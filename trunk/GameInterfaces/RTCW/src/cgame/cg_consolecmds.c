@@ -1,13 +1,12 @@
 /*
- * name:		cg_consolecmds.c
- *
- * desc:		text commands typed in at the local console, or executed by a key binding
- *
+* name:		cg_consolecmds.c
+*
+* desc:		text commands typed in at the local console, or executed by a key binding
+*
 */
 
 #include "cg_local.h"
 #include "../ui/ui_shared.h"
-
 
 void CG_TargetCommand_f( void ) {
 	int targetNum;
@@ -22,7 +21,6 @@ void CG_TargetCommand_f( void ) {
 	trap_SendConsoleCommand( va( "gc %i %i", targetNum, atoi( test ) ) );
 }
 
-
 /*
 =================
 CG_SizeUp_f
@@ -33,7 +31,6 @@ Keybinding command
 static void CG_SizeUp_f( void ) {
 	trap_Cvar_Set( "cg_viewsize", va( "%i",(int)( cg_viewsize.integer + 10 ) ) );
 }
-
 
 /*
 =================
@@ -46,7 +43,6 @@ static void CG_SizeDown_f( void ) {
 	trap_Cvar_Set( "cg_viewsize", va( "%i",(int)( cg_viewsize.integer - 10 ) ) );
 }
 
-
 /*
 =============
 CG_Viewpos_f
@@ -56,10 +52,9 @@ Debugging command to print the current position
 */
 static void CG_Viewpos_f( void ) {
 	CG_Printf( "(%i %i %i) : %i\n", (int)cg.refdef.vieworg[0],
-			   (int)cg.refdef.vieworg[1], (int)cg.refdef.vieworg[2],
-			   (int)cg.refdefViewAngles[YAW] );
+		(int)cg.refdef.vieworg[1], (int)cg.refdef.vieworg[2],
+		(int)cg.refdefViewAngles[YAW] );
 }
-
 
 static void CG_ScoresDown_f( void ) {
 	if ( cg.scoresRequestTime + 2000 < cg.time ) {
@@ -87,7 +82,6 @@ static void CG_ScoresUp_f( void ) {
 		cg.scoreFadeTime = cg.time;
 	}
 }
-
 
 extern menuDef_t *menuScoreboard;
 void Menu_Reset();          // FIXME: add to right include file
@@ -263,7 +257,7 @@ static void CG_LimboMessage_f( void ) {
 	Q_strncpyz( weapStr, CG_TranslateString( CG_Argv( 3 ) ), 80 );
 
 	CG_PriorityCenterPrint( va( "%s %s %s %s %s.", CG_TranslateString( "You will spawn as an" ),
-								teamStr, classStr, CG_TranslateString( "with a" ), weapStr ), SCREEN_HEIGHT - ( SCREEN_HEIGHT * 0.25 ), SMALLCHAR_WIDTH, -1 );
+		teamStr, classStr, CG_TranslateString( "with a" ), weapStr ), SCREEN_HEIGHT - ( SCREEN_HEIGHT * 0.25 ), SMALLCHAR_WIDTH, -1 );
 }
 
 static void CG_VoiceChat_f( void ) {
@@ -366,13 +360,13 @@ static void CG_DumpLocation_f( void ) {
 
 	// Build the entity definition
 	buffptr = va(   "{\n\"classname\" \"target_location\"\n\"origin\" \"%i %i %i\"\n\"message\" \"%s\"\n}\n\n",
-					(int) cg.snap->ps.origin[0], (int) cg.snap->ps.origin[1], (int) cg.snap->ps.origin[2], locname );
+		(int) cg.snap->ps.origin[0], (int) cg.snap->ps.origin[1], (int) cg.snap->ps.origin[2], locname );
 
 	// And write out/acknowledge
 	trap_FS_Write( buffptr, strlen( buffptr ), f );
 	trap_FS_FCloseFile( f );
 	CG_Printf( "Entity dumped to '%s' (%i %i %i).\n", locfilename,
-			   (int) cg.snap->ps.origin[0], (int) cg.snap->ps.origin[1], (int) cg.snap->ps.origin[2] );
+		(int) cg.snap->ps.origin[0], (int) cg.snap->ps.origin[1], (int) cg.snap->ps.origin[2] );
 }
 
 // quad: etpro style enemy spawntimer
@@ -415,7 +409,6 @@ void CG_ResetTimer_f( void ) {
 	msec = ( cgs.timelimit * 60.f * 1000.f ) - ( cg.time - cgs.levelStartTime );
 	trap_Cvar_Set( "cg_spawnTimer_set", va( "%d", msec / 1000 ) );
 }
-
 
 typedef struct {
 	char    *cmd;
@@ -476,7 +469,6 @@ static consoleCommand_t commands[] =
 	{ "resetTimer", CG_ResetTimer_f },
 };
 
-
 /*
 =================
 CG_ConsoleCommand
@@ -505,7 +497,6 @@ qboolean CG_ConsoleCommand( void ) {
 
 	return qfalse;
 }
-
 
 /*
 =================

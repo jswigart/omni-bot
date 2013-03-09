@@ -3,7 +3,6 @@
 // q_math.c -- stateless support routines that are included in each code module
 #include "q_shared.h"
 
-
 vec3_t vec3_origin = {0,0,0};
 vec3_t axisDefault[3] = { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
 
@@ -176,7 +175,6 @@ float   Q_crandom( int *seed ) {
 	return 2.0 * ( Q_random( seed ) - 0.5 );
 }
 
-
 //=======================================================
 
 signed char ClampChar( int i ) {
@@ -198,7 +196,6 @@ signed short ClampShort( int i ) {
 	}
 	return i;
 }
-
 
 // this isn't a real cheap function to call!
 int DirToByte( vec3_t dir ) {
@@ -230,7 +227,6 @@ void ByteToDir( int b, vec3_t dir ) {
 	}
 	VectorCopy( bytedirs[b], dir );
 }
-
 
 unsigned ColorBytes3( float r, float g, float b ) {
 	unsigned i;
@@ -273,7 +269,6 @@ float NormalizeColor( const vec3_t in, vec3_t out ) {
 	}
 	return max;
 }
-
 
 /*
 =====================
@@ -340,59 +335,59 @@ This is not implemented very well...
 ===============
 */
 void RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point,
-							  float degrees ) {
-	float m[3][3];
-	float im[3][3];
-	float zrot[3][3];
-	float tmpmat[3][3];
-	float rot[3][3];
-	int i;
-	vec3_t vr, vup, vf;
-	float rad;
+							 float degrees ) {
+								 float m[3][3];
+								 float im[3][3];
+								 float zrot[3][3];
+								 float tmpmat[3][3];
+								 float rot[3][3];
+								 int i;
+								 vec3_t vr, vup, vf;
+								 float rad;
 
-	vf[0] = dir[0];
-	vf[1] = dir[1];
-	vf[2] = dir[2];
+								 vf[0] = dir[0];
+								 vf[1] = dir[1];
+								 vf[2] = dir[2];
 
-	PerpendicularVector( vr, dir );
-	CrossProduct( vr, vf, vup );
+								 PerpendicularVector( vr, dir );
+								 CrossProduct( vr, vf, vup );
 
-	m[0][0] = vr[0];
-	m[1][0] = vr[1];
-	m[2][0] = vr[2];
+								 m[0][0] = vr[0];
+								 m[1][0] = vr[1];
+								 m[2][0] = vr[2];
 
-	m[0][1] = vup[0];
-	m[1][1] = vup[1];
-	m[2][1] = vup[2];
+								 m[0][1] = vup[0];
+								 m[1][1] = vup[1];
+								 m[2][1] = vup[2];
 
-	m[0][2] = vf[0];
-	m[1][2] = vf[1];
-	m[2][2] = vf[2];
+								 m[0][2] = vf[0];
+								 m[1][2] = vf[1];
+								 m[2][2] = vf[2];
 
-	memcpy( im, m, sizeof( im ) );
+								 memcpy( im, m, sizeof( im ) );
 
-	im[0][1] = m[1][0];
-	im[0][2] = m[2][0];
-	im[1][0] = m[0][1];
-	im[1][2] = m[2][1];
-	im[2][0] = m[0][2];
-	im[2][1] = m[1][2];
+								 im[0][1] = m[1][0];
+								 im[0][2] = m[2][0];
+								 im[1][0] = m[0][1];
+								 im[1][2] = m[2][1];
+								 im[2][0] = m[0][2];
+								 im[2][1] = m[1][2];
 
-	memset( zrot, 0, sizeof( zrot ) );
-	zrot[0][0] = zrot[1][1] = zrot[2][2] = 1.0F;
+								 memset( zrot, 0, sizeof( zrot ) );
+								 zrot[0][0] = zrot[1][1] = zrot[2][2] = 1.0F;
 
-	rad = DEG2RAD( degrees );
-	zrot[0][0] = cos( rad );
-	zrot[0][1] = sin( rad );
-	zrot[1][0] = -sin( rad );
-	zrot[1][1] = cos( rad );
+								 rad = DEG2RAD( degrees );
+								 zrot[0][0] = cos( rad );
+								 zrot[0][1] = sin( rad );
+								 zrot[1][0] = -sin( rad );
+								 zrot[1][1] = cos( rad );
 
-	MatrixMultiply( m, zrot, tmpmat );
-	MatrixMultiply( tmpmat, im, rot );
+								 MatrixMultiply( m, zrot, tmpmat );
+								 MatrixMultiply( tmpmat, im, rot );
 
-	for ( i = 0; i < 3; i++ ) {
-		dst[i] = rot[i][0] * point[0] + rot[i][1] * point[1] + rot[i][2] * point[2];
-	}
+								 for ( i = 0; i < 3; i++ ) {
+									 dst[i] = rot[i][0] * point[0] + rot[i][1] * point[1] + rot[i][2] * point[2];
+								 }
 }
 
 /*
@@ -415,7 +410,6 @@ void RotateAroundDirection( vec3_t axis[3], float yaw ) {
 	// cross to get axis[2]
 	CrossProduct( axis[0], axis[1], axis[2] );
 }
-
 
 void vectoangles( const vec3_t value1, vec3_t angles ) {
 	float yaw, pitch;
@@ -452,7 +446,6 @@ void vectoangles( const vec3_t value1, vec3_t angles ) {
 	angles[YAW] = yaw;
 	angles[ROLL] = 0;
 }
-
 
 /*
 =================
@@ -525,7 +518,6 @@ void MakeNormalVectors( const vec3_t forward, vec3_t right, vec3_t up ) {
 	VectorNormalize( right );
 	CrossProduct( right, forward, up );
 }
-
 
 void VectorRotate( vec3_t in, vec3_t matrix[3], vec3_t out ) {
 	out[0] = DotProduct( in, matrix[0] );
@@ -615,19 +607,16 @@ float   AngleSubtract( float a1, float a2 ) {
 	return a;
 }
 
-
 void AnglesSubtract( vec3_t v1, vec3_t v2, vec3_t v3 ) {
 	v3[0] = AngleSubtract( v1[0], v2[0] );
 	v3[1] = AngleSubtract( v1[1], v2[1] );
 	v3[2] = AngleSubtract( v1[2], v2[2] );
 }
 
-
 float   AngleMod( float a ) {
 	a = ( 360.0 / 65536 ) * ( (int)( a * ( 65536 / 360.0 ) ) & 65535 );
 	return a;
 }
-
 
 /*
 =================
@@ -641,14 +630,13 @@ float AngleNormalize360( float angle ) {
 }
 
 // tjw: integer angles used for at least usercmd.angles[3]
-// 
+//
 // returns angle normalized to the range [0 <= angle < 65536]
 unsigned int AngleNormalizeInt(int angle)
 {
 	if(angle < 0)
 		angle = (65536 + (angle % 65536));
 	return (angle % 65536);
-
 }
 
 /*
@@ -666,7 +654,6 @@ float AngleNormalize180( float angle ) {
 	return angle;
 }
 
-
 /*
 =================
 AngleDelta
@@ -678,9 +665,7 @@ float AngleDelta( float angle1, float angle2 ) {
 	return AngleNormalize180( angle1 - angle2 );
 }
 
-
 //============================================================
-
 
 /*
 =================
@@ -707,7 +692,7 @@ int BoxOnPlaneSide( vec3_t emins, vec3_t emaxs, struct cplane_s *p ) {
 	float dist1, dist2;
 	int sides;
 
-// fast axial cases
+	// fast axial cases
 	if ( p->type < 3 ) {
 		if ( p->dist <= emins[p->type] ) {
 			return 1;
@@ -718,7 +703,7 @@ int BoxOnPlaneSide( vec3_t emins, vec3_t emaxs, struct cplane_s *p ) {
 		return 3;
 	}
 
-// general case
+	// general case
 	switch ( p->signbits )
 	{
 	case 0:
@@ -776,227 +761,226 @@ __declspec( naked ) int BoxOnPlaneSide( vec3_t emins, vec3_t emaxs, struct cplan
 	static int Ljmptab[8];
 
 	__asm {
-
 		push ebx
 
-		cmp bops_initialized, 1
-		je initialized
-		mov bops_initialized, 1
+			cmp bops_initialized, 1
+			je initialized
+			mov bops_initialized, 1
 
-		mov Ljmptab[0 * 4], offset Lcase0
-		mov Ljmptab[1 * 4], offset Lcase1
-		mov Ljmptab[2 * 4], offset Lcase2
-		mov Ljmptab[3 * 4], offset Lcase3
-		mov Ljmptab[4 * 4], offset Lcase4
-		mov Ljmptab[5 * 4], offset Lcase5
-		mov Ljmptab[6 * 4], offset Lcase6
-		mov Ljmptab[7 * 4], offset Lcase7
+			mov Ljmptab[0 * 4], offset Lcase0
+			mov Ljmptab[1 * 4], offset Lcase1
+			mov Ljmptab[2 * 4], offset Lcase2
+			mov Ljmptab[3 * 4], offset Lcase3
+			mov Ljmptab[4 * 4], offset Lcase4
+			mov Ljmptab[5 * 4], offset Lcase5
+			mov Ljmptab[6 * 4], offset Lcase6
+			mov Ljmptab[7 * 4], offset Lcase7
 
 initialized:
 
 		mov edx,dword ptr[4 + 12 + esp]
 		mov ecx,dword ptr[4 + 4 + esp]
 		xor eax,eax
-		mov ebx,dword ptr[4 + 8 + esp]
+			mov ebx,dword ptr[4 + 8 + esp]
 		mov al,byte ptr[17 + edx]
 		cmp al,8
-		jge Lerror
-		fld dword ptr[0 + edx]
+			jge Lerror
+			fld dword ptr[0 + edx]
 		fld st( 0 )
-		jmp dword ptr[Ljmptab + eax * 4]
-		Lcase0 :
-			fmul dword ptr[ebx]
-			fld dword ptr[0 + 4 + edx]
-			fxch st( 2 )
+			jmp dword ptr[Ljmptab + eax * 4]
+Lcase0 :
+		fmul dword ptr[ebx]
+		fld dword ptr[0 + 4 + edx]
+		fxch st( 2 )
 			fmul dword ptr[ecx]
-			fxch st( 2 )
+		fxch st( 2 )
 			fld st( 0 )
 			fmul dword ptr[4 + ebx]
-			fld dword ptr[0 + 8 + edx]
-			fxch st( 2 )
+		fld dword ptr[0 + 8 + edx]
+		fxch st( 2 )
 			fmul dword ptr[4 + ecx]
-			fxch st( 2 )
+		fxch st( 2 )
 			fld st( 0 )
 			fmul dword ptr[8 + ebx]
-			fxch st( 5 )
+		fxch st( 5 )
 			faddp st( 3 ),st( 0 )
 			fmul dword ptr[8 + ecx]
-			fxch st( 1 )
+		fxch st( 1 )
 			faddp st( 3 ),st( 0 )
 			fxch st( 3 )
 			faddp st( 2 ),st( 0 )
 			jmp LSetSides
-			Lcase1 :
-				fmul dword ptr[ecx]
-				fld dword ptr[0 + 4 + edx]
-				fxch st( 2 )
-				fmul dword ptr[ebx]
-				fxch st( 2 )
-				fld st( 0 )
-				fmul dword ptr[4 + ebx]
-				fld dword ptr[0 + 8 + edx]
-				fxch st( 2 )
-				fmul dword ptr[4 + ecx]
-				fxch st( 2 )
-				fld st( 0 )
-				fmul dword ptr[8 + ebx]
-				fxch st( 5 )
-				faddp st( 3 ),st( 0 )
-				fmul dword ptr[8 + ecx]
-				fxch st( 1 )
-				faddp st( 3 ),st( 0 )
-				fxch st( 3 )
-				faddp st( 2 ),st( 0 )
-				jmp LSetSides
-				Lcase2 :
-					fmul dword ptr[ebx]
-					fld dword ptr[0 + 4 + edx]
-					fxch st( 2 )
-					fmul dword ptr[ecx]
-					fxch st( 2 )
-					fld st( 0 )
-					fmul dword ptr[4 + ecx]
-					fld dword ptr[0 + 8 + edx]
-					fxch st( 2 )
-					fmul dword ptr[4 + ebx]
-					fxch st( 2 )
-					fld st( 0 )
-					fmul dword ptr[8 + ebx]
-					fxch st( 5 )
-					faddp st( 3 ),st( 0 )
-					fmul dword ptr[8 + ecx]
-					fxch st( 1 )
-					faddp st( 3 ),st( 0 )
-					fxch st( 3 )
-					faddp st( 2 ),st( 0 )
-					jmp LSetSides
-					Lcase3 :
-						fmul dword ptr[ecx]
-						fld dword ptr[0 + 4 + edx]
-						fxch st( 2 )
-						fmul dword ptr[ebx]
-						fxch st( 2 )
-						fld st( 0 )
-						fmul dword ptr[4 + ecx]
-						fld dword ptr[0 + 8 + edx]
-						fxch st( 2 )
-						fmul dword ptr[4 + ebx]
-						fxch st( 2 )
-						fld st( 0 )
-						fmul dword ptr[8 + ebx]
-						fxch st( 5 )
-						faddp st( 3 ),st( 0 )
-						fmul dword ptr[8 + ecx]
-						fxch st( 1 )
-						faddp st( 3 ),st( 0 )
-						fxch st( 3 )
-						faddp st( 2 ),st( 0 )
-						jmp LSetSides
-						Lcase4 :
-							fmul dword ptr[ebx]
-							fld dword ptr[0 + 4 + edx]
-							fxch st( 2 )
-							fmul dword ptr[ecx]
-							fxch st( 2 )
-							fld st( 0 )
-							fmul dword ptr[4 + ebx]
-							fld dword ptr[0 + 8 + edx]
-							fxch st( 2 )
-							fmul dword ptr[4 + ecx]
-							fxch st( 2 )
-							fld st( 0 )
-							fmul dword ptr[8 + ecx]
-							fxch st( 5 )
-							faddp st( 3 ),st( 0 )
-							fmul dword ptr[8 + ebx]
-							fxch st( 1 )
-							faddp st( 3 ),st( 0 )
-							fxch st( 3 )
-							faddp st( 2 ),st( 0 )
-							jmp LSetSides
-							Lcase5 :
-								fmul dword ptr[ecx]
-								fld dword ptr[0 + 4 + edx]
-								fxch st( 2 )
-								fmul dword ptr[ebx]
-								fxch st( 2 )
-								fld st( 0 )
-								fmul dword ptr[4 + ebx]
-								fld dword ptr[0 + 8 + edx]
-								fxch st( 2 )
-								fmul dword ptr[4 + ecx]
-								fxch st( 2 )
-								fld st( 0 )
-								fmul dword ptr[8 + ecx]
-								fxch st( 5 )
-								faddp st( 3 ),st( 0 )
-								fmul dword ptr[8 + ebx]
-								fxch st( 1 )
-								faddp st( 3 ),st( 0 )
-								fxch st( 3 )
-								faddp st( 2 ),st( 0 )
-								jmp LSetSides
-								Lcase6 :
-									fmul dword ptr[ebx]
-									fld dword ptr[0 + 4 + edx]
-									fxch st( 2 )
-									fmul dword ptr[ecx]
-									fxch st( 2 )
-									fld st( 0 )
-									fmul dword ptr[4 + ecx]
-									fld dword ptr[0 + 8 + edx]
-									fxch st( 2 )
-									fmul dword ptr[4 + ebx]
-									fxch st( 2 )
-									fld st( 0 )
-									fmul dword ptr[8 + ecx]
-									fxch st( 5 )
-									faddp st( 3 ),st( 0 )
-									fmul dword ptr[8 + ebx]
-									fxch st( 1 )
-									faddp st( 3 ),st( 0 )
-									fxch st( 3 )
-									faddp st( 2 ),st( 0 )
-									jmp LSetSides
-									Lcase7 :
-										fmul dword ptr[ecx]
-										fld dword ptr[0 + 4 + edx]
-										fxch st( 2 )
-										fmul dword ptr[ebx]
-										fxch st( 2 )
-										fld st( 0 )
-										fmul dword ptr[4 + ecx]
-										fld dword ptr[0 + 8 + edx]
-										fxch st( 2 )
-										fmul dword ptr[4 + ebx]
-										fxch st( 2 )
-										fld st( 0 )
-										fmul dword ptr[8 + ecx]
-										fxch st( 5 )
-										faddp st( 3 ),st( 0 )
-										fmul dword ptr[8 + ebx]
-										fxch st( 1 )
-										faddp st( 3 ),st( 0 )
-										fxch st( 3 )
-										faddp st( 2 ),st( 0 )
-										LSetSides :
-											faddp st( 2 ),st( 0 )
-											fcomp dword ptr[12 + edx]
-											xor ecx,ecx
-											fnstsw ax
-											fcomp dword ptr[12 + edx]
-											and ah,1
-											xor ah,1
-											add cl,ah
-											fnstsw ax
-											and ah,1
-											add ah,ah
-											add cl,ah
-											pop ebx
-											mov eax,ecx
-											ret
-											Lerror :
-												int 3
+Lcase1 :
+		fmul dword ptr[ecx]
+		fld dword ptr[0 + 4 + edx]
+		fxch st( 2 )
+			fmul dword ptr[ebx]
+		fxch st( 2 )
+			fld st( 0 )
+			fmul dword ptr[4 + ebx]
+		fld dword ptr[0 + 8 + edx]
+		fxch st( 2 )
+			fmul dword ptr[4 + ecx]
+		fxch st( 2 )
+			fld st( 0 )
+			fmul dword ptr[8 + ebx]
+		fxch st( 5 )
+			faddp st( 3 ),st( 0 )
+			fmul dword ptr[8 + ecx]
+		fxch st( 1 )
+			faddp st( 3 ),st( 0 )
+			fxch st( 3 )
+			faddp st( 2 ),st( 0 )
+			jmp LSetSides
+Lcase2 :
+		fmul dword ptr[ebx]
+		fld dword ptr[0 + 4 + edx]
+		fxch st( 2 )
+			fmul dword ptr[ecx]
+		fxch st( 2 )
+			fld st( 0 )
+			fmul dword ptr[4 + ecx]
+		fld dword ptr[0 + 8 + edx]
+		fxch st( 2 )
+			fmul dword ptr[4 + ebx]
+		fxch st( 2 )
+			fld st( 0 )
+			fmul dword ptr[8 + ebx]
+		fxch st( 5 )
+			faddp st( 3 ),st( 0 )
+			fmul dword ptr[8 + ecx]
+		fxch st( 1 )
+			faddp st( 3 ),st( 0 )
+			fxch st( 3 )
+			faddp st( 2 ),st( 0 )
+			jmp LSetSides
+Lcase3 :
+		fmul dword ptr[ecx]
+		fld dword ptr[0 + 4 + edx]
+		fxch st( 2 )
+			fmul dword ptr[ebx]
+		fxch st( 2 )
+			fld st( 0 )
+			fmul dword ptr[4 + ecx]
+		fld dword ptr[0 + 8 + edx]
+		fxch st( 2 )
+			fmul dword ptr[4 + ebx]
+		fxch st( 2 )
+			fld st( 0 )
+			fmul dword ptr[8 + ebx]
+		fxch st( 5 )
+			faddp st( 3 ),st( 0 )
+			fmul dword ptr[8 + ecx]
+		fxch st( 1 )
+			faddp st( 3 ),st( 0 )
+			fxch st( 3 )
+			faddp st( 2 ),st( 0 )
+			jmp LSetSides
+Lcase4 :
+		fmul dword ptr[ebx]
+		fld dword ptr[0 + 4 + edx]
+		fxch st( 2 )
+			fmul dword ptr[ecx]
+		fxch st( 2 )
+			fld st( 0 )
+			fmul dword ptr[4 + ebx]
+		fld dword ptr[0 + 8 + edx]
+		fxch st( 2 )
+			fmul dword ptr[4 + ecx]
+		fxch st( 2 )
+			fld st( 0 )
+			fmul dword ptr[8 + ecx]
+		fxch st( 5 )
+			faddp st( 3 ),st( 0 )
+			fmul dword ptr[8 + ebx]
+		fxch st( 1 )
+			faddp st( 3 ),st( 0 )
+			fxch st( 3 )
+			faddp st( 2 ),st( 0 )
+			jmp LSetSides
+Lcase5 :
+		fmul dword ptr[ecx]
+		fld dword ptr[0 + 4 + edx]
+		fxch st( 2 )
+			fmul dword ptr[ebx]
+		fxch st( 2 )
+			fld st( 0 )
+			fmul dword ptr[4 + ebx]
+		fld dword ptr[0 + 8 + edx]
+		fxch st( 2 )
+			fmul dword ptr[4 + ecx]
+		fxch st( 2 )
+			fld st( 0 )
+			fmul dword ptr[8 + ecx]
+		fxch st( 5 )
+			faddp st( 3 ),st( 0 )
+			fmul dword ptr[8 + ebx]
+		fxch st( 1 )
+			faddp st( 3 ),st( 0 )
+			fxch st( 3 )
+			faddp st( 2 ),st( 0 )
+			jmp LSetSides
+Lcase6 :
+		fmul dword ptr[ebx]
+		fld dword ptr[0 + 4 + edx]
+		fxch st( 2 )
+			fmul dword ptr[ecx]
+		fxch st( 2 )
+			fld st( 0 )
+			fmul dword ptr[4 + ecx]
+		fld dword ptr[0 + 8 + edx]
+		fxch st( 2 )
+			fmul dword ptr[4 + ebx]
+		fxch st( 2 )
+			fld st( 0 )
+			fmul dword ptr[8 + ecx]
+		fxch st( 5 )
+			faddp st( 3 ),st( 0 )
+			fmul dword ptr[8 + ebx]
+		fxch st( 1 )
+			faddp st( 3 ),st( 0 )
+			fxch st( 3 )
+			faddp st( 2 ),st( 0 )
+			jmp LSetSides
+Lcase7 :
+		fmul dword ptr[ecx]
+		fld dword ptr[0 + 4 + edx]
+		fxch st( 2 )
+			fmul dword ptr[ebx]
+		fxch st( 2 )
+			fld st( 0 )
+			fmul dword ptr[4 + ecx]
+		fld dword ptr[0 + 8 + edx]
+		fxch st( 2 )
+			fmul dword ptr[4 + ebx]
+		fxch st( 2 )
+			fld st( 0 )
+			fmul dword ptr[8 + ecx]
+		fxch st( 5 )
+			faddp st( 3 ),st( 0 )
+			fmul dword ptr[8 + ebx]
+		fxch st( 1 )
+			faddp st( 3 ),st( 0 )
+			fxch st( 3 )
+			faddp st( 2 ),st( 0 )
+LSetSides :
+		faddp st( 2 ),st( 0 )
+			fcomp dword ptr[12 + edx]
+		xor ecx,ecx
+			fnstsw ax
+			fcomp dword ptr[12 + edx]
+		and ah,1
+			xor ah,1
+			add cl,ah
+			fnstsw ax
+			and ah,1
+			add ah,ah
+			add cl,ah
+			pop ebx
+			mov eax,ecx
+			ret
+Lerror :
+		int 3
 	}
 }
 #pragma warning( default: 4035 )
@@ -1022,7 +1006,6 @@ float RadiusFromBounds( const vec3_t mins, const vec3_t maxs ) {
 
 	return VectorLength( corner );
 }
-
 
 void ClearBounds( vec3_t mins, vec3_t maxs ) {
 	mins[0] = mins[1] = mins[2] = 99999;
@@ -1052,7 +1035,6 @@ void AddPointToBounds( const vec3_t v, vec3_t mins, vec3_t maxs ) {
 	}
 }
 
-
 int VectorCompare( const vec3_t v1, const vec3_t v2 ) {
 	if ( v1[0] != v2[0] || v1[1] != v2[1] || v1[2] != v2[2] ) {
 		return 0;
@@ -1060,7 +1042,6 @@ int VectorCompare( const vec3_t v1, const vec3_t v2 ) {
 
 	return 1;
 }
-
 
 vec_t VectorNormalize( vec3_t v ) {
 	float length;
@@ -1115,7 +1096,6 @@ void _VectorMA( const vec3_t veca, float scale, const vec3_t vecb, vec3_t vecc )
 	vecc[1] = veca[1] + scale * vecb[1];
 	vecc[2] = veca[2] + scale * vecb[2];
 }
-
 
 vec_t _DotProduct( const vec3_t v1, const vec3_t v2 ) {
 	return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
@@ -1173,7 +1153,6 @@ vec_t DistanceSquared( const vec3_t p1, const vec3_t p2 ) {
 	return v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
 }
 
-
 void VectorInverse( vec3_t v ) {
 	v[0] = -v[0];
 	v[1] = -v[1];
@@ -1186,7 +1165,6 @@ void Vector4Scale( const vec4_t in, vec_t scale, vec4_t out ) {
 	out[2] = in[2] * scale;
 	out[3] = in[3] * scale;
 }
-
 
 int Q_log2( int val ) {
 	int answer;
@@ -1205,25 +1183,24 @@ MatrixMultiply
 */
 void MatrixMultiply( float in1[3][3], float in2[3][3], float out[3][3] ) {
 	out[0][0] = in1[0][0] * in2[0][0] + in1[0][1] * in2[1][0] +
-				in1[0][2] * in2[2][0];
+		in1[0][2] * in2[2][0];
 	out[0][1] = in1[0][0] * in2[0][1] + in1[0][1] * in2[1][1] +
-				in1[0][2] * in2[2][1];
+		in1[0][2] * in2[2][1];
 	out[0][2] = in1[0][0] * in2[0][2] + in1[0][1] * in2[1][2] +
-				in1[0][2] * in2[2][2];
+		in1[0][2] * in2[2][2];
 	out[1][0] = in1[1][0] * in2[0][0] + in1[1][1] * in2[1][0] +
-				in1[1][2] * in2[2][0];
+		in1[1][2] * in2[2][0];
 	out[1][1] = in1[1][0] * in2[0][1] + in1[1][1] * in2[1][1] +
-				in1[1][2] * in2[2][1];
+		in1[1][2] * in2[2][1];
 	out[1][2] = in1[1][0] * in2[0][2] + in1[1][1] * in2[1][2] +
-				in1[1][2] * in2[2][2];
+		in1[1][2] * in2[2][2];
 	out[2][0] = in1[2][0] * in2[0][0] + in1[2][1] * in2[1][0] +
-				in1[2][2] * in2[2][0];
+		in1[2][2] * in2[2][0];
 	out[2][1] = in1[2][0] * in2[0][1] + in1[2][1] * in2[1][1] +
-				in1[2][2] * in2[2][1];
+		in1[2][2] * in2[2][1];
 	out[2][2] = in1[2][0] * in2[0][2] + in1[2][1] * in2[1][2] +
-				in1[2][2] * in2[2][2];
+		in1[2][2] * in2[2][2];
 }
-
 
 void AngleVectors( const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up ) {
 	float angle;
@@ -1295,7 +1272,7 @@ void PerpendicularVector( vec3_t dst, const vec3_t src ) {
 =================
 GetPerpendicularViewVector
 
-  Used to find an "up" vector for drawing a sprite so that it always faces the view as best as possible
+Used to find an "up" vector for drawing a sprite so that it always faces the view as best as possible
 =================
 */
 void GetPerpendicularViewVector( const vec3_t point, const vec3_t p1, const vec3_t p2, vec3_t up ) {
@@ -1359,29 +1336,29 @@ float DistanceFromLineSquared( vec3_t p, vec3_t lp1, vec3_t lp2 ) {
 	ProjectPointOntoVector( p, lp1, lp2, proj );
 	for ( j = 0; j < 3; j++ )
 		if ( ( proj[j] > lp1[j] && proj[j] > lp2[j] ) ||
-			 ( proj[j] < lp1[j] && proj[j] < lp2[j] ) ) {
-			break;
+			( proj[j] < lp1[j] && proj[j] < lp2[j] ) ) {
+				break;
 		}
-	if ( j < 3 ) {
-		if ( Q_fabs( proj[j] - lp1[j] ) < Q_fabs( proj[j] - lp2[j] ) ) {
-			VectorSubtract( p, lp1, t );
-		} else {
-			VectorSubtract( p, lp2, t );
+		if ( j < 3 ) {
+			if ( Q_fabs( proj[j] - lp1[j] ) < Q_fabs( proj[j] - lp2[j] ) ) {
+				VectorSubtract( p, lp1, t );
+			} else {
+				VectorSubtract( p, lp2, t );
+			}
+			return VectorLengthSquared( t );
 		}
+		VectorSubtract( p, proj, t );
 		return VectorLengthSquared( t );
-	}
-	VectorSubtract( p, proj, t );
-	return VectorLengthSquared( t );
 }
 
 /*
 =================
 AxisToAngles
 
-  Used to convert the MD3 tag axis to MDC tag angles, which are much smaller
+Used to convert the MD3 tag axis to MDC tag angles, which are much smaller
 
-  This doesn't have to be fast, since it's only used for conversion in utils, try to avoid
-  using this during gameplay
+This doesn't have to be fast, since it's only used for conversion in utils, try to avoid
+using this during gameplay
 =================
 */
 void AxisToAngles( vec3_t axis[3], vec3_t angles ) {

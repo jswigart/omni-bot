@@ -90,10 +90,9 @@ void trap_Cvar_VariableStringBuffer( const char *var_name, char *buffer, int buf
 	syscall( G_CVAR_VARIABLE_STRING_BUFFER, var_name, buffer, bufsize );
 }
 
-
 void trap_LocateGameData( gentity_t *gEnts, int numGEntities, int sizeofGEntity_t,
-						  playerState_t *clients, int sizeofGClient ) {
-	syscall( G_LOCATE_GAME_DATA, gEnts, numGEntities, sizeofGEntity_t, clients, sizeofGClient );
+						 playerState_t *clients, int sizeofGClient ) {
+							 syscall( G_LOCATE_GAME_DATA, gEnts, numGEntities, sizeofGEntity_t, clients, sizeofGClient );
 }
 
 void trap_DropClient( int clientNum, const char *reason ) {
@@ -145,7 +144,6 @@ int trap_PointContents( const vec3_t point, int passEntityNum ) {
 	return syscall( G_POINT_CONTENTS, point, passEntityNum );
 }
 
-
 qboolean trap_InPVS( const vec3_t p1, const vec3_t p2 ) {
 	return syscall( G_IN_PVS, p1, p2 );
 }
@@ -169,7 +167,6 @@ void trap_LinkEntity( gentity_t *ent ) {
 void trap_UnlinkEntity( gentity_t *ent ) {
 	syscall( G_UNLINKENTITY, ent );
 }
-
 
 int trap_EntitiesInBox( const vec3_t mins, const vec3_t maxs, int *list, int maxcount ) {
 	return syscall( G_ENTITIES_IN_BOX, mins, maxs, list, maxcount );

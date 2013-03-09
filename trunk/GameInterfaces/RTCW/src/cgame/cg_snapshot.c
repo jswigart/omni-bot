@@ -1,9 +1,7 @@
 // cg_snapshot.c -- things that happen on snapshot transition,
 // not necessarily every single rendered frame
 
-
 #include "cg_local.h"
-
 
 /*
 ==================
@@ -31,7 +29,6 @@ static void CG_ResetEntity( centity_t *cent ) {
 		CG_ResetPlayerEntity( cent );
 	}
 }
-
 
 /*
 ===============
@@ -88,7 +85,6 @@ static void CG_TransitionEntity( centity_t *cent ) {
 	CG_CheckEvents( cent );
 }
 
-
 /*
 ==================
 CG_SetInitialSnapshot
@@ -133,9 +129,9 @@ void CG_SetInitialSnapshot( snapshot_t *snap ) {
 		CG_CheckEvents( cent );
 	}
 
-// JPW NERVE -- make sure we didn't break anything
+	// JPW NERVE -- make sure we didn't break anything
 	cg_fxflags = 0;
-// jpw
+	// jpw
 
 	// NERVE - SMF
 	{
@@ -151,7 +147,6 @@ void CG_SetInitialSnapshot( snapshot_t *snap ) {
 	}
 	// -NERVE - SMF
 }
-
 
 /*
 ===================
@@ -217,12 +212,11 @@ static void CG_TransitionSnapshot( void ) {
 		// if we are not doing client side movement prediction for any
 		// reason, then the client events and view changes will be issued now
 		if ( cg.demoPlayback || ( cg.snap->ps.pm_flags & PMF_FOLLOW )
-			 || cg_nopredict.integer || cg_synchronousClients.integer ) {
-			CG_TransitionPlayerState( ps, ops );
+			|| cg_nopredict.integer || cg_synchronousClients.integer ) {
+				CG_TransitionPlayerState( ps, ops );
 		}
 	}
 }
-
 
 /*
 ===================
@@ -279,7 +273,6 @@ static void CG_SetNextSnap( snapshot_t *snap ) {
 	CG_BuildSolidList();
 }
 
-
 /*
 ========================
 CG_ReadNextSnapshot
@@ -296,7 +289,7 @@ static snapshot_t *CG_ReadNextSnapshot( void ) {
 
 	if ( cg.latestSnapshotNum > cgs.processedSnapshotNum + 1000 ) {
 		CG_Printf( "[skipnotify]WARNING: CG_ReadNextSnapshot: way out of range, %i > %i\n",
-				   cg.latestSnapshotNum, cgs.processedSnapshotNum );
+			cg.latestSnapshotNum, cgs.processedSnapshotNum );
 	}
 
 	while ( cgs.processedSnapshotNum < cg.latestSnapshotNum ) {
@@ -313,7 +306,6 @@ static snapshot_t *CG_ReadNextSnapshot( void ) {
 
 		// FIXME: why would trap_GetSnapshot return a snapshot with the same server time
 		if ( cg.snap && r && dest->serverTime == cg.snap->serverTime ) {
-
 			// because we're playing back demos taken by local servers apparently...
 			// http://www.lucasforums.com/showthread.php?t=140104&page=3
 			if ( cg.demoPlayback ) {
@@ -324,7 +316,7 @@ static snapshot_t *CG_ReadNextSnapshot( void ) {
 		// if it succeeded, return
 		if ( r ) {
 			CG_AddLagometerSnapshotInfo( dest );
-// JPW NERVE pulled for MP, maybe this was the code that was causing crashes.  Shouldn't need it for savegame stuff
+			// JPW NERVE pulled for MP, maybe this was the code that was causing crashes.  Shouldn't need it for savegame stuff
 			// Ridah, savegame: we should use this as our new base snapshot
 			// server has been restarted
 			if ( cg.snap && ( dest->snapFlags ^ cg.snap->snapFlags ) & SNAPFLAG_SERVERCOUNT ) {
@@ -333,7 +325,7 @@ static snapshot_t *CG_ReadNextSnapshot( void ) {
 				cg.landTime = -1;
 				cg.stepTime = -1;
 			}
-//
+			//
 			return dest;
 		}
 
@@ -352,7 +344,6 @@ static snapshot_t *CG_ReadNextSnapshot( void ) {
 	// nothing left to read
 	return NULL;
 }
-
 
 /*
 ============

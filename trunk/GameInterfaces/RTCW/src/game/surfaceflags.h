@@ -1,10 +1,7 @@
 // This file must be identical in the quake and utils directories
 
-
 #ifndef __SURFACEFLAGS_H__
 #define __SURFACEFLAGS_H__
-
-
 
 // contents flags are seperate bits
 // a given brush can contribute multiple content bits
@@ -19,7 +16,6 @@
 #define CONTENTS_SLIME          16
 #define CONTENTS_WATER          32
 #define CONTENTS_FOG            64
-
 
 //----(SA) added
 #define CONTENTS_MISSILECLIP    128 // 0x80
@@ -37,7 +33,6 @@
 #define CONTENTS_CLUSTERPORTAL  0x100000
 #define CONTENTS_DONOTENTER     0x200000
 #define CONTENTS_DONOTENTER_LARGE       0x400000
-
 
 #define CONTENTS_ORIGIN         0x1000000   // removed before bsping an entity
 

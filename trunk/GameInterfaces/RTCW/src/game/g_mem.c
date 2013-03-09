@@ -2,7 +2,6 @@
 // g_mem.c
 //
 
-
 #include "g_local.h"
 
 // Ridah, increased this (fixes Dan's crash)

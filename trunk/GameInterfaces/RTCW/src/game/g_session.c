@@ -1,10 +1,9 @@
 #include "g_local.h"
 
-
 /*
 =======================================================================
 
-  SESSION DATA
+SESSION DATA
 
 Session data is the only data that stays persistant across level loads
 and tournament restarts.
@@ -23,22 +22,22 @@ void G_WriteClientSessionData( gclient_t *client ) {
 	const char  *var;
 
 	s = va( "%i %i %i %i %i %i %i %i %i %i %i %i %i %i %i",      // DHM - Nerve
-			client->sess.sessionTeam,
-			client->sess.spectatorTime,
-			client->sess.spectatorState,
-			client->sess.spectatorClient,
-			client->sess.wins,
-			client->sess.losses,
-			client->sess.playerType,        // DHM - Nerve
-			client->sess.playerWeapon,      // DHM - Nerve
-			client->sess.playerItem,        // DHM - Nerve
-			client->sess.playerSkin,        // DHM - Nerve
-			client->sess.spawnObjectiveIndex, // DHM - Nerve
-			client->sess.latchPlayerType,   // DHM - Nerve
-			client->sess.latchPlayerWeapon, // DHM - Nerve
-			client->sess.latchPlayerItem,   // DHM - Nerve
-			client->sess.latchPlayerSkin    // DHM - Nerve
-			);
+		client->sess.sessionTeam,
+		client->sess.spectatorTime,
+		client->sess.spectatorState,
+		client->sess.spectatorClient,
+		client->sess.wins,
+		client->sess.losses,
+		client->sess.playerType,        // DHM - Nerve
+		client->sess.playerWeapon,      // DHM - Nerve
+		client->sess.playerItem,        // DHM - Nerve
+		client->sess.playerSkin,        // DHM - Nerve
+		client->sess.spawnObjectiveIndex, // DHM - Nerve
+		client->sess.latchPlayerType,   // DHM - Nerve
+		client->sess.latchPlayerWeapon, // DHM - Nerve
+		client->sess.latchPlayerItem,   // DHM - Nerve
+		client->sess.latchPlayerSkin    // DHM - Nerve
+		);
 
 	var = va( "session%i", (int)(client - level.clients) );
 
@@ -61,23 +60,22 @@ void G_ReadSessionData( gclient_t *client ) {
 	trap_Cvar_VariableStringBuffer( var, s, sizeof( s ) );
 
 	sscanf( s, "%i %i %i %i %i %i %i %i %i %i %i %i %i %i %i",      // DHM - Nerve
-			(int *)&client->sess.sessionTeam,
-			&client->sess.spectatorTime,
-			(int *)&client->sess.spectatorState,
-			&client->sess.spectatorClient,
-			&client->sess.wins,
-			&client->sess.losses,
-			&client->sess.playerType,       // DHM - Nerve
-			&client->sess.playerWeapon,     // DHM - Nerve
-			&client->sess.playerItem,       // DHM - Nerve
-			&client->sess.playerSkin,       // DHM - Nerve
-			&client->sess.spawnObjectiveIndex, // DHM - Nerve
-			&client->sess.latchPlayerType,  // DHM - Nerve
-			&client->sess.latchPlayerWeapon, // DHM - Nerve
-			&client->sess.latchPlayerItem,  // DHM - Nerve
-			&client->sess.latchPlayerSkin   // DHM - Nerve
-			);
-
+		(int *)&client->sess.sessionTeam,
+		&client->sess.spectatorTime,
+		(int *)&client->sess.spectatorState,
+		&client->sess.spectatorClient,
+		&client->sess.wins,
+		&client->sess.losses,
+		&client->sess.playerType,       // DHM - Nerve
+		&client->sess.playerWeapon,     // DHM - Nerve
+		&client->sess.playerItem,       // DHM - Nerve
+		&client->sess.playerSkin,       // DHM - Nerve
+		&client->sess.spawnObjectiveIndex, // DHM - Nerve
+		&client->sess.latchPlayerType,  // DHM - Nerve
+		&client->sess.latchPlayerWeapon, // DHM - Nerve
+		&client->sess.latchPlayerItem,  // DHM - Nerve
+		&client->sess.latchPlayerSkin   // DHM - Nerve
+		);
 
 	// NERVE - SMF
 	if ( g_altStopwatchMode.integer ) {
@@ -105,7 +103,6 @@ void G_ReadSessionData( gclient_t *client ) {
 	}
 }
 
-
 /*
 ================
 G_InitSessionData
@@ -130,8 +127,8 @@ void G_InitSessionData( gclient_t *client, char *userinfo ) {
 			sess->sessionTeam = TEAM_SPECTATOR;
 		} else {
 			if ( g_maxGameClients.integer > 0 &&
-				 level.numNonSpectatorClients >= g_maxGameClients.integer ) {
-				sess->sessionTeam = TEAM_SPECTATOR;
+				level.numNonSpectatorClients >= g_maxGameClients.integer ) {
+					sess->sessionTeam = TEAM_SPECTATOR;
 			} else {
 				sess->sessionTeam = TEAM_FREE;
 			}
@@ -161,7 +158,6 @@ void G_InitSessionData( gclient_t *client, char *userinfo ) {
 
 	G_WriteClientSessionData( client );
 }
-
 
 /*
 ==================

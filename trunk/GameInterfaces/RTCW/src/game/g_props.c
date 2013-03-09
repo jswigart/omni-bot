@@ -251,7 +251,6 @@ void PGUNsparks_use( gentity_t *ent, gentity_t *self, gentity_t *activator ) {
 	VectorCopy( ent->r.currentAngles, tent->s.angles );
 	tent->s.density = ent->health;
 	tent->s.angles2[2] = ent->speed;
-
 }
 
 void Psparks_think( gentity_t *ent ) {
@@ -315,7 +314,6 @@ void SP_props_gunsparks( gentity_t *ent ) {
 	}
 
 	trap_LinkEntity( ent );
-
 }
 
 /*QUAKED props_smokedust (.8 .46 .16) (-8 -8 -8) (8 8 8)
@@ -353,7 +351,6 @@ void SP_SmokeDust( gentity_t *ent ) {
 	trap_LinkEntity( ent );
 }
 
-
 /*QUAKED props_dust (.7 .3 .16) (-8 -8 -8) (8 8 8) WHITE
 you should give this ent a target use a not null
 or you could set its angles in the editor
@@ -372,7 +369,6 @@ void dust_use( gentity_t *ent, gentity_t *self, gentity_t *activator ) {
 		}
 	} else
 	{
-
 		AngleVectors( ent->r.currentAngles, forward, NULL, NULL );
 
 		tent = G_TempEntity( ent->r.currentOrigin, EV_DUST );
@@ -613,7 +609,6 @@ void SP_Props_Radio( gentity_t *ent ) {
 	trap_LinkEntity( ent );
 }
 
-
 void props_radio_dieSEVEN( gentity_t *ent, gentity_t *inflictor, gentity_t *attacker, int damage, int mod ) {
 	int i;
 
@@ -638,15 +633,14 @@ void props_radio_dieSEVEN( gentity_t *ent, gentity_t *inflictor, gentity_t *atta
 requires an origin brush
 health = defaults to 100
 
+the models dims are
+x 32
+y 136
+z 32
 
-  the models dims are
-  x 32
-  y 136
-  z 32
+if you want more explosions you'll need func explosive
 
-  if you want more explosions you'll need func explosive
-
-  it will fire all its targets upon death
+it will fire all its targets upon death
 */
 void SP_Props_RadioSEVEN( gentity_t *ent ) {
 	if ( !ent->model ) {
@@ -671,11 +665,9 @@ void SP_Props_RadioSEVEN( gentity_t *ent ) {
 	trap_LinkEntity( ent );
 }
 
-
 void locker_tall_think( gentity_t *ent ) {
 	if ( ent->s.frame == 30 ) {
 		G_UseTargets( ent, NULL );
-
 	} else
 	{
 		ent->s.frame++;
@@ -723,10 +715,10 @@ health = default = 10
 wait = defaults to 5 how many shards to spawn ( try not to exceed 20 )
 
 shard =
-    shard_glass = 0,
-    shard_wood = 1,
-    shard_metal = 2,
-    shard_ceramic = 3
+shard_glass = 0,
+shard_wood = 1,
+shard_metal = 2,
+shard_ceramic = 3
 
 */
 
@@ -736,10 +728,10 @@ health = default = 10
 wait = defaults to 5 how many shards to spawn ( try not to exceed 20 )
 
 shard =
-    shard_glass = 0,
-    shard_wood = 1,
-    shard_metal = 2,
-    shard_ceramic = 3
+shard_glass = 0,
+shard_wood = 1,
+shard_metal = 2,
+shard_ceramic = 3
 
 */
 
@@ -749,13 +741,12 @@ health = default = 10
 wait = defaults to 5 how many shards to spawn ( try not to exceed 20 )
 
 shard =
-    shard_glass = 0,
-    shard_wood = 1,
-    shard_metal = 2,
-    shard_ceramic = 3
+shard_glass = 0,
+shard_wood = 1,
+shard_metal = 2,
+shard_ceramic = 3
 
 */
-
 
 /*QUAKED props_chair_hiback (.8 .6 .2) (-16 -16 0) (16 16 32)
 point entity
@@ -763,10 +754,10 @@ health = default = 10
 wait = defaults to 5 how many shards to spawn ( try not to exceed 20 )
 
 shard =
-    shard_glass = 0,
-    shard_wood = 1,
-    shard_metal = 2,
-    shard_ceramic = 3
+shard_glass = 0,
+shard_wood = 1,
+shard_metal = 2,
+shard_ceramic = 3
 
 */
 
@@ -776,10 +767,10 @@ health = default = 10
 wait = defaults to 5 how many shards to spawn ( try not to exceed 20 )
 
 shard =
-    shard_glass = 0,
-    shard_wood = 1,
-    shard_metal = 2,
-    shard_ceramic = 3
+shard_glass = 0,
+shard_wood = 1,
+shard_metal = 2,
+shard_ceramic = 3
 
 */
 void Props_Chair_Think( gentity_t *self );
@@ -856,7 +847,6 @@ void Just_Got_Thrown( gentity_t *self ) {
 				}
 			}
 		}
-
 	}
 
 	self->think = Props_Chair_Think;
@@ -905,7 +895,6 @@ void Props_Activated( gentity_t *self ) {
 	Props_TurnLightsOff( self );
 
 	if ( owner->active == qfalse ) {
-
 		owner->melee = NULL;
 
 		self->physicsObject = qtrue;
@@ -1077,9 +1066,7 @@ void Props_Chair_Think( gentity_t *self ) {
 		}
 	}
 
-
 	Prop_Check_Ground( self );
-
 
 	self->nextthink = level.time + 50;
 	trap_LinkEntity( self );
@@ -1149,7 +1136,6 @@ void Prop_Check_Ground( gentity_t *self ) {
 	if ( tr.fraction == 1 ) {
 		self->s.groundEntityNum = -1;
 	}
-
 }
 
 void Props_Chair_Touch( gentity_t *self, gentity_t *other, trace_t *trace ) {
@@ -1192,7 +1178,6 @@ void Props_Chair_Touch( gentity_t *self, gentity_t *other, trace_t *trace ) {
 			self->target = NULL;
 		}
 	}
-
 }
 
 void Props_Chair_Animate( gentity_t *ent ) {
@@ -1217,18 +1202,18 @@ void Props_Chair_Animate( gentity_t *ent ) {
 		( !Q_stricmp( ent->classname, "props_chair_chatarm" ) ) ||
 		( !Q_stricmp( ent->classname, "props_chair_hiback" ) )
 		) {
-		if ( ent->s.frame >= 20 ) {
-			ent->s.frame = 20;
-			G_UseTargets( ent, NULL );
-			ent->think = G_FreeEntity;
-			ent->nextthink = level.time + 2000;
-			ent->s.time = level.time;
-			ent->s.time2 = level.time + 2000;
-			return;
-		} else
-		{
-			ent->nextthink = level.time + ( FRAMETIME / 2 );
-		}
+			if ( ent->s.frame >= 20 ) {
+				ent->s.frame = 20;
+				G_UseTargets( ent, NULL );
+				ent->think = G_FreeEntity;
+				ent->nextthink = level.time + 2000;
+				ent->s.time = level.time;
+				ent->s.time2 = level.time + 2000;
+				return;
+			} else
+			{
+				ent->nextthink = level.time + ( FRAMETIME / 2 );
+			}
 	} else if ( !Q_stricmp( ent->classname, "props_desklamp" ) ) {
 		if ( ent->s.frame >= 11 ) {
 			// player may have picked it up before
@@ -1317,7 +1302,6 @@ void Prop_Break_Sound( gentity_t *ent ) {
 		break;
 	}
 }
-
 
 void Props_Chair_Die( gentity_t *ent, gentity_t *inflictor, gentity_t *attacker, int damage, int mod ) {
 	int quantity;
@@ -1580,7 +1564,6 @@ void SP_Props_ChateauChair( gentity_t *ent ) {
 	snd_chairhitground = G_SoundIndex( "sound/props/chair/chairthud.wav" );
 }
 
-
 /*
 ==============
 SP_Props_ChairChat
@@ -1601,7 +1584,6 @@ void SP_Props_ChairChatArm( gentity_t *ent ) {
 }
 
 //----(SA)	end
-
 
 void Use_DamageInflictor( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	gentity_t *daent;
@@ -1678,17 +1660,16 @@ void SP_props_shard_generator( gentity_t *ent ) {
 	trap_LinkEntity( ent );
 }
 
-
 /*QUAKED props_desklamp (.8 .6 .2) (-16 -16 0) (16 16 32)
 point entity
 health = default = 10
 wait = defaults to 5 how many shards to spawn ( try not to exceed 20 )
 
 shard =
-    shard_glass = 0,
-    shard_wood = 1,
-    shard_metal = 2,
-    shard_ceramic = 3
+shard_glass = 0,
+shard_wood = 1,
+shard_metal = 2,
+shard_ceramic = 3
 
 */
 void SP_Props_Desklamp( gentity_t *ent ) {
@@ -2088,28 +2069,28 @@ void SP_Props_Flamebarrel( gentity_t *ent ) {
 /*QUAKED props_crate_64 (.8 .6 .2) (-32 -32 0) (32 32 64)
 breakable pushable
 
-  health = default = 20
+health = default = 20
 wait = defaults to 10 how many shards to spawn ( try not to exceed 20 )
 
 shard =
-    shard_glass = 0,
-    shard_wood = 1,
-    shard_metal = 2,
-    shard_ceramic = 3
+shard_glass = 0,
+shard_wood = 1,
+shard_metal = 2,
+shard_ceramic = 3
 
 */
 
 /*QUAKED props_crate_32 (.8 .6 .2) (-16 -16 0) (16 16 32)
 breakable pushable
 
-  health = default = 20
+health = default = 20
 wait = defaults to 10 how many shards to spawn ( try not to exceed 20 )
 
 shard =
-    shard_glass = 0,
-    shard_wood = 1,
-    shard_metal = 2,
-    shard_ceramic = 3
+shard_glass = 0,
+shard_wood = 1,
+shard_metal = 2,
+shard_ceramic = 3
 
 */
 
@@ -2120,14 +2101,14 @@ breakable NOT pushable
 
 brushmodel only
 
-  health = default = 20
+health = default = 20
 wait = defaults to 10 how many shards to spawn ( try not to exceed 20 )
 
 shard =
-    shard_glass = 0,
-    shard_wood = 1,
-    shard_metal = 2,
-    shard_ceramic = 3
+shard_glass = 0,
+shard_wood = 1,
+shard_metal = 2,
+shard_ceramic = 3
 
 */
 
@@ -2365,7 +2346,6 @@ void flippy_table_use( gentity_t *ent, gentity_t *other, gentity_t *activator ) 
 	} else {
 		Use_BinaryMover( ent, other, other );
 	}
-
 }
 
 void flippy_table_animate( gentity_t *ent ) {
@@ -2468,7 +2448,6 @@ void SP_Props_Flipping_Table( gentity_t *ent ) {
 	trap_LinkEntity( ent );
 }
 
-
 /*QUAKED props_58x112tablew (.8 .6 .2) ?
 dimensions are 58 x 112 x 32 (x,y,z)
 
@@ -2478,14 +2457,14 @@ breakable NOT pushable
 
 brushmodel only
 
-  health = default = 10
+health = default = 10
 wait = defaults to 10 how many shards to spawn ( try not to exceed 20 )
 
 shard =
-    shard_glass = 0,
-    shard_wood = 1,
-    shard_metal = 2,
-    shard_ceramic = 3
+shard_glass = 0,
+shard_wood = 1,
+shard_metal = 2,
+shard_ceramic = 3
 
 */
 
@@ -2501,7 +2480,6 @@ void props_58x112tablew_think( gentity_t *ent ) {
 
 		G_UseTargets( ent, NULL );
 	}
-
 }
 
 void props_58x112tablew_die( gentity_t *ent, gentity_t *inflictor, gentity_t *attacker, int damage, int mod ) {
@@ -2535,14 +2513,14 @@ breakable NOT pushable
 
 brushmodel only
 
-  health = default = 20
+health = default = 20
 wait = defaults to 10 how many shards to spawn ( try not to exceed 20 )
 
 shard =
-    shard_glass = 0,
-    shard_wood = 1,
-    shard_metal = 2,
-    shard_ceramic = 3
+shard_glass = 0,
+shard_wood = 1,
+shard_metal = 2,
+shard_ceramic = 3
 
 */
 
@@ -2552,19 +2530,18 @@ void props_castlebed_touch( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 	}
 
 	if ( other->client->ps.pm_flags & PMF_JUMP_HELD
-		 && other->s.groundEntityNum == ent->s.number
-		 && !other->client->ps.pm_time ) {
-		G_Damage( ent, other, other, NULL, NULL, 1, 0, MOD_CRUSH );
+		&& other->s.groundEntityNum == ent->s.number
+		&& !other->client->ps.pm_time ) {
+			G_Damage( ent, other, other, NULL, NULL, 1, 0, MOD_CRUSH );
 
-		// TDB: need sound of bed springs for this
-		G_Printf( "SOUND sqweeky\n" );
+			// TDB: need sound of bed springs for this
+			G_Printf( "SOUND sqweeky\n" );
 
-		other->client->ps.velocity[2] += 250;
+			other->client->ps.velocity[2] += 250;
 
-		other->client->ps.pm_time = 250;
-		other->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
+			other->client->ps.pm_time = 250;
+			other->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
 	}
-
 }
 
 void props_castlebed_animate( gentity_t *ent ) {
@@ -2735,8 +2712,8 @@ void SP_props_snowGenerator( gentity_t *ent ) {
 this entity will require a target use an infonotnull to specifiy its direction
 
 defaults:
-    will leave a flaming trail by default
-    will not be affected by gravity
+will leave a flaming trail by default
+will not be affected by gravity
 
 radius = distance flame will corkscrew from origin
 speed = default is 900
@@ -2835,8 +2812,6 @@ void propsFireColumnInit( gentity_t *ent ) {
 	if ( ent->duration ) {
 		ent->duration = ent->duration * 1000;
 	}
-
-
 }
 
 void SP_propsFireColumn( gentity_t *ent ) {
@@ -2856,7 +2831,7 @@ void SP_propsFireColumn( gentity_t *ent ) {
 "type"  wood concrete or stone
 "count"in the absense of a model count will determine the piece to spawn
 for wood:
-  it can be one of the following 64 48 32 24 16 8
+it can be one of the following 64 48 32 24 16 8
 for concrete:
 for stone:
 */
@@ -3145,7 +3120,6 @@ void SP_props_decoration( gentity_t *ent ) {
 		}
 
 		ent->touch = props_touch;
-
 	} else if ( !( ent->health ) && ent->spawnflags & 4 ) {
 		G_SpawnString( "frames", "0", &frames );
 		num_frames = atof( frames );
@@ -3197,7 +3171,6 @@ void SP_props_decorBRUSH( gentity_t *self ) {
 		self->s.modelindex2 = G_ModelIndex( self->model2 );
 	}
 }
-
 
 /*QUAKED props_decoration_scale (.6 .7 .7) (-8 -8 0) (8 8 16) STARTINVIS DEBRIS ANIMATE KEEPBLOCK TOUCHACTIVATE LOOPING STARTON
 
@@ -3264,13 +3237,13 @@ void SP_skyportal( gentity_t *ent ) {
 	G_SpawnString( "fov", "90", &fov );
 	fov_x = atof( fov );
 
-//----(SA)	modified
+	//----(SA)	modified
 	isfog += G_SpawnVector( "fogcolor", "0 0 0", fogv );
 	isfog += G_SpawnInt( "fognear", "0", &fogn );
 	isfog += G_SpawnInt( "fogfar", "300", &fogf );
 
 	trap_SetConfigstring( CS_SKYBOXORG, va( "%.2f %.2f %.2f %.1f %i %.2f %.2f %.2f %i %i", ent->s.origin[0], ent->s.origin[1], ent->s.origin[2], fov_x, (int)isfog, fogv[0], fogv[1], fogv[2], fogn, fogf ) );
-//----(SA)	end
+	//----(SA)	end
 }
 
 /*QUAKED props_statue (.6 .3 .2) (-8 -8 0) (8 8 128) HURT DEBRIS ANIMATE KEEPBLOCK
@@ -3347,7 +3320,6 @@ void props_statue_blocked( gentity_t *ent ) {
 			traceEnt->client->ps.pm_time = t;
 			traceEnt->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
 		}
-
 	} else {
 		G_Damage( traceEnt, ent, ent, NULL, trace.endpos, 9999, 0, MOD_CRUSH );
 	}
@@ -3381,7 +3353,6 @@ void props_statue_animate( gentity_t *ent ) {
 		ent->nextthink = level.time + 50;
 	}
 }
-
 
 void props_statue_death( gentity_t *ent, gentity_t *inflictor, gentity_t *attacker, int damage, int mod ) {
 	ent->timestamp = level.time;
@@ -3522,7 +3493,6 @@ void SP_props_statue( gentity_t *ent ) {
 	trap_LinkEntity( ent );
 }
 
-
 /*QUAKED props_statueBRUSH (.6 .3 .2) ? HURT DEBRIS ANIMATE KEEPBLOCK
 needs an origin brush
 
@@ -3611,7 +3581,6 @@ void props_locker_endrattle( gentity_t *ent ) {
 	ent->delay = 0;
 }
 
-
 void props_locker_use( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	if ( !ent->delay ) {
 		ent->s.frame = 1;   // rattle when pain starts
@@ -3624,7 +3593,6 @@ void props_locker_use( gentity_t *ent, gentity_t *other, gentity_t *activator ) 
 void props_locker_pain( gentity_t *ent, gentity_t *attacker, int damage, vec3_t point ) {
 	props_locker_use( ent, attacker, attacker );
 }
-
 
 void init_locker( gentity_t *ent ) {
 	ent->isProp = qtrue;
@@ -3709,13 +3677,13 @@ void props_locker_mass( gentity_t *ent ) {
 /*QUAKED props_footlocker (.6 .7 .3) (-12 -21 -12) (12 21 12) ? NO_JUNK
 "noise"  the sound entity is to make upon death
 the default sounds are:
-  "wood"	- "sound/world/boardbreak.wav"
-  "glass"	- "sound/world/glassbreak.wav"
-  "metal"	- "sound/world/metalbreak.wav"
-  "gibs"	- "sound/player/gibsplit1.wav"
-  "brick"	- "sound/world/brickfall.wav"
-  "stone"	- "sound/world/stonefall.wav"
-  "fabric"	- "sound/world/metalbreak.wav"	// (SA) temp
+"wood"	- "sound/world/boardbreak.wav"
+"glass"	- "sound/world/glassbreak.wav"
+"metal"	- "sound/world/metalbreak.wav"
+"gibs"	- "sound/player/gibsplit1.wav"
+"brick"	- "sound/world/brickfall.wav"
+"stone"	- "sound/world/stonefall.wav"
+"fabric"	- "sound/world/metalbreak.wav"	// (SA) temp
 
 "locknoise" the locked sound to play
 "wait"	 denotes how long the wait is going to be before the locked sound is played again default is 1 sec
@@ -3750,7 +3718,6 @@ void props_locker_death( gentity_t *ent, gentity_t *inflictor, gentity_t *attack
 	props_locker_spawn_item( ent );
 	trap_LinkEntity( ent );
 }
-
 
 void SP_props_footlocker( gentity_t *self ) {
 	char    *type;

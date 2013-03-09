@@ -1,10 +1,9 @@
 /*
- * name:		cg_main.c
- *
- * desc:		initialization and primary entry point for cgame
- *
+* name:		cg_main.c
+*
+* desc:		initialization and primary entry point for cgame
+*
 */
-
 
 #include "cg_local.h"
 #include "../ui/ui_shared.h"
@@ -17,7 +16,6 @@ int autoReloadModificationCount = -1;
 void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum );
 void CG_Shutdown( void );
 void CG_HandleMessage( const char *_buffer, int _messagesize, int _commandtime );
-
 
 /*
 ================
@@ -493,7 +491,7 @@ void CG_RegisterCvars( void ) {
 
 	for ( i = 0, cv = cvarTable ; i < cvarTableSize ; i++, cv++ ) {
 		trap_Cvar_Register( cv->vmCvar, cv->cvarName,
-							cv->defaultString, cv->cvarFlags );
+			cv->defaultString, cv->cvarFlags );
 	}
 
 	// see if we are also running the server on this machine
@@ -566,7 +564,6 @@ void CG_UpdateCvars( void ) {
 		autoReloadModificationCount = cg_autoReload.modificationCount;
 	}
 }
-
 
 int CG_CrosshairPlayer( void ) {
 	if ( cg.time > ( cg.crosshairClientTime + 1000 ) ) {
@@ -658,7 +655,6 @@ const char *CG_Argv( int arg ) {
 	return buffer;
 }
 
-
 //========================================================================
 void CG_SetupDlightstyles( void ) {
 	int i, j;
@@ -697,7 +693,6 @@ void CG_SetupDlightstyles( void ) {
 		cent->dl_atten = atoi( token );
 
 		for ( j = 0; j < strlen( cent->dl_stylestring ); j++ ) {
-
 			cent->dl_stylestring[j] += cent->dl_atten;  // adjust character for attenuation/amplification
 
 			// clamp result
@@ -750,7 +745,7 @@ static void CG_RegisterItemSounds( int itemNum ) {
 		len = s - start;
 		if ( len >= MAX_QPATH || len < 5 ) {
 			CG_Error( "PrecacheItem: %s has bad precache string",
-					  item->classname );
+				item->classname );
 			return;
 		}
 		memcpy( data, start, len );
@@ -764,7 +759,6 @@ static void CG_RegisterItemSounds( int itemNum ) {
 		}
 	}
 }
-
 
 /*
 =================
@@ -786,7 +780,7 @@ static void CG_RegisterSounds( void ) {
 	CG_SoundInit();
 	// done.
 
-// JPW NERVE
+	// JPW NERVE
 	cgs.media.noFireUnderwater = trap_S_RegisterSound( "sound/weapons/underwaterfire.wav" );    //----(SA)	added
 	cgs.media.snipersound = trap_S_RegisterSound( "sound/weapons/mauser/mauserf1.wav" );
 	cgs.media.selectSound = trap_S_RegisterSound( "sound/weapons/change.wav" );
@@ -928,7 +922,7 @@ static void CG_RegisterSounds( void ) {
 	cgs.media.sparkSounds[0] = trap_S_RegisterSound( "sound/world/saarc2.wav" );
 	cgs.media.sparkSounds[1] = trap_S_RegisterSound( "sound/world/arc2.wav" );
 
-//----(SA)	doors and kick
+	//----(SA)	doors and kick
 
 	// DHM - Nerve :: Used for multiplayer
 	if ( cgs.gametype >= GT_WOLF ) {
@@ -948,9 +942,7 @@ static void CG_RegisterSounds( void ) {
 	cgs.media.powerupSound = trap_S_RegisterSound( "sound/pickup/holdable/use_book.wav" );
 }
 
-
 //===================================================================================
-
 
 void CG_MakeItemFindable( int i ) {
 }
@@ -1009,7 +1001,7 @@ static void CG_RegisterGraphics( void ) {
 		cgs.media.numberShaders[i] = trap_R_RegisterShader( sb_nums[i] );
 	}
 
-// JPW NERVE
+	// JPW NERVE
 	cgs.media.fleshSmokePuffShader = trap_R_RegisterShader( "fleshimpactsmokepuff" ); // JPW NERVE
 	cgs.media.nerveTestShader = trap_R_RegisterShader( "jpwtest1" );
 	cgs.media.idTestShader = trap_R_RegisterShader( "jpwtest2" );
@@ -1018,7 +1010,7 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.hud3Shader = trap_R_RegisterShader( "jpwhud3" );
 	cgs.media.hud4Shader = trap_R_RegisterShader( "jpwhud4" );
 	cgs.media.hud5Shader = trap_R_RegisterShader( "jpwhud5" );
-// jpw
+	// jpw
 	cgs.media.smokePuffShader = trap_R_RegisterShader( "smokePuff" );
 
 	// RF, blood cloud
@@ -1049,11 +1041,11 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.bloodTrailShader = trap_R_RegisterShader( "bloodTrail" );
 	cgs.media.connectionShader = trap_R_RegisterShader( "disconnected" );
 
-//----(SA)
+	//----(SA)
 	cgs.media.reticleShaderSimple = trap_R_RegisterShader( "gfx/misc/reticlesimple" );
 	cgs.media.snooperShaderSimple = trap_R_RegisterShader( "gfx/misc/snoopersimple" );
 	cgs.media.binocShaderSimple = trap_R_RegisterShader( "gfx/misc/binocsimple" );
-//----(SA)
+	//----(SA)
 
 	// Rafael
 	cgs.media.snowShader = trap_R_RegisterShader( "snow_tri" );
@@ -1065,7 +1057,7 @@ static void CG_RegisterGraphics( void ) {
 
 	cgs.media.tracerShader = trap_R_RegisterShader( "gfx/misc/tracer" );
 
-//----(SA)	cursor hints
+	//----(SA)	cursor hints
 	cgs.media.usableHintShader      = trap_R_RegisterShader( "gfx/2d/usableHint" );
 	cgs.media.notUsableHintShader   = trap_R_RegisterShader( "gfx/2d/notUsableHint" );
 	cgs.media.doorHintShader        = trap_R_RegisterShader( "gfx/2d/doorHint" );
@@ -1100,7 +1092,7 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.reviveHintShader      = trap_R_RegisterShader( "gfx/2d/reviveHint" );     // DHM - Nerve
 	cgs.media.dynamiteHintShader    = trap_R_RegisterShader( "gfx/2d/dynamiteHint" );   // DHM - Nerve
 
-//----(SA)	end
+	//----(SA)	end
 
 	for ( i = 0 ; i < NUM_CROSSHAIRS ; i++ ) {
 		// cs: if they don't have the media pack, register the default ones
@@ -1126,12 +1118,12 @@ static void CG_RegisterGraphics( void ) {
 
 	cgs.media.teamStatusBar = trap_R_RegisterShader( "gfx/2d/colorbar.tga" );       // NERVE - SMF
 
-// JPW NERVE
+	// JPW NERVE
 	cgs.media.redColorBar = trap_R_RegisterShader( "redcolorbar" );
 	cgs.media.blueColorBar = trap_R_RegisterShader( "bluecolorbar" );
 	cgs.media.hudAlliedHelmet = trap_R_RegisterShader( "AlliedHelmet" );
 	cgs.media.hudAxisHelmet = trap_R_RegisterShader( "AxisHelmet" );
-// jpw
+	// jpw
 
 	CG_LoadingString( " - models" );
 
@@ -1153,7 +1145,6 @@ static void CG_RegisterGraphics( void ) {
 	cgs.media.debRock[0] = trap_R_RegisterModel( "models/mapobjects/debris/rubble1.md3" );
 	cgs.media.debRock[1] = trap_R_RegisterModel( "models/mapobjects/debris/rubble2.md3" );
 	cgs.media.debRock[2] = trap_R_RegisterModel( "models/mapobjects/debris/rubble3.md3" );
-
 
 	cgs.media.debWood[0] = trap_R_RegisterModel( "models/gibs/wood/wood1.md3" );
 	cgs.media.debWood[1] = trap_R_RegisterModel( "models/gibs/wood/wood2.md3" );
@@ -1233,7 +1224,7 @@ static void CG_RegisterGraphics( void ) {
 	memset( cg_items, 0, sizeof( cg_items ) );
 	memset( cg_weapons, 0, sizeof( cg_weapons ) );
 
-// TODO: FIXME:  REMOVE REGISTRATION OF EACH MODEL FOR EVERY LEVEL LOAD
+	// TODO: FIXME:  REMOVE REGISTRATION OF EACH MODEL FOR EVERY LEVEL LOAD
 
 	//----(SA)	okay, new stuff to intialize rather than doing it at level load time (or "give all" time)
 	//			(I'm certainly not against being efficient here, but I'm tired of the rocket launcher effect only registering
@@ -1247,7 +1238,7 @@ static void CG_RegisterGraphics( void ) {
 		}
 	}
 
-// END
+	// END
 
 	// only register the items that the server says we need
 	Q_strncpyz(items, CG_ConfigString(CS_ITEMS), sizeof(items));
@@ -1602,7 +1593,6 @@ qboolean CG_Load_Menu( char **p ) {
 	}
 
 	while ( 1 ) {
-
 		token = COM_ParseExt( p, qtrue );
 
 		if ( Q_stricmp( token, "}" ) == 0 ) {
@@ -1677,7 +1667,6 @@ void CG_LoadMenus( const char *menuFile ) {
 static qboolean CG_OwnerDrawHandleKey( int ownerDraw, int flags, float *special, int key ) {
 	return qfalse;
 }
-
 
 static int CG_FeederCount( float feederID ) {
 	int i, count;
@@ -1826,8 +1815,6 @@ static void CG_RunCinematicFrame( int handle ) {
 	trap_CIN_RunCinematic( handle );
 }
 
-
-
 /*
 =================
 CG_LoadHudMenu();
@@ -1920,7 +1907,6 @@ void CG_AssetCache() {
 	cgDC.Assets.sliderThumb = trap_R_RegisterShaderNoMip( ASSET_SLIDER_THUMB );
 }
 
-
 extern qboolean initTrails;
 void CG_ClearTrails( void );
 extern qboolean initparticles;
@@ -1999,9 +1985,9 @@ void CG_Init( int serverMessageNum, int serverCommandSequence, int clientNum ) {
 	s = CG_ConfigString( CS_LEVEL_START_TIME );
 	cgs.levelStartTime = atoi( s );
 
-// JPW NERVE -- pick a direction for smoke drift on the client -- cheap trick because it can be different on different clients, but who cares?
+	// JPW NERVE -- pick a direction for smoke drift on the client -- cheap trick because it can be different on different clients, but who cares?
 	cgs.smokeWindDir = crandom();
-// jpw
+	// jpw
 
 	CG_ParseServerinfo();
 	CG_ParseWolfinfo();     // NERVE - SMF

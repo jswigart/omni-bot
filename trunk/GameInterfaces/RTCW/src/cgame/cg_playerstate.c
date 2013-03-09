@@ -1,5 +1,3 @@
-
-
 // cg_playerstate.c -- this file acts on changes in a new playerState_t
 // With normal play, this will be done after local prediction, but when
 // following another player or playing back a demo, it will be checked
@@ -121,7 +119,6 @@ void CG_DamageFeedback( int yawByte, int pitchByte, int damage ) {
 
 	if ( slot == MAX_VIEWDAMAGE ) {
 		return;     // no free slots, never override or splats will suddenly disappear
-
 	}
 	vd = &cg.viewDamage[slot];
 
@@ -262,7 +259,7 @@ void CG_CheckPlayerstateEvents_wolf( playerState_t *ps, playerState_t *ops ) {
 	// go through the predictable events buffer
 	for ( i = ps->eventSequence - MAX_EVENTS ; i < ps->eventSequence ; i++ ) {
 		if ( ps->events[i & ( MAX_EVENTS - 1 )] != ops->events[i & ( MAX_EVENTS - 1 )]
-			 || i >= ops->eventSequence ) {
+		|| i >= ops->eventSequence ) {
 			event = ps->events[ i & ( MAX_EVENTS - 1 ) ];
 
 			cent->currentState.event = event;
@@ -289,18 +286,17 @@ void CG_CheckPlayerstateEvents( playerState_t *ps, playerState_t *ops ) {
 	for ( i = ps->eventSequence - MAX_EVENTS ; i < ps->eventSequence ; i++ ) {
 		// if we have a new predictable event
 		if ( i >= ops->eventSequence
-		     // or the server told us to play another event instead of a predicted event we already issued
-		     // or something the server told us changed our prediction causing a different event
-			 || ( i > ops->eventSequence - MAX_EVENTS && ps->events[i & ( MAX_EVENTS - 1 )] != ops->events[i & ( MAX_EVENTS - 1 )] ) ) {
+			// or the server told us to play another event instead of a predicted event we already issued
+				// or something the server told us changed our prediction causing a different event
+					|| ( i > ops->eventSequence - MAX_EVENTS && ps->events[i & ( MAX_EVENTS - 1 )] != ops->events[i & ( MAX_EVENTS - 1 )] ) ) {
+						event = ps->events[ i & ( MAX_EVENTS - 1 ) ];
+						cent->currentState.event = event;
+						cent->currentState.eventParm = ps->eventParms[ i & ( MAX_EVENTS - 1 ) ];
+						CG_EntityEvent( cent, cent->lerpOrigin );
 
-			event = ps->events[ i & ( MAX_EVENTS - 1 ) ];
-			cent->currentState.event = event;
-			cent->currentState.eventParm = ps->eventParms[ i & ( MAX_EVENTS - 1 ) ];
-			CG_EntityEvent( cent, cent->lerpOrigin );
+						cg.predictableEvents[ i & ( MAX_PREDICTED_EVENTS - 1 ) ] = event;
 
-			cg.predictableEvents[ i & ( MAX_PREDICTED_EVENTS - 1 ) ] = event;
-
-			cg.eventSequence++;
+						cg.eventSequence++;
 		}
 	}
 }
@@ -325,7 +321,6 @@ void CG_CheckChangedPredictableEvents( playerState_t *ps ) {
 		if ( i > cg.eventSequence - MAX_PREDICTED_EVENTS ) {
 			// if the new playerstate event is different from a previously predicted one
 			if ( ps->events[i & ( MAX_EVENTS - 1 )] != cg.predictableEvents[i & ( MAX_PREDICTED_EVENTS - 1 ) ] ) {
-
 				event = ps->events[ i & ( MAX_EVENTS - 1 ) ];
 				cent->currentState.event = event;
 				cent->currentState.eventParm = ps->eventParms[ i & ( MAX_EVENTS - 1 ) ];
@@ -376,22 +371,22 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 		msec = cg.time - cgs.levelStartTime;
 
 		if ( cgs.timelimit > 2 && !( cg.timelimitWarnings & 1 ) && ( msec > ( cgs.timelimit - 2 ) * 60 * 1000 ) &&
-			 ( msec < ( cgs.timelimit - 2 ) * 60 * 1000 + 1000 ) ) {
-			cg.timelimitWarnings |= 1;
-			if ( ps->persistant[PERS_TEAM] == TEAM_RED && cg.twoMinuteSound_g[0] != '0' ) {
-				trap_S_StartLocalSound( cgs.media.twoMinuteSound_g, CHAN_ANNOUNCER );
-			} else if ( ps->persistant[PERS_TEAM] == TEAM_BLUE && cg.twoMinuteSound_a[0] != '0' ) {
-				trap_S_StartLocalSound( cgs.media.twoMinuteSound_a, CHAN_ANNOUNCER );
-			}
+			( msec < ( cgs.timelimit - 2 ) * 60 * 1000 + 1000 ) ) {
+				cg.timelimitWarnings |= 1;
+				if ( ps->persistant[PERS_TEAM] == TEAM_RED && cg.twoMinuteSound_g[0] != '0' ) {
+					trap_S_StartLocalSound( cgs.media.twoMinuteSound_g, CHAN_ANNOUNCER );
+				} else if ( ps->persistant[PERS_TEAM] == TEAM_BLUE && cg.twoMinuteSound_a[0] != '0' ) {
+					trap_S_StartLocalSound( cgs.media.twoMinuteSound_a, CHAN_ANNOUNCER );
+				}
 		}
 		if ( !( cg.timelimitWarnings & 2 ) && ( msec > ( cgs.timelimit ) * 60 * 1000 - 30000 ) &&
-			 ( msec < ( cgs.timelimit ) * 60 * 1000 - 29000 ) ) {
-			cg.timelimitWarnings |= 2;
-			if ( ps->persistant[PERS_TEAM] == TEAM_RED && cg.thirtySecondSound_g[0] != '0' ) {
-				trap_S_StartLocalSound( cgs.media.thirtySecondSound_g, CHAN_ANNOUNCER );
-			} else if ( ps->persistant[PERS_TEAM] == TEAM_BLUE && cg.thirtySecondSound_a[0] != '0' ) {
-				trap_S_StartLocalSound( cgs.media.thirtySecondSound_a, CHAN_ANNOUNCER );
-			}
+			( msec < ( cgs.timelimit ) * 60 * 1000 - 29000 ) ) {
+				cg.timelimitWarnings |= 2;
+				if ( ps->persistant[PERS_TEAM] == TEAM_RED && cg.thirtySecondSound_g[0] != '0' ) {
+					trap_S_StartLocalSound( cgs.media.thirtySecondSound_g, CHAN_ANNOUNCER );
+				} else if ( ps->persistant[PERS_TEAM] == TEAM_BLUE && cg.thirtySecondSound_a[0] != '0' ) {
+					trap_S_StartLocalSound( cgs.media.thirtySecondSound_a, CHAN_ANNOUNCER );
+				}
 		}
 	}
 }
@@ -430,8 +425,8 @@ void CG_TransitionPlayerState( playerState_t *ps, playerState_t *ops ) {
 	}
 
 	if ( cg.snap->ps.pm_type != PM_INTERMISSION
-		 && ps->persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
-		CG_CheckLocalSounds( ps, ops );
+		&& ps->persistant[PERS_TEAM] != TEAM_SPECTATOR ) {
+			CG_CheckLocalSounds( ps, ops );
 	}
 
 	// check for going low on ammo
@@ -446,4 +441,3 @@ void CG_TransitionPlayerState( playerState_t *ps, playerState_t *ops ) {
 		cg.duckTime = cg.time;
 	}
 }
-

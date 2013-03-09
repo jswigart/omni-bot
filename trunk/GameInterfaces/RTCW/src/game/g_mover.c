@@ -1,9 +1,8 @@
-
 /*
- * name:		g_mover.c
- *
- * desc:
- *
+* name:		g_mover.c
+*
+* desc:
+*
 */
 
 #include "g_local.h"
@@ -52,7 +51,6 @@ char *hintStrings[] =
 	"HINT_REVIVE",              // DHM - Nerve
 	"HINT_DYNAMITE",            // DHM - Nerve
 
-
 	"",                 // HINT_BAD_USER
 };
 
@@ -82,7 +80,6 @@ typedef struct {
 } pushed_t;
 pushed_t pushed[MAX_GENTITIES * PUSH_STACK_DEPTH], *pushed_p;       // Arnout *PUSH_STACK_DEPTH to prevent overflows
 
-
 /*
 ============
 G_TestEntityPosition
@@ -95,7 +92,6 @@ gentity_t *G_TestEntityPosition( gentity_t *ent ) {
 
 	if ( ent->clipmask ) {
 		mask = ent->clipmask;
-
 	} else {
 		mask = MASK_SOLID;
 	}
@@ -219,7 +215,6 @@ void G_RotatePoint( vec3_t point, const vec3_t matrix[3] ) {
 	point[2] = DotProduct( matrix[2], tvec );
 }
 
-
 /*
 ==================
 G_TryPushingEntity
@@ -237,9 +232,9 @@ qboolean G_TryPushingEntity( gentity_t *check, gentity_t *pusher, vec3_t move, v
 	// EF_MOVER_STOP will just stop when contacting another entity
 	// instead of pushing it, but entities can still ride on top of it
 	if ( ( pusher->s.eFlags & EF_MOVER_STOP ) &&
-		 check->s.groundEntityNum != pusher->s.number ) {
-		//pusher->s.eFlags |= EF_MOVER_BLOCKED;
-		return qfalse;
+		check->s.groundEntityNum != pusher->s.number ) {
+			//pusher->s.eFlags |= EF_MOVER_BLOCKED;
+			return qfalse;
 	}
 
 	// save off the old position
@@ -345,15 +340,15 @@ qboolean G_TryPushingEntity( gentity_t *check, gentity_t *pusher, vec3_t move, v
 								}
 							}
 					}
-				if ( !fz ) {
-					break;
-				}
+					if ( !fz ) {
+						break;
+					}
 			}
-		// didnt work, so set the position back
-		VectorCopy( org, check->s.pos.trBase );
-		if ( check->client ) {
-			VectorCopy( org, check->client->ps.origin );
-		}
+			// didnt work, so set the position back
+			VectorCopy( org, check->s.pos.trBase );
+			if ( check->client ) {
+				VectorCopy( org, check->client->ps.origin );
+			}
 	}
 
 	// if it is ok to leave in the old position, do it
@@ -373,7 +368,6 @@ qboolean G_TryPushingEntity( gentity_t *check, gentity_t *pusher, vec3_t move, v
 	// blocked
 	return qfalse;
 }
-
 
 /*
 ============
@@ -396,11 +390,10 @@ qboolean G_MoverPush( gentity_t *pusher, vec3_t move, vec3_t amove, gentity_t **
 
 	*obstacle = NULL;
 
-
 	// mins/maxs are the bounds at the destination
 	// totalMins / totalMaxs are the bounds for the entire move
 	if ( pusher->r.currentAngles[0] || pusher->r.currentAngles[1] || pusher->r.currentAngles[2]
-		 || amove[0] || amove[1] || amove[2] ) {
+	|| amove[0] || amove[1] || amove[2] ) {
 		float radius;
 
 		radius = RadiusFromBounds( pusher->r.mins, pusher->r.maxs );
@@ -463,11 +456,11 @@ qboolean G_MoverPush( gentity_t *pusher, vec3_t move, vec3_t amove, gentity_t **
 		if ( check->s.groundEntityNum != pusher->s.number ) {
 			// see if the ent needs to be tested
 			if ( check->r.absmin[0] >= maxs[0]
-				 || check->r.absmin[1] >= maxs[1]
-				 || check->r.absmin[2] >= maxs[2]
-				 || check->r.absmax[0] <= mins[0]
-				 || check->r.absmax[1] <= mins[1]
-				 || check->r.absmax[2] <= mins[2] ) {
+			|| check->r.absmin[1] >= maxs[1]
+			|| check->r.absmin[2] >= maxs[2]
+			|| check->r.absmax[0] <= mins[0]
+			|| check->r.absmax[1] <= mins[1]
+			|| check->r.absmax[2] <= mins[2] ) {
 				continue;
 			}
 			// see if the ent's bbox is inside the pusher's final position
@@ -506,7 +499,6 @@ qboolean G_MoverPush( gentity_t *pusher, vec3_t move, vec3_t amove, gentity_t **
 			continue;
 		}
 
-
 		// save off the obstacle so we can call the block function (crush, etc)
 		*obstacle = check;
 
@@ -539,7 +531,6 @@ qboolean G_MoverPush( gentity_t *pusher, vec3_t move, vec3_t amove, gentity_t **
 	// movement was successfull
 	return qtrue;
 }
-
 
 /*
 =================
@@ -604,7 +595,7 @@ void G_MoverTeam( gentity_t *ent ) {
 				}
 			}
 		}
-//----(SA)	removed
+		//----(SA)	removed
 		// opening or closing rotating door
 		else if ( part->s.apos.trType == TR_LINEAR_STOP ) {
 			if ( level.time >= part->s.apos.trTime + part->s.apos.trDuration ) {
@@ -623,7 +614,6 @@ G_RunMover
 ================
 */
 void G_RunMover( gentity_t *ent ) {
-
 	//CS: to help with waypointing trams
 	if ( g_stopMovers.integer ) {
 		return;
@@ -694,7 +684,7 @@ void SetMoverState( gentity_t *ent, moverState_t moverState, int time ) {
 		ent->s.pos.trType = TR_STATIONARY;
 		break;
 
-	// JOSEPH 1-26-00
+		// JOSEPH 1-26-00
 	case MOVER_POS3:
 		VectorCopy( ent->pos3, ent->s.pos.trBase );
 		ent->s.pos.trType = TR_STATIONARY;
@@ -714,11 +704,11 @@ void SetMoverState( gentity_t *ent, moverState_t moverState, int time ) {
 		VectorScale( delta, f, ent->s.pos.trDelta );
 		ent->s.pos.trType = TR_LINEAR_STOP;
 		break;
-	// END JOSEPH
+		// END JOSEPH
 	case MOVER_1TO2:        // opening
 		VectorCopy( ent->pos1, ent->s.pos.trBase );
 		VectorSubtract( ent->pos2, ent->pos1, delta );
-//----(SA)	numerous changes start here
+		//----(SA)	numerous changes start here
 		ent->s.pos.trDuration = ent->gDuration;
 		f = 1000.0 / ent->s.pos.trDuration;
 		VectorScale( delta, f, ent->s.pos.trDelta );
@@ -753,7 +743,6 @@ void SetMoverState( gentity_t *ent, moverState_t moverState, int time ) {
 			}
 		}
 		break;
-
 
 	case MOVER_POS1ROTATE:      // at close
 		VectorCopy( ent->r.currentAngles, ent->s.apos.trBase );
@@ -825,8 +814,6 @@ void SetMoverState( gentity_t *ent, moverState_t moverState, int time ) {
 			}
 		}
 		break;
-
-
 	}
 	BG_EvaluateTrajectory( &ent->s.pos, level.time, ent->r.currentOrigin );
 
@@ -847,7 +834,6 @@ void MatchTeam( gentity_t *teamLeader, int moverState, int time ) {
 	gentity_t       *slave;
 
 	for ( slave = teamLeader ; slave ; slave = slave->teamchain ) {
-
 		// pass along flags for how door was activated
 		if ( teamLeader->flags & FL_KICKACTIVATE ) {
 			slave->flags |= FL_KICKACTIVATE;
@@ -898,7 +884,6 @@ void ReturnToPos1( gentity_t *ent ) {
 	ent->s.loopSound = 0;
 	// set looping sound
 	ent->s.loopSound = ent->sound3to2;
-
 }
 
 // JOSEPH 1-26-00
@@ -938,7 +923,7 @@ void GotoPos3( gentity_t *ent ) {
 /*
 ================
 ReturnToPos1Rotate
-    closing
+closing
 ================
 */
 void ReturnToPos1Rotate( gentity_t *ent ) {
@@ -971,7 +956,6 @@ Reached_BinaryMover
 ================
 */
 void Reached_BinaryMover( gentity_t *ent ) {
-
 	// stop the looping sound
 	ent->s.loopSound = 0;
 
@@ -1049,7 +1033,6 @@ void Reached_BinaryMover( gentity_t *ent ) {
 		// return to pos1 after a delay
 		ent->think = ReturnToPos1Rotate;
 		ent->nextthink = level.time + ent->wait;
-
 	} else if ( ent->moverState == MOVER_2TO1ROTATE ) {
 		// reached pos1
 		SetMoverState( ent, MOVER_POS1ROTATE, level.time );
@@ -1087,7 +1070,6 @@ void Reached_BinaryMover( gentity_t *ent ) {
 	}
 
 	ent->flags &= ~FL_KICKACTIVATE; // (SA) it was not opened normally.  Clear this so it thinks it's closed normally
-
 }
 
 /*
@@ -1149,11 +1131,9 @@ qboolean IsBinaryMoverBlocked( gentity_t *ent, gentity_t *other, gentity_t *acti
 		} else {
 			return qfalse;
 		}
-
 	}
 
 	return qfalse;
-
 }
 
 // JOSEPH 1-26-00
@@ -1259,7 +1239,6 @@ void Use_TrinaryMover( gentity_t *ent, gentity_t *other, gentity_t *activator ) 
 	ent->activator = activator;
 
 	if ( ent->moverState == MOVER_POS1 ) {
-
 		// start moving 50 msec later, becase if this was player
 		// triggered, level.time hasn't been advanced yet
 		MatchTeam( ent, MOVER_1TO2, level.time + 50 );
@@ -1278,7 +1257,6 @@ void Use_TrinaryMover( gentity_t *ent, gentity_t *other, gentity_t *activator ) 
 	}
 
 	if ( ent->moverState == MOVER_POS2 ) {
-
 		// start moving 50 msec later, becase if this was player
 		// triggered, level.time hasn't been advanced yet
 		MatchTeam( ent, MOVER_2TO3, level.time + 50 );
@@ -1375,7 +1353,6 @@ void Use_BinaryMover( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 
 	// only the master should be used
 	if ( ent->flags & FL_TEAMSLAVE ) {
-
 		// pass along flags for how door was activated
 		if ( ent->flags & FL_KICKACTIVATE ) {
 			ent->teammaster->flags |= FL_KICKACTIVATE;
@@ -1392,7 +1369,6 @@ void Use_BinaryMover( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	if ( ent->moverState == MOVER_POS1 || ent->moverState == MOVER_POS1ROTATE ) {
 		isblocked = IsBinaryMoverBlocked( ent, other, activator );
 	}
-
 
 	if ( isblocked ) {
 		// start moving 50 msec later, becase if this was player
@@ -1437,7 +1413,6 @@ void Use_BinaryMover( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	}
 
 	if ( ent->moverState == MOVER_POS1 ) {
-
 		// start moving 50 msec later, becase if this was player
 		// triggered, level.time hasn't been advanced yet
 		MatchTeam( ent, MOVER_1TO2, level.time + 50 );
@@ -1462,7 +1437,6 @@ void Use_BinaryMover( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	}
 
 	if ( ent->moverState == MOVER_POS1ROTATE ) {
-
 		// start moving 50 msec later, becase if this was player
 		// triggered, level.time hasn't been advanced yet
 		MatchTeam( ent, MOVER_1TO2ROTATE, level.time + 50 );
@@ -1561,7 +1535,6 @@ void Use_BinaryMover( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	}
 }
 
-
 /*
 ================
 InitMover
@@ -1645,7 +1618,7 @@ void InitMover( gentity_t *ent ) {
 		ent->speed = 100;
 	}
 
-//----(SA)	changes
+	//----(SA)	changes
 	// open time based on speed
 	VectorScale( move, ent->speed, ent->gDelta );
 	ent->s.pos.trDuration = distance * 1000 / ent->speed;
@@ -1660,7 +1633,7 @@ void InitMover( gentity_t *ent ) {
 		ent->gDurationBack = distance * 1000 / ent->closespeed;
 		if ( ent->gDurationBack <= 0 ) {
 			ent->gDurationBack = 1;
-//----(SA) end
+			//----(SA) end
 		}
 	}
 }
@@ -1743,7 +1716,6 @@ void InitMoverRotate( gentity_t *ent ) {
 	ent->gDuration = ent->gDurationBack = ent->s.apos.trDuration;   // (SA) store 'real' durations so doors can be opened/closed at different speeds
 }
 
-
 /*
 ===============================================================================
 
@@ -1815,9 +1787,9 @@ static void Touch_DoorTriggerSpectator( gentity_t *ent, gentity_t *other, trace_
 	axis = ent->count;
 	VectorClear( dir );
 	if ( fabs( other->s.origin[axis] - ent->r.absmax[axis] ) <
-		 fabs( other->s.origin[axis] - ent->r.absmin[axis] ) ) {
-		origin[axis] = ent->r.absmin[axis] - 10;
-		dir[axis] = -1;
+		fabs( other->s.origin[axis] - ent->r.absmin[axis] ) ) {
+			origin[axis] = ent->r.absmin[axis] - 10;
+			dir[axis] = -1;
 	} else {
 		origin[axis] = ent->r.absmax[axis] + 10;
 		dir[axis] = 1;
@@ -1881,7 +1853,6 @@ void Blocked_DoorRotate( gentity_t *ent, gentity_t *other ) {
 	}
 }
 
-
 /*
 ================
 Touch_DoorTrigger
@@ -1891,8 +1862,8 @@ void Touch_DoorTrigger( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 	if ( other->client && other->client->sess.sessionTeam == TEAM_SPECTATOR ) {
 		// if the door is not open and not opening
 		if ( ent->parent->moverState != MOVER_1TO2 &&
-			 ent->parent->moverState != MOVER_POS2 ) {
-			Touch_DoorTriggerSpectator( ent, other, trace );
+			ent->parent->moverState != MOVER_POS2 ) {
+				Touch_DoorTriggerSpectator( ent, other, trace );
 		}
 	} else if ( ent->parent->moverState != MOVER_1TO2 ) {
 		Use_BinaryMover( ent->parent, ent, other );
@@ -1956,14 +1927,13 @@ void Think_MatchTeam( gentity_t *ent ) {
 	MatchTeam( ent, ent->moverState, level.time );
 }
 
-
 //----(SA) added
 
 /*
 ==============
 findNonAIBrushTargeter
-    determine if there is an entity pointing at ent that is not a "trigger_aidoor"
-    (used now for checking which key to set for a door)
+determine if there is an entity pointing at ent that is not a "trigger_aidoor"
+(used now for checking which key to set for a door)
 ==============
 */
 qboolean findNonAIBrushTargeter( gentity_t *ent ) {
@@ -1976,14 +1946,13 @@ qboolean findNonAIBrushTargeter( gentity_t *ent ) {
 	while ( ( targeter = G_Find( targeter, FOFS( target ), ent->targetname ) ) != NULL )
 	{
 		if ( strcmp( targeter->classname,"trigger_aidoor" ) &&
-			 Q_stricmp( targeter->classname, "func_invisible_user" ) ) {
-			return qtrue;
+			Q_stricmp( targeter->classname, "func_invisible_user" ) ) {
+				return qtrue;
 		}
 	}
 
 	return qfalse;
 }
-
 
 /*
 ==============
@@ -1995,7 +1964,7 @@ void finishSpawningKeyedMover( gentity_t *ent ) {
 
 	// all ents should be spawned, so it's okay to check for special door triggers now
 
-//----(SA)	modified
+	//----(SA)	modified
 	if ( ent->key == -2 ) {    // the key was not set in the spawn
 		if ( ent->targetname && findNonAIBrushTargeter( ent ) ) {
 			ent->key = -1;  // something is targeting this (other than a trigger_aidoor) so leave locked
@@ -2003,7 +1972,7 @@ void finishSpawningKeyedMover( gentity_t *ent ) {
 			ent->key = 0;
 		}
 	}
-//----(SA)	end
+	//----(SA)	end
 
 	ent->nextthink = level.time + FRAMETIME;
 
@@ -2011,7 +1980,7 @@ void finishSpawningKeyedMover( gentity_t *ent ) {
 		if ( ent->targetname || ent->takedamage ) {  // non touch/shoot doors
 			ent->think = Think_MatchTeam;
 		}
-// (SA) is this safe?  is ent->spawnflags & 8 consistant among all keyed ents?
+		// (SA) is this safe?  is ent->spawnflags & 8 consistant among all keyed ents?
 		else if ( ( ent->spawnflags & 8 ) && ( strcmp( ent->classname, "func_door_rotating" ) ) ) {
 			ent->think = Think_SpawnNewDoorTrigger;
 		} else {
@@ -2033,14 +2002,12 @@ void finishSpawningKeyedMover( gentity_t *ent ) {
 
 //----(SA) end
 
-
-
 /*
 ==============
 Door_reverse_sounds
-    The door has been marked as "START_OPEN" which means the open/closed
-    positions have been swapped.
-    This swaps the sounds around as well
+The door has been marked as "START_OPEN" which means the open/closed
+positions have been swapped.
+This swaps the sounds around as well
 ==============
 */
 void Door_reverse_sounds( gentity_t *ent ) {
@@ -2058,7 +2025,6 @@ void Door_reverse_sounds( gentity_t *ent ) {
 	ent->sound2to3 = ent->sound3to2;
 	ent->sound3to2 = stemp;
 
-
 	stemp = ent->soundSoftopen;
 	ent->soundSoftopen = ent->soundSoftclose;
 	ent->soundSoftclose = stemp;
@@ -2068,12 +2034,11 @@ void Door_reverse_sounds( gentity_t *ent ) {
 	ent->soundSoftendc = stemp;
 }
 
-
 /*
 ==============
 DoorSetSounds
-    get sound indexes for the various door sounds
-    (used by SP_func_door() and SP_func_door_rotating() )
+get sound indexes for the various door sounds
+(used by SP_func_door() and SP_func_door_rotating() )
 ==============
 */
 void DoorSetSounds( gentity_t *ent, int doortype, qboolean isRotating ) {
@@ -2085,7 +2050,6 @@ void DoorSetSounds( gentity_t *ent, int doortype, qboolean isRotating ) {
 	ent->sound3to2 = G_SoundIndex( va( "sound/movers/doors/door%i_loopc.wav", doortype ) );     // loopclosed
 	ent->soundPos3 = G_SoundIndex( va( "sound/movers/doors/door%i_locked.wav", doortype ) );    // locked
 
-
 	ent->soundSoftopen  = G_SoundIndex( va( "sound/movers/doors/door%i_openq.wav", doortype ) );    // opening quietly
 	ent->soundSoftendo  = G_SoundIndex( va( "sound/movers/doors/door%i_endoq.wav", doortype ) );    // open quietly
 	ent->soundSoftclose = G_SoundIndex( va( "sound/movers/doors/door%i_closeq.wav", doortype ) );   // closing quietly
@@ -2095,15 +2059,14 @@ void DoorSetSounds( gentity_t *ent, int doortype, qboolean isRotating ) {
 		ent->soundKicked    = G_SoundIndex( va( "sound/movers/doors/door%i_kicked.wav", doortype ) );
 		ent->soundKickedEnd = G_SoundIndex( va( "sound/movers/doors/door%i_kickedend.wav", doortype ) );
 	}
-
 }
 
 //----(SA)	added
 /*
 ==============
 G_TryDoor
-    seemed better to have this isolated.  this way i can get func_invisible_user's using the
-    regular rules of doors.
+seemed better to have this isolated.  this way i can get func_invisible_user's using the
+regular rules of doors.
 ==============
 */
 void G_TryDoor( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
@@ -2129,7 +2092,6 @@ void G_TryDoor( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 				}
 			}
 
-
 			if ( ent->teammaster && ent->team && ent != ent->teammaster ) {
 				ent->teammaster->active = qtrue;
 				if ( walking ) {
@@ -2153,7 +2115,6 @@ void G_TryDoor( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 }
 //----(SA)	end
 
-
 /*QUAKED func_door (0 .5 .8) ? START_OPEN TOGGLE CRUSHER TOUCH SHOOT-THRU
 TOGGLE      wait in both the start and end states for a trigger event.
 START_OPEN  the door to moves to its destination when spawned, and operate in reverse.  It is used to temporarily or permanently close off an area when triggered (not useful for touch or takedamage doors).
@@ -2175,33 +2136,33 @@ SHOOT-THRU	Bullets don't stop when they hit the door.  Set "shoot_thru_scale" wi
 "team"		team name.  other doors with same team name will open/close in syncronicity
 "shoot_thru_scale"	Multiplier for how much damage bullets do that have passed through the door.  Effectively how much damage the door 'absorbs'.  0.0 - 1.0 (0.0 will turn SHOOT-THRU off, 1.0 is full damage)
 "type"		use sounds based on construction of door:
-     0 - nosound (default)
-     1 - metal
-     2 - stone
-     3 - lab
-     4 - wood
-     5 - iron/jail
-     6 - portcullis
-     7 - wood (quiet)
+0 - nosound (default)
+1 - metal
+2 - stone
+3 - lab
+4 - wood
+5 - iron/jail
+6 - portcullis
+7 - wood (quiet)
 
 SOUND NAMING INFO -
 inside "sound/movers/doors/door<number>...
-    _open.wav		// opening
-    _endo.wav		// open
-    _close.wav		// closing
-    _endc.wav		// closed
-    _loopo.wav		// opening loop
-    _loopc.wav		// closing loop
-    _locked.wav		// locked
+_open.wav		// opening
+_endo.wav		// open
+_close.wav		// closing
+_endc.wav		// closed
+_loopo.wav		// opening loop
+_loopc.wav		// closing loop
+_locked.wav		// locked
 
-    _openq.wav		// opening quietly
-    _endoq.wav		// open quietly
-    _closeq.wav		// closing quietly
-    _endcq.wav		// closed quietly
+_openq.wav		// opening quietly
+_endoq.wav		// open quietly
+_closeq.wav		// closing quietly
+_endcq.wav		// closed quietly
 
 and for rotating doors:
-    _kicked.wav
-    _kickedend.wav
+_kicked.wav
+_kickedend.wav
 
 */
 void SP_func_door( gentity_t *ent ) {
@@ -2236,7 +2197,6 @@ void SP_func_door( gentity_t *ent ) {
 		ent->key = key;
 	} else {
 		ent->key = -2;                  // otherwise, set the key when this ent finishes spawning
-
 	}
 	// if the key is invalid, set the key in the finishSpawning routine
 	if ( ent->key > MAX_DOOR_KEYS || ent->key < -2 ) {
@@ -2352,7 +2312,6 @@ void SP_func_secret( gentity_t *ent ) {
 		ent->key = key;
 	} else {
 		ent->key = -1;                  // otherwise, set the key when this ent finishes spawning
-
 	}
 	// if the key is invalid, set the key in the finishSpawning routine
 	if ( ent->key > MAX_DOOR_KEYS || ent->key < -1 ) {
@@ -2456,7 +2415,6 @@ void Touch_PlatCenterTrigger( gentity_t *ent, gentity_t *other, trace_t *trace )
 	}
 }
 
-
 /*
 ================
 SpawnPlatTrigger
@@ -2499,7 +2457,6 @@ void SpawnPlatTrigger( gentity_t *ent ) {
 
 	trap_LinkEntity( trigger );
 }
-
 
 /*QUAKED func_plat (0 .5 .8) ?
 Plats are always drawn in the extended position so they will light correctly.
@@ -2555,7 +2512,6 @@ void SP_func_plat( gentity_t *ent ) {
 	}
 }
 
-
 /*
 ===============================================================================
 
@@ -2579,7 +2535,6 @@ void Touch_Button( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 		Use_BinaryMover( ent, other, other );
 	}
 }
-
 
 /*QUAKED func_button (0 .5 .8) ? x x x TOUCH x x STAYOPEN
 When a button is touched, it moves some distance in the direction of it's angle, triggers all of it's targets, waits some time, then returns to it's original position where it can be triggered again.
@@ -2638,7 +2593,6 @@ void SP_func_button( gentity_t *ent ) {
 	InitMover( ent );
 }
 
-
 /*
 ===============================================================================
 
@@ -2646,7 +2600,6 @@ TRAIN
 
 ===============================================================================
 */
-
 
 #define TRAIN_START_ON      1
 #define TRAIN_TOGGLE        2
@@ -2735,7 +2688,6 @@ void Reached_Train( gentity_t *ent ) {
 	}
 }
 
-
 /*
 ===============
 Think_SetupTrainTargets
@@ -2749,7 +2701,7 @@ void Think_SetupTrainTargets( gentity_t *ent ) {
 	ent->nextTrain = G_Find( NULL, FOFS( targetname ), ent->target );
 	if ( !ent->nextTrain ) {
 		G_Printf( "func_train at %s with an unfound target\n",
-				  vtos( ent->r.absmin ) );
+			vtos( ent->r.absmin ) );
 		return;
 	}
 
@@ -2757,14 +2709,13 @@ void Think_SetupTrainTargets( gentity_t *ent ) {
 
 	if ( ent->s.eType == ET_BAT ) {
 		for ( path = ent->nextTrain ; path != start ; path = next ) {
-
 			if ( !start ) {
 				start = path;
 			}
 
 			if ( !path->target ) {
 				G_Printf( "Train corner at %s without a target\n",
-						  vtos( path->s.origin ) );
+					vtos( path->s.origin ) );
 				return;
 			}
 
@@ -2776,7 +2727,7 @@ void Think_SetupTrainTargets( gentity_t *ent ) {
 				next = G_Find( next, FOFS( targetname ), path->target );
 				if ( !next ) {
 					G_Printf( "Train corner at %s without a target path_corner\n",
-							  vtos( path->s.origin ) );
+						vtos( path->s.origin ) );
 					return;
 				}
 			} while ( strcmp( next->classname, "path_corner" ) );
@@ -2786,14 +2737,13 @@ void Think_SetupTrainTargets( gentity_t *ent ) {
 	} else
 	{
 		for ( path = ent->nextTrain ; !path->nextTrain ; path = next ) {
-
 			if ( !start ) {
 				start = path;
 			}
 
 			if ( !path->target ) {
 				G_Printf( "Train corner at %s without a target\n",
-						  vtos( path->s.origin ) );
+					vtos( path->s.origin ) );
 				return;
 			}
 
@@ -2805,7 +2755,7 @@ void Think_SetupTrainTargets( gentity_t *ent ) {
 				next = G_Find( next, FOFS( targetname ), path->target );
 				if ( !next ) {
 					G_Printf( "Train corner at %s without a target path_corner\n",
-							  vtos( path->s.origin ) );
+						vtos( path->s.origin ) );
 					return;
 				}
 			} while ( strcmp( next->classname, "path_corner" ) );
@@ -2848,8 +2798,6 @@ void Think_SetupTrainTargets( gentity_t *ent ) {
 	}
 }
 
-
-
 /*QUAKED path_corner (.5 .3 0) (-8 -8 -8) (8 8 8) STOP END REVERSE
 Train path corners.
 Target: next path corner and other targets to fire
@@ -2870,8 +2818,6 @@ void SP_path_corner( gentity_t *self ) {
 		self->count = 1;
 	}
 }
-
-
 
 /*QUAKED func_train (0 .5 .8) ? START_ON TOGGLE BLOCK_STOPS
 A train is a mover that moves between path_corner target points.
@@ -2918,7 +2864,6 @@ void SP_func_train( gentity_t *self ) {
 	self->think = Think_SetupTrainTargets;
 
 	self->blocked = Blocked_Door;
-
 }
 
 // Rafael - bats
@@ -3041,7 +2986,6 @@ void BatMoveThink( gentity_t *bat ) {
 				bat->damage = level.time + 1000;
 			}
 		}
-
 	} else if ( owner->active == 2 ) {
 		// owner has finished
 		G_FreeEntity( bat );
@@ -3107,7 +3051,6 @@ void FuncBatsActivate( gentity_t *self, gentity_t * other, gentity_t * activator
 		self->r.contents = 0;
 
 		self->use = FuncBatsActivate;   // make sure this stays the same
-
 	} else {    // second use kills bats
 		self->active = 2;
 	}
@@ -3273,7 +3216,7 @@ void Think_SetupTrainTargets_rotating( gentity_t *ent ) {
 	ent->nextTrain = G_Find( NULL, FOFS( targetname ), ent->target );
 	if ( !ent->nextTrain ) {
 		G_Printf( "func_train at %s with an unfound target\n",
-				  vtos( ent->r.absmin ) );
+			vtos( ent->r.absmin ) );
 		return;
 	}
 
@@ -3289,7 +3232,7 @@ void Think_SetupTrainTargets_rotating( gentity_t *ent ) {
 
 		if ( !path->target ) {
 			G_Printf( "Train corner at %s without a target\n",
-					  vtos( path->s.origin ) );
+				vtos( path->s.origin ) );
 			return;
 		}
 
@@ -3301,7 +3244,7 @@ void Think_SetupTrainTargets_rotating( gentity_t *ent ) {
 			next = G_Find( next, FOFS( targetname ), path->target );
 			if ( !next ) {
 				G_Printf( "Train corner at %s without a target path_corner\n",
-						  vtos( path->s.origin ) );
+					vtos( path->s.origin ) );
 				return;
 			}
 		} while ( strcmp( next->classname, "path_corner" ) );
@@ -3377,7 +3320,7 @@ STATIC
 /*
 ==============
 Use_Static
-    toggle hide or show (including collisions) this entity
+toggle hide or show (including collisions) this entity
 ==============
 */
 void Use_Static( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
@@ -3400,16 +3343,15 @@ void Static_Pain( gentity_t *ent, gentity_t *attacker, int damage, vec3_t point 
 
 		// TBD only venom mg42 rocket and grenade can inflict damage
 		if ( attacker && attacker->client
-			 && ( attacker->s.weapon == WP_VENOM
-				  || attacker->s.weapon == WP_VENOM_FULL
-				  || attacker->s.weapon == WP_GRENADE_LAUNCHER
-				  || attacker->s.weapon == WP_ROCKET_LAUNCHER
-				  || attacker->client->ps.persistant[PERS_HWEAPON_USE] ) ) {
-
-			VectorCopy( ent->r.currentOrigin, temp );
-			VectorCopy( ent->pos3, ent->r.currentOrigin );
-			Spawn_Shard( ent, attacker, 3, ent->count );
-			VectorCopy( temp, ent->r.currentOrigin );
+			&& ( attacker->s.weapon == WP_VENOM
+			|| attacker->s.weapon == WP_VENOM_FULL
+			|| attacker->s.weapon == WP_GRENADE_LAUNCHER
+			|| attacker->s.weapon == WP_ROCKET_LAUNCHER
+			|| attacker->client->ps.persistant[PERS_HWEAPON_USE] ) ) {
+				VectorCopy( ent->r.currentOrigin, temp );
+				VectorCopy( ent->pos3, ent->r.currentOrigin );
+				Spawn_Shard( ent, attacker, 3, ent->count );
+				VectorCopy( temp, ent->r.currentOrigin );
 		}
 		return;
 	}
@@ -3418,13 +3360,10 @@ void Static_Pain( gentity_t *ent, gentity_t *attacker, int damage, vec3_t point 
 		G_UseTargets( ent, NULL );
 		ent->wait = level.time;
 	}
-
 }
 
 void G_BlockThink( gentity_t *ent ) {
-
 }
-
 
 /*QUAKED func_leaky (0 .5 .8) ?
 "type" - leaks particles of this type
@@ -3432,7 +3371,6 @@ void G_BlockThink( gentity_t *ent ) {
 1:oil
 2:water
 3:steam
-
 
 */
 
@@ -3446,7 +3384,6 @@ void SP_func_leaky( gentity_t *ent ) {
 	VectorCopy( ent->s.origin, ent->s.pos.trBase );
 	VectorCopy( ent->s.origin, ent->r.currentOrigin );
 }
-
 
 /*QUAKED func_static (0 .5 .8) ? start_invis pain painEFX
 A bmodel that just sits there, doing nothing.  Can be used for conditional walls and models.
@@ -3524,7 +3461,6 @@ void SP_func_static( gentity_t *ent ) {
 	}
 }
 
-
 /*
 ===============================================================================
 
@@ -3532,7 +3468,6 @@ ROTATING
 
 ===============================================================================
 */
-
 
 /*QUAKED func_rotating (0 .5 .8) ? START_ON STARTINVIS X_AXIS Y_AXIS
 You need to have an origin brush as part of this entity.  The center of that brush will be
@@ -3597,9 +3532,7 @@ void SP_func_rotating( gentity_t *ent ) {
 	} else {
 		trap_LinkEntity( ent );
 	}
-
 }
-
 
 /*
 ===============================================================================
@@ -3608,7 +3541,6 @@ BOBBING
 
 ===============================================================================
 */
-
 
 /*QUAKED func_bobbing (0 .5 .8) ? X_AXIS Y_AXIS
 Normally bobs on the Z axis
@@ -3656,7 +3588,6 @@ PENDULUM
 
 ===============================================================================
 */
-
 
 /*QUAKED func_pendulum (0 .5 .8) ?
 You need to have an origin brush as part of this entity.
@@ -3724,19 +3655,16 @@ SHOOT-THRU	Bullets don't stop when they hit the door.  Set "shoot_thru_scale" wi
 "light"     constantLight radius
 "shoot_thru_scale"	Multiplier for how much damage bullets do that have passed through the door.  Effectively how much damage the door 'absorbs'.  0.0 - 1.0 (0.0 will turn SHOOT-THRU off, 1.0 is full damage)
 "type"		use sounds based on construction of door:
-     0 - nosound (default)
-     1 - metal
-     2 - stone
-     3 - lab
-     4 - wood
-     5 - iron/jail
-     6 - portcullis
-     7 - wood (quiet)
+0 - nosound (default)
+1 - metal
+2 - stone
+3 - lab
+4 - wood
+5 - iron/jail
+6 - portcullis
+7 - wood (quiet)
 "team"		team name.  other doors with same team name will open/close in syncronicity
 */
-
-
-
 
 //
 //
@@ -3775,7 +3703,6 @@ void SP_func_door_rotating( gentity_t *ent ) {
 		ent->key = key;
 	} else {
 		ent->key = -2;                  // otherwise, set the key when this ent finishes spawning
-
 	}
 	// if the key is invalid, set the key in the finishSpawning routine
 	if ( ent->key > MAX_DOOR_KEYS || ent->key < -2 ) {
@@ -3783,7 +3710,6 @@ void SP_func_door_rotating( gentity_t *ent ) {
 		ent->key = -2;
 	}
 	//---- (SA) end
-
 
 	// set the rotation axis
 	VectorClear( ent->rotate );
@@ -3831,14 +3757,13 @@ void SP_func_door_rotating( gentity_t *ent ) {
 	trap_LinkEntity( ent );
 }
 
-
 /*
 ===============================================================================
 
 EFFECTS
 
-  I'm keeping all this stuff in here just to avoid collisions with Raf right now in g_misc or g_props
-  Will move.
+I'm keeping all this stuff in here just to avoid collisions with Raf right now in g_misc or g_props
+Will move.
 ===============================================================================
 */
 
@@ -3872,7 +3797,6 @@ void target_effect( gentity_t *self, gentity_t *other, gentity_t *activator ) {
 
 	G_UseTargets( self, other );
 }
-
 
 /*QUAKED target_effect (0 .5 .8) (-6 -6 -6) (6 6 6) fire explode smoke rubble gore lowgrav debris
 "mass" defaults to 15.  This determines how much debris is emitted when it explodes.  (number of pieces)
@@ -3913,16 +3837,14 @@ void SP_target_effect( gentity_t *ent ) {
 	}
 }
 
-
 /*
 ===============================================================================
 
 EXPLOSIVE
-  I'm keeping all this stuff in here just to avoid collisions with Raf right now in g_misc or g_props
-  Will move.
+I'm keeping all this stuff in here just to avoid collisions with Raf right now in g_misc or g_props
+Will move.
 ===============================================================================
 */
-
 
 /*
 ==============
@@ -3935,7 +3857,7 @@ void ThrowDebris( gentity_t *self, char *modelname, float speed, vec3_t origin )
 /*
 ==============
 BecomeExplosion
-    nuke the original entity and create all the debris entities that need to be synced to clients
+nuke the original entity and create all the debris entities that need to be synced to clients
 ==============
 */
 void BecomeExplosion( gentity_t *self ) {
@@ -3949,11 +3871,10 @@ void BecomeExplosion( gentity_t *self ) {
 	G_FreeEntity( self );
 }
 
-
 /*
 ==============
 func_explosive_explode
-    NOTE: the 'damage' passed in is ignored completely
+NOTE: the 'damage' passed in is ignored completely
 ==============
 */
 void func_explosive_explode( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int damage, int mod ) {
@@ -4037,7 +3958,6 @@ void func_explosive_touch( gentity_t *self, gentity_t *other, trace_t *trace ) {
 	func_explosive_explode( self, self, other, self->damage, 0 );
 }
 
-
 /*
 ==============
 func_explosive_use
@@ -4068,7 +3988,6 @@ void func_explosive_spawn( gentity_t *self, gentity_t *other, gentity_t *activat
 	// turn the brush to visible
 }
 
-
 /*
 ==============
 InitExplosive
@@ -4095,7 +4014,6 @@ void InitExplosive( gentity_t *ent ) {
 	ent->nextthink = level.time + FRAMETIME;
 }
 
-
 /*QUAKED func_explosive (0 .5 .8) ? START_INVIS TOUCHABLE USESHADER LOWGRAV NOBLOCKAAS EXPLO DYNOMITE
 EXPLO only explosives can damage it rockets grendades etc
 DYNOMITE only can be damaged by DY-NO-MITE!
@@ -4111,13 +4029,13 @@ LOWGRAV specifies that the debris will /always/ fall slowly
 "mass" - defaults to 75.  This determines how much debris is emitted when it explodes.  You get one large chunk per 100 of mass (up to 8) and one small chunk per 25 of mass (up to 16).  So 800 gives the most.
 "noise" - sound to play when triggered.  The explosive will default to a sound that matches it's 'type'.  Use the sound name "nosound" (case in-sensitive) if you want it silent.
 the default sounds are:
-  "wood"	- "sound/world/boardbreak.wav"
-  "glass"	- "sound/world/glassbreak.wav"
-  "metal"	- "sound/world/metalbreak.wav"
-  "gibs"	- "sound/player/gibsplit1.wav"
-  "brick"	- "sound/world/brickfall.wav"
-  "stone"	- "sound/world/stonefall.wav"
-  "fabric"	- "sound/world/metalbreak.wav"	// (SA) temp
+"wood"	- "sound/world/boardbreak.wav"
+"glass"	- "sound/world/glassbreak.wav"
+"metal"	- "sound/world/metalbreak.wav"
+"gibs"	- "sound/player/gibsplit1.wav"
+"brick"	- "sound/world/brickfall.wav"
+"stone"	- "sound/world/stonefall.wav"
+"fabric"	- "sound/world/metalbreak.wav"	// (SA) temp
 */
 /*
 "fxdensity" size of explosion 1 - 100 (default is 10)
@@ -4222,7 +4140,7 @@ void SP_func_explosive( gentity_t *ent ) {
 		}
 	}
 
-//----(SA)	added
+	//----(SA)	added
 
 	ent->s.dmgFlags = 0;
 
@@ -4234,7 +4152,7 @@ void SP_func_explosive( gentity_t *ent ) {
 			}
 		}
 	}
-//----(SA)	end
+	//----(SA)	end
 
 	ent->die = func_explosive_explode;
 }
@@ -4252,42 +4170,42 @@ NOT_KICKABLE - kicking doesn't fire, only player activating
 
 "cursorhint" cursor types: (probably more, ask sherman if you think the list is out of date)
 they /don't/ need to be all uppercase
-    HINT_NONE
-    HINT_PLAYER
-    HINT_ACTIVATE
-    HINT_DOOR
-    HINT_DOOR_ROTATING
-    HINT_DOOR_LOCKED
-    HINT_DOOR_ROTATING_LOCKED
-    HINT_MG42
-    HINT_BREAKABLE
-    HINT_BREAKABLE_BIG
-    HINT_CHAIR
-    HINT_ALARM
-    HINT_HEALTH
-    HINT_TREASURE
-    HINT_KNIFE
-    HINT_LADDER
-    HINT_BUTTON
-    HINT_WATER
-    HINT_CAUTION
-    HINT_DANGER
-    HINT_SECRET
-    HINT_QUESTION
-    HINT_EXCLAMATION
-    HINT_CLIPBOARD
-    HINT_WEAPON
-    HINT_AMMO
-    HINT_ARMOR
-    HINT_POWERUP
-    HINT_HOLDABLE
-    HINT_INVENTORY
-    HINT_SCENARIC
-    HINT_EXIT
-    HINT_PLYR_FRIEND
-    HINT_PLYR_NEUTRAL
-    HINT_PLYR_ENEMY
-    HINT_PLYR_UNKNOWN
+HINT_NONE
+HINT_PLAYER
+HINT_ACTIVATE
+HINT_DOOR
+HINT_DOOR_ROTATING
+HINT_DOOR_LOCKED
+HINT_DOOR_ROTATING_LOCKED
+HINT_MG42
+HINT_BREAKABLE
+HINT_BREAKABLE_BIG
+HINT_CHAIR
+HINT_ALARM
+HINT_HEALTH
+HINT_TREASURE
+HINT_KNIFE
+HINT_LADDER
+HINT_BUTTON
+HINT_WATER
+HINT_CAUTION
+HINT_DANGER
+HINT_SECRET
+HINT_QUESTION
+HINT_EXCLAMATION
+HINT_CLIPBOARD
+HINT_WEAPON
+HINT_AMMO
+HINT_ARMOR
+HINT_POWERUP
+HINT_HOLDABLE
+HINT_INVENTORY
+HINT_SCENARIC
+HINT_EXIT
+HINT_PLYR_FRIEND
+HINT_PLYR_NEUTRAL
+HINT_PLYR_ENEMY
+HINT_PLYR_UNKNOWN
 */
 
 void use_invisible_user( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
@@ -4321,9 +4239,8 @@ void use_invisible_user( gentity_t *ent, gentity_t *other, gentity_t *activator 
 	}
 
 	G_UseTargets( ent, other ); //----(SA)	how about this so the triggered targets have an 'activator' as well as an 'other'?
-	                            //----(SA)	Please let me know if you forsee any problems with this.
+	//----(SA)	Please let me know if you forsee any problems with this.
 }
-
 
 void func_invisible_user( gentity_t *ent ) {
 	char    *sound;
@@ -4346,7 +4263,7 @@ void func_invisible_user( gentity_t *ent ) {
 
 	ent->use = use_invisible_user;
 
-//----(SA)	added
+	//----(SA)	added
 	if ( G_SpawnString( "cursorhint", "0", &cursorhint ) ) {
 		int i;
 		for ( i = 0; i < HINT_NUM_HINTS; i++ ) {
@@ -4355,7 +4272,7 @@ void func_invisible_user( gentity_t *ent ) {
 			}
 		}
 	}
-//----(SA)	end
+	//----(SA)	end
 
 	if ( !( ent->spawnflags & 4 ) ) {    // !NO_OFF_NOISE
 		if ( G_SpawnString( "offnoise", "0", &sound ) ) {
@@ -4370,49 +4287,49 @@ void func_invisible_user( gentity_t *ent ) {
 ==========
 G_Activate
 
-  Generic activation routine for doors
+Generic activation routine for doors
 ==========
 */
 void G_Activate( gentity_t *ent, gentity_t *activator ) {
 	if ( ( ent->s.apos.trType == TR_STATIONARY && ent->s.pos.trType == TR_STATIONARY )
-		 && ent->active == qfalse ) {
-		// trigger the ent if possible, if not, then we'll just wait at the marker until it opens, which could be never(!?)
-		if ( ent->key < 0 ) {  // ent force locked
-			return;
-		}
-
-		if ( ent->key > 0 ) {  // ent requires key
-			gitem_t *item = BG_FindItemForKey( ent->key, 0 );
-			if ( !( activator->client->ps.stats[STAT_KEYS] & ( 1 << item->giTag ) ) ) {
+		&& ent->active == qfalse ) {
+			// trigger the ent if possible, if not, then we'll just wait at the marker until it opens, which could be never(!?)
+			if ( ent->key < 0 ) {  // ent force locked
 				return;
 			}
-		}
 
-		if ( !Q_stricmp( ent->classname, "script_mover" ) ) { // RF, dont activate script_mover's
-			if ( activator->aiName ) {
-				G_Script_ScriptEvent( ent, "activate", activator->aiName );
+			if ( ent->key > 0 ) {  // ent requires key
+				gitem_t *item = BG_FindItemForKey( ent->key, 0 );
+				if ( !( activator->client->ps.stats[STAT_KEYS] & ( 1 << item->giTag ) ) ) {
+					return;
+				}
 			}
-			return;
-		}
 
-		// hack fix for bigdoor1 on tram1_21
+			if ( !Q_stricmp( ent->classname, "script_mover" ) ) { // RF, dont activate script_mover's
+				if ( activator->aiName ) {
+					G_Script_ScriptEvent( ent, "activate", activator->aiName );
+				}
+				return;
+			}
 
-		if ( !( ent->teammaster ) ) {
-			ent->active = qtrue;
-			Use_BinaryMover( ent, activator, activator );
-			G_UseTargets( ent->teammaster, activator );
-			return;
-		}
+			// hack fix for bigdoor1 on tram1_21
 
-		if ( ent->team && ent != ent->teammaster ) {
-			ent->teammaster->active = qtrue;
-			Use_BinaryMover( ent->teammaster, activator, activator );
-			G_UseTargets( ent->teammaster, activator );
-		} else
-		{
-			ent->active = qtrue;
-			Use_BinaryMover( ent, activator, activator );
-			G_UseTargets( ent->teammaster, activator );
-		}
+			if ( !( ent->teammaster ) ) {
+				ent->active = qtrue;
+				Use_BinaryMover( ent, activator, activator );
+				G_UseTargets( ent->teammaster, activator );
+				return;
+			}
+
+			if ( ent->team && ent != ent->teammaster ) {
+				ent->teammaster->active = qtrue;
+				Use_BinaryMover( ent->teammaster, activator, activator );
+				G_UseTargets( ent->teammaster, activator );
+			} else
+			{
+				ent->active = qtrue;
+				Use_BinaryMover( ent, activator, activator );
+				G_UseTargets( ent->teammaster, activator );
+			}
 	}
 }

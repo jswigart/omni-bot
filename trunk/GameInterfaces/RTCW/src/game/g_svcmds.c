@@ -1,6 +1,3 @@
-
-
-
 // this file holds commands that can be executed by the server console, but not remote clients
 
 #include "g_local.h"
@@ -10,12 +7,10 @@
 #include "g_lua.h"
 #endif
 
-
 /*
 ==============================================================================
 
 PACKET FILTERING
-
 
 You can add or remove addresses from the filter list with:
 
@@ -204,11 +199,11 @@ qboolean G_FilterPacket( char *from ) {
 			return g_filterBan.integer != 0;
 		}
 
-	return g_filterBan.integer == 0;
+		return g_filterBan.integer == 0;
 }
 
 /*
- Check to see if the user is trying to sneak back in with g_enforcemaxlives enabled
+Check to see if the user is trying to sneak back in with g_enforcemaxlives enabled
 */
 qboolean G_FilterMaxLivesPacket( char *from ) {
 	int i;
@@ -234,19 +229,19 @@ static void AddIP( char *str ) {
 		if ( ipFilters[i].compare == 0xffffffff ) {
 			break;
 		}               // free spot
-	if ( i == numIPFilters ) {
-		if ( numIPFilters == MAX_IPFILTERS ) {
-			G_Printf( "IP filter list is full\n" );
-			return;
+		if ( i == numIPFilters ) {
+			if ( numIPFilters == MAX_IPFILTERS ) {
+				G_Printf( "IP filter list is full\n" );
+				return;
+			}
+			numIPFilters++;
 		}
-		numIPFilters++;
-	}
 
-	if ( !StringToFilter( str, &ipFilters[i] ) ) {
-		ipFilters[i].compare = 0xffffffffu;
-	}
+		if ( !StringToFilter( str, &ipFilters[i] ) ) {
+			ipFilters[i].compare = 0xffffffffu;
+		}
 
-	UpdateIPBans();
+		UpdateIPBans();
 }
 /*
 =================
@@ -263,7 +258,6 @@ void AddMaxLivesGUID( char *str ) {
 	Q_strncpyz( ipMaxLivesFilters[numMaxLivesFilters].compare, str, 33 );
 	numMaxLivesFilters++;
 }
-
 
 /*
 =================
@@ -289,7 +283,6 @@ void G_ProcessIPBans( void ) {
 		t = s;
 	}
 }
-
 
 /*
 =================
@@ -332,12 +325,12 @@ void Svcmd_RemoveIP_f( void ) {
 
 	for ( i = 0 ; i < numIPFilters ; i++ ) {
 		if ( ipFilters[i].mask == f.mask &&
-			 ipFilters[i].compare == f.compare ) {
-			ipFilters[i].compare = 0xffffffffu;
-			G_Printf( "Removed.\n" );
+			ipFilters[i].compare == f.compare ) {
+				ipFilters[i].compare = 0xffffffffu;
+				G_Printf( "Removed.\n" );
 
-			UpdateIPBans();
-			return;
+				UpdateIPBans();
+				return;
 		}
 	}
 
@@ -345,7 +338,7 @@ void Svcmd_RemoveIP_f( void ) {
 }
 
 /*
- Xian - Clears out the entire list maxlives enforcement banlist
+Xian - Clears out the entire list maxlives enforcement banlist
 */
 void ClearMaxLivesGUID() {
 	int i;
@@ -399,11 +392,11 @@ void    Svcmd_EntityList_f( void ) {
 		case ET_PUSH_TRIGGER:
 			G_Printf( "ET_PUSH_TRIGGER     " );
 			break;
-// JPW NERVE
+			// JPW NERVE
 		case ET_CONCUSSIVE_TRIGGER:
 			G_Printf( "ET_CONCUSSIVE_TRIGGR" );
 			break;
-// jpw
+			// jpw
 		case ET_TELEPORT_TRIGGER:
 			G_Printf( "ET_TELEPORT_TRIGGER " );
 			break;
@@ -561,10 +554,10 @@ NERVE - SMF - swaps all clients to opposite team
 */
 void Svcmd_SwapTeams_f() {
 	if ( ( g_gamestate.integer == GS_INITIALIZE ) || // JPW NERVE -- so teams can swap between checkpoint rounds
-		 ( g_gamestate.integer == GS_WAITING_FOR_PLAYERS ) ||
-		 ( g_gamestate.integer == GS_RESET ) ) {
-		trap_SendServerCommand( -1, va( "print \"Match must be in progress to swap teams.\n\"" ) );
-		return;
+		( g_gamestate.integer == GS_WAITING_FOR_PLAYERS ) ||
+		( g_gamestate.integer == GS_RESET ) ) {
+			trap_SendServerCommand( -1, va( "print \"Match must be in progress to swap teams.\n\"" ) );
+			return;
 	}
 
 	if ( g_gametype.integer == GT_WOLF_STOPWATCH ) {
@@ -575,8 +568,6 @@ void Svcmd_SwapTeams_f() {
 	trap_Cvar_Set( "g_swapteams", "1" );
 	trap_SendConsoleCommand( EXEC_APPEND, va( "map_restart 0 %i\n", GS_WARMUP ) );
 }
-
-
 
 char    *ConcatArgs( int start );
 
@@ -671,4 +662,3 @@ qboolean    ConsoleCommand( void ) {
 
 	return qfalse;
 }
-

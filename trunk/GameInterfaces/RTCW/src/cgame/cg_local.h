@@ -1,12 +1,12 @@
 /*
- * name:	cg_local.h
- *
- * desc:	The entire cgame module is unloaded and reloaded on each level change,
- *			so there is NO persistant data between levels on the client side.
- *			If you absolutely need something stored, it can either be kept
- *			by the server in the server stored userinfos, or stashed in a cvar.
+* name:	cg_local.h
+*
+* desc:	The entire cgame module is unloaded and reloaded on each level change,
+*			so there is NO persistant data between levels on the client side.
+*			If you absolutely need something stored, it can either be kept
+*			by the server in the server stored userinfos, or stashed in a cvar.
 
- *
+*
 */
 
 #ifndef __CG_LOCAL_H__
@@ -16,7 +16,6 @@
 #include "tr_types.h"
 #include "../game/bg_public.h"
 #include "cg_public.h"
-
 
 #define POWERUP_BLINKS      5
 
@@ -122,7 +121,6 @@ typedef struct {
 	int oldFrameSnapshotTime;
 	headAnimation_t *headAnim;
 	// done.
-
 } lerpFrame_t;
 
 // Ridah, effect defines
@@ -236,7 +234,6 @@ typedef struct {
 	int lightningSoundTime;
 
 	qboolean forceLOD;
-
 } playerEntity_t;
 
 //----(SA)
@@ -246,10 +243,7 @@ typedef struct {
 } skinModel_t;
 //----(SA) end
 
-
 //=================================================
-
-
 
 // centity_t have a direct corespondence with gentity_t in the game, but
 // only the entityState_t is directly communicated to the cgame
@@ -327,7 +321,6 @@ typedef struct centity_s {
 	int highlightTime;
 	qboolean highlighted;
 } centity_t;
-
 
 //======================================================================
 
@@ -451,11 +444,9 @@ typedef struct localEntity_s {
 	int breakCount;                     // break-up this many times before we can break no more
 	float sizeScale;
 	// done.
-
 } localEntity_t;
 
 //======================================================================
-
 
 typedef struct {
 	int client;
@@ -477,7 +468,6 @@ typedef struct {
 	int respawnsLeft;                   // NERVE - SMF
 } score_t;
 
-
 typedef enum {
 	ACC_BELT_LEFT,  // belt left (lower)
 	ACC_BELT_RIGHT, // belt right (lower)
@@ -490,13 +480,10 @@ typedef enum {
 	ACC_MOUTH3,     //
 	//
 	ACC_MAX     // this is bound by network limits, must change network stream to increase this
-	            // (SA) No, really?  that's not true is it?  isn't this client-side only?
+	// (SA) No, really?  that's not true is it?  isn't this client-side only?
 } accType_t;
 
 #define ACC_NUM_MOUTH 3 // matches the above count
-
-
-
 
 // each client has an associated clientInfo_t
 // that contains media references necessary to present the
@@ -576,8 +563,6 @@ typedef struct {
 	// -NERVE - SMF
 } clientInfo_t;
 
-
-
 typedef enum {
 	W_PART_1,
 	W_PART_2,
@@ -605,20 +590,20 @@ typedef struct weaponInfo_s {
 	qboolean registered;
 	gitem_t         *item;
 
-//----(SA)	weapon animation sequences loaded from the weapon.cfg
+	//----(SA)	weapon animation sequences loaded from the weapon.cfg
 	animation_t weapAnimations[MAX_WP_ANIMATIONS];
-//----(SA)	end
+	//----(SA)	end
 
 	qhandle_t handsModel;               // the hands don't actually draw, they just position the weapon
 
 	qhandle_t standModel;               // not drawn.  tags used for positioning weapons for pickup
 
-//----(SA) mod for 1st/3rd person weap views
+	//----(SA) mod for 1st/3rd person weap views
 	qhandle_t weaponModel[W_NUM_TYPES];
 	qhandle_t partModels[W_NUM_TYPES][W_MAX_PARTS];
 	qhandle_t flashModel[W_NUM_TYPES];
 	qhandle_t modModel[W_NUM_TYPES];        // like the scope for the rifles
-//----(SA) end
+	//----(SA) end
 
 	pose_t position;                    // wolf locations (high, low, knife, pistol, shoulder, throw)  defines are WPOS_HIGH, WPOS_LOW, WPOS_KNIFE, WPOS_PISTOL, WPOS_SHOULDER, WPOS_THROW
 
@@ -656,7 +641,6 @@ typedef struct weaponInfo_s {
 	sfxHandle_t spindownSound;      //----(SA)	added // sound called if the above is running but player doesn't follow through and fire
 } weaponInfo_t;
 
-
 // each IT_* item has an associated itemInfo_t
 // that constains media references necessary to present the
 // item and its effects
@@ -665,7 +649,6 @@ typedef struct {
 	qhandle_t models[MAX_ITEM_MODELS];
 	qhandle_t icons[MAX_ITEM_ICONS];
 } itemInfo_t;
-
 
 typedef struct {
 	int itemNum;
@@ -714,7 +697,7 @@ typedef struct {
 	int frametime;              // cg.time - cg.oldTime
 
 	int time;                   // this is the time value that the client
-	                            // is rendering at.
+	// is rendering at.
 	int oldTime;                // time at last frame, used for missile trails and prediction checking
 
 	int physicsTime;            // either cg.snap->time or cg.nextSnap->time
@@ -769,7 +752,6 @@ typedef struct {
 	int zoomTime;
 	float zoomSensitivity;
 	float zoomval;
-
 
 	// information screen text during loading
 	char infoScreenText[MAX_STRING_CHARS];
@@ -831,13 +813,13 @@ typedef struct {
 	int identifyNextTime;                   // NERVE - SMF
 	int identifyClientRequest;              // NERVE - SMF
 
-//----(SA)	added
+	//----(SA)	added
 	// cursorhints
 	int cursorHintIcon;
 	int cursorHintTime;
 	int cursorHintFade;
 	int cursorHintValue;
-//----(SA)	end
+	//----(SA)	end
 
 	// attacking player
 	int attackerTime;
@@ -875,7 +857,7 @@ typedef struct {
 	int switchbackWeapon;
 	int lastFiredWeapon;
 	int lastWeapSelInBank[MAX_WEAP_BANKS];          // remember which weapon was last selected in a bank for 'weaponbank' commands //----(SA)	added
-// JPW FIXME NOTE: max_weap_banks > max_weap_banks_mp so this should be OK, but if that changes, change this too
+	// JPW FIXME NOTE: max_weap_banks > max_weap_banks_mp so this should be OK, but if that changes, change this too
 
 	// status bar head
 	float headYaw;
@@ -911,12 +893,12 @@ typedef struct {
 
 	// RF, new kick angles
 	vec3_t kickAVel;            // for damage feedback, weapon recoil, etc
-	                            // This is the angular velocity, to give a smooth
-	                            // rotational feedback, rather than sudden jerks
+	// This is the angular velocity, to give a smooth
+	// rotational feedback, rather than sudden jerks
 	vec3_t kickAngles;          // for damage feedback, weapon recoil, etc
-	                            // NOTE: this is not transmitted through MSG.C stream
-	                            // since weapon kicks are client-side, and damage feedback
-	                            // is rare enough that we can transmit that as an event
+	// NOTE: this is not transmitted through MSG.C stream
+	// since weapon kicks are client-side, and damage feedback
+	// is rare enough that we can transmit that as an event
 	float recoilPitch, recoilPitchAngle;
 
 	// Duffy
@@ -967,7 +949,6 @@ typedef struct {
 	// Martin - crosshairColor
 	vec4_t xhairColor;
 	vec4_t xhairColorAlt;
-
 } cg_t;
 
 #define NUM_FUNNEL_SPRITES  21
@@ -979,7 +960,6 @@ typedef struct {
 // Other media that can be tied to clients, weapons, or items are
 // stored in the clientInfo_t, itemInfo_t, weaponInfo_t, and powerupInfo_t
 typedef struct {
-
 	// shaders
 	qhandle_t charsetShader;
 	qhandle_t menucharsetShader;
@@ -1183,7 +1163,6 @@ typedef struct {
 
 	int bulletHitFleshScript;
 } cgMedia_t;
-
 
 // The client game static (cgs) structure hold everything
 // loaded or calculated from the gamestate.  It will NOT
@@ -1562,14 +1541,13 @@ void CG_FilledBar( float x, float y, float w, float h, float *startColor, float 
 void CG_DrawStretchPic( float x, float y, float width, float height, qhandle_t hShader );
 // END JOSEPH
 void CG_DrawString( float x, float y, const char *string,
-					float charWidth, float charHeight, const float *modulate );
-
+				   float charWidth, float charHeight, const float *modulate );
 
 void CG_DrawStringExt( int x, int y, const char *string, float *setColor,
-					   qboolean forceColor, qboolean shadow, int charWidth, int charHeight, int maxChars );
+					  qboolean forceColor, qboolean shadow, int charWidth, int charHeight, int maxChars );
 // JOSEPH 4-17-00
 void CG_DrawStringExt2( int x, int y, const char *string, const float *setColor,
-						qboolean forceColor, qboolean shadow, int charWidth, int charHeight, int maxChars );
+					   qboolean forceColor, qboolean shadow, int charWidth, int charHeight, int maxChars );
 // END JOSEPH
 void CG_DrawBigString( int x, int y, const char *s, float alpha );
 void CG_DrawBigStringColor( int x, int y, const char *s, vec4_t color );
@@ -1653,9 +1631,6 @@ qboolean CG_OtherTeamHasFlag();
 qhandle_t CG_StatusHandle( int task );
 void CG_Fade( int r, int g, int b, int a, float time );
 
-
-
-
 //
 // cg_player.c
 //
@@ -1676,11 +1651,10 @@ int CG_NewParticleArea( int num );
 void CG_BuildSolidList( void );
 int CG_PointContents( const vec3_t point, int passEntityNum );
 void CG_Trace( trace_t *result, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-			   int skipNumber, int mask );
+			  int skipNumber, int mask );
 qboolean PointVisible( vec3_t point );
 void CG_PredictPlayerState( void );
 void CG_LoadDeferredPlayers( void );
-
 
 //
 // cg_events.c
@@ -1689,7 +1663,6 @@ void CG_CheckEvents( centity_t *cent );
 const char  *CG_PlaceString( int rank );
 void CG_EntityEvent( centity_t *cent, vec3_t position );
 void CG_PainEvent( centity_t *cent, int health, qboolean crouching );
-
 
 //
 // cg_ents.c
@@ -1700,9 +1673,8 @@ void CG_Beam( centity_t *cent );
 void CG_AdjustPositionForMover( const vec3_t in, int moverNum, int fromTime, int toTime, vec3_t out, vec3_t outDeltaAngles );
 
 void CG_PositionEntityOnTag( refEntity_t *entity, const refEntity_t *parent,
-							 char *tagName, int startIndex, vec3_t *offset );
+							char *tagName, int startIndex, vec3_t *offset );
 void CG_PositionRotatedEntityOnTag( refEntity_t *entity, const refEntity_t *parent, char *tagName );
-
 
 //----(SA)
 void CG_AttachedPartChange( centity_t *cent );
@@ -1710,7 +1682,6 @@ void CG_NextItem_f( void );
 void CG_PrevItem_f( void );
 void CG_Item_f( void );
 //----(SA)	end
-
 
 //
 // cg_weapons.c
@@ -1775,11 +1746,11 @@ void CG_ClientDamage( int entnum, int enemynum, int id );
 void    CG_InitMarkPolys( void );
 void    CG_AddMarks( void );
 void    CG_ImpactMark( qhandle_t markShader,
-					   const vec3_t origin, const vec3_t dir,
-					   float orientation,
-					   float r, float g, float b, float a,
-					   qboolean alphaFade,
-					   float radius, qboolean temporary, int duration );
+					  const vec3_t origin, const vec3_t dir,
+					  float orientation,
+					  float r, float g, float b, float a,
+					  qboolean alphaFade,
+					  float radius, qboolean temporary, int duration );
 
 // Rafael particles
 //
@@ -1860,14 +1831,14 @@ void    CG_AddLocalEntities( void );
 //
 int CG_GetOriginForTag( centity_t * cent, refEntity_t * parent, char *tagName, int startIndex, vec3_t org, vec3_t axis[3] );
 localEntity_t *CG_SmokePuff( const vec3_t p,
-							 const vec3_t vel,
-							 float radius,
-							 float r, float g, float b, float a,
-							 float duration,
-							 int startTime,
-							 int fadeInTime,
-							 int leFlags,
-							 qhandle_t hShader );
+							const vec3_t vel,
+							float radius,
+							float r, float g, float b, float a,
+							float duration,
+							int startTime,
+							int fadeInTime,
+							int leFlags,
+							qhandle_t hShader );
 
 void CG_BubbleTrail( vec3_t start, vec3_t end, float size, float spacing );
 void CG_SpawnEffect( vec3_t org );
@@ -1877,8 +1848,8 @@ void CG_LoseHat( centity_t *cent, vec3_t dir );         //----(SA)	added
 void CG_Bleed( vec3_t origin, int entityNum );
 
 localEntity_t *CG_MakeExplosion( vec3_t origin, vec3_t dir,
-								 qhandle_t hModel, qhandle_t shader, int msec,
-								 qboolean isSprite );
+								qhandle_t hModel, qhandle_t shader, int msec,
+								qboolean isSprite );
 // Ridah
 void CG_DynamicLightningBolt( qhandle_t shader, vec3_t start, vec3_t pend, int numBolts, float maxWidth, qboolean fade, float startAlpha, int recursion, int randseed );
 void CG_SparklerSparks( vec3_t origin, int count );
@@ -1954,7 +1925,6 @@ void CG_ParseReinforcementTimes( const char *pszReinfSeedString );
 void CG_Respawn( void );
 void CG_TransitionPlayerState( playerState_t *ps, playerState_t *ops );
 
-
 //===============================================
 
 //
@@ -2015,26 +1985,26 @@ clipHandle_t trap_CM_TempCapsuleModel( const vec3_t mins, const vec3_t maxs );
 int         trap_CM_PointContents( const vec3_t p, clipHandle_t model );
 int         trap_CM_TransformedPointContents( const vec3_t p, clipHandle_t model, const vec3_t origin, const vec3_t angles );
 void        trap_CM_BoxTrace( trace_t *results, const vec3_t start, const vec3_t end,
-							  const vec3_t mins, const vec3_t maxs,
-							  clipHandle_t model, int brushmask );
+							 const vec3_t mins, const vec3_t maxs,
+							 clipHandle_t model, int brushmask );
 void        trap_CM_TransformedBoxTrace( trace_t *results, const vec3_t start, const vec3_t end,
-										 const vec3_t mins, const vec3_t maxs,
-										 clipHandle_t model, int brushmask,
-										 const vec3_t origin, const vec3_t angles );
+										const vec3_t mins, const vec3_t maxs,
+										clipHandle_t model, int brushmask,
+										const vec3_t origin, const vec3_t angles );
 
 void        trap_CM_CapsuleTrace( trace_t *results, const vec3_t start, const vec3_t end,
-								  const vec3_t mins, const vec3_t maxs,
-								  clipHandle_t model, int brushmask );
+								 const vec3_t mins, const vec3_t maxs,
+								 clipHandle_t model, int brushmask );
 void        trap_CM_TransformedCapsuleTrace( trace_t *results, const vec3_t start, const vec3_t end,
-											 const vec3_t mins, const vec3_t maxs,
-											 clipHandle_t model, int brushmask,
-											 const vec3_t origin, const vec3_t angles );
+											const vec3_t mins, const vec3_t maxs,
+											clipHandle_t model, int brushmask,
+											const vec3_t origin, const vec3_t angles );
 
 // Returns the projection of a polygon onto the solid brushes in the world
 int         trap_CM_MarkFragments( int numPoints, const vec3_t *points,
-								   const vec3_t projection,
-								   int maxPoints, vec3_t pointBuffer,
-								   int maxFragments, markFragment_t *fragmentBuffer );
+								  const vec3_t projection,
+								  int maxPoints, vec3_t pointBuffer,
+								  int maxFragments, markFragment_t *fragmentBuffer );
 
 // normal sounds will have their volume dynamically changed as their entity
 // moves and the listener moves
@@ -2090,11 +2060,11 @@ void        trap_R_AddCoronaToScene( const vec3_t org, float r, float g, float b
 void        trap_R_RenderScene( const refdef_t *fd );
 void        trap_R_SetColor( const float *rgba );   // NULL = 1,1,1,1
 void        trap_R_DrawStretchPic( float x, float y, float w, float h,
-								   float s1, float t1, float s2, float t2, qhandle_t hShader );
+								  float s1, float t1, float s2, float t2, qhandle_t hShader );
 void        trap_R_DrawRotatedPic( float x, float y, float w, float h,
-								   float s1, float t1, float s2, float t2, qhandle_t hShader, float angle );    // NERVE - SMF
+								  float s1, float t1, float s2, float t2, qhandle_t hShader, float angle );    // NERVE - SMF
 void        trap_R_DrawStretchPicGradient( float x, float y, float w, float h,
-										   float s1, float t1, float s2, float t2, qhandle_t hShader, const float *gradientColor, int gradientType );
+										  float s1, float t1, float s2, float t2, qhandle_t hShader, const float *gradientColor, int gradientType );
 
 void        trap_R_ModelBounds( clipHandle_t model, vec3_t mins, vec3_t maxs );
 int         trap_R_LerpTag( orientation_t *tag, const refEntity_t *refent, const char *tagName, int startIndex );

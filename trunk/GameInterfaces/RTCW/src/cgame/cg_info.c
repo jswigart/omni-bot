@@ -5,7 +5,6 @@
 #define MAX_LOADING_PLAYER_ICONS    16
 #define MAX_LOADING_ITEM_ICONS      26
 
-
 /*
 ===================
 CG_DrawLoadingIcons
@@ -13,7 +12,6 @@ CG_DrawLoadingIcons
 */
 static void CG_DrawLoadingIcons( void ) {
 }
-
 
 /*
 ======================
@@ -26,7 +24,6 @@ void CG_LoadingString( const char *s ) {
 
 	if ( s && s[0] != 0 ) {
 		CG_Printf( va( "LOADING... %s\n",s ) ); //----(SA)	added so you can see from the console what's going on
-
 	}
 	trap_UpdateScreen();
 }
@@ -110,7 +107,7 @@ static statsItem_t statsItems[] = {
 
 void CG_DrawStats( char *stats ) {
 	int i, y, v, j;
-	#define MAX_STATS_VARS  64
+#define MAX_STATS_VARS  64
 	int vars[MAX_STATS_VARS];
 	char *str, *token;
 	char *formatStr = NULL; // TTimo: init
@@ -118,7 +115,7 @@ void CG_DrawStats( char *stats ) {
 	char string[MAX_QPATH];
 
 	UI_DrawProportionalString( 320, 120, "MISSION STATS",
-							   UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
+		UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 
 	Q_strncpyz( string, stats, sizeof( string ) );
 	str = string;
@@ -133,7 +130,7 @@ void CG_DrawStats( char *stats ) {
 		y += statsItems[i].YOfs;
 
 		UI_DrawProportionalString( statsItems[i].labelX, y, statsItems[i].label,
-								   statsItems[i].labelFlags, *statsItems[i].labelColor );
+			statsItems[i].labelFlags, *statsItems[i].labelColor );
 
 		if ( statsItems[i].numVars ) {
 			varIndex = v;
@@ -164,7 +161,7 @@ void CG_DrawStats( char *stats ) {
 			}
 
 			UI_DrawProportionalString( statsItems[i].formatX, y, formatStr,
-									   statsItems[i].formatFlags, *statsItems[i].formatColor );
+				statsItems[i].formatFlags, *statsItems[i].formatColor );
 		}
 	}
 }
@@ -183,7 +180,7 @@ void CG_DrawInformation( void ) {
 	int y;
 	int value;
 	qhandle_t levelshot = 0; // TTimo: init
-//	qhandle_t	detail;
+	//	qhandle_t	detail;
 	char buf[1024];
 	static int lastDraw = 0;  // Ridah, so we don't draw the screen more often than we need to
 	int ms;
@@ -217,7 +214,6 @@ void CG_DrawInformation( void ) {
 	trap_Cvar_VariableStringBuffer( "com_expectedhunkusage", hunkBuf, MAX_QPATH );
 	expectedHunk = atoi( hunkBuf );
 
-
 	s = Info_ValueForKey( info, "mapname" );
 	if ( s && s[0] != 0 ) {  // there is often no 's'
 		if ( strlen( cg_missionStats.string ) > 1 && cg_missionStats.string[0] == 's' ) {
@@ -238,9 +234,8 @@ void CG_DrawInformation( void ) {
 	//detail = trap_R_RegisterShader( "levelShotDetail" );
 	//trap_R_DrawStretchPic( 0, 0, cgs.glconfig.vidWidth, cgs.glconfig.vidHeight, 0, 0, 2.5, 2, detail );
 
-
-// (SA) commented out for Drew
-//	UI_DrawProportionalString( 320, 16, va( "Loading %s", Info_ValueForKey( info, "mapname" ) ), UI_SMALLFONT|UI_CENTER|UI_DROPSHADOW, colorWhite );
+	// (SA) commented out for Drew
+	//	UI_DrawProportionalString( 320, 16, va( "Loading %s", Info_ValueForKey( info, "mapname" ) ), UI_SMALLFONT|UI_CENTER|UI_DROPSHADOW, colorWhite );
 
 	// show the loading progress
 	VectorSet( color, 0.8, 0.8, 0.8 );
@@ -258,7 +253,7 @@ void CG_DrawInformation( void ) {
 		if ( cg_waitForFire.integer == 1 ) {
 			// waiting for server to finish loading the map
 			UI_DrawProportionalString( 320, xy[1] + wh[1] - 10, "press fire to continue",
-									   UI_CENTER | UI_EXSMALLFONT | UI_DROPSHADOW, color );
+				UI_CENTER | UI_EXSMALLFONT | UI_DROPSHADOW, color );
 		} else if ( expectedHunk > 0 ) {
 			percentDone = (float)( cg_hunkUsed.integer + cg_soundAdjust.integer ) / (float)( expectedHunk );
 			if ( percentDone > 0.97 ) { // never actually show 100%, since we are not in the game yet
@@ -269,11 +264,11 @@ void CG_DrawInformation( void ) {
 			// we're ready, press a key to start playing
 			if ( ( ms % 1000 ) < 700 ) {  // flashing to get our attention
 				UI_DrawProportionalString( 320, xy[1] + wh[1] - 10, "press fire to begin",
-										   UI_CENTER | UI_EXSMALLFONT | UI_DROPSHADOW, color );
+					UI_CENTER | UI_EXSMALLFONT | UI_DROPSHADOW, color );
 			}
 		} else {
 			UI_DrawProportionalString( 320, xy[1] + wh[1] - 10, "please wait",
-									   UI_CENTER | UI_EXSMALLFONT | UI_DROPSHADOW, color );
+				UI_CENTER | UI_EXSMALLFONT | UI_DROPSHADOW, color );
 		}
 
 		trap_UpdateScreen();
@@ -300,7 +295,7 @@ void CG_DrawInformation( void ) {
 			// we're ready, press a key to start playing
 			if ( ( ms % 1000 ) < 700 ) {  // flashing to get our attention
 				UI_DrawProportionalString( 320, xy[1] - 2, "press fire to begin",
-										   UI_CENTER | UI_EXSMALLFONT | UI_DROPSHADOW, color );
+					UI_CENTER | UI_EXSMALLFONT | UI_DROPSHADOW, color );
 			}
 		}
 
@@ -317,10 +312,10 @@ void CG_DrawInformation( void ) {
 	// screen to write into
 	if ( cg.infoScreenText[0] ) {
 		UI_DrawProportionalString( 320, 128, va( "Loading... %s", cg.infoScreenText ),
-								   UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
+			UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 	} else {
 		UI_DrawProportionalString( 320, 128, "Awaiting snapshot...",
-								   UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
+			UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 	}
 
 	// draw info string information
@@ -332,14 +327,14 @@ void CG_DrawInformation( void ) {
 		// server hostname
 		s = Info_ValueForKey( info, "sv_hostname" );
 		UI_DrawProportionalString( 320, y, s,
-								   UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
+			UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 		y += PROP_HEIGHT;
 
 		// server-specific message of the day
 		s = CG_ConfigString( CS_MOTD );
 		if ( s[0] ) {
 			UI_DrawProportionalString( 320, y, s,
-									   UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
 		}
 
@@ -351,7 +346,7 @@ void CG_DrawInformation( void ) {
 	s = CG_ConfigString( CS_MESSAGE );
 	if ( s[0] ) {
 		UI_DrawProportionalString( 320, y, s,
-								   UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
+			UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 		y += PROP_HEIGHT;
 	}
 
@@ -359,7 +354,7 @@ void CG_DrawInformation( void ) {
 	s = Info_ValueForKey( sysInfo, "sv_cheats" );
 	if ( s[0] == '1' ) {
 		UI_DrawProportionalString( 320, y, "CHEATS ARE ENABLED",
-								   UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
+			UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 		y += PROP_HEIGHT;
 	}
 
@@ -380,43 +375,43 @@ void CG_DrawInformation( void ) {
 	case GT_CTF:
 		s = "Capture The Flag";
 		break;
-	// JPW NERVE
+		// JPW NERVE
 	case GT_WOLF:
 		s = "Wolfenstein Multiplayer";
 		break;
-	// jpw
-	// NERVE - SMF
+		// jpw
+		// NERVE - SMF
 	case GT_WOLF_STOPWATCH:
 		s = "WolfMP Stopwatch";
 		break;
 	case GT_WOLF_CP:
 		s = "WolfMP Checkpoint";
 		break;
-	// -NERVE - SMF
-	// JPW NERVE
+		// -NERVE - SMF
+		// JPW NERVE
 	case GT_WOLF_CPH:
 		s = "WolfMP Capture & Hold";
 		break;
-	// jpw
+		// jpw
 	default:
 		s = "Unknown Gametype";
 		break;
 	}
 	UI_DrawProportionalString( 320, y, s,
-							   UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
+		UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 	y += PROP_HEIGHT;
 
 	value = atoi( Info_ValueForKey( info, "timelimit" ) );
 	if ( value ) {
 		UI_DrawProportionalString( 320, y, va( "timelimit %i", value ),
-								   UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
+			UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 		y += PROP_HEIGHT;
 	}
 
 	value = atoi( Info_ValueForKey( info, "fraglimit" ) );
 	if ( value ) {
 		UI_DrawProportionalString( 320, y, va( "fraglimit %i", value ),
-								   UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
+			UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 		y += PROP_HEIGHT;
 	}
 
@@ -424,7 +419,7 @@ void CG_DrawInformation( void ) {
 		value = atoi( Info_ValueForKey( info, "capturelimit" ) );
 		if ( value ) {
 			UI_DrawProportionalString( 320, y, va( "capturelimit %i", value ),
-									   UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite );
 			y += PROP_HEIGHT;
 		}
 	}

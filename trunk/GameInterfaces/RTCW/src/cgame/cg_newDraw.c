@@ -1,5 +1,3 @@
-
-
 #include "cg_local.h"
 #include "../ui/ui_shared.h"
 
@@ -77,13 +75,12 @@ weapIconDrawSize
 */
 static int weapIconDrawSize( int weap ) {
 	switch ( weap ) {
-
-	// weapons to not draw
+		// weapons to not draw
 	case WP_KNIFE:
 	case WP_KNIFE2:
 		return 0;
 
-	// weapons with 'wide' icons
+		// weapons with 'wide' icons
 	case WP_THOMPSON:
 	case WP_MP40:
 	case WP_STEN:
@@ -107,7 +104,6 @@ static int weapIconDrawSize( int weap ) {
 	return 1;
 }
 
-
 /*
 ==============
 CG_DrawPlayerWeaponIcon
@@ -118,12 +114,12 @@ static void CG_DrawPlayerWeaponIcon( rectDef_t *rect, qboolean drawHighlighted, 
 	int realweap;                   // DHM - Nerve
 	qhandle_t icon;
 	float scale,halfScale;
-// JPW NERVE
+	// JPW NERVE
 	vec4_t hcolor;
 
 	VectorSet( hcolor,1.f,1.f,1.f );
 	hcolor[3] = cg_hudAlpha.value;
-// jpw
+	// jpw
 
 	if ( !cg_drawIcons.integer ) {
 		return;
@@ -194,12 +190,10 @@ static void CG_DrawPlayerWeaponIcon( rectDef_t *rect, qboolean drawHighlighted, 
 		scale = halfScale = 0;
 	}
 
-
 	if ( icon ) {
 		float x, y, w, h;
 
 		if ( size == 1 ) { // draw half width to match the icon asset
-
 			// start at left
 			x = rect->x - halfScale;
 			y = rect->y - halfScale;
@@ -217,7 +211,6 @@ static void CG_DrawPlayerWeaponIcon( rectDef_t *rect, qboolean drawHighlighted, 
 			default:
 				break;
 			}
-
 		} else {
 			x = rect->x - halfScale;
 			y = rect->y - halfScale;
@@ -225,12 +218,10 @@ static void CG_DrawPlayerWeaponIcon( rectDef_t *rect, qboolean drawHighlighted, 
 			h = rect->h + scale;
 		}
 
-
 		trap_R_SetColor( hcolor ); // JPW NERVE
 		CG_DrawPic( x, y, w, h, icon );
 	}
 }
-
 
 /*
 ==============
@@ -269,12 +260,12 @@ extern void CG_CheckForCursorHints( void );
 ==============
 CG_DrawCursorHints
 
-  cg_cursorHints.integer ==
-    0:	no hints
-    1:	sin size pulse
-    2:	one way size pulse
-    3:	alpha pulse
-    4+:	static image
+cg_cursorHints.integer ==
+0:	no hints
+1:	sin size pulse
+2:	one way size pulse
+3:	alpha pulse
+4+:	static image
 
 ==============
 */
@@ -290,7 +281,6 @@ static void CG_DrawCursorhint( rectDef_t *rect ) {
 	CG_CheckForCursorHints();
 
 	switch ( cg.cursorHintIcon ) {
-
 	case HINT_NONE:
 	case HINT_FORCENONE:
 		icon = 0;
@@ -326,9 +316,9 @@ static void CG_DrawCursorhint( rectDef_t *rect ) {
 
 		// only show 'pickupable' if you're not armed, or are armed with a single handed weapon
 		if ( !( cg.predictedPlayerState.weapon ) ||
-			 WEAPS_ONE_HANDED & ( 1 << ( cg.predictedPlayerState.weapon ) )
-			 ) {
-			icon = cgs.media.chairHintShader;
+			WEAPS_ONE_HANDED & ( 1 << ( cg.predictedPlayerState.weapon ) )
+			) {
+				icon = cgs.media.chairHintShader;
 		}
 		break;
 	case HINT_ALARM:
@@ -392,14 +382,14 @@ static void CG_DrawCursorhint( rectDef_t *rect ) {
 		icon = cgs.media.exitHintShader;
 		break;
 
-	// cs: no shaders registered
+		// cs: no shaders registered
 	case HINT_PLYR_FRIEND:
 	case HINT_PLYR_NEUTRAL:
 	case HINT_PLYR_ENEMY:
 	case HINT_PLYR_UNKNOWN:
 		break;
 
-	// DHM - Nerve :: multiplayer hints
+		// DHM - Nerve :: multiplayer hints
 	case HINT_BUILD:
 		icon = cgs.media.buildHintShader;
 		break;
@@ -412,7 +402,7 @@ static void CG_DrawCursorhint( rectDef_t *rect ) {
 	case HINT_DYNAMITE:
 		icon = cgs.media.dynamiteHintShader;
 		break;
-	// dhm - end
+		// dhm - end
 
 	case HINT_ACTIVATE:
 	case HINT_PLAYER:
@@ -436,7 +426,6 @@ static void CG_DrawCursorhint( rectDef_t *rect ) {
 		color[3] *= 0.5 + 0.5 * sin( (float)cg.time / 150.0 );
 	}
 
-
 	// size
 	if ( cg_cursorHints.integer >= 3 ) {   // no size pulsing
 		scale = halfscale = 0;
@@ -445,7 +434,6 @@ static void CG_DrawCursorhint( rectDef_t *rect ) {
 			scale = (float)( ( cg.cursorHintTime ) % 1000 ) / 100.0f; // one way size pulse
 		} else {
 			scale = CURSORHINT_SCALE * ( 0.5 + 0.5 * sin( (float)cg.time / 150.0 ) ); // sin pulse
-
 		}
 		halfscale = scale * 0.5f;
 	}
@@ -467,12 +455,11 @@ static void CG_DrawCursorhint( rectDef_t *rect ) {
 	}
 }
 
-
 /*
 ==============
 CG_DrawPlayerAmmoValue
-    0 - ammo
-    1 - clip
+0 - ammo
+1 - clip
 ==============
 */
 int CG_DrawFieldWidth( int x, int y, int width, int value, int charWidth, int charHeight );
@@ -574,7 +561,6 @@ static void CG_DrawPlayerAmmoValue( rectDef_t *rect, float scale, vec4_t color, 
 	}
 }
 
-
 static void CG_DrawPlayerHead( rectDef_t *rect, qboolean draw2D ) {
 	vec3_t angles;
 	float size;
@@ -674,10 +660,8 @@ qhandle_t CG_StatusHandle( int task ) {
 static void CG_DrawSelectedPlayerStatus( rectDef_t *rect ) {
 }
 
-
 static void CG_DrawPlayerStatus( rectDef_t *rect ) {
 }
-
 
 static void CG_DrawSelectedPlayerName( rectDef_t *rect, float scale, vec4_t color, qboolean voice, int textStyle ) {
 	clientInfo_t *ci;
@@ -711,7 +695,6 @@ static void CG_DrawPlayerLocation( rectDef_t *rect, float scale, vec4_t color, i
 	}
 }
 
-
 static void CG_DrawSelectedPlayerWeapon( rectDef_t *rect ) {
 	clientInfo_t *ci;
 	ci = cgs.clientinfo + sortedTeamPlayers[CG_GetSelectedPlayer()];
@@ -738,7 +721,6 @@ static void CG_DrawPlayerScore( rectDef_t *rect, float scale, vec4_t color, qhan
 		CG_Text_Paint( rect->x + ( rect->w - value ) / 2, rect->y + rect->h, scale, color, num, 0, 0, textStyle );
 	}
 }
-
 
 static void CG_DrawHoldableItem( rectDef_t *rect, float scale, qboolean draw2D ) {
 }
@@ -791,7 +773,6 @@ static void CG_DrawSelectedPlayerPowerup( rectDef_t *rect, qboolean draw2D ) {
 	}
 }
 
-
 static void CG_DrawSelectedPlayerHead( rectDef_t *rect, qboolean draw2D, qboolean voice ) {
 	clientInfo_t    *ci;
 	ci = cgs.clientinfo + sortedTeamPlayers[CG_GetSelectedPlayer()];
@@ -826,7 +807,6 @@ static void CG_DrawSelectedPlayerHead( rectDef_t *rect, qboolean draw2D, qboolea
 			angles[ROLL] = 0;
 
 			CG_Draw3DModel( rect->x, rect->y, rect->w, rect->h, ci->headModel, ci->headSkin, origin, angles );
-
 		} else if ( cg_drawIcons.integer ) {
 			CG_DrawPic( rect->x, rect->y, rect->w, rect->h, ci->modelIcon );
 		}
@@ -867,7 +847,6 @@ static void CG_DrawPlayerHealth( rectDef_t *rect, float scale, vec4_t color, qha
 		// DHM - Nerve :: temp display of number of lifes left
 
 		if ( ps->persistant[PERS_RESPAWNS_LEFT] >= 0 ) {
-
 			VectorSet( color2, 1.0f, 1.0f, 1.0f );
 			color2[3] = color[3];
 			trap_R_SetColor( color2 );
@@ -957,7 +936,6 @@ static void CG_HarvesterSkulls( rectDef_t *rect, float scale, vec4_t color, qboo
 static void CG_OneFlagStatus( rectDef_t *rect ) {
 }
 
-
 static void CG_DrawCTFPowerUp( rectDef_t *rect ) {
 }
 
@@ -965,13 +943,11 @@ static void CG_DrawTeamColor( rectDef_t *rect, vec4_t color ) {
 	CG_DrawTeamBackground( rect->x, rect->y, rect->w, rect->h, color[3], cg.snap->ps.persistant[PERS_TEAM] );
 }
 
-
 static void CG_DrawAreaHoldable( rectDef_t *rect, int align, float spacing, float scale, vec4_t color ) {
 }
 
 static void CG_DrawAreaWeapons( rectDef_t *rect, int align, float spacing, float scale, vec4_t color ) {
 }
-
 
 static void CG_DrawAreaPowerUp( rectDef_t *rect, int align, float spacing, float scale, vec4_t color ) {
 	char num[16];
@@ -1049,10 +1025,8 @@ static void CG_DrawAreaPowerUp( rectDef_t *rect, int align, float spacing, float
 			CG_Text_Paint( r2.x + ( r2.w * .75 ) + 3, r2.y + r2.h, scale, color, num, 0, 0, 0 );
 			*inc += r2.w + spacing;
 		}
-
 	}
 	trap_R_SetColor( NULL );
-
 }
 
 float CG_GetValue( int ownerDraw, int type ) {
@@ -1145,7 +1119,7 @@ qboolean CG_YourTeamHasFlag() {
 // THINKABOUTME: should these be exclusive or inclusive..
 //
 qboolean CG_OwnerDrawVisible( int flags ) {
-//----(SA)	added
+	//----(SA)	added
 	if ( flags & CG_SHOW_NOT_V_BINOC ) {      // if looking through binocs
 		if ( cg.zoomedBinoc ) {
 			return qfalse;
@@ -1170,7 +1144,7 @@ qboolean CG_OwnerDrawVisible( int flags ) {
 		}
 	}
 
-//----(SA)	end
+	//----(SA)	end
 
 	if ( flags & CG_SHOW_TEAMINFO ) {
 		return ( cg_currentSelectedPlayer.integer == numSortedTeamPlayers );
@@ -1221,7 +1195,7 @@ qboolean CG_OwnerDrawVisible( int flags ) {
 	if ( flags & CG_SHOW_DURINGINCOMINGVOICE ) {
 	}
 
-//----(SA)	added
+	//----(SA)	added
 	if ( flags & CG_SHOW_NOT_V_CLEAR ) {
 		// if /not/ looking through binocs,snooper or sniper
 		if ( !cg.zoomedBinoc && !( cg.weaponSelect == WP_SNIPERRIFLE ) && !( cg.weaponSelect == WP_SNOOPERSCOPE ) && !( cg.weaponSelect == WP_FG42SCOPE ) ) {
@@ -1237,12 +1211,10 @@ qboolean CG_OwnerDrawVisible( int flags ) {
 		}
 	}
 
-//----(SA)	end
+	//----(SA)	end
 
 	return qfalse;
 }
-
-
 
 static void CG_DrawPlayerHasFlag( rectDef_t *rect, qboolean force2D ) {
 }
@@ -1267,16 +1239,13 @@ const char *CG_GetKillerText() {
 	return s;
 }
 
-
 static void CG_DrawKiller( rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle ) {
 	// fragged by ... line
 	if ( cg.killerName[0] ) {
 		int x = rect->x + rect->w / 2;
 		CG_Text_Paint( x - CG_Text_Width( CG_GetKillerText(), scale, 0 ) / 2, rect->y + rect->h, scale, color, CG_GetKillerText(), 0, 0, textStyle );
 	}
-
 }
-
 
 static void CG_DrawCapFragLimit( rectDef_t *rect, float scale, vec4_t color, qhandle_t shader, int textStyle ) {
 	int limit = ( cgs.gametype >= GT_CTF ) ? cgs.capturelimit : cgs.fraglimit;
@@ -1374,14 +1343,14 @@ static void CG_Text_Paint_Limit( float *maxX, float x, float y, float scale, vec
 					break;
 				}
 				CG_Text_PaintChar( x, y - yadj,
-								   glyph->imageWidth,
-								   glyph->imageHeight,
-								   useScale,
-								   glyph->s,
-								   glyph->t,
-								   glyph->s2,
-								   glyph->t2,
-								   glyph->glyph );
+					glyph->imageWidth,
+					glyph->imageHeight,
+					useScale,
+					glyph->s,
+					glyph->t,
+					glyph->s2,
+					glyph->t2,
+					glyph->glyph );
 
 				x += ( glyph->xSkip * useScale ) + adjust;
 				*maxX = x;
@@ -1451,7 +1420,6 @@ void CG_DrawTeamSpectators( rectDef_t *rect, float scale, vec4_t color, qhandle_
 		} else {
 			cg.spectatorPaintX2 = -1;
 		}
-
 	}
 }
 
@@ -1516,16 +1484,14 @@ void CG_DrawMedal( int ownerDraw, rectDef_t *rect, float scale, vec4_t color, qh
 		CG_Text_Paint( rect->x + ( rect->w - value ) / 2, rect->y + rect->h + 10, scale, color, text, 0, 0, 0 );
 	}
 	trap_R_SetColor( NULL );
-
 }
-
 
 /*
 ==============
 CG_DrawWeapStability
-    draw a bar showing current stability level (0-255), max at current weapon/ability, and 'perfect' reference mark
+draw a bar showing current stability level (0-255), max at current weapon/ability, and 'perfect' reference mark
 
-    probably only drawn for scoped weapons
+probably only drawn for scoped weapons
 ==============
 */
 void CG_DrawWeapStability( rectDef_t *rect, vec4_t color, int align ) {
@@ -1546,7 +1512,6 @@ void CG_DrawWeapStability( rectDef_t *rect, vec4_t color, int align ) {
 	CG_FilledBar( rect->x, rect->y, rect->w, rect->h, goodColor, badColor, NULL, (float)cg.snap->ps.aimSpreadScale / 255.0f, 2 | 4 | 256 ); // flags (BAR_CENTER|BAR_VERT|BAR_LERP_COLOR)
 }
 
-
 /*
 ==============
 CG_DrawWeapHeat
@@ -1562,16 +1527,14 @@ void CG_DrawWeapHeat( rectDef_t *rect, int align ) {
 
 	if ( align != HUD_HORIZONTAL ) {
 		flags |= 4;   // BAR_VERT
-
 	}
 	flags |= 1;       // BAR_LEFT			- this is hardcoded now, but will be decided by the menu script
 	flags |= 16;      // BAR_BG			- draw the filled contrast box
-//	flags|=32;		// BAR_BGSPACING_X0Y5	- different style
+	//	flags|=32;		// BAR_BGSPACING_X0Y5	- different style
 
 	flags |= 256;     // BAR_COLOR_LERP
 	CG_FilledBar( rect->x, rect->y, rect->w, rect->h, color, color2, NULL, (float)cg.snap->ps.curWeapHeat / 255.0f, flags );
 }
-
 
 /*
 ==============
@@ -1611,7 +1574,7 @@ static void CG_DrawWeapRecharge( rectDef_t *rect, vec4_t color, int align ) {
 	}
 	flags |= 16;
 
-// JPW NERVE -- added drawWeaponPercent in multiplayer
+	// JPW NERVE -- added drawWeaponPercent in multiplayer
 	if ( cgs.gametype >= GT_WOLF ) {
 		float barFrac, chargeTime;
 		qboolean fade = qfalse;
@@ -1679,10 +1642,10 @@ void CG_OwnerDraw( float x, float y, float w, float h, float text_x, float text_
 	case CG_PLAYER_WEAPON_ICON2D:
 		CG_DrawPlayerWeaponIcon( &rect, ownerDrawFlags & CG_SHOW_HIGHLIGHTED, align );
 		break;
-	/*case CG_PLAYER_ARMOR_ICON:
+		/*case CG_PLAYER_ARMOR_ICON:
 		CG_DrawPlayerArmorIcon( &rect, ownerDrawFlags & CG_SHOW_2DONLY );
 		break;
-	case CG_PLAYER_ARMOR_ICON2D:
+		case CG_PLAYER_ARMOR_ICON2D:
 		CG_DrawPlayerArmorIcon( &rect, qtrue );
 		break;*/
 	case CG_PLAYER_ARMOR_VALUE:
@@ -1742,11 +1705,11 @@ void CG_OwnerDraw( float x, float y, float w, float h, float text_x, float text_
 	case CG_STAMINA:
 		CG_DrawFatigue( &rect, color, align );
 		break;
-	// DHM - Nerve
+		// DHM - Nerve
 	case CG_PLAYER_WEAPON_RECHARGE:
 		CG_DrawWeapRecharge( &rect, color, align );
 		break;
-	// dhm - end
+		// dhm - end
 	case CG_PLAYER_HEAD:
 		CG_DrawPlayerHead( &rect, ownerDrawFlags & CG_SHOW_2DONLY );
 		break;
@@ -1940,9 +1903,9 @@ void CG_ShowTeamMenu() {
 ==================
 CG_EventHandling
 ==================
- type 0 - no event handling
-      1 - team menu
-      2 - hud editor
+type 0 - no event handling
+1 - team menu
+2 - hud editor
 
 */
 void CG_EventHandling( int type ) {
@@ -2002,7 +1965,6 @@ void CG_ShowResponseHead() {
 void CG_RunMenuScript( char **args ) {
 }
 
-
 void CG_GetTeamColor( vec4_t *color ) {
 	if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED ) {
 		( *color )[0] = 1;
@@ -2018,4 +1980,3 @@ void CG_GetTeamColor( vec4_t *color ) {
 		( *color )[3] = .25f;
 	}
 }
-

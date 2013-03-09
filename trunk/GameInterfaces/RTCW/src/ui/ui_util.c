@@ -35,14 +35,13 @@ char *get_http_info( char *host, char *filename, int *filesize, mydown_options *
 	opt->filedata = NULL;
 
 	trap_Print( va(
-					"^7- ^3file name   ^1%s\n"
-					"^7- ^3file size   ^1%u\n"
-					"\n", filename, fsize ) );
+		"^7- ^3file name   ^1%s\n"
+		"^7- ^3file size   ^1%u\n"
+		"\n", filename, fsize ) );
 
 	*filesize = fsize;
 	return( filename );
 }
-
 
 //Basically just a systemcall to the downloads complete function in the engine
 typedef void ( *g_DownloadsComplete )( void );
@@ -67,7 +66,6 @@ void downloadThread( void*dummy ) {
 	_endthread();
 }
 
-
 //Hook to kick off the http downloader
 void ( WINAPIV *orig_BeginDownload )( const char *localName, const char *remoteName );
 void hook_BeginDownload( const char *localName, const char *remoteName ) {
@@ -83,7 +81,6 @@ void hook_BeginDownload( const char *localName, const char *remoteName ) {
 		return;
 	}
 
-
 	trap_GetConfigString( CS_SERVERINFO, info, sizeof( info ) );
 	host = Info_ValueForKey( info, "g_httpdownhost" );
 
@@ -91,7 +88,6 @@ void hook_BeginDownload( const char *localName, const char *remoteName ) {
 	if ( !strlen( host ) ) {
 		host = "s4ndmod.com/downloads/";
 	}
-
 
 	httpdown.opt.useragent = va( "%s Omni-bot",Q3_VERSION );
 	trap_Cvar_Set( "cl_downloadName", remoteName );
@@ -114,7 +110,6 @@ void hook_BeginDownload( const char *localName, const char *remoteName ) {
 	_beginthread( downloadThread, 0, NULL );
 }
 
-
 //S4NDM4NN - Display for the http downloader
 #define ESTIMATES 80
 void UI_DisplayMyDownloadInfo( const char *downloadName, float centerPoint, float yStart, float scale ) {
@@ -122,9 +117,9 @@ void UI_DisplayMyDownloadInfo( const char *downloadName, float centerPoint, floa
 	static char etaText[]   = "Estimated time left:";
 	static char xferText[]  = "Transfer rate:";
 	static int tleEstimates[ESTIMATES] = { 60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,
-										   60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,
-										   60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,
-										   60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60 };
+		60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,
+		60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,
+		60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60 };
 	static int tleIndex = 0;
 	vec4_t color = { 0.3f, 0.3f, 0.3f, 0.8f };
 	int downloadSize, downloadCount, downloadTime;

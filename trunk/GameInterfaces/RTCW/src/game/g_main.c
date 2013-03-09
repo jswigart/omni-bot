@@ -229,7 +229,6 @@ vmCvar_t g_dbgRevive;
 
 vmCvar_t g_dynoFuseTime;
 
-
 cvarTable_t gameCvarTable[] = {
 	// debug vars
 
@@ -414,12 +413,10 @@ cvarTable_t gameCvarTable[] = {
 
 	//http downloads - if no server is given client will try s4ndmod.com/downloads
 	{0,                             "g_httpdownhost",               "",                     CVAR_SERVERINFO,    0,      qfalse}
-
 };
 
 // bk001129 - made static to avoid aliasing
 static int gameCvarTableSize = sizeof( gameCvarTable ) / sizeof( gameCvarTable[0] );
-
 
 void G_InitGame( int levelTime, int randomSeed, int restart );
 void G_RunFrame( int levelTime );
@@ -430,7 +427,7 @@ void G_HandleMessage( int _clientfrom, const char *_buffer, int _messagesize, in
 
 // Ridah, Cast AI
 qboolean AICast_VisibleFromPos( vec3_t srcpos, int srcnum,
-								vec3_t destpos, int destnum, qboolean updateVisPos );
+							   vec3_t destpos, int destnum, qboolean updateVisPos );
 qboolean AICast_CheckAttackAtPos( int entnum, int enemy, vec3_t pos, qboolean ducking, qboolean allowHitWorld );
 void AICast_Init( void );
 // done.
@@ -484,14 +481,14 @@ int vmMain( int command, int arg0, int arg1, int arg2, int arg3, int arg4, int a
 		ClientCommand( arg0 );
 		return 0;
 	case GAME_MESSAGERECEIVED:
-	{
-		int iClientFrom = arg0;
-		const char *pBuffer = (const char *)arg1;
-		int iBufferLength = arg2;
-		int iCommandTime = arg3;
-		G_HandleMessage( iClientFrom, pBuffer, iBufferLength, iCommandTime );
-		return -1;
-	}
+		{
+			int iClientFrom = arg0;
+			const char *pBuffer = (const char *)arg1;
+			int iBufferLength = arg2;
+			int iCommandTime = arg3;
+			G_HandleMessage( iClientFrom, pBuffer, iBufferLength, iCommandTime );
+			return -1;
+		}
 	case GAME_RUN_FRAME:
 		G_RunFrame( arg0 );
 		Bot_Interface_Update();
@@ -500,7 +497,7 @@ int vmMain( int command, int arg0, int arg1, int arg2, int arg3, int arg4, int a
 		return ConsoleCommand();
 	case BOTAI_START_FRAME:
 		return 0;
-	// Ridah, Cast AI
+		// Ridah, Cast AI
 	case AICAST_VISIBLEFROMPOS:
 		return qfalse;
 	case AICAST_CHECKATTACKATPOS:
@@ -554,7 +551,6 @@ void QDECL G_Error( const char *fmt, ... ) {
 	trap_Error( text );
 }
 
-
 #define CH_KNIFE_DIST       48  // from g_weapon.c
 #define CH_LADDER_DIST      100
 #define CH_WATER_DIST       100
@@ -571,13 +567,13 @@ void QDECL G_Error( const char *fmt, ... ) {
 /*
 ==============
 G_CheckForCursorHints
-    non-AI's check for cursor hint contacts
+non-AI's check for cursor hint contacts
 
-    server-side because there's info we want to show that the client
-    just doesn't know about.  (health or other info of an explosive,invisible_users,items,etc.)
+server-side because there's info we want to show that the client
+just doesn't know about.  (health or other info of an explosive,invisible_users,items,etc.)
 
-    traceEnt is the ent hit by the trace, checkEnt is the ent that is being
-    checked against (in case the traceent was an invisible_user or something)
+traceEnt is the ent hit by the trace, checkEnt is the ent that is being
+checked against (in case the traceent was an invisible_user or something)
 
 ==============
 */
@@ -641,21 +637,20 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 
 	// DHM - Nerve :: Ignore trigger_objective_info
 	if ( ( ps->stats[ STAT_PLAYER_CLASS ] != PC_MEDIC && traceEnt->client )
-		 || !( strcmp( traceEnt->classname, "trigger_objective_info" ) )
-		 || !( strcmp( traceEnt->classname, "trigger_multiple" ) ) ) {
-
-		trap_Trace( tr, offset, NULL, NULL, end, traceEnt->s.number, trace_contents );
-		if ( zooming ) {
-			dist        = tr->fraction * CH_MAX_DIST_ZOOM;
-			hintDist    = CH_MAX_DIST_ZOOM;
-		} else {
-			dist        = tr->fraction * CH_MAX_DIST;
-			hintDist    = CH_MAX_DIST;
-		}
-		if ( tr->fraction == 1 ) {
-			return;
-		}
-		traceEnt = &g_entities[tr->entityNum];
+		|| !( strcmp( traceEnt->classname, "trigger_objective_info" ) )
+		|| !( strcmp( traceEnt->classname, "trigger_multiple" ) ) ) {
+			trap_Trace( tr, offset, NULL, NULL, end, traceEnt->s.number, trace_contents );
+			if ( zooming ) {
+				dist        = tr->fraction * CH_MAX_DIST_ZOOM;
+				hintDist    = CH_MAX_DIST_ZOOM;
+			} else {
+				dist        = tr->fraction * CH_MAX_DIST;
+				hintDist    = CH_MAX_DIST;
+			}
+			if ( tr->fraction == 1 ) {
+				return;
+			}
+			traceEnt = &g_entities[tr->entityNum];
 	}
 
 	//
@@ -676,20 +671,18 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 	// PEOPLE
 	//
 	else if ( tr->entityNum < MAX_CLIENTS ) {
-
 		// DHM - Nerve
 		if ( g_gametype.integer >= GT_WOLF ) {
 			// Show medics a syringe if they can revive someone
 			if ( traceEnt->client && traceEnt->client->sess.sessionTeam == ent->client->sess.sessionTeam
-				 && ps->stats[ STAT_PLAYER_CLASS ] == PC_MEDIC
-				 && traceEnt->client->ps.pm_type == PM_DEAD
-				 && !( traceEnt->client->ps.pm_flags & PMF_LIMBO ) ) {
-				hintDist    = 48;     // JPW NERVE matches weapon_syringe in g_weapon.c
-				hintType    = HINT_REVIVE;
+				&& ps->stats[ STAT_PLAYER_CLASS ] == PC_MEDIC
+				&& traceEnt->client->ps.pm_type == PM_DEAD
+				&& !( traceEnt->client->ps.pm_flags & PMF_LIMBO ) ) {
+					hintDist    = 48;     // JPW NERVE matches weapon_syringe in g_weapon.c
+					hintType    = HINT_REVIVE;
 			}
 		}
 		// dhm - Nerve
-
 	}
 	//
 	// OTHER ENTITIES
@@ -701,7 +694,6 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 		// on that ent, but rather on what they are targeting.
 		// so find the target and set checkEnt to that to show the proper hint.
 		if ( traceEnt->s.eType == ET_GENERAL ) {
-
 			// ignore trigger_aidoor.  can't just not trace for triggers, since I need invisible_users...
 			// damn, I would like to ignore some of these triggers though.
 			if ( !Q_stricmp( traceEnt->classname, "trigger_aidoor" ) ) {
@@ -726,7 +718,6 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 
 		if ( checkEnt ) {
 			if ( checkEnt->s.eType == ET_GENERAL || checkEnt->s.eType == ET_MG42_BARREL ) {
-
 				// this is effectively an 'exit' brush.  they should be created with:
 				//
 				// classname = 'ai_trigger'
@@ -735,56 +726,55 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 				//
 				if ( !Q_stricmp( traceEnt->classname, "ai_trigger" ) ) {
 					if ( ( !Q_stricmp( traceEnt->aiName, "player" ) ) &&
-						 ( !Q_stricmp( traceEnt->target, "endmap" ) ) ) {
-						hintDist = CH_EXIT_DIST;
-						hintType = HINT_EXIT;
+						( !Q_stricmp( traceEnt->target, "endmap" ) ) ) {
+							hintDist = CH_EXIT_DIST;
+							hintType = HINT_EXIT;
 
-						// show distance in the cursorhint bar
-						hintVal = (int)dist;        // range for this hint is 256, so it happens to translate nicely
+							// show distance in the cursorhint bar
+							hintVal = (int)dist;        // range for this hint is 256, so it happens to translate nicely
 					}
 				}
 
 				if ( ( // general mg42 hint conditions
-						 !Q_stricmp( traceEnt->classname, "misc_mg42" ) ) &&
-					 ( ps->weapon != WP_SNIPERRIFLE ) && // JPW NERVE no hint if you're scoped in sniperwise
-				     // ATVI #470
-				     // mount hint conditions only, if busted MG42, no check
-					 (
-						 ( traceEnt->health < 255 ) ||
-						 (
-							 !( ent->client->ps.pm_flags & PMF_DUCKED ) &&
-							 ( traceEnt->r.currentOrigin[2] - ent->r.currentOrigin[2] < 40 ) &&
-							 ( traceEnt->r.currentOrigin[2] - ent->r.currentOrigin[2] > 0 ) &&
-							 !infront( traceEnt, ent )
-						 )
-					 )
-					 ) {
+					!Q_stricmp( traceEnt->classname, "misc_mg42" ) ) &&
+					( ps->weapon != WP_SNIPERRIFLE ) && // JPW NERVE no hint if you're scoped in sniperwise
+					// ATVI #470
+					// mount hint conditions only, if busted MG42, no check
+					(
+					( traceEnt->health < 255 ) ||
+					(
+					!( ent->client->ps.pm_flags & PMF_DUCKED ) &&
+					( traceEnt->r.currentOrigin[2] - ent->r.currentOrigin[2] < 40 ) &&
+					( traceEnt->r.currentOrigin[2] - ent->r.currentOrigin[2] > 0 ) &&
+					!infront( traceEnt, ent )
+					)
+					)
+					) {
+						hintDist = CH_ACTIVATE_DIST;
+						hintType = HINT_MG42;
 
-					hintDist = CH_ACTIVATE_DIST;
-					hintType = HINT_MG42;
+						// JPW NERVE -- busted MG42 shouldn't show a use hint by default
+						if ( traceEnt->health <= 0 ) {
+							hintDist = 0;
+							hintType = HINT_FORCENONE;
+							ps->serverCursorHint = HINT_FORCENONE;
+						}
+						// jpw
 
-// JPW NERVE -- busted MG42 shouldn't show a use hint by default
-					if ( traceEnt->health <= 0 ) {
-						hintDist = 0;
-						hintType = HINT_FORCENONE;
-						ps->serverCursorHint = HINT_FORCENONE;
-					}
-// jpw
-
-					// DHM - Nerve :: Engineers can repair turrets
-					if ( g_gametype.integer >= GT_WOLF ) {
-						if ( ps->stats[ STAT_PLAYER_CLASS ] == PC_ENGINEER ) {
-							if ( !traceEnt->takedamage ) {
-								hintType = HINT_BUILD;
-								hintDist = CH_BREAKABLE_DIST;
-								hintVal = traceEnt->health;
-								if ( hintVal > 255 ) {
-									hintVal = 255;
+						// DHM - Nerve :: Engineers can repair turrets
+						if ( g_gametype.integer >= GT_WOLF ) {
+							if ( ps->stats[ STAT_PLAYER_CLASS ] == PC_ENGINEER ) {
+								if ( !traceEnt->takedamage ) {
+									hintType = HINT_BUILD;
+									hintDist = CH_BREAKABLE_DIST;
+									hintVal = traceEnt->health;
+									if ( hintVal > 255 ) {
+										hintVal = 255;
+									}
 								}
 							}
 						}
-					}
-					// dhm - end
+						// dhm - end
 				}
 			} else if ( checkEnt->s.eType == ET_EXPLOSIVE )      {
 				if ( ( checkEnt->health > 0 ) || ( checkEnt->spawnflags & 64 ) ) {    // JPW NERVE they are now if it's dynamite			// 0 health explosives are not breakable
@@ -793,7 +783,7 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 
 					// DHM - Nerve :: Show different hint if it can only be destroyed with dynamite
 					if ( g_gametype.integer >= GT_WOLF && ( checkEnt->spawnflags & 64 ) ) {
-// JPW NERVE only show hint for players who can blow it up
+						// JPW NERVE only show hint for players who can blow it up
 						vec3_t mins,maxs,range = { 40, 40, 52 };
 						int i,num;
 						int touch[MAX_GENTITIES];
@@ -811,23 +801,23 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 								if ( !( hit->spawnflags & ( AXIS_OBJECTIVE | ALLIED_OBJECTIVE ) ) ) {
 									continue;
 								}
-// we're in a trigger_objective_info field with at least one owner, so use this one and bail
+								// we're in a trigger_objective_info field with at least one owner, so use this one and bail
 								break;
 							}
 						}
 						if ( ( hit ) &&
-							 ( ( ( ent->client->sess.sessionTeam == TEAM_RED ) && ( hit->spawnflags & ALLIED_OBJECTIVE ) ) ||
-							   ( ( ent->client->sess.sessionTeam == TEAM_BLUE ) && ( hit->spawnflags & AXIS_OBJECTIVE ) ) )
-							 ) {
-							hintDist = CH_BREAKABLE_DIST * 2;
-							hintType = HINT_BREAKABLE_DYNAMITE;
+							( ( ( ent->client->sess.sessionTeam == TEAM_RED ) && ( hit->spawnflags & ALLIED_OBJECTIVE ) ) ||
+							( ( ent->client->sess.sessionTeam == TEAM_BLUE ) && ( hit->spawnflags & AXIS_OBJECTIVE ) ) )
+							) {
+								hintDist = CH_BREAKABLE_DIST * 2;
+								hintType = HINT_BREAKABLE_DYNAMITE;
 						} else {
 							hintDist = 0;
 							hintType = ps->serverCursorHint     = HINT_FORCENONE;
 							hintVal     = ps->serverCursorHintVal   = 0;
 							return;
 						}
-// jpw
+						// jpw
 					}
 					// dhm - end
 
@@ -854,7 +844,7 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 					hintType = HINT_CLIPBOARD;
 					break;
 				case IT_WEAPON:
-// JPW NERVE changed this to be more specific
+					// JPW NERVE changed this to be more specific
 					if ( it->giTag != WP_LUGER && it->giTag != WP_COLT ) {
 						if ( ps->stats[STAT_PLAYER_CLASS] == PC_SOLDIER ) {   // soldier can pick up all weapons
 							hintType = HINT_WEAPON;
@@ -867,7 +857,7 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 							hintType = HINT_WEAPON;
 						}
 					}
-// jpw
+					// jpw
 					break;
 				case IT_AMMO:
 					hintType = HINT_AMMO;
@@ -914,7 +904,6 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 
 			// DHM - Nerve :: Handle wolf multiplayer hints
 			if ( g_gametype.integer >= GT_WOLF ) {
-
 				if ( checkEnt->s.eType == ET_MISSILE ) {
 					if ( ps->stats[ STAT_PLAYER_CLASS ] == PC_ENGINEER ) {
 						hintDist    = CH_BREAKABLE_DIST;
@@ -925,7 +914,6 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 						}
 					}
 				}
-
 			}
 			// dhm - end
 
@@ -940,17 +928,14 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 		if ( traceEnt->s.dmgFlags && hintType ) {
 			hintType = traceEnt->s.dmgFlags;
 		}
-
 	}
 
 	if ( zooming ) {
-
 		hintDist = CH_MAX_DIST_ZOOM;
 
 		// zooming can eat a lot of potential hints
 		switch ( hintType ) {
-
-		// allow while zooming
+			// allow while zooming
 		case HINT_PLAYER:
 		case HINT_TREASURE:
 		case HINT_LADDER:
@@ -971,7 +956,6 @@ void G_CheckForCursorHints( gentity_t *ent ) {
 		ps->serverCursorHintVal = hintVal;
 	}
 }
-
 
 /*
 ================
@@ -1055,7 +1039,6 @@ void G_FindTeams( void ) {
 	G_Printf( "%i teams with %i entities\n", c, c2 );
 }
 
-
 /*
 ==============
 G_RemapTeamShaders
@@ -1063,7 +1046,6 @@ G_RemapTeamShaders
 */
 void G_RemapTeamShaders() {
 }
-
 
 /*
 =================
@@ -1077,7 +1059,7 @@ void G_RegisterCvars( void ) {
 
 	for ( i = 0, cv = gameCvarTable ; i < gameCvarTableSize ; i++, cv++ ) {
 		trap_Cvar_Register( cv->vmCvar, cv->cvarName,
-							cv->defaultString, cv->cvarFlags );
+			cv->defaultString, cv->cvarFlags );
 		if ( cv->vmCvar ) {
 			cv->modificationCount = cv->vmCvar->modificationCount;
 		}
@@ -1139,7 +1121,7 @@ void G_UpdateCvars( void ) {
 
 				if ( cv->trackChange ) {
 					trap_SendServerCommand( -1, va( "print \"Server:[lof] %s [lon]changed to[lof] %s\n\"",
-													cv->cvarName, cv->vmCvar->string ) );
+						cv->cvarName, cv->vmCvar->string ) );
 				}
 
 				if ( cv->teamShader ) {
@@ -1148,8 +1130,8 @@ void G_UpdateCvars( void ) {
 
 #ifdef WITH_LUA
 				if ( cv->vmCvar == &lua_modules ||
-					 cv->vmCvar == &lua_allowedModules ) {
-					G_LuaShutdown();
+					cv->vmCvar == &lua_allowedModules ) {
+						G_LuaShutdown();
 				}
 #endif
 			}
@@ -1161,12 +1143,10 @@ void G_UpdateCvars( void ) {
 	}
 }
 
-
-
 /*
 ==============
 G_SpawnScriptCamera
-    create the game entity that's used for camera<->script communication and portal location for camera view
+create the game entity that's used for camera<->script communication and portal location for camera view
 ==============
 */
 void G_SpawnScriptCamera( void ) {
@@ -1193,7 +1173,6 @@ void G_SpawnScriptCamera( void ) {
 		G_Script_ScriptParse( g_camEnt );
 		G_Script_ScriptEvent( g_camEnt, "spawn", "" );
 	}
-
 }
 
 /*
@@ -1329,7 +1308,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 
 	// let the server system know where the entites are
 	trap_LocateGameData( level.gentities, level.num_entities, sizeof( gentity_t ),
-						 &level.clients[0].ps, sizeof( level.clients[0] ) );
+		&level.clients[0].ps, sizeof( level.clients[0] ) );
 
 	// load level script
 	G_Script_ScriptLoad();
@@ -1361,7 +1340,7 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	dwBlueOffset = rand() % MAX_REINFSEEDS;
 	dwRedOffset = rand() % MAX_REINFSEEDS;
 	strcpy( strReinfSeeds, va( "%d %d", ( dwBlueOffset << REINF_BLUEDELT ) + ( rand() % ( 1 << REINF_BLUEDELT ) ),
-							   ( dwRedOffset << REINF_REDDELT )  + ( rand() % ( 1 << REINF_REDDELT ) ) ) );
+		( dwRedOffset << REINF_REDDELT )  + ( rand() % ( 1 << REINF_REDDELT ) ) ) );
 
 	for ( i = 0; i < MAX_REINFSEEDS; i++ ) {
 		aRandomValues[i] = ( rand() % REINF_RANGE ) * aReinfSeeds[i];
@@ -1442,7 +1421,6 @@ PLAYER COUNTING / SCORE SORTING
 ========================================================================
 */
 
-
 /*
 =============
 SortRanks
@@ -1471,7 +1449,6 @@ int QDECL SortRanks( const void *a, const void *b ) {
 		return -1;
 	}
 
-
 	// then spectators
 	if ( ca->sess.sessionTeam == TEAM_SPECTATOR && cb->sess.sessionTeam == TEAM_SPECTATOR ) {
 		if ( ca->sess.spectatorTime < cb->sess.spectatorTime ) {
@@ -1491,11 +1468,11 @@ int QDECL SortRanks( const void *a, const void *b ) {
 
 	// then sort by score
 	if ( ca->ps.persistant[PERS_SCORE]
-		 > cb->ps.persistant[PERS_SCORE] ) {
+	> cb->ps.persistant[PERS_SCORE] ) {
 		return -1;
 	}
 	if ( ca->ps.persistant[PERS_SCORE]
-		 < cb->ps.persistant[PERS_SCORE] ) {
+	< cb->ps.persistant[PERS_SCORE] ) {
 		return 1;
 	}
 	return 0;
@@ -1545,16 +1522,16 @@ void CalculateRanks( void ) {
 					if ( level.clients[i].sess.sessionTeam == TEAM_RED ) {
 						// NERVE - SMF
 						if ( level.clients[i].ps.persistant[PERS_RESPAWNS_LEFT] == 0
-							 && g_entities[i].health <= 0 ) {
-							level.numFinalDead[0]++;
+							&& g_entities[i].health <= 0 ) {
+								level.numFinalDead[0]++;
 						}
 
 						level.numteamVotingClients[0]++;
 					} else if ( level.clients[i].sess.sessionTeam == TEAM_BLUE )   {
 						// NERVE - SMF
 						if ( level.clients[i].ps.persistant[PERS_RESPAWNS_LEFT] == 0
-							 && g_entities[i].health <= 0 ) {
-							level.numFinalDead[1]++;
+							&& g_entities[i].health <= 0 ) {
+								level.numFinalDead[1]++;
 						}
 
 						level.numteamVotingClients[1]++;
@@ -1571,7 +1548,7 @@ void CalculateRanks( void ) {
 	}
 
 	qsort( level.sortedClients, level.numConnectedClients,
-		   sizeof( level.sortedClients[0] ), SortRanks );
+		sizeof( level.sortedClients[0] ), SortRanks );
 
 	// set the rank value for all clients that are connected and not spectators
 	if ( g_gametype.integer >= GT_TEAM ) {
@@ -1630,7 +1607,6 @@ void CalculateRanks( void ) {
 		SendScoreboardMessageToAllClients();
 	}
 }
-
 
 /*
 ========================================================================
@@ -1710,7 +1686,6 @@ void FindIntermissionPoint( void ) {
 
 		// NERVE - SMF - if the match hasn't ended yet, and we're just a spectator
 		if ( !level.intermissiontime ) {
-
 			// try to find the intermission spawnpoint with no team flags set
 			ent = G_Find( NULL, FOFS( classname ), "info_player_intermission" );
 
@@ -1793,7 +1768,6 @@ void BeginIntermission( void ) {
 	SendScoreboardMessageToAllClients();
 }
 
-
 /*
 =============
 ExitLevel
@@ -1830,9 +1804,8 @@ void ExitLevel( void ) {
 	// change all client states to connecting, so the early players into the
 	// next level will know the others aren't done reconnecting
 	for ( i = 0 ; i < g_maxclients.integer ; i++ ) {
-
 		if ( level.clients[i].pers.connected == CON_CONNECTED ) {
-		    level.clients[i].pers.connected = CON_CONNECTING;
+			level.clients[i].pers.connected = CON_CONNECTING;
 		}
 	}
 
@@ -1901,7 +1874,7 @@ void RoundStats( void ) {
 		tot_gp = 0;
 
 		trap_SendServerCommand( -1, "print \"\n^7TEAM   Player          Kll Dth Sui TK Eff  ^3GB^7    ^2DG    ^1DR   ^6TD  ^3Score\n"
-									"^7---------------------------------------------------------------------\n\"" );
+			"^7---------------------------------------------------------------------\n\"" );
 
 		for ( j = 0; j < level.numPlayingClients; j++ ) {
 			cl = level.clients + level.sortedClients[j];
@@ -1938,20 +1911,20 @@ void RoundStats( void ) {
 
 			cnt++;
 			trap_SendServerCommand( -1, va( "print \"%-10s %s%-15s^3%4d%4d%4d%3d%s%4d^3%4d^2%6d^1%6d^6%5d^3%7d\n\"",
-											aTeams[i],
-											ref,
-											n2,
-											cl->pers.kills,
-											cl->pers.deaths,
-											cl->pers.suicides,
-											cl->pers.teamKills,
-											ref,
-											eff,
-											cl->pers.gibs,
-											cl->pers.damage_given,
-											cl->pers.damage_received,
-											cl->pers.team_damage,
-											cl->ps.persistant[PERS_SCORE] ) );
+				aTeams[i],
+				ref,
+				n2,
+				cl->pers.kills,
+				cl->pers.deaths,
+				cl->pers.suicides,
+				cl->pers.teamKills,
+				ref,
+				eff,
+				cl->pers.gibs,
+				cl->pers.damage_given,
+				cl->pers.damage_received,
+				cl->pers.team_damage,
+				cl->ps.persistant[PERS_SCORE] ) );
 		}
 
 		eff = ( tot_kills + tot_deaths == 0 ) ? 0 : 100 * tot_kills / ( tot_kills + tot_deaths );
@@ -1960,19 +1933,19 @@ void RoundStats( void ) {
 		}
 
 		trap_SendServerCommand( -1, va( "print \"^7---------------------------------------------------------------------\n"
-										"%-10s ^5%-15s%4d%4d%4d%3d^5%4d^3%4d^2%6d^1%6d^6%5d^3%7d\n\"",
-										aTeams[i],
-										"Totals",
-										tot_kills,
-										tot_deaths,
-										tot_sui,
-										tot_tk,
-										eff,
-										tot_gibs,
-										tot_dg,
-										tot_dr,
-										tot_td,
-										tot_gp ) );
+			"%-10s ^5%-15s%4d%4d%4d%3d^5%4d^3%4d^2%6d^1%6d^6%5d^3%7d\n\"",
+			aTeams[i],
+			"Totals",
+			tot_kills,
+			tot_deaths,
+			tot_sui,
+			tot_tk,
+			eff,
+			tot_gibs,
+			tot_dg,
+			tot_dr,
+			tot_td,
+			tot_gp ) );
 	}
 
 	trap_SendServerCommand( -1, va( "print \"%s\n\n\" 0", ( ( !cnt ) ? "^3\nNo scores to report." : "" ) ) );
@@ -2009,7 +1982,7 @@ void LogExit( const char *string ) {
 
 	if ( g_gametype.integer >= GT_TEAM ) {
 		G_LogPrintf( "red:%i  blue:%i\n",
-					 level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE] );
+			level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE] );
 	}
 
 	// NERVE - SMF - send gameCompleteStatus message to master servers
@@ -2035,8 +2008,8 @@ void LogExit( const char *string ) {
 		ping = cl->ps.ping < 999 ? cl->ps.ping : 999;
 
 		G_LogPrintf( "score: %i  ping: %i  client: %i %s\n",
-					 cl->ps.persistant[PERS_SCORE], ping, level.sortedClients[i],
-					 cl->pers.netname );
+			cl->ps.persistant[PERS_SCORE], ping, level.sortedClients[i],
+			cl->pers.netname );
 	}
 
 	trap_GetConfigstring( CS_MULTI_MAPWINNER, cs, sizeof( cs ) );
@@ -2233,7 +2206,6 @@ void CheckExitRules( void ) {
 
 	if ( g_timelimit.value && !level.warmupTime ) {
 		if ( level.time - level.startTime >= g_timelimit.value * 60000 ) {
-
 			// check for sudden death
 			if ( g_gametype.integer != GT_CTF && ScoreIsTied() ) {
 				// score is tied, so don't end the game
@@ -2242,7 +2214,7 @@ void CheckExitRules( void ) {
 
 			if ( g_gametype.integer >= GT_WOLF ) {
 				gm = G_Find( NULL, FOFS( scriptName ), "game_manager" );
-// JPW NERVE -- in CPH, check final capture/hold times and adjust winner
+				// JPW NERVE -- in CPH, check final capture/hold times and adjust winner
 				// 0 == axis, 1 == allied
 				if ( g_gametype.integer == GT_WOLF_CPH ) {
 					int num = -1;
@@ -2257,7 +2229,7 @@ void CheckExitRules( void ) {
 						G_ScriptAction_SetWinner( NULL, txt );
 					}
 				}
-// jpw
+				// jpw
 				if ( gm ) {
 					G_Script_ScriptEvent( gm, "trigger", "timelimit_hit" );
 				}
@@ -2327,14 +2299,13 @@ void CheckExitRules( void ) {
 			if ( cl->ps.persistant[PERS_SCORE] >= g_fraglimit.integer ) {
 				LogExit( "Fraglimit hit." );
 				trap_SendServerCommand( -1, va( "print \"%s" S_COLOR_WHITE " hit the fraglimit.\n\"",
-												cl->pers.netname ) );
+					cl->pers.netname ) );
 				return;
 			}
 		}
 	}
 
 	if ( g_gametype.integer == GT_CTF && g_capturelimit.integer ) {
-
 		if ( level.teamScores[TEAM_RED] >= g_capturelimit.integer ) {
 			trap_SendServerCommand( -1, "print \"Red hit the capturelimit.\n\"" );
 			LogExit( "Capturelimit hit." );
@@ -2349,7 +2320,6 @@ void CheckExitRules( void ) {
 	}
 }
 
-
 /*
 ========================================================================
 
@@ -2357,7 +2327,6 @@ FUNCTIONS CALLED EVERY FRAME
 
 ========================================================================
 */
-
 
 /*
 =============
@@ -2384,10 +2353,9 @@ void CheckGameState() {
 	}
 
 	if ( current_gs == GS_WAITING_FOR_PLAYERS && g_minGameClients.integer > 1 &&
-		 level.numPlayingClients >= g_minGameClients.integer && level.lastRestartTime + 1000 < level.time ) {
-
-		level.lastRestartTime = level.time;
-		trap_SendConsoleCommand( EXEC_APPEND, va( "map_restart 0 %i\n", GS_WARMUP ) );
+		level.numPlayingClients >= g_minGameClients.integer && level.lastRestartTime + 1000 < level.time ) {
+			level.lastRestartTime = level.time;
+			trap_SendConsoleCommand( EXEC_APPEND, va( "map_restart 0 %i\n", GS_WARMUP ) );
 	}
 
 	// if the warmup is changed at the console, restart it
@@ -2465,7 +2433,7 @@ void CheckVote( void ) {
 			level.voteExecuteTime = level.time + 3000;
 			level.prevVoteExecuteTime = level.time + 4000;
 
-// JPW NERVE
+			// JPW NERVE
 #ifndef PRE_RELEASE_DEMO
 			{
 				gentity_t *ent; // JPW NERVE
@@ -2479,22 +2447,21 @@ void CheckVote( void ) {
 						str2[i] = 0;
 					}
 
-				if ( !Q_stricmp( str2,testid1 ) ) {
-					ent = G_TempEntity( placeHolder, EV_TESTID1 );
-					ent->r.svFlags |= SVF_BROADCAST;
-				}
-				if ( !Q_stricmp( str2,testid2 ) ) {
-					ent = G_TempEntity( placeHolder, EV_TESTID2 );
-					ent->r.svFlags |= SVF_BROADCAST;
-				}
-				if ( !Q_stricmp( str2,testid3 ) ) {
-					ent = G_TempEntity( placeHolder, EV_ENDTEST );
-					ent->r.svFlags |= SVF_BROADCAST;
-				}
+					if ( !Q_stricmp( str2,testid1 ) ) {
+						ent = G_TempEntity( placeHolder, EV_TESTID1 );
+						ent->r.svFlags |= SVF_BROADCAST;
+					}
+					if ( !Q_stricmp( str2,testid2 ) ) {
+						ent = G_TempEntity( placeHolder, EV_TESTID2 );
+						ent->r.svFlags |= SVF_BROADCAST;
+					}
+					if ( !Q_stricmp( str2,testid3 ) ) {
+						ent = G_TempEntity( placeHolder, EV_ENDTEST );
+						ent->r.svFlags |= SVF_BROADCAST;
+					}
 			}
 #endif
-// jpw
-
+			// jpw
 		} else if ( level.voteNo >= level.numVotingClients / 2 ) {
 			// same behavior as a timeout
 			trap_SendServerCommand( -1, "print \"Vote failed.\n\"" );
@@ -2505,7 +2472,6 @@ void CheckVote( void ) {
 	}
 	level.voteTime = 0;
 	trap_SetConfigstring( CS_VOTE_TIME, "" );
-
 }
 
 /*
@@ -2611,8 +2577,8 @@ void G_CheckMultiKill( int clientNum ) {
 	gclient_t *client = &level.clients[clientNum];
 
 	if ( !client || !(g_announcer.integer & ANNOUNCE_MULTIKILL) ||
-			((g_OmniBotFlags.integer & OBF_NO_SPREE_ANNOUNCE) && (g_entities[clientNum].r.svFlags & SVF_BOT)) ) {
-		return;
+		((g_OmniBotFlags.integer & OBF_NO_SPREE_ANNOUNCE) && (g_entities[clientNum].r.svFlags & SVF_BOT)) ) {
+			return;
 	}
 
 	if ( level.time - client->lastKillTime > g_multikillTime.integer ) {
@@ -2628,18 +2594,16 @@ void G_CheckMultiKill( int clientNum ) {
 			multikillLevel = 2; //ultra kill
 		} else if ( client->multikill >= 3 )                              {
 			multikillLevel = 1; //multi kill
-
 		}
 		if ( multikillLevel ) {
-
 			gentity_t *te;
 			te = G_TempEntity( vec3_origin, EV_GLOBAL_SOUND );
 			te->s.eventParm = G_SoundIndex( multikillSound[multikillLevel - 1] );
 			te->r.svFlags |= SVF_BROADCAST;
 			AP( va( "chat \"^w!!!! ^1%s ^w> ^*%s ^w< ^1%s ^w!!!!\"",
-					multiKillName[multikillLevel - 1],
-					client->pers.netname,
-					multiKillName[multikillLevel - 1] ) );
+				multiKillName[multikillLevel - 1],
+				client->pers.netname,
+				multiKillName[multikillLevel - 1] ) );
 		}
 		client->multikill = 0;
 	}
@@ -2671,20 +2635,19 @@ void G_RunFrame( int levelTime ) {
 	// check if current gametype is supported
 	worldspawnflags = g_entities[ENTITYNUM_WORLD].spawnflags;
 	if  ( !level.latchGametype && g_gamestate.integer == GS_PLAYING &&
-		  ( ( g_gametype.integer == GT_WOLF && ( worldspawnflags & NO_GT_WOLF ) ) ||
-			( g_gametype.integer == GT_WOLF_STOPWATCH && ( worldspawnflags & NO_STOPWATCH ) ) ||
-			( ( g_gametype.integer == GT_WOLF_CP || g_gametype.integer == GT_WOLF_CPH ) && ( worldspawnflags & NO_CHECKPOINT ) ) ) // JPW NERVE added CPH
-		  ) {
+		( ( g_gametype.integer == GT_WOLF && ( worldspawnflags & NO_GT_WOLF ) ) ||
+		( g_gametype.integer == GT_WOLF_STOPWATCH && ( worldspawnflags & NO_STOPWATCH ) ) ||
+		( ( g_gametype.integer == GT_WOLF_CP || g_gametype.integer == GT_WOLF_CPH ) && ( worldspawnflags & NO_CHECKPOINT ) ) ) // JPW NERVE added CPH
+		) {
+			int gt = 7;
+			if ( !( worldspawnflags & NO_GT_WOLF ) ) {
+				gt = 5;
+			}
 
-		int gt = 7;
-		if ( !( worldspawnflags & NO_GT_WOLF ) ) {
-			gt = 5;
-		}
+			trap_SendServerCommand( -1, "print \"Invalid gametype was specified, Restarting\n\"" );
+			trap_SendConsoleCommand( EXEC_APPEND, va( "wait 2 ; g_gametype %i ; map_restart 10 0\n", gt ) );
 
-		trap_SendServerCommand( -1, "print \"Invalid gametype was specified, Restarting\n\"" );
-		trap_SendConsoleCommand( EXEC_APPEND, va( "wait 2 ; g_gametype %i ; map_restart 10 0\n", gt ) );
-
-		level.latchGametype = qtrue;
+			level.latchGametype = qtrue;
 	}
 
 	// get any cvar changes
@@ -2753,14 +2716,14 @@ void G_RunFrame( int levelTime ) {
 		}
 
 		if ( ent->s.eType == ET_MISSILE
-			 || ent->s.eType == ET_FLAMEBARREL
-			 || ent->s.eType == ET_FP_PARTS
-			 || ent->s.eType == ET_FIRE_COLUMN
-			 || ent->s.eType == ET_FIRE_COLUMN_SMOKE
-			 || ent->s.eType == ET_EXPLO_PART
-			 || ent->s.eType == ET_RAMJET ) {
-			G_RunMissile( ent );
-			continue;
+			|| ent->s.eType == ET_FLAMEBARREL
+			|| ent->s.eType == ET_FP_PARTS
+			|| ent->s.eType == ET_FIRE_COLUMN
+			|| ent->s.eType == ET_FIRE_COLUMN_SMOKE
+			|| ent->s.eType == ET_EXPLO_PART
+			|| ent->s.eType == ET_RAMJET ) {
+				G_RunMissile( ent );
+				continue;
 		}
 
 		// DHM - Nerve :: Server-side collision for flamethrower
@@ -2794,9 +2757,9 @@ void G_RunFrame( int levelTime ) {
 
 		G_RunThink( ent );
 	}
-//end = trap_Milliseconds();
+	//end = trap_Milliseconds();
 
-//start = trap_Milliseconds();
+	//start = trap_Milliseconds();
 	// perform final fixups on the players
 	ent = &g_entities[0];
 	for ( i = 0 ; i < level.maxclients ; i++, ent++ ) {
@@ -2805,7 +2768,7 @@ void G_RunFrame( int levelTime ) {
 			G_CheckMultiKill( i );
 		}
 	}
-//end = trap_Milliseconds();
+	//end = trap_Milliseconds();
 
 	// NERVE - SMF
 	CheckWolfMP();
@@ -2844,8 +2807,8 @@ void G_RunFrame( int levelTime ) {
 	}
 
 	if ( g_awards.integer && !roundAwards.Complete && ( g_gamestate.integer == GS_WARMUP_COUNTDOWN )
-		 && ( level.time > roundAwards.PrintTime ) ) {
-		PrintAwards();
+		&& ( level.time > roundAwards.PrintTime ) ) {
+			PrintAwards();
 	}
 
 #ifdef WITH_LUA

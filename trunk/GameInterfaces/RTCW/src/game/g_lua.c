@@ -1,4 +1,3 @@
-
 #include "g_lua.h"
 
 // TODO: aiming for compatibility with ETPro lua mods
@@ -15,7 +14,7 @@ void QDECL LOG( const char *fmt, ... ) {
 	va_end( argptr );
 
 	//if ( g_dedicated.integer ) {
-		trap_Printf( buff );
+	trap_Printf( buff );
 	//}
 
 	if ( level.logFile ) {
@@ -408,13 +407,13 @@ static int _et_G_Damage( lua_State *L ) {
 	int mod = luaL_checkint( L, 6 );
 
 	G_Damage( g_entities + target,
-			  g_entities + inflictor,
-			  g_entities + attacker,
-			  NULL,
-			  NULL,
-			  damage,
-			  dflags,
-			  mod );
+		g_entities + inflictor,
+		g_entities + attacker,
+		NULL,
+		NULL,
+		damage,
+		dflags,
+		mod );
 
 	return 0;
 }
@@ -423,7 +422,7 @@ static int _et_G_Damage( lua_State *L ) {
 // Entities {{{
 // client entity fields
 static const gentity_field_t gclient_fields[] = {
-//								NAME							ALIAS						TYPE				FLAGS
+	//								NAME							ALIAS						TYPE				FLAGS
 	_et_gclient_addfield(       inactivityTime,                                             FIELD_INT,          0                                       ),
 	_et_gclient_addfield(       inactivityWarning,                                          FIELD_INT,          0                                       ),
 
@@ -504,7 +503,7 @@ static const gentity_field_t gclient_fields[] = {
 
 // entity fields
 static const gentity_field_t gentity_fields[] = {
-//								NAME							ALIAS						TYPE				FLAGS
+	//								NAME							ALIAS						TYPE				FLAGS
 	_et_gentity_addfield(       activator,                                                  FIELD_ENTITY,       FIELD_FLAG_READONLY ),
 	_et_gentity_addfield(       chain,                                                      FIELD_ENTITY,       0                   ),
 	_et_gentity_addfield(       classname,                                                  FIELD_STRING,       0                   ),
@@ -974,7 +973,6 @@ static int _et_SetMap( lua_State *L ) {
 	if ( *s ) {
 		trap_SendConsoleCommand( EXEC_APPEND, va( "map %s; set nextmap \"%s\"\n", mapName, s ) );
 	} else {
-
 		trap_SendConsoleCommand( EXEC_APPEND, va( "map %s;\n", mapName ) );
 	}
 	return 1;
@@ -994,17 +992,17 @@ static int _et_lol( lua_State *L ) {
 		return 0;
 	}
 
-	grenadeWPID = ent->client->sess.sessionTeam == TEAM_RED ? WP_GRENADE_LAUNCHER : WP_GRENADE_PINEAPPLE; 
+	grenadeWPID = ent->client->sess.sessionTeam == TEAM_RED ? WP_GRENADE_LAUNCHER : WP_GRENADE_PINEAPPLE;
 
 	degPerNade = 36; // 360 / 10
 	for( it = 0; it < 10; it++ ) {
-		x = 200 * cos( DEG2RAD(degPerNade * it) );  
+		x = 200 * cos( DEG2RAD(degPerNade * it) );
 		y = 200 * sin( DEG2RAD(degPerNade * it) );
 		VectorSet( dir, x, y, 30 );
 		VectorSubtract( ent->client->ps.velocity, dir, dir );
 		dir[2] = 60;
-		nade = fire_grenade( ent, ent->r.currentOrigin, 
-					dir, grenadeWPID );
+		nade = fire_grenade( ent, ent->r.currentOrigin,
+			dir, grenadeWPID );
 		nade->nextthink = level.time + 1000;
 	}
 
@@ -1090,8 +1088,8 @@ static const luaL_Reg etlib[] = {
 
 //{{{
 /** G_LuaInit()
- * Initialises the Lua API interface
- */
+* Initialises the Lua API interface
+*/
 qboolean G_LuaInit() {
 	int i, num_vm = 0, len, flen = 0;
 	char buff[MAX_CVAR_VALUE_STRING], *crt, *code, *signature;
@@ -1131,9 +1129,9 @@ qboolean G_LuaInit() {
 				signature = G_SHA1( code );
 
 				if ( Q_stricmp( lua_allowedModules.string, "" ) &&
-					 !strstr( lua_allowedModules.string, signature ) ) {
-					// don't load disallowed lua modules into vm
-					LOG( "Lua API: Lua module [%s] [%s] disallowed by ACL\n", crt, signature );
+					!strstr( lua_allowedModules.string, signature ) ) {
+						// don't load disallowed lua modules into vm
+						LOG( "Lua API: Lua module [%s] [%s] disallowed by ACL\n", crt, signature );
 				} else {
 					// Init lua_vm_t struct
 					vm = (lua_vm_t*) malloc( sizeof( lua_vm_t ) );
@@ -1169,12 +1167,12 @@ qboolean G_LuaInit() {
 				break;
 			}
 		}
-	return qtrue;
+		return qtrue;
 }
 
 /** G_LuaCall( func, vm, nargs, nresults )
- * Calls a function already on the stack.
- */
+* Calls a function already on the stack.
+*/
 qboolean G_LuaCall( lua_vm_t* vm, char *func, int nargs, int nresults ) {
 	int res = lua_pcall( vm->L, nargs, nresults, 0 );
 	if ( res == LUA_ERRRUN ) {
@@ -1196,9 +1194,9 @@ qboolean G_LuaCall( lua_vm_t* vm, char *func, int nargs, int nresults ) {
 }
 
 /** G_LuaGetNamedFunction( vm, name )
- * Finds a function by name and puts it onto the stack.
- * If the function does not exist, returns qfalse.
- */
+* Finds a function by name and puts it onto the stack.
+* If the function does not exist, returns qfalse.
+*/
 qboolean G_LuaGetNamedFunction( lua_vm_t *vm, char *name ) {
 	if ( vm->L ) {
 		lua_getglobal( vm->L, name );
@@ -1213,8 +1211,8 @@ qboolean G_LuaGetNamedFunction( lua_vm_t *vm, char *name ) {
 }
 
 /** G_LuaStartVM( vm )
- * Starts one individual virtual machine.
- */
+* Starts one individual virtual machine.
+*/
 qboolean G_LuaStartVM( lua_vm_t *vm ) {
 	int res = 0;
 	char basepath[MAX_QPATH];
@@ -1241,21 +1239,21 @@ qboolean G_LuaStartVM( lua_vm_t *vm ) {
 	trap_Cvar_VariableStringBuffer( "fs_game", gamepath, sizeof( gamepath ) );
 
 	luaPath = va( "%s%s%s%s?.lua;%s%s%s%slualibs%s?.lua",
-				  homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP,
-				  homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP );
+		homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP,
+		homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP );
 
 	luaCPath = va( "%s%s%s%slualibs%s?.%s",
-				   homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, EXTENSION );
+		homepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, EXTENSION );
 
 	// add fs_basepath if different from fs_homepath
 	if ( Q_stricmp( basepath, homepath ) ) {
 		luaPath = va( "%s%s%s%s?.lua;%s%s%s%slualibs%s?.lua;%s",
-					  basepath, LUA_DIRSEP, gamepath, LUA_DIRSEP,
-					  basepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, luaPath );
+			basepath, LUA_DIRSEP, gamepath, LUA_DIRSEP,
+			basepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, luaPath );
 
 		luaCPath = va( "%s%s%s%slualibs%s?.%s;%s",
-					   basepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, EXTENSION,
-					   luaCPath );
+			basepath, LUA_DIRSEP, gamepath, LUA_DIRSEP, LUA_DIRSEP, EXTENSION,
+			luaCPath );
 	}
 
 	lua_getglobal( vm->L, LUA_LOADLIBNAME );
@@ -1295,7 +1293,7 @@ qboolean G_LuaStartVM( lua_vm_t *vm ) {
 	res = luaL_loadbuffer( vm->L, vm->code, vm->code_size, vm->file_name );
 	if ( res == LUA_ERRSYNTAX ) {
 		LOG( "Lua API: syntax error during pre-compilation: %s\n",
-			 lua_tostring( vm->L, -1 ) );
+			lua_tostring( vm->L, -1 ) );
 		lua_pop( vm->L, 1 );
 		vm->err++;
 		return qfalse;
@@ -1314,8 +1312,8 @@ qboolean G_LuaStartVM( lua_vm_t *vm ) {
 }
 
 /** G_LuaStopVM( vm )
- * Stops one virtual machine, and calls its et_Quit callback.
- */
+* Stops one virtual machine, and calls its et_Quit callback.
+*/
 void G_LuaStopVM( lua_vm_t *vm ) {
 	if ( vm == NULL ) {
 		return;
@@ -1343,8 +1341,8 @@ void G_LuaStopVM( lua_vm_t *vm ) {
 }
 
 /** G_LuaShutdown()
- * Shuts down everything related to Lua API.
- */
+* Shuts down everything related to Lua API.
+*/
 void G_LuaShutdown() {
 	int i;
 	lua_vm_t *vm;
@@ -1357,8 +1355,8 @@ void G_LuaShutdown() {
 }
 
 /** G_LuaStatus( ent )
- * Prints information on the Lua virtual machines.
- */
+* Prints information on the Lua virtual machines.
+*/
 void G_LuaStatus( gentity_t *ent ) {
 	int i, cnt = 0;
 	for ( i = 0; i < LUA_NUM_VM; i++ )
@@ -1366,35 +1364,34 @@ void G_LuaStatus( gentity_t *ent ) {
 			cnt++;
 		}
 
-	if ( cnt == 0 ) {
-		G_Printf( "Lua API: no scripts loaded." );
-		return;
-	} else if ( cnt == 1 ) {
-		G_Printf( "Lua API: showing lua information ( 1 module loaded )" );
-	} else {
-		G_Printf( "Lua API: showing lua information ( %d modules loaded )", cnt );
-	}
-	G_Printf( "\n%-2s %-10s %-40s %-11s", "VM", "Modname", "Signature", "Filename" );
-	G_Printf( "\n-- ---------- ---------------------------------------- -----------" );
-	for ( i = 0; i < LUA_NUM_VM; i++ ) {
-		if ( lVM[i] ) {
-			G_Printf( "\n%2d %-10s %-40s %-11s", lVM[i]->id, lVM[i]->mod_name, lVM[i]->mod_signature, lVM[i]->file_name );
+		if ( cnt == 0 ) {
+			G_Printf( "Lua API: no scripts loaded." );
+			return;
+		} else if ( cnt == 1 ) {
+			G_Printf( "Lua API: showing lua information ( 1 module loaded )" );
+		} else {
+			G_Printf( "Lua API: showing lua information ( %d modules loaded )", cnt );
 		}
-	}
-	G_Printf( "\n-- ---------- ---------------------------------------- -----------" );
-
+		G_Printf( "\n%-2s %-10s %-40s %-11s", "VM", "Modname", "Signature", "Filename" );
+		G_Printf( "\n-- ---------- ---------------------------------------- -----------" );
+		for ( i = 0; i < LUA_NUM_VM; i++ ) {
+			if ( lVM[i] ) {
+				G_Printf( "\n%2d %-10s %-40s %-11s", lVM[i]->id, lVM[i]->mod_name, lVM[i]->mod_signature, lVM[i]->file_name );
+			}
+		}
+		G_Printf( "\n-- ---------- ---------------------------------------- -----------" );
 }
 
 /** G_LuaGetVM
- * Retrieves the VM for a given lua_State
- */
+* Retrieves the VM for a given lua_State
+*/
 lua_vm_t * G_LuaGetVM( lua_State *L ) {
 	int i;
 	for ( i = 0; i < LUA_NUM_VM; i++ )
 		if ( lVM[i] && lVM[i]->L == L ) {
 			return lVM[i];
 		}
-	return NULL;
+		return NULL;
 }
 //}}}
 
@@ -1403,10 +1400,9 @@ lua_vm_t * G_LuaGetVM( lua_State *L ) {
 /*****************************/
 
 //{{{
-
 /** G_LuaHook_InitGame
- * et_InitGame( levelTime, randomSeed, restart ) callback
- */
+* et_InitGame( levelTime, randomSeed, restart ) callback
+*/
 void G_LuaHook_InitGame( int levelTime, int randomSeed, int restart ) {
 	int i;
 	lua_vm_t *vm;
@@ -1434,8 +1430,8 @@ void G_LuaHook_InitGame( int levelTime, int randomSeed, int restart ) {
 }
 
 /** G_LuaHook_ShutdownGame
- * et_ShutdownGame( restart )  callback
- */
+* et_ShutdownGame( restart )  callback
+*/
 void G_LuaHook_ShutdownGame( int restart ) {
 	int i;
 	lua_vm_t *vm;
@@ -1461,8 +1457,8 @@ void G_LuaHook_ShutdownGame( int restart ) {
 }
 
 /** G_LuaHook_LogExit
- * et_LogExit()  callback
- */
+* et_LogExit()  callback
+*/
 void G_LuaHook_LogExit() {
 	int i;
 	lua_vm_t *vm;
@@ -1487,8 +1483,8 @@ void G_LuaHook_LogExit() {
 }
 
 /** G_LuaHook_RunFrame
- * et_RunFrame( levelTime )  callback
- */
+* et_RunFrame( levelTime )  callback
+*/
 void G_LuaHook_RunFrame( int levelTime ) {
 	int i;
 	lua_vm_t *vm;
@@ -1514,8 +1510,8 @@ void G_LuaHook_RunFrame( int levelTime ) {
 }
 
 /** G_LuaHook_ClientConnect
- * rejectreason = et_ClientConnect( clientNum, firstTime, isBot ) callback
- */
+* rejectreason = et_ClientConnect( clientNum, firstTime, isBot ) callback
+*/
 qboolean G_LuaHook_ClientConnect( int clientNum, qboolean firstTime, qboolean isBot, char *reason ) {
 	int i;
 	lua_vm_t *vm;
@@ -1548,8 +1544,8 @@ qboolean G_LuaHook_ClientConnect( int clientNum, qboolean firstTime, qboolean is
 }
 
 /** G_LuaHook_ClientDisconnect
- * et_ClientDisconnect( clientNum ) callback
- */
+* et_ClientDisconnect( clientNum ) callback
+*/
 void G_LuaHook_ClientDisconnect( int clientNum ) {
 	int i;
 	lua_vm_t *vm;
@@ -1575,8 +1571,8 @@ void G_LuaHook_ClientDisconnect( int clientNum ) {
 }
 
 /** G_LuaHook_ClientBegin
- * et_ClientBegin( clientNum ) callback
- */
+* et_ClientBegin( clientNum ) callback
+*/
 void G_LuaHook_ClientBegin( int clientNum ) {
 	int i;
 	lua_vm_t *vm;
@@ -1602,8 +1598,8 @@ void G_LuaHook_ClientBegin( int clientNum ) {
 }
 
 /** void G_LuaHook_ClientUserinfoChanged(int clientNum);
- * et_ClientUserinfoChanged( clientNum ) callback
- */
+* et_ClientUserinfoChanged( clientNum ) callback
+*/
 void G_LuaHook_ClientUserinfoChanged( int clientNum ) {
 	int i;
 	lua_vm_t *vm;
@@ -1629,8 +1625,8 @@ void G_LuaHook_ClientUserinfoChanged( int clientNum ) {
 }
 
 /** G_LuaHook_ClientSpawn
- * et_ClientSpawn( clientNum, revived ) callback
- */
+* et_ClientSpawn( clientNum, revived ) callback
+*/
 void G_LuaHook_ClientSpawn( int clientNum, qboolean revived ) {
 	int i;
 	lua_vm_t *vm;
@@ -1657,8 +1653,8 @@ void G_LuaHook_ClientSpawn( int clientNum, qboolean revived ) {
 }
 
 /** G_LuaHook_ClientCommand
- * intercepted = et_ClientCommand( clientNum, command ) callback
- */
+* intercepted = et_ClientCommand( clientNum, command ) callback
+*/
 qboolean G_LuaHook_ClientCommand( int clientNum, char *command ) {
 	int i;
 	lua_vm_t *vm;
@@ -1691,8 +1687,8 @@ qboolean G_LuaHook_ClientCommand( int clientNum, char *command ) {
 }
 
 /** G_LuaHook_ConsoleCommand
- * intercepted = et_ConsoleCommand( command ) callback
- */
+* intercepted = et_ConsoleCommand( command ) callback
+*/
 qboolean G_LuaHook_ConsoleCommand( char *command ) {
 	int i;
 	lua_vm_t *vm;
@@ -1724,8 +1720,8 @@ qboolean G_LuaHook_ConsoleCommand( char *command ) {
 }
 
 /** G_LuaHook_Print
- * et_Print( text ) callback
- */
+* et_Print( text ) callback
+*/
 void G_LuaHook_Print( char *text ) {
 	int i;
 	lua_vm_t *vm;
@@ -1751,8 +1747,8 @@ void G_LuaHook_Print( char *text ) {
 }
 
 /** G_LuaHook_Obituary
- * (customObit) = et_Obituary( victim, killer, meansOfDeath ) callback
- */
+* (customObit) = et_Obituary( victim, killer, meansOfDeath ) callback
+*/
 qboolean G_LuaHook_Obituary( int victim, int killer, int meansOfDeath, char *customObit ) {
 	int i;
 	lua_vm_t *vm;

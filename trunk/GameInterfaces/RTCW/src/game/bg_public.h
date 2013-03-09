@@ -1,8 +1,8 @@
 /*
- * name:		bg_public.h
- *
- * desc:		definitions shared by both the server game and client game modules
- *
+* name:		bg_public.h
+*
+* desc:		definitions shared by both the server game and client game modules
+*
 */
 
 // because games can change separately from the main system version, we need a
@@ -241,10 +241,9 @@ typedef struct {
 	vec3_t centerangles;
 
 	int shoveTime;
-
 } pmoveExt_t;   // data used both in client and server - store it here
-                // generally useful for data you want to manipulate in bg_* and cgame, or bg_* and game
-                // instead of playerstate to prevent different engine versions of playerstate between XP and MP
+// generally useful for data you want to manipulate in bg_* and cgame, or bg_* and game
+// instead of playerstate to prevent different engine versions of playerstate between XP and MP
 
 #define MAXTOUCH    32
 typedef struct {
@@ -312,11 +311,11 @@ int Pmove( pmove_t *pmove );
 typedef enum {
 	STAT_HEALTH,
 	STAT_HOLDABLE_ITEM,
-//	STAT_WEAPONS,					// 16 bit fields
+	//	STAT_WEAPONS,					// 16 bit fields
 	STAT_ARMOR,
-//----(SA) Keys for Wolf
+	//----(SA) Keys for Wolf
 	STAT_KEYS,                      // 16 bit fields
-//----(SA) end
+	//----(SA) end
 	STAT_DEAD_YAW,                  // look this direction when dead (FIXME: get rid of?)
 	STAT_CLIENTS_READY,             // bit mask of clients wishing to exit the intermission (FIXME: configstring?)
 	STAT_MAX_HEALTH,                // health / armor limit, changable by handicap
@@ -324,7 +323,6 @@ typedef enum {
 	STAT_CAPTUREHOLD_RED,           // JPW NERVE - red team score
 	STAT_CAPTUREHOLD_BLUE           // JPW NERVE - blue team score
 } statIndex_t;
-
 
 // player_state->persistant[] indexes
 // these fields are the only part of player_state that isn't
@@ -353,9 +351,7 @@ typedef enum {
 
 	PERS_BLEH_2,            //hitsound headshot
 	PERS_KILLS,
-
 } persEnum_t;
-
 
 // entityState_t->eFlags
 #define EF_DEAD             0x00000001      // don't draw a foe marker over players with EF_DEAD
@@ -390,7 +386,6 @@ typedef enum {
 
 #define EF_ZOOMING          0x00400000      // client is zooming
 #define EF_NOSWINGANGLES    0x00800000      // try and keep all parts facing same direction
-
 
 // !! NOTE: only place flags that don't need to go to the client beyond 0x00800000
 
@@ -453,7 +448,7 @@ typedef enum {
 typedef enum {
 	HI_NONE,
 
-//	HI_TELEPORTER,
+	//	HI_TELEPORTER,
 	HI_MEDKIT,
 
 	// new for Wolf
@@ -470,7 +465,7 @@ typedef enum {
 	HI_12,
 	HI_13,
 	HI_14,
-//	HI_15,	// ?
+	//	HI_15,	// ?
 
 	HI_NUM_HOLDABLE
 } holdable_t;
@@ -493,7 +488,7 @@ typedef enum {
 	WP_TESLA,               // 10
 	WP_SPEARGUN,            // 11
 
-// weapon keys only go 1-0, so put the alternates above that (since selection will be a double click on the german weapon key)
+	// weapon keys only go 1-0, so put the alternates above that (since selection will be a double click on the german weapon key)
 
 	// American equivalents
 	WP_KNIFE2,              // 12
@@ -520,7 +515,7 @@ typedef enum {
 	WP_SILENCER,            // 29	// used to be sp5
 	WP_AKIMBO,              // 30	//----(SA)	added
 
-// jpw
+	// jpw
 	WP_CROSS,               // 31
 	WP_DYNAMITE,            // 32
 	WP_DYNAMITE2,           // 33
@@ -546,7 +541,6 @@ typedef enum {
 	WP_BINOCULARS,          // 46
 
 	WP_NUM_WEAPONS          // 47   NOTE: this cannot be larger than 64 for AI/player weapons!
-
 } weapon_t;
 
 // JPW NERVE moved from cg_weapons (now used in g_active) for drop command, actual array in bg_misc.c
@@ -560,17 +554,16 @@ typedef struct ammotable_s {
 	int reloadTime;         //
 	int fireDelayTime;      //
 	int nextShotTime;       //
-//----(SA)	added
+	//----(SA)	added
 	int maxHeat;            // max active firing time before weapon 'overheats' (at which point the weapon will fail)
 	int coolRate;           // how fast the weapon cools down. (per second)
-//----(SA)	end
+	//----(SA)	end
 	int mod;                // means of death
 	int numClips;			// cs: added for correct ammo limits
 } ammotable_t;
 
 extern ammotable_t ammoTable[];     // defined in bg_misc.c
 extern int weapAlts[];  // defined in bg_misc.c
-
 
 //----(SA)
 // for routines that need to check if a WP_ is </=/> a given set of weapons
@@ -587,7 +580,7 @@ extern int weapAlts[];  // defined in bg_misc.c
 // TTimo
 // NOTE: what about WP_MAUSER WP_GARAND WP_VENOM
 #define IS_AUTORELOAD_WEAPON( weapon ) ( ( weapon ) == WP_LUGER || ( weapon ) == WP_COLT || ( weapon ) == WP_MP40 \
-										 || ( weapon ) == WP_THOMPSON || ( weapon ) == WP_STEN )
+	|| ( weapon ) == WP_THOMPSON || ( weapon ) == WP_STEN )
 
 //----(SA)	end
 
@@ -610,7 +603,6 @@ typedef enum {
 	REWARD_DENIED,
 	REWARD_GAUNTLET
 } reward_t;
-
 
 // entityState_t->event values
 // entity events are for effects that take place reletive
@@ -729,12 +721,12 @@ typedef enum {
 	EV_EXPLODE,     // func_explosive
 	EV_EFFECT,      // target_effect
 	EV_MORTAREFX,   // mortar firing
-// JPW NERVE
+	// JPW NERVE
 	EV_SPINUP,  // JPW NERVE panzerfaust preamble
 	EV_TESTID1, // new particle test
 	EV_TESTID2,
 	EV_ENDTEST,
-// jpw
+	// jpw
 	EV_SNOW_ON,
 	EV_SNOW_OFF,
 	EV_MISSILE_MISS_SMALL,
@@ -775,7 +767,6 @@ typedef enum {
 	EV_BOT_DEBUG_LINE,
 	EV_BOT_DEBUG_RADIUS,
 	EV_MAX_EVENTS   // just added as an 'endcap'
-
 } entity_event_t;
 
 // NOTE: this must be synched with the text list below
@@ -793,7 +784,7 @@ typedef enum {
 	BOTH_DEAD3_WATER,
 
 	BOTH_CLIMB,
-/*10*/ BOTH_CLIMB_DOWN,
+	/*10*/ BOTH_CLIMB_DOWN,
 	BOTH_CLIMB_DISMOUNT,
 
 	BOTH_SALUTE,
@@ -805,7 +796,7 @@ typedef enum {
 	BOTH_PAIN5,     // left shoulder
 	BOTH_PAIN6,     // right knee
 	BOTH_PAIN7,     // left knee
-/*20*/ BOTH_PAIN8,      // dazed
+	/*20*/ BOTH_PAIN8,      // dazed
 
 	BOTH_GRAB_GRENADE,
 
@@ -818,7 +809,7 @@ typedef enum {
 	BOTH_EXTRA1,
 	BOTH_EXTRA2,
 	BOTH_EXTRA3,
-/*30*/ BOTH_EXTRA4,
+	/*30*/ BOTH_EXTRA4,
 	BOTH_EXTRA5,
 	BOTH_EXTRA6,
 	BOTH_EXTRA7,
@@ -828,7 +819,7 @@ typedef enum {
 	BOTH_EXTRA11,
 	BOTH_EXTRA12,
 	BOTH_EXTRA13,
-/*40*/ BOTH_EXTRA14,
+	/*40*/ BOTH_EXTRA14,
 	BOTH_EXTRA15,
 	BOTH_EXTRA16,
 	BOTH_EXTRA17,
@@ -839,7 +830,7 @@ typedef enum {
 	TORSO_GESTURE,
 	TORSO_GESTURE2,
 	TORSO_GESTURE3,
-/*50*/ TORSO_GESTURE4,
+	/*50*/ TORSO_GESTURE4,
 
 	TORSO_DROP,
 
@@ -852,7 +843,7 @@ typedef enum {
 	TORSO_RELAX,
 
 	TORSO_RAISE2,   // (high)
-/*60*/ TORSO_ATTACK2,
+	/*60*/ TORSO_ATTACK2,
 	TORSO_STAND2,
 	TORSO_STAND2_ALT1,
 	TORSO_STAND2_ALT2,
@@ -863,7 +854,7 @@ typedef enum {
 	TORSO_ATTACK3,
 	TORSO_STAND3,
 	TORSO_STAND3_ALT1,
-/*70*/ TORSO_STAND3_ALT2,
+	/*70*/ TORSO_STAND3_ALT2,
 	TORSO_READY3,
 	TORSO_RELAX3,
 
@@ -875,7 +866,7 @@ typedef enum {
 	TORSO_READY4,
 	TORSO_RELAX4,
 
-/*80*/ TORSO_RAISE5,    // (throw)
+	/*80*/ TORSO_RAISE5,    // (throw)
 	TORSO_ATTACK5,
 	TORSO_ATTACK5B,
 	TORSO_STAND5,
@@ -886,7 +877,7 @@ typedef enum {
 
 	TORSO_RELOAD1,  // (low)
 	TORSO_RELOAD2,  // (high)
-/*90*/ TORSO_RELOAD3,   // (pistol)
+	/*90*/ TORSO_RELOAD3,   // (pistol)
 	TORSO_RELOAD4,  // (shoulder)
 
 	TORSO_MG42,     // firing tripod mounted weapon animation
@@ -899,7 +890,7 @@ typedef enum {
 	TORSO_EXTRA3,
 	TORSO_EXTRA4,
 	TORSO_EXTRA5,
-/*100*/ TORSO_EXTRA6,
+	/*100*/ TORSO_EXTRA6,
 	TORSO_EXTRA7,
 	TORSO_EXTRA8,
 	TORSO_EXTRA9,
@@ -910,7 +901,7 @@ typedef enum {
 	LEGS_WALK,
 	LEGS_RUN,
 	LEGS_BACK,
-/*110*/ LEGS_SWIM,
+	/*110*/ LEGS_SWIM,
 	LEGS_SWIM_IDLE,
 
 	LEGS_JUMP,
@@ -925,7 +916,7 @@ typedef enum {
 
 	LEGS_BOOT,      // kicking animation
 
-/*120*/ LEGS_EXTRA1,
+	/*120*/ LEGS_EXTRA1,
 	LEGS_EXTRA2,
 	LEGS_EXTRA3,
 	LEGS_EXTRA4,
@@ -936,13 +927,12 @@ typedef enum {
 	LEGS_EXTRA9,
 	LEGS_EXTRA10,
 
-/*130*/ MAX_ANIMATIONS
+	/*130*/ MAX_ANIMATIONS
 } animNumber_t;
 
 // text represenation for scripting
 extern char *animStrings[];     // defined in bg_misc.c
 extern char *animStringsOld[];      // defined in bg_misc.c
-
 
 typedef enum {
 	WEAP_IDLE1,
@@ -959,7 +949,6 @@ typedef enum {
 	WEAP_ALTSWITCHTO,   // switch to alt fire mode weap
 	MAX_WP_ANIMATIONS
 } weapAnimNumber_t;
-
 
 #define ANIMFL_LADDERANIM   0x1
 #define ANIMFL_FIRINGANIM   0x2
@@ -1012,7 +1001,6 @@ typedef struct headAnimation_s {
 // flip the togglebit every time an animation
 // changes so a restart of the same anim can be detected
 #define ANIM_TOGGLEBIT      ( 1 << ( ANIM_BITS - 1 ) )
-
 
 typedef enum {
 	TEAM_FREE,
@@ -1111,19 +1099,18 @@ typedef enum {
 	MOD_LOPER_GROUND,
 	MOD_LOPER_HIT,
 
-// JPW NERVE multiplayer class-specific MODs
+	// JPW NERVE multiplayer class-specific MODs
 	MOD_LT_AMMO,
 	MOD_LT_AIRSTRIKE,
 	MOD_ENGINEER,   // not sure if we'll use
 	MOD_MEDIC,      // these like this or not
-//
+	//
 	MOD_BAT,
 
 	MOD_KNIFE_THROWN,
 	MOD_GOOMBA,
 	MOD_POISON
 } meansOfDeath_t;
-
 
 //---------------------------------------------------------
 
@@ -1136,9 +1123,9 @@ typedef enum {
 	IT_ARMOR,               // EFX: rotate + minlight
 	IT_HEALTH,              // EFX: static external sphere + rotating internal
 	IT_POWERUP,             // instant on, timer based
-	                        // EFX: rotate + external ring that rotates
+	// EFX: rotate + external ring that rotates
 	IT_HOLDABLE,            // single use, holdable item
-	                        // EFX: rotate + bob
+	// EFX: rotate + bob
 	IT_KEY,
 	IT_TREASURE,            // gold bars, etc.  things that can be picked up and counted for a tally at end-level
 	IT_CLIPBOARD,           // 'clipboard' used as a general term for 'popup' items where you pick up the item and it pauses and opens a menu
@@ -1192,7 +1179,6 @@ qboolean BG_AkimboFireSequence( playerState_t *ps );    //----(SA)	added
 #define ITEM_INDEX( x ) ( ( x ) - bg_itemlist )
 
 qboolean    BG_CanItemBeGrabbed( const entityState_t *ent, const playerState_t *ps );
-
 
 // g_dmflags->integer flags
 #define DF_NO_FALLING           8
@@ -1272,10 +1258,9 @@ typedef enum {
 	ET_MG42_BARREL,         // Arnout: MG42 barrel
 
 	ET_EVENTS               // any of the EV_* events can be added freestanding
-	                        // by setting eType to ET_EVENTS + eventNum
-	                        // this avoids having to set eFlags and eventNum
+	// by setting eType to ET_EVENTS + eventNum
+	// this avoids having to set eFlags and eventNum
 } entityType_t;
-
 
 // cursorhints (stored in ent->s.dmgFlags since that's only used for players at the moment)
 typedef enum {
@@ -1325,8 +1310,6 @@ typedef enum {
 
 	HINT_NUM_HINTS
 } hintType_t;
-
-
 
 void    BG_EvaluateTrajectory( const trajectory_t *tr, int atTime, vec3_t result );
 void    BG_EvaluateTrajectoryDelta( const trajectory_t *tr, int atTime, vec3_t result );
@@ -1559,7 +1542,6 @@ typedef struct
 	// global list of script items for this model
 	animScriptItem_t scriptItems[MAX_ANIMSCRIPT_ITEMS_PER_MODEL];
 	int numScriptItems;
-
 } animModelInfo_t;
 
 // this is the main structure that is duplicated on the client and server
@@ -1784,4 +1766,3 @@ void BG_setCrosshair( char *colString, float *col, float alpha, char *cvarName )
 #define HITBOXBIT_CLIENT 4096
 
 #endif
-

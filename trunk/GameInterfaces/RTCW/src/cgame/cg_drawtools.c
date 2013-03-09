@@ -58,25 +58,23 @@ void CG_FillRectGradient( float x, float y, float width, float height, const flo
 	trap_R_SetColor( NULL );
 }
 
-
 /*
 ==============
 CG_HorizontalPercentBar
-    Generic routine for pretty much all status indicators that show a fractional
-    value to the palyer by virtue of how full a drawn box is.
+Generic routine for pretty much all status indicators that show a fractional
+value to the palyer by virtue of how full a drawn box is.
 
 flags:
-    left		- 1
-    center		- 2		// direction is 'right' by default and orientation is 'horizontal'
-    vert		- 4
-    nohudalpha	- 8		// don't adjust bar's alpha value by the cg_hudalpha value
-    bg			- 16	// background contrast box (bg set with bgColor of 'NULL' means use default bg color (1,1,1,0.25)
-    spacing		- 32	// some bars use different sorts of spacing when drawing both an inner and outer box
+left		- 1
+center		- 2		// direction is 'right' by default and orientation is 'horizontal'
+vert		- 4
+nohudalpha	- 8		// don't adjust bar's alpha value by the cg_hudalpha value
+bg			- 16	// background contrast box (bg set with bgColor of 'NULL' means use default bg color (1,1,1,0.25)
+spacing		- 32	// some bars use different sorts of spacing when drawing both an inner and outer box
 
-    lerp color	- 256	// use an average of the start and end colors to set the fill color
+lerp color	- 256	// use an average of the start and end colors to set the fill color
 ==============
 */
-
 
 // TODO: these flags will be shared, but it was easier to work on stuff if I wasn't changing header files a lot
 #define BAR_LEFT        0x0001
@@ -119,18 +117,16 @@ void CG_FilledBar( float x, float y, float w, float h, float *startColor, float 
 		int indent = BAR_BORDERSIZE;
 		// draw background at full size and shrink the remaining box to fit inside with a border.  (alternate border may be specified by a BAR_BGSPACING_xx)
 		CG_FillRect(   x,
-					   y,
-					   w,
-					   h,
-					   backgroundcolor );
+			y,
+			w,
+			h,
+			backgroundcolor );
 
 		if ( flags & BAR_BGSPACING_X0Y0 ) {          // fill the whole box (no border)
-
 		} else if ( flags & BAR_BGSPACING_X0Y5 ) {   // spacing created for weapon heat
 			indent *= 3;
 			y += indent;
 			h -= ( 2 * indent );
-
 		} else {                                // default spacing of 2 units on each side
 			x += indent;
 			y += indent;
@@ -153,7 +149,6 @@ void CG_FilledBar( float x, float y, float w, float h, float *startColor, float 
 			CG_FillRect( x, y, w, h * frac, startColor );
 		}
 	} else {
-
 		if ( flags & BAR_LEFT ) {    // TODO: remember to swap colors on the ends here
 			x += ( w * ( 1 - frac ) );
 		} else if ( flags & BAR_CENTER ) {
@@ -175,7 +170,7 @@ CG_HorizontalPercentBar
 */
 void CG_HorizontalPercentBar( float x, float y, float width, float height, float percent ) {
 	vec4_t bgcolor = {0.5f, 0.5f, 0.5f, 0.3f},
-		   color = {1.0f, 1.0f, 1.0f, 0.3f};
+		color = {1.0f, 1.0f, 1.0f, 0.3f};
 	CG_FilledBar( x, y, width, height, color, NULL, bgcolor, percent, BAR_BG | BAR_NOHUDALPHA );
 }
 
@@ -238,7 +233,6 @@ void CG_DrawRect( float x, float y, float width, float height, float size, const
 	trap_R_SetColor( NULL );
 }
 
-
 /*
 ================
 CG_DrawPic
@@ -298,9 +292,9 @@ void CG_DrawChar( int x, int y, int width, int height, int ch ) {
 	size = 0.0625;
 
 	trap_R_DrawStretchPic( ax, ay, aw, ah,
-						   fcol, frow,
-						   fcol + size, frow + size,
-						   cgs.media.charsetShader );
+		fcol, frow,
+		fcol + size, frow + size,
+		cgs.media.charsetShader );
 }
 
 /*
@@ -336,9 +330,9 @@ void CG_DrawChar2( int x, int y, int width, int height, int ch ) {
 	size = 0.0625;
 
 	trap_R_DrawStretchPic( ax, ay, aw, ah,
-						   fcol, frow,
-						   fcol + size, frow + size,
-						   cgs.media.menucharsetShader );
+		fcol, frow,
+		fcol + size, frow + size,
+		cgs.media.menucharsetShader );
 }
 
 // JOSEPH 4-25-00
@@ -360,7 +354,6 @@ void CG_DrawStringExt( int x, int y, const char *string, float *setColor, qboole
 
 	if ( maxChars <= 0 ) {
 		maxChars = 32767; // do them all!
-
 	}
 	// draw the drop shadow
 	if ( shadow ) {
@@ -423,7 +416,6 @@ void CG_DrawStringExt2( int x, int y, const char *string, const float *setColor,
 
 	if ( maxChars <= 0 ) {
 		maxChars = 32767; // do them all!
-
 	}
 	// draw the drop shadow
 	if ( shadow ) {
@@ -485,7 +477,6 @@ void CG_DrawStringExt3( int x, int y, const char *string, const float *setColor,
 
 	if ( maxChars <= 0 ) {
 		maxChars = 32767; // do them all!
-
 	}
 	s = string;
 	xx = 0;
@@ -638,7 +629,6 @@ static void CG_TileClearBox( int x, int y, int w, int h, qhandle_t hShader ) {
 	trap_R_DrawStretchPic( x, y, w, h, s1, t1, s2, t2, hShader );
 }
 
-
 /*
 ==============
 CG_TileClear
@@ -654,8 +644,8 @@ void CG_TileClear( void ) {
 	h = cgs.glconfig.vidHeight;
 
 	if ( cg.refdef.x == 0 && cg.refdef.y == 0 &&
-		 cg.refdef.width == w && cg.refdef.height == h ) {
-		return;     // full screen rendering
+		cg.refdef.width == w && cg.refdef.height == h ) {
+			return;     // full screen rendering
 	}
 
 	top = cg.refdef.y;
@@ -675,7 +665,6 @@ void CG_TileClear( void ) {
 	// clear right of view screen
 	CG_TileClearBox( right, top, w - right, bottom - top + 1, cgs.media.backTileShader );
 }
-
 
 /*
 ================
@@ -709,7 +698,6 @@ float *CG_FadeColor( int startMsec, int totalMsec ) {
 	return color;
 }
 
-
 /*
 ================
 CG_TeamColor
@@ -732,7 +720,6 @@ float *CG_TeamColor( int team ) {
 		return other;
 	}
 }
-
 
 /*
 =================
@@ -802,7 +789,6 @@ void CG_ColorForHealth( vec4_t hcolor ) {
 	}
 	health += count;
 
-
 	// set the color based on health
 	hcolor[0] = 1.0;
 	hcolor[3] = 1.0;
@@ -822,7 +808,6 @@ void CG_ColorForHealth( vec4_t hcolor ) {
 		hcolor[1] = ( health - 30 ) / 30.0;
 	}
 }
-
 
 /*
 =================
@@ -1064,7 +1049,6 @@ void UI_DrawBannerString( int x, int y, const char* str, int style, vec4_t color
 	UI_DrawBannerString2( x, y, str, color );
 }
 
-
 int UI_ProportionalStringWidth( const char* str ) {
 	const char *    s;
 	int ch;
@@ -1145,7 +1129,6 @@ float UI_ProportionalSizeScale( int style ) {
 
 	return 1.00;
 }
-
 
 /*
 =================

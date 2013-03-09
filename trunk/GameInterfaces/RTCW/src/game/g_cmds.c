@@ -61,9 +61,9 @@ void DeathmatchScoreboardMessage( gentity_t *ent ) {
 			ping = cl->ps.ping < 999 ? cl->ps.ping : 999;
 		}
 		Com_sprintf( entry, sizeof( entry ),
-					 " %i %i %i %i %i %i %i %i", level.sortedClients[i],
-					 cl->ps.persistant[PERS_SCORE], ping, ( level.time - cl->pers.enterTime ) / 60000,
-					 scoreFlags, g_entities[level.sortedClients[i]].s.powerups, playerClass, respawnsLeft );
+			" %i %i %i %i %i %i %i %i", level.sortedClients[i],
+			cl->ps.persistant[PERS_SCORE], ping, ( level.time - cl->pers.enterTime ) / 60000,
+			scoreFlags, g_entities[level.sortedClients[i]].s.powerups, playerClass, respawnsLeft );
 		j = strlen( entry );
 		if ( stringlength + j >= sizeof(string) ) {
 			break;
@@ -73,10 +73,9 @@ void DeathmatchScoreboardMessage( gentity_t *ent ) {
 	}
 
 	trap_SendServerCommand( ent - g_entities, va( "scores %i %i %i%s", i,
-												  level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE],
-												  string ) );
+		level.teamScores[TEAM_RED], level.teamScores[TEAM_BLUE],
+		string ) );
 }
-
 
 /*
 ==================
@@ -88,8 +87,6 @@ Request current scoreboard information
 void Cmd_Score_f( gentity_t *ent ) {
 	DeathmatchScoreboardMessage( ent );
 }
-
-
 
 /*
 ==================
@@ -107,7 +104,6 @@ qboolean    CheatsOk( gentity_t *ent ) {
 	}
 	return qtrue;
 }
-
 
 /*
 ==================
@@ -221,11 +217,10 @@ int ClientNumbersFromString( char *s, int *plist ) {
 		if ( i >= 0 && i < level.maxclients ) {
 			p = &level.clients[i];
 			if ( p->pers.connected == CON_CONNECTED ||
-				 p->pers.connected == CON_CONNECTING ) {
-
-				*plist++ = i;
-				*plist = -1;
-				return 1;
+				p->pers.connected == CON_CONNECTING ) {
+					*plist++ = i;
+					*plist = -1;
+					return 1;
 			}
 		}
 	}
@@ -238,9 +233,8 @@ int ClientNumbersFromString( char *s, int *plist ) {
 	for ( i = 0; i < level.maxclients; i++ ) {
 		p = &level.clients[i];
 		if ( p->pers.connected != CON_CONNECTED &&
-			 p->pers.connected != CON_CONNECTING ) {
-
-			continue;
+			p->pers.connected != CON_CONNECTING ) {
+				continue;
 		}
 		CleanseString( p->pers.netname, n2, qtrue );
 		m = strstr( n2, s2 );
@@ -286,15 +280,15 @@ void G_PrivateMessage( gentity_t *ent, char *botTargetName, char *botMessage, qb
 		sent = qtrue;
 		tmpent = &g_entities[pids[i]];
 		CPx( pids[i], va(
-				 "chat \"%s^7 -> %s^7: (%d recipients^7): ^3%s^7\"",
-				 ent->client->pers.netname,
-				 tmpent->client->pers.netname,
-				 pcount,
-				 msg ) );
+			"chat \"%s^7 -> %s^7: (%d recipients^7): ^3%s^7\"",
+			ent->client->pers.netname,
+			tmpent->client->pers.netname,
+			pcount,
+			msg ) );
 		CP( va( "print \"private message sent to %s: ^3%s^7\n\"",
-				tmpent->client->pers.netname,
-				msg
-				) );
+			tmpent->client->pers.netname,
+			msg
+			) );
 
 		// Omni-bot: Tell the bot about the chat message
 		Bot_Event_ChatMessage( tmpent - g_entities, ent, PRIVATE_MESSAGE, msg );
@@ -337,7 +331,6 @@ void Cmd_Give_f( gentity_t *ent ) {
 	} else {
 		give_all = qfalse;
 	}
-
 
 	if ( give_all || Q_stricmpn( name, "health", 6 ) == 0 ) {
 		//----(SA)	modified
@@ -431,7 +424,6 @@ void Cmd_Give_f( gentity_t *ent ) {
 	}
 }
 
-
 /*
 ==================
 Cmd_God_f
@@ -511,7 +503,6 @@ void Cmd_Notarget_f( gentity_t *ent ) {
 	trap_SendServerCommand( ent - g_entities, va( "print \"%s\"", msg ) );
 }
 
-
 /*
 ==================
 Cmd_Noclip_f
@@ -536,7 +527,6 @@ void Cmd_Noclip_f( gentity_t *ent ) {
 	trap_SendServerCommand( ent - g_entities, va( "print \"%s\"", msg ) );
 }
 
-
 /*
 ==================
 Cmd_LevelShot_f
@@ -555,14 +545,13 @@ void Cmd_LevelShot_f( gentity_t *ent ) {
 	// doesn't work in single player
 	if ( g_gametype.integer != 0 ) {
 		trap_SendServerCommand( ent - g_entities,
-								"print \"Must be in g_gametype 0 for levelshot\n\"" );
+			"print \"Must be in g_gametype 0 for levelshot\n\"" );
 		return;
 	}
 
 	BeginIntermission();
 	trap_SendServerCommand( ent - g_entities, "clientLevelShot" );
 }
-
 
 /*
 =================
@@ -572,7 +561,7 @@ Cmd_Kill_f
 void Cmd_Kill_f( gentity_t *ent ) {
 	if( ent->client->sess.sessionTeam == TEAM_SPECTATOR ||
 		( ent->client->ps.pm_flags & PMF_LIMBO ) ) {
-		return;
+			return;
 	}
 
 	// bots always need to go to limbo or it causes problems
@@ -590,7 +579,6 @@ void Cmd_Kill_f( gentity_t *ent ) {
 	ent->client->ps.persistant[PERS_HWEAPON_USE] = 0; // TTimo - if using /kill while at MG42
 	player_die( ent, ent, ent, 100000, MOD_SUICIDE );
 }
-
 
 /*
 =================
@@ -655,12 +643,12 @@ void SetTeam( gentity_t *ent, char *s, qboolean ignoreRestrictions ) {
 			// We allow a spread of one
 			if ( team == TEAM_RED && counts[TEAM_RED] - counts[TEAM_BLUE] >= 1 ) {
 				trap_SendServerCommand( clientNum,
-										"cp \"The Axis has too many players.\n\"" );
+					"cp \"The Axis has too many players.\n\"" );
 				return; // ignore the request
 			}
 			if ( team == TEAM_BLUE && counts[TEAM_BLUE] - counts[TEAM_RED] >= 1 ) {
 				trap_SendServerCommand( clientNum,
-										"cp \"The Allies have too many players.\n\"" );
+					"cp \"The Allies have too many players.\n\"" );
 				return; // ignore the request
 			}
 
@@ -686,10 +674,10 @@ void SetTeam( gentity_t *ent, char *s, qboolean ignoreRestrictions ) {
 
 	// NERVE - SMF - prevent players from switching to regain deployments
 	if ( !ignoreRestrictions && g_maxlives.integer > 0 && ent->client->ps.persistant[PERS_RESPAWNS_LEFT] == 0 &&
-		 oldTeam != TEAM_SPECTATOR ) {
-		trap_SendServerCommand( clientNum,
-								"cp \"You can't switch teams because you are out of lives.\n\" 3" );
-		return; // ignore the request
+		oldTeam != TEAM_SPECTATOR ) {
+			trap_SendServerCommand( clientNum,
+				"cp \"You can't switch teams because you are out of lives.\n\" 3" );
+			return; // ignore the request
 	}
 
 	//
@@ -722,16 +710,16 @@ void SetTeam( gentity_t *ent, char *s, qboolean ignoreRestrictions ) {
 
 	if ( team == TEAM_RED ) {
 		trap_SendServerCommand( -1, va( "cp \"[lof]%s" S_COLOR_WHITE " [lon]joined the Axis team.\n\"",
-										client->pers.netname ) );
+			client->pers.netname ) );
 	} else if ( team == TEAM_BLUE ) {
 		trap_SendServerCommand( -1, va( "cp \"[lof]%s" S_COLOR_WHITE " [lon]joined the Allied team.\n\"",
-										client->pers.netname ) );
+			client->pers.netname ) );
 	} else if ( team == TEAM_SPECTATOR && oldTeam != TEAM_SPECTATOR ) {
 		trap_SendServerCommand( -1, va( "cp \"[lof]%s" S_COLOR_WHITE " [lon]joined the spectators.\n\"",
-										client->pers.netname ) );
+			client->pers.netname ) );
 	} else if ( team == TEAM_FREE ) {
 		trap_SendServerCommand( -1, va( "cp \"[lof]%s" S_COLOR_WHITE " [lon]joined the battle.\n\"",
-										client->pers.netname ) );
+			client->pers.netname ) );
 	}
 
 	// get and distribute relevent paramters
@@ -937,7 +925,7 @@ void Cmd_FollowCycle_f( gentity_t *ent, int dir ) {
 			continue;
 		}
 
-// JPW NERVE -- couple extra checks for limbo mode
+		// JPW NERVE -- couple extra checks for limbo mode
 		if ( ent->client->ps.pm_flags & PMF_LIMBO ) {
 			if ( level.clients[clientnum].ps.pm_flags & PMF_LIMBO ) {
 				continue;
@@ -946,7 +934,7 @@ void Cmd_FollowCycle_f( gentity_t *ent, int dir ) {
 				continue;
 			}
 		}
-// jpw
+		// jpw
 
 		if ( g_gametype.integer >= GT_WOLF ) {
 			if ( level.clients[clientnum].ps.pm_flags & PMF_LIMBO ) {
@@ -1012,8 +1000,8 @@ char *G_Shortcuts( gentity_t *ent, char *text ) {
 			client = &level.clients[ent->client->pers.lastammo_client];
 			if ( client ) {
 				Q_strncpyz( a,
-							G_ShortcutSanitize( client->pers.netname ),
-							sizeof( a ) );
+					G_ShortcutSanitize( client->pers.netname ),
+					sizeof( a ) );
 			}
 		}
 	}
@@ -1023,8 +1011,8 @@ char *G_Shortcuts( gentity_t *ent, char *text ) {
 			client = &level.clients[ent->client->pers.lastkiller_client];
 			if ( client ) {
 				Q_strncpyz( d,
-							G_ShortcutSanitize( client->pers.netname ),
-							sizeof( d ) );
+					G_ShortcutSanitize( client->pers.netname ),
+					sizeof( d ) );
 			}
 		}
 	}
@@ -1034,8 +1022,8 @@ char *G_Shortcuts( gentity_t *ent, char *text ) {
 			client = &level.clients[ent->client->pers.lasthealth_client];
 			if ( client ) {
 				Q_strncpyz( h,
-							G_ShortcutSanitize( client->pers.netname ),
-							sizeof( h ) );
+					G_ShortcutSanitize( client->pers.netname ),
+					sizeof( h ) );
 			}
 		}
 	}
@@ -1045,12 +1033,11 @@ char *G_Shortcuts( gentity_t *ent, char *text ) {
 			client = &level.clients[ent->client->pers.lastkilled_client];
 			if ( client ) {
 				Q_strncpyz( k,
-							G_ShortcutSanitize( client->pers.netname ),
-							sizeof( k ) );
+					G_ShortcutSanitize( client->pers.netname ),
+					sizeof( k ) );
 			}
 		}
 	}
-
 
 	if ( ent ) {
 		char location[32];
@@ -1060,8 +1047,8 @@ char *G_Shortcuts( gentity_t *ent, char *text ) {
 
 	if ( ent ) {
 		Q_strncpyz( n,
-					G_ShortcutSanitize( ent->client->pers.netname ),
-					sizeof( n ) );
+			G_ShortcutSanitize( ent->client->pers.netname ),
+			sizeof( n ) );
 	}
 
 	if ( ent ) {
@@ -1069,8 +1056,8 @@ char *G_Shortcuts( gentity_t *ent, char *text ) {
 			client = &level.clients[ent->client->pers.lastrevive_client];
 			if ( client ) {
 				Q_strncpyz( r,
-							G_ShortcutSanitize( client->pers.netname ),
-							sizeof( r ) );
+					G_ShortcutSanitize( client->pers.netname ),
+					sizeof( r ) );
 			}
 		}
 	}
@@ -1090,8 +1077,8 @@ char *G_Shortcuts( gentity_t *ent, char *text ) {
 		int clip = BG_FindClipForWeapon( ent->client->ps.weapon );
 		int ammo = BG_FindAmmoForWeapon( ent->client->ps.weapon );
 		Com_sprintf( t, sizeof( t ), "%i",
-					 ( ent->client->ps.ammoclip[clip] +
-					   ( ( ent->client->ps.weapon == WP_KNIFE ) ? 0 : ent->client->ps.ammo[ammo] ) ) );
+			( ent->client->ps.ammoclip[clip] +
+			( ( ent->client->ps.weapon == WP_KNIFE ) ? 0 : ent->client->ps.ammo[ammo] ) ) );
 	}
 
 	rep = Q_StrReplace( text, "[a]", a );
@@ -1109,7 +1096,6 @@ char *G_Shortcuts( gentity_t *ent, char *text ) {
 	Q_strncpyz( out, rep, sizeof( out ) );
 	return out;
 }
-
 
 /*
 ==================
@@ -1139,21 +1125,21 @@ void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char 
 
 	// NERVE - SMF - if spectator, no chatting to players in WolfMP
 	if ( g_gametype.integer >= GT_WOLF && g_muteSpecs.integer > 0
-		 && ( ( ent->client->sess.sessionTeam == TEAM_FREE && other->client->sess.sessionTeam != TEAM_FREE ) ||
-			  ( ent->client->sess.sessionTeam == TEAM_SPECTATOR && other->client->sess.sessionTeam != TEAM_SPECTATOR ) ) ) {
-		return;
+		&& ( ( ent->client->sess.sessionTeam == TEAM_FREE && other->client->sess.sessionTeam != TEAM_FREE ) ||
+		( ent->client->sess.sessionTeam == TEAM_SPECTATOR && other->client->sess.sessionTeam != TEAM_SPECTATOR ) ) ) {
+			return;
 	}
 
 	// NERVE - SMF
 	if ( mode == SAY_LIMBO ) {
 		trap_SendServerCommand( other - g_entities, va( "%s \"%s%c%c%s\"",
-														"lchat", name, Q_COLOR_ESCAPE, color, message ) );
+			"lchat", name, Q_COLOR_ESCAPE, color, message ) );
 	}
 	// -NERVE - SMF
 	else {
 		trap_SendServerCommand( other - g_entities, va( "%s \"%s%c%c%s\" %i",
-														mode == SAY_TEAM ? "tchat" : "chat",
-														name, Q_COLOR_ESCAPE, color, message, localize ) );
+			mode == SAY_TEAM ? "tchat" : "chat",
+			name, Q_COLOR_ESCAPE, color, message, localize ) );
 
 		// Omni-bot: Tell the bot about the chat message
 		Bot_Event_ChatMessage( other - g_entities, ent, mode, message );
@@ -1193,24 +1179,24 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 		G_LogPrintf( "sayteam: %s: %s\n", ent->client->pers.netname, text );
 		if ( Team_GetLocationMsg( ent, location, sizeof( location ) ) ) {
 			Com_sprintf( name, sizeof( name ), "[lof](%s%c%c) (%s): ",
-						 ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE, location );
+				ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE, location );
 		} else {
 			Com_sprintf( name, sizeof( name ), "(%s%c%c): ",
-						 ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
+				ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
 		}
 		color = COLOR_CYAN;
 		break;
 	case SAY_TELL:
 		if ( target && g_gametype.integer >= GT_TEAM &&
-			 target->client->sess.sessionTeam == ent->client->sess.sessionTeam &&
-			 Team_GetLocationMsg( ent, location, sizeof( location ) ) ) {
-			Com_sprintf( name, sizeof( name ), "[%s%c%c] (%s): ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE, location );
+			target->client->sess.sessionTeam == ent->client->sess.sessionTeam &&
+			Team_GetLocationMsg( ent, location, sizeof( location ) ) ) {
+				Com_sprintf( name, sizeof( name ), "[%s%c%c] (%s): ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE, location );
 		} else {
 			Com_sprintf( name, sizeof( name ), "[%s%c%c]: ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
 		}
 		color = COLOR_MAGENTA;
 		break;
-	// NERVE - SMF
+		// NERVE - SMF
 	case SAY_LIMBO:
 		G_LogPrintf( "say_limbo: %s: %s\n", ent->client->pers.netname, text );
 		Com_sprintf( name, sizeof( name ), "%s%c%c: ", ent->client->pers.netname, Q_COLOR_ESCAPE, COLOR_WHITE );
@@ -1235,7 +1221,6 @@ void G_Say( gentity_t *ent, gentity_t *target, int mode, const char *chatText ) 
 		G_SayTo( ent, other, mode, color, name, text, localize );
 	}
 }
-
 
 /*
 ==================
@@ -1322,14 +1307,13 @@ static void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *i
 	}
 
 	if ( other->r.svFlags & SVF_BOT ) {
-	    // Omni-bot Send this voice macro to the bot as an event.
-	    Bot_Event_VoiceMacro( other - g_entities, ent, mode, id );
-	    return;
+		// Omni-bot Send this voice macro to the bot as an event.
+		Bot_Event_VoiceMacro( other - g_entities, ent, mode, id );
+		return;
 	}
 
 	trap_SendServerCommand( other - g_entities, va( "%s %d %d %d %s %i %i %i", cmd, voiceonly, ent->s.number, color, id,
-													(int)ent->s.pos.trBase[0], (int)ent->s.pos.trBase[1], (int)ent->s.pos.trBase[2] ) );
-
+		(int)ent->s.pos.trBase[0], (int)ent->s.pos.trBase[1], (int)ent->s.pos.trBase[2] ) );
 }
 
 void G_Voice( gentity_t *ent, gentity_t *target, int mode, const char *id, const char *customChat, qboolean voiceonly ) {
@@ -1408,7 +1392,6 @@ void Cmd_Where_f( gentity_t *ent ) {
 	trap_SendServerCommand( ent - g_entities, va( "print \"%s\n\"", vtos( ent->s.origin ) ) );
 }
 
-
 static const char *gameNames[] = {
 	"Free For All",
 	"Tournament",
@@ -1419,7 +1402,6 @@ static const char *gameNames[] = {
 	"Wolf Stopwatch",
 	"Wolf Checkpoint"
 };
-
 
 /*
 ==================
@@ -1457,10 +1439,10 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 
 	// cs: added quad's fix for callvote exploits
 	if ( strchr( arg1, ';' ) || strchr( arg2, ';' ) ||
-		 strchr( arg1, '\r' ) || strchr( arg2, '\r' ) ||
-		 strchr( arg1, '\n' ) || strchr( arg2, '\n' ) ) {
-		trap_SendServerCommand( ent - g_entities, "print \"Invalid vote string.\n\"" );
-		return;
+		strchr( arg1, '\r' ) || strchr( arg2, '\r' ) ||
+		strchr( arg1, '\n' ) || strchr( arg2, '\n' ) ) {
+			trap_SendServerCommand( ent - g_entities, "print \"Invalid vote string.\n\"" );
+			return;
 	}
 
 	if ( !Q_stricmp( arg1, "map_restart" ) ) {
@@ -1483,13 +1465,13 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		mask = VOTEFLAGS_SWAP;
 	} else if ( !Q_stricmp( arg1, "difficulty" ) ) {
 		mask = VOTEFLAGS_BOTDIFFICULTY;
-// JPW NERVE
+		// JPW NERVE
 #ifndef PRE_RELEASE_DEMO
 	} else if ( !Q_stricmp( arg1, testid1 ) ) {
 	} else if ( !Q_stricmp( arg1, testid2 ) ) {
 	} else if ( !Q_stricmp( arg1, testid3 ) ) {
 #endif
-// jpw
+		// jpw
 	} else {
 		trap_SendServerCommand( ent - g_entities, "print \"Invalid vote string.\n\"" );
 		trap_SendServerCommand( ent - g_entities, "print \"Vote commands are: map_restart, nextmap, start_match, swap_teams, reset_match, map <mapname>, g_gametype <n>, kick <player>, clientkick <clientnum>, difficulty\n\"" );
@@ -1548,14 +1530,14 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		}
 		Com_sprintf( level.voteString, sizeof( level.voteString ), "vstr nextmap" );
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", level.voteString );
-// JPW NERVE
+		// JPW NERVE
 	} else if ( !Q_stricmp( arg1,"kick" ) ) {
 		int kicknum = MAX_CLIENTS;
 		for ( i = 0; i < MAX_CLIENTS; i++ ) {
 			if ( level.clients[i].pers.connected != CON_CONNECTED ) {
 				continue;
 			}
-// strip the color crap out
+			// strip the color crap out
 			Q_strncpyz( cleanName, level.clients[i].pers.netname, sizeof( cleanName ) );
 			Q_CleanStr( cleanName );
 			if ( !Q_stricmp( cleanName, arg2 ) ) {
@@ -1572,18 +1554,17 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 			trap_SendServerCommand( ent - g_entities, "print \"Client not on server.\n\"" );
 			return;
 		}
-// jpw
+		// jpw
 	} else if ( !Q_stricmp( arg1, "difficulty" ) ) {
 		int botDifficulty = atoi(arg2);
 
 		if ( botDifficulty < -1 || botDifficulty == 0 || botDifficulty > MAXBOTDIFFICULTY ) {
-		    trap_SendServerCommand( ent - g_entities, va( "print \"^3Difficulty must be -1 for random or between 1 and %i^7\n\"", MAXBOTDIFFICULTY ) );
-		    return;
+			trap_SendServerCommand( ent - g_entities, va( "print \"^3Difficulty must be -1 for random or between 1 and %i^7\n\"", MAXBOTDIFFICULTY ) );
+			return;
 		}
 
 		Com_sprintf( level.voteString, sizeof( level.voteString ),"bot difficulty %i", botDifficulty );
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", level.voteString );
-
 	} else {
 		Com_sprintf( level.voteString, sizeof( level.voteString ), "%s \"%s\"", arg1, arg2 );
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", level.voteString );
@@ -1617,7 +1598,6 @@ void Cmd_Vote_f( gentity_t *ent ) {
 
 	// DHM - Nerve :: Complaints supercede voting (and share command)
 	if ( ent->client->pers.complaintEndTime > level.time ) {
-
 		gclient_t *cl = g_entities[ ent->client->pers.complaintClient ].client;
 		if ( !cl ) {
 			return;
@@ -1691,18 +1671,15 @@ void Cmd_Vote_f( gentity_t *ent ) {
 	}
 }
 
-
 qboolean G_canPickupMelee( gentity_t *ent ) {
-
-// JPW NERVE -- no "melee" weapons in net play
+	// JPW NERVE -- no "melee" weapons in net play
 	if ( g_gametype.integer >= GT_WOLF ) {
 		return qfalse;
 	}
-// jpw
+	// jpw
 
 	if ( !( ent->client ) ) {
 		return qfalse;  // hmm, shouldn't be too likely...
-
 	}
 	if ( !( ent->s.weapon ) ) {  // no weap, go ahead
 		return qtrue;
@@ -1839,14 +1816,13 @@ qboolean G_PushPlayer( gentity_t *ent, gentity_t *victim ) {
 
 	// no longer try to shove into ground
 	if ( ( push[2] > fabs( push[0] ) ) &&
-		 ( push[2] > fabs( push[1] ) ) ) {
-
-		// player is being boosted
-		if ( g_shoveNoZ.integer ) {
-			push[2] = 64;
-		} else {
-			push[2] = dir[2] * g_shove.integer * 4; // like in etpro, shoving up gives only 350 speed ( jump gives 270 )
-		}
+		( push[2] > fabs( push[1] ) ) ) {
+			// player is being boosted
+			if ( g_shoveNoZ.integer ) {
+				push[2] = 64;
+			} else {
+				push[2] = dir[2] * g_shove.integer * 4; // like in etpro, shoving up gives only 350 speed ( jump gives 270 )
+			}
 	} else {
 		// give them a little hop
 		push[2] = 64;
@@ -1896,7 +1872,6 @@ qboolean G_DragCorpse( gentity_t *dragger, gentity_t *corpse ) {
 
 // credits to s4ndmod
 void G_CanisterKick( gentity_t *ent ) {
-
 	gentity_t   *traceEnt;
 	vec3_t forward, right, up, angles, mins, maxs, origin;
 	float speed = 800.0f;       //default value, based on some testing
@@ -1904,12 +1879,12 @@ void G_CanisterKick( gentity_t *ent ) {
 	int touch[MAX_GENTITIES];
 
 	if (
-	    //dead players
-		ent->client->ps.pm_flags & PMF_LIMBO ||
-		ent->client->ps.pm_type == PM_DEAD
-		) {
-		// do not pass go, do not kick canisters
-		return;
+		//dead players
+			ent->client->ps.pm_flags & PMF_LIMBO ||
+			ent->client->ps.pm_type == PM_DEAD
+			) {
+				// do not pass go, do not kick canisters
+				return;
 	}
 
 	// Find straight ahead, no pitching...
@@ -1937,11 +1912,9 @@ void G_CanisterKick( gentity_t *ent ) {
 		tent = G_TempEntity( mins, EV_RAILTRAIL );
 		VectorCopy( maxs, tent->s.origin2 );
 		tent->s.dmgFlags = 1;
-
 	}
 
 	for ( i = 0; i < num; i++ ) {
-
 		traceEnt = &g_entities[touch[i]];
 
 		// prevents a nasty kick corpses bug if they died holding any of
@@ -1952,34 +1925,33 @@ void G_CanisterKick( gentity_t *ent ) {
 
 		// check for grenades, and misc canisters otherwise reject...
 		if ( ( g_kickItems.integer & KICK_GRENADE && traceEnt->s.weapon == WP_GRENADE_PINEAPPLE ) ||
-			 ( g_kickItems.integer & KICK_GRENADE && traceEnt->s.weapon == WP_GRENADE_LAUNCHER ) ||
-			 ( g_kickItems.integer & KICK_AIRSTRIKE && traceEnt->s.weapon == WP_SMOKE_GRENADE ) ) {
+			( g_kickItems.integer & KICK_GRENADE && traceEnt->s.weapon == WP_GRENADE_LAUNCHER ) ||
+			( g_kickItems.integer & KICK_AIRSTRIKE && traceEnt->s.weapon == WP_SMOKE_GRENADE ) ) {
+				traceEnt->s.pos.trType = TR_GRAVITY;            //have to set this in case it was reset to TR_STATIONARY
+				VectorClear( angles );        //only angles[1] is used
+				//set it to the direction we're facing, +/- 15 degrees
+				angles[1] = ent->client->ps.viewangles[1] + ( crandom() * 15.0f );
 
-			traceEnt->s.pos.trType = TR_GRAVITY;            //have to set this in case it was reset to TR_STATIONARY
-			VectorClear( angles );        //only angles[1] is used
-			//set it to the direction we're facing, +/- 15 degrees
-			angles[1] = ent->client->ps.viewangles[1] + ( crandom() * 15.0f );
+				//get the 'forward' vector based on the direction we're facing
+				AngleVectors( angles, forward, NULL, NULL );
+				//add some randomness to the 'height' of the kick
+				forward[2] = 0.5f + ( crandom() * 0.15f );
+				VectorNormalizeFast( forward );               //re-normalize the vector
 
-			//get the 'forward' vector based on the direction we're facing
-			AngleVectors( angles, forward, NULL, NULL );
-			//add some randomness to the 'height' of the kick
-			forward[2] = 0.5f + ( crandom() * 0.15f );
-			VectorNormalizeFast( forward );               //re-normalize the vector
+				speed += ( crandom() * 150.0f );              //add some randomness to the speed/distance of the kick
+				VectorScale( forward, speed, forward );       //and multiply the vector by the speed
 
-			speed += ( crandom() * 150.0f );              //add some randomness to the speed/distance of the kick
-			VectorScale( forward, speed, forward );       //and multiply the vector by the speed
+				//play the grenade throwing sound, just to let them know they successfully kicked it
+				G_Sound( ent, G_SoundIndex( "sound/weapons/grenade/grenlf1a.wav" ) );
 
-			//play the grenade throwing sound, just to let them know they successfully kicked it
-			G_Sound( ent, G_SoundIndex( "sound/weapons/grenade/grenlf1a.wav" ) );
+				trap_UnlinkEntity( traceEnt );                    //probably not necessary, may prevent an occasional error
+				traceEnt->s.pos.trTime = level.time - 50;   //move a little on the first frame
 
-			trap_UnlinkEntity( traceEnt );                    //probably not necessary, may prevent an occasional error
-			traceEnt->s.pos.trTime = level.time - 50;   //move a little on the first frame
-
-			//set the grenade's initial position
-			VectorCopy( traceEnt->r.currentOrigin, traceEnt->s.pos.trBase );
-			VectorCopy( forward, traceEnt->s.pos.trDelta );   //essentially, set the velocity
-			SnapVector( traceEnt->s.pos.trDelta );                //"save network bandwith" apparently...rounds everything to integers
-			trap_LinkEntity( traceEnt );                      //re-link the grenade...have to if we unlinked it
+				//set the grenade's initial position
+				VectorCopy( traceEnt->r.currentOrigin, traceEnt->s.pos.trBase );
+				VectorCopy( forward, traceEnt->s.pos.trDelta );   //essentially, set the velocity
+				SnapVector( traceEnt->s.pos.trDelta );                //"save network bandwith" apparently...rounds everything to integers
+				trap_LinkEntity( traceEnt );                      //re-link the grenade...have to if we unlinked it
 		}
 	}
 }
@@ -2074,7 +2046,6 @@ void Cmd_Activate_f( gentity_t *ent ) {
 				traceEnt->active = qtrue;
 				traceEnt->touch( traceEnt, ent, &trace );
 			}
-
 		} else if ( G_EmplacedGunIsMountable( traceEnt, ent ) ) {
 			gclient_t* cl = &level.clients[ ent->s.clientNum ];
 			vec3_t point;
@@ -2114,10 +2085,10 @@ void Cmd_Activate_f( gentity_t *ent ) {
 				traceEnt->health++;
 			}
 		} else if ( ( Q_stricmp( traceEnt->classname, "func_button" ) == 0 )
-					&& ( traceEnt->s.apos.trType == TR_STATIONARY && traceEnt->s.pos.trType == TR_STATIONARY )
-					&& traceEnt->active == qfalse ) {
-			Use_BinaryMover( traceEnt, ent, ent );
-			traceEnt->active = qtrue;
+			&& ( traceEnt->s.apos.trType == TR_STATIONARY && traceEnt->s.pos.trType == TR_STATIONARY )
+			&& traceEnt->active == qfalse ) {
+				Use_BinaryMover( traceEnt, ent, ent );
+				traceEnt->active = qtrue;
 		} else if ( !Q_stricmp( traceEnt->classname, "func_invisible_user" ) ) {
 			if ( walking ) {
 				traceEnt->flags |= FL_SOFTACTIVATE;     // no noise
@@ -2137,10 +2108,10 @@ void Cmd_Activate_f( gentity_t *ent ) {
 
 /*
 Cmd_Activate2_f() is only for:
-    shove
-    dragging
-	kicking
- */
+shove
+dragging
+kicking
+*/
 void Cmd_Activate2_f( gentity_t *ent ) {
 	trace_t tr;
 	vec3_t end;
@@ -2157,12 +2128,12 @@ void Cmd_Activate2_f( gentity_t *ent ) {
 
 	// look for a corpse to drag
 	trap_Trace( &tr,
-				offset,
-				NULL,
-				NULL,
-				end,
-				ent->s.number,
-				CONTENTS_CORPSE );
+		offset,
+		NULL,
+		NULL,
+		end,
+		ent->s.number,
+		CONTENTS_CORPSE );
 	if ( tr.entityNum >= 0 ) {
 		traceEnt = &g_entities[tr.entityNum];
 		if ( traceEnt->client ) {
@@ -2176,12 +2147,12 @@ void Cmd_Activate2_f( gentity_t *ent ) {
 
 	// look for a guy to push
 	trap_Trace( &tr,
-				offset,
-				NULL,
-				NULL,
-				end,
-				ent->s.number,
-				CONTENTS_BODY );
+		offset,
+		NULL,
+		NULL,
+		end,
+		ent->s.number,
+		CONTENTS_BODY );
 	if ( tr.entityNum >= 0 ) {
 		traceEnt = &g_entities[tr.entityNum];
 		if ( traceEnt->client ) {
@@ -2321,7 +2292,6 @@ Touch_Knife
 void Touch_Knife( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 	qboolean hurt = qfalse;
 	ent->active = qfalse;   //set this just to be safe, but shouldn't be necessary
-
 
 	if ( !other->client ) {
 		return;
@@ -2627,7 +2597,6 @@ void Cmd_GiveAmmo_f( gentity_t* ent ) {
 			target->client->ps.ammo[BG_FindAmmoForWeapon( WP_SNIPERRIFLE )] = (ammoTable[WP_SNIPERRIFLE].maxclip * 3) + G_ExtraAmmo(-1,WP_SNIPERRIFLE);
 		}
 
-
 		maxGive = ( (ammoTable[WP_MAUSER].maxclip * 3) + G_ExtraAmmo(-1,WP_MAUSER) ) - target->client->ps.ammo[BG_FindAmmoForWeapon( WP_MAUSER )];
 		target->client->ps.ammo[BG_FindAmmoForWeapon( WP_MAUSER )] += givenAmmo;
 		if ( target->client->ps.ammo[BG_FindAmmoForWeapon( WP_MAUSER )] > (ammoTable[WP_MAUSER].maxclip * 3) + G_ExtraAmmo(-1,WP_MAUSER) ) {
@@ -2654,7 +2623,6 @@ void Cmd_GiveAmmo_f( gentity_t* ent ) {
 		}
 
 		break;
-
 
 	case WP_VENOM:
 
@@ -2688,14 +2656,11 @@ void Cmd_GiveAmmo_f( gentity_t* ent ) {
 		trap_SendServerCommand( ent - g_entities, va( "chat \"^3You gave ^7%s^3 ammo, ^7%i ^3was all he could carry!\"",target->client->pers.netname,maxGive ) );
 		trap_SendServerCommand( target - g_entities, va( "chat \"^7%s^3 gave you ^7%i ^3ammo!\"",ent->client->pers.netname,maxGive ) );
 		ent->client->ps.ammo[BG_FindClipForWeapon( weapon )] -= maxGive;
-
 	} else {
-
 		trap_SendServerCommand( ent - g_entities, va( "chat \"^3You gave ^7%i^3 ammo to ^7%s^3!\"",givenAmmo,target->client->pers.netname ) );
 		trap_SendServerCommand( target - g_entities, va( "chat \"^7%s^3 gave you ^7%i ^3ammo!\"",ent->client->pers.netname,givenAmmo ) );
 		ent->client->ps.ammo[BG_FindClipForWeapon( weapon )] -= givenAmmo;
 	}
-
 
 	Bot_Event_RecievedAmmo( target - g_entities, ent );
 }
@@ -2897,14 +2862,14 @@ void Cmd_Buy_f( gentity_t* ent )
 
 	// buying ammo..
 	if ( !Q_stricmp(buyingstr, "ammo") ) {
-        if ( ent->client->ps.weapon ) {
-            Add_Ammo( ent, ent->client->ps.weapon, ammoTable[ent->client->ps.weapon].maxammo, qtrue );
-            CP("print \"^dbuy: ^9you bought yourself some ammo\n\"");
-        }
-        else {
-            CP("print \"^dbuy: ^9you need a primary weapon to buy ammo\n\"");
-            return;
-        }
+		if ( ent->client->ps.weapon ) {
+			Add_Ammo( ent, ent->client->ps.weapon, ammoTable[ent->client->ps.weapon].maxammo, qtrue );
+			CP("print \"^dbuy: ^9you bought yourself some ammo\n\"");
+		}
+		else {
+			CP("print \"^dbuy: ^9you need a primary weapon to buy ammo\n\"");
+			return;
+		}
 	}
 	// buying health..
 	else if ( !Q_stricmp(buyingstr, "health") ) {
@@ -2936,9 +2901,9 @@ void Cmd_Buy_f( gentity_t* ent )
 void Cmd_Injure_f( gentity_t *ent )
 {
 	if(ent->client->sess.sessionTeam == TEAM_SPECTATOR ||
-	  (ent->client->ps.pm_flags & PMF_LIMBO) ||
-	  ent->health <= 0) {
-		return;
+		(ent->client->ps.pm_flags & PMF_LIMBO) ||
+		ent->health <= 0) {
+			return;
 	}
 
 	G_Damage(ent,NULL,NULL,NULL,NULL,ent->health + 1,0, MOD_POISONGAS);
@@ -2953,7 +2918,7 @@ qboolean G_FlingClient( gentity_t *vic, int flingType )
 		return qfalse;
 
 	if(!(vic->client->sess.sessionTeam == TEAM_RED ||
-			vic->client->sess.sessionTeam == TEAM_BLUE))
+		vic->client->sess.sessionTeam == TEAM_BLUE))
 		return qfalse;
 
 	if(vic->health <= 0)
@@ -2971,10 +2936,10 @@ qboolean G_FlingClient( gentity_t *vic, int flingType )
 	VectorNormalize(dir);
 	VectorScale(dir, 1500, flingvec);
 	VectorAdd(vic->s.pos.trDelta, flingvec, vic->s.pos.trDelta);
-	VectorAdd(vic->client->ps.velocity, 
-			flingvec, 
-			vic->client->ps.velocity);
-	return qtrue;					
+	VectorAdd(vic->client->ps.velocity,
+		flingvec,
+		vic->client->ps.velocity);
+	return qtrue;
 }
 
 qboolean G_FlingClientA( int flingType )
@@ -3117,28 +3082,28 @@ void ClientCommand( int clientNum ) {
 	} else if ( Q_stricmp( cmd, "giveammo" ) == 0 ) {
 		Cmd_GiveAmmo_f( ent );
 	} else if ( Q_stricmp( cmd, "mycredits" ) == 0 ) {
-	    if ( !(g_betting.integer & CREDITS_ENABLE) ) {
-	        trap_SendServerCommand( clientNum, "print \"betting is not enabled on this server\n\"" );
-	        return;
-	    }
+		if ( !(g_betting.integer & CREDITS_ENABLE) ) {
+			trap_SendServerCommand( clientNum, "print \"betting is not enabled on this server\n\"" );
+			return;
+		}
 		Cmd_MyCredits_f( ent );
 	} else if ( Q_stricmp( cmd, "bet" ) == 0 ) {
-	    if ( !(g_betting.integer & CREDITS_ENABLE) ) {
-	        trap_SendServerCommand( clientNum, "print \"betting is not enabled on this server\n\"" );
-	        return;
-	    }
+		if ( !(g_betting.integer & CREDITS_ENABLE) ) {
+			trap_SendServerCommand( clientNum, "print \"betting is not enabled on this server\n\"" );
+			return;
+		}
 		Cmd_Bet_f( ent );
 	} else if ( Q_stricmp( cmd, "accept" ) == 0 ) {
-	    if ( !(g_betting.integer & CREDITS_ENABLE) ) {
-	        trap_SendServerCommand( clientNum, "print \"betting is not enabled on this server\n\"" );
-	        return;
-	    }
+		if ( !(g_betting.integer & CREDITS_ENABLE) ) {
+			trap_SendServerCommand( clientNum, "print \"betting is not enabled on this server\n\"" );
+			return;
+		}
 		Cmd_Accept_f( ent );
 	} else if ( Q_stricmp( cmd, "buy" ) == 0 ) {
-	    if ( !(g_betting.integer & CREDITS_BUYING) ) {
-	        trap_SendServerCommand( clientNum, "print \"buying is not enabled on this server\n\"" );
-	        return;
-	    }
+		if ( !(g_betting.integer & CREDITS_BUYING) ) {
+			trap_SendServerCommand( clientNum, "print \"buying is not enabled on this server\n\"" );
+			return;
+		}
 		Cmd_Buy_f( ent );
 	} else if (Q_stricmp (cmd, "injure") == 0) {
 		Cmd_Injure_f (ent);

@@ -1,5 +1,3 @@
-
-
 // cg_predict.c -- this file generates cg.predictedPlayerState by either
 // interpolating between snapshots from the server or locally predicting
 // ahead the client's movement.
@@ -48,10 +46,10 @@ void CG_BuildSolidList( void ) {
 		}
 
 		if ( ent->eType == ET_ITEM || ent->eType == ET_PUSH_TRIGGER || ent->eType == ET_TELEPORT_TRIGGER
-			 || ent->eType == ET_CONCUSSIVE_TRIGGER || ent->eType == ET_OID_TRIGGER ) { // JPW NERVE
-			cg_triggerEntities[cg_numTriggerEntities] = cent;
-			cg_numTriggerEntities++;
-			continue;
+			|| ent->eType == ET_CONCUSSIVE_TRIGGER || ent->eType == ET_OID_TRIGGER ) { // JPW NERVE
+				cg_triggerEntities[cg_numTriggerEntities] = cent;
+				cg_numTriggerEntities++;
+				continue;
 		}
 
 		if ( cent->nextState.solid ) {
@@ -69,67 +67,67 @@ CG_ClipMoveToEntities
 ====================
 */
 static void CG_ClipMoveToEntities( const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-								   int skipNumber, int mask, int capsule, trace_t *tr ) {
-	int i, x, zd, zu;
-	trace_t trace;
-	entityState_t   *ent;
-	clipHandle_t cmodel;
-	vec3_t bmins, bmaxs;
-	vec3_t origin, angles;
-	centity_t   *cent;
+								  int skipNumber, int mask, int capsule, trace_t *tr ) {
+									  int i, x, zd, zu;
+									  trace_t trace;
+									  entityState_t   *ent;
+									  clipHandle_t cmodel;
+									  vec3_t bmins, bmaxs;
+									  vec3_t origin, angles;
+									  centity_t   *cent;
 
-	for ( i = 0 ; i < cg_numSolidEntities ; i++ ) {
-		cent = cg_solidEntities[ i ];
-		ent = &cent->currentState;
+									  for ( i = 0 ; i < cg_numSolidEntities ; i++ ) {
+										  cent = cg_solidEntities[ i ];
+										  ent = &cent->currentState;
 
-		if ( ent->number == skipNumber ) {
-			continue;
-		}
+										  if ( ent->number == skipNumber ) {
+											  continue;
+										  }
 
-		if ( ent->solid == SOLID_BMODEL ) {
-			// special value for bmodel
-			cmodel = trap_CM_InlineModel( ent->modelindex );
-			BG_EvaluateTrajectory( &cent->currentState.apos, cg.physicsTime, angles );
-			BG_EvaluateTrajectory( &cent->currentState.pos, cg.physicsTime, origin );
-		} else {
-			// encoded bbox
-			x = ( ent->solid & 255 );
-			zd = ( ( ent->solid >> 8 ) & 255 );
-			zu = ( ( ent->solid >> 16 ) & 255 ) - 32;
+										  if ( ent->solid == SOLID_BMODEL ) {
+											  // special value for bmodel
+											  cmodel = trap_CM_InlineModel( ent->modelindex );
+											  BG_EvaluateTrajectory( &cent->currentState.apos, cg.physicsTime, angles );
+											  BG_EvaluateTrajectory( &cent->currentState.pos, cg.physicsTime, origin );
+										  } else {
+											  // encoded bbox
+											  x = ( ent->solid & 255 );
+											  zd = ( ( ent->solid >> 8 ) & 255 );
+											  zu = ( ( ent->solid >> 16 ) & 255 ) - 32;
 
-			bmins[0] = bmins[1] = -x;
-			bmaxs[0] = bmaxs[1] = x;
-			bmins[2] = -zd;
-			bmaxs[2] = zu;
+											  bmins[0] = bmins[1] = -x;
+											  bmaxs[0] = bmaxs[1] = x;
+											  bmins[2] = -zd;
+											  bmaxs[2] = zu;
 
-			// MrE: use bbox or capsule
-			if ( ent->eFlags & EF_CAPSULE ) {
-				cmodel = trap_CM_TempCapsuleModel( bmins, bmaxs );
-			} else {
-				cmodel = trap_CM_TempBoxModel( bmins, bmaxs );
-			}
-			VectorCopy( vec3_origin, angles );
-			VectorCopy( cent->lerpOrigin, origin );
-		}
-		// MrE: use bbox of capsule
-		if ( capsule ) {
-			trap_CM_TransformedCapsuleTrace( &trace, start, end,
-											 mins, maxs, cmodel,  mask, origin, angles );
-		} else {
-			trap_CM_TransformedBoxTrace( &trace, start, end,
-										 mins, maxs, cmodel,  mask, origin, angles );
-		}
+											  // MrE: use bbox or capsule
+											  if ( ent->eFlags & EF_CAPSULE ) {
+												  cmodel = trap_CM_TempCapsuleModel( bmins, bmaxs );
+											  } else {
+												  cmodel = trap_CM_TempBoxModel( bmins, bmaxs );
+											  }
+											  VectorCopy( vec3_origin, angles );
+											  VectorCopy( cent->lerpOrigin, origin );
+										  }
+										  // MrE: use bbox of capsule
+										  if ( capsule ) {
+											  trap_CM_TransformedCapsuleTrace( &trace, start, end,
+												  mins, maxs, cmodel,  mask, origin, angles );
+										  } else {
+											  trap_CM_TransformedBoxTrace( &trace, start, end,
+												  mins, maxs, cmodel,  mask, origin, angles );
+										  }
 
-		if ( trace.allsolid || trace.fraction < tr->fraction ) {
-			trace.entityNum = ent->number;
-			*tr = trace;
-		} else if ( trace.startsolid ) {
-			tr->startsolid = qtrue;
-		}
-		if ( tr->allsolid ) {
-			return;
-		}
-	}
+										  if ( trace.allsolid || trace.fraction < tr->fraction ) {
+											  trace.entityNum = ent->number;
+											  *tr = trace;
+										  } else if ( trace.startsolid ) {
+											  tr->startsolid = qtrue;
+										  }
+										  if ( tr->allsolid ) {
+											  return;
+										  }
+									  }
 }
 
 /*
@@ -138,37 +136,37 @@ CG_Trace
 ================
 */
 void    CG_Trace( trace_t *result, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-				  int skipNumber, int mask ) {
-	trace_t t;
+				 int skipNumber, int mask ) {
+					 trace_t t;
 
-	trap_CM_BoxTrace( &t, start, end, mins, maxs, 0, mask );
-	t.entityNum = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
-	// check all other solid models
-	CG_ClipMoveToEntities( start, mins, maxs, end, skipNumber, mask, qfalse, &t );
+					 trap_CM_BoxTrace( &t, start, end, mins, maxs, 0, mask );
+					 t.entityNum = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
+					 // check all other solid models
+					 CG_ClipMoveToEntities( start, mins, maxs, end, skipNumber, mask, qfalse, &t );
 
-	*result = t;
+					 *result = t;
 }
 
-void	CG_Trace_World( trace_t *result, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, 
-					 int skipNumber, int mask ) {
-	trace_t	t;
+void	CG_Trace_World( trace_t *result, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
+					   int skipNumber, int mask ) {
+						   trace_t	t;
 
-	trap_CM_BoxTrace ( &t, start, end, mins, maxs, 0, mask );
-	t.entityNum = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
+						   trap_CM_BoxTrace ( &t, start, end, mins, maxs, 0, mask );
+						   t.entityNum = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
 
-	*result = t;
+						   *result = t;
 }
 
 qboolean PointVisible( vec3_t point ) {
-    trace_t trace;
+	trace_t trace;
 
-    CG_Trace_World( &trace, cg.refdef.vieworg, NULL, NULL, point, 0, MASK_SOLID );
+	CG_Trace_World( &trace, cg.refdef.vieworg, NULL, NULL, point, 0, MASK_SOLID );
 
-    if ( trace.fraction != 1.0 ) {
-	return qfalse;
-    }
+	if ( trace.fraction != 1.0 ) {
+		return qfalse;
+	}
 
-    return qtrue;
+	return qtrue;
 }
 
 /*
@@ -177,15 +175,15 @@ CG_TraceCapsule
 ================
 */
 void    CG_TraceCapsule( trace_t *result, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-						 int skipNumber, int mask ) {
-	trace_t t;
+						int skipNumber, int mask ) {
+							trace_t t;
 
-	trap_CM_CapsuleTrace( &t, start, end, mins, maxs, 0, mask );
-	t.entityNum = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
-	// check all other solid models
-	CG_ClipMoveToEntities( start, mins, maxs, end, skipNumber, mask, qtrue, &t );
+							trap_CM_CapsuleTrace( &t, start, end, mins, maxs, 0, mask );
+							t.entityNum = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
+							// check all other solid models
+							CG_ClipMoveToEntities( start, mins, maxs, end, skipNumber, mask, qtrue, &t );
 
-	*result = t;
+							*result = t;
 }
 
 /*
@@ -225,7 +223,6 @@ int     CG_PointContents( const vec3_t point, int passEntityNum ) {
 
 	return contents;
 }
-
 
 /*
 ========================
@@ -282,9 +279,8 @@ static void CG_InterpolatePlayerState( qboolean grabAngles ) {
 				prev->ps.viewangles[i], next->ps.viewangles[i], f );
 		}
 		out->velocity[i] = prev->ps.velocity[i] +
-						   f * ( next->ps.velocity[i] - prev->ps.velocity[i] );
+			f * ( next->ps.velocity[i] - prev->ps.velocity[i] );
 	}
-
 }
 
 /*/////////////////////////////////////////////////
@@ -385,12 +381,11 @@ static void CG_TouchItem( centity_t *cent ) {
 		return;
 	}
 
-//----(SA) autoactivate
+	//----(SA) autoactivate
 	if ( !cg_autoactivate.integer ) {
 		return;
 	}
-//----(SA) end
-
+	//----(SA) end
 
 	if ( !BG_PlayerTouchesItem( &cg.predictedPlayerState, &cent->currentState, cg.time ) ) {
 		return;
@@ -431,14 +426,13 @@ static void CG_TouchItem( centity_t *cent ) {
 	// Special case for flags.
 	// We don't predict touching our own flag
 	if ( cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_RED &&
-		 item->giTag == PW_REDFLAG ) {
-		return;
+		item->giTag == PW_REDFLAG ) {
+			return;
 	}
 	if ( cg.predictedPlayerState.persistant[PERS_TEAM] == TEAM_BLUE &&
-		 item->giTag == PW_BLUEFLAG ) {
-		return;
+		item->giTag == PW_BLUEFLAG ) {
+			return;
 	}
-
 
 	// grab it
 	BG_AddPredictableEventToPlayerstate( EV_ITEM_PICKUP, cent->currentState.modelindex, &cg.predictedPlayerState );
@@ -453,29 +447,28 @@ static void CG_TouchItem( centity_t *cent ) {
 	if ( item->giType == IT_WEAPON ) {
 		COM_BitSet( cg.predictedPlayerState.weapons, item->giTag );
 
-//----(SA)	added
+		//----(SA)	added
 		if ( item->giTag == WP_SNOOPERSCOPE ) {
 			COM_BitSet( cg.predictedPlayerState.weapons, WP_GARAND );
 		} else if ( item->giTag == WP_GARAND ) {
 			COM_BitSet( cg.predictedPlayerState.weapons, WP_SNOOPERSCOPE );
 		}
-//----(SA)	end
+		//----(SA)	end
 
 		if ( !cg.predictedPlayerState.ammo[ BG_FindAmmoForWeapon( item->giTag )] ) {
 			cg.predictedPlayerState.ammo[ BG_FindAmmoForWeapon( item->giTag )] = 1;
 		}
 	}
 
-//----(SA)
+	//----(SA)
 	if ( item->giType == IT_HOLDABLE ) {
 		cg.predictedPlayerState.stats[ STAT_HOLDABLE_ITEM ] |= 1 << item->giTag;
 	}
-//----(SA)	end
+	//----(SA)	end
 }
 
 void CG_AddDirtBulletParticles( vec3_t origin, vec3_t dir, int speed, int duration, int count, float randScale,
-								float width, float height, float alpha, char *shadername );
-
+							   float width, float height, float alpha, char *shadername );
 
 /*
 =========================
@@ -523,7 +516,7 @@ static void CG_TouchTriggerPrediction( void ) {
 		}
 
 		trap_CM_BoxTrace( &trace, cg.predictedPlayerState.origin, cg.predictedPlayerState.origin,
-						  cg_pmove.mins, cg_pmove.maxs, cmodel, -1 );
+			cg_pmove.mins, cg_pmove.maxs, cmodel, -1 );
 
 		if ( !trace.startsolid ) {
 			continue;
@@ -560,7 +553,6 @@ static void CG_TouchTriggerPrediction( void ) {
 		}
 	}
 }
-
 
 /*
 =================
@@ -655,8 +647,7 @@ void CG_PredictPlayerState( void ) {
 	if ( cg.predictedPlayerState.aiChar ) {
 		cg_pmove.noWeapClips = qtrue;   // ensure AI characters don't use clips
 	}
-//----(SA)	end
-
+	//----(SA)	end
 
 	// save the state before the pmove so we can detect transitions
 	oldPlayerState = cg.predictedPlayerState;
@@ -669,8 +660,8 @@ void CG_PredictPlayerState( void ) {
 	cmdNum = current - CMD_BACKUP + 1;
 	trap_GetUserCmd( cmdNum, &oldestCmd );
 	if ( cg_showmiss.integer && oldestCmd.serverTime > cg.snap->ps.commandTime
-		 && oldestCmd.serverTime < cg.time ) {  // special check for map_restart
-		CG_Printf( "exceeded PACKET_BACKUP on commands\n" );
+		&& oldestCmd.serverTime < cg.time ) {  // special check for map_restart
+			CG_Printf( "exceeded PACKET_BACKUP on commands\n" );
 	}
 
 	// get the latest command so we can know which commands are from previous map_restarts
@@ -689,13 +680,13 @@ void CG_PredictPlayerState( void ) {
 	cg_pmove.pmove_fixed = pmove_fixed.integer; // | cg_pmove_fixed.integer;
 	cg_pmove.pmove_msec = pmove_msec.integer;
 
-//----(SA)	added
+	//----(SA)	added
 	// restore persistant client-side playerstate variables before doing the pmove
 	// this could be done as suggested in q_shared.h ~line 1155, but right now I copy each variable individually
 	// DHM - Nerve :: weapAnim is transmitted now
 	cg.predictedPlayerState.weapAnimTimer           = oldPlayerState.weapAnimTimer;
 	cg.predictedPlayerState.venomTime               = oldPlayerState.venomTime;
-//----(SA)	end
+	//----(SA)	end
 
 	// RF, anim system
 	if ( cg_animState.integer ) {
@@ -746,7 +737,7 @@ void CG_PredictPlayerState( void ) {
 				float len;
 				vec3_t adjusted;
 				CG_AdjustPositionForMover( cg.predictedPlayerState.origin,
-										   cg.predictedPlayerState.groundEntityNum, cg.physicsTime, cg.oldTime, adjusted, deltaAngles );
+					cg.predictedPlayerState.groundEntityNum, cg.physicsTime, cg.oldTime, adjusted, deltaAngles );
 				// RF, add the deltaAngles (fixes jittery view while riding trains)
 				cg.predictedPlayerState.delta_angles[YAW] += ANGLE2SHORT( deltaAngles[YAW] );
 
@@ -833,10 +824,9 @@ void CG_PredictPlayerState( void ) {
 
 	// adjust for the movement of the groundentity
 	CG_AdjustPositionForMover( cg.predictedPlayerState.origin,
-							   cg.predictedPlayerState.groundEntityNum,
-							   cg.physicsTime, cg.time, cg.predictedPlayerState.origin, deltaAngles );
+		cg.predictedPlayerState.groundEntityNum,
+		cg.physicsTime, cg.time, cg.predictedPlayerState.origin, deltaAngles );
 
 	// fire events and other transition triggered things
 	CG_TransitionPlayerState( &cg.predictedPlayerState, &oldPlayerState );
 }
-

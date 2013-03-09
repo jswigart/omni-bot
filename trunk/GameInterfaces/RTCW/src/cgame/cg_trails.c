@@ -24,7 +24,6 @@ typedef struct trailJunc_s
 	float alpha;
 	float width;
 	vec3_t color;
-
 } trailJunc_t;
 
 #define MAX_TRAILJUNCS  4096
@@ -135,14 +134,13 @@ trailJunc_t *CG_SpawnTrailJunc( trailJunc_t *headJunc ) {
 	return j;
 }
 
-
 /*
 ===============
 CG_AddTrailJunc
 
-  returns the index of the trail junction created
+returns the index of the trail junction created
 
-  Used for generic trails
+Used for generic trails
 ===============
 */
 int CG_AddTrailJunc( int headJuncIndex, qhandle_t shader, int spawnTime, int sType, vec3_t pos, int trailLife, float alphaStart, float alphaEnd, float startWidth, float endWidth, int flags, vec3_t colorStart, vec3_t colorEnd, float sRatio, float animSpeed ) {
@@ -214,7 +212,7 @@ int CG_AddTrailJunc( int headJuncIndex, qhandle_t shader, int spawnTime, int sTy
 ===============
 CG_AddSparkJunc
 
-  returns the index of the trail junction created
+returns the index of the trail junction created
 ===============
 */
 int CG_AddSparkJunc( int headJuncIndex, qhandle_t shader, vec3_t pos, int trailLife, float alphaStart, float alphaEnd, float startWidth, float endWidth ) {
@@ -263,7 +261,7 @@ int CG_AddSparkJunc( int headJuncIndex, qhandle_t shader, vec3_t pos, int trailL
 ===============
 CG_AddSmokeJunc
 
-  returns the index of the trail junction created
+returns the index of the trail junction created
 ===============
 */
 int CG_AddSmokeJunc( int headJuncIndex, qhandle_t shader, vec3_t pos, int trailLife, float alpha, float startWidth, float endWidth ) {
@@ -401,7 +399,7 @@ void CG_KillTrail( trailJunc_t *t ) {
 ==============
 CG_AddTrailToScene
 
-  TODO: this can do with some major optimization
+TODO: this can do with some major optimization
 ==============
 */
 static vec3_t vforward, vright, vup;
@@ -417,8 +415,8 @@ void CG_AddTrailToScene( trailJunc_t *trail, int iteration, int numJuncs ) {
 	trailJunc_t *j, *jNext;
 	vec3_t fwd, up, p, v;
 	// clipping vars
-	#define TRAIL_FADE_CLOSE_DIST   64.0
-	#define TRAIL_FADE_FAR_SCALE    4.0
+#define TRAIL_FADE_CLOSE_DIST   64.0
+#define TRAIL_FADE_FAR_SCALE    4.0
 	vec3_t viewProj;
 	float viewDist, fadeAlpha;
 
@@ -514,7 +512,6 @@ void CG_AddTrailToScene( trailJunc_t *trail, int iteration, int numJuncs ) {
 	jNext = j->nextJunc;
 	i = 0;
 	while ( jNext ) {
-
 		// first get the directional vectors to the next junc
 		VectorSubtract( jNext->pos, j->pos, fwd );
 		GetPerpendicularViewVector( cg.refdef.vieworg, j->pos, jNext->pos, up );
@@ -668,7 +665,6 @@ void CG_AddTrailToScene( trailJunc_t *trail, int iteration, int numJuncs ) {
 					outVerts[numOutVerts++] = verts[k];
 				}
 			}
-
 		}
 
 		if ( !( trail->flags & TJFL_NOPOLYMERGE ) ) {

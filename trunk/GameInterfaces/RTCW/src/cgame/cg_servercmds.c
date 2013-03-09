@@ -76,7 +76,6 @@ static void CG_ParseTeamInfo( void ) {
 	}
 }
 
-
 /*
 ================
 CG_ParseServerinfo
@@ -105,8 +104,8 @@ void CG_ParseServerinfo( void ) {
 	mapname = Info_ValueForKey( info, "mapname" );
 	Com_sprintf( cgs.mapname, sizeof( cgs.mapname ), "maps/%s.bsp", mapname );
 
-// JPW NERVE
-// prolly should parse all CS_SERVERINFO keys automagically, but I don't want to break anything that might be improperly set for wolf SP, so I'm just parsing MP relevant stuff here
+	// JPW NERVE
+	// prolly should parse all CS_SERVERINFO keys automagically, but I don't want to break anything that might be improperly set for wolf SP, so I'm just parsing MP relevant stuff here
 	trap_Cvar_Set( "g_medicChargeTime",Info_ValueForKey( info,"g_medicChargeTime" ) );
 	trap_Cvar_Set( "g_engineerChargeTime",Info_ValueForKey( info,"g_engineerChargeTime" ) );
 	trap_Cvar_Set( "g_soldierChargeTime",Info_ValueForKey( info,"g_soldierChargeTime" ) );
@@ -116,7 +115,7 @@ void CG_ParseServerinfo( void ) {
 	cg_redlimbotime.integer = atoi( Info_ValueForKey( info,"g_redlimbotime" ) );
 	//trap_Cvar_Set("g_bluelimbotime",Info_ValueForKey(info,"g_bluelimbotime"));
 	cg_bluelimbotime.integer = atoi( Info_ValueForKey( info,"g_bluelimbotime" ) );
-// jpw
+	// jpw
 
 	cgs.minclients = atoi( Info_ValueForKey( info, "g_minGameClients" ) );      // NERVE - SMF
 
@@ -184,15 +183,14 @@ static void CG_ParseScreenFade( void ) {
 	}
 }
 
-
 /*
 ==============
 CG_ParseFog
-    float near dist
-    float far dist
-    float density
-    float[3] r,g,b
-    int		time
+float near dist
+float far dist
+float density
+float[3] r,g,b
+int		time
 ==============
 */
 static void CG_ParseFog( void ) {
@@ -312,14 +310,14 @@ static void CG_ConfigStringModified( void ) {
 
 	num = atoi( CG_Argv( 1 ) );
 
-    // get the gamestate from the client system, which will have the
-    // new configstring already integrated
+	// get the gamestate from the client system, which will have the
+	// new configstring already integrated
 	trap_GetGameState( &cgs.gameState );
 
-    // look up the individual string that was modified
+	// look up the individual string that was modified
 	str = CG_ConfigString( num );
 
-    // do something with it if necessary
+	// do something with it if necessary
 	if ( num == CS_MUSIC ) {
 		CG_StartMusic();
 	} else if ( num == CS_SERVERINFO ) {
@@ -357,31 +355,28 @@ static void CG_ConfigStringModified( void ) {
 		cgs.gameModels[ num - CS_MODELS ] = trap_R_RegisterModel( str );
 	} else if ( num >= CS_SOUNDS && num < CS_SOUNDS + MAX_MODELS ) {
 		if ( str[0] != '*' ) {  // player specific sounds don't register here
-
-            // Ridah, register sound scripts seperately
+			// Ridah, register sound scripts seperately
 			if ( !strstr( str, ".wav" ) ) {
 				CG_SoundScriptPrecache( str );
 			} else {
 				cgs.gameSounds[ num - CS_SOUNDS] = trap_S_RegisterSound( str );
 			}
-
 		}
 	} else if ( num >= CS_PLAYERS && num < CS_PLAYERS + MAX_CLIENTS ) {
 		CG_NewClientInfo( num - CS_PLAYERS );
 	}
-    // Rafael particle configstring
+	// Rafael particle configstring
 	else if ( num >= CS_PARTICLES && num < CS_PARTICLES + MAX_PARTICLES_AREAS ) {
 		CG_NewParticleArea( num );
 	}
-//----(SA)	have not reached this code yet so I don't know if I really need this here
+	//----(SA)	have not reached this code yet so I don't know if I really need this here
 	else if ( num >= CS_DLIGHTS && num < CS_DLIGHTS + MAX_DLIGHTS ) {
-//		CG_Printf(">>>>>>>>>>>got configstring for dlight: %d\ntell Sherman!!!!!!!!!!", num-CS_DLIGHTS);
-//----(SA)
+		//		CG_Printf(">>>>>>>>>>>got configstring for dlight: %d\ntell Sherman!!!!!!!!!!", num-CS_DLIGHTS);
+		//----(SA)
 	} else if ( num == CS_SHADERSTATE ) {
 		CG_ShaderStateChanged();
 	}
 }
-
 
 /*
 =======================
@@ -402,7 +397,7 @@ static void CG_AddToTeamChat( const char *str ) {
 	}
 
 	if ( chatHeight <= 0 || cg_teamChatTime.integer <= 0 ) {
-        // team chat disabled, dump into normal chat
+		// team chat disabled, dump into normal chat
 		cgs.teamChatPos = cgs.teamLastChatPos = 0;
 		return;
 	}
@@ -477,7 +472,7 @@ void CG_AddToNotify( const char *str ) {
 	chatHeight = NOTIFY_HEIGHT;
 
 	if ( chatHeight <= 0 || notifytime <= 0 ) {
-        // team chat disabled, dump into normal chat
+		// team chat disabled, dump into normal chat
 		cgs.notifyPos = cgs.notifyLastPos = 0;
 		return;
 	}
@@ -520,8 +515,8 @@ void CG_AddToNotify( const char *str ) {
 			ls = p;
 		}
 		while ( *str == '\n' ) {
-            // TTimo gcc warning: value computed is not used
-            // was *str++;
+			// TTimo gcc warning: value computed is not used
+			// was *str++;
 			str++;
 		}
 
@@ -562,11 +557,11 @@ void CG_SendMoveSpeed( animation_t *animList, int numAnims, char *modelName ) {
 			continue;
 		}
 
-        // add this to the list
+		// add this to the list
 		Q_strcat( text, sizeof( text ), va( " %s %i", anim->name, anim->moveSpeed ) );
 	}
 
-    // send the movespeeds to the server
+	// send the movespeeds to the server
 	trap_SendMoveSpeedsToGame( 0, text );
 }
 
@@ -574,7 +569,7 @@ void CG_SendMoveSpeed( animation_t *animList, int numAnims, char *modelName ) {
 ===============
 CG_SendMoveSpeeds
 
-  send moveSpeeds for all unique models
+send moveSpeeds for all unique models
 ===============
 */
 void CG_SendMoveSpeeds( void ) {
@@ -586,11 +581,10 @@ void CG_SendMoveSpeeds( void ) {
 			continue;
 		}
 
-        // send this model
+		// send this model
 		CG_SendMoveSpeed( modelInfo->animations, modelInfo->numAnimations, modelInfo->modelname );
 	}
 }
-
 
 /*
 ===============
@@ -615,25 +609,25 @@ static void CG_MapRestart( void ) {
 	cg.itemPickupTime = 0;  // reset item pickup counter so previous messages don't re-appear
 	cg.cursorHintFade = 0;  // reset cursor hint timer
 
-    // DHM - Nerve :: Reset complaint system
+	// DHM - Nerve :: Reset complaint system
 	cgs.complaintClient = -1;
 	cgs.complaintEndTime = 0;
 
-    // (SA) clear zoom (so no warpies)
+	// (SA) clear zoom (so no warpies)
 	cg.zoomedBinoc = qfalse;
 	cg.zoomedBinoc = cg.zoomedScope = qfalse;
 	cg.zoomTime = 0;
 	cg.zoomval = 0;
 
-    // reset fog to world fog (if present)
+	// reset fog to world fog (if present)
 	trap_R_SetFog( FOG_CMD_SWITCHFOG, FOG_MAP,20,0,0,0,0 );
 
 	CG_InitLocalEntities();
 	CG_InitMarkPolys();
 
-    //Rafael particles
+	//Rafael particles
 	CG_ClearParticles();
-    // done.
+	// done.
 
 	for ( i = 1; i < MAX_PARTICLES_AREAS; i++ )
 	{
@@ -647,13 +641,12 @@ static void CG_MapRestart( void ) {
 		}
 	}
 
-
-    // Ridah
+	// Ridah
 	CG_ClearFlameChunks();
 	CG_SoundInit();
-    // done.
+	// done.
 
-    // make sure the "3 frags left" warnings play again
+	// make sure the "3 frags left" warnings play again
 	cg.fraglimitWarnings = 0;
 
 	cg.timelimitWarnings = 0;
@@ -671,17 +664,16 @@ static void CG_MapRestart( void ) {
 	trap_S_ClearLoopingSounds( qtrue );
 
 	cg.latchVictorySound = qfalse;          // NERVE - SMF
-// JPW NERVE -- reset render flags
+	// JPW NERVE -- reset render flags
 	cg_fxflags = 0;
-// jpw
+	// jpw
 
-
-    // we really should clear more parts of cg here and stop sounds
+	// we really should clear more parts of cg here and stop sounds
 	cg.v_dmg_time = 0;
 	cg.v_noFireTime = 0;
 	cg.v_fireTime = 0;
 
-    // play the "fight" sound if this is a restart without warmup
+	// play the "fight" sound if this is a restart without warmup
 	if ( cg.warmup == 0 && cg_announcer.integer ) {
 		trap_S_StartLocalSound( cgs.media.countFightSound, CHAN_ANNOUNCER );
 		CG_CenterPrint( "^1FIGHT!", 320, SMALLCHAR_WIDTH );
@@ -701,11 +693,11 @@ void CG_RequestMoveSpeed( const char *modelname ) {
 	modelInfo = BG_ModelInfoForModelname( (char *)modelname );
 
 	if ( !modelInfo ) {
-        // ignore it
+		// ignore it
 		return;
 	}
 
-    // send it
+	// send it
 	CG_SendMoveSpeed( modelInfo->animations, modelInfo->numAnimations, (char *)modelname );
 }
 
@@ -825,7 +817,7 @@ int CG_ParseVoiceChats( const char *filename, voiceChatList_t *voiceChatList, in
 			}
 			Com_sprintf( voiceChats[voiceChatList->numVoiceChats].chats[current], MAX_CHATSIZE, "%s", token );
 
-            // DHM - Nerve :: Specify sprite shader to show above player's head
+			// DHM - Nerve :: Specify sprite shader to show above player's head
 			token = COM_ParseExt( p, qfalse );
 			if ( !Q_stricmp( token, "}" ) || !token || token[0] == 0 ) {
 				voiceChats[voiceChatList->numVoiceChats].sprite[current] = trap_R_RegisterShader( "sprites/voiceChat" );
@@ -836,7 +828,7 @@ int CG_ParseVoiceChats( const char *filename, voiceChatList_t *voiceChatList, in
 					voiceChats[voiceChatList->numVoiceChats].sprite[current] = trap_R_RegisterShader( "sprites/voiceChat" );
 				}
 			}
-            // dhm - end
+			// dhm - end
 
 			voiceChats[voiceChatList->numVoiceChats].numSounds++;
 			current = voiceChats[voiceChatList->numVoiceChats].numSounds;
@@ -909,11 +901,10 @@ int CG_HeadModelVoiceChats( char *filename ) {
 		}
 	}
 
-    //FIXME: maybe try to load the .voice file which name is stored in token?
+	//FIXME: maybe try to load the .voice file which name is stored in token?
 
 	return -1;
 }
-
 
 /*
 =================
@@ -945,7 +936,7 @@ voiceChatList_t *CG_VoiceChatListForClient( int clientNum ) {
 	int voiceChatNum, i, j, k, gender;
 	char filename[128], *headModelName;
 
-    // NERVE - SMF
+	// NERVE - SMF
 	if ( cgs.gametype >= GT_WOLF ) {
 		if ( cgs.clientinfo[ clientNum ].team == TEAM_RED ) {
 			return &voiceChatLists[0];
@@ -953,7 +944,7 @@ voiceChatList_t *CG_VoiceChatListForClient( int clientNum ) {
 			return &voiceChatLists[1];
 		}
 	}
-    // -NERVE - SMF
+	// -NERVE - SMF
 
 	if ( clientNum < 0 || clientNum >= MAX_CLIENTS ) {
 		clientNum = 0;
@@ -965,7 +956,7 @@ voiceChatList_t *CG_VoiceChatListForClient( int clientNum ) {
 		headModelName++;
 	}
 
-    // find the voice file for the head model the client uses
+	// find the voice file for the head model the client uses
 	for ( i = 0; i < MAX_HEADMODELS; i++ ) {
 		if ( !Q_stricmp( headModelVoiceChat[i].headmodel, headModelName ) ) {
 			break;
@@ -976,7 +967,7 @@ voiceChatList_t *CG_VoiceChatListForClient( int clientNum ) {
 		return &voiceChatLists[headModelVoiceChat[i].voiceChatNum];
 	}
 
-    // find a <headmodelname>.vc file
+	// find a <headmodelname>.vc file
 	for ( i = 0; i < MAX_HEADMODELS; i++ ) {
 		if ( !strlen( headModelVoiceChat[i].headmodel ) ) {
 			Com_sprintf( filename, sizeof( filename ), "scripts/%s.vc", headModelName );
@@ -985,7 +976,7 @@ voiceChatList_t *CG_VoiceChatListForClient( int clientNum ) {
 				break;
 			}
 			Com_sprintf( headModelVoiceChat[i].headmodel, sizeof( headModelVoiceChat[i].headmodel ),
-						 "%s", headModelName );
+				"%s", headModelName );
 			headModelVoiceChat[i].voiceChatNum = voiceChatNum;
 			return &voiceChatLists[headModelVoiceChat[i].voiceChatNum];
 		}
@@ -993,15 +984,15 @@ voiceChatList_t *CG_VoiceChatListForClient( int clientNum ) {
 
 	gender = ci->gender;
 	for ( k = 0; k < 2; k++ ) {
-        // just pick the first with the right gender
+		// just pick the first with the right gender
 		for ( i = 0; i < MAX_VOICEFILES; i++ ) {
 			if ( strlen( voiceChatLists[i].name ) ) {
 				if ( voiceChatLists[i].gender == gender ) {
-                    // store this head model with voice chat for future reference
+					// store this head model with voice chat for future reference
 					for ( j = 0; j < MAX_HEADMODELS; j++ ) {
 						if ( !strlen( headModelVoiceChat[j].headmodel ) ) {
 							Com_sprintf( headModelVoiceChat[j].headmodel, sizeof( headModelVoiceChat[j].headmodel ),
-										 "%s", headModelName );
+								"%s", headModelName );
 							headModelVoiceChat[j].voiceChatNum = i;
 							break;
 						}
@@ -1011,7 +1002,7 @@ voiceChatList_t *CG_VoiceChatListForClient( int clientNum ) {
 			}
 		}
 
-        // fall back to male gender because we don't have neuter in the mission pack
+		// fall back to male gender because we don't have neuter in the mission pack
 		if ( gender == GENDER_MALE ) {
 			break;
 		}
@@ -1019,17 +1010,17 @@ voiceChatList_t *CG_VoiceChatListForClient( int clientNum ) {
 		gender = GENDER_MALE;
 	}
 
-    // store this head model with voice chat for future reference
+	// store this head model with voice chat for future reference
 	for ( j = 0; j < MAX_HEADMODELS; j++ ) {
 		if ( !strlen( headModelVoiceChat[j].headmodel ) ) {
 			Com_sprintf( headModelVoiceChat[j].headmodel, sizeof( headModelVoiceChat[j].headmodel ),
-						 "%s", headModelName );
+				"%s", headModelName );
 			headModelVoiceChat[j].voiceChatNum = 0;
 			break;
 		}
 	}
 
-    // just return the first voice chat list
+	// just return the first voice chat list
 	return &voiceChatLists[0];
 }
 
@@ -1057,7 +1048,7 @@ void CG_PlayVoiceChat( bufferedVoiceChat_t *vchat ) {
 	if ( !cg_noVoiceChats.integer ) {
 		trap_S_StartLocalSound( vchat->snd, CHAN_VOICE );
 
-        // DHM - Nerve :: Show icon above head
+		// DHM - Nerve :: Show icon above head
 		if ( vchat->clientNum == cg.snap->ps.clientNum ) {
 			cg.predictedPlayerEntity.voiceChatSprite = vchat->sprite;
 			if ( vchat->sprite == cgs.media.voiceChatShader ) {
@@ -1074,7 +1065,7 @@ void CG_PlayVoiceChat( bufferedVoiceChat_t *vchat ) {
 				cg_entities[ vchat->clientNum ].voiceChatSpriteTime = cg.time + cg_voiceSpriteTime.integer * 2;
 			}
 		}
-        // dhm - end
+		// dhm - end
 	}
 
 	if ( !vchat->voiceOnly && !cg_noVoiceText.integer ) {
@@ -1093,9 +1084,9 @@ CG_PlayBufferedVoieChats
 void CG_PlayBufferedVoiceChats( void ) {
 	if ( cg.voiceChatTime < cg.time ) {
 		if ( cg.voiceChatBufferOut != cg.voiceChatBufferIn && voiceChatBuffer[cg.voiceChatBufferOut].snd ) {
-            //
+			//
 			CG_PlayVoiceChat( &voiceChatBuffer[cg.voiceChatBufferOut] );
-            //
+			//
 			cg.voiceChatBufferOut = ( cg.voiceChatBufferOut + 1 ) % MAX_VOICECHATBUFFER;
 			cg.voiceChatTime = cg.time + 1000;
 		}
@@ -1108,7 +1099,7 @@ CG_AddBufferedVoiceChat
 =====================
 */
 void CG_AddBufferedVoiceChat( bufferedVoiceChat_t *vchat ) {
-// JPW NERVE new system doesn't buffer but overwrites vchats FIXME put this on a cvar to choose which to use
+	// JPW NERVE new system doesn't buffer but overwrites vchats FIXME put this on a cvar to choose which to use
 	memcpy( &voiceChatBuffer[0],vchat,sizeof( bufferedVoiceChat_t ) );
 	cg.voiceChatBufferIn = 0;
 	CG_PlayVoiceChat( &voiceChatBuffer[0] );
@@ -1138,7 +1129,7 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 	voiceChatList = CG_VoiceChatListForClient( clientNum );
 
 	if ( CG_GetVoiceChat( voiceChatList, cmd, &snd, &sprite, &chat ) ) {
-        //
+		//
 		if ( mode == SAY_TEAM || !cg_teamChatsOnly.integer ) {
 			vchat.clientNum = clientNum;
 			vchat.snd = snd;
@@ -1147,22 +1138,22 @@ void CG_VoiceChatLocal( int mode, qboolean voiceOnly, int clientNum, int color, 
 			VectorCopy( origin, vchat.origin );     // NERVE - SMF
 			Q_strncpyz( vchat.cmd, cmd, sizeof( vchat.cmd ) );
 
-            // NERVE - SMF - get location
+			// NERVE - SMF - get location
 			loc = CG_ConfigString( CS_LOCATIONS + ci->location );
 			if ( !loc || !*loc ) {
 				loc = " ";
 			}
-            // -NERVE - SMF
+			// -NERVE - SMF
 
 			if ( mode == SAY_TELL ) {
 				Com_sprintf( vchat.message, sizeof( vchat.message ), "[%s]%c%c[%s]: %c%c%s",
-							 ci->name, Q_COLOR_ESCAPE, COLOR_YELLOW, CG_TranslateString( loc ), Q_COLOR_ESCAPE, color, CG_TranslateString( chat ) );
+					ci->name, Q_COLOR_ESCAPE, COLOR_YELLOW, CG_TranslateString( loc ), Q_COLOR_ESCAPE, color, CG_TranslateString( chat ) );
 			} else if ( mode == SAY_TEAM ) {
 				Com_sprintf( vchat.message, sizeof( vchat.message ), "(%s)%c%c(%s): %c%c%s",
-							 ci->name, Q_COLOR_ESCAPE, COLOR_YELLOW, CG_TranslateString( loc ), Q_COLOR_ESCAPE, color, CG_TranslateString( chat ) );
+					ci->name, Q_COLOR_ESCAPE, COLOR_YELLOW, CG_TranslateString( loc ), Q_COLOR_ESCAPE, color, CG_TranslateString( chat ) );
 			} else {
 				Com_sprintf( vchat.message, sizeof( vchat.message ), "%s %c%c(%s): %c%c%s",
-							 ci->name, Q_COLOR_ESCAPE, COLOR_YELLOW, CG_TranslateString( loc ), Q_COLOR_ESCAPE, color, CG_TranslateString( chat ) );
+					ci->name, Q_COLOR_ESCAPE, COLOR_YELLOW, CG_TranslateString( loc ), Q_COLOR_ESCAPE, color, CG_TranslateString( chat ) );
 			}
 			CG_AddBufferedVoiceChat( &vchat );
 		}
@@ -1184,7 +1175,7 @@ void CG_VoiceChat( int mode ) {
 	clientNum = atoi( CG_Argv( 2 ) );
 	color = atoi( CG_Argv( 3 ) );
 
-    // NERVE - SMF - added origin
+	// NERVE - SMF - added origin
 	origin[0] = atoi( CG_Argv( 5 ) );
 	origin[1] = atoi( CG_Argv( 6 ) );
 	origin[2] = atoi( CG_Argv( 7 ) );
@@ -1193,9 +1184,9 @@ void CG_VoiceChat( int mode ) {
 
 	if ( cg_noTaunt.integer != 0 ) {
 		if ( !strcmp( cmd, VOICECHAT_KILLINSULT )  || !strcmp( cmd, VOICECHAT_TAUNT ) || \
-			 !strcmp( cmd, VOICECHAT_DEATHINSULT ) || !strcmp( cmd, VOICECHAT_KILLGAUNTLET ) ||	\
-			 !strcmp( cmd, VOICECHAT_PRAISE ) ) {
-			return;
+			!strcmp( cmd, VOICECHAT_DEATHINSULT ) || !strcmp( cmd, VOICECHAT_KILLGAUNTLET ) ||	\
+			!strcmp( cmd, VOICECHAT_PRAISE ) ) {
+				return;
 		}
 	}
 
@@ -1245,7 +1236,6 @@ const char* CG_LocalizeServerCommand( const char *buf ) {
 
 	for ( i = 0; *s; i++, s++ ) {
 		if ( *s == '[' && ( !Q_strncmp( s, "[lon]", 5 ) || !Q_strncmp( s, "[lof]", 5 ) ) ) {
-
 			if ( togloc ) {
 				memset( temp, 0, sizeof( temp ) );
 				strncpy( temp, buf + prev, i - prev );
@@ -1294,7 +1284,7 @@ static void CG_ServerCommand( void ) {
 	cmd = CG_Argv( 0 );
 
 	if ( !cmd[0] ) {
-        // server claimed the command
+		// server claimed the command
 		return;
 	}
 
@@ -1320,8 +1310,8 @@ static void CG_ServerCommand( void ) {
 				if ( args == 4 ) {
 					s = va( "%s%s", CG_Argv( 3 ), s );
 				}
-		        // Martin - OSP style
-		        // cs: not in warmup. lazy way to make it so award prints don't spam this stuff
+				// Martin - OSP style
+				// cs: not in warmup. lazy way to make it so award prints don't spam this stuff
 				if ( cgs.gamestate == GS_PLAYING && cg_printObjectiveInfo.integer > 0 && ( args == 4 || atoi( CG_Argv( 2 ) ) > 1 ) ) {
 					CG_Printf( "[cgnotify]*** ^3INFO: ^5%s\n", CG_LocalizeServerCommand( CG_Argv( 1 ) ) );
 				}
@@ -1364,7 +1354,7 @@ static void CG_ServerCommand( void ) {
 			CG_AddToTeamChat( text ); // JPW NERVE
 			CG_Printf( "[skipnotify]%s\n", text ); // JPW NERVE
 
-		    // NERVE - SMF - we also want this to display in limbo chat
+			// NERVE - SMF - we also want this to display in limbo chat
 			if ( cgs.gametype >= GT_WOLF ) {
 				trap_UI_LimboChat( text );
 			}
@@ -1388,7 +1378,7 @@ static void CG_ServerCommand( void ) {
 			CG_AddToTeamChat( text );
 			CG_Printf( "[skipnotify]%s\n", text ); // JPW NERVE
 
-		    // NERVE - SMF - we also want this to display in limbo chat
+			// NERVE - SMF - we also want this to display in limbo chat
 			if ( cgs.gametype >= GT_WOLF ) {
 				trap_UI_LimboChat( text );
 			}
@@ -1463,7 +1453,6 @@ static void CG_ServerCommand( void ) {
 		CG_Printf( "Unknown client game command: %s\n", cmd );
 	}
 }
-
 
 /*
 ====================

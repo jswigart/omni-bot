@@ -4,13 +4,11 @@
 #include "q_shared.h"
 #include "g_local.h"
 
-
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
 
 #include "lsqlite3.h"
-
 
 #define LUA_NUM_VM 16
 #define LUA_MAX_FSIZE 1024 * 1024 // 1MB

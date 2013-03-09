@@ -1,18 +1,17 @@
 /*
- * name:		g_items.c
- *
- * desc:		Items are any object that a player can touch to gain some effect.
- *				Pickup will return the number of seconds until they should respawn.
- *				all items should pop when dropped in lava or slime.
- *				Respawnable items don't actually go away when picked up, they are
- *				just made invisible and untouchable.  This allows them to ride
- *				movers and respawn apropriately.
- *
+* name:		g_items.c
+*
+* desc:		Items are any object that a player can touch to gain some effect.
+*				Pickup will return the number of seconds until they should respawn.
+*				all items should pop when dropped in lava or slime.
+*				Respawnable items don't actually go away when picked up, they are
+*				just made invisible and untouchable.  This allows them to ride
+*				movers and respawn apropriately.
+*
 */
 
 #include "g_local.h"
 #include  "g_rtcwbot_interface.h"
-
 
 #define RESPAWN_SP          -1
 #define RESPAWN_KEY         4
@@ -26,14 +25,12 @@
 #define RESPAWN_PARTIAL     998     // for multi-stage ammo/health
 #define RESPAWN_PARTIAL_DONE 999    // for multi-stage ammo/health
 
-
 //======================================================================
 
 int Pickup_Powerup( gentity_t *ent, gentity_t *other ) {
 	int quantity;
 
 	if ( !other->client->ps.powerups[ent->item->giTag] ) {
-
 		// some powerups are time based on how long the powerup is /used/
 		// rather than timed from when the player picks it up.
 		if ( ent->item->giTag == PW_NOFATIGUE ) {
@@ -69,7 +66,6 @@ int Pickup_Key( gentity_t *ent, gentity_t *other ) {
 	return RESPAWN_KEY;
 }
 
-
 /*
 ==============
 Pickup_Clipboard
@@ -78,11 +74,9 @@ Pickup_Clipboard
 int Pickup_Clipboard( gentity_t *ent, gentity_t *other ) {
 	if ( ent->spawnflags & 4 ) {
 		return 0;   // leave in world
-
 	}
 	return -1;
 }
-
 
 /*
 ==============
@@ -94,11 +88,10 @@ int Pickup_Treasure( gentity_t *ent, gentity_t *other ) {
 	return RESPAWN_SP;  // no respawn
 }
 
-
 /*
 ==============
 UseHoldableItem
-    server side handling of holdable item use
+server side handling of holdable item use
 ==============
 */
 void UseHoldableItem( gentity_t *ent, int item ) {
@@ -145,7 +138,6 @@ void UseHoldableItem( gentity_t *ent, int item ) {
 	}
 }
 
-
 //======================================================================
 
 int Pickup_Holdable( gentity_t *ent, gentity_t *other ) {
@@ -156,7 +148,6 @@ int Pickup_Holdable( gentity_t *ent, gentity_t *other ) {
 		other->client->ps.holdable[item->giTag] += item->gameskillnumber[0];
 	} else {
 		other->client->ps.holdable[item->giTag] += 1;   // add default of 1
-
 	}
 	other->client->ps.holding = item->giTag;
 
@@ -165,13 +156,12 @@ int Pickup_Holdable( gentity_t *ent, gentity_t *other ) {
 	return RESPAWN_HOLDABLE;
 }
 
-
 //======================================================================
 
 /*
 ==============
 Fill_Clip
-    push reserve ammo into available space in the clip
+push reserve ammo into available space in the clip
 ==============
 */
 void Fill_Clip( playerState_t *ps, int weapon ) {
@@ -291,16 +281,16 @@ qboolean PlayerNeedsAmmo( gentity_t *ent ) {
 /*
 ==============
 Add_Ammo
-    Try to always add ammo here unless you have specific needs
-    (like the AI "infinite ammo" where they get below 900 and force back up to 999)
+Try to always add ammo here unless you have specific needs
+(like the AI "infinite ammo" where they get below 900 and force back up to 999)
 
-    fillClip will push the ammo straight through into the clip and leave the rest in reserve
+fillClip will push the ammo straight through into the clip and leave the rest in reserve
 ==============
 */
 //----(SA)	modified
 void Add_Ammo( gentity_t *ent, int weapon, int count, qboolean fillClip ) {
 	int ammoweap = BG_FindAmmoForWeapon( weapon );
-	
+
 	// cs: this extraClip stuff needs rewritten ...
 	int clips = ammoTable[ammoweap].numClips > 1 ? ammoTable[ammoweap].numClips - 1 : ammoTable[ammoweap].numClips;
 	int maxammo = (ammoTable[ammoweap].maxclip * clips) + G_ExtraAmmo(ent->client->ps.stats[STAT_PLAYER_CLASS],weapon);
@@ -333,10 +323,8 @@ void Add_Ammo( gentity_t *ent, int weapon, int count, qboolean fillClip ) {
 	if ( count >= 999 ) { // 'really, give /all/'
 		ent->client->ps.ammo[ammoweap] = count;
 	}   // JPW NERVE
-
 }
 //----(SA)	end
-
 
 /*
 ==============
@@ -364,12 +352,11 @@ int Pickup_Ammo( gentity_t *ent, gentity_t *other ) {
 
 //======================================================================
 
-
 int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 	int quantity;
 	qboolean alreadyHave = qfalse;
 
-// JPW NERVE -- magic ammo for any two-handed weapon
+	// JPW NERVE -- magic ammo for any two-handed weapon
 	if ( ent->item->giTag == WP_AMMO ) {
 		int i,weapon;         // JPW NERVE
 
@@ -377,7 +364,7 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 			other->client->pers.lastammo_client = ent->parent->client->ps.clientNum;
 		}
 
-// if LT isn't giving ammo to self or another LT or the enemy, give him some props
+		// if LT isn't giving ammo to self or another LT or the enemy, give him some props
 		if ( !g_deathmatch.integer && other->client->ps.stats[STAT_PLAYER_CLASS] != PC_LT ) {
 			if ( ent->parent ) {
 				if ( other->client->sess.sessionTeam == ent->parent->client->sess.sessionTeam ) {
@@ -404,8 +391,8 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 		// everybody likes grenades -- abuse weapon var as grenade type and i as max # grenades class can carry
 		switch ( other->client->ps.stats[STAT_PLAYER_CLASS] ) {
 		case PC_LT:
-            i = g_LTNades.integer;
-            break;
+			i = g_LTNades.integer;
+			break;
 		case PC_MEDIC:
 			i = g_MedNades.integer;
 			break;
@@ -484,7 +471,7 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 		}
 		return RESPAWN_SP;
 	}
-// jpw
+	// jpw
 
 	// check if player already had the weapon
 	alreadyHave = COM_BitCheck( other->client->ps.weapons, ent->item->giTag );
@@ -529,7 +516,7 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 	}
 	//----(SA)	end
 
-// JPW NERVE  prevents drop/pickup weapon "quick reload" exploit
+	// JPW NERVE  prevents drop/pickup weapon "quick reload" exploit
 	if ( alreadyHave ) {
 		Add_Ammo( other, ent->item->giTag, quantity, !alreadyHave );
 	} else {
@@ -537,7 +524,7 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 		other->client->ps.ammoclip[BG_FindClipForWeapon( ent->item->giTag )] = quantity;
 		other->client->ps.ammo[BG_FindClipForWeapon( ent->item->giTag )] = ent->item->quantity;
 	}
-// jpw
+	// jpw
 
 	if ( g_gametype.integer == GT_TEAM ) {
 		return g_weaponTeamRespawn.integer;
@@ -546,7 +533,6 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 	Bot_Event_AddWeapon( other->client->ps.clientNum, Bot_WeaponGameToBot( ent->item->giTag ) );
 	return g_weaponRespawn.integer;
 }
-
 
 //======================================================================
 
@@ -559,8 +545,8 @@ int Pickup_Health( gentity_t *ent, gentity_t *other ) {
 		other->client->pers.lasthealth_client = ent->parent->client->ps.clientNum;
 	}
 
-// JPW NERVE
-// if medic isn't giving ammo to self or another medic or the enemy, give him some props
+	// JPW NERVE
+	// if medic isn't giving ammo to self or another medic or the enemy, give him some props
 	if ( !g_deathmatch.integer && other->client->ps.stats[STAT_PLAYER_CLASS] != PC_MEDIC ) {
 		if ( ent->parent ) {
 			if ( other->client->sess.sessionTeam == ent->parent->client->sess.sessionTeam ) {
@@ -574,7 +560,7 @@ int Pickup_Health( gentity_t *ent, gentity_t *other ) {
 		}
 	}
 
-// jpw
+	// jpw
 
 	// cure poison
 	other->poisoned = qfalse;
@@ -649,7 +635,6 @@ RespawnItem
 ===============
 */
 void RespawnItem( gentity_t *ent ) {
-
 	if ( !ent ) {
 		return;
 	}
@@ -685,13 +670,12 @@ void RespawnItem( gentity_t *ent ) {
 	ent->nextthink = 0;
 }
 
-
 /*
 ==============
 Touch_Item
-    if other->client->pers.autoActivate == PICKUP_ACTIVATE	(0), he will pick up items only when using +activate
-    if other->client->pers.autoActivate == PICKUP_TOUCH		(1), he will pickup items when touched
-    if other->client->pers.autoActivate == PICKUP_FORCE		(2), he will pickup the next item when touched (and reset to PICKUP_ACTIVATE when done)
+if other->client->pers.autoActivate == PICKUP_ACTIVATE	(0), he will pick up items only when using +activate
+if other->client->pers.autoActivate == PICKUP_TOUCH		(1), he will pickup items when touched
+if other->client->pers.autoActivate == PICKUP_FORCE		(2), he will pickup the next item when touched (and reset to PICKUP_ACTIVATE when done)
 ==============
 */
 void Touch_Item_Auto( gentity_t *ent, gentity_t *other, trace_t *trace ) {
@@ -729,7 +713,6 @@ void Touch_Item( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 	}
 	if ( other->health < 1 ) {
 		return;     // dead people can't pickup
-
 	}
 	// the same pickup rules are used for client side and server side
 	if ( !BG_CanItemBeGrabbed( &ent->s, &other->client->ps ) ) {
@@ -810,7 +793,6 @@ void Touch_Item( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 		makenoise = EV_ITEM_PICKUP_QUIET;
 		G_AddEvent( other, EV_GENERAL_SOUND, ent->noise_index );
 	}
-
 
 	// send the pickup event
 	if ( other->client->pers.predictItemPickup ) {
@@ -898,7 +880,6 @@ void Touch_Item( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 	}
 	trap_LinkEntity( ent );
 }
-
 
 //======================================================================
 
@@ -996,7 +977,6 @@ gentity_t *Drop_Item( gentity_t *ent, gitem_t *item, float angle, qboolean novel
 	return LaunchItem( item, ent->s.pos.trBase, velocity, ent->s.number );
 }
 
-
 /*
 ================
 Use_Item
@@ -1047,7 +1027,6 @@ void FinishSpawningItem( gentity_t *ent ) {
 		ent->s.modelindex2 = G_ModelIndex( ent->model );
 	}
 
-
 	// if clipboard, add the menu name string to the client's configstrings
 	if ( ent->item->giType == IT_CLIPBOARD ) {
 		if ( !ent->message ) {
@@ -1064,23 +1043,21 @@ void FinishSpawningItem( gentity_t *ent ) {
 		ent->touch = Touch_Item;    // no auto-pickup, only activate
 	}
 
-
-//----(SA)	added
+	//----(SA)	added
 	if ( ent->item->giType == IT_TREASURE ) {
 		ent->touch = Touch_Item;    // no auto-pickup, only activate
 	}
-//----(SA)	end
+	//----(SA)	end
 
 	// using an item causes it to respawn
 	ent->use = Use_Item;
 
-//----(SA) moved this up so it happens for suspended items too (and made it a function)
+	//----(SA) moved this up so it happens for suspended items too (and made it a function)
 	G_SetAngle( ent, ent->s.angles );
 
 	if ( ent->spawnflags & 1 ) {    // suspended
 		G_SetOrigin( ent, ent->s.origin );
 	} else {
-
 		VectorSet( dest, ent->s.origin[0], ent->s.origin[1], ent->s.origin[2] - 4096 );
 		trap_Trace( &tr, ent->s.origin, ent->r.mins, maxs, dest, ent->s.number, MASK_SOLID );
 
@@ -1109,7 +1086,6 @@ void FinishSpawningItem( gentity_t *ent ) {
 	if ( ent->spawnflags & 2 ) {      // spin
 		ent->s.eFlags |= EF_SPINNING;
 	}
-
 
 	// team slaves and targeted items aren't present at start
 	if ( ( ent->flags & FL_TEAMSLAVE ) || ent->targetname ) {
@@ -1146,7 +1122,6 @@ void FinishSpawningItem( gentity_t *ent ) {
 
 	trap_LinkEntity( ent );
 }
-
 
 qboolean itemRegistered[MAX_ITEMS];
 
@@ -1199,7 +1174,6 @@ void RegisterItem( gitem_t *item ) {
 	itemRegistered[ item - bg_itemlist ] = qtrue;
 }
 
-
 /*
 ===============
 SaveRegisteredItems
@@ -1233,7 +1207,6 @@ void SaveRegisteredItems( void ) {
 	G_Printf( "%i items registered\n", count );
 	trap_SetConfigstring( CS_ITEMS, string );
 }
-
 
 /*
 ============
@@ -1279,7 +1252,6 @@ void G_SpawnItem( gentity_t *ent, gitem_t *item ) {
 		G_SoundIndex( "sound/items/poweruprespawn.wav" );
 	}
 }
-
 
 /*
 ================
@@ -1337,7 +1309,7 @@ void G_RunItemProp( gentity_t *ent, vec3_t origin ) {
 	end[2] += 1;
 
 	trap_Trace( &trace, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, end,
-				ent->r.ownerNum, MASK_SHOT );
+		ent->r.ownerNum, MASK_SHOT );
 
 	traceEnt = &g_entities[ trace.entityNum ];
 
@@ -1346,7 +1318,6 @@ void G_RunItemProp( gentity_t *ent, vec3_t origin ) {
 	}
 
 	if ( owner->client && trace.startsolid && traceEnt != owner && traceEnt != ent /* && !traceEnt->active*/ ) {
-
 		ent->takedamage = qfalse;
 		ent->die( ent, ent, NULL, 10, 0 );
 		Prop_Break_Sound( ent );
@@ -1397,7 +1368,7 @@ void G_RunItem( gentity_t *ent ) {
 		mask = MASK_SOLID;
 	}
 	trap_Trace( &tr, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, origin,
-				ent->r.ownerNum, mask );
+		ent->r.ownerNum, mask );
 
 	if ( ent->isProp && ent->takedamage ) {
 		G_RunItemProp( ent, origin );
@@ -1431,4 +1402,3 @@ void G_RunItem( gentity_t *ent ) {
 
 	G_BounceItem( ent, &tr );
 }
-

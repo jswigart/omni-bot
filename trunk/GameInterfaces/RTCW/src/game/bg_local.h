@@ -14,7 +14,6 @@
 
 #define MAX_WP_HEAT     1500.f
 
-
 #define OVERCLIP        1.001
 
 // all of the locals will be zeroed before each

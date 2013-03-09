@@ -1,5 +1,5 @@
 /*
-    SP_Tramcar
+SP_Tramcar
 */
 #include "g_local.h"
 
@@ -150,7 +150,7 @@ void InitTramcar( gentity_t *ent ) {
 	}
 
 	ent->use = Use_BinaryMover;
-//	ent->reached = Reached_BinaryMover;
+	//	ent->reached = Reached_BinaryMover;
 
 	ent->moverState = MOVER_POS1;
 	ent->r.svFlags = SVF_USE_CURRENT_ORIGIN;
@@ -221,17 +221,14 @@ void Calc_Roll( gentity_t *ent ) {
 		ent->s.apos.trBase[ROLL] = 0;
 	}
 
+	// G_Printf ("dot: %5.2f dot2: %5.2f\n", dot, dot2);
 
-// G_Printf ("dot: %5.2f dot2: %5.2f\n", dot, dot2);
-
-
-//	VectorCopy (ent->r.currentAngles, ent->TargetAngles);
+	//	VectorCopy (ent->r.currentAngles, ent->TargetAngles);
 
 	trap_LinkEntity( ent );
 
 	ent->nextthink = level.time + 50;
 }
-
 
 #define MAXCHOICES  8
 
@@ -273,7 +270,6 @@ void GetNextTrack( gentity_t *ent ) {
 
 	ent->nextTrain = NULL;
 	ent->target = choice[rval]->targetname;
-
 }
 
 void Reached_Tramcar( gentity_t *ent ) {
@@ -336,7 +332,6 @@ void Reached_Tramcar( gentity_t *ent ) {
 		VectorSubtract( ent->nextTrain->nextTrain->s.origin, ent->r.currentOrigin, vec );
 		vectoangles( vec, angles );
 
-
 		diff = AngleSubtract( ent->r.currentAngles [YAW], angles[YAW] );
 		// diff = AngleSubtract (ent->TargetAngles [YAW], angles[YAW]);
 
@@ -369,11 +364,10 @@ void Reached_Tramcar( gentity_t *ent ) {
 
 			ent->s.apos.trDuration = length * 1000 / speed;
 
-//testing
-// ent->gDuration = ent->s.apos.trDuration;
+			//testing
+			// ent->gDuration = ent->s.apos.trDuration;
 			ent->gDurationBack = ent->gDuration = ent->s.apos.trDuration;
-// ent->gDeltaBack = ent->gDelta =
-
+			// ent->gDeltaBack = ent->gDelta =
 		}
 
 		VectorClear( ent->s.apos.trDelta );
@@ -419,7 +413,7 @@ void Reached_Tramcar( gentity_t *ent ) {
 				ent->s.apos.trDuration = 1000;
 			}
 
-//testing
+			//testing
 			ent->gDuration = ent->s.pos.trDuration;
 
 			VectorClear( ent->s.apos.trDelta );
@@ -456,13 +450,11 @@ void Reached_Tramcar( gentity_t *ent ) {
 		case truck_bouncy3: ent->s.loopSound = truck_bouncy3_snd; break;
 		}
 
-//testing
+		//testing
 		ent->s.loopSound = truck_sound;
 		ent->think = truck_cam_think;
 		ent->nextthink = level.time + ( FRAMETIME / 2 );
-
 	} else if ( !Q_stricmp( ent->classname, "camera_cam" ) ) {
-
 	}
 
 	// fire all other targets
@@ -495,10 +487,10 @@ void Reached_Tramcar( gentity_t *ent ) {
 
 	ent->s.pos.trDuration = length * 1000 / speed;
 
-//testing
-// ent->gDuration = ent->s.pos.trDuration;
+	//testing
+	// ent->gDuration = ent->s.pos.trDuration;
 	ent->gDurationBack = ent->gDuration = ent->s.pos.trDuration;
-// ent->gDeltaBack = ent->gDelta = ;
+	// ent->gDeltaBack = ent->gDelta = ;
 
 	// looping sound
 	if ( next->soundLoop ) {
@@ -527,7 +519,6 @@ void Tramcar_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, in
 	// link all teammembers
 	for ( slave = self ; slave ; slave = slave->teamchain )
 	{
-
 		if ( slave == self ) {
 			continue;
 		}
@@ -582,14 +573,12 @@ void Tramcar_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, in
 
 	self->flags |= FL_TEAMSLAVE;
 	trap_UnlinkEntity( self );
-
 }
 
 void TramCarUse( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	gentity_t       *next;
 
 	if ( level.time >= ent->s.pos.trTime + ent->s.pos.trDuration ) {
-
 		next = ent->nextTrain;
 
 		if ( next->wait == -1 && next->count ) {
@@ -598,13 +587,10 @@ void TramCarUse( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 		}
 
 		Reached_Tramcar( ent );
-
 	}
-//	else
-//		G_Printf ("no can do havent reached yet\n");
-
+	//	else
+	//		G_Printf ("no can do havent reached yet\n");
 }
-
 
 void Blocked_Tramcar( gentity_t *ent, gentity_t *other ) {
 	// remove anything other than a client
@@ -625,7 +611,6 @@ void Blocked_Tramcar( gentity_t *ent, gentity_t *other ) {
 	}
 
 	G_Damage( other, ent, ent, NULL, NULL, 99999, 0, MOD_CRUSH );
-
 }
 
 /*QUAKED func_tramcar (0 .5 .8) ? START_ON TOGGLE - LEADER
@@ -655,7 +640,6 @@ position when you bsp the map you can the start it by targeting the desired path
 "mass" defaults to 75.  This determines how much debris is emitted when it explodes.  You get one large chunk per 100 of mass (up to 8) and one small chunk per 25 of mass (up to 16).  So 800 gives the most.
 */
 void SP_func_tramcar( gentity_t *self ) {
-
 	int mass;
 	char    *type;
 	char    *s;
@@ -753,16 +737,13 @@ void SP_func_tramcar( gentity_t *self ) {
 	if ( self->spawnflags & TRAMCAR_TOGGLE ) {
 		self->use = TramCarUse;
 	}
-
 }
-
 
 ////////////////////////////
 // me109
 ////////////////////////////
 
 void plane_AIScript_AlertEntity( gentity_t *ent ) {
-
 	// when count reaches 0, the marker is active
 	ent->count--;
 
@@ -779,7 +760,6 @@ the program will pick one randomly there can be a maximum of eight tracks at any
 the entity will fire its target when reached
 */
 void SP_plane_waypoint( gentity_t *self ) {
-
 	if ( !self->targetname ) {
 		G_Printf( "plane_waypoint with no targetname at %s\n", vtos( self->s.origin ) );
 		G_FreeEntity( self );
@@ -798,7 +778,6 @@ void SP_plane_waypoint( gentity_t *self ) {
 		self->count = 1;
 	}
 }
-
 
 /*QUAKED props_me109 (.7 .3 .1) (-128 -128 0) (128 128 64) START_ON TOGGLE SPINNINGPROP FIXED_DIE
 default health = 1000
@@ -957,7 +936,6 @@ void Plane_Attack( gentity_t *self, qboolean in_PVS ) {
 }
 
 void props_me109_think( gentity_t *self ) {
-
 	qboolean in_PVS = qfalse;
 
 	{
@@ -1040,10 +1018,7 @@ void props_me109_think( gentity_t *self ) {
 		ExplodePlaneSndFx( self );
 		G_FreeEntity( self->melee );
 		G_FreeEntity( self );
-
-
 	}
-
 }
 
 void Think_SetupAirplaneWaypoints( gentity_t *ent ) {
@@ -1052,7 +1027,7 @@ void Think_SetupAirplaneWaypoints( gentity_t *ent ) {
 	ent->nextTrain = G_Find( NULL, FOFS( targetname ), ent->target );
 	if ( !ent->nextTrain ) {
 		G_Printf( "plane at %s with an unfound target\n",
-				  vtos( ent->r.absmin ) );
+			vtos( ent->r.absmin ) );
 		return;
 	}
 
@@ -1064,7 +1039,7 @@ void Think_SetupAirplaneWaypoints( gentity_t *ent ) {
 
 		if ( !path->target ) {
 			G_Printf( "plane at %s without a target\n",
-					  vtos( path->s.origin ) );
+				vtos( path->s.origin ) );
 			return;
 		}
 
@@ -1076,7 +1051,7 @@ void Think_SetupAirplaneWaypoints( gentity_t *ent ) {
 			next = G_Find( next, FOFS( targetname ), path->target );
 			if ( !next ) {
 				G_Printf( "plane at %s without a target path_corner\n",
-						  vtos( path->s.origin ) );
+					vtos( path->s.origin ) );
 				return;
 			}
 		} while ( strcmp( next->classname, "plane_waypoint" ) );
@@ -1093,12 +1068,10 @@ void Think_SetupAirplaneWaypoints( gentity_t *ent ) {
 	}
 }
 
-
 void PlaneUse( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	gentity_t       *next;
 
 	if ( level.time >= ent->s.pos.trTime + ent->s.pos.trDuration ) {
-
 		next = ent->nextTrain;
 
 		if ( next->wait == -1 && next->count ) {
@@ -1107,13 +1080,10 @@ void PlaneUse( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 		}
 
 		Reached_Tramcar( ent );
-
 	}
-//	else
-//		G_Printf ("no can do havent reached yet\n");
-
+	//	else
+	//		G_Printf ("no can do havent reached yet\n");
 }
-
 
 void InitPlaneSpeaker( gentity_t *ent ) {
 	gentity_t   *snd;
@@ -1136,11 +1106,9 @@ void InitPlaneSpeaker( gentity_t *ent ) {
 	ent->melee = snd;
 
 	trap_LinkEntity( snd );
-
 }
 
 void SP_props_me109( gentity_t *ent ) {
-
 	VectorSet( ent->r.mins, -128, -128, -128 );
 	VectorSet( ent->r.maxs, 128, 128, 128 );
 
@@ -1188,12 +1156,10 @@ void SP_props_me109( gentity_t *ent ) {
 	fpattack_snd = G_SoundIndex( "sound/weapons/mg42/37mm.wav" );
 	fpexpdebris_snd = G_SoundIndex( "sound/fighterplane/fpexpdebris.wav" );
 
-
 	fpflyby1_snd = G_SoundIndex( "sound/fighterplane/fpflyby1.wav" );
 	fpflyby2_snd = G_SoundIndex( "sound/fighterplane/fpflyby2.wav" );
 	fpidle_snd = G_SoundIndex( "sound/fighterplane/fpidle.wav" );
 	fpstartup_snd = G_SoundIndex( "sound/fighterplane/fpstartup.wav" );
-
 
 	fuse_part = G_ModelIndex( "models/mapobjects/vehicles/m109debris_a.md3" );
 	wing_part = G_ModelIndex( "models/mapobjects/vehicles/m109debris_b.md3" );
@@ -1203,7 +1169,6 @@ void SP_props_me109( gentity_t *ent ) {
 	crash_part = G_ModelIndex( "models/mapobjects/vehicles/m109crash.md3" );
 
 	InitPlaneSpeaker( ent );
-
 }
 
 /////////////////////////
@@ -1248,7 +1213,6 @@ void truck_cam_touch( gentity_t *self, gentity_t *other, trace_t *trace ) {
 
 		trap_LinkEntity( other );
 	}
-
 }
 
 void truck_cam_think( gentity_t *ent ) {
@@ -1437,7 +1401,6 @@ void camera_cam_use( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 			player->client->ps.viewlocked_entNum = 0;
 		}
 	}
-
 }
 
 void camera_cam_firstthink( gentity_t *ent ) {
@@ -1487,16 +1450,14 @@ void SP_camera_cam( gentity_t *ent ) {
 		delayOn->melee = ent;
 		trap_LinkEntity( delayOn );
 	}
-
 }
-
 
 /*QUAKED screen_fade (.3 .7 .9) (-8 -8 -8) (8 8 8)
 "wait" duration of fade out
 "delay" duration of fade in
 
-  1 = 1 sec
-  .5 = .5 sec
+1 = 1 sec
+.5 = .5 sec
 
 defaults are .5 sec
 */
@@ -1511,7 +1472,6 @@ void screen_fade_use( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 		trap_SetConfigstring( CS_SCREENFADE, va( "0 %i %i", level.time + 100, (int) ent->delay ) );
 		ent->spawnflags |= 1;
 	}
-
 }
 
 void SP_screen_fade( gentity_t *ent ) {
@@ -1523,7 +1483,6 @@ void SP_screen_fade( gentity_t *ent ) {
 	if ( !ent->delay ) {
 		ent->delay = 500;
 	}
-
 }
 
 /*QUAKED camera_reset_player (.5 .7 .3) ?
@@ -1543,11 +1502,9 @@ void mark_players_pos( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 
 		G_UseTargets( ent, NULL );
 	}
-
 }
 
 void reset_players_pos( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
-
 	gentity_t *player;
 
 	player = AICast_FindEntityForName( "player" );
@@ -1573,7 +1530,6 @@ void reset_players_pos( gentity_t *ent, gentity_t *other, gentity_t *activator )
 	player->client->ps.viewlocked_entNum = 0;
 
 	trap_LinkEntity( player );
-
 }
 
 extern void InitTrigger( gentity_t *self );

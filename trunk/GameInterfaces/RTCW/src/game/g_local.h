@@ -1,5 +1,3 @@
-
-
 // g_local.h -- local definitions for game module
 
 #ifndef __G_LOCAL_H__
@@ -149,7 +147,6 @@ typedef struct
 void G_Script_ScriptEvent( gentity_t *ent, char *eventStr, char *params );
 //====================================================================
 
-
 #define CFOFS( x ) ( (int)&( ( (gclient_t *)0 )->x ) )
 
 struct gentity_s {
@@ -168,7 +165,7 @@ struct gentity_s {
 	int spawnflags;                 // set in QuakeEd
 
 	qboolean neverFree;             // if true, FreeEntity will only unlink
-	                                // bodyque uses this
+	// bodyque uses this
 
 	int flags;                      // FL_* variables
 
@@ -181,11 +178,11 @@ struct gentity_s {
 	qboolean unlinkAfterEvent;
 
 	qboolean physicsObject;         // if true, it can be pushed by movers and fall off edges
-	                                // all game items are physicsObjects,
+	// all game items are physicsObjects,
 	float physicsBounce;            // 1.0 = continuous bounce, 0.0 = no bounce
 	int clipmask;                   // brushes with this content value will be collided against
-	                                // when moving.  items and corpses do not collide against
-	                                // players, for instance
+	// when moving.  items and corpses do not collide against
+	// players, for instance
 
 	// movers
 	moverState_t moverState;
@@ -227,7 +224,6 @@ struct gentity_s {
 	char        *targetShaderName;
 	char        *targetShaderNewName;
 	gentity_t   *target_ent;
-
 
 	float speed;
 	float closespeed;           // for movers that close at a different speed than they open
@@ -314,7 +310,7 @@ struct gentity_s {
 
 	// Ridah
 	int missionLevel;               // mission we are currently trying to complete
-	                                // gets reset each new level
+	// gets reset each new level
 	// done.
 
 	// Rafael
@@ -417,30 +413,30 @@ typedef struct {
 // time and reading them back at connection time.  Anything added here
 // MUST be dealt with in G_InitSessionData() / G_ReadSessionData() / G_WriteSessionData()
 typedef struct {
-    team_t sessionTeam;
-    int spectatorTime;              // for determining next-in-line to play
-    spectatorState_t spectatorState;
-    int spectatorClient;            // for chasecam and follow mode
-    int wins, losses;               // tournament stats
-    int playerType;                 // DHM - Nerve :: for GT_WOLF
-    int playerWeapon;               // DHM - Nerve :: for GT_WOLF
-    int playerWeapon2;
-    int playerItem;                 // DHM - Nerve :: for GT_WOLF
-    int playerSkin;                 // DHM - Nerve :: for GT_WOLF
-    int spawnObjectiveIndex;         // JPW NERVE index of objective to spawn nearest to (returned from UI)
-    int latchPlayerType;            // DHM - Nerve :: for GT_WOLF not archived
-    int latchPlayerWeapon;          // DHM - Nerve :: for GT_WOLF not archived
-    int latchPlayerWeapon2;
-    int latchPlayerItem;            // DHM - Nerve :: for GT_WOLF not archived
-    int latchPlayerSkin;            // DHM - Nerve :: for GT_WOLF not archived
-    qboolean botSuicide;            // CS: if true, bots will /kill 2 seconds before their next spawn
-    qboolean botSuicidePersist;
-    qboolean botPush;               // CS: in some cases we don't want bots pushing
-    int credits;
-    gentity_t *currentBetTarget;
-    int currentBetAmount;
-    int betTime;
-    int buyTime;
+	team_t sessionTeam;
+	int spectatorTime;              // for determining next-in-line to play
+	spectatorState_t spectatorState;
+	int spectatorClient;            // for chasecam and follow mode
+	int wins, losses;               // tournament stats
+	int playerType;                 // DHM - Nerve :: for GT_WOLF
+	int playerWeapon;               // DHM - Nerve :: for GT_WOLF
+	int playerWeapon2;
+	int playerItem;                 // DHM - Nerve :: for GT_WOLF
+	int playerSkin;                 // DHM - Nerve :: for GT_WOLF
+	int spawnObjectiveIndex;         // JPW NERVE index of objective to spawn nearest to (returned from UI)
+	int latchPlayerType;            // DHM - Nerve :: for GT_WOLF not archived
+	int latchPlayerWeapon;          // DHM - Nerve :: for GT_WOLF not archived
+	int latchPlayerWeapon2;
+	int latchPlayerItem;            // DHM - Nerve :: for GT_WOLF not archived
+	int latchPlayerSkin;            // DHM - Nerve :: for GT_WOLF not archived
+	qboolean botSuicide;            // CS: if true, bots will /kill 2 seconds before their next spawn
+	qboolean botSuicidePersist;
+	qboolean botPush;               // CS: in some cases we don't want bots pushing
+	int credits;
+	gentity_t *currentBetTarget;
+	int currentBetAmount;
+	int betTime;
+	int buyTime;
 } clientSession_t;
 
 //
@@ -450,7 +446,6 @@ typedef struct {
 #define PICKUP_ACTIVATE 0   // pickup items only when using "+activate"
 #define PICKUP_TOUCH    1   // pickup items when touched
 #define PICKUP_FORCE    2   // pickup the next item when touched (and reset to PICKUP_ACTIVATE when done)
-
 
 // zinx etpro antiwarp
 #define LAG_MAX_COMMANDS 512
@@ -521,7 +516,6 @@ typedef struct {
 	int lastkiller_client;
 	int lastammo_client;
 	int lasthealth_client;
-
 } clientPersistant_t;
 
 typedef struct {
@@ -554,8 +548,8 @@ struct gclient_s {
 	qboolean noclip;
 
 	int lastCmdTime;                // level.time of last usercmd_t, for EF_CONNECTION
-	                                // we can't just use pers.lastCommand.time, because
-	                                // of the g_sycronousclients case
+	// we can't just use pers.lastCommand.time, because
+	// of the g_sycronousclients case
 	int buttons;
 	int oldbuttons;
 	int latched_buttons;
@@ -767,7 +761,7 @@ typedef struct {
 	int lieutenantChargeTime[2]; */
 
 	qboolean newSession;                // don't use any old session data, because
-	                                    // we changed gametype
+	// we changed gametype
 
 	qboolean restarted;                 // waiting for a map_restart to fire
 
@@ -807,10 +801,10 @@ typedef struct {
 
 	// intermission state
 	int intermissionQueued;             // intermission was qualified, but
-	                                    // wait INTERMISSION_DELAY_TIME before
-	                                    // actually going there so the last
-	                                    // frag can be watched.  Disable future
-	                                    // kills during this delay
+	// wait INTERMISSION_DELAY_TIME before
+	// actually going there so the last
+	// frag can be watched.  Disable future
+	// kills during this delay
 	int intermissiontime;               // time the intermission was started
 	char        *changemap;
 	qboolean readyToExit;               // at least one client wants to exit
@@ -841,13 +835,13 @@ typedef struct {
 	int knifeSound[4];
 	//----(SA)	end
 
-// JPW NERVE
+	// JPW NERVE
 	int capturetimes[4];         // red, blue, none, spectator for WOLF_MP_CPH
 	int redReinforceTime, blueReinforceTime;         // last time reinforcements arrived in ms
 	int redNumWaiting, blueNumWaiting;         // number of reinforcements in queue
 	vec3_t spawntargets[MAX_MULTI_SPAWNTARGETS];      // coordinates of spawn targets
 	int numspawntargets;         // # spawntargets in this map
-// jpw
+	// jpw
 
 	// RF, entity scripting
 	char        *scriptEntity;
@@ -880,7 +874,6 @@ typedef struct {
 	int LastMsgTime;
 	int MsgNum;
 	int TotalMsgs;
-
 } level_locals_t;
 
 extern qboolean reloading;                  // loading up a savegame
@@ -1090,13 +1083,11 @@ void func_explosive_explode( gentity_t *self, gentity_t *inflictor, gentity_t *a
 //
 void Reached_Tramcar( gentity_t *ent );
 
-
 //
 // g_misc.c
 //
 void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles );
 void mg42_fire( gentity_t *other );
-
 
 //
 // g_weapon.c
@@ -1169,7 +1160,6 @@ void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char 
 // g_pweapon.c
 //
 
-
 //
 // g_main.c
 //
@@ -1219,7 +1209,6 @@ void ReadAwards();
 // g_team.c
 //
 qboolean OnSameTeam( gentity_t *ent1, gentity_t *ent2 );
-
 
 //
 // g_mem.c
@@ -1570,4 +1559,3 @@ void G_Trace( gentity_t* ent, trace_t *results, const vec3_t start, const vec3_t
 #define	BINOCS_MEDIC	0x0004
 
 #endif // __G_LOCAL_H__
-

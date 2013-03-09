@@ -5,7 +5,7 @@
 /*
 =============================================================================
 
-  MODEL TESTING
+MODEL TESTING
 
 The viewthing and gun positioning tools from Q2 have been integrated and
 enhanced into a single model testing facility.
@@ -89,7 +89,6 @@ void CG_TestGun_f( void ) {
 	cg.testModelEntity.renderfx = RF_MINLIGHT | RF_DEPTHHACK | RF_FIRST_PERSON;
 }
 
-
 void CG_TestModelNextFrame_f( void ) {
 	cg.testModelEntity.frame++;
 	CG_Printf( "frame %i\n", cg.testModelEntity.frame );
@@ -146,7 +145,6 @@ static void CG_AddTestModel( void ) {
 
 //============================================================================
 
-
 /*
 =================
 CG_CalcVrect
@@ -193,16 +191,16 @@ static void CG_CalcVrect( void ) {
 		}
 	}
 
-//----(SA)	added transition to/from letterbox
-// normal aspect is xx:xx
-// letterbox is yy:yy  (85% of 'normal' height)
+	//----(SA)	added transition to/from letterbox
+	// normal aspect is xx:xx
+	// letterbox is yy:yy  (85% of 'normal' height)
 
 	lbheight = ysize * 0.85;
 
 	if ( cg_letterbox.integer ) {
 		ysize = lbheight;
 	}
-//----(SA)	end
+	//----(SA)	end
 
 	cg.refdef.width = cgs.glconfig.vidWidth * xsize / 100;
 	cg.refdef.width &= ~1;
@@ -215,7 +213,6 @@ static void CG_CalcVrect( void ) {
 }
 
 //==============================================================================
-
 
 /*
 ===============
@@ -292,7 +289,6 @@ static void CG_OffsetThirdPersonView( void ) {
 	cg.refdefViewAngles[YAW] -= cg_thirdPersonAngle.value;
 }
 
-
 // this causes a compiler bug on mac MrC compiler
 static void CG_StepOffset( void ) {
 	int timeDelta;
@@ -305,7 +301,7 @@ static void CG_StepOffset( void ) {
 	}
 	if ( timeDelta < STEP_TIME ) {
 		cg.refdef.vieworg[2] -= cg.stepChange
-								* ( STEP_TIME - timeDelta ) / STEP_TIME;
+			* ( STEP_TIME - timeDelta ) / STEP_TIME;
 	}
 }
 
@@ -323,7 +319,7 @@ void CG_KickAngles( void ) {
 	float idealCenterSpeed, kickChange;
 	int i, frametime, t;
 	float ft;
-	#define STEP 20
+#define STEP 20
 	char buf[32];               // NERVE - SMF
 
 	// this code is frametime-dependant, so split it up into small chunks
@@ -443,12 +439,11 @@ void CG_Concussive( centity_t *cent ) {
 	}
 }
 
-
 /*
 ==============
 CG_ZoomSway
-    sway for scoped weapons.
-    this takes aimspread into account so the view settles after a bit
+sway for scoped weapons.
+this takes aimspread into account so the view settles after a bit
 ==============
 */
 static void CG_ZoomSway( void ) {
@@ -558,7 +553,7 @@ static void CG_OffsetFirstPersonView( void ) {
 	}
 	angles[ROLL] += delta;
 
-//===================================
+	//===================================
 
 	// add view height
 	origin[2] += cg.predictedPlayerState.viewheight;
@@ -570,7 +565,7 @@ static void CG_OffsetFirstPersonView( void ) {
 	}
 	if ( timeDelta < DUCK_TIME ) {
 		cg.refdef.vieworg[2] -= cg.duckChange
-								* ( DUCK_TIME - timeDelta ) / DUCK_TIME;
+			* ( DUCK_TIME - timeDelta ) / DUCK_TIME;
 	}
 
 	// add bob height
@@ -620,11 +615,10 @@ static void CG_OffsetFirstPersonView( void ) {
 // Zoom controls
 //
 
-
 // probably move to server variables
 float zoomTable[ZOOM_MAX_ZOOMS][2] =
 {
-// max {out,in}
+	// max {out,in}
 	{0, 0},
 
 	{36, 8},    //	binoc
@@ -711,7 +705,6 @@ void CG_Zoom( void ) {
 		}
 	}
 }
-
 
 /*
 ====================
@@ -850,7 +843,6 @@ static int CG_CalcFov( void ) {
 	return inwater;
 }
 
-
 /*
 ==============
 CG_UnderwaterSounds
@@ -860,7 +852,6 @@ CG_UnderwaterSounds
 static void CG_UnderwaterSounds( void ) {
 	trap_S_AddLoopingSound( cg.snap->ps.clientNum, cg.snap->ps.origin, vec3_origin, cgs.media.underWaterSound, 255 & ( 1 << 8 ) );
 }
-
 
 /*
 ===============
@@ -880,7 +871,6 @@ static void CG_DamageBlendBlob( void ) {
 	}
 
 	for ( i = 0; i < MAX_VIEWDAMAGE; i++ ) {
-
 		vd = &cg.viewDamage[i];
 
 		if ( !vd->damageValue ) {
@@ -910,7 +900,7 @@ static void CG_DamageBlendBlob( void ) {
 		ent.shaderRGBA[2] = 255;
 		//ent.shaderRGBA[3] = 255;
 		ent.shaderRGBA[3] = 255 * ( ( cg_bloodDamageBlend.value > 1.0f ) ? 1.0f :
-									( cg_bloodDamageBlend.value < 0.0f ) ? 0.0f : cg_bloodDamageBlend.value );  // Martin
+			( cg_bloodDamageBlend.value < 0.0f ) ? 0.0f : cg_bloodDamageBlend.value );  // Martin
 		trap_R_AddRefEntityToScene( &ent );
 	}
 }
@@ -960,7 +950,6 @@ static int CG_CalcViewValues( void ) {
 
 			trap_SendClientCommand( va( "setCameraOrigin %f %f %f", origin[0], origin[1], origin[2] ) );
 			return 0;
-
 		} else {
 			cg.cameraMode = qfalse;
 			trap_Cvar_Set( "cg_letterbox", "0" );
@@ -1122,7 +1111,6 @@ void CG_DrawSkyBoxPortal( void ) {
 		fov_x = 90;
 	}
 
-
 	// setup fog the first time, ignore this part of the configstring after that
 	token = COM_ParseExt( &cstr, qfalse );
 	if ( !token || !token[0] ) {
@@ -1177,8 +1165,7 @@ void CG_DrawSkyBoxPortal( void ) {
 		}
 	}
 
-//----(SA)	end
-
+	//----(SA)	end
 
 	if ( cg.predictedPlayerState.pm_type == PM_INTERMISSION ) {
 		// if in intermission, use a fixed value
@@ -1289,7 +1276,6 @@ void CG_DrawNotebook( void ) {
 
 extern void CG_SetupDlightstyles( void );
 
-
 //#define DEBUGTIME_ENABLED
 #ifdef DEBUGTIME_ENABLED
 #define DEBUGTIME CG_Printf( "t%i:%i ", dbgCnt++, elapsed = ( trap_Milliseconds() - dbgTime ) ); dbgTime += elapsed;
@@ -1316,7 +1302,7 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 	cg.time = serverTime;
 	cg.demoPlayback = demoPlayback;
 
-    // update cvars
+	// update cvars
 	CG_UpdateCvars();
 
 #ifdef DEBUGTIME_ENABLED
@@ -1324,186 +1310,185 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 #endif
 	DEBUGTIME
 
-    // if we are only updating the screen as a loading
-    // pacifier, don't even try to read snapshots
-	if ( cg.infoScreenText[0] != 0 ) {
-		CG_DrawInformation();
-		return;
-	}
-
-    // any looped sounds will be respecified as entities
-    // are added to the render list
-	trap_S_ClearLoopingSounds( qfalse );
-
-	DEBUGTIME
-
-    // clear all the render lists
-	trap_R_ClearScene();
-
-	DEBUGTIME
-
-    // set up cg.snap and possibly cg.nextSnap
-	CG_ProcessSnapshots();
-
-	DEBUGTIME
-
-    // if we haven't received any snapshots yet, all
-    // we can draw is the information screen
-	if ( !cg.snap || ( cg.snap->snapFlags & SNAPFLAG_NOT_ACTIVE ) ) {
-		CG_DrawInformation();
-		return;
-	}
-
-    // check for server set weapons we might not know about
-    // (FIXME: this is a hack for the time being since a scripted "selectweapon" does
-    // not hit the first snap, the server weapon set in cg_playerstate.c line 219 doesn't
-    // do the trick)
-	if ( !cg.weaponSelect && cg.snap->ps.weapon ) {
-		cg.weaponSelect = cg.snap->ps.weapon;
-		cg.weaponSelectTime = cg.time;
-	}
-
-//----(SA)	nerve uses this for snooper/sniper
-	if ( cg.weaponSelect == WP_FG42SCOPE ) {
-		float spd;
-		spd = VectorLength( cg.snap->ps.velocity );
-		if ( spd > 180.0f ) {
-			CG_FinishWeaponChange( WP_FG42SCOPE, WP_FG42 );
+		// if we are only updating the screen as a loading
+		// pacifier, don't even try to read snapshots
+		if ( cg.infoScreenText[0] != 0 ) {
+			CG_DrawInformation();
+			return;
 		}
-	}
 
-	DEBUGTIME
-
-	if ( !cg.lightstylesInited ) {
-		CG_SetupDlightstyles();
-	}
-
-	DEBUGTIME
-
-    // if we have been told not to render, don't
-	if ( cg_norender.integer ) {
-		return;
-	}
-
-    // this counter will be bumped for every valid scene we generate
-	cg.clientFrame++;
-
-    // update cg.predictedPlayerState
-	CG_PredictPlayerState();
-
-	DEBUGTIME
-
-    // decide on third person view
-	cg.renderingThirdPerson = cg_thirdPerson.integer || ( cg.snap->ps.stats[STAT_HEALTH] <= 0 );
-
-    // build cg.refdef
-	inwater = CG_CalcViewValues();
-
-	DEBUGTIME
-
-    // RF, draw the skyboxportal
-	CG_DrawSkyBoxPortal();
-
-	DEBUGTIME
-
-	if ( inwater ) {
-		CG_UnderwaterSounds();
-	}
-
-	DEBUGTIME
-
-    // first person blend blobs, done after AnglesToAxis
-	if ( !cg.renderingThirdPerson ) {
-		CG_DamageBlendBlob();
-	}
-
-	DEBUGTIME
-
-    // build the render lists
-	if ( !cg.hyperspace ) {
-		CG_AddPacketEntities();         // adter calcViewValues, so predicted player state is correct
-		CG_AddMarks();
+		// any looped sounds will be respecified as entities
+		// are added to the render list
+		trap_S_ClearLoopingSounds( qfalse );
 
 		DEBUGTIME
 
-        // Rafael particles
-		CG_AddParticles();
-        // done.
+			// clear all the render lists
+			trap_R_ClearScene();
 
 		DEBUGTIME
 
-		CG_AddLocalEntities();
+			// set up cg.snap and possibly cg.nextSnap
+			CG_ProcessSnapshots();
 
 		DEBUGTIME
-	}
-    // Rafael mg42
-	if ( !( cg.snap->ps.persistant[PERS_HWEAPON_USE] ) ) {
-		CG_AddViewWeapon( &cg.predictedPlayerState );
-	}
 
-    // NERVE - SMF - play buffered voice chats
-	CG_PlayBufferedVoiceChats();
+			// if we haven't received any snapshots yet, all
+			// we can draw is the information screen
+			if ( !cg.snap || ( cg.snap->snapFlags & SNAPFLAG_NOT_ACTIVE ) ) {
+				CG_DrawInformation();
+				return;
+			}
 
-	DEBUGTIME
+			// check for server set weapons we might not know about
+			// (FIXME: this is a hack for the time being since a scripted "selectweapon" does
+			// not hit the first snap, the server weapon set in cg_playerstate.c line 219 doesn't
+			// do the trick)
+			if ( !cg.weaponSelect && cg.snap->ps.weapon ) {
+				cg.weaponSelect = cg.snap->ps.weapon;
+				cg.weaponSelectTime = cg.time;
+			}
 
-    // Ridah, trails
-	if ( !cg.hyperspace ) {
-		CG_AddFlameChunks();
-		CG_AddTrails();         // this must come last, so the trails dropped this frame get drawn
-	}
-    // done.
+			//----(SA)	nerve uses this for snooper/sniper
+			if ( cg.weaponSelect == WP_FG42SCOPE ) {
+				float spd;
+				spd = VectorLength( cg.snap->ps.velocity );
+				if ( spd > 180.0f ) {
+					CG_FinishWeaponChange( WP_FG42SCOPE, WP_FG42 );
+				}
+			}
 
-	DEBUGTIME
+			DEBUGTIME
 
-    // finish up the rest of the refdef
-	if ( cg.testModelEntity.hModel ) {
-		CG_AddTestModel();
-	}
-	cg.refdef.time = cg.time;
-	memcpy( cg.refdef.areamask, cg.snap->areamask, sizeof( cg.refdef.areamask ) );
+				if ( !cg.lightstylesInited ) {
+					CG_SetupDlightstyles();
+				}
 
-	DEBUGTIME
+				DEBUGTIME
 
-    // warning sounds when powerup is wearing off
-    //CG_PowerupTimerSounds();
+					// if we have been told not to render, don't
+					if ( cg_norender.integer ) {
+						return;
+					}
 
-    // make sure the lagometerSample and frame timing isn't done twice when in stereo
-	if ( stereoView != STEREO_RIGHT ) {
-		cg.frametime = cg.time - cg.oldTime;
-		if ( cg.frametime < 0 ) {
-			cg.frametime = 0;
-		}
-		cg.oldTime = cg.time;
-		CG_AddLagometerFrameInfo();
-	}
+					// this counter will be bumped for every valid scene we generate
+					cg.clientFrame++;
 
-	DEBUGTIME
+					// update cg.predictedPlayerState
+					CG_PredictPlayerState();
 
-    // Ridah, fade the screen
-	CG_DrawScreenFade();
+					DEBUGTIME
 
-	DEBUGTIME
+						// decide on third person view
+						cg.renderingThirdPerson = cg_thirdPerson.integer || ( cg.snap->ps.stats[STAT_HEALTH] <= 0 );
 
-		mpSetup = CG_GetMPSetupValue(); // NERVE - SMF - setup mpSetup values
+					// build cg.refdef
+					inwater = CG_CalcViewValues();
 
-    // let the client system know what our weapon, holdable item and zoom settings are
-	trap_SetUserCmdValue( cg.weaponSelect, cg.holdableSelect, cg.zoomSensitivity, mpSetup, cg.identifyClientRequest );
+					DEBUGTIME
 
-    // DHM - Nerve :: let client system know our predicted origin
-	trap_SetClientLerpOrigin( cg.refdef.vieworg[0], cg.refdef.vieworg[1], cg.refdef.vieworg[2] );
+						// RF, draw the skyboxportal
+						CG_DrawSkyBoxPortal();
 
-    // actually issue the rendering calls
-	CG_DrawActive( stereoView );
+					DEBUGTIME
 
-	DEBUGTIME
+						if ( inwater ) {
+							CG_UnderwaterSounds();
+						}
 
-    // update audio positions
-	trap_S_Respatialize( cg.snap->ps.clientNum, cg.refdef.vieworg, cg.refdef.viewaxis, inwater );
+						DEBUGTIME
 
-	if ( cg_stats.integer ) {
-		CG_Printf( "cg.clientFrame:%i\n", cg.clientFrame );
-	}
+							// first person blend blobs, done after AnglesToAxis
+							if ( !cg.renderingThirdPerson ) {
+								CG_DamageBlendBlob();
+							}
 
-	DEBUGTIME
+							DEBUGTIME
+
+								// build the render lists
+								if ( !cg.hyperspace ) {
+									CG_AddPacketEntities();         // adter calcViewValues, so predicted player state is correct
+									CG_AddMarks();
+
+									DEBUGTIME
+
+										// Rafael particles
+										CG_AddParticles();
+									// done.
+
+									DEBUGTIME
+
+										CG_AddLocalEntities();
+
+									DEBUGTIME
+								}
+								// Rafael mg42
+								if ( !( cg.snap->ps.persistant[PERS_HWEAPON_USE] ) ) {
+									CG_AddViewWeapon( &cg.predictedPlayerState );
+								}
+
+								// NERVE - SMF - play buffered voice chats
+								CG_PlayBufferedVoiceChats();
+
+								DEBUGTIME
+
+									// Ridah, trails
+									if ( !cg.hyperspace ) {
+										CG_AddFlameChunks();
+										CG_AddTrails();         // this must come last, so the trails dropped this frame get drawn
+									}
+									// done.
+
+									DEBUGTIME
+
+										// finish up the rest of the refdef
+										if ( cg.testModelEntity.hModel ) {
+											CG_AddTestModel();
+										}
+										cg.refdef.time = cg.time;
+										memcpy( cg.refdef.areamask, cg.snap->areamask, sizeof( cg.refdef.areamask ) );
+
+										DEBUGTIME
+
+											// warning sounds when powerup is wearing off
+											//CG_PowerupTimerSounds();
+
+											// make sure the lagometerSample and frame timing isn't done twice when in stereo
+											if ( stereoView != STEREO_RIGHT ) {
+												cg.frametime = cg.time - cg.oldTime;
+												if ( cg.frametime < 0 ) {
+													cg.frametime = 0;
+												}
+												cg.oldTime = cg.time;
+												CG_AddLagometerFrameInfo();
+											}
+
+											DEBUGTIME
+
+												// Ridah, fade the screen
+												CG_DrawScreenFade();
+
+											DEBUGTIME
+
+												mpSetup = CG_GetMPSetupValue(); // NERVE - SMF - setup mpSetup values
+
+											// let the client system know what our weapon, holdable item and zoom settings are
+											trap_SetUserCmdValue( cg.weaponSelect, cg.holdableSelect, cg.zoomSensitivity, mpSetup, cg.identifyClientRequest );
+
+											// DHM - Nerve :: let client system know our predicted origin
+											trap_SetClientLerpOrigin( cg.refdef.vieworg[0], cg.refdef.vieworg[1], cg.refdef.vieworg[2] );
+
+											// actually issue the rendering calls
+											CG_DrawActive( stereoView );
+
+											DEBUGTIME
+
+												// update audio positions
+												trap_S_Respatialize( cg.snap->ps.clientNum, cg.refdef.vieworg, cg.refdef.viewaxis, inwater );
+
+											if ( cg_stats.integer ) {
+												CG_Printf( "cg.clientFrame:%i\n", cg.clientFrame );
+											}
+
+											DEBUGTIME
 }
-

@@ -13,7 +13,6 @@
 #include "../game/bg_public.h"
 #include "ui_shared.h"
 
-
 extern vmCvar_t ui_ffa_fraglimit;
 extern vmCvar_t ui_ffa_timelimit;
 
@@ -728,7 +727,6 @@ typedef struct {
 	int start;
 } pinglist_t;
 
-
 typedef struct serverStatus_s {
 	pinglist_t pingList[MAX_PINGREQUESTS];
 	int numqueriedservers;
@@ -757,7 +755,6 @@ typedef struct serverStatus_s {
 	int motdTime;
 	char motd[MAX_STRING_CHARS];
 } serverStatus_t;
-
 
 typedef struct {
 	char adrstr[MAX_ADDRESSLENGTH];
@@ -825,7 +822,6 @@ typedef struct {
 	int mapCount;
 	mapInfo mapList[MAX_MAPS];
 
-
 	int tierCount;
 	tierInfo tierList[MAX_TIERS];
 
@@ -844,12 +840,12 @@ typedef struct {
 	int movieIndex;
 	int previewMovie;
 
-//----(SA)	added
-//	const char		*savegameList[MAX_SAVEGAMES];
+	//----(SA)	added
+	//	const char		*savegameList[MAX_SAVEGAMES];
 	savegameInfo savegameList[MAX_SAVEGAMES];
 	int savegameCount;
 	int savegameIndex;
-//----(SA)	end
+	//----(SA)	end
 
 	serverStatus_t serverStatus;
 
@@ -892,11 +888,9 @@ typedef struct {
 	// Martin - crosshairColor
 	vec4_t xhairColor;
 	vec4_t xhairColorAlt;
-
 }   uiInfo_t;
 
 extern uiInfo_t uiInfo;
-
 
 extern void         UI_Init( void );
 extern void         UI_Shutdown( void );
@@ -1044,7 +1038,6 @@ void            trap_LAN_LoadCachedServers();
 
 void            trap_SetPbClStatus( int status );                               // DHM - Nerve
 void            trap_SetPbSvStatus( int status );                               // TTimo
-
 
 // -NERVE - SMF
 

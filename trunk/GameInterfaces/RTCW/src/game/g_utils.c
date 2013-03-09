@@ -1,8 +1,8 @@
 /*
- * name:	g_utils.c
- *
- * desc:	misc utility functions for game module
- *
+* name:	g_utils.c
+*
+* desc:	misc utility functions for game module
+*
 */
 
 #include "g_local.h"
@@ -20,7 +20,6 @@ typedef struct {
 
 int remapCount = 0;
 shaderRemap_t remappedShaders[MAX_SHADER_REMAPS];
-
 
 // CS: Some used functions from old bot code
 /*
@@ -150,7 +149,6 @@ int G_FindConfigstringIndex( const char *name, int start, int max, qboolean crea
 	return i;
 }
 
-
 int G_ModelIndex( char *name ) {
 	return G_FindConfigstringIndex( name, CS_MODELS, MAX_MODELS, qtrue );
 }
@@ -160,7 +158,6 @@ int G_SoundIndex( const char *name ) {
 }
 
 //=====================================================================
-
 
 /*
 ================
@@ -180,7 +177,6 @@ void G_TeamCommand( team_t team, char *cmd ) {
 		}
 	}
 }
-
 
 /*
 =============
@@ -248,7 +244,6 @@ gentity_t* G_FindByTargetname( gentity_t *from, const char* match ) {
 	return NULL;
 }
 
-
 /*
 =============
 G_PickTarget
@@ -287,7 +282,6 @@ gentity_t *G_PickTarget( char *targetname ) {
 	return choice[rand() % num_choices];
 }
 
-
 /*
 ==============================
 G_UseTargets
@@ -325,19 +319,19 @@ void G_UseTargets( gentity_t *ent, gentity_t *activator ) {
 				//G_Printf ("ent->classname %s ent->targetname %s t->targetname %s t->s.number %d\n", ent->classname, ent->targetname, t->targetname, t->s.number);
 
 				t->flags |= ( ent->flags & FL_KICKACTIVATE ); // (SA) If 'ent' was kicked to activate, pass this along to it's targets.
-				                                              //		It may become handy to put a "KICKABLE" flag in ents so that it knows whether to pass this along or not
-				                                              //		Right now, the only situation where it would be weird would be an invisible_user that is a 'button' near
-				                                              //		a rotating door that it triggers.  Kick the switch and the door next to it flies open.
+				//		It may become handy to put a "KICKABLE" flag in ents so that it knows whether to pass this along or not
+				//		Right now, the only situation where it would be weird would be an invisible_user that is a 'button' near
+				//		a rotating door that it triggers.  Kick the switch and the door next to it flies open.
 
 				t->flags |= ( ent->flags & FL_SOFTACTIVATE ); // (SA) likewise for soft activation
 
 				if (    activator &&
-						(   ( Q_stricmp( t->classname, "func_door" ) == 0 ) ||
-							( Q_stricmp( t->classname, "func_door_rotating" ) == 0 )
-						)
-						) {
-					// check door usage rules before allowing any entity to trigger a door open
-					G_TryDoor( t, ent, activator );       // (door,other,activator)
+					(   ( Q_stricmp( t->classname, "func_door" ) == 0 ) ||
+					( Q_stricmp( t->classname, "func_door_rotating" ) == 0 )
+					)
+					) {
+						// check door usage rules before allowing any entity to trigger a door open
+						G_TryDoor( t, ent, activator );       // (door,other,activator)
 				} else {
 					t->use( t, ent, activator );
 				}
@@ -386,7 +380,6 @@ char    *vtosf( const vec3_t v ) {
 	return s;
 }
 
-
 /*
 ===============
 G_SetMovedir
@@ -413,7 +406,6 @@ void G_SetMovedir( vec3_t angles, vec3_t movedir ) {
 	VectorClear( angles );
 }
 
-
 void G_InitGentity( gentity_t *e ) {
 	e->inuse = qtrue;
 	e->classname = "noclass";
@@ -434,7 +426,7 @@ G_Spawn
 
 Either finds a free entity, or allocates a new one.
 
-  The slots from 0 to MAX_CLIENTS-1 are always reserved for clients, and will
+The slots from 0 to MAX_CLIENTS-1 are always reserved for clients, and will
 never be used by anything else.
 
 Try to avoid reusing an entity that was recently freed, because it
@@ -484,7 +476,7 @@ gentity_t *G_Spawn( void ) {
 
 	// let the server system know that there are more entities
 	trap_LocateGameData( level.gentities, level.num_entities, sizeof( gentity_t ),
-						 &level.clients[0].ps, sizeof( level.clients[0] ) );
+		&level.clients[0].ps, sizeof( level.clients[0] ) );
 
 	G_InitGentity( e );
 
@@ -510,7 +502,6 @@ qboolean G_EntitiesFree( void ) {
 	}
 	return qfalse;
 }
-
 
 /*
 =================
@@ -564,7 +555,6 @@ gentity_t *G_TempEntity( vec3_t origin, int event ) {
 	return e;
 }
 
-
 /*
 ==============================================================================
 
@@ -602,9 +592,8 @@ void G_KillBox( gentity_t *ent ) {
 
 		// nail it
 		G_Damage( hit, ent, ent, NULL, NULL,
-				  100000, DAMAGE_NO_PROTECTION, MOD_TELEFRAG );
+			100000, DAMAGE_NO_PROTECTION, MOD_TELEFRAG );
 	}
-
 }
 
 //==============================================================================
@@ -625,7 +614,6 @@ void G_AddPredictableEvent( gentity_t *ent, int event, int eventParm ) {
 	BG_AddPredictableEventToPlayerstate( event, eventParm, &ent->client->ps );
 }
 
-
 /*
 ===============
 G_AddEvent
@@ -634,7 +622,7 @@ Adds an event+parm and twiddles the event counter
 ===============
 */
 void G_AddEvent( gentity_t *ent, int event, int eventParm ) {
-//	int		bits;
+	//	int		bits;
 
 	if ( !event ) {
 		G_Printf( "G_AddEvent: zero event added for entity %i\n", ent->s.number );
@@ -648,7 +636,6 @@ void G_AddEvent( gentity_t *ent, int event, int eventParm ) {
 		ent->client->ps.eventParms[ent->client->ps.eventSequence & ( MAX_EVENTS - 1 )] = eventParm;
 		ent->client->ps.eventSequence++;
 		// -NERVE - SMF
-
 	} else {
 		// NERVE - SMF - commented in - externalEvents not being handled properly in Wolf right now
 		ent->s.events[ent->s.eventSequence & ( MAX_EVENTS - 1 )] = event;
@@ -661,12 +648,11 @@ void G_AddEvent( gentity_t *ent, int event, int eventParm ) {
 	ent->r.eventTime = level.time;
 }
 
-
 /*
 =============
 G_Sound
 
-  Ridah, removed channel parm, since it wasn't used, and could cause confusion
+Ridah, removed channel parm, since it wasn't used, and could cause confusion
 =============
 */
 void G_Sound( gentity_t *ent, int soundIndex ) {
@@ -689,7 +675,6 @@ void G_AnimScriptSound( int soundIndex, vec3_t org, int client ) {
 
 //==============================================================================
 
-
 /*
 ================
 G_SetOrigin
@@ -707,14 +692,12 @@ void G_SetOrigin( gentity_t *ent, vec3_t origin ) {
 	VectorCopy( origin, ent->r.currentOrigin );
 }
 
-
 /*
 ==============
 G_SetAngle
 ==============
 */
 void G_SetAngle( gentity_t *ent, vec3_t angle ) {
-
 	VectorCopy( angle, ent->s.apos.trBase );
 	ent->s.apos.trType = TR_STATIONARY;
 	ent->s.apos.trTime = 0;
@@ -780,8 +763,8 @@ void G_ProcessTagConnect( gentity_t *ent ) {
 ================
 DebugLine
 
-  debug polygons only work when running a local game
-  with r_debugSurface set to 2
+debug polygons only work when running a local game
+with r_debugSurface set to 2
 ================
 */
 int DebugLine( vec3_t start, vec3_t end, int color ) {
@@ -1082,44 +1065,42 @@ return amount of ammo to be added for max ammo evaluations based on extraClips c
 ================
 */
 int G_ExtraAmmo( int playerClass, int weapon ) {
-    switch(weapon)
-    {
-        case WP_MAUSER:
-        case WP_SNIPERRIFLE:
-            return g_mauserExtraClips.integer * ammoTable[weapon].maxclip;
-            break;
-        case WP_VENOM:
-            return g_venomExtraClips.integer * ammoTable[weapon].maxclip;
-            break;
-        case WP_PANZERFAUST:
-            return g_panzerExtraClips.integer * ammoTable[weapon].maxclip;
-            break;
-        case WP_COLT:
-        case WP_LUGER:
-            return g_pistolExtraClips.integer * ammoTable[weapon].maxclip;
-            break;
-        case WP_THOMPSON:
-        case WP_MP40:
-            if (playerClass == PC_SOLDIER) {
-                return g_soldExtraClips.integer * ammoTable[weapon].maxclip;
-            }
+	switch(weapon)
+	{
+	case WP_MAUSER:
+	case WP_SNIPERRIFLE:
+		return g_mauserExtraClips.integer * ammoTable[weapon].maxclip;
+		break;
+	case WP_VENOM:
+		return g_venomExtraClips.integer * ammoTable[weapon].maxclip;
+		break;
+	case WP_PANZERFAUST:
+		return g_panzerExtraClips.integer * ammoTable[weapon].maxclip;
+		break;
+	case WP_COLT:
+	case WP_LUGER:
+		return g_pistolExtraClips.integer * ammoTable[weapon].maxclip;
+		break;
+	case WP_THOMPSON:
+	case WP_MP40:
+		if (playerClass == PC_SOLDIER) {
+			return g_soldExtraClips.integer * ammoTable[weapon].maxclip;
+		}
 
-            if (playerClass == PC_MEDIC) {
-                return g_medExtraClips.integer * ammoTable[weapon].maxclip;
-            }
+		if (playerClass == PC_MEDIC) {
+			return g_medExtraClips.integer * ammoTable[weapon].maxclip;
+		}
 
-            if (playerClass == PC_ENGINEER) {
-                return g_engExtraClips.integer * ammoTable[weapon].maxclip;
-            }
+		if (playerClass == PC_ENGINEER) {
+			return g_engExtraClips.integer * ammoTable[weapon].maxclip;
+		}
 
-            if (playerClass == PC_LT) {
-                return g_ltExtraClips.integer * ammoTable[weapon].maxclip;
-            }
-            break;
-        default:
-            break;
-    }
-    return 0;
+		if (playerClass == PC_LT) {
+			return g_ltExtraClips.integer * ammoTable[weapon].maxclip;
+		}
+		break;
+	default:
+		break;
+	}
+	return 0;
 }
-
-

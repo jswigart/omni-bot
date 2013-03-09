@@ -3,7 +3,6 @@
 
 #include "cg_local.h"
 
-
 /*
 ==================
 CG_BubbleTrail
@@ -43,7 +42,7 @@ void CG_BubbleTrail( vec3_t start, vec3_t end, float size, float spacing ) {
 
 		re->reType = RT_SPRITE;
 		re->rotation = 0;
-//		re->radius = 3;
+		//		re->radius = 3;
 		re->radius = size; // (SA)
 		re->customShader = cgs.media.waterBubbleShader;
 		re->shaderRGBA[0] = 0xff;
@@ -58,7 +57,7 @@ void CG_BubbleTrail( vec3_t start, vec3_t end, float size, float spacing ) {
 		VectorCopy( move, le->pos.trBase );
 		le->pos.trDelta[0] = crandom() * 3;
 		le->pos.trDelta[1] = crandom() * 3;
-//		le->pos.trDelta[2] = crandom()*5 + 6;
+		//		le->pos.trDelta[2] = crandom()*5 + 6;
 		le->pos.trDelta[2] = crandom() * 5 + 20;  // (SA)
 
 		VectorAdd( move, vec, move );
@@ -72,81 +71,80 @@ CG_SmokePuff
 Adds a smoke puff or blood trail localEntity.
 
 (SA) boy, it would be nice to have an acceleration vector for this as well.
-        big velocity vector with a negative acceleration for deceleration, etc.
-        (breath could then come out of a guys mouth at the rate he's walking/running and it
-        would slow down once it's created)
+big velocity vector with a negative acceleration for deceleration, etc.
+(breath could then come out of a guys mouth at the rate he's walking/running and it
+would slow down once it's created)
 =====================
 */
 
 //----(SA)	modified
 localEntity_t *CG_SmokePuff( const vec3_t p, const vec3_t vel,
-							 float radius,
-							 float r, float g, float b, float a,
-							 float duration,
-							 int startTime,
-							 int fadeInTime,
-							 int leFlags,
-							 qhandle_t hShader ) {
-	static int seed = 0x92;
-	localEntity_t   *le;
-	refEntity_t     *re;
+							float radius,
+							float r, float g, float b, float a,
+							float duration,
+							int startTime,
+							int fadeInTime,
+							int leFlags,
+							qhandle_t hShader ) {
+								static int seed = 0x92;
+								localEntity_t   *le;
+								refEntity_t     *re;
 
-	le = CG_AllocLocalEntity();
-	le->leFlags = leFlags;
-	le->radius = radius;
+								le = CG_AllocLocalEntity();
+								le->leFlags = leFlags;
+								le->radius = radius;
 
-	re = &le->refEntity;
-	re->rotation = Q_random( &seed ) * 360;
-	re->radius = radius;
-	re->shaderTime = startTime / 1000.0f;
+								re = &le->refEntity;
+								re->rotation = Q_random( &seed ) * 360;
+								re->radius = radius;
+								re->shaderTime = startTime / 1000.0f;
 
-	le->leType = LE_MOVE_SCALE_FADE;
-	le->startTime = startTime;
-	le->endTime = startTime + duration;
-	le->fadeInTime = fadeInTime;
-	if ( fadeInTime > startTime ) {
-		le->lifeRate = 1.0 / ( le->endTime - le->fadeInTime );
-	} else {
-		le->lifeRate = 1.0 / ( le->endTime - le->startTime );
-	}
-	le->color[0] = r;
-	le->color[1] = g;
-	le->color[2] = b;
-	le->color[3] = a;
+								le->leType = LE_MOVE_SCALE_FADE;
+								le->startTime = startTime;
+								le->endTime = startTime + duration;
+								le->fadeInTime = fadeInTime;
+								if ( fadeInTime > startTime ) {
+									le->lifeRate = 1.0 / ( le->endTime - le->fadeInTime );
+								} else {
+									le->lifeRate = 1.0 / ( le->endTime - le->startTime );
+								}
+								le->color[0] = r;
+								le->color[1] = g;
+								le->color[2] = b;
+								le->color[3] = a;
 
+								le->pos.trType = TR_LINEAR;
+								le->pos.trTime = startTime;
+								VectorCopy( vel, le->pos.trDelta );
+								VectorCopy( p, le->pos.trBase );
 
-	le->pos.trType = TR_LINEAR;
-	le->pos.trTime = startTime;
-	VectorCopy( vel, le->pos.trDelta );
-	VectorCopy( p, le->pos.trBase );
+								VectorCopy( p, re->origin );
+								re->customShader = hShader;
 
-	VectorCopy( p, re->origin );
-	re->customShader = hShader;
+								// rage pro can't alpha fade, so use a different shader
+								if ( cgs.glconfig.hardwareType == GLHW_RAGEPRO ) {
+									re->customShader = cgs.media.smokePuffRageProShader;
+									re->shaderRGBA[0] = 0xff;
+									re->shaderRGBA[1] = 0xff;
+									re->shaderRGBA[2] = 0xff;
+									re->shaderRGBA[3] = 0xff;
+								} else {
+									re->shaderRGBA[0] = le->color[0] * 0xff;
+									re->shaderRGBA[1] = le->color[1] * 0xff;
+									re->shaderRGBA[2] = le->color[2] * 0xff;
+									re->shaderRGBA[3] = 0xff;
+								}
+								// JPW NERVE
+								if ( cg_fxflags & 1 ) {
+									re->customShader = getTestShader();
+									re->rotation = 180;
+								}
+								// jpw
 
-	// rage pro can't alpha fade, so use a different shader
-	if ( cgs.glconfig.hardwareType == GLHW_RAGEPRO ) {
-		re->customShader = cgs.media.smokePuffRageProShader;
-		re->shaderRGBA[0] = 0xff;
-		re->shaderRGBA[1] = 0xff;
-		re->shaderRGBA[2] = 0xff;
-		re->shaderRGBA[3] = 0xff;
-	} else {
-		re->shaderRGBA[0] = le->color[0] * 0xff;
-		re->shaderRGBA[1] = le->color[1] * 0xff;
-		re->shaderRGBA[2] = le->color[2] * 0xff;
-		re->shaderRGBA[3] = 0xff;
-	}
-// JPW NERVE
-	if ( cg_fxflags & 1 ) {
-		re->customShader = getTestShader();
-		re->rotation = 180;
-	}
-// jpw
+								re->reType = RT_SPRITE;
+								re->radius = le->radius;
 
-	re->reType = RT_SPRITE;
-	re->radius = le->radius;
-
-	return le;
+								return le;
 }
 
 /*
@@ -329,17 +327,14 @@ void CG_Bleed( vec3_t origin, int entityNum ) {
 			for ( j = 0; j < 3; j++ ) ndir[j] += crandom() * 0.3;
 			VectorNormalize( ndir );
 			CG_AddBloodTrails( bOrigin, ndir,
-							   100,     // speed
-							   450 + (int)( crandom() * 50 ),   // duration
-							   2 + rand() % 2,  // count
-							   0.1 );   // rand scale
+				100,     // speed
+				450 + (int)( crandom() * 50 ),   // duration
+				2 + rand() % 2,  // count
+				0.1 );   // rand scale
 		}
-
 	}
 	// done.
 }
-
-
 
 /*
 ==================
@@ -382,17 +377,16 @@ void CG_LaunchGib( centity_t *cent, vec3_t origin, vec3_t angles, vec3_t velocit
 	le->pos.trType = TR_GRAVITY;
 
 	le->angles.trDelta[0] = ( 10 + ( rand() & 50 ) ) - 30;
-//	le->angles.trDelta[0] = (100 + (rand()&500)) - 300;	// pitch
+	//	le->angles.trDelta[0] = (100 + (rand()&500)) - 300;	// pitch
 	le->angles.trDelta[1] = ( 100 + ( rand() & 500 ) ) - 300; // (SA) this is the safe one right now (yaw)  turn the others up when I have tumbling things landing properly
 	le->angles.trDelta[2] = ( 10 + ( rand() & 50 ) ) - 30;
-//	le->angles.trDelta[2] = (100 + (rand()&500)) - 300;	// roll
+	//	le->angles.trDelta[2] = (100 + (rand()&500)) - 300;	// roll
 
 	le->bounceFactor = 0.3;
 
 	VectorCopy( origin, le->pos.trBase );
 	VectorCopy( velocity, le->pos.trDelta );
 	le->pos.trTime = cg.time;
-
 
 	le->angles.trType = TR_LINEAR;
 
@@ -412,7 +406,6 @@ void CG_LaunchGib( centity_t *cent, vec3_t origin, vec3_t angles, vec3_t velocit
 
 #define GIB_VELOCITY    75
 #define GIB_JUMP        250
-
 
 /*
 ==============
@@ -470,11 +463,11 @@ void CG_LoseHat( centity_t *cent, vec3_t dir ) {
 		VectorCopy( tv( 0, 0, 0 ), le->angles.trBase );
 		le->angles.trDelta[0]   = 0;
 		le->angles.trDelta[1]   = ( 100 + ( rand() & 500 ) ) - 300;
-//		le->angles.trDelta[2]	= 0;
+		//		le->angles.trDelta[2]	= 0;
 		le->angles.trDelta[2]   = 400;  // (SA) this is set with a very particular value to try to get it
-		                                // to flip exactly once before landing (based on player alive
-		                                // (standing) and on level ground) and will be unnecessary when
-		                                // I have things landing properly on their own
+		// to flip exactly once before landing (based on player alive
+		// (standing) and on level ground) and will be unnecessary when
+		// I have things landing properly on their own
 
 		le->angles.trTime       = cg.time;
 
@@ -492,9 +485,9 @@ void CG_LoseHat( centity_t *cent, vec3_t dir ) {
 ======================
 CG_GetOriginForTag
 
-  places the position of the tag into "org"
+places the position of the tag into "org"
 
-  returns the index of the tag it used, so we can cycle through tag's with the same name
+returns the index of the tag it used, so we can cycle through tag's with the same name
 ======================
 */
 int CG_GetOriginForTag( centity_t *cent, refEntity_t *parent, char *tagName, int startIndex, vec3_t org, vec3_t axis[3] ) {
@@ -609,7 +602,6 @@ void CG_GibPlayer( centity_t *cent, vec3_t playerOrigin, vec3_t gdir ) {
 		// Ridah, fetch the various positions of the tag_gib*'s
 		// and spawn the gibs from the correct places (especially the head)
 		for ( gibIndex = 0, count = 0, foundtag = qtrue; foundtag && gibIndex < MAX_GIB_MODELS && gibTags[gibIndex]; gibIndex++ ) {
-
 			refEntity_t *re = 0;
 
 			foundtag = qfalse;
@@ -621,7 +613,6 @@ void CG_GibPlayer( centity_t *cent, vec3_t playerOrigin, vec3_t gdir ) {
 			re = &cent->pe.torsoRefEnt;
 
 			for ( tagIndex = 0; ( tagIndex = CG_GetOriginForTag( cent, re, gibTags[gibIndex], tagIndex, origin, axis ) ) >= 0; count++, tagIndex++ ) {
-
 				foundtag = qtrue;
 
 				VectorSubtract( origin, re->origin, dir );
@@ -664,7 +655,7 @@ void CG_GibPlayer( centity_t *cent, vec3_t playerOrigin, vec3_t gdir ) {
 		}
 
 		// Ridah, spawn a bunch of blood dots around the place
-		#define GIB_BLOOD_DOTS  3
+#define GIB_BLOOD_DOTS  3
 		for ( i = 0, count = 0; i < GIB_BLOOD_DOTS * 2; i++ ) {
 			// TTimo: unused
 			//static vec3_t mins = {-10,-10,-10};
@@ -685,7 +676,7 @@ void CG_GibPlayer( centity_t *cent, vec3_t playerOrigin, vec3_t gdir ) {
 			if ( trace.fraction < 1.0 ) {
 				BG_GetMarkDir( velocity, trace.plane.normal, velocity );
 				CG_ImpactMark( cgs.media.bloodDotShaders[rand() % 5], trace.endpos, velocity, random() * 360,
-							   1,1,1,1, qtrue, 30, qfalse, cg_bloodTime.integer * 1000 );
+					1,1,1,1, qtrue, 30, qfalse, cg_bloodTime.integer * 1000 );
 				if ( count++ > GIB_BLOOD_DOTS ) {
 					break;
 				}
@@ -698,17 +689,16 @@ void CG_GibPlayer( centity_t *cent, vec3_t playerOrigin, vec3_t gdir ) {
 	}
 }
 
-
 /*
 ==============
 CG_SparklerSparks
 ==============
 */
 void CG_SparklerSparks( vec3_t origin, int count ) {
-// these effect the look of the, umm, effect
+	// these effect the look of the, umm, effect
 	int FUSE_SPARK_LIFE         = 100;
 	int FUSE_SPARK_LENGTH       = 30;
-// these are calculated from the above
+	// these are calculated from the above
 	int FUSE_SPARK_SPEED        = ( FUSE_SPARK_LENGTH * 1000 / FUSE_SPARK_LIFE );
 
 	int i;
@@ -716,7 +706,6 @@ void CG_SparklerSparks( vec3_t origin, int count ) {
 	refEntity_t     *re;
 
 	for ( i = 0; i < count; i++ ) {
-
 		// spawn the spark
 		le = CG_AllocLocalEntity();
 		re = &le->refEntity;
@@ -734,7 +723,6 @@ void CG_SparklerSparks( vec3_t origin, int count ) {
 		VectorNormalize( le->pos.trDelta );
 		VectorScale( le->pos.trDelta, FUSE_SPARK_SPEED, le->pos.trDelta );
 		le->pos.trTime = cg.time;
-
 	}
 }
 
@@ -805,9 +793,9 @@ void CG_DynamicLightningBolt( qhandle_t shader, vec3_t start, vec3_t pend, int n
 	float alpha, viewDist;
 	const int trailLife = 1;
 	int forks = 0;
-	#define STYPE_LIGHTNING     STYPE_REPEAT    // ST mapping for trail
-	#define FORK_CHANCE     0.5
-	#define VIEW_SCALE_DIST 128
+#define STYPE_LIGHTNING     STYPE_REPEAT    // ST mapping for trail
+#define FORK_CHANCE     0.5
+#define VIEW_SCALE_DIST 128
 
 	VectorCopy( pend, end );    // need this so recursive calls don't override stacked endpoints
 
@@ -943,7 +931,6 @@ void CG_DynamicLightningBolt( qhandle_t shader, vec3_t start, vec3_t pend, int n
 					// thisWidth > maxWidth*2;
 					thisWidth = maxWidth * 2;
 				}
-
 			}
 			//
 			VectorScale( bc, alpha, c );
@@ -960,9 +947,9 @@ void CG_DynamicLightningBolt( qhandle_t shader, vec3_t start, vec3_t pend, int n
 				vec3_t fend;
 				forks++;
 				VectorSet( fend,
-						   distLeft * 0.3 * lt_crandom( randseed,56 + i + forks ),
-						   distLeft * 0.3 * lt_crandom( randseed,160 + i + forks ),
-						   distLeft * 0.3 * lt_crandom( randseed,190 + i + forks ) );
+					distLeft * 0.3 * lt_crandom( randseed,56 + i + forks ),
+					distLeft * 0.3 * lt_crandom( randseed,160 + i + forks ),
+					distLeft * 0.3 * lt_crandom( randseed,190 + i + forks ) );
 				VectorAdd( fend, end, fend );
 				VectorSubtract( fend, pos, fend );
 				VectorMA( pos, 0.2 + 0.7 * lt_random( randseed,6 + i + forks ), fend, fend );
@@ -976,12 +963,9 @@ void CG_DynamicLightningBolt( qhandle_t shader, vec3_t start, vec3_t pend, int n
 			}
 
 			randseed++;
-
 		}
 	}
 }
-
-
 
 /*
 ================
@@ -1009,29 +993,28 @@ void CG_ProjectedSpotLight( vec3_t start, vec3_t dir ) {
 	CG_ImpactMark( cgs.media.spotLightShader, tr.endpos, proj, 0, alpha, alpha, alpha, 1.0, qfalse, radius, qtrue, -2 );
 }
 
-
 #define MAX_SPOT_SEGS 20
 #define MAX_SPOT_RANGE 2000
 /*
 ==============
 CG_Spotlight
-    segs:	number of sides on tube. - 999 is a valid value and just means, 'cap to max' (MAX_SPOT_SEGS) or use lod scheme
-    range:	effective range of beam
-    startWidth: will be optimized for '0' as a value (true cone) to not use quads and not cap the start circle
+segs:	number of sides on tube. - 999 is a valid value and just means, 'cap to max' (MAX_SPOT_SEGS) or use lod scheme
+range:	effective range of beam
+startWidth: will be optimized for '0' as a value (true cone) to not use quads and not cap the start circle
 
-    -- flags --
-    SL_NOTRACE			- don't do a trace check for shortening the beam, always draw at full 'range' length
-    SL_TRACEWORLDONLY	- go through everything but the world
-    SL_NODLIGHT			- don't put a dlight at the end
-    SL_NOSTARTCAP		- dont' cap the start circle
-    SL_LOCKTRACETORANGE	- only trace out as far as the specified range (rather than to max spot range)
-    SL_NOFLARE			- don't draw a flare when the light is pointing at the camera
-    SL_NOIMPACT			- don't draw the impact mark on hit surfaces
-    SL_LOCKUV			- lock the texture coordinates at the 'true' length of the requested beam.
-    SL_NOCORE			- don't draw the center 'core' beam
+-- flags --
+SL_NOTRACE			- don't do a trace check for shortening the beam, always draw at full 'range' length
+SL_TRACEWORLDONLY	- go through everything but the world
+SL_NODLIGHT			- don't put a dlight at the end
+SL_NOSTARTCAP		- dont' cap the start circle
+SL_LOCKTRACETORANGE	- only trace out as far as the specified range (rather than to max spot range)
+SL_NOFLARE			- don't draw a flare when the light is pointing at the camera
+SL_NOIMPACT			- don't draw the impact mark on hit surfaces
+SL_LOCKUV			- lock the texture coordinates at the 'true' length of the requested beam.
+SL_NOCORE			- don't draw the center 'core' beam
 
-  I know, this is a bit kooky right now.  It evolved big, but now that I know what it should do, it'll get
-  crunched down to a bunch of table driven stuff.  once it works, I'll make it work well...
+I know, this is a bit kooky right now.  It evolved big, but now that I know what it should do, it'll get
+crunched down to a bunch of table driven stuff.  once it works, I'll make it work well...
 
 ==============
 */
@@ -1125,7 +1108,7 @@ void CG_Spotlight( centity_t *cent, float *color, vec3_t realstart, vec3_t light
 	// TODO: adjust segs based on r_lodbias
 	// TODO: move much of this to renderer
 
-// model at base
+	// model at base
 	if ( cent->currentState.modelindex ) {
 		memset( &ent, 0, sizeof( ent ) );
 		ent.frame = 0;
@@ -1144,7 +1127,7 @@ void CG_Spotlight( centity_t *cent, float *color, vec3_t realstart, vec3_t light
 		VectorMA( start, 14, lightDir, start );
 	}
 
-//// BEAM
+	//// BEAM
 
 	PerpendicularVector( up, lightDir );
 	CrossProduct( lightDir, up, right );
@@ -1160,9 +1143,9 @@ void CG_Spotlight( centity_t *cent, float *color, vec3_t realstart, vec3_t light
 	coreEndRadius = VectorLength( coreverts[3].xyz );
 #define CORESCALE 0.6f
 
-//
-//	generate the flat beam 'core'
-//
+	//
+	//	generate the flat beam 'core'
+	//
 	if ( !( flags & SL_NOCORE ) ) {
 		vec3_t v2;
 		VectorSubtract( start, cg.refdef.vieworg, v1 );
@@ -1193,10 +1176,9 @@ void CG_Spotlight( centity_t *cent, float *color, vec3_t realstart, vec3_t light
 		trap_R_AddPolyToScene( cgs.media.spotLightBeamShader, 4, &coreverts[0] );
 	}
 
-
-//
-// generate the beam cylinder
-//
+	//
+	// generate the beam cylinder
+	//
 
 	for ( i = 0; i <= segs; i++ ) {
 		RotatePointAroundVector( start_points[i], lightDir, startvec, ( 360.0f / (float)segs ) * i );
@@ -1207,7 +1189,6 @@ void CG_Spotlight( centity_t *cent, float *color, vec3_t realstart, vec3_t light
 	}
 
 	for ( i = 0; i < segs; i++ ) {
-
 		j = ( i * 4 );
 
 		VectorCopy( start_points[i], verts[( i * 4 )].xyz );
@@ -1258,12 +1239,10 @@ void CG_Spotlight( centity_t *cent, float *color, vec3_t realstart, vec3_t light
 
 	trap_R_AddPolysToScene( cgs.media.spotLightBeamShader, 4, &verts[0], segs );
 
-
 	// plug up the start circle
 	if ( capStart ) {
 		trap_R_AddPolyToScene( cgs.media.spotLightBeamShader, segs, &plugVerts[0] );
 	}
-
 
 	// show the endpoint
 
@@ -1316,7 +1295,6 @@ void CG_Spotlight( centity_t *cent, float *color, vec3_t realstart, vec3_t light
 			if ( tr.fraction != 1 ) {
 				lightInEyes = qfalse;
 			}
-
 		}
 
 		if ( lightInEyes ) {
@@ -1332,7 +1310,6 @@ void CG_Spotlight( centity_t *cent, float *color, vec3_t realstart, vec3_t light
 		}
 	}
 }
-
 
 /*
 ==============
@@ -1373,6 +1350,3 @@ void CG_RumbleEfx( float pitch, float yaw ) {
 	// set the recoil
 	cg.recoilPitch -= pitchRecoilAdd;
 }
-
-
-
