@@ -103,7 +103,7 @@ void RenderBuffer::Init()
 		0,
 		0,
 		0,
-		0, //m_bold? FW_BOLD : FW_NORMAL,
+		FW_BOLD, //m_bold? FW_BOLD : FW_NORMAL,
 		0, //m_italic? TRUE : FALSE,
 		0, //m_underline? TRUE : FALSE,
 		0, //m_strokeout? TRUE : FALSE,

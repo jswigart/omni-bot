@@ -151,7 +151,6 @@ void PathPlannerBase::AddFailedPath(const Vector3f &_start, const Vector3f &_end
 	FailedPath fp;
 	fp.m_Start = _start;
 	fp.m_End = _end;
-	fp.m_NextRenderTime = 0;
 	fp.m_Render = false;
 	m_FailedPathList.push_back(fp);
 	EngineFuncs::ConsoleMessage(va("Added failed path to log, view with nav_showfailedpath %d",
@@ -176,21 +175,17 @@ void PathPlannerBase::RenderFailedPaths()
 		FailedPath &fp = (*it);
 		if(fp.m_Render)
 		{
-			if(IGame::GetTime() >= fp.m_NextRenderTime)
+			AABB aabb;
+			Vector3f pos;
+			GameEntity ge = Utils::GetLocalEntity();
+			if(ge.IsValid() &&
+				EngineFuncs::EntityPosition(ge, pos) &&
+				EngineFuncs::EntityWorldAABB(ge, aabb))
 			{
-				AABB aabb;
-				Vector3f pos;
-				GameEntity ge = Utils::GetLocalEntity();
-				if(ge.IsValid() &&
-					EngineFuncs::EntityPosition(ge, pos) &&
-					EngineFuncs::EntityWorldAABB(ge, aabb))
-				{
-					aabb.UnTranslate(pos);
+				aabb.UnTranslate(pos);
 
-					RenderBuffer::AddAABB(aabb.TranslateCopy(fp.m_Start), COLOR::GREEN);
-					RenderBuffer::AddAABB(aabb.TranslateCopy(fp.m_End), COLOR::RED);
-					fp.m_NextRenderTime = IGame::GetTime() + 5000;
-				}
+				RenderBuffer::AddAABB(aabb.TranslateCopy(fp.m_Start), COLOR::GREEN);
+				RenderBuffer::AddAABB(aabb.TranslateCopy(fp.m_End), COLOR::RED);
 			}
 		}
 	}

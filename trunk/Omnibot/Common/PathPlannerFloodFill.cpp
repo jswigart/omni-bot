@@ -96,12 +96,6 @@ void PathPlannerFloodFill::_Render()
 	GameEntity ge = Utils::GetLocalEntity();
 	if(!ge.IsValid())
 		return;
-
-	static int iNextTimeUpdate = 0;
-	if(IGame::GetTime() >= iNextTimeUpdate)
-	{
-		iNextTimeUpdate = IGame::GetTime() + 2000;
-	}
 }
 
 void PathPlannerFloodFill::Shutdown()

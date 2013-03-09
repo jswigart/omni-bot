@@ -117,7 +117,6 @@ protected:
 	{
 		Vector3f	m_Start;
 		Vector3f	m_End;
-		int			m_NextRenderTime;
 		bool		m_Render;
 	};
 	typedef std::list<FailedPath> FailedPathList;

@@ -185,21 +185,16 @@ public:
 	}
 	void Render()
 	{
-		static int NEXT_DRAW = 0;
-		if(IGame::GetTime()>NEXT_DRAW)
+		for(int i = 0; i < m_UsedNodes; ++i)
 		{
-			NEXT_DRAW = IGame::GetTime() + 2000;
-			for(int i = 0; i < m_UsedNodes; ++i)
-			{
-				PlanNode *pNode = &m_Nodes[i];
+			PlanNode *pNode = &m_Nodes[i];
 
-				obColor col = COLOR::BLACK;
-				if(IsOnOpenList(pNode) != m_OpenList.end())
-					col = COLOR::GREEN;
+			obColor col = COLOR::BLACK;
+			if(IsOnOpenList(pNode) != m_OpenList.end())
+				col = COLOR::GREEN;
 
-				if(pNode->Parent)
-					RenderBuffer::AddLine(pNode->Position,pNode->Parent->Position,col,2.f);
-			}
+			if(pNode->Parent)
+				RenderBuffer::AddLine(pNode->Position,pNode->Parent->Position,col,2.f);
 		}
 	}
 	PathFindNavMesh()
