@@ -36,7 +36,7 @@ console doesn't pause the game.
 
 =============================================================================
 */
-void OmnibotRenderDebugLines();
+
 /*
 =================
 CG_TestModel_f
@@ -1435,11 +1435,6 @@ void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demo
 		CG_AddLocalEntities();
 
 		DEBUGTIME
-
-        // CS: Don't run unless local server
-		if ( cgs.localServer ) {
-			OmnibotRenderDebugLines();
-		}
 	}
     // Rafael mg42
 	if ( !( cg.snap->ps.persistant[PERS_HWEAPON_USE] ) ) {
