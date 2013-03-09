@@ -1,10 +1,9 @@
 /*
- * name:		g_misc.c
- *
- * desc:
- *
+* name:		g_misc.c
+*
+* desc:
+*
 */
-
 
 #include "g_local.h"
 
@@ -17,14 +16,12 @@ int snd_noammo;
 Used to group brushes together just for editor convenience.  They are turned into normal brushes by the utilities.
 */
 
-
 /*QUAKED info_camp (0 0.5 0) (-4 -4 -4) (4 4 4)
 Used as a positional target for calculations in the utilities (spotlights, etc), but removed during gameplay.
 */
 void SP_info_camp( gentity_t *self ) {
 	G_SetOrigin( self, self->s.origin );
 }
-
 
 /*QUAKED info_null (0 0.5 0) (-4 -4 -4) (4 4 4)
 Used as a positional target for calculations in the utilities (spotlights, etc), but removed during gameplay.
@@ -33,7 +30,6 @@ void SP_info_null( gentity_t *self ) {
 	G_FreeEntity( self );
 }
 
-
 /*QUAKED info_notnull (0 0.5 0) (-4 -4 -4) (4 4 4)
 Used as a positional target for in-game calculation, like jumppad targets.
 target_position does the same thing
@@ -41,7 +37,6 @@ target_position does the same thing
 void SP_info_notnull( gentity_t *self ) {
 	G_SetOrigin( self, self->s.origin );
 }
-
 
 /*QUAKED light (0 1 0) (-8 -8 -8) (8 8 8) nonlinear angle negative_spot negative_point q3map_non-dynamic
 Non-displayed light.
@@ -69,8 +64,6 @@ Lights pointed at a target will be spotlights.
 void SP_lightJunior( gentity_t *self ) {
 	G_FreeEntity( self );
 }
-
-
 
 /*
 =================================================================================
@@ -126,7 +119,6 @@ void TeleportPlayer( gentity_t *player, vec3_t origin, vec3_t angles ) {
 	}
 }
 
-
 /*QUAKED misc_teleporter_dest (1 0 0) (-32 -32 -24) (32 32 -16)
 Point teleporters at these.
 Now that we don't have teleport destination pads, this is just
@@ -135,27 +127,25 @@ an info_notnull
 void SP_misc_teleporter_dest( gentity_t *ent ) {
 }
 
-
 /*
 =================================================================================
 
-    misc_grabber_trap
+misc_grabber_trap
 
 */
 
-
 static int attackDurations[] = {    ( 11 * 1000 ) / 15,
-									( 16 * 1000 ) / 15,
-									( 16 * 1000 ) / 15 };
+	( 16 * 1000 ) / 15,
+	( 16 * 1000 ) / 15 };
 
 static int attackHittimes[] = {     ( 7 * 1000 ) / 15,
-									( 6 * 1000 ) / 15,
-									( 7 * 1000 ) / 15 };
+	( 6 * 1000 ) / 15,
+	( 7 * 1000 ) / 15 };
 
 /*
 ==============
 grabber_think_idle
-    think func for the grabber ent to reset to idle if not attacking
+think func for the grabber ent to reset to idle if not attacking
 ==============
 */
 void grabber_think_idle( gentity_t *ent ) {
@@ -167,7 +157,7 @@ void grabber_think_idle( gentity_t *ent ) {
 /*
 ==============
 grabber_think_hit
-    think func for grabber ent following an attack command
+think func for grabber ent following an attack command
 ==============
 */
 void grabber_think_hit( gentity_t *ent ) {
@@ -178,7 +168,6 @@ void grabber_think_hit( gentity_t *ent ) {
 	ent->think      = grabber_think_idle;
 }
 
-
 /*
 ==============
 grabber_die
@@ -187,7 +176,6 @@ grabber_die
 extern void GibEntity( gentity_t * self, int killer ) ;
 
 void grabber_die( gentity_t *ent, gentity_t *inflictor, gentity_t *attacker, int damage, int mod ) {
-
 	// FIXME FIXME
 	// this is buggy.  the trigger brush entity (ent->enemy) does not free.
 	// need to fix.
@@ -203,11 +191,10 @@ void grabber_die( gentity_t *ent, gentity_t *inflictor, gentity_t *attacker, int
 	ent->nextthink = level.time + FRAMETIME;
 }
 
-
 /*
 ==============
 grabber_attack
-    direct call to the grabber entity (not a trigger) to call the attack
+direct call to the grabber entity (not a trigger) to call the attack
 ==============
 */
 void grabber_attack( gentity_t *ent ) {
@@ -220,7 +207,7 @@ void grabber_attack( gentity_t *ent ) {
 /*
 ==============
 grabber_close
-    touch func for attack distance trigger entity
+touch func for attack distance trigger entity
 ==============
 */
 void grabber_close( gentity_t *ent, gentity_t *other, trace_t *trace ) {
@@ -231,23 +218,21 @@ void grabber_close( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 	grabber_attack( ent->parent );
 }
 
-
 /*
 ==============
 grabber_pain
-    pain func for the grabber entity (not triggers)
+pain func for the grabber entity (not triggers)
 ==============
 */
 void grabber_pain( gentity_t *ent, gentity_t *attacker, int damage, vec3_t point ) {
 	G_AddEvent( ent, EV_GENERAL_SOUND, ent->sound2to1 ); // sound2to1 is the 'pain' sound
 }
 
-
 /*
 ==============
 grabber_wake
-    ent calling this is the bounding box for the grabber, not the grabber ent itself.
-    the grabber ent is 'ent->parent'
+ent calling this is the bounding box for the grabber, not the grabber ent itself.
+the grabber ent is 'ent->parent'
 ==============
 */
 void grabber_wake( gentity_t *ent ) {
@@ -286,13 +271,12 @@ void grabber_wake( gentity_t *ent ) {
 	G_AddEvent( ent, EV_GENERAL_SOUND, ent->soundPos1 ); // soundPos1 is the 'wake' sound
 }
 
-
 /*
 ==============
 grabber_use
-    use func for the grabber entity
-    if not awake, allow waking by trigger
-    if awake, allow attacking by trigger
+use func for the grabber entity
+if not awake, allow waking by trigger
+if awake, allow attacking by trigger
 ==============
 */
 void grabber_use( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
@@ -308,13 +292,12 @@ void grabber_use( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 /*
 ==============
 grabber_wake_touch
-    touch func for the first 'wake' trigger entity
+touch func for the first 'wake' trigger entity
 ==============
 */
 void grabber_wake_touch( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 	grabber_wake( ent );
 }
-
 
 /*QUAKED misc_grabber_trap (1 0 0) (-8 -8 -8) (8 8 8)
 fields:
@@ -336,10 +319,10 @@ pain sound - "models/misc/grabber/grabber_pain.wav"
 The current frames are:
 first frame
 |   length
-    |   looping frames
-        |   fps
-            |   damage at frame
-                |
+|   looping frames
+|   fps
+|   damage at frame
+|
 0   6   6   5   0  (main idle)
 5   21  21  7   0  (random idle)
 25  11  10  15  7  (attack big swipe)
@@ -365,14 +348,11 @@ void SP_misc_grabber_trap( gentity_t *ent ) {
 	VectorCopy( ent->s.angles, ent->s.apos.trBase );
 	ent->s.apos.trBase[YAW] -= 90;  // adjust for model rotation
 
-
 	if ( !ent->health ) {
 		ent->health = 100;  // default to 100
-
 	}
 	if ( !ent->damage ) {
 		ent->damage = 10;   // default to 10
-
 	}
 	ent->s.frame    = 5;
 
@@ -408,7 +388,6 @@ void SP_misc_grabber_trap( gentity_t *ent ) {
 	trig->r.svFlags     = SVF_NOCLIENT;
 	trig->touch         = grabber_wake_touch;
 	trap_LinkEntity( trig );
-
 }
 
 void use_spotlight( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
@@ -426,7 +405,6 @@ void use_spotlight( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	}
 }
 
-
 void spotlight_finish_spawning( gentity_t *ent ) {
 	if ( ent->spawnflags & 1 ) {   // START_ON
 		ent->active = 0;
@@ -437,7 +415,6 @@ void spotlight_finish_spawning( gentity_t *ent ) {
 	ent->think      = 0;
 	ent->nextthink  = 0;
 }
-
 
 //----(SA)	added
 /*QUAKED misc_spotlight (1 0 0) (-16 -16 -16) (16 16 16) START_ON BACK_AND_FORTH
@@ -461,7 +438,6 @@ void SP_misc_spotlight( gentity_t *ent ) {
 	if ( ent->target ) {
 		ent->s.density = G_FindConfigstringIndex( ent->target, CS_SPLINES, MAX_SPLINE_CONFIGSTRINGS, qtrue );
 	}
-
 }
 
 //----(SA)	end
@@ -478,7 +454,6 @@ void SP_misc_spotlight( gentity_t *ent ) {
 void SP_misc_model( gentity_t *ent ) {
 	G_FreeEntity( ent );
 }
-
 
 //----(SA)
 /*QUAKED misc_gamemodel (1 0 0) (-16 -16 -16) (16 16 16) ORIENT_LOD
@@ -537,8 +512,6 @@ void SP_misc_gamemodel( gentity_t *ent ) {
 
 	if ( ent->spawnflags & 1 ) {
 		ent->s.apos.trType = 1; // misc_gamemodels (since they have no movement) will use type = 0 for static models, type = 1 for auto-aligning models
-
-
 	}
 	trap_LinkEntity( ent );
 }
@@ -593,7 +566,6 @@ void SP_misc_vis_dummy_multiple( gentity_t *ent ) {
 	G_SetOrigin( ent, ent->s.origin );
 	trap_LinkEntity( ent );
 }
-
 
 //===========================================================
 
@@ -686,7 +658,7 @@ void SP_misc_portal_camera( gentity_t *ent ) {
 /*
 ======================================================================
 
-  SHOOTERS
+SHOOTERS
 
 ======================================================================
 */
@@ -741,18 +713,17 @@ void Use_Shooter( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 		fire_speargun( ent, ent->s.origin, dir );
 		break;
 
-	// Rafael sniper
+		// Rafael sniper
 	case WP_SNIPER:
 		fire_lead( ent, ent->s.origin, dir, ent->damage );
 		break;
-	// done
+		// done
 
 	case WP_MORTAR:
 		AimAtTarget( ent );   // store in ent->s.origin2 the direction/force needed to pass through the target
 		VectorScale( dir, VectorLength( ent->s.origin2 ), dir );
 		fire_mortar( ent, ent->s.origin, dir );
 		break;
-
 	}
 
 	G_AddEvent( ent, EV_FIRE_WEAPON, 0 );
@@ -823,7 +794,6 @@ Fires at either the target or the current direction.
 void SP_shooter_zombiespit( gentity_t *ent ) {
 	InitShooter( ent, WP_MONSTER_ATTACK1 );
 }
-
 
 /*
 ==============
@@ -896,7 +866,6 @@ void SP_shooter_tesla( gentity_t *ent ) {
 		ent->s.density = 2;
 	}
 
-
 	// width
 	if ( G_SpawnFloat( "width", "", &tempf ) ) {
 		ent->s.frame = (int)tempf;
@@ -904,17 +873,14 @@ void SP_shooter_tesla( gentity_t *ent ) {
 		ent->s.frame = 20;
 	}
 
-
 	// 'sticky' time (stored in .weapon)
 	if ( G_SpawnFloat( "sticktime", "", &tempf ) ) {
 		ent->s.time2 = (int)( tempf * 1000.0f );
 	} else {
 		ent->s.time2 = 500; // default to 1/2 sec
-
 	}
 	// randomness
 	ent->s.angles2[0] = ent->random;
-
 
 	// DLIGHT
 	if ( ent->spawnflags & 2 ) {
@@ -929,15 +895,14 @@ void SP_shooter_tesla( gentity_t *ent ) {
 			ent->s.time2 = ent->random;
 		} else {
 			ent->s.time2 = 4; // dlight randomness
-
 		}
 		if ( ent->dl_color[0] <= 0 &&    // if it's black or has no color assigned
-			 ent->dl_color[1] <= 0 &&
-			 ent->dl_color[2] <= 0 ) {
-			// default is the same color as the tesla weapon
-			ent->dl_color[0] = 0.2f;
-			ent->dl_color[1] = 0.6f;
-			ent->dl_color[2] = 1.0f;
+			ent->dl_color[1] <= 0 &&
+			ent->dl_color[2] <= 0 ) {
+				// default is the same color as the tesla weapon
+				ent->dl_color[0] = 0.2f;
+				ent->dl_color[1] = 0.6f;
+				ent->dl_color[2] = 1.0f;
 		}
 
 		ent->dl_color[0] = ent->dl_color[0] * 255;
@@ -945,18 +910,15 @@ void SP_shooter_tesla( gentity_t *ent ) {
 		ent->dl_color[2] = ent->dl_color[2] * 255;
 
 		ent->s.dl_intensity = (int)ent->dl_color[0] | ( (int)ent->dl_color[1] << 8 ) | ( (int)ent->dl_color[2] << 16 );
-
 	} else {
 		ent->s.dl_intensity = 0;
 	}
-
 
 	// finish up after everything has spawned in so we know all potential targets are ready
 	ent->think = shooter_tesla_finish_spawning;
 	ent->nextthink = level.time + 100;
 }
 //----(SA)	end
-
 
 /*QUAKED shooter_grenade (1 0 0) (-16 -16 -16) (16 16 16)
 Fires at either the target or the current direction.
@@ -989,7 +951,6 @@ void SP_shooter_sniper( gentity_t *ent ) {
 	}
 	if ( !ent->delay ) {
 		ent->delay = 1.0; // one sec
-
 	}
 	InitShooter( ent, WP_SNIPER );
 
@@ -1038,7 +999,6 @@ void brush_activate_sniper( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 
 						// added sniper shot
 						G_AddEvent( player, EV_GENERAL_SOUND, sniper_sound );
-
 					}
 
 					// reset the sniper delay
@@ -1052,7 +1012,6 @@ void brush_activate_sniper( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 			sniper->count = 0;
 		}
 	}
-
 }
 
 void sniper_brush_init( gentity_t *ent ) {
@@ -1083,7 +1042,6 @@ void SP_sniper_brush( gentity_t *ent ) {
 	trap_LinkEntity( ent );
 }
 
-
 /*QUAKED corona (0 1 0) (-4 -4 -4) (4 4 4) START_OFF
 Use color picker to set color or key "color".  values are 0.0-1.0 for each color (rgb).
 "scale" will designate a multiplier to the default size.  (so 2.0 is 2xdefault size, 0.5 is half)
@@ -1092,7 +1050,7 @@ Use color picker to set color or key "color".  values are 0.0-1.0 for each color
 /*
 ==============
 use_corona
-    so level designers can toggle them on/off
+so level designers can toggle them on/off
 ==============
 */
 void use_corona( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
@@ -1105,7 +1063,6 @@ void use_corona( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	}
 }
 
-
 /*
 ==============
 SP_corona
@@ -1117,10 +1074,9 @@ void SP_corona( gentity_t *ent ) {
 	ent->s.eType        = ET_CORONA;
 
 	if ( ent->dl_color[0] <= 0 &&                // if it's black or has no color assigned
-		 ent->dl_color[1] <= 0 &&
-		 ent->dl_color[2] <= 0 ) {
-		ent->dl_color[0] = ent->dl_color[1] = ent->dl_color[2] = 1; // set white
-
+		ent->dl_color[1] <= 0 &&
+		ent->dl_color[2] <= 0 ) {
+			ent->dl_color[0] = ent->dl_color[1] = ent->dl_color[2] = 1; // set white
 	}
 	ent->dl_color[0] = ent->dl_color[0] * 255;
 	ent->dl_color[1] = ent->dl_color[1] * 255;
@@ -1137,7 +1093,6 @@ void SP_corona( gentity_t *ent ) {
 		trap_LinkEntity( ent );
 	}
 }
-
 
 // (SA) dlights and dlightstyles
 // TTimo gcc: lots of braces around scalar initializer
@@ -1166,12 +1121,11 @@ char* predef_lightstyles[] = {
 	"aaaaaaaaaaaaaaaazzzzzzzz"
 };
 
-
 /*
 ==============
 dlight_finish_spawning
-    All the dlights should call this on the same frame, thereby
-    being synched, starting	their sequences all at the same time.
+All the dlights should call this on the same frame, thereby
+being synched, starting	their sequences all at the same time.
 ==============
 */
 void dlight_finish_spawning( gentity_t *ent ) {
@@ -1179,7 +1133,6 @@ void dlight_finish_spawning( gentity_t *ent ) {
 }
 
 static int dlightstarttime = 0;
-
 
 /*QUAKED dlight (0 1 0) (-12 -12 -12) (12 12 12) FORCEACTIVE STARTOFF ONETIME
 "style": value is an int from 1-19 that contains a pre-defined 'flicker' string.
@@ -1216,11 +1169,10 @@ styles:
 19 - "aaaaaaaaaaaaaaaazzzzzzzz"
 */
 
-
 /*
 ==============
 shutoff_dlight
-    the dlight knew when it was triggered to unlink after going through it's cycle once
+the dlight knew when it was triggered to unlink after going through it's cycle once
 ==============
 */
 void shutoff_dlight( gentity_t *ent ) {
@@ -1232,7 +1184,6 @@ void shutoff_dlight( gentity_t *ent ) {
 	ent->think = 0;
 	ent->nextthink = 0;
 }
-
 
 /*
 ==============
@@ -1254,13 +1205,12 @@ void use_dlight( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 	}
 }
 
-
 /*
 ==============
 SP_dlight
-    ent->dl_stylestring contains the lightstyle string
-    ent->health tracks current index into style string
-    ent->count tracks length of style string
+ent->dl_stylestring contains the lightstyle string
+ent->health tracks current index into style string
+ent->count tracks length of style string
 ==============
 */
 void SP_dlight( gentity_t *ent ) {
@@ -1303,9 +1253,9 @@ void SP_dlight( gentity_t *ent ) {
 	ent->nextthink  = dlightstarttime;
 
 	if ( ent->dl_color[0] <= 0 &&                // if it's black or has no color assigned, make it white
-		 ent->dl_color[1] <= 0 &&
-		 ent->dl_color[2] <= 0 ) {
-		ent->dl_color[0] = ent->dl_color[1] = ent->dl_color[2] = 1;
+		ent->dl_color[1] <= 0 &&
+		ent->dl_color[2] <= 0 ) {
+			ent->dl_color[0] = ent->dl_color[1] = ent->dl_color[2] = 1;
 	}
 
 	ent->dl_color[0] = ent->dl_color[0] * 255;  // range 0-255 now so the client doesn't have to on every update
@@ -1322,11 +1272,8 @@ void SP_dlight( gentity_t *ent ) {
 	if ( !( ent->spawnflags & 2 ) ) {
 		trap_LinkEntity( ent );
 	}
-
 }
 // done (SA)
-
-
 
 // Rafael particles
 /*QUAKED misc_snow256 (1 0 0) (-256 -256 -16) (256 256 16) TURBULENT
@@ -1354,7 +1301,6 @@ health = density defaults to 32
 /*QUAKED misc_bubbles64 (1 0 0) (-64 -64 0) (64 64 64) TURBULENT
 health = density defaults to 32
 */
-
 
 void snowInPVS( gentity_t *ent ) {
 	gentity_t *tent;
@@ -1436,7 +1382,6 @@ void snow_think( gentity_t *ent ) {
 
 	ent->think = snowInPVS;
 	ent->nextthink = level.time + FRAMETIME;
-
 }
 
 void SP_Snow( gentity_t *ent ) {
@@ -1457,7 +1402,6 @@ void SP_Snow( gentity_t *ent ) {
 	ent->active = qtrue;
 }
 // done.
-
 
 void SP_Bubbles( gentity_t *ent ) {
 	ent->think = snow_think;
@@ -1532,12 +1476,12 @@ void Fire_Lead( gentity_t *ent, gentity_t *activator, float spread, int damage )
 	G_HistoricalTrace( activator, &tr, sMuzzle, NULL, NULL, end, ent->s.number, MASK_SHOT );
 
 	if ( tr.surfaceFlags & SURF_NOIMPACT ) {
-// JPW NERVE added this event so tracers work if you're shooting mg42 into skybox, otherwise shouldn't ever see the event double-up
+		// JPW NERVE added this event so tracers work if you're shooting mg42 into skybox, otherwise shouldn't ever see the event double-up
 		tent = G_TempEntity( tr.endpos, EV_MG42BULLET_HIT_WALL );
 		tent->s.otherEntityNum = ent->s.number;
 		tent->s.otherEntityNum2 = activator->s.number;
 		tent->s.effect1Time = seed;
-// jpw
+		// jpw
 		return;
 	}
 
@@ -1558,7 +1502,6 @@ void Fire_Lead( gentity_t *ent, gentity_t *activator, float spread, int damage )
 			ent->client->ps.persistant[PERS_ACCURACY_HITS]++;
 			ent->client->pers.acc_hits++; //stats
 		}
-
 	} else {
 		// Ridah, bullet impact should reflect off surface
 		vec3_t reflect;
@@ -1578,10 +1521,9 @@ void Fire_Lead( gentity_t *ent, gentity_t *activator, float spread, int damage )
 
 	if ( traceEnt->takedamage ) {
 		G_Damage( traceEnt, ent, activator, sForward, tr.endpos,
-				  damage, 0, MOD_MACHINEGUN );
+			damage, 0, MOD_MACHINEGUN );
 	}
 }
-
 
 float AngleDifference( float ang1, float ang2 );
 // NOTE: use this value, and THEN the cl_input.c scales to tweak the feel
@@ -1618,7 +1560,6 @@ void clamp_hweapontofirearc( gentity_t *self, vec3_t dang ) {
 void clamp_playerbehindgun( gentity_t *self, gentity_t *other, vec3_t dang ) {
 	vec3_t forward, right, up;
 	vec3_t point;
-
 
 	AngleVectors( self->s.apos.trBase, forward, right, up );
 	VectorMA( self->r.currentOrigin, -36, forward, point );
@@ -1988,11 +1929,11 @@ void SP_mg42( gentity_t *self ) {
 	if ( !self->accuracy ) {
 		self->accuracy = 1;
 	}
-// JPW NERVE
+	// JPW NERVE
 	if ( !self->damage ) {
 		self->damage = 25;
 	}
-// jpw
+	// jpw
 }
 
 #define FLAK_SPREAD 100
@@ -2010,10 +1951,10 @@ void SP_mg42( gentity_t *self ) {
 
 void Flak_Animate( gentity_t *ent ) {
 	if ( ent->s.frame == GUN1_IDLE
-		 || ent->s.frame == GUN2_IDLE
-		 || ent->s.frame == GUN3_IDLE
-		 || ent->s.frame == GUN4_IDLE ) {
-		return;
+		|| ent->s.frame == GUN2_IDLE
+		|| ent->s.frame == GUN3_IDLE
+		|| ent->s.frame == GUN4_IDLE ) {
+			return;
 	}
 
 	if ( ent->count == 1 ) {
@@ -2075,13 +2016,11 @@ void flak_spawn( gentity_t *ent ) {
 	gun->mg42BaseEnt = ent->s.number;
 
 	trap_LinkEntity( gun );
-
 }
 
 /*QUAKED misc_flak (1 0 0) (-32 -32 0) (32 32 100)
 */
 void SP_misc_flak( gentity_t *self ) {
-
 	if ( !self->harc ) {
 		self->harc = 180;
 	} else
@@ -2107,7 +2046,7 @@ void SP_misc_flak( gentity_t *self ) {
 
 /*QUAKED misc_spawner (.3 .7 .8) (-8 -8 -8) (8 8 8)
 use the pickup name
-  when this entity gets used it will spawn an item
+when this entity gets used it will spawn an item
 that matches its spawnitem field
 e.i.
 spawnitem
@@ -2115,7 +2054,6 @@ spawnitem
 */
 
 void misc_spawner_think( gentity_t *ent ) {
-
 	gitem_t     *item;
 	gentity_t   *drop = NULL;
 
@@ -2127,7 +2065,6 @@ void misc_spawner_think( gentity_t *ent ) {
 		G_Printf( "-----> WARNING <-------\n" );
 		G_Printf( "misc_spawner used at %s failed to drop!\n", vtos( ent->r.currentOrigin ) );
 	}
-
 }
 
 void misc_spawner_use( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
@@ -2146,7 +2083,6 @@ void SP_misc_spawner( gentity_t *ent ) {
 	ent->use = misc_spawner_use;
 
 	trap_LinkEntity( ent );
-
 }
 
 void firetrail_die( gentity_t *ent ) {
@@ -2166,9 +2102,9 @@ void firetrail_use( gentity_t *ent, gentity_t *other, gentity_t *activator ) {
 /*QUAKED misc_firetrails (.4 .9 .7) (-16 -16 -16) (16 16 16)
 This entity must target the plane its going to be attached to
 
-  its use function will turn the fire stream effect on and off
+its use function will turn the fire stream effect on and off
 
-  an alert entity call will kill it
+an alert entity call will kill it
 */
 
 void misc_firetrails_think( gentity_t *ent ) {
@@ -2211,7 +2147,4 @@ void misc_firetrails_think( gentity_t *ent ) {
 void SP_misc_firetrails( gentity_t *ent ) {
 	ent->think = misc_firetrails_think;
 	ent->nextthink = level.time + 100;
-
 }
-
-

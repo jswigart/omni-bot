@@ -383,27 +383,23 @@ e_status trap_CIN_StopCinematic( int handle ) {
 	return syscall( UI_CIN_STOPCINEMATIC, handle );
 }
 
-
 // will run a frame of the cinematic but will not draw it.  Will return FMV_EOF if the end of the cinematic has been reached.
 e_status trap_CIN_RunCinematic( int handle ) {
 	return syscall( UI_CIN_RUNCINEMATIC, handle );
 }
-
 
 // draws the current frame
 void trap_CIN_DrawCinematic( int handle ) {
 	syscall( UI_CIN_DRAWCINEMATIC, handle );
 }
 
-
 // allows you to resize the animation dynamically
 void trap_CIN_SetExtents( int handle, int x, int y, int w, int h ) {
 	syscall( UI_CIN_SETEXTENTS, handle, x, y, w, h );
 }
 
-
 /*void	trap_R_RemapShader( const char *oldShader, const char *newShader, const char *timeOffset ) {
-    syscall( UI_R_REMAP_SHADER, oldShader, newShader, timeOffset );
+syscall( UI_R_REMAP_SHADER, oldShader, newShader, timeOffset );
 }*/
 
 void    trap_R_RemapShader( const char *oldShader, const char *newShader, const char *timeOffset ) {

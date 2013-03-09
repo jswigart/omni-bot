@@ -48,20 +48,20 @@
 #endif
 
 /**********************************************************************
-  VM Considerations
+VM Considerations
 
-  The VM can not use the standard system headers because we aren't really
-  using the compiler they were meant for.  We use bg_lib.h which contains
-  prototypes for the functions we define for our own use in bg_lib.c.
+The VM can not use the standard system headers because we aren't really
+using the compiler they were meant for.  We use bg_lib.h which contains
+prototypes for the functions we define for our own use in bg_lib.c.
 
-  When writing mods, please add needed headers HERE, do not start including
-  stuff like <stdio.h> in the various .c files that make up each of the VMs
-  since you will be including system headers files can will have issues.
+When writing mods, please add needed headers HERE, do not start including
+stuff like <stdio.h> in the various .c files that make up each of the VMs
+since you will be including system headers files can will have issues.
 
-  Remember, if you use a C library function that is not defined in bg_lib.c,
-  you will have to add your own version for support in the VM.
+Remember, if you use a C library function that is not defined in bg_lib.c,
+you will have to add your own version for support in the VM.
 
- **********************************************************************/
+**********************************************************************/
 
 #ifdef Q3_VM
 
@@ -86,7 +86,6 @@
 //#pragma intrinsic( memset, memcpy )
 
 #endif
-
 
 // this is the define for determining if we have an asm version of a C function
 #if ( defined _M_IX86 || defined __i386__ ) && !defined __sun__  && !defined __LCC__
@@ -122,7 +121,6 @@
 #define CPUSTRING   "win-AXP-debug"
 #endif
 #endif
-
 
 #define PATH_SEP '\\'
 
@@ -175,7 +173,6 @@ static inline float idSqrt( float x ) {
 }
 #define sqrt idSqrt
 
-
 #endif
 
 //======================= MAC DEFINES =================================
@@ -215,7 +212,6 @@ void Sys_PumpEvents( void );
 
 //=============================================================
 
-
 typedef unsigned char byte;
 
 typedef enum {qfalse, qtrue}    qboolean;
@@ -231,7 +227,6 @@ typedef int clipHandle_t;
 #define     SND_CUTOFF          0x004   // Cut off sounds on this channel that are marked 'SND_REQUESTCUT'
 #define     SND_CUTOFF_ALL      0x008   // Cut off all sounds on this channel
 #define     SND_NOCUT           0x010   // Don't cut off.  Always let finish (overridden by SND_CUTOFF_ALL)
-
 
 #ifndef NULL
 #define NULL ( (void *)0 )
@@ -278,17 +273,15 @@ typedef int clipHandle_t;
 // paramters for command buffer stuffing
 typedef enum {
 	EXEC_NOW,           // don't return until completed, a VM should NEVER use this,
-	                    // because some commands might cause the VM to be unloaded...
+	// because some commands might cause the VM to be unloaded...
 	EXEC_INSERT,        // insert at current position, but don't run yet
 	EXEC_APPEND         // add to end of the command buffer (normal case)
 } cbufExec_t;
-
 
 //
 // these aren't needed by any of the VMs.  put in another header?
 //
 #define MAX_MAP_AREA_BYTES      32      // bit vector of area visibility
-
 
 // print levels from renderer (FIXME: set up for game / cgame?)
 typedef enum {
@@ -310,7 +303,6 @@ typedef enum {
 	ERR_DISCONNECT,             // client disconnected from the server
 	ERR_NEED_CD                 // pop up the need-cd dialog
 } errorParm_t;
-
 
 // font rendering values used by ui and cgame
 
@@ -343,7 +335,7 @@ typedef enum {
 #define UI_SMALLFONT75  0x00100000
 
 #if defined( _DEBUG ) && !defined( BSPC )
-	#define HUNK_DEBUG
+#define HUNK_DEBUG
 #endif
 
 typedef enum {
@@ -376,7 +368,6 @@ void Com_Memcpy( void* dest, const void* src, const size_t count );
 #define CIN_silent  8
 #define CIN_shader  16
 
-
 /*
 ==============================================================
 
@@ -384,7 +375,6 @@ MATHLIB
 
 ==============================================================
 */
-
 
 typedef float vec_t;
 typedef vec_t vec2_t[2];
@@ -480,7 +470,6 @@ extern vec4_t clrBrownLineFull;
 #define COLOR_MDCYAN    'B'
 #define COLOR_MDPURPLE  'C'
 #define COLOR_NULL      '*'
-
 
 #define COLOR_BITS  31
 #define ColorIndex( c )   ( ( ( c ) - '0' ) & COLOR_BITS )
@@ -728,7 +717,6 @@ void Parse3DMatrix( char **buf_p, int z, int y, int x, float *m );
 
 void QDECL Com_sprintf( char *dest, int size, const char *fmt, ... );
 
-
 // mode parm for FS_FOpenFile
 typedef enum {
 	FS_READ,
@@ -830,7 +818,6 @@ void Info_NextPair( const char **s, char *key, char *value );
 void QDECL Com_Error( int level, const char *error, ... );
 void QDECL Com_Printf( const char *msg, ... );
 
-
 /*
 ==========================================================
 
@@ -843,18 +830,18 @@ default values.
 */
 
 #define CVAR_ARCHIVE        1   // set to cause it to be saved to vars.rc
-                                // used for system variables, not for player
-                                // specific configurations
+// used for system variables, not for player
+// specific configurations
 #define CVAR_USERINFO       2   // sent to server on connect or change
 #define CVAR_SERVERINFO     4   // sent in response to front end requests
 #define CVAR_SYSTEMINFO     8   // these cvars will be duplicated on all clients
 #define CVAR_INIT           16  // don't allow change from console at all,
-                                // but can be set from the command line
+// but can be set from the command line
 #define CVAR_LATCH          32  // will only change when C code next does
-                                // a Cvar_Get(), so it can't be changed
-                                // without proper initialization.  modified
-                                // will be set, even though the value hasn't
-                                // changed yet
+// a Cvar_Get(), so it can't be changed
+// without proper initialization.  modified
+// will be set, even though the value hasn't
+// changed yet
 #define CVAR_ROM            64  // display only, cannot be set by user at all
 #define CVAR_USER_CREATED   128 // created by a set command
 #define CVAR_TEMP           256 // can be set even when cheats are disabled, but is not archived
@@ -908,7 +895,6 @@ COLLISION DETECTION
 #define PLANE_Z         2
 #define PLANE_NON_AXIAL 3
 
-
 /*
 =================
 PlaneTypeForNormal
@@ -927,7 +913,6 @@ typedef struct cplane_s {
 	byte pad[2];
 } cplane_t;
 
-
 // a trace is returned when a box is swept through the world
 typedef struct {
 	qboolean allsolid;      // if true, plane is not valid
@@ -943,14 +928,11 @@ typedef struct {
 // trace->entityNum can also be 0 to (MAX_GENTITIES-1)
 // or ENTITYNUM_NONE, ENTITYNUM_WORLD
 
-
 // markfragments are returned by CM_MarkFragments()
 typedef struct {
 	int firstPoint;
 	int numPoints;
 } markFragment_t;
-
-
 
 typedef struct {
 	vec3_t origin;
@@ -959,14 +941,12 @@ typedef struct {
 
 //=====================================================================
 
-
 // in order from highest priority to lowest
 // if none of the catchers are active, bound key strings will be executed
 #define KEYCATCH_CONSOLE        0x0001
 #define KEYCATCH_UI                 0x0002
 #define KEYCATCH_MESSAGE        0x0004
 #define KEYCATCH_CGAME          0x0008
-
 
 // sound channels
 // channel 0 never willingly overrides
@@ -982,11 +962,10 @@ typedef enum {
 	CHAN_ANNOUNCER      // announcer voices, etc
 } soundChannel_t;
 
-
 /*
 ========================================================================
 
-  ELEMENTS COMMUNICATED ACROSS THE NET
+ELEMENTS COMMUNICATED ACROSS THE NET
 
 ========================================================================
 */
@@ -1016,10 +995,8 @@ typedef enum {
 #define ENTITYNUM_WORLD     ( MAX_GENTITIES - 2 )
 #define ENTITYNUM_MAX_NORMAL    ( MAX_GENTITIES - 2 )
 
-
 #define MAX_MODELS          256     // these are sent over the net as 8 bits
 #define MAX_SOUNDS          256     // so they cannot be blindly increased
-
 
 #define MAX_PARTICLES_AREAS     128
 
@@ -1064,7 +1041,7 @@ typedef struct {
 //
 typedef enum
 {
-    // TTimo gcc: enums don't go <=0 unless you force a value
+	// TTimo gcc: enums don't go <=0 unless you force a value
 	AISTATE_NULL = -1,
 	AISTATE_RELAXED,
 	AISTATE_QUERY,
@@ -1076,7 +1053,6 @@ typedef enum
 
 //=========================================================
 
-
 // weapon grouping
 #define MAX_WEAP_BANKS      12
 #define MAX_WEAPS_IN_BANK   3
@@ -1085,7 +1061,6 @@ typedef enum
 #define MAX_WEAP_BANKS_MP   7
 // jpw
 #define MAX_WEAP_ALTS       WP_DYNAMITE2
-
 
 // bit field limits
 #define MAX_STATS               16
@@ -1098,7 +1073,6 @@ typedef enum
 // ACK: I'd really like to make this 4, but that seems to cause network problems
 #define MAX_EVENTS              4   // max events per frame before we drop events
 //#define	MAX_EVENTS				2	// max events per frame before we drop events
-
 
 #define PS_PMOVEFRAMECOUNTBITS  6
 
@@ -1126,17 +1100,16 @@ typedef struct playerState_s {
 	int weaponTime;
 	int weaponDelay;            // for weapons that don't fire immediately when 'fire' is hit (grenades, venom, ...)
 	int grenadeTimeLeft;            // for delayed grenade throwing.  this is set to a #define for grenade
-                                    // lifetime when the attack button goes down, then when attack is released
-                                    // this is the amount of time left before the grenade goes off (or if it
-                                    // gets to 0 while in players hand, it explodes)
-
+	// lifetime when the attack button goes down, then when attack is released
+	// this is the amount of time left before the grenade goes off (or if it
+	// gets to 0 while in players hand, it explodes)
 
 	int gravity;
 	float leanf;                // amount of 'lean' when player is looking around corner //----(SA)	added
 
 	int speed;
 	int delta_angles[3];            // add to command angles to get view direction
-                                    // changed by spawns, rotating objects, and teleporters
+	// changed by spawns, rotating objects, and teleporters
 
 	int groundEntityNum;        // ENTITYNUM_NONE = in air
 
@@ -1147,11 +1120,9 @@ typedef struct playerState_s {
 	int torsoAnim;              // mask off ANIM_TOGGLEBIT
 
 	int movementDir;            // a number 0 to 7 that represents the reletive angle
-                                // of movement to the view angle (axial and diagonals)
-                                // when at rest, the value will remain unchanged
-                                // used to twist the legs during strafing
-
-
+	// of movement to the view angle (axial and diagonals)
+	// when at rest, the value will remain unchanged
+	// used to twist the legs during strafing
 
 	int eFlags;                 // copied to entityState_t->eFlags
 
@@ -1166,17 +1137,17 @@ typedef struct playerState_s {
 
 	int clientNum;              // ranges from 0 to MAX_CLIENTS-1
 
-    // weapon info
+	// weapon info
 	int weapon;                 // copied to entityState_t->weapon
 	int weaponstate;
 
-    // item info
+	// item info
 	int item;
 
 	vec3_t viewangles;          // for fixed views
 	int viewheight;
 
-    // damage feedback
+	// damage feedback
 	int damageEvent;            // when it changes, latch the other parms
 	int damageYaw;
 	int damagePitch;
@@ -1191,30 +1162,30 @@ typedef struct playerState_s {
 	int holding;                        // the current item in holdable[] that is selected (held)
 	int weapons[MAX_WEAPONS / ( sizeof( int ) * 8 )];   // 64 bits for weapons held
 
-    // Ridah, allow for individual bounding boxes
+	// Ridah, allow for individual bounding boxes
 	vec3_t mins, maxs;
 	float crouchMaxZ;
 	float crouchViewHeight, standViewHeight, deadViewHeight;
-    // variable movement speed
+	// variable movement speed
 	float runSpeedScale, sprintSpeedScale, crouchSpeedScale;
-    // done.
+	// done.
 
-    // Ridah, view locking for mg42
+	// Ridah, view locking for mg42
 	int viewlocked;
 	int viewlocked_entNum;
 
-    // Ridah, need this to fix friction problems with slow zombie's whereby
-    // the friction prevents them from accelerating to their full potential
+	// Ridah, need this to fix friction problems with slow zombie's whereby
+	// the friction prevents them from accelerating to their full potential
 	float friction;
 
-    // Ridah, AI character id is used for weapon association
+	// Ridah, AI character id is used for weapon association
 	int aiChar;
 	int teamNum;
 
-    // Rafael
+	// Rafael
 	int gunfx;
 
-    // RF, burning effect is required for view blending effect
+	// RF, burning effect is required for view blending effect
 	int onFireStart;
 
 	int serverCursorHint;               // what type of cursor hint the server is dictating
@@ -1222,15 +1193,15 @@ typedef struct playerState_s {
 
 	trace_t serverCursorHintTrace;      // not communicated over net, but used to store the current server-side cursorhint trace
 
-    // ----------------------------------------------------------------------
-    // not communicated over the net at all
-    // FIXME: this doesn't get saved between predicted frames on the clients-side (cg.predictedPlayerState)
-    // So to use persistent variables here, which don't need to come from the server,
-    // we could use a marker variable, and use that to store everything after it
-    // before we read in the new values for the predictedPlayerState, then restore them
-    // after copying the structure recieved from the server.
+	// ----------------------------------------------------------------------
+	// not communicated over the net at all
+	// FIXME: this doesn't get saved between predicted frames on the clients-side (cg.predictedPlayerState)
+	// So to use persistent variables here, which don't need to come from the server,
+	// we could use a marker variable, and use that to store everything after it
+	// before we read in the new values for the predictedPlayerState, then restore them
+	// after copying the structure recieved from the server.
 
-    // (SA) yeah.  this is causing me a little bit of trouble too.  can we go ahead with the above suggestion or find an alternative?
+	// (SA) yeah.  this is causing me a little bit of trouble too.  can we go ahead with the above suggestion or find an alternative?
 
 	int ping;                   // server to game info for scoreboard
 	int pmove_framecount;           // FIXME: don't transmit over the network
@@ -1239,10 +1210,10 @@ typedef struct playerState_s {
 	int sprintTime;
 	int sprintExertTime;
 
-    // JPW NERVE -- value for all multiplayer classes with regenerating "class weapons" -- ie LT artillery, medic medpack, engineer build points, etc
+	// JPW NERVE -- value for all multiplayer classes with regenerating "class weapons" -- ie LT artillery, medic medpack, engineer build points, etc
 	int classWeaponTime;
 	int jumpTime;         // used in MP to prevent jump accel
-    // jpw
+	// jpw
 
 	int weapAnimTimer;              // don't change low priority animations until this runs out		//----(SA)	added
 	int weapAnim;               // mask off ANIM_TOGGLEBIT										//----(SA)	added
@@ -1250,7 +1221,7 @@ typedef struct playerState_s {
 	qboolean releasedFire;
 
 	float aimSpreadScaleFloat;          // (SA) the server-side aimspreadscale that lets it track finer changes but still only
-                                        // transmit the 8bit int to the client
+	// transmit the 8bit int to the client
 	int aimSpreadScale;         // 0 - 255 increases with angular movement
 	int lastFireTime;           // used by server to hold last firing frame briefly when randomly releasing trigger (AI)
 
@@ -1258,24 +1229,22 @@ typedef struct playerState_s {
 
 	int leanStopDebounceTime;
 
-//----(SA)	added
+	//----(SA)	added
 
-    // seems like heat and aimspread could be tied together somehow, however, they (appear to) change at different rates and
-    // I can't currently see how to optimize this to one server->client transmission "weapstatus" value.
+	// seems like heat and aimspread could be tied together somehow, however, they (appear to) change at different rates and
+	// I can't currently see how to optimize this to one server->client transmission "weapstatus" value.
 	int weapHeat[MAX_WEAPONS];          // some weapons can overheat.  this tracks (server-side) how hot each weapon currently is.
 	int curWeapHeat;                    // value for the currently selected weapon (for transmission to client)
 
 	int venomTime;          //----(SA)	added
-//----(SA)	end
+	//----(SA)	end
 
 	aistateEnum_t aiState;
 
 	int identifyClient;                 // NERVE - SMF
 } playerState_t;
 
-
 //====================================================================
-
 
 //
 // usercmd_t->button bits, many of which are generated by the client system,
@@ -1286,19 +1255,16 @@ typedef struct playerState_s {
 #define BUTTON_USE_HOLDABLE 4
 #define BUTTON_GESTURE      8
 #define BUTTON_WALKING      16          // walking can't just be infered from MOVE_RUN
-                                        // because a key pressed late in the frame will
-                                        // only generate a small move value for that frame
-                                        // walking will use different animations and
-                                        // won't generate footsteps
+// because a key pressed late in the frame will
+// only generate a small move value for that frame
+// walking will use different animations and
+// won't generate footsteps
 //----(SA)	added
 #define BUTTON_SPRINT       32
 #define BUTTON_ACTIVATE     64
 //----(SA)	end
 
 #define BUTTON_ANY          128         // any key whatsoever
-
-
-
 
 //----(SA) wolf buttons
 #define WBUTTON_ATTACK2     1
@@ -1314,7 +1280,7 @@ typedef struct playerState_s {
 //----(SA) end
 
 #define MOVE_RUN            120         // if forwardmove or rightmove are >= MOVE_RUN,
-                                        // then BUTTON_WALKING should be set
+// then BUTTON_WALKING should be set
 
 #define MP_TEAM_OFFSET      6
 #define MP_CLASS_OFFSET     4
@@ -1357,7 +1323,7 @@ typedef enum {
 	TR_LINEAR_STOP_BACK,        //----(SA)	added.  so reverse movement can be different than forward
 	TR_SINE,                    // value = base + sin( time / duration ) * delta
 	TR_GRAVITY,
-    // Ridah
+	// Ridah
 	TR_GRAVITY_LOW,
 	TR_GRAVITY_FLOAT,           // super low grav with no gravity acceleration (floating feathers/fabric/leaves/...)
 	TR_GRAVITY_PAUSED,          //----(SA)	has stopped, but will still do a short trace to see if it should be switched back to TR_GRAVITY
@@ -1369,10 +1335,10 @@ typedef struct {
 	trType_t trType;
 	int trTime;
 	int trDuration;             // if non 0, trTime + trDuration = stop time
-//----(SA)	removed
+	//----(SA)	removed
 	vec3_t trBase;
 	vec3_t trDelta;             // velocity, etc
-//----(SA)	removed
+	//----(SA)	removed
 } trajectory_t;
 
 // RF, put this here so we have a central means of defining a Zombie (kind of a hack, but this is to minimize bandwidth usage)
@@ -1421,7 +1387,7 @@ typedef struct entityState_s {
 
 	int solid;              // for client side prediction, trap_linkentity sets this properly
 
-    // old style events, in for compatibility only
+	// old style events, in for compatibility only
 	int event;
 	int eventParm;
 
@@ -1429,18 +1395,18 @@ typedef struct entityState_s {
 	int events[MAX_EVENTS];
 	int eventParms[MAX_EVENTS];
 
-    // for players
+	// for players
 	int powerups;           // bit flags
 	int weapon;             // determines weapon and flash model, etc
 	int legsAnim;           // mask off ANIM_TOGGLEBIT
 	int torsoAnim;          // mask off ANIM_TOGGLEBIT
-//	int		weapAnim;		// mask off ANIM_TOGGLEBIT	//----(SA)	removed (weap anims will be client-side only)
+	//	int		weapAnim;		// mask off ANIM_TOGGLEBIT	//----(SA)	removed (weap anims will be client-side only)
 
 	int density;            // for particle effects
 
 	int dmgFlags;           // to pass along additional information for damage effects for players/ Also used for cursorhints for non-player entities
 
-    // Ridah
+	// Ridah
 	int onFireStart, onFireEnd;
 
 	int aiChar, teamNum;
@@ -1450,8 +1416,6 @@ typedef struct entityState_s {
 	aistateEnum_t aiState;
 
 	int animMovetype;       // clients can't derive movetype of other clients for anim scripting system
-
-
 } entityState_t;
 
 typedef enum {
@@ -1501,7 +1465,6 @@ typedef struct {
 // real time
 //=============================================
 
-
 typedef struct qtime_s {
 	int tm_sec;     /* seconds after the minute - [0,59] */
 	int tm_min;     /* minutes after the hour - [0,59] */
@@ -1514,13 +1477,11 @@ typedef struct qtime_s {
 	int tm_isdst;   /* daylight savings time flag */
 } qtime_t;
 
-
 // server browser sources
 #define AS_LOCAL        0
 #define AS_GLOBAL       1           // NERVE - SMF - modified
 #define AS_FAVORITES    2
 #define AS_MPLAYER      3
-
 
 // cinematic states
 typedef enum {
@@ -1540,8 +1501,6 @@ typedef enum _flag_status {
 	FLAG_TAKEN_BLUE,    // One Flag CTF
 	FLAG_DROPPED
 } flagStatus_t;
-
-
 
 #define MAX_GLOBAL_SERVERS          2048
 #define MAX_OTHER_SERVERS           128

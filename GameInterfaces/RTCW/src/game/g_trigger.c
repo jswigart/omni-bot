@@ -1,6 +1,5 @@
 #include "g_local.h"
 
-
 void InitTrigger( gentity_t *self ) {
 	if ( !VectorCompare( self->s.angles, vec3_origin ) ) {
 		G_SetMovedir( self->s.angles, self->movedir );
@@ -12,12 +11,10 @@ void InitTrigger( gentity_t *self ) {
 	self->r.svFlags = SVF_NOCLIENT;
 }
 
-
 // the wait time has passed, so set back up for another activation
 void multi_wait( gentity_t *ent ) {
 	ent->nextthink = 0;
 }
-
 
 // the trigger was just activated
 // ent->activator should be set to the activator so it can be held through a delay
@@ -179,7 +176,6 @@ void SP_trigger_always( gentity_t *ent ) {
 	ent->think = trigger_always_think;
 }
 
-
 /*
 ==============================================================================
 
@@ -214,7 +210,6 @@ void trigger_push_touch( gentity_t *self, gentity_t *other, trace_t *trace ) {
 		G_FreeEntity( self );
 	}
 }
-
 
 /*
 =================
@@ -293,7 +288,6 @@ void SP_trigger_push( gentity_t *self ) {
 	self->nextthink = level.time + FRAMETIME;
 }
 
-
 void Use_target_push( gentity_t *self, gentity_t *other, gentity_t *activator ) {
 	if ( !activator->client ) {
 		return;
@@ -368,7 +362,6 @@ void trigger_teleporter_touch( gentity_t *self, gentity_t *other, trace_t *trace
 	TeleportPlayer( other, dest->s.origin, dest->s.angles );
 }
 
-
 /*QUAKED trigger_teleport (.5 .5 .5) ?
 Allows client side prediction of teleportation events.
 Must point at a target_position, which will be the teleport destination.
@@ -387,7 +380,6 @@ void SP_trigger_teleport( gentity_t *self ) {
 
 	trap_LinkEntity( self );
 }
-
 
 /*
 ==============================================================================
@@ -453,7 +445,6 @@ void hurt_think( gentity_t *ent ) {
 	if ( ent->wait < level.time ) {
 		G_FreeEntity( ent );
 	}
-
 }
 
 void hurt_use( gentity_t *self, gentity_t *other, gentity_t *activator ) {
@@ -503,7 +494,6 @@ void SP_trigger_hurt( gentity_t *self ) {
 	self->delay = dalife;
 }
 
-
 /*
 ==============================================================================
 
@@ -511,7 +501,6 @@ timer
 
 ==============================================================================
 */
-
 
 /*QUAKED func_timer (0.3 0.1 0.6) (-8 -8 -8) (8 8 8) START_ON
 This should be renamed trigger_timer...
@@ -565,7 +554,6 @@ void SP_func_timer( gentity_t *self ) {
 
 //---- (SA) Wolf triggers
 
-
 /*QUAKED trigger_once (.5 .5 .5) ? AI_Touch
 Must be targeted at one or more entities.
 Once triggered, this entity is destroyed
@@ -607,7 +595,6 @@ void SP_trigger_deathCheck( gentity_t *ent ) {
 	trap_LinkEntity( ent );
 }
 
-
 /*QUAKED trigger_aidoor (.5 .5 .5) ?
 These entities must be placed on all doors one for each side of the door
 this will enable ai's to operate the door and help in preventing ai's and
@@ -645,7 +632,6 @@ void SP_trigger_aidoor( gentity_t *ent ) {
 	trap_LinkEntity( ent );
 }
 
-
 void gas_touch( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 	gentity_t       *traceEnt;
 	trace_t tr;
@@ -670,11 +656,10 @@ void gas_touch( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 	traceEnt = &g_entities[ tr.entityNum ];
 
 	if ( traceEnt->takedamage ) {
-
 		VectorClear( dir );
 
 		G_Damage( traceEnt, ent, ent, dir, tr.endpos,
-				  damage, 0, MOD_POISONGAS );
+			damage, 0, MOD_POISONGAS );
 	}
 }
 
@@ -735,7 +720,6 @@ void SP_gas( gentity_t *self ) {
 	}
 }
 
-
 // DHM - Nerve :: Multiplayer triggers
 
 #define RED_FLAG 1
@@ -747,7 +731,7 @@ It will call the "death" function in the object's script.
 
 "scriptName"	The object name in the script file
 "score"			score given to player for dropping flag in this field
-                (default 20)
+(default 20)
 
 RED_FLAG -- only trigger if player is carrying red flag
 BLUE_FLAG -- only trigger if player is carrying blue flag
@@ -759,11 +743,10 @@ void Touch_flagonly( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 	}
 
 	if ( ent->spawnflags & RED_FLAG && other->client->ps.powerups[ PW_REDFLAG ] ) {
-
 		AddScore( other, ent->accuracy ); // JPW NERVE set from map, defaults to 20
 
-        // credits
-        other->client->sess.credits += CREDITS_OBJBONUS;
+		// credits
+		other->client->sess.credits += CREDITS_OBJBONUS;
 
 		G_Script_ScriptEvent( ent, "death", "" );
 
@@ -772,11 +755,10 @@ void Touch_flagonly( gentity_t *ent, gentity_t *other, trace_t *trace ) {
 		ent->nextthink = level.time + FRAMETIME;
 		ent->think = G_FreeEntity;
 	} else if ( ent->spawnflags & BLUE_FLAG && other->client->ps.powerups[ PW_BLUEFLAG ] ) {
-
 		AddScore( other, ent->accuracy ); // JPW NERVE set from map, defaults to 20
 
-        // credits
-        other->client->sess.credits += CREDITS_OBJBONUS;
+		// credits
+		other->client->sess.credits += CREDITS_OBJBONUS;
 
 		G_Script_ScriptEvent( ent, "death", "" );
 
@@ -821,7 +803,7 @@ void explosive_indicator_think( gentity_t *ent ) {
 /*QUAKED trigger_objective_info (.5 .5 .5) ? AXIS_OBJECTIVE ALLIED_OBJECTIVE
 Players in this field will see a message saying that they are near an objective.
 
-  "track"		Mandatory, this is the text that is appended to "You are near "
+"track"		Mandatory, this is the text that is appended to "You are near "
 */
 #define AXIS_OBJECTIVE      1
 #define ALLIED_OBJECTIVE    2
@@ -901,7 +883,6 @@ void SP_trigger_objective_info( gentity_t *ent ) {
 	// -NERVE - SMF
 }
 
-
 // dhm - end
 
 // JPW NERVE -- field which is acted upon (cgame side) by screenshakes to drop dust particles
@@ -921,4 +902,3 @@ void SP_trigger_concussive_dust( gentity_t *self ) {
 	trap_LinkEntity( self );
 }
 // jpw
-

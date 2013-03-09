@@ -1,9 +1,9 @@
 // Copyright (C) 1999-2000 Id Software, Inc.
 //
 /**********************************************************************
-    UI_ATOMS.C
+UI_ATOMS.C
 
-    User interface building blocks and support functions.
+User interface building blocks and support functions.
 **********************************************************************/
 #include "ui_local.h"
 
@@ -12,7 +12,6 @@ qboolean m_entersound;              // after a frame, so caching won't disrupt t
 
 // these are here so the functions in q_shared.c can link
 #ifndef UI_HARD_LINKED
-
 
 // JPW NERVE added Com_DPrintf
 #define MAXPRINTMSG 4096
@@ -90,7 +89,6 @@ char *UI_Argv( int arg ) {
 	return buffer;
 }
 
-
 char *UI_Cvar_VariableString( const char *var_name ) {
 	static char buffer[2][MAX_STRING_CHARS];
 	static int toggle;
@@ -113,8 +111,6 @@ UI_ClearScores
 void UI_ClearScores() {
 }
 
-
-
 static void UI_Cache_f() {
 	Display_CacheAll();
 }
@@ -126,7 +122,6 @@ UI_CalcPostGameStats
 */
 static void UI_CalcPostGameStats() {
 }
-
 
 /*
 =================
@@ -184,7 +179,6 @@ qboolean UI_ConsoleCommand( int realTime ) {
 		//UI_TeamOrdersMenu_f();
 		return qtrue;
 	}
-
 
 	if ( Q_stricmp( cmd, "ui_cdkey" ) == 0 ) {
 		//UI_CDKeyMenu_f();
@@ -303,7 +297,6 @@ void UI_UpdateScreen( void ) {
 	trap_UpdateScreen();
 }
 
-
 void UI_DrawTextBox( int x, int y, int width, int lines ) {
 	UI_FillRect( x + BIGCHAR_WIDTH / 2, y + BIGCHAR_HEIGHT / 2, ( width + 1 ) * BIGCHAR_WIDTH, ( lines + 1 ) * BIGCHAR_HEIGHT, colorBlack );
 	UI_DrawRect( x + BIGCHAR_WIDTH / 2, y + BIGCHAR_HEIGHT / 2, ( width + 1 ) * BIGCHAR_WIDTH, ( lines + 1 ) * BIGCHAR_HEIGHT, colorWhite );
@@ -311,10 +304,10 @@ void UI_DrawTextBox( int x, int y, int width, int lines ) {
 
 qboolean UI_CursorInRect( int x, int y, int width, int height ) {
 	if ( uiInfo.uiDC.cursorx < x ||
-		 uiInfo.uiDC.cursory < y ||
-		 uiInfo.uiDC.cursorx > x + width ||
-		 uiInfo.uiDC.cursory > y + height ) {
-		return qfalse;
+		uiInfo.uiDC.cursory < y ||
+		uiInfo.uiDC.cursorx > x + width ||
+		uiInfo.uiDC.cursory > y + height ) {
+			return qfalse;
 	}
 
 	return qtrue;

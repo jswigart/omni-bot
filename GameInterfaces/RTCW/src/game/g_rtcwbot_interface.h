@@ -1,7 +1,7 @@
 /*
- * ET <-> Omni-Bot interface header file.
- *
- */
+* ET <-> Omni-Bot interface header file.
+*
+*/
 
 #ifndef __G_RTCW_INTERFACE_H__
 #define __G_RTCW_INTERFACE_H__

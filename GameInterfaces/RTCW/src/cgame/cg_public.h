@@ -7,7 +7,6 @@
 // multiple commands may be combined into a single packet, so this
 // needs to be larger than PACKET_BACKUP
 
-
 #define MAX_ENTITIES_IN_SNAPSHOT    256
 
 // snapshots are a view of the server at a given time
@@ -38,7 +37,6 @@ enum {
 	CGAME_EVENT_SCOREBOARD,
 	CGAME_EVENT_EDITHUD
 };
-
 
 /*
 ==================================================================
@@ -78,11 +76,11 @@ typedef enum {
 	CG_CM_TRANSFORMEDPOINTCONTENTS,
 	CG_CM_BOXTRACE,
 	CG_CM_TRANSFORMEDBOXTRACE,
-// MrE:
+	// MrE:
 	CG_CM_CAPSULETRACE,
 	CG_CM_TRANSFORMEDCAPSULETRACE,
 	CG_CM_TEMPCAPSULEMODEL,
-// done.
+	// done.
 	CG_CM_MARKFRAGMENTS,
 	CG_S_STARTSOUND,
 	CG_S_STARTSOUNDEX,  //----(SA)	added
@@ -90,9 +88,9 @@ typedef enum {
 	CG_S_CLEARLOOPINGSOUNDS,
 	CG_S_ADDLOOPINGSOUND,
 	CG_S_UPDATEENTITYPOSITION,
-// Ridah, talking animations
+	// Ridah, talking animations
 	CG_S_GETVOICEAMPLITUDE,
-// done.
+	// done.
 	CG_S_RESPATIALIZE,
 	CG_S_REGISTERSOUND,
 	CG_S_STARTBACKGROUNDTRACK,
@@ -110,9 +108,9 @@ typedef enum {
 	CG_R_ADDREFENTITYTOSCENE,
 	CG_GET_ENTITY_TOKEN,
 	CG_R_ADDPOLYTOSCENE,
-// Ridah
+	// Ridah
 	CG_R_ADDPOLYSTOSCENE,
-// done.
+	// done.
 	CG_R_ADDLIGHTTOSCENE,
 
 	CG_R_ADDCORONATOSCENE,
@@ -197,7 +195,6 @@ typedef enum {
 	// -NERVE - SMF
 } cgameImport_t;
 
-
 /*
 ==================================================================
 
@@ -208,7 +205,7 @@ functions exported to the main executable
 
 typedef enum {
 	CG_INIT,
-//	void CG_Init( int serverMessageNum, int serverCommandSequence )
+	//	void CG_Init( int serverMessageNum, int serverCommandSequence )
 	// called when the level loads or when the renderer is restarted
 	// all media should be registered at this time
 	// cgame will display loading status by calling SCR_Update, which
@@ -217,41 +214,40 @@ typedef enum {
 	// demos, tourney restarts, or vid_restarts
 
 	CG_SHUTDOWN,
-//	void (*CG_Shutdown)( void );
+	//	void (*CG_Shutdown)( void );
 	// oportunity to flush and close any open files
 
 	CG_CONSOLE_COMMAND,
-//	qboolean (*CG_ConsoleCommand)( void );
+	//	qboolean (*CG_ConsoleCommand)( void );
 	// a console command has been issued locally that is not recognized by the
 	// main game system.
 	// use Cmd_Argc() / Cmd_Argv() to read the command, return qfalse if the
 	// command is not known to the game
 
 	CG_DRAW_ACTIVE_FRAME,
-//	void (*CG_DrawActiveFrame)( int serverTime, stereoFrame_t stereoView, qboolean demoPlayback );
+	//	void (*CG_DrawActiveFrame)( int serverTime, stereoFrame_t stereoView, qboolean demoPlayback );
 	// Generates and draws a game scene and status information at the given time.
 	// If demoPlayback is set, local movement prediction will not be enabled
 
 	CG_CROSSHAIR_PLAYER,
-//	int (*CG_CrosshairPlayer)( void );
+	//	int (*CG_CrosshairPlayer)( void );
 
 	CG_LAST_ATTACKER,
-//	int (*CG_LastAttacker)( void );
+	//	int (*CG_LastAttacker)( void );
 
 	CG_KEY_EVENT,
-//	void	(*CG_KeyEvent)( int key, qboolean down );
+	//	void	(*CG_KeyEvent)( int key, qboolean down );
 
 	CG_MOUSE_EVENT,
-//	void	(*CG_MouseEvent)( int dx, int dy );
+	//	void	(*CG_MouseEvent)( int dx, int dy );
 	CG_EVENT_HANDLING,
-//	void (*CG_EventHandling)(int type);
+	//	void (*CG_EventHandling)(int type);
 
 	CG_GET_TAG,
-//	qboolean CG_GetTag( int clientNum, char *tagname, orientation_t *or );
+	//	qboolean CG_GetTag( int clientNum, char *tagname, orientation_t *or );
 
 	CG_CHECKCENTERVIEW,
-//	qboolean CG_CheckCenterView();
-
+	//	qboolean CG_CheckCenterView();
 } cgameExport_t;
 
 //----------------------------------------------

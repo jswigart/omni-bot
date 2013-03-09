@@ -3,14 +3,14 @@
 void G_StoreClientPosition( gentity_t* ent ) {
 	int	top;
 
-	if(!( ent->inuse && 
- 		(ent->client->sess.sessionTeam == TEAM_RED || ent->client->sess.sessionTeam == TEAM_BLUE) && 
- 		ent->r.linked &&
- 		(ent->health > 0) &&
- 		!(ent->client->ps.pm_flags & PMF_LIMBO) &&
+	if(!( ent->inuse &&
+		(ent->client->sess.sessionTeam == TEAM_RED || ent->client->sess.sessionTeam == TEAM_BLUE) &&
+		ent->r.linked &&
+		(ent->health > 0) &&
+		!(ent->client->ps.pm_flags & PMF_LIMBO) &&
 		(ent->client->ps.pm_type == PM_NORMAL)
- 	)) {
-		return;
+		)) {
+			return;
 	}
 
 	ent->client->topMarker++;
@@ -98,20 +98,20 @@ void G_AdjustClientPositions( gentity_t* ent, int time, qboolean forward ) {
 	for( i = 0; i < level.numConnectedClients; i++, list++ ) {
 		list = g_entities + level.sortedClients[i];
 		// Gordon: ok lets test everything under the sun
- 		if( list->client && 
- 			list->inuse && 
- 			(list->client->sess.sessionTeam == TEAM_RED || list->client->sess.sessionTeam == TEAM_BLUE) && 
- 			(list != ent) &&
- 			list->r.linked &&
- 			(list->health > 0) &&
- 			!(list->client->ps.pm_flags & PMF_LIMBO) &&
+		if( list->client &&
+			list->inuse &&
+			(list->client->sess.sessionTeam == TEAM_RED || list->client->sess.sessionTeam == TEAM_BLUE) &&
+			(list != ent) &&
+			list->r.linked &&
+			(list->health > 0) &&
+			!(list->client->ps.pm_flags & PMF_LIMBO) &&
 			(list->client->ps.pm_type == PM_NORMAL)
- 		) {
-			if( forward ) {
-				G_AdjustSingleClientPosition( list, time );
-			} else {
-				G_ReAdjustSingleClientPosition( list );
-			}
+			) {
+				if( forward ) {
+					G_AdjustSingleClientPosition( list, time );
+				} else {
+					G_ReAdjustSingleClientPosition( list );
+				}
 		}
 	}
 }
@@ -146,15 +146,15 @@ void G_AttachBodyParts(gentity_t* ent) {
 	for( i = 0; i < level.numConnectedClients; i++, list++ ) {
 		list = g_entities + level.sortedClients[i];
 		// Gordon: ok lets test everything under the sun
-	 	if( list->inuse && 
- 			(list->client->sess.sessionTeam == TEAM_RED || list->client->sess.sessionTeam == TEAM_BLUE) && 
- 			(list != ent) &&
- 			list->r.linked &&
- 			(list->health > 0) &&
- 			!(list->client->ps.pm_flags & PMF_LIMBO) &&
+		if( list->inuse &&
+			(list->client->sess.sessionTeam == TEAM_RED || list->client->sess.sessionTeam == TEAM_BLUE) &&
+			(list != ent) &&
+			list->r.linked &&
+			(list->health > 0) &&
+			!(list->client->ps.pm_flags & PMF_LIMBO) &&
 			(list->client->ps.pm_type == PM_NORMAL)
- 		) {
-			list->client->tempHead = G_BuildHead( list );
+			) {
+				list->client->tempHead = G_BuildHead( list );
 		} else {
 			list->client->tempHead = NULL;
 		}
@@ -182,11 +182,11 @@ int G_SwitchBodyPartEntity(gentity_t* ent) {
 
 #define POSITION_READJUST						\
 	if( res != results->entityNum ) {				\
-		VectorSubtract( end, start, dir );			\
-		VectorNormalizeFast( dir );				\
-									\
-		VectorMA( results->endpos, -1, dir, results->endpos );	\
-		results->entityNum = res;				\
+	VectorSubtract( end, start, dir );			\
+	VectorNormalizeFast( dir );				\
+	\
+	VectorMA( results->endpos, -1, dir, results->endpos );	\
+	results->entityNum = res;				\
 	}
 
 // Run a trace with players in historical positions.
@@ -202,7 +202,7 @@ void G_HistoricalTrace( gentity_t* ent, trace_t *results, const vec3_t start, co
 		res = G_SwitchBodyPartEntity( &g_entities[ results->entityNum ] );
 		POSITION_READJUST
 
-		G_DettachBodyParts();
+			G_DettachBodyParts();
 		return;
 	}
 
@@ -215,7 +215,7 @@ void G_HistoricalTrace( gentity_t* ent, trace_t *results, const vec3_t start, co
 	res = G_SwitchBodyPartEntity( &g_entities[ results->entityNum ] );
 	POSITION_READJUST
 
-	G_DettachBodyParts();
+		G_DettachBodyParts();
 
 	G_AdjustClientPositions( ent, 0, qfalse );
 }
@@ -240,5 +240,5 @@ void G_Trace( gentity_t* ent, trace_t *results, const vec3_t start, const vec3_t
 	res = G_SwitchBodyPartEntity( &g_entities[ results->entityNum ] );
 	POSITION_READJUST
 
-	G_DettachBodyParts();
+		G_DettachBodyParts();
 }

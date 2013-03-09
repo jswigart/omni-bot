@@ -25,7 +25,6 @@ float Com_Clamp( float min, float max, float value ) {
 	return value;
 }
 
-
 /*
 ============
 COM_SkipPath
@@ -87,7 +86,6 @@ void COM_StripFilename( char *in, char *out ) {
 	*end = 0;
 }
 
-
 /*
 ==================
 COM_DefaultExtension
@@ -97,10 +95,10 @@ void COM_DefaultExtension( char *path, int maxSize, const char *extension ) {
 	char oldPath[MAX_QPATH];
 	char    *src;
 
-//
-// if path doesn't have a .EXT, append extension
-// (extension should include the .)
-//
+	//
+	// if path doesn't have a .EXT, append extension
+	// (extension should include the .)
+	//
 	src = path + strlen( path ) - 1;
 
 	while ( *src != '/' && src != path ) {
@@ -119,7 +117,7 @@ void COM_DefaultExtension( char *path, int maxSize, const char *extension ) {
 ==================
 COM_BitCheck
 
-  Allows bit-wise checks on arrays with more than one item (> 32 bits)
+Allows bit-wise checks on arrays with more than one item (> 32 bits)
 ==================
 */
 qboolean COM_BitCheck( const int array[], int bitNum ) {
@@ -138,7 +136,7 @@ qboolean COM_BitCheck( const int array[], int bitNum ) {
 ==================
 COM_BitSet
 
-  Allows bit-wise SETS on arrays with more than one item (> 32 bits)
+Allows bit-wise SETS on arrays with more than one item (> 32 bits)
 ==================
 */
 void COM_BitSet( int array[], int bitNum ) {
@@ -157,7 +155,7 @@ void COM_BitSet( int array[], int bitNum ) {
 ==================
 COM_BitClear
 
-  Allows bit-wise CLEAR on arrays with more than one item (> 32 bits)
+Allows bit-wise CLEAR on arrays with more than one item (> 32 bits)
 ==================
 */
 void COM_BitClear( int array[], int bitNum ) {
@@ -176,7 +174,7 @@ void COM_BitClear( int array[], int bitNum ) {
 /*
 ============================================================================
 
-                    BYTE ORDER FUNCTIONS
+BYTE ORDER FUNCTIONS
 
 ============================================================================
 */
@@ -255,7 +253,6 @@ float FloatSwap( float f ) {
 		byte b[4];
 	} dat1, dat2;
 
-
 	dat1.f = f;
 	dat2.b[0] = dat1.b[3];
 	dat2.b[1] = dat1.b[2];
@@ -276,7 +273,7 @@ Swap_Init
 void Swap_Init( void ) {
 	byte swaptest[2] = {1,0};
 
-// set the byte swapping variables in a portable manner
+	// set the byte swapping variables in a portable manner
 	if ( *(short *)swaptest == 1 ) {
 		_BigShort = ShortSwap;
 		_LittleShort = ShortNoSwap;
@@ -298,7 +295,6 @@ void Swap_Init( void ) {
 		_LittleFloat = FloatSwap;
 	}
 }
-
 
 /*
 ============================================================================
@@ -555,7 +551,6 @@ void COM_MatchToken( char **buf_p, char *match ) {
 	}
 }
 
-
 /*
 =================
 SkipBracedSection
@@ -602,7 +597,6 @@ void SkipRestOfLine( char **data ) {
 	*data = p;
 }
 
-
 void Parse1DMatrix( char **buf_p, int x, float *m ) {
 	char    *token;
 	int i;
@@ -641,11 +635,10 @@ void Parse3DMatrix( char **buf_p, int z, int y, int x, float *m ) {
 	COM_MatchToken( buf_p, ")" );
 }
 
-
 /*
 ============================================================================
 
-                    LIBRARY REPLACEMENT FUNCTIONS
+LIBRARY REPLACEMENT FUNCTIONS
 
 ============================================================================
 */
@@ -770,7 +763,6 @@ int Q_stricmp( const char *s1, const char *s2 ) {
 	return ( s1 && s2 ) ? Q_stricmpn( s1, s2, 99999 ) : -1;
 }
 
-
 char *Q_strlwr( char *s1 ) {
 	char    *s;
 
@@ -793,7 +785,6 @@ char *Q_strupr( char *s1 ) {
 	return s1;
 }
 
-
 // never goes past bounds or leaves without a terminating 0
 void Q_strcat( char *dest, int size, const char *src ) {
 	int l1;
@@ -804,7 +795,6 @@ void Q_strcat( char *dest, int size, const char *src ) {
 	}
 	Q_strncpyz( dest + l1, src, size - l1 );
 }
-
 
 int Q_PrintStrlen( const char *string ) {
 	int len;
@@ -827,7 +817,6 @@ int Q_PrintStrlen( const char *string ) {
 
 	return len;
 }
-
 
 char *Q_CleanStr( char *string ) {
 	char*   d;
@@ -878,7 +867,6 @@ int Q_strncasecmp( char *s1, char *s2, int n ) {
 
 		if ( !n-- ) {
 			return 0;       // strings are equal until end point
-
 		}
 		if ( c1 != c2 ) {
 			if ( c1 >= 'a' && c1 <= 'z' ) {
@@ -915,13 +903,12 @@ previous strings
 */
 char    * QDECL va( char *format, ... ) {
 	va_list argptr;
-	#define MAX_VA_STRING   32000
+#define MAX_VA_STRING   32000
 	static char temp_buffer[MAX_VA_STRING];
 	static char string[MAX_VA_STRING];      // in case va is called by nested functions
 	static int index = 0;
 	char    *buf;
 	int len;
-
 
 	va_start( argptr, format );
 	vsprintf( temp_buffer, format,argptr );
@@ -974,7 +961,7 @@ float   *tv( float x, float y, float z ) {
 /*
 =====================================================================
 
-  INFO STRINGS
+INFO STRINGS
 
 =====================================================================
 */
@@ -991,7 +978,7 @@ FIXME: overflow check?
 char *Info_ValueForKey( const char *s, const char *key ) {
 	char pkey[BIG_INFO_KEY];
 	static char value[2][BIG_INFO_VALUE];   // use two buffers so compares
-	                                        // work without stomping on each other
+	// work without stomping on each other
 	static int valueindex = 0;
 	char    *o;
 
@@ -1041,7 +1028,6 @@ char *Info_ValueForKey( const char *s, const char *key ) {
 	return "";
 }
 
-
 /*
 ===================
 Info_NextPair
@@ -1081,7 +1067,6 @@ void Info_NextPair( const char **head, char *key, char *value ) {
 
 	*head = s;
 }
-
 
 /*
 ===================
@@ -1199,7 +1184,6 @@ void Info_RemoveKey_Big( char *s, const char *key ) {
 		}
 	}
 }
-
 
 /*
 ==================
@@ -1351,6 +1335,3 @@ char *Q_StrReplace( char *haystack, char *needle, char *newp ) {  // ETPUB
 	Q_strncpyz( final, dest, sizeof( final ) );
 	return final;
 }
-
-
-

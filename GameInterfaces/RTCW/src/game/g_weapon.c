@@ -1,10 +1,9 @@
 /*
- * name:		g_weapon.c
- *
- * desc:		perform the server side effects of a weapon firing
- *
+* name:		g_weapon.c
+*
+* desc:		perform the server side effects of a weapon firing
+*
 */
-
 
 #include "g_local.h"
 #include "g_rtcwbot_interface.h"
@@ -12,7 +11,6 @@
 static vec3_t swForward, swRight, swUp;
 static vec3_t swMuzzleEffect;
 static vec3_t swMuzzleTrace;
-
 
 // forward dec
 void Bullet_Fire( gentity_t *ent, float spread, int damage );
@@ -105,7 +103,6 @@ void Weapon_Knife( gentity_t *ent ) {
 // JPW NERVE
 
 void MagicSink( gentity_t *self ) {
-
 	self->clipmask = 0;
 	self->r.contents = 0;
 
@@ -121,8 +118,8 @@ void MagicSink( gentity_t *self ) {
 
 /*
 ======================
-  Weapon_Class_Special
-    class-specific in multiplayer
+Weapon_Class_Special
+class-specific in multiplayer
 ======================
 */
 // JPW NERVE
@@ -286,8 +283,8 @@ void Weapon_GrenadePack( gentity_t *ent ) {
 // JPW NERVE Weapon_Syringe:
 /*
 ======================
-  Weapon_Syringe
-    shoot the syringe, do the old lazarus bit
+Weapon_Syringe
+shoot the syringe, do the old lazarus bit
 ======================
 */
 void Weapon_Syringe( gentity_t *ent ) {
@@ -400,7 +397,6 @@ void Weapon_Syringe( gentity_t *ent ) {
 
 				if ( !g_deathmatch.integer ) {
 					AddScore( ent, WOLF_MEDIC_BONUS ); // JPW NERVE props to the medic for the swift and dexterous bit o healitude
-
 				}
 				//stats
 				ent->client->pers.revives++;
@@ -488,15 +484,14 @@ void Weapon_Engineer( gentity_t *ent ) {
 
 			if ( !g_deathmatch.integer ) {
 				AddScore( ent, WOLF_REPAIR_BONUS ); // JPW NERVE props to the E for the fixin'
-
 			}
 			traceEnt->takedamage = qtrue;
 			traceEnt->s.eFlags &= ~EF_SMOKING;
 
 			trap_SendServerCommand( ent - g_entities, "cp \"You have repaired the MG42!\n\"" );
-// JPW NERVE sound effect to go with fixing MG42
+			// JPW NERVE sound effect to go with fixing MG42
 			G_AddEvent( ent, EV_MG42_FIXED, 0 );
-// jpw
+			// jpw
 		} else {
 			traceEnt->health += 3;
 		}
@@ -520,7 +515,6 @@ void Weapon_Engineer( gentity_t *ent ) {
 
 			// Not armed
 			if ( traceEnt->s.teamNum >= 4 ) {
-
 				// Opposing team cannot accidentally arm it
 				if ( ( traceEnt->s.teamNum - 4 ) != ent->client->sess.sessionTeam ) {
 					return;
@@ -568,13 +562,12 @@ void Weapon_Engineer( gentity_t *ent ) {
 							continue;
 						}
 						if ( !strcmp( hit->classname,"trigger_objective_info" ) ) {
-
 							if ( !( hit->spawnflags & ( AXIS_OBJECTIVE | ALLIED_OBJECTIVE ) ) ) {
 								continue;
 							}
 
 							te = G_TempEntity( ent->s.pos.trBase, EV_GLOBAL_SOUND );
-// JPW NERVE
+							// JPW NERVE
 							// TTimo gcc: suggest explicit braces to avoid ambiguous `else'
 							if ( ent->client != NULL ) {
 								const char *Goalname = NULL;
@@ -615,21 +608,21 @@ void Weapon_Engineer( gentity_t *ent ) {
 							te->r.svFlags |= SVF_BROADCAST;
 
 							if ( ( ( hit->spawnflags & AXIS_OBJECTIVE ) && ( ent->client->sess.sessionTeam == TEAM_BLUE ) ) ||
-								 ( ( hit->spawnflags & ALLIED_OBJECTIVE ) && ( ent->client->sess.sessionTeam == TEAM_RED ) ) ) {
-								if ( hit->track ) {
-									trap_SendServerCommand( -1, va( "cp \"%s\" 2", va( "Dynamite planted near %s!", hit->track ) ) );
-								} else {
-									trap_SendServerCommand( -1, va( "cp \"%s\" 2", va( "Dynamite planted near objective #%d!", hit->count ) ) );
-								}
+								( ( hit->spawnflags & ALLIED_OBJECTIVE ) && ( ent->client->sess.sessionTeam == TEAM_RED ) ) ) {
+									if ( hit->track ) {
+										trap_SendServerCommand( -1, va( "cp \"%s\" 2", va( "Dynamite planted near %s!", hit->track ) ) );
+									} else {
+										trap_SendServerCommand( -1, va( "cp \"%s\" 2", va( "Dynamite planted near objective #%d!", hit->count ) ) );
+									}
 							}
 							i = num;
 
 							if ( ( !( hit->spawnflags & OBJECTIVE_DESTROYED ) ) &&
-								 te->s.teamNum && ( te->s.teamNum != ent->client->sess.sessionTeam ) ) {
-								AddScore( traceEnt->parent, WOLF_DYNAMITE_PLANT ); // give drop score to guy who dropped it
-								traceEnt->parent = ent; // give explode score to guy who armed it
+								te->s.teamNum && ( te->s.teamNum != ent->client->sess.sessionTeam ) ) {
+									AddScore( traceEnt->parent, WOLF_DYNAMITE_PLANT ); // give drop score to guy who dropped it
+									traceEnt->parent = ent; // give explode score to guy who armed it
 							}
-// jpw
+							// jpw
 						}
 					}
 				}
@@ -670,7 +663,6 @@ void Weapon_Engineer( gentity_t *ent ) {
 								continue;
 							}
 							if ( !strcmp( hit->classname,"trigger_objective_info" ) ) {
-
 								if ( !( hit->spawnflags & ( AXIS_OBJECTIVE | ALLIED_OBJECTIVE ) ) ) {
 									continue;
 								}
@@ -707,7 +699,6 @@ void Weapon_Engineer( gentity_t *ent ) {
 		}
 	}
 }
-
 
 // JPW NERVE -- launch airstrike as line of bombs mostly-perpendicular to line of grenade travel
 // (close air support should *always* drop parallel to friendly lines, tho accidents do happen)
@@ -918,7 +909,6 @@ void artillerySpotterThink( gentity_t *ent ) {
 	}
 }
 
-
 // JPW NERVE
 /*
 ==================
@@ -984,9 +974,8 @@ void Weapon_Artillery( gentity_t *ent ) {
 		traceheight = bomboffset[2];
 		bottomtraceheight = traceheight - 8192;
 
-
-// "spotter" round (i == 0)
-// i == 1->4 is regular explosives
+		// "spotter" round (i == 0)
+		// i == 1->4 is regular explosives
 		for ( i = 0; i < 5; i++ ) {
 			bomb = G_Spawn();
 			bomb->think = G_AirStrikeExplode;
@@ -1004,7 +993,7 @@ void Weapon_Artillery( gentity_t *ent ) {
 				bomb->damage        = 0; // maybe should un-hard-code these?
 				bomb->splashDamage  = 90;
 				bomb->splashRadius  = 50;
-//		bomb->s.weapon	= WP_SMOKE_GRENADE;
+				//		bomb->s.weapon	= WP_SMOKE_GRENADE;
 				// TTimo ambiguous else
 				if ( ent->client != NULL ) { // set team color on smoke
 					if ( ent->client->sess.sessionTeam == TEAM_RED ) { // store team so we can generate red or blue smoke
@@ -1054,7 +1043,7 @@ void Weapon_Artillery( gentity_t *ent ) {
 			SnapVector( bomb->s.pos.trDelta );          // save net bandwidth
 			VectorCopy( bomb->s.pos.trBase, bomb->r.currentOrigin );
 
-// build arty falling sound effect in front of bomb drop
+			// build arty falling sound effect in front of bomb drop
 			bomb2 = G_Spawn();
 			bomb2->think = artilleryThink;
 			bomb2->s.eType  = ET_MISSILE;
@@ -1077,9 +1066,7 @@ void Weapon_Artillery( gentity_t *ent ) {
 
 	// Omni-bot - Send a fire event.
 	Bot_Event_FireWeapon( ent - g_entities, Bot_WeaponGameToBot( WP_ARTY ), 0 );
-
 }
-
 
 /*
 ======================================================================
@@ -1222,11 +1209,10 @@ float G_GetWeaponSpread( int weapon ) {
 #define SNIPER_SPREAD   G_GetWeaponSpread( WP_SNIPERRIFLE )
 #define SNIPER_DAMAGE   G_GetWeaponDamage( WP_SNIPERRIFLE ) // JPW
 
-
 /*
 ==============
 EmitterCheck
-    see if a new particle emitter should be created at the bullet impact point
+see if a new particle emitter should be created at the bullet impact point
 ==============
 */
 void EmitterCheck( gentity_t *ent, gentity_t *attacker, trace_t *tr ) {
@@ -1248,7 +1234,7 @@ void EmitterCheck( gentity_t *ent, gentity_t *attacker, trace_t *tr ) {
 /*
 ==============
 Bullet_Endpos
-    find target end position for bullet trace based on entities weapon and accuracy
+find target end position for bullet trace based on entities weapon and accuracy
 ==============
 */
 void Bullet_Endpos( gentity_t *ent, float spread, vec3_t *end ) {
@@ -1289,7 +1275,7 @@ void Bullet_Fire( gentity_t *ent, float spread, int damage ) {
 
 	Bullet_Fire_Extended( ent, ent, swMuzzleTrace, end, spread, damage );
 
-	if ( g_antilag.integer ) { 
+	if ( g_antilag.integer ) {
 		G_HistoricalTraceEnd( ent );
 	}
 
@@ -1297,14 +1283,13 @@ void Bullet_Fire( gentity_t *ent, float spread, int damage ) {
 	ent->client->pers.acc_shots++;
 }
 
-
 /*
 ==============
 Bullet_Fire_Extended
-    A modified Bullet_Fire with more parameters.
-    The original Bullet_Fire still passes through here and functions as it always has.
+A modified Bullet_Fire with more parameters.
+The original Bullet_Fire still passes through here and functions as it always has.
 
-    uses for this include shooting through entities (windows, doors, other players, etc.) and reflecting bullets
+uses for this include shooting through entities (windows, doors, other players, etc.) and reflecting bullets
 ==============
 */
 void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start, vec3_t end, float spread, int damage ) {
@@ -1344,7 +1329,7 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 			}
 		}
 
-//----(SA)	added
+		//----(SA)	added
 		if ( g_debugBullets.integer >= 2 ) {   // show hit player bb
 			gentity_t *bboxEnt;
 			vec3_t b1, b2;
@@ -1356,8 +1341,7 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 			VectorCopy( b2, bboxEnt->s.origin2 );
 			bboxEnt->s.dmgFlags = 1;    // ("type")
 		}
-//----(SA)	end
-
+		//----(SA)	end
 	} else if ( traceEnt->takedamage && traceEnt->s.eType == ET_BAT ) {
 		tent = G_TempEntity( tr.endpos, EV_BULLET_HIT_FLESH );
 		tent->s.eventParm = traceEnt->s.number;
@@ -1417,10 +1401,10 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 			G_AddEvent( traceEnt, EV_GENERAL_SOUND, level.bulletRicochetSound );
 			CalcMuzzlePoints( traceEnt, traceEnt->s.weapon );
 
-//----(SA)	modified to use extended version so attacker would pass through
+			//----(SA)	modified to use extended version so attacker would pass through
 			Bullet_Endpos( traceEnt, spread, &reflect_end );
 			Bullet_Fire_Extended( traceEnt, attacker, swMuzzleTrace, reflect_end, spread, damage );
-//----(SA)	end
+			//----(SA)	end
 		} else {
 			G_Damage( traceEnt, attacker, attacker, swForward, tr.endpos, damage, 0, ammoTable[attacker->s.weapon].mod );
 
@@ -1436,13 +1420,12 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 	}
 }
 
-
 /*
 ======================================================================
 
 GRENADE LAUNCHER
 
-  700 has been the standard direction multiplier in fire_grenade()
+700 has been the standard direction multiplier in fire_grenade()
 
 ======================================================================
 */
@@ -1531,7 +1514,6 @@ gentity_t *weapon_grenadelauncher_fire( gentity_t *ent, int grenType ) {
 
 	// JPW NERVE
 	if ( grenType == WP_SMOKE_GRENADE ) {
-
 		if ( ent->client->sess.sessionTeam == TEAM_RED ) { // store team so we can generate red or blue smoke
 			m->s.otherEntityNum2 = 1;
 		} else {
@@ -1633,7 +1615,6 @@ void Weapon_Nailgun_Fire( gentity_t *ent ) {
 	}
 }
 
-
 /*
 ======================================================================
 
@@ -1670,7 +1651,7 @@ void weapon_venom_fire( gentity_t *ent, qboolean fullmode, float aimSpreadScale 
 	tent->s.otherEntityNum = ent->s.number;
 
 	if ( (g_unlockWeapons.integer & WEAPONUNLOCK_HANDICAP) && (ent->client && ent->client->ps.stats[STAT_PLAYER_CLASS] != PC_SOLDIER) ) {
-	    spread *= 7;
+		spread *= 7;
 	}
 
 	if ( fullmode ) {
@@ -1696,7 +1677,6 @@ gentity_t *Weapon_Panzerfaust_Fire( gentity_t *ent ) {
 	gentity_t   *m = fire_rocket( ent, swMuzzleEffect, swForward );
 	return m;
 }
-
 
 // TTimo - extracted G_FlameDamage to unify with Weapon_FlamethrowerFire usage
 void G_BurnMeGood( gentity_t *self, gentity_t *body ) {
@@ -1766,11 +1746,10 @@ void Weapon_FlamethrowerFire( gentity_t *ent ) {
 
 //======================================================================
 
-
 /*
 ==============
 AddLean
-    add leaning offset
+add leaning offset
 ==============
 */
 void AddLean( gentity_t *ent, vec3_t point ) {
@@ -1819,7 +1798,6 @@ qboolean LogAccuracyHit( gentity_t *target, gentity_t *attacker ) {
 
 	return qtrue;
 }
-
 
 /*
 ===============
@@ -1891,14 +1869,13 @@ void CalcMuzzlePoints( gentity_t *ent, int weapon ) {
 		}
 	}
 
-
 	// set aiming directions
 	AngleVectors( viewang, swForward, swRight, swUp );
 
-//----(SA)	modified the muzzle stuff so that weapons that need to fire down a perfect trace
-//			straight out of the camera (SP5, Mauser right now) can have that accuracy, but
-//			weapons that need an offset effect (bazooka/grenade/etc.) can still look like
-//			they came out of the weap.
+	//----(SA)	modified the muzzle stuff so that weapons that need to fire down a perfect trace
+	//			straight out of the camera (SP5, Mauser right now) can have that accuracy, but
+	//			weapons that need an offset effect (bazooka/grenade/etc.) can still look like
+	//			they came out of the weap.
 	CalcMuzzlePointForActivate( ent, swForward, swRight, swUp, swMuzzleTrace );
 	CalcMuzzlePoint( ent, weapon, swForward, swRight, swUp, swMuzzleEffect );
 }
@@ -1932,25 +1909,24 @@ void FireWeapon( gentity_t *ent ) {
 		aimSpreadScale = 1.0;
 	}
 
-// JPW NERVE -- EARLY OUT: if I'm in multiplayer and I have binocs, try to use artillery and then early return b4 switch statement
+	// JPW NERVE -- EARLY OUT: if I'm in multiplayer and I have binocs, try to use artillery and then early return b4 switch statement
 	if ( g_gametype.integer != GT_SINGLE_PLAYER ) {
 		if ( ( ent->client->ps.eFlags & EF_ZOOMING ) && ( ent->client->ps.stats[STAT_KEYS] & ( 1 << INV_BINOCS ) ) &&
-			 ( ent->s.weapon != WP_SNIPERRIFLE ) ) {
+			( ent->s.weapon != WP_SNIPERRIFLE ) ) {
+				if ( !( ent->client->ps.leanf ) ) {
+					Weapon_Artillery( ent );
+				}
 
-			if ( !( ent->client->ps.leanf ) ) {
-				Weapon_Artillery( ent );
-			}
-
-			return;
+				return;
 		}
 	}
-// jpw
+	// jpw
 
-// JPW NERVE -- if jumping, make aim bite ass
+	// JPW NERVE -- if jumping, make aim bite ass
 	if ( ent->client->ps.groundEntityNum == ENTITYNUM_NONE ) {
 		aimSpreadScale = 2.0f;
 	}
-// jpw
+	// jpw
 
 	// fire the specific weapon
 	switch ( ent->s.weapon ) {
@@ -1958,7 +1934,7 @@ void FireWeapon( gentity_t *ent ) {
 	case WP_KNIFE2:
 		Weapon_Knife( ent );
 		break;
-	// NERVE - SMF
+		// NERVE - SMF
 	case WP_MEDKIT:
 		callEvent = qfalse;
 		Weapon_Medic( ent );
@@ -1967,25 +1943,25 @@ void FireWeapon( gentity_t *ent ) {
 		Weapon_Engineer( ent );
 		break;
 	case WP_SMOKE_GRENADE:
-	{
-		float charge = ( g_smokeGrenades.integer ) && ( ent->client->ps.powerups[PW_SMOKEGRENADE] > 0 ) ? 0.25 : 0.5;
+		{
+			float charge = ( g_smokeGrenades.integer ) && ( ent->client->ps.powerups[PW_SMOKEGRENADE] > 0 ) ? 0.25 : 0.5;
 
-		if ( level.time - ent->client->ps.classWeaponTime >= g_LTChargeTime.integer * charge ) {
-			if ( level.time - ent->client->ps.classWeaponTime > g_LTChargeTime.integer ) {
-				ent->client->ps.classWeaponTime = level.time - g_LTChargeTime.integer;
+			if ( level.time - ent->client->ps.classWeaponTime >= g_LTChargeTime.integer * charge ) {
+				if ( level.time - ent->client->ps.classWeaponTime > g_LTChargeTime.integer ) {
+					ent->client->ps.classWeaponTime = level.time - g_LTChargeTime.integer;
+				}
+
+				if ( ent->client->ps.powerups[PW_SMOKEGRENADE] > 0 ) {
+					ent->client->ps.classWeaponTime += g_LTChargeTime.integer * charge;
+				} else {
+					ent->client->ps.classWeaponTime = level.time;
+				}
+
+				pFiredShot = weapon_grenadelauncher_fire( ent,WP_SMOKE_GRENADE );
 			}
-
-			if ( ent->client->ps.powerups[PW_SMOKEGRENADE] > 0 ) {
-				ent->client->ps.classWeaponTime += g_LTChargeTime.integer * charge;
-			} else {
-				ent->client->ps.classWeaponTime = level.time;
-			}
-
-			pFiredShot = weapon_grenadelauncher_fire( ent,WP_SMOKE_GRENADE );
 		}
-	}
-	break;
-	// -NERVE - SMF
+		break;
+		// -NERVE - SMF
 	case WP_ARTY:
 		//G_Printf( "calling artilery\n" );
 		break;
@@ -2000,7 +1976,7 @@ void FireWeapon( gentity_t *ent ) {
 			Weapon_MagicAmmo( ent );
 		}
 		break;
-// jpw
+		// jpw
 	case WP_LUGER:
 		Bullet_Fire( ent, LUGER_SPREAD * aimSpreadScale, LUGER_DAMAGE );
 		break;
@@ -2012,12 +1988,12 @@ void FireWeapon( gentity_t *ent ) {
 		break;
 	case WP_SNIPERRIFLE:
 		Bullet_Fire( ent, SNIPER_SPREAD * aimSpreadScale, SNIPER_DAMAGE );
-// JPW NERVE -- added muzzle flip in multiplayer
+		// JPW NERVE -- added muzzle flip in multiplayer
 		VectorCopy( ent->client->ps.viewangles,viewang );
 		ent->client->sniperRifleMuzzleYaw = crandom() * 0.5; // used in clientthink
 		ent->client->sniperRifleFiredTime = level.time;
 		SetClientViewAngle( ent,viewang );
-// jpw
+		// jpw
 		break;
 	case WP_MAUSER:
 		aimSpreadScale = 1.0;
@@ -2065,14 +2041,3 @@ void FireWeapon( gentity_t *ent ) {
 		Bot_Event_FireWeapon( ent - g_entities, Bot_WeaponGameToBot( ent->s.weapon ), pFiredShot );
 	}
 }
-
-
-
-
-
-
-
-
-
-
-

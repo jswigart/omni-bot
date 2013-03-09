@@ -1,7 +1,6 @@
 // cg_scoreboard -- draw the scoreboard on top of the game screen
 #include "cg_local.h"
 
-
 #define SCOREBOARD_WIDTH    ( 31 * BIGCHAR_WIDTH )
 
 /*
@@ -34,26 +33,26 @@ static void CG_DrawClientScore( int x, int y, score_t *score, float *color, floa
 	headAngles[YAW] = 180;
 
 	CG_DrawHead( x - ICON_SIZE, y - ( ICON_SIZE - BIGCHAR_HEIGHT ) / 2, ICON_SIZE, ICON_SIZE,
-				 score->client, headAngles );
+		score->client, headAngles );
 
 	if ( ci->powerups & ( 1 << PW_REDFLAG ) ) {
 		CG_DrawFlagModel( x - ICON_SIZE - ICON_SIZE / 2, y - ( ICON_SIZE - BIGCHAR_HEIGHT ) / 2, ICON_SIZE, ICON_SIZE,
-						  TEAM_RED );
+			TEAM_RED );
 	} else if ( ci->powerups & ( 1 << PW_BLUEFLAG ) ) {
 		CG_DrawFlagModel( x - ICON_SIZE - ICON_SIZE / 2, y - ( ICON_SIZE - BIGCHAR_HEIGHT ) / 2, ICON_SIZE, ICON_SIZE,
-						  TEAM_BLUE );
+			TEAM_BLUE );
 	}
 
 	// draw the score line
 	if ( score->ping == -1 ) {
 		Com_sprintf( string, sizeof( string ),
-					 "connecting     %s", ci->name );
+			"connecting     %s", ci->name );
 	} else if ( ci->team == TEAM_SPECTATOR ) {
 		Com_sprintf( string, sizeof( string ),
-					 "SPECT %4i %4i %s", score->ping, score->time, ci->name );
+			"SPECT %4i %4i %s", score->ping, score->time, ci->name );
 	} else {
 		Com_sprintf( string, sizeof( string ),
-					 "%5i %4i %4i %s", score->score, score->ping, score->time, ci->name );
+			"%5i %4i %4i %s", score->score, score->ping, score->time, ci->name );
 	}
 
 	// highlight your position
@@ -62,8 +61,8 @@ static void CG_DrawClientScore( int x, int y, score_t *score, float *color, floa
 		int rank;
 
 		if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR
-			 || cgs.gametype >= GT_TEAM ) {
-			rank = -1;
+			|| cgs.gametype >= GT_TEAM ) {
+				rank = -1;
 		} else {
 			rank = cg.snap->ps.persistant[PERS_RANK] & ~RANK_TIED_FLAG;
 		}
@@ -250,7 +249,7 @@ int WM_DrawObjectives( int x, int y, int width, float fade ) {
 		}
 		return y;
 	}
-// JPW NERVE -- mission time & reinforce time
+	// JPW NERVE -- mission time & reinforce time
 	else {
 		int msec, mins, seconds, tens;
 		tempy = y;
@@ -267,7 +266,6 @@ int WM_DrawObjectives( int x, int y, int width, float fade ) {
 			s = va( "%s %s", CG_TranslateString( "Mission time:" ),  CG_TranslateString( "Sudden Death" ) );
 		} else {
 			s = va( "%s   %2.0f:%i%i", CG_TranslateString( "Mission time:" ), (float)mins, tens, seconds ); // float cast to line up with reinforce time
-
 		}
 		CG_DrawSmallString( x,y,s,fade );
 
@@ -301,7 +299,7 @@ int WM_DrawObjectives( int x, int y, int width, float fade ) {
 
 		y = tempy;
 	}
-// jpw
+	// jpw
 
 	// determine character's team
 	if ( cg.snap->ps.persistant[PERS_TEAM] == TEAM_RED ) {
@@ -644,9 +642,9 @@ qboolean CG_DrawScoreboard( void ) {
 
 	// NERVE - SMF - added mp wolf check
 	if ( cg.showScores || ( cg.predictedPlayerState.pm_type == PM_DEAD && cgs.gametype < GT_WOLF ) ||
-		 cg.predictedPlayerState.pm_type == PM_INTERMISSION ) {
-		fade = 1.0;
-		fadeColor = colorWhite;
+		cg.predictedPlayerState.pm_type == PM_INTERMISSION ) {
+			fade = 1.0;
+			fadeColor = colorWhite;
 	} else {
 		fadeColor = CG_FadeColor( cg.scoreFadeTime, FADE_TIME );
 
@@ -658,7 +656,6 @@ qboolean CG_DrawScoreboard( void ) {
 		}
 		fade = *fadeColor;
 	}
-
 
 	// fragged by ... line
 	if ( cg.killerName[0] ) {
@@ -713,7 +710,6 @@ qboolean CG_DrawScoreboard( void ) {
 			y = CG_TeamScoreboard( x, y, TEAM_RED, fade );
 		}
 		y = CG_TeamScoreboard( x, y, TEAM_SPECTATOR, fade );
-
 	} else {    //----(SA) modified
 		//
 		// free for all scoreboard
@@ -784,4 +780,3 @@ void CG_DrawTourneyScoreboard( void ) {
 		}
 	}
 }
-

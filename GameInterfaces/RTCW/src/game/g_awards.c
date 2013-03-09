@@ -59,8 +59,8 @@ void ExtendWarmup( qboolean adjust ) {
 		extend++;
 	}
 	/*if ( roundAwards.highDeathSpreeValue < 0 ) {
-		roundAwards.highDeathSpreeAnnounce = qtrue;
-		extend++;
+	roundAwards.highDeathSpreeAnnounce = qtrue;
+	extend++;
 	}*/
 
 	// set the number of awards that will be printed
@@ -184,111 +184,111 @@ void FormatName( char *in ) {
 void ListAwards() {
 	if ( roundAwards.NumAwards > 0 ) {
 		trap_SendServerCommand( -1, "print \"\n^3AWARD      Amount   Player\n"
-									"^7---------------------------------------------------------------------\n\"" );
+			"^7---------------------------------------------------------------------\n\"" );
 	}
 
 	if ( roundAwards.highKillValue > 0 ) {
 		FormatName( roundAwards.highKillName );
 		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
-										,"^3Kills:^7"
-										,roundAwards.highKillValue
-										,roundAwards.highKillName ) );
+			,"^3Kills:^7"
+			,roundAwards.highKillValue
+			,roundAwards.highKillName ) );
 	}
 
 	if ( roundAwards.highDeathValue > 0 ) {
 		FormatName( roundAwards.highDeathName );
 		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
-										,"^3Deaths:^7"
-										,roundAwards.highDeathValue
-										,roundAwards.highDeathName ) );
+			,"^3Deaths:^7"
+			,roundAwards.highDeathValue
+			,roundAwards.highDeathName ) );
 	}
 
 	if ( roundAwards.highGibsValue > 0 ) {
 		FormatName( roundAwards.highGibsName );
 		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
-										,"^3Gibs:^7"
-										,roundAwards.highGibsValue
-										,roundAwards.highGibsName ) );
+			,"^3Gibs:^7"
+			,roundAwards.highGibsValue
+			,roundAwards.highGibsName ) );
 	}
 
 	if ( roundAwards.highAccValue > 0 ) {
 		FormatName( roundAwards.highAccName );
 		trap_SendServerCommand( -1, va( "print \"%-16s %-6s %s\n\""
-										,"^3Accuracy:^7"
-										,va( "%2.2f",roundAwards.highAccValue )
-										,roundAwards.highAccName ) );
+			,"^3Accuracy:^7"
+			,va( "%2.2f",roundAwards.highAccValue )
+			,roundAwards.highAccName ) );
 	}
 
 	if ( roundAwards.highRevValue > 0 ) {
 		FormatName( roundAwards.highRevName );
 		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
-										,"^3Revives:^7"
-										,roundAwards.highRevValue
-										,roundAwards.highRevName ) );
+			,"^3Revives:^7"
+			,roundAwards.highRevValue
+			,roundAwards.highRevName ) );
 	}
 
 	if ( roundAwards.highMedValue > 0 ) {
 		FormatName( roundAwards.highMedName );
 		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
-										,"^3Med Packs:^7"
-										,roundAwards.highMedValue
-										,roundAwards.highMedName ) );
+			,"^3Med Packs:^7"
+			,roundAwards.highMedValue
+			,roundAwards.highMedName ) );
 	}
 
 	if ( roundAwards.highAmmoValue > 0 ) {
 		FormatName( roundAwards.highAmmoName );
 		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
-										,"^3Ammo Packs:^7"
-										,roundAwards.highAmmoValue
-										,roundAwards.highAmmoName ) );
+			,"^3Ammo Packs:^7"
+			,roundAwards.highAmmoValue
+			,roundAwards.highAmmoName ) );
 	}
 
 	if ( roundAwards.highHSValue > 0 ) {
 		FormatName( roundAwards.highHSName );
 		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
-										,"^3Headshots:^7"
-										,roundAwards.highHSValue
-										,roundAwards.highHSName ) );
+			,"^3Headshots:^7"
+			,roundAwards.highHSValue
+			,roundAwards.highHSName ) );
 	}
 
 	if ( roundAwards.highGoombaValue > 0 ) {
 		FormatName( roundAwards.highGoombaName );
 		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
-										,"^3Goombas:^7"
-										,roundAwards.highGoombaValue
-										,roundAwards.highGoombaName ) );
+			,"^3Goombas:^7"
+			,roundAwards.highGoombaValue
+			,roundAwards.highGoombaName ) );
 	}
 
 	if ( roundAwards.highPoisonValue > 0 ) {
 		FormatName( roundAwards.highPoisonName );
 		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
-										,"^3Poisons:^7"
-										,roundAwards.highPoisonValue
-										,roundAwards.highPoisonName ) );
+			,"^3Poisons:^7"
+			,roundAwards.highPoisonValue
+			,roundAwards.highPoisonName ) );
 	}
 
 	if ( roundAwards.highKnifeValue > 0 ) {
 		FormatName( roundAwards.highKnifeName );
 		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
-										,"^3Knife Kills:^7"
-										,roundAwards.highKnifeValue
-										,roundAwards.highKnifeName ) );
+			,"^3Knife Kills:^7"
+			,roundAwards.highKnifeValue
+			,roundAwards.highKnifeName ) );
 	}
 
 	if ( roundAwards.highKillSpreeValue > 0 ) {
 		FormatName( roundAwards.highKillSpreeName );
 		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
-										,"^3KillSpree:^7"
-										,roundAwards.highKillSpreeValue
-										,roundAwards.highKillSpreeName ) );
+			,"^3KillSpree:^7"
+			,roundAwards.highKillSpreeValue
+			,roundAwards.highKillSpreeName ) );
 	}
 
 	/*if ( roundAwards.highDeathSpreeValue < 0 ) {
-		FormatName( roundAwards.highDeathSpreeName );
-		trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
-										,"^3DeathSpree:^7"
-										,roundAwards.highDeathSpreeValue
-										,roundAwards.highDeathSpreeName ) );
+	FormatName( roundAwards.highDeathSpreeName );
+	trap_SendServerCommand( -1, va( "print \"%-16s %-6d %s\n\""
+	,"^3DeathSpree:^7"
+	,roundAwards.highDeathSpreeValue
+	,roundAwards.highDeathSpreeName ) );
 	}*/
 	ClearAwards();
 }

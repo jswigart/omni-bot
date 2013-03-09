@@ -1,7 +1,6 @@
 #ifndef __TR_TYPES_H
 #define __TR_TYPES_H
 
-
 #define MAX_CORONAS     32          //----(SA)	not really a reason to limit this other than trying to keep a reasonable count
 #define MAX_DLIGHTS     32          // can't be increased, because bit flags are used on surfaces
 #define MAX_ENTITIES    1023        // can't be increased without changing drawsurf bit packing
@@ -14,12 +13,12 @@
 #define RF_NOSHADOW         64      // don't add stencil shadows
 
 #define RF_LIGHTING_ORIGIN  128     // use refEntity->lightingOrigin instead of refEntity->origin
-                                    // for lighting.  This allows entities to sink into the floor
-                                    // with their origin going solid, and allows all parts of a
-                                    // player to get the same lighting
+// for lighting.  This allows entities to sink into the floor
+// with their origin going solid, and allows all parts of a
+// player to get the same lighting
 #define RF_SHADOW_PLANE     256     // use refEntity->shadowPlane
 #define RF_WRAP_FRAMES      512     // mod the model frames by the maxframes to allow continuous
-                                    // animation without needing to know the frame count
+// animation without needing to know the frame count
 
 #define RF_HILIGHT          ( 1 << 8 )  // more than RF_MINLIGHT.  For when an object is "Highlighted" (looked at/training identification/etc)
 #define RF_BLINK            ( 1 << 9 )  // eyes in 'blink' state
@@ -35,7 +34,6 @@
 #define RDF_UNDERWATER      ( 1 << 4 )  // so the renderer knows to use underwater fog when the player is underwater
 #define RDF_DRAWINGSKY      ( 1 << 5 )
 #define RDF_SNOOPERVIEW     ( 1 << 6 )  //----(SA)	added
-
 
 typedef struct {
 	vec3_t xyz;
@@ -120,7 +118,6 @@ typedef struct {
 	int reFlags;
 
 	int entityNum;                  // currentState.number, so we can attach rendering effects to specific entities (Zombie)
-
 } refEntity_t;
 
 //----(SA)
@@ -150,7 +147,6 @@ typedef enum {
 	NUM_FOGS
 }glfogType_t;
 
-
 typedef struct {
 	int mode;                   // GL_LINEAR, GL_EXP
 	int hint;                   // GL_DONT_CARE
@@ -168,7 +164,6 @@ typedef struct {
 
 //----(SA)	end
 
-
 #define MAX_RENDER_STRINGS          8
 #define MAX_RENDER_STRING_LENGTH    32
 
@@ -184,26 +179,19 @@ typedef struct {
 	// 1 bits will prevent the associated area from rendering at all
 	byte areamask[MAX_MAP_AREA_BYTES];
 
-
-
-
 	// text messages for deform text shaders
 	char text[MAX_RENDER_STRINGS][MAX_RENDER_STRING_LENGTH];
 
-
-//----(SA)	added (needed to pass fog infos into the portal sky scene)
+	//----(SA)	added (needed to pass fog infos into the portal sky scene)
 	glfog_t glfog;
-//----(SA)	end
-
+	//----(SA)	end
 } refdef_t;
-
 
 typedef enum {
 	STEREO_CENTER,
 	STEREO_LEFT,
 	STEREO_RIGHT
 } stereoFrame_t;
-
 
 /*
 ** glconfig_t
@@ -220,10 +208,10 @@ typedef enum {
 
 typedef enum {
 	GLDRV_ICD,                  // driver is integrated with window system
-	                            // WARNING: there are tests that check for
-	                            // > GLDRV_ICD for minidriverness, so this
-	                            // should always be the lowest value in this
-	                            // enum set
+	// WARNING: there are tests that check for
+	// > GLDRV_ICD for minidriverness, so this
+	// should always be the lowest value in this
+	// enum set
 	GLDRV_STANDALONE,           // driver is a non-3Dfx standalone driver
 	GLDRV_VOODOO                // driver is a 3Dfx standalone driver
 } glDriverType_t;
@@ -231,8 +219,8 @@ typedef enum {
 typedef enum {
 	GLHW_GENERIC,           // where everthing works the way it should
 	GLHW_3DFX_2D3D,         // Voodoo Banshee or Voodoo3, relevant since if this is
-	                        // the hardware type then there can NOT exist a secondary
-	                        // display adapter
+	// the hardware type then there can NOT exist a secondary
+	// display adapter
 	GLHW_RIVA128,           // where you can't interpolate alpha
 	GLHW_RAGEPRO,           // where you can't modulate alpha on alpha textures
 	GLHW_PERMEDIA2          // where you don't have src*dst
@@ -285,7 +273,6 @@ typedef struct {
 	qboolean textureFilterAnisotropicAvailable;                 //DAJ
 } glconfig_t;
 
-
 #if !defined _WIN32
 
 #define _3DFX_DRIVER_NAME   "libMesaVoodooGL.so.3.1"
@@ -300,6 +287,5 @@ typedef struct {
 #define WICKED3D_V3_DRIVER_NAME "gl/openglv3.dll"
 
 #endif  // !defined _WIN32
-
 
 #endif  // __TR_TYPES_H

@@ -2,7 +2,6 @@
 
 #include "ui_local.h"
 
-
 #define UI_TIMER_GESTURE        2300
 #define UI_TIMER_JUMP           1000
 #define UI_TIMER_LAND           130
@@ -18,10 +17,8 @@
 #define SPIN_SPEED              0.9
 #define COAST_TIME              1000
 
-
 static int dp_realtime;
 static float jumpHeight;
-
 
 /*
 ===============
@@ -103,7 +100,6 @@ tryagain:
 	}
 }
 
-
 /*
 ===============
 UI_ForceLegsAnim
@@ -116,7 +112,6 @@ static void UI_ForceLegsAnim( playerInfo_t *pi, int anim ) {
 		pi->legsAnimationTimer = UI_TIMER_JUMP;
 	}
 }
-
 
 /*
 ===============
@@ -141,24 +136,23 @@ UI_PositionEntityOnTag
 ======================
 */
 static void UI_PositionEntityOnTag( refEntity_t *entity, const refEntity_t *parent,
-									clipHandle_t parentModel, char *tagName ) {
-	int i;
-	orientation_t lerped;
+								   clipHandle_t parentModel, char *tagName ) {
+									   int i;
+									   orientation_t lerped;
 
-	// lerp the tag
-	trap_CM_LerpTag( &lerped, (const refEntity_t *)parent, (const char *)tagName, 0 );
+									   // lerp the tag
+									   trap_CM_LerpTag( &lerped, (const refEntity_t *)parent, (const char *)tagName, 0 );
 
-	// FIXME: allow origin offsets along tag?
-	VectorCopy( parent->origin, entity->origin );
-	for ( i = 0 ; i < 3 ; i++ ) {
-		VectorMA( entity->origin, lerped.origin[i], parent->axis[i], entity->origin );
-	}
+									   // FIXME: allow origin offsets along tag?
+									   VectorCopy( parent->origin, entity->origin );
+									   for ( i = 0 ; i < 3 ; i++ ) {
+										   VectorMA( entity->origin, lerped.origin[i], parent->axis[i], entity->origin );
+									   }
 
-	// cast away const because of compiler problems
-	MatrixMultiply( lerped.axis, ( (refEntity_t*)parent )->axis, entity->axis );
-	entity->backlerp = parent->backlerp;
+									   // cast away const because of compiler problems
+									   MatrixMultiply( lerped.axis, ( (refEntity_t*)parent )->axis, entity->axis );
+									   entity->backlerp = parent->backlerp;
 }
-
 
 /*
 ======================
@@ -166,23 +160,23 @@ UI_PositionRotatedEntityOnTag
 ======================
 */
 static void UI_PositionRotatedEntityOnTag( refEntity_t *entity, const refEntity_t *parent,
-										   clipHandle_t parentModel, char *tagName ) {
-	int i;
-	orientation_t lerped;
-	vec3_t tempAxis[3];
+										  clipHandle_t parentModel, char *tagName ) {
+											  int i;
+											  orientation_t lerped;
+											  vec3_t tempAxis[3];
 
-	// lerp the tag
-	trap_CM_LerpTag( &lerped, parent, tagName, 0 );
+											  // lerp the tag
+											  trap_CM_LerpTag( &lerped, parent, tagName, 0 );
 
-	// FIXME: allow origin offsets along tag?
-	VectorCopy( parent->origin, entity->origin );
-	for ( i = 0 ; i < 3 ; i++ ) {
-		VectorMA( entity->origin, lerped.origin[i], parent->axis[i], entity->origin );
-	}
+											  // FIXME: allow origin offsets along tag?
+											  VectorCopy( parent->origin, entity->origin );
+											  for ( i = 0 ; i < 3 ; i++ ) {
+												  VectorMA( entity->origin, lerped.origin[i], parent->axis[i], entity->origin );
+											  }
 
-	// cast away const because of compiler problems
-	MatrixMultiply( entity->axis, ( (refEntity_t *)parent )->axis, tempAxis );
-	MatrixMultiply( lerped.axis, tempAxis, entity->axis );
+											  // cast away const because of compiler problems
+											  MatrixMultiply( entity->axis, ( (refEntity_t *)parent )->axis, tempAxis );
+											  MatrixMultiply( lerped.axis, tempAxis, entity->axis );
 }
 
 /*
@@ -191,61 +185,60 @@ UI_SwingAngles
 ==================
 */
 static void UI_SwingAngles( float destination, float swingTolerance, float clampTolerance,
-							float speed, float *angle, qboolean *swinging ) {
-	float swing;
-	float move;
-	float scale;
+						   float speed, float *angle, qboolean *swinging ) {
+							   float swing;
+							   float move;
+							   float scale;
 
-	if ( !*swinging ) {
-		// see if a swing should be started
-		swing = AngleSubtract( *angle, destination );
-		if ( swing > swingTolerance || swing < -swingTolerance ) {
-			*swinging = qtrue;
-		}
-	}
+							   if ( !*swinging ) {
+								   // see if a swing should be started
+								   swing = AngleSubtract( *angle, destination );
+								   if ( swing > swingTolerance || swing < -swingTolerance ) {
+									   *swinging = qtrue;
+								   }
+							   }
 
-	if ( !*swinging ) {
-		return;
-	}
+							   if ( !*swinging ) {
+								   return;
+							   }
 
-	// modify the speed depending on the delta
-	// so it doesn't seem so linear
-	swing = AngleSubtract( destination, *angle );
-	scale = fabs( swing );
-	if ( scale < swingTolerance * 0.5 ) {
-		scale = 0.5;
-	} else if ( scale < swingTolerance ) {
-		scale = 1.0;
-	} else {
-		scale = 2.0;
-	}
+							   // modify the speed depending on the delta
+							   // so it doesn't seem so linear
+							   swing = AngleSubtract( destination, *angle );
+							   scale = fabs( swing );
+							   if ( scale < swingTolerance * 0.5 ) {
+								   scale = 0.5;
+							   } else if ( scale < swingTolerance ) {
+								   scale = 1.0;
+							   } else {
+								   scale = 2.0;
+							   }
 
-	// swing towards the destination angle
-	if ( swing >= 0 ) {
-		move = uis.frametime * scale * speed;
-		if ( move >= swing ) {
-			move = swing;
-			*swinging = qfalse;
-		}
-		*angle = AngleMod( *angle + move );
-	} else if ( swing < 0 ) {
-		move = uis.frametime * scale * -speed;
-		if ( move <= swing ) {
-			move = swing;
-			*swinging = qfalse;
-		}
-		*angle = AngleMod( *angle + move );
-	}
+							   // swing towards the destination angle
+							   if ( swing >= 0 ) {
+								   move = uis.frametime * scale * speed;
+								   if ( move >= swing ) {
+									   move = swing;
+									   *swinging = qfalse;
+								   }
+								   *angle = AngleMod( *angle + move );
+							   } else if ( swing < 0 ) {
+								   move = uis.frametime * scale * -speed;
+								   if ( move <= swing ) {
+									   move = swing;
+									   *swinging = qfalse;
+								   }
+								   *angle = AngleMod( *angle + move );
+							   }
 
-	// clamp to no more than tolerance
-	swing = AngleSubtract( destination, *angle );
-	if ( swing > clampTolerance ) {
-		*angle = AngleMod( destination - ( clampTolerance - 1 ) );
-	} else if ( swing < -clampTolerance ) {
-		*angle = AngleMod( destination + ( clampTolerance - 1 ) );
-	}
+							   // clamp to no more than tolerance
+							   swing = AngleSubtract( destination, *angle );
+							   if ( swing > clampTolerance ) {
+								   *angle = AngleMod( destination - ( clampTolerance - 1 ) );
+							   } else if ( swing < -clampTolerance ) {
+								   *angle = AngleMod( destination + ( clampTolerance - 1 ) );
+							   }
 }
-
 
 /*
 ======================
@@ -290,7 +283,6 @@ static float UI_MovedirAdjustment( playerInfo_t *pi ) {
 	return -22;
 }
 
-
 /*
 ===============
 UI_PlayerAngles
@@ -310,18 +302,17 @@ static void UI_PlayerAngles( playerInfo_t *pi, vec3_t legs[3], vec3_t torso[3], 
 
 	// allow yaw to drift a bit
 	if ( ( pi->legsAnim & ~ANIM_TOGGLEBIT ) != LEGS_IDLE
-		 || ( pi->torsoAnim & ~ANIM_TOGGLEBIT ) != TORSO_STAND  ) {
-		// if not standing still, always point all in the same direction
-		pi->torso.yawing = qtrue;   // always center
-		pi->torso.pitching = qtrue; // always center
-		pi->legs.yawing = qtrue;    // always center
+		|| ( pi->torsoAnim & ~ANIM_TOGGLEBIT ) != TORSO_STAND  ) {
+			// if not standing still, always point all in the same direction
+			pi->torso.yawing = qtrue;   // always center
+			pi->torso.pitching = qtrue; // always center
+			pi->legs.yawing = qtrue;    // always center
 	}
 
 	// adjust legs for movement dir
 	adjust = UI_MovedirAdjustment( pi );
 	legsAngles[YAW] = headAngles[YAW] + adjust;
 	torsoAngles[YAW] = headAngles[YAW] + 0.25 * adjust;
-
 
 	// torso
 	UI_SwingAngles( torsoAngles[YAW], 25, 90, SWINGSPEED, &pi->torso.yawAngle, &pi->torso.yawing );
@@ -352,7 +343,6 @@ static void UI_PlayerAngles( playerInfo_t *pi, vec3_t legs[3], vec3_t torso[3], 
 	AnglesToAxis( headAngles, head );
 }
 
-
 /*
 ===============
 UI_PlayerFloatSprite
@@ -370,7 +360,6 @@ static void UI_PlayerFloatSprite( playerInfo_t *pi, vec3_t origin, qhandle_t sha
 	ent.renderfx = 0;
 	trap_R_AddRefEntityToScene( &ent );
 }
-
 
 /*
 ======================
@@ -442,7 +431,7 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 	refEntity_t barrel;
 	refEntity_t backpack;
 	refEntity_t helmet;
-//	refEntity_t		barrel;
+	//	refEntity_t		barrel;
 	refEntity_t flash;
 	vec3_t origin;
 	int renderfx;
@@ -596,7 +585,7 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 		// make a dlight for the flash
 		if ( pi->flashDlightColor[0] || pi->flashDlightColor[1] || pi->flashDlightColor[2] ) {
 			trap_R_AddLightToScene( flash.origin, 200 + ( rand() & 31 ), pi->flashDlightColor[0],
-									pi->flashDlightColor[1], pi->flashDlightColor[2], 0 );
+				pi->flashDlightColor[1], pi->flashDlightColor[2], 0 );
 		}
 	}
 
@@ -647,7 +636,6 @@ void UI_DrawPlayer( float x, float y, float w, float h, playerInfo_t *pi, int ti
 	trap_R_RenderScene( &refdef );
 }
 
-
 /*
 ==========================
 UI_RegisterClientSkin
@@ -676,7 +664,7 @@ static qboolean UI_RegisterClientSkin( playerInfo_t *pi, const char *modelName, 
 ============
 AnimParseAnimConfig
 
-  returns qfalse if error, qtrue otherwise
+returns qfalse if error, qtrue otherwise
 ============
 */
 static qboolean AnimParseAnimConfig( playerInfo_t *animModelInfo, const char *filename, const char *input ) {
@@ -771,14 +759,12 @@ static qboolean AnimParseAnimConfig( playerInfo_t *animModelInfo, const char *fi
 
 	// read information for each frame
 	for ( i = 0 ; ( animModelInfo->version > 1 ) || ( i < MAX_ANIMATIONS ) ; i++ ) {
-
 		token = COM_Parse( &text_p );
 		if ( !token ) {
 			break;
 		}
 
 		if ( animModelInfo->version > 1 ) {   // includes animation names at start of each line
-
 			if ( !Q_stricmp( token, "ENDANIMS" ) ) {  // end of animations
 				break;
 			}
@@ -798,7 +784,6 @@ static qboolean AnimParseAnimConfig( playerInfo_t *animModelInfo, const char *fi
 		animations[i].firstFrame = atoi( token );
 
 		if ( !animModelInfo->isSkeletal ) { // skeletal models dont require adjustment
-
 			// leg only frames are adjusted to not count the upper body only frames
 			if ( i == LEGS_WALKCR ) {
 				skip = animations[LEGS_WALKCR].firstFrame - animations[TORSO_GESTURE].firstFrame;
@@ -806,7 +791,6 @@ static qboolean AnimParseAnimConfig( playerInfo_t *animModelInfo, const char *fi
 			if ( i >= LEGS_WALKCR ) {
 				animations[i].firstFrame -= skip;
 			}
-
 		}
 
 		token = COM_ParseExt( &text_p, qfalse );
@@ -837,8 +821,8 @@ static qboolean AnimParseAnimConfig( playerInfo_t *animModelInfo, const char *fi
 
 		// calculate the duration
 		animations[i].duration = animations[i].initialLerp
-								 + animations[i].frameLerp * animations[i].numFrames
-								 + animations[i].animBlend;
+			+ animations[i].frameLerp * animations[i].numFrames
+			+ animations[i].animBlend;
 
 		// get the nameHash
 		animations[i].nameHash = BG_StringHashValue( animations[i].name );
@@ -864,10 +848,8 @@ static qboolean AnimParseAnimConfig( playerInfo_t *animModelInfo, const char *fi
 	token = COM_Parse( &text_p );
 	if ( token && token[0] ) {
 		if ( animModelInfo->version < 2 || !Q_stricmp( token, "HEADFRAMES" ) ) {
-
 			// read information for each head frame
 			for ( i = 0 ; i < MAX_HEAD_ANIMS ; i++ ) {
-
 				token = COM_Parse( &text_p );
 				if ( !token || !token[0] ) {
 					break;
@@ -951,7 +933,6 @@ static qboolean UI_ParseAnimationFile( const char *filename, playerInfo_t *pi ) 
 	AnimParseAnimConfig( pi, filename, text );
 	return qtrue;
 }
-
 
 /*
 ==========================
@@ -1103,7 +1084,6 @@ qboolean UI_RegisterClientModelname( playerInfo_t *pi, const char *modelSkinName
 	return qtrue;
 }
 
-
 /*
 ===============
 UI_PlayerInfo_SetModel
@@ -1120,7 +1100,6 @@ void UI_PlayerInfo_SetModel( playerInfo_t *pi, const char *model ) {
 	pi->newModel = qtrue;
 	UI_PlayerInfo_SetWeapon( pi, pi->weapon );
 }
-
 
 /*
 ===============

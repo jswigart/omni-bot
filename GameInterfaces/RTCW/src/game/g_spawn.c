@@ -1,8 +1,8 @@
 /*
- * name:		g_spawn.c
- *
- * desc:
- *
+* name:		g_spawn.c
+*
+* desc:
+*
 */
 
 #include "g_local.h"
@@ -153,7 +153,6 @@ field_t fields[] = {
 	{NULL}
 };
 
-
 typedef struct {
 	char    *name;
 	int hash;
@@ -302,7 +301,6 @@ void SP_trigger_objective_info( gentity_t *ent );   // DHM - Nerve
 void SP_gas( gentity_t *ent );
 void SP_target_rumble( gentity_t *ent );
 void SP_func_train_particles( gentity_t *ent );
-
 
 // Rafael
 void SP_trigger_aidoor( gentity_t *ent );
@@ -618,7 +616,6 @@ char *G_NewString( const char *string ) {
 	return newb;
 }
 
-
 /*
 ===============
 G_ParseField
@@ -669,7 +666,6 @@ void G_ParseField( const char *key, const char *value, gentity_t *ent ) {
 	}
 }
 
-
 /*
 ===================
 G_SpawnGEntityFromSpawnVars
@@ -718,7 +714,6 @@ void G_SpawnGEntityFromSpawnVars( void ) {
 		G_FreeEntity( ent );
 	}
 }
-
 
 /*
 ====================
@@ -828,7 +823,6 @@ qboolean    G_SpawnVector2DExt( const char *key, const char *defaultString, floa
 	return present;
 }
 
-
 /*QUAKED worldspawn (0 0 0) ? NO_GT_WOLF NO_STOPWATCH NO_CHECKPOINT
 
 Every map should have exactly one worldspawn.
@@ -878,8 +872,8 @@ void SP_worldspawn( void ) {
 		level.warmupTime = 0;
 	}
 
-// JPW NERVE change minigun overheat time for single player -- this array gets reloaded every time the server is reset,
-// so this is as good a place as any to do stuff like this
+	// JPW NERVE change minigun overheat time for single player -- this array gets reloaded every time the server is reset,
+	// so this is as good a place as any to do stuff like this
 	{
 		int i;
 		ammoTable[WP_VENOM].maxHeat *= 0.25;
@@ -911,7 +905,6 @@ void SP_worldspawn( void ) {
 	}
 }
 
-
 /*
 ==============
 G_SpawnEntitiesFromString
@@ -939,4 +932,3 @@ void G_SpawnEntitiesFromString( void ) {
 
 	level.spawning = qfalse;            // any future calls to G_Spawn*() will be errors
 }
-

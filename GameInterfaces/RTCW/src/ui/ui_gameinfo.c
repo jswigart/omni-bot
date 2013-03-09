@@ -6,11 +6,9 @@
 
 #include "ui_local.h"
 
-
 //
 // arena and bot info
 //
-
 
 int ui_numBots;
 static char     *ui_botInfos[MAX_BOTS];
@@ -112,7 +110,7 @@ UI_LoadArenas
 */
 void UI_LoadArenas( void ) {
 	int numdirs;
-//	vmCvar_t	arenasFile;
+	//	vmCvar_t	arenasFile;
 	char filename[128];
 	char dirlist[1024];
 	char*       dirptr;
@@ -123,15 +121,15 @@ void UI_LoadArenas( void ) {
 	ui_numArenas = 0;
 	uiInfo.mapCount = 0;
 
-/*	NERVE - SMF - commented out
-    trap_Cvar_Register( &arenasFile, "g_arenasFile", "", CVAR_INIT|CVAR_ROM );
-    if( *arenasFile.string ) {
-        UI_LoadArenasFromFile(arenasFile.string);
-    }
-    else {
-        UI_LoadArenasFromFile("scripts/arenas.txt");
-    }
-*/
+	/*	NERVE - SMF - commented out
+	trap_Cvar_Register( &arenasFile, "g_arenasFile", "", CVAR_INIT|CVAR_ROM );
+	if( *arenasFile.string ) {
+	UI_LoadArenasFromFile(arenasFile.string);
+	}
+	else {
+	UI_LoadArenasFromFile("scripts/arenas.txt");
+	}
+	*/
 	// get all arenas from .arena files
 	numdirs = trap_FS_GetFileList( "scripts", ".arena", dirlist, 1024 );
 	dirptr  = dirlist;
@@ -141,7 +139,7 @@ void UI_LoadArenas( void ) {
 		strcat( filename, dirptr );
 		UI_LoadArenasFromFile( filename );
 	}
-//	trap_DPrint( va( "%i arenas parsed\n", ui_numArenas ) ); // JPW NERVE pulled per atvi req
+	//	trap_DPrint( va( "%i arenas parsed\n", ui_numArenas ) ); // JPW NERVE pulled per atvi req
 	if ( UI_OutOfMemory() ) {
 		trap_Print( S_COLOR_YELLOW "WARNING: not anough memory in pool to load all arenas\n" );
 	}
@@ -227,7 +225,6 @@ void UI_LoadArenas( void ) {
 	}
 }
 
-
 /*
 ===============
 UI_LoadBotsFromFile
@@ -293,7 +290,6 @@ void UI_LoadBots( void ) {
 	trap_Print( va( "%i bots parsed\n", ui_numBots ) );
 }
 
-
 /*
 ===============
 UI_GetBotInfoByNumber
@@ -306,7 +302,6 @@ char *UI_GetBotInfoByNumber( int num ) {
 	}
 	return ui_botInfos[num];
 }
-
 
 /*
 ===============
@@ -330,7 +325,6 @@ char *UI_GetBotInfoByName( const char *name ) {
 int UI_GetNumBots() {
 	return ui_numBots;
 }
-
 
 char *UI_GetBotNameByNumber( int num ) {
 	char *info = UI_GetBotInfoByNumber( num );

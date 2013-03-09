@@ -1,8 +1,8 @@
 /*
- * name:		cg_spawn.c
- *
- * desc:
- *
+* name:		cg_spawn.c
+*
+* desc:
+*
 */
 
 #include "cg_local.h"
@@ -12,7 +12,7 @@ qboolean    CG_SpawnString( const char *key, const char *defaultString, char **o
 
 	if ( !cg.spawning ) {
 		*out = (char *)defaultString;
-//		CG_Error( "CG_SpawnString() called while not spawning" );
+		//		CG_Error( "CG_SpawnString() called while not spawning" );
 	}
 
 	for ( i = 0 ; i < cg.numSpawnVars ; i++ ) {
@@ -81,7 +81,6 @@ void CG_ParseEntityFromSpawnVars( void ) {
 			}
 		}
 	}
-
 }
 
 /*

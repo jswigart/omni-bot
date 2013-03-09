@@ -7,37 +7,37 @@
 #include "q_shared.h"
 
 /*-
- * Copyright (c) 1992, 1993
- *	The Regents of the University of California.  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- */
+* Copyright (c) 1992, 1993
+*	The Regents of the University of California.  All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions
+* are met:
+* 1. Redistributions of source code must retain the above copyright
+*    notice, this list of conditions and the following disclaimer.
+* 2. Redistributions in binary form must reproduce the above copyright
+*    notice, this list of conditions and the following disclaimer in the
+*    documentation and/or other materials provided with the distribution.
+* 3. All advertising materials mentioning features or use of this software
+*    must display the following acknowledgement:
+*	This product includes software developed by the University of
+*	California, Berkeley and its contributors.
+* 4. Neither the name of the University nor the names of its contributors
+*    may be used to endorse or promote products derived from this software
+*    without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
+* ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+* ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+* LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+* OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+* SUCH DAMAGE.
+*/
 
 #if defined( LIBC_SCCS ) && !defined( lint )
 #if 0
@@ -48,7 +48,7 @@ static const char rcsid[] =
 
 #include <stdlib.h>
 
-typedef int cmp_t ( const void *, const void * );
+	typedef int cmp_t ( const void *, const void * );
 static char *med3( char *, char *, char *, cmp_t * );
 static void  swapfunc( char *, char *, int, int );
 
@@ -57,59 +57,59 @@ static void  swapfunc( char *, char *, int, int );
 #endif
 
 /*
- * Qsort routine from Bentley & McIlroy's "Engineering a Sort Function".
- */
+* Qsort routine from Bentley & McIlroy's "Engineering a Sort Function".
+*/
 #define swapcode( TYPE, parmi, parmj, n ) {		  \
-		long i = ( n ) / sizeof( TYPE );		   \
-		register TYPE *pi = (TYPE *) ( parmi );		  \
-		register TYPE *pj = (TYPE *) ( parmj );		  \
-		do {						\
-			register TYPE t = *pi;		  \
-			*pi++ = *pj;				\
-			*pj++ = t;				\
-		} while ( --i > 0 );			  \
+	long i = ( n ) / sizeof( TYPE );		   \
+	register TYPE *pi = (TYPE *) ( parmi );		  \
+	register TYPE *pj = (TYPE *) ( parmj );		  \
+	do {						\
+	register TYPE t = *pi;		  \
+	*pi++ = *pj;				\
+	*pj++ = t;				\
+	} while ( --i > 0 );			  \
 }
 
 #define SWAPINIT( a, es ) swaptype = ( (char *)a - (char *)0 ) % sizeof( long ) || \
-									 es % sizeof( long ) ? 2 : es == sizeof( long ) ? 0 : 1;
+	es % sizeof( long ) ? 2 : es == sizeof( long ) ? 0 : 1;
 
 static void
-swapfunc( a, b, n, swaptype )
-char *a, *b;
+	swapfunc( a, b, n, swaptype )
+	char *a, *b;
 int n, swaptype;
 {
 	if ( swaptype <= 1 ) {
 		swapcode( long, a, b, n )
-		else {
-			swapcode( char, a, b, n )
+	else {
+		swapcode( char, a, b, n )
 		}
 
 #define swap( a, b )				  \
 	if ( swaptype == 0 ) {				  \
-		long t = *(long *)( a );		  \
-		*(long *)( a ) = *(long *)( b );		\
-		*(long *)( b ) = t;			  \
+	long t = *(long *)( a );		  \
+	*(long *)( a ) = *(long *)( b );		\
+	*(long *)( b ) = t;			  \
 	} \
 	else					  \
-		swapfunc( a, b, es, swaptype )
+	swapfunc( a, b, es, swaptype )
 
 #define vecswap( a, b, n )    if ( ( n ) > 0 ) swapfunc( a, b, n, swaptype )
 
 		static char *
-		med3( a, b, c, cmp )
-		char *a, *b, *c;
+			med3( a, b, c, cmp )
+			char *a, *b, *c;
 	}
 }
 cmp_t *cmp;
 {
 	return cmp( a, b ) < 0 ?
-		   ( cmp( b, c ) < 0 ? b : ( cmp( a, c ) < 0 ? c : a ) )
-		   : ( cmp( b, c ) > 0 ? b : ( cmp( a, c ) < 0 ? a : c ) );
+		( cmp( b, c ) < 0 ? b : ( cmp( a, c ) < 0 ? c : a ) )
+		: ( cmp( b, c ) > 0 ? b : ( cmp( a, c ) < 0 ? a : c ) );
 }
 
 void
-qsort( a, n, es, cmp )
-void *a;
+	qsort( a, n, es, cmp )
+	void *a;
 size_t n, es;
 cmp_t *cmp;
 {
@@ -121,7 +121,7 @@ loop:   SWAPINIT( a, es );
 	if ( n < 7 ) {
 		for ( pm = (char *)a + es; pm < (char *)a + n * es; pm += es )
 			for ( pl = pm; pl > (char *)a && cmp( pl - es, pl ) > 0;
-				  pl -= es )
+				pl -= es )
 				swap( pl, pl - es );
 		return;
 	}
@@ -169,7 +169,7 @@ loop:   SWAPINIT( a, es );
 	if ( swap_cnt == 0 ) {  /* Switch to insertion sort */
 		for ( pm = (char *)a + es; pm < (char *)a + n * es; pm += es )
 			for ( pl = pm; pl > (char *)a && cmp( pl - es, pl ) > 0;
-				  pl -= es )
+				pl -= es )
 				swap( pl, pl - es );
 		return;
 	}
@@ -188,11 +188,10 @@ loop:   SWAPINIT( a, es );
 		n = r / es;
 		goto loop;
 	}
-/*		qsort(pn - r, r / es, es, cmp);*/
+	/*		qsort(pn - r, r / es, es, cmp);*/
 }
 
 //==================================================================================
-
 
 // this file is excluded from release builds because of intrinsics
 
@@ -205,7 +204,6 @@ size_t strlen( const char *string ) {
 	}
 	return s - string;
 }
-
 
 char *strcat( char *strDestination, const char *strSource ) {
 	char    *s;
@@ -232,7 +230,6 @@ char *strcpy( char *strDestination, const char *strSource ) {
 	return strDestination;
 }
 
-
 int strcmp( const char *string1, const char *string2 ) {
 	while ( *string1 == *string2 && *string1 && *string2 ) {
 		string1++;
@@ -240,7 +237,6 @@ int strcmp( const char *string1, const char *string2 ) {
 	}
 	return *string1 - *string2;
 }
-
 
 char *strchr( const char *string, int c ) {
 	while ( *string ) {
@@ -278,7 +274,6 @@ int tolower( int c ) {
 	return c;
 }
 
-
 int toupper( int c ) {
 	if ( c >= 'a' && c <= 'z' ) {
 		c += 'A' - 'a';
@@ -303,7 +298,6 @@ void *memmove( void *dest, const void *src, size_t count ) {
 	}
 	return dest;
 }
-
 
 #if 0
 
@@ -361,7 +355,6 @@ double sqrt( double x ) {
 
 	return y;
 }
-
 
 float sintable[1024] = {
 	0.000000,0.001534,0.003068,0.004602,0.006136,0.007670,0.009204,0.010738,
@@ -514,7 +507,6 @@ double sin( double x ) {
 	return 0;
 }
 
-
 double cos( double x ) {
 	int index;
 	int quad;
@@ -534,7 +526,6 @@ double cos( double x ) {
 	}
 	return 0;
 }
-
 
 double atan2( double y, double x ) {
 	float base;
@@ -592,13 +583,11 @@ double atan2( double y, double x ) {
 	return base + dir * i * ( M_PI / 2048 );
 }
 
-
 #endif
 
 double tan( double x ) {
 	return sin( x ) / cos( x );
 }
-
 
 static int randSeed = 0;
 
@@ -615,7 +604,6 @@ double atof( const char *string ) {
 	float sign;
 	float value;
 	int c;
-
 
 	// skip whitespace
 	while ( *string <= ' ' ) {
@@ -670,7 +658,6 @@ double atof( const char *string ) {
 			value += c * fraction;
 			fraction *= 0.1;
 		} while ( 1 );
-
 	}
 
 	// not handling 10e10 notation...
@@ -737,7 +724,6 @@ double _atof( const char **stringPtr ) {
 			value += c * fraction;
 			fraction *= 0.1;
 		} while ( 1 );
-
 	}
 
 	// not handling 10e10 notation...
@@ -746,14 +732,12 @@ double _atof( const char **stringPtr ) {
 	return value * sign;
 }
 
-
 #if !defined( _MSC_VER ) && !defined( __linux__ )
 
 int atoi( const char *string ) {
 	int sign;
 	int value;
 	int c;
-
 
 	// skip whitespace
 	while ( *string <= ' ' ) {
@@ -793,7 +777,6 @@ int atoi( const char *string ) {
 
 	return value * sign;
 }
-
 
 int _atoi( const char **stringPtr ) {
 	int sign;
@@ -852,10 +835,7 @@ double fabs( double x ) {
 	return x < 0 ? -x : x;
 }
 
-
-
 //=========================================================
-
 
 #define ALT         0x00000001      /* alternate form */
 #define HEXPREFIX   0x00000002      /* add 0x or 0X prefix */
@@ -952,7 +932,6 @@ void AddFloat( char **buf_p, float fval, int width, int prec ) {
 
 	*buf_p = buf;
 }
-
 
 void AddString( char **buf_p, char *string, int width, int prec ) {
 	int size;
@@ -1095,7 +1074,6 @@ done:
 	*buf_p = 0;
 	return buf_p - buffer;
 }
-
 
 /* this is really crappy */
 int sscanf( const char *buffer, const char *fmt, ... ) {

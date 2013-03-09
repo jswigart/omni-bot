@@ -68,7 +68,7 @@ static long generateHashValue( const char *fname ) {
 ==============
 CG_SoundScriptPrecache
 
-  returns the index+1 of the script in the global list, for fast calling
+returns the index+1 of the script in the global list, for fast calling
 ==============
 */
 int CG_SoundScriptPrecache( const char *name ) {
@@ -151,7 +151,7 @@ void CG_SoundPickOldestRandomSound( soundScript_t *sound, vec3_t org, int entnum
 ==============
 CG_SoundPlaySoundScript
 
-  returns qtrue is a script is found
+returns qtrue is a script is found
 ==============
 */
 qboolean CG_SoundPlaySoundScript( const char *name, vec3_t org, int entnum ) {
@@ -183,7 +183,7 @@ qboolean CG_SoundPlaySoundScript( const char *name, vec3_t org, int entnum ) {
 ==============
 CG_SoundPlayIndexedScript
 
-  returns qtrue is a script is found
+returns qtrue is a script is found
 ==============
 */
 void CG_SoundPlayIndexedScript( int index, vec3_t org, int entnum ) {
@@ -403,7 +403,6 @@ CG_SoundInit
 ==============
 */
 void CG_SoundInit( void ) {
-
 	if ( numSoundScripts ) {
 		// keep all the information, just reset the vars
 		int i;
@@ -414,7 +413,7 @@ void CG_SoundInit( void ) {
 		}
 	} else {
 		CG_Printf(  "\n.........................\n"
-					"Initializing Sound Scripts\n" );
+			"Initializing Sound Scripts\n" );
 		CG_SoundLoadSoundFiles();
 		CG_Printf(  "done.\n" );
 	}

@@ -4,7 +4,6 @@
 
 #include "g_local.h"
 
-
 qboolean G_DoAntiwarp( gentity_t *ent ) {
 	if ( !g_antiwarp.integer || g_gamestate.integer == GS_INTERMISSION ) {
 		return qfalse;
@@ -13,9 +12,9 @@ qboolean G_DoAntiwarp( gentity_t *ent ) {
 	if ( ent && ent->client ) {
 		// don't antiwarp spectators or local clients ( bots, and player on listen server )
 		if ( ent->client->sess.sessionTeam == TEAM_SPECTATOR ||
-			 ent->client->ps.pm_flags & PMF_LIMBO ||
-			 ent->client->pers.localClient ) {
-			return qfalse;
+			ent->client->ps.pm_flags & PMF_LIMBO ||
+			ent->client->pers.localClient ) {
+				return qfalse;
 		}
 
 		// don't antiwarp if they haven't been connected for 5 seconds
@@ -145,7 +144,7 @@ void DoClientThinks( gentity_t *ent ) {
 			// Store the corrected time in serverTime
 			// IlDuca - tested : this must stay division and multiply
 			serverTime = ( ( serverTime + ent->client->pers.pmoveMsec - 1 ) /
-						   ent->client->pers.pmoveMsec ) * ent->client->pers.pmoveMsec;
+				ent->client->pers.pmoveMsec ) * ent->client->pers.pmoveMsec;
 		}
 
 		// This is the difference of time between the first command in the queeue
@@ -254,6 +253,6 @@ drop_packet:
 	// warning: eats bandwidth like popcorn
 	if ( g_antiwarp.integer & 32 ) {
 		trap_SendServerCommand( ent - g_entities,
-								va( "cp \"%d %d\n\"", latestTime - lastTime, startPackets - ent->client->cmdcount ) );
+			va( "cp \"%d %d\n\"", latestTime - lastTime, startPackets - ent->client->cmdcount ) );
 	}
 }

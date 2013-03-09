@@ -1,9 +1,7 @@
-
 #include "g_local.h"
 #include  "g_rtcwbot_interface.h"
 
 extern void G_CheckForCursorHints( gentity_t *ent );
-
 
 void PushBot( gentity_t *ent, gentity_t *other ) {
 	vec3_t dir, ang, f, r;
@@ -97,7 +95,6 @@ void P_DamageFeedback( gentity_t *player ) {
 	client->damage_knockback = 0;
 }
 
-
 #define MIN_BURN_INTERVAL 399 // JPW NERVE set burn timeinterval so we can do more precise damage (was 199 old model)
 
 /*
@@ -123,7 +120,6 @@ void P_WorldEffects( gentity_t *ent ) {
 	if ( waterlevel == 3 ) {
 		// if out of air, start drowning
 		if ( ent->client->airOutTime < level.time ) {
-
 			if ( ent->client->ps.powerups[PW_BREATHER] ) { // take air from the breather now that we need it
 				ent->client->ps.powerups[PW_BREATHER] -= ( level.time - ent->client->airOutTime );
 				ent->client->airOutTime = level.time + ( level.time - ent->client->airOutTime );
@@ -152,7 +148,7 @@ void P_WorldEffects( gentity_t *ent ) {
 					ent->pain_debounce_time = level.time + 200;
 
 					G_Damage( ent, NULL, NULL, NULL, NULL,
-							  ent->damage, DAMAGE_NO_ARMOR, MOD_WATER );
+						ent->damage, DAMAGE_NO_ARMOR, MOD_WATER );
 				}
 			}
 		}
@@ -168,7 +164,7 @@ void P_WorldEffects( gentity_t *ent ) {
 		if ( ent->health > 0 && ent->pain_debounce_time <= level.time ) {
 			if ( ent->watertype & CONTENTS_LAVA ) {
 				G_Damage( ent, NULL, NULL, NULL, NULL,
-						  30 * waterlevel, 0, MOD_LAVA );
+					30 * waterlevel, 0, MOD_LAVA );
 			}
 		}
 	}
@@ -179,7 +175,6 @@ void P_WorldEffects( gentity_t *ent ) {
 	// JPW NERVE MP way
 	if ( ent->s.onFireEnd && ent->client ) {
 		if ( level.time - ent->client->lastBurnTime >= MIN_BURN_INTERVAL ) {
-
 			// JPW NERVE server-side incremental damage routine / player damage/health is int (not float)
 			// so I can't allocate 1.5 points per server tick, and 1 is too weak and 2 is too strong.
 			// solution: allocate damage far less often (MIN_BURN_INTERVAL often) and do more damage.
@@ -194,7 +189,6 @@ void P_WorldEffects( gentity_t *ent ) {
 		}
 	}
 	// jpw
-
 
 	// poisoned
 	if ( ent->poisoned && ent->client && (g_gamestate.integer == GS_PLAYING || g_warmupDamage.integer == 1) ) {
@@ -239,7 +233,6 @@ void G_SetClientSound( gentity_t *ent ) {
 	}
 }
 
-
 //==============================================================
 
 /*
@@ -266,14 +259,14 @@ void ClientImpacts( gentity_t *ent, pmove_t *pm ) {
 
 		// cs: modified so they push inv humans too (for annoying revives)
 		if ( ( ent->client ) &&
-			 ( ( other->r.svFlags & SVF_BOT ) || ( other->client && other->client->ps.powerups[PW_INVULNERABLE] ) ) ) {
-			PushBot( ent, other );
+			( ( other->r.svFlags & SVF_BOT ) || ( other->client && other->client->ps.powerups[PW_INVULNERABLE] ) ) ) {
+				PushBot( ent, other );
 		}
 
 		// if we are standing on their head, then we should be pushed also
 		if ( ( ent->r.svFlags & SVF_BOT || ( other->client && other->client->ps.powerups[PW_INVULNERABLE] ) ) &&
-			 ( ent->s.groundEntityNum == other->s.number && other->client ) ) {
-			PushBot( other, ent );
+			( ent->s.groundEntityNum == other->s.number && other->client ) ) {
+				PushBot( other, ent );
 		}
 		if ( !other->touch ) {
 			continue;
@@ -372,7 +365,6 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 		client->ps.speed = 400; // faster than normal
 		if ( client->ps.sprintExertTime ) {
 			client->ps.speed *= 3;  // (SA) allow sprint in free-cam mode
-
 		}
 		// set up for pmove
 		memset( &pm, 0, sizeof( pm ) );
@@ -402,11 +394,10 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 		ent->client->ps.sprintTime = 20000;
 	}
 
-
 	client->oldbuttons = client->buttons;
 	client->buttons = ucmd->buttons;
 
-//----(SA)	added
+	//----(SA)	added
 	client->oldwbuttons = client->wbuttons;
 	client->wbuttons = ucmd->wbuttons;
 
@@ -417,18 +408,17 @@ void SpectatorThink( gentity_t *ent, usercmd_t *ucmd ) {
 		( client->sess.spectatorState == SPECTATOR_FOLLOW ) &&
 		( ucmd->upmove > 0 ) &&
 		( level.time - client->lastJump > 250 ) ) {
-		client->lastJump = level.time;
-		Cmd_FollowCycle_f( ent, -1 );
+			client->lastJump = level.time;
+			Cmd_FollowCycle_f( ent, -1 );
 	} else if (
 		( client->sess.sessionTeam == TEAM_SPECTATOR ) && // don't let dead team players do free fly
 		( client->sess.spectatorState == SPECTATOR_FOLLOW ) &&
 		( client->buttons & BUTTON_ACTIVATE ) &&
 		!( client->oldbuttons & BUTTON_ACTIVATE ) ) {
-		// code moved to StopFollowing
-		StopFollowing( ent );
+			// code moved to StopFollowing
+			StopFollowing( ent );
 	}
 }
-
 
 /*
 =================
@@ -444,12 +434,12 @@ qboolean ClientInactivityTimer( gclient_t *client ) {
 		client->inactivityTime = level.time + 60 * 1000;
 		client->inactivityWarning = qfalse;
 	} else if ( client->pers.cmd.forwardmove ||
-				client->pers.cmd.rightmove ||
-				client->pers.cmd.upmove ||
-				( client->pers.cmd.wbuttons & WBUTTON_ATTACK2 ) ||
-				( client->pers.cmd.buttons & BUTTON_ATTACK ) ) {
-		client->inactivityTime = level.time + g_inactivity.integer * 1000;
-		client->inactivityWarning = qfalse;
+		client->pers.cmd.rightmove ||
+		client->pers.cmd.upmove ||
+		( client->pers.cmd.wbuttons & WBUTTON_ATTACK2 ) ||
+		( client->pers.cmd.buttons & BUTTON_ATTACK ) ) {
+			client->inactivityTime = level.time + g_inactivity.integer * 1000;
+			client->inactivityWarning = qfalse;
 	} else if ( !client->pers.localClient ) {
 		if ( level.time > client->inactivityTime ) {
 			trap_DropClient( client - level.clients, "Dropped due to inactivity" );
@@ -503,7 +493,7 @@ void ClientTimerActions( gentity_t *ent, int msec ) {
 				}
 			}
 		}
-// JPW NERVE
+		// JPW NERVE
 		else { // GT_WOLF
 			if ( client->ps.powerups[PW_REGEN] ) {
 				if ( ent->health < client->ps.stats[STAT_MAX_HEALTH] ) {
@@ -524,7 +514,7 @@ void ClientTimerActions( gentity_t *ent, int msec ) {
 				}
 			}
 		}
-// jpw
+		// jpw
 		// count down armor when over max
 		if ( client->ps.stats[STAT_ARMOR] > client->ps.stats[STAT_MAX_HEALTH] ) {
 			client->ps.stats[STAT_ARMOR]--;
@@ -547,13 +537,13 @@ void ClientIntermissionThink( gclient_t *client ) {
 	client->oldbuttons = client->buttons;
 	client->buttons = client->pers.cmd.buttons;
 
-//----(SA)	added
+	//----(SA)	added
 	client->oldwbuttons = client->wbuttons;
 	client->wbuttons = client->pers.cmd.wbuttons;
 
 	if ( ( client->buttons & ( BUTTON_ATTACK | BUTTON_USE_HOLDABLE ) & ( client->oldbuttons ^ client->buttons ) ) ||
-		 ( client->wbuttons & WBUTTON_ATTACK2 & ( client->oldwbuttons ^ client->wbuttons ) ) ) {
-		client->readyToExit ^= 1;
+		( client->wbuttons & WBUTTON_ATTACK2 & ( client->oldwbuttons ^ client->wbuttons ) ) ) {
+			client->readyToExit ^= 1;
 	}
 }
 
@@ -582,11 +572,11 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 
 		switch ( event ) {
 		case EV_FALL_NDIE:
-		//case EV_FALL_SHORT:
+			//case EV_FALL_SHORT:
 		case EV_FALL_DMG_10:
 		case EV_FALL_DMG_15:
 		case EV_FALL_DMG_25:
-		//case EV_FALL_DMG_30:
+			//case EV_FALL_DMG_30:
 		case EV_FALL_DMG_50:
 			//case EV_FALL_DMG_75:
 
@@ -627,27 +617,25 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 				}
 			} else {
 				damage = 5; // never used
-
 			}
 
 			if ( ( g_goomba.integer ) && ( ent->s.groundEntityNum < MAX_CLIENTS ) && ( ent->s.groundEntityNum != -1 )
-				 && ( g_entities[ent->s.groundEntityNum].client->ps.stats[STAT_HEALTH] > 0 ) ) {
-				if ( g_goombaDmg.value ) {
-					damage = g_goombaDmg.value;
-				} else if ( damage > 24 ) {
-					damage = 999;
-				} else {
-					damage += 50;
-				}
+				&& ( g_entities[ent->s.groundEntityNum].client->ps.stats[STAT_HEALTH] > 0 ) ) {
+					if ( g_goombaDmg.value ) {
+						damage = g_goombaDmg.value;
+					} else if ( damage > 24 ) {
+						damage = 999;
+					} else {
+						damage += 50;
+					}
 
-				if ( !OnSameTeam( &g_entities[ent->s.groundEntityNum], ent ) ) {
-					G_Damage( &g_entities[ent->s.groundEntityNum], ent, ent, tv( 0, 0, -1 ), NULL, damage, 0, MOD_GOOMBA ); //splat!
-
-				}
-				break;
+					if ( !OnSameTeam( &g_entities[ent->s.groundEntityNum], ent ) ) {
+						G_Damage( &g_entities[ent->s.groundEntityNum], ent, ent, tv( 0, 0, -1 ), NULL, damage, 0, MOD_GOOMBA ); //splat!
+					}
+					break;
 			}
 
-            // cs: moved down so goombas will still work.
+			// cs: moved down so goombas will still work.
 			if ( g_dmflags.integer & DF_NO_FALLING ) {
 				break;
 			}
@@ -656,12 +644,12 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 			ent->pain_debounce_time = level.time + 200; // no normal pain sound
 			G_Damage( ent, NULL, NULL, NULL, NULL, damage, 0, MOD_FALLING );
 			break;
-// JPW NERVE
+			// JPW NERVE
 		case EV_TESTID1:
 		case EV_TESTID2:
 		case EV_ENDTEST:
 			break;
-// jpw
+			// jpw
 		case EV_FIRE_WEAPON_MG42:
 			mg42_fire( ent );
 			break;
@@ -672,7 +660,7 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 			FireWeapon( ent );
 			break;
 
-//----(SA)	modified
+			//----(SA)	modified
 		case EV_USE_ITEM1:      // ( HI_MEDKIT )	medkit
 		case EV_USE_ITEM2:      // ( HI_WINE )		wine
 		case EV_USE_ITEM3:      // ( HI_SKULL )		skull of invulnerable
@@ -685,7 +673,7 @@ void ClientEvents( gentity_t *ent, int oldEventSequence ) {
 		case EV_USE_ITEM10:     // ( HI_BOOK3 )
 			UseHoldableItem( ent, event - EV_USE_ITEM0 );
 			break;
-//----(SA)	end
+			//----(SA)	end
 
 		default:
 			break;
@@ -885,8 +873,8 @@ void ClientThink_real( gentity_t *ent ) {
 
 	// lt info from sandmod
 	if ( !( ent->r.svFlags & SVF_BOT ) && ( g_LTinfomsg.integer ) &&
-		 ( ent->client->ps.stats[STAT_PLAYER_CLASS] == PC_LT ) && ( level.time >= ent->client->lastLTinfotime + 1000 ) ) {
-		GetLTinfo( ent );
+		( ent->client->ps.stats[STAT_PLAYER_CLASS] == PC_LT ) && ( level.time >= ent->client->lastLTinfotime + 1000 ) ) {
+			GetLTinfo( ent );
 	}
 
 	// mark the time, so the connection sprite can be removed
@@ -905,19 +893,19 @@ void ClientThink_real( gentity_t *ent ) {
 		// time is small, you won't move as far since it's doing
 		// velocity*time for updating your position
 		client->ps.commandTime = level.previousTime -
-								 ( frames  * ( level.time - level.previousTime ) );
+			( frames  * ( level.time - level.previousTime ) );
 		client->warped = qtrue;
 	}
 
 	client->warping = qfalse;
 	client->lastUpdateFrame = level.framenum;
 
-// JPW NERVE -- update counter for capture & hold display
+	// JPW NERVE -- update counter for capture & hold display
 	if ( g_gametype.integer == GT_WOLF_CPH ) {
 		client->ps.stats[STAT_CAPTUREHOLD_RED] = level.capturetimes[TEAM_RED];
 		client->ps.stats[STAT_CAPTUREHOLD_BLUE] = level.capturetimes[TEAM_BLUE];
 	}
-// jpw
+	// jpw
 
 	// sanity check the command time to prevent speedup cheating
 	if ( ucmd->serverTime > level.time + 200 && !G_DoAntiwarp( ent ) ) {
@@ -960,7 +948,7 @@ void ClientThink_real( gentity_t *ent ) {
 	// zinx etpro antiwarp
 	if ( G_DoAntiwarp( ent ) && ( pmove_fixed.integer || client->pers.pmoveFixed ) ) {
 		ucmd->serverTime = ( ( ucmd->serverTime + client->pers.pmoveMsec - 1 ) /
-							 client->pers.pmoveMsec ) * client->pers.pmoveMsec;
+			client->pers.pmoveMsec ) * client->pers.pmoveMsec;
 	}
 
 	//
@@ -983,7 +971,7 @@ void ClientThink_real( gentity_t *ent ) {
 
 	// JPW NERVE do some time-based muzzle flip -- this never gets touched in single player (see g_weapon.c)
 	// #define RIFLE_SHAKE_TIME 150 // JPW NERVE this one goes with the commented out old damped "realistic" behavior below
-	#define RIFLE_SHAKE_TIME 300 // per Id request, longer recoil time
+#define RIFLE_SHAKE_TIME 300 // per Id request, longer recoil time
 	if ( client->sniperRifleFiredTime ) {
 		if ( level.time - client->sniperRifleFiredTime > RIFLE_SHAKE_TIME ) {
 			client->sniperRifleFiredTime = 0;
@@ -1023,7 +1011,6 @@ void ClientThink_real( gentity_t *ent ) {
 				{
 					weapon = weapBanksMultiPlayer[3][i];
 					if ( COM_BitCheck( client->ps.weapons,weapon ) ) {
-
 						item = BG_FindItemForWeapon( (weapon_t)weapon );
 						if ( item ) {
 							VectorCopy( client->ps.viewangles, angles );
@@ -1078,7 +1065,7 @@ void ClientThink_real( gentity_t *ent ) {
 	} else {
 		client->dropWeaponTime = 0;
 	}
-// jpw
+	// jpw
 
 	// check for inactivity timer, but never drop the local client of a non-dedicated server
 	if ( !ClientInactivityTimer( client ) ) {
@@ -1120,7 +1107,7 @@ void ClientThink_real( gentity_t *ent ) {
 		client->ps.speed *= 1.3;
 	}
 	else if ( (g_OmniBotFlags.integer & OBF_FAST_BOTS) && (ent->r.svFlags & SVF_BOT) ) {
-	    client->ps.speed *= 1.2;
+		client->ps.speed *= 1.2;
 	}
 
 	// set up for pmove
@@ -1256,7 +1243,6 @@ void ClientThink_real( gentity_t *ent ) {
 
 	// check for respawning
 	if ( client->ps.stats[STAT_HEALTH] <= 0 ) {
-
 		// DHM - Nerve
 		if ( g_gametype.integer >= GT_WOLF ) {
 			WolfFindMedic( ent );
@@ -1333,7 +1319,6 @@ void ClientThink( int clientNum ) {
 	}
 }
 
-
 void G_RunClient( gentity_t *ent ) {
 	if ( ent->client->pers.cmd.buttons & BUTTON_ACTIVATE ) {
 		Cmd_Activate2_f( ent );
@@ -1366,8 +1351,8 @@ void SpectatorClientEndFrame( gentity_t *ent ) {
 
 		// Players can respawn quickly in warmup
 		if ( g_gamestate.integer != GS_PLAYING && /*ent->client->respawnTime <= level.timeCurrent &&*/
-			 ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
-			do_respawn = 1;
+			ent->client->sess.sessionTeam != TEAM_SPECTATOR ) {
+				do_respawn = 1;
 		} else if ( ent->client->sess.sessionTeam == TEAM_RED ) {
 			testtime = ( level.dwRedReinfOffset + level.time - level.startTime ) % g_redlimbotime.integer;
 			if ( testtime < ent->client->pers.lastReinforceTime ) {
@@ -1446,7 +1431,6 @@ void SpectatorClientEndFrame( gentity_t *ent ) {
 	}
 }
 
-
 // DHM - Nerve :: After reviving a player, their contents stay CONTENTS_CORPSE until it is determined
 //					to be safe to return them to PLAYERSOLID
 
@@ -1460,8 +1444,8 @@ qboolean StuckInClient( gentity_t *self ) {
 		hit = g_entities + level.sortedClients[i];
 
 		if ( !hit->inuse || hit == self || !hit->client ||
-			 !hit->s.solid || hit->health <= 0 ) {
-			continue;
+			!hit->s.solid || hit->health <= 0 ) {
+				continue;
 		}
 
 		VectorAdd( hit->r.currentOrigin, hit->r.mins, hitmin );
@@ -1594,21 +1578,19 @@ void ClientEndFrame( gentity_t *ent ) {
 		return;
 	}
 
-    // turn off any expired powerups
-    for ( i = 0 ; i < MAX_POWERUPS ; i++ ) {
+	// turn off any expired powerups
+	for ( i = 0 ; i < MAX_POWERUPS ; i++ ) {
+		if ( i == PW_FIRE ||             // these aren't dependant on level.time
+			i == PW_ELECTRIC ||
+			i == PW_BREATHER ||
+			i == PW_NOFATIGUE ) {
+				continue;
+		}
 
-        if ( i == PW_FIRE ||             // these aren't dependant on level.time
-             i == PW_ELECTRIC ||
-             i == PW_BREATHER ||
-             i == PW_NOFATIGUE ) {
-
-            continue;
-        }
-
-        if ( ent->client->ps.powerups[ i ] < level.time ) {
-            ent->client->ps.powerups[ i ] = 0;
-        }
-    }
+		if ( ent->client->ps.powerups[ i ] < level.time ) {
+			ent->client->ps.powerups[ i ] = 0;
+		}
+	}
 
 	//
 	// If the end of unit layout is displayed, don't give

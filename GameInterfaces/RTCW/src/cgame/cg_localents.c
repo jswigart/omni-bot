@@ -1,11 +1,10 @@
-
 // cg_localents.c -- every frame, generate renderer commands for locally
 // processed entities, like smoke puffs, gibs, shells, etc.
 
 #include "cg_local.h"
 
 #define MAX_LOCAL_ENTITIES  768     // renderer can only handle 1024 entities max, so we should avoid
-                                    // overwriting game entities
+// overwriting game entities
 
 localEntity_t cg_localEntities[MAX_LOCAL_ENTITIES];
 localEntity_t cg_activeLocalEntities;       // double linked list
@@ -29,7 +28,6 @@ void    CG_InitLocalEntities( void ) {
 		cg_localEntities[i].next = &cg_localEntities[i + 1];
 	}
 }
-
 
 /*
 ==================
@@ -79,7 +77,6 @@ localEntity_t   *CG_AllocLocalEntity( void ) {
 	cg_activeLocalEntities.next = le;
 	return le;
 }
-
 
 /*
 ====================================================================================
@@ -134,23 +131,21 @@ void CG_BloodTrail( localEntity_t *le ) {
 #else
 		// Ridah, blood trail using trail code (should be faster since we don't have to spawn as many)
 		le->headJuncIndex = CG_AddTrailJunc( le->headJuncIndex,
-											 cgs.media.bloodTrailShader,
-											 t,
-											 STYPE_STRETCH,
-											 newOrigin,
-											 180,
-											 1.0, // start alpha
-											 0.0, // end alpha
-											 12.0,
-											 12.0,
-											 TJFL_NOCULL,
-											 col, col,
-											 0, 0 );
+			cgs.media.bloodTrailShader,
+			t,
+			STYPE_STRETCH,
+			newOrigin,
+			180,
+			1.0, // start alpha
+			0.0, // end alpha
+			12.0,
+			12.0,
+			TJFL_NOCULL,
+			col, col,
+			0, 0 );
 #endif
-
 	}
 }
-
 
 /*
 ================
@@ -165,7 +160,7 @@ void CG_FragmentBounceMark( localEntity_t *le, trace_t *trace ) {
 		if ( !( lastBloodMark > cg.time || lastBloodMark > cg.time - 100 ) ) {
 			int radius = 16 + ( rand() & 31 );
 			CG_ImpactMark( cgs.media.bloodDotShaders[rand() % 5], trace->endpos, trace->plane.normal, random() * 360,
-						   1,1,1,1, qtrue, radius, qfalse, cg_bloodTime.integer * 1000 );
+				1,1,1,1, qtrue, radius, qfalse, cg_bloodTime.integer * 1000 );
 
 			lastBloodMark = cg.time;
 		}
@@ -206,7 +201,6 @@ void CG_FragmentBounceSound( localEntity_t *le, trace_t *trace ) {
 	le->leBounceSoundType = LEBS_NONE;
 }
 
-
 /*
 ================
 CG_ReflectVelocity
@@ -228,23 +222,20 @@ void CG_ReflectVelocity( localEntity_t *le, trace_t *trace ) {
 	VectorCopy( trace->endpos, le->pos.trBase );
 	le->pos.trTime = cg.time;
 
-
 	// check for stop, making sure that even on low FPS systems it doesn't bobble
 	if ( !(le->leMarkType == LEMT_BLOOD && trace->startsolid) && trace->allsolid ||
-		 ( trace->plane.normal[2] > 0 &&
-		   ( le->pos.trDelta[2] < 40 || le->pos.trDelta[2] < -cg.frametime * le->pos.trDelta[2] ) ) ) {
-
-//----(SA)	if it's a fragment and it's not resting on the world...
-//			if(le->leType == LE_DEBRIS && trace->entityNum < (MAX_ENTITIES - 1))
-		if ( le->leType == LE_FRAGMENT && trace->entityNum < ( MAX_ENTITIES - 1 ) ) {
-			le->pos.trType = TR_GRAVITY_PAUSED;
-		} else
-		{
-			le->pos.trType = TR_STATIONARY;
-		}
+		( trace->plane.normal[2] > 0 &&
+		( le->pos.trDelta[2] < 40 || le->pos.trDelta[2] < -cg.frametime * le->pos.trDelta[2] ) ) ) {
+			//----(SA)	if it's a fragment and it's not resting on the world...
+			//			if(le->leType == LE_DEBRIS && trace->entityNum < (MAX_ENTITIES - 1))
+			if ( le->leType == LE_FRAGMENT && trace->entityNum < ( MAX_ENTITIES - 1 ) ) {
+				le->pos.trType = TR_GRAVITY_PAUSED;
+			} else
+			{
+				le->pos.trType = TR_STATIONARY;
+			}
 	}
 }
-
 
 //----(SA)	added
 
@@ -272,7 +263,6 @@ void CG_AddEmitter( localEntity_t *le ) {
 }
 
 //----(SA)	end
-
 
 /*
 ================
@@ -313,7 +303,7 @@ void CG_AddFragment( localEntity_t *le ) {
 		trap_S_AddLoopingSound( -1, le->refEntity.origin, vec3_origin, cgs.media.flameCrackSound, (int)( 20.0 * flameAlpha ) );
 	}
 
-//----(SA)	added
+	//----(SA)	added
 	if ( le->leFlags & LEF_SMOKING ) {
 		refEntity_t flash;
 
@@ -329,10 +319,9 @@ void CG_AddFragment( localEntity_t *le ) {
 			CG_ParticleImpactSmokePuffExtended( cgs.media.smokeParticleShader, flash.origin, 1000, 8, 20, 20, alpha );
 		}
 	}
-//----(SA)	end
+	//----(SA)	end
 
 	if ( le->pos.trType == TR_STATIONARY ) {
-
 		// Ridah, add the flame
 		if ( hasFlame ) {
 			refEntity_t backupEnt;
@@ -355,9 +344,7 @@ void CG_AddFragment( localEntity_t *le ) {
 		trap_R_AddRefEntityToScene( &le->refEntity );
 
 		return;
-
 	} else if ( le->pos.trType == TR_GRAVITY_PAUSED ) {
-
 		// Ridah, add the flame
 		if ( hasFlame ) {
 			refEntity_t backupEnt;
@@ -378,7 +365,6 @@ void CG_AddFragment( localEntity_t *le ) {
 		}
 
 		trap_R_AddRefEntityToScene( &le->refEntity );
-
 
 		// trace a line from previous position down, to see if I should start falling again
 		VectorCopy( le->refEntity.origin, newOrigin );
@@ -585,13 +571,13 @@ void CG_AddSparkElements( localEntity_t *le ) {
 
 		// add a trail
 		le->headJuncIndex = CG_AddSparkJunc( le->headJuncIndex,
-											 le->refEntity.customShader,
-											 le->refEntity.origin,
-											 200,
-											 1.0 - lifeFrac, // start alpha
-											 0.0, //1.0 - lifeFrac,	// end alpha
-											 lifeFrac * 2.0 * ( ( ( le->endTime - le->startTime ) > 400 ) + 1 ) * 1.5,
-											 lifeFrac * 2.0 * ( ( ( le->endTime - le->startTime ) > 400 ) + 1 ) * 1.5 );
+			le->refEntity.customShader,
+			le->refEntity.origin,
+			200,
+			1.0 - lifeFrac, // start alpha
+			0.0, //1.0 - lifeFrac,	// end alpha
+			lifeFrac * 2.0 * ( ( ( le->endTime - le->startTime ) > 400 ) + 1 ) * 1.5,
+			lifeFrac * 2.0 * ( ( ( le->endTime - le->startTime ) > 400 ) + 1 ) * 1.5 );
 
 		if ( trace.fraction < 1.0 ) {
 			// just kill it
@@ -628,7 +614,7 @@ void CG_AddFuseSparkElements( localEntity_t *le ) {
 
 		// add a trail
 		le->headJuncIndex = CG_AddTrailJunc( le->headJuncIndex, cgs.media.sparkParticleShader, time, STYPE_STRETCH, le->refEntity.origin, (int)( lifeFrac * (float)( le->endTime - le->startTime ) / 2.0 ),
-											 1.0 /*(1.0 - lifeFrac)*/, 0.0, FUSE_SPARK_WIDTH * ( 1.0 - lifeFrac ), FUSE_SPARK_WIDTH * ( 1.0 - lifeFrac ), TJFL_SPARKHEADFLARE, whiteColor, whiteColor, 0, 0 );
+			1.0 /*(1.0 - lifeFrac)*/, 0.0, FUSE_SPARK_WIDTH * ( 1.0 - lifeFrac ), FUSE_SPARK_WIDTH * ( 1.0 - lifeFrac ), TJFL_SPARKHEADFLARE, whiteColor, whiteColor, 0, 0 );
 
 		time += step;
 
@@ -671,13 +657,13 @@ void CG_AddBloodElements( localEntity_t *le ) {
 
 		// add a trail
 		le->headJuncIndex = CG_AddSparkJunc( le->headJuncIndex,
-											 cgs.media.bloodTrailShader,
-											 le->refEntity.origin,
-											 200,
-											 1.0 - lifeFrac, // start alpha
-											 1.0 - lifeFrac, // end alpha
-											 3.0,
-											 5.0 );
+			cgs.media.bloodTrailShader,
+			le->refEntity.origin,
+			200,
+			1.0 - lifeFrac, // start alpha
+			1.0 - lifeFrac, // end alpha
+			3.0,
+			5.0 );
 
 		if ( trace.fraction < 1.0 ) {
 			// reflect the velocity on the trace plane
@@ -729,12 +715,12 @@ void CG_AddDebrisElements( localEntity_t *le ) {
 		// smoke
 		if ( le->effectFlags & 1 ) {
 			le->headJuncIndex2 = CG_AddSmokeJunc( le->headJuncIndex2,
-												  cgs.media.smokeTrailShader,
-												  le->refEntity.origin,
-												  (int)( 2000.0 * ( 0.5 + 0.5 * ( 1.0 - lifeFrac ) ) ), // trail life
-												  1.0 * ( trace.fraction == 1.0 ) * ( 0.5 + 0.5 * ( 1.0 - lifeFrac ) ), // alpha
-												  1, // start width
-												  (int)( 60.0 * ( 0.5 + 0.5 * ( 1.0 - lifeFrac ) ) ) ); // end width
+				cgs.media.smokeTrailShader,
+				le->refEntity.origin,
+				(int)( 2000.0 * ( 0.5 + 0.5 * ( 1.0 - lifeFrac ) ) ), // trail life
+				1.0 * ( trace.fraction == 1.0 ) * ( 0.5 + 0.5 * ( 1.0 - lifeFrac ) ), // alpha
+				1, // start width
+				(int)( 60.0 * ( 0.5 + 0.5 * ( 1.0 - lifeFrac ) ) ) ); // end width
 		}
 
 		if ( trace.fraction < 1.0 ) {
@@ -915,7 +901,6 @@ static void CG_AddMoveScaleFade( localEntity_t *le ) {
 	trap_R_AddRefEntityToScene( re );
 }
 
-
 /*
 ===================
 CG_AddScaleFade
@@ -952,7 +937,6 @@ static void CG_AddScaleFade( localEntity_t *le ) {
 
 	trap_R_AddRefEntityToScene( re );
 }
-
 
 /*
 =================
@@ -1071,7 +1055,6 @@ static void CG_AddSpriteExplosion( localEntity_t *le ) {
 	}
 }
 
-
 //==============================================================================
 
 /*
@@ -1100,7 +1083,7 @@ void CG_AddLocalEntities( void ) {
 			CG_Error( "Bad leType: %i", le->leType );
 			break;
 
-		// Ridah
+			// Ridah
 		case LE_MOVING_TRACER:
 			CG_AddMovingTracer( le );
 			break;
@@ -1156,8 +1139,6 @@ void CG_AddLocalEntities( void ) {
 		case LE_EMITTER:
 			CG_AddEmitter( le );
 			break;
-
 		}
 	}
 }
-

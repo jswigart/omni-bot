@@ -1,7 +1,6 @@
 #ifndef __UI_SHARED_H
 #define __UI_SHARED_H
 
-
 #include "../game/q_shared.h"
 #include "../cgame/tr_types.h"
 #include "keycodes.h"
@@ -93,7 +92,6 @@ typedef struct {
 	const char *args[MAX_SCRIPT_ARGS];
 } scriptDef_t;
 
-
 typedef struct {
 	float x;    // horiz position
 	float y;    // vert position
@@ -130,7 +128,6 @@ typedef struct {
 } windowDef_t;
 
 typedef windowDef_t Window;
-
 
 typedef struct {
 	vec4_t color;
@@ -312,7 +309,6 @@ typedef struct {
 	qhandle_t fxPic[7];
 	qhandle_t crosshairShader[NUM_CROSSHAIRS];
 	qhandle_t crosshairAltShader[NUM_CROSSHAIRS];
-
 } cachedAssets_t;
 
 typedef struct {
@@ -370,7 +366,7 @@ typedef struct {
 	void ( *Print )( const char *msg, ... );
 	void ( *Pause )( qboolean b );
 	int ( *ownerDrawWidth )( int ownerDraw, float scale );
-//	sfxHandle_t (*registerSound)(const char *name, qboolean compressed);
+	//	sfxHandle_t (*registerSound)(const char *name, qboolean compressed);
 	sfxHandle_t ( *registerSound )( const char *name );
 	void ( *startBackgroundTrack )( const char *intro, const char *loop );
 	void ( *stopBackgroundTrack )();
@@ -395,7 +391,6 @@ typedef struct {
 	qhandle_t gradientImage;
 	qhandle_t cursor;
 	float FPS;
-
 } displayContextDef_t;
 
 const char *String_Alloc( const char *p );

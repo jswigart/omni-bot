@@ -200,7 +200,7 @@ g_script_stack_action_t *G_Script_ActionForString( char *string ) {
 =============
 G_Script_ScriptLoad
 
-  Loads the script for the current level into the buffer
+Loads the script for the current level into the buffer
 =============
 */
 void G_Script_ScriptLoad( void ) {
@@ -247,11 +247,11 @@ void G_Script_ScriptLoad( void ) {
 ==============
 G_Script_ScriptParse
 
-  Parses the script for the given entity
+Parses the script for the given entity
 ==============
 */
 void G_Script_ScriptParse( gentity_t *ent ) {
-	#define MAX_SCRIPT_EVENTS   64
+#define MAX_SCRIPT_EVENTS   64
 	char        *pScript;
 	char        *token;
 	qboolean wantName;
@@ -456,13 +456,11 @@ void G_Script_ScriptChange( gentity_t *ent, int newScriptNum ) {
 	}
 }
 
-
-
 /*
 ================
 G_Script_ScriptEvent
 
-  An event has occured, for which a script may exist
+An event has occured, for which a script may exist
 ================
 */
 const char *_GetEntityName( gentity_t *_ent );
@@ -492,37 +490,37 @@ void G_Script_ScriptEvent( gentity_t *ent, char *eventStr, char *params ) {
 	{
 		if ( ent->scriptEvents[i].eventNum == eventNum ) {
 			if (    ( !ent->scriptEvents[i].params )
-					||  ( !gScriptEvents[eventNum].eventMatch || gScriptEvents[eventNum].eventMatch( &ent->scriptEvents[i], params ) ) ) {
-				G_Script_ScriptChange( ent, i );
-				break;
+				||  ( !gScriptEvents[eventNum].eventMatch || gScriptEvents[eventNum].eventMatch( &ent->scriptEvents[i], params ) ) ) {
+					G_Script_ScriptChange( ent, i );
+					break;
 			}
 		}
 	}
 
 	// skip these
 	if ( !Q_stricmp( eventStr, "trigger" ) ||
-		 !Q_stricmp( eventStr, "activate" ) ||
-		 !Q_stricmp( eventStr, "spawn" ) ||
-		 !Q_stricmp( eventStr, "death" ) ||
-		 !Q_stricmp( eventStr, "pain" ) ||
-		 !Q_stricmp( eventStr, "playerstart" ) ) {
-		return;
+		!Q_stricmp( eventStr, "activate" ) ||
+		!Q_stricmp( eventStr, "spawn" ) ||
+		!Q_stricmp( eventStr, "death" ) ||
+		!Q_stricmp( eventStr, "pain" ) ||
+		!Q_stricmp( eventStr, "playerstart" ) ) {
+			return;
 	}
 
 	if ( !Q_stricmp( eventStr, "defused" ) ) {
 		Bot_Util_SendTrigger( ent, NULL,
-							  va( "Defused at %s.", ent->parent ? ent->parent->track : ent->track ),
-							  eventStr );
+			va( "Defused at %s.", ent->parent ? ent->parent->track : ent->track ),
+			eventStr );
 	}
 	if ( !Q_stricmp( eventStr, "dynamited" ) ) {
 		Bot_Util_SendTrigger( ent, NULL,
-							  va( "Planted at %s.", ent->parent ? ent->parent->track : ent->track ),
-							  eventStr );
+			va( "Planted at %s.", ent->parent ? ent->parent->track : ent->track ),
+			eventStr );
 	}
 	if ( !Q_stricmp( eventStr, "destroyed" ) ) {
 		Bot_Util_SendTrigger( ent, NULL,
-							  va( "%s Destroyed.", ent->parent ? ent->parent->track : ent->track ),
-							  eventStr );
+			va( "%s Destroyed.", ent->parent ? ent->parent->track : ent->track ),
+			eventStr );
 	}
 	if ( !Q_stricmp( eventStr, "exploded" ) ) {
 		if ( ent->spawnflags & 32 ) {
@@ -548,7 +546,7 @@ void G_Script_ScriptEvent( gentity_t *ent, char *eventStr, char *params ) {
 =============
 G_Script_ScriptRun
 
-  returns qtrue if the script completed
+returns qtrue if the script completed
 =============
 */
 qboolean G_Script_ScriptRun( gentity_t *ent ) {
@@ -620,7 +618,6 @@ qboolean G_Script_ScriptRun( gentity_t *ent ) {
 // Script Entities
 
 void script_linkentity( gentity_t *ent ) {
-
 	// this is required since non-solid brushes need to be linked but not solid
 	trap_LinkEntity( ent );
 }
@@ -809,8 +806,8 @@ void SP_script_model_med( gentity_t *ent ) {
 
 /*QUAKED script_camera (1.0 0.25 1.0) (-8 -8 -8) (8 8 8) TriggerSpawn
 
-  This is a camera entity. Used by the scripting to show cinematics, via special
-  camera commands. See scripting documentation.
+This is a camera entity. Used by the scripting to show cinematics, via special
+camera commands. See scripting documentation.
 
 "scriptname" name used for scripting purposes (like aiName in AI scripting)
 */
@@ -831,12 +828,11 @@ void SP_script_camera( gentity_t *ent ) {
 	ent->r.svFlags |= SVF_NOCLIENT;     // only broadcast when in use
 }
 
-
 //..DHM-Nerve..................................................................
 
 /*QUAKED script_multiplayer (1.0 0.25 1.0) (-8 -8 -8) (8 8 8)
 
-  This is used to script multiplayer maps.  Entity not displayed in game.
+This is used to script multiplayer maps.  Entity not displayed in game.
 
 "scriptname" name used for scripting purposes (REQUIRED)
 */

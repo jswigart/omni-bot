@@ -1,10 +1,9 @@
 #include "g_local.h"
 
-
 /*
 ==============
 alarmExplosion
-    copied from propExplosion
+copied from propExplosion
 ==============
 */
 void G_ExplodeMissile( gentity_t *ent );
@@ -33,7 +32,6 @@ void alarmExplosion( gentity_t *ent ) {
 	VectorCopy( ent->r.currentOrigin, bolt->s.pos.trBase );
 	VectorCopy( ent->r.currentOrigin, bolt->r.currentOrigin );
 }
-
 
 /*
 ==============
@@ -124,10 +122,8 @@ void alarmbox_use( gentity_t *ent, gentity_t *other, gentity_t *foo ) {
 	if ( other->client ) {
 		G_AddEvent( ent, EV_GENERAL_SOUND, ent->soundPos3 );
 	}
-//	G_Printf("touched alarmbox\n");
-
+	//	G_Printf("touched alarmbox\n");
 }
-
 
 /*
 ==============
@@ -141,9 +137,6 @@ void alarmbox_die( gentity_t *ent, gentity_t *inflictor, gentity_t *attacker, in
 	ent->takedamage = qfalse;
 	alarmbox_updateparts( ent, qtrue );
 }
-
-
-
 
 /*
 ==============
@@ -160,7 +153,6 @@ void alarmbox_finishspawning( gentity_t *ent ) {
 	// find lights and set their state
 	alarmbox_updateparts( ent, qtrue );
 }
-
 
 /*QUAKED alarm_box (1 0 1) START_ON
 You need to have an origin brush as part of this entity
@@ -197,7 +189,6 @@ void SP_alarm_box( gentity_t *ent ) {
 
 	ent->soundPos3 = G_SoundIndex( "sound/world/alarmswitch.wav" );
 
-
 	G_SetOrigin( ent, ent->s.origin );
 	G_SetAngle( ent, ent->s.angles );
 
@@ -221,5 +212,3 @@ void SP_alarm_box( gentity_t *ent ) {
 
 	trap_LinkEntity( ent );
 }
-
-

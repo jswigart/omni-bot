@@ -21,7 +21,7 @@
 #define SVF_BROADCAST           0x00000020  // send to all connected clients
 #define SVF_PORTAL              0x00000040  // merge a second pvs at origin2 into snapshots
 #define SVF_USE_CURRENT_ORIGIN  0x00000080  // entity->r.currentOrigin instead of entity->s.origin
-                                            // for link position (missiles and movers)
+// for link position (missiles and movers)
 // Ridah
 #define SVF_NOFOOTSTEPS         0x00000100
 // done.
@@ -33,15 +33,14 @@
 // recent id changes
 #define SVF_SINGLECLIENT        0x00000800  // only send to a single client (entityShared_t->singleClient)
 #define SVF_NOSERVERINFO        0x00001000  // don't send CS_SERVERINFO updates to this client
-                                            // so that it can be updated for ping tools without
-                                            // lagging clients
+// so that it can be updated for ping tools without
+// lagging clients
 #define SVF_NOTSINGLECLIENT     0x00002000  // send entity to everyone but one client
-                                            // (entityShared_t->singleClient)
+// (entityShared_t->singleClient)
 
 #define SVF_SMOKEGRENADE        0x00004000  // mark the ent as a smoke grenade rather than an airstrike
 
 //===============================================================
-
 
 typedef struct {
 	entityState_t s;                // communicated by server to clients
@@ -53,10 +52,10 @@ typedef struct {
 	int singleClient;               // only send to this client when SVF_SINGLECLIENT is set
 
 	qboolean bmodel;                // if false, assume an explicit mins / maxs bounding box
-	                                // only set by trap_SetBrushModel
+	// only set by trap_SetBrushModel
 	vec3_t mins, maxs;
 	int contents;                   // CONTENTS_TRIGGER, CONTENTS_SOLID, CONTENTS_BODY, etc
-	                                // a non-solid entity should set to 0
+	// a non-solid entity should set to 0
 
 	vec3_t absmin, absmax;          // derived from mins/maxs and origin + rotation
 
@@ -78,15 +77,11 @@ typedef struct {
 	int worldflags;             // DHM - Nerve
 } entityShared_t;
 
-
-
 // the server looks at a sharedEntity, which is the start of the game's gentity_t structure
 typedef struct {
 	entityState_t s;                // communicated by server to clients
 	entityShared_t r;               // shared by both the server system and game
 } sharedEntity_t;
-
-
 
 //===============================================================
 
@@ -129,7 +124,6 @@ typedef enum {
 	G_SEND_CONSOLE_COMMAND, // ( const char *text );
 	// add commands to the console as if they were typed in
 	// for map changing, etc
-
 
 	//=========== server specific functionality =============
 
@@ -213,14 +207,14 @@ typedef enum {
 	G_DEBUG_POLYGON_DELETE,
 	G_REAL_TIME,
 	G_SNAPVECTOR,
-// MrE:
+	// MrE:
 
 	G_TRACECAPSULE, // ( trace_t *results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int passEntityNum, int contentmask );
 	// collision detection using capsule against all linked entities
 
 	G_ENTITY_CONTACTCAPSULE,    // ( const vec3_t mins, const vec3_t maxs, const gentity_t *ent );
 	// perform an exact check against inline brush models of non-square shape
-// done.
+	// done.
 
 	G_GETTAG,
 
@@ -305,7 +299,6 @@ typedef enum {
 	BOTLIB_EA_END_REGULAR,
 	BOTLIB_EA_GET_INPUT,
 	BOTLIB_EA_RESET_INPUT,
-
 
 	BOTLIB_AI_LOAD_CHARACTER = 500,
 	BOTLIB_AI_FREE_CHARACTER,
@@ -399,9 +392,7 @@ typedef enum {
 	BOTLIB_PC_FREE_SOURCE,
 	BOTLIB_PC_READ_TOKEN,
 	BOTLIB_PC_SOURCE_FILE_AND_LINE
-
 } gameImport_t;
-
 
 //
 // functions exported by the game subsystem
@@ -446,7 +437,6 @@ typedef enum {
 	GAME_RETRIEVE_MOVESPEEDS_FROM_CLIENT,
 
 	GAME_MESSAGERECEIVED,
-
 } gameExport_t;
 
 #endif
