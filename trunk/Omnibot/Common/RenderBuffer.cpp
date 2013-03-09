@@ -619,7 +619,7 @@ void RenderBuffer::RenderToOpenGL()
 
 	if ( mStringList3d.size() > 0 && textListBase != 0 )
 	{
-		static const float textScale = 5.0f;
+		static const float textScale = 10.0f;
 		static const float textDistance = 2048.0f;
 
 		glPushMatrix();
@@ -638,6 +638,11 @@ void RenderBuffer::RenderToOpenGL()
 			StringVector lines;
 			Utils::Tokenize( prim.str, "\n", lines );
 
+			std::vector<float> lineWidths;
+			std::vector<float> lineHeights;
+
+			// what's the largest line height
+			float blockHeight = 0.0f;
 			for ( size_t l = 0; l < lines.size(); ++l )
 			{
 				float lineWidth = 0.0f;
@@ -648,8 +653,19 @@ void RenderBuffer::RenderToOpenGL()
 					lineHeight = std::max( lineHeight, glyphMetrics[ lines[ l ][ j ] ].gmfBlackBoxY );
 				}
 
-				lineWidth *= textScale;
-				lineHeight *= textScale;
+				blockHeight += lineHeight;
+
+				lineWidths.push_back( lineWidth );
+				lineHeights.push_back( lineHeight );
+			}
+
+			assert( lineWidths.size() == lines.size() );
+			assert( lineHeights.size() == lines.size() );
+
+			for ( size_t l = 0; l < lines.size(); ++l )
+			{
+				const float height = lineHeights[ l ] * textScale;
+				const float width = lineWidths[ l ] * textScale;
 
 				glPushMatrix();
 
@@ -668,8 +684,8 @@ void RenderBuffer::RenderToOpenGL()
 				};
 				glMultMatrixf( bb );
 				glTranslatef(
-					- lineWidth * 0.5f,
-					- (float)l * lineHeight,
+					- width * 0.5f,
+					(blockHeight*0.5f) - (float)l * height,
 					0.0f );
 				glScalef( textScale, textScale, textScale );
 				glCallLists( lines[ l ].length(), GL_UNSIGNED_BYTE, lines[ l ].c_str() );

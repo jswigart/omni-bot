@@ -8,6 +8,6 @@ if(Wp)
 	Wp.BottomPathOffset = 6;
 	Wp.BlockablePathOffset = 20;
 	Wp.FacingOffset = 18;
-	Wp.TextOffset = 10;
+	Wp.TextOffset = 30;
 	Wp.TextDuration = 0.05;
 }
