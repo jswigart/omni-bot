@@ -1,0 +1,61 @@
+CFG ?= Debug
+SYS ?= Linux
+GRF ?= Glx
+
+CFLAGS := -c -D__LINUX__ -DWM5_USE_OPENGL
+ARFLAGS := rs
+INCPATH := -I . -I ../SDK/Include
+INCDIR := ../SDK/Include
+EXT := a
+
+ifeq (Linux,$(findstring Linux,$(SYS)))
+CC := /usr/bin/g++
+AR := /usr/bin/ar
+INCPATH += -I /usr/include
+endif
+
+ifeq (Debug,$(findstring Debug,$(CFG)))
+CFLAGS += -g -D_DEBUG
+else
+CFLAGS += -O2 -DNDEBUG
+endif
+
+ifeq (Dynamic,$(findstring Dynamic,$(CFG)))
+CFLAGS += -fPIC
+AR := $(CC)
+ARFLAGS := -shared -fPIC -o
+EXT := so
+endif
+
+INC := Wm5ApplicationPCH.h \
+       Wm5Application.h \
+       Wm5Command.h \
+       Wm5ConsoleApplication.h \
+       Wm5WindowApplication.h \
+       Wm5WindowApplication.inl \
+       Wm5WindowApplication2.h \
+       Wm5WindowApplication3.h
+SRC := Wm5Application.cpp \
+       Wm5Command.cpp \
+       Wm5ConsoleApplication.cpp \
+       Wm5WindowApplication.cpp \
+       Wm5WindowApplication2.cpp \
+       Wm5WindowApplication3.cpp
+OBJ := $(SRC:%.cpp=$(CFG)/%.o)
+LIB := ../SDK/Library/$(CFG)/libWm5$(GRF)Application.$(EXT)
+
+build : $(OBJ) $(CFG)/Wm5$(GRF)Application.o
+	$(AR) $(ARFLAGS) $(LIB) $(OBJ) $(CFG)/Wm5$(GRF)Application.o
+	cp -fp $(INC) $(INCDIR) 
+
+$(CFG)/Wm5$(GRF)Application.o : $(GRF)Application/Wm5$(GRF)Application.cpp
+	@mkdir -p $(CFG)
+	$(CC) $(INCPATH) $(CFLAGS) $< -o $@
+
+$(CFG)/%.o : %.cpp
+	@mkdir -p $(CFG)
+	$(CC) $(INCPATH) $(CFLAGS) $< -o $@
+
+clean :
+	rm -f $(LIB)
+	rm -f $(CFG)/*.o

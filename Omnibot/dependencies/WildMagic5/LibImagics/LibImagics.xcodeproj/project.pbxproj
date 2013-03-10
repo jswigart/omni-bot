@@ -1,0 +1,1127 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3C64CC631256B55B00F4B0B0 /* Wm5CurvatureFlow3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6523D0AE56F3F00651FE5 /* Wm5CurvatureFlow3.cpp */; };
+		3C64CC641256B55B00F4B0B0 /* Wm5ImageConvert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651EC0AE56F2600651FE5 /* Wm5ImageConvert.cpp */; };
+		3C64CC651256B55B00F4B0B0 /* Wm5RasterDrawing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652CA0AE56F4B00651FE5 /* Wm5RasterDrawing.cpp */; };
+		3C64CC661256B55B00F4B0B0 /* Wm5Images.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651EE0AE56F2600651FE5 /* Wm5Images.cpp */; };
+		3C64CC671256B55B00F4B0B0 /* Wm5PdeFilter3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6524F0AE56F3F00651FE5 /* Wm5PdeFilter3.cpp */; };
+		3C64CC681256B55B00F4B0B0 /* Wm5GaussianBlur3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652430AE56F3F00651FE5 /* Wm5GaussianBlur3.cpp */; };
+		3C64CC691256B55B00F4B0B0 /* Wm5ExtractCurveSquares.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B00AE56F0E00651FE5 /* Wm5ExtractCurveSquares.cpp */; };
+		3C64CC6A1256B55B00F4B0B0 /* Wm5GaussianBlur2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652410AE56F3F00651FE5 /* Wm5GaussianBlur2.cpp */; };
+		3C64CC6B1256B55B00F4B0B0 /* Wm5PdeFilter2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6524C0AE56F3F00651FE5 /* Wm5PdeFilter2.cpp */; };
+		3C64CC6C1256B55B00F4B0B0 /* Wm5Lattice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651F00AE56F2600651FE5 /* Wm5Lattice.cpp */; };
+		3C64CC6D1256B55B00F4B0B0 /* Wm5GradientAnisotropic3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652470AE56F3F00651FE5 /* Wm5GradientAnisotropic3.cpp */; };
+		3C64CC6E1256B55B00F4B0B0 /* Wm5ImagicsPCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC653F60AE5705900651FE5 /* Wm5ImagicsPCH.cpp */; };
+		3C64CC6F1256B55B00F4B0B0 /* Wm5Binary2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651940AE56EF800651FE5 /* Wm5Binary2D.cpp */; };
+		3C64CC701256B55B00F4B0B0 /* Wm5GradientAnisotropic2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652450AE56F3F00651FE5 /* Wm5GradientAnisotropic2.cpp */; };
+		3C64CC711256B55B00F4B0B0 /* Wm5CurvatureFlow2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6523B0AE56F3F00651FE5 /* Wm5CurvatureFlow2.cpp */; };
+		3C64CC721256B55B00F4B0B0 /* Wm5PdeFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652490AE56F3F00651FE5 /* Wm5PdeFilter.cpp */; };
+		3C64CC731256B55B00F4B0B0 /* Wm5Binary3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651960AE56EF800651FE5 /* Wm5Binary3D.cpp */; };
+		3C64CC741256B55B00F4B0B0 /* Wm5FastMarch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652D80AE56F5C00651FE5 /* Wm5FastMarch.cpp */; };
+		3C64CC751256B55B00F4B0B0 /* Wm5ExtractSurfaceTetra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B70AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.cpp */; };
+		3C64CC761256B55B00F4B0B0 /* Wm5FastMarch3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652DE0AE56F5C00651FE5 /* Wm5FastMarch3.cpp */; };
+		3C64CC771256B55B00F4B0B0 /* Wm5ExtractSurfaceCubes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B40AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.cpp */; };
+		3C64CC781256B55B00F4B0B0 /* Wm5ExtractCurveTris.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B20AE56F0E00651FE5 /* Wm5ExtractCurveTris.cpp */; };
+		3C64CC791256B55B00F4B0B0 /* Wm5Element.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651E90AE56F2600651FE5 /* Wm5Element.cpp */; };
+		3C64CC7A1256B55B00F4B0B0 /* Wm5FastMarch2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652DB0AE56F5C00651FE5 /* Wm5FastMarch2.cpp */; };
+		3C64CC7B1256B59300F4B0B0 /* Wm5PdeFilter3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652500AE56F3F00651FE5 /* Wm5PdeFilter3.h */; };
+		3C64CC7C1256B59300F4B0B0 /* Wm5FastMarch3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652DF0AE56F5C00651FE5 /* Wm5FastMarch3.h */; };
+		3C64CC7D1256B59300F4B0B0 /* Wm5ExtractCurveSquares.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B10AE56F0E00651FE5 /* Wm5ExtractCurveSquares.h */; };
+		3C64CC7E1256B59300F4B0B0 /* Wm5FastBlur.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652400AE56F3F00651FE5 /* Wm5FastBlur.h */; };
+		3C64CC7F1256B59300F4B0B0 /* Wm5Element.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651EA0AE56F2600651FE5 /* Wm5Element.h */; };
+		3C64CC801256B59300F4B0B0 /* Wm5TImage3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F70AE56F2600651FE5 /* Wm5TImage3D.h */; };
+		3C64CC811256B59300F4B0B0 /* Wm5GaussianBlur3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652440AE56F3F00651FE5 /* Wm5GaussianBlur3.h */; };
+		3C64CC821256B59300F4B0B0 /* Wm5Binary3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651970AE56EF800651FE5 /* Wm5Binary3D.h */; };
+		3C64CC831256B59300F4B0B0 /* Wm5PdeFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6524A0AE56F3F00651FE5 /* Wm5PdeFilter.h */; };
+		3C64CC841256B59300F4B0B0 /* Wm5GradientAnisotropic2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652460AE56F3F00651FE5 /* Wm5GradientAnisotropic2.h */; };
+		3C64CC851256B59300F4B0B0 /* Wm5Binary2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651950AE56EF800651FE5 /* Wm5Binary2D.h */; };
+		3C64CC861256B59300F4B0B0 /* Wm5PdeFilter2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6524D0AE56F3F00651FE5 /* Wm5PdeFilter2.h */; };
+		3C64CC871256B59300F4B0B0 /* Wm5ImagicsLIB.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC653F50AE5705900651FE5 /* Wm5ImagicsLIB.h */; };
+		3C64CC881256B59300F4B0B0 /* Wm5FastMarch2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652DC0AE56F5C00651FE5 /* Wm5FastMarch2.h */; };
+		3C64CC891256B59300F4B0B0 /* Wm5ExtractSurfaceTetra.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B80AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.h */; };
+		3C64CC8A1256B59300F4B0B0 /* Wm5Imagics.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC653F40AE5705900651FE5 /* Wm5Imagics.h */; };
+		3C64CC8B1256B59300F4B0B0 /* Wm5CurvatureFlow2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6523C0AE56F3F00651FE5 /* Wm5CurvatureFlow2.h */; };
+		3C64CC8C1256B59300F4B0B0 /* Wm5FastMarch.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652D90AE56F5C00651FE5 /* Wm5FastMarch.h */; };
+		3C64CC8D1256B59300F4B0B0 /* Wm5ImageConvert.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651ED0AE56F2600651FE5 /* Wm5ImageConvert.h */; };
+		3C64CC8E1256B59300F4B0B0 /* Wm5ExtractCurveTris.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B30AE56F0E00651FE5 /* Wm5ExtractCurveTris.h */; };
+		3C64CC8F1256B59300F4B0B0 /* Wm5GaussianBlur2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652420AE56F3F00651FE5 /* Wm5GaussianBlur2.h */; };
+		3C64CC901256B59300F4B0B0 /* Wm5TImage2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F50AE56F2600651FE5 /* Wm5TImage2D.h */; };
+		3C64CC911256B59300F4B0B0 /* Wm5CurvatureFlow3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6523E0AE56F3F00651FE5 /* Wm5CurvatureFlow3.h */; };
+		3C64CC921256B59300F4B0B0 /* Wm5ExtractSurfaceCubes.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B50AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.h */; };
+		3C64CC931256B59300F4B0B0 /* Wm5Lattice.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F10AE56F2600651FE5 /* Wm5Lattice.h */; };
+		3C64CC941256B59300F4B0B0 /* Wm5RasterDrawing.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652CB0AE56F4B00651FE5 /* Wm5RasterDrawing.h */; };
+		3C64CC951256B59300F4B0B0 /* Wm5ImagicsPCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC653F70AE5705900651FE5 /* Wm5ImagicsPCH.h */; };
+		3C64CC961256B59300F4B0B0 /* Wm5GradientAnisotropic3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652480AE56F3F00651FE5 /* Wm5GradientAnisotropic3.h */; };
+		3C64CC971256B59300F4B0B0 /* Wm5Images.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651EF0AE56F2600651FE5 /* Wm5Images.h */; };
+		3C64CC981256B59300F4B0B0 /* Wm5TImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F30AE56F2600651FE5 /* Wm5TImage.h */; };
+		3C64CCB21256B6CC00F4B0B0 /* libWm5Cored.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64CCB01256B6CC00F4B0B0 /* libWm5Cored.dylib */; };
+		3C64CCB31256B6CC00F4B0B0 /* libWm5Mathematicsd.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64CCB11256B6CC00F4B0B0 /* libWm5Mathematicsd.dylib */; };
+		3C64CCC31256B7E100F4B0B0 /* Wm5CurvatureFlow3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6523D0AE56F3F00651FE5 /* Wm5CurvatureFlow3.cpp */; };
+		3C64CCC41256B7E100F4B0B0 /* Wm5ImageConvert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651EC0AE56F2600651FE5 /* Wm5ImageConvert.cpp */; };
+		3C64CCC51256B7E100F4B0B0 /* Wm5RasterDrawing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652CA0AE56F4B00651FE5 /* Wm5RasterDrawing.cpp */; };
+		3C64CCC61256B7E100F4B0B0 /* Wm5Images.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651EE0AE56F2600651FE5 /* Wm5Images.cpp */; };
+		3C64CCC71256B7E100F4B0B0 /* Wm5PdeFilter3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6524F0AE56F3F00651FE5 /* Wm5PdeFilter3.cpp */; };
+		3C64CCC81256B7E100F4B0B0 /* Wm5GaussianBlur3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652430AE56F3F00651FE5 /* Wm5GaussianBlur3.cpp */; };
+		3C64CCC91256B7E100F4B0B0 /* Wm5ExtractCurveSquares.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B00AE56F0E00651FE5 /* Wm5ExtractCurveSquares.cpp */; };
+		3C64CCCA1256B7E100F4B0B0 /* Wm5GaussianBlur2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652410AE56F3F00651FE5 /* Wm5GaussianBlur2.cpp */; };
+		3C64CCCB1256B7E100F4B0B0 /* Wm5PdeFilter2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6524C0AE56F3F00651FE5 /* Wm5PdeFilter2.cpp */; };
+		3C64CCCC1256B7E100F4B0B0 /* Wm5Lattice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651F00AE56F2600651FE5 /* Wm5Lattice.cpp */; };
+		3C64CCCD1256B7E100F4B0B0 /* Wm5GradientAnisotropic3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652470AE56F3F00651FE5 /* Wm5GradientAnisotropic3.cpp */; };
+		3C64CCCE1256B7E100F4B0B0 /* Wm5ImagicsPCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC653F60AE5705900651FE5 /* Wm5ImagicsPCH.cpp */; };
+		3C64CCCF1256B7E100F4B0B0 /* Wm5Binary2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651940AE56EF800651FE5 /* Wm5Binary2D.cpp */; };
+		3C64CCD01256B7E100F4B0B0 /* Wm5GradientAnisotropic2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652450AE56F3F00651FE5 /* Wm5GradientAnisotropic2.cpp */; };
+		3C64CCD11256B7E100F4B0B0 /* Wm5CurvatureFlow2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6523B0AE56F3F00651FE5 /* Wm5CurvatureFlow2.cpp */; };
+		3C64CCD21256B7E100F4B0B0 /* Wm5PdeFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652490AE56F3F00651FE5 /* Wm5PdeFilter.cpp */; };
+		3C64CCD31256B7E100F4B0B0 /* Wm5Binary3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651960AE56EF800651FE5 /* Wm5Binary3D.cpp */; };
+		3C64CCD41256B7E100F4B0B0 /* Wm5FastMarch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652D80AE56F5C00651FE5 /* Wm5FastMarch.cpp */; };
+		3C64CCD51256B7E100F4B0B0 /* Wm5ExtractSurfaceTetra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B70AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.cpp */; };
+		3C64CCD61256B7E100F4B0B0 /* Wm5FastMarch3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652DE0AE56F5C00651FE5 /* Wm5FastMarch3.cpp */; };
+		3C64CCD71256B7E100F4B0B0 /* Wm5ExtractSurfaceCubes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B40AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.cpp */; };
+		3C64CCD81256B7E100F4B0B0 /* Wm5ExtractCurveTris.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B20AE56F0E00651FE5 /* Wm5ExtractCurveTris.cpp */; };
+		3C64CCD91256B7E100F4B0B0 /* Wm5Element.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651E90AE56F2600651FE5 /* Wm5Element.cpp */; };
+		3C64CCDA1256B7E100F4B0B0 /* Wm5FastMarch2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652DB0AE56F5C00651FE5 /* Wm5FastMarch2.cpp */; };
+		3C64CCDB1256B7F200F4B0B0 /* Wm5PdeFilter3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652500AE56F3F00651FE5 /* Wm5PdeFilter3.h */; };
+		3C64CCDC1256B7F200F4B0B0 /* Wm5FastMarch3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652DF0AE56F5C00651FE5 /* Wm5FastMarch3.h */; };
+		3C64CCDD1256B7F200F4B0B0 /* Wm5ExtractCurveSquares.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B10AE56F0E00651FE5 /* Wm5ExtractCurveSquares.h */; };
+		3C64CCDE1256B7F200F4B0B0 /* Wm5FastBlur.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652400AE56F3F00651FE5 /* Wm5FastBlur.h */; };
+		3C64CCDF1256B7F200F4B0B0 /* Wm5Element.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651EA0AE56F2600651FE5 /* Wm5Element.h */; };
+		3C64CCE01256B7F200F4B0B0 /* Wm5TImage3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F70AE56F2600651FE5 /* Wm5TImage3D.h */; };
+		3C64CCE11256B7F200F4B0B0 /* Wm5GaussianBlur3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652440AE56F3F00651FE5 /* Wm5GaussianBlur3.h */; };
+		3C64CCE21256B7F200F4B0B0 /* Wm5Binary3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651970AE56EF800651FE5 /* Wm5Binary3D.h */; };
+		3C64CCE31256B7F200F4B0B0 /* Wm5PdeFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6524A0AE56F3F00651FE5 /* Wm5PdeFilter.h */; };
+		3C64CCE41256B7F200F4B0B0 /* Wm5GradientAnisotropic2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652460AE56F3F00651FE5 /* Wm5GradientAnisotropic2.h */; };
+		3C64CCE51256B7F200F4B0B0 /* Wm5Binary2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651950AE56EF800651FE5 /* Wm5Binary2D.h */; };
+		3C64CCE61256B7F200F4B0B0 /* Wm5PdeFilter2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6524D0AE56F3F00651FE5 /* Wm5PdeFilter2.h */; };
+		3C64CCE71256B7F200F4B0B0 /* Wm5ImagicsLIB.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC653F50AE5705900651FE5 /* Wm5ImagicsLIB.h */; };
+		3C64CCE81256B7F200F4B0B0 /* Wm5FastMarch2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652DC0AE56F5C00651FE5 /* Wm5FastMarch2.h */; };
+		3C64CCE91256B7F200F4B0B0 /* Wm5ExtractSurfaceTetra.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B80AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.h */; };
+		3C64CCEA1256B7F200F4B0B0 /* Wm5Imagics.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC653F40AE5705900651FE5 /* Wm5Imagics.h */; };
+		3C64CCEB1256B7F200F4B0B0 /* Wm5CurvatureFlow2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6523C0AE56F3F00651FE5 /* Wm5CurvatureFlow2.h */; };
+		3C64CCEC1256B7F200F4B0B0 /* Wm5FastMarch.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652D90AE56F5C00651FE5 /* Wm5FastMarch.h */; };
+		3C64CCED1256B7F200F4B0B0 /* Wm5ImageConvert.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651ED0AE56F2600651FE5 /* Wm5ImageConvert.h */; };
+		3C64CCEE1256B7F200F4B0B0 /* Wm5ExtractCurveTris.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B30AE56F0E00651FE5 /* Wm5ExtractCurveTris.h */; };
+		3C64CCEF1256B7F200F4B0B0 /* Wm5GaussianBlur2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652420AE56F3F00651FE5 /* Wm5GaussianBlur2.h */; };
+		3C64CCF01256B7F200F4B0B0 /* Wm5TImage2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F50AE56F2600651FE5 /* Wm5TImage2D.h */; };
+		3C64CCF11256B7F200F4B0B0 /* Wm5CurvatureFlow3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6523E0AE56F3F00651FE5 /* Wm5CurvatureFlow3.h */; };
+		3C64CCF21256B7F200F4B0B0 /* Wm5ExtractSurfaceCubes.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B50AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.h */; };
+		3C64CCF31256B7F200F4B0B0 /* Wm5Lattice.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F10AE56F2600651FE5 /* Wm5Lattice.h */; };
+		3C64CCF41256B7F200F4B0B0 /* Wm5RasterDrawing.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652CB0AE56F4B00651FE5 /* Wm5RasterDrawing.h */; };
+		3C64CCF51256B7F200F4B0B0 /* Wm5ImagicsPCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC653F70AE5705900651FE5 /* Wm5ImagicsPCH.h */; };
+		3C64CCF61256B7F200F4B0B0 /* Wm5GradientAnisotropic3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652480AE56F3F00651FE5 /* Wm5GradientAnisotropic3.h */; };
+		3C64CCF71256B7F200F4B0B0 /* Wm5Images.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651EF0AE56F2600651FE5 /* Wm5Images.h */; };
+		3C64CCF81256B7F200F4B0B0 /* Wm5TImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F30AE56F2600651FE5 /* Wm5TImage.h */; };
+		3C64CCFE1256B89600F4B0B0 /* libWm5Core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64CCFC1256B89600F4B0B0 /* libWm5Core.dylib */; };
+		3C64CCFF1256B89600F4B0B0 /* libWm5Mathematics.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64CCFD1256B89600F4B0B0 /* libWm5Mathematics.dylib */; };
+		3CC651980AE56EF800651FE5 /* Wm5Binary2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651940AE56EF800651FE5 /* Wm5Binary2D.cpp */; };
+		3CC651990AE56EF800651FE5 /* Wm5Binary2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651950AE56EF800651FE5 /* Wm5Binary2D.h */; };
+		3CC6519A0AE56EF800651FE5 /* Wm5Binary3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651960AE56EF800651FE5 /* Wm5Binary3D.cpp */; };
+		3CC6519B0AE56EF800651FE5 /* Wm5Binary3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651970AE56EF800651FE5 /* Wm5Binary3D.h */; };
+		3CC6519C0AE56EF800651FE5 /* Wm5Binary2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651940AE56EF800651FE5 /* Wm5Binary2D.cpp */; };
+		3CC6519D0AE56EF800651FE5 /* Wm5Binary2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651950AE56EF800651FE5 /* Wm5Binary2D.h */; };
+		3CC6519E0AE56EF800651FE5 /* Wm5Binary3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651960AE56EF800651FE5 /* Wm5Binary3D.cpp */; };
+		3CC6519F0AE56EF800651FE5 /* Wm5Binary3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651970AE56EF800651FE5 /* Wm5Binary3D.h */; };
+		3CC651B90AE56F0E00651FE5 /* Wm5ExtractCurveSquares.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B00AE56F0E00651FE5 /* Wm5ExtractCurveSquares.cpp */; };
+		3CC651BA0AE56F0E00651FE5 /* Wm5ExtractCurveSquares.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B10AE56F0E00651FE5 /* Wm5ExtractCurveSquares.h */; };
+		3CC651BB0AE56F0E00651FE5 /* Wm5ExtractCurveTris.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B20AE56F0E00651FE5 /* Wm5ExtractCurveTris.cpp */; };
+		3CC651BC0AE56F0E00651FE5 /* Wm5ExtractCurveTris.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B30AE56F0E00651FE5 /* Wm5ExtractCurveTris.h */; };
+		3CC651BD0AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B40AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.cpp */; };
+		3CC651BE0AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B50AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.h */; };
+		3CC651BF0AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B70AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.cpp */; };
+		3CC651C00AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B80AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.h */; };
+		3CC651C10AE56F0E00651FE5 /* Wm5ExtractCurveSquares.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B00AE56F0E00651FE5 /* Wm5ExtractCurveSquares.cpp */; };
+		3CC651C20AE56F0E00651FE5 /* Wm5ExtractCurveSquares.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B10AE56F0E00651FE5 /* Wm5ExtractCurveSquares.h */; };
+		3CC651C30AE56F0E00651FE5 /* Wm5ExtractCurveTris.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B20AE56F0E00651FE5 /* Wm5ExtractCurveTris.cpp */; };
+		3CC651C40AE56F0E00651FE5 /* Wm5ExtractCurveTris.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B30AE56F0E00651FE5 /* Wm5ExtractCurveTris.h */; };
+		3CC651C50AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B40AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.cpp */; };
+		3CC651C60AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B50AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.h */; };
+		3CC651C70AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651B70AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.cpp */; };
+		3CC651C80AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651B80AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.h */; };
+		3CC651F90AE56F2600651FE5 /* Wm5Element.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651E90AE56F2600651FE5 /* Wm5Element.cpp */; };
+		3CC651FA0AE56F2600651FE5 /* Wm5Element.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651EA0AE56F2600651FE5 /* Wm5Element.h */; };
+		3CC651FB0AE56F2600651FE5 /* Wm5ImageConvert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651EC0AE56F2600651FE5 /* Wm5ImageConvert.cpp */; };
+		3CC651FC0AE56F2600651FE5 /* Wm5ImageConvert.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651ED0AE56F2600651FE5 /* Wm5ImageConvert.h */; };
+		3CC651FD0AE56F2600651FE5 /* Wm5Images.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651EE0AE56F2600651FE5 /* Wm5Images.cpp */; };
+		3CC651FE0AE56F2600651FE5 /* Wm5Images.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651EF0AE56F2600651FE5 /* Wm5Images.h */; };
+		3CC651FF0AE56F2600651FE5 /* Wm5Lattice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651F00AE56F2600651FE5 /* Wm5Lattice.cpp */; };
+		3CC652000AE56F2600651FE5 /* Wm5Lattice.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F10AE56F2600651FE5 /* Wm5Lattice.h */; };
+		3CC652010AE56F2600651FE5 /* Wm5TImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F30AE56F2600651FE5 /* Wm5TImage.h */; };
+		3CC652020AE56F2600651FE5 /* Wm5TImage2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F50AE56F2600651FE5 /* Wm5TImage2D.h */; };
+		3CC652030AE56F2600651FE5 /* Wm5TImage3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F70AE56F2600651FE5 /* Wm5TImage3D.h */; };
+		3CC652040AE56F2600651FE5 /* Wm5Element.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651E90AE56F2600651FE5 /* Wm5Element.cpp */; };
+		3CC652050AE56F2600651FE5 /* Wm5Element.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651EA0AE56F2600651FE5 /* Wm5Element.h */; };
+		3CC652060AE56F2600651FE5 /* Wm5ImageConvert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651EC0AE56F2600651FE5 /* Wm5ImageConvert.cpp */; };
+		3CC652070AE56F2600651FE5 /* Wm5ImageConvert.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651ED0AE56F2600651FE5 /* Wm5ImageConvert.h */; };
+		3CC652080AE56F2600651FE5 /* Wm5Images.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651EE0AE56F2600651FE5 /* Wm5Images.cpp */; };
+		3CC652090AE56F2600651FE5 /* Wm5Images.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651EF0AE56F2600651FE5 /* Wm5Images.h */; };
+		3CC6520A0AE56F2600651FE5 /* Wm5Lattice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC651F00AE56F2600651FE5 /* Wm5Lattice.cpp */; };
+		3CC6520B0AE56F2600651FE5 /* Wm5Lattice.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F10AE56F2600651FE5 /* Wm5Lattice.h */; };
+		3CC6520C0AE56F2600651FE5 /* Wm5TImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F30AE56F2600651FE5 /* Wm5TImage.h */; };
+		3CC6520D0AE56F2600651FE5 /* Wm5TImage2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F50AE56F2600651FE5 /* Wm5TImage2D.h */; };
+		3CC6520E0AE56F2600651FE5 /* Wm5TImage3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC651F70AE56F2600651FE5 /* Wm5TImage3D.h */; };
+		3CC652520AE56F3F00651FE5 /* Wm5CurvatureFlow2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6523B0AE56F3F00651FE5 /* Wm5CurvatureFlow2.cpp */; };
+		3CC652530AE56F3F00651FE5 /* Wm5CurvatureFlow2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6523C0AE56F3F00651FE5 /* Wm5CurvatureFlow2.h */; };
+		3CC652540AE56F3F00651FE5 /* Wm5CurvatureFlow3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6523D0AE56F3F00651FE5 /* Wm5CurvatureFlow3.cpp */; };
+		3CC652550AE56F3F00651FE5 /* Wm5CurvatureFlow3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6523E0AE56F3F00651FE5 /* Wm5CurvatureFlow3.h */; };
+		3CC652570AE56F3F00651FE5 /* Wm5FastBlur.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652400AE56F3F00651FE5 /* Wm5FastBlur.h */; };
+		3CC652580AE56F3F00651FE5 /* Wm5GaussianBlur2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652410AE56F3F00651FE5 /* Wm5GaussianBlur2.cpp */; };
+		3CC652590AE56F3F00651FE5 /* Wm5GaussianBlur2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652420AE56F3F00651FE5 /* Wm5GaussianBlur2.h */; };
+		3CC6525A0AE56F3F00651FE5 /* Wm5GaussianBlur3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652430AE56F3F00651FE5 /* Wm5GaussianBlur3.cpp */; };
+		3CC6525B0AE56F3F00651FE5 /* Wm5GaussianBlur3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652440AE56F3F00651FE5 /* Wm5GaussianBlur3.h */; };
+		3CC6525C0AE56F3F00651FE5 /* Wm5GradientAnisotropic2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652450AE56F3F00651FE5 /* Wm5GradientAnisotropic2.cpp */; };
+		3CC6525D0AE56F3F00651FE5 /* Wm5GradientAnisotropic2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652460AE56F3F00651FE5 /* Wm5GradientAnisotropic2.h */; };
+		3CC6525E0AE56F3F00651FE5 /* Wm5GradientAnisotropic3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652470AE56F3F00651FE5 /* Wm5GradientAnisotropic3.cpp */; };
+		3CC6525F0AE56F3F00651FE5 /* Wm5GradientAnisotropic3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652480AE56F3F00651FE5 /* Wm5GradientAnisotropic3.h */; };
+		3CC652600AE56F3F00651FE5 /* Wm5PdeFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652490AE56F3F00651FE5 /* Wm5PdeFilter.cpp */; };
+		3CC652610AE56F3F00651FE5 /* Wm5PdeFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6524A0AE56F3F00651FE5 /* Wm5PdeFilter.h */; };
+		3CC652620AE56F3F00651FE5 /* Wm5PdeFilter2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6524C0AE56F3F00651FE5 /* Wm5PdeFilter2.cpp */; };
+		3CC652630AE56F3F00651FE5 /* Wm5PdeFilter2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6524D0AE56F3F00651FE5 /* Wm5PdeFilter2.h */; };
+		3CC652640AE56F3F00651FE5 /* Wm5PdeFilter3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6524F0AE56F3F00651FE5 /* Wm5PdeFilter3.cpp */; };
+		3CC652650AE56F3F00651FE5 /* Wm5PdeFilter3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652500AE56F3F00651FE5 /* Wm5PdeFilter3.h */; };
+		3CC652660AE56F3F00651FE5 /* Wm5CurvatureFlow2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6523B0AE56F3F00651FE5 /* Wm5CurvatureFlow2.cpp */; };
+		3CC652670AE56F3F00651FE5 /* Wm5CurvatureFlow2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6523C0AE56F3F00651FE5 /* Wm5CurvatureFlow2.h */; };
+		3CC652680AE56F3F00651FE5 /* Wm5CurvatureFlow3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6523D0AE56F3F00651FE5 /* Wm5CurvatureFlow3.cpp */; };
+		3CC652690AE56F3F00651FE5 /* Wm5CurvatureFlow3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6523E0AE56F3F00651FE5 /* Wm5CurvatureFlow3.h */; };
+		3CC6526B0AE56F3F00651FE5 /* Wm5FastBlur.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652400AE56F3F00651FE5 /* Wm5FastBlur.h */; };
+		3CC6526C0AE56F3F00651FE5 /* Wm5GaussianBlur2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652410AE56F3F00651FE5 /* Wm5GaussianBlur2.cpp */; };
+		3CC6526D0AE56F3F00651FE5 /* Wm5GaussianBlur2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652420AE56F3F00651FE5 /* Wm5GaussianBlur2.h */; };
+		3CC6526E0AE56F3F00651FE5 /* Wm5GaussianBlur3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652430AE56F3F00651FE5 /* Wm5GaussianBlur3.cpp */; };
+		3CC6526F0AE56F3F00651FE5 /* Wm5GaussianBlur3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652440AE56F3F00651FE5 /* Wm5GaussianBlur3.h */; };
+		3CC652700AE56F3F00651FE5 /* Wm5GradientAnisotropic2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652450AE56F3F00651FE5 /* Wm5GradientAnisotropic2.cpp */; };
+		3CC652710AE56F3F00651FE5 /* Wm5GradientAnisotropic2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652460AE56F3F00651FE5 /* Wm5GradientAnisotropic2.h */; };
+		3CC652720AE56F3F00651FE5 /* Wm5GradientAnisotropic3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652470AE56F3F00651FE5 /* Wm5GradientAnisotropic3.cpp */; };
+		3CC652730AE56F3F00651FE5 /* Wm5GradientAnisotropic3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652480AE56F3F00651FE5 /* Wm5GradientAnisotropic3.h */; };
+		3CC652740AE56F3F00651FE5 /* Wm5PdeFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652490AE56F3F00651FE5 /* Wm5PdeFilter.cpp */; };
+		3CC652750AE56F3F00651FE5 /* Wm5PdeFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6524A0AE56F3F00651FE5 /* Wm5PdeFilter.h */; };
+		3CC652760AE56F3F00651FE5 /* Wm5PdeFilter2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6524C0AE56F3F00651FE5 /* Wm5PdeFilter2.cpp */; };
+		3CC652770AE56F3F00651FE5 /* Wm5PdeFilter2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC6524D0AE56F3F00651FE5 /* Wm5PdeFilter2.h */; };
+		3CC652780AE56F3F00651FE5 /* Wm5PdeFilter3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6524F0AE56F3F00651FE5 /* Wm5PdeFilter3.cpp */; };
+		3CC652790AE56F3F00651FE5 /* Wm5PdeFilter3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652500AE56F3F00651FE5 /* Wm5PdeFilter3.h */; };
+		3CC652CC0AE56F4C00651FE5 /* Wm5RasterDrawing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652CA0AE56F4B00651FE5 /* Wm5RasterDrawing.cpp */; };
+		3CC652CD0AE56F4C00651FE5 /* Wm5RasterDrawing.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652CB0AE56F4B00651FE5 /* Wm5RasterDrawing.h */; };
+		3CC652CE0AE56F4C00651FE5 /* Wm5RasterDrawing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652CA0AE56F4B00651FE5 /* Wm5RasterDrawing.cpp */; };
+		3CC652CF0AE56F4C00651FE5 /* Wm5RasterDrawing.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652CB0AE56F4B00651FE5 /* Wm5RasterDrawing.h */; };
+		3CC6530B0AE56F5C00651FE5 /* Wm5FastMarch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652D80AE56F5C00651FE5 /* Wm5FastMarch.cpp */; };
+		3CC6530C0AE56F5C00651FE5 /* Wm5FastMarch.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652D90AE56F5C00651FE5 /* Wm5FastMarch.h */; };
+		3CC6530D0AE56F5C00651FE5 /* Wm5FastMarch2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652DB0AE56F5C00651FE5 /* Wm5FastMarch2.cpp */; };
+		3CC6530E0AE56F5C00651FE5 /* Wm5FastMarch2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652DC0AE56F5C00651FE5 /* Wm5FastMarch2.h */; };
+		3CC6530F0AE56F5C00651FE5 /* Wm5FastMarch3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652DE0AE56F5C00651FE5 /* Wm5FastMarch3.cpp */; };
+		3CC653100AE56F5C00651FE5 /* Wm5FastMarch3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652DF0AE56F5C00651FE5 /* Wm5FastMarch3.h */; };
+		3CC653310AE56F5C00651FE5 /* Wm5FastMarch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652D80AE56F5C00651FE5 /* Wm5FastMarch.cpp */; };
+		3CC653320AE56F5C00651FE5 /* Wm5FastMarch.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652D90AE56F5C00651FE5 /* Wm5FastMarch.h */; };
+		3CC653330AE56F5C00651FE5 /* Wm5FastMarch2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652DB0AE56F5C00651FE5 /* Wm5FastMarch2.cpp */; };
+		3CC653340AE56F5C00651FE5 /* Wm5FastMarch2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652DC0AE56F5C00651FE5 /* Wm5FastMarch2.h */; };
+		3CC653350AE56F5C00651FE5 /* Wm5FastMarch3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC652DE0AE56F5C00651FE5 /* Wm5FastMarch3.cpp */; };
+		3CC653360AE56F5C00651FE5 /* Wm5FastMarch3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC652DF0AE56F5C00651FE5 /* Wm5FastMarch3.h */; };
+		3CC653F80AE5705900651FE5 /* Wm5Imagics.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC653F40AE5705900651FE5 /* Wm5Imagics.h */; };
+		3CC653F90AE5705900651FE5 /* Wm5ImagicsLIB.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC653F50AE5705900651FE5 /* Wm5ImagicsLIB.h */; };
+		3CC653FA0AE5705900651FE5 /* Wm5ImagicsPCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC653F60AE5705900651FE5 /* Wm5ImagicsPCH.cpp */; };
+		3CC653FB0AE5705900651FE5 /* Wm5ImagicsPCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC653F70AE5705900651FE5 /* Wm5ImagicsPCH.h */; };
+		3CC653FC0AE5705900651FE5 /* Wm5Imagics.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC653F40AE5705900651FE5 /* Wm5Imagics.h */; };
+		3CC653FD0AE5705900651FE5 /* Wm5ImagicsLIB.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC653F50AE5705900651FE5 /* Wm5ImagicsLIB.h */; };
+		3CC653FE0AE5705900651FE5 /* Wm5ImagicsPCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC653F60AE5705900651FE5 /* Wm5ImagicsPCH.cpp */; };
+		3CC653FF0AE5705900651FE5 /* Wm5ImagicsPCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC653F70AE5705900651FE5 /* Wm5ImagicsPCH.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3C64CC5C1256B51C00F4B0B0 /* libWm5Imagicsd.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libWm5Imagicsd.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C64CCB01256B6CC00F4B0B0 /* libWm5Cored.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Cored.dylib; path = ../SDK/Library/DebugDLL/libWm5Cored.dylib; sourceTree = SOURCE_ROOT; };
+		3C64CCB11256B6CC00F4B0B0 /* libWm5Mathematicsd.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Mathematicsd.dylib; path = ../SDK/Library/DebugDLL/libWm5Mathematicsd.dylib; sourceTree = SOURCE_ROOT; };
+		3C64CCBC1256B6E900F4B0B0 /* libWm5Imagics.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libWm5Imagics.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C64CCFC1256B89600F4B0B0 /* libWm5Core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Core.dylib; path = ../SDK/Library/ReleaseDLL/libWm5Core.dylib; sourceTree = SOURCE_ROOT; };
+		3C64CCFD1256B89600F4B0B0 /* libWm5Mathematics.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Mathematics.dylib; path = ../SDK/Library/ReleaseDLL/libWm5Mathematics.dylib; sourceTree = SOURCE_ROOT; };
+		3CC4F85E10FCD44F00C42DBB /* Wm5FastBlur.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5FastBlur.inl; path = Filters/Wm5FastBlur.inl; sourceTree = "<group>"; };
+		3CC651940AE56EF800651FE5 /* Wm5Binary2D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Binary2D.cpp; path = BinaryOperations/Wm5Binary2D.cpp; sourceTree = "<group>"; };
+		3CC651950AE56EF800651FE5 /* Wm5Binary2D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5Binary2D.h; path = BinaryOperations/Wm5Binary2D.h; sourceTree = "<group>"; };
+		3CC651960AE56EF800651FE5 /* Wm5Binary3D.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Binary3D.cpp; path = BinaryOperations/Wm5Binary3D.cpp; sourceTree = "<group>"; };
+		3CC651970AE56EF800651FE5 /* Wm5Binary3D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5Binary3D.h; path = BinaryOperations/Wm5Binary3D.h; sourceTree = "<group>"; };
+		3CC651B00AE56F0E00651FE5 /* Wm5ExtractCurveSquares.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5ExtractCurveSquares.cpp; path = Extraction/Wm5ExtractCurveSquares.cpp; sourceTree = "<group>"; };
+		3CC651B10AE56F0E00651FE5 /* Wm5ExtractCurveSquares.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5ExtractCurveSquares.h; path = Extraction/Wm5ExtractCurveSquares.h; sourceTree = "<group>"; };
+		3CC651B20AE56F0E00651FE5 /* Wm5ExtractCurveTris.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5ExtractCurveTris.cpp; path = Extraction/Wm5ExtractCurveTris.cpp; sourceTree = "<group>"; };
+		3CC651B30AE56F0E00651FE5 /* Wm5ExtractCurveTris.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5ExtractCurveTris.h; path = Extraction/Wm5ExtractCurveTris.h; sourceTree = "<group>"; };
+		3CC651B40AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5ExtractSurfaceCubes.cpp; path = Extraction/Wm5ExtractSurfaceCubes.cpp; sourceTree = "<group>"; };
+		3CC651B50AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5ExtractSurfaceCubes.h; path = Extraction/Wm5ExtractSurfaceCubes.h; sourceTree = "<group>"; };
+		3CC651B70AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5ExtractSurfaceTetra.cpp; path = Extraction/Wm5ExtractSurfaceTetra.cpp; sourceTree = "<group>"; };
+		3CC651B80AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5ExtractSurfaceTetra.h; path = Extraction/Wm5ExtractSurfaceTetra.h; sourceTree = "<group>"; };
+		3CC651E90AE56F2600651FE5 /* Wm5Element.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Element.cpp; path = Images/Wm5Element.cpp; sourceTree = "<group>"; };
+		3CC651EA0AE56F2600651FE5 /* Wm5Element.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5Element.h; path = Images/Wm5Element.h; sourceTree = "<group>"; };
+		3CC651EB0AE56F2600651FE5 /* Wm5Element.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = Wm5Element.inl; path = Images/Wm5Element.inl; sourceTree = "<group>"; };
+		3CC651EC0AE56F2600651FE5 /* Wm5ImageConvert.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5ImageConvert.cpp; path = Images/Wm5ImageConvert.cpp; sourceTree = "<group>"; };
+		3CC651ED0AE56F2600651FE5 /* Wm5ImageConvert.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5ImageConvert.h; path = Images/Wm5ImageConvert.h; sourceTree = "<group>"; };
+		3CC651EE0AE56F2600651FE5 /* Wm5Images.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Images.cpp; path = Images/Wm5Images.cpp; sourceTree = "<group>"; };
+		3CC651EF0AE56F2600651FE5 /* Wm5Images.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5Images.h; path = Images/Wm5Images.h; sourceTree = "<group>"; };
+		3CC651F00AE56F2600651FE5 /* Wm5Lattice.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Lattice.cpp; path = Images/Wm5Lattice.cpp; sourceTree = "<group>"; };
+		3CC651F10AE56F2600651FE5 /* Wm5Lattice.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5Lattice.h; path = Images/Wm5Lattice.h; sourceTree = "<group>"; };
+		3CC651F20AE56F2600651FE5 /* Wm5Lattice.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = Wm5Lattice.inl; path = Images/Wm5Lattice.inl; sourceTree = "<group>"; };
+		3CC651F30AE56F2600651FE5 /* Wm5TImage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5TImage.h; path = Images/Wm5TImage.h; sourceTree = "<group>"; };
+		3CC651F40AE56F2600651FE5 /* Wm5TImage.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = Wm5TImage.inl; path = Images/Wm5TImage.inl; sourceTree = "<group>"; };
+		3CC651F50AE56F2600651FE5 /* Wm5TImage2D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5TImage2D.h; path = Images/Wm5TImage2D.h; sourceTree = "<group>"; };
+		3CC651F60AE56F2600651FE5 /* Wm5TImage2D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = Wm5TImage2D.inl; path = Images/Wm5TImage2D.inl; sourceTree = "<group>"; };
+		3CC651F70AE56F2600651FE5 /* Wm5TImage3D.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5TImage3D.h; path = Images/Wm5TImage3D.h; sourceTree = "<group>"; };
+		3CC651F80AE56F2600651FE5 /* Wm5TImage3D.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = Wm5TImage3D.inl; path = Images/Wm5TImage3D.inl; sourceTree = "<group>"; };
+		3CC6523B0AE56F3F00651FE5 /* Wm5CurvatureFlow2.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5CurvatureFlow2.cpp; path = Filters/Wm5CurvatureFlow2.cpp; sourceTree = "<group>"; };
+		3CC6523C0AE56F3F00651FE5 /* Wm5CurvatureFlow2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5CurvatureFlow2.h; path = Filters/Wm5CurvatureFlow2.h; sourceTree = "<group>"; };
+		3CC6523D0AE56F3F00651FE5 /* Wm5CurvatureFlow3.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5CurvatureFlow3.cpp; path = Filters/Wm5CurvatureFlow3.cpp; sourceTree = "<group>"; };
+		3CC6523E0AE56F3F00651FE5 /* Wm5CurvatureFlow3.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5CurvatureFlow3.h; path = Filters/Wm5CurvatureFlow3.h; sourceTree = "<group>"; };
+		3CC652400AE56F3F00651FE5 /* Wm5FastBlur.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5FastBlur.h; path = Filters/Wm5FastBlur.h; sourceTree = "<group>"; };
+		3CC652410AE56F3F00651FE5 /* Wm5GaussianBlur2.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5GaussianBlur2.cpp; path = Filters/Wm5GaussianBlur2.cpp; sourceTree = "<group>"; };
+		3CC652420AE56F3F00651FE5 /* Wm5GaussianBlur2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5GaussianBlur2.h; path = Filters/Wm5GaussianBlur2.h; sourceTree = "<group>"; };
+		3CC652430AE56F3F00651FE5 /* Wm5GaussianBlur3.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5GaussianBlur3.cpp; path = Filters/Wm5GaussianBlur3.cpp; sourceTree = "<group>"; };
+		3CC652440AE56F3F00651FE5 /* Wm5GaussianBlur3.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5GaussianBlur3.h; path = Filters/Wm5GaussianBlur3.h; sourceTree = "<group>"; };
+		3CC652450AE56F3F00651FE5 /* Wm5GradientAnisotropic2.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5GradientAnisotropic2.cpp; path = Filters/Wm5GradientAnisotropic2.cpp; sourceTree = "<group>"; };
+		3CC652460AE56F3F00651FE5 /* Wm5GradientAnisotropic2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5GradientAnisotropic2.h; path = Filters/Wm5GradientAnisotropic2.h; sourceTree = "<group>"; };
+		3CC652470AE56F3F00651FE5 /* Wm5GradientAnisotropic3.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5GradientAnisotropic3.cpp; path = Filters/Wm5GradientAnisotropic3.cpp; sourceTree = "<group>"; };
+		3CC652480AE56F3F00651FE5 /* Wm5GradientAnisotropic3.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5GradientAnisotropic3.h; path = Filters/Wm5GradientAnisotropic3.h; sourceTree = "<group>"; };
+		3CC652490AE56F3F00651FE5 /* Wm5PdeFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5PdeFilter.cpp; path = Filters/Wm5PdeFilter.cpp; sourceTree = "<group>"; };
+		3CC6524A0AE56F3F00651FE5 /* Wm5PdeFilter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5PdeFilter.h; path = Filters/Wm5PdeFilter.h; sourceTree = "<group>"; };
+		3CC6524B0AE56F3F00651FE5 /* Wm5PdeFilter.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = Wm5PdeFilter.inl; path = Filters/Wm5PdeFilter.inl; sourceTree = "<group>"; };
+		3CC6524C0AE56F3F00651FE5 /* Wm5PdeFilter2.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5PdeFilter2.cpp; path = Filters/Wm5PdeFilter2.cpp; sourceTree = "<group>"; };
+		3CC6524D0AE56F3F00651FE5 /* Wm5PdeFilter2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5PdeFilter2.h; path = Filters/Wm5PdeFilter2.h; sourceTree = "<group>"; };
+		3CC6524E0AE56F3F00651FE5 /* Wm5PdeFilter2.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = Wm5PdeFilter2.inl; path = Filters/Wm5PdeFilter2.inl; sourceTree = "<group>"; };
+		3CC6524F0AE56F3F00651FE5 /* Wm5PdeFilter3.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5PdeFilter3.cpp; path = Filters/Wm5PdeFilter3.cpp; sourceTree = "<group>"; };
+		3CC652500AE56F3F00651FE5 /* Wm5PdeFilter3.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5PdeFilter3.h; path = Filters/Wm5PdeFilter3.h; sourceTree = "<group>"; };
+		3CC652510AE56F3F00651FE5 /* Wm5PdeFilter3.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = Wm5PdeFilter3.inl; path = Filters/Wm5PdeFilter3.inl; sourceTree = "<group>"; };
+		3CC652CA0AE56F4B00651FE5 /* Wm5RasterDrawing.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5RasterDrawing.cpp; path = RasterDrawing/Wm5RasterDrawing.cpp; sourceTree = "<group>"; };
+		3CC652CB0AE56F4B00651FE5 /* Wm5RasterDrawing.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5RasterDrawing.h; path = RasterDrawing/Wm5RasterDrawing.h; sourceTree = "<group>"; };
+		3CC652D80AE56F5C00651FE5 /* Wm5FastMarch.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5FastMarch.cpp; path = Segmenters/Wm5FastMarch.cpp; sourceTree = "<group>"; };
+		3CC652D90AE56F5C00651FE5 /* Wm5FastMarch.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5FastMarch.h; path = Segmenters/Wm5FastMarch.h; sourceTree = "<group>"; };
+		3CC652DA0AE56F5C00651FE5 /* Wm5FastMarch.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = Wm5FastMarch.inl; path = Segmenters/Wm5FastMarch.inl; sourceTree = "<group>"; };
+		3CC652DB0AE56F5C00651FE5 /* Wm5FastMarch2.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5FastMarch2.cpp; path = Segmenters/Wm5FastMarch2.cpp; sourceTree = "<group>"; };
+		3CC652DC0AE56F5C00651FE5 /* Wm5FastMarch2.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5FastMarch2.h; path = Segmenters/Wm5FastMarch2.h; sourceTree = "<group>"; };
+		3CC652DD0AE56F5C00651FE5 /* Wm5FastMarch2.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = Wm5FastMarch2.inl; path = Segmenters/Wm5FastMarch2.inl; sourceTree = "<group>"; };
+		3CC652DE0AE56F5C00651FE5 /* Wm5FastMarch3.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5FastMarch3.cpp; path = Segmenters/Wm5FastMarch3.cpp; sourceTree = "<group>"; };
+		3CC652DF0AE56F5C00651FE5 /* Wm5FastMarch3.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5FastMarch3.h; path = Segmenters/Wm5FastMarch3.h; sourceTree = "<group>"; };
+		3CC652E00AE56F5C00651FE5 /* Wm5FastMarch3.inl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = Wm5FastMarch3.inl; path = Segmenters/Wm5FastMarch3.inl; sourceTree = "<group>"; };
+		3CC653F40AE5705900651FE5 /* Wm5Imagics.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Wm5Imagics.h; sourceTree = "<group>"; };
+		3CC653F50AE5705900651FE5 /* Wm5ImagicsLIB.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Wm5ImagicsLIB.h; sourceTree = "<group>"; };
+		3CC653F60AE5705900651FE5 /* Wm5ImagicsPCH.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Wm5ImagicsPCH.cpp; sourceTree = "<group>"; };
+		3CC653F70AE5705900651FE5 /* Wm5ImagicsPCH.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Wm5ImagicsPCH.h; sourceTree = "<group>"; };
+		74B57E8D07F3427D00913EC4 /* libWm5Imagicsd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libWm5Imagicsd.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		74D6DDFE07F342E200267169 /* libWm5Imagics.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libWm5Imagics.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3C64CC5A1256B51C00F4B0B0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64CCB21256B6CC00F4B0B0 /* libWm5Cored.dylib in Frameworks */,
+				3C64CCB31256B6CC00F4B0B0 /* libWm5Mathematicsd.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C64CCBA1256B6E900F4B0B0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64CCFE1256B89600F4B0B0 /* libWm5Core.dylib in Frameworks */,
+				3C64CCFF1256B89600F4B0B0 /* libWm5Mathematics.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74B57E8B07F3427D00913EC4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D6DDFD07F342E200267169 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3C64CCA81256B69C00F4B0B0 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				3C64CCAB1256B6A400F4B0B0 /* DebugDLL */,
+				3C64CCAE1256B6AC00F4B0B0 /* ReleaseDLL */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		3C64CCAB1256B6A400F4B0B0 /* DebugDLL */ = {
+			isa = PBXGroup;
+			children = (
+				3C64CCB01256B6CC00F4B0B0 /* libWm5Cored.dylib */,
+				3C64CCB11256B6CC00F4B0B0 /* libWm5Mathematicsd.dylib */,
+			);
+			name = DebugDLL;
+			sourceTree = "<group>";
+		};
+		3C64CCAE1256B6AC00F4B0B0 /* ReleaseDLL */ = {
+			isa = PBXGroup;
+			children = (
+				3C64CCFC1256B89600F4B0B0 /* libWm5Core.dylib */,
+				3C64CCFD1256B89600F4B0B0 /* libWm5Mathematics.dylib */,
+			);
+			name = ReleaseDLL;
+			sourceTree = "<group>";
+		};
+		3CC651840AE56E7C00651FE5 /* BinaryOperations */ = {
+			isa = PBXGroup;
+			children = (
+				3CC651940AE56EF800651FE5 /* Wm5Binary2D.cpp */,
+				3CC651950AE56EF800651FE5 /* Wm5Binary2D.h */,
+				3CC651960AE56EF800651FE5 /* Wm5Binary3D.cpp */,
+				3CC651970AE56EF800651FE5 /* Wm5Binary3D.h */,
+			);
+			name = BinaryOperations;
+			sourceTree = "<group>";
+		};
+		3CC651870AE56E8F00651FE5 /* Extraction */ = {
+			isa = PBXGroup;
+			children = (
+				3CC651B00AE56F0E00651FE5 /* Wm5ExtractCurveSquares.cpp */,
+				3CC651B10AE56F0E00651FE5 /* Wm5ExtractCurveSquares.h */,
+				3CC651B20AE56F0E00651FE5 /* Wm5ExtractCurveTris.cpp */,
+				3CC651B30AE56F0E00651FE5 /* Wm5ExtractCurveTris.h */,
+				3CC651B40AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.cpp */,
+				3CC651B50AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.h */,
+				3CC651B70AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.cpp */,
+				3CC651B80AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.h */,
+			);
+			name = Extraction;
+			sourceTree = "<group>";
+		};
+		3CC6518A0AE56E9A00651FE5 /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+				3CC4F85E10FCD44F00C42DBB /* Wm5FastBlur.inl */,
+				3CC6523B0AE56F3F00651FE5 /* Wm5CurvatureFlow2.cpp */,
+				3CC6523C0AE56F3F00651FE5 /* Wm5CurvatureFlow2.h */,
+				3CC6523D0AE56F3F00651FE5 /* Wm5CurvatureFlow3.cpp */,
+				3CC6523E0AE56F3F00651FE5 /* Wm5CurvatureFlow3.h */,
+				3CC652400AE56F3F00651FE5 /* Wm5FastBlur.h */,
+				3CC652410AE56F3F00651FE5 /* Wm5GaussianBlur2.cpp */,
+				3CC652420AE56F3F00651FE5 /* Wm5GaussianBlur2.h */,
+				3CC652430AE56F3F00651FE5 /* Wm5GaussianBlur3.cpp */,
+				3CC652440AE56F3F00651FE5 /* Wm5GaussianBlur3.h */,
+				3CC652450AE56F3F00651FE5 /* Wm5GradientAnisotropic2.cpp */,
+				3CC652460AE56F3F00651FE5 /* Wm5GradientAnisotropic2.h */,
+				3CC652470AE56F3F00651FE5 /* Wm5GradientAnisotropic3.cpp */,
+				3CC652480AE56F3F00651FE5 /* Wm5GradientAnisotropic3.h */,
+				3CC652490AE56F3F00651FE5 /* Wm5PdeFilter.cpp */,
+				3CC6524A0AE56F3F00651FE5 /* Wm5PdeFilter.h */,
+				3CC6524B0AE56F3F00651FE5 /* Wm5PdeFilter.inl */,
+				3CC6524C0AE56F3F00651FE5 /* Wm5PdeFilter2.cpp */,
+				3CC6524D0AE56F3F00651FE5 /* Wm5PdeFilter2.h */,
+				3CC6524E0AE56F3F00651FE5 /* Wm5PdeFilter2.inl */,
+				3CC6524F0AE56F3F00651FE5 /* Wm5PdeFilter3.cpp */,
+				3CC652500AE56F3F00651FE5 /* Wm5PdeFilter3.h */,
+				3CC652510AE56F3F00651FE5 /* Wm5PdeFilter3.inl */,
+			);
+			name = Filters;
+			sourceTree = "<group>";
+		};
+		3CC6518D0AE56EA400651FE5 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				3CC651E90AE56F2600651FE5 /* Wm5Element.cpp */,
+				3CC651EA0AE56F2600651FE5 /* Wm5Element.h */,
+				3CC651EB0AE56F2600651FE5 /* Wm5Element.inl */,
+				3CC651EC0AE56F2600651FE5 /* Wm5ImageConvert.cpp */,
+				3CC651ED0AE56F2600651FE5 /* Wm5ImageConvert.h */,
+				3CC651EE0AE56F2600651FE5 /* Wm5Images.cpp */,
+				3CC651EF0AE56F2600651FE5 /* Wm5Images.h */,
+				3CC651F00AE56F2600651FE5 /* Wm5Lattice.cpp */,
+				3CC651F10AE56F2600651FE5 /* Wm5Lattice.h */,
+				3CC651F20AE56F2600651FE5 /* Wm5Lattice.inl */,
+				3CC651F30AE56F2600651FE5 /* Wm5TImage.h */,
+				3CC651F40AE56F2600651FE5 /* Wm5TImage.inl */,
+				3CC651F50AE56F2600651FE5 /* Wm5TImage2D.h */,
+				3CC651F60AE56F2600651FE5 /* Wm5TImage2D.inl */,
+				3CC651F70AE56F2600651FE5 /* Wm5TImage3D.h */,
+				3CC651F80AE56F2600651FE5 /* Wm5TImage3D.inl */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+		3CC651900AE56EAF00651FE5 /* RasterDrawing */ = {
+			isa = PBXGroup;
+			children = (
+				3CC652CA0AE56F4B00651FE5 /* Wm5RasterDrawing.cpp */,
+				3CC652CB0AE56F4B00651FE5 /* Wm5RasterDrawing.h */,
+			);
+			name = RasterDrawing;
+			sourceTree = "<group>";
+		};
+		3CC651930AE56EBD00651FE5 /* Segmenters */ = {
+			isa = PBXGroup;
+			children = (
+				3CC652D80AE56F5C00651FE5 /* Wm5FastMarch.cpp */,
+				3CC652D90AE56F5C00651FE5 /* Wm5FastMarch.h */,
+				3CC652DA0AE56F5C00651FE5 /* Wm5FastMarch.inl */,
+				3CC652DB0AE56F5C00651FE5 /* Wm5FastMarch2.cpp */,
+				3CC652DC0AE56F5C00651FE5 /* Wm5FastMarch2.h */,
+				3CC652DD0AE56F5C00651FE5 /* Wm5FastMarch2.inl */,
+				3CC652DE0AE56F5C00651FE5 /* Wm5FastMarch3.cpp */,
+				3CC652DF0AE56F5C00651FE5 /* Wm5FastMarch3.h */,
+				3CC652E00AE56F5C00651FE5 /* Wm5FastMarch3.inl */,
+			);
+			name = Segmenters;
+			sourceTree = "<group>";
+		};
+		74B57E7F07F3425300913EC4 = {
+			isa = PBXGroup;
+			children = (
+				74D6DE0107F3432700267169 /* Sources */,
+				3C64CCA81256B69C00F4B0B0 /* Libraries */,
+				74B57E8E07F3427D00913EC4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		74B57E8E07F3427D00913EC4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				74B57E8D07F3427D00913EC4 /* libWm5Imagicsd.a */,
+				74D6DDFE07F342E200267169 /* libWm5Imagics.a */,
+				3C64CC5C1256B51C00F4B0B0 /* libWm5Imagicsd.dylib */,
+				3C64CCBC1256B6E900F4B0B0 /* libWm5Imagics.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		74D6DE0107F3432700267169 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				3CC653F40AE5705900651FE5 /* Wm5Imagics.h */,
+				3CC653F50AE5705900651FE5 /* Wm5ImagicsLIB.h */,
+				3CC653F60AE5705900651FE5 /* Wm5ImagicsPCH.cpp */,
+				3CC653F70AE5705900651FE5 /* Wm5ImagicsPCH.h */,
+				3CC651840AE56E7C00651FE5 /* BinaryOperations */,
+				3CC651870AE56E8F00651FE5 /* Extraction */,
+				3CC6518A0AE56E9A00651FE5 /* Filters */,
+				3CC6518D0AE56EA400651FE5 /* Images */,
+				3CC651900AE56EAF00651FE5 /* RasterDrawing */,
+				3CC651930AE56EBD00651FE5 /* Segmenters */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		3C64CC581256B51C00F4B0B0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64CC7B1256B59300F4B0B0 /* Wm5PdeFilter3.h in Headers */,
+				3C64CC7C1256B59300F4B0B0 /* Wm5FastMarch3.h in Headers */,
+				3C64CC7D1256B59300F4B0B0 /* Wm5ExtractCurveSquares.h in Headers */,
+				3C64CC7E1256B59300F4B0B0 /* Wm5FastBlur.h in Headers */,
+				3C64CC7F1256B59300F4B0B0 /* Wm5Element.h in Headers */,
+				3C64CC801256B59300F4B0B0 /* Wm5TImage3D.h in Headers */,
+				3C64CC811256B59300F4B0B0 /* Wm5GaussianBlur3.h in Headers */,
+				3C64CC821256B59300F4B0B0 /* Wm5Binary3D.h in Headers */,
+				3C64CC831256B59300F4B0B0 /* Wm5PdeFilter.h in Headers */,
+				3C64CC841256B59300F4B0B0 /* Wm5GradientAnisotropic2.h in Headers */,
+				3C64CC851256B59300F4B0B0 /* Wm5Binary2D.h in Headers */,
+				3C64CC861256B59300F4B0B0 /* Wm5PdeFilter2.h in Headers */,
+				3C64CC871256B59300F4B0B0 /* Wm5ImagicsLIB.h in Headers */,
+				3C64CC881256B59300F4B0B0 /* Wm5FastMarch2.h in Headers */,
+				3C64CC891256B59300F4B0B0 /* Wm5ExtractSurfaceTetra.h in Headers */,
+				3C64CC8A1256B59300F4B0B0 /* Wm5Imagics.h in Headers */,
+				3C64CC8B1256B59300F4B0B0 /* Wm5CurvatureFlow2.h in Headers */,
+				3C64CC8C1256B59300F4B0B0 /* Wm5FastMarch.h in Headers */,
+				3C64CC8D1256B59300F4B0B0 /* Wm5ImageConvert.h in Headers */,
+				3C64CC8E1256B59300F4B0B0 /* Wm5ExtractCurveTris.h in Headers */,
+				3C64CC8F1256B59300F4B0B0 /* Wm5GaussianBlur2.h in Headers */,
+				3C64CC901256B59300F4B0B0 /* Wm5TImage2D.h in Headers */,
+				3C64CC911256B59300F4B0B0 /* Wm5CurvatureFlow3.h in Headers */,
+				3C64CC921256B59300F4B0B0 /* Wm5ExtractSurfaceCubes.h in Headers */,
+				3C64CC931256B59300F4B0B0 /* Wm5Lattice.h in Headers */,
+				3C64CC941256B59300F4B0B0 /* Wm5RasterDrawing.h in Headers */,
+				3C64CC951256B59300F4B0B0 /* Wm5ImagicsPCH.h in Headers */,
+				3C64CC961256B59300F4B0B0 /* Wm5GradientAnisotropic3.h in Headers */,
+				3C64CC971256B59300F4B0B0 /* Wm5Images.h in Headers */,
+				3C64CC981256B59300F4B0B0 /* Wm5TImage.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C64CCB81256B6E900F4B0B0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64CCDB1256B7F200F4B0B0 /* Wm5PdeFilter3.h in Headers */,
+				3C64CCDC1256B7F200F4B0B0 /* Wm5FastMarch3.h in Headers */,
+				3C64CCDD1256B7F200F4B0B0 /* Wm5ExtractCurveSquares.h in Headers */,
+				3C64CCDE1256B7F200F4B0B0 /* Wm5FastBlur.h in Headers */,
+				3C64CCDF1256B7F200F4B0B0 /* Wm5Element.h in Headers */,
+				3C64CCE01256B7F200F4B0B0 /* Wm5TImage3D.h in Headers */,
+				3C64CCE11256B7F200F4B0B0 /* Wm5GaussianBlur3.h in Headers */,
+				3C64CCE21256B7F200F4B0B0 /* Wm5Binary3D.h in Headers */,
+				3C64CCE31256B7F200F4B0B0 /* Wm5PdeFilter.h in Headers */,
+				3C64CCE41256B7F200F4B0B0 /* Wm5GradientAnisotropic2.h in Headers */,
+				3C64CCE51256B7F200F4B0B0 /* Wm5Binary2D.h in Headers */,
+				3C64CCE61256B7F200F4B0B0 /* Wm5PdeFilter2.h in Headers */,
+				3C64CCE71256B7F200F4B0B0 /* Wm5ImagicsLIB.h in Headers */,
+				3C64CCE81256B7F200F4B0B0 /* Wm5FastMarch2.h in Headers */,
+				3C64CCE91256B7F200F4B0B0 /* Wm5ExtractSurfaceTetra.h in Headers */,
+				3C64CCEA1256B7F200F4B0B0 /* Wm5Imagics.h in Headers */,
+				3C64CCEB1256B7F200F4B0B0 /* Wm5CurvatureFlow2.h in Headers */,
+				3C64CCEC1256B7F200F4B0B0 /* Wm5FastMarch.h in Headers */,
+				3C64CCED1256B7F200F4B0B0 /* Wm5ImageConvert.h in Headers */,
+				3C64CCEE1256B7F200F4B0B0 /* Wm5ExtractCurveTris.h in Headers */,
+				3C64CCEF1256B7F200F4B0B0 /* Wm5GaussianBlur2.h in Headers */,
+				3C64CCF01256B7F200F4B0B0 /* Wm5TImage2D.h in Headers */,
+				3C64CCF11256B7F200F4B0B0 /* Wm5CurvatureFlow3.h in Headers */,
+				3C64CCF21256B7F200F4B0B0 /* Wm5ExtractSurfaceCubes.h in Headers */,
+				3C64CCF31256B7F200F4B0B0 /* Wm5Lattice.h in Headers */,
+				3C64CCF41256B7F200F4B0B0 /* Wm5RasterDrawing.h in Headers */,
+				3C64CCF51256B7F200F4B0B0 /* Wm5ImagicsPCH.h in Headers */,
+				3C64CCF61256B7F200F4B0B0 /* Wm5GradientAnisotropic3.h in Headers */,
+				3C64CCF71256B7F200F4B0B0 /* Wm5Images.h in Headers */,
+				3C64CCF81256B7F200F4B0B0 /* Wm5TImage.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74B57E8907F3427D00913EC4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CC651990AE56EF800651FE5 /* Wm5Binary2D.h in Headers */,
+				3CC6519B0AE56EF800651FE5 /* Wm5Binary3D.h in Headers */,
+				3CC651BA0AE56F0E00651FE5 /* Wm5ExtractCurveSquares.h in Headers */,
+				3CC651BC0AE56F0E00651FE5 /* Wm5ExtractCurveTris.h in Headers */,
+				3CC651BE0AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.h in Headers */,
+				3CC651C00AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.h in Headers */,
+				3CC651FA0AE56F2600651FE5 /* Wm5Element.h in Headers */,
+				3CC651FC0AE56F2600651FE5 /* Wm5ImageConvert.h in Headers */,
+				3CC651FE0AE56F2600651FE5 /* Wm5Images.h in Headers */,
+				3CC652000AE56F2600651FE5 /* Wm5Lattice.h in Headers */,
+				3CC652010AE56F2600651FE5 /* Wm5TImage.h in Headers */,
+				3CC652020AE56F2600651FE5 /* Wm5TImage2D.h in Headers */,
+				3CC652030AE56F2600651FE5 /* Wm5TImage3D.h in Headers */,
+				3CC652530AE56F3F00651FE5 /* Wm5CurvatureFlow2.h in Headers */,
+				3CC652550AE56F3F00651FE5 /* Wm5CurvatureFlow3.h in Headers */,
+				3CC652570AE56F3F00651FE5 /* Wm5FastBlur.h in Headers */,
+				3CC652590AE56F3F00651FE5 /* Wm5GaussianBlur2.h in Headers */,
+				3CC6525B0AE56F3F00651FE5 /* Wm5GaussianBlur3.h in Headers */,
+				3CC6525D0AE56F3F00651FE5 /* Wm5GradientAnisotropic2.h in Headers */,
+				3CC6525F0AE56F3F00651FE5 /* Wm5GradientAnisotropic3.h in Headers */,
+				3CC652610AE56F3F00651FE5 /* Wm5PdeFilter.h in Headers */,
+				3CC652630AE56F3F00651FE5 /* Wm5PdeFilter2.h in Headers */,
+				3CC652650AE56F3F00651FE5 /* Wm5PdeFilter3.h in Headers */,
+				3CC652CD0AE56F4C00651FE5 /* Wm5RasterDrawing.h in Headers */,
+				3CC6530C0AE56F5C00651FE5 /* Wm5FastMarch.h in Headers */,
+				3CC6530E0AE56F5C00651FE5 /* Wm5FastMarch2.h in Headers */,
+				3CC653100AE56F5C00651FE5 /* Wm5FastMarch3.h in Headers */,
+				3CC653F80AE5705900651FE5 /* Wm5Imagics.h in Headers */,
+				3CC653F90AE5705900651FE5 /* Wm5ImagicsLIB.h in Headers */,
+				3CC653FB0AE5705900651FE5 /* Wm5ImagicsPCH.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D6DDFB07F342E200267169 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CC6519D0AE56EF800651FE5 /* Wm5Binary2D.h in Headers */,
+				3CC6519F0AE56EF800651FE5 /* Wm5Binary3D.h in Headers */,
+				3CC651C20AE56F0E00651FE5 /* Wm5ExtractCurveSquares.h in Headers */,
+				3CC651C40AE56F0E00651FE5 /* Wm5ExtractCurveTris.h in Headers */,
+				3CC651C60AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.h in Headers */,
+				3CC651C80AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.h in Headers */,
+				3CC652050AE56F2600651FE5 /* Wm5Element.h in Headers */,
+				3CC652070AE56F2600651FE5 /* Wm5ImageConvert.h in Headers */,
+				3CC652090AE56F2600651FE5 /* Wm5Images.h in Headers */,
+				3CC6520B0AE56F2600651FE5 /* Wm5Lattice.h in Headers */,
+				3CC6520C0AE56F2600651FE5 /* Wm5TImage.h in Headers */,
+				3CC6520D0AE56F2600651FE5 /* Wm5TImage2D.h in Headers */,
+				3CC6520E0AE56F2600651FE5 /* Wm5TImage3D.h in Headers */,
+				3CC652670AE56F3F00651FE5 /* Wm5CurvatureFlow2.h in Headers */,
+				3CC652690AE56F3F00651FE5 /* Wm5CurvatureFlow3.h in Headers */,
+				3CC6526B0AE56F3F00651FE5 /* Wm5FastBlur.h in Headers */,
+				3CC6526D0AE56F3F00651FE5 /* Wm5GaussianBlur2.h in Headers */,
+				3CC6526F0AE56F3F00651FE5 /* Wm5GaussianBlur3.h in Headers */,
+				3CC652710AE56F3F00651FE5 /* Wm5GradientAnisotropic2.h in Headers */,
+				3CC652730AE56F3F00651FE5 /* Wm5GradientAnisotropic3.h in Headers */,
+				3CC652750AE56F3F00651FE5 /* Wm5PdeFilter.h in Headers */,
+				3CC652770AE56F3F00651FE5 /* Wm5PdeFilter2.h in Headers */,
+				3CC652790AE56F3F00651FE5 /* Wm5PdeFilter3.h in Headers */,
+				3CC652CF0AE56F4C00651FE5 /* Wm5RasterDrawing.h in Headers */,
+				3CC653320AE56F5C00651FE5 /* Wm5FastMarch.h in Headers */,
+				3CC653340AE56F5C00651FE5 /* Wm5FastMarch2.h in Headers */,
+				3CC653360AE56F5C00651FE5 /* Wm5FastMarch3.h in Headers */,
+				3CC653FC0AE5705900651FE5 /* Wm5Imagics.h in Headers */,
+				3CC653FD0AE5705900651FE5 /* Wm5ImagicsLIB.h in Headers */,
+				3CC653FF0AE5705900651FE5 /* Wm5ImagicsPCH.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		3C64CC5B1256B51C00F4B0B0 /* Debug Dynamic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C64CC621256B55800F4B0B0 /* Build configuration list for PBXNativeTarget "Debug Dynamic" */;
+			buildPhases = (
+				3C64CC581256B51C00F4B0B0 /* Headers */,
+				3C64CC591256B51C00F4B0B0 /* Sources */,
+				3C64CC5A1256B51C00F4B0B0 /* Frameworks */,
+				3C64CC611256B52800F4B0B0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Debug Dynamic";
+			productName = "Debug Dynamic";
+			productReference = 3C64CC5C1256B51C00F4B0B0 /* libWm5Imagicsd.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		3C64CCBB1256B6E900F4B0B0 /* Release Dynamic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C64CCBE1256B72D00F4B0B0 /* Build configuration list for PBXNativeTarget "Release Dynamic" */;
+			buildPhases = (
+				3C64CCB81256B6E900F4B0B0 /* Headers */,
+				3C64CCB91256B6E900F4B0B0 /* Sources */,
+				3C64CCBA1256B6E900F4B0B0 /* Frameworks */,
+				3C64CCC21256B7C800F4B0B0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Release Dynamic";
+			productName = "Release Dynamic";
+			productReference = 3C64CCBC1256B6E900F4B0B0 /* libWm5Imagics.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		74B57E8C07F3427D00913EC4 /* Debug Static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C027382088FE67300A93309 /* Build configuration list for PBXNativeTarget "Debug Static" */;
+			buildPhases = (
+				74B57E8907F3427D00913EC4 /* Headers */,
+				74B57E8A07F3427D00913EC4 /* Sources */,
+				74B57E8B07F3427D00913EC4 /* Frameworks */,
+				3C6FBBCD083E65BF0068AA05 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Debug Static";
+			productName = "Static Debug";
+			productReference = 74B57E8D07F3427D00913EC4 /* libWm5Imagicsd.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		74D6DDFA07F342E200267169 /* Release Static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C027385088FE67300A93309 /* Build configuration list for PBXNativeTarget "Release Static" */;
+			buildPhases = (
+				74D6DDFB07F342E200267169 /* Headers */,
+				74D6DDFC07F342E200267169 /* Sources */,
+				74D6DDFD07F342E200267169 /* Frameworks */,
+				3C6FBBD0083E65D80068AA05 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Release Static";
+			productName = "Static Debug";
+			productReference = 74D6DDFE07F342E200267169 /* libWm5Imagics.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		74B57E8307F3425300913EC4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+			};
+			buildConfigurationList = 3C027397088FE67400A93309 /* Build configuration list for PBXProject "LibImagics" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 74B57E7F07F3425300913EC4;
+			productRefGroup = 74B57E8E07F3427D00913EC4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				74B57E8C07F3427D00913EC4 /* Debug Static */,
+				74D6DDFA07F342E200267169 /* Release Static */,
+				3C64CC5B1256B51C00F4B0B0 /* Debug Dynamic */,
+				3C64CCBB1256B6E900F4B0B0 /* Release Dynamic */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3C64CC611256B52800F4B0B0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkDebugDynamic.sh;
+		};
+		3C64CCC21256B7C800F4B0B0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkReleaseDynamic.sh;
+		};
+		3C6FBBCD083E65BF0068AA05 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkDebugStatic.sh;
+		};
+		3C6FBBD0083E65D80068AA05 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkReleaseStatic.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3C64CC591256B51C00F4B0B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64CC631256B55B00F4B0B0 /* Wm5CurvatureFlow3.cpp in Sources */,
+				3C64CC641256B55B00F4B0B0 /* Wm5ImageConvert.cpp in Sources */,
+				3C64CC651256B55B00F4B0B0 /* Wm5RasterDrawing.cpp in Sources */,
+				3C64CC661256B55B00F4B0B0 /* Wm5Images.cpp in Sources */,
+				3C64CC671256B55B00F4B0B0 /* Wm5PdeFilter3.cpp in Sources */,
+				3C64CC681256B55B00F4B0B0 /* Wm5GaussianBlur3.cpp in Sources */,
+				3C64CC691256B55B00F4B0B0 /* Wm5ExtractCurveSquares.cpp in Sources */,
+				3C64CC6A1256B55B00F4B0B0 /* Wm5GaussianBlur2.cpp in Sources */,
+				3C64CC6B1256B55B00F4B0B0 /* Wm5PdeFilter2.cpp in Sources */,
+				3C64CC6C1256B55B00F4B0B0 /* Wm5Lattice.cpp in Sources */,
+				3C64CC6D1256B55B00F4B0B0 /* Wm5GradientAnisotropic3.cpp in Sources */,
+				3C64CC6E1256B55B00F4B0B0 /* Wm5ImagicsPCH.cpp in Sources */,
+				3C64CC6F1256B55B00F4B0B0 /* Wm5Binary2D.cpp in Sources */,
+				3C64CC701256B55B00F4B0B0 /* Wm5GradientAnisotropic2.cpp in Sources */,
+				3C64CC711256B55B00F4B0B0 /* Wm5CurvatureFlow2.cpp in Sources */,
+				3C64CC721256B55B00F4B0B0 /* Wm5PdeFilter.cpp in Sources */,
+				3C64CC731256B55B00F4B0B0 /* Wm5Binary3D.cpp in Sources */,
+				3C64CC741256B55B00F4B0B0 /* Wm5FastMarch.cpp in Sources */,
+				3C64CC751256B55B00F4B0B0 /* Wm5ExtractSurfaceTetra.cpp in Sources */,
+				3C64CC761256B55B00F4B0B0 /* Wm5FastMarch3.cpp in Sources */,
+				3C64CC771256B55B00F4B0B0 /* Wm5ExtractSurfaceCubes.cpp in Sources */,
+				3C64CC781256B55B00F4B0B0 /* Wm5ExtractCurveTris.cpp in Sources */,
+				3C64CC791256B55B00F4B0B0 /* Wm5Element.cpp in Sources */,
+				3C64CC7A1256B55B00F4B0B0 /* Wm5FastMarch2.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C64CCB91256B6E900F4B0B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64CCC31256B7E100F4B0B0 /* Wm5CurvatureFlow3.cpp in Sources */,
+				3C64CCC41256B7E100F4B0B0 /* Wm5ImageConvert.cpp in Sources */,
+				3C64CCC51256B7E100F4B0B0 /* Wm5RasterDrawing.cpp in Sources */,
+				3C64CCC61256B7E100F4B0B0 /* Wm5Images.cpp in Sources */,
+				3C64CCC71256B7E100F4B0B0 /* Wm5PdeFilter3.cpp in Sources */,
+				3C64CCC81256B7E100F4B0B0 /* Wm5GaussianBlur3.cpp in Sources */,
+				3C64CCC91256B7E100F4B0B0 /* Wm5ExtractCurveSquares.cpp in Sources */,
+				3C64CCCA1256B7E100F4B0B0 /* Wm5GaussianBlur2.cpp in Sources */,
+				3C64CCCB1256B7E100F4B0B0 /* Wm5PdeFilter2.cpp in Sources */,
+				3C64CCCC1256B7E100F4B0B0 /* Wm5Lattice.cpp in Sources */,
+				3C64CCCD1256B7E100F4B0B0 /* Wm5GradientAnisotropic3.cpp in Sources */,
+				3C64CCCE1256B7E100F4B0B0 /* Wm5ImagicsPCH.cpp in Sources */,
+				3C64CCCF1256B7E100F4B0B0 /* Wm5Binary2D.cpp in Sources */,
+				3C64CCD01256B7E100F4B0B0 /* Wm5GradientAnisotropic2.cpp in Sources */,
+				3C64CCD11256B7E100F4B0B0 /* Wm5CurvatureFlow2.cpp in Sources */,
+				3C64CCD21256B7E100F4B0B0 /* Wm5PdeFilter.cpp in Sources */,
+				3C64CCD31256B7E100F4B0B0 /* Wm5Binary3D.cpp in Sources */,
+				3C64CCD41256B7E100F4B0B0 /* Wm5FastMarch.cpp in Sources */,
+				3C64CCD51256B7E100F4B0B0 /* Wm5ExtractSurfaceTetra.cpp in Sources */,
+				3C64CCD61256B7E100F4B0B0 /* Wm5FastMarch3.cpp in Sources */,
+				3C64CCD71256B7E100F4B0B0 /* Wm5ExtractSurfaceCubes.cpp in Sources */,
+				3C64CCD81256B7E100F4B0B0 /* Wm5ExtractCurveTris.cpp in Sources */,
+				3C64CCD91256B7E100F4B0B0 /* Wm5Element.cpp in Sources */,
+				3C64CCDA1256B7E100F4B0B0 /* Wm5FastMarch2.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74B57E8A07F3427D00913EC4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CC651980AE56EF800651FE5 /* Wm5Binary2D.cpp in Sources */,
+				3CC6519A0AE56EF800651FE5 /* Wm5Binary3D.cpp in Sources */,
+				3CC651B90AE56F0E00651FE5 /* Wm5ExtractCurveSquares.cpp in Sources */,
+				3CC651BB0AE56F0E00651FE5 /* Wm5ExtractCurveTris.cpp in Sources */,
+				3CC651BD0AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.cpp in Sources */,
+				3CC651BF0AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.cpp in Sources */,
+				3CC651F90AE56F2600651FE5 /* Wm5Element.cpp in Sources */,
+				3CC651FB0AE56F2600651FE5 /* Wm5ImageConvert.cpp in Sources */,
+				3CC651FD0AE56F2600651FE5 /* Wm5Images.cpp in Sources */,
+				3CC651FF0AE56F2600651FE5 /* Wm5Lattice.cpp in Sources */,
+				3CC652520AE56F3F00651FE5 /* Wm5CurvatureFlow2.cpp in Sources */,
+				3CC652540AE56F3F00651FE5 /* Wm5CurvatureFlow3.cpp in Sources */,
+				3CC652580AE56F3F00651FE5 /* Wm5GaussianBlur2.cpp in Sources */,
+				3CC6525A0AE56F3F00651FE5 /* Wm5GaussianBlur3.cpp in Sources */,
+				3CC6525C0AE56F3F00651FE5 /* Wm5GradientAnisotropic2.cpp in Sources */,
+				3CC6525E0AE56F3F00651FE5 /* Wm5GradientAnisotropic3.cpp in Sources */,
+				3CC652600AE56F3F00651FE5 /* Wm5PdeFilter.cpp in Sources */,
+				3CC652620AE56F3F00651FE5 /* Wm5PdeFilter2.cpp in Sources */,
+				3CC652640AE56F3F00651FE5 /* Wm5PdeFilter3.cpp in Sources */,
+				3CC652CC0AE56F4C00651FE5 /* Wm5RasterDrawing.cpp in Sources */,
+				3CC6530B0AE56F5C00651FE5 /* Wm5FastMarch.cpp in Sources */,
+				3CC6530D0AE56F5C00651FE5 /* Wm5FastMarch2.cpp in Sources */,
+				3CC6530F0AE56F5C00651FE5 /* Wm5FastMarch3.cpp in Sources */,
+				3CC653FA0AE5705900651FE5 /* Wm5ImagicsPCH.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D6DDFC07F342E200267169 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CC6519C0AE56EF800651FE5 /* Wm5Binary2D.cpp in Sources */,
+				3CC6519E0AE56EF800651FE5 /* Wm5Binary3D.cpp in Sources */,
+				3CC651C10AE56F0E00651FE5 /* Wm5ExtractCurveSquares.cpp in Sources */,
+				3CC651C30AE56F0E00651FE5 /* Wm5ExtractCurveTris.cpp in Sources */,
+				3CC651C50AE56F0E00651FE5 /* Wm5ExtractSurfaceCubes.cpp in Sources */,
+				3CC651C70AE56F0E00651FE5 /* Wm5ExtractSurfaceTetra.cpp in Sources */,
+				3CC652040AE56F2600651FE5 /* Wm5Element.cpp in Sources */,
+				3CC652060AE56F2600651FE5 /* Wm5ImageConvert.cpp in Sources */,
+				3CC652080AE56F2600651FE5 /* Wm5Images.cpp in Sources */,
+				3CC6520A0AE56F2600651FE5 /* Wm5Lattice.cpp in Sources */,
+				3CC652660AE56F3F00651FE5 /* Wm5CurvatureFlow2.cpp in Sources */,
+				3CC652680AE56F3F00651FE5 /* Wm5CurvatureFlow3.cpp in Sources */,
+				3CC6526C0AE56F3F00651FE5 /* Wm5GaussianBlur2.cpp in Sources */,
+				3CC6526E0AE56F3F00651FE5 /* Wm5GaussianBlur3.cpp in Sources */,
+				3CC652700AE56F3F00651FE5 /* Wm5GradientAnisotropic2.cpp in Sources */,
+				3CC652720AE56F3F00651FE5 /* Wm5GradientAnisotropic3.cpp in Sources */,
+				3CC652740AE56F3F00651FE5 /* Wm5PdeFilter.cpp in Sources */,
+				3CC652760AE56F3F00651FE5 /* Wm5PdeFilter2.cpp in Sources */,
+				3CC652780AE56F3F00651FE5 /* Wm5PdeFilter3.cpp in Sources */,
+				3CC652CE0AE56F4C00651FE5 /* Wm5RasterDrawing.cpp in Sources */,
+				3CC653310AE56F5C00651FE5 /* Wm5FastMarch.cpp in Sources */,
+				3CC653330AE56F5C00651FE5 /* Wm5FastMarch2.cpp in Sources */,
+				3CC653350AE56F5C00651FE5 /* Wm5FastMarch3.cpp in Sources */,
+				3CC653FE0AE5705900651FE5 /* Wm5ImagicsPCH.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		3C027384088FE67300A93309 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Wm5ImagicsPCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+				);
+				HEADER_SEARCH_PATHS = "${SRCROOT}/../SDK/Include";
+				LIBRARY_STYLE = STATIC;
+				PRODUCT_NAME = Wm5Imagicsd;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/DebugStatic";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		3C027387088FE67300A93309 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Wm5ImagicsPCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+				);
+				HEADER_SEARCH_PATHS = "${SRCROOT}/../SDK/Include";
+				LIBRARY_STYLE = STATIC;
+				PRODUCT_NAME = Wm5Imagics;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/ReleaseStatic";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		3C027399088FE67400A93309 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_PARAMETER = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				SDKROOT = macosx;
+			};
+			name = Default;
+		};
+		3C64CC5D1256B51C00F4B0B0 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Wm5ImagicsPCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+				);
+				HEADER_SEARCH_PATHS = "${SRCROOT}/../SDK/Include";
+				INSTALL_PATH = "${SRCROOT}/../SDK/Library/DebugDLL";
+				LIBRARY_SEARCH_PATHS = "${SRCROOT}/../SDK/Library/DebugDLL";
+				OTHER_LDFLAGS = (
+					"-seg1addr",
+					0x10000000,
+					"-framework",
+					Carbon,
+				);
+				PRODUCT_NAME = Wm5Imagicsd;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/DebugDynamic";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		3C64CCBD1256B6E900F4B0B0 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Wm5ImagicsPCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = "${SRCROOT}/../SDK/Include";
+				INSTALL_PATH = "${SRCROOT}/../SDK/Library/ReleaseDLL";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../SDK/Library/ReleaseDLL";
+				OTHER_LDFLAGS = (
+					"-seg1addr",
+					0x10000000,
+					"-framework",
+					Carbon,
+				);
+				PRODUCT_NAME = Wm5Imagics;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/ReleaseDynamic";
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3C027382088FE67300A93309 /* Build configuration list for PBXNativeTarget "Debug Static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C027384088FE67300A93309 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C027385088FE67300A93309 /* Build configuration list for PBXNativeTarget "Release Static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C027387088FE67300A93309 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C027397088FE67400A93309 /* Build configuration list for PBXProject "LibImagics" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C027399088FE67400A93309 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C64CC621256B55800F4B0B0 /* Build configuration list for PBXNativeTarget "Debug Dynamic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C64CC5D1256B51C00F4B0B0 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C64CCBE1256B72D00F4B0B0 /* Build configuration list for PBXNativeTarget "Release Dynamic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C64CCBD1256B6E900F4B0B0 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 74B57E8307F3425300913EC4 /* Project object */;
+}

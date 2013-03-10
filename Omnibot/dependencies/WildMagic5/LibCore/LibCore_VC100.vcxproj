@@ -1,0 +1,514 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugDLL|Win32">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|Win32">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugDLL|x64">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|x64">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2DA95CD7-8454-497E-B25D-6840527B73F3}</ProjectGuid>
+    <RootNamespace>LibCore</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Wm5CoreD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">Wm5CoreD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Wm5Core</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">Wm5Core</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Wm5CoreD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">Wm5CoreD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Wm5Core</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">Wm5Core</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;Assert;DataTypes;InputOutput;Memory;ObjectSystems;Threading;Time;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5CorePCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Core.h ..\SDK\Include
+xcopy /DY Wm5CoreLIB.h ..\SDK\Include
+xcopy /DY Assert\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.inl ..\SDK\Include
+xcopy /DY InputOutput\*.h ..\SDK\Include
+xcopy /DY InputOutput\*.inl ..\SDK\Include
+xcopy /DY Memory\*.h ..\SDK\Include
+xcopy /DY Memory\*.inl ..\SDK\Include
+xcopy /DY ObjectSystems\*.h ..\SDK\Include
+xcopy /DY ObjectSystems\*.inl ..\SDK\Include
+xcopy /DY Threading\*.h ..\SDK\Include
+xcopy /DY Time\*.h ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;Assert;DataTypes;InputOutput;Memory;ObjectSystems;Threading;Time;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5CorePCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>
+        mkdir ..\SDK\Include
+        xcopy /DY Wm5Core.h ..\SDK\Include
+        xcopy /DY Wm5CoreLIB.h ..\SDK\Include
+        xcopy /DY Assert\*.h ..\SDK\Include
+        xcopy /DY DataTypes\*.h ..\SDK\Include
+        xcopy /DY DataTypes\*.inl ..\SDK\Include
+        xcopy /DY InputOutput\*.h ..\SDK\Include
+        xcopy /DY InputOutput\*.inl ..\SDK\Include
+        xcopy /DY Memory\*.h ..\SDK\Include
+        xcopy /DY Memory\*.inl ..\SDK\Include
+        xcopy /DY ObjectSystems\*.h ..\SDK\Include
+        xcopy /DY ObjectSystems\*.inl ..\SDK\Include
+        xcopy /DY Threading\*.h ..\SDK\Include
+        xcopy /DY Time\*.h ..\SDK\Include
+        mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+        xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+        xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+      </Command>
+    </PostBuildEvent>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;Assert;DataTypes;InputOutput;Memory;ObjectSystems;Threading;Time;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5CorePCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>
+        mkdir ..\SDK\Include
+        xcopy /DY Wm5Core.h ..\SDK\Include
+        xcopy /DY Wm5CoreLIB.h ..\SDK\Include
+        xcopy /DY Assert\*.h ..\SDK\Include
+        xcopy /DY DataTypes\*.h ..\SDK\Include
+        xcopy /DY DataTypes\*.inl ..\SDK\Include
+        xcopy /DY InputOutput\*.h ..\SDK\Include
+        xcopy /DY InputOutput\*.inl ..\SDK\Include
+        xcopy /DY Memory\*.h ..\SDK\Include
+        xcopy /DY Memory\*.inl ..\SDK\Include
+        xcopy /DY ObjectSystems\*.h ..\SDK\Include
+        xcopy /DY ObjectSystems\*.inl ..\SDK\Include
+        xcopy /DY Threading\*.h ..\SDK\Include
+        xcopy /DY Time\*.h ..\SDK\Include
+        mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+        xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;Assert;DataTypes;InputOutput;Memory;ObjectSystems;Threading;Time;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5CorePCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>
+        mkdir ..\SDK\Include
+        xcopy /DY Wm5Core.h ..\SDK\Include
+        xcopy /DY Wm5CoreLIB.h ..\SDK\Include
+        xcopy /DY Assert\*.h ..\SDK\Include
+        xcopy /DY DataTypes\*.h ..\SDK\Include
+        xcopy /DY DataTypes\*.inl ..\SDK\Include
+        xcopy /DY InputOutput\*.h ..\SDK\Include
+        xcopy /DY InputOutput\*.inl ..\SDK\Include
+        xcopy /DY Memory\*.h ..\SDK\Include
+        xcopy /DY Memory\*.inl ..\SDK\Include
+        xcopy /DY ObjectSystems\*.h ..\SDK\Include
+        xcopy /DY ObjectSystems\*.inl ..\SDK\Include
+        xcopy /DY Threading\*.h ..\SDK\Include
+        xcopy /DY Time\*.h ..\SDK\Include
+        mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+        xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+        xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;Assert;DataTypes;InputOutput;Memory;ObjectSystems;Threading;Time;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5CorePCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Core.h ..\SDK\Include
+xcopy /DY Wm5CoreLIB.h ..\SDK\Include
+xcopy /DY Assert\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.inl ..\SDK\Include
+xcopy /DY InputOutput\*.h ..\SDK\Include
+xcopy /DY InputOutput\*.inl ..\SDK\Include
+xcopy /DY Memory\*.h ..\SDK\Include
+xcopy /DY Memory\*.inl ..\SDK\Include
+xcopy /DY ObjectSystems\*.h ..\SDK\Include
+xcopy /DY ObjectSystems\*.inl ..\SDK\Include
+xcopy /DY Threading\*.h ..\SDK\Include
+xcopy /DY Time\*.h ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;Assert;DataTypes;InputOutput;Memory;ObjectSystems;Threading;Time;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5CorePCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Core.h ..\SDK\Include
+xcopy /DY Wm5CoreLIB.h ..\SDK\Include
+xcopy /DY Assert\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.inl ..\SDK\Include
+xcopy /DY InputOutput\*.h ..\SDK\Include
+xcopy /DY InputOutput\*.inl ..\SDK\Include
+xcopy /DY Memory\*.h ..\SDK\Include
+xcopy /DY Memory\*.inl ..\SDK\Include
+xcopy /DY ObjectSystems\*.h ..\SDK\Include
+xcopy /DY ObjectSystems\*.inl ..\SDK\Include
+xcopy /DY Threading\*.h ..\SDK\Include
+xcopy /DY Time\*.h ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;Assert;DataTypes;InputOutput;Memory;ObjectSystems;Threading;Time;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5CorePCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Core.h ..\SDK\Include
+xcopy /DY Wm5CoreLIB.h ..\SDK\Include
+xcopy /DY Assert\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.inl ..\SDK\Include
+xcopy /DY InputOutput\*.h ..\SDK\Include
+xcopy /DY InputOutput\*.inl ..\SDK\Include
+xcopy /DY Memory\*.h ..\SDK\Include
+xcopy /DY Memory\*.inl ..\SDK\Include
+xcopy /DY ObjectSystems\*.h ..\SDK\Include
+xcopy /DY ObjectSystems\*.inl ..\SDK\Include
+xcopy /DY Threading\*.h ..\SDK\Include
+xcopy /DY Time\*.h ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;Assert;DataTypes;InputOutput;Memory;ObjectSystems;Threading;Time;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5CorePCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Core.h ..\SDK\Include
+xcopy /DY Wm5CoreLIB.h ..\SDK\Include
+xcopy /DY Assert\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.inl ..\SDK\Include
+xcopy /DY InputOutput\*.h ..\SDK\Include
+xcopy /DY InputOutput\*.inl ..\SDK\Include
+xcopy /DY Memory\*.h ..\SDK\Include
+xcopy /DY Memory\*.inl ..\SDK\Include
+xcopy /DY ObjectSystems\*.h ..\SDK\Include
+xcopy /DY ObjectSystems\*.inl ..\SDK\Include
+xcopy /DY Threading\*.h ..\SDK\Include
+xcopy /DY Time\*.h ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Memory\Wm5Memory.cpp" />
+    <ClCompile Include="Memory\Wm5SmartPointer.cpp" />
+    <ClCompile Include="Assert\Wm5Assert.cpp" />
+    <ClCompile Include="Threading\Wm5Mutex.cpp" />
+    <ClCompile Include="Threading\Wm5ScopedCS.cpp" />
+    <ClCompile Include="Threading\Wm5Thread.cpp" />
+    <ClCompile Include="ObjectSystems\Wm5InitTerm.cpp" />
+    <ClCompile Include="ObjectSystems\Wm5InStream.cpp" />
+    <ClCompile Include="ObjectSystems\Wm5Object.cpp" />
+    <ClCompile Include="ObjectSystems\Wm5OutStream.cpp" />
+    <ClCompile Include="ObjectSystems\Wm5Rtti.cpp" />
+    <ClCompile Include="ObjectSystems\Wm5Stream.cpp" />
+    <ClCompile Include="InputOutput\Wm5BufferIO.cpp" />
+    <ClCompile Include="InputOutput\Wm5Endian.cpp" />
+    <ClCompile Include="InputOutput\Wm5Environment.cpp" />
+    <ClCompile Include="InputOutput\Wm5FileIO.cpp" />
+    <ClCompile Include="Time\Wm5Time.cpp" />
+    <ClCompile Include="Wm5CorePCH.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Memory\Wm5Memory.h" />
+    <ClInclude Include="Memory\Wm5SmartPointer.h" />
+    <ClInclude Include="Assert\Wm5Assert.h" />
+    <ClInclude Include="Threading\Wm5Mutex.h" />
+    <ClInclude Include="Threading\Wm5MutexType.h" />
+    <ClInclude Include="Threading\Wm5ScopedCS.h" />
+    <ClInclude Include="Threading\Wm5Thread.h" />
+    <ClInclude Include="Threading\Wm5ThreadType.h" />
+    <ClInclude Include="ObjectSystems\Wm5InitTerm.h" />
+    <ClInclude Include="ObjectSystems\Wm5InStream.h" />
+    <ClInclude Include="ObjectSystems\Wm5Names.h" />
+    <ClInclude Include="ObjectSystems\Wm5Object.h" />
+    <ClInclude Include="ObjectSystems\Wm5OutStream.h" />
+    <ClInclude Include="ObjectSystems\Wm5Rtti.h" />
+    <ClInclude Include="ObjectSystems\Wm5Stream.h" />
+    <ClInclude Include="InputOutput\Wm5BufferIO.h" />
+    <ClInclude Include="InputOutput\Wm5Endian.h" />
+    <ClInclude Include="InputOutput\Wm5Environment.h" />
+    <ClInclude Include="InputOutput\Wm5FileIO.h" />
+    <ClInclude Include="Time\Wm5Time.h" />
+    <ClInclude Include="DataTypes\Wm5MinHeap.h" />
+    <ClInclude Include="DataTypes\Wm5Table.h" />
+    <ClInclude Include="DataTypes\Wm5Tuple.h" />
+    <ClInclude Include="Wm5CorePCH.h" />
+    <ClInclude Include="Wm5Core.h" />
+    <ClInclude Include="Wm5CoreLIB.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Memory\Wm5Memory.inl" />
+    <None Include="Memory\Wm5SmartPointer.inl" />
+    <None Include="ObjectSystems\Wm5InStream.inl" />
+    <None Include="ObjectSystems\Wm5Object.inl" />
+    <None Include="ObjectSystems\Wm5OutStream.inl" />
+    <None Include="ObjectSystems\Wm5Rtti.inl" />
+    <None Include="InputOutput\Wm5BufferIO.inl" />
+    <None Include="InputOutput\Wm5FileIO.inl" />
+    <None Include="DataTypes\Wm5MinHeap.inl" />
+    <None Include="DataTypes\Wm5Table.inl" />
+    <None Include="DataTypes\Wm5Tuple.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

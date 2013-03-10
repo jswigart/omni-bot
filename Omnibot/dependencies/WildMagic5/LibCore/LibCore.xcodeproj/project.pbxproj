@@ -1,0 +1,988 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3C64C76D1256A21900F4B0B0 /* Wm5Assert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B4110F94CDB00CE71D3 /* Wm5Assert.cpp */; };
+		3C64C76E1256A21A00F4B0B0 /* Wm5Assert.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B4210F94CDB00CE71D3 /* Wm5Assert.h */; };
+		3C64C76F1256A21C00F4B0B0 /* Wm5BufferIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5310F94CFD00CE71D3 /* Wm5BufferIO.cpp */; };
+		3C64C7701256A21C00F4B0B0 /* Wm5BufferIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5410F94CFD00CE71D3 /* Wm5BufferIO.h */; };
+		3C64C7711256A21F00F4B0B0 /* Wm5Core.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9FC610FBAF4500DB28AA /* Wm5Core.h */; };
+		3C64C7721256A22000F4B0B0 /* Wm5CoreLIB.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9FC710FBAF4500DB28AA /* Wm5CoreLIB.h */; };
+		3C64C7731256A22100F4B0B0 /* Wm5CorePCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9FC810FBAF4500DB28AA /* Wm5CorePCH.cpp */; };
+		3C64C7741256A22200F4B0B0 /* Wm5CorePCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9FC910FBAF4500DB28AA /* Wm5CorePCH.h */; };
+		3C64C7751256A22300F4B0B0 /* Wm5Endian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5610F94CFE00CE71D3 /* Wm5Endian.cpp */; };
+		3C64C7761256A22600F4B0B0 /* Wm5Endian.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5710F94CFE00CE71D3 /* Wm5Endian.h */; };
+		3C64C7771256A22700F4B0B0 /* Wm5Environment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5810F94CFE00CE71D3 /* Wm5Environment.cpp */; };
+		3C64C7781256A22700F4B0B0 /* Wm5Environment.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5910F94CFE00CE71D3 /* Wm5Environment.h */; };
+		3C64C7791256A22800F4B0B0 /* Wm5FileIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5A10F94CFE00CE71D3 /* Wm5FileIO.cpp */; };
+		3C64C77A1256A22900F4B0B0 /* Wm5FileIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5B10F94CFE00CE71D3 /* Wm5FileIO.h */; };
+		3C64C77B1256A22B00F4B0B0 /* Wm5InitTerm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2210FB88A400DB28AA /* Wm5InitTerm.cpp */; };
+		3C64C77C1256A22C00F4B0B0 /* Wm5InitTerm.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2310FB88A400DB28AA /* Wm5InitTerm.h */; };
+		3C64C77D1256A22D00F4B0B0 /* Wm5InStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2410FB88A400DB28AA /* Wm5InStream.cpp */; };
+		3C64C77E1256A22E00F4B0B0 /* Wm5InStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2510FB88A400DB28AA /* Wm5InStream.h */; };
+		3C64C77F1256A23000F4B0B0 /* Wm5Memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F1210FB889300DB28AA /* Wm5Memory.cpp */; };
+		3C64C7801256A23000F4B0B0 /* Wm5Memory.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F1310FB889300DB28AA /* Wm5Memory.h */; };
+		3C64C7811256A23400F4B0B0 /* Wm5MinHeap.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B4910F94CEF00CE71D3 /* Wm5MinHeap.h */; };
+		3C64C7821256A23600F4B0B0 /* Wm5Mutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F4F10FB88B400DB28AA /* Wm5Mutex.cpp */; };
+		3C64C7831256A23700F4B0B0 /* Wm5Mutex.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5010FB88B400DB28AA /* Wm5Mutex.h */; };
+		3C64C7841256A23800F4B0B0 /* Wm5MutexType.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5110FB88B400DB28AA /* Wm5MutexType.h */; };
+		3C64C7851256A23900F4B0B0 /* Wm5Names.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2710FB88A400DB28AA /* Wm5Names.h */; };
+		3C64C7861256A23A00F4B0B0 /* Wm5Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2810FB88A400DB28AA /* Wm5Object.cpp */; };
+		3C64C7871256A23B00F4B0B0 /* Wm5Object.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2910FB88A400DB28AA /* Wm5Object.h */; };
+		3C64C7881256A23C00F4B0B0 /* Wm5OutStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2B10FB88A400DB28AA /* Wm5OutStream.cpp */; };
+		3C64C7891256A23D00F4B0B0 /* Wm5OutStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2C10FB88A400DB28AA /* Wm5OutStream.h */; };
+		3C64C78A1256A23E00F4B0B0 /* Wm5Rtti.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2E10FB88A400DB28AA /* Wm5Rtti.cpp */; };
+		3C64C78B1256A23F00F4B0B0 /* Wm5Rtti.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2F10FB88A400DB28AA /* Wm5Rtti.h */; };
+		3C64C78C1256A24100F4B0B0 /* Wm5ScopedCS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F5210FB88B400DB28AA /* Wm5ScopedCS.cpp */; };
+		3C64C78D1256A24200F4B0B0 /* Wm5ScopedCS.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5310FB88B400DB28AA /* Wm5ScopedCS.h */; };
+		3C64C78E1256A24300F4B0B0 /* Wm5SmartPointer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F1510FB889300DB28AA /* Wm5SmartPointer.cpp */; };
+		3C64C78F1256A24400F4B0B0 /* Wm5SmartPointer.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F1610FB889300DB28AA /* Wm5SmartPointer.h */; };
+		3C64C7901256A24500F4B0B0 /* Wm5Stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F3110FB88A400DB28AA /* Wm5Stream.cpp */; };
+		3C64C7911256A24600F4B0B0 /* Wm5Stream.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F3210FB88A400DB28AA /* Wm5Stream.h */; };
+		3C64C7921256A24800F4B0B0 /* Wm5Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F5410FB88B400DB28AA /* Wm5Thread.cpp */; };
+		3C64C7931256A24800F4B0B0 /* Wm5Thread.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5510FB88B400DB28AA /* Wm5Thread.h */; };
+		3C64C7941256A24900F4B0B0 /* Wm5ThreadType.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5610FB88B400DB28AA /* Wm5ThreadType.h */; };
+		3C64C7951256A24A00F4B0B0 /* Wm5Time.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F6910FB88C600DB28AA /* Wm5Time.cpp */; };
+		3C64C7961256A24A00F4B0B0 /* Wm5Time.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F6A10FB88C600DB28AA /* Wm5Time.h */; };
+		3C64C7971256A24B00F4B0B0 /* Wm5Tuple.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B4B10F94CEF00CE71D3 /* Wm5Tuple.h */; };
+		3C64C7A71256A6A600F4B0B0 /* Wm5Assert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B4110F94CDB00CE71D3 /* Wm5Assert.cpp */; };
+		3C64C7A81256A6A700F4B0B0 /* Wm5Assert.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B4210F94CDB00CE71D3 /* Wm5Assert.h */; };
+		3C64C7A91256A6A700F4B0B0 /* Wm5BufferIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5310F94CFD00CE71D3 /* Wm5BufferIO.cpp */; };
+		3C64C7AA1256A6A800F4B0B0 /* Wm5BufferIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5410F94CFD00CE71D3 /* Wm5BufferIO.h */; };
+		3C64C7AB1256A6A900F4B0B0 /* Wm5Core.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9FC610FBAF4500DB28AA /* Wm5Core.h */; };
+		3C64C7AC1256A6AA00F4B0B0 /* Wm5CoreLIB.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9FC710FBAF4500DB28AA /* Wm5CoreLIB.h */; };
+		3C64C7AD1256A6AB00F4B0B0 /* Wm5CorePCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9FC810FBAF4500DB28AA /* Wm5CorePCH.cpp */; };
+		3C64C7AE1256A6AC00F4B0B0 /* Wm5CorePCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9FC910FBAF4500DB28AA /* Wm5CorePCH.h */; };
+		3C64C7AF1256A6AC00F4B0B0 /* Wm5Endian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5610F94CFE00CE71D3 /* Wm5Endian.cpp */; };
+		3C64C7B01256A6AE00F4B0B0 /* Wm5Endian.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5710F94CFE00CE71D3 /* Wm5Endian.h */; };
+		3C64C7B11256A6AF00F4B0B0 /* Wm5Environment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5810F94CFE00CE71D3 /* Wm5Environment.cpp */; };
+		3C64C7B21256A6B000F4B0B0 /* Wm5Environment.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5910F94CFE00CE71D3 /* Wm5Environment.h */; };
+		3C64C7B31256A6B000F4B0B0 /* Wm5FileIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5A10F94CFE00CE71D3 /* Wm5FileIO.cpp */; };
+		3C64C7B41256A6B100F4B0B0 /* Wm5FileIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5B10F94CFE00CE71D3 /* Wm5FileIO.h */; };
+		3C64C7B51256A6B300F4B0B0 /* Wm5InitTerm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2210FB88A400DB28AA /* Wm5InitTerm.cpp */; };
+		3C64C7B61256A6B400F4B0B0 /* Wm5InitTerm.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2310FB88A400DB28AA /* Wm5InitTerm.h */; };
+		3C64C7B71256A6B500F4B0B0 /* Wm5InStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2410FB88A400DB28AA /* Wm5InStream.cpp */; };
+		3C64C7B81256A6B700F4B0B0 /* Wm5InStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2510FB88A400DB28AA /* Wm5InStream.h */; };
+		3C64C7B91256A6B800F4B0B0 /* Wm5Memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F1210FB889300DB28AA /* Wm5Memory.cpp */; };
+		3C64C7BA1256A6B900F4B0B0 /* Wm5Memory.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F1310FB889300DB28AA /* Wm5Memory.h */; };
+		3C64C7BB1256A6BA00F4B0B0 /* Wm5MinHeap.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B4910F94CEF00CE71D3 /* Wm5MinHeap.h */; };
+		3C64C7BC1256A6BB00F4B0B0 /* Wm5Mutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F4F10FB88B400DB28AA /* Wm5Mutex.cpp */; };
+		3C64C7BD1256A6BC00F4B0B0 /* Wm5Mutex.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5010FB88B400DB28AA /* Wm5Mutex.h */; };
+		3C64C7BE1256A6BD00F4B0B0 /* Wm5MutexType.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5110FB88B400DB28AA /* Wm5MutexType.h */; };
+		3C64C7BF1256A6BE00F4B0B0 /* Wm5Names.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2710FB88A400DB28AA /* Wm5Names.h */; };
+		3C64C7C01256A6BF00F4B0B0 /* Wm5Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2810FB88A400DB28AA /* Wm5Object.cpp */; };
+		3C64C7C11256A6C000F4B0B0 /* Wm5Object.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2910FB88A400DB28AA /* Wm5Object.h */; };
+		3C64C7C21256A6C200F4B0B0 /* Wm5OutStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2B10FB88A400DB28AA /* Wm5OutStream.cpp */; };
+		3C64C7C31256A6C300F4B0B0 /* Wm5OutStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2C10FB88A400DB28AA /* Wm5OutStream.h */; };
+		3C64C7C41256A6C500F4B0B0 /* Wm5Rtti.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2E10FB88A400DB28AA /* Wm5Rtti.cpp */; };
+		3C64C7C51256A6C600F4B0B0 /* Wm5Rtti.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2F10FB88A400DB28AA /* Wm5Rtti.h */; };
+		3C64C7C61256A6C700F4B0B0 /* Wm5ScopedCS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F5210FB88B400DB28AA /* Wm5ScopedCS.cpp */; };
+		3C64C7C71256A6C800F4B0B0 /* Wm5ScopedCS.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5310FB88B400DB28AA /* Wm5ScopedCS.h */; };
+		3C64C7C81256A6C900F4B0B0 /* Wm5SmartPointer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F1510FB889300DB28AA /* Wm5SmartPointer.cpp */; };
+		3C64C7C91256A6CD00F4B0B0 /* Wm5SmartPointer.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F1610FB889300DB28AA /* Wm5SmartPointer.h */; };
+		3C64C7CA1256A6CE00F4B0B0 /* Wm5Stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F3110FB88A400DB28AA /* Wm5Stream.cpp */; };
+		3C64C7CB1256A6CE00F4B0B0 /* Wm5Stream.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F3210FB88A400DB28AA /* Wm5Stream.h */; };
+		3C64C7CC1256A6CF00F4B0B0 /* Wm5Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F5410FB88B400DB28AA /* Wm5Thread.cpp */; };
+		3C64C7CD1256A6D100F4B0B0 /* Wm5Thread.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5510FB88B400DB28AA /* Wm5Thread.h */; };
+		3C64C7CE1256A6D200F4B0B0 /* Wm5ThreadType.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5610FB88B400DB28AA /* Wm5ThreadType.h */; };
+		3C64C7CF1256A6D300F4B0B0 /* Wm5Time.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F6910FB88C600DB28AA /* Wm5Time.cpp */; };
+		3C64C7D01256A6D300F4B0B0 /* Wm5Time.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F6A10FB88C600DB28AA /* Wm5Time.h */; };
+		3C64C7D11256A6D400F4B0B0 /* Wm5Tuple.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B4B10F94CEF00CE71D3 /* Wm5Tuple.h */; };
+		3C7B9F1810FB889300DB28AA /* Wm5Memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F1210FB889300DB28AA /* Wm5Memory.cpp */; };
+		3C7B9F1910FB889300DB28AA /* Wm5Memory.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F1310FB889300DB28AA /* Wm5Memory.h */; };
+		3C7B9F1A10FB889300DB28AA /* Wm5SmartPointer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F1510FB889300DB28AA /* Wm5SmartPointer.cpp */; };
+		3C7B9F1B10FB889300DB28AA /* Wm5SmartPointer.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F1610FB889300DB28AA /* Wm5SmartPointer.h */; };
+		3C7B9F1C10FB889300DB28AA /* Wm5Memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F1210FB889300DB28AA /* Wm5Memory.cpp */; };
+		3C7B9F1D10FB889300DB28AA /* Wm5Memory.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F1310FB889300DB28AA /* Wm5Memory.h */; };
+		3C7B9F1E10FB889300DB28AA /* Wm5SmartPointer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F1510FB889300DB28AA /* Wm5SmartPointer.cpp */; };
+		3C7B9F1F10FB889300DB28AA /* Wm5SmartPointer.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F1610FB889300DB28AA /* Wm5SmartPointer.h */; };
+		3C7B9F3310FB88A400DB28AA /* Wm5InitTerm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2210FB88A400DB28AA /* Wm5InitTerm.cpp */; };
+		3C7B9F3410FB88A400DB28AA /* Wm5InitTerm.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2310FB88A400DB28AA /* Wm5InitTerm.h */; };
+		3C7B9F3510FB88A400DB28AA /* Wm5InStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2410FB88A400DB28AA /* Wm5InStream.cpp */; };
+		3C7B9F3610FB88A400DB28AA /* Wm5InStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2510FB88A400DB28AA /* Wm5InStream.h */; };
+		3C7B9F3710FB88A400DB28AA /* Wm5Names.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2710FB88A400DB28AA /* Wm5Names.h */; };
+		3C7B9F3810FB88A400DB28AA /* Wm5Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2810FB88A400DB28AA /* Wm5Object.cpp */; };
+		3C7B9F3910FB88A400DB28AA /* Wm5Object.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2910FB88A400DB28AA /* Wm5Object.h */; };
+		3C7B9F3A10FB88A400DB28AA /* Wm5OutStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2B10FB88A400DB28AA /* Wm5OutStream.cpp */; };
+		3C7B9F3B10FB88A400DB28AA /* Wm5OutStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2C10FB88A400DB28AA /* Wm5OutStream.h */; };
+		3C7B9F3C10FB88A400DB28AA /* Wm5Rtti.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2E10FB88A400DB28AA /* Wm5Rtti.cpp */; };
+		3C7B9F3D10FB88A400DB28AA /* Wm5Rtti.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2F10FB88A400DB28AA /* Wm5Rtti.h */; };
+		3C7B9F3E10FB88A400DB28AA /* Wm5Stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F3110FB88A400DB28AA /* Wm5Stream.cpp */; };
+		3C7B9F3F10FB88A400DB28AA /* Wm5Stream.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F3210FB88A400DB28AA /* Wm5Stream.h */; };
+		3C7B9F4010FB88A400DB28AA /* Wm5InitTerm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2210FB88A400DB28AA /* Wm5InitTerm.cpp */; };
+		3C7B9F4110FB88A400DB28AA /* Wm5InitTerm.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2310FB88A400DB28AA /* Wm5InitTerm.h */; };
+		3C7B9F4210FB88A400DB28AA /* Wm5InStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2410FB88A400DB28AA /* Wm5InStream.cpp */; };
+		3C7B9F4310FB88A400DB28AA /* Wm5InStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2510FB88A400DB28AA /* Wm5InStream.h */; };
+		3C7B9F4410FB88A400DB28AA /* Wm5Names.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2710FB88A400DB28AA /* Wm5Names.h */; };
+		3C7B9F4510FB88A400DB28AA /* Wm5Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2810FB88A400DB28AA /* Wm5Object.cpp */; };
+		3C7B9F4610FB88A400DB28AA /* Wm5Object.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2910FB88A400DB28AA /* Wm5Object.h */; };
+		3C7B9F4710FB88A400DB28AA /* Wm5OutStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2B10FB88A400DB28AA /* Wm5OutStream.cpp */; };
+		3C7B9F4810FB88A400DB28AA /* Wm5OutStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2C10FB88A400DB28AA /* Wm5OutStream.h */; };
+		3C7B9F4910FB88A400DB28AA /* Wm5Rtti.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F2E10FB88A400DB28AA /* Wm5Rtti.cpp */; };
+		3C7B9F4A10FB88A400DB28AA /* Wm5Rtti.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F2F10FB88A400DB28AA /* Wm5Rtti.h */; };
+		3C7B9F4B10FB88A400DB28AA /* Wm5Stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F3110FB88A400DB28AA /* Wm5Stream.cpp */; };
+		3C7B9F4C10FB88A400DB28AA /* Wm5Stream.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F3210FB88A400DB28AA /* Wm5Stream.h */; };
+		3C7B9F5710FB88B400DB28AA /* Wm5Mutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F4F10FB88B400DB28AA /* Wm5Mutex.cpp */; };
+		3C7B9F5810FB88B400DB28AA /* Wm5Mutex.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5010FB88B400DB28AA /* Wm5Mutex.h */; };
+		3C7B9F5910FB88B400DB28AA /* Wm5MutexType.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5110FB88B400DB28AA /* Wm5MutexType.h */; };
+		3C7B9F5A10FB88B400DB28AA /* Wm5ScopedCS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F5210FB88B400DB28AA /* Wm5ScopedCS.cpp */; };
+		3C7B9F5B10FB88B400DB28AA /* Wm5ScopedCS.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5310FB88B400DB28AA /* Wm5ScopedCS.h */; };
+		3C7B9F5C10FB88B400DB28AA /* Wm5Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F5410FB88B400DB28AA /* Wm5Thread.cpp */; };
+		3C7B9F5D10FB88B400DB28AA /* Wm5Thread.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5510FB88B400DB28AA /* Wm5Thread.h */; };
+		3C7B9F5E10FB88B400DB28AA /* Wm5ThreadType.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5610FB88B400DB28AA /* Wm5ThreadType.h */; };
+		3C7B9F5F10FB88B400DB28AA /* Wm5Mutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F4F10FB88B400DB28AA /* Wm5Mutex.cpp */; };
+		3C7B9F6010FB88B400DB28AA /* Wm5Mutex.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5010FB88B400DB28AA /* Wm5Mutex.h */; };
+		3C7B9F6110FB88B400DB28AA /* Wm5MutexType.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5110FB88B400DB28AA /* Wm5MutexType.h */; };
+		3C7B9F6210FB88B400DB28AA /* Wm5ScopedCS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F5210FB88B400DB28AA /* Wm5ScopedCS.cpp */; };
+		3C7B9F6310FB88B400DB28AA /* Wm5ScopedCS.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5310FB88B400DB28AA /* Wm5ScopedCS.h */; };
+		3C7B9F6410FB88B400DB28AA /* Wm5Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F5410FB88B400DB28AA /* Wm5Thread.cpp */; };
+		3C7B9F6510FB88B400DB28AA /* Wm5Thread.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5510FB88B400DB28AA /* Wm5Thread.h */; };
+		3C7B9F6610FB88B400DB28AA /* Wm5ThreadType.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F5610FB88B400DB28AA /* Wm5ThreadType.h */; };
+		3C7B9F6B10FB88C600DB28AA /* Wm5Time.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F6910FB88C600DB28AA /* Wm5Time.cpp */; };
+		3C7B9F6C10FB88C600DB28AA /* Wm5Time.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F6A10FB88C600DB28AA /* Wm5Time.h */; };
+		3C7B9F6D10FB88C600DB28AA /* Wm5Time.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9F6910FB88C600DB28AA /* Wm5Time.cpp */; };
+		3C7B9F6E10FB88C600DB28AA /* Wm5Time.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9F6A10FB88C600DB28AA /* Wm5Time.h */; };
+		3C7B9FCA10FBAF4500DB28AA /* Wm5Core.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9FC610FBAF4500DB28AA /* Wm5Core.h */; };
+		3C7B9FCB10FBAF4500DB28AA /* Wm5CoreLIB.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9FC710FBAF4500DB28AA /* Wm5CoreLIB.h */; };
+		3C7B9FCC10FBAF4500DB28AA /* Wm5CorePCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9FC810FBAF4500DB28AA /* Wm5CorePCH.cpp */; };
+		3C7B9FCD10FBAF4500DB28AA /* Wm5CorePCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9FC910FBAF4500DB28AA /* Wm5CorePCH.h */; };
+		3C7B9FCE10FBAF4500DB28AA /* Wm5Core.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9FC610FBAF4500DB28AA /* Wm5Core.h */; };
+		3C7B9FCF10FBAF4500DB28AA /* Wm5CoreLIB.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9FC710FBAF4500DB28AA /* Wm5CoreLIB.h */; };
+		3C7B9FD010FBAF4500DB28AA /* Wm5CorePCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7B9FC810FBAF4500DB28AA /* Wm5CorePCH.cpp */; };
+		3C7B9FD110FBAF4500DB28AA /* Wm5CorePCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7B9FC910FBAF4500DB28AA /* Wm5CorePCH.h */; };
+		3CD53B4310F94CDB00CE71D3 /* Wm5Assert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B4110F94CDB00CE71D3 /* Wm5Assert.cpp */; };
+		3CD53B4410F94CDB00CE71D3 /* Wm5Assert.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B4210F94CDB00CE71D3 /* Wm5Assert.h */; };
+		3CD53B4510F94CDB00CE71D3 /* Wm5Assert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B4110F94CDB00CE71D3 /* Wm5Assert.cpp */; };
+		3CD53B4610F94CDB00CE71D3 /* Wm5Assert.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B4210F94CDB00CE71D3 /* Wm5Assert.h */; };
+		3CD53B4D10F94CEF00CE71D3 /* Wm5MinHeap.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B4910F94CEF00CE71D3 /* Wm5MinHeap.h */; };
+		3CD53B4E10F94CEF00CE71D3 /* Wm5Tuple.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B4B10F94CEF00CE71D3 /* Wm5Tuple.h */; };
+		3CD53B4F10F94CEF00CE71D3 /* Wm5MinHeap.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B4910F94CEF00CE71D3 /* Wm5MinHeap.h */; };
+		3CD53B5010F94CEF00CE71D3 /* Wm5Tuple.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B4B10F94CEF00CE71D3 /* Wm5Tuple.h */; };
+		3CD53B5D10F94CFE00CE71D3 /* Wm5BufferIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5310F94CFD00CE71D3 /* Wm5BufferIO.cpp */; };
+		3CD53B5E10F94CFE00CE71D3 /* Wm5BufferIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5410F94CFD00CE71D3 /* Wm5BufferIO.h */; };
+		3CD53B5F10F94CFE00CE71D3 /* Wm5Endian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5610F94CFE00CE71D3 /* Wm5Endian.cpp */; };
+		3CD53B6010F94CFE00CE71D3 /* Wm5Endian.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5710F94CFE00CE71D3 /* Wm5Endian.h */; };
+		3CD53B6110F94CFE00CE71D3 /* Wm5Environment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5810F94CFE00CE71D3 /* Wm5Environment.cpp */; };
+		3CD53B6210F94CFE00CE71D3 /* Wm5Environment.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5910F94CFE00CE71D3 /* Wm5Environment.h */; };
+		3CD53B6310F94CFE00CE71D3 /* Wm5FileIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5A10F94CFE00CE71D3 /* Wm5FileIO.cpp */; };
+		3CD53B6410F94CFE00CE71D3 /* Wm5FileIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5B10F94CFE00CE71D3 /* Wm5FileIO.h */; };
+		3CD53B6510F94CFE00CE71D3 /* Wm5BufferIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5310F94CFD00CE71D3 /* Wm5BufferIO.cpp */; };
+		3CD53B6610F94CFE00CE71D3 /* Wm5BufferIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5410F94CFD00CE71D3 /* Wm5BufferIO.h */; };
+		3CD53B6710F94CFE00CE71D3 /* Wm5Endian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5610F94CFE00CE71D3 /* Wm5Endian.cpp */; };
+		3CD53B6810F94CFE00CE71D3 /* Wm5Endian.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5710F94CFE00CE71D3 /* Wm5Endian.h */; };
+		3CD53B6910F94CFE00CE71D3 /* Wm5Environment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5810F94CFE00CE71D3 /* Wm5Environment.cpp */; };
+		3CD53B6A10F94CFE00CE71D3 /* Wm5Environment.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5910F94CFE00CE71D3 /* Wm5Environment.h */; };
+		3CD53B6B10F94CFE00CE71D3 /* Wm5FileIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CD53B5A10F94CFE00CE71D3 /* Wm5FileIO.cpp */; };
+		3CD53B6C10F94CFE00CE71D3 /* Wm5FileIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CD53B5B10F94CFE00CE71D3 /* Wm5FileIO.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3C64C75312569DBD00F4B0B0 /* libWm5Cored.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libWm5Cored.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C64C7A41256A63100F4B0B0 /* libWm5Core.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libWm5Core.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C7B9F1210FB889300DB28AA /* Wm5Memory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Memory.cpp; path = Memory/Wm5Memory.cpp; sourceTree = "<group>"; };
+		3C7B9F1310FB889300DB28AA /* Wm5Memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Memory.h; path = Memory/Wm5Memory.h; sourceTree = "<group>"; };
+		3C7B9F1410FB889300DB28AA /* Wm5Memory.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5Memory.inl; path = Memory/Wm5Memory.inl; sourceTree = "<group>"; };
+		3C7B9F1510FB889300DB28AA /* Wm5SmartPointer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5SmartPointer.cpp; path = Memory/Wm5SmartPointer.cpp; sourceTree = "<group>"; };
+		3C7B9F1610FB889300DB28AA /* Wm5SmartPointer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5SmartPointer.h; path = Memory/Wm5SmartPointer.h; sourceTree = "<group>"; };
+		3C7B9F1710FB889300DB28AA /* Wm5SmartPointer.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5SmartPointer.inl; path = Memory/Wm5SmartPointer.inl; sourceTree = "<group>"; };
+		3C7B9F2210FB88A400DB28AA /* Wm5InitTerm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5InitTerm.cpp; path = ObjectSystems/Wm5InitTerm.cpp; sourceTree = "<group>"; };
+		3C7B9F2310FB88A400DB28AA /* Wm5InitTerm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5InitTerm.h; path = ObjectSystems/Wm5InitTerm.h; sourceTree = "<group>"; };
+		3C7B9F2410FB88A400DB28AA /* Wm5InStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5InStream.cpp; path = ObjectSystems/Wm5InStream.cpp; sourceTree = "<group>"; };
+		3C7B9F2510FB88A400DB28AA /* Wm5InStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5InStream.h; path = ObjectSystems/Wm5InStream.h; sourceTree = "<group>"; };
+		3C7B9F2610FB88A400DB28AA /* Wm5InStream.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5InStream.inl; path = ObjectSystems/Wm5InStream.inl; sourceTree = "<group>"; };
+		3C7B9F2710FB88A400DB28AA /* Wm5Names.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Names.h; path = ObjectSystems/Wm5Names.h; sourceTree = "<group>"; };
+		3C7B9F2810FB88A400DB28AA /* Wm5Object.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Object.cpp; path = ObjectSystems/Wm5Object.cpp; sourceTree = "<group>"; };
+		3C7B9F2910FB88A400DB28AA /* Wm5Object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Object.h; path = ObjectSystems/Wm5Object.h; sourceTree = "<group>"; };
+		3C7B9F2A10FB88A400DB28AA /* Wm5Object.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5Object.inl; path = ObjectSystems/Wm5Object.inl; sourceTree = "<group>"; };
+		3C7B9F2B10FB88A400DB28AA /* Wm5OutStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5OutStream.cpp; path = ObjectSystems/Wm5OutStream.cpp; sourceTree = "<group>"; };
+		3C7B9F2C10FB88A400DB28AA /* Wm5OutStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5OutStream.h; path = ObjectSystems/Wm5OutStream.h; sourceTree = "<group>"; };
+		3C7B9F2D10FB88A400DB28AA /* Wm5OutStream.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5OutStream.inl; path = ObjectSystems/Wm5OutStream.inl; sourceTree = "<group>"; };
+		3C7B9F2E10FB88A400DB28AA /* Wm5Rtti.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Rtti.cpp; path = ObjectSystems/Wm5Rtti.cpp; sourceTree = "<group>"; };
+		3C7B9F2F10FB88A400DB28AA /* Wm5Rtti.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Rtti.h; path = ObjectSystems/Wm5Rtti.h; sourceTree = "<group>"; };
+		3C7B9F3010FB88A400DB28AA /* Wm5Rtti.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5Rtti.inl; path = ObjectSystems/Wm5Rtti.inl; sourceTree = "<group>"; };
+		3C7B9F3110FB88A400DB28AA /* Wm5Stream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Stream.cpp; path = ObjectSystems/Wm5Stream.cpp; sourceTree = "<group>"; };
+		3C7B9F3210FB88A400DB28AA /* Wm5Stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Stream.h; path = ObjectSystems/Wm5Stream.h; sourceTree = "<group>"; };
+		3C7B9F4F10FB88B400DB28AA /* Wm5Mutex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Mutex.cpp; path = Threading/Wm5Mutex.cpp; sourceTree = "<group>"; };
+		3C7B9F5010FB88B400DB28AA /* Wm5Mutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Mutex.h; path = Threading/Wm5Mutex.h; sourceTree = "<group>"; };
+		3C7B9F5110FB88B400DB28AA /* Wm5MutexType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5MutexType.h; path = Threading/Wm5MutexType.h; sourceTree = "<group>"; };
+		3C7B9F5210FB88B400DB28AA /* Wm5ScopedCS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5ScopedCS.cpp; path = Threading/Wm5ScopedCS.cpp; sourceTree = "<group>"; };
+		3C7B9F5310FB88B400DB28AA /* Wm5ScopedCS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5ScopedCS.h; path = Threading/Wm5ScopedCS.h; sourceTree = "<group>"; };
+		3C7B9F5410FB88B400DB28AA /* Wm5Thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Thread.cpp; path = Threading/Wm5Thread.cpp; sourceTree = "<group>"; };
+		3C7B9F5510FB88B400DB28AA /* Wm5Thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Thread.h; path = Threading/Wm5Thread.h; sourceTree = "<group>"; };
+		3C7B9F5610FB88B400DB28AA /* Wm5ThreadType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5ThreadType.h; path = Threading/Wm5ThreadType.h; sourceTree = "<group>"; };
+		3C7B9F6910FB88C600DB28AA /* Wm5Time.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Time.cpp; path = Time/Wm5Time.cpp; sourceTree = "<group>"; };
+		3C7B9F6A10FB88C600DB28AA /* Wm5Time.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Time.h; path = Time/Wm5Time.h; sourceTree = "<group>"; };
+		3C7B9FC610FBAF4500DB28AA /* Wm5Core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Wm5Core.h; sourceTree = "<group>"; };
+		3C7B9FC710FBAF4500DB28AA /* Wm5CoreLIB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Wm5CoreLIB.h; sourceTree = "<group>"; };
+		3C7B9FC810FBAF4500DB28AA /* Wm5CorePCH.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Wm5CorePCH.cpp; sourceTree = "<group>"; };
+		3C7B9FC910FBAF4500DB28AA /* Wm5CorePCH.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Wm5CorePCH.h; sourceTree = "<group>"; };
+		3CD53B4110F94CDB00CE71D3 /* Wm5Assert.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Assert.cpp; path = Assert/Wm5Assert.cpp; sourceTree = "<group>"; };
+		3CD53B4210F94CDB00CE71D3 /* Wm5Assert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Assert.h; path = Assert/Wm5Assert.h; sourceTree = "<group>"; };
+		3CD53B4910F94CEF00CE71D3 /* Wm5MinHeap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5MinHeap.h; path = DataTypes/Wm5MinHeap.h; sourceTree = "<group>"; };
+		3CD53B4A10F94CEF00CE71D3 /* Wm5MinHeap.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5MinHeap.inl; path = DataTypes/Wm5MinHeap.inl; sourceTree = "<group>"; };
+		3CD53B4B10F94CEF00CE71D3 /* Wm5Tuple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Tuple.h; path = DataTypes/Wm5Tuple.h; sourceTree = "<group>"; };
+		3CD53B4C10F94CEF00CE71D3 /* Wm5Tuple.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5Tuple.inl; path = DataTypes/Wm5Tuple.inl; sourceTree = "<group>"; };
+		3CD53B5310F94CFD00CE71D3 /* Wm5BufferIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5BufferIO.cpp; path = InputOutput/Wm5BufferIO.cpp; sourceTree = "<group>"; };
+		3CD53B5410F94CFD00CE71D3 /* Wm5BufferIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5BufferIO.h; path = InputOutput/Wm5BufferIO.h; sourceTree = "<group>"; };
+		3CD53B5510F94CFE00CE71D3 /* Wm5BufferIO.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5BufferIO.inl; path = InputOutput/Wm5BufferIO.inl; sourceTree = "<group>"; };
+		3CD53B5610F94CFE00CE71D3 /* Wm5Endian.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Endian.cpp; path = InputOutput/Wm5Endian.cpp; sourceTree = "<group>"; };
+		3CD53B5710F94CFE00CE71D3 /* Wm5Endian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Endian.h; path = InputOutput/Wm5Endian.h; sourceTree = "<group>"; };
+		3CD53B5810F94CFE00CE71D3 /* Wm5Environment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Environment.cpp; path = InputOutput/Wm5Environment.cpp; sourceTree = "<group>"; };
+		3CD53B5910F94CFE00CE71D3 /* Wm5Environment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Environment.h; path = InputOutput/Wm5Environment.h; sourceTree = "<group>"; };
+		3CD53B5A10F94CFE00CE71D3 /* Wm5FileIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5FileIO.cpp; path = InputOutput/Wm5FileIO.cpp; sourceTree = "<group>"; };
+		3CD53B5B10F94CFE00CE71D3 /* Wm5FileIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5FileIO.h; path = InputOutput/Wm5FileIO.h; sourceTree = "<group>"; };
+		3CD53B5C10F94CFE00CE71D3 /* Wm5FileIO.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5FileIO.inl; path = InputOutput/Wm5FileIO.inl; sourceTree = "<group>"; };
+		74B57E8D07F3427D00913EC4 /* libWm5Cored.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libWm5Cored.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		74D6DDFE07F342E200267169 /* libWm5Core.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libWm5Core.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3C64C75112569DBD00F4B0B0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C64C7A21256A63100F4B0B0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74B57E8B07F3427D00913EC4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D6DDFD07F342E200267169 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3CD53B2810F94C4600CE71D3 /* Assert */ = {
+			isa = PBXGroup;
+			children = (
+				3CD53B4110F94CDB00CE71D3 /* Wm5Assert.cpp */,
+				3CD53B4210F94CDB00CE71D3 /* Wm5Assert.h */,
+			);
+			name = Assert;
+			sourceTree = "<group>";
+		};
+		3CD53B2B10F94C5A00CE71D3 /* DataTypes */ = {
+			isa = PBXGroup;
+			children = (
+				3CD53B4910F94CEF00CE71D3 /* Wm5MinHeap.h */,
+				3CD53B4A10F94CEF00CE71D3 /* Wm5MinHeap.inl */,
+				3CD53B4B10F94CEF00CE71D3 /* Wm5Tuple.h */,
+				3CD53B4C10F94CEF00CE71D3 /* Wm5Tuple.inl */,
+			);
+			name = DataTypes;
+			sourceTree = "<group>";
+		};
+		3CD53B3010F94C6800CE71D3 /* InputOutput */ = {
+			isa = PBXGroup;
+			children = (
+				3CD53B5310F94CFD00CE71D3 /* Wm5BufferIO.cpp */,
+				3CD53B5410F94CFD00CE71D3 /* Wm5BufferIO.h */,
+				3CD53B5510F94CFE00CE71D3 /* Wm5BufferIO.inl */,
+				3CD53B5610F94CFE00CE71D3 /* Wm5Endian.cpp */,
+				3CD53B5710F94CFE00CE71D3 /* Wm5Endian.h */,
+				3CD53B5810F94CFE00CE71D3 /* Wm5Environment.cpp */,
+				3CD53B5910F94CFE00CE71D3 /* Wm5Environment.h */,
+				3CD53B5A10F94CFE00CE71D3 /* Wm5FileIO.cpp */,
+				3CD53B5B10F94CFE00CE71D3 /* Wm5FileIO.h */,
+				3CD53B5C10F94CFE00CE71D3 /* Wm5FileIO.inl */,
+			);
+			name = InputOutput;
+			sourceTree = "<group>";
+		};
+		3CD53B3310F94C6E00CE71D3 /* Memory */ = {
+			isa = PBXGroup;
+			children = (
+				3C7B9F1210FB889300DB28AA /* Wm5Memory.cpp */,
+				3C7B9F1310FB889300DB28AA /* Wm5Memory.h */,
+				3C7B9F1410FB889300DB28AA /* Wm5Memory.inl */,
+				3C7B9F1510FB889300DB28AA /* Wm5SmartPointer.cpp */,
+				3C7B9F1610FB889300DB28AA /* Wm5SmartPointer.h */,
+				3C7B9F1710FB889300DB28AA /* Wm5SmartPointer.inl */,
+			);
+			name = Memory;
+			sourceTree = "<group>";
+		};
+		3CD53B3610F94C7700CE71D3 /* ObjectSystems */ = {
+			isa = PBXGroup;
+			children = (
+				3C7B9F2210FB88A400DB28AA /* Wm5InitTerm.cpp */,
+				3C7B9F2310FB88A400DB28AA /* Wm5InitTerm.h */,
+				3C7B9F2410FB88A400DB28AA /* Wm5InStream.cpp */,
+				3C7B9F2510FB88A400DB28AA /* Wm5InStream.h */,
+				3C7B9F2610FB88A400DB28AA /* Wm5InStream.inl */,
+				3C7B9F2710FB88A400DB28AA /* Wm5Names.h */,
+				3C7B9F2810FB88A400DB28AA /* Wm5Object.cpp */,
+				3C7B9F2910FB88A400DB28AA /* Wm5Object.h */,
+				3C7B9F2A10FB88A400DB28AA /* Wm5Object.inl */,
+				3C7B9F2B10FB88A400DB28AA /* Wm5OutStream.cpp */,
+				3C7B9F2C10FB88A400DB28AA /* Wm5OutStream.h */,
+				3C7B9F2D10FB88A400DB28AA /* Wm5OutStream.inl */,
+				3C7B9F2E10FB88A400DB28AA /* Wm5Rtti.cpp */,
+				3C7B9F2F10FB88A400DB28AA /* Wm5Rtti.h */,
+				3C7B9F3010FB88A400DB28AA /* Wm5Rtti.inl */,
+				3C7B9F3110FB88A400DB28AA /* Wm5Stream.cpp */,
+				3C7B9F3210FB88A400DB28AA /* Wm5Stream.h */,
+			);
+			name = ObjectSystems;
+			sourceTree = "<group>";
+		};
+		3CD53B3910F94C7F00CE71D3 /* Time */ = {
+			isa = PBXGroup;
+			children = (
+				3C7B9F6910FB88C600DB28AA /* Wm5Time.cpp */,
+				3C7B9F6A10FB88C600DB28AA /* Wm5Time.h */,
+			);
+			name = Time;
+			sourceTree = "<group>";
+		};
+		3CD53B3C10F94C8600CE71D3 /* Threading */ = {
+			isa = PBXGroup;
+			children = (
+				3C7B9F4F10FB88B400DB28AA /* Wm5Mutex.cpp */,
+				3C7B9F5010FB88B400DB28AA /* Wm5Mutex.h */,
+				3C7B9F5110FB88B400DB28AA /* Wm5MutexType.h */,
+				3C7B9F5210FB88B400DB28AA /* Wm5ScopedCS.cpp */,
+				3C7B9F5310FB88B400DB28AA /* Wm5ScopedCS.h */,
+				3C7B9F5410FB88B400DB28AA /* Wm5Thread.cpp */,
+				3C7B9F5510FB88B400DB28AA /* Wm5Thread.h */,
+				3C7B9F5610FB88B400DB28AA /* Wm5ThreadType.h */,
+			);
+			name = Threading;
+			sourceTree = "<group>";
+		};
+		74B57E7F07F3425300913EC4 = {
+			isa = PBXGroup;
+			children = (
+				74D6DE0107F3432700267169 /* Sources */,
+				74B57E8E07F3427D00913EC4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		74B57E8E07F3427D00913EC4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				74B57E8D07F3427D00913EC4 /* libWm5Cored.a */,
+				74D6DDFE07F342E200267169 /* libWm5Core.a */,
+				3C64C75312569DBD00F4B0B0 /* libWm5Cored.dylib */,
+				3C64C7A41256A63100F4B0B0 /* libWm5Core.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		74D6DE0107F3432700267169 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				3C7B9FC610FBAF4500DB28AA /* Wm5Core.h */,
+				3C7B9FC710FBAF4500DB28AA /* Wm5CoreLIB.h */,
+				3C7B9FC810FBAF4500DB28AA /* Wm5CorePCH.cpp */,
+				3C7B9FC910FBAF4500DB28AA /* Wm5CorePCH.h */,
+				3CD53B2810F94C4600CE71D3 /* Assert */,
+				3CD53B2B10F94C5A00CE71D3 /* DataTypes */,
+				3CD53B3010F94C6800CE71D3 /* InputOutput */,
+				3CD53B3310F94C6E00CE71D3 /* Memory */,
+				3CD53B3610F94C7700CE71D3 /* ObjectSystems */,
+				3CD53B3C10F94C8600CE71D3 /* Threading */,
+				3CD53B3910F94C7F00CE71D3 /* Time */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		3C64C74F12569DBD00F4B0B0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64C76E1256A21A00F4B0B0 /* Wm5Assert.h in Headers */,
+				3C64C7701256A21C00F4B0B0 /* Wm5BufferIO.h in Headers */,
+				3C64C7711256A21F00F4B0B0 /* Wm5Core.h in Headers */,
+				3C64C7721256A22000F4B0B0 /* Wm5CoreLIB.h in Headers */,
+				3C64C7741256A22200F4B0B0 /* Wm5CorePCH.h in Headers */,
+				3C64C7761256A22600F4B0B0 /* Wm5Endian.h in Headers */,
+				3C64C7781256A22700F4B0B0 /* Wm5Environment.h in Headers */,
+				3C64C77A1256A22900F4B0B0 /* Wm5FileIO.h in Headers */,
+				3C64C77C1256A22C00F4B0B0 /* Wm5InitTerm.h in Headers */,
+				3C64C77E1256A22E00F4B0B0 /* Wm5InStream.h in Headers */,
+				3C64C7801256A23000F4B0B0 /* Wm5Memory.h in Headers */,
+				3C64C7811256A23400F4B0B0 /* Wm5MinHeap.h in Headers */,
+				3C64C7831256A23700F4B0B0 /* Wm5Mutex.h in Headers */,
+				3C64C7841256A23800F4B0B0 /* Wm5MutexType.h in Headers */,
+				3C64C7851256A23900F4B0B0 /* Wm5Names.h in Headers */,
+				3C64C7871256A23B00F4B0B0 /* Wm5Object.h in Headers */,
+				3C64C7891256A23D00F4B0B0 /* Wm5OutStream.h in Headers */,
+				3C64C78B1256A23F00F4B0B0 /* Wm5Rtti.h in Headers */,
+				3C64C78D1256A24200F4B0B0 /* Wm5ScopedCS.h in Headers */,
+				3C64C78F1256A24400F4B0B0 /* Wm5SmartPointer.h in Headers */,
+				3C64C7911256A24600F4B0B0 /* Wm5Stream.h in Headers */,
+				3C64C7931256A24800F4B0B0 /* Wm5Thread.h in Headers */,
+				3C64C7941256A24900F4B0B0 /* Wm5ThreadType.h in Headers */,
+				3C64C7961256A24A00F4B0B0 /* Wm5Time.h in Headers */,
+				3C64C7971256A24B00F4B0B0 /* Wm5Tuple.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C64C7A01256A63100F4B0B0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64C7A81256A6A700F4B0B0 /* Wm5Assert.h in Headers */,
+				3C64C7AA1256A6A800F4B0B0 /* Wm5BufferIO.h in Headers */,
+				3C64C7AB1256A6A900F4B0B0 /* Wm5Core.h in Headers */,
+				3C64C7AC1256A6AA00F4B0B0 /* Wm5CoreLIB.h in Headers */,
+				3C64C7AE1256A6AC00F4B0B0 /* Wm5CorePCH.h in Headers */,
+				3C64C7B01256A6AE00F4B0B0 /* Wm5Endian.h in Headers */,
+				3C64C7B21256A6B000F4B0B0 /* Wm5Environment.h in Headers */,
+				3C64C7B41256A6B100F4B0B0 /* Wm5FileIO.h in Headers */,
+				3C64C7B61256A6B400F4B0B0 /* Wm5InitTerm.h in Headers */,
+				3C64C7B81256A6B700F4B0B0 /* Wm5InStream.h in Headers */,
+				3C64C7BA1256A6B900F4B0B0 /* Wm5Memory.h in Headers */,
+				3C64C7BB1256A6BA00F4B0B0 /* Wm5MinHeap.h in Headers */,
+				3C64C7BD1256A6BC00F4B0B0 /* Wm5Mutex.h in Headers */,
+				3C64C7BE1256A6BD00F4B0B0 /* Wm5MutexType.h in Headers */,
+				3C64C7BF1256A6BE00F4B0B0 /* Wm5Names.h in Headers */,
+				3C64C7C11256A6C000F4B0B0 /* Wm5Object.h in Headers */,
+				3C64C7C31256A6C300F4B0B0 /* Wm5OutStream.h in Headers */,
+				3C64C7C51256A6C600F4B0B0 /* Wm5Rtti.h in Headers */,
+				3C64C7C71256A6C800F4B0B0 /* Wm5ScopedCS.h in Headers */,
+				3C64C7C91256A6CD00F4B0B0 /* Wm5SmartPointer.h in Headers */,
+				3C64C7CB1256A6CE00F4B0B0 /* Wm5Stream.h in Headers */,
+				3C64C7CD1256A6D100F4B0B0 /* Wm5Thread.h in Headers */,
+				3C64C7CE1256A6D200F4B0B0 /* Wm5ThreadType.h in Headers */,
+				3C64C7D01256A6D300F4B0B0 /* Wm5Time.h in Headers */,
+				3C64C7D11256A6D400F4B0B0 /* Wm5Tuple.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74B57E8907F3427D00913EC4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CD53B4410F94CDB00CE71D3 /* Wm5Assert.h in Headers */,
+				3CD53B4D10F94CEF00CE71D3 /* Wm5MinHeap.h in Headers */,
+				3CD53B4E10F94CEF00CE71D3 /* Wm5Tuple.h in Headers */,
+				3CD53B5E10F94CFE00CE71D3 /* Wm5BufferIO.h in Headers */,
+				3CD53B6010F94CFE00CE71D3 /* Wm5Endian.h in Headers */,
+				3CD53B6210F94CFE00CE71D3 /* Wm5Environment.h in Headers */,
+				3CD53B6410F94CFE00CE71D3 /* Wm5FileIO.h in Headers */,
+				3C7B9F1910FB889300DB28AA /* Wm5Memory.h in Headers */,
+				3C7B9F1B10FB889300DB28AA /* Wm5SmartPointer.h in Headers */,
+				3C7B9F3410FB88A400DB28AA /* Wm5InitTerm.h in Headers */,
+				3C7B9F3610FB88A400DB28AA /* Wm5InStream.h in Headers */,
+				3C7B9F3710FB88A400DB28AA /* Wm5Names.h in Headers */,
+				3C7B9F3910FB88A400DB28AA /* Wm5Object.h in Headers */,
+				3C7B9F3B10FB88A400DB28AA /* Wm5OutStream.h in Headers */,
+				3C7B9F3D10FB88A400DB28AA /* Wm5Rtti.h in Headers */,
+				3C7B9F3F10FB88A400DB28AA /* Wm5Stream.h in Headers */,
+				3C7B9F5810FB88B400DB28AA /* Wm5Mutex.h in Headers */,
+				3C7B9F5910FB88B400DB28AA /* Wm5MutexType.h in Headers */,
+				3C7B9F5B10FB88B400DB28AA /* Wm5ScopedCS.h in Headers */,
+				3C7B9F5D10FB88B400DB28AA /* Wm5Thread.h in Headers */,
+				3C7B9F5E10FB88B400DB28AA /* Wm5ThreadType.h in Headers */,
+				3C7B9F6C10FB88C600DB28AA /* Wm5Time.h in Headers */,
+				3C7B9FCA10FBAF4500DB28AA /* Wm5Core.h in Headers */,
+				3C7B9FCB10FBAF4500DB28AA /* Wm5CoreLIB.h in Headers */,
+				3C7B9FCD10FBAF4500DB28AA /* Wm5CorePCH.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D6DDFB07F342E200267169 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CD53B4610F94CDB00CE71D3 /* Wm5Assert.h in Headers */,
+				3CD53B4F10F94CEF00CE71D3 /* Wm5MinHeap.h in Headers */,
+				3CD53B5010F94CEF00CE71D3 /* Wm5Tuple.h in Headers */,
+				3CD53B6610F94CFE00CE71D3 /* Wm5BufferIO.h in Headers */,
+				3CD53B6810F94CFE00CE71D3 /* Wm5Endian.h in Headers */,
+				3CD53B6A10F94CFE00CE71D3 /* Wm5Environment.h in Headers */,
+				3CD53B6C10F94CFE00CE71D3 /* Wm5FileIO.h in Headers */,
+				3C7B9F1D10FB889300DB28AA /* Wm5Memory.h in Headers */,
+				3C7B9F1F10FB889300DB28AA /* Wm5SmartPointer.h in Headers */,
+				3C7B9F4110FB88A400DB28AA /* Wm5InitTerm.h in Headers */,
+				3C7B9F4310FB88A400DB28AA /* Wm5InStream.h in Headers */,
+				3C7B9F4410FB88A400DB28AA /* Wm5Names.h in Headers */,
+				3C7B9F4610FB88A400DB28AA /* Wm5Object.h in Headers */,
+				3C7B9F4810FB88A400DB28AA /* Wm5OutStream.h in Headers */,
+				3C7B9F4A10FB88A400DB28AA /* Wm5Rtti.h in Headers */,
+				3C7B9F4C10FB88A400DB28AA /* Wm5Stream.h in Headers */,
+				3C7B9F6010FB88B400DB28AA /* Wm5Mutex.h in Headers */,
+				3C7B9F6110FB88B400DB28AA /* Wm5MutexType.h in Headers */,
+				3C7B9F6310FB88B400DB28AA /* Wm5ScopedCS.h in Headers */,
+				3C7B9F6510FB88B400DB28AA /* Wm5Thread.h in Headers */,
+				3C7B9F6610FB88B400DB28AA /* Wm5ThreadType.h in Headers */,
+				3C7B9F6E10FB88C600DB28AA /* Wm5Time.h in Headers */,
+				3C7B9FCE10FBAF4500DB28AA /* Wm5Core.h in Headers */,
+				3C7B9FCF10FBAF4500DB28AA /* Wm5CoreLIB.h in Headers */,
+				3C7B9FD110FBAF4500DB28AA /* Wm5CorePCH.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		3C64C75212569DBD00F4B0B0 /* Debug Dynamic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C64C75512569DDB00F4B0B0 /* Build configuration list for PBXNativeTarget "Debug Dynamic" */;
+			buildPhases = (
+				3C64C74F12569DBD00F4B0B0 /* Headers */,
+				3C64C75012569DBD00F4B0B0 /* Sources */,
+				3C64C75112569DBD00F4B0B0 /* Frameworks */,
+				3C64C79B1256A44F00F4B0B0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Debug Dynamic";
+			productName = "Debug Dynamic";
+			productReference = 3C64C75312569DBD00F4B0B0 /* libWm5Cored.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		3C64C7A31256A63100F4B0B0 /* Release Dynamic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C64C7A61256A65000F4B0B0 /* Build configuration list for PBXNativeTarget "Release Dynamic" */;
+			buildPhases = (
+				3C64C7A01256A63100F4B0B0 /* Headers */,
+				3C64C7A11256A63100F4B0B0 /* Sources */,
+				3C64C7A21256A63100F4B0B0 /* Frameworks */,
+				3C64C7D51256A6E100F4B0B0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Release Dynamic";
+			productName = "Release Dynamic";
+			productReference = 3C64C7A41256A63100F4B0B0 /* libWm5Core.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		74B57E8C07F3427D00913EC4 /* Debug Static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C027382088FE67300A93309 /* Build configuration list for PBXNativeTarget "Debug Static" */;
+			buildPhases = (
+				74B57E8907F3427D00913EC4 /* Headers */,
+				74B57E8A07F3427D00913EC4 /* Sources */,
+				74B57E8B07F3427D00913EC4 /* Frameworks */,
+				3C6FBBCD083E65BF0068AA05 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Debug Static";
+			productName = "Static Debug";
+			productReference = 74B57E8D07F3427D00913EC4 /* libWm5Cored.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		74D6DDFA07F342E200267169 /* Release Static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C027385088FE67300A93309 /* Build configuration list for PBXNativeTarget "Release Static" */;
+			buildPhases = (
+				74D6DDFB07F342E200267169 /* Headers */,
+				74D6DDFC07F342E200267169 /* Sources */,
+				74D6DDFD07F342E200267169 /* Frameworks */,
+				3C6FBBD0083E65D80068AA05 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Release Static";
+			productName = "Static Debug";
+			productReference = 74D6DDFE07F342E200267169 /* libWm5Core.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		74B57E8307F3425300913EC4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+			};
+			buildConfigurationList = 3C027397088FE67400A93309 /* Build configuration list for PBXProject "LibCore" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 74B57E7F07F3425300913EC4;
+			productRefGroup = 74B57E8E07F3427D00913EC4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				74B57E8C07F3427D00913EC4 /* Debug Static */,
+				74D6DDFA07F342E200267169 /* Release Static */,
+				3C64C75212569DBD00F4B0B0 /* Debug Dynamic */,
+				3C64C7A31256A63100F4B0B0 /* Release Dynamic */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3C64C79B1256A44F00F4B0B0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkDebugDynamic.sh;
+		};
+		3C64C7D51256A6E100F4B0B0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkReleaseDynamic.sh;
+		};
+		3C6FBBCD083E65BF0068AA05 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkDebugStatic.sh;
+		};
+		3C6FBBD0083E65D80068AA05 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkReleaseStatic.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3C64C75012569DBD00F4B0B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64C76D1256A21900F4B0B0 /* Wm5Assert.cpp in Sources */,
+				3C64C76F1256A21C00F4B0B0 /* Wm5BufferIO.cpp in Sources */,
+				3C64C7731256A22100F4B0B0 /* Wm5CorePCH.cpp in Sources */,
+				3C64C7751256A22300F4B0B0 /* Wm5Endian.cpp in Sources */,
+				3C64C7771256A22700F4B0B0 /* Wm5Environment.cpp in Sources */,
+				3C64C7791256A22800F4B0B0 /* Wm5FileIO.cpp in Sources */,
+				3C64C77B1256A22B00F4B0B0 /* Wm5InitTerm.cpp in Sources */,
+				3C64C77D1256A22D00F4B0B0 /* Wm5InStream.cpp in Sources */,
+				3C64C77F1256A23000F4B0B0 /* Wm5Memory.cpp in Sources */,
+				3C64C7821256A23600F4B0B0 /* Wm5Mutex.cpp in Sources */,
+				3C64C7861256A23A00F4B0B0 /* Wm5Object.cpp in Sources */,
+				3C64C7881256A23C00F4B0B0 /* Wm5OutStream.cpp in Sources */,
+				3C64C78A1256A23E00F4B0B0 /* Wm5Rtti.cpp in Sources */,
+				3C64C78C1256A24100F4B0B0 /* Wm5ScopedCS.cpp in Sources */,
+				3C64C78E1256A24300F4B0B0 /* Wm5SmartPointer.cpp in Sources */,
+				3C64C7901256A24500F4B0B0 /* Wm5Stream.cpp in Sources */,
+				3C64C7921256A24800F4B0B0 /* Wm5Thread.cpp in Sources */,
+				3C64C7951256A24A00F4B0B0 /* Wm5Time.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C64C7A11256A63100F4B0B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64C7A71256A6A600F4B0B0 /* Wm5Assert.cpp in Sources */,
+				3C64C7A91256A6A700F4B0B0 /* Wm5BufferIO.cpp in Sources */,
+				3C64C7AD1256A6AB00F4B0B0 /* Wm5CorePCH.cpp in Sources */,
+				3C64C7AF1256A6AC00F4B0B0 /* Wm5Endian.cpp in Sources */,
+				3C64C7B11256A6AF00F4B0B0 /* Wm5Environment.cpp in Sources */,
+				3C64C7B31256A6B000F4B0B0 /* Wm5FileIO.cpp in Sources */,
+				3C64C7B51256A6B300F4B0B0 /* Wm5InitTerm.cpp in Sources */,
+				3C64C7B71256A6B500F4B0B0 /* Wm5InStream.cpp in Sources */,
+				3C64C7B91256A6B800F4B0B0 /* Wm5Memory.cpp in Sources */,
+				3C64C7BC1256A6BB00F4B0B0 /* Wm5Mutex.cpp in Sources */,
+				3C64C7C01256A6BF00F4B0B0 /* Wm5Object.cpp in Sources */,
+				3C64C7C21256A6C200F4B0B0 /* Wm5OutStream.cpp in Sources */,
+				3C64C7C41256A6C500F4B0B0 /* Wm5Rtti.cpp in Sources */,
+				3C64C7C61256A6C700F4B0B0 /* Wm5ScopedCS.cpp in Sources */,
+				3C64C7C81256A6C900F4B0B0 /* Wm5SmartPointer.cpp in Sources */,
+				3C64C7CA1256A6CE00F4B0B0 /* Wm5Stream.cpp in Sources */,
+				3C64C7CC1256A6CF00F4B0B0 /* Wm5Thread.cpp in Sources */,
+				3C64C7CF1256A6D300F4B0B0 /* Wm5Time.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74B57E8A07F3427D00913EC4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CD53B4310F94CDB00CE71D3 /* Wm5Assert.cpp in Sources */,
+				3CD53B5D10F94CFE00CE71D3 /* Wm5BufferIO.cpp in Sources */,
+				3CD53B5F10F94CFE00CE71D3 /* Wm5Endian.cpp in Sources */,
+				3CD53B6110F94CFE00CE71D3 /* Wm5Environment.cpp in Sources */,
+				3CD53B6310F94CFE00CE71D3 /* Wm5FileIO.cpp in Sources */,
+				3C7B9F1810FB889300DB28AA /* Wm5Memory.cpp in Sources */,
+				3C7B9F1A10FB889300DB28AA /* Wm5SmartPointer.cpp in Sources */,
+				3C7B9F3310FB88A400DB28AA /* Wm5InitTerm.cpp in Sources */,
+				3C7B9F3510FB88A400DB28AA /* Wm5InStream.cpp in Sources */,
+				3C7B9F3810FB88A400DB28AA /* Wm5Object.cpp in Sources */,
+				3C7B9F3A10FB88A400DB28AA /* Wm5OutStream.cpp in Sources */,
+				3C7B9F3C10FB88A400DB28AA /* Wm5Rtti.cpp in Sources */,
+				3C7B9F3E10FB88A400DB28AA /* Wm5Stream.cpp in Sources */,
+				3C7B9F5710FB88B400DB28AA /* Wm5Mutex.cpp in Sources */,
+				3C7B9F5A10FB88B400DB28AA /* Wm5ScopedCS.cpp in Sources */,
+				3C7B9F5C10FB88B400DB28AA /* Wm5Thread.cpp in Sources */,
+				3C7B9F6B10FB88C600DB28AA /* Wm5Time.cpp in Sources */,
+				3C7B9FCC10FBAF4500DB28AA /* Wm5CorePCH.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D6DDFC07F342E200267169 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CD53B4510F94CDB00CE71D3 /* Wm5Assert.cpp in Sources */,
+				3CD53B6510F94CFE00CE71D3 /* Wm5BufferIO.cpp in Sources */,
+				3CD53B6710F94CFE00CE71D3 /* Wm5Endian.cpp in Sources */,
+				3CD53B6910F94CFE00CE71D3 /* Wm5Environment.cpp in Sources */,
+				3CD53B6B10F94CFE00CE71D3 /* Wm5FileIO.cpp in Sources */,
+				3C7B9F1C10FB889300DB28AA /* Wm5Memory.cpp in Sources */,
+				3C7B9F1E10FB889300DB28AA /* Wm5SmartPointer.cpp in Sources */,
+				3C7B9F4010FB88A400DB28AA /* Wm5InitTerm.cpp in Sources */,
+				3C7B9F4210FB88A400DB28AA /* Wm5InStream.cpp in Sources */,
+				3C7B9F4510FB88A400DB28AA /* Wm5Object.cpp in Sources */,
+				3C7B9F4710FB88A400DB28AA /* Wm5OutStream.cpp in Sources */,
+				3C7B9F4910FB88A400DB28AA /* Wm5Rtti.cpp in Sources */,
+				3C7B9F4B10FB88A400DB28AA /* Wm5Stream.cpp in Sources */,
+				3C7B9F5F10FB88B400DB28AA /* Wm5Mutex.cpp in Sources */,
+				3C7B9F6210FB88B400DB28AA /* Wm5ScopedCS.cpp in Sources */,
+				3C7B9F6410FB88B400DB28AA /* Wm5Thread.cpp in Sources */,
+				3C7B9F6D10FB88C600DB28AA /* Wm5Time.cpp in Sources */,
+				3C7B9FD010FBAF4500DB28AA /* Wm5CorePCH.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		3C027384088FE67300A93309 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
+				COPY_PHASE_STRIP = NO;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Wm5CorePCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+				);
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = "";
+				LIBRARY_STYLE = STATIC;
+				PRODUCT_NAME = Wm5Cored;
+				SDKROOT = macosx;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/DebugStatic";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		3C027387088FE67300A93309 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Wm5CorePCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+				);
+				LIBRARY_STYLE = STATIC;
+				PRODUCT_NAME = Wm5Core;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/ReleaseStatic";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		3C027399088FE67400A93309 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_PARAMETER = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				SDKROOT = macosx;
+			};
+			name = Default;
+		};
+		3C64C75412569DBD00F4B0B0 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Wm5CorePCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INSTALL_PATH = "${SRCROOT}/../SDK/Library/DebugDLL";
+				OTHER_LDFLAGS = (
+					"-seg1addr",
+					0x10000000,
+					"-framework",
+					Carbon,
+				);
+				PRODUCT_NAME = Wm5Cored;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/DebugDynamic";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		3C64C7A51256A63200F4B0B0 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Wm5CorePCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+				);
+				INSTALL_PATH = "${SRCROOT}/../SDK/Library/ReleaseDLL";
+				OTHER_LDFLAGS = (
+					"-seg1addr",
+					0x10000000,
+					"-framework",
+					Carbon,
+				);
+				PRODUCT_NAME = Wm5Core;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/ReleaseDynamic";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3C027382088FE67300A93309 /* Build configuration list for PBXNativeTarget "Debug Static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C027384088FE67300A93309 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C027385088FE67300A93309 /* Build configuration list for PBXNativeTarget "Release Static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C027387088FE67300A93309 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C027397088FE67400A93309 /* Build configuration list for PBXProject "LibCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C027399088FE67400A93309 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C64C75512569DDB00F4B0B0 /* Build configuration list for PBXNativeTarget "Debug Dynamic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C64C75412569DBD00F4B0B0 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C64C7A61256A65000F4B0B0 /* Build configuration list for PBXNativeTarget "Release Dynamic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C64C7A51256A63200F4B0B0 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 74B57E8307F3425300913EC4 /* Project object */;
+}

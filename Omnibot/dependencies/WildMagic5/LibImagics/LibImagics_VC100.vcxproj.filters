@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="BinaryOperations">
+      <UniqueIdentifier>{3d1704b4-fd22-4f4d-a8fe-3733c858487b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Images">
+      <UniqueIdentifier>{ee781146-1e6c-47cd-bf1f-124f203502de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Extraction">
+      <UniqueIdentifier>{70d93563-d341-4854-bac1-c76364d07d17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RasterDrawing">
+      <UniqueIdentifier>{b4f32ac2-22fd-4d69-a073-7a7b6561fd65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Segmenters">
+      <UniqueIdentifier>{794e5b8a-8988-4c00-bdac-f370ab9c42c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filters">
+      <UniqueIdentifier>{ec921151-685d-48d7-b58a-383417d00282}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_PrecompiledHeaders">
+      <UniqueIdentifier>{ebda7190-2d8c-4263-91fd-e66541e8fc3e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BinaryOperations\Wm5Binary2D.cpp">
+      <Filter>BinaryOperations</Filter>
+    </ClCompile>
+    <ClCompile Include="BinaryOperations\Wm5Binary3D.cpp">
+      <Filter>BinaryOperations</Filter>
+    </ClCompile>
+    <ClCompile Include="Images\Wm5Element.cpp">
+      <Filter>Images</Filter>
+    </ClCompile>
+    <ClCompile Include="Images\Wm5ImageConvert.cpp">
+      <Filter>Images</Filter>
+    </ClCompile>
+    <ClCompile Include="Images\Wm5Images.cpp">
+      <Filter>Images</Filter>
+    </ClCompile>
+    <ClCompile Include="Images\Wm5Lattice.cpp">
+      <Filter>Images</Filter>
+    </ClCompile>
+    <ClCompile Include="Extraction\Wm5ExtractCurveSquares.cpp">
+      <Filter>Extraction</Filter>
+    </ClCompile>
+    <ClCompile Include="Extraction\Wm5ExtractCurveTris.cpp">
+      <Filter>Extraction</Filter>
+    </ClCompile>
+    <ClCompile Include="Extraction\Wm5ExtractSurfaceCubes.cpp">
+      <Filter>Extraction</Filter>
+    </ClCompile>
+    <ClCompile Include="Extraction\Wm5ExtractSurfaceTetra.cpp">
+      <Filter>Extraction</Filter>
+    </ClCompile>
+    <ClCompile Include="RasterDrawing\Wm5RasterDrawing.cpp">
+      <Filter>RasterDrawing</Filter>
+    </ClCompile>
+    <ClCompile Include="Segmenters\Wm5FastMarch.cpp">
+      <Filter>Segmenters</Filter>
+    </ClCompile>
+    <ClCompile Include="Segmenters\Wm5FastMarch2.cpp">
+      <Filter>Segmenters</Filter>
+    </ClCompile>
+    <ClCompile Include="Segmenters\Wm5FastMarch3.cpp">
+      <Filter>Segmenters</Filter>
+    </ClCompile>
+    <ClCompile Include="Filters\Wm5CurvatureFlow2.cpp">
+      <Filter>Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="Filters\Wm5CurvatureFlow3.cpp">
+      <Filter>Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="Filters\Wm5GaussianBlur2.cpp">
+      <Filter>Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="Filters\Wm5GaussianBlur3.cpp">
+      <Filter>Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="Filters\Wm5GradientAnisotropic2.cpp">
+      <Filter>Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="Filters\Wm5GradientAnisotropic3.cpp">
+      <Filter>Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="Filters\Wm5PdeFilter.cpp">
+      <Filter>Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="Filters\Wm5PdeFilter2.cpp">
+      <Filter>Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="Filters\Wm5PdeFilter3.cpp">
+      <Filter>Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="Wm5ImagicsPCH.cpp">
+      <Filter>_PrecompiledHeaders</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BinaryOperations\Wm5Binary2D.h">
+      <Filter>BinaryOperations</Filter>
+    </ClInclude>
+    <ClInclude Include="BinaryOperations\Wm5Binary3D.h">
+      <Filter>BinaryOperations</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\Wm5Element.h">
+      <Filter>Images</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\Wm5ImageConvert.h">
+      <Filter>Images</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\Wm5Images.h">
+      <Filter>Images</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\Wm5Lattice.h">
+      <Filter>Images</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\Wm5TImage.h">
+      <Filter>Images</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\Wm5TImage2D.h">
+      <Filter>Images</Filter>
+    </ClInclude>
+    <ClInclude Include="Images\Wm5TImage3D.h">
+      <Filter>Images</Filter>
+    </ClInclude>
+    <ClInclude Include="Extraction\Wm5ExtractCurveSquares.h">
+      <Filter>Extraction</Filter>
+    </ClInclude>
+    <ClInclude Include="Extraction\Wm5ExtractCurveTris.h">
+      <Filter>Extraction</Filter>
+    </ClInclude>
+    <ClInclude Include="Extraction\Wm5ExtractSurfaceCubes.h">
+      <Filter>Extraction</Filter>
+    </ClInclude>
+    <ClInclude Include="Extraction\Wm5ExtractSurfaceTetra.h">
+      <Filter>Extraction</Filter>
+    </ClInclude>
+    <ClInclude Include="RasterDrawing\Wm5RasterDrawing.h">
+      <Filter>RasterDrawing</Filter>
+    </ClInclude>
+    <ClInclude Include="Segmenters\Wm5FastMarch.h">
+      <Filter>Segmenters</Filter>
+    </ClInclude>
+    <ClInclude Include="Segmenters\Wm5FastMarch2.h">
+      <Filter>Segmenters</Filter>
+    </ClInclude>
+    <ClInclude Include="Segmenters\Wm5FastMarch3.h">
+      <Filter>Segmenters</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters\Wm5CurvatureFlow2.h">
+      <Filter>Filters</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters\Wm5CurvatureFlow3.h">
+      <Filter>Filters</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters\Wm5FastBlur.h">
+      <Filter>Filters</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters\Wm5GaussianBlur2.h">
+      <Filter>Filters</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters\Wm5GaussianBlur3.h">
+      <Filter>Filters</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters\Wm5GradientAnisotropic2.h">
+      <Filter>Filters</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters\Wm5GradientAnisotropic3.h">
+      <Filter>Filters</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters\Wm5PdeFilter.h">
+      <Filter>Filters</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters\Wm5PdeFilter2.h">
+      <Filter>Filters</Filter>
+    </ClInclude>
+    <ClInclude Include="Filters\Wm5PdeFilter3.h">
+      <Filter>Filters</Filter>
+    </ClInclude>
+    <ClInclude Include="Wm5ImagicsPCH.h">
+      <Filter>_PrecompiledHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Wm5Imagics.h" />
+    <ClInclude Include="Wm5ImagicsLIB.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Wm5Element.inl">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="Images\Wm5Lattice.inl">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="Images\Wm5TImage.inl">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="Images\Wm5TImage2D.inl">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="Images\Wm5TImage3D.inl">
+      <Filter>Images</Filter>
+    </None>
+    <None Include="Segmenters\Wm5FastMarch.inl">
+      <Filter>Segmenters</Filter>
+    </None>
+    <None Include="Segmenters\Wm5FastMarch2.inl">
+      <Filter>Segmenters</Filter>
+    </None>
+    <None Include="Segmenters\Wm5FastMarch3.inl">
+      <Filter>Segmenters</Filter>
+    </None>
+    <None Include="Filters\Wm5FastBlur.inl">
+      <Filter>Filters</Filter>
+    </None>
+    <None Include="Filters\Wm5PdeFilter.inl">
+      <Filter>Filters</Filter>
+    </None>
+    <None Include="Filters\Wm5PdeFilter2.inl">
+      <Filter>Filters</Filter>
+    </None>
+    <None Include="Filters\Wm5PdeFilter3.inl">
+      <Filter>Filters</Filter>
+    </None>
+  </ItemGroup>
+</Project>
