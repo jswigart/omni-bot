@@ -1,0 +1,44 @@
+CFG ?= Debug
+SYS ?= linux
+
+build :
+	@mkdir -p ../SDK/Include
+	@mkdir -p ../SDK/Library/$(CFG)
+	@mkdir -p $(CFG)
+	@cp -fp *.h ../SDK/Include
+	cd Algebra               ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Approximation         ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Base                  ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd ComputationalGeometry ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Containment           ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd CurvesSurfacesVolumes ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Distance              ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Interpolation         ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Intersection          ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Meshes                ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Miscellaneous         ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd NumericalAnalysis     ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Objects2D             ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Objects3D             ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Query                 ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Rational              ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+
+clean :
+	cd Algebra               ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Approximation         ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Base                  ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd ComputationalGeometry ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Containment           ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd CurvesSurfacesVolumes ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Distance              ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Interpolation         ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Intersection          ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Meshes                ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Miscellaneous         ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd NumericalAnalysis     ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Objects2D             ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Objects3D             ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Query                 ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Rational              ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	@rm -f $(CFG)/*.*
+	@rmdir $(CFG)

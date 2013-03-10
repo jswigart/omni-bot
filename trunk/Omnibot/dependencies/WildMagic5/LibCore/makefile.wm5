@@ -1,0 +1,26 @@
+CFG ?= Debug
+SYS ?= Linux
+
+build :
+	@mkdir -p ../SDK/Include
+	@mkdir -p ../SDK/Library/$(CFG)
+	@mkdir -p $(CFG)
+	@cp -fp *.h ../SDK/Include
+	cd Assert        ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd DataTypes     ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd InputOutput   ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Memory        ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd ObjectSystems ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Threading     ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Time          ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+
+clean :
+	cd Assert        ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd DataTypes     ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd InputOutput   ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Memory        ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd ObjectSystems ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Threading     ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Time          ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	@rm -f $(CFG)/*.*
+	@rmdir $(CFG)

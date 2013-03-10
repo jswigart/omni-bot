@@ -1,0 +1,22 @@
+//----------------------------------------------------------------------------
+22 Jan 2010
+
+The graphics library has a new class, TransformController, that derives from
+Controller.  It manages the local transformation for a Spatial object.
+
+The KeyframeController class used to be derived from Controller, but is now
+derived from TransformationController.  The reason is that the key frames of
+a KeyframeController may affect only *some* of the transformation channels.
+For example, if a KeyframeController has only translation key frames, then the
+3x3 matrix of the transformation is never modified.  Effectively, the system
+relied (implicitly) on the application setting the local transformation for
+mObject, which fills in those transformation channels not affected by the
+key frames.  By living on top of TransformController, KeyframeController now
+fills in *all* of the transformation channels.
+
+The streaming system is affected by this change.  The streaming version of
+Wild Magic 5.0 is WM_VERSION_5_0 (see LibCore/ObjectSystems, files
+Wm5InStream.h and Wm5OutStream.h).  The version number is changed to
+WM_VERSION_5_1.  A streamed KeyframeController object in WM_VERSION_5_1 has
+a Transform object occurring *before* the mNumCommonTimes member.
+//----------------------------------------------------------------------------

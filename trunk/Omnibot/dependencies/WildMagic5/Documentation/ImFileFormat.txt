@@ -1,0 +1,52 @@
+The *.im file format is a simple one.  It has a header block of data followed by the image data.
+
+=====
+For 2D images (like WildMagic5/Data/Im/Head.im), the file is organized as
+
+char* uniqueIdentifier = "Magic Image"; // null-terminated string (12 bytes)
+int numberOfDimensions = 2; // (4 bytes)
+int xDimension;  // number of image columns (4 bytes)
+int yDimension;  // number of image rows (4 bytes)
+int rtti;   // type of pixels, see WildMagic5/LibImagics/Images/Wm5Element.cpp, (4 bytes)
+int size;   // bytes per pixel [size of the pixel type], (4 bytes)
+char* data;  // the image data in row-major order (row0 pixels, row1 pixels, ...)
+
+Head.im has header listed as hexadecimal characters
+    4D 61 67 69 63 20 49 6D 61 67 65 00 02 00 00 00
+    00 01 00 00 00 01 00 00 03 00 00 00 02 00 00 00
+    <data>
+
+4D 61 67 69 63 20 49 6D 61 67 65 00 // "Magic Image\0"
+02 00 00 00 // 2 dimensions
+00 01 00 00 // 256 columns
+00 01 00 00 // 256 rows
+03 00 00 00 // pixels are of type 'unsigned short'
+02 00 00 00 // size of 'unsigned short' is 2 bytes
+
+
+=====
+For 3D images (like WildMagic5/Data/Im/Molecule.im), the file is organized as
+
+char* uniqueIdentifier = "Magic Image"; // null-terminated string (12 bytes)
+int numberOfDimensions = 3; // (4 bytes)
+int xDimension;  // number of image columns (4 bytes)
+int yDimension;  // number of image rows (4 bytes)
+int zDimension;  // number of image slices (4 bytes)
+int rtti;   // type of voxels, see WildMagic5/LibImagics/Images/Wm5Element.cpp, (4 bytes)
+int size;   // bytes per voxel [size of the voxel type], (4 bytes)
+char* data;  // the image data in lexicographical order (slice0 voxels,
+             // slice1 voxels, ...), each slice in row-major order
+
+Molecule.im has header listed as hexadecimal characters
+    4D 61 67 69 63 20 49 6D 61 67 65 00 03 00 00 00
+    61 00 00 00 61 00 00 00 74 00 00 00 01 00 00 00
+    01 00 00 00
+    <data>
+
+4D 61 67 69 63 20 49 6D 61 67 65 00 // "Magic Image\0"
+03 00 00 00 // 3 dimensions
+61 00 00 00 // 97 columns
+61 00 00 00 // 97 rows
+74 00 00 00 // 116 slices
+01 00 00 00 // pixels are of type 'unsigned char'
+01 00 00 00 // size of 'unsigned char' is 1 byte

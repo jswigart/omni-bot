@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Intersection">
+      <UniqueIdentifier>{b7cef3ea-ac08-491c-b3c2-e499bd5a4e62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RigidBody">
+      <UniqueIdentifier>{fd619dbd-f52b-406f-9955-ecc46700b0d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ParticleSystem">
+      <UniqueIdentifier>{2022080f-21b8-4ffd-83b5-d66123179f5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LCPSolver">
+      <UniqueIdentifier>{4a287dad-867d-4b66-a47e-a5cd417b8846}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CollisionDetection">
+      <UniqueIdentifier>{9bf3b448-acc4-4c5b-9b65-64b6a7cca398}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_PrecompiledHeaders">
+      <UniqueIdentifier>{7f4032a9-89d8-44f2-8c00-e6786f987377}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fluid">
+      <UniqueIdentifier>{1c901f0f-6919-4cd4-8cb4-c3f489b0d8a7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Intersection\Wm5BoxManager.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5ExtremalQuery3.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5ExtremalQuery3BSP.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5ExtremalQuery3PRJ.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntervalManager.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5RectangleManager.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody\Wm5PolyhedralMassProperties.cpp">
+      <Filter>RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody\Wm5RigidBody.cpp">
+      <Filter>RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem\Wm5MassSpringArbitrary.cpp">
+      <Filter>ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem\Wm5MassSpringCurve.cpp">
+      <Filter>ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem\Wm5MassSpringSurface.cpp">
+      <Filter>ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem\Wm5MassSpringVolume.cpp">
+      <Filter>ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem\Wm5ParticleSystem.cpp">
+      <Filter>ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="LCPSolver\Wm5LCPPolyDist.cpp">
+      <Filter>LCPSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="LCPSolver\Wm5LCPSolver.cpp">
+      <Filter>LCPSolver</Filter>
+    </ClCompile>
+    <ClCompile Include="Wm5PhysicsPCH.cpp">
+      <Filter>_PrecompiledHeaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Fluid\Wm5Fluid2Da.cpp">
+      <Filter>Fluid</Filter>
+    </ClCompile>
+    <ClCompile Include="Fluid\Wm5Fluid2Db.cpp">
+      <Filter>Fluid</Filter>
+    </ClCompile>
+    <ClCompile Include="Fluid\Wm5Fluid3Da.cpp">
+      <Filter>Fluid</Filter>
+    </ClCompile>
+    <ClCompile Include="Fluid\Wm5Fluid3Db.cpp">
+      <Filter>Fluid</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Intersection\Wm5BoxManager.h">
+      <Filter>Intersection</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5ExtremalQuery3.h">
+      <Filter>Intersection</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5ExtremalQuery3BSP.h">
+      <Filter>Intersection</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5ExtremalQuery3PRJ.h">
+      <Filter>Intersection</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntervalManager.h">
+      <Filter>Intersection</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5RectangleManager.h">
+      <Filter>Intersection</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody\Wm5PolyhedralMassProperties.h">
+      <Filter>RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody\Wm5RigidBody.h">
+      <Filter>RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem\Wm5MassSpringArbitrary.h">
+      <Filter>ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem\Wm5MassSpringCurve.h">
+      <Filter>ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem\Wm5MassSpringSurface.h">
+      <Filter>ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem\Wm5MassSpringVolume.h">
+      <Filter>ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem\Wm5ParticleSystem.h">
+      <Filter>ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="LCPSolver\Wm5LCPPolyDist.h">
+      <Filter>LCPSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="LCPSolver\Wm5LCPSolver.h">
+      <Filter>LCPSolver</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionDetection\Wm5BoundTree.h">
+      <Filter>CollisionDetection</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionDetection\Wm5CollisionGroup.h">
+      <Filter>CollisionDetection</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionDetection\Wm5CollisionRecord.h">
+      <Filter>CollisionDetection</Filter>
+    </ClInclude>
+    <ClInclude Include="Wm5PhysicsPCH.h">
+      <Filter>_PrecompiledHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Fluid\Wm5Fluid2Da.h">
+      <Filter>Fluid</Filter>
+    </ClInclude>
+    <ClInclude Include="Fluid\Wm5Fluid2Db.h">
+      <Filter>Fluid</Filter>
+    </ClInclude>
+    <ClInclude Include="Fluid\Wm5Fluid3Da.h">
+      <Filter>Fluid</Filter>
+    </ClInclude>
+    <ClInclude Include="Fluid\Wm5Fluid3Db.h">
+      <Filter>Fluid</Filter>
+    </ClInclude>
+    <ClInclude Include="Wm5Physics.h" />
+    <ClInclude Include="Wm5PhysicsLIB.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CollisionDetection\Wm5BoundTree.inl">
+      <Filter>CollisionDetection</Filter>
+    </None>
+    <None Include="CollisionDetection\Wm5CollisionGroup.inl">
+      <Filter>CollisionDetection</Filter>
+    </None>
+    <None Include="CollisionDetection\Wm5CollisionRecord.inl">
+      <Filter>CollisionDetection</Filter>
+    </None>
+    <None Include="Fluid\Wm5Fluid2Da.inl">
+      <Filter>Fluid</Filter>
+    </None>
+    <None Include="Fluid\Wm5Fluid2Db.inl">
+      <Filter>Fluid</Filter>
+    </None>
+    <None Include="Fluid\Wm5Fluid3Da.inl">
+      <Filter>Fluid</Filter>
+    </None>
+    <None Include="Fluid\Wm5Fluid3Db.inl">
+      <Filter>Fluid</Filter>
+    </None>
+  </ItemGroup>
+</Project>

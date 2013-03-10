@@ -1,0 +1,1204 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SceneGraph">
+      <UniqueIdentifier>{6e713bb6-1222-4917-ac54-3d26633c0d49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers">
+      <UniqueIdentifier>{01fd29a2-b02e-4628-a9a5-84e3a9cbd1f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataTypes">
+      <UniqueIdentifier>{6c138ec9-d355-41b7-853e-01e645c9fede}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{8c6bc573-eef5-4227-b38f-93b668ed6ee4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Detail">
+      <UniqueIdentifier>{dcc8c085-8ab8-468c-9906-b5d4859b57e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{9604e38a-94a5-4a31-aede-49af92e9b512}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CurvesSurfaces">
+      <UniqueIdentifier>{1432234a-7833-487c-9bc7-39c80586de41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Terrain">
+      <UniqueIdentifier>{a4f3cdd8-fb3d-4b07-88d0-f5f6624bff85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sorting">
+      <UniqueIdentifier>{b6857c57-0143-4b01-b262-8ac3ea0dc5df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_PrecompiledHeaders">
+      <UniqueIdentifier>{3b0767f5-788d-4045-acae-b93c07f7946e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderFloats">
+      <UniqueIdentifier>{e1c99cc7-2205-43cc-ab1e-be3747c019a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LocalEffects">
+      <UniqueIdentifier>{53b62cb3-af42-465f-800d-204baa353cc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImageProcessing">
+      <UniqueIdentifier>{33829fa0-6acc-4a80-ba5a-f17234a46bf8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GlobalEffects">
+      <UniqueIdentifier>{a7dde6c5-501e-4d39-b2fc-0e40688ff397}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderers">
+      <UniqueIdentifier>{8f5d5e65-86c6-4713-8d79-0d654236217d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderers\Dx9Renderer">
+      <UniqueIdentifier>{84c80644-554e-4b3b-9b7a-f2a3d73cb1cc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SceneGraph\Wm5Camera.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5CameraNode.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5Culler.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5Light.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5LightNode.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5Material.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5Node.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5Particles.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5Picker.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5Polypoint.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5Polysegment.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5Projector.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5ScreenTarget.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5Spatial.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5StandardMesh.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5Triangles.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5TriFan.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5TriMesh.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5TriStrip.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5VisibleSet.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Wm5Visual.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Wm5BlendTransformController.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Wm5ControlledObject.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Wm5Controller.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Wm5IKController.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Wm5IKGoal.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Wm5IKJoint.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Wm5KeyframeController.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Wm5MorphController.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Wm5ParticleController.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Wm5PointController.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Wm5SkinController.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="Controllers\Wm5TransformController.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="DataTypes\Wm5Bound.cpp">
+      <Filter>DataTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="DataTypes\Wm5Color.cpp">
+      <Filter>DataTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="DataTypes\Wm5HalfFloat.cpp">
+      <Filter>DataTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="DataTypes\Wm5SpecializedIO.cpp">
+      <Filter>DataTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="DataTypes\Wm5Transform.cpp">
+      <Filter>DataTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="DataTypes\Wm5Utility.cpp">
+      <Filter>DataTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Wm5Buffer.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Wm5IndexBuffer.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Wm5RenderTarget.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Wm5Texture.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Wm5Texture1D.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Wm5Texture2D.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Wm5Texture3D.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Wm5TextureCube.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Wm5VertexBuffer.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Wm5VertexBufferAccessor.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Wm5VertexFormat.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Detail\Wm5BillboardNode.cpp">
+      <Filter>Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="Detail\Wm5ClodMesh.cpp">
+      <Filter>Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="Detail\Wm5CollapseRecord.cpp">
+      <Filter>Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="Detail\Wm5CollapseRecordArray.cpp">
+      <Filter>Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="Detail\Wm5CreateClodMesh.cpp">
+      <Filter>Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="Detail\Wm5DlodNode.cpp">
+      <Filter>Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="Detail\Wm5SwitchNode.cpp">
+      <Filter>Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\Wm5AlphaState.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\Wm5CullState.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\Wm5DepthState.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\Wm5OffsetState.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\Wm5PixelShader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\Wm5Shader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\Wm5ShaderParameters.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\Wm5StencilState.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\Wm5VertexShader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\Wm5VisualEffect.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\Wm5VisualEffectInstance.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\Wm5VisualPass.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\Wm5VisualTechnique.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\Wm5WireState.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfaces\Wm5BoxSurface.cpp">
+      <Filter>CurvesSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfaces\Wm5BSplineSurfacePatch.cpp">
+      <Filter>CurvesSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfaces\Wm5CurveMesh.cpp">
+      <Filter>CurvesSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfaces\Wm5CurveSegment.cpp">
+      <Filter>CurvesSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfaces\Wm5Float2Array.cpp">
+      <Filter>CurvesSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfaces\Wm5FloatArray.cpp">
+      <Filter>CurvesSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfaces\Wm5RectangleSurface.cpp">
+      <Filter>CurvesSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfaces\Wm5RevolutionSurface.cpp">
+      <Filter>CurvesSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfaces\Wm5SurfaceMesh.cpp">
+      <Filter>CurvesSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfaces\Wm5SurfacePatch.cpp">
+      <Filter>CurvesSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfaces\Wm5TubeSurface.cpp">
+      <Filter>CurvesSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain\Wm5Terrain.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain\Wm5TerrainPage.cpp">
+      <Filter>Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Sorting\Wm5BspNode.cpp">
+      <Filter>Sorting</Filter>
+    </ClCompile>
+    <ClCompile Include="Sorting\Wm5ConvexRegion.cpp">
+      <Filter>Sorting</Filter>
+    </ClCompile>
+    <ClCompile Include="Sorting\Wm5ConvexRegionManager.cpp">
+      <Filter>Sorting</Filter>
+    </ClCompile>
+    <ClCompile Include="Sorting\Wm5CRMCuller.cpp">
+      <Filter>Sorting</Filter>
+    </ClCompile>
+    <ClCompile Include="Sorting\Wm5Portal.cpp">
+      <Filter>Sorting</Filter>
+    </ClCompile>
+    <ClCompile Include="Wm5GraphicsPCH.cpp">
+      <Filter>_PrecompiledHeaders</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5CameraModelDVectorConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5CameraModelPositionConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5CameraWorldDVectorConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5CameraWorldPositionConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5LightAmbientConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5LightAttenuationConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5LightDiffuseConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5LightModelDVectorConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5LightModelPositionConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5LightSpecularConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5LightSpotConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5LightWorldDVectorConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5LightWorldPositionConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5MaterialAmbientConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5MaterialDiffuseConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5MaterialEmissiveConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5MaterialSpecularConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5PMatrixConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5ProjectorMatrixConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5ProjectorWorldPositionConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5PVMatrixConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5PVWMatrixConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5ShaderFloat.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5VMatrixConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5VWMatrixConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5WMatrixConstant.cpp">
+      <Filter>ShaderFloats</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5DefaultEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5LightAmbEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5LightDirPerPixEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5LightDirPerVerEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5LightPntPerPixEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5LightPntPerVerEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5LightSptPerPixEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5LightSptPerVerEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5MaterialEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5MaterialTextureEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5Texture1DEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5Texture2AddEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5Texture2ColorBlendEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5Texture2DEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5Texture2MulEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5Texture3DEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5VertexColor3Effect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5VertexColor4Effect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalEffects\Wm5VertexColor4TextureEffect.cpp">
+      <Filter>LocalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageProcessing\Wm5ImageProcessing.cpp">
+      <Filter>ImageProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageProcessing\Wm5ImageProcessing2.cpp">
+      <Filter>ImageProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageProcessing\Wm5ImageProcessing3.cpp">
+      <Filter>ImageProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalEffects\Wm5GlobalEffect.cpp">
+      <Filter>GlobalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalEffects\Wm5PlanarReflectionEffect.cpp">
+      <Filter>GlobalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalEffects\Wm5PlanarShadowEffect.cpp">
+      <Filter>GlobalEffects</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderers\Wm5Renderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderers\Dx9Renderer\Wm5Dx9IndexBuffer.cpp">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderers\Dx9Renderer\Wm5Dx9Mapping.cpp">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderers\Dx9Renderer\Wm5Dx9PixelShader.cpp">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderers\Dx9Renderer\Wm5Dx9Renderer.cpp">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderers\Dx9Renderer\Wm5Dx9RenderTarget.cpp">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderers\Dx9Renderer\Wm5Dx9Shader.cpp">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderers\Dx9Renderer\Wm5Dx9Texture1D.cpp">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderers\Dx9Renderer\Wm5Dx9Texture2D.cpp">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderers\Dx9Renderer\Wm5Dx9Texture3D.cpp">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderers\Dx9Renderer\Wm5Dx9TextureCube.cpp">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderers\Dx9Renderer\Wm5Dx9VertexBuffer.cpp">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderers\Dx9Renderer\Wm5Dx9VertexFormat.cpp">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderers\Dx9Renderer\Wm5Dx9VertexShader.cpp">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SceneGraph\Wm5Camera.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5CameraNode.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5Culler.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5Light.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5LightNode.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5Material.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5Node.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5Particles.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5Picker.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5PickRecord.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5Polypoint.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5Polysegment.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5Projector.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5ScreenTarget.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5Spatial.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5StandardMesh.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5Triangles.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5TriFan.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5TriMesh.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5TriStrip.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5VisibleSet.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Wm5Visual.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Wm5BlendTransformController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Wm5ControlledObject.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Wm5Controller.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Wm5IKController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Wm5IKGoal.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Wm5IKJoint.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Wm5KeyframeController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Wm5MorphController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Wm5ParticleController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Wm5PointController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Wm5SkinController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="Controllers\Wm5TransformController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTypes\Wm5Bound.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTypes\Wm5Color.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTypes\Wm5HalfFloat.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTypes\Wm5SpecializedIO.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTypes\Wm5Transform.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTypes\Wm5Utility.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Wm5Buffer.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Wm5IndexBuffer.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Wm5RenderTarget.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Wm5Texture.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Wm5Texture1D.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Wm5Texture2D.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Wm5Texture3D.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Wm5TextureCube.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Wm5VertexBuffer.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Wm5VertexBufferAccessor.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Wm5VertexFormat.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Detail\Wm5BillboardNode.h">
+      <Filter>Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Detail\Wm5ClodMesh.h">
+      <Filter>Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Detail\Wm5CollapseRecord.h">
+      <Filter>Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Detail\Wm5CollapseRecordArray.h">
+      <Filter>Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Detail\Wm5CreateClodMesh.h">
+      <Filter>Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Detail\Wm5DlodNode.h">
+      <Filter>Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Detail\Wm5SwitchNode.h">
+      <Filter>Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Wm5AlphaState.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Wm5CullState.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Wm5DepthState.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Wm5OffsetState.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Wm5PixelShader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Wm5Shader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Wm5ShaderParameters.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Wm5StencilState.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Wm5VertexShader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Wm5VisualEffect.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Wm5VisualEffectInstance.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Wm5VisualPass.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Wm5VisualTechnique.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Wm5WireState.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfaces\Wm5BoxSurface.h">
+      <Filter>CurvesSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfaces\Wm5BSplineSurfacePatch.h">
+      <Filter>CurvesSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfaces\Wm5CurveMesh.h">
+      <Filter>CurvesSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfaces\Wm5CurveSegment.h">
+      <Filter>CurvesSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfaces\Wm5Float2Array.h">
+      <Filter>CurvesSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfaces\Wm5FloatArray.h">
+      <Filter>CurvesSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfaces\Wm5RectangleSurface.h">
+      <Filter>CurvesSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfaces\Wm5RevolutionSurface.h">
+      <Filter>CurvesSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfaces\Wm5SurfaceMesh.h">
+      <Filter>CurvesSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfaces\Wm5SurfacePatch.h">
+      <Filter>CurvesSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfaces\Wm5TubeSurface.h">
+      <Filter>CurvesSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain\Wm5Terrain.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain\Wm5TerrainPage.h">
+      <Filter>Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Sorting\Wm5BspNode.h">
+      <Filter>Sorting</Filter>
+    </ClInclude>
+    <ClInclude Include="Sorting\Wm5ConvexRegion.h">
+      <Filter>Sorting</Filter>
+    </ClInclude>
+    <ClInclude Include="Sorting\Wm5ConvexRegionManager.h">
+      <Filter>Sorting</Filter>
+    </ClInclude>
+    <ClInclude Include="Sorting\Wm5CRMCuller.h">
+      <Filter>Sorting</Filter>
+    </ClInclude>
+    <ClInclude Include="Sorting\Wm5Portal.h">
+      <Filter>Sorting</Filter>
+    </ClInclude>
+    <ClInclude Include="Wm5GraphicsPCH.h">
+      <Filter>_PrecompiledHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5CameraModelDVectorConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5CameraModelPositionConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5CameraWorldDVectorConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5CameraWorldPositionConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5LightAmbientConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5LightAttenuationConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5LightDiffuseConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5LightModelDVectorConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5LightModelPositionConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5LightSpecularConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5LightSpotConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5LightWorldDVectorConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5LightWorldPositionConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5MaterialAmbientConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5MaterialDiffuseConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5MaterialEmissiveConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5MaterialSpecularConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5PMatrixConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5ProjectorMatrixConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5ProjectorWorldPositionConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5PVMatrixConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5PVWMatrixConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5ShaderFloat.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5VMatrixConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5VWMatrixConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFloats\Wm5WMatrixConstant.h">
+      <Filter>ShaderFloats</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5DefaultEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5LightAmbEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5LightDirPerPixEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5LightDirPerVerEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5LightPntPerPixEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5LightPntPerVerEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5LightSptPerPixEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5LightSptPerVerEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5MaterialEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5MaterialTextureEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5Texture1DEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5Texture2AddEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5Texture2ColorBlendEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5Texture2DEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5Texture2MulEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5Texture3DEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5VertexColor3Effect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5VertexColor4Effect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalEffects\Wm5VertexColor4TextureEffect.h">
+      <Filter>LocalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageProcessing\Wm5ImageProcessing.h">
+      <Filter>ImageProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageProcessing\Wm5ImageProcessing2.h">
+      <Filter>ImageProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageProcessing\Wm5ImageProcessing3.h">
+      <Filter>ImageProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalEffects\Wm5GlobalEffect.h">
+      <Filter>GlobalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalEffects\Wm5PlanarReflectionEffect.h">
+      <Filter>GlobalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalEffects\Wm5PlanarShadowEffect.h">
+      <Filter>GlobalEffects</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Wm5Renderer.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Wm5Renderers.h">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Dx9Renderer\Wm5Dx9IndexBuffer.h">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Dx9Renderer\Wm5Dx9Mapping.h">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Dx9Renderer\Wm5Dx9PixelShader.h">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Dx9Renderer\Wm5Dx9RendererData.h">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Dx9Renderer\Wm5Dx9RendererInput.h">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Dx9Renderer\Wm5Dx9RendererLIB.h">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Dx9Renderer\Wm5Dx9RenderTarget.h">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Dx9Renderer\Wm5Dx9Shader.h">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Dx9Renderer\Wm5Dx9Texture1D.h">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Dx9Renderer\Wm5Dx9Texture2D.h">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Dx9Renderer\Wm5Dx9Texture3D.h">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Dx9Renderer\Wm5Dx9TextureCube.h">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Dx9Renderer\Wm5Dx9VertexBuffer.h">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Dx9Renderer\Wm5Dx9VertexFormat.h">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderers\Dx9Renderer\Wm5Dx9VertexShader.h">
+      <Filter>Renderers\Dx9Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Wm5Graphics.h" />
+    <ClInclude Include="Wm5GraphicsLIB.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SceneGraph\Wm5Camera.inl">
+      <Filter>SceneGraph</Filter>
+    </None>
+    <None Include="SceneGraph\Wm5CameraNode.inl">
+      <Filter>SceneGraph</Filter>
+    </None>
+    <None Include="SceneGraph\Wm5Culler.inl">
+      <Filter>SceneGraph</Filter>
+    </None>
+    <None Include="SceneGraph\Wm5Light.inl">
+      <Filter>SceneGraph</Filter>
+    </None>
+    <None Include="SceneGraph\Wm5LightNode.inl">
+      <Filter>SceneGraph</Filter>
+    </None>
+    <None Include="SceneGraph\Wm5Node.inl">
+      <Filter>SceneGraph</Filter>
+    </None>
+    <None Include="SceneGraph\Wm5Particles.inl">
+      <Filter>SceneGraph</Filter>
+    </None>
+    <None Include="SceneGraph\Wm5Picker.inl">
+      <Filter>SceneGraph</Filter>
+    </None>
+    <None Include="SceneGraph\Wm5Polypoint.inl">
+      <Filter>SceneGraph</Filter>
+    </None>
+    <None Include="SceneGraph\Wm5Polysegment.inl">
+      <Filter>SceneGraph</Filter>
+    </None>
+    <None Include="SceneGraph\Wm5Spatial.inl">
+      <Filter>SceneGraph</Filter>
+    </None>
+    <None Include="SceneGraph\Wm5Triangles.inl">
+      <Filter>SceneGraph</Filter>
+    </None>
+    <None Include="SceneGraph\Wm5VisibleSet.inl">
+      <Filter>SceneGraph</Filter>
+    </None>
+    <None Include="SceneGraph\Wm5Visual.inl">
+      <Filter>SceneGraph</Filter>
+    </None>
+    <None Include="Controllers\Wm5BlendTransformController.inl">
+      <Filter>Controllers</Filter>
+    </None>
+    <None Include="Controllers\Wm5ControlledObject.inl">
+      <Filter>Controllers</Filter>
+    </None>
+    <None Include="Controllers\Wm5Controller.inl">
+      <Filter>Controllers</Filter>
+    </None>
+    <None Include="Controllers\Wm5IKGoal.inl">
+      <Filter>Controllers</Filter>
+    </None>
+    <None Include="Controllers\Wm5KeyframeController.inl">
+      <Filter>Controllers</Filter>
+    </None>
+    <None Include="Controllers\Wm5MorphController.inl">
+      <Filter>Controllers</Filter>
+    </None>
+    <None Include="Controllers\Wm5ParticleController.inl">
+      <Filter>Controllers</Filter>
+    </None>
+    <None Include="Controllers\Wm5PointController.inl">
+      <Filter>Controllers</Filter>
+    </None>
+    <None Include="Controllers\Wm5SkinController.inl">
+      <Filter>Controllers</Filter>
+    </None>
+    <None Include="Controllers\Wm5TransformController.inl">
+      <Filter>Controllers</Filter>
+    </None>
+    <None Include="DataTypes\Wm5Bound.inl">
+      <Filter>DataTypes</Filter>
+    </None>
+    <None Include="DataTypes\Wm5Color.inl">
+      <Filter>DataTypes</Filter>
+    </None>
+    <None Include="DataTypes\Wm5Transform.inl">
+      <Filter>DataTypes</Filter>
+    </None>
+    <None Include="Resources\Wm5Buffer.inl">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\Wm5IndexBuffer.inl">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\Wm5RenderTarget.inl">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\Wm5Texture.inl">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\Wm5Texture1D.inl">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\Wm5Texture2D.inl">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\Wm5Texture3D.inl">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\Wm5TextureCube.inl">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\Wm5VertexBuffer.inl">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\Wm5VertexBufferAccessor.inl">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Resources\Wm5VertexFormat.inl">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Detail\Wm5BillboardNode.inl">
+      <Filter>Detail</Filter>
+    </None>
+    <None Include="Detail\Wm5ClodMesh.inl">
+      <Filter>Detail</Filter>
+    </None>
+    <None Include="Detail\Wm5CollapseRecordArray.inl">
+      <Filter>Detail</Filter>
+    </None>
+    <None Include="Detail\Wm5DlodNode.inl">
+      <Filter>Detail</Filter>
+    </None>
+    <None Include="Detail\Wm5SwitchNode.inl">
+      <Filter>Detail</Filter>
+    </None>
+    <None Include="Shaders\Wm5Shader.inl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Wm5ShaderParameters.inl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Wm5VisualEffect.inl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Wm5VisualEffectInstance.inl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Wm5VisualPass.inl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Wm5VisualTechnique.inl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="CurvesSurfaces\Wm5BoxSurface.inl">
+      <Filter>CurvesSurfaces</Filter>
+    </None>
+    <None Include="CurvesSurfaces\Wm5Float2Array.inl">
+      <Filter>CurvesSurfaces</Filter>
+    </None>
+    <None Include="CurvesSurfaces\Wm5FloatArray.inl">
+      <Filter>CurvesSurfaces</Filter>
+    </None>
+    <None Include="CurvesSurfaces\Wm5RectangleSurface.inl">
+      <Filter>CurvesSurfaces</Filter>
+    </None>
+    <None Include="CurvesSurfaces\Wm5RevolutionSurface.inl">
+      <Filter>CurvesSurfaces</Filter>
+    </None>
+    <None Include="CurvesSurfaces\Wm5TubeSurface.inl">
+      <Filter>CurvesSurfaces</Filter>
+    </None>
+    <None Include="Terrain\Wm5Terrain.inl">
+      <Filter>Terrain</Filter>
+    </None>
+    <None Include="Terrain\Wm5TerrainPage.inl">
+      <Filter>Terrain</Filter>
+    </None>
+    <None Include="Sorting\Wm5BspNode.inl">
+      <Filter>Sorting</Filter>
+    </None>
+    <None Include="Sorting\Wm5ConvexRegion.inl">
+      <Filter>Sorting</Filter>
+    </None>
+    <None Include="ShaderFloats\Wm5ShaderFloat.inl">
+      <Filter>ShaderFloats</Filter>
+    </None>
+    <None Include="ImageProcessing\Wm5ImageProcessing.inl">
+      <Filter>ImageProcessing</Filter>
+    </None>
+    <None Include="ImageProcessing\Wm5ImageProcessing2.inl">
+      <Filter>ImageProcessing</Filter>
+    </None>
+    <None Include="ImageProcessing\Wm5ImageProcessing3.inl">
+      <Filter>ImageProcessing</Filter>
+    </None>
+    <None Include="GlobalEffects\Wm5PlanarReflectionEffect.inl">
+      <Filter>GlobalEffects</Filter>
+    </None>
+    <None Include="GlobalEffects\Wm5PlanarShadowEffect.inl">
+      <Filter>GlobalEffects</Filter>
+    </None>
+    <None Include="Renderers\Wm5Renderer.inl">
+      <Filter>Renderers</Filter>
+    </None>
+    <None Include="SceneGraph\Wm5PickRecord.inl">
+      <Filter>SceneGraph</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,1275 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugDLL|Win32">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugDLL|x64">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|Win32">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|x64">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{05AB1253-998D-4170-B8EB-B092BEDE9593}</ProjectGuid>
+    <RootNamespace>LibMathematics</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Wm5MathematicsD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Wm5MathematicsD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">Wm5MathematicsD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">Wm5MathematicsD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Wm5Mathematics</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Wm5Mathematics</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">Wm5Mathematics</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">Wm5Mathematics</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;Algebra;Approximation;Base;ComputationalGeometry;Containment;CurvesSurfacesVolumes;Distance;Interpolation;Intersection;Meshes;Miscellaneous;NumericalAnalysis;Objects2D;Objects3D;Query;Rational;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Mathematics.h ..\SDK\Include
+xcopy /DY Wm5MathematicsLIB.h ..\SDK\Include
+xcopy /DY Algebra\*.h ..\SDK\Include
+xcopy /DY Algebra\*.inl ..\SDK\Include
+xcopy /DY Approximation\*.h ..\SDK\Include
+xcopy /DY Base\*.h ..\SDK\Include
+xcopy /DY Base\*.inl ..\SDK\Include
+xcopy /DY ComputationalGeometry\*.h ..\SDK\Include
+xcopy /DY Containment\*.h ..\SDK\Include
+xcopy /DY CurvesSurfacesVolumes\*.h ..\SDK\Include
+xcopy /DY Distance\*.h ..\SDK\Include
+xcopy /DY Intersection\*.h ..\SDK\Include
+xcopy /DY Interpolation\*.h ..\SDK\Include
+xcopy /DY Meshes\*.h ..\SDK\Include
+xcopy /DY Meshes\*.inl ..\SDK\Include
+xcopy /DY Miscellaneous\*.h ..\SDK\Include
+xcopy /DY NumericalAnalysis\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.inl ..\SDK\Include
+xcopy /DY Objects3D\*.h ..\SDK\Include
+xcopy /DY Objects3D\*.inl ..\SDK\Include
+xcopy /DY Query\*.h ..\SDK\Include
+xcopy /DY Query\*.inl ..\SDK\Include
+xcopy /DY Rational\*.h ..\SDK\Include
+xcopy /DY Rational\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;Algebra;Approximation;Base;ComputationalGeometry;Containment;CurvesSurfacesVolumes;Distance;Interpolation;Intersection;Meshes;Miscellaneous;NumericalAnalysis;Objects2D;Objects3D;Query;Rational;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Mathematics.h ..\SDK\Include
+xcopy /DY Wm5MathematicsLIB.h ..\SDK\Include
+xcopy /DY Algebra\*.h ..\SDK\Include
+xcopy /DY Algebra\*.inl ..\SDK\Include
+xcopy /DY Approximation\*.h ..\SDK\Include
+xcopy /DY Base\*.h ..\SDK\Include
+xcopy /DY Base\*.inl ..\SDK\Include
+xcopy /DY ComputationalGeometry\*.h ..\SDK\Include
+xcopy /DY Containment\*.h ..\SDK\Include
+xcopy /DY CurvesSurfacesVolumes\*.h ..\SDK\Include
+xcopy /DY Distance\*.h ..\SDK\Include
+xcopy /DY Intersection\*.h ..\SDK\Include
+xcopy /DY Interpolation\*.h ..\SDK\Include
+xcopy /DY Meshes\*.h ..\SDK\Include
+xcopy /DY Meshes\*.inl ..\SDK\Include
+xcopy /DY Miscellaneous\*.h ..\SDK\Include
+xcopy /DY NumericalAnalysis\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.inl ..\SDK\Include
+xcopy /DY Objects3D\*.h ..\SDK\Include
+xcopy /DY Objects3D\*.inl ..\SDK\Include
+xcopy /DY Query\*.h ..\SDK\Include
+xcopy /DY Query\*.inl ..\SDK\Include
+xcopy /DY Rational\*.h ..\SDK\Include
+xcopy /DY Rational\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;Algebra;Approximation;Base;ComputationalGeometry;Containment;CurvesSurfacesVolumes;Distance;Interpolation;Intersection;Meshes;Miscellaneous;NumericalAnalysis;Objects2D;Objects3D;Query;Rational;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Mathematics.h ..\SDK\Include
+xcopy /DY Wm5MathematicsLIB.h ..\SDK\Include
+xcopy /DY Algebra\*.h ..\SDK\Include
+xcopy /DY Algebra\*.inl ..\SDK\Include
+xcopy /DY Approximation\*.h ..\SDK\Include
+xcopy /DY Base\*.h ..\SDK\Include
+xcopy /DY Base\*.inl ..\SDK\Include
+xcopy /DY ComputationalGeometry\*.h ..\SDK\Include
+xcopy /DY Containment\*.h ..\SDK\Include
+xcopy /DY CurvesSurfacesVolumes\*.h ..\SDK\Include
+xcopy /DY Distance\*.h ..\SDK\Include
+xcopy /DY Intersection\*.h ..\SDK\Include
+xcopy /DY Interpolation\*.h ..\SDK\Include
+xcopy /DY Meshes\*.h ..\SDK\Include
+xcopy /DY Meshes\*.inl ..\SDK\Include
+xcopy /DY Miscellaneous\*.h ..\SDK\Include
+xcopy /DY NumericalAnalysis\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.inl ..\SDK\Include
+xcopy /DY Objects3D\*.h ..\SDK\Include
+xcopy /DY Objects3D\*.inl ..\SDK\Include
+xcopy /DY Query\*.h ..\SDK\Include
+xcopy /DY Query\*.inl ..\SDK\Include
+xcopy /DY Rational\*.h ..\SDK\Include
+xcopy /DY Rational\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wm5CoreD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;Algebra;Approximation;Base;ComputationalGeometry;Containment;CurvesSurfacesVolumes;Distance;Interpolation;Intersection;Meshes;Miscellaneous;NumericalAnalysis;Objects2D;Objects3D;Query;Rational;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Mathematics.h ..\SDK\Include
+xcopy /DY Wm5MathematicsLIB.h ..\SDK\Include
+xcopy /DY Algebra\*.h ..\SDK\Include
+xcopy /DY Algebra\*.inl ..\SDK\Include
+xcopy /DY Approximation\*.h ..\SDK\Include
+xcopy /DY Base\*.h ..\SDK\Include
+xcopy /DY Base\*.inl ..\SDK\Include
+xcopy /DY ComputationalGeometry\*.h ..\SDK\Include
+xcopy /DY Containment\*.h ..\SDK\Include
+xcopy /DY CurvesSurfacesVolumes\*.h ..\SDK\Include
+xcopy /DY Distance\*.h ..\SDK\Include
+xcopy /DY Intersection\*.h ..\SDK\Include
+xcopy /DY Interpolation\*.h ..\SDK\Include
+xcopy /DY Meshes\*.h ..\SDK\Include
+xcopy /DY Meshes\*.inl ..\SDK\Include
+xcopy /DY Miscellaneous\*.h ..\SDK\Include
+xcopy /DY NumericalAnalysis\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.inl ..\SDK\Include
+xcopy /DY Objects3D\*.h ..\SDK\Include
+xcopy /DY Objects3D\*.inl ..\SDK\Include
+xcopy /DY Query\*.h ..\SDK\Include
+xcopy /DY Query\*.inl ..\SDK\Include
+xcopy /DY Rational\*.h ..\SDK\Include
+xcopy /DY Rational\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wm5CoreD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;Algebra;Approximation;Base;ComputationalGeometry;Containment;CurvesSurfacesVolumes;Distance;Interpolation;Intersection;Meshes;Miscellaneous;NumericalAnalysis;Objects2D;Objects3D;Query;Rational;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Mathematics.h ..\SDK\Include
+xcopy /DY Wm5MathematicsLIB.h ..\SDK\Include
+xcopy /DY Algebra\*.h ..\SDK\Include
+xcopy /DY Algebra\*.inl ..\SDK\Include
+xcopy /DY Approximation\*.h ..\SDK\Include
+xcopy /DY Base\*.h ..\SDK\Include
+xcopy /DY Base\*.inl ..\SDK\Include
+xcopy /DY ComputationalGeometry\*.h ..\SDK\Include
+xcopy /DY Containment\*.h ..\SDK\Include
+xcopy /DY CurvesSurfacesVolumes\*.h ..\SDK\Include
+xcopy /DY Distance\*.h ..\SDK\Include
+xcopy /DY Intersection\*.h ..\SDK\Include
+xcopy /DY Interpolation\*.h ..\SDK\Include
+xcopy /DY Meshes\*.h ..\SDK\Include
+xcopy /DY Meshes\*.inl ..\SDK\Include
+xcopy /DY Miscellaneous\*.h ..\SDK\Include
+xcopy /DY NumericalAnalysis\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.inl ..\SDK\Include
+xcopy /DY Objects3D\*.h ..\SDK\Include
+xcopy /DY Objects3D\*.inl ..\SDK\Include
+xcopy /DY Query\*.h ..\SDK\Include
+xcopy /DY Query\*.inl ..\SDK\Include
+xcopy /DY Rational\*.h ..\SDK\Include
+xcopy /DY Rational\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;Algebra;Approximation;Base;ComputationalGeometry;Containment;CurvesSurfacesVolumes;Distance;Interpolation;Intersection;Meshes;Miscellaneous;NumericalAnalysis;Objects2D;Objects3D;Query;Rational;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Mathematics.h ..\SDK\Include
+xcopy /DY Wm5MathematicsLIB.h ..\SDK\Include
+xcopy /DY Algebra\*.h ..\SDK\Include
+xcopy /DY Algebra\*.inl ..\SDK\Include
+xcopy /DY Approximation\*.h ..\SDK\Include
+xcopy /DY Base\*.h ..\SDK\Include
+xcopy /DY Base\*.inl ..\SDK\Include
+xcopy /DY ComputationalGeometry\*.h ..\SDK\Include
+xcopy /DY Containment\*.h ..\SDK\Include
+xcopy /DY CurvesSurfacesVolumes\*.h ..\SDK\Include
+xcopy /DY Distance\*.h ..\SDK\Include
+xcopy /DY Intersection\*.h ..\SDK\Include
+xcopy /DY Interpolation\*.h ..\SDK\Include
+xcopy /DY Meshes\*.h ..\SDK\Include
+xcopy /DY Meshes\*.inl ..\SDK\Include
+xcopy /DY Miscellaneous\*.h ..\SDK\Include
+xcopy /DY NumericalAnalysis\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.inl ..\SDK\Include
+xcopy /DY Objects3D\*.h ..\SDK\Include
+xcopy /DY Objects3D\*.inl ..\SDK\Include
+xcopy /DY Query\*.h ..\SDK\Include
+xcopy /DY Query\*.inl ..\SDK\Include
+xcopy /DY Rational\*.h ..\SDK\Include
+xcopy /DY Rational\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;Algebra;Approximation;Base;ComputationalGeometry;Containment;CurvesSurfacesVolumes;Distance;Interpolation;Intersection;Meshes;Miscellaneous;NumericalAnalysis;Objects2D;Objects3D;Query;Rational;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Mathematics.h ..\SDK\Include
+xcopy /DY Wm5MathematicsLIB.h ..\SDK\Include
+xcopy /DY Algebra\*.h ..\SDK\Include
+xcopy /DY Algebra\*.inl ..\SDK\Include
+xcopy /DY Approximation\*.h ..\SDK\Include
+xcopy /DY Base\*.h ..\SDK\Include
+xcopy /DY Base\*.inl ..\SDK\Include
+xcopy /DY ComputationalGeometry\*.h ..\SDK\Include
+xcopy /DY Containment\*.h ..\SDK\Include
+xcopy /DY CurvesSurfacesVolumes\*.h ..\SDK\Include
+xcopy /DY Distance\*.h ..\SDK\Include
+xcopy /DY Intersection\*.h ..\SDK\Include
+xcopy /DY Interpolation\*.h ..\SDK\Include
+xcopy /DY Meshes\*.h ..\SDK\Include
+xcopy /DY Meshes\*.inl ..\SDK\Include
+xcopy /DY Miscellaneous\*.h ..\SDK\Include
+xcopy /DY NumericalAnalysis\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.inl ..\SDK\Include
+xcopy /DY Objects3D\*.h ..\SDK\Include
+xcopy /DY Objects3D\*.inl ..\SDK\Include
+xcopy /DY Query\*.h ..\SDK\Include
+xcopy /DY Query\*.inl ..\SDK\Include
+xcopy /DY Rational\*.h ..\SDK\Include
+xcopy /DY Rational\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wm5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;Algebra;Approximation;Base;ComputationalGeometry;Containment;CurvesSurfacesVolumes;Distance;Interpolation;Intersection;Meshes;Miscellaneous;NumericalAnalysis;Objects2D;Objects3D;Query;Rational;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Mathematics.h ..\SDK\Include
+xcopy /DY Wm5MathematicsLIB.h ..\SDK\Include
+xcopy /DY Algebra\*.h ..\SDK\Include
+xcopy /DY Algebra\*.inl ..\SDK\Include
+xcopy /DY Approximation\*.h ..\SDK\Include
+xcopy /DY Base\*.h ..\SDK\Include
+xcopy /DY Base\*.inl ..\SDK\Include
+xcopy /DY ComputationalGeometry\*.h ..\SDK\Include
+xcopy /DY Containment\*.h ..\SDK\Include
+xcopy /DY CurvesSurfacesVolumes\*.h ..\SDK\Include
+xcopy /DY Distance\*.h ..\SDK\Include
+xcopy /DY Intersection\*.h ..\SDK\Include
+xcopy /DY Interpolation\*.h ..\SDK\Include
+xcopy /DY Meshes\*.h ..\SDK\Include
+xcopy /DY Meshes\*.inl ..\SDK\Include
+xcopy /DY Miscellaneous\*.h ..\SDK\Include
+xcopy /DY NumericalAnalysis\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.h ..\SDK\Include
+xcopy /DY Objects2D\*.inl ..\SDK\Include
+xcopy /DY Objects3D\*.h ..\SDK\Include
+xcopy /DY Objects3D\*.inl ..\SDK\Include
+xcopy /DY Query\*.h ..\SDK\Include
+xcopy /DY Query\*.inl ..\SDK\Include
+xcopy /DY Rational\*.h ..\SDK\Include
+xcopy /DY Rational\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wm5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Approximation\Wm5ApprPolynomialFit2.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprPolynomialFit3.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprPolynomialFit4.cpp" />
+    <ClCompile Include="Base\Wm5BitHacks.cpp" />
+    <ClCompile Include="Base\Wm5Math.cpp" />
+    <ClCompile Include="Algebra\Wm5APoint.cpp" />
+    <ClCompile Include="Algebra\Wm5AVector.cpp" />
+    <ClCompile Include="Algebra\Wm5HMatrix.cpp" />
+    <ClCompile Include="Algebra\Wm5HPlane.cpp" />
+    <ClCompile Include="Algebra\Wm5HPoint.cpp" />
+    <ClCompile Include="Algebra\Wm5HQuaternion.cpp" />
+    <ClCompile Include="Algebra\Wm5Matrix2.cpp" />
+    <ClCompile Include="Algebra\Wm5Matrix3.cpp" />
+    <ClCompile Include="Algebra\Wm5Matrix4.cpp" />
+    <ClCompile Include="Algebra\Wm5Quaternion.cpp" />
+    <ClCompile Include="Algebra\Wm5Vector2.cpp" />
+    <ClCompile Include="Algebra\Wm5Vector3.cpp" />
+    <ClCompile Include="Algebra\Wm5Vector4.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrEllipsoid3Ellipsoid3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrTriangle3Cylinder3.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5Bisect1.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5Bisect2.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5Bisect3.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5BrentsMethod.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5EigenDecomposition.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5Integrate1.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5LinearSystem.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5Minimize1.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5MinimizeN.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5NoniterativeEigen3x3.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5OdeEuler.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5OdeImplicitEuler.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5OdeMidpoint.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5OdeRungeKutta4.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5OdeSolver.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5PolynomialRoots.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5PolynomialRootsR.cpp" />
+    <ClCompile Include="NumericalAnalysis\Wm5SingularValueDecomposition.cpp" />
+    <ClCompile Include="Meshes\Wm5BasicMesh.cpp" />
+    <ClCompile Include="Meshes\Wm5ConformalMap.cpp" />
+    <ClCompile Include="Meshes\Wm5ETManifoldMesh.cpp" />
+    <ClCompile Include="Meshes\Wm5ETNonmanifoldMesh.cpp" />
+    <ClCompile Include="Meshes\Wm5MeshCurvature.cpp" />
+    <ClCompile Include="Meshes\Wm5MeshSmoother.cpp" />
+    <ClCompile Include="Meshes\Wm5VEManifoldMesh.cpp" />
+    <ClCompile Include="Query\Wm5Query.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprCircleFit2.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprEllipseByArcs2.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprEllipseFit2.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprGaussPointsFit2.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprLineFit2.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprQuadraticFit2.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprCylinderFit3.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprEllipsoidFit3.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprGaussPointsFit3.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprGreatCircleFit3.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprLineFit3.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprParaboloidFit3.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprPlaneFit3.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprQuadraticFit3.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprSphereFit3.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprPolyFit2.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprPolyFit3.cpp" />
+    <ClCompile Include="Approximation\Wm5ApprPolyFit4.cpp" />
+    <ClCompile Include="Containment\Wm5ContBox2.cpp" />
+    <ClCompile Include="Containment\Wm5ContEllipse2.cpp" />
+    <ClCompile Include="Containment\Wm5ContEllipse2MinCR.cpp" />
+    <ClCompile Include="Containment\Wm5ContMinBox2.cpp" />
+    <ClCompile Include="Containment\Wm5ContMinCircle2.cpp" />
+    <ClCompile Include="Containment\Wm5ContPointInPolygon2.cpp" />
+    <ClCompile Include="Containment\Wm5ContScribeCircle2.cpp" />
+    <ClCompile Include="Containment\Wm5ContSeparatePoints2.cpp" />
+    <ClCompile Include="Containment\Wm5ContBox3.cpp" />
+    <ClCompile Include="Containment\Wm5ContCapsule3.cpp" />
+    <ClCompile Include="Containment\Wm5ContCylinder3.cpp" />
+    <ClCompile Include="Containment\Wm5ContEllipsoid3.cpp" />
+    <ClCompile Include="Containment\Wm5ContEllipsoid3MinCR.cpp" />
+    <ClCompile Include="Containment\Wm5ContLozenge3.cpp" />
+    <ClCompile Include="Containment\Wm5ContMinBox3.cpp" />
+    <ClCompile Include="Containment\Wm5ContMinSphere3.cpp" />
+    <ClCompile Include="Containment\Wm5ContPointInPolyhedron3.cpp" />
+    <ClCompile Include="Containment\Wm5ContScribeCircle3Sphere3.cpp" />
+    <ClCompile Include="Containment\Wm5ContSeparatePoints3.cpp" />
+    <ClCompile Include="Containment\Wm5ContSphere3.cpp" />
+    <ClCompile Include="ComputationalGeometry\Wm5ConvexHull.cpp" />
+    <ClCompile Include="ComputationalGeometry\Wm5ConvexHull1.cpp" />
+    <ClCompile Include="ComputationalGeometry\Wm5ConvexHull2.cpp" />
+    <ClCompile Include="ComputationalGeometry\Wm5ConvexHull3.cpp" />
+    <ClCompile Include="ComputationalGeometry\Wm5Delaunay.cpp" />
+    <ClCompile Include="ComputationalGeometry\Wm5Delaunay1.cpp" />
+    <ClCompile Include="ComputationalGeometry\Wm5Delaunay2.cpp" />
+    <ClCompile Include="ComputationalGeometry\Wm5Delaunay3.cpp" />
+    <ClCompile Include="ComputationalGeometry\Wm5IncrementalDelaunay2.cpp" />
+    <ClCompile Include="ComputationalGeometry\Wm5TriangulateEC.cpp" />
+    <ClCompile Include="Distance\Wm5Distance.cpp" />
+    <ClCompile Include="Distance\Wm5DistLine2Line2.cpp" />
+    <ClCompile Include="Distance\Wm5DistLine2Ray2.cpp" />
+    <ClCompile Include="Distance\Wm5DistLine2Segment2.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint2Box2.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint2Ellipse2.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint2Line2.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint2Ray2.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint2Segment2.cpp" />
+    <ClCompile Include="Distance\Wm5DistRay2Ray2.cpp" />
+    <ClCompile Include="Distance\Wm5DistRay2Segment2.cpp" />
+    <ClCompile Include="Distance\Wm5DistSegment2Segment2.cpp" />
+    <ClCompile Include="Distance\Wm5DistCircle3Circle3.cpp" />
+    <ClCompile Include="Distance\Wm5DistLine3Box3.cpp" />
+    <ClCompile Include="Distance\Wm5DistLine3Circle3.cpp" />
+    <ClCompile Include="Distance\Wm5DistLine3Line3.cpp" />
+    <ClCompile Include="Distance\Wm5DistLine3Ray3.cpp" />
+    <ClCompile Include="Distance\Wm5DistLine3Rectangle3.cpp" />
+    <ClCompile Include="Distance\Wm5DistLine3Segment3.cpp" />
+    <ClCompile Include="Distance\Wm5DistLine3Triangle3.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint3Box3.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint3Circle3.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint3Ellipsoid3.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint3Frustum3.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint3Line3.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint3Plane3.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint3Ray3.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint3Rectangle3.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint3Segment3.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint3Tetrahedron3.cpp" />
+    <ClCompile Include="Distance\Wm5DistPoint3Triangle3.cpp" />
+    <ClCompile Include="Distance\Wm5DistRay3Box3.cpp" />
+    <ClCompile Include="Distance\Wm5DistRay3Ray3.cpp" />
+    <ClCompile Include="Distance\Wm5DistRay3Rectangle3.cpp" />
+    <ClCompile Include="Distance\Wm5DistRay3Segment3.cpp" />
+    <ClCompile Include="Distance\Wm5DistRay3Triangle3.cpp" />
+    <ClCompile Include="Distance\Wm5DistRectangle3Rectangle3.cpp" />
+    <ClCompile Include="Distance\Wm5DistSegment3Box3.cpp" />
+    <ClCompile Include="Distance\Wm5DistSegment3Rectangle3.cpp" />
+    <ClCompile Include="Distance\Wm5DistSegment3Segment3.cpp" />
+    <ClCompile Include="Distance\Wm5DistSegment3Triangle3.cpp" />
+    <ClCompile Include="Distance\Wm5DistTriangle3Rectangle3.cpp" />
+    <ClCompile Include="Distance\Wm5DistTriangle3Triangle3.cpp" />
+    <ClCompile Include="Intersection\Wm5Intersector.cpp" />
+    <ClCompile Include="Intersection\Wm5Intersector1.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrArc2Arc2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrArc2Circle2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrBox2Box2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrBox2Circle2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrCircle2Circle2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrEllipse2Ellipse2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine2Arc2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine2Box2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine2Circle2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine2Line2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine2Ray2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine2Segment2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine2Triangle2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrRay2Arc2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrRay2Box2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrRay2Circle2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrRay2Ray2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrRay2Segment2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrRay2Triangle2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSegment2Arc2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSegment2Box2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSegment2Circle2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSegment2Segment2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSegment2Triangle2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrTriangle2Triangle2.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrBox3Box3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrBox3Frustum3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrBox3Sphere3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrCapsule3Capsule3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrCircle3Plane3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrHalfspace3Box3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrHalfspace3Segment3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrHalfspace3Sphere3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrHalfspace3Triangle3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine3Box3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine3Capsule3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine3Cone3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine3Cylinder3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine3Ellipsoid3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine3Lozenge3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine3Plane3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine3Sphere3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine3Torus3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLine3Triangle3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrLozenge3Lozenge3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrPlane3Box3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrPlane3Capsule3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrPlane3Cylinder3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrPlane3Ellipsoid3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrPlane3Lozenge3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrPlane3Plane3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrPlane3Sphere3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrPlane3Triangle3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrRay3Box3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrRay3Capsule3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrRay3Cylinder3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrRay3Ellipsoid3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrRay3Lozenge3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrRay3Plane3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrRay3Sphere3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrRay3Triangle3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSegment3Box3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSegment3Capsule3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSegment3Cylinder3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSegment3Ellipsoid3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSegment3Lozenge3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSegment3Plane3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSegment3Sphere3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSegment3Triangle3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSphere3Cone3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSphere3Frustum3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrSphere3Sphere3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrTetrahedron3Tetrahedron3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrTriangle3Box3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrTriangle3Cone3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrTriangle3Sphere3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrTriangle3Triangle3.cpp" />
+    <ClCompile Include="Intersection\Wm5IntrUtility3.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineBasis.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineCurveFit.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineFitBasis.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineReduction.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5NaturalSpline1.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BezierCurve2.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineCurve2.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5CubicPolynomialCurve2.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5Curve2.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5MultipleCurve2.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5NaturalSpline2.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5NURBSCurve2.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5PolynomialCurve2.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5SingleCurve2.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5TCBSpline2.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BezierCurve3.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineCurve3.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5CubicPolynomialCurve3.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5Curve3.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5MultipleCurve3.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5NaturalSpline3.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5NURBSCurve3.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5PolynomialCurve3.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5SingleCurve3.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5TCBSpline3.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineRectangle.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineSurfaceFit.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5ImplicitSurface.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5NURBSRectangle.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5ParametricSurface.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5QuadricSurface.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5Surface.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineVolume.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineGeodesic.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5EllipsoidGeodesic.cpp" />
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5RiemannianGeodesic.cpp" />
+    <ClCompile Include="Miscellaneous\Wm5GridGraph2.cpp" />
+    <ClCompile Include="Miscellaneous\Wm5NormalCompression.cpp" />
+    <ClCompile Include="Miscellaneous\Wm5PerspProjEllipsoid.cpp" />
+    <ClCompile Include="Miscellaneous\Wm5QuadToQuadTransforms.cpp" />
+    <ClCompile Include="Miscellaneous\Wm5RandomHypersphere.cpp" />
+    <ClCompile Include="Miscellaneous\Wm5TangentsToCircles.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpAkima1.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpAkimaNonuniform1.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpAkimaUniform1.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpAkimaUniform2.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpAkimaUniform3.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpBicubic2.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpBilinear2.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpBSplineUniform.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpBSplineUniform1.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpBSplineUniform2.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpBSplineUniform3.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpBSplineUniform4.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpBSplineUniformN.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpLinearNonuniform2.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpLinearNonuniform3.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpQdrNonuniform2.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpSphere2.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpThinPlateSpline2.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpThinPlateSpline3.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpTricubic3.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpTrilinear3.cpp" />
+    <ClCompile Include="Interpolation\Wm5IntpVectorField2.cpp" />
+    <ClCompile Include="Rational\Wm5IVector2.cpp" />
+    <ClCompile Include="Rational\Wm5IVector3.cpp" />
+    <ClCompile Include="Wm5MathematicsPCH.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Approximation\Wm5ApprPolynomialFit2.h" />
+    <ClInclude Include="Approximation\Wm5ApprPolynomialFit3.h" />
+    <ClInclude Include="Approximation\Wm5ApprPolynomialFit4.h" />
+    <ClInclude Include="Base\Wm5BitHacks.h" />
+    <ClInclude Include="Base\Wm5Float1.h" />
+    <ClInclude Include="Base\Wm5Float2.h" />
+    <ClInclude Include="Base\Wm5Float3.h" />
+    <ClInclude Include="Base\Wm5Float4.h" />
+    <ClInclude Include="Base\Wm5Math.h" />
+    <ClInclude Include="Algebra\Wm5APoint.h" />
+    <ClInclude Include="Algebra\Wm5AVector.h" />
+    <ClInclude Include="Algebra\Wm5BandedMatrix.h" />
+    <ClInclude Include="Algebra\Wm5GMatrix.h" />
+    <ClInclude Include="Algebra\Wm5GVector.h" />
+    <ClInclude Include="Algebra\Wm5HMatrix.h" />
+    <ClInclude Include="Algebra\Wm5HPlane.h" />
+    <ClInclude Include="Algebra\Wm5HPoint.h" />
+    <ClInclude Include="Algebra\Wm5HQuaternion.h" />
+    <ClInclude Include="Algebra\Wm5Matrix2.h" />
+    <ClInclude Include="Algebra\Wm5Matrix3.h" />
+    <ClInclude Include="Algebra\Wm5Matrix4.h" />
+    <ClInclude Include="Algebra\Wm5Polynomial1.h" />
+    <ClInclude Include="Algebra\Wm5Quaternion.h" />
+    <ClInclude Include="Algebra\Wm5Vector2.h" />
+    <ClInclude Include="Algebra\Wm5Vector3.h" />
+    <ClInclude Include="Algebra\Wm5Vector4.h" />
+    <ClInclude Include="Intersection\Wm5IntrEllipsoid3Ellipsoid3.h" />
+    <ClInclude Include="Intersection\Wm5IntrTriangle3Cylinder3.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5BrentsMethod.h" />
+    <ClInclude Include="Objects2D\Wm5Arc2.h" />
+    <ClInclude Include="Objects2D\Wm5AxisAlignedBox2.h" />
+    <ClInclude Include="Objects2D\Wm5Box2.h" />
+    <ClInclude Include="Objects2D\Wm5Circle2.h" />
+    <ClInclude Include="Objects2D\Wm5ConvexPolygon2.h" />
+    <ClInclude Include="Objects2D\Wm5Ellipse2.h" />
+    <ClInclude Include="Objects2D\Wm5Line2.h" />
+    <ClInclude Include="Objects2D\Wm5Polygon2.h" />
+    <ClInclude Include="Objects2D\Wm5Ray2.h" />
+    <ClInclude Include="Objects2D\Wm5Segment2.h" />
+    <ClInclude Include="Objects2D\Wm5Triangle2.h" />
+    <ClInclude Include="Objects3D\Wm5AxisAlignedBox3.h" />
+    <ClInclude Include="Objects3D\Wm5Box3.h" />
+    <ClInclude Include="Objects3D\Wm5Capsule3.h" />
+    <ClInclude Include="Objects3D\Wm5Circle3.h" />
+    <ClInclude Include="Objects3D\Wm5Cone3.h" />
+    <ClInclude Include="Objects3D\Wm5ConvexPolyhedron3.h" />
+    <ClInclude Include="Objects3D\Wm5Cylinder3.h" />
+    <ClInclude Include="Objects3D\Wm5Ellipse3.h" />
+    <ClInclude Include="Objects3D\Wm5Ellipsoid3.h" />
+    <ClInclude Include="Objects3D\Wm5Frustum3.h" />
+    <ClInclude Include="Objects3D\Wm5Line3.h" />
+    <ClInclude Include="Objects3D\Wm5Lozenge3.h" />
+    <ClInclude Include="Objects3D\Wm5Plane3.h" />
+    <ClInclude Include="Objects3D\Wm5Polyhedron3.h" />
+    <ClInclude Include="Objects3D\Wm5Ray3.h" />
+    <ClInclude Include="Objects3D\Wm5Rectangle3.h" />
+    <ClInclude Include="Objects3D\Wm5Segment3.h" />
+    <ClInclude Include="Objects3D\Wm5Sphere3.h" />
+    <ClInclude Include="Objects3D\Wm5Tetrahedron3.h" />
+    <ClInclude Include="Objects3D\Wm5Torus3.h" />
+    <ClInclude Include="Objects3D\Wm5Triangle3.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5Bisect1.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5Bisect2.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5Bisect3.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5EigenDecomposition.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5Integrate1.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5LinearSystem.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5Minimize1.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5MinimizeN.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5NoniterativeEigen3x3.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5OdeEuler.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5OdeImplicitEuler.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5OdeMidpoint.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5OdeRungeKutta4.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5OdeSolver.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5PolynomialRoots.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5PolynomialRootsR.h" />
+    <ClInclude Include="NumericalAnalysis\Wm5SingularValueDecomposition.h" />
+    <ClInclude Include="Meshes\Wm5BasicMesh.h" />
+    <ClInclude Include="Meshes\Wm5ConformalMap.h" />
+    <ClInclude Include="Meshes\Wm5EdgeKey.h" />
+    <ClInclude Include="Meshes\Wm5ETManifoldMesh.h" />
+    <ClInclude Include="Meshes\Wm5ETNonmanifoldMesh.h" />
+    <ClInclude Include="Meshes\Wm5MeshCurvature.h" />
+    <ClInclude Include="Meshes\Wm5MeshSmoother.h" />
+    <ClInclude Include="Meshes\Wm5PlanarGraph.h" />
+    <ClInclude Include="Meshes\Wm5TriangleKey.h" />
+    <ClInclude Include="Meshes\Wm5UniqueVerticesTriangles.h" />
+    <ClInclude Include="Meshes\Wm5VEManifoldMesh.h" />
+    <ClInclude Include="Query\Wm5Query.h" />
+    <ClInclude Include="Query\Wm5Query2.h" />
+    <ClInclude Include="Query\Wm5Query2Filtered.h" />
+    <ClInclude Include="Query\Wm5Query2Int64.h" />
+    <ClInclude Include="Query\Wm5Query2Integer.h" />
+    <ClInclude Include="Query\Wm5Query2Rational.h" />
+    <ClInclude Include="Query\Wm5Query3.h" />
+    <ClInclude Include="Query\Wm5Query3Filtered.h" />
+    <ClInclude Include="Query\Wm5Query3Int64.h" />
+    <ClInclude Include="Query\Wm5Query3Integer.h" />
+    <ClInclude Include="Query\Wm5Query3Rational.h" />
+    <ClInclude Include="Rational\Wm5Integer.h" />
+    <ClInclude Include="Rational\Wm5IVector.h" />
+    <ClInclude Include="Rational\Wm5IVector2.h" />
+    <ClInclude Include="Rational\Wm5IVector3.h" />
+    <ClInclude Include="Rational\Wm5Rational.h" />
+    <ClInclude Include="Rational\Wm5RVector.h" />
+    <ClInclude Include="Rational\Wm5RVector2.h" />
+    <ClInclude Include="Rational\Wm5RVector3.h" />
+    <ClInclude Include="Approximation\Wm5ApprCircleFit2.h" />
+    <ClInclude Include="Approximation\Wm5ApprEllipseByArcs2.h" />
+    <ClInclude Include="Approximation\Wm5ApprEllipseFit2.h" />
+    <ClInclude Include="Approximation\Wm5ApprGaussPointsFit2.h" />
+    <ClInclude Include="Approximation\Wm5ApprLineFit2.h" />
+    <ClInclude Include="Approximation\Wm5ApprQuadraticFit2.h" />
+    <ClInclude Include="Approximation\Wm5ApprCylinderFit3.h" />
+    <ClInclude Include="Approximation\Wm5ApprEllipsoidFit3.h" />
+    <ClInclude Include="Approximation\Wm5ApprGaussPointsFit3.h" />
+    <ClInclude Include="Approximation\Wm5ApprGreatCircleFit3.h" />
+    <ClInclude Include="Approximation\Wm5ApprLineFit3.h" />
+    <ClInclude Include="Approximation\Wm5ApprParaboloidFit3.h" />
+    <ClInclude Include="Approximation\Wm5ApprPlaneFit3.h" />
+    <ClInclude Include="Approximation\Wm5ApprQuadraticFit3.h" />
+    <ClInclude Include="Approximation\Wm5ApprSphereFit3.h" />
+    <ClInclude Include="Approximation\Wm5ApprPolyFit2.h" />
+    <ClInclude Include="Approximation\Wm5ApprPolyFit3.h" />
+    <ClInclude Include="Approximation\Wm5ApprPolyFit4.h" />
+    <ClInclude Include="Containment\Wm5ContBox2.h" />
+    <ClInclude Include="Containment\Wm5ContEllipse2.h" />
+    <ClInclude Include="Containment\Wm5ContEllipse2MinCR.h" />
+    <ClInclude Include="Containment\Wm5ContMinBox2.h" />
+    <ClInclude Include="Containment\Wm5ContMinCircle2.h" />
+    <ClInclude Include="Containment\Wm5ContPointInPolygon2.h" />
+    <ClInclude Include="Containment\Wm5ContScribeCircle2.h" />
+    <ClInclude Include="Containment\Wm5ContSeparatePoints2.h" />
+    <ClInclude Include="Containment\Wm5ContBox3.h" />
+    <ClInclude Include="Containment\Wm5ContCapsule3.h" />
+    <ClInclude Include="Containment\Wm5ContCylinder3.h" />
+    <ClInclude Include="Containment\Wm5ContEllipsoid3.h" />
+    <ClInclude Include="Containment\Wm5ContEllipsoid3MinCR.h" />
+    <ClInclude Include="Containment\Wm5ContLozenge3.h" />
+    <ClInclude Include="Containment\Wm5ContMinBox3.h" />
+    <ClInclude Include="Containment\Wm5ContMinSphere3.h" />
+    <ClInclude Include="Containment\Wm5ContPointInPolyhedron3.h" />
+    <ClInclude Include="Containment\Wm5ContScribeCircle3Sphere3.h" />
+    <ClInclude Include="Containment\Wm5ContSeparatePoints3.h" />
+    <ClInclude Include="Containment\Wm5ContSphere3.h" />
+    <ClInclude Include="ComputationalGeometry\Wm5ConvexHull.h" />
+    <ClInclude Include="ComputationalGeometry\Wm5ConvexHull1.h" />
+    <ClInclude Include="ComputationalGeometry\Wm5ConvexHull2.h" />
+    <ClInclude Include="ComputationalGeometry\Wm5ConvexHull3.h" />
+    <ClInclude Include="ComputationalGeometry\Wm5Delaunay.h" />
+    <ClInclude Include="ComputationalGeometry\Wm5Delaunay1.h" />
+    <ClInclude Include="ComputationalGeometry\Wm5Delaunay2.h" />
+    <ClInclude Include="ComputationalGeometry\Wm5Delaunay3.h" />
+    <ClInclude Include="ComputationalGeometry\Wm5IncrementalDelaunay2.h" />
+    <ClInclude Include="ComputationalGeometry\Wm5TriangulateEC.h" />
+    <ClInclude Include="Distance\Wm5Distance.h" />
+    <ClInclude Include="Distance\Wm5DistLine2Line2.h" />
+    <ClInclude Include="Distance\Wm5DistLine2Ray2.h" />
+    <ClInclude Include="Distance\Wm5DistLine2Segment2.h" />
+    <ClInclude Include="Distance\Wm5DistPoint2Box2.h" />
+    <ClInclude Include="Distance\Wm5DistPoint2Ellipse2.h" />
+    <ClInclude Include="Distance\Wm5DistPoint2Line2.h" />
+    <ClInclude Include="Distance\Wm5DistPoint2Ray2.h" />
+    <ClInclude Include="Distance\Wm5DistPoint2Segment2.h" />
+    <ClInclude Include="Distance\Wm5DistRay2Ray2.h" />
+    <ClInclude Include="Distance\Wm5DistRay2Segment2.h" />
+    <ClInclude Include="Distance\Wm5DistSegment2Segment2.h" />
+    <ClInclude Include="Distance\Wm5DistCircle3Circle3.h" />
+    <ClInclude Include="Distance\Wm5DistLine3Box3.h" />
+    <ClInclude Include="Distance\Wm5DistLine3Circle3.h" />
+    <ClInclude Include="Distance\Wm5DistLine3Line3.h" />
+    <ClInclude Include="Distance\Wm5DistLine3Ray3.h" />
+    <ClInclude Include="Distance\Wm5DistLine3Rectangle3.h" />
+    <ClInclude Include="Distance\Wm5DistLine3Segment3.h" />
+    <ClInclude Include="Distance\Wm5DistLine3Triangle3.h" />
+    <ClInclude Include="Distance\Wm5DistPoint3Box3.h" />
+    <ClInclude Include="Distance\Wm5DistPoint3Circle3.h" />
+    <ClInclude Include="Distance\Wm5DistPoint3Ellipsoid3.h" />
+    <ClInclude Include="Distance\Wm5DistPoint3Frustum3.h" />
+    <ClInclude Include="Distance\Wm5DistPoint3Line3.h" />
+    <ClInclude Include="Distance\Wm5DistPoint3Plane3.h" />
+    <ClInclude Include="Distance\Wm5DistPoint3Ray3.h" />
+    <ClInclude Include="Distance\Wm5DistPoint3Rectangle3.h" />
+    <ClInclude Include="Distance\Wm5DistPoint3Segment3.h" />
+    <ClInclude Include="Distance\Wm5DistPoint3Tetrahedron3.h" />
+    <ClInclude Include="Distance\Wm5DistPoint3Triangle3.h" />
+    <ClInclude Include="Distance\Wm5DistRay3Box3.h" />
+    <ClInclude Include="Distance\Wm5DistRay3Ray3.h" />
+    <ClInclude Include="Distance\Wm5DistRay3Rectangle3.h" />
+    <ClInclude Include="Distance\Wm5DistRay3Segment3.h" />
+    <ClInclude Include="Distance\Wm5DistRay3Triangle3.h" />
+    <ClInclude Include="Distance\Wm5DistRectangle3Rectangle3.h" />
+    <ClInclude Include="Distance\Wm5DistSegment3Box3.h" />
+    <ClInclude Include="Distance\Wm5DistSegment3Rectangle3.h" />
+    <ClInclude Include="Distance\Wm5DistSegment3Segment3.h" />
+    <ClInclude Include="Distance\Wm5DistSegment3Triangle3.h" />
+    <ClInclude Include="Distance\Wm5DistTriangle3Rectangle3.h" />
+    <ClInclude Include="Distance\Wm5DistTriangle3Triangle3.h" />
+    <ClInclude Include="Intersection\Wm5Intersector.h" />
+    <ClInclude Include="Intersection\Wm5Intersector1.h" />
+    <ClInclude Include="Intersection\Wm5IntrArc2Arc2.h" />
+    <ClInclude Include="Intersection\Wm5IntrArc2Circle2.h" />
+    <ClInclude Include="Intersection\Wm5IntrBox2Box2.h" />
+    <ClInclude Include="Intersection\Wm5IntrBox2Circle2.h" />
+    <ClInclude Include="Intersection\Wm5IntrCircle2Circle2.h" />
+    <ClInclude Include="Intersection\Wm5IntrEllipse2Ellipse2.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine2Arc2.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine2Box2.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine2Circle2.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine2Line2.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine2Ray2.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine2Segment2.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine2Triangle2.h" />
+    <ClInclude Include="Intersection\Wm5IntrRay2Arc2.h" />
+    <ClInclude Include="Intersection\Wm5IntrRay2Box2.h" />
+    <ClInclude Include="Intersection\Wm5IntrRay2Circle2.h" />
+    <ClInclude Include="Intersection\Wm5IntrRay2Ray2.h" />
+    <ClInclude Include="Intersection\Wm5IntrRay2Segment2.h" />
+    <ClInclude Include="Intersection\Wm5IntrRay2Triangle2.h" />
+    <ClInclude Include="Intersection\Wm5IntrSegment2Arc2.h" />
+    <ClInclude Include="Intersection\Wm5IntrSegment2Box2.h" />
+    <ClInclude Include="Intersection\Wm5IntrSegment2Circle2.h" />
+    <ClInclude Include="Intersection\Wm5IntrSegment2Segment2.h" />
+    <ClInclude Include="Intersection\Wm5IntrSegment2Triangle2.h" />
+    <ClInclude Include="Intersection\Wm5IntrTriangle2Triangle2.h" />
+    <ClInclude Include="Intersection\Wm5IntrBox3Box3.h" />
+    <ClInclude Include="Intersection\Wm5IntrBox3Frustum3.h" />
+    <ClInclude Include="Intersection\Wm5IntrBox3Sphere3.h" />
+    <ClInclude Include="Intersection\Wm5IntrCapsule3Capsule3.h" />
+    <ClInclude Include="Intersection\Wm5IntrCircle3Plane3.h" />
+    <ClInclude Include="Intersection\Wm5IntrHalfspace3Box3.h" />
+    <ClInclude Include="Intersection\Wm5IntrHalfspace3Segment3.h" />
+    <ClInclude Include="Intersection\Wm5IntrHalfspace3Sphere3.h" />
+    <ClInclude Include="Intersection\Wm5IntrHalfspace3Triangle3.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine3Box3.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine3Capsule3.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine3Cone3.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine3Cylinder3.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine3Ellipsoid3.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine3Lozenge3.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine3Plane3.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine3Sphere3.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine3Torus3.h" />
+    <ClInclude Include="Intersection\Wm5IntrLine3Triangle3.h" />
+    <ClInclude Include="Intersection\Wm5IntrLozenge3Lozenge3.h" />
+    <ClInclude Include="Intersection\Wm5IntrPlane3Box3.h" />
+    <ClInclude Include="Intersection\Wm5IntrPlane3Capsule3.h" />
+    <ClInclude Include="Intersection\Wm5IntrPlane3Cylinder3.h" />
+    <ClInclude Include="Intersection\Wm5IntrPlane3Ellipsoid3.h" />
+    <ClInclude Include="Intersection\Wm5IntrPlane3Lozenge3.h" />
+    <ClInclude Include="Intersection\Wm5IntrPlane3Plane3.h" />
+    <ClInclude Include="Intersection\Wm5IntrPlane3Sphere3.h" />
+    <ClInclude Include="Intersection\Wm5IntrPlane3Triangle3.h" />
+    <ClInclude Include="Intersection\Wm5IntrRay3Box3.h" />
+    <ClInclude Include="Intersection\Wm5IntrRay3Capsule3.h" />
+    <ClInclude Include="Intersection\Wm5IntrRay3Cylinder3.h" />
+    <ClInclude Include="Intersection\Wm5IntrRay3Ellipsoid3.h" />
+    <ClInclude Include="Intersection\Wm5IntrRay3Lozenge3.h" />
+    <ClInclude Include="Intersection\Wm5IntrRay3Plane3.h" />
+    <ClInclude Include="Intersection\Wm5IntrRay3Sphere3.h" />
+    <ClInclude Include="Intersection\Wm5IntrRay3Triangle3.h" />
+    <ClInclude Include="Intersection\Wm5IntrSegment3Box3.h" />
+    <ClInclude Include="Intersection\Wm5IntrSegment3Capsule3.h" />
+    <ClInclude Include="Intersection\Wm5IntrSegment3Cylinder3.h" />
+    <ClInclude Include="Intersection\Wm5IntrSegment3Ellipsoid3.h" />
+    <ClInclude Include="Intersection\Wm5IntrSegment3Lozenge3.h" />
+    <ClInclude Include="Intersection\Wm5IntrSegment3Plane3.h" />
+    <ClInclude Include="Intersection\Wm5IntrSegment3Sphere3.h" />
+    <ClInclude Include="Intersection\Wm5IntrSegment3Triangle3.h" />
+    <ClInclude Include="Intersection\Wm5IntrSphere3Cone3.h" />
+    <ClInclude Include="Intersection\Wm5IntrSphere3Frustum3.h" />
+    <ClInclude Include="Intersection\Wm5IntrSphere3Sphere3.h" />
+    <ClInclude Include="Intersection\Wm5IntrTetrahedron3Tetrahedron3.h" />
+    <ClInclude Include="Intersection\Wm5IntrTriangle3Box3.h" />
+    <ClInclude Include="Intersection\Wm5IntrTriangle3Cone3.h" />
+    <ClInclude Include="Intersection\Wm5IntrTriangle3Sphere3.h" />
+    <ClInclude Include="Intersection\Wm5IntrTriangle3Triangle3.h" />
+    <ClInclude Include="Intersection\Wm5IntrUtility3.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineBasis.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineCurveFit.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineFitBasis.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineReduction.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5NaturalSpline1.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BezierCurve2.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineCurve2.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5CubicPolynomialCurve2.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5Curve2.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5MultipleCurve2.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5NaturalSpline2.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5NURBSCurve2.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5PolynomialCurve2.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5SingleCurve2.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5TCBSpline2.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BezierCurve3.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineCurve3.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5CubicPolynomialCurve3.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5Curve3.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5MultipleCurve3.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5NaturalSpline3.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5NURBSCurve3.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5PolynomialCurve3.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5SingleCurve3.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5TCBSpline3.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineRectangle.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineSurfaceFit.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5ImplicitSurface.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5NURBSRectangle.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5ParametricSurface.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5QuadricSurface.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5Surface.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineVolume.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineGeodesic.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5EllipsoidGeodesic.h" />
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5RiemannianGeodesic.h" />
+    <ClInclude Include="Miscellaneous\Wm5GridGraph2.h" />
+    <ClInclude Include="Miscellaneous\Wm5NormalCompression.h" />
+    <ClInclude Include="Miscellaneous\Wm5PerspProjEllipsoid.h" />
+    <ClInclude Include="Miscellaneous\Wm5QuadToQuadTransforms.h" />
+    <ClInclude Include="Miscellaneous\Wm5RandomHypersphere.h" />
+    <ClInclude Include="Miscellaneous\Wm5TangentsToCircles.h" />
+    <ClInclude Include="Interpolation\Wm5IntpAkima1.h" />
+    <ClInclude Include="Interpolation\Wm5IntpAkimaNonuniform1.h" />
+    <ClInclude Include="Interpolation\Wm5IntpAkimaUniform1.h" />
+    <ClInclude Include="Interpolation\Wm5IntpAkimaUniform2.h" />
+    <ClInclude Include="Interpolation\Wm5IntpAkimaUniform3.h" />
+    <ClInclude Include="Interpolation\Wm5IntpBicubic2.h" />
+    <ClInclude Include="Interpolation\Wm5IntpBilinear2.h" />
+    <ClInclude Include="Interpolation\Wm5IntpBSplineUniform.h" />
+    <ClInclude Include="Interpolation\Wm5IntpBSplineUniform1.h" />
+    <ClInclude Include="Interpolation\Wm5IntpBSplineUniform2.h" />
+    <ClInclude Include="Interpolation\Wm5IntpBSplineUniform3.h" />
+    <ClInclude Include="Interpolation\Wm5IntpBSplineUniform4.h" />
+    <ClInclude Include="Interpolation\Wm5IntpBSplineUniformN.h" />
+    <ClInclude Include="Interpolation\Wm5IntpLinearNonuniform2.h" />
+    <ClInclude Include="Interpolation\Wm5IntpLinearNonuniform3.h" />
+    <ClInclude Include="Interpolation\Wm5IntpQdrNonuniform2.h" />
+    <ClInclude Include="Interpolation\Wm5IntpSphere2.h" />
+    <ClInclude Include="Interpolation\Wm5IntpThinPlateSpline2.h" />
+    <ClInclude Include="Interpolation\Wm5IntpThinPlateSpline3.h" />
+    <ClInclude Include="Interpolation\Wm5IntpTricubic3.h" />
+    <ClInclude Include="Interpolation\Wm5IntpTrilinear3.h" />
+    <ClInclude Include="Interpolation\Wm5IntpVectorField2.h" />
+    <ClInclude Include="Wm5MathematicsPCH.h" />
+    <ClInclude Include="Wm5Mathematics.h" />
+    <ClInclude Include="Wm5MathematicsLIB.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Base\Wm5BitHacks.inl" />
+    <None Include="Base\Wm5Float1.inl" />
+    <None Include="Base\Wm5Float2.inl" />
+    <None Include="Base\Wm5Float3.inl" />
+    <None Include="Base\Wm5Float4.inl" />
+    <None Include="Base\Wm5Math.inl" />
+    <None Include="Algebra\Wm5APoint.inl" />
+    <None Include="Algebra\Wm5AVector.inl" />
+    <None Include="Algebra\Wm5BandedMatrix.inl" />
+    <None Include="Algebra\Wm5GMatrix.inl" />
+    <None Include="Algebra\Wm5GVector.inl" />
+    <None Include="Algebra\Wm5HMatrix.inl" />
+    <None Include="Algebra\Wm5HPlane.inl" />
+    <None Include="Algebra\Wm5HPoint.inl" />
+    <None Include="Algebra\Wm5HQuaternion.inl" />
+    <None Include="Algebra\Wm5Matrix2.inl" />
+    <None Include="Algebra\Wm5Matrix3.inl" />
+    <None Include="Algebra\Wm5Matrix4.inl" />
+    <None Include="Algebra\Wm5Polynomial1.inl" />
+    <None Include="Algebra\Wm5Quaternion.inl" />
+    <None Include="Algebra\Wm5Vector2.inl" />
+    <None Include="Algebra\Wm5Vector3.inl" />
+    <None Include="Algebra\Wm5Vector4.inl" />
+    <None Include="Objects2D\Wm5Arc2.inl" />
+    <None Include="Objects2D\Wm5AxisAlignedBox2.inl" />
+    <None Include="Objects2D\Wm5Box2.inl" />
+    <None Include="Objects2D\Wm5Circle2.inl" />
+    <None Include="Objects2D\Wm5ConvexPolygon2.inl" />
+    <None Include="Objects2D\Wm5Ellipse2.inl" />
+    <None Include="Objects2D\Wm5Line2.inl" />
+    <None Include="Objects2D\Wm5Polygon2.inl" />
+    <None Include="Objects2D\Wm5Ray2.inl" />
+    <None Include="Objects2D\Wm5Segment2.inl" />
+    <None Include="Objects2D\Wm5Triangle2.inl" />
+    <None Include="Objects3D\Wm5AxisAlignedBox3.inl" />
+    <None Include="Objects3D\Wm5Box3.inl" />
+    <None Include="Objects3D\Wm5Capsule3.inl" />
+    <None Include="Objects3D\Wm5Circle3.inl" />
+    <None Include="Objects3D\Wm5Cone3.inl" />
+    <None Include="Objects3D\Wm5ConvexPolyhedron3.inl" />
+    <None Include="Objects3D\Wm5Cylinder3.inl" />
+    <None Include="Objects3D\Wm5Ellipse3.inl" />
+    <None Include="Objects3D\Wm5Ellipsoid3.inl" />
+    <None Include="Objects3D\Wm5Frustum3.inl" />
+    <None Include="Objects3D\Wm5Line3.inl" />
+    <None Include="Objects3D\Wm5Lozenge3.inl" />
+    <None Include="Objects3D\Wm5Plane3.inl" />
+    <None Include="Objects3D\Wm5Polyhedron3.inl" />
+    <None Include="Objects3D\Wm5Ray3.inl" />
+    <None Include="Objects3D\Wm5Rectangle3.inl" />
+    <None Include="Objects3D\Wm5Segment3.inl" />
+    <None Include="Objects3D\Wm5Sphere3.inl" />
+    <None Include="Objects3D\Wm5Tetrahedron3.inl" />
+    <None Include="Objects3D\Wm5Torus3.inl" />
+    <None Include="Objects3D\Wm5Triangle3.inl" />
+    <None Include="Meshes\Wm5BasicMesh.inl" />
+    <None Include="Meshes\Wm5EdgeKey.inl" />
+    <None Include="Meshes\Wm5ETManifoldMesh.inl" />
+    <None Include="Meshes\Wm5ETNonmanifoldMesh.inl" />
+    <None Include="Meshes\Wm5PlanarGraph.inl" />
+    <None Include="Meshes\Wm5TriangleKey.inl" />
+    <None Include="Meshes\Wm5UniqueVerticesTriangles.inl" />
+    <None Include="Meshes\Wm5VEManifoldMesh.inl" />
+    <None Include="Query\Wm5Query2.inl" />
+    <None Include="Query\Wm5Query2Filtered.inl" />
+    <None Include="Query\Wm5Query2Int64.inl" />
+    <None Include="Query\Wm5Query2Integer.inl" />
+    <None Include="Query\Wm5Query2Rational.inl" />
+    <None Include="Query\Wm5Query3.inl" />
+    <None Include="Query\Wm5Query3Filtered.inl" />
+    <None Include="Query\Wm5Query3Int64.inl" />
+    <None Include="Query\Wm5Query3Integer.inl" />
+    <None Include="Query\Wm5Query3Rational.inl" />
+    <None Include="Rational\Wm5Integer.inl" />
+    <None Include="Rational\Wm5IVector.inl" />
+    <None Include="Rational\Wm5IVector2.inl" />
+    <None Include="Rational\Wm5IVector3.inl" />
+    <None Include="Rational\Wm5Rational.inl" />
+    <None Include="Rational\Wm5RVector.inl" />
+    <None Include="Rational\Wm5RVector2.inl" />
+    <None Include="Rational\Wm5RVector3.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

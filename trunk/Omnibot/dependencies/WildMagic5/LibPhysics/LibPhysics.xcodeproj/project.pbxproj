@@ -1,0 +1,1022 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3C64CD231256BA1600F4B0B0 /* Wm5Fluid3Da.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8BF10FCDA9800C42DBB /* Wm5Fluid3Da.cpp */; };
+		3C64CD241256BA1600F4B0B0 /* Wm5ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A2F0A38D80700CD8CCF /* Wm5ParticleSystem.cpp */; };
+		3C64CD251256BA1600F4B0B0 /* Wm5Fluid3Db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8C210FCDA9800C42DBB /* Wm5Fluid3Db.cpp */; };
+		3C64CD261256BA1600F4B0B0 /* Wm5BoxManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8D710FCDABD00C42DBB /* Wm5BoxManager.cpp */; };
+		3C64CD271256BA1600F4B0B0 /* Wm5ExtremalQuery3BSP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7679B90A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.cpp */; };
+		3C64CD281256BA1600F4B0B0 /* Wm5MassSpringArbitrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A270A38D80700CD8CCF /* Wm5MassSpringArbitrary.cpp */; };
+		3C64CD291256BA1600F4B0B0 /* Wm5Fluid2Da.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8B910FCDA9800C42DBB /* Wm5Fluid2Da.cpp */; };
+		3C64CD2A1256BA1600F4B0B0 /* Wm5LCPPolyDist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A0B0A38D7F600CD8CCF /* Wm5LCPPolyDist.cpp */; };
+		3C64CD2B1256BA1600F4B0B0 /* Wm5LCPSolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A0D0A38D7F600CD8CCF /* Wm5LCPSolver.cpp */; };
+		3C64CD2C1256BA1600F4B0B0 /* Wm5Fluid2Db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8BC10FCDA9800C42DBB /* Wm5Fluid2Db.cpp */; };
+		3C64CD2D1256BA1600F4B0B0 /* Wm5MassSpringVolume.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A2D0A38D80700CD8CCF /* Wm5MassSpringVolume.cpp */; };
+		3C64CD2E1256BA1600F4B0B0 /* Wm5MassSpringSurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A2B0A38D80700CD8CCF /* Wm5MassSpringSurface.cpp */; };
+		3C64CD2F1256BA1600F4B0B0 /* Wm5ExtremalQuery3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7679B70A38D7E800CD8CCF /* Wm5ExtremalQuery3.cpp */; };
+		3C64CD301256BA1600F4B0B0 /* Wm5MassSpringCurve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A290A38D80700CD8CCF /* Wm5MassSpringCurve.cpp */; };
+		3C64CD311256BA1600F4B0B0 /* Wm5PolyhedralMassProperties.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A6D0A38D81400CD8CCF /* Wm5PolyhedralMassProperties.cpp */; };
+		3C64CD321256BA1600F4B0B0 /* Wm5RigidBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A6F0A38D81400CD8CCF /* Wm5RigidBody.cpp */; };
+		3C64CD331256BA1600F4B0B0 /* Wm5PhysicsPCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CB8725B0A006FA100B5F514 /* Wm5PhysicsPCH.cpp */; };
+		3C64CD341256BA1600F4B0B0 /* Wm5ExtremalQuery3PRJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7679BB0A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.cpp */; };
+		3C64CD351256BA1600F4B0B0 /* Wm5RectangleManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8DB10FCDABD00C42DBB /* Wm5RectangleManager.cpp */; };
+		3C64CD361256BA1600F4B0B0 /* Wm5IntervalManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8D910FCDABD00C42DBB /* Wm5IntervalManager.cpp */; };
+		3C64CD371256BA2800F4B0B0 /* Wm5ParticleSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A300A38D80700CD8CCF /* Wm5ParticleSystem.h */; };
+		3C64CD381256BA2800F4B0B0 /* Wm5PolyhedralMassProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A6E0A38D81400CD8CCF /* Wm5PolyhedralMassProperties.h */; };
+		3C64CD391256BA2800F4B0B0 /* Wm5Fluid3Da.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8C010FCDA9800C42DBB /* Wm5Fluid3Da.h */; };
+		3C64CD3A1256BA2800F4B0B0 /* Wm5CollisionGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8A710FCDA7100C42DBB /* Wm5CollisionGroup.h */; };
+		3C64CD3B1256BA2800F4B0B0 /* Wm5MassSpringSurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A2C0A38D80700CD8CCF /* Wm5MassSpringSurface.h */; };
+		3C64CD3C1256BA2800F4B0B0 /* Wm5MassSpringCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A2A0A38D80700CD8CCF /* Wm5MassSpringCurve.h */; };
+		3C64CD3D1256BA2800F4B0B0 /* Wm5Physics.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CB872590A006FA100B5F514 /* Wm5Physics.h */; };
+		3C64CD3E1256BA2800F4B0B0 /* Wm5PhysicsPCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CB8725C0A006FA100B5F514 /* Wm5PhysicsPCH.h */; };
+		3C64CD3F1256BA2800F4B0B0 /* Wm5ExtremalQuery3PRJ.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7679BC0A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.h */; };
+		3C64CD401256BA2800F4B0B0 /* Wm5ExtremalQuery3BSP.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7679BA0A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.h */; };
+		3C64CD411256BA2800F4B0B0 /* Wm5BoundTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8A510FCDA7100C42DBB /* Wm5BoundTree.h */; };
+		3C64CD421256BA2800F4B0B0 /* Wm5Fluid3Db.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8C310FCDA9800C42DBB /* Wm5Fluid3Db.h */; };
+		3C64CD431256BA2800F4B0B0 /* Wm5LCPPolyDist.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A0C0A38D7F600CD8CCF /* Wm5LCPPolyDist.h */; };
+		3C64CD441256BA2800F4B0B0 /* Wm5MassSpringArbitrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A280A38D80700CD8CCF /* Wm5MassSpringArbitrary.h */; };
+		3C64CD451256BA2800F4B0B0 /* Wm5IntervalManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8DA10FCDABD00C42DBB /* Wm5IntervalManager.h */; };
+		3C64CD461256BA2800F4B0B0 /* Wm5ExtremalQuery3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7679B80A38D7E800CD8CCF /* Wm5ExtremalQuery3.h */; };
+		3C64CD471256BA2800F4B0B0 /* Wm5LCPSolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A0E0A38D7F600CD8CCF /* Wm5LCPSolver.h */; };
+		3C64CD481256BA2800F4B0B0 /* Wm5CollisionRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8A910FCDA7100C42DBB /* Wm5CollisionRecord.h */; };
+		3C64CD491256BA2800F4B0B0 /* Wm5Fluid2Da.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8BA10FCDA9800C42DBB /* Wm5Fluid2Da.h */; };
+		3C64CD4A1256BA2800F4B0B0 /* Wm5BoxManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8D810FCDABD00C42DBB /* Wm5BoxManager.h */; };
+		3C64CD4B1256BA2800F4B0B0 /* Wm5MassSpringVolume.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A2E0A38D80700CD8CCF /* Wm5MassSpringVolume.h */; };
+		3C64CD4C1256BA2800F4B0B0 /* Wm5RigidBody.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A700A38D81400CD8CCF /* Wm5RigidBody.h */; };
+		3C64CD4D1256BA2800F4B0B0 /* Wm5RectangleManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8DC10FCDABD00C42DBB /* Wm5RectangleManager.h */; };
+		3C64CD4E1256BA2800F4B0B0 /* Wm5PhysicsLIB.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CB8725A0A006FA100B5F514 /* Wm5PhysicsLIB.h */; };
+		3C64CD4F1256BA2800F4B0B0 /* Wm5Fluid2Db.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8BD10FCDA9800C42DBB /* Wm5Fluid2Db.h */; };
+		3C64CD571256BAAC00F4B0B0 /* libWm5Cored.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64CD551256BAAC00F4B0B0 /* libWm5Cored.dylib */; };
+		3C64CD581256BAAC00F4B0B0 /* libWm5Mathematicsd.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64CD561256BAAC00F4B0B0 /* libWm5Mathematicsd.dylib */; };
+		3C64CD671256BAFB00F4B0B0 /* Wm5Fluid3Da.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8BF10FCDA9800C42DBB /* Wm5Fluid3Da.cpp */; };
+		3C64CD681256BAFB00F4B0B0 /* Wm5ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A2F0A38D80700CD8CCF /* Wm5ParticleSystem.cpp */; };
+		3C64CD691256BAFB00F4B0B0 /* Wm5Fluid3Db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8C210FCDA9800C42DBB /* Wm5Fluid3Db.cpp */; };
+		3C64CD6A1256BAFB00F4B0B0 /* Wm5BoxManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8D710FCDABD00C42DBB /* Wm5BoxManager.cpp */; };
+		3C64CD6B1256BAFB00F4B0B0 /* Wm5ExtremalQuery3BSP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7679B90A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.cpp */; };
+		3C64CD6C1256BAFB00F4B0B0 /* Wm5MassSpringArbitrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A270A38D80700CD8CCF /* Wm5MassSpringArbitrary.cpp */; };
+		3C64CD6D1256BAFB00F4B0B0 /* Wm5Fluid2Da.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8B910FCDA9800C42DBB /* Wm5Fluid2Da.cpp */; };
+		3C64CD6E1256BAFB00F4B0B0 /* Wm5LCPPolyDist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A0B0A38D7F600CD8CCF /* Wm5LCPPolyDist.cpp */; };
+		3C64CD6F1256BAFB00F4B0B0 /* Wm5LCPSolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A0D0A38D7F600CD8CCF /* Wm5LCPSolver.cpp */; };
+		3C64CD701256BAFB00F4B0B0 /* Wm5Fluid2Db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8BC10FCDA9800C42DBB /* Wm5Fluid2Db.cpp */; };
+		3C64CD711256BAFB00F4B0B0 /* Wm5MassSpringVolume.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A2D0A38D80700CD8CCF /* Wm5MassSpringVolume.cpp */; };
+		3C64CD721256BAFB00F4B0B0 /* Wm5MassSpringSurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A2B0A38D80700CD8CCF /* Wm5MassSpringSurface.cpp */; };
+		3C64CD731256BAFB00F4B0B0 /* Wm5ExtremalQuery3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7679B70A38D7E800CD8CCF /* Wm5ExtremalQuery3.cpp */; };
+		3C64CD741256BAFB00F4B0B0 /* Wm5MassSpringCurve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A290A38D80700CD8CCF /* Wm5MassSpringCurve.cpp */; };
+		3C64CD751256BAFB00F4B0B0 /* Wm5PolyhedralMassProperties.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A6D0A38D81400CD8CCF /* Wm5PolyhedralMassProperties.cpp */; };
+		3C64CD761256BAFB00F4B0B0 /* Wm5RigidBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A6F0A38D81400CD8CCF /* Wm5RigidBody.cpp */; };
+		3C64CD771256BAFB00F4B0B0 /* Wm5PhysicsPCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CB8725B0A006FA100B5F514 /* Wm5PhysicsPCH.cpp */; };
+		3C64CD781256BAFB00F4B0B0 /* Wm5ExtremalQuery3PRJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7679BB0A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.cpp */; };
+		3C64CD791256BAFB00F4B0B0 /* Wm5RectangleManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8DB10FCDABD00C42DBB /* Wm5RectangleManager.cpp */; };
+		3C64CD7A1256BAFB00F4B0B0 /* Wm5IntervalManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8D910FCDABD00C42DBB /* Wm5IntervalManager.cpp */; };
+		3C64CD7B1256BB1400F4B0B0 /* Wm5ParticleSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A300A38D80700CD8CCF /* Wm5ParticleSystem.h */; };
+		3C64CD7C1256BB1400F4B0B0 /* Wm5PolyhedralMassProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A6E0A38D81400CD8CCF /* Wm5PolyhedralMassProperties.h */; };
+		3C64CD7D1256BB1400F4B0B0 /* Wm5Fluid3Da.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8C010FCDA9800C42DBB /* Wm5Fluid3Da.h */; };
+		3C64CD7E1256BB1400F4B0B0 /* Wm5CollisionGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8A710FCDA7100C42DBB /* Wm5CollisionGroup.h */; };
+		3C64CD7F1256BB1400F4B0B0 /* Wm5MassSpringSurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A2C0A38D80700CD8CCF /* Wm5MassSpringSurface.h */; };
+		3C64CD801256BB1400F4B0B0 /* Wm5MassSpringCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A2A0A38D80700CD8CCF /* Wm5MassSpringCurve.h */; };
+		3C64CD811256BB1400F4B0B0 /* Wm5Physics.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CB872590A006FA100B5F514 /* Wm5Physics.h */; };
+		3C64CD821256BB1400F4B0B0 /* Wm5PhysicsPCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CB8725C0A006FA100B5F514 /* Wm5PhysicsPCH.h */; };
+		3C64CD831256BB1400F4B0B0 /* Wm5ExtremalQuery3PRJ.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7679BC0A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.h */; };
+		3C64CD841256BB1400F4B0B0 /* Wm5ExtremalQuery3BSP.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7679BA0A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.h */; };
+		3C64CD851256BB1400F4B0B0 /* Wm5BoundTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8A510FCDA7100C42DBB /* Wm5BoundTree.h */; };
+		3C64CD861256BB1400F4B0B0 /* Wm5Fluid3Db.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8C310FCDA9800C42DBB /* Wm5Fluid3Db.h */; };
+		3C64CD871256BB1400F4B0B0 /* Wm5LCPPolyDist.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A0C0A38D7F600CD8CCF /* Wm5LCPPolyDist.h */; };
+		3C64CD881256BB1400F4B0B0 /* Wm5MassSpringArbitrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A280A38D80700CD8CCF /* Wm5MassSpringArbitrary.h */; };
+		3C64CD891256BB1400F4B0B0 /* Wm5IntervalManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8DA10FCDABD00C42DBB /* Wm5IntervalManager.h */; };
+		3C64CD8A1256BB1400F4B0B0 /* Wm5ExtremalQuery3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7679B80A38D7E800CD8CCF /* Wm5ExtremalQuery3.h */; };
+		3C64CD8B1256BB1400F4B0B0 /* Wm5LCPSolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A0E0A38D7F600CD8CCF /* Wm5LCPSolver.h */; };
+		3C64CD8C1256BB1400F4B0B0 /* Wm5CollisionRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8A910FCDA7100C42DBB /* Wm5CollisionRecord.h */; };
+		3C64CD8D1256BB1400F4B0B0 /* Wm5Fluid2Da.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8BA10FCDA9800C42DBB /* Wm5Fluid2Da.h */; };
+		3C64CD8E1256BB1400F4B0B0 /* Wm5BoxManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8D810FCDABD00C42DBB /* Wm5BoxManager.h */; };
+		3C64CD8F1256BB1400F4B0B0 /* Wm5MassSpringVolume.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A2E0A38D80700CD8CCF /* Wm5MassSpringVolume.h */; };
+		3C64CD901256BB1400F4B0B0 /* Wm5RigidBody.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A700A38D81400CD8CCF /* Wm5RigidBody.h */; };
+		3C64CD911256BB1400F4B0B0 /* Wm5RectangleManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8DC10FCDABD00C42DBB /* Wm5RectangleManager.h */; };
+		3C64CD921256BB1400F4B0B0 /* Wm5PhysicsLIB.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CB8725A0A006FA100B5F514 /* Wm5PhysicsLIB.h */; };
+		3C64CD931256BB1400F4B0B0 /* Wm5Fluid2Db.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8BD10FCDA9800C42DBB /* Wm5Fluid2Db.h */; };
+		3C64CD9C1256BBC300F4B0B0 /* libWm5Core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64CD9A1256BBC300F4B0B0 /* libWm5Core.dylib */; };
+		3C64CD9D1256BBC300F4B0B0 /* libWm5Mathematics.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64CD9B1256BBC300F4B0B0 /* libWm5Mathematics.dylib */; };
+		3C7679C30A38D7E800CD8CCF /* Wm5ExtremalQuery3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7679B70A38D7E800CD8CCF /* Wm5ExtremalQuery3.cpp */; };
+		3C7679C40A38D7E800CD8CCF /* Wm5ExtremalQuery3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7679B80A38D7E800CD8CCF /* Wm5ExtremalQuery3.h */; };
+		3C7679C50A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7679B90A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.cpp */; };
+		3C7679C60A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7679BA0A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.h */; };
+		3C7679C70A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7679BB0A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.cpp */; };
+		3C7679C80A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7679BC0A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.h */; };
+		3C7679CF0A38D7E800CD8CCF /* Wm5ExtremalQuery3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7679B70A38D7E800CD8CCF /* Wm5ExtremalQuery3.cpp */; };
+		3C7679D00A38D7E800CD8CCF /* Wm5ExtremalQuery3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7679B80A38D7E800CD8CCF /* Wm5ExtremalQuery3.h */; };
+		3C7679D10A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7679B90A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.cpp */; };
+		3C7679D20A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7679BA0A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.h */; };
+		3C7679D30A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C7679BB0A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.cpp */; };
+		3C7679D40A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C7679BC0A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.h */; };
+		3C767A0F0A38D7F600CD8CCF /* Wm5LCPPolyDist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A0B0A38D7F600CD8CCF /* Wm5LCPPolyDist.cpp */; };
+		3C767A100A38D7F600CD8CCF /* Wm5LCPPolyDist.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A0C0A38D7F600CD8CCF /* Wm5LCPPolyDist.h */; };
+		3C767A110A38D7F600CD8CCF /* Wm5LCPSolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A0D0A38D7F600CD8CCF /* Wm5LCPSolver.cpp */; };
+		3C767A120A38D7F600CD8CCF /* Wm5LCPSolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A0E0A38D7F600CD8CCF /* Wm5LCPSolver.h */; };
+		3C767A130A38D7F600CD8CCF /* Wm5LCPPolyDist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A0B0A38D7F600CD8CCF /* Wm5LCPPolyDist.cpp */; };
+		3C767A140A38D7F600CD8CCF /* Wm5LCPPolyDist.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A0C0A38D7F600CD8CCF /* Wm5LCPPolyDist.h */; };
+		3C767A150A38D7F600CD8CCF /* Wm5LCPSolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A0D0A38D7F600CD8CCF /* Wm5LCPSolver.cpp */; };
+		3C767A160A38D7F600CD8CCF /* Wm5LCPSolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A0E0A38D7F600CD8CCF /* Wm5LCPSolver.h */; };
+		3C767A310A38D80700CD8CCF /* Wm5MassSpringArbitrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A270A38D80700CD8CCF /* Wm5MassSpringArbitrary.cpp */; };
+		3C767A320A38D80700CD8CCF /* Wm5MassSpringArbitrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A280A38D80700CD8CCF /* Wm5MassSpringArbitrary.h */; };
+		3C767A330A38D80700CD8CCF /* Wm5MassSpringCurve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A290A38D80700CD8CCF /* Wm5MassSpringCurve.cpp */; };
+		3C767A340A38D80700CD8CCF /* Wm5MassSpringCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A2A0A38D80700CD8CCF /* Wm5MassSpringCurve.h */; };
+		3C767A350A38D80700CD8CCF /* Wm5MassSpringSurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A2B0A38D80700CD8CCF /* Wm5MassSpringSurface.cpp */; };
+		3C767A360A38D80700CD8CCF /* Wm5MassSpringSurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A2C0A38D80700CD8CCF /* Wm5MassSpringSurface.h */; };
+		3C767A370A38D80700CD8CCF /* Wm5MassSpringVolume.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A2D0A38D80700CD8CCF /* Wm5MassSpringVolume.cpp */; };
+		3C767A380A38D80700CD8CCF /* Wm5MassSpringVolume.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A2E0A38D80700CD8CCF /* Wm5MassSpringVolume.h */; };
+		3C767A390A38D80700CD8CCF /* Wm5ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A2F0A38D80700CD8CCF /* Wm5ParticleSystem.cpp */; };
+		3C767A3A0A38D80700CD8CCF /* Wm5ParticleSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A300A38D80700CD8CCF /* Wm5ParticleSystem.h */; };
+		3C767A3B0A38D80700CD8CCF /* Wm5MassSpringArbitrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A270A38D80700CD8CCF /* Wm5MassSpringArbitrary.cpp */; };
+		3C767A3C0A38D80700CD8CCF /* Wm5MassSpringArbitrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A280A38D80700CD8CCF /* Wm5MassSpringArbitrary.h */; };
+		3C767A3D0A38D80700CD8CCF /* Wm5MassSpringCurve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A290A38D80700CD8CCF /* Wm5MassSpringCurve.cpp */; };
+		3C767A3E0A38D80700CD8CCF /* Wm5MassSpringCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A2A0A38D80700CD8CCF /* Wm5MassSpringCurve.h */; };
+		3C767A3F0A38D80700CD8CCF /* Wm5MassSpringSurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A2B0A38D80700CD8CCF /* Wm5MassSpringSurface.cpp */; };
+		3C767A400A38D80700CD8CCF /* Wm5MassSpringSurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A2C0A38D80700CD8CCF /* Wm5MassSpringSurface.h */; };
+		3C767A410A38D80700CD8CCF /* Wm5MassSpringVolume.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A2D0A38D80700CD8CCF /* Wm5MassSpringVolume.cpp */; };
+		3C767A420A38D80700CD8CCF /* Wm5MassSpringVolume.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A2E0A38D80700CD8CCF /* Wm5MassSpringVolume.h */; };
+		3C767A430A38D80700CD8CCF /* Wm5ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A2F0A38D80700CD8CCF /* Wm5ParticleSystem.cpp */; };
+		3C767A440A38D80700CD8CCF /* Wm5ParticleSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A300A38D80700CD8CCF /* Wm5ParticleSystem.h */; };
+		3C767A710A38D81400CD8CCF /* Wm5PolyhedralMassProperties.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A6D0A38D81400CD8CCF /* Wm5PolyhedralMassProperties.cpp */; };
+		3C767A720A38D81400CD8CCF /* Wm5PolyhedralMassProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A6E0A38D81400CD8CCF /* Wm5PolyhedralMassProperties.h */; };
+		3C767A730A38D81400CD8CCF /* Wm5RigidBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A6F0A38D81400CD8CCF /* Wm5RigidBody.cpp */; };
+		3C767A740A38D81400CD8CCF /* Wm5RigidBody.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A700A38D81400CD8CCF /* Wm5RigidBody.h */; };
+		3C767A750A38D81400CD8CCF /* Wm5PolyhedralMassProperties.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A6D0A38D81400CD8CCF /* Wm5PolyhedralMassProperties.cpp */; };
+		3C767A760A38D81400CD8CCF /* Wm5PolyhedralMassProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A6E0A38D81400CD8CCF /* Wm5PolyhedralMassProperties.h */; };
+		3C767A770A38D81400CD8CCF /* Wm5RigidBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C767A6F0A38D81400CD8CCF /* Wm5RigidBody.cpp */; };
+		3C767A780A38D81400CD8CCF /* Wm5RigidBody.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C767A700A38D81400CD8CCF /* Wm5RigidBody.h */; };
+		3CB8725D0A006FA100B5F514 /* Wm5Physics.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CB872590A006FA100B5F514 /* Wm5Physics.h */; };
+		3CB8725E0A006FA100B5F514 /* Wm5PhysicsLIB.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CB8725A0A006FA100B5F514 /* Wm5PhysicsLIB.h */; };
+		3CB8725F0A006FA100B5F514 /* Wm5PhysicsPCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CB8725B0A006FA100B5F514 /* Wm5PhysicsPCH.cpp */; };
+		3CB872600A006FA100B5F514 /* Wm5PhysicsPCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CB8725C0A006FA100B5F514 /* Wm5PhysicsPCH.h */; };
+		3CB872610A006FA100B5F514 /* Wm5Physics.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CB872590A006FA100B5F514 /* Wm5Physics.h */; };
+		3CB872620A006FA100B5F514 /* Wm5PhysicsLIB.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CB8725A0A006FA100B5F514 /* Wm5PhysicsLIB.h */; };
+		3CB872630A006FA100B5F514 /* Wm5PhysicsPCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CB8725B0A006FA100B5F514 /* Wm5PhysicsPCH.cpp */; };
+		3CB872640A006FA100B5F514 /* Wm5PhysicsPCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CB8725C0A006FA100B5F514 /* Wm5PhysicsPCH.h */; };
+		3CC4F8AB10FCDA7100C42DBB /* Wm5BoundTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8A510FCDA7100C42DBB /* Wm5BoundTree.h */; };
+		3CC4F8AC10FCDA7100C42DBB /* Wm5CollisionGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8A710FCDA7100C42DBB /* Wm5CollisionGroup.h */; };
+		3CC4F8AD10FCDA7100C42DBB /* Wm5CollisionRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8A910FCDA7100C42DBB /* Wm5CollisionRecord.h */; };
+		3CC4F8AE10FCDA7100C42DBB /* Wm5BoundTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8A510FCDA7100C42DBB /* Wm5BoundTree.h */; };
+		3CC4F8AF10FCDA7100C42DBB /* Wm5CollisionGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8A710FCDA7100C42DBB /* Wm5CollisionGroup.h */; };
+		3CC4F8B010FCDA7100C42DBB /* Wm5CollisionRecord.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8A910FCDA7100C42DBB /* Wm5CollisionRecord.h */; };
+		3CC4F8C510FCDA9800C42DBB /* Wm5Fluid2Da.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8B910FCDA9800C42DBB /* Wm5Fluid2Da.cpp */; };
+		3CC4F8C610FCDA9800C42DBB /* Wm5Fluid2Da.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8BA10FCDA9800C42DBB /* Wm5Fluid2Da.h */; };
+		3CC4F8C710FCDA9800C42DBB /* Wm5Fluid2Db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8BC10FCDA9800C42DBB /* Wm5Fluid2Db.cpp */; };
+		3CC4F8C810FCDA9800C42DBB /* Wm5Fluid2Db.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8BD10FCDA9800C42DBB /* Wm5Fluid2Db.h */; };
+		3CC4F8C910FCDA9800C42DBB /* Wm5Fluid3Da.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8BF10FCDA9800C42DBB /* Wm5Fluid3Da.cpp */; };
+		3CC4F8CA10FCDA9800C42DBB /* Wm5Fluid3Da.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8C010FCDA9800C42DBB /* Wm5Fluid3Da.h */; };
+		3CC4F8CB10FCDA9800C42DBB /* Wm5Fluid3Db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8C210FCDA9800C42DBB /* Wm5Fluid3Db.cpp */; };
+		3CC4F8CC10FCDA9800C42DBB /* Wm5Fluid3Db.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8C310FCDA9800C42DBB /* Wm5Fluid3Db.h */; };
+		3CC4F8CD10FCDA9800C42DBB /* Wm5Fluid2Da.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8B910FCDA9800C42DBB /* Wm5Fluid2Da.cpp */; };
+		3CC4F8CE10FCDA9800C42DBB /* Wm5Fluid2Da.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8BA10FCDA9800C42DBB /* Wm5Fluid2Da.h */; };
+		3CC4F8CF10FCDA9800C42DBB /* Wm5Fluid2Db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8BC10FCDA9800C42DBB /* Wm5Fluid2Db.cpp */; };
+		3CC4F8D010FCDA9800C42DBB /* Wm5Fluid2Db.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8BD10FCDA9800C42DBB /* Wm5Fluid2Db.h */; };
+		3CC4F8D110FCDA9800C42DBB /* Wm5Fluid3Da.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8BF10FCDA9800C42DBB /* Wm5Fluid3Da.cpp */; };
+		3CC4F8D210FCDA9800C42DBB /* Wm5Fluid3Da.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8C010FCDA9800C42DBB /* Wm5Fluid3Da.h */; };
+		3CC4F8D310FCDA9800C42DBB /* Wm5Fluid3Db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8C210FCDA9800C42DBB /* Wm5Fluid3Db.cpp */; };
+		3CC4F8D410FCDA9800C42DBB /* Wm5Fluid3Db.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8C310FCDA9800C42DBB /* Wm5Fluid3Db.h */; };
+		3CC4F8DD10FCDABD00C42DBB /* Wm5BoxManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8D710FCDABD00C42DBB /* Wm5BoxManager.cpp */; };
+		3CC4F8DE10FCDABD00C42DBB /* Wm5BoxManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8D810FCDABD00C42DBB /* Wm5BoxManager.h */; };
+		3CC4F8DF10FCDABD00C42DBB /* Wm5IntervalManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8D910FCDABD00C42DBB /* Wm5IntervalManager.cpp */; };
+		3CC4F8E010FCDABD00C42DBB /* Wm5IntervalManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8DA10FCDABD00C42DBB /* Wm5IntervalManager.h */; };
+		3CC4F8E110FCDABD00C42DBB /* Wm5RectangleManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8DB10FCDABD00C42DBB /* Wm5RectangleManager.cpp */; };
+		3CC4F8E210FCDABD00C42DBB /* Wm5RectangleManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8DC10FCDABD00C42DBB /* Wm5RectangleManager.h */; };
+		3CC4F8E310FCDABD00C42DBB /* Wm5BoxManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8D710FCDABD00C42DBB /* Wm5BoxManager.cpp */; };
+		3CC4F8E410FCDABD00C42DBB /* Wm5BoxManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8D810FCDABD00C42DBB /* Wm5BoxManager.h */; };
+		3CC4F8E510FCDABD00C42DBB /* Wm5IntervalManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8D910FCDABD00C42DBB /* Wm5IntervalManager.cpp */; };
+		3CC4F8E610FCDABD00C42DBB /* Wm5IntervalManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8DA10FCDABD00C42DBB /* Wm5IntervalManager.h */; };
+		3CC4F8E710FCDABD00C42DBB /* Wm5RectangleManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4F8DB10FCDABD00C42DBB /* Wm5RectangleManager.cpp */; };
+		3CC4F8E810FCDABD00C42DBB /* Wm5RectangleManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4F8DC10FCDABD00C42DBB /* Wm5RectangleManager.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3C64CD1D1256B97700F4B0B0 /* libWm5Physicsd.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libWm5Physicsd.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C64CD551256BAAC00F4B0B0 /* libWm5Cored.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Cored.dylib; path = ../SDK/Library/DebugDLL/libWm5Cored.dylib; sourceTree = SOURCE_ROOT; };
+		3C64CD561256BAAC00F4B0B0 /* libWm5Mathematicsd.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Mathematicsd.dylib; path = ../SDK/Library/DebugDLL/libWm5Mathematicsd.dylib; sourceTree = SOURCE_ROOT; };
+		3C64CD611256BACB00F4B0B0 /* libWm5Physics.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libWm5Physics.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C64CD9A1256BBC300F4B0B0 /* libWm5Core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Core.dylib; path = ../SDK/Library/ReleaseDLL/libWm5Core.dylib; sourceTree = SOURCE_ROOT; };
+		3C64CD9B1256BBC300F4B0B0 /* libWm5Mathematics.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Mathematics.dylib; path = ../SDK/Library/ReleaseDLL/libWm5Mathematics.dylib; sourceTree = SOURCE_ROOT; };
+		3C7679B70A38D7E800CD8CCF /* Wm5ExtremalQuery3.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5ExtremalQuery3.cpp; path = Intersection/Wm5ExtremalQuery3.cpp; sourceTree = "<group>"; };
+		3C7679B80A38D7E800CD8CCF /* Wm5ExtremalQuery3.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5ExtremalQuery3.h; path = Intersection/Wm5ExtremalQuery3.h; sourceTree = "<group>"; };
+		3C7679B90A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5ExtremalQuery3BSP.cpp; path = Intersection/Wm5ExtremalQuery3BSP.cpp; sourceTree = "<group>"; };
+		3C7679BA0A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5ExtremalQuery3BSP.h; path = Intersection/Wm5ExtremalQuery3BSP.h; sourceTree = "<group>"; };
+		3C7679BB0A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5ExtremalQuery3PRJ.cpp; path = Intersection/Wm5ExtremalQuery3PRJ.cpp; sourceTree = "<group>"; };
+		3C7679BC0A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5ExtremalQuery3PRJ.h; path = Intersection/Wm5ExtremalQuery3PRJ.h; sourceTree = "<group>"; };
+		3C767A0B0A38D7F600CD8CCF /* Wm5LCPPolyDist.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5LCPPolyDist.cpp; path = LCPSolver/Wm5LCPPolyDist.cpp; sourceTree = "<group>"; };
+		3C767A0C0A38D7F600CD8CCF /* Wm5LCPPolyDist.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5LCPPolyDist.h; path = LCPSolver/Wm5LCPPolyDist.h; sourceTree = "<group>"; };
+		3C767A0D0A38D7F600CD8CCF /* Wm5LCPSolver.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5LCPSolver.cpp; path = LCPSolver/Wm5LCPSolver.cpp; sourceTree = "<group>"; };
+		3C767A0E0A38D7F600CD8CCF /* Wm5LCPSolver.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5LCPSolver.h; path = LCPSolver/Wm5LCPSolver.h; sourceTree = "<group>"; };
+		3C767A270A38D80700CD8CCF /* Wm5MassSpringArbitrary.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5MassSpringArbitrary.cpp; path = ParticleSystem/Wm5MassSpringArbitrary.cpp; sourceTree = "<group>"; };
+		3C767A280A38D80700CD8CCF /* Wm5MassSpringArbitrary.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5MassSpringArbitrary.h; path = ParticleSystem/Wm5MassSpringArbitrary.h; sourceTree = "<group>"; };
+		3C767A290A38D80700CD8CCF /* Wm5MassSpringCurve.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5MassSpringCurve.cpp; path = ParticleSystem/Wm5MassSpringCurve.cpp; sourceTree = "<group>"; };
+		3C767A2A0A38D80700CD8CCF /* Wm5MassSpringCurve.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5MassSpringCurve.h; path = ParticleSystem/Wm5MassSpringCurve.h; sourceTree = "<group>"; };
+		3C767A2B0A38D80700CD8CCF /* Wm5MassSpringSurface.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5MassSpringSurface.cpp; path = ParticleSystem/Wm5MassSpringSurface.cpp; sourceTree = "<group>"; };
+		3C767A2C0A38D80700CD8CCF /* Wm5MassSpringSurface.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5MassSpringSurface.h; path = ParticleSystem/Wm5MassSpringSurface.h; sourceTree = "<group>"; };
+		3C767A2D0A38D80700CD8CCF /* Wm5MassSpringVolume.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5MassSpringVolume.cpp; path = ParticleSystem/Wm5MassSpringVolume.cpp; sourceTree = "<group>"; };
+		3C767A2E0A38D80700CD8CCF /* Wm5MassSpringVolume.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5MassSpringVolume.h; path = ParticleSystem/Wm5MassSpringVolume.h; sourceTree = "<group>"; };
+		3C767A2F0A38D80700CD8CCF /* Wm5ParticleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5ParticleSystem.cpp; path = ParticleSystem/Wm5ParticleSystem.cpp; sourceTree = "<group>"; };
+		3C767A300A38D80700CD8CCF /* Wm5ParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5ParticleSystem.h; path = ParticleSystem/Wm5ParticleSystem.h; sourceTree = "<group>"; };
+		3C767A6D0A38D81400CD8CCF /* Wm5PolyhedralMassProperties.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5PolyhedralMassProperties.cpp; path = RigidBody/Wm5PolyhedralMassProperties.cpp; sourceTree = "<group>"; };
+		3C767A6E0A38D81400CD8CCF /* Wm5PolyhedralMassProperties.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5PolyhedralMassProperties.h; path = RigidBody/Wm5PolyhedralMassProperties.h; sourceTree = "<group>"; };
+		3C767A6F0A38D81400CD8CCF /* Wm5RigidBody.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5RigidBody.cpp; path = RigidBody/Wm5RigidBody.cpp; sourceTree = "<group>"; };
+		3C767A700A38D81400CD8CCF /* Wm5RigidBody.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Wm5RigidBody.h; path = RigidBody/Wm5RigidBody.h; sourceTree = "<group>"; };
+		3CB872590A006FA100B5F514 /* Wm5Physics.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Wm5Physics.h; sourceTree = "<group>"; };
+		3CB8725A0A006FA100B5F514 /* Wm5PhysicsLIB.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Wm5PhysicsLIB.h; sourceTree = "<group>"; };
+		3CB8725B0A006FA100B5F514 /* Wm5PhysicsPCH.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = Wm5PhysicsPCH.cpp; sourceTree = "<group>"; };
+		3CB8725C0A006FA100B5F514 /* Wm5PhysicsPCH.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Wm5PhysicsPCH.h; sourceTree = "<group>"; };
+		3CC4F8A510FCDA7100C42DBB /* Wm5BoundTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5BoundTree.h; path = CollisionDetection/Wm5BoundTree.h; sourceTree = "<group>"; };
+		3CC4F8A610FCDA7100C42DBB /* Wm5BoundTree.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5BoundTree.inl; path = CollisionDetection/Wm5BoundTree.inl; sourceTree = "<group>"; };
+		3CC4F8A710FCDA7100C42DBB /* Wm5CollisionGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5CollisionGroup.h; path = CollisionDetection/Wm5CollisionGroup.h; sourceTree = "<group>"; };
+		3CC4F8A810FCDA7100C42DBB /* Wm5CollisionGroup.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5CollisionGroup.inl; path = CollisionDetection/Wm5CollisionGroup.inl; sourceTree = "<group>"; };
+		3CC4F8A910FCDA7100C42DBB /* Wm5CollisionRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5CollisionRecord.h; path = CollisionDetection/Wm5CollisionRecord.h; sourceTree = "<group>"; };
+		3CC4F8AA10FCDA7100C42DBB /* Wm5CollisionRecord.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5CollisionRecord.inl; path = CollisionDetection/Wm5CollisionRecord.inl; sourceTree = "<group>"; };
+		3CC4F8B910FCDA9800C42DBB /* Wm5Fluid2Da.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Fluid2Da.cpp; path = Fluid/Wm5Fluid2Da.cpp; sourceTree = "<group>"; };
+		3CC4F8BA10FCDA9800C42DBB /* Wm5Fluid2Da.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Fluid2Da.h; path = Fluid/Wm5Fluid2Da.h; sourceTree = "<group>"; };
+		3CC4F8BB10FCDA9800C42DBB /* Wm5Fluid2Da.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5Fluid2Da.inl; path = Fluid/Wm5Fluid2Da.inl; sourceTree = "<group>"; };
+		3CC4F8BC10FCDA9800C42DBB /* Wm5Fluid2Db.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Fluid2Db.cpp; path = Fluid/Wm5Fluid2Db.cpp; sourceTree = "<group>"; };
+		3CC4F8BD10FCDA9800C42DBB /* Wm5Fluid2Db.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Fluid2Db.h; path = Fluid/Wm5Fluid2Db.h; sourceTree = "<group>"; };
+		3CC4F8BE10FCDA9800C42DBB /* Wm5Fluid2Db.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5Fluid2Db.inl; path = Fluid/Wm5Fluid2Db.inl; sourceTree = "<group>"; };
+		3CC4F8BF10FCDA9800C42DBB /* Wm5Fluid3Da.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Fluid3Da.cpp; path = Fluid/Wm5Fluid3Da.cpp; sourceTree = "<group>"; };
+		3CC4F8C010FCDA9800C42DBB /* Wm5Fluid3Da.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Fluid3Da.h; path = Fluid/Wm5Fluid3Da.h; sourceTree = "<group>"; };
+		3CC4F8C110FCDA9800C42DBB /* Wm5Fluid3Da.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5Fluid3Da.inl; path = Fluid/Wm5Fluid3Da.inl; sourceTree = "<group>"; };
+		3CC4F8C210FCDA9800C42DBB /* Wm5Fluid3Db.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Fluid3Db.cpp; path = Fluid/Wm5Fluid3Db.cpp; sourceTree = "<group>"; };
+		3CC4F8C310FCDA9800C42DBB /* Wm5Fluid3Db.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Fluid3Db.h; path = Fluid/Wm5Fluid3Db.h; sourceTree = "<group>"; };
+		3CC4F8C410FCDA9800C42DBB /* Wm5Fluid3Db.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5Fluid3Db.inl; path = Fluid/Wm5Fluid3Db.inl; sourceTree = "<group>"; };
+		3CC4F8D710FCDABD00C42DBB /* Wm5BoxManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5BoxManager.cpp; path = Intersection/Wm5BoxManager.cpp; sourceTree = "<group>"; };
+		3CC4F8D810FCDABD00C42DBB /* Wm5BoxManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5BoxManager.h; path = Intersection/Wm5BoxManager.h; sourceTree = "<group>"; };
+		3CC4F8D910FCDABD00C42DBB /* Wm5IntervalManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5IntervalManager.cpp; path = Intersection/Wm5IntervalManager.cpp; sourceTree = "<group>"; };
+		3CC4F8DA10FCDABD00C42DBB /* Wm5IntervalManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5IntervalManager.h; path = Intersection/Wm5IntervalManager.h; sourceTree = "<group>"; };
+		3CC4F8DB10FCDABD00C42DBB /* Wm5RectangleManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5RectangleManager.cpp; path = Intersection/Wm5RectangleManager.cpp; sourceTree = "<group>"; };
+		3CC4F8DC10FCDABD00C42DBB /* Wm5RectangleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5RectangleManager.h; path = Intersection/Wm5RectangleManager.h; sourceTree = "<group>"; };
+		74B57E8D07F3427D00913EC4 /* libWm5Physicsd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libWm5Physicsd.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		74D6DDFE07F342E200267169 /* libWm5Physics.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libWm5Physics.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3C64CD1B1256B97700F4B0B0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64CD571256BAAC00F4B0B0 /* libWm5Cored.dylib in Frameworks */,
+				3C64CD581256BAAC00F4B0B0 /* libWm5Mathematicsd.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C64CD5F1256BACB00F4B0B0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64CD9C1256BBC300F4B0B0 /* libWm5Core.dylib in Frameworks */,
+				3C64CD9D1256BBC300F4B0B0 /* libWm5Mathematics.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74B57E8B07F3427D00913EC4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D6DDFD07F342E200267169 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3C64CD0D1256B94B00F4B0B0 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				3C64CD101256B95100F4B0B0 /* DebugDLL */,
+				3C64CD131256B95800F4B0B0 /* ReleaseDLL */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		3C64CD101256B95100F4B0B0 /* DebugDLL */ = {
+			isa = PBXGroup;
+			children = (
+				3C64CD551256BAAC00F4B0B0 /* libWm5Cored.dylib */,
+				3C64CD561256BAAC00F4B0B0 /* libWm5Mathematicsd.dylib */,
+			);
+			name = DebugDLL;
+			sourceTree = "<group>";
+		};
+		3C64CD131256B95800F4B0B0 /* ReleaseDLL */ = {
+			isa = PBXGroup;
+			children = (
+				3C64CD9A1256BBC300F4B0B0 /* libWm5Core.dylib */,
+				3C64CD9B1256BBC300F4B0B0 /* libWm5Mathematics.dylib */,
+			);
+			name = ReleaseDLL;
+			sourceTree = "<group>";
+		};
+		3C7679AB0A38D7A000CD8CCF /* Intersection */ = {
+			isa = PBXGroup;
+			children = (
+				3CC4F8D710FCDABD00C42DBB /* Wm5BoxManager.cpp */,
+				3CC4F8D810FCDABD00C42DBB /* Wm5BoxManager.h */,
+				3CC4F8D910FCDABD00C42DBB /* Wm5IntervalManager.cpp */,
+				3CC4F8DA10FCDABD00C42DBB /* Wm5IntervalManager.h */,
+				3CC4F8DB10FCDABD00C42DBB /* Wm5RectangleManager.cpp */,
+				3CC4F8DC10FCDABD00C42DBB /* Wm5RectangleManager.h */,
+				3C7679B70A38D7E800CD8CCF /* Wm5ExtremalQuery3.cpp */,
+				3C7679B80A38D7E800CD8CCF /* Wm5ExtremalQuery3.h */,
+				3C7679B90A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.cpp */,
+				3C7679BA0A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.h */,
+				3C7679BB0A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.cpp */,
+				3C7679BC0A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.h */,
+			);
+			name = Intersection;
+			sourceTree = "<group>";
+		};
+		3C7679AE0A38D7B200CD8CCF /* LCPSolver */ = {
+			isa = PBXGroup;
+			children = (
+				3C767A0B0A38D7F600CD8CCF /* Wm5LCPPolyDist.cpp */,
+				3C767A0C0A38D7F600CD8CCF /* Wm5LCPPolyDist.h */,
+				3C767A0D0A38D7F600CD8CCF /* Wm5LCPSolver.cpp */,
+				3C767A0E0A38D7F600CD8CCF /* Wm5LCPSolver.h */,
+			);
+			name = LCPSolver;
+			sourceTree = "<group>";
+		};
+		3C7679B10A38D7BA00CD8CCF /* ParticleSystem */ = {
+			isa = PBXGroup;
+			children = (
+				3C767A270A38D80700CD8CCF /* Wm5MassSpringArbitrary.cpp */,
+				3C767A280A38D80700CD8CCF /* Wm5MassSpringArbitrary.h */,
+				3C767A290A38D80700CD8CCF /* Wm5MassSpringCurve.cpp */,
+				3C767A2A0A38D80700CD8CCF /* Wm5MassSpringCurve.h */,
+				3C767A2B0A38D80700CD8CCF /* Wm5MassSpringSurface.cpp */,
+				3C767A2C0A38D80700CD8CCF /* Wm5MassSpringSurface.h */,
+				3C767A2D0A38D80700CD8CCF /* Wm5MassSpringVolume.cpp */,
+				3C767A2E0A38D80700CD8CCF /* Wm5MassSpringVolume.h */,
+				3C767A2F0A38D80700CD8CCF /* Wm5ParticleSystem.cpp */,
+				3C767A300A38D80700CD8CCF /* Wm5ParticleSystem.h */,
+			);
+			name = ParticleSystem;
+			sourceTree = "<group>";
+		};
+		3C7679B60A38D7C800CD8CCF /* RigidBody */ = {
+			isa = PBXGroup;
+			children = (
+				3C767A6D0A38D81400CD8CCF /* Wm5PolyhedralMassProperties.cpp */,
+				3C767A6E0A38D81400CD8CCF /* Wm5PolyhedralMassProperties.h */,
+				3C767A6F0A38D81400CD8CCF /* Wm5RigidBody.cpp */,
+				3C767A700A38D81400CD8CCF /* Wm5RigidBody.h */,
+			);
+			name = RigidBody;
+			sourceTree = "<group>";
+		};
+		3CC4F8A210FCDA5D00C42DBB /* CollisionDetection */ = {
+			isa = PBXGroup;
+			children = (
+				3CC4F8A510FCDA7100C42DBB /* Wm5BoundTree.h */,
+				3CC4F8A610FCDA7100C42DBB /* Wm5BoundTree.inl */,
+				3CC4F8A710FCDA7100C42DBB /* Wm5CollisionGroup.h */,
+				3CC4F8A810FCDA7100C42DBB /* Wm5CollisionGroup.inl */,
+				3CC4F8A910FCDA7100C42DBB /* Wm5CollisionRecord.h */,
+				3CC4F8AA10FCDA7100C42DBB /* Wm5CollisionRecord.inl */,
+			);
+			name = CollisionDetection;
+			sourceTree = "<group>";
+		};
+		3CC4F8B310FCDA7C00C42DBB /* Fluid */ = {
+			isa = PBXGroup;
+			children = (
+				3CC4F8B910FCDA9800C42DBB /* Wm5Fluid2Da.cpp */,
+				3CC4F8BA10FCDA9800C42DBB /* Wm5Fluid2Da.h */,
+				3CC4F8BB10FCDA9800C42DBB /* Wm5Fluid2Da.inl */,
+				3CC4F8BC10FCDA9800C42DBB /* Wm5Fluid2Db.cpp */,
+				3CC4F8BD10FCDA9800C42DBB /* Wm5Fluid2Db.h */,
+				3CC4F8BE10FCDA9800C42DBB /* Wm5Fluid2Db.inl */,
+				3CC4F8BF10FCDA9800C42DBB /* Wm5Fluid3Da.cpp */,
+				3CC4F8C010FCDA9800C42DBB /* Wm5Fluid3Da.h */,
+				3CC4F8C110FCDA9800C42DBB /* Wm5Fluid3Da.inl */,
+				3CC4F8C210FCDA9800C42DBB /* Wm5Fluid3Db.cpp */,
+				3CC4F8C310FCDA9800C42DBB /* Wm5Fluid3Db.h */,
+				3CC4F8C410FCDA9800C42DBB /* Wm5Fluid3Db.inl */,
+			);
+			name = Fluid;
+			sourceTree = "<group>";
+		};
+		74B57E7F07F3425300913EC4 = {
+			isa = PBXGroup;
+			children = (
+				74D6DE0107F3432700267169 /* Sources */,
+				3C64CD0D1256B94B00F4B0B0 /* Libraries */,
+				74B57E8E07F3427D00913EC4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		74B57E8E07F3427D00913EC4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				74B57E8D07F3427D00913EC4 /* libWm5Physicsd.a */,
+				74D6DDFE07F342E200267169 /* libWm5Physics.a */,
+				3C64CD1D1256B97700F4B0B0 /* libWm5Physicsd.dylib */,
+				3C64CD611256BACB00F4B0B0 /* libWm5Physics.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		74D6DE0107F3432700267169 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				3CC4F8A210FCDA5D00C42DBB /* CollisionDetection */,
+				3CC4F8B310FCDA7C00C42DBB /* Fluid */,
+				3C7679AB0A38D7A000CD8CCF /* Intersection */,
+				3C7679AE0A38D7B200CD8CCF /* LCPSolver */,
+				3C7679B10A38D7BA00CD8CCF /* ParticleSystem */,
+				3C7679B60A38D7C800CD8CCF /* RigidBody */,
+				3CB872590A006FA100B5F514 /* Wm5Physics.h */,
+				3CB8725A0A006FA100B5F514 /* Wm5PhysicsLIB.h */,
+				3CB8725B0A006FA100B5F514 /* Wm5PhysicsPCH.cpp */,
+				3CB8725C0A006FA100B5F514 /* Wm5PhysicsPCH.h */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		3C64CD191256B97700F4B0B0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64CD371256BA2800F4B0B0 /* Wm5ParticleSystem.h in Headers */,
+				3C64CD381256BA2800F4B0B0 /* Wm5PolyhedralMassProperties.h in Headers */,
+				3C64CD391256BA2800F4B0B0 /* Wm5Fluid3Da.h in Headers */,
+				3C64CD3A1256BA2800F4B0B0 /* Wm5CollisionGroup.h in Headers */,
+				3C64CD3B1256BA2800F4B0B0 /* Wm5MassSpringSurface.h in Headers */,
+				3C64CD3C1256BA2800F4B0B0 /* Wm5MassSpringCurve.h in Headers */,
+				3C64CD3D1256BA2800F4B0B0 /* Wm5Physics.h in Headers */,
+				3C64CD3E1256BA2800F4B0B0 /* Wm5PhysicsPCH.h in Headers */,
+				3C64CD3F1256BA2800F4B0B0 /* Wm5ExtremalQuery3PRJ.h in Headers */,
+				3C64CD401256BA2800F4B0B0 /* Wm5ExtremalQuery3BSP.h in Headers */,
+				3C64CD411256BA2800F4B0B0 /* Wm5BoundTree.h in Headers */,
+				3C64CD421256BA2800F4B0B0 /* Wm5Fluid3Db.h in Headers */,
+				3C64CD431256BA2800F4B0B0 /* Wm5LCPPolyDist.h in Headers */,
+				3C64CD441256BA2800F4B0B0 /* Wm5MassSpringArbitrary.h in Headers */,
+				3C64CD451256BA2800F4B0B0 /* Wm5IntervalManager.h in Headers */,
+				3C64CD461256BA2800F4B0B0 /* Wm5ExtremalQuery3.h in Headers */,
+				3C64CD471256BA2800F4B0B0 /* Wm5LCPSolver.h in Headers */,
+				3C64CD481256BA2800F4B0B0 /* Wm5CollisionRecord.h in Headers */,
+				3C64CD491256BA2800F4B0B0 /* Wm5Fluid2Da.h in Headers */,
+				3C64CD4A1256BA2800F4B0B0 /* Wm5BoxManager.h in Headers */,
+				3C64CD4B1256BA2800F4B0B0 /* Wm5MassSpringVolume.h in Headers */,
+				3C64CD4C1256BA2800F4B0B0 /* Wm5RigidBody.h in Headers */,
+				3C64CD4D1256BA2800F4B0B0 /* Wm5RectangleManager.h in Headers */,
+				3C64CD4E1256BA2800F4B0B0 /* Wm5PhysicsLIB.h in Headers */,
+				3C64CD4F1256BA2800F4B0B0 /* Wm5Fluid2Db.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C64CD5D1256BACB00F4B0B0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64CD7B1256BB1400F4B0B0 /* Wm5ParticleSystem.h in Headers */,
+				3C64CD7C1256BB1400F4B0B0 /* Wm5PolyhedralMassProperties.h in Headers */,
+				3C64CD7D1256BB1400F4B0B0 /* Wm5Fluid3Da.h in Headers */,
+				3C64CD7E1256BB1400F4B0B0 /* Wm5CollisionGroup.h in Headers */,
+				3C64CD7F1256BB1400F4B0B0 /* Wm5MassSpringSurface.h in Headers */,
+				3C64CD801256BB1400F4B0B0 /* Wm5MassSpringCurve.h in Headers */,
+				3C64CD811256BB1400F4B0B0 /* Wm5Physics.h in Headers */,
+				3C64CD821256BB1400F4B0B0 /* Wm5PhysicsPCH.h in Headers */,
+				3C64CD831256BB1400F4B0B0 /* Wm5ExtremalQuery3PRJ.h in Headers */,
+				3C64CD841256BB1400F4B0B0 /* Wm5ExtremalQuery3BSP.h in Headers */,
+				3C64CD851256BB1400F4B0B0 /* Wm5BoundTree.h in Headers */,
+				3C64CD861256BB1400F4B0B0 /* Wm5Fluid3Db.h in Headers */,
+				3C64CD871256BB1400F4B0B0 /* Wm5LCPPolyDist.h in Headers */,
+				3C64CD881256BB1400F4B0B0 /* Wm5MassSpringArbitrary.h in Headers */,
+				3C64CD891256BB1400F4B0B0 /* Wm5IntervalManager.h in Headers */,
+				3C64CD8A1256BB1400F4B0B0 /* Wm5ExtremalQuery3.h in Headers */,
+				3C64CD8B1256BB1400F4B0B0 /* Wm5LCPSolver.h in Headers */,
+				3C64CD8C1256BB1400F4B0B0 /* Wm5CollisionRecord.h in Headers */,
+				3C64CD8D1256BB1400F4B0B0 /* Wm5Fluid2Da.h in Headers */,
+				3C64CD8E1256BB1400F4B0B0 /* Wm5BoxManager.h in Headers */,
+				3C64CD8F1256BB1400F4B0B0 /* Wm5MassSpringVolume.h in Headers */,
+				3C64CD901256BB1400F4B0B0 /* Wm5RigidBody.h in Headers */,
+				3C64CD911256BB1400F4B0B0 /* Wm5RectangleManager.h in Headers */,
+				3C64CD921256BB1400F4B0B0 /* Wm5PhysicsLIB.h in Headers */,
+				3C64CD931256BB1400F4B0B0 /* Wm5Fluid2Db.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74B57E8907F3427D00913EC4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CB8725D0A006FA100B5F514 /* Wm5Physics.h in Headers */,
+				3CB8725E0A006FA100B5F514 /* Wm5PhysicsLIB.h in Headers */,
+				3CB872600A006FA100B5F514 /* Wm5PhysicsPCH.h in Headers */,
+				3C7679C40A38D7E800CD8CCF /* Wm5ExtremalQuery3.h in Headers */,
+				3C7679C60A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.h in Headers */,
+				3C7679C80A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.h in Headers */,
+				3C767A100A38D7F600CD8CCF /* Wm5LCPPolyDist.h in Headers */,
+				3C767A120A38D7F600CD8CCF /* Wm5LCPSolver.h in Headers */,
+				3C767A320A38D80700CD8CCF /* Wm5MassSpringArbitrary.h in Headers */,
+				3C767A340A38D80700CD8CCF /* Wm5MassSpringCurve.h in Headers */,
+				3C767A360A38D80700CD8CCF /* Wm5MassSpringSurface.h in Headers */,
+				3C767A380A38D80700CD8CCF /* Wm5MassSpringVolume.h in Headers */,
+				3C767A3A0A38D80700CD8CCF /* Wm5ParticleSystem.h in Headers */,
+				3C767A720A38D81400CD8CCF /* Wm5PolyhedralMassProperties.h in Headers */,
+				3C767A740A38D81400CD8CCF /* Wm5RigidBody.h in Headers */,
+				3CC4F8AB10FCDA7100C42DBB /* Wm5BoundTree.h in Headers */,
+				3CC4F8AC10FCDA7100C42DBB /* Wm5CollisionGroup.h in Headers */,
+				3CC4F8AD10FCDA7100C42DBB /* Wm5CollisionRecord.h in Headers */,
+				3CC4F8C610FCDA9800C42DBB /* Wm5Fluid2Da.h in Headers */,
+				3CC4F8C810FCDA9800C42DBB /* Wm5Fluid2Db.h in Headers */,
+				3CC4F8CA10FCDA9800C42DBB /* Wm5Fluid3Da.h in Headers */,
+				3CC4F8CC10FCDA9800C42DBB /* Wm5Fluid3Db.h in Headers */,
+				3CC4F8DE10FCDABD00C42DBB /* Wm5BoxManager.h in Headers */,
+				3CC4F8E010FCDABD00C42DBB /* Wm5IntervalManager.h in Headers */,
+				3CC4F8E210FCDABD00C42DBB /* Wm5RectangleManager.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D6DDFB07F342E200267169 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CB872610A006FA100B5F514 /* Wm5Physics.h in Headers */,
+				3CB872620A006FA100B5F514 /* Wm5PhysicsLIB.h in Headers */,
+				3CB872640A006FA100B5F514 /* Wm5PhysicsPCH.h in Headers */,
+				3C7679D00A38D7E800CD8CCF /* Wm5ExtremalQuery3.h in Headers */,
+				3C7679D20A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.h in Headers */,
+				3C7679D40A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.h in Headers */,
+				3C767A140A38D7F600CD8CCF /* Wm5LCPPolyDist.h in Headers */,
+				3C767A160A38D7F600CD8CCF /* Wm5LCPSolver.h in Headers */,
+				3C767A3C0A38D80700CD8CCF /* Wm5MassSpringArbitrary.h in Headers */,
+				3C767A3E0A38D80700CD8CCF /* Wm5MassSpringCurve.h in Headers */,
+				3C767A400A38D80700CD8CCF /* Wm5MassSpringSurface.h in Headers */,
+				3C767A420A38D80700CD8CCF /* Wm5MassSpringVolume.h in Headers */,
+				3C767A440A38D80700CD8CCF /* Wm5ParticleSystem.h in Headers */,
+				3C767A760A38D81400CD8CCF /* Wm5PolyhedralMassProperties.h in Headers */,
+				3C767A780A38D81400CD8CCF /* Wm5RigidBody.h in Headers */,
+				3CC4F8AE10FCDA7100C42DBB /* Wm5BoundTree.h in Headers */,
+				3CC4F8AF10FCDA7100C42DBB /* Wm5CollisionGroup.h in Headers */,
+				3CC4F8B010FCDA7100C42DBB /* Wm5CollisionRecord.h in Headers */,
+				3CC4F8CE10FCDA9800C42DBB /* Wm5Fluid2Da.h in Headers */,
+				3CC4F8D010FCDA9800C42DBB /* Wm5Fluid2Db.h in Headers */,
+				3CC4F8D210FCDA9800C42DBB /* Wm5Fluid3Da.h in Headers */,
+				3CC4F8D410FCDA9800C42DBB /* Wm5Fluid3Db.h in Headers */,
+				3CC4F8E410FCDABD00C42DBB /* Wm5BoxManager.h in Headers */,
+				3CC4F8E610FCDABD00C42DBB /* Wm5IntervalManager.h in Headers */,
+				3CC4F8E810FCDABD00C42DBB /* Wm5RectangleManager.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		3C64CD1C1256B97700F4B0B0 /* Debug Dynamic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C64CD541256BA9000F4B0B0 /* Build configuration list for PBXNativeTarget "Debug Dynamic" */;
+			buildPhases = (
+				3C64CD191256B97700F4B0B0 /* Headers */,
+				3C64CD1A1256B97700F4B0B0 /* Sources */,
+				3C64CD1B1256B97700F4B0B0 /* Frameworks */,
+				3C64CD221256B9FD00F4B0B0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Debug Dynamic";
+			productName = "Debug Dynamic";
+			productReference = 3C64CD1D1256B97700F4B0B0 /* libWm5Physicsd.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		3C64CD601256BACB00F4B0B0 /* Release Dynamic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C64CD941256BB3200F4B0B0 /* Build configuration list for PBXNativeTarget "Release Dynamic" */;
+			buildPhases = (
+				3C64CD5D1256BACB00F4B0B0 /* Headers */,
+				3C64CD5E1256BACB00F4B0B0 /* Sources */,
+				3C64CD5F1256BACB00F4B0B0 /* Frameworks */,
+				3C64CD661256BAD900F4B0B0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Release Dynamic";
+			productName = "Release Dynamic";
+			productReference = 3C64CD611256BACB00F4B0B0 /* libWm5Physics.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		74B57E8C07F3427D00913EC4 /* Debug Static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C027382088FE67300A93309 /* Build configuration list for PBXNativeTarget "Debug Static" */;
+			buildPhases = (
+				74B57E8907F3427D00913EC4 /* Headers */,
+				74B57E8A07F3427D00913EC4 /* Sources */,
+				74B57E8B07F3427D00913EC4 /* Frameworks */,
+				3C6FBBCD083E65BF0068AA05 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Debug Static";
+			productName = "Static Debug";
+			productReference = 74B57E8D07F3427D00913EC4 /* libWm5Physicsd.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		74D6DDFA07F342E200267169 /* Release Static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C027385088FE67300A93309 /* Build configuration list for PBXNativeTarget "Release Static" */;
+			buildPhases = (
+				74D6DDFB07F342E200267169 /* Headers */,
+				74D6DDFC07F342E200267169 /* Sources */,
+				74D6DDFD07F342E200267169 /* Frameworks */,
+				3C6FBBD0083E65D80068AA05 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Release Static";
+			productName = "Static Debug";
+			productReference = 74D6DDFE07F342E200267169 /* libWm5Physics.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		74B57E8307F3425300913EC4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+			};
+			buildConfigurationList = 3C027397088FE67400A93309 /* Build configuration list for PBXProject "LibPhysics" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 74B57E7F07F3425300913EC4;
+			productRefGroup = 74B57E8E07F3427D00913EC4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				74B57E8C07F3427D00913EC4 /* Debug Static */,
+				74D6DDFA07F342E200267169 /* Release Static */,
+				3C64CD1C1256B97700F4B0B0 /* Debug Dynamic */,
+				3C64CD601256BACB00F4B0B0 /* Release Dynamic */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3C64CD221256B9FD00F4B0B0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkDebugDynamic.sh;
+		};
+		3C64CD661256BAD900F4B0B0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkReleaseDynamic.sh;
+		};
+		3C6FBBCD083E65BF0068AA05 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkDebugStatic.sh;
+		};
+		3C6FBBD0083E65D80068AA05 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkReleaseStatic.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3C64CD1A1256B97700F4B0B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64CD231256BA1600F4B0B0 /* Wm5Fluid3Da.cpp in Sources */,
+				3C64CD241256BA1600F4B0B0 /* Wm5ParticleSystem.cpp in Sources */,
+				3C64CD251256BA1600F4B0B0 /* Wm5Fluid3Db.cpp in Sources */,
+				3C64CD261256BA1600F4B0B0 /* Wm5BoxManager.cpp in Sources */,
+				3C64CD271256BA1600F4B0B0 /* Wm5ExtremalQuery3BSP.cpp in Sources */,
+				3C64CD281256BA1600F4B0B0 /* Wm5MassSpringArbitrary.cpp in Sources */,
+				3C64CD291256BA1600F4B0B0 /* Wm5Fluid2Da.cpp in Sources */,
+				3C64CD2A1256BA1600F4B0B0 /* Wm5LCPPolyDist.cpp in Sources */,
+				3C64CD2B1256BA1600F4B0B0 /* Wm5LCPSolver.cpp in Sources */,
+				3C64CD2C1256BA1600F4B0B0 /* Wm5Fluid2Db.cpp in Sources */,
+				3C64CD2D1256BA1600F4B0B0 /* Wm5MassSpringVolume.cpp in Sources */,
+				3C64CD2E1256BA1600F4B0B0 /* Wm5MassSpringSurface.cpp in Sources */,
+				3C64CD2F1256BA1600F4B0B0 /* Wm5ExtremalQuery3.cpp in Sources */,
+				3C64CD301256BA1600F4B0B0 /* Wm5MassSpringCurve.cpp in Sources */,
+				3C64CD311256BA1600F4B0B0 /* Wm5PolyhedralMassProperties.cpp in Sources */,
+				3C64CD321256BA1600F4B0B0 /* Wm5RigidBody.cpp in Sources */,
+				3C64CD331256BA1600F4B0B0 /* Wm5PhysicsPCH.cpp in Sources */,
+				3C64CD341256BA1600F4B0B0 /* Wm5ExtremalQuery3PRJ.cpp in Sources */,
+				3C64CD351256BA1600F4B0B0 /* Wm5RectangleManager.cpp in Sources */,
+				3C64CD361256BA1600F4B0B0 /* Wm5IntervalManager.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C64CD5E1256BACB00F4B0B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64CD671256BAFB00F4B0B0 /* Wm5Fluid3Da.cpp in Sources */,
+				3C64CD681256BAFB00F4B0B0 /* Wm5ParticleSystem.cpp in Sources */,
+				3C64CD691256BAFB00F4B0B0 /* Wm5Fluid3Db.cpp in Sources */,
+				3C64CD6A1256BAFB00F4B0B0 /* Wm5BoxManager.cpp in Sources */,
+				3C64CD6B1256BAFB00F4B0B0 /* Wm5ExtremalQuery3BSP.cpp in Sources */,
+				3C64CD6C1256BAFB00F4B0B0 /* Wm5MassSpringArbitrary.cpp in Sources */,
+				3C64CD6D1256BAFB00F4B0B0 /* Wm5Fluid2Da.cpp in Sources */,
+				3C64CD6E1256BAFB00F4B0B0 /* Wm5LCPPolyDist.cpp in Sources */,
+				3C64CD6F1256BAFB00F4B0B0 /* Wm5LCPSolver.cpp in Sources */,
+				3C64CD701256BAFB00F4B0B0 /* Wm5Fluid2Db.cpp in Sources */,
+				3C64CD711256BAFB00F4B0B0 /* Wm5MassSpringVolume.cpp in Sources */,
+				3C64CD721256BAFB00F4B0B0 /* Wm5MassSpringSurface.cpp in Sources */,
+				3C64CD731256BAFB00F4B0B0 /* Wm5ExtremalQuery3.cpp in Sources */,
+				3C64CD741256BAFB00F4B0B0 /* Wm5MassSpringCurve.cpp in Sources */,
+				3C64CD751256BAFB00F4B0B0 /* Wm5PolyhedralMassProperties.cpp in Sources */,
+				3C64CD761256BAFB00F4B0B0 /* Wm5RigidBody.cpp in Sources */,
+				3C64CD771256BAFB00F4B0B0 /* Wm5PhysicsPCH.cpp in Sources */,
+				3C64CD781256BAFB00F4B0B0 /* Wm5ExtremalQuery3PRJ.cpp in Sources */,
+				3C64CD791256BAFB00F4B0B0 /* Wm5RectangleManager.cpp in Sources */,
+				3C64CD7A1256BAFB00F4B0B0 /* Wm5IntervalManager.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74B57E8A07F3427D00913EC4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CB8725F0A006FA100B5F514 /* Wm5PhysicsPCH.cpp in Sources */,
+				3C7679C30A38D7E800CD8CCF /* Wm5ExtremalQuery3.cpp in Sources */,
+				3C7679C50A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.cpp in Sources */,
+				3C7679C70A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.cpp in Sources */,
+				3C767A0F0A38D7F600CD8CCF /* Wm5LCPPolyDist.cpp in Sources */,
+				3C767A110A38D7F600CD8CCF /* Wm5LCPSolver.cpp in Sources */,
+				3C767A310A38D80700CD8CCF /* Wm5MassSpringArbitrary.cpp in Sources */,
+				3C767A330A38D80700CD8CCF /* Wm5MassSpringCurve.cpp in Sources */,
+				3C767A350A38D80700CD8CCF /* Wm5MassSpringSurface.cpp in Sources */,
+				3C767A370A38D80700CD8CCF /* Wm5MassSpringVolume.cpp in Sources */,
+				3C767A390A38D80700CD8CCF /* Wm5ParticleSystem.cpp in Sources */,
+				3C767A710A38D81400CD8CCF /* Wm5PolyhedralMassProperties.cpp in Sources */,
+				3C767A730A38D81400CD8CCF /* Wm5RigidBody.cpp in Sources */,
+				3CC4F8C510FCDA9800C42DBB /* Wm5Fluid2Da.cpp in Sources */,
+				3CC4F8C710FCDA9800C42DBB /* Wm5Fluid2Db.cpp in Sources */,
+				3CC4F8C910FCDA9800C42DBB /* Wm5Fluid3Da.cpp in Sources */,
+				3CC4F8CB10FCDA9800C42DBB /* Wm5Fluid3Db.cpp in Sources */,
+				3CC4F8DD10FCDABD00C42DBB /* Wm5BoxManager.cpp in Sources */,
+				3CC4F8DF10FCDABD00C42DBB /* Wm5IntervalManager.cpp in Sources */,
+				3CC4F8E110FCDABD00C42DBB /* Wm5RectangleManager.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D6DDFC07F342E200267169 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CB872630A006FA100B5F514 /* Wm5PhysicsPCH.cpp in Sources */,
+				3C7679CF0A38D7E800CD8CCF /* Wm5ExtremalQuery3.cpp in Sources */,
+				3C7679D10A38D7E800CD8CCF /* Wm5ExtremalQuery3BSP.cpp in Sources */,
+				3C7679D30A38D7E800CD8CCF /* Wm5ExtremalQuery3PRJ.cpp in Sources */,
+				3C767A130A38D7F600CD8CCF /* Wm5LCPPolyDist.cpp in Sources */,
+				3C767A150A38D7F600CD8CCF /* Wm5LCPSolver.cpp in Sources */,
+				3C767A3B0A38D80700CD8CCF /* Wm5MassSpringArbitrary.cpp in Sources */,
+				3C767A3D0A38D80700CD8CCF /* Wm5MassSpringCurve.cpp in Sources */,
+				3C767A3F0A38D80700CD8CCF /* Wm5MassSpringSurface.cpp in Sources */,
+				3C767A410A38D80700CD8CCF /* Wm5MassSpringVolume.cpp in Sources */,
+				3C767A430A38D80700CD8CCF /* Wm5ParticleSystem.cpp in Sources */,
+				3C767A750A38D81400CD8CCF /* Wm5PolyhedralMassProperties.cpp in Sources */,
+				3C767A770A38D81400CD8CCF /* Wm5RigidBody.cpp in Sources */,
+				3CC4F8CD10FCDA9800C42DBB /* Wm5Fluid2Da.cpp in Sources */,
+				3CC4F8CF10FCDA9800C42DBB /* Wm5Fluid2Db.cpp in Sources */,
+				3CC4F8D110FCDA9800C42DBB /* Wm5Fluid3Da.cpp in Sources */,
+				3CC4F8D310FCDA9800C42DBB /* Wm5Fluid3Db.cpp in Sources */,
+				3CC4F8E310FCDABD00C42DBB /* Wm5BoxManager.cpp in Sources */,
+				3CC4F8E510FCDABD00C42DBB /* Wm5IntervalManager.cpp in Sources */,
+				3CC4F8E710FCDABD00C42DBB /* Wm5RectangleManager.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		3C027384088FE67300A93309 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Wm5PhysicsPCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+				);
+				HEADER_SEARCH_PATHS = "${SRCROOT}/../SDK/Include";
+				LIBRARY_STYLE = STATIC;
+				PRODUCT_NAME = Wm5Physicsd;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/DebugStatic";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		3C027387088FE67300A93309 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Wm5PhysicsPCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+				);
+				HEADER_SEARCH_PATHS = "${SRCROOT}/../SDK/Include";
+				LIBRARY_STYLE = STATIC;
+				PRODUCT_NAME = Wm5Physics;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/ReleaseStatic";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		3C027399088FE67400A93309 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_WARN_SIGN_COMPARE = NO;
+				GCC_WARN_UNINITIALIZED_AUTOS = NO;
+				GCC_WARN_UNUSED_PARAMETER = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				SDKROOT = macosx;
+			};
+			name = Default;
+		};
+		3C64CD1E1256B97700F4B0B0 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Wm5PhysicsPCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				HEADER_SEARCH_PATHS = "${SRCROOT}/../SDK/Include";
+				INSTALL_PATH = "${SRCROOT}/../SDK/Library/DebugDLL";
+				LIBRARY_SEARCH_PATHS = "${SRCROOT}/../SDK/Library/DebugDLL";
+				OTHER_LDFLAGS = (
+					"-seg1addr",
+					0x10000000,
+					"-framework",
+					Carbon,
+				);
+				PRODUCT_NAME = Wm5Physicsd;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/DebugDynamic";
+			};
+			name = Default;
+		};
+		3C64CD621256BACB00F4B0B0 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Wm5PhysicsPCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+				);
+				HEADER_SEARCH_PATHS = "${SRCROOT}/../SDK/Include";
+				INSTALL_PATH = "${SRCROOT}/../SDK/Library/ReleaseDLL";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../SDK/Library/ReleaseDLL";
+				OTHER_LDFLAGS = (
+					"-seg1addr",
+					0x10000000,
+					"-framework",
+					Carbon,
+				);
+				PRODUCT_NAME = Wm5Physics;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/ReleaseDynamic";
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3C027382088FE67300A93309 /* Build configuration list for PBXNativeTarget "Debug Static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C027384088FE67300A93309 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C027385088FE67300A93309 /* Build configuration list for PBXNativeTarget "Release Static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C027387088FE67300A93309 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C027397088FE67400A93309 /* Build configuration list for PBXProject "LibPhysics" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C027399088FE67400A93309 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C64CD541256BA9000F4B0B0 /* Build configuration list for PBXNativeTarget "Debug Dynamic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C64CD1E1256B97700F4B0B0 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C64CD941256BB3200F4B0B0 /* Build configuration list for PBXNativeTarget "Release Dynamic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C64CD621256BACB00F4B0B0 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 74B57E8307F3425300913EC4 /* Project object */;
+}

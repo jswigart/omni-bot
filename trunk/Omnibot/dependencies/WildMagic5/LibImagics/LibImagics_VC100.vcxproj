@@ -1,0 +1,518 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugDLL|Win32">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugDLL|x64">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|Win32">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|x64">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B2CAEE6F-98AE-4D65-AE9C-631B6FD81BE4}</ProjectGuid>
+    <RootNamespace>LibImagics</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Wm5ImagicsD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Wm5ImagicsD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">Wm5ImagicsD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">Wm5ImagicsD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Wm5Imagics</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Wm5Imagics</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">Wm5Imagics</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">Wm5Imagics</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;BinaryOperations;Extraction;Filters;Images;RasterDrawing;Segmenters;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5ImagicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Imagics.h ..\SDK\Include
+xcopy /DY Wm5ImagicsLIB.h ..\SDK\Include
+xcopy /DY BinaryOperations\*.h ..\SDK\Include
+xcopy /DY Extraction\*.h ..\SDK\Include
+xcopy /DY Filters\*.h ..\SDK\Include
+xcopy /DY Filters\*.inl ..\SDK\Include
+xcopy /DY Images\*.h ..\SDK\Include
+xcopy /DY Images\*.inl ..\SDK\Include
+xcopy /DY RasterDrawing\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;BinaryOperations;Extraction;Filters;Images;RasterDrawing;Segmenters;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5ImagicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Imagics.h ..\SDK\Include
+xcopy /DY Wm5ImagicsLIB.h ..\SDK\Include
+xcopy /DY BinaryOperations\*.h ..\SDK\Include
+xcopy /DY Extraction\*.h ..\SDK\Include
+xcopy /DY Filters\*.h ..\SDK\Include
+xcopy /DY Filters\*.inl ..\SDK\Include
+xcopy /DY Images\*.h ..\SDK\Include
+xcopy /DY Images\*.inl ..\SDK\Include
+xcopy /DY RasterDrawing\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;BinaryOperations;Extraction;Filters;Images;RasterDrawing;Segmenters;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_IMPORT;WM5_IMAGICS_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5ImagicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Imagics.h ..\SDK\Include
+xcopy /DY Wm5ImagicsLIB.h ..\SDK\Include
+xcopy /DY BinaryOperations\*.h ..\SDK\Include
+xcopy /DY Extraction\*.h ..\SDK\Include
+xcopy /DY Filters\*.h ..\SDK\Include
+xcopy /DY Filters\*.inl ..\SDK\Include
+xcopy /DY Images\*.h ..\SDK\Include
+xcopy /DY Images\*.inl ..\SDK\Include
+xcopy /DY RasterDrawing\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wm5CoreD.lib;Wm5MathematicsD.lib</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;BinaryOperations;Extraction;Filters;Images;RasterDrawing;Segmenters;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_IMPORT;WM5_IMAGICS_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5ImagicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Imagics.h ..\SDK\Include
+xcopy /DY Wm5ImagicsLIB.h ..\SDK\Include
+xcopy /DY BinaryOperations\*.h ..\SDK\Include
+xcopy /DY Extraction\*.h ..\SDK\Include
+xcopy /DY Filters\*.h ..\SDK\Include
+xcopy /DY Filters\*.inl ..\SDK\Include
+xcopy /DY Images\*.h ..\SDK\Include
+xcopy /DY Images\*.inl ..\SDK\Include
+xcopy /DY RasterDrawing\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wm5CoreD.lib;Wm5MathematicsD.lib</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;BinaryOperations;Extraction;Filters;Images;RasterDrawing;Segmenters;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5ImagicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Imagics.h ..\SDK\Include
+xcopy /DY Wm5ImagicsLIB.h ..\SDK\Include
+xcopy /DY BinaryOperations\*.h ..\SDK\Include
+xcopy /DY Extraction\*.h ..\SDK\Include
+xcopy /DY Filters\*.h ..\SDK\Include
+xcopy /DY Filters\*.inl ..\SDK\Include
+xcopy /DY Images\*.h ..\SDK\Include
+xcopy /DY Images\*.inl ..\SDK\Include
+xcopy /DY RasterDrawing\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;BinaryOperations;Extraction;Filters;Images;RasterDrawing;Segmenters;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5ImagicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Imagics.h ..\SDK\Include
+xcopy /DY Wm5ImagicsLIB.h ..\SDK\Include
+xcopy /DY BinaryOperations\*.h ..\SDK\Include
+xcopy /DY Extraction\*.h ..\SDK\Include
+xcopy /DY Filters\*.h ..\SDK\Include
+xcopy /DY Filters\*.inl ..\SDK\Include
+xcopy /DY Images\*.h ..\SDK\Include
+xcopy /DY Images\*.inl ..\SDK\Include
+xcopy /DY RasterDrawing\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;BinaryOperations;Extraction;Filters;Images;RasterDrawing;Segmenters;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_IMPORT;WM5_IMAGICS_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5ImagicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Imagics.h ..\SDK\Include
+xcopy /DY Wm5ImagicsLIB.h ..\SDK\Include
+xcopy /DY BinaryOperations\*.h ..\SDK\Include
+xcopy /DY Extraction\*.h ..\SDK\Include
+xcopy /DY Filters\*.h ..\SDK\Include
+xcopy /DY Filters\*.inl ..\SDK\Include
+xcopy /DY Images\*.h ..\SDK\Include
+xcopy /DY Images\*.inl ..\SDK\Include
+xcopy /DY RasterDrawing\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wm5Core.lib;Wm5Mathematics.lib</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;BinaryOperations;Extraction;Filters;Images;RasterDrawing;Segmenters;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_IMPORT;WM5_IMAGICS_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5ImagicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Imagics.h ..\SDK\Include
+xcopy /DY Wm5ImagicsLIB.h ..\SDK\Include
+xcopy /DY BinaryOperations\*.h ..\SDK\Include
+xcopy /DY Extraction\*.h ..\SDK\Include
+xcopy /DY Filters\*.h ..\SDK\Include
+xcopy /DY Filters\*.inl ..\SDK\Include
+xcopy /DY Images\*.h ..\SDK\Include
+xcopy /DY Images\*.inl ..\SDK\Include
+xcopy /DY RasterDrawing\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.h ..\SDK\Include
+xcopy /DY Segmenters\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wm5Core.lib;Wm5Mathematics.lib</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="BinaryOperations\Wm5Binary2D.cpp" />
+    <ClCompile Include="BinaryOperations\Wm5Binary3D.cpp" />
+    <ClCompile Include="Images\Wm5Element.cpp" />
+    <ClCompile Include="Images\Wm5ImageConvert.cpp" />
+    <ClCompile Include="Images\Wm5Images.cpp" />
+    <ClCompile Include="Images\Wm5Lattice.cpp" />
+    <ClCompile Include="Extraction\Wm5ExtractCurveSquares.cpp" />
+    <ClCompile Include="Extraction\Wm5ExtractCurveTris.cpp" />
+    <ClCompile Include="Extraction\Wm5ExtractSurfaceCubes.cpp" />
+    <ClCompile Include="Extraction\Wm5ExtractSurfaceTetra.cpp" />
+    <ClCompile Include="RasterDrawing\Wm5RasterDrawing.cpp" />
+    <ClCompile Include="Segmenters\Wm5FastMarch.cpp" />
+    <ClCompile Include="Segmenters\Wm5FastMarch2.cpp" />
+    <ClCompile Include="Segmenters\Wm5FastMarch3.cpp" />
+    <ClCompile Include="Filters\Wm5CurvatureFlow2.cpp" />
+    <ClCompile Include="Filters\Wm5CurvatureFlow3.cpp" />
+    <ClCompile Include="Filters\Wm5GaussianBlur2.cpp" />
+    <ClCompile Include="Filters\Wm5GaussianBlur3.cpp" />
+    <ClCompile Include="Filters\Wm5GradientAnisotropic2.cpp" />
+    <ClCompile Include="Filters\Wm5GradientAnisotropic3.cpp" />
+    <ClCompile Include="Filters\Wm5PdeFilter.cpp" />
+    <ClCompile Include="Filters\Wm5PdeFilter2.cpp" />
+    <ClCompile Include="Filters\Wm5PdeFilter3.cpp" />
+    <ClCompile Include="Wm5ImagicsPCH.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BinaryOperations\Wm5Binary2D.h" />
+    <ClInclude Include="BinaryOperations\Wm5Binary3D.h" />
+    <ClInclude Include="Images\Wm5Element.h" />
+    <ClInclude Include="Images\Wm5ImageConvert.h" />
+    <ClInclude Include="Images\Wm5Images.h" />
+    <ClInclude Include="Images\Wm5Lattice.h" />
+    <ClInclude Include="Images\Wm5TImage.h" />
+    <ClInclude Include="Images\Wm5TImage2D.h" />
+    <ClInclude Include="Images\Wm5TImage3D.h" />
+    <ClInclude Include="Extraction\Wm5ExtractCurveSquares.h" />
+    <ClInclude Include="Extraction\Wm5ExtractCurveTris.h" />
+    <ClInclude Include="Extraction\Wm5ExtractSurfaceCubes.h" />
+    <ClInclude Include="Extraction\Wm5ExtractSurfaceTetra.h" />
+    <ClInclude Include="RasterDrawing\Wm5RasterDrawing.h" />
+    <ClInclude Include="Segmenters\Wm5FastMarch.h" />
+    <ClInclude Include="Segmenters\Wm5FastMarch2.h" />
+    <ClInclude Include="Segmenters\Wm5FastMarch3.h" />
+    <ClInclude Include="Filters\Wm5CurvatureFlow2.h" />
+    <ClInclude Include="Filters\Wm5CurvatureFlow3.h" />
+    <ClInclude Include="Filters\Wm5FastBlur.h" />
+    <ClInclude Include="Filters\Wm5GaussianBlur2.h" />
+    <ClInclude Include="Filters\Wm5GaussianBlur3.h" />
+    <ClInclude Include="Filters\Wm5GradientAnisotropic2.h" />
+    <ClInclude Include="Filters\Wm5GradientAnisotropic3.h" />
+    <ClInclude Include="Filters\Wm5PdeFilter.h" />
+    <ClInclude Include="Filters\Wm5PdeFilter2.h" />
+    <ClInclude Include="Filters\Wm5PdeFilter3.h" />
+    <ClInclude Include="Wm5ImagicsPCH.h" />
+    <ClInclude Include="Wm5Imagics.h" />
+    <ClInclude Include="Wm5ImagicsLIB.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\Wm5Element.inl" />
+    <None Include="Images\Wm5Lattice.inl" />
+    <None Include="Images\Wm5TImage.inl" />
+    <None Include="Images\Wm5TImage2D.inl" />
+    <None Include="Images\Wm5TImage3D.inl" />
+    <None Include="Segmenters\Wm5FastMarch.inl" />
+    <None Include="Segmenters\Wm5FastMarch2.inl" />
+    <None Include="Segmenters\Wm5FastMarch3.inl" />
+    <None Include="Filters\Wm5FastBlur.inl" />
+    <None Include="Filters\Wm5PdeFilter.inl" />
+    <None Include="Filters\Wm5PdeFilter2.inl" />
+    <None Include="Filters\Wm5PdeFilter3.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

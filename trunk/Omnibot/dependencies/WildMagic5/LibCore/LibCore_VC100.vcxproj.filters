@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Assert\Wm5Assert.cpp">
+      <Filter>Assert</Filter>
+    </ClCompile>
+    <ClCompile Include="InputOutput\Wm5BufferIO.cpp">
+      <Filter>InputOutput</Filter>
+    </ClCompile>
+    <ClCompile Include="InputOutput\Wm5Endian.cpp">
+      <Filter>InputOutput</Filter>
+    </ClCompile>
+    <ClCompile Include="InputOutput\Wm5Environment.cpp">
+      <Filter>InputOutput</Filter>
+    </ClCompile>
+    <ClCompile Include="InputOutput\Wm5FileIO.cpp">
+      <Filter>InputOutput</Filter>
+    </ClCompile>
+    <ClCompile Include="Wm5CorePCH.cpp">
+      <Filter>_PrecompiledHeaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\Wm5Memory.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\Wm5SmartPointer.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectSystems\Wm5InitTerm.cpp">
+      <Filter>ObjectSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectSystems\Wm5InStream.cpp">
+      <Filter>ObjectSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectSystems\Wm5Object.cpp">
+      <Filter>ObjectSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectSystems\Wm5OutStream.cpp">
+      <Filter>ObjectSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectSystems\Wm5Rtti.cpp">
+      <Filter>ObjectSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectSystems\Wm5Stream.cpp">
+      <Filter>ObjectSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="Threading\Wm5Thread.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Threading\Wm5Mutex.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Threading\Wm5ScopedCS.cpp">
+      <Filter>Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Time\Wm5Time.cpp">
+      <Filter>Time</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Wm5Core.h" />
+    <ClInclude Include="Wm5CoreLIB.h" />
+    <ClInclude Include="Assert\Wm5Assert.h">
+      <Filter>Assert</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTypes\Wm5MinHeap.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTypes\Wm5Table.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="DataTypes\Wm5Tuple.h">
+      <Filter>DataTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="InputOutput\Wm5BufferIO.h">
+      <Filter>InputOutput</Filter>
+    </ClInclude>
+    <ClInclude Include="InputOutput\Wm5Endian.h">
+      <Filter>InputOutput</Filter>
+    </ClInclude>
+    <ClInclude Include="InputOutput\Wm5Environment.h">
+      <Filter>InputOutput</Filter>
+    </ClInclude>
+    <ClInclude Include="InputOutput\Wm5FileIO.h">
+      <Filter>InputOutput</Filter>
+    </ClInclude>
+    <ClInclude Include="Wm5CorePCH.h">
+      <Filter>_PrecompiledHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\Wm5Memory.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\Wm5SmartPointer.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectSystems\Wm5InitTerm.h">
+      <Filter>ObjectSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectSystems\Wm5InStream.h">
+      <Filter>ObjectSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectSystems\Wm5Names.h">
+      <Filter>ObjectSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectSystems\Wm5Object.h">
+      <Filter>ObjectSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectSystems\Wm5OutStream.h">
+      <Filter>ObjectSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectSystems\Wm5Rtti.h">
+      <Filter>ObjectSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectSystems\Wm5Stream.h">
+      <Filter>ObjectSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="Threading\Wm5Thread.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Threading\Wm5ThreadType.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Threading\Wm5Mutex.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Threading\Wm5MutexType.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Threading\Wm5ScopedCS.h">
+      <Filter>Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Time\Wm5Time.h">
+      <Filter>Time</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DataTypes\Wm5MinHeap.inl">
+      <Filter>DataTypes</Filter>
+    </None>
+    <None Include="DataTypes\Wm5Table.inl">
+      <Filter>DataTypes</Filter>
+    </None>
+    <None Include="DataTypes\Wm5Tuple.inl">
+      <Filter>DataTypes</Filter>
+    </None>
+    <None Include="InputOutput\Wm5BufferIO.inl">
+      <Filter>InputOutput</Filter>
+    </None>
+    <None Include="InputOutput\Wm5FileIO.inl">
+      <Filter>InputOutput</Filter>
+    </None>
+    <None Include="Memory\Wm5Memory.inl">
+      <Filter>Memory</Filter>
+    </None>
+    <None Include="Memory\Wm5SmartPointer.inl">
+      <Filter>Memory</Filter>
+    </None>
+    <None Include="ObjectSystems\Wm5InStream.inl">
+      <Filter>ObjectSystems</Filter>
+    </None>
+    <None Include="ObjectSystems\Wm5Object.inl">
+      <Filter>ObjectSystems</Filter>
+    </None>
+    <None Include="ObjectSystems\Wm5OutStream.inl">
+      <Filter>ObjectSystems</Filter>
+    </None>
+    <None Include="ObjectSystems\Wm5Rtti.inl">
+      <Filter>ObjectSystems</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="_PrecompiledHeaders">
+      <UniqueIdentifier>{6a08bc71-9fbc-483f-9891-1f0b016246e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assert">
+      <UniqueIdentifier>{41122f2c-e17f-4473-a1b1-8a3994c89daf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataTypes">
+      <UniqueIdentifier>{73de4cea-4541-4f7b-aca3-1533a469661d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="InputOutput">
+      <UniqueIdentifier>{0793f518-3d21-4b53-a1bb-5108c403a87b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{2709ceb0-5aa7-468d-bdad-5fd75064c121}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ObjectSystems">
+      <UniqueIdentifier>{01f93759-e142-4035-80e3-83111f553ef8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Threading">
+      <UniqueIdentifier>{6063149b-6838-4859-8a82-b2fe0fc5915a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Time">
+      <UniqueIdentifier>{c5fc4f0b-8f50-46d0-b4cc-e66d5d4105db}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
