@@ -286,13 +286,13 @@ void RenderBuffer::AddString2d( const Vector2f & v, const obColor & col, const c
 
 void RenderBuffer::AddAABB(const AABB &_aabb, const obColor &_color, AABB::Direction _dir/* = AABB::DIR_ALL*/)
 {
-	if(g_EngineFuncs->DebugBox(Vector3f::ZERO,Vector3f::ZERO,COLOR::WHITE,0.f))
-	{
-		if(_dir == AABB::DIR_ALL)
-		{
-			g_EngineFuncs->DebugBox(_aabb.m_Mins,_aabb.m_Maxs,_color,DEFAULT_TIME);
-			return;
-		}
+	//if(g_EngineFuncs->DebugBox(Vector3f::ZERO,Vector3f::ZERO,COLOR::WHITE,0.f))
+	//{
+	//	if(_dir == AABB::DIR_ALL)
+	//	{
+	//		g_EngineFuncs->DebugBox(_aabb.m_Mins,_aabb.m_Maxs,_color,DEFAULT_TIME);
+	//		return;
+	//	}
 
 		Vector3f vVertex[8] = { Vector3f::ZERO };
 
@@ -332,7 +332,7 @@ void RenderBuffer::AddAABB(const AABB &_aabb, const obColor &_color, AABB::Direc
 			RenderBuffer::AddLine(vVertex[6], vVertex[2], _color, DEFAULT_TIME);
 			RenderBuffer::AddLine(vVertex[7], vVertex[3], _color, DEFAULT_TIME);
 		}
-	}
+	//}
 }
 
 void RenderBuffer::AddOBB(const Box3f &_obb, const obColor &_color, AABB::Direction _dir)
