@@ -791,7 +791,7 @@ static rserr_t GLW_SetMode( const char *drivername,
 				ri.Printf( PRINT_ALL, "...using colorsbits of %d\n", colorbits );
 			} else
 			{
-				ri.Printf( PRINT_ALL, "WARNING:...changing depth not supported on Win95 < pre-OSR 2.x\n" );
+				ri.Printf( PRINT_ALL, "WARNING:...changing depth not supported on Win95 < pre-OSR 2.X()\n" );
 			}
 		} else
 		{

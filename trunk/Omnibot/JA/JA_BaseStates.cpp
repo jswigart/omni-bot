@@ -61,7 +61,7 @@ namespace AiState
 	{
 		Vector3f vMyPos = GetClient()->GetPosition();
 
-		const float fDistanceToPt = Length(vMyPos.As2d(), m_NextPt.m_Pt.As2d());
+		const float fDistanceToPt = SquaredLength2d( vMyPos, m_NextPt.m_Pt );
 		bool bInRadius = fDistanceToPt <= m_NextPt.m_Radius;
 
 		FINDSTATEIF(SteeringSystem, GetRootState(), SetTarget(m_NextPt.m_Pt));
@@ -104,7 +104,7 @@ namespace AiState
 
 		// Finish when we exceed the targets height, because of this, it isn't usable for
 		// long distance force jumps, only height based force jumps.
-		if(m_IsJumping && vMyPos.z >= m_NextPt.m_Pt.z && (m_DistanceLeft < m_DistanceTotal*0.35f))
+		if(m_IsJumping && vMyPos.Z() >= m_NextPt.m_Pt.Z() && (m_DistanceLeft < m_DistanceTotal*0.35f))
 			return State_Finished;
 
 		return State_Busy;

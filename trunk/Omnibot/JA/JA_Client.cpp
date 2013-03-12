@@ -195,7 +195,7 @@ float JA_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to
 		if(iForce < fMinForceNeeded)
 			return false;
 
-		const float fHeightDiff = to->GetPosition().z - from->GetPosition().z;
+		const float fHeightDiff = to->GetPosition().Z() - from->GetPosition().Z();
 		if(fHeightDiff < fMaxForceJumpheight)
 			return 1.f;
 	}

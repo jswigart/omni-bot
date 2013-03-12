@@ -2041,7 +2041,7 @@ namespace AiState
 
 	void RocketJump::OnTarget()
 	{
-		bool bInRange = SquaredLength(GetClient()->GetPosition().As2d(), m_NextPt.m_Pt.As2d()) <= Mathf::Sqr(m_NextPt.m_Radius);
+		bool bInRange = SquaredLength2d( GetClient()->GetPosition(), m_NextPt.m_Pt ) <= Mathf::Sqr(m_NextPt.m_Radius);
 		if(bInRange)
 		{
 			FINDSTATE(ws, WeaponSystem, GetRootState());
@@ -2316,7 +2316,7 @@ namespace AiState
 				fProjectileSpeed, targetInfo, Vector3f::ZERO);
 
 			// Add a vertical aim offset
-			m_AimPos.z += targetInfo.m_DistanceTo * 0.25f;
+			m_AimPos.Z() += targetInfo.m_DistanceTo * 0.25f;
 
 			bool bThrow = fTimeToDet < 1.0;
 

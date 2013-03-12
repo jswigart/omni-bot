@@ -332,7 +332,7 @@ static bool GetHeightAtPos( const Vector3f & pos, float & height )
 		False);
 	if ( tr.m_Fraction > 0.0f && tr.m_Fraction < 1.0f )
 	{
-		height = tr.m_Endpos[ 2 ] - pos.z;
+		height = tr.m_Endpos[ 2 ] - pos.Z();
 		return true;
 	}
 	return false;
@@ -708,9 +708,9 @@ int PathPlannerFloodFill::Process_FloodFill()
 
 			//	for(obuint32 i = 0; i < m_FloodFillData->m_VertIndex; ++i)
 			//	{
-			//		fl << m_FloodFillData->m_Vertices[i].x << " " <<
-			//			m_FloodFillData->m_Vertices[i].y << " " <<
-			//			m_FloodFillData->m_Vertices[i].z << std::endl;
+			//		fl << m_FloodFillData->m_Vertices[i].X() << " " <<
+			//			m_FloodFillData->m_Vertices[i].Y() << " " <<
+			//			m_FloodFillData->m_Vertices[i].Z() << std::endl;
 			//	}
 
 			//	for(obuint32 i = 0; i < m_FloodFillData->m_FaceIndex; ++i)
@@ -769,9 +769,9 @@ void PathPlannerFloodFill::SaveFloodStarts()
 		Vector3List::const_iterator cIt = m_StartPositions.begin();
 		for(; cIt != m_StartPositions.end(); ++cIt)
 		{
-			f.WriteFloat((*cIt).x);
-			f.WriteFloat((*cIt).y);
-			f.WriteFloat((*cIt).z);
+			f.WriteFloat((*cIt).X());
+			f.WriteFloat((*cIt).Y());
+			f.WriteFloat((*cIt).Z());
 			f.WriteNewLine();
 		}
 		f.Close();
@@ -801,9 +801,9 @@ void PathPlannerFloodFill::LoadFloodStarts()
 		Vector3f vPos;
 		for(obuint32 i = 0; i < iNumPositions; ++i)
 		{
-			f.ReadFloat(vPos.x);
-			f.ReadFloat(vPos.y);
-			f.ReadFloat(vPos.z);
+			f.ReadFloat(vPos.X());
+			f.ReadFloat(vPos.Y());
+			f.ReadFloat(vPos.Z());
 			m_StartPositions.push_back( vPos );
 		}
 		f.Close();

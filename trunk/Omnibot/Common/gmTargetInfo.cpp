@@ -72,27 +72,27 @@ bool gmTargetInfo::getDistanceTo( TargetInfo *a_native, gmThread *a_thread, gmVa
 bool gmTargetInfo::getPosition( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
 	a_operands[0].SetVector(
-		a_native->m_LastPosition.x, 
-		a_native->m_LastPosition.y, 
-		a_native->m_LastPosition.z);
+		a_native->m_LastPosition.X(), 
+		a_native->m_LastPosition.Y(), 
+		a_native->m_LastPosition.Z());
 	return true;
 }
 
 bool gmTargetInfo::getFacing( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
 	a_operands[0].SetVector(
-		a_native->m_LastFacing.x, 
-		a_native->m_LastFacing.y, 
-		a_native->m_LastFacing.z);
+		a_native->m_LastFacing.X(), 
+		a_native->m_LastFacing.Y(), 
+		a_native->m_LastFacing.Z());
 	return true;
 }
 
 bool gmTargetInfo::getVelocity( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
 	a_operands[0].SetVector(
-		a_native->m_LastVelocity.x, 
-		a_native->m_LastVelocity.y, 
-		a_native->m_LastVelocity.z);
+		a_native->m_LastVelocity.X(), 
+		a_native->m_LastVelocity.Y(), 
+		a_native->m_LastVelocity.Z());
 	return true;
 }
 

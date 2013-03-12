@@ -135,7 +135,7 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		Vector3f vSource = m_MapGoal->GetPosition();
 		//vSource = vSource + Vector3(0,0,60);
-		vSource.z = vSource.z + 60;
+		vSource.Z() = vSource.Z() + 60;
 		//////////////////////////////////////////////////////////////////////////
 		if(!m_MapGoalTarget)
 		{
@@ -151,7 +151,7 @@ namespace AiState
 
 				{
 					Vector3f vTarget = qry.m_List[i]->GetPosition();
-					vTarget.z = vTarget.z + 20;
+					vTarget.Z() = vTarget.Z() + 20;
 					if(!Client::HasLineOfSightTo(vSource,vTarget))
 						continue;
 				}
@@ -175,7 +175,7 @@ namespace AiState
 
 				{
 					Vector3f vTarget = qry.m_List[i]->GetPosition();
-					vTarget.z = vTarget.z + 20;
+					vTarget.Z() = vTarget.Z() + 20;
 					if(!Client::HasLineOfSightTo(vSource,vTarget))
 						continue;
 				}

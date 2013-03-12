@@ -135,8 +135,8 @@ void PathPlannerWaypoint::cmdWaypointAdd(const StringVector &_args)
 	// Add this waypoint to the list.
 	ScriptManager::GetInstance()->ExecuteStringLogged(
 		(std::string)va("Wp.AddWaypoint( Vector3(%f, %f, %f), Vector3(%f, %f, %f) );",
-		vPosition.x, vPosition.y, vPosition.z,
-		vFacing.x, vFacing.y, vFacing.z));
+		vPosition.X(), vPosition.Y(), vPosition.Z(),
+		vFacing.X(), vFacing.Y(), vFacing.Z()));
 }
 
 void PathPlannerWaypoint::cmdWaypointAddX(const StringVector &_args)
@@ -148,7 +148,7 @@ void PathPlannerWaypoint::cmdWaypointAddX(const StringVector &_args)
 	Vector3f vAimPosition;
 	if(Utils::GetLocalAimPoint(vAimPosition))
 	{
-		vAimPosition.z -= g_fBottomWaypointOffset;
+		vAimPosition.Z() -= g_fBottomWaypointOffset;
 		AddWaypoint(vAimPosition);
 	}
 }
@@ -206,7 +206,7 @@ void PathPlannerWaypoint::cmdWaypointDeleteX(const StringVector &_args)
 		if(tr.m_Fraction < 1.f)
 		{
 			Vector3f vWaypointPos(tr.m_Endpos);
-			vWaypointPos.z -= g_fBottomWaypointOffset;
+			vWaypointPos.Z() -= g_fBottomWaypointOffset;
 			DeleteWaypoint(vWaypointPos);
 		}
 	}
@@ -411,7 +411,7 @@ void PathPlannerWaypoint::cmdWaypointAutoRadius(const StringVector &_args)
 			}
 		}
 
-		float fNewRadius = Mathf::Max(fMaxRadius, fClosestHit);
+		float fNewRadius = std::max(fMaxRadius, fClosestHit);
 		EngineFuncs::ConsoleMessage(va("#%d Changed Radius from %f to %f",
 			(*it)->GetUID(),
 			(*it)->GetRadius(),
@@ -480,7 +480,7 @@ void PathPlannerWaypoint::cmdWaypointAutoBuild(const StringVector &_args)
 			// Are we limiting height?
 			if(fLimitHeight > 0)
 			{
-				float fHeightDiff = fabs((m_WaypointList[i]->GetPosition().z - m_WaypointList[j]->GetPosition().z));
+				float fHeightDiff = fabs((m_WaypointList[i]->GetPosition().Z() - m_WaypointList[j]->GetPosition().Z()));
 
 				// If the difference in height is > 32 don't do anything.
 				if(fHeightDiff > fLimitHeight)
@@ -661,7 +661,7 @@ void PathPlannerWaypoint::cmdWaypointSetProperty(const StringVector &_args)
 				Utils::ConvertString(v,propertyValue);
 			if(propertyValue=="<wpposition>" && Utils::GetLocalAimPoint(v))
 			{
-				v.z -= g_fBottomWaypointOffset;
+				v.Z() -= g_fBottomWaypointOffset;
 				Utils::ConvertString(v,propertyValue);
 			}
 			//////////////////////////////////////////////////////////////////////////
@@ -1129,8 +1129,8 @@ void PathPlannerWaypoint::cmdWaypointMirror(const StringVector &_args)
 		// Mirror the waypoint.
 		if(bAxis[3])
 		{
-			pWp->m_Position.y = -pWp->m_Position.y;
-			pWp->m_Facing.y = -pWp->m_Facing.y;
+			pWp->m_Position.Y() = -pWp->m_Position.Y();
+			pWp->m_Facing.Y() = -pWp->m_Facing.Y();
 		}
 		if(bUsePlayer)
 			pWp->m_Position += vPlayerPos;
@@ -1237,17 +1237,17 @@ void PathPlannerWaypoint::cmdWaypointDeleteAxis(const StringVector &_args)
 	for(; it != m_WaypointList.end(); )
 	{
 		bool bRemoveMe = false;
-		if(vAxis.x != 0.0f)
+		if(vAxis.X() != 0.0f)
 		{
-			bRemoveMe = Mathf::Sign((*it)->GetPosition().x) != Mathf::Sign(vAxis.x);
+			bRemoveMe = Mathf::Sign((*it)->GetPosition().X()) != Mathf::Sign(vAxis.X());
 		}
-		else if(vAxis.y != 0.0f)
+		else if(vAxis.Y() != 0.0f)
 		{
-			bRemoveMe = Mathf::Sign((*it)->GetPosition().y) != Mathf::Sign(vAxis.y);
+			bRemoveMe = Mathf::Sign((*it)->GetPosition().Y()) != Mathf::Sign(vAxis.Y());
 		}
-		else if(vAxis.z != 0.0f)
+		else if(vAxis.Z() != 0.0f)
 		{
-			bRemoveMe = Mathf::Sign((*it)->GetPosition().z) != Mathf::Sign(vAxis.z);
+			bRemoveMe = Mathf::Sign((*it)->GetPosition().Z()) != Mathf::Sign(vAxis.Z());
 		}
 
 		if(bRemoveMe)
@@ -1924,19 +1924,19 @@ void PathPlannerWaypoint::cmdAutoBuildFeatures(const StringVector &_args)
 		Vector3f vTarget(features[i].m_TargetPosition);
 
 		// adjust for waypoint offset
-		vPos.z -= g_fBottomWaypointOffset;
-		vTarget.z -= g_fBottomWaypointOffset;
+		vPos.Z() -= g_fBottomWaypointOffset;
+		vTarget.Z() -= g_fBottomWaypointOffset;
 
 		// Adjust for waypoint offsets
 		if(!features[i].m_Bounds.IsZero())
 		{
 			features[i].m_Bounds.CenterBottom(vPos);
-			vPos.z -= g_fBottomWaypointOffset;
+			vPos.Z() -= g_fBottomWaypointOffset;
 		}
 		if(!features[i].m_TargetBounds.IsZero())
 		{
 			features[i].m_TargetBounds.CenterBottom(vTarget);
-			vTarget.z -= g_fBottomWaypointOffset;
+			vTarget.Z() -= g_fBottomWaypointOffset;
 		}
 
 		Waypoint *pFeature = AddWaypoint(vPos, vFace, true);

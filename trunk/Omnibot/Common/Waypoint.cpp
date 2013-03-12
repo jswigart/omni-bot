@@ -73,9 +73,9 @@ void Waypoint::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 
 	//	newSnapShot.Sync( "name", GetName().c_str(), localBuffer );
 	//	newSnapShot.Sync( "uid", GetUID(), localBuffer );
-	//	newSnapShot.Sync( "x", GetPosition().x, localBuffer );
-	//	newSnapShot.Sync( "y", GetPosition().y, localBuffer );
-	//	newSnapShot.Sync( "z", GetPosition().z, localBuffer );
+	//	newSnapShot.Sync( "x", GetPosition().X(), localBuffer );
+	//	newSnapShot.Sync( "y", GetPosition().Y(), localBuffer );
+	//	newSnapShot.Sync( "z", GetPosition().Z(), localBuffer );
 	//	newSnapShot.Sync( "offsetTop", g_fTopWaypointOffset, localBuffer );
 	//	newSnapShot.Sync( "offsetBottom", g_fBottomWaypointOffset, localBuffer );
 
@@ -136,12 +136,12 @@ void Waypoint::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 
 		//RemoteLib::DataBufferStatic<2048> localBuffer;
 		//localBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-		//newSnapShot.Sync( "fromx", GetPosition().x, localBuffer );
-		//newSnapShot.Sync( "fromy", GetPosition().y, localBuffer );
-		//newSnapShot.Sync( "fromz", GetPosition().z + g_fTopPathOffset, localBuffer );
-		//newSnapShot.Sync( "tox", ci.m_Connection->GetPosition().x, localBuffer );
-		//newSnapShot.Sync( "toy", ci.m_Connection->GetPosition().y, localBuffer );
-		//newSnapShot.Sync( "toz", ci.m_Connection->GetPosition().z + g_fBottomPathOffset, localBuffer );
+		//newSnapShot.Sync( "fromx", GetPosition().X(), localBuffer );
+		//newSnapShot.Sync( "fromy", GetPosition().Y(), localBuffer );
+		//newSnapShot.Sync( "fromz", GetPosition().Z() + g_fTopPathOffset, localBuffer );
+		//newSnapShot.Sync( "tox", ci.m_Connection->GetPosition().X(), localBuffer );
+		//newSnapShot.Sync( "toy", ci.m_Connection->GetPosition().Y(), localBuffer );
+		//newSnapShot.Sync( "toz", ci.m_Connection->GetPosition().Z() + g_fBottomPathOffset, localBuffer );
 		//newSnapShot.Sync( "color", linkColor.rgba(), localBuffer );
 		//
 		//const uint32 writeErrors = localBuffer.endWrite();

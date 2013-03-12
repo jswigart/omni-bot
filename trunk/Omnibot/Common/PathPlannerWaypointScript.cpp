@@ -97,8 +97,8 @@ void SetWaypointDataInTable(gmMachine *_machine, gmTableObject *_table, const Wa
 {
 	DisableGCInScope gcEn(_machine);
 
-	_table->Set(_machine, "position", gmVariable(_waypoint->GetPosition().x, _waypoint->GetPosition().y, _waypoint->GetPosition().z));
-	_table->Set(_machine, "facing", gmVariable(_waypoint->GetFacing().x, _waypoint->GetFacing().y, _waypoint->GetFacing().z));
+	_table->Set(_machine, "position", gmVariable(_waypoint->GetPosition().X(), _waypoint->GetPosition().Y(), _waypoint->GetPosition().Z()));
+	_table->Set(_machine, "facing", gmVariable(_waypoint->GetFacing().X(), _waypoint->GetFacing().Y(), _waypoint->GetFacing().Z()));
 	_table->Set(_machine, "guid", gmVariable(_waypoint->GetUID()));
 	_table->Set(_machine, "radius", gmVariable(_waypoint->GetRadius()));
 

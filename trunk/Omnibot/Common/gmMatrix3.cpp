@@ -95,7 +95,7 @@ gmMat3Type *gmMatrix3::Constructor(gmThread *a_thread)
 				a_thread->Param(2).GetFloatSafe(fZ))
 			{
 				pNewMat = new gmMat3Type(gmMat3Type::IDENTITY);
-				pNewMat->FromEulerAnglesXYZ(fX, fY, fZ);
+				pNewMat->MakeEulerXYZ(fX, fY, fZ);
 			}
 		}
 		else if(a_thread->GetNumParams() == 2)
@@ -149,7 +149,7 @@ void gmMatrix3::AsString(gmUserObject *a_object, char *a_buffer, int a_bufferLen
 	}
 
 	float fX = 0.f, fY = 0.f, fZ = 0.f;
-	pNative->ToEulerAnglesXYZ(fX, fY, fZ);
+	pNative->ExtractEulerXYZ(fX, fY, fZ);
 	//Note '#' always display decimal place, 'g' display exponent if > precision or 4
 	_gmsnprintf(a_buffer, a_bufferLen, "(%#.8g, %#.8g, %#.8g)", fX, fY, fZ);
 }
@@ -175,7 +175,7 @@ int gmMatrix3::gmfTransformVector(gmThread *a_thread)
 
 	Vector3f vt(v.x,v.y,v.z);
 	vt = *native * vt;
-	a_thread->PushVector(vt.x, vt.y, vt.z);
+	a_thread->PushVector(vt.X(), vt.Y(), vt.Z());
 	return GM_OK;
 }
 
@@ -191,7 +191,7 @@ int gmMatrix3::gmfInverseTransformVector(gmThread *a_thread)
 
 	Vector3f vt(v.x,v.y,v.z);
 	vt = mInv * vt;
-	a_thread->PushVector(vt.x, vt.y, vt.z);
+	a_thread->PushVector( vt.X(), vt.Y(), vt.Z() );
 	return GM_OK;
 }
 
@@ -310,26 +310,26 @@ bool gmMatrix3::gmfGetIdentity( gmMat3Type *a_native, gmThread *a_thread, gmVari
 bool gmMatrix3::gmfGetX( gmMat3Type *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
 	a_operands[0].SetVector(
-		a_native->GetColumn(0).x,
-		a_native->GetColumn(0).y,
-		a_native->GetColumn(0).z);
+		a_native->GetColumn(0)[0],
+		a_native->GetColumn(0)[1],
+		a_native->GetColumn(0)[2]);
 	return true;
 }
 
 bool gmMatrix3::gmfGetY( gmMat3Type *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
 	a_operands[0].SetVector(
-		a_native->GetColumn(1).x,
-		a_native->GetColumn(1).y,
-		a_native->GetColumn(1).z);
+		a_native->GetColumn(1)[0],
+		a_native->GetColumn(1)[1],
+		a_native->GetColumn(1)[2]);
 	return true;
 }
 
 bool gmMatrix3::gmfGetZ( gmMat3Type *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
 	a_operands[0].SetVector(
-		a_native->GetColumn(2).x,
-		a_native->GetColumn(2).y,
-		a_native->GetColumn(2).z);
+		a_native->GetColumn(2)[0],
+		a_native->GetColumn(2)[1],
+		a_native->GetColumn(2)[2]);
 	return true;
 }

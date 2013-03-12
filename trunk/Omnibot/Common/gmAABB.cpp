@@ -121,7 +121,7 @@ int gmAABB::gmfCenterPoint(gmThread *a_thread)
 
 	Vector3f vCenter(Vector3f::ZERO);
 	pNative->CenterPoint(vCenter);
-	a_thread->PushVector(vCenter.x, vCenter.y, vCenter.z);
+	a_thread->PushVector(vCenter.X(), vCenter.Y(), vCenter.Z());
 	return GM_OK;
 }
 

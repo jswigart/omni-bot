@@ -550,7 +550,7 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		Vector3f vSource = m_MapGoal->GetPosition();
 		//vSource = vSource + Vector3(0,0,60);
-		vSource.z = vSource.z + 60;
+		vSource.Z() = vSource.Z() + 60;
 		//////////////////////////////////////////////////////////////////////////
 		if(!m_MapGoalTarget)
 		{
@@ -1113,7 +1113,7 @@ namespace AiState
 	//			if (!m_AdjustedPosition)
 	//			{
 	//				// use our z value because some trigger entities may be below the ground
-	//				Vector3f checkPos(m_ConstructionPos.x, m_ConstructionPos.y, GetClient()->GetEyePosition().z);
+	//				Vector3f checkPos(m_ConstructionPos.X(), m_ConstructionPos.Y(), GetClient()->GetEyePosition().Z());
 
 	//				obTraceResult tr;
 	//				EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(),checkPos,
@@ -1333,7 +1333,7 @@ namespace AiState
 	//	// set position to base of construction
 	//	AABB aabb = m_MapGoal->GetWorldBounds();
 	//	aabb.CenterPoint(m_ExplosivePosition);
-	//	m_ExplosivePosition.z = aabb.m_Mins[2];
+	//	m_ExplosivePosition.Z() = aabb.m_Mins[2];
 	//	m_TargetPosition = m_ExplosivePosition;
 	//	m_AdjustedPosition = false;
 	//	m_GoalState = LAY_EXPLOSIVE;
@@ -1417,7 +1417,7 @@ namespace AiState
 	//					m_AdjustedPosition = true;
 
 	//					// use our z value because some trigger entities may be below the ground
-	//					Vector3f vCheckPos(m_TargetPosition.x, m_TargetPosition.y, GetClient()->GetEyePosition().z);
+	//					Vector3f vCheckPos(m_TargetPosition.X(), m_TargetPosition.Y(), GetClient()->GetEyePosition().Z());
 	//					/*if(m_Client->IsDebugEnabled(BOT_DEBUG_GOALS))
 	//					{
 	//						RenderBuffer::AddLine(GetClient()->GetEyePosition(), vCheckPos, COLOR::GREEN, 2.0f);
@@ -1512,7 +1512,7 @@ namespace AiState
 	//					m_AdjustedPosition = true;
 
 	//					// use our z value because some trigger entities may be below the ground
-	//					Vector3f vCheckPos(m_TargetPosition.x, m_TargetPosition.y, GetClient()->GetEyePosition().z);
+	//					Vector3f vCheckPos(m_TargetPosition.X(), m_TargetPosition.Y(), GetClient()->GetEyePosition().Z());
 	//					/*if(m_Client->IsDebugEnabled(BOT_DEBUG_GOALS))
 	//					{
 	//						RenderBuffer::AddLine(m_Client->GetEyePosition(), vCheckPos, COLOR::GREEN, 2.0f);
@@ -2605,7 +2605,7 @@ namespace AiState
 
 	//	if(DidPathSucceed())
 	//	{
-	//		m_TargetPosition.z = GetClient()->GetPosition().z;
+	//		m_TargetPosition.Z() = GetClient()->GetPosition().Z();
 	//		GetClient()->GetSteeringSystem()->SetTarget(m_TargetPosition, 32.f);
 	//	}
 	//	return State_Busy;
@@ -2829,7 +2829,7 @@ namespace AiState
 	//				const Vector3f eyePos = GetClient()->GetEyePosition();
 	//				Vector3f aimPos;
 	//				GetAimPosition( aimPos );
-	//				const float heightDiff = aimPos.z - eyePos.z;
+	//				const float heightDiff = aimPos.Z() - eyePos.Z();
 	//				if ( heightDiff > 20.f ) {
 	//					if(GetClient()->GetEntityFlags().CheckFlag(ENT_FLAG_ONGROUND)) {
 	//						GetClient()->PressButton(BOT_BUTTON_JUMP);

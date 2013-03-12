@@ -77,6 +77,9 @@ namespace Wm5
 			// calc contact point
 			pos += ( dir * t );
 		}
+
+		Plane3 operator-() const { return Plane3( -Normal, -Constant );  }
+
 		///////////////////////////////////////////////////////////////////////////
 	};
 

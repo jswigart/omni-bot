@@ -1,43 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="DebugDLL|Win32">
-      <Configuration>DebugDLL</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="DebugDLL|x64">
-      <Configuration>DebugDLL</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|x64">
-      <Configuration>Debug</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseDLL|Win32">
-      <Configuration>ReleaseDLL</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="ReleaseDLL|x64">
-      <Configuration>ReleaseDLL</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|x64">
-      <Configuration>Release</Configuration>
-      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{05AB1253-998D-4170-B8EB-B092BEDE9593}</ProjectGuid>
     <RootNamespace>LibMathematics</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <ProjectName>LibMathematics</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -45,35 +22,8 @@
     <CharacterSet>NotSet</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <CharacterSet>NotSet</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <CharacterSet>NotSet</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <CharacterSet>NotSet</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <CharacterSet>NotSet</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <CharacterSet>NotSet</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <CharacterSet>NotSet</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -82,54 +32,16 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\$(Configuration)\</IntDir>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Wm5MathematicsD</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Wm5MathematicsD</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">Wm5MathematicsD</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">Wm5MathematicsD</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Wm5Mathematics</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Wm5Mathematics</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">Wm5Mathematics</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">Wm5Mathematics</TargetName>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)build\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)build\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)build\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)build\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -138,7 +50,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
       <WarningLevel>Level4</WarningLevel>
@@ -179,163 +91,6 @@ mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
 xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
 </Command>
     </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\;Algebra;Approximation;Base;ComputationalGeometry;Containment;CurvesSurfacesVolumes;Distance;Interpolation;Intersection;Meshes;Miscellaneous;NumericalAnalysis;Objects2D;Objects3D;Query;Rational;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
-      <WarningLevel>Level4</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
-    </ClCompile>
-    <Lib>
-      <OutputFile>$(TargetPath)</OutputFile>
-    </Lib>
-    <PostBuildEvent>
-      <Command>mkdir ..\SDK\Include
-xcopy /DY Wm5Mathematics.h ..\SDK\Include
-xcopy /DY Wm5MathematicsLIB.h ..\SDK\Include
-xcopy /DY Algebra\*.h ..\SDK\Include
-xcopy /DY Algebra\*.inl ..\SDK\Include
-xcopy /DY Approximation\*.h ..\SDK\Include
-xcopy /DY Base\*.h ..\SDK\Include
-xcopy /DY Base\*.inl ..\SDK\Include
-xcopy /DY ComputationalGeometry\*.h ..\SDK\Include
-xcopy /DY Containment\*.h ..\SDK\Include
-xcopy /DY CurvesSurfacesVolumes\*.h ..\SDK\Include
-xcopy /DY Distance\*.h ..\SDK\Include
-xcopy /DY Intersection\*.h ..\SDK\Include
-xcopy /DY Interpolation\*.h ..\SDK\Include
-xcopy /DY Meshes\*.h ..\SDK\Include
-xcopy /DY Meshes\*.inl ..\SDK\Include
-xcopy /DY Miscellaneous\*.h ..\SDK\Include
-xcopy /DY NumericalAnalysis\*.h ..\SDK\Include
-xcopy /DY Objects2D\*.h ..\SDK\Include
-xcopy /DY Objects2D\*.inl ..\SDK\Include
-xcopy /DY Objects3D\*.h ..\SDK\Include
-xcopy /DY Objects3D\*.inl ..\SDK\Include
-xcopy /DY Query\*.h ..\SDK\Include
-xcopy /DY Query\*.inl ..\SDK\Include
-xcopy /DY Rational\*.h ..\SDK\Include
-xcopy /DY Rational\*.inl ..\SDK\Include
-mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-</Command>
-    </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
-    <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\;Algebra;Approximation;Base;ComputationalGeometry;Containment;CurvesSurfacesVolumes;Distance;Interpolation;Intersection;Meshes;Miscellaneous;NumericalAnalysis;Objects2D;Objects3D;Query;Rational;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <MinimalRebuild>true</MinimalRebuild>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
-      <WarningLevel>Level4</WarningLevel>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
-    </ClCompile>
-    <Lib>
-      <OutputFile>$(TargetPath)</OutputFile>
-    </Lib>
-    <PostBuildEvent>
-      <Command>mkdir ..\SDK\Include
-xcopy /DY Wm5Mathematics.h ..\SDK\Include
-xcopy /DY Wm5MathematicsLIB.h ..\SDK\Include
-xcopy /DY Algebra\*.h ..\SDK\Include
-xcopy /DY Algebra\*.inl ..\SDK\Include
-xcopy /DY Approximation\*.h ..\SDK\Include
-xcopy /DY Base\*.h ..\SDK\Include
-xcopy /DY Base\*.inl ..\SDK\Include
-xcopy /DY ComputationalGeometry\*.h ..\SDK\Include
-xcopy /DY Containment\*.h ..\SDK\Include
-xcopy /DY CurvesSurfacesVolumes\*.h ..\SDK\Include
-xcopy /DY Distance\*.h ..\SDK\Include
-xcopy /DY Intersection\*.h ..\SDK\Include
-xcopy /DY Interpolation\*.h ..\SDK\Include
-xcopy /DY Meshes\*.h ..\SDK\Include
-xcopy /DY Meshes\*.inl ..\SDK\Include
-xcopy /DY Miscellaneous\*.h ..\SDK\Include
-xcopy /DY NumericalAnalysis\*.h ..\SDK\Include
-xcopy /DY Objects2D\*.h ..\SDK\Include
-xcopy /DY Objects2D\*.inl ..\SDK\Include
-xcopy /DY Objects3D\*.h ..\SDK\Include
-xcopy /DY Objects3D\*.inl ..\SDK\Include
-xcopy /DY Query\*.h ..\SDK\Include
-xcopy /DY Query\*.inl ..\SDK\Include
-xcopy /DY Rational\*.h ..\SDK\Include
-xcopy /DY Rational\*.inl ..\SDK\Include
-mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-</Command>
-    </PostBuildEvent>
-    <Link>
-      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Wm5CoreD.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
-    <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\;Algebra;Approximation;Base;ComputationalGeometry;Containment;CurvesSurfacesVolumes;Distance;Interpolation;Intersection;Meshes;Miscellaneous;NumericalAnalysis;Objects2D;Objects3D;Query;Rational;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
-      <WarningLevel>Level4</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
-    </ClCompile>
-    <Lib>
-      <OutputFile>$(TargetPath)</OutputFile>
-    </Lib>
-    <PostBuildEvent>
-      <Command>mkdir ..\SDK\Include
-xcopy /DY Wm5Mathematics.h ..\SDK\Include
-xcopy /DY Wm5MathematicsLIB.h ..\SDK\Include
-xcopy /DY Algebra\*.h ..\SDK\Include
-xcopy /DY Algebra\*.inl ..\SDK\Include
-xcopy /DY Approximation\*.h ..\SDK\Include
-xcopy /DY Base\*.h ..\SDK\Include
-xcopy /DY Base\*.inl ..\SDK\Include
-xcopy /DY ComputationalGeometry\*.h ..\SDK\Include
-xcopy /DY Containment\*.h ..\SDK\Include
-xcopy /DY CurvesSurfacesVolumes\*.h ..\SDK\Include
-xcopy /DY Distance\*.h ..\SDK\Include
-xcopy /DY Intersection\*.h ..\SDK\Include
-xcopy /DY Interpolation\*.h ..\SDK\Include
-xcopy /DY Meshes\*.h ..\SDK\Include
-xcopy /DY Meshes\*.inl ..\SDK\Include
-xcopy /DY Miscellaneous\*.h ..\SDK\Include
-xcopy /DY NumericalAnalysis\*.h ..\SDK\Include
-xcopy /DY Objects2D\*.h ..\SDK\Include
-xcopy /DY Objects2D\*.inl ..\SDK\Include
-xcopy /DY Objects3D\*.h ..\SDK\Include
-xcopy /DY Objects3D\*.inl ..\SDK\Include
-xcopy /DY Query\*.h ..\SDK\Include
-xcopy /DY Query\*.inl ..\SDK\Include
-xcopy /DY Rational\*.h ..\SDK\Include
-xcopy /DY Rational\*.inl ..\SDK\Include
-mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-</Command>
-    </PostBuildEvent>
-    <Link>
-      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Wm5CoreD.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -343,7 +98,7 @@ xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platf
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>.\;Algebra;Approximation;Base;ComputationalGeometry;Containment;CurvesSurfacesVolumes;Distance;Interpolation;Intersection;Meshes;Miscellaneous;NumericalAnalysis;Objects2D;Objects3D;Query;Rational;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
@@ -385,163 +140,6 @@ mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
 xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
 </Command>
     </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.\;Algebra;Approximation;Base;ComputationalGeometry;Containment;CurvesSurfacesVolumes;Distance;Interpolation;Intersection;Meshes;Miscellaneous;NumericalAnalysis;Objects2D;Objects3D;Query;Rational;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
-      <WarningLevel>Level4</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
-    </ClCompile>
-    <Lib>
-      <OutputFile>$(TargetPath)</OutputFile>
-    </Lib>
-    <PostBuildEvent>
-      <Command>mkdir ..\SDK\Include
-xcopy /DY Wm5Mathematics.h ..\SDK\Include
-xcopy /DY Wm5MathematicsLIB.h ..\SDK\Include
-xcopy /DY Algebra\*.h ..\SDK\Include
-xcopy /DY Algebra\*.inl ..\SDK\Include
-xcopy /DY Approximation\*.h ..\SDK\Include
-xcopy /DY Base\*.h ..\SDK\Include
-xcopy /DY Base\*.inl ..\SDK\Include
-xcopy /DY ComputationalGeometry\*.h ..\SDK\Include
-xcopy /DY Containment\*.h ..\SDK\Include
-xcopy /DY CurvesSurfacesVolumes\*.h ..\SDK\Include
-xcopy /DY Distance\*.h ..\SDK\Include
-xcopy /DY Intersection\*.h ..\SDK\Include
-xcopy /DY Interpolation\*.h ..\SDK\Include
-xcopy /DY Meshes\*.h ..\SDK\Include
-xcopy /DY Meshes\*.inl ..\SDK\Include
-xcopy /DY Miscellaneous\*.h ..\SDK\Include
-xcopy /DY NumericalAnalysis\*.h ..\SDK\Include
-xcopy /DY Objects2D\*.h ..\SDK\Include
-xcopy /DY Objects2D\*.inl ..\SDK\Include
-xcopy /DY Objects3D\*.h ..\SDK\Include
-xcopy /DY Objects3D\*.inl ..\SDK\Include
-xcopy /DY Query\*.h ..\SDK\Include
-xcopy /DY Query\*.inl ..\SDK\Include
-xcopy /DY Rational\*.h ..\SDK\Include
-xcopy /DY Rational\*.inl ..\SDK\Include
-mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-</Command>
-    </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
-    <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.\;Algebra;Approximation;Base;ComputationalGeometry;Containment;CurvesSurfacesVolumes;Distance;Interpolation;Intersection;Meshes;Miscellaneous;NumericalAnalysis;Objects2D;Objects3D;Query;Rational;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
-      <WarningLevel>Level4</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
-    </ClCompile>
-    <Lib>
-      <OutputFile>$(TargetPath)</OutputFile>
-    </Lib>
-    <PostBuildEvent>
-      <Command>mkdir ..\SDK\Include
-xcopy /DY Wm5Mathematics.h ..\SDK\Include
-xcopy /DY Wm5MathematicsLIB.h ..\SDK\Include
-xcopy /DY Algebra\*.h ..\SDK\Include
-xcopy /DY Algebra\*.inl ..\SDK\Include
-xcopy /DY Approximation\*.h ..\SDK\Include
-xcopy /DY Base\*.h ..\SDK\Include
-xcopy /DY Base\*.inl ..\SDK\Include
-xcopy /DY ComputationalGeometry\*.h ..\SDK\Include
-xcopy /DY Containment\*.h ..\SDK\Include
-xcopy /DY CurvesSurfacesVolumes\*.h ..\SDK\Include
-xcopy /DY Distance\*.h ..\SDK\Include
-xcopy /DY Intersection\*.h ..\SDK\Include
-xcopy /DY Interpolation\*.h ..\SDK\Include
-xcopy /DY Meshes\*.h ..\SDK\Include
-xcopy /DY Meshes\*.inl ..\SDK\Include
-xcopy /DY Miscellaneous\*.h ..\SDK\Include
-xcopy /DY NumericalAnalysis\*.h ..\SDK\Include
-xcopy /DY Objects2D\*.h ..\SDK\Include
-xcopy /DY Objects2D\*.inl ..\SDK\Include
-xcopy /DY Objects3D\*.h ..\SDK\Include
-xcopy /DY Objects3D\*.inl ..\SDK\Include
-xcopy /DY Query\*.h ..\SDK\Include
-xcopy /DY Query\*.inl ..\SDK\Include
-xcopy /DY Rational\*.h ..\SDK\Include
-xcopy /DY Rational\*.inl ..\SDK\Include
-mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-</Command>
-    </PostBuildEvent>
-    <Link>
-      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Wm5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
-    <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.\;Algebra;Approximation;Base;ComputationalGeometry;Containment;CurvesSurfacesVolumes;Distance;Interpolation;Intersection;Meshes;Miscellaneous;NumericalAnalysis;Objects2D;Objects3D;Query;Rational;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Wm5MathematicsPCH.h</PrecompiledHeaderFile>
-      <WarningLevel>Level4</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
-    </ClCompile>
-    <Lib>
-      <OutputFile>$(TargetPath)</OutputFile>
-    </Lib>
-    <PostBuildEvent>
-      <Command>mkdir ..\SDK\Include
-xcopy /DY Wm5Mathematics.h ..\SDK\Include
-xcopy /DY Wm5MathematicsLIB.h ..\SDK\Include
-xcopy /DY Algebra\*.h ..\SDK\Include
-xcopy /DY Algebra\*.inl ..\SDK\Include
-xcopy /DY Approximation\*.h ..\SDK\Include
-xcopy /DY Base\*.h ..\SDK\Include
-xcopy /DY Base\*.inl ..\SDK\Include
-xcopy /DY ComputationalGeometry\*.h ..\SDK\Include
-xcopy /DY Containment\*.h ..\SDK\Include
-xcopy /DY CurvesSurfacesVolumes\*.h ..\SDK\Include
-xcopy /DY Distance\*.h ..\SDK\Include
-xcopy /DY Intersection\*.h ..\SDK\Include
-xcopy /DY Interpolation\*.h ..\SDK\Include
-xcopy /DY Meshes\*.h ..\SDK\Include
-xcopy /DY Meshes\*.inl ..\SDK\Include
-xcopy /DY Miscellaneous\*.h ..\SDK\Include
-xcopy /DY NumericalAnalysis\*.h ..\SDK\Include
-xcopy /DY Objects2D\*.h ..\SDK\Include
-xcopy /DY Objects2D\*.inl ..\SDK\Include
-xcopy /DY Objects3D\*.h ..\SDK\Include
-xcopy /DY Objects3D\*.inl ..\SDK\Include
-xcopy /DY Query\*.h ..\SDK\Include
-xcopy /DY Query\*.inl ..\SDK\Include
-xcopy /DY Rational\*.h ..\SDK\Include
-xcopy /DY Rational\*.inl ..\SDK\Include
-mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
-</Command>
-    </PostBuildEvent>
-    <Link>
-      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Wm5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Approximation\Wm5ApprPolynomialFit2.cpp" />
@@ -829,13 +427,7 @@ xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platf
     <ClCompile Include="Rational\Wm5IVector3.cpp" />
     <ClCompile Include="Wm5MathematicsPCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -17,7 +17,7 @@ namespace Trajectory
 		int n, i;
 		float x, y, a, b, c, d, sqrtd, inva, p[2];
 
-		x = ( Vector2f(_end) - Vector2f(_start) ).Length();
+		x = ( Vector2f(_end.X(),_end.Y()) - Vector2f(_start.X(),_start.Y()) ).Length();
 		y = _end[2] - _start[2];
 
 		a = 4.0f * y * y + 4.0f * x * x;
@@ -46,7 +46,7 @@ namespace Trajectory
 			// Calculate the Aim vector for this result.
 			Vector3f vTargetPos = _end;
 			Vector3f vAimDir = vTargetPos - _start;
-			vTargetPos.z = _start.z + Mathf::Tan(_bal[n].m_Angle) * Vector2f(vAimDir).Length();
+			vTargetPos.Z() = _start.Z() + Mathf::Tan(_bal[n].m_Angle) * Vector2f(vAimDir.X(),vAimDir.Y()).Length();
 			_bal[n].m_AimVector = vTargetPos - _start;
 			_bal[n].m_AimVector.Normalize();
 
@@ -59,12 +59,12 @@ namespace Trajectory
 	float MaxHeightForTrajectory( const Vector3f &start, float zVel, float gravity )
 	{
 		float t = zVel / gravity;
-		return start.z - 0.5f * gravity * ( t * t );
+		return start.Z() - 0.5f * gravity * ( t * t );
 	}
 
 	float HeightForTrajectory( const Vector3f &start, float zVel, float gravity, float t )
 	{
-		return start.z - 0.5f * gravity * ( t * t );
+		return start.Z() - 0.5f * gravity * ( t * t );
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -143,7 +143,7 @@ namespace Trajectory
 
 	void TrajectorySim::Render(obColor _col, float _time)
 	{
-		float interval = Mathf::Max(m_Interval,0.05f);
+		float interval = std::max(m_Interval,0.05f);
 
 		obTraceResult tr;
 
@@ -177,7 +177,7 @@ namespace Trajectory
 
 			t += interval;
 
-			vel.z += (IGame::GetGravity() * m_GravityMultiplier) * interval;
+			vel.Z() += (IGame::GetGravity() * m_GravityMultiplier) * interval;
 
 			//////////////////////////////////////////////////////////////////////////
 

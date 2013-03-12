@@ -175,7 +175,7 @@ void PathPlannerRecast::cmdCreateLadder(const StringVector &_args)
 				EngineFuncs::TraceLine(tr,vBottom,vBottom-vAimNormal*TraceDist,0,TR_MASK_FLOODFILL,0,False);
 				if(tr.m_Fraction < 1.f && tr.m_Surface & SURFACE_LADDER)
 				{
-					vBottom.z -= StepSize;
+					vBottom.Z() -= StepSize;
 				}
 				else
 					break;
@@ -187,7 +187,7 @@ void PathPlannerRecast::cmdCreateLadder(const StringVector &_args)
 				EngineFuncs::TraceLine(tr,vTop,vTop-vAimNormal*TraceDist,0,TR_MASK_FLOODFILL,0,False);
 				if(tr.m_Fraction < 1.f && tr.m_Surface & SURFACE_LADDER)
 				{
-					vTop.z += StepSize;
+					vTop.Z() += StepSize;
 				}
 				else
 					break;

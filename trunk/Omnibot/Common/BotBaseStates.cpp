@@ -1054,7 +1054,7 @@ namespace AiState
 		m_CurrentPath.DebugRender(COLOR::RED);
 		Path::PathPoint pt;
 		m_CurrentPath.GetCurrentPt(pt);
-		RenderBuffer::AddCircle( pt.m_Pt, COLOR::GREEN, pt.m_Radius );
+		RenderBuffer::AddCircle( pt.m_Pt, pt.m_Radius, COLOR::GREEN );
 	}
 
 	bool FollowPath::GetAimPosition(Vector3f &_aimpos)
@@ -1396,7 +1396,7 @@ namespace AiState
 					f.WriteNewLine();
 
 					f.Printf("\tType = \"%s\",",FailType); f.WriteNewLine();
-					f.Printf("\tP = Vector3(%f,%f,%f),",Position.x,Position.y,Position.z);
+					f.Printf("\tP = Vector3(%f,%f,%f),",Position.X(),Position.Y(),Position.Z());
 					f.WriteNewLine();
 
 					if(_how == FollowPathUser::NoPath)
@@ -1405,9 +1405,9 @@ namespace AiState
 						for(obuint32 i = 0; i < m_Query.m_Destination.size(); ++i)
 						{
 							f.Printf("\t\tVector3(%f,%f,%f),",
-								m_Query.m_Destination[i].m_Position.x,
-								m_Query.m_Destination[i].m_Position.y,
-								m_Query.m_Destination[i].m_Position.z);
+								m_Query.m_Destination[i].m_Position.X(),
+								m_Query.m_Destination[i].m_Position.Y(),
+								m_Query.m_Destination[i].m_Position.Z());
 							f.WriteNewLine();
 						}
 						f.WriteString("\t},"); f.WriteNewLine();
@@ -1415,7 +1415,7 @@ namespace AiState
 					else
 					{
 						f.Printf("\tDest = Vector3(%f,%f,%f),",
-							pt.m_Pt.x,pt.m_Pt.y,pt.m_Pt.z);
+							pt.m_Pt.X(),pt.m_Pt.Y(),pt.m_Pt.Z());
 						f.WriteNewLine();
 					}
 
@@ -1478,8 +1478,8 @@ namespace AiState
 		const float fWpHeight = g_fTopWaypointOffset - g_fBottomWaypointOffset;
 
 		Vector3f v = pp.m_Pt;
-		v.z -= fWpHeight*0.5f;
-		v.z -= g_fBottomWaypointOffset;
+		v.Z() -= fWpHeight*0.5f;
+		v.Z() -= g_fBottomWaypointOffset;
 		return v;
 	}
 
@@ -1538,7 +1538,7 @@ namespace AiState
 				else
 				{
 					// hack: let it succeed if we're in 2d radius and above the wp
-					if(fDistSq2d < fWpRadiusSq && vPos.z > vGotoTarget.z)
+					if(fDistSq2d < fWpRadiusSq && vPos.Z() > vGotoTarget.Z())
 					{
 						fDistanceSq = fWpRadiusSq;
 					}
@@ -1648,7 +1648,7 @@ namespace AiState
 			{
 				if(GetClient()->HasEntityFlag(ENT_FLAG_ONLADDER))
 				{
-					float fHeight = pt.m_Pt.z - vPos.z;
+					float fHeight = pt.m_Pt.Z() - vPos.Z();
 
 					if(m_LadderDirection == 0)
 					{
@@ -1658,7 +1658,7 @@ namespace AiState
 							Path::PathPoint nextpt;
 							if(m_CurrentPath.GetNextPt(nextpt))
 							{
-								fHeight = nextpt.m_Pt.z - vPos.z;
+								fHeight = nextpt.m_Pt.Z() - vPos.Z();
 							}
 						}
 					}
@@ -1680,7 +1680,7 @@ namespace AiState
 						if(m_LadderDirection > 0)
 						{
 							GetClient()->PressButton(BOT_BUTTON_MOVEUP);
-							vLook.z += g_fTopWaypointOffset;
+							vLook.Z() += g_fTopWaypointOffset;
 							vLook.ToSpherical(h, p, r);
 							p = ClampT(p,-cl,cl);
 						}
@@ -1706,9 +1706,9 @@ namespace AiState
 			// Ignore vertical look points unless it's significantly out of our bbox height.
 			const Box3f &worldObb = GetClient()->GetWorldBounds();
 			const float fTolerance = worldObb.Extent[2];
-			if(Mathf::FAbs(m_LookAheadPt.z - worldObb.Center.z) < fTolerance)
+			if(Mathf::FAbs(m_LookAheadPt.Z() - worldObb.Center.Z()) < fTolerance)
 			{
-				m_LookAheadPt.z = GetClient()->GetEyePosition().z;
+				m_LookAheadPt.Z() = GetClient()->GetEyePosition().Z();
 			}
 		}
 		return State_Busy;
@@ -1721,9 +1721,9 @@ namespace AiState
 		// Use a ray the size of a waypoint offset down by half a waypoint height.
 
 		Vector3f pos1 = _pos + Vector3f(0.f,0.f,g_fTopWaypointOffset);
-		pos1.z -= (fWpHeight * 0.5f);
+		pos1.Z() -= (fWpHeight * 0.5f);
 		Vector3f pos2 = pos1;
-		pos2.z -= fWpHeight;
+		pos2.Z() -= fWpHeight;
 
 		const bool bMover = InterfaceFuncs::IsMoverAt(pos1,pos2);
 
@@ -1751,7 +1751,7 @@ namespace AiState
 		// Calculate the vector we're wanting to move, this will be
 		// the direction of the trace
 		Vector3f vMoveVec = _destination - GetClient()->GetPosition();
-		vMoveVec.z = 0.0f; // get rid of the vertical component
+		vMoveVec.Z() = 0.0f; // get rid of the vertical component
 		vMoveVec.Normalize();
 
 		// Get this entities bounding box to use for traces.
@@ -1796,14 +1796,14 @@ namespace AiState
 				bHit ? COLOR::RED : COLOR::GREEN );
 
 			Vector3f vBottomStartLine(vStartPos), vBottomEndLine(vEndPos);
-			vBottomStartLine.z += localAABB.m_Mins[2];
-			vBottomEndLine.z += localAABB.m_Mins[2];
+			vBottomStartLine.Z() += localAABB.m_Mins[2];
+			vBottomEndLine.Z() += localAABB.m_Mins[2];
 			RenderBuffer::AddLine(vBottomStartLine, vBottomEndLine,
 				bHit ? COLOR::RED : COLOR::GREEN );
 
 			Vector3f vTopStartLine(vStartPos), vTopEndLine(vEndPos);
-			vTopStartLine.z += localAABB.m_Maxs[2];
-			vTopEndLine.z += localAABB.m_Maxs[2];
+			vTopStartLine.Z() += localAABB.m_Maxs[2];
+			vTopEndLine.Z() += localAABB.m_Maxs[2];
 			RenderBuffer::AddLine(vTopStartLine, vTopEndLine,
 				bHit ? COLOR::RED : COLOR::GREEN );
 		}
@@ -1824,7 +1824,7 @@ namespace AiState
 		aabb.CenterPoint(vStartPos);
 
 		Vector3f vEndPos(vStartPos);
-		vEndPos.z -= fEndDownOffset;
+		vEndPos.Z() -= fEndDownOffset;
 
 		// Trace a line downward to see the distance below us.
 		//DEBUG_ONLY(RenderBuffer::AddLine(vStartPos, vEndPos, COLOR::RED));
@@ -2088,7 +2088,7 @@ namespace AiState
 					if(steer)
 					{
 						curAim->m_AimVector = steer->GetTarget();
-						curAim->m_AimVector.z = GetClient()->GetEyePosition().z;
+						curAim->m_AimVector.Z() = GetClient()->GetEyePosition().Z();
 						GetClient()->TurnTowardPosition(curAim->m_AimVector);
 					}
 					break;
@@ -2303,12 +2303,10 @@ namespace AiState
 			{
 				for(int p = 0; p < m_Triggers[i].m_SensoryFilter->GetNumPositions(); ++p)
 				{
-					float r = Mathf::Max(m_Triggers[i].m_SensoryFilter->GetMaxDistance(), 10.f);
+					float r = std::max(m_Triggers[i].m_SensoryFilter->GetMaxDistance(), 10.f);
 
-					RenderBuffer::AddCircle(
-						m_Triggers[i].m_SensoryFilter->GetPosition(p),
-						COLOR::MAGENTA,
-						r );
+					RenderBuffer::AddCircle( m_Triggers[i].m_SensoryFilter->GetPosition(p),
+						r, COLOR::MAGENTA );
 				}
 			}
 		}
@@ -2444,8 +2442,8 @@ namespace AiState
 			{
 				RenderBuffer::AddCircle(
 					m_TargetZones[i].m_Position,
-					COLOR::MAGENTA,
-					m_Radius );
+					m_Radius,
+					COLOR::MAGENTA );
 
 				RenderBuffer::AddString3d(
 					m_TargetZones[i].m_Position,
@@ -2621,9 +2619,9 @@ namespace AiState
 		const float nX = (float)(_Node.MinOffset.X + _Node.MaxOffset.X) * 0.5f;
 		const float nY = (float)(_Node.MinOffset.Y + _Node.MaxOffset.Y) * 0.5f;
 
-		vNodePos.x += ((Radius*2.f) * nX);
-		vNodePos.y += ((Radius*2.f) * nY);
-		vNodePos.z = _Node.Height;
+		vNodePos.X() += ((Radius*2.f) * nX);
+		vNodePos.Y() += ((Radius*2.f) * nY);
+		vNodePos.Z() = _Node.Height;
 
 		return vNodePos;
 	}
@@ -3126,8 +3124,8 @@ namespace AiState
 								if(node.Connections[d].Cover & (1<<j))
 								{
 									Vector3f vNeighborPos = vNodePos2;
-									vNeighborPos.x += (Radius*2.f) * Offset[j][0];
-									vNeighborPos.y += (Radius*2.f) * Offset[j][1];
+									vNeighborPos.X() += (Radius*2.f) * Offset[j][0];
+									vNeighborPos.Y() += (Radius*2.f) * Offset[j][1];
 									RenderBuffer::AddLine(
 										vNodePos2 + Vector3f(0.f,0.f,32.f),
 										vNeighborPos + Vector3f(0.f,0.f,32.f),
@@ -3180,7 +3178,7 @@ namespace AiState
 			Reset();
 
 			// Add a starting flood node
-			Nodes[FreeNode++].Init(0,0,Start.z,true);
+			Nodes[FreeNode++].Init(0,0,Start.Z(),true);
 
 			_DropToGround(&Nodes[0]);
 

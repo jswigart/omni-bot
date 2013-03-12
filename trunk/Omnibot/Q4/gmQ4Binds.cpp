@@ -34,9 +34,9 @@ static int GM_CDECL gmfGetLocation(gmThread *a_thread)
 		GM_CHECK_FLOAT_OR_INT_PARAM(x, 0);
 		GM_CHECK_FLOAT_OR_INT_PARAM(y, 1);
 		GM_CHECK_FLOAT_OR_INT_PARAM(z, 2);
-		vPosition.x = x;
-		vPosition.y = y;
-		vPosition.z = z;
+		vPosition.X() = x;
+		vPosition.Y() = y;
+		vPosition.Z() = z;
 	}
 	else
 	{

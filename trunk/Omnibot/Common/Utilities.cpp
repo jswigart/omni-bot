@@ -22,7 +22,7 @@ static std::string			g_StringRepository;
 
 //////////////////////////////////////////////////////////////////////////
 // turn radius
-// turnradius = fWheelBase / (2.f * PblMath::Sin(PblMath::DegToRad(fWheelAngle/2.f)));
+// turnradius = fWheelBase / (2.f * Math::Sin(Math::DegToRad(fWheelAngle/2.f)));
 //////////////////////////////////////////////////////////////////////////
 
 namespace Priority
@@ -141,15 +141,15 @@ namespace Utils
 	}
 	std::string FormatVectorString(const Vector3f &v)
 	{
-		return std::string(va("(%.3f, %.3f, %.3f)",v.x,v.y,v.z));
+		return std::string(va("(%.3f, %.3f, %.3f)",v.X(),v.Y(),v.Z()));
 	}
 
 	std::string FormatMatrixString(const Matrix3f &m)
 	{
 		return std::string(va("(%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f)",
-			m.GetColumn(0).x,m.GetColumn(0).y,m.GetColumn(0).z,
-			m.GetColumn(1).x,m.GetColumn(1).y,m.GetColumn(1).z,
-			m.GetColumn(2).x,m.GetColumn(2).y,m.GetColumn(2).z));
+			m.GetColumn(0)[0],m.GetColumn(0)[1],m.GetColumn(0)[2],
+			m.GetColumn(1)[0],m.GetColumn(1)[1],m.GetColumn(1)[2],
+			m.GetColumn(2)[0],m.GetColumn(2)[1],m.GetColumn(2)[2]));
 	}
 
 	/*
@@ -317,7 +317,7 @@ namespace Utils
 
 			if(tr.m_Fraction < 1.f)
 			{
-				_pos = tr.m_Endpos;
+				_pos = Vector3f( tr.m_Endpos );
 				return true;
 			}
 		}
@@ -335,9 +335,9 @@ namespace Utils
 
 			if(tr.m_Fraction < 1.f)
 			{
-				_pos = tr.m_Endpos;
+				_pos = Vector3f( tr.m_Endpos );
 				if(_normal)
-					*_normal = tr.m_Normal;
+					*_normal = Vector3f( tr.m_Normal );
 				return true;
 			}
 		}
@@ -377,9 +377,9 @@ namespace Utils
 
 			if(tr.m_Fraction < 1.f)
 			{
-				_pos = tr.m_Endpos;
+				_pos = Vector3f( tr.m_Endpos );
 				if(_normal)
-					*_normal = tr.m_Normal;
+					*_normal = Vector3f( tr.m_Normal );
 				if(_contents)
 					*_contents = tr.m_Contents;
 				if(_surface)
@@ -598,21 +598,34 @@ namespace Utils
 		// Compensate for airborne target?
 		//if(!_tg.m_EntityFlags.CheckFlag(ENT_FLAG_ONGROUND))
 		//{
-		//	//vPredictedPos.z -= _tg.m_LastVelocity.z + IGame::GetGravity() * fLookAheadTime;
-		//	vPredictedPos.z = Trajectory::HeightForTrajectory(
+		//	//vPredictedPos.Z() -= _tg.m_LastVelocity.Z() + IGame::GetGravity() * fLookAheadTime;
+		//	vPredictedPos.Z() = Trajectory::HeightForTrajectory(
 		//		vPredictedPos,
-		//		_tg.m_LastVelocity.z,
+		//		_tg.m_LastVelocity.Z(),
 		//		IGame::GetGravity(),
 		//		fLookAheadTime);
 		//}
 		return vPredictedPos;
 	}
 
-	Segment3f MakeSegment(const Vector3f &_p1, const Vector3f &_p2)
+	bool InFieldOfView(const Vector3f &_face1, const Vector3f &_face2, float _fovAngles)
 	{
-		Vector3f t = _p2 - _p1;
-		float fExtent = t.Normalize() * 0.5f;
-		return Segment3f (_p1 + t * fExtent, t, fExtent);
+		const float fFovInRadians = Mathf::DEG_TO_RAD * _fovAngles;
+		return (_face1.Dot(_face2) >= cosf(fFovInRadians/2.0f) * _face1.Length() * _face2.Length());
+	}
+
+	bool InFieldOfView2d(const Vector3f &_face1, const Vector3f &_face2, float _fovAngles)
+	{
+		const Vector2f v1( _face1.X(), _face1.Y() );
+		const Vector2f v2( _face2.X(), _face2.Y() );
+
+		float fFovInRadians = Mathf::DEG_TO_RAD * _fovAngles;
+		return (v1.Dot(v2) >= cosf(fFovInRadians/2.0f) * v1.Length() * v2.Length());
+	}
+
+	float AngleBetween(const Vector3f &_v1, const Vector3f &_v2)
+	{
+		return Mathf::ACos(_v1.Dot(_v2));
 	}
 
 	Vector3f AveragePoint(const Vector3List &_list)
@@ -736,8 +749,8 @@ namespace Utils
 		AABB b(Vector3f(-32,-32,0), Vector3f(32,32,64));
 
 		obTraceResult tr;
-		EngineFuncs::TraceLine(tr,seg.Origin,seg.Origin,&b,TR_MASK_FLOODFILL,-1,False);
-		if(tr.m_Fraction < 0.f)
+		EngineFuncs::TraceLine( tr, seg.Center, seg.Center, &b, TR_MASK_FLOODFILL, -1, False );
+		if ( tr.m_Fraction < 0.f )
 			return true;
 
 		return false;
@@ -760,13 +773,17 @@ namespace Utils
 		if(fDot > DotThreshold)
 			return false;
 
+		DistPoint3Segment3f dist( _seg1.Center, Segment3f( _seg2.P0,_seg2.P1 ) );
+		dist.Get();
+
+		Vector3f cp =
+			dist.GetSegment().Center +
+			dist.GetSegmentParameter() * dist.GetSegment().Direction;
+
 		// make sure the lines 'overlap' on the same line
-		Vector3f cp;
-		DistancePointToLine(_seg1.Origin,_seg2.GetNegEnd(),_seg2.GetPosEnd(),&cp);
+		const float f2dDist = Length2d(cp,_seg1.Center);
 
-		const float f2dDist = Length2d(cp,_seg1.Origin);
-
-		const float fStepDist = (cp.z - _seg1.Origin.z);
+		const float fStepDist = (cp.Z() - _seg1.Center.Z());
 		if(f2dDist > MaxHorizontalDist)
 			return false;
 		if(fStepDist > MaxStepHeight)
@@ -775,64 +792,65 @@ namespace Utils
 			return false;
 
 		// make sure they overlap in segment space
-		const float Dist = Length(_seg1.Origin, _seg2.Origin);
+		const float Dist = Length( _seg1.Center, _seg2.Center );
 		if(Dist > (_seg1.Extent + _seg2.Extent))
 			return false;
 
-		Vector3f vMin = _seg1.Origin,vMax = _seg2.Origin;
+		Vector3f vMin = _seg1.Center,vMax = _seg2.Center;
 
 		float fT = 0.f;
 		//////////////////////////////////////////////////////////////////////////
-		fT = ClosestPtOnLine_Unclamped(_seg1.GetNegEnd(),_seg1.GetPosEnd(),_seg2.GetNegEnd(),cp);
+
+		fT = ClosestPtOnLine_Unclamped(_seg1.P0,_seg1.P1,_seg2.P0,cp);
 		if(fT > 1.f)
 		{
-			vMax = _seg1.GetPosEnd();
+			vMax = _seg1.P1;
 		}
 		else if(fT >= 0.f)
 		{
-			vMax = _seg2.GetNegEnd();
+			vMax = _seg2.P0;
 		}
 		else
 			OBASSERT(0,"Unexpected");
 
-		fT = ClosestPtOnLine_Unclamped(_seg1.GetNegEnd(),_seg1.GetPosEnd(),_seg2.GetPosEnd(),cp);
+		fT = ClosestPtOnLine_Unclamped(_seg1.P0,_seg1.P1,_seg2.P1,cp);
 		if(fT < 0.f)
 		{
-			vMin = _seg1.GetNegEnd();
+			vMin = _seg1.P0;
 		}
 		else if(fT <= 1.f)
 		{
-			vMin = _seg2.GetPosEnd();
+			vMin = _seg2.P1;
 		}
 		else
 			OBASSERT(0,"Unexpected");
 		//////////////////////////////////////////////////////////////////////////
-		/*fT = ClosestPtOnLine_Unclamped(_seg2.GetPosEnd(),_seg2.GetNegEnd(),_seg1.GetPosEnd(),cp);
+		/*fT = ClosestPtOnLine_Unclamped(_seg2.P1,_seg2.P0,_seg1.P1,cp);
 		if(fT > 1.f)
 		{
-		vMax = _seg1.GetPosEnd();
+		vMax = _seg1.P1;
 		}
 		else if(fT > 0.f)
 		{
-		vMax = _seg2.GetNegEnd();
+		vMax = _seg2.P0;
 		}
 		else
 		OBASSERT(0,"Unexpected");
 
-		fT = ClosestPtOnLine_Unclamped(_seg2.GetPosEnd(),_seg2.GetNegEnd(),_seg1.GetPosEnd(),cp);
+		fT = ClosestPtOnLine_Unclamped(_seg2.P1,_seg2.P0,_seg1.P1,cp);
 		if(fT < 0.f)
 		{
-		vMin = _seg2.GetNegEnd();
+		vMin = _seg2.P0;
 		}
 		else if(fT < 1.f)
 		{
-		vMin = _seg1.GetPosEnd();
+		vMin = _seg1.P1;
 		}
 		else
 		OBASSERT(0,"Unexpected");*/
 		//////////////////////////////////////////////////////////////////////////
 
-		out = MakeSegment(vMin,vMax);
+		out = Segment3f(vMin,vMax);
 
 		if(out.Extent * 2.f < MinOverlapWidth)
 			return false;
@@ -840,24 +858,24 @@ namespace Utils
 		/*Vector3f cp;
 
 		const fT1p = Utils::ClosestPtOnLine(
-		_seg2.GetPosEnd(),
-		_seg2.GetNegEnd(),
-		_seg1.GetPosEnd(),
+		_seg2.P1,
+		_seg2.P0,
+		_seg1.P1,
 		cp);
 		const fT1e = Utils::ClosestPtOnLine(
-		_seg2.GetPosEnd(),
-		_seg2.GetNegEnd(),
-		_seg1.GetNegEnd(),
+		_seg2.P1,
+		_seg2.P0,
+		_seg1.P0,
 		cp);
 		const fT2p = Utils::ClosestPtOnLine(
-		_seg1.GetPosEnd(),
-		_seg1.GetNegEnd(),
-		_seg2.GetPosEnd(),
+		_seg1.P1,
+		_seg1.P0,
+		_seg2.P1,
 		cp);
 		const fT2e = Utils::ClosestPtOnLine(
-		_seg1.GetPosEnd(),
-		_seg1.GetNegEnd(),
-		_seg2.GetNegEnd(),
+		_seg1.P1,
+		_seg1.P0,
+		_seg2.P0,
 		cp);*/
 
 		return true;
@@ -943,7 +961,7 @@ namespace Utils
 	{
 		Vector3List vl;
 
-		Plane3f p = Utils::PlaneFromPoint(_pos, _normal);
+		Plane3f p = Plane3f(_normal,_pos);
 
 		Quaternionf q;
 		q.FromAxisAngle(_normal, Mathf::DegToRad(90.f));
@@ -960,100 +978,82 @@ namespace Utils
 		return vl;
 	}
 
-	Vector3List ClipPolygonToPlanes(const Vector3List &_poly, const Plane3f &_plane, bool _clipfront)
+	Vector3List ClipPolygonToPlanes( const Vector3List & poly, const Plane3f & plane )
 	{
-		if(_poly.size() < 2)
-			return _poly;
+		Vector3List newlist = poly;
 
-		Vector3List newlist;
-		Vector3f s = _poly[ _poly.size() - 1];
-		for(obuint32 v = 0; v < _poly.size(); ++v)
+		if ( newlist.size() > 2 )
 		{
-			Vector3f p = _poly[v];
+			int numVerts = newlist.size();
 
-			if(_clipfront)
-			{
-				if(_plane.WhichSide(p) < 0)
-				{
-					if(_plane.WhichSide(s) < 0)
-					{
-						newlist.push_back(p);
-					}
-					else
-					{
-						IntrSegment3Plane3f intr(Utils::MakeSegment(s,p), _plane);
-						intr.Find();
+			// reserve extra space
+			newlist.resize( 64 );
 
-						Vector3f vIntr = intr.GetSegment().Origin + intr.GetSegmentT()*intr.GetSegment().Direction;
-						newlist.push_back(vIntr);
-						newlist.push_back(p);
-					}
-				}
-				else if(_plane.WhichSide(s) < 0)
-				{
-					IntrSegment3Plane3f intr(Utils::MakeSegment(s,p), _plane);
-					intr.Find();
+			ClipConvexPolygonAgainstPlane(
+				-plane.Normal,
+				-plane.Constant,
+				numVerts,
+				&newlist[ 0 ] );
 
-					Vector3f vIntr = intr.GetSegment().Origin + intr.GetSegmentT()*intr.GetSegment().Direction;
-					newlist.push_back(vIntr);
-				}
-				s = p;
-			}
-			else
-			{
-				if(_plane.WhichSide(p) > 0)
-				{
-					if(_plane.WhichSide(s) > 0)
-					{
-						newlist.push_back(p);
-					}
-					else
-					{
-						IntrSegment3Plane3f intr(Utils::MakeSegment(s,p), _plane);
-						intr.Find();
-
-						Vector3f vIntr = intr.GetSegment().Origin + intr.GetSegmentT()*intr.GetSegment().Direction;
-						newlist.push_back(vIntr);
-						newlist.push_back(p);
-					}
-				}
-				else if(_plane.WhichSide(s) > 0)
-				{
-					IntrSegment3Plane3f intr(Utils::MakeSegment(s,p), _plane);
-					intr.Find();
-
-					Vector3f vIntr = intr.GetSegment().Origin + intr.GetSegmentT()*intr.GetSegment().Direction;
-					newlist.push_back(vIntr);
-				}
-				s = p;
-			}
+			newlist.resize( numVerts );
+		}
+		else
+		{
+			newlist.resize( 0 );
 		}
 		return newlist;
 	}
 
-	float DistancePointToLineSqr(const Vector3f &_point,
-		const Vector3f &_pt0,
-		const Vector3f &_pt1,
-		Vector3f *_linePt)
-	{
-		Vector3f v = _point - _pt0;
-		Vector3f s = _pt1 - _pt0;
-		float lenSq = s.SquaredLength();
-		float dot = v.Dot(s) / lenSq;
-		Vector3f disp = s * dot;
-		if (_linePt)
-			*_linePt = _pt0 + disp;
-		v -= disp;
-		return v.SquaredLength();
-	}
+	//float DistancePointToLineSqr(const Vector3f &_point,
+	//	const Vector3f &_pt0,
+	//	const Vector3f &_pt1,
+	//	Vector3f *_linePt)
+	//{
+	//	Vector3f v = _point - _pt0;
+	//	Vector3f s = _pt1 - _pt0;
+	//	float lenSq = s.SquaredLength();
+	//	float dot = v.Dot(s) / lenSq;
+	//	Vector3f disp = s * dot;
+	//	if (_linePt)
+	//		*_linePt = _pt0 + disp;
+	//	v -= disp;
+	//	return v.SquaredLength();
+	//}
 
-	float DistancePointToLine(const Vector3f &_point,
-		const Vector3f &_pt0,
-		const Vector3f &_pt1,
-		Vector3f *_linePt)
-	{
-		return Mathf::Sqrt( DistancePointToLineSqr(_point, _pt0, _pt1, _linePt) );
-	}
+	//float DistancePointToLine(const Vector3f &_point,
+	//	const Vector3f &_pt0,
+	//	const Vector3f &_pt1,
+	//	Vector3f *_linePt)
+	//{
+	//	return Mathf::Sqrt( DistancePointToLineSqr(_point, _pt0, _pt1, _linePt) );
+	//}
+
+	//float DistancePointToTri(const Vector3f &_point,
+	//	const Vector3f &_pt0,
+	//	const Vector3f &_pt1,
+	//	const Vector3f &_pt2,
+	//	Vector3f *_pt)
+	//{
+	//	// Compute vectors
+	//	const Vector3f v0 = _pt2 - _pt0;
+	//	const Vector3f v1 = _pt1 - _pt0;
+	//	const Vector3f v2 = _point - _pt0;
+
+	//	// Compute dot products
+	//	const float dot00 = v0.Dot(v0);
+	//	const float dot01 = v0.Dot(v1);
+	//	const float dot02 = v0.Dot(v2);
+	//	const float dot11 = v1.Dot(v1);
+	//	const float dot12 = v1.Dot(v2);
+
+	//	// Compute barycentric coordinates
+	//	const float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
+	//	const float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+	//	const float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+	//	// Check if point is in triangle
+	//	return (u >= 0) && (v >= 0) && (u + v < 1);
+	//}
 
 	//////////////////////////////////////////////////////////////////////////
 	// inSegment(): determine if a point is inside a segment
@@ -1062,16 +1062,16 @@ namespace Utils
 	//            0 = P is not inside S
 	int inSegment(Vector3f P, Segment3f _S)
 	{
-		if (_S.GetNegEnd().x != _S.GetPosEnd().x) {    // S is not vertical
-			if (_S.GetNegEnd().x <= P.x && P.x <= _S.GetPosEnd().x)
+		if (_S.P0.X() != _S.P1.X()) {    // S is not vertical
+			if (_S.P0.X() <= P.X() && P.X() <= _S.P1.X())
 				return 1;
-			if (_S.GetNegEnd().x >= P.x && P.x >= _S.GetPosEnd().x)
+			if (_S.P0.X() >= P.X() && P.X() >= _S.P1.X())
 				return 1;
 		}
 		else {    // S is vertical, so test y coordinate
-			if (_S.GetNegEnd().y <= P.y && P.y <= _S.GetPosEnd().y)
+			if (_S.P0.Y() <= P.Y() && P.Y() <= _S.P1.Y())
 				return 1;
-			if (_S.GetNegEnd().y >= P.y && P.y >= _S.GetPosEnd().y)
+			if (_S.P0.Y() >= P.Y() && P.Y() >= _S.P1.Y())
 				return 1;
 		}
 		return 0;
@@ -1079,12 +1079,13 @@ namespace Utils
 
 	inline float dot(const Vector3f &u,const Vector3f &v)
 	{
-		return ((u).x * (v).x + (u).y * (v).y + (u).z * (v).z);
+		return ((u).X() * (v).X() + (u).Y() * (v).Y() + (u).Z() * (v).Z());
 	}
 	inline float perp(const Vector3f &u,const Vector3f &v)
 	{
-		return ((u).x * (v).y - (u).y * (v).x);
+		return ((u).X() * (v).Y() - (u).Y() * (v).X());
 	}
+
 	// intersect2D_2Segments(): the intersection of 2 finite 2D segments
 	//    Input:  two finite segments S1 and S2
 	//    Output: *I0 = intersect point (when it exists)
@@ -1094,9 +1095,9 @@ namespace Utils
 	//            2=overlap in segment from I0 to I1
 	int intersect2D_Segments(const Segment3f &S1,const Segment3f &S2, Vector3f* I0, Vector3f* I1 )
 	{
-		Vector3f    u = S1.GetPosEnd() - S1.GetNegEnd();
-		Vector3f    v = S2.GetPosEnd() - S2.GetNegEnd();
-		Vector3f    w = S1.GetNegEnd() - S2.GetNegEnd();
+		Vector3f    u = S1.P1 - S1.P0;
+		Vector3f    v = S2.P1 - S2.P0;
+		Vector3f    w = S1.P0 - S2.P0;
 		float		D = perp(u,v);
 
 		// test if they are parallel (includes either being a point)
@@ -1112,37 +1113,37 @@ namespace Utils
 			float dv = dot(v,v);
 			if (du==0 && dv==0)
 			{           // both segments are points
-				if (S1.GetNegEnd() != S2.GetNegEnd())         // they are distinct points
+				if (S1.P0 != S2.P0)         // they are distinct points
 					return 0;
-				*I0 = S1.GetNegEnd();                // they are the same point
+				*I0 = S1.P0;                // they are the same point
 				return 1;
 			}
 			if (du==0)
 			{                    // S1 is a single point
-				if (inSegment(S1.GetNegEnd(), S2) == 0)  // but is not in S2
+				if (inSegment(S1.P0, S2) == 0)  // but is not in S2
 					return 0;
-				*I0 = S1.GetNegEnd();
+				*I0 = S1.P0;
 				return 1;
 			}
 			if (dv==0)
 			{                    // S2 a single point
-				if (inSegment(S2.GetNegEnd(), S1) == 0)  // but is not in S1
+				if (inSegment(S2.P0, S1) == 0)  // but is not in S1
 					return 0;
-				*I0 = S2.GetNegEnd();
+				*I0 = S2.P0;
 				return 1;
 			}
 			// they are collinear segments - get overlap (or not)
 			float t0, t1;                   // endpoints of S1 in eqn for S2
-			Vector3f w2 = S1.GetPosEnd() - S2.GetNegEnd();
-			if (v.x != 0)
+			Vector3f w2 = S1.P1 - S2.P0;
+			if (v.X() != 0)
 			{
-				t0 = w.x / v.x;
-				t1 = w2.x / v.x;
+				t0 = w.X() / v.X();
+				t1 = w2.X() / v.X();
 			}
 			else
 			{
-				t0 = w.y / v.y;
-				t1 = w2.y / v.y;
+				t0 = w.Y() / v.Y();
+				t1 = w2.Y() / v.Y();
 			}
 			if (t0 > t1)
 			{                  // must have t0 smaller than t1
@@ -1156,13 +1157,13 @@ namespace Utils
 			t1 = t1>1? 1 : t1;              // clip to max 1
 			if (t0 == t1)
 			{                 // intersect is a point
-				*I0 = S2.GetNegEnd() + t0 * v;
+				*I0 = S2.P0 + t0 * v;
 				return 1;
 			}
 
 			// they overlap in a valid subsegment
-			*I0 = S2.GetNegEnd() + t0 * v;
-			*I1 = S2.GetNegEnd() + t1 * v;
+			*I0 = S2.P0 + t0 * v;
+			*I1 = S2.P0 + t1 * v;
 			return 2;
 		}
 
@@ -1180,16 +1181,16 @@ namespace Utils
 		// no intersect with S2
 		if (tI < 0.f)
 		{
-			*I0 = S2.GetNegEnd();
+			*I0 = S2.P0;
 			return 1;
 		}
 		if (tI > 1.f)
 		{
-			*I0 = S2.GetPosEnd();
+			*I0 = S2.P1;
 			return 1;
 		}
 
-		*I0 = S1.GetNegEnd() + sI * u;               // compute S1 intersect point
+		*I0 = S1.P0 + sI * u;               // compute S1 intersect point
 		return 1;
 	}
 

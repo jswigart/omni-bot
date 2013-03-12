@@ -32,7 +32,7 @@ bool WaypointSerializer_V1::Load(File &_file, PathPlannerWaypoint::WaypointList 
 
 		// Read the position in.
 		CHECK_READ(_file.Read(&pCurrentWp->m_Position, sizeof(pCurrentWp->m_Position)));
-		pCurrentWp->m_Position.z += 24.0f;
+		pCurrentWp->m_Position.Z() += 24.0f;
 
 		CHECK_READ(_file.ReadInt64(pCurrentWp->m_NavigationFlags));
 

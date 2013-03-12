@@ -9,14 +9,46 @@
 #include <gl/GLU.h>
 #include "glext.h"
 
-const float DEFAULT_TIME = 0.01f;
+//////////////////////////////////////////////////////////////////
+static const float VIEW_DISTANCE = 1024.0f;
+static const float DEFAULT_TIME = 0.1f;
+static const float TEXT_SCALE = 10.0f;
+static const float TEXT_DIST = 2048.0f;
+//////////////////////////////////////////////////////////////////
+
+static int nextBufferId = 0;
 
 struct VBOVert
 {
 	float p[3];
 	float c[4];
+
+	void SetPos( float _x, float _y, float _z )
+	{
+		p[0] = _x;
+		p[1] = _y;
+		p[2] = _z;
+	}
+	void SetColor( const obColor col )
+	{
+		c[ 0 ] = col.rF();
+		c[ 1 ] = col.gF();
+		c[ 2 ] = col.bF();
+		c[ 3 ] = col.aF();
+	}
 };
-typedef std::vector<VBOVert> VBOVerts;
+
+typedef std::vector<unsigned int>	Indices;
+
+// partition for rendering acceleration
+struct Chunk
+{
+	AxisAlignedBox3f	mAABB;
+	Indices				mIndices;
+};
+
+typedef std::vector<VBOVert>		VBOVerts;
+typedef std::vector<Chunk>			Chunks;
 
 struct VBO
 {
@@ -33,6 +65,66 @@ struct VBO
 	GLuint		mNumPrimitives;
 	GLuint		mNumVertsPerPrimitive;
 	VBOVerts	mVerts;
+
+	Chunks		mChunks;
+
+	void PartitionData( float cellSize )
+	{
+		AxisAlignedBox3f fullBounds;
+		fullBounds.Clear();
+
+		for ( size_t i = 0; i < mVerts.size(); ++i )
+			fullBounds.Expand( mVerts[ i ].p );
+
+		const int cellsX = ceil( fullBounds.GetSize().X() ) / cellSize;
+		const int cellsY = ceil( fullBounds.GetSize().Y() ) / cellSize;
+
+		mChunks.resize( 0 );
+
+		for ( int y = 0; y < cellsY; ++y )
+		{
+			for ( int x = 0; x < cellsX; ++x )
+			{
+				Chunk c;
+				c.mAABB.Min = fullBounds.Min + Vector3f( cellSize * x, cellSize * y, 0.0f );
+				c.mAABB.Max = c.mAABB.Min + Vector3f( cellSize, cellSize, 0.0f );
+
+				c.mAABB.Min.Z() = -100000.0f;
+				c.mAABB.Max.Z() =  100000.0f;
+
+				mChunks.push_back( c );
+			}
+		}
+
+		// now put each primitive in the appropriate chunk
+		for ( size_t i = 0; i < mVerts.size();  )
+		{
+			for ( size_t c = 0; c < mChunks.size(); ++c )
+			{
+				bool contains = false;
+
+				for ( size_t p = 0; p < mNumVertsPerPrimitive && !contains; ++p )
+				{
+					if ( mChunks[c].mAABB.Contains( mVerts[ i+p ].p ) )
+						contains = true;
+				}
+
+				if ( contains )
+					mChunks[c].mIndices.push_back( i );
+			}
+
+			i += mNumVertsPerPrimitive;
+		}
+
+		// remove empty chunks
+		for ( size_t i = 0; i < mChunks.size();  )
+		{
+			if ( mChunks[ i ].mIndices.size() == 0 )
+				mChunks.erase( mChunks.begin() + i );
+			else
+				++i;
+		}
+	}
 };
 
 typedef std::map<obuint32,VBO> VBOMap;
@@ -84,7 +176,6 @@ static void CheckGLError( const char * msg )
 RenderBuffer::PointList		RenderBuffer::mPointList;
 RenderBuffer::LineList		RenderBuffer::mLineList;
 RenderBuffer::TriList		RenderBuffer::mTriList;
-RenderBuffer::QuadList		RenderBuffer::mQuadList;
 RenderBuffer::CircleList	RenderBuffer::mCircleList;
 RenderBuffer::StringList3d	RenderBuffer::mStringList3d;
 RenderBuffer::StringList2d	RenderBuffer::mStringList2d;
@@ -140,7 +231,6 @@ void RenderBuffer::BeginFrame()
 	mPointList.resize( 0 );
 	mLineList.resize( 0 );
 	mTriList.resize( 0 );
-	mQuadList.resize( 0 );
 	mCircleList.resize( 0 );
 	mStringList2d.resize( 0 );
 	mStringList3d.resize( 0 );
@@ -205,13 +295,18 @@ void RenderBuffer::AddTri( const Vector3f & v0, const Vector3f & v1, const Vecto
 
 void RenderBuffer::AddQuad( const Vector3f & v0, const Vector3f & v1, const Vector3f & v2, const Vector3f & v3, const obColor & col )
 {
-	Quad prim;
+	Triangle prim;
+	prim.c = col;
+
 	prim.v[0] = v0;
 	prim.v[1] = v1;
 	prim.v[2] = v2;
-	prim.v[3] = v3;
-	prim.c = col;
-	mQuadList.push_back( prim );
+	mTriList.push_back( prim );
+
+	prim.v[0] = v0;
+	prim.v[1] = v2;
+	prim.v[2] = v3;
+	mTriList.push_back( prim );
 }
 
 void RenderBuffer::AddPolygonFilled( const Vector3List & verts, obColor col )
@@ -256,7 +351,7 @@ void RenderBuffer::AddPolygonSilouette( const Vector3List & verts, obColor col )
 	}
 }
 
-void RenderBuffer::AddCircle( const Vector3f & v, const obColor & col, float radius, const Vector3f & up )
+void RenderBuffer::AddCircle( const Vector3f & v, float radius, const obColor & col, const Vector3f & up )
 {
 	Circle prim;
 	prim.v = v;
@@ -368,144 +463,134 @@ void RenderBuffer::AddOBB(const Box3f &_obb, const obColor &_color, AABB::Direct
 	}
 }
 
-//bool RenderBuffer::StaticBufferCreate( obuint32 & bufferId, const TriList & primitives )
-//{
-//	static int nextBufferId = 0;
-//
-//	if ( glGenBuffersARB == NULL ||
-//		glBufferDataARB == NULL ||
-//		glBindBufferARB == NULL ||
-//		glDeleteBuffersARB == NULL )
-//		return false;
-//
-//	CheckGLError( "StaticBufferCreate1" );
-//
-//	StaticBufferDelete( bufferId );
-//
-//	if ( bufferId == 0 )
-//		bufferId = ++nextBufferId;
-//
-//	glPushClientAttrib( GL_CLIENT_ALL_ATTRIB_BITS );
-//
-//	VBO vb;
-//	vb.mType = GL_TRIANGLES;
-//	vb.mNumVertsPerPrimitive = 3;
-//	vb.mNumPrimitives = primitives.size();
-//
-//	glGenBuffersARB( 1, &vb.mBufferId );
-//
-//	std::vector<VBOVert> verts( vb.mNumPrimitives * vb.mNumVertsPerPrimitive * 4 );
-//
-//	verts.resize( 0 );
-//
-//	for ( size_t i = 0; i < primitives.size(); ++i )
-//	{
-//		const Triangle & q = primitives[ i ];
-//		for ( size_t v = 0; v < vb.mNumVertsPerPrimitive; ++v )
-//		{
-//			VBOVert vert;
-//			vert.p[ 0 ] = q.v[ v ].x;
-//			vert.p[ 1 ] = q.v[ v ].y;
-//			vert.p[ 2 ] = q.v[ v ].z;
-//			vert.c[ 0 ] = q.c.rF();
-//			vert.c[ 1 ] = q.c.gF();
-//			vert.c[ 2 ] = q.c.bF();
-//			vert.c[ 3 ] = q.c.aF();
-//			verts.push_back( vert );
-//			verts.push_back( vert );
-//		}
-//	}
-//
-//	const GLsizeiptr vertexBytes = sizeof(VBOVert) * verts.size();
-//
-//	glBindBufferARB( GL_ARRAY_BUFFER_ARB, vb.mBufferId );
-//	glBufferDataARB( GL_ARRAY_BUFFER_ARB, vertexBytes, &verts[ 0 ], GL_STATIC_DRAW_ARB );
-//
-//	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
-//
-//	CheckGLError( "StaticBufferCreate2" );
-//
-//	vbos.insert( std::make_pair( bufferId, vb ) );
-//
-//	glPopClientAttrib();
-//	return true;
-//}
-
-bool RenderBuffer::StaticBufferCreate( obuint32 & bufferId, const QuadList & primitives )
+bool RenderBuffer::StaticBufferCreate( obuint32 & bufferId, const TriList & primitives )
 {
-	static int nextBufferId = 0;
-
-	if ( glGenBuffersARB == NULL ||
-		glBufferDataARB == NULL ||
-		glBindBufferARB == NULL ||
-		glDeleteBuffersARB == NULL )
-		return false;
-
-	CheckGLError( "StaticBufferCreate1" );
-
 	StaticBufferDelete( bufferId );
 
 	if ( bufferId == 0 )
 		bufferId = ++nextBufferId;
 
-	glPushClientAttrib( GL_CLIENT_ALL_ATTRIB_BITS );
-
 	VBO vb;
-	vb.mType = GL_QUADS;
-	vb.mNumVertsPerPrimitive = 4;
+	vb.mType = GL_TRIANGLES;
+	vb.mNumVertsPerPrimitive = 3;
 	vb.mNumPrimitives = primitives.size();
 	vb.mVerts.reserve( vb.mNumPrimitives * vb.mNumVertsPerPrimitive );
 
 	for ( size_t i = 0; i < primitives.size(); ++i )
 	{
-		const Quad & q = primitives[ i ];
-		for ( size_t v = 0; v < vb.mNumVertsPerPrimitive; ++v )
-		{
-			VBOVert vert;
-			vert.p[ 0 ] = q.v[ v ].x;
-			vert.p[ 1 ] = q.v[ v ].y;
-			vert.p[ 2 ] = q.v[ v ].z;
-			vert.c[ 0 ] = q.c.rF();
-			vert.c[ 1 ] = q.c.gF();
-			vert.c[ 2 ] = q.c.bF();
-			vert.c[ 3 ] = q.c.aF();
-			vb.mVerts.push_back( vert );
+		const Triangle & q = primitives[ i ];
 
-			assert( InRangeT( vert.p[ 0 ], -30000.0f, 30000.0f ) );
-			assert( InRangeT( vert.p[ 1 ], -30000.0f, 30000.0f ) );
-			assert( InRangeT( vert.p[ 2 ], -30000.0f, 30000.0f ) );
+		VBOVert vert;
+		vert.SetColor( q.c );
 
-			assert( InRangeT( vert.c[ 0 ], 0.0f, 1.0f ) );
-			assert( InRangeT( vert.c[ 1 ], 0.0f, 1.0f ) );
-			assert( InRangeT( vert.c[ 2 ], 0.0f, 1.0f ) );
-			assert( InRangeT( vert.c[ 3 ], 0.0f, 1.0f ) );
-		}
+		vert.SetPos( q.v[ 0 ].X(), q.v[ 0 ].Y(), q.v[ 0 ].Z() );
+		vb.mVerts.push_back( vert );
+		vert.SetPos( q.v[ 1 ].X(), q.v[ 1 ].Y(), q.v[ 1 ].Z() );
+		vb.mVerts.push_back( vert );
+		vert.SetPos( q.v[ 2 ].X(), q.v[ 2 ].Y(), q.v[ 2 ].Z() );
+		vb.mVerts.push_back( vert );
 	}
 
-	const GLsizeiptr vertexBytes = sizeof(VBOVert) * vb.mVerts.size();
+	if ( glGenBuffersARB != NULL &&
+		glBufferDataARB != NULL &&
+		glBindBufferARB != NULL &&
+		glDeleteBuffersARB != NULL )
+	{
+		CheckGLError( "StaticBufferCreate1" );
 
-	glGenBuffersARB( 1, &vb.mBufferId );
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, vb.mBufferId );
-	glBufferDataARB( GL_ARRAY_BUFFER_ARB, vertexBytes, &vb.mVerts[ 0 ], GL_STATIC_DRAW_ARB );
-	glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
+		glPushClientAttrib( GL_CLIENT_ALL_ATTRIB_BITS );
+		const GLsizeiptr vertexBytes = sizeof(VBOVert) * vb.mVerts.size();
 
-	CheckGLError( "StaticBufferCreate2" );
+		glGenBuffersARB( 1, &vb.mBufferId );
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, vb.mBufferId );
+		glBufferDataARB( GL_ARRAY_BUFFER_ARB, vertexBytes, &vb.mVerts[ 0 ], GL_STATIC_DRAW_ARB );
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
 
+		glPopClientAttrib();
+
+		CheckGLError( "StaticBufferCreate2" );
+	}
+	else
+	{
+		vb.mBufferId = 0;
+	}
+
+	vb.PartitionData( VIEW_DISTANCE * 0.5f );
 	vbos.insert( std::make_pair( bufferId, vb ) );
+	return true;
+}
 
-	glPopClientAttrib();
+bool RenderBuffer::StaticBufferCreate( obuint32 & bufferId, const QuadList & primitives )
+{
+	StaticBufferDelete( bufferId );
+
+	if ( bufferId == 0 )
+		bufferId = ++nextBufferId;
+
+	VBO vb;
+	vb.mType = GL_TRIANGLES;
+	vb.mNumVertsPerPrimitive = 3;
+	vb.mNumPrimitives = primitives.size() * 2;
+	vb.mVerts.reserve( vb.mNumPrimitives * vb.mNumVertsPerPrimitive );
+
+	for ( size_t i = 0; i < primitives.size(); ++i )
+	{
+		const Quad & q = primitives[ i ];
+
+		VBOVert vert;
+		vert.SetColor( q.c );
+
+		vert.SetPos( q.v[ 0 ].X(), q.v[ 0 ].Y(), q.v[ 0 ].Z() );
+		vb.mVerts.push_back( vert );
+		vert.SetPos( q.v[ 1 ].X(), q.v[ 1 ].Y(), q.v[ 1 ].Z() );
+		vb.mVerts.push_back( vert );
+		vert.SetPos( q.v[ 2 ].X(), q.v[ 2 ].Y(), q.v[ 2 ].Z() );
+		vb.mVerts.push_back( vert );
+
+		vert.SetPos( q.v[ 0 ].X(), q.v[ 0 ].Y(), q.v[ 0 ].Z() );
+		vb.mVerts.push_back( vert );
+		vert.SetPos( q.v[ 2 ].X(), q.v[ 2 ].Y(), q.v[ 2 ].Z() );
+		vb.mVerts.push_back( vert );
+		vert.SetPos( q.v[ 3 ].X(), q.v[ 3 ].Y(), q.v[ 3 ].Z() );
+		vb.mVerts.push_back( vert );
+	}
+
+	if ( glGenBuffersARB != NULL &&
+		glBufferDataARB != NULL &&
+		glBindBufferARB != NULL &&
+		glDeleteBuffersARB != NULL )
+	{
+		CheckGLError( "StaticBufferCreate1" );
+
+		glPushClientAttrib( GL_CLIENT_ALL_ATTRIB_BITS );
+		const GLsizeiptr vertexBytes = sizeof(VBOVert) * vb.mVerts.size();
+
+		glGenBuffersARB( 1, &vb.mBufferId );
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, vb.mBufferId );
+		glBufferDataARB( GL_ARRAY_BUFFER_ARB, vertexBytes, &vb.mVerts[ 0 ], GL_STATIC_DRAW_ARB );
+		glBindBufferARB( GL_ARRAY_BUFFER_ARB, 0 );
+
+		glPopClientAttrib();
+
+		CheckGLError( "StaticBufferCreate2" );
+	}
+	else
+	{
+		vb.mBufferId = 0;
+	}
+
+	vb.PartitionData( VIEW_DISTANCE * 0.5f );
+	vbos.insert( std::make_pair( bufferId, vb ) );
 	return true;
 }
 
 void RenderBuffer::StaticBufferDelete( obuint32 bufferId )
 {
-	if ( glDeleteBuffersARB == NULL )
-		return;
-
 	VBOMap::iterator it = vbos.find( bufferId );
 	if ( it != vbos.end() )
 	{
-		glDeleteBuffersARB( 1, &it->second.mBufferId );
+		if ( glDeleteBuffersARB != NULL )
+			glDeleteBuffersARB( 1, &it->second.mBufferId );
 		vbos.erase( it );
 	}
 }
@@ -588,21 +673,6 @@ void RenderBuffer::RenderToOpenGL()
 		glEnd();
 	}
 
-	if ( mQuadList.size() > 0 )
-	{
-		glBegin( GL_QUADS );
-		for( size_t i = 0; i < mQuadList.size(); ++i )
-		{
-			const Quad & prim = mQuadList[ i ];
-			CheckColor( col, prim.c );
-			glVertex3fv( prim.v[0] );
-			glVertex3fv( prim.v[1] );
-			glVertex3fv( prim.v[2] );
-			glVertex3fv( prim.v[3] );
-		}
-		glEnd();
-	}
-
 	if ( mCircleList.size() > 0 )
 	{
 		GLUquadric * q = gluNewQuadric();
@@ -618,9 +688,6 @@ void RenderBuffer::RenderToOpenGL()
 
 	if ( mStringList3d.size() > 0 && textListBase != 0 )
 	{
-		static const float textScale = 10.0f;
-		static const float textDistance = 2048.0f;
-
 		glPushMatrix();
 		glPushAttrib( GL_LIST_BIT ); // save the base list
 		glListBase( textListBase );
@@ -629,7 +696,7 @@ void RenderBuffer::RenderToOpenGL()
 		{
 			const Str3d & prim = mStringList3d[ i ];
 
-			if ( ( vEyePos - prim.v ).Length() > textDistance )
+			if ( ( vEyePos - prim.v ).Length() > TEXT_DIST )
 				continue;
 
 			CheckColor( col, prim.c );
@@ -663,30 +730,30 @@ void RenderBuffer::RenderToOpenGL()
 
 			for ( size_t l = 0; l < lines.size(); ++l )
 			{
-				const float height = lineHeights[ l ] * textScale;
-				const float width = lineWidths[ l ] * textScale;
+				const float height = lineHeights[ l ] * TEXT_SCALE;
+				const float width = lineWidths[ l ] * TEXT_SCALE;
 
 				glPushMatrix();
 
 				// calculate a bill board matrix so the text always faces the camera
 				Vector3f look = vEyePos - prim.v;
-				look.z = 0.0f;
+				look.Z() = 0.0f;
 				look.Normalize();
 				Vector3f right = Vector3f::UNIT_Z.Cross( look );
 
 				const GLfloat bb[16] =
 				{
-					right.x,	right.y,	right.z,	0.0f,
+					right.X(),	right.Y(),	right.Z(),	0.0f,
 					0.0f,		0.0f,		1.0f,		0.0f,
-					look.x,		look.y,		look.z,		0.0f,
-					prim.v.x,	prim.v.y,	prim.v.z,	1.0f
+					look.X(),		look.Y(),		look.Z(),		0.0f,
+					prim.v.X(),	prim.v.Y(),	prim.v.Z(),	1.0f
 				};
 				glMultMatrixf( bb );
 				glTranslatef(
 					- width * 0.5f,
 					(blockHeight*0.5f) - (float)l * height,
 					0.0f );
-				glScalef( textScale, textScale, textScale );
+				glScalef( TEXT_SCALE, TEXT_SCALE, TEXT_SCALE );
 				glCallLists( lines[ l ].length(), GL_UNSIGNED_BYTE, lines[ l ].c_str() );
 				glPopMatrix();
 			}
@@ -732,14 +799,14 @@ void RenderBuffer::RenderToOpenGL()
 
 				glVertexPointer( 3, GL_FLOAT, sizeof(VBOVert), (GLvoid*)offsetP );
 				glColorPointer( 4, GL_FLOAT, sizeof(VBOVert), (GLvoid*)offsetC );
-				
+
 				CheckGLError( "PreRender" );
 
 				///////////////////////////////////////
 				/*GLint arrayBind, colorBind, vertexBind,
-					normalBind, elementBind, textureBind,
-					indexBind, edgeflagBind,
-					color2Bind, fogBind;
+				normalBind, elementBind, textureBind,
+				indexBind, edgeflagBind,
+				color2Bind, fogBind;
 				glGetIntegerv( GL_ARRAY_BUFFER_BINDING, &arrayBind );
 				glGetIntegerv( GL_COLOR_ARRAY_BUFFER_BINDING, &colorBind );
 				glGetIntegerv( GL_VERTEX_ARRAY_BUFFER_BINDING, &vertexBind );
@@ -752,12 +819,12 @@ void RenderBuffer::RenderToOpenGL()
 				glGetIntegerv( GL_FOG_COORDINATE_ARRAY_BUFFER_BINDING, &fogBind );
 
 				OutputDebugString( va( "bind: %d %d %d %d %d %d %d %d %d %d\n",
-					arrayBind, colorBind, vertexBind,
-					normalBind, elementBind, textureBind,
-					indexBind, edgeflagBind,
-					color2Bind, fogBind ) );*/
+				arrayBind, colorBind, vertexBind,
+				normalBind, elementBind, textureBind,
+				indexBind, edgeflagBind,
+				color2Bind, fogBind ) );*/
 				///////////////////////////////////////
-				
+
 				// whole batch
 				glDrawArrays( it->second.mType, 0, it->second.mNumPrimitives * it->second.mNumVertsPerPrimitive );
 
@@ -775,4 +842,125 @@ void RenderBuffer::RenderToOpenGL()
 	}
 
 	glPopAttrib();
+}
+
+void RenderBuffer::RenderToGame()
+{
+	Vector3f vEyePos;
+	if ( !Utils::GetLocalEyePosition( vEyePos ) )
+		return;
+
+	AxisAlignedBox3f viewBox;
+	viewBox.Clear();
+	viewBox.Expand( vEyePos );
+	viewBox.Extend( VIEW_DISTANCE*0.5f, VIEW_DISTANCE*0.5f, VIEW_DISTANCE*0.5f );
+
+	// vbos first bc this populates the other primitive lists
+	for ( size_t i = 0; i < mVBOList.size(); ++i )
+	{
+		VBOMap::const_iterator it = vbos.find( mVBOList[ i ] );
+		if ( it == vbos.end() )
+			continue;
+
+		const VBO & vbo = it->second;
+
+		for ( size_t c = 0; c < vbo.mChunks.size(); ++c )
+		{
+			const Chunk & ch = vbo.mChunks[ c ];
+			if ( ch.mAABB.TestIntersection( viewBox ) )
+			{
+				AABB b( ch.mAABB.Min, ch.mAABB.Max );
+				b.m_Mins[ 2 ] = b.m_Maxs[ 2 ] = vEyePos.Z();
+
+				AddAABB( b, COLOR::CYAN, AABB::DIR_BOTTOM );
+
+				for ( size_t x = 0; x < ch.mIndices.size(); ++x )
+				{
+					switch ( vbo.mType )
+					{
+					case GL_POINTS:
+						AddPoint(
+							vbo.mVerts[ ch.mIndices[ x ] + 0 ].p,
+							vbo.mVerts[ ch.mIndices[ x ] + 0 ].c );
+						break;
+					case GL_LINES:
+						AddLine(
+							vbo.mVerts[ ch.mIndices[ x ] + 0 ].p,
+							vbo.mVerts[ ch.mIndices[ x ] + 1 ].p,
+							vbo.mVerts[ ch.mIndices[ x ] + 0 ].c );
+						break;
+					case GL_TRIANGLES:
+						AddTri(
+							vbo.mVerts[ ch.mIndices[ x ] + 0 ].p,
+							vbo.mVerts[ ch.mIndices[ x ] + 1 ].p,
+							vbo.mVerts[ ch.mIndices[ x ] + 2 ].p,
+							vbo.mVerts[ ch.mIndices[ x ] + 0 ].c );
+						break;
+					default:
+						assert( 0 && "Unhandled Primitive" );
+					}
+				}
+			}
+		}
+	}
+
+	const float cullDistSq = VIEW_DISTANCE*VIEW_DISTANCE;
+
+	for( size_t i = 0; i < mPointList.size(); ++i )
+	{
+		const Point & prim = mPointList[ i ];
+
+		if ( ( prim.v[ 0 ] - vEyePos ).SquaredLength() > cullDistSq )
+			continue;
+
+		g_EngineFuncs->DebugLine(
+			prim.v[0],
+			prim.v[0]+Vector3f(0.0f,0.0f,prim.pointSize),
+			prim.c,
+			DEFAULT_TIME );
+	}
+
+	for( size_t i = 0; i < mLineList.size(); ++i )
+	{
+		const Line & prim = mLineList[ i ];
+
+		DistPoint3Segment3f dist( vEyePos, Segment3f( prim.v[0], prim.v[1] ) );
+		if ( dist.GetSquared() > cullDistSq )
+			continue;
+
+		g_EngineFuncs->DebugLine(
+			prim.v[0],
+			prim.v[1],
+			prim.c,
+			DEFAULT_TIME );
+	}
+
+	int renderedTris = 0;
+	for( size_t i = 0; i < mTriList.size(); ++i )
+	{
+		const Triangle & prim = mTriList[ i ];
+
+		/*DistPoint3Triangle3f dist( vEyePos, Triangle3f( prim.v[0],prim.v[1],prim.v[2] ) );
+		if ( dist.GetSquared() > cullDistSq )
+		continue;*/
+
+		g_EngineFuncs->DebugPolygon( (const obVec3 *)prim.v, 3, prim.c, DEFAULT_TIME, 0 );
+		++renderedTris;
+	}
+
+	for( size_t i = 0; i < mCircleList.size(); ++i )
+	{
+		const Circle & prim = mCircleList[ i ];
+		g_EngineFuncs->DebugRadius( prim.v, prim.radius, prim.c, DEFAULT_TIME );
+	}
+
+	for( size_t i = 0; i < mStringList3d.size(); ++i )
+	{
+		const Str3d & prim = mStringList3d[ i ];
+
+		if ( ( vEyePos - prim.v ).Length() > TEXT_DIST )
+			continue;
+
+		g_EngineFuncs->PrintScreenText( prim.v, DEFAULT_TIME, prim.c, prim.str.c_str() );
+	}
 }

@@ -335,7 +335,7 @@ void IGame::InitScriptEvents(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "GOAL_ABORTED",	gmVariable(GOAL_ABORTED));
 	_table->Set(_machine, "PATH_SUCCESS",	gmVariable(PATH_SUCCESS));
 	_table->Set(_machine, "PATH_FAILED",	gmVariable(PATH_FAILED));
-	_table->Set(_machine, "AIM_SUCCESS",	gmVariable(AIM_SUCCESS));
+	_table->Set(_machine, "AIM_SUCCESS",	gmVariable(AIM_ONTARGET));
 	_table->Set(_machine, "SCRIPTMSG",		gmVariable(MESSAGE_SCRIPTMSG));
 	_table->Set(_machine, "SPAWNED",		gmVariable(MESSAGE_SPAWN));
 	_table->Set(_machine, "CHANGETEAM",		gmVariable(MESSAGE_CHANGETEAM));
@@ -776,12 +776,12 @@ void IGame::SyncEntity( const EntityInstance & ent, RemoteLib::DebugConnection *
 		EngineFuncs::EntityOrientation( ent.m_Entity, facingVector, rightVector, upVector );
 
 		SET_IF_DIFF( cachedEntity, entityUpdate, entName.c_str(), name );
-		SET_IF_DIFF( cachedEntity.position(), *entityUpdate.mutable_position(), entPosition.x, x );
-		SET_IF_DIFF( cachedEntity.position(), *entityUpdate.mutable_position(), entPosition.y, y );
-		SET_IF_DIFF( cachedEntity.position(), *entityUpdate.mutable_position(), entPosition.z, z );
-		SET_IF_DIFF( cachedEntity.facing(), *entityUpdate.mutable_facing(), facingVector.x, x );
-		SET_IF_DIFF( cachedEntity.facing(), *entityUpdate.mutable_facing(), facingVector.y, y );
-		SET_IF_DIFF( cachedEntity.facing(), *entityUpdate.mutable_facing(), facingVector.z, z );
+		SET_IF_DIFF( cachedEntity.position(), *entityUpdate.mutable_position(), entPosition.X(), x );
+		SET_IF_DIFF( cachedEntity.position(), *entityUpdate.mutable_position(), entPosition.Y(), y );
+		SET_IF_DIFF( cachedEntity.position(), *entityUpdate.mutable_position(), entPosition.Z(), z );
+		SET_IF_DIFF( cachedEntity.facing(), *entityUpdate.mutable_facing(), facingVector.X(), x );
+		SET_IF_DIFF( cachedEntity.facing(), *entityUpdate.mutable_facing(), facingVector.Y(), y );
+		SET_IF_DIFF( cachedEntity.facing(), *entityUpdate.mutable_facing(), facingVector.Z(), z );
 		SET_IF_DIFF( cachedEntity, entityUpdate, entClass, classid );
 		SET_IF_DIFF( cachedEntity, entityUpdate, entTeam, teamid );
 
@@ -1776,7 +1776,7 @@ bool IGame::CreateCriteria(gmThread *_thread, CheckCriteria &_criteria, std::str
 
 					Vector3f v;
 					o.GetVector(v);
-					_criteria.m_Operand[i] = obUserData(v.x,v.y,v.z);
+					_criteria.m_Operand[i] = obUserData(v.X(),v.Y(),v.Z());
 					break;
 				}
 			case kTypeEntity:

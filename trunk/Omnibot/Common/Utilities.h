@@ -72,40 +72,18 @@ namespace Utils
 	const char *FindClassName(obint32 _classId);
 	std::string BuildRoleName(obint32 _mask);
 
+	// todo: depracate these for type safe time types
 	inline float MillisecondsToSeconds(int _ms) { return (float)_ms/1000.f; }
 	inline int SecondsToMilliseconds(float _seconds) { return (int)(_seconds*1000.f); }
 	inline int HzToMilliseconds(int _hz) { return (int)(1000.f/(float)_hz); }
 	inline float HzToSeconds(int _hz) { return MillisecondsToSeconds(HzToMilliseconds(_hz)); }
 
-	inline bool InFieldOfView(const Vector3f &_face1, const Vector3f &_face2, float _fovAngles)
-	{
-		float fFovInRadians = Mathf::DegToRad(_fovAngles);
-		return (_face1.Dot(_face2) >= cosf(fFovInRadians/2.0f) * _face1.Length() * _face2.Length());
-	}
+	bool InFieldOfView(const Vector3f &_face1, const Vector3f &_face2, float _fovAngles);
 
-	inline bool InFieldOfView2d(const Vector3f &_face1, const Vector3f &_face2, float _fovAngles)
-	{
-		Vector2f v1 = _face1;
-		Vector2f v2 = _face2;
+	bool InFieldOfView2d(const Vector3f &_face1, const Vector3f &_face2, float _fovAngles);
 
-		float fFovInRadians = Mathf::DegToRad(_fovAngles);
-		return (v1.Dot(v2) >= cosf(fFovInRadians/2.0f) * v1.Length() * v2.Length());
-	}
+	float AngleBetween(const Vector3f &_v1, const Vector3f &_v2);
 
-	inline float AngleBetween(const Vector3f &_v1, const Vector3f &_v2)
-	{
-		return Mathf::ACos(_v1.Dot(_v2));
-	}
-
-	inline Plane3f PlaneFromPoint(const Vector3f &_pos, const Vector3f &_normal)
-	{
-		Plane3f p;
-		p.Normal = _normal;
-		p.Constant = -(_pos.x * _normal.x + _pos.y * _normal.y + _pos.z * _normal.z);
-		return p;
-	}
-
-	Segment3f MakeSegment(const Vector3f &_p1, const Vector3f &_p2);
 	Vector3f AveragePoint(const Vector3List &_lis);
 
 	float ClosestPointOfApproachTime(const Vector3f& aP1, const Vector3f& aV1, const Vector3f& aP2, const Vector3f& aV2) ;
@@ -247,41 +225,18 @@ namespace Utils
 	bool AssertFunction(bool _bexp, const char* _exp, const char* _file, int _line, CHECK_PRINTF_ARGS const char *_msg, ...);
 	bool SoftAssertFunction(AssertMode _mode, bool _bexp, const char* _exp, const char* _file, int _line, CHECK_PRINTF_ARGS const char *_msg, ...);
 
-	template <typename BidirectionalIterator, typename Predicate>
-	BidirectionalIterator unstable_remove_if(BidirectionalIterator first, BidirectionalIterator last, Predicate pred)
-	{
-		BidirectionalIterator cursor = first;
-		while (cursor != last)
-		{
-			if (pred(*cursor))
-			{
-				--last;
-				if (cursor != last)
-				{
-					using std::swap;
-					swap(*cursor, *last);
-				}
-			}
-			else
-			{
-				++cursor;
-			}
-		}
-		return last;
-	}
-
 	Vector3List CreatePolygon(const Vector3f &_pos, const Vector3f &_normal, float _size = 512.f);
-	Vector3List ClipPolygonToPlanes(const Vector3List &_poly, const Plane3f &_plane, bool _clipfront = false);
+	Vector3List ClipPolygonToPlanes( const Vector3List & poly, const Plane3f & plane);
 
-	float DistancePointToLineSqr(const Vector3f &_point,
-		const Vector3f &_pt0,
-		const Vector3f &_pt1,
-		Vector3f *_linePt = NULL);
+	/*float DistancePointToLineSqr(const Vector3f &_point,
+	const Vector3f &_pt0,
+	const Vector3f &_pt1,
+	Vector3f *_linePt = NULL);
 
 	float DistancePointToLine(const Vector3f &_point,
-		const Vector3f &_pt0,
-		const Vector3f &_pt1,
-		Vector3f *_linePt = NULL);
+	const Vector3f &_pt0,
+	const Vector3f &_pt1,
+	Vector3f *_linePt = NULL);*/
 
 	int intersect2D_Segments(const Segment3f &S1,const Segment3f &S2, Vector3f* I0 = 0, Vector3f* I1 = 0);
 };

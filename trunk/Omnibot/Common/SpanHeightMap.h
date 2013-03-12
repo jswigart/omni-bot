@@ -157,14 +157,14 @@ public:
 
 	bool AddOpenSpan( const Vector3f & pos, const float height )
 	{
-		const unsigned int ix = (unsigned int)( ( pos.x - mMin.x ) / mCellSize );
-		const unsigned int iy = (unsigned int)( ( pos.y - mMin.y ) / mCellSize );
+		const unsigned int ix = (unsigned int)( ( pos.X() - mMin.X() ) / mCellSize );
+		const unsigned int iy = (unsigned int)( ( pos.Y() - mMin.Y() ) / mCellSize );
 
 		if ( ix >= mNumCellsX || iy >= mNumCellsY )
 			return NULL;
 
-		const float spanMin = pos.z;
-		const float spanMax = pos.z + height;
+		const float spanMin = pos.Z();
+		const float spanMax = pos.Z() + height;
 
 		Span * head = mSpans[ IDX( ix, iy ) ];
 		if ( head == NULL || spanMax < head->mMin )
@@ -233,8 +233,8 @@ public:
 
 	Span * GetSpanForPos( const Vector3f & p )
 	{
-		const unsigned int ix = ( p.x - mMin.x ) / mCellSize;
-		const unsigned int iy = ( p.y - mMin.y ) / mCellSize;
+		const unsigned int ix = ( p.X() - mMin.X() ) / mCellSize;
+		const unsigned int iy = ( p.Y() - mMin.Y() ) / mCellSize;
 
 		if ( ix >= mNumCellsX || iy >= mNumCellsY )
 			return NULL;
@@ -242,7 +242,7 @@ public:
 		Span * s = mSpans[ IDX( ix, iy ) ];
 		while ( s )
 		{
-			if ( p.z >= s->mMin && p.z <= s->mMax )
+			if ( p.Z() >= s->mMin && p.Z() <= s->mMax )
 				return s;
 
 			s = s->mNext;
@@ -252,8 +252,8 @@ public:
 
 	bool GetSpanInfoForPos( const Vector3f & p, SpanInfo & spanInfo ) const
 	{
-		const unsigned int ix = (unsigned int)(( p.x - mMin.x ) / mCellSize);
-		const unsigned int iy = (unsigned int)(( p.y - mMin.y ) / mCellSize);
+		const unsigned int ix = (unsigned int)(( p.X() - mMin.X() ) / mCellSize);
+		const unsigned int iy = (unsigned int)(( p.Y() - mMin.Y() ) / mCellSize);
 
 		if ( ix >= mNumCellsX || iy >= mNumCellsY )
 			return false;
@@ -261,7 +261,7 @@ public:
 		Span * s = mSpans[ IDX( ix, iy ) ];
 		while ( s )
 		{
-			if ( p.z >= s->mMin && p.z <= s->mMax )
+			if ( p.Z() >= s->mMin && p.Z() <= s->mMax )
 			{
 				spanInfo.mSpan = s;
 				spanInfo.mSpanX = ix;
@@ -320,8 +320,8 @@ public:
 		mMin = mins;
 		mMax = maxs;
 		mCellSize = cellSize;
-		mNumCellsX = (unsigned int)ceil( ( maxs.x - mins.x ) / cellSize );
-		mNumCellsY = (unsigned int)ceil( ( maxs.y - mins.y ) / cellSize );
+		mNumCellsX = (unsigned int)ceil( ( maxs.X() - mins.X() ) / cellSize );
+		mNumCellsY = (unsigned int)ceil( ( maxs.Y() - mins.Y() ) / cellSize );
 
 		mSpans = new Span *[ mNumCellsX * mNumCellsY ];
 
@@ -400,7 +400,7 @@ public:
 				Span * s = mSpans[ IDX( i,j ) ];
 				while ( s )
 				{
-					spanPos.z = s->mMin;
+					spanPos.Z() = s->mMin;
 
 					const float influence = influenceMap ?
 						influenceMap->GetWeight( s->mIndex ) : 1.0f;
@@ -465,12 +465,12 @@ public:
 		try
 		{
 			InfluenceMapIO::InfluenceMap map;
-			map.mutable_header()->mutable_boundsmin()->set_x( mMin.x );
-			map.mutable_header()->mutable_boundsmin()->set_y( mMin.y );
-			map.mutable_header()->mutable_boundsmin()->set_z( mMin.z );
-			map.mutable_header()->mutable_boundsmax()->set_x( mMax.x );
-			map.mutable_header()->mutable_boundsmax()->set_y( mMax.y );
-			map.mutable_header()->mutable_boundsmax()->set_z( mMax.z );
+			map.mutable_header()->mutable_boundsmin()->set_x( mMin.X() );
+			map.mutable_header()->mutable_boundsmin()->set_y( mMin.Y() );
+			map.mutable_header()->mutable_boundsmin()->set_z( mMin.Z() );
+			map.mutable_header()->mutable_boundsmax()->set_x( mMax.X() );
+			map.mutable_header()->mutable_boundsmax()->set_y( mMax.Y() );
+			map.mutable_header()->mutable_boundsmax()->set_z( mMax.Z() );
 			map.mutable_header()->set_cellsize( mCellSize );
 			map.mutable_header()->set_numcellsx( mNumCellsX );
 			map.mutable_header()->set_numcellsy( mNumCellsY );
@@ -513,12 +513,12 @@ public:
 			InfluenceMapIO::InfluenceMap map;
 			if ( map.ParseFromString( dataIn ) )
 			{
-				mMin.x = map.header().boundsmin().x();
-				mMin.y = map.header().boundsmin().y();
-				mMin.z = map.header().boundsmin().z();
-				mMax.x = map.header().boundsmax().x();
-				mMax.y = map.header().boundsmax().y();
-				mMax.z = map.header().boundsmax().z();
+				mMin.X() = map.header().boundsmin().x();
+				mMin.Y() = map.header().boundsmin().y();
+				mMin.Z() = map.header().boundsmin().z();
+				mMax.X() = map.header().boundsmax().x();
+				mMax.Y() = map.header().boundsmax().y();
+				mMax.Z() = map.header().boundsmax().z();
 				mCellSize = map.header().cellsize();
 				mNumCellsX = map.header().numcellsx();
 				mNumCellsY = map.header().numcellsy();

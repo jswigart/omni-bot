@@ -13,6 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C6EE526F-5B56-4F29-8ED2-8558D157DFB3}</ProjectGuid>
     <RootNamespace>polypartition</RootNamespace>
+    <ProjectName>polypartition</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

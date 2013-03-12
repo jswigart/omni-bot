@@ -250,7 +250,7 @@ public:
 
 	// function: GetRadius
 	//		Gets the radius of this goal
-	inline float GetRadius() const { return Mathf::Max(m_Radius, m_MinRadius); }
+	inline float GetRadius() const { return std::max(m_Radius, m_MinRadius); }
 
 	// function: GetName
 	//		Gets the name of this goal
@@ -361,7 +361,7 @@ public:
 		void GetPriorityText(std::string &_txtout) const;
 	};
 
-	void DrawRoute(int _color, float _duration);
+	void DrawRoute( const obColor _color, float _duration );
 
 	const ClassPriority &GetClassPriorities() const { return m_ClassPriority; }
 
