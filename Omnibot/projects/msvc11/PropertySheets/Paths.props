@@ -11,6 +11,7 @@
     <OMNIBOT_INST>$(REPO_ROOT)\Installer\Files</OMNIBOT_INST>
     <REMOTEDEBUGLIB>$(REPO_ROOT)\Tools\RemoteDebugWindow\RemoteDebugLib</REMOTEDEBUGLIB>
     <ETDIR>D:\Games\WET</ETDIR>
+    <WILDMAGIC>$(DEPENDENCIES)\WildMagic5</WILDMAGIC>
   </PropertyGroup>
   <PropertyGroup>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -53,6 +54,10 @@
     </BuildMacro>
     <BuildMacro Include="ETDIR">
       <Value>$(ETDIR)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="WILDMAGIC">
+      <Value>$(WILDMAGIC)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
   </ItemGroup>

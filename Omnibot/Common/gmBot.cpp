@@ -291,7 +291,7 @@ int gmBot::gmfGetPosition(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(0);
 
 	const Vector3f &v = native->GetPosition();
-	a_thread->PushVector(v.x, v.y, v.z);
+	a_thread->PushVector(v.X(), v.Y(), v.Z());
 	return GM_OK;
 }
 
@@ -310,7 +310,7 @@ int gmBot::gmfGetEyePosition(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(0);
 
 	const Vector3f &v = native->GetEyePosition();
-	a_thread->PushVector(v.x, v.y, v.z);
+	a_thread->PushVector(v.X(), v.Y(), v.Z());
 	return GM_OK;
 }
 
@@ -329,7 +329,7 @@ int gmBot::gmfGetFacing(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(0);
 
 	const Vector3f &v = native->GetFacingVector();
-	a_thread->PushVector(v.x, v.y, v.z);
+	a_thread->PushVector(v.X(), v.Y(), v.Z());
 	return GM_OK;
 }
 
@@ -348,7 +348,7 @@ int gmBot::gmfGetVelocity(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(0);
 
 	const Vector3f &v = native->GetVelocity();
-	a_thread->PushVector(v.x, v.y, v.z);
+	a_thread->PushVector(v.X(), v.Y(), v.Z());
 	return GM_OK;
 }
 
@@ -1174,7 +1174,7 @@ int gmBot::gmfSetMoveTo(gmThread *a_thread)
 	GM_FLOAT_OR_INT_PARAM(tolerance, 1, 32.f);
 	GM_INT_PARAM(m,2,Run);
 	MoveMode mm = m==Walk?Walk:Run;
-	GM_THREAD_ARG->PushInt(native->MoveTo(Vector3f(v.x,v.y,v.z), tolerance, mm) ? 1 : 0);
+	GM_THREAD_ARG->PushInt(native->MoveTo(Vector3f(v.x, v.y, v.z), tolerance, mm) ? 1 : 0);
 	return GM_OK;
 }
 
@@ -1193,8 +1193,8 @@ int gmBot::gmfToLocalSpace(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_VECTOR_PARAM(v,0);
 
-	Vector3f vl = native->ToLocalSpace(Vector3f(v.x, v.y, v.z));
-	a_thread->PushVector(vl.x,vl.y,vl.z);
+	Vector3f vl = native->ToLocalSpace( Vector3f( v.x, v.y, v.z ) );
+	a_thread->PushVector( vl.X(), vl.Y(), vl.Z() );
 	return GM_OK;
 }
 
@@ -1213,8 +1213,8 @@ int gmBot::gmfToWorldSpace(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_VECTOR_PARAM(v,0);
 
-	Vector3f vw = native->ToWorldSpace(Vector3f(v.x, v.y, v.z));
-	a_thread->PushVector(vw.x,vw.y,vw.z);
+	Vector3f vw = native->ToWorldSpace( Vector3f( v.x, v.y, v.z ) );
+	a_thread->PushVector(vw.X(),vw.Y(),vw.Z());
 	return GM_OK;
 }
 
@@ -1242,7 +1242,7 @@ int gmBot::gmfDistanceTo(gmThread *a_thread)
 	if(a_thread->ParamType(0) == GM_VEC3)
 	{
 		GM_CHECK_VECTOR_PARAM(v,0);
-		vPosition2 = Vector3f(v.x,v.y,v.z);
+		vPosition2 = Vector3f( v.x, v.y, v.z );
 	}
 	else
 	{
@@ -1457,7 +1457,7 @@ int gmBot::gmfInFieldOfView(gmThread *a_thread)
 	GM_CHECK_VECTOR_PARAM(v,0);
 	GM_FLOAT_OR_INT_PARAM(fov, 1, native->GetFieldOfView());
 
-	Vector3f toTarget = (Vector3f(v.x,v.y,v.z) - native->GetPosition());
+	Vector3f toTarget = (Vector3f(v.x, v.y, v.z) - native->GetPosition());
 	toTarget.Normalize();
 	a_thread->PushInt(Utils::InFieldOfView2d(native->GetFacingVector(), toTarget, fov) ? 1 : 0);
 	return GM_OK;
@@ -1490,7 +1490,7 @@ int gmBot::gmfHasLineOfSightTo(gmThread *a_thread)
 		GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 1);
 	}
 
-	a_thread->PushInt(native->HasLineOfSightTo(Vector3f(v.x,v.y,v.z), gameEnt) ? 1 : 0);
+	a_thread->PushInt( native->HasLineOfSightTo( Vector3f( v.x, v.y, v.z ), gameEnt ) ? 1 : 0);
 	return GM_OK;
 }
 

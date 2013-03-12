@@ -3,4 +3,10 @@
   <PropertyGroup>
     <ShowAllFiles>false</ShowAllFiles>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LocalDebuggerCommand>D:\Steam\steamapps\tgdrevil@yahoo.com\source sdk base\hl2.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments>-allowdebug -dev -sw -game "D:\Steam\steamapps\sourcemods\FortressForever"</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>D:\Steam\steamapps\tgdrevil@yahoo.com\source sdk base</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
 </Project>

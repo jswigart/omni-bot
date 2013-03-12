@@ -288,6 +288,9 @@ void IGameManager::UpdateGame()
 	FileDownloader::Poll();
 #endif
 
+	if ( m_Game->RendersToGame() )
+		RenderBuffer::RenderToGame();
+
 	EngineFuncs::FlushAsyncMessages();
 }
 

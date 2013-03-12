@@ -100,12 +100,8 @@
 //typedef boost::try_mutex TryMutex;
 
 // Wild Magic Math Libraries
-#include "WildMagic3Math.h"
-#include "WildMagic3Distance.h"
-#include "WildMagic3Containment.h"
-using namespace Wm3;
-
-#include "Bezier.h"
+#include "Wm5Mathematics.h"
+using namespace Wm5;
 
 // General purpose stuff.
 #include "Functor.h"

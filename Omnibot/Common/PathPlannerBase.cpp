@@ -72,8 +72,8 @@ void PathPlannerBase::cmdShowFailedPaths(const StringVector &_args)
 			EngineFuncs::ConsoleMessage(
 				va("%d: (%.2f,%.2f,%.2f) to (%.2f,%.2f,%.2f) %s",
 				iIndex,
-				fp.m_Start.x, fp.m_Start.y, fp.m_Start.z,
-				fp.m_End.x, fp.m_End.y, fp.m_End.z,
+				fp.m_Start.X(), fp.m_Start.Y(), fp.m_Start.Z(),
+				fp.m_End.X(), fp.m_End.Y(), fp.m_End.Z(),
 				fp.m_Render ? "rendering" : "not rendering"));
 			++iIndex;
 		}

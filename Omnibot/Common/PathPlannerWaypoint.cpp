@@ -141,7 +141,7 @@ void PathPlannerWaypoint::UpdateSelectedWpRender()
 		//////////////////////////////////////////////////////////////////////////
 		// Display a radius indicator
 		Vector3f vRadiusPos = GetDisplayPosition(pWaypoint->GetPosition());
-		RenderBuffer::AddCircle(vRadiusPos, g_RadiusIndicator, pWaypoint->GetRadius());
+		RenderBuffer::AddCircle(vRadiusPos, pWaypoint->GetRadius(), g_RadiusIndicator);
 		//////////////////////////////////////////////////////////////////////////
 
 		GameEntity ge = Utils::GetLocalEntity();
@@ -482,9 +482,9 @@ void PathPlannerWaypoint::Update()
 			EngineFuncs::TraceLine(tr, vPlayerPos, vEndPos, NULL, TR_MASK_SOLID, iPlayerGameID, False);
 			if(tr.m_Fraction != 1.0f)
 			{
-				vEndPos.x = tr.m_Endpos[0];
-				vEndPos.y = tr.m_Endpos[1];
-				vEndPos.z = tr.m_Endpos[2];
+				vEndPos.X() = tr.m_Endpos[0];
+				vEndPos.Y() = tr.m_Endpos[1];
+				vEndPos.Z() = tr.m_Endpos[2];
 			}
 
 			// Outline entities that we're pointing at.
@@ -1402,11 +1402,11 @@ Waypoint *PathPlannerWaypoint::_GetClosestWaypoint(const Vector3f &_pos,
 				continue;
 
 			Vector3f vDist = pWaypoint->GetPosition() - _pos;
-			float fWaypointDistance = vDist.x * vDist.x;
+			float fWaypointDistance = vDist.X() * vDist.X();
 			if (fWaypointDistance >= fClosestDistance) continue;
-			fWaypointDistance += vDist.y * vDist.y;
+			fWaypointDistance += vDist.Y() * vDist.Y();
 			if (fWaypointDistance >= fClosestDistance) continue;
-			fWaypointDistance += vDist.z * vDist.z;
+			fWaypointDistance += vDist.Z() * vDist.Z();
 
 			if (fWaypointDistance < fClosestDistance)
 			{
@@ -1473,7 +1473,7 @@ PathPlannerWaypoint::ClosestLink PathPlannerWaypoint::_GetClosestLink(const Vect
 					pWaypoint->GetPosition() + vDir * fExtent,
 					vDir, fExtent);
 
-				DistVector3Segment3f dtoseg(_pos, seg);
+				DistPoint3Segment3f dtoseg(_pos, seg);
 				fSegmentDistance = dtoseg.GetSquared();
 				if(fSegmentDistance < fClosestSegmentDistance)
 				{
@@ -1488,10 +1488,10 @@ PathPlannerWaypoint::ClosestLink PathPlannerWaypoint::_GetClosestLink(const Vect
 		}
 
 #ifdef _DEBUG
-		DistVector3Segment3f debugSeg(debugVec, debugSegment);
+		DistPoint3Segment3f debugSeg(debugVec, debugSegment);
 		RenderBuffer::AddLine(
-			debugSeg.GetSegment().GetPosEnd(),
-			debugSeg.GetSegment().GetNegEnd(),
+			debugSeg.GetSegment().P0,
+			debugSeg.GetSegment().P1,
 			COLOR::GREEN, 10.f);
 		RenderBuffer::AddLine(_pos,
 			debugSeg.GetClosestPoint0(), COLOR::CYAN, 10.f);
@@ -1824,7 +1824,7 @@ Vector3f PathPlannerWaypoint::GetRandomDestination(Client *_client, const Vector
 		const float fWpHalfHeight = fWpHeight * g_fPathLevelOffset;
 
 		dest = pWp->GetPosition();
-		dest.z += g_fBottomWaypointOffset + fWpHalfHeight;
+		dest.Z() += g_fBottomWaypointOffset + fWpHalfHeight;
 	}
 	return dest;
 }
@@ -1848,7 +1848,7 @@ void PathPlannerWaypoint::GetPath(Path &_path, int _smoothiterations)
 	{
 		// Center the waypoint position according to offsets.
 		Vector3f vWpPos = m_Solution.back()->GetPosition();
-		vWpPos.z += g_fBottomWaypointOffset + fWpHalfHeight;
+		vWpPos.Z() += g_fBottomWaypointOffset + fWpHalfHeight;
 
 		if(bFirst)
 		{
@@ -1859,7 +1859,7 @@ void PathPlannerWaypoint::GetPath(Path &_path, int _smoothiterations)
 				if(m_Client)
 				{
 					Vector3f vNextWpPos = m_Solution[m_Solution.size()-2]->GetPosition();
-					vNextWpPos.z += g_fBottomWaypointOffset + fWpHalfHeight;
+					vNextWpPos.Z() += g_fBottomWaypointOffset + fWpHalfHeight;
 					Vector3f vClosest;
 					float t = Utils::ClosestPtOnLine(vWpPos, vNextWpPos, m_Client->GetPosition(), vClosest);
 					if(t > 0.f)
@@ -2082,7 +2082,7 @@ Vector3f PathPlannerWaypoint::GetDisplayPosition(const Vector3f &_pos)
 {
 	Vector3f dp = _pos;
 	const float fWpHeight = g_fTopWaypointOffset - g_fBottomWaypointOffset;
-	dp.z += g_fBottomWaypointOffset + (fWpHeight*0.5f);
+	dp.Z() += g_fBottomWaypointOffset + (fWpHeight*0.5f);
 	return dp;
 }
 

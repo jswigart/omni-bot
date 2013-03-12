@@ -58,21 +58,6 @@
     <Filter Include="3rdParty">
       <UniqueIdentifier>{c88d6c03-4d27-42a4-8d36-66e3ef94bdf2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="3rdParty\WildMagic">
-      <UniqueIdentifier>{ff980440-d84b-4c6a-911d-2bcc336eb40c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="3rdParty\WildMagic\Math">
-      <UniqueIdentifier>{4e2a2768-14a4-4da7-a23d-16d80671eb80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="3rdParty\WildMagic\Distance">
-      <UniqueIdentifier>{58e3d273-1239-42ed-afa1-7a591989f951}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="3rdParty\WildMagic\Containment">
-      <UniqueIdentifier>{e7c96764-105c-4ba6-9c60-028dbadb983d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="3rdParty\WildMagic\Intersection">
-      <UniqueIdentifier>{d7349d87-5b4c-4400-8f96-faeddd1f1352}</UniqueIdentifier>
-    </Filter>
     <Filter Include="3rdParty\physfs">
       <UniqueIdentifier>{b135ac64-12db-47fe-b97c-f4e787d345df}</UniqueIdentifier>
     </Filter>
@@ -344,57 +329,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Common\WeaponDatabase.cpp">
       <Filter>Core\Weapons</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Math.cpp">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Matrix3.cpp">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Quaternion.cpp">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Vector2.cpp">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Vector3.cpp">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Distance.cpp">
-      <Filter>3rdParty\WildMagic\Distance</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3DistSegment3Segment3.cpp">
-      <Filter>3rdParty\WildMagic\Distance</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3DistVector3Ray3.cpp">
-      <Filter>3rdParty\WildMagic\Distance</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3DistVector3Segment3.cpp">
-      <Filter>3rdParty\WildMagic\Distance</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3ContBox3.cpp">
-      <Filter>3rdParty\WildMagic\Containment</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Intersector.cpp">
-      <Filter>3rdParty\WildMagic\Intersection</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3IntrBox3Box3.cpp">
-      <Filter>3rdParty\WildMagic\Intersection</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3IntrLine3Box3.cpp">
-      <Filter>3rdParty\WildMagic\Intersection</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3IntrLine3Plane3.cpp">
-      <Filter>3rdParty\WildMagic\Intersection</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3IntrPlane3Plane3.cpp">
-      <Filter>3rdParty\WildMagic\Intersection</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3IntrSegment3Box3.cpp">
-      <Filter>3rdParty\WildMagic\Intersection</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3IntrSegment3Plane3.cpp">
-      <Filter>3rdParty\WildMagic\Intersection</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\physfs\physfs.c">
       <Filter>3rdParty\physfs</Filter>
@@ -914,84 +848,6 @@
     <ClInclude Include="..\..\..\Common\WeaponDatabase.h">
       <Filter>Core\Weapons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\WildMagic3Math.h">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Box3.h">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3LinComp.h">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\wm3line3.h">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Math.h">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Matrix3.h">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Plane3.h">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Quaternion.h">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Ray3.h">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Segment3.h">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Vector2.h">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Vector3.h">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\WildMagic3Distance.h">
-      <Filter>3rdParty\WildMagic\Distance</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Distance.h">
-      <Filter>3rdParty\WildMagic\Distance</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3DistSegment3Segment3.h">
-      <Filter>3rdParty\WildMagic\Distance</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3DistVector3Ray3.h">
-      <Filter>3rdParty\WildMagic\Distance</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3DistVector3Segment3.h">
-      <Filter>3rdParty\WildMagic\Distance</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\WildMagic3Containment.h">
-      <Filter>3rdParty\WildMagic\Containment</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3ContBox3.h">
-      <Filter>3rdParty\WildMagic\Containment</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Intersector.h">
-      <Filter>3rdParty\WildMagic\Intersection</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3IntrBox3Box3.h">
-      <Filter>3rdParty\WildMagic\Intersection</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3IntrLine3Box3.h">
-      <Filter>3rdParty\WildMagic\Intersection</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3IntrLine3Plane3.h">
-      <Filter>3rdParty\WildMagic\Intersection</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3IntrPlane3Plane3.h">
-      <Filter>3rdParty\WildMagic\Intersection</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3IntrSegment3Box3.h">
-      <Filter>3rdParty\WildMagic\Intersection</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3IntrSegment3Plane3.h">
-      <Filter>3rdParty\WildMagic\Intersection</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\dependencies\physfs\physfs.h">
       <Filter>3rdParty\physfs</Filter>
     </ClInclude>
@@ -1306,39 +1162,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Box3.inl">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </None>
-    <None Include="..\..\..\dependencies\wildmagic\Wm3LinComp.inl">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </None>
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Line3.inl">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </None>
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Math.inl">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </None>
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Matrix3.inl">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </None>
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Plane3.inl">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </None>
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Quaternion.inl">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </None>
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Ray3.inl">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </None>
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Segment3.inl">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </None>
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Vector2.inl">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </None>
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Vector3.inl">
-      <Filter>3rdParty\WildMagic\Math</Filter>
-    </None>
     <None Include="..\..\..\Common\Jamfile" />
     <None Include="..\..\..\Common\Omni-Bot_Common_TODO.txt" />
   </ItemGroup>

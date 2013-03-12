@@ -73,7 +73,7 @@ you need to write to bind integral types
 a function
 
 03/03/2005 Version 0.9.2
-- Fixed compatibility with GCC 3.4.x compilers
+- Fixed compatibility with GCC 3.4.X() compilers
 
 26/01/2005 Version 0.9.1
 - Fixed bug which was reported on the GM forums (m_gmTypeLib[])

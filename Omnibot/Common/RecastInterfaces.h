@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy: jswigart $
 // $LastChangedDate: 2010-08-28 00:12:05 -0500 (Sat, 28 Aug 2010) $
 // $LastChangedRevision: 32 $
@@ -29,7 +29,7 @@ public:
 	// Returns log message text.
 	const char* getLogText(const int i) const;
 
-protected:	
+protected:
 	// Virtual functions for custom implementations.
 	virtual void doResetLog();
 	virtual void doLog(const rcLogCategory /*category*/, const char* /*msg*/, const int /*len*/);
@@ -51,13 +51,13 @@ private:
 };
 
 // stdio file implementation.
-class FileIO : public duFileIO
+class rcFileIO : public duFileIO
 {
 	File m_file;
 	int m_mode;
 public:
-	FileIO();
-	virtual ~FileIO();
+	rcFileIO();
+	virtual ~rcFileIO();
 	bool openForWrite(const char* path);
 	bool openForRead(const char* path);
 	virtual bool isWriting() const;
@@ -67,4 +67,3 @@ public:
 };
 
 #endif
-

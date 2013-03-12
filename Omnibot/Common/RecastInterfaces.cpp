@@ -1,5 +1,3 @@
-
-
 #include "RecastInterfaces.h"
 
 RecastBuildContext::RecastBuildContext() {
@@ -117,39 +115,39 @@ const char* RecastBuildContext::getLogText(const int i) const
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-FileIO::FileIO() :
-m_mode(-1)
+rcFileIO::rcFileIO() :
+	m_mode(-1)
 {
 }
 
-FileIO::~FileIO()
+rcFileIO::~rcFileIO()
 {
 	m_file.Close();
 }
 
-bool FileIO::openForWrite(const char* path)
+bool rcFileIO::openForWrite(const char* path)
 {
 	m_mode = 1;
 	return m_file.OpenForWrite( path, File::Text, false );
 }
 
-bool FileIO::openForRead(const char* path)
+bool rcFileIO::openForRead(const char* path)
 {
 	m_mode = 2;
 	return m_file.OpenForRead( path, File::Text );
 }
 
-bool FileIO::isWriting() const
+bool rcFileIO::isWriting() const
 {
 	return m_mode == 1;
 }
 
-bool FileIO::isReading() const
+bool rcFileIO::isReading() const
 {
 	return m_mode == 2;
 }
 
-bool FileIO::write(const void* ptr, const size_t size)
+bool rcFileIO::write(const void* ptr, const size_t size)
 {
 	if( m_file.IsOpen() ) {
 		m_file.Write( ptr, size, 1 );
@@ -158,7 +156,7 @@ bool FileIO::write(const void* ptr, const size_t size)
 	return false;
 }
 
-bool FileIO::read(void* ptr, const size_t size)
+bool rcFileIO::read(void* ptr, const size_t size)
 {
 	if( m_file.IsOpen() ) {
 		m_file.Read( ptr, size, 1 );
@@ -166,5 +164,3 @@ bool FileIO::read(void* ptr, const size_t size)
 	}
 	return false;
 }
-
-

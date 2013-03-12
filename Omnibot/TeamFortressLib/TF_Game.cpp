@@ -452,8 +452,8 @@ void TF_Game::ProcessEvent(const MessageHelper &_message, CallbackParameters &_c
 						// Auto Nav
 						if(pPlanner->GetPlannerType() == NAVID_WP)
 						{
-							vEntPosition.z -= g_fBottomWaypointOffset;
-							//vWpPosition.z -= g_fBottomWaypointOffset;
+							vEntPosition.Z() -= g_fBottomWaypointOffset;
+							//vWpPosition.Z() -= g_fBottomWaypointOffset;
 
 							PathPlannerWaypoint *pWp = static_cast<PathPlannerWaypoint*>(pPlanner);
 							Waypoint *pWaypoint = pWp->AddWaypoint(vWpPosition, vWpFacing, true);

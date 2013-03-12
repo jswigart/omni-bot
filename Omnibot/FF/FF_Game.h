@@ -36,6 +36,9 @@ public:
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
 	const char *GetGameDatabaseAbbrev() const { return "ff"; }
+	virtual eNavigatorID GetDefaultNavigator() const { return NAVID_NAVMESH; }
+
+	virtual bool RendersToGame() const { return true; }
 
 	ClientPtr &GetClientFromCorrectedGameId(int _gameid);
 

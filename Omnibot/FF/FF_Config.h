@@ -13,9 +13,6 @@
 
 #include "TF_Config.h"
 
-#include "Omni-Bot_Types.h"
-#include "Omni-Bot_Events.h"
-
 typedef enum eFF_Version
 {
 	FF_VERSION_0_1 = 1,

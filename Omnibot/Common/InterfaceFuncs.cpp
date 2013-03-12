@@ -325,13 +325,13 @@ namespace InterfaceFuncs
 	bool IsMoverAt(const Vector3f &_pos1, const Vector3f &_pos2)
 	{
 		Msg_MoverAt data;
-		data.m_Position[0] = _pos1.x;
-		data.m_Position[1] = _pos1.y;
-		data.m_Position[2] = _pos1.z;
+		data.m_Position[0] = _pos1.X();
+		data.m_Position[1] = _pos1.Y();
+		data.m_Position[2] = _pos1.Z();
 
-		data.m_Under[0] = _pos2.x;
-		data.m_Under[1] = _pos2.y;
-		data.m_Under[2] = _pos2.z;
+		data.m_Under[0] = _pos2.X();
+		data.m_Under[1] = _pos2.Y();
+		data.m_Under[2] = _pos2.Z();
 
 		MessageHelper msg(GEN_MSG_MOVERAT, &data, sizeof(data));
 		return SUCCESS(InterfaceMsg(msg)) && data.m_Entity.IsValid();

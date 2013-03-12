@@ -348,8 +348,8 @@ namespace AiState
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 		if(!m_AimSignalled && m_ActiveThread[ON_UPDATE].IsActive())
 		{
-			pMachine->Signal(gmVariable(AIM_SUCCESS), m_ActiveThread[ON_UPDATE].ThreadId(), GM_INVALID_THREAD);
-			Signal(gmVariable(AIM_SUCCESS));
+			pMachine->Signal(gmVariable(AIM_ONTARGET), m_ActiveThread[ON_UPDATE].ThreadId(), GM_INVALID_THREAD);
+			Signal(gmVariable(AIM_ONTARGET));
 			m_AimSignalled = true;
 		}
 	}

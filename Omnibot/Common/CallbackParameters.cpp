@@ -132,7 +132,7 @@ void CallbackParameters::AddFloat(const char *_name, float _param)
 
 void CallbackParameters::AddVector(const char *_name, const Vector3f &_vec)
 {
-	AddVector(_name, _vec.x, _vec.y, _vec.z);
+	AddVector(_name, _vec.X(), _vec.Y(), _vec.Z());
 }
 
 void CallbackParameters::AddVector(const char *_name, float _x, float _y, float _z)

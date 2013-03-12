@@ -83,16 +83,27 @@ public:
 	};
 	typedef std::vector<Obstacle> ObstacleList;
 
+	struct NavPortal
+	{
+		Segment3f		m_Segment;
+
+		int				m_DestSector;
+
+		BitFlag64		m_LinkFlags;
+	};
+
+	typedef std::vector<NavPortal> NavPortalList;
+
 	struct NavSector
 	{
 		int								m_Id;
-		int								m_StartPortal;
-		int								m_NumPortals;
 
 		Vector3List						m_Boundary;
 		NavmeshIO::Sector_MirrorDir		m_Mirror;
 
 		Plane3f							m_Plane;
+
+		NavPortalList					m_NavPortals;
 
 		ObstacleList					m_Obstacles;
 
@@ -102,9 +113,7 @@ public:
 		}
 
 		NavSector()
-			: m_Id(0)
-			, m_StartPortal(0)
-			, m_NumPortals(0)
+			: m_Id( 0 )
 			, m_Mirror( NavmeshIO::Sector_MirrorDir_MirrorNone )
 		{
 		}
@@ -113,15 +122,6 @@ public:
 		NavSector GetMirroredCopy(const Vector3f &offset) const;
 		SegmentList GetEdgeSegments() const;
 		void GetEdgeSegments(SegmentList &_list) const;
-	};
-	struct NavPortal
-	{
-		Segment3f		m_Segment;
-
-		int				m_DestSector;
-		int				m_DestPortal;
-
-		BitFlag64		m_LinkFlags;
 	};
 
 	NavSector *GetSectorAt(const Vector3f &_pos, float _distance = 1024.f);
@@ -268,8 +268,6 @@ protected:
 	NavSectorList		m_NavSectors;
 	NavSectorList		m_ActiveNavSectors;
 
-	typedef std::vector<NavPortal> NavPortalList;
-	NavPortalList		m_NavPortals;
 	//////////////////////////////////////////////////////////////////////////
 	// Tool state machine
 	STATE_PROTOTYPE(NoOp);

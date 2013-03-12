@@ -29,14 +29,14 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\PropertySheets\ReleaseProperties.props" />
-    <Import Project="..\PropertySheets\BaseBuildProperties.props" />
-    <Import Project="..\PropertySheets\Paths.props" />
+    <Import Project="..\..\msvc11\PropertySheets\BaseBuildProperties.props" />
+    <Import Project="..\..\msvc11\PropertySheets\Paths.props" />
+    <Import Project="..\..\msvc11\PropertySheets\ReleaseProperties.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\PropertySheets\BaseBuildProperties.props" />
-    <Import Project="..\PropertySheets\Paths.props" />
+    <Import Project="..\..\msvc11\PropertySheets\BaseBuildProperties.props" />
+    <Import Project="..\..\msvc11\PropertySheets\Paths.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -225,108 +225,6 @@
     <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastAlloc.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Math.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Matrix3.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Quaternion.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Vector2.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Vector3.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Distance.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3DistSegment3Segment3.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3DistVector3Ray3.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3DistVector3Segment3.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3ContBox3.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3Intersector.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3IntrBox3Box3.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3IntrLine3Box3.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3IntrLine3Plane3.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3IntrPlane3Plane3.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3IntrSegment3Box3.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3IntrSegment3Plane3.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\physfs\physfs.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -848,32 +746,6 @@
     <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNavMeshQuery.h" />
     <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourObstacleAvoidance.h" />
     <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastAlloc.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\WildMagic3Math.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Box3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3LinComp.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\wm3line3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Math.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Matrix3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Plane3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Quaternion.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Ray3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Segment3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Vector2.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Vector3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\WildMagic3Distance.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Distance.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3DistSegment3Segment3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3DistVector3Ray3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3DistVector3Segment3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\WildMagic3Containment.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3ContBox3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3Intersector.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3IntrBox3Box3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3IntrLine3Box3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3IntrLine3Plane3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3IntrPlane3Plane3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3IntrSegment3Box3.h" />
-    <ClInclude Include="..\..\..\dependencies\wildmagic\Wm3IntrSegment3Plane3.h" />
     <ClInclude Include="..\..\..\dependencies\physfs\physfs.h" />
     <ClInclude Include="..\..\..\dependencies\physfs\physfs_casefolding.h" />
     <ClInclude Include="..\..\..\dependencies\physfs\physfs_internal.h" />
@@ -981,17 +853,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>
     </CustomBuild>
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Box3.inl" />
-    <None Include="..\..\..\dependencies\wildmagic\Wm3LinComp.inl" />
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Line3.inl" />
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Math.inl" />
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Matrix3.inl" />
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Plane3.inl" />
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Quaternion.inl" />
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Ray3.inl" />
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Segment3.inl" />
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Vector2.inl" />
-    <None Include="..\..\..\dependencies\wildmagic\Wm3Vector3.inl" />
     <None Include="..\..\..\Common\Jamfile" />
     <None Include="..\..\..\Common\Omni-Bot_Common_TODO.txt" />
   </ItemGroup>
@@ -1033,6 +894,22 @@
     </ProjectReference>
     <ProjectReference Include="..\..\..\dependencies\protobuf-2.4.1\vsprojects\libprotobuf2010.vcxproj">
       <Project>{3e283f37-a4ed-41b7-a3e6-a2d89d131a30}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\dependencies\WildMagic5\LibCore\LibCore_VC100.vcxproj">
+      <Project>{2da95cd7-8454-497e-b25d-6840527b73f3}</Project>
+      <Private>true</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\dependencies\WildMagic5\LibMathematics\LibMathematics_VC100.vcxproj">
+      <Project>{05ab1253-998d-4170-b8eb-b092bede9593}</Project>
       <Private>true</Private>
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>

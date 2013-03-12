@@ -896,7 +896,7 @@ static int gmfGroundPoint(gmThread *a_thread)
 	if(tr.m_Fraction<1.f)
 		vPt = tr.m_Endpos;
 
-	vPt.z -= offset;
+	vPt.Z() -= offset;
 
 	a_thread->PushVector(vPt);
 	return GM_OK;
@@ -977,7 +977,7 @@ static int gmfDrawDebugAABB(gmThread *a_thread)
 	GM_CHECK_INT_PARAM(color, 1);
 	GM_CHECK_FLOAT_OR_INT_PARAM(duration, 2);
 
-	RenderBuffer::AddAABB(*aabb, color);
+	RenderBuffer::AddAABB( *aabb, obColor(color) );
 	return GM_OK;
 }
 
@@ -1001,7 +1001,7 @@ static int gmfDrawDebugRadius(gmThread *a_thread)
 	GM_CHECK_FLOAT_OR_INT_PARAM(rad,1);
 	GM_CHECK_INT_PARAM(color, 2);
 	GM_CHECK_FLOAT_OR_INT_PARAM(duration, 3);
-	RenderBuffer::AddCircle(Vector3f(v.x,v.y,v.z), obColor(color), rad);
+	RenderBuffer::AddCircle(Vector3f(v.x,v.y,v.z), rad, obColor(color));
 	return GM_OK;
 }
 
@@ -1269,7 +1269,7 @@ static int gmfGetEntityFacing(gmThread *a_thread)
 
 	Vector3f v = Vector3f::ZERO;
 	if(gameEnt.IsValid() && EngineFuncs::EntityOrientation(gameEnt, v, NULL, NULL))
-		a_thread->PushVector(v.x, v.y, v.z);
+		a_thread->PushVector( v.X(), v.Y(), v.Z() );
 	else
 		a_thread->PushNull();
 	return GM_OK;
@@ -1300,7 +1300,7 @@ static int gmfGetEntityPosition(gmThread *a_thread)
 
 	Vector3f v = Vector3f::ZERO;
 	if(gameEnt.IsValid() && EngineFuncs::EntityPosition(gameEnt, v))
-		a_thread->PushVector(v.x, v.y, v.z);
+		a_thread->PushVector( v.X(), v.Y(), v.Z() );
 	else
 		a_thread->PushNull();
 	return GM_OK;
@@ -1333,7 +1333,7 @@ static int gmfGetEntityBonePosition(gmThread *a_thread)
 
 	Vector3f v = Vector3f::ZERO;
 	if(gameEnt.IsValid() && EngineFuncs::EntityBonePosition(gameEnt, boneid, v))
-		a_thread->PushVector(v.x, v.y, v.z);
+		a_thread->PushVector( v.X(), v.Y(), v.Z() );
 	else
 		a_thread->PushNull();
 	return GM_OK;
@@ -1361,7 +1361,7 @@ static int gmfGetEntEyePosition(gmThread *a_thread)
 
 	Vector3f v = Vector3f::ZERO;
 	if(gameEnt.IsValid() && EngineFuncs::EntityEyePosition(gameEnt, v))
-		a_thread->PushVector(v.x, v.y, v.z);
+		a_thread->PushVector( v.X(), v.Y(), v.Z() );
 	else
 		a_thread->PushNull();
 	return GM_OK;
@@ -1392,7 +1392,7 @@ static int gmfGetEntityVelocity(gmThread *a_thread)
 
 	Vector3f v = Vector3f::ZERO;
 	if(gameEnt.IsValid() && EngineFuncs::EntityVelocity(gameEnt, v))
-		a_thread->PushVector(v.x, v.y, v.z);
+		a_thread->PushVector( v.X(), v.Y(), v.Z() );
 	else
 		a_thread->PushNull();
 	return GM_OK;
@@ -1824,7 +1824,7 @@ static int gmfGetEntityToLocalSpace(gmThread *a_thread)
 
 	Vector3f vl;
 	if(Utils::ToLocalSpace(gameEnt, Vector3f(v.x,v.y,v.z), vl))
-		a_thread->PushVector(vl.x,vl.y,vl.z);
+		a_thread->PushVector( vl.X(), vl.Y(), vl.Z() );
 	else
 		a_thread->PushNull();
 	return GM_OK;
@@ -1856,7 +1856,7 @@ static int gmfGetEntityToWorldSpace(gmThread *a_thread)
 
 	Vector3f vw;
 	if(Utils::ToWorldSpace(gameEnt, Vector3f(v.x,v.y,v.z), vw))
-		a_thread->PushVector(vw.x,vw.y,vw.z);
+		a_thread->PushVector( vw.X(), vw.Y(), vw.Z() );
 	else
 		a_thread->PushNull();
 	return GM_OK;
@@ -2109,11 +2109,11 @@ static int gmfCalculateTrajectory(gmThread *a_thread)
 
 			Vector3f vAimPt = Vector3f(v2.x,v2.y,v2.z), vStartPos = Vector3f(v1.x,v1.y,v1.z);
 			Vector3f vAimDir = vAimPt - vStartPos;
-			vAimPt.z = vStartPos.z + Mathf::Tan(traj[0].m_Angle) * Vector2f(vAimDir).Length();
+			vAimPt.Z() = vStartPos.Z() + Mathf::Tan(traj[0].m_Angle) * Vector2f(vAimDir.X(), vAimDir.Y()).Length();
 			vAimDir = vAimPt - vStartPos;
 			vAimDir.Normalize();
 
-			var.SetVector(vAimDir.x, vAimDir.y, vAimDir.z);
+			var.SetVector( vAimDir.X(), vAimDir.Y(), vAimDir.Z() );
 			pTbl->Set(pMachine, i, var);
 		}
 	}

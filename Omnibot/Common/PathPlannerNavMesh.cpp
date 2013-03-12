@@ -334,11 +334,9 @@ private:
 			return;
 		}
 
-		for(int p = _node->Sector->m_StartPortal;
-			p < _node->Sector->m_StartPortal+_node->Sector->m_NumPortals;
-			++p)
+		for ( size_t p = 0; p < _node->Sector->m_NavPortals.size(); ++p)
 		{
-			const PathPlannerNavMesh::NavPortal &portal = g_PlannerNavMesh->m_NavPortals[p];
+			const PathPlannerNavMesh::NavPortal &portal = _node->Sector->m_NavPortals[p];
 
 			//for(int b = 0; b < )
 
@@ -348,7 +346,7 @@ private:
 			tmpNext.Portal = &portal;
 			tmpNext.Parent = _node;
 			tmpNext.Sector = &g_PlannerNavMesh->m_ActiveNavSectors[portal.m_DestSector];
-			tmpNext.Position = portal.m_Segment.Origin; // TODO: branch more
+			tmpNext.Position = portal.m_Segment.Center; // TODO: branch more
 
 			//if(m_CurrentGoals.size()==1)
 			//	tmpNext.CostHeuristic = Length(m_CurrentGoals.front().Position,tmpNext.Position); // USE IF 1 GOAL!
@@ -428,8 +426,8 @@ PathPlannerNavMesh::NavCollision PathPlannerNavMesh::FindCollision(const Vector3
 		const float distance = dir.Normalize() * 16.0f;
 
 		IceMaths::Ray ray;
-		ray.mOrig.Set( _from.x, _from.y, _from.z );
-		ray.mDir.Set( dir.x, dir.y, dir.z );
+		ray.mOrig.Set( _from.X(), _from.Y(), _from.Z() );
+		ray.mDir.Set( dir.X(), dir.Y(), dir.Z() );
 
 		Opcode::CollisionFaces faces;
 		Opcode::RayCollider rayCol;
@@ -566,9 +564,9 @@ void PathPlannerNavMesh::NavSector::GetEdgeSegments(SegmentList &_list) const
 {
 	for(obuint32 m = 0; m < m_Boundary.size()-1; ++m)
 	{
-		_list.push_back(Utils::MakeSegment(m_Boundary[m],m_Boundary[m+1]));
+		_list.push_back( Segment3f(m_Boundary[m],m_Boundary[m+1]) );
 	}
-	_list.push_back(Utils::MakeSegment(m_Boundary[m_Boundary.size()-1],m_Boundary[0]));
+	_list.push_back( Segment3f( m_Boundary[m_Boundary.size()-1],m_Boundary[0] ) );
 }
 
 SegmentList PathPlannerNavMesh::NavSector::GetEdgeSegments() const
@@ -591,7 +589,7 @@ static void DrawPoly( bool solid, const PathPlannerNavMesh::NavSector & ns, cons
 	{
 		Vector3f vec3d( (float)poly[ i ].x, (float)poly[ i ].y, 0.0f );
 		ns.m_Plane.DropToPlane( vec3d, -Vector3f::UNIT_Z );
-		vec3d.z += offset;
+		vec3d.Z() += offset;
 		polyList.push_back( vec3d );
 	}
 	/*if ( solid )
@@ -620,7 +618,7 @@ static void DrawPoly( bool solid, const PathPlannerNavMesh::NavSector & ns, cons
 		const ClipperLib::IntPoint & pt = *it;
 		Vector3f vec3d( (float)pt.X, (float)pt.Y, 0.0f );
 		ns.m_Plane.DropToPlane( vec3d, -Vector3f::UNIT_Z );
-		vec3d.z += offset;
+		vec3d.Z() += offset;
 		polyList.push_back( vec3d );
 	}
 	/*if ( solid )
@@ -701,248 +699,258 @@ void PathPlannerNavMesh::Update()
 			//Utils::DrawPolygon(m_ActiveNavSectors[iCurrentSector].m_Boundary, COLOR::RED, 0.5f, false);
 		}
 
-		static int iNextTimeUpdate = 0;
-		if(IGame::GetTime() >= iNextTimeUpdate)
+		//////////////////////////////////////////////////////////////////////////
+		// Draw our nav sectors
+		for(obuint32 i = 0; i < m_ActiveNavSectors.size(); ++i)
 		{
-			iNextTimeUpdate = IGame::GetTime() + 0;//2000;
-			//////////////////////////////////////////////////////////////////////////
-			// Draw our nav sectors
-			for(obuint32 i = 0; i < m_ActiveNavSectors.size(); ++i)
-			{
-				const NavSector &ns = m_ActiveNavSectors[i];
+			const NavSector &ns = m_ActiveNavSectors[i];
 
-				// mirrored sectors are contiguous at the end of
-				// the m_ActiveNavSectors list, so draw them differently
-				obColor SEC_COLOR = COLOR::GREEN;
-				if ( i >= m_NavSectors.size() )
-					SEC_COLOR = COLOR::CYAN;
+			// mirrored sectors are contiguous at the end of
+			// the m_ActiveNavSectors list, so draw them differently
+			obColor SEC_COLOR = COLOR::GREEN;
+			if ( i >= m_NavSectors.size() )
+				SEC_COLOR = COLOR::CYAN;
+
+			//////////////////////////////////////////////////////////////////////////
+			// Draw sector obstacles
+			if ( ns.m_Obstacles.size() > 0 )
+			{
+				ClipperLib::Polygon sectorPoly;
+				for ( size_t b = 0; b < ns.m_Boundary.size(); ++b )
+				{
+					sectorPoly.push_back( ClipperLib::IntPoint(
+						(ClipperLib::long64)ns.m_Boundary[b].X(),
+						(ClipperLib::long64)ns.m_Boundary[b].Y() ) );
+				}
+
+				ClipperLib::Polygons obstaclePolys;
+				for ( size_t o = 0; o < ns.m_Obstacles.size(); ++o )
+				{
+					obstaclePolys.push_back( ClipperLib::Polygon() );
+
+					ClipperLib::Polygon & obs = obstaclePolys.back();
+					for ( size_t ov = 0; ov < ns.m_Obstacles[o].mPolyVerts.size(); ++ov )
+					{
+						obs.push_back( ClipperLib::IntPoint(
+							(ClipperLib::long64)ns.m_Obstacles[o].mPolyVerts[ ov ].X(),
+							(ClipperLib::long64)ns.m_Obstacles[o].mPolyVerts[ ov ].Y() ) );
+					}
+				}
 
 				//////////////////////////////////////////////////////////////////////////
-				// Draw sector obstacles
-				if ( ns.m_Obstacles.size() > 0 )
+				// generate the union of the obstacles in case there is overlap
+				//static bool mergeObstacles = false;
+				//if ( mergeObstacles && obstaclePolys.size() > 0 )
+				//{
+				//	static ClipperLib::ClipType ct = ClipperLib::ctUnion;
+				//	static ClipperLib::PolyFillType pft = ClipperLib::pftNonZero;
+
+				//	ClipperLib::Clipper obsUnion;
+				//	obsUnion.AddPolygon( obstaclePolys[0], ClipperLib::ptSubject );
+				//	obsUnion.AddPolygons( obstaclePolys, ClipperLib::ptClip );
+				//	if ( obsUnion.Execute( ct, pft ) )
+				//	{
+				//		obstaclePolys.resize( 0 );
+
+				//		ClipperLib::Polygon poly;
+				//		for ( size_t i = 0; i < obsUnion.GetNumPolysOut(); ++i )
+				//		{
+				//			bool polyIsHole = false;
+				//			if ( obsUnion.GetPolyOut( i, poly, polyIsHole ) )
+				//			{
+				//				//assert( ClipperLib::Orientation( poly ) );
+				//				if ( !ClipperLib::Orientation( poly ) )
+				//				{
+				//					DrawPoly( true, ns, poly, 12, COLOR::WHITE, 2.0f, 4.0f );
+				//				}
+				//				obstaclePolys.push_back( poly );
+				//			}
+				//		}
+				//	}
+				//}
+				//////////////////////////////////////////////////////////////////////////
+				assert ( ClipperLib::Orientation( sectorPoly ) );
+
+				static ClipperLib::ClipType ct = ClipperLib::ctDifference;
+				static ClipperLib::PolyFillType pft = ClipperLib::pftNonZero;
+				static ClipperLib::PolyFillType cft = ClipperLib::pftNonZero;
+
+				ClipperLib::Clipper obsNav;
+				obsNav.AddPolygon( sectorPoly, ClipperLib::ptSubject );
+				obsNav.AddPolygons( obstaclePolys, ClipperLib::ptClip );
+				if ( obsNav.Execute( ct, pft, cft ) )
 				{
-					ClipperLib::Polygon sectorPoly;
-					for ( size_t b = 0; b < ns.m_Boundary.size(); ++b )
-					{
-						sectorPoly.push_back( ClipperLib::IntPoint(
-							(ClipperLib::long64)ns.m_Boundary[b].x,
-							(ClipperLib::long64)ns.m_Boundary[b].y ) );
-					}
+					typedef std::list<TPPLPoly> PolyList;
+					PolyList inputPolys;
+					PolyList subPolys;
 
-					ClipperLib::Polygons obstaclePolys;
-					for ( size_t o = 0; o < ns.m_Obstacles.size(); ++o )
+					// add all the solution polygons to the input polygons
+					// of the partition list
+					ClipperLib::Polygon poly;
+					for ( size_t p = 0; p < obsNav.GetNumPolysOut(); ++p )
 					{
-						obstaclePolys.push_back( ClipperLib::Polygon() );
-
-						ClipperLib::Polygon & obs = obstaclePolys.back();
-						for ( size_t ov = 0; ov < ns.m_Obstacles[o].mPolyVerts.size(); ++ov )
+						bool polyIsHole = false;
+						if ( obsNav.GetPolyOut( p, poly, polyIsHole ) )
 						{
-							obs.push_back( ClipperLib::IntPoint(
-								(ClipperLib::long64)ns.m_Obstacles[o].mPolyVerts[ ov ].x,
-								(ClipperLib::long64)ns.m_Obstacles[o].mPolyVerts[ ov ].y ) );
+							inputPolys.push_back( TPPLPoly() );
+							inputPolys.back().Init( poly.size() );
+
+							Vector3List drawList;
+
+							for ( size_t j = 0; j < poly.size(); ++j )
+							{
+								const ClipperLib::IntPoint & pt = poly[ j ];
+
+								TPPLPoint & tpp = inputPolys.back()[ j ];
+								tpp.x = (float)pt.X;
+								tpp.y = (float)pt.X;
+
+								//////////////////////////////////////////////////////////////////////////
+								Vector3f vec3d( (float)tpp.x, (float)tpp.y, 0.0f );
+								ns.m_Plane.DropToPlane( vec3d, -Vector3f::UNIT_Z );
+								drawList.push_back( vec3d );
+								//////////////////////////////////////////////////////////////////////////
+							}
+
+							inputPolys.back().SetHole( polyIsHole );
+							inputPolys.back().SetOrientation( polyIsHole ? TPPL_CW : TPPL_CCW );
 						}
 					}
 
-					//////////////////////////////////////////////////////////////////////////
-					// generate the union of the obstacles in case there is overlap
-					//static bool mergeObstacles = false;
-					//if ( mergeObstacles && obstaclePolys.size() > 0 )
-					//{
-					//	static ClipperLib::ClipType ct = ClipperLib::ctUnion;
-					//	static ClipperLib::PolyFillType pft = ClipperLib::pftNonZero;
-
-					//	ClipperLib::Clipper obsUnion;
-					//	obsUnion.AddPolygon( obstaclePolys[0], ClipperLib::ptSubject );
-					//	obsUnion.AddPolygons( obstaclePolys, ClipperLib::ptClip );
-					//	if ( obsUnion.Execute( ct, pft ) )
-					//	{
-					//		obstaclePolys.resize( 0 );
-
-					//		ClipperLib::Polygon poly;
-					//		for ( size_t i = 0; i < obsUnion.GetNumPolysOut(); ++i )
-					//		{
-					//			bool polyIsHole = false;
-					//			if ( obsUnion.GetPolyOut( i, poly, polyIsHole ) )
-					//			{
-					//				//assert( ClipperLib::Orientation( poly ) );
-					//				if ( !ClipperLib::Orientation( poly ) )
-					//				{
-					//					DrawPoly( true, ns, poly, 12, COLOR::WHITE, 2.0f, 4.0f );
-					//				}
-					//				obstaclePolys.push_back( poly );
-					//			}
-					//		}
-					//	}
-					//}
-					//////////////////////////////////////////////////////////////////////////
-					assert ( ClipperLib::Orientation( sectorPoly ) );
-
-					static ClipperLib::ClipType ct = ClipperLib::ctDifference;
-					static ClipperLib::PolyFillType pft = ClipperLib::pftNonZero;
-					static ClipperLib::PolyFillType cft = ClipperLib::pftNonZero;
-
-					ClipperLib::Clipper obsNav;
-					obsNav.AddPolygon( sectorPoly, ClipperLib::ptSubject );
-					obsNav.AddPolygons( obstaclePolys, ClipperLib::ptClip );
-					if ( obsNav.Execute( ct, pft, cft ) )
+					TPPLPartition partition;
+					if ( partition.ConvexPartition_HM( &inputPolys, &subPolys ) != 0 )
 					{
-						typedef std::list<TPPLPoly> PolyList;
-						PolyList inputPolys;
-						PolyList subPolys;
-
-						// add all the solution polygons to the input polygons
-						// of the partition list
-						ClipperLib::Polygon poly;
-						for ( size_t p = 0; p < obsNav.GetNumPolysOut(); ++p )
+						// translate it back to sector space
+						for ( PolyList::iterator it = subPolys.begin();
+							it != subPolys.end();
+							++it )
 						{
-							bool polyIsHole = false;
-							if ( obsNav.GetPolyOut( p, poly, polyIsHole ) )
+							const TPPLPoly & ply = *it;
+							for ( int p = 0; p < ply.GetNumPoints(); ++p )
 							{
-								inputPolys.push_back( TPPLPoly() );
-								inputPolys.back().Init( poly.size() );
-
-								Vector3List drawList;
-
-								for ( size_t j = 0; j < poly.size(); ++j )
-								{
-									const ClipperLib::IntPoint & pt = poly[ j ];
-
-									TPPLPoint & tpp = inputPolys.back()[ j ];
-									tpp.x = (float)pt.X;
-									tpp.y = (float)pt.Y;
-
-									//////////////////////////////////////////////////////////////////////////
-									Vector3f vec3d( (float)tpp.x, (float)tpp.y, 0.0f );
-									ns.m_Plane.DropToPlane( vec3d, -Vector3f::UNIT_Z );
-									drawList.push_back( vec3d );
-									//////////////////////////////////////////////////////////////////////////
-								}
-
-								inputPolys.back().SetHole( polyIsHole );
-								inputPolys.back().SetOrientation( polyIsHole ? TPPL_CW : TPPL_CCW );
+								Vector3f vec3d( (float)ply[ p ].x, (float)ply[ p ].y, 0.0f );
+								ns.m_Plane.DropToPlane( vec3d, -Vector3f::UNIT_Z );
 							}
+
+							DrawPoly( true, ns, ply, 0.0f, SEC_COLOR.fade(100), 2.0f, 4.0f );
+							DrawPoly( false, ns, ply, 0.0f, SEC_COLOR, 2.0f, 4.0f );
 						}
+					}
+					else
+					{
+						const NavSector &ns = m_ActiveNavSectors[i];
 
-						TPPLPartition partition;
-						if ( partition.ConvexPartition_HM( &inputPolys, &subPolys ) != 0 )
+						RenderBuffer::AddLine(ns.m_Boundary, COLOR::RED.fade( 100 ));
+
+						// Draw the error input poly line
+						for ( PolyList::iterator p = inputPolys.begin();
+							p != inputPolys.end();
+							++p )
 						{
-							// translate it back to sector space
-							for ( PolyList::iterator it = subPolys.begin();
-								it != subPolys.end();
-								++it )
-							{
-								const TPPLPoly & ply = *it;
-								for ( int p = 0; p < ply.GetNumPoints(); ++p )
-								{
-									Vector3f vec3d( (float)ply[ p ].x, (float)ply[ p ].y, 0.0f );
-									ns.m_Plane.DropToPlane( vec3d, -Vector3f::UNIT_Z );
-								}
-
-								DrawPoly( true, ns, ply, 0.0f, SEC_COLOR.fade(100), 2.0f, 4.0f );
-								DrawPoly( false, ns, ply, 0.0f, SEC_COLOR, 2.0f, 4.0f );
-							}
-						}
-						else
-						{
-							const NavSector &ns = m_ActiveNavSectors[i];
-
-							RenderBuffer::AddLine(ns.m_Boundary, COLOR::RED.fade( 100 ));
-
-							// Draw the error input poly line
-							for ( PolyList::iterator p = inputPolys.begin();
-								p != inputPolys.end();
-								++p )
-							{
-								DrawPoly( false, ns, (*p), 6.0f, COLOR::MAGENTA, 2.0f, 4.0f );
-							}
+							DrawPoly( false, ns, (*p), 6.0f, COLOR::MAGENTA, 2.0f, 4.0f );
 						}
 					}
 				}
-				else
-				{
-					//RenderBuffer::AddPolygonFilled( ns.m_Boundary, SEC_COLOR.fade(100) );
-					/*RenderBuffer::AddPolygonSilouette( ns.m_Boundary, SEC_COLOR );
-					RenderBuffer::AddPoints( ns.m_Boundary, COLOR::MAGENTA, 5.0f );*/
-				}
+			}
+			else
+			{
+				RenderBuffer::AddPolygonFilled( ns.m_Boundary, SEC_COLOR.fade(100) );
+				RenderBuffer::AddPolygonSilouette( ns.m_Boundary, SEC_COLOR );
+
+				// render the points, colored by whether this sector is mirrored
+				const obColor ptColor = m_NavSectors[ ns.m_Id ].IsMirrored() ?
+					COLOR::CYAN :
+				COLOR::MAGENTA;
+				RenderBuffer::AddPoints( ns.m_Boundary, ptColor, 5.0f );
 			}
 
 			if(m_PlannerFlags.CheckFlag(NAV_VIEWCONNECTIONS))
 			{
-				NavPortalList ::const_iterator pIt = m_NavPortals.begin();
-				for(; pIt != m_NavPortals.end(); ++pIt)
+				for ( size_t p = 0; p < ns.m_NavPortals.size(); ++p )
 				{
-					const NavPortal &portal = (*pIt);
+					const NavPortal &portal = ns.m_NavPortals[ p ];
 
-					/*RenderBuffer::AddLine(portal.m_Segment.GetPosEnd(),
-					portal.m_Segment.Origin+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
-					RenderBuffer::AddLine(portal.m_Segment.GetNegEnd(),
-					portal.m_Segment.Origin+Vector3f(0,0,32),COLOR::MAGENTA,10.f);*/
+					const Vector3f fwd = ( portal.m_Segment.P1 - portal.m_Segment.P0 ).UnitCross( Vector3f::UNIT_Z );
 
-					RenderBuffer::AddLine( portal.m_Segment.GetPosEnd(),
-						portal.m_Segment.Origin+Vector3f(0,0,32),COLOR::MAGENTA );
-					RenderBuffer::AddLine( portal.m_Segment.GetNegEnd(),
-						portal.m_Segment.Origin+Vector3f(0,0,32),COLOR::MAGENTA );
+					RenderBuffer::AddLine(
+						portal.m_Segment.P0 + Vector3f(0.0f,0.0f,8.0f),
+						portal.m_Segment.P1 + Vector3f(0.0f,0.0f,8.0f),
+						COLOR::BLUE.fade( 100 ));
+
+					RenderBuffer::AddLine(
+						portal.m_Segment.Center + Vector3f(0.0f,0.0f,8.0f),
+						portal.m_Segment.Center + Vector3f(0.0f,0.0f,8.0f) + fwd * 4.0f,
+						COLOR::BLUE.fade( 100 ));
+
+					const NavSector & destSector = m_ActiveNavSectors[ portal.m_DestSector ];
+
+					RenderBuffer::AddLine(
+						portal.m_Segment.Center + Vector3f(0.0f,0.0f,8.0f) + fwd * 4.0f,
+						destSector.CalculateCenter(),
+						COLOR::BLUE.fade( 100 ));
 				}
 			}
-			//////////////////////////////////////////////////////////////////////////
-			if ( m_SpanMap != NULL )
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+		if ( m_SpanMap != NULL )
+		{
+			struct RenderSpanCell : SpanMap::RenderFunctor
 			{
-				struct RenderSpanCell : SpanMap::RenderFunctor
+			public:
+				RenderSpanCell( RenderBuffer::QuadList & lst )
+					: mList( lst ) { }
+
+				virtual void RenderCell( const Vector3f & pos, float cellSize, float influenceRatio )
 				{
-				public:
-					RenderSpanCell( RenderBuffer::QuadList & lst )
-						: mList( lst ) { }
+					static obuint8 alpha = 255;
 
-					virtual void RenderCell( const Vector3f & pos, float cellSize, float influenceRatio )
-					{
-						static obuint8 alpha = 255;
-
-						RenderBuffer::Quad q;
-						q.v[ 0 ] = pos + Vector3f( -cellSize, -cellSize, 0.0f );
-						q.v[ 1 ] = pos + Vector3f(  cellSize, -cellSize, 0.0f );
-						q.v[ 2 ] = pos + Vector3f(  cellSize,  cellSize, 0.0f );
-						q.v[ 3 ] = pos + Vector3f( -cellSize,  cellSize, 0.0f );
-						q.c = GetCoolWarmColor( influenceRatio ).fade( alpha );
-						mList.push_back( q );
-					}
-
-					RenderBuffer::QuadList & mList;
-				};
-
-				float influenceMinWeight = 0.0f;
-				float influenceMaxWeight = 1.0f;
-				if ( m_Influence )
-				{
-					m_Influence->GetWeightRange( influenceMinWeight, influenceMaxWeight );
+					RenderBuffer::Quad q;
+					q.v[ 0 ] = pos + Vector3f( -cellSize, -cellSize, 0.0f );
+					q.v[ 1 ] = pos + Vector3f(  cellSize, -cellSize, 0.0f );
+					q.v[ 2 ] = pos + Vector3f(  cellSize,  cellSize, 0.0f );
+					q.v[ 3 ] = pos + Vector3f( -cellSize,  cellSize, 0.0f );
+					q.c = GetCoolWarmColor( influenceRatio ).fade( alpha );
+					mList.push_back( q );
 				}
 
-				if ( mInfluenceBufferId == 0 && m_SpanMap->GetNumSpans() > 0 )
-				{
-					RenderBuffer::QuadList prims;
-					prims.reserve( m_SpanMap->GetNumSpans() * 2 );
+				RenderBuffer::QuadList & mList;
+			};
 
-					RenderSpanCell renderCb( prims );
-					m_SpanMap->RenderWithCallback( renderCb, influenceDone ? m_Influence : NULL );
-
-					RenderBuffer::StaticBufferCreate( mInfluenceBufferId, prims );
-				}
-
-				if ( mInfluenceBufferId != 0 )
-				{
-					RenderBuffer::StaticBufferDraw( mInfluenceBufferId );
-				}
+			float influenceMinWeight = 0.0f;
+			float influenceMaxWeight = 1.0f;
+			if ( m_Influence )
+			{
+				m_Influence->GetWeightRange( influenceMinWeight, influenceMaxWeight );
 			}
-			//////////////////////////////////////////////////////////////////////////
+
+			if ( mInfluenceBufferId == 0 && m_SpanMap->GetNumSpans() > 0 )
+			{
+				RenderBuffer::QuadList prims;
+				prims.reserve( m_SpanMap->GetNumSpans() * 2 );
+
+				RenderSpanCell renderCb( prims );
+				m_SpanMap->RenderWithCallback( renderCb, influenceDone ? m_Influence : NULL );
+
+				RenderBuffer::StaticBufferCreate( mInfluenceBufferId, prims );
+			}
+
+			if ( mInfluenceBufferId != 0 )
+			{
+				RenderBuffer::StaticBufferDraw( mInfluenceBufferId );
+			}
 		}
 		//////////////////////////////////////////////////////////////////////////
-
 		if(!m_WorkingSector.m_Boundary.empty())
 		{
-			//Utils::DrawPolygon(m_WorkingSector.m_Boundary, COLOR::GREEN.fade(100), 0.1f, false);
-			RenderBuffer::AddPolygonFilled( m_WorkingSector.m_Boundary, COLOR::GREEN );
+			RenderBuffer::AddLine(
+				m_WorkingSectorStart,
+				m_WorkingSectorStart + m_WorkingSectorPlane.Normal * 10.0f,
+				COLOR::MAGENTA );
+
+			RenderBuffer::AddPolygonFilled( m_WorkingSector.m_Boundary, COLOR::BLUE.fade(100) );
 			if ( m_WorkingSector.IsMirrored() )
 				RenderBuffer::AddPolygonFilled( m_WorkingSector.GetMirroredCopy(m_MapCenter).m_Boundary, COLOR::CYAN );
-			//Utils::DrawPolygon(m_WorkingSector.GetMirroredCopy(m_MapCenter).m_Boundary, COLOR::CYAN.fade(100), 0.1f, false);
 		}
 	}
 }
@@ -990,9 +998,9 @@ bool PathPlannerNavMesh::Load(const std::string &_mapname, bool _dl)
 			return false;
 		}
 
-		m_MapCenter.x = nm.header().mapcenter().x();
-		m_MapCenter.y = nm.header().mapcenter().y();
-		m_MapCenter.z = nm.header().mapcenter().z();
+		m_MapCenter.X() = nm.header().mapcenter().x();
+		m_MapCenter.Y() = nm.header().mapcenter().y();
+		m_MapCenter.Z() = nm.header().mapcenter().z();
 
 		m_NavSectors.clear();
 		m_NavSectors.reserve( nm.sectors_size() );
@@ -1043,9 +1051,9 @@ bool PathPlannerNavMesh::Save(const std::string &_mapname)
 
 	if ( !m_MapCenter.IsZero() )
 	{
-		nm.mutable_header()->mutable_mapcenter()->set_x( m_MapCenter.x );
-		nm.mutable_header()->mutable_mapcenter()->set_y( m_MapCenter.y );
-		nm.mutable_header()->mutable_mapcenter()->set_z( m_MapCenter.z );
+		nm.mutable_header()->mutable_mapcenter()->set_x( m_MapCenter.X() );
+		nm.mutable_header()->mutable_mapcenter()->set_y( m_MapCenter.Y() );
+		nm.mutable_header()->mutable_mapcenter()->set_z( m_MapCenter.Z() );
 	}
 
 	for(obuint32 s = 0; s < m_NavSectors.size(); ++s)
@@ -1056,9 +1064,9 @@ bool PathPlannerNavMesh::Save(const std::string &_mapname)
 		for(obuint32 v = 0; v < ns.m_Boundary.size(); ++v)
 		{
 			NavmeshIO::SectorVert * sectorVertOut = sectorOut->add_vertices();
-			sectorVertOut->mutable_position()->set_x( ns.m_Boundary[v].x );
-			sectorVertOut->mutable_position()->set_y( ns.m_Boundary[v].y );
-			sectorVertOut->mutable_position()->set_z( ns.m_Boundary[v].z );
+			sectorVertOut->mutable_position()->set_x( ns.m_Boundary[v].X() );
+			sectorVertOut->mutable_position()->set_y( ns.m_Boundary[v].Y() );
+			sectorVertOut->mutable_position()->set_z( ns.m_Boundary[v].Z() );
 
 			/*sectorOut->mutable_sectordata()
 			sectorOut->mutable_sectordatamirrored()*/
@@ -1208,17 +1216,17 @@ void PathPlannerNavMesh::InitSectors()
 			triSectors.push_back( attr );
 
 			vertices.push_back( IceMaths::Point(
-				center.x, center.y, center.z ) );
+				center.X(), center.Y(), center.Z() ) );
 
 			vertices.push_back( IceMaths::Point(
-				allSectors.back().m_Boundary[ v-1 ].x,
-				allSectors.back().m_Boundary[ v-1 ].y,
-				allSectors.back().m_Boundary[ v-1 ].z ) );
+				allSectors.back().m_Boundary[ v-1 ].X(),
+				allSectors.back().m_Boundary[ v-1 ].Y(),
+				allSectors.back().m_Boundary[ v-1 ].Z() ) );
 
 			vertices.push_back( IceMaths::Point(
-				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].x,
-				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].y,
-				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].z ) );
+				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].X(),
+				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].Y(),
+				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].Z() ) );
 
 			if ( v == 1 )
 			{
@@ -1250,17 +1258,17 @@ void PathPlannerNavMesh::InitSectors()
 				triSectors.push_back( attr );
 
 				vertices.push_back( IceMaths::Point(
-					center.x, center.y, center.z ) );
+					center.X(), center.Y(), center.Z() ) );
 
 				vertices.push_back( IceMaths::Point(
-					allSectors.back().m_Boundary[ v-1 ].x,
-					allSectors.back().m_Boundary[ v-1 ].y,
-					allSectors.back().m_Boundary[ v-1 ].z ) );
+					allSectors.back().m_Boundary[ v-1 ].X(),
+					allSectors.back().m_Boundary[ v-1 ].Y(),
+					allSectors.back().m_Boundary[ v-1 ].Z() ) );
 
 				vertices.push_back( IceMaths::Point(
-					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].x,
-					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].y,
-					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].z ) );
+					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].X(),
+					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].Y(),
+					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].Z() ) );
 
 				if ( v == 1 )
 				{
@@ -1326,7 +1334,7 @@ void PathPlannerNavMesh::GetPath(Path &_path, int _smoothiterations)
 
 				Segment3f portalSeg = pMid->Portal->m_Segment;
 				portalSeg.Extent -= 32.f;
-				Segment3f seg = Utils::MakeSegment(pFrom->Position,pTo->Position);
+				Segment3f seg( pFrom->Position, pTo->Position );
 				//DistancePointToLine(_seg1.Origin,_seg2.GetNegEnd(),_seg2.GetPosEnd(),&cp);
 
 				Vector3f intr;

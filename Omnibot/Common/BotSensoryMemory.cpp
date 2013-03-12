@@ -313,7 +313,7 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		Vector3f vTracePosition = vNewPosition;
 		if(m_pfnGetTraceOffset)
-			vTracePosition.z += m_pfnGetTraceOffset(ti.m_EntityClass, ti.m_EntityFlags);
+			vTracePosition.Z() += m_pfnGetTraceOffset(ti.m_EntityClass, ti.m_EntityFlags);
 
 		if(bIsStatic ||
 			(GetClient()->IsWithinViewDistance(vTracePosition) &&
@@ -371,7 +371,7 @@ namespace AiState
 				// Update Target Info.
 				ti.m_LastPosition = vNewPosition;
 				if(m_pfnGetAimOffset)
-					ti.m_LastPosition.z += m_pfnGetAimOffset(ti.m_EntityClass, ti.m_EntityFlags);
+					ti.m_LastPosition.Z() += m_pfnGetAimOffset(ti.m_EntityClass, ti.m_EntityFlags);
 
 				if(DebugDrawingEnabled() && m_DebugFlags.CheckFlag(Dbg_ShowPerception))
 				{
@@ -573,7 +573,7 @@ namespace AiState
 	{
 		Vector3f vTracePosition = mr.m_TargetInfo.m_LastPosition;
 		if(m_pfnGetTraceOffset)
-			vTracePosition.z += m_pfnGetTraceOffset(mr.m_TargetInfo.m_EntityClass, mr.m_TargetInfo.m_EntityFlags);
+			vTracePosition.Z() += m_pfnGetTraceOffset(mr.m_TargetInfo.m_EntityClass, mr.m_TargetInfo.m_EntityFlags);
 		return GetClient()->HasLineOfSightTo(vTracePosition, mr.GetEntity(), customTraceMask);
 	}
 

@@ -599,7 +599,7 @@ const Vector3f &MapGoal::GetPosition()
 
 void MapGoal::SetPosition_Script(const Vec3 &_pos)
 {
-	m_Position = Vector3f(_pos.x,_pos.y,_pos.z);
+	m_Position = Vector3f(_pos.x, _pos.y, _pos.z);
 }
 
 Vec3 MapGoal::GetPosition_Script()
@@ -624,7 +624,7 @@ void MapGoal::SetFacing(const Vector3f &_facing)
 
 void MapGoal::SetFacing_Script(const Vec3 &_facing)
 {
-	Vector3f facing(_facing.x,_facing.y,_facing.z);
+	Vector3f facing(_facing.x, _facing.y, _facing.z);
 	m_Orientation = Matrix3f(
 		facing.Cross(Vector3f::UNIT_Z),
 		facing,
@@ -787,8 +787,8 @@ bool MapGoal::RouteTo(Client *_bot, DestinationVector &_dest, float _minradius)
 		// because FollowPath calculates 2D distance (that is less than 3D distance).
 		// Omni-bot 0.81 compared 3D distance here and skipped ROUTE goals on stairs, hillsides etc.
 		Vector3f vDist = _bot->GetPosition() - r.m_Start->GetPosition();
-		if( vDist.x * vDist.x + vDist.y * vDist.y <= Mathf::Sqr(r.m_Start->GetRadius()) &&
-			abs(vDist.z - fTolerance) - 2 * fTolerance <= r.m_Start->GetRadius() &&
+		if( vDist.X() * vDist.X() + vDist.Y() * vDist.Y() <= Mathf::Sqr(r.m_Start->GetRadius()) &&
+			abs(vDist.Z() - fTolerance) - 2 * fTolerance <= r.m_Start->GetRadius() &&
 
 			// Most maps have all routes enabled for all teams,
 			// that's why it's better to check availability after checking radius.
@@ -817,7 +817,7 @@ bool MapGoal::RouteTo(Client *_bot, DestinationVector &_dest, float _minradius)
 
 		Destination d;
 		d.m_Position = routes[iIndex].m_End->GetPosition();
-		d.m_Radius = Mathf::Max(routes[iIndex].m_End->GetRadius(), _minradius);
+		d.m_Radius = std::max(routes[iIndex].m_End->GetRadius(), _minradius);
 		_dest.push_back(d);
 
 		return true;
@@ -830,7 +830,7 @@ bool MapGoal::RouteTo(Client *_bot, DestinationVector &_dest, float _minradius)
 			int iRand = Mathf::IntervalRandomInt(0, (int)GetNumUsePoints());
 			Destination d;
 			d.m_Position = GetWorldUsePoint(iRand);
-			d.m_Radius = Mathf::Max(GetRadius(), _minradius);
+			d.m_Radius = std::max(GetRadius(), _minradius);
 			_dest.push_back(d);
 		}
 		else
@@ -839,7 +839,7 @@ bool MapGoal::RouteTo(Client *_bot, DestinationVector &_dest, float _minradius)
 			{
 				Destination d;
 				d.m_Position = GetWorldUsePoint(i);
-				d.m_Radius = Mathf::Max(GetRadius(), _minradius);
+				d.m_Radius = std::max(GetRadius(), _minradius);
 				_dest.push_back(d);
 			}
 		}
@@ -848,7 +848,7 @@ bool MapGoal::RouteTo(Client *_bot, DestinationVector &_dest, float _minradius)
 	{
 		Destination d;
 		d.m_Position = GetWorldUsePoint();
-		d.m_Radius = Mathf::Max(GetRadius(), _minradius);
+		d.m_Radius = std::max(GetRadius(), _minradius);
 		_dest.push_back(d);
 	}
 	return false;
@@ -972,7 +972,7 @@ void MapGoal::RenderDefault()
 		vRenderPos = GetWorldBounds().Center;
 	}
 
-	vRenderPos.z += GetRenderHeight();
+	vRenderPos.Z() += GetRenderHeight();
 
 	Vector3f vLocalPos, vLocalFace;
 	if(!Utils::GetLocalFacing(vLocalFace) || !Utils::GetLocalPosition(vLocalPos))
@@ -1064,7 +1064,7 @@ void MapGoal::RenderDefault()
 	if(bf.CheckFlag(DrawRadius))
 	{
 		if(GetRadius() != 0.f)
-			RenderBuffer::AddCircle( GetPosition(), COLOR::ORANGE, GetRadius() );
+			RenderBuffer::AddCircle( GetPosition(), GetRadius(), COLOR::ORANGE );
 		else
 			RenderBuffer::AddLine( GetPosition(), GetPosition() + Vector3f::UNIT_Z * 32.f, COLOR::ORANGE );
 	}
@@ -1113,7 +1113,7 @@ Vector3f MapGoal::CalculateFarthestFacing()
 	static float fInterval = 5.0f;
 	for(float fAng = fInterval; fAng <= 360.0f; fAng += fInterval)
 	{
-		Quaternionf quat(Vector3f::UNIT_Z, Mathf::DegToRad(fAng));
+		Quaternionf quat( Vector3f::UNIT_Z, Mathf::DEG_TO_RAD * fAng );
 		Vector3f vVec = quat.Rotate(Vector3f::UNIT_Y*fRayLength);
 		EngineFuncs::TraceLine(tr, GetPosition(), GetPosition()+vVec, NULL, TR_MASK_SHOT, -1, False);
 		float fSightLength = tr.m_Fraction * fRayLength;
@@ -1350,7 +1350,7 @@ void MapGoal::CheckForPersistentPriority()
 	}
 }
 
-void MapGoal::DrawRoute(int _color, float _duration)
+void MapGoal::DrawRoute( const obColor _color, float _duration)
 {
 	PathPlannerBase *planner = NavigationManager::GetInstance()->GetCurrentPathPlanner();
 
@@ -1362,7 +1362,7 @@ void MapGoal::DrawRoute(int _color, float _duration)
 
 		Path p;
 		planner->GetPath(p);
-		p.DebugRender(_color);
+		p.DebugRender( _color );
 	}
 }
 
@@ -1491,7 +1491,7 @@ bool MapGoal::SaveToTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_savetab
 	GoalTable->Set(_machine,"Bounds",gmVariable(userBounds));*/
 
 	Vector3f Euler(0,0,0);
-	m_Orientation.ToEulerAnglesZXY(Euler.x,Euler.y,Euler.z);
+	m_Orientation.ExtractEulerZXY(Euler.X(),Euler.Y(),Euler.Z());
 	GoalTable->Set(_machine,"Orientation",gmVariable(Euler));
 	//////////////////////////////////////////////////////////////////////////
 
@@ -1593,7 +1593,7 @@ bool MapGoal::LoadFromTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_loadt
 		_err.AddError("Goal.Orientation Field Missing!");
 		return false;
 	}
-	m_Orientation.FromEulerAnglesZXY(Euler.x,Euler.y,Euler.z);
+	m_Orientation.MakeEulerZXY(Euler.X(),Euler.Y(),Euler.Z());
 
 	int InitialTeams = 0;
 	if(!proptable->Get(_machine,"TeamAvailability").GetIntSafe(InitialTeams,0))
@@ -1805,9 +1805,9 @@ void MapGoal::Sync( RemoteLib::DebugConnection * connection ) {
 	//newSnapShot.Sync( "tagName", GetTagName().c_str(), localBuffer );
 	//newSnapShot.Sync( "entityid", GetEntity().AsInt(), localBuffer );
 	//newSnapShot.Sync( "ownerid", GetOwner().AsInt(), localBuffer );
-	//newSnapShot.Sync( "x", worldbounds.Center.x, localBuffer );
-	//newSnapShot.Sync( "y", worldbounds.Center.y, localBuffer );
-	//newSnapShot.Sync( "z", worldbounds.Center.z, localBuffer );
+	//newSnapShot.Sync( "x", worldbounds.Center.X(), localBuffer );
+	//newSnapShot.Sync( "y", worldbounds.Center.Y(), localBuffer );
+	//newSnapShot.Sync( "z", worldbounds.Center.Z(), localBuffer );
 	//newSnapShot.Sync( "yaw", -Mathf::RadToDeg( heading ), localBuffer );
 	//newSnapShot.Sync( "pitch", Mathf::RadToDeg( pitch ), localBuffer );
 	//newSnapShot.Sync( "sizex", worldbounds.Extent[ 0 ], localBuffer );
@@ -1932,7 +1932,7 @@ static int gmfAddUsePoint(gmThread *a_thread)
 	GM_CHECK_VECTOR_PARAM(v,0);
 	GM_INT_PARAM(rel, 1, 0);
 
-	NativePtr->AddUsePoint(Vector3f(v.x,v.y,v.z), rel != 0);
+	NativePtr->AddUsePoint( Vector3f( v.x, v.y, v.z ), rel != 0);
 	return GM_OK;
 }
 

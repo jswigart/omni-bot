@@ -511,7 +511,7 @@ int gmScriptGoal::gmfGoto(gmThread *a_thread)
 		opn.FromTable(a_thread->GetMachine(),Options);
 	}
 
-	if(native->Goto(Vector3f(v.x,v.y,v.z), opn))
+	if ( native->Goto( Vector3f( v.x, v.y, v.z ), opn ) )
 	{
 		gmVariable blocks[2] = { gmVariable(PATH_SUCCESS), gmVariable(PATH_FAILED) };
 		int res = a_thread->GetMachine()->Sys_Block(a_thread, 2, blocks);
@@ -541,8 +541,8 @@ int gmScriptGoal::gmfGotoAsync(gmThread *a_thread)
 		opn.FromTable(a_thread->GetMachine(),Options);
 	}
 
-	bool b = native->Goto(Vector3f(v.x,v.y,v.z), opn);
-	a_thread->Push(gmVariable(b?1:0));
+	bool b = native->Goto( Vector3f( v.x, v.y, v.z ), opn);
+	a_thread->Push( gmVariable(b?1:0) );
 	return GM_OK;
 }
 
@@ -664,7 +664,7 @@ int gmScriptGoal::gmfAddAimRequest(gmThread *a_thread)
 	}
 
 	Priority::ePriority prio = (Priority::ePriority)priority;
-	if(!native->AddScriptAimRequest(prio,eAimType,Vector3f(v.x, v.y, v.z)))
+	if(!native->AddScriptAimRequest(prio, eAimType, Vector3f( v.x, v.y, v.z ) ))
 	{
 		GM_EXCEPTION_MSG("Unable to add aim request. Too many!");
 		return GM_EXCEPTION;
@@ -1399,7 +1399,7 @@ bool gmScriptGoal::getAimVectorFunc(AiState::ScriptGoal *a_native, gmThread *a_t
 bool gmScriptGoal::setAimVectorFunc(AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands)
 {
 	Vector3f v;
-	if(a_operands[1].IsVector() && a_operands[1].GetVector(v.x,v.y,v.z))
+	if(a_operands[1].IsVector() && a_operands[1].GetVector(v.X(),v.Y(),v.Z()))
 		a_native->SetAimVector(v);
 	return true;
 }

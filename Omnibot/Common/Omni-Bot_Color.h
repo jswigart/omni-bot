@@ -26,7 +26,7 @@ public:
 		cdata.m_RGBA[2] = 255;
 		cdata.m_RGBA[3] = 255; // 255 is opaque, 0 is transparent
 	}
-	obColor(obint32 _color)
+	explicit obColor(obint32 _color)
 	{
 		cdata.m_RGBAi = _color;
 	}
@@ -36,6 +36,10 @@ public:
 		cdata.m_RGBA[1] = _g;
 		cdata.m_RGBA[2] = _b;
 		cdata.m_RGBA[3] = _a; // 255 is opaque, 0 is transparent
+	}
+	obColor( const float * flt )
+	{
+		*this = FromFloat( flt[ 0 ], flt[ 1 ], flt[ 2 ], flt[ 3 ] );
 	}
 
 	operator int() const

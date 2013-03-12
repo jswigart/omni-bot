@@ -144,7 +144,7 @@ namespace AiState
 				if (!m_AdjustedPosition)
 				{
 					// use our z value because some trigger entities may be below the ground
-					Vector3f checkPos(m_ConstructionPos.x, m_ConstructionPos.y, GetClient()->GetEyePosition().z);
+					Vector3f checkPos(m_ConstructionPos.X(), m_ConstructionPos.Y(), GetClient()->GetEyePosition().Z());
 
 					obTraceResult tr;
 					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(),checkPos,
@@ -412,7 +412,7 @@ namespace AiState
 						m_AdjustedPosition = true;
 
 						// use our z value because some trigger entities may be below the ground
-						Vector3f vCheckPos(m_TargetPosition.x, m_TargetPosition.y, GetClient()->GetEyePosition().z);
+						Vector3f vCheckPos(m_TargetPosition.X(), m_TargetPosition.Y(), GetClient()->GetEyePosition().Z());
 						/*if(m_Client->IsDebugEnabled(BOT_DEBUG_GOALS))
 						{
 						RenderBuffer::AddLine(GetClient()->GetEyePosition(), vCheckPos, COLOR::GREEN, 2.0f);
@@ -500,7 +500,7 @@ namespace AiState
 		//				m_AdjustedPosition = true;
 
 		//				// use our z value because some trigger entities may be below the ground
-		//				Vector3f vCheckPos(m_TargetPosition.x, m_TargetPosition.y, GetClient()->GetEyePosition().z);
+		//				Vector3f vCheckPos(m_TargetPosition.X(), m_TargetPosition.Y(), GetClient()->GetEyePosition().Z());
 		//				/*if(m_Client->IsDebugEnabled(BOT_DEBUG_GOALS))
 		//				{
 		//					RenderBuffer::AddLine(m_Client->GetEyePosition(), vCheckPos, COLOR::GREEN, 2.0f);
@@ -937,7 +937,7 @@ namespace AiState
 
 		if(DidPathSucceed())
 		{
-			m_TargetPosition.z = GetClient()->GetPosition().z;
+			m_TargetPosition.Z() = GetClient()->GetPosition().Z();
 			GetClient()->GetSteeringSystem()->SetTarget(m_TargetPosition, 32.f);
 		}
 		return State_Busy;

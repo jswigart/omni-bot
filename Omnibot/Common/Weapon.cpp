@@ -375,7 +375,7 @@ Vector3f Weapon::WeaponFireMode::GetAimPoint(Client *_bot, const GameEntity &_ta
 			const gmVariable &ret = call.GetReturnedVariable();
 			if(ret.m_type == GM_VEC3)
 			{
-				ret.GetVector(vAimPoint.x,vAimPoint.y,vAimPoint.z);
+				ret.GetVector(vAimPoint.X(),vAimPoint.Y(),vAimPoint.Z());
 				vAimPoint += m_AimOffset;
 				return vAimPoint;
 			}
@@ -443,9 +443,9 @@ Vector3f Weapon::WeaponFireMode::_GetAimPoint_Projectile(Client *_bot, const Gam
 		//float fProjSpeedAngleMod = 0.f;
 		//static Vector3f s_ProjSpeed(3000*1.1f, 3000*1.1f, 1500*1.1f);
 		//Vector3f vProjVel = _bot->GetFacingVector();
-		//vProjVel.x *= s_ProjSpeed.x;
-		//vProjVel.y *= s_ProjSpeed.y;
-		//vProjVel.z *= s_ProjSpeed.z;
+		//vProjVel.X() *= s_ProjSpeed.X();
+		//vProjVel.Y() *= s_ProjSpeed.Y();
+		//vProjVel.Z() *= s_ProjSpeed.Z();
 		////vProjVel.Length();
 		//float fProjectileSpeed = vProjVel.Normalize();
 		//Quaternionf q;
@@ -454,7 +454,7 @@ Vector3f Weapon::WeaponFireMode::_GetAimPoint_Projectile(Client *_bot, const Gam
 		//Vector3f vAxis;
 		//q.ToAxisAngle(vAxis, fProjSpeedAngleMod);
 
-		//fProjSpeedAngleMod = Mathf::ATan(vProjVel.z - _bot->GetFacingVector().z);
+		//fProjSpeedAngleMod = Mathf::ATan(vProjVel.Z() - _bot->GetFacingVector().Z());
 
 		//EngineFuncs::ConsoleMessage("Angle Diff: %f", Mathf::RadToDeg(fProjSpeedAngleMod));
 		///////////////////////////////////////////////////////////////
@@ -473,17 +473,17 @@ Vector3f Weapon::WeaponFireMode::_GetAimPoint_Projectile(Client *_bot, const Gam
 		int iTrajectoryNum = CheckFlag(UseMortarTrajectory) ? 1 : 0;
 
 		Vector3f vAimDir = vAimPt - vEyePos;
-		const float fAimLength2d = Vector2f(vAimDir).Length();
+		const float fAimLength2d = Vector2f( vAimDir.X(), vAimDir.Y() ).Length();
 		if(t > iTrajectoryNum)
 		{
-			vAimPt.z = vEyePos.z + Mathf::Tan(traj[iTrajectoryNum].m_Angle - m_PitchOffset) * fAimLength2d;
+			vAimPt.Z() = vEyePos.Z() + Mathf::Tan(traj[iTrajectoryNum].m_Angle - m_PitchOffset) * fAimLength2d;
 
 			/*if(_bot->IsDebugEnabled(BOT_DEBUG_AIMPOINT))
 			{
 			}*/
 		}
 		else
-			vAimPt.z = vEyePos.z + Mathf::Tan(Mathf::DegToRad(45.0f)) * fAimLength2d;
+			vAimPt.Z() = vEyePos.Z() + Mathf::Tan(Mathf::DegToRad(45.0f)) * fAimLength2d;
 	}
 	return vAimPt;
 }
@@ -499,9 +499,9 @@ void Weapon::WeaponFireMode::AddAimError(Client *_bot, Vector3f &_aimpoint, cons
 	// Check if we need to get a new aim error.
 	if(IGame::GetTime() > m_NextAimAdjustmentTime)
 	{
-		m_AimErrorCurrent.x = (Mathf::SymmetricRandom() * m_AimErrorMax.x);
-		m_AimErrorCurrent.y = (Mathf::SymmetricRandom() * m_AimErrorMax.x);
-		m_AimErrorCurrent.z = (Mathf::SymmetricRandom() * m_AimErrorMax.y);
+		m_AimErrorCurrent.X() = (Mathf::SymmetricRandom() * m_AimErrorMax.X());
+		m_AimErrorCurrent.Y() = (Mathf::SymmetricRandom() * m_AimErrorMax.X());
+		m_AimErrorCurrent.Z() = (Mathf::SymmetricRandom() * m_AimErrorMax.Y());
 
 		const float fDelaySecs = Mathf::IntervalRandom(m_MinAimAdjustmentSecs, m_MaxAimAdjustmentSecs);
 		m_NextAimAdjustmentTime = IGame::GetTime() + Utils::SecondsToMilliseconds(fDelaySecs);
@@ -1190,7 +1190,7 @@ bool Weapon::WeaponFireMode::setType( Weapon::WeaponFireMode *a_native, gmThread
 
 bool Weapon::WeaponFireMode::getMaxAimError( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
-	a_operands[0].SetVector(a_native->m_AimErrorMax.x, a_native->m_AimErrorMax.y, 0);
+	a_operands[0].SetVector(a_native->m_AimErrorMax.X(), a_native->m_AimErrorMax.Y(), 0);
 	return true;
 }
 
@@ -1207,7 +1207,7 @@ bool Weapon::WeaponFireMode::setMaxAimError( Weapon::WeaponFireMode *a_native, g
 
 bool Weapon::WeaponFireMode::getAimOffset( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
-	a_operands[0].SetVector(a_native->m_AimOffset.x, a_native->m_AimOffset.y, a_native->m_AimOffset.z);
+	a_operands[0].SetVector(a_native->m_AimOffset.X(), a_native->m_AimOffset.Y(), a_native->m_AimOffset.Z());
 	return true;
 }
 

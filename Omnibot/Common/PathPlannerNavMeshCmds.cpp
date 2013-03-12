@@ -227,12 +227,12 @@ void PathPlannerNavMesh::cmdAutoBuildFeatures(const StringVector &_args)
 		if(!features[i].m_Bounds.IsZero())
 		{
 			features[i].m_Bounds.CenterBottom(vPos);
-			vPos.z -= g_fBottomWaypointOffset;
+			vPos.Z() -= g_fBottomWaypointOffset;
 		}
 		if(!features[i].m_TargetBounds.IsZero())
 		{
 			features[i].m_TargetBounds.CenterBottom(vTarget);
-			vTarget.z -= g_fBottomWaypointOffset;
+			vTarget.Z() -= g_fBottomWaypointOffset;
 		}
 
 		//AddFloodStart(vPos);
@@ -269,8 +269,9 @@ Vector3f PathPlannerNavMesh::_SectorVertWithin(const Vector3f &_pos1, const Vect
 
 		for(obuint32 v = 0; v < sec.m_Boundary.size(); ++v)
 		{
-			float fLenSq = Utils::DistancePointToLineSqr(sec.m_Boundary[v],_pos1,_pos2);
-			if(fLenSq < fRangeSq && fLenSq < fClosest)
+			DistPoint3Segment3f dist( sec.m_Boundary[v], Segment3f( _pos1,_pos2 ) );
+			const float fLenSq = dist.GetSquared();
+			if( fLenSq < fRangeSq && fLenSq < fClosest )
 			{
 				r = sec.m_Boundary[v];
 				fClosest = fLenSq;
@@ -483,70 +484,155 @@ void PathPlannerNavMesh::cmdMirrorSectors(const StringVector &_args)
 
 void PathPlannerNavMesh::cmdSectorCreateConnections(const StringVector &_args)
 {
-	typedef std::vector<SegmentList> SectorSegments;
-	SectorSegments segs;
+	Vector3f vFacing, vEyePos;
+	if( !Utils::GetLocalEyePosition( vEyePos ) || !Utils::GetLocalFacing( vFacing ) )
+		return;
 
-	//////////////////////////////////////////////////////////////////////////
+	static float DROP_HEIGHT = -128.f;
+	static float STEP_HEIGHT = 20.f;
+	static float LINE_DIST = 2.f;
 
-	for(obuint32 i = 0; i < m_ActiveNavSectors.size(); ++i)
+	NavSector * sector = GetSectorAt( vEyePos );
+	if ( sector != NULL )
 	{
-		const NavSector &ns = m_ActiveNavSectors[i];
-		segs.push_back(ns.GetEdgeSegments());
-	}
+		sector->m_NavPortals.resize( 0 );
 
-	// look for edges that could be connected
-	obuint32 LastPortalSector = (obuint32)-1;
-
-	for(obuint32 i = 0; i < segs.size(); ++i)
-	{
-		for(obuint32 j = 0; j < segs.size(); ++j)
+		// look for all neighbors
+		const Vector3List & edges0 = sector->m_Boundary;
+		for ( size_t b = 1; b <= edges0.size(); ++b )
 		{
-			if(i==j)
-				continue;
+			//
+			Line3f line0;
+			Segment3f seg0( edges0[ b-1 ], edges0[ b % edges0.size() ] );
+			//DistPoint3Segment3
 
-			// look for matching segments
-			for(obuint32 s1 = 0; s1 < segs[i].size(); ++s1)
+			line0.FromPoints( seg0.P0, seg0.P1 );
+
+			// search all sectors for neighboring connections
+			for ( size_t n = 0; n < m_ActiveNavSectors.size(); ++n )
 			{
-				for(obuint32 s2 = 0; s2 < segs[j].size(); ++s2)
+				NavSector * neighbor = &m_ActiveNavSectors[ n ];
+
+				if ( sector == neighbor )
+					continue;
+
+				const Vector3List & edges1 = neighbor->m_Boundary;
+				for ( size_t nb = 1; nb <= edges1.size(); ++nb )
 				{
-					const Segment3f &sec1 = segs[i][s1];
-					const Segment3f &sec2 = segs[j][s2];
+					Segment3f seg1( edges1[ nb-1 ], edges1[ nb % edges1.size() ] );
 
-					Segment3f overlap;
-					if(Utils::GetSegmentOverlap(sec1,sec2,overlap))
+					// test
+					DistSegment3Segment3f distSeg( seg0, seg1 );
+					distSeg.Get();
+
+					DistPoint3Line3f d0( seg1.P0, line0 );
+					DistPoint3Line3f d1( seg1.P1, line0 );
+
+					d0.Get();
+					d1.Get();
+
+					// the lines must overlap
+					if ( d0.GetLineParameter() > 1.0f && d1.GetLineParameter() > 1.0f )
+						continue;
+					if ( d0.GetLineParameter() < -1.0f && d1.GetLineParameter() < -1.0f )
+						continue;
+
+					const Vector3f p0diff = seg1.P0 - d0.GetClosestPoint1();
+					const Vector3f p1diff = seg1.P1 - d1.GetClosestPoint1();
+
+					const float p0zDiff = seg1.P0.Z() - d0.GetClosestPoint1().Z();
+					const float p1zDiff = seg1.P1.Z() - d0.GetClosestPoint1().Z();
+
+					if ( p0diff.Length2d() < LINE_DIST && p1diff.Length2d() < LINE_DIST &&
+						p0zDiff <= STEP_HEIGHT && p1zDiff <= STEP_HEIGHT &&
+						p0zDiff >= DROP_HEIGHT && p1zDiff >= DROP_HEIGHT )
 					{
-						if(!Utils::TestSegmentForOcclusion(overlap))
+						/*struct NavPortal
 						{
-							RenderBuffer::AddLine(overlap.GetPosEnd(),overlap.Origin+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
-							RenderBuffer::AddLine(overlap.GetNegEnd(),overlap.Origin+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
-							//RenderBuffer::AddLine(sec2.GetPosEnd()+Vector3f(0,0,32),sec1.GetNegEnd()+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
+						Segment3f		m_Segment;
+						int				m_DestSector;
+						BitFlag64		m_LinkFlags;
+						};*/
 
-							NavPortal navPortal;
-							navPortal.m_Segment = overlap;
-							navPortal.m_DestPortal = s2; // todo
-							navPortal.m_DestSector = j;
-							m_NavPortals.push_back(navPortal);
-
-							//////////////////////////////////////////////////////////////////////////
-							// Update the sector so it knows about its portals
-							if(LastPortalSector==i)
-							{
-								m_ActiveNavSectors[i].m_NumPortals++;
-							}
-							else
-							{
-								m_ActiveNavSectors[i].m_StartPortal = (int)m_NavPortals.size()-1;
-								m_ActiveNavSectors[i].m_NumPortals = 1;
-							}
-							//////////////////////////////////////////////////////////////////////////
-
-							LastPortalSector = i;
-						}
+						// these lines are close enough
+						NavPortal portal;
+						portal.m_Segment = seg0; // TRIM
+						portal.m_DestSector = n;
+						sector->m_NavPortals.push_back( portal );
 					}
+
+					/*Line3f line1;
+					line1.FromPoints( seg1.P0, seg1.P1 );*/
 				}
 			}
 		}
 	}
+
+	return;
+
+	//typedef std::vector<SegmentList> SectorSegments;
+	//SectorSegments segs;
+
+	////////////////////////////////////////////////////////////////////////////
+
+	//for(obuint32 i = 0; i < m_ActiveNavSectors.size(); ++i)
+	//{
+	//	const NavSector &ns = m_ActiveNavSectors[i];
+	//	segs.push_back(ns.GetEdgeSegments());
+	//}
+
+	//// look for edges that could be connected
+	//obuint32 LastPortalSector = (obuint32)-1;
+
+	//for(obuint32 i = 0; i < segs.size(); ++i)
+	//{
+	//	for(obuint32 j = 0; j < segs.size(); ++j)
+	//	{
+	//		if(i==j)
+	//			continue;
+
+	//		// look for matching segments
+	//		for(obuint32 s1 = 0; s1 < segs[i].size(); ++s1)
+	//		{
+	//			for(obuint32 s2 = 0; s2 < segs[j].size(); ++s2)
+	//			{
+	//				const Segment3f &sec1 = segs[i][s1];
+	//				const Segment3f &sec2 = segs[j][s2];
+
+	//				Segment3f overlap;
+	//				if(Utils::GetSegmentOverlap(sec1,sec2,overlap))
+	//				{
+	//					if(!Utils::TestSegmentForOcclusion(overlap))
+	//					{
+	//						//RenderBuffer::AddLine(overlap.P1,overlap.Center+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
+	//						//RenderBuffer::AddLine(overlap.P0,overlap.Center+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
+	//						//RenderBuffer::AddLine(sec2.GetPosEnd()+Vector3f(0,0,32),sec1.GetNegEnd()+Vector3f(0,0,32),COLOR::MAGENTA,10.f);
+
+	//						NavPortal navPortal;
+	//						navPortal.m_Segment = overlap;
+	//						navPortal.m_DestSector = j;
+	//						m_NavPortals.push_back(navPortal);
+
+	//						//////////////////////////////////////////////////////////////////////////
+	//						// Update the sector so it knows about its portals
+	//						if(LastPortalSector==i)
+	//						{
+	//							m_ActiveNavSectors[i].m_NumPortals++;
+	//						}
+	//						else
+	//						{
+	//							m_ActiveNavSectors[i].m_StartPortal = (int)m_NavPortals.size()-1;
+	//							m_ActiveNavSectors[i].m_NumPortals = 1;
+	//						}
+	//						//////////////////////////////////////////////////////////////////////////
+
+	//						LastPortalSector = i;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 void PathPlannerNavMesh::cmdSetMapCenter(const StringVector &_args)
@@ -572,9 +658,9 @@ void PathPlannerNavMesh::cmdSetMapCenter(const StringVector &_args)
 		}
 	case 4:
 		{
-			if(Utils::ConvertString(_args[1],vMapCenter.x) &&
-				Utils::ConvertString(_args[2],vMapCenter.y) &&
-				Utils::ConvertString(_args[3],vMapCenter.z))
+			if(Utils::ConvertString(_args[1],vMapCenter.X()) &&
+				Utils::ConvertString(_args[2],vMapCenter.Y()) &&
+				Utils::ConvertString(_args[3],vMapCenter.Z()))
 			{
 			}
 			else
@@ -671,6 +757,12 @@ void PathPlannerNavMesh::cmdInfluenceMapCreate(const StringVector &_args)
 
 	VectorQueue empty;
 	m_SpanFrontier.swap( empty );
+
+	RenderBuffer::StaticBufferDelete( mInfluenceBufferId );
+	mInfluenceBufferId = 0;
+
+	OB_DELETE( m_Influence );
+	OB_DELETE( m_SpanMap );
 
 	m_SpanMap = new SpanMap();
 	m_SpanMap->Init( Vector3f(mapbounds.m_Mins), Vector3f(mapbounds.m_Maxs), 16.0f );
@@ -771,6 +863,7 @@ void PathPlannerNavMesh::cmdInfluenceMapFlood(const StringVector &_args)
 	m_Influence = m_SpanMap->CreateInfluenceLayer();
 	m_Influence->Reset();
 	m_Influence->AddSeed( vAimPt, 0.0f );
+
 	Timer t;
 	while( !m_Influence->UpdateInfluences( std::numeric_limits<int>::max() ) )
 	{
@@ -881,7 +974,7 @@ STATE_ENTER(PathPlannerNavMesh, PlaceSector)
 		return;
 
 	m_WorkingSectorStart = vPos;
-	m_WorkingSectorPlane = Utils::PlaneFromPoint(vPos, vNormal);
+	m_WorkingSectorPlane = Plane3f( vNormal, vPos );
 }
 
 STATE_UPDATE(PathPlannerNavMesh, PlaceSector)
@@ -890,7 +983,7 @@ STATE_UPDATE(PathPlannerNavMesh, PlaceSector)
 	if(!Utils::GetLocalAimPoint(vPos, &vNormal))
 		return;
 
-	m_WorkingSectorPlane = Utils::PlaneFromPoint(vPos, m_WorkingSectorPlane.Normal);
+	m_WorkingSectorPlane = Plane3f( m_WorkingSectorPlane.Normal, vPos );
 
 	Vector3List poly = Utils::CreatePolygon(
 		vPos,
@@ -908,8 +1001,12 @@ STATE_EXIT(PathPlannerNavMesh, PlaceSector)
 		return;
 	}
 
+	Vector3f vPos, vNormal;
+	if(!Utils::GetLocalAimPoint(vPos, &vNormal))
+		return;
+
 	m_WorkingSector.m_Boundary = Utils::CreatePolygon(
-		m_WorkingSectorPlane.Normal*-m_WorkingSectorPlane.Constant,
+		vPos,
 		m_WorkingSectorPlane.Normal,
 		32768.f);
 }
@@ -928,7 +1025,7 @@ STATE_ENTER(PathPlannerNavMesh, SliceSector)
 	if(!Utils::GetLocalAimPoint(vPos, &vNormal))
 		return;
 
-	m_WorkingSlicePlane = Utils::PlaneFromPoint(vPos, vNormal);
+	m_WorkingSlicePlane = Plane3f( vNormal, vPos );
 }
 
 STATE_UPDATE(PathPlannerNavMesh, SliceSector)
@@ -943,7 +1040,7 @@ STATE_UPDATE(PathPlannerNavMesh, SliceSector)
 	if(bSnapped)
 		m_CursorColor = COLOR::ORANGE;
 
-	m_WorkingSlicePlane = Utils::PlaneFromPoint(vPos, m_WorkingSlicePlane.Normal);
+	m_WorkingSlicePlane = Plane3f( m_WorkingSlicePlane.Normal, vPos );
 
 	Vector3List slicePoly = Utils::CreatePolygon(
 		vPos,
@@ -958,11 +1055,11 @@ STATE_EXIT(PathPlannerNavMesh, SliceSector)
 	if(m_ToolCancelled)
 		return;
 
-	bool bClipFront = false;
-	if(!bClipFront && m_WorkingSlicePlane.WhichSide(m_WorkingSectorStart) < 0)
-		bClipFront = true;
+	const Plane3f clipPlane = ( m_WorkingSlicePlane.WhichSide( m_WorkingSectorStart ) > 0 ) ?
+		-m_WorkingSlicePlane : m_WorkingSlicePlane;
 
-	m_WorkingSector.m_Boundary = Utils::ClipPolygonToPlanes(m_WorkingSector.m_Boundary, m_WorkingSlicePlane, bClipFront);
+	m_WorkingSector.m_Boundary =
+		Utils::ClipPolygonToPlanes( m_WorkingSector.m_Boundary, clipPlane );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -994,13 +1091,12 @@ STATE_ENTER(PathPlannerNavMesh, SliceSectorWithSector)
 	}
 	//////////////////////////////////////////////////////////////////////////
 
-	m_WorkingSlicePlane = Utils::PlaneFromPoint(nc.HitPosition(),nc.HitNormal());
+	m_WorkingSlicePlane = Plane3f( nc.HitNormal(), nc.HitPosition() );
 
-	bool bClipFront = false;
-	if(!bClipFront && m_WorkingSlicePlane.WhichSide(m_WorkingSectorStart) < 0)
-		bClipFront = true;
+	const Plane3f clipPlane = ( m_WorkingSlicePlane.WhichSide( m_WorkingSectorStart ) > 0 ) ?
+		-m_WorkingSlicePlane : m_WorkingSlicePlane;
 
-	m_WorkingSector.m_Boundary = Utils::ClipPolygonToPlanes(m_WorkingSector.m_Boundary, m_WorkingSlicePlane, bClipFront);
+	m_WorkingSector.m_Boundary = Utils::ClipPolygonToPlanes( m_WorkingSector.m_Boundary, clipPlane );
 
 	SetNextState(NoOp);
 }
@@ -1065,7 +1161,7 @@ STATE_ENTER(PathPlannerNavMesh, SplitSector)
 	if(!Utils::GetLocalAimPoint(vPos, &vNormal))
 		return;
 
-	m_WorkingSlicePlane = Utils::PlaneFromPoint(vPos, vNormal);
+	m_WorkingSlicePlane = Plane3f( vNormal, vPos );
 }
 
 STATE_UPDATE(PathPlannerNavMesh, SplitSector)
@@ -1074,7 +1170,7 @@ STATE_UPDATE(PathPlannerNavMesh, SplitSector)
 	if(!Utils::GetLocalAimPoint(vPos, &vNormal))
 		return;
 
-	m_WorkingSlicePlane = Utils::PlaneFromPoint(vPos, m_WorkingSlicePlane.Normal);
+	m_WorkingSlicePlane = Plane3f( m_WorkingSlicePlane.Normal, vPos );
 
 	Vector3List slicePoly = Utils::CreatePolygon(
 		vPos,
@@ -1089,8 +1185,8 @@ STATE_EXIT(PathPlannerNavMesh, SplitSector)
 	if(m_ToolCancelled)
 		return;
 
-	Vector3List s1 = Utils::ClipPolygonToPlanes(m_WorkingSector.m_Boundary, m_WorkingSlicePlane, true);
-	Vector3List s2 = Utils::ClipPolygonToPlanes(m_WorkingSector.m_Boundary, m_WorkingSlicePlane, false);
+	Vector3List s1 = Utils::ClipPolygonToPlanes( m_WorkingSector.m_Boundary, m_WorkingSlicePlane );
+	Vector3List s2 = Utils::ClipPolygonToPlanes( m_WorkingSector.m_Boundary, -m_WorkingSlicePlane );
 
 	// add the 2 new sectors
 	NavSector ns = m_WorkingSector;
@@ -1222,7 +1318,7 @@ STATE_UPDATE(PathPlannerNavMesh, GroundSector)
 			-1,
 			False);
 
-		ns.m_Boundary[i].z = tr.m_Endpos[2];
+		ns.m_Boundary[i].Z() = tr.m_Endpos[2];
 	}
 
 	InitSectors();
@@ -1325,9 +1421,9 @@ static bool TestForValidNode( Vector3f & spanPos, float & spanHeight )
 		spanPos = tr.m_Endpos;
 		EngineFuncs::TraceLine(tr,spanPos+up0,spanPos+up1,NULL,TR_MASK_FLOODFILL,-1,False);
 
-		spanHeight = (spanPos+up1).z - spanPos.z;
+		spanHeight = (spanPos+up1).Z() - spanPos.Z();
 		if ( tr.m_Fraction < 1.0f )
-			spanHeight = tr.m_Endpos[2] - spanPos.z;
+			spanHeight = tr.m_Endpos[2] - spanPos.Z();
 
 		if ( spanHeight > SpanHeightMin )
 		{

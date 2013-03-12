@@ -1243,8 +1243,8 @@ void GoalManager::Update()
 		{
 			RenderBuffer::AddCircle(
 				HighlightedGoal->GetPosition()+Vector3f(0,0,32.f),
-				COLOR::YELLOW,
-				HighlightedGoal->GetRadius() );
+				HighlightedGoal->GetRadius(),
+				COLOR::YELLOW );
 		}
 		m_HighlightedGoal = HighlightedGoal;
 	}

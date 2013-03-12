@@ -476,15 +476,15 @@
 //	if(a_operands[1].m_type == GM_VEC3)
 //	{
 //		a_native->m_AimErrorMax = Vector2f(
-//			a_operands[1].m_value.m_vec3.x,
-//			a_operands[1].m_value.m_vec3.y);
+//			a_operands[1].m_value.m_vec3.X(),
+//			a_operands[1].m_value.m_vec3.Y());
 //	}
 //	return true;
 //}
 //
 //bool gmFireMode::getMaxAimError( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands )
 //{
-//	a_operands[0].SetVector(a_native->m_AimErrorMax.x, a_native->m_AimErrorMax.y, 0);
+//	a_operands[0].SetVector(a_native->m_AimErrorMax.X(), a_native->m_AimErrorMax.Y(), 0);
 //	return true;
 //}
 //
@@ -493,16 +493,16 @@
 //	if(a_operands[1].m_type == GM_VEC3)
 //	{
 //		a_native->m_AimOffset = Vector3f(
-//			a_operands[1].m_value.m_vec3.x,
-//			a_operands[1].m_value.m_vec3.y,
-//			a_operands[1].m_value.m_vec3.z);
+//			a_operands[1].m_value.m_vec3.X(),
+//			a_operands[1].m_value.m_vec3.Y(),
+//			a_operands[1].m_value.m_vec3.Z());
 //	}
 //	return true;
 //}
 //
 //bool gmFireMode::getAimOffset( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands )
 //{
-//	a_operands[0].SetVector(a_native->m_AimOffset.x, a_native->m_AimOffset.y, a_native->m_AimOffset.z);
+//	a_operands[0].SetVector(a_native->m_AimOffset.X(), a_native->m_AimOffset.Y(), a_native->m_AimOffset.Z());
 //	return true;
 //}
 //

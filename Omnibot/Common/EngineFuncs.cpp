@@ -28,9 +28,9 @@ namespace EngineFuncs
 			}
 		}
 
-		_tr.m_Endpos[0] = _start.x;
-		_tr.m_Endpos[1] = _start.y;
-		_tr.m_Endpos[2] = _start.z;
+		_tr.m_Endpos[0] = _start.X();
+		_tr.m_Endpos[1] = _start.Y();
+		_tr.m_Endpos[2] = _start.Z();
 		return SUCCESS(g_EngineFuncs->TraceLine(_tr, _start, _end, _aabb, _mask, _user, _usepvs));
 	}
 	std::string EntityName(const GameEntity _ent, const char *_default)

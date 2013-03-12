@@ -178,12 +178,12 @@ void Client::Update()
 	}
 
 	// Update my input with the engine
-	m_ClientInput.m_MoveDir[0]		= m_MoveVector.x;
-	m_ClientInput.m_MoveDir[1]		= m_MoveVector.y;
-	m_ClientInput.m_MoveDir[2]		= m_MoveVector.z;
-	m_ClientInput.m_Facing[0]		= m_FacingVector.x;
-	m_ClientInput.m_Facing[1]		= m_FacingVector.y;
-	m_ClientInput.m_Facing[2]		= m_FacingVector.z;
+	m_ClientInput.m_MoveDir[0]		= m_MoveVector.X();
+	m_ClientInput.m_MoveDir[1]		= m_MoveVector.Y();
+	m_ClientInput.m_MoveDir[2]		= m_MoveVector.Z();
+	m_ClientInput.m_Facing[0]		= m_FacingVector.X();
+	m_ClientInput.m_Facing[1]		= m_FacingVector.Y();
+	m_ClientInput.m_Facing[2]		= m_FacingVector.Z();
 	m_ClientInput.m_ButtonFlags		= m_ButtonFlags;
 	m_ClientInput.m_CurrentWeapon	= GetWeaponSystem()->GetDesiredWeaponID();
 	{
@@ -660,7 +660,7 @@ bool Client::TurnTowardPosition(const Vector3f &_pos)
 	float fAngle = Mathf::ACos(fDot);
 
 	Ray3f rFacing(GetEyePosition(), GetFacingVector());
-	DistVector3Ray3f dist(_pos, rFacing);
+	DistPoint3Ray3f dist(_pos, rFacing);
 	float fDistance = dist.Get();
 
 	// If it's very close, just snap it.

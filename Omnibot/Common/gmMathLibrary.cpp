@@ -11,7 +11,6 @@
 #include "gmThread.h"
 #include "gmMachine.h"
 #include "gmHelpers.h"
-#include "Wm3Math.h"
 
 // script: MathLibrary
 //		Exposes useful math functionality to the scripting system.

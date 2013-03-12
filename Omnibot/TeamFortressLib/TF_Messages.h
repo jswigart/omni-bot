@@ -234,6 +234,12 @@ struct Event_TeleporterStatus_TF
 	obBool			m_SabotagedExit;
 };
 
+struct Event_DetpackStatus_TF
+{
+	GameEntity		m_Entity;
+	float			m_TimeLeft;
+};
+
 struct Event_TeleporterBuilding_TF
 {
 	GameEntity	m_Teleporter;
@@ -297,6 +303,7 @@ struct TF_BuildInfo
 	Event_SentryStatus_TF		m_SentryStats;
 	Event_DispenserStatus_TF	m_DispenserStats;
 	Event_TeleporterStatus_TF	m_TeleporterStats;
+	Event_DetpackStatus_TF		m_DetpackStats;
 };
 
 struct TF_HealTarget

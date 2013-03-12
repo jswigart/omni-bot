@@ -169,7 +169,7 @@ void PathPlannerFloodFill::cmdAddFloodStart(const StringVector &_args)
 	{
 		ScriptManager::GetInstance()->ExecuteStringLogged(
 			(std::string)va("Nav.AddFloodStart( Vector3(%f, %f, %f) );",
-			vPosition.x, vPosition.y, vPosition.z));
+			vPosition.X(), vPosition.Y(), vPosition.Z()));
 	}
 }
 
@@ -246,12 +246,12 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 		if(!features[i].m_Bounds.IsZero())
 		{
 			features[i].m_Bounds.CenterBottom(vPos);
-			vPos.z -= g_fBottomWaypointOffset;
+			vPos.Z() -= g_fBottomWaypointOffset;
 		}
 		if(!features[i].m_TargetBounds.IsZero())
 		{
 			features[i].m_TargetBounds.CenterBottom(vTarget);
-			vTarget.z -= g_fBottomWaypointOffset;
+			vTarget.Z() -= g_fBottomWaypointOffset;
 		}
 
 		AddFloodStart(vPos);

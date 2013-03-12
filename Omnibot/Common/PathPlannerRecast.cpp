@@ -192,7 +192,7 @@ static NavObstacles	gNavObstacles[MaxObstacles];
 //////////////////////////////////////////////////////////////////////////
 Vector3f ToRecast(const Vector3f &v)
 {
-	return Vector3f(v.x,v.z,v.y);
+	return Vector3f(v.X(),v.Z(),v.Y());
 }
 //////////////////////////////////////////////////////////////////////////
 
@@ -399,7 +399,7 @@ Vector3f PathPlannerRecast::GetRandomDestination(Client *_client, const Vector3f
 	{
 		//DetourNavmesh->getRandomPolyPosition(rand(),dest);
 	}
-	return Vector3f(dest.x,dest.z,dest.y);
+	return Vector3f(dest.X(),dest.Z(),dest.Y());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -751,7 +751,7 @@ int PathPlannerRecast::Process_FloodFill()
 								RC_NULL_AREA,
 								*FloodHeightField);
 
-							vWall.z += RecastCfg.ch;
+							vWall.Z() += RecastCfg.ch;
 							EngineFuncs::TraceLine(
 								trFloor,
 								vWall,
@@ -767,7 +767,7 @@ int PathPlannerRecast::Process_FloodFill()
 								RecastExploredList.push_back(rcn);
 							}
 							RecastStats.ExploredCells++;
-						} while(trFloor.m_StartSolid && (vWall.z - currentNode.Pos.z) <= 512.f);
+						} while(trFloor.m_StartSolid && (vWall.Z() - currentNode.Pos.Z()) <= 512.f);
 
 						// if we found a non solid, add it to the open list to explore further.
 						if(!trFloor.m_StartSolid)
@@ -822,7 +822,7 @@ int PathPlannerRecast::Process_FloodFill()
 				{
 					RecastNode expand;
 					expand.Pos = floorPos + Expand[d] * RecastCfg.cs;
-					expand.Pos.z += RecastCfg.walkableClimb;
+					expand.Pos.Z() += RecastCfg.walkableClimb;
 					RecastOpenList.push_back(expand);
 				}
 			}
@@ -900,7 +900,7 @@ int PathPlannerRecast::Process_FloodFill()
 
 			if ( DUMP_OBJS ) {
 				const char * mapName = g_EngineFuncs->GetMapName();
-				FileIO obj, mat;
+				rcFileIO obj, mat;
 				const char * objFileName = va( "%s_walkhf.obj", mapName );
 				const char * matFileName = va( "%s_walkhf.mat", mapName );
 				if ( obj.openForWrite( objFileName ) && mat.openForWrite( matFileName )) {
@@ -928,7 +928,7 @@ int PathPlannerRecast::Process_FloodFill()
 
 			if ( DUMP_OBJS ) {
 				const char * mapName = g_EngineFuncs->GetMapName();
-				FileIO obj, mat;
+				rcFileIO obj, mat;
 				const char * objFileName = va( "%s_disthf.obj", mapName );
 				const char * matFileName = va( "%s_disthf.mat", mapName );
 				if ( obj.openForWrite( objFileName ) && mat.openForWrite( matFileName )) {
@@ -967,7 +967,7 @@ int PathPlannerRecast::Process_FloodFill()
 			}
 
 			if ( DUMP_OBJS ) {
-				FileIO obj;
+				rcFileIO obj;
 				if ( obj.openForWrite( va( "%s_pm.obj", g_EngineFuncs->GetMapName() ) ) )
 					duDumpPolyMeshToObj( *build.PolyMesh, &obj );
 			}
@@ -984,7 +984,7 @@ int PathPlannerRecast::Process_FloodFill()
 			}
 
 			if ( DUMP_OBJS ) {
-				FileIO obj;
+				rcFileIO obj;
 				if ( obj.openForWrite( va( "%s_pmd.obj", g_EngineFuncs->GetMapName() ) ) )
 					duDumpPolyMeshDetailToObj( *build.PolyMeshDetail, &obj );
 			}
@@ -2057,11 +2057,11 @@ void PathPlannerRecast::RenderToMapViewPort(gcn::Widget *widget, gcn::Graphics *
 	//		Vector2f vP0 = FromWorld(navextents, ToRecast(v0)).As2d();
 	//		Vector2f vP1 = FromWorld(navextents, ToRecast(v1)).As2d();
 	//		Vector2f vP2 = FromWorld(navextents, ToRecast(v2)).As2d();
-	//		//graphics->drawLine((int)vP1.x, (int)vP1.y, (int)vP2.x, (int)vP2.y);
+	//		//graphics->drawLine((int)vP1.X(), (int)vP1.Y(), (int)vP2.X(), (int)vP2.Y());
 
-	//		Triangles[NumTriangles].v0 = gcn::Graphics::Point((int)vP0.x, (int)vP0.y, col);
-	//		Triangles[NumTriangles].v1 = gcn::Graphics::Point((int)vP1.x, (int)vP1.y, col);
-	//		Triangles[NumTriangles].v2 = gcn::Graphics::Point((int)vP2.x, (int)vP2.y, col);
+	//		Triangles[NumTriangles].v0 = gcn::Graphics::Point((int)vP0.X(), (int)vP0.Y(), col);
+	//		Triangles[NumTriangles].v1 = gcn::Graphics::Point((int)vP1.X(), (int)vP1.Y(), col);
+	//		Triangles[NumTriangles].v2 = gcn::Graphics::Point((int)vP2.X(), (int)vP2.Y(), col);
 	//		NumTriangles++;
 	//	}
 	//	graphics->drawPolygon(Triangles,NumTriangles);
@@ -2078,7 +2078,7 @@ void PathPlannerRecast::RenderToMapViewPort(gcn::Widget *widget, gcn::Graphics *
 	//		{
 	//			Vector2f linkStart = FromWorld(navextents, ToRecast(link->start)).As2d();
 	//			Vector2f linkEnd = FromWorld(navextents, ToRecast(link->end)).As2d();
-	//			graphics->drawLine((int)linkStart.x, (int)linkStart.y, (int)linkEnd.x, (int)linkEnd.y);
+	//			graphics->drawLine((int)linkStart.X(), (int)linkStart.Y(), (int)linkEnd.X(), (int)linkEnd.Y());
 	//		}
 	//	}
 	//}
@@ -2092,9 +2092,9 @@ void PathPlannerRecast::RenderToMapViewPort(gcn::Widget *widget, gcn::Graphics *
 	//		Vector3f vViewPortFace = FromWorld(navextents, c->GetPosition() + c->GetFacingVector() * 50.f);
 
 	//		graphics->setColor(colBot);
-	//		graphics->drawLine((int)vViewPortPos.x, (int)vViewPortPos.y, (int)vViewPortFace.x, (int)vViewPortFace.y);
+	//		graphics->drawLine((int)vViewPortPos.X(), (int)vViewPortPos.Y(), (int)vViewPortFace.X(), (int)vViewPortFace.Y());
 
-	//		//DrawBuffer::Add(graphics, Graphics::Line((int)vViewPortPos.x, (int)vViewPortPos.y, (int)vViewPortFace.x, (int)vViewPortFace.y, colBot));
+	//		//DrawBuffer::Add(graphics, Graphics::Line((int)vViewPortPos.X(), (int)vViewPortPos.Y(), (int)vViewPortFace.X(), (int)vViewPortFace.Y(), colBot));
 
 	//		/*if(selectedPlayer && selectedPlayer==c)
 	//			drawCircle(graphics, vViewPortPos, 3.f+Mathf::Sin(IGame::GetTimeSecs()*3.f), colSelectedBot);
@@ -2118,7 +2118,7 @@ void PathPlannerRecast::RenderToMapViewPort(gcn::Widget *widget, gcn::Graphics *
 	//					Vector3f vP2 = FromWorld(navextents, ppt.m_Pt);
 
 	//					graphics->setColor(colBotPath);
-	//					graphics->drawLine((int)vP1.x, (int)vP1.y, (int)vP2.x, (int)vP2.y);
+	//					graphics->drawLine((int)vP1.X(), (int)vP1.Y(), (int)vP2.X(), (int)vP2.Y());
 
 	//					//drawCircle(graphics, FromWorld(navextents, ppt.m_Pt), ppt.m_Radius*fRadiusScaler, colBotPath);
 

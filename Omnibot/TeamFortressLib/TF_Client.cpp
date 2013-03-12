@@ -520,18 +520,18 @@ void TF_Client::ProcessGotoNode(const Path &_path)
 			}
 
 			static float JumpVelocity = 10.f;
-			if(!OnGround && GetVelocity().z > JumpVelocity)
+			if(!OnGround && GetVelocity().Z() > JumpVelocity)
 			{
 				m_DoubleJumping = true;
 			}
 
-			m_DoubleJumpHeight = GetPosition().z;
+			m_DoubleJumpHeight = GetPosition().Z();
 		}
 	}
 
 	if(m_DoubleJumping)
 	{
-		const float NextHeight = GetPosition().z + GetVelocity().z * IGame::GetDeltaTimeSecs();
+		const float NextHeight = GetPosition().Z() + GetVelocity().Z() * IGame::GetDeltaTimeSecs();
 		if(NextHeight < m_DoubleJumpHeight)
 		{
 			PressButton(BOT_BUTTON_JUMP);
