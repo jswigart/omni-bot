@@ -23,6 +23,7 @@
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
 #include <google/protobuf/generated_message_reflection.h>
+#include "google/protobuf/descriptor.pb.h"
 // @@protoc_insertion_point(includes)
 
 namespace NavmeshIO {
@@ -429,12 +430,23 @@ class SectorData : public ::google::protobuf::Message {
   inline bool inwater() const;
   inline void set_inwater(bool value);
   
-  // optional bool underwater = 7 [default = false];
-  inline bool has_underwater() const;
-  inline void clear_underwater();
-  static const int kUnderwaterFieldNumber = 7;
-  inline bool underwater() const;
-  inline void set_underwater(bool value);
+  // optional bool onmover = 7 [default = false];
+  inline bool has_onmover() const;
+  inline void clear_onmover();
+  static const int kOnmoverFieldNumber = 7;
+  inline bool onmover() const;
+  inline void set_onmover(bool value);
+  
+  // optional string location = 8;
+  inline bool has_location() const;
+  inline void clear_location();
+  static const int kLocationFieldNumber = 8;
+  inline const ::std::string& location() const;
+  inline void set_location(const ::std::string& value);
+  inline void set_location(const char* value);
+  inline void set_location(const char* value, size_t size);
+  inline ::std::string* mutable_location();
+  inline ::std::string* release_location();
   
   // @@protoc_insertion_point(class_scope:NavmeshIO.SectorData)
  private:
@@ -450,8 +462,10 @@ class SectorData : public ::google::protobuf::Message {
   inline void clear_has_team4();
   inline void set_has_inwater();
   inline void clear_has_inwater();
-  inline void set_has_underwater();
-  inline void clear_has_underwater();
+  inline void set_has_onmover();
+  inline void clear_has_onmover();
+  inline void set_has_location();
+  inline void clear_has_location();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -461,10 +475,11 @@ class SectorData : public ::google::protobuf::Message {
   bool team3_;
   bool team4_;
   bool inwater_;
-  bool underwater_;
+  bool onmover_;
+  ::std::string* location_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
   
   friend void  protobuf_AddDesc_navmesh_2eproto();
   friend void protobuf_AssignDesc_navmesh_2eproto();
@@ -717,6 +732,10 @@ class NavigationMesh : public ::google::protobuf::Message {
 };
 // ===================================================================
 
+static const int kDocFieldNumber = 2000;
+extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::StringTypeTraits, 9, false >
+  doc;
 
 // ===================================================================
 
@@ -990,26 +1009,84 @@ inline void SectorData::set_inwater(bool value) {
   inwater_ = value;
 }
 
-// optional bool underwater = 7 [default = false];
-inline bool SectorData::has_underwater() const {
+// optional bool onmover = 7 [default = false];
+inline bool SectorData::has_onmover() const {
   return (_has_bits_[0] & 0x00000040u) != 0;
 }
-inline void SectorData::set_has_underwater() {
+inline void SectorData::set_has_onmover() {
   _has_bits_[0] |= 0x00000040u;
 }
-inline void SectorData::clear_has_underwater() {
+inline void SectorData::clear_has_onmover() {
   _has_bits_[0] &= ~0x00000040u;
 }
-inline void SectorData::clear_underwater() {
-  underwater_ = false;
-  clear_has_underwater();
+inline void SectorData::clear_onmover() {
+  onmover_ = false;
+  clear_has_onmover();
 }
-inline bool SectorData::underwater() const {
-  return underwater_;
+inline bool SectorData::onmover() const {
+  return onmover_;
 }
-inline void SectorData::set_underwater(bool value) {
-  set_has_underwater();
-  underwater_ = value;
+inline void SectorData::set_onmover(bool value) {
+  set_has_onmover();
+  onmover_ = value;
+}
+
+// optional string location = 8;
+inline bool SectorData::has_location() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void SectorData::set_has_location() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void SectorData::clear_has_location() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void SectorData::clear_location() {
+  if (location_ != &::google::protobuf::internal::kEmptyString) {
+    location_->clear();
+  }
+  clear_has_location();
+}
+inline const ::std::string& SectorData::location() const {
+  return *location_;
+}
+inline void SectorData::set_location(const ::std::string& value) {
+  set_has_location();
+  if (location_ == &::google::protobuf::internal::kEmptyString) {
+    location_ = new ::std::string;
+  }
+  location_->assign(value);
+}
+inline void SectorData::set_location(const char* value) {
+  set_has_location();
+  if (location_ == &::google::protobuf::internal::kEmptyString) {
+    location_ = new ::std::string;
+  }
+  location_->assign(value);
+}
+inline void SectorData::set_location(const char* value, size_t size) {
+  set_has_location();
+  if (location_ == &::google::protobuf::internal::kEmptyString) {
+    location_ = new ::std::string;
+  }
+  location_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SectorData::mutable_location() {
+  set_has_location();
+  if (location_ == &::google::protobuf::internal::kEmptyString) {
+    location_ = new ::std::string;
+  }
+  return location_;
+}
+inline ::std::string* SectorData::release_location() {
+  clear_has_location();
+  if (location_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = location_;
+    location_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
 }
 
 // -------------------------------------------------------------------

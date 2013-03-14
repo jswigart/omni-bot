@@ -12,25 +12,25 @@
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\..\Common\floodfill.proto">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) -I=$(PROTO_BUFF)/src --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) -I=$(PROTO_BUFF)/src --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling %(Filename)%(Extension)</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\Common\influencemap.proto">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) -I=$(PROTO_BUFF)/src --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) -I=$(PROTO_BUFF)/src --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling %(Filename)%(Extension)</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="..\..\..\Common\navmesh.proto">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) -I=$(PROTO_BUFF)/src --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) -I=$(PROTO_BUFF)/src --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling %(Filename)%(Extension)</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>

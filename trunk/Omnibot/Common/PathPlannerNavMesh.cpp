@@ -69,7 +69,7 @@ public:
 		obint32 Hash() const
 		{
 			return (obint32)Utils::MakeId32(
-				(obint16)Sector->m_Id,
+				(obint16)Sector->mId,
 				Portal ? (obint16)Portal->m_DestSector : (obint16)0xFF);
 		}
 
@@ -270,14 +270,14 @@ private:
 	void _MarkClosed(PlanNode *_node)
 	{
 		m_ClosedList[_node->Hash()] = _node;
-		//m_ClosedList.insert(std::make_pair(_node->Sector->m_Id,_node));
+		//m_ClosedList.insert(std::make_pair(_node->Sector->mId,_node));
 	}
 	NodeClosedList::iterator IsOnClosedList(PlanNode *_node)
 	{
 		NodeClosedList::iterator it = m_ClosedList.find(_node->Hash());
 		return it;
-		/*NodeClosedList::iterator it = m_ClosedList.lower_bound(_node->Sector->m_Id);
-		NodeClosedList::iterator itEnd = m_ClosedList.upper_bound(_node->Sector->m_Id);
+		/*NodeClosedList::iterator it = m_ClosedList.lower_bound(_node->Sector->mId);
+		NodeClosedList::iterator itEnd = m_ClosedList.upper_bound(_node->Sector->mId);
 		while(it != itEnd)
 		{
 		if(SquaredLength(_node->Position,it->second->Position) < 32.f)
@@ -484,6 +484,7 @@ PathPlannerNavMesh::PathPlannerNavMesh()
 {
 	// TEMP
 	m_PlannerFlags.SetFlag(NAV_VIEW);
+	m_PlannerFlags.SetFlag(NAV_VIEWCONNECTIONS);
 	m_PlannerFlags.SetFlag(NAVMESH_STEPPROCESS);
 
 	m_CursorColor = COLOR::BLUE;
@@ -522,10 +523,10 @@ Vector3f PathPlannerNavMesh::NavSector::CalculateCenter() const
 PathPlannerNavMesh::NavSector PathPlannerNavMesh::NavSector::GetMirroredCopy(const Vector3f &offset) const
 {
 	NavSector ns;
-	ns.m_Mirror = NavmeshIO::Sector_MirrorDir_MirrorNone;
+	ns.mMirror = NavmeshIO::Sector_MirrorDir_MirrorNone;
 
 	Vector3f vAxis;
-	switch(m_Mirror)
+	switch(mMirror)
 	{
 	case NavmeshIO::Sector_MirrorDir_MirrorX:
 		vAxis = Vector3f::UNIT_X;
@@ -858,7 +859,7 @@ void PathPlannerNavMesh::Update()
 				RenderBuffer::AddPolygonSilouette( ns.m_Boundary, SEC_COLOR );
 
 				// render the points, colored by whether this sector is mirrored
-				const obColor ptColor = m_NavSectors[ ns.m_Id ].IsMirrored() ?
+				const obColor ptColor = m_NavSectors[ ns.mId ].IsMirrored() ?
 					COLOR::CYAN :
 				COLOR::MAGENTA;
 				RenderBuffer::AddPoints( ns.m_Boundary, ptColor, 5.0f );
@@ -866,6 +867,8 @@ void PathPlannerNavMesh::Update()
 
 			if(m_PlannerFlags.CheckFlag(NAV_VIEWCONNECTIONS))
 			{
+				ConnectTest();
+
 				for ( size_t p = 0; p < ns.m_NavPortals.size(); ++p )
 				{
 					const NavPortal &portal = ns.m_NavPortals[ p ];
@@ -1010,13 +1013,9 @@ bool PathPlannerNavMesh::Load(const std::string &_mapname, bool _dl)
 			const NavmeshIO::Sector & s = nm.sectors( i );
 
 			NavSector sector;
-			sector.m_Mirror = s.sectormirrored();
-			if ( s.has_sectordata() )
-			{
-			}
-			if ( s.has_sectordatamirrored() )
-			{
-			}
+			sector.mMirror = s.sectormirrored();
+			sector.mSectorData = s.sectordata();
+			sector.mSectorDataMirrored = s.sectordatamirrored();
 
 			for ( int i = 0; i < s.vertices_size(); ++i )
 			{
@@ -1061,21 +1060,32 @@ bool PathPlannerNavMesh::Save(const std::string &_mapname)
 		const NavSector &ns = m_NavSectors[s];
 
 		NavmeshIO::Sector* sectorOut = nm.add_sectors();
+
+		sectorOut->set_sectormirrored( ns.mMirror );
+		*sectorOut->mutable_sectordata() = ns.mSectorData;
+		*sectorOut->mutable_sectordatamirrored() = ns.mSectorDataMirrored;
+
 		for(obuint32 v = 0; v < ns.m_Boundary.size(); ++v)
 		{
 			NavmeshIO::SectorVert * sectorVertOut = sectorOut->add_vertices();
 			sectorVertOut->mutable_position()->set_x( ns.m_Boundary[v].X() );
 			sectorVertOut->mutable_position()->set_y( ns.m_Boundary[v].Y() );
 			sectorVertOut->mutable_position()->set_z( ns.m_Boundary[v].Z() );
-
-			/*sectorOut->mutable_sectordata()
-			sectorOut->mutable_sectordatamirrored()*/
-			if ( ns.m_Mirror != NavmeshIO::Sector_MirrorDir_MirrorNone )
-			{
-				sectorOut->set_sectormirrored( ns.m_Mirror );
-				//sectorOut->mutable_sectordatamirrored();
-			}
 		}
+
+		// TODO: walk the message tree and clear fields
+		// that are default value to reduce the data size
+		/*std::vector<const google::protobuf::FieldDescriptor*> fields;
+		sectorOut->GetReflection()->ListFields( *sectorOut, fields );
+		for ( size_t f = 0; f < fields.size(); ++f )
+		{
+		if ( fields[ f ]->is_optional() )
+		{
+		fields[ f ]->reflec
+		sectorOut->GetReflection()->ClearField( *sectorOut, fields[ f ] );
+		fields[ f ]->default
+		}
+		}*/
 	}
 
 	std::string outBuffer;
@@ -1207,7 +1217,7 @@ void PathPlannerNavMesh::InitSectors()
 		attr.Fields.Mirrored = 0;
 
 		allSectors.push_back( m_NavSectors[ i ] );
-		allSectors.back().m_Id = attr.Fields.SectorId;
+		allSectors.back().mId = attr.Fields.SectorId;
 
 		//////////////////////////////////////////////////////////////////////////
 		Vector3f center = allSectors.back().CalculateCenter();
@@ -1241,7 +1251,7 @@ void PathPlannerNavMesh::InitSectors()
 	// do another pass for the mirrored set
 	for ( size_t i = 0; i < m_NavSectors.size(); ++i )
 	{
-		if ( m_NavSectors[ i ].m_Mirror != NavmeshIO::Sector_MirrorDir_MirrorNone )
+		if ( m_NavSectors[ i ].mMirror != NavmeshIO::Sector_MirrorDir_MirrorNone )
 		{
 			PolyAttrib attr;
 			attr.Fields.ActiveId = allSectors.size();
@@ -1249,7 +1259,7 @@ void PathPlannerNavMesh::InitSectors()
 			attr.Fields.Mirrored = 1;
 
 			allSectors.push_back( m_NavSectors[ i ].GetMirroredCopy( m_MapCenter ) );
-			allSectors.back().m_Id = attr.Fields.SectorId;
+			allSectors.back().mId = attr.Fields.SectorId;
 
 			//////////////////////////////////////////////////////////////////////////
 			Vector3f center = allSectors.back().CalculateCenter();
@@ -1362,7 +1372,7 @@ void PathPlannerNavMesh::GetPath(Path &_path, int _smoothiterations)
 		Vector3f vNodePos = pn->Position;
 
 		_path.AddPt(vNodePos + Vector3f(0,0,CHAR_HALF_HEIGHT),32.f)
-			.NavId(pn->Sector->m_Id)
+			.NavId(pn->Sector->mId)
 			/*.Flags(m_Solution.back()->GetNavigationFlags())
 			.OnPathThrough(m_Solution.back()->OnPathThrough())
 			.OnPathThroughParam(m_Solution.back()->OnPathThroughParam())*/;
@@ -1390,5 +1400,122 @@ Vector3f PathPlannerNavMesh::GetDisplayPosition(const Vector3f &_pos)
 {
 	return _pos;
 }
+
+void PathPlannerNavMesh::ConnectTest()
+{
+	Vector3f vFacing, vEyePos;
+	if( !Utils::GetLocalEyePosition( vEyePos ) || !Utils::GetLocalFacing( vFacing ) )
+		return;
+
+	Vector3f vAimPos, vAimNormal;
+	if( !Utils::GetLocalAimPoint( vAimPos, &vAimNormal) )
+		return;
+
+	static float DROP_HEIGHT = -128.f;
+	static float STEP_HEIGHT = 20.f;
+	static float LINE_DIST = 2.f;
+
+	NavSector * sector = GetSectorAt( vEyePos );
+	if ( sector != NULL )
+	{
+		sector->m_NavPortals.resize( 0 );
+
+		// look for all neighbors
+		const Vector3List & edges0 = sector->m_Boundary;
+		for ( size_t b = 1; b <= edges0.size(); ++b )
+		{
+			//
+			Line3f line0;
+			Segment3f seg0( edges0[ b-1 ], edges0[ b % edges0.size() ] );
+
+			{
+				DistPoint3Segment3f segDist( vAimPos, seg0 );
+				if ( segDist.Get() > 32.0f )
+					continue;
+			}
+
+			line0.FromPoints( seg0.P0, seg0.P1 );
+
+			// search all sectors for neighboring connections
+			for ( size_t n = 0; n < m_ActiveNavSectors.size(); ++n )
+			{
+				NavSector * neighbor = &m_ActiveNavSectors[ n ];
+
+				if ( sector == neighbor )
+					continue;
+
+				const Vector3List & edges1 = neighbor->m_Boundary;
+				for ( size_t nb = 1; nb <= edges1.size(); ++nb )
+				{
+					Segment3f seg1( edges1[ nb-1 ], edges1[ nb % edges1.size() ] );
+
+					static bool cull2 = true;
+					if ( cull2 )
+					{
+						DistPoint3Segment3f segDist( vAimPos, seg1 );
+						if ( segDist.Get() > 32.0f )
+							continue;
+					}
+
+					DistPoint3Line3f d0( seg1.P0, line0 );
+					DistPoint3Line3f d1( seg1.P1, line0 );
+
+					d0.GetSquared();
+					d1.GetSquared();
+
+					RenderBuffer::AddLine(
+						d0.GetClosestPoint1() + Vector3f( 0.0f, 0.0f, 2.0f ),
+						d0.GetClosestPoint0() + Vector3f( 0.0f, 0.0f, 2.0f ),
+						COLOR::MAGENTA );
+
+					RenderBuffer::AddLine(
+						d1.GetClosestPoint1() + Vector3f( 0.0f, 0.0f, 2.0f ),
+						d1.GetClosestPoint0() + Vector3f( 0.0f, 0.0f, 2.0f ),
+						COLOR::RED );
+
+					// the lines must overlap
+					if ( d0.GetLineParameter() > seg0.Extent && d1.GetLineParameter() > seg0.Extent )
+						continue;
+					if ( d0.GetLineParameter() < -seg0.Extent && d1.GetLineParameter() < -seg0.Extent )
+						continue;
+
+					// pull the points into the segment space
+					const float d0Segment = Mathf::Clamp( d0.GetLineParameter(), -seg0.Extent, seg0.Extent );
+					const float d1Segment = Mathf::Clamp( d1.GetLineParameter(), -seg0.Extent, seg0.Extent );
+
+					const Vector3f p0diff = d0.GetClosestPoint1() - d0.GetClosestPoint0();
+					const Vector3f p1diff = d1.GetClosestPoint1() - d1.GetClosestPoint0();
+
+					const float p0zDiff = seg1.P0.Z() - d0.GetClosestPoint1().Z();
+					const float p1zDiff = seg1.P1.Z() - d0.GetClosestPoint1().Z();
+
+					if ( p0diff.Length2d() < LINE_DIST && p1diff.Length2d() < LINE_DIST &&
+						p0zDiff <= STEP_HEIGHT && p1zDiff <= STEP_HEIGHT &&
+						p0zDiff >= DROP_HEIGHT && p1zDiff >= DROP_HEIGHT )
+					{
+						/*struct NavPortal
+						{
+						Segment3f		m_Segment;
+						int				m_DestSector;
+						BitFlag64		m_LinkFlags;
+						};*/
+
+						// these lines are close enough
+						NavPortal portal;
+						portal.m_Segment.P0 = line0.Origin + d0Segment * line0.Direction;
+						portal.m_Segment.P1 = line0.Origin + d1Segment * line0.Direction;
+						portal.m_Segment.ComputeCenterDirectionExtent();
+						portal.m_DestSector = n;
+						sector->m_NavPortals.push_back( portal );
+					}
+
+					/*Line3f line1;
+					line1.FromPoints( seg1.P0, seg1.P1 );*/
+				}
+			}
+		}
+	}
+}
+
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////

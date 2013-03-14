@@ -96,32 +96,42 @@ public:
 
 	struct NavSector
 	{
-		int								m_Id;
+		// where the absolute value will be the index of the original sector
+		int								mId;
 
 		Vector3List						m_Boundary;
-		NavmeshIO::Sector_MirrorDir		m_Mirror;
+		NavmeshIO::Sector_MirrorDir		mMirror;
 
-		Plane3f							m_Plane;
-
+		// currently active navigation portals
 		NavPortalList					m_NavPortals;
 
+		// plane, for obstacle projection
+		Plane3f							m_Plane;
+		// current obstacles influencing this sector
 		ObstacleList					m_Obstacles;
+
+		NavmeshIO::SectorData			mSectorData;
+		NavmeshIO::SectorData			mSectorDataMirrored;
+
+		// flags
+		float							m_WaterDepth;
 
 		bool IsMirrored() const
 		{
-			return m_Mirror != NavmeshIO::Sector_MirrorDir_MirrorNone;
+			return mMirror != NavmeshIO::Sector_MirrorDir_MirrorNone;
 		}
 
-		NavSector()
-			: m_Id( 0 )
-			, m_Mirror( NavmeshIO::Sector_MirrorDir_MirrorNone )
-		{
-		}
-
+		// Utility functions
 		Vector3f CalculateCenter() const;
 		NavSector GetMirroredCopy(const Vector3f &offset) const;
 		SegmentList GetEdgeSegments() const;
 		void GetEdgeSegments(SegmentList &_list) const;
+
+		NavSector()
+			: mId( 0 )
+			, mMirror( NavmeshIO::Sector_MirrorDir_MirrorNone )
+		{
+		}
 	};
 
 	NavSector *GetSectorAt(const Vector3f &_pos, float _distance = 1024.f);
@@ -193,6 +203,8 @@ protected:
 	void cmdGroundSector(const StringVector &_args);
 	void cmdSectorCreateConnections(const StringVector &_args);
 	void cmdSetMapCenter(const StringVector &_args);
+	void cmdUpdateContents(const StringVector &_args);
+	void cmdSetField(const StringVector &_args);
 
 	void cmdObstacleAdd(const StringVector &_args);
 
@@ -204,6 +216,8 @@ protected:
 	void cmdInfluenceMapFlood(const StringVector &_args);
 
 	void cmdNext(const StringVector &_args);
+
+	void ConnectTest();
 
 	//////////////////////////////////////////////////////////////////////////
 	// Friend functions
