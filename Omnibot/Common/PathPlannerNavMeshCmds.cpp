@@ -62,6 +62,11 @@ void PathPlannerNavMesh::InitCommands()
 	SetEx("nav_ss", "Slices working sector with the sector being aimed at.",
 		this, &PathPlannerNavMesh::cmdCreateSliceSector);
 
+	SetEx("nav_setfield", "Sets a named field on the navigation sector.",
+		this, &PathPlannerNavMesh::cmdSetField);
+	SetEx("nav_setfieldm", "Sets a named field on the navigation sector.",
+		this, &PathPlannerNavMesh::cmdSetField);
+
 	SetEx("nav_commit", "Creates a plane from a point and normal.",
 		this, &PathPlannerNavMesh::cmdCommitPoly);
 	SetEx("nav_editsector", "Begins editing a sector so further slicing may be done.",
@@ -70,7 +75,8 @@ void PathPlannerNavMesh::InitCommands()
 		this, &PathPlannerNavMesh::cmdSplitSector);
 	SetEx("nav_groundsector", "Grounds all the vertices in the sector.",
 		this, &PathPlannerNavMesh::cmdGroundSector);
-
+	SetEx("nav_updatecontents", "Updates the contents flags of all sectors.",
+		this, &PathPlannerNavMesh::cmdUpdateContents);
 	SetEx("nav_next", "Steps the current tool to the next operation.",
 		this, &PathPlannerNavMesh::cmdNext);
 
@@ -92,6 +98,7 @@ void PathPlannerNavMesh::InitCommands()
 	SetEx("nav_obstacleadd", "Creates an obstacle.",
 		this, &PathPlannerNavMesh::cmdObstacleAdd);
 
+	// INFLUENCE MAP EXPERIMENTATION
 	SetEx("nav_mapcreate", "Creates an influence map.",
 		this, &PathPlannerNavMesh::cmdInfluenceMapCreate);
 	SetEx("nav_mapseed", "Adds a seed point to the map for exploration.",
@@ -451,7 +458,7 @@ void PathPlannerNavMesh::cmdMirrorSectors(const StringVector &_args)
 	{
 		for(obuint32 s = 0; s < m_NavSectors.size(); ++s)
 		{
-			m_NavSectors[s].m_Mirror = mir;
+			m_NavSectors[s].mMirror = mir;
 		}
 	}
 	else
@@ -476,7 +483,7 @@ void PathPlannerNavMesh::cmdMirrorSectors(const StringVector &_args)
 			EngineFuncs::ConsoleError("can't find sector, aim at a sector and try again.");
 			return;
 		}
-		pNavSector->m_Mirror = mir;
+		pNavSector->mMirror = mir;
 	}
 
 	InitSectors();
@@ -484,90 +491,6 @@ void PathPlannerNavMesh::cmdMirrorSectors(const StringVector &_args)
 
 void PathPlannerNavMesh::cmdSectorCreateConnections(const StringVector &_args)
 {
-	Vector3f vFacing, vEyePos;
-	if( !Utils::GetLocalEyePosition( vEyePos ) || !Utils::GetLocalFacing( vFacing ) )
-		return;
-
-	static float DROP_HEIGHT = -128.f;
-	static float STEP_HEIGHT = 20.f;
-	static float LINE_DIST = 2.f;
-
-	NavSector * sector = GetSectorAt( vEyePos );
-	if ( sector != NULL )
-	{
-		sector->m_NavPortals.resize( 0 );
-
-		// look for all neighbors
-		const Vector3List & edges0 = sector->m_Boundary;
-		for ( size_t b = 1; b <= edges0.size(); ++b )
-		{
-			//
-			Line3f line0;
-			Segment3f seg0( edges0[ b-1 ], edges0[ b % edges0.size() ] );
-			//DistPoint3Segment3
-
-			line0.FromPoints( seg0.P0, seg0.P1 );
-
-			// search all sectors for neighboring connections
-			for ( size_t n = 0; n < m_ActiveNavSectors.size(); ++n )
-			{
-				NavSector * neighbor = &m_ActiveNavSectors[ n ];
-
-				if ( sector == neighbor )
-					continue;
-
-				const Vector3List & edges1 = neighbor->m_Boundary;
-				for ( size_t nb = 1; nb <= edges1.size(); ++nb )
-				{
-					Segment3f seg1( edges1[ nb-1 ], edges1[ nb % edges1.size() ] );
-
-					// test
-					DistSegment3Segment3f distSeg( seg0, seg1 );
-					distSeg.Get();
-
-					DistPoint3Line3f d0( seg1.P0, line0 );
-					DistPoint3Line3f d1( seg1.P1, line0 );
-
-					d0.Get();
-					d1.Get();
-
-					// the lines must overlap
-					if ( d0.GetLineParameter() > 1.0f && d1.GetLineParameter() > 1.0f )
-						continue;
-					if ( d0.GetLineParameter() < -1.0f && d1.GetLineParameter() < -1.0f )
-						continue;
-
-					const Vector3f p0diff = seg1.P0 - d0.GetClosestPoint1();
-					const Vector3f p1diff = seg1.P1 - d1.GetClosestPoint1();
-
-					const float p0zDiff = seg1.P0.Z() - d0.GetClosestPoint1().Z();
-					const float p1zDiff = seg1.P1.Z() - d0.GetClosestPoint1().Z();
-
-					if ( p0diff.Length2d() < LINE_DIST && p1diff.Length2d() < LINE_DIST &&
-						p0zDiff <= STEP_HEIGHT && p1zDiff <= STEP_HEIGHT &&
-						p0zDiff >= DROP_HEIGHT && p1zDiff >= DROP_HEIGHT )
-					{
-						/*struct NavPortal
-						{
-						Segment3f		m_Segment;
-						int				m_DestSector;
-						BitFlag64		m_LinkFlags;
-						};*/
-
-						// these lines are close enough
-						NavPortal portal;
-						portal.m_Segment = seg0; // TRIM
-						portal.m_DestSector = n;
-						sector->m_NavPortals.push_back( portal );
-					}
-
-					/*Line3f line1;
-					line1.FromPoints( seg1.P0, seg1.P1 );*/
-				}
-			}
-		}
-	}
-
 	return;
 
 	//typedef std::vector<SegmentList> SectorSegments;
@@ -948,6 +871,256 @@ void PathPlannerNavMesh::cmdNext(const StringVector &_args)
 {
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
+}
+
+void PathPlannerNavMesh::cmdUpdateContents(const StringVector &_args)
+{
+	/*CONT_SOLID		= (1<<0),
+	CONT_WATER		= (1<<1),
+	CONT_SLIME		= (1<<2),
+	CONT_FOG		= (1<<3),
+	CONT_MOVER		= (1<<4),
+	CONT_TRIGGER	= (1<<5),
+	CONT_LAVA		= (1<<6),
+	CONT_LADDER		= (1<<7),
+	CONT_TELEPORTER = (1<<8),
+	CONT_MOVABLE	= (1<<9),
+	CONT_PLYRCLIP	= (1<<10),*/
+
+	for ( size_t i = 0; i < m_ActiveNavSectors.size(); ++i )
+	{
+		const NavSector & ans = m_ActiveNavSectors[ i ];
+		const Vector3f sectorCenter = ans.CalculateCenter();
+
+		const bool mirroredSector = ans.mId >= m_NavSectors.size();
+		NavSector & baseSector = m_NavSectors[ ans.mId % m_NavSectors.size() ];
+
+		NavmeshIO::SectorData & sectorData = mirroredSector ?
+			baseSector.mSectorDataMirrored :
+		baseSector.mSectorData;
+
+		const int contents = g_EngineFuncs->GetPointContents( sectorCenter );
+
+		// set the flags
+		sectorData.set_inwater( contents & CONT_WATER );
+
+		if ( sectorData.inwater() )
+		{
+		}
+	}
+}
+
+static std::string GetDisplayValue( const google::protobuf::Message & msg, const google::protobuf::FieldDescriptor * fieldDesc )
+{
+	using namespace google;
+
+	try
+	{
+		switch( fieldDesc->type() )
+		{
+		case protobuf::FieldDescriptorProto_Type_TYPE_DOUBLE:
+			{
+				return boost::lexical_cast<std::string>( msg.GetReflection()->GetDouble( msg, fieldDesc ) );
+			}
+		case protobuf::FieldDescriptorProto_Type_TYPE_FLOAT:
+			return boost::lexical_cast<std::string>( msg.GetReflection()->GetFloat( msg, fieldDesc ) );
+		case protobuf::FieldDescriptorProto_Type_TYPE_INT64:
+		case protobuf::FieldDescriptorProto_Type_TYPE_SFIXED64:
+		case protobuf::FieldDescriptorProto_Type_TYPE_SINT64:
+			return boost::lexical_cast<std::string>( msg.GetReflection()->GetInt64( msg, fieldDesc ) );
+		case protobuf::FieldDescriptorProto_Type_TYPE_UINT64:
+		case protobuf::FieldDescriptorProto_Type_TYPE_FIXED64:
+			return boost::lexical_cast<std::string>( msg.GetReflection()->GetUInt64( msg, fieldDesc ) );
+		case protobuf::FieldDescriptorProto_Type_TYPE_INT32:
+		case protobuf::FieldDescriptorProto_Type_TYPE_SFIXED32:
+		case protobuf::FieldDescriptorProto_Type_TYPE_SINT32:
+			return boost::lexical_cast<std::string>( msg.GetReflection()->GetInt32( msg, fieldDesc ) );
+		case protobuf::FieldDescriptorProto_Type_TYPE_BOOL:
+			return boost::lexical_cast<std::string>( msg.GetReflection()->GetBool( msg, fieldDesc ) );
+		case protobuf::FieldDescriptorProto_Type_TYPE_UINT32:
+		case protobuf::FieldDescriptorProto_Type_TYPE_FIXED32:
+			return boost::lexical_cast<std::string>( msg.GetReflection()->GetUInt32( msg, fieldDesc ) );
+		case protobuf::FieldDescriptorProto_Type_TYPE_STRING:
+			return msg.GetReflection()->GetString( msg, fieldDesc );
+		case protobuf::FieldDescriptorProto_Type_TYPE_GROUP:
+			return "GROUP";
+		case protobuf::FieldDescriptorProto_Type_TYPE_MESSAGE:
+			return "MESSAGE";
+		case protobuf::FieldDescriptorProto_Type_TYPE_BYTES:
+			return "BYTES";
+		case protobuf::FieldDescriptorProto_Type_TYPE_ENUM:
+			{
+				const protobuf::EnumValueDescriptor * enumVal = msg.GetReflection()->GetEnum( msg, fieldDesc );
+				return enumVal->name();
+			}
+		}
+	}
+	catch ( const boost::bad_lexical_cast & ex )
+	{
+		/*EngineFuncs::ConsoleError(
+		va( "Can't convert '%s' to appropriate type %s",
+		_args.at( 2 ).c_str(),
+		protobuf::FieldDescriptor::kTypeToName[ fieldDesc->type() ] ) );*/
+	}
+	return "";
+}
+
+void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
+{
+	Vector3f vFacing, vPos;
+	if ( !Utils::GetLocalEyePosition( vPos ) || !Utils::GetLocalFacing( vFacing ) )
+	{
+		EngineFuncs::ConsoleError("can't get facing or eye position");
+		SetNextState(NoOp);
+		return;
+	}
+
+	NavCollision nc = FindCollision( vPos, vPos + vFacing * 2048.f );
+	if( !nc.DidHit() )
+	{
+		EngineFuncs::ConsoleError("no sector at cursor");
+		SetNextState(NoOp);
+		return;
+	}
+
+	using namespace google;
+
+	const bool mirrored = _args.at( 0 ).back() == 'm';
+	NavSector & ns = m_NavSectors[ nc.HitAttrib().Fields.SectorId ];
+	NavmeshIO::SectorData & sectorData = mirrored ? ns.mSectorDataMirrored : ns.mSectorData;
+
+	const protobuf::Descriptor * desc = sectorData.GetDescriptor();
+
+	if ( _args.size() <= 2 )
+	{
+		EngineFuncs::ConsoleError( va( "Usage: %s fieldname fieldvalue", _args.at( 0 ).c_str() ) );
+		for ( size_t i = 0; i < desc->field_count(); ++i )
+		{
+			const protobuf::FieldDescriptor * fieldDesc = desc->field( i );
+
+			const std::string doc = fieldDesc->options().GetExtension( NavmeshIO::doc );
+			EngineFuncs::ConsoleError( va( "    %s ( %s ) = %s - %s",
+				fieldDesc->lowercase_name().c_str(),
+				protobuf::FieldDescriptor::kTypeToName[ fieldDesc->type() ],
+				GetDisplayValue( sectorData, fieldDesc ).c_str(),
+				doc.c_str() ) );
+		}
+		return;
+	}
+
+	const std::string fieldName = Utils::StringToLower( _args.at( 1 ).c_str() );
+	const std::string fieldValue = _args.at( 2 ).c_str();
+
+	const protobuf::FieldDescriptor * fieldDesc = desc->FindFieldByLowercaseName( fieldName.c_str() );
+	if ( fieldDesc == NULL )
+	{
+		EngineFuncs::ConsoleError( va( "Unknown field: %s", _args.at( 1 ).c_str() ) );
+		EngineFuncs::ConsoleError( "    If this should be added as a custom field, use nav_addfield instead" );
+		return;
+	}
+
+	bool unsupported = false;
+	try
+	{
+		switch( fieldDesc->type() )
+		{
+		case protobuf::FieldDescriptorProto_Type_TYPE_DOUBLE:
+			sectorData.GetReflection()->SetDouble(
+				&sectorData, fieldDesc, boost::lexical_cast<double>(  _args.at( 2 ).c_str() ) );
+			break;
+		case protobuf::FieldDescriptorProto_Type_TYPE_FLOAT:
+			sectorData.GetReflection()->SetFloat(
+				&sectorData, fieldDesc, boost::lexical_cast<float>(  _args.at( 2 ).c_str() ) );
+			break;
+		case protobuf::FieldDescriptorProto_Type_TYPE_INT64:
+		case protobuf::FieldDescriptorProto_Type_TYPE_SFIXED64:
+		case protobuf::FieldDescriptorProto_Type_TYPE_SINT64:
+			sectorData.GetReflection()->SetInt64(
+				&sectorData, fieldDesc, boost::lexical_cast<protobuf::int64>(  _args.at( 2 ).c_str() ) );
+			break;
+		case protobuf::FieldDescriptorProto_Type_TYPE_UINT64:
+		case protobuf::FieldDescriptorProto_Type_TYPE_FIXED64:
+			sectorData.GetReflection()->SetUInt64(
+				&sectorData, fieldDesc, boost::lexical_cast<protobuf::uint64>(  _args.at( 2 ).c_str() ) );
+			break;
+		case protobuf::FieldDescriptorProto_Type_TYPE_INT32:
+		case protobuf::FieldDescriptorProto_Type_TYPE_SFIXED32:
+		case protobuf::FieldDescriptorProto_Type_TYPE_SINT32:
+			sectorData.GetReflection()->SetInt32(
+				&sectorData, fieldDesc, boost::lexical_cast<protobuf::int32>(  _args.at( 2 ).c_str() ) );
+			break;
+		case protobuf::FieldDescriptorProto_Type_TYPE_BOOL:
+			sectorData.GetReflection()->SetBool(
+				&sectorData, fieldDesc, boost::lexical_cast<bool>(  _args.at( 2 ).c_str() ) );
+			break;
+		case protobuf::FieldDescriptorProto_Type_TYPE_UINT32:
+		case protobuf::FieldDescriptorProto_Type_TYPE_FIXED32:
+			sectorData.GetReflection()->SetUInt32( &sectorData, fieldDesc, boost::lexical_cast<protobuf::uint32>(  _args.at( 2 ).c_str() ) );
+			break;
+		case protobuf::FieldDescriptorProto_Type_TYPE_STRING:
+			{
+				std::string str = _args.at( 2 );
+				// parse multi word strings if in quotes
+				if ( str[ 0 ] == '\'' || str[ 0 ] == '\"' )
+				{
+					for( int a = 3; a < _args.size(); ++a )
+					{
+						str += " ";
+						str += _args.at( a );
+					}
+				}
+				while ( str.size() > 0 && ( str.front() == '\'' || str.front() == '\\"' ) )
+					str.erase( str.begin() );
+				while ( str.size() > 0 && ( str.back() == '\'' || str.back() == '\\"' ) )
+					str.pop_back();
+				sectorData.GetReflection()->SetString( &sectorData, fieldDesc, str );
+				break;
+			}
+		case protobuf::FieldDescriptorProto_Type_TYPE_GROUP:
+			unsupported = true;
+			break;
+		case protobuf::FieldDescriptorProto_Type_TYPE_MESSAGE:
+			unsupported = true;
+			break;
+		case protobuf::FieldDescriptorProto_Type_TYPE_BYTES:
+			unsupported = true;
+			break;
+		case protobuf::FieldDescriptorProto_Type_TYPE_ENUM:
+			{
+				const protobuf::EnumValueDescriptor * enumVal = fieldDesc->enum_type()->FindValueByName( _args.at( 2 ).c_str() );
+				if ( enumVal != NULL )
+					sectorData.GetReflection()->SetEnum( &sectorData, fieldDesc, enumVal );
+				else
+				{
+					EngineFuncs::ConsoleError( va( "Invalid enumeration( '%s' ) value %s",
+						fieldDesc->enum_type()->name().c_str(),
+						_args.at( 2 ).c_str() ) );
+					EngineFuncs::ConsoleError( "Valid Values Are:" );
+					for ( int i = 0; i < fieldDesc->enum_type()->value_count(); ++i )
+					{
+						EngineFuncs::ConsoleError(
+							va( "    %s", fieldDesc->enum_type()->value( i )->name().c_str() ) );
+					}
+				}
+				break;
+			}
+		}
+
+		if ( unsupported )
+		{
+			EngineFuncs::ConsoleError(
+				va( "Can't set unsupported message field type '%s'",
+				protobuf::FieldDescriptor::kTypeToName[ fieldDesc->type() ] ) );
+		}
+	}
+	catch ( const boost::bad_lexical_cast & ex )
+	{
+		EngineFuncs::ConsoleError(
+			va( "Can't convert '%s' to appropriate type %s ( %s )",
+			_args.at( 2 ).c_str(),
+			protobuf::FieldDescriptor::kTypeToName[ fieldDesc->type() ],
+			ex.what() ) );
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -1,3 +1,11 @@
+import "google/protobuf/descriptor.proto";
+
+// Custom option for fields
+extend google.protobuf.FieldOptions 
+{
+	optional string doc = 2000;
+}
+
 package NavmeshIO;
 
 option optimize_for = SPEED;
@@ -21,13 +29,14 @@ message SectorVert
 
 message SectorData
 {
-	optional bool		enabled					= 1 [default = true];		// is this enabled for use?
-	optional bool		team1					= 2 [default = false];		// only usable by team 1
-	optional bool		team2					= 3 [default = false];		// only usable by team 2
-	optional bool		team3					= 4 [default = false];		// only usable by team 3
-	optional bool		team4					= 5 [default = false];		// only usable by team 4
-	optional bool		inwater					= 6 [default = false];		// sector is in water(shallow)
-	optional bool		underwater				= 7 [default = false];		// sector is under water(swimming)		
+	optional bool		enabled		= 1 [default = true,	(doc)="Is this sector enabled for use"];
+	optional bool		team1		= 2 [default = false,	(doc)="Is this sector usable by team1"];
+	optional bool		team2		= 3 [default = false,	(doc)="Is this sector usable by team2"];
+	optional bool		team3		= 4 [default = false,	(doc)="Is this sector usable by team3"];
+	optional bool		team4		= 5 [default = false,	(doc)="Is this sector usable by team4"];
+	optional bool		inwater		= 6 [default = false,	(doc)="Is this sector in water"];
+	optional bool		onmover		= 7 [default = false,	(doc)="Is this sector on a dynamic mover"];
+	optional string		location	= 8;
 }
 
 message Sector 

@@ -92,13 +92,6 @@
 #pragma warning( pop )
 #endif // _WIN32
 
-// typedef: Thread
-//		Simpler typedef for boost::thread.
-//typedef boost::thread Thread;
-//typedef boost::thread_group ThreadGroup;
-//typedef boost::mutex Mutex;
-//typedef boost::try_mutex TryMutex;
-
 // Wild Magic Math Libraries
 #include "Wm5Mathematics.h"
 using namespace Wm5;

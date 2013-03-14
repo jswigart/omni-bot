@@ -24,7 +24,6 @@ extern "C"
 
 void Bot_Event_EntityCreated(gentity_t *pEnt);
 
-
 bool IsBot(gentity_t *e)
 {
 	return e->r.svFlags & SVF_BOT ? true : false;
@@ -247,7 +246,6 @@ void GetEntityCenter( gentity_t *ent, vec3_t _pos )
 
 //////////////////////////////////////////////////////////////////////////
 
-
 // Important note:
 // These weaponcharged values are intentionally set a little bit lower
 // so the bots can start heading towards a goal a bit ahead of time rather than waiting
@@ -262,7 +260,7 @@ static qboolean weaponCharged(playerState_t* ps, team_t team, int weapon, int* s
 	switch (weapon)
 	{
 #ifdef NOQUARTER
-	// IRATA added BAZOOKA
+		// IRATA added BAZOOKA
 	case WP_BAZOOKA:
 
 #endif
@@ -1148,7 +1146,7 @@ static int _chooseSecWeap(gentity_t *bot, int playerClass, int team)
 {
 	int iSelected = ET_WP_NONE;
 
-// IRATA NQ like _chooseSecWeap
+	// IRATA NQ like _chooseSecWeap
 #ifdef NOQUARTER
 
 	switch (playerClass)
@@ -1165,7 +1163,6 @@ static int _chooseSecWeap(gentity_t *bot, int playerClass, int team)
 					iSelected = ET_WP_COLT;
 				}
 				else {
-
 					int wpns[] =
 					{
 						ET_WP_COLT, // simple noob bots ...
@@ -1238,10 +1235,10 @@ static int _chooseSecWeap(gentity_t *bot, int playerClass, int team)
 		break;
 	}
 
-// common
-// IRATA @ botteam:
-// In fact G_IsWeaponDisabled won't return true for secondary weapons it only checks for HW in most mods & vanilla
-// I did fix inconsistency of return & break usage
+	// common
+	// IRATA @ botteam:
+	// In fact G_IsWeaponDisabled won't return true for secondary weapons it only checks for HW in most mods & vanilla
+	// I did fix inconsistency of return & break usage
 #else
 	do
 	{
@@ -1680,15 +1677,15 @@ static int _GetEntityClass(gentity_t *_ent)
 		{
 			return ET_CLASSEX_MG42MOUNT;
 		}
-	//case ET_AAGUN:
-	//	{
-	//		if((pCurrent->health > 0) &&
-	//		(pCurrent->entstate != STATE_INVISIBLE) &&
-	//		(pCurrent->entstate != STATE_UNDERCONSTRUCTION))
-	//		{
-	//		}
-	//		break;
-	//	}
+		//case ET_AAGUN:
+		//	{
+		//		if((pCurrent->health > 0) &&
+		//		(pCurrent->entstate != STATE_INVISIBLE) &&
+		//		(pCurrent->entstate != STATE_UNDERCONSTRUCTION))
+		//		{
+		//		}
+		//		break;
+		//	}
 	case ET_EXPLOSIVE:
 		{
 			if (!(_ent->spawnflags & EXPLOSIVE_TANK) &&
@@ -2275,7 +2272,7 @@ public:
 			if(ammo==0 && bot->client->ps.weaponstate==WEAPON_READY)
 				cmd.weapon = WP_CARBINE;
 		}
-		else if(cmd.weapon == WP_FOOTKICK) 
+		else if(cmd.weapon == WP_FOOTKICK)
 		{
 			// convert from weapon request to command
 			cmd.buttons |= BUTTON_GESTURE;
@@ -3393,24 +3390,24 @@ public:
 		{
 			if(!pEnt->client)
 			{
-					vec3_t axis[3];
-					//AngleVectors( pEnt->r.currentAngles, axis[0], axis[1], axis[2] );
-					AnglesToAxis( pEnt->r.currentAngles, axis );
+				vec3_t axis[3];
+				//AngleVectors( pEnt->r.currentAngles, axis[0], axis[1], axis[2] );
+				AnglesToAxis( pEnt->r.currentAngles, axis );
 
-					vec3_t boxCenter;
-					boxCenter[0] = ((pEnt->r.maxs[0] + pEnt->r.mins[0]) * 0.5f);
-					boxCenter[1] = ((pEnt->r.maxs[1] + pEnt->r.mins[1]) * 0.5f);
-					boxCenter[2] = ((pEnt->r.maxs[2] + pEnt->r.mins[2]) * 0.5f);
+				vec3_t boxCenter;
+				boxCenter[0] = ((pEnt->r.maxs[0] + pEnt->r.mins[0]) * 0.5f);
+				boxCenter[1] = ((pEnt->r.maxs[1] + pEnt->r.mins[1]) * 0.5f);
+				boxCenter[2] = ((pEnt->r.maxs[2] + pEnt->r.mins[2]) * 0.5f);
 
-					vec3_t out;
-					VectorCopy(pEnt->r.currentOrigin,out);
-					for( int i = 0; i < 3; ++i ) {
-						vec3_t tmp;
-						VectorScale( axis[i], boxCenter[i], tmp );
-						VectorAdd( out, tmp, out );
-					}
-					VectorCopy( out, _pos );
-					return Success;
+				vec3_t out;
+				VectorCopy(pEnt->r.currentOrigin,out);
+				for( int i = 0; i < 3; ++i ) {
+					vec3_t tmp;
+					VectorScale( axis[i], boxCenter[i], tmp );
+					VectorAdd( out, tmp, out );
+				}
+				VectorCopy( out, _pos );
+				return Success;
 			}
 
 			// Clients return normal position.
@@ -3480,7 +3477,6 @@ public:
 			//	_aabb.m_Mins[0] = pEnt->r.currentOrigin[0] + pEnt->r.mins[0] * fwd[0];
 			//	_aabb.m_Mins[1] = pEnt->r.currentOrigin[1] + pEnt->r.mins[1] * fwd[1];
 			//	_aabb.m_Mins[1] = pEnt->r.currentOrigin[1] + pEnt->r.mins[2] * fwd[2];
-
 
 			//	_aabb.m_Mins[0] = pEnt->r.mins[0] * fwd;
 			//	_aabb.m_Mins[1] = pEnt->r.mins[1] - pos[1];
@@ -4229,7 +4225,6 @@ public:
 
 		info.m_MaxPlayers = level.maxclients;
 
-
 		GameEntity ge;
 
 		for( int i = 0; i < g_maxclients.integer; ++i )
@@ -4322,7 +4317,6 @@ public:
 				OB_GETMSG(WeaponLimits);
 				if(pMsg)
 				{
-
 					if (pEnt && pEnt->inuse && pEnt->client)
 					{
 						if(pMsg->m_WeaponId == ET_WP_MOUNTABLE_MG42 &&
@@ -4582,10 +4576,10 @@ public:
 				OB_GETMSG(Msg_TeamStat);
 				/*if(pMsg)
 				{
-					if(!strcmp(pMsg->m_StatName, "score"))
-					pMsg->m_Result = obUserData(0);
-					else if(!strcmp(pMsg->m_StatName, "deaths"))
-					pMsg->m_Result = obUserData(0);
+				if(!strcmp(pMsg->m_StatName, "score"))
+				pMsg->m_Result = obUserData(0);
+				else if(!strcmp(pMsg->m_StatName, "deaths"))
+				pMsg->m_Result = obUserData(0);
 				}
 				*/
 				break;
@@ -4629,22 +4623,21 @@ public:
 				/*
 				if(pMsg)
 				{
-					Vector org(
-					pMsg->m_Position[0],
-					pMsg->m_Position[1],
-					pMsg->m_Position[2]);
-					Vector under(
-					pMsg->m_Under[0],
-					pMsg->m_Under[1],
-					pMsg->m_Under[2]);
+				Vector org(
+				pMsg->m_Position[0],
+				pMsg->m_Position[1],
+				pMsg->m_Position[2]);
+				Vector under(
+				pMsg->m_Under[0],
+				pMsg->m_Under[1],
+				pMsg->m_Under[2]);
 
-					trace_t tr;
-					UTIL_TraceLine(org, under, MASK_SOLID, NULL, COLLISION_GROUP_PLAYER_MOVEMENT, &tr);
+				trace_t tr;
+				UTIL_TraceLine(org, under, MASK_SOLID, NULL, COLLISION_GROUP_PLAYER_MOVEMENT, &tr);
 
-					if(tr.DidHitNonWorldEntity() && !tr.m_pEnt->IsPlayer()&&!startsolid)
-					{
-					pMsg->m_Entity = HandleFromEntity(tr.m_pEnt);
-
+				if(tr.DidHitNonWorldEntity() && !tr.m_pEnt->IsPlayer()&&!startsolid)
+				{
+				pMsg->m_Entity = HandleFromEntity(tr.m_pEnt);
 				}
 				}*/
 				break;
@@ -5085,7 +5078,6 @@ public:
 					//CS: testing flagstate
 					//pMsg->m_CanBeGrabbed = True;
 
-
 					gentity_t *pFlagEnt = EntityFromHandle(pMsg->m_Entity);
 					if(pEnt && pEnt->client && pFlagEnt)
 					{
@@ -5122,7 +5114,6 @@ public:
 								}
 							}
 						}
-
 					}
 				}
 				break;
@@ -5472,7 +5463,7 @@ public:
 	int GetAutoNavFeatures(AutoNavFeature *_feature, int _max)
 	{
 		int iNumFeatures = 0;
-		for (int i = MAX_CLIENTS; i < level.num_entities; ++i)
+		for (int i = MAX_CLIENTS; i < level.num_entities && iNumFeatures < _max; ++i)
 		{
 			gentity_t *e = &g_entities[i];
 
@@ -5669,7 +5660,6 @@ void Bot_Interface_ConsoleCommand()
 			G_Printf("%s%s\n", S_COLOR_RED, "Omni-bot not loaded.");
 		}
 	}
-
 }
 
 extern "C" void script_mover_spawn(gentity_t *ent);
@@ -5679,10 +5669,10 @@ void Bot_Interface_Update()
 	{
 		char buf[1024] = {0};
 
-//#ifdef _DEBUG
-//		trap_Cvar_Set( "sv_cheats", "1" );
-//		trap_Cvar_Update(&g_cheats);
-//#endif
+		//#ifdef _DEBUG
+		//		trap_Cvar_Set( "sv_cheats", "1" );
+		//		trap_Cvar_Update(&g_cheats);
+		//#endif
 		/*if (level.framenum == GAME_INIT_FRAMES)
 		Bot_Event_StartGame();*/
 
@@ -6444,4 +6434,3 @@ extern "C"
 			Bot_Util_AddGoal("revive",_teammate,(1<<ET_TEAM_ALLIES),_GetEntityName(_teammate));
 	}
 };
-

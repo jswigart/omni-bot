@@ -94,14 +94,15 @@ void protobuf_AssignDesc_navmesh_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SectorVert));
   SectorData_descriptor_ = file->message_type(3);
-  static const int SectorData_offsets_[7] = {
+  static const int SectorData_offsets_[8] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, enabled_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, team1_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, team2_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, team3_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, team4_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, inwater_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, underwater_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, onmover_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, location_),
   };
   SectorData_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -198,26 +199,36 @@ void protobuf_AddDesc_navmesh_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
+  ::google::protobuf::protobuf_AddDesc_google_2fprotobuf_2fdescriptor_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\rnavmesh.proto\022\tNavmeshIO\"\'\n\004Vec3\022\t\n\001x\030"
-    "\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\",\n\006Header\022\"\n"
-    "\tmapCenter\030\001 \001(\0132\017.NavmeshIO.Vec3\"/\n\nSec"
-    "torVert\022!\n\010position\030\001 \002(\0132\017.NavmeshIO.Ve"
-    "c3\"\256\001\n\nSectorData\022\025\n\007enabled\030\001 \001(\010:\004true"
-    "\022\024\n\005team1\030\002 \001(\010:\005false\022\024\n\005team2\030\003 \001(\010:\005f"
-    "alse\022\024\n\005team3\030\004 \001(\010:\005false\022\024\n\005team4\030\005 \001("
-    "\010:\005false\022\026\n\007inwater\030\006 \001(\010:\005false\022\031\n\nunde"
-    "rwater\030\007 \001(\010:\005false\"\276\002\n\006Sector\022\'\n\010vertic"
-    "es\030\001 \003(\0132\025.NavmeshIO.SectorVert\022\?\n\016secto"
-    "rMirrored\030\002 \001(\0162\033.NavmeshIO.Sector.Mirro"
-    "rDir:\nMirrorNone\022)\n\nsectorData\030\003 \001(\0132\025.N"
-    "avmeshIO.SectorData\0221\n\022sectorDataMirrore"
-    "d\030\004 \001(\0132\025.NavmeshIO.SectorData\"l\n\tMirror"
-    "Dir\022\016\n\nMirrorNone\020\000\022\013\n\007MirrorX\020\001\022\014\n\010Mirr"
-    "orNX\020\002\022\013\n\007MirrorY\020\003\022\014\n\010MirrorNY\020\004\022\013\n\007Mir"
-    "rorZ\020\005\022\014\n\010MirrorNZ\020\006\"W\n\016NavigationMesh\022!"
-    "\n\006header\030\001 \002(\0132\021.NavmeshIO.Header\022\"\n\007sec"
-    "tors\030\002 \003(\0132\021.NavmeshIO.SectorB\002H\001", 753);
+    "\n\rnavmesh.proto\022\tNavmeshIO\032 google/proto"
+    "buf/descriptor.proto\"\'\n\004Vec3\022\t\n\001x\030\001 \001(\002\022"
+    "\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\",\n\006Header\022\"\n\tmapCe"
+    "nter\030\001 \001(\0132\017.NavmeshIO.Vec3\"/\n\nSectorVer"
+    "t\022!\n\010position\030\001 \002(\0132\017.NavmeshIO.Vec3\"\256\003\n"
+    "\nSectorData\0228\n\007enabled\030\001 \001(\010:\004trueB!\202}\036I"
+    "s this sector enabled for use\0227\n\005team1\030\002"
+    " \001(\010:\005falseB!\202}\036Is this sector usable by"
+    " team1\0227\n\005team2\030\003 \001(\010:\005falseB!\202}\036Is this"
+    " sector usable by team2\0227\n\005team3\030\004 \001(\010:\005"
+    "falseB!\202}\036Is this sector usable by team3"
+    "\0227\n\005team4\030\005 \001(\010:\005falseB!\202}\036Is this secto"
+    "r usable by team4\0222\n\007inwater\030\006 \001(\010:\005fals"
+    "eB\032\202}\027Is this sector in water\022<\n\007onmover"
+    "\030\007 \001(\010:\005falseB$\202}!Is this sector on a dy"
+    "namic mover\022\020\n\010location\030\010 \001(\t\"\276\002\n\006Sector"
+    "\022\'\n\010vertices\030\001 \003(\0132\025.NavmeshIO.SectorVer"
+    "t\022\?\n\016sectorMirrored\030\002 \001(\0162\033.NavmeshIO.Se"
+    "ctor.MirrorDir:\nMirrorNone\022)\n\nsectorData"
+    "\030\003 \001(\0132\025.NavmeshIO.SectorData\0221\n\022sectorD"
+    "ataMirrored\030\004 \001(\0132\025.NavmeshIO.SectorData"
+    "\"l\n\tMirrorDir\022\016\n\nMirrorNone\020\000\022\013\n\007MirrorX"
+    "\020\001\022\014\n\010MirrorNX\020\002\022\013\n\007MirrorY\020\003\022\014\n\010MirrorN"
+    "Y\020\004\022\013\n\007MirrorZ\020\005\022\014\n\010MirrorNZ\020\006\"W\n\016Naviga"
+    "tionMesh\022!\n\006header\030\001 \002(\0132\021.NavmeshIO.Hea"
+    "der\022\"\n\007sectors\030\002 \003(\0132\021.NavmeshIO.Sector:"
+    "+\n\003doc\022\035.google.protobuf.FieldOptions\030\320\017"
+    " \001(\tB\002H\001", 1088);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "navmesh.proto", &protobuf_RegisterTypes);
   Vec3::default_instance_ = new Vec3();
@@ -226,6 +237,9 @@ void protobuf_AddDesc_navmesh_2eproto() {
   SectorData::default_instance_ = new SectorData();
   Sector::default_instance_ = new Sector();
   NavigationMesh::default_instance_ = new NavigationMesh();
+  ::google::protobuf::internal::ExtensionSet::RegisterExtension(
+    &::google::protobuf::FieldOptions::default_instance(),
+    2000, 9, false, false);
   Vec3::default_instance_->InitAsDefaultInstance();
   Header::default_instance_->InitAsDefaultInstance();
   SectorVert::default_instance_->InitAsDefaultInstance();
@@ -958,7 +972,8 @@ const int SectorData::kTeam2FieldNumber;
 const int SectorData::kTeam3FieldNumber;
 const int SectorData::kTeam4FieldNumber;
 const int SectorData::kInwaterFieldNumber;
-const int SectorData::kUnderwaterFieldNumber;
+const int SectorData::kOnmoverFieldNumber;
+const int SectorData::kLocationFieldNumber;
 #endif  // !_MSC_VER
 
 SectorData::SectorData()
@@ -983,7 +998,8 @@ void SectorData::SharedCtor() {
   team3_ = false;
   team4_ = false;
   inwater_ = false;
-  underwater_ = false;
+  onmover_ = false;
+  location_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -992,6 +1008,9 @@ SectorData::~SectorData() {
 }
 
 void SectorData::SharedDtor() {
+  if (location_ != &::google::protobuf::internal::kEmptyString) {
+    delete location_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -1024,7 +1043,12 @@ void SectorData::Clear() {
     team3_ = false;
     team4_ = false;
     inwater_ = false;
-    underwater_ = false;
+    onmover_ = false;
+    if (has_location()) {
+      if (location_ != &::google::protobuf::internal::kEmptyString) {
+        location_->clear();
+      }
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1127,19 +1151,36 @@ bool SectorData::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(56)) goto parse_underwater;
+        if (input->ExpectTag(56)) goto parse_onmover;
         break;
       }
       
-      // optional bool underwater = 7 [default = false];
+      // optional bool onmover = 7 [default = false];
       case 7: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_underwater:
+         parse_onmover:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &underwater_)));
-          set_has_underwater();
+                 input, &onmover_)));
+          set_has_onmover();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(66)) goto parse_location;
+        break;
+      }
+      
+      // optional string location = 8;
+      case 8: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_location:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_location()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->location().data(), this->location().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -1195,9 +1236,18 @@ void SectorData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(6, this->inwater(), output);
   }
   
-  // optional bool underwater = 7 [default = false];
-  if (has_underwater()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(7, this->underwater(), output);
+  // optional bool onmover = 7 [default = false];
+  if (has_onmover()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(7, this->onmover(), output);
+  }
+  
+  // optional string location = 8;
+  if (has_location()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->location().data(), this->location().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      8, this->location(), output);
   }
   
   if (!unknown_fields().empty()) {
@@ -1238,9 +1288,19 @@ void SectorData::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(6, this->inwater(), target);
   }
   
-  // optional bool underwater = 7 [default = false];
-  if (has_underwater()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(7, this->underwater(), target);
+  // optional bool onmover = 7 [default = false];
+  if (has_onmover()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(7, this->onmover(), target);
+  }
+  
+  // optional string location = 8;
+  if (has_location()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->location().data(), this->location().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        8, this->location(), target);
   }
   
   if (!unknown_fields().empty()) {
@@ -1284,9 +1344,16 @@ int SectorData::ByteSize() const {
       total_size += 1 + 1;
     }
     
-    // optional bool underwater = 7 [default = false];
-    if (has_underwater()) {
+    // optional bool onmover = 7 [default = false];
+    if (has_onmover()) {
       total_size += 1 + 1;
+    }
+    
+    // optional string location = 8;
+    if (has_location()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->location());
     }
     
   }
@@ -1334,8 +1401,11 @@ void SectorData::MergeFrom(const SectorData& from) {
     if (from.has_inwater()) {
       set_inwater(from.inwater());
     }
-    if (from.has_underwater()) {
-      set_underwater(from.underwater());
+    if (from.has_onmover()) {
+      set_onmover(from.onmover());
+    }
+    if (from.has_location()) {
+      set_location(from.location());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1366,7 +1436,8 @@ void SectorData::Swap(SectorData* other) {
     std::swap(team3_, other->team3_);
     std::swap(team4_, other->team4_);
     std::swap(inwater_, other->inwater_);
-    std::swap(underwater_, other->underwater_);
+    std::swap(onmover_, other->onmover_);
+    std::swap(location_, other->location_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -2015,6 +2086,10 @@ void NavigationMesh::Swap(NavigationMesh* other) {
   return metadata;
 }
 
+const ::std::string doc_default("");
+::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::StringTypeTraits, 9, false >
+  doc(kDocFieldNumber, doc_default);
 
 // @@protoc_insertion_point(namespace_scope)
 
