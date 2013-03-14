@@ -112,7 +112,7 @@ this.Render = function(editMode)
 		{
 			DrawArrow(goalPos+stanceOffset,goalPos+stanceOffset+this.Facing*32,COLOR.BLUE,2);
 		}
-		sleep(2);
+		yield();
 	}
 };
 

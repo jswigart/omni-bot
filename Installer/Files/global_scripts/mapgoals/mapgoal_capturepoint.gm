@@ -45,6 +45,6 @@ this.Render = function()
 			DrawLine(goalPos,goalBasePos,COLOR.GREEN,2);
 		}
 
-		sleep(2);
+		yield();
 	}
 };
