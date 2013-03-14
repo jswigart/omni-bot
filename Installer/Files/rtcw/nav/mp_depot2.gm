@@ -192,6 +192,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rTrain.*" );
 		if ( Map.FriendlyFire < 1 ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rAA.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkillDepot.*" );
 		}
 		
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
@@ -463,11 +464,6 @@ global OnMapLoad = function()
 		{
 			ROUTE_flagspawn =
 			{
-				ROUTE_axistunnel =
-				{
-					ROUTE_elevator ={},
-					ROUTE_oldaa = {},
-				},
 				ROUTE_cargobay =
 				{
 					Weight = 2,
@@ -475,7 +471,7 @@ global OnMapLoad = function()
 					ROUTE_ducts = {},
 					ROUTE_oldaa = {},
 				},
-				ROUTE_eastramp = {Weight = 2,},
+				ROUTE_eastramp = {},
 				ROUTE_axisgarageeast =
 				{
 					Weight = 2,
@@ -502,6 +498,11 @@ global OnMapLoad = function()
 						ROUTE_westramp = {Weight = 2,},
 						ROUTE_cargomid = {},
 					},
+				},
+				ROUTE_axistunnel =
+				{
+					ROUTE_elevator ={},
+					ROUTE_oldaa = {},
 				},
 				ROUTE_axisgaragewest =
 				{
@@ -540,14 +541,6 @@ global OnMapLoad = function()
 			},
 			ROUTE_bspawn =
 			{
-				ROUTE_alliedtunnel =
-				{
-					ROUTE_axistunnel =
-					{
-						ROUTE_elevator ={},
-						ROUTE_oldaa = {},
-					},
-				},
 				ROUTE_westalliedtrain =
 				{
 					ROUTE_axisgaragewest =
@@ -556,7 +549,7 @@ global OnMapLoad = function()
 						{
 							ROUTE_weaponfactory = 
 							{
-								ROUTE_spawnroof = {},
+								ROUTE_spawnroof = {Weight=2,},
 								ROUTE_axiscc = {},
 							},
 						},
@@ -571,10 +564,10 @@ global OnMapLoad = function()
 							ROUTE_westramp = {Weight = 2,},
 							ROUTE_cargomid = {},
 						},
-						ROUTE_westramp = {},
+						ROUTE_westramp = {},	
 					},
 				},
-				ROUTE_office =
+				ROUTE_warehousenorth =
 				{
 					ROUTE_alliedtunnel =
 					{
@@ -582,7 +575,7 @@ global OnMapLoad = function()
 						{
 							ROUTE_westramp = {},
 							ROUTE_elevator = {Weight = 3},
-							ROUTE_oldaa = {Weight = 2},
+							ROUTE_oldaa = {Weight = 3},
 						},
 					},
 				},

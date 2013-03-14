@@ -154,7 +154,7 @@ global Map =
 				SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_box.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_wh.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_aTower" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_aTower.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bTruck" );
 				SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bTower.*" );
@@ -198,6 +198,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTower.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSpawn" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_wh.*" );
 
 		if ( Map.FriendlyFire == 0 ) {
 			Map.Airstrike.stepsas.Enabled = true;
@@ -240,7 +241,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_tarmac" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_D_target_warehouse_ladder" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bTruck" );   // First spawn location
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_aTower" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_aTower.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bFlag.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bGate.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_bGateSpam.*" );
@@ -258,7 +259,7 @@ global Map =
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
 		Util.EnableGoal( "CHECKPOINT.*" );
 
-		RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
+		RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.LIEUTENANT );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
@@ -644,7 +645,7 @@ global OnMapLoad = function()
 
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "GRENADE_bTower.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "GRENADE_bTower.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "GRENADE_hatch", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER ); //classes with lots of grenades to spam
 	RTCWUtil.LimitToClass( "CAMP_eng_tower.*", TEAM.ALLIES, CLASS.ENGINEER );
 
@@ -666,8 +667,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_Gate2" );
 
 	// Artillery
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );    // First spawn location
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_aTower" );    // First spawn location
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );    // First spawn location
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_aTower.*" );    // First spawn location
 	// end artillery
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_flag_tower" );
