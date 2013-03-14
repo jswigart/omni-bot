@@ -1,5 +1,24 @@
 global _MG = 
 {
+	AIRSTRIKE_bGarage1 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.278, 0.431, 0.858),
+		},
+		CreateOnLoad = 1,
+		GoalType = "AIRSTRIKE",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "AIRSTRIKE_bGarage1",
+		Orientation = Vec3(-0.398, 0.060, -0.000),
+		Position = Vec3(-2358.799, 554.064, -93.171),
+		Radius = 32,
+		Stance = "stand",
+		TagName = "bGarage1",
+		TeamAvailability = 30,
+		Version = 1,
+	},
 	AIRSTRIKE_btransmit = 
 	{
 		AimVectors = 
@@ -23,7 +42,7 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(-0.035, -0.890, 0.455),
+			[0] = Vec3(0.089, -0.864, 0.495),
 		},
 		CreateOnLoad = 1,
 		GoalType = "AIRSTRIKE",
@@ -31,9 +50,9 @@ global _MG =
 		MinRadius = 35,
 		Name = "AIRSTRIKE_door_as_2",
 		Orientation = Vec3(-0.000, 0.000, -0.000),
-		Position = Vec3(-1783.778, 291.699, 320.125),
-		Radius = 35,
-		Stance = "stand",
+		Position = Vec3(-1811.875, 369.273, 320.125),
+		Radius = 20,
+		Stance = "crouch",
 		TagName = "door_as_2",
 		TeamAvailability = 0,
 		Version = 1,
@@ -42,7 +61,7 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(-0.081, -0.893, 0.442),
+			[0] = Vec3(-0.037, -0.876, 0.480),
 		},
 		CreateOnLoad = 1,
 		GoalType = "AIRSTRIKE",
@@ -50,9 +69,9 @@ global _MG =
 		MinRadius = 35,
 		Name = "AIRSTRIKE_door_as_3",
 		Orientation = Vec3(-0.000, 0.000, -0.000),
-		Position = Vec3(-1718.249, 289.713, 320.125),
+		Position = Vec3(-1720.761, 370.965, 320.125),
 		Radius = 35,
-		Stance = "stand",
+		Stance = "crouch",
 		TagName = "door_as_3",
 		TeamAvailability = 0,
 		Version = 1,
@@ -68,6 +87,34 @@ global _MG =
 		Position = Vec3(-1648.125, -87.549, 516.804),
 		Radius = 0,
 		TagName = "bFlag1",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	ARTILLERY_S_bGarage1 = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "ARTILLERY_S",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "ARTILLERY_S_bGarage1",
+		Orientation = Vec3(-1.569, -0.122, -0.000),
+		Position = Vec3(-1280.125, 1375.290, 385.785),
+		Radius = 0,
+		TagName = "bGarage1",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	ARTILLERY_S_bGate1 = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "ARTILLERY_S",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "ARTILLERY_S_bGate1",
+		Orientation = Vec3(-1.590, 0.174, -0.000),
+		Position = Vec3(-2872.125, 1856.880, -19.705),
+		Radius = 0,
+		TagName = "bGate1",
 		TeamAvailability = 30,
 		Version = 1,
 	},
@@ -173,6 +220,7 @@ global _MG =
 	{
 		AimVectors = 
 		{
+			[0] = Vec3(0.787, 0.583, 0.204),
 		},
 		CreateOnLoad = 1,
 		DisableCM = 0,
@@ -183,9 +231,9 @@ global _MG =
 		MinRadius = 30,
 		Name = "ATTACK_CP_Attack_1",
 		Orientation = Vec3(-0.000, 0.000, -0.000),
-		Position = Vec3(-1565.945, 277.240, 320.125),
+		Position = Vec3(-2821.055, -619.533, 41.607),
 		Radius = 35,
-		Stance = "stand",
+		Stance = "crouch",
 		TagName = "CP_Attack_1",
 		TeamAvailability = 30,
 		Version = 1,
@@ -197,7 +245,8 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(0.939, 0.029, -0.344),
+			[0] = Vec3(0.996, 0.007, 0.090),
+			[1] = Vec3(0.443, 0.893, -0.082),
 		},
 		CreateOnLoad = 1,
 		DisableCM = 0,
@@ -208,9 +257,9 @@ global _MG =
 		MinRadius = 30,
 		Name = "ATTACK_CP_Attack_2",
 		Orientation = Vec3(-1.540, -0.351, -0.000),
-		Position = Vec3(-1785.494, 601.423, 160.125),
+		Position = Vec3(-4855.383, -62.612, 4.448),
 		Radius = 35,
-		Stance = "stand",
+		Stance = "crouch",
 		TagName = "CP_Attack_2",
 		TeamAvailability = 30,
 		Version = 1,
@@ -222,7 +271,7 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(-0.989, 0.020, -0.145),
+			[0] = Vec3(0.837, 0.525, 0.152),
 		},
 		CreateOnLoad = 1,
 		DisableCM = 0,
@@ -233,85 +282,10 @@ global _MG =
 		MinRadius = 30,
 		Name = "ATTACK_CP_Attack_3",
 		Orientation = Vec3(1.551, -0.146, -0.000),
-		Position = Vec3(-1314.729, 365.552, 320.125),
+		Position = Vec3(-3223.456, -747.224, 38.400),
 		Radius = 35,
-		Stance = "stand",
+		Stance = "crouch",
 		TagName = "CP_Attack_3",
-		TeamAvailability = 30,
-		Version = 1,
-		Weapons = 
-		{
-		},
-	},
-	ATTACK_CP_Attack_4 = 
-	{
-		AimVectors = 
-		{
-			[0] = Vec3(0.925, 0.378, -0.029),
-		},
-		CreateOnLoad = 1,
-		DisableCM = 0,
-		GoalType = "Attack",
-		GroupName = "",
-		MaxCampTime = 30,
-		MinCampTime = 15,
-		MinRadius = 30,
-		Name = "ATTACK_CP_Attack_4",
-		Orientation = Vec3(-1.183, -0.029, -0.000),
-		Position = Vec3(-1157.999, 470.006, 254.346),
-		Radius = 35,
-		Stance = "stand",
-		TagName = "CP_Attack_4",
-		TeamAvailability = 30,
-		Version = 1,
-		Weapons = 
-		{
-		},
-	},
-	ATTACK_CP_Attack_5 = 
-	{
-		AimVectors = 
-		{
-			[0] = Vec3(-0.349, 0.936, -0.051),
-		},
-		CreateOnLoad = 1,
-		DisableCM = 0,
-		GoalType = "Attack",
-		GroupName = "",
-		MaxCampTime = 30,
-		MinCampTime = 15,
-		MinRadius = 30,
-		Name = "ATTACK_CP_Attack_5",
-		Orientation = Vec3(0.357, -0.051, -0.000),
-		Position = Vec3(-1016.425, -446.207, 256.125),
-		Radius = 25,
-		Stance = "stand",
-		TagName = "CP_Attack_5",
-		TeamAvailability = 30,
-		Version = 1,
-		Weapons = 
-		{
-		},
-	},
-	ATTACK_CP_Attack_6 = 
-	{
-		AimVectors = 
-		{
-			[0] = Vec3(0.999, 0.007, -0.046),
-		},
-		CreateOnLoad = 1,
-		DisableCM = 0,
-		GoalType = "Attack",
-		GroupName = "",
-		MaxCampTime = 30,
-		MinCampTime = 15,
-		MinRadius = 30,
-		Name = "ATTACK_CP_Attack_6",
-		Orientation = Vec3(-1.564, -0.046, -0.000),
-		Position = Vec3(-1553.092, -299.223, 256.125),
-		Radius = 35,
-		Stance = "stand",
-		TagName = "CP_Attack_6",
 		TeamAvailability = 30,
 		Version = 1,
 		Weapons = 
@@ -640,6 +614,21 @@ global _MG =
 		{
 		},
 	},
+	CALLARTILLERY_bTransmit1 = 
+	{
+		CreateOnLoad = 1,
+		Facing = Vec3(-0.955, 0.148, -0.257),
+		GoalType = "CALLARTILLERY",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "CALLARTILLERY_bTransmit1",
+		Orientation = Vec3(1.417, -0.260, 0.000),
+		Position = Vec3(-4245.000, 1896.000, -203.000),
+		Radius = 60,
+		TagName = "bTransmit1",
+		TeamAvailability = 30,
+		Version = 1,
+	},
 	CALLARTILLERY_spot_flag = 
 	{
 		CreateOnLoad = 1,
@@ -690,7 +679,7 @@ global _MG =
 			[0] = Vec3(-0.561, -0.827, -0.043),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Defend",
 		GroupName = "",
 		MaxCampTime = 30,
@@ -698,8 +687,8 @@ global _MG =
 		MinRadius = 30,
 		Name = "DEFEND_CP_Defense_1",
 		Orientation = Vec3(2.546, -0.043, -0.000),
-		Position = Vec3(-1550.168, 490.556, 320.131),
-		Radius = 35,
+		Position = Vec3(-1571.847, 517.875, 320.125),
+		Radius = 20,
 		Stance = "crouch",
 		TagName = "CP_Defense_1",
 		TeamAvailability = 30,
@@ -712,10 +701,12 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(-0.823, -0.568, -0.000),
+			[0] = Vec3(-0.641, -0.768, -0.000),
+			[1] = Vec3(-0.618, -0.787, -0.000),
+			[2] = Vec3(-0.877, -0.325, -0.354),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Defend",
 		GroupName = "",
 		MaxCampTime = 30,
@@ -724,7 +715,7 @@ global _MG =
 		Name = "DEFEND_CP_Defense_2",
 		Orientation = Vec3(2.175, 0.000, -0.000),
 		Position = Vec3(-1286.125, 781.875, 320.125),
-		Radius = 35,
+		Radius = 20,
 		Stance = "stand",
 		TagName = "CP_Defense_2",
 		TeamAvailability = 30,
@@ -740,7 +731,7 @@ global _MG =
 			[0] = Vec3(-0.941, -0.335, -0.050),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Defend",
 		GroupName = "",
 		MaxCampTime = 30,
@@ -765,7 +756,7 @@ global _MG =
 			[0] = Vec3(-0.465, 0.885, -0.037),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Defend",
 		GroupName = "",
 		MaxCampTime = 30,
@@ -773,8 +764,8 @@ global _MG =
 		MinRadius = 30,
 		Name = "DEFEND_CP_Defense_4",
 		Orientation = Vec3(0.484, -0.037, -0.000),
-		Position = Vec3(-1444.199, -325.141, 256.125),
-		Radius = 25,
+		Position = Vec3(-1439.319, -333.875, 256.125),
+		Radius = 20,
 		Stance = "stand",
 		TagName = "CP_Defense_4",
 		TeamAvailability = 30,
@@ -790,7 +781,7 @@ global _MG =
 			[0] = Vec3(-0.690, 0.724, 0.001),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Defend",
 		GroupName = "",
 		MaxCampTime = 30,
@@ -798,8 +789,8 @@ global _MG =
 		MinRadius = 30,
 		Name = "DEFEND_CP_Defense_5",
 		Orientation = Vec3(0.762, 0.001, -0.000),
-		Position = Vec3(-1235.284, -437.231, 256.125),
-		Radius = 35,
+		Position = Vec3(-1220.482, -414.209, 256.125),
+		Radius = 20,
 		Stance = "stand",
 		TagName = "CP_Defense_5",
 		TeamAvailability = 30,
@@ -815,7 +806,7 @@ global _MG =
 			[0] = Vec3(-0.331, -0.937, -0.112),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Defend",
 		GroupName = "",
 		MaxCampTime = 30,
@@ -823,8 +814,8 @@ global _MG =
 		MinRadius = 30,
 		Name = "DEFEND_CP_Defense_6",
 		Orientation = Vec3(2.802, -0.113, -0.000),
-		Position = Vec3(-1646.786, 498.693, 320.172),
-		Radius = 35,
+		Position = Vec3(-1650.155, 517.875, 320.125),
+		Radius = 20,
 		Stance = "crouch",
 		TagName = "CP_Defense_6",
 		TeamAvailability = 30,
@@ -837,10 +828,12 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(0.703, -0.711, -0.000),
+			[0] = Vec3(0.054, -0.996, -0.070),
+			[1] = Vec3(0.100, -0.993, -0.070),
+			[2] = Vec3(0.573, 0.522, -0.632),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Defend",
 		GroupName = "",
 		MaxCampTime = 30,
@@ -1086,10 +1079,11 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(-0.975, 0.128, -0.182),
+			[0] = Vec3(-0.900, 0.397, -0.180),
+			[1] = Vec3(-0.929, -0.370, 0.012),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Defend",
 		GroupName = "",
 		MaxCampTime = 30,
@@ -1112,9 +1106,11 @@ global _MG =
 		AimVectors = 
 		{
 			[0] = Vec3(-0.991, -0.109, -0.083),
+			[1] = Vec3(-0.475, 0.873, 0.114),
+			[2] = Vec3(-0.993, -0.088, -0.083),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Defend",
 		GroupName = "",
 		MaxCampTime = 30,
@@ -1122,7 +1118,7 @@ global _MG =
 		MinRadius = 30,
 		Name = "DEFEND_Doc_Defense_2",
 		Orientation = Vec3(1.681, -0.083, -0.000),
-		Position = Vec3(1197.864, -219.569, 320.125),
+		Position = Vec3(1197.875, -235.487, 320.125),
 		Radius = 20,
 		Stance = "crouch",
 		TagName = "Doc_Defense_2",
@@ -1136,7 +1132,8 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(-0.223, 0.973, -0.059),
+			[0] = Vec3(0.650, -0.747, -0.136),
+			[1] = Vec3(0.631, 0.770, -0.095),
 		},
 		CreateOnLoad = 1,
 		DisableCM = 0,
@@ -1147,8 +1144,8 @@ global _MG =
 		MinRadius = 30,
 		Name = "DEFEND_Doc_Defense_3",
 		Orientation = Vec3(0.225, -0.059, -0.000),
-		Position = Vec3(1197.875, 114.125, 352.125),
-		Radius = 35,
+		Position = Vec3(786.125, 161.527, 384.125),
+		Radius = 20,
 		Stance = "crouch",
 		TagName = "Doc_Defense_3",
 		TeamAvailability = 30,
@@ -1186,10 +1183,11 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(-0.718, -0.669, -0.191),
+			[0] = Vec3(-0.536, -0.844, -0.000),
+			[1] = Vec3(-0.900, -0.403, -0.165),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Defend",
 		GroupName = "",
 		MaxCampTime = 30,
@@ -1197,7 +1195,7 @@ global _MG =
 		MinRadius = 30,
 		Name = "DEFEND_Doc_Defense_5",
 		Orientation = Vec3(2.321, -0.193, -0.000),
-		Position = Vec3(498.125, 557.966, 176.125),
+		Position = Vec3(498.629, 557.820, 176.125),
 		Radius = 20,
 		Stance = "stand",
 		TagName = "Doc_Defense_5",
@@ -1286,10 +1284,11 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(-0.791, 0.611, -0.000),
+			[0] = Vec3(-0.996, -0.046, -0.072),
+			[1] = Vec3(-0.997, -0.019, -0.071),
 		},
 		CreateOnLoad = 1,
-		DisableCM = 0,
+		DisableCM = 1,
 		GoalType = "Defend",
 		GroupName = "",
 		MaxCampTime = 30,
@@ -1314,7 +1313,7 @@ global _MG =
 		GroupName = "",
 		MinRadius = 0,
 		Name = "EXPLODE_180",
-		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Orientation = Vec3(-1.571, 0.000, -0.000),
 		Position = Vec3(-2032.000, 384.000, 120.000),
 		Radius = 0,
 		TagName = "",
@@ -1617,8 +1616,8 @@ global _MG =
 		MinRadius = 32,
 		Name = "ROUTE_CpSpawn",
 		Orientation = Vec3(-0.000, 0.000, -0.000),
-		Position = Vec3(-1436.404, 378.039, 320.125),
-		Radius = 300,
+		Position = Vec3(-1649.847, 372.138, 320.125),
+		Radius = 250,
 		TagName = "CpSpawn",
 		TeamAvailability = 30,
 		Version = 1,
@@ -1659,8 +1658,8 @@ global _MG =
 		MinRadius = 32,
 		Name = "ROUTE_central",
 		Orientation = Vec3(-0.000, 0.000, -0.000),
-		Position = Vec3(-387.962, 47.112, 4.125),
-		Radius = 50,
+		Position = Vec3(-423.901, 95.924, 0.125),
+		Radius = 100,
 		TagName = "central",
 		TeamAvailability = 30,
 		Version = 1,

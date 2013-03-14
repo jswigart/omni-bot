@@ -144,6 +144,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bSpawnMG" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bDeliver.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bLT.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBoxes.*" );
 	},
 
 	forwardspawn_Allies_Captured = function( trigger )
@@ -167,6 +168,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bCapMG" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bDeliver.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bLT.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bBoxes.*" );
 	},
 	DisableAirstrikes = function()
 	{
