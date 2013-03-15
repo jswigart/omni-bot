@@ -11,7 +11,6 @@
 #include "mdump.h"
 
 #include "TaskManager.h"
-#include "NavigationManager.h"
 #include "GoalManager.h"
 #include "TriggerManager.h"
 #include "ScriptManager.h"
@@ -22,22 +21,19 @@
 #include "WeaponDatabase.h"
 #include "FileSystem.h"
 #include "FileDownloader.h"
-#include "PathPlannerBase.h"
+
+#include "PathPlannerWaypoint.h"
+#include "PathPlannerFloodFill.h"
+#include "PathPlannerNavmesh.h"
+#include "PathPlannerRecast.h"
 
 IEngineInterface *g_EngineFuncs = 0;
 
 //////////////////////////////////////////////////////////////////////////
 
-IGameManager *IGameManager::m_Instance = 0;
-
 IGame *CreateGameInstance();
 
 IGameManager::IGameManager()
-	: m_ScriptManager(0)
-	, m_PathPlanner(0)
-	, m_GoalManager(0)
-	, m_Game(0)
-	, m_TaskManager(0)
 #ifdef ENABLE_REMOTE_DEBUGGING
 	, m_Remote( 0 )
 #endif
@@ -59,13 +55,12 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 
 	g_EngineFuncs = _pEngineFuncs;
 
-	// Attempt to create the proper instance of IGame based on the game requested.
-	m_Game = CreateGameInstance();
+	mBotSystem.mGame = CreateGameInstance();
 
 	// Verify the version is correct.
-	if(!m_Game->CheckVersion(_version))
+	if(!mBotSystem.mGame->CheckVersion(_version))
 	{
-		OB_DELETE(m_Game);
+		OB_DELETE(mBotSystem.mGame);
 		return BOT_ERROR_WRONGVERSION;
 	}
 
@@ -100,8 +95,8 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	}
 
 	// Initialize the Scripting System.
-	m_ScriptManager = ScriptManager::GetInstance();
-	m_ScriptManager->Init();
+	mBotSystem.mScript = ScriptManager::GetInstance();
+	mBotSystem.mScript->Init();
 
 	//////////////////////////////////////////////////////////////////////////
 	// Set up global config options.
@@ -160,44 +155,54 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 
 	RenderBuffer::Init();
 
-	// Create the requested path planner.
-	if(NavigationManager::GetInstance()->CreatePathPlanner(m_Game, m_Game->GetDefaultNavigator()))
+	// Create the navigation system
+	switch( mBotSystem.mGame->GetDefaultNavigator() )
 	{
-		m_PathPlanner = NavigationManager::GetInstance()->GetCurrentPathPlanner();
-		m_PathPlanner->RegisterScriptFunctions(m_ScriptManager->GetMachine());
-		LOG("Created Nav System : " << m_PathPlanner->GetPlannerName());
+	case NAVID_WP:
+		mBotSystem.mNavigation = new PathPlannerWaypoint;
+		break;
+	case NAVID_NAVMESH:
+		mBotSystem.mNavigation = new PathPlannerNavMesh;
+		break;
+	case NAVID_FLOODFILL:
+		mBotSystem.mNavigation = new PathPlannerFloodFill;
+		break;
+	case NAVID_RECAST:
+		mBotSystem.mNavigation = new PathPlannerRecast;
+		break;
+	default:
+		LOGERR("Unknown Path Planner!");
+		return BOT_ERROR_CANTINITBOT;
+	};
+
+	OBASSERT ( mBotSystem.mNavigation, "No Path Planner!" );
+	if ( mBotSystem.mNavigation->Init( mBotSystem ) )
+	{
+		// Allow the game to set up its navigation flags.
+		mBotSystem.mGame->RegisterNavigationFlags( mBotSystem.mNavigation );
+		mBotSystem.mNavigation->RegisterScriptFunctions( mBotSystem.mScript->GetMachine() );
 	}
 	else
 	{
-		LOG("Unable to Create Nav System");
 		return BOT_ERROR_CANTINITBOT;
 	}
 
 	// Create the goal manager.
-	m_GoalManager = m_Game->GetGoalManager();
-	if(m_GoalManager)
-	{
-		m_GoalManager->Init();
-		LOG("Goal Manager Created.");
-	}
-	else
-	{
-		LOGERR("ERROR: Creating Goal Manager.");
-		return BOT_ERROR_CANTINITBOT;
-	}
+	mBotSystem.mGoalManager = mBotSystem.mGame->GetGoalManager();
+	mBotSystem.mGoalManager->Init( mBotSystem );
 
-	TriggerManager::GetInstance();
+	mBotSystem.mTriggerManager = TriggerManager::GetInstance();
 
 	// Initialize the game.
-	if(m_Game && m_Game->Init())
+	if ( mBotSystem.mGame->Init( mBotSystem ) )
 	{
-		LOG("Created Game Interface : " << m_Game->GetGameName());
+		LOG("Created Game Interface : " << mBotSystem.mGame->GetGameName());
 		LOG("Game Interface : " << g_EngineFuncs->GetGameName());
 		LOG("Mod Interface : " << g_EngineFuncs->GetModName());
 	}
 	else
 	{
-		LOGERR("Unable to CreateGame() : " << m_Game->GetGameName());
+		LOGERR("Unable to CreateGame() : " << mBotSystem.mGame->GetGameName());
 		return BOT_ERROR_CANTINITBOT;
 	}
 
@@ -208,14 +213,14 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	//m_TaskManager = new TaskManager();
 
 	// Load the waypoints for this map.
-	if(m_PathPlanner->Load(std::string(g_EngineFuncs->GetMapName())))
+	if( mBotSystem.mNavigation->Load() )
 	{
 		EngineFuncs::ConsoleMessage("Loaded Waypoints.");
 	}
 	else
 		EngineFuncs::ConsoleError("ERROR Loading Waypoints.");
 
-	m_Game->LoadGoalScripts(true);
+	mBotSystem.mGame->LoadGoalScripts(true);
 
 	EngineFuncs::ConsoleMessage(va("Bot Initialized in %.2f seconds.", loadTime.GetElapsedSeconds()));
 	LOG("Bot Initialized in " << loadTime.GetElapsedSeconds() << " seconds.");
@@ -230,28 +235,12 @@ void IGameManager::UpdateGame()
 
 		RenderBuffer::BeginFrame();
 
-		m_Game->UpdateTime();
-		m_ScriptManager->Update();
-		m_PathPlanner->Update();
-		m_Game->UpdateGame();
-		m_GoalManager->Update();
-		TriggerManager::GetInstance()->Update();
-
-		{
-			Prof(Processes);
-
-			FunctorMap::iterator it = m_UpdateMap.begin();
-			for(; it != m_UpdateMap.end(); )
-			{
-				if((*(*it).second)() == Function_Finished)
-				{
-					EngineFuncs::ConsoleMessage(va("Finished Process: %s", (*it).first.c_str()));
-					m_UpdateMap.erase(it++);
-				}
-				else
-					++it;
-			}
-		}
+		mBotSystem.mGame->UpdateTime();
+		mBotSystem.mScript->Update();
+		mBotSystem.mNavigation->Update( mBotSystem );
+		mBotSystem.mGame->UpdateGame( mBotSystem );
+		mBotSystem.mGoalManager->Update( mBotSystem );
+		mBotSystem.mTriggerManager->Update( mBotSystem );
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 		{
@@ -273,7 +262,7 @@ void IGameManager::UpdateGame()
 
 					conn->updateState.Clear();
 
-					m_Game->UpdateSync( conn, conn->cachedState, conn->updateState );
+					mBotSystem.mGame->UpdateSync( conn, conn->cachedState, conn->updateState );
 					//m_PathPlanner->Sync( conn );
 					m_GoalManager->Sync( conn );
 				}
@@ -288,7 +277,7 @@ void IGameManager::UpdateGame()
 	FileDownloader::Poll();
 #endif
 
-	if ( m_Game->RendersToGame() )
+	if ( mBotSystem.mGame->RendersToGame() )
 		RenderBuffer::RenderToGame();
 
 	EngineFuncs::FlushAsyncMessages();
@@ -296,7 +285,7 @@ void IGameManager::UpdateGame()
 
 void IGameManager::Shutdown()
 {
-	OB_DELETE( m_TaskManager );
+	OB_DELETE( mBotSystem.mTaskManager );
 
 #ifdef ENABLE_FILE_DOWNLOADER
 	FileDownloader::Shutdown();
@@ -306,33 +295,35 @@ void IGameManager::Shutdown()
 	m_Remote.shutdown();
 #endif
 
-	m_Game->Shutdown();
-	g_Blackboard.RemoveAllBBRecords();
+	mBotSystem.mGame->Shutdown();
 
-	while(!m_UpdateMap.empty())
-		RemoveUpdateFunction((*m_UpdateMap.begin()).first);
+	g_Blackboard.RemoveAllBBRecords();
 
 	LOGFUNCBLOCK;
 
 	// Get rid of the path planner.
-	NavigationManager::DeleteInstance();
-	m_PathPlanner = 0;
+	mBotSystem.mNavigation->Shutdown();
+	mBotSystem.mNavigation = NULL;
 
 	// Shutdown and clean up the goal manager.
-	m_GoalManager->Shutdown();
-	m_GoalManager = 0;
+	mBotSystem.mGoalManager->Shutdown();
+	mBotSystem.mGoalManager = NULL;
 	GoalManager::DeleteInstance();
 
+	mBotSystem.mTriggerManager = NULL;
 	TriggerManager::DeleteInstance();
+
+	mBotSystem.mNameManager = NULL;
 	NameManager::DeleteInstance();
 
 	// Shutdown and clean up the game.
-	OB_DELETE(m_Game);
+	OB_DELETE( mBotSystem.mGame );
 	LOG("Successfully Shut down Game Interface");
 
 	g_WeaponDatabase.Unload();
 
-	ScriptManager::GetInstance()->Shutdown();
+	mBotSystem.mScript->Shutdown();
+	mBotSystem.mScript = NULL;
 	ScriptManager::DeleteInstance();
 
 	MiniDumper::Shutdown();
@@ -342,68 +333,34 @@ void IGameManager::Shutdown()
 	FileSystem::ShutdownFileSystem();
 }
 
-IGameManager *IGameManager::GetInstance()
-{
-	if(!m_Instance)
-		m_Instance = new IGameManager;
-	return m_Instance;
-}
-
-void IGameManager::DeleteInstance()
-{
-	OB_DELETE(m_Instance);
-}
-
 void IGameManager::InitCommands()
 {
-	Set("version", "Prints out the bot version number.",
-		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdVersion)));
-	Set("stopprocess", "Stops a process by its name.",
-		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdStopProcess)));
-	Set("showprocesses", "Shows current proccesses.",
-		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdShowProcesses)));
-	Set("navsystem", "Creates a navigation system of a specified type.",
-		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdNavSystem)));
-	Set("printfs", "Prints the whole file system.",
-		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdPrintAllFiles)));
+	SetEx("version", "Prints out the bot version number.",
+		this, &IGameManager::cmdVersion);
+	SetEx("navsystem", "Creates a navigation system of a specified type.",
+		this, &IGameManager::cmdNavSystem);
+	SetEx("printfs", "Prints the whole file system.",
+		this, &IGameManager::cmdPrintAllFiles);
 
 #ifdef ENABLE_FILE_DOWNLOADER
-	Set("update_nav", "Checks the remote waypoint database for updated navigation.",
-		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdUpdateNavFile)));
-	Set("update_all_nav", "Attempts to download all nav files from the database, including updating existing files.",
-		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdUpdateAllNavFiles)));
+	SetEx("update_nav", "Checks the remote waypoint database for updated navigation.",
+		this, &IGameManager::cmdUpdateNavFile);
+	SetEx("update_all_nav", "Attempts to download all nav files from the database, including updating existing files.",
+		this, &IGameManager::cmdUpdateAllNavFiles);
 #endif
 }
 
 void IGameManager::cmdVersion(const StringVector &_args)
 {
-	if(m_Game)
+	if ( mBotSystem.mGame )
 	{
 #ifdef _DEBUG
 		EngineFuncs::ConsoleMessage(va("Omni-Bot DEBUG Build : %s %s", __DATE__, __TIME__));
 #else
 		EngineFuncs::ConsoleMessage(va("Omni-Bot : %s %s", __DATE__, __TIME__));
 #endif
-		EngineFuncs::ConsoleMessage(va("Version : %s", m_Game->GetVersion()));
-		EngineFuncs::ConsoleMessage(va("Interface # : %d", m_Game->GetVersionNum()));
-	}
-}
-
-void IGameManager::cmdShowProcesses(const StringVector &_args)
-{
-	EngineFuncs::ConsoleMessage(va("# Processes: %d!", m_UpdateMap.size()));
-	FunctorMap::iterator it = m_UpdateMap.begin(), itEnd = m_UpdateMap.end();
-	for(; it != itEnd; ++it)
-	{
-		EngineFuncs::ConsoleMessage(va("Process: %s!", (*it).first.c_str()));
-	}
-}
-
-void IGameManager::cmdStopProcess(const StringVector &_args)
-{
-	if(!_args.empty())
-	{
-		RemoveUpdateFunction(_args[1]);
+		EngineFuncs::ConsoleMessage(va("Version : %s", mBotSystem.mGame->GetVersion()));
+		EngineFuncs::ConsoleMessage(va("Interface # : %d", mBotSystem.mGame->GetVersionNum()));
 	}
 }
 
@@ -432,21 +389,31 @@ void IGameManager::cmdNavSystem(const StringVector &_args)
 		return;
 	}
 
-	if(!m_PathPlanner || m_PathPlanner->GetPlannerType() != navId)
+	if( !mBotSystem.mNavigation || mBotSystem.mNavigation->GetPlannerType() != navId )
 	{
-		NavigationManager::GetInstance()->DeletePathPlanner();
+		mBotSystem.mNavigation->Shutdown();
+		OB_DELETE( mBotSystem.mNavigation );
 
-		// Create the requested path planner.
-		if(NavigationManager::GetInstance()->CreatePathPlanner(m_Game, navId))
+		switch( navId )
 		{
-			m_PathPlanner = NavigationManager::GetInstance()->GetCurrentPathPlanner();
-			m_PathPlanner->RegisterScriptFunctions(m_ScriptManager->GetMachine());
-			EngineFuncs::ConsoleMessage("Navigation System created.");
-		}
-		else
-		{
-			EngineFuncs::ConsoleError("Unable to create Navigation System.");
-		}
+		case NAVID_WP:
+			mBotSystem.mNavigation = new PathPlannerWaypoint;
+			break;
+		case NAVID_NAVMESH:
+			mBotSystem.mNavigation = new PathPlannerNavMesh;
+			break;
+		case NAVID_FLOODFILL:
+			mBotSystem.mNavigation = new PathPlannerFloodFill;
+			break;
+		case NAVID_RECAST:
+			mBotSystem.mNavigation = new PathPlannerRecast;
+			break;
+		default:
+			break;
+		};
+
+		mBotSystem.mNavigation->RegisterScriptFunctions( mBotSystem.mScript->GetMachine() );
+		EngineFuncs::ConsoleMessage("Navigation System created.");
 	}
 }
 
@@ -476,32 +443,6 @@ void IGameManager::cmdUpdateAllNavFiles(const StringVector &_args)
 	FileDownloader::UpdateAllWaypoints(newstufftoo);
 }
 #endif
-
-//////////////////////////////////////////////////////////////////////////
-
-bool IGameManager::AddUpdateFunction(const std::string &_name, FunctorPtr _func)
-{
-	if(m_UpdateMap.find(_name) != m_UpdateMap.end())
-	{
-		EngineFuncs::ConsoleError("That process is already running!");
-		return false;
-	}
-	EngineFuncs::ConsoleMessage(va("Process %s has been started! ", _name.c_str()));
-	m_UpdateMap.insert(std::make_pair(_name, _func));
-	return true;
-}
-
-bool IGameManager::RemoveUpdateFunction(const std::string &_name)
-{
-	FunctorMap::iterator it = m_UpdateMap.find(_name);
-	if(it != m_UpdateMap.end())
-	{
-		EngineFuncs::ConsoleMessage(va("Process %s has been stopped! ", _name.c_str()));
-		m_UpdateMap.erase(_name.c_str());
-		return true;
-	}
-	return false;
-}
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 void IGameManager::SyncRemoteDelete( int entityHandle )

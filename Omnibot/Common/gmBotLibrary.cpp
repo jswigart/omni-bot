@@ -11,7 +11,6 @@
 #include "TriggerManager.h"
 #include "NameManager.h"
 #include "IGameManager.h"
-#include "NavigationManager.h"
 #include "ScriptManager.h"
 #include "IGame.h"
 #include "MapGoalDatabase.h"
@@ -271,7 +270,7 @@ static int GM_CDECL gmfAddBot(gmThread *a_thread)
 		b.m_Team = iAddTeam;
 		b.m_Class = iAddClass;
 	}
-	IGameManager::GetInstance()->GetGame()->AddBot(b, true);
+	System::mInstance->mGame->AddBot(b, true);
 	return GM_OK;
 }
 
@@ -325,12 +324,11 @@ static int GM_CDECL gmfKickBotFromTeam(gmThread *a_thread)
 	GM_CHECK_INT_PARAM(team,0);
 
 	ClientPtr lastBotOnTeam;
-	IGame *pGame = IGameManager::GetInstance()->GetGame();
-	if(pGame)
+	if( System::mInstance->mGame )
 	{
 		for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 		{
-			ClientPtr cp = pGame->GetClientByIndex(i);
+			ClientPtr cp = System::mInstance->mGame->GetClientByIndex(i);
 			if(cp && cp->GetTeam() == team)
 				lastBotOnTeam = cp;
 		}
@@ -368,12 +366,11 @@ static int GM_CDECL gmfMoveBotToAnotherTeam(gmThread *a_thread)
 	GM_CHECK_INT_PARAM(destinationteam,1);
 
 	ClientPtr lastBotOnTeam;
-	IGame *pGame = IGameManager::GetInstance()->GetGame();
-	if(pGame)
+	if( System::mInstance->mGame )
 	{
 		for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
 		{
-			ClientPtr cp = pGame->GetClientByIndex(i);
+			ClientPtr cp = System::mInstance->mGame->GetClientByIndex(i);
 			if(cp && cp->GetTeam() == sourceteam)
 				lastBotOnTeam = cp;
 		}
@@ -1724,7 +1721,7 @@ static int gmfGetClassNameFromId(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_INT_PARAM(classId, 0);
 
-	const char *pClassName = IGameManager::GetInstance()->GetGame()->FindClassName(classId);
+	const char *pClassName = System::mInstance->mGame->FindClassName(classId);
 	if(pClassName)
 		a_thread->PushNewString(pClassName);
 	else
@@ -1750,7 +1747,7 @@ static int gmfGetWeaponIdFromClassId(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_INT_PARAM(classId, 0);
 
-	const int weaponId = IGameManager::GetInstance()->GetGame()->FindWeaponId(classId);
+	const int weaponId = System::mInstance->mGame->FindWeaponId(classId);
 	if(weaponId)
 		a_thread->PushInt(weaponId);
 	else
@@ -2337,14 +2334,13 @@ static int GM_CDECL gmfShowPaths(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);
 
-	IGame *pGame = IGameManager::GetInstance()->GetGame();
-	if(pGame)
+	if ( System::mInstance->mGame )
 	{
 		EngineFuncs::ConsoleMessage(va("Omni-bot %s, Revision %s, %s",
-			pGame->GetVersion(),
+			System::mInstance->mGame->GetVersion(),
 			Revision::Number().c_str(),
 			Revision::Date().c_str()));
-		EngineFuncs::ConsoleMessage(va("Game: %s", pGame->GetGameName()));
+		EngineFuncs::ConsoleMessage(va("Game: %s", System::mInstance->mGame->GetGameName()));
 		EngineFuncs::ConsoleMessage(va("Mod Folder: %s", FileSystem::GetModFolder().string().c_str()));
 		EngineFuncs::ConsoleMessage(va("Nav Folder: %s", FileSystem::GetNavFolder().string().c_str()));
 		EngineFuncs::ConsoleMessage(va("Script Folder: %s", FileSystem::GetScriptFolder().string().c_str()));
@@ -2516,7 +2512,7 @@ static int GM_CDECL gmfGetNearestNonSolid(gmThread *a_thread)
 static int GM_CDECL gmfReloadGoalScripts(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);
-	IGameManager::GetInstance()->GetGame()->LoadGoalScripts(true);
+	System::mInstance->mGame->LoadGoalScripts(true);
 	return GM_OK;
 }
 
@@ -2537,8 +2533,7 @@ static int GM_CDECL gmfDynamicPathsUpdated(gmThread *a_thread)
 	}
 
 	Event_DynamicPathsChanged m(iTeamMask);
-	IGameManager::GetInstance()->GetGame()->DispatchGlobalEvent(
-		MessageHelper(MESSAGE_DYNAMIC_PATHS_CHANGED,&m,sizeof(m)));
+	System::mInstance->mGame->DispatchGlobalEvent(MessageHelper(MESSAGE_DYNAMIC_PATHS_CHANGED,&m,sizeof(m)));
 	return GM_OK;
 }
 

@@ -544,10 +544,10 @@ fs::path FileSystem::GetModFolder()
 {
 	fs::path navFolder = GetBaseFolder();
 
-	if(IGame *pGame = IGameManager::GetInstance()->GetGame())
+	if( System::mInstance->mGame )
 	{
 		// Append the script subfolder
-		navFolder /= fs::path(pGame->GetModSubFolder(), fs::native);
+		navFolder /= fs::path(System::mInstance->mGame->GetModSubFolder(), fs::native);
 		return navFolder;
 	}
 
@@ -558,10 +558,10 @@ fs::path FileSystem::GetNavFolder()
 {
 	fs::path navFolder = GetBaseFolder();
 
-	if(IGame *pGame = IGameManager::GetInstance()->GetGame())
+	if( System::mInstance->mGame )
 	{
 		// Append the script subfolder
-		navFolder /= fs::path(pGame->GetNavSubfolder(), fs::native);
+		navFolder /= fs::path(System::mInstance->mGame->GetNavSubfolder(), fs::native);
 		return navFolder;
 	}
 
@@ -572,10 +572,10 @@ fs::path FileSystem::GetScriptFolder()
 {
 	fs::path scriptFolder = GetBaseFolder();
 
-	if(IGame *pGame = IGameManager::GetInstance()->GetGame())
+	if(System::mInstance->mGame)
 	{
 		// Append the script subfolder
-		scriptFolder /= fs::path(pGame->GetScriptSubfolder(), fs::native);
+		scriptFolder /= fs::path(System::mInstance->mGame->GetScriptSubfolder(), fs::native);
 		return scriptFolder;
 	}
 

@@ -13,9 +13,11 @@
 #include "ET_InterfaceFuncs.h"
 #include "ET_Client.h"
 
+#include "System.h"
 #include "RenderBuffer.h"
 
-#include "PathPlannerWaypoint.h"
+#include "Waypoint.h"
+#include "PathPlannerBase.h"
 #include "BotBaseStates.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
@@ -83,7 +85,7 @@ const char *ET_Game::GetScriptSubfolder() const
 eNavigatorID ET_Game::GetDefaultNavigator() const
 {
 	//return NAVID_RECAST;
-	return NAVID_WP;
+	return NAVID_NAVMESH;
 }
 
 bool ET_Game::ReadyForDebugWindow() const
@@ -111,7 +113,7 @@ GoalManager *ET_Game::GetGoalManager()
 	return new ET_GoalManager;
 }
 
-bool ET_Game::Init()
+bool ET_Game::Init( System & system )
 {
 	const char *modName = g_EngineFuncs->GetModName();
 	IsETBlight = !strcmp(modName, "etblight");
@@ -126,15 +128,12 @@ bool ET_Game::Init()
 	AiState::SensoryMemory::SetEntityVisDistanceCallback(ET_Game::ET_GetEntityVisDistance);
 	AiState::SensoryMemory::SetCanSensoreEntityCallback(ET_Game::ET_CanSensoreEntity);
 
-	if(!IGame::Init())
+	if( !IGame::Init( system ) )
 		return false;
-
-	PathPlannerWaypoint::m_BlockableMask = F_ET_NAV_WALL|F_ET_NAV_BRIDGE|F_ET_NAV_WATERBLOCKABLE;
-	PathPlannerWaypoint::m_CallbackFlags = F_ET_NAV_DISGUISE|F_ET_NAV_USEPATH;
 
 	// Run the games autoexec.
 	int threadId;
-	ScriptManager::GetInstance()->ExecuteFile("scripts/et_autoexec.gm", threadId);
+	system.mScript->ExecuteFile("scripts/et_autoexec.gm", threadId);
 
 	return true;
 }
@@ -700,7 +699,17 @@ void ET_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 }
 
 // PathPlannerWaypointInterface
-PathPlannerWaypointInterface::BlockableStatus ET_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw)
+NavFlags ET_Game::WaypointBlockableFlags() const
+{
+	return F_ET_NAV_WALL|F_ET_NAV_BRIDGE|F_ET_NAV_WATERBLOCKABLE;
+}
+
+NavFlags ET_Game::WaypointCallbackFlags() const
+{
+	return F_ET_NAV_DISGUISE|F_ET_NAV_USEPATH;
+}
+
+PathPlannerWaypointInterface::BlockableStatus ET_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw) const
 {
 	static bool bRender = false;
 	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;

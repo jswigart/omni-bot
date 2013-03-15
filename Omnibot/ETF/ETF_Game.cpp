@@ -13,10 +13,9 @@
 
 #include "gmTFBinds.h"
 
+#include "System.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
-#include "NavigationManager.h"
-#include "PathPlannerWaypoint.h"
 
 BOOST_STATIC_ASSERT( ETF_TEAM_MAX == TF_TEAM_MAX );
 
@@ -76,9 +75,9 @@ const char *ETF_Game::GetScriptSubfolder() const
 #endif
 }
 
-bool ETF_Game::Init()
+bool ETF_Game::Init( System & system )
 {
-	if(!TF_Game::Init())
+	if ( !TF_Game::Init( system ) )
 		return false;
 
 	// Set the sensory systems callback for getting aim offsets for entity types.
@@ -87,11 +86,8 @@ bool ETF_Game::Init()
 
 	// Run the games autoexec.
 	int threadId;
-	ScriptManager::GetInstance()->ExecuteFile("scripts/etf_autoexec.gm", threadId);
 
-	PathPlannerWaypoint::m_CallbackFlags =
-		F_TF_NAV_ROCKETJUMP |
-		F_TF_NAV_CONCJUMP;
+	system.mScript->ExecuteFile("scripts/etf_autoexec.gm", threadId);
 
 	// Set up ETF specific data.
 	using namespace AiState;

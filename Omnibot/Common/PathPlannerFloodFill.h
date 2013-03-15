@@ -54,8 +54,8 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 
-	bool Init();
-	void Update();
+	bool Init( System & system );
+	void Update( System & system );
 	void Shutdown();
 	bool IsReady() const;
 
@@ -79,9 +79,8 @@ public:
 	void RegisterGameGoals();
 	void GetPath(Path &_path, int _smoothiterations);
 
-	virtual void RegisterNavFlag(const std::string &_name, const NavFlags &_bits) {}
-
-	void RegisterScriptFunctions(gmMachine *a_machine);
+	virtual void RegisterNavFlag(const std::string &_name, const NavFlags &_bits);
+	virtual void RegisterScriptFunctions(gmMachine *a_machine);
 
 	bool GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name);
 

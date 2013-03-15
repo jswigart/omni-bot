@@ -395,52 +395,10 @@ class SectorData : public ::google::protobuf::Message {
   inline bool enabled() const;
   inline void set_enabled(bool value);
   
-  // optional bool team1 = 2 [default = false];
-  inline bool has_team1() const;
-  inline void clear_team1();
-  static const int kTeam1FieldNumber = 2;
-  inline bool team1() const;
-  inline void set_team1(bool value);
-  
-  // optional bool team2 = 3 [default = false];
-  inline bool has_team2() const;
-  inline void clear_team2();
-  static const int kTeam2FieldNumber = 3;
-  inline bool team2() const;
-  inline void set_team2(bool value);
-  
-  // optional bool team3 = 4 [default = false];
-  inline bool has_team3() const;
-  inline void clear_team3();
-  static const int kTeam3FieldNumber = 4;
-  inline bool team3() const;
-  inline void set_team3(bool value);
-  
-  // optional bool team4 = 5 [default = false];
-  inline bool has_team4() const;
-  inline void clear_team4();
-  static const int kTeam4FieldNumber = 5;
-  inline bool team4() const;
-  inline void set_team4(bool value);
-  
-  // optional bool inwater = 6 [default = false];
-  inline bool has_inwater() const;
-  inline void clear_inwater();
-  static const int kInwaterFieldNumber = 6;
-  inline bool inwater() const;
-  inline void set_inwater(bool value);
-  
-  // optional bool onmover = 7 [default = false];
-  inline bool has_onmover() const;
-  inline void clear_onmover();
-  static const int kOnmoverFieldNumber = 7;
-  inline bool onmover() const;
-  inline void set_onmover(bool value);
-  
-  // optional string location = 8;
+  // optional string location = 2;
   inline bool has_location() const;
   inline void clear_location();
-  static const int kLocationFieldNumber = 8;
+  static const int kLocationFieldNumber = 2;
   inline const ::std::string& location() const;
   inline void set_location(const ::std::string& value);
   inline void set_location(const char* value);
@@ -448,10 +406,106 @@ class SectorData : public ::google::protobuf::Message {
   inline ::std::string* mutable_location();
   inline ::std::string* release_location();
   
+  // optional string locationteam1 = 3;
+  inline bool has_locationteam1() const;
+  inline void clear_locationteam1();
+  static const int kLocationteam1FieldNumber = 3;
+  inline const ::std::string& locationteam1() const;
+  inline void set_locationteam1(const ::std::string& value);
+  inline void set_locationteam1(const char* value);
+  inline void set_locationteam1(const char* value, size_t size);
+  inline ::std::string* mutable_locationteam1();
+  inline ::std::string* release_locationteam1();
+  
+  // optional string locationteam2 = 4;
+  inline bool has_locationteam2() const;
+  inline void clear_locationteam2();
+  static const int kLocationteam2FieldNumber = 4;
+  inline const ::std::string& locationteam2() const;
+  inline void set_locationteam2(const ::std::string& value);
+  inline void set_locationteam2(const char* value);
+  inline void set_locationteam2(const char* value, size_t size);
+  inline ::std::string* mutable_locationteam2();
+  inline ::std::string* release_locationteam2();
+  
+  // optional string locationteam3 = 5;
+  inline bool has_locationteam3() const;
+  inline void clear_locationteam3();
+  static const int kLocationteam3FieldNumber = 5;
+  inline const ::std::string& locationteam3() const;
+  inline void set_locationteam3(const ::std::string& value);
+  inline void set_locationteam3(const char* value);
+  inline void set_locationteam3(const char* value, size_t size);
+  inline ::std::string* mutable_locationteam3();
+  inline ::std::string* release_locationteam3();
+  
+  // optional string locationteam4 = 6;
+  inline bool has_locationteam4() const;
+  inline void clear_locationteam4();
+  static const int kLocationteam4FieldNumber = 6;
+  inline const ::std::string& locationteam4() const;
+  inline void set_locationteam4(const ::std::string& value);
+  inline void set_locationteam4(const char* value);
+  inline void set_locationteam4(const char* value, size_t size);
+  inline ::std::string* mutable_locationteam4();
+  inline ::std::string* release_locationteam4();
+  
+  // optional bool team1 = 7 [default = false];
+  inline bool has_team1() const;
+  inline void clear_team1();
+  static const int kTeam1FieldNumber = 7;
+  inline bool team1() const;
+  inline void set_team1(bool value);
+  
+  // optional bool team2 = 8 [default = false];
+  inline bool has_team2() const;
+  inline void clear_team2();
+  static const int kTeam2FieldNumber = 8;
+  inline bool team2() const;
+  inline void set_team2(bool value);
+  
+  // optional bool team3 = 9 [default = false];
+  inline bool has_team3() const;
+  inline void clear_team3();
+  static const int kTeam3FieldNumber = 9;
+  inline bool team3() const;
+  inline void set_team3(bool value);
+  
+  // optional bool team4 = 10 [default = false];
+  inline bool has_team4() const;
+  inline void clear_team4();
+  static const int kTeam4FieldNumber = 10;
+  inline bool team4() const;
+  inline void set_team4(bool value);
+  
+  // optional bool inwater = 11 [default = false];
+  inline bool has_inwater() const;
+  inline void clear_inwater();
+  static const int kInwaterFieldNumber = 11;
+  inline bool inwater() const;
+  inline void set_inwater(bool value);
+  
+  // optional bool onmover = 12 [default = false];
+  inline bool has_onmover() const;
+  inline void clear_onmover();
+  static const int kOnmoverFieldNumber = 12;
+  inline bool onmover() const;
+  inline void set_onmover(bool value);
+  
   // @@protoc_insertion_point(class_scope:NavmeshIO.SectorData)
  private:
   inline void set_has_enabled();
   inline void clear_has_enabled();
+  inline void set_has_location();
+  inline void clear_has_location();
+  inline void set_has_locationteam1();
+  inline void clear_has_locationteam1();
+  inline void set_has_locationteam2();
+  inline void clear_has_locationteam2();
+  inline void set_has_locationteam3();
+  inline void clear_has_locationteam3();
+  inline void set_has_locationteam4();
+  inline void clear_has_locationteam4();
   inline void set_has_team1();
   inline void clear_has_team1();
   inline void set_has_team2();
@@ -464,11 +518,14 @@ class SectorData : public ::google::protobuf::Message {
   inline void clear_has_inwater();
   inline void set_has_onmover();
   inline void clear_has_onmover();
-  inline void set_has_location();
-  inline void clear_has_location();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
+  ::std::string* location_;
+  ::std::string* locationteam1_;
+  ::std::string* locationteam2_;
+  ::std::string* locationteam3_;
+  ::std::string* locationteam4_;
   bool enabled_;
   bool team1_;
   bool team2_;
@@ -476,10 +533,9 @@ class SectorData : public ::google::protobuf::Message {
   bool team4_;
   bool inwater_;
   bool onmover_;
-  ::std::string* location_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(12 + 31) / 32];
   
   friend void  protobuf_AddDesc_navmesh_2eproto();
   friend void protobuf_AssignDesc_navmesh_2eproto();
@@ -899,147 +955,15 @@ inline void SectorData::set_enabled(bool value) {
   enabled_ = value;
 }
 
-// optional bool team1 = 2 [default = false];
-inline bool SectorData::has_team1() const {
+// optional string location = 2;
+inline bool SectorData::has_location() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SectorData::set_has_team1() {
+inline void SectorData::set_has_location() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SectorData::clear_has_team1() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void SectorData::clear_team1() {
-  team1_ = false;
-  clear_has_team1();
-}
-inline bool SectorData::team1() const {
-  return team1_;
-}
-inline void SectorData::set_team1(bool value) {
-  set_has_team1();
-  team1_ = value;
-}
-
-// optional bool team2 = 3 [default = false];
-inline bool SectorData::has_team2() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void SectorData::set_has_team2() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void SectorData::clear_has_team2() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void SectorData::clear_team2() {
-  team2_ = false;
-  clear_has_team2();
-}
-inline bool SectorData::team2() const {
-  return team2_;
-}
-inline void SectorData::set_team2(bool value) {
-  set_has_team2();
-  team2_ = value;
-}
-
-// optional bool team3 = 4 [default = false];
-inline bool SectorData::has_team3() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void SectorData::set_has_team3() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void SectorData::clear_has_team3() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void SectorData::clear_team3() {
-  team3_ = false;
-  clear_has_team3();
-}
-inline bool SectorData::team3() const {
-  return team3_;
-}
-inline void SectorData::set_team3(bool value) {
-  set_has_team3();
-  team3_ = value;
-}
-
-// optional bool team4 = 5 [default = false];
-inline bool SectorData::has_team4() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void SectorData::set_has_team4() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void SectorData::clear_has_team4() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void SectorData::clear_team4() {
-  team4_ = false;
-  clear_has_team4();
-}
-inline bool SectorData::team4() const {
-  return team4_;
-}
-inline void SectorData::set_team4(bool value) {
-  set_has_team4();
-  team4_ = value;
-}
-
-// optional bool inwater = 6 [default = false];
-inline bool SectorData::has_inwater() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
-}
-inline void SectorData::set_has_inwater() {
-  _has_bits_[0] |= 0x00000020u;
-}
-inline void SectorData::clear_has_inwater() {
-  _has_bits_[0] &= ~0x00000020u;
-}
-inline void SectorData::clear_inwater() {
-  inwater_ = false;
-  clear_has_inwater();
-}
-inline bool SectorData::inwater() const {
-  return inwater_;
-}
-inline void SectorData::set_inwater(bool value) {
-  set_has_inwater();
-  inwater_ = value;
-}
-
-// optional bool onmover = 7 [default = false];
-inline bool SectorData::has_onmover() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
-}
-inline void SectorData::set_has_onmover() {
-  _has_bits_[0] |= 0x00000040u;
-}
-inline void SectorData::clear_has_onmover() {
-  _has_bits_[0] &= ~0x00000040u;
-}
-inline void SectorData::clear_onmover() {
-  onmover_ = false;
-  clear_has_onmover();
-}
-inline bool SectorData::onmover() const {
-  return onmover_;
-}
-inline void SectorData::set_onmover(bool value) {
-  set_has_onmover();
-  onmover_ = value;
-}
-
-// optional string location = 8;
-inline bool SectorData::has_location() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
-}
-inline void SectorData::set_has_location() {
-  _has_bits_[0] |= 0x00000080u;
-}
 inline void SectorData::clear_has_location() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void SectorData::clear_location() {
   if (location_ != &::google::protobuf::internal::kEmptyString) {
@@ -1087,6 +1011,370 @@ inline ::std::string* SectorData::release_location() {
     location_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
+}
+
+// optional string locationteam1 = 3;
+inline bool SectorData::has_locationteam1() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SectorData::set_has_locationteam1() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SectorData::clear_has_locationteam1() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SectorData::clear_locationteam1() {
+  if (locationteam1_ != &::google::protobuf::internal::kEmptyString) {
+    locationteam1_->clear();
+  }
+  clear_has_locationteam1();
+}
+inline const ::std::string& SectorData::locationteam1() const {
+  return *locationteam1_;
+}
+inline void SectorData::set_locationteam1(const ::std::string& value) {
+  set_has_locationteam1();
+  if (locationteam1_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam1_ = new ::std::string;
+  }
+  locationteam1_->assign(value);
+}
+inline void SectorData::set_locationteam1(const char* value) {
+  set_has_locationteam1();
+  if (locationteam1_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam1_ = new ::std::string;
+  }
+  locationteam1_->assign(value);
+}
+inline void SectorData::set_locationteam1(const char* value, size_t size) {
+  set_has_locationteam1();
+  if (locationteam1_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam1_ = new ::std::string;
+  }
+  locationteam1_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SectorData::mutable_locationteam1() {
+  set_has_locationteam1();
+  if (locationteam1_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam1_ = new ::std::string;
+  }
+  return locationteam1_;
+}
+inline ::std::string* SectorData::release_locationteam1() {
+  clear_has_locationteam1();
+  if (locationteam1_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = locationteam1_;
+    locationteam1_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// optional string locationteam2 = 4;
+inline bool SectorData::has_locationteam2() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SectorData::set_has_locationteam2() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SectorData::clear_has_locationteam2() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SectorData::clear_locationteam2() {
+  if (locationteam2_ != &::google::protobuf::internal::kEmptyString) {
+    locationteam2_->clear();
+  }
+  clear_has_locationteam2();
+}
+inline const ::std::string& SectorData::locationteam2() const {
+  return *locationteam2_;
+}
+inline void SectorData::set_locationteam2(const ::std::string& value) {
+  set_has_locationteam2();
+  if (locationteam2_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam2_ = new ::std::string;
+  }
+  locationteam2_->assign(value);
+}
+inline void SectorData::set_locationteam2(const char* value) {
+  set_has_locationteam2();
+  if (locationteam2_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam2_ = new ::std::string;
+  }
+  locationteam2_->assign(value);
+}
+inline void SectorData::set_locationteam2(const char* value, size_t size) {
+  set_has_locationteam2();
+  if (locationteam2_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam2_ = new ::std::string;
+  }
+  locationteam2_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SectorData::mutable_locationteam2() {
+  set_has_locationteam2();
+  if (locationteam2_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam2_ = new ::std::string;
+  }
+  return locationteam2_;
+}
+inline ::std::string* SectorData::release_locationteam2() {
+  clear_has_locationteam2();
+  if (locationteam2_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = locationteam2_;
+    locationteam2_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// optional string locationteam3 = 5;
+inline bool SectorData::has_locationteam3() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void SectorData::set_has_locationteam3() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void SectorData::clear_has_locationteam3() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void SectorData::clear_locationteam3() {
+  if (locationteam3_ != &::google::protobuf::internal::kEmptyString) {
+    locationteam3_->clear();
+  }
+  clear_has_locationteam3();
+}
+inline const ::std::string& SectorData::locationteam3() const {
+  return *locationteam3_;
+}
+inline void SectorData::set_locationteam3(const ::std::string& value) {
+  set_has_locationteam3();
+  if (locationteam3_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam3_ = new ::std::string;
+  }
+  locationteam3_->assign(value);
+}
+inline void SectorData::set_locationteam3(const char* value) {
+  set_has_locationteam3();
+  if (locationteam3_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam3_ = new ::std::string;
+  }
+  locationteam3_->assign(value);
+}
+inline void SectorData::set_locationteam3(const char* value, size_t size) {
+  set_has_locationteam3();
+  if (locationteam3_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam3_ = new ::std::string;
+  }
+  locationteam3_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SectorData::mutable_locationteam3() {
+  set_has_locationteam3();
+  if (locationteam3_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam3_ = new ::std::string;
+  }
+  return locationteam3_;
+}
+inline ::std::string* SectorData::release_locationteam3() {
+  clear_has_locationteam3();
+  if (locationteam3_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = locationteam3_;
+    locationteam3_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// optional string locationteam4 = 6;
+inline bool SectorData::has_locationteam4() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void SectorData::set_has_locationteam4() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void SectorData::clear_has_locationteam4() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void SectorData::clear_locationteam4() {
+  if (locationteam4_ != &::google::protobuf::internal::kEmptyString) {
+    locationteam4_->clear();
+  }
+  clear_has_locationteam4();
+}
+inline const ::std::string& SectorData::locationteam4() const {
+  return *locationteam4_;
+}
+inline void SectorData::set_locationteam4(const ::std::string& value) {
+  set_has_locationteam4();
+  if (locationteam4_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam4_ = new ::std::string;
+  }
+  locationteam4_->assign(value);
+}
+inline void SectorData::set_locationteam4(const char* value) {
+  set_has_locationteam4();
+  if (locationteam4_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam4_ = new ::std::string;
+  }
+  locationteam4_->assign(value);
+}
+inline void SectorData::set_locationteam4(const char* value, size_t size) {
+  set_has_locationteam4();
+  if (locationteam4_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam4_ = new ::std::string;
+  }
+  locationteam4_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SectorData::mutable_locationteam4() {
+  set_has_locationteam4();
+  if (locationteam4_ == &::google::protobuf::internal::kEmptyString) {
+    locationteam4_ = new ::std::string;
+  }
+  return locationteam4_;
+}
+inline ::std::string* SectorData::release_locationteam4() {
+  clear_has_locationteam4();
+  if (locationteam4_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = locationteam4_;
+    locationteam4_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// optional bool team1 = 7 [default = false];
+inline bool SectorData::has_team1() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void SectorData::set_has_team1() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void SectorData::clear_has_team1() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void SectorData::clear_team1() {
+  team1_ = false;
+  clear_has_team1();
+}
+inline bool SectorData::team1() const {
+  return team1_;
+}
+inline void SectorData::set_team1(bool value) {
+  set_has_team1();
+  team1_ = value;
+}
+
+// optional bool team2 = 8 [default = false];
+inline bool SectorData::has_team2() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void SectorData::set_has_team2() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void SectorData::clear_has_team2() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void SectorData::clear_team2() {
+  team2_ = false;
+  clear_has_team2();
+}
+inline bool SectorData::team2() const {
+  return team2_;
+}
+inline void SectorData::set_team2(bool value) {
+  set_has_team2();
+  team2_ = value;
+}
+
+// optional bool team3 = 9 [default = false];
+inline bool SectorData::has_team3() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void SectorData::set_has_team3() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void SectorData::clear_has_team3() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void SectorData::clear_team3() {
+  team3_ = false;
+  clear_has_team3();
+}
+inline bool SectorData::team3() const {
+  return team3_;
+}
+inline void SectorData::set_team3(bool value) {
+  set_has_team3();
+  team3_ = value;
+}
+
+// optional bool team4 = 10 [default = false];
+inline bool SectorData::has_team4() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void SectorData::set_has_team4() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void SectorData::clear_has_team4() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void SectorData::clear_team4() {
+  team4_ = false;
+  clear_has_team4();
+}
+inline bool SectorData::team4() const {
+  return team4_;
+}
+inline void SectorData::set_team4(bool value) {
+  set_has_team4();
+  team4_ = value;
+}
+
+// optional bool inwater = 11 [default = false];
+inline bool SectorData::has_inwater() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+inline void SectorData::set_has_inwater() {
+  _has_bits_[0] |= 0x00000400u;
+}
+inline void SectorData::clear_has_inwater() {
+  _has_bits_[0] &= ~0x00000400u;
+}
+inline void SectorData::clear_inwater() {
+  inwater_ = false;
+  clear_has_inwater();
+}
+inline bool SectorData::inwater() const {
+  return inwater_;
+}
+inline void SectorData::set_inwater(bool value) {
+  set_has_inwater();
+  inwater_ = value;
+}
+
+// optional bool onmover = 12 [default = false];
+inline bool SectorData::has_onmover() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+inline void SectorData::set_has_onmover() {
+  _has_bits_[0] |= 0x00000800u;
+}
+inline void SectorData::clear_has_onmover() {
+  _has_bits_[0] &= ~0x00000800u;
+}
+inline void SectorData::clear_onmover() {
+  onmover_ = false;
+  clear_has_onmover();
+}
+inline bool SectorData::onmover() const {
+  return onmover_;
+}
+inline void SectorData::set_onmover(bool value) {
+  set_has_onmover();
+  onmover_ = value;
 }
 
 // -------------------------------------------------------------------

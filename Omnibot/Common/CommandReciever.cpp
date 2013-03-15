@@ -168,19 +168,6 @@ bool CommandReciever::DispatchCommand(const StringVector &_args)
 	return false;
 }
 
-void CommandReciever::Set(const std::string _name, const std::string _info, CommandFunctorPtr _func)
-{
-	CommandMap::iterator it = m_CommandMap.find(_name);
-	if(it != m_CommandMap.end())
-	{
-		it->second.second = _func;
-	}
-	else
-	{
-		m_CommandMap[_name] = CommandInfo(_info, _func);
-	}
-}
-
 void CommandReciever::Alias(const std::string _name,const std::string _existingname)
 {
 	CommandMap::iterator it = m_CommandMap.find(_existingname);

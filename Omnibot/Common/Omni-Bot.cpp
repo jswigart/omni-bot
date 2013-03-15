@@ -73,7 +73,7 @@ omnibot_error BotInitialise(IEngineInterface *_pEngineFuncs, int _version)
 		_pEngineFuncs->GetMapName()), true);
 
 	// Create the Game Manager
-	g_GameManager = IGameManager::GetInstance();
+	g_GameManager = new IGameManager();
 	return g_GameManager->CreateGame(_pEngineFuncs, _version);
 }
 
@@ -89,7 +89,8 @@ void BotUpdate()
 void BotShutdown()
 {
 	g_GameManager->Shutdown();
-	IGameManager::DeleteInstance();
+	OB_DELETE( g_GameManager );
+
 	g_Logger.Stop();
 #ifndef __linux__
 	//_ASSERTE( _CrtCheckMemory( ) );
@@ -120,12 +121,12 @@ void BotConsoleCommand(const Arguments &_args)
 
 void BotSendEvent(int _dest, const MessageHelper &_message)
 {
-	IGameManager::GetInstance()->GetGame()->DispatchEvent(_dest, _message);
+	System::mInstance->mGame->DispatchEvent(_dest, _message);
 }
 
 void BotSendGlobalEvent(const MessageHelper &_message)
 {
-	IGameManager::GetInstance()->GetGame()->DispatchGlobalEvent(_message);
+	System::mInstance->mGame->DispatchGlobalEvent(_message);
 }
 
 void BotAddGoal(const MapGoalDef &goaldef)

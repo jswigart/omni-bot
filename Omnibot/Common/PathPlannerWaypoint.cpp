@@ -70,11 +70,6 @@ obColor		g_Team4 = COLOR::MAGENTA;
 
 //////////////////////////////////////////////////////////////////////////
 
-NavFlags PathPlannerWaypoint::m_CallbackFlags = 0;
-NavFlags PathPlannerWaypoint::m_BlockableMask = 0;
-
-//////////////////////////////////////////////////////////////////////////
-
 PathPlannerWaypoint::PathPlannerWaypoint()
 	: PathPlannerBase()
 	, m_Client					(0)
@@ -84,7 +79,6 @@ PathPlannerWaypoint::PathPlannerWaypoint()
 	, m_NextUID					(0)
 	, m_GoodPathQueries			(0)
 	, m_BadPathQueries			(0)
-	, m_PlannerWpInterface		(0)
 	, m_WaypointMark			(0)
 	, m_MovingWaypointIndex		(-1)
 	, m_BoxStart				(Vector3f::ZERO)
@@ -117,15 +111,15 @@ int PathPlannerWaypoint::GetLatestFileVersion() const
 	return rIt->first;
 }
 
-bool PathPlannerWaypoint::Init()
+bool PathPlannerWaypoint::Init( System & system )
 {
 	m_BlockableRegulator.reset(new Regulator(2000));
 	m_RadiusMarkRegulator.reset(new Regulator(200));
 
 	InitCommands();
 
-	// Allow the game to register a path check callback.
-	m_PlannerWpInterface = IGameManager::GetInstance()->GetGame();
+	m_CallbackFlags = system.mGame->WaypointCallbackFlags();
+	m_BlockableMask = system.mGame->WaypointBlockableFlags();
 
 	// todo, any data structure initialization
 	return true;
@@ -406,7 +400,7 @@ void PathPlannerWaypoint::UpdateNavRender()
 	}
 }
 
-void PathPlannerWaypoint::Update()
+void PathPlannerWaypoint::Update( System & system )
 {
 	Prof(PathPlannerWaypoint);
 
@@ -414,14 +408,14 @@ void PathPlannerWaypoint::Update()
 		UpdateNavRender();
 
 	// TODO: run any time spliced paths.
-	if(m_BlockableRegulator->IsReady() && m_PlannerWpInterface)
+	if( m_BlockableRegulator->IsReady() )
 	{
-		bool bDrawTests = IGameManager::GetInstance()->GetGame()->DrawBlockableTests();
+		bool bDrawTests = system.mGame->DrawBlockableTests();
 
 		ConnectionList::iterator it = m_BlockableList.begin(), itEnd = m_BlockableList.end();
 		for( ; it != itEnd; ++it)
 		{
-			PathPlannerWaypointInterface::BlockableStatus bl = m_PlannerWpInterface->WaypointPathCheck((*it).first, (*it).second->m_Connection, bDrawTests);
+			PathPlannerWaypointInterface::BlockableStatus bl = system.mGame->WaypointPathCheck((*it).first, (*it).second->m_Connection, bDrawTests);
 
 			switch(bl)
 			{
@@ -438,7 +432,7 @@ void PathPlannerWaypoint::Update()
 
 					//////////////////////////////////////////////////////////////////////////
 					Event_DynamicPathsChanged m(0xFFFF, (*it).second->m_Connection->GetUID());
-					IGameManager::GetInstance()->GetGame()->DispatchGlobalEvent(
+					system.mGame->DispatchGlobalEvent(
 						MessageHelper(MESSAGE_DYNAMIC_PATHS_CHANGED,&m,sizeof(m)));
 				}
 				break;

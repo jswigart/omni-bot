@@ -144,9 +144,6 @@
     <ClCompile Include="..\..\..\Common\MapGoalDatabase.cpp">
       <Filter>Core\MapGoals</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\NavigationManager.cpp">
-      <Filter>Core\Navigation</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\Path.cpp">
       <Filter>Core\Navigation</Filter>
     </ClCompile>
@@ -201,9 +198,6 @@
     <ClCompile Include="..\..\..\Common\PathPlannerNavMeshCmds.cpp">
       <Filter>Core\Navigation\PathPlannerNavMesh</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\PathPlannerNavMeshScript.cpp">
-      <Filter>Core\Navigation\PathPlannerNavMesh</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\PathPlannerFloodFill.cpp">
       <Filter>Core\Navigation\PathPlannerFloodFill</Filter>
     </ClCompile>
@@ -213,16 +207,10 @@
     <ClCompile Include="..\..\..\Common\PathPlannerFloodFillCmds.cpp">
       <Filter>Core\Navigation\PathPlannerFloodFill</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\PathPlannerFloodFillScript.cpp">
-      <Filter>Core\Navigation\PathPlannerFloodFill</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\PathPlannerRecast.cpp">
       <Filter>Core\Navigation\PathPlannerRecast</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\PathPlannerRecastCmds.cpp">
-      <Filter>Core\Navigation\PathPlannerRecast</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\PathPlannerRecastScript.cpp">
       <Filter>Core\Navigation\PathPlannerRecast</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\gmAABB.cpp">
@@ -621,6 +609,9 @@
     <ClCompile Include="..\..\..\Common\RenderBuffer.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Common\System.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Common\Client.h">
@@ -679,9 +670,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Common\MessageHelper.h">
       <Filter>Core\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\NavigationManager.h">
-      <Filter>Core\Navigation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\Path.h">
       <Filter>Core\Navigation</Filter>
@@ -1131,6 +1119,9 @@
       <Filter>Core\Concurrency</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\RenderBuffer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\System.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

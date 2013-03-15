@@ -567,7 +567,8 @@ void PathPlannerWaypoint::cmdWaypointView(const StringVector &_args)
 		if(Utils::StringToTrue(_args[1]))
 		{
 			m_PlannerFlags.SetFlag(NAV_VIEW);
-			const char * msg = IGameManager::GetInstance()->GetGame()->IsDebugDrawSupported();
+
+			const char * msg = System::mInstance->mGame->IsDebugDrawSupported();
 			if(msg){
 				EngineFuncs::ConsoleError(msg);
 				return;

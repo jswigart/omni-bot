@@ -9,7 +9,7 @@
 #include "JA_GoalManager.h"
 #include "JA_NavigationFlags.h"
 
-#include "PathPlannerWaypoint.h"
+#include "Waypoint.h"
 
 JA_GoalManager::JA_GoalManager()
 {

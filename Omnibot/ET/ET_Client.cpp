@@ -17,7 +17,7 @@
 #include "ET_InterfaceFuncs.h"
 #include "ET_Game.h"
 
-#include "PathPlannerWaypoint.h"
+#include "Waypoint.h"
 
 //////////////////////////////////////////////////////////////////////////
 // MOVE THIS

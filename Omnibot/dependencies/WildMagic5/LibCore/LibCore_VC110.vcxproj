@@ -63,6 +63,7 @@
     </ClCompile>
     <Lib>
       <OutputFile>$(TargetPath)</OutputFile>
+      <TargetMachine>MachineX86</TargetMachine>
     </Lib>
     <PostBuildEvent>
       <Command>mkdir ..\SDK\Include
@@ -100,6 +101,7 @@ xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Config
     </ClCompile>
     <Lib>
       <OutputFile>$(TargetPath)</OutputFile>
+      <TargetMachine>MachineX86</TargetMachine>
     </Lib>
     <PostBuildEvent>
       <Command>

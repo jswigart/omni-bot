@@ -14,10 +14,10 @@
 #include "RTCW_BaseStates.h"
 #include "RTCW_InterfaceFuncs.h"
 
+#include "System.h"
+#include "Waypoint.h"
 #include "BotTargetingSystem.h"
 #include "BotWeaponSystem.h"
-
-#include "PathPlannerWaypoint.h"
 
 //////////////////////////////////////////////////////////////////////////
 // MOVE THIS

@@ -24,7 +24,7 @@ class gmTableObject;
 class Skeleton_Game : public IGame
 {
 public:
-	bool Init();
+	bool Init( System & system );
 
 	void RegisterNavigationFlags(PathPlannerBase *_planner);
 
@@ -44,7 +44,9 @@ public:
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
 
 	// PathPlannerWaypointInterface
-	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw);
+	NavFlags WaypointBlockableFlags() const;
+	NavFlags WaypointCallbackFlags() const;
+	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const;
 
 	Skeleton_Game() {};
 	virtual ~Skeleton_Game() {};

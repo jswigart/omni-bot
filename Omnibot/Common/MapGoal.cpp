@@ -10,7 +10,6 @@
 #include "gmBind.h"
 #include "gmbinder2_class.h"
 #include "ScriptManager.h"
-#include "NavigationManager.h"
 #include "PathPlannerBase.h"
 #include "InterfaceFuncs.h"
 #include "TriggerManager.h"
@@ -224,8 +223,7 @@ void MapGoal::GenerateName(int _instance, bool _skipdupecheck)
 	if(m_TagName.empty())
 	{
 		std::string sNavName;
-		PathPlannerBase *pBase = NavigationManager::GetInstance()->GetCurrentPathPlanner();
-		pBase->GetNavInfo(GetPosition(),iNavId,m_TagName);
+		System::mInstance->mNavigation->GetNavInfo(GetPosition(),iNavId,m_TagName);
 	}
 
 	std::string gtype = GetGoalType();
@@ -1152,14 +1150,14 @@ void MapGoal::BindProperties()
 	{
 		int EnumSize = 0;
 		const IntEnum *Enum = 0;
-		IGameManager::GetInstance()->GetGame()->GetTeamEnumeration(Enum,EnumSize);
+		System::mInstance->mGame->GetTeamEnumeration(Enum,EnumSize);
 		BindProperty("Available",m_AvailableTeamsInit,0,Enum,EnumSize);
 	}
 
 	{
 		int EnumSize = 0;
 		const IntEnum *Enum = 0;
-		IGameManager::GetInstance()->GetGame()->GetRoleEnumeration(Enum,EnumSize);
+		System::mInstance->mGame->GetRoleEnumeration(Enum,EnumSize);
 		BindProperty("Roles",m_RoleMask,0,Enum,EnumSize);
 	}
 
@@ -1352,16 +1350,14 @@ void MapGoal::CheckForPersistentPriority()
 
 void MapGoal::DrawRoute( const obColor _color, float _duration)
 {
-	PathPlannerBase *planner = NavigationManager::GetInstance()->GetCurrentPathPlanner();
-
 	Routes::const_iterator cIt = m_Routes.begin(), cItEnd = m_Routes.end();
 	for(; cIt != cItEnd; ++cIt)
 	{
 		const Route &r = (*cIt);
-		planner->PlanPathToGoal(NULL,r.m_Start->GetPosition(),r.m_End->GetPosition(),0);
+		System::mInstance->mNavigation->PlanPathToGoal(NULL,r.m_Start->GetPosition(),r.m_End->GetPosition(),0);
 
 		Path p;
-		planner->GetPath(p);
+		System::mInstance->mNavigation->GetPath(p);
 		p.DebugRender( _color );
 	}
 }
@@ -1504,7 +1500,7 @@ bool MapGoal::SaveToTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_savetab
 
 		int NumElements = 0;
 		const IntEnum *Enum = 0;
-		IGameManager::GetInstance()->GetGame()->GetRoleEnumeration(Enum,NumElements);
+		System::mInstance->mGame->GetRoleEnumeration(Enum,NumElements);
 		for(int i = 0; i < 32; ++i)
 		{
 			if(m_RoleMask.CheckFlag(i))
@@ -1609,7 +1605,7 @@ bool MapGoal::LoadFromTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_loadt
 	{
 		int NumElements = 0;
 		const IntEnum *Enum = 0;
-		IGameManager::GetInstance()->GetGame()->GetRoleEnumeration(Enum,NumElements);
+		System::mInstance->mGame->GetRoleEnumeration(Enum,NumElements);
 
 		gmTableIterator tIt;
 		gmTableNode * pNodeRole = roleTable->GetFirst(tIt);

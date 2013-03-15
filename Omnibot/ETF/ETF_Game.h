@@ -23,7 +23,7 @@ class gmTableObject;
 class ETF_Game : public TF_Game
 {
 public:
-	bool Init();
+	bool Init( System & system );
 
 	//void AddBot(const std::string &_name, int _team, int _class, const std::string _profile, bool _createnow);
 

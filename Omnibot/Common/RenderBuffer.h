@@ -48,6 +48,7 @@ public:
 		Vector3f		v;
 		obColor			c;
 		std::string		str;
+		float			radius;
 	};
 
 	typedef std::vector<Point>		PointList;
@@ -76,6 +77,7 @@ public:
 	static void AddPolygonSilouette( const Vector3List & verts, obColor col );
 	static void AddCircle( const Vector3f & v, float radius, const obColor & col, const Vector3f & up = Vector3f::UNIT_Z );
 	static void AddString3d( const Vector3f & v, const obColor & col, const char * str );
+	static void AddString3dRadius( const Vector3f & v, const obColor & col, float radius, const char * str );
 	static void AddString2d( const Vector2f & v, const obColor & col, const char * str );
 	static void AddAABB(const AABB &_aabb, const obColor &_color, AABB::Direction _dir = AABB::DIR_ALL);
 	static void AddOBB(const Box3f &_obb, const obColor &_color, AABB::Direction _dir = AABB::DIR_ALL);

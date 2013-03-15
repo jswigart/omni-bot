@@ -29,14 +29,19 @@ message SectorVert
 
 message SectorData
 {
-	optional bool		enabled		= 1 [default = true,	(doc)="Is this sector enabled for use"];
-	optional bool		team1		= 2 [default = false,	(doc)="Is this sector usable by team1"];
-	optional bool		team2		= 3 [default = false,	(doc)="Is this sector usable by team2"];
-	optional bool		team3		= 4 [default = false,	(doc)="Is this sector usable by team3"];
-	optional bool		team4		= 5 [default = false,	(doc)="Is this sector usable by team4"];
-	optional bool		inwater		= 6 [default = false,	(doc)="Is this sector in water"];
-	optional bool		onmover		= 7 [default = false,	(doc)="Is this sector on a dynamic mover"];
-	optional string		location	= 8;
+	optional bool		enabled			= 1		[default = true, (doc)="Is this sector enabled for use"];
+	optional string		location		= 2		[(doc)="Global location string for communication"];
+	optional string		locationteam1	= 3		[(doc)="Team1 location string for communication"];
+	optional string		locationteam2	= 4		[(doc)="Team2 location string for communication"];
+	optional string		locationteam3	= 5		[(doc)="Team3 location string for communication"];
+	optional string		locationteam4	= 6		[(doc)="Team4 location string for communication"];
+	optional bool		team1			= 7		[default = false, (doc)="Is this sector usable by team1"];
+	optional bool		team2			= 8		[default = false, (doc)="Is this sector usable by team2"];
+	optional bool		team3			= 9		[default = false, (doc)="Is this sector usable by team3"];
+	optional bool		team4			= 10	[default = false, (doc)="Is this sector usable by team4"];
+	optional bool		inwater			= 11	[default = false, (doc)="Is this sector in water"];
+	optional bool		onmover			= 12	[default = false, (doc)="Is this sector on a dynamic mover"];
+	
 }
 
 message Sector 

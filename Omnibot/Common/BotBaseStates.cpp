@@ -1185,8 +1185,7 @@ namespace AiState
 
 	bool FollowPath::GotoRandomPt(FollowPathUser *_owner, MoveMode _movemode /*= Run*/)
 	{
-		PathPlannerBase *pPathPlanner = IGameManager::GetInstance()->GetNavSystem();
-		Vector3f vDestination = pPathPlanner->GetRandomDestination(GetClient(),GetClient()->GetPosition(),GetClient()->GetTeamFlag());
+		Vector3f vDestination = System::mInstance->mNavigation->GetRandomDestination(GetClient(),GetClient()->GetPosition(),GetClient()->GetTeamFlag());
 		return Goto(_owner,vDestination);
 	}
 
@@ -1277,12 +1276,17 @@ namespace AiState
 		m_Query.m_User->ResetPathUser();
 		m_PathThroughPtIndex = -1;
 
-		PathPlannerBase *pPathPlanner = IGameManager::GetInstance()->GetNavSystem();
-		m_Query.m_User->m_DestinationIndex = pPathPlanner->PlanPathToNearest(GetClient(), GetClient()->GetPosition(), m_Query.m_Destination, GetClient()->GetTeamFlag());
-		if(pPathPlanner->FoundGoal())
+		m_Query.m_User->m_DestinationIndex =
+			System::mInstance->mNavigation->PlanPathToNearest(
+			GetClient(),
+			GetClient()->GetPosition(),
+			m_Query.m_Destination,
+			GetClient()->GetTeamFlag() );
+
+		if( System::mInstance->mNavigation->FoundGoal() )
 		{
 			m_CurrentPath.Clear();
-			pPathPlanner->GetPath(m_CurrentPath);
+			System::mInstance->mNavigation->GetPath(m_CurrentPath);
 			if(!m_Query.m_SkipLastPt)
 			{
 				Destination dest = m_Query.m_Destination[m_Query.m_User->m_DestinationIndex];
@@ -1321,17 +1325,16 @@ namespace AiState
 
 	bool FollowPath::QueryPath(Path &pathOut, const DestinationVector &_goals, bool _skiplastpt, float _limitexpansion)
 	{
-		PathPlannerBase *pPathPlanner = IGameManager::GetInstance()->GetNavSystem();
-		int iDestIndex = pPathPlanner->PlanPathToNearest(
+		int iDestIndex = System::mInstance->mNavigation->PlanPathToNearest(
 			0,
 			GetClient()->GetPosition(),
 			_goals,
 			GetClient()->GetTeamFlag());
 
-		if(pPathPlanner->FoundGoal())
+		if( System::mInstance->mNavigation->FoundGoal() )
 		{
 			pathOut.Clear();
-			pPathPlanner->GetPath(pathOut);
+			System::mInstance->mNavigation->GetPath(pathOut);
 			if(!m_Query.m_SkipLastPt)
 			{
 				m_CurrentPath.AddPt(

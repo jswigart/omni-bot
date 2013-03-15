@@ -683,9 +683,8 @@ bool GM_CDECL ScriptManager::ScriptSysCallback_Machine(gmMachine* a_machine, gmM
 		{
 			/*Event_SystemThreadDestroyed d = { pThread->GetId() };
 			MessageHelper evt(SYSTEM_THREAD_DESTROYED, &d, sizeof(d));
-			IGameManager::GetInstance()->GetGame()->DispatchGlobalEvent(evt);*/
-
-			IGameManager::GetInstance()->GetGame()->AddDeletedThread(pThread->GetId());
+			System::mInstance->mGame->DispatchGlobalEvent(evt);*/
+			System::mInstance->mGame->AddDeletedThread(pThread->GetId());
 		}
 	default:
 		break;
@@ -821,18 +820,18 @@ void ScriptManager::GetAutoCompleteList(const std::string &_string, StringVector
 
 void ScriptManager::InitCommands()
 {
-	Set("script_stats", "Shows scripting system memory usage/stats",
-		CommandFunctorPtr(new CommandFunctorT<ScriptManager>(this, &ScriptManager::cmdScriptStats)));
-	Set("script_collect", "Performs a garbage collection",
-		CommandFunctorPtr(new CommandFunctorT<ScriptManager>(this, &ScriptManager::cmdScriptCollect)));
-	Set("script_runfile", "Executes a specified script file",
-		CommandFunctorPtr(new CommandFunctorT<ScriptManager>(this, &ScriptManager::cmdScriptRunFile)));
-	Set("script_debug", "Enables/disables debug messages in the scripting system.",
-		CommandFunctorPtr(new CommandFunctorT<ScriptManager>(this, &ScriptManager::cmdDebugScriptSystem)));
-	Set("script_run", "Executes a std::string as a script snippet.",
-		CommandFunctorPtr(new CommandFunctorT<ScriptManager>(this, &ScriptManager::cmdScriptExecute)));
-	Set("script_docs", "Dumps a file of gm bound type info.",
-		CommandFunctorPtr(new CommandFunctorT<ScriptManager>(this, &ScriptManager::cmdScriptWriteDocs)));
+	SetEx("script_stats", "Shows scripting system memory usage/stats",
+		this, &ScriptManager::cmdScriptStats);
+	SetEx("script_collect", "Performs a garbage collection",
+		this, &ScriptManager::cmdScriptCollect);
+	SetEx("script_runfile", "Executes a specified script file",
+		this, &ScriptManager::cmdScriptRunFile);
+	SetEx("script_debug", "Enables/disables debug messages in the scripting system.",
+		this, &ScriptManager::cmdDebugScriptSystem);
+	SetEx("script_run", "Executes a std::string as a script snippet.",
+		this, &ScriptManager::cmdScriptExecute);
+	SetEx("script_docs", "Dumps a file of gm bound type info.",
+		this, &ScriptManager::cmdScriptWriteDocs);
 }
 
 void ScriptManager::cmdScriptStats(const StringVector &_args)
@@ -1003,7 +1002,7 @@ void ScriptManager::CheckLiveUpdates()
 				// send an event and update the local time.
 				Event_SystemScriptUpdated d = { i };
 				MessageHelper evt(SYSTEM_SCRIPT_CHANGED, &d, sizeof(d));
-				IGameManager::GetInstance()->GetGame()->DispatchGlobalEvent(evt);
+				System::mInstance->mGame->DispatchGlobalEvent(evt);
 
 				entry.FileModTime = modTime;
 			}

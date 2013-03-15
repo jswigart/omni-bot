@@ -11,6 +11,8 @@
 #include "Q4_GoalManager.h"
 #include "Q4_InterfaceFuncs.h"
 
+#include "System.h"
+
 #include "gmQ4Binds.h"
 
 #include "PathPlannerBase.h"
@@ -84,18 +86,18 @@ GoalManager *Q4_Game::GetGoalManager()
 	return new Q4_GoalManager;
 }
 
-bool Q4_Game::Init()
+bool Q4_Game::Init( System & system )
 {
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(Q4_Game::Q4_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(Q4_Game::Q4_GetEntityClassAimOffset);
 
-	if(!IGame::Init())
+	if ( !IGame::Init( system ) )
 		return false;
 
 	// Run the games autoexec.
 	int threadId;
-	ScriptManager::GetInstance()->ExecuteFile("scripts/q4_autoexec.gm", threadId);
+	system.mScript->ExecuteFile("scripts/q4_autoexec.gm", threadId);
 
 	return true;
 }
@@ -312,7 +314,17 @@ const float Q4_Game::Q4_GetEntityClassAimOffset(const int _class, const BitFlag6
 }
 
 // PathPlannerWaypointInterface
-PathPlannerWaypointInterface::BlockableStatus Q4_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw)
+NavFlags Q4_Game::WaypointBlockableFlags() const
+{
+	return (NavFlags)0;
+}
+
+NavFlags Q4_Game::WaypointCallbackFlags() const
+{
+	return (NavFlags)0;
+}
+
+PathPlannerWaypointInterface::BlockableStatus Q4_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const
 {
 	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
 	return res;

@@ -14,6 +14,7 @@
 #include "CommandReciever.h"
 #include "GoalManager.h"
 
+class System;
 class TriggerShape;
 class gmFunctionObject;
 
@@ -40,7 +41,7 @@ public:
 
 	void HandleTrigger(const TriggerInfo &_triggerInfo);
 
-	void Update();
+	void Update( System & system );
 
 	//////////////////////////////////////////////////////////////////////////
 	int AddTrigger(const Vector3f &_pos, float _radius, gmMachine *_m, gmTableObject *tbl);

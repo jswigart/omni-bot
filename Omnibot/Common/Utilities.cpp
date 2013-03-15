@@ -465,7 +465,7 @@ namespace Utils
 
 	const char *FindClassName(obint32 _classId)
 	{
-		return IGameManager::GetInstance()->GetGame()->FindClassName(_classId);
+		return System::mInstance->mGame->FindClassName(_classId);
 	}
 
 	obint32 GetRoleMask(const std::string &_name)
@@ -498,7 +498,7 @@ namespace Utils
 
 		int EnumSize = 0;
 		const IntEnum *Enum = 0;
-		IGameManager::GetInstance()->GetGame()->GetRoleEnumeration(Enum,EnumSize);
+		System::mInstance->mGame->GetRoleEnumeration(Enum,EnumSize);
 
 		for(int r = 0; r < EnumSize; ++r)
 		{
@@ -1698,8 +1698,6 @@ std::string Utils::GetTeamString(obint32 _team)
 
 std::string Utils::GetClassString(obint32 _class)
 {
-	IGame *pGame = IGameManager::GetInstance()->GetGame();
-
 	std::string sOut;
 	bool bAllClasses = true;
 
@@ -1708,7 +1706,7 @@ std::string Utils::GetClassString(obint32 _class)
 	{
 		if(_class & (1<<c))
 		{
-			const char *classname = pGame->FindClassName(c);
+			const char *classname = System::mInstance->mGame->FindClassName(c);
 			sOut += (classname?classname:"!!!");
 			sOut += " ";
 		}
@@ -2161,5 +2159,5 @@ obColor GetCoolWarmColor( float scalar )
 		obColor( 180, 4, 38 ),
 	};
 	const int numMappings = sizeof(mapping)/sizeof(mapping[0]);
-	return mapping[ ClampT<int>( scalar * numMappings, 0, numMappings ) ];
+	return mapping[ ClampT<int>( (int)(scalar * numMappings), 0, numMappings ) ];
 }

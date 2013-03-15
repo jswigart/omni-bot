@@ -11,6 +11,7 @@
 #include "TF_BaseStates.h"
 #include "FF_Client.h"
 
+#include "System.h"
 #include "ScriptManager.h"
 
 BOOST_STATIC_ASSERT( FF_TEAM_MAX == TF_TEAM_MAX );
@@ -71,9 +72,9 @@ const char *FF_Game::GetScriptSubfolder() const
 #endif
 }
 
-bool FF_Game::Init()
+bool FF_Game::Init( System & system )
 {
-	if(!TF_Game::Init())
+	if ( !TF_Game::Init( system ) )
 		return false;
 
 	// Set the sensory systems callback for getting aim offsets for entity types.
@@ -82,7 +83,7 @@ bool FF_Game::Init()
 
 	// Run the games autoexec.
 	int threadId;
-	ScriptManager::GetInstance()->ExecuteFile("scripts/ff_autoexec.gm", threadId);
+	system.mScript->ExecuteFile("scripts/ff_autoexec.gm", threadId);
 
 	TF_Options::DisguiseTeamFlags[ FF_TEAM_BLUE ] = TF_PWR_DISGUISE_BLUE;
 	TF_Options::DisguiseTeamFlags[ FF_TEAM_RED ] = TF_PWR_DISGUISE_RED;

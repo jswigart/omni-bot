@@ -8,7 +8,8 @@
 
 #include "RTCW_GoalManager.h"
 #include "RTCW_NavigationFlags.h"
-#include "PathPlannerWaypoint.h"
+
+#include "Waypoint.h"
 
 RTCW_GoalManager::RTCW_GoalManager()
 {

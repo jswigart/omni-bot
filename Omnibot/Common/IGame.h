@@ -20,6 +20,7 @@
 #include "PropertyBinding.h"
 #include "Regulator.h"
 
+class System;
 class State;
 class Client;
 class CheckCriteria;
@@ -62,9 +63,9 @@ public:
 	};
 	static const GameVars &GetGameVars() { return m_GameVars; }
 
-	virtual bool Init();
+	virtual bool Init( System & system );
 	virtual void Shutdown();
-	virtual void UpdateGame();
+	virtual void UpdateGame( System & system );
 	virtual void StartGame();
 	virtual void EndGame();
 	virtual void NewRound();
@@ -174,6 +175,9 @@ public:
 	virtual void InternalSyncEntity( const EntityInstance & ent, RemoteLib::DebugConnection * connection );
 #endif
 
+	bool AddUpdateFunction(const std::string &_name, FunctorPtr _func);
+	bool RemoveUpdateFunction(const std::string &_name);
+
 	IGame();
 	virtual ~IGame();
 protected:
@@ -198,6 +202,8 @@ protected:
 	static GameVars		m_GameVars;
 
 	Module				m_AttachedGui;
+
+	FunctorMap			m_UpdateMap;
 
 	enum { MaxDeletedThreads = 1024 };
 	int			m_DeletedThreads[MaxDeletedThreads];
@@ -247,6 +253,8 @@ protected:
 	void cmdDrawBlockableTests(const StringVector &_args);
 	void cmdPrintFileSystem(const StringVector &_args);
 	void cmdTraceBenchmark(const StringVector &_args);
+	void cmdShowProcesses(const StringVector &_args);
+	void cmdStopProcess(const StringVector &_args);
 
 	// Server settings
 	RegulatorPtr	m_SettingLimiter;
@@ -256,6 +264,8 @@ protected:
 	bool			m_bDrawBlockableTests;
 
 	void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+
+	void UpdateProcesses();
 };
 
 #endif
