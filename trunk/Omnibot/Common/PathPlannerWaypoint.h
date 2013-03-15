@@ -90,8 +90,8 @@ public:
 		}
 	};
 
-	bool Init();
-	void Update();
+	bool Init( System & system );
+	void Update( System & system );
 	void Shutdown();
 	bool IsReady() const;
 
@@ -189,12 +189,11 @@ public:
 	SectorList g_SectorList;
 	Sector m_CreatingSector;
 
-	static NavFlags			m_CallbackFlags;
-	static NavFlags			m_BlockableMask;
-
 	void BuildFlagMap();
 	//void BuildVisTable();
 	void BuildBlockableList();
+
+	NavFlags GetBlockableMask() const { return m_BlockableMask; }
 
 	const char *GetPlannerName() const { return "Waypoint Path Planner"; } ;
 	int GetPlannerType() const { return NAVID_WP; };
@@ -238,7 +237,8 @@ protected:
 	int					m_GoodPathQueries;
 	int					m_BadPathQueries;
 
-	PathPlannerWaypointInterface * m_PlannerWpInterface;
+	NavFlags			m_CallbackFlags;
+	NavFlags			m_BlockableMask;
 
 	// Utility Functions
 	void BuildSpatialDatabase();

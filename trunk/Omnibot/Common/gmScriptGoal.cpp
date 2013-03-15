@@ -990,7 +990,7 @@ int gmScriptGoal::gmfAddFinishCriteria(gmThread *a_thread)
 
 	CheckCriteria c;
 	std::stringstream err;
-	if(IGameManager::GetInstance()->GetGame()->CreateCriteria(a_thread,c,err))
+	if( System::mInstance->mGame->CreateCriteria(a_thread,c,err) )
 	{
 		a_thread->PushInt(native->AddFinishCriteria(c) ? 1 : 0);
 	}

@@ -9,6 +9,7 @@
 #include "HL2DM_Game.h"
 #include "HL2DM_Client.h"
 
+#include "System.h"
 #include "ScriptManager.h"
 
 #include "PathPlannerBase.h"
@@ -63,18 +64,18 @@ const char *HL2DM_Game::GetScriptSubfolder() const
 	return "hl2dm\\scripts\\";
 }
 
-bool HL2DM_Game::Init()
+bool HL2DM_Game::Init( System & system )
 {
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(HL2DM_Game::HL2DM_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(HL2DM_Game::HL2DM_GetEntityClassAimOffset);
 
-	if(!IGame::Init())
+	if ( !IGame::Init( system ) )
 		return false;
 
 	// Run the games autoexec.
 	int threadId;
-	ScriptManager::GetInstance()->ExecuteFile("scripts/hl2dm_autoexec.gm", threadId);
+	system.mScript->ExecuteFile("scripts/hl2dm_autoexec.gm", threadId);
 
 	return true;
 }
@@ -185,7 +186,17 @@ const float HL2DM_Game::HL2DM_GetEntityClassAimOffset(const int _class, const Bi
 }
 
 // PathPlannerWaypointInterface
-PathPlannerWaypointInterface::BlockableStatus HL2DM_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw)
+NavFlags HL2DM_Game::WaypointBlockableFlags() const
+{
+	return (NavFlags)0;
+}
+
+NavFlags HL2DM_Game::WaypointCallbackFlags() const
+{
+	return (NavFlags)0;
+}
+
+PathPlannerWaypointInterface::BlockableStatus HL2DM_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const
 {
 	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
 	return res;

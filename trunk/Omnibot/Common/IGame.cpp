@@ -8,7 +8,6 @@
 
 #include "NameManager.h"
 #include "ScriptManager.h"
-#include "NavigationManager.h"
 #include "NavigationFlags.h"
 #include "WeaponDatabase.h"
 #include "MapGoalDatabase.h"
@@ -81,7 +80,7 @@ GoalManager *IGame::GetGoalManager()
 	return new GoalManager;
 }
 
-bool IGame::Init()
+bool IGame::Init( System & system )
 {
 	GetGameVars(m_GameVars);
 
@@ -124,6 +123,8 @@ bool IGame::Init()
 
 void IGame::Shutdown()
 {
+	m_UpdateMap.clear();
+
 	if(GameStarted())
 	{
 		EndGame();
@@ -643,7 +644,7 @@ void IGame::RegisterNavigationFlags(PathPlannerBase *_planner)
 	_planner->RegisterNavFlag("ROUTE",		F_NAV_ROUTEPT);
 }
 
-void IGame::UpdateGame()
+void IGame::UpdateGame( System & system )
 {
 	Prof(GameUpdate);
 
@@ -677,8 +678,27 @@ void IGame::UpdateGame()
 
 	g_Blackboard.PurgeExpiredRecords();
 
+	UpdateProcesses();
+
 	// Increment the game frame.
 	++m_GameFrame;
+}
+
+void IGame::UpdateProcesses()
+{
+	Prof(Processes);
+
+	FunctorMap::iterator it = m_UpdateMap.begin();
+	for(; it != m_UpdateMap.end(); )
+	{
+		if((*(*it).second)() == Function_Finished)
+		{
+			EngineFuncs::ConsoleMessage(va("Finished Process: %s", (*it).first.c_str()));
+			m_UpdateMap.erase(it++);
+		}
+		else
+			++it;
+	}
 }
 
 #ifdef ENABLE_REMOTE_DEBUGGING
@@ -867,7 +887,7 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 				m_GameEntities[index].m_EntityCategory = m->m_EntityCategory;
 				m_GameEntities[index].m_TimeStamp = IGame::GetTime();
 
-				NavigationManager::GetInstance()->GetCurrentPathPlanner()->EntityCreated(m_GameEntities[index]);
+				System::mInstance->mNavigation->EntityCreated(m_GameEntities[index]);
 
 #ifdef _DEBUG
 				const char *pClassName = FindClassName(m->m_EntityClass);
@@ -910,12 +930,10 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 				}
 
 				GoalManager::GetInstance()->RemoveGoalByEntity(m->m_Entity);
-
 				//////////////////////////////////////////////////////////////////////////
-				PathPlannerBase *pPlanner = NavigationManager::GetInstance()->GetCurrentPathPlanner();
-				if(pPlanner)
+				if ( System::mInstance->mNavigation )
 				{
-					pPlanner->RemoveEntityConnection(m->m_Entity);
+					System::mInstance->mNavigation->RemoveEntityConnection(m->m_Entity);
 				}
 			}
 			break;
@@ -962,10 +980,9 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 			const Event_EntityConnection *m = _message.Get<Event_EntityConnection>();
 			if(m)
 			{
-				PathPlannerBase *pPlanner = NavigationManager::GetInstance()->GetCurrentPathPlanner();
-				if(pPlanner)
+				if ( System::mInstance->mNavigation )
 				{
-					pPlanner->AddEntityConnection(*m);
+					System::mInstance->mNavigation->AddEntityConnection(*m);
 				}
 			}
 			break;
@@ -1141,7 +1158,7 @@ void IGame::InitMapScript()
 	if(!goalsLoaded)
 	{
 		// register nav system goals
-		IGameManager::GetInstance()->GetNavSystem()->RegisterGameGoals();
+		System::mInstance->mNavigation->RegisterGameGoals();
 	}
 
 	GoalManager::GetInstance()->InitGameGoals();
@@ -1196,7 +1213,7 @@ void IGame::CheckServerSettings(bool managePlayers)
 {
 	Prof(CheckServerSettings);
 
-	if(!NavigationManager::GetInstance()->GetCurrentPathPlanner()->IsReady())
+	if(!System::mInstance->mNavigation->IsReady())
 		return;
 
 	obPlayerInfo pi;
@@ -1277,6 +1294,10 @@ void IGame::InitCommands()
 		this, &IGame::cmdRevision);
 	SetEx("print_filesystem", "Prints files from file system.",
 		this, &IGame::cmdPrintFileSystem);
+	SetEx("stopprocess", "Stops a process by its name.",
+		this, &IGame::cmdStopProcess );
+	SetEx("showprocesses", "Shows current proccesses.",
+		this, &IGame::cmdShowProcesses );
 }
 
 bool IGame::UnhandledCommand(const StringVector &_args)
@@ -1429,7 +1450,7 @@ void IGame::cmdKickAll(const StringVector &_args)
 
 void IGame::cmdAddbot(const StringVector &_args)
 {
-	if(!NavigationManager::GetInstance()->GetCurrentPathPlanner()->IsReady())
+	if(!System::mInstance->mNavigation->IsReady())
 	{
 		EngineFuncs::ConsoleError(va("No navigation file loaded, unable to add bots."));
 		return;
@@ -1534,6 +1555,48 @@ void IGame::cmdReloadWeaponDatabase(const StringVector &_args)
 {
 	g_WeaponDatabase.LoadWeaponDefinitions(true);
 	DispatchGlobalEvent(MessageHelper(MESSAGE_REFRESHALLWEAPONS));
+}
+
+void IGame::cmdShowProcesses(const StringVector &_args)
+{
+	EngineFuncs::ConsoleMessage(va("# Processes: %d!", m_UpdateMap.size()));
+	FunctorMap::iterator it = m_UpdateMap.begin(), itEnd = m_UpdateMap.end();
+	for(; it != itEnd; ++it)
+	{
+		EngineFuncs::ConsoleMessage(va("Process: %s!", (*it).first.c_str()));
+	}
+}
+
+void IGame::cmdStopProcess(const StringVector &_args)
+{
+	if(!_args.empty())
+	{
+		RemoveUpdateFunction(_args[1]);
+	}
+}
+
+bool IGame::AddUpdateFunction(const std::string &_name, FunctorPtr _func)
+{
+	if(m_UpdateMap.find(_name) != m_UpdateMap.end())
+	{
+		EngineFuncs::ConsoleError("That process is already running!");
+		return false;
+	}
+	EngineFuncs::ConsoleMessage(va("Process %s has been started! ", _name.c_str()));
+	m_UpdateMap.insert(std::make_pair(_name, _func));
+	return true;
+}
+
+bool IGame::RemoveUpdateFunction(const std::string &_name)
+{
+	FunctorMap::iterator it = m_UpdateMap.find(_name);
+	if(it != m_UpdateMap.end())
+	{
+		EngineFuncs::ConsoleMessage(va("Process %s has been stopped! ", _name.c_str()));
+		m_UpdateMap.erase(_name.c_str());
+		return true;
+	}
+	return false;
 }
 
 void IGame::AddBot(Msg_Addbot &_addbot, bool _createnow)

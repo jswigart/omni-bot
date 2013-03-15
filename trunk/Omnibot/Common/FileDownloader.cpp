@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "FileDownloader.h"
-#include "NavigationManager.h"
+#include "System.h"
 
 #ifdef ENABLE_FILE_DOWNLOADER
 
@@ -304,7 +304,7 @@ int		gNavFileVersion = 0;
 
 bool FileDownloader::Init()
 {
-	gGameAbbrev = IGameManager::GetInstance()->GetGame()->GetGameDatabaseAbbrev();
+	gGameAbbrev = System::mInstance->mGame->GetGameDatabaseAbbrev();
 	gNavFileVersion = NavigationManager::GetInstance()->GetCurrentPathPlanner()->GetLatestFileVersion();
 
 	FileSystem::MakeDirectory("user/download");

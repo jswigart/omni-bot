@@ -10,9 +10,9 @@
 #include "OF_Client.h"
 #include "TF_BaseStates.h"
 
+#include "System.h"
 #include "gmTFBinds.h"
 
-#include "PathPlannerWaypoint.h"
 #include "ScriptManager.h"
 
 IGame *CreateGameInstance()
@@ -71,9 +71,9 @@ const char *OF_Game::GetScriptSubfolder() const
 #endif
 }
 
-bool OF_Game::Init()
+bool OF_Game::Init( System & system )
 {
-	if(!TF_Game::Init())
+	if ( !TF_Game::Init( system ) )
 		return false;
 
 	// Set the sensory systems callback for getting aim offsets for entity types.
@@ -82,11 +82,7 @@ bool OF_Game::Init()
 
 	// Run the games autoexec.
 	int threadId;
-	ScriptManager::GetInstance()->ExecuteFile("scripts/of_autoexec.gm", threadId);
-
-	PathPlannerWaypoint::m_CallbackFlags =
-		F_TF_NAV_ROCKETJUMP |
-		F_TF_NAV_CONCJUMP;
+	system.mScript->ExecuteFile("scripts/of_autoexec.gm", threadId);
 
 	// Set up OF specific data.
 	using namespace AiState;

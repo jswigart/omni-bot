@@ -136,8 +136,8 @@ public:
 
 	NavSector *GetSectorAt(const Vector3f &_pos, float _distance = 1024.f);
 
-	bool Init();
-	void Update();
+	bool Init( System & system );
+	void Update( System & system );
 	void Shutdown();
 	bool IsReady() const;
 
@@ -163,9 +163,8 @@ public:
 	void RegisterGameGoals();
 	void GetPath(Path &_path, int _smoothiterations);
 
-	virtual void RegisterNavFlag(const std::string &_name, const NavFlags &_bits) {}
-
-	void RegisterScriptFunctions(gmMachine *a_machine);
+	virtual void RegisterNavFlag(const std::string &_name, const NavFlags &_bits);
+	virtual void RegisterScriptFunctions(gmMachine *a_machine);
 
 	bool GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name);
 
@@ -184,6 +183,7 @@ protected:
 	void cmdNavLoad(const StringVector &_args);
 	void cmdNavView(const StringVector &_args);
 	void cmdNavViewConnections(const StringVector &_args);
+	void cmdNavViewFlags(const StringVector &_args);
 	void cmdNavStep(const StringVector &_args);
 	void cmdNavEnableStep(const StringVector &_args);
 	void cmdAutoBuildFeatures(const StringVector &_args);
@@ -218,13 +218,6 @@ protected:
 	void cmdNext(const StringVector &_args);
 
 	void ConnectTest();
-
-	//////////////////////////////////////////////////////////////////////////
-	// Friend functions
-	friend int GM_CDECL gmfNavMeshView(gmThread *a_thread);
-	friend int GM_CDECL gmfNavMeshViewConnections(gmThread *a_thread);
-	friend int GM_CDECL gmfNavMeshEnableStep(gmThread *a_thread);
-	friend int GM_CDECL gmfNavMeshStep(gmThread *a_thread);
 
 	//////////////////////////////////////////////////////////////////////////
 

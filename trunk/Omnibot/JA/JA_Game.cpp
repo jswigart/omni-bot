@@ -15,9 +15,11 @@
 
 #include "RenderBuffer.h"
 
-#include "PathPlannerWaypoint.h"
+#include "System.h"
+#include "PathPlannerBase.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
+#include "Waypoint.h"
 
 #include "FilterSensory.h"
 #include "BotSensoryMemory.h"
@@ -88,21 +90,18 @@ GoalManager *JA_Game::GetGoalManager()
 	return new JA_GoalManager;
 }
 
-bool JA_Game::Init()
+bool JA_Game::Init( System & system )
 {
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(JA_Game::JA_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(JA_Game::JA_GetEntityClassAimOffset);
 
-	if(!IGame::Init())
+	if ( !IGame::Init( system ) )
 		return false;
-
-	PathPlannerWaypoint::m_CallbackFlags = F_JA_NAV_FORCEJUMP;
-	PathPlannerWaypoint::m_BlockableMask = F_JA_NAV_WALL|F_JA_NAV_BRIDGE;
 
 	// Run the games autoexec.
 	int threadId;
-	ScriptManager::GetInstance()->ExecuteFile("scripts/ja_autoexec.gm", threadId);
+	system.mScript->ExecuteFile("scripts/ja_autoexec.gm", threadId);
 
 	return true;
 }
@@ -471,7 +470,17 @@ void JA_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 }
 
 // PathPlannerWaypointInterface
-PathPlannerWaypointInterface::BlockableStatus JA_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw)
+NavFlags JA_Game::WaypointBlockableFlags() const
+{
+	return F_JA_NAV_WALL|F_JA_NAV_BRIDGE;
+}
+
+NavFlags JA_Game::WaypointCallbackFlags() const
+{
+	return F_JA_NAV_FORCEJUMP;
+}
+
+PathPlannerWaypointInterface::BlockableStatus JA_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw) const
 {
 	static bool bRender = false;
 	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;

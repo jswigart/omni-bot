@@ -11,7 +11,6 @@
 #include "Waypoint.h"
 #include "Client.h"
 #include "ScriptManager.h"
-#include "NavigationManager.h"
 #include "MapGoal.h"
 #include "MapGoalDatabase.h"
 #include "gmUtilityLib.h"
@@ -484,7 +483,7 @@ void GoalManager::DeleteInstance()
 	OB_DELETE(m_Instance);
 }
 
-void GoalManager::Init()
+void GoalManager::Init( System & system )
 {
 	InitCommands();
 
@@ -1213,7 +1212,7 @@ void GoalManager::Shutdown()
 	m_MapGoalList.clear();
 }
 
-void GoalManager::Update()
+void GoalManager::Update( System & system )
 {
 	Prof(GoalManagerUpdate);
 

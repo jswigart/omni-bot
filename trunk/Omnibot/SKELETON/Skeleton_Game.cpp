@@ -9,6 +9,7 @@
 #include "Skeleton_Game.h"
 #include "Skeleton_Client.h"
 
+#include "System.h"
 #include "PathPlannerBase.h"
 #include "ScriptManager.h"
 #include "FilterSensory.h"
@@ -58,18 +59,18 @@ const char *Skeleton_Game::GetScriptSubfolder() const
 	return "skeleton\\scripts\\";
 }
 
-bool Skeleton_Game::Init()
+bool Skeleton_Game::Init( System & system )
 {
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(Skeleton_Game::Skeleton_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(Skeleton_Game::Skeleton_GetEntityClassAimOffset);
 
-	if(!IGame::Init())
+	if ( !IGame::Init( system ) )
 		return false;
 
 	// Run the games autoexec.
 	int threadId;
-	ScriptManager::GetInstance()->ExecuteFile("scripts/skeleton_autoexec.gm", threadId);
+	system.mScript->ExecuteFile("scripts/skeleton_autoexec.gm", threadId);
 
 	return true;
 }
@@ -169,7 +170,17 @@ const float Skeleton_Game::Skeleton_GetEntityClassAimOffset(const int _class, co
 }
 
 // PathPlannerWaypointInterface
-PathPlannerWaypointInterface::BlockableStatus Skeleton_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw)
+NavFlags Skeleton_Game::WaypointBlockableFlags() const
+{
+	return (NavFlags)0;
+}
+
+NavFlags Skeleton_Game::WaypointCallbackFlags() const
+{
+	return (NavFlags)0;
+}
+
+PathPlannerWaypointInterface::BlockableStatus Skeleton_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const
 {
 	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
 	return res;

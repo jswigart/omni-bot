@@ -11,14 +11,9 @@
 #ifndef __IGAMEMANAGER_H__
 #define __IGAMEMANAGER_H__
 
+#include "System.h"
 #include "CommandReciever.h"
 #include "ObjFunctor.h"
-
-class IGame;
-class GoalManager;
-class ScriptManager;
-class PathPlannerBase;
-class TaskManager;
 
 // interface: IGameManager
 //		Handles most of the common functionality of the game manager. Mods should subclass
@@ -30,6 +25,9 @@ class IGameManager : public CommandReciever
 #endif
 {
 public:
+	IGameManager();
+	virtual ~IGameManager() {};
+
 	/*
 	Function: CreateGame
 	Initializes the bot library based on the provided game type
@@ -56,28 +54,12 @@ public:
 	*/
 	void UpdateGame();
 
-	inline IGame *GetGame()					{ return m_Game; }
-	inline PathPlannerBase *GetNavSystem()	{ return m_PathPlanner; }
-	inline TaskManager * GetTaskMgr()		{ return m_TaskManager; }
-
-	bool AddUpdateFunction(const std::string &_name, FunctorPtr _func);
-	bool RemoveUpdateFunction(const std::string &_name);
 #ifdef ENABLE_REMOTE_DEBUGGING
 	void SyncRemoteDelete( int entityHandle );
 	void SyncRemoteMessage( const RemoteLib::DataBuffer & db );
 #endif
-	// Singleton Accessors
-	static IGameManager *GetInstance();
-	static void DeleteInstance();
 protected:
-
-	ScriptManager						*m_ScriptManager;
-	PathPlannerBase						*m_PathPlanner;
-	GoalManager							*m_GoalManager;
-	IGame								*m_Game;
-	TaskManager							*m_TaskManager;
-
-	FunctorMap							m_UpdateMap;
+	System				mBotSystem;
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 	RemoteLib::ConnectionManagerServer	m_Remote;
@@ -93,12 +75,7 @@ protected:
 	void cmdUpdateNavFile(const StringVector &_args);
 	void cmdUpdateAllNavFiles(const StringVector &_args);
 #endif
-	void cmdShowProcesses(const StringVector &_args);
-	void cmdStopProcess(const StringVector &_args);
 
-	static IGameManager	*m_Instance;
-	IGameManager();
-	virtual ~IGameManager() {};
 	IGameManager &operator=(const IGameManager&);
 };
 

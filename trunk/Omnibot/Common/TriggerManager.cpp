@@ -626,7 +626,7 @@ bool operator<(const GameEntity& _v1, const GameEntity& _v2)
 
 //////////////////////////////////////////////////////////////////////////
 
-void TriggerManager::Update()
+void TriggerManager::Update( System & system )
 {
 	Prof(TriggerManager_Update);
 

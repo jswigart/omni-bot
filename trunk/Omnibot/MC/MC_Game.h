@@ -23,7 +23,7 @@ class gmTableObject;
 class MC_Game : public IGame
 {
 public:
-	bool Init();
+	bool Init( System & system );
 
 	void InitScriptBinds(gmMachine *_machine);
 
@@ -49,7 +49,9 @@ public:
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
 
 	// PathPlannerWaypointInterface
-	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw);
+	NavFlags WaypointBlockableFlags() const;
+	NavFlags WaypointCallbackFlags() const;
+	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const;
 
 	MC_Game() {};
 	virtual ~MC_Game() {};

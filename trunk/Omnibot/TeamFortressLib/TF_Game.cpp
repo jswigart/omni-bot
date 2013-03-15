@@ -9,13 +9,13 @@
 #include "TF_Game.h"
 #include "TF_GoalManager.h"
 
+#include "System.h"
+
 #include "gmTFBinds.h"
 
-#include "NavigationManager.h"
-#include "PathPlannerWaypoint.h"
-#include "ScriptManager.h"
 #include "NameManager.h"
 
+#include "PathPlannerBase.h"
 #include "BotSensoryMemory.h"
 #include "BotSteeringSystem.h"
 #include "FilterSensory.h"
@@ -27,23 +27,12 @@ GoalManager *TF_Game::GetGoalManager()
 	return new TF_GoalManager;
 }
 
-bool TF_Game::Init()
+bool TF_Game::Init( System & system )
 {
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(TF_Game::TF_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(TF_Game::TF_GetEntityClassAimOffset);
-
-	PathPlannerWaypoint::m_CallbackFlags =
-		F_TF_NAV_ROCKETJUMP |
-		F_TF_NAV_CONCJUMP |
-		F_NAV_TELEPORT |
-		F_TF_NAV_DOUBLEJUMP;
-
-	PathPlannerWaypoint::m_BlockableMask =
-		F_TF_NAV_WALL |
-		F_TF_NAV_DETPACK;
-
-	return IGame::Init();
+	return IGame::Init( system );
 }
 
 void TF_Game::Shutdown()
@@ -425,10 +414,9 @@ void TF_Game::ProcessEvent(const MessageHelper &_message, CallbackParameters &_c
 {
 	IGame::ProcessEvent(_message,_cb);
 
-	PathPlannerBase *pPlanner = NavigationManager::GetInstance()->GetCurrentPathPlanner();
-	if(pPlanner->IsViewOn() && pPlanner->IsAutoDetectFlagsOn())
+	if ( System::mInstance->mNavigation->IsViewOn() && System::mInstance->mNavigation->IsAutoDetectFlagsOn() )
 	{
-		switch(_message.GetMessageId())
+		switch ( _message.GetMessageId() )
 		{
 		case GAME_ENTITYCREATED:
 			{
@@ -450,12 +438,12 @@ void TF_Game::ProcessEvent(const MessageHelper &_message, CallbackParameters &_c
 						//RenderBuffer::AddLine(GetClient()->GetEyePosition(), _aimpos, COLOR::GREEN, 20.f);
 
 						// Auto Nav
-						if(pPlanner->GetPlannerType() == NAVID_WP)
+						if( System::mInstance->mNavigation->GetPlannerType() == NAVID_WP )
 						{
 							vEntPosition.Z() -= g_fBottomWaypointOffset;
 							//vWpPosition.Z() -= g_fBottomWaypointOffset;
 
-							PathPlannerWaypoint *pWp = static_cast<PathPlannerWaypoint*>(pPlanner);
+							PathPlannerWaypoint *pWp = static_cast<PathPlannerWaypoint*>( System::mInstance->mNavigation );
 							Waypoint *pWaypoint = pWp->AddWaypoint(vWpPosition, vWpFacing, true);
 
 							pWaypoint->GetPropertyMap().AddPropertyT("BuildPosition", vEntPosition);
@@ -682,7 +670,21 @@ obReal TF_Game::_GetDesirabilityFromTargetClass(int _grentype, int _class)
 }
 
 // PathPlannerWaypointInterface
-PathPlannerWaypointInterface::BlockableStatus TF_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw)
+
+NavFlags TF_Game::WaypointBlockableFlags() const
+{
+	return F_TF_NAV_WALL | F_TF_NAV_DETPACK;
+}
+
+NavFlags TF_Game::WaypointCallbackFlags() const
+{
+	return F_TF_NAV_ROCKETJUMP |
+		F_TF_NAV_CONCJUMP |
+		F_NAV_TELEPORT |
+		F_TF_NAV_DOUBLEJUMP;
+}
+
+PathPlannerWaypointInterface::BlockableStatus TF_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw) const
 {
 	static bool bRender = false;
 	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;

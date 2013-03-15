@@ -76,8 +76,8 @@ struct VBO
 		for ( size_t i = 0; i < mVerts.size(); ++i )
 			fullBounds.Expand( mVerts[ i ].p );
 
-		const int cellsX = ceil( fullBounds.GetSize().X() ) / cellSize;
-		const int cellsY = ceil( fullBounds.GetSize().Y() ) / cellSize;
+		const int cellsX = (int)(ceil( fullBounds.GetSize().X() ) / cellSize);
+		const int cellsY = (int)(ceil( fullBounds.GetSize().Y() ) / cellSize);
 
 		mChunks.resize( 0 );
 
@@ -367,6 +367,17 @@ void RenderBuffer::AddString3d( const Vector3f & v, const obColor & col, const c
 	prim.v = v;
 	prim.c = col;
 	prim.str = str;
+	prim.radius = TEXT_DIST;
+	mStringList3d.push_back( prim );
+}
+
+void RenderBuffer::AddString3dRadius( const Vector3f & v, const obColor & col, float radius, const char * str )
+{
+	Str3d prim;
+	prim.v = v;
+	prim.c = col;
+	prim.str = str;
+	prim.radius = radius;
 	mStringList3d.push_back( prim );
 }
 
@@ -389,44 +400,44 @@ void RenderBuffer::AddAABB(const AABB &_aabb, const obColor &_color, AABB::Direc
 	//		return;
 	//	}
 
-		Vector3f vVertex[8] = { Vector3f::ZERO };
+	Vector3f vVertex[8] = { Vector3f::ZERO };
 
-		vVertex[0] = Vector3f(_aabb.m_Mins[0], _aabb.m_Mins[1], _aabb.m_Mins[2]);
-		vVertex[1] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Mins[1], _aabb.m_Mins[2]);
-		vVertex[2] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Maxs[1], _aabb.m_Mins[2]);
-		vVertex[3] = Vector3f(_aabb.m_Mins[0], _aabb.m_Maxs[1], _aabb.m_Mins[2]);
+	vVertex[0] = Vector3f(_aabb.m_Mins[0], _aabb.m_Mins[1], _aabb.m_Mins[2]);
+	vVertex[1] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Mins[1], _aabb.m_Mins[2]);
+	vVertex[2] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Maxs[1], _aabb.m_Mins[2]);
+	vVertex[3] = Vector3f(_aabb.m_Mins[0], _aabb.m_Maxs[1], _aabb.m_Mins[2]);
 
-		vVertex[4] = Vector3f(_aabb.m_Mins[0], _aabb.m_Mins[1], _aabb.m_Maxs[2]);
-		vVertex[5] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Mins[1], _aabb.m_Maxs[2]);
-		vVertex[6] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Maxs[1], _aabb.m_Maxs[2]);
-		vVertex[7] = Vector3f(_aabb.m_Mins[0], _aabb.m_Maxs[1], _aabb.m_Maxs[2]);
+	vVertex[4] = Vector3f(_aabb.m_Mins[0], _aabb.m_Mins[1], _aabb.m_Maxs[2]);
+	vVertex[5] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Mins[1], _aabb.m_Maxs[2]);
+	vVertex[6] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Maxs[1], _aabb.m_Maxs[2]);
+	vVertex[7] = Vector3f(_aabb.m_Mins[0], _aabb.m_Maxs[1], _aabb.m_Maxs[2]);
 
-		// Top
-		if(_dir == AABB::DIR_TOP || _dir == AABB::DIR_ALL)
-		{
-			RenderBuffer::AddLine(vVertex[4], vVertex[5], _color, DEFAULT_TIME);
-			RenderBuffer::AddLine(vVertex[5], vVertex[6], _color, DEFAULT_TIME);
-			RenderBuffer::AddLine(vVertex[6], vVertex[7], _color, DEFAULT_TIME);
-			RenderBuffer::AddLine(vVertex[7], vVertex[4], _color, DEFAULT_TIME);
-		}
+	// Top
+	if(_dir == AABB::DIR_TOP || _dir == AABB::DIR_ALL)
+	{
+		RenderBuffer::AddLine(vVertex[4], vVertex[5], _color, DEFAULT_TIME);
+		RenderBuffer::AddLine(vVertex[5], vVertex[6], _color, DEFAULT_TIME);
+		RenderBuffer::AddLine(vVertex[6], vVertex[7], _color, DEFAULT_TIME);
+		RenderBuffer::AddLine(vVertex[7], vVertex[4], _color, DEFAULT_TIME);
+	}
 
-		// Bottom
-		if(_dir == AABB::DIR_BOTTOM || _dir == AABB::DIR_ALL)
-		{
-			RenderBuffer::AddLine(vVertex[0], vVertex[1], _color, DEFAULT_TIME);
-			RenderBuffer::AddLine(vVertex[1], vVertex[2], _color, DEFAULT_TIME);
-			RenderBuffer::AddLine(vVertex[2], vVertex[3], _color, DEFAULT_TIME);
-			RenderBuffer::AddLine(vVertex[3], vVertex[0], _color, DEFAULT_TIME);
-		}
+	// Bottom
+	if(_dir == AABB::DIR_BOTTOM || _dir == AABB::DIR_ALL)
+	{
+		RenderBuffer::AddLine(vVertex[0], vVertex[1], _color, DEFAULT_TIME);
+		RenderBuffer::AddLine(vVertex[1], vVertex[2], _color, DEFAULT_TIME);
+		RenderBuffer::AddLine(vVertex[2], vVertex[3], _color, DEFAULT_TIME);
+		RenderBuffer::AddLine(vVertex[3], vVertex[0], _color, DEFAULT_TIME);
+	}
 
-		// Sides
-		if(_dir == AABB::DIR_ALL)
-		{
-			RenderBuffer::AddLine(vVertex[4], vVertex[0], _color, DEFAULT_TIME);
-			RenderBuffer::AddLine(vVertex[5], vVertex[1], _color, DEFAULT_TIME);
-			RenderBuffer::AddLine(vVertex[6], vVertex[2], _color, DEFAULT_TIME);
-			RenderBuffer::AddLine(vVertex[7], vVertex[3], _color, DEFAULT_TIME);
-		}
+	// Sides
+	if(_dir == AABB::DIR_ALL)
+	{
+		RenderBuffer::AddLine(vVertex[4], vVertex[0], _color, DEFAULT_TIME);
+		RenderBuffer::AddLine(vVertex[5], vVertex[1], _color, DEFAULT_TIME);
+		RenderBuffer::AddLine(vVertex[6], vVertex[2], _color, DEFAULT_TIME);
+		RenderBuffer::AddLine(vVertex[7], vVertex[3], _color, DEFAULT_TIME);
+	}
 	//}
 }
 

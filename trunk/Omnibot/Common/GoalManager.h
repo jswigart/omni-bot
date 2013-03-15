@@ -15,6 +15,7 @@
 
 #include "CommandReciever.h"
 
+class System;
 class Client;
 class Waypoint;
 
@@ -126,8 +127,8 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	void InitGameGoals();
 
-	void Init();
-	void Update();
+	void Init( System & system );
+	void Update( System & system );
 	void Shutdown();
 	void Reset();
 

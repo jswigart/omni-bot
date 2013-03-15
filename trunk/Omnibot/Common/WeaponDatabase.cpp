@@ -137,7 +137,7 @@ void WeaponDatabase::ReloadScript(LiveUpdateKey _key)
 
 					Event_RefreshWeapon d = { wpn->GetWeaponID() };
 					MessageHelper evt(MESSAGE_REFRESHWEAPON, &d, sizeof(d));
-					IGameManager::GetInstance()->GetGame()->DispatchGlobalEvent(evt);
+					System::mInstance->mGame->DispatchGlobalEvent(evt);
 				}
 			}
 		}
@@ -180,7 +180,7 @@ bool WeaponScriptResource::InitScriptSource(const filePath &_path)
 					const char * weaponName = pNode->m_key.GetCStringSafe(0);
 					if(weaponName && pNode->m_value.IsInt())
 					{
-						if(IGameManager::GetInstance()->GetGame()->AddWeaponId(weaponName,pNode->m_value.GetInt()))
+						if(System::mInstance->mGame->AddWeaponId(weaponName,pNode->m_value.GetInt()))
 						{
 							LOG("Adding new weapon enumeration: "<<weaponName<<"("<<pNode->m_value.GetInt()<<")");
 						}

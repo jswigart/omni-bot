@@ -241,8 +241,7 @@ namespace AiState
 		FINDSTATE(fp, FollowPath, GetRootState());
 		if(fp)
 		{
-			PathPlannerBase *pPathPlanner = IGameManager::GetInstance()->GetNavSystem();
-			Vector3f vDestination = pPathPlanner->GetRandomDestination(GetClient(),GetClient()->GetPosition(),GetClient()->GetTeamFlag());
+			Vector3f vDestination = System::mInstance->mNavigation->GetRandomDestination(GetClient(),GetClient()->GetPosition(),GetClient()->GetTeamFlag());
 			return fp->Goto(this, vDestination, options.Radius, options.Mode);
 		}
 		return false;

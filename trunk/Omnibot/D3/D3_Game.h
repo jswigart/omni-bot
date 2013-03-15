@@ -23,7 +23,7 @@ class gmTableObject;
 class D3_Game : public IGame
 {
 public:
-	bool Init();
+	bool Init( System & system );
 	void StartGame();
 
 	void RegisterNavigationFlags(PathPlannerBase *_planner);
@@ -45,7 +45,9 @@ public:
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
 
 	// PathPlannerWaypointInterface
-	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw);
+	NavFlags WaypointBlockableFlags() const;
+	NavFlags WaypointCallbackFlags() const;
+	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const;
 
 	D3_Game() {};
 	virtual ~D3_Game() {};

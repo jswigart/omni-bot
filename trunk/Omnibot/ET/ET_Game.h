@@ -22,7 +22,7 @@ class gmTableObject;
 class ET_Game : public IGame
 {
 public:
-	bool Init();
+	bool Init( System & system );
 
 	void RegisterNavigationFlags(PathPlannerBase *_planner);
 
@@ -55,7 +55,9 @@ public:
 	static int CLASSEXoffset;
 	static bool IsETBlight, IsBastardmod;
 
-	BlockableStatus WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw);
+	NavFlags WaypointBlockableFlags() const;
+	NavFlags WaypointCallbackFlags() const;
+	BlockableStatus WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw) const;
 
 	ET_Game() {};
 	virtual ~ET_Game() {};

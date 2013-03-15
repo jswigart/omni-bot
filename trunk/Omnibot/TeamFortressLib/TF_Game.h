@@ -24,7 +24,7 @@ class gmTableObject;
 class TF_Game : public IGame
 {
 public:
-	bool Init();
+	bool Init( System & system );
 	void Shutdown();
 
 	void RegisterNavigationFlags(PathPlannerBase *_planner);
@@ -40,7 +40,9 @@ public:
 	static obReal _GetDesirabilityFromTargetClass(int _grentype, int _class);
 
 	// PathPlannerWaypointInterface
-	BlockableStatus WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw);
+	NavFlags WaypointBlockableFlags() const;
+	NavFlags WaypointCallbackFlags() const;
+	BlockableStatus WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw) const;
 
 	TF_Game() {};
 	virtual ~TF_Game() {};

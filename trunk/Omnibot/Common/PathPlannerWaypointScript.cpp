@@ -7,13 +7,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "PathPlannerWaypoint.h"
-#include "NavigationManager.h"
+#include "System.h"
 #include "ScriptManager.h"
 
 // Title: PathPlannerWaypoint Script Commands
 static PathPlannerWaypoint *GetWpPlanner()
 {
-	PathPlannerBase *pPlanner = NavigationManager::GetInstance()->GetCurrentPathPlanner();
+	PathPlannerBase * pPlanner = System::mInstance->mNavigation;
 	if(pPlanner->GetPlannerType() == NAVID_WP)
 		return static_cast<PathPlannerWaypoint*>(pPlanner);
 	return 0;
@@ -348,8 +348,9 @@ static int GM_CDECL gmfSetWaypointFlag(gmThread *a_thread)
 		pWaypoint->AddFlag(F_NAV_TEAMONLY);
 	}
 
-	if(flag & PathPlannerWaypoint::m_BlockableMask)
+	if(flag & pWp->GetBlockableMask())
 		pWp->BuildBlockableList();
+
 	pWp->BuildFlagMap();
 	return GM_OK;
 }

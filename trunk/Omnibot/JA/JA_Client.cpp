@@ -15,10 +15,9 @@
 #include "JA_BaseStates.h"
 #include "JA_InterfaceFuncs.h"
 
+#include "Waypoint.h"
 #include "BotTargetingSystem.h"
 #include "BotWeaponSystem.h"
-
-#include "PathPlannerWaypoint.h"
 
 JA_Client::JA_Client() :
 	m_BreakableTargetDistance(0.f)

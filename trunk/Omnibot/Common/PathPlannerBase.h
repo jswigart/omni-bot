@@ -11,6 +11,7 @@
 #ifndef __PATHPLANNER_H__
 #define __PATHPLANNER_H__
 
+class System;
 class Goal;
 class GoalQueue;
 class Client;
@@ -46,12 +47,13 @@ public:
 		NAV_FOUNDGOAL,
 		NAV_SAVEFAILEDPATHS,
 		NAV_AUTODETECTFLAGS,
+		NAV_VIEWFLAGS,
 
 		NUM_BASE_NAVFLAGS
 	};
 
-	virtual bool Init() = 0;
-	virtual void Update() = 0;
+	virtual bool Init( System & system ) = 0;
+	virtual void Update( System & system ) = 0;
 	virtual void Shutdown() = 0;
 	virtual bool IsReady() const = 0;
 
@@ -87,7 +89,6 @@ public:
 	virtual int GetPlannerType() const = 0;
 
 	virtual void RegisterNavFlag(const std::string &_name, const NavFlags &_bits) = 0;
-
 	virtual void RegisterScriptFunctions(gmMachine *a_machine) = 0;
 
 	struct AvoidData

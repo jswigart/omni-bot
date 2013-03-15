@@ -486,6 +486,7 @@ PathPlannerNavMesh::PathPlannerNavMesh()
 	m_PlannerFlags.SetFlag(NAV_VIEW);
 	m_PlannerFlags.SetFlag(NAV_VIEWCONNECTIONS);
 	m_PlannerFlags.SetFlag(NAVMESH_STEPPROCESS);
+	m_PlannerFlags.SetFlag(NAV_VIEWFLAGS);
 
 	m_CursorColor = COLOR::BLUE;
 
@@ -577,10 +578,18 @@ SegmentList PathPlannerNavMesh::NavSector::GetEdgeSegments() const
 	return lst;
 }
 
-bool PathPlannerNavMesh::Init()
+bool PathPlannerNavMesh::Init( System & system )
 {
 	InitCommands();
 	return true;
+}
+
+void PathPlannerNavMesh::RegisterNavFlag(const std::string &_name, const NavFlags &_bits)
+{
+}
+
+void PathPlannerNavMesh::RegisterScriptFunctions(gmMachine *a_machine)
+{
 }
 
 static void DrawPoly( bool solid, const PathPlannerNavMesh::NavSector & ns, const TPPLPoly & poly, float offset, obColor color, float dur, float vertSize )
@@ -638,7 +647,7 @@ static void DrawPoly( bool solid, const PathPlannerNavMesh::NavSector & ns, cons
 	}
 }
 
-void PathPlannerNavMesh::Update()
+void PathPlannerNavMesh::Update( System & system )
 {
 	Prof(PathPlannerNavMesh);
 
@@ -892,6 +901,15 @@ void PathPlannerNavMesh::Update()
 						destSector.CalculateCenter(),
 						COLOR::BLUE.fade( 100 ));
 				}
+			}
+
+			if ( m_PlannerFlags.CheckFlag( NAV_VIEWFLAGS ) )
+			{
+				std::string strData = ns.mSectorData.ShortDebugString();
+
+				RenderBuffer::AddString3dRadius(
+					ns.CalculateCenter() + Vector3f(0.f,0.f,96.f),
+					COLOR::BLUE, 1024.f, strData.c_str() );
 			}
 		}
 

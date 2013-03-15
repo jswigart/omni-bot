@@ -213,7 +213,7 @@ int PathPlannerRecast::GetLatestFileVersion() const
 	return 1; // TODO
 }
 
-bool PathPlannerRecast::Init()
+bool PathPlannerRecast::Init( System & system )
 {
 	RecastOptions.DrawSolidNodes = false;
 	RecastOptions.DrawOffset = 4.f;
@@ -239,7 +239,15 @@ bool PathPlannerRecast::Init()
 	return true;
 }
 
-void PathPlannerRecast::Update()
+void PathPlannerRecast::RegisterNavFlag(const std::string &_name, const NavFlags &_bits)
+{
+}
+
+void PathPlannerRecast::RegisterScriptFunctions(gmMachine *a_machine)
+{
+}
+
+void PathPlannerRecast::Update( System & system )
 {
 	Prof(PathPlannerRecast);
 
@@ -1249,13 +1257,13 @@ void PathPlannerRecast::AddFloodEntityBounds(const AABB &_bnds)
 
 void PathPlannerRecast::FloodFill()
 {
-	if(IGameManager::GetInstance()->RemoveUpdateFunction("Recast_FloodFill"))
+	if( System::mInstance->mGame->RemoveUpdateFunction("Recast_FloodFill") )
 		return;
 
 	gFloodStatus = Process_Init;
 
 	FunctorPtr f(new ObjFunctor<PathPlannerRecast>(this, &PathPlannerRecast::Process_FloodFill));
-	IGameManager::GetInstance()->AddUpdateFunction("Recast_FloodFill", f);
+	System::mInstance->mGame->AddUpdateFunction("Recast_FloodFill", f);
 }
 
 void PathPlannerRecast::BuildNav()

@@ -21,7 +21,9 @@ public:
 		B_INVALID_FLAGS
 	} BlockableStatus;
 
-	virtual BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) = 0;
+	virtual NavFlags WaypointBlockableFlags() const = 0;
+	virtual NavFlags WaypointCallbackFlags() const = 0;
+	virtual BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const = 0;
 };
 
 #endif

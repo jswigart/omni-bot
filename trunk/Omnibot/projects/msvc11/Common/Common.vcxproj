@@ -71,6 +71,7 @@
     <Lib>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib</AdditionalDependencies>
+      <TargetMachine>MachineX86</TargetMachine>
     </Lib>
     <PostBuildEvent>
       <Message>Copy To Bot Folder...</Message>
@@ -91,6 +92,7 @@
     <Lib>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib</AdditionalDependencies>
+      <TargetMachine>MachineX86</TargetMachine>
     </Lib>
     <PostBuildEvent>
       <Message>Copy To Bot Folder...</Message>
@@ -144,10 +146,10 @@
     <ClCompile Include="..\..\..\Common\GoalManager.cpp" />
     <ClCompile Include="..\..\..\Common\MapGoal.cpp" />
     <ClCompile Include="..\..\..\Common\MapGoalDatabase.cpp" />
-    <ClCompile Include="..\..\..\Common\NavigationManager.cpp" />
     <ClCompile Include="..\..\..\Common\Path.cpp" />
     <ClCompile Include="..\..\..\Common\PathPlannerBase.cpp" />
     <ClCompile Include="..\..\..\Common\PathQuery.cpp" />
+    <ClCompile Include="..\..\..\Common\System.cpp" />
     <ClCompile Include="..\..\..\Common\TaskManager.cpp" />
     <ClCompile Include="..\..\..\Common\ThreatZone.cpp" />
     <ClCompile Include="..\..\..\Common\PathPlannerWaypoint.cpp" />
@@ -164,14 +166,11 @@
     <ClCompile Include="..\..\..\Common\WaypointSerializerImp.cpp" />
     <ClCompile Include="..\..\..\Common\PathPlannerNavMesh.cpp" />
     <ClCompile Include="..\..\..\Common\PathPlannerNavMeshCmds.cpp" />
-    <ClCompile Include="..\..\..\Common\PathPlannerNavMeshScript.cpp" />
     <ClCompile Include="..\..\..\Common\PathPlannerFloodFill.cpp" />
     <ClCompile Include="..\..\..\Common\PathPlannerFloodFillBuilder.cpp" />
     <ClCompile Include="..\..\..\Common\PathPlannerFloodFillCmds.cpp" />
-    <ClCompile Include="..\..\..\Common\PathPlannerFloodFillScript.cpp" />
     <ClCompile Include="..\..\..\Common\PathPlannerRecast.cpp" />
     <ClCompile Include="..\..\..\Common\PathPlannerRecastCmds.cpp" />
-    <ClCompile Include="..\..\..\Common\PathPlannerRecastScript.cpp" />
     <ClCompile Include="..\..\..\Common\gmAABB.cpp" />
     <ClCompile Include="..\..\..\Common\gmBot.cpp" />
     <ClCompile Include="..\..\..\Common\gmBotLibrary.cpp" />
@@ -680,11 +679,11 @@
     <ClInclude Include="..\..\..\Common\MapGoalDatabase.h" />
     <ClInclude Include="..\..\..\Common\Base_Messages.h" />
     <ClInclude Include="..\..\..\Common\MessageHelper.h" />
-    <ClInclude Include="..\..\..\Common\NavigationManager.h" />
     <ClInclude Include="..\..\..\Common\Path.h" />
     <ClInclude Include="..\..\..\Common\PathPlannerBase.h" />
     <ClInclude Include="..\..\..\Common\PathQuery.h" />
     <ClInclude Include="..\..\..\Common\SpanHeightMap.h" />
+    <ClInclude Include="..\..\..\Common\System.h" />
     <ClInclude Include="..\..\..\Common\TaskManager.h" />
     <ClInclude Include="..\..\..\Common\ThreatZone.h" />
     <ClInclude Include="..\..\..\Common\PathPlannerWaypoint.h" />

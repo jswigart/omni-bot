@@ -9,7 +9,7 @@
 #include "ET_GoalManager.h"
 #include "ET_NavigationFlags.h"
 
-#include "PathPlannerWaypoint.h"
+#include "Waypoint.h"
 
 ET_GoalManager::ET_GoalManager()
 {

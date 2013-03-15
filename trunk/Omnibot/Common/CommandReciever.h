@@ -91,10 +91,6 @@ public:
 
 	CommandReciever();
 protected:
-
-	/*typedef boost::signal<void (const StringVector &)> CommandSignal;
-	typedef boost::shared_ptr<CommandSignal> ComSigPtr;*/
-
 	typedef std::pair<std::string, CommandFunctorPtr> CommandInfo;
 	typedef std::map<std::string, CommandInfo> CommandMap;
 
@@ -103,13 +99,20 @@ protected:
 	static CommandMap			m_CommandMap;
 	static RecieverList			m_RecieverList;
 
-	void Set(const std::string _name, const std::string _info, CommandFunctorPtr _func);
 	void Remove(const std::string _name);
 
 	template <typename T, typename Fn>
 	void SetEx(const std::string _name, const std::string _info, T *_src, Fn _fn)
 	{
-		Set(_name,_info,CommandFunctorPtr(new Delegate<T,Fn>(_src,_fn)));
+		CommandMap::iterator it = m_CommandMap.find(_name);
+		if(it != m_CommandMap.end())
+		{
+			it->second.second = CommandFunctorPtr(new Delegate<T,Fn>(_src,_fn));
+		}
+		else
+		{
+			m_CommandMap[_name] = CommandInfo(_info, CommandFunctorPtr(new Delegate<T,Fn>(_src,_fn)));
+		}
 	}
 
 	void Alias(const std::string _name,const std::string _existingname);

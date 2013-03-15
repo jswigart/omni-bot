@@ -16,8 +16,9 @@
 #include "gmRTCWBinds.h"
 #include "gmCall.h"
 
+#include "Waypoint.h"
+#include "PathPlannerBase.h"
 #include "BotBaseStates.h"
-#include "PathPlannerWaypoint.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
 #include "IGameManager.h"
@@ -94,7 +95,7 @@ GoalManager *RTCW_Game::GetGoalManager()
 	return new RTCW_GoalManager;
 }
 
-bool RTCW_Game::Init()
+bool RTCW_Game::Init( System & system )
 {
 	AiState::FollowPath::m_OldLadderStyle = false;
 
@@ -104,16 +105,12 @@ bool RTCW_Game::Init()
 	AiState::SensoryMemory::SetEntityVisDistanceCallback(RTCW_Game::RTCW_GetEntityVisDistance);
 	AiState::SensoryMemory::SetCanSensoreEntityCallback(RTCW_Game::RTCW_CanSensoreEntity);
 
-	if(!IGame::Init())
+	if ( !IGame::Init( system ) )
 		return false;
 
 	// Run the games autoexec.
 	int threadId;
-	ScriptManager::GetInstance()->ExecuteFile("scripts/rtcw_autoexec.gm", threadId);
-
-	PathPlannerWaypoint::m_BlockableMask = F_RTCW_NAV_WALL|F_RTCW_NAV_BRIDGE|F_RTCW_NAV_WATERBLOCKABLE;
-
-	PathPlannerWaypoint::m_CallbackFlags = F_RTCW_NAV_USEPATH;
+	system.mScript->ExecuteFile("scripts/rtcw_autoexec.gm", threadId);
 
 	return true;
 }
@@ -556,7 +553,7 @@ void RTCW_Game::StartGame()
 	if(!goalsLoaded)
 	{
 		// register nav system goals
-		IGameManager::GetInstance()->GetNavSystem()->RegisterGameGoals();
+		System::mInstance->mNavigation->RegisterGameGoals();
 	}
 
 	GoalManager::GetInstance()->InitGameGoals();
@@ -600,7 +597,17 @@ void RTCW_Game::StartGame()
 }
 
 // PathPlannerWaypointInterface
-PathPlannerWaypointInterface::BlockableStatus RTCW_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw)
+NavFlags RTCW_Game::WaypointBlockableFlags() const
+{
+	return F_RTCW_NAV_WALL|F_RTCW_NAV_BRIDGE|F_RTCW_NAV_WATERBLOCKABLE;
+}
+
+NavFlags RTCW_Game::WaypointCallbackFlags() const
+{
+	return F_RTCW_NAV_USEPATH;
+}
+
+PathPlannerWaypointInterface::BlockableStatus RTCW_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw) const
 {
 	static bool bRender = false;
 	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;

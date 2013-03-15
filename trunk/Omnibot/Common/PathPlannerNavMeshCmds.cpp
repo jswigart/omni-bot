@@ -34,6 +34,8 @@ void PathPlannerNavMesh::InitCommands()
 		this, &PathPlannerNavMesh::cmdNavView);
 	SetEx("nav_viewconnections", "Turn on/off navmesh connection visibility.",
 		this, &PathPlannerNavMesh::cmdNavViewConnections);
+	SetEx("nav_viewflags", "Turn on/off navmesh flag visibility.",
+		this, &PathPlannerNavMesh::cmdNavViewFlags);
 
 	//////////////////////////////////////////////////////////////////////////
 	SetEx("nav_enablestep", "Enable step by step generation process.",
@@ -165,9 +167,8 @@ void PathPlannerNavMesh::cmdNavView(const StringVector &_args)
 
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
-	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(std::string)va("Nav.EnableView( %s );",
-		bEnable ? "true" : "false"));
+
+	m_PlannerFlags.SetFlag( NAV_VIEW, bEnable );
 }
 
 void PathPlannerNavMesh::cmdNavViewConnections(const StringVector &_args)
@@ -180,9 +181,22 @@ void PathPlannerNavMesh::cmdNavViewConnections(const StringVector &_args)
 
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
-	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(std::string)va("Nav.EnableViewConnection( %s );",
-		bEnable ? "true" : "false"));
+
+	m_PlannerFlags.SetFlag( NAV_VIEWCONNECTIONS, bEnable );
+}
+
+void PathPlannerNavMesh::cmdNavViewFlags(const StringVector &_args)
+{
+	const char *strUsage[] =
+	{
+		"nav_viewflags enable[bool]",
+		"> enable: Enable nav flag. true/false/on/off/1/0",
+	};
+
+	CHECK_NUM_PARAMS(_args, 2, strUsage);
+	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
+
+	m_PlannerFlags.SetFlag( NAV_VIEWFLAGS, bEnable );
 }
 
 void PathPlannerNavMesh::cmdNavEnableStep(const StringVector &_args)
@@ -198,16 +212,16 @@ void PathPlannerNavMesh::cmdNavEnableStep(const StringVector &_args)
 
 	CHECK_NUM_PARAMS(_args, 2, strUsage);
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
-	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(std::string)va("Nav.EnableStep( %s );",
-		bEnable ? "true" : "false"));
+
+	m_PlannerFlags.SetFlag( NAVMESH_STEPPROCESS, bEnable );
 }
 
 void PathPlannerNavMesh::cmdNavStep(const StringVector &_args)
 {
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
-	ScriptManager::GetInstance()->ExecuteStringLogged("Nav.Step();");
+
+	m_PlannerFlags.SetFlag( NAVMESH_TAKESTEP, true );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -892,7 +906,7 @@ void PathPlannerNavMesh::cmdUpdateContents(const StringVector &_args)
 		const NavSector & ans = m_ActiveNavSectors[ i ];
 		const Vector3f sectorCenter = ans.CalculateCenter();
 
-		const bool mirroredSector = ans.mId >= m_NavSectors.size();
+		const bool mirroredSector = ans.mId >= (int)m_NavSectors.size();
 		NavSector & baseSector = m_NavSectors[ ans.mId % m_NavSectors.size() ];
 
 		NavmeshIO::SectorData & sectorData = mirroredSector ?
@@ -902,7 +916,7 @@ void PathPlannerNavMesh::cmdUpdateContents(const StringVector &_args)
 		const int contents = g_EngineFuncs->GetPointContents( sectorCenter );
 
 		// set the flags
-		sectorData.set_inwater( contents & CONT_WATER );
+		sectorData.set_inwater( (contents & CONT_WATER)!=0 );
 
 		if ( sectorData.inwater() )
 		{
@@ -957,6 +971,7 @@ static std::string GetDisplayValue( const google::protobuf::Message & msg, const
 	}
 	catch ( const boost::bad_lexical_cast & ex )
 	{
+		ex;
 		/*EngineFuncs::ConsoleError(
 		va( "Can't convert '%s' to appropriate type %s",
 		_args.at( 2 ).c_str(),
@@ -994,7 +1009,7 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 	if ( _args.size() <= 2 )
 	{
 		EngineFuncs::ConsoleError( va( "Usage: %s fieldname fieldvalue", _args.at( 0 ).c_str() ) );
-		for ( size_t i = 0; i < desc->field_count(); ++i )
+		for ( int i = 0; i < desc->field_count(); ++i )
 		{
 			const protobuf::FieldDescriptor * fieldDesc = desc->field( i );
 
@@ -1063,7 +1078,7 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 				// parse multi word strings if in quotes
 				if ( str[ 0 ] == '\'' || str[ 0 ] == '\"' )
 				{
-					for( int a = 3; a < _args.size(); ++a )
+					for( size_t a = 3; a < _args.size(); ++a )
 					{
 						str += " ";
 						str += _args.at( a );

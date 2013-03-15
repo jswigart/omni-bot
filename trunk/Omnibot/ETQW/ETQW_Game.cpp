@@ -13,13 +13,14 @@
 #include "ETQW_InterfaceFuncs.h"
 #include "ETQW_Client.h"
 
+#include "System.h"
+#include "PathPlannerBase.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
 #include "gmETQWBinds.h"
 
 #include "BotSensoryMemory.h"
 #include "FilterSensory.h"
-#include "PathPlannerWaypoint.h"
 
 IGame *CreateGameInstance()
 {
@@ -87,20 +88,18 @@ GoalManager *ETQW_Game::GetGoalManager()
 	return new ETQW_GoalManager;
 }
 
-bool ETQW_Game::Init()
+bool ETQW_Game::Init( System & system )
 {
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(ETQW_Game::ETQW_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(ETQW_Game::ETQW_GetEntityClassAimOffset);
 
-	if(!IGame::Init())
+	if ( !IGame::Init( system ) )
 		return false;
-
-	PathPlannerWaypoint::m_CallbackFlags = F_ETQW_NAV_DISGUISE;
 
 	// Run the games autoexec.
 	int threadId;
-	ScriptManager::GetInstance()->ExecuteFile("scripts/etqw_autoexec.gm", threadId);
+	system.mScript->ExecuteFile("scripts/etqw_autoexec.gm", threadId);
 
 	return true;
 }
@@ -543,7 +542,17 @@ void ETQW_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 }
 
 // PathPlannerWaypointInterface
-PathPlannerWaypointInterface::BlockableStatus ETQW_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw)
+NavFlags ETQW_Game::WaypointBlockableFlags() const
+{
+	return (NavFlags)0;
+}
+
+NavFlags ETQW_Game::WaypointCallbackFlags() const
+{
+	return F_ETQW_NAV_DISGUISE;
+}
+
+PathPlannerWaypointInterface::BlockableStatus ETQW_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const
 {
 	// todo
 	return PathPlannerWaypointInterface::B_PATH_OPEN;

@@ -13,7 +13,8 @@
 
 #include "gmD3Binds.h"
 
-#include "PathPlannerWaypoint.h"
+#include "System.h"
+#include "PathPlannerBase.h"
 #include "FilterSensory.h"
 #include "BotSensoryMemory.h"
 #include "BotTargetingSystem.h"
@@ -72,18 +73,18 @@ eNavigatorID D3_Game::GetDefaultNavigator() const
 	return NAVID_WP;
 }
 
-bool D3_Game::Init()
+bool D3_Game::Init( System & system )
 {
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(D3_Game::D3_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(D3_Game::D3_GetEntityClassAimOffset);
 
-	if(!IGame::Init())
+	if( !IGame::Init( system ) )
 		return false;
 
 	// Run the games autoexec.
 	int threadId;
-	ScriptManager::GetInstance()->ExecuteFile("scripts/d3_autoexec.gm", threadId);
+	system.mScript->ExecuteFile("scripts/d3_autoexec.gm", threadId);
 
 	return true;
 }
@@ -274,7 +275,17 @@ const float D3_Game::D3_GetEntityClassAimOffset(const int _class, const BitFlag6
 }
 
 // PathPlannerWaypointInterface
-PathPlannerWaypointInterface::BlockableStatus D3_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw)
+NavFlags D3_Game::WaypointBlockableFlags() const
+{
+	return (NavFlags)0;
+}
+
+NavFlags D3_Game::WaypointCallbackFlags() const
+{
+	return (NavFlags)0;
+}
+
+PathPlannerWaypointInterface::BlockableStatus D3_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const
 {
 	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
 	return res;

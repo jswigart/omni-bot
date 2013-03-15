@@ -10,7 +10,7 @@
 #include "Q4_Config.h"
 #include "Q4_NavigationFlags.h"
 
-#include "PathPlannerWaypoint.h"
+#include "Waypoint.h"
 
 Q4_GoalManager::Q4_GoalManager()
 {

@@ -24,7 +24,7 @@ class gmTableObject;
 class Q4_Game : public IGame
 {
 public:
-	bool Init();
+	bool Init( System & system );
 	void StartGame();
 
 	void AddBot(Msg_Addbot &_addbot, bool _createnow = true);
@@ -50,7 +50,9 @@ public:
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
 
 	// PathPlannerWaypointInterface
-	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw);
+	NavFlags WaypointBlockableFlags() const;
+	NavFlags WaypointCallbackFlags() const;
+	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const;
 
 	Q4_Game() {};
 	virtual ~Q4_Game() {};

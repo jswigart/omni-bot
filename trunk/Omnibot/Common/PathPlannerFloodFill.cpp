@@ -41,13 +41,21 @@ PathPlannerFloodFill::~PathPlannerFloodFill()
 	Shutdown();
 }
 
-bool PathPlannerFloodFill::Init()
+bool PathPlannerFloodFill::Init( System & system )
 {
 	InitCommands();
 	return true;
 }
 
-void PathPlannerFloodFill::Update()
+void PathPlannerFloodFill::RegisterNavFlag(const std::string &_name, const NavFlags &_bits)
+{
+}
+
+void PathPlannerFloodFill::RegisterScriptFunctions(gmMachine *a_machine)
+{
+}
+
+void PathPlannerFloodFill::Update( System & system )
 {
 	Prof(PathPlannerFloodFill);
 
@@ -814,11 +822,12 @@ void PathPlannerFloodFill::LoadFloodStarts()
 
 void PathPlannerFloodFill::FloodFill(const FloodFillOptions &_options)
 {
-	if(IGameManager::GetInstance()->RemoveUpdateFunction("NavMesh_FloodFill"))
+	if( System::mInstance->mGame->RemoveUpdateFunction("NavMesh_FloodFill"))
 		return;
 
 	FunctorPtr f(new ObjFunctor<PathPlannerFloodFill>(this, &PathPlannerFloodFill::Process_FloodFill));
-	IGameManager::GetInstance()->AddUpdateFunction("NavMesh_FloodFill", f);
+
+	System::mInstance->mGame->AddUpdateFunction("NavMesh_FloodFill", f);
 }
 
 //////////////////////////////////////////////////////////////////////////
