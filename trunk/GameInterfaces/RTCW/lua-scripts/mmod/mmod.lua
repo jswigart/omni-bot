@@ -131,8 +131,8 @@ function et_ClientCommand(clientNum)
 			userprint(clientNum, "chat", "^3" .. command .. ": ^7insufficient admin status")
 			return 1
 		end
-		-- lets make announce only centerprint
-		if command == "announce" then
+		-- dont print any commands to console
+		if commandflags[command] ~= nil then
 			-- do nothing
 		elseif argv0 == "say" then
 			-- SAY_ALL		0
