@@ -81,7 +81,9 @@
       <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)"
 copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
 copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"
-copy "$(TargetPath)" D:\Games\ETF\omnibot</Command>
+copy "$(TargetPath)" D:\Games\ETF\omnibot
+copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" D:\Games\ETF\omnibot
+copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" D:\Games\ETF\omnibot</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

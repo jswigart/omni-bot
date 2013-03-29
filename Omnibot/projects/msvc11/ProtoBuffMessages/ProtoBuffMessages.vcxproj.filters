@@ -7,6 +7,9 @@
     <Filter Include="Protocol Buffer Files\autogen">
       <UniqueIdentifier>{94bcaa71-5541-4aa9-8c3f-ed8ed5381f89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{8ad993ed-8169-47d1-8147-1431dab9bd6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Common\floodfill.pb.cc">
@@ -18,6 +21,9 @@
     <ClCompile Include="..\..\..\Common\navmesh.pb.cc">
       <Filter>Protocol Buffer Files\autogen</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Common\ProtoBufUtility.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Common\floodfill.pb.h">
@@ -28,6 +34,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Common\navmesh.pb.h">
       <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\ProtoBufUtility.h">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

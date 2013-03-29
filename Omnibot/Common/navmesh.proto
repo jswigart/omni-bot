@@ -1,9 +1,12 @@
+
 import "google/protobuf/descriptor.proto";
 
 // Custom option for fields
 extend google.protobuf.FieldOptions 
 {
 	optional string doc = 2000;
+	optional bool hidden = 2001;
+	optional bool settable = 2002;
 }
 
 package NavmeshIO;
@@ -27,21 +30,31 @@ message SectorVert
 	required Vec3		position				= 1;
 }
 
+message MoverEntity
+{
+	required int32		id						= 1 [default = 0];
+}
+
 message SectorData
 {
-	optional bool		enabled			= 1		[default = true, (doc)="Is this sector enabled for use"];
-	optional string		location		= 2		[(doc)="Global location string for communication"];
-	optional string		locationteam1	= 3		[(doc)="Team1 location string for communication"];
-	optional string		locationteam2	= 4		[(doc)="Team2 location string for communication"];
-	optional string		locationteam3	= 5		[(doc)="Team3 location string for communication"];
-	optional string		locationteam4	= 6		[(doc)="Team4 location string for communication"];
-	optional bool		team1			= 7		[default = false, (doc)="Is this sector usable by team1"];
-	optional bool		team2			= 8		[default = false, (doc)="Is this sector usable by team2"];
-	optional bool		team3			= 9		[default = false, (doc)="Is this sector usable by team3"];
-	optional bool		team4			= 10	[default = false, (doc)="Is this sector usable by team4"];
-	optional bool		inwater			= 11	[default = false, (doc)="Is this sector in water"];
-	optional bool		onmover			= 12	[default = false, (doc)="Is this sector on a dynamic mover"];
+	optional bool			enabled			= 1		[default = true, (doc)="Is this sector enabled for use"];
+	optional string			location		= 2		[(doc)="Global location string for communication"];
+	optional string			locationteam1	= 3		[(doc)="Team1 location string for communication"];
+	optional string			locationteam2	= 4		[(doc)="Team2 location string for communication"];
+	optional string			locationteam3	= 5		[(doc)="Team3 location string for communication"];
+	optional string			locationteam4	= 6		[(doc)="Team4 location string for communication"];
+	optional bool			team1			= 7		[default = false, (doc)="Is this sector usable by team1"];
+	optional bool			team2			= 8		[default = false, (doc)="Is this sector usable by team2"];
+	optional bool			team3			= 9		[default = false, (doc)="Is this sector usable by team3"];
+	optional bool			team4			= 10	[default = false, (doc)="Is this sector usable by team4"];
+	optional bool			inwater			= 11	[default = false, (doc)="Is this sector in water"];
+	optional bool			onmover			= 12	[default = false, (doc)="Is this sector on a dynamic mover"];
+	optional bool			hazard			= 13	[default = false, (doc)="This area should be exited immediately"];
+	optional bool			ladder			= 14	[default = false, (doc)="This area represents a climbable ladder"];
 	
+	optional float			waterdepth		= 200	[default = 0.0, (settable)=false, (doc)="The surface to sector height"];
+	optional MoverEntity	mover			= 201	[(hidden)=true, (settable)=false];
+	repeated SectorVert		localoffsets	= 202	[(hidden)=true, (settable)=false];
 }
 
 message Sector 

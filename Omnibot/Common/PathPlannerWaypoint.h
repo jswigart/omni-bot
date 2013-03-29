@@ -122,7 +122,7 @@ public:
 	bool Save(const std::string &_mapname);
 	void Unload();
 
-	void GetPath(Path &_path, int _smoothiterations);
+	void GetPath(Path &_path);
 
 	// waypoint creation methods
 	Waypoint *AddWaypoint(const Vector3f &_pos, const Vector3f &_facing = Vector3f::ZERO, bool _blockdupe = false);

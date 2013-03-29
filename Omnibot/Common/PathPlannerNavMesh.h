@@ -13,6 +13,7 @@
 
 #include <queue>
 
+#include "Omni-Bot_BitFlags.h"
 #include "PathPlannerBase.h"
 #include "InternalFsm.h"
 #include "SpanHeightMap.h"
@@ -30,12 +31,12 @@ enum ToolStateNavMesh
 	SliceSector,
 	SliceSectorWithSector,
 	EditSector,
+	MoveSector,
 	SplitSector,
 	TraceSector,
 	GroundSector,
 	CommitSector,
 	MirrorSectors,
-	PlaceBorder,
 	FloodSpanMap,
 	NumToolStates
 };
@@ -56,6 +57,18 @@ namespace IceMaths
 	class Point;
 }
 
+template< typename T >
+class EditTool
+{
+public:
+	EditTool() {}
+	virtual ~EditTool() {}
+
+	virtual bool Start( T * system ) = 0;
+	virtual void Update( T * system ) = 0;
+	virtual void Commit( T * system ) = 0;
+};
+
 // class: PathPlannerNavMesh
 //		Path planner interface for the navmesh system for hl2
 class PathPlannerNavMesh : public PathPlannerBase, public InternalFSM<PathPlannerNavMesh,NumToolStates>
@@ -67,74 +80,102 @@ public:
 		NAVMESH_TAKESTEP,
 	};
 
-	enum NodeDirection
-	{
-		NORTH,
-		SOUTH,
-		EAST,
-		WEST,
-		NUM_DIRS
-	};
-
 	//////////////////////////////////////////////////////////////////////////
 	struct Obstacle
 	{
-		Vector3List	mPolyVerts;
+		Vector3List		mPoly;
+		float			mCost; // -1 is blocked
+
+		Obstacle() : mCost( -1.0f ) {}
 	};
 	typedef std::vector<Obstacle> ObstacleList;
 
 	struct NavPortal
 	{
-		Segment3f		m_Segment;
+		Segment3f		mSegment;
 
-		int				m_DestSector;
+		Vector3f		mLocalOffset;
 
-		BitFlag64		m_LinkFlags;
+		int				mDestSector;
+
+		enum PortalFlags
+		{
+			FL_DISABLED	= (1<<0),
+			FL_JUMP		= (1<<1),
+		};
+
+		BitFlag64		mFlags;
+
+		NavPortal()
+		{
+			mLocalOffset = Vector3f::ZERO;
+			mFlags.ClearAll();
+		}
 	};
 
 	typedef std::vector<NavPortal> NavPortalList;
 
-	struct NavSector
+	/////////////////////////////////////////////////////////
+
+	struct NavSectorBase
 	{
-		// where the absolute value will be the index of the original sector
-		int								mId;
+		Vector3List						mPoly;
+		Plane3f							mPlane;
 
-		Vector3List						m_Boundary;
+		Vector3f CalculateCenter() const;
+		void GetMirroredCopy(const Vector3f & mirrorAxis,NavmeshIO::Sector_MirrorDir mirror,NavSectorBase & dest) const;
+		void GetEdgeSegments(SegmentList &_list) const;
+		void SetPointsToPlane();
+	};
+
+	struct NavSector : public NavSectorBase
+	{
 		NavmeshIO::Sector_MirrorDir		mMirror;
-
-		// currently active navigation portals
-		NavPortalList					m_NavPortals;
-
-		// plane, for obstacle projection
-		Plane3f							m_Plane;
-		// current obstacles influencing this sector
-		ObstacleList					m_Obstacles;
-
 		NavmeshIO::SectorData			mSectorData;
 		NavmeshIO::SectorData			mSectorDataMirrored;
 
-		// flags
-		float							m_WaterDepth;
-
-		bool IsMirrored() const
-		{
-			return mMirror != NavmeshIO::Sector_MirrorDir_MirrorNone;
-		}
+		bool IsMirrored() const;
 
 		// Utility functions
-		Vector3f CalculateCenter() const;
-		NavSector GetMirroredCopy(const Vector3f &offset) const;
-		SegmentList GetEdgeSegments() const;
-		void GetEdgeSegments(SegmentList &_list) const;
-
-		NavSector()
-			: mId( 0 )
-			, mMirror( NavmeshIO::Sector_MirrorDir_MirrorNone )
-		{
-		}
+		NavSector();
 	};
 
-	NavSector *GetSectorAt(const Vector3f &_pos, float _distance = 1024.f);
+	struct RuntimeNavSector : public NavSectorBase
+	{
+		obuint32					mIndex;
+
+		Vector3List					mLocalPoly;
+
+		NavSector *					mSector;
+
+		// reference to the global sector data for this sector
+		NavmeshIO::SectorData *		mSectorData;
+
+		// currently active navigation portals
+		NavPortalList				mPortals;
+
+		// current obstacles influencing this sector
+		ObstacleList				mObstacles;
+
+		bool						mUpdatePortals;
+
+		bool IsMirroredSector() const;
+
+		void UpdateAutoFlags();
+
+		void BuildSectorPortals( PathPlannerNavMesh * navmesh );
+
+		bool InitSectorTransform();
+
+		void UpdateSectorTransform();
+
+		RuntimeNavSector( obuint32 index, NavSector * sector, NavmeshIO::SectorData * data );
+	private:
+		RuntimeNavSector(); // not allowed
+	};
+	/////////////////////////////////////////////////////////
+
+	RuntimeNavSector *GetSectorAt(const Vector3f &_pos, float _distance = 1024.f);
 
 	bool Init( System & system );
 	void Update( System & system );
@@ -161,7 +202,7 @@ public:
 	bool SetFileComments(const std::string &_text);
 
 	void RegisterGameGoals();
-	void GetPath(Path &_path, int _smoothiterations);
+	void GetPath(Path &_path);
 
 	virtual void RegisterNavFlag(const std::string &_name, const NavFlags &_bits);
 	virtual void RegisterScriptFunctions(gmMachine *a_machine);
@@ -185,6 +226,7 @@ protected:
 	void cmdNavViewConnections(const StringVector &_args);
 	void cmdNavViewFlags(const StringVector &_args);
 	void cmdNavStep(const StringVector &_args);
+	void cmdNavStats(const StringVector &_args);
 	void cmdNavEnableStep(const StringVector &_args);
 	void cmdAutoBuildFeatures(const StringVector &_args);
 	void cmdStartPoly(const StringVector &_args);
@@ -199,12 +241,15 @@ protected:
 	void cmdMirrorSectors(const StringVector &_args);
 	void cmdSectorSetProperty(const StringVector &_args);
 	void cmdEditSector(const StringVector &_args);
+	void cmdDupeSector(const StringVector &_args);
 	void cmdSplitSector(const StringVector &_args);
 	void cmdGroundSector(const StringVector &_args);
 	void cmdSectorCreateConnections(const StringVector &_args);
 	void cmdSetMapCenter(const StringVector &_args);
 	void cmdUpdateContents(const StringVector &_args);
+	void cmdSectorEdgeDrop(const StringVector &_args);
 	void cmdSetField(const StringVector &_args);
+	void cmdPortalCreate(const StringVector &_args);
 
 	void cmdObstacleAdd(const StringVector &_args);
 
@@ -215,15 +260,16 @@ protected:
 	void cmdInfluenceMapLoad(const StringVector &_args);
 	void cmdInfluenceMapFlood(const StringVector &_args);
 
-	void cmdNext(const StringVector &_args);
-
 	void ConnectTest();
+
+	NavSector * GetSectorAtCursor();
 
 	//////////////////////////////////////////////////////////////////////////
 
 	friend class PathFindNavMesh;
+	friend class ToolSectorEdgeDrop;
+	friend class ToolPortalCreate;
 protected:
-
 	//////////////////////////////////////////////////////////////////////////
 	struct AttribFields
 	{
@@ -243,7 +289,6 @@ protected:
 	class NavCollision
 	{
 	public:
-
 		bool DidHit() const { return m_HitSomething; }
 		const PolyAttrib HitAttrib() const { return m_HitAttrib; }
 		const Vector3f &HitPosition() const { return m_HitPosition; }
@@ -267,13 +312,19 @@ protected:
 	};
 
 	NavCollision FindCollision(const Vector3f &_from, const Vector3f &_to);
+	int FindRuntimeSectors( const AABB & aabb, std::vector<RuntimeNavSector*> & sectorsOut );
+	int FindRuntimeSectors( const Box3f & obb, std::vector<RuntimeNavSector*> & sectorsOut );
 
 	//////////////////////////////////////////////////////////////////////////
 	Vector3f			m_MapCenter;
 
 	typedef std::vector<NavSector> NavSectorList;
-	NavSectorList		m_NavSectors;
-	NavSectorList		m_ActiveNavSectors;
+	typedef std::vector<RuntimeNavSector> RuntimeSectorList;
+	typedef std::vector<RuntimeNavSector*> RuntimeSectorRefList;
+
+	NavSectorList			mNavSectors;
+	RuntimeSectorList		mRuntimeSectors;
+	ObstacleList			mPendingObstacles;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Tool state machine
@@ -282,12 +333,12 @@ protected:
 	STATE_PROTOTYPE(SliceSector);
 	STATE_PROTOTYPE(SliceSectorWithSector);
 	STATE_PROTOTYPE(EditSector);
+	STATE_PROTOTYPE(MoveSector);
 	STATE_PROTOTYPE(SplitSector);
 	STATE_PROTOTYPE(TraceSector);
 	STATE_PROTOTYPE(GroundSector);
 	STATE_PROTOTYPE(CommitSector);
 	STATE_PROTOTYPE(MirrorSectors);
-	STATE_PROTOTYPE(PlaceBorder);
 	STATE_PROTOTYPE(FloodSpanMap);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -303,6 +354,8 @@ protected:
 	Plane3f				m_WorkingSlicePlane;
 
 	bool				m_ToolCancelled;
+
+	EditTool<PathPlannerNavMesh> * mCurrentTool;
 
 	typedef SpanHeightMap<obuint8> SpanMap;
 	typedef std::queue<Vector3f> VectorQueue;
@@ -342,6 +395,10 @@ protected:
 	std::string _GetNavFileExtension() { return ".nav"; }
 	virtual void _BenchmarkPathFinder(const StringVector &_args);
 	virtual void _BenchmarkGetNavPoint(const StringVector &_args);
+
+	void UpdateMoverSectors();
+	void UpdatePortals();
+	void UpdateObstacles();
 };
 
 #endif

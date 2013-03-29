@@ -359,7 +359,7 @@ namespace Utils
 		return EngineFuncs::EntityWorldAABB(GetLocalEntity(), _aabb);
 	}
 
-	bool GetLocalAimPoint(Vector3f &_pos, Vector3f *_normal, int _tracemask /*= TR_MASK_FLOODFILL*/, int * _contents, int * _surface)
+	bool GetLocalAimPoint(Vector3f &_pos, Vector3f *_normal, int _tracemask /*= TR_MASK_FLOODFILLENT*/, int * _contents, int * _surface)
 	{
 		if(_contents)
 			*_contents = 0;
@@ -1004,57 +1004,6 @@ namespace Utils
 		return newlist;
 	}
 
-	//float DistancePointToLineSqr(const Vector3f &_point,
-	//	const Vector3f &_pt0,
-	//	const Vector3f &_pt1,
-	//	Vector3f *_linePt)
-	//{
-	//	Vector3f v = _point - _pt0;
-	//	Vector3f s = _pt1 - _pt0;
-	//	float lenSq = s.SquaredLength();
-	//	float dot = v.Dot(s) / lenSq;
-	//	Vector3f disp = s * dot;
-	//	if (_linePt)
-	//		*_linePt = _pt0 + disp;
-	//	v -= disp;
-	//	return v.SquaredLength();
-	//}
-
-	//float DistancePointToLine(const Vector3f &_point,
-	//	const Vector3f &_pt0,
-	//	const Vector3f &_pt1,
-	//	Vector3f *_linePt)
-	//{
-	//	return Mathf::Sqrt( DistancePointToLineSqr(_point, _pt0, _pt1, _linePt) );
-	//}
-
-	//float DistancePointToTri(const Vector3f &_point,
-	//	const Vector3f &_pt0,
-	//	const Vector3f &_pt1,
-	//	const Vector3f &_pt2,
-	//	Vector3f *_pt)
-	//{
-	//	// Compute vectors
-	//	const Vector3f v0 = _pt2 - _pt0;
-	//	const Vector3f v1 = _pt1 - _pt0;
-	//	const Vector3f v2 = _point - _pt0;
-
-	//	// Compute dot products
-	//	const float dot00 = v0.Dot(v0);
-	//	const float dot01 = v0.Dot(v1);
-	//	const float dot02 = v0.Dot(v2);
-	//	const float dot11 = v1.Dot(v1);
-	//	const float dot12 = v1.Dot(v2);
-
-	//	// Compute barycentric coordinates
-	//	const float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
-	//	const float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-	//	const float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
-
-	//	// Check if point is in triangle
-	//	return (u >= 0) && (v >= 0) && (u + v < 1);
-	//}
-
 	//////////////////////////////////////////////////////////////////////////
 	// inSegment(): determine if a point is inside a segment
 	//    Input:  a point P, and a collinear segment S
@@ -1192,6 +1141,15 @@ namespace Utils
 
 		*I0 = S1.P0 + sI * u;               // compute S1 intersect point
 		return 1;
+	}
+
+	void PushPointToPlane( Vector3f & pt, const Plane3f & plane, const Vector3f & pushdirection )
+	{
+		const Line3f line( pt, pushdirection );
+
+		IntrLine3Plane3f intr( line, plane );
+		if ( intr.Find() )
+			pt = line.Origin + intr.GetLineParameter() * line.Direction;
 	}
 
 	gmVariable UserDataToGmVar(gmMachine *_machine, const obUserData &bud)

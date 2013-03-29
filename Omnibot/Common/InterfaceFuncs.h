@@ -62,6 +62,7 @@ namespace InterfaceFuncs
 	bool GetVehicleInfo(Client *_bot, VehicleInfo &_vi);
 
 	bool IsMoverAt(const Vector3f &_pos1, const Vector3f &_pos2);
+	GameEntity GetMoverAt( const Vector3f &_pos );
 
 	template <typename T>
 	bool SetLoadOut(GameEntity _ent, T &_info)

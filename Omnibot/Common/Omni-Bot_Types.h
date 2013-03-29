@@ -309,22 +309,6 @@ typedef struct AABB_t
 			m_Maxs[i] += _out[i];
 		}
 	}
-	void Expand(const float _pt[3])
-	{
-		for(int i = 0; i < 3; ++i)
-		{
-			if(_pt[i] < m_Mins[i])
-				m_Mins[i] = _pt[i];
-
-			if(_pt[i] > m_Maxs[i])
-				m_Maxs[i] = _pt[i];
-		}
-	}
-	void Expand(const AABB_t &_bbox)
-	{
-		Expand(_bbox.m_Mins);
-		Expand(_bbox.m_Maxs);
-	}
 	bool Intersects(const AABB_t &_bbox) const
 	{
 		for (int i = 0; i < 3; i++)
@@ -413,6 +397,22 @@ typedef struct AABB_t
 		m_Maxs[1] += _expandY;
 		m_Mins[2] -= _expandZ;
 		m_Maxs[2] += _expandZ;
+	}
+	void Expand(const float _pt[3])
+	{
+		for(int i = 0; i < 3; ++i)
+		{
+			if(_pt[i] < m_Mins[i])
+				m_Mins[i] = _pt[i];
+
+			if(_pt[i] > m_Maxs[i])
+				m_Maxs[i] = _pt[i];
+		}
+	}
+	void Expand(const AABB_t &_bbox)
+	{
+		Expand(_bbox.m_Mins);
+		Expand(_bbox.m_Maxs);
 	}
 	void ExpandAxis(int _axis, float _expand)
 	{

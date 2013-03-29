@@ -336,4 +336,19 @@ namespace InterfaceFuncs
 		MessageHelper msg(GEN_MSG_MOVERAT, &data, sizeof(data));
 		return SUCCESS(InterfaceMsg(msg)) && data.m_Entity.IsValid();
 	}
+
+	GameEntity GetMoverAt( const Vector3f &_pos )
+	{
+		Msg_MoverAt data;
+		data.m_Position[0] = _pos.X();
+		data.m_Position[1] = _pos.Y();
+		data.m_Position[2] = _pos.Z();
+
+		data.m_Under[0] = _pos.X();
+		data.m_Under[1] = _pos.Y();
+		data.m_Under[2] = _pos.Z() - 1024.0f;
+
+		MessageHelper msg(GEN_MSG_MOVERAT, &data, sizeof(data));
+		return SUCCESS(InterfaceMsg(msg)) ? data.m_Entity : GameEntity();
+	}
 };

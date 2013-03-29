@@ -526,7 +526,7 @@ void PathPlannerRecast::RegisterGameGoals()
 {
 }
 
-void PathPlannerRecast::GetPath(Path &_path, int _smoothiterations)
+void PathPlannerRecast::GetPath(Path &_path)
 {
 	for(int i = 0; i < StraightPathPoints; ++i)
 	{
