@@ -48,7 +48,7 @@ public:
 	bool SetFileComments(const std::string &_text);
 
 	void RegisterGameGoals();
-	void GetPath(Path &_path, int _smoothiterations);
+	void GetPath(Path &_path);
 
 	virtual void RegisterNavFlag(const std::string &_name, const NavFlags &_bits);
 	virtual void RegisterScriptFunctions(gmMachine *a_machine);

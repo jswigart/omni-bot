@@ -179,7 +179,7 @@ bool PathPlannerFloodFill::Save(const std::string &_mapname)
 
 bool PathPlannerFloodFill::IsReady() const
 {
-	return true;//!m_ActiveNavSectors.empty();
+	return true;//!mRuntimeSectors.empty();
 }
 
 bool PathPlannerFloodFill::GetNavFlagByName(const std::string &_flagname, NavFlags &_flag) const
@@ -192,9 +192,9 @@ Vector3f PathPlannerFloodFill::GetRandomDestination(Client *_client, const Vecto
 {
 	Vector3f dest = _start;
 
-	/*if(!m_ActiveNavSectors.empty())
+	/*if(!mRuntimeSectors.empty())
 	{
-	const NavSector &randSector = m_ActiveNavSectors[rand()%m_ActiveNavSectors.size()];
+	const NavSector &randSector = mRuntimeSectors[rand()%mRuntimeSectors.size()];
 	dest = Utils::AveragePoint(randSector.m_Boundary);
 	}*/
 	return dest;
@@ -251,7 +251,7 @@ void PathPlannerFloodFill::RegisterGameGoals()
 {
 }
 
-void PathPlannerFloodFill::GetPath(Path &_path, int _smoothiterations)
+void PathPlannerFloodFill::GetPath(Path &_path)
 {
 	//const float CHAR_HALF_HEIGHT = g_CharacterHeight * 0.75f;
 

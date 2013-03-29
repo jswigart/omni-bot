@@ -408,7 +408,7 @@ void PathPlannerWaypoint::Update( System & system )
 		UpdateNavRender();
 
 	// TODO: run any time spliced paths.
-	if( m_BlockableRegulator->IsReady() )
+	if( m_BlockableRegulator && m_BlockableRegulator->IsReady() )
 	{
 		bool bDrawTests = system.mGame->DrawBlockableTests();
 
@@ -1832,7 +1832,7 @@ void PathPlannerWaypoint::RegisterGameGoals()
 	}
 }
 
-void PathPlannerWaypoint::GetPath(Path &_path, int _smoothiterations)
+void PathPlannerWaypoint::GetPath(Path &_path)
 {
 	const float fWpHeight = g_fTopWaypointOffset-g_fBottomWaypointOffset;
 	const float fWpHalfHeight = fWpHeight * g_fPathLevelOffset;

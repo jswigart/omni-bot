@@ -6,15 +6,20 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "platformspecifics.h"
 #include "PathPlannerNavMesh.h"
+
+#include <algorithm>
+
+#include "platformspecifics.h"
+
+#include "InterfaceFuncs.h"
 #include "IGameManager.h"
 #include "IGame.h"
 #include "GoalManager.h"
 #include "NavigationFlags.h"
 #include "FileSystem.h"
 #include "Path.h"
-#include "gmUtilityLib.h"
+#include "ProtoBufUtility.h"
 
 #include "RenderBuffer.h"
 
@@ -27,6 +32,12 @@
 
 #include "Opcode.h"
 #include "OPC_IceHook.h"
+
+static float DROP_HEIGHT = 64.f;
+static float STEP_HEIGHT = 20.f;
+static float JUMP_HEIGHT = 60.f;
+static float LINE_DIST = 2.f;
+static float WATER_EXIT = 16.0f;
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -55,10 +66,10 @@ class PathFindNavMesh
 public:
 	struct PlanNode
 	{
-		PathPlannerNavMesh::NavSector			*Sector;
+		PathPlannerNavMesh::RuntimeNavSector *	Sector;
 		Vector3f								Position;
-		PlanNode								*Parent;
-		const PathPlannerNavMesh::NavPortal		*Portal;
+		PlanNode *								Parent;
+		const PathPlannerNavMesh::NavPortal *	Portal;
 
 		int										BoundaryEdge;
 
@@ -69,8 +80,8 @@ public:
 		obint32 Hash() const
 		{
 			return (obint32)Utils::MakeId32(
-				(obint16)Sector->mId,
-				Portal ? (obint16)Portal->m_DestSector : (obint16)0xFF);
+				(obint16)Sector->mIndex,
+				Portal ? (obint16)Portal->mDestSector : (obint16)0xFF);
 		}
 
 		void Reset()
@@ -119,7 +130,7 @@ public:
 	}
 	bool AddStart(const Vector3f &_pos)
 	{
-		PathPlannerNavMesh::NavSector *pSector = g_PlannerNavMesh->GetSectorAt(_pos,512.f);
+		PathPlannerNavMesh::RuntimeNavSector *pSector = g_PlannerNavMesh->GetSectorAt(_pos,512.f);
 		if(pSector)
 		{
 			PlanNode *pNode = _GetFreeNode();
@@ -203,10 +214,14 @@ public:
 		m_UsedNodes = 0;
 	}
 private:
+	/*std::vector<float>		mCostG;
+	std::vector<float>		mCostF;
+	std::vector<int>		mOpen;*/
+
 	struct GoalLocation
 	{
-		PathPlannerNavMesh::NavSector	*Sector;
-		Vector3f						Position;
+		PathPlannerNavMesh::RuntimeNavSector	*Sector;
+		Vector3f								Position;
 	};
 	typedef std::vector<GoalLocation> GoalList;
 	GoalList	m_CurrentGoals;
@@ -219,14 +234,6 @@ private:
 	{
 		return _n1->CostFinal > _n2->CostFinal;
 	}
-	/*static int HashNavNode(const PlanNode *_n1)
-	{
-	return _n1->Hash;
-	}*/
-
-	//typedef boost::fast_pool_allocator< std::pair< const int, PlanNode* >, boost::default_user_allocator_new_delete, boost::details::pool::default_mutex, 769 > HashMapAllocator;
-	//typedef FSBAllocator< std::pair< int, PlanNode* > > HashMapAllocator;
-
 #ifdef WIN32
 	typedef stdext::hash_compare<int> HashMapCompare;
 	typedef stdext::hash_map<int, PlanNode*, HashMapCompare/*, HashMapAllocator*/ > NavHashMap;
@@ -237,7 +244,6 @@ private:
 	NodeList			m_OpenList;
 	NodeList			m_Solution;
 
-	//typedef std::multimap<int,PlanNode*> NodeClosedList; // temp?
 	typedef NavHashMap NodeClosedList;
 	NavHashMap			m_ClosedList;
 
@@ -270,21 +276,11 @@ private:
 	void _MarkClosed(PlanNode *_node)
 	{
 		m_ClosedList[_node->Hash()] = _node;
-		//m_ClosedList.insert(std::make_pair(_node->Sector->mId,_node));
 	}
 	NodeClosedList::iterator IsOnClosedList(PlanNode *_node)
 	{
 		NodeClosedList::iterator it = m_ClosedList.find(_node->Hash());
 		return it;
-		/*NodeClosedList::iterator it = m_ClosedList.lower_bound(_node->Sector->mId);
-		NodeClosedList::iterator itEnd = m_ClosedList.upper_bound(_node->Sector->mId);
-		while(it != itEnd)
-		{
-		if(SquaredLength(_node->Position,it->second->Position) < 32.f)
-		return it;
-		++it;
-		}
-		return m_ClosedList.end();*/
 	}
 	NodeList::iterator IsOnOpenList(PlanNode *_node)
 	{
@@ -334,9 +330,9 @@ private:
 			return;
 		}
 
-		for ( size_t p = 0; p < _node->Sector->m_NavPortals.size(); ++p)
+		for ( size_t p = 0; p < _node->Sector->mPortals.size(); ++p)
 		{
-			const PathPlannerNavMesh::NavPortal &portal = _node->Sector->m_NavPortals[p];
+			const PathPlannerNavMesh::NavPortal &portal = _node->Sector->mPortals[p];
 
 			//for(int b = 0; b < )
 
@@ -345,8 +341,8 @@ private:
 			tmpNext.Reset();
 			tmpNext.Portal = &portal;
 			tmpNext.Parent = _node;
-			tmpNext.Sector = &g_PlannerNavMesh->m_ActiveNavSectors[portal.m_DestSector];
-			tmpNext.Position = portal.m_Segment.Center; // TODO: branch more
+			tmpNext.Sector = &g_PlannerNavMesh->mRuntimeSectors[portal.mDestSector];
+			tmpNext.Position = portal.mSegment.Center; // TODO: branch more
 
 			//if(m_CurrentGoals.size()==1)
 			//	tmpNext.CostHeuristic = Length(m_CurrentGoals.front().Position,tmpNext.Position); // USE IF 1 GOAL!
@@ -416,66 +412,263 @@ private:
 	}
 };
 
-PathFindNavMesh g_PathFind;
+PathFindNavMesh g_PathFind; // TEMP
 
-PathPlannerNavMesh::NavCollision PathPlannerNavMesh::FindCollision(const Vector3f &_from, const Vector3f &_to)
+//////////////////////////////////////////////////////////////////////////
+
+PathPlannerNavMesh::NavSector::NavSector()
+	: mMirror( NavmeshIO::Sector_MirrorDir_MirrorNone )
 {
-	if ( m_CollisionData.m_CollisionTree != NULL )
-	{
-		Vector3f dir = _to - _from;
-		const float distance = dir.Normalize() * 16.0f;
-
-		IceMaths::Ray ray;
-		ray.mOrig.Set( _from.X(), _from.Y(), _from.Z() );
-		ray.mDir.Set( dir.X(), dir.Y(), dir.Z() );
-
-		Opcode::CollisionFaces faces;
-		Opcode::RayCollider rayCol;
-		rayCol.SetDestination( &faces );
-		rayCol.SetMaxDist( distance );
-		rayCol.SetClosestHit( true );
-		rayCol.Collide( ray, *m_CollisionData.m_CollisionTree );
-
-		//udword		mFaceID;				//!< Index of touched face
-		//float		mDistance;				//!< Distance from collider to hitpoint
-		//float		mU, mV;
-		const Opcode::CollisionFace * hitFace = faces.GetFaces();
-		if ( hitFace != NULL )
-		{
-			Opcode::VertexPointers v;
-			m_CollisionData.m_CollisionTree->GetMeshInterface()->GetTriangle( v, hitFace->mFaceID );
-
-			/*Vector3List pts( 3 );
-			pts.push_back( Vector3f( v.Vertex[ 0 ]->x, v.Vertex[ 0 ]->y, v.Vertex[ 0 ]->z ) );
-			pts.push_back( Vector3f( v.Vertex[ 1 ]->x, v.Vertex[ 1 ]->y, v.Vertex[ 1 ]->z ) );
-			pts.push_back( Vector3f( v.Vertex[ 2 ]->x, v.Vertex[ 2 ]->y, v.Vertex[ 2 ]->z ) );
-			Utils::DrawPolygon( pts, COLOR::MAGENTA, 2.0 );*/
-
-			const PolyAttrib faceAttrib = m_CollisionData.m_TriSectorMap[ hitFace->mFaceID ];
-
-			IceMaths::Point normal = v.Normal();
-
-			return NavCollision( true,
-				_from + dir * hitFace->mDistance,
-				Vector3f( normal.x, normal.y, normal.z ),
-				faceAttrib );
-		}
-	}
-	return NavCollision(false);
 }
 
-PathPlannerNavMesh::NavSector *PathPlannerNavMesh::GetSectorAt(const Vector3f &_pos, float _distance)
+bool PathPlannerNavMesh::NavSector::IsMirrored() const
 {
-	const float CHAR_HALF_HEIGHT = NavigationMeshOptions::CharacterHeight /** 0.5f*/;
+	return mMirror != NavmeshIO::Sector_MirrorDir_MirrorNone;
+}
 
-	Vector3f raySrc = _pos+Vector3f(0,0,CHAR_HALF_HEIGHT);
-	Vector3f rayDst = raySrc - Vector3f::UNIT_Z * _distance;
-	NavCollision nc = FindCollision(raySrc, rayDst);
-	if(nc.DidHit())
+//////////////////////////////////////////////////////////////////////////
+
+PathPlannerNavMesh::RuntimeNavSector::RuntimeNavSector( obuint32 index, NavSector * sector, NavmeshIO::SectorData * data )
+	: mIndex( index )
+	, mSector( sector )
+	, mSectorData( data )
+	, mUpdatePortals( true )
+{
+}
+
+bool PathPlannerNavMesh::RuntimeNavSector::IsMirroredSector() const
+{
+	return mSectorData == &mSector->mSectorDataMirrored;
+}
+
+bool PathPlannerNavMesh::RuntimeNavSector::InitSectorTransform()
+{
+	const Vector3f center = CalculateCenter();
+
+	mSectorData->clear_mover();
+
+	GameEntity mover = InterfaceFuncs::GetMoverAt( center );
+	if ( mover.IsValid() )
 	{
-		return &m_ActiveNavSectors[ nc.HitAttrib().Fields.ActiveId ];
+		bool good = true;
+
+		Vector3f moverPos;
+		Vector3f moverFwd, moverRight, moverUp;
+		good &= EngineFuncs::EntityPosition(
+			mover,
+			moverPos );
+		good &= EngineFuncs::EntityOrientation(
+			mover,
+			moverFwd,
+			moverRight,
+			moverUp );
+
+		if ( good )
+		{
+			const Matrix3f moverOrient( moverRight, moverFwd, moverUp, true );
+
+			mSectorData->mutable_mover()->set_id( mover.AsInt() );
+
+			mLocalPoly.resize( mPoly.size() );
+			mSectorData->clear_localoffsets();
+			for ( size_t i = 0; i < mPoly.size(); ++i )
+			{
+				mLocalPoly[ i ] = (mPoly[ i ] - moverPos) * moverOrient.Transpose();
+
+				NavmeshIO::SectorVert * vert = mSectorData->add_localoffsets();
+				vert->mutable_position()->set_x( mLocalPoly[ i ].X() );
+				vert->mutable_position()->set_y( mLocalPoly[ i ].Y() );
+				vert->mutable_position()->set_z( mLocalPoly[ i ].Z() );
+			}
+
+			UpdateSectorTransform();
+			return true;
+		}
 	}
-	return NULL;
+	return false;
+}
+
+void PathPlannerNavMesh::RuntimeNavSector::UpdateSectorTransform()
+{
+	if ( mSectorData->onmover() )
+	{
+		GameEntity mover;
+		mover.FromInt( mSectorData->mover().id() );
+
+		Vector3f moverPos;
+		Vector3f moverFwd, moverRight, moverUp;
+		if ( mover.IsValid() &&
+			EngineFuncs::EntityPosition( mover, moverPos ) &&
+			EngineFuncs::EntityOrientation(
+			mover,
+			moverFwd,
+			moverRight,
+			moverUp ) )
+		{
+			const Matrix3f moverOrient( moverRight, moverFwd, moverUp, true );
+
+			for ( size_t i = 0; i < mPoly.size(); ++i )
+				mPoly[ i ] = moverPos + mLocalPoly[ i ] * moverOrient;
+		}
+		else
+		{
+			const Vector3f center = CalculateCenter();
+			RenderBuffer::AddString3d(
+				center + Vector3f(0.f,0.f,32.f),
+				COLOR::RED,
+				"Invalid Mover Entity" );
+		}
+	}
+	else
+	{
+		Vector3List empty;
+		mLocalPoly.swap( empty );
+	}
+}
+
+void PathPlannerNavMesh::RuntimeNavSector::UpdateAutoFlags()
+{
+	const Vector3f center = CalculateCenter();
+
+	// reset the fields we're going to auto detect
+	mSectorData->clear_inwater();
+	mSectorData->clear_waterdepth();
+
+	const int contents = g_EngineFuncs->GetPointContents( center );
+
+	// set the flags
+	const NavmeshIO::SectorData & def = NavmeshIO::SectorData::default_instance();
+
+	const bool inwater = (contents & CONT_WATER)!=0;
+
+	if ( def.inwater() != inwater )
+		mSectorData->set_inwater( inwater );
+
+	if ( mSectorData->inwater() )
+	{
+		// find the water depth over the sector
+		obTraceResult tr;
+		EngineFuncs::TraceLine(tr,
+			center + Vector3f( 0.f, 0.f, 1.f ),
+			center + Vector3f( 0.f, 0.f, 1024.f ),
+			NULL,TR_MASK_FLOODFILL,-1,False);
+
+		EngineFuncs::TraceLine(tr,
+			Vector3f( tr.m_Endpos ) + Vector3f( 0.f, 0.f, -1.f),
+			Vector3f( tr.m_Endpos ) + Vector3f( 0.f, 0.f, -1024.f),
+			NULL,TR_MASK_WATER,-1,False);
+
+		if ( tr.m_Fraction < 1.0f )
+		{
+			mSectorData->set_waterdepth( tr.m_Endpos[2] - center.Z() );
+		}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+void PathPlannerNavMesh::RuntimeNavSector::BuildSectorPortals( PathPlannerNavMesh * navmesh )
+{
+	mPortals.resize( 0 );
+
+	SegmentList edges;
+	GetEdgeSegments( edges );
+
+	const float MAX_STEPUP = std::max( JUMP_HEIGHT, mSectorData->waterdepth() + WATER_EXIT );
+
+	for ( size_t e = 0; e < edges.size(); ++e )
+	{
+		const Segment3f & seg0 = edges[ e ];
+
+		Line3f line0;
+		line0.FromPoints( seg0.P0, seg0.P1 );
+
+		// the box height is adjusted for proximity with both climb/jumpable sectors
+		// as well as sectors that may be jumped down onto
+		Box3f obb;
+		obb.Center = seg0.Center;
+		obb.Center.Z() += (MAX_STEPUP - DROP_HEIGHT) * 0.5f;
+		obb.Axis[ 0 ] = seg0.Direction.Cross( Vector3f::UNIT_Z );
+		obb.Axis[ 1 ] = seg0.Direction;
+		obb.Axis[ 2 ] = obb.Axis[ 0 ].Cross( obb.Axis[ 1 ] );
+		obb.Extent[ 0 ] = 8;
+		obb.Extent[ 1 ] = seg0.Extent;
+		obb.Extent[ 2 ] = (MAX_STEPUP - -DROP_HEIGHT) * 0.5f;
+
+		//RenderBuffer::AddOBB( obb, COLOR::ORANGE );
+
+		RuntimeSectorRefList nearbySectors;
+		navmesh->FindRuntimeSectors( obb, nearbySectors );
+
+		// search all sectors for neighboring connections
+		for ( size_t n = 0; n < nearbySectors.size(); ++n )
+		{
+			RuntimeNavSector * neighbor = nearbySectors[ n ];
+
+			if ( this == neighbor )
+				continue;
+
+			const Vector3List & edges1 = neighbor->mPoly;
+			for ( size_t nb = 1; nb <= edges1.size(); ++nb )
+			{
+				Segment3f seg1( edges1[ nb-1 ], edges1[ nb % edges1.size() ] );
+
+				DistPoint3Line3f d0( seg1.P0, line0 );
+				DistPoint3Line3f d1( seg1.P1, line0 );
+
+				d0.GetSquared();
+				d1.GetSquared();
+
+				/*RenderBuffer::AddLine(
+				d0.GetClosestPoint1() + Vector3f( 0.0f, 0.0f, 2.0f ),
+				d0.GetClosestPoint0() + Vector3f( 0.0f, 0.0f, 2.0f ),
+				COLOR::MAGENTA );
+
+				RenderBuffer::AddLine(
+				d1.GetClosestPoint1() + Vector3f( 0.0f, 0.0f, 2.0f ),
+				d1.GetClosestPoint0() + Vector3f( 0.0f, 0.0f, 2.0f ),
+				COLOR::RED );*/
+
+				// the lines must overlap
+				/*if ( d0.GetLineParameter() > seg0.Extent && d1.GetLineParameter() > seg0.Extent )
+				continue;
+				if ( d0.GetLineParameter() < -seg0.Extent && d1.GetLineParameter() < -seg0.Extent )
+				continue;*/
+
+				// pull the points into the segment space
+				const float d0Segment = Mathf::Clamp( d0.GetLineParameter(), -seg0.Extent, seg0.Extent );
+				const float d1Segment = Mathf::Clamp( d1.GetLineParameter(), -seg0.Extent, seg0.Extent );
+
+				if ( Mathf::FAbs( d0Segment - d1Segment ) < 8.0 )
+					continue;
+
+				const Vector3f p0diff = d0.GetClosestPoint1() - d0.GetClosestPoint0();
+				const Vector3f p1diff = d1.GetClosestPoint1() - d1.GetClosestPoint0();
+
+				const float p0zDiff = seg1.P0.Z() - d0.GetClosestPoint1().Z();
+				const float p1zDiff = seg1.P1.Z() - d0.GetClosestPoint1().Z();
+
+				// are these lines are close enough
+				if ( p0diff.Length2d() < LINE_DIST && p1diff.Length2d() < LINE_DIST &&
+					p0zDiff <= MAX_STEPUP && p1zDiff <= MAX_STEPUP &&
+					p0zDiff >= -DROP_HEIGHT && p1zDiff >= -DROP_HEIGHT )
+				{
+					NavPortal portal;
+					portal.mSegment.P0 = line0.Origin + d0Segment * line0.Direction;
+					portal.mSegment.P1 = line0.Origin + d1Segment * line0.Direction;
+					portal.mSegment.ComputeCenterDirectionExtent();
+					portal.mDestSector = neighbor->mIndex;
+
+					// do we need to jump to reach this edge?
+					if ( p0zDiff > STEP_HEIGHT && p0zDiff <= JUMP_HEIGHT )
+					{
+						portal.mFlags.SetFlag( NavPortal::FL_JUMP );
+					}
+					mPortals.push_back( portal );
+				}
+			}
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -500,6 +693,8 @@ PathPlannerNavMesh::PathPlannerNavMesh()
 	g_PlannerNavMesh = this;
 
 	mInfluenceBufferId = 0;
+
+	mCurrentTool = NULL;
 }
 
 PathPlannerNavMesh::~PathPlannerNavMesh()
@@ -508,26 +703,26 @@ PathPlannerNavMesh::~PathPlannerNavMesh()
 	g_PlannerNavMesh = 0;
 }
 
-Vector3f PathPlannerNavMesh::NavSector::CalculateCenter() const
+Vector3f PathPlannerNavMesh::NavSectorBase::CalculateCenter() const
 {
 	Vector3f center = Vector3f::ZERO;
-	if ( m_Boundary.size() > 0 )
+	if ( mPoly.size() > 0 )
 	{
-		center = m_Boundary[ 0 ];
-		for ( size_t i = 1; i < m_Boundary.size(); ++i )
-			center += m_Boundary[ i ];
-		center /= (float)m_Boundary.size();
+		center = mPoly[ 0 ];
+		for ( size_t i = 1; i < mPoly.size(); ++i )
+			center += mPoly[ i ];
+		center /= (float)mPoly.size();
 	}
 	return center;
 }
 
-PathPlannerNavMesh::NavSector PathPlannerNavMesh::NavSector::GetMirroredCopy(const Vector3f &offset) const
+void PathPlannerNavMesh::NavSectorBase::GetMirroredCopy(
+	const Vector3f & mirrorAxis,
+	NavmeshIO::Sector_MirrorDir mirror,
+	NavSectorBase & dest) const
 {
-	NavSector ns;
-	ns.mMirror = NavmeshIO::Sector_MirrorDir_MirrorNone;
-
 	Vector3f vAxis;
-	switch(mMirror)
+	switch( mirror )
 	{
 	case NavmeshIO::Sector_MirrorDir_MirrorX:
 		vAxis = Vector3f::UNIT_X;
@@ -552,30 +747,31 @@ PathPlannerNavMesh::NavSector PathPlannerNavMesh::NavSector::GetMirroredCopy(con
 	}
 
 	Matrix3f mat(vAxis, Mathf::DegToRad(180.0f));
-	ns.m_Boundary = m_Boundary;
-	for(obuint32 m = 0; m < ns.m_Boundary.size(); ++m)
+	dest.mPoly = mPoly;
+	for(obuint32 m = 0; m < dest.mPoly.size(); ++m)
 	{
-		ns.m_Boundary[m] -= offset;
-		ns.m_Boundary[m] = mat * ns.m_Boundary[m];
-		ns.m_Boundary[m] += offset;
+		dest.mPoly[m] -= mirrorAxis;
+		dest.mPoly[m] = mat * dest.mPoly[m];
+		dest.mPoly[m] += mirrorAxis;
 	}
-	return ns;
+	dest.mPlane.Normal = mat * dest.mPlane.Normal;
 }
 
-void PathPlannerNavMesh::NavSector::GetEdgeSegments(SegmentList &_list) const
+void PathPlannerNavMesh::NavSectorBase::GetEdgeSegments(SegmentList &_list) const
 {
-	for(obuint32 m = 0; m < m_Boundary.size()-1; ++m)
+	_list.reserve( mPoly.size() );
+	for ( size_t i = 1; i <= mPoly.size(); ++i )
 	{
-		_list.push_back( Segment3f(m_Boundary[m],m_Boundary[m+1]) );
+		_list.push_back( Segment3f( mPoly[ i-1 ], mPoly[ i % mPoly.size() ] ) );
 	}
-	_list.push_back( Segment3f( m_Boundary[m_Boundary.size()-1],m_Boundary[0] ) );
 }
 
-SegmentList PathPlannerNavMesh::NavSector::GetEdgeSegments() const
+void PathPlannerNavMesh::NavSectorBase::SetPointsToPlane()
 {
-	SegmentList lst;
-	GetEdgeSegments(lst);
-	return lst;
+	for ( size_t i = 0; i < mPoly.size(); ++i )
+	{
+		Utils::PushPointToPlane( mPoly[ i ], mPlane, -Vector3f::UNIT_Z );
+	}
 }
 
 bool PathPlannerNavMesh::Init( System & system )
@@ -592,13 +788,14 @@ void PathPlannerNavMesh::RegisterScriptFunctions(gmMachine *a_machine)
 {
 }
 
-static void DrawPoly( bool solid, const PathPlannerNavMesh::NavSector & ns, const TPPLPoly & poly, float offset, obColor color, float dur, float vertSize )
+static void DrawPoly( bool solid, const PathPlannerNavMesh::RuntimeNavSector & ns, const TPPLPoly & poly, float offset, obColor color, float dur, float vertSize )
 {
 	Vector3List polyList;
 	for ( int i = 0; i < poly.GetNumPoints(); ++i )
 	{
 		Vector3f vec3d( (float)poly[ i ].x, (float)poly[ i ].y, 0.0f );
-		ns.m_Plane.DropToPlane( vec3d, -Vector3f::UNIT_Z );
+		Utils::PushPointToPlane( vec3d, ns.mPlane, -Vector3f::UNIT_Z );
+
 		vec3d.Z() += offset;
 		polyList.push_back( vec3d );
 	}
@@ -618,7 +815,7 @@ static void DrawPoly( bool solid, const PathPlannerNavMesh::NavSector & ns, cons
 	}
 }
 
-static void DrawPoly( bool solid, const PathPlannerNavMesh::NavSector & ns, const ClipperLib::Polygon & poly, float offset, obColor color, float dur, float vertSize )
+static void DrawPoly( bool solid, const PathPlannerNavMesh::RuntimeNavSector & ns, const ClipperLib::Polygon & poly, float offset, obColor color, float dur, float vertSize )
 {
 	Vector3List polyList;
 	for ( ClipperLib::Polygon::const_iterator it = poly.begin();
@@ -627,7 +824,9 @@ static void DrawPoly( bool solid, const PathPlannerNavMesh::NavSector & ns, cons
 	{
 		const ClipperLib::IntPoint & pt = *it;
 		Vector3f vec3d( (float)pt.X, (float)pt.Y, 0.0f );
-		ns.m_Plane.DropToPlane( vec3d, -Vector3f::UNIT_Z );
+
+		Utils::PushPointToPlane( vec3d, ns.mPlane, -Vector3f::UNIT_Z );
+
 		vec3d.Z() += offset;
 		polyList.push_back( vec3d );
 	}
@@ -651,7 +850,14 @@ void PathPlannerNavMesh::Update( System & system )
 {
 	Prof(PathPlannerNavMesh);
 
+	if ( mCurrentTool )
+		mCurrentTool->Update( this );
+
 	UpdateFsm(IGame::GetDeltaTimeSecs());
+
+	UpdateMoverSectors();
+	UpdatePortals();
+	UpdateObstacles();
 
 	if(m_PlannerFlags.CheckFlag(NAV_VIEW))
 	{
@@ -661,7 +867,7 @@ void PathPlannerNavMesh::Update( System & system )
 		Vector3f vLocalPos, vLocalAim, vAimPos, vAimNormal;
 		Utils::GetLocalEyePosition(vLocalPos);
 		Utils::GetLocalFacing(vLocalAim);
-		if(Utils::GetLocalAimPoint(vAimPos, &vAimNormal))
+		if(Utils::GetLocalAimPoint(vAimPos, &vAimNormal, TR_MASK_FLOODFILLENT))
 		{
 			RenderBuffer::AddLine(vAimPos,
 				vAimPos + vAimNormal * 16.f,
@@ -696,99 +902,55 @@ void PathPlannerNavMesh::Update( System & system )
 			influenceDone = m_Influence->UpdateInfluences( iterations );
 		}
 
-		NavSector nsMirrored;
-
-		static int iLastSector = -1;
-
-		static int iNextCurSectorTimeUpdate = 0;
-		if(iCurrentSector != -1 &&
-			(iLastSector != iCurrentSector || IGame::GetTime() >= iNextCurSectorTimeUpdate))
-		{
-			iLastSector = iCurrentSector;
-			iNextCurSectorTimeUpdate = IGame::GetTime() + 500;
-			//Utils::DrawPolygon(m_ActiveNavSectors[iCurrentSector].m_Boundary, COLOR::RED, 0.5f, false);
-		}
-
 		//////////////////////////////////////////////////////////////////////////
 		// Draw our nav sectors
-		for(obuint32 i = 0; i < m_ActiveNavSectors.size(); ++i)
+		for ( obuint32 i = 0; i < mRuntimeSectors.size(); ++i )
 		{
-			const NavSector &ns = m_ActiveNavSectors[i];
+			const RuntimeNavSector &ns = mRuntimeSectors[i];
 
 			// mirrored sectors are contiguous at the end of
-			// the m_ActiveNavSectors list, so draw them differently
+			// the mRuntimeSectors list, so draw them differently
 			obColor SEC_COLOR = COLOR::GREEN;
-			if ( i >= m_NavSectors.size() )
+			if ( i >= mNavSectors.size() )
 				SEC_COLOR = COLOR::CYAN;
 
 			//////////////////////////////////////////////////////////////////////////
 			// Draw sector obstacles
-			if ( ns.m_Obstacles.size() > 0 )
+			if ( ns.mObstacles.size() > 0 )
 			{
-				ClipperLib::Polygon sectorPoly;
-				for ( size_t b = 0; b < ns.m_Boundary.size(); ++b )
+				ClipperLib::Polygon		sectorPoly;
+				ClipperLib::Polygons	obstaclePolys;
+
+				for ( size_t b = 0; b < ns.mPoly.size(); ++b )
 				{
 					sectorPoly.push_back( ClipperLib::IntPoint(
-						(ClipperLib::long64)ns.m_Boundary[b].X(),
-						(ClipperLib::long64)ns.m_Boundary[b].Y() ) );
+						(ClipperLib::long64)ns.mPoly[b].X(),
+						(ClipperLib::long64)ns.mPoly[b].Y() ) );
 				}
 
-				ClipperLib::Polygons obstaclePolys;
-				for ( size_t o = 0; o < ns.m_Obstacles.size(); ++o )
+				for ( size_t o = 0; o < ns.mObstacles.size(); ++o )
 				{
 					obstaclePolys.push_back( ClipperLib::Polygon() );
 
 					ClipperLib::Polygon & obs = obstaclePolys.back();
-					for ( size_t ov = 0; ov < ns.m_Obstacles[o].mPolyVerts.size(); ++ov )
+					for ( size_t ov = 0; ov < ns.mObstacles[o].mPoly.size(); ++ov )
 					{
 						obs.push_back( ClipperLib::IntPoint(
-							(ClipperLib::long64)ns.m_Obstacles[o].mPolyVerts[ ov ].X(),
-							(ClipperLib::long64)ns.m_Obstacles[o].mPolyVerts[ ov ].Y() ) );
+							(ClipperLib::long64)ns.mObstacles[o].mPoly[ ov ].X(),
+							(ClipperLib::long64)ns.mObstacles[o].mPoly[ ov ].Y() ) );
 					}
 				}
 
-				//////////////////////////////////////////////////////////////////////////
-				// generate the union of the obstacles in case there is overlap
-				//static bool mergeObstacles = false;
-				//if ( mergeObstacles && obstaclePolys.size() > 0 )
-				//{
-				//	static ClipperLib::ClipType ct = ClipperLib::ctUnion;
-				//	static ClipperLib::PolyFillType pft = ClipperLib::pftNonZero;
-
-				//	ClipperLib::Clipper obsUnion;
-				//	obsUnion.AddPolygon( obstaclePolys[0], ClipperLib::ptSubject );
-				//	obsUnion.AddPolygons( obstaclePolys, ClipperLib::ptClip );
-				//	if ( obsUnion.Execute( ct, pft ) )
-				//	{
-				//		obstaclePolys.resize( 0 );
-
-				//		ClipperLib::Polygon poly;
-				//		for ( size_t i = 0; i < obsUnion.GetNumPolysOut(); ++i )
-				//		{
-				//			bool polyIsHole = false;
-				//			if ( obsUnion.GetPolyOut( i, poly, polyIsHole ) )
-				//			{
-				//				//assert( ClipperLib::Orientation( poly ) );
-				//				if ( !ClipperLib::Orientation( poly ) )
-				//				{
-				//					DrawPoly( true, ns, poly, 12, COLOR::WHITE, 2.0f, 4.0f );
-				//				}
-				//				obstaclePolys.push_back( poly );
-				//			}
-				//		}
-				//	}
-				//}
-				//////////////////////////////////////////////////////////////////////////
 				assert ( ClipperLib::Orientation( sectorPoly ) );
 
 				static ClipperLib::ClipType ct = ClipperLib::ctDifference;
 				static ClipperLib::PolyFillType pft = ClipperLib::pftNonZero;
 				static ClipperLib::PolyFillType cft = ClipperLib::pftNonZero;
 
-				ClipperLib::Clipper obsNav;
-				obsNav.AddPolygon( sectorPoly, ClipperLib::ptSubject );
-				obsNav.AddPolygons( obstaclePolys, ClipperLib::ptClip );
-				if ( obsNav.Execute( ct, pft, cft ) )
+				ClipperLib::Clipper clipNav;
+				clipNav.AddPolygon( sectorPoly, ClipperLib::ptSubject );
+				clipNav.AddPolygons( obstaclePolys, ClipperLib::ptClip );
+				if ( clipNav.Execute( ct, pft, cft ) )
 				{
 					typedef std::list<TPPLPoly> PolyList;
 					PolyList inputPolys;
@@ -797,10 +959,10 @@ void PathPlannerNavMesh::Update( System & system )
 					// add all the solution polygons to the input polygons
 					// of the partition list
 					ClipperLib::Polygon poly;
-					for ( size_t p = 0; p < obsNav.GetNumPolysOut(); ++p )
+					for ( size_t p = 0; p < clipNav.GetNumPolysOut(); ++p )
 					{
 						bool polyIsHole = false;
-						if ( obsNav.GetPolyOut( p, poly, polyIsHole ) )
+						if ( clipNav.GetPolyOut( p, poly, polyIsHole ) )
 						{
 							inputPolys.push_back( TPPLPoly() );
 							inputPolys.back().Init( poly.size() );
@@ -813,11 +975,13 @@ void PathPlannerNavMesh::Update( System & system )
 
 								TPPLPoint & tpp = inputPolys.back()[ j ];
 								tpp.x = (float)pt.X;
-								tpp.y = (float)pt.X;
+								tpp.y = (float)pt.Y;
 
 								//////////////////////////////////////////////////////////////////////////
 								Vector3f vec3d( (float)tpp.x, (float)tpp.y, 0.0f );
-								ns.m_Plane.DropToPlane( vec3d, -Vector3f::UNIT_Z );
+
+								Utils::PushPointToPlane( vec3d, ns.mPlane, -Vector3f::UNIT_Z );
+
 								drawList.push_back( vec3d );
 								//////////////////////////////////////////////////////////////////////////
 							}
@@ -836,21 +1000,15 @@ void PathPlannerNavMesh::Update( System & system )
 							++it )
 						{
 							const TPPLPoly & ply = *it;
-							for ( int p = 0; p < ply.GetNumPoints(); ++p )
-							{
-								Vector3f vec3d( (float)ply[ p ].x, (float)ply[ p ].y, 0.0f );
-								ns.m_Plane.DropToPlane( vec3d, -Vector3f::UNIT_Z );
-							}
-
 							DrawPoly( true, ns, ply, 0.0f, SEC_COLOR.fade(100), 2.0f, 4.0f );
 							DrawPoly( false, ns, ply, 0.0f, SEC_COLOR, 2.0f, 4.0f );
 						}
 					}
 					else
 					{
-						const NavSector &ns = m_ActiveNavSectors[i];
+						const RuntimeNavSector &ns = mRuntimeSectors[i];
 
-						RenderBuffer::AddLine(ns.m_Boundary, COLOR::RED.fade( 100 ));
+						RenderBuffer::AddLine(ns.mPoly, COLOR::RED.fade( 100 ));
 
 						// Draw the error input poly line
 						for ( PolyList::iterator p = inputPolys.begin();
@@ -864,51 +1022,120 @@ void PathPlannerNavMesh::Update( System & system )
 			}
 			else
 			{
-				RenderBuffer::AddPolygonFilled( ns.m_Boundary, SEC_COLOR.fade(100) );
-				RenderBuffer::AddPolygonSilouette( ns.m_Boundary, SEC_COLOR );
+				RenderBuffer::AddPolygonFilled( ns.mPoly, SEC_COLOR.fade(100) );
+				RenderBuffer::AddPolygonSilouette( ns.mPoly, SEC_COLOR );
 
 				// render the points, colored by whether this sector is mirrored
-				const obColor ptColor = m_NavSectors[ ns.mId ].IsMirrored() ?
-					COLOR::CYAN :
-				COLOR::MAGENTA;
-				RenderBuffer::AddPoints( ns.m_Boundary, ptColor, 5.0f );
+				const obColor ptColor = ( ns.mSector->mMirror != NavmeshIO::Sector_MirrorDir_MirrorNone ) ?
+					COLOR::CYAN : COLOR::MAGENTA;
+				RenderBuffer::AddPoints( ns.mPoly, ptColor, 5.0f );
 			}
 
-			if(m_PlannerFlags.CheckFlag(NAV_VIEWCONNECTIONS))
+			if ( m_PlannerFlags.CheckFlag( NAV_VIEWCONNECTIONS ) )
 			{
-				ConnectTest();
+				//ConnectTest();
 
-				for ( size_t p = 0; p < ns.m_NavPortals.size(); ++p )
+				for ( size_t p = 0; p < ns.mPortals.size(); ++p )
 				{
-					const NavPortal &portal = ns.m_NavPortals[ p ];
+					const NavPortal &portal = ns.mPortals[ p ];
 
-					const Vector3f fwd = ( portal.m_Segment.P1 - portal.m_Segment.P0 ).UnitCross( Vector3f::UNIT_Z );
-
-					RenderBuffer::AddLine(
-						portal.m_Segment.P0 + Vector3f(0.0f,0.0f,8.0f),
-						portal.m_Segment.P1 + Vector3f(0.0f,0.0f,8.0f),
-						COLOR::BLUE.fade( 100 ));
+					const Vector3f fwd = ( portal.mSegment.P1 - portal.mSegment.P0 ).UnitCross( Vector3f::UNIT_Z );
 
 					RenderBuffer::AddLine(
-						portal.m_Segment.Center + Vector3f(0.0f,0.0f,8.0f),
-						portal.m_Segment.Center + Vector3f(0.0f,0.0f,8.0f) + fwd * 4.0f,
-						COLOR::BLUE.fade( 100 ));
+						portal.mSegment.P0 + Vector3f(0.0f,0.0f,2.0f),
+						portal.mSegment.P1 + Vector3f(0.0f,0.0f,2.0f),
+						COLOR::MAGENTA );
 
-					const NavSector & destSector = m_ActiveNavSectors[ portal.m_DestSector ];
+					const RuntimeNavSector & destSector = mRuntimeSectors[ portal.mDestSector ];
 
-					RenderBuffer::AddLine(
-						portal.m_Segment.Center + Vector3f(0.0f,0.0f,8.0f) + fwd * 4.0f,
-						destSector.CalculateCenter(),
-						COLOR::BLUE.fade( 100 ));
+					obColor portalColor = COLOR::BLUE;
+					if ( portal.mFlags.CheckFlag( NavPortal::FL_DISABLED ) )
+						portalColor = COLOR::RED;
+					else if ( portal.mFlags.CheckFlag( NavPortal::FL_JUMP ) )
+						portalColor = COLOR::CYAN;
+
+					Vector3f vP0 = portal.mSegment.Center;
+					Vector3f vP1 = vP0;
+
+					Utils::PushPointToPlane( vP1, destSector.mPlane, -Vector3f::UNIT_Z );
+
+					RenderBuffer::AddLine( vP0, vP1,portalColor );
+					vP0 = vP1;
+					vP1 = destSector.CalculateCenter();
+					RenderBuffer::AddArrow( vP0, vP1,portalColor );
 				}
 			}
 
 			if ( m_PlannerFlags.CheckFlag( NAV_VIEWFLAGS ) )
 			{
-				std::string strData = ns.mSectorData.ShortDebugString();
+				using namespace google;
+				const protobuf::Reflection * refl = ns.mSectorData->GetReflection();
 
+				// fields for mirrored
+				NavmeshIO::SectorData & data = *ns.mSectorData;
+				NavmeshIO::SectorData & otherData =
+					ns.IsMirroredSector() ? ns.mSector->mSectorData : ns.mSector->mSectorDataMirrored;
+
+				std::vector<const protobuf::FieldDescriptor*> fields0;
+				std::vector<const protobuf::FieldDescriptor*> fields1;
+
+				refl->ListFields( data, &fields0 );
+				refl->ListFields( otherData, &fields1 );
+
+				StringVector strs;
+
+				// what fields do the sectors share
+				while( fields0.size() > 0 )
+				{
+					const protobuf::FieldDescriptor * field = fields0.back();
+
+					if ( !field->is_repeated() )
+					{
+						std::string s = va( "%s - %s",
+							field->lowercase_name().c_str(),
+							GetFieldString( data, field ).c_str() );
+
+						if ( refl->HasField( otherData, field ) )
+							s += " <+m> ";
+
+						strs.push_back( s );
+					}
+
+					fields0.erase( std::remove( fields0.begin(), fields0.end(), field ), fields0.end() );
+					fields1.erase( std::remove( fields1.begin(), fields1.end(), field ), fields1.end() );
+				}
+
+				// what's in the mirrored and not this one
+				while( fields1.size() > 0 )
+				{
+					const protobuf::FieldDescriptor * field = fields1.front();
+
+					if ( !field->is_repeated() )
+					{
+						std::string s = va( "%s - %s",
+							field->lowercase_name().c_str(),
+							GetFieldString( otherData, field ).c_str() );
+						s += " <m> ";
+
+						strs.push_back( s );
+					}
+
+					fields0.erase( std::remove( fields0.begin(), fields0.end(), field ), fields0.end() );
+					fields1.erase( std::remove( fields1.begin(), fields1.end(), field ), fields1.end() );
+				}
+
+				std::sort( strs.begin(), strs.end(), std::less<std::string>() );
+
+				std::string strData;
+				for ( size_t s = 0; s < strs.size(); ++s )
+				{
+					strData += strs[ s ];
+					strData += "\n";
+				}
+
+				/*std::string strData = ns.mSectorData->ShortDebugString();*/
 				RenderBuffer::AddString3dRadius(
-					ns.CalculateCenter() + Vector3f(0.f,0.f,96.f),
+					ns.CalculateCenter() + Vector3f(0.f,0.f,32.f),
 					COLOR::BLUE, 1024.f, strData.c_str() );
 			}
 		}
@@ -962,16 +1189,20 @@ void PathPlannerNavMesh::Update( System & system )
 			}
 		}
 		//////////////////////////////////////////////////////////////////////////
-		if(!m_WorkingSector.m_Boundary.empty())
+		if(!m_WorkingSector.mPoly.empty())
 		{
 			RenderBuffer::AddLine(
 				m_WorkingSectorStart,
 				m_WorkingSectorStart + m_WorkingSectorPlane.Normal * 10.0f,
 				COLOR::MAGENTA );
 
-			RenderBuffer::AddPolygonFilled( m_WorkingSector.m_Boundary, COLOR::BLUE.fade(100) );
+			RenderBuffer::AddPolygonFilled( m_WorkingSector.mPoly, COLOR::BLUE.fade(100) );
 			if ( m_WorkingSector.IsMirrored() )
-				RenderBuffer::AddPolygonFilled( m_WorkingSector.GetMirroredCopy(m_MapCenter).m_Boundary, COLOR::CYAN );
+			{
+				NavSectorBase temp;
+				m_WorkingSector.GetMirroredCopy(m_MapCenter, m_WorkingSector.mMirror, temp);
+				RenderBuffer::AddPolygonFilled( temp.mPoly, COLOR::CYAN.fade(100) );
+			}
 		}
 	}
 }
@@ -986,8 +1217,9 @@ bool PathPlannerNavMesh::Load(const std::string &_mapname, bool _dl)
 	if(_mapname.empty())
 		return false;
 
-	m_ActiveNavSectors.clear();
-	m_NavSectors.clear();
+	OB_DELETE( mCurrentTool );
+	mRuntimeSectors.clear();
+	mNavSectors.clear();
 
 	try
 	{
@@ -999,6 +1231,9 @@ bool PathPlannerNavMesh::Load(const std::string &_mapname, bool _dl)
 		NavmeshIO::NavigationMesh nm;
 
 		std::string fileContents;
+
+		/*const obint64 modBin = FileSystem::FileModifiedTime( filePath( "%s", navPathBinary.c_str() ) );
+		const obint64 modTxt = FileSystem::FileModifiedTime( filePath( "%s", navPathText.c_str() ) );*/
 
 		File navFile;
 		if ( navFile.OpenForRead( navPathBinary.c_str(), File::Binary) )
@@ -1023,8 +1258,8 @@ bool PathPlannerNavMesh::Load(const std::string &_mapname, bool _dl)
 		m_MapCenter.Y() = nm.header().mapcenter().y();
 		m_MapCenter.Z() = nm.header().mapcenter().z();
 
-		m_NavSectors.clear();
-		m_NavSectors.reserve( nm.sectors_size() );
+		mNavSectors.clear();
+		mNavSectors.reserve( nm.sectors_size() );
 
 		for ( int i = 0; i < nm.sectors_size(); ++i )
 		{
@@ -1038,13 +1273,17 @@ bool PathPlannerNavMesh::Load(const std::string &_mapname, bool _dl)
 			for ( int i = 0; i < s.vertices_size(); ++i )
 			{
 				const NavmeshIO::SectorVert & v = s.vertices( i );
-				sector.m_Boundary.push_back( Vector3f(
+				sector.mPoly.push_back( Vector3f(
 					v.position().x(),
 					v.position().y(),
 					v.position().z() ) );
 			}
 
-			m_NavSectors.push_back( sector );
+			// calculate normal
+			const Vector3f center = sector.CalculateCenter();
+			sector.mPlane = Plane3f( center, sector.mPoly[ 0 ], sector.mPoly[ 1 ] );
+
+			mNavSectors.push_back( sector );
 		}
 	}
 	catch (std::exception* e)
@@ -1073,37 +1312,27 @@ bool PathPlannerNavMesh::Save(const std::string &_mapname)
 		nm.mutable_header()->mutable_mapcenter()->set_z( m_MapCenter.Z() );
 	}
 
-	for(obuint32 s = 0; s < m_NavSectors.size(); ++s)
+	for(obuint32 s = 0; s < mNavSectors.size(); ++s)
 	{
-		const NavSector &ns = m_NavSectors[s];
+		const NavSector &ns = mNavSectors[s];
 
 		NavmeshIO::Sector* sectorOut = nm.add_sectors();
 
-		sectorOut->set_sectormirrored( ns.mMirror );
+		if ( ns.IsMirrored() )
+			sectorOut->set_sectormirrored( ns.mMirror );
+		else
+			sectorOut->clear_sectormirrored();
+
 		*sectorOut->mutable_sectordata() = ns.mSectorData;
 		*sectorOut->mutable_sectordatamirrored() = ns.mSectorDataMirrored;
 
-		for(obuint32 v = 0; v < ns.m_Boundary.size(); ++v)
+		for(obuint32 v = 0; v < ns.mPoly.size(); ++v)
 		{
 			NavmeshIO::SectorVert * sectorVertOut = sectorOut->add_vertices();
-			sectorVertOut->mutable_position()->set_x( ns.m_Boundary[v].X() );
-			sectorVertOut->mutable_position()->set_y( ns.m_Boundary[v].Y() );
-			sectorVertOut->mutable_position()->set_z( ns.m_Boundary[v].Z() );
+			sectorVertOut->mutable_position()->set_x( ns.mPoly[v].X() );
+			sectorVertOut->mutable_position()->set_y( ns.mPoly[v].Y() );
+			sectorVertOut->mutable_position()->set_z( ns.mPoly[v].Z() );
 		}
-
-		// TODO: walk the message tree and clear fields
-		// that are default value to reduce the data size
-		/*std::vector<const google::protobuf::FieldDescriptor*> fields;
-		sectorOut->GetReflection()->ListFields( *sectorOut, fields );
-		for ( size_t f = 0; f < fields.size(); ++f )
-		{
-		if ( fields[ f ]->is_optional() )
-		{
-		fields[ f ]->reflec
-		sectorOut->GetReflection()->ClearField( *sectorOut, fields[ f ] );
-		fields[ f ]->default
-		}
-		}*/
 	}
 
 	std::string outBuffer;
@@ -1116,18 +1345,20 @@ bool PathPlannerNavMesh::Save(const std::string &_mapname)
 
 	try
 	{
+		ClearDefaultedValues( nm );
+
 		nm.SerializeToString( &serializeBinary );
 		TextFormat::PrintToString( nm, &serializeText );
 
 		const std::string navPathText	= std::string("nav/") + _mapname + ".nm";
 		const std::string navPathBinary	= std::string("nav/") + _mapname + ".nmb";
 
-		File outFileBinary;
+		/*File outFileBinary;
 		if ( outFileBinary.OpenForWrite(navPathBinary.c_str(), File::Binary) )
 		{
-			outFileBinary.Write( serializeBinary.c_str(), serializeBinary.length(), 1 );
-			outFileBinary.Close();
-		}
+		outFileBinary.Write( serializeBinary.c_str(), serializeBinary.length(), 1 );
+		outFileBinary.Close();
+		}*/
 
 		File outFileText;
 		if( outFileText.OpenForWrite(navPathText.c_str(), File::Text) )
@@ -1146,7 +1377,7 @@ bool PathPlannerNavMesh::Save(const std::string &_mapname)
 
 bool PathPlannerNavMesh::IsReady() const
 {
-	return !m_ActiveNavSectors.empty();
+	return !mRuntimeSectors.empty();
 }
 
 bool PathPlannerNavMesh::GetNavFlagByName(const std::string &_flagname, NavFlags &_flag) const
@@ -1159,10 +1390,10 @@ Vector3f PathPlannerNavMesh::GetRandomDestination(Client *_client, const Vector3
 {
 	Vector3f dest = _start;
 
-	if(!m_ActiveNavSectors.empty())
+	if(!mRuntimeSectors.empty())
 	{
-		const NavSector &randSector = m_ActiveNavSectors[rand()%m_ActiveNavSectors.size()];
-		dest = Utils::AveragePoint(randSector.m_Boundary);
+		const RuntimeNavSector &randSector = mRuntimeSectors[rand()%mRuntimeSectors.size()];
+		dest = Utils::AveragePoint(randSector.mPoly);
 	}
 	return dest;
 }
@@ -1209,6 +1440,7 @@ bool PathPlannerNavMesh::FoundGoal() const
 
 void PathPlannerNavMesh::Unload()
 {
+	OB_DELETE( mCurrentTool );
 	OB_DELETE( m_Influence );
 	OB_DELETE( m_SpanMap );
 
@@ -1219,27 +1451,42 @@ void PathPlannerNavMesh::InitSectors()
 {
 	m_CollisionData.Free();
 
-	m_ActiveNavSectors.clear();
+	mRuntimeSectors.clear();
 
-	NavSectorList					allSectors;
+	RuntimeSectorList	allSectors;
 
 	std::vector<IceMaths::Point>	vertices;
 	std::vector<PolyAttrib>			triSectors;
 
-	// create the active sector list and the collision data at the same time so we can create a proper mapping
-	for ( size_t i = 0; i < m_NavSectors.size(); ++i )
+	// create the active sector list and the collision data at the same time
+	// so we can create a proper mapping
+	for ( size_t i = 0; i < mNavSectors.size(); ++i )
 	{
 		PolyAttrib attr;
 		attr.Fields.ActiveId = allSectors.size();
 		attr.Fields.SectorId = i;
 		attr.Fields.Mirrored = 0;
 
-		allSectors.push_back( m_NavSectors[ i ] );
-		allSectors.back().mId = attr.Fields.SectorId;
+		RuntimeNavSector runtimeSector( allSectors.size(), &mNavSectors[ i ], &mNavSectors[ i ].mSectorData );
+		runtimeSector.mPoly = mNavSectors[ i ].mPoly;
+
+		runtimeSector.mLocalPoly.resize( 0 );
+		for ( int i = 0; i < runtimeSector.mSectorData->localoffsets_size(); ++i )
+		{
+			const NavmeshIO::SectorVert & v = runtimeSector.mSectorData->localoffsets( i );
+			runtimeSector.mLocalPoly.push_back( Vector3f(
+				v.position().x(),
+				v.position().y(),
+				v.position().z() ) );
+		}
+
+		runtimeSector.UpdateSectorTransform();
+		runtimeSector.UpdateAutoFlags();
+		allSectors.push_back( runtimeSector );
 
 		//////////////////////////////////////////////////////////////////////////
 		Vector3f center = allSectors.back().CalculateCenter();
-		for ( size_t v = 1; v <= allSectors.back().m_Boundary.size(); ++v )
+		for ( size_t v = 1; v <= allSectors.back().mPoly.size(); ++v )
 		{
 			triSectors.push_back( attr );
 
@@ -1247,41 +1494,55 @@ void PathPlannerNavMesh::InitSectors()
 				center.X(), center.Y(), center.Z() ) );
 
 			vertices.push_back( IceMaths::Point(
-				allSectors.back().m_Boundary[ v-1 ].X(),
-				allSectors.back().m_Boundary[ v-1 ].Y(),
-				allSectors.back().m_Boundary[ v-1 ].Z() ) );
+				allSectors.back().mPoly[ v-1 ].X(),
+				allSectors.back().mPoly[ v-1 ].Y(),
+				allSectors.back().mPoly[ v-1 ].Z() ) );
 
 			vertices.push_back( IceMaths::Point(
-				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].X(),
-				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].Y(),
-				allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].Z() ) );
+				allSectors.back().mPoly[ v % allSectors.back().mPoly.size() ].X(),
+				allSectors.back().mPoly[ v % allSectors.back().mPoly.size() ].Y(),
+				allSectors.back().mPoly[ v % allSectors.back().mPoly.size() ].Z() ) );
 
 			if ( v == 1 )
 			{
-				allSectors.back().m_Plane = Plane3f(
+				allSectors.back().mPlane = Plane3f(
 					center,
-					allSectors.back().m_Boundary[ v-1 ],
-					allSectors.back().m_Boundary[ v ] );
+					allSectors.back().mPoly[ v-1 ],
+					allSectors.back().mPoly[ v ] );
 			}
 		}
 	}
 
 	// do another pass for the mirrored set
-	for ( size_t i = 0; i < m_NavSectors.size(); ++i )
+	for ( size_t i = 0; i < mNavSectors.size(); ++i )
 	{
-		if ( m_NavSectors[ i ].mMirror != NavmeshIO::Sector_MirrorDir_MirrorNone )
+		if ( mNavSectors[ i ].mMirror != NavmeshIO::Sector_MirrorDir_MirrorNone )
 		{
 			PolyAttrib attr;
 			attr.Fields.ActiveId = allSectors.size();
 			attr.Fields.SectorId = i;
 			attr.Fields.Mirrored = 1;
 
-			allSectors.push_back( m_NavSectors[ i ].GetMirroredCopy( m_MapCenter ) );
-			allSectors.back().mId = attr.Fields.SectorId;
+			RuntimeNavSector runtimeSector( allSectors.size(), &mNavSectors[ i ], &mNavSectors[ i ].mSectorDataMirrored );
+			mNavSectors[ i ].GetMirroredCopy( m_MapCenter, mNavSectors[ i ].mMirror, runtimeSector );
+
+			runtimeSector.mLocalPoly.resize( 0 );
+			for ( int i = 0; i < runtimeSector.mSectorData->localoffsets_size(); ++i )
+			{
+				const NavmeshIO::SectorVert & v = runtimeSector.mSectorData->localoffsets( i );
+				runtimeSector.mLocalPoly.push_back( Vector3f(
+					v.position().x(),
+					v.position().y(),
+					v.position().z() ) );
+			}
+
+			runtimeSector.UpdateSectorTransform();
+			runtimeSector.UpdateAutoFlags();
+			allSectors.push_back( runtimeSector );
 
 			//////////////////////////////////////////////////////////////////////////
 			Vector3f center = allSectors.back().CalculateCenter();
-			for ( size_t v = 1; v <= allSectors.back().m_Boundary.size(); ++v )
+			for ( size_t v = 1; v <= allSectors.back().mPoly.size(); ++v )
 			{
 				triSectors.push_back( attr );
 
@@ -1289,29 +1550,50 @@ void PathPlannerNavMesh::InitSectors()
 					center.X(), center.Y(), center.Z() ) );
 
 				vertices.push_back( IceMaths::Point(
-					allSectors.back().m_Boundary[ v-1 ].X(),
-					allSectors.back().m_Boundary[ v-1 ].Y(),
-					allSectors.back().m_Boundary[ v-1 ].Z() ) );
+					allSectors.back().mPoly[ v-1 ].X(),
+					allSectors.back().mPoly[ v-1 ].Y(),
+					allSectors.back().mPoly[ v-1 ].Z() ) );
 
 				vertices.push_back( IceMaths::Point(
-					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].X(),
-					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].Y(),
-					allSectors.back().m_Boundary[ v % allSectors.back().m_Boundary.size() ].Z() ) );
+					allSectors.back().mPoly[ v % allSectors.back().mPoly.size() ].X(),
+					allSectors.back().mPoly[ v % allSectors.back().mPoly.size() ].Y(),
+					allSectors.back().mPoly[ v % allSectors.back().mPoly.size() ].Z() ) );
 
 				if ( v == 1 )
 				{
-					allSectors.back().m_Plane = Plane3f(
+					allSectors.back().mPlane = Plane3f(
 						center,
-						allSectors.back().m_Boundary[ v-1 ],
-						allSectors.back().m_Boundary[ v ] );
+						allSectors.back().mPoly[ v-1 ],
+						allSectors.back().mPoly[ v ] );
 				}
 			}
 			//////////////////////////////////////////////////////////////////////////
 		}
 	}
 
-	m_ActiveNavSectors.swap( allSectors );
+	// make the new set of sectors the active set
+	mRuntimeSectors.swap( allSectors );
 
+	if ( vertices.size() == 0 )
+	{
+		PolyAttrib attr;
+		attr.Fields.ActiveId = 0;
+		attr.Fields.SectorId = 0;
+		attr.Fields.Mirrored = 0;
+
+		// just make a single huge quad
+		vertices.push_back( IceMaths::Point( -10000.0f, -10000.0f, -10000 ) );
+		vertices.push_back( IceMaths::Point( -10000.0f,  10000.0f, -10000 ) );
+		vertices.push_back( IceMaths::Point(  10000.0f,  10000.0f, -10000 ) );
+		triSectors.push_back( attr );
+
+		vertices.push_back( IceMaths::Point( -10000.0f, -10000.0f, -10000 ) );
+		vertices.push_back( IceMaths::Point(  10000.0f,  10000.0f, -10000 ) );
+		vertices.push_back( IceMaths::Point( 10000.0f,  -10000.0f, -10000 ) );
+		triSectors.push_back( attr );
+	}
+
+	// initialize the opcode collision for navigation geometry probes
 	m_CollisionData.m_Verts = new IceMaths::Point[ vertices.size() ];
 	m_CollisionData.m_TriSectorMap = new PolyAttrib[ triSectors.size() ];
 
@@ -1330,7 +1612,6 @@ void PathPlannerNavMesh::InitSectors()
 	if ( !m_CollisionData.m_CollisionTree->Build( parms ) )
 	{
 		m_CollisionData.Free();
-		return;
 	}
 }
 
@@ -1338,51 +1619,11 @@ void PathPlannerNavMesh::RegisterGameGoals()
 {
 }
 
-void PathPlannerNavMesh::GetPath(Path &_path, int _smoothiterations)
+void PathPlannerNavMesh::GetPath(Path &_path)
 {
 	const float CHAR_HALF_HEIGHT = NavigationMeshOptions::CharacterHeight * 0.75f;
 
 	PathFindNavMesh::NodeList &nl = g_PathFind.GetSolution();
-
-	//////////////////////////////////////////////////////////////////////////
-	if(nl.size() > 2)
-	{
-		for(int i = 0; i < _smoothiterations; ++i)
-		{
-			bool bSmoothed = false;
-
-			// solution is goal to start
-			for(obuint32 n = 1; n < nl.size()-1; ++n)
-			{
-				PathFindNavMesh::PlanNode *pFrom = nl[n+1];
-				PathFindNavMesh::PlanNode *pTo = nl[n-1];
-				PathFindNavMesh::PlanNode *pMid = nl[n];
-				if(!pMid->Portal /*|| pMid->Portal->m_LinkFlags & teleporter*/)
-					continue;
-
-				Segment3f portalSeg = pMid->Portal->m_Segment;
-				portalSeg.Extent -= 32.f;
-				Segment3f seg( pFrom->Position, pTo->Position );
-				//DistancePointToLine(_seg1.Origin,_seg2.GetNegEnd(),_seg2.GetPosEnd(),&cp);
-
-				Vector3f intr;
-				if(Utils::intersect2D_Segments(seg,portalSeg,&intr))
-				{
-					// adjust the node position
-					if(SquaredLength(intr,pMid->Position) > Mathf::Sqr(16.f))
-					{
-						//RenderBuffer::AddLine(pMid->Position+Vector3f(0,0,32),intr,COLOR::YELLOW,15.f);
-						bSmoothed = true;
-						pMid->Position = intr;
-					}
-				}
-			}
-
-			if(!bSmoothed)
-				break;
-		}
-	}
-	//////////////////////////////////////////////////////////////////////////
 
 	while(!nl.empty())
 	{
@@ -1390,7 +1631,7 @@ void PathPlannerNavMesh::GetPath(Path &_path, int _smoothiterations)
 		Vector3f vNodePos = pn->Position;
 
 		_path.AddPt(vNodePos + Vector3f(0,0,CHAR_HALF_HEIGHT),32.f)
-			.NavId(pn->Sector->mId)
+			.NavId(pn->Sector->mIndex)
 			/*.Flags(m_Solution.back()->GetNavigationFlags())
 			.OnPathThrough(m_Solution.back()->OnPathThrough())
 			.OnPathThroughParam(m_Solution.back()->OnPathThroughParam())*/;
@@ -1406,17 +1647,237 @@ bool PathPlannerNavMesh::GetNavInfo(const Vector3f &pos,obint32 &_id,std::string
 	return false;
 }
 
+//////////////////////////////////////////////////////////////////////////
+
 void PathPlannerNavMesh::AddEntityConnection(const Event_EntityConnection &_conn)
 {
 }
+
+//////////////////////////////////////////////////////////////////////////
 
 void PathPlannerNavMesh::RemoveEntityConnection(GameEntity _ent)
 {
 }
 
+//////////////////////////////////////////////////////////////////////////
+
 Vector3f PathPlannerNavMesh::GetDisplayPosition(const Vector3f &_pos)
 {
 	return _pos;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+void PathPlannerNavMesh::UpdateMoverSectors()
+{
+	for ( size_t i = 0; i < mRuntimeSectors.size(); ++i )
+	{
+		mRuntimeSectors[ i ].UpdateSectorTransform();
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+void PathPlannerNavMesh::UpdatePortals()
+{
+	for ( size_t i = 0; i < mRuntimeSectors.size(); ++i )
+	{
+		RuntimeNavSector & runtimeSector = mRuntimeSectors[ i ];
+		if ( runtimeSector.mUpdatePortals )
+		{
+			runtimeSector.BuildSectorPortals( this );
+
+			// update the connections for this portal
+			runtimeSector.mUpdatePortals = false;
+		}
+	}
+}
+
+void PathPlannerNavMesh::UpdateObstacles()
+{
+	RuntimeSectorRefList nearbySectors;
+
+	for ( size_t i = 0; i < mPendingObstacles.size(); ++i )
+	{
+		const Obstacle & obs = mPendingObstacles[ i ];
+
+		AABB obsBounds;
+		obsBounds.m_Mins[ 0 ] = std::numeric_limits<float>::max();
+		obsBounds.m_Mins[ 1 ] = std::numeric_limits<float>::max();
+		obsBounds.m_Mins[ 2 ] = std::numeric_limits<float>::max();
+		obsBounds.m_Maxs[ 0 ] = std::numeric_limits<float>::lowest();
+		obsBounds.m_Maxs[ 1 ] = std::numeric_limits<float>::lowest();
+		obsBounds.m_Maxs[ 2 ] = std::numeric_limits<float>::lowest();
+
+		for ( size_t v = 0; v < obs.mPoly.size(); ++v )
+			obsBounds.Expand( obs.mPoly[ v ] );
+
+		obsBounds.ExpandAxis( 2, 32.f );
+
+		obsBounds.Expand( 128.0f );
+
+		FindRuntimeSectors( obsBounds, nearbySectors );
+
+		for ( size_t o = 0; o < nearbySectors.size(); ++o )
+			nearbySectors[ o ]->mObstacles.push_back( obs );
+	}
+
+	mPendingObstacles.resize( 0 );
+}
+
+PathPlannerNavMesh::RuntimeNavSector *PathPlannerNavMesh::GetSectorAt(const Vector3f &_pos, float _distance)
+{
+	const float CHAR_HALF_HEIGHT = NavigationMeshOptions::CharacterHeight /** 0.5f*/;
+
+	Vector3f raySrc = _pos+Vector3f(0,0,CHAR_HALF_HEIGHT);
+	Vector3f rayDst = raySrc - Vector3f::UNIT_Z * _distance;
+	NavCollision nc = FindCollision(raySrc, rayDst);
+	if(nc.DidHit())
+	{
+		return &mRuntimeSectors[ nc.HitAttrib().Fields.ActiveId ];
+	}
+	return NULL;
+}
+
+PathPlannerNavMesh::NavCollision PathPlannerNavMesh::FindCollision(const Vector3f &_from, const Vector3f &_to)
+{
+	if ( m_CollisionData.m_CollisionTree != NULL )
+	{
+		Vector3f dir = _to - _from;
+		const float distance = dir.Normalize();
+
+		IceMaths::Ray ray;
+		ray.mOrig.Set( _from.X(), _from.Y(), _from.Z() );
+		ray.mDir.Set( dir.X(), dir.Y(), dir.Z() );
+
+		Opcode::CollisionFaces faces;
+		Opcode::RayCollider collider;
+		collider.SetCulling( false );
+		collider.SetDestination( &faces );
+		collider.SetMaxDist( distance );
+		collider.SetClosestHit( true );
+		collider.Collide( ray, *m_CollisionData.m_CollisionTree );
+
+		//udword		mFaceID;				//!< Index of touched face
+		//float		mDistance;				//!< Distance from collider to hitpoint
+		//float		mU, mV;
+		const Opcode::CollisionFace * hitFace = faces.GetFaces();
+		if ( hitFace != NULL )
+		{
+			Opcode::VertexPointers v;
+			m_CollisionData.m_CollisionTree->GetMeshInterface()->GetTriangle( v, hitFace->mFaceID );
+
+			/*Vector3List pts( 3 );
+			pts.push_back( Vector3f( v.Vertex[ 0 ]->x, v.Vertex[ 0 ]->y, v.Vertex[ 0 ]->z ) );
+			pts.push_back( Vector3f( v.Vertex[ 1 ]->x, v.Vertex[ 1 ]->y, v.Vertex[ 1 ]->z ) );
+			pts.push_back( Vector3f( v.Vertex[ 2 ]->x, v.Vertex[ 2 ]->y, v.Vertex[ 2 ]->z ) );
+			Utils::DrawPolygon( pts, COLOR::MAGENTA, 2.0 );*/
+
+			const PolyAttrib faceAttrib = m_CollisionData.m_TriSectorMap[ hitFace->mFaceID ];
+
+			IceMaths::Point normal = v.Normal();
+
+			return NavCollision( true,
+				_from + dir * hitFace->mDistance,
+				Vector3f( normal.x, normal.y, normal.z ),
+				faceAttrib );
+		}
+	}
+	return NavCollision(false);
+}
+
+PathPlannerNavMesh::NavSector * PathPlannerNavMesh::GetSectorAtCursor()
+{
+	Vector3f vFacing, vPos;
+	if ( !Utils::GetLocalEyePosition( vPos ) || !Utils::GetLocalFacing( vFacing ) )
+		return NULL;
+
+	NavCollision nc = FindCollision( vPos, vPos + vFacing * 2048.f );
+	if( !nc.DidHit() )
+		return NULL;
+
+	return &mNavSectors[ nc.HitAttrib().Fields.SectorId ];
+}
+
+int PathPlannerNavMesh::FindRuntimeSectors( const AABB & aabb, std::vector<RuntimeNavSector*> & sectorsOut )
+{
+	sectorsOut.resize( 0 );
+
+	if ( m_CollisionData.m_CollisionTree != NULL )
+	{
+		Opcode::CollisionAABB colaabb;
+		colaabb.SetMinMax(
+			IceMaths::Point( aabb.m_Mins ),
+			IceMaths::Point( aabb.m_Maxs ) );
+
+		Opcode::AABBCollider collider;
+		collider.SetFirstContact( false );
+
+		Opcode::AABBCache boxCache;
+		collider.Collide( boxCache, colaabb, *m_CollisionData.m_CollisionTree );
+
+		typedef std::set<RuntimeNavSector*> SectorSet;
+		SectorSet	sectorSet;
+
+		for ( udword i = 0; i < collider.GetNbTouchedPrimitives(); ++i )
+		{
+			const udword primId = collider.GetTouchedPrimitives()[ i ];
+
+			const PolyAttrib faceAttrib = m_CollisionData.m_TriSectorMap[ primId ];
+			sectorSet.insert( &mRuntimeSectors[ faceAttrib.Fields.ActiveId ] );
+		}
+
+		for ( SectorSet::iterator it = sectorSet.begin();
+			it != sectorSet.end();
+			++it )
+		{
+			sectorsOut.push_back( *it );
+		}
+	}
+	return (int)sectorsOut.size();
+}
+
+int PathPlannerNavMesh::FindRuntimeSectors( const Box3f & obb, std::vector<RuntimeNavSector*> & sectorsOut )
+{
+	sectorsOut.resize( 0 );
+
+	if ( m_CollisionData.m_CollisionTree != NULL )
+	{
+		IceMaths::Matrix3x3 rot;
+		rot.SetRow( 0, IceMaths::Point( obb.Axis[0].X(), obb.Axis[0].Y(), obb.Axis[0].Z() ) );
+		rot.SetRow( 1, IceMaths::Point( obb.Axis[1].X(), obb.Axis[1].Y(), obb.Axis[1].Z() ) );
+		rot.SetRow( 2, IceMaths::Point( obb.Axis[2].X(), obb.Axis[2].Y(), obb.Axis[2].Z() ) );
+
+		IceMaths::OBB iceobb(
+			IceMaths::Point( obb.Center.X(), obb.Center.Y(), obb.Center.Z() ),
+			IceMaths::Point( obb.Extent[0], obb.Extent[1], obb.Extent[2] ),
+			rot );
+
+		Opcode::OBBCollider collider;
+		collider.SetFirstContact( false );
+
+		Opcode::OBBCache cache;
+		collider.Collide( cache, iceobb, *m_CollisionData.m_CollisionTree );
+
+		typedef std::set<RuntimeNavSector*> SectorSet;
+		SectorSet	sectorSet;
+
+		for ( udword i = 0; i < collider.GetNbTouchedPrimitives(); ++i )
+		{
+			const udword primId = collider.GetTouchedPrimitives()[ i ];
+
+			const PolyAttrib faceAttrib = m_CollisionData.m_TriSectorMap[ primId ];
+			sectorSet.insert( &mRuntimeSectors[ faceAttrib.Fields.ActiveId ] );
+		}
+
+		for ( SectorSet::iterator it = sectorSet.begin();
+			it != sectorSet.end();
+			++it )
+		{
+			sectorsOut.push_back( *it );
+		}
+	}
+	return (int)sectorsOut.size();
 }
 
 void PathPlannerNavMesh::ConnectTest()
@@ -1426,24 +1887,21 @@ void PathPlannerNavMesh::ConnectTest()
 		return;
 
 	Vector3f vAimPos, vAimNormal;
-	if( !Utils::GetLocalAimPoint( vAimPos, &vAimNormal) )
+	if( !Utils::GetLocalAimPoint( vAimPos, &vAimNormal ) )
 		return;
 
-	static float DROP_HEIGHT = -128.f;
-	static float STEP_HEIGHT = 20.f;
-	static float LINE_DIST = 2.f;
-
-	NavSector * sector = GetSectorAt( vEyePos );
+	RuntimeNavSector * sector = GetSectorAt( vEyePos );
 	if ( sector != NULL )
 	{
-		sector->m_NavPortals.resize( 0 );
+		sector->BuildSectorPortals( this );
+		return;
+
+		sector->mPortals.resize( 0 );
 
 		// look for all neighbors
-		const Vector3List & edges0 = sector->m_Boundary;
+		const Vector3List & edges0 = sector->mPoly;
 		for ( size_t b = 1; b <= edges0.size(); ++b )
 		{
-			//
-			Line3f line0;
 			Segment3f seg0( edges0[ b-1 ], edges0[ b % edges0.size() ] );
 
 			{
@@ -1452,28 +1910,34 @@ void PathPlannerNavMesh::ConnectTest()
 					continue;
 			}
 
+			Line3f line0;
 			line0.FromPoints( seg0.P0, seg0.P1 );
 
+			const float MAX_STEPUP = std::max( JUMP_HEIGHT, sector->mSectorData->waterdepth() + WATER_EXIT );
+
+			RuntimeSectorRefList nearbySectors;
+
+			Box3f edgeBox;
+			edgeBox.Center = vAimPos;
+
+			AABB probeBox( vAimPos );
+			probeBox.Expand( 64.0f );
+			probeBox.m_Maxs[ 2 ] += MAX_STEPUP;
+
+			FindRuntimeSectors( probeBox, nearbySectors );
+
 			// search all sectors for neighboring connections
-			for ( size_t n = 0; n < m_ActiveNavSectors.size(); ++n )
+			for ( size_t n = 0; n < nearbySectors.size(); ++n )
 			{
-				NavSector * neighbor = &m_ActiveNavSectors[ n ];
+				RuntimeNavSector * neighbor = nearbySectors[ n ];
 
 				if ( sector == neighbor )
 					continue;
 
-				const Vector3List & edges1 = neighbor->m_Boundary;
+				const Vector3List & edges1 = neighbor->mPoly;
 				for ( size_t nb = 1; nb <= edges1.size(); ++nb )
 				{
 					Segment3f seg1( edges1[ nb-1 ], edges1[ nb % edges1.size() ] );
-
-					static bool cull2 = true;
-					if ( cull2 )
-					{
-						DistPoint3Segment3f segDist( vAimPos, seg1 );
-						if ( segDist.Get() > 32.0f )
-							continue;
-					}
 
 					DistPoint3Line3f d0( seg1.P0, line0 );
 					DistPoint3Line3f d1( seg1.P1, line0 );
@@ -1481,15 +1945,15 @@ void PathPlannerNavMesh::ConnectTest()
 					d0.GetSquared();
 					d1.GetSquared();
 
-					RenderBuffer::AddLine(
-						d0.GetClosestPoint1() + Vector3f( 0.0f, 0.0f, 2.0f ),
-						d0.GetClosestPoint0() + Vector3f( 0.0f, 0.0f, 2.0f ),
-						COLOR::MAGENTA );
+					/*RenderBuffer::AddLine(
+					d0.GetClosestPoint1() + Vector3f( 0.0f, 0.0f, 2.0f ),
+					d0.GetClosestPoint0() + Vector3f( 0.0f, 0.0f, 2.0f ),
+					COLOR::MAGENTA );
 
 					RenderBuffer::AddLine(
-						d1.GetClosestPoint1() + Vector3f( 0.0f, 0.0f, 2.0f ),
-						d1.GetClosestPoint0() + Vector3f( 0.0f, 0.0f, 2.0f ),
-						COLOR::RED );
+					d1.GetClosestPoint1() + Vector3f( 0.0f, 0.0f, 2.0f ),
+					d1.GetClosestPoint0() + Vector3f( 0.0f, 0.0f, 2.0f ),
+					COLOR::RED );*/
 
 					// the lines must overlap
 					if ( d0.GetLineParameter() > seg0.Extent && d1.GetLineParameter() > seg0.Extent )
@@ -1507,28 +1971,24 @@ void PathPlannerNavMesh::ConnectTest()
 					const float p0zDiff = seg1.P0.Z() - d0.GetClosestPoint1().Z();
 					const float p1zDiff = seg1.P1.Z() - d0.GetClosestPoint1().Z();
 
+					// are these lines are close enough
 					if ( p0diff.Length2d() < LINE_DIST && p1diff.Length2d() < LINE_DIST &&
-						p0zDiff <= STEP_HEIGHT && p1zDiff <= STEP_HEIGHT &&
-						p0zDiff >= DROP_HEIGHT && p1zDiff >= DROP_HEIGHT )
+						p0zDiff <= MAX_STEPUP && p1zDiff <= MAX_STEPUP &&
+						p0zDiff >= -DROP_HEIGHT && p1zDiff >= -DROP_HEIGHT )
 					{
-						/*struct NavPortal
-						{
-						Segment3f		m_Segment;
-						int				m_DestSector;
-						BitFlag64		m_LinkFlags;
-						};*/
-
-						// these lines are close enough
 						NavPortal portal;
-						portal.m_Segment.P0 = line0.Origin + d0Segment * line0.Direction;
-						portal.m_Segment.P1 = line0.Origin + d1Segment * line0.Direction;
-						portal.m_Segment.ComputeCenterDirectionExtent();
-						portal.m_DestSector = n;
-						sector->m_NavPortals.push_back( portal );
-					}
+						portal.mSegment.P0 = line0.Origin + d0Segment * line0.Direction;
+						portal.mSegment.P1 = line0.Origin + d1Segment * line0.Direction;
+						portal.mSegment.ComputeCenterDirectionExtent();
+						portal.mDestSector = neighbor->mIndex;
 
-					/*Line3f line1;
-					line1.FromPoints( seg1.P0, seg1.P1 );*/
+						// do we need to jump to reach this edge?
+						if ( p0zDiff > STEP_HEIGHT && p0zDiff <= JUMP_HEIGHT )
+						{
+							portal.mFlags.SetFlag( NavPortal::FL_JUMP );
+						}
+						sector->mPortals.push_back( portal );
+					}
 				}
 			}
 		}

@@ -571,7 +571,7 @@ void PathPlannerFloodFill::_BenchmarkPathFinder(const StringVector &_args)
 	EngineFuncs::ConsoleMessage("-= FloodFill PathFind Benchmark =-");
 
 	double dTimeTaken = 0.0f;
-	obint32 iNumSectors = 0;//(obint32)m_ActiveNavSectors.size();
+	obint32 iNumSectors = 0;//(obint32)mRuntimeSectors.size();
 	obint32 iNumPaths = iNumSectors * iNumSectors;
 
 	Timer tme;
@@ -580,8 +580,8 @@ void PathPlannerFloodFill::_BenchmarkPathFinder(const StringVector &_args)
 	{
 		for(obint32 w2 = 0; w2 < iNumSectors; ++w2)
 		{
-			/*const NavSector &pS1 = m_ActiveNavSectors[w1];
-			const NavSector &pS2 = m_ActiveNavSectors[w2];
+			/*const NavSector &pS1 = mRuntimeSectors[w1];
+			const NavSector &pS2 = mRuntimeSectors[w2];
 
 			PlanPathToGoal(NULL,
 			pS1.m_Middle+Vector3f(0,0,NavigationMeshOptions::CharacterHeight),
@@ -608,7 +608,7 @@ void PathPlannerFloodFill::_BenchmarkGetNavPoint(const StringVector &_args)
 	EngineFuncs::ConsoleMessage("-= FloodFill GetNavPoint Benchmark  =-");
 
 	/*double dTimeTaken = 0.0f;
-	obuint32 iNumWaypoints = m_ActiveNavSectors.size();
+	obuint32 iNumWaypoints = mRuntimeSectors.size();
 	Timer tme;
 
 	obuint32 iHits = 0, iMisses = 0;
@@ -617,7 +617,7 @@ void PathPlannerFloodFill::_BenchmarkGetNavPoint(const StringVector &_args)
 	{
 	for(obuint32 w1 = 0; w1 < iNumWaypoints; ++w1)
 	{
-	NavSector *pSector = m_ActiveNavSectors[w1];
+	NavSector *pSector = mRuntimeSectors[w1];
 
 	Waypoint *pClosest = _GetClosestWaypoint(pWaypoint->GetPosition(), (NavFlags)0, true);
 	if(pClosest)

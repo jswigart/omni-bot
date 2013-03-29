@@ -36,6 +36,7 @@ void protobuf_ShutdownFile_navmesh_2eproto();
 class Vec3;
 class Header;
 class SectorVert;
+class MoverEntity;
 class SectorData;
 class Sector;
 class NavigationMesh;
@@ -334,6 +335,88 @@ class SectorVert : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class MoverEntity : public ::google::protobuf::Message {
+ public:
+  MoverEntity();
+  virtual ~MoverEntity();
+  
+  MoverEntity(const MoverEntity& from);
+  
+  inline MoverEntity& operator=(const MoverEntity& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const MoverEntity& default_instance();
+  
+  void Swap(MoverEntity* other);
+  
+  // implements Message ----------------------------------------------
+  
+  MoverEntity* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const MoverEntity& from);
+  void MergeFrom(const MoverEntity& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required int32 id = 1 [default = 0];
+  inline bool has_id() const;
+  inline void clear_id();
+  static const int kIdFieldNumber = 1;
+  inline ::google::protobuf::int32 id() const;
+  inline void set_id(::google::protobuf::int32 value);
+  
+  // @@protoc_insertion_point(class_scope:NavmeshIO.MoverEntity)
+ private:
+  inline void set_has_id();
+  inline void clear_has_id();
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::google::protobuf::int32 id_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_navmesh_2eproto();
+  friend void protobuf_AssignDesc_navmesh_2eproto();
+  friend void protobuf_ShutdownFile_navmesh_2eproto();
+  
+  void InitAsDefaultInstance();
+  static MoverEntity* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class SectorData : public ::google::protobuf::Message {
  public:
   SectorData();
@@ -492,6 +575,47 @@ class SectorData : public ::google::protobuf::Message {
   inline bool onmover() const;
   inline void set_onmover(bool value);
   
+  // optional bool hazard = 13 [default = false];
+  inline bool has_hazard() const;
+  inline void clear_hazard();
+  static const int kHazardFieldNumber = 13;
+  inline bool hazard() const;
+  inline void set_hazard(bool value);
+  
+  // optional bool ladder = 14 [default = false];
+  inline bool has_ladder() const;
+  inline void clear_ladder();
+  static const int kLadderFieldNumber = 14;
+  inline bool ladder() const;
+  inline void set_ladder(bool value);
+  
+  // optional float waterdepth = 200 [default = 0];
+  inline bool has_waterdepth() const;
+  inline void clear_waterdepth();
+  static const int kWaterdepthFieldNumber = 200;
+  inline float waterdepth() const;
+  inline void set_waterdepth(float value);
+  
+  // optional .NavmeshIO.MoverEntity mover = 201;
+  inline bool has_mover() const;
+  inline void clear_mover();
+  static const int kMoverFieldNumber = 201;
+  inline const ::NavmeshIO::MoverEntity& mover() const;
+  inline ::NavmeshIO::MoverEntity* mutable_mover();
+  inline ::NavmeshIO::MoverEntity* release_mover();
+  
+  // repeated .NavmeshIO.SectorVert localoffsets = 202;
+  inline int localoffsets_size() const;
+  inline void clear_localoffsets();
+  static const int kLocaloffsetsFieldNumber = 202;
+  inline const ::NavmeshIO::SectorVert& localoffsets(int index) const;
+  inline ::NavmeshIO::SectorVert* mutable_localoffsets(int index);
+  inline ::NavmeshIO::SectorVert* add_localoffsets();
+  inline const ::google::protobuf::RepeatedPtrField< ::NavmeshIO::SectorVert >&
+      localoffsets() const;
+  inline ::google::protobuf::RepeatedPtrField< ::NavmeshIO::SectorVert >*
+      mutable_localoffsets();
+  
   // @@protoc_insertion_point(class_scope:NavmeshIO.SectorData)
  private:
   inline void set_has_enabled();
@@ -518,6 +642,14 @@ class SectorData : public ::google::protobuf::Message {
   inline void clear_has_inwater();
   inline void set_has_onmover();
   inline void clear_has_onmover();
+  inline void set_has_hazard();
+  inline void clear_has_hazard();
+  inline void set_has_ladder();
+  inline void clear_has_ladder();
+  inline void set_has_waterdepth();
+  inline void clear_has_waterdepth();
+  inline void set_has_mover();
+  inline void clear_has_mover();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -533,9 +665,14 @@ class SectorData : public ::google::protobuf::Message {
   bool team4_;
   bool inwater_;
   bool onmover_;
+  bool hazard_;
+  bool ladder_;
+  float waterdepth_;
+  ::NavmeshIO::MoverEntity* mover_;
+  ::google::protobuf::RepeatedPtrField< ::NavmeshIO::SectorVert > localoffsets_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(12 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(17 + 31) / 32];
   
   friend void  protobuf_AddDesc_navmesh_2eproto();
   friend void protobuf_AssignDesc_navmesh_2eproto();
@@ -792,6 +929,14 @@ static const int kDocFieldNumber = 2000;
 extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
     ::google::protobuf::internal::StringTypeTraits, 9, false >
   doc;
+static const int kHiddenFieldNumber = 2001;
+extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< bool >, 8, false >
+  hidden;
+static const int kSettableFieldNumber = 2002;
+extern ::google::protobuf::internal::ExtensionIdentifier< ::google::protobuf::FieldOptions,
+    ::google::protobuf::internal::PrimitiveTypeTraits< bool >, 8, false >
+  settable;
 
 // ===================================================================
 
@@ -927,6 +1072,32 @@ inline ::NavmeshIO::Vec3* SectorVert::release_position() {
   ::NavmeshIO::Vec3* temp = position_;
   position_ = NULL;
   return temp;
+}
+
+// -------------------------------------------------------------------
+
+// MoverEntity
+
+// required int32 id = 1 [default = 0];
+inline bool MoverEntity::has_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void MoverEntity::set_has_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void MoverEntity::clear_has_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void MoverEntity::clear_id() {
+  id_ = 0;
+  clear_has_id();
+}
+inline ::google::protobuf::int32 MoverEntity::id() const {
+  return id_;
+}
+inline void MoverEntity::set_id(::google::protobuf::int32 value) {
+  set_has_id();
+  id_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -1375,6 +1546,126 @@ inline bool SectorData::onmover() const {
 inline void SectorData::set_onmover(bool value) {
   set_has_onmover();
   onmover_ = value;
+}
+
+// optional bool hazard = 13 [default = false];
+inline bool SectorData::has_hazard() const {
+  return (_has_bits_[0] & 0x00001000u) != 0;
+}
+inline void SectorData::set_has_hazard() {
+  _has_bits_[0] |= 0x00001000u;
+}
+inline void SectorData::clear_has_hazard() {
+  _has_bits_[0] &= ~0x00001000u;
+}
+inline void SectorData::clear_hazard() {
+  hazard_ = false;
+  clear_has_hazard();
+}
+inline bool SectorData::hazard() const {
+  return hazard_;
+}
+inline void SectorData::set_hazard(bool value) {
+  set_has_hazard();
+  hazard_ = value;
+}
+
+// optional bool ladder = 14 [default = false];
+inline bool SectorData::has_ladder() const {
+  return (_has_bits_[0] & 0x00002000u) != 0;
+}
+inline void SectorData::set_has_ladder() {
+  _has_bits_[0] |= 0x00002000u;
+}
+inline void SectorData::clear_has_ladder() {
+  _has_bits_[0] &= ~0x00002000u;
+}
+inline void SectorData::clear_ladder() {
+  ladder_ = false;
+  clear_has_ladder();
+}
+inline bool SectorData::ladder() const {
+  return ladder_;
+}
+inline void SectorData::set_ladder(bool value) {
+  set_has_ladder();
+  ladder_ = value;
+}
+
+// optional float waterdepth = 200 [default = 0];
+inline bool SectorData::has_waterdepth() const {
+  return (_has_bits_[0] & 0x00004000u) != 0;
+}
+inline void SectorData::set_has_waterdepth() {
+  _has_bits_[0] |= 0x00004000u;
+}
+inline void SectorData::clear_has_waterdepth() {
+  _has_bits_[0] &= ~0x00004000u;
+}
+inline void SectorData::clear_waterdepth() {
+  waterdepth_ = 0;
+  clear_has_waterdepth();
+}
+inline float SectorData::waterdepth() const {
+  return waterdepth_;
+}
+inline void SectorData::set_waterdepth(float value) {
+  set_has_waterdepth();
+  waterdepth_ = value;
+}
+
+// optional .NavmeshIO.MoverEntity mover = 201;
+inline bool SectorData::has_mover() const {
+  return (_has_bits_[0] & 0x00008000u) != 0;
+}
+inline void SectorData::set_has_mover() {
+  _has_bits_[0] |= 0x00008000u;
+}
+inline void SectorData::clear_has_mover() {
+  _has_bits_[0] &= ~0x00008000u;
+}
+inline void SectorData::clear_mover() {
+  if (mover_ != NULL) mover_->::NavmeshIO::MoverEntity::Clear();
+  clear_has_mover();
+}
+inline const ::NavmeshIO::MoverEntity& SectorData::mover() const {
+  return mover_ != NULL ? *mover_ : *default_instance_->mover_;
+}
+inline ::NavmeshIO::MoverEntity* SectorData::mutable_mover() {
+  set_has_mover();
+  if (mover_ == NULL) mover_ = new ::NavmeshIO::MoverEntity;
+  return mover_;
+}
+inline ::NavmeshIO::MoverEntity* SectorData::release_mover() {
+  clear_has_mover();
+  ::NavmeshIO::MoverEntity* temp = mover_;
+  mover_ = NULL;
+  return temp;
+}
+
+// repeated .NavmeshIO.SectorVert localoffsets = 202;
+inline int SectorData::localoffsets_size() const {
+  return localoffsets_.size();
+}
+inline void SectorData::clear_localoffsets() {
+  localoffsets_.Clear();
+}
+inline const ::NavmeshIO::SectorVert& SectorData::localoffsets(int index) const {
+  return localoffsets_.Get(index);
+}
+inline ::NavmeshIO::SectorVert* SectorData::mutable_localoffsets(int index) {
+  return localoffsets_.Mutable(index);
+}
+inline ::NavmeshIO::SectorVert* SectorData::add_localoffsets() {
+  return localoffsets_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::NavmeshIO::SectorVert >&
+SectorData::localoffsets() const {
+  return localoffsets_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::NavmeshIO::SectorVert >*
+SectorData::mutable_localoffsets() {
+  return &localoffsets_;
 }
 
 // -------------------------------------------------------------------

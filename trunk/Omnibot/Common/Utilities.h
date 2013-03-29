@@ -106,7 +106,7 @@ namespace Utils
 	bool GetLocalEyePosition(Vector3f &_pos);
 	bool GetLocalFacing(Vector3f &_face);
 	bool GetLocalAABB(AABB &_aabb);
-	bool GetLocalAimPoint(Vector3f &_pos, Vector3f *_normal = 0, int _tracemask = TR_MASK_FLOODFILL, int * _contents = 0, int * _surface = 0);
+	bool GetLocalAimPoint(Vector3f &_pos, Vector3f *_normal = 0, int _tracemask = TR_MASK_FLOODFILLENT, int * _contents = 0, int * _surface = 0);
 	bool GetNearestNonSolid(Vector3f &_pos, const Vector3f &_start, const Vector3f &_end, int _tracemask = TR_MASK_FLOODFILL);
 
 	obint32 MakeId32(obint8 a, obint8 b, obint8 c, obint8 d);
@@ -228,6 +228,7 @@ namespace Utils
 	Vector3List CreatePolygon(const Vector3f &_pos, const Vector3f &_normal, float _size = 512.f);
 	Vector3List ClipPolygonToPlanes( const Vector3List & poly, const Plane3f & plane);
 
+	void PushPointToPlane( Vector3f & pt, const Plane3f & plane, const Vector3f & pushdirection );
 	/*float DistancePointToLineSqr(const Vector3f &_point,
 	const Vector3f &_pt0,
 	const Vector3f &_pt1,

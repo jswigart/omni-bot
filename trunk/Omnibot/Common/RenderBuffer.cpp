@@ -259,6 +259,16 @@ void RenderBuffer::AddArrow( const Vector3f & v0, const Vector3f & v1, const obC
 	prim.lineWidth = width;
 	mLineList.push_back( prim );
 
+	Vector3f dir = v1 - v0;
+	dir.Normalize();
+	Vector3f side = dir.Cross( Vector3f::UNIT_Z );
+
+	prim.v[0] = v1 - dir * 8 - side * 8;
+	mLineList.push_back( prim );
+
+	prim.v[0] = v1 - dir * 8 + side * 8;
+	mLineList.push_back( prim );
+
 	// arrowheads todo
 }
 void RenderBuffer::AddLine( const Vector3f & v0, const Vector3f & v1, const obColor & col, float width )
@@ -637,20 +647,14 @@ void RenderBuffer::RenderToOpenGL()
 	obColor col = COLOR::CYAN;
 	CheckColor( col, COLOR::WHITE );
 
-	if ( mPointList.size() > 0 )
+	for( size_t i = 0; i < mPointList.size(); ++i )
 	{
-		float sz = 0.0;
-		CheckPointSize( sz, 1.0 );
-
-		glBegin( GL_POINTS );
-		for( size_t i = 0; i < mPointList.size(); ++i )
-		{
-			const Point & prim = mPointList[ i ];
-			CheckPointSize( sz, prim.pointSize );
-			CheckColor( col, prim.c );
-			glVertex3fv( prim.v[0] );
-		}
-		glEnd();
+		const Point & prim = mPointList[ i ];
+		AddLine(
+			prim.v[ 0 ],
+			prim.v[ 0 ] + Vector3f( 0.0f, 0.0f, prim.pointSize ),
+			prim.c,
+			prim.pointSize );
 	}
 
 	if ( mLineList.size() > 0 )

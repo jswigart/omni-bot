@@ -55,28 +55,6 @@ namespace Wm5
 
 		///////////////////////////////////////////////////////////////////////////
 		// Custom functions
-		void ProjectPointOnPlane( Vector3<Real> & rPt ) const
-		{
-			rPt += Normal * DistanceTo( rPt );
-		}
-
-		void IntersectRay( const Vector3<Real> & rayPos, const Vector3<Real> & rayDir, Vector3<Real> & rPt ) const
-		{
-			ProjectPointOnPlane( rayPos, rPt );
-			Real t = Normal.Dot( rPt - rayPos ) / Normal.Dot( rayDir );
-			rPt = rayPos + rayDir * t;
-		}
-
-		void DropToPlane( Vector3<Real> & pos, const Vector3<Real> & dir ) const
-		{
-			/*if ( Normal.Dot( dir ) == 0.0 )
-			return;*/
-
-			const Real t = (Constant - Normal.Dot( pos ) ) / Normal.Dot( dir );
-
-			// calc contact point
-			pos += ( dir * t );
-		}
 
 		Plane3 operator-() const { return Plane3( -Normal, -Constant );  }
 

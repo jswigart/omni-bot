@@ -83,7 +83,7 @@ public:
 	virtual int GetLatestFileVersion() const = 0;
 
 	virtual void RegisterGameGoals() = 0;
-	virtual void GetPath(Path &_path, int _smoothiterations = 3) = 0;
+	virtual void GetPath(Path &_path) = 0;
 
 	virtual const char *GetPlannerName() const = 0;
 	virtual int GetPlannerType() const = 0;
