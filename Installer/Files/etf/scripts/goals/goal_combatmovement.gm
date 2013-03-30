@@ -82,9 +82,6 @@ this.ShouldCombatMovement = function()
 	if ( !this.WeaponCheck() )
 		{ return false; }
 	
-	//if ( this.Bot.GetHighLevelGoalName() == "ReviveTeammate" )
-	//	{ return false; }
-	
 	if ( this.Bot.GetHighLevelGoalName() == "Sentry" || this.Bot.GetHighLevelGoalName() == "Dispenser" || this.Bot.GetHighLevelGoalName() == "Detpack" )
 		{ return false; }
 
