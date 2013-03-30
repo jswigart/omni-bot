@@ -24,7 +24,6 @@ this.GetPriority = function()
 				break;
 			}
 		}
-		else { print("no patrol goals"); }
 
 		tableClear(this.Bot.QueryGoalsTable);
 
