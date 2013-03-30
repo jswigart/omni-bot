@@ -209,3 +209,17 @@ member SetDefense = function()
 	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.RED, CLASS.SPY );
 	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.RED, CLASS.ENGINEER );
 };
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member DrawSpawns = function()
+{
+	for ( i = 64; i < 1024; i = i + 1 )
+	{
+		if (EntityIsValid(i) && GetEntClass(i) == CLASS.PLAYERSTART)
+		{
+			pos = GroundPoint(GetEntPosition(i));
+			DrawLine(pos,pos+Vector3(0,0,64),COLOR.RED,60);
+		}
+	}
+};
