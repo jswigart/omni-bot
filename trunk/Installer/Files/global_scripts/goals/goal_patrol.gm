@@ -1,0 +1,88 @@
+// This script contains functionality to trigger any available switches as set up in the global map table.
+
+// These parameters are required
+this.Name = "PATROL";		// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.SkipGetPriorityWhenActive = true;
+
+this.Initialize = function()
+{
+	this.Bot.QueryGoalsTable = table();
+};
+
+this.GetPriority = function()
+{
+	while(1)
+	{
+		count = this.QueryGoals(this.Bot.QueryGoalsTable, 0xbcc33d1b /* PATROL */);
+		if ( count > 0 )
+		{
+			foreach ( id and goal in this.Bot.QueryGoalsTable )
+			{
+				this.MapGoal = goal;
+				this.Priority = goal.GetGoalPriority(this.Bot);
+				break;
+			}
+		}
+		else { print("no patrol goals"); }
+
+		tableClear(this.Bot.QueryGoalsTable);
+
+		sleep(2);
+	}
+};
+
+this.Enter = function()
+{
+	if(!this.MarkInProgress(this.MapGoal)) {
+		this.BlackboardDelay(5, this.MapGoal);
+		this.Finished();
+	}
+	
+	this.StartIndex = RandInt(0, tableCount(this.MapGoal.PatrolPoints) - 1);
+};
+
+this.Update = function()
+{
+	currentIndex = this.StartIndex;
+	totalSpots = tableCount(this.MapGoal.PatrolPoints);
+	this.Goto(this.MapGoal.PatrolPoints[currentIndex].position, 32.0);
+	this.AddAimRequest(Priority.Low, "facing", Util.GetRandomTableValue(this.MapGoal.PatrolPoints[currentIndex].AimVectors));
+	
+	visited = 1;
+	if (this.MapGoal.PatrolOrder == "sequential") {
+		for ( i = 1; i <= totalSpots; i += 1) {
+			if (visited == totalSpots) {
+				break;
+			}
+
+			nextSpot = currentIndex + 1;
+			if (nextSpot > totalSpots - 1) {
+				nextSpot = 0;
+			}
+
+			this.Goto(this.MapGoal.PatrolPoints[nextSpot].position, 32.0);
+			this.AddAimRequest(Priority.Low, "facing", Util.GetRandomTableValue(this.MapGoal.PatrolPoints[nextSpot].AimVectors));
+			sleep(RandFloat(this.MapGoal.MinCampTime, this.MapGoal.MaxCampTime));
+			this.ReleaseAimRequest();
+
+			currentIndex = nextSpot;
+			visited += 1;
+		}
+	}
+	else {
+		for ( i = 1; i <= totalSpots; i += 1) {
+			if (visited == totalSpots) {
+				break;
+			}
+			nextSpot = Util.GetRandomFromTable(this.MapGoal.PatrolPoints);
+
+			this.Goto(this.MapGoal.PatrolPoints[nextSpot].position, 32.0);
+			this.AddAimRequest(Priority.Low, "facing", Util.GetRandomTableValue(this.MapGoal.PatrolPoints[nextSpot].AimVectors));
+			sleep(RandFloat(this.MapGoal.MinCampTime, this.MapGoal.MaxCampTime));
+			this.ReleaseAimRequest();
+			visited += 1;
+		}
+	}
+};
+

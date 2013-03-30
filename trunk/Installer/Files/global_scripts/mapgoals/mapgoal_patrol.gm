@@ -1,0 +1,369 @@
+this.GoalType = "PATROL";
+this.Version = 1;
+this.DefaultPriority = 0.5;
+this.MinRadius = 30;
+this.DefaultRenderRadius = 1024;
+this.MaxUsers_InUse(1);
+this.MaxUsers_InProgress(2);
+this.RolePriorityBonus = 0.01;
+
+//////////////////////////////////////////////////////////////////////////
+// Couple callbacks to enforce additional constraints on property values.
+CheckMinCamp = function(var)
+{
+	if(var <= this.MaxCampTime)
+	{
+		return true;
+	}
+	// returning any string is an error string
+	return "MinCampTime must be <= MaxCampTime";
+};
+CheckMaxCamp = function(var)
+{
+	if(var >= this.MinCampTime)
+	{
+		return true;
+	}
+	// returning any string is an error string
+	return "MaxCampTime must be >= MinCampTime";
+};
+
+// Schema is a 'blueprint' of expected data that the goal needs to operate.
+// It is used for validating the expected fields and field values for correctness.
+this.Schema = Schema();
+this.Schema.AimVectors = Validate.TableOf("vector3").Default({});
+this.Schema.MinCampTime = Validate.NumRange(0,9999).Default(0).CheckCallback(CheckMinCamp);
+this.Schema.MaxCampTime = Validate.NumRange(0,9999).Default(1).CheckCallback(CheckMaxCamp);
+
+//////////////////////////////////////////////////////////////////////////
+
+this.InitNewGoal = function()
+{
+	// the schema will initialize all fields with a default
+	// so as long as everything has a default, we can let the schema
+	// set up the data for us.
+	this.Schema.Check(this);
+
+	this.AimVectors[0] = GetLocalFacing();
+	this.PatrolPoints = {};
+
+	// main goal is first patrol point
+	this.PatrolPoints[0] = {
+		position = GetLocalPosition(),
+		AimVectors = this.AimVectors
+	};
+
+	this.PatrolOrder = "random";
+	this.CreateOnLoad = true; // user created goals need this
+
+	this.Radius = 32;
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+this.UpgradeVersion = function(Props)
+{
+	// version 0 is string,string key/values from the old waypoint format
+	if(Props.Version==0)
+	{
+		// Version 1 Schema, upgrade from waypoint format
+		Props.Version = 1;
+		Props.AimVectors = { ToVector(Props.Facing) };
+
+		this.Schema.Check(Props);
+
+		this.SetBounds(Vec3(-5,-5,0),Vec3(5,5,96));
+	}
+	else if(Props.Version == this.Version)
+	{
+		this.Schema.Check(Props);
+
+		this.AimVectors = Props.AimVectors;
+		this.MinCampTime = Props.MinCampTime;
+		this.MaxCampTime = Props.MaxCampTime;
+		this.PatrolOrder = Props.PatrolOrder;
+
+		if ( Props.PatrolPoints )
+		{
+			this.PatrolPoints = Props.PatrolPoints;
+		}
+		else
+		{
+			this.PatrolPoints = table();
+		}
+
+		// lock this to the main goal position. needed in case of goal_move.
+		this.PatrolPoints[0] = {
+			position = this.GetPosition(),
+			AimVectors = this.AimVectors
+		};
+
+		if(!this.Schema.Check(this) || tableCount(Props.PatrolPoints) < 1)
+		{
+			this.DisableGoal(true);
+		}
+	}
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+this.Render = function(editMode)
+{
+	offset = Vector3(0,0,0);
+	offset2 = Vector3(0,0,64);
+
+	while(this.RenderGoal == true)
+	{
+		goalBasePos = this.GetPosition();
+		goalPos = goalBasePos + offset2;
+
+		if(this.ExtraDebugText==null)
+		{
+			this.ExtraDebugText = "";
+			this.ExtraDebugText += format("CampTime: %g to %g secs",ToFloat(this.MinCampTime),ToFloat(this.MaxCampTime));
+			this.ExtraDebugText += format("\nPatrolOrder: %s", this.PatrolOrder);
+		}
+
+		this.RenderDefault();
+
+		if(this.IsDisabled())
+		{
+			DrawLine(goalPos,goalBasePos,COLOR.RED,2);
+		}
+		else
+		{
+			DrawLine(goalPos,goalBasePos,COLOR.GREEN,2);
+		}
+
+		if ( typeId(this.AimVectors) == 6 )
+		{
+			foreach ( id and face in this.AimVectors )
+			{
+				DrawArrow(goalPos,goalPos+face*32,COLOR.BLUE,2);
+				DrawText3d(goalPos+face*32,ToString(id),COLOR.WHITE,2,512);
+			}
+		}
+
+		if ( this.PatrolPoints )
+		{
+			foreach ( id and spot in this.PatrolPoints )
+			{
+				if ( id == 0 ) { continue; }
+				base = GroundPoint(spot.position);
+
+				DrawLine(base,base+offset2,COLOR.BLUE,2);
+				DrawText3d(base+Vector3(0,0,32), this.GetName() + " Point " + ToString(id),COLOR.WHITE,2,textDrawRadius);
+
+				foreach ( id and face in spot.AimVectors )
+				{
+					DrawArrow(base+offset2,base+offset2+face*32,COLOR.BLUE,2);
+					DrawText3d(base+offset2+face*32,ToString(id),COLOR.WHITE,2,512);
+				}
+			}
+		}
+
+		yield();
+	}
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+this.SaveToTable = function(SaveTable)
+{
+	// save the goal specific properties
+	SaveTable.AimVectors = this.AimVectors;
+	SaveTable.MaxCampTime = this.MaxCampTime;
+	SaveTable.MinCampTime = this.MinCampTime;
+	SaveTable.PatrolPoints	= this.PatrolPoints;
+	SaveTable.PatrolOrder	= this.PatrolOrder;
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+this.Help = function()
+{
+	print(this.GoalType,"goal, version",this.Version);
+	print("Requires:");
+	print("		facing - Direction the bot should face");
+	print("		patrolpoint - minimum of 1 patrol points");
+	print("Optional:");
+	print("		mincamptime - minimum time a bot should camp at the goal");
+	print("		maxcamptime - maximum time a bot should camp at the goal");
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+this.SetProperty = function(property, value)
+{
+	proplower = property.Lower(0);
+	switch(proplower)
+	{
+		case "facing":
+		{
+			if ( value == "clearall" || value == "clear" )
+			{
+				tableClear(this.AimVectors);
+			}
+			else
+			{
+				i = ToInt(value);
+				if ( typeId(i) == 1)
+				{
+					// make em add sequentially
+					n = tableCount(this.AimVectors);
+					if ( i < 0 || i > n )
+					{
+						i = n;
+					}
+
+					playerFace = GetLocalFacing();
+					this.AimVectors[ i ] = playerFace;
+					print("Facing",i,"set to",playerFace);
+				}
+				else
+				{
+					print(this.GoalType, ": Invalid facing index, expecting int");
+				}
+			}
+		}
+		case "mincamptime":
+		{
+			v = ToFloat(value);
+			if(this.Schema.MinCampTime.CheckPrintErrors(this,v))
+			{
+				this.MinCampTime = v;
+			}
+		}
+		case "maxcamptime":
+		{
+			v = ToFloat(value);
+			if(this.Schema.MaxCampTime.CheckPrintErrors(this,v))
+			{
+				this.MaxCampTime = v;
+			}
+		}
+		case "order":
+		{
+			if ( value == "sequential" ) {
+				this.PatrolOrder = "sequential";
+			}
+			else {
+				this.PatrolOrder = "random";
+			}
+		}
+		case "patrolpoint":
+		{
+			if ( value == "clearall" || value == "clear" )
+			{
+				for (i = 1; i <= tableCount(this.PatrolPoints); i += 1) {
+					this.PatrolPoints[i] = null;
+				}
+			}
+			else
+			{
+				i = ToInt(value);
+				if ( typeId(i) == 1)
+				{
+					spotCount = tableCount(this.PatrolPoints);
+					if ( i < 1 || i > spotCount )
+					{
+						i = spotCount;
+					}
+
+					playerFace = GetLocalFacing();
+
+					this.PatrolPoints[ i ] = table();
+					this.PatrolPoints[ i ].position = GetLocalPosition();
+
+					if ( !this.PatrolPoints[ i ].AimVectors )
+					{
+						this.PatrolPoints[ i ].AimVectors = table();
+					}
+
+					facingCount = tableCount(this.PatrolPoints[ i ].AimVectors);
+					this.PatrolPoints[ i ].AimVectors[ facingCount ] = playerFace;
+
+					print("Patrol Point ",i," added");
+				}
+				else
+				{
+					print(this.GoalType, ": Invalid Patrol Point index, expecting int");
+				}
+			}
+		}
+		case "patrolfacing":
+		{
+			if ( this.PatrolPoints )
+			{
+				clear = false;
+				if ( value != "clearall" && value != "clear" ) {
+					ind = ToInt(value, 0);
+					if (typeId(ind) != 1) {
+						print(this.GoalType, ": Invalid facing index, expecting int");
+						return;
+					}
+				}
+				else {
+					clear = true;
+				}
+
+				spot = null;
+				dist = null;
+				spotCount = tableCount(this.PatrolPoints);
+
+				// get the closest one
+				for( i = 1; i <= spotCount; i += 1)
+				{
+					if ( !this.PatrolPoints[ i ] ) { continue; }
+					testDist = DistanceBetween(GetLocalPosition(), this.PatrolPoints[ i ].position);
+					if (!dist || testDist < dist) {
+						dist = testDist;
+						spot = i;
+					}
+				}
+
+				if (typeId(spot) == 1)
+				{
+					if ( clear ) {
+						tableClear(this.PatrolPoints[ spot ].AimVectors);
+						print("all facings cleared");
+						return;
+					}
+
+					facingCount = tableCount(this.PatrolPoints[ spot ].AimVectors);
+					if ( ind < 0 || ind > facingCount ) {
+						ind = facingCount;
+					}
+
+					playerFace = GetLocalFacing();
+					this.PatrolPoints[ spot ].AimVectors[ ind ] = playerFace;
+					print("Facing",ind,"set to",playerFace);
+				}
+				else
+				{
+					print(this.GoalType, ": No Patrol Points found!");
+				}
+			}
+		}
+		default:
+		{
+			print(this.GoalType, ": Invalid property:", property);
+			return;
+		}
+	}
+
+	// null the debug text so it will be rebuilt
+	this.ExtraDebugText = null;
+};
+
+//////////////////////////////////////////////////////////////////////////
+global CreateGui = function(object, guidef)
+{
+};
+//////////////////////////////////////////////////////////////////////////
+
+this.HudDisplay = function(window)
+{
+	// Create Gui elements to edit Schema properties
+	this.CreateGuiFromSchema(this.Schema);
+};
