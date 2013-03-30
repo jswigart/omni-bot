@@ -170,56 +170,47 @@ member HudTextMsgOff = function()
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-member SetOffense = function()
-{
-	SetGoalPriority( "DEFENSE_.*", 0.0, TEAM.BLUE, CLASS.SCOUT );
-	SetGoalPriority( "DEFENSE_.*", 0.0, TEAM.BLUE, CLASS.SOLDIER );
-	SetGoalPriority( "DEFENSE_.*", 0.0, TEAM.BLUE, CLASS.PYRO );
-	
-	SetGoalPriority( "DEFENSE_.*", 0.0, TEAM.RED, CLASS.SCOUT );
-	SetGoalPriority( "DEFENSE_.*", 0.0, TEAM.RED, CLASS.SOLDIER );
-	SetGoalPriority( "DEFENSE_.*", 0.0, TEAM.RED, CLASS.PYRO );
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//
-member SetDefense = function()
-{
-	SetGoalPriority( "FLAG_.*", 0.0, TEAM.BLUE, CLASS.SNIPER );
-	SetGoalPriority( "FLAG_.*", 0.0, TEAM.BLUE, CLASS.DEMOMAN );
-	SetGoalPriority( "FLAG_.*", 0.0, TEAM.BLUE, CLASS.MEDIC );
-	SetGoalPriority( "FLAG_.*", 0.0, TEAM.BLUE, CLASS.HWGUY );
-	SetGoalPriority( "FLAG_.*", 0.0, TEAM.BLUE, CLASS.ENGINEER );
-	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.BLUE, CLASS.SNIPER );
-	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.BLUE, CLASS.DEMOMAN );
-	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.BLUE, CLASS.MEDIC );
-	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.BLUE, CLASS.HWGUY );
-	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.BLUE, CLASS.SPY );
-	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.BLUE, CLASS.ENGINEER );
-	
-	SetGoalPriority( "FLAG_.*", 0.0, TEAM.RED, CLASS.SNIPER );
-	SetGoalPriority( "FLAG_.*", 0.0, TEAM.RED, CLASS.DEMOMAN );
-	SetGoalPriority( "FLAG_.*", 0.0, TEAM.RED, CLASS.MEDIC );
-	SetGoalPriority( "FLAG_.*", 0.0, TEAM.RED, CLASS.HWGUY );
-	SetGoalPriority( "FLAG_.*", 0.0, TEAM.RED, CLASS.ENGINEER );
-	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.RED, CLASS.SNIPER );
-	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.RED, CLASS.DEMOMAN );
-	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.RED, CLASS.MEDIC );
-	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.RED, CLASS.HWGUY );
-	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.RED, CLASS.SPY );
-	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.RED, CLASS.ENGINEER );
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//
 member DrawSpawns = function()
 {
-	for ( i = 64; i < 1024; i = i + 1 )
-	{
-		if (EntityIsValid(i) && GetEntClass(i) == CLASS.PLAYERSTART)
+	.getSpawnEntity = function(entId) {
+		cls = GetEntClass(entId);
+		switch(cls)
 		{
-			pos = GroundPoint(GetEntPosition(i));
-			DrawLine(pos,pos+Vector3(0,0,64),COLOR.RED,60);
+			case CLASS.PLAYERSTART_TEAM1:
+			{
+				return {COLOR.BLUE, "Team1 Spawn"};
+			}
+			case CLASS.PLAYERSTART_TEAM2:
+			{
+				return {COLOR.RED, "Team2 Spawn"};
+			}
+			case CLASS.PLAYERSTART_TEAM3:
+			{
+				return {COLOR.GREEN, "Team3 Spawn"};
+			}
+			case CLASS.PLAYERSTART_TEAM4:
+			{
+				return {COLOR.YELLOW, "Team4 Spawn"};
+			}
 		}
+		
+		return null;
+	};
+
+	while(DRAW_SPAWNS) {
+		for ( i = 64; i < 1024; i = i + 1 )
+		{
+			if (EntityIsValid(i))
+			{
+				info = this.getSpawnEntity(i);
+				if (info) {
+					pos = GroundPoint(GetEntPosition(i));
+					DrawLine(pos,pos+Vector3(0,0,64),info[0],60);
+					DrawText3d(pos+Vector3(0,0,48),info[1],COLOR.WHITE,60,1000);
+				}
+			}
+		}
+		
+		yield();
 	}
 };
