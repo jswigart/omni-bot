@@ -21,7 +21,11 @@ global DEBUG_GOAL_AVAILABILITY = false;
 
 global PostMapLoad = function()
 {
-
+	// set up the minimum class counts for the game
+	if ( !Util.ClassTablesInitialized )
+	{
+		Util.InitializeClassTables();
+	}
 };
 
 print("ETF Script Executed");

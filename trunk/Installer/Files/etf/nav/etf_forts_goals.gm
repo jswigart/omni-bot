@@ -7,6 +7,20 @@ global _MG =
 		GroupName = "",
 		MinRadius = 0,
 		Name = "CAPPOINT_trigger_multiple_246",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		Position = Vec3(-896.000, -32.000, 228.000),
+		Radius = 0,
+		TagName = "trigger_multiple_246",
+		TeamAvailability = 2,
+		Version = 1,
+	},
+	CAPPOINT_trigger_multiple_246_1 = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "CapPoint",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "CAPPOINT_trigger_multiple_246_1",
 		Orientation = Vec3(-1.571, -0.000, 0.000),
 		Position = Vec3(-896.000, -32.000, 228.000),
 		Radius = 0,
@@ -21,6 +35,20 @@ global _MG =
 		GroupName = "",
 		MinRadius = 0,
 		Name = "CAPPOINT_trigger_multiple_247",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		Position = Vec3(908.000, -32.000, 232.000),
+		Radius = 0,
+		TagName = "trigger_multiple_247",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	CAPPOINT_trigger_multiple_247_1 = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "CapPoint",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "CAPPOINT_trigger_multiple_247_1",
 		Orientation = Vec3(-1.571, -0.000, 0.000),
 		Position = Vec3(908.000, -32.000, 232.000),
 		Radius = 0,
@@ -35,9 +63,13 @@ global _MG =
 		GroupName = "",
 		MinRadius = 0,
 		Name = "FLAG_blueflag",
-		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Orientation = Vec3(-1.571, 0.000, -0.000),
 		Position = Vec3(3525.000, 388.000, -352.000),
 		Radius = 0,
+		Roles = 
+		{
+			[0] = "ATTACKER",
+		},
 		TagName = "blueflag",
 		TeamAvailability = 2,
 		Version = 1,
@@ -49,11 +81,295 @@ global _MG =
 		GroupName = "",
 		MinRadius = 0,
 		Name = "FLAG_redflag",
-		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Orientation = Vec3(-1.571, 0.000, -0.000),
 		Position = Vec3(-3512.000, -452.000, -352.000),
 		Radius = 0,
+		Roles = 
+		{
+			[0] = "ATTACKER",
+		},
 		TagName = "redflag",
 		TeamAvailability = 4,
+		Version = 1,
+	},
+	PATROL_bluecapture = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.118, -0.993, 0.006),
+			[1] = Vec3(-0.123, 0.992, 0.003),
+		},
+		CreateOnLoad = 1,
+		GoalType = "PATROL",
+		GroupName = "",
+		MaxCampTime = 1,
+		MinCampTime = 0,
+		MinRadius = 32,
+		Name = "PATROL_bluecapture",
+		Orientation = Vec3(3.024, 0.006, -0.000),
+		PatrolOrder = "random",
+		PatrolPoints = 
+		{
+			[0] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(-0.118, -0.993, 0.006),
+					[1] = Vec3(-0.123, 0.992, 0.003),
+				},
+				position = Vec3(1051.212, -49.395, 232.125),
+			},
+			[1] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(-0.919, -0.318, -0.235),
+				},
+				position = Vec3(849.152, 226.901, 232.125),
+			},
+			[2] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(-0.944, 0.266, -0.195),
+				},
+				position = Vec3(855.694, -294.964, 232.125),
+			},
+			[3] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(0.880, -0.475, 0.023),
+				},
+				position = Vec3(1199.763, -710.725, 232.125),
+			},
+			[4] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(-0.043, -0.999, 0.010),
+				},
+				position = Vec3(1062.182, 404.874, 232.125),
+			},
+		},
+		Position = Vec3(1051.000, -49.000, 209.000),
+		Radius = 32,
+		TagName = "bluecapture",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	PATROL_blueflag = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.924, -0.381, 0.033),
+			[1] = Vec3(0.055, -0.997, 0.060),
+		},
+		CreateOnLoad = 1,
+		GoalType = "PATROL",
+		GroupName = "",
+		MaxCampTime = 1,
+		MinCampTime = 0,
+		MinRadius = 32,
+		Name = "PATROL_blueflag",
+		Orientation = Vec3(1.962, 0.033, -0.000),
+		PatrolOrder = "random",
+		PatrolPoints = 
+		{
+			[0] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(-0.924, -0.381, 0.033),
+					[1] = Vec3(0.055, -0.997, 0.060),
+				},
+				position = Vec3(3364.238, 452.274, -351.875),
+			},
+			[1] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(-1.000, -0.017, -0.002),
+					[1] = Vec3(-0.066, 0.997, -0.051),
+				},
+				position = Vec3(3427.542, -567.148, -295.875),
+			},
+			[2] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(0.022, 0.980, 0.196),
+					[1] = Vec3(1.000, -0.009, -0.005),
+				},
+				position = Vec3(2162.976, -553.491, -295.875),
+			},
+			[3] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(0.999, 0.020, 0.031),
+					[1] = Vec3(-0.011, -0.996, 0.086),
+				},
+				position = Vec3(2761.522, 277.359, -351.875),
+			},
+			[4] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(-0.739, -0.670, 0.073),
+					[1] = Vec3(-0.976, 0.215, 0.025),
+				},
+				position = Vec3(3610.763, 141.708, -351.875),
+			},
+		},
+		Position = Vec3(3364.000, 452.000, -374.000),
+		Radius = 32,
+		Roles = 
+		{
+			[0] = "DEFENDER",
+		},
+		TagName = "blueflag",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	PATROL_redcapture = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.116, 0.993, -0.001),
+			[1] = Vec3(0.141, -0.990, 0.012),
+		},
+		CreateOnLoad = 1,
+		GoalType = "PATROL",
+		GroupName = "",
+		MaxCampTime = 1,
+		MinCampTime = 0,
+		MinRadius = 32,
+		Name = "PATROL_redcapture",
+		Orientation = Vec3(-0.116, -0.001, -0.000),
+		PatrolOrder = "random",
+		PatrolPoints = 
+		{
+			[0] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(0.116, 0.993, -0.001),
+					[1] = Vec3(0.141, -0.990, 0.012),
+				},
+				position = Vec3(-1040.955, -33.002, 232.125),
+			},
+			[1] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(0.938, 0.282, -0.201),
+				},
+				position = Vec3(-854.041, -331.518, 232.125),
+			},
+			[2] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(0.970, -0.192, -0.151),
+				},
+				position = Vec3(-853.828, 223.169, 232.125),
+			},
+			[3] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(-0.744, 0.668, -0.012),
+				},
+				position = Vec3(-1190.236, 641.624, 232.125),
+			},
+			[4] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(0.043, 0.998, 0.034),
+				},
+				position = Vec3(-1052.875, -462.764, 232.125),
+			},
+		},
+		Position = Vec3(-1040.000, -33.000, 209.000),
+		Radius = 32,
+		TagName = "redcapture",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	PATROL_redflag = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.030, 0.999, 0.017),
+			[1] = Vec3(0.921, 0.389, 0.011),
+		},
+		CreateOnLoad = 1,
+		GoalType = "PATROL",
+		GroupName = "",
+		MaxCampTime = 1,
+		MinCampTime = 0,
+		MinRadius = 32,
+		Name = "PATROL_redflag",
+		Orientation = Vec3(0.030, 0.017, 0.000),
+		PatrolOrder = "random",
+		PatrolPoints = 
+		{
+			[0] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(-0.030, 0.999, 0.017),
+					[1] = Vec3(0.921, 0.389, 0.011),
+				},
+				position = Vec3(-3360.323, -508.113, -351.875),
+			},
+			[1] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(0.999, 0.008, -0.034),
+					[1] = Vec3(0.037, -0.999, -0.040),
+				},
+				position = Vec3(-3393.365, 514.816, -295.875),
+			},
+			[2] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(0.054, -0.987, 0.149),
+					[1] = Vec3(-0.998, -0.060, 0.006),
+				},
+				position = Vec3(-2167.838, 495.428, -295.875),
+			},
+			[3] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(-0.002, 0.997, 0.075),
+					[1] = Vec3(-0.990, -0.138, 0.023),
+				},
+				position = Vec3(-2741.655, -319.493, -351.875),
+			},
+			[4] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(0.696, 0.715, 0.066),
+					[1] = Vec3(0.968, -0.250, 0.021),
+				},
+				position = Vec3(-3601.080, -190.480, -351.875),
+			},
+		},
+		Position = Vec3(-3360.000, -508.000, -374.000),
+		Radius = 32,
+		Roles = 
+		{
+			[0] = "DEFENDER",
+		},
+		TagName = "redflag",
+		TeamAvailability = 30,
 		Version = 1,
 	},
 	Version = 1,

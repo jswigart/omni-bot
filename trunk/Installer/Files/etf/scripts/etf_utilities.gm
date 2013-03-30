@@ -4,6 +4,20 @@ Util.FlagCarrier = "CLASS.SCOUT";
 Util.Sniper = "CLASS.SNIPER";
 Util.SniperClass = CLASS.SNIPER;
 
+Util.PlayerClassTable =
+{
+	CLASS.SCOUT,
+	CLASS.SNIPER,
+	CLASS.SOLDIER,
+	CLASS.DEMOMAN,
+	CLASS.MEDIC,
+	CLASS.HWGUY,
+	CLASS.PYRO,
+	CLASS.SPY,
+	CLASS.ENGINEER,
+	CLASS.CIVILIAN,
+};
+
 Util.SniperWeapons =
 {
 	WEAPON.SNIPERRIFLE,
