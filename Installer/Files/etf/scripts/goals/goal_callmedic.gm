@@ -1,0 +1,96 @@
+// This script contains functionality to allow medic bots to dispense health at spawn
+
+// These parameters are required
+this.Name = "CallMedic";		// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+this.AlwaysRecieveEvents = true;	// Recieve events even when not active. Normally events are only called when goal is active.
+
+// Entity flags are mapped to a health value to determine when to call for medic for each entity flag.
+// This prevents over calling, and better customization of how effects are treated.
+this.CallForMedicFlags = {};
+this.CallForMedicFlags[ENTFLAG.TRANQUED] = 0.5;
+this.CallForMedicFlags[ENTFLAG.LEGSHOT] = 0.6;
+this.CallForMedicFlags[ENTFLAG.BLIND] = 0.85;
+this.CallForMedicFlags[ENTFLAG.BURNING] = 0.7;
+this.CallForMedicFlags[ENTFLAG.INFECTED] = 0.9;
+this.CallForMedicFlags[ENTFLAG.GASSED] = 0.65;
+
+this.ShouldCallForMedic = function()
+{
+	b = this.Bot;
+	
+	healthpc = b.GetHealthPercent();
+	//print(b.Name, " Health %: ", healthpc, " ", this.HealthThreshold);
+	
+	if(healthpc < this.HealthThreshold)
+	{
+		return true;
+	}
+	
+	foreach(flag and health in this.CallForMedicFlags)
+	{
+		if(b.HasEntityFlag(flag) && healthpc < health)
+		{
+			return true;
+		}
+	}
+	return false;
+};
+
+this.Initialize = function()
+{
+	// Internal variables
+	this.HealthThreshold = 0.6;
+	this.DelayBetweenCalls = 20.0;
+	
+	//print(this.Name, " Initialized");
+};
+
+// this.OnSpawn = function()
+// {
+	// while(true)
+	// {
+		// if(this.ShouldCallForMedic())
+		// {
+			// this.Priority = 1;
+		// }
+		// else
+		// {
+			// this.Priority = 0;
+		// }
+		// sleep(3);
+	// };
+// };
+
+this.GetPriority = function()
+{
+	if(this.ShouldCallForMedic())
+	{
+		this.Priority = 1;
+	}
+	sleep(3);
+};
+
+// this.Enter = function()
+// {
+// };
+
+// this.Exit = function()
+// {
+// };
+
+this.Update = function()
+{
+	this.Bot.PressButton(BTN.CALLFORMEDIC);
+	sleep(this.DelayBetweenCalls);
+	this.Finished();
+};
+
+this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth)
+{
+	if(this.ShouldCallForMedic())
+	{
+		this.Priority = 1;
+	}
+};

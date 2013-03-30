@@ -1,0 +1,250 @@
+// Map Script for ETF_Canalzone
+
+global OnRedCp1 = function(trigger)
+{
+	echo("OnRedCp1");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp1");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.red, false);
+			cp.SetAvailable(team.blue, true);
+		}
+	}
+};
+
+global OnRedCp2 = function(trigger)
+{
+	echo("OnRedCp2");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp2");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.red, false);
+			cp.SetAvailable(team.blue, true);
+		}
+	}
+};
+
+global OnRedCp3 = function(trigger)
+{
+	echo("OnRedCp3");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp3");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.red, false);
+			cp.SetAvailable(team.blue, true);
+		}
+	}
+};
+
+global OnRedCp4 = function(trigger)
+{
+	echo("OnRedCp4");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp4");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.red, false);
+			cp.SetAvailable(team.blue, true);
+		}
+	}
+};
+
+global OnRedCp5 = function(trigger)
+{
+	echo("OnRedCp5");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp5");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.red, false);
+			cp.SetAvailable(team.blue, true);
+		}
+	}
+};
+
+global OnRedCp6 = function(trigger)
+{
+	echo("OnRedCp6");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp6");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.red, false);
+			cp.SetAvailable(team.blue, true);
+		}
+	}
+};
+
+global OnRedCp7 = function(trigger)
+{
+	echo("OnRedCp7");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp7");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.red, false);
+			cp.SetAvailable(team.blue, true);
+		}
+	}
+};
+
+global OnRedCp8 = function(trigger)
+{
+	echo("OnRedCp8");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp8");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.red, false);
+			cp.SetAvailable(team.blue, true);
+		}
+	}
+};
+
+global OnBlueCp1 = function(trigger)
+{
+	echo("OnBlueCp1");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp1");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.blue, false);
+			cp.SetAvailable(team.red, true);
+		}
+	}
+};
+
+global OnBlueCp2 = function(trigger)
+{
+	echo("OnBlueCp2");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp2");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.blue, false);
+			cp.SetAvailable(team.red, true);
+		}
+	}
+};
+
+global OnBlueCp3 = function(trigger)
+{
+	echo("OnBlueCp3");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp3");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.blue, false);
+			cp.SetAvailable(team.red, true);
+		}
+	}
+};
+
+global OnBlueCp4 = function(trigger)
+{
+	echo("OnBlueCp4");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp4");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.blue, false);
+			cp.SetAvailable(team.red, true);
+		}
+	}
+};
+
+global OnBlueCp5 = function(trigger)
+{
+	echo("OnBlueCp5");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp5");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.blue, false);
+			cp.SetAvailable(team.red, true);
+		}
+	}
+};
+
+global OnBlueCp6 = function(trigger)
+{
+	echo("OnBlueCp6");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp6");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.blue, false);
+			cp.SetAvailable(team.red, true);
+		}
+	}
+};
+
+global OnBlueCp7 = function(trigger)
+{
+	echo("OnBlueCp7");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp7");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.blue, false);
+			cp.SetAvailable(team.red, true);
+		}
+	}
+};
+
+global OnBlueCp8 = function(trigger)
+{
+	echo("OnBlueCp8");
+	if(trigger.action == "active")
+	{
+		cp = GetGoal("CP_cp8");
+		if(cp != NULL)
+		{
+			cp.SetAvailable(team.blue, false);
+			cp.SetAvailable(team.red, true);
+		}
+	}
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger("red_CP1_flag", OnRedCp1);
+	OnTrigger("red_CP2_flag", OnRedCp2);
+	OnTrigger("red_CP3_flag", OnRedCp3);
+	OnTrigger("red_CP4_flag", OnRedCp4);
+	OnTrigger("red_CP5_flag", OnRedCp5);
+	OnTrigger("red_CP6_flag", OnRedCp6);
+	OnTrigger("red_CP7_flag", OnRedCp7);
+	OnTrigger("red_CP8_flag", OnRedCp8);
+	
+	OnTrigger("blue_CP1_flag", OnBlueCp1);
+	OnTrigger("blue_CP2_flag", OnBlueCp2);
+	OnTrigger("blue_CP3_flag", OnBlueCp3);
+	OnTrigger("blue_CP4_flag", OnBlueCp4);
+	OnTrigger("blue_CP5_flag", OnBlueCp5);
+	OnTrigger("blue_CP6_flag", OnBlueCp6);
+	OnTrigger("blue_CP7_flag", OnBlueCp7);
+	OnTrigger("blue_CP8_flag", OnBlueCp8);
+};
+
+
+
+

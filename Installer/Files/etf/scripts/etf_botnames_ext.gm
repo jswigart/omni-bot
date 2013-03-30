@@ -1,0 +1,278 @@
+/////////////////////////////////////////////////////////////////////
+// initialize the team tables
+RedBots = table();
+BlueBots = table();
+YellowBots = table();
+GreenBots = table();
+
+/////////////////////////////////////////////////////////////////////
+// USER CONFIG STARTS HERE
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+// Register default profiles for the game classes.
+RegisterDefaultProfile(CLASS.SCOUT, "def_bot.gm");
+RegisterDefaultProfile(CLASS.SNIPER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.SOLDIER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.DEMOMAN, "def_bot.gm");
+RegisterDefaultProfile(CLASS.MEDIC, "def_bot.gm");
+RegisterDefaultProfile(CLASS.HWGUY, "def_bot.gm");
+RegisterDefaultProfile(CLASS.PYRO, "def_bot.gm");
+RegisterDefaultProfile(CLASS.SPY, "def_bot.gm");
+RegisterDefaultProfile(CLASS.ENGINEER, "def_bot.gm");
+RegisterDefaultProfile(CLASS.CIVILIAN, "def_bot.gm");
+
+/////////////////////////////////////////////////////////////////////
+// optionally assign a prefix for the bot name. set to "" for no prefix
+global BotPrefix = "";    //"^o[BOT]^7"
+
+/////////////////////////////////////////////////////////////////////
+// Red Bots
+
+// Recons
+RedBots["Halfbaked"] = { class=CLASS.SCOUT, weapon=0, profile="" };
+RedBots["Fullmonty"] = { class=CLASS.SCOUT, weapon=0, profile="" };
+RedBots["Nohope"] = { class=CLASS.SCOUT, weapon=0, profile="" };
+RedBots["Hitnrun"] = { class=CLASS.SCOUT, weapon=0, profile="" };
+RedBots["Missnrun"] = { class=CLASS.SCOUT, weapon=0, profile="" };
+RedBots["Oysterhead"] = { class=CLASS.SCOUT, weapon=0, profile="" };
+RedBots["Fullthrottle"] = { class=CLASS.SCOUT, weapon=0, profile="" };
+
+// Snipers
+RedBots["^6tits^7"] = { class=CLASS.SNIPER, weapon=0, profile="" };
+
+// Soldiers
+RedBots["Razor"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
+RedBots["Tanz"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
+RedBots["Vic"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
+RedBots["Malin"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
+RedBots["Thor"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
+RedBots["Grog"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
+RedBots["Drago"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
+
+// Grenadiers
+RedBots["RedGrenadier"] = { class=CLASS.DEMOMAN, weapon=0, profile="" };
+
+// Paramedics
+RedBots["NoAmmo"] = { class=CLASS.MEDIC, weapon=0, profile="" };
+RedBots["Bullseye"] = { class=CLASS.MEDIC, weapon=0, profile="" };
+RedBots["Aimless"] = { class=CLASS.MEDIC, weapon=0, profile="" };
+RedBots["Blackadder"] = { class=CLASS.MEDIC, weapon=0, profile="" };
+RedBots["Newbie"] = { class=CLASS.MEDIC, weapon=0, profile="" };
+RedBots["Cledus"] = { class=CLASS.MEDIC, weapon=0, profile="" };
+RedBots["Chimichanga"] = { class=CLASS.MEDIC, weapon=0, profile="" };
+
+// Minigunners
+RedBots["RedMinigunner"] = { class=CLASS.HWGUY, weapon=0, profile="" };
+
+// Flametroopers
+RedBots["RedFlametrooper"] = { class=CLASS.PYRO, weapon=0, profile="" };
+
+// Agents
+RedBots["Walter"] = { class=CLASS.SPY, weapon=0, profile="" };
+RedBots["Fred"] = { class=CLASS.SPY, weapon=0, profile="" };
+RedBots["Morgan"] = { class=CLASS.SPY, weapon=0, profile="" };
+RedBots["Lawrence"] = { class=CLASS.SPY, weapon=0, profile="" };
+RedBots["Richard"] = { class=CLASS.SPY, weapon=0, profile="" };
+RedBots["Michael"] = { class=CLASS.SPY, weapon=0, profile="" };
+RedBots["Brad"] = { class=CLASS.SPY, weapon=0, profile="" };
+
+// Engineers
+RedBots["George"] = { class=CLASS.ENGINEER, weapon=0, profile="" };
+RedBots["Anton"] = { class=CLASS.ENGINEER, weapon=0, profile="" };
+RedBots["Monty"] = { class=CLASS.ENGINEER, weapon=0, profile="" };
+RedBots["Bean"] = { class=CLASS.ENGINEER, weapon=0, profile="" };
+RedBots["Sean"] = { class=CLASS.ENGINEER, weapon=0, profile="" };
+RedBots["Backfire"] = { class=CLASS.ENGINEER, weapon=0, profile="" };
+RedBots["Halfwit"] = { class=CLASS.ENGINEER, weapon=0, profile="" };
+
+// Civilians
+RedBots["Helios-"] = { class=CLASS.CIVILIAN, weapon=0, profile="" };
+
+/////////////////////////////////////////////////////////////////////
+// Blue Bots
+
+// Recons
+BlueBots["^6babe^7|^3Rapist^7"] = { class=CLASS.SCOUT, weapon=0, profile="" };
+BlueBots["CraigChrist"] = { class=CLASS.SCOUT, weapon=0, profile="" };
+BlueBots["WhittlinMan"] = { class=CLASS.SCOUT, weapon=0, profile="" };
+BlueBots["SpecialEd"] = { class=CLASS.SCOUT, weapon=0, profile="" };
+BlueBots["Flint"] = { class=CLASS.SCOUT, weapon=0, profile="" };
+BlueBots["Argo"] = { class=CLASS.SCOUT, weapon=0, profile="" };
+BlueBots["Milius"] = { class=CLASS.SCOUT, weapon=0, profile="" };
+BlueBots["Vera"] = { class=CLASS.SCOUT, weapon=0, profile="" };
+
+// Snipers
+BlueBots["BlueSniper"] = { class=CLASS.SNIPER, weapon=0, profile="" };
+
+// Soldiers
+BlueBots["^yJooBs^7"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
+BlueBots["Mungri"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
+BlueBots["Chan"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
+BlueBots["Amadi"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
+BlueBots["Zarna"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
+BlueBots["PillowPants"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
+BlueBots["ListerFiend"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
+BlueBots["Ilikechocmilk"] = { class=CLASS.SOLDIER, weapon=0, profile="" };
+
+// Grenadiers
+BlueBots["BlueGrenadier"] = { class=CLASS.DEMOMAN, weapon=0, profile="" };
+
+// Paramedics
+BlueBots["Merki"] = { class=CLASS.MEDIC, weapon=0, profile="" };
+BlueBots["Tarnen"] = { class=CLASS.MEDIC, weapon=0, profile="" };
+BlueBots["Royen"] = { class=CLASS.MEDIC, weapon=0, profile="" };
+BlueBots["Kaolin"] = { class=CLASS.MEDIC, weapon=0, profile="" };
+BlueBots["Nandet"] = { class=CLASS.MEDIC, weapon=0, profile="" };
+BlueBots["Nundak"] = { class=CLASS.MEDIC, weapon=0, profile="" };
+BlueBots["Ryver"] = { class=CLASS.MEDIC, weapon=0, profile="" };
+
+// Minigunners
+BlueBots["BlueMinigunner"] = { class=CLASS.HWGUY, weapon=0, profile="" };
+
+// Flametroopers
+BlueBots["BlueFlametrooper"] = { class=CLASS.PYRO, weapon=0, profile="" };
+
+// Agents
+BlueBots["Stinger"] = { class=CLASS.SPY, weapon=0, profile="" };
+BlueBots["Tarnok"] = { class=CLASS.SPY, weapon=0, profile="" };
+BlueBots["Wens"] = { class=CLASS.SPY, weapon=0, profile="" };
+BlueBots["Brohn"] = { class=CLASS.SPY, weapon=0, profile="" };
+BlueBots["Ivor"] = { class=CLASS.SPY, weapon=0, profile="" };
+BlueBots["Gordac"] = { class=CLASS.SPY, weapon=0, profile="" };
+BlueBots["Bortack"] = { class=CLASS.SPY, weapon=0, profile="" };
+
+// Engineers
+BlueBots["Morgriff"] = { class=CLASS.ENGINEER, weapon=0, profile="" };
+BlueBots["Kole"] = { class=CLASS.ENGINEER, weapon=0, profile="" };
+BlueBots["Garbok"] = { class=CLASS.ENGINEER, weapon=0, profile="" };
+BlueBots["Korv"] = { class=CLASS.ENGINEER, weapon=0, profile="" };
+BlueBots["Vokur"] = { class=CLASS.ENGINEER, weapon=0, profile="" };
+BlueBots["Gali"] = { class=CLASS.ENGINEER, weapon=0, profile="" };
+BlueBots["Beelz"] = { class=CLASS.ENGINEER, weapon=0, profile="" };
+
+// Civilians
+BlueBots["Q"] = { class=CLASS.CIVILIAN, weapon=0, profile="" };
+
+
+/////////////////////////////////////////////////////////////////////
+// Overflow bots - used if no bots left for team / class desired
+global _OverFlowBotNumber = 0;
+global ExtraBots =
+{
+	"Himdar",
+	"Vedro",
+	"Icexo",
+	"Tahlkora",
+	"Bolund",
+	"Ellanil",
+	"Galul",
+	"Mindelos",
+	"Ostmor",
+	"Sagel",
+	"Thalath",
+	"Dharmesh",
+	"Aegarond",
+	"Havo",
+	"Jarno",
+	"Leiruth",
+	"Edoli",
+	"Edwig",
+	"Faden",
+	"Skorgan"
+};
+
+/////////////////////////////////////////////////////////////////////
+// END USER CONFIG. DO NOT EDIT BELOW
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+// initialize some global tables for external reference
+// the previous tables are set up for user friendliness
+global _RedBots = table();
+global _BlueBots = table();
+global _PreferredWeapon = table();
+
+/////////////////////////////////////////////////////////////////////
+// register the bot names and set up tables for OnBotAutoJoin reference
+
+// red
+foreach ( botName and loadout in RedBots ) {
+	name = BotPrefix + botName;
+	Names[ name ] = loadout.profile;
+	if (!_RedBots[ loadout.class ]) {
+		_RedBots[ loadout.class ] = table();
+	}
+	// add the name to the list
+	_RedBots[ loadout.class ][ tableCount(_RedBots[ loadout.class ]) ] = name;
+
+	if (loadout.weapon) {
+		_PreferredWeapon[ name ] = loadout.weapon;
+	}
+}
+
+// blue
+foreach ( botName and loadout in BlueBots ) {
+	name = BotPrefix + botName;
+	Names[ name ] = loadout.profile;
+	if (!_BlueBots[ loadout.class ]) {
+		_BlueBots[ loadout.class ] = table();
+	}
+	// add the name to the list
+	_BlueBots[ loadout.class ][ tableCount(_BlueBots[ loadout.class ]) ] = name;
+
+	if (loadout.weapon) {
+		_PreferredWeapon[ name ] = loadout.weapon;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////
+// pick a bot to add based on team / class needed
+global OnBotAutoJoin = function()
+{
+	botTable = {};
+	desiredTeam = TEAM.RED;
+	if ( Server.Team[TEAM.RED].NumPlayers > Server.Team[TEAM.BLUE].NumPlayers ) {
+		desiredTeam = TEAM.BLUE;
+	}
+
+	desiredClass = ClassManager.EvalClassByTeam(desiredTeam);
+
+	teamTable = _RedBots;
+	if ( desiredTeam == TEAM.BLUE ) {
+		teamTable = _BlueBots;
+	}
+
+	// find a bot for the team and class. sequential lookup for now.
+	// cs: note: gm tables are actually randomized, so bots will vary
+	// from game to game.
+	botName = null;
+	if ( desiredClass != -1 && teamTable[ desiredClass ] ) {
+		foreach ( name in teamTable[ desiredClass ] ) {
+			// make sure this name is not already used
+			if ( !Util.GetBotByName(name) ) {
+				botName = name;
+				break;
+			}
+		}
+	}
+
+	if ( botName ) {
+		botTable = { class = desiredClass, team = desiredTeam, name = botName };
+	}
+	else {
+		if ( _OverFlowBotNumber < tableCount(ExtraBots) ) {
+			botName = ExtraBots[_OverFlowBotNumber];
+			global _OverFlowBotNumber = _OverFlowBotNumber + 1;
+		}
+
+		if ( botName ) {
+			botTable = { class = desiredClass, team = desiredTeam, name = BotPrefix + botName };
+		}
+		else {
+			botTable = { class = desiredClass, team = desiredTeam };
+		}
+	}
+
+	return botTable;
+};

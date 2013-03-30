@@ -1,0 +1,51 @@
+// This script contains functionality to allow medic bots to dispense health at spawn
+
+// These parameters are required
+this.Name = "DetDispenser";		// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+this.LimitToClass(CLASS.ENGINEER);
+
+this.LimitToTargetClass(CLASS.ANYPLAYER);
+
+this.Initialize = function()
+{
+	// Internal variables
+	this.DelayBetweenCalls = 20.0;
+	
+	//print(this.Name, " Initialized");
+};
+
+// this.OnSpawn = function()
+// {
+// };
+
+//this.GetPriority = function()
+//{
+//};
+
+//this.Enter = function()
+//{
+//};
+
+//this.Exit = function()
+//{
+//};
+
+this.Update = function()
+{
+	this.Bot.PressButton(BTN.DETDISPENSER);
+	this.Finished();	
+};
+
+this.Events[EVENT.DISPENSER_ENEMYUSED] = function(UsedBy)
+{
+	whoDoneIt = GetEntName(UsedBy);
+	if(whoDoneIt)
+	{
+		this.Bot.Say( "DIE ", whoDoneIt);
+	}
+	//sleep(0.1); // randomize this?
+	
+	this.Priority = 1;
+};
