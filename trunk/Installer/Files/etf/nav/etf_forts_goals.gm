@@ -1,0 +1,60 @@
+global _MG = 
+{
+	CAPPOINT_trigger_multiple_246 = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "CapPoint",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "CAPPOINT_trigger_multiple_246",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-896.000, -32.000, 228.000),
+		Radius = 0,
+		TagName = "trigger_multiple_246",
+		TeamAvailability = 2,
+		Version = 1,
+	},
+	CAPPOINT_trigger_multiple_247 = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "CapPoint",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "CAPPOINT_trigger_multiple_247",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(908.000, -32.000, 232.000),
+		Radius = 0,
+		TagName = "trigger_multiple_247",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	FLAG_blueflag = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "Flag",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "FLAG_blueflag",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(3525.000, 388.000, -352.000),
+		Radius = 0,
+		TagName = "blueflag",
+		TeamAvailability = 2,
+		Version = 1,
+	},
+	FLAG_redflag = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "Flag",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "FLAG_redflag",
+		Orientation = Vec3(-1.571, -0.000, 0.000),
+		Position = Vec3(-3512.000, -452.000, -352.000),
+		Radius = 0,
+		TagName = "redflag",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	Version = 1,
+};

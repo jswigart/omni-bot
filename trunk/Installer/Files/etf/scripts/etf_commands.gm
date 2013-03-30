@@ -1,0 +1,20 @@
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["draw_spawns"] =
+{
+	Func = function( _params )
+	{
+		global DRAW_SPAWNS = !DRAW_SPAWNS;
+		if (DRAW_SPAWNS) {
+			print("spawn point rendering enabled");
+			ETFUtil.DrawSpawns();
+			return;
+		}
+		print("spawn point rendering disabled");
+	},
+
+	Help =
+	{
+		"Toggle rendering of spawn points",
+	},
+};
