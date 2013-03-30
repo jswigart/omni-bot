@@ -21,29 +21,29 @@ Util.TeamNames =
 };
 
 Util.BotNames =
-{ 
-	{ 
-		"", "", "", "", 
+{
+	{
+		"", "", "", "",
 		"", "", "",
 		"","","","",
 	},
-	{ 
-		"", "blue_scout", "blue_sniper", "blue_soldier", 
+	{
+		"", "blue_scout", "blue_sniper", "blue_soldier",
 		"blue_demoman", "blue_medic", "blue_hwguy",
 		"blue_pyro","blue_spy","blue_engineer","blue_civilian",
 	},
-	{ 
-		"", "red_scout", "red_sniper", "red_soldier", 
+	{
+		"", "red_scout", "red_sniper", "red_soldier",
 		"red_demoman", "red_medic", "red_hwguy",
 		"red_pyro","red_spy","red_engineer","red_civilian",
 	},
-	{ 
-		"", "yellow_scout", "yellow_sniper", "yellow_soldier", 
+	{
+		"", "yellow_scout", "yellow_sniper", "yellow_soldier",
 		"yellow_demoman", "yellow_medic", "yellow_hwguy",
 		"yellow_pyro","yellow_spy","yellow_engineer","yellow_civilian",
 	},
-	{ 
-		"", "green_scout", "green_sniper", "green_soldier", 
+	{
+		"", "green_scout", "green_sniper", "green_soldier",
 		"green_demoman", "green_medic", "green_hwguy",
 		"green_pyro","green_spy","green_engineer","green_civilian",
 	},
@@ -67,17 +67,17 @@ member RedFlagHandler = function( _params )
 	{
 		if ( this.RedFlagState == "pickedup" )
 			{ this.NumRedFlagCaptures = this.NumRedFlagCaptures + 1; }
-		
+
 		this.RedFlagState = "returned";
 		return;
 	}
-	
+
 	if ( _params.Action == "dropped" )
 	{
 		this.RedFlagState = "dropped";
 		return;
 	}
-	
+
 	if ( _params.Action == "pickedup" )
 	{
 		this.RedFlagState = "pickedup";
@@ -86,7 +86,7 @@ member RedFlagHandler = function( _params )
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-//	
+//
 member NumBlueFlagCaptures = 0;
 member BlueFlagState = "item_returned";
 
@@ -98,17 +98,17 @@ member BlueFlagHandler = function( _params )
 	{
 		if ( this.BlueFlagState == "pickedup" )
 			{ this.NumBlueFlagCaptures = this.NumBlueFlagCaptures + 1; }
-		
+
 		this.BlueFlagState = "returned";
 		return;
 	}
-	
+
 	if ( _params.Action == "dropped" )
 	{
 		this.BlueFlagState = "dropped";
 		return;
 	}
-	
+
 	if ( _params.Action == "pickedup" )
 	{
 		this.BlueFlagState = "pickedup";
@@ -136,7 +136,7 @@ member HudTextMsgOutput = function( text )
 member HudTextMsgOutput2 = function( text, time )
 {
 	this.HudTextMsgOn( text );
-	
+
 	for ( i = 0 ; i < time ; i = i + 1 )
 	{
 		if ( Util.Skip )
@@ -144,7 +144,7 @@ member HudTextMsgOutput2 = function( text, time )
 
 		sleep( 1 );
 	}
-	
+
 	this.HudTextMsgOff();
 };
 
@@ -174,45 +174,71 @@ member HudTextMsgOff = function()
 //
 member DrawSpawns = function()
 {
+	cached = null;
+	.cachedSpawnEntities = {};
+
 	.getSpawnEntity = function(entId) {
 		cls = GetEntClass(entId);
-		switch(cls)
+
+		if (cls == CLASS.PLAYERSTART_TEAM1 || cls == CLASS.PLAYERSTART_TEAM2 || cls == CLASS.PLAYERSTART_TEAM3 || cls == CLASS.PLAYERSTART_TEAM4)
 		{
-			case CLASS.PLAYERSTART_TEAM1:
+			pos = GroundPoint(GetEntPosition(entId));
+			top = pos+Vector3(0,0,64);
+			textPos = pos+Vector3(0,0,48);
+			color = 0;
+			displayText = "";
+			switch(cls)
 			{
-				return {COLOR.BLUE, "Team1 Spawn"};
+				case CLASS.PLAYERSTART_TEAM1:
+				{
+					color = COLOR.BLUE;
+					displayText = "Team1 Spawn";
+				}
+				case CLASS.PLAYERSTART_TEAM2:
+				{
+					color = COLOR.RED;
+					displayText = "Team2 Spawn";
+				}
+				case CLASS.PLAYERSTART_TEAM3:
+				{
+					color = COLOR.GREEN;
+					displayText = "Team3 Spawn";
+				}
+				case CLASS.PLAYERSTART_TEAM4:
+				{
+					color = COLOR.YELLOW;
+					displayText = "Team4 Spawn";
+				}
 			}
-			case CLASS.PLAYERSTART_TEAM2:
-			{
-				return {COLOR.RED, "Team2 Spawn"};
-			}
-			case CLASS.PLAYERSTART_TEAM3:
-			{
-				return {COLOR.GREEN, "Team3 Spawn"};
-			}
-			case CLASS.PLAYERSTART_TEAM4:
-			{
-				return {COLOR.YELLOW, "Team4 Spawn"};
-			}
+
+			return {color, displayText, pos, top, textPos};
 		}
-		
+
 		return null;
 	};
 
-	while(DRAW_SPAWNS) {
+	if (!cached) {
 		for ( i = 64; i < 1024; i = i + 1 )
 		{
 			if (EntityIsValid(i))
 			{
 				info = this.getSpawnEntity(i);
 				if (info) {
-					pos = GroundPoint(GetEntPosition(i));
-					DrawLine(pos,pos+Vector3(0,0,64),info[0],60);
-					DrawText3d(pos+Vector3(0,0,48),info[1],COLOR.WHITE,60,1000);
+					this.cachedSpawnEntities[ tableCount(this.cachedSpawnEntities) ] = info;
 				}
 			}
 		}
-		
+
+		cached = true;
+	}
+
+	while(DRAW_SPAWNS) {
+		foreach (obj in this.cachedSpawnEntities)
+		{
+			DrawLine(obj[2],obj[3],obj[0],60);
+			DrawText3d(obj[4],obj[1],COLOR.WHITE,60,1000);
+		}
+
 		yield();
 	}
 };
