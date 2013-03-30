@@ -52,6 +52,8 @@ Util.BotNames =
 Util.NoTimeLimit = "timelimit 0";
 Util.TimeLimit1 = "timelimit 1";
 
+Util.PrimaryRouteGoalQuery = "FLAG_.*\nCAPPOINT_.*"; // used for map script generation
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 member NumRedFlagCaptures = 0;

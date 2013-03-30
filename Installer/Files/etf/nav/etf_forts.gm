@@ -1,0 +1,82 @@
+//==========================================================================================
+//
+//	etf_forts.gm
+//
+//	Who         	When		What
+//------------------------------------------------------------------------------------------
+//	^7crapsh^1oo^7t	29 March 2013	Initial Script
+//
+//==========================================================================================
+//
+
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	blueflag_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "blueflag_Taken" );
+	},
+
+	blueflag_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "blueflag_Returned" );
+	},
+
+	redflag_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "redflag_Taken" );
+	},
+
+	redflag_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "redflag_Returned" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "Flag blueflag pickedup", Map.blueflag_Taken );
+	OnTrigger( "Flag blueflag returned", Map.blueflag_Returned );
+	OnTrigger( "Flag redflag pickedup", Map.redflag_Taken );
+	OnTrigger( "Flag redflag returned", Map.redflag_Returned );
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		CAPPOINT_trigger_multiple_246 =
+		{
+		},
+		CAPPOINT_trigger_multiple_247 =
+		{
+		},
+		FLAG_redflag =
+		{
+		},
+		FLAG_blueflag =
+		{
+		},
+	};
+	Util.Routes(MapRoutes);
+};
