@@ -12,12 +12,45 @@
 global Map =
 {
 	Debug = 1, // please set to zero before distributing your script
-	ShowMovers = false,
+
+	Roles =
+	{
+		RED =
+		{
+			AllBots = true,
+			DEFENDER =
+			{
+				numbots = 4,
+			},
+
+			ATTACKER =
+			{
+				numbots = 4,
+			},
+		},
+
+		BLUE =
+		{
+			AllBots = true,
+			DEFENDER =
+			{
+				numbots = 4,
+			},
+
+			ATTACKER =
+			{
+				numbots = 4,
+			},
+		},
+	},
 
 	blueflag_Taken = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
+
+		SetAvailableMapGoals( TEAM.BLUE, true, "PATROL_redcapture");
+		SetAvailableMapGoals( TEAM.BLUE, false, "PATROL_blueflag");
 
 		Util.MapDebugPrint( "blueflag_Taken" );
 	},
@@ -27,6 +60,9 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		SetAvailableMapGoals( TEAM.BLUE, false, "PATROL_redcapture");
+		SetAvailableMapGoals( TEAM.BLUE, true, "PATROL_blueflag");
+
 		Util.MapDebugPrint( "blueflag_Returned" );
 	},
 
@@ -34,7 +70,10 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
-
+		
+		SetAvailableMapGoals( TEAM.RED, true, "PATROL_bluecapture");
+		SetAvailableMapGoals( TEAM.RED, false, "PATROL_redflag");
+		
 		Util.MapDebugPrint( "redflag_Taken" );
 	},
 
@@ -42,6 +81,9 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+		
+		SetAvailableMapGoals( TEAM.RED, false, "PATROL_bluecapture");
+		SetAvailableMapGoals( TEAM.RED, true, "PATROL_redflag");
 
 		Util.MapDebugPrint( "redflag_Returned" );
 	},
@@ -57,6 +99,10 @@ global OnMapLoad = function()
 	OnTrigger( "Flag blueflag returned", Map.blueflag_Returned );
 	OnTrigger( "Flag redflag pickedup", Map.redflag_Taken );
 	OnTrigger( "Flag redflag returned", Map.redflag_Returned );
+	
+	Util.DisableGoal("PATROL_.*");
+	SetAvailableMapGoals( TEAM.RED, true, "PATROL_redflag");
+	SetAvailableMapGoals( TEAM.BLUE, true, "PATROL_blueflag");
 
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
