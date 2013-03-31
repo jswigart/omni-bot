@@ -1,6 +1,6 @@
 this.GoalType = "PATROL";
 this.Version = 1;
-this.DefaultPriority = 0.5;
+this.DefaultPriority = 0.45;
 this.MinRadius = 30;
 this.DefaultRenderRadius = 1024;
 this.MaxUsers_InUse(1);
