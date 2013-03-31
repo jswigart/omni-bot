@@ -17,6 +17,14 @@ ExecScript("etf_botnames_ext.gm"); // note: must be loaded after etf_classmanage
 global DEBUG_MAP_SCRIPTS = true;
 global DEBUG_GOAL_AVAILABILITY = false;
 
+global DEBUG_SCRIPT_GOALS = false;
+global DEBUG_SCRIPT_GOALS_FILTER = {};
+DEBUG_SCRIPT_GOALS_FILTER["pathfailed"] = 1;
+DEBUG_SCRIPT_GOALS_FILTER["timedout"] = 1;
+DEBUG_SCRIPT_GOALS_FILTER["disabled"] = 1;
+DEBUG_SCRIPT_GOALS_FILTER["regiontrigger"] = 1;
+DEBUG_SCRIPT_GOALS_FILTER["initialized"] = 1;
+
 //EnableDebugWindow(true);
 
 global PostMapLoad = function()

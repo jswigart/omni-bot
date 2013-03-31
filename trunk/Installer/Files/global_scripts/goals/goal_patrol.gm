@@ -37,51 +37,41 @@ this.Enter = function()
 		this.BlackboardDelay(5, this.MapGoal);
 		this.Finished();
 	}
-	
-	this.StartIndex = RandInt(0, tableCount(this.MapGoal.PatrolPoints) - 1);
 };
 
 this.Update = function()
 {
-	currentIndex = this.StartIndex;
-	totalSpots = tableCount(this.MapGoal.PatrolPoints);
-	this.Goto(this.MapGoal.PatrolPoints[currentIndex].position, 32.0);
-	this.AddAimRequest(Priority.Low, "facing", Util.GetRandomTableValue(this.MapGoal.PatrolPoints[currentIndex].AimVectors));
+	if (this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS)
+	{
+		totalSpots = tableCount(this.MapGoal.PatrolPoints);
+		this.AddAimRequest(Priority.Low, "facing", Util.GetRandomTableValue(this.MapGoal.PatrolPoints[0].AimVectors));
+		sleep(RandFloat(this.MapGoal.MinCampTime, this.MapGoal.MaxCampTime));
+
+		if (this.MapGoal.PatrolOrder == "sequential") {
+			for ( i = 1; i < totalSpots; i += 1) {
+				this.Goto(this.MapGoal.PatrolPoints[i].position, 32.0);
+				this.AddAimRequest(Priority.Low, "facing", Util.GetRandomTableValue(this.MapGoal.PatrolPoints[i].AimVectors));
+				sleep(RandFloat(this.MapGoal.MinCampTime, this.MapGoal.MaxCampTime));
+				this.ReleaseAimRequest();
+			}
+		}
+		else { // random
+			for (i = 1; i < totalSpots; i += 1) {
+				nextSpot = Util.GetRandomFromTable(this.MapGoal.PatrolPoints);
+
+				this.Goto(this.MapGoal.PatrolPoints[nextSpot].position, 32.0);
+				this.AddAimRequest(Priority.Low, "facing", Util.GetRandomTableValue(this.MapGoal.PatrolPoints[nextSpot].AimVectors));
+				sleep(RandFloat(this.MapGoal.MinCampTime, this.MapGoal.MaxCampTime));
+				this.ReleaseAimRequest();
+			}
+		}
+	}
+	else
+	{
+		this.BlackboardDelay(10, this.MapGoal);
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
+		this.Finished();
+	}
 	
-	visited = 1;
-	if (this.MapGoal.PatrolOrder == "sequential") {
-		for ( i = 1; i <= totalSpots; i += 1) {
-			if (visited == totalSpots) {
-				break;
-			}
-
-			nextSpot = currentIndex + 1;
-			if (nextSpot > totalSpots - 1) {
-				nextSpot = 0;
-			}
-
-			this.Goto(this.MapGoal.PatrolPoints[nextSpot].position, 32.0);
-			this.AddAimRequest(Priority.Low, "facing", Util.GetRandomTableValue(this.MapGoal.PatrolPoints[nextSpot].AimVectors));
-			sleep(RandFloat(this.MapGoal.MinCampTime, this.MapGoal.MaxCampTime));
-			this.ReleaseAimRequest();
-
-			currentIndex = nextSpot;
-			visited += 1;
-		}
-	}
-	else {
-		for ( i = 1; i <= totalSpots; i += 1) {
-			if (visited == totalSpots) {
-				break;
-			}
-			nextSpot = Util.GetRandomFromTable(this.MapGoal.PatrolPoints);
-
-			this.Goto(this.MapGoal.PatrolPoints[nextSpot].position, 32.0);
-			this.AddAimRequest(Priority.Low, "facing", Util.GetRandomTableValue(this.MapGoal.PatrolPoints[nextSpot].AimVectors));
-			sleep(RandFloat(this.MapGoal.MinCampTime, this.MapGoal.MaxCampTime));
-			this.ReleaseAimRequest();
-			visited += 1;
-		}
-	}
+	this.Finished();
 };
-
