@@ -344,8 +344,8 @@ typedef enum eTF_ItemTypes
 } TF_ItemTypes;
 
 // enumerations: TF_Team
-//		TF_TEAM_BLUE - Blue team.
 //		TF_TEAM_RED - Red team.
+//		TF_TEAM_BLUE - Blue team.
 //		TF_TEAM_YELLOW - Yellow team.
 //		TF_TEAM_GREEN - Green team.
 typedef enum eTF_Team
