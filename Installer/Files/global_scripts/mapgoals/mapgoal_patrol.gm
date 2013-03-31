@@ -97,6 +97,11 @@ this.UpgradeVersion = function(Props)
 			position = this.GetPosition(),
 			AimVectors = this.AimVectors
 		};
+		
+		// bind users to num points. this can be overridden in map script.
+		users = tableCount(this.PatrolPoints);
+		this.MaxUsers_InUse(users);
+		this.MaxUsers_InProgress(users);
 
 		if(!this.Schema.Check(this) || tableCount(Props.PatrolPoints) < 1)
 		{
