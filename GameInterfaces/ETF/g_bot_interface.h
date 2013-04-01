@@ -102,6 +102,15 @@ void            Bot_Event_DispenserDismantled(gentity_t * _player);
 void            Bot_Event_SentryDetonated(gentity_t * _player);
 void            Bot_Event_SentryDismantled(gentity_t * _player);
 
+void            Bot_Event_CantDisguiseAsTeam(gentity_t * _player, int _disguiseTeam);
+void            Bot_Event_CantDisguiseAsClass(gentity_t * _player, int _disguiseClass);
+void            Bot_Event_Disguising(gentity_t * _player, int _disguiseTeam, int _disguiseClass);
+void            Bot_Event_Disguised(gentity_t * _player, int _disguiseTeam, int _disguiseClass);
+void            Bot_Event_DisguiseLost(gentity_t * _player);
+void            Bot_Event_UnCloaked(gentity_t * _player);
+void            Bot_Event_CantCloak(gentity_t * _player);
+void            Bot_Event_Cloaked(gentity_t * _player);
+
 void            Bot_Event_SendSentryStatsToBot(gentity_t * _sentry);
 void            Bot_Event_SendSupplyStatsToBot(gentity_t * _supplystation);
 

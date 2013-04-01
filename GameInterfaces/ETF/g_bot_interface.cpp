@@ -8,18 +8,16 @@
 
 extern          "C"
 {
-#include "g_bot_interface.h"
+	#include "g_bot_interface.h"
+
+	void Cmd_Kill_f(gentity_t * ent);
 };
 
 #include "BotExports.h"
 #include "ETF_Config.h"
 #include "TF_Messages.h"
 
-extern          "C"
-{
-	void            Bot_Event_EntityCreated(gentity_t * pEnt);
-	void            Cmd_Kill_f(gentity_t * ent);
-}
+void            Bot_Event_EntityCreated(gentity_t * pEnt);
 
 bool IsBot(gentity_t * e)
 {
@@ -164,17 +162,17 @@ int Bot_TeamGameToBot(int team)
 	switch (team)
 	{
 		case Q3F_TEAM_RED:
-			return TF_TEAM_RED;
+			return ETF_TEAM_RED;
 		case Q3F_TEAM_BLUE:
-			return TF_TEAM_BLUE;
+			return ETF_TEAM_BLUE;
 		case Q3F_TEAM_YELLOW:
-			return TF_TEAM_YELLOW;
+			return ETF_TEAM_YELLOW;
 		case Q3F_TEAM_GREEN:
-			return TF_TEAM_GREEN;
+			return ETF_TEAM_GREEN;
 		case Q3F_TEAM_SPECTATOR:
 			return OB_TEAM_SPECTATOR;
 		default:
-			return TF_TEAM_NONE;
+			return ETF_TEAM_NONE;
 	}
 }
 
@@ -182,13 +180,13 @@ int _teamBotToGame(int team)
 {
 	switch (team)
 	{
-		case TF_TEAM_RED:
+		case ETF_TEAM_RED:
 			return Q3F_TEAM_RED;
-		case TF_TEAM_BLUE:
+		case ETF_TEAM_BLUE:
 			return Q3F_TEAM_BLUE;
-		case TF_TEAM_YELLOW:
+		case ETF_TEAM_YELLOW:
 			return Q3F_TEAM_YELLOW;
-		case TF_TEAM_GREEN:
+		case ETF_TEAM_GREEN:
 			return Q3F_TEAM_GREEN;
 		case OB_TEAM_SPECTATOR:
 			return Q3F_TEAM_SPECTATOR;
@@ -569,7 +567,7 @@ bool _IsBackpack(gentity_t *_ent)
 	{
 		case ET_Q3F_GOAL:
 		{
-			if(!Q_stricmp( _ent->classname, "func_goalinfo" ) && _ent->mapdata && _ent->mapdata->give)	/* func_goalinfo */
+			if(!Q_stricmp( _ent->classname, "func_goalinfo" ) && _ent->mapdata && _ent->mapdata->give && !_ent->mapdata->holding)	/* func_goalinfo */
 				return true;
 			break;
 		}
@@ -620,13 +618,13 @@ static int _GetEntityTeam(gentity_t * _ent)
 		case ET_Q3F_SENTRY:
 		case ET_Q3F_SUPPLYSTATION:
 			return _ent->parent &&
-				_ent->parent->client ? Bot_TeamGameToBot(_ent->parent->client->sess.sessionTeam) : TF_TEAM_NONE;
+				_ent->parent->client ? Bot_TeamGameToBot(_ent->parent->client->sess.sessionTeam) : ETF_TEAM_NONE;
 		case ET_MISSILE:
 		{
 			if(_ent->s.otherEntityNum >= 0 && _ent->s.otherEntityNum < ENTITYNUM_MAX_NORMAL)
 				return &g_entities[_ent->s.otherEntityNum] &&
 					g_entities[_ent->s.otherEntityNum].client ? Bot_TeamGameToBot(g_entities[_ent->s.otherEntityNum].client->sess.
-																				  sessionTeam) : TF_TEAM_NONE;
+																				  sessionTeam) : ETF_TEAM_NONE;
 		}
 			// Let this fall through
 		default:
@@ -664,7 +662,7 @@ static int _GetEntityClass(gentity_t * _ent)
 		{
 			if(!Q_stricmp(_ent->classname, "func_button"))
 				return ENT_CLASS_GENERIC_BUTTON;
-			if(!Q_stricmp(_ent->classname, "trigger_multiple") && _ent->mapdata && _ent->mapdata->give && _ent->mapdata->other)	/* trigger_multiple */
+			if(!Q_stricmp(_ent->classname, "trigger_multiple") && _ent->mapdata && (_ent->mapdata->give || _ent->mapdata->holding) && _ent->mapdata->other)	/* trigger_multiple */
 			{
 				q3f_keypair_t  *data = G_Q3F_KeyPairArrayFind(_ent->mapdata->other, teamscoreptr);
 
@@ -755,7 +753,18 @@ static int _GetEntityClass(gentity_t * _ent)
 		case ET_Q3F_GOAL:
 		{
 			if(!Q_stricmp(_ent->classname, "func_goalinfo") && _ent->mapdata && _ent->mapdata->give)	/* func_goalinfo */
+			{
+				if(_ent->mapdata->give && _ent->mapdata->holding && _ent->mapdata->other)
+				{
+					q3f_keypair_t  *data = G_Q3F_KeyPairArrayFind(_ent->mapdata->other, teamscoreptr);
+
+					if(data && data->value.d.intdata)
+					{
+						return ENT_CLASS_GENERIC_FLAGCAPPOINT;
+					}
+				}
 				return TF_CLASSEX_BACKPACK;
+			}
 			if((!Q_stricmp(_ent->classname, "func_goalitem") || !Q_stricmp(_ent->classname, "func_flag")) && _ent->model && _ent->model[0] && _ent->mapdata && _ent->mapdata->groupname)	/* func_goalitem */ /* func_flag */
 				return ENT_CLASS_GENERIC_FLAG;
 			break;
@@ -822,6 +831,8 @@ int obUtilBotContentsFromGameContents(int _contents)
 		iBotContents |= CONT_TRIGGER;
 	if(_contents & CONTENTS_LAVA)
 		iBotContents |= CONT_LAVA;
+	if(_contents & CONTENTS_PLAYERCLIP)
+		iBotContents |= CONT_PLYRCLIP;
 	return iBotContents;
 }
 
@@ -885,11 +896,7 @@ class           ETFInterface:public IEngineInterface
 
 		OB_GETMSG(Msg_Addbot);
 
-		int             num;
-		char            userinfo[MAX_INFO_STRING] = { 0 };
-		gentity_t      *bot;
-
-		num = trap_BotAllocateClient(0);
+		int num = trap_BotAllocateClient(0);
 
 		if(num < 0)
 		{
@@ -898,10 +905,12 @@ class           ETFInterface:public IEngineInterface
 			return -1;
 		}
 
+		char userinfo[MAX_INFO_STRING] = { 0 };
+
 		std::stringstream guid;
 		guid << "OMNIBOT" << std::setw(2) << std::setfill('0') << num << std::right << std::setw(23) << "";
 
-		bot = &g_entities[num];
+		gentity_t *bot = &g_entities[num];
 
 		Info_SetValueForKey(userinfo, "name", pMsg->m_Name);
 		Info_SetValueForKey(userinfo, "rate", "25000");
@@ -913,7 +922,6 @@ class           ETFInterface:public IEngineInterface
 		trap_SetUserinfo(num, userinfo);
 
 		const char     *s = 0;
-
 		if((s = ClientConnect(num, qtrue, qtrue)) != 0)
 		{
 			PrintError(va("Could not connect bot: %s", s));
@@ -942,8 +950,8 @@ class           ETFInterface:public IEngineInterface
 		}
 		else
 		{
-			char            cleanNetName[MAX_NETNAME];
-			char            cleanName[MAX_NAME_LENGTH];
+			char cleanNetName[MAX_NETNAME];
+			char cleanName[MAX_NAME_LENGTH];
 
 			Q_strncpyz(cleanName, pMsg->m_Name, MAX_NAME_LENGTH);
 			Q_CleanStr(cleanName);
@@ -1048,8 +1056,7 @@ class           ETFInterface:public IEngineInterface
 	void            UpdateBotInput(int _client, const ClientInput & _input)
 	{
 		static usercmd_t cmd;
-		vec3_t          angles, bodyangles, forward, right;
-		gentity_t      *bot = &g_entities[_client];
+		gentity_t *bot = &g_entities[_client];
 
 		// only causes problems
 		bot->client->ps.pm_flags &= ~PMF_RESPAWNED;
@@ -1181,7 +1188,8 @@ class           ETFInterface:public IEngineInterface
 		}
 		else
 		{
-			float           fMaxSpeed = 127.f;
+			float fMaxSpeed = 127.f;
+			vec3_t angles, bodyangles, forward, right;
 
 			// Convert the bots vector to angles and set the view angle to the orientation
 			vectoangles(_input.m_Facing, angles);
@@ -1198,24 +1206,24 @@ class           ETFInterface:public IEngineInterface
 			bodyangles[PITCH] = 0;
 
 			AngleVectors(bodyangles, forward, right, NULL);
-			const float     fwd = DotProduct(forward, _input.m_MoveDir);
-			const float     rght = DotProduct(right, _input.m_MoveDir);
+			const float fwd = DotProduct(forward, _input.m_MoveDir);
+			const float rght = DotProduct(right, _input.m_MoveDir);
 
 			cmd.forwardmove = (char)(fwd * fMaxSpeed);
 			cmd.rightmove = (char)(rght * fMaxSpeed);
 
 			if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_FWD) || _input.m_ButtonFlags.CheckFlag(BOT_BUTTON_MOVEUP))
-				cmd.forwardmove = fMaxSpeed;
+				cmd.forwardmove = (char)fMaxSpeed;
 			if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_BACK) || _input.m_ButtonFlags.CheckFlag(BOT_BUTTON_MOVEDN))
-				cmd.forwardmove = -fMaxSpeed;
+				cmd.forwardmove = (char)-fMaxSpeed;
 			if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_RSTRAFE))
-				cmd.rightmove = fMaxSpeed;
+				cmd.rightmove = (char)fMaxSpeed;
 			if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_LSTRAFE))
-				cmd.rightmove = -fMaxSpeed;
+				cmd.rightmove = (char)-fMaxSpeed;
 			if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_JUMP))
-				cmd.upmove = fMaxSpeed;
+				cmd.upmove = (char)fMaxSpeed;
 			if(_input.m_ButtonFlags.CheckFlag(BOT_BUTTON_CROUCH))
-				cmd.upmove = -fMaxSpeed;
+				cmd.upmove = (char)-fMaxSpeed;
 		}
 		trap_BotUserCommand(_client, &cmd);
 	}
@@ -1547,6 +1555,17 @@ class           ETFInterface:public IEngineInterface
 				//if(!Q_stricmp(pEnt->classname, "func_goalinfo") && (pEnt->mapdata && pEnt->mapdata->give))
 				if((!Q_stricmp(pEnt->classname, "func_goalinfo") && (pEnt->mapdata && pEnt->mapdata->give)) || (!Q_stricmp(pEnt->classname, "func_goalitem") && pEnt->model && pEnt->model[0]))	/* func_goalinfo */ /* func_goalitem */
 				{
+					if(!Q_stricmp(pEnt->classname, "func_goalinfo") && pEnt->mapdata && pEnt->mapdata->give && pEnt->mapdata->other)
+					{
+						q3f_keypair_t  *data = G_Q3F_KeyPairArrayFind(pEnt->mapdata->other, teamscoreptr);
+
+						if(data && data->value.d.intdata)
+						{
+							_category.SetFlag(ENT_CAT_TRIGGER);
+							break;
+						}
+					}
+
 					_category.SetFlag(ENT_CAT_PICKUP);
 					_category.SetFlag(ENT_CAT_STATIC);
 					// Assume it's everything for now
@@ -2322,7 +2341,7 @@ class           ETFInterface:public IEngineInterface
 	{
 		gentity_t      *pEnt = EntityFromHandle(_ent);
 
-		return pEnt && pEnt->inuse ? _GetEntityTeam(pEnt) : TF_TEAM_NONE;
+		return pEnt && pEnt->inuse ? _GetEntityTeam(pEnt) : ETF_TEAM_NONE;
 	}
 
 	const char     *GetEntityName(const GameEntity _ent)
@@ -2448,7 +2467,7 @@ class           ETFInterface:public IEngineInterface
 
 	void            GetGoals()
 	{
-		const int       iAllTeams = (1 << TF_TEAM_BLUE) | (1 << TF_TEAM_RED) | (1 << TF_TEAM_YELLOW) | (1 << TF_TEAM_GREEN);
+		const int       iAllTeams = (1 << ETF_TEAM_BLUE) | (1 << ETF_TEAM_RED) | (1 << ETF_TEAM_YELLOW) | (1 << ETF_TEAM_GREEN);
 		int             iNumFlags = 0;
 		int             iNumCaptures = 0;
 
@@ -2510,12 +2529,29 @@ class           ETFInterface:public IEngineInterface
 							//Bot_Util_AddGoal(e, GOAL_CTF_FLAG, teams, pGoalName);
 						}
 					}
+					if(!Q_stricmp(e->classname, "func_goalinfo"))
+					{
+						// This is going to be a flag-cap.
+						if((e->mapdata->give || e->mapdata->holding) && e->mapdata->other)
+						{
+							q3f_keypair_t  *data = G_Q3F_KeyPairArrayFind(e->mapdata->other, teamscoreptr);
+
+							if(data && data->value.d.intdata)
+							{
+								if(e->mapdata->team == 0)
+									teams = _GetTeamsFromHoldingFlag(e->mapdata->holding);
+								Bot_Util_AddGoal("cappoint", e, teams, pGoalName);
+								++iNumCaptures;
+								//Bot_Util_AddGoal(e, GOAL_CTF_FLAGCAP, teams, pGoalName);
+							}
+						}
+					}
 					break;
 				default:
 					if(!Q_stricmp(e->classname, "trigger_multiple"))
 					{
 						// This is going to be a flag-cap.
-						if(e->mapdata->give && e->mapdata->other)
+						if((e->mapdata->give || e->mapdata->holding) && e->mapdata->other)
 						{
 							q3f_keypair_t  *data = G_Q3F_KeyPairArrayFind(e->mapdata->other, teamscoreptr);
 
@@ -2768,31 +2804,13 @@ class           ETFInterface:public IEngineInterface
 				}
 				break;
 			}
-#if 0
-			case GEN_MSG_GOTOWAYPOINT:
-			{
-				OB_GETMSG(Msg_GotoWaypoint);
-				if(pMsg && pMsg->m_WaypointName[0] && pEnt && pEnt->client)
-				{
-					static int      lastUseTime = 0;
-
-					if(level.time - lastUseTime < 5000)
-					{
-						//CPx(ENTINDEX(pEnt), "chat \"^1Must wait 5 seconds before teleporting to a new waypoint!\"");
-						break;
-					}
-					TeleportPlayer(pEnt, pMsg->m_Origin, vec3_origin/*, qtrue*/);
-					//CPx(ENTINDEX(pEnt), va("chat \"^2Teleported To Waypoint%s\"", pMsg->m_WaypointName));
-					lastUseTime = level.time;
-				}
-				break;
-			}
-#endif
 			case GEN_MSG_GETFLAGSTATE:
 			{
 				OB_GETMSG(Msg_FlagState);
 				if(pMsg)
 				{
+					/* CS: flagreturn position is not updated while its carried. */
+					/* Ensiform : Not relevant to ETF though, no returning flags */
 					if(pEnt && pEnt->inuse && pEnt->s.eType == ET_Q3F_GOAL && pEnt->model && pEnt->model[0] && pEnt->mapdata &&
 					   (pEnt->mapdata->flags & Q3F_FLAG_CARRYABLE))
 					{
@@ -2894,16 +2912,16 @@ class           ETFInterface:public IEngineInterface
 					q3f_team_t iTeam = Q3F_TEAM_FREE;
 					switch(pMsg->m_Team)
 					{
-					case TF_TEAM_RED:
+					case ETF_TEAM_RED:
 						iTeam = Q3F_TEAM_RED;
 						break;
-					case TF_TEAM_BLUE:
+					case ETF_TEAM_BLUE:
 						iTeam = Q3F_TEAM_BLUE;
 						break;
-					case TF_TEAM_YELLOW:
+					case ETF_TEAM_YELLOW:
 						iTeam = Q3F_TEAM_YELLOW;
 						break;
-					case TF_TEAM_GREEN:
+					case ETF_TEAM_GREEN:
 						iTeam = Q3F_TEAM_GREEN;
 						break;
 					default:
@@ -3058,6 +3076,7 @@ class           ETFInterface:public IEngineInterface
 
 					if(iTeam != Q3F_TEAM_FREE && iClass != Q3F_CLASS_NULL)
 					{
+						// FIXME can't do both at same time
 						trap_EA_Command(ENTINDEX(pEnt), va("disguise %i %i", iTeam, iClass));
 					}
 					else
@@ -3117,7 +3136,35 @@ class           ETFInterface:public IEngineInterface
 				}
 				break;
 			}
-				//////////////////////////////////////////////////////////////////////////
+			case TF_MSG_GETGAMEMODE:
+			{
+				OB_GETMSG(TF_GameMode);
+				if(pMsg)
+				{
+					pMsg->m_GameMode = g_gameindex.integer;
+				}
+				break;
+			}
+		case TF_MSG_SETCVAR:
+			{
+				OB_GETMSG(TF_CvarSet);
+				if(pMsg)
+				{
+					trap_Cvar_Set(pMsg->m_Cvar, pMsg->m_Value);
+				}
+				break;
+			}
+		case TF_MSG_GETCVAR:
+			{
+				OB_GETMSG(TF_CvarGet);
+				if(pMsg)
+				{
+					pMsg->m_Value =
+						trap_Cvar_VariableIntegerValue(pMsg->m_Cvar);
+				}
+				break;
+			}
+			//////////////////////////////////////////////////////////////////////////
 			default:
 			{
 				return UnknownMessageType;
@@ -3267,7 +3314,7 @@ class           ETFInterface:public IEngineInterface
 			hasptr = qtrue;
 		}
 
-		for(int i = MAX_CLIENTS; i < level.num_entities; i++)
+		for(int i = MAX_CLIENTS; i < level.num_entities && iNumFeatures < _max; i++)
 		{
 			gentity_t      *e = &g_entities[i];
 
@@ -3346,7 +3393,7 @@ class           ETFInterface:public IEngineInterface
 				}
 				else if(!Q_stricmp(e->classname, "trigger_multiple"))
 				{
-					if(e->mapdata && e->mapdata->give && e->mapdata->other)
+					if(e->mapdata && (e->mapdata->give || e->mapdata->holding) && e->mapdata->other)
 					{
 						q3f_keypair_t  *data = G_Q3F_KeyPairArrayFind(e->mapdata->other, teamscoreptr);
 
@@ -3389,6 +3436,18 @@ class           ETFInterface:public IEngineInterface
 					if(e->model && e->model[0] && e->mapdata && e->mapdata->groupname)
 					{
 						_feature[iNumFeatures].m_Type = ENT_CLASS_GENERIC_FLAG;
+					}
+				}
+				else if(!Q_stricmp(e->classname, "func_goalinfo"))
+				{
+					if(e->mapdata && e->mapdata->give && e->mapdata->holding && e->mapdata->other)
+					{
+						q3f_keypair_t  *data = G_Q3F_KeyPairArrayFind(e->mapdata->other, teamscoreptr);
+
+						if(data && data->value.d.intdata)
+						{
+							_feature[iNumFeatures].m_Type = ENT_CLASS_GENERIC_FLAGCAPPOINT;
+						}
 					}
 				}
 				else if(!Q_stricmp(e->classname, "team_CTF_redflag"))
@@ -3543,8 +3602,9 @@ void Bot_Interface_Update()
 		{
 			if(g_OmniBotPlaying.integer != iNumBots)
 			{
-				g_OmniBotPlaying.integer = iNumBots;
+				//g_OmniBotPlaying.integer = iNumBots;
 				trap_Cvar_Set("omnibot_playing", va("%i", iNumBots));
+				trap_Cvar_Update(&g_OmniBotPlaying);
 				trap_Cvar_Set("sv_numbots", va("%i", iNumBots));
 				trap_Cvar_Set("g_heavyWeaponRestriction", va("%i", iNumBots));
 			}
@@ -3553,8 +3613,9 @@ void Bot_Interface_Update()
 		{
 			if(g_OmniBotPlaying.integer != -1)
 			{
-				g_OmniBotPlaying.integer = -1;
+				//g_OmniBotPlaying.integer = -1;
 				trap_Cvar_Set("omnibot_playing", "-1");
+				trap_Cvar_Update(&g_OmniBotPlaying);
 				trap_Cvar_Set("sv_numbots", "0");
 				trap_Cvar_Set("g_heavyWeaponRestriction", "0");
 			}
@@ -4112,10 +4173,7 @@ void Bot_Event_FireWeapon(gentity_t * _player, int _weaponId, gentity_t * _proje
 {
 	if(IsOmnibotLoaded() && IsBot(_player))
 	{
-		Event_WeaponFire d = { };
-		d.m_WeaponId = _weaponId;
-		d.m_Projectile = HandleFromEntity(_projectile);
-		d.m_FireMode = Primary;
+		Event_WeaponFire d = {_weaponId, Primary, HandleFromEntity(_projectile)};
 		g_BotFunctions.pfnSendEvent(ENTINDEX(_player), MessageHelper(ACTION_WEAPON_FIRE, &d, sizeof(d)));
 	}
 }
@@ -4313,6 +4371,28 @@ void Bot_Event_SendSupplyStatsToBot(gentity_t * _supplystation)
 	}
 }
 
+void            Bot_Event_EntityCreated(gentity_t * pEnt)
+{
+	if(pEnt && IsOmnibotLoaded())
+	{
+		// Get common properties.
+		const int iEntNum = ENTINDEX(pEnt);
+		GameEntity ent = HandleFromEntity(pEnt);
+		int iClass = g_InterfaceFunctions->GetEntityClass(ent);
+
+		if(iClass)
+		{
+			Event_EntityCreated d;
+			d.m_Entity = GameEntity(iEntNum, m_EntityHandles[iEntNum].m_HandleSerial);
+
+			d.m_EntityClass = iClass;
+			g_InterfaceFunctions->GetEntityCategory(ent, d.m_EntityCategory);
+			g_BotFunctions.pfnSendGlobalEvent(MessageHelper(GAME_ENTITYCREATED, &d, sizeof(d)));
+			m_EntityHandles[iEntNum].m_Used = true;
+		}
+	}
+}
+
 extern          "C"
 {
 	void            Bot_TeleporterSource(gentity_t * pEnt)
@@ -4349,27 +4429,6 @@ extern          "C"
 		}
 	}
 
-	void            Bot_Event_EntityCreated(gentity_t * pEnt)
-	{
-		if(pEnt && IsOmnibotLoaded())
-		{
-			// Get common properties.
-			GameEntity      ent = HandleFromEntity(pEnt);
-			int             iClass = g_InterfaceFunctions->GetEntityClass(ent);
-
-			if(iClass)
-			{
-				Event_EntityCreated d;
-
-				int             index = ENTINDEX(pEnt);
-				d.m_Entity = GameEntity(index, m_EntityHandles[index].m_HandleSerial);
-
-				d.m_EntityClass = iClass;
-				g_InterfaceFunctions->GetEntityCategory(ent, d.m_EntityCategory);
-				g_BotFunctions.pfnSendGlobalEvent(MessageHelper(GAME_ENTITYCREATED, &d, sizeof(d)));
-			}
-		}
-	}
 	void            Bot_Queue_EntityCreated(gentity_t * pEnt)
 	{
 		if(pEnt)
@@ -4379,18 +4438,16 @@ extern          "C"
 	{
 		if(pEnt)
 		{
-			int             index = ENTINDEX(pEnt);
+			const int iEntNum = ENTINDEX(pEnt);
 
 			if(IsOmnibotLoaded())
 			{
-				Event_EntityDeleted d;
-
-				d.m_Entity = GameEntity(index, m_EntityHandles[index].m_HandleSerial);
+				Event_EntityDeleted d = { GameEntity(iEntNum, m_EntityHandles[iEntNum].m_HandleSerial) };
 				g_BotFunctions.pfnSendGlobalEvent(MessageHelper(GAME_ENTITYDELETED, &d, sizeof(d)));
 			}
-			m_EntityHandles[index].m_Used = false;
-			m_EntityHandles[index].m_NewEntity = false;
-			while(++m_EntityHandles[index].m_HandleSerial == 0)
+			m_EntityHandles[iEntNum].m_Used = false;
+			m_EntityHandles[iEntNum].m_NewEntity = false;
+			while(++m_EntityHandles[iEntNum].m_HandleSerial == 0)
 			{
 			}
 		}
