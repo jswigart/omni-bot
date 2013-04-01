@@ -372,6 +372,23 @@ struct Event_MedicUberCharged
 	GameEntity	m_ByWho;
 };
 
+struct TF_GameMode
+{
+	int			m_GameMode;
+};
+
+struct TF_CvarSet
+{
+	char *		m_Cvar;
+	char *		m_Value;
+};
+
+struct TF_CvarGet
+{
+	char *		m_Cvar;
+	int			m_Value;
+};
+
 #pragma pack(pop)
 
 #endif

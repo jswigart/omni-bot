@@ -149,4 +149,38 @@ namespace InterfaceFuncs
 	//	OBASSERT("Invalid Team!");
 	//	return &s_NullInfo;
 	//}
+
+	bool SetCvar(char *_cvar, char *_value)
+	{
+		if (_cvar && _value)
+		{
+			TF_CvarSet data;
+			data.m_Cvar = _cvar;
+			data.m_Value = _value;
+			MessageHelper msg(TF_MSG_SETCVAR, &data, sizeof(data));
+			InterfaceMsg(msg);
+		}
+		return true;
+	}
+
+	int GetCvar(char *_cvar)
+	{
+		if (_cvar)
+		{
+			TF_CvarGet data;
+			data.m_Cvar = _cvar;
+			MessageHelper msg(TF_MSG_GETCVAR, &data, sizeof(data));
+			InterfaceMsg(msg);
+			return data.m_Value;
+		}
+		return 0;
+	}
+
+	int GetGameMode(void)
+	{
+		TF_GameMode data = { 0 };
+		MessageHelper msg(TF_MSG_GETGAMEMODE, &data, sizeof(data));
+		InterfaceMsg(msg);
+		return data.m_GameMode;
+	}
 };
