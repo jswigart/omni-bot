@@ -1,7 +1,7 @@
 this.GoalType = "CapPoint";
 this.Version = 1;
 this.DefaultPriority = 1.1;
-this.CreateOnLoad = true; // FIXME: some games auto detect
+this.CreateOnLoad = true;
 this.RolePriorityBonus = 0.1;
 
 //////////////////////////////////////////////////////////////////////////
@@ -16,6 +16,7 @@ this.UpgradeVersion = function(Props)
 
 		this.SetPosition(this.GetPosition() + Util.WaypointGoalOffset);
 		this.SetBounds(Vec3(-5,-5,0),Vec3(5,5,96));
+		this.CreateOnLoad = !Props.InterfaceGoal; // some maps autodect
 	}
 	else if(Props.Version == this.Version)
 	{
