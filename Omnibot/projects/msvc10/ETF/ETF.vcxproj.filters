@@ -10,6 +10,12 @@
     <Filter Include="Core\Filters">
       <UniqueIdentifier>{4eea2450-1279-4c51-b95e-7f6d131b009e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Goals">
+      <UniqueIdentifier>{41c079bb-4c70-4d77-89bc-2a97512589db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Scripting">
+      <UniqueIdentifier>{fbb95b68-618f-4e99-9d69-02aa43825c52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\common\BotExports.cpp">
