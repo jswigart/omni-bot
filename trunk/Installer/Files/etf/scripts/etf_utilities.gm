@@ -215,12 +215,12 @@ member DrawSpawns = function()
 				}
 				case CLASS.PLAYERSTART_TEAM3:
 				{
-					color = COLOR.GREEN;
+					color = COLOR.YELLOW;
 					displayText = "Team3 Spawn";
 				}
 				case CLASS.PLAYERSTART_TEAM4:
 				{
-					color = COLOR.YELLOW;
+					color = COLOR.GREEN;
 					displayText = "Team4 Spawn";
 				}
 			}

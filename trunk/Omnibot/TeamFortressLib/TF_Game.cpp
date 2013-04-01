@@ -345,8 +345,8 @@ void TF_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
 	// Should always register the default flags
 	IGame::RegisterNavigationFlags(_planner);
 
-	_planner->RegisterNavFlag("RED",		F_NAV_TEAM1);
-	_planner->RegisterNavFlag("BLUE",		F_NAV_TEAM2);
+	_planner->RegisterNavFlag("BLUE",		F_NAV_TEAM1);
+	_planner->RegisterNavFlag("RED",		F_NAV_TEAM2);
 	_planner->RegisterNavFlag("YELLOW",		F_NAV_TEAM3);
 	_planner->RegisterNavFlag("GREEN",		F_NAV_TEAM4);
 	_planner->RegisterNavFlag("SENTRY",		F_TF_NAV_SENTRY);

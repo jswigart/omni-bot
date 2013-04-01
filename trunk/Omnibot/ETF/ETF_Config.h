@@ -26,15 +26,15 @@ typedef enum eETF_Version
 } ETF_Version;
 
 // enumerations: TF_Team
-//		ETF_TEAM_RED - Red team.
 //		ETF_TEAM_BLUE - Blue team.
+//		ETF_TEAM_RED - Red team.
 //		ETF_TEAM_YELLOW - Yellow team.
 //		ETF_TEAM_GREEN - Green team.
 typedef enum eETF_Team
 {
 	ETF_TEAM_NONE = OB_TEAM_NONE,
-	ETF_TEAM_RED,
 	ETF_TEAM_BLUE,
+	ETF_TEAM_RED,
 	ETF_TEAM_YELLOW,
 	ETF_TEAM_GREEN,
 
