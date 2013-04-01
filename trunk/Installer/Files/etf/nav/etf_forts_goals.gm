@@ -2,25 +2,11 @@ global _MG =
 {
 	CAPPOINT_trigger_multiple_246 = 
 	{
-		CreateOnLoad = 1,
+		CreateOnLoad = 0,
 		GoalType = "CapPoint",
 		GroupName = "",
 		MinRadius = 0,
 		Name = "CAPPOINT_trigger_multiple_246",
-		Orientation = Vec3(-1.571, 0.000, -0.000),
-		Position = Vec3(-896.000, -32.000, 228.000),
-		Radius = 0,
-		TagName = "trigger_multiple_246",
-		TeamAvailability = 2,
-		Version = 1,
-	},
-	CAPPOINT_trigger_multiple_246_1 = 
-	{
-		CreateOnLoad = 1,
-		GoalType = "CapPoint",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "CAPPOINT_trigger_multiple_246_1",
 		Orientation = Vec3(-1.571, -0.000, 0.000),
 		Position = Vec3(-896.000, -32.000, 228.000),
 		Radius = 0,
@@ -30,25 +16,11 @@ global _MG =
 	},
 	CAPPOINT_trigger_multiple_247 = 
 	{
-		CreateOnLoad = 1,
+		CreateOnLoad = 0,
 		GoalType = "CapPoint",
 		GroupName = "",
 		MinRadius = 0,
 		Name = "CAPPOINT_trigger_multiple_247",
-		Orientation = Vec3(-1.571, 0.000, -0.000),
-		Position = Vec3(908.000, -32.000, 232.000),
-		Radius = 0,
-		TagName = "trigger_multiple_247",
-		TeamAvailability = 4,
-		Version = 1,
-	},
-	CAPPOINT_trigger_multiple_247_1 = 
-	{
-		CreateOnLoad = 1,
-		GoalType = "CapPoint",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "CAPPOINT_trigger_multiple_247_1",
 		Orientation = Vec3(-1.571, -0.000, 0.000),
 		Position = Vec3(908.000, -32.000, 232.000),
 		Radius = 0,
@@ -117,7 +89,7 @@ global _MG =
 					[0] = Vec3(-0.118, -0.993, 0.006),
 					[1] = Vec3(-0.123, 0.992, 0.003),
 				},
-				position = Vec3(1051.212, -49.395, 232.125),
+				position = Vec3(1051.000, -49.000, 209.000),
 			},
 			[1] = 
 			{
@@ -183,7 +155,7 @@ global _MG =
 					[0] = Vec3(-0.924, -0.381, 0.033),
 					[1] = Vec3(0.055, -0.997, 0.060),
 				},
-				position = Vec3(3364.238, 452.274, -351.875),
+				position = Vec3(3364.000, 452.000, -374.000),
 			},
 			[1] = 
 			{
@@ -257,7 +229,7 @@ global _MG =
 					[0] = Vec3(0.116, 0.993, -0.001),
 					[1] = Vec3(0.141, -0.990, 0.012),
 				},
-				position = Vec3(-1040.955, -33.002, 232.125),
+				position = Vec3(-1040.000, -33.000, 209.000),
 			},
 			[1] = 
 			{
@@ -312,7 +284,7 @@ global _MG =
 		MinCampTime = 0,
 		MinRadius = 32,
 		Name = "PATROL_redflag",
-		Orientation = Vec3(0.030, 0.017, 0.000),
+		Orientation = Vec3(0.030, 0.017, -0.000),
 		PatrolOrder = "random",
 		PatrolPoints = 
 		{
@@ -323,7 +295,7 @@ global _MG =
 					[0] = Vec3(-0.030, 0.999, 0.017),
 					[1] = Vec3(0.921, 0.389, 0.011),
 				},
-				position = Vec3(-3360.323, -508.113, -351.875),
+				position = Vec3(-3360.000, -508.000, -374.000),
 			},
 			[1] = 
 			{
