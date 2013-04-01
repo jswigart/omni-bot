@@ -263,10 +263,10 @@ void RenderBuffer::AddArrow( const Vector3f & v0, const Vector3f & v1, const obC
 	dir.Normalize();
 	Vector3f side = dir.Cross( Vector3f::UNIT_Z );
 
-	prim.v[0] = v1 - dir * 8 - side * 8;
+	prim.v[0] = v1 - dir * 8 - side * 4;
 	mLineList.push_back( prim );
 
-	prim.v[0] = v1 - dir * 8 + side * 8;
+	prim.v[0] = v1 - dir * 8 + side * 4;
 	mLineList.push_back( prim );
 
 	// arrowheads todo

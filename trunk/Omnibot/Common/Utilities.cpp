@@ -744,6 +744,14 @@ namespace Utils
 		return std::string(va("OmniBot[%i]", nextIndex++));
 	}
 
+	std::string IndentString( const int indentlevel )
+	{
+		std::string s;
+		for ( int i = 0; i < indentlevel; ++i )
+			s += "    ";
+		return s;
+	}
+
 	bool TestSegmentForOcclusion(const Segment3f &seg)
 	{
 		AABB b(Vector3f(-32,-32,0), Vector3f(32,32,64));
@@ -1150,6 +1158,27 @@ namespace Utils
 		IntrLine3Plane3f intr( line, plane );
 		if ( intr.Find() )
 			pt = line.Origin + intr.GetLineParameter() * line.Direction;
+	}
+
+	Vector3f CalculateCenter( const Vector3List & poly )
+	{
+		Vector3f center = Vector3f::ZERO;
+		if ( poly.size() > 0 )
+		{
+			center = poly[ 0 ];
+			for ( size_t i = 1; i < poly.size(); ++i )
+				center += poly[ i ];
+			center /= (float)poly.size();
+		}
+		return center;
+	}
+
+	Plane3f CalculatePlane( const Vector3List & poly )
+	{
+		return Plane3f(
+			CalculateCenter( poly ),
+			poly[ 1 ],
+			poly[ 0 ] );
 	}
 
 	gmVariable UserDataToGmVar(gmMachine *_machine, const obUserData &bud)

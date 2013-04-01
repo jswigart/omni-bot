@@ -612,6 +612,9 @@
     <ClCompile Include="..\..\..\Common\System.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Common\CollisionModel.cpp">
+      <Filter>Miscellaneous</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Common\Client.h">
@@ -1123,6 +1126,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Common\System.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\CollisionModel.h">
+      <Filter>Miscellaneous</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

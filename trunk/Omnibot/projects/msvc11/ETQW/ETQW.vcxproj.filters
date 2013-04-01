@@ -74,8 +74,5 @@
     <ClInclude Include="..\..\..\ETQW\ETQW_FilterClosest.h">
       <Filter>Core\Filters</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\ETQW\gmETQWBinds.h">
-      <Filter>Core\Scripting</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

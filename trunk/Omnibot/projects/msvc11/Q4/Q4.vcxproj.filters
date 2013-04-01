@@ -61,9 +61,6 @@
     <ClInclude Include="..\..\..\Q4\Q4_NavigationFlags.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Q4\gmQ4Binds.h">
-      <Filter>Core\Scripting</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Q4\Q4_BaseStates.h">
       <Filter>Core\Goals</Filter>
     </ClInclude>

@@ -31,6 +31,23 @@ IEngineInterface *g_EngineFuncs = 0;
 
 //////////////////////////////////////////////////////////////////////////
 
+void ProtobufLogHandler(google::protobuf::LogLevel level, const char* filename, int line, const std::string& message)
+{
+	switch ( level )
+	{
+	case google::protobuf::LOGLEVEL_INFO:
+		EngineFuncs::ConsoleMessage( va( "%s( %d ) : %s", filename, line, message.c_str() ) );
+		break;
+	case google::protobuf::LOGLEVEL_WARNING:
+	case google::protobuf::LOGLEVEL_ERROR:
+	case google::protobuf::LOGLEVEL_FATAL:
+		EngineFuncs::ConsoleError( va( "%s( %d ) : %s", filename, line, message.c_str() ) );
+		break;
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 IGame *CreateGameInstance();
 
 IGameManager::IGameManager()
@@ -43,6 +60,8 @@ IGameManager::IGameManager()
 
 omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _version)
 {
+	google::protobuf::SetLogHandler( ProtobufLogHandler );
+
 	MiniDumper::Init("Omni-bot");
 
 	Timer loadTime;
@@ -218,7 +237,7 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 		EngineFuncs::ConsoleMessage("Loaded Waypoints.");
 	}
 	else
-		EngineFuncs::ConsoleError("ERROR Loading Waypoints.");
+		EngineFuncs::ConsoleError("ERROR Loading Navigation for map.");
 
 	mBotSystem.mGame->LoadGoalScripts(true);
 

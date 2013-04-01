@@ -238,40 +238,6 @@ namespace InterfaceFuncs
 		return SUCCESS(InterfaceMsg(msg, _bot->GetGameEntity()));
 	}
 
-	bool SetCvar(char *_cvar, char *_value)
-	{
-		if (_cvar && _value)
-		{
-			ET_CvarSet data;
-			data.m_Cvar = _cvar;
-			data.m_Value = _value;
-			MessageHelper msg(ET_MSG_SETCVAR, &data, sizeof(data));
-			InterfaceMsg(msg);
-		}
-		return true;
-	}
-
-	int GetCvar(char *_cvar)
-	{
-		if (_cvar)
-		{
-			ET_CvarGet data;
-			data.m_Cvar = _cvar;
-			MessageHelper msg(ET_MSG_GETCVAR, &data, sizeof(data));
-			InterfaceMsg(msg);
-			return data.m_Value;
-		}
-		return 0;
-	}
-
-	int GetGameType()
-	{
-		ET_GameType data = { 0 };
-		MessageHelper msg(ET_MSG_GETGAMETYPE, &data, sizeof(data));
-		InterfaceMsg(msg);
-		return data.m_GameType;
-	}
-
 	void DisableBotPush(Client *_bot, int _push )
 	{
 		ET_DisableBotPush data = { _push };

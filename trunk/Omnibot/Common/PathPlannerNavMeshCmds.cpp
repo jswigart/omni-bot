@@ -98,9 +98,6 @@ void PathPlannerNavMesh::InitCommands()
 	SetEx("nav_mirrorsectors", "Mirrors all sectors across a specified axis.",
 		this, &PathPlannerNavMesh::cmdMirrorSectors);
 
-	SetEx("sector_setproperty", "Sets a property of the current sector.",
-		this, &PathPlannerNavMesh::cmdSectorSetProperty);
-
 	SetEx("sector_createconnections", "Sets a property of the current sector.",
 		this, &PathPlannerNavMesh::cmdSectorCreateConnections);
 
@@ -245,9 +242,16 @@ void PathPlannerNavMesh::cmdNavStats(const StringVector &_args)
 	for ( size_t i = 0; i < mRuntimeSectors.size(); ++i )
 		numPortals += mRuntimeSectors[ i ].mPortals.size();
 
+	size_t dynTris = 0;
+	for ( size_t i = 0; i < mRuntimeSectorCollision.size(); ++i )
+		if ( mRuntimeSectorCollision[ i ] )
+			dynTris += mRuntimeSectorCollision[ i ]->NumTriangles();
+
 	EngineFuncs::ConsoleMessage( va( "%d Sectors", mNavSectors.size() ) );
 	EngineFuncs::ConsoleMessage( va( "%d Total Sectors(with mirrored)", mRuntimeSectors.size() ) );
 	EngineFuncs::ConsoleMessage( va( "%d Portals", numPortals ) );
+	EngineFuncs::ConsoleMessage( va( "%d Tris in Static NavMesh Collision", mSectorCollision.NumTriangles() ) );
+	EngineFuncs::ConsoleMessage( va( "%d Tris in Dynamic NavMesh Collision", dynTris ) );
 }
 
 extern float g_fBottomWaypointOffset;
@@ -420,14 +424,15 @@ void PathPlannerNavMesh::cmdDupeSector(const StringVector &_args)
 	}
 
 	NavCollision nc = FindCollision(vLocalPos, vLocalPos + vLocalAim * 1024.f);
-	if(!nc.DidHit() && !nc.HitAttrib().Fields.Mirrored)
+	if ( !nc.DidHit() || !nc.HitSector()->mMirrored )
 	{
 		EngineFuncs::ConsoleError("No Nav Sector Found");
 		return;
 	}
 
+	RuntimeNavSector * ns = nc.HitSector();
 	m_WorkingSectorStart = nc.HitPosition();
-	m_WorkingSector = mNavSectors[nc.HitAttrib().Fields.SectorId];
+	m_WorkingSector = *ns->mSector;
 
 	m_ToolCancelled = false;
 	SetNextState(MoveSector);
@@ -488,13 +493,16 @@ void PathPlannerNavMesh::cmdDeleteSector(const StringVector &_args)
 	}
 
 	PathPlannerNavMesh::NavCollision nc = FindCollision(vPos, vFacing*2048.f);
-	if(!nc.DidHit() || nc.HitAttrib().Fields.Mirrored)
+	if ( !nc.DidHit() || nc.HitSector()->mMirrored )
 	{
 		EngineFuncs::ConsoleError("can't find sector, aim at a sector and try again.");
 		return;
 	}
 
-	mNavSectors.erase(mNavSectors.begin() + nc.HitAttrib().Fields.SectorId);
+	RuntimeNavSector * ns = nc.HitSector();
+
+	mNavSectors.erase( mNavSectors.begin() + ( ns->mSector - &mNavSectors[ 0 ] ) );
+
 	InitSectors();
 }
 
@@ -543,19 +551,19 @@ void PathPlannerNavMesh::cmdMirrorSectors(const StringVector &_args)
 		}
 
 		NavCollision nc = FindCollision(vPos, vPos + vFacing * 2048.f);
-		if(!nc.DidHit() || nc.HitAttrib().Fields.Mirrored)
+		if ( !nc.DidHit() || nc.HitSector()->mMirrored )
 		{
 			EngineFuncs::ConsoleError("no sector at cursor");
 			SetNextState(NoOp);
 			return;
 		}
-		NavSector *pNavSector = &mNavSectors[nc.HitAttrib().Fields.SectorId];
-		if(!pNavSector)
+		RuntimeNavSector * ns = nc.HitSector();
+		if ( ns == NULL )
 		{
 			EngineFuncs::ConsoleError("can't find sector, aim at a sector and try again.");
 			return;
 		}
-		pNavSector->mMirror = mir;
+		ns->mSector->mMirror = mir;
 	}
 
 	InitSectors();
@@ -573,7 +581,7 @@ void PathPlannerNavMesh::cmdSectorCreateConnections(const StringVector &_args)
 	RuntimeNavSector * ns = GetSectorAt( vPos );
 	if ( ns )
 	{
-		ns->BuildSectorPortals( this );
+		ns->RebuildPortals( this );
 	}
 
 	size_t totalPortals = 0;
@@ -627,37 +635,6 @@ void PathPlannerNavMesh::cmdSetMapCenter(const StringVector &_args)
 
 	m_MapCenter = vMapCenter;
 	InitSectors();
-}
-
-void PathPlannerNavMesh::cmdSectorSetProperty(const StringVector &_args)
-{
-	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
-		return;
-
-	if(_args.size() < 3)
-	{
-		EngineFuncs::ConsoleError("sector_setproperty name value");
-		return;
-	}
-
-	std::string propName = _args[1];
-	std::string propValue = _args[2];
-
-	Vector3f vFacing, vPos;
-	if(!Utils::GetLocalEyePosition(vPos) || !Utils::GetLocalFacing(vFacing))
-	{
-		EngineFuncs::ConsoleError("can't get facing or eye position");
-		return;
-	}
-
-	PathPlannerNavMesh::NavCollision nc = FindCollision(vPos, vFacing*2048.f);
-	if(!nc.DidHit() || nc.HitAttrib().Fields.Mirrored)
-	{
-		EngineFuncs::ConsoleError("can't find sector, aim at a sector and try again.");
-		return;
-	}
-
-	// TODO:
 }
 
 void PathPlannerNavMesh::cmdObstacleAdd(const StringVector &_args)
@@ -1023,6 +1000,46 @@ void PathPlannerNavMesh::cmdPortalCreate(const StringVector &_args)
 		OB_DELETE( mCurrentTool );
 }
 
+static void PrintSetFieldUsage( const google::protobuf::Message & msg, const std::string & varpath = "" )
+{
+	using namespace google;
+
+	for ( int i = 0; i < msg.GetDescriptor()->field_count(); ++i )
+	{
+		const protobuf::FieldDescriptor * fieldDesc = msg.GetDescriptor()->field( i );
+
+		const bool hidden = fieldDesc->options().GetExtension( NavmeshIO::hidden );
+		if ( hidden )
+			continue;
+
+		std::string fullvarname = varpath;
+		if ( !fullvarname.empty() )
+			fullvarname += ".";
+		fullvarname += fieldDesc->lowercase_name();
+
+		if ( fieldDesc->type() == protobuf::FieldDescriptorProto_Type_TYPE_MESSAGE )
+		{
+			PrintSetFieldUsage( msg.GetReflection()->GetMessage( msg, fieldDesc ), fullvarname );
+			continue;
+		}
+		else if ( fieldDesc->type() == protobuf::FieldDescriptorProto_Type_TYPE_GROUP )
+		{
+			continue;
+		}
+		else if ( fieldDesc->type() == protobuf::FieldDescriptorProto_Type_TYPE_BYTES )
+		{
+			continue;
+		}
+
+		const std::string doc = fieldDesc->options().GetExtension( NavmeshIO::doc );
+		EngineFuncs::ConsoleError( va( "%s ( %s ) = %s - %s",
+			fullvarname.c_str(),
+			protobuf::FieldDescriptor::kTypeToName[ fieldDesc->type() ],
+			GetFieldString( msg, fieldDesc ).c_str(),
+			doc.c_str() ) );
+	}
+}
+
 void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 {
 	using namespace google;
@@ -1033,48 +1050,62 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 
 	NavSector * ns = GetSectorAtCursor();
 	if ( ns == NULL )
+	{
+		EngineFuncs::ConsoleError( "No Sector found. Aim at a sector to set field values." );
 		return;
+	}
 
-	NavmeshIO::SectorData & msg = mirrored ? ns->mSectorDataMirrored : ns->mSectorData;
-
-	const protobuf::Descriptor * desc = msg.GetDescriptor();
+	NavmeshIO::SectorData * msgSectorData = mirrored ? &ns->mSectorDataMirrored : &ns->mSectorData;
+	protobuf::Message * msg = msgSectorData;
 
 	if ( _args.size() <= 2 )
 	{
 		EngineFuncs::ConsoleError( va( "Usage: %s fieldname fieldvalue", _args.at( 0 ).c_str() ) );
-		for ( int i = 0; i < desc->field_count(); ++i )
-		{
-			const protobuf::FieldDescriptor * fieldDesc = desc->field( i );
-
-			const bool hidden = fieldDesc->options().GetExtension( NavmeshIO::hidden );
-			if ( hidden )
-				continue;
-
-			const std::string doc = fieldDesc->options().GetExtension( NavmeshIO::doc );
-			EngineFuncs::ConsoleError( va( "    %s ( %s ) = %s - %s",
-				fieldDesc->lowercase_name().c_str(),
-				protobuf::FieldDescriptor::kTypeToName[ fieldDesc->type() ],
-				GetFieldString( msg, fieldDesc ).c_str(),
-				doc.c_str() ) );
-		}
+		PrintSetFieldUsage( *msg );
 		return;
 	}
 
-	const bool wasOnMover = msg.onmover();
+	const bool wasOnMover = msgSectorData->onmover();
 
 	const std::string fieldName = Utils::StringToLower( _args.at( 1 ).c_str() );
-	const std::string fieldValue = _args.at( 2 ).c_str();
 
-	const protobuf::FieldDescriptor * fieldDesc = desc->FindFieldByLowercaseName( fieldName.c_str() );
+	const protobuf::Descriptor * msgDesc = msg->GetDescriptor();
+	const protobuf::Reflection * refl = msg->GetReflection();
+	const protobuf::FieldDescriptor * fieldDesc = NULL;
+
+	// handle setting nested field values
+	StringVector tokens;
+	Utils::Tokenize( fieldName, ".", tokens );
+	for ( size_t t = 0; t < tokens.size() && msgDesc != NULL; ++t )
+	{
+		fieldDesc = msgDesc->FindFieldByLowercaseName( tokens[ t ] );
+		if ( fieldDesc == NULL )
+		{
+			EngineFuncs::ConsoleError( va( "Unknown field: '%s'", tokens[ t ].c_str() ) );
+			EngineFuncs::ConsoleError( "    If this should be added as a custom field, use nav_addfield instead" );
+			return;
+		}
+
+		if ( fieldDesc->type() == protobuf::FieldDescriptorProto_Type_TYPE_MESSAGE )
+		{
+			msg = refl->MutableMessage( msg, fieldDesc );
+			msgDesc = msg ? msg->GetDescriptor() : NULL;
+			refl = msg ? msg->GetReflection() : NULL;
+
+			if ( msg == NULL )
+			{
+				EngineFuncs::ConsoleError( va( "Unknown field: '%s' in sub message '%s'",
+					tokens[ t ].c_str(),
+					fieldDesc->lowercase_name() ) );
+				return;
+			}
+		}
+	}
+
+	const std::string fieldValue = _args.at( 2 ).c_str();
 
 	const bool hidden = fieldDesc ? fieldDesc->options().GetExtension( NavmeshIO::hidden ) : false;
 	const bool settable = fieldDesc ? fieldDesc->options().GetExtension( NavmeshIO::settable ) : false;
-	if ( fieldDesc == NULL )
-	{
-		EngineFuncs::ConsoleError( va( "Unknown field: %s", _args.at( 1 ).c_str() ) );
-		EngineFuncs::ConsoleError( "    If this should be added as a custom field, use nav_addfield instead" );
-		return;
-	}
 	if ( hidden )
 	{
 		EngineFuncs::ConsoleError( va( "Field: %s is hidden and cannot be set", _args.at( 1 ).c_str() ) );
@@ -1086,9 +1117,6 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 		return;
 	}
 
-	const protobuf::Reflection * refl = msg.GetReflection();
-
-	bool unsupported = false;
 	try
 	{
 		switch( fieldDesc->type() )
@@ -1097,18 +1125,18 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 			{
 				const double val = boost::lexical_cast<double>( _args.at( 2 ).c_str() );
 				if ( val == refl->GetDouble( msgDef, fieldDesc ) )
-					refl->ClearField( &msg, fieldDesc );
+					refl->ClearField( msg, fieldDesc );
 				else
-					refl->SetDouble( &msg, fieldDesc, val );
+					refl->SetDouble( msg, fieldDesc, val );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_FLOAT:
 			{
 				const float val = boost::lexical_cast<float>( _args.at( 2 ).c_str() );
 				if ( val == refl->GetFloat( msgDef, fieldDesc ) )
-					refl->ClearField( &msg, fieldDesc );
+					refl->ClearField( msg, fieldDesc );
 				else
-					refl->SetFloat( &msg, fieldDesc, val );
+					refl->SetFloat( msg, fieldDesc, val );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_INT64:
@@ -1117,9 +1145,9 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 			{
 				const protobuf::int64 val = boost::lexical_cast<protobuf::int64>( _args.at( 2 ).c_str() );
 				if ( val == refl->GetInt64( msgDef, fieldDesc ) )
-					refl->ClearField( &msg, fieldDesc );
+					refl->ClearField( msg, fieldDesc );
 				else
-					refl->SetInt64( &msg, fieldDesc, val );
+					refl->SetInt64( msg, fieldDesc, val );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_UINT64:
@@ -1127,9 +1155,9 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 			{
 				const protobuf::uint64 val = boost::lexical_cast<protobuf::uint64>( _args.at( 2 ).c_str() );
 				if ( val == refl->GetUInt64( msgDef, fieldDesc ) )
-					refl->ClearField( &msg, fieldDesc );
+					refl->ClearField( msg, fieldDesc );
 				else
-					refl->SetUInt64( &msg, fieldDesc, val );
+					refl->SetUInt64( msg, fieldDesc, val );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_INT32:
@@ -1138,18 +1166,18 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 			{
 				const protobuf::int32 val = boost::lexical_cast<protobuf::int32>( _args.at( 2 ).c_str() );
 				if ( val == refl->GetInt32( msgDef, fieldDesc ) )
-					refl->ClearField( &msg, fieldDesc );
+					refl->ClearField( msg, fieldDesc );
 				else
-					refl->SetInt32( &msg, fieldDesc, val );
+					refl->SetInt32( msg, fieldDesc, val );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_BOOL:
 			{
 				const bool val = boost::lexical_cast<bool>( _args.at( 2 ).c_str() );
 				if ( val == refl->GetBool( msgDef, fieldDesc ) )
-					refl->ClearField( &msg, fieldDesc );
+					refl->ClearField( msg, fieldDesc );
 				else
-					refl->SetBool( &msg, fieldDesc, val );
+					refl->SetBool( msg, fieldDesc, val );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_UINT32:
@@ -1157,9 +1185,9 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 			{
 				const protobuf::uint32 val = boost::lexical_cast<protobuf::uint32>( _args.at( 2 ).c_str() );
 				if ( val == refl->GetUInt32( msgDef, fieldDesc ) )
-					refl->ClearField( &msg, fieldDesc );
+					refl->ClearField( msg, fieldDesc );
 				else
-					refl->SetUInt32( &msg, fieldDesc, val );
+					refl->SetUInt32( msg, fieldDesc, val );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_STRING:
@@ -1180,29 +1208,29 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 					str.pop_back();
 
 				if ( str == refl->GetString( msgDef, fieldDesc ) )
-					refl->ClearField( &msg, fieldDesc );
+					refl->ClearField( msg, fieldDesc );
 				else
-					refl->SetString( &msg, fieldDesc, str );
+					refl->SetString( msg, fieldDesc, str );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_GROUP:
-			unsupported = true;
-			break;
+			EngineFuncs::ConsoleError( va( "Can't set message field type 'Group'" ) );
+			return;
 		case protobuf::FieldDescriptorProto_Type_TYPE_MESSAGE:
-			unsupported = true;
-			break;
+			EngineFuncs::ConsoleError( va( "Can't set message field type 'Message', use dot(.) syntax to set child fields directly." ) );
+			return;
 		case protobuf::FieldDescriptorProto_Type_TYPE_BYTES:
-			unsupported = true;
-			break;
+			EngineFuncs::ConsoleError( va( "Can't set message field type 'bytes'" ) );
+			return;
 		case protobuf::FieldDescriptorProto_Type_TYPE_ENUM:
 			{
 				const protobuf::EnumValueDescriptor * enumVal = fieldDesc->enum_type()->FindValueByName( _args.at( 2 ).c_str() );
 				if ( enumVal != NULL )
 				{
 					if ( enumVal == refl->GetEnum( msgDef, fieldDesc ) )
-						refl->ClearField( &msg, fieldDesc );
+						refl->ClearField( msg, fieldDesc );
 					else
-						refl->SetEnum( &msg, fieldDesc, enumVal );
+						refl->SetEnum( msg, fieldDesc, enumVal );
 				}
 				else
 				{
@@ -1220,20 +1248,12 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 			}
 		}
 
-		if ( unsupported )
-		{
-			EngineFuncs::ConsoleError(
-				va( "Can't set unsupported message field type '%s'",
-				protobuf::FieldDescriptor::kTypeToName[ fieldDesc->type() ] ) );
-			return;
-		}
-
-		bool clearMoverState = !msg.onmover();
-		if ( !wasOnMover && msg.onmover() )
+		bool clearMoverState = !msgSectorData->onmover();
+		if ( !wasOnMover && msgSectorData->onmover() )
 		{
 			for ( size_t i = 0; i < mRuntimeSectors.size(); ++i )
 			{
-				if ( mRuntimeSectors[ i ].mSectorData == &msg )
+				if ( mRuntimeSectors[ i ].mSectorData == msgSectorData )
 				{
 					if ( !mRuntimeSectors[ i ].InitSectorTransform() )
 					{
@@ -1246,9 +1266,9 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 
 		if ( clearMoverState )
 		{
-			msg.clear_onmover();
-			msg.clear_mover();
-			msg.clear_localoffsets();
+			msgSectorData->clear_onmover();
+			msgSectorData->clear_mover();
+			msgSectorData->clear_localoffsets();
 		}
 	}
 	catch ( const boost::bad_lexical_cast & ex )
@@ -1438,16 +1458,18 @@ STATE_UPDATE(PathPlannerNavMesh, EditSector)
 	}
 
 	NavCollision nc = FindCollision(vLocalPos, vLocalPos + vLocalAim * 1024.f);
-	if(!nc.DidHit() && !nc.HitAttrib().Fields.Mirrored)
+	if ( !nc.DidHit() || nc.HitSector()->mMirrored )
 	{
 		EngineFuncs::ConsoleError("No Nav Sector Found");
 		SetNextState(NoOp);
 		return;
 	}
 
+	RuntimeNavSector * ns = nc.HitSector();
+
 	m_WorkingSectorStart = nc.HitPosition();
-	m_WorkingSector = mNavSectors[nc.HitAttrib().Fields.SectorId];
-	mNavSectors.erase(mNavSectors.begin() + nc.HitAttrib().Fields.SectorId);
+	m_WorkingSector = *ns->mSector;
+	mNavSectors.erase(mNavSectors.begin() + ( ns->mSector - &mNavSectors[ 0 ] ));
 
 	InitSectors();
 
@@ -1635,19 +1657,19 @@ STATE_UPDATE(PathPlannerNavMesh, GroundSector)
 	}
 
 	NavCollision nc = FindCollision(vLocalPos, vLocalPos + vLocalAim * 1024.f);
-	if(!nc.DidHit() && !nc.HitAttrib().Fields.Mirrored)
+	if ( !nc.DidHit() || nc.HitSector()->mMirrored )
 	{
 		EngineFuncs::ConsoleError("No Nav Sector Found");
 		SetNextState(NoOp);
 		return;
 	}
 
-	NavSector &ns = mNavSectors[nc.HitAttrib().Fields.SectorId];
+	RuntimeNavSector * ns = nc.HitSector();
 
 	obTraceResult tr;
-	for(obuint32 i = 0; i < ns.mPoly.size(); ++i)
+	for(obuint32 i = 0; i < ns->mPoly.size(); ++i)
 	{
-		Vector3f vPt = ns.mPoly[i];
+		Vector3f vPt = ns->mSector->mPoly[i];
 		EngineFuncs::TraceLine(tr,
 			vPt+Vector3f(0.f,0.f,1.f),
 			vPt+Vector3f(0.f,0.f,-1024.f),
@@ -1656,7 +1678,7 @@ STATE_UPDATE(PathPlannerNavMesh, GroundSector)
 			-1,
 			False);
 
-		ns.mPoly[i].Z() = tr.m_Endpos[2];
+		ns->mSector->mPoly[i].Z() = tr.m_Endpos[2];
 	}
 
 	InitSectors();

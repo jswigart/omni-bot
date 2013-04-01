@@ -351,4 +351,38 @@ namespace InterfaceFuncs
 		MessageHelper msg(GEN_MSG_MOVERAT, &data, sizeof(data));
 		return SUCCESS(InterfaceMsg(msg)) ? data.m_Entity : GameEntity();
 	}
+
+	int GetGameType()
+	{
+		Event_GameType data = { 0 };
+		MessageHelper msg(GEN_MSG_GETGAMETYPE, &data, sizeof(data));
+		InterfaceMsg(msg);
+		return data.m_GameType;
+	}
+
+	bool SetCvar(const char *_cvar, const char *_value)
+	{
+		if (_cvar && _value)
+		{
+			Event_CvarSet data;
+			data.m_Cvar = _cvar;
+			data.m_Value = _value;
+			MessageHelper msg(GEN_MSG_SETCVAR, &data, sizeof(data));
+			InterfaceMsg(msg);
+		}
+		return true;
+	}
+
+	int GetCvar(const char *_cvar)
+	{
+		if (_cvar)
+		{
+			Event_CvarGet data;
+			data.m_Cvar = _cvar;
+			MessageHelper msg(GEN_MSG_GETCVAR, &data, sizeof(data));
+			InterfaceMsg(msg);
+			return data.m_Value;
+		}
+		return 0;
+	}
 };

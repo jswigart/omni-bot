@@ -109,7 +109,6 @@ protected:
 	void cmdLoadFloodStarts(const StringVector &_args);
 	void cmdNavMeshFloodFill(const StringVector &_args);
 	void cmdAutoBuildFeatures(const StringVector &_args);
-	void cmdSectorSetProperty(const StringVector &_args);
 
 	void cmdNext(const StringVector &_args);
 

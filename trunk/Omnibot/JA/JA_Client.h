@@ -19,7 +19,7 @@
 class JA_Client : public Client
 {
 public:
-	//friend void gmBindJABotLibrary(gmMachine *_machine);
+	friend class JA_Game;
 
 	void Init(int _gameid);
 

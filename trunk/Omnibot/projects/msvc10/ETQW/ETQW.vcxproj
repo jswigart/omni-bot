@@ -134,7 +134,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ClInclude Include="..\..\..\ETQW\ETQW_BaseStates.h" />
     <ClInclude Include="..\..\..\ETQW\ETQW_GoalManager.h" />
     <ClInclude Include="..\..\..\ETQW\ETQW_FilterClosest.h" />
-    <ClInclude Include="..\..\..\ETQW\gmETQWBinds.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">

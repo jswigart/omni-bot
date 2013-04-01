@@ -80,9 +80,6 @@
     <ClInclude Include="..\Common\resource.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\ET\gmETBinds.h">
-      <Filter>Core\Scripting</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\ET\ET_BaseStates.h">
       <Filter>Core\Goals</Filter>
     </ClInclude>

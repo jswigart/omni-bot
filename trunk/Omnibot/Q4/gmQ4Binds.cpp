@@ -12,7 +12,7 @@
 #include "gmBot.h"
 #include "gmBotLibrary.h"
 
-#include "gmQ4Binds.h"
+#include "Q4_Game.h"
 #include "Q4_Client.h"
 #include "Q4_InterfaceFuncs.h"
 
@@ -111,11 +111,10 @@ static gmFunctionEntry s_ExtendedBotTypeLib[] =
 	{"Buy",					gmfBuy},
 };
 
-bool gmBindQ4BotLibrary(gmMachine *_machine)
+void Q4_Game::InitScriptBinds(gmMachine *_machine)
 {
 	// Register the bot functions.
 	_machine->RegisterLibrary(s_ExtendedBotLib, sizeof(s_ExtendedBotLib) / sizeof(s_ExtendedBotLib[0]));
 	//////////////////////////////////////////////////////////////////////////
 	_machine->RegisterTypeLibrary(gmBot::GetType(), s_ExtendedBotTypeLib, sizeof(s_ExtendedBotTypeLib) / sizeof(s_ExtendedBotTypeLib[0]));
-	return true;
 }

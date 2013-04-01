@@ -141,7 +141,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ClInclude Include="..\..\..\MC\MC_Game.h" />
     <ClInclude Include="..\..\..\MC\MC_InterfaceFuncs.h" />
     <ClInclude Include="..\..\..\MC\MC_Messages.h" />
-    <ClInclude Include="..\..\..\MC\gmMCBinds.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">

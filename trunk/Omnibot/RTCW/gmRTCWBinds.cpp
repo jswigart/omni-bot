@@ -6,7 +6,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "gmRTCWBinds.h"
+#include "RTCW_Game.h"
 #include "RTCW_Client.h"
 #include "RTCW_InterfaceFuncs.h"
 
@@ -264,129 +264,6 @@ static int GM_CDECL gmfSnipe(gmThread *a_thread)
 
 //////////////////////////////////////////////////////////////////////////
 
-// function: GetGameType
-//		Gets the current game type
-//
-// Parameters:
-//
-//		none
-//
-// Returns:
-//		int - game type
-static int GM_CDECL gmfGetGameType(gmThread *a_thread)
-{
-	GM_CHECK_NUM_PARAMS(0);
-
-	a_thread->PushInt(InterfaceFuncs::GetGameType());
-	return GM_OK;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-// function: SetCvar
-//		This function will set a game cvar
-//
-// Parameters:
-//
-//		char   - the cvar to set
-//		char   - the value of the cvar to be set
-//
-//
-// Returns:
-//		None
-static int GM_CDECL gmfSetCvar(gmThread *a_thread)
-{
-	if(a_thread->GetNumParams() > 1)
-	{
-		const int bufferSize = 512;
-		char buffer[bufferSize];
-
-		int iPos = 0;
-		const int cvarSize = 2048;
-		const int valueSize = 2048;
-		char cvar[cvarSize] = {0};
-		char value[valueSize] = {0};
-
-		const char *pAsString = a_thread->Param(0).AsString(a_thread->GetMachine(), buffer, bufferSize);
-		if(pAsString)
-		{
-			size_t len = strlen(pAsString);
-			if(cvarSize - iPos > len)
-			{
-				Utils::StringCopy(&cvar[iPos], pAsString, len);
-				iPos += len;
-			}
-		}
-
-		iPos = 0;
-		// and for the message...
-		for(int i = 1; i < a_thread->GetNumParams(); ++i)
-		{
-			const char *pAsString = a_thread->Param(i).AsString(a_thread->GetMachine(), buffer, bufferSize);
-			if(pAsString)
-			{
-				size_t len = strlen(pAsString);
-				if(valueSize - iPos > len)
-				{
-					Utils::StringCopy(&value[iPos], pAsString, len);
-					iPos += len;
-				}
-			}
-		}
-
-		bool bSucess = InterfaceFuncs::SetCvar(cvar, value);
-		a_thread->PushInt(bSucess ? 1 : 0);
-		return GM_OK;
-	}
-
-	GM_EXCEPTION_MSG("Expected 2+ parameters");
-	return GM_EXCEPTION;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-// function: GetCvar
-//		This function will get the value of a game cvar
-//
-// Parameters:
-//
-//		char   - the cvar to get
-//
-//
-// Returns:
-//		The value of the cvar
-static int GM_CDECL gmfGetCvar(gmThread *a_thread)
-{
-	if(a_thread->GetNumParams() > 0)
-	{
-		const int bufferSize = 512;
-		char buffer[bufferSize];
-
-		int iPos = 0;
-		const int cvarSize = 2048;
-		char cvar[cvarSize] = {0};
-
-		const char *pAsString = a_thread->Param(0).AsString(a_thread->GetMachine(), buffer, bufferSize);
-		if(pAsString)
-		{
-			size_t len = strlen(pAsString);
-			if(cvarSize - iPos > len)
-			{
-				Utils::StringCopy(&cvar[iPos], pAsString, len);
-				iPos += len;
-			}
-		}
-
-		a_thread->PushInt(InterfaceFuncs::GetCvar(cvar));
-		return GM_OK;
-	}
-
-	GM_EXCEPTION_MSG("Expected 1 parameter");
-	return GM_EXCEPTION;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
 // function: GetSpawnPoint
 //		Gets the bots current spawn point
 //
@@ -627,17 +504,14 @@ static gmFunctionEntry s_ExtendedBotTypeLib[] =
 	{"GoToLimbo",			gmfGoToLimbo, NULL},
 };
 
-static gmFunctionEntry s_ExtendedBotLib[] =
-{
-	{"GetGameType",				gmfGetGameType},
-	{"SetCvar",					gmfSetCvar},
-	{"GetCvar",					gmfGetCvar},
-};
+//static gmFunctionEntry s_ExtendedBotLib[] =
+//{
+//};
 
-void gmBindRTCWBotLibrary(gmMachine *_machine)
+void RTCW_Game::InitScriptBinds(gmMachine *_machine)
 {
 	// Register the bot functions.
-	_machine->RegisterLibrary(s_ExtendedBotLib, sizeof(s_ExtendedBotLib) / sizeof(s_ExtendedBotLib[0]));
+	//_machine->RegisterLibrary(s_ExtendedBotLib, sizeof(s_ExtendedBotLib) / sizeof(s_ExtendedBotLib[0]));
 	//////////////////////////////////////////////////////////////////////////
 	_machine->RegisterTypeLibrary(gmBot::GetType(), s_ExtendedBotTypeLib, sizeof(s_ExtendedBotTypeLib) / sizeof(s_ExtendedBotTypeLib[0]));
 

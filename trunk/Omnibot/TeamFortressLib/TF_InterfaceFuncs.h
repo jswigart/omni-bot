@@ -31,10 +31,6 @@ namespace InterfaceFuncs
 	void ShowHudHint(GameEntity _player, obint32 _id, const char *_msg);
 	void ShowHudMenu(TF_HudMenu &_data);
 	void ShowHudText(TF_HudText &_data);
-
-	bool SetCvar(char *_cvar, char *_value);
-	int GetCvar(char *_cvar);
-	int GetGameMode(void);
 };
 
 #endif

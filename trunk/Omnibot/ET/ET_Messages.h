@@ -223,23 +223,6 @@ struct Event_Ammo
 	GameEntity	m_WhoDoneIt;
 };
 
-struct ET_GameType
-{
-	int			m_GameType;
-};
-
-struct ET_CvarSet
-{
-	char *		m_Cvar;
-	char *		m_Value;
-};
-
-struct ET_CvarGet
-{
-	char *		m_Cvar;
-	int			m_Value;
-};
-
 struct ET_DisableBotPush
 {
 	int			m_Push;

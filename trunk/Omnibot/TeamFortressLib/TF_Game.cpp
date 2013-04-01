@@ -70,7 +70,7 @@ static IntEnum TF_WeaponEnum[] =
 	IntEnum("NAPALMCANNON",		TF_WP_NAPALMCANNON),
 	IntEnum("UMBRELLA",			TF_WP_UMBRELLA),
 	IntEnum("GRENADE1",			TF_WP_GRENADE1),
-	IntEnum("GRENADE2",			TF_WP_GRENADE2),
+	IntEnum("GRENADE2",			TF_WP_GRENADE1),
 	IntEnum("GRENADE",			TF_WP_GRENADE),
 	IntEnum("GRENADE_CONC",		TF_WP_GRENADE_CONC),
 	IntEnum("GRENADE_EMP",		TF_WP_GRENADE_EMP),
@@ -345,8 +345,8 @@ void TF_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
 	// Should always register the default flags
 	IGame::RegisterNavigationFlags(_planner);
 
-	_planner->RegisterNavFlag("RED",		F_NAV_TEAM1);
-	_planner->RegisterNavFlag("BLUE",		F_NAV_TEAM2);
+	_planner->RegisterNavFlag("BLUE",		F_NAV_TEAM1);
+	_planner->RegisterNavFlag("RED",		F_NAV_TEAM2);
 	_planner->RegisterNavFlag("YELLOW",		F_NAV_TEAM3);
 	_planner->RegisterNavFlag("GREEN",		F_NAV_TEAM4);
 	_planner->RegisterNavFlag("SENTRY",		F_TF_NAV_SENTRY);

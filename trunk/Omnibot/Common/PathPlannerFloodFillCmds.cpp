@@ -70,9 +70,6 @@ void PathPlannerFloodFill::InitCommands()
 	SetEx("nav_next", "Steps the current tool to the next operation.",
 		this, &PathPlannerFloodFill::cmdNext);
 
-	SetEx("sector_setproperty", "Sets a property of the current sector.",
-		this, &PathPlannerFloodFill::cmdSectorSetProperty);
-
 	/*REGISTER_STATE(PathPlannerFloodFill,NoOp);
 
 	SetNextState(NoOp);*/
@@ -534,37 +531,6 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 //
 //	InitCollision();
 //}
-
-void PathPlannerFloodFill::cmdSectorSetProperty(const StringVector &_args)
-{
-	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
-		return;
-
-	if(_args.size() < 3)
-	{
-		EngineFuncs::ConsoleError("sector_setproperty name value");
-		return;
-	}
-
-	std::string propName = _args[1];
-	std::string propValue = _args[2];
-
-	Vector3f vFacing, vPos;
-	if(!Utils::GetLocalEyePosition(vPos) || !Utils::GetLocalFacing(vFacing))
-	{
-		EngineFuncs::ConsoleError("can't get facing or eye position");
-		return;
-	}
-
-	/*PathPlannerFloodFill::NavCollision nc = FindCollision(vPos, vFacing*2048.f);
-	if(!nc.DidHit() || nc.HitAttrib().Fields.Mirrored)
-	{
-	EngineFuncs::ConsoleError("can't find sector, aim at a sector and try again.");
-	return;
-	}*/
-
-	// TODO:
-}
 
 void PathPlannerFloodFill::_BenchmarkPathFinder(const StringVector &_args)
 {

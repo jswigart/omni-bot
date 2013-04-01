@@ -26,32 +26,6 @@ namespace InterfaceFuncs
 		return true;
 	}
 
-	bool SetCvar(char *_cvar, char *_value)
-	{
-		if (_cvar && _value)
-		{
-			RTCW_CvarSet data;
-			data.m_Cvar = _cvar;
-			data.m_Value = _value;
-			MessageHelper msg(RTCW_MSG_SETCVAR, &data, sizeof(data));
-			InterfaceMsg(msg);
-		}
-		return true;
-	}
-
-	int GetCvar(char *_cvar)
-	{
-		if (_cvar)
-		{
-			RTCW_CvarGet data;
-			data.m_Cvar = _cvar;
-			MessageHelper msg(RTCW_MSG_GETCVAR, &data, sizeof(data));
-			InterfaceMsg(msg);
-			return data.m_Value;
-		}
-		return NULL;
-	}
-
 	bool IsWeaponOverheated(Client *_bot, RTCW_Weapon _weapon)
 	{
 		RTCW_WeaponOverheated data = { _weapon, False };
@@ -198,14 +172,6 @@ namespace InterfaceFuncs
 				return true;
 		}
 		return false;
-	}
-
-	int GetGameType()
-	{
-		RTCW_GameType data = { 0 };
-		MessageHelper msg(RTCW_MSG_GETGAMETYPE, &data, sizeof(data));
-		InterfaceMsg(msg);
-		return data.m_GameType;
 	}
 
 	int GetSpawnPoint(Client *_bot)

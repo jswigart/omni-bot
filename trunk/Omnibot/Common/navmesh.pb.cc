@@ -29,6 +29,12 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* MoverEntity_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   MoverEntity_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SectorTeam_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SectorTeam_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SectorLocation_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SectorLocation_reflection_ = NULL;
 const ::google::protobuf::Descriptor* SectorData_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SectorData_reflection_ = NULL;
@@ -111,22 +117,55 @@ void protobuf_AssignDesc_navmesh_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(MoverEntity));
-  SectorData_descriptor_ = file->message_type(4);
-  static const int SectorData_offsets_[17] = {
+  SectorTeam_descriptor_ = file->message_type(4);
+  static const int SectorTeam_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorTeam, team1_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorTeam, team2_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorTeam, team3_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorTeam, team4_),
+  };
+  SectorTeam_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SectorTeam_descriptor_,
+      SectorTeam::default_instance_,
+      SectorTeam_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorTeam, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorTeam, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SectorTeam));
+  SectorLocation_descriptor_ = file->message_type(5);
+  static const int SectorLocation_offsets_[5] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorLocation, global_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorLocation, team1_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorLocation, team2_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorLocation, team3_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorLocation, team4_),
+  };
+  SectorLocation_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SectorLocation_descriptor_,
+      SectorLocation::default_instance_,
+      SectorLocation_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorLocation, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorLocation, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SectorLocation));
+  SectorData_descriptor_ = file->message_type(6);
+  static const int SectorData_offsets_[13] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, enabled_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, scriptname_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, team_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, location_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, locationteam1_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, locationteam2_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, locationteam3_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, locationteam4_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, team1_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, team2_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, team3_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, team4_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, inwater_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, onmover_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, hazard_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, ladder_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, crouch_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, ledge_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, waterdepth_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, mover_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, localoffsets_),
@@ -142,7 +181,7 @@ void protobuf_AssignDesc_navmesh_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SectorData));
-  Sector_descriptor_ = file->message_type(5);
+  Sector_descriptor_ = file->message_type(7);
   static const int Sector_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Sector, vertices_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Sector, sectormirrored_),
@@ -161,7 +200,7 @@ void protobuf_AssignDesc_navmesh_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Sector));
   Sector_MirrorDir_descriptor_ = Sector_descriptor_->enum_type(0);
-  NavigationMesh_descriptor_ = file->message_type(6);
+  NavigationMesh_descriptor_ = file->message_type(8);
   static const int NavigationMesh_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NavigationMesh, header_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NavigationMesh, sectors_),
@@ -198,6 +237,10 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     MoverEntity_descriptor_, &MoverEntity::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SectorTeam_descriptor_, &SectorTeam::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SectorLocation_descriptor_, &SectorLocation::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SectorData_descriptor_, &SectorData::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Sector_descriptor_, &Sector::default_instance());
@@ -216,6 +259,10 @@ void protobuf_ShutdownFile_navmesh_2eproto() {
   delete SectorVert_reflection_;
   delete MoverEntity::default_instance_;
   delete MoverEntity_reflection_;
+  delete SectorTeam::default_instance_;
+  delete SectorTeam_reflection_;
+  delete SectorLocation::default_instance_;
+  delete SectorLocation_reflection_;
   delete SectorData::default_instance_;
   delete SectorData_reflection_;
   delete Sector::default_instance_;
@@ -237,53 +284,67 @@ void protobuf_AddDesc_navmesh_2eproto() {
     "\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\",\n\006Header\022\"\n\tmapCe"
     "nter\030\001 \001(\0132\017.NavmeshIO.Vec3\"/\n\nSectorVer"
     "t\022!\n\010position\030\001 \002(\0132\017.NavmeshIO.Vec3\"\034\n\013"
-    "MoverEntity\022\r\n\002id\030\001 \002(\005:\0010\"\216\010\n\nSectorDat"
-    "a\0228\n\007enabled\030\001 \001(\010:\004trueB!\202}\036Is this sec"
-    "tor enabled for use\022=\n\010location\030\002 \001(\tB+\202"
-    "}(Global location string for communicati"
-    "on\022A\n\rlocationteam1\030\003 \001(\tB*\202}\'Team1 loca"
-    "tion string for communication\022A\n\rlocatio"
-    "nteam2\030\004 \001(\tB*\202}\'Team2 location string f"
-    "or communication\022A\n\rlocationteam3\030\005 \001(\tB"
-    "*\202}\'Team3 location string for communicat"
-    "ion\022A\n\rlocationteam4\030\006 \001(\tB*\202}\'Team4 loc"
-    "ation string for communication\0227\n\005team1\030"
-    "\007 \001(\010:\005falseB!\202}\036Is this sector usable b"
-    "y team1\0227\n\005team2\030\010 \001(\010:\005falseB!\202}\036Is thi"
-    "s sector usable by team2\0227\n\005team3\030\t \001(\010:"
-    "\005falseB!\202}\036Is this sector usable by team"
-    "3\0227\n\005team4\030\n \001(\010:\005falseB!\202}\036Is this sect"
-    "or usable by team4\0222\n\007inwater\030\013 \001(\010:\005fal"
-    "seB\032\202}\027Is this sector in water\022<\n\007onmove"
-    "r\030\014 \001(\010:\005falseB$\202}!Is this sector on a d"
-    "ynamic mover\022@\n\006hazard\030\r \001(\010:\005falseB)\202}&"
-    "This area should be exited immediately\022A"
-    "\n\006ladder\030\016 \001(\010:\005falseB*\202}\'This area repr"
-    "esents a climbable ladder\022:\n\nwaterdepth\030"
-    "\310\001 \001(\002:\0010B\"\220}\000\202}\034The surface to sector h"
-    "eight\022.\n\005mover\030\311\001 \001(\0132\026.NavmeshIO.MoverE"
-    "ntityB\006\210}\001\220}\000\0224\n\014localoffsets\030\312\001 \003(\0132\025.N"
-    "avmeshIO.SectorVertB\006\210}\001\220}\000\"\276\002\n\006Sector\022\'"
-    "\n\010vertices\030\001 \003(\0132\025.NavmeshIO.SectorVert\022"
-    "\?\n\016sectorMirrored\030\002 \001(\0162\033.NavmeshIO.Sect"
-    "or.MirrorDir:\nMirrorNone\022)\n\nsectorData\030\003"
-    " \001(\0132\025.NavmeshIO.SectorData\0221\n\022sectorDat"
-    "aMirrored\030\004 \001(\0132\025.NavmeshIO.SectorData\"l"
-    "\n\tMirrorDir\022\016\n\nMirrorNone\020\000\022\013\n\007MirrorX\020\001"
-    "\022\014\n\010MirrorNX\020\002\022\013\n\007MirrorY\020\003\022\014\n\010MirrorNY\020"
-    "\004\022\013\n\007MirrorZ\020\005\022\014\n\010MirrorNZ\020\006\"W\n\016Navigati"
-    "onMesh\022!\n\006header\030\001 \002(\0132\021.NavmeshIO.Heade"
-    "r\022\"\n\007sectors\030\002 \003(\0132\021.NavmeshIO.Sector:+\n"
-    "\003doc\022\035.google.protobuf.FieldOptions\030\320\017 \001"
-    "(\t:.\n\006hidden\022\035.google.protobuf.FieldOpti"
-    "ons\030\321\017 \001(\010:0\n\010settable\022\035.google.protobuf"
-    ".FieldOptions\030\322\017 \001(\010B\002H\001", 1824);
+    "MoverEntity\022\r\n\002id\030\001 \002(\005:\0010\"\360\001\n\nSectorTea"
+    "m\0227\n\005team1\030\001 \001(\010:\005falseB!\202}\036Is this sect"
+    "or usable by team1\0227\n\005team2\030\002 \001(\010:\005false"
+    "B!\202}\036Is this sector usable by team2\0227\n\005t"
+    "eam3\030\003 \001(\010:\005falseB!\202}\036Is this sector usa"
+    "ble by team3\0227\n\005team4\030\004 \001(\010:\005falseB!\202}\036I"
+    "s this sector usable by team4\"\271\002\n\016Sector"
+    "Location\022;\n\006global\030\001 \001(\tB+\202}(Global loca"
+    "tion string for communication\0229\n\005team1\030\002"
+    " \001(\tB*\202}\'Team1 location string for commu"
+    "nication\0229\n\005team2\030\003 \001(\tB*\202}\'Team2 locati"
+    "on string for communication\0229\n\005team3\030\004 \001"
+    "(\tB*\202}\'Team3 location string for communi"
+    "cation\0229\n\005team4\030\005 \001(\tB*\202}\'Team4 location"
+    " string for communication\"\205\007\n\nSectorData"
+    "\0228\n\007enabled\030\001 \001(\010:\004trueB!\202}\036Is this sect"
+    "or enabled for use\0223\n\nscriptname\030\002 \001(\tB\037"
+    "\202}\034Name reference for scripting\022A\n\004team\030"
+    "\003 \001(\0132\025.NavmeshIO.SectorTeamB\034\202}\031Team sp"
+    "ecific limitations\022a\n\010location\030\004 \001(\0132\031.N"
+    "avmeshIO.SectorLocationB4\202}1Location inf"
+    "ormation for sector for communication\0222\n"
+    "\007inwater\030\005 \001(\010:\005falseB\032\202}\027Is this sector"
+    " in water\022<\n\007onmover\030\006 \001(\010:\005falseB$\202}!Is"
+    " this sector on a dynamic mover\022@\n\006hazar"
+    "d\030\007 \001(\010:\005falseB)\202}&This area should be e"
+    "xited immediately\022A\n\006ladder\030\010 \001(\010:\005false"
+    "B*\202}\'This area represents a climbable la"
+    "dder\022U\n\006crouch\030\t \001(\010:\005falseB>\202};This are"
+    "a represents a crouch area(Must crouch t"
+    "o traverse)\022l\n\005ledge\030\n \001(\010:\005falseBV\202}STh"
+    "is area represents a ledge area where un"
+    "derlying areas can be reached via jumpin"
+    "g\022@\n\nwaterdepth\030\310\001 \001(\002:\0010B(\220}\000\202}\"The sec"
+    "tor to water surface height\022.\n\005mover\030\311\001 "
+    "\001(\0132\026.NavmeshIO.MoverEntityB\006\210}\001\220}\000\0224\n\014l"
+    "ocaloffsets\030\312\001 \003(\0132\025.NavmeshIO.SectorVer"
+    "tB\006\210}\001\220}\000\"\351\002\n\006Sector\022\'\n\010vertices\030\001 \003(\0132\025"
+    ".NavmeshIO.SectorVert\022\?\n\016sectorMirrored\030"
+    "\002 \001(\0162\033.NavmeshIO.Sector.MirrorDir:\nMirr"
+    "orNone\022)\n\nsectorData\030\003 \001(\0132\025.NavmeshIO.S"
+    "ectorData\0221\n\022sectorDataMirrored\030\004 \001(\0132\025."
+    "NavmeshIO.SectorData\"\226\001\n\tMirrorDir\022\016\n\nMi"
+    "rrorNone\020\000\022\013\n\007MirrorX\020\001\022\014\n\010MirrorNX\020\002\022\013\n"
+    "\007MirrorY\020\003\022\014\n\010MirrorNY\020\004\022\013\n\007MirrorZ\020\005\022\014\n"
+    "\010MirrorNZ\020\006\022\014\n\010ReflectX\020\007\022\014\n\010ReflectY\020\010\022"
+    "\014\n\010ReflectZ\020\t\"W\n\016NavigationMesh\022!\n\006heade"
+    "r\030\001 \002(\0132\021.NavmeshIO.Header\022\"\n\007sectors\030\002 "
+    "\003(\0132\021.NavmeshIO.Sector:+\n\003doc\022\035.google.p"
+    "rotobuf.FieldOptions\030\320\017 \001(\t:.\n\006hidden\022\035."
+    "google.protobuf.FieldOptions\030\321\017 \001(\010:0\n\010s"
+    "ettable\022\035.google.protobuf.FieldOptions\030\322"
+    "\017 \001(\010B\002H\001", 2289);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "navmesh.proto", &protobuf_RegisterTypes);
   Vec3::default_instance_ = new Vec3();
   Header::default_instance_ = new Header();
   SectorVert::default_instance_ = new SectorVert();
   MoverEntity::default_instance_ = new MoverEntity();
+  SectorTeam::default_instance_ = new SectorTeam();
+  SectorLocation::default_instance_ = new SectorLocation();
   SectorData::default_instance_ = new SectorData();
   Sector::default_instance_ = new Sector();
   NavigationMesh::default_instance_ = new NavigationMesh();
@@ -300,6 +361,8 @@ void protobuf_AddDesc_navmesh_2eproto() {
   Header::default_instance_->InitAsDefaultInstance();
   SectorVert::default_instance_->InitAsDefaultInstance();
   MoverEntity::default_instance_->InitAsDefaultInstance();
+  SectorTeam::default_instance_->InitAsDefaultInstance();
+  SectorLocation::default_instance_->InitAsDefaultInstance();
   SectorData::default_instance_->InitAsDefaultInstance();
   Sector::default_instance_->InitAsDefaultInstance();
   NavigationMesh::default_instance_->InitAsDefaultInstance();
@@ -1231,20 +1294,787 @@ void MoverEntity::Swap(MoverEntity* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int SectorTeam::kTeam1FieldNumber;
+const int SectorTeam::kTeam2FieldNumber;
+const int SectorTeam::kTeam3FieldNumber;
+const int SectorTeam::kTeam4FieldNumber;
+#endif  // !_MSC_VER
+
+SectorTeam::SectorTeam()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void SectorTeam::InitAsDefaultInstance() {
+}
+
+SectorTeam::SectorTeam(const SectorTeam& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void SectorTeam::SharedCtor() {
+  _cached_size_ = 0;
+  team1_ = false;
+  team2_ = false;
+  team3_ = false;
+  team4_ = false;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SectorTeam::~SectorTeam() {
+  SharedDtor();
+}
+
+void SectorTeam::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void SectorTeam::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SectorTeam::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SectorTeam_descriptor_;
+}
+
+const SectorTeam& SectorTeam::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_navmesh_2eproto();  return *default_instance_;
+}
+
+SectorTeam* SectorTeam::default_instance_ = NULL;
+
+SectorTeam* SectorTeam::New() const {
+  return new SectorTeam;
+}
+
+void SectorTeam::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    team1_ = false;
+    team2_ = false;
+    team3_ = false;
+    team4_ = false;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool SectorTeam::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional bool team1 = 1 [default = false];
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &team1_)));
+          set_has_team1();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_team2;
+        break;
+      }
+      
+      // optional bool team2 = 2 [default = false];
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_team2:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &team2_)));
+          set_has_team2();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_team3;
+        break;
+      }
+      
+      // optional bool team3 = 3 [default = false];
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_team3:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &team3_)));
+          set_has_team3();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(32)) goto parse_team4;
+        break;
+      }
+      
+      // optional bool team4 = 4 [default = false];
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_team4:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &team4_)));
+          set_has_team4();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void SectorTeam::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional bool team1 = 1 [default = false];
+  if (has_team1()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->team1(), output);
+  }
+  
+  // optional bool team2 = 2 [default = false];
+  if (has_team2()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->team2(), output);
+  }
+  
+  // optional bool team3 = 3 [default = false];
+  if (has_team3()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->team3(), output);
+  }
+  
+  // optional bool team4 = 4 [default = false];
+  if (has_team4()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->team4(), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* SectorTeam::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional bool team1 = 1 [default = false];
+  if (has_team1()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->team1(), target);
+  }
+  
+  // optional bool team2 = 2 [default = false];
+  if (has_team2()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->team2(), target);
+  }
+  
+  // optional bool team3 = 3 [default = false];
+  if (has_team3()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->team3(), target);
+  }
+  
+  // optional bool team4 = 4 [default = false];
+  if (has_team4()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->team4(), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int SectorTeam::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional bool team1 = 1 [default = false];
+    if (has_team1()) {
+      total_size += 1 + 1;
+    }
+    
+    // optional bool team2 = 2 [default = false];
+    if (has_team2()) {
+      total_size += 1 + 1;
+    }
+    
+    // optional bool team3 = 3 [default = false];
+    if (has_team3()) {
+      total_size += 1 + 1;
+    }
+    
+    // optional bool team4 = 4 [default = false];
+    if (has_team4()) {
+      total_size += 1 + 1;
+    }
+    
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SectorTeam::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const SectorTeam* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SectorTeam*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SectorTeam::MergeFrom(const SectorTeam& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_team1()) {
+      set_team1(from.team1());
+    }
+    if (from.has_team2()) {
+      set_team2(from.team2());
+    }
+    if (from.has_team3()) {
+      set_team3(from.team3());
+    }
+    if (from.has_team4()) {
+      set_team4(from.team4());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void SectorTeam::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SectorTeam::CopyFrom(const SectorTeam& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SectorTeam::IsInitialized() const {
+  
+  return true;
+}
+
+void SectorTeam::Swap(SectorTeam* other) {
+  if (other != this) {
+    std::swap(team1_, other->team1_);
+    std::swap(team2_, other->team2_);
+    std::swap(team3_, other->team3_);
+    std::swap(team4_, other->team4_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata SectorTeam::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SectorTeam_descriptor_;
+  metadata.reflection = SectorTeam_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int SectorLocation::kGlobalFieldNumber;
+const int SectorLocation::kTeam1FieldNumber;
+const int SectorLocation::kTeam2FieldNumber;
+const int SectorLocation::kTeam3FieldNumber;
+const int SectorLocation::kTeam4FieldNumber;
+#endif  // !_MSC_VER
+
+SectorLocation::SectorLocation()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void SectorLocation::InitAsDefaultInstance() {
+}
+
+SectorLocation::SectorLocation(const SectorLocation& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void SectorLocation::SharedCtor() {
+  _cached_size_ = 0;
+  global_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  team1_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  team2_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  team3_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  team4_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SectorLocation::~SectorLocation() {
+  SharedDtor();
+}
+
+void SectorLocation::SharedDtor() {
+  if (global_ != &::google::protobuf::internal::kEmptyString) {
+    delete global_;
+  }
+  if (team1_ != &::google::protobuf::internal::kEmptyString) {
+    delete team1_;
+  }
+  if (team2_ != &::google::protobuf::internal::kEmptyString) {
+    delete team2_;
+  }
+  if (team3_ != &::google::protobuf::internal::kEmptyString) {
+    delete team3_;
+  }
+  if (team4_ != &::google::protobuf::internal::kEmptyString) {
+    delete team4_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void SectorLocation::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SectorLocation::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SectorLocation_descriptor_;
+}
+
+const SectorLocation& SectorLocation::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_navmesh_2eproto();  return *default_instance_;
+}
+
+SectorLocation* SectorLocation::default_instance_ = NULL;
+
+SectorLocation* SectorLocation::New() const {
+  return new SectorLocation;
+}
+
+void SectorLocation::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_global()) {
+      if (global_ != &::google::protobuf::internal::kEmptyString) {
+        global_->clear();
+      }
+    }
+    if (has_team1()) {
+      if (team1_ != &::google::protobuf::internal::kEmptyString) {
+        team1_->clear();
+      }
+    }
+    if (has_team2()) {
+      if (team2_ != &::google::protobuf::internal::kEmptyString) {
+        team2_->clear();
+      }
+    }
+    if (has_team3()) {
+      if (team3_ != &::google::protobuf::internal::kEmptyString) {
+        team3_->clear();
+      }
+    }
+    if (has_team4()) {
+      if (team4_ != &::google::protobuf::internal::kEmptyString) {
+        team4_->clear();
+      }
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool SectorLocation::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string global = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_global()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->global().data(), this->global().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_team1;
+        break;
+      }
+      
+      // optional string team1 = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_team1:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_team1()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->team1().data(), this->team1().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(26)) goto parse_team2;
+        break;
+      }
+      
+      // optional string team2 = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_team2:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_team2()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->team2().data(), this->team2().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(34)) goto parse_team3;
+        break;
+      }
+      
+      // optional string team3 = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_team3:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_team3()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->team3().data(), this->team3().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(42)) goto parse_team4;
+        break;
+      }
+      
+      // optional string team4 = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_team4:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_team4()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->team4().data(), this->team4().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void SectorLocation::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional string global = 1;
+  if (has_global()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->global().data(), this->global().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->global(), output);
+  }
+  
+  // optional string team1 = 2;
+  if (has_team1()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->team1().data(), this->team1().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->team1(), output);
+  }
+  
+  // optional string team2 = 3;
+  if (has_team2()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->team2().data(), this->team2().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      3, this->team2(), output);
+  }
+  
+  // optional string team3 = 4;
+  if (has_team3()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->team3().data(), this->team3().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      4, this->team3(), output);
+  }
+  
+  // optional string team4 = 5;
+  if (has_team4()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->team4().data(), this->team4().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      5, this->team4(), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* SectorLocation::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional string global = 1;
+  if (has_global()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->global().data(), this->global().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->global(), target);
+  }
+  
+  // optional string team1 = 2;
+  if (has_team1()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->team1().data(), this->team1().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->team1(), target);
+  }
+  
+  // optional string team2 = 3;
+  if (has_team2()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->team2().data(), this->team2().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        3, this->team2(), target);
+  }
+  
+  // optional string team3 = 4;
+  if (has_team3()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->team3().data(), this->team3().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        4, this->team3(), target);
+  }
+  
+  // optional string team4 = 5;
+  if (has_team4()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->team4().data(), this->team4().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        5, this->team4(), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int SectorLocation::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string global = 1;
+    if (has_global()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->global());
+    }
+    
+    // optional string team1 = 2;
+    if (has_team1()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->team1());
+    }
+    
+    // optional string team2 = 3;
+    if (has_team2()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->team2());
+    }
+    
+    // optional string team3 = 4;
+    if (has_team3()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->team3());
+    }
+    
+    // optional string team4 = 5;
+    if (has_team4()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->team4());
+    }
+    
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SectorLocation::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const SectorLocation* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SectorLocation*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SectorLocation::MergeFrom(const SectorLocation& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_global()) {
+      set_global(from.global());
+    }
+    if (from.has_team1()) {
+      set_team1(from.team1());
+    }
+    if (from.has_team2()) {
+      set_team2(from.team2());
+    }
+    if (from.has_team3()) {
+      set_team3(from.team3());
+    }
+    if (from.has_team4()) {
+      set_team4(from.team4());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void SectorLocation::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SectorLocation::CopyFrom(const SectorLocation& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SectorLocation::IsInitialized() const {
+  
+  return true;
+}
+
+void SectorLocation::Swap(SectorLocation* other) {
+  if (other != this) {
+    std::swap(global_, other->global_);
+    std::swap(team1_, other->team1_);
+    std::swap(team2_, other->team2_);
+    std::swap(team3_, other->team3_);
+    std::swap(team4_, other->team4_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata SectorLocation::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SectorLocation_descriptor_;
+  metadata.reflection = SectorLocation_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
 const int SectorData::kEnabledFieldNumber;
+const int SectorData::kScriptnameFieldNumber;
+const int SectorData::kTeamFieldNumber;
 const int SectorData::kLocationFieldNumber;
-const int SectorData::kLocationteam1FieldNumber;
-const int SectorData::kLocationteam2FieldNumber;
-const int SectorData::kLocationteam3FieldNumber;
-const int SectorData::kLocationteam4FieldNumber;
-const int SectorData::kTeam1FieldNumber;
-const int SectorData::kTeam2FieldNumber;
-const int SectorData::kTeam3FieldNumber;
-const int SectorData::kTeam4FieldNumber;
 const int SectorData::kInwaterFieldNumber;
 const int SectorData::kOnmoverFieldNumber;
 const int SectorData::kHazardFieldNumber;
 const int SectorData::kLadderFieldNumber;
+const int SectorData::kCrouchFieldNumber;
+const int SectorData::kLedgeFieldNumber;
 const int SectorData::kWaterdepthFieldNumber;
 const int SectorData::kMoverFieldNumber;
 const int SectorData::kLocaloffsetsFieldNumber;
@@ -1256,6 +2086,8 @@ SectorData::SectorData()
 }
 
 void SectorData::InitAsDefaultInstance() {
+  team_ = const_cast< ::NavmeshIO::SectorTeam*>(&::NavmeshIO::SectorTeam::default_instance());
+  location_ = const_cast< ::NavmeshIO::SectorLocation*>(&::NavmeshIO::SectorLocation::default_instance());
   mover_ = const_cast< ::NavmeshIO::MoverEntity*>(&::NavmeshIO::MoverEntity::default_instance());
 }
 
@@ -1268,19 +2100,15 @@ SectorData::SectorData(const SectorData& from)
 void SectorData::SharedCtor() {
   _cached_size_ = 0;
   enabled_ = true;
-  location_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  locationteam1_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  locationteam2_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  locationteam3_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  locationteam4_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  team1_ = false;
-  team2_ = false;
-  team3_ = false;
-  team4_ = false;
+  scriptname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  team_ = NULL;
+  location_ = NULL;
   inwater_ = false;
   onmover_ = false;
   hazard_ = false;
   ladder_ = false;
+  crouch_ = false;
+  ledge_ = false;
   waterdepth_ = 0;
   mover_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1291,22 +2119,12 @@ SectorData::~SectorData() {
 }
 
 void SectorData::SharedDtor() {
-  if (location_ != &::google::protobuf::internal::kEmptyString) {
-    delete location_;
-  }
-  if (locationteam1_ != &::google::protobuf::internal::kEmptyString) {
-    delete locationteam1_;
-  }
-  if (locationteam2_ != &::google::protobuf::internal::kEmptyString) {
-    delete locationteam2_;
-  }
-  if (locationteam3_ != &::google::protobuf::internal::kEmptyString) {
-    delete locationteam3_;
-  }
-  if (locationteam4_ != &::google::protobuf::internal::kEmptyString) {
-    delete locationteam4_;
+  if (scriptname_ != &::google::protobuf::internal::kEmptyString) {
+    delete scriptname_;
   }
   if (this != default_instance_) {
+    delete team_;
+    delete location_;
     delete mover_;
   }
 }
@@ -1334,41 +2152,25 @@ SectorData* SectorData::New() const {
 void SectorData::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     enabled_ = true;
+    if (has_scriptname()) {
+      if (scriptname_ != &::google::protobuf::internal::kEmptyString) {
+        scriptname_->clear();
+      }
+    }
+    if (has_team()) {
+      if (team_ != NULL) team_->::NavmeshIO::SectorTeam::Clear();
+    }
     if (has_location()) {
-      if (location_ != &::google::protobuf::internal::kEmptyString) {
-        location_->clear();
-      }
+      if (location_ != NULL) location_->::NavmeshIO::SectorLocation::Clear();
     }
-    if (has_locationteam1()) {
-      if (locationteam1_ != &::google::protobuf::internal::kEmptyString) {
-        locationteam1_->clear();
-      }
-    }
-    if (has_locationteam2()) {
-      if (locationteam2_ != &::google::protobuf::internal::kEmptyString) {
-        locationteam2_->clear();
-      }
-    }
-    if (has_locationteam3()) {
-      if (locationteam3_ != &::google::protobuf::internal::kEmptyString) {
-        locationteam3_->clear();
-      }
-    }
-    if (has_locationteam4()) {
-      if (locationteam4_ != &::google::protobuf::internal::kEmptyString) {
-        locationteam4_->clear();
-      }
-    }
-    team1_ = false;
-    team2_ = false;
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    team3_ = false;
-    team4_ = false;
     inwater_ = false;
     onmover_ = false;
     hazard_ = false;
     ladder_ = false;
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    crouch_ = false;
+    ledge_ = false;
     waterdepth_ = 0;
     if (has_mover()) {
       if (mover_ != NULL) mover_->::NavmeshIO::MoverEntity::Clear();
@@ -1396,161 +2198,57 @@ bool SectorData::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_location;
+        if (input->ExpectTag(18)) goto parse_scriptname;
         break;
       }
       
-      // optional string location = 2;
+      // optional string scriptname = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_location:
+         parse_scriptname:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_location()));
+                input, this->mutable_scriptname()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->location().data(), this->location().length(),
+            this->scriptname().data(), this->scriptname().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(26)) goto parse_locationteam1;
+        if (input->ExpectTag(26)) goto parse_team;
         break;
       }
       
-      // optional string locationteam1 = 3;
+      // optional .NavmeshIO.SectorTeam team = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_locationteam1:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_locationteam1()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->locationteam1().data(), this->locationteam1().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
+         parse_team:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_team()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(34)) goto parse_locationteam2;
+        if (input->ExpectTag(34)) goto parse_location;
         break;
       }
       
-      // optional string locationteam2 = 4;
+      // optional .NavmeshIO.SectorLocation location = 4;
       case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_locationteam2:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_locationteam2()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->locationteam2().data(), this->locationteam2().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
+         parse_location:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_location()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(42)) goto parse_locationteam3;
+        if (input->ExpectTag(40)) goto parse_inwater;
         break;
       }
       
-      // optional string locationteam3 = 5;
+      // optional bool inwater = 5 [default = false];
       case 5: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_locationteam3:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_locationteam3()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->locationteam3().data(), this->locationteam3().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(50)) goto parse_locationteam4;
-        break;
-      }
-      
-      // optional string locationteam4 = 6;
-      case 6: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_locationteam4:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_locationteam4()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->locationteam4().data(), this->locationteam4().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(56)) goto parse_team1;
-        break;
-      }
-      
-      // optional bool team1 = 7 [default = false];
-      case 7: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_team1:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &team1_)));
-          set_has_team1();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(64)) goto parse_team2;
-        break;
-      }
-      
-      // optional bool team2 = 8 [default = false];
-      case 8: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_team2:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &team2_)));
-          set_has_team2();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(72)) goto parse_team3;
-        break;
-      }
-      
-      // optional bool team3 = 9 [default = false];
-      case 9: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_team3:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &team3_)));
-          set_has_team3();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(80)) goto parse_team4;
-        break;
-      }
-      
-      // optional bool team4 = 10 [default = false];
-      case 10: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_team4:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &team4_)));
-          set_has_team4();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(88)) goto parse_inwater;
-        break;
-      }
-      
-      // optional bool inwater = 11 [default = false];
-      case 11: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_inwater:
@@ -1561,12 +2259,12 @@ bool SectorData::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(96)) goto parse_onmover;
+        if (input->ExpectTag(48)) goto parse_onmover;
         break;
       }
       
-      // optional bool onmover = 12 [default = false];
-      case 12: {
+      // optional bool onmover = 6 [default = false];
+      case 6: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_onmover:
@@ -1577,12 +2275,12 @@ bool SectorData::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(104)) goto parse_hazard;
+        if (input->ExpectTag(56)) goto parse_hazard;
         break;
       }
       
-      // optional bool hazard = 13 [default = false];
-      case 13: {
+      // optional bool hazard = 7 [default = false];
+      case 7: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_hazard:
@@ -1593,12 +2291,12 @@ bool SectorData::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(112)) goto parse_ladder;
+        if (input->ExpectTag(64)) goto parse_ladder;
         break;
       }
       
-      // optional bool ladder = 14 [default = false];
-      case 14: {
+      // optional bool ladder = 8 [default = false];
+      case 8: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_ladder:
@@ -1606,6 +2304,38 @@ bool SectorData::MergePartialFromCodedStream(
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &ladder_)));
           set_has_ladder();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(72)) goto parse_crouch;
+        break;
+      }
+      
+      // optional bool crouch = 9 [default = false];
+      case 9: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_crouch:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &crouch_)));
+          set_has_crouch();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(80)) goto parse_ledge;
+        break;
+      }
+      
+      // optional bool ledge = 10 [default = false];
+      case 10: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_ledge:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &ledge_)));
+          set_has_ledge();
         } else {
           goto handle_uninterpreted;
         }
@@ -1681,89 +2411,55 @@ void SectorData::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->enabled(), output);
   }
   
-  // optional string location = 2;
+  // optional string scriptname = 2;
+  if (has_scriptname()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->scriptname().data(), this->scriptname().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->scriptname(), output);
+  }
+  
+  // optional .NavmeshIO.SectorTeam team = 3;
+  if (has_team()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3, this->team(), output);
+  }
+  
+  // optional .NavmeshIO.SectorLocation location = 4;
   if (has_location()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->location().data(), this->location().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->location(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      4, this->location(), output);
   }
   
-  // optional string locationteam1 = 3;
-  if (has_locationteam1()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->locationteam1().data(), this->locationteam1().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      3, this->locationteam1(), output);
-  }
-  
-  // optional string locationteam2 = 4;
-  if (has_locationteam2()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->locationteam2().data(), this->locationteam2().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      4, this->locationteam2(), output);
-  }
-  
-  // optional string locationteam3 = 5;
-  if (has_locationteam3()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->locationteam3().data(), this->locationteam3().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      5, this->locationteam3(), output);
-  }
-  
-  // optional string locationteam4 = 6;
-  if (has_locationteam4()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->locationteam4().data(), this->locationteam4().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      6, this->locationteam4(), output);
-  }
-  
-  // optional bool team1 = 7 [default = false];
-  if (has_team1()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(7, this->team1(), output);
-  }
-  
-  // optional bool team2 = 8 [default = false];
-  if (has_team2()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(8, this->team2(), output);
-  }
-  
-  // optional bool team3 = 9 [default = false];
-  if (has_team3()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(9, this->team3(), output);
-  }
-  
-  // optional bool team4 = 10 [default = false];
-  if (has_team4()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(10, this->team4(), output);
-  }
-  
-  // optional bool inwater = 11 [default = false];
+  // optional bool inwater = 5 [default = false];
   if (has_inwater()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(11, this->inwater(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(5, this->inwater(), output);
   }
   
-  // optional bool onmover = 12 [default = false];
+  // optional bool onmover = 6 [default = false];
   if (has_onmover()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(12, this->onmover(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(6, this->onmover(), output);
   }
   
-  // optional bool hazard = 13 [default = false];
+  // optional bool hazard = 7 [default = false];
   if (has_hazard()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(13, this->hazard(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(7, this->hazard(), output);
   }
   
-  // optional bool ladder = 14 [default = false];
+  // optional bool ladder = 8 [default = false];
   if (has_ladder()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(14, this->ladder(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(8, this->ladder(), output);
+  }
+  
+  // optional bool crouch = 9 [default = false];
+  if (has_crouch()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(9, this->crouch(), output);
+  }
+  
+  // optional bool ledge = 10 [default = false];
+  if (has_ledge()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(10, this->ledge(), output);
   }
   
   // optional float waterdepth = 200 [default = 0];
@@ -1796,94 +2492,58 @@ void SectorData::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->enabled(), target);
   }
   
-  // optional string location = 2;
+  // optional string scriptname = 2;
+  if (has_scriptname()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->scriptname().data(), this->scriptname().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->scriptname(), target);
+  }
+  
+  // optional .NavmeshIO.SectorTeam team = 3;
+  if (has_team()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        3, this->team(), target);
+  }
+  
+  // optional .NavmeshIO.SectorLocation location = 4;
   if (has_location()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->location().data(), this->location().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->location(), target);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        4, this->location(), target);
   }
   
-  // optional string locationteam1 = 3;
-  if (has_locationteam1()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->locationteam1().data(), this->locationteam1().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->locationteam1(), target);
-  }
-  
-  // optional string locationteam2 = 4;
-  if (has_locationteam2()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->locationteam2().data(), this->locationteam2().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        4, this->locationteam2(), target);
-  }
-  
-  // optional string locationteam3 = 5;
-  if (has_locationteam3()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->locationteam3().data(), this->locationteam3().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        5, this->locationteam3(), target);
-  }
-  
-  // optional string locationteam4 = 6;
-  if (has_locationteam4()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->locationteam4().data(), this->locationteam4().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        6, this->locationteam4(), target);
-  }
-  
-  // optional bool team1 = 7 [default = false];
-  if (has_team1()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(7, this->team1(), target);
-  }
-  
-  // optional bool team2 = 8 [default = false];
-  if (has_team2()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(8, this->team2(), target);
-  }
-  
-  // optional bool team3 = 9 [default = false];
-  if (has_team3()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(9, this->team3(), target);
-  }
-  
-  // optional bool team4 = 10 [default = false];
-  if (has_team4()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(10, this->team4(), target);
-  }
-  
-  // optional bool inwater = 11 [default = false];
+  // optional bool inwater = 5 [default = false];
   if (has_inwater()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(11, this->inwater(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(5, this->inwater(), target);
   }
   
-  // optional bool onmover = 12 [default = false];
+  // optional bool onmover = 6 [default = false];
   if (has_onmover()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(12, this->onmover(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(6, this->onmover(), target);
   }
   
-  // optional bool hazard = 13 [default = false];
+  // optional bool hazard = 7 [default = false];
   if (has_hazard()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(13, this->hazard(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(7, this->hazard(), target);
   }
   
-  // optional bool ladder = 14 [default = false];
+  // optional bool ladder = 8 [default = false];
   if (has_ladder()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(14, this->ladder(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(8, this->ladder(), target);
+  }
+  
+  // optional bool crouch = 9 [default = false];
+  if (has_crouch()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(9, this->crouch(), target);
+  }
+  
+  // optional bool ledge = 10 [default = false];
+  if (has_ledge()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(10, this->ledge(), target);
   }
   
   // optional float waterdepth = 200 [default = 0];
@@ -1921,80 +2581,56 @@ int SectorData::ByteSize() const {
       total_size += 1 + 1;
     }
     
-    // optional string location = 2;
-    if (has_location()) {
+    // optional string scriptname = 2;
+    if (has_scriptname()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->scriptname());
+    }
+    
+    // optional .NavmeshIO.SectorTeam team = 3;
+    if (has_team()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->team());
+    }
+    
+    // optional .NavmeshIO.SectorLocation location = 4;
+    if (has_location()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->location());
     }
     
-    // optional string locationteam1 = 3;
-    if (has_locationteam1()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->locationteam1());
-    }
-    
-    // optional string locationteam2 = 4;
-    if (has_locationteam2()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->locationteam2());
-    }
-    
-    // optional string locationteam3 = 5;
-    if (has_locationteam3()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->locationteam3());
-    }
-    
-    // optional string locationteam4 = 6;
-    if (has_locationteam4()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->locationteam4());
-    }
-    
-    // optional bool team1 = 7 [default = false];
-    if (has_team1()) {
+    // optional bool inwater = 5 [default = false];
+    if (has_inwater()) {
       total_size += 1 + 1;
     }
     
-    // optional bool team2 = 8 [default = false];
-    if (has_team2()) {
+    // optional bool onmover = 6 [default = false];
+    if (has_onmover()) {
+      total_size += 1 + 1;
+    }
+    
+    // optional bool hazard = 7 [default = false];
+    if (has_hazard()) {
+      total_size += 1 + 1;
+    }
+    
+    // optional bool ladder = 8 [default = false];
+    if (has_ladder()) {
       total_size += 1 + 1;
     }
     
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    // optional bool team3 = 9 [default = false];
-    if (has_team3()) {
+    // optional bool crouch = 9 [default = false];
+    if (has_crouch()) {
       total_size += 1 + 1;
     }
     
-    // optional bool team4 = 10 [default = false];
-    if (has_team4()) {
-      total_size += 1 + 1;
-    }
-    
-    // optional bool inwater = 11 [default = false];
-    if (has_inwater()) {
-      total_size += 1 + 1;
-    }
-    
-    // optional bool onmover = 12 [default = false];
-    if (has_onmover()) {
-      total_size += 1 + 1;
-    }
-    
-    // optional bool hazard = 13 [default = false];
-    if (has_hazard()) {
-      total_size += 1 + 1;
-    }
-    
-    // optional bool ladder = 14 [default = false];
-    if (has_ladder()) {
+    // optional bool ledge = 10 [default = false];
+    if (has_ledge()) {
       total_size += 1 + 1;
     }
     
@@ -2049,34 +2685,14 @@ void SectorData::MergeFrom(const SectorData& from) {
     if (from.has_enabled()) {
       set_enabled(from.enabled());
     }
+    if (from.has_scriptname()) {
+      set_scriptname(from.scriptname());
+    }
+    if (from.has_team()) {
+      mutable_team()->::NavmeshIO::SectorTeam::MergeFrom(from.team());
+    }
     if (from.has_location()) {
-      set_location(from.location());
-    }
-    if (from.has_locationteam1()) {
-      set_locationteam1(from.locationteam1());
-    }
-    if (from.has_locationteam2()) {
-      set_locationteam2(from.locationteam2());
-    }
-    if (from.has_locationteam3()) {
-      set_locationteam3(from.locationteam3());
-    }
-    if (from.has_locationteam4()) {
-      set_locationteam4(from.locationteam4());
-    }
-    if (from.has_team1()) {
-      set_team1(from.team1());
-    }
-    if (from.has_team2()) {
-      set_team2(from.team2());
-    }
-  }
-  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    if (from.has_team3()) {
-      set_team3(from.team3());
-    }
-    if (from.has_team4()) {
-      set_team4(from.team4());
+      mutable_location()->::NavmeshIO::SectorLocation::MergeFrom(from.location());
     }
     if (from.has_inwater()) {
       set_inwater(from.inwater());
@@ -2089,6 +2705,14 @@ void SectorData::MergeFrom(const SectorData& from) {
     }
     if (from.has_ladder()) {
       set_ladder(from.ladder());
+    }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (from.has_crouch()) {
+      set_crouch(from.crouch());
+    }
+    if (from.has_ledge()) {
+      set_ledge(from.ledge());
     }
     if (from.has_waterdepth()) {
       set_waterdepth(from.waterdepth());
@@ -2126,19 +2750,15 @@ bool SectorData::IsInitialized() const {
 void SectorData::Swap(SectorData* other) {
   if (other != this) {
     std::swap(enabled_, other->enabled_);
+    std::swap(scriptname_, other->scriptname_);
+    std::swap(team_, other->team_);
     std::swap(location_, other->location_);
-    std::swap(locationteam1_, other->locationteam1_);
-    std::swap(locationteam2_, other->locationteam2_);
-    std::swap(locationteam3_, other->locationteam3_);
-    std::swap(locationteam4_, other->locationteam4_);
-    std::swap(team1_, other->team1_);
-    std::swap(team2_, other->team2_);
-    std::swap(team3_, other->team3_);
-    std::swap(team4_, other->team4_);
     std::swap(inwater_, other->inwater_);
     std::swap(onmover_, other->onmover_);
     std::swap(hazard_, other->hazard_);
     std::swap(ladder_, other->ladder_);
+    std::swap(crouch_, other->crouch_);
+    std::swap(ledge_, other->ledge_);
     std::swap(waterdepth_, other->waterdepth_);
     std::swap(mover_, other->mover_);
     localoffsets_.Swap(&other->localoffsets_);
@@ -2172,6 +2792,9 @@ bool Sector_MirrorDir_IsValid(int value) {
     case 4:
     case 5:
     case 6:
+    case 7:
+    case 8:
+    case 9:
       return true;
     default:
       return false;
@@ -2186,6 +2809,9 @@ const Sector_MirrorDir Sector::MirrorY;
 const Sector_MirrorDir Sector::MirrorNY;
 const Sector_MirrorDir Sector::MirrorZ;
 const Sector_MirrorDir Sector::MirrorNZ;
+const Sector_MirrorDir Sector::ReflectX;
+const Sector_MirrorDir Sector::ReflectY;
+const Sector_MirrorDir Sector::ReflectZ;
 const Sector_MirrorDir Sector::MirrorDir_MIN;
 const Sector_MirrorDir Sector::MirrorDir_MAX;
 const int Sector::MirrorDir_ARRAYSIZE;

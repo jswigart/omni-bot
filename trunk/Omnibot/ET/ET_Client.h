@@ -19,7 +19,7 @@
 class ET_Client : public Client
 {
 public:
-	friend void gmBindETBotLibrary(gmMachine *_machine);
+	friend class ET_Game;
 
 	void Init(int _gameid);
 	void UpdateBotInput();

@@ -4653,6 +4653,34 @@ public:
 				}
 				break;
 			}
+		case GEN_MSG_GETGAMETYPE:
+			{
+				OB_GETMSG(Event_GameType);
+				if(pMsg)
+				{
+					pMsg->m_GameType = g_gametype.integer;
+				}
+				break;
+			}
+		case GEN_MSG_SETCVAR:
+			{
+				OB_GETMSG(Event_CvarSet);
+				if(pMsg)
+				{
+					trap_Cvar_Set(pMsg->m_Cvar, pMsg->m_Value);
+				}
+				break;
+			}
+		case GEN_MSG_GETCVAR:
+			{
+				OB_GETMSG(Event_CvarGet);
+				if(pMsg)
+				{
+					pMsg->m_Value =
+						trap_Cvar_VariableIntegerValue(pMsg->m_Cvar);
+				}
+				break;
+			}
 			//////////////////////////////////////////////////////////////////////////
 		case ET_MSG_GOTOLIMBO:
 			{
@@ -5277,34 +5305,6 @@ public:
 							}
 						}
 					}
-				}
-				break;
-			}
-		case ET_MSG_GETGAMETYPE:
-			{
-				OB_GETMSG(ET_GameType);
-				if(pMsg)
-				{
-					pMsg->m_GameType = g_gametype.integer;
-				}
-				break;
-			}
-		case ET_MSG_SETCVAR:
-			{
-				OB_GETMSG(ET_CvarSet);
-				if(pMsg)
-				{
-					trap_Cvar_Set(pMsg->m_Cvar, pMsg->m_Value);
-				}
-				break;
-			}
-		case ET_MSG_GETCVAR:
-			{
-				OB_GETMSG(ET_CvarGet);
-				if(pMsg)
-				{
-					pMsg->m_Value =
-						trap_Cvar_VariableIntegerValue(pMsg->m_Cvar);
 				}
 				break;
 			}

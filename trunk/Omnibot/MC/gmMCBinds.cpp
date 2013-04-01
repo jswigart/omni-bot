@@ -8,12 +8,12 @@
 
 #include "gmConfig.h"
 #include "gmBot.h"
-#include "gmMCBinds.h"
 #include "gmThread.h"
 #include "gmMachine.h"
 #include "gmGameEntity.h"
 #include "gmBotLibrary.h"
 
+#include "MC_Game.h"
 #include "MC_Client.h"
 #include "MC_InterfaceFuncs.h"
 
@@ -368,8 +368,10 @@ static bool getAuxPowerRegen( Client *a_native, gmThread *a_thread, gmVariable *
 	return true;
 }
 
-bool gmBindMCLibrary(gmMachine *_machine)
+void MC_Game::InitScriptBinds(gmMachine *_machine)
 {
+	LOG("Binding MC Library...");
+
 	// Register the bot functions.
 	_machine->RegisterLibrary(s_MCbotLib, sizeof(s_MCbotLib) / sizeof(s_MCbotLib[0]));
 	//////////////////////////////////////////////////////////////////////////
@@ -387,5 +389,15 @@ bool gmBindMCLibrary(gmMachine *_machine)
 	gmBot::registerProperty("AuxPowerMax",getAuxPowerMax,NULL);
 	gmBot::registerProperty("AuxRegenRate",getAuxPowerRegen,NULL);
 
-	return true;
+	{
+		gmTableObject *pModuleTable = _machine->AllocTableObject();
+		_machine->GetGlobals()->Set(_machine, "MODULE", gmVariable(pModuleTable));
+		InitScriptModules(_machine, pModuleTable);
+	}
+
+	{
+		gmTableObject *pUpgradeTable = _machine->AllocTableObject();
+		_machine->GetGlobals()->Set(_machine, "UPGRADE", gmVariable(pUpgradeTable));
+		InitScriptUpgrades(_machine, pUpgradeTable);
+	}
 }

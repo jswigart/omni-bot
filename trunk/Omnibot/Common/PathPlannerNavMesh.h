@@ -17,6 +17,7 @@
 #include "PathPlannerBase.h"
 #include "InternalFsm.h"
 #include "SpanHeightMap.h"
+#include "CollisionModel.h"
 
 #include "navmesh.pb.h"
 
@@ -74,29 +75,33 @@ public:
 class PathPlannerNavMesh : public PathPlannerBase, public InternalFSM<PathPlannerNavMesh,NumToolStates>
 {
 public:
+	struct RuntimeNavSector;
+
 	enum NavMeshFlags
 	{
 		NAVMESH_STEPPROCESS = NUM_BASE_NAVFLAGS,
 		NAVMESH_TAKESTEP,
+		NAVMESH_SHOWCOLLISION,
 	};
 
-	//////////////////////////////////////////////////////////////////////////
 	struct Obstacle
 	{
 		Vector3List		mPoly;
 		float			mCost; // -1 is blocked
 
-		Obstacle() : mCost( -1.0f ) {}
+		obuint32		mSerial;
+
+		Obstacle() : mCost( -1.0f ), mSerial( 0 ) {}
 	};
 	typedef std::vector<Obstacle> ObstacleList;
 
 	struct NavPortal
 	{
-		Segment3f		mSegment;
+		Segment3f			mSegment;
 
-		Vector3f		mLocalOffset;
+		Vector3f			mLocalOffset;
 
-		int				mDestSector;
+		RuntimeNavSector *  mDestSector;
 
 		enum PortalFlags
 		{
@@ -109,6 +114,7 @@ public:
 		NavPortal()
 		{
 			mLocalOffset = Vector3f::ZERO;
+			mDestSector = NULL;
 			mFlags.ClearAll();
 		}
 	};
@@ -116,7 +122,6 @@ public:
 	typedef std::vector<NavPortal> NavPortalList;
 
 	/////////////////////////////////////////////////////////
-
 	struct NavSectorBase
 	{
 		Vector3List						mPoly;
@@ -140,13 +145,20 @@ public:
 		NavSector();
 	};
 
+	typedef std::vector<NavSector> NavSectorList;
+	typedef std::vector<RuntimeNavSector> RuntimeSectorList;
+	typedef std::vector<RuntimeNavSector*> RuntimeSectorRefs;
+
 	struct RuntimeNavSector : public NavSectorBase
 	{
 		obuint32					mIndex;
+		obuint32					mParentIndex;
 
 		Vector3List					mLocalPoly;
 
 		NavSector *					mSector;
+
+		float						mCost;
 
 		// reference to the global sector data for this sector
 		NavmeshIO::SectorData *		mSectorData;
@@ -157,19 +169,30 @@ public:
 		// current obstacles influencing this sector
 		ObstacleList				mObstacles;
 
-		bool						mUpdatePortals;
+		RuntimeSectorList			mSubSectors;
 
-		bool IsMirroredSector() const;
+		bool						mMirrored;
+		bool						mUpdatePortals;
+		bool						mUpdateObstacles;
+
+		bool						IsMirroredSector() const;
 
 		void UpdateAutoFlags();
 
-		void BuildSectorPortals( PathPlannerNavMesh * navmesh );
+		// build portals for this sector
+		void RebuildPortals( PathPlannerNavMesh * navmesh );
 
+		// rebuild subsectors due to change in obstacles
+		void RebuildObstacles( PathPlannerNavMesh * navmesh );
+
+		void RenderPortals( const PathPlannerNavMesh * navmesh ) const;
+
+		// movable sectors
 		bool InitSectorTransform();
-
 		void UpdateSectorTransform();
 
 		RuntimeNavSector( obuint32 index, NavSector * sector, NavmeshIO::SectorData * data );
+		~RuntimeNavSector();
 	private:
 		RuntimeNavSector(); // not allowed
 	};
@@ -218,7 +241,6 @@ public:
 	PathPlannerNavMesh();
 	virtual ~PathPlannerNavMesh();
 protected:
-
 	void InitCommands();
 	void cmdNavSave(const StringVector &_args);
 	void cmdNavLoad(const StringVector &_args);
@@ -231,15 +253,12 @@ protected:
 	void cmdAutoBuildFeatures(const StringVector &_args);
 	void cmdStartPoly(const StringVector &_args);
 	void cmdUndoPoly(const StringVector &_args);
-	/*void cmdLoadObj(const StringVector &_args);
-	void cmdLoadMap(const StringVector &_args);*/
 	void cmdCreatePlanePoly(const StringVector &_args);
 	void cmdCreateSlicePoly(const StringVector &_args);
 	void cmdCreateSliceSector(const StringVector &_args);
 	void cmdCommitPoly(const StringVector &_args);
 	void cmdDeleteSector(const StringVector &_args);
 	void cmdMirrorSectors(const StringVector &_args);
-	void cmdSectorSetProperty(const StringVector &_args);
 	void cmdEditSector(const StringVector &_args);
 	void cmdDupeSector(const StringVector &_args);
 	void cmdSplitSector(const StringVector &_args);
@@ -260,8 +279,6 @@ protected:
 	void cmdInfluenceMapLoad(const StringVector &_args);
 	void cmdInfluenceMapFlood(const StringVector &_args);
 
-	void ConnectTest();
-
 	NavSector * GetSectorAtCursor();
 
 	//////////////////////////////////////////////////////////////////////////
@@ -271,60 +288,45 @@ protected:
 	friend class ToolPortalCreate;
 protected:
 	//////////////////////////////////////////////////////////////////////////
-	struct AttribFields
-	{
-		obuint32		Mirrored : 1;
-		obuint32		ActiveId : 12;
-		obuint32		SectorId : 12;
-		obuint32		UnUsed : 7;
-	};
-	union PolyAttrib
-	{
-		obuint32		Attrib;
-		AttribFields	Fields;
-
-		PolyAttrib() : Attrib( 0 ) {}
-	};
-	//////////////////////////////////////////////////////////////////////////
 	class NavCollision
 	{
 	public:
-		bool DidHit() const { return m_HitSomething; }
-		const PolyAttrib HitAttrib() const { return m_HitAttrib; }
-		const Vector3f &HitPosition() const { return m_HitPosition; }
-		const Vector3f &HitNormal() const { return m_HitNormal; }
+		bool DidHit() const { return mHitSector != NULL; }
+		RuntimeNavSector * HitSector() { return mHitSector; }
+		const Vector3f & HitPosition() const { return mHitPosition; }
+		const Vector3f & HitNormal() const { return mHitNormal; }
 
-		NavCollision(bool _hit, const Vector3f &_pos = Vector3f::ZERO, const Vector3f &_normal = Vector3f::ZERO, PolyAttrib _attrib = PolyAttrib() )
-			: m_HitPosition(_pos)
-			, m_HitNormal(_normal)
-			, m_HitSomething(_hit)
-			, m_HitAttrib( _attrib )
+		NavCollision( const Vector3f & pos = Vector3f::ZERO, const Vector3f &normal = Vector3f::ZERO, RuntimeNavSector * hitSector = NULL )
+			: mHitPosition( pos )
+			, mHitNormal( normal )
+			, mHitSector( hitSector )
 		{
 		}
 	private:
-		Vector3f	m_HitPosition;
-		Vector3f	m_HitNormal;
-		obuint32	m_ActiveSectorId;
-		PolyAttrib	m_HitAttrib;
-		bool		m_HitSomething : 1;
-
-		NavCollision();
+		RuntimeNavSector *	mHitSector;
+		Vector3f			mHitPosition;
+		Vector3f			mHitNormal;
+		obuint32			mActiveSectorId;
 	};
 
 	NavCollision FindCollision(const Vector3f &_from, const Vector3f &_to);
-	int FindRuntimeSectors( const AABB & aabb, std::vector<RuntimeNavSector*> & sectorsOut );
-	int FindRuntimeSectors( const Box3f & obb, std::vector<RuntimeNavSector*> & sectorsOut );
+	int FindRuntimeSectors( const AABB & aabb,
+		RuntimeSectorRefs & sectorsOut,
+		const bool staticOnly );
+	int FindRuntimeSectors( const Box3f & obb,
+		RuntimeSectorRefs & sectorsOut,
+		const bool staticOnly );
 
 	//////////////////////////////////////////////////////////////////////////
-	Vector3f			m_MapCenter;
+	Vector3f				m_MapCenter;
 
-	typedef std::vector<NavSector> NavSectorList;
-	typedef std::vector<RuntimeNavSector> RuntimeSectorList;
-	typedef std::vector<RuntimeNavSector*> RuntimeSectorRefList;
+	typedef std::vector<CollisionModel*> SectorCollisionList;
 
 	NavSectorList			mNavSectors;
 	RuntimeSectorList		mRuntimeSectors;
+	SectorCollisionList		mRuntimeSectorCollision;
 	ObstacleList			mPendingObstacles;
+	ObstacleList			mObstacles;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Tool state machine
@@ -363,32 +365,24 @@ protected:
 	SpanMap *				m_SpanMap;
 	SpanMap::InfluenceMap *	m_Influence;
 	VectorQueue				m_SpanFrontier;
-	struct CollisionData
-	{
-		CollisionData()
-			: m_CollisionTree( NULL )
-			, m_MeshInterface( NULL )
-			, m_Verts( NULL )
-			, m_TriSectorMap( NULL )
-		{
-		}
-		~CollisionData()
-		{
-			Free();
-		}
-		void Free();
 
-		Opcode::Model *				m_CollisionTree;
-		Opcode::MeshInterface *		m_MeshInterface;
-		IceMaths::Point *			m_Verts;
-		PolyAttrib *				m_TriSectorMap;
-	}	m_CollisionData;
+	CollisionModel			mSectorCollision;
 
-	obuint32	mInfluenceBufferId;
+	obuint32				mInfluenceBufferId;
 
 	void InitSectors();
 
 	Vector3f _SectorVertWithin(const Vector3f &_pos1, const Vector3f &_pos2, float _range, bool *_snapped = NULL);
+
+	void SectorsFromAttribs( RuntimeSectorRefs & sectorsOut,
+		const AABB & aabb,
+		const CollisionModel::AttribSet & attribs,
+		const bool staticOnly );
+
+	void SectorsFromAttribs( RuntimeSectorRefs & sectorsOut,
+		const Box3f & obb,
+		const CollisionModel::AttribSet & attribs,
+		const bool staticOnly );
 
 	//////////////////////////////////////////////////////////////////////////
 	// Internal Implementations of base class functionality
@@ -397,7 +391,7 @@ protected:
 	virtual void _BenchmarkGetNavPoint(const StringVector &_args);
 
 	void UpdateMoverSectors();
-	void UpdatePortals();
+	void UpdateRuntimeSectors();
 	void UpdateObstacles();
 };
 
