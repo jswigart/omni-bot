@@ -512,6 +512,11 @@ typedef enum eTF_Events
 	// Internal Events
 	TF_MSG_CIVILIAN_END,
 
+	// Implement in specific sub-game interface funcs
+	TF_MSG_GETGAMEMODE, // ETF: gameindex, others: ?
+	TF_MSG_SETCVAR, // cvars for q3 based, convars for hl2 based
+	TF_MSG_GETCVAR, // cvars for q3 based, convars for hl2 based
+
 	// THIS MUST STAY LAST
 	TF_MSG_END_EVENTS
 } TF_Events;

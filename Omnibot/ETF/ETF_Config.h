@@ -75,6 +75,6 @@ typedef enum eETF_Powerups
 	ETF_PWR_FLIGHT,
 	ETF_PWR_INVULN,
 	ETF_PWR_AQUALUNG,
-} OF_Powerups;
+} ETF_Powerups;
 
 #endif

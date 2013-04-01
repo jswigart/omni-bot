@@ -19,7 +19,7 @@ class gmTableObject;
 #include "TF_Game.h"
 
 // class: ETF_Game
-//		Game Type for Open Fortress.
+//		Game Type for Enemy Territory Fortress.
 class ETF_Game : public TF_Game
 {
 public:
@@ -37,8 +37,14 @@ public:
 	const char *GetScriptSubfolder() const;
 	const char *GetGameDatabaseAbbrev() const { return "etf"; }
 	virtual eNavigatorID GetDefaultNavigator() const { return NAVID_NAVMESH; }
+	bool ReadyForDebugWindow() const { return true; }
+	virtual const char *IsDebugDrawSupported() const;
 
 	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
+
+	NavFlags WaypointBlockableFlags() const;
+	NavFlags WaypointCallbackFlags() const;
+	BlockableStatus WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw) const;
 
 	ETF_Game() { }
 	virtual ~ETF_Game() {}
@@ -49,9 +55,11 @@ protected:
 	// Script support.
 	void InitScriptBinds(gmMachine *_machine);
 	void InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table);
+	void InitScriptPowerups(gmMachine *_machine, gmTableObject *_table);
 
 	static const float ETF_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags);
 	static const float ETF_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags);
+	static const void ETF_GetEntityVisDistance(float &_distance, const TargetInfo &_target, const Client *_client);
 };
 
 #endif
