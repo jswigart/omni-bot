@@ -3742,9 +3742,6 @@ void Field_CompleteCommand( field_t *field ) {
 	Cmd_TokenizeString( completionField->buffer );
 
 	completionString = Cmd_Argv( 0 );
-	if ( completionString[0] == '\\' || completionString[0] == '/' ) {
-		completionString++;
-	}
 	matchCount = 0;
 	shortestMatch[0] = 0;
 
@@ -3762,7 +3759,7 @@ void Field_CompleteCommand( field_t *field ) {
 	Com_Memcpy( &temp, completionField, sizeof( field_t ) );
 
 	if ( matchCount == 1 ) {
-		Com_sprintf( completionField->buffer, sizeof( completionField->buffer ), "\\%s", shortestMatch );
+		Com_sprintf( completionField->buffer, sizeof( completionField->buffer ), "%s", shortestMatch );
 		if ( Cmd_Argc() == 1 ) {
 			Q_strcat( completionField->buffer, sizeof( completionField->buffer ), " " );
 		} else {
@@ -3773,7 +3770,7 @@ void Field_CompleteCommand( field_t *field ) {
 	}
 
 	// multiple matches, complete to shortest
-	Com_sprintf( completionField->buffer, sizeof( completionField->buffer ), "\\%s", shortestMatch );
+	Com_sprintf( completionField->buffer, sizeof( completionField->buffer ), "%s", shortestMatch );
 	completionField->cursor = strlen( completionField->buffer );
 	ConcatRemaining( temp.buffer, completionString );
 

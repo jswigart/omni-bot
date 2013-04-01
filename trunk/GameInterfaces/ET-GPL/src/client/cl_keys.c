@@ -1089,11 +1089,6 @@ static void CompleteCommand( void ) {
 		Cmd_TokenizeString( edit->buffer );
 
 		Q_strncpyz( completionString, Cmd_Argv( 0 ), sizeof( completionString ) );
-		if ( completionString[0] == '\\' || completionString[0] == '/' ) {
-			// rain - in strcpy, src and dest cannot overlap
-			//Q_strncpyz( completionString, completionString+1, sizeof(completionString) );
-			memmove( completionString, completionString + 1, sizeof( completionString ) - 1 );
-		}
 
 		matchCount = 0;
 		matchIndex = 0;
@@ -1113,7 +1108,7 @@ static void CompleteCommand( void ) {
 		Com_Memcpy( &temp, edit, sizeof( field_t ) );
 
 		if ( matchCount == 1 ) {
-			Com_sprintf( edit->buffer, sizeof( edit->buffer ), "\\%s", currentMatch );
+			Com_sprintf( edit->buffer, sizeof( edit->buffer ), "%s", currentMatch );
 			if ( Cmd_Argc() == 1 ) {
 				Q_strcat( g_consoleField.buffer, sizeof( g_consoleField.buffer ), " " );
 			} else {
@@ -1124,7 +1119,7 @@ static void CompleteCommand( void ) {
 		}
 
 		// multiple matches, complete to shortest
-		Com_sprintf( edit->buffer, sizeof( edit->buffer ), "\\%s", currentMatch );
+		Com_sprintf( edit->buffer, sizeof( edit->buffer ), "%s", currentMatch );
 		con.acLength = edit->cursor = strlen( edit->buffer );
 		ConcatRemaining( temp.buffer, completionString );
 
@@ -1151,7 +1146,7 @@ static void CompleteCommand( void ) {
 			Com_Memcpy( &temp, edit, sizeof( field_t ) );
 
 			// and print it
-			Com_sprintf( edit->buffer, sizeof( edit->buffer ), "\\%s", currentMatch );
+			Com_sprintf( edit->buffer, sizeof( edit->buffer ), "%s", currentMatch );
 			edit->cursor = strlen( edit->buffer );
 			ConcatRemaining( temp.buffer, lastMatch );
 		}
@@ -1177,31 +1172,13 @@ void Console_Key( int key ) {
 	if ( key == K_ENTER || key == K_KP_ENTER ) {
 		con.acLength = 0;
 
-		// if not in the game explicitly prepent a slash if needed
-		if ( cls.state != CA_ACTIVE && g_consoleField.buffer[0] != '\\'
-			 && g_consoleField.buffer[0] != '/' ) {
-			char temp[MAX_STRING_CHARS];
-
-			Q_strncpyz( temp, g_consoleField.buffer, sizeof( temp ) );
-			Com_sprintf( g_consoleField.buffer, sizeof( g_consoleField.buffer ), "\\%s", temp );
-			g_consoleField.cursor++;
-		}
-
 		Com_Printf( "]%s\n", g_consoleField.buffer );
 
-		// leading slash is an explicit command
-		if ( g_consoleField.buffer[0] == '\\' || g_consoleField.buffer[0] == '/' ) {
-			Cbuf_AddText( g_consoleField.buffer + 1 );    // valid command
-			Cbuf_AddText( "\n" );
-		} else {
-			// other text will be chat messages
-			if ( !g_consoleField.buffer[0] ) {
-				return; // empty lines just scroll the console without adding to history
-			} else {
-				Cbuf_AddText( "cmd say " );
-				Cbuf_AddText( g_consoleField.buffer );
-				Cbuf_AddText( "\n" );
-			}
+		Cbuf_AddText( g_consoleField.buffer );    // valid command
+		Cbuf_AddText( "\n" );
+
+		if ( !g_consoleField.buffer[0] ) {
+			return; // empty lines just scroll the console without adding to history
 		}
 
 		// copy line to history buffer

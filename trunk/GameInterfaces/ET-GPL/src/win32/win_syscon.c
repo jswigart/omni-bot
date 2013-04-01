@@ -405,9 +405,6 @@ static void Win_CompleteCommand( qboolean showMatches ) {
 		Cmd_TokenizeString( edit->buffer );
 
 		Q_strncpyz( win_completionString, Cmd_Argv( 0 ), sizeof( win_completionString ) );
-		if ( win_completionString[0] == '\\' || win_completionString[0] == '/' ) {
-			Q_strncpyz( win_completionString, win_completionString + 1, sizeof( win_completionString ) );
-		}
 
 		win_matchCount = 0;
 		win_matchIndex = 0;
