@@ -109,12 +109,6 @@
     <Filter Include="RemoteDebug">
       <UniqueIdentifier>{13065e1d-94ef-4870-80e5-0200fd2708ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Protocol Buffer Files">
-      <UniqueIdentifier>{c22826b0-61fd-4c2f-9704-66ba6383ee85}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Protocol Buffer Files\autogen">
-      <UniqueIdentifier>{497f8beb-9507-44e4-b556-2e0e9db03483}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\RemoteDebugger">
       <UniqueIdentifier>{059725f0-d21f-4d4c-8058-8469057dfc06}</UniqueIdentifier>
     </Filter>
@@ -609,15 +603,6 @@
     <ClCompile Include="..\..\..\Common\Module.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\navmesh.pb.cc">
-      <Filter>Protocol Buffer Files\autogen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\floodfill.pb.cc">
-      <Filter>Protocol Buffer Files\autogen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Common\influencemap.pb.cc">
-      <Filter>Protocol Buffer Files\autogen</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\TaskManager.cpp">
       <Filter>Core\Concurrency</Filter>
     </ClCompile>
@@ -977,9 +962,6 @@
     <ClInclude Include="..\..\..\dependencies\Recast\DebugUtils\Include\RecastDump.h">
       <Filter>3rdParty\Recast\DebugUtils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Common\Bezier.h">
-      <Filter>Miscellaneous</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Common\CallbackParameters.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
@@ -1121,26 +1103,17 @@
     <ClInclude Include="..\..\..\Common\Module.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Common\navmesh.pb.h">
-      <Filter>Protocol Buffer Files\autogen</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Common\ConcurrentQueue.h">
       <Filter>Core\Concurrency</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\SpanHeightMap.h">
       <Filter>Core\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Common\floodfill.pb.h">
-      <Filter>Protocol Buffer Files\autogen</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Common\platformspecifics.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\PathPlannerWaypointInterface.h">
       <Filter>Core\Navigation\PathPlannerWaypoint</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\influencemap.pb.h">
-      <Filter>Protocol Buffer Files\autogen</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\TaskManager.h">
       <Filter>Core\Concurrency</Filter>
@@ -1160,16 +1133,5 @@
     <ResourceCompile Include="Common.rc">
       <Filter>Dll</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\..\..\Common\navmesh.proto">
-      <Filter>Protocol Buffer Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\..\Common\floodfill.proto">
-      <Filter>Protocol Buffer Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\..\Common\influencemap.proto">
-      <Filter>Protocol Buffer Files</Filter>
-    </CustomBuild>
   </ItemGroup>
 </Project>
