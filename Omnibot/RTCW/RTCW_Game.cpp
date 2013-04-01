@@ -13,7 +13,6 @@
 #include "RTCW_VoiceMacros.h"
 #include "RTCW_InterfaceFuncs.h"
 
-#include "gmRTCWBinds.h"
 #include "gmCall.h"
 
 #include "Waypoint.h"
@@ -118,12 +117,6 @@ bool RTCW_Game::Init( System & system )
 void RTCW_Game::GetGameVars(GameVars &_gamevars)
 {
 	_gamevars.mPlayerHeight = 64.f;
-}
-
-void RTCW_Game::InitScriptBinds(gmMachine *_machine)
-{
-	// Register bot extension functions.
-	gmBindRTCWBotLibrary(_machine);
 }
 
 static IntEnum RTCW_TeamEnum[] =

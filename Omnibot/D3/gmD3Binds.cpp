@@ -11,7 +11,7 @@
 #include "gmMachine.h"
 #include "gmBot.h"
 
-#include "gmD3Binds.h"
+#include "D3_Game.h"
 #include "D3_Client.h"
 #include "D3_Config.h"
 #include "D3_InterfaceFuncs.h"
@@ -59,9 +59,8 @@ static gmFunctionEntry s_ExtendedBotLib[] =
 	{"GetLocation",			gmfGetLocation},
 };
 
-bool gmBindD3BotLibrary(gmMachine *_machine)
+void D3_Game::InitScriptBinds(gmMachine *_machine)
 {
-	// Register the bot functions.
+	// Register bot extension functions.
 	_machine->RegisterLibrary(s_ExtendedBotLib, sizeof(s_ExtendedBotLib) / sizeof(s_ExtendedBotLib[0]));
-	return true;
 }

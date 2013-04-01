@@ -119,6 +119,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\Client.cpp" />
+    <ClCompile Include="..\..\..\Common\CollisionModel.cpp" />
     <ClCompile Include="..\..\..\Common\DebugConnection.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -650,6 +651,7 @@
     <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\systemLib.h" />
     <ClInclude Include="..\..\..\Common\Client.h" />
     <ClInclude Include="..\..\..\Common\CodeAnalysis.h" />
+    <ClInclude Include="..\..\..\Common\CollisionModel.h" />
     <ClInclude Include="..\..\..\Common\ConcurrentQueue.h" />
     <ClInclude Include="..\..\..\Common\DebugConnection.h" />
     <ClInclude Include="..\..\..\Common\FiberManager.h" />

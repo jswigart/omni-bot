@@ -49,9 +49,6 @@
     <ClInclude Include="..\..\..\D3\D3_Messages.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\D3\gmD3Binds.h">
-      <Filter>Core\Scripting</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\D3\Jamfile" />

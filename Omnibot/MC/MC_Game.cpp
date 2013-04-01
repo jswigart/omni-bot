@@ -9,8 +9,6 @@
 #include "MC_Game.h"
 #include "MC_Client.h"
 
-#include "gmMCBinds.h"
-
 #include "System.h"
 #include "NavigationFlags.h"
 #include "PathPlannerBase.h"
@@ -85,24 +83,6 @@ bool MC_Game::Init( System & system )
 	system.mScript->ExecuteFile("scripts/mc_autoexec.gm", threadId);
 
 	return true;
-}
-
-void MC_Game::InitScriptBinds(gmMachine *_machine)
-{
-	LOG("Binding MC Library...");
-	gmBindMCLibrary(_machine);
-
-	{
-		gmTableObject *pModuleTable = _machine->AllocTableObject();
-		_machine->GetGlobals()->Set(_machine, "MODULE", gmVariable(pModuleTable));
-		InitScriptModules(_machine, pModuleTable);
-	}
-
-	{
-		gmTableObject *pUpgradeTable = _machine->AllocTableObject();
-		_machine->GetGlobals()->Set(_machine, "UPGRADE", gmVariable(pUpgradeTable));
-		InitScriptUpgrades(_machine, pUpgradeTable);
-	}
 }
 
 void MC_Game::GetGameVars(GameVars &_gamevars)

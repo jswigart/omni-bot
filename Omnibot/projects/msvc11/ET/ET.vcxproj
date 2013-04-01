@@ -154,7 +154,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
     <ClInclude Include="..\..\..\ET\ET_NavigationFlags.h" />
     <ClInclude Include="..\..\..\ET\ET_VoiceMacros.h" />
     <ClInclude Include="..\Common\resource.h" />
-    <ClInclude Include="..\..\..\ET\gmETBinds.h" />
     <ClInclude Include="..\..\..\ET\ET_BaseStates.h" />
     <ClInclude Include="..\..\..\ET\ET_GoalManager.h" />
     <ClInclude Include="..\..\..\ET\ET_FilterClosest.h" />

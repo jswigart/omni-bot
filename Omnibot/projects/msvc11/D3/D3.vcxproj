@@ -128,7 +128,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ClInclude Include="..\..\..\D3\D3_Game.h" />
     <ClInclude Include="..\..\..\D3\D3_InterfaceFuncs.h" />
     <ClInclude Include="..\..\..\D3\D3_Messages.h" />
-    <ClInclude Include="..\..\..\D3\gmD3Binds.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\D3\Jamfile" />

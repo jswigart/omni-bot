@@ -17,7 +17,6 @@
 #include "PathPlannerBase.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
-#include "gmETQWBinds.h"
 
 #include "BotSensoryMemory.h"
 #include "FilterSensory.h"
@@ -107,12 +106,6 @@ bool ETQW_Game::Init( System & system )
 void ETQW_Game::GetGameVars(GameVars &_gamevars)
 {
 	_gamevars.mPlayerHeight = 64.f;
-}
-
-void ETQW_Game::InitScriptBinds(gmMachine *_machine)
-{
-	// Register bot extension functions.
-	gmBindETQWBotLibrary(_machine);
 }
 
 static IntEnum ETQW_TeamEnum[] =

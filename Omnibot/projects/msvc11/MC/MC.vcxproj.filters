@@ -52,8 +52,5 @@
     <ClInclude Include="..\..\..\MC\MC_Messages.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\MC\gmMCBinds.h">
-      <Filter>Core\Scripting</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

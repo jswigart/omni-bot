@@ -6,7 +6,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "gmETQWBinds.h"
+#include "ETQW_Game.h"
 #include "ETQW_InterfaceFuncs.h"
 #include "ETQW_Client.h"
 
@@ -148,7 +148,7 @@ static gmFunctionEntry s_ExtendedBotTypeLib[] =
 	{"ChangeSpawnPoint",		gmfChangeSpawnPoint},
 };
 
-void gmBindETQWBotLibrary(gmMachine *_machine)
+void ETQW_Game::InitScriptBinds(gmMachine *_machine)
 {
 	// Register the bot functions.
 	//_machine->RegisterLibrary(s_ExntendedBotLib, sizeof(s_ExntendedBotLib) / sizeof(s_ExntendedBotLib[0]));

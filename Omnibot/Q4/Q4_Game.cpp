@@ -13,8 +13,6 @@
 
 #include "System.h"
 
-#include "gmQ4Binds.h"
-
 #include "PathPlannerBase.h"
 #include "FilterSensory.h"
 #include "ScriptManager.h"
@@ -121,12 +119,6 @@ void Q4_Game::StartGame()
 void Q4_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 {
 	IGame::AddBot(_addbot, false);
-}
-
-void Q4_Game::InitScriptBinds(gmMachine *_machine)
-{
-	// Register bot extension functions.
-	gmBindQ4BotLibrary(_machine);
 }
 
 static IntEnum Q4_TeamEnum[] =

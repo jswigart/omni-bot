@@ -21,7 +21,6 @@
 #include "BotBaseStates.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
-#include "gmETBinds.h"
 
 int ET_Game::CLASSEXoffset;
 bool ET_Game::IsETBlight, ET_Game::IsBastardmod;
@@ -141,12 +140,6 @@ bool ET_Game::Init( System & system )
 void ET_Game::GetGameVars(GameVars &_gamevars)
 {
 	_gamevars.mPlayerHeight = 64.f;
-}
-
-void ET_Game::InitScriptBinds(gmMachine *_machine)
-{
-	// Register bot extension functions.
-	gmBindETBotLibrary(_machine);
 }
 
 static IntEnum ET_TeamEnum[] =

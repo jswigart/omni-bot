@@ -11,8 +11,6 @@
 
 #include "ScriptManager.h"
 
-#include "gmD3Binds.h"
-
 #include "System.h"
 #include "PathPlannerBase.h"
 #include "FilterSensory.h"
@@ -103,12 +101,6 @@ void D3_Game::StartGame()
 	{
 		InitMapScript();
 	}
-}
-
-void D3_Game::InitScriptBinds(gmMachine *_machine)
-{
-	// Register bot extension functions.
-	gmBindD3BotLibrary(_machine);
 }
 
 static IntEnum D3_TeamEnum[] =

@@ -48,9 +48,6 @@ namespace InterfaceFuncs
 	bool FireTeamPropose(Client *_bot, GameEntity _target);
 	bool FireTeamGetInfo(Client *_bot, ET_FireTeamInfo&data);
 
-	bool SetCvar(char *_cvar, char *_value);
-	int GetCvar(char *_cvar);
-	int GetGameType();
 	void DisableBotPush(Client *_bot, int _push);
 };
 

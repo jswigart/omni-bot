@@ -70,6 +70,11 @@ namespace InterfaceFuncs
 		MessageHelper msg(GEN_MSG_SETLOADOUT, &_info, sizeof(T));
 		return SUCCESS(InterfaceMsg(msg,_ent));
 	}
+
+	int GetGameType();
+
+	bool SetCvar(const char *_cvar, const char *_value);
+	int GetCvar(const char *_cvar);
 };
 
 #endif

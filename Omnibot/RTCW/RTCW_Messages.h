@@ -136,11 +136,6 @@ struct RTCW_SendPM
 	char *		m_Message;
 };
 
-struct RTCW_GameType
-{
-	int			m_GameType;
-};
-
 struct RTCW_CvarSet
 {
 	char *		m_Cvar;

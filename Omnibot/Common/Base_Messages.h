@@ -567,6 +567,23 @@ struct Event_EntLeaveRadius
 	GameEntity	m_Entity;
 };
 
+struct Event_GameType
+{
+	int			m_GameType;
+};
+
+struct Event_CvarSet
+{
+	const char *		m_Cvar;
+	const char *		m_Value;
+};
+
+struct Event_CvarGet
+{
+	const char *		m_Cvar;
+	int					m_Value;
+};
+
 #pragma pack(pop)
 
 #endif

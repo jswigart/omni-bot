@@ -19,7 +19,7 @@
 class RTCW_Client : public Client
 {
 public:
-	friend void gmBindRTCWBotLibrary(gmMachine *_machine);
+	friend class RTCW_Game;
 
 	void Init(int _gameid);
 

@@ -99,6 +99,7 @@
     <ClCompile Include="..\..\..\TeamFortressLib\FilterClosestTF.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\TeamFortressLib\gmTFBinds.h" />
     <ClInclude Include="..\..\..\TeamFortressLib\TF_BaseStates.h" />
     <ClInclude Include="..\..\..\TeamFortressLib\TF_Client.h" />
     <ClInclude Include="..\..\..\TeamFortressLib\TF_Config.h" />
@@ -107,7 +108,6 @@
     <ClInclude Include="..\..\..\TeamFortressLib\TF_InterfaceFuncs.h" />
     <ClInclude Include="..\..\..\TeamFortressLib\TF_Messages.h" />
     <ClInclude Include="..\..\..\TeamFortressLib\TF_NavigationFlags.h" />
-    <ClInclude Include="..\..\..\TeamFortressLib\gmTFBinds.h" />
     <ClInclude Include="..\..\..\TeamFortressLib\FilterClosestTF.h" />
   </ItemGroup>
   <ItemGroup>

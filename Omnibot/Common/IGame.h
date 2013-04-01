@@ -215,7 +215,7 @@ protected:
 
 	// Script support.
 	void InitScriptSupport();
-	virtual void InitScriptBinds(gmMachine *_machine) {};
+	virtual void InitScriptBinds(gmMachine *_machine) {}
 	virtual void InitScriptTeams(gmMachine *_machine, gmTableObject *_table);
 	virtual void InitScriptWeapons(gmMachine *_machine, gmTableObject *_table);
 	virtual void InitScriptRoles(gmMachine *_machine, gmTableObject *_table);

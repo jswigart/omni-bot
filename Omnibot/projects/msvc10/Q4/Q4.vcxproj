@@ -131,7 +131,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ClInclude Include="..\..\..\Q4\Q4_InterfaceFuncs.h" />
     <ClInclude Include="..\..\..\Q4\Q4_Messages.h" />
     <ClInclude Include="..\..\..\Q4\Q4_NavigationFlags.h" />
-    <ClInclude Include="..\..\..\Q4\gmQ4Binds.h" />
     <ClInclude Include="..\..\..\Q4\Q4_BaseStates.h" />
     <ClInclude Include="..\..\..\Q4\Q4_GoalManager.h" />
   </ItemGroup>

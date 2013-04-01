@@ -35,24 +35,38 @@ message MoverEntity
 	required int32		id						= 1 [default = 0];
 }
 
+message SectorTeam
+{
+	optional bool			team1			= 1		[default = false, (doc)="Is this sector usable by team1"];
+	optional bool			team2			= 2		[default = false, (doc)="Is this sector usable by team2"];
+	optional bool			team3			= 3		[default = false, (doc)="Is this sector usable by team3"];
+	optional bool			team4			= 4		[default = false, (doc)="Is this sector usable by team4"];
+}
+
+message SectorLocation
+{
+	optional string			global			= 1		[(doc)="Global location string for communication"];
+	optional string			team1			= 2		[(doc)="Team1 location string for communication"];
+	optional string			team2			= 3		[(doc)="Team2 location string for communication"];
+	optional string			team3			= 4		[(doc)="Team3 location string for communication"];
+	optional string			team4			= 5		[(doc)="Team4 location string for communication"];
+}
+
 message SectorData
 {
 	optional bool			enabled			= 1		[default = true, (doc)="Is this sector enabled for use"];
-	optional string			location		= 2		[(doc)="Global location string for communication"];
-	optional string			locationteam1	= 3		[(doc)="Team1 location string for communication"];
-	optional string			locationteam2	= 4		[(doc)="Team2 location string for communication"];
-	optional string			locationteam3	= 5		[(doc)="Team3 location string for communication"];
-	optional string			locationteam4	= 6		[(doc)="Team4 location string for communication"];
-	optional bool			team1			= 7		[default = false, (doc)="Is this sector usable by team1"];
-	optional bool			team2			= 8		[default = false, (doc)="Is this sector usable by team2"];
-	optional bool			team3			= 9		[default = false, (doc)="Is this sector usable by team3"];
-	optional bool			team4			= 10	[default = false, (doc)="Is this sector usable by team4"];
-	optional bool			inwater			= 11	[default = false, (doc)="Is this sector in water"];
-	optional bool			onmover			= 12	[default = false, (doc)="Is this sector on a dynamic mover"];
-	optional bool			hazard			= 13	[default = false, (doc)="This area should be exited immediately"];
-	optional bool			ladder			= 14	[default = false, (doc)="This area represents a climbable ladder"];
+	optional string			scriptname		= 2		[(doc)="Name reference for scripting"];
+	optional SectorTeam		team			= 3		[(doc)="Team specific limitations"];
+	optional SectorLocation location		= 4		[(doc)="Location information for sector for communication"];
+	optional bool			inwater			= 5		[default = false, (doc)="Is this sector in water"];
+	optional bool			onmover			= 6		[default = false, (doc)="Is this sector on a dynamic mover"];
+	optional bool			hazard			= 7		[default = false, (doc)="This area should be exited immediately"];
+	optional bool			ladder			= 8		[default = false, (doc)="This area represents a climbable ladder"];
+	optional bool			crouch			= 9		[default = false, (doc)="This area represents a crouch area(Must crouch to traverse)"];
+	optional bool			ledge			= 10	[default = false, (doc)="This area represents a ledge area where underlying areas can be reached via jumping"];
 	
-	optional float			waterdepth		= 200	[default = 0.0, (settable)=false, (doc)="The surface to sector height"];
+		
+	optional float			waterdepth		= 200	[default = 0.0, (settable)=false, (doc)="The sector to water surface height"];
 	optional MoverEntity	mover			= 201	[(hidden)=true, (settable)=false];
 	repeated SectorVert		localoffsets	= 202	[(hidden)=true, (settable)=false];
 }
@@ -68,12 +82,15 @@ message Sector
 		MirrorNY		= 4;
 		MirrorZ			= 5;
 		MirrorNZ		= 6;
+		ReflectX		= 7;
+		ReflectY		= 8;
+		ReflectZ		= 9;
 	}
 
 	repeated SectorVert			vertices			= 1;
-	optional MirrorDir			sectorMirrored		= 2 [default=MirrorNone];
-	optional SectorData			sectorData			= 3; // data markup for this sector
-	optional SectorData			sectorDataMirrored	= 4; // data markup for the mirrored copy
+	optional MirrorDir			sectorMirrored		= 2		[default=MirrorNone];
+	optional SectorData			sectorData			= 3;	// data markup for this sector
+	optional SectorData			sectorDataMirrored	= 4;	// data markup for the mirrored copy
 }
 
 message NavigationMesh 

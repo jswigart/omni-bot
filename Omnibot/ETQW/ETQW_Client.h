@@ -19,7 +19,7 @@
 class ETQW_Client : public Client
 {
 public:
-	friend void gmBindETQWBotLibrary(gmMachine *_machine);
+	friend class ETQW_Game;
 
 	void Init(int _gameid);
 

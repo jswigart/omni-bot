@@ -217,6 +217,8 @@ namespace Utils
 
 	std::string FindOpenPlayerName();
 
+	std::string IndentString( const int indentlevel );
+
 	enum AssertMode
 	{
 		FireOnce,
@@ -238,6 +240,9 @@ namespace Utils
 	const Vector3f &_pt0,
 	const Vector3f &_pt1,
 	Vector3f *_linePt = NULL);*/
+
+	Vector3f CalculateCenter( const Vector3List & poly );
+	Plane3f CalculatePlane( const Vector3List & poly );
 
 	int intersect2D_Segments(const Segment3f &S1,const Segment3f &S2, Vector3f* I0 = 0, Vector3f* I1 = 0);
 };
