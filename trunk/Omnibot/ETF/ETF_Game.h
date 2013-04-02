@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// $LastChangedBy: jswigart $
-// $LastChangedDate: 2010-08-28 00:12:05 -0500 (Sat, 28 Aug 2010) $
-// $LastChangedRevision: 32 $
+// $LastChangedBy$
+// $LastChangedDate$
+// $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -53,7 +53,6 @@ protected:
 	void GetGameVars(GameVars &_gamevars);
 
 	// Script support.
-	void InitScriptBinds(gmMachine *_machine);
 	void InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table);
 	void InitScriptPowerups(gmMachine *_machine, gmTableObject *_table);
 

@@ -11,7 +11,6 @@
 #include "TF_BaseStates.h"
 
 #include "System.h"
-#include "gmTFBinds.h"
 
 #include "ScriptManager.h"
 
