@@ -8,7 +8,6 @@
 
 #include "gmConfig.h"
 #include "gmBot.h"
-#include "gmTFBinds.h"
 #include "gmThread.h"
 #include "gmMachine.h"
 #include "gmGameEntity.h"
