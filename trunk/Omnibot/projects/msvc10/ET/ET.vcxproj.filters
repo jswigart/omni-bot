@@ -27,9 +27,6 @@
     <ClCompile Include="..\..\..\ET\ET_Game.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\ET\ET_InterfaceFuncs.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\ET\ET_VoiceMacros.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -44,6 +41,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\ET\ET_FilterClosest.cpp">
       <Filter>Core\Filters</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ET\ET_InterfaceFuncs.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

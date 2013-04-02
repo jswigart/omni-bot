@@ -59,9 +59,6 @@
     <ClInclude Include="..\..\..\TeamFortressLib\TF_NavigationFlags.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\TeamFortressLib\gmTFBinds.h">
-      <Filter>Core\Scripting</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\TeamFortressLib\FilterClosestTF.h">
       <Filter>Core\Filters</Filter>
     </ClInclude>

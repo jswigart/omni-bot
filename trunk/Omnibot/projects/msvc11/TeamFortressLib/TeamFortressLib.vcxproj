@@ -99,7 +99,6 @@
     <ClCompile Include="..\..\..\TeamFortressLib\FilterClosestTF.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\TeamFortressLib\gmTFBinds.h" />
     <ClInclude Include="..\..\..\TeamFortressLib\TF_BaseStates.h" />
     <ClInclude Include="..\..\..\TeamFortressLib\TF_Client.h" />
     <ClInclude Include="..\..\..\TeamFortressLib\TF_Config.h" />

@@ -14,6 +14,7 @@
 #include "gmGameEntity.h"
 #include "gmBotLibrary.h"
 
+#include "TF_Game.h"
 #include "TF_Client.h"
 #include "TF_BaseStates.h"
 #include "TF_InterfaceFuncs.h"
@@ -511,11 +512,10 @@ static gmFunctionEntry s_TFbotTypeLib[] =
 	{"Cloak",			gmfCloak},
 };
 
-bool gmBindTFLibrary(gmMachine *_machine)
+void TF_Game::InitScriptBinds(gmMachine *_machine)
 {
 	// Register the bot functions.
 	_machine->RegisterLibrary(s_TFbotLib, sizeof(s_TFbotLib) / sizeof(s_TFbotLib[0]));
 	//////////////////////////////////////////////////////////////////////////
 	_machine->RegisterTypeLibrary(gmBot::GetType(), s_TFbotTypeLib, sizeof(s_TFbotTypeLib) / sizeof(s_TFbotTypeLib[0]));
-	return true;
 }
