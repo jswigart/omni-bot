@@ -4991,10 +4991,14 @@ sectors {
   }
   sectorMirrored: MirrorZ
   sectorData {
-    team1: true
+    team {
+      team1: true
+	}
   }
   sectorDataMirrored {
-    team2: true
+    team {
+      team2: true
+	}
   }
 }
 sectors {
@@ -5098,10 +5102,14 @@ sectors {
   }
   sectorMirrored: MirrorZ
   sectorData {
-    team1: true
+    team {
+      team1: true
+	}
   }
   sectorDataMirrored {
-    team2: true
+    team {
+      team2: true
+	}
   }
 }
 sectors {
