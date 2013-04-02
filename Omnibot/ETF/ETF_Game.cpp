@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// $LastChangedBy: jswigart $
-// $LastChangedDate: 2010-08-28 00:12:05 -0500 (Sat, 28 Aug 2010) $
-// $LastChangedRevision: 32 $
+// $LastChangedBy$
+// $LastChangedDate$
+// $LastChangedRevision$
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +21,6 @@
 #include "TF_BaseStates.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
-#include "gmTFBinds.h"
 
 BOOST_STATIC_ASSERT( ETF_TEAM_MAX == TF_TEAM_MAX );
 
@@ -129,12 +128,6 @@ bool ETF_Game::Init( System & system )
 void ETF_Game::GetGameVars(GameVars &_gamevars)
 {
 	_gamevars.mPlayerHeight = 64.f;
-}
-
-void ETF_Game::InitScriptBinds(gmMachine *_machine)
-{
-	LOG("Binding ETF Library...");
-	gmBindTFLibrary(_machine);
 }
 
 static IntEnum ETF_TeamEnum[] =
