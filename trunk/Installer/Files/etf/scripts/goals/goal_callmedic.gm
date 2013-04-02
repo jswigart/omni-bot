@@ -89,7 +89,7 @@ this.Update = function()
 
 this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth)
 {
-	if(this.ShouldCallForMedic())
+	if(this && this.ShouldCallForMedic && this.ShouldCallForMedic())
 	{
 		this.Priority = 1;
 	}
