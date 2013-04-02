@@ -78,6 +78,10 @@ this.Update = function()
 			{
 				this.Bot.PressButton(BTN.USE);
 			}
+			else
+			{
+				this.Bot.PressButton(BTN.FORWARD);
+			}
 
 			sleep(0.25);
 		}

@@ -1,107 +1,187 @@
-// Map Script for ETF_Openfire
+//==========================================================================================
+//
+//	etf_openfire.gm
+//
+//	Who         	When		What
+//------------------------------------------------------------------------------------------
+//	^7crapsh^1oo^7t	01 April 2013	Initial Script
+//
+//==========================================================================================
+//
 
-global OnBlueLaser = function(trigger)
-{	
-	if(trigger.action == "invisible")
-	{
-		print("Blue Laser Down!");
-		
-		// Enable the flag.
-		flag = GetGoal("FL_blueflag");
-		if(flag != NULL)
-		{
-			flag.SetAvailable(team.red, true);
-		}
-		
-		// Disable the button
-		btn = GetGoal("GO_blue_button");
-		if(btn != NULL)
-		{
-			btn.SetAvailable(team.red, false);
-		}
-	} 
-	else if(trigger.action == "inactive")
-	{
-		print("Blue Laser Up!");	
-		
-		// Disable the flag.
-		flag = GetGoal("FL_blueflag");
-		if(flag != NULL)
-		{
-			flag.SetAvailable(team.red, false);
-		}
-		
-		// Enable the button
-		btn = GetGoal("GO_blue_button");
-		if(btn != NULL)
-		{
-			btn.SetAvailable(team.red, true);
-		}
-	}
-};
-
-global OnRedLaser = function(trigger)
+global Map =
 {
-	print("OnRedLaser");
-	
-	if(trigger.action == "invisible")
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+
+	blueLasersUp = true,
+	redLasersUp = true,
+
+	redFlagGoal,
+	redFlagHomePos,
+	blueFlagGoal,
+	blueFlagHomePos,
+
+	redFlagNeedsSwitch = true,
+	blueFlagNeedsSwitch = true,
+
+	distForNeedsSwitch = 250,
+
+	evalBlueFlag = function()
 	{
-		print("Red Laser Down!");
-		
-		// Enable the flag.
-		flag = GetGoal("FL_redflag");
-		if(flag != NULL)
-		{
-			flag.SetAvailable(team.blue, true);
+		// prob gonna just use region triggers ...
+		if ( DistanceBetween( Map.blueFlagHomePos, Map.blueFlagGoal.GetPosition() ) < Map.distForNeedsSwitch ) {
+			Map.blueFlagNeedsSwitch = true;
 		}
-		
-		// Disable the button
-		btn = GetGoal("GO_red_button");
-		if(btn != NULL)
-		{
-			btn.SetAvailable(team.blue, false);
-		}
-	} 
-	else if(trigger.action == "inactive")
+	},
+
+	blueflag_Taken = function( trigger )
 	{
-		print("Red Laser Up!");	
-		
-		// Disable the flag.
-		flag = GetGoal("FL_redflag");
-		if(flag != NULL)
-		{
-			flag.SetAvailable(team.blue, false);
+		if ( TestMap )
+			{ return; }
+
+		Map.blueFlagNeedsSwitch = false;
+
+		Util.MapDebugPrint( "blueflag_Taken" );
+	},
+
+	blueflag_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.blueFlagNeedsSwitch = Map.redLasersUp;
+		SetAvailableMapGoals( TEAM.RED, Map.blueFlagNeedsSwitch, "SWITCH_bluebutton" );
+
+		Util.MapDebugPrint( "blueflag_Returned" );
+	},
+
+	blueflag_Dropped = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.evalBlueFlag();
+		SetAvailableMapGoals( TEAM.RED, Map.blueFlagNeedsSwitch, "SWITCH_bluebutton" );
+
+		Util.MapDebugPrint( "blueflag_Dropped" );
+	},
+
+	evalRedFlag = function()
+	{
+		if ( DistanceBetween( Map.redFlagHomePos, Map.redFlagGoal.GetPosition() ) < Map.distForNeedsSwitch ) {
+			Map.redFlagNeedsSwitch = true;
 		}
-		
-		// Enable the button
-		btn = GetGoal("GO_red_button");
-		if(btn != NULL)
-		{
-			btn.SetAvailable(team.blue, true);
+	},
+
+	redflag_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.redFlagNeedsSwitch = false;
+
+		Util.MapDebugPrint( "redflag_Taken" );
+	},
+
+	redflag_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.redFlagNeedsSwitch = Map.blueLasersUp;
+		SetAvailableMapGoals( TEAM.BLUE, Map.redFlagNeedsSwitch, "SWITCH_redbutton" );
+
+		Util.MapDebugPrint( "redflag_Returned" );
+	},
+
+	redflag_Dropped = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.evalRedFlag();
+		SetAvailableMapGoals( TEAM.BLUE, Map.redFlagNeedsSwitch, "SWITCH_redbutton" );
+
+		Util.MapDebugPrint( "redflag_Dropped" );
+	},
+
+	blue_lasers = function ( trigger )
+	{
+		Map.evalBlueFlag();
+
+		if ( trigger.Action == "active" ) {
+			Map.blueLasersUp = false;
 		}
-	}	
+		else if ( trigger.Action == "inactive" ) {
+			Map.blueLasersUp = true;
+		}
+
+		SetAvailableMapGoals( TEAM.RED, Map.blueFlagNeedsSwitch && Map.blueLasersUp, "SWITCH_bluebutton" );
+		SetAvailableMapGoals( TEAM.RED, !Map.blueFlagNeedsSwitch || !Map.blueLasersUp, "FLAG_blueflag" );
+	},
+
+	red_lasers = function ( trigger )
+	{
+		Map.evalRedFlag();
+
+		if ( trigger.Action == "active" ) {
+			Map.redLasersUp = false;
+		}
+		else if ( trigger.Action == "inactive" ) {
+			Map.redLasersUp = true;
+		}
+
+		SetAvailableMapGoals( TEAM.BLUE, Map.redFlagNeedsSwitch && Map.redLasersUp, "SWITCH_redbutton" );
+		SetAvailableMapGoals( TEAM.BLUE, !Map.redFlagNeedsSwitch || !Map.redLasersUp, "FLAG_redflag" );
+	},
+
 };
 
 global OnMapLoad = function()
 {
-	OnTrigger("blue_forcefield", OnBlueLaser);
-	OnTrigger("red_forcefield", OnRedLaser);
-	
-	// Initialize the starting states.
-	
-	redflag = GetGoal("FL_redflag");
-	if(redflag != NULL)
-	{
-		redflag.SetAvailable(team.blue, false);
-	}
-	
-	blueflag = GetGoal("FL_blueflag");
-	if(blueflag != NULL)
-	{
-		blueflag.SetAvailable(team.red, false);
-	}
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "blue_flaggrab", Map.blueflag_Taken );
+	OnTrigger( "Flag blueflag returned", Map.blueflag_Returned );
+	OnTrigger( "Flag blueflag dropped", Map.blueflag_Dropped );
+	OnTrigger( "red_flaggrab", Map.redflag_Taken );
+	OnTrigger( "Flag redflag returned", Map.redflag_Returned );
+	OnTrigger( "Flag redflag dropped", Map.redflag_Dropped );
+	OnTrigger( "func_button_155", Map.blue_lasers );
+	OnTrigger( "func_button_160", Map.red_lasers );
+
+	Map.blueFlagGoal = GetGoal("FLAG_blueflag");
+	Map.blueFlagHomePos = Map.blueFlagGoal.GetPosition();
+	Map.redFlagGoal = GetGoal("FLAG_redflag");
+	Map.redFlagHomePos = Map.redFlagGoal.GetPosition();
+
+	Util.DisableGoal( "FLAG_.*" );
+	Util.DisableGoal( "SWITCH.*" );
+	SetAvailableMapGoals( TEAM.BLUE, true, "SWITCH_redbutton" );
+	SetAvailableMapGoals( TEAM.RED, true, "SWITCH_bluebutton" );
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
-
-
-
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		CAPPOINT_trigger_multiple_158 =
+		{
+		},
+		CAPPOINT_trigger_multiple_163 =
+		{
+		},
+		FLAG_blueflag =
+		{
+		},
+		FLAG_redflag =
+		{
+		},
+	};
+	Util.Routes(MapRoutes);
+};

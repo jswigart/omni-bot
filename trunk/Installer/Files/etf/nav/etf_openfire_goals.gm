@@ -1,0 +1,306 @@
+global _MG = 
+{
+	CAPPOINT_trigger_multiple_158 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "CapPoint",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "CAPPOINT_trigger_multiple_158",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		Position = Vec3(-3072.000, -1664.000, -40.000),
+		Radius = 0,
+		TagName = "trigger_multiple_158",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	CAPPOINT_trigger_multiple_163 = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "CapPoint",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "CAPPOINT_trigger_multiple_163",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		Position = Vec3(1792.000, -2048.000, -40.000),
+		Radius = 0,
+		TagName = "trigger_multiple_163",
+		TeamAvailability = 2,
+		Version = 1,
+	},
+	FLAG_blueflag = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "Flag",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "FLAG_blueflag",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		Position = Vec3(-3176.000, -3008.000, -24.000),
+		Radius = 0,
+		TagName = "blueflag",
+		TeamAvailability = 2,
+		Version = 1,
+	},
+	FLAG_redflag = 
+	{
+		CreateOnLoad = 0,
+		GoalType = "Flag",
+		GroupName = "",
+		MinRadius = 0,
+		Name = "FLAG_redflag",
+		Orientation = Vec3(-1.571, 0.000, -0.000),
+		Position = Vec3(1896.000, -704.000, -24.000),
+		Radius = 0,
+		TagName = "redflag",
+		TeamAvailability = 4,
+		Version = 1,
+	},
+	SNIPE_102 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.015, 1.000, 0.022),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Snipe",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 30,
+		Name = "SNIPE_102",
+		Orientation = Vec3(-0.015, 0.022, -0.000),
+		Position = Vec3(-640.878, -3061.049, -391.875),
+		Radius = 100,
+		Stance = "stand",
+		TagName = "102",
+		TeamAvailability = 4,
+		Version = 1,
+		Weapons = 
+		{
+			[13] = 1,
+		},
+	},
+	SNIPE_103 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.966, -0.084, 0.243),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Snipe",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 30,
+		Name = "SNIPE_103",
+		Orientation = Vec3(1.658, 0.246, -0.000),
+		Position = Vec3(-1085.296, -2895.666, -391.875),
+		Radius = 100,
+		Stance = "stand",
+		TagName = "103",
+		TeamAvailability = 2,
+		Version = 1,
+		Weapons = 
+		{
+			[13] = 1,
+		},
+	},
+	SNIPE_104 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.008, -1.000, 0.022),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Snipe",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 30,
+		Name = "SNIPE_104",
+		Orientation = Vec3(3.133, 0.022, -0.000),
+		Position = Vec3(-642.380, -661.892, -391.875),
+		Radius = 100,
+		Stance = "stand",
+		TagName = "104",
+		TeamAvailability = 2,
+		Version = 1,
+		Weapons = 
+		{
+			[13] = 1,
+		},
+	},
+	SNIPE_105 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.966, 0.064, 0.252),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Snipe",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 30,
+		Name = "SNIPE_105",
+		Orientation = Vec3(-1.504, 0.255, -0.000),
+		Position = Vec3(-60.824, -829.773, -391.875),
+		Radius = 100,
+		Stance = "stand",
+		TagName = "105",
+		TeamAvailability = 4,
+		Version = 1,
+		Weapons = 
+		{
+			[13] = 1,
+		},
+	},
+	SNIPE_117 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.986, -0.167, -0.023),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Snipe",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 30,
+		Name = "SNIPE_117",
+		Orientation = Vec3(1.738, -0.023, -0.000),
+		Position = Vec3(149.711, -1598.120, 24.125),
+		Radius = 100,
+		Stance = "stand",
+		TagName = "117",
+		TeamAvailability = 2,
+		Version = 1,
+		Weapons = 
+		{
+			[13] = 1,
+		},
+	},
+	SNIPE_118 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.970, 0.214, -0.112),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Snipe",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 30,
+		Name = "SNIPE_118",
+		Orientation = Vec3(1.354, -0.112, -0.000),
+		Position = Vec3(157.644, -2097.989, 24.125),
+		Radius = 100,
+		Stance = "stand",
+		TagName = "118",
+		TeamAvailability = 2,
+		Version = 1,
+		Weapons = 
+		{
+			[13] = 1,
+		},
+	},
+	SNIPE_89 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.982, -0.186, -0.040),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Snipe",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 30,
+		Name = "SNIPE_89",
+		Orientation = Vec3(-1.759, -0.040, -0.000),
+		Position = Vec3(-1437.187, -1596.773, 24.125),
+		Radius = 100,
+		Stance = "stand",
+		TagName = "89",
+		TeamAvailability = 4,
+		Version = 1,
+		Weapons = 
+		{
+			[13] = 1,
+		},
+	},
+	SNIPE_90 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.978, 0.204, -0.040),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Snipe",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 30,
+		Name = "SNIPE_90",
+		Orientation = Vec3(-1.365, -0.040, -0.000),
+		Position = Vec3(-1427.445, -2118.417, 24.125),
+		Radius = 100,
+		Stance = "stand",
+		TagName = "90",
+		TeamAvailability = 4,
+		Version = 1,
+		Weapons = 
+		{
+			[13] = 1,
+		},
+	},
+	SWITCH_bluebutton = 
+	{
+		AimPosition = Vec3(-2927.789, -1368.125, -15.909),
+		CreateOnLoad = 1,
+		Facing = Vec3(0.000, 0.000, 0.000),
+		GoalType = "SWITCH",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "SWITCH_bluebutton",
+		Orientation = Vec3(-0.010, -0.047, -0.000),
+		Position = Vec3(-2928.320, -1376.127, -63.875),
+		Radius = 32,
+		Stance = "stand",
+		TagName = "bluebutton",
+		TeamAvailability = 30,
+		Timeout = 1500,
+		Use = 0,
+		Version = 1,
+	},
+	SWITCH_redbutton = 
+	{
+		AimPosition = Vec3(1647.923, -2343.875, -15.441),
+		CreateOnLoad = 1,
+		Facing = Vec3(0.000, 0.000, 0.000),
+		GoalType = "SWITCH",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "SWITCH_redbutton",
+		Orientation = Vec3(-3.137, -0.048, -0.000),
+		Position = Vec3(1650.482, -2328.875, -63.875),
+		Radius = 32,
+		Stance = "stand",
+		TagName = "redbutton",
+		TeamAvailability = 30,
+		Timeout = 1500,
+		Use = 0,
+		Version = 1,
+	},
+	Version = 1,
+};
