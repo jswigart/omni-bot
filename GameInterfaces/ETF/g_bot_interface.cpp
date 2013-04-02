@@ -1,5 +1,5 @@
 /*
-* OF <-> Omni-Bot interface source file.
+* ETF <-> Omni-Bot interface source file.
 * 
 */
 

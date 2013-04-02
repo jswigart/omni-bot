@@ -105,7 +105,6 @@
     <ClInclude Include="..\..\..\TeamFortressLib\TF_InterfaceFuncs.h" />
     <ClInclude Include="..\..\..\TeamFortressLib\TF_Messages.h" />
     <ClInclude Include="..\..\..\TeamFortressLib\TF_NavigationFlags.h" />
-    <ClInclude Include="..\..\..\TeamFortressLib\gmTFBinds.h" />
     <ClInclude Include="..\..\..\TeamFortressLib\FilterClosestTF.h" />
   </ItemGroup>
   <ItemGroup>

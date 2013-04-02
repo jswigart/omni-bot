@@ -40,12 +40,6 @@ void TF_Game::Shutdown()
 	IGame::Shutdown();
 }
 
-void TF_Game::InitScriptBinds(gmMachine *_machine)
-{
-	LOG("Binding TF Library...");
-	gmBindTFLibrary(_machine);
-}
-
 static IntEnum TF_WeaponEnum[] =
 {
 	IntEnum("NONE",				TF_WP_NONE),
