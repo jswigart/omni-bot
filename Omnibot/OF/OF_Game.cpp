@@ -101,12 +101,6 @@ void OF_Game::GetGameVars(GameVars &_gamevars)
 	_gamevars.mPlayerHeight = 64.f;
 }
 
-void OF_Game::InitScriptBinds(gmMachine *_machine)
-{
-	LOG("Binding OF Library...");
-	gmBindTFLibrary(_machine);
-}
-
 static IntEnum OF_TeamEnum[] =
 {
 	IntEnum("SPECTATOR",OB_TEAM_SPECTATOR),

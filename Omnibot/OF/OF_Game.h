@@ -46,7 +46,6 @@ protected:
 	void GetGameVars(GameVars &_gamevars);
 
 	// Script support.
-	void InitScriptBinds(gmMachine *_machine);
 	void InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table);
 
 	static const float OF_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags);
