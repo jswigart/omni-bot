@@ -656,6 +656,32 @@ static int _GetEntityClass(gentity_t * _ent)
 	if(_ent->mapdata && _ent->mapdata->gameindex && !(_ent->mapdata->gameindex & (1 << g_gameindex.integer)))
 		return 0;
 
+	if(_ent->classname)
+	{
+		if(!Q_stricmp(_ent->classname, "team_CTF_redspawn"))
+			return ENT_CLASS_GENERIC_PLAYERSTART_TEAM1;
+		else if(!Q_stricmp(_ent->classname, "team_CTF_bluespawn"))
+			return ENT_CLASS_GENERIC_PLAYERSTART_TEAM2;
+		else if(!Q_stricmp(_ent->classname, "info_player_deathmatch") || !Q_stricmp(_ent->classname, "info_player_start"))
+		{
+			if(_ent->mapdata && _ent->mapdata->team)
+			{
+				if(_ent->mapdata->team == (1 << Q3F_TEAM_BLUE))
+					return ENT_CLASS_GENERIC_PLAYERSTART_TEAM1;
+				else if(_ent->mapdata->team == (1 << Q3F_TEAM_RED))
+					return ENT_CLASS_GENERIC_PLAYERSTART_TEAM2;
+				else if(_ent->mapdata->team == (1 << Q3F_TEAM_YELLOW))
+					return ENT_CLASS_GENERIC_PLAYERSTART_TEAM3;
+				else if(_ent->mapdata->team == (1 << Q3F_TEAM_GREEN))
+					return ENT_CLASS_GENERIC_PLAYERSTART_TEAM4;
+				else
+					return ENT_CLASS_GENERIC_PLAYERSTART;
+			}
+			else
+				return ENT_CLASS_GENERIC_PLAYERSTART;
+		}
+	}
+
 	switch (t)
 	{
 		case ET_GENERAL:
@@ -3006,6 +3032,34 @@ class           ETFInterface:public IEngineInterface
 				}
 				break;
 			}
+			case GEN_MSG_GETGAMETYPE:
+				{
+					OB_GETMSG(TF_GameMode);
+					if(pMsg)
+					{
+						pMsg->m_GameMode = g_gameindex.integer;
+					}
+					break;
+				}
+			case GEN_MSG_SETCVAR:
+				{
+					OB_GETMSG(TF_CvarSet);
+					if(pMsg)
+					{
+						trap_Cvar_Set(pMsg->m_Cvar, pMsg->m_Value);
+					}
+					break;
+				}
+			case GEN_MSG_GETCVAR:
+				{
+					OB_GETMSG(TF_CvarGet);
+					if(pMsg)
+					{
+						pMsg->m_Value =
+							trap_Cvar_VariableIntegerValue(pMsg->m_Cvar);
+					}
+					break;
+				}
 /*		case TF_MSG_GETBUILDABLES:
 			{
 				OB_GETMSG(TF_BuildInfo);
@@ -3133,34 +3187,6 @@ class           ETFInterface:public IEngineInterface
 							break;
 						}
 					}
-				}
-				break;
-			}
-			case TF_MSG_GETGAMEMODE:
-			{
-				OB_GETMSG(TF_GameMode);
-				if(pMsg)
-				{
-					pMsg->m_GameMode = g_gameindex.integer;
-				}
-				break;
-			}
-		case TF_MSG_SETCVAR:
-			{
-				OB_GETMSG(TF_CvarSet);
-				if(pMsg)
-				{
-					trap_Cvar_Set(pMsg->m_Cvar, pMsg->m_Value);
-				}
-				break;
-			}
-		case TF_MSG_GETCVAR:
-			{
-				OB_GETMSG(TF_CvarGet);
-				if(pMsg)
-				{
-					pMsg->m_Value =
-						trap_Cvar_VariableIntegerValue(pMsg->m_Cvar);
 				}
 				break;
 			}
