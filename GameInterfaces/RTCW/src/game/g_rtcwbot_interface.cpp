@@ -2538,6 +2538,31 @@ public:
 		switch ( _data.GetMessageId() )
 		{
 			// general messages
+		case GEN_MSG_GETGAMETYPE:
+			{
+				OB_GETMSG( Event_GameType );
+				if ( pMsg ) {
+					pMsg->m_GameType = g_gametype.integer;
+				}
+				break;
+			}
+		case GEN_MSG_SETCVAR:
+			{
+				OB_GETMSG( RTCW_CvarSet );
+				if ( pMsg ) {
+					trap_Cvar_Set( pMsg->m_Cvar, pMsg->m_Value );
+				}
+				break;
+			}
+		case GEN_MSG_GETCVAR:
+			{
+				OB_GETMSG( RTCW_CvarGet );
+				if ( pMsg ) {
+					pMsg->m_Value =
+						trap_Cvar_VariableIntegerValue( pMsg->m_Cvar );
+				}
+				break;
+			}
 		case GEN_MSG_ISALIVE:
 			{
 				OB_GETMSG( Msg_IsAlive );
@@ -3178,31 +3203,6 @@ public:
 					if ( pEnt && pEnt->client ) {
 						G_PrivateMessage( pEnt, pMsg->m_TargetName, pMsg->m_Message, qtrue );
 					}
-				}
-				break;
-			}
-		case RTCW_MSG_GETGAMETYPE:
-			{
-				OB_GETMSG( RTCW_GameType );
-				if ( pMsg ) {
-					pMsg->m_GameType = g_gametype.integer;
-				}
-				break;
-			}
-		case RTCW_MSG_SETCVAR:
-			{
-				OB_GETMSG( RTCW_CvarSet );
-				if ( pMsg ) {
-					trap_Cvar_Set( pMsg->m_Cvar, pMsg->m_Value );
-				}
-				break;
-			}
-		case RTCW_MSG_GETCVAR:
-			{
-				OB_GETMSG( RTCW_CvarGet );
-				if ( pMsg ) {
-					pMsg->m_Value =
-						trap_Cvar_VariableIntegerValue( pMsg->m_Cvar );
 				}
 				break;
 			}
