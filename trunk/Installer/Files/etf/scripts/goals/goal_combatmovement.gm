@@ -25,8 +25,7 @@ this.Initialize = function()
 	
 	this.Bot.hadtarget = false;
 	
-	if (!Map || !Map.Quiet)
-		{ print(this.Name, " Initialized"); }
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 this.GetPriority = function()

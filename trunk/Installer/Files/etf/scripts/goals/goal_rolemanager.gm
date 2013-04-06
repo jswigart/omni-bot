@@ -149,7 +149,7 @@ this.Events[EVENT.CHANGETEAM] = function(team)
 		//this.justStarted = null;
 	} else {
 		// clear role in old team
-		if (team==TEAM.AXIS){ team=TEAM.ALLIES; } else { team=TEAM.AXIS; }
+		if (team==TEAM.RED){ team=TEAM.BLUE; } else { team=TEAM.RED; }
 		teamRoles = Map.Roles[ Util.TeamName(team) ];
 		if (teamRoles) {
 			bot = this.Bot;
