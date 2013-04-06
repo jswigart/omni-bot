@@ -666,9 +666,9 @@ static int _GetEntityClass(gentity_t * _ent)
 		{
 			if(_ent->mapdata && _ent->mapdata->team)
 			{
-				if(_ent->mapdata->team == (1 << Q3F_TEAM_BLUE))
+				if(_ent->mapdata->team == (1 << Q3F_TEAM_RED))
 					return ENT_CLASS_GENERIC_PLAYERSTART_TEAM1;
-				else if(_ent->mapdata->team == (1 << Q3F_TEAM_RED))
+				else if(_ent->mapdata->team == (1 << Q3F_TEAM_BLUE))
 					return ENT_CLASS_GENERIC_PLAYERSTART_TEAM2;
 				else if(_ent->mapdata->team == (1 << Q3F_TEAM_YELLOW))
 					return ENT_CLASS_GENERIC_PLAYERSTART_TEAM3;
@@ -3377,9 +3377,9 @@ class           ETFInterface:public IEngineInterface
 				{
 					if(e->mapdata && e->mapdata->team)
 					{
-						if(e->mapdata->team == (1 << Q3F_TEAM_BLUE))
+						if(e->mapdata->team == (1 << Q3F_TEAM_RED))
 							_feature[iNumFeatures].m_Type = ENT_CLASS_GENERIC_PLAYERSTART_TEAM1;
-						else if(e->mapdata->team == (1 << Q3F_TEAM_RED))
+						else if(e->mapdata->team == (1 << Q3F_TEAM_BLUE))
 							_feature[iNumFeatures].m_Type = ENT_CLASS_GENERIC_PLAYERSTART_TEAM2;
 						else if(e->mapdata->team == (1 << Q3F_TEAM_YELLOW))
 							_feature[iNumFeatures].m_Type = ENT_CLASS_GENERIC_PLAYERSTART_TEAM3;

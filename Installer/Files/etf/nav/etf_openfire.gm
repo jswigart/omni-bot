@@ -25,12 +25,9 @@ global Map =
 	redFlagNeedsSwitch = true,
 	blueFlagNeedsSwitch = true,
 
-	distForNeedsSwitch = 250,
-
 	evalBlueFlag = function()
 	{
-		// prob gonna just use region triggers ...
-		if ( DistanceBetween( Map.blueFlagHomePos, Map.blueFlagGoal.GetPosition() ) < Map.distForNeedsSwitch ) {
+		if ( Map.blueFlagGoal.GetPosition().x < -2984 ) {
 			Map.blueFlagNeedsSwitch = true;
 		}
 	},
@@ -50,8 +47,9 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.blueFlagNeedsSwitch = Map.redLasersUp;
+		Map.blueFlagNeedsSwitch = Map.blueLasersUp;
 		SetAvailableMapGoals( TEAM.RED, Map.blueFlagNeedsSwitch, "SWITCH_bluebutton" );
+		SetAvailableMapGoals( TEAM.RED, !Map.blueFlagNeedsSwitch, "FLAG_blueflag" );
 
 		Util.MapDebugPrint( "blueflag_Returned" );
 	},
@@ -69,7 +67,7 @@ global Map =
 
 	evalRedFlag = function()
 	{
-		if ( DistanceBetween( Map.redFlagHomePos, Map.redFlagGoal.GetPosition() ) < Map.distForNeedsSwitch ) {
+		if ( Map.redFlagGoal.GetPosition().x > 1748 ) {
 			Map.redFlagNeedsSwitch = true;
 		}
 	},
@@ -89,8 +87,9 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
-		Map.redFlagNeedsSwitch = Map.blueLasersUp;
+		Map.redFlagNeedsSwitch = Map.redLasersUp;
 		SetAvailableMapGoals( TEAM.BLUE, Map.redFlagNeedsSwitch, "SWITCH_redbutton" );
+		SetAvailableMapGoals( TEAM.BLUE, !Map.redFlagNeedsSwitch, "FLAG_redflag" );
 
 		Util.MapDebugPrint( "redflag_Returned" );
 	},
