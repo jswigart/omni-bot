@@ -1465,6 +1465,8 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		mask = VOTEFLAGS_SWAP;
 	} else if ( !Q_stricmp( arg1, "difficulty" ) ) {
 		mask = VOTEFLAGS_BOTDIFFICULTY;
+	} else if ( !Q_stricmp( arg1, "maxbots" ) ) {
+		mask = VOTEFLAGS_MAXBOTS;
 		// JPW NERVE
 #ifndef PRE_RELEASE_DEMO
 	} else if ( !Q_stricmp( arg1, testid1 ) ) {
@@ -1474,7 +1476,7 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		// jpw
 	} else {
 		trap_SendServerCommand( ent - g_entities, "print \"Invalid vote string.\n\"" );
-		trap_SendServerCommand( ent - g_entities, "print \"Vote commands are: map_restart, nextmap, start_match, swap_teams, reset_match, map <mapname>, g_gametype <n>, kick <player>, clientkick <clientnum>, difficulty\n\"" );
+		trap_SendServerCommand( ent - g_entities, "print \"Vote commands are: map_restart, nextmap, start_match, swap_teams, reset_match, map <mapname>, g_gametype <n>, kick <player>, clientkick <clientnum>, difficulty, maxbots\n\"" );
 		return;
 	}
 
@@ -1564,6 +1566,18 @@ void Cmd_CallVote_f( gentity_t *ent ) {
 		}
 
 		Com_sprintf( level.voteString, sizeof( level.voteString ),"bot difficulty %i", botDifficulty );
+		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", level.voteString );
+	} else if ( !Q_stricmp( arg1, "maxbots" ) ) {
+		int maxBots = atoi(arg2);
+		maxBots = maxBots == 0 ? -1 : maxBots;
+
+		if ( maxBots < -1 || maxBots > g_maxclients.integer ) {
+			trap_SendServerCommand( ent - g_entities, va( "print \"^3maxbots must be -1 for or between 1 and %i^7\n\"", g_maxclients.integer ) );
+			return;
+		}
+
+		Com_sprintf( level.voteString, sizeof( level.voteString ),"bot minbots -1" );
+		Com_sprintf( level.voteString, sizeof( level.voteString ),"bot maxbots %i", maxBots );
 		Com_sprintf( level.voteDisplayString, sizeof( level.voteDisplayString ), "%s", level.voteString );
 	} else {
 		Com_sprintf( level.voteString, sizeof( level.voteString ), "%s \"%s\"", arg1, arg2 );

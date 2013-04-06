@@ -1550,6 +1550,7 @@ typedef enum {
 #define VOTEFLAGS_KICK          ( 1 << 6 )
 #define VOTEFLAGS_MAP           ( 1 << 7 )
 #define VOTEFLAGS_BOTDIFFICULTY ( 1 << 8 )
+#define VOTEFLAGS_MAXBOTS		( 1 << 9 )
 
 //////////////////////////////////////////////////////////////////////////
 
