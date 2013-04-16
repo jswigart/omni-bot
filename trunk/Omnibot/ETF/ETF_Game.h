@@ -36,7 +36,7 @@ public:
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
 	const char *GetGameDatabaseAbbrev() const { return "etf"; }
-	virtual eNavigatorID GetDefaultNavigator() const { return NAVID_WP; }
+	virtual eNavigatorID GetDefaultNavigator() const { return NAVID_NAVMESH; }
 	bool ReadyForDebugWindow() const { return true; }
 	virtual const char *IsDebugDrawSupported() const;
 

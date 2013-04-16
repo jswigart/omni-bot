@@ -14,8 +14,9 @@
 #include "Client.h"
 #include "Timer.h"
 #include "ProtoBufUtility.h"
-
 #include "RenderBuffer.h"
+
+#include "google/protobuf/descriptor.h"
 
 using namespace std;
 
@@ -51,21 +52,19 @@ void PathPlannerNavMesh::InitCommands()
 		this, &PathPlannerNavMesh::cmdNavStats);
 
 	//////////////////////////////////////////////////////////////////////////
-	SetEx("nav_startpoly", "Starts a sector polygon.",
-		this, &PathPlannerNavMesh::cmdStartPoly);
-	SetEx("nav_undopoly", "Starts a sector polygon.",
-		this, &PathPlannerNavMesh::cmdUndoPoly);
+	SetEx("nav_tracepoly", "Starts a sector polygon.",
+		this, &PathPlannerNavMesh::cmdTracePoly);
 
 	/*SetEx("nav_loadobj", "Loads navmesh from obj file.",
 	this, &PathPlannerNavMesh::cmdLoadObj);
 	SetEx("nav_loadmap", "Loads navmesh from map file.",
 	this, &PathPlannerNavMesh::cmdLoadMap);*/
 
-	SetEx("nav_pp", "Creates a plane from a point and normal.",
+	SetEx("nav_poly", "Creates a plane from a point and normal.",
 		this, &PathPlannerNavMesh::cmdCreatePlanePoly);
-	SetEx("nav_sp", "Creates a plane from a point and normal.",
+	SetEx("nav_slice", "Creates a plane from a point and normal.",
 		this, &PathPlannerNavMesh::cmdCreateSlicePoly);
-	SetEx("nav_ss", "Slices working sector with the sector being aimed at.",
+	SetEx("nav_sectorslice", "Slices working sector with the sector being aimed at.",
 		this, &PathPlannerNavMesh::cmdCreateSliceSector);
 
 	SetEx("nav_setfield", "Sets a named field on the navigation sector.",
@@ -92,6 +91,9 @@ void PathPlannerNavMesh::InitCommands()
 	SetEx("nav_portalcreate", "Creates a manual portal edge.",
 		this, &PathPlannerNavMesh::cmdPortalCreate);
 
+	SetEx("nav_edgeblock", "Toggle flag on sector edge that prevents the edge from generating portals.",
+		this, &PathPlannerNavMesh::cmdPortalBlockCreate);
+
 	SetEx("nav_delsector", "Deletes a sector by its id number.",
 		this, &PathPlannerNavMesh::cmdDeleteSector);
 
@@ -106,36 +108,6 @@ void PathPlannerNavMesh::InitCommands()
 
 	SetEx("nav_obstacleadd", "Creates an obstacle.",
 		this, &PathPlannerNavMesh::cmdObstacleAdd);
-
-	// INFLUENCE MAP EXPERIMENTATION
-	SetEx("nav_mapcreate", "Creates an influence map.",
-		this, &PathPlannerNavMesh::cmdInfluenceMapCreate);
-	SetEx("nav_mapseed", "Adds a seed point to the map for exploration.",
-		this, &PathPlannerNavMesh::cmdInfluenceMapSeed);
-	SetEx("nav_mapmem", "Shows the memory usage of the map.",
-		this, &PathPlannerNavMesh::cmdInfluenceMapMem);
-	SetEx("nav_mapsave", "Saves the influence map.",
-		this, &PathPlannerNavMesh::cmdInfluenceMapSave);
-	SetEx("nav_mapload", "Load the influence map.",
-		this, &PathPlannerNavMesh::cmdInfluenceMapLoad);
-
-	SetEx("nav_mapflood", "Load the influence map.",
-		this, &PathPlannerNavMesh::cmdInfluenceMapFlood);
-
-	REGISTER_STATE(PathPlannerNavMesh,NoOp);
-	REGISTER_STATE(PathPlannerNavMesh,PlaceSector);
-	REGISTER_STATE(PathPlannerNavMesh,SliceSector);
-	REGISTER_STATE(PathPlannerNavMesh,SliceSectorWithSector);
-	REGISTER_STATE(PathPlannerNavMesh,EditSector);
-	REGISTER_STATE(PathPlannerNavMesh,MoveSector);
-	REGISTER_STATE(PathPlannerNavMesh,SplitSector);
-	REGISTER_STATE(PathPlannerNavMesh,TraceSector);
-	REGISTER_STATE(PathPlannerNavMesh,GroundSector);
-	REGISTER_STATE(PathPlannerNavMesh,CommitSector);
-	REGISTER_STATE(PathPlannerNavMesh,MirrorSectors);
-	REGISTER_STATE(PathPlannerNavMesh,FloodSpanMap);
-
-	SetNextState(NoOp);
 }
 
 void PathPlannerNavMesh::cmdNavSave(const StringVector &_args)
@@ -312,17 +284,17 @@ Vector3f PathPlannerNavMesh::_SectorVertWithin(const Vector3f &_pos1, const Vect
 	float fClosest = Utils::FloatMax;
 
 	*_snapped = false;
-	for(obuint32 s = 0; s < mNavSectors.size(); ++s)
+	for ( size_t s = 0; s < mRuntimeSectors.size(); ++s )
 	{
-		const NavSector &sec = mNavSectors[s];
+		const RuntimeNavSector & ns = mRuntimeSectors[s];
 
-		for(obuint32 v = 0; v < sec.mPoly.size(); ++v)
+		for(obuint32 v = 0; v < ns.mPoly.size(); ++v)
 		{
-			DistPoint3Segment3f dist( sec.mPoly[v], Segment3f( _pos1,_pos2 ) );
+			DistPoint3Segment3f dist( ns.mPoly[v], Segment3f( _pos1,_pos2 ) );
 			const float fLenSq = dist.GetSquared();
 			if( fLenSq < fRangeSq && fLenSq < fClosest )
 			{
-				r = sec.mPoly[v];
+				r = ns.mPoly[v];
 				fClosest = fLenSq;
 
 				if(_snapped)
@@ -333,73 +305,292 @@ Vector3f PathPlannerNavMesh::_SectorVertWithin(const Vector3f &_pos1, const Vect
 	return r;
 }
 
-void PathPlannerNavMesh::cmdStartPoly(const StringVector &_args)
+class ToolTraceSector : public EditTool<PathPlannerNavMesh>
+{
+public:
+	ToolTraceSector() : EditTool( "Trace Sector" ) {}
+
+	virtual bool Enter( PathPlannerNavMesh * system )
+	{
+		Vector3f aimPt;
+		if ( !Utils::GetLocalAimPoint( aimPt ) )
+			return false;
+
+		mPoly.clear();
+		mPoly.push_back( aimPt);
+		mPoly.push_back( aimPt );
+		return true;
+	}
+	virtual bool ReEnter( PathPlannerNavMesh * system )
+	{
+		Vector3f aimPt;
+		if ( !Utils::GetLocalAimPoint( aimPt ) )
+			return false;
+
+		// add a new vert
+		mPoly.push_back( aimPt );
+		return true;
+	}
+	virtual bool Update( PathPlannerNavMesh * system )
+	{
+		if ( mPoly.size() == 0 )
+			return false;
+
+		Vector3f eyePos, aimPt;
+		if ( !Utils::GetLocalEyePosition( eyePos ) || !Utils::GetLocalAimPoint( aimPt ) )
+			return false;
+
+		bool bSnapped = false;
+		if ( Length( aimPt, mPoly[0] ) <= SNAP_RADIUS)
+		{
+			bSnapped = true;
+			aimPt = mPoly[0];
+		}
+		else
+			aimPt = system->_SectorVertWithin( eyePos, aimPt, SNAP_RADIUS, &bSnapped);
+
+		if(bSnapped)
+			system->m_CursorColor = COLOR::ORANGE;
+
+		mPoly[ mPoly.size() - 1 ] = aimPt;
+
+		RenderBuffer::AddPolygonSilouette( mPoly, COLOR::YELLOW );
+		return true;
+	}
+	virtual void Commit( PathPlannerNavMesh * system )
+	{
+		Utils::WeldVertices( mPoly, 1.0f );
+		if ( mPoly.size() >= 3 )
+		{
+			PathPlannerNavMesh::NavSector ns;
+			ns.mPoly = mPoly;
+			system->mNavSectors.push_back( ns );
+			system->InitSectors();
+		}
+	}
+	void Undo( PathPlannerNavMesh * system )
+	{
+		if ( mPoly.size() > 0 )
+			mPoly.pop_back();
+	}
+private:
+	Vector3List			mPoly;
+};
+
+void PathPlannerNavMesh::cmdTracePoly(const StringVector &_args)
 {
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	m_ToolCancelled = false;
-	SetNextState(TraceSector);
+	SetCurrentTool<ToolTraceSector>();
 }
 
-void PathPlannerNavMesh::cmdUndoPoly(const StringVector &_args)
+void PathPlannerNavMesh::cmdUndo(const StringVector &_args)
 {
-	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
+	if ( mCurrentTool )
+		mCurrentTool->Undo( this );
+}
+
+class ToolCreateSectorPoly : public EditTool<PathPlannerNavMesh>
+{
+public:
+	ToolCreateSectorPoly() : EditTool( "Polygon Create" ) {}
+
+	virtual bool Enter( PathPlannerNavMesh * system )
+	{
+		Vector3f aimPt, aimNormal;
+		if( !Utils::GetLocalAimPoint( aimPt, &aimNormal ) )
+			return false;
+
+		system->mEditSectorStart = aimPt;
+		system->mEditSectorPlane = Plane3f( aimNormal, aimPt );
+
+		return true;
+	}
+	virtual bool ReEnter( PathPlannerNavMesh * system )
+	{
+		Vector3f aimPt;
+		if( !Utils::GetLocalAimPoint( aimPt ) )
+			return false;
+
+		system->mEditSector.mPoly = Utils::CreatePolygon(
+			aimPt,
+			system->mEditSectorPlane.Normal,
+			32768.f);
+
+		// we want it to cancel the tool here to use the tool as a toggle
+		return false;
+	}
+	virtual bool Update( PathPlannerNavMesh * system )
+	{
+		Vector3f aimPt;
+		if( !Utils::GetLocalAimPoint( aimPt ) )
+			return false;
+
+		system->mEditSectorPlane = Plane3f( system->mEditSectorPlane.Normal, aimPt );
+
+		Vector3List poly = Utils::CreatePolygon(
+			aimPt,
+			system->mEditSectorPlane.Normal,
+			32768.f);
+
+		RenderBuffer::AddPolygonFilled( poly, COLOR::GREEN.fade(100) );
+
+		return true;
+	}
+	virtual void Commit( PathPlannerNavMesh * system )
+	{
+		ReEnter( system );
+		/*Vector3f aimPt;
+		if( !Utils::GetLocalAimPoint( aimPt ) )
 		return;
 
-	if(!m_WorkingManualSector.empty())
-		m_WorkingManualSector.pop_back();
-
-	if(m_WorkingManualSector.empty() && GetCurrentStateId()==TraceSector)
-		SetNextState(NoOp);
-}
+		system->mEditSector.mPoly = Utils::CreatePolygon(
+		aimPt,
+		system->mEditSectorPlane.Normal,
+		32768.f);*/
+	}
+};
 
 void PathPlannerNavMesh::cmdCreatePlanePoly(const StringVector &_args)
 {
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	if(GetCurrentStateId()!=PlaceSector)
-	{
-		SetNextState(PlaceSector);
-	}
-	else
-	{
-		m_ToolCancelled = false;
-		SetNextState(NoOp);
-	}
+	SetCurrentTool<ToolCreateSectorPoly>();
 }
+
+class ToolCreateSlicePoly : public EditTool<PathPlannerNavMesh>
+{
+public:
+	ToolCreateSlicePoly() : EditTool( "Polygon Slice" ) {}
+
+	virtual bool Enter( PathPlannerNavMesh * system )
+	{
+		if(system->mEditSector.mPoly.empty())
+		{
+			EngineFuncs::ConsoleError("No Active Sector");
+			return false;
+		}
+
+		Vector3f aimPt, aimNormal;
+		if( !Utils::GetLocalAimPoint( aimPt, &aimNormal ) )
+			return false;
+
+		system->mEditSlicePlane = Plane3f( aimNormal, aimPt );
+
+		return true;
+	}
+	virtual bool ReEnter( PathPlannerNavMesh * system )
+	{
+		const Plane3f clipPlane = ( system->mEditSlicePlane.WhichSide( system->mEditSectorStart ) > 0 ) ?
+			-system->mEditSlicePlane : system->mEditSlicePlane;
+
+		system->mEditSector.mPoly =
+			Utils::ClipPolygonToPlanes( system->mEditSector.mPoly, clipPlane );
+
+		// we want it to cancel the tool here to use the tool as a toggle
+		return false;
+	}
+	virtual bool Update( PathPlannerNavMesh * system )
+	{
+		Vector3f aimPt, eyePos;
+		if( !Utils::GetLocalAimPoint( aimPt ) || !Utils::GetLocalEyePosition( eyePos ) )
+			return false;
+
+		bool bSnapped = false;
+		aimPt = system->_SectorVertWithin( aimPt, aimPt, SNAP_RADIUS, &bSnapped );
+		if(bSnapped)
+			system->m_CursorColor = COLOR::ORANGE;
+
+		system->mEditSlicePlane = Plane3f( system->mEditSlicePlane.Normal, aimPt );
+
+		Vector3List poly = Utils::CreatePolygon(
+			aimPt,
+			system->mEditSlicePlane.Normal,
+			32768.f);
+
+		RenderBuffer::AddPolygonFilled( poly, COLOR::RED.fade(100) );
+		return true;
+	}
+	virtual void Commit( PathPlannerNavMesh * system )
+	{
+		ReEnter( system );
+		/*const Plane3f clipPlane = ( system->mEditSlicePlane.WhichSide( system->mEditSectorStart ) > 0 ) ?
+		-system->mEditSlicePlane : system->mEditSlicePlane;
+
+		system->mEditSector.mPoly =
+		Utils::ClipPolygonToPlanes( system->mEditSector.mPoly, clipPlane );*/
+	}
+};
+
+class ToolMoveSector : public EditTool<PathPlannerNavMesh>
+{
+public:
+	ToolMoveSector() : EditTool( "Move Sector" ) {}
+
+	virtual bool Enter( PathPlannerNavMesh * system )
+	{
+		Vector3f eyePos, eyeDir;
+		if ( !Utils::GetLocalEyePosition( eyePos ) || !Utils::GetLocalFacing( eyeDir ) )
+			return false;
+
+		PathPlannerNavMesh::NavCollision nc = system->FindCollision( eyePos, eyePos + eyeDir * 1024.f);
+		if ( !nc.DidHit() || !nc.HitSector()->mMirrored )
+		{
+			EngineFuncs::ConsoleError("No Nav Sector Found");
+			return false;
+		}
+
+		PathPlannerNavMesh::RuntimeNavSector * ns = nc.HitSector();
+		system->mEditSectorStart = nc.HitPosition();
+		system->mEditSector = *ns->mSector;
+
+		system->mNavSectors.erase(system->mNavSectors.begin() + ( ns->mSector - &system->mNavSectors[ 0 ] ));
+
+		system->InitSectors();
+
+		return true;
+	}
+	virtual bool Update( PathPlannerNavMesh * system )
+	{
+		Vector3f aimPt;
+		if( !Utils::GetLocalAimPoint( aimPt ) )
+			return false;
+
+		system->mEditSector.mPlane = Plane3f( system->mEditSector.mPlane.Normal, aimPt );
+		system->mEditSector.SetPointsToPlane();
+
+		return true;
+	}
+	virtual void Commit( PathPlannerNavMesh * system )
+	{
+		system->InitSectors();
+	}
+};
 
 void PathPlannerNavMesh::cmdCreateSlicePoly(const StringVector &_args)
 {
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	if(GetCurrentStateId()!=SliceSector)
-	{
-		SetNextState(SliceSector);
-	}
-	else
-	{
-		m_ToolCancelled = false;
-		SetNextState(NoOp);
-	}
+	SetCurrentTool<ToolCreateSlicePoly>();
 }
 
 void PathPlannerNavMesh::cmdCreateSliceSector(const StringVector &_args)
 {
-	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
-		return;
+	/*if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
+	return;
 
 	if(GetCurrentStateId()!=SliceSectorWithSector)
 	{
-		SetNextState(SliceSectorWithSector);
+	SetNextState(SliceSectorWithSector);
 	}
 	else
 	{
-		m_ToolCancelled = false;
-		SetNextState(NoOp);
-	}
+	m_ToolCancelled = false;
+	SetNextState(NoOp);
+	}*/
 }
 
 void PathPlannerNavMesh::cmdEditSector(const StringVector &_args)
@@ -407,8 +598,24 @@ void PathPlannerNavMesh::cmdEditSector(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	m_ToolCancelled = false;
-	SetNextState(EditSector);
+	Vector3f eyePos, eyeDir;
+	if ( !Utils::GetLocalEyePosition( eyePos ) || !Utils::GetLocalFacing( eyeDir ) )
+		return;
+
+	NavCollision nc = FindCollision( eyePos, eyePos + eyeDir * 1024.f );
+	if ( !nc.DidHit() || nc.HitSector()->mMirrored )
+	{
+		EngineFuncs::ConsoleError("No Nav Sector Found");
+		return;
+	}
+
+	RuntimeNavSector * ns = nc.HitSector();
+
+	mEditSectorStart = nc.HitPosition();
+	mEditSector = *ns->mSector;
+	mNavSectors.erase(mNavSectors.begin() + ( ns->mSector - &mNavSectors[ 0 ] ));
+
+	InitSectors();
 }
 
 void PathPlannerNavMesh::cmdDupeSector(const StringVector &_args)
@@ -416,42 +623,81 @@ void PathPlannerNavMesh::cmdDupeSector(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	Vector3f vLocalPos, vLocalAim;
-	if(!Utils::GetLocalEyePosition(vLocalPos) || !Utils::GetLocalFacing(vLocalAim))
-	{
-		SetNextState(NoOp);
-		return;
-	}
-
-	NavCollision nc = FindCollision(vLocalPos, vLocalPos + vLocalAim * 1024.f);
-	if ( !nc.DidHit() || !nc.HitSector()->mMirrored )
-	{
-		EngineFuncs::ConsoleError("No Nav Sector Found");
-		return;
-	}
-
-	RuntimeNavSector * ns = nc.HitSector();
-	m_WorkingSectorStart = nc.HitPosition();
-	m_WorkingSector = *ns->mSector;
-
-	m_ToolCancelled = false;
-	SetNextState(MoveSector);
+	SetCurrentTool<ToolMoveSector>();
 }
+
+class ToolSplitSector : public EditTool<PathPlannerNavMesh>
+{
+public:
+	ToolSplitSector() : EditTool( "Split Sector" ) {}
+
+	virtual bool Enter( PathPlannerNavMesh * system )
+	{
+		if ( system->mEditSector.mPoly.empty() )
+		{
+			EngineFuncs::ConsoleError("No Active Sector");
+			return false;
+		}
+
+		Vector3f aimPos, aimNormal;
+		if ( !Utils::GetLocalAimPoint( aimPos, &aimNormal ) )
+			return false;
+
+		system->mEditSlicePlane = Plane3f( aimNormal, aimPos );
+
+		return true;
+	}
+	virtual bool Update( PathPlannerNavMesh * system )
+	{
+		Vector3f aimPt, eyePos;
+		if( !Utils::GetLocalAimPoint( aimPt ) || !Utils::GetLocalEyePosition( eyePos ) )
+			return false;
+
+		system->mEditSlicePlane = Plane3f( system->mEditSlicePlane.Normal, aimPt );
+
+		Vector3List slicePoly = Utils::CreatePolygon(
+			aimPt,
+			system->mEditSlicePlane.Normal,
+			1024.f);
+
+		RenderBuffer::AddPolygonFilled( slicePoly, COLOR::RED.fade(100) );
+
+		return true;
+	}
+	virtual void Commit( PathPlannerNavMesh * system )
+	{
+		Vector3List s1 = Utils::ClipPolygonToPlanes( system->mEditSector.mPoly, system->mEditSlicePlane );
+		Vector3List s2 = Utils::ClipPolygonToPlanes( system->mEditSector.mPoly, -system->mEditSlicePlane );
+
+		Utils::WeldVertices( s1, 1.0f );
+		Utils::WeldVertices( s2, 1.0f );
+
+		// add the 2 new sectors
+		if( s1.size() >= 3 )
+		{
+			PathPlannerNavMesh::NavSector sec = system->mEditSector;
+			sec.mPoly = s1;
+			system->mNavSectors.push_back( sec );
+		}
+		if( s2.size() >= 3 )
+		{
+			PathPlannerNavMesh::NavSector sec = system->mEditSector;
+			sec.mPoly = s2;
+			system->mNavSectors.push_back( sec );
+		}
+
+		system->mEditSector = PathPlannerNavMesh::NavSector();
+
+		system->InitSectors();
+	}
+};
 
 void PathPlannerNavMesh::cmdSplitSector(const StringVector &_args)
 {
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	if(GetCurrentStateId()!=SplitSector)
-	{
-		SetNextState(SplitSector);
-	}
-	else
-	{
-		m_ToolCancelled = false;
-		SetNextState(NoOp);
-	}
+	SetCurrentTool<ToolSplitSector>();
 }
 
 void PathPlannerNavMesh::cmdGroundSector(const StringVector &_args)
@@ -459,8 +705,36 @@ void PathPlannerNavMesh::cmdGroundSector(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	m_ToolCancelled = false;
-	SetNextState(GroundSector);
+	Vector3f eyePos, eyeDir;
+
+	if(!Utils::GetLocalEyePosition( eyePos ) || !Utils::GetLocalFacing( eyeDir ))
+		return;
+
+	NavCollision nc = FindCollision( eyePos, eyePos + eyeDir * 1024.f );
+	if ( !nc.DidHit() || nc.HitSector()->mMirrored )
+	{
+		EngineFuncs::ConsoleError("No Nav Sector Found");
+		return;
+	}
+
+	RuntimeNavSector * ns = nc.HitSector();
+
+	obTraceResult tr;
+	for ( obuint32 i = 0; i < ns->mPoly.size(); ++i )
+	{
+		Vector3f vPt = ns->mSector->mPoly[i];
+		EngineFuncs::TraceLine(tr,
+			vPt+Vector3f(0.f,0.f,1.f),
+			vPt+Vector3f(0.f,0.f,-1024.f),
+			NULL,
+			TR_MASK_FLOODFILL,
+			-1,
+			False);
+
+		ns->mSector->mPoly[i].Z() = tr.m_Endpos[2];
+	}
+
+	InitSectors();
 }
 
 void PathPlannerNavMesh::cmdCommitPoly(const StringVector &_args)
@@ -468,15 +742,23 @@ void PathPlannerNavMesh::cmdCommitPoly(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	m_ToolCancelled = false;
-	SetNextState(CommitSector);
-
 	if ( mCurrentTool )
 	{
 		mCurrentTool->Commit( this );
 
 		// should we always delete the tool?
 		OB_DELETE( mCurrentTool );
+	}
+	else
+	{
+		Utils::WeldVertices( mEditSector.mPoly, 1.0f );
+
+		if ( mEditSector.mPoly.size() > 2 )
+		{
+			mNavSectors.push_back( mEditSector );
+			InitSectors();
+		}
+		mEditSector = NavSector();
 	}
 }
 
@@ -554,7 +836,6 @@ void PathPlannerNavMesh::cmdMirrorSectors(const StringVector &_args)
 		if ( !nc.DidHit() || nc.HitSector()->mMirrored )
 		{
 			EngineFuncs::ConsoleError("no sector at cursor");
-			SetNextState(NoOp);
 			return;
 		}
 		RuntimeNavSector * ns = nc.HitSector();
@@ -641,12 +922,13 @@ void PathPlannerNavMesh::cmdObstacleAdd(const StringVector &_args)
 {
 	if(_args.size() < 3)
 	{
-		EngineFuncs::ConsoleError("nav_obstacleadd length width");
+		EngineFuncs::ConsoleError("nav_obstacleadd length width cost");
 		return;
 	}
 
 	const float len = (float)atof( _args[ 1 ].c_str() );
 	const float wid = (float)atof( _args[ 2 ].c_str() );
+	const float cost = (float)atof( _args[ 3 ].c_str() );
 
 	if ( len == 0.0 || wid == 0.0 )
 		return;
@@ -659,141 +941,8 @@ void PathPlannerNavMesh::cmdObstacleAdd(const StringVector &_args)
 	obs.mPoly.push_back( vObsPoint + Vector3f(  len, -wid, 0.0f ) );
 	obs.mPoly.push_back( vObsPoint + Vector3f(  len,  wid, 0.0f ) );
 	obs.mPoly.push_back( vObsPoint + Vector3f( -len,  wid, 0.0f ) );
+	obs.mCost = cost;
 	mPendingObstacles.push_back( obs );
-}
-
-void PathPlannerNavMesh::cmdInfluenceMapCreate(const StringVector &_args)
-{
-	const float fmin = std::numeric_limits<float>::lowest();
-	const float fmax = std::numeric_limits<float>::max();
-
-	AABB mapbounds;
-	mapbounds.Set( Vector3f( fmax,fmax,fmax ), Vector3f( fmin, fmin, fmin ) );
-	for ( RuntimeSectorList::iterator s = mRuntimeSectors.begin(); s != mRuntimeSectors.end(); ++s)
-	{
-		for ( Vector3List::iterator v = s->mPoly.begin(); v != s->mPoly.end(); ++v)
-		{
-			mapbounds.Expand( *v );
-		}
-	}
-
-	VectorQueue empty;
-	m_SpanFrontier.swap( empty );
-
-	RenderBuffer::StaticBufferDelete( mInfluenceBufferId );
-	mInfluenceBufferId = 0;
-
-	OB_DELETE( m_Influence );
-	OB_DELETE( m_SpanMap );
-
-	m_SpanMap = new SpanMap();
-	m_SpanMap->Init( Vector3f(mapbounds.m_Mins), Vector3f(mapbounds.m_Maxs), 16.0f );
-
-	EngineFuncs::ConsoleMessage(va("Created %d x %d span map",
-		m_SpanMap->GetNumCellsX(), m_SpanMap->GetNumCellsY() ) );
-}
-
-void PathPlannerNavMesh::cmdInfluenceMapSeed(const StringVector &_args)
-{
-	/*Vector3f eyePos;
-	if ( Utils::GetLocalEyePosition(eyePos) )
-	m_SpanFrontier.push( eyePos );*/
-
-	enum { MaxFeatures = 64 };
-	AutoNavFeature features[ MaxFeatures ];
-	const int numFeatures = g_EngineFuncs->GetAutoNavFeatures( features, MaxFeatures );
-	for ( int i = 0; i < numFeatures; ++i )
-	{
-		m_SpanFrontier.push( features[ i ].m_Position );
-		m_SpanFrontier.push( features[ i ].m_TargetPosition );
-	}
-
-	if ( m_SpanMap == NULL )
-		EngineFuncs::ConsoleMessage( "No Influence Map Created, use nav_mapcreate" );
-	else if ( GetCurrentStateId() != FloodSpanMap )
-		SetNextState( FloodSpanMap );
-}
-
-void PathPlannerNavMesh::cmdInfluenceMapMem(const StringVector &_args)
-{
-	if ( m_SpanMap != NULL )
-	{
-		EngineFuncs::ConsoleMessage(va("Influence Map %d x %d ( %s )",
-			m_SpanMap->GetNumCellsX(),
-			m_SpanMap->GetNumCellsY(),
-			Utils::FormatByteString( m_SpanMap->CalculateMemUsage() ).c_str() ) );
-	}
-}
-
-void PathPlannerNavMesh::cmdInfluenceMapSave(const StringVector &_args)
-{
-	if ( m_SpanMap != NULL )
-	{
-		const std::string filePath	= std::string("nav/") + std::string(g_EngineFuncs->GetMapName()) + ".influence";
-
-		std::string data;
-		if ( m_SpanMap->Serialize( data ) )
-		{
-			File f;
-			if(f.OpenForWrite( filePath.c_str() ,File::Binary ) )
-			{
-				f.Write( data.c_str(), data.length() );
-			}
-		}
-	}
-}
-
-void PathPlannerNavMesh::cmdInfluenceMapLoad(const StringVector &_args)
-{
-	if ( m_SpanMap == NULL )
-		m_SpanMap = new SpanMap();
-
-	const std::string filePath	= std::string("nav/") + std::string(g_EngineFuncs->GetMapName()) + ".influence";
-
-	m_SpanMap->Clear();
-
-	File f;
-	if(!f.OpenForRead( filePath.c_str() ,File::Binary ) )
-	{
-		EngineFuncs::ConsoleError( va( "Influence Map %s not found", filePath.c_str() ) );
-		return;
-	}
-
-	std::string data;
-	if (!f.ReadWholeFile( data ) )
-	{
-		EngineFuncs::ConsoleError( va( "Influence Map Read Error %s", filePath.c_str() ) );
-		return;
-	}
-
-	if ( !m_SpanMap->DeSerialize( data ) )
-	{
-		EngineFuncs::ConsoleError( va( "Influence Map Parse Error %s", filePath.c_str() ) );
-		return;
-	}
-}
-
-void PathPlannerNavMesh::cmdInfluenceMapFlood(const StringVector &_args)
-{
-	Vector3f vAimPt;
-	if ( !Utils::GetLocalAimPoint( vAimPt ))
-		return;
-	RuntimeNavSector * ns = GetSectorAt(vAimPt);
-	if ( ns == NULL )
-		return;
-
-	m_Influence = m_SpanMap->CreateInfluenceLayer();
-	m_Influence->Reset();
-	m_Influence->AddSeed( vAimPt, 0.0f );
-
-	Timer t;
-	while( !m_Influence->UpdateInfluences( std::numeric_limits<int>::max() ) )
-	{
-	}
-
-	EngineFuncs::ConsoleError( va( "Influence Flooded in %.3f sec ( %s )",
-		t.GetElapsedSeconds(),
-		Utils::FormatByteString( m_Influence->CalculateMemUsage() ).c_str() ) );
 }
 
 void PathPlannerNavMesh::_BenchmarkPathFinder(const StringVector &_args)
@@ -882,7 +1031,10 @@ void PathPlannerNavMesh::cmdUpdateContents(const StringVector &_args)
 
 class ToolSectorEdgeDrop : public EditTool<PathPlannerNavMesh>
 {
-	virtual bool Start( PathPlannerNavMesh * system )
+public:
+	ToolSectorEdgeDrop() : EditTool( "Sector Edge Drop" ) {}
+
+	virtual bool Enter( PathPlannerNavMesh * system )
 	{
 		Vector3f aimPt;
 		if( !Utils::GetLocalAimPoint( aimPt ) )
@@ -912,11 +1064,11 @@ class ToolSectorEdgeDrop : public EditTool<PathPlannerNavMesh>
 
 		return true;
 	}
-	virtual void Update( PathPlannerNavMesh * system )
+	virtual bool Update( PathPlannerNavMesh * system )
 	{
 		Vector3f aimPt;
 		if( !Utils::GetLocalAimPoint( aimPt ) )
-			return;
+			return false;
 
 		mSector->mPoly[ m0 ].Z() = aimPt.Z();
 		mSector->mPoly[ m1 ].Z() = aimPt.Z();
@@ -930,6 +1082,7 @@ class ToolSectorEdgeDrop : public EditTool<PathPlannerNavMesh>
 				system->mRuntimeSectors[ i ].mPoly[ m1 ].Z() = aimPt.Z();
 			}
 		}
+		return true;
 	}
 	virtual void Commit( PathPlannerNavMesh * system )
 	{
@@ -949,43 +1102,25 @@ private:
 
 void PathPlannerNavMesh::cmdSectorEdgeDrop(const StringVector &_args)
 {
-	mCurrentTool = new ToolSectorEdgeDrop;
-	if ( !mCurrentTool->Start( this ) )
-		OB_DELETE( mCurrentTool );
+	SetCurrentTool<ToolSectorEdgeDrop>();
 }
 
 class ToolPortalCreate : public EditTool<PathPlannerNavMesh>
 {
-	virtual bool Start( PathPlannerNavMesh * system )
+public:
+	ToolPortalCreate() : EditTool( "Create Portal" ) {}
+
+	virtual bool Enter( PathPlannerNavMesh * system )
 	{
 		Vector3f aimPt;
 		if( !Utils::GetLocalAimPoint( aimPt ) )
 			return false;
 
-		/*mSector = system->GetSectorAtCursor();
-		if ( mSector == NULL )
-		return false;*/
-
-		/*float nearest = std::numeric_limits<float>::max();
-		for ( size_t i = 1; i <= mSector->mPoly.size(); ++i )
-		{
-		const int s0 = i-1;
-		const int s1 = i%mSector->mPoly.size();
-		DistPoint3Segment3f dist( aimPt, Segment3f( mSector->mPoly[ s0 ], mSector->mPoly[ s1 ] ) );
-
-		const float d = dist.Get();
-		if ( d < nearest )
-		{
-		nearest = d;
-		m0 = s0;
-		m1 = s1;
-		}
-		}*/
-
 		return true;
 	}
-	virtual void Update( PathPlannerNavMesh * system )
+	virtual bool Update( PathPlannerNavMesh * system )
 	{
+		return true;
 	}
 	virtual void Commit( PathPlannerNavMesh * system )
 	{
@@ -996,8 +1131,82 @@ private:
 void PathPlannerNavMesh::cmdPortalCreate(const StringVector &_args)
 {
 	mCurrentTool = new ToolPortalCreate;
-	if ( !mCurrentTool->Start( this ) )
-		OB_DELETE( mCurrentTool );
+}
+
+class ToolPortalEdgeMask : public EditTool<PathPlannerNavMesh>
+{
+public:
+	ToolPortalEdgeMask() : EditTool( "PortalEdgeMask" ) {}
+
+	virtual bool Enter( PathPlannerNavMesh * system )
+	{
+		Vector3f eyePos, eyeDir;
+		if( !Utils::GetLocalEyePosition( eyePos ) )
+			return false;
+		if( !Utils::GetLocalFacing( eyeDir ) )
+			return false;
+
+		PathPlannerNavMesh::NavCollision nc = system->FindCollision( eyePos, eyePos + eyeDir * 2048.f );
+		if( !nc.DidHit() )
+			return false;
+
+		mSector = nc.HitSector();
+
+		if ( mSector == NULL )
+			return false;
+
+		return true;
+	}
+	virtual bool Update( PathPlannerNavMesh * system )
+	{
+		Vector3f eyePos, eyeDir;
+		if( !Utils::GetLocalEyePosition( eyePos ) )
+			return false;
+		if( !Utils::GetLocalFacing( eyeDir ) )
+			return false;
+
+		for ( size_t i = 0; i < mSector->mPoly.size(); ++i )
+		{
+			const size_t i0 = i;
+			const size_t i1 = (i+1) % mSector->mPoly.size();
+			IntrRay2Segment2f intr(
+				Ray2f( To2d( eyePos ), To2d( eyeDir ) ),
+				Segment2f( Vector2f( To2d( mSector->mPoly[ i0 ] ) ), Vector2f( To2d( mSector->mPoly[ i1 ] ) ) ) );
+
+			if ( intr.Test() )
+			{
+				const bool edgedisabled = ( mSector->mSectorData->edgeportalmask() & (1<<i) ) != 0;
+
+				RenderBuffer::AddTri(
+					mSector->mPoly[ i0 ] + Vector3f(0.0f,0.0f,4.0f),
+					mSector->mPoly[ i1 ] + Vector3f(0.0f,0.0f,4.0f),
+					mSector->CalculateCenter(),
+					edgedisabled ? COLOR::GREEN.fade(100) : COLOR::RED.fade(100) );
+
+				mMask = ( 1<<i );
+				break;
+			}
+		}
+		return true;
+	}
+	virtual void Commit( PathPlannerNavMesh * system )
+	{
+		const bool edgedisabled = ( mSector->mSectorData->edgeportalmask() & mMask ) != 0;
+		if ( edgedisabled )
+			mSector->mSectorData->set_edgeportalmask( mSector->mSectorData->edgeportalmask() & ~mMask );
+		else
+			mSector->mSectorData->set_edgeportalmask( mSector->mSectorData->edgeportalmask() | mMask );
+
+		mSector->mUpdatePortals = true;
+	}
+private:
+	PathPlannerNavMesh::RuntimeNavSector *		mSector;
+	obuint32									mMask;
+};
+
+void PathPlannerNavMesh::cmdPortalBlockCreate(const StringVector &_args)
+{
+	SetCurrentTool<ToolPortalEdgeMask>();
 }
 
 static void PrintSetFieldUsage( const google::protobuf::Message & msg, const std::string & varpath = "" )
@@ -1282,462 +1491,51 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 }
 
 //////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
 
-STATE_ENTER(PathPlannerNavMesh, NoOp)
-{
-}
-
-STATE_UPDATE(PathPlannerNavMesh, NoOp)
-{
-}
-
-STATE_EXIT(PathPlannerNavMesh, NoOp)
-{
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-STATE_ENTER(PathPlannerNavMesh, PlaceSector)
-{
-	Vector3f vPos, vNormal;
-	if(!Utils::GetLocalAimPoint(vPos, &vNormal))
-		return;
-
-	m_WorkingSectorStart = vPos;
-	m_WorkingSectorPlane = Plane3f( vNormal, vPos );
-}
-
-STATE_UPDATE(PathPlannerNavMesh, PlaceSector)
-{
-	Vector3f vPos, vNormal;
-	if(!Utils::GetLocalAimPoint(vPos, &vNormal))
-		return;
-
-	m_WorkingSectorPlane = Plane3f( m_WorkingSectorPlane.Normal, vPos );
-
-	Vector3List poly = Utils::CreatePolygon(
-		vPos,
-		m_WorkingSectorPlane.Normal,
-		32768.f);
-
-	RenderBuffer::AddPolygonFilled( poly, COLOR::GREEN.fade(100) );
-}
-
-STATE_EXIT(PathPlannerNavMesh, PlaceSector)
-{
-	if(m_ToolCancelled)
-	{
-		m_WorkingSector = NavSector();
-		return;
-	}
-
-	Vector3f vPos, vNormal;
-	if(!Utils::GetLocalAimPoint(vPos, &vNormal))
-		return;
-
-	m_WorkingSector.mPoly = Utils::CreatePolygon(
-		vPos,
-		m_WorkingSectorPlane.Normal,
-		32768.f);
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-STATE_ENTER(PathPlannerNavMesh, SliceSector)
-{
-	if(m_WorkingSector.mPoly.empty())
-	{
-		EngineFuncs::ConsoleError("No Active Sector");
-		SetNextState(NoOp);
-	}
-
-	Vector3f vPos, vNormal;
-	if(!Utils::GetLocalAimPoint(vPos, &vNormal))
-		return;
-
-	m_WorkingSlicePlane = Plane3f( vNormal, vPos );
-}
-
-STATE_UPDATE(PathPlannerNavMesh, SliceSector)
-{
-	Vector3f vEye, vPos, vNormal;
-	if(!Utils::GetLocalAimPoint(vPos, &vNormal) ||
-		!Utils::GetLocalEyePosition(vEye))
-		return;
-
-	bool bSnapped = false;
-	vPos = _SectorVertWithin(vEye, vPos, SNAP_RADIUS, &bSnapped);
-	if(bSnapped)
-		m_CursorColor = COLOR::ORANGE;
-
-	m_WorkingSlicePlane = Plane3f( m_WorkingSlicePlane.Normal, vPos );
-
-	Vector3List slicePoly = Utils::CreatePolygon(
-		vPos,
-		m_WorkingSlicePlane.Normal,
-		1024.f);
-
-	RenderBuffer::AddPolygonFilled( slicePoly, COLOR::GREEN.fade(100) );
-}
-
-STATE_EXIT(PathPlannerNavMesh, SliceSector)
-{
-	if(m_ToolCancelled)
-		return;
-
-	const Plane3f clipPlane = ( m_WorkingSlicePlane.WhichSide( m_WorkingSectorStart ) > 0 ) ?
-		-m_WorkingSlicePlane : m_WorkingSlicePlane;
-
-	m_WorkingSector.mPoly =
-		Utils::ClipPolygonToPlanes( m_WorkingSector.mPoly, clipPlane );
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-STATE_ENTER(PathPlannerNavMesh, SliceSectorWithSector)
-{
-	if(m_WorkingSector.mPoly.empty())
-	{
-		EngineFuncs::ConsoleError("No Active Sector");
-		SetNextState(NoOp);
-		return;
-	}
-
-	//////////////////////////////////////////////////////////////////////////
-	Vector3f vFacing, vPos;
-	if(!Utils::GetLocalEyePosition(vPos) || !Utils::GetLocalFacing(vFacing))
-	{
-		EngineFuncs::ConsoleError("can't get facing or eye position");
-		SetNextState(NoOp);
-		return;
-	}
-
-	NavCollision nc = FindCollision(vPos, vPos + vFacing * 2048.f);
-	if(!nc.DidHit())
-	{
-		EngineFuncs::ConsoleError("no sector at cursor");
-		SetNextState(NoOp);
-		return;
-	}
-	//////////////////////////////////////////////////////////////////////////
-
-	m_WorkingSlicePlane = Plane3f( nc.HitNormal(), nc.HitPosition() );
-
-	const Plane3f clipPlane = ( m_WorkingSlicePlane.WhichSide( m_WorkingSectorStart ) > 0 ) ?
-		-m_WorkingSlicePlane : m_WorkingSlicePlane;
-
-	m_WorkingSector.mPoly = Utils::ClipPolygonToPlanes( m_WorkingSector.mPoly, clipPlane );
-
-	SetNextState(NoOp);
-}
-
-STATE_UPDATE(PathPlannerNavMesh, SliceSectorWithSector)
-{
-}
-
-STATE_EXIT(PathPlannerNavMesh, SliceSectorWithSector)
-{
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-STATE_ENTER(PathPlannerNavMesh, EditSector)
-{
-}
-
-STATE_UPDATE(PathPlannerNavMesh, EditSector)
-{
-	Vector3f vLocalPos, vLocalAim;
-
-	if(!Utils::GetLocalEyePosition(vLocalPos) ||
-		!Utils::GetLocalFacing(vLocalAim))
-	{
-		SetNextState(NoOp);
-		return;
-	}
-
-	NavCollision nc = FindCollision(vLocalPos, vLocalPos + vLocalAim * 1024.f);
-	if ( !nc.DidHit() || nc.HitSector()->mMirrored )
-	{
-		EngineFuncs::ConsoleError("No Nav Sector Found");
-		SetNextState(NoOp);
-		return;
-	}
-
-	RuntimeNavSector * ns = nc.HitSector();
-
-	m_WorkingSectorStart = nc.HitPosition();
-	m_WorkingSector = *ns->mSector;
-	mNavSectors.erase(mNavSectors.begin() + ( ns->mSector - &mNavSectors[ 0 ] ));
-
-	InitSectors();
-
-	SetNextState(NoOp);
-}
-
-STATE_EXIT(PathPlannerNavMesh, EditSector)
-{
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-STATE_ENTER(PathPlannerNavMesh, MoveSector)
-{
-}
-
-STATE_UPDATE(PathPlannerNavMesh, MoveSector)
-{
-	Vector3f vAimPt, vAimNormal;
-	if ( !Utils::GetLocalAimPoint( vAimPt, &vAimNormal ) )
-	{
-		SetNextState(NoOp);
-		return;
-	}
-
-	m_WorkingSector.mPlane = Plane3f( m_WorkingSector.mPlane.Normal, vAimPt );
-	m_WorkingSector.SetPointsToPlane();
-}
-
-STATE_EXIT(PathPlannerNavMesh, MoveSector)
-{
-	if(m_ToolCancelled)
-		return;
-
-	InitSectors();
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-STATE_ENTER(PathPlannerNavMesh, SplitSector)
-{
-	if(m_WorkingSector.mPoly.empty())
-	{
-		EngineFuncs::ConsoleError("No Active Sector");
-		SetNextState(NoOp);
-	}
-
-	Vector3f vPos, vNormal;
-	if(!Utils::GetLocalAimPoint(vPos, &vNormal))
-		return;
-
-	m_WorkingSlicePlane = Plane3f( vNormal, vPos );
-}
-
-STATE_UPDATE(PathPlannerNavMesh, SplitSector)
-{
-	Vector3f vPos, vNormal;
-	if(!Utils::GetLocalAimPoint(vPos, &vNormal))
-		return;
-
-	m_WorkingSlicePlane = Plane3f( m_WorkingSlicePlane.Normal, vPos );
-
-	Vector3List slicePoly = Utils::CreatePolygon(
-		vPos,
-		m_WorkingSlicePlane.Normal,
-		1024.f);
-
-	RenderBuffer::AddPolygonFilled( slicePoly, COLOR::RED.fade(100) );
-}
-
-STATE_EXIT(PathPlannerNavMesh, SplitSector)
-{
-	if(m_ToolCancelled)
-		return;
-
-	Vector3List s1 = Utils::ClipPolygonToPlanes( m_WorkingSector.mPoly, m_WorkingSlicePlane );
-	Vector3List s2 = Utils::ClipPolygonToPlanes( m_WorkingSector.mPoly, -m_WorkingSlicePlane );
-
-	// add the 2 new sectors
-	NavSector ns = m_WorkingSector;
-	if(!s1.empty())
-	{
-		m_WorkingSector.mPoly = s1;
-		mNavSectors.push_back(m_WorkingSector);
-	}
-	if(!s2.empty())
-	{
-		m_WorkingSector.mPoly = s2;
-		mNavSectors.push_back(m_WorkingSector);
-	}
-
-	m_WorkingSector = NavSector();
-
-	InitSectors();
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-STATE_ENTER(PathPlannerNavMesh, TraceSector)
-{
-	Vector3f vEye, vAimPos;
-	Utils::GetLocalEyePosition(vEye);
-	Utils::GetLocalAimPoint(vAimPos);
-
-	// see if this closes the loop.
-	if(m_WorkingManualSector.size()>2)
-	{
-		if(Length(vAimPos,m_WorkingManualSector[0]) <= SNAP_RADIUS)
-		{
-			m_WorkingManualSector.pop_back(); // remove the last pt
-			vAimPos = m_WorkingManualSector[0];
-			m_WorkingSector.mPoly = m_WorkingManualSector;
-			m_WorkingManualSector.resize(0);
-			SetNextState(NoOp);
-			return;
-		}
-	}
-
-	vAimPos = _SectorVertWithin(vEye, vAimPos, SNAP_RADIUS);
-
-	if(m_WorkingManualSector.empty())
-	{
-		m_WorkingManualSector.push_back(vAimPos);
-		m_WorkingManualSector.push_back(vAimPos);
-	}
-	else
-	{
-		m_WorkingManualSector.push_back(vAimPos);
-	}
-}
-
-STATE_UPDATE(PathPlannerNavMesh, TraceSector)
-{
-	if(m_WorkingManualSector.empty())
-		return;
-
-	Vector3f vEye, vAimPos;
-	Utils::GetLocalEyePosition(vEye);
-	Utils::GetLocalAimPoint(vAimPos);
-
-	bool bSnapped = false;
-
-	// see if we can snap to the start.
-	if(Length(vAimPos,m_WorkingManualSector[0]) <= SNAP_RADIUS)
-	{
-		m_CursorColor = COLOR::ORANGE;
-		vAimPos = m_WorkingManualSector[0];
-	}
-	else
-		vAimPos = _SectorVertWithin(vEye, vAimPos,SNAP_RADIUS,&bSnapped);
-
-	if(bSnapped)
-		m_CursorColor = COLOR::ORANGE;
-
-	// update the last point
-	m_WorkingManualSector[m_WorkingManualSector.size()-1] = vAimPos;
-
-	RenderBuffer::AddPolygonSilouette( m_WorkingManualSector, COLOR::GREEN );
-}
-
-STATE_EXIT(PathPlannerNavMesh, TraceSector)
-{
-	if(m_ToolCancelled)
-	{
-		m_WorkingManualSector.resize(0);
-		return;
-	}
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-STATE_ENTER(PathPlannerNavMesh, GroundSector)
-{
-}
-
-STATE_UPDATE(PathPlannerNavMesh, GroundSector)
-{
-	Vector3f vLocalPos, vLocalAim;
-
-	if(!Utils::GetLocalEyePosition(vLocalPos) ||
-		!Utils::GetLocalFacing(vLocalAim))
-	{
-		SetNextState(NoOp);
-		return;
-	}
-
-	NavCollision nc = FindCollision(vLocalPos, vLocalPos + vLocalAim * 1024.f);
-	if ( !nc.DidHit() || nc.HitSector()->mMirrored )
-	{
-		EngineFuncs::ConsoleError("No Nav Sector Found");
-		SetNextState(NoOp);
-		return;
-	}
-
-	RuntimeNavSector * ns = nc.HitSector();
-
-	obTraceResult tr;
-	for(obuint32 i = 0; i < ns->mPoly.size(); ++i)
-	{
-		Vector3f vPt = ns->mSector->mPoly[i];
-		EngineFuncs::TraceLine(tr,
-			vPt+Vector3f(0.f,0.f,1.f),
-			vPt+Vector3f(0.f,0.f,-1024.f),
-			NULL,
-			TR_MASK_FLOODFILL,
-			-1,
-			False);
-
-		ns->mSector->mPoly[i].Z() = tr.m_Endpos[2];
-	}
-
-	InitSectors();
-
-	SetNextState(NoOp);
-}
-
-STATE_EXIT(PathPlannerNavMesh, GroundSector)
-{
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-STATE_ENTER(PathPlannerNavMesh, CommitSector)
-{
-}
-
-STATE_UPDATE(PathPlannerNavMesh, CommitSector)
-{
-	//////////////////////////////////////////////////////////////////////////
-
-	if ( m_WorkingSector.mPoly.size() > 2 )
-	{
-		mNavSectors.push_back( m_WorkingSector );
-	}
-	m_WorkingSector = NavSector();
-
-	//////////////////////////////////////////////////////////////////////////
-
-	if ( m_WorkingManualSector.size() > 2 )
-	{
-		NavSector ns;
-		ns.mPoly = m_WorkingManualSector;
-		mNavSectors.push_back(ns);
-	}
-	m_WorkingManualSector.resize(0);
-
-	InitSectors();
-
-	SetNextState( NoOp );
-}
-
-STATE_EXIT(PathPlannerNavMesh, CommitSector)
-{
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-STATE_ENTER(PathPlannerNavMesh, MirrorSectors)
-{
-}
-
-STATE_UPDATE(PathPlannerNavMesh, MirrorSectors)
-{
-}
-
-STATE_EXIT(PathPlannerNavMesh, MirrorSectors)
-{
-}
+//STATE_ENTER(PathPlannerNavMesh, SliceSectorWithSector)
+//{
+//	if(mEditSector.mPoly.empty())
+//	{
+//		EngineFuncs::ConsoleError("No Active Sector");
+//		SetNextState(NoOp);
+//		return;
+//	}
+//
+//	//////////////////////////////////////////////////////////////////////////
+//	Vector3f vFacing, vPos;
+//	if(!Utils::GetLocalEyePosition(vPos) || !Utils::GetLocalFacing(vFacing))
+//	{
+//		EngineFuncs::ConsoleError("can't get facing or eye position");
+//		SetNextState(NoOp);
+//		return;
+//	}
+//
+//	NavCollision nc = FindCollision(vPos, vPos + vFacing * 2048.f);
+//	if(!nc.DidHit())
+//	{
+//		EngineFuncs::ConsoleError("no sector at cursor");
+//		SetNextState(NoOp);
+//		return;
+//	}
+//	//////////////////////////////////////////////////////////////////////////
+//
+//	mEditSlicePlane = Plane3f( nc.HitNormal(), nc.HitPosition() );
+//
+//	const Plane3f clipPlane = ( mEditSlicePlane.WhichSide( mEditSectorStart ) > 0 ) ?
+//		-mEditSlicePlane : mEditSlicePlane;
+//
+//	mEditSector.mPoly = Utils::ClipPolygonToPlanes( mEditSector.mPoly, clipPlane );
+//
+//	SetNextState(NoOp);
+//}
+//
+//STATE_UPDATE(PathPlannerNavMesh, SliceSectorWithSector)
+//{
+//}
+//
+//STATE_EXIT(PathPlannerNavMesh, SliceSectorWithSector)
+//{
+//}
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -1774,74 +1572,74 @@ static bool TestForValidNode( Vector3f & spanPos, float & spanHeight )
 	return false;
 }
 
-STATE_ENTER(PathPlannerNavMesh, FloodSpanMap)
-{
-	EngineFuncs::ConsoleMessage( "Flooding Influence Map..." );
-	m_ToolCancelled = false;
-}
-
-STATE_UPDATE(PathPlannerNavMesh, FloodSpanMap)
-{
-	if ( m_SpanFrontier.empty() )
-		SetNextState( NoOp );
-
-	const float cs = m_SpanMap->GetCellSize();
-
-	const Vector3f step[] =
-	{
-		Vector3f( -cs, 0.0f, SpanStepHeight ),
-		Vector3f(  cs, 0.0f, SpanStepHeight ),
-		Vector3f( 0.0f, -cs, SpanStepHeight ),
-		Vector3f( 0.0f,  cs, SpanStepHeight ),
-	};
-	const int stepdirs = sizeof(step) / sizeof(step[0]);
-
-	static int maxIterations = std::numeric_limits<int>::max();
-	int iterations = maxIterations;
-	while ( !m_SpanFrontier.empty() && (iterations--) > 0 )
-	{
-		Vector3f spanPos = m_SpanFrontier.front();
-		m_SpanFrontier.pop();
-
-		float spanHeight = 0.0f;
-		if ( TestForValidNode( spanPos, spanHeight ) && m_SpanMap->AddOpenSpan( spanPos, spanHeight ) )
-		{
-			//RenderBuffer::AddCircle( spanPos, 16.0f, COLOR::GREEN, 0.1f );
-
-			for ( int i = 0; i < stepdirs; ++i )
-			{
-				Vector3f expandPos = spanPos + step[ i ];
-
-				obTraceResult tr;
-				EngineFuncs::TraceLine(tr,
-					spanPos + Vector3f(0,0,4),
-					expandPos,
-					NULL,
-					TR_MASK_FLOODFILL,
-					-1,
-					False);
-
-				if ( tr.m_Fraction == 1.0f )
-					m_SpanFrontier.push( expandPos );
-			}
-		}
-	}
-}
-
-STATE_EXIT(PathPlannerNavMesh, FloodSpanMap)
-{
-	if ( m_ToolCancelled )
-	{
-		OB_DELETE( m_SpanMap );
-		OB_DELETE( m_Influence );
-		return;
-	}
-
-	unsigned int numIndices = m_SpanMap->IndexSpanNodes();
-
-	EngineFuncs::ConsoleMessage(va("Finalize %d x %d ( %d nodes ) span map( %s )",
-		m_SpanMap->GetNumCellsX(),
-		m_SpanMap->GetNumCellsY(),
-		numIndices,
-		Utils::FormatByteString( m_SpanMap->CalculateMemUsage() ).c_str() ) );
-}
+//STATE_ENTER(PathPlannerNavMesh, FloodSpanMap)
+//{
+//	EngineFuncs::ConsoleMessage( "Flooding Influence Map..." );
+//	m_ToolCancelled = false;
+//}
+//
+//STATE_UPDATE(PathPlannerNavMesh, FloodSpanMap)
+//{
+//	if ( m_SpanFrontier.empty() )
+//		SetNextState( NoOp );
+//
+//	const float cs = m_SpanMap->GetCellSize();
+//
+//	const Vector3f step[] =
+//	{
+//		Vector3f( -cs, 0.0f, SpanStepHeight ),
+//		Vector3f(  cs, 0.0f, SpanStepHeight ),
+//		Vector3f( 0.0f, -cs, SpanStepHeight ),
+//		Vector3f( 0.0f,  cs, SpanStepHeight ),
+//	};
+//	const int stepdirs = sizeof(step) / sizeof(step[0]);
+//
+//	static int maxIterations = std::numeric_limits<int>::max();
+//	int iterations = maxIterations;
+//	while ( !m_SpanFrontier.empty() && (iterations--) > 0 )
+//	{
+//		Vector3f spanPos = m_SpanFrontier.front();
+//		m_SpanFrontier.pop();
+//
+//		float spanHeight = 0.0f;
+//		if ( TestForValidNode( spanPos, spanHeight ) && m_SpanMap->AddOpenSpan( spanPos, spanHeight ) )
+//		{
+//			//RenderBuffer::AddCircle( spanPos, 16.0f, COLOR::GREEN, 0.1f );
+//
+//			for ( int i = 0; i < stepdirs; ++i )
+//			{
+//				Vector3f expandPos = spanPos + step[ i ];
+//
+//				obTraceResult tr;
+//				EngineFuncs::TraceLine(tr,
+//					spanPos + Vector3f(0,0,4),
+//					expandPos,
+//					NULL,
+//					TR_MASK_FLOODFILL,
+//					-1,
+//					False);
+//
+//				if ( tr.m_Fraction == 1.0f )
+//					m_SpanFrontier.push( expandPos );
+//			}
+//		}
+//	}
+//}
+//
+//STATE_EXIT(PathPlannerNavMesh, FloodSpanMap)
+//{
+//	if ( m_ToolCancelled )
+//	{
+//		OB_DELETE( m_SpanMap );
+//		OB_DELETE( m_Influence );
+//		return;
+//	}
+//
+//	unsigned int numIndices = m_SpanMap->IndexSpanNodes();
+//
+//	EngineFuncs::ConsoleMessage(va("Finalize %d x %d ( %d nodes ) span map( %s )",
+//		m_SpanMap->GetNumCellsX(),
+//		m_SpanMap->GetNumCellsY(),
+//		numIndices,
+//		Utils::FormatByteString( m_SpanMap->CalculateMemUsage() ).c_str() ) );
+//}

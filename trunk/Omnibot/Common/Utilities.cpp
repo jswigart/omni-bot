@@ -463,6 +463,24 @@ namespace Utils
 		_list.push_back(vVertex[3]);
 	}
 
+	void WeldVertices( Vector3List & poly, float epsilon )
+	{
+		for ( size_t i = 0; i < poly.size(); ++i )
+		{
+			const size_t i0 = i;
+			const size_t i1 = (i+1) % poly.size();
+
+			const Vector3f p0 = poly[ i0 ];
+			const Vector3f p1 = poly[ i1 ];
+
+			if ( Length( p0, p1 ) < epsilon )
+			{
+				poly.erase( poly.begin() + i );
+				--i;
+			}
+		}
+	}
+
 	const char *FindClassName(obint32 _classId)
 	{
 		return System::mInstance->mGame->FindClassName(_classId);

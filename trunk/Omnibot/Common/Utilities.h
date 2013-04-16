@@ -86,6 +86,8 @@ namespace Utils
 
 	Vector3f AveragePoint(const Vector3List &_lis);
 
+	void WeldVertices( Vector3List & poly, float epsilon );
+
 	float ClosestPointOfApproachTime(const Vector3f& aP1, const Vector3f& aV1, const Vector3f& aP2, const Vector3f& aV2) ;
 
 	// function: Tokenize
@@ -375,6 +377,12 @@ template<class Type>
 inline Type InterpolateT(const Type &_1, const Type &_2, float _t)
 {
 	return _1 + (_2 - _1) * _t;
+}
+
+template<typename T>
+inline Vector2<T> To2d( const Vector3<T> & v3 )
+{
+	return Vector2<T>( v3.X(), v3.Y() );
 }
 
 // ostream helpers

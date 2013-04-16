@@ -11,12 +11,8 @@
 #ifndef __PATHPLANNERNAVMESH_H__
 #define __PATHPLANNERNAVMESH_H__
 
-#include <queue>
-
 #include "Omni-Bot_BitFlags.h"
 #include "PathPlannerBase.h"
-#include "InternalFsm.h"
-#include "SpanHeightMap.h"
 #include "CollisionModel.h"
 
 #include "navmesh.pb.h"
@@ -24,23 +20,6 @@
 typedef std::vector<Segment3f> SegmentList;
 
 //////////////////////////////////////////////////////////////////////////
-
-enum ToolStateNavMesh
-{
-	NoOp,
-	PlaceSector,
-	SliceSector,
-	SliceSectorWithSector,
-	EditSector,
-	MoveSector,
-	SplitSector,
-	TraceSector,
-	GroundSector,
-	CommitSector,
-	MirrorSectors,
-	FloodSpanMap,
-	NumToolStates
-};
 
 namespace NavigationMeshOptions
 {
@@ -62,17 +41,22 @@ template< typename T >
 class EditTool
 {
 public:
-	EditTool() {}
+	EditTool( const char * toolname ) : mToolName( toolname ) {}
 	virtual ~EditTool() {}
 
-	virtual bool Start( T * system ) = 0;
-	virtual void Update( T * system ) = 0;
+	virtual bool Enter( T * system ) = 0;
+	virtual bool ReEnter( T * system ) { return true; }
+	virtual bool Update( T * system ) = 0;
 	virtual void Commit( T * system ) = 0;
+	virtual void Undo( T * system ) { EngineFuncs::ConsoleError( va( "No Undo functionality for tool %s",mToolName ) ); }
+protected:
+	std::string		mToolError;
+	const char *	mToolName;
 };
 
 // class: PathPlannerNavMesh
 //		Path planner interface for the navmesh system for hl2
-class PathPlannerNavMesh : public PathPlannerBase, public InternalFSM<PathPlannerNavMesh,NumToolStates>
+class PathPlannerNavMesh : public PathPlannerBase
 {
 public:
 	struct RuntimeNavSector;
@@ -251,8 +235,8 @@ protected:
 	void cmdNavStats(const StringVector &_args);
 	void cmdNavEnableStep(const StringVector &_args);
 	void cmdAutoBuildFeatures(const StringVector &_args);
-	void cmdStartPoly(const StringVector &_args);
-	void cmdUndoPoly(const StringVector &_args);
+	void cmdTracePoly(const StringVector &_args);
+	void cmdUndo(const StringVector &_args);
 	void cmdCreatePlanePoly(const StringVector &_args);
 	void cmdCreateSlicePoly(const StringVector &_args);
 	void cmdCreateSliceSector(const StringVector &_args);
@@ -269,15 +253,9 @@ protected:
 	void cmdSectorEdgeDrop(const StringVector &_args);
 	void cmdSetField(const StringVector &_args);
 	void cmdPortalCreate(const StringVector &_args);
+	void cmdPortalBlockCreate(const StringVector &_args);
 
 	void cmdObstacleAdd(const StringVector &_args);
-
-	void cmdInfluenceMapCreate(const StringVector &_args);
-	void cmdInfluenceMapSeed(const StringVector &_args);
-	void cmdInfluenceMapMem(const StringVector &_args);
-	void cmdInfluenceMapSave(const StringVector &_args);
-	void cmdInfluenceMapLoad(const StringVector &_args);
-	void cmdInfluenceMapFlood(const StringVector &_args);
 
 	NavSector * GetSectorAtCursor();
 
@@ -286,6 +264,12 @@ protected:
 	friend class PathFindNavMesh;
 	friend class ToolSectorEdgeDrop;
 	friend class ToolPortalCreate;
+	friend class ToolPortalEdgeMask;
+	friend class ToolCreateSectorPoly;
+	friend class ToolCreateSlicePoly;
+	friend class ToolSplitSector;
+	friend class ToolTraceSector;
+	friend class ToolMoveSector;
 protected:
 	//////////////////////////////////////////////////////////////////////////
 	class NavCollision
@@ -328,47 +312,22 @@ protected:
 	ObstacleList			mPendingObstacles;
 	ObstacleList			mObstacles;
 
-	//////////////////////////////////////////////////////////////////////////
-	// Tool state machine
-	STATE_PROTOTYPE(NoOp);
-	STATE_PROTOTYPE(PlaceSector);
-	STATE_PROTOTYPE(SliceSector);
-	STATE_PROTOTYPE(SliceSectorWithSector);
-	STATE_PROTOTYPE(EditSector);
-	STATE_PROTOTYPE(MoveSector);
-	STATE_PROTOTYPE(SplitSector);
-	STATE_PROTOTYPE(TraceSector);
-	STATE_PROTOTYPE(GroundSector);
-	STATE_PROTOTYPE(CommitSector);
-	STATE_PROTOTYPE(MirrorSectors);
-	STATE_PROTOTYPE(FloodSpanMap);
+	float					mMinSectorCost;
+	float					mMaxSectorCost;
+
+	CollisionModel			mSectorCollision;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Current tool variables
 	obColor				m_CursorColor;
-	NavSector			m_WorkingSector;
-	Vector3f			m_WorkingSectorStart;
-	Vector3f			m_WorkingSectorNormal;
+	NavSector			mEditSector;
+	Vector3f			mEditSectorStart;
+	Vector3f			mEditSectorNormal;
 
-	Vector3List			m_WorkingManualSector;
-
-	Plane3f				m_WorkingSectorPlane;
-	Plane3f				m_WorkingSlicePlane;
-
-	bool				m_ToolCancelled;
+	Plane3f				mEditSectorPlane;
+	Plane3f				mEditSlicePlane;
 
 	EditTool<PathPlannerNavMesh> * mCurrentTool;
-
-	typedef SpanHeightMap<obuint8> SpanMap;
-	typedef std::queue<Vector3f> VectorQueue;
-
-	SpanMap *				m_SpanMap;
-	SpanMap::InfluenceMap *	m_Influence;
-	VectorQueue				m_SpanFrontier;
-
-	CollisionModel			mSectorCollision;
-
-	obuint32				mInfluenceBufferId;
 
 	void InitSectors();
 
@@ -393,6 +352,23 @@ protected:
 	void UpdateMoverSectors();
 	void UpdateRuntimeSectors();
 	void UpdateObstacles();
+
+	template<typename T>
+	void SetCurrentTool()
+	{
+		if ( mCurrentTool != NULL && typeid( *mCurrentTool ) == typeid( T ) )
+		{
+			if ( !mCurrentTool->ReEnter( this ) )
+				OB_DELETE( mCurrentTool );
+		}
+		else
+		{
+			OB_DELETE( mCurrentTool );
+			mCurrentTool = new T;
+			if ( !mCurrentTool->Enter( this ) )
+				OB_DELETE( mCurrentTool );
+		}
+	}
 };
 
 #endif

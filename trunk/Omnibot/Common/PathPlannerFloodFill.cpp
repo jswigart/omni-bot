@@ -34,6 +34,8 @@ PathPlannerFloodFill::PathPlannerFloodFill()
 	m_PlannerFlags.SetFlag(NAVMESH_STEPPROCESS);
 
 	m_CursorColor = COLOR::BLUE;
+
+	mInfluence = NULL;
 }
 
 PathPlannerFloodFill::~PathPlannerFloodFill()
@@ -63,6 +65,56 @@ void PathPlannerFloodFill::Update( System & system )
 
 	if(m_PlannerFlags.CheckFlag(NAV_VIEW))
 	{
+		bool influenceDone = true;
+		if ( mInfluence )
+		{
+			static int iterations = 200;
+			influenceDone = mInfluence->UpdateInfluences( iterations );
+		}
+		struct RenderSpanCell : SpanMap::RenderFunctor
+		{
+		public:
+			RenderSpanCell( RenderBuffer::QuadList & lst )
+				: mList( lst ) { }
+
+			virtual void RenderCell( const Vector3f & pos, float cellSize, float influenceRatio )
+			{
+				static obuint8 alpha = 255;
+
+				RenderBuffer::Quad q;
+				q.v[ 0 ] = pos + Vector3f( -cellSize, -cellSize, 0.0f );
+				q.v[ 1 ] = pos + Vector3f(  cellSize, -cellSize, 0.0f );
+				q.v[ 2 ] = pos + Vector3f(  cellSize,  cellSize, 0.0f );
+				q.v[ 3 ] = pos + Vector3f( -cellSize,  cellSize, 0.0f );
+				q.c = GetCoolWarmColor( influenceRatio ).fade( alpha );
+				mList.push_back( q );
+			}
+
+			RenderBuffer::QuadList & mList;
+		};
+
+		float influenceMinWeight = 0.0f;
+		float influenceMaxWeight = 1.0f;
+		if ( mInfluence )
+		{
+			mInfluence->GetWeightRange( influenceMinWeight, influenceMaxWeight );
+		}
+
+		if ( mInfluenceBufferId == 0 && mSpanMap.GetNumSpans() > 0 )
+		{
+			RenderBuffer::QuadList prims;
+			prims.reserve( mSpanMap.GetNumSpans() * 2 );
+
+			RenderSpanCell renderCb( prims );
+			mSpanMap.RenderWithCallback( renderCb, influenceDone ? mInfluence : NULL );
+
+			RenderBuffer::StaticBufferCreate( mInfluenceBufferId, prims );
+		}
+
+		if ( mInfluenceBufferId != 0 )
+		{
+			RenderBuffer::StaticBufferDraw( mInfluenceBufferId );
+		}
 		//////////////////////////////////////////////////////////////////////////
 		Vector3f vLocalPos, vLocalAim, vAimPos, vAimNormal;
 		Utils::GetLocalEyePosition(vLocalPos);
@@ -245,6 +297,7 @@ bool PathPlannerFloodFill::FoundGoal() const
 
 void PathPlannerFloodFill::Unload()
 {
+	OB_DELETE( mInfluence );
 }
 
 void PathPlannerFloodFill::RegisterGameGoals()

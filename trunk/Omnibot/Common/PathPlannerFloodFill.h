@@ -15,6 +15,8 @@
 #include "InternalFsm.h"
 #include "SpanHeightMap.h"
 
+#include <queue>
+
 //////////////////////////////////////////////////////////////////////////
 
 // class: PathPlannerFloodFill
@@ -110,6 +112,13 @@ protected:
 	void cmdNavMeshFloodFill(const StringVector &_args);
 	void cmdAutoBuildFeatures(const StringVector &_args);
 
+	void cmdInfluenceMapCreate(const StringVector &_args);
+	void cmdInfluenceMapSeed(const StringVector &_args);
+	void cmdInfluenceMapMem(const StringVector &_args);
+	void cmdInfluenceMapSave(const StringVector &_args);
+	void cmdInfluenceMapLoad(const StringVector &_args);
+	void cmdInfluenceMapFlood(const StringVector &_args);
+
 	void cmdNext(const StringVector &_args);
 
 	// Process Functions
@@ -140,8 +149,14 @@ protected:
 
 	Vector3List			m_StartPositions;
 
-	typedef SpanHeightMap< CellData > SpanMap;
-	SpanMap				mSpanMap;
+	typedef SpanHeightMap<obuint8> SpanMap;
+	typedef std::queue<Vector3f> VectorQueue;
+
+	SpanMap 				mSpanMap;
+	SpanMap::InfluenceMap *	mInfluence;
+	VectorQueue				mSpanFrontier;
+
+	obuint32				mInfluenceBufferId;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Tool state machine

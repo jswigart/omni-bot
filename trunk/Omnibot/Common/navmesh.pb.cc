@@ -155,7 +155,7 @@ void protobuf_AssignDesc_navmesh_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SectorLocation));
   SectorData_descriptor_ = file->message_type(6);
-  static const int SectorData_offsets_[13] = {
+  static const int SectorData_offsets_[14] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, enabled_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, scriptname_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, team_),
@@ -169,6 +169,7 @@ void protobuf_AssignDesc_navmesh_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, waterdepth_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, mover_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, localoffsets_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SectorData, edgeportalmask_),
   };
   SectorData_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -298,7 +299,7 @@ void protobuf_AddDesc_navmesh_2eproto() {
     "on string for communication\0229\n\005team3\030\004 \001"
     "(\tB*\202}\'Team3 location string for communi"
     "cation\0229\n\005team4\030\005 \001(\tB*\202}\'Team4 location"
-    " string for communication\"\205\007\n\nSectorData"
+    " string for communication\"\251\007\n\nSectorData"
     "\0228\n\007enabled\030\001 \001(\010:\004trueB!\202}\036Is this sect"
     "or enabled for use\0223\n\nscriptname\030\002 \001(\tB\037"
     "\202}\034Name reference for scripting\022A\n\004team\030"
@@ -321,22 +322,23 @@ void protobuf_AddDesc_navmesh_2eproto() {
     "tor to water surface height\022.\n\005mover\030\311\001 "
     "\001(\0132\026.NavmeshIO.MoverEntityB\006\210}\001\220}\000\0224\n\014l"
     "ocaloffsets\030\312\001 \003(\0132\025.NavmeshIO.SectorVer"
-    "tB\006\210}\001\220}\000\"\351\002\n\006Sector\022\'\n\010vertices\030\001 \003(\0132\025"
-    ".NavmeshIO.SectorVert\022\?\n\016sectorMirrored\030"
-    "\002 \001(\0162\033.NavmeshIO.Sector.MirrorDir:\nMirr"
-    "orNone\022)\n\nsectorData\030\003 \001(\0132\025.NavmeshIO.S"
-    "ectorData\0221\n\022sectorDataMirrored\030\004 \001(\0132\025."
-    "NavmeshIO.SectorData\"\226\001\n\tMirrorDir\022\016\n\nMi"
-    "rrorNone\020\000\022\013\n\007MirrorX\020\001\022\014\n\010MirrorNX\020\002\022\013\n"
-    "\007MirrorY\020\003\022\014\n\010MirrorNY\020\004\022\013\n\007MirrorZ\020\005\022\014\n"
-    "\010MirrorNZ\020\006\022\014\n\010ReflectX\020\007\022\014\n\010ReflectY\020\010\022"
-    "\014\n\010ReflectZ\020\t\"W\n\016NavigationMesh\022!\n\006heade"
-    "r\030\001 \002(\0132\021.NavmeshIO.Header\022\"\n\007sectors\030\002 "
-    "\003(\0132\021.NavmeshIO.Sector:+\n\003doc\022\035.google.p"
-    "rotobuf.FieldOptions\030\320\017 \001(\t:.\n\006hidden\022\035."
-    "google.protobuf.FieldOptions\030\321\017 \001(\010:0\n\010s"
-    "ettable\022\035.google.protobuf.FieldOptions\030\322"
-    "\017 \001(\010B\002H\001", 2289);
+    "tB\006\210}\001\220}\000\022\"\n\016edgePortalMask\030\313\001 \001(\r:\0010B\006\210"
+    "}\001\220}\000\"\351\002\n\006Sector\022\'\n\010vertices\030\001 \003(\0132\025.Nav"
+    "meshIO.SectorVert\022\?\n\016sectorMirrored\030\002 \001("
+    "\0162\033.NavmeshIO.Sector.MirrorDir:\nMirrorNo"
+    "ne\022)\n\nsectorData\030\003 \001(\0132\025.NavmeshIO.Secto"
+    "rData\0221\n\022sectorDataMirrored\030\004 \001(\0132\025.Navm"
+    "eshIO.SectorData\"\226\001\n\tMirrorDir\022\016\n\nMirror"
+    "None\020\000\022\013\n\007MirrorX\020\001\022\014\n\010MirrorNX\020\002\022\013\n\007Mir"
+    "rorY\020\003\022\014\n\010MirrorNY\020\004\022\013\n\007MirrorZ\020\005\022\014\n\010Mir"
+    "rorNZ\020\006\022\014\n\010ReflectX\020\007\022\014\n\010ReflectY\020\010\022\014\n\010R"
+    "eflectZ\020\t\"W\n\016NavigationMesh\022!\n\006header\030\001 "
+    "\002(\0132\021.NavmeshIO.Header\022\"\n\007sectors\030\002 \003(\0132"
+    "\021.NavmeshIO.Sector:+\n\003doc\022\035.google.proto"
+    "buf.FieldOptions\030\320\017 \001(\t:.\n\006hidden\022\035.goog"
+    "le.protobuf.FieldOptions\030\321\017 \001(\010:0\n\010setta"
+    "ble\022\035.google.protobuf.FieldOptions\030\322\017 \001("
+    "\010B\002H\001", 2325);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "navmesh.proto", &protobuf_RegisterTypes);
   Vec3::default_instance_ = new Vec3();
@@ -2078,6 +2080,7 @@ const int SectorData::kLedgeFieldNumber;
 const int SectorData::kWaterdepthFieldNumber;
 const int SectorData::kMoverFieldNumber;
 const int SectorData::kLocaloffsetsFieldNumber;
+const int SectorData::kEdgePortalMaskFieldNumber;
 #endif  // !_MSC_VER
 
 SectorData::SectorData()
@@ -2111,6 +2114,7 @@ void SectorData::SharedCtor() {
   ledge_ = false;
   waterdepth_ = 0;
   mover_ = NULL;
+  edgeportalmask_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2175,6 +2179,7 @@ void SectorData::Clear() {
     if (has_mover()) {
       if (mover_ != NULL) mover_->::NavmeshIO::MoverEntity::Clear();
     }
+    edgeportalmask_ = 0u;
   }
   localoffsets_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2384,6 +2389,22 @@ bool SectorData::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(1618)) goto parse_localoffsets;
+        if (input->ExpectTag(1624)) goto parse_edgePortalMask;
+        break;
+      }
+      
+      // optional uint32 edgePortalMask = 203 [default = 0];
+      case 203: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_edgePortalMask:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &edgeportalmask_)));
+          set_has_edgeportalmask();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -2479,6 +2500,11 @@ void SectorData::SerializeWithCachedSizes(
       202, this->localoffsets(i), output);
   }
   
+  // optional uint32 edgePortalMask = 203 [default = 0];
+  if (has_edgeportalmask()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(203, this->edgeportalmask(), output);
+  }
+  
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2565,6 +2591,11 @@ void SectorData::SerializeWithCachedSizes(
         202, this->localoffsets(i), target);
   }
   
+  // optional uint32 edgePortalMask = 203 [default = 0];
+  if (has_edgeportalmask()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(203, this->edgeportalmask(), target);
+  }
+  
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -2646,6 +2677,13 @@ int SectorData::ByteSize() const {
           this->mover());
     }
     
+    // optional uint32 edgePortalMask = 203 [default = 0];
+    if (has_edgeportalmask()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->edgeportalmask());
+    }
+    
   }
   // repeated .NavmeshIO.SectorVert localoffsets = 202;
   total_size += 2 * this->localoffsets_size();
@@ -2720,6 +2758,9 @@ void SectorData::MergeFrom(const SectorData& from) {
     if (from.has_mover()) {
       mutable_mover()->::NavmeshIO::MoverEntity::MergeFrom(from.mover());
     }
+    if (from.has_edgeportalmask()) {
+      set_edgeportalmask(from.edgeportalmask());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2762,6 +2803,7 @@ void SectorData::Swap(SectorData* other) {
     std::swap(waterdepth_, other->waterdepth_);
     std::swap(mover_, other->mover_);
     localoffsets_.Swap(&other->localoffsets_);
+    std::swap(edgeportalmask_, other->edgeportalmask_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

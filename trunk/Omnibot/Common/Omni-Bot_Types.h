@@ -1211,9 +1211,6 @@ typedef enum
 	DRAW_TEXT,
 } DebugMsgType;
 
-typedef float vector_t;
-typedef vector_t vector3_t[3];
-
 typedef struct
 {
 	obVec3			m_Start, m_End;
