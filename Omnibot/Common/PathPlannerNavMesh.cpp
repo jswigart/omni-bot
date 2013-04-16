@@ -64,6 +64,30 @@ static void ConvertPoly( Vector3List & polyOut, const PathPlannerNavMesh::Runtim
 	}
 }
 
+static void ConvertPoly( ClipperLib::Polygon & polyOut, const Vector3List & poly )
+{
+	polyOut.resize( poly.size() );
+	for ( size_t i = 0; i < poly.size(); ++i )
+	{
+		polyOut[ i ] = ClipperLib::IntPoint(
+			(ClipperLib::long64)poly[i].X(),
+			(ClipperLib::long64)poly[i].Y() );
+	}
+}
+
+static void ConvertPoly( TPPLPoly & polyOut, const ClipperLib::Polygon & poly )
+{
+	polyOut.Init( poly.size() );
+	for ( size_t i = 0; i < poly.size(); ++i )
+	{
+		const ClipperLib::IntPoint & pt = poly[ i ];
+
+		TPPLPoint & tpp = polyOut[ i ];
+		tpp.x = (float)pt.X;
+		tpp.y = (float)pt.Y;
+	}
+}
+
 //////////////////////////////////////////////////////////////////////////
 namespace NavigationMeshOptions
 {
@@ -334,8 +358,6 @@ private:
 		{
 			const PathPlannerNavMesh::NavPortal &portal = _node->Sector->mPortals[p];
 
-			//for(int b = 0; b < )
-
 			//////////////////////////////////////////////////////////////////////////
 			PlanNode tmpNext;
 			tmpNext.Reset();
@@ -577,6 +599,8 @@ void PathPlannerNavMesh::RuntimeNavSector::UpdateAutoFlags()
 
 void PathPlannerNavMesh::RuntimeNavSector::RenderPortals( const PathPlannerNavMesh * navmesh ) const
 {
+	const Vector3f sectorCenter = CalculateCenter();
+
 	for ( size_t p = 0; p < mPortals.size(); ++p )
 	{
 		const NavPortal &portal = mPortals[ p ];
@@ -599,12 +623,14 @@ void PathPlannerNavMesh::RuntimeNavSector::RenderPortals( const PathPlannerNavMe
 		Vector3f vP0 = portal.mSegment.Center;
 		Vector3f vP1 = vP0;
 
+		RenderBuffer::AddArrow( sectorCenter, vP0, portalColor );
+
 		Utils::PushPointToPlane( vP1, destSector->mPlane, -Vector3f::UNIT_Z );
 
-		RenderBuffer::AddLine( vP0, vP1,portalColor );
-		vP0 = vP1;
+		RenderBuffer::AddLine( vP0, vP1, portalColor );
+		/*vP0 = vP1;
 		vP1 = destSector->CalculateCenter();
-		RenderBuffer::AddArrow( vP0, vP1,portalColor );
+		RenderBuffer::AddArrow( vP0, vP1, portalColor );*/
 	}
 }
 
@@ -623,6 +649,9 @@ void PathPlannerNavMesh::RuntimeNavSector::RebuildPortals( PathPlannerNavMesh * 
 
 	for ( size_t e = 0; e < edges.size(); ++e )
 	{
+		if ( mSectorData->edgeportalmask() & (1<<e) )
+			continue;
+
 		const Segment3f & seg0 = edges[ e ];
 
 		Line3f line0;
@@ -722,6 +751,61 @@ void PathPlannerNavMesh::RuntimeNavSector::RebuildPortals( PathPlannerNavMesh * 
 
 //////////////////////////////////////////////////////////////////////////
 
+static bool CostLessThan( const PathPlannerNavMesh::Obstacle & obs1, const PathPlannerNavMesh::Obstacle & obs2 )
+{
+	return obs1.mCost < obs2.mCost;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+static void GenerateFromClipResults( const ClipperLib::Clipper & clip,
+									const PathPlannerNavMesh::RuntimeNavSector & parent,
+									const float cost,
+									PathPlannerNavMesh::RuntimeSectorList & sectorsOut )
+{
+	typedef std::list<TPPLPoly> PolyList;
+	PolyList inputPolys;
+	PolyList convexPolys;
+
+	// add all the solution polygons to the input polygons
+	// of the partition list
+	ClipperLib::Polygon poly;
+	for ( size_t i = 0; i < clip.GetNumPolysOut(); ++i )
+	{
+		bool polyIsHole = false;
+		if ( clip.GetPolyOut( i, poly, polyIsHole ) )
+		{
+			inputPolys.push_back( TPPLPoly() );
+
+			ConvertPoly( inputPolys.back(), poly );
+			inputPolys.back().SetHole( polyIsHole );
+			inputPolys.back().SetOrientation( polyIsHole ? TPPL_CW : TPPL_CCW );
+		}
+	}
+
+	TPPLPartition partition;
+	if ( partition.ConvexPartition_HM( &inputPolys, &convexPolys ) != 0 )
+	{
+		// translate it back to sector space
+		for ( PolyList::iterator it = convexPolys.begin(); it != convexPolys.end(); ++it )
+		{
+			const TPPLPoly & ply = *it;
+			PathPlannerNavMesh::RuntimeNavSector subSector( parent.mIndex, parent.mSector, parent.mSectorData );
+			subSector.mCost = cost;
+			subSector.mPlane = parent.mPlane;
+			subSector.mParentIndex = parent.mIndex;
+			ConvertPoly( subSector.mPoly, subSector, ply );
+			sectorsOut.push_back( subSector );
+		}
+	}
+	else
+	{
+		EngineFuncs::ConsoleError( va( "Sector %d error building subsectors", parent.mIndex ) );
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 void PathPlannerNavMesh::RuntimeNavSector::RebuildObstacles( PathPlannerNavMesh * navmesh )
 {
 	mUpdateObstacles = false;
@@ -732,107 +816,50 @@ void PathPlannerNavMesh::RuntimeNavSector::RebuildObstacles( PathPlannerNavMesh 
 
 	if ( mObstacles.size() > 0 )
 	{
-		ClipperLib::Polygon		sectorPoly;
-		ClipperLib::Polygons	obstaclePolys;
+		// sort the obstacles from least to highest cost values for processing
+		std::sort( mObstacles.begin(), mObstacles.end(), CostLessThan );
 
-		for ( size_t b = 0; b < mPoly.size(); ++b )
+		// the first operation is removing ALL obstacle footprints from the sector
+		ClipperLib::Polygons subjectPolys;
+		subjectPolys.push_back( ClipperLib::Polygon() );
+		ConvertPoly( subjectPolys.back(), mPoly );
+		assert ( ClipperLib::Orientation( subjectPolys.back() ) );
+
+		ClipperLib::Polygons clipPolys;
+		for ( size_t i = 0; i < mObstacles.size(); ++i )
 		{
-			sectorPoly.push_back( ClipperLib::IntPoint(
-				(ClipperLib::long64)mPoly[b].X(),
-				(ClipperLib::long64)mPoly[b].Y() ) );
+			clipPolys.push_back( ClipperLib::Polygon() );
+			ConvertPoly( clipPolys.back(), mObstacles[ i ].mPoly );
 		}
-
-		for ( size_t o = 0; o < mObstacles.size(); ++o )
-		{
-			obstaclePolys.push_back( ClipperLib::Polygon() );
-
-			ClipperLib::Polygon & obs = obstaclePolys.back();
-			for ( size_t ov = 0; ov < mObstacles[o].mPoly.size(); ++ov )
-			{
-				obs.push_back( ClipperLib::IntPoint(
-					(ClipperLib::long64)mObstacles[o].mPoly[ ov ].X(),
-					(ClipperLib::long64)mObstacles[o].mPoly[ ov ].Y() ) );
-			}
-		}
-
-		assert ( ClipperLib::Orientation( sectorPoly ) );
-
-		static ClipperLib::ClipType ct = ClipperLib::ctDifference;
-		static ClipperLib::PolyFillType pft = ClipperLib::pftNonZero;
-		static ClipperLib::PolyFillType cft = ClipperLib::pftNonZero;
-
-		struct ClipParms
-		{
-			ClipperLib::ClipType		mClipType;
-			ClipperLib::PolyFillType	mPolyFill;
-			ClipperLib::PolyFillType	mClipFill;
-		};
 
 		ClipperLib::Clipper clip;
-		clip.AddPolygon( sectorPoly, ClipperLib::ptSubject );
-		clip.AddPolygons( obstaclePolys, ClipperLib::ptClip );
+		clip.AddPolygons( subjectPolys, ClipperLib::ptSubject );
+		clip.AddPolygons( clipPolys, ClipperLib::ptClip );
 
-		const ClipParms parms[2] =
-		{
-			{  ClipperLib::ctDifference, ClipperLib::pftNonZero, ClipperLib::pftNonZero },
-			{  ClipperLib::ctIntersection, ClipperLib::pftNonZero, ClipperLib::pftNonZero }
-		};
+		if ( clip.Execute( ClipperLib::ctDifference, ClipperLib::pftNonZero, ClipperLib::pftNonZero ) )
+			GenerateFromClipResults( clip, *this, 1.0f, newSectors );
 
-		for ( int i = 0; i < 2; ++i )
+		// next, merge the obstacles into an internal polygon set
+		ClipperLib::Polygons obstacleSubjects;
+		if ( clip.Execute( ClipperLib::ctIntersection, ClipperLib::pftNonZero, ClipperLib::pftNonZero ) )
 		{
-			if ( clip.Execute( parms[ i ].mClipType, parms[ i ].mPolyFill, parms[ i ].mClipFill ) )
+			obstacleSubjects.reserve( clip.GetNumPolysOut() );
+
+			ClipperLib::Polygon poly;
+			for ( size_t i = 0; i < clip.GetNumPolysOut(); ++i )
 			{
-				typedef std::list<TPPLPoly> PolyList;
-				PolyList inputPolys;
-				PolyList subPolys;
-
-				// add all the solution polygons to the input polygons
-				// of the partition list
-				ClipperLib::Polygon poly;
-				for ( size_t p = 0; p < clip.GetNumPolysOut(); ++p )
+				bool polyIsHole = false;
+				if ( clip.GetPolyOut( i, poly, polyIsHole ) )
 				{
-					bool polyIsHole = false;
-					if ( clip.GetPolyOut( p, poly, polyIsHole ) )
-					{
-						inputPolys.push_back( TPPLPoly() );
-						inputPolys.back().Init( poly.size() );
-
-						for ( size_t j = 0; j < poly.size(); ++j )
-						{
-							const ClipperLib::IntPoint & pt = poly[ j ];
-
-							TPPLPoint & tpp = inputPolys.back()[ j ];
-							tpp.x = (float)pt.X;
-							tpp.y = (float)pt.Y;
-						}
-
-						inputPolys.back().SetHole( polyIsHole );
-						inputPolys.back().SetOrientation( polyIsHole ? TPPL_CW : TPPL_CCW );
-					}
-				}
-
-				TPPLPartition partition;
-				if ( partition.ConvexPartition_HM( &inputPolys, &subPolys ) != 0 )
-				{
-					// translate it back to sector space
-					for ( PolyList::iterator it = subPolys.begin();
-						it != subPolys.end();
-						++it )
-					{
-						const TPPLPoly & ply = *it;
-						RuntimeNavSector subSector( mIndex, mSector, mSectorData );
-						subSector.mPlane = mPlane;
-						subSector.mParentIndex = mIndex;
-						ConvertPoly( subSector.mPoly, subSector, ply );
-						newSectors.push_back( subSector );
-					}
-				}
-				else
-				{
-					EngineFuncs::ConsoleError( va( "Sector %d error building subsectors", mIndex ) );
+					obstacleSubjects.push_back( poly );
 				}
 			}
+
+			// TEMP
+			GenerateFromClipResults( clip, *this, 2.0f, newSectors );
 		}
+
+		// now for each obstacle set(by cost), subdivide the obstacle polys
 	}
 
 	mSubSectors.clear();
@@ -877,16 +904,12 @@ PathPlannerNavMesh::PathPlannerNavMesh()
 
 	m_MapCenter = Vector3f::ZERO;
 
-	m_ToolCancelled = false;
-
-	m_SpanMap = NULL;
-	m_Influence = NULL;
-
 	g_PlannerNavMesh = this;
 
-	mInfluenceBufferId = 0;
-
 	mCurrentTool = NULL;
+
+	mMinSectorCost = 1.0f;
+	mMaxSectorCost = 1.0f;
 }
 
 PathPlannerNavMesh::~PathPlannerNavMesh()
@@ -1052,9 +1075,10 @@ void PathPlannerNavMesh::Update( System & system )
 	Prof(PathPlannerNavMesh);
 
 	if ( mCurrentTool )
-		mCurrentTool->Update( this );
-
-	UpdateFsm(IGame::GetDeltaTimeSecs());
+	{
+		if ( !mCurrentTool->Update( this ) )
+			OB_DELETE( mCurrentTool );
+	}
 
 	UpdateObstacles();
 	UpdateRuntimeSectors();
@@ -1066,28 +1090,13 @@ void PathPlannerNavMesh::Update( System & system )
 		g_PathFind.Render();
 
 		//////////////////////////////////////////////////////////////////////////
-		Vector3f vLocalPos, vLocalAim, vAimPos, vAimNormal;
-		Utils::GetLocalEyePosition(vLocalPos);
-		Utils::GetLocalFacing(vLocalAim);
-		if(Utils::GetLocalAimPoint(vAimPos, &vAimNormal, TR_MASK_FLOODFILLENT))
+		Vector3f eyePos, eyeNorm;
+		if(Utils::GetLocalAimPoint(eyePos, &eyeNorm, TR_MASK_FLOODFILLENT))
 		{
-			RenderBuffer::AddLine(vAimPos,
-				vAimPos + vAimNormal * 16.f,
-				m_CursorColor);
-
-			RenderBuffer::AddLine(vAimPos,
-				vAimPos + vAimNormal.Perpendicular() * 16.f, m_CursorColor);
+			RenderBuffer::AddLine(eyePos,eyePos + eyeNorm * 16.f,m_CursorColor);
+			RenderBuffer::AddLine(eyePos,eyePos + eyePos.Perpendicular() * 16.f, m_CursorColor);
 		}
 		m_CursorColor = COLOR::BLUE; // back to default
-
-		//////////////////////////////////////////////////////////////////////////
-
-		bool influenceDone = true;
-		if ( m_Influence )
-		{
-			static int iterations = 200;
-			influenceDone = m_Influence->UpdateInfluences( iterations );
-		}
 
 		//////////////////////////////////////////////////////////////////////////
 		// Draw our nav sectors
@@ -1095,9 +1104,16 @@ void PathPlannerNavMesh::Update( System & system )
 		{
 			const RuntimeNavSector &ns = mRuntimeSectors[i];
 
+			const Vector3f nsCenter = ns.CalculateCenter();
+
 			// mirrored sectors are contiguous at the end of
 			// the mRuntimeSectors list, so draw them differently
 			obColor SEC_COLOR = ns.mMirrored ? COLOR::CYAN : COLOR::GREEN;
+
+			const float costRange = mMaxSectorCost - mMinSectorCost;
+			const float lerp = costRange > 0.0f ?
+				Mathf::Clamp( (ns.mCost - mMinSectorCost) / costRange, 0.0f, 1.0f ) : 0.0f;
+			SEC_COLOR = obColor::lerp( SEC_COLOR, COLOR::RED, lerp );
 
 			if ( ns.mSubSectors.size() > 0 )
 			{
@@ -1105,14 +1121,48 @@ void PathPlannerNavMesh::Update( System & system )
 				{
 					const RuntimeNavSector & subSector = ns.mSubSectors[ s ];
 
-					RenderBuffer::AddPolygonFilled( subSector.mPoly, COLOR::ORANGE.fade(100) );
-					RenderBuffer::AddPolygonSilouette( subSector.mPoly, COLOR::ORANGE );
+					const float costRange = mMaxSectorCost - mMinSectorCost;
+					const float lerp = costRange > 0.0f ?
+						Mathf::Clamp( (subSector.mCost - mMinSectorCost) / costRange, 0.0f, 1.0f ) : 0.0f;
+					SEC_COLOR = obColor::lerp( SEC_COLOR, COLOR::RED, lerp );
+
+					//obColor obsColor = GetCoolWarmColor( subSector.mCost / COST_MAX_LAST );
+
+					RenderBuffer::AddPolygonFilled( subSector.mPoly, SEC_COLOR.fade(100) );
+
+					// render edge polys based on edge mask
+					for ( size_t p = 0; p < subSector.mPoly.size(); ++p )
+					{
+						const Vector3f v0 = subSector.mPoly[ p ];
+						const Vector3f v1 = subSector.mPoly[ (p+1) % subSector.mPoly.size() ];
+
+						if ( ns.mSectorData->edgeportalmask() & (1<<p) )
+						{
+							RenderBuffer::AddTri( v0, v1, ns.CalculateCenter(), COLOR::RED.fade(100) );
+							continue;
+						}
+
+						RenderBuffer::AddLine( v0, v1, COLOR::GREEN );
+					}
 				}
 			}
 			else
 			{
 				RenderBuffer::AddPolygonFilled( ns.mPoly, SEC_COLOR.fade(100) );
-				RenderBuffer::AddPolygonSilouette( ns.mPoly, SEC_COLOR );
+
+				// render edge polys based on edge mask
+				for ( size_t p = 0; p < ns.mPoly.size(); ++p )
+				{
+					const Vector3f v0 = ns.mPoly[ p ];
+					const Vector3f v1 = ns.mPoly[ (p+1) % ns.mPoly.size() ];
+
+					if ( ns.mSectorData->edgeportalmask() & (1<<p) )
+					{
+						RenderBuffer::AddTri( v0, v1, ns.CalculateCenter(), COLOR::RED.fade(100) );
+					}
+
+					RenderBuffer::AddLine( v0, v1, COLOR::GREEN );
+				}
 			}
 
 			// render the points, colored by whether this sector is mirrored
@@ -1223,66 +1273,19 @@ void PathPlannerNavMesh::Update( System & system )
 		}
 
 		//////////////////////////////////////////////////////////////////////////
-		if ( m_SpanMap != NULL )
-		{
-			struct RenderSpanCell : SpanMap::RenderFunctor
-			{
-			public:
-				RenderSpanCell( RenderBuffer::QuadList & lst )
-					: mList( lst ) { }
 
-				virtual void RenderCell( const Vector3f & pos, float cellSize, float influenceRatio )
-				{
-					static obuint8 alpha = 255;
-
-					RenderBuffer::Quad q;
-					q.v[ 0 ] = pos + Vector3f( -cellSize, -cellSize, 0.0f );
-					q.v[ 1 ] = pos + Vector3f(  cellSize, -cellSize, 0.0f );
-					q.v[ 2 ] = pos + Vector3f(  cellSize,  cellSize, 0.0f );
-					q.v[ 3 ] = pos + Vector3f( -cellSize,  cellSize, 0.0f );
-					q.c = GetCoolWarmColor( influenceRatio ).fade( alpha );
-					mList.push_back( q );
-				}
-
-				RenderBuffer::QuadList & mList;
-			};
-
-			float influenceMinWeight = 0.0f;
-			float influenceMaxWeight = 1.0f;
-			if ( m_Influence )
-			{
-				m_Influence->GetWeightRange( influenceMinWeight, influenceMaxWeight );
-			}
-
-			if ( mInfluenceBufferId == 0 && m_SpanMap->GetNumSpans() > 0 )
-			{
-				RenderBuffer::QuadList prims;
-				prims.reserve( m_SpanMap->GetNumSpans() * 2 );
-
-				RenderSpanCell renderCb( prims );
-				m_SpanMap->RenderWithCallback( renderCb, influenceDone ? m_Influence : NULL );
-
-				RenderBuffer::StaticBufferCreate( mInfluenceBufferId, prims );
-			}
-
-			if ( mInfluenceBufferId != 0 )
-			{
-				RenderBuffer::StaticBufferDraw( mInfluenceBufferId );
-			}
-		}
-		//////////////////////////////////////////////////////////////////////////
-		if(!m_WorkingSector.mPoly.empty())
+		if(!mEditSector.mPoly.empty())
 		{
 			RenderBuffer::AddLine(
-				m_WorkingSectorStart,
-				m_WorkingSectorStart + m_WorkingSectorPlane.Normal * 10.0f,
+				mEditSectorStart,
+				mEditSectorStart + mEditSectorPlane.Normal * 10.0f,
 				COLOR::MAGENTA );
 
-			RenderBuffer::AddPolygonFilled( m_WorkingSector.mPoly, COLOR::BLUE.fade(100) );
-			if ( m_WorkingSector.IsMirrored() )
+			RenderBuffer::AddPolygonFilled( mEditSector.mPoly, COLOR::BLUE.fade(100) );
+			if ( mEditSector.IsMirrored() )
 			{
 				NavSectorBase temp;
-				m_WorkingSector.GetMirroredCopy(m_MapCenter, m_WorkingSector.mMirror, temp);
+				mEditSector.GetMirroredCopy(m_MapCenter, mEditSector.mMirror, temp);
 				RenderBuffer::AddPolygonFilled( temp.mPoly, COLOR::CYAN.fade(100) );
 			}
 		}
@@ -1299,9 +1302,7 @@ bool PathPlannerNavMesh::Load(const std::string &_mapname, bool _dl)
 	if(_mapname.empty())
 		return false;
 
-	OB_DELETE( mCurrentTool );
-	mRuntimeSectors.clear();
-	mNavSectors.clear();
+	Unload();
 
 	try
 	{
@@ -1360,6 +1361,11 @@ bool PathPlannerNavMesh::Load(const std::string &_mapname, bool _dl)
 					v.position().y(),
 					v.position().z() ) );
 			}
+
+			Utils::WeldVertices( sector.mPoly, 1.0f );
+
+			if ( sector.mPoly.size() <= 3 )
+				continue;
 
 			// calculate normal
 			const Vector3f center = sector.CalculateCenter();
@@ -1620,10 +1626,10 @@ bool PathPlannerNavMesh::FoundGoal() const
 void PathPlannerNavMesh::Unload()
 {
 	OB_DELETE( mCurrentTool );
-	OB_DELETE( m_Influence );
-	OB_DELETE( m_SpanMap );
 
 	mSectorCollision.Free();
+	mRuntimeSectors.clear();
+	mNavSectors.clear();
 }
 
 void PathPlannerNavMesh::InitSectors()
@@ -1778,11 +1784,17 @@ void PathPlannerNavMesh::UpdateRuntimeSectors()
 	// accumulate and rebuild all the portals after all the
 	// obstacles have been built, so all the areas are available
 	// to find new sector edges
-	std::vector<RuntimeNavSector*> buildPortals;
+	RuntimeSectorRefs buildPortals;
+
+	float minCost = std::numeric_limits<float>::max();
+	float maxCost = std::numeric_limits<float>::lowest();
 
 	for ( size_t i = 0; i < mRuntimeSectors.size(); ++i )
 	{
 		RuntimeNavSector & runtimeSector = mRuntimeSectors[ i ];
+
+		minCost = std::min( minCost, runtimeSector.mCost );
+		maxCost = std::max( maxCost, runtimeSector.mCost );
 
 		if ( runtimeSector.mUpdateObstacles )
 		{
@@ -1795,21 +1807,33 @@ void PathPlannerNavMesh::UpdateRuntimeSectors()
 
 		for ( size_t s = 0; s < runtimeSector.mSubSectors.size(); ++s )
 		{
-			if ( runtimeSector.mSubSectors[ s ].mUpdateObstacles )
+			RuntimeNavSector & subSector = runtimeSector.mSubSectors[ s ];
+
+			minCost = std::min( minCost, subSector.mCost );
+			maxCost = std::max( maxCost, subSector.mCost );
+
+			if ( subSector.mUpdateObstacles )
 			{
-				runtimeSector.mSubSectors[ s ].RebuildObstacles( this );
+				subSector.RebuildObstacles( this );
 			}
-			if ( runtimeSector.mSubSectors[ s ].mUpdatePortals )
+			if ( subSector.mUpdatePortals )
 			{
-				buildPortals.push_back( &runtimeSector.mSubSectors[ s ] );
+				buildPortals.push_back( &subSector );
 			}
 		}
 	}
+
+	mMinSectorCost = minCost;
+	mMaxSectorCost = maxCost;
 
 	for ( size_t i = 0; i < buildPortals.size(); ++i )
 	{
 		buildPortals[ i ]->RebuildPortals( this );
 	}
+
+	// todo: invalidate neighboring sectors that connect to this sector
+	// because they need to rebuild their sectors as well to create
+	// new portals to the new sectors we just built here.
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1999,5 +2023,4 @@ int PathPlannerNavMesh::FindRuntimeSectors( const Box3f & obb,
 	return (int)sectorsOut.size();
 }
 
-//////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////

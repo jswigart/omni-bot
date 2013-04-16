@@ -70,6 +70,21 @@ void PathPlannerFloodFill::InitCommands()
 	SetEx("nav_next", "Steps the current tool to the next operation.",
 		this, &PathPlannerFloodFill::cmdNext);
 
+	// INFLUENCE MAP EXPERIMENTATION
+	SetEx("nav_mapcreate", "Creates an influence map.",
+		this, &PathPlannerFloodFill::cmdInfluenceMapCreate);
+	SetEx("nav_mapseed", "Adds a seed point to the map for exploration.",
+		this, &PathPlannerFloodFill::cmdInfluenceMapSeed);
+	SetEx("nav_mapmem", "Shows the memory usage of the map.",
+		this, &PathPlannerFloodFill::cmdInfluenceMapMem);
+	SetEx("nav_mapsave", "Saves the influence map.",
+		this, &PathPlannerFloodFill::cmdInfluenceMapSave);
+	SetEx("nav_mapload", "Load the influence map.",
+		this, &PathPlannerFloodFill::cmdInfluenceMapLoad);
+
+	SetEx("nav_mapflood", "Load the influence map.",
+		this, &PathPlannerFloodFill::cmdInfluenceMapFlood);
+
 	/*REGISTER_STATE(PathPlannerFloodFill,NoOp);
 
 	SetNextState(NoOp);*/
@@ -611,16 +626,123 @@ void PathPlannerFloodFill::cmdNext(const StringVector &_args)
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-//STATE_ENTER(PathPlannerFloodFill, NoOp)
-//{
-//}
-//
-//STATE_UPDATE(PathPlannerFloodFill, NoOp)
-//{
-//}
-//
-//STATE_EXIT(PathPlannerFloodFill, NoOp)
-//{
-//}
+void PathPlannerFloodFill::cmdInfluenceMapCreate(const StringVector &_args)
+{
+	const float fmin = std::numeric_limits<float>::lowest();
+	const float fmax = std::numeric_limits<float>::max();
 
-//////////////////////////////////////////////////////////////////////////
+	AABB mapbounds;
+	mapbounds.Set( Vector3f( -4000,-4000,fmax ), Vector3f( fmin, fmin, fmin ) );
+	/*for ( RuntimeSectorList::iterator s = mRuntimeSectors.begin(); s != mRuntimeSectors.end(); ++s)
+	{
+	for ( Vector3List::iterator v = s->mPoly.begin(); v != s->mPoly.end(); ++v)
+	{
+	mapbounds.Expand( *v );
+	}
+	}*/
+
+	VectorQueue empty;
+	mSpanFrontier.swap( empty );
+
+	RenderBuffer::StaticBufferDelete( mInfluenceBufferId );
+	mInfluenceBufferId = 0;
+
+	OB_DELETE( mInfluence );
+
+	mSpanMap.Clear();
+	mSpanMap.Init( Vector3f(mapbounds.m_Mins), Vector3f(mapbounds.m_Maxs), 16.0f );
+
+	EngineFuncs::ConsoleMessage(va("Created %d x %d span map",
+		mSpanMap.GetNumCellsX(), mSpanMap.GetNumCellsY() ) );
+}
+
+void PathPlannerFloodFill::cmdInfluenceMapSeed(const StringVector &_args)
+{
+	/*Vector3f eyePos;
+	if ( Utils::GetLocalEyePosition(eyePos) )
+	mSpanFrontier.push( eyePos );*/
+
+	enum { MaxFeatures = 64 };
+	AutoNavFeature features[ MaxFeatures ];
+	const int numFeatures = g_EngineFuncs->GetAutoNavFeatures( features, MaxFeatures );
+	for ( int i = 0; i < numFeatures; ++i )
+	{
+		mSpanFrontier.push( features[ i ].m_Position );
+		mSpanFrontier.push( features[ i ].m_TargetPosition );
+	}
+
+	/*if ( mSpanMap == NULL )
+	EngineFuncs::ConsoleMessage( "No Influence Map Created, use nav_mapcreate" );
+	else if ( GetCurrentStateId() != FloodSpanMap )
+	SetNextState( FloodSpanMap );*/
+}
+
+void PathPlannerFloodFill::cmdInfluenceMapMem(const StringVector &_args)
+{
+	EngineFuncs::ConsoleMessage(va("Influence Map %d x %d ( %s )",
+		mSpanMap.GetNumCellsX(),
+		mSpanMap.GetNumCellsY(),
+		Utils::FormatByteString( mSpanMap.CalculateMemUsage() ).c_str() ) );
+}
+
+void PathPlannerFloodFill::cmdInfluenceMapSave(const StringVector &_args)
+{
+	const std::string filePath	= std::string("nav/") + std::string(g_EngineFuncs->GetMapName()) + ".influence";
+
+	std::string data;
+	if ( mSpanMap.Serialize( data ) )
+	{
+		File f;
+		if(f.OpenForWrite( filePath.c_str() ,File::Binary ) )
+		{
+			f.Write( data.c_str(), data.length() );
+		}
+	}
+}
+
+void PathPlannerFloodFill::cmdInfluenceMapLoad(const StringVector &_args)
+{
+	const std::string filePath	= std::string("nav/") + std::string(g_EngineFuncs->GetMapName()) + ".influence";
+
+	mSpanMap.Clear();
+
+	File f;
+	if(!f.OpenForRead( filePath.c_str() ,File::Binary ) )
+	{
+		EngineFuncs::ConsoleError( va( "Influence Map %s not found", filePath.c_str() ) );
+		return;
+	}
+
+	std::string data;
+	if (!f.ReadWholeFile( data ) )
+	{
+		EngineFuncs::ConsoleError( va( "Influence Map Read Error %s", filePath.c_str() ) );
+		return;
+	}
+
+	if ( !mSpanMap.DeSerialize( data ) )
+	{
+		EngineFuncs::ConsoleError( va( "Influence Map Parse Error %s", filePath.c_str() ) );
+		return;
+	}
+}
+
+void PathPlannerFloodFill::cmdInfluenceMapFlood(const StringVector &_args)
+{
+	Vector3f vAimPt;
+	if ( !Utils::GetLocalAimPoint( vAimPt ))
+		return;
+
+	mInfluence = mSpanMap.CreateInfluenceLayer();
+	mInfluence->Reset();
+	mInfluence->AddSeed( vAimPt, 0.0f );
+
+	Timer t;
+	while( !mInfluence->UpdateInfluences( std::numeric_limits<int>::max() ) )
+	{
+	}
+
+	EngineFuncs::ConsoleError( va( "Influence Flooded in %.3f sec ( %s )",
+		t.GetElapsedSeconds(),
+		Utils::FormatByteString( mInfluence->CalculateMemUsage() ).c_str() ) );
+}

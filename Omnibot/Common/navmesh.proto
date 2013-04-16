@@ -65,10 +65,12 @@ message SectorData
 	optional bool			crouch			= 9		[default = false, (doc)="This area represents a crouch area(Must crouch to traverse)"];
 	optional bool			ledge			= 10	[default = false, (doc)="This area represents a ledge area where underlying areas can be reached via jumping"];
 	
-		
+
+
 	optional float			waterdepth		= 200	[default = 0.0, (settable)=false, (doc)="The sector to water surface height"];
 	optional MoverEntity	mover			= 201	[(hidden)=true, (settable)=false];
 	repeated SectorVert		localoffsets	= 202	[(hidden)=true, (settable)=false];
+	optional uint32			edgePortalMask	= 203	[default = 0, (hidden)=true, (settable)=false];
 }
 
 message Sector 

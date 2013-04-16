@@ -833,6 +833,13 @@ class SectorData : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::NavmeshIO::SectorVert >*
       mutable_localoffsets();
   
+  // optional uint32 edgePortalMask = 203 [default = 0];
+  inline bool has_edgeportalmask() const;
+  inline void clear_edgeportalmask();
+  static const int kEdgePortalMaskFieldNumber = 203;
+  inline ::google::protobuf::uint32 edgeportalmask() const;
+  inline void set_edgeportalmask(::google::protobuf::uint32 value);
+  
   // @@protoc_insertion_point(class_scope:NavmeshIO.SectorData)
  private:
   inline void set_has_enabled();
@@ -859,6 +866,8 @@ class SectorData : public ::google::protobuf::Message {
   inline void clear_has_waterdepth();
   inline void set_has_mover();
   inline void clear_has_mover();
+  inline void set_has_edgeportalmask();
+  inline void clear_has_edgeportalmask();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
@@ -873,11 +882,12 @@ class SectorData : public ::google::protobuf::Message {
   bool crouch_;
   bool ledge_;
   ::NavmeshIO::MoverEntity* mover_;
-  ::google::protobuf::RepeatedPtrField< ::NavmeshIO::SectorVert > localoffsets_;
   float waterdepth_;
+  ::google::protobuf::uint32 edgeportalmask_;
+  ::google::protobuf::RepeatedPtrField< ::NavmeshIO::SectorVert > localoffsets_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(13 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(14 + 31) / 32];
   
   friend void  protobuf_AddDesc_navmesh_2eproto();
   friend void protobuf_AssignDesc_navmesh_2eproto();
@@ -2042,6 +2052,28 @@ SectorData::localoffsets() const {
 inline ::google::protobuf::RepeatedPtrField< ::NavmeshIO::SectorVert >*
 SectorData::mutable_localoffsets() {
   return &localoffsets_;
+}
+
+// optional uint32 edgePortalMask = 203 [default = 0];
+inline bool SectorData::has_edgeportalmask() const {
+  return (_has_bits_[0] & 0x00002000u) != 0;
+}
+inline void SectorData::set_has_edgeportalmask() {
+  _has_bits_[0] |= 0x00002000u;
+}
+inline void SectorData::clear_has_edgeportalmask() {
+  _has_bits_[0] &= ~0x00002000u;
+}
+inline void SectorData::clear_edgeportalmask() {
+  edgeportalmask_ = 0u;
+  clear_has_edgeportalmask();
+}
+inline ::google::protobuf::uint32 SectorData::edgeportalmask() const {
+  return edgeportalmask_;
+}
+inline void SectorData::set_edgeportalmask(::google::protobuf::uint32 value) {
+  set_has_edgeportalmask();
+  edgeportalmask_ = value;
 }
 
 // -------------------------------------------------------------------
