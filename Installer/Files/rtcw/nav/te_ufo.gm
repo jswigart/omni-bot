@@ -356,6 +356,7 @@ global OnMapLoad = function()
 	//OnTrigger( "thirty second warning.", Map.thirty_second );
 
 	Util.SetMaxUsersInProgress( 8, Map.FLAG_UFO_Documents );
+	Util.SetMaxUsersInProgress( 4, "CHECKPOINT.*" );
 	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
@@ -382,7 +383,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_phase1_blue.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_phase1.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as[123]_phase1.*" );
-	//SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bInitial.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bInitial.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_sentry_MG  );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Repair_sentry_MG  );
