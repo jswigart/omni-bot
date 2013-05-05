@@ -384,19 +384,12 @@ Commands["draw_spawns"] =
 {
 	Func = function( _params )
 	{
-		for ( i = 64; i < 1024; i = i + 1 )
-		{
-			if (GetEntClass(i) == CLASS.PLAYERSTART)
-			{
-				pos = GroundPoint(GetEntPosition(i));
-				DrawLine(pos,pos+Vector3(0,0,64),COLOR.RED,60);
-			}
-		}
+		RTCWUtil.DrawEntities(CLASS.PLAYERSTART);
 	},
 
 	Help =
 	{
-		"Draw spawn points, waypoint tool. draws the bounds of all spawn points in the map",
+		"Toggle drawing spawn points, waypoint tool. draws the bounds of all spawn points in the map",
 		"Usage: /bot draw_spawns",
 	},
 };
@@ -405,20 +398,26 @@ Commands["draw_oids"] =
 {
 	Func = function( _params )
 	{
-		for ( i = 64; i < 1024; i = i + 1 )
-		{
-			if (GetEntClass(i) == CLASS.GOAL)
-			{
-				DrawEntityAABB( i, 60, COLOR.RED );
-				center = GetEntWorldAABB(i).CenterPoint();
-				DrawText3d(center, i + " : " + GetEntName(i) ,COLOR.WHITE,60,textDrawRadius);
-			}
-		}
+		RTCWUtil.DrawEntities(CLASS.GOAL);
 	},
 
 	Help =
 	{
-		"Draw Objective Info Displays, waypoint tool. draws the bounds of all OID's in the map",
+		"Toggle drawing Objective Info Displays, waypoint tool. draws the bounds of all OID's in the map",
+		"Usage: /bot draw_oids",
+	},
+};
+
+Commands["draw_breakables"] =
+{
+	Func = function( _params )
+	{
+		RTCWUtil.DrawEntities(CLASS.BREAKABLE);
+	},
+
+	Help =
+	{
+		"Toggle drawing breakables, waypoint tool. draws the bounds of all breakables in the map",
 		"Usage: /bot draw_oids",
 	},
 };
@@ -457,7 +456,7 @@ Commands["imoutside"] =
 		if (outside) {
 			msg = "you are outside";
 		}
-		
+
 		EchoToScreen(10, msg);
 	},
 
