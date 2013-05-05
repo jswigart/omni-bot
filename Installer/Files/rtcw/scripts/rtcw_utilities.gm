@@ -943,3 +943,69 @@ member GetClosestEnemy = function (bot, class, distLimit)
 
 	return null;
 };
+
+member DrawEntities = function(class)
+{
+	if (!DRAW_ENTITIES) {
+		global DRAW_ENTITIES = {};
+	}
+
+	DRAW_ENTITIES[class] = !DRAW_ENTITIES[class];
+
+	if (DRAW_ENTITIES[class]) {
+		print("rendering " + Util.ClassName(class) + "'s enabled");
+	}
+	else {
+		print("rendering " + Util.ClassName(class) + "'s disabled");
+	}
+
+	drawBounds = true;
+	displayEntName = false;
+
+	switch(class)
+	{
+		case CLASS.BREAKABLE:
+		{
+			// do nothing
+		}
+		case CLASS.GOAL:
+		{
+			displayEntName = true;
+		}
+		case CLASS.PLAYERSTART:
+		{
+			drawBounds = false;
+		}
+		default:
+		{
+			print(Util.ClassName(class) + " not supported");
+			DRAW_ENTITIES[class] = false;
+		}
+	}
+
+	while(DRAW_ENTITIES[class])
+	{
+		for ( i = 64; i < 1024; i = i + 1 )
+		{
+			if (GetEntClass(i) == class)
+			{
+				if (drawBounds) {
+					DrawEntityAABB( i, 60, COLOR.RED );
+					textPos = GetEntWorldAABB(i).CenterPoint();
+				}
+				else {
+					pos = GroundPoint(GetEntPosition(i));
+					textPos = pos + Vector3(0,0,32);
+					DrawLine(pos,pos+Vector3(0,0,64),COLOR.RED,60);
+				}
+
+				text = format("%d",i);
+				if (displayEntName) {
+					text += " : " + GetEntName(i);
+				}
+				DrawText3d(textPos, text ,COLOR.WHITE,60);
+			}
+		}
+		yield();
+	}
+};
