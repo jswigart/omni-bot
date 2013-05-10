@@ -60,7 +60,7 @@ class PathPlannerNavMesh : public PathPlannerBase
 {
 public:
 	struct RuntimeNavSector;
-
+	
 	enum NavMeshFlags
 	{
 		NAVMESH_STEPPROCESS = NUM_BASE_NAVFLAGS,
@@ -68,42 +68,62 @@ public:
 		NAVMESH_SHOWCOLLISION,
 	};
 
+	typedef std::vector<RuntimeNavSector*> RuntimeSectorRefs;
+	typedef std::vector<const RuntimeNavSector*> RuntimeSectorRefsConst;
+
 	struct Obstacle
 	{
-		Vector3List		mPoly;
-		float			mCost; // -1 is blocked
+		obuint32				mHandle;
 
-		obuint32		mSerial;
+		GameEntity				mEntity;
+		Vector3f				mPosition;
 
-		Obstacle() : mCost( -1.0f ), mSerial( 0 ) {}
+		Vector3List				mPoly;
+		float					mCost; // NavPortal::MAX_COST is blocked
+		
+		obint32					mExpireTime;
+		RuntimeSectorRefs		mAffectedSectors;
+
+		bool operator==( const Obstacle & other )
+		{
+			return mHandle == other.mHandle;
+		}
+
+		bool Expired() const;
+
+		Obstacle();
 	};
 	typedef std::vector<Obstacle> ObstacleList;
-
+	
 	struct NavPortal
 	{
 		Segment3f			mSegment;
+		Segment3f			mSegmentLocal;
 
-		Vector3f			mLocalOffset;
-
-		RuntimeNavSector *  mDestSector;
+		RuntimeNavSector *  mSrcSector;
+		RuntimeNavSector *  mDstSector;
 
 		enum PortalFlags
 		{
-			FL_DISABLED	= (1<<0),
-			FL_JUMP		= (1<<1),
+			FL_DISABLED,
+			FL_JUMP,
 		};
 
 		BitFlag64		mFlags;
 
-		NavPortal()
-		{
-			mLocalOffset = Vector3f::ZERO;
-			mDestSector = NULL;
-			mFlags.ClearAll();
-		}
+		static const float MAX_COST;
+
+		NavPortal();
+	};
+
+	struct EdgePortals
+	{
+		obuint16				mPortalIndex;
+		obuint16				mPortalCount;
 	};
 
 	typedef std::vector<NavPortal> NavPortalList;
+	typedef std::vector<EdgePortals> NavEdgePortals;
 
 	/////////////////////////////////////////////////////////
 	struct NavSectorBase
@@ -131,12 +151,11 @@ public:
 
 	typedef std::vector<NavSector> NavSectorList;
 	typedef std::vector<RuntimeNavSector> RuntimeSectorList;
-	typedef std::vector<RuntimeNavSector*> RuntimeSectorRefs;
 
 	struct RuntimeNavSector : public NavSectorBase
 	{
 		obuint32					mIndex;
-		obuint32					mParentIndex;
+		RuntimeNavSector *			mParent;
 
 		Vector3List					mLocalPoly;
 
@@ -154,6 +173,11 @@ public:
 		ObstacleList				mObstacles;
 
 		RuntimeSectorList			mSubSectors;
+		
+		obuint32					mVersion;
+
+		Vector3f					mSectorWorldTrans;
+		Matrix3f					mSectorWorldRot;
 
 		bool						mMirrored;
 		bool						mUpdatePortals;
@@ -165,6 +189,7 @@ public:
 
 		// build portals for this sector
 		void RebuildPortals( PathPlannerNavMesh * navmesh );
+		void RebuildLedgePortals( PathPlannerNavMesh * navmesh );		
 
 		// rebuild subsectors due to change in obstacles
 		void RebuildObstacles( PathPlannerNavMesh * navmesh );
@@ -174,6 +199,8 @@ public:
 		// movable sectors
 		bool InitSectorTransform();
 		void UpdateSectorTransform();
+
+		obColor GetRenderColor() const;
 
 		RuntimeNavSector( obuint32 index, NavSector * sector, NavmeshIO::SectorData * data );
 		~RuntimeNavSector();
@@ -218,9 +245,14 @@ public:
 
 	void AddEntityConnection(const Event_EntityConnection &_conn);
 	void RemoveEntityConnection(GameEntity _ent);
+	
+	void EntityCreated(const EntityInstance &ei);
+	void EntityDeleted(const EntityInstance &ei);
 
 	const char *GetPlannerName() const { return "Navigation Mesh Path Planner"; } ;
 	int GetPlannerType() const { return NAVID_NAVMESH; };
+
+	PathInterface * AllocPathInterface();
 
 	PathPlannerNavMesh();
 	virtual ~PathPlannerNavMesh();
@@ -260,7 +292,7 @@ protected:
 	NavSector * GetSectorAtCursor();
 
 	//////////////////////////////////////////////////////////////////////////
-
+	friend class NavMeshPathInterface;
 	friend class PathFindNavMesh;
 	friend class ToolSectorEdgeDrop;
 	friend class ToolPortalCreate;
@@ -310,11 +342,9 @@ protected:
 	RuntimeSectorList		mRuntimeSectors;
 	SectorCollisionList		mRuntimeSectorCollision;
 	ObstacleList			mPendingObstacles;
+	ObstacleList			mDynamicObstacles;
 	ObstacleList			mObstacles;
-
-	float					mMinSectorCost;
-	float					mMaxSectorCost;
-
+	
 	CollisionModel			mSectorCollision;
 
 	//////////////////////////////////////////////////////////////////////////
@@ -328,6 +358,8 @@ protected:
 	Plane3f				mEditSlicePlane;
 
 	EditTool<PathPlannerNavMesh> * mCurrentTool;
+
+	gmGCRoot<gmUserObject> mNavRef;
 
 	void InitSectors();
 

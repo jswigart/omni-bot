@@ -12,6 +12,7 @@
 #include "TF_InterfaceFuncs.h"
 #include "FilterClosestTF.h"
 
+#include "BotPathing.h"
 #include "BotSteeringSystem.h"
 #include "BotWeaponSystem.h"
 #include "BotTargetingSystem.h"
@@ -2080,9 +2081,7 @@ namespace AiState
 		FINDSTATE(fp,FollowPath,GetParent());
 		if(fp)
 		{
-			if(fp->IsMoving() &&
-				fp->GetCurrentPath().GetCurrentPt(m_NextPt) &&
-				(m_NextPt.m_NavFlags & F_TF_NAV_ROCKETJUMP))
+			if(fp->IsMoving() && fp->IsNavFlagActive( F_TF_NAV_ROCKETJUMP ) )
 			{
 				return 1.f;
 			}
@@ -2135,7 +2134,7 @@ namespace AiState
 	}
 	obReal ConcussionJump::GetPriority()
 	{
-		FINDSTATE(fp,FollowPath,GetParent());
+		/*FINDSTATE(fp,FollowPath,GetParent());
 		if(fp)
 		{
 			if(fp->IsMoving())
@@ -2157,7 +2156,7 @@ namespace AiState
 					}
 				}
 			}
-		}
+		}*/
 		return 0.f;
 	}
 	void ConcussionJump::Enter()

@@ -9,6 +9,7 @@
 #include "RTCW_BaseStates.h"
 #include "RTCW_FilterClosest.h"
 #include "RTCW_InterfaceFuncs.h"
+#include "BotPathing.h"
 #include "WeaponDatabase.h"
 #include "RenderBuffer.h"
 

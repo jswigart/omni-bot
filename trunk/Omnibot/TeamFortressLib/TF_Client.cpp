@@ -495,6 +495,54 @@ float TF_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to
 	return 0.f;
 }
 
+void TF_Client::ProcessGotoNode( const PathInterface::PathEdge edges[ 2 ], const size_t numEdges )
+{
+	if ( numEdges == 0 )
+		return;
+
+	//const bool OnGround = GetEntityFlags().CheckFlag(ENT_FLAG_ONGROUND);
+	//if(OnGround)
+	//	m_DoubleJumping = false;
+
+	//if(edges[ 0 ].m_NavFlags & F_TF_NAV_DOUBLEJUMP)
+	//{
+	//	if(!m_DoubleJumping && (GetPosition()-edges[ 0 ].m_Pos).Length() < pt.m_Radius)
+	//	{
+	//		//const float Speed = GetVelocity().Length();
+	//		const Vector3f Vel = Normalize(GetVelocity());
+	//		const Vector3f IdealVel = Normalize(pt.m_Pt - GetPosition());
+	//		const float fDot = IdealVel.Dot(Vel);
+
+	//		if(OnGround && fDot > 0.9f)
+	//		{
+	//			m_DoubleJumping = true;
+	//			PressButton(BOT_BUTTON_JUMP);
+	//		}
+
+	//		static float JumpVelocity = 10.f;
+	//		if(!OnGround && GetVelocity().Z() > JumpVelocity)
+	//		{
+	//			m_DoubleJumping = true;
+	//		}
+
+	//		m_DoubleJumpHeight = GetPosition().Z();
+	//	}
+	//}
+
+	//if(m_DoubleJumping)
+	//{
+	//	const float NextHeight = GetPosition().Z() + GetVelocity().Z() * IGame::GetDeltaTimeSecs();
+	//	if(NextHeight < m_DoubleJumpHeight)
+	//	{
+	//		PressButton(BOT_BUTTON_JUMP);
+	//		m_DoubleJumping = false;
+	//	}
+	//	return;
+	//}
+
+	//m_DoubleJumping = false;
+}
+
 void TF_Client::ProcessGotoNode(const Path &_path)
 {
 	const bool OnGround = GetEntityFlags().CheckFlag(ENT_FLAG_ONGROUND);

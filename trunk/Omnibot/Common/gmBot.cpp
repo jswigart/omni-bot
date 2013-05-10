@@ -13,6 +13,7 @@
 #include "gmTargetInfo.h"
 #include "gmUtilityLib.h"
 #include "BotBaseStates.h"
+#include "BotPathing.h"
 #include "FilterClosest.h"
 #include "FilterAllType.h"
 #include "BotWeaponSystem.h"

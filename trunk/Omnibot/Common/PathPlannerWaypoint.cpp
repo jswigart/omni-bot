@@ -349,54 +349,17 @@ void PathPlannerWaypoint::UpdateNavRender()
 	}
 
 	// render entity connections.
-	for ( int i = 0; i < MaxEntityConnections; ++i )
+	for ( size_t i = 0; i < mEntityConnections.size(); ++i )
 	{
-		if(EntityConnections[i].Entity.IsValid())
-		{
-			AABB boxi;
-			EngineFuncs::EntityWorldAABB(EntityConnections[i].Entity,boxi);
-			RenderBuffer::AddAABB(boxi,COLOR::CYAN);
+		AABB boxSrc, boxDst;
+		EngineFuncs::EntityWorldAABB(mEntityConnections[ i ].EntitySrc, boxSrc);
+		EngineFuncs::EntityWorldAABB(mEntityConnections[ i ].EntityDst, boxDst);
 
-			for(int j = 0; j < MaxEntityConnections; ++j)
-			{
-				if(EntityConnections[j].Entity.IsValid())
-				{
-					if(EntityConnections[i].ConnectionId == EntityConnections[j].ConnectionId)
-					{
-						AABB boxj;
-						EngineFuncs::EntityWorldAABB(EntityConnections[j].Entity,boxj);
+		Vector3f vStart, vEnd;
+		boxSrc.CenterBottom(vStart);
+		boxDst.CenterBottom(vEnd);
 
-						Vector3f vStart, vEnd;
-						boxi.CenterBottom(vStart);
-						boxj.CenterBottom(vEnd);
-
-						switch(EntityConnections[i].Direction)
-						{
-						case CON_TWO_WAY:
-							{
-								boxi.CenterPoint(vStart);
-								boxj.CenterPoint(vEnd);
-								break;
-							}
-						case CON_SOURCE:
-							{
-								boxi.CenterTop(vStart);
-								boxj.CenterPoint(vEnd);
-								break;
-							}
-						case CON_DEST:
-							{
-								boxj.CenterTop(vStart);
-								boxi.CenterPoint(vEnd);
-								break;
-							}
-						}
-
-						RenderBuffer::AddLine( vStart, vEnd, COLOR::CYAN );
-					}
-				}
-			}
-		}
+		RenderBuffer::AddLine( vStart, vEnd, COLOR::CYAN );
 	}
 }
 
@@ -1980,94 +1943,75 @@ bool PathPlannerWaypoint::GetNavInfo(const Vector3f &pos,obint32 &_id,std::strin
 
 void PathPlannerWaypoint::AddEntityConnection(const Event_EntityConnection &_conn)
 {
-	int iFreeIndex = -1;
-	for(int i = 0; i < MaxEntityConnections; ++i)
+	Vector3f vPosSrc, vPosDst;
+	if ( EngineFuncs::EntityPosition(_conn.m_EntitySrc, vPosSrc ) && EngineFuncs::EntityPosition( _conn.m_EntityDst, vPosDst ) )
 	{
-		if(iFreeIndex == -1 && !EntityConnections[i].Entity.IsValid())
-			iFreeIndex = i;
+		Waypoint * pLinkSrc = _GetClosestWaypoint(vPosSrc,0,SKIP_NO_CONNECTIONS,0);
+		Waypoint * pLinkDst = _GetClosestWaypoint(vPosDst,0,SKIP_NO_CONNECTIONS,0);
 
-		if(EntityConnections[i].Entity == _conn.m_Entity)
-		{
-			iFreeIndex = i;
-			break;
-		}
-	}
+		EntityConnection connection;
 
-	Vector3f vPos;
-	if(iFreeIndex != -1 && EngineFuncs::EntityPosition(_conn.m_Entity,vPos))
-	{
-		EntityConnections[iFreeIndex].Entity = _conn.m_Entity;
-		EntityConnections[iFreeIndex].ConnectionId = _conn.m_ConnectionId;
-		EntityConnections[iFreeIndex].Direction = _conn.m_ConnectionDir;
+		connection.EntitySrc = _conn.m_EntitySrc;
+		connection.EntityDst = _conn.m_EntityDst;
 
-		EntityConnections[iFreeIndex].Wp = AddWaypoint(vPos, Vector3f::ZERO, false);
-		EntityConnections[iFreeIndex].Wp->SetRadius(_conn.m_Radius);
-		EntityConnections[iFreeIndex].Wp->SetEntity(_conn.m_Entity);
-		EntityConnections[iFreeIndex].Wp->AddFlag(F_NAV_DONTSAVE);
-		if(_conn.m_Teleport)
-			EntityConnections[iFreeIndex].Wp->AddFlag(F_NAV_TELEPORT);
+		connection.WpSrc = AddWaypoint( vPosSrc, Vector3f::ZERO, false );
+		connection.WpSrc->SetRadius(_conn.m_Radius);
+		connection.WpSrc->SetEntity(_conn.m_EntitySrc);
+		connection.WpSrc->AddFlag(F_NAV_DONTSAVE);
+		
+		connection.WpDst = AddWaypoint( vPosDst, Vector3f::ZERO, false );
+		connection.WpDst->SetRadius(_conn.m_Radius);
+		connection.WpDst->SetEntity(_conn.m_EntityDst);
+		connection.WpDst->AddFlag(F_NAV_DONTSAVE);
 
 		// add team flag
 		for(int i = 1; i <= 4; ++i)
 		{
 			if(_conn.m_Team.CheckFlag(i))
-				EntityConnections[iFreeIndex].Wp->AddFlag(F_NAV_TEAM1 << i);
-		}
-
-		Waypoint *pWp = _GetClosestWaypoint(vPos,0,SKIP_NO_CONNECTIONS,0);
-		if(pWp)
-		{
-			// create 2 way connection to splice the new wp into the mesh
-			pWp->ConnectTo(EntityConnections[iFreeIndex].Wp);
-			EntityConnections[iFreeIndex].Wp->ConnectTo(pWp);
-		}
-
-		// see if the other connections exist.
-		for(int i = 0; i < MaxEntityConnections; ++i)
-		{
-			if(iFreeIndex == i)
-				continue;
-
-			if(EntityConnections[iFreeIndex].ConnectionId == EntityConnections[i].ConnectionId)
 			{
-				obuint32 iFlags = 0;
-				if(_conn.m_Teleport)
-					iFlags |= F_LNK_TELEPORT;
-
-				if(EntityConnections[iFreeIndex].Direction == CON_TWO_WAY ||
-					EntityConnections[i].Direction == CON_TWO_WAY)
-				{
-					EntityConnections[iFreeIndex].Wp->ConnectTo(EntityConnections[i].Wp,iFlags);
-					EntityConnections[i].Wp->ConnectTo(EntityConnections[iFreeIndex].Wp,iFlags);
-				}
-				else if(EntityConnections[iFreeIndex].Direction == CON_SOURCE ||
-					EntityConnections[i].Direction == CON_DEST)
-				{
-					EntityConnections[iFreeIndex].Wp->ConnectTo(EntityConnections[i].Wp,iFlags);
-				}
-				else if(EntityConnections[iFreeIndex].Direction == CON_DEST ||
-					EntityConnections[i].Direction == CON_SOURCE)
-				{
-					EntityConnections[i].Wp->ConnectTo(EntityConnections[iFreeIndex].Wp,iFlags);
-				}
+				connection.WpSrc->AddFlag(F_NAV_TEAM1 << i);
+				connection.WpDst->AddFlag(F_NAV_TEAM1 << i);
 			}
 		}
+
+		if ( pLinkSrc )
+		{
+			// create 2 way connection to splice the new wp into the mesh
+			pLinkSrc->ConnectTo( connection.WpSrc );
+			connection.WpSrc->ConnectTo( pLinkSrc );
+		}
+
+		if ( pLinkDst )
+		{
+			// create 2 way connection to splice the new wp into the mesh
+			pLinkDst->ConnectTo( connection.WpDst );
+			connection.WpDst->ConnectTo( pLinkDst );
+		}
+
+		mEntityConnections.push_back( connection );
 	}
 }
 
 void PathPlannerWaypoint::RemoveEntityConnection(GameEntity _ent)
 {
-	for(int i = 0; i < MaxEntityConnections; ++i)
+	for( size_t i = 0; i < mEntityConnections.size(); ++i )
 	{
-		if(EntityConnections[i].Entity == _ent)
+		EntityConnection & conn = mEntityConnections[i];
+		if ( conn.EntitySrc == _ent || conn.EntityDst == _ent )
 		{
-			EntityConnections[i].Entity.Reset();
-
-			if(EntityConnections[i].Wp)
+			if(conn.WpSrc)
 			{
-				DeleteWaypoint(EntityConnections[i].Wp->GetPosition());
-				EntityConnections[i].Wp = 0;
+				DeleteWaypoint(conn.WpSrc->GetPosition());
+				conn.WpSrc = 0;
 			}
+			if(conn.WpDst)
+			{
+				DeleteWaypoint(conn.WpDst->GetPosition());
+				conn.WpDst = 0;
+			}
+
+			mEntityConnections.erase( mEntityConnections.begin() + i );
+			--i;
 		}
 	}
 }

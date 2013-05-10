@@ -119,7 +119,7 @@ public:
 	virtual void GetWeaponEnumeration(const IntEnum *&_ptr, int &num) = 0;
 	virtual void GetTeamEnumeration(const IntEnum *&_ptr, int &num) = 0;
 	virtual void GetRoleEnumeration(const IntEnum *&_ptr, int &num);
-
+	
 	virtual void AddBot(Msg_Addbot &_addbot, bool _createnow = true);
 
 	virtual void CheckServerSettings(bool managePlayers = true);

@@ -9,6 +9,7 @@
 #include "ET_BaseStates.h"
 #include "ET_FilterClosest.h"
 #include "ET_InterfaceFuncs.h"
+#include "BotPathing.h"
 
 #include "RenderBuffer.h"
 

@@ -324,6 +324,32 @@ int ET_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 	return iVoiceId;
 }
 
+void ET_Client::ProcessGotoNode( const PathInterface::PathEdge edges[ 2 ], const size_t numEdges )
+{
+	if ( numEdges > 0 )
+	{
+		if(edges[ 0 ].mFlags & F_ET_NAV_SPRINT)
+		{
+			PressButton(BOT_BUTTON_SPRINT);
+		}
+
+		// test for inwater / jump to move to surface
+		if(edges[ 0 ].mFlags & F_NAV_INWATER)
+		{
+			PressButton(BOT_BUTTON_JUMP);
+		}
+
+		if(edges[ 0 ].mFlags & F_ET_NAV_STRAFE_L)
+		{
+			PressButton(BOT_BUTTON_LSTRAFE);
+		}
+		else if(edges[ 0 ].mFlags & F_ET_NAV_STRAFE_R)
+		{
+			PressButton(BOT_BUTTON_RSTRAFE);
+		}
+	}
+}
+
 void ET_Client::ProcessGotoNode(const Path &_path)
 {
 	Path::PathPoint pt;

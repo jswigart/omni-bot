@@ -17,7 +17,7 @@
 
 #include "Waypoint.h"
 #include "PathPlannerBase.h"
-#include "BotBaseStates.h"
+#include "BotPathing.h"
 #include "TF_BaseStates.h"
 #include "NameManager.h"
 #include "ScriptManager.h"

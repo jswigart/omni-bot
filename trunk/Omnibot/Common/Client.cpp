@@ -11,7 +11,7 @@
 #include "IGame.h"
 #include "ScriptManager.h"
 #include "WeaponDatabase.h"
-#include "BotBaseStates.h"
+#include "BotPathing.h"
 #include "BotTargetingSystem.h"
 #include "BotSteeringSystem.h"
 #include "MovementCaps.h"
@@ -154,6 +154,9 @@ void Client::Update()
 		if(m_StateRoot)
 		{
 			m_StateRoot->RootUpdate();
+
+			FINDSTATE(path, FollowPath, GetStateRoot());
+			path->RenderDebug();
 		}
 
 		// Purge expired blackboard records.

@@ -12,7 +12,7 @@
 
 #include "RenderBuffer.h"
 
-#include "BotBaseStates.h"
+#include "BotPathing.h"
 #include "BotSteeringSystem.h"
 
 namespace AiState

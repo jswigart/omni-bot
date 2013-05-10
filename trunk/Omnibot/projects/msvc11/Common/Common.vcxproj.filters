@@ -615,6 +615,12 @@
     <ClCompile Include="..\..\..\Common\CollisionModel.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Common\BotPathing.cpp">
+      <Filter>Core\States\States</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\PathPlannerNavMeshScript.cpp">
+      <Filter>Core\Navigation\PathPlannerNavMesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Common\Client.h">
@@ -1132,6 +1138,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Common\CollisionModel.h">
       <Filter>Miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\BotPathing.h">
+      <Filter>Core\States\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

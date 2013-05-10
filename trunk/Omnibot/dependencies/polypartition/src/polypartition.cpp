@@ -482,8 +482,8 @@ int TPPLPartition::ConvexPartition_HM(TPPLPoly *poly, list<TPPLPoly> *parts) {
 		return 1;
 	}
 
-	if(!Triangulate_OPT(poly,&triangles)) return 0;	
-	//if(!Triangulate_EC(poly,&triangles)) return 0;
+	//if(!Triangulate_OPT(poly,&triangles)) return 0;	
+	if(!Triangulate_EC(poly,&triangles)) return 0;
 
 	for(iter1 = triangles.begin(); iter1 != triangles.end(); iter1++) {
 		poly1 = &(*iter1);

@@ -12,6 +12,7 @@
     <REMOTEDEBUGLIB>$(REPO_ROOT)\Tools\RemoteDebugWindow\RemoteDebugLib</REMOTEDEBUGLIB>
     <ETDIR>D:\Games\WET</ETDIR>
     <WILDMAGIC>$(DEPENDENCIES)\WildMagic5</WILDMAGIC>
+    <JADIR>D:\Games\JediAcademy\GameData\</JADIR>
   </PropertyGroup>
   <PropertyGroup>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -58,6 +59,10 @@
     </BuildMacro>
     <BuildMacro Include="WILDMAGIC">
       <Value>$(WILDMAGIC)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="JADIR">
+      <Value>$(JADIR)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
   </ItemGroup>
