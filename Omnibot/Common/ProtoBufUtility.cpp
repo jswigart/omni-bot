@@ -88,13 +88,13 @@ void ClearDefaultedValues( google::protobuf::Message & msg )
 		{
 		case protobuf::FieldDescriptorProto_Type_TYPE_DOUBLE:
 			{
-				if ( refl->GetDouble( msg, fieldDesc ) == reflDefault->GetDouble( msg, fieldDesc ) )
+				if ( refl->GetDouble( msg, fieldDesc ) == reflDefault->GetDouble( *defaultMsg.get(), fieldDesc ) )
 					refl->ClearField( &msg, fieldDesc );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_FLOAT:
 			{
-				if ( refl->GetFloat( msg, fieldDesc ) == reflDefault->GetFloat( msg, fieldDesc ) )
+				if ( refl->GetFloat( msg, fieldDesc ) == reflDefault->GetFloat( *defaultMsg.get(), fieldDesc ) )
 					refl->ClearField( &msg, fieldDesc );
 				break;
 			}
@@ -102,14 +102,14 @@ void ClearDefaultedValues( google::protobuf::Message & msg )
 		case protobuf::FieldDescriptorProto_Type_TYPE_SFIXED64:
 		case protobuf::FieldDescriptorProto_Type_TYPE_SINT64:
 			{
-				if ( refl->GetInt64( msg, fieldDesc ) == reflDefault->GetInt64( msg, fieldDesc ) )
+				if ( refl->GetInt64( msg, fieldDesc ) == reflDefault->GetInt64( *defaultMsg.get(), fieldDesc ) )
 					refl->ClearField( &msg, fieldDesc );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_UINT64:
 		case protobuf::FieldDescriptorProto_Type_TYPE_FIXED64:
 			{
-				if ( refl->GetUInt64( msg, fieldDesc ) == reflDefault->GetUInt64( msg, fieldDesc ) )
+				if ( refl->GetUInt64( msg, fieldDesc ) == reflDefault->GetUInt64( *defaultMsg.get(), fieldDesc ) )
 					refl->ClearField( &msg, fieldDesc );
 				break;
 			}
@@ -117,26 +117,26 @@ void ClearDefaultedValues( google::protobuf::Message & msg )
 		case protobuf::FieldDescriptorProto_Type_TYPE_SFIXED32:
 		case protobuf::FieldDescriptorProto_Type_TYPE_SINT32:
 			{
-				if ( refl->GetInt32( msg, fieldDesc ) == reflDefault->GetInt32( msg, fieldDesc ) )
+				if ( refl->GetInt32( msg, fieldDesc ) == reflDefault->GetInt32( *defaultMsg.get(), fieldDesc ) )
 					refl->ClearField( &msg, fieldDesc );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_BOOL:
 			{
-				if ( refl->GetBool( msg, fieldDesc ) == reflDefault->GetBool( msg, fieldDesc ) )
+				if ( refl->GetBool( msg, fieldDesc ) == reflDefault->GetBool( *defaultMsg.get(), fieldDesc ) )
 					refl->ClearField( &msg, fieldDesc );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_UINT32:
 		case protobuf::FieldDescriptorProto_Type_TYPE_FIXED32:
 			{
-				if ( refl->GetUInt32( msg, fieldDesc ) == reflDefault->GetUInt32( msg, fieldDesc ) )
+				if ( refl->GetUInt32( msg, fieldDesc ) == reflDefault->GetUInt32( *defaultMsg.get(), fieldDesc ) )
 					refl->ClearField( &msg, fieldDesc );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_STRING:
 			{
-				if ( refl->GetString( msg, fieldDesc ) == reflDefault->GetString( msg, fieldDesc ) )
+				if ( refl->GetString( msg, fieldDesc ) == reflDefault->GetString( *defaultMsg.get(), fieldDesc ) )
 					refl->ClearField( &msg, fieldDesc );
 				break;
 			}
@@ -148,7 +148,7 @@ void ClearDefaultedValues( google::protobuf::Message & msg )
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_ENUM:
 			{
-				if ( refl->GetEnum( msg, fieldDesc ) == reflDefault->GetEnum( msg, fieldDesc ) )
+				if ( refl->GetEnum( msg, fieldDesc ) == reflDefault->GetEnum( *defaultMsg.get(), fieldDesc ) )
 					refl->ClearField( &msg, fieldDesc );
 				break;
 			}

@@ -78,6 +78,7 @@
     <PostBuildEvent>
       <Message>Copying to "$(OMNIBOT_INST)"</Message>
       <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)"
+copy "$(TargetPath)" "$(JADIR)/omnibot/"
 copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
 copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Command>
     </PostBuildEvent>
@@ -98,6 +99,7 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <PostBuildEvent>
       <Message>Copying to "$(OMNIBOT_INST)"</Message>
       <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)"
+copy "$(TargetPath)" "$(JADIR)/omnibot/"
 copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
 copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Command>
     </PostBuildEvent>

@@ -28,6 +28,7 @@ public:
 
 	void SendVoiceMacro(int _macroId);
 
+	void ProcessGotoNode( const PathInterface::PathEdge edges[ 2 ], const size_t numEdges );
 	void ProcessGotoNode(const Path &_path);
 
 	float GetGameVar(GameVar _var) const;

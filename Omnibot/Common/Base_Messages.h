@@ -541,19 +541,22 @@ struct Event_ScriptSignal
 
 struct Event_EntityConnection
 {
-	GameEntity	m_Entity;
-	int			m_ConnectionId;
-	ConnDir		m_ConnectionDir;
+	GameEntity	m_EntitySrc;
+	GameEntity	m_EntityDst;
+
+	/*float		m_SrcPos[3];
+	float		m_DstPos[3];*/
+
 	BitFlag32	m_Team;
 	float		m_Radius;
-	bool		m_Teleport;
+	float		m_Cost;
 
 	Event_EntityConnection()
-		: m_ConnectionId(0)
-		, m_ConnectionDir(CON_TWO_WAY)
-		, m_Radius(0.f)
-		, m_Teleport(false)
+		: m_Radius(0.f)
+		, m_Cost(0.f)
 	{
+		/*for ( int i = 0; i < 3; ++i )
+			m_SrcPos[ i ] = m_DstPos[ i ] = 0.0f;*/
 	}
 };
 

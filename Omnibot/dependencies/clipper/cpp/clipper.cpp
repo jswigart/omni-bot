@@ -999,7 +999,7 @@ HORIZONTAL : (double)(pt2.X - pt1.X) / (pt2.Y - pt1.Y);
 		}
 		return result;
 	}
-
+	
 	//------------------------------------------------------------------------------
 
 	void ClipperBase::Clear()

@@ -696,7 +696,10 @@ void RenderBuffer::RenderToOpenGL()
 		{
 			const Circle & prim = mCircleList[ i ];
 			CheckColor( col, prim.c );
+			glPushMatrix();
+			glTranslatef( prim.v.X(), prim.v.Y(), prim.v.Z() );
 			gluDisk( q, 0, prim.radius, 12, 1 );
+			glPopMatrix();
 		}
 		gluDeleteQuadric( q );
 	}

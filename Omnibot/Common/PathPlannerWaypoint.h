@@ -323,31 +323,22 @@ protected:
 
 	struct EntityConnection
 	{
-		GameEntity					Entity;
-		int							ConnectionId;
-		ConnDir						Direction;
+		GameEntity					EntitySrc;
+		GameEntity					EntityDst;
 
-		Waypoint *					Wp;
-
+		Waypoint *					WpSrc;
+		Waypoint *					WpDst;
+		
 		EntityConnection()
-			: ConnectionId(0)
-			, Direction(CON_TWO_WAY)
-			, Wp(0)
+			: WpSrc( NULL )
+			, WpDst( NULL )
 		{
 		}
 	};
 
-	enum { MaxEntityConnections = 32 };
-	EntityConnection				EntityConnections[MaxEntityConnections];
-
-	struct Obstacle
-	{
-		GameEntity		Entity;
-		float			Radius;
-	};
-	enum { MaxObstacles = 512 };
-	Obstacle				Obstacles[MaxEntityConnections];
-
+	typedef std::vector<EntityConnection> EntityConnections;
+	EntityConnections	mEntityConnections;
+	
 	void _RunDijkstra(const NavFlags _team);
 	void _RunAStar(const NavFlags _team, const Vector3f &_goalPosition);
 

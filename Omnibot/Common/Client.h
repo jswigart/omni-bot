@@ -18,6 +18,7 @@
 #include "BlackBoard.h"
 #include "FileSystem.h"
 #include "GoalManager.h"
+#include "PathPlannerBase.h"
 
 class BotItemSystem;
 namespace AiState
@@ -227,6 +228,7 @@ public:
 	// These helper functions allow the derived class to perform additional
 	// actions as a result of mode specific flags on the waypoint. This allow handling
 	// of custom nav flags without subclassing the actual goals.
+	virtual void ProcessGotoNode( const PathInterface::PathEdge edges[ 2 ], const size_t numEdges ) {}
 	virtual void ProcessGotoNode(const Path &_path) {}
 
 	// Game specific variables.

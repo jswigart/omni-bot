@@ -9,6 +9,7 @@
 #include "ETQW_BaseStates.h"
 #include "ETQW_InterfaceFuncs.h"
 
+#include "BotPathing.h"
 #include "BotWeaponSystem.h"
 #include "BotSteeringSystem.h"
 #include "BotTargetingSystem.h"

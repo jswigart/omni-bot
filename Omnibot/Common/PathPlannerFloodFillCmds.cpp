@@ -632,15 +632,8 @@ void PathPlannerFloodFill::cmdInfluenceMapCreate(const StringVector &_args)
 	const float fmax = std::numeric_limits<float>::max();
 
 	AABB mapbounds;
-	mapbounds.Set( Vector3f( -4000,-4000,fmax ), Vector3f( fmin, fmin, fmin ) );
-	/*for ( RuntimeSectorList::iterator s = mRuntimeSectors.begin(); s != mRuntimeSectors.end(); ++s)
-	{
-	for ( Vector3List::iterator v = s->mPoly.begin(); v != s->mPoly.end(); ++v)
-	{
-	mapbounds.Expand( *v );
-	}
-	}*/
-
+	mapbounds.Set( Vector3f( -4400,-2000,-800 ), Vector3f( 4400, 2000, 230 ) );
+	
 	VectorQueue empty;
 	mSpanFrontier.swap( empty );
 
@@ -670,11 +663,48 @@ void PathPlannerFloodFill::cmdInfluenceMapSeed(const StringVector &_args)
 		mSpanFrontier.push( features[ i ].m_Position );
 		mSpanFrontier.push( features[ i ].m_TargetPosition );
 	}
-
+	
 	/*if ( mSpanMap == NULL )
-	EngineFuncs::ConsoleMessage( "No Influence Map Created, use nav_mapcreate" );
-	else if ( GetCurrentStateId() != FloodSpanMap )
-	SetNextState( FloodSpanMap );*/
+	{
+		EngineFuncs::ConsoleMessage( "No Influence Map Created, use nav_mapcreate" );
+		return;
+	}
+	
+	while( !mSpanFrontier.empty() )
+	{
+		Vector3f search = mSpanFrontier.front();
+		mSpanFrontier.pop();
+
+		Vector3f floor, ceiling;
+
+		obTraceResult tr;
+		EngineFuncs::TraceLine(tr,
+			search + Vector3f( 0.f, 0.f, 1.f ),
+			search - Vector3f( 0.f, 0.f, 1024.f ),
+			NULL,TR_MASK_FLOODFILL,-1,False);
+		
+		floor = Vector3f( tr.m_Endpos );
+
+		EngineFuncs::TraceLine(tr,
+			floor + Vector3f( 0.f, 0.f, 1.f ),
+			floor + Vector3f( 0.f, 0.f, 1024.f ),
+			NULL,TR_MASK_FLOODFILL,-1,False);
+
+		if ( mSpanMap->AddOpenSpan( floor, tr.m_Endpos[ 2 ] - floor.Z() ) )
+		{
+			const Vector3f directions[4] =
+			{
+				Vector3f( -mSpanMap->GetCellSize(), 0.0f ),
+				Vector3f(  mSpanMap->GetCellSize(), 0.0f ),
+				Vector3f( 0.0f, -mSpanMap->GetCellSize() ),
+				Vector3f( 0.0f, mSpanMap->GetCellSize() )
+			};
+
+			for ( int i = 0; i < 4; ++i )
+			{
+			}
+		}
+	}*/
 }
 
 void PathPlannerFloodFill::cmdInfluenceMapMem(const StringVector &_args)

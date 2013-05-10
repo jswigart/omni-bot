@@ -891,7 +891,7 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 				m_GameEntities[index].m_EntityCategory = m->m_EntityCategory;
 				m_GameEntities[index].m_TimeStamp = IGame::GetTime();
 
-				System::mInstance->mNavigation->EntityCreated(m_GameEntities[index]);
+				System::mInstance->mNavigation->EntityCreated( m_GameEntities[index] );
 
 #ifdef _DEBUG
 				const char *pClassName = FindClassName(m->m_EntityClass);
@@ -918,6 +918,7 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 					const char *pClassName = FindClassName(m_GameEntities[index].m_EntityClass);
 					Utils::OutputDebug(kNormal, "Entity: %d deleted: %s\n", index, pClassName?pClassName:"<unknown>");
 #endif
+					System::mInstance->mNavigation->EntityDeleted( m_GameEntities[index] );
 
 					m_GameEntities[index].m_Entity.Reset();
 					m_GameEntities[index].m_EntityClass = 0;

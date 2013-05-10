@@ -29,8 +29,45 @@ namespace NavigationAssertions
 	//BOOST_STATIC_ASSERT(sizeof(obUserData) == 16); // cs: FIXME 64 bit struct size is different. do we really need this?
 }
 
-struct rcConfig;
 struct EntityInstance;
+
+class PathInterface
+{
+public:
+	PathInterface() {}
+	virtual ~PathInterface() {}
+
+	enum PathStatus
+	{
+		PATH_NONE,
+		PATH_VALID,
+		PATH_SEARCHING,
+		PATH_NOPATHTOGOAL,
+	};
+
+	struct PathEdge
+	{
+		Vector3f		mSrc;
+		Vector3f		mDst;
+
+		NavFlags		mFlags;
+	};
+
+	virtual PathStatus GetPathStatus() const = 0;
+
+	virtual void UpdateSourcePosition( const Vector3f & srcPos ) = 0;
+	virtual void UpdateGoalPositions( const DestinationVector & goals ) = 0;
+	virtual void UpdateGoalPositionRandom() = 0;
+
+	virtual void UpdatePath() = 0;
+
+	virtual void Cancel() = 0;
+
+	virtual size_t GetNextMoveEdges( PathEdge * corners, size_t maxEdges ) = 0;
+	virtual bool GetPointAlongPath( float lookAheadDist, Vector3f & ptOut ) = 0;
+
+	virtual void Render() = 0;
+};
 
 // class: PathPlannerBase
 //		Abstract Base Class for Path Planning
@@ -110,6 +147,8 @@ public:
 #ifdef ENABLE_REMOTE_DEBUGGING
 	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync ) { }
 #endif
+
+	virtual PathInterface * AllocPathInterface() { return NULL; }
 
 	PathPlannerBase() {};
 	virtual ~PathPlannerBase() {};

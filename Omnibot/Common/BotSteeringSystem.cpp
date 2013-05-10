@@ -10,7 +10,7 @@
 #include "Client.h"
 #include "IGame.h"
 #include "IGameManager.h"
-#include "BotBaseStates.h"
+#include "BotPathing.h"
 #include "RenderBuffer.h"
 
 namespace AiState

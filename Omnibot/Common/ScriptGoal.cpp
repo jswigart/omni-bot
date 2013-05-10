@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "BotBaseStates.h"
+#include "BotPathing.h"
 #include "ScriptManager.h"
 #include "IGameManager.h"
 #include "BotWeaponSystem.h"

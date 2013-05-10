@@ -71,6 +71,8 @@ void PathPlannerNavMesh::InitCommands()
 		this, &PathPlannerNavMesh::cmdSetField);
 	SetEx("nav_setfieldm", "Sets a named field on the navigation sector.",
 		this, &PathPlannerNavMesh::cmdSetField);
+	SetEx("nav_setfields", "Sets a named field on the navigation sector.",
+		this, &PathPlannerNavMesh::cmdSetField);
 
 	SetEx("nav_commit", "Creates a plane from a point and normal.",
 		this, &PathPlannerNavMesh::cmdCommitPoly);
@@ -224,6 +226,22 @@ void PathPlannerNavMesh::cmdNavStats(const StringVector &_args)
 	EngineFuncs::ConsoleMessage( va( "%d Portals", numPortals ) );
 	EngineFuncs::ConsoleMessage( va( "%d Tris in Static NavMesh Collision", mSectorCollision.NumTriangles() ) );
 	EngineFuncs::ConsoleMessage( va( "%d Tris in Dynamic NavMesh Collision", dynTris ) );
+	
+	const float fmin = std::numeric_limits<float>::lowest();
+	const float fmax = std::numeric_limits<float>::max();
+
+	AABB mapbounds;
+	mapbounds.Set( Vector3f( fmax, fmax, fmax ), Vector3f( fmin, fmin, fmin ) );
+	for ( size_t i = 0; i < mRuntimeSectors.size(); ++i )
+	{
+		for ( size_t v = 0; v != mRuntimeSectors[i].mPoly.size(); ++v )
+		{
+			mapbounds.Expand( mRuntimeSectors[i].mPoly[ v ] );
+		}
+	}
+
+	EngineFuncs::ConsoleMessage( va( "Bounds Min( %.4f, %.4f, %.4f )", mapbounds.m_Mins[ 0 ], mapbounds.m_Mins[ 1 ], mapbounds.m_Mins[ 2 ] ) );
+	EngineFuncs::ConsoleMessage( va( "Bounds Max( %.4f, %.4f, %.4f )", mapbounds.m_Maxs[ 0 ], mapbounds.m_Maxs[ 1 ], mapbounds.m_Maxs[ 2 ] ) );
 }
 
 extern float g_fBottomWaypointOffset;
@@ -935,13 +953,28 @@ void PathPlannerNavMesh::cmdObstacleAdd(const StringVector &_args)
 
 	Vector3f vObsPoint, vObsNormal;
 	Utils::GetLocalAimPoint( vObsPoint, &vObsNormal );
+	
+	// build a random polygon
+	Plane3f p = Plane3f( Vector3f::UNIT_Z, vObsPoint );
+
+	const int numPoints = Mathf::IntervalRandomInt( 3, 10 );
+
+	Quaternionf q;
+	q.FromAxisAngle( Vector3f::UNIT_Z, Mathf::DegToRad( 360.0f / (float)numPoints ) );
+
+	Vector3f v = Vector3f::UNIT_X;
 
 	Obstacle obs;
-	obs.mPoly.push_back( vObsPoint + Vector3f( -len, -wid, 0.0f ) );
-	obs.mPoly.push_back( vObsPoint + Vector3f(  len, -wid, 0.0f ) );
-	obs.mPoly.push_back( vObsPoint + Vector3f(  len,  wid, 0.0f ) );
-	obs.mPoly.push_back( vObsPoint + Vector3f( -len,  wid, 0.0f ) );
+	obs.mPoly.push_back( vObsPoint + v * Mathf::IntervalRandom( 32.0f, 64.0f ) );
+	for ( int i = 0; i < numPoints - 1; ++i )
+	{
+		v = q.Rotate(v);
+		obs.mPoly.push_back( vObsPoint + v * Mathf::IntervalRandom( 32.0f, 64.0f ) );
+	}
+	
+	obs.mPosition = vObsPoint;
 	obs.mCost = cost;
+	obs.mExpireTime = IGame::GetTime() + 5000;
 	mPendingObstacles.push_back( obs );
 }
 
@@ -952,7 +985,7 @@ void PathPlannerNavMesh::_BenchmarkPathFinder(const StringVector &_args)
 	// cache all sector center positions so we don't include that as part of the benchmark
 	Vector3List sectorCenters;
 	sectorCenters.reserve( mRuntimeSectors.size() );
-	for(obuint32 i = 0; i < mRuntimeSectors.size(); ++i)
+	for( size_t i = 0; i < mRuntimeSectors.size(); ++i)
 	{
 		sectorCenters.push_back( mRuntimeSectors[ i ].CalculateCenter() );
 	}
@@ -1197,6 +1230,8 @@ public:
 		else
 			mSector->mSectorData->set_edgeportalmask( mSector->mSectorData->edgeportalmask() | mMask );
 
+		ClearDefaultedValues( *mSector->mSectorData );
+
 		mSector->mUpdatePortals = true;
 	}
 private:
@@ -1252,11 +1287,22 @@ static void PrintSetFieldUsage( const google::protobuf::Message & msg, const std
 void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 {
 	using namespace google;
-
-	const NavmeshIO::SectorData & msgDef = NavmeshIO::SectorData::default_instance();
+	
+	const bool both = _args.at( 0 ).back() == 's';
+	if ( both )
+	{
+		// easiest to just execute the command multiple times
+		// than to adapt the function to be able to do both
+		StringVector cmd = _args;
+		cmd[ 0 ] = "nav_setfield";
+		cmdSetField( cmd );
+		cmd[ 0 ] = "nav_setfieldm";
+		cmdSetField( cmd );
+		return;
+	}
 
 	const bool mirrored = _args.at( 0 ).back() == 'm';
-
+	
 	NavSector * ns = GetSectorAtCursor();
 	if ( ns == NULL )
 	{
@@ -1333,19 +1379,13 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 		case protobuf::FieldDescriptorProto_Type_TYPE_DOUBLE:
 			{
 				const double val = boost::lexical_cast<double>( _args.at( 2 ).c_str() );
-				if ( val == refl->GetDouble( msgDef, fieldDesc ) )
-					refl->ClearField( msg, fieldDesc );
-				else
-					refl->SetDouble( msg, fieldDesc, val );
+				refl->SetDouble( msg, fieldDesc, val );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_FLOAT:
 			{
 				const float val = boost::lexical_cast<float>( _args.at( 2 ).c_str() );
-				if ( val == refl->GetFloat( msgDef, fieldDesc ) )
-					refl->ClearField( msg, fieldDesc );
-				else
-					refl->SetFloat( msg, fieldDesc, val );
+				refl->SetFloat( msg, fieldDesc, val );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_INT64:
@@ -1353,20 +1393,14 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 		case protobuf::FieldDescriptorProto_Type_TYPE_SINT64:
 			{
 				const protobuf::int64 val = boost::lexical_cast<protobuf::int64>( _args.at( 2 ).c_str() );
-				if ( val == refl->GetInt64( msgDef, fieldDesc ) )
-					refl->ClearField( msg, fieldDesc );
-				else
-					refl->SetInt64( msg, fieldDesc, val );
+				refl->SetInt64( msg, fieldDesc, val );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_UINT64:
 		case protobuf::FieldDescriptorProto_Type_TYPE_FIXED64:
 			{
 				const protobuf::uint64 val = boost::lexical_cast<protobuf::uint64>( _args.at( 2 ).c_str() );
-				if ( val == refl->GetUInt64( msgDef, fieldDesc ) )
-					refl->ClearField( msg, fieldDesc );
-				else
-					refl->SetUInt64( msg, fieldDesc, val );
+				refl->SetUInt64( msg, fieldDesc, val );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_INT32:
@@ -1374,29 +1408,20 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 		case protobuf::FieldDescriptorProto_Type_TYPE_SINT32:
 			{
 				const protobuf::int32 val = boost::lexical_cast<protobuf::int32>( _args.at( 2 ).c_str() );
-				if ( val == refl->GetInt32( msgDef, fieldDesc ) )
-					refl->ClearField( msg, fieldDesc );
-				else
-					refl->SetInt32( msg, fieldDesc, val );
+				refl->SetInt32( msg, fieldDesc, val );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_BOOL:
 			{
 				const bool val = boost::lexical_cast<bool>( _args.at( 2 ).c_str() );
-				if ( val == refl->GetBool( msgDef, fieldDesc ) )
-					refl->ClearField( msg, fieldDesc );
-				else
-					refl->SetBool( msg, fieldDesc, val );
+				refl->SetBool( msg, fieldDesc, val );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_UINT32:
 		case protobuf::FieldDescriptorProto_Type_TYPE_FIXED32:
 			{
 				const protobuf::uint32 val = boost::lexical_cast<protobuf::uint32>( _args.at( 2 ).c_str() );
-				if ( val == refl->GetUInt32( msgDef, fieldDesc ) )
-					refl->ClearField( msg, fieldDesc );
-				else
-					refl->SetUInt32( msg, fieldDesc, val );
+				refl->SetUInt32( msg, fieldDesc, val );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_STRING:
@@ -1415,11 +1440,8 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 					str.erase( str.begin() );
 				while ( str.size() > 0 && ( str.back() == '\'' || str.back() == '\\"' ) )
 					str.pop_back();
-
-				if ( str == refl->GetString( msgDef, fieldDesc ) )
-					refl->ClearField( msg, fieldDesc );
-				else
-					refl->SetString( msg, fieldDesc, str );
+				
+				refl->SetString( msg, fieldDesc, str );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_GROUP:
@@ -1436,10 +1458,7 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 				const protobuf::EnumValueDescriptor * enumVal = fieldDesc->enum_type()->FindValueByName( _args.at( 2 ).c_str() );
 				if ( enumVal != NULL )
 				{
-					if ( enumVal == refl->GetEnum( msgDef, fieldDesc ) )
-						refl->ClearField( msg, fieldDesc );
-					else
-						refl->SetEnum( msg, fieldDesc, enumVal );
+					refl->SetEnum( msg, fieldDesc, enumVal );
 				}
 				else
 				{
@@ -1456,6 +1475,8 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 				break;
 			}
 		}
+
+		ClearDefaultedValues( *msg );
 
 		bool clearMoverState = !msgSectorData->onmover();
 		if ( !wasOnMover && msgSectorData->onmover() )

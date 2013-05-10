@@ -209,6 +209,72 @@ int RTCW_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 	return iVoiceId;
 }
 
+void RTCW_Client::ProcessGotoNode( const PathInterface::PathEdge edges[ 2 ], const size_t numEdges )
+{
+	if ( numEdges == 0 )
+		return;
+
+	if(edges[ 0 ].mFlags & F_RTCW_NAV_SPRINT)
+	{
+		PressButton(BOT_BUTTON_SPRINT);
+	}
+
+	// test for inwater / jump to move to surface
+	if(edges[ 0 ].mFlags & F_NAV_INWATER)
+	{
+		PressButton(BOT_BUTTON_JUMP);
+	}
+
+	if(edges[ 0 ].mFlags & F_RTCW_NAV_STRAFE_L)
+	{
+		PressButton(BOT_BUTTON_LSTRAFE);
+	}
+	else if(edges[ 0 ].mFlags & F_RTCW_NAV_STRAFE_R)
+	{
+		PressButton(BOT_BUTTON_RSTRAFE);
+	}
+
+	if (m_StrafeJump)
+	{
+		if(edges[ 0 ].mFlags & F_RTCW_NAV_STRAFE_JUMP_L)
+		{
+			if (IGame::GetFrameNumber() % 20 == 0)
+			{
+				GameEntity targetent;
+				targetent = this->GetTargetingSystem()->GetCurrentTarget();
+				if (!targetent.IsValid())
+				{
+					BitFlag64 b;
+					b.SetFlag(BOT_BUTTON_LSTRAFE,true);
+					//b.SetFlag(BOT_BUTTON_FWD,true);
+
+					PressButton(BOT_BUTTON_JUMP);
+					HoldButton(b, 750);
+				}
+			}
+			PressButton(BOT_BUTTON_SPRINT);
+		}
+		else if(edges[ 0 ].mFlags & F_RTCW_NAV_STRAFE_JUMP_R)
+		{
+			if (IGame::GetFrameNumber() % 20 == 0)
+			{
+				GameEntity targetent;
+				targetent = this->GetTargetingSystem()->GetCurrentTarget();
+				if (!targetent.IsValid())
+				{
+					BitFlag64 b;
+					b.SetFlag(BOT_BUTTON_LSTRAFE,true);
+					//b.SetFlag(BOT_BUTTON_FWD,true);
+
+					PressButton(BOT_BUTTON_JUMP);
+					HoldButton(b, 750);
+				}
+			}
+			PressButton(BOT_BUTTON_SPRINT);
+		}
+	}
+}
+
 void RTCW_Client::ProcessGotoNode(const Path &_path)
 {
 	Path::PathPoint pt;

@@ -108,9 +108,7 @@ public:
 		Vector3f								Position;
 		PlanNode *								Parent;
 		const PathPlannerNavMesh::NavPortal *	Portal;
-
-		int										BoundaryEdge;
-
+		
 		float									CostHeuristic;
 		float									CostGiven;
 		float									CostFinal;
@@ -119,7 +117,7 @@ public:
 		{
 			return (obint32)Utils::MakeId32(
 				(obint16)Sector->mIndex,
-				Portal ? (obint16)Portal->mDestSector : (obint16)0xFF);
+				Portal ? (obint16)Portal->mDstSector : (obint16)0xFF);
 		}
 
 		void Reset()
@@ -128,9 +126,7 @@ public:
 			Parent = 0;
 
 			Portal = 0;
-
-			BoundaryEdge = -1;
-
+			
 			CostHeuristic = 0.f;
 			CostGiven = 0.f;
 			CostFinal = 0.f;
@@ -363,7 +359,7 @@ private:
 			tmpNext.Reset();
 			tmpNext.Portal = &portal;
 			tmpNext.Parent = _node;
-			tmpNext.Sector = portal.mDestSector;
+			tmpNext.Sector = portal.mDstSector;
 			tmpNext.Position = portal.mSegment.Center; // TODO: branch more
 
 			//if(m_CurrentGoals.size()==1)
@@ -436,6 +432,98 @@ private:
 
 PathFindNavMesh g_PathFind; // TEMP
 
+
+class NavMeshPathInterface : public PathInterface
+{
+public:
+	NavMeshPathInterface( PathPlannerNavMesh * nav ) 
+		: mNavMesh( nav )
+		, mStatus( PATH_NONE )
+		, mMoveDirection( Vector3f::ZERO )
+	{
+	}
+
+	virtual PathStatus GetPathStatus() const
+	{
+		return mStatus;
+	}
+
+	virtual void UpdateSourcePosition( const Vector3f & srcPos )
+	{
+		mSrc = srcPos;
+		// update and re-funnel path
+	}
+
+	virtual void UpdateGoalPositions( const DestinationVector & goals )
+	{
+		mGoals = goals;
+		//re-plan path
+	}
+
+	virtual void UpdateGoalPositionRandom()
+	{
+		mGoals.resize( 0 );
+
+		Destination dest;
+		dest.m_Position = mSrc;
+		dest.m_Radius = 4.0f;
+
+		const PathPlannerNavMesh::RuntimeSectorList & sectors = mNavMesh->mRuntimeSectors;
+		if ( !sectors.empty() )
+		{
+			const PathPlannerNavMesh::RuntimeNavSector & sec = sectors[ rand()% sectors.size() ];
+			dest.m_Position = sec.CalculateCenter();
+		}
+		mGoals.push_back( dest );
+	}
+
+	virtual void UpdatePath()
+	{
+		//repath
+	}
+
+	virtual void Cancel()
+	{
+		mStatus = PATH_NONE;
+		mMoveDirection = Vector3f::ZERO;
+	}
+
+	virtual size_t GetNextMoveEdges( PathEdge * corners, size_t maxEdges )
+	{
+		return 0;
+	}
+	
+	virtual bool GetPointAlongPath( float lookAheadDist, Vector3f & ptOut )	
+	{
+		if ( mStatus != PATH_VALID )
+			return false;
+
+		return true;
+	}
+
+	virtual void Render() 
+	{
+
+	}
+private:
+	PathPlannerNavMesh *mNavMesh;
+	PathStatus			mStatus;
+
+	Vector3f			mSrc;
+	DestinationVector	mGoals;
+
+	Vector3f			mMoveDirection;
+};
+
+const float PathPlannerNavMesh::NavPortal::MAX_COST = 10.0f;
+
+PathPlannerNavMesh::NavPortal::NavPortal()
+{
+	mSrcSector = NULL;
+	mDstSector = NULL;
+	mFlags.ClearAll();
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 PathPlannerNavMesh::NavSector::NavSector()
@@ -450,16 +538,34 @@ bool PathPlannerNavMesh::NavSector::IsMirrored() const
 
 //////////////////////////////////////////////////////////////////////////
 
+bool PathPlannerNavMesh::Obstacle::Expired() const
+{
+	if ( mExpireTime >= 0 && IGame::GetTime() > mExpireTime )
+		return true;
+	return false;
+}
+
+PathPlannerNavMesh::Obstacle::Obstacle() 
+	: mCost( -1.0f )
+	, mExpireTime( -1 )
+{
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 PathPlannerNavMesh::RuntimeNavSector::RuntimeNavSector( obuint32 index, NavSector * sector, NavmeshIO::SectorData * data )
 	: mIndex( index )
-	, mParentIndex( (obuint32)-1 )
+	, mParent( NULL )
 	, mSector( sector )
 	, mSectorData( data )
 	, mCost( 1.0f )
+	, mVersion( 0 )
 	, mMirrored( false )
 	, mUpdatePortals( true )
 	, mUpdateObstacles( false )
 {
+	mSectorWorldTrans = Vector3f::ZERO;
+	mSectorWorldRot.MakeIdentity();
 }
 
 PathPlannerNavMesh::RuntimeNavSector::~RuntimeNavSector()
@@ -482,11 +588,10 @@ bool PathPlannerNavMesh::RuntimeNavSector::InitSectorTransform()
 	{
 		bool good = true;
 
-		Vector3f moverPos;
 		Vector3f moverFwd, moverRight, moverUp;
 		good &= EngineFuncs::EntityPosition(
 			mover,
-			moverPos );
+			mSectorWorldTrans );
 		good &= EngineFuncs::EntityOrientation(
 			mover,
 			moverFwd,
@@ -495,7 +600,7 @@ bool PathPlannerNavMesh::RuntimeNavSector::InitSectorTransform()
 
 		if ( good )
 		{
-			const Matrix3f moverOrient( moverRight, moverFwd, moverUp, true );
+			mSectorWorldRot = Matrix3f( moverRight, moverFwd, moverUp, true );
 
 			mSectorData->mutable_mover()->set_id( mover.AsInt() );
 
@@ -503,14 +608,14 @@ bool PathPlannerNavMesh::RuntimeNavSector::InitSectorTransform()
 			mSectorData->clear_localoffsets();
 			for ( size_t i = 0; i < mPoly.size(); ++i )
 			{
-				mLocalPoly[ i ] = (mPoly[ i ] - moverPos) * moverOrient.Transpose();
+				mLocalPoly[ i ] = (mPoly[ i ] - mSectorWorldTrans) * mSectorWorldRot.Transpose();
 
 				NavmeshIO::SectorVert * vert = mSectorData->add_localoffsets();
 				vert->mutable_position()->set_x( mLocalPoly[ i ].X() );
 				vert->mutable_position()->set_y( mLocalPoly[ i ].Y() );
 				vert->mutable_position()->set_z( mLocalPoly[ i ].Z() );
 			}
-
+			
 			UpdateSectorTransform();
 			return true;
 		}
@@ -525,20 +630,26 @@ void PathPlannerNavMesh::RuntimeNavSector::UpdateSectorTransform()
 		GameEntity mover;
 		mover.FromInt( mSectorData->mover().id() );
 
-		Vector3f moverPos;
 		Vector3f moverFwd, moverRight, moverUp;
 		if ( mover.IsValid() &&
-			EngineFuncs::EntityPosition( mover, moverPos ) &&
+			EngineFuncs::EntityPosition( mover, mSectorWorldTrans ) &&
 			EngineFuncs::EntityOrientation(
 			mover,
 			moverFwd,
 			moverRight,
 			moverUp ) )
 		{
-			const Matrix3f moverOrient( moverRight, moverFwd, moverUp, true );
+			mSectorWorldRot = Matrix3f( moverRight, moverFwd, moverUp, true );
 
 			for ( size_t i = 0; i < mPoly.size(); ++i )
-				mPoly[ i ] = moverPos + mLocalPoly[ i ] * moverOrient;
+				mPoly[ i ] = mSectorWorldTrans + mLocalPoly[ i ] * mSectorWorldRot;
+			
+			for ( size_t i = 0; i < mPortals.size(); ++i )
+			{
+				mPortals[ i ].mSegment.P0 = mSectorWorldTrans + mPortals[ i ].mSegmentLocal.P0 * mSectorWorldRot;
+				mPortals[ i ].mSegment.P1 = mSectorWorldTrans + mPortals[ i ].mSegmentLocal.P1 * mSectorWorldRot;
+				mPortals[ i ].mSegment.ComputeCenterDirectionExtent();
+			}
 		}
 		else
 		{
@@ -612,7 +723,7 @@ void PathPlannerNavMesh::RuntimeNavSector::RenderPortals( const PathPlannerNavMe
 			portal.mSegment.P1 + Vector3f(0.0f,0.0f,2.0f),
 			COLOR::MAGENTA );
 
-		const RuntimeNavSector * destSector = portal.mDestSector;
+		const RuntimeNavSector * destSector = portal.mDstSector;
 
 		obColor portalColor = COLOR::BLUE;
 		if ( portal.mFlags.CheckFlag( NavPortal::FL_DISABLED ) )
@@ -639,20 +750,20 @@ void PathPlannerNavMesh::RuntimeNavSector::RenderPortals( const PathPlannerNavMe
 void PathPlannerNavMesh::RuntimeNavSector::RebuildPortals( PathPlannerNavMesh * navmesh )
 {
 	mUpdatePortals = false;
-
+	
 	mPortals.resize( 0 );
 
-	SegmentList edges;
-	GetEdgeSegments( edges );
-
+	SegmentList edges0, edges1;
+	GetEdgeSegments( edges0 );
+	
 	const float MAX_STEPUP = std::max( JUMP_HEIGHT, mSectorData->waterdepth() + WATER_EXIT );
 
-	for ( size_t e = 0; e < edges.size(); ++e )
+	for ( size_t e = 0; e < edges0.size(); ++e )
 	{
 		if ( mSectorData->edgeportalmask() & (1<<e) )
 			continue;
 
-		const Segment3f & seg0 = edges[ e ];
+		const Segment3f & seg0 = edges0[ e ];
 
 		Line3f line0;
 		line0.FromPoints( seg0.P0, seg0.P1 );
@@ -679,17 +790,18 @@ void PathPlannerNavMesh::RuntimeNavSector::RebuildPortals( PathPlannerNavMesh * 
 		{
 			RuntimeNavSector * neighbor = nearbySectors[ n ];
 
-			if ( this == neighbor )
+			if ( this == neighbor || neighbor->mCost >= NavPortal::MAX_COST )
 				continue;
+			
+			// don't connect to it if it has sub sectors, which means
+			// it is subdivided as well
 			if ( neighbor->mSubSectors.size() > 0 )
 				continue;
-			/*if ( mParentIndex == neighbor->mIndex )
-			continue;*/
-
-			const Vector3List & edges1 = neighbor->mPoly;
-			for ( size_t nb = 1; nb <= edges1.size(); ++nb )
+			
+			neighbor->GetEdgeSegments( edges1 );
+			for ( size_t nb = 0; nb < edges1.size(); ++nb )
 			{
-				Segment3f seg1( edges1[ nb-1 ], edges1[ nb % edges1.size() ] );
+				const Segment3f & seg1 = edges1[ nb ];
 
 				DistPoint3Line3f d0( seg1.P0, line0 );
 				DistPoint3Line3f d1( seg1.P1, line0 );
@@ -735,7 +847,12 @@ void PathPlannerNavMesh::RuntimeNavSector::RebuildPortals( PathPlannerNavMesh * 
 					portal.mSegment.P0 = line0.Origin + d0Segment * line0.Direction;
 					portal.mSegment.P1 = line0.Origin + d1Segment * line0.Direction;
 					portal.mSegment.ComputeCenterDirectionExtent();
-					portal.mDestSector = neighbor;
+					portal.mSrcSector = this;
+					portal.mDstSector = neighbor;
+
+					portal.mSegmentLocal = portal.mSegment;
+					portal.mSegmentLocal.P0 = (portal.mSegment.P0 - mSectorWorldTrans) * mSectorWorldRot.Transpose();
+					portal.mSegmentLocal.P1 = (portal.mSegment.P1 - mSectorWorldTrans) * mSectorWorldRot.Transpose();
 
 					// do we need to jump to reach this edge?
 					if ( p0zDiff > STEP_HEIGHT && p0zDiff <= JUMP_HEIGHT )
@@ -747,6 +864,17 @@ void PathPlannerNavMesh::RuntimeNavSector::RebuildPortals( PathPlannerNavMesh * 
 			}
 		}
 	}
+
+	if ( mSectorData->ledge() )
+	{
+		RebuildLedgePortals( navmesh );
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+void PathPlannerNavMesh::RuntimeNavSector::RebuildLedgePortals( PathPlannerNavMesh * navmesh )
+{
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -759,7 +887,7 @@ static bool CostLessThan( const PathPlannerNavMesh::Obstacle & obs1, const PathP
 //////////////////////////////////////////////////////////////////////////
 
 static void GenerateFromClipResults( const ClipperLib::Clipper & clip,
-									const PathPlannerNavMesh::RuntimeNavSector & parent,
+									PathPlannerNavMesh::RuntimeNavSector & parent,
 									const float cost,
 									PathPlannerNavMesh::RuntimeSectorList & sectorsOut )
 {
@@ -793,7 +921,7 @@ static void GenerateFromClipResults( const ClipperLib::Clipper & clip,
 			PathPlannerNavMesh::RuntimeNavSector subSector( parent.mIndex, parent.mSector, parent.mSectorData );
 			subSector.mCost = cost;
 			subSector.mPlane = parent.mPlane;
-			subSector.mParentIndex = parent.mIndex;
+			subSector.mParent = &parent;
 			ConvertPoly( subSector.mPoly, subSector, ply );
 			sectorsOut.push_back( subSector );
 		}
@@ -818,48 +946,86 @@ void PathPlannerNavMesh::RuntimeNavSector::RebuildObstacles( PathPlannerNavMesh 
 	{
 		// sort the obstacles from least to highest cost values for processing
 		std::sort( mObstacles.begin(), mObstacles.end(), CostLessThan );
-
+		
 		// the first operation is removing ALL obstacle footprints from the sector
 		ClipperLib::Polygons subjectPolys;
 		subjectPolys.push_back( ClipperLib::Polygon() );
 		ConvertPoly( subjectPolys.back(), mPoly );
 		assert ( ClipperLib::Orientation( subjectPolys.back() ) );
 
-		ClipperLib::Polygons clipPolys;
+		ClipperLib::Polygons obstaclePolys;
 		for ( size_t i = 0; i < mObstacles.size(); ++i )
 		{
-			clipPolys.push_back( ClipperLib::Polygon() );
-			ConvertPoly( clipPolys.back(), mObstacles[ i ].mPoly );
+			obstaclePolys.push_back( ClipperLib::Polygon() );
+			ConvertPoly( obstaclePolys.back(), mObstacles[ i ].mPoly );
 		}
 
 		ClipperLib::Clipper clip;
 		clip.AddPolygons( subjectPolys, ClipperLib::ptSubject );
-		clip.AddPolygons( clipPolys, ClipperLib::ptClip );
-
+		clip.AddPolygons( obstaclePolys.begin(), obstaclePolys.end(), ClipperLib::ptClip );
+		
+		// first we get the sectors MINUS all the obstacles
 		if ( clip.Execute( ClipperLib::ctDifference, ClipperLib::pftNonZero, ClipperLib::pftNonZero ) )
 			GenerateFromClipResults( clip, *this, 1.0f, newSectors );
 
-		// next, merge the obstacles into an internal polygon set
-		ClipperLib::Polygons obstacleSubjects;
-		if ( clip.Execute( ClipperLib::ctIntersection, ClipperLib::pftNonZero, ClipperLib::pftNonZero ) )
+		// generate the full obstacle set as unified subsectors, or as discrete obstacle cost sets
+		static const bool GENERATE_SIMPLE_OBSTACLESET = false;
+		if ( GENERATE_SIMPLE_OBSTACLESET )
 		{
-			obstacleSubjects.reserve( clip.GetNumPolysOut() );
+			if ( clip.Execute( ClipperLib::ctIntersection, ClipperLib::pftNonZero, ClipperLib::pftNonZero ) )
+				GenerateFromClipResults( clip, *this, FLT_MAX, newSectors );
+		}
+		else
+		{
+			// for each set of obstacles, we need to find the union of the sector polygons 
+			// and the obstacle set MINUS, the set of greater costs
 
-			ClipperLib::Polygon poly;
-			for ( size_t i = 0; i < clip.GetNumPolysOut(); ++i )
+			size_t o = 0;
+			while( o < mObstacles.size() )
 			{
-				bool polyIsHole = false;
-				if ( clip.GetPolyOut( i, poly, polyIsHole ) )
+				clip.Clear();
+				clip.AddPolygons( subjectPolys, ClipperLib::ptSubject );
+
+				const float setCost = mObstacles[ o ].mCost;
+
+				while ( o < mObstacles.size() )
 				{
-					obstacleSubjects.push_back( poly );
+					if ( setCost == mObstacles[ o ].mCost )
+						clip.AddPolygon( *(obstaclePolys.begin() + o), ClipperLib::ptClip );
+					else
+						break;
+
+					++o;
+				}
+				
+				if ( clip.Execute( ClipperLib::ctIntersection, ClipperLib::pftNonZero, ClipperLib::pftNonZero ) )
+				{
+					// if there are remaining obstacle sets, we need to cut them from these results
+					// if this was the last set, we can add them as-is
+					if ( o >= mObstacles.size() )
+					{
+						GenerateFromClipResults( clip, *this, setCost, newSectors );
+					}
+					else
+					{
+						ClipperLib::Polygons obstacleSetPolys;
+						obstacleSetPolys.resize( clip.GetNumPolysOut() );
+						for ( size_t i = 0; i < clip.GetNumPolysOut(); ++i )
+						{				
+							bool isHole;
+							clip.GetPolyOut( i, obstacleSetPolys[ i ], isHole );
+						}
+
+						clip.Clear();
+						clip.AddPolygons( obstacleSetPolys, ClipperLib::ptSubject );
+						clip.AddPolygons( obstaclePolys.begin() + o, obstaclePolys.end(), ClipperLib::ptClip );
+
+						if ( clip.Execute( ClipperLib::ctDifference, ClipperLib::pftNonZero, ClipperLib::pftNonZero ) )
+							GenerateFromClipResults( clip, *this, setCost, newSectors );
+					}
 				}
 			}
-
-			// TEMP
-			GenerateFromClipResults( clip, *this, 2.0f, newSectors );
 		}
-
-		// now for each obstacle set(by cost), subdivide the obstacle polys
 	}
 
 	mSubSectors.clear();
@@ -887,6 +1053,9 @@ void PathPlannerNavMesh::RuntimeNavSector::RebuildObstacles( PathPlannerNavMesh 
 		navmesh->mRuntimeSectorCollision[ mIndex ]->Add( mPoly, this );
 		navmesh->mRuntimeSectorCollision[ mIndex ]->Build( false );
 	}
+
+	// sector changed, update version to force portal rebuilding of any that reference this sector
+	++mVersion;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -907,9 +1076,6 @@ PathPlannerNavMesh::PathPlannerNavMesh()
 	g_PlannerNavMesh = this;
 
 	mCurrentTool = NULL;
-
-	mMinSectorCost = 1.0f;
-	mMaxSectorCost = 1.0f;
 }
 
 PathPlannerNavMesh::~PathPlannerNavMesh()
@@ -992,6 +1158,7 @@ void PathPlannerNavMesh::NavSectorBase::GetMirroredCopy(
 void PathPlannerNavMesh::NavSectorBase::GetEdgeSegments(SegmentList &_list) const
 {
 	_list.reserve( mPoly.size() );
+	_list.resize( 0 );
 	for ( size_t i = 1; i <= mPoly.size(); ++i )
 	{
 		_list.push_back( Segment3f( mPoly[ i-1 ], mPoly[ i % mPoly.size() ] ) );
@@ -1013,10 +1180,6 @@ bool PathPlannerNavMesh::Init( System & system )
 }
 
 void PathPlannerNavMesh::RegisterNavFlag(const std::string &_name, const NavFlags &_bits)
-{
-}
-
-void PathPlannerNavMesh::RegisterScriptFunctions(gmMachine *a_machine)
 {
 }
 
@@ -1070,6 +1233,18 @@ static void DrawPoly( bool solid, const PathPlannerNavMesh::RuntimeNavSector & n
 	}
 }
 
+obColor PathPlannerNavMesh::RuntimeNavSector::GetRenderColor() const
+{
+	obColor SEC_COLOR = mMirrored ? COLOR::CYAN.fade(100) : COLOR::GREEN.fade(100);
+
+	if ( mCost != 1.0 )
+	{
+		SEC_COLOR = obColor::lerp( COLOR::WHITE, COLOR::RED, Mathf::Clamp( mCost / NavPortal::MAX_COST, 0.0f, 1.0f ) ).fade( 180 );
+	}
+
+	return SEC_COLOR;
+}
+
 void PathPlannerNavMesh::Update( System & system )
 {
 	Prof(PathPlannerNavMesh);
@@ -1100,7 +1275,7 @@ void PathPlannerNavMesh::Update( System & system )
 
 		//////////////////////////////////////////////////////////////////////////
 		// Draw our nav sectors
-		for ( obuint32 i = 0; i < mRuntimeSectors.size(); ++i )
+		for ( size_t i = 0; i < mRuntimeSectors.size(); ++i )
 		{
 			const RuntimeNavSector &ns = mRuntimeSectors[i];
 
@@ -1108,27 +1283,13 @@ void PathPlannerNavMesh::Update( System & system )
 
 			// mirrored sectors are contiguous at the end of
 			// the mRuntimeSectors list, so draw them differently
-			obColor SEC_COLOR = ns.mMirrored ? COLOR::CYAN : COLOR::GREEN;
-
-			const float costRange = mMaxSectorCost - mMinSectorCost;
-			const float lerp = costRange > 0.0f ?
-				Mathf::Clamp( (ns.mCost - mMinSectorCost) / costRange, 0.0f, 1.0f ) : 0.0f;
-			SEC_COLOR = obColor::lerp( SEC_COLOR, COLOR::RED, lerp );
-
 			if ( ns.mSubSectors.size() > 0 )
 			{
 				for ( size_t s = 0; s < ns.mSubSectors.size(); ++s )
 				{
 					const RuntimeNavSector & subSector = ns.mSubSectors[ s ];
-
-					const float costRange = mMaxSectorCost - mMinSectorCost;
-					const float lerp = costRange > 0.0f ?
-						Mathf::Clamp( (subSector.mCost - mMinSectorCost) / costRange, 0.0f, 1.0f ) : 0.0f;
-					SEC_COLOR = obColor::lerp( SEC_COLOR, COLOR::RED, lerp );
-
-					//obColor obsColor = GetCoolWarmColor( subSector.mCost / COST_MAX_LAST );
-
-					RenderBuffer::AddPolygonFilled( subSector.mPoly, SEC_COLOR.fade(100) );
+										
+					RenderBuffer::AddPolygonFilled( subSector.mPoly, subSector.GetRenderColor() );
 
 					// render edge polys based on edge mask
 					for ( size_t p = 0; p < subSector.mPoly.size(); ++p )
@@ -1148,7 +1309,7 @@ void PathPlannerNavMesh::Update( System & system )
 			}
 			else
 			{
-				RenderBuffer::AddPolygonFilled( ns.mPoly, SEC_COLOR.fade(100) );
+				RenderBuffer::AddPolygonFilled( ns.mPoly, ns.GetRenderColor() );
 
 				// render edge polys based on edge mask
 				for ( size_t p = 0; p < ns.mPoly.size(); ++p )
@@ -1185,74 +1346,89 @@ void PathPlannerNavMesh::Update( System & system )
 			if ( m_PlannerFlags.CheckFlag( NAV_VIEWFLAGS ) )
 			{
 				using namespace google;
-				const protobuf::Reflection * refl = ns.mSectorData->GetReflection();
 
-				// fields for mirrored
-				NavmeshIO::SectorData & data = *ns.mSectorData;
-				NavmeshIO::SectorData & otherData =
-					ns.IsMirroredSector() ? ns.mSector->mSectorData : ns.mSector->mSectorDataMirrored;
-
-				std::vector<const protobuf::FieldDescriptor*> fields0;
-				std::vector<const protobuf::FieldDescriptor*> fields1;
-
-				refl->ListFields( data, &fields0 );
-				refl->ListFields( otherData, &fields1 );
-
-				StringVector strs;
-
-				// what fields do the sectors share
-				while( fields0.size() > 0 )
+				RuntimeSectorRefsConst sectorRefs;
+				if ( ns.mSubSectors.size() > 0 )
 				{
-					const protobuf::FieldDescriptor * field = fields0.back();
+					for ( size_t s = 0; s < ns.mSubSectors.size(); ++s )
+						sectorRefs.push_back( &ns.mSubSectors[ s ] );
+				}
+				else
+				{
+					sectorRefs.push_back( &ns );
+				}
 
-					if ( !field->is_repeated() )
+				for ( size_t s = 0; s < sectorRefs.size(); ++s )
+				{
+					const RuntimeNavSector * sec = sectorRefs[ s ];
+
+					const protobuf::Reflection * refl = sec->mSectorData->GetReflection();
+
+					// fields for mirrored
+					NavmeshIO::SectorData & data = *sec->mSectorData;
+					NavmeshIO::SectorData & otherData = sec->IsMirroredSector() ? sec->mSector->mSectorData : sec->mSector->mSectorDataMirrored;
+
+					std::vector<const protobuf::FieldDescriptor*> fields0;
+					std::vector<const protobuf::FieldDescriptor*> fields1;
+
+					refl->ListFields( data, &fields0 );
+					refl->ListFields( otherData, &fields1 );
+
+					StringVector strs;
+
+					// what fields do the sectors share
+					while( fields0.size() > 0 )
 					{
-						std::string s = va( "%s - %s",
-							field->lowercase_name().c_str(),
-							GetFieldString( data, field ).c_str() );
+						const protobuf::FieldDescriptor * field = fields0.back();
 
-						if ( refl->HasField( otherData, field ) )
-							s += " <+m> ";
+						if ( !field->is_repeated() && !field->options().GetExtension( NavmeshIO::hidden ) )
+						{
+							std::string s = va( "%s - %s",
+								field->lowercase_name().c_str(),
+								GetFieldString( data, field ).c_str() );
 
-						strs.push_back( s );
+							if ( refl->HasField( otherData, field ) )
+								s += " <+m> ";
+
+							strs.push_back( s );
+						}
+
+						fields0.erase( std::remove( fields0.begin(), fields0.end(), field ), fields0.end() );
+						fields1.erase( std::remove( fields1.begin(), fields1.end(), field ), fields1.end() );
 					}
 
-					fields0.erase( std::remove( fields0.begin(), fields0.end(), field ), fields0.end() );
-					fields1.erase( std::remove( fields1.begin(), fields1.end(), field ), fields1.end() );
-				}
-
-				// what's in the mirrored and not this one
-				while( fields1.size() > 0 )
-				{
-					const protobuf::FieldDescriptor * field = fields1.front();
-
-					if ( !field->is_repeated() )
+					// what's in the mirrored and not this one
+					while( fields1.size() > 0 )
 					{
-						std::string s = va( "%s - %s",
-							field->lowercase_name().c_str(),
-							GetFieldString( otherData, field ).c_str() );
-						s += " <m> ";
+						const protobuf::FieldDescriptor * field = fields1.front();
 
-						strs.push_back( s );
+						if ( !field->is_repeated() && !field->options().GetExtension( NavmeshIO::hidden ) )
+						{
+							std::string s = va( "%s - %s",
+								field->lowercase_name().c_str(),
+								GetFieldString( otherData, field ).c_str() );
+							s += " <m> ";
+
+							strs.push_back( s );
+						}
+
+						fields0.erase( std::remove( fields0.begin(), fields0.end(), field ), fields0.end() );
+						fields1.erase( std::remove( fields1.begin(), fields1.end(), field ), fields1.end() );
 					}
 
-					fields0.erase( std::remove( fields0.begin(), fields0.end(), field ), fields0.end() );
-					fields1.erase( std::remove( fields1.begin(), fields1.end(), field ), fields1.end() );
+					std::sort( strs.begin(), strs.end(), std::less<std::string>() );
+
+					std::string strData;
+					for ( size_t s = 0; s < strs.size(); ++s )
+					{
+						strData += strs[ s ];
+						strData += "\n";
+					}
+
+					RenderBuffer::AddString3dRadius(
+						sec->CalculateCenter() + Vector3f(0.f,0.f,32.f),
+						COLOR::BLUE, 1024.f, strData.c_str() );
 				}
-
-				std::sort( strs.begin(), strs.end(), std::less<std::string>() );
-
-				std::string strData;
-				for ( size_t s = 0; s < strs.size(); ++s )
-				{
-					strData += strs[ s ];
-					strData += "\n";
-				}
-
-				/*std::string strData = ns.mSectorData->ShortDebugString();*/
-				RenderBuffer::AddString3dRadius(
-					ns.CalculateCenter() + Vector3f(0.f,0.f,32.f),
-					COLOR::BLUE, 1024.f, strData.c_str() );
 			}
 		}
 
@@ -1352,6 +1528,9 @@ bool PathPlannerNavMesh::Load(const std::string &_mapname, bool _dl)
 			sector.mMirror = s.sectormirrored();
 			sector.mSectorData = s.sectordata();
 			sector.mSectorDataMirrored = s.sectordatamirrored();
+
+			ClearDefaultedValues( sector.mSectorData );
+			ClearDefaultedValues( sector.mSectorDataMirrored );
 
 			for ( int i = 0; i < s.vertices_size(); ++i )
 			{
@@ -1707,7 +1886,7 @@ void PathPlannerNavMesh::InitSectors()
 
 	// allocate enough slots to hold a potential custom collision model
 	// for each sector. custom models are created whenever a sector
-	// is subdivided by obstacles
+	// is subdivided by obstacles and needs a temporary collision model
 	for ( size_t i = 0; i < mRuntimeSectorCollision.size(); ++i )
 		OB_DELETE( mRuntimeSectorCollision[ i ] );
 	mRuntimeSectorCollision.resize( mRuntimeSectors.size() );
@@ -1731,10 +1910,21 @@ void PathPlannerNavMesh::GetPath(Path &_path)
 		PathFindNavMesh::PlanNode *pn = nl.back();
 		Vector3f vNodePos = pn->Position;
 
+		NavFlags navFlags = (NavFlags)0;
+		if ( pn->Portal )	
+		{
+			static const float pushDist = 32.0f;
+			Vector3f portalNormal = pn->Portal->mSegment.Direction.Cross( Vector3f::UNIT_Z );
+			vNodePos += portalNormal * pushDist;
+
+			if ( pn->Portal->mFlags.CheckFlag( NavPortal::FL_JUMP ) )
+				navFlags |= F_NAV_JUMPLOW;
+		}
+		
 		_path.AddPt(vNodePos + Vector3f(0,0,CHAR_HALF_HEIGHT),32.f)
-			.NavId(pn->Sector->mIndex)
-			/*.Flags(m_Solution.back()->GetNavigationFlags())
-			.OnPathThrough(m_Solution.back()->OnPathThrough())
+			.NavId( pn->Sector->mIndex )
+			.Flags( navFlags )
+			/*.OnPathThrough(m_Solution.back()->OnPathThrough())
 			.OnPathThroughParam(m_Solution.back()->OnPathThroughParam())*/;
 
 		nl.pop_back();
@@ -1750,13 +1940,34 @@ bool PathPlannerNavMesh::GetNavInfo(const Vector3f &pos,obint32 &_id,std::string
 
 //////////////////////////////////////////////////////////////////////////
 
-void PathPlannerNavMesh::AddEntityConnection(const Event_EntityConnection &_conn)
+void PathPlannerNavMesh::AddEntityConnection( const Event_EntityConnection &_conn )
 {
+	/*struct Event_EntityConnection
+	{
+		GameEntity	m_EntitySrc;
+		GameEntity	m_EntityDst;
+
+		float		m_SrcPos[3];
+		float		m_DstPos[3];
+
+		BitFlag32	m_Team;
+		float		m_Radius;
+		float		m_Cost;
+
+		Event_EntityConnection()
+			: m_Radius(0.f)
+			, m_Cost(0.f)
+		{
+			for ( int i = 0; i < 3; ++i )
+				m_SrcPos[ i ] = m_DstPos[ i ] = 0.0f;
+		}
+	};*/
+
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-void PathPlannerNavMesh::RemoveEntityConnection(GameEntity _ent)
+void PathPlannerNavMesh::RemoveEntityConnection( GameEntity _ent )
 {
 }
 
@@ -1822,10 +2033,7 @@ void PathPlannerNavMesh::UpdateRuntimeSectors()
 			}
 		}
 	}
-
-	mMinSectorCost = minCost;
-	mMaxSectorCost = maxCost;
-
+	
 	for ( size_t i = 0; i < buildPortals.size(); ++i )
 	{
 		buildPortals[ i ]->RebuildPortals( this );
@@ -1840,44 +2048,213 @@ void PathPlannerNavMesh::UpdateRuntimeSectors()
 
 void PathPlannerNavMesh::UpdateObstacles()
 {
-	if ( mPendingObstacles.size() > 0 )
+	static obuint32 nextHandle = 0;
+
+	// see if we can activate any dynamic obstacles
+	for ( size_t i = 0; i < mDynamicObstacles.size(); ++i )
 	{
-		RuntimeSectorRefs nearbySectors;
+		const Obstacle & dynObs = mDynamicObstacles[ i ];
 
-		for ( size_t i = 0; i < mPendingObstacles.size(); ++i )
+		Vector3f velocity = Vector3f::ZERO;
+		if ( !EngineFuncs::EntityVelocity( dynObs.mEntity, velocity ) || !velocity.IsZero() )
+			continue;
+
+		Box3f obb;
+		if ( !EngineFuncs::EntityWorldOBB( dynObs.mEntity, obb ) )
+			continue;
+
+		const float radii[] = 
 		{
-			const Obstacle & obs = mPendingObstacles[ i ];
+			10.0f,
+			30.0f,
+			60.0f
+		};
+		const float cost[] = 
+		{
+			9.5f,
+			6.0f,
+			3.0f
+		};
 
-			AABB obsBounds;
-			obsBounds.m_Mins[ 0 ] = std::numeric_limits<float>::max();
-			obsBounds.m_Mins[ 1 ] = std::numeric_limits<float>::max();
-			obsBounds.m_Mins[ 2 ] = std::numeric_limits<float>::max();
-			obsBounds.m_Maxs[ 0 ] = std::numeric_limits<float>::lowest();
-			obsBounds.m_Maxs[ 1 ] = std::numeric_limits<float>::lowest();
-			obsBounds.m_Maxs[ 2 ] = std::numeric_limits<float>::lowest();
+		for ( int x = 0; x < 3; ++x )
+		{
+			obb.Extent[ 0 ] = radii[x];
+			obb.Extent[ 1 ] = radii[x];
+			obb.Extent[ 2 ] = radii[x];
 
-			for ( size_t v = 0; v < obs.mPoly.size(); ++v )
-				obsBounds.Expand( obs.mPoly[ v ] );
+			Obstacle obs;
+			obs.mPosition = obb.Center;
+			obs.mEntity = dynObs.mEntity;
+			obs.mCost = cost[x];
 
-			obsBounds.ExpandAxis( 0, 8.f );
-			obsBounds.ExpandAxis( 1, 8.f );
-			obsBounds.ExpandAxis( 2, 32.f );
-
-			FindRuntimeSectors( obsBounds, nearbySectors, true );
-
-			for ( size_t o = 0; o < nearbySectors.size(); ++o )
-			{
-				nearbySectors[ o ]->mObstacles.push_back( obs );
-				nearbySectors[ o ]->mUpdateObstacles = true;
-			}
+			Vector3f vertices[8];
+			obb.ComputeVertices(vertices);
+			obs.mPoly.resize( 0 );
+			obs.mPoly.push_back( vertices[ 0 ] );
+			obs.mPoly.push_back( vertices[ 1 ] );
+			obs.mPoly.push_back( vertices[ 2 ] );
+			obs.mPoly.push_back( vertices[ 3 ] );
+			mPendingObstacles.push_back( obs );
 		}
 
-		// move the obstacles to the active list after we've given them
-		// to affected navigation sectors
+		/*obb.Extent[ 0 ] = 50;
+		obb.Extent[ 1 ] = 50;
+		obb.Extent[ 2 ] = 50;
+
+		Obstacle obs;
+		obs.mPosition = obb.Center;
+		obs.mEntity = dynObs.mEntity;
+		obs.mCost = dynObs.mCost;
+
+		Vector3f vertices[8];
+		obb.ComputeVertices(vertices);
+		obs.mPoly.push_back( vertices[ 0 ] );
+		obs.mPoly.push_back( vertices[ 1 ] );
+		obs.mPoly.push_back( vertices[ 2 ] );
+		obs.mPoly.push_back( vertices[ 3 ] );
+		mPendingObstacles.push_back( obs );*/
+
+		mDynamicObstacles.erase( mDynamicObstacles.begin() + i );
+		--i;
+	}
+
+	if ( mPendingObstacles.size() > 0 )
+	{
+		const size_t newObstacleStart = mObstacles.size();
+
 		mObstacles.reserve( mObstacles.size() + mPendingObstacles.size() );
 		mObstacles.insert( mObstacles.end(), mPendingObstacles.begin(), mPendingObstacles.end() );
-
 		mPendingObstacles.resize( 0 );
+
+		const size_t newObstacleEnd = mObstacles.size();
+
+		for ( size_t i = newObstacleStart; i < newObstacleEnd; ++i )
+		{
+			Obstacle & obs = mObstacles[ i ];
+			obs.mHandle = ++nextHandle;
+			
+			// if we don't find a starting sector we can't propagate it correctly
+			RuntimeNavSector * obstacleSector = GetSectorAt( obs.mPosition );
+			if ( obstacleSector == NULL )
+			{
+				obs.mExpireTime = 0;
+				continue;
+			}
+			if ( obstacleSector->mParent )
+				obstacleSector = obstacleSector->mParent;
+
+			typedef std::set<RuntimeNavSector*> SectorSet;
+			SectorSet obstacleClosedSet;
+
+			struct OpenNode
+			{
+				RuntimeNavSector *	mSector;
+				Vector3List			mPoly;
+
+				OpenNode( RuntimeNavSector * sector, const Vector3List & poly ) 
+					: mSector( sector )
+					, mPoly( poly ) 
+				{
+				}
+			};
+
+			// flood fill and propagate clipped obtacles until the whole poly is clipped
+			typedef std::list<OpenNode> ExploreOpen;
+
+			ExploreOpen openList;
+
+			openList.push_back( OpenNode( obstacleSector, obs.mPoly ) );
+
+			Vector3List clippedPoly;
+
+			size_t numAffected  = 0;
+
+			while ( !openList.empty() )
+			{
+				OpenNode node = openList.front();
+				openList.pop_front();
+				
+				// so we don't backtrack to it
+				obstacleClosedSet.insert( node.mSector );
+				
+				// customize the poly for this sector with the clipped poly
+				Obstacle sectorObstacle = obs;
+				obs.mAffectedSectors.push_back( node.mSector );
+				sectorObstacle.mAffectedSectors.push_back( node.mSector );
+				sectorObstacle.mPoly = node.mPoly;
+				node.mSector->mObstacles.push_back( sectorObstacle );
+				node.mSector->mUpdateObstacles = true;
+				++numAffected;
+				
+				// attempt to clip and propagate the poly through portals
+				for ( size_t p = 0; p < node.mSector->mPortals.size(); ++p )
+				{
+					const NavPortal & portal = node.mSector->mPortals[ p ];
+
+					if ( obstacleClosedSet.find( portal.mDstSector ) != obstacleClosedSet.end() )
+						continue;
+
+					const Vector3f portalNormal = portal.mSegment.Direction.Cross( Vector3f::UNIT_Z );
+
+					clippedPoly = sectorObstacle.mPoly;
+
+					// clip the portal normal
+					clippedPoly = Utils::ClipPolygonToPlanes( clippedPoly, Plane3f( portalNormal, portal.mSegment.Center ) );
+					if ( clippedPoly.empty() )
+						continue;
+
+					// clip the portal view planes
+					clippedPoly = Utils::ClipPolygonToPlanes( clippedPoly, Plane3f( obs.mPosition, obs.mPosition + Vector3f::UNIT_Z, portal.mSegment.P0 ) );
+					if ( clippedPoly.empty() )
+						continue;
+					clippedPoly = Utils::ClipPolygonToPlanes( clippedPoly, Plane3f( obs.mPosition, obs.mPosition - Vector3f::UNIT_Z, portal.mSegment.P1 ) );
+					if ( clippedPoly.empty() )
+						continue;
+					
+					openList.push_back( OpenNode( portal.mDstSector, clippedPoly ) );
+				}
+			}
+
+			//EngineFuncs::ConsoleMessage( va( "Obstacle %d affected %d sectors", obs.mHandle, numAffected ) );
+		}
+	}
+	
+	for ( size_t i = 0; i < mObstacles.size(); ++i )
+	{
+		Obstacle & obs = mObstacles[ i ];
+		if ( obs.Expired() )
+		{
+			for ( size_t s = 0; s < obs.mAffectedSectors.size(); ++s )
+			{
+				RuntimeNavSector * ns = obs.mAffectedSectors[ s ];
+				ns->mObstacles.erase( std::remove( ns->mObstacles.begin(), ns->mObstacles.end(), obs ), ns->mObstacles.end() );				
+				ns->mUpdateObstacles = true;
+			}
+
+			mObstacles.erase( mObstacles.begin() + i );
+			--i;
+		}
+	}
+
+
+	Vector3f aimPos;
+	if ( Utils::GetLocalAimPoint( aimPos ) )
+	{
+		const RuntimeNavSector * mySector = GetSectorAt( aimPos );
+		if ( mySector )
+		{
+			for ( size_t i = 0; i < mySector->mPortals.size(); ++i )
+			{
+				const NavPortal & portal =  mySector->mPortals[ i ];
+
+				const Vector3f portalNormal = portal.mSegment.Direction.Cross( Vector3f::UNIT_Z );
+
+				// clip the portal normal
+				RenderBuffer::AddArrow( portal.mSegment.Center, portal.mSegment.Center + portalNormal * 32.0f, COLOR::CYAN );
+				RenderBuffer::AddArrow( portal.mSegment.P0, portal.mSegment.P0 + Plane3f( aimPos, aimPos + Vector3f::UNIT_Z, portal.mSegment.P0 ).Normal * 32.0f, COLOR::RED );
+				RenderBuffer::AddArrow( portal.mSegment.P1, portal.mSegment.P1 + Plane3f( aimPos, aimPos - Vector3f::UNIT_Z, portal.mSegment.P1 ).Normal * 32.0f, COLOR::BLUE );
+			}
+		}
 	}
 }
 
@@ -2024,3 +2401,95 @@ int PathPlannerNavMesh::FindRuntimeSectors( const Box3f & obb,
 }
 
 //////////////////////////////////////////////////////////////////////////
+
+void PathPlannerNavMesh::EntityCreated( const EntityInstance &ei )
+{
+	if ( ei.m_EntityCategory.CheckFlag(ENT_CAT_OBSTACLE) && ei.m_EntityCategory.CheckFlag(ENT_CAT_STATIC) )
+	{
+		Obstacle obs;
+		obs.mEntity = ei.m_Entity;
+		obs.mCost = NavPortal::MAX_COST; // TODO
+
+		if ( !EngineFuncs::EntityPosition( obs.mEntity, obs.mPosition ) )
+			return;
+
+		Box3f obb;
+		if ( !EngineFuncs::EntityWorldOBB( obs.mEntity, obb ) )
+			return;
+
+		Vector3f vertices[8];
+		obb.ComputeVertices(vertices);
+		obs.mPoly.push_back( vertices[ 0 ] );
+		obs.mPoly.push_back( vertices[ 1 ] );
+		obs.mPoly.push_back( vertices[ 2 ] );
+		obs.mPoly.push_back( vertices[ 3 ] );
+		
+		mPendingObstacles.push_back( obs );
+		
+		///////////////////////////////////////////////////////////////////////////////////////
+		// test field of view obstacle
+		Matrix3f orient;
+		if ( EngineFuncs::EntityOrientation( ei.m_Entity, orient ) )
+		{
+			if ( ei.m_EntityClass == 12 || ei.m_EntityClass == 37 ) // sentry, turret
+			{
+				Obstacle fovObs;
+				fovObs.mPosition = obs.mPosition;
+				fovObs.mEntity = ei.m_Entity;
+				fovObs.mCost = 9.0f;
+				fovObs.mPoly.push_back( fovObs.mPosition );
+				fovObs.mPoly.push_back( fovObs.mPosition + Vector3f( orient.GetColumn( 0 ) ) * 1200.0f + Vector3f( orient.GetColumn( 1 ) ) * 600.0f );
+				fovObs.mPoly.push_back( fovObs.mPosition + Vector3f( orient.GetColumn( 0 ) ) * 1200.0f - Vector3f( orient.GetColumn( 1 ) ) * 600.0f );
+				mPendingObstacles.push_back( fovObs );
+			}
+			
+		}	
+	}
+	// TEMP
+	if ( ei.m_EntityClass == 32 ) // pipe
+	{
+		Obstacle obs;
+		obs.mEntity = ei.m_Entity;
+		obs.mCost = 4.0f;
+		mDynamicObstacles.push_back( obs );
+	}
+
+}
+
+void PathPlannerNavMesh::EntityDeleted( const EntityInstance &ei )
+{
+	for ( size_t i = 0; i < mDynamicObstacles.size(); ++i )
+	{
+		if ( mDynamicObstacles[ i ].mEntity == ei.m_Entity )
+		{
+			mDynamicObstacles.erase( mDynamicObstacles.begin() + i );
+			--i;
+		}
+	}
+
+	for ( size_t i = 0; i < mPendingObstacles.size(); ++i )
+	{
+		if ( mPendingObstacles[ i ].mEntity == ei.m_Entity )
+		{
+			mPendingObstacles.erase( mPendingObstacles.begin() + i );
+			--i;
+		}
+	}
+
+	for ( size_t i = 0; i < mObstacles.size(); ++i )
+	{
+		if ( mObstacles[ i ].mEntity == ei.m_Entity )
+		{
+			// mark it for immediate removal
+			mObstacles[ i ].mExpireTime = 0;
+		}
+	}
+}
+
+PathInterface * PathPlannerNavMesh::AllocPathInterface()
+{
+	return new NavMeshPathInterface( this ); 
+}
+
+//////////////////////////////////////////////////////////////////////////
+

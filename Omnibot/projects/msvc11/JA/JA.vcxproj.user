@@ -3,4 +3,10 @@
   <PropertyGroup>
     <ShowAllFiles>false</ShowAllFiles>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LocalDebuggerCommand>D:\Games\JediAcademy\GameData\jamp.exe</LocalDebuggerCommand>
+    <LocalDebuggerWorkingDirectory>D:\Games\JediAcademy\GameData</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>+set fs_game omnibot +set sv_pure 0 +map mp/siege_hoth +set sv_cheats 1</LocalDebuggerCommandArguments>
+  </PropertyGroup>
 </Project>
