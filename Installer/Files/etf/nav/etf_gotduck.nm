@@ -1,0 +1,920 @@
+header {
+}
+sectors {
+  vertices {
+    position {
+      x: -188.07813
+      y: 63.875061
+      z: 584.125
+    }
+  }
+  vertices {
+    position {
+      x: -188.07813
+      y: -63.875061
+      z: 584.125
+    }
+  }
+  vertices {
+    position {
+      x: -63.874939
+      y: -63.875046
+      z: 584.125
+    }
+  }
+  vertices {
+    position {
+      x: -63.874939
+      y: 63.875053
+      z: 584.125
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: 188.0779
+      y: -63.875061
+      z: 584.125
+    }
+  }
+  vertices {
+    position {
+      x: 188.0779
+      y: 63.875061
+      z: 584.125
+    }
+  }
+  vertices {
+    position {
+      x: 63.874931
+      y: 63.875061
+      z: 584.125
+    }
+  }
+  vertices {
+    position {
+      x: 63.874939
+      y: -63.875061
+      z: 584.125
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -63.875057
+      y: -63.874954
+      z: 584.125
+    }
+  }
+  vertices {
+    position {
+      x: -63.875053
+      y: -188.07668
+      z: 584.125
+    }
+  }
+  vertices {
+    position {
+      x: 63.875053
+      y: -188.07718
+      z: 584.125
+    }
+  }
+  vertices {
+    position {
+      x: 63.875057
+      y: -63.874954
+      z: 584.125
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: 63.875061
+      y: 188.07813
+      z: 584.125
+    }
+  }
+  vertices {
+    position {
+      x: -63.875061
+      y: 188.07811
+      z: 584.125
+    }
+  }
+  vertices {
+    position {
+      x: -63.875061
+      y: 63.874939
+      z: 584.125
+    }
+  }
+  vertices {
+    position {
+      x: 63.875061
+      y: 63.874939
+      z: 584.125
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -63.875061
+      y: 63.875061
+      z: 584.125
+    }
+  }
+  vertices {
+    position {
+      x: -63.875057
+      y: -63.875076
+      z: 584.125
+    }
+  }
+  vertices {
+    position {
+      x: 63.875057
+      y: -63.875092
+      z: 584.125
+    }
+  }
+  vertices {
+    position {
+      x: 63.875061
+      y: 63.875061
+      z: 584.125
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -64.053474
+      y: 1344.0547
+      z: 400.125
+    }
+  }
+  vertices {
+    position {
+      x: -64.053467
+      y: 1215.9492
+      z: 400.125
+    }
+  }
+  vertices {
+    position {
+      x: 64.052223
+      y: 1215.9486
+      z: 400.125
+    }
+  }
+  vertices {
+    position {
+      x: 64.052223
+      y: 1344.0547
+      z: 400.125
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -1344.0536
+      y: 1215.9475
+      z: 448.125
+    }
+  }
+  vertices {
+    position {
+      x: -1215.9482
+      y: 1215.9475
+      z: 448.125
+    }
+  }
+  vertices {
+    position {
+      x: -1215.9482
+      y: 1344.0508
+      z: 448.125
+    }
+  }
+  vertices {
+    position {
+      x: -1344.0547
+      y: 1344.0508
+      z: 448.125
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -1856.0541
+      y: 447.94824
+      z: 448.125
+    }
+  }
+  vertices {
+    position {
+      x: -1727.9492
+      y: 447.94824
+      z: 448.125
+    }
+  }
+  vertices {
+    position {
+      x: -1727.9492
+      y: 576.05377
+      z: 448.125
+    }
+  }
+  vertices {
+    position {
+      x: -1856.0547
+      y: 576.05377
+      z: 448.125
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -1856.127
+      y: -191.87695
+      z: 232.15967
+    }
+  }
+  vertices {
+    position {
+      x: -1856.127
+      y: -320.125
+      z: 200.09766
+    }
+  }
+  vertices {
+    position {
+      x: -1727.8733
+      y: -320.12531
+      z: 200.09756
+    }
+  }
+  vertices {
+    position {
+      x: -1727.8733
+      y: -191.87694
+      z: 232.15967
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -1600.0543
+      y: -959.94531
+      z: 464.125
+    }
+  }
+  vertices {
+    position {
+      x: -1600.0543
+      y: -1088.0527
+      z: 464.125
+    }
+  }
+  vertices {
+    position {
+      x: -1471.9471
+      y: -1088.0533
+      z: 464.125
+    }
+  }
+  vertices {
+    position {
+      x: -1471.9471
+      y: -959.94531
+      z: 464.125
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -904.12592
+      y: -1600.1266
+      z: 126.09694
+    }
+  }
+  vertices {
+    position {
+      x: -767.875
+      y: -1600.1266
+      z: 160.15967
+    }
+  }
+  vertices {
+    position {
+      x: -767.875
+      y: -1471.8733
+      z: 160.15967
+    }
+  }
+  vertices {
+    position {
+      x: -904.12592
+      y: -1471.8733
+      z: 126.09694
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -768.125
+      y: -959.874
+      z: 160.16016
+    }
+  }
+  vertices {
+    position {
+      x: -768.125
+      y: -1088.1266
+      z: 160.16016
+    }
+  }
+  vertices {
+    position {
+      x: -639.875
+      y: -1088.1266
+      z: 128.09766
+    }
+  }
+  vertices {
+    position {
+      x: -639.87439
+      y: -959.874
+      z: 128.0975
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -64.0525
+      y: -1471.947
+      z: 384.125
+    }
+  }
+  vertices {
+    position {
+      x: -64.0525
+      y: -1600.0566
+      z: 384.125
+    }
+  }
+  vertices {
+    position {
+      x: 64.052734
+      y: -1600.0566
+      z: 384.125
+    }
+  }
+  vertices {
+    position {
+      x: 64.052269
+      y: -1471.947
+      z: 384.125
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: 831.87415
+      y: -959.874
+      z: 168.09744
+    }
+  }
+  vertices {
+    position {
+      x: 831.87415
+      y: -1088.1265
+      z: 168.09744
+    }
+  }
+  vertices {
+    position {
+      x: 960.125
+      y: -1088.1265
+      z: 200.16016
+    }
+  }
+  vertices {
+    position {
+      x: 960.125
+      y: -959.875
+      z: 200.16016
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: 1471.9551
+      y: -959.94769
+      z: 448.125
+    }
+  }
+  vertices {
+    position {
+      x: 1471.9551
+      y: -1088.052
+      z: 448.125
+    }
+  }
+  vertices {
+    position {
+      x: 1600.0547
+      y: -1088.052
+      z: 448.125
+    }
+  }
+  vertices {
+    position {
+      x: 1600.054
+      y: -959.94769
+      z: 448.125
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: 1599.8734
+      y: -64.123055
+      z: 272.16052
+    }
+  }
+  vertices {
+    position {
+      x: 1728.1268
+      y: -64.123047
+      z: 240.09717
+    }
+  }
+  vertices {
+    position {
+      x: 1728.1268
+      y: 64.125
+      z: 240.09717
+    }
+  }
+  vertices {
+    position {
+      x: 1599.873
+      y: 64.125
+      z: 272.16064
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: 959.874
+      y: 1112.1261
+      z: 94.096893
+    }
+  }
+  vertices {
+    position {
+      x: 959.874
+      y: 975.875
+      z: 128.15967
+    }
+  }
+  vertices {
+    position {
+      x: 1088.1266
+      y: 975.875
+      z: 128.15967
+    }
+  }
+  vertices {
+    position {
+      x: 1088.1266
+      y: 1112.1261
+      z: 94.096893
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -64.125061
+      y: 511.87448
+      z: 224.20282
+    }
+  }
+  vertices {
+    position {
+      x: 64.125
+      y: 511.87448
+      z: 224.20282
+    }
+  }
+  vertices {
+    position {
+      x: 64.125
+      y: 640.12628
+      z: 160.07692
+    }
+  }
+  vertices {
+    position {
+      x: -64.125
+      y: 640.12628
+      z: 160.07692
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -656.12567
+      y: 1215.8711
+      z: 176.16003
+    }
+  }
+  vertices {
+    position {
+      x: -527.87476
+      y: 1215.8711
+      z: 144.09731
+    }
+  }
+  vertices {
+    position {
+      x: -527.87476
+      y: 1344.127
+      z: 144.09731
+    }
+  }
+  vertices {
+    position {
+      x: -656.125
+      y: 1344.127
+      z: 176.15967
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -831.87415
+      y: 576.12531
+      z: 136.09744
+    }
+  }
+  vertices {
+    position {
+      x: -960.125
+      y: 576.12531
+      z: 168.16016
+    }
+  }
+  vertices {
+    position {
+      x: -960.125
+      y: 447.875
+      z: 168.16016
+    }
+  }
+  vertices {
+    position {
+      x: -831.875
+      y: 447.875
+      z: 136.09766
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -640.12561
+      y: -64.125061
+      z: 272.07684
+    }
+  }
+  vertices {
+    position {
+      x: -511.875
+      y: -64.125061
+      z: 336.20215
+    }
+  }
+  vertices {
+    position {
+      x: -511.875
+      y: 64.125031
+      z: 336.20215
+    }
+  }
+  vertices {
+    position {
+      x: -640.125
+      y: 64.125031
+      z: 272.07715
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -1599.8733
+      y: -1701.5308
+      z: 896.125
+    }
+  }
+  vertices {
+    position {
+      x: -1599.8733
+      y: -1599.873
+      z: 896.125
+    }
+  }
+  vertices {
+    position {
+      x: -2176.127
+      y: -1599.873
+      z: 896.125
+    }
+  }
+  vertices {
+    position {
+      x: -2176.127
+      y: -1701.5309
+      z: 896.125
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -2176.1272
+      y: -2176.1272
+      z: 896.125
+    }
+  }
+  vertices {
+    position {
+      x: -2074.4688
+      y: -2176.1272
+      z: 896.125
+    }
+  }
+  vertices {
+    position {
+      x: -2074.4688
+      y: -1701.5275
+      z: 896.125
+    }
+  }
+  vertices {
+    position {
+      x: -2176.127
+      y: -1701.5275
+      z: 896.125
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -2074.4729
+      y: -2176.1272
+      z: 896.125
+    }
+  }
+  vertices {
+    position {
+      x: -1599.8733
+      y: -2176.1272
+      z: 896.125
+    }
+  }
+  vertices {
+    position {
+      x: -1599.8733
+      y: -2074.4685
+      z: 896.125
+    }
+  }
+  vertices {
+    position {
+      x: -2074.4729
+      y: -2074.4685
+      z: 896.125
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -1599.8733
+      y: -2074.4727
+      z: 896.125
+    }
+  }
+  vertices {
+    position {
+      x: -1599.8733
+      y: -1701.5276
+      z: 896.125
+    }
+  }
+  vertices {
+    position {
+      x: -1701.5309
+      y: -1701.5276
+      z: 896.125
+    }
+  }
+  vertices {
+    position {
+      x: -1701.5309
+      y: -2074.4727
+      z: 896.125
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: -64.125
+      y: -511.87448
+      z: 288.20221
+    }
+  }
+  vertices {
+    position {
+      x: -64.125
+      y: -640.12531
+      z: 224.07681
+    }
+  }
+  vertices {
+    position {
+      x: 64.125
+      y: -640.12531
+      z: 224.07681
+    }
+  }
+  vertices {
+    position {
+      x: 64.125046
+      y: -511.87448
+      z: 288.20221
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
+sectors {
+  vertices {
+    position {
+      x: 511.875
+      y: 64.125061
+      z: 448.20215
+    }
+  }
+  vertices {
+    position {
+      x: 511.875
+      y: -64.125031
+      z: 448.20215
+    }
+  }
+  vertices {
+    position {
+      x: 640.12561
+      y: -64.125031
+      z: 384.07684
+    }
+  }
+  vertices {
+    position {
+      x: 640.12561
+      y: 64.125061
+      z: 384.07684
+    }
+  }
+  sectorData {
+  }
+  sectorDataMirrored {
+  }
+}
