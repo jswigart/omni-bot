@@ -196,6 +196,8 @@ global _PreferredWeapon = table();
 /////////////////////////////////////////////////////////////////////
 // register the bot names and set up tables for OnBotAutoJoin reference
 
+Names[ "testbot" ] = "testbot.gm";
+
 // red
 foreach ( botName and loadout in RedBots ) {
 	name = BotPrefix + botName;
