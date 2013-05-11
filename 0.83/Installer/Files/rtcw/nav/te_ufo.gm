@@ -73,7 +73,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_ufo.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docs.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rBridgeAS_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rRoof.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rRoof_.*" );
 		}
 		if ( Map.FriendlyFire < 1 ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
@@ -87,7 +87,7 @@ global Map =
 			return;
 		}
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rRoof.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rRoof_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rSpawnkill.*" );
 	},
 
@@ -241,7 +241,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.FLAG_UFO_Documents );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_axis_spawn_north" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rRoof" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rRoof.*" );
 
 		//activate some AS goals for Axis
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
@@ -286,7 +286,7 @@ global Map =
 		//clear the AS goals
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_axis_spawn_north" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rRoof" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rRoof.*" );
 	},
 
 	transmitter_Captured = function( trigger )
@@ -307,6 +307,26 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, true, Map.FLAG_UFO_Documents );
 	},
+	
+		DisableCombatMove =
+	{
+		Name = "DisableCombatMove",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
 
 	//thirty_second = function( trigger )
 	//{
@@ -320,6 +340,7 @@ global OnMapLoad = function()
 		RTCWUtil.AutoTestMap();
 	}
 
+	NoCombat = OnTriggerRegion( AABB( -2863.000,-2208.000,777.000,-2032.000,-799.000,851.000 ), Map.DisableCombatMove );
 	OnTrigger( "The Main Gate has been breached!", Map.allied_obj1_Destroyed );
 	OnTrigger( "The South Gate has been breached!", Map.allied_obj1a_Destroyed );
 	OnTrigger( "Allies have stolen The UFO Documents!", Map.The_UFO_Documents_Taken );
@@ -335,6 +356,7 @@ global OnMapLoad = function()
 	//OnTrigger( "thirty second warning.", Map.thirty_second );
 
 	Util.SetMaxUsersInProgress( 8, Map.FLAG_UFO_Documents );
+	Util.SetMaxUsersInProgress( 4, "CHECKPOINT.*" );
 	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
@@ -361,7 +383,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_phase1_blue.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_phase1.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as[123]_phase1.*" );
-	//SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bInitial.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bInitial.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_sentry_MG  );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Repair_sentry_MG  );
@@ -472,32 +494,36 @@ global OnMapLoad = function()
 						ROUTE_stairs = { Weight = 4, },
 					},
 				},
-				ROUTE_mid_alley =
+				ROUTE_south_gate =
 				{
-					ROUTE_garage =
+					Weight = 3,
+					ROUTE_mid_alley =
 					{
-						ROUTE_duct =
+						ROUTE_garage =
 						{
-							ROUTE_roof = {},
-							ROUTE_duct_exit = {},
-						},
-
-						ROUTE_stairs = { Weight = 4, },
-					},
-				},
-				ROUTE_main_gate =
-				{
-					Weight = 2,
-					ROUTE_trans_route =
-					{
-						ROUTE_spawn_stairs =
-						{
-							ROUTE_spawn_route = {},
-							ROUTE_upper_ufo =
+							ROUTE_duct =
 							{
-								Weight = 2,
-								ROUTE_upper_west = {},
-								ROUTE_upper_east = {},
+								ROUTE_roof = {},
+								ROUTE_duct_exit = {},
+							},
+
+							ROUTE_stairs = { Weight = 4, },
+						},
+					},
+					ROUTE_main_gate =
+					{
+						Weight = 2,
+						ROUTE_trans_route =
+						{
+							ROUTE_spawn_stairs =
+							{
+								ROUTE_spawn_route = {},
+								ROUTE_upper_ufo =
+								{
+									Weight = 2,
+									ROUTE_upper_west = {},
+									ROUTE_upper_east = {},
+								},
 							},
 						},
 					},
@@ -558,6 +584,14 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_phase1_d5 = MapRoutes.MOUNTMG42_sentry_MG;
 
 	Util.Routes( MapRoutes );
+	
+	EntityKill(276);
+	EntityKill(279);
+	EntityKill(280);
+	EntityKill(291);
+	EntityKill(292);
+	EntityKill(293);
+	EntityKill(298);
 
 	Util.MapDebugPrint( "OnMapLoad" );
 };

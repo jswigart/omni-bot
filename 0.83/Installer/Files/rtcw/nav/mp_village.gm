@@ -491,13 +491,14 @@ global Map =
 		while ( 1 )
 		{
 			if ( Map.GoldStatus == 0 && !Map.AxisPushedForward && RTCWUtil.IsTeamDead( TEAM.ALLIES ) ) {
-				// guess there should be a spawn time check too ...
-				RTCWUtil.OneBotSayTeam( TEAM.AXIS, "push forward!" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSpawnkill.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+				RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Spawnkill!" );
 				Map.AxisPushedForward = true;
+				
+				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
 				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSpawnkill.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSpawnkill.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );				
 				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnkill.*" );
 				Wp.SetWaypointFlag( "tavernblock", "allies", false );
 			}
@@ -577,7 +578,7 @@ global OnMapLoad = function()
 
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );
-	SetMapGoalProperties( "PANZER_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 60, maxcamptime = 60} );
 	SetMapGoalProperties( "PANZER_rSpawnkill.*", {mincamptime = 999, maxcamptime = 999} );
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 30, maxcamptime = 60} );
 
@@ -737,6 +738,14 @@ global OnMapLoad = function()
 				ROUTE_block2 = {},
 			},
 		},
+		AIRSTRIKE_rSpawnkill_1 =
+		{
+			ROUTE_rSpawn =
+			{
+				ROUTE_ccyd = {},
+				ROUTE_block2 = {},
+			},
+		},
 	};
 	MapRoutes.DEFEND_rDeliver2 = MapRoutes.DEFEND_rDeliver1;
 	MapRoutes.DEFEND_rDeliver3 = MapRoutes.DEFEND_rDeliver1;
@@ -754,6 +763,11 @@ global OnMapLoad = function()
 	MapRoutes.CALLARTILLERY_bCemetary_1 = MapRoutes.FLAG_obj_item01;
 	MapRoutes.PANZER_bSpawncamp1 = MapRoutes.FLAG_obj_item01;
 	MapRoutes.PANZER_bSpawncamp2 = MapRoutes.FLAG_obj_item01;
+	MapRoutes.DEFEND_rSpawnkill_1 = MapRoutes.AIRSTRIKE_rSpawnkill_1;
+	MapRoutes.DEFEND_rSpawnkill_2 = MapRoutes.AIRSTRIKE_rSpawnkill_1;
+	MapRoutes.DEFEND_rSpawnkill_3 = MapRoutes.AIRSTRIKE_rSpawnkill_1;
+	MapRoutes.DEFEND_rSpawnkill_4 = MapRoutes.AIRSTRIKE_rSpawnkill_1;
+	MapRoutes.DEFEND_rSpawnkill_5 = MapRoutes.AIRSTRIKE_rSpawnkill_1;
 
 	Util.Routes( MapRoutes );
 	
