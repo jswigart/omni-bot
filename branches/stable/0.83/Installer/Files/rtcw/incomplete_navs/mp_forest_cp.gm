@@ -1,35 +1,30 @@
 global Map =
 {
 	Quiet=true,
-	Checkpoint_checkpoint01 = "CHECKPOINT_checkpoint01",
-	Checkpoint_checkpoint02 = "CHECKPOINT_checkpoint02",
-	Checkpoint_checkpoint03 = "CHECKPOINT_checkpoint03",
-	Checkpoint_checkpoint04 = "CHECKPOINT_checkpoint04",
-	Checkpoint_checkpoint05 = "CHECKPOINT_checkpoint05",
-	Checkpoint_checkpoint06 = "CHECKPOINT_checkpoint06",
-	Mount_mg42_1 = "MOUNTMG42_mg42_1",
-	Repair_mg42_1 = "REPAIRMG42_mg42_1",
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = true,
 	
-	//scripted defend spots for dual objective support
-	Defend =
+	Roles =
 	{
-		AxisSpawnPt = 1, // axis defenders will choose this spawn point
-		AlliesSpawnPt = 2, // allied defenders will choose this spawn point
-		//the first bot joining defending team will switch to crucial class
-		CrucialClass = CLASS.ENGINEER,
-		AxisDefenders = 0, // a variable to keep a count of defenders
-		MaxAxisDefenders = 5, // maximum defenders for this team
-		AlliesDefenders = 0,
-		MaxAlliesDefenders = 5,
-		
-		// initialize some tables for adding waypoints for them to use
-		Axis = {}, 
-		Allies = {},		
+		AXIS =
+		{
+			AllBots = true,
+			DEFENDER2 =
+			{
+				numbots = 3,
+			},
+		},
+
+		ALLIES =
+		{
+			AllBots = true,
+			DEFENDER1 = // house
+			{
+				numbots = 3,
+			},
+		},
 	},
 	
-	base_conservative = { "dual_base_1", "dual_base_2", "dual_base_3", "dual_base_4", "dual_base_5", },
-	house_conservative = { "dual_house_1", "dual_house_2", "dual_house_3", "dual_house_4", "dual_house_5", },
-
 	checkpoint01_Axis_Captured = function( trigger )
 	{
 		if ( TestMap )
@@ -146,6 +141,11 @@ global OnMapLoad = function()
 	OnTrigger( "MISSING_STRING", Map.checkpoint06_Axis_Captured );
 	OnTrigger( "MISSING_STRING", Map.checkpoint06_Allies_Captured );
 	
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 60, maxcamptime = 90} );
+	
 	RTCWUtil.DisableGoal(".*", true); //all but the routes
 	RTCWUtil.EnableGoal("CHECKPOINT.*", true); //all but the routes
 	
@@ -158,21 +158,37 @@ global OnMapLoad = function()
 	RTCWUtil.SetPrimaryGoals(1.0);
 	
 	SetGoalPriority("MOUNTMG42.*", 0.91);
+	SetGoalPriority("ARTILLERY.*", 1.0);
+	SetGoalPriority( "CHECKPOINT_checkpoint01", 1.0, TEAM.AXIS );
+	SetGoalPriority( "CHECKPOINT_checkpoint05", 1.0, TEAM.AXIS );
+	SetGoalPriority( "CHECKPOINT_checkpoint03", 0.95, TEAM.AXIS );
+	SetGoalPriority( "CHECKPOINT_checkpoint04", 0.95, TEAM.AXIS );
+	SetGoalPriority( "CHECKPOINT_checkpoint06", 1.0, TEAM.ALLIES );
+	SetGoalPriority( "CHECKPOINT_checkpoint02", 1.0, TEAM.ALLIES );
+	SetGoalPriority( "CHECKPOINT_checkpoint05", 0.95, TEAM.ALLIES );
+	SetGoalPriority( "CHECKPOINT_checkpoint03", 0.95, TEAM.ALLIES );
 	
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
 	
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_testaxisgoal" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rmg42.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rWatertower.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBarn.*" );
 	
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_testalliedgoal" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBaseart.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bHill.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bgate.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bspawnkill.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bspawnkill.*" );
 	
-	Map.Defend.Axis = Map.base_conservative;
-	Map.Defend.Allies = Map.house_conservative;
-
-	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
+	EntityKill(96);
+	EntityKill(97);
+	EntityKill(153);
+	EntityKill(370);
+	EntityKill(143);
 
 	print( "OnMapLoad" );
 };
@@ -181,6 +197,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	bot.TargetBreakableDist = 300.0;
+	bot.TargetBreakableDist = 80.0;
 	
 };

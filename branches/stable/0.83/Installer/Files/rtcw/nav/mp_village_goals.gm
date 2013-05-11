@@ -1000,6 +1000,33 @@ global _MG =
 		{
 		},
 	},
+	DEFEND_rCrypt9 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.312, 0.942, -0.126),
+			[1] = Vec3(0.929, 0.132, -0.345),
+			[2] = Vec3(0.381, 0.880, -0.284),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 1,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_rCrypt9",
+		Orientation = Vec3(-0.105, -0.278, -0.000),
+		Position = Vec3(-717.000, 2955.000, 137.000),
+		Radius = 20,
+		Stance = "crouch",
+		TagName = "rCrypt9",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
 	DEFEND_rDeliver1 = 
 	{
 		AimVectors = 
@@ -1216,7 +1243,7 @@ global _MG =
 		Name = "DEFEND_rSpawnkill_2",
 		Orientation = Vec3(3.006, -0.167, -0.000),
 		Position = Vec3(-66.125, 18.125, -79.836),
-		Radius = 35,
+		Radius = 20,
 		Stance = "crouch",
 		TagName = "rSpawnkill_2",
 		TeamAvailability = 30,
@@ -1229,7 +1256,7 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(0.067, 0.995, 0.075),
+			[0] = Vec3(0.287, 0.942, 0.176),
 		},
 		CreateOnLoad = 1,
 		DisableCM = 0,
@@ -1240,9 +1267,9 @@ global _MG =
 		MinRadius = 30,
 		Name = "DEFEND_rSpawnkill_3",
 		Orientation = Vec3(-0.067, 0.075, -0.000),
-		Position = Vec3(-91.671, -788.388, -208.253),
+		Position = Vec3(-169.875, -1021.875, -237.799),
 		Radius = 20,
-		Stance = "stand",
+		Stance = "crouch",
 		TagName = "rSpawnkill_3",
 		TeamAvailability = 30,
 		Version = 1,
@@ -1294,6 +1321,81 @@ global _MG =
 		Radius = 35,
 		Stance = "crouch",
 		TagName = "rSpawnkill_5",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_rSpawnkill_6 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.028, 0.996, 0.088),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_rSpawnkill_6",
+		Orientation = Vec3(0.028, 0.088, 0.000),
+		Position = Vec3(-790.000, -1065.000, -190.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "rSpawnkill_6",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_rSpawnkill_7 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.981, 0.190, 0.051),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_rSpawnkill_7",
+		Orientation = Vec3(-1.380, 0.051, -0.000),
+		Position = Vec3(210.000, -741.000, -174.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "rSpawnkill_7",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_rSpawnkill_8 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.858, -0.511, 0.049),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_rSpawnkill_8",
+		Orientation = Vec3(-2.108, 0.049, -0.000),
+		Position = Vec3(214.000, -402.000, -190.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "rSpawnkill_8",
 		TeamAvailability = 30,
 		Version = 1,
 		Weapons = 
@@ -1869,8 +1971,8 @@ global _MG =
 		DisableCM = 0,
 		GoalType = "Panzer",
 		GroupName = "",
-		MaxCampTime = 20,
-		MinCampTime = 10,
+		MaxCampTime = 60,
+		MinCampTime = 45,
 		MinRadius = 32,
 		Name = "PANZER_bCottage1",
 		Orientation = Vec3(2.941, -0.211, -0.000),
@@ -1897,8 +1999,8 @@ global _MG =
 		DisableCM = 1,
 		GoalType = "Panzer",
 		GroupName = "",
-		MaxCampTime = 20,
-		MinCampTime = 10,
+		MaxCampTime = 60,
+		MinCampTime = 45,
 		MinRadius = 32,
 		Name = "PANZER_bCottage2",
 		Orientation = Vec3(3.060, 0.003, -0.000),

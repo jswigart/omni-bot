@@ -1,0 +1,325 @@
+global Map =
+{
+	DontDispenseAmmo = true,
+	DocStatus = false,
+	Suicide = true,
+
+	Blocked_Dam_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		if (!Map.DocStatus)
+		{
+			Map.RestrictAxis();
+		}
+			
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_flagmg.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlag.*" );
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWalkway.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rXlab.*" );
+		
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
+		RTCWUtil.SetTeamSuicide( TEAM.AXIS, 1, 0 );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bFlag.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bXlab.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bLT.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_X_Lab_equipment" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Research_Documents" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bSpawnkill.*" );
+		print( "Blocked_Dam_Door_Destroyed" );
+	},
+
+	Service_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "Service_Entrance_Destroyed" );
+		
+		// Axis need to switch to spawn pt 101 if they have the flag
+	},
+
+	X_Lab_equipment_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "X_Lab_equipment_Destroyed" );
+	},
+
+	Research_Documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.DocStatus = true;
+
+		print( "Research_Documents_Taken" );
+	},
+	
+	Research_Documents_Transmitted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.DocStatus = false;
+		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_Research_Documents" );
+		Util.DisableGoal( "CAPPOINT_deliver" );
+
+		print( "Research_Documents_Transmitted" );
+	},
+	
+	Research_Documents_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.DocStatus = false;
+
+		print( "Research_Documents_Secured" );
+	},
+
+	the_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "the_flag_Axis_Captured" );
+		// Axis need to switch to spawn pt 101 if service entrance is blown
+	},
+
+	the_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag.*" );
+
+		print( "the_flag_Allies_Captured" );
+	},
+
+	RestrictAxis = function ()
+	{
+		Wp.SetWaypointFlag( "axisblock1", "allies", true );
+		Wp.SetWaypointFlag( "axisblock2", "allies", true );
+		//Wp.SetWaypointFlag( "axisblock3", "allies", true );
+	},
+	UnrestrictAxis = function()
+	{
+		Wp.SetWaypointFlag( "axisblock1", "allies", false );
+		Wp.SetWaypointFlag( "axisblock2", "allies", false );
+		//Wp.SetWaypointFlag( "axisblock3", "allies", false );
+	},
+	
+	LadderTrigger =
+	{
+		Name = "LadderTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+	
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+	ladder = OnTriggerRegion( AABB( -480.000,1743.000,535.000,-344.000,1933.000,971.000 ), Map.LadderTrigger );
+		
+
+		// "Planted at the Blocked Dam Door."
+	OnTrigger( "the Blocked Dam Door Destroyed.", Map.Blocked_Dam_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Service_Entrance_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.X_Lab_equipment_Destroyed );
+	OnTrigger( "Allies have stolen the Research Documents!", Map.Research_Documents_Taken );
+	OnTrigger( "Allies transmitted the research documents!", Map.Research_Documents_Transmitted );
+	OnTrigger( "Axis captures storage area spawn!!", Map.the_flag_Axis_Captured );
+	OnTrigger( "Allies captures storage area spawn!!", Map.the_flag_Allies_Captured );
+	
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 45} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "MOUNT_.*", {mincamptime = 45, maxcamptime = 60} );
+	Util.DisableGoal( ".*", true ); //all but routes
+	
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "AIRSTRIKE.*", 0.95 );
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "PANZER.*", 0.95 );
+	SetGoalPriority( "PLANT_Service_Entrance", 1.0 );
+	
+	Map.UnrestrictAxis();
+	
+	Util.EnableGoal( "CAPPOINT_deliver" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Blocked_Dam_Door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Service_Entrance" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bFlag.*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_flagmg.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlag.*" );
+	
+	RTCWUtil.LimitToClass("MOUNT.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER);
+	RTCWUtil.LimitToClass("DEFEND_bLT.*", TEAM.ALLIES, CLASS.LIEUTENANT);
+	RTCWUtil.LimitToClass("GRENADE_bSpawnkill.*", TEAM.ALLIES, CLASS.LIEUTENANT);
+	RTCWUtil.LimitToClass("FLAG.*", TEAM.ALLIES, CLASS.MEDIC, CLASS.SOLDIER, CLASS.ENGINEER);
+	Util.SetMaxUsersInProgress( 2, "PLANT_Service_Entrance" );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+	
+	MapRoutes =
+	{
+		CHECKPOINT_the_flag =
+		{
+			ROUTE_bSpawn =
+			{
+				ROUTE_damupper = {},
+				ROUTE_damladder = {},
+				ROUTE_westdamladder =
+				{
+					Weight = 3,
+					ROUTE_damdoor = {},
+					ROUTE_damducts = {Weight = 2,},
+				},				
+			},
+			ROUTE_rspawn =
+			{
+				ROUTE_midladder = {},
+				ROUTE_midupper = {},
+			},
+		},
+		PLANT_X_Lab_equipment =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_midladder =
+				{
+					ROUTE_midladder2 =
+					{
+						ROUTE_southdoor = {},
+						ROUTE_northdoor = {},
+						ROUTE_tunnel = {Weight = 2,},
+					},
+				},
+				ROUTE_middoor =
+				{
+					Weight = 4,
+					ROUTE_southdoor = {},
+					ROUTE_northdoor = {},
+					ROUTE_tunnel = {Weight = 3,},
+				},
+			},
+		},
+		AIRSTRIKE_bSpawnkill1 =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_midladder =
+				{
+					ROUTE_midladder2 =
+					{
+						ROUTE_southdoor = {},
+						ROUTE_northdoor = {},
+					},
+				},
+				ROUTE_middoor =
+				{
+					Weight = 4,
+					ROUTE_southdoor = {},
+					ROUTE_northdoor = {},
+				},
+			},
+		},
+		DEFEND_rXlab1 =
+		{
+			ROUTE_rspawn =
+			{
+				ROUTE_rspawnexit1 = {},
+				ROUTE_rspawnexit2 = {},
+			},
+		},
+	};
+	MapRoutes.PLANT_Blocked_Dam_Door = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.FLAG_Research_Documents = MapRoutes.PLANT_X_Lab_equipment;
+	MapRoutes.PANZER_bSpawnkill1 = MapRoutes.AIRSTRIKE_bSpawnkill1;
+	MapRoutes.PANZER_bSpawnkill2 = MapRoutes.AIRSTRIKE_bSpawnkill1;
+	MapRoutes.DEFEND_rFlag1 = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.DEFEND_rFlag2 = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.DEFEND_rFlag3 = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.DEFEND_rFlag4 = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.DEFEND_rFlag5 = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.DEFEND_rFlag6 = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.DEFEND_rFlag7 = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.DEFEND_rXlab2 = MapRoutes.DEFEND_rXlab1;
+	MapRoutes.DEFEND_rXlab3 = MapRoutes.DEFEND_rXlab1;
+	MapRoutes.DEFEND_rXlab4 = MapRoutes.DEFEND_rXlab1;
+	MapRoutes.DEFEND_rXlab5 = MapRoutes.DEFEND_rXlab1;
+	MapRoutes.DEFEND_rXlab6 = MapRoutes.DEFEND_rXlab1;
+	MapRoutes.DEFEND_rXlab7 = MapRoutes.DEFEND_rXlab1;
+	MapRoutes.DEFEND_rXlab8 = MapRoutes.DEFEND_rXlab1;
+	MapRoutes.AIRSTRIKE_rFlag1 = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.CALLARTILLERY_rFlag1 = MapRoutes.CHECKPOINT_the_flag;
+	
+	Util.Routes( MapRoutes );
+	
+	EntityKill(72);
+	EntityKill(124);
+	EntityKill(139);
+	EntityKill(170);
+	EntityKill(177);
+	EntityKill(196);
+	EntityKill(244);
+	EntityKill(267);
+	EntityKill(229);
+	//EntityKill(324);
+	EntityKill(325);
+	
+	
+	yield(); yield();
+	if ( Map.Suicide ) {
+		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+	}
+	
+
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	RTCWUtil.NoSnipe( bot );
+	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+};

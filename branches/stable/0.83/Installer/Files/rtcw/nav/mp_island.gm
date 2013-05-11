@@ -1,0 +1,308 @@
+global Map =
+{
+	ViewDistance = 4300,
+	DispenseAmmoTime = 10,
+	Suicide = true,
+	DontDispenseAmmo = true,
+	EastBlown = false,
+	WestBlown = false,
+
+	Eastern_Ammo_Dump_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.EastBlown = true;
+		if (Map.EastBlown && Map.WestBlown)
+		{
+			Map.defend_key();
+		}
+		print( "Eastern_Ammo_Dump_Destroyed" );
+	},
+
+	Western_Ammo_Dump_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.WestBlown = true;
+		if (Map.EastBlown && Map.WestBlown)
+		{
+			Map.defend_key();
+		}
+		print( "Western_Ammo_Dump_Destroyed" );
+	},
+
+	prison_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "prison_flag_Axis_Captured" );
+	},
+
+	prison_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		print( "prison_flag_Allies_Captured" );
+	},
+	
+	documents_stolen = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_transmit.*" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bKey.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_transmit.*" );
+
+		Util.MapDebugPrint( "documents_stolen" );
+
+	},
+	
+	documents_returned = function( trigger )
+	{
+		if ( TestMap ) {
+			return;
+		}
+		
+		Map.defend_key();
+		
+		Util.MapDebugPrint( "documents_returned" );
+
+	},
+	
+	defend_fortress = function ()
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFortress.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rCannon.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+	},
+	defend_key = function()
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rKey.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rKey.*" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bFortress.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bFortress.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bKey.*" );
+	},
+	
+	DisableCombatMove =
+	{
+		Name = "DisableCombatMove",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+	
+	tspawn = OnTriggerRegion( AABB( -1236.000,365.000,789.000,20.000,1230.000,890.000 ), Map.DisableCombatMove );
+		
+// 
+		// Planted at the Eastern Ammo Dump.
+		// Planted at the Western Ammo Dump.
+		// 
+	OnTrigger( "the Eastern Ammo Dump Destroyed.", Map.Eastern_Ammo_Dump_Destroyed );
+	OnTrigger( "the Western Ammo Dump Destroyed.", Map.Western_Ammo_Dump_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.prison_flag_Axis_Captured );
+	OnTrigger( "Allies have gained control of the holding cells", Map.prison_flag_Allies_Captured );
+	OnTrigger( "Allies have stolen Ignition Key!", Map.documents_stolen );
+	OnTrigger( "Flag returned docs!", Map.documents_returned );
+
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 60, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNT_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	Util.DisableGoal( ".*", true ); //all but routes
+	Util.EnableGoal( "CAPPOINT_transmitter" );
+	
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "AIRSTRIKE.*", 0.94 );
+	
+	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
+	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
+	
+	RTCWUtil.LimitToClass( "FLAG.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.MEDIC, CLASS.LIEUTENANT );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bFortress.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bFortress.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTrench.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rTrench.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTrench.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrench.*" );
+	
+	Map.defend_fortress();
+	
+	MapRoutes =
+	{
+		CHECKPOINT_prison_flag =
+		{
+			ROUTE_bspawn = 
+			{
+				ROUTE_trencheast =
+				{
+					ROUTE_trenchwest = {},
+				},
+				ROUTE_southeastbeach = 
+				{
+					Weight = 2,
+					ROUTE_sewer = {Weight = 3},
+					ROUTE_trenchwest = {},
+				},
+			},
+		},
+		PLANT_Eastern_Ammo_Dump =
+		{
+			ROUTE_flagspawn = 
+			{
+				ROUTE_office =
+				{
+					ROUTE_fortress = {},
+					ROUTE_cannon = {},
+					ROUTE_southeastbeach = 
+					{
+						ROUTE_sewer = {},
+					},
+				},
+				ROUTE_fireplacehut = 
+				{
+					ROUTE_fortress = {},
+					ROUTE_cannon = {},
+					ROUTE_southeastbeach = 
+					{
+						ROUTE_sewer = {},
+					},
+				},
+			},
+		},
+		FLAG_docs =
+		{
+			ROUTE_flagspawn = 
+			{
+				ROUTE_office =
+				{
+					ROUTE_westbridge = 
+					{
+						ROUTE_ducts = {},
+						ROUTE_ladder = {},
+					},
+					ROUTE_eastbridge = 
+					{
+						Weight = 2,
+						ROUTE_ducts = {},
+						ROUTE_frontdoor = {Weight = 2,},
+					},
+				},
+				ROUTE_fireplacehut = 
+				{
+					ROUTE_westbridge = 
+					{
+						ROUTE_ducts = {},
+						ROUTE_ladder = {},
+					},
+					ROUTE_eastbridge = 
+					{
+						Weight = 2,
+						ROUTE_ducts = {},
+						ROUTE_frontdoor = {Weight = 2,},
+					},
+				},
+			},
+		},
+		DEFEND_rKey_1 =
+		{
+			ROUTE_rspawn =
+			{
+				ROUTE_frontdoor = {Weight = 2,},
+				ROUTE_ladder = {},
+			},
+		},
+	};
+	
+	MapRoutes.PLANT_Western_Ammo_Dump = MapRoutes.PLANT_Eastern_Ammo_Dump;
+	MapRoutes.ATTACK_bFortress1 = MapRoutes.PLANT_Eastern_Ammo_Dump;
+	MapRoutes.ATTACK_bFortress2 = MapRoutes.PLANT_Eastern_Ammo_Dump;
+	MapRoutes.ATTACK_bFortress3 = MapRoutes.PLANT_Eastern_Ammo_Dump;
+	MapRoutes.ATTACK_bFortress4 = MapRoutes.PLANT_Eastern_Ammo_Dump;
+	MapRoutes.ATTACK_bFortress5 = MapRoutes.PLANT_Eastern_Ammo_Dump;
+	MapRoutes.ATTACK_bFortress6 = MapRoutes.PLANT_Eastern_Ammo_Dump;
+	MapRoutes.ATTACK_bFortress7 = MapRoutes.PLANT_Eastern_Ammo_Dump;
+	MapRoutes.DEFEND_rKey_2 = MapRoutes.DEFEND_rKey_1;
+	MapRoutes.DEFEND_rKey3 = MapRoutes.DEFEND_rKey_1;
+	MapRoutes.DEFEND_rKey4 = MapRoutes.DEFEND_rKey_1;
+	MapRoutes.DEFEND_rKey5 = MapRoutes.DEFEND_rKey_1;
+	MapRoutes.DEFEND_rKey6 = MapRoutes.DEFEND_rKey_1;
+	MapRoutes.DEFEND_rKey7 = MapRoutes.DEFEND_rKey_1;
+	MapRoutes.DEFEND_rKey8 = MapRoutes.DEFEND_rKey_1;
+	
+	Util.Routes( MapRoutes );
+	yield(); yield();
+	
+	EntityKill(319);
+	EntityKill(444);
+	EntityKill(487);
+	EntityKill(488);
+	EntityKill(489);
+	EntityKill(623);
+	
+	print( "OnMapLoad" );
+};
+
+// Uncomment for shootable breakables
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	RTCWUtil.NoSnipe( bot );
+	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
+	bot.MaxViewDistance = Map.ViewDistance;
+	bot.ChangeSpawnPoint( 0 );
+	if ( bot.GetTeam() == TEAM.AXIS ) {
+		bot.ChangeSpawnPoint( 101 );
+	}
+};
