@@ -253,8 +253,12 @@ global Map =
 
 		Map.FlagStatus = 2;
 
-		if ( !Map.FocusPrimary  || !Map.MainDoorStatus ) {
+		// Door isnt blown and more than 2 mins left
+		if ( !Map.FocusPrimary  || !Map.MainDoorStatus ) 
+		{
 			SetAvailableMapGoals( TEAM.AXIS, false, Map.Flag_axis_obj01 );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_.*" );
 		}
 
 		// Allied Panzer
@@ -284,7 +288,6 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_flag_respawn_obj" );
 		}
 
-		// *** Artillery
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
 
@@ -403,7 +406,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bFlag.*" );
 
-	SetGoalPriority( "CALL.*", 0.7 );
+	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
 	// Allied Panzer
