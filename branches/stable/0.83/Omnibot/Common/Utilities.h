@@ -78,8 +78,8 @@ namespace Utils
 
 	inline bool InFieldOfView2d(const Vector3f &_face1, const Vector3f &_face2, float _fovAngles) 
 	{ 
-		Vector2f v1 = _face1;
-		Vector2f v2 = _face2;
+		Vector2f v1 = (Vector2f)_face1;
+		Vector2f v2 = (Vector2f)_face2;
 
 		float fFovInRadians = Mathf::DegToRad(_fovAngles); 
 		return (v1.Dot(v2) >= cosf(fFovInRadians/2.0f) * v1.Length() * v2.Length());
