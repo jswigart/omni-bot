@@ -229,21 +229,37 @@ global OnMapLoad = function()
 					ROUTE_westbridge = 
 					{
 						ROUTE_ducts = {},
-						ROUTE_frontdoor = {},
 						ROUTE_ladder = {},
 					},
-					ROUTE_eastbridge = {Weight = 2,},
+					ROUTE_eastbridge = 
+					{
+						Weight = 2,
+						ROUTE_ducts = {},
+						ROUTE_frontdoor = {Weight = 2,},
+					},
 				},
 				ROUTE_fireplacehut = 
 				{
 					ROUTE_westbridge = 
 					{
 						ROUTE_ducts = {},
-						ROUTE_frontdoor = {},
 						ROUTE_ladder = {},
 					},
-					ROUTE_eastbridge = {Weight = 2,},
+					ROUTE_eastbridge = 
+					{
+						Weight = 2,
+						ROUTE_ducts = {},
+						ROUTE_frontdoor = {Weight = 2,},
+					},
 				},
+			},
+		},
+		DEFEND_rKey_1 =
+		{
+			ROUTE_rspawn =
+			{
+				ROUTE_frontdoor = {Weight = 2,},
+				ROUTE_ladder = {},
 			},
 		},
 	};
@@ -256,6 +272,14 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bFortress5 = MapRoutes.PLANT_Eastern_Ammo_Dump;
 	MapRoutes.ATTACK_bFortress6 = MapRoutes.PLANT_Eastern_Ammo_Dump;
 	MapRoutes.ATTACK_bFortress7 = MapRoutes.PLANT_Eastern_Ammo_Dump;
+	MapRoutes.DEFEND_rKey_2 = MapRoutes.DEFEND_rKey_1;
+	MapRoutes.DEFEND_rKey3 = MapRoutes.DEFEND_rKey_1;
+	MapRoutes.DEFEND_rKey4 = MapRoutes.DEFEND_rKey_1;
+	MapRoutes.DEFEND_rKey5 = MapRoutes.DEFEND_rKey_1;
+	MapRoutes.DEFEND_rKey6 = MapRoutes.DEFEND_rKey_1;
+	MapRoutes.DEFEND_rKey7 = MapRoutes.DEFEND_rKey_1;
+	MapRoutes.DEFEND_rKey8 = MapRoutes.DEFEND_rKey_1;
+	
 	Util.Routes( MapRoutes );
 	yield(); yield();
 	
