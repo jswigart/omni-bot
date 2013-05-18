@@ -1208,7 +1208,7 @@ bool PathPlannerWaypoint::Load(const String &_mapname, bool _dl)
 	if(_dl)
 		FileDownloader::NavigationMissing(_mapname);		
 #endif
-	LOGERR("Waypoint " << waypointName.c_str() << "%s not found in file or archives.");
+	LOGERR("Waypoint " << waypointName.c_str() << " not found in file or archives.");
 	return false;
 }
 
