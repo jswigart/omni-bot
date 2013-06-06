@@ -57,6 +57,67 @@ global _MG =
 		TeamAvailability = 0,
 		Version = 1,
 	},
+	AIRSTRIKE_rTrans1 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.519, 0.334, 0.787),
+		},
+		CreateOnLoad = 1,
+		GoalType = "AIRSTRIKE",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "AIRSTRIKE_rTrans1",
+		Orientation = Vec3(1.081, 0.179, -0.000),
+		Position = Vec3(-7546.000, -832.000, -414.000),
+		Radius = 32,
+		Stance = "stand",
+		TagName = "rTrans1",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	ARTILLERY_S_rObelisk1 = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "ARTILLERY_S",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "ARTILLERY_S_rObelisk1",
+		Orientation = Vec3(-3.093, -0.746, -0.000),
+		Position = Vec3(-9026.958, -627.023, 144.125),
+		Radius = 0,
+		TagName = "rObelisk1",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	ARTILLERY_S_rRoof1 = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "ARTILLERY_S",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "ARTILLERY_S_rRoof1",
+		Orientation = Vec3(-0.114, 0.824, -0.000),
+		Position = Vec3(-9306.154, -1062.023, 1156.586),
+		Radius = 0,
+		TagName = "rRoof1",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	ARTILLERY_S_rTransArty2 = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "ARTILLERY_S",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "ARTILLERY_S_rTransArty2",
+		Orientation = Vec3(1.575, 0.619, -0.000),
+		Position = Vec3(-8511.875, -497.651, 1171.099),
+		Radius = 0,
+		TagName = "rTransArty2",
+		TeamAvailability = 30,
+		Version = 1,
+	},
 	ARTILLERY_S_rTransArty_1 = 
 	{
 		CreateOnLoad = 1,
@@ -65,7 +126,7 @@ global _MG =
 		MinRadius = 0,
 		Name = "ARTILLERY_S_rTransArty_1",
 		Orientation = Vec3(-0.014, -1.534, -0.000),
-		Position = Vec3(-8272.896, 133.345, -435.887),
+		Position = Vec3(-8747.317, 150.668, -200.000),
 		Radius = 15,
 		TagName = "rTransArty_1",
 		TeamAvailability = 30,
@@ -547,6 +608,21 @@ global _MG =
 		{
 		},
 	},
+	CALLARTILLERY_rObelisk1 = 
+	{
+		CreateOnLoad = 1,
+		Facing = Vec3(0.773, -0.016, -0.635),
+		GoalType = "CALLARTILLERY",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "CALLARTILLERY_rObelisk1",
+		Orientation = Vec3(-1.591, -0.688, -0.000),
+		Position = Vec3(-9330.000, -621.000, 353.000),
+		Radius = 0,
+		TagName = "rObelisk1",
+		TeamAvailability = 30,
+		Version = 1,
+	},
 	CALLARTILLERY_rTranscall = 
 	{
 		CreateOnLoad = 1,
@@ -556,7 +632,7 @@ global _MG =
 		MinRadius = 0,
 		Name = "CALLARTILLERY_rTranscall",
 		Orientation = Vec3(0.661, -0.057, -0.000),
-		Position = Vec3(-7657.881, -611.893, -415.875),
+		Position = Vec3(-7498.983, -426.874, -415.875),
 		Radius = 70,
 		TagName = "rTranscall",
 		TeamAvailability = 30,
@@ -919,8 +995,8 @@ global _MG =
 	{
 		AimVectors = 
 		{
-			[0] = Vec3(0.570, -0.799, 0.192),
-			[1] = Vec3(0.987, -0.160, 0.012),
+			[0] = Vec3(-0.517, 0.855, 0.024),
+			[1] = Vec3(-0.729, 0.501, 0.467),
 		},
 		CreateOnLoad = 1,
 		DisableCM = 0,
@@ -931,7 +1007,7 @@ global _MG =
 		MinRadius = 30,
 		Name = "DEFEND_rTruck4",
 		Orientation = Vec3(-2.188, 0.050, -0.000),
-		Position = Vec3(-8448.896, -354.125, -399.875),
+		Position = Vec3(-7265.542, -1534.901, -415.875),
 		Radius = 20,
 		Stance = "crouch",
 		TagName = "rTruck4",
@@ -1216,7 +1292,7 @@ global _MG =
 		MinRadius = 32,
 		Name = "ROUTE_courtyard2",
 		Orientation = Vec3(-0.431, -0.392, -0.000),
-		Position = Vec3(-7622.000, -1795.000, -414.000),
+		Position = Vec3(-7459.784, -1685.712, -415.875),
 		Radius = 125,
 		TagName = "courtyard2",
 		TeamAvailability = 30,

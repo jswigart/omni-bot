@@ -6,6 +6,7 @@ global Map =
 	Plant_Southwest_Gate = "PLANT_Southwest_Gate",
 	ViewDistance = 4000,
 	DispenseAmmoTime = 1,
+	DontDispenseAmmo = true,
 	Debug = false,
 
 	OBStatus = false,
@@ -13,6 +14,8 @@ global Map =
 	SEStatus = false,
 	SWDyno = 0,
 	SEDyno = 0,
+	RoofAxis = 0,
+	RoofAllies = 0,
 
 	Southeast_Gate_Destroyed = function( trigger )
 	{
@@ -53,6 +56,7 @@ global Map =
 		Map.SWDyno = 0;
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_obj_item01 );
+		
 	},
 
 	Southwest_Gate_Planted = function( trigger )
@@ -80,14 +84,18 @@ global Map =
 		}
 
 		Map.OBStatus = true;
+		Map.DontDispenseAmmo = true;
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTruck.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTransArty.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrans.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rTranscall.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rMain.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_stairs.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_gatepatrol.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rRoof.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rObelisk1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rObelisk1" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTruck.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bMain.*" );
 
@@ -105,14 +113,18 @@ global Map =
 		}
 
 		Map.OBStatus = false;
+		Map.DontDispenseAmmo = false;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rTruck.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLadderTruck.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTransArty.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rTrans.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rTranscall.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMain.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gatepatrol.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_stairs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rObelisk1" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rObelisk1" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bTruck.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bMain.*" );
 
@@ -188,6 +200,69 @@ global Map =
 		{
 		},
 	},
+	
+	Roof =
+	{
+		Name = "Roof",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+			}
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				Map.RoofAllies += 1;
+			}
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.RoofAxis += 1;
+			}
+			if (Map.RoofAxis == 0 && Map.RoofAllies > 1)
+			{
+				if (!Map.OBStatus)
+				{
+					//SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rRoof1" );
+				}
+				else
+				{
+					SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rRoof1" );
+				}
+			}
+			if (Map.RoofAllies == 0 && Map.RoofAxis > 1)
+			{
+				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rRoof1" );
+			}
+			print("-----");
+			print("^4Allies: ", Map.RoofAllies);
+			print("^1Axis: ", Map.RoofAxis);
+			print("-----");
+		},
+		OnExit = function( ent )
+		{
+			if ( TestMap ) {
+				return;
+			}
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+			}
+			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
+				Map.RoofAllies -= 1;
+			}
+			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
+				Map.RoofAxis -= 1;
+			}
+			//print("-----");
+			//print("^4Allies: ", Map.RoofAllies);
+			//print("^1Axis: ", Map.RoofAxis);
+			//print("-----");
+		},
+	},
 
 };
 
@@ -201,6 +276,8 @@ global OnMapLoad = function()
 	Util.AddUseWp( "PLANT_Southeast_Gate", "segate2" );
 	Util.AddUseWp( "PLANT_Southwest_Gate", "swgate1" );
 	Util.AddUseWp( "PLANT_Southwest_Gate", "swgate2" );
+	
+	RoofTrigger = OnTriggerRegion( AABB( -9792.000,-1392.000,321.000,-8406.000,-63.000,395.000 ), Map.Roof );
 
 	SpawnLadder = OnTriggerRegion( AABB( -9084.000,-1550.000,-322.000,-9027.000,-1479.000,-22.000 ), Map.LadderTrigger );
 	SpawnLadder2 = OnTriggerRegion( AABB( -9708.000,-906.000,-128.000,-9655.000,-830.000,201.000 ), Map.LadderTrigger );
@@ -240,6 +317,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoof.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_gatepatrol.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_stairs.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rObelisk1" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rObelisk1" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bMain.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bLTMain.*" );
@@ -251,6 +330,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_bLTMain.*", 0.55 );
 	SetGoalPriority( "ATTACK_bLTDocs.*", 0.57 );
 	SetGoalPriority( "ATTACK_bLTMain[14]", 0.56 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "DEFEND_LadderTruck.*", 0.6 );
 	RTCWUtil.LimitToClass( "ATTACK_bLT.*", TEAM.ALLIES, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "FLAG.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.MEDIC, CLASS.ENGINEER );
@@ -372,6 +453,8 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rMain4 = MapRoutes.DEFEND_rMain1;
 	MapRoutes.DEFEND_rMain5 = MapRoutes.DEFEND_rMain1;
 	MapRoutes.DEFEND_rMain6 = MapRoutes.DEFEND_rMain1;
+	MapRoutes.CALLARTILLERY_rObelisk1 = MapRoutes.DEFEND_rMain1;
+	MapRoutes.ARTILLERY_S_rObelisk1 = MapRoutes.DEFEND_rMain1;
 	MapRoutes.DEFEND_gatepatrol1 = MapRoutes.DEFEND_rMain1;
 	MapRoutes.DEFEND_rRoof_1 = MapRoutes.DEFEND_rMain1;
 	MapRoutes.DEFEND_rTruck2 = MapRoutes.DEFEND_rTruck1;
@@ -381,7 +464,9 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rTruck6 = MapRoutes.DEFEND_rTruck1;
 	MapRoutes.DEFEND_rTruck7 = MapRoutes.DEFEND_rTruck1;
 	MapRoutes.DEFEND_rTruck8 = MapRoutes.DEFEND_rTruck1;
-
+	MapRoutes.CALLARTILLERY_rTranscall = MapRoutes.DEFEND_rTruck1;
+	MapRoutes.AIRSTRIKE_rTrans1 = MapRoutes.DEFEND_rTruck1;
+	
 	Util.Routes( MapRoutes );
 	Util.MapDebugPrint( "OnMapLoad" );
 };
