@@ -196,6 +196,18 @@ void CommandReciever::Remove(const String _name)
 	}
 }
 
+struct HelpItem
+{
+	const char *CommandName,*HelpString;
+	HelpItem(const char *commandName, const char *helpString)
+		: CommandName(commandName), HelpString(helpString){}
+};
+
+bool _HelpItemAlphabetical(const HelpItem &_pt1, const HelpItem &_pt2)
+{
+	return strcmp(_pt1.CommandName, _pt2.CommandName) < 0;
+}
+
 void CommandReciever::cmdHelp(const StringVector &_args)
 {
 	EngineFuncs::ConsoleMessage("---- Omni-bot Command Help ----");
@@ -212,6 +224,8 @@ void CommandReciever::cmdHelp(const StringVector &_args)
 	if(pCommandsTable)
 	{
 		EngineFuncs::ConsoleMessage("---- Script Commands ----");
+		std::vector<HelpItem> items;
+		items.reserve(pCommandsTable->Count());
 		gmTableIterator tIt;
 		gmTableNode *pNode = pCommandsTable->GetFirst(tIt);
 		while(pNode)
@@ -226,7 +240,7 @@ void CommandReciever::cmdHelp(const StringVector &_args)
 					const char *pHelpString = vHelp.GetCStringSafe(0);
 					if(pHelpString)
 					{
-						EngineFuncs::ConsoleMessage(va("%s : %s", pCommandName, pHelpString));
+						items.push_back(HelpItem(pCommandName,pHelpString));
 					}
 					else
 					{
@@ -236,13 +250,18 @@ void CommandReciever::cmdHelp(const StringVector &_args)
 							pHelpString = pUsageTbl->Get(0).GetCStringSafe(0);
 							if(pHelpString)
 							{
-								EngineFuncs::ConsoleMessage(va("%s : %s", pCommandName, pHelpString));
+								items.push_back(HelpItem(pCommandName,pHelpString));
 							}
 						}
 					}
 				}
 			}
 			pNode = pCommandsTable->GetNext(tIt);
+		}
+		std::sort(items.begin(), items.end(), _HelpItemAlphabetical);
+		for(std::vector<HelpItem>::const_iterator cIt = items.begin(); cIt != items.end(); ++cIt)
+		{
+			EngineFuncs::ConsoleMessage(va("%s : %s", cIt->CommandName, cIt->HelpString));
 		}
 		EngineFuncs::ConsoleMessage("---- End Script Commands ----");
 	}
