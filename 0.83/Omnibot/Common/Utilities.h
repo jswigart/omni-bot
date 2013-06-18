@@ -239,6 +239,9 @@ namespace Utils
 
 	gmVariable UserDataToGmVar(gmMachine *_machine, const obUserData &bud);
 
+	bool ConvertString(const String &_str, int &_var);
+	bool ConvertString(const String &_str, float &_var);
+
 	template <typename T>
 	bool ConvertString(const String &_str, T &_var)
 	{
