@@ -983,7 +983,7 @@ namespace Utils
 			return iRes != IDIGNORE;
 #else
 			vsnprintf(buffer, 2048, _msg, list);
-			assert(_bexp /*&& buffer*/); //cs: gcc - the address of ‘buffer’ will always evaluate as ‘true’
+			assert(_bexp /*&& buffer*/); //cs: gcc - the address of ï¿½bufferï¿½ will always evaluate as ï¿½trueï¿½
 			return true;
 #endif
 		}
@@ -2039,6 +2039,25 @@ void Utils::KeyValsToTable(const KeyVals &_kv, gmGCRoot<gmTableObject> _tbl, gmM
 		}
 	}
 
+}
+
+bool Utils::ConvertString(const String &_str, int &_var)
+{
+	errno=0;
+	char *endPtr;
+	const char *startPtr = _str.c_str();
+	_var = (int)strtol(startPtr, &endPtr, 10);
+	return endPtr!=startPtr && !*endPtr && errno!=ERANGE;
+}
+
+bool Utils::ConvertString(const String &_str, float &_var)
+{
+	errno=0;
+	char *endPtr;
+	const char *startPtr = _str.c_str();
+	double d = strtod(startPtr, &endPtr);
+	_var = (float)d;
+	return endPtr!=startPtr && !*endPtr && errno!=ERANGE && abs(d)<=GM_MAX_FLOAT32;
 }
 
 //////////////////////////////////////////////////////////////////////////
