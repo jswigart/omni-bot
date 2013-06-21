@@ -954,7 +954,7 @@ int gmBot::gmfGetWeapon(gmThread *a_thread)
 		a_thread->PushUser(wp->GetScriptObject(a_thread->GetMachine()));
 	else
 	{
-		OBASSERT(0, va("No Weapon of Type: %d", weaponId));
+		OBASSERT(weaponId==0, va("No Weapon of Type: %d", weaponId));
 		a_thread->PushNull();
 	}
 	return GM_OK;
