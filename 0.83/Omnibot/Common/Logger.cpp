@@ -104,6 +104,7 @@ void Logger::Start(const std::string &_filename, const bool reset)
 	// Get the time
 	time_t t = time(NULL);
 	std::string ts = asctime(localtime(&t));
+	ts.erase(ts.length() - 1);
 
 	// Start the log
 	LimitFileSize();
@@ -256,7 +257,7 @@ void Logger::Undent(const std::string &s, const LogFlags logBits)
 
 	// Undo the indentation
 
-	m_IndentCount -= m_IndentCount;
+	m_IndentCount -= m_IndentChars;
 	if (m_IndentCount < 0) 
 		m_IndentCount = 0;
 
