@@ -358,6 +358,11 @@ namespace AiState
 				Tracker.InUse = m_MapGoal;
 				m_FireDelay = IGame::GetTime() + 2000;
 			}
+			else if(IGame::GetTime() - m_FireDelay > 10000)
+			{
+				//timeout, try to shoot from current position
+				OnTarget();
+			}
 
 			// TODO: FIXME: check for unreachable.
 			const float fDistanceToTarget = SquaredLength2d(m_MapGoal->GetPosition(), GetClient()->GetPosition());
