@@ -269,9 +269,9 @@ namespace AiState
 	{
 		FINDSTATE(wp,WeaponSystem,GetRootState());
 		if(wp != NULL && wp->CurrentWeaponIs(ET_WP_MORTAR_SET))
-			_aimpos = GetClient()->GetEyePosition() + m_MortarAim[m_CurrentAim];
+			_aimpos = GetClient()->GetEyePosition() + m_MortarAim[m_CurrentAim] * 512.f;
 		else
-			_aimpos = GetClient()->GetEyePosition() + m_MapGoal->GetFacing();
+			_aimpos = GetClient()->GetEyePosition() + m_MapGoal->GetFacing() * 512.f;
 		return true;
 	}
 

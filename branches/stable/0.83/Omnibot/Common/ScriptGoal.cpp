@@ -329,7 +329,7 @@ namespace AiState
 		switch(m_ScriptAimType)
 		{
 		case Aimer::WorldFacing:
-			_aimpos = GetClient()->GetEyePosition() + m_AimVector;
+			_aimpos = GetClient()->GetEyePosition() + m_AimVector * 512.f;
 			break;
 		case Aimer::WorldPosition:
 		case Aimer::MoveDirection:
