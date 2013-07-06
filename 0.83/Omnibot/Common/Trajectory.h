@@ -30,6 +30,7 @@ namespace Trajectory
 		Vector3f		m_Velocity;
 
 		float			m_Interval;
+		float			m_PhysInterval;
 		float			m_Duration;
 
 		float			m_BounceLoss;
