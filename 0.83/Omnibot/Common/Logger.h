@@ -49,21 +49,21 @@ extern Logger g_Logger;
 // Macros (necessary evil to take advantage of __LINE__ and __FILE__)
 // ---------------------------------------------------------------------------------------------------------------------------------
 
-#define	LOG(_s) if(g_Logger.LogStarted() && (g_Logger.LogMask() & Logger::LOG_INFO) == Logger::LOG_INFO) {	\
+#define	LOG(_s) if(g_Logger.LogStarted() && (g_Logger.LogMask() & Logger::LOG_INFO)) {	\
 	g_Logger.LimitFileSize(); \
 	g_Logger.Stream() << g_Logger.HeaderString(Logger::LOG_INFO); \
 	g_Logger.SourceLine() = __LINE__; \
 	g_Logger.SourceFile() = __FILE__; \
 	g_Logger.Stream() << _s << std::endl; }
 
-#define	LOGERR(_s) if(g_Logger.LogStarted() && (g_Logger.LogMask() & Logger::LOG_ERR) == Logger::LOG_ERR) {	\
+#define	LOGERR(_s) if(g_Logger.LogStarted() && (g_Logger.LogMask() & Logger::LOG_ERR)) {	\
 	g_Logger.LimitFileSize(); \
 	g_Logger.Stream() << g_Logger.HeaderString(Logger::LOG_ERR); \
 	g_Logger.SourceLine() = __LINE__; \
 	g_Logger.SourceFile() = __FILE__; \
 	g_Logger.Stream() << _s << std::endl; }
 
-#define	LOGWARN(_s) if(g_Logger.LogStarted() && (g_Logger.LogMask() & Logger::LOG_WARN) == Logger::LOG_WARN) {	\
+#define	LOGWARN(_s) if(g_Logger.LogStarted() && (g_Logger.LogMask() & Logger::LOG_WARN)) {	\
 	g_Logger.LimitFileSize(); \
 	g_Logger.Stream() << g_Logger.HeaderString(Logger::LOG_WARN); \
 	g_Logger.SourceLine() = __LINE__; \
@@ -101,15 +101,14 @@ class Logger
 public:
 	enum LogFlags
 	{
-		LOG_INDENT = 0x00000001,
-		LOG_UNDENT = 0x00000002,
-		LOG_FLOW   = 0x00000004,
-		LOG_BLOK   = 0x00000008,
-		LOG_DATA   = 0x00000010,
-		LOG_INFO   = 0x00000012,
-		LOG_WARN   = 0x00000014,
-		LOG_ERR    = 0x00000018,
-		LOG_CRIT   = 0x00000020,
+		LOG_INDENT = 1<<0,
+		LOG_UNDENT = 1<<1,
+		LOG_FLOW   = 1<<2,
+		LOG_DATA   = 1<<3,
+		LOG_INFO   = 1<<4,
+		LOG_WARN   = 1<<5,
+		LOG_ERR    = 1<<6,
+		LOG_CRIT   = 1<<7,
 		LOG_ALL    = 0xFFFFFFFF
 	};
 

@@ -21,6 +21,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 
 	static bool InitFileSystem();
+	static void LogInit();
 	static bool InitRawFileSystem(const String &folder);
 	static void ShutdownFileSystem();
 	static bool SetWriteDirectory(const fs::path &_dir);
