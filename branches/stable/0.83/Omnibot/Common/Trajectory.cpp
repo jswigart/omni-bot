@@ -72,6 +72,7 @@ namespace Trajectory
 		: m_Position(0.f,0.f,0.f)
 		, m_Velocity(0.f,0.f,0.f)
 		, m_Interval(0.05f)
+		, m_PhysInterval(0.05f)
 		, m_Duration(5.f)
 		, m_BounceLoss(0.f)
 		, m_GravityMultiplier(1.f)
@@ -101,6 +102,12 @@ namespace Trajectory
 			GM_EXCEPTION_MSG("expected Interval field as float or int");
 			return GM_EXCEPTION;
 		}
+		gmVariable vPhysInterval = a_table->Get(a_thread->GetMachine(),"PhysInterval");
+		if(!vPhysInterval.IsNull() && !vPhysInterval.GetFloatSafe(m_PhysInterval,m_PhysInterval))
+		{
+			GM_EXCEPTION_MSG("expected PhysInterval field as float or int");
+			return GM_EXCEPTION;
+		}
 
 		gmVariable vDuration = a_table->Get(a_thread->GetMachine(),"Duration");
 		if(!vDuration.IsNull() && !vDuration.GetFloatSafe(m_Duration,m_Duration))
@@ -119,7 +126,7 @@ namespace Trajectory
 		gmVariable vGravMult = a_table->Get(a_thread->GetMachine(),"GravityMultiplier");
 		if(!vGravMult.IsNull() && !vGravMult.GetFloatSafe(m_GravityMultiplier,m_GravityMultiplier))
 		{
-			GM_EXCEPTION_MSG("expected BounceLoss field as float or int");
+			GM_EXCEPTION_MSG("expected GravityMultiplier field as float or int");
 			return GM_EXCEPTION;
 		}
 
@@ -133,7 +140,7 @@ namespace Trajectory
 		gmVariable vTraceBounce = a_table->Get(a_thread->GetMachine(),"TraceBounce");
 		if(!vTraceBounce.IsNull() && !vTraceBounce.GetBoolSafe(m_TraceBounce,m_TraceBounce))
 		{
-			GM_EXCEPTION_MSG("expected StopAtHit field as true/false");
+			GM_EXCEPTION_MSG("expected TraceBounce field as true/false");
 			return GM_EXCEPTION;
 		}
 
@@ -142,13 +149,15 @@ namespace Trajectory
 
 	void TrajectorySim::Render(obColor _col, float _time)
 	{
-		float interval = Mathf::Max(m_Interval,0.05f);
+		float interval = Mathf::Max(m_PhysInterval,0.05f);
 
 		obTraceResult tr;
 
 		Vector3f vel = m_Velocity;
 		Vector3f pos = m_Position;
 		Vector3f vlast = m_Position;
+		float tlast = 0;
+
 		for(float t = interval; t <= m_Duration;)
 		{
 			bool Hit = false;
@@ -181,8 +190,12 @@ namespace Trajectory
 
 			//////////////////////////////////////////////////////////////////////////
 
-			Utils::DrawLine(vlast,pos,_col,_time);
-			vlast = pos;
+			if(t-tlast > m_Interval)
+			{
+				Utils::DrawLine(vlast,pos,_col,_time);
+				vlast = pos;
+				tlast = t;
+			}
 
 			m_StopPos = pos;
 
