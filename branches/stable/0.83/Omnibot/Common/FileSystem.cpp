@@ -74,16 +74,7 @@ void FileSystem::FindAllFiles(const String &_path, DirectoryList &_list, const S
 
 bool FileSystem::InitFileSystem()
 {
-	PHYSFS_Version compiled;
-	PHYSFS_VERSION(&compiled);
-	LOG("Initializing PhysFS: Version " << 
-		(int)compiled.major << "." <<
-		(int)compiled.minor << "." <<
-		(int)compiled.patch);
-	
-	LOGFUNC;
 	fs::path basePath = Utils::GetBaseFolder();
-	LOG("Your base directory is: "<<basePath.string().c_str());
 	if(!PHYSFS_init(basePath.string().c_str()))
 	{
 		OBASSERT(0, "PhysFS: Error Initializing: %s", PHYSFS_getLastError());
@@ -96,9 +87,7 @@ bool FileSystem::InitFileSystem()
 	fs::path globalMapGoalPath = basePath / "global_scripts/mapgoals";
 	PHYSFS_mount(globalMapGoalPath.string().c_str(), "scripts/mapgoals", 0);
 
-	LOG("Your user directory is: "<<PHYSFS_getUserDir());
 	fs::path modPath = Utils::GetModFolder();
-	LOG("Your mod directory is: %s"<<modPath.string().c_str());
 	if(!PHYSFS_mount(modPath.string().c_str(), NULL, 1))
 	{
 		LOGERR("Can't mount folder: " << modPath.string().c_str());
@@ -116,11 +105,28 @@ bool FileSystem::InitFileSystem()
 	fs::path configPath = basePath / "config";
 	PHYSFS_mount(configPath.string().c_str(), "config", 0);
 
-	LogAvailableArchives();
-
 	CrcGenerateTable();
 	g_FileSystemInitialized = true;
 	return true;
+}
+
+void FileSystem::LogInit()
+{
+	PHYSFS_Version compiled;
+	PHYSFS_VERSION(&compiled);
+	LOG("Initializing PhysFS: Version " << 
+		(int)compiled.major << "." <<
+		(int)compiled.minor << "." <<
+		(int)compiled.patch);
+
+	LOGFUNC;
+	fs::path basePath = Utils::GetBaseFolder();
+	LOG("Your base directory is: "<<basePath.string().c_str());
+	LOG("Your user directory is: "<<PHYSFS_getUserDir());
+	fs::path modPath = Utils::GetModFolder();
+	LOG("Your mod directory is: "<<modPath.string().c_str());
+
+	LogAvailableArchives();
 }
 
 //////////////////////////////////////////////////////////////////////////

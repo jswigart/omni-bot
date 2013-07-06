@@ -48,8 +48,6 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	
 	Timer loadTime;
 
-	LOGFUNCBLOCK;
-
 	InitCommands();
 
 	srand((unsigned int)time(NULL));
@@ -106,13 +104,18 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	g_Logger.LogMask() = 0;
 	bool l = true;
 	if(Options::GetValue("Log","LogInfo",l) && l)
-		g_Logger.LogMask() |= Logger::LOG_INFO;
+		g_Logger.LogMask() |= Logger::LOG_INFO|Logger::LOG_INDENT|Logger::LOG_UNDENT|Logger::LOG_FLOW;
 	if(Options::GetValue("Log","LogWarnings",l) && l)
 		g_Logger.LogMask() |= Logger::LOG_WARN;
 	if(Options::GetValue("Log","LogErrors",l) && l)
 		g_Logger.LogMask() |= Logger::LOG_ERR;
 	if(Options::GetValue("Log","LogCriticalErrors",l) && l)
 		g_Logger.LogMask() |= Logger::LOG_CRIT;
+
+
+	// Log FileSystem information
+	LOGFUNCBLOCK;
+	FileSystem::LogInit();
 
 	//////////////////////////////////////////////////////////////////////////
 	// Initialize the Scripting System.
