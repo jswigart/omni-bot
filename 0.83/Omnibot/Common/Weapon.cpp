@@ -38,6 +38,7 @@ Weapon::WeaponFireMode::WeaponFireMode()
 	, m_ClipCurrent			(0)
 	, m_ClipMax				(0)
 	, m_AimOffset			(Vector3f::ZERO)
+	, m_AimOffsetZ			(0)
 	, m_AimErrorMax			(Vector2f::ZERO)
 	, m_AimErrorCurrent		(Vector3f::ZERO)
 	, m_MinAimAdjustmentSecs	(0.0f)
@@ -123,6 +124,7 @@ Weapon::WeaponFireMode &Weapon::WeaponFireMode::operator=(const WeaponFireMode &
 	m_ClipCurrent = _rh.m_ClipCurrent;
 	m_ClipMax = _rh.m_ClipMax;
 	m_AimOffset = _rh.m_AimOffset;
+	m_AimOffsetZ = _rh.m_AimOffsetZ;
 	m_AimErrorMax = _rh.m_AimErrorMax;
 	m_AimErrorCurrent = _rh.m_AimErrorCurrent;
 	m_MinAimAdjustmentSecs = _rh.m_MinAimAdjustmentSecs;
@@ -1255,6 +1257,7 @@ void Weapon::WeaponFireMode::Bind(gmMachine *_m)
 		// aiming
 		.var(getMaxAimError,setMaxAimError,					"MaxAimError","vec3","Horizontal and vertical aim error.")
 		.var(getAimOffset,setAimOffset,						"AimOffset","vec3","Offset added to targeting aim point.")
+		.var(&WeaponFireMode::m_AimOffsetZ,					"AimOffsetZ",0,"Vertical offset added to AimOffset if AdjustAim is 1.")
 		
 		.var(&WeaponFireMode::m_PitchOffset,				"PitchOffset",0,"Pitch offset to projectile spawn point.")
 
