@@ -2108,16 +2108,10 @@ static int gmfCalculateTrajectory(gmThread *a_thread)
 		for(int i = 0; i < t; ++i)
 		{
 			gmVariable var;
-
-			Vector3f vAimPt = Vector3f(v2.x,v2.y,v2.z), vStartPos = Vector3f(v1.x,v1.y,v1.z);
-			Vector3f vAimDir = vAimPt - vStartPos;
-			vAimPt.z = vStartPos.z + Mathf::Tan(traj[0].m_Angle) * Vector2f(vAimDir).Length();
-			vAimDir = vAimPt - vStartPos;
-			vAimDir.Normalize();
-
-			var.SetVector(vAimDir.x, vAimDir.y, vAimDir.z);
+			var.SetVector((float*)traj[i].m_AimVector);
 			pTbl->Set(pMachine, i, var);
 		}
+		a_thread->PushTable(pTbl);
 	}
 	else
 		a_thread->PushNull();
