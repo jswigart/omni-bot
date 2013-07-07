@@ -389,6 +389,10 @@ class Weapon : public WeaponScriptResource
 			//		The <Vector3> aim offset that should be applied to weapon aim points to modify targeting.
 			Vector3f		m_AimOffset;
 
+			// var: m_AimOffsetZ
+			//		The vertical offset that should be added to AimOffset if AdjustAim is 1 (used in goal_difficulty.gm).
+			obReal			m_AimOffsetZ;
+
 			// var: m_AimErrorMax
 			//		The max <Vector2> aim error range to apply to aiming. horizontal(x), vertical(y)
 			Vector2f		m_AimErrorMax;
