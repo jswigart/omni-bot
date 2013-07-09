@@ -767,3 +767,8 @@ void ET_Game::RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathChe
 {
 	_pfnPathCheck = ET_PathCheck;
 }
+
+int ET_Game::GetLogSize()
+{
+	return InterfaceFuncs::GetCvar("omnibot_logsize");
+}

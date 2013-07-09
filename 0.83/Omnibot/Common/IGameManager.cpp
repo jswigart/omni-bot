@@ -57,6 +57,18 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	// Attempt to create the proper instance of IGame based on the game requested.
 	m_Game = CreateGameInstance();
 	
+	// Create log file
+	int logSize = m_Game->GetLogSize();
+	if(logSize >= 0)
+	{
+		if(logSize > 0)
+			g_Logger.FileSizeLimit() = (logSize < 2000000) ? logSize * 1024 : 2048000000;
+		g_Logger.Start(
+			(String)va("%s/omnibot_%s.log", 
+			_pEngineFuncs->GetLogPath(),
+			_pEngineFuncs->GetMapName()), logSize==0);
+	}
+
 	// Verify the version is correct.
 	if(!m_Game->CheckVersion(_version))
 	{
