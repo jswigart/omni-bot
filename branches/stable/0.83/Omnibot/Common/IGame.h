@@ -167,6 +167,8 @@ public:
 	virtual void InternalSyncEntity( const EntityInstance & ent, EntitySnapShot & snapShot, RemoteLib::DataBuffer & db );
 #endif
 
+	virtual inline int GetLogSize() { return 0; }
+
 	IGame();
 	virtual ~IGame();
 protected:	

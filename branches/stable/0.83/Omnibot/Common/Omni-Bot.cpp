@@ -67,11 +67,6 @@ omnibot_error BotInitialise(IEngineInterface *_pEngineFuncs, int _version)
 	SetThreadName ((DWORD)-1, "MainThread");
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF|_CRTDBG_CHECK_ALWAYS_DF|_CRTDBG_CHECK_CRT_DF|_CRTDBG_LEAK_CHECK_DF);
 #endif
-	
-	g_Logger.Start(
-		(String)va("%s/omnibot_%s.log", 
-		_pEngineFuncs->GetLogPath(),
-		_pEngineFuncs->GetMapName()), true);
 
 	// Create the Game Manager
 	g_GameManager = IGameManager::GetInstance();

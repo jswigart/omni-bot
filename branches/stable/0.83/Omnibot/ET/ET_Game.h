@@ -52,6 +52,8 @@ public:
 
 	virtual bool AddWeaponId(const char * weaponName, int weaponId);
 	
+	int GetLogSize();
+
 	static int CLASSEXoffset;
 	static bool IsETBlight, IsBastardmod;
 
