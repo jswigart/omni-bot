@@ -1,7 +1,8 @@
 global Map =
 {
 	Quiet = true,
-	DispenseAmmoTime = 10,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = true,
 
 	cp1 = "CHECKPOINT_checkpoint1", // allies 1
 	cp2 = "CHECKPOINT_checkpoint2", // allies 2
@@ -13,20 +14,6 @@ global Map =
 	Checkpoint_void_1 = "CHECKPOINT_void_1",
 	Explode_barrier1 = "EXPLODE_barrier1",
 	Explode_barrier2 = "EXPLODE_barrier2",
-	Mount_bCentral = "MOUNTMG42_bCentral",
-	Mount_bNest = "MOUNTMG42_bNest",
-	Mount_rCentral = "MOUNTMG42_rCentral",
-	Mount_rNest = "MOUNTMG42_rNest",
-	Mount_t364 = "MOUNTMG42_t364",  // bBunker_2
-	Mount_t451 = "MOUNTMG42_t451",  // bBunker_1
-	Mount_t452 = "MOUNTMG42_t452",  // DONT USE B BUNKER
-	Mount_t454 = "MOUNTMG42_t454",  // rBunker_2
-	Mount_t455 = "MOUNTMG42_t455",  // DONT USE r BUNKER
-	Mount_t456 = "MOUNTMG42_t456",  // rBunker_1
-	Mount_t457 = "MOUNTMG42_t457",  // bRear_1
-	Mount_t460 = "MOUNTMG42_t460",  // bRear_2
-	Mount_t461 = "MOUNTMG42_t461",  // rRear_2
-	Mount_t462 = "MOUNTMG42_t462",  // rRear_1
 	bPanzers = 0,
 	rPanzers = 0,
 
@@ -286,6 +273,8 @@ global Map =
 		Util.DisableGoal( "MOUNT.*" );
 		Util.DisableGoal( "CALL.*" );
 		Util.DisableGoal( "CAMP.*" );
+		Util.DisableGoal( "AIRSTRIKE.*" );
+		Util.DisableGoal( "SNIPE.*" );
 	},
 
 	barrier1 = function( trigger )
@@ -316,14 +305,33 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFirstspawn_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bFirstspawn" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFirstspawn_.*" );
-		Map.DontDispenseAmmo = false;   // Share the ammo now
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_D_bMid.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bMid.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bMid.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_D_rMid.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bMid.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rMid.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rMid.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rMid.*" );
 	},
+	Pillbox =
+	{
+		Name = "Pillbox",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = true;
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = false;
+			}
+		},
+	},
+	
 };
 
 global OnMapLoad = function()
@@ -331,6 +339,8 @@ global OnMapLoad = function()
 	if ( TestMapOn ) {
 		Util.AutoTestMap();
 	}
+	AlliesPillbox = OnTriggerRegion( AABB( 5599.000,9439.000,321.000,6016.000,9760.000,395.000 ), Map.Pillbox );
+	AxisPillbox = OnTriggerRegion( AABB( 3775.000,11743.000,321.000,4192.000,12064.000,395.000 ), Map.Pillbox );
 
 	OnTrigger( "Axis takes the Southern Flag!", Map.checkpoint1_Axis_Captured );
 	OnTrigger( "Allies take the Southern Flag!", Map.checkpoint1_Allies_Captured );
@@ -363,9 +373,20 @@ global OnMapLoad = function()
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "CAMP_.*", 0.95 );
+	SetGoalPriority( "AIRSTRIKE.*", 0.99 );
 	SetGoalPriority( "GRENADE_Barricade.*", 0.65 );
+	SetGoalPriority( "MOUNT.*", 0.91 );
+	
+	//priority should be based on closest available checkpoint
+	SetGoalPriority( "CHECKPOINT_checkpoint5", 1.0, TEAM.AXIS );
+	SetGoalPriority( "CHECKPOINT_checkpoint6", 0.99, TEAM.AXIS );
+	SetGoalPriority( "CHECKPOINT_checkpoint4", 0.98, TEAM.AXIS );
+	SetGoalPriority( "CHECKPOINT_checkpoint2", 1.0, TEAM.ALLIES );
+	SetGoalPriority( "CHECKPOINT_checkpoint1", 0.99, TEAM.ALLIES );
+	SetGoalPriority( "CHECKPOINT_checkpoint3", 0.98, TEAM.ALLIES );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.cp6 );
@@ -391,6 +412,8 @@ global OnMapLoad = function()
 	//concentrate on sniping until 30 seconds left
 	RTCWUtil.ExcludeClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
 	RTCWUtil.ExcludeClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER );
 
 	MapRoutes =
 	{
