@@ -21,7 +21,7 @@ global Map =
 	Repair_west_cyd_mg = "REPAIRMG42_west_cyd_mg",
 	Repair_west_mg = "REPAIRMG42_west_mg",
 
-	spawnkill = false,  // Turn this off to stop the bots from spawnkilling and win the round instead.
+	spawnkill = false,
 	thirtysecond = false,
 	c1status = 0,
 	c2status = 0,
@@ -403,6 +403,8 @@ global OnMapLoad = function()
 	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint3", TEAM.ALLIES, CLASS.SOLDIER );
 
 	Util.EnableGoal( "CHECKPOINT.*" );
+	
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rCheckpoint5" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFirstspawn.*" );
