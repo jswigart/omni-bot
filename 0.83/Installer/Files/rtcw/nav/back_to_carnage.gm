@@ -31,6 +31,7 @@ global Map =
 	WallStatus = false,
 	DontDispenseAmmo = true,
 	RemoveFirstWall = true,
+	Suicide = MAP_SUICIDE,
 
 	bPanzers = 0,
 	bSnipers = 0,
@@ -156,6 +157,10 @@ global Map =
 		}
 
 		Map.WallStatus = true;
+		
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
+		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_trenchbarricade" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
@@ -502,10 +507,14 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bGenerator_6 = MapRoutes.ATTACK_bGenerator_1;
 	Util.Routes( MapRoutes );
 
+	yield();yield();
+	if ( Map.Suicide ) {
+		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 1, 1 );
+	}
 	if (Map.RemoveFirstWall) {
 		EntityKill(217);
 	}
-
+	
 	Util.MapDebugPrint( "OnMapLoad" );
 };
 
