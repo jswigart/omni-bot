@@ -96,6 +96,7 @@ bool State::AppendTo(obuint32 _name, State *_insertstate)
 		_insertstate->m_Root = pFoundState->m_Root;
 		return true;
 	}
+	delete _insertstate;
 	return false;
 }
 
@@ -124,6 +125,7 @@ bool State::PrependTo(obuint32 _name, State *_insertstate)
 		_insertstate->m_Root = pFoundState->m_Root;
 		return true;
 	}
+	delete _insertstate;
 	return false;
 }
 
@@ -181,6 +183,7 @@ bool State::InsertAfter(obuint32 _name, State *_insertstate)
 		pFoundState->m_Sibling = _insertstate;
 		return true;
 	}
+	delete _insertstate;
 	return false;
 }
 
@@ -194,7 +197,6 @@ bool State::InsertBefore(obuint32 _name, State *_insertstate)
 	if(!_name)
 		return false;
 
-	bool bGood = false;
 	State *pFoundState = FindState(_name);
 	if(pFoundState)
 	{
@@ -205,11 +207,10 @@ bool State::InsertBefore(obuint32 _name, State *_insertstate)
 		{
 			_insertstate->m_Sibling = pFoundState;
 			pFoundState->m_Parent->m_FirstChild = _insertstate;
-			bGood = true;
+			return true;
 		}
 		else
 		{
-			bGood = false;
 			for(State *pS = pFoundState->m_Parent->m_FirstChild; 
 				pS; 
 				pS = pS->m_Sibling)
@@ -218,13 +219,13 @@ bool State::InsertBefore(obuint32 _name, State *_insertstate)
 				{
 					pS->m_Sibling = _insertstate;
 					_insertstate->m_Sibling = pFoundState;
-					bGood = true;
-					break;
+					return true;
 				}
 			}
 		}
 	}
-	return bGood;
+	delete _insertstate;
+	return false;
 }
 
 State *State::RemoveState(const char * _name)
