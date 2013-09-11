@@ -63,6 +63,8 @@ void SetThreadName( DWORD dwThreadID, char* threadName)
 
 omnibot_error BotInitialise(IEngineInterface *_pEngineFuncs, int _version)
 {
+	Timer loadTime;
+
 #ifdef WIN32
 	SetThreadName ((DWORD)-1, "MainThread");
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF|_CRTDBG_CHECK_ALWAYS_DF|_CRTDBG_CHECK_CRT_DF|_CRTDBG_LEAK_CHECK_DF);
@@ -70,7 +72,14 @@ omnibot_error BotInitialise(IEngineInterface *_pEngineFuncs, int _version)
 
 	// Create the Game Manager
 	g_GameManager = IGameManager::GetInstance();
-	return g_GameManager->CreateGame(_pEngineFuncs, _version);
+	omnibot_error result = g_GameManager->CreateGame(_pEngineFuncs, _version);
+	
+	if(result==BOT_ERROR_NONE)
+	{
+		EngineFuncs::ConsoleMessage(va("Bot Initialized in %.2f seconds.", loadTime.GetElapsedSeconds()));
+		LOG("Bot Initialized in " << loadTime.GetElapsedSeconds() << " seconds.");
+	}
+	return result;
 }
 
 void BotUpdate()
