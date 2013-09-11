@@ -826,13 +826,13 @@ bool GoalManager::Save(const String &_map, ErrorObj &_err)
 
 bool GoalManager::Load(const String &_map, ErrorObj &_err)
 {
+	Timer loadTime;
+
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 
 	int GoalsLoaded = 0;
 	int GoalsDeferred = 0;
 	int GoalsLoadedFailed = 0;
-
-	Timer loadTime;
 
 	bool LoadedOk = true;
 
