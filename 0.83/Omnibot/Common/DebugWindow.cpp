@@ -1546,8 +1546,10 @@ namespace ScriptThreads
 			}
 		}
 		Utils::VarArgs(currentTi.mFile,ThreadInfo::BufferSize,"%s",pFileName?pFileName:"<unknown file>");
+#if(GM_USE_THREAD_TIMERS)
 		currentTi.mTime = a_thread->GetRealThreadTime().LastExecTime;
 		currentTi.mPeakTime = a_thread->GetRealThreadTime().PeakTime;
+#endif
 		Threads.push_back(currentTi);
 		return true;
 	}
