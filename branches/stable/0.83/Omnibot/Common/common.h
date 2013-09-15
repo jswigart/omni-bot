@@ -114,6 +114,13 @@ typedef std::list<String> StringList;
 	#endif
 #endif
 
+#ifdef WIN32
+	//#define ENABLE_REMOTE_DEBUGGER
+	//#define ENABLE_DEBUG_WINDOW
+	//#define ENABLE_FILE_DOWNLOADER
+	//#define ENABLE_REMOTE_DEBUGGING
+#endif
+
 // Boost
 #if _MSC_VER == 1600 // cs: ffs
 #include <boost/version.hpp>
@@ -143,7 +150,10 @@ typedef std::list<String> StringList;
 #include <boost/lexical_cast.hpp>
 #include <boost/array.hpp>
 #include <boost/multi_array.hpp>
+
+#ifdef ENABLE_FILE_DOWNLOADER
 #include <boost/thread.hpp>
+#endif
 
 #ifdef _WIN32
 #pragma warning( pop )
@@ -151,12 +161,14 @@ typedef std::list<String> StringList;
 
 namespace fs = boost::filesystem;
 
+#ifdef ENABLE_FILE_DOWNLOADER
 // typedef: Thread
 //		Simpler typedef for boost::thread.
 typedef boost::thread Thread;
 typedef boost::thread_group ThreadGroup;
 typedef boost::mutex Mutex;
 typedef boost::try_mutex TryMutex;
+#endif
 
 
 
@@ -181,13 +193,6 @@ using namespace Wm3;
 #include "IEngineInterface.h"
 
 #include "prof.h"
-
-#ifdef WIN32
-	//#define ENABLE_REMOTE_DEBUGGER
-	//#define ENABLE_DEBUG_WINDOW
-	//#define ENABLE_FILE_DOWNLOADER
-	//#define ENABLE_REMOTE_DEBUGGING
-#endif
 
 // remote debug
 #ifdef ENABLE_REMOTE_DEBUGGING
