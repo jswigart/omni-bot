@@ -1,0 +1,383 @@
+global Map =
+{
+	Debug = 0,
+	ShowMovers = false,
+	DontDispenseAmmo = true,
+	DispenseAmmoTime = 1,
+	DocStatus = 0,
+	FlagStatus = 0, //0 nobody, 1 allies
+
+	Vault_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
+
+		Util.MapDebugPrint( "Vault_Door_Destroyed" );
+	},
+	
+	Vault_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+
+		Util.MapDebugPrint( "Vault_Door_Destroyed" );
+	},
+	
+	bunker_door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_bunker.*" );
+
+		Util.MapDebugPrint( "bunker_door_Planted" );
+	},
+
+	bunker_door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		if ( !Map.DocStatus && !Map.FlagStatus)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_door" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rdoor" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rDoor.*" );
+		}
+
+		Util.MapDebugPrint( "bunker_door_Destroyed" );
+	},
+
+	Enigma_Machine_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Util.ChangeSpawn( TEAM.ALLIES, 101 );
+		Map.DocStatus = 1;
+			
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_door" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rdoor" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rDoor.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rWest.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rEast.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_transmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnkill.*" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_transmit.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bVault.*" );
+
+		Util.MapDebugPrint( "Enigma_Machine_Taken" );
+	},
+	
+	Enigma_Machine_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Util.ChangeSpawn( TEAM.ALLIES, 0 ); 
+		Map.DocStatus = 0;
+	
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_door" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rdoor" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rDoor.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rWest.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rEast.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rVault.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rSpawnkill.*" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_transmit.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bVault.*" );
+		
+		Util.MapDebugPrint( "Enigma_Machine_Secured" );
+	},
+
+	forward_spawn_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.FlagStatus = 0;
+
+		Util.MapDebugPrint( "forward_spawn_Axis_Captured" );
+	},
+
+	forward_spawn_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		DontDispenseAmmo = false;
+		Map.FlagStatus = 1;
+			
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_door" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rdoor" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rDoor.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rWest.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rEast.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rVault.*" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Vault_Door" );
+
+		Util.MapDebugPrint( "forward_spawn_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+		
+	Util.AddUseWp( "PLANT_bunker_door", "door" );
+
+	// Register callback functions
+	OnTrigger( "the Vault Door! Destroyed.", Map.Vault_Door_Destroyed );
+	OnTrigger( "Planted at the Vault Door!.", Map.Vault_Door_Planted );
+	OnTrigger( "Planted at the bunker door.", Map.bunker_door_Planted );
+	OnTrigger( "the bunker door. Destroyed.", Map.bunker_door_Destroyed );
+	OnTrigger( "Allies have stolen the Enigma Machine!", Map.Enigma_Machine_Taken );
+	OnTrigger( "Axis have returned the Enigma Machine!", Map.Enigma_Machine_Secured );
+	OnTrigger( "Axis have secured the bunker entrance!", Map.forward_spawn_Axis_Captured );
+	OnTrigger( "Allies captured the bunker entrance!", Map.forward_spawn_Allies_Captured );
+	
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 60, maxcamptime = 60} );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "DEFEND_rLT.*", 0.55 );
+	SetGoalPriority( "DEFEND_rDocs.*", 0.55 );
+	SetGoalPriority( "PANZER_bSpawnkill.*", 0.86 );
+	
+	RTCWUtil.LimitToClass( "DEFEND_rLT.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	
+	Util.EnableGoal( "CAPPOINT.*", true ); // all but routes
+	
+	Util.SetMaxUsersInProgress( 2, "PANZER.*" );
+	Util.SetMaxUsersInProgress( 6, "CHECKPOINT.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_bunker_door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bVault.*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEast.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rWest.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rWest.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rEast.*" );
+	
+	MapRoutes =
+	{
+
+		CAPPOINT_transmit =
+		{
+			ROUTE_docsteal =
+			{
+				ROUTE_ducts =
+				{
+					ROUTE_steps = 
+					{
+						ROUTE_entrance = {Weight=3,},
+						ROUTE_westpillbox = {},
+						ROUTE_eastpillbox = {},
+					},
+				},
+				ROUTE_basementnorth = 
+				{
+					ROUTE_steps =
+					{
+						ROUTE_entrance = {Weight=3,},
+						ROUTE_westpillbox = {},
+						ROUTE_eastpillbox = {},
+					},
+					ROUTE_ladder =
+					{
+						ROUTE_entrance = {Weight=3,},
+						ROUTE_westpillbox = {},
+						ROUTE_eastpillbox = {},
+					},
+				},
+				ROUTE_basementsouth = 
+				{
+					ROUTE_steps =
+					{
+						ROUTE_entrance = {Weight=3,},
+						ROUTE_westpillbox = {},
+						ROUTE_eastpillbox = {},
+					},
+					ROUTE_ladder =
+					{
+						ROUTE_entrance = {Weight=3,},
+						ROUTE_westpillbox = {},
+						ROUTE_eastpillbox = {},
+					},
+				},
+			},
+		},
+		CHECKPOINT_forward_spawn =
+		{
+			ROUTE_bspawn = 
+			{
+				ROUTE_westpillbox =
+				{
+					ROUTE_steps =
+					{
+						ROUTE_basementnorth = {},
+						ROUTE_basementsouth = {},
+					},
+					ROUTE_ladder = 
+					{
+						ROUTE_basementnorth = {},
+						ROUTE_basementsouth = {},
+					},
+				},
+				ROUTE_entrance = 
+				{
+					Weight = 3,
+					ROUTE_steps =
+					{
+						ROUTE_basementnorth = {},
+						ROUTE_basementsouth = {},
+					},
+					ROUTE_ladder = 
+					{
+						ROUTE_basementnorth = {},
+						ROUTE_basementsouth = {},
+					},
+					ROUTE_midhall =
+					{
+						ROUTE_ladder = 
+						{
+							ROUTE_basementnorth = {},
+							ROUTE_basementsouth = {},
+						},
+					},
+				},
+			},
+		},
+		ATTACK_bVault1 =
+		{
+			ROUTE_bspawn = 
+			{
+				ROUTE_westpillbox =
+				{
+					ROUTE_steps =
+					{
+						ROUTE_basementnorth = {},
+						ROUTE_basementsouth = {},
+					},
+					ROUTE_ladder = 
+					{
+						ROUTE_basementnorth = {},
+						ROUTE_basementsouth = {},
+					},
+				},
+				ROUTE_entrance = 
+				{
+					Weight = 3,
+					ROUTE_steps =
+					{
+						ROUTE_basementnorth = {},
+						ROUTE_basementsouth = {},
+					},
+					ROUTE_ladder = 
+					{
+						ROUTE_basementnorth = {},
+						ROUTE_basementsouth = {},
+					},
+					ROUTE_midhall =
+					{
+						ROUTE_ladder = 
+						{
+							ROUTE_basementnorth = {},
+							ROUTE_basementsouth = {},
+						},
+					},
+				},
+			},
+			ROUTE_flagspawn =
+			{
+				ROUTE_steps =
+				{
+					ROUTE_basementnorth = {},
+					ROUTE_basementsouth = {},
+				},
+				ROUTE_ladder = 
+				{
+					ROUTE_basementnorth = {},
+					ROUTE_basementsouth = {},
+				},
+				ROUTE_midhall =
+				{
+					ROUTE_ladder = 
+					{
+						ROUTE_basementnorth = {},
+						ROUTE_basementsouth = {},
+					},
+				},
+			},
+		},
+		DEFEND_rVault1 =
+		{
+			ROUTE_rspawn =
+			{
+				ROUTE_steps = {},
+				ROUTE_ladder = {},
+			},
+		},
+		DEFEND_transmit1 =
+		{
+			ROUTE_rspawn =
+			{
+				ROUTE_westpillbox = {},
+				ROUTE_eastpillbox = {},
+			},
+		},
+	};
+	MapRoutes.ATTACK_bVault1.ROUTE_bspawn.ROUTE_eastpillbox = MapRoutes.ATTACK_bVault1.ROUTE_bspawn.ROUTE_westpillbox;
+	MapRoutes.CHECKPOINT_forward_spawn.ROUTE_eastpillbox = MapRoutes.CHECKPOINT_forward_spawn.ROUTE_bspawn.ROUTE_westpillbox;
+	MapRoutes.ATTACK_bVault2 = MapRoutes.ATTACK_bVault1;
+	MapRoutes.ATTACK_bVault3 = MapRoutes.ATTACK_bVault1;
+	MapRoutes.ATTACK_bVault4 = MapRoutes.ATTACK_bVault1;
+	MapRoutes.ATTACK_bVault5 = MapRoutes.ATTACK_bVault1;
+	MapRoutes.ATTACK_bVault6 = MapRoutes.ATTACK_bVault1;
+	MapRoutes.ATTACK_bVault7 = MapRoutes.ATTACK_bVault1;
+	MapRoutes.FLAG_Enigma_Machine = MapRoutes.ATTACK_bVault1;
+	MapRoutes.PLANT_Vault_Door = MapRoutes.ATTACK_bVault1;
+	MapRoutes.DEFEND_rVault2 = MapRoutes.DEFEND_rVault1;
+	MapRoutes.DEFEND_rVault3 = MapRoutes.DEFEND_rVault1;
+	MapRoutes.DEFEND_rVault4 = MapRoutes.DEFEND_rVault1;
+	MapRoutes.DEFEND_rVault5 = MapRoutes.DEFEND_rVault1;
+	MapRoutes.DEFEND_rVault6 = MapRoutes.DEFEND_rVault1;
+	MapRoutes.DEFEND_transmit2 = MapRoutes.DEFEND_transmit1;
+	MapRoutes.DEFEND_transmit3 = MapRoutes.DEFEND_transmit1;
+	MapRoutes.DEFEND_transmit4 = MapRoutes.DEFEND_transmit1;
+	MapRoutes.DEFEND_transmit5 = MapRoutes.DEFEND_transmit1;
+	MapRoutes.DEFEND_transmit6 = MapRoutes.DEFEND_transmit1;
+	MapRoutes.AIRSTRIKE_rSpawnkill1 = MapRoutes.DEFEND_transmit1;
+	
+	Util.Routes(MapRoutes);
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	RTCWUtil.NoSnipe( bot );
+	bot.ChangeSpawnPoint( 0 );
+};

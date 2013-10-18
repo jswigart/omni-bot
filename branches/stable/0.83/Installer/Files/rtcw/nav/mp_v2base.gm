@@ -1,0 +1,284 @@
+global Map =
+{
+	Quiet = true,
+	Debug = false,
+	DontDispenseAmmo = true,
+	Suicide = MAP_SUICIDE,
+	FlagStatus = 0,
+	DocStatus = 0,
+	WallStatus = 0,
+	//RemoveFlag = true,
+		/* 	Martin - There are only 5 axis spawn points in the base, so many axis will
+			spawn up at the flag each spawn wave and retake the flag by bumping into
+			it. Leaving this at true will at least give the allies a chance. */
+	
+
+	Base_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.WallStatus = 1;
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Storage.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bYard.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bSpawnkill.*" );
+		
+		Util.MapDebugPrint( "Base_Wall_Destroyed" );
+	},
+
+	Storage_Room_Wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Storage_Room_Wall_Destroyed" );
+	},
+
+	War_Documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		
+		Map.DocStatus = 1;
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_transmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTransmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTransmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rTransmit.*" );
+
+		Util.MapDebugPrint( "War_Documents_Taken" );
+	},
+
+	War_Documents_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.DocStatus = 0;
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rTransmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTransmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rTransmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rYard.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_transmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
+		Util.MapDebugPrint( "War_Documents_Returned" );
+	},
+
+	the_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.FlagStatus = 1;
+		
+		if (!Map.WallStatus)
+		{
+			Util.SetMaxUsersInProgress( 8, "CHECKPOINT.*" );
+		}
+		else
+		{
+			Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
+		}
+			
+		Util.MapDebugPrint( "the_flag_Axis_Captured" );
+	},
+
+	the_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.FlagStatus = 2;
+		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
+			
+		if ( Map.Suicide ) {
+			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
+		}
+		
+		if (!Map.DocStatus)
+		{	
+			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlag.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rSpawnkill.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rYard.*" );
+		}
+
+		Util.MapDebugPrint( "the_flag_Allies_Captured" );
+	},
+	DisableCombatMove =
+	{
+		Name = "DisableCombatMove",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = true;
+				b.DisableBotPush( true );
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = false;
+				b.DisableBotPush( false );
+			}
+		},
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+	
+	Bridge = OnTriggerRegion( AABB( 71.000,-824.000,249.000,192.000,-439.000,392.000 ), Map.DisableCombatMove );
+	Bridge2 = OnTriggerRegion( AABB( -329.000,-696.000,129.000,447.000,-527.000,203.000 ), Map.DisableCombatMove );
+	DoorBlock = OnTriggerRegion( AABB( -52.000,67.000,389.000,70.000,316.000,504.000 ), Map.DisableCombatMove );
+	
+	OnTrigger( "the Base Wall Destroyed.", Map.Base_Wall_Destroyed );
+	OnTrigger( "the Storage Room Wall Destroyed.", Map.Storage_Room_Wall_Destroyed );
+	OnTrigger( "Allies have stolen the War Documents!", Map.War_Documents_Taken );
+	OnTrigger( "Flag returned War Documents!", Map.War_Documents_Returned );
+	OnTrigger( "Axis capture the Fortress!", Map.the_flag_Axis_Captured );
+	OnTrigger( "Allies capture the Fortress!", Map.the_flag_Allies_Captured );
+
+	RTCWUtil.DisableGoal(".*", true); //all but routes
+	RTCWUtil.EnableGoal("CAPPOINT_.*");
+	
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "AIRSTRIKE.*", 0.89 );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Base_Wall" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bYard.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bFlag.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bYard.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rYard.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rWall.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rYard.*" );
+	
+	Util.SetMaxUsersInProgress( 8, "CHECKPOINT.*" );	
+	RTCWUtil.LimitToClass( "GRENADE_rWall.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	
+	// remove the barrier
+	RTCWUtil.KillEntities({127,145,146,147,245,217,336,301,430,431,72,73,90,408,151,222,223,211,210,161,221,224,123,124,199,225});
+	
+	InitializeRoutes();
+	
+	yield();yield();
+	if ( Map.Suicide ) {
+		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
+	}	
+	
+	Util.MapDebugPrint( "OnMapLoad" );
+		
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 75.0;
+	RTCWUtil.NoSnipe( bot );
+	bot.ChangeSpawnPoint( 0 );
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes = 
+	{	
+		FLAG_War_Documents =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_frontdoor = 
+				{
+					ROUTE_ductse = {},
+					ROUTE_ductsw = {},
+					ROUTE_basementsteps = {},
+				},
+				ROUTE_backhallway =
+				{
+					ROUTE_basementcenter = {},
+					ROUTE_basementeast = {},
+				},
+			},
+			ROUTE_bspawn =
+			{
+				ROUTE_bduct = 
+				{
+					ROUTE_frontdoor = 
+					{
+						ROUTE_ductse = {},
+						ROUTE_ductsw = {},
+						ROUTE_basementsteps = {},
+					},
+					ROUTE_backhallway =
+					{
+						ROUTE_basementcenter = {},
+						ROUTE_basementeast = {},
+					},
+				},
+				ROUTE_btunnel = 
+				{
+					Weight=3,
+						ROUTE_frontdoor = 
+					{
+						ROUTE_ductse = {},
+						ROUTE_ductsw = {},
+						ROUTE_basementsteps = {},
+					},
+					ROUTE_backhallway =
+					{
+						ROUTE_basementcenter = {},
+						ROUTE_basementeast = {},
+					},
+				},
+			},
+		},
+		CHECKPOINT_the_flag =
+		{
+			ROUTE_bspawn =
+			{
+				ROUTE_bduct = {},
+				ROUTE_btunnel = {Weight=3},
+			},
+		},
+		CAPPOINT_transmit =
+		{
+			ROUTE_docsteal =
+			{
+				ROUTE_backhallway = {},
+			},
+		},
+	};
+	MapRoutes.ATTACK_bFlag1 = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.ATTACK_bFlag2 = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.ATTACK_bFlag3 = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.ATTACK_bFlag4 = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.ATTACK_bFlag5 = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.AIRSTRIKE_bYard1 = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.AIRSTRIKE_bYard2 = MapRoutes.CHECKPOINT_the_flag;
+	MapRoutes.PLANT_Base_Wall = MapRoutes.CHECKPOINT_the_flag;
+	
+	Util.Routes(MapRoutes);
+};
