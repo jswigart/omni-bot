@@ -30,7 +30,7 @@ global Map =
 	RadioStatus = false,
 	WallStatus = false,
 	DontDispenseAmmo = true,
-	RemoveFirstWall = true,
+	RemoveFirstWall = false,
 	Suicide = MAP_SUICIDE,
 
 	bPanzers = 0,
