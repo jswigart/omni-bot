@@ -122,7 +122,7 @@ typedef std::list<String> StringList;
 #endif
 
 // Boost
-#if _MSC_VER == 1600 // cs: ffs
+#if _MSC_VER >= 1600 // cs: ffs
 #include <boost/version.hpp>
 #if BOOST_VERSION <= 104400
 #define BOOST_NO_RVALUE_REFERENCES 1

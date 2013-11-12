@@ -426,7 +426,7 @@ namespace AiState
 
 	bool WeaponSystem::HasWeapon(int _weaponId) const
 	{
-		return GetWeapon(_weaponId);	
+		return (bool)GetWeapon(_weaponId);
 	}
 
 	bool WeaponSystem::HasAmmo(FireMode _mode) const
