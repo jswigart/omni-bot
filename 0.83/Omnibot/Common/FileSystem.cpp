@@ -10,6 +10,7 @@
 #include "FileSystem.h"
 
 #include "physfs.h"
+#include <boost/version.hpp>
 
 extern "C"
 {
@@ -228,7 +229,11 @@ bool FileSystem::UnMount(const fs::path &_path)
 
 bool FileSystem::SetWriteDirectory(const fs::path &_dir)
 {
+#if BOOST_VERSION <= 104400
 	if(!PHYSFS_setWriteDir(_dir.native_file_string().c_str()))
+#else
+	if (!PHYSFS_setWriteDir(_dir.string().c_str()))
+#endif
 	{
 		LOG("PhysFS: Error Setting Write Directory: " << PHYSFS_getLastError());
 		return false;

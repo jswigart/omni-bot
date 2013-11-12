@@ -57,9 +57,7 @@
     <ClCompile Include="..\..\..\RTCW\RTCW_FilterClosest.cpp">
       <Filter>Core\Filters</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\GameInterfaces\RTCW\src\game\g_rtcwbot_interface.cpp">
-      <Filter>_Interface</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\..\..\GameInterfaces\RTCW\MP\WolfMP-Source\src\game\g_rtcwbot_interface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\Common\Common.rc">
