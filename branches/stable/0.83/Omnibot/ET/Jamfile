@@ -14,6 +14,6 @@ alias common_lib : ..//Common : <link>static ;
 
 # Compile ALL .cpp files and link to Common.lib to create our dll
 
-SOURCES = [ glob ET_BatchBuild.cpp ] ..//boost_fs ..//boost_regx ..//boost_th ..//boost_dt ..//boost_sys common_lib ;
+SOURCES = [ glob ET_BatchBuild.cpp ] ..//boost_fs ..//boost_regx ..//boost_dt ..//boost_sys common_lib ;
 
-lib omnibot_et : $(SOURCES) : <toolset>gcc:<cflags>-w <cflags>-pthread <linkflags>-pthread <cflags>-ffriend-injection <cflags>-fno-strict-aliasing <linkflags>-lrt ;
+lib omnibot_et : $(SOURCES) : <toolset>gcc:<cflags>-w <cflags>-ffriend-injection <cflags>-fno-strict-aliasing <linkflags>-lrt ;
