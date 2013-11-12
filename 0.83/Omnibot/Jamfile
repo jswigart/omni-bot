@@ -33,15 +33,15 @@ project Omnibot
 # define external libs
 lib boost_filesystem : : <variant>release <file>$(BOOST)/lib/libboost_filesystem-gcc41-mt-1_44.a ;
 lib boost_regex : : <variant>release <file>$(BOOST)/lib/libboost_regex-gcc41-mt-1_44.a ;
-lib boost_thread : : <variant>release <file>$(BOOST)/lib/libboost_thread-gcc41-mt-1_44.a ;
-lib boost_datetime : : <variant>release <file>$(BOOST)/lib/libboost_date_time-gcc41-mt-1_44.a ;
+#lib boost_thread : : <variant>release <file>$(BOOST)/lib/libboost_thread-gcc41-mt-1_44.a ;
+lib boost_date_time : : <variant>release <file>$(BOOST)/lib/libboost_date_time-gcc41-mt-1_44.a ;
 lib boost_system : : <variant>release <file>$(BOOST)/lib/libboost_system-gcc41-mt-1_44.a ;
 
 # define aliases for convenience and to force static linking
 alias boost_fs : boost_filesystem : <link>static ;
 alias boost_regx : boost_regex : <link>static ;
-alias boost_th : boost_thread : <link>static ;
-alias boost_dt : boost_datetime : <link>static ;
+#alias boost_th : boost_thread : <link>static ;
+alias boost_dt : boost_date_time : <link>static ;
 alias boost_sys : boost_system : <link>static ;
 
 build-project Common ; 
