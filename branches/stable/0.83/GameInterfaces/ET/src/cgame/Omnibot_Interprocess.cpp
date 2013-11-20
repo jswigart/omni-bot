@@ -1,3 +1,6 @@
+#define BOOST_NO_RVALUE_REFERENCES 1 // cs: < 1_45 vs2010 compile 'fix'
+#include <boost/interprocess/ipc/message_queue.hpp>
+
 #include "../game/q_shared.h"
 #include "Omnibot_Interprocess.h"
 #include "Omni-Bot_Types.h"
@@ -11,8 +14,6 @@ extern "C" void DrawDebugPolygon(vec3_t *verts, int _numverts, int _duration, in
 extern "C" void DrawDebugText(float *_start, const char *_msg, int _duration, int _color);
 //////////////////////////////////////////////////////////////////////////
 
-#define BOOST_NO_RVALUE_REFERENCES 1 // cs: < 1_45 vs2010 compile 'fix'
-#include <boost/interprocess/ipc/message_queue.hpp>
 using namespace boost::interprocess;
 
 extern "C" void OmnibotDisableDrawing();
