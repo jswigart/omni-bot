@@ -485,7 +485,9 @@ void ET_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 		// always call pfnChangeClass() _before_ pfnChangeTeam()!
 		// todo: send the weapon preferences as 3rd param
 		g_EngineFuncs->ChangeTeam(iGameID, cp->m_DesiredTeam, NULL);
+		if (!cp) return; //some mods can kick bot in ClientUserinfoChanged
 		g_EngineFuncs->ChangeClass(iGameID, cp->m_DesiredClass, NULL);		
+		if (!cp) return;
 
 		cp->CheckTeamEvent();
 		cp->CheckClassEvent();
