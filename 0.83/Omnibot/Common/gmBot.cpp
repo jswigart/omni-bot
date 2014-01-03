@@ -131,6 +131,9 @@ GMBIND_FUNCTION_MAP_BEGIN(gmBot)
 	GMBIND_FUNCTION( "ScriptEvent", gmfScriptEvent )
 	GMBIND_FUNCTION( "ScriptMessage", gmfScriptMessage )	
 
+	GMBIND_FUNCTION("IsCarryingFlag", gmfIsCarryingFlag)
+	GMBIND_FUNCTION("CanGrabFlag", gmfCanGrabFlag)
+
 GMBIND_FUNCTION_MAP_END();
 
 // property: Field Of View
@@ -1581,6 +1584,60 @@ int gmBot::gmfHasPowerUp(gmThread *a_thread)
 	a_thread->PushInt(0);
 	return GM_OK;
 }
+
+// function: IsCarryingFlag
+//		This functions gets whether the bot is carrying a flag.
+//
+// Parameters:
+//
+//		string - optional mapgoal name (ignored in ET and RTCW)
+//
+// Returns:
+//		int - true if the bot has the flag, false if not.
+int gmBot::gmfIsCarryingFlag(gmThread *a_thread)
+{
+	CHECK_THIS_BOT();
+
+	MapGoalPtr pGoal;
+	if (a_thread->GetNumParams() > 0)
+	{
+		GM_CHECK_STRING_PARAM(name, 0);
+		if (name)
+		{
+			pGoal = GoalManager::GetInstance()->GetGoal(name);
+			if (!pGoal) LOGWARN("Map Goal not found: " << name);
+		}
+	}
+	a_thread->PushInt(native->DoesBotHaveFlag(pGoal) ? 1 : 0);
+	return GM_OK;
+}
+
+// function: CanGrabFlag
+//		This function gets whether the bot can grab a flag.
+//
+// Parameters:
+//
+//		string - goal name (FLAG or FLAG_dropped)
+//
+// Returns:
+//		int - true if the bot can grab the flag, false if not.
+int gmBot::gmfCanGrabFlag(gmThread *a_thread)
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS(1);
+	GM_CHECK_STRING_PARAM(name, 0);
+	MapGoalPtr pGoal = GoalManager::GetInstance()->GetGoal(name);
+	if (!pGoal)
+	{
+		EngineFuncs::ConsoleMessage(va("CanGrabFlag: goal %s not found!", name));
+		LOGWARN("CanGrabFlag: goal " << name << " not found!");
+		a_thread->PushInt(0);
+	}
+	else a_thread->PushInt(native->IsFlagGrabbable(pGoal) ? 1 : 0);
+	return GM_OK;
+}
+
+
 
 // function: HasEntityFlag
 //		This functions gets whether the bot has a particular entity flag.
