@@ -62,6 +62,8 @@ public:
 	static int gmfSetRoles(gmThread *a_thread);
 	static int gmfClearRoles(gmThread *a_thread);
 	static int gmfHasRole(gmThread *a_thread);
+	static int gmfIsCarryingFlag(gmThread *a_thread);
+	static int gmfCanGrabFlag(gmThread *a_thread);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Modifiers
