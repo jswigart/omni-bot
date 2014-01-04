@@ -314,6 +314,7 @@ public:
 	obint32 GetNumUsePoints() const { return (obint32)m_LocalUsePoints.size(); }
 	void AddUsePoint(const Vector3f &_pos, bool _relative = false);
 	Vector3f GetWorldUsePoint(obint32 _index = -1);
+	Vec3 GetWorldUsePoint_Script(obint32 _index);
 	void GetAllUsePoints(Vector3List &_pv);
 
 	bool AddRoute_Script(const std::string &_start, const std::string &_end, float _weight);
