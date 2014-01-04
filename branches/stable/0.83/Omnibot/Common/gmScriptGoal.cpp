@@ -497,7 +497,6 @@ int gmScriptGoal::gmfGoto(gmThread *a_thread)
 {
 	CHECK_THIS_SGOAL();
 	GM_CHECK_NUM_PARAMS(1);
-	GM_CHECK_VECTOR_PARAM(v,0);
 	GM_FLOAT_OR_INT_PARAM(r,1,32.f);
 	GM_TABLE_PARAM(Options,2,NULL);
 
@@ -510,7 +509,42 @@ int gmScriptGoal::gmfGoto(gmThread *a_thread)
 		opn.FromTable(a_thread->GetMachine(),Options);
 	}
 
-	if(native->Goto(Vector3f(v.x,v.y,v.z), opn))
+	bool success; 
+
+	switch (a_thread->ParamType(0))
+	{
+	case GM_VEC3:
+	{
+		Vec3 v = ConvertVec3(a_thread->Param(0).m_value.m_vec3);
+		success = native->Goto(Vector3f(v.x, v.y, v.z), opn);
+		break;
+	}
+	case GM_TABLE:
+	{
+		gmTableObject *typesTable = a_thread->ParamTable(0);
+		Vector3List list;
+		list.reserve(typesTable->Count());
+		gmTableIterator tIt;
+		for (gmTableNode *pNode = typesTable->GetFirst(tIt); pNode; pNode = typesTable->GetNext(tIt))
+		{
+			if (pNode->m_value.m_type != GM_VEC3)
+			{
+				GM_EXCEPTION_MSG("expecting param 1 as table of vectors, got %s", a_thread->GetMachine()->GetTypeName(pNode->m_value.m_type));
+				return GM_EXCEPTION;
+			}
+			Vector3f v;
+			pNode->m_value.GetVector(v.x, v.y, v.z);
+			list.push_back(v);
+		}
+		success = native->Goto(list, opn);
+		break;
+	}
+	default:
+		GM_EXCEPTION_MSG("expecting param 1 as vector or table, got %s", a_thread->ParamTypeName(0));
+		return GM_EXCEPTION;
+	}
+
+	if(success)
 	{
 		gmVariable blocks[2] = { gmVariable(PATH_SUCCESS), gmVariable(PATH_FAILED) };
 		int res = a_thread->GetMachine()->Sys_Block(a_thread, 2, blocks);

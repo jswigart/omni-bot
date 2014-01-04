@@ -229,6 +229,16 @@ namespace AiState
 		return false;
 	}
 
+	bool ScriptGoal::Goto(const Vector3List &_vectors, const MoveOptions &options)
+	{
+		m_SkipLastWp = false;
+		m_MinRadius = options.Radius;
+
+		SetSourceThread(options.ThreadId);
+		FINDSTATE(fp, FollowPath, GetRootState());
+		return fp && fp->Goto(this, _vectors, options.Radius, options.Mode);
+	}
+
 	bool ScriptGoal::GotoRandom(const MoveOptions &options)
 	{
 		m_SkipLastWp = false;

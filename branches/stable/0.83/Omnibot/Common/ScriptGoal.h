@@ -80,6 +80,7 @@ namespace AiState
 
 		// functionality
 		bool Goto(const Vector3f &_pos, const MoveOptions &options);
+		bool Goto(const Vector3List &_vectors, const MoveOptions &options);
 		bool GotoRandom(const MoveOptions &options);
 		bool RouteTo(MapGoalPtr mg, const MoveOptions &options);
 		void Stop();
