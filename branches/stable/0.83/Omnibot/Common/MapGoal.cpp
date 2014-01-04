@@ -1260,7 +1260,7 @@ void MapGoal::SetPriorityForClass(int _teamid, int _classId, obReal _priority)
 		_classId = -1;
 
 	//////////////////////////////////////////////////////////////////////////
-	for(int t = 1; t < ClassPriority::MaxTeams; ++t)
+	for(int t = 1; t <= ClassPriority::MaxTeams; ++t)
 	{
 		for(int c = 1; c < ClassPriority::MaxClasses; ++c)
 		{
@@ -1287,7 +1287,7 @@ obReal MapGoal::GetPriorityForClient(Client *_client)
 
 obReal MapGoal::GetPriorityForClass(int _teamid, int _classId)
 {
-	if(_teamid>0 && _teamid<ClassPriority::MaxTeams &&
+	if(_teamid>0 && _teamid<=ClassPriority::MaxTeams &&
 		_classId>0 && _classId<ClassPriority::MaxClasses)
 	{
 		float classPrio = m_ClassPriority.Priorities[_teamid-1][_classId-1];
