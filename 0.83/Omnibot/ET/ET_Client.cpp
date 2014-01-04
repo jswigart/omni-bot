@@ -392,6 +392,11 @@ bool ET_Client::IsFlagGrabbable(MapGoalPtr _mapgoal)
 	return InterfaceFuncs::ItemCanBeGrabbed(this, _mapgoal->GetEntity());
 }
 
+bool ET_Client::IsItemGrabbable(GameEntity _ent)
+{
+	return InterfaceFuncs::ItemCanBeGrabbed(this, _ent);
+}
+
 bool ET_Client::CanBotSnipe() 
 {
 	// Make sure we have a sniping weapon.
