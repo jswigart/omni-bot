@@ -41,7 +41,7 @@ namespace EngineFuncs
 };
 
 namespace Constants {
-	enum Internal { MAX_PLAYERS = 64, MAX_ENTITIES = 4096 };
+	enum Internal { MAX_PLAYERS = 64, MAX_ENTITIES = 4096, MAX_TEAMS = 4 };
 }
 
 #endif

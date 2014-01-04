@@ -181,6 +181,8 @@ void MapGoal::_Init()
 	for(int i = 0; i < NUM_TRACK_CATS; ++i)
 		m_MaxUsers[i] = 10000;
 
+	memset(&m_CurrentUsers, 0, sizeof(m_CurrentUsers));
+
 	ResetGoalPriorities();
 
 	m_RoleMask = BitFlag32(0);
@@ -1537,6 +1539,15 @@ bool MapGoal::GetProperty(const char *_name, Seconds &_var)
 
 bool MapGoal::SaveToTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_savetable, ErrorObj &_err)
 {
+#if 0
+	const char *name = GetName().c_str();
+	for(const char *s = name; *s; s++)
+	{
+		char ch = *s;
+		if(ch=='{' || ch=='}') return false; //tank on ludendorff bridge
+	}
+#endif
+
 	gmGCRoot<gmTableObject> GoalTable(_machine->AllocTableObject(),_machine);
 
 	if(m_SerializeFunc)
@@ -1901,9 +1912,9 @@ void MapGoal::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 	newSnapShot.Sync( "sizey", worldbounds.Extent[ 1 ], localBuffer );
 	newSnapShot.Sync( "sizez", worldbounds.Extent[ 2 ], localBuffer );
 	newSnapShot.Sync( "defaultPriority", GetDefaultPriority(), localBuffer );	
-	newSnapShot.Sync( "usersInProgress", GetCurrentUsers( MapGoal::TRACK_INPROGRESS ), localBuffer );
+	newSnapShot.Sync( "usersInProgress", GetCurrentUsers(MapGoal::TRACK_INPROGRESS, 1) + GetCurrentUsers(MapGoal::TRACK_INPROGRESS, 2), localBuffer);
 	newSnapShot.Sync( "maxUsersInProgress", GetMaxUsers( MapGoal::TRACK_INPROGRESS ), localBuffer );
-	newSnapShot.Sync( "usersInUse", GetCurrentUsers( MapGoal::TRACK_INUSE ), localBuffer );
+	newSnapShot.Sync( "usersInUse", GetCurrentUsers(MapGoal::TRACK_INUSE, 1) + GetCurrentUsers(MapGoal::TRACK_INUSE, 2), localBuffer);
 	newSnapShot.Sync( "maxUsersInUse", GetMaxUsers( MapGoal::TRACK_INUSE ), localBuffer );
 	newSnapShot.Sync( "availableTeamMask", GetAvailableFlags().GetRawFlags(), localBuffer );
 	newSnapShot.Sync( "roleMask", GetRoleMask().GetRawFlags(), localBuffer );

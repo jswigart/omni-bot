@@ -9,8 +9,6 @@
 #ifndef __TRACKABLEPTR_H__
 #define __TRACKABLEPTR_H__
 
-#include "Trackable.h"
-
 // class: TrackablePtr
 template<class Type, int TrackType>
 class TrackablePtr
@@ -34,7 +32,7 @@ public:
 		ShPtr shPtr = m_pObject.lock();
 		if(shPtr)
 		{
-			shPtr->DelReference(m_TrackType); 
+			shPtr->DelReference(m_TrackType, m_Team);
 		}			
 	}
 
@@ -43,7 +41,7 @@ public:
 	///////////////////////////	
 
 	// Assigning a shared pointer
-	inline TrackPtr& operator=(ShPtr &_obj)
+	inline void Set(ShPtr &_obj, int _team)
 	{
 		// Release the obj if necessary to decrement the reference counter.
 		if(!m_pObject.expired())
@@ -52,16 +50,17 @@ public:
 
 			// assigning the same thing!
 			if(shPtr == _obj)
-				return *this;
+				return;
 
 			if(shPtr)
 			{
-				shPtr->DelReference(m_TrackType); 
+				shPtr->DelReference(m_TrackType, m_Team);
 			}
 		}		
 				
 		// Assign the new object
 		m_pObject = _obj;
+		m_Team = _team;
 		
 		// Addref to increment the new objects reference counter.
 		if(!m_pObject.expired())
@@ -69,35 +68,34 @@ public:
 			ShPtr shPtr = m_pObject.lock();
 			if(shPtr)
 			{
-				shPtr->AddReference(m_TrackType); 
+				shPtr->AddReference(m_TrackType, _team);
 			}
 		}	
-		return *this;
 	}
 	// Assigning a shared pointer
-	inline Type& operator=(WPtr &_obj)
+	inline void Set(WPtr &_obj, int _team)
 	{
 		// assigning the same thing!
 		if(m_pObject == _obj)
-			return *this;
+			return;
 
 		// Release the obj if necessary to decrement the reference counter.
 		ShPtr shPtr = m_pObject.lock();
 		if(shPtr)
 		{
-			shPtr->DelReference(m_TrackType); 
+			shPtr->DelReference(m_TrackType, m_Team);
 		}
 
 		// Assign the new object
 		m_pObject = _obj;
+		m_Team = _team;
 
 		// Addref to increment the new objects reference counter.
 		ShPtr shPtr2 = m_pObject.lock();
 		if(shPtr2)
 		{
-			shPtr2->AddReference(m_TrackType); 
+			shPtr2->AddReference(m_TrackType, _team);
 		}
-		return *m_pObject;
 	}
 	// comparison
 	inline bool operator==(ShPtr &_obj)
@@ -116,7 +114,7 @@ public:
 		ShPtr shPtr = m_pObject.lock();
 		if(shPtr)
 		{
-			shPtr->DelReference(m_TrackType); 
+			shPtr->DelReference(m_TrackType, m_Team);
 		}
 
 		// Clear the reference.
@@ -151,6 +149,7 @@ public:
 private:
 	WPtr	m_pObject;
 	int		m_TrackType;
+	int		m_Team;
 };
 
 #endif

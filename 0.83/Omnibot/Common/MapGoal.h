@@ -24,9 +24,9 @@ class gmUserObject;
 // class: MapGoal
 //		removed from the triggermanager slots.
 #ifdef ENABLE_DEBUG_WINDOW
-class MapGoal : public Trackable, public PropertyBinding, public gcn::ActionListener
+class MapGoal : public PropertyBinding, public gcn::ActionListener
 #else
-class MapGoal : public Trackable, public PropertyBinding
+class MapGoal : public PropertyBinding
 #endif
 {
 public:
@@ -266,16 +266,33 @@ public:
 	//		Gets the navigation flags for this goal
 	inline NavFlags GetFlags() const { return m_NavFlags; } // deprecated
 
-	inline obint32 GetSlotsOpen(TrackingCat _cat)
+
+	inline void AddReference(int _cat, int _team)
 	{
-		obint32 curUsers = GetCurrentUsers(_cat);
+		OBASSERT(_team > 0 && _team <= Constants::MAX_TEAMS, "Invalid team");
+		m_CurrentUsers[_cat][_team - 1]++;
+	}
+	inline void DelReference(int _cat, int _team)
+	{
+		OBASSERT(_team > 0 && _team <= Constants::MAX_TEAMS, "Invalid team");
+		OBASSERT(m_CurrentUsers[_cat][_team - 1] > 0, "Counter got below 0!");
+		m_CurrentUsers[_cat][_team - 1]--;
+	}
+
+	inline obint32 GetSlotsOpen(TrackingCat _cat, int _team)
+	{
+		obint32 curUsers = GetCurrentUsers(_cat, _team);
 		return GetMaxUsers(_cat) - curUsers;
 	}
 
-	inline obint32 GetCurrentUsers(TrackingCat _cat)
+	inline obint32 GetCurrentUsers(TrackingCat _cat, int _team)
 	{
 		OBASSERT(_cat < NUM_TRACK_CATS, "Invalid Tracking Category");
-		return GetRefCount(_cat);
+		OBASSERT(_team > 0 && _team <= Constants::MAX_TEAMS, "Invalid team");
+		if (_cat < NUM_TRACK_CATS && _team > 0) {
+			return m_CurrentUsers[_cat][_team - 1];
+		}
+		return 0;
 	}
 
 	inline void SetMaxUsers(TrackingCat _cat, obint32 _val)
@@ -431,6 +448,7 @@ private:
 	float			m_MinRadius;
 
 	obint32			m_MaxUsers[NUM_TRACK_CATS];
+	obint32			m_CurrentUsers[NUM_TRACK_CATS][Constants::MAX_TEAMS];
 
 	obint32			m_SerialNum;
 

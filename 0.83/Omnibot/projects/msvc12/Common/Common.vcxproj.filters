@@ -321,9 +321,6 @@
     <ClCompile Include="..\..\..\Common\gmUtilityLib.cpp">
       <Filter>Core\Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\gmWeapon.cpp">
-      <Filter>Core\Scripting</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\ScriptManager.cpp">
       <Filter>Core\Scripting</Filter>
     </ClCompile>
@@ -867,9 +864,6 @@
     <ClCompile Include="..\..\..\Common\Timer.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\Trackable.cpp">
-      <Filter>Miscellaneous</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\Trajectory.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
@@ -1086,9 +1080,6 @@
       <Filter>Core\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\gmUtilityLib.h">
-      <Filter>Core\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\gmWeapon.h">
       <Filter>Core\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\ScriptManager.h">
@@ -1653,9 +1644,6 @@
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\Timer.h">
-      <Filter>Miscellaneous</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\Trackable.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\TrackablePtr.h">
