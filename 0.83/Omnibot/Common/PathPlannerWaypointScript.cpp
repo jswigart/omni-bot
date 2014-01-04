@@ -102,6 +102,7 @@ void SetWaypointDataInTable(gmMachine *_machine, gmTableObject *_table, const Wa
 	_table->Set(_machine, "facing", gmVariable(_waypoint->GetFacing().x, _waypoint->GetFacing().y, _waypoint->GetFacing().z));
 	_table->Set(_machine, "guid", gmVariable(_waypoint->GetUID()));
 	_table->Set(_machine, "radius", gmVariable(_waypoint->GetRadius()));
+	if (!_waypoint->GetName().empty()) _table->Set(_machine, "name", _waypoint->GetName().c_str());
 
 	gmTableObject *pFlagTable = _machine->AllocTableObject();
 
