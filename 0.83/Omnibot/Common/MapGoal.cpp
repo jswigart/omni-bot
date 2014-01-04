@@ -784,6 +784,11 @@ Vector3f MapGoal::GetWorldUsePoint(obint32 _index)
 	return GetPosition();
 }
 
+Vec3 MapGoal::GetWorldUsePoint_Script(obint32 _index)
+{
+	return Vec3(GetWorldUsePoint(_index));
+}
+
 void MapGoal::GetAllUsePoints(Vector3List &_pv)
 {
 	_pv.reserve(GetNumUsePoints());
@@ -2311,7 +2316,7 @@ void MapGoal::Bind(gmMachine *_m)
 		//.func(&MapGoal::SetProperties,	"SetProperties")
 
 		.func(gmfAddUsePoint,				"AddUsePoint","Adds a 'use' point to the goal.")
-		.func(&MapGoal::GetWorldUsePoint,	"GetUsePoint","Gets a use point in world space, by index.")
+		.func(&MapGoal::GetWorldUsePoint_Script, "GetUsePoint", "Gets a use point in world space, by index.")
 		.func(&MapGoal::GetNumUsePoints,	"GetNumUsePoint","Gets the number of use points currently defined.")
 
 		.func(gmfSetRoles,					"SetRoles","Sets the roles that are allowed to use this goal.")
