@@ -238,6 +238,7 @@ public:
 
 	virtual bool DoesBotHaveFlag(MapGoalPtr _mapgoal) = 0;
 	virtual bool IsFlagGrabbable(MapGoalPtr _mapgoal) { return true; }
+	virtual bool IsItemGrabbable(GameEntity _ent) { return false; }
 
 	virtual bool CanBotSnipe() { return false; }
 	virtual bool GetSniperWeapon(int &nonscoped, int &scoped) { nonscoped=0; scoped=0; return false; }

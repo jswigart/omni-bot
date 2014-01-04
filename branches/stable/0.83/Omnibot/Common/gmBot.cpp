@@ -133,6 +133,7 @@ GMBIND_FUNCTION_MAP_BEGIN(gmBot)
 
 	GMBIND_FUNCTION("IsCarryingFlag", gmfIsCarryingFlag)
 	GMBIND_FUNCTION("CanGrabFlag", gmfCanGrabFlag)
+	GMBIND_FUNCTION("CanGrabItem", gmfCanGrabItem)
 
 GMBIND_FUNCTION_MAP_END();
 
@@ -1637,6 +1638,27 @@ int gmBot::gmfCanGrabFlag(gmThread *a_thread)
 	return GM_OK;
 }
 
+// function: CanGrabItem
+//		This function gets whether the bot can grab an entity.
+//
+// Parameters:
+//
+//		GameEntity
+//
+// Returns:
+//		int - true if the bot can grab the entity, false if not.
+int gmBot::gmfCanGrabItem(gmThread *a_thread)
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS(1);
+
+	GameEntity gameEnt;
+	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
+	OBASSERT(gameEnt.IsValid(), "Bad Entity");
+
+	a_thread->PushInt(native->IsItemGrabbable(gameEnt) ? 1 : 0);
+	return GM_OK;
+}
 
 
 // function: HasEntityFlag
