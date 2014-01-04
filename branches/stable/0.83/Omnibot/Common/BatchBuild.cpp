@@ -51,7 +51,6 @@
 #include "ResponseCurve.cpp"
 #include "Revision.cpp"
 #include "Timer.cpp"
-#include "Trackable.cpp"
 #include "Trajectory.cpp"
 #include "TriggerManager.cpp"
 #include "Utilities.cpp"

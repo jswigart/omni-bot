@@ -335,10 +335,10 @@ bool GoalManager::Query::CheckForMatch(MapGoalPtr & mg)
 	if(m_Entity.IsValid() && mg->GetEntity() != m_Entity)
 		return false;
 
-	if(m_SkipNoInProgressSlots && mg->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+	if(m_SkipNoInProgressSlots && m_Team && mg->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, m_Team) < 1)
 		return false;
 
-	if(m_SkipNoInUseSlots && mg->GetSlotsOpen(MapGoal::TRACK_INUSE) < 1)
+	if(m_SkipNoInUseSlots && m_Team && mg->GetSlotsOpen(MapGoal::TRACK_INUSE, m_Team) < 1)
 		return false;
 
 	if(m_CheckInRadius)

@@ -98,7 +98,7 @@ namespace AiState
 
 	void PlantMine::Enter()
 	{
-		Tracker.InProgress = m_MapGoal;
+		Tracker.InProgress.Set(m_MapGoal, GetClient()->GetTeam());
 		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
 	}
 
@@ -322,7 +322,7 @@ namespace AiState
 
 	void MobileMortar::Enter()
 	{
-		Tracker.InProgress = m_MapGoal;
+		Tracker.InProgress.Set(m_MapGoal, GetClient()->GetTeam());
 		m_FireDelay = 0;
 		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
 	}
@@ -348,14 +348,14 @@ namespace AiState
 		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
 			return State_Finished;
 
-		if(!Tracker.InUse && m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE) < 1)
+		if (!Tracker.InUse && m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE, GetClient()->GetTeam()) < 1)
 			return State_Finished;
 
 		if(DidPathSucceed())
 		{
 			if(m_FireDelay == 0)
 			{
-				Tracker.InUse = m_MapGoal;
+				Tracker.InUse.Set(m_MapGoal, GetClient()->GetTeam());
 				m_FireDelay = IGame::GetTime() + 2000;
 			}
 			else if(IGame::GetTime() - m_FireDelay > 10000)
@@ -543,7 +543,7 @@ namespace AiState
 				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
 					continue;
 
-				if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+				if (qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
 					continue;
 
 				m_MapGoal = qry.m_List[i];
@@ -566,7 +566,7 @@ namespace AiState
 				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
 					continue;
 
-				if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+				if (qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
 					continue;
 
 				if(!Client::HasLineOfSightTo(vSource,qry.m_List[i]->GetPosition()))
@@ -586,7 +586,7 @@ namespace AiState
 				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
 					continue;
 
-				if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+				if (qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
 					continue;
 
 				if(!Client::HasLineOfSightTo(vSource,qry.m_List[i]->GetPosition()))
@@ -628,7 +628,7 @@ namespace AiState
 			m_WatchFilter->SetMaxDistance(100.f);
 			FINDSTATEIF(ProximityWatcher, GetRootState(), AddWatch(GetNameHash(),m_WatchFilter,false));
 		}
-		Tracker.InProgress = m_MapGoal;
+		Tracker.InProgress.Set(m_MapGoal, GetClient()->GetTeam());
 		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
 	}
 
@@ -667,7 +667,7 @@ namespace AiState
 			if(m_ExpireTime==0)
 			{
 				m_ExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(m_MinCampTime.GetMs(),m_MaxCampTime.GetMs());
-				Tracker.InUse = m_MapGoal;
+				Tracker.InUse.Set(m_MapGoal, GetClient()->GetTeam());
 			}
 			else if(IGame::GetTime() > m_ExpireTime)
 			{
@@ -823,7 +823,7 @@ namespace AiState
 			for(; mIt != qryHealth.m_List.end(); )
 			{
 				if(BlackboardIsDelayed((*mIt)->GetSerialNum()) ||
-					(*mIt)->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+					(*mIt)->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
 				{
 					mIt = qryHealth.m_List.erase(mIt);
 					continue;
@@ -860,7 +860,7 @@ namespace AiState
 			for(; mIt != qryAmmo.m_List.end(); )
 			{
 				if(BlackboardIsDelayed((*mIt)->GetSerialNum()) ||
-					(*mIt)->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+					(*mIt)->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
 				{
 					mIt = qryAmmo.m_List.erase(mIt);
 					continue;
@@ -896,7 +896,7 @@ namespace AiState
 		if(!DidPathFail())
 		{
 			m_MapGoal = m_Query.m_List[GetDestinationIndex()];
-			Tracker.InProgress = m_MapGoal;
+			Tracker.InProgress.Set(m_MapGoal, GetClient()->GetTeam());
 		}
 	}
 

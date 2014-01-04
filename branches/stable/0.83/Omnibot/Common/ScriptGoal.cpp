@@ -653,14 +653,14 @@ namespace AiState
 					if(m_AutoFinishOnNoProgressSlots)
 					{
 						if(!m_Tracker.InProgress || m_Tracker.InProgress != m_MapGoal)
-							if(m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INPROGRESS)==0)
+							if (m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) == 0)
 								return State_Finished;
 					}
 
 					if(m_AutoFinishOnNoUseSlots)
 					{
 						if(!m_Tracker.InUse || m_Tracker.InUse != m_MapGoal)
-							if(m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE)==0)
+							if (m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE, GetClient()->GetTeam()) == 0)
 								return State_Finished;
 					}
 				}
@@ -696,9 +696,9 @@ namespace AiState
 	bool ScriptGoal::MarkInProgress(MapGoalPtr _p)
 	{
 		m_Tracker.InProgress.Reset();
-		if(!_p || _p->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) > 0)
+		if (!_p || _p->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) > 0)
 		{
-			m_Tracker.InProgress = _p; 
+			m_Tracker.InProgress.Set(_p, GetClient()->GetTeam());
 			return true;
 		}
 		return false;
@@ -707,9 +707,9 @@ namespace AiState
 	bool ScriptGoal::MarkInUse(MapGoalPtr _p) 
 	{
 		m_Tracker.InUse.Reset();
-		if(!_p || _p->GetSlotsOpen(MapGoal::TRACK_INUSE) > 0)
+		if (!_p || _p->GetSlotsOpen(MapGoal::TRACK_INUSE, GetClient()->GetTeam()) > 0)
 		{
-			m_Tracker.InUse = _p; 
+			m_Tracker.InUse.Set(_p, GetClient()->GetTeam());
 			return true;
 		}
 		return false;

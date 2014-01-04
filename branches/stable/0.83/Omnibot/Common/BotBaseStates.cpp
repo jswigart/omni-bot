@@ -133,7 +133,7 @@ namespace AiState
 
 					if(!available)
 					{
-						if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+						if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
 							continue;
 
 						if(qry.m_List[i]->GetGoalState() != S_FLAG_CARRIED)
@@ -178,7 +178,7 @@ namespace AiState
 	{
 		m_LastFlagState = m_MapGoalFlag ? m_MapGoalFlag->GetGoalState() : 0;
 
-		Tracker.InProgress = m_MapGoalFlag;
+		Tracker.InProgress.Set(m_MapGoalFlag, GetClient()->GetTeam());
 		FINDSTATEIF(FollowPath,GetRootState(),Goto(this));
 	}
 
@@ -202,7 +202,7 @@ namespace AiState
 		case GettingFlag:
 			{
 				// cs: this is a hack. if too many are in progress, bail.
-				if ( m_MapGoalFlag && m_MapGoalFlag->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 0 ) {
+				if (m_MapGoalFlag && m_MapGoalFlag->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 0) {
 					BlackboardDelay(10.f, m_MapGoalFlag->GetSerialNum());
 					return State_Finished;
 				}
@@ -217,7 +217,7 @@ namespace AiState
 					{
 						return State_Finished;
 					}
-					Tracker.InUse = m_MapGoalFlag;
+					Tracker.InUse.Set(m_MapGoalFlag, GetClient()->GetTeam());
 					FINDSTATEIF(FollowPath, GetRootState(), Goto(this));
 				}
 				else
@@ -540,7 +540,7 @@ namespace AiState
 					if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
 						continue;
 
-					if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INUSE) < 1)
+					if (qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INUSE, GetClient()->GetTeam()) < 1)
 						continue;
 
 					const int iGoalState = qry.m_List[i]->GetGoalState();
@@ -568,7 +568,7 @@ namespace AiState
 
 	void ReturnTheFlag::Enter()
 	{
-		m_MapGoalProg = m_MapGoal;
+		m_MapGoalProg.Set(m_MapGoal, GetClient()->GetTeam());
 		m_LastGoalPosition = m_MapGoal->GetWorldUsePoint();
 		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, m_LastGoalPosition, m_MapGoal->GetRadius()));
 	}
