@@ -81,7 +81,8 @@ public:
 	static int gmfToWorldSpace(gmThread *a_thread);	
 	static int gmfDumpBotTable(gmThread *a_thread);
 	static int gmfDistanceTo(gmThread *a_thread);
-		
+	static int gmfGetNearestDestination(gmThread *a_thread);
+
 	//////////////////////////////////////////////////////////////////////////
 	// Actions
 	static int gmfExecCommand(gmThread *a_thread);
