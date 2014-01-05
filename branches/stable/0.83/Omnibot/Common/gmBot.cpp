@@ -133,7 +133,6 @@ GMBIND_FUNCTION_MAP_BEGIN(gmBot)
 	GMBIND_FUNCTION( "ScriptMessage", gmfScriptMessage )	
 
 	GMBIND_FUNCTION("IsCarryingFlag", gmfIsCarryingFlag)
-	GMBIND_FUNCTION("CanGrabFlag", gmfCanGrabFlag)
 	GMBIND_FUNCTION("CanGrabItem", gmfCanGrabItem)
 
 GMBIND_FUNCTION_MAP_END();
@@ -1659,30 +1658,6 @@ int gmBot::gmfIsCarryingFlag(gmThread *a_thread)
 	return GM_OK;
 }
 
-// function: CanGrabFlag
-//		This function gets whether the bot can grab a flag.
-//
-// Parameters:
-//
-//		string - goal name (FLAG or FLAG_dropped)
-//
-// Returns:
-//		int - true if the bot can grab the flag, false if not.
-int gmBot::gmfCanGrabFlag(gmThread *a_thread)
-{
-	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(1);
-	GM_CHECK_STRING_PARAM(name, 0);
-	MapGoalPtr pGoal = GoalManager::GetInstance()->GetGoal(name);
-	if (!pGoal)
-	{
-		EngineFuncs::ConsoleMessage(va("CanGrabFlag: goal %s not found!", name));
-		LOGWARN("CanGrabFlag: goal " << name << " not found!");
-		a_thread->PushInt(0);
-	}
-	else a_thread->PushInt(native->IsFlagGrabbable(pGoal) ? 1 : 0);
-	return GM_OK;
-}
 
 // function: CanGrabItem
 //		This function gets whether the bot can grab an entity.
@@ -1690,6 +1665,8 @@ int gmBot::gmfCanGrabFlag(gmThread *a_thread)
 // Parameters:
 //
 //		GameEntity
+//		OR
+//		string - goal name (FLAG or FLAG_dropped)
 //
 // Returns:
 //		int - true if the bot can grab the entity, false if not.
@@ -1698,11 +1675,26 @@ int gmBot::gmfCanGrabItem(gmThread *a_thread)
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(1);
 
-	GameEntity gameEnt;
-	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
-	OBASSERT(gameEnt.IsValid(), "Bad Entity");
-
-	a_thread->PushInt(native->IsItemGrabbable(gameEnt) ? 1 : 0);
+	bool result = false;
+	if (a_thread->ParamType(0) == GM_STRING)
+	{
+		GM_CHECK_STRING_PARAM(name, 0);
+		MapGoalPtr pGoal = GoalManager::GetInstance()->GetGoal(name);
+		if (!pGoal)
+		{
+			EngineFuncs::ConsoleMessage(va("CanGrabFlag: goal %s not found!", name));
+			LOGWARN("CanGrabFlag: goal " << name << " not found!");
+		}
+		else result = native->IsFlagGrabbable(pGoal);
+	}
+	else
+	{
+		GameEntity gameEnt;
+		GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
+		OBASSERT(gameEnt.IsValid(), "Bad Entity");
+		result = native->IsItemGrabbable(gameEnt);
+	}
+	a_thread->PushInt(result ? 1 : 0);
 	return GM_OK;
 }
 
