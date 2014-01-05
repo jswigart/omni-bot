@@ -111,6 +111,7 @@ GMBIND_FUNCTION_MAP_BEGIN(gmBot)
 	GMBIND_FUNCTION( "ToLocalSpace", gmfToLocalSpace )
 	GMBIND_FUNCTION( "ToWorldSpace", gmfToWorldSpace )
 	GMBIND_FUNCTION( "DistanceTo", gmfDistanceTo )
+	GMBIND_FUNCTION( "GetNearestDestination", gmfGetNearestDestination )
 
 	GMBIND_FUNCTION( "DumpBotTable", gmfDumpBotTable )	
 
@@ -1263,6 +1264,49 @@ int gmBot::gmfDistanceTo(gmThread *a_thread)
 	return GM_OK;
 }
 
+// function: GetNearestDestination
+//		Finds the nearest position from table of positions
+//
+// Parameters:
+//
+//		table of vectors
+//
+// Returns:
+//		index of the nearest destination, or null if path not found
+
+int gmBot::gmfGetNearestDestination(gmThread *a_thread)
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS(1);
+	GM_CHECK_TABLE_PARAM(table, 0);
+
+	DestinationVector list;
+	list.reserve(table->Count());
+	gmTableIterator tIt;
+	gmTableNode *pNode;
+	for (pNode = table->GetFirst(tIt); pNode; pNode = table->GetNext(tIt))
+	{
+		if (pNode->m_value.m_type != GM_VEC3)
+		{
+			GM_EXCEPTION_MSG("expecting param 1 as table of vectors, got %s", a_thread->GetMachine()->GetTypeName(pNode->m_value.m_type));
+			return GM_EXCEPTION;
+		}
+		Vector3f v;
+		pNode->m_value.GetVector(v.x, v.y, v.z);
+		list.push_back(Destination(v, 0));
+	}
+
+	PathPlannerBase *pPathPlanner = IGameManager::GetInstance()->GetNavSystem();
+	int index = pPathPlanner->PlanPathToNearest(native, native->GetPosition(), list, native->GetTeamFlag());
+	if (!pPathPlanner->FoundGoal()) a_thread->PushNull();
+	else
+	{
+		for (pNode = table->GetFirst(tIt); index > 0; pNode = table->GetNext(tIt)) index--;
+		a_thread->Push(pNode->m_key);
+	}
+	return GM_OK;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Weapon System Functions
 
@@ -1529,6 +1573,7 @@ int gmBot::gmfGetMostDesiredAmmo(gmThread *a_thread)
 // Parameters:
 //
 //		int - ammo Id to check. Use values from the global AMMO table.
+//		int - optional amount
 //		- OR - 
 //		None - uses the current weapon.
 //
@@ -1539,10 +1584,11 @@ int gmBot::gmfHasAmmo(gmThread *a_thread)
 	CHECK_THIS_BOT();
 
 	bool bHasAmmo = false;
-	if(a_thread->GetNumParams() == 1)
+	if (a_thread->GetNumParams() == 1 || a_thread->GetNumParams() == 2)
 	{
 		GM_CHECK_INT_PARAM(ammotype, 0);
-		bHasAmmo = native->GetWeaponSystem()->HasAmmo(ammotype, Primary);
+		GM_INT_PARAM(amount, 1, 0);
+		bHasAmmo = native->GetWeaponSystem()->HasAmmo(ammotype, Primary, amount);
 	}
 	else if(a_thread->GetNumParams() == 0)
 	{
@@ -1551,7 +1597,7 @@ int gmBot::gmfHasAmmo(gmThread *a_thread)
 	else
 	{
 		// Didn't match one of the overloads
-		GM_EXCEPTION_MSG("Expected 0 or 1 parameters");
+		GM_EXCEPTION_MSG("Expected 0 or 1 or 2 parameters");
 		return GM_EXCEPTION;
 	}
 	a_thread->PushInt(bHasAmmo ? 1 : 0);
@@ -2004,6 +2050,7 @@ int gmBot::gmfCanSnipe(gmThread *a_thread)
 	a_thread->PushInt(native->CanBotSnipe() ? 1 : 0);
 	return GM_OK;
 }
+
 
 //////////////////////////////////////////////////////////////////////////
 
