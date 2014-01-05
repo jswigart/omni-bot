@@ -2043,11 +2043,16 @@ void Utils::KeyValsToTable(const KeyVals &_kv, gmGCRoot<gmTableObject> _tbl, gmM
 
 bool Utils::ConvertString(const String &_str, int &_var)
 {
-	errno=0;
+	errno = 0;
 	char *endPtr;
 	const char *startPtr = _str.c_str();
-	_var = (int)strtol(startPtr, &endPtr, 10);
-	return endPtr!=startPtr && !*endPtr && errno!=ERANGE;
+	int i = (int)strtol(startPtr, &endPtr, 10);
+	if (endPtr != startPtr && !*endPtr && errno != ERANGE)
+	{
+		_var = i;
+		return true;
+	}
+	return false;
 }
 
 bool Utils::ConvertString(const String &_str, float &_var)
@@ -2056,8 +2061,12 @@ bool Utils::ConvertString(const String &_str, float &_var)
 	char *endPtr;
 	const char *startPtr = _str.c_str();
 	double d = strtod(startPtr, &endPtr);
-	_var = (float)d;
-	return endPtr!=startPtr && !*endPtr && errno!=ERANGE && abs(d)<=GM_MAX_FLOAT32;
+	if (endPtr!=startPtr && !*endPtr && errno!=ERANGE && abs(d)<=GM_MAX_FLOAT32)
+	{
+		_var = (float)d;
+		return true;
+	}
+	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////
