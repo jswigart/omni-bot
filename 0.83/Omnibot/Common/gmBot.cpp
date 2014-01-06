@@ -54,7 +54,9 @@ GMBIND_FUNCTION_MAP_BEGIN(gmBot)
 	GMBIND_FUNCTION( "GetStat", gmfGetStat )
 	GMBIND_FUNCTION( "GetVelocity", gmfGetVelocity )
 	GMBIND_FUNCTION( "GetAllType", gmfGetAllType )
-	GMBIND_FUNCTION( "GetNearest", gmfGetNearest )
+	GMBIND_FUNCTION( "GetAllAlly", gmfGetAllAlly )
+	GMBIND_FUNCTION( "GetAllEnemy", gmfGetAllEnemy )
+	GMBIND_FUNCTION( "GetNearest", gmfGetNearest)
 	GMBIND_FUNCTION( "GetNearestAlly", gmfGetNearestAlly )
 	GMBIND_FUNCTION( "GetNearestEnemy", gmfGetNearestEnemy )
 	GMBIND_FUNCTION( "GetTarget", gmfGetTarget )
@@ -132,8 +134,8 @@ GMBIND_FUNCTION_MAP_BEGIN(gmBot)
 	GMBIND_FUNCTION( "ScriptEvent", gmfScriptEvent )
 	GMBIND_FUNCTION( "ScriptMessage", gmfScriptMessage )	
 
-	GMBIND_FUNCTION("IsCarryingFlag", gmfIsCarryingFlag)
-	GMBIND_FUNCTION("CanGrabItem", gmfCanGrabItem)
+	GMBIND_FUNCTION( "IsCarryingFlag", gmfIsCarryingFlag )
+	GMBIND_FUNCTION( "CanGrabItem", gmfCanGrabItem )
 
 GMBIND_FUNCTION_MAP_END();
 
@@ -713,8 +715,8 @@ int gmBot::gmfGetNearestAlly(gmThread *a_thread)
 //		table - where to put the results
 //
 // Returns:
-//		none
-int gmBot::gmfGetAllType(gmThread *a_thread)
+//		int - count
+static int gmfGetAllAllyOrEnemy(gmThread *a_thread, SensoryMemory::Type _type)
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(3);
@@ -727,23 +729,39 @@ int gmBot::gmfGetAllType(gmThread *a_thread)
 	MemoryRecords list;
 	list.reserve(16);
 
-	FilterAllType filter(native, SensoryMemory::EntAny, list);
+	FilterAllType filter(native, _type, list);
 	filter.AddClass(classID);
 	filter.AddCategory(catID);
 	sensory->QueryMemory(filter);
 	gmMachine *pMachine = a_thread->GetMachine();
 
 	DisableGCInScope gcEn(pMachine);
-	for(obuint32 i = 0; i < list.size(); ++i)
+	table->RemoveAndDeleteAll(pMachine);
+	for (obuint32 i = 0; i < list.size(); ++i)
 	{
 		const MemoryRecord *rec = sensory->GetMemoryRecord(list[i]);
 
 		gmVariable v;
 		v.SetEntity(rec->GetEntity().AsInt());
-		a_thread->Push(v);
 		table->Set(pMachine, i, v);
 	}
+	a_thread->PushInt((gmint)list.size());
 	return GM_OK;
+}
+
+int gmBot::gmfGetAllType(gmThread *a_thread)
+{
+	return gmfGetAllAllyOrEnemy(a_thread, SensoryMemory::EntAny);
+}
+
+int gmBot::gmfGetAllEnemy(gmThread *a_thread)
+{
+	return gmfGetAllAllyOrEnemy(a_thread, SensoryMemory::EntEnemy);
+}
+
+int gmBot::gmfGetAllAlly(gmThread *a_thread)
+{
+	return gmfGetAllAllyOrEnemy(a_thread, SensoryMemory::EntAlly);
 }
 
 // function: GetTarget

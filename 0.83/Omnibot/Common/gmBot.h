@@ -31,6 +31,8 @@ public:
 	static int gmfGetTeam(gmThread *a_thread);
 	static int gmfGetClassId(gmThread *a_thread);
 	static int gmfGetAllType(gmThread *a_thread);
+	static int gmfGetAllEnemy(gmThread *a_thread);
+	static int gmfGetAllAlly(gmThread *a_thread);
 	static int gmfGetNearestEnemy(gmThread *a_thread);
 	static int gmfGetNearestAlly(gmThread *a_thread);
 	static int gmfGetNearest(gmThread *a_thread);
