@@ -14,7 +14,7 @@
 #include "ET_VoiceMacros.h"
 #include "ET_FilterClosest.h"
 #include "ET_Messages.h"
-#include "ET_BaseStates.h"
+//#include "ET_BaseStates.h"
 #include "ET_Game.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -503,14 +503,17 @@ void ET_Client::SetupBehaviorTree()
 	//GetStateRoot()->AppendTo("HighLevel", new RepairMg42);
 	//GetStateRoot()->AppendTo("HighLevel", new TakeCheckPoint);
 	//GetStateRoot()->AppendTo("HighLevel", new MobileMg42);
-	GetStateRoot()->AppendTo("HighLevel", new MobileMortar);
+	//GetStateRoot()->AppendTo("HighLevel", new MobileMortar);
 	//GetStateRoot()->AppendTo("HighLevel", new ReviveTeammate);
 	//GetStateRoot()->AppendTo("HighLevel", new DefuseDynamite);
-	GetStateRoot()->AppendTo("HighLevel", new PlantMine);
-	GetStateRoot()->AppendTo("HighLevel", new CallArtillery);
-	GetStateRoot()->AppendTo("HighLevel", new UseCabinet);
+	//GetStateRoot()->AppendTo("HighLevel", new PlantMine);
+	//GetStateRoot()->AppendTo("HighLevel", new CallArtillery);
+	//GetStateRoot()->AppendTo("HighLevel", new UseCabinet);
 	//GetStateRoot()->AppendTo("HighLevel", new Flamethrower);
 	//GetStateRoot()->AppendTo("HighLevel", new Panzer);
+
+	GetStateRoot()->RemoveState("CaptureTheFlag");
+	GetStateRoot()->RemoveState("ReturnTheFlag");
 
 	//FINDSTATEIF(Flamethrower,GetStateRoot(),LimitToClass().SetFlag(ET_CLASS_SOLDIER));
 	//FINDSTATEIF(Panzer,GetStateRoot(),LimitToClass().SetFlag(ET_CLASS_SOLDIER));

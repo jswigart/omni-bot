@@ -15,161 +15,161 @@ namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////
 
-	class PlantMine : public StateChild, public FollowPathUser, public AimerUser
-	{
-	public:
+	//class PlantMine : public StateChild, public FollowPathUser, public AimerUser
+	//{
+	//public:
 
-		void GetDebugString(StringStr &out);
-		MapGoal *GetMapGoalPtr();
-		void RenderDebug();
+	//	void GetDebugString(StringStr &out);
+	//	MapGoal *GetMapGoalPtr();
+	//	void RenderDebug();
 
-		obReal GetPriority();
-		void Enter();
-		void Exit();
-		StateStatus Update(float fDt);
+	//	obReal GetPriority();
+	//	void Enter();
+	//	void Exit();
+	//	StateStatus Update(float fDt);
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+	//	void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
 
-		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+	//	// FollowPathUser functions.
+	//	bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
 
-		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
-		void OnTarget();
+	//	// AimerUser functions.
+	//	bool GetAimPosition(Vector3f &_aimpos);
+	//	void OnTarget();
 
-		PlantMine();
-	private:
+	//	PlantMine();
+	//private:
 
-		Trackers			Tracker;
-		MapGoalPtr			m_MapGoal;
+	//	Trackers			Tracker;
+	//	MapGoalPtr			m_MapGoal;
 
-		GameEntity			m_LandMineEntity;
-		Vector3f			m_LandMinePosition;
-		Vector3f			m_LandMineVelocity;
-	};
-
-	//////////////////////////////////////////////////////////////////////////
-
-	class MobileMortar : public StateChild, public FollowPathUser, public AimerUser
-	{
-	public:
-		void GetDebugString(StringStr &out);
-		MapGoal *GetMapGoalPtr();
-		void RenderDebug();
-
-		obReal GetPriority();
-		void Enter();
-		void Exit();
-		StateStatus Update(float fDt);
-
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
-
-		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
-
-		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
-		void OnTarget();
-
-		MobileMortar();
-	private:
-		enum { MaxMortarAims = 8 };
-		Vector3f			m_MortarAim[MaxMortarAims];
-		int					m_CurrentAim;
-		int					m_NumMortarAims;
-		int					m_FireDelay;
-
-		WeaponLimits		m_Limits;
-		MapGoalPtr			m_MapGoal;
-		Trackers			Tracker;
-
-		bool CacheGoalInfo(MapGoalPtr mg);
-	};
+	//	GameEntity			m_LandMineEntity;
+	//	Vector3f			m_LandMinePosition;
+	//	Vector3f			m_LandMineVelocity;
+	//};
 
 	//////////////////////////////////////////////////////////////////////////
 
-	class CallArtillery : public StateChild, public FollowPathUser, public AimerUser
-	{
-	public:
+	//class MobileMortar : public StateChild, public FollowPathUser, public AimerUser
+	//{
+	//public:
+	//	void GetDebugString(StringStr &out);
+	//	MapGoal *GetMapGoalPtr();
+	//	void RenderDebug();
 
-		void GetDebugString(StringStr &out);
-		MapGoal *GetMapGoalPtr();
-		void RenderDebug();
+	//	obReal GetPriority();
+	//	void Enter();
+	//	void Exit();
+	//	StateStatus Update(float fDt);
 
-		obReal GetPriority();
-		void Enter();
-		void Exit();
-		StateStatus Update(float fDt);
+	//	void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+	//	// FollowPathUser functions.
+	//	bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
 
-		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+	//	// AimerUser functions.
+	//	bool GetAimPosition(Vector3f &_aimpos);
+	//	void OnTarget();
 
-		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
-		void OnTarget();
+	//	MobileMortar();
+	//private:
+	//	enum { MaxMortarAims = 8 };
+	//	Vector3f			m_MortarAim[MaxMortarAims];
+	//	int					m_CurrentAim;
+	//	int					m_NumMortarAims;
+	//	int					m_FireDelay;
 
-		CallArtillery();
-	private:
-		Trackers			Tracker;
-		MapGoalPtr			m_MapGoal;
-		MapGoalPtr			m_MapGoalTarget;
-		GameEntity			m_TargetEntity;
-		int					m_FireTime;
+	//	WeaponLimits		m_Limits;
+	//	MapGoalPtr			m_MapGoal;
+	//	Trackers			Tracker;
 
-		FilterPtr			m_WatchFilter;
-
-		bool				m_Fired;
-		Seconds				m_MinCampTime;
-		Seconds				m_MaxCampTime;
-		int					m_Stance;
-
-		int					m_ExpireTime;
-	};
+	//	bool CacheGoalInfo(MapGoalPtr mg);
+	//};
 
 	//////////////////////////////////////////////////////////////////////////
 
-	class UseCabinet : public StateChild, public FollowPathUser//, public AimerUser
-	{
-	public:
-		enum CabinetType
-		{
-			Health,
-			Ammo,
-		};
+	//class CallArtillery : public StateChild, public FollowPathUser, public AimerUser
+	//{
+	//public:
 
-		void GetDebugString(StringStr &out);
-		MapGoal *GetMapGoalPtr();
-		void RenderDebug();
+	//	void GetDebugString(StringStr &out);
+	//	MapGoal *GetMapGoalPtr();
+	//	void RenderDebug();
 
-		obReal GetPriority();
-		void Enter();
-		void Exit();
-		StateStatus Update(float fDt);
+	//	obReal GetPriority();
+	//	void Enter();
+	//	void Exit();
+	//	StateStatus Update(float fDt);
 
-		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+	//	void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
 
-		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
-		void OnTarget();
+	//	// FollowPathUser functions.
+	//	bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
 
-		UseCabinet();
-	private:
-		Trackers			Tracker;
-		MapGoalPtr			m_MapGoal;
-		CabinetType			m_CabinetType;
-		int					m_AmmoType;
-		int					m_GetAmmoAmount;
-		obint32				m_UseTime;
+	//	// AimerUser functions.
+	//	bool GetAimPosition(Vector3f &_aimpos);
+	//	void OnTarget();
 
-		float				m_HealthPriority;
-		float				m_AmmoPriority;
-		float				m_Range;
+	//	CallArtillery();
+	//private:
+	//	Trackers			Tracker;
+	//	MapGoalPtr			m_MapGoal;
+	//	MapGoalPtr			m_MapGoalTarget;
+	//	GameEntity			m_TargetEntity;
+	//	int					m_FireTime;
 
-		GoalManager::Query	m_Query;
-	};
+	//	FilterPtr			m_WatchFilter;
+
+	//	bool				m_Fired;
+	//	Seconds				m_MinCampTime;
+	//	Seconds				m_MaxCampTime;
+	//	int					m_Stance;
+
+	//	int					m_ExpireTime;
+	//};
+
+	//////////////////////////////////////////////////////////////////////////
+
+	//class UseCabinet : public StateChild, public FollowPathUser//, public AimerUser
+	//{
+	//public:
+	//	enum CabinetType
+	//	{
+	//		Health,
+	//		Ammo,
+	//	};
+
+	//	void GetDebugString(StringStr &out);
+	//	MapGoal *GetMapGoalPtr();
+	//	void RenderDebug();
+
+	//	obReal GetPriority();
+	//	void Enter();
+	//	void Exit();
+	//	StateStatus Update(float fDt);
+
+	//	// FollowPathUser functions.
+	//	bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+
+	//	// AimerUser functions.
+	//	bool GetAimPosition(Vector3f &_aimpos);
+	//	void OnTarget();
+
+	//	UseCabinet();
+	//private:
+	//	Trackers			Tracker;
+	//	MapGoalPtr			m_MapGoal;
+	//	CabinetType			m_CabinetType;
+	//	int					m_AmmoType;
+	//	int					m_GetAmmoAmount;
+	//	obint32				m_UseTime;
+
+	//	float				m_HealthPriority;
+	//	float				m_AmmoPriority;
+	//	float				m_Range;
+
+	//	GoalManager::Query	m_Query;
+	//};
 
 	//////////////////////////////////////////////////////////////////////////
 
