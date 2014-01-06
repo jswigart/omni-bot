@@ -16,964 +16,964 @@ namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////
 
-	PlantMine::PlantMine()
-		: StateChild("PlantMine")
-		, FollowPathUser("PlantMine")
-	{
-		LimitToWeapon().SetFlag(ET_WP_LANDMINE);
-		SetAlwaysRecieveEvents(true);
-	}
+	//PlantMine::PlantMine()
+	//	: StateChild("PlantMine")
+	//	, FollowPathUser("PlantMine")
+	//{
+	//	LimitToWeapon().SetFlag(ET_WP_LANDMINE);
+	//	SetAlwaysRecieveEvents(true);
+	//}
 
-	void PlantMine::GetDebugString(StringStr &out)
-	{
-		out << (m_MapGoal ? m_MapGoal->GetName() : "");
-	}
+	//void PlantMine::GetDebugString(StringStr &out)
+	//{
+	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
+	//}
 
-	MapGoal *PlantMine::GetMapGoalPtr()
-	{
-		return m_MapGoal.get();
-	}
+	//MapGoal *PlantMine::GetMapGoalPtr()
+	//{
+	//	return m_MapGoal.get();
+	//}
 
-	void PlantMine::RenderDebug()
-	{
-		if(IsActive())
-		{
-			Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-			Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
-		}
-	}
+	//void PlantMine::RenderDebug()
+	//{
+	//	if(IsActive())
+	//	{
+	//		Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
+	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//	}
+	//}
 
-	// FollowPathUser functions.
-	bool PlantMine::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
-	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 32.f))
-			_final = false;
-		else 
-			_final = true;
-		return true;
-	}
+	//// FollowPathUser functions.
+	//bool PlantMine::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	//{
+	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 32.f))
+	//		_final = false;
+	//	else 
+	//		_final = true;
+	//	return true;
+	//}
 
-	// AimerUser functions.
-	bool PlantMine::GetAimPosition(Vector3f &_aimpos)
-	{
-		static float MINE_PITCH = -75.f;
-		if(!m_LandMineEntity.IsValid())
-			_aimpos = GetClient()->GetEyePosition() + Utils::ChangePitch(m_MapGoal->GetFacing(),MINE_PITCH) * 32.f;
-		else
-			_aimpos = m_LandMinePosition;
-		return true;
-	}
+	//// AimerUser functions.
+	//bool PlantMine::GetAimPosition(Vector3f &_aimpos)
+	//{
+	//	static float MINE_PITCH = -75.f;
+	//	if(!m_LandMineEntity.IsValid())
+	//		_aimpos = GetClient()->GetEyePosition() + Utils::ChangePitch(m_MapGoal->GetFacing(),MINE_PITCH) * 32.f;
+	//	else
+	//		_aimpos = m_LandMinePosition;
+	//	return true;
+	//}
 
-	void PlantMine::OnTarget()
-	{
-		FINDSTATE(ws, WeaponSystem, GetRootState());
-		if(ws)
-		{
-			if(m_LandMineEntity.IsValid() && ws->CurrentWeaponIs(ET_WP_PLIERS))
-				ws->FireWeapon();
-			else if(!m_LandMineEntity.IsValid() && ws->CurrentWeaponIs(ET_WP_LANDMINE))
-				ws->FireWeapon();
-		}
-	}
+	//void PlantMine::OnTarget()
+	//{
+	//	FINDSTATE(ws, WeaponSystem, GetRootState());
+	//	if(ws)
+	//	{
+	//		if(m_LandMineEntity.IsValid() && ws->CurrentWeaponIs(ET_WP_PLIERS))
+	//			ws->FireWeapon();
+	//		else if(!m_LandMineEntity.IsValid() && ws->CurrentWeaponIs(ET_WP_LANDMINE))
+	//			ws->FireWeapon();
+	//	}
+	//}
 
-	obReal PlantMine::GetPriority()
-	{
-		int currentMines, maxMines;
-		InterfaceFuncs::NumTeamMines(GetClient(), currentMines, maxMines);
-		if ( currentMines >= maxMines ) return 0.f;
+	//obReal PlantMine::GetPriority()
+	//{
+	//	int currentMines, maxMines;
+	//	InterfaceFuncs::NumTeamMines(GetClient(), currentMines, maxMines);
+	//	if ( currentMines >= maxMines ) return 0.f;
 
-		if(IsActive())
-			return GetLastPriority();
+	//	if(IsActive())
+	//		return GetLastPriority();
 
-		m_MapGoal.reset();
+	//	m_MapGoal.reset();
 
-		if(InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_LANDMINE, Primary)) 
-		{
-			GoalManager::Query qry(0xf2dffa59 /* PLANTMINE */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			qry.GetBest(m_MapGoal);
-		}
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
-	}
+	//	if(InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_LANDMINE, Primary)) 
+	//	{
+	//		GoalManager::Query qry(0xf2dffa59 /* PLANTMINE */, GetClient());
+	//		GoalManager::GetInstance()->GetGoals(qry);
+	//		qry.GetBest(m_MapGoal);
+	//	}
+	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//}
 
-	void PlantMine::Enter()
-	{
-		Tracker.InProgress.Set(m_MapGoal, GetClient()->GetTeam());
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
-	}
+	//void PlantMine::Enter()
+	//{
+	//	Tracker.InProgress.Set(m_MapGoal, GetClient()->GetTeam());
+	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
+	//}
 
-	void PlantMine::Exit()
-	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+	//void PlantMine::Exit()
+	//{
+	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-		m_LandMineEntity.Reset();
-		m_MapGoal.reset();
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(), ReleaseWeaponRequest(GetNameHash()));
+	//	m_LandMineEntity.Reset();
+	//	m_MapGoal.reset();
+	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
+	//	FINDSTATEIF(WeaponSystem, GetRootState(), ReleaseWeaponRequest(GetNameHash()));
 
-		Tracker.Reset();
-	}
+	//	Tracker.Reset();
+	//}
 
-	State::StateStatus PlantMine::Update(float fDt)
-	{
-		if(DidPathFail())
-		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
-			return State_Finished;
-		}
+	//State::StateStatus PlantMine::Update(float fDt)
+	//{
+	//	if(DidPathFail())
+	//	{
+	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		return State_Finished;
+	//	}
 
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
-			return State_Finished;
+	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//		return State_Finished;
 
-		// If it's not destroyable, consider it a success.
-		if (!InterfaceFuncs::IsDestroyable(GetClient(), m_MapGoal->GetEntity()))
-		{
-			return State_Finished;
-		}
+	//	// If it's not destroyable, consider it a success.
+	//	if (!InterfaceFuncs::IsDestroyable(GetClient(), m_MapGoal->GetEntity()))
+	//	{
+	//		return State_Finished;
+	//	}
 
-		if(m_LandMineEntity.IsValid() && !IGame::IsEntityValid(m_LandMineEntity))
-			return State_Finished;
+	//	if(m_LandMineEntity.IsValid() && !IGame::IsEntityValid(m_LandMineEntity))
+	//		return State_Finished;
 
-		if(DidPathSucceed())
-		{
-			GetClient()->ResetStuckTime();
+	//	if(DidPathSucceed())
+	//	{
+	//		GetClient()->ResetStuckTime();
 
-			// abort if they have a target
-			if(GetClient()->GetTargetingSystem()->HasTarget())
-				return State_Finished;
+	//		// abort if they have a target
+	//		if(GetClient()->GetTargetingSystem()->HasTarget())
+	//			return State_Finished;
 
-			static float THROW_DISTANCE = 40.f;
-			static float ARM_DISTANCE = 32.f;
+	//		static float THROW_DISTANCE = 40.f;
+	//		static float ARM_DISTANCE = 32.f;
 
-			// Have we already thrown out a mine?
-			if(m_LandMineEntity.IsValid())
-			{
-				// Is it armed yet?
-				if(InterfaceFuncs::GetExplosiveState(GetClient(), m_LandMineEntity) == XPLO_ARMED)
-				{
-					BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
-					return State_Finished;
-				}
+	//		// Have we already thrown out a mine?
+	//		if(m_LandMineEntity.IsValid())
+	//		{
+	//			// Is it armed yet?
+	//			if(InterfaceFuncs::GetExplosiveState(GetClient(), m_LandMineEntity) == XPLO_ARMED)
+	//			{
+	//				BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//				return State_Finished;
+	//			}
 
-				// Disable avoidance for this frame.
-				//m_Client->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime());
+	//			// Disable avoidance for this frame.
+	//			//m_Client->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime());
 
-				// Not armed yet, keep trying.
-				if(EngineFuncs::EntityPosition(m_LandMineEntity, m_LandMinePosition) && 
-					EngineFuncs::EntityVelocity(m_LandMineEntity, m_LandMineVelocity))
-				{
-					GetClient()->PressButton(BOT_BUTTON_CROUCH);
+	//			// Not armed yet, keep trying.
+	//			if(EngineFuncs::EntityPosition(m_LandMineEntity, m_LandMinePosition) && 
+	//				EngineFuncs::EntityVelocity(m_LandMineEntity, m_LandMineVelocity))
+	//			{
+	//				GetClient()->PressButton(BOT_BUTTON_CROUCH);
 
-					FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-					FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_PLIERS));
+	//				FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
+	//				FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_PLIERS));
 
-					// Get into position?
-					Vector3f vMineToMe = GetClient()->GetPosition() - m_LandMinePosition;
-					vMineToMe.Flatten();
+	//				// Get into position?
+	//				Vector3f vMineToMe = GetClient()->GetPosition() - m_LandMinePosition;
+	//				vMineToMe.Flatten();
 
-					/*Utils::DrawLine(m_LandMinePosition,
-						m_LandMinePosition + Normalize(vMineToMe) * ARM_DISTANCE,
-						COLOR::GREEN,
-						5.f);*/
+	//				/*Utils::DrawLine(m_LandMinePosition,
+	//					m_LandMinePosition + Normalize(vMineToMe) * ARM_DISTANCE,
+	//					COLOR::GREEN,
+	//					5.f);*/
 
-					GetClient()->GetSteeringSystem()->SetTarget(
-						m_LandMinePosition + Normalize(vMineToMe) * ARM_DISTANCE);
-				}
-				return State_Busy;
-			}
+	//				GetClient()->GetSteeringSystem()->SetTarget(
+	//					m_LandMinePosition + Normalize(vMineToMe) * ARM_DISTANCE);
+	//			}
+	//			return State_Busy;
+	//		}
 
-			// Get into position?
-			Vector3f vMineToMe = GetClient()->GetPosition() - m_MapGoal->GetPosition();
-			vMineToMe.Flatten();
+	//		// Get into position?
+	//		Vector3f vMineToMe = GetClient()->GetPosition() - m_MapGoal->GetPosition();
+	//		vMineToMe.Flatten();
 
-			/*Utils::DrawLine(m_MapGoal->GetPosition(),
-				m_MapGoal->GetPosition() + Normalize(vMineToMe) * THROW_DISTANCE,
-				COLOR::GREEN,
-				5.f);*/
+	//		/*Utils::DrawLine(m_MapGoal->GetPosition(),
+	//			m_MapGoal->GetPosition() + Normalize(vMineToMe) * THROW_DISTANCE,
+	//			COLOR::GREEN,
+	//			5.f);*/
 
-			GetClient()->GetSteeringSystem()->SetTarget(
-				m_MapGoal->GetPosition() + Normalize(vMineToMe) * THROW_DISTANCE);
+	//		GetClient()->GetSteeringSystem()->SetTarget(
+	//			m_MapGoal->GetPosition() + Normalize(vMineToMe) * THROW_DISTANCE);
 
-			// keep watching the target position.
-			// cs: make sure they are within bounds before planting
-			// TODO: FIXME: check for unreachable.
-			const float fDistanceToTarget = SquaredLength2d(m_MapGoal->GetPosition(), GetClient()->GetPosition());
-			if ( fDistanceToTarget <= 1024 ) // 32 units.
-			{
-				FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-				FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_LANDMINE));
-			}
-			else
-			{
-				GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
-			}
-		}		
-		return State_Busy;
-	}
+	//		// keep watching the target position.
+	//		// cs: make sure they are within bounds before planting
+	//		// TODO: FIXME: check for unreachable.
+	//		const float fDistanceToTarget = SquaredLength2d(m_MapGoal->GetPosition(), GetClient()->GetPosition());
+	//		if ( fDistanceToTarget <= 1024 ) // 32 units.
+	//		{
+	//			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
+	//			FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_LANDMINE));
+	//		}
+	//		else
+	//		{
+	//			GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
+	//		}
+	//	}		
+	//	return State_Busy;
+	//}
 
-	void PlantMine::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
-	{
-		switch(_message.GetMessageId())
-		{
-			HANDLER(ACTION_WEAPON_FIRE)
-			{
-				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-				if(m->m_WeaponId == ET_WP_LANDMINE && m->m_Projectile.IsValid())
-				{
-					m_LandMineEntity = m->m_Projectile;
-				}
-				break;
-			}			
-		}
-	}
-
-	//////////////////////////////////////////////////////////////////////////
-
-	MobileMortar::MobileMortar()
-		: StateChild("MobileMortar")
-		, FollowPathUser("MobileMortar")
-	{
-		LimitToWeapon().SetFlag(ET_WP_MORTAR);
-	}
-
-	void MobileMortar::GetDebugString(StringStr &out)
-	{
-		out << (m_MapGoal ? m_MapGoal->GetName() : "");
-	}
-
-	MapGoal *MobileMortar::GetMapGoalPtr()
-	{
-		return m_MapGoal.get();
-	}
-
-	void MobileMortar::RenderDebug()
-	{
-		if(IsActive())
-		{
-			Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::CYAN,5.f);
-		}
-	}
-
-	// FollowPathUser functions.
-	bool MobileMortar::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
-	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 32.f))
-			_final = false;
-		else 
-			_final = true;
-		return true;
-	}
-
-	// AimerUser functions.
-	bool MobileMortar::GetAimPosition(Vector3f &_aimpos)
-	{
-		FINDSTATE(wp,WeaponSystem,GetRootState());
-		if(wp != NULL && wp->CurrentWeaponIs(ET_WP_MORTAR_SET))
-			_aimpos = GetClient()->GetEyePosition() + m_MortarAim[m_CurrentAim] * 512.f;
-		else
-			_aimpos = GetClient()->GetEyePosition() + m_MapGoal->GetFacing() * 512.f;
-		return true;
-	}
-
-	void MobileMortar::OnTarget()
-	{
-		FINDSTATE(wp,WeaponSystem,GetRootState());
-		if(wp)
-		{
-			if(!wp->CurrentWeaponIs(ET_WP_MORTAR_SET))
-			{
-				if(wp->CurrentWeaponIs(ET_WP_MORTAR))
-					wp->AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_MORTAR_SET);
-				else
-					wp->AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_MORTAR);
-			}
-			else
-			{
-				if(IGame::GetTime() >= m_FireDelay)
-				{
-					wp->FireWeapon();
-				}
-			}
-		}
-	}
-
-	obReal MobileMortar::GetPriority()
-	{
-		int curAmmo = 0, maxAmmo = 0;
-		g_EngineFuncs->GetCurrentAmmo(GetClient()->GetGameEntity(),ET_WP_MORTAR,Primary,curAmmo,maxAmmo);
-		if(curAmmo <= 0)
-			return 0.f;
-
-		if(IsActive())
-			return GetLastPriority();
-
-		/*if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_MORTAR_SET))
-			return 0.f;*/
-
-		m_MapGoal.reset();
-
-		GoalManager::Query qry(0x74708d7a /* MOBILEMORTAR */, GetClient());
-		GoalManager::GetInstance()->GetGoals(qry);
-		if(!qry.GetBest(m_MapGoal) || !CacheGoalInfo(m_MapGoal))
-			m_MapGoal.reset();
-
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
-	}
-
-	void MobileMortar::Enter()
-	{
-		Tracker.InProgress.Set(m_MapGoal, GetClient()->GetTeam());
-		m_FireDelay = 0;
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
-	}
-
-	void MobileMortar::Exit()
-	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
-
-		m_MapGoal.reset();
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem,GetRootState(),ReleaseWeaponRequest(GetNameHash()));
-		Tracker.Reset();
-	}
-
-	State::StateStatus MobileMortar::Update(float fDt)
-	{
-		if(DidPathFail())
-		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
-			return State_Finished;
-		}
-
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
-			return State_Finished;
-
-		if (!Tracker.InUse && m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE, GetClient()->GetTeam()) < 1)
-			return State_Finished;
-
-		if(DidPathSucceed())
-		{
-			if(m_FireDelay == 0)
-			{
-				Tracker.InUse.Set(m_MapGoal, GetClient()->GetTeam());
-				m_FireDelay = IGame::GetTime() + 2000;
-			}
-			else if(IGame::GetTime() - m_FireDelay > 10000)
-			{
-				//timeout, try to shoot from current position
-				OnTarget();
-			}
-
-			// TODO: FIXME: check for unreachable.
-			const float fDistanceToTarget = SquaredLength2d(m_MapGoal->GetPosition(), GetClient()->GetPosition());
-			if ( fDistanceToTarget <= 1024 ) // 32 units.
-			{
-				FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-			}
-			else
-			{
-				GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
-			}
-		}
-		return State_Busy;
-	}
-
-	void MobileMortar::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
-	{
-		switch(_message.GetMessageId())
-		{
-			HANDLER(ACTION_WEAPON_FIRE)
-			{
-				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-				if(m != NULL && m->m_Projectile.IsValid())
-				{
-					if(InterfaceFuncs::GetEntityClass(m->m_Projectile) - ET_Game::CLASSEXoffset == ET_CLASSEX_MORTAR)
-					{
-						m_CurrentAim = (m_CurrentAim+1)%m_NumMortarAims;
-						m_FireDelay = IGame::GetTime() + 2000;
-					}
-				}
-				break;
-			}
-		}
-	}
-
-	bool MobileMortar::CacheGoalInfo(MapGoalPtr mg)
-	{
-		m_CurrentAim = 0;
-		m_NumMortarAims = 0;
-
-		for(int i = 0; i < MaxMortarAims; ++i)
-		{
-			if(m_MapGoal->GetProperty(va("MortarAim[%d]",i),m_MortarAim[m_NumMortarAims]))
-			{
-				if(!m_MortarAim[m_NumMortarAims].IsZero())
-				{
-					++m_NumMortarAims;
-				}		
-			}
-		}
-		std::random_shuffle(m_MortarAim, m_MortarAim + m_NumMortarAims);
-		return m_NumMortarAims > 0;
-	}
+	//void PlantMine::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+	//{
+	//	switch(_message.GetMessageId())
+	//	{
+	//		HANDLER(ACTION_WEAPON_FIRE)
+	//		{
+	//			const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
+	//			if(m->m_WeaponId == ET_WP_LANDMINE && m->m_Projectile.IsValid())
+	//			{
+	//				m_LandMineEntity = m->m_Projectile;
+	//			}
+	//			break;
+	//		}			
+	//	}
+	//}
 
 	//////////////////////////////////////////////////////////////////////////
 
-	CallArtillery::CallArtillery()
-		: StateChild("CallArtillery")
-		, FollowPathUser("CallArtillery")
-		, m_MinCampTime(1.f)
-		, m_MaxCampTime(2.f)
-		, m_Stance(StanceStand)
-		, m_ExpireTime(0)
-	{
-		LimitToWeapon().SetFlag(ET_WP_BINOCULARS);
-	}
+	//MobileMortar::MobileMortar()
+	//	: StateChild("MobileMortar")
+	//	, FollowPathUser("MobileMortar")
+	//{
+	//	LimitToWeapon().SetFlag(ET_WP_MORTAR);
+	//}
 
-	void CallArtillery::GetDebugString(StringStr &out)
-	{
-		out << (m_MapGoal ? m_MapGoal->GetName() : "");
-	}
+	//void MobileMortar::GetDebugString(StringStr &out)
+	//{
+	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
+	//}
 
-	MapGoal *CallArtillery::GetMapGoalPtr()
-	{
-		return m_MapGoal.get();
-	}
+	//MapGoal *MobileMortar::GetMapGoalPtr()
+	//{
+	//	return m_MapGoal.get();
+	//}
 
-	void CallArtillery::RenderDebug()
-	{
-		if(IsActive())
-		{
-			if(m_MapGoal)
-			{
-				Utils::OutlineOBB(m_MapGoal->GetWorldBounds(),COLOR::ORANGE, 5.f);
-				Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
-			}
-		}
-	}
+	//void MobileMortar::RenderDebug()
+	//{
+	//	if(IsActive())
+	//	{
+	//		Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::CYAN,5.f);
+	//	}
+	//}
 
-	// FollowPathUser functions.
-	bool CallArtillery::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
-	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
-			_final = false;
-		else 
-			_final = true;
-		return true;
-	}
+	//// FollowPathUser functions.
+	//bool MobileMortar::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	//{
+	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 32.f))
+	//		_final = false;
+	//	else 
+	//		_final = true;
+	//	return true;
+	//}
 
-	// AimerUser functions.
-	bool CallArtillery::GetAimPosition(Vector3f &_aimpos)
-	{
-		if(m_MapGoalTarget)
-		{
-			_aimpos = m_MapGoalTarget->GetPosition();
-		}
-		else if(m_TargetEntity.IsValid())
-		{
-			const float LOOKAHEAD_TIME = 5.0f;
-			const MemoryRecord *mr = GetClient()->GetSensoryMemory()->GetMemoryRecord(m_TargetEntity);
-			if(mr)
-			{
-				const Vector3f vVehicleOffset = Vector3f(0.0f, 0.0f, 32.0f);
-				_aimpos = vVehicleOffset + mr->m_TargetInfo.m_LastPosition + 
-					mr->m_TargetInfo.m_LastVelocity * LOOKAHEAD_TIME;
-				m_FireTime = IGame::GetTime() + 1000;
-			}
-		}
-		return true;
-	}
+	//// AimerUser functions.
+	//bool MobileMortar::GetAimPosition(Vector3f &_aimpos)
+	//{
+	//	FINDSTATE(wp,WeaponSystem,GetRootState());
+	//	if(wp != NULL && wp->CurrentWeaponIs(ET_WP_MORTAR_SET))
+	//		_aimpos = GetClient()->GetEyePosition() + m_MortarAim[m_CurrentAim] * 512.f;
+	//	else
+	//		_aimpos = GetClient()->GetEyePosition() + m_MapGoal->GetFacing() * 512.f;
+	//	return true;
+	//}
 
-	void CallArtillery::OnTarget()
-	{
-		FINDSTATE(ws, WeaponSystem, GetRootState());
-		if(ws != NULL && ws->CurrentWeaponIs(ET_WP_BINOCULARS))
-		{
-			GetClient()->PressButton(BOT_BUTTON_AIM);
-			if(m_FireTime < IGame::GetTime())
-			{
-				if(GetClient()->HasEntityFlag(ENT_FLAG_ZOOMING))
-				{
-					ws->FireWeapon();
-				}
-			}
-		}
-	}
+	//void MobileMortar::OnTarget()
+	//{
+	//	FINDSTATE(wp,WeaponSystem,GetRootState());
+	//	if(wp)
+	//	{
+	//		if(!wp->CurrentWeaponIs(ET_WP_MORTAR_SET))
+	//		{
+	//			if(wp->CurrentWeaponIs(ET_WP_MORTAR))
+	//				wp->AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_MORTAR_SET);
+	//			else
+	//				wp->AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_MORTAR);
+	//		}
+	//		else
+	//		{
+	//			if(IGame::GetTime() >= m_FireDelay)
+	//			{
+	//				wp->FireWeapon();
+	//			}
+	//		}
+	//	}
+	//}
 
-	obReal CallArtillery::GetPriority()
-	{
-		if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_BINOCULARS, Primary))
-			return 0.f;
+	//obReal MobileMortar::GetPriority()
+	//{
+	//	int curAmmo = 0, maxAmmo = 0;
+	//	g_EngineFuncs->GetCurrentAmmo(GetClient()->GetGameEntity(),ET_WP_MORTAR,Primary,curAmmo,maxAmmo);
+	//	if(curAmmo <= 0)
+	//		return 0.f;
 
-		if(IsActive())
-			return GetLastPriority();
+	//	if(IsActive())
+	//		return GetLastPriority();
 
-		m_MapGoal.reset();
-		m_MapGoalTarget.reset();
+	//	/*if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_MORTAR_SET))
+	//		return 0.f;*/
 
-		//////////////////////////////////////////////////////////////////////////
-		ET_FilterClosest filter(GetClient(), AiState::SensoryMemory::EntEnemy);
-		filter.AddCategory(ENT_CAT_SHOOTABLE);
-		filter.AddClass(ET_CLASSEX_VEHICLE + ET_Game::CLASSEXoffset);
-		filter.AddClass(ET_CLASSEX_VEHICLE_HVY + ET_Game::CLASSEXoffset);
-		FINDSTATE(sensory,SensoryMemory,GetRootState());
-		if(sensory)
-		{
-			sensory->QueryMemory(filter);
-			
-			if(filter.GetBestEntity().IsValid())
-			{
-				GoalManager::Query q(0xa411a092 /* MOVER */);
-				q.Ent(filter.GetBestEntity());
-				GoalManager::GetInstance()->GetGoals(q);
-				
-				if(!q.m_List.empty())
-				{
-					m_TargetEntity = filter.GetBestEntity();
-					return q.m_List.front()->GetDefaultPriority();
-				}				
-			}
-		}
-		//////////////////////////////////////////////////////////////////////////
-		{
-			GoalManager::Query qry(0x312ad48d /* CALLARTILLERY */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			for(obuint32 i = 0; i < qry.m_List.size(); ++i)
-			{
-				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
-					continue;
+	//	m_MapGoal.reset();
 
-				if (qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
-					continue;
+	//	GoalManager::Query qry(0x74708d7a /* MOBILEMORTAR */, GetClient());
+	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	if(!qry.GetBest(m_MapGoal) || !CacheGoalInfo(m_MapGoal))
+	//		m_MapGoal.reset();
 
-				m_MapGoal = qry.m_List[i];
-				break;
-			}
-		}
-		if(!m_MapGoal)
-			return 0.f;
-		//////////////////////////////////////////////////////////////////////////
-		Vector3f vSource = m_MapGoal->GetPosition();
-		//vSource = vSource + Vector3(0,0,60);
-		vSource.z = vSource.z + 60;
-		//////////////////////////////////////////////////////////////////////////
-		if(!m_MapGoalTarget)
-		{
-			GoalManager::Query qry(0xb708821b /* ARTILLERY_S */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			for(obuint32 i = 0; i < qry.m_List.size(); ++i)
-			{
-				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
-					continue;
+	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//}
 
-				if (qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
-					continue;
+	//void MobileMortar::Enter()
+	//{
+	//	Tracker.InProgress.Set(m_MapGoal, GetClient()->GetTeam());
+	//	m_FireDelay = 0;
+	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
+	//}
 
-				if(!Client::HasLineOfSightTo(vSource,qry.m_List[i]->GetPosition()))
-					continue;
+	//void MobileMortar::Exit()
+	//{
+	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-				m_MapGoalTarget = qry.m_List[i];
-				break;
-			}
-		}
-		//////////////////////////////////////////////////////////////////////////
-		if(!m_MapGoalTarget)
-		{
-			GoalManager::Query qry(0xac0870ca /* ARTILLERY_D */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			for(obuint32 i = 0; i < qry.m_List.size(); ++i)
-			{
-				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
-					continue;
+	//	m_MapGoal.reset();
+	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
+	//	FINDSTATEIF(WeaponSystem,GetRootState(),ReleaseWeaponRequest(GetNameHash()));
+	//	Tracker.Reset();
+	//}
 
-				if (qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
-					continue;
+	//State::StateStatus MobileMortar::Update(float fDt)
+	//{
+	//	if(DidPathFail())
+	//	{
+	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		return State_Finished;
+	//	}
 
-				if(!Client::HasLineOfSightTo(vSource,qry.m_List[i]->GetPosition()))
-					continue;
+	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//		return State_Finished;
 
-				m_MapGoalTarget = qry.m_List[i];
-				break;
-			}
-		}
-		return m_MapGoalTarget ? m_MapGoalTarget->GetPriorityForClient(GetClient()) : 0.f;
-	}
+	//	if (!Tracker.InUse && m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE, GetClient()->GetTeam()) < 1)
+	//		return State_Finished;
 
-	void CallArtillery::Enter()
-	{
-		if(m_MapGoalTarget && m_MapGoalTarget->GetGoalType()=="ARTILLERY_D")
-			m_FireTime = std::numeric_limits<int>::max();
-		else
-			m_FireTime = 0;			
+	//	if(DidPathSucceed())
+	//	{
+	//		if(m_FireDelay == 0)
+	//		{
+	//			Tracker.InUse.Set(m_MapGoal, GetClient()->GetTeam());
+	//			m_FireDelay = IGame::GetTime() + 2000;
+	//		}
+	//		else if(IGame::GetTime() - m_FireDelay > 10000)
+	//		{
+	//			//timeout, try to shoot from current position
+	//			OnTarget();
+	//		}
 
-		m_Fired = false;
-		m_ExpireTime = 0;
-		
-		if(m_MapGoal)
-		{
-			m_MapGoal->GetProperty("Stance",m_Stance);
-			m_MapGoal->GetProperty("MinCampTime",m_MinCampTime);
-			m_MapGoal->GetProperty("MaxCampTime",m_MaxCampTime);
-		}
+	//		// TODO: FIXME: check for unreachable.
+	//		const float fDistanceToTarget = SquaredLength2d(m_MapGoal->GetPosition(), GetClient()->GetPosition());
+	//		if ( fDistanceToTarget <= 1024 ) // 32 units.
+	//		{
+	//			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
+	//		}
+	//		else
+	//		{
+	//			GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
+	//		}
+	//	}
+	//	return State_Busy;
+	//}
 
-		if(m_MapGoalTarget)
-		{
-			if(!m_WatchFilter)
-			{
-				m_WatchFilter.reset(new ET_FilterClosest(GetClient(), AiState::SensoryMemory::EntEnemy));
-			}
-			
-			m_WatchFilter->AddClass(FilterSensory::ANYPLAYERCLASS);
-			m_WatchFilter->AddPosition(m_MapGoalTarget->GetPosition());
-			m_WatchFilter->SetMaxDistance(100.f);
-			FINDSTATEIF(ProximityWatcher, GetRootState(), AddWatch(GetNameHash(),m_WatchFilter,false));
-		}
-		Tracker.InProgress.Set(m_MapGoal, GetClient()->GetTeam());
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
-	}
+	//void MobileMortar::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+	//{
+	//	switch(_message.GetMessageId())
+	//	{
+	//		HANDLER(ACTION_WEAPON_FIRE)
+	//		{
+	//			const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
+	//			if(m != NULL && m->m_Projectile.IsValid())
+	//			{
+	//				if(InterfaceFuncs::GetEntityClass(m->m_Projectile) - ET_Game::CLASSEXoffset == ET_CLASSEX_MORTAR)
+	//				{
+	//					m_CurrentAim = (m_CurrentAim+1)%m_NumMortarAims;
+	//					m_FireDelay = IGame::GetTime() + 2000;
+	//				}
+	//			}
+	//			break;
+	//		}
+	//	}
+	//}
 
-	void CallArtillery::Exit()
-	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+	//bool MobileMortar::CacheGoalInfo(MapGoalPtr mg)
+	//{
+	//	m_CurrentAim = 0;
+	//	m_NumMortarAims = 0;
 
-		m_MapGoal.reset();
+	//	for(int i = 0; i < MaxMortarAims; ++i)
+	//	{
+	//		if(m_MapGoal->GetProperty(va("MortarAim[%d]",i),m_MortarAim[m_NumMortarAims]))
+	//		{
+	//			if(!m_MortarAim[m_NumMortarAims].IsZero())
+	//			{
+	//				++m_NumMortarAims;
+	//			}		
+	//		}
+	//	}
+	//	std::random_shuffle(m_MortarAim, m_MortarAim + m_NumMortarAims);
+	//	return m_NumMortarAims > 0;
+	//}
 
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(),ReleaseWeaponRequest(GetNameHash()));
-		FINDSTATEIF(ProximityWatcher, GetRootState(), RemoveWatch(GetNameHash()));
+	//////////////////////////////////////////////////////////////////////////
 
-		Tracker.Reset();
-	}
+	//CallArtillery::CallArtillery()
+	//	: StateChild("CallArtillery")
+	//	, FollowPathUser("CallArtillery")
+	//	, m_MinCampTime(1.f)
+	//	, m_MaxCampTime(2.f)
+	//	, m_Stance(StanceStand)
+	//	, m_ExpireTime(0)
+	//{
+	//	LimitToWeapon().SetFlag(ET_WP_BINOCULARS);
+	//}
 
-	State::StateStatus CallArtillery::Update(float fDt)
-	{
-		if(DidPathFail())
-		{
-			if(m_MapGoal)
-				BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
-			return State_Finished;
-		}
+	//void CallArtillery::GetDebugString(StringStr &out)
+	//{
+	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
+	//}
 
-		if(m_MapGoal && !m_MapGoal->IsAvailable(GetClient()->GetTeam()))
-			return State_Finished;
-		if(m_MapGoalTarget && !m_MapGoalTarget->IsAvailable(GetClient()->GetTeam()))
-			return State_Finished;
+	//MapGoal *CallArtillery::GetMapGoalPtr()
+	//{
+	//	return m_MapGoal.get();
+	//}
 
-		if(DidPathSucceed())
-		{
-			if(m_Fired)
-				return State_Finished;
+	//void CallArtillery::RenderDebug()
+	//{
+	//	if(IsActive())
+	//	{
+	//		if(m_MapGoal)
+	//		{
+	//			Utils::OutlineOBB(m_MapGoal->GetWorldBounds(),COLOR::ORANGE, 5.f);
+	//			Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//		}
+	//	}
+	//}
 
-			if(m_ExpireTime==0)
-			{
-				m_ExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(m_MinCampTime.GetMs(),m_MaxCampTime.GetMs());
-				Tracker.InUse.Set(m_MapGoal, GetClient()->GetTeam());
-			}
-			else if(IGame::GetTime() > m_ExpireTime)
-			{
-				// Delay it from being used for a while.
-				if(m_MapGoal)
-					BlackboardDelay(30.f, m_MapGoal->GetSerialNum());
-				return State_Finished;
-			}
+	//// FollowPathUser functions.
+	//bool CallArtillery::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	//{
+	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//		_final = false;
+	//	else 
+	//		_final = true;
+	//	return true;
+	//}
 
-			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-			FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_BINOCULARS));
+	//// AimerUser functions.
+	//bool CallArtillery::GetAimPosition(Vector3f &_aimpos)
+	//{
+	//	if(m_MapGoalTarget)
+	//	{
+	//		_aimpos = m_MapGoalTarget->GetPosition();
+	//	}
+	//	else if(m_TargetEntity.IsValid())
+	//	{
+	//		const float LOOKAHEAD_TIME = 5.0f;
+	//		const MemoryRecord *mr = GetClient()->GetSensoryMemory()->GetMemoryRecord(m_TargetEntity);
+	//		if(mr)
+	//		{
+	//			const Vector3f vVehicleOffset = Vector3f(0.0f, 0.0f, 32.0f);
+	//			_aimpos = vVehicleOffset + mr->m_TargetInfo.m_LastPosition + 
+	//				mr->m_TargetInfo.m_LastVelocity * LOOKAHEAD_TIME;
+	//			m_FireTime = IGame::GetTime() + 1000;
+	//		}
+	//	}
+	//	return true;
+	//}
 
-			if (m_Stance==StanceProne)
-				GetClient()->PressButton(BOT_BUTTON_PRONE);
-			else if (m_Stance==StanceCrouch)
-				GetClient()->PressButton(BOT_BUTTON_CROUCH);
-		}
-		return State_Busy;
-	}
+	//void CallArtillery::OnTarget()
+	//{
+	//	FINDSTATE(ws, WeaponSystem, GetRootState());
+	//	if(ws != NULL && ws->CurrentWeaponIs(ET_WP_BINOCULARS))
+	//	{
+	//		GetClient()->PressButton(BOT_BUTTON_AIM);
+	//		if(m_FireTime < IGame::GetTime())
+	//		{
+	//			if(GetClient()->HasEntityFlag(ENT_FLAG_ZOOMING))
+	//			{
+	//				ws->FireWeapon();
+	//			}
+	//		}
+	//	}
+	//}
 
-	void CallArtillery::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
-	{
-		switch(_message.GetMessageId())
-		{
-			HANDLER(MESSAGE_PROXIMITY_TRIGGER)
-			{
-				const AiState::Event_ProximityTrigger *m = _message.Get<AiState::Event_ProximityTrigger>();
-				if(m->m_OwnerState == GetNameHash())
-				{
-					m_FireTime = IGame::GetTime();// + 1000;
-				}
-				break;
-			}
-			HANDLER(ACTION_WEAPON_FIRE)
-			{
-				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-				if(m != NULL && m->m_WeaponId == ET_WP_BINOCULARS)
-				{
-					m_Fired = true;
-				}
-				break;
-			}
-		}
-	}
+	//obReal CallArtillery::GetPriority()
+	//{
+	//	if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_BINOCULARS, Primary))
+	//		return 0.f;
+
+	//	if(IsActive())
+	//		return GetLastPriority();
+
+	//	m_MapGoal.reset();
+	//	m_MapGoalTarget.reset();
+
+	//	//////////////////////////////////////////////////////////////////////////
+	//	ET_FilterClosest filter(GetClient(), AiState::SensoryMemory::EntEnemy);
+	//	filter.AddCategory(ENT_CAT_SHOOTABLE);
+	//	filter.AddClass(ET_CLASSEX_VEHICLE + ET_Game::CLASSEXoffset);
+	//	filter.AddClass(ET_CLASSEX_VEHICLE_HVY + ET_Game::CLASSEXoffset);
+	//	FINDSTATE(sensory,SensoryMemory,GetRootState());
+	//	if(sensory)
+	//	{
+	//		sensory->QueryMemory(filter);
+	//		
+	//		if(filter.GetBestEntity().IsValid())
+	//		{
+	//			GoalManager::Query q(0xa411a092 /* MOVER */);
+	//			q.Ent(filter.GetBestEntity());
+	//			GoalManager::GetInstance()->GetGoals(q);
+	//			
+	//			if(!q.m_List.empty())
+	//			{
+	//				m_TargetEntity = filter.GetBestEntity();
+	//				return q.m_List.front()->GetDefaultPriority();
+	//			}				
+	//		}
+	//	}
+	//	//////////////////////////////////////////////////////////////////////////
+	//	{
+	//		GoalManager::Query qry(0x312ad48d /* CALLARTILLERY */, GetClient());
+	//		GoalManager::GetInstance()->GetGoals(qry);
+	//		for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//		{
+	//			if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+	//				continue;
+
+	//			if (qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
+	//				continue;
+
+	//			m_MapGoal = qry.m_List[i];
+	//			break;
+	//		}
+	//	}
+	//	if(!m_MapGoal)
+	//		return 0.f;
+	//	//////////////////////////////////////////////////////////////////////////
+	//	Vector3f vSource = m_MapGoal->GetPosition();
+	//	//vSource = vSource + Vector3(0,0,60);
+	//	vSource.z = vSource.z + 60;
+	//	//////////////////////////////////////////////////////////////////////////
+	//	if(!m_MapGoalTarget)
+	//	{
+	//		GoalManager::Query qry(0xb708821b /* ARTILLERY_S */, GetClient());
+	//		GoalManager::GetInstance()->GetGoals(qry);
+	//		for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//		{
+	//			if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+	//				continue;
+
+	//			if (qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
+	//				continue;
+
+	//			if(!Client::HasLineOfSightTo(vSource,qry.m_List[i]->GetPosition()))
+	//				continue;
+
+	//			m_MapGoalTarget = qry.m_List[i];
+	//			break;
+	//		}
+	//	}
+	//	//////////////////////////////////////////////////////////////////////////
+	//	if(!m_MapGoalTarget)
+	//	{
+	//		GoalManager::Query qry(0xac0870ca /* ARTILLERY_D */, GetClient());
+	//		GoalManager::GetInstance()->GetGoals(qry);
+	//		for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//		{
+	//			if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+	//				continue;
+
+	//			if (qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
+	//				continue;
+
+	//			if(!Client::HasLineOfSightTo(vSource,qry.m_List[i]->GetPosition()))
+	//				continue;
+
+	//			m_MapGoalTarget = qry.m_List[i];
+	//			break;
+	//		}
+	//	}
+	//	return m_MapGoalTarget ? m_MapGoalTarget->GetPriorityForClient(GetClient()) : 0.f;
+	//}
+
+	//void CallArtillery::Enter()
+	//{
+	//	if(m_MapGoalTarget && m_MapGoalTarget->GetGoalType()=="ARTILLERY_D")
+	//		m_FireTime = std::numeric_limits<int>::max();
+	//	else
+	//		m_FireTime = 0;			
+
+	//	m_Fired = false;
+	//	m_ExpireTime = 0;
+	//	
+	//	if(m_MapGoal)
+	//	{
+	//		m_MapGoal->GetProperty("Stance",m_Stance);
+	//		m_MapGoal->GetProperty("MinCampTime",m_MinCampTime);
+	//		m_MapGoal->GetProperty("MaxCampTime",m_MaxCampTime);
+	//	}
+
+	//	if(m_MapGoalTarget)
+	//	{
+	//		if(!m_WatchFilter)
+	//		{
+	//			m_WatchFilter.reset(new ET_FilterClosest(GetClient(), AiState::SensoryMemory::EntEnemy));
+	//		}
+	//		
+	//		m_WatchFilter->AddClass(FilterSensory::ANYPLAYERCLASS);
+	//		m_WatchFilter->AddPosition(m_MapGoalTarget->GetPosition());
+	//		m_WatchFilter->SetMaxDistance(100.f);
+	//		FINDSTATEIF(ProximityWatcher, GetRootState(), AddWatch(GetNameHash(),m_WatchFilter,false));
+	//	}
+	//	Tracker.InProgress.Set(m_MapGoal, GetClient()->GetTeam());
+	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
+	//}
+
+	//void CallArtillery::Exit()
+	//{
+	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+
+	//	m_MapGoal.reset();
+
+	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
+	//	FINDSTATEIF(WeaponSystem, GetRootState(),ReleaseWeaponRequest(GetNameHash()));
+	//	FINDSTATEIF(ProximityWatcher, GetRootState(), RemoveWatch(GetNameHash()));
+
+	//	Tracker.Reset();
+	//}
+
+	//State::StateStatus CallArtillery::Update(float fDt)
+	//{
+	//	if(DidPathFail())
+	//	{
+	//		if(m_MapGoal)
+	//			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		return State_Finished;
+	//	}
+
+	//	if(m_MapGoal && !m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//		return State_Finished;
+	//	if(m_MapGoalTarget && !m_MapGoalTarget->IsAvailable(GetClient()->GetTeam()))
+	//		return State_Finished;
+
+	//	if(DidPathSucceed())
+	//	{
+	//		if(m_Fired)
+	//			return State_Finished;
+
+	//		if(m_ExpireTime==0)
+	//		{
+	//			m_ExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(m_MinCampTime.GetMs(),m_MaxCampTime.GetMs());
+	//			Tracker.InUse.Set(m_MapGoal, GetClient()->GetTeam());
+	//		}
+	//		else if(IGame::GetTime() > m_ExpireTime)
+	//		{
+	//			// Delay it from being used for a while.
+	//			if(m_MapGoal)
+	//				BlackboardDelay(30.f, m_MapGoal->GetSerialNum());
+	//			return State_Finished;
+	//		}
+
+	//		FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
+	//		FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_BINOCULARS));
+
+	//		if (m_Stance==StanceProne)
+	//			GetClient()->PressButton(BOT_BUTTON_PRONE);
+	//		else if (m_Stance==StanceCrouch)
+	//			GetClient()->PressButton(BOT_BUTTON_CROUCH);
+	//	}
+	//	return State_Busy;
+	//}
+
+	//void CallArtillery::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+	//{
+	//	switch(_message.GetMessageId())
+	//	{
+	//		HANDLER(MESSAGE_PROXIMITY_TRIGGER)
+	//		{
+	//			const AiState::Event_ProximityTrigger *m = _message.Get<AiState::Event_ProximityTrigger>();
+	//			if(m->m_OwnerState == GetNameHash())
+	//			{
+	//				m_FireTime = IGame::GetTime();// + 1000;
+	//			}
+	//			break;
+	//		}
+	//		HANDLER(ACTION_WEAPON_FIRE)
+	//		{
+	//			const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
+	//			if(m != NULL && m->m_WeaponId == ET_WP_BINOCULARS)
+	//			{
+	//				m_Fired = true;
+	//			}
+	//			break;
+	//		}
+	//	}
+	//}
 	
 	//////////////////////////////////////////////////////////////////////////
 
-	UseCabinet::UseCabinet()
-		: StateChild("UseCabinet")
-		, FollowPathUser("UseCabinet")
-		, m_Range(1250.f)
-	{
-	}
+	//UseCabinet::UseCabinet()
+	//	: StateChild("UseCabinet")
+	//	, FollowPathUser("UseCabinet")
+	//	, m_Range(1250.f)
+	//{
+	//}
 
-	void UseCabinet::GetDebugString(StringStr &out)
-	{
-		out << 
-			(m_MapGoal ? m_MapGoal->GetName() : "") <<
-			" (" << m_HealthPriority << "," << m_AmmoPriority << ")";
-	}
+	//void UseCabinet::GetDebugString(StringStr &out)
+	//{
+	//	out << 
+	//		(m_MapGoal ? m_MapGoal->GetName() : "") <<
+	//		" (" << m_HealthPriority << "," << m_AmmoPriority << ")";
+	//}
 
-	MapGoal *UseCabinet::GetMapGoalPtr()
-	{
-		return m_MapGoal.get();
-	}
+	//MapGoal *UseCabinet::GetMapGoalPtr()
+	//{
+	//	return m_MapGoal.get();
+	//}
 
-	void UseCabinet::RenderDebug()
-	{
-		if(IsActive())
-		{
-			if(m_MapGoal)
-			{
-				Utils::OutlineOBB(m_MapGoal->GetWorldBounds(),COLOR::ORANGE, 5.f);
-				Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
-			}
-		}
-	}
+	//void UseCabinet::RenderDebug()
+	//{
+	//	if(IsActive())
+	//	{
+	//		if(m_MapGoal)
+	//		{
+	//			Utils::OutlineOBB(m_MapGoal->GetWorldBounds(),COLOR::ORANGE, 5.f);
+	//			Utils::DrawLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//		}
+	//	}
+	//}
 
-	// FollowPathUser functions.
-	bool UseCabinet::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
-	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
-			_final = false;
-		else 
-			_final = true;
-		return true;
-	}
+	//// FollowPathUser functions.
+	//bool UseCabinet::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	//{
+	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//		_final = false;
+	//	else 
+	//		_final = true;
+	//	return true;
+	//}
 
-	// AimerUser functions.
-	/*bool UseHealthCabinet::GetAimPosition(Vector3f &_aimpos)
-	{
-		if(m_MapGoalTarget)
-		{
-			_aimpos = m_MapGoalTarget->GetPosition();
-		}
-		else if(m_TargetEntity.IsValid())
-		{
-			const float LOOKAHEAD_TIME = 5.0f;
-			const MemoryRecord *mr = GetClient()->GetSensoryMemory()->GetMemoryRecord(m_TargetEntity);
-			if(mr)
-			{
-				const Vector3f vVehicleOffset = Vector3f(0.0f, 0.0f, 32.0f);
-				_aimpos = vVehicleOffset + mr->m_TargetInfo.m_LastPosition + 
-					mr->m_TargetInfo.m_LastVelocity * LOOKAHEAD_TIME;
-				m_FireTime = IGame::GetTime() + 1000;
-			}
-		}
-		return true;
-	}
+	//// AimerUser functions.
+	///*bool UseHealthCabinet::GetAimPosition(Vector3f &_aimpos)
+	//{
+	//	if(m_MapGoalTarget)
+	//	{
+	//		_aimpos = m_MapGoalTarget->GetPosition();
+	//	}
+	//	else if(m_TargetEntity.IsValid())
+	//	{
+	//		const float LOOKAHEAD_TIME = 5.0f;
+	//		const MemoryRecord *mr = GetClient()->GetSensoryMemory()->GetMemoryRecord(m_TargetEntity);
+	//		if(mr)
+	//		{
+	//			const Vector3f vVehicleOffset = Vector3f(0.0f, 0.0f, 32.0f);
+	//			_aimpos = vVehicleOffset + mr->m_TargetInfo.m_LastPosition + 
+	//				mr->m_TargetInfo.m_LastVelocity * LOOKAHEAD_TIME;
+	//			m_FireTime = IGame::GetTime() + 1000;
+	//		}
+	//	}
+	//	return true;
+	//}
 
-	void UseHealthCabinet::OnTarget()
-	{
-		FINDSTATE(ws, WeaponSystem, GetRootState());
-		if(ws && ws->CurrentWeaponIs(ET_WP_BINOCULARS))
-		{
-			GetClient()->PressButton(BOT_BUTTON_AIM);
-			if(m_FireTime < IGame::GetTime())
-			{
-				if(GetClient()->HasEntityFlag(ENT_FLAG_ZOOMING))
-				{
-					ws->FireWeapon();
-				}
-			}
-		}
-	}*/
+	//void UseHealthCabinet::OnTarget()
+	//{
+	//	FINDSTATE(ws, WeaponSystem, GetRootState());
+	//	if(ws && ws->CurrentWeaponIs(ET_WP_BINOCULARS))
+	//	{
+	//		GetClient()->PressButton(BOT_BUTTON_AIM);
+	//		if(m_FireTime < IGame::GetTime())
+	//		{
+	//			if(GetClient()->HasEntityFlag(ENT_FLAG_ZOOMING))
+	//			{
+	//				ws->FireWeapon();
+	//			}
+	//		}
+	//	}
+	//}*/
 
-	obReal UseCabinet::GetPriority()
-	{
-		if(IsActive())
-			return GetLastPriority();
+	//obReal UseCabinet::GetPriority()
+	//{
+	//	if(IsActive())
+	//		return GetLastPriority();
 
-		m_HealthPriority = 0.f;
-		m_AmmoPriority = 0.f;
+	//	m_HealthPriority = 0.f;
+	//	m_AmmoPriority = 0.f;
 
-		const float fHealthPc = GetClient()->GetHealthPercent();
-		const float fHealthPcInv = ClampT(1.f - fHealthPc,0.f,1.f);
-		const float fHealthPriority = fHealthPcInv;
-		const float fAmmoPriority = GetClient()->GetWeaponSystem()->GetMostDesiredAmmo(m_AmmoType,m_GetAmmoAmount);
+	//	const float fHealthPc = GetClient()->GetHealthPercent();
+	//	const float fHealthPcInv = ClampT(1.f - fHealthPc,0.f,1.f);
+	//	const float fHealthPriority = fHealthPcInv;
+	//	const float fAmmoPriority = GetClient()->GetWeaponSystem()->GetMostDesiredAmmo(m_AmmoType,m_GetAmmoAmount);
 
-		m_MapGoal.reset();
+	//	m_MapGoal.reset();
 
-		//MapGoalPtr mgHealth;
-		//MapGoalPtr mgAmmo;
+	//	//MapGoalPtr mgHealth;
+	//	//MapGoalPtr mgAmmo;
 
-		// don't bother if desire for health is too low
-		if(fHealthPriority > 0.7f)
-		{
-			GoalManager::Query qryHealth(0x63217fa7 /* HEALTHCAB */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qryHealth);
-			float fDistToHealthCabinet;
+	//	// don't bother if desire for health is too low
+	//	if(fHealthPriority > 0.7f)
+	//	{
+	//		GoalManager::Query qryHealth(0x63217fa7 /* HEALTHCAB */, GetClient());
+	//		GoalManager::GetInstance()->GetGoals(qryHealth);
+	//		float fDistToHealthCabinet;
 
-			MapGoalList::iterator mIt = qryHealth.m_List.begin();
-			for(; mIt != qryHealth.m_List.end(); )
-			{
-				if(BlackboardIsDelayed((*mIt)->GetSerialNum()) ||
-					(*mIt)->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
-				{
-					mIt = qryHealth.m_List.erase(mIt);
-					continue;
-				}
+	//		MapGoalList::iterator mIt = qryHealth.m_List.begin();
+	//		for(; mIt != qryHealth.m_List.end(); )
+	//		{
+	//			if(BlackboardIsDelayed((*mIt)->GetSerialNum()) ||
+	//				(*mIt)->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
+	//			{
+	//				mIt = qryHealth.m_List.erase(mIt);
+	//				continue;
+	//			}
 
-				fDistToHealthCabinet = SquaredLength2d((*mIt)->GetPosition(), GetClient()->GetPosition());
-				(*mIt)->GetProperty("Range",m_Range);
-				if ( fDistToHealthCabinet > m_Range * m_Range )
-				{
-					mIt = qryHealth.m_List.erase(mIt);
-					continue;
-				}
+	//			fDistToHealthCabinet = SquaredLength2d((*mIt)->GetPosition(), GetClient()->GetPosition());
+	//			(*mIt)->GetProperty("Range",m_Range);
+	//			if ( fDistToHealthCabinet > m_Range * m_Range )
+	//			{
+	//				mIt = qryHealth.m_List.erase(mIt);
+	//				continue;
+	//			}
 
-				++mIt;
-			}
+	//			++mIt;
+	//		}
 
-			if(!qryHealth.m_List.empty())
-			{
-				//mgAmmo = mgHealth;
-				m_Query = qryHealth;
-				m_CabinetType = Health;
-				m_HealthPriority = fHealthPriority;
-			}
-		}
-		
-		// don't bother if we need health more than ammo or if desire for ammo is too low
-		if(fAmmoPriority > fHealthPriority && fAmmoPriority > 0.7f && m_AmmoType != -1)
-		{
-			GoalManager::Query qryAmmo(0x52ad0a47 /* AMMOCAB */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qryAmmo);
-			float fDistToAmmoCabinet;
+	//		if(!qryHealth.m_List.empty())
+	//		{
+	//			//mgAmmo = mgHealth;
+	//			m_Query = qryHealth;
+	//			m_CabinetType = Health;
+	//			m_HealthPriority = fHealthPriority;
+	//		}
+	//	}
+	//	
+	//	// don't bother if we need health more than ammo or if desire for ammo is too low
+	//	if(fAmmoPriority > fHealthPriority && fAmmoPriority > 0.7f && m_AmmoType != -1)
+	//	{
+	//		GoalManager::Query qryAmmo(0x52ad0a47 /* AMMOCAB */, GetClient());
+	//		GoalManager::GetInstance()->GetGoals(qryAmmo);
+	//		float fDistToAmmoCabinet;
 
-			MapGoalList::iterator mIt = qryAmmo.m_List.begin();
-			for(; mIt != qryAmmo.m_List.end(); )
-			{
-				if(BlackboardIsDelayed((*mIt)->GetSerialNum()) ||
-					(*mIt)->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
-				{
-					mIt = qryAmmo.m_List.erase(mIt);
-					continue;
-				}
+	//		MapGoalList::iterator mIt = qryAmmo.m_List.begin();
+	//		for(; mIt != qryAmmo.m_List.end(); )
+	//		{
+	//			if(BlackboardIsDelayed((*mIt)->GetSerialNum()) ||
+	//				(*mIt)->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
+	//			{
+	//				mIt = qryAmmo.m_List.erase(mIt);
+	//				continue;
+	//			}
 
-				fDistToAmmoCabinet = SquaredLength2d((*mIt)->GetPosition(), GetClient()->GetPosition());
-				(*mIt)->GetProperty("Range",m_Range);
-				if ( fDistToAmmoCabinet > m_Range * m_Range )
-				{
-					mIt = qryAmmo.m_List.erase(mIt);
-					continue;
-				}
+	//			fDistToAmmoCabinet = SquaredLength2d((*mIt)->GetPosition(), GetClient()->GetPosition());
+	//			(*mIt)->GetProperty("Range",m_Range);
+	//			if ( fDistToAmmoCabinet > m_Range * m_Range )
+	//			{
+	//				mIt = qryAmmo.m_List.erase(mIt);
+	//				continue;
+	//			}
 
-				++mIt;
-			}
+	//			++mIt;
+	//		}
 
-			if(!qryAmmo.m_List.empty())
-			{
-				//m_MapGoal = mgAmmo;
-				m_Query = qryAmmo;
-				m_CabinetType = Ammo;
-				m_AmmoPriority = fAmmoPriority;
-			}
-		}
+	//		if(!qryAmmo.m_List.empty())
+	//		{
+	//			//m_MapGoal = mgAmmo;
+	//			m_Query = qryAmmo;
+	//			m_CabinetType = Ammo;
+	//			m_AmmoPriority = fAmmoPriority;
+	//		}
+	//	}
 
-		return m_HealthPriority > m_AmmoPriority ? m_HealthPriority : m_AmmoPriority;
-	}
+	//	return m_HealthPriority > m_AmmoPriority ? m_HealthPriority : m_AmmoPriority;
+	//}
 
-	void UseCabinet::Enter()
-	{	
-		m_UseTime = 0;
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this,m_Query.m_List,Run,true));
-		if(!DidPathFail())
-		{
-			m_MapGoal = m_Query.m_List[GetDestinationIndex()];
-			Tracker.InProgress.Set(m_MapGoal, GetClient()->GetTeam());
-		}
-	}
+	//void UseCabinet::Enter()
+	//{	
+	//	m_UseTime = 0;
+	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this,m_Query.m_List,Run,true));
+	//	if(!DidPathFail())
+	//	{
+	//		m_MapGoal = m_Query.m_List[GetDestinationIndex()];
+	//		Tracker.InProgress.Set(m_MapGoal, GetClient()->GetTeam());
+	//	}
+	//}
 
-	void UseCabinet::Exit()
-	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+	//void UseCabinet::Exit()
+	//{
+	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-		m_MapGoal.reset();
+	//	m_MapGoal.reset();
 
-		//FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(),ReleaseWeaponRequest(GetNameHash()));
+	//	//FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
+	//	FINDSTATEIF(WeaponSystem, GetRootState(),ReleaseWeaponRequest(GetNameHash()));
 
-		Tracker.Reset();
-	}
+	//	Tracker.Reset();
+	//}
 
-	State::StateStatus UseCabinet::Update(float fDt)
-	{
-		if(!m_MapGoal || DidPathFail())
-		{
-			// delay all of em.
-			for(obuint32 i = 0; i < m_Query.m_List.size(); ++i)
-				BlackboardDelay(10.f, m_Query.m_List[i]->GetSerialNum());
-			return State_Finished;
-		}
-		OBASSERT(m_MapGoal,"No Map Goal!");
+	//State::StateStatus UseCabinet::Update(float fDt)
+	//{
+	//	if(!m_MapGoal || DidPathFail())
+	//	{
+	//		// delay all of em.
+	//		for(obuint32 i = 0; i < m_Query.m_List.size(); ++i)
+	//			BlackboardDelay(10.f, m_Query.m_List[i]->GetSerialNum());
+	//		return State_Finished;
+	//	}
+	//	OBASSERT(m_MapGoal,"No Map Goal!");
 
-		ET_CabinetData cData;
-		if(InterfaceFuncs::GetCabinetData(m_MapGoal->GetEntity(),cData) && 
-			cData.m_CurrentAmount == 0)
-		{
-			BlackboardDelay(20.f, m_MapGoal->GetSerialNum());
-			return State_Finished;
-		}
+	//	ET_CabinetData cData;
+	//	if(InterfaceFuncs::GetCabinetData(m_MapGoal->GetEntity(),cData) && 
+	//		cData.m_CurrentAmount == 0)
+	//	{
+	//		BlackboardDelay(20.f, m_MapGoal->GetSerialNum());
+	//		return State_Finished;
+	//	}
 
-		if(m_MapGoal && !m_MapGoal->IsAvailable(GetClient()->GetTeam()))
-			return State_Finished;
+	//	if(m_MapGoal && !m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//		return State_Finished;
 
-		switch(m_CabinetType)
-		{
-		case Health:
-			if(GetClient()->GetHealthPercent() >= 1.0)
-				return State_Finished;
-			break;
-		case Ammo:
-			{
-				if(m_GetAmmoAmount>0)
-				{
-					if(GetClient()->GetWeaponSystem()->HasAmmo(m_AmmoType,Primary,m_GetAmmoAmount))
-						return State_Finished;
-				}
-				else
-				{
-					int AmmoType = 0, GetAmmo = 0;
-					if(GetClient()->GetWeaponSystem()->GetMostDesiredAmmo(AmmoType,GetAmmo) <= 0.f)
-						return State_Finished;
-				}
-				break;
-			}
-		}
+	//	switch(m_CabinetType)
+	//	{
+	//	case Health:
+	//		if(GetClient()->GetHealthPercent() >= 1.0)
+	//			return State_Finished;
+	//		break;
+	//	case Ammo:
+	//		{
+	//			if(m_GetAmmoAmount>0)
+	//			{
+	//				if(GetClient()->GetWeaponSystem()->HasAmmo(m_AmmoType,Primary,m_GetAmmoAmount))
+	//					return State_Finished;
+	//			}
+	//			else
+	//			{
+	//				int AmmoType = 0, GetAmmo = 0;
+	//				if(GetClient()->GetWeaponSystem()->GetMostDesiredAmmo(AmmoType,GetAmmo) <= 0.f)
+	//					return State_Finished;
+	//			}
+	//			break;
+	//		}
+	//	}
 
-		if(DidPathSucceed())
-		{
-			GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetWorldUsePoint());
+	//	if(DidPathSucceed())
+	//	{
+	//		GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetWorldUsePoint());
 
-			if(m_UseTime==0)
-			{
-				m_UseTime = IGame::GetTime();
-			}
-			else if(IGame::GetTime() - m_UseTime > 15000)
-			{
-				//timeout
-				BlackboardDelay(30.f, m_MapGoal->GetSerialNum());
-				return State_Finished;
-			}
-		}
-		return State_Busy;
-	}
+	//		if(m_UseTime==0)
+	//		{
+	//			m_UseTime = IGame::GetTime();
+	//		}
+	//		else if(IGame::GetTime() - m_UseTime > 15000)
+	//		{
+	//			//timeout
+	//			BlackboardDelay(30.f, m_MapGoal->GetSerialNum());
+	//			return State_Finished;
+	//		}
+	//	}
+	//	return State_Busy;
+	//}
 
 	//////////////////////////////////////////////////////////////////////////
 
