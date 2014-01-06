@@ -634,101 +634,74 @@ int gmBot::gmfSetGoal_GetHealth(gmThread *a_thread)
 //		<GameEntity> - The enemy best matching the request
 //		- OR -
 //		null - If no entity matches the request
+static int gmfGetNearestAllyOrEnemy(gmThread *a_thread, SensoryMemory::Type _type)
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS(1);
+	GM_CHECK_INT_PARAM(catID, 0);
+
+	FilterClosest filter(native, _type);
+	filter.AddCategory(catID);
+
+	if (a_thread->GetNumParams() > 1)
+	{
+		switch (a_thread->ParamType(1))
+		{
+		case GM_INT:
+		{
+			filter.AddClass(a_thread->ParamInt(1));
+			break;
+		}
+		case GM_TABLE:
+		{
+			gmTableObject *table = a_thread->ParamTable(1);
+			gmTableIterator tIt;
+			for (gmTableNode *pNode = table->GetFirst(tIt); pNode; pNode = table->GetNext(tIt))
+			{
+				if (pNode->m_value.m_type != GM_INT)
+				{
+					GM_EXCEPTION_MSG("expecting param 2 as table of int, got %s", a_thread->GetMachine()->GetTypeName(pNode->m_value.m_type));
+					return GM_EXCEPTION;
+				}
+				filter.AddClass(pNode->m_value.GetInt());
+			}
+			break;
+		}
+		default:
+			GM_EXCEPTION_MSG("expecting param 2 as int or table, got %s", a_thread->ParamTypeName(1));
+			return GM_EXCEPTION;
+		}
+	}
+
+	native->GetSensoryMemory()->QueryMemory(filter);
+
+	GameEntity ge = filter.GetBestEntity();
+	if(ge.IsValid())
+	{
+		gmVariable v;
+		v.SetEntity(ge.AsInt());
+		a_thread->Push(v);
+	}
+	else
+		a_thread->PushNull();
+	return GM_OK;
+}
+
 int gmBot::gmfGetNearest(gmThread *a_thread)
 {
-	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(1);
-	GM_CHECK_INT_PARAM(catID, 0);
-	GM_INT_PARAM(classID, 1, 0);
-
-	FilterClosest filter(native, SensoryMemory::EntAny);
-	filter.AddClass(classID);
-	filter.AddCategory(catID);
-	native->GetSensoryMemory()->QueryMemory(filter);
-
-	GameEntity ge = filter.GetBestEntity();
-	if(ge.IsValid())
-	{
-		gmVariable v;
-		v.SetEntity(ge.AsInt());
-		a_thread->Push(v);
-	}
-	else
-		a_thread->PushNull();
-	return GM_OK;
+	return gmfGetNearestAllyOrEnemy(a_thread, SensoryMemory::EntAny);
 }
 
-// function: GetNearestEnemy
-//		This function will get the nearest known enemy to the bot that matches a category and class Id
-//
-// Parameters:
-//
-//		int - category of entities to search for, from the global CAT table
-//		int - OPTIONAL - the specific class Id to search for, pass 0 to search for any class
-//
-// Returns:
-//		<GameEntity> - The enemy best matching the request
-//		- OR -
-//		null - If no entity matches the request
 int gmBot::gmfGetNearestEnemy(gmThread *a_thread)
 {
-	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(1);
-	GM_CHECK_INT_PARAM(catID, 0);
-	GM_INT_PARAM(classID, 1, 0);
-
-	FilterClosest filter(native, SensoryMemory::EntEnemy);
-	filter.AddClass(classID);
-	filter.AddCategory(catID);
-	native->GetSensoryMemory()->QueryMemory(filter);
-
-	GameEntity ge = filter.GetBestEntity();
-	if(ge.IsValid())
-	{
-		gmVariable v;
-		v.SetEntity(ge.AsInt());
-		a_thread->Push(v);
-	}
-	else
-		a_thread->PushNull();
-	return GM_OK;
+	return gmfGetNearestAllyOrEnemy(a_thread, SensoryMemory::EntEnemy);
 }
 
-// function: GetNearestAlly
-//		This function will get the nearest known ally to the bot that matches a category and class Id
-//
-// Parameters:
-//
-//		int - category of entities to search for, from the global CAT table
-//		int - OPTIONAL - the specific class Id to search for, pass 0 to search for any class
-//
-// Returns:
-//		<GameEntity> - The enemy best matching the request
-//		- OR -
-//		null - If no entity matches the request
 int gmBot::gmfGetNearestAlly(gmThread *a_thread)
 {
-	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(1);
-	GM_CHECK_INT_PARAM(catID, 0);
-	GM_INT_PARAM(classID, 1, 0);
-
-	FilterClosest filter(native, SensoryMemory::EntAlly);
-	filter.AddClass(classID);
-	filter.AddCategory(catID);
-	native->GetSensoryMemory()->QueryMemory(filter);
-
-	GameEntity ge = filter.GetBestEntity();
-	if(ge.IsValid())
-	{
-		gmVariable v;
-		v.SetEntity(ge.AsInt());
-		a_thread->Push(v);
-	}
-	else
-		a_thread->PushNull();
-	return GM_OK;
+	return gmfGetNearestAllyOrEnemy(a_thread, SensoryMemory::EntAlly);
 }
+
 
 // function: GetAllType
 //		This function will get all entities that matche a category and class Id
