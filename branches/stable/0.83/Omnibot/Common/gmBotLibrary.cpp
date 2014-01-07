@@ -529,6 +529,8 @@ static int GM_CDECL gmfGetMapGoals(gmThread *a_thread)
 	GM_STRING_PARAM(pExpr,2,0);
 	GM_TABLE_PARAM(params,3,0);
 
+	table->RemoveAndDeleteAll(a_thread->GetMachine());
+
 	GoalManager::Query qry;
 	qry.DefaultGlobalQuery();
 	qry.Expression(pExpr).Team(iTeam);
@@ -557,7 +559,7 @@ static int GM_CDECL gmfGetMapGoals(gmThread *a_thread)
 
 		for(obuint32 i = 0; i < qry.m_List.size(); ++i)
 		{
-			gmUserObject *pUser = qry.m_List[i]->GetScriptObject(a_thread->GetMachine());
+			gmUserObject *pUser = qry.m_List[i]->GetScriptObject(pMachine);
 			OBASSERT(pUser, "Invalid Object");
 
 			table->Set(pMachine, i, gmVariable(pUser));

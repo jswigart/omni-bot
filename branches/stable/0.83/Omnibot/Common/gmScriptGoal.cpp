@@ -1052,6 +1052,8 @@ int gmScriptGoal::gmfQueryMapGoals(gmThread *a_thread)
 
 	Prof(QueryMapGoals);
 
+	table->RemoveAndDeleteAll(a_thread->GetMachine());
+
 	GoalManager::Query qry;
 
 	if(GM_NUM_PARAMS > 1)
@@ -1118,7 +1120,7 @@ int gmScriptGoal::gmfQueryMapGoals(gmThread *a_thread)
 
 		for(obuint32 i = 0; i < qry.m_List.size(); ++i)
 		{
-			gmUserObject *pUser = qry.m_List[i]->GetScriptObject(a_thread->GetMachine());
+			gmUserObject *pUser = qry.m_List[i]->GetScriptObject(pMachine);
 			OBASSERT(pUser, "Invalid Object");
 
 			table->Set(pMachine, i, gmVariable(pUser));
