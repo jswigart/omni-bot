@@ -899,7 +899,7 @@ void CG_DrawMap( float x, float y, float w, float h, int mEntFilter, mapScissor_
 	CG_DrawMortarMarker( x, y, w, h, qtrue, scissor, exspawn );
 
 	for(i = 0, mEnt = &mapEntities[0]; i < mapEntityCount; i++, mEnt++ ) {
-		if( mEnt->team != CG_LimboPanel_GetRealTeam() ) {
+		if (mEnt->team != CG_LimboPanel_GetRealTeam() && CG_LimboPanel_GetRealTeam() != TEAM_SPECTATOR) {
 			continue;
 		}
 

@@ -696,13 +696,17 @@ void G_SendSpectatorMapEntityInfo( gentity_t* e ) {
 	mapEntityData_Team_t *teamList;
 	char buffer[2048];
 	int al_cnt, ax_cnt;
+	int noCheat;
+
+	noCheat = !g_cheats.integer || g_dedicated.integer;
 
 	// Axis data init
 	teamList = &mapEntityData[0];
 	
 	ax_cnt = 0;
 	for( mEnt = teamList->activeMapEntityData.next; mEnt && mEnt != &teamList->activeMapEntityData; mEnt = mEnt->next ) {
-		if( mEnt->type != ME_CONSTRUCT && mEnt->type != ME_DESTRUCT && mEnt->type != ME_TANK && mEnt->type != ME_TANK_DEAD ) {
+		if (mEnt->type != ME_CONSTRUCT && mEnt->type != ME_DESTRUCT && mEnt->type != ME_TANK && mEnt->type != ME_TANK_DEAD
+			&& (mEnt->type != ME_PLAYER || noCheat)) {
 			continue;
 		}
 
@@ -721,7 +725,8 @@ void G_SendSpectatorMapEntityInfo( gentity_t* e ) {
 	
 	al_cnt = 0;
 	for( mEnt = teamList->activeMapEntityData.next; mEnt && mEnt != &teamList->activeMapEntityData; mEnt = mEnt->next ) {
-		if( mEnt->type != ME_CONSTRUCT && mEnt->type != ME_DESTRUCT && mEnt->type != ME_TANK && mEnt->type != ME_TANK_DEAD ) {
+		if (mEnt->type != ME_CONSTRUCT && mEnt->type != ME_DESTRUCT && mEnt->type != ME_TANK && mEnt->type != ME_TANK_DEAD 
+			&& (mEnt->type != ME_PLAYER || noCheat)) {
 			continue;
 		}
 
@@ -740,7 +745,8 @@ void G_SendSpectatorMapEntityInfo( gentity_t* e ) {
 
 	for( mEnt = teamList->activeMapEntityData.next; mEnt && mEnt != &teamList->activeMapEntityData; mEnt = mEnt->next ) {
 
-		if( mEnt->type != ME_CONSTRUCT && mEnt->type != ME_DESTRUCT && mEnt->type != ME_TANK && mEnt->type != ME_TANK_DEAD && mEnt->type != ME_DESTRUCT_2 )
+		if (mEnt->type != ME_CONSTRUCT && mEnt->type != ME_DESTRUCT && mEnt->type != ME_TANK && mEnt->type != ME_TANK_DEAD && mEnt->type != ME_DESTRUCT_2 
+			&& (mEnt->type != ME_PLAYER || noCheat))
 			continue;
 
 		if( mEnt->singleClient >= 0 && e->s.clientNum != mEnt->singleClient )
@@ -754,7 +760,8 @@ void G_SendSpectatorMapEntityInfo( gentity_t* e ) {
 
 	for( mEnt = teamList->activeMapEntityData.next; mEnt && mEnt != &teamList->activeMapEntityData; mEnt = mEnt->next ) {
 
-		if( mEnt->type != ME_CONSTRUCT && mEnt->type != ME_DESTRUCT && mEnt->type != ME_TANK && mEnt->type != ME_TANK_DEAD && mEnt->type != ME_DESTRUCT_2 )
+		if (mEnt->type != ME_CONSTRUCT && mEnt->type != ME_DESTRUCT && mEnt->type != ME_TANK && mEnt->type != ME_TANK_DEAD && mEnt->type != ME_DESTRUCT_2 
+			&& (mEnt->type != ME_PLAYER || noCheat))
 			continue;
 
 		if( mEnt->singleClient >= 0 && e->s.clientNum != mEnt->singleClient )
