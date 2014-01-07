@@ -553,7 +553,9 @@ namespace AiState
 
 			m_ActiveThread[ON_GETPRIORITY].Kill();
 
-			if(m_Callbacks[ON_ENTER])
+			m_Finished = false;
+
+			if (m_Callbacks[ON_ENTER])
 			{
 				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 				gmCall call;
@@ -567,7 +569,6 @@ namespace AiState
 					//KillAllGoalThreads();
 				}
 			}
-			m_Finished = false;
 		}
 	}
 
