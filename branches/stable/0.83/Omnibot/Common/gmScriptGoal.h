@@ -70,6 +70,7 @@ public:
 	static int gmfBlackboardDelay(gmThread *a_thread);
 	static int gmfBlackboardIsDelayed(gmThread *a_thread);
 
+	static int gmfMarkTracker(gmThread *a_thread, bool (AiState::ScriptGoal::*_func)(MapGoalPtr));
 	static int gmfMarkInProgress(gmThread *a_thread);
 	static int gmfMarkInUse(gmThread *a_thread);
 

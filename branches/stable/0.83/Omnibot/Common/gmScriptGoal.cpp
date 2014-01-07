@@ -884,36 +884,41 @@ int gmScriptGoal::gmfDelayGetPriority(gmThread *a_thread)
 int gmScriptGoal::gmfBlackboardDelay(gmThread *a_thread)
 {
 	CHECK_THIS_SGOAL();
-	GM_CHECK_NUM_PARAMS(2);
+	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_FLOAT_OR_INT_PARAM(time,0);
 
+	int serial;
 	MapGoal *Mg = 0;
-	if(gmBind2::Class<MapGoal>::FromVar(a_thread,a_thread->Param(1),Mg) && Mg)
+
+	if (a_thread->GetNumParams() < 2)
+	{
+		serial = native->GetMapGoal()->GetSerialNum();
+	}
+	else if(gmBind2::Class<MapGoal>::FromVar(a_thread,a_thread->Param(1),Mg) && Mg)
 	{
 		MapGoalPtr mg = Mg->GetSmartPtr();
-		if(mg)
-		{
-			native->BlackboardDelay(time,mg->GetSerialNum());
-			return GM_OK;
-		}
-		else
+		if(!mg)
 		{
 			GM_EXCEPTION_MSG("error retrieving %s",gmBind2::Class<MapGoal>::ClassName());
 			return GM_EXCEPTION;
 		}
+		serial = mg->GetSerialNum();
 	}
 	else if(a_thread->Param(1).IsInt())
 	{
-		native->BlackboardDelay(time,a_thread->Param(1).GetInt());
-		return GM_OK;
+		serial = a_thread->Param(1).GetInt();
 	}
-	
-	enum { BufferSize=1024 };
-	char buffer[BufferSize] = {};
-	GM_EXCEPTION_MSG("expecting %s, got %s",
-		gmBind2::Class<MapGoal>::ClassName(),
-		a_thread->Param(1).AsStringWithType(a_thread->GetMachine(),buffer,BufferSize));
-	return GM_EXCEPTION;
+	else
+	{
+		enum { BufferSize = 1024 };
+		char buffer[BufferSize] = {};
+		GM_EXCEPTION_MSG("expecting %s or int, got %s",
+			gmBind2::Class<MapGoal>::ClassName(),
+			a_thread->Param(1).AsStringWithType(a_thread->GetMachine(), buffer, BufferSize));
+		return GM_EXCEPTION;
+	}
+	native->BlackboardDelay(time, serial);
+	return GM_OK;
 }
 
 int gmScriptGoal::gmfBlackboardIsDelayed(gmThread *a_thread)
@@ -950,71 +955,47 @@ int gmScriptGoal::gmfBlackboardIsDelayed(gmThread *a_thread)
 	return GM_EXCEPTION;
 }
 
+int gmScriptGoal::gmfMarkTracker(gmThread *a_thread, bool (ScriptGoal::*_func)(MapGoalPtr))
+{
+	CHECK_THIS_SGOAL();
+
+	MapGoalPtr mg;
+	MapGoal *Mg = 0;
+	if (a_thread->GetNumParams() == 0)
+	{
+		mg = native->GetMapGoal();
+	}
+	else if(gmBind2::Class<MapGoal>::FromVar(a_thread,a_thread->Param(0),Mg) && Mg)
+	{
+		mg = Mg->GetSmartPtr();
+		if(!mg)
+		{
+			GM_EXCEPTION_MSG("error retrieving %s",gmBind2::Class<MapGoal>::ClassName());
+			return GM_EXCEPTION;
+		}
+	}
+	else if(!a_thread->Param(0).IsNull())
+	{
+		enum { BufferSize = 1024 };
+		char buffer[BufferSize] = {};
+		GM_EXCEPTION_MSG("expecting %s, got %s",
+			gmBind2::Class<MapGoal>::ClassName(),
+			a_thread->Param(0).AsStringWithType(a_thread->GetMachine(), buffer, BufferSize));
+		return GM_EXCEPTION;
+	}
+
+	a_thread->PushInt((native->*_func)(mg) ? 1 : 0);
+	return GM_OK;
+}
+
 int gmScriptGoal::gmfMarkInProgress(gmThread *a_thread)
 {
-	CHECK_THIS_SGOAL();
-	GM_CHECK_NUM_PARAMS(1);
-
-	MapGoal *Mg = 0;
-	if(gmBind2::Class<MapGoal>::FromVar(a_thread,a_thread->Param(0),Mg) && Mg)
-	{
-		MapGoalPtr mg = Mg->GetSmartPtr();
-		if(mg)
-		{
-			a_thread->PushInt(native->MarkInProgress(mg)?1:0);
-			return GM_OK;
-		}
-		else
-		{
-			GM_EXCEPTION_MSG("error retrieving %s",gmBind2::Class<MapGoal>::ClassName());
-			return GM_EXCEPTION;
-		}
-	}
-	else if(a_thread->Param(0).IsNull())
-	{
-		a_thread->PushInt(native->MarkInProgress(MapGoalPtr())?1:0);
-		return GM_OK;
-	}
-	
-	enum { BufferSize=1024 };
-	char buffer[BufferSize] = {};
-	GM_EXCEPTION_MSG("expecting %s, got %s",
-		gmBind2::Class<MapGoal>::ClassName(),
-		a_thread->Param(1).AsStringWithType(a_thread->GetMachine(),buffer,BufferSize));
-	return GM_EXCEPTION;
+	return gmfMarkTracker(a_thread, &ScriptGoal::MarkInProgress);
 }
+
 int gmScriptGoal::gmfMarkInUse(gmThread *a_thread)
 {
-	CHECK_THIS_SGOAL();
-	GM_CHECK_NUM_PARAMS(1);
-
-	MapGoal *Mg = 0;
-	if(gmBind2::Class<MapGoal>::FromVar(a_thread,a_thread->Param(0),Mg) && Mg)
-	{
-		MapGoalPtr mg = Mg->GetSmartPtr();
-		if(mg)
-		{
-			a_thread->PushInt(native->MarkInUse(mg)?1:0);
-			return GM_OK;
-		}
-		else
-		{
-			GM_EXCEPTION_MSG("error retrieving %s",gmBind2::Class<MapGoal>::ClassName());
-			return GM_EXCEPTION;
-		}
-	}
-	else if(a_thread->Param(0).IsNull())
-	{
-		a_thread->PushInt(native->MarkInUse(MapGoalPtr())?1:0);
-		return GM_OK;
-	}
-
-	enum { BufferSize=1024 };
-	char buffer[BufferSize] = {};
-	GM_EXCEPTION_MSG("expecting %s, got %s",
-		gmBind2::Class<MapGoal>::ClassName(),
-		a_thread->Param(1).AsStringWithType(a_thread->GetMachine(),buffer,BufferSize));
-	return GM_EXCEPTION;
+	return gmfMarkTracker(a_thread, &ScriptGoal::MarkInUse);
 }
 
 
