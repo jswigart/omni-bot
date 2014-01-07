@@ -4,6 +4,8 @@
 
 extern void CG_StartShakeCamera( float param );
 extern void CG_Tracer( vec3_t source, vec3_t dest, int sparks );
+
+extern vmCvar_t	cg_obituary;
 //==========================================================================
 
 static void CG_BotDebugLine(vec3_t start, vec3_t end, vec3_t color)
@@ -445,7 +447,9 @@ static void CG_Obituary( entityState_t *ent ) {
 			message = CG_TranslateString( message );
 			if ( message2 ) {
 				message2 = CG_TranslateString( message2 );
-				CG_AddPMItem( PM_DEATH, va( "%s %s %s%s", targetName, message, attackerName, message2 ), deathShader );
+
+				if (cg_obituary.integer)
+					CG_AddPMItem( PM_DEATH, va( "%s %s %s%s", targetName, message, attackerName, message2 ), deathShader );
 //				CG_Printf( "[cgnotify]%s %s %s%s\n", targetName, message, attackerName, message2 );
 			}
 			return;

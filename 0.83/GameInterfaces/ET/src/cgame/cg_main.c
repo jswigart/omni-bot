@@ -300,6 +300,7 @@ vmCvar_t	cg_recording_statusline;
 
 vmCvar_t	cg_omnibotdrawing;
 vmCvar_t	cg_generictext; // cs: waypoint tool only. not for mods
+vmCvar_t	cg_obituary;
 
 typedef struct {
 	vmCvar_t	*vmCvar;
@@ -526,6 +527,7 @@ cvarTable_t		cvarTable[] = {
 
 	{ &cg_omnibotdrawing, "cg_omnibotdrawing", "1", CVAR_ARCHIVE },
 	{ &cg_generictext, "cg_genericText", "", CVAR_TEMP }, // cs: waypoint tool only. not for mods
+	{ &cg_obituary, "cg_obituary", "1", CVAR_ARCHIVE },
 };
 
 int		cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
