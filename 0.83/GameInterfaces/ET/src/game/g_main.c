@@ -3110,7 +3110,7 @@ void CheckWolfMP() {
 			  (level.numPlayingClients >= match_minplayers.integer &&
 			   level.lastRestartTime + 1000 < level.time && G_readyMatchState()))
 			{
-				int delay = (g_warmup.integer < 10) ? 11 : g_warmup.integer + 1;
+				int delay = (g_warmup.integer < 1) ? 2 : g_warmup.integer + 1;
 
 				// Why scale these at all?  Minimum would mean 22s on Campaign and 44 on LMS....
 				// Once people are ready, they want to get the show rolling :)
