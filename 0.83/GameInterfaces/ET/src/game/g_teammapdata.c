@@ -690,94 +690,83 @@ void G_UpdateTeamMapData_CommandmapMarker( gentity_t* ent )
 	}
 }
 
+int G_FreePlayesFromMapData(mapEntityData_Team_t *teamList, gentity_t* e)
+{
+	int cnt;
+	mapEntityData_t *mEnt;
+
+	cnt = 0;
+	mEnt = teamList->activeMapEntityData.next;
+	while (mEnt && mEnt != &teamList->activeMapEntityData) {
+		if (level.time - mEnt->startTime > 5000) {
+			mEnt->status = 1;
+			// we can free this player from the list now
+			if (mEnt->type == ME_PLAYER) {
+				mEnt = G_FreeMapEntityData(teamList, mEnt);
+				continue;
+			}
+			else if (mEnt->type == ME_PLAYER_DISGUISED) {
+				if (mEnt->singleClient == e->s.clientNum) {
+					mEnt = G_FreeMapEntityData(teamList, mEnt);
+					continue;
+				}
+			}
+		}
+		else {
+			mEnt->status = 2;
+		}
+		cnt++;
+
+		mEnt = mEnt->next;
+	}
+	return cnt;
+}
+
 void G_SendSpectatorMapEntityInfo( gentity_t* e ) {
 	// special version, sends different set of ents - only the objectives, but also team info (string is split in two basically)
 	mapEntityData_t *mEnt;
 	mapEntityData_Team_t *teamList;
 	char buffer[2048];
-	int al_cnt, ax_cnt;
+	int cnt[2];
+	int pass, team;
 	int noCheat;
 
 	noCheat = !g_cheats.integer || g_dedicated.integer;
 
-	// Axis data init
-	teamList = &mapEntityData[0];
-	
-	ax_cnt = 0;
-	for( mEnt = teamList->activeMapEntityData.next; mEnt && mEnt != &teamList->activeMapEntityData; mEnt = mEnt->next ) {
-		if (mEnt->type != ME_CONSTRUCT && mEnt->type != ME_DESTRUCT && mEnt->type != ME_TANK && mEnt->type != ME_TANK_DEAD
-			&& (mEnt->type != ME_PLAYER || noCheat)) {
-			continue;
+	for (pass = 0; pass < 2; pass++)
+	{
+		for (team = 0; team < 2; team++)
+		{
+			teamList = &mapEntityData[team];
+			if (pass == 0) G_FreePlayesFromMapData(teamList, e);
+
+			cnt[team] = 0;
+			for (mEnt = teamList->activeMapEntityData.next; mEnt && mEnt != &teamList->activeMapEntityData; mEnt = mEnt->next) {
+				if (mEnt->type != ME_CONSTRUCT && mEnt->type != ME_DESTRUCT && mEnt->type != ME_TANK && mEnt->type != ME_TANK_DEAD && mEnt->type != ME_DESTRUCT_2
+					&& (mEnt->type != ME_PLAYER || noCheat)) {
+					continue;
+				}
+
+				if (mEnt->singleClient >= 0 && e->s.clientNum != mEnt->singleClient) {
+					continue;
+				}
+
+				cnt[team]++;
+				if (pass) G_PushMapEntityToBuffer(buffer, sizeof(buffer), mEnt);
+			}
 		}
-
-		if( mEnt->singleClient >= 0 && e->s.clientNum != mEnt->singleClient ) {
-			continue;
-		}
-
-		ax_cnt++;
-
 		
+		// Data setup
+		if (pass==0) Com_sprintf(buffer, sizeof(buffer), "entnfo %i %i", cnt[0], cnt[1]);
 	}
-
-	// Allied data init
-	teamList = &mapEntityData[1];
-
-	
-	al_cnt = 0;
-	for( mEnt = teamList->activeMapEntityData.next; mEnt && mEnt != &teamList->activeMapEntityData; mEnt = mEnt->next ) {
-		if (mEnt->type != ME_CONSTRUCT && mEnt->type != ME_DESTRUCT && mEnt->type != ME_TANK && mEnt->type != ME_TANK_DEAD 
-			&& (mEnt->type != ME_PLAYER || noCheat)) {
-			continue;
-		}
-
-		if( mEnt->singleClient >= 0 && e->s.clientNum != mEnt->singleClient ) {
-			continue;
-		}
-
-		al_cnt++;		
-	}
-
-	// Data setup
-	Com_sprintf( buffer, sizeof( buffer ), "entnfo %i %i", ax_cnt, al_cnt );
-
-	// Axis data
-	teamList = &mapEntityData[0];
-
-	for( mEnt = teamList->activeMapEntityData.next; mEnt && mEnt != &teamList->activeMapEntityData; mEnt = mEnt->next ) {
-
-		if (mEnt->type != ME_CONSTRUCT && mEnt->type != ME_DESTRUCT && mEnt->type != ME_TANK && mEnt->type != ME_TANK_DEAD && mEnt->type != ME_DESTRUCT_2 
-			&& (mEnt->type != ME_PLAYER || noCheat))
-			continue;
-
-		if( mEnt->singleClient >= 0 && e->s.clientNum != mEnt->singleClient )
-			continue;
-
-		G_PushMapEntityToBuffer( buffer, sizeof( buffer ), mEnt );
-	}
-
-	// Allied data
-	teamList = &mapEntityData[1];
-
-	for( mEnt = teamList->activeMapEntityData.next; mEnt && mEnt != &teamList->activeMapEntityData; mEnt = mEnt->next ) {
-
-		if (mEnt->type != ME_CONSTRUCT && mEnt->type != ME_DESTRUCT && mEnt->type != ME_TANK && mEnt->type != ME_TANK_DEAD && mEnt->type != ME_DESTRUCT_2 
-			&& (mEnt->type != ME_PLAYER || noCheat))
-			continue;
-
-		if( mEnt->singleClient >= 0 && e->s.clientNum != mEnt->singleClient )
-			continue;
-
-		G_PushMapEntityToBuffer( buffer, sizeof( buffer ), mEnt );
-	}
-
-	trap_SendServerCommand( e-g_entities, buffer );
+	trap_SendServerCommand(e - g_entities, buffer);
 }
 
 void G_SendMapEntityInfo( gentity_t* e ) {
 	mapEntityData_t *mEnt;
 	mapEntityData_Team_t *teamList;
 	char buffer[2048];
-	int cnt = 0;
+	int cnt;
 
 	if( e->client->sess.sessionTeam == TEAM_SPECTATOR ) {
 		G_SendSpectatorMapEntityInfo( e );
@@ -790,28 +779,7 @@ void G_SendMapEntityInfo( gentity_t* e ) {
 	}
 
 	teamList = e->client->sess.sessionTeam == TEAM_AXIS ? &mapEntityData[0] : &mapEntityData[1];
-	
-	mEnt = teamList->activeMapEntityData.next;
-	while( mEnt && mEnt != &teamList->activeMapEntityData ) {
-		if(level.time - mEnt->startTime > 5000) {
-			mEnt->status = 1;
-			// we can free this player from the list now
-			if( mEnt->type == ME_PLAYER ) {
-				mEnt = G_FreeMapEntityData( teamList, mEnt );
-				continue;
-			} else if( mEnt->type == ME_PLAYER_DISGUISED ) {
-				if( mEnt->singleClient == e->s.clientNum ) {
-					mEnt = G_FreeMapEntityData( teamList, mEnt );
-					continue;
-				}
-			}
-		} else {
-			mEnt->status = 2;
-		}
-		cnt++;
-
-		mEnt = mEnt->next;
-	}
+	cnt = G_FreePlayesFromMapData(teamList, e);
 
 	if( e->client->sess.sessionTeam == TEAM_AXIS ) {
 		Com_sprintf(buffer, sizeof( buffer ), "entnfo %i 0", cnt);
