@@ -51,6 +51,7 @@ Weapon::WeaponFireMode::WeaponFireMode()
 	, m_DelayChooseTime		(0)
 	, m_BurstTime			(0)
 	, m_BurstRound			(0)
+	, m_LastAmmoUpdate(0)
 {
 	// Initialize Default Properties
 	SetFlag(Waterproof, true);
@@ -667,7 +668,10 @@ void Weapon::WeaponFireMode::OnStartShooting(Weapon *_weapon, Client *_client)
 	}
 	else
 	{
-		_client->PressButton(m_ShootButton);
+		if(m_ShootButton == BOT_BUTTON_THROWKNIFE)
+			_client->GameCommand("throwknife");
+		else
+			_client->PressButton(m_ShootButton);
 	}
 }
 
@@ -731,7 +735,6 @@ Weapon::Weapon(Client *_client/* = 0*/)
 	, m_WeaponLockTime		(0)
 	, m_WeaponNameHash		(0)
 	, m_MinUseTime			(0)
-	, m_LastAmmoUpdate		(0)
 	, m_ScriptObject		(0)
 {
 	memset(&m_WeaponLimits, 0, sizeof(m_WeaponLimits));	
@@ -743,7 +746,6 @@ Weapon::Weapon(Client *_client, const Weapon *_wpn)
 	, m_WeaponLockTime		(0)
 	, m_WeaponNameHash		(0)
 	, m_MinUseTime			(0)
-	, m_LastAmmoUpdate		(0)
 	, m_ScriptObject		(0)
 {
 	m_WeaponID = _wpn->m_WeaponID;
@@ -858,13 +860,35 @@ bool Weapon::CanShoot(FireMode _mode, const TargetInfo &_targetinfo)
 	if(!_MeetsRequirements(_mode, _targetinfo))
 		return false;
 
-	WeaponFireMode &fireMode = GetFireMode(_mode);
-	obReal d = fireMode.CalculateDesirability(m_Client, _targetinfo);
-	if(d == 0.f) return false;
-	if(fireMode.m_WeaponType == Melee && d == fireMode.m_DefaultDesirability * fireMode.m_WeaponBias)
-		return false;
+	return GetFireMode(_mode).CalculateDesirability(m_Client, _targetinfo) > 0;
+}
 
-	return true;
+FireMode Weapon::GetBestFireMode(const TargetInfo &_targetinfo)
+{
+	if(!GetFireMode(Secondary).IsDefined() && GetFireMode(Primary).m_WeaponType!=Melee) 
+		return Primary;
+	
+	FireMode bestFireMode = InvalidFireMode;
+	obReal fBestDesir = 0.f;
+	for(int i = 0; i < Num_FireModes; ++i)
+	{
+		FireMode m = GetFireMode(i);
+		WeaponFireMode& fireMode = GetFireMode(m);
+		if(fireMode.IsDefined())
+		{
+			if(!_MeetsRequirements(m, _targetinfo))
+				continue;
+
+			obReal fDesir = fireMode.CalculateDesirability(m_Client, _targetinfo);
+			if(fDesir > fBestDesir &&
+				(fireMode.m_WeaponType != Melee || fDesir > fireMode.m_DefaultDesirability * fireMode.m_WeaponBias))
+			{
+				fBestDesir = fDesir;
+				bestFireMode = m;
+			}
+		}
+	}
+	return bestFireMode;
 }
 
 void Weapon::PreShoot(FireMode _mode, bool _facingTarget, const TargetInfo *_target)
@@ -941,18 +965,19 @@ void Weapon::UpdateClipAmmo(FireMode _mode)
 
 void Weapon::UpdateAmmo(FireMode _mode)
 {
-	if(m_LastAmmoUpdate == IGame::GetTime())
+	WeaponFireMode& fireMode = GetFireMode(_mode);
+	if(fireMode.m_LastAmmoUpdate == IGame::GetTime())
 		return;
 
-	m_LastAmmoUpdate = IGame::GetTime();
-	if(GetFireMode(_mode).CheckFlag(RequiresAmmo))
+	fireMode.m_LastAmmoUpdate = IGame::GetTime();
+	if(fireMode.CheckFlag(RequiresAmmo))
 	{
 		g_EngineFuncs->GetCurrentAmmo(
 			m_Client->GetGameEntity(),
 			GetWeaponID(), 
 			_mode,
-			GetFireMode(_mode).m_AmmoCurrent, 
-			GetFireMode(_mode).m_AmmoMax);
+			fireMode.m_AmmoCurrent,
+			fireMode.m_AmmoMax);
 	}
 }
 
@@ -1112,14 +1137,23 @@ obReal Weapon::CalculateDesirability(const TargetInfo &_targetinfo)
 
 bool Weapon::_MeetsRequirements(FireMode _mode)
 {	
-	if(!GetFireMode(_mode).CheckFlag(Waterproof) && m_Client->HasEntityFlag(ENT_FLAG_UNDERWATER))
+	WeaponFireMode& fireMode = GetFireMode(_mode);
+	
+	if(!fireMode.CheckFlag(Waterproof) && m_Client->HasEntityFlag(ENT_FLAG_UNDERWATER))
 		return false;
 
 	UpdateAmmo(_mode);
-	if(GetFireMode(_mode).CheckFlag(RequiresAmmo) && !GetFireMode(_mode).HasAmmo())
-		return false;
+	if(fireMode.CheckFlag(RequiresAmmo)){
+		if(fireMode.m_ShootButton == BOT_BUTTON_THROWKNIFE){
+			UpdateClipAmmo(_mode);
+			fireMode.m_AmmoMax = fireMode.m_AmmoCurrent - fireMode.m_ClipCurrent;
+			fireMode.m_AmmoCurrent = fireMode.m_ClipCurrent;
+		}
+		if(!fireMode.HasAmmo())
+			return false;
+	}
 
-	if(GetFireMode(_mode).m_DelayChooseTime > IGame::GetTime())
+	if(fireMode.m_DelayChooseTime > IGame::GetTime())
 		return false;
 
 	if(!InterfaceFuncs::IsWeaponCharged(m_Client, GetWeaponID(), _mode))

@@ -46,6 +46,7 @@ namespace AiState
 		WeaponLimits	m_WeaponLimits;
 		Vector3f		m_AimPosition;
 		obuint32		m_CurrentWeaponHash;
+		FireMode	m_FireMode;
 		bool			m_ShootTheBastard : 1;
 		bool			m_TargetExceedsWeaponLimits : 1;
 	};
