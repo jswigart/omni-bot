@@ -447,6 +447,7 @@ class Weapon : public WeaponScriptResource
 			int		m_DelayChooseTime;
 			int		m_BurstTime;
 			int		m_BurstRound;
+			int		m_LastAmmoUpdate;
 
 			struct
 			{
@@ -561,6 +562,8 @@ class Weapon : public WeaponScriptResource
 		bool SelectionLocked();
 
 		bool CanShoot(FireMode _mode, const TargetInfo &_targetinfo);
+		
+		FireMode GetBestFireMode(const TargetInfo &_targetinfo);
 
 		// function: PreShoot
 		//		Called during the time the weapon has been chosen and the bot
@@ -714,8 +717,6 @@ class Weapon : public WeaponScriptResource
 		// var: m_MinUseTime
 		//		The minimum time to use a weapon when equipped.
 		obReal			m_MinUseTime;
-
-		int				m_LastAmmoUpdate;
 
 		// For scripting
 		mutable gmGCRoot<gmUserObject>	m_ScriptObject;		

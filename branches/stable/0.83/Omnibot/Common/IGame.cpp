@@ -534,6 +534,7 @@ void IGame::InitScriptBotButtons(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "AIM",		gmVariable(BOT_BUTTON_AIM));
 	_table->Set(_machine, "RESPAWN",	gmVariable(BOT_BUTTON_RESPAWN));
 	_table->Set(_machine, "TAUNT",		gmVariable(BOT_BUTTON_TAUNT));	
+	_table->Set(_machine, "THROW_KNIFE", gmVariable(BOT_BUTTON_THROWKNIFE));
 }
 
 void IGame::InitScriptTraceMasks(gmMachine *_machine, gmTableObject *_table)

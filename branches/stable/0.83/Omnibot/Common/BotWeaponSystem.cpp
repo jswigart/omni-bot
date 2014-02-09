@@ -177,10 +177,16 @@ namespace AiState
 			{
 				m_CurrentWeaponHash = wpn->GetWeaponNameHash();
 
+				m_FireMode = wpn->GetBestFireMode(targetInfo);
+				if(m_FireMode == InvalidFireMode){
+					m_FireMode = Primary;
+					m_ShootTheBastard = false;
+				}
+
 				// Calculate the position the bot will aim at, the weapon itself should account
 				// for any leading that may need to take place 
-				m_AimPosition = wpn->GetAimPoint(Primary, vTargetEnt, targetInfo);
-				wpn->AddAimError(Primary, m_AimPosition, targetInfo);
+				m_AimPosition = wpn->GetAimPoint(m_FireMode, vTargetEnt, targetInfo);
+				wpn->AddAimError(m_FireMode, m_AimPosition, targetInfo);
 				_aimpos = m_AimPosition;
 
 				// Check limits
@@ -223,12 +229,12 @@ namespace AiState
 			{
 				if(wsys->ReadyToFire())
 				{
-					wpn->PreShoot(Primary);
-					wpn->Shoot();
+					wpn->PreShoot(m_FireMode);
+					wpn->Shoot(m_FireMode);
 				}
 				else
 				{
-					wpn->StopShooting(Primary);
+					wpn->StopShooting(m_FireMode);
 				}
 			}
 		}
