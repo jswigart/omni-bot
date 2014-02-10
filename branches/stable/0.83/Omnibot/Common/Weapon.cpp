@@ -871,8 +871,12 @@ bool Weapon::CanShoot(FireMode _mode, const TargetInfo &_targetinfo)
 
 FireMode Weapon::GetBestFireMode(const TargetInfo &_targetinfo)
 {
-	if(!GetFireMode(Secondary).IsDefined() && GetFireMode(Primary).m_WeaponType!=Melee) 
-		return Primary;
+	if(!GetFireMode(Secondary).IsDefined())
+	{
+		WeaponType type = GetFireMode(Primary).m_WeaponType;
+		if(type == WeaponType::Item) return InvalidFireMode;
+		if(type != WeaponType::Melee) return Primary;
+	}
 	
 	FireMode bestFireMode = InvalidFireMode;
 	obReal fBestDesir = 0.f;
@@ -1112,12 +1116,11 @@ obReal Weapon::CalculateDefaultDesirability()
 	for(int i = Primary; i < Num_FireModes; ++i)
 	{
 		FireMode m = GetFireMode(i);
-
-		if(!_MeetsRequirements(m))
-			continue;
-
-		if(GetFireMode(m).IsDefined()) // hmmm?
+		if(GetFireMode(m).IsDefined())
 		{
+			if(!_MeetsRequirements(m))
+				continue;
+
 			fDesir = GetFireMode(m).CalculateDefaultDesirability(m_Client);
 			if(fDesir > fBestDesir)
 			{
@@ -1155,6 +1158,9 @@ bool Weapon::_MeetsRequirements(FireMode _mode)
 {	
 	WeaponFireMode& fireMode = GetFireMode(_mode);
 	
+	if(fireMode.m_WeaponType == WeaponType::Item)
+		return false;
+
 	if(!fireMode.CheckFlag(Waterproof) && m_Client->HasEntityFlag(ENT_FLAG_UNDERWATER))
 		return false;
 
@@ -1190,23 +1196,30 @@ bool Weapon::_MeetsRequirements(FireMode _mode, const TargetInfo &_targetinfo)
 
 bool Weapon::WeaponFireMode::getType( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
+	const char* s;
+
 	switch(a_native->m_WeaponType)
 	{
-	case Weapon::Melee:
-		a_operands[0].SetString(a_thread->GetMachine()->AllocStringObject("melee"));
+	case WeaponType::Melee:
+		s = "melee";
 		break;
-	case Weapon::InstantHit:
-		a_operands[0].SetString(a_thread->GetMachine()->AllocStringObject("instant"));
+	case WeaponType::InstantHit:
+		s = "instant";
 		break;
-	case Weapon::Projectile:
-		a_operands[0].SetString(a_thread->GetMachine()->AllocStringObject("projectile"));
+	case WeaponType::Projectile:
+		s = "projectile";
 		break;
-	case Weapon::Grenade:
-		a_operands[0].SetString(a_thread->GetMachine()->AllocStringObject("grenade"));
+	case WeaponType::Grenade:
+		s = "grenade";
+		break;
+	case WeaponType::Item:
+		s = "item";
 		break;
 	default:
 		a_operands[0].Nullify();
+		return true;
 	}
+	a_operands[0].SetString(a_thread->GetMachine()->AllocStringObject(s));
 	return true;
 }
 
@@ -1223,6 +1236,8 @@ bool Weapon::WeaponFireMode::setType( Weapon::WeaponFireMode *a_native, gmThread
 			a_native->m_WeaponType = Weapon::Projectile;
 		else if(!_gmstricmp(pObj->GetString(), "grenade"))
 			a_native->m_WeaponType = Weapon::Grenade;
+		else if(!_gmstricmp(pObj->GetString(), "item"))
+			a_native->m_WeaponType = Weapon::Item;
 		else
 			Utils::OutputDebug(kError, "Invalid Weapon Type specified: %s", pObj->GetString());
 	}
@@ -1272,7 +1287,7 @@ void Weapon::WeaponFireMode::Bind(gmMachine *_m)
 		.func(&WeaponFireMode::SetTargetBias,				"SetTargetBias","Set a desirability multiplier versus a target class.")
 		.func(gmfSetIgnoreEntFlags,							"SetIgnoreEntFlags","Sets one or more entity flags that should be ignored for this weapon.")
 
-		.var(getType,setType,								"WeaponType","string","melee, instant, projectile, or grenade")
+		.var(getType,setType,								"WeaponType","string","melee, instant, projectile, grenade, or item")
 		
 		.var(&WeaponFireMode::m_ShootButton,				"ShootButton",0,"The button to press to fire the weapon. Default ATTACK1.")
 		.var(&WeaponFireMode::m_ZoomButton,					"ZoomButton",0,"The button to press to zoom the weapon. Default AIM.")
