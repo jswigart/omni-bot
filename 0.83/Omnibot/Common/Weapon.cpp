@@ -52,6 +52,7 @@ Weapon::WeaponFireMode::WeaponFireMode()
 	, m_BurstTime			(0)
 	, m_BurstRound			(0)
 	, m_LastAmmoUpdate(0)
+	, m_LastClipAmmoUpdate(0)
 {
 	// Initialize Default Properties
 	SetFlag(Waterproof, true);
@@ -957,14 +958,24 @@ void Weapon::StopShooting(FireMode _mode)
 
 void Weapon::UpdateClipAmmo(FireMode _mode)
 {
-	// This function is meant to be called when the weapon is currently equipped.
-	if(GetFireMode(_mode).CheckFlag(RequiresAmmo))
+	WeaponFireMode& fireMode = GetFireMode(_mode);
+	if(fireMode.m_LastClipAmmoUpdate == IGame::GetTime())
+		return;
+
+	fireMode.m_LastClipAmmoUpdate = IGame::GetTime();
+	if(fireMode.CheckFlag(RequiresAmmo))
 	{
 		g_EngineFuncs->GetCurrentWeaponClip(
 			m_Client->GetGameEntity(), 
 			_mode, 
-			GetFireMode(_mode).m_ClipCurrent, 
-			GetFireMode(_mode).m_ClipMax);
+			fireMode.m_ClipCurrent,
+			fireMode.m_ClipMax);
+
+		if(fireMode.m_ShootButton == BOT_BUTTON_THROWKNIFE)
+		{
+			fireMode.m_AmmoMax = fireMode.m_AmmoCurrent - fireMode.m_ClipCurrent;
+			fireMode.m_AmmoCurrent = fireMode.m_ClipCurrent;
+		}
 	}
 }
 
@@ -1147,13 +1158,10 @@ bool Weapon::_MeetsRequirements(FireMode _mode)
 	if(!fireMode.CheckFlag(Waterproof) && m_Client->HasEntityFlag(ENT_FLAG_UNDERWATER))
 		return false;
 
-	UpdateAmmo(_mode);
 	if(fireMode.CheckFlag(RequiresAmmo)){
-		if(fireMode.m_ShootButton == BOT_BUTTON_THROWKNIFE){
+		UpdateAmmo(_mode);
+		if(fireMode.m_ShootButton == BOT_BUTTON_THROWKNIFE) 
 			UpdateClipAmmo(_mode);
-			fireMode.m_AmmoMax = fireMode.m_AmmoCurrent - fireMode.m_ClipCurrent;
-			fireMode.m_AmmoCurrent = fireMode.m_ClipCurrent;
-		}
 		if(!fireMode.HasAmmo())
 			return false;
 	}
