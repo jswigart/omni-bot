@@ -251,17 +251,22 @@ obReal Weapon::WeaponFireMode::CalculateDesirability(Client *_bot, const TargetI
 		return m_LastDesirability;
 	}
 
+	obReal fBestDesirability = -1;
 	for(int i = 0; i < MaxDesirabilities; ++i)
 	{
 		if(m_Desirabilities[i].m_MaxRange != 0.f)
 		{
 			if(InRangeT(_targetinfo.m_DistanceTo, m_Desirabilities[i].m_MinRange, m_Desirabilities[i].m_MaxRange))
 			{
-				if(m_Desirabilities[i].m_Desirability > m_LastDesirability)
-					m_LastDesirability = m_Desirabilities[i].m_Desirability * fTargetBias;
+				if(m_Desirabilities[i].m_Desirability > fBestDesirability)
+					fBestDesirability = m_Desirabilities[i].m_Desirability;
 			}
 		}
 	}
+	if(fBestDesirability >= 0){
+		m_LastDesirability = fBestDesirability * fTargetBias;
+	}
+
 	m_LastDesirability *= m_WeaponBias;
 	return m_LastDesirability;	
 }
