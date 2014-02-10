@@ -1443,6 +1443,7 @@ int gmBot::gmfGetAmmo(gmThread *a_thread)
 	if(curWeapon && m != InvalidFireMode)
 	{		
 		curWeapon->UpdateAmmo(m);
+		curWeapon->UpdateClipAmmo(m);
 		gmMachine *pMachine = a_thread->GetMachine();
 		DisableGCInScope gcEn(pMachine);
 

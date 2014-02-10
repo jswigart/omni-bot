@@ -448,6 +448,7 @@ class Weapon : public WeaponScriptResource
 			int		m_BurstTime;
 			int		m_BurstRound;
 			int		m_LastAmmoUpdate;
+			int		m_LastClipAmmoUpdate;
 
 			struct
 			{
