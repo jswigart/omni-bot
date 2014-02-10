@@ -62,6 +62,7 @@ class Weapon : public WeaponScriptResource
 			InstantHit,
 			Projectile,
 			Grenade,
+			Item
 		} WeaponType;
 
 		typedef enum
