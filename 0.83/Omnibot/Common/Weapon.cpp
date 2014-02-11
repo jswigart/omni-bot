@@ -874,8 +874,8 @@ FireMode Weapon::GetBestFireMode(const TargetInfo &_targetinfo)
 	if(!GetFireMode(Secondary).IsDefined())
 	{
 		WeaponType type = GetFireMode(Primary).m_WeaponType;
-		if(type == WeaponType::Item) return InvalidFireMode;
-		if(type != WeaponType::Melee) return Primary;
+		if(type == Weapon::Item) return InvalidFireMode;
+		if(type != Weapon::Melee) return Primary;
 	}
 	
 	FireMode bestFireMode = InvalidFireMode;
@@ -1158,7 +1158,7 @@ bool Weapon::_MeetsRequirements(FireMode _mode)
 {	
 	WeaponFireMode& fireMode = GetFireMode(_mode);
 	
-	if(fireMode.m_WeaponType == WeaponType::Item)
+	if(fireMode.m_WeaponType == Weapon::Item)
 		return false;
 
 	if(!fireMode.CheckFlag(Waterproof) && m_Client->HasEntityFlag(ENT_FLAG_UNDERWATER))
@@ -1200,19 +1200,19 @@ bool Weapon::WeaponFireMode::getType( Weapon::WeaponFireMode *a_native, gmThread
 
 	switch(a_native->m_WeaponType)
 	{
-	case WeaponType::Melee:
+	case Weapon::Melee:
 		s = "melee";
 		break;
-	case WeaponType::InstantHit:
+	case Weapon::InstantHit:
 		s = "instant";
 		break;
-	case WeaponType::Projectile:
+	case Weapon::Projectile:
 		s = "projectile";
 		break;
-	case WeaponType::Grenade:
+	case Weapon::Grenade:
 		s = "grenade";
 		break;
-	case WeaponType::Item:
+	case Weapon::Item:
 		s = "item";
 		break;
 	default:
