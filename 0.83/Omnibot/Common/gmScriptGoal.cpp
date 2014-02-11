@@ -892,7 +892,13 @@ int gmScriptGoal::gmfBlackboardDelay(gmThread *a_thread)
 
 	if (a_thread->GetNumParams() < 2)
 	{
-		serial = native->GetMapGoal()->GetSerialNum();
+		MapGoal* mg = native->GetMapGoal().get();
+		if(!mg)
+		{
+			GM_EXCEPTION_MSG("this.MapGoal is null");
+			return GM_EXCEPTION;
+		}
+		serial = mg->GetSerialNum();
 	}
 	else if(gmBind2::Class<MapGoal>::FromVar(a_thread,a_thread->Param(1),Mg) && Mg)
 	{
