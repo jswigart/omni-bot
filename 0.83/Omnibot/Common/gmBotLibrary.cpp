@@ -519,6 +519,7 @@ static int GM_CDECL gmfGetMapGoal(gmThread *a_thread)
 //		table	- The table to put the matching goals into.
 //		team	- The team the goal should be for. 0 means any team.
 //		exp		- The expression to use to match the goal names. 0 to match any.
+//		params
 //
 // Returns:
 //		none
@@ -532,7 +533,7 @@ static int GM_CDECL gmfGetMapGoals(gmThread *a_thread)
 	table->RemoveAndDeleteAll(a_thread->GetMachine());
 
 	GoalManager::Query qry;
-	qry.DefaultGlobalQuery();
+	qry.NoFilters();
 	qry.Expression(pExpr).Team(iTeam);
 
 	// parse optional parameters

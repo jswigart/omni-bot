@@ -44,7 +44,8 @@ public:
 		{
 			SORT_BIAS,
 			SORT_NONE,
-			SORT_RANDOM_FULL
+			SORT_RANDOM_FULL,
+			SORT_NAME
 		};
 
 		enum QueryError 
@@ -85,7 +86,6 @@ public:
 		Query(obuint32 _type = 0, Client *_client = 0);
 		virtual ~Query() {}
 
-		void DefaultGlobalQuery();
 		void FromTable(gmMachine *a_machine, gmTableObject *a_table);
 
 		const char *QueryErrorString();

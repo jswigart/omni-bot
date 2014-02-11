@@ -202,6 +202,7 @@ GoalManager::Query &GoalManager::Query::CheckRangeProperty(bool checkRange)
 
 GoalManager::Query &GoalManager::Query::NoFilters()
 {
+	m_SortType = SORT_NONE;
 	m_SkipDelayed = false;
 	m_SkipNoInProgressSlots = false;
 	m_SkipNoInUseSlots = false;
@@ -240,13 +241,6 @@ bool GoalManager::Query::GetBest(MapGoalPtr &_mg)
 		return true;
 	}
 	return false; 
-}
-
-void GoalManager::Query::DefaultGlobalQuery()
-{
-	m_SkipDelayed = false;
-	m_SkipNoInProgressSlots = false;
-	m_SkipNoInUseSlots = false;
 }
 
 void GoalManager::Query::FromTable(gmMachine *a_machine, gmTableObject *a_table)
@@ -289,6 +283,17 @@ void GoalManager::Query::FromTable(gmMachine *a_machine, gmTableObject *a_table)
 		gmVariable var = a_table->Get(a_machine,"NoFilters");
 		if(var.IsInt() && var.GetInt()!=0)
 			NoFilters();
+	}
+	{
+		gmVariable var = a_table->Get(a_machine, "Sort");
+		if(var.IsString()){
+			const char* s = var.GetCStringSafe();
+			if(!_gmstricmp(s, "priority")) Sort(Query::SORT_BIAS);
+			else if(!_gmstricmp(s, "none")) Sort(Query::SORT_NONE);
+			else if(!_gmstricmp(s, "name")) Sort(Query::SORT_NAME);
+			else if(!_gmstricmp(s, "random")) Sort(Query::SORT_RANDOM_FULL);
+			else LOGERR("Invalid Sort Type specified: " << s);
+		}
 	}
 }
 
@@ -378,58 +383,58 @@ void GoalManager::Query::OnQueryStart()
 	m_List.resize(0);
 }
 
+bool _GoalNameLT(const MapGoalPtr _pt1, const MapGoalPtr _pt2)
+{
+	return _pt1->GetName() < _pt2->GetName();
+}
+
 void GoalManager::Query::OnQueryFinish()
 {
-	if(!m_List.empty())
+	if(m_List.size()>1)
 	{
 		switch(m_SortType)
 		{
 		case SORT_BIAS:
 			{
-				if(m_List.size()>1)
+				// Get priorities of all goals in the list
+				typedef std::vector<IndexPriority> IndexPriorityList;
+				IndexPriorityList list;
+				list.reserve(m_List.size());
+				int index=0;
+				for(MapGoalList::iterator it = m_List.begin(); it != m_List.end(); it++)
 				{
-					// Get priorities of all goals in the list
-					typedef std::vector<IndexPriority> IndexPriorityList;
-					IndexPriorityList list;
-					list.reserve(m_List.size());
-					int index=0;
-					for(MapGoalList::iterator it = m_List.begin(); it != m_List.end(); it++)
-					{
-						list.push_back( IndexPriority(index++, 
-							m_Client ? (*it)->GetPriorityForClient(m_Client) : (*it)->GetDefaultPriority()));
-					}
+					list.push_back( IndexPriority(index++, 
+						m_Client ? (*it)->GetPriorityForClient(m_Client) : (*it)->GetDefaultPriority()));
+				}
 
-					std::sort(list.begin(), list.end(), IndexPriorityGreaterThan());
+				std::sort(list.begin(), list.end(), IndexPriorityGreaterThan());
 
-					// Randomize the ranges that have the same bias.
-					for(IndexPriorityList::iterator it = list.begin(); it != list.end(); )
-					{
-						IndexPriorityList::iterator upper = std::upper_bound(
-							it, list.end(), (*it).second, IndexPriorityGreaterThan());
+				// Randomize the ranges that have the same bias.
+				for(IndexPriorityList::iterator it = list.begin(); it != list.end(); )
+				{
+					IndexPriorityList::iterator upper = std::upper_bound(
+						it, list.end(), (*it).second, IndexPriorityGreaterThan());
 
-						std::random_shuffle(it, upper);
-						it = upper;
-					}
+					std::random_shuffle(it, upper);
+					it = upper;
+				}
 					
-					// Reorder goals list
-					MapGoalList newList;
-					newList.reserve(list.size());
-					for(IndexPriorityList::iterator it = list.begin(); it!=list.end(); it++)
-					{
-						newList.push_back(m_List[it->first]);
-					}
-					m_List.swap(newList);
-				}				
+				// Reorder goals list
+				MapGoalList newList;
+				newList.reserve(list.size());
+				for(IndexPriorityList::iterator it = list.begin(); it!=list.end(); it++)
+				{
+					newList.push_back(m_List[it->first]);
+				}
+				m_List.swap(newList);
 				break;
 			}
 		case SORT_RANDOM_FULL:
-			{
-				if(m_List.size()>1)
-				{
-					std::random_shuffle(m_List.begin(), m_List.end());
-				}
-				break;
-			}
+			std::random_shuffle(m_List.begin(), m_List.end());
+			break;
+		case SORT_NAME:
+			std::sort(m_List.begin(), m_List.end(), _GoalNameLT);
+			break;
 		default:
 			break;
 		}
@@ -537,11 +542,6 @@ void GoalManager::InitCommands()
 		this, &GoalManager::cmdGoalMove);
 }
 
-bool _GoalNameLT(const MapGoalPtr _pt1, const MapGoalPtr _pt2)
-{
-	return _pt1->GetName() < _pt2->GetName();
-}
-
 void GoalManager::cmdGoalShow(const StringVector &_args)
 {
 	File f;
@@ -571,11 +571,9 @@ void GoalManager::cmdGoalShow(const StringVector &_args)
 
 	GoalManager::Query qry;
 	qry.NoFilters();
-	qry.Expression(strExpression.c_str());
+	qry.Expression(strExpression.c_str()).Sort(Query::SORT_NAME);
 	GetGoals(qry);
 	
-	std::sort(qry.m_List.begin(), qry.m_List.end(), _GoalNameLT);
-
 	EngineFuncs::ConsoleMessage("- Goal List -");
 	int iCount = 1;
 	String txt;
@@ -649,10 +647,8 @@ void GoalManager::cmdGoalShowRoutes(const StringVector &_args)
 	}
 
 	GoalManager::Query qry;
-	qry.Expression(strExpression.c_str());
+	qry.Expression(strExpression.c_str()).Sort(Query::SORT_NAME);
 	GetGoals(qry);
-
-	std::sort(qry.m_List.begin(), qry.m_List.end(), _GoalNameLT);
 
 	EngineFuncs::ConsoleMessage("- Route List -");
 	int iCount = 1;
