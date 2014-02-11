@@ -2017,10 +2017,14 @@ static int gmfGetTeamStat(gmThread *a_thread)
 //		- OR - 
 //		<GameEntity> - The first entity to use
 //		- OR - 
+//		<MapGoal> - The first goal to use
+//		- OR - 
 //		<int> - The gameId for the first entity to use
 //		<Vector3> - The 3d vector to convert to calculate distance to.
 //		- OR - 
 //		<GameEntity> - The second entity to use
+//		- OR - 
+//		<MapGoal> - The second goal to use
 //		- OR - 
 //		<int> - The gameId for the second entity to use
 //
@@ -2032,11 +2036,16 @@ static int gmfDistanceBetween(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(2);
 	Vector3f vPosition1, vPosition2;
+	MapGoal *Mg = 0;
 
 	if(a_thread->ParamType(0) == GM_VEC3)
 	{
 		GM_CHECK_VECTOR_PARAM(v,0);
 		vPosition1 = Vector3f(v.x,v.y,v.z);
+	}
+	else if(gmBind2::Class<MapGoal>::FromVar(a_thread, a_thread->Param(0), Mg) && Mg)
+	{
+		vPosition1 = Mg->GetPosition();
 	}
 	else
 	{
@@ -2054,6 +2063,10 @@ static int gmfDistanceBetween(gmThread *a_thread)
 	{
 		GM_CHECK_VECTOR_PARAM(v,1);
 		vPosition2 = Vector3f(v.x,v.y,v.z);
+	}
+	else if(gmBind2::Class<MapGoal>::FromVar(a_thread, a_thread->Param(1), Mg) && Mg)
+	{
+		vPosition2 = Mg->GetPosition();
 	}
 	else
 	{

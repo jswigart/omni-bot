@@ -1222,6 +1222,8 @@ int gmBot::gmfToWorldSpace(gmThread *a_thread)
 //		 - OR -
 //		<GameEntity> - The entity to calculate distance to.
 //		- OR - 
+//		<MapGoal> - The goal to calculate distance to.
+//		- OR - 
 //		<int> - The gameId to calculate distance to.
 //		<int> - OPTIONAL - true to use eye position, false to use entity position(default false)
 //
@@ -1234,10 +1236,15 @@ int gmBot::gmfDistanceTo(gmThread *a_thread)
 	GM_INT_PARAM(eyepos, 1, False);
 
 	Vector3f vPosition2;
+	MapGoal *Mg = 0;
 	if(a_thread->ParamType(0) == GM_VEC3)
 	{
 		GM_CHECK_VECTOR_PARAM(v,0);
 		vPosition2 = Vector3f(v.x,v.y,v.z);
+	}
+	else if(gmBind2::Class<MapGoal>::FromVar(a_thread, a_thread->Param(0), Mg) && Mg)
+	{
+		vPosition2 = Mg->GetPosition();
 	}
 	else
 	{
