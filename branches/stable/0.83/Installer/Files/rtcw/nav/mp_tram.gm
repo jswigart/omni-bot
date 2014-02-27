@@ -339,6 +339,10 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe_Flag.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rAlliesRear" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlagCall.*" );
+			
+			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
+			
+			Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLower_.*" );
@@ -365,6 +369,8 @@ global Map =
 			//SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe_Supply.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_artyflag.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_supplycall.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag.*" );
+			Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
 
 			if ( !Map.LowerStatus ) {
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLower_.*" );
@@ -863,8 +869,8 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-	Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
-	Util.SetMaxUsersInProgress( 3, "FLAG.*" ); // Martin - 3 people go for it (now includes after dropped)
+	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );	// More than 1 bot should go for it...it is critical to hold to get the supply plant down
+	Util.SetMaxUsersInProgress( 3, "FLAG.*" );
 
 	Util.DisableGoal( ".*", true );
 	RTCWUtil.SetPrimaryGoals( 1 );
@@ -901,8 +907,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rAlliesRear" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-	//SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK.*" );	//Martin - Why were they ALL on at once?
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSupply.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRoam_Supply.*" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe_Flag.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_lowerouthouse.*" );

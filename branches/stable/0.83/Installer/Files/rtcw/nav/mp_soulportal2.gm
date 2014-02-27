@@ -542,6 +542,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Hells_Spawn_Soul_Portal" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Guardhouse_Door" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_nemountain.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
 	Util.EnableGroup( "r_church1", TEAM.AXIS ); // static defense
 	Util.EnableGroup( "r_church2", TEAM.AXIS ); // shifts inside once door is destroyed
 	Util.EnableGroup( "r_traincontrol", TEAM.AXIS );

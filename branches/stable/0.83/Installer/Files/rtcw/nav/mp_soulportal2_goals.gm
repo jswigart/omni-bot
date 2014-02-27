@@ -82,6 +82,34 @@ global _MG =
 		TeamAvailability = 30,
 		Version = 1,
 	},
+	ARTILLERY_S_rSpawnkill1 = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "ARTILLERY_S",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "ARTILLERY_S_rSpawnkill1",
+		Orientation = Vec3(-2.192, 0.201, -0.000),
+		Position = Vec3(-640.125, -2049.000, 1144.298),
+		Radius = 0,
+		TagName = "rSpawnkill1",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	ARTILLERY_S_rSpawnkill2 = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "ARTILLERY_S",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "ARTILLERY_S_rSpawnkill2",
+		Orientation = Vec3(-3.131, 0.331, -0.000),
+		Position = Vec3(-1910.375, -1151.875, 730.998),
+		Radius = 0,
+		TagName = "rSpawnkill2",
+		TeamAvailability = 30,
+		Version = 1,
+	},
 	ATTACK_bCheckpoint1 = 
 	{
 		AimVectors = 

@@ -2,34 +2,6 @@ global Map =
 {
 	Quiet = true,
 
-	Checkpoint_beach_flag = "CHECKPOINT_beach_flag",
-	Plant_Axis_data_center = "PLANT_Axis_data_center",
-	Plant_Axis_radar_room = "PLANT_Axis_radar_room",
-	Plant_Axis_transmitter = "PLANT_Axis_transmitter",
-	Plant_dock = "PLANT_dock",
-	Plant_outer_defense_controls = "PLANT_outer_defense_controls",
-	Mount_249 = "MOUNTMG42_249",
-	Mount_29 = "MOUNTMG42_29",
-	Mount_307 = "MOUNTMG42_307",
-	Mount_mg42_1 = "MOUNTMG42_mg42_1",
-	Mount_mg42_1_1 = "MOUNTMG42_mg42_1_1",
-	Mount_mg42_1_2 = "MOUNTMG42_mg42_1_2",
-	Mount_mg42_1_3 = "MOUNTMG42_mg42_1_3",
-	Mount_t364 = "MOUNTMG42_t364",
-	Mount_t364_1 = "MOUNTMG42_t364_1",
-	Mount_t364_2 = "MOUNTMG42_t364_2",
-	Mount_t364_3 = "MOUNTMG42_t364_3",
-	Repair_249 = "REPAIRMG42_249",
-	Repair_29 = "REPAIRMG42_29",
-	Repair_307 = "REPAIRMG42_307",
-	Repair_mg42_1 = "REPAIRMG42_mg42_1",
-	Repair_mg42_1_1 = "REPAIRMG42_mg42_1_1",
-	Repair_mg42_1_2 = "REPAIRMG42_mg42_1_2",
-	Repair_mg42_1_3 = "REPAIRMG42_mg42_1_3",
-	Repair_t364 = "REPAIRMG42_t364",
-	Repair_t364_1 = "REPAIRMG42_t364_1",
-	Repair_t364_2 = "REPAIRMG42_t364_2",
-	Repair_t364_3 = "REPAIRMG42_t364_3",
 	DontDispenseAmmo = true,
 
 	ElevatorStatus = "Bottom", 
@@ -68,6 +40,16 @@ global Map =
 			},
 		},
 
+	},
+	Airstrike =
+	{
+		flagas =
+		{
+			Enabled = true,
+			Team = ( 1 << TEAM.AXIS ),
+			Facing = Vector3( 0.291,0.020, 0.956 ),
+			NoPause = true,
+		},
 	},
 
 	Axis_data_center_Destroyed = function( trigger )
@@ -178,6 +160,10 @@ global OnMapLoad = function()
 {
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
+		
+	Util.AddUseWp( "PLANT_outer_defense_controls", "controls1" );
+	Util.AddUseWp( "PLANT_Axis_transmitter", "transmit1" );
+	Util.AddUseWp( "PLANT_Axis_radar_room", "radar1" );
 
 	OnTrigger( "Allies have destroyed the data center!", Map.Axis_data_center_Destroyed );
 	OnTrigger( "Allies have destroyed the radar room!", Map.Axis_radar_room_Destroyed );
@@ -194,24 +180,35 @@ global OnMapLoad = function()
 
 	//disable all goals at start
 	RTCWUtil.DisableGoal(".*", true); //all but routes
+	RTCWUtil.SetPrimaryGoals( 1.0 );
 	
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
 
 	RTCWUtil.EnableGoal("CHECKPOINT.*", true);
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_dock" );
-	//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axupper.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1_2" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1_3" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rInitial.*" );
+//	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_dock" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1_2" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1_3" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rInitial.*" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rInitial.*" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRadar.*" );
+	SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
+	Map.Airstrike.flagas.Enabled = true;
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_outer.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_radar.*" );
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTransmit.*" );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
 
 	Wp.SetWaypointFlag( "ladderhack", "closed", true );
 	Wp.SetWaypointFlag( "laddertoggle1", "closed", true );
@@ -222,6 +219,9 @@ global OnMapLoad = function()
 	Wp.SetWaypointFlag( "bottom5", "closed", true );
 	
 	Util.UpdateSwitchData();
+	
+	yield();yield();
+	RTCWUtil.KillEntities({588,589,594,593,592,625,301,300});
 
 	print( "OnMapLoad" );
 };
@@ -231,6 +231,9 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 100.0;
-	bot.MaxViewDistance = 2500;
+	bot.MaxViewDistance = 2300;
+	RTCWUtil.NoSnipe( bot ); 
+	RTCWUtil.SelectSoldierWeapons( 0, bot, WEAPON.PANZERFAUST, WEAPON.VENOM );
+	bot.ChangeSpawnPoint( 0 );
 };
 

@@ -1,0 +1,9 @@
+Reasons for not completing maps
+
+fun_beach / fun_beach_2 - Forward deploy flag broken
+mk_d_day2 - Forward deploy flag broken
+mp_lumber-factory - Awful map
+mp_password / mp_password2 - Bot's can't handle password
+tt_trench - Awful map
+mp_zion - Awful map (Converted from SOF2)
+mp_bridge - Need crapshoot's assistance to rotate the waypoints

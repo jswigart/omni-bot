@@ -19,6 +19,7 @@ global Map =
 	Repair_mg42_5 = "REPAIRMG42_mg42_5",
 
 	AxisDontDispenseAmmo = true,
+	DontDispenseAmmo = true,
 	AlliesDontDispenseAmmo = true,
 
 	bccDyno = 0,
