@@ -1,20 +1,20 @@
 global Map =
 {
-	Debug = 1, // please set to zero before distributing your script
+	Debug = 0, // please set to zero before distributing your script
 	ShowMovers = false,
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = true,
 	
 	Switches =
 	{
-		/*hospitaldoor =
+		hospitaldoor =
 		{
 			Enabled = true,
 			Priority = 0.84,
-			//WaypointName = "lowerdoor",
+			WaypointName = "hospitaldoor",
 			LimitBots = 2,
 			LimitClass = Util.AllClasses,
-		},*/
+		},
 		garagedoor =
 		{
 			Enabled = true,
@@ -29,6 +29,8 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_rFlag.*" );
 
 		Util.MapDebugPrint( "Hospital_Storage_Door_Destroyed" );
 	},
@@ -48,7 +50,11 @@ global Map =
 		sleep(15);
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bRoad.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bHospital.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bHangar.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFiretruck.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bHangar.*" );
 		Util.MapDebugPrint( "Sewer_Entrance_Destroyed" );
 	},
 	
@@ -65,6 +71,16 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE.*" );		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_bDocs.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bTrans.*" );
+		
+		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rTrans.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_transmitmg.*" );
 
 		Util.MapDebugPrint( "documents_Taken" );
 	},
@@ -74,6 +90,15 @@ global Map =
 		if ( TestMap )
 			{ return; }
 
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bDocs.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bDocs.*" );
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_rTrans.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_transmitmg.*" );
+		
 		Util.MapDebugPrint( "documents_Secured" );
 	},
 
@@ -81,6 +106,8 @@ global Map =
 	{
 		if ( TestMap )
 			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rRoad.*" );
 
 		Util.MapDebugPrint( "FDA_Axis_Captured" );
 	},
@@ -129,7 +156,7 @@ global OnMapLoad = function()
 		{ Util.AutoTestMap(); }
 
 	// Register callback functions
-	OnTrigger( "the Hospital Storage Door Destroyed.", Map.Hospital_Storage_Door_Destroyed );
+	OnTrigger( "Hospital Storage Door Destroyed.", Map.Hospital_Storage_Door_Destroyed );
 	OnTrigger( "Planted at Hospital Storage Door.", Map.Hospital_Storage_Door_Planted );
 	OnTrigger( "the Sewer Entrance Destroyed.", Map.Sewer_Entrance_Destroyed );
 	OnTrigger( "Planted at the Sewer Entrance.", Map.Sewer_Entrance_Planted );
@@ -139,6 +166,7 @@ global OnMapLoad = function()
 	OnTrigger( "MISSING_STRING", Map.FDA_Allies_Captured );
 	OnTrigger( "door2mover_goto", Map.hospitaldoor );
 	OnTrigger( "door1mover_goto", Map.garagedoor );
+	//"Explode_369 Exploded"
 	
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
@@ -147,12 +175,16 @@ global OnMapLoad = function()
 
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
-	SetGoalPriority( "GRENADE_rHangar", 0.94 );
-	SetGoalPriority( "PLANT_Sewer_Entrance", 0.93 );
+	SetGoalPriority( "GRENADE_rHangar", 0.90 );
+	SetGoalPriority( "ATTACK_rFlag", 0.91 );
 	
 	RTCWUtil.LimitToClass( "DEFEND_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.ENGINEER,CLASS.SOLDIER );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
+	Util.SetMaxUsersInProgress( 1, "ATTACK_rFlag.*" );
+	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
+	
 	Util.DisableGoal( ".*", true ); // all but routes
 	Util.EnableGoal( "CAPPOINT_transmit", true );
 	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_documents" );
@@ -160,15 +192,90 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rHangar" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rRoad.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rRocks.*" );
 	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bRoad.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRoad.*" );
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bRoad.*" );
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRoad.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bHospital.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bHospital.*" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_hospital" );
 	
+	MapRoutes =
+	{
+		FLAG_documents =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_alohanorth =
+				{
+					ROUTE_hangarwest =
+					{
+						ROUTE_ducts = {},
+						ROUTE_maindoor = {Weight = 3,},
+					},
+					ROUTE_hangareast = 
+					{
+						ROUTE_ducts = {},
+						ROUTE_maindoor = {Weight = 3,},
+					},
+				},
+			},
+		},
+		ROUTE_rspawn =
+		{
+			ROUTE_hospital =
+			{
+				ROUTE_hospitaleast = 
+				{
+					ROUTE_hospitaltunnel = {},
+					ROUTE_hangarwest =
+					{
+						ROUTE_ducts = {},
+						ROUTE_maindoor = {Weight = 3,},
+					},
+					ROUTE_hangareast = 
+					{
+						ROUTE_ducts = {},
+						ROUTE_maindoor = {Weight = 3,},
+					},
+				},
+				ROUTE_alohanorth =
+				{
+					ROUTE_hangarwest =
+					{
+						ROUTE_ducts = {},
+						ROUTE_maindoor = {Weight = 3,},
+					},
+					ROUTE_hangareast = 
+					{
+						ROUTE_ducts = {},
+						ROUTE_maindoor = {Weight = 3,},
+					},
+				},
+			},
+			ROUTE_sewer = 
+			{
+				ROUTE_hangarwest =
+				{
+					ROUTE_ducts = {},
+					ROUTE_maindoor = {},
+				},
+				ROUTE_hangareast = 
+				{
+					ROUTE_ducts = {},
+					ROUTE_maindoor = {},
+				},
+			},
+		},
+	};
+	
+	MapRoutes.FLAG_documents.ROUTE_flagspawn.ROUTE_alohasouth = MapRoutes.FLAG_documents.ROUTE_flagspawn.ROUTE_alohanorth;
+	
+	Util.Routes( MapRoutes );
 	Util.UpdateSwitchData();
 	yield(); yield();
+	
 
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };

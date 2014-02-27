@@ -2,7 +2,8 @@ global Map =
 {
 	//Quiet = true,
 	DispenseAmmoTime = 1,
-	Debug = 1,
+	DontDispenseAmmo = true,
+	Debug = 0,
 	ShowMovers = false,
 	DoorStatus = false,
 	
@@ -189,7 +190,7 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_street" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_spawn" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_flag" );
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_flag" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bspawnkill.*" );
 	
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDoor.*" );
@@ -261,8 +262,7 @@ global OnMapLoad = function()
 	
 	Util.Routes( MapRoutes );
 	
-	EntityKill(83);
-	EntityKill(90);
+	RTCWUtil.KillEntities({83,90,375,94,147,116});
 	
 	Util.MapDebugPrint( "OnMapLoad" );
 };

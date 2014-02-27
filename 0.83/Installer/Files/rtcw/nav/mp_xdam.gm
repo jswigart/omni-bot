@@ -143,6 +143,21 @@ global Map =
 			}
 		},
 	},
+	KillBridge1 = function ()
+	{
+		if ( TestMap )
+		{ return; }
+		
+		RTCWUtil.KillEntities({196,321,178});
+	},
+
+	KillAxisSpawn = function ()
+	{
+		if ( TestMap )
+		{ return; }
+		
+		RTCWUtil.KillEntities({413,322});
+	},
 	
 };
 
@@ -151,9 +166,16 @@ global OnMapLoad = function()
 	if ( TestMapOn )
 		{ Util.AutoTestMap(); }
 	ladder = OnTriggerRegion( AABB( -480.000,1743.000,535.000,-344.000,1933.000,971.000 ), Map.LadderTrigger );
-		
-
+	//EntityKill(196);
+		//t131_Opening
+		//178_Opening
+		//321_Opening
+		//322_Opening
 		// "Planted at the Blocked Dam Door."
+		
+	OnTrigger( "t131_Opening", Map.KillBridge1 );
+	OnTrigger( "322_Opening", Map.KillAxisSpawn );
+		
 	OnTrigger( "the Blocked Dam Door Destroyed.", Map.Blocked_Dam_Door_Destroyed );
 	OnTrigger( "MISSING_STRING", Map.Service_Entrance_Destroyed );
 	OnTrigger( "MISSING_STRING", Map.X_Lab_equipment_Destroyed );
@@ -298,7 +320,7 @@ global OnMapLoad = function()
 	EntityKill(139);
 	EntityKill(170);
 	EntityKill(177);
-	EntityKill(196);
+
 	EntityKill(244);
 	EntityKill(267);
 	EntityKill(229);

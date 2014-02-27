@@ -132,7 +132,30 @@ global Map =
 			}
 		},
 	},
-
+	AlliedSpawnTrigger =
+	{
+		Name = "AlliedSpawnTrigger",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( true );
+				b.DisableCombatMovement = true;
+				b.HoldButton( BTN.SPRINT, 999 );
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableBotPush( false );
+				b.DisableCombatMovement = false;
+				b.ReleaseButton( BTN.SPRINT );
+			}
+		},
+	},
+	
 	TowerTrigger =
 	{
 		Name = "TowerTrigger",
@@ -585,7 +608,8 @@ global OnMapLoad = function()
 	tarmacladder = OnTriggerRegion( AABB( 767.000,1743.000,-560.000,992.000,1968.000,122.000 ), Map.TarmacLadderTrigger );
 	gateladder = OnTriggerRegion( AABB( -1806.000,719.000,-560.000,-1581.000,944.000,115.000 ), Map.TarmacLadderTrigger );
 	garagedoor = OnTriggerRegion( AABB( 2879.000,2815.000,31.000,2944.000,2895.000,105.000 ), Map.LadderTrigger );
-
+	bspawntrigger = OnTriggerRegion( AABB(  3585.000,732.000,33.000,3928.000,1536.000,107.000), Map.AlliedSpawnTrigger);
+	
 	if ( TestMapOn ) {
 		Util.AutoTestMap();
 	}
@@ -621,7 +645,7 @@ global OnMapLoad = function()
 
 	SetGoalPriority( "CALL.*", 0.75 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
-	SetGoalPriority( "MOUNT.*", 0.71 );
+	SetGoalPriority( "MOUNTMG42_tarmac_nest_2", 0.82 );
 	SetGoalPriority( "DEFEND_bGarage_[236]", 0.55 );
 	SetGoalPriority( "GRENADE_gatebarrier", 0.81 );
 	SetGoalPriority( "GRENADE_hatch", 0.81 );
@@ -666,10 +690,8 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bGateSpam.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_Gate2" );
 
-	// Artillery
-	//SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );    // First spawn location
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_aTower.*" );    // First spawn location
-	// end artillery
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_aTower.*" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_flag_tower" );
 
