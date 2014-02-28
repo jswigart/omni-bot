@@ -1180,12 +1180,13 @@ void    Sys_EndProfiling( void );
 qboolean Sys_LowPhysicalMemory();
 unsigned int Sys_ProcessorCount();
 
+typedef struct {
+	int commandId;
+} renderOmnibot_t;
 
 void	Sys_OmnibotLoad();
 void	Sys_OmnibotUnLoad();
-void	Sys_OmnibotRender();
-
-
+const void * Sys_OmnibotRender( const void *data );
 
 // NOTE TTimo - on win32 the cwd is prepended .. non portable behaviour
 void Sys_StartProcess( char *exeName, qboolean doexit );            // NERVE - SMF

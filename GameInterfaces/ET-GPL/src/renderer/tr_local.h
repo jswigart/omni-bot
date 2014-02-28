@@ -1418,6 +1418,7 @@ void  R_NoiseInit( void );
 void R_SwapBuffers( int );
 
 void R_RenderView( viewParms_t *parms );
+void R_RenderOmnibot();
 
 void R_AddMD3Surfaces( trRefEntity_t *e );
 void R_AddNullModelSurfaces( trRefEntity_t *e );
@@ -1972,7 +1973,8 @@ typedef enum {
 	RC_DRAW_BUFFER,
 	RC_SWAP_BUFFERS,
 	RC_RENDERTOTEXTURE, //bani
-	RC_FINISH   //bani
+	RC_FINISH,   //bani
+	RC_DRAW_OMNIBOT
 } renderCommand_t;
 
 // these are sort of arbitrary limits.
