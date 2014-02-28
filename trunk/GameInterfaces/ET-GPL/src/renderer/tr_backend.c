@@ -1478,7 +1478,6 @@ void RB_ExecuteRenderCommands( const void *data ) {
 			break;
 		case RC_DRAW_SURFS:
 			data = RB_DrawSurfs( data );
-			Sys_OmnibotRender();
 			break;
 		case RC_DRAW_BUFFER:
 			data = RB_DrawBuffer( data );
@@ -1493,6 +1492,9 @@ void RB_ExecuteRenderCommands( const void *data ) {
 			//bani
 		case RC_FINISH:
 			data = RB_Finish( data );
+			break;
+		case RC_DRAW_OMNIBOT:
+			data = Sys_OmnibotRender( data );
 			break;
 		case RC_END_OF_LIST:
 		default:

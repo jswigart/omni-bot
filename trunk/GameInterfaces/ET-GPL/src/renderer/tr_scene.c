@@ -622,6 +622,9 @@ void RE_RenderScene( const refdef_t *fd ) {
 
 	R_RenderView( &parms );
 
+	if ( fd->rdflags & RDF_RENDEROMNIBOT )
+		R_RenderOmnibot();
+
 	// the next scene rendered in this frame will tack on after this one
 	r_firstSceneDrawSurf = tr.refdef.numDrawSurfs;
 	r_firstSceneEntity = r_numentities;

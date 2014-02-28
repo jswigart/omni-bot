@@ -1874,6 +1874,13 @@ void R_DebugGraphics( void ) {
 	ri.CM_DrawDebugSurface( R_DebugPolygon );
 }
 
+void R_RenderOmnibot()
+{
+	renderOmnibot_t * cmd = R_GetCommandBuffer( sizeof( renderOmnibot_t ) );
+	if ( cmd != NULL ) {
+		cmd->commandId = RC_DRAW_OMNIBOT;	
+	}	
+}
 
 /*
 ================

@@ -1356,10 +1356,12 @@ void	Sys_OmnibotUnLoad()
 	omnibotHandle = NULL;
 }
 
-void	Sys_OmnibotRender()
+const void * Sys_OmnibotRender( const void * data )
 {
+	renderOmnibot_t * cmd = (renderOmnibot_t*)data;
 	if ( gOmnibotRenderFunc )
 	{
 		gOmnibotRenderFunc();
-	}	
+	}
+	return (const void *)( cmd + 1 );
 }
