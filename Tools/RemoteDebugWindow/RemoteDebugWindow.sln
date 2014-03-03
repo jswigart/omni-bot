@@ -1,13 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RemoteDebugWindow", "RemoteDebugWindow\RemoteDebugWindow.vcproj", "{15CE2F8C-EA71-4EB9-8970-703FC444AE0A}"
-	ProjectSection(ProjectDependencies) = postProject
-		{3E283F37-A4ED-41B7-A3E6-A2D89D131A30} = {3E283F37-A4ED-41B7-A3E6-A2D89D131A30}
-		{C9B38552-3534-437E-A660-C34A62DDCEB1} = {C9B38552-3534-437E-A660-C34A62DDCEB1}
-	EndProjectSection
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RemoteDebugWindow", "RemoteDebugWindow\RemoteDebugWindow.vcxproj", "{15CE2F8C-EA71-4EB9-8970-703FC444AE0A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RemoteDebugLib", "RemoteDebugLib\RemoteDebugLib.vcproj", "{C9B38552-3534-437E-A660-C34A62DDCEB1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RemoteDebugLib", "RemoteDebugLib\RemoteDebugLib.vcxproj", "{C9B38552-3534-437E-A660-C34A62DDCEB1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libprotobuf", "..\protobuf\protobuf-2.4.1\vsprojects\libprotobuf.vcproj", "{3E283F37-A4ED-41B7-A3E6-A2D89D131A30}"
 EndProject
