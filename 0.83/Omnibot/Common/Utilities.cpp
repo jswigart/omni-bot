@@ -59,6 +59,7 @@ namespace Utils
 	bool RegexMatch( const char * exp, const char * str ) {		
 		try
 		{
+			if(exp[0]=='.' && exp[1]=='*' && exp[2]=='\0') return true;
 			boost::regex expression( exp, REGEX_OPTIONS );
 			return boost::regex_match( str, expression );
 		}
