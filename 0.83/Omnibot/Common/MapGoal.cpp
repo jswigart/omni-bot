@@ -12,6 +12,7 @@
 #include "ScriptManager.h"
 #include "NavigationManager.h"
 #include "gmSchemaLib.h"
+#include "gmBot.h"
 
 #ifdef ENABLE_DEBUG_WINDOW
 #include <guichan.hpp>
@@ -164,7 +165,7 @@ void MapGoal::_Init()
 
 	m_Position = Vector3f::ZERO;
 	m_InterfacePosition = Vector3f::ZERO;
-	m_Orientation = Matrix3f::IDENTITY;
+	SetMatrix(Matrix3f::IDENTITY);
 	m_LocalBounds = AABB(Vector3f::ZERO, Vector3f::ZERO);
 	m_Radius = 0.f;
 	m_MinRadius = 0.f;
@@ -549,7 +550,7 @@ void MapGoal::InternalInitEntityState()
 
 		Vector3f vFwd, vRight, vUp;
 		bool b3 = EngineFuncs::EntityOrientation(GetEntity(), vFwd, vRight, vUp);
-		if(b3) m_Orientation = Matrix3f(vRight, vFwd, vUp, true);
+		if(b3) SetMatrix(Matrix3f(vRight, vFwd, vUp, true));
 
 		OBASSERT(b1&&b2&&b3,"Lost Entity!");
 	}
@@ -672,16 +673,13 @@ int MapGoal::GetRange_Script()
 
 void MapGoal::SetFacing(const Vector3f &_facing)
 {
-	m_Orientation = Matrix3f(_facing.Cross(Vector3f::UNIT_Z), _facing, Vector3f::UNIT_Z, true);
+	SetMatrix(Matrix3f(_facing.Cross(Vector3f::UNIT_Z), _facing, Vector3f::UNIT_Z, true));
 }
 
 void MapGoal::SetFacing_Script(const Vec3 &_facing)
 {
 	Vector3f facing(_facing.x,_facing.y,_facing.z);
-	m_Orientation = Matrix3f(
-		facing.Cross(Vector3f::UNIT_Z), 
-		facing, 
-		Vector3f::UNIT_Z, true);
+	SetFacing(facing);
 }
 
 
@@ -698,6 +696,8 @@ Vec3 MapGoal::GetFacing_Script()
 void MapGoal::SetMatrix(const Matrix3f &_mat)
 {
 	m_Orientation = _mat;
+	m_OrientationValid = true;
+	m_EulerValid = false;
 }
 
 Matrix3f MapGoal::GetMatrix()
@@ -707,7 +707,12 @@ Matrix3f MapGoal::GetMatrix()
 		Vector3f vFwd, vRight, vUp;
 		bool b = EngineFuncs::EntityOrientation(GetEntity(), vFwd, vRight, vUp);
 		OBASSERT(b,"Lost Entity!");
-		if(b) m_Orientation = Matrix3f(vRight, vFwd, vUp, false);
+		if(b) SetMatrix(Matrix3f(vRight, vFwd, vUp, false));
+	}
+
+	if(!m_OrientationValid){
+		m_Orientation.FromEulerAnglesZXY(m_Euler.x, m_Euler.y, m_Euler.z);
+		m_OrientationValid = true;
 	}
 	return m_Orientation;
 }
@@ -1592,9 +1597,11 @@ bool MapGoal::SaveToTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_savetab
 	/*gmGCRoot<gmUserObject> userBounds = gmBind2::Class<BoundingBox>::WrapObject(_machine,&m_Bounds,true);
 	GoalTable->Set(_machine,"Bounds",gmVariable(userBounds));*/
 
-	Vector3f Euler(0,0,0);
-	m_Orientation.ToEulerAnglesZXY(Euler.x,Euler.y,Euler.z);
-	GoalTable->Set(_machine,"Orientation",gmVariable(Euler));
+	if(!m_EulerValid){
+		m_Orientation.ToEulerAnglesZXY(m_Euler.x, m_Euler.y, m_Euler.z);
+		m_EulerValid = true;
+	}
+	GoalTable->Set(_machine, "Orientation", gmVariable(m_Euler));
 	//////////////////////////////////////////////////////////////////////////
 
 	GoalTable->Set(_machine,"TeamAvailability",gmVariable(m_AvailableTeamsInit.GetRawFlags()));
@@ -1690,13 +1697,12 @@ bool MapGoal::LoadFromTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_loadt
 	//	return false;
 	//}
 
-	Vector3f Euler(0,0,0);
-	if(!proptable->Get(_machine,"Orientation").GetVector(Euler))
+	//orientation is used only by MORTAR goals
+	if(proptable->Get(_machine,"Orientation").GetVector(m_Euler))
 	{
-		_err.AddError("Goal.Orientation Field Missing!");
-		return false;
+		m_EulerValid = true;
+		m_OrientationValid = false;
 	}
-	m_Orientation.FromEulerAnglesZXY(Euler.x,Euler.y,Euler.z);
 
 	int InitialTeams = 0;
 	if(!proptable->Get(_machine,"TeamAvailability").GetIntSafe(InitialTeams,0))
