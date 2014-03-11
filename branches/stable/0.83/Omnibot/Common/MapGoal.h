@@ -440,6 +440,7 @@ private:
 	Vector3f		m_Position;
 	Vector3f		m_InterfacePosition; //cache the auto detected position
 	Matrix3f		m_Orientation;
+	Vector3f		m_Euler;
 	AABB			m_LocalBounds; // deprecated
 	//BoundingBox	m_Bounds;
 
@@ -470,6 +471,8 @@ private:
 	int				m_Version;
 
 	bool			m_NeedsSynced;
+	bool			m_OrientationValid;
+	bool			m_EulerValid;
 
 	// var: m_ScriptObject
 	//		This objects script instance, so that the object can clear its script
