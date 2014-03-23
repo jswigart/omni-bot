@@ -1,0 +1,88 @@
+global Map =
+{
+	Debug = 1,
+	ShowMovers = false,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = true,
+
+	allied_bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "allied_bridge_Destroyed" );
+	},
+
+	axis_bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_bridge_Destroyed" );
+	},
+
+	Radio_Codes_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Radio_Codes_Taken" );
+	},
+
+	Weld_Tanks_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Weld_Tanks_Taken" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "MISSING_STRING", Map.allied_bridge_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.axis_bridge_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Radio_Codes_Taken );
+	OnTrigger( "MISSING_STRING", Map.Weld_Tanks_Taken );
+
+	//~Util.DisableGoal( ".*", true ); // all but routes
+	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
+	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
+
+	RTCWUtil.KillEntities( {269, 280} );
+	//Doors \/
+	RTCWUtil.KillEntities( {155, 450, 444, 442} );
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.ChangeSpawnPoint( 0 );
+	bot.MaxViewDistance = 1950;
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		PLANT_allied_bridge =
+		{
+		},
+		PLANT_axis_bridge =
+		{
+		},
+		FLAG_Radio_Codes =
+		{
+		},
+		FLAG_Weld_Tanks =
+		{
+		},
+	};
+	Util.Routes(MapRoutes);
+};
