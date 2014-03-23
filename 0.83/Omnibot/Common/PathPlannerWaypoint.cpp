@@ -53,7 +53,7 @@ float g_fPathLevelOffset = 0.5f;
 //////////////////////////////////////////////////////////////////////////
 
 obColor		g_WaypointColor = COLOR::MAGENTA;
-obColor		g_LinkClosedColor = COLOR::BLACK;
+obColor		g_LinkClosedColor = obColor(20, 20, 20);
 obColor		g_LinkTeleport = COLOR::YELLOW;
 obColor		g_LinkColor1Way = COLOR::GREY;
 obColor		g_LinkColor2Way = COLOR::GREY;
