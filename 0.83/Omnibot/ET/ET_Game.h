@@ -29,6 +29,7 @@ public:
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
+	bool CheckVersion(int _version);
 	const char *GetDLLName() const;
 	const char *GetGameName() const;
 	const char *GetModSubFolder() const;

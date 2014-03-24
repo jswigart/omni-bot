@@ -61,8 +61,9 @@ public:
 	{
 	}
 	~MessageHelper() {};
-private:
+
 	mutable int m_MessageId;
+private:
 	void		*m_pVoid;
 	obuint32	m_BlockSize;
 

@@ -1090,6 +1090,31 @@ typedef struct MapGoalDef_t
 #endif
 } MapGoalDef;
 
+// struct: MapGoalDef71
+typedef struct MapGoalDef71_t
+{
+	enum { BufferSize = 64 };
+
+	GameEntity		m_Entity;
+	int				m_GoalType;
+	int				m_Team;
+	char			m_TagName[BufferSize];
+	obUserData		m_UserData;
+
+#ifdef __cplusplus
+
+	void Reset()
+	{
+		m_Entity.Reset();
+		m_GoalType = 0;
+		m_Team = 0;
+		m_TagName[0] = 0;
+		m_UserData = obUserData();
+	}
+	MapGoalDef71_t() { Reset(); }
+#endif
+} MapGoalDef71;
+
 // struct: AutoNavFeature
 typedef struct AutoNavFeature_t
 {

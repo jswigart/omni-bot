@@ -51,10 +51,18 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	srand((unsigned int)time(NULL));
 
 	g_EngineFuncs = _pEngineFuncs;
+	m_InterfaceVersionNum = _version;
 
 	// Attempt to create the proper instance of IGame based on the game requested.
 	m_Game = CreateGameInstance();
 	
+	// Verify the version is correct.
+	if(!m_Game->CheckVersion(_version))
+	{
+		OB_DELETE(m_Game);
+		return BOT_ERROR_WRONGVERSION;
+	}
+
 	// Create log file
 	int logSize = m_Game->GetLogSize();
 	if(logSize >= 0)
@@ -66,13 +74,6 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 			(String)va("%s/omnibot_%s.log", 
 			fs::is_directory(logFolder) ? logFolder.string().c_str() : _pEngineFuncs->GetLogPath(),
 			_pEngineFuncs->GetMapName()), logSize==0);
-	}
-
-	// Verify the version is correct.
-	if(!m_Game->CheckVersion(_version))
-	{
-		OB_DELETE(m_Game);
-		return BOT_ERROR_WRONGVERSION;
 	}
 
 	if(!FileSystem::InitFileSystem())
@@ -409,7 +410,7 @@ void IGameManager::cmdVersion(const StringVector &_args)
 		EngineFuncs::ConsoleMessage(va("Omni-Bot : %s %s", __DATE__, __TIME__));
 #endif
 		EngineFuncs::ConsoleMessage(va("Version : %s", m_Game->GetVersion()));
-		EngineFuncs::ConsoleMessage(va("Interface # : %d", m_Game->GetVersionNum()));
+		EngineFuncs::ConsoleMessage(va("Interface # : %d", m_InterfaceVersionNum));
 	}
 }
 

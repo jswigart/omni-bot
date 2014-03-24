@@ -41,6 +41,23 @@ typedef struct
 	void (*pfnUpdateEntity)(GameEntity oldent,GameEntity newent);
 } Bot_EngineFuncs_t;
 
+typedef struct
+{
+	omnibot_error(*pfnInitialize)(IEngineInterface *_pEngineFuncs, int _version);
+	void(*pfnUpdate)();
+	void(*pfnShutdown)();
+	void(*pfnConsoleCommand)(const Arguments &_args);
+	void(*pfnAddGoal)(const MapGoalDef71 &goaldef);
+	void(*pfnSendTrigger)(const TriggerInfo &_triggerInfo);
+	void(*pfnAddBlackboardRecord)(BlackBoard_Key _type, int _posterID, int _targetID, obUserData *_data);
+	void(*pfnBotEntityAdded)(GameEntity _ent, EntityInfo *_info);
+	void(*pfnSendEvent)(int _dest, const MessageHelper &_message);
+	void(*pfnSendGlobalEvent)(const MessageHelper &_message);
+	void(*pfnUpdateEntity)(GameEntity oldent, GameEntity newent);
+	void(*pfnDeleteGoal)(const char *goalname);
+} Bot_EngineFuncs71_t;
+
+
 //#define DllExport __declspec( dllexport )
 //
 //class DllExport IBotEngineInterface
