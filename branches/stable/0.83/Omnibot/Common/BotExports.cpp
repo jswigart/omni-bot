@@ -57,5 +57,24 @@ OMNIBOT_API eomnibot_error ExportBotFunctionsFromDLL(Bot_EngineFuncs_t *_pBotFun
 
 		return BOT_ERROR_NONE;
 	}
+
+	if(sizeof(Bot_EngineFuncs71_t) == _size)
+	{
+		Bot_EngineFuncs71_t* _pBotFuncs71 = reinterpret_cast<Bot_EngineFuncs71_t*>(_pBotFuncs);
+		_pBotFuncs71->pfnInitialize			= BotInitialise71;
+		_pBotFuncs71->pfnUpdate				= BotUpdate;
+		_pBotFuncs71->pfnShutdown				= BotShutdown;
+		_pBotFuncs71->pfnConsoleCommand		= BotConsoleCommand;
+		_pBotFuncs71->pfnAddGoal				= BotAddGoal71;
+		_pBotFuncs71->pfnSendTrigger			= BotSendTrigger;
+		_pBotFuncs71->pfnAddBlackboardRecord	= BotAddBBRecord;
+		_pBotFuncs71->pfnSendEvent			= BotSendEvent71;
+		_pBotFuncs71->pfnSendGlobalEvent		= BotSendGlobalEvent71;
+		_pBotFuncs71->pfnUpdateEntity			= BotUpdateEntity;
+		_pBotFuncs71->pfnDeleteGoal			= BotDeleteMapGoal;
+
+		return BOT_ERROR_NONE;
+	}
+
 	return BOT_ERROR_BAD_INTERFACE;
 }

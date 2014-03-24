@@ -61,6 +61,13 @@ void SetThreadName( DWORD dwThreadID, char* threadName)
 
 //////////////////////////////////////////////////////////////////////////
 
+omnibot_error BotInitialise71(IEngineInterface *_pEngineFuncs, int _version)
+{
+	static IEngineInterface71wrapper interface71wrapper;
+	interface71wrapper.base = reinterpret_cast<IEngineInterface71*>(_pEngineFuncs);
+	return BotInitialise(&interface71wrapper, _version);
+}
+
 omnibot_error BotInitialise(IEngineInterface *_pEngineFuncs, int _version)
 {
 	Timer loadTime;
@@ -123,7 +130,41 @@ void BotConsoleCommand(const Arguments &_args)
 	CommandReciever::DispatchCommand(tokList);
 }
 
-void BotSendEvent(int _dest, const MessageHelper &_message) 
+static void FixEventId71(const MessageHelper &_message)
+{
+	int id=_message.GetMessageId();
+	if(id>=4 && id<48) _message.m_MessageId--;
+	if(id>53) _message.m_MessageId+=4;
+
+	if(_message.GetMessageId() == GAME_ENTITYCREATED)
+	{
+		Event_EntityCreated *m = _message.Get<Event_EntityCreated>();
+		IEngineInterface71wrapper::FixEntityCategory(m->m_EntityCategory);
+		if(m->m_EntityCategory.CheckFlag(ENT_CAT_PICKUP))
+		{
+			if(m->m_EntityClass==ENT_CLASS_GENERIC_HEALTH)
+				m->m_EntityCategory.SetFlag(ENT_CAT_PICKUP_HEALTH);
+			else if(m->m_EntityClass==ENT_CLASS_GENERIC_AMMO)
+				m->m_EntityCategory.SetFlag(ENT_CAT_PICKUP_AMMO);
+			else if(m->m_EntityClass==ENT_CLASS_GENERIC_WEAPON)
+				m->m_EntityCategory.SetFlag(ENT_CAT_PICKUP_WEAPON);
+		}
+	}
+}
+
+void BotSendEvent71(int _dest, const MessageHelper &_message)
+{
+	FixEventId71(_message);
+	BotSendEvent(_dest, _message);
+}
+
+void BotSendGlobalEvent71(const MessageHelper &_message)
+{
+	FixEventId71(_message);
+	BotSendGlobalEvent(_message);
+}
+
+void BotSendEvent(int _dest, const MessageHelper &_message)
 {
 	IGameManager::GetInstance()->GetGame()->DispatchEvent(_dest, _message);
 }
@@ -131,6 +172,24 @@ void BotSendEvent(int _dest, const MessageHelper &_message)
 void BotSendGlobalEvent(const MessageHelper &_message)
 {
 	IGameManager::GetInstance()->GetGame()->DispatchGlobalEvent(_message);
+}
+
+void BotAddGoal71(const MapGoalDef71 &goaldef071)
+{
+	static const char* goalTypes[]={"build", "plant", "defuse", "revive", "mover", "mountmg42", "repairmg42",
+		0, 0, "plant", 0, 0, 0, 0, "healthcab", "ammocab", "checkpoint", "explode"};
+
+	MapGoalDef goaldef;
+	if(goaldef071.m_GoalType==8) goaldef.Props.SetString("Type", "flag");
+	if(goaldef071.m_GoalType==11) goaldef.Props.SetString("Type", "flagreturn");
+	else if(goaldef071.m_GoalType>1000 && goaldef071.m_GoalType<1019 && goalTypes[goaldef071.m_GoalType-1001])
+		goaldef.Props.SetString("Type", goalTypes[goaldef071.m_GoalType-1001]);
+
+	goaldef.Props.SetEntity("Entity", goaldef071.m_Entity);
+	goaldef.Props.SetInt("Team", goaldef071.m_Team);
+	goaldef.Props.SetString("TagName", goaldef071.m_TagName);
+	goaldef.Props.SetInt("InterfaceGoal", 1);
+	BotAddGoal(goaldef);
 }
 
 void BotAddGoal(const MapGoalDef &goaldef)

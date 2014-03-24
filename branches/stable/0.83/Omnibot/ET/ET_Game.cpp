@@ -32,6 +32,11 @@ int ET_Game::GetVersionNum() const
 	return ET_VERSION_LATEST;
 }
 
+bool ET_Game::CheckVersion(int _version)
+{
+	return _version == ET_VERSION_LATEST || _version == ET_VERSION_0_71;
+}
+
 Client *ET_Game::CreateGameClient()
 {
 	return new ET_Client;

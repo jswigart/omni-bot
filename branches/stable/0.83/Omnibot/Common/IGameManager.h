@@ -87,6 +87,7 @@ protected:
 	PathPlannerBase						*m_PathPlanner;
 	GoalManager							*m_GoalManager;
 	IGame								*m_Game;
+	int	m_InterfaceVersionNum;
 
 	FunctorMap							m_UpdateMap;
 

@@ -234,3 +234,81 @@ namespace EngineFuncs
 		//ThreadAddError(_msg);
 	}
 };
+
+
+
+obResult IEngineInterface71wrapper::TraceLine(obTraceResult &_result, const float _start[3], const float _end[3], const AABB *_pBBox, int _mask, int _user, obBool _bUsePVS)
+{
+	if(_mask==TR_MASK_VISIBLE) _mask=TR_MASK_SOLID|TR_MASK_OPAQUE;
+	_mask = (_mask&0x3f)|((_mask&~0xff)>>2);
+	return base->TraceLine(_result, _start, _end, _pBBox, _mask, _user, _bUsePVS);
+}
+
+void IEngineInterface71wrapper::FixEntityCategory(BitFlag32& category)
+{
+	obint32 c = category.GetRawFlags();
+	c = (c&0x1f)|((c&~0x1f)<<5);
+	c = (c&0xffff)|((c&~0xffff)<<1);
+	c = (c&0x3ffff)|((c&~0x3ffff)<<1);
+	category = BitFlag32(c);
+}
+
+obResult IEngineInterface71wrapper::GetEntityCategory(const GameEntity _ent, BitFlag32 &_category)
+{
+	obResult result = base->GetEntityCategory(_ent, _category);
+	if(SUCCESS(result))
+	{
+		FixEntityCategory(_category);
+		if(_category.CheckFlag(ENT_CAT_PICKUP))
+		{
+			int entClass=GetEntityClass(_ent);
+			if(entClass==ENT_CLASS_GENERIC_HEALTH)
+				_category.SetFlag(ENT_CAT_PICKUP_HEALTH);
+			else if(entClass==ENT_CLASS_GENERIC_AMMO)
+				_category.SetFlag(ENT_CAT_PICKUP_AMMO);
+			else if(entClass==ENT_CLASS_GENERIC_WEAPON)
+				_category.SetFlag(ENT_CAT_PICKUP_WEAPON);
+		}
+	}
+	return result;
+}
+
+obResult IEngineInterface71wrapper::GetEntityLocalAABB(const GameEntity _ent, AABB &_aabb)
+{
+	obResult result = base->GetEntityWorldAABB(_ent, _aabb);
+	if(SUCCESS(result))
+	{
+		float pos[3];
+		result = base->GetEntityPosition(_ent, pos);
+		if(SUCCESS(result))
+		{
+			_aabb.UnTranslate(pos);
+		}
+	}
+	return result;
+}
+
+obResult IEngineInterface71wrapper::GetEntityWorldOBB(const GameEntity _ent, float *_center, float *_axis0, float *_axis1, float *_axis2, float *_extents)
+{
+	AABB aabb;
+	obResult result = base->GetEntityWorldAABB(_ent, aabb);
+	if(SUCCESS(result))
+	{
+		aabb.CenterPoint(_center);
+		for(int i=0; i<3; i++)
+		{
+			_axis0[i]=Vector3<float>::UNIT_X[i];
+			_axis1[i]=Vector3<float>::UNIT_Y[i];
+			_axis2[i]=Vector3<float>::UNIT_Z[i];
+			_extents[i] = aabb.GetAxisLength(i)/2;
+		}
+	}
+	return result;
+}
+
+obResult IEngineInterface71wrapper::InterfaceSendMessage(const MessageHelper &_data, const GameEntity _ent)
+{ 
+	if(_data.GetMessageId()>43) _data.m_MessageId++;
+	if(_data.GetMessageId()==GEN_MSG_GETCONTROLLINGTEAM) _data.m_MessageId=44;
+	return base->InterfaceSendMessage(_data, _ent);
+}
