@@ -176,7 +176,7 @@ void BotSendGlobalEvent(const MessageHelper &_message)
 
 void BotAddGoal71(const MapGoalDef71 &goaldef071)
 {
-	static const char* goalTypes[]={"build", "plant", "defuse", "revive", "mover", "mountmg42", "repairmg42",
+	static const char* goalTypes[]={"build", "plant", "defuse", "revive", "mover", "mountmg42", 0,
 		0, 0, "plant", 0, 0, 0, 0, "healthcab", "ammocab", "checkpoint", "explode"};
 
 	MapGoalDef goaldef;
@@ -190,6 +190,11 @@ void BotAddGoal71(const MapGoalDef71 &goaldef071)
 	goaldef.Props.SetString("TagName", goaldef071.m_TagName);
 	goaldef.Props.SetInt("InterfaceGoal", 1);
 	BotAddGoal(goaldef);
+	
+	if(goaldef071.m_GoalType==1006){
+		goaldef.Props.SetString("Type", "repairmg42");
+		BotAddGoal(goaldef);
+	}
 }
 
 void BotAddGoal(const MapGoalDef &goaldef)
