@@ -257,6 +257,7 @@ namespace InterfaceFuncs
 		{
 			ET_CvarGet data;
 			data.m_Cvar = _cvar;
+			data.m_Value = 0;
 			MessageHelper msg(ET_MSG_GETCVAR, &data, sizeof(data));
 			InterfaceMsg(msg);
 			return data.m_Value;
