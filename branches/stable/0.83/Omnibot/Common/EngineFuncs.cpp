@@ -239,7 +239,7 @@ namespace EngineFuncs
 
 obResult IEngineInterface71wrapper::TraceLine(obTraceResult &_result, const float _start[3], const float _end[3], const AABB *_pBBox, int _mask, int _user, obBool _bUsePVS)
 {
-	if(_mask==TR_MASK_VISIBLE) _mask=TR_MASK_SOLID|TR_MASK_OPAQUE;
+	if(_mask&TR_MASK_FLOODFILLENT) _mask|=TR_MASK_PLAYERCLIP; //grates in map cortex_who
 	_mask = (_mask&0x3f)|((_mask&~0xff)>>2);
 	return base->TraceLine(_result, _start, _end, _pBBox, _mask, _user, _bUsePVS);
 }
