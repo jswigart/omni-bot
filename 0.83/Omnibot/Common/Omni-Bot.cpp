@@ -61,10 +61,10 @@ void SetThreadName( DWORD dwThreadID, char* threadName)
 
 //////////////////////////////////////////////////////////////////////////
 
-omnibot_error BotInitialise71(IEngineInterface *_pEngineFuncs, int _version)
+omnibot_error BotInitialise71(IEngineInterface71 *_pEngineFuncs, int _version)
 {
 	static IEngineInterface71wrapper interface71wrapper;
-	interface71wrapper.base = reinterpret_cast<IEngineInterface71*>(_pEngineFuncs);
+	interface71wrapper.base = _pEngineFuncs;
 	return BotInitialise(&interface71wrapper, _version);
 }
 

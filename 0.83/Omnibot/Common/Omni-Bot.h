@@ -23,7 +23,7 @@
 //		Initializes the bot library and sets the bot up with the callbacks to 
 //		the game in the form of function pointers to functions within the game.
 omnibot_error BotInitialise(IEngineInterface *_pEngineFuncs, int _version);
-omnibot_error BotInitialise71(IEngineInterface *_pEngineFuncs, int _version);
+omnibot_error BotInitialise71(IEngineInterface71 *_pEngineFuncs, int _version);
 // function: BotShutdown
 //		Shuts down and frees memory from the bot system
 void BotShutdown();

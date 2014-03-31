@@ -43,7 +43,7 @@ typedef struct
 
 typedef struct
 {
-	omnibot_error(*pfnInitialize)(IEngineInterface *_pEngineFuncs, int _version);
+	omnibot_error(*pfnInitialize)(IEngineInterface71 *_pEngineFuncs, int _version);
 	void(*pfnUpdate)();
 	void(*pfnShutdown)();
 	void(*pfnConsoleCommand)(const Arguments &_args);
