@@ -1,5 +1,97 @@
 global _MG = 
 {
+	AIRSTRIKE_bUpper1 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.391, -0.531, 0.751),
+		},
+		CreateOnLoad = 1,
+		GoalType = "AIRSTRIKE",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "AIRSTRIKE_bUpper1",
+		Orientation = Vec3(3.120, 0.005, -0.000),
+		Position = Vec3(1543.000, 4586.000, 985.000),
+		Radius = 32,
+		Roles = 
+		{
+			[0] = "DEFENDER",
+		},
+		Stance = "stand",
+		TagName = "bUpper1",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	AIRSTRIKE_bUpper2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.008, -0.727, 0.687),
+		},
+		CreateOnLoad = 1,
+		GoalType = "AIRSTRIKE",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "AIRSTRIKE_bUpper2",
+		Orientation = Vec3(-3.140, -0.055, -0.000),
+		Position = Vec3(640.000, 4586.000, 985.000),
+		Radius = 32,
+		Roles = 
+		{
+			[0] = "DEFENDER",
+		},
+		Stance = "crouch",
+		TagName = "bUpper2",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	AIRSTRIKE_rUpper1 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.404, 0.568, 0.717),
+		},
+		CreateOnLoad = 1,
+		GoalType = "AIRSTRIKE",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "AIRSTRIKE_rUpper1",
+		Orientation = Vec3(0.013, -0.243, 0.000),
+		Position = Vec3(2414.000, -4586.000, 985.000),
+		Radius = 32,
+		Roles = 
+		{
+			[0] = "DEFENDER",
+		},
+		Stance = "stand",
+		TagName = "rUpper1",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	AIRSTRIKE_rUpper2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.000, 0.624, 0.781),
+		},
+		CreateOnLoad = 1,
+		GoalType = "AIRSTRIKE",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "AIRSTRIKE_rUpper2",
+		Orientation = Vec3(-0.013, -0.000, -0.000),
+		Position = Vec3(3327.000, -4586.000, 985.000),
+		Radius = 32,
+		Roles = 
+		{
+			[0] = "DEFENDER",
+		},
+		Stance = "crouch",
+		TagName = "rUpper2",
+		TeamAvailability = 30,
+		Version = 1,
+	},
 	ARTILLERY_S_bCenter1 = 
 	{
 		CreateOnLoad = 1,
@@ -531,6 +623,34 @@ global _MG =
 		Weapons = 
 		{
 		},
+	},
+	CAPPOINT_btransmit = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "CapPoint",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "CAPPOINT_btransmit",
+		Orientation = Vec3(0.018, 0.000, -0.000),
+		Position = Vec3(1790.000, 5206.000, 817.000),
+		Radius = 0,
+		TagName = "btransmit",
+		TeamAvailability = 30,
+		Version = 1,
+	},
+	CAPPOINT_rtransmit = 
+	{
+		CreateOnLoad = 1,
+		GoalType = "CapPoint",
+		GroupName = "",
+		MinRadius = 32,
+		Name = "CAPPOINT_rtransmit",
+		Orientation = Vec3(3.136, 0.000, -0.000),
+		Position = Vec3(2178.000, -5213.000, 817.000),
+		Radius = 0,
+		TagName = "rtransmit",
+		TeamAvailability = 30,
+		Version = 1,
 	},
 	EXPLODE_111 = 
 	{
@@ -2219,6 +2339,18 @@ global _MG =
 	{
 		CoverSpots = 
 		{
+			[0] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(-0.952, -0.300, -0.061),
+					[1] = Vec3(-0.819, 0.568, 0.080),
+					[2] = Vec3(0.858, 0.507, 0.086),
+					[3] = Vec3(0.949, -0.314, -0.033),
+				},
+				position = Vec3(1982.258, 3952.400, 712.153),
+				stance = "stand",
+			},
 		},
 		CreateOnLoad = 0,
 		ExplosiveType = 1,
@@ -2237,6 +2369,18 @@ global _MG =
 	{
 		CoverSpots = 
 		{
+			[0] = 
+			{
+				AimVectors = 
+				{
+					[0] = Vec3(0.826, -0.558, 0.082),
+					[1] = Vec3(0.938, 0.346, -0.020),
+					[2] = Vec3(-0.921, 0.385, -0.052),
+					[3] = Vec3(-0.836, -0.544, 0.071),
+				},
+				position = Vec3(1983.826, -3953.016, 712.148),
+				stance = "stand",
+			},
 		},
 		CreateOnLoad = 0,
 		ExplosiveType = 1,
