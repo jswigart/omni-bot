@@ -30,18 +30,40 @@ global Map =
 		},
 	},
 
-	allied_bridge_Destroyed = function( trigger )
+	allied_bridge_Planted = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
 
+		Util.MapDebugPrint( "allied_bridge_Planted" );
+	},
+	
+	allied_bridge_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Wp.SetWaypointFlag( "bbridge1", "closed", true );
+		Wp.SetWaypointFlag( "bbridge2", "closed", true );
+
 		Util.MapDebugPrint( "allied_bridge_Destroyed" );
+	},
+	
+	axis_bridge_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "axis_bridge_Planted" );
 	},
 
 	axis_bridge_Destroyed = function( trigger )
 	{
 		if ( TestMap )
 			{ return; }
+
+		Wp.SetWaypointFlag( "rbridge1", "closed", true );
+		Wp.SetWaypointFlag( "rbridge2", "closed", true );
 
 		Util.MapDebugPrint( "axis_bridge_Destroyed" );
 	},
@@ -53,7 +75,23 @@ global Map =
 
 		Util.MapDebugPrint( "Radio_Codes_Taken" );
 	},
+	
+	Radio_Codes_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
 
+		Util.MapDebugPrint( "Radio_Codes_Returned" );
+	},
+
+	Weld_Tanks_Returned = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Weld_Tanks_Taken" );
+	},
+	
 	Weld_Tanks_Taken = function( trigger )
 	{
 		if ( TestMap )
@@ -70,17 +108,24 @@ global OnMapLoad = function()
 		{ Util.AutoTestMap(); }
 
 	// Register callback functions
-	OnTrigger( "MISSING_STRING", Map.allied_bridge_Destroyed );
-	OnTrigger( "MISSING_STRING", Map.axis_bridge_Destroyed );
-	OnTrigger( "MISSING_STRING", Map.Radio_Codes_Taken );
-	OnTrigger( "MISSING_STRING", Map.Weld_Tanks_Taken );
+	OnTrigger( "Planted at the allied bridge.", Map.allied_bridge_Planted );
+	OnTrigger( "the allied bridge Destroyed.", Map.allied_bridge_Destroyed );
+	OnTrigger( "Planted at the axis bridge.", Map.axis_bridge_Planted );
+	OnTrigger( "the axis bridge Destroyed.	", Map.axis_bridge_Destroyed );
+	OnTrigger( "Allies have stolen the Radio Codes!!", Map.Radio_Codes_Taken );
+	OnTrigger( "Flag returned Radio Codes!", Map.Radio_Codes_Returned );
+	OnTrigger( "Axis have stolen the Weld Tanks!", Map.Weld_Tanks_Taken );
+	OnTrigger( "Flag returned Weld Tanks!", Map.Weld_Tanks_Returned );
 	
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 90, maxcamptime = 120} );
 
 	Util.DisableGoal( ".*", true ); // all but routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	
-	SetGoalPriority( "MOUNTMG42.*", 0.90 );
+	SetGoalPriority( "MOUNTMG42.*", 0.91 );
+	SetGoalPriority( "CAMP.*", 0.89 );
+	SetGoalPriority( "AIRSTRIKE_rUpper.*", 0.90 );
+	SetGoalPriority( "AIRSTRIKE_bUpper.*", 0.90 );
 	
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 	
@@ -89,12 +134,21 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_r.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_r.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rDocs.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_rtransmit" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rUpper.*" );
 	
 	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Radio_Codes" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_axis_bridge" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_b.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_b.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bDocs.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_btransmit" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bUpper.*" );
+	
+	Wp.SetWaypointFlag( "bbridge1", "closed", false );
+	Wp.SetWaypointFlag( "bbridge2", "closed", false );
+	Wp.SetWaypointFlag( "rbridge1", "closed", false );
+	Wp.SetWaypointFlag( "rbridge2", "closed", false );
 
 	RTCWUtil.KillEntities( {269, 280} );
 	//Doors \/
