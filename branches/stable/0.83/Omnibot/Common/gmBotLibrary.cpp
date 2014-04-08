@@ -867,6 +867,9 @@ static int gmfTraceLine(gmThread *a_thread)
 
 		pTable->Set(pMachine, "normal", gmVariable(tr.m_Normal[0], tr.m_Normal[1], tr.m_Normal[2]));
 		pTable->Set(pMachine, "end", gmVariable(tr.m_Endpos[0], tr.m_Endpos[1], tr.m_Endpos[2]));
+
+		pTable->Set(pMachine, "contents", gmVariable(tr.m_Contents));
+		pTable->Set(pMachine, "surface", gmVariable(tr.m_Surface));
 	}
 
 	a_thread->PushTable(pTable);
