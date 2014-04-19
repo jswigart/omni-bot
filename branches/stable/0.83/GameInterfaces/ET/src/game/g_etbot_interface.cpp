@@ -180,7 +180,7 @@ void GetMG42s()
 		gentity_t *trav = NULL;
 		char *name;
 
-		while ((trav = G_Find(trav, FOFS(classname), "misc_mg42")))
+		while ((trav = G_Find(trav, FOFS(classname), "misc_mg42"))!=NULL)
 		{
 			name = (char *)_GetEntityName( trav );
 			mg42s[ numofmg42s ].ent = trav;
@@ -5003,7 +5003,7 @@ public:
 					{
 						if (G_IsConstructible(pEnt->client->sess.sessionTeam, pConstructable))
 							pMsg->m_State = CONST_UNBUILT;
-						else if ((pConstructable = G_ConstructionForTeam(pConstructable, pEnt->client->sess.sessionTeam)) &&
+						else if((pConstructable = G_ConstructionForTeam(pConstructable, pEnt->client->sess.sessionTeam))!=NULL &&
 							G_ConstructionIsFullyBuilt(pConstructable))
 							pMsg->m_State = CONST_BUILT;
 						else
@@ -5617,6 +5617,8 @@ void Bot_Interface_InitHandles()
 
 int Bot_Interface_Init()
 {
+	g_GoalSubmitReady = false;
+
 	if(g_OmniBotEnable.integer == 0)
 	{
 		G_Printf("%s%s\n", S_COLOR_GREEN,
@@ -5628,8 +5630,6 @@ int Bot_Interface_Init()
 	trap_Cvar_Set( "sv_cheats", "1" );
 	trap_Cvar_Update(&g_cheats);
 #endif
-
-	g_GoalSubmitReady = false;
 
 	g_InterfaceFunctions = new ETInterface;
 	eomnibot_error err = Omnibot_LoadLibrary(ET_VERSION_LATEST,
