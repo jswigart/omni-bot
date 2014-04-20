@@ -209,7 +209,24 @@ void BotAddGoal(const MapGoalDef &goaldef)
 		BotSendGlobalEvent(MessageHelper(GAME_ENTITYCREATED, &d, sizeof(d)));
 	}
 
-	GoalManager::GetInstance()->AddGoal(goaldef);
+	MapGoalPtr goal = GoalManager::GetInstance()->AddGoal(goaldef);
+
+	//send "dropped" trigger when FLAGRETURN goal is created
+	if(goal && goal->GetGoalTypeHash()==0xa06840e5)
+	{
+		TriggerInfo ti;
+		const char *TagName;
+		if(goaldef.Props.GetString("TagName", TagName))
+		{
+			int len = (int)strlen(TagName) - 8; //trim suffix
+			if(len>0){
+				sprintf(ti.m_TagName, "Flag dropped %.*s!", OB_MIN(len, TriggerBufferSize-15), TagName);
+				goaldef.Props.GetEntity("Entity", ti.m_Entity);
+				strcpy(ti.m_Action, "dropped");
+				TriggerManager::GetInstance()->HandleTrigger(ti);
+			}
+		}
+	}
 }
 
 void BotSendTrigger(const TriggerInfo &_triggerInfo)
