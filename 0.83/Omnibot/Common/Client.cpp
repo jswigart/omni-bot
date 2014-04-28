@@ -53,6 +53,7 @@ Client::Client()
 	, m_AimDamping			(10.0f)
 	, m_AimTolerance		(48.0f)
 	, m_ProfileType			(PROFILE_NONE)
+	, m_SpawnTime(0)
 {
 	memset(&m_ClientInput, 0, sizeof(m_ClientInput));
 	memset(&m_HealthArmor, 0, sizeof(m_HealthArmor));

@@ -30,6 +30,7 @@ public:
 	void Exit()
 	{
 		GetRootState()->OnSpawn();
+		GetClient()->m_SpawnTime = IGame::GetTime();
 	}
 	State::StateStatus Update(float fDt) 
 	{

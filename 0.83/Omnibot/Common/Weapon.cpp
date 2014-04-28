@@ -52,7 +52,7 @@ Weapon::WeaponFireMode::WeaponFireMode()
 	, m_BurstTime			(0)
 	, m_BurstRound			(0)
 	, m_LastAmmoUpdate(0)
-	, m_LastClipAmmoUpdate(0)
+	, m_LastClipAmmoUpdate(-1)
 {
 	// Initialize Default Properties
 	SetFlag(Waterproof, true);
@@ -963,23 +963,14 @@ void Weapon::StopShooting(FireMode _mode)
 void Weapon::UpdateClipAmmo(FireMode _mode)
 {
 	WeaponFireMode& fireMode = GetFireMode(_mode);
-	if(fireMode.m_LastClipAmmoUpdate == IGame::GetTime())
-		return;
-
-	fireMode.m_LastClipAmmoUpdate = IGame::GetTime();
-	if(fireMode.CheckFlag(RequiresAmmo))
+	if(fireMode.IsDefined() && fireMode.CheckFlag(RequiresAmmo) && fireMode.m_LastClipAmmoUpdate < IGame::GetTime())
 	{
+		fireMode.m_LastClipAmmoUpdate = IGame::GetTime();
 		g_EngineFuncs->GetCurrentWeaponClip(
 			m_Client->GetGameEntity(), 
 			_mode, 
 			fireMode.m_ClipCurrent,
 			fireMode.m_ClipMax);
-
-		if(fireMode.m_ShootButton == BOT_BUTTON_THROWKNIFE)
-		{
-			fireMode.m_AmmoMax = fireMode.m_AmmoCurrent - fireMode.m_ClipCurrent;
-			fireMode.m_AmmoCurrent = fireMode.m_ClipCurrent;
-		}
 	}
 }
 
@@ -994,10 +985,29 @@ void Weapon::UpdateAmmo(FireMode _mode)
 	{
 		g_EngineFuncs->GetCurrentAmmo(
 			m_Client->GetGameEntity(),
-			GetWeaponID(), 
+			GetWeaponID(),
 			_mode,
 			fireMode.m_AmmoCurrent,
 			fireMode.m_AmmoMax);
+
+		if(fireMode.m_ShootButton == BOT_BUTTON_THROWKNIFE)
+		{
+			//UpdateClipAmmo can be called only for currently equipped weapon
+			if(InterfaceFuncs::GetEquippedWeapon(m_Client->GetGameEntity()).m_WeaponId == GetWeaponID())
+			{
+				UpdateClipAmmo(_mode);
+			}
+			else
+			{
+				//bot does not know knives count after spawn, let's assume he has one knife
+				if(fireMode.m_LastClipAmmoUpdate < m_Client->m_SpawnTime && fireMode.m_AmmoCurrent > 0) 
+					fireMode.m_ClipCurrent = 1;
+			}
+
+			fireMode.m_AmmoMax = fireMode.m_AmmoCurrent - fireMode.m_ClipCurrent;
+			if(fireMode.m_AmmoMax==0) fireMode.m_ClipCurrent = 0; //hack for Bastard mod
+			fireMode.m_AmmoCurrent = fireMode.m_ClipCurrent;
+		}
 	}
 }
 
@@ -1166,8 +1176,6 @@ bool Weapon::_MeetsRequirements(FireMode _mode)
 
 	if(fireMode.CheckFlag(RequiresAmmo)){
 		UpdateAmmo(_mode);
-		if(fireMode.m_ShootButton == BOT_BUTTON_THROWKNIFE) 
-			UpdateClipAmmo(_mode);
 		if(!fireMode.HasAmmo())
 			return false;
 	}

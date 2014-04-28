@@ -271,6 +271,9 @@ public:
 
 	Client();
 	virtual ~Client();
+
+	int		m_SpawnTime;
+
 protected:
 
 	float			m_StepHeight;
