@@ -143,6 +143,8 @@ bool CommandReciever::DispatchCommand(const StringVector &_args)
 		return true;
 	}
 
+	bool handled = false;
+
 	// Look for the command in the script command table.
 	gmMachine *m_Machine = ScriptManager::GetInstance()->GetMachine();
 	gmTableObject *pCommandsTable = ScriptManager::GetInstance()->GetGlobalCommandsTable();
@@ -150,7 +152,7 @@ bool CommandReciever::DispatchCommand(const StringVector &_args)
 	{
 		ScriptCommandExecutor cmdExec(m_Machine,pCommandsTable);
 		if(cmdExec.Exec(_args))
-			return true;
+			handled = true;
 	}
 
 	// iterate all com
@@ -159,10 +161,10 @@ bool CommandReciever::DispatchCommand(const StringVector &_args)
 		++it)
 	{
 		if((*it)->UnhandledCommand(_args))
-			return true;
+			handled = true;
 	}
-	EngineFuncs::ConsoleError("Unrecognized command. Use /bot help for a list of commands.");
-	return false;
+	if(!handled) EngineFuncs::ConsoleError("Unrecognized command. Use /bot help for a list of commands.");
+	return handled;
 }
 
 void CommandReciever::Set(const String _name, const String _info, CommandFunctorPtr _func)
