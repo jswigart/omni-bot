@@ -478,7 +478,7 @@ public:
 	int GetEntityTeam(const GameEntity _ent){ return base->GetEntityTeam(_ent); }
 	const char *GetEntityName(const GameEntity _ent){ return base->GetEntityName(_ent); }
 	obResult GetCurrentWeaponClip(const GameEntity _ent, FireMode _mode, int &_curclip, int &_maxclip){ return base->GetCurrentWeaponClip(_ent,_mode,_curclip,_maxclip); }
-	obResult GetCurrentAmmo(const GameEntity _ent, int _weaponId, FireMode _mode, int &_cur, int &_max){ return base->GetCurrentAmmo(_ent, _weaponId, _cur, _max); }
+	obResult GetCurrentAmmo(const GameEntity _ent, int _weaponId, FireMode _mode, int &_cur, int &_max){ _UNUSED(_mode); return base->GetCurrentAmmo(_ent, _weaponId, _cur, _max); }
 	int GetGameTime(){ return base->GetGameTime(); }
 	void GetGoals(){ base->GetGoals(); }
 	void GetPlayerInfo(obPlayerInfo &info){ base->GetPlayerInfo(info); }
