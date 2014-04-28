@@ -519,7 +519,8 @@ namespace AiState
 		if(m_CurrentWeapon)
 		{
 			m_CurrentWeapon->Update(_mode);
-			m_CurrentWeapon->UpdateClipAmmo(_mode);
+			m_CurrentWeapon->UpdateClipAmmo(Primary);
+			m_CurrentWeapon->UpdateClipAmmo(Secondary);
 		}
 	}
 
