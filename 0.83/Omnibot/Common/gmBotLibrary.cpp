@@ -652,8 +652,13 @@ static int GM_CDECL gmfSetAvailableMapGoals(gmThread *a_thread)
 		a_thread->PushInt(1);
 	else
 	{
-		EngineFuncs::ConsoleMessage(va("SetAvailableMapGoals: goal query for %s has no results!", 
-			pExpression ));
+		gmCall call;
+		if(call.BeginTableFunction(a_thread->GetMachine(), "MapDebugPrint", "Util"))
+		{
+			call.AddParamString(va("SetAvailableMapGoals: goal query for %s has no results!", pExpression));
+			call.AddParamInt(1);
+			call.End();
+		}
 		LOGWARN("SetAvailableMapGoals: goal query for " << pExpression << " has no results!");
 		a_thread->PushInt(0);
 	}
