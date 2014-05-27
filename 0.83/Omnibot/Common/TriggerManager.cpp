@@ -56,29 +56,35 @@ public:
 		}
 
 		// check class
-		for(int i = 0; i < MaxClassCount; ++i)
+		if(m_TriggerOnClass[0])
 		{
-			if(m_TriggerOnClass[i]==0)
-				break;
-
-			if(m_TriggerOnClass[i] == FilterSensory::ANYPLAYERCLASS)
+			for(int i = 0; i < MaxClassCount; ++i)
 			{
-				if(_ent.m_EntityClass < FilterSensory::ANYPLAYERCLASS)
+				if(m_TriggerOnClass[i]==0)
+					break;
+
+				if(m_TriggerOnClass[i] == FilterSensory::ANYPLAYERCLASS)
+				{
+					if(_ent.m_EntityClass < FilterSensory::ANYPLAYERCLASS)
+						return true;
+				}
+
+				if(m_TriggerOnClass[i] == _ent.m_EntityClass)
 					return true;
 			}
-
-			if(m_TriggerOnClass[i] == _ent.m_EntityClass)
-				return true;
 		}
 
 		// check specific entities.
-		for(int i = 0; i < MaxEntCount; ++i)
+		if(m_TriggerOnEntity[0].IsValid())
 		{
-			if(!m_TriggerOnEntity[i].IsValid())
-				break;
+			for(int i = 0; i < MaxEntCount; ++i)
+			{
+				if(!m_TriggerOnEntity[i].IsValid())
+					break;
 
-			if(m_TriggerOnEntity[i] == _ent.m_Entity)
-				return true;
+				if(m_TriggerOnEntity[i] == _ent.m_Entity)
+					return true;
+			}
 		}
 		return false;
 	}
@@ -139,10 +145,13 @@ public:
 
 		if(it)
 		{
-			// otherwise add it to the list of entities in trigger, and fire an enter event.
-			it->m_Entity = _ent.m_Entity;
-			it->m_TimeStamp = IGame::GetTime();
-			FireEnterEvent(_ent.m_Entity);
+			if(!DeleteMe())
+			{
+				// otherwise add it to the list of entities in trigger, and fire an enter event.
+				it->m_Entity = _ent.m_Entity;
+				it->m_TimeStamp = IGame::GetTime();
+				FireEnterEvent(_ent.m_Entity);
+			}
 		}
 		else
 		{
@@ -152,28 +161,6 @@ public:
 
 	void Update()
 	{
-		if(m_NextUpdateTime > IGame::GetTime())
-			return;
-
-		IGame::EntityIterator ent;
-		while(IGame::IterateEntity(ent))
-		{
-			if(TriggerableEntity(ent.GetEnt()))
-			{
-				AABB bounds;
-				if(EngineFuncs::EntityWorldAABB(ent.GetEnt().m_Entity,bounds))
-				{
-					if(Test(ent.GetEnt().m_Entity,bounds))
-					{
-						FireTrigger(ent.GetEnt());
-						
-						if(DeleteMe())
-							return;
-					}
-				}
-			}
-		}
-
 		// fire exit events for any expired objects.
 		for(int i = 0; i < MaxInTrigger; ++i)
 		{
@@ -328,7 +315,6 @@ public:
 	TriggerShape()
 		: m_NameHash(0)
 		, m_ExpireTime(0)
-		, m_NextUpdateTime(0)
 		, m_UpdateDelay(0)
 		, m_SerialNum(0)
 		, m_ThisObject(gmVariable::s_null)
@@ -353,7 +339,6 @@ private:
 	obuint32	m_NameHash;
 	int			m_ExpireTime;
 
-	int			m_NextUpdateTime;
 	int			m_UpdateDelay;
 
 	int			m_SerialNum;
@@ -627,8 +612,31 @@ void TriggerManager::Update()
 {
 	Prof(TriggerManager_Update);
 
-	ShapeList::iterator it = m_TriggerShapes.begin();
+	if(m_TriggerShapes.empty()) return;
 
+	//fire Enter events
+	AABB bounds;
+	IGame::EntityIterator ent;
+	while(IGame::IterateEntity(ent))
+	{
+		bool aabbValid = false;
+		for(int x = m_TriggerShapes.size() - 1; x >= 0; --x)
+		{
+			TriggerShape* shape = m_TriggerShapes[x].get();
+			if(shape->TriggerableEntity(ent.GetEnt()))
+			{
+				if(aabbValid || (aabbValid = EngineFuncs::EntityWorldAABB(ent.GetEnt().m_Entity, bounds))!=false)
+				{
+					if(shape->Test(ent.GetEnt().m_Entity, bounds))
+					{
+						shape->FireTrigger(ent.GetEnt());
+					}
+				}
+			}
+		}
+	}
+
+	//Render, fire Exit events, Delete
 	unsigned int x = 0;
 	for(; x < m_TriggerShapes.size(); )
 	{
@@ -639,7 +647,7 @@ void TriggerManager::Update()
 
 		if( m_TriggerShapes[ x ]->Expired())
 		{
-			it = m_TriggerShapes.erase(m_TriggerShapes.begin()+x);
+			m_TriggerShapes.erase(m_TriggerShapes.begin()+x);
 			continue;
 		}
 
