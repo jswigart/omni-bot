@@ -17,11 +17,11 @@ void PathPlannerBase::InitCommands()
 		this, &PathPlannerBase::cmdLogFailedPaths);
 	SetEx("nav_showfailedpath", "Render a failed path by its index.", 
 		this, &PathPlannerBase::cmdShowFailedPaths);
-	SetEx("nav_benchmarkpathfinder", "Render a failed path by its index.", 
+	SetEx("nav_benchmarkpathfinder", "PlanPathToGoal benchmark.", 
 		this, &PathPlannerBase::cmdBenchmarkPathFind);
-	SetEx("nav_benchmarkgetnavpoint", "Render a failed path by its index.", 
+	SetEx("nav_benchmarkgetnavpoint", "GetClosestWaypoint benchmark.", 
 		this, &PathPlannerBase::cmdBenchmarkGetNavPoint);
-	SetEx("nav_resaveall", "Re-save all nav files to the newest file format..", 
+	SetEx("nav_resaveall", "Re-save all nav files to the newest file format.", 
 		this, &PathPlannerBase::cmdResaveNav);
 }
 
