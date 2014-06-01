@@ -217,6 +217,7 @@ protected:
 	virtual void InitScriptBotButtons(gmMachine *_machine, gmTableObject *_table);
 	virtual void InitScriptTraceMasks(gmMachine *_machine, gmTableObject *_table);
 	virtual void InitScriptContentFlags(gmMachine *_machine, gmTableObject *_table);
+	virtual void InitScriptSurfaceFlags(gmMachine *_machine, gmTableObject *_table);
 	virtual void InitScriptBlackboardKeys(gmMachine *_machine, gmTableObject *_table);
 	virtual void InitScriptBuyMenu(gmMachine *_machine, gmTableObject *_table) {};
 	virtual void InitDebugFlags(gmMachine *_machine, gmTableObject *_table);
