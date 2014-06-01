@@ -228,6 +228,11 @@ void IGame::InitScriptSupport()
 	pMachine->GetGlobals()->Set(pMachine, "CONTENT", gmVariable(pContentTable));
 	InitScriptContentFlags(pMachine, pContentTable);
 
+	// Register surface flags
+	gmTableObject *pSurfaceTable = pMachine->AllocTableObject();
+	pMachine->GetGlobals()->Set(pMachine, "SURFACE", gmVariable(pSurfaceTable));
+	InitScriptSurfaceFlags(pMachine, pSurfaceTable);
+
 	gmTableObject *pBlackboardTable = pMachine->AllocTableObject();
 	pMachine->GetGlobals()->Set(pMachine, "BB", gmVariable(pBlackboardTable));
 	InitScriptBlackboardKeys(pMachine, pBlackboardTable);
@@ -564,6 +569,12 @@ void IGame::InitScriptContentFlags(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "MOVER",	gmVariable(CONT_MOVER));
 	_table->Set(_machine, "TRIGGER",gmVariable(CONT_TRIGGER));
 	_table->Set(_machine, "LAVA",	gmVariable(CONT_LAVA));
+}
+
+void IGame::InitScriptSurfaceFlags(gmMachine *_machine, gmTableObject *_table)
+{
+	_table->Set(_machine, "SLICK", gmVariable(SURFACE_SLICK));
+	_table->Set(_machine, "LADDER", gmVariable(SURFACE_LADDER));
 }
 
 void IGame::InitScriptBlackboardKeys(gmMachine *_machine, gmTableObject *_table)
