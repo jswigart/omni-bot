@@ -209,13 +209,12 @@ static int GM_CDECL gmfGetWaypointByUID(gmThread *a_thread)
 //////////////////////////////////////////////////////////////////////////
 
 // function: ConnectWaypoints
-//		Gets a waypoint information by its guid.
+//		Connects two waypoints.
 //
 // Parameters:
 //
 //		<int> - Guid of a waypoint.
 //		<int> - Guid of another waypoint.
-//		<table> - An empty table, the function will fill in position, facing, guid.
 //
 // Returns:
 //		int - true if successful, false if not
@@ -359,14 +358,14 @@ static int GM_CDECL gmfSetWaypointFlag(gmThread *a_thread)
 //////////////////////////////////////////////////////////////////////////
 
 // function: SetWaypointProperty
-//		Sets the flag on a waypoint by name.
+//		Sets the waypoint property.
 //
 // Parameters:
 //
 //		<int> - Guid of a waypoint.
 //		- OR -
 //		<string> - Name of the waypoint.
-//		<string> - The name of the flag to set.
+//		<string> - The name of the property to set.
 //		<string> - Property value to set.
 //
 // Returns:
