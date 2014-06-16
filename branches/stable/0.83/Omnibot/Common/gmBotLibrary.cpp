@@ -2690,7 +2690,7 @@ static int GM_CDECL gmfConfigGet(gmThread *a_thread)
 		else
 			a_thread->PushNewString(sValue.c_str(),(int)sValue.length());
 	}
-	else if(!a_thread->Param(2).IsNull())
+	else if(!vValue.IsNull())
 	{
 		Options::SetValue(section,key,String(vValue.AsString(a_thread->GetMachine(),buffer,BufferSize)));
 
