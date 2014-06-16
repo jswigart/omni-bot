@@ -1035,7 +1035,6 @@ int gmBot::gmfScriptEvent(gmThread *a_thread)
 	Utils::StringCopy(m.m_MessageData2,d2,sizeof(m.m_MessageData2));
 	Utils::StringCopy(m.m_MessageData3,d3,sizeof(m.m_MessageData3));
 	native->SendEvent(MessageHelper(MESSAGE_SCRIPTMSG,&m,sizeof(m)));
-	InterfaceFuncs::StopSound(native, name);
 	return GM_OK;
 }
 
