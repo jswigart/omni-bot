@@ -1051,7 +1051,7 @@ static int GM_CDECL gmfDrawDebugText3d(gmThread *a_thread)
 
 static int GM_CDECL gmfTransformAndDrawLineList(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(4);
+	GM_CHECK_NUM_PARAMS(5);
 	GM_CHECK_TABLE_PARAM(veclist,0);
 	GM_CHECK_INT_PARAM(color, 1);
 	GM_CHECK_FLOAT_OR_INT_PARAM(duration, 2);
