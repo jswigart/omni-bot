@@ -1,0 +1,336 @@
+global Map =
+{
+	Debug = 0,
+	ShowMovers = false,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = true,
+	GenADestroyed = 0,
+	GenBDestroyed = 0,
+	GenCDestroyed = 0,
+
+	north_wall_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_north_wall.*" );
+
+		Util.MapDebugPrint( "north_wall_Planted" );
+	},
+	
+	north_wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_north_wall" );
+
+		Util.MapDebugPrint( "north_wall_Destroyed" );
+	},
+
+	power_generator_A_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "power_generator_A_Planted" );
+	},
+	
+	power_generator_A_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.GenADestroyed = true;
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rGeneratorA.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_generatora.*" );
+		Util.MapDebugPrint( "power_generator_A_Destroyed" );
+	},
+
+	power_generator_B_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+		Map.GenBDestroyed = true;
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rGeneratorB.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_generatorb.*" );
+		Util.MapDebugPrint( "power_generator_B_Destroyed" );
+	},
+
+	power_generator_B_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "power_generator_B_Planted" );
+	},
+	
+	power_generator_C_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "power_generator_C_Planted" );
+	},
+	
+	power_generator_C_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.GenCDestroyed = true;
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rGeneratorC.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_generatorc.*" );
+		Util.MapDebugPrint( "power_generator_C_Destroyed" );
+	},
+
+	tunnel_entrance_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_tunnel_entrance.*" );
+		Util.MapDebugPrint( "tunnel_entrance_Planted" );
+	},
+	
+	tunnel_entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Map.DontDispenseAmmo = false;
+		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlag.*" );
+		
+		if (!Map.GenADestroyed)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGeneratorA.*" );
+		}
+		if (!Map.GenBDestroyed)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGeneratorB.*" );
+		}
+		if (!Map.GenCDestroyed)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGeneratorC.*" );
+		}
+		foreach( id and bot in BotTable )
+		{
+			if ( bot.GetTeam() == TEAM.AXIS ) {
+				bot.ChangeSpawnPoint( 0 );
+			}
+		}
+			
+		Util.EnableGoal( "ROUTE_tunnel_entrance" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_tunnel_entrance" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag.*" );
+		
+		Util.MapDebugPrint( "tunnel_entrance_Destroyed" );
+	},
+
+	front_fort_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.SetMaxUsersInProgress( 5, "CHECKPOINT.*" );
+		Util.MapDebugPrint( "front_fort_Axis_Captured" );
+	},
+
+	front_fort_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
+		Util.MapDebugPrint( "front_fort_Allies_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+		
+	Util.AddUseWp( "PLANT_tunnel_entrance", "tunnelplant" );
+	Util.AddUseWp( "PLANT_power_generator_A", "generator_a" );
+	Util.AddUseWp( "PLANT_power_generator_B", "generator_b" );
+	Util.AddUseWp( "PLANT_power_generator_C", "generator_c" );
+
+	// Register callback functions
+	OnTrigger( "Planted at the north wall.", Map.north_wall_Planted );
+	OnTrigger( "The north wall has been destroyed!", Map.north_wall_Destroyed );
+	OnTrigger( "Planted at power generator A.", Map.power_generator_A_Planted );
+	OnTrigger( "power generator A Destroyed.", Map.power_generator_A_Destroyed );
+	OnTrigger( "Planted at power generator B.", Map.power_generator_B_Planted );
+	OnTrigger( "power generator B Destroyed.", Map.power_generator_B_Destroyed );
+	OnTrigger( "Planted at power generator C.", Map.power_generator_C_Planted );
+	OnTrigger( "power generator C Destroyed.", Map.power_generator_C_Destroyed );
+	OnTrigger( "Planted at the tunnel entrance.", Map.tunnel_entrance_Planted );
+	OnTrigger( "The tunnel entrance has been cleared!", Map.tunnel_entrance_Destroyed );
+	OnTrigger( "Axis reclaim the Front Fort!", Map.front_fort_Axis_Captured );
+	OnTrigger( "Allies capture the Front Fort!", Map.front_fort_Allies_Captured );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	Util.DisableGoal( "ROUTE_tunnel_entrance", true );
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	SetGoalPriority( "CALL.*", 0.99 );
+	SetGoalPriority( "ARTILLERY.*", 0.99 );
+	SetGoalPriority( "AIRSTRIKE.*", 0.95 );
+	SetGoalPriority( "PLANT_tunnel_entrance", 0.93 );
+	
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNT_.*", {mincamptime = 60, maxcamptime = 90} );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_generator.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
+
+	InitializeRoutes();
+	yield();yield();
+	RTCWUtil.KillEntities( {72,73,74,75,76,78,81,82,83,84,86,87,88,89,90,91,92,106,107,108,109,110,111,112,119,120,127,132,135,136,137,138,139,140,141,142,144,143,145,146,147,148,149,151,334,365,366,369,371,382,384,404,405,410,417} );
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.ChangeSpawnPoint( 0 );
+	if ( bot.GetTeam() == TEAM.AXIS ) {
+		bot.ChangeSpawnPoint( 1 );
+	}
+	bot.RemoveState("WatchForProjectile"); // This screws up axis defending the flag
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		PLANT_north_wall =
+		{
+		},
+		PLANT_power_generator_A =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_northsteps =
+				{
+					ROUTE_northentrance = {},
+				},
+				ROUTE_southsteps =
+				{
+					ROUTE_northentrance = {},
+				},
+				ROUTE_southentrance = { Weight = 2,},
+			},
+			ROUTE_bspawn =
+			{
+				ROUTE_tunnel_entrance =
+				{
+					Weight = 2,
+					ROUTE_tunnel_mid = {},
+				},
+			},
+		},
+		PLANT_power_generator_B =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_northsteps =
+				{
+					Weight = 2,
+					ROUTE_northentrance = {},
+				},
+				ROUTE_southsteps =
+				{
+					Weight = 2,
+					ROUTE_northentrance = {},
+				},
+				ROUTE_southentrance = { Weight = 2,},
+			},
+			ROUTE_bspawn =
+			{
+				ROUTE_tunnel_entrance =
+				{
+					Weight = 2,
+					ROUTE_tunnel_mid = {},
+				},
+			},
+		},
+		PLANT_power_generator_C =
+		{
+			ROUTE_flagspawn =
+			{
+				ROUTE_northsteps =
+				{
+					ROUTE_northentrance = 
+					{
+						ROUTE_genc_west = {},
+						ROUTE_genc_east = {},
+					},
+				},
+				ROUTE_southentrance =
+				{
+					ROUTE_genc_west = {},
+					ROUTE_genc_east = {},
+				},
+			},
+			ROUTE_bspawn =
+			{
+				ROUTE_tunnel_entrance =
+				{
+					Weight = 2,
+					ROUTE_tunnel_mid = 
+					{
+						ROUTE_northwall = {},
+						ROUTE_genc_south = {},
+					},
+				},
+			},
+		},
+		CHECKPOINT_front_fort =
+		{
+			ROUTE_bspawn = 
+			{
+				ROUTE_upperridge = {},
+				ROUTE_northtunnel = {},
+				ROUTE_southtunnel = {},
+			},
+		},
+	};
+	
+	MapRoutes.PLANT_power_generator_C.ROUTE_flagspawn.ROUTE_southsteps = MapRoutes.PLANT_power_generator_C.ROUTE_flagspawn.ROUTE_northsteps;
+	MapRoutes.PLANT_power_generator_A.ROUTE_bspawn.ROUTE_northsteps = MapRoutes.PLANT_power_generator_A.ROUTE_flagspawn.ROUTE_northsteps;
+	MapRoutes.PLANT_power_generator_A.ROUTE_bspawn.ROUTE_southentrance = MapRoutes.PLANT_power_generator_A.ROUTE_flagspawn.ROUTE_southentrance;
+	MapRoutes.PLANT_power_generator_B.ROUTE_bspawn.ROUTE_northsteps = MapRoutes.PLANT_power_generator_B.ROUTE_flagspawn.ROUTE_northsteps;
+	MapRoutes.PLANT_power_generator_B.ROUTE_bspawn.ROUTE_southentrance = MapRoutes.PLANT_power_generator_B.ROUTE_flagspawn.ROUTE_southentrance;
+	
+	MapRoutes.ATTACK_generatora_1 = MapRoutes.PLANT_power_generator_A;
+	MapRoutes.ATTACK_generatora_2 = MapRoutes.PLANT_power_generator_A;
+	MapRoutes.ATTACK_generatora_3 = MapRoutes.PLANT_power_generator_A;
+	MapRoutes.ATTACK_generatora_4 = MapRoutes.PLANT_power_generator_A;
+	MapRoutes.ATTACK_generatorb_1 = MapRoutes.PLANT_power_generator_B;
+	MapRoutes.ATTACK_generatorb_2 = MapRoutes.PLANT_power_generator_B;
+	MapRoutes.ATTACK_generatorb_3 = MapRoutes.PLANT_power_generator_B;
+	MapRoutes.ATTACK_generatorb_4 = MapRoutes.PLANT_power_generator_B;
+	MapRoutes.ATTACK_generatorc_1 = MapRoutes.PLANT_power_generator_C;
+	MapRoutes.ATTACK_generatorc_2 = MapRoutes.PLANT_power_generator_C;
+	MapRoutes.ATTACK_generatorc_3 = MapRoutes.PLANT_power_generator_C;
+	MapRoutes.ATTACK_generatorc_4 = MapRoutes.PLANT_power_generator_C;
+	
+	Util.Routes(MapRoutes);
+};
