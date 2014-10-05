@@ -1,7 +1,8 @@
 global Map =
 {
-	Debug = 1, // please set to zero before distributing your script
+	Debug = 0,
 	ShowMovers = false,
+	DontDispenseAmmo = true,
 
 	balkonflag_Axis_Captured = function( trigger )
 	{
@@ -76,6 +77,8 @@ global OnMapLoad = function()
 	
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+	
+	RTCWUtil.KillEntities({130});
 
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
