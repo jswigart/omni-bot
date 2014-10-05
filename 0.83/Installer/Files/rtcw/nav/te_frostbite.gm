@@ -283,6 +283,8 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Destroy_service_door );
 		}
 
+		RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER );
+		
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.FLAG_War_Documents );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bGarage.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bTransmit1" );
