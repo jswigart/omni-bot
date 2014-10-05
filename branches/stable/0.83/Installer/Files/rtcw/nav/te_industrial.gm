@@ -1,0 +1,142 @@
+global Map =
+{
+	Debug = 1, // please set to zero before distributing your script
+	ShowMovers = false,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = true,
+	Suicide = MAP_SUICIDE,
+
+	Main_Gate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Util.EnableGoal("ROUTE_maingate");
+			
+		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bGate.*" );
+		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
+
+		Util.MapDebugPrint( "Main_Gate_Destroyed" );
+	},
+
+	Transmitter_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Util.EnableGoal("ROUTE_transmitdoor");
+
+		Util.MapDebugPrint( "Transmitter_Door_Destroyed" );
+	},
+
+	Supply_Documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Supply_Documents_Taken" );
+	},
+
+	transmit_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "transmit_Captured" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	// Register callback functions
+	OnTrigger( "the Main Gate Destroyed.", Map.Main_Gate_Destroyed );
+	OnTrigger( "the Transmitter Door Destroyed.", Map.Transmitter_Door_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Supply_Documents_Taken );
+	OnTrigger( "MISSING_STRING", Map.transmit_Captured );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	Util.DisableGoal("ROUTE_maingate");
+	Util.DisableGoal("ROUTE_transmitdoor");
+	
+	
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
+	
+	SetGoalPriority( "CALL.*", 1.0 );
+	SetGoalPriority( "ARTILLERY.*", 1.0 );
+	SetGoalPriority( "AIRSTRIKE.*", 0.90 );
+	
+	RTCWUtil.LimitToClass( "GRENADE_r.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_r.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rGate.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rGate.*" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rCourtyard.*" );
+	
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rDocs.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTransmit.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bGate.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bWalljump.*" );
+	
+	MapRoutes =
+	{
+		FLAG_Supply_Documents =
+		{
+			ROUTE_bspawn =
+			{
+				ROUTE_nroad = 
+				{
+					ROUTE_upperwest = 
+					{
+						ROUTE_abovespawn = {ROUTE_docsrear = {},},
+					},
+					ROUTE_uppereast =
+					{
+						ROUTE_docsrear = {},
+						ROUTE_docsfront = {},
+					},
+					ROUTE_docsrear = {},
+					ROUTE_docsfront = {},
+					ROUTE_transmitdoor = {ROUTE_docsrear = {},},
+				},
+				ROUTE_maingate =
+				{
+					ROUTE_docsrear = {},
+					ROUTE_docsfront = {},
+				},
+			},
+		},
+	};
+	
+	Util.Routes( MapRoutes );
+	yield(); yield();
+		
+	if ( Map.Suicide ) {
+		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 1, 1 );
+	}
+
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+
+	//default spawn
+	bot.ChangeSpawnPoint( 0 );
+
+	RTCWUtil.NoSnipe( bot );
+};
