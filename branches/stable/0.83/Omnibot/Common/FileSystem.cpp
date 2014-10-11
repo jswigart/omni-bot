@@ -142,7 +142,7 @@ bool FileSystem::InitRawFileSystem(const String &folder)
 		(int)compiled.patch);
 
 	LOGFUNC;
-	fs::path basePath = fs::path(folder.c_str(),fs::native);
+	fs::path basePath = fs::path(folder.c_str());
 	LOG("Your base directory is: " << folder.c_str());
 	if(!PHYSFS_init(basePath.string().c_str()))
 	{
@@ -282,13 +282,13 @@ fs::path FileSystem::GetRealDir(const String &_file)
 
 	try
 	{
-		return fs::path(pPath ? pPath : "", fs::native);
+		return fs::path(pPath ? pPath : "");
 	}
 	catch(const std::exception & ex)
 	{
 		SOFTASSERTALWAYS(0, "Filesystem: %s", ex.what());
 	}
-	return fs::path("", fs::native);
+	return fs::path("");
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -297,14 +297,14 @@ fs::path FileSystem::GetRealPath(const String &_file)
 {
 	try
 	{
-		fs::path filepath(_file, fs::native);
+		fs::path filepath(_file);
 		return GetRealDir(_file) / filepath.leaf();
 	}
 	catch(const std::exception & ex)
 	{
 		SOFTASSERTALWAYS(0, "Filesystem: %s", ex.what());
 	}
-	return fs::path("", fs::native);
+	return fs::path("");
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -379,7 +379,7 @@ void _MountAllCallback(void *data, const char *origdir, const char *str)
 		const char *pDir = PHYSFS_getRealDir(fullname);
 		if(pDir)
 		{
-			fs::path filepath(pDir, fs::native);
+			fs::path filepath(pDir);
 			filepath /= origdir;
 			filepath /= str;
 

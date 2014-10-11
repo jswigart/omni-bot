@@ -107,8 +107,8 @@ static int GM_CDECL gmfFileExists(gmThread * a_thread)
 	bool bGood = false;
 	try
 	{
-		fs::path filepath("user/", fs::native);
-		filepath /= fs::path(filename, fs::native);
+		fs::path filepath("user/");
+		filepath /= fs::path(filename);
 		bGood = FileSystem::FileExists(filepath.string().c_str());
 	}
 	catch ( const std::exception & ex )
@@ -163,7 +163,7 @@ void ScriptEnumerateCallback(void *data, const char *origdir, const char *str)
 		const char *pDir = PHYSFS_getRealDir(fullname);
 		if(pDir)
 		{
-			fs::path filepath(pDir, fs::native);
+			fs::path filepath(pDir);
 			filepath /= origdir;
 			filepath /= str;
 
@@ -206,8 +206,8 @@ static int GM_CDECL gmfFileEnumerate(gmThread * a_thread)
 	bool bGood = false;
 	try
 	{
-		fs::path filepath("user/", fs::native);
-		filepath /= fs::path(dir, fs::native);		
+		fs::path filepath("user/");
+		filepath /= fs::path(dir);		
 		PHYSFS_enumerateFilesCallback(filepath.string().c_str(), ScriptEnumerateCallback, callback);
 	}
 	catch ( const std::exception & ex )

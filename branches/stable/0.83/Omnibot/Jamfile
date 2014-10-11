@@ -37,6 +37,11 @@ lib boost_regex : : <variant>release <file>$(BOOST)/lib/libboost_regex-gcc41-mt-
 lib boost_date_time : : <variant>release <file>$(BOOST)/lib/libboost_date_time-gcc41-mt-1_44.a ;
 lib boost_system : : <variant>release <file>$(BOOST)/lib/libboost_system-gcc41-mt-1_44.a ;
 
+#lib boost_filesystem : : <variant>release <file>/usr/local/lib/libboost_filesystem.a ;
+#lib boost_regex : : <variant>release <file>/usr/local/lib/libboost_regex.a ;
+#lib boost_date_time : : <variant>release <file>/usr/local/lib/libboost_date_time.a ;
+#lib boost_system : : <variant>release <file>/usr/local/lib/libboost_system.a ;
+
 # define aliases for convenience and to force static linking
 alias boost_fs : boost_filesystem : <link>static ;
 alias boost_regx : boost_regex : <link>static ;
