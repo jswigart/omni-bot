@@ -69,7 +69,7 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	{
 		if(logSize > 0)
 			g_Logger.FileSizeLimit() = (logSize < 2000000) ? logSize * 1024 : 2048000000;
-		fs::path logFolder = Utils::GetModFolder() / fs::path("logs", fs::native);
+		fs::path logFolder = Utils::GetModFolder() / fs::path("logs");
 		g_Logger.Start(
 			(String)va("%s/omnibot_%s.log", 
 			fs::is_directory(logFolder) ? logFolder.string().c_str() : _pEngineFuncs->GetLogPath(),

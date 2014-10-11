@@ -321,13 +321,13 @@ namespace Utils
 					try
 					{
 						// search for the just the file or the whole path
-						fs::path checkPath = fs::path(*it, fs::native) / fs::path(_file.leaf());
+						fs::path checkPath = fs::path(*it) / fs::path(_file.leaf());
 						if(fs::exists(checkPath) && !fs::is_directory(checkPath))
 							return checkPath;
 
 						if (_file.string() != _file.leaf())
 						{
-							checkPath = fs::path(*it, fs::native) / fs::path(_file);
+							checkPath = fs::path(*it) / fs::path(_file);
 							if(fs::exists(checkPath) && !fs::is_directory(checkPath))
 								return checkPath;
 						}
@@ -356,7 +356,7 @@ namespace Utils
 		if(IGame *pGame = IGameManager::GetInstance()->GetGame())
 		{
 			// Append the script subfolder
-			navFolder /= fs::path(pGame->GetModSubFolder(), fs::native);
+			navFolder /= fs::path(pGame->GetModSubFolder());
 			return navFolder;
 		}
 
@@ -370,7 +370,7 @@ namespace Utils
 		if(IGame *pGame = IGameManager::GetInstance()->GetGame())
 		{
 			// Append the script subfolder
-			navFolder /= fs::path(pGame->GetNavSubfolder(), fs::native);
+			navFolder /= fs::path(pGame->GetNavSubfolder());
 			return navFolder;
 		}
 
@@ -384,7 +384,7 @@ namespace Utils
 		if(IGame *pGame = IGameManager::GetInstance()->GetGame())
 		{
 			// Append the script subfolder
-			scriptFolder /= fs::path(pGame->GetScriptSubfolder(), fs::native);
+			scriptFolder /= fs::path(pGame->GetScriptSubfolder());
 			return scriptFolder;
 		}
 
@@ -399,10 +399,10 @@ namespace Utils
 		const char *pPathOverride = g_EngineFuncs->GetBotPath();
 		try
 		{
-			fs::path pathOverride(pPathOverride, fs::native);
+			fs::path pathOverride(pPathOverride);
 			if(fs::exists(pathOverride) && !fs::is_directory(pathOverride))
 			{
-				basePath = fs::path(pPathOverride, fs::native);
+				basePath = fs::path(pPathOverride);
 				basePath = basePath.branch_path();
 			}
 
