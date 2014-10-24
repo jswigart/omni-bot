@@ -203,6 +203,7 @@ using namespace Wm3;
 // global: g_EngineFuncs is a bot-wide global so that game functionality
 //		can be used from anywhere
 extern IEngineInterface *g_EngineFuncs;
+extern IClientInterface *g_ClientFuncs;
 
 // typedef: PathList
 //		This type is defined as a vector of paths

@@ -1244,8 +1244,6 @@ namespace Utils
 	{
 		Vector3List vl;
 
-		Plane3f p = Utils::PlaneFromPoint(_pos, _normal);
-
 		Quaternionf q;
 		q.FromAxisAngle(_normal, Mathf::DegToRad(90.f));
 

@@ -138,13 +138,13 @@ void PathPlannerWaypoint::UpdateSelectedWpRender()
 	{
 		Waypoint *pWaypoint = m_WaypointList[m_SelectedWaypoint];
 
-		// Build a string with the waypoint info
 		//////////////////////////////////////////////////////////////////////////
 		// Display a radius indicator
 		Vector3f vRadiusPos = GetDisplayPosition(pWaypoint->GetPosition());
-		Utils::DrawRadius(vRadiusPos, pWaypoint->GetRadius(), g_RadiusIndicator, 2.0f);
+		Utils::DrawRadius(vRadiusPos, pWaypoint->GetRadius(), g_RadiusIndicator, max(0.1f, g_fWaypointTextDuration));
 		//////////////////////////////////////////////////////////////////////////	
 
+		// Build a string with the waypoint info
 		GameEntity ge = Utils::GetLocalEntity();
 		if(ge.IsValid())
 		{
@@ -315,7 +315,7 @@ void PathPlannerWaypoint::UpdateNavRender()
 			if(iNextStart > IGame::GetTime())
 				break;
 			iNextStart = IGame::GetTime() + Utils::SecondsToMilliseconds(fWaypointDuration);
-			UpdateSelectedWpRender();
+			//UpdateSelectedWpRender();
 		}
 
 		Waypoint *pWp = m_WaypointList[i];

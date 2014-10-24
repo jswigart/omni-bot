@@ -500,6 +500,26 @@ public:
 	const char *GetLogPath(){ return base->GetLogPath(); }
 };
 
+class IClientInterface {
+public:
+	// Adds a line to immediately display between 2 positions, with a specific color
+	virtual void DrawLine(const float _start[3], const float _end[3], int _color, int _time) = 0;
+
+	// Adds a AABB to immediately display, with a specific color
+	virtual void DrawAABB(const float _mins[3], const float _maxs[3], int _color, int _time, AABB::Direction _dir) = 0;
+
+	// Adds a radius indicator to be displayed at a certain position with radius and color
+	virtual void DrawRadius(const float _pos[3], const float _radius, int _color, int _time) = 0;
+
+	// Draws a shaded polygon
+	virtual void DrawPolygon(const float *_verts, const int _numverts, int _color, int _time) = 0;
+
+	// Displays a text at 3D position, or shows info message if _pos is (0,0,0)
+	virtual void PrintScreenText(const float _pos[3], int _duration, int _color, const char *_msg) = 0;
+
+	// Removes all currently visible objects
+	virtual void ClearView() = 0;
+};
 
 //class SkeletonInterface : public IEngineInterface
 //{
