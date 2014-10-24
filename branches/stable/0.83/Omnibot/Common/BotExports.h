@@ -29,6 +29,8 @@
 // Typedef for the only exported bot function.
 typedef eomnibot_error (*pfnGetFunctionsFromDLL)(Bot_EngineFuncs_t *_pBotFuncs, int _size);
 
+typedef eomnibot_error(*pfnGetClientFunctionsFromDLL)(IClientInterface **_pClientFuncs, int _version);
+
 // note: Export Functions with C Linkage
 //	Export with C Linkage so the game interface can acccess it easier.
 //	This gets rid of name mangling

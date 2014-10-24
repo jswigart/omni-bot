@@ -3,23 +3,18 @@
 #include <fstream>
 #include "Omni-Bot_Types.h"
 #include "Omni-Bot_BitFlags.h"
-
 #include "Interprocess.h"
 
-#define INTERPROCESS
-
-#ifdef INTERPROCESS
-#include <boost/interprocess/ipc/message_queue.hpp>
-using namespace boost::interprocess;
-#endif
-
-//////////////////////////////////////////////////////////////////////////
+//#define INTERPROCESS
 
 Prof_Define(InterProcess);
 
 //////////////////////////////////////////////////////////////////////////
 
 #ifdef INTERPROCESS
+#include <boost/interprocess/ipc/message_queue.hpp>
+using namespace boost::interprocess;
+
 template <typename MsgType>
 class InterProcessMessageQueue
 {
@@ -55,14 +50,45 @@ private:
 
 typedef boost::shared_ptr< InterProcessMessageQueue<IPC_DebugDrawMsg> > MessageQueuePtr;
 MessageQueuePtr g_MessageQueue;
+
+#else
+#include "BotExports.h"
+
+#ifndef WIN32
+#include <dlfcn.h>
+#include <link.h>
+
+static int dl_iterate_callback(struct dl_phdr_info *info, size_t size, void *data)
+{
+	const char *name=info->dlpi_name;
+	if(strstr(name, "/cgame.mp.i386.so")){
+		void *hmod = dlopen(name, RTLD_NOW|RTLD_NOLOAD);
+		if(hmod){
+			*(void**)data = hmod;
+			return 1;
+		}
+	}
+	return 0;
+}
+#endif
+
 #endif // INTERPROCESS
+
+IClientInterface *g_ClientFuncs;
+
 //////////////////////////////////////////////////////////////////////////
 namespace InterProcess
 {
+	bool Enabled;
+	bool Initialized = false;
+
 	//////////////////////////////////////////////////////////////////////////
+
 	void Init()
 	{
 		Prof_Scope(InterProcess);
+
+		if(Initialized || !Enabled) return;
 
 		Vector3f v1(Vector3f::ZERO);
 
@@ -75,25 +101,49 @@ namespace InterProcess
 				message_queue::remove("debug_draw_queue");
 				g_MessageQueue.reset(new InterProcessMessageQueue<IPC_DebugDrawMsg>("debug_draw_queue", 8192));
 				LOG("InterProcess Initialized");
-			}
-			catch(interprocess_exception &ex)
+			} catch(interprocess_exception &ex)
 			{
 				g_MessageQueue.reset();
-				LOGERR(ex.what());				
+				LOGERR(ex.what());
 			}
+#else
+
+#ifdef WIN32
+			HMODULE hmod = GetModuleHandle("cgame_mp_x86");
+			if(hmod){
+				pfnGetClientFunctionsFromDLL pfnGetBotFuncs = (pfnGetClientFunctionsFromDLL)GetProcAddress(hmod, "ExportClientFunctionsFromDLL");
+#else
+			void *hmod = 0;
+			dl_iterate_phdr(dl_iterate_callback, &hmod);
+			if(hmod){
+				pfnGetClientFunctionsFromDLL pfnGetBotFuncs = (pfnGetClientFunctionsFromDLL)dlsym(hmod, "ExportClientFunctionsFromDLL");
+#endif
+				if(pfnGetBotFuncs && pfnGetBotFuncs(&g_ClientFuncs, 1)==BOT_ERROR_NONE){
+					LOG("cgame drawing Initialized");
+				}
+#ifndef WIN32
+				dlclose(hmod);
+#endif
+			}
+
 #endif // INTERPROCESS
 		}
 		else
 		{
 			LOG("InterProcess Not Required, interface callbacks defined.");
 		}
+
+		Initialized=true;
 	}
 	
 	void Shutdown()
 	{
 #ifdef INTERPROCESS
 		g_MessageQueue.reset();
+#else
+		g_ClientFuncs=0;
 #endif
+		Initialized=false;
 	}
 
 	void Update()
@@ -112,11 +162,10 @@ namespace InterProcess
 
 	void Enable(bool _en)
 	{
+		Enabled = _en;
+		if(!_en) Shutdown();
 #ifdef INTERPROCESS
-		if(!_en)
-			g_MessageQueue.reset();
-		if(_en && !g_MessageQueue)
-			Init();
+		else Init();
 #endif
 	}
 
@@ -143,6 +192,12 @@ namespace InterProcess
 				msg.data.m_Line.m_Color = _color.rgba();
 				g_MessageQueue->TrySend(msg);
 			}
+#else
+			Init();
+
+			if(g_ClientFuncs)
+				g_ClientFuncs->DrawLine(_a, _b, _color.rgba(), Utils::SecondsToMilliseconds(_time));
+
 #endif // INTERPROCESS
 		}
 	}
@@ -167,6 +222,12 @@ namespace InterProcess
 				msg.data.m_Radius.m_Color = _color.rgba();
 				g_MessageQueue->TrySend(msg);
 			}
+#else
+			Init();
+
+			if(g_ClientFuncs) 
+				g_ClientFuncs->DrawRadius(_a, _radius, _color.rgba(), Utils::SecondsToMilliseconds(_time));
+
 #endif // INTERPROCESS
 		}
 	}
@@ -195,6 +256,12 @@ namespace InterProcess
 				msg.data.m_AABB.m_Sides = _dir;
 				g_MessageQueue->TrySend(msg);
 			}
+#else
+			Init();
+
+			if(g_ClientFuncs)
+				g_ClientFuncs->DrawAABB(_aabb.m_Mins, _aabb.m_Maxs, _color.rgba(), Utils::SecondsToMilliseconds(_time), _dir);
+
 #endif // INTERPROCESS
 		}
 	}
@@ -225,6 +292,12 @@ namespace InterProcess
 				msg.data.m_Polygon.m_Color = _color.rgba();
 				g_MessageQueue->TrySend(msg);
 			}
+#else
+			Init();
+
+			if(g_ClientFuncs)
+				g_ClientFuncs->DrawPolygon((float*)_vertices.data(), (int)_vertices.size(), _color.rgba(), Utils::SecondsToMilliseconds(_time));
+
 #endif // INTERPROCESS
 		}
 	}
@@ -249,6 +322,12 @@ namespace InterProcess
 				Utils::StringCopy(msg.data.m_Text.m_Buffer,_txt,IPC_DebugTextMessage::BufferSize);
 				g_MessageQueue->TrySend(msg);
 			}
+#else
+			Init();
+
+			if(g_ClientFuncs)
+				g_ClientFuncs->PrintScreenText(_a, Utils::SecondsToMilliseconds(_time), _color.rgba(), _txt);
+
 #endif // INTERPROCESS
 		}
 	}

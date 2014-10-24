@@ -578,6 +578,8 @@ void PathPlannerWaypoint::cmdWaypointView(const StringVector &_args)
 		else if(Utils::StringToFalse(_args[1]))
 		{
 			m_PlannerFlags.ClearFlag(NAV_VIEW);
+
+			if(g_ClientFuncs) g_ClientFuncs->ClearView();
 		}
 
 		EngineFuncs::ConsoleMessage(va("Waypoint Visible %s",
