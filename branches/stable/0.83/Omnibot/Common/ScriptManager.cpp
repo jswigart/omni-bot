@@ -334,11 +334,12 @@ void ScriptManager::Init()
 	for(int i = 0; i < Priority::NumPriority; ++i)
 		pAimPrioTable->Set(m_ScriptEngine, Priority::AsString(i), gmVariable(i));
 
-	//////////////////////////////////////////////////////////////////////////
+#ifdef ENABLE_REMOTE_DEBUGGER
 	bool RemoteDebugger = false;
 	Options::GetValue("Script","EnableRemoteDebugger",RemoteDebugger);
 	EnableRemoteDebugger(RemoteDebugger);
-	//////////////////////////////////////////////////////////////////////////
+#endif
+
 	ScriptLiveUpdate = false;
 	Options::GetValue("Script","LiveUpdate",ScriptLiveUpdate);
 

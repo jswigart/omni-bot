@@ -100,10 +100,14 @@ const char *ET_Game::IsDebugDrawSupported() const
 		return "Can't draw waypoints on dedicated server.";
 	if(strcmp(g_EngineFuncs->GetModName(), "etmain"))
 		return "Only omnibot mod can draw waypoints.";
+
+#ifdef INTERPROCESS
 	bool EnableIpc = false;
 	Options::GetValue("Debug Render","EnableInterProcess",EnableIpc);
 	if(!EnableIpc) 
 		return "Waypoints are not visible because option EnableInterProcess in file omni-bot.cfg is false.";
+#endif
+
 	if(InterfaceFuncs::GetCvar("cg_omnibotdrawing")==0) 
 		return "Waypoints are not visible because cg_omnibotdrawing is \"0\".";
 	return NULL;
