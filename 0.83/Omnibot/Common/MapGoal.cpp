@@ -104,7 +104,7 @@ void MapGoal::CopyFrom(MapGoal *_other)
 
 	m_GoalType = _other->m_GoalType;
 	m_Radius = _other->m_Radius;
-	m_MinRadius = _other->m_MinRadius;
+	m_MinRadius = m_MinRadiusInit = _other->m_MinRadius;
 	m_DefaultPriority = _other->m_DefaultPriority;
 	m_RolePriorityBonus = _other->m_RolePriorityBonus;
 	m_RandomUsePoint = _other->m_RandomUsePoint;
@@ -1578,33 +1578,32 @@ bool MapGoal::SaveToTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_savetab
 
 	//////////////////////////////////////////////////////////////////////////
 	// Standard info.
-	GoalTable->Set(_machine,"Version",gmVariable(m_Version));
+	if(m_Version!=MapGoalVersion) GoalTable->Set(_machine, "Version", gmVariable(m_Version));
 	GoalTable->Set(_machine,"GoalType",GetGoalType().c_str());
-	GoalTable->Set(_machine,"Name",GetName().c_str());
+	//GoalTable->Set(_machine, "Name", GetName().c_str());
 	GoalTable->Set(_machine,"TagName",GetTagName().c_str());	
-	GoalTable->Set(_machine,"GroupName",GetGroupName().c_str());
+	if(!GetGroupName().empty()) GoalTable->Set(_machine, "GroupName", GetGroupName().c_str());
 	GoalTable->Set(_machine,"Position",gmVariable(m_InterfacePosition.IsZero() ? m_Position : m_InterfacePosition));
-	GoalTable->Set(_machine,"Radius",gmVariable(m_Radius));
-	GoalTable->Set(_machine,"MinRadius",gmVariable(m_MinRadius));
+	if(m_Radius!=0.0f) GoalTable->Set(_machine, "Radius", gmVariable(m_Radius));
+	if(m_MinRadius < m_MinRadiusInit && m_Radius < m_MinRadiusInit || m_MinRadius > m_MinRadiusInit && m_Radius < m_MinRadius)
+		GoalTable->Set(_machine, "MinRadius", gmVariable(m_MinRadius));
 	
-	// There's no reason to save SerialNum, because function LoadFromTable never loaded SerialNum from file.
-	//GoalTable->Set(_machine,"SerialNum",gmVariable(m_SerialNum));
-	
-	GoalTable->Set(_machine,"CreateOnLoad",gmVariable(m_CreateOnLoad));
+	if(!m_CreateOnLoad) GoalTable->Set(_machine, "CreateOnLoad", gmVariable(m_CreateOnLoad));
 	if(m_RandomUsePoint) GoalTable->Set(_machine,"RandomUsePoint",gmVariable(m_RandomUsePoint));
 	if(m_Range) GoalTable->Set(_machine,"Range",gmVariable(m_Range));
 
 	/*gmGCRoot<gmUserObject> userBounds = gmBind2::Class<BoundingBox>::WrapObject(_machine,&m_Bounds,true);
 	GoalTable->Set(_machine,"Bounds",gmVariable(userBounds));*/
 
-	if(!m_EulerValid){
-		m_Orientation.ToEulerAnglesZXY(m_Euler.x, m_Euler.y, m_Euler.z);
-		m_EulerValid = true;
-	}
-	GoalTable->Set(_machine, "Orientation", gmVariable(m_Euler));
+	//if(!m_EulerValid){
+	//	m_Orientation.ToEulerAnglesZXY(m_Euler.x, m_Euler.y, m_Euler.z);
+	//	m_EulerValid = true;
+	//}
+	//GoalTable->Set(_machine, "Orientation", gmVariable(m_Euler));
 	//////////////////////////////////////////////////////////////////////////
 
-	GoalTable->Set(_machine,"TeamAvailability",gmVariable(m_AvailableTeamsInit.GetRawFlags()));
+	if(m_AvailableTeamsInit.GetRawFlags()!=30) 
+		GoalTable->Set(_machine, "TeamAvailability", gmVariable(m_AvailableTeamsInit.GetRawFlags()));
 
 	GoalTable->Set(_machine,"Roles",gmVariable::s_null);
 	if(m_RoleMask.AnyFlagSet())
@@ -1658,46 +1657,23 @@ bool MapGoal::LoadFromTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_loadt
 		_err.AddError("Goal.Name Field Missing!");
 		return false;
 	}
-	if(const char *GroupName = proptable->Get(_machine,"GroupName").GetCStringSafe(0))
-		m_GroupName = GroupName;
-	else
-	{
-		_err.AddError("Goal.GroupName Field Missing!");
-		return false;
-	}
-	if(!proptable->Get(_machine,"Version").GetInt(m_Version,0))
-	{
-		_err.AddError("Goal.Version Field Missing!");
-		return false;
-	}
-	if(!proptable->Get(_machine,"Position").GetVector(m_Position))
+	m_GroupName = proptable->Get(_machine, "GroupName").GetCStringSafe("");
+	proptable->Get(_machine, "Version").GetInt(m_Version, 0);
+	if(!proptable->Get(_machine, "Position").GetVector(m_Position))
 	{
 		_err.AddError("Goal.Position Field Missing!");
 		return false;
 	}
-	if(!proptable->Get(_machine,"Radius").GetFloatSafe(m_Radius))
-	{
-		_err.AddError("Goal.Radius Field Missing!");
-		return false;
-	}
-	if(!proptable->Get(_machine,"MinRadius").GetFloatSafe(m_MinRadius))
-	{
-		_err.AddError("Goal.MinRadius Field Missing!");
-		return false;
-	}
+	proptable->Get(_machine, "Radius").GetFloatSafe(m_Radius, 0.0f);
+	proptable->Get(_machine, "MinRadius").GetFloatSafe(m_MinRadius, m_MinRadius);
 	
 	// Command /bot goal_create does not generate unique serial numbers !
 	// If some goals are deleted, then newly created goals can have same serial number as existing goals.
 	// Because serial numbers in the file are not unique, it would be very dangerous to load them.
 	// Fortunatelly, omni-bot never loaded serial numbers from a file, because here is another bug.
 	// Function GetIntSafe cannot change value of m_SerialNum, because parameter is not passed by reference (see declaration in gmVariable.h)
-	//if(!proptable->Get(_machine,"SerialNum").GetIntSafe(m_SerialNum))
-	//{
-	//	_err.AddError("Goal.SerialNum Field Missing!");
-	//	return false;
-	//}
+	//proptable->Get(_machine,"SerialNum").GetIntSafe(m_SerialNum);
 
-	//orientation is used only by MORTAR goals
 	if(proptable->Get(_machine,"Orientation").GetVector(m_Euler))
 	{
 		m_EulerValid = true;
@@ -1705,11 +1681,7 @@ bool MapGoal::LoadFromTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_loadt
 	}
 
 	int InitialTeams = 0;
-	if(!proptable->Get(_machine,"TeamAvailability").GetIntSafe(InitialTeams,0))
-	{
-		//_err.AddError("Goal.TeamAvailability Field Missing!");
-		//return false;
-	}
+	proptable->Get(_machine, "TeamAvailability").GetIntSafe(InitialTeams, 30);
 	m_AvailableTeamsInit = BitFlag32(InitialTeams);
 	m_AvailableTeams = m_AvailableTeamsInit;
 	
@@ -1739,25 +1711,13 @@ bool MapGoal::LoadFromTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_loadt
 		}
 	}
 
-	int CreateOnLoad = GetCreateOnLoad();
-	if(!proptable->Get(_machine,"CreateOnLoad").GetIntSafe(CreateOnLoad,CreateOnLoad))
-	{
-		//_err.AddError("Goal.TeamAvailability Field Missing!");
-		//return false;
-	}
+	int CreateOnLoad;
+	proptable->Get(_machine, "CreateOnLoad").GetIntSafe(CreateOnLoad, 1);
 	SetCreateOnLoad(CreateOnLoad!=0);
 
-	if(!proptable->Get(_machine,"RandomUsePoint").GetInt(m_RandomUsePoint,0))
-	{
-		//_err.AddError("Goal.RandomUsePoint Field Missing!");
-		//return false;
-	}
+	proptable->Get(_machine, "RandomUsePoint").GetInt(m_RandomUsePoint, 0);
 
-	if(!proptable->Get(_machine,"Range").GetInt(m_Range,0))
-	{
-		//_err.AddError("Goal.Range Field Missing!");
-		//return false;
-	}
+	proptable->Get(_machine, "Range").GetInt(m_Range, 0);
 
 	// clear out the properties we don't want to pass along.
 	//proptable->Set(_machine,"Version",gmVariable::s_null);

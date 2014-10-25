@@ -16,6 +16,8 @@ class Waypoint;
 
 // Title: GoalManager
 
+enum { MapGoalVersion = 1 };
+
 // typedef: MapGoalPtr
 class MapGoal;
 typedef boost::shared_ptr<MapGoal> MapGoalPtr;

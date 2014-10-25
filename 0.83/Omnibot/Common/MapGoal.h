@@ -448,6 +448,7 @@ private:
 
 	float			m_Radius;
 	float			m_MinRadius;
+	float			m_MinRadiusInit;
 
 	obint32			m_MaxUsers[NUM_TRACK_CATS];
 	obint32			m_CurrentUsers[NUM_TRACK_CATS][Constants::MAX_TEAMS];
