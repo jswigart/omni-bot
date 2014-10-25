@@ -84,7 +84,7 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	FileSystem::MakeDirectory("user");
 	FileSystem::MakeDirectory("nav");
 	FileSystem::MakeDirectory("scripts");
-	FileSystem::MakeDirectory("gui");
+	//FileSystem::MakeDirectory("gui");
 	//FileSystem::MakeDirectory("gui/weapons");
 
 	FileSystem::MountArchives("scripts");
@@ -137,12 +137,18 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	//////////////////////////////////////////////////////////////////////////
 	// Set up global config options.
 	//Options::SetValue("Settings","TickRate",20,false);
+
+#ifdef WIN32
 	Options::SetValue("Debug","DumpFileEnable",true,false);
 	Options::SetValue("Debug","DumpFileDialog",true,false);
+#endif
+
 	Options::SetValue("Script","LiveUpdate",true,false);
-	Options::SetValue("Script","Debug","true",false);
+	//Options::SetValue("Script","Debug","true",false);
+
+#ifdef ENABLE_REMOTE_DEBUGGER
 	Options::SetValue("Script","EnableRemoteDebugger","true",false);
-	Options::SetValue("Debug Render","EnableInterProcess","true",false);
+#endif
 
 #ifdef ENABLE_FILE_DOWNLOADER
 	Options::SetValue("Downloader","Server","",false);
@@ -157,9 +163,12 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	
 	//////////////////////////////////////////////////////////////////////////
 
-	bool EnableIpc = false;
+#ifdef INTERPROCESS
+	Options::SetValue("Debug Render", "EnableInterProcess", "true", false);
+	bool EnableIpc = true;
 	Options::GetValue("Debug Render","EnableInterProcess",EnableIpc);
 	InterProcess::Enable(EnableIpc);
+#endif
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 	{
