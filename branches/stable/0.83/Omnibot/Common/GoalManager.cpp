@@ -19,9 +19,6 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-enum { MapGoalVersion = 1 };
-
-//////////////////////////////////////////////////////////////////////////
 
 class PriorityGreaterThan
 {
@@ -869,7 +866,21 @@ bool GoalManager::Load(const String &_map, ErrorObj &_err)
 					gmTableObject *mgTbl = pNode->m_value.GetTableObjectSafe();
 					if(mgTbl)
 					{
-						const String goalName = mgTbl->Get(pMachine,"Name").GetCStringSafe("");
+						//copy file version to goal version
+						if(mgTbl->Get(pMachine, "Version").IsNull()) 
+							mgTbl->Set(pMachine, "Version", gmVersion);
+
+						//copy table key to goal name
+						String goalName;
+						gmVariable gmName = mgTbl->Get(pMachine, "Name");
+						if(gmName.IsNull()){
+							mgTbl->Set(pMachine, "Name", pNode->m_key);
+							goalName = pNode->m_key.GetCStringSafe("");
+						}
+						else{
+							goalName = gmName.GetCStringSafe("");
+						}
+
 						const String goalType = mgTbl->Get(pMachine,"GoalType").GetCStringSafe("");
 						if(!goalType.empty() && !goalName.empty())
 						{
