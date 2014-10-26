@@ -1581,7 +1581,10 @@ bool MapGoal::SaveToTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_savetab
 	if(m_Version!=MapGoalVersion) GoalTable->Set(_machine, "Version", gmVariable(m_Version));
 	GoalTable->Set(_machine,"GoalType",GetGoalType().c_str());
 	//GoalTable->Set(_machine, "Name", GetName().c_str());
-	GoalTable->Set(_machine,"TagName",GetTagName().c_str());	
+	int sz = m_Name.length() - m_GoalType.length() - 1;
+	if(sz <= 0 || m_Name.compare(m_GoalType.length()+1, sz, m_TagName)) 
+		GoalTable->Set(_machine, "TagName", GetTagName().c_str());
+
 	if(!GetGroupName().empty()) GoalTable->Set(_machine, "GroupName", GetGroupName().c_str());
 	GoalTable->Set(_machine,"Position",gmVariable(m_InterfacePosition.IsZero() ? m_Position : m_InterfacePosition));
 	if(m_Radius!=0.0f) GoalTable->Set(_machine, "Radius", gmVariable(m_Radius));

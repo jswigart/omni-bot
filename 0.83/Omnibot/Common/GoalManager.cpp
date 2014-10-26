@@ -881,9 +881,14 @@ bool GoalManager::Load(const String &_map, ErrorObj &_err)
 							goalName = gmName.GetCStringSafe("");
 						}
 
-						const String goalType = mgTbl->Get(pMachine,"GoalType").GetCStringSafe("");
+						const String goalType = mgTbl->Get(pMachine, "GoalType").GetCStringSafe("");
 						if(!goalType.empty() && !goalName.empty())
 						{
+							//set TagName from Name
+							if(mgTbl->Get(pMachine, "TagName").IsNull() && goalName.length() - goalType.length() > 1){
+								mgTbl->Set(pMachine, "TagName", goalName.c_str()+goalType.length()+1);
+							}
+
 							// if the goal exists already
 							gmGCRoot<gmTableObject> goalTbl(mgTbl,pMachine);
 							MapGoalPtr existingGoal = GetGoal(goalName);
