@@ -422,7 +422,7 @@ void DrawDebugAABB(float *mins, float *_maxs, int _duration, int _color, int _si
 
 void DrawDebugPolygon(vec3_t *verts, int _numverts, int _duration, int _color)
 {
-	if(cg_omnibotdrawing.integer){
+	if(cg_omnibotdrawing.integer && _numverts <= 64){
 		UdpDebugPolygon_t *lne = AddToPolygonList();
 
 		lne->duration = _duration;
