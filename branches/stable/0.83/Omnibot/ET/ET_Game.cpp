@@ -145,6 +145,7 @@ bool ET_Game::Init()
 	// Run the games autoexec.
 	int threadId;
 	ScriptManager::GetInstance()->ExecuteFile("scripts/et_autoexec.gm", threadId);	
+	ScriptManager::GetInstance()->ExecuteFile("scripts/et_autoexec_user.gm", threadId);
 
 	return true;
 }
