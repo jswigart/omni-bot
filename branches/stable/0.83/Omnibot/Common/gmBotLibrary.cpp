@@ -595,6 +595,45 @@ static int GM_CDECL gmfSetMapGoalProperties(gmThread *a_thread)
 	return GM_OK;
 }
 
+
+static int SetAvailableMapGoals(gmThread *a_thread, int _team, bool _available, const char* _expression)
+{
+	GoalManager::Query qry;
+	qry.Expression(_expression);
+	qry.NoFilters();
+	GoalManager::GetInstance()->GetGoals(qry);
+
+	int size = (int) qry.m_List.size();
+	if (size>0)
+	{
+		for(int i = 0; i < size; ++i)
+		{
+			if(_team == 0)
+			{
+				for(int t = 1; t <= 4; ++t)
+					qry.m_List[i]->SetAvailable(t, _available);
+			}
+			else
+			{
+				qry.m_List[i]->SetAvailable(_team, _available);
+			}
+		}
+	}
+	else
+	{
+		gmCall call;
+		if(call.BeginTableFunction(a_thread->GetMachine(), "MapDebugPrint", "Util"))
+		{
+			call.AddParamString(va("SetAvailableMapGoals: goal query for %s has no results!", _expression));
+			call.AddParamInt(1);
+			call.End();
+		}
+		LOGWARN("SetAvailableMapGoals: goal query for " << _expression << " has no results!");
+	}
+
+	return size;
+}
+
 // function: SetAvailableMapGoals
 //		This function enables/disables map goals
 //
@@ -602,70 +641,49 @@ static int GM_CDECL gmfSetMapGoalProperties(gmThread *a_thread)
 //
 //		int		- The team the goal should be for. 0 means any team. See global team table.
 //		int		- True to enable, false to disable.
-//		string	- OPTIONAL - The expression to use to match the goal names.
+//		string or table	- OPTIONAL - The expression to use to match the goal names.
 //
 // Returns:
-//		none
+//		int - count of goals
 static int GM_CDECL gmfSetAvailableMapGoals(gmThread *a_thread)
 {
 	GM_CHECK_INT_PARAM(team, 0);
 	GM_CHECK_INT_PARAM(enable, 1);
-	bool bFoundGoal = false;
 
-	const char *pExpression = 0;
-	if(a_thread->GetNumParams() > 2)
+	int size = 0;
+	if(a_thread->GetNumParams() < 3)
 	{
-		if(a_thread->ParamType(2)==GM_STRING)
-		{
-			pExpression = a_thread->ParamString(2);
-		}
-		else
-		{
-			EngineFuncs::ConsoleMessage("SetAvailableMapGoals: Parameter 3 must be a string");
-			LOGWARN("SetAvailableMapGoals: Parameter 3 must be a string");
-			a_thread->PushInt(0);
-			return GM_OK;
-		}		
+		size = SetAvailableMapGoals(a_thread, team, enable != 0, 0);
 	}
-
-	GoalManager::Query qry;
-	qry.Expression(pExpression);
-	qry.NoFilters();
-	GoalManager::GetInstance()->GetGoals(qry);
-	for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	else if(a_thread->ParamType(2)==GM_STRING)
 	{
-		if ( !bFoundGoal )
-			bFoundGoal = true;
-
-		if(team == 0)
+		size = SetAvailableMapGoals(a_thread, team, enable != 0, a_thread->ParamString(2));
+	}
+	else if(a_thread->ParamType(2)==GM_TABLE)
+	{
+		gmTableObject* tbl = a_thread->ParamTable(2);
+		gmTableIterator tIt;
+		for(gmTableNode *pNode = tbl->GetFirst(tIt); pNode; pNode = tbl->GetNext(tIt))
 		{
-			for(int t = 1; t <= 4; ++t)
-				qry.m_List[i]->SetAvailable(t, enable != 0);
-		}
-		else
-		{
-			qry.m_List[i]->SetAvailable(team, enable != 0);
+			if(!pNode->m_value.IsString())
+			{
+				GM_EXCEPTION_MSG("expecting param 3 as table of string, got %s", a_thread->GetMachine()->GetTypeName(pNode->m_value.m_type));
+				return GM_EXCEPTION;
+			}
+			size += SetAvailableMapGoals(a_thread, team, enable != 0, pNode->m_value.GetCStringSafe(0));
 		}
 	}
-
-	if ( bFoundGoal )
-		a_thread->PushInt(1);
 	else
 	{
-		gmCall call;
-		if(call.BeginTableFunction(a_thread->GetMachine(), "MapDebugPrint", "Util"))
-		{
-			call.AddParamString(va("SetAvailableMapGoals: goal query for %s has no results!", pExpression));
-			call.AddParamInt(1);
-			call.End();
-		}
-		LOGWARN("SetAvailableMapGoals: goal query for " << pExpression << " has no results!");
-		a_thread->PushInt(0);
+		EngineFuncs::ConsoleMessage("SetAvailableMapGoals: Parameter 3 must be a string or table");
+		LOGWARN("SetAvailableMapGoals: Parameter 3 must be a string");
 	}
 
+	a_thread->PushInt(size);
 	return GM_OK;
 }
 
+		
 // function: SetGoalPriority
 //		This function sets the bias for a selection of goals
 //
