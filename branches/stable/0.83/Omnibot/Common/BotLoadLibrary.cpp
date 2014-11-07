@@ -105,25 +105,31 @@ const char *Omnibot_FixPath(const char *_path)
 
 #if defined WIN32 || defined _WINDOWS || defined _WIN32
 
-//////////////////////////////////////////////////////////////////////////
-// Windows
-#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32 1
 #define WIN32_LEAN_AND_MEAN
-#endif
-#ifndef NOWINRES
 #define NOWINRES
-#endif
-#ifndef NOSERVICE
 #define NOSERVICE
-#endif
-#ifndef NOMCX
 #define NOMCX
-#endif
-#ifndef NOIME
 #define NOIME
-#endif
 #include <stdio.h>
 #include <windows.h>
+
+#elif defined __linux__ || ((defined __MACH__) && (defined __APPLE__))
+
+#include <stdarg.h>
+#include <dlfcn.h>
+
+#define _vsnprintf vsnprintf
+#define _stricmp strcasecmp
+#define GetProcAddress dlsym
+#define FreeLibrary dlclose
+#define HINSTANCE void*
+
+#else
+
+#error "Unsupported Platform or Missing platform #defines";
+
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 // Utilities
@@ -159,38 +165,36 @@ int OB_VA_OWNBUFFER(char *_buffer, int _buffersize, const char* _msg, ...)
 	return ret;
 }
 
-static int StringCompareNoCase(const char *s1, const char *s2)
-{
-	return _stricmp(s1,s2);
-}
-
 //////////////////////////////////////////////////////////////////////////	
-HINSTANCE g_BotLibrary = NULL;
+HINSTANCE g_BotLibrary = 0;
 
-bool OB_ShowLastError(const char *context)
+void OB_ShowLastError(const char *context)
 {
-	LPVOID lpMsgBuf;
-	DWORD dw = GetLastError(); 
+#ifdef WIN32
+	char *pMessage;
 	FormatMessage(
-		FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-		FORMAT_MESSAGE_FROM_SYSTEM,
-		NULL,
-		dw,
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+		0,
+		GetLastError(),
 		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-		(LPTSTR) &lpMsgBuf,
-		0, NULL );
+		(LPTSTR)&pMessage,
+		0, 0 );
 
-	//////////////////////////////////////////////////////////////////////////
 	// Strip Newlines
-	char *pMessage = (char*)lpMsgBuf;
 	int i = (int)strlen(pMessage)-1;
 	while(pMessage[i] == '\n' || pMessage[i] == '\r')
 		pMessage[i--] = 0;
-	//////////////////////////////////////////////////////////////////////////
+
+#else
+	const char *pMessage = dlerror();
+	if(!pMessage) pMessage = "<unknown error>";
+#endif
 
 	Omnibot_Load_PrintErr(OB_VA("%s Failed with Error: %s", context, pMessage));
-	LocalFree(lpMsgBuf);
-	return true;
+
+#ifdef WIN32
+	LocalFree(pMessage);
+#endif
 }
 
 HINSTANCE Omnibot_LL(const char *file)
@@ -202,7 +206,11 @@ HINSTANCE Omnibot_LL(const char *file)
 
 	//////////////////////////////////////////////////////////////////////////
 	g_OmnibotLibPath = file;
+#ifdef WIN32
 	HINSTANCE hndl = LoadLibrary(g_OmnibotLibPath.c_str());
+#else
+	void *hndl = dlopen(g_OmnibotLibPath.c_str(), RTLD_NOW);
+#endif
 	if(!hndl)
 		OB_ShowLastError("LoadLibrary");
 	Omnibot_Load_PrintMsg(OB_VA("Looking for %s, %s", g_OmnibotLibPath.c_str(), hndl ? "found." : "not found"));
@@ -212,11 +220,26 @@ HINSTANCE Omnibot_LL(const char *file)
 eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *path)
 {
 	eomnibot_error r = BOT_ERROR_NONE;
+#ifdef WIN32
 	g_BotLibrary = Omnibot_LL( OB_VA("%s\\%s.dll", path ? path : ".", lib) );
 	if(g_BotLibrary == 0)
 		g_BotLibrary = Omnibot_LL( OB_VA(".\\omni-bot\\%s.dll", lib) );
 	if(g_BotLibrary == 0)
 		g_BotLibrary = Omnibot_LL( OB_VA("%s.dll", lib) );
+#else
+	g_BotLibrary = Omnibot_LL(OB_VA("%s/%s.so", path ? path : ".", lib));
+	if(!g_BotLibrary)
+		g_BotLibrary = Omnibot_LL(OB_VA("./%s.so", lib));
+	if(!g_BotLibrary)
+	{
+		char *homeDir = getenv("HOME");
+		if(homeDir)
+			g_BotLibrary = Omnibot_LL(OB_VA("%s/omni-bot/%s.so", homeDir, lib));
+	}
+	if(!g_BotLibrary)
+		g_BotLibrary = Omnibot_LL(OB_VA("%s.so", lib));
+#endif
+
 	if(g_BotLibrary == 0)
 	{
 		g_OmnibotLibPath.clear();
@@ -231,24 +254,25 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 		if(pfnGetBotFuncs == 0)
 		{
 			r = BOT_ERROR_CANTGETBOTFUNCTIONS;
-			Omnibot_Load_PrintErr(OB_VA("Omni-bot Failed with Error: %s", Omnibot_ErrorString(r)));
+			OB_ShowLastError("GetProcAddress");
 		} 
 		else
 		{
 			r = pfnGetBotFuncs(&g_BotFunctions, sizeof(g_BotFunctions));
 			if(r == BOT_ERROR_NONE)
 			{
-				Omnibot_Load_PrintMsg("Omni-bot Loaded Successfully");
 				r = g_BotFunctions.pfnInitialize(g_InterfaceFunctions, version);
-				g_IsOmnibotLoaded = (r == BOT_ERROR_NONE);
 			}
-			
-			// cs: removed else so interface errors can be printed
-			if (r != BOT_ERROR_NONE)
-			{
-				Omnibot_Load_PrintErr(OB_VA("Omni-bot Failed with Error: %s", Omnibot_ErrorString(r)));
-				Omnibot_FreeLibrary();
-			}
+		}
+		g_IsOmnibotLoaded = (r == BOT_ERROR_NONE);
+		if(g_IsOmnibotLoaded)
+		{
+			Omnibot_Load_PrintMsg("Omni-bot Loaded Successfully");
+		}
+		else
+		{
+			Omnibot_Load_PrintErr(OB_VA("Omni-bot Failed with Error: %s", Omnibot_ErrorString(r)));
+			Omnibot_FreeLibrary();
 		}
 	}
 	return r;
@@ -268,147 +292,6 @@ void Omnibot_FreeLibrary()
 
 	g_IsOmnibotLoaded = false;
 }
-
-#elif defined __linux__ || ((defined __MACH__) && (defined __APPLE__))
-
-#include <stdarg.h>
-
-//////////////////////////////////////////////////////////////////////////
-// Utilities
-
-const char *OB_VA(const char* _msg, ...)
-{
-	static int iCurrentBuffer = 0;
-	const int iNumBuffers = 3;
-	const int BUF_SIZE = 1024;
-	struct BufferInstance
-	{
-		char buffer[BUF_SIZE];
-	};
-	static BufferInstance buffers[iNumBuffers];
-
-	char *pNextBuffer = buffers[iCurrentBuffer].buffer;
-
-	va_list list;
-	va_start(list, _msg);
-	vsnprintf(pNextBuffer, sizeof(buffers[iCurrentBuffer].buffer), _msg, list);	
-	va_end(list);
-
-	iCurrentBuffer = (iCurrentBuffer+1)%iNumBuffers;
-	return pNextBuffer;
-}
-
-
-int OB_VA_OWNBUFFER(char *_buffer, int _buffersize, CHECK_PRINTF_ARGS const char* _msg, ...)
-{
-	va_list list;
-	va_start(list, _msg);
-	const int ret = vsnprintf(_buffer, _buffersize, _msg, list);	
-	va_end(list);
-	return ret;
-}
-
-static int StringCompareNoCase(const char *s1, const char *s2)
-{
-	return strcasecmp(s1,s2);
-}
-
-#include <dlfcn.h>
-#define GetProcAddress dlsym
-#ifndef NULL
-#define NULL 0
-#endif
-
-//////////////////////////////////////////////////////////////////////////	
-void *g_BotLibrary = NULL;
-
-bool OB_ShowLastError(const char *context, const char *errormsg)
-{
-	Omnibot_Load_PrintErr(OB_VA("%s Failed with Error: %s", context, errormsg?errormsg:"<unknown error>"));
-	return true;
-}
-
-void *Omnibot_LL(const char *file)
-{
-	g_OmnibotLibPath = file;
-	void *pLib = dlopen(g_OmnibotLibPath.c_str(), RTLD_NOW);
-	if(!pLib)
-		OB_ShowLastError("LoadLibrary", dlerror());
-
-	Omnibot_Load_PrintMsg(OB_VA("Looking for %s, ", g_OmnibotLibPath.c_str(), pLib ? "found." : "not found"));
-	return pLib;
-}
-
-eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *path)
-{
-	eomnibot_error r = BOT_ERROR_NONE;
-	g_BotLibrary = Omnibot_LL(OB_VA("%s/%s.so", path ? path : ".", lib));
-	if(!g_BotLibrary)
-	{
-		g_BotLibrary = Omnibot_LL(OB_VA("./%s.so", lib));
-	}
-	if(!g_BotLibrary)
-	{
-		char *homeDir = getenv("HOME");
-		if(homeDir)
-			g_BotLibrary = Omnibot_LL(OB_VA("%s/omni-bot/%s.so", homeDir, lib));
-	}
-	if(!g_BotLibrary)
-	{
-		char *homeDir = getenv("HOME");
-		if(homeDir)
-			g_BotLibrary = Omnibot_LL(OB_VA("%s.so", lib));
-	}
-	if(!g_BotLibrary)
-	{
-		g_OmnibotLibPath.clear();
-		r = BOT_ERROR_CANTLOADDLL;
-	}
-	else
-	{
-		Omnibot_Load_PrintMsg(OB_VA("Found Omni-bot: %s, Attempting to Initialize", g_OmnibotLibPath.c_str()));
-		pfnGetFunctionsFromDLL pfnGetBotFuncs = 0;
-		memset(&g_BotFunctions, 0, sizeof(g_BotFunctions));
-		pfnGetBotFuncs = (pfnGetFunctionsFromDLL)GetProcAddress(g_BotLibrary, "ExportBotFunctionsFromDLL");
-		if(!pfnGetBotFuncs)
-		{
-			r = BOT_ERROR_CANTGETBOTFUNCTIONS;
-			Omnibot_Load_PrintErr(OB_VA("Omni-bot Failed with Error: %s", Omnibot_ErrorString(r)));
-			OB_ShowLastError("GetProcAddress", dlerror());
-		}
-		else
-		{
-			r = pfnGetBotFuncs(&g_BotFunctions, sizeof(g_BotFunctions));
-			if(r == BOT_ERROR_NONE)
-			{
-				Omnibot_Load_PrintMsg("Omni-bot Loaded Successfully");
-				r = g_BotFunctions.pfnInitialize(g_InterfaceFunctions, version);
-				g_IsOmnibotLoaded = (r == BOT_ERROR_NONE);
-			}
-		}
-	}
-	return r;
-}
-
-void Omnibot_FreeLibrary()
-{
-	if(g_BotLibrary)
-	{
-		dlclose(g_BotLibrary);
-		g_BotLibrary = 0;
-	}
-	memset(&g_BotFunctions, 0, sizeof(g_BotFunctions));
-	memset(&g_InterfaceFunctions, 0, sizeof(g_InterfaceFunctions));
-	g_IsOmnibotLoaded = false;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-#else
-
-#error "Unsupported Platform or Missing platform #defines";
-
-#endif
 
 //////////////////////////////////////////////////////////////////////////
 KeyVals::KeyVals()
@@ -471,7 +354,7 @@ bool KeyVals::SetKeyVal(const char *_key, const obUserData &_ud)
 	{
 		if(ifree == -1 && m_Key[i][0]==0)
 			ifree = i;
-		if(!StringCompareNoCase(m_Key[i],_key))
+		if(!_stricmp(m_Key[i], _key))
 		{
 			m_Value[i] = _ud;
 			return true;
@@ -554,7 +437,7 @@ bool KeyVals::GetKeyVal(const char *_key, obUserData &_ud) const
 {
 	for(int i = 0; i < MaxArgs; ++i)
 	{
-		if(!StringCompareNoCase(m_Key[i],_key))
+		if(!_stricmp(m_Key[i], _key))
 		{
 			_ud = m_Value[i];
 			return true;
