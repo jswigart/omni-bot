@@ -335,7 +335,14 @@ enum MoveMode
 
 // cs: FIXME: debug version of OBASSERT doesnt build in linux. doesn't like __VA_ARGS__
 #ifdef __linux__ 
+#ifdef	_DEBUG
+#define OBASSERT(f, msg, ...) { static bool bShowAssert = true; \
+	if(bShowAssert) { \
+	bShowAssert = Utils::AssertFunction((bool)((f)!=0), #f, __FILE__, __LINE__, msg, ##__VA_ARGS__); \
+		} }
+#else	// !DEBUG
 #define OBASSERT(f, sz, ...) {}	// cs: for gcc warnings, was (f)
+#endif	// _DEBUG
 #else // !__linux__
 #ifdef	_DEBUG
 #define OBASSERT(f, msg, ...) { static bool bShowAssert = true; \
@@ -346,7 +353,7 @@ enum MoveMode
 #define OBASSERT(f, sz, ...) (f)
 #endif	// !DEBUG
 
-#endif // cs: FIXME
+#endif
 
 #ifdef	_DEBUG
 #define SOFTASSERTONCE(f, sz, ...) { static bool bShowAssert = true; \

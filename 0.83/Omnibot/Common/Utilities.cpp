@@ -414,6 +414,7 @@ namespace Utils
 		}
 		catch(const std::exception & ex)
 		{
+			EngineFuncs::ConsoleError(ex.what());
 			LOG("Bad Override Path: " << ex.what());
 		}
 		return basePath;
@@ -983,8 +984,11 @@ namespace Utils
 				DebugBreak();
 			return iRes != IDIGNORE;
 #else
-			vsnprintf(buffer, 2048, _msg, list);
-			assert(_bexp /*&& buffer*/); //cs: gcc - the address of �buffer� will always evaluate as �true�
+			snprintf(buffer, BufferSize, "%s(%d): ", _file, _line);
+			size_t len = strlen(buffer);
+			vsnprintf(buffer+len, BufferSize-len, _msg, list);
+			EngineFuncs::ConsoleError(buffer);
+			abort();
 			return true;
 #endif
 		}
