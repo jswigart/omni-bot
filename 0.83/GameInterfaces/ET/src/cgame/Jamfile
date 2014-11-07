@@ -1,11 +1,6 @@
 # The client library.
 
-import modules ;
-
-BOOST = [ modules.peek : BOOST ] ; 
-
 project cgame
-	: requirements <include>$(BOOST)
 	: requirements <define>CGAMEDLL
 	: requirements <include>../game
 	: requirements <include>../ui
