@@ -8,6 +8,38 @@
 
 #include "BotExports.h"
 
+#if defined WIN32 || defined _WINDOWS || defined _WIN32
+
+#define WIN32 1
+
+#elif defined __linux__ || ((defined __MACH__) && (defined __APPLE__))
+
+#define _stricmp strcasecmp
+
+#else
+
+#error "Unsupported Platform or Missing platform #defines";
+
+#endif
+
+
+void Omnibot_strncpy(char *dest, const char *source, int count)
+{
+	// Only doing this because some engines(HL2), think it a good idea to fuck up the 
+	// defines of all basic string functions throughout the entire project.
+	while (count && (*dest++ = *source++)) /* copy string */
+		count--;
+
+	if (count) /* pad out with zeroes */
+		while (--count)
+			*dest++ = '\0';
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+#ifdef GAMEDLL
+//this is compiled into qagame_mp_x86.dll or qagame.mp.i386.so
+
 #ifdef _WIN32
 #pragma warning(disable:4530) //C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
 #pragma warning(disable:4706) //assignment within conditional expression
@@ -59,18 +91,6 @@ static const char *BOTERRORS[BOT_NUM_ERRORS] =
 	"Error Initializing File System",
 };
 
-void Omnibot_strncpy(char *dest, const char *source, int count)
-{
-	// Only doing this because some engines(HL2), think it a good idea to fuck up the 
-	// defines of all basic string functions throughout the entire project.
-	while (count && (*dest++ = *source++)) /* copy string */
-		count--;
-
-	if (count) /* pad out with zeroes */
-		while (--count)
-			*dest++ = '\0';
-}
-
 const char *Omnibot_ErrorString(eomnibot_error err)
 {
 	return ((err >= BOT_ERROR_NONE) && (err < BOT_NUM_ERRORS)) ? BOTERRORS[err] : "";
@@ -103,9 +123,7 @@ const char *Omnibot_FixPath(const char *_path)
 
 //////////////////////////////////////////////////////////////////////////
 
-#if defined WIN32 || defined _WINDOWS || defined _WIN32
-
-#define WIN32 1
+#ifdef WIN32
 #define WIN32_LEAN_AND_MEAN
 #define NOWINRES
 #define NOSERVICE
@@ -114,21 +132,15 @@ const char *Omnibot_FixPath(const char *_path)
 #include <stdio.h>
 #include <windows.h>
 
-#elif defined __linux__ || ((defined __MACH__) && (defined __APPLE__))
+#else
 
 #include <stdarg.h>
 #include <dlfcn.h>
 
 #define _vsnprintf vsnprintf
-#define _stricmp strcasecmp
 #define GetProcAddress dlsym
 #define FreeLibrary dlclose
 #define HINSTANCE void*
-
-#else
-
-#error "Unsupported Platform or Missing platform #defines";
-
 #endif
 
 //////////////////////////////////////////////////////////////////////////
@@ -292,6 +304,9 @@ void Omnibot_FreeLibrary()
 
 	g_IsOmnibotLoaded = false;
 }
+
+
+#endif // GAMEDLL
 
 //////////////////////////////////////////////////////////////////////////
 KeyVals::KeyVals()
