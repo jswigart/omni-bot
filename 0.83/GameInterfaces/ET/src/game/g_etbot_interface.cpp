@@ -1877,11 +1877,6 @@ class ETInterface : public IEngineInterface
 public:
 	int AddBot(const MessageHelper &_data)
 	{
-		// wait until everything settles before adding bots on dedicated servers
-		if ( g_dedicated.integer && (level.time - level.startTime < 10000) ) {
-			return -1;
-		}
-
 		OB_GETMSG(Msg_Addbot);
 
 		int num = trap_BotAllocateClient(0);
