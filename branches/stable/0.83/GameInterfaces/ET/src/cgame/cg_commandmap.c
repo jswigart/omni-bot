@@ -910,6 +910,14 @@ void CG_DrawMap( float x, float y, float w, float h, int mEntFilter, mapScissor_
 
         CG_DrawMapEntity( mEnt, x, y, w, h, mEntFilter, scissor, interactive, snap, icon_size );
 	}
+
+	// draw spectator position
+	if(cgs.clientinfo[cg.clientNum].team == TEAM_SPECTATOR && !scissor) {
+		float size = cgs.ccZoomFactor * 15;
+		CG_DrawRotatedPic((cg.predictedPlayerEntity.lerpOrigin[0] - cg.mapcoordsMins[0]) * cg.mapcoordsScale[0] * w + x - size/2, 
+			(cg.predictedPlayerEntity.lerpOrigin[1] - cg.mapcoordsMins[1]) * cg.mapcoordsScale[1] * h + y - size/2, 
+			size, size, cgs.media.ccMortarTargetArrow, 1.125 - cg.predictedPlayerState.viewangles[YAW] / 360);
+	}
 }
 
 void CG_DrawExpandedAutoMap( void ) {
