@@ -343,16 +343,15 @@ obuint32 FileSystem::GetFileCrc(const String &_file)
 
 //////////////////////////////////////////////////////////////////////////
 
-bool _SupportsArchiveType(const String &_extension)
+bool _SupportsArchiveType(const char* fileName)
 {
-	const PHYSFS_ArchiveInfo **rc = PHYSFS_supportedArchiveTypes();
-	if (*rc)
+	const char *ext = strrchr(fileName, '.');
+	if(ext)
 	{
-		String strExt;
-		for(const PHYSFS_ArchiveInfo **i = rc; *i != NULL; i++)
+		ext++;
+		for(const PHYSFS_ArchiveInfo **i = PHYSFS_supportedArchiveTypes(); *i != NULL; i++)
 		{
-			strExt = String(".") + (*i)->extension;
-			if(!Utils::StringCompareNoCase(_extension, strExt))
+			if(!Utils::StringCompareNoCase(ext, (*i)->extension))
 				return true;
 		}
 	}
@@ -372,24 +371,26 @@ void _MountAllCallback(void *data, const char *origdir, const char *str)
 {
 	try
 	{
-		MountFiles *FileList = (MountFiles*)data;
-
-		char fullname[512] = {};
-		sprintf(fullname, "%s/%s", origdir, str);
-		const char *pDir = PHYSFS_getRealDir(fullname);
-		if(pDir)
+		if(_SupportsArchiveType(str))
 		{
-			fs::path filepath(pDir);
-			filepath /= origdir;
-			filepath /= str;
+			MountFiles *FileList = (MountFiles*)data;
 
-			if(!fs::is_directory(filepath) &&
-				_SupportsArchiveType(fs::extension(filepath)))
+			char fullname[512] ={};
+			sprintf(fullname, "%s/%s", origdir, str);
+			const char *pDir = PHYSFS_getRealDir(fullname);
+			if(pDir)
 			{
-				MntFile fl;
-				fl.FilePath = filepath;
-				fl.OrigDir = origdir;
-				FileList->push_back(fl);
+				fs::path filepath(pDir);
+				filepath /= origdir;
+				filepath /= str;
+
+				if(!fs::is_directory(filepath))
+				{
+					MntFile fl;
+					fl.FilePath = filepath;
+					fl.OrigDir = origdir;
+					FileList->push_back(fl);
+				}
 			}
 		}
 	}
