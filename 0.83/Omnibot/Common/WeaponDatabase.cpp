@@ -76,10 +76,25 @@ WeaponPtr WeaponDatabase::GetWeapon(int _weaponId)
 	return WeaponPtr();
 }
 
+void WeaponDatabase::LoadDefaultWeapon()
+{
+	Weapon *weapon = new Weapon();
+	gmGCRoot<gmUserObject> UserObj = weapon->GetScriptObject(ScriptManager::GetInstance()->GetMachine());
+	gmVariable varThis(UserObj);
+
+	int iThreadId;
+	const filePath wpnDefault("scripts/weapons/weapon_defaults.gm");
+	ScriptManager::GetInstance()->ExecuteFile(wpnDefault, iThreadId, &varThis);
+
+	m_DefaultWeapon.reset(weapon);
+}
+
 void WeaponDatabase::LoadWeaponDefinitions(bool _clearall)
 {
 	if(_clearall)
 		m_WeaponMap.clear();
+
+	LoadDefaultWeapon();
 
 	DirectoryList wpnFiles;
 	FileSystem::FindAllFiles("scripts/weapons", wpnFiles, "weapon_.*\\.gm");
@@ -92,7 +107,7 @@ void WeaponDatabase::LoadWeaponDefinitions(bool _clearall)
 		if((*cIt).leaf() == "weapon_defaults.gm")
 			continue;
 
-		WeaponPtr wpn(new Weapon);
+		WeaponPtr wpn(new Weapon(0, m_DefaultWeapon.get()));
 
 		LOG("Loading Weapon Definition: " << (*cIt).string());
 
@@ -115,6 +130,7 @@ void WeaponDatabase::LoadWeaponDefinitions(bool _clearall)
 void WeaponDatabase::Unload()
 {
 	m_WeaponMap.clear();
+	m_DefaultWeapon.reset();
 }
 
 void WeaponDatabase::ReloadScript(LiveUpdateKey _key)
@@ -128,7 +144,9 @@ void WeaponDatabase::ReloadScript(LiveUpdateKey _key)
 			EngineFuncs::ConsoleMessage(va("File changed, reloading %s",wpn->GetScriptPath().c_str()));
 			LOG("Re-Loading Weapon Definition: "<<wpn->GetScriptPath().c_str());
 			
-			WeaponPtr newwpn(new Weapon);
+			LoadDefaultWeapon();
+
+			WeaponPtr newwpn(new Weapon(0, m_DefaultWeapon.get()));
 
 			if(newwpn->InitScriptSource(wpn->GetScriptPath()))
 			{
@@ -152,7 +170,7 @@ bool WeaponScriptResource::InitScriptSource(const filePath &_path)
 	gmMachine * pMachine = ScriptManager::GetInstance()->GetMachine();
 
 	int iThreadId;
-	gmGCRoot<gmUserObject> UserObj = GetScriptObject(ScriptManager::GetInstance()->GetMachine());
+	gmGCRoot<gmUserObject> UserObj = GetScriptObject(pMachine);
 	gmVariable varThis(UserObj);
 
 	gmTableObject * weaponTable = pMachine->GetGlobals()->Get(pMachine,"WEAPON").GetTableObjectSafe();
@@ -162,12 +180,10 @@ bool WeaponScriptResource::InitScriptSource(const filePath &_path)
 		weaponTable->CopyTo(pMachine,weaponTableOld);
 	}
 
-	const filePath wpnDefault( "scripts/weapons/weapon_defaults.gm" );
-	const bool a = ScriptManager::GetInstance()->ExecuteFile( wpnDefault, iThreadId, &varThis );
 	const bool b = ScriptManager::GetInstance()->ExecuteFile( _path, iThreadId, &varThis );
 	const bool c = ScriptResource::InitScriptSource(_path);
 
-	if(a && b && c)
+	if(b && c)
 	{
 		if(weaponTableOld)
 		{
