@@ -69,7 +69,7 @@ void MapGoalDatabase::LoadMapGoalDefinitions(bool _clearall)
 		Unload();
 
 	DirectoryList mapgoalFiles;
-	FileSystem::FindAllFiles("scripts/mapgoals", mapgoalFiles, "mapgoal_.*.gm");
+	FileSystem::FindAllFiles("scripts/mapgoals", mapgoalFiles, "mapgoal_.*\\.gm");
 
 	LOG("Loading " << mapgoalFiles.size() << 
 		" MapGoals from: global_scripts/mapgoals & scripts/mapgoals");

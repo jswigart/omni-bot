@@ -1811,8 +1811,8 @@ void IGame::LoadGoalScripts(bool _clearold)
 	}
 
 	DirectoryList goalFiles;
-	FileSystem::FindAllFiles("global_scripts/goals", goalFiles, "goal_.*.gm");
-	FileSystem::FindAllFiles("scripts/goals", goalFiles, "goal_.*.gm");
+	FileSystem::FindAllFiles("global_scripts/goals", goalFiles, "goal_.*\\.gm");
+	FileSystem::FindAllFiles("scripts/goals", goalFiles, "goal_.*\\.gm");
 
 	LOG("Loading " << goalFiles.size() << " goal scripts from: scripts/goals");
 	DirectoryList::const_iterator cIt = goalFiles.begin(), cItEnd = goalFiles.end();
