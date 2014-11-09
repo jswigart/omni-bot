@@ -82,7 +82,7 @@ void WeaponDatabase::LoadWeaponDefinitions(bool _clearall)
 		m_WeaponMap.clear();
 
 	DirectoryList wpnFiles;
-	FileSystem::FindAllFiles("scripts/weapons", wpnFiles, "weapon_.*.gm");
+	FileSystem::FindAllFiles("scripts/weapons", wpnFiles, "weapon_.*\\.gm");
 
 	LOG("Loading " << wpnFiles.size() << " weapon scripts from: scripts/weapons");
 	DirectoryList::const_iterator cIt = wpnFiles.begin(), cItEnd = wpnFiles.end();
