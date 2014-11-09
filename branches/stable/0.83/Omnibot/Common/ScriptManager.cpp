@@ -977,7 +977,8 @@ ScriptResource & ScriptResource::operator=(const ScriptResource &_rh)
 bool ScriptResource::InitScriptSource(const filePath &_path)
 {
 	m_Script = _path;
-	m_Key = ScriptManager::GetInstance()->RegisterLiveUpdate(_path);
+	if(ScriptLiveUpdate)
+		m_Key = ScriptManager::GetInstance()->RegisterLiveUpdate(_path);
 	return true;
 }
 

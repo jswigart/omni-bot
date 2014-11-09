@@ -24,6 +24,7 @@ public:
 	String GetWeaponName(int _weaponId);
 	WeaponPtr GetWeapon(int _weaponId);
 
+	void LoadDefaultWeapon();
 	void LoadWeaponDefinitions(bool _clearall);
 	void Unload();
 
@@ -35,6 +36,7 @@ public:
 	~WeaponDatabase();
 private:
 	WeaponMap	m_WeaponMap;
+	WeaponPtr m_DefaultWeapon;
 };
 
 extern WeaponDatabase g_WeaponDatabase;
