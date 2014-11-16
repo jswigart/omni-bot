@@ -2810,7 +2810,7 @@ namespace AiState
 
 		obuint16 NextSectorId = 0;
 
-		while(true)
+		for(;;)
 		{
 			NextSectorId++;
 			//////////////////////////////////////////////////////////////////////////

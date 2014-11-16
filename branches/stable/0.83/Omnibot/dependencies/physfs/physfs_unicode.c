@@ -219,7 +219,7 @@ void PHYSFS_utf8ToUcs2(const char *src, PHYSFS_uint16 *dst, PHYSFS_uint64 len)
         if (cp > 0xFFFF)
             cp = UNICODE_BOGUS_CHAR_CODEPOINT;
 
-        *(dst++) = cp;
+        *(dst++) = (PHYSFS_uint16) cp;
         len -= sizeof (PHYSFS_uint16);
     } /* while */
 

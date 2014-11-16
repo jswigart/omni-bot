@@ -19,28 +19,25 @@
 
 
 // Disable some compiler warnings.
-#ifdef _WIN32
+#ifdef _MSC_VER
 #pragma warning(   error: 4002 )	// Too many actual parameters for macro: promoted to be an error
-#pragma warning( disable: 4097 )	// typedef-name '...' used as synonym for class-name '...'
+//#pragma warning( disable: 4097 )	// typedef-name '...' used as synonym for class-name '...'
 #pragma warning( disable: 4100 )	// unreferenced formal parameter
-#pragma warning( disable: 4127 )	// conditional expression is constant
-#pragma warning( disable: 4206 )	// nonstandard extension used : translation unit is empty
-#pragma warning( disable: 4505 )	// 'function' : unreferenced local function has been removed
-#pragma warning( disable: 4511 )	// 'class' : copy constructor could not be generated
+//#pragma warning( disable: 4127 )	// conditional expression is constant
+//#pragma warning( disable: 4206 )	// nonstandard extension used : translation unit is empty
+//#pragma warning( disable: 4505 )	// 'function' : unreferenced local function has been removed
+//#pragma warning( disable: 4511 )	// 'class' : copy constructor could not be generated
 #pragma warning( disable: 4512 )	// assignment operator could not be generated
-#pragma warning( disable: 4521 )	// 'class' : multiple copy constructors specified
-#pragma warning( disable: 4522 )	// 'class' : multiple assignment operators specified
-#pragma warning( disable: 4530 )	// C++ exception handler used, but unwind semantics are not enabled.
-#pragma warning( disable: 4714 )	// function 'function' marked as __forceinline not inlined
-#pragma warning( disable: 4996 )	// 'function': was declared deprecated
-#pragma warning( disable: 6246 )	// Local declaration of 'class' hides declaration of the same name in outer scope
-#pragma warning( disable: 6322 )	// Empty _except block
-#pragma warning( disable: 6355 )	// _alloca indicates failure by raising a stack overflow exception. Consider using _malloca instead
-#pragma warning( disable: 4512 )	// 'class' : assignment operator could not be generated
-#pragma warning( disable: 6384 )	// Dividing sizeof a pointer by another value
-#endif // _WIN32
-
-#define _UNUSED(x) ((void)x) // cs: for gcc warnings
+//#pragma warning( disable: 4521 )	// 'class' : multiple copy constructors specified
+//#pragma warning( disable: 4522 )	// 'class' : multiple assignment operators specified
+//#pragma warning( disable: 4530 )	// C++ exception handler used, but unwind semantics are not enabled.
+//#pragma warning( disable: 4714 )	// function 'function' marked as __forceinline not inlined
+//#pragma warning( disable: 4996 )	// 'function': was declared deprecated
+//#pragma warning( disable: 6246 )	// Local declaration of 'class' hides declaration of the same name in outer scope
+//#pragma warning( disable: 6322 )	// Empty _except block
+//#pragma warning( disable: 6355 )	// _alloca indicates failure by raising a stack overflow exception. Consider using _malloca instead
+//#pragma warning( disable: 4512 )	// 'class' : assignment operator could not be generated
+//#pragma warning( disable: 6384 )	// Dividing sizeof a pointer by another value
 
 // Enable some useful ones that are disabled by default 
 // http://msdn2.microsoft.com/en-us/library/23k5d385(VS.80).aspx
@@ -51,6 +48,9 @@
 // Disable if these get annoying.
 #pragma warning( default: 4710 )	// function '...' not inlined
 #pragma warning( default: 4711 )	// function '...' selected for automatic inline expansion
+#endif // _MSC_VER
+
+#define _UNUSED(x) ((void)x) // cs: for gcc warnings
 
 // :note
 //	Commonly included STL headers.

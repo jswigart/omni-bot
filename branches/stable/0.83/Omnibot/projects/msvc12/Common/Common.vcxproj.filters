@@ -423,9 +423,6 @@
     <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3IntrLine3Plane3.cpp">
       <Filter>3rdParty\WildMagic\Intersection</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3IntrPlane3Plane3.cpp">
-      <Filter>3rdParty\WildMagic\Intersection</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\dependencies\wildmagic\Wm3IntrSegment3Box3.cpp">
       <Filter>3rdParty\WildMagic\Intersection</Filter>
     </ClCompile>
@@ -462,9 +459,6 @@
     <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Sort.c">
       <Filter>3rdParty\physfs\lzma</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Threads.c">
-      <Filter>3rdParty\physfs\lzma</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zAlloc.c">
       <Filter>3rdParty\physfs\lzma\Archive</Filter>
     </ClCompile>
@@ -499,9 +493,6 @@
       <Filter>3rdParty\physfs\lzma\Compress\Branch</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Compress\Lzma\LzmaDecode.c">
-      <Filter>3rdParty\physfs\lzma\Compress\Lzma</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Compress\Lzma\LzmaDecodeSize.c">
       <Filter>3rdParty\physfs\lzma\Compress\Lzma</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Compress\Lzma\LzmaStateDecode.c">
@@ -891,9 +882,6 @@
     <ClCompile Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\dataBuffer.cpp">
       <Filter>RemoteDebug</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\messageTags.cpp">
-      <Filter>RemoteDebug</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\socket.cpp">
       <Filter>RemoteDebug</Filter>
     </ClCompile>
@@ -1239,9 +1227,6 @@
       <Filter>3rdParty\physfs\lzma</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Sort.h">
-      <Filter>3rdParty\physfs\lzma</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Threads.h">
       <Filter>3rdParty\physfs\lzma</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Types.h">
