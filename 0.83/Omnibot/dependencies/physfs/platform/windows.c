@@ -375,7 +375,7 @@ static char *getExePath(void)
         DWORD rc;
         void *ptr;
 
-        if ( !(ptr = allocator.Realloc(modpath, buflen*sizeof(WCHAR))) )
+        if ( (ptr = allocator.Realloc(modpath, buflen*sizeof(WCHAR)))==NULL )
         {
             allocator.Free(modpath);
             BAIL_MACRO(ERR_OUT_OF_MEMORY, NULL);

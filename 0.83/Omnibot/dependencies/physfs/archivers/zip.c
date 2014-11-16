@@ -158,7 +158,7 @@ static const char *zlib_error_string(int rc)
         default: return(ERR_UNKNOWN_ERROR);
     } /* switch */
 
-    return(NULL);
+    //return(NULL);
 } /* zlib_error_string */
 
 

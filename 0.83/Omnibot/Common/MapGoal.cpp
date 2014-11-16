@@ -587,7 +587,7 @@ bool MapGoal::InternalInit(gmGCRoot<gmTableObject> &_propmap, bool _newgoal)
 	{
 		if(m_UpgradeFunc)
 		{
-			while(true)
+			for(;;)
 			{			
 				gmCall call;
 
@@ -2182,7 +2182,7 @@ static int gmfSetBaseGoalType(gmThread *a_thread)
 
 	if(!Good)
 	{
-		GM_EXCEPTION_MSG( "Unable to set base goal type: %s", script ); 
+		GM_EXCEPTION_MSG("Unable to set base goal type: %s", script.FileName().c_str());
 		return GM_EXCEPTION;
 	}
 

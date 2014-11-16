@@ -699,7 +699,7 @@ static char *calculateBaseDir(const char *argv0)
 
     /* argv0 wasn't helpful. */
     BAIL_MACRO(ERR_INVALID_ARGUMENT, NULL);
-    return(NULL);
+    //return(NULL);
 } /* calculateBaseDir */
 
 

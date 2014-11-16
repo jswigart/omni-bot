@@ -1610,7 +1610,7 @@ int PathPlannerFloodFill::Process_FloodFill()
 			Prof(FloodFill);
 
 			Timer tme;
-			while(true)
+			for(;;)
 			{
 				//////////////////////////////////////////////////////////////////////////
 				NavNode *pNavNode = _GetNextOpenNode();
@@ -1805,7 +1805,7 @@ int PathPlannerFloodFill::Process_FloodFill()
 			}
 			//////////////////////////////////////////////////////////////////////////
 			
-			while(true)
+			for(;;)
 			{
 				int iNodeDepth = 0;
 				int iDeepestNode = -1;

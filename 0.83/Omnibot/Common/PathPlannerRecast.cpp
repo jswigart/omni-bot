@@ -27,6 +27,10 @@
 
 #include <DetourDebugDraw.h>
 
+#ifdef _MSC_VER
+#pragma warning( disable: 4127 )	// conditional expression is constant
+#endif
+
 duDebugDraw * gDDraw = 0;
 
 static const obuint32 NAVMESH_MAGIC = 'OMNI';

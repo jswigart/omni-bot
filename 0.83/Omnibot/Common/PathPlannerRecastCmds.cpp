@@ -158,7 +158,7 @@ void PathPlannerRecast::cmdCreateLadder(const StringVector &_args)
 			Vector3f vEdge[2] = { vStartPt,vStartPt };
 			for(int i = 0; i < 2; ++i)
 			{
-				while(1)
+				for(;;)
 				{
 					EngineFuncs::TraceLine(tr,vEdge[i],vEdge[i]-vAimNormal*TraceDist,0,TR_MASK_FLOODFILL,0,False);
 					if(tr.m_Fraction < 1.f && tr.m_Surface & SURFACE_LADDER)
@@ -174,7 +174,7 @@ void PathPlannerRecast::cmdCreateLadder(const StringVector &_args)
 			Vector3f vTop = vBottom;
 
 			// find the bottom			
-			while(1)
+			for(;;)
 			{
 				EngineFuncs::TraceLine(tr,vBottom,vBottom-vAimNormal*TraceDist,0,TR_MASK_FLOODFILL,0,False);
 				if(tr.m_Fraction < 1.f && tr.m_Surface & SURFACE_LADDER)
@@ -186,7 +186,7 @@ void PathPlannerRecast::cmdCreateLadder(const StringVector &_args)
 			}
 
 			// find the top
-			while(1)
+			for(;;)
 			{
 				EngineFuncs::TraceLine(tr,vTop,vTop-vAimNormal*TraceDist,0,TR_MASK_FLOODFILL,0,False);
 				if(tr.m_Fraction < 1.f && tr.m_Surface & SURFACE_LADDER)

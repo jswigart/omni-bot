@@ -48,9 +48,6 @@
     <ClCompile Include="..\..\..\ET\gmETBinds.cpp">
       <Filter>Core\Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\ET\ET_BaseStates.cpp">
-      <Filter>Core\Goals</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\ET\ET_GoalManager.cpp">
       <Filter>Core\Goals</Filter>
     </ClCompile>
@@ -100,9 +97,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\ET\gmETBinds.h">
       <Filter>Core\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\ET\ET_BaseStates.h">
-      <Filter>Core\Goals</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\ET\ET_GoalManager.h">
       <Filter>Core\Goals</Filter>
