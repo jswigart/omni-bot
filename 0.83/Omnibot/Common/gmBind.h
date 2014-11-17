@@ -880,9 +880,9 @@ public:
 	//
 	static void Initialise( gmMachine *a_machine, bool a_extensible = true )
 	{
-		// Return immediately if already initialised
-		if ( GetType() )
-			return;
+		// m_gmType is static, but a_machine is not static
+		// gmMachine is deleted at the end of each match and new gmMachine is created when next match starts
+		GM_ASSERT(!GetType());
 
 		// Registery library
 		a_machine->RegisterLibrary( T_API::m_gmTypeLib, 1 );
