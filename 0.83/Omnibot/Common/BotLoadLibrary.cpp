@@ -27,7 +27,7 @@ void Omnibot_strncpy(char *dest, const char *source, int count)
 {
 	// Only doing this because some engines(HL2), think it a good idea to fuck up the 
 	// defines of all basic string functions throughout the entire project.
-	while (count && (*dest++ = *source++)) /* copy string */
+	while (count && (*dest++ = *source++)!=0) /* copy string */
 		count--;
 
 	if (count) /* pad out with zeroes */
