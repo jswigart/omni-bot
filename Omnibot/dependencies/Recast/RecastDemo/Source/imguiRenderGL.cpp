@@ -22,6 +22,9 @@
 #include "SDL.h"
 #include "SDL_opengl.h"
 
+// Some math headers don't have PI defined.
+static const float PI = 3.14159265f;
+
 void imguifree(void* ptr, void* userptr);
 void* imguimalloc(size_t size, void* userptr);
 
@@ -235,7 +238,7 @@ bool imguiRenderGLInit(const char* fontpath)
 {
 	for (int i = 0; i < CIRCLE_VERTS; ++i)
 	{
-		float a = (float)i/(float)CIRCLE_VERTS * (float)M_PI*2;
+		float a = (float)i/(float)CIRCLE_VERTS * PI*2;
 		g_circleVerts[i*2+0] = cosf(a);
 		g_circleVerts[i*2+1] = sinf(a);
 	}
@@ -244,7 +247,7 @@ bool imguiRenderGLInit(const char* fontpath)
 	FILE* fp = fopen(fontpath, "rb");
 	if (!fp) return false;
 	fseek(fp, 0, SEEK_END);
-	int size = ftell(fp);
+	size_t size = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
 	
 	unsigned char* ttfBuffer = (unsigned char*)malloc(size); 
@@ -254,8 +257,13 @@ bool imguiRenderGLInit(const char* fontpath)
 		return false;
 	}
 	
-	fread(ttfBuffer, 1, size, fp);
+	size_t readLen = fread(ttfBuffer, 1, size, fp);
 	fclose(fp);
+	if (readLen != size)
+	{
+		return false;
+	}
+
 	fp = 0;
 	
 	unsigned char* bmap = (unsigned char*)malloc(512*512);
@@ -449,7 +457,7 @@ void imguiRenderGLDraw()
 			{
 				const float verts[3*2] =
 				{
-					(float)cmd.rect.x*s+0.5f, (float)cmd.rect.y*s+(float)cmd.rect.h*s-1,
+					(float)cmd.rect.x*s+0.5f, (float)cmd.rect.y*s+0.5f+(float)cmd.rect.h*s-1,
 					(float)cmd.rect.x*s+0.5f+(float)cmd.rect.w*s/2-0.5f, (float)cmd.rect.y*s+0.5f,
 					(float)cmd.rect.x*s+0.5f+(float)cmd.rect.w*s-1, (float)cmd.rect.y*s+0.5f+(float)cmd.rect.h*s-1,
 				};

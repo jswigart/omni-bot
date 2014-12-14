@@ -23,177 +23,117 @@
 #include "DetourNavMesh.h"
 #include "DetourObstacleAvoidance.h"
 #include "ValueHistory.h"
+#include "DetourCrowd.h"
 
 // Tool to create crowds.
 
-enum AgentTargetState
+struct CrowdToolParams
 {
-	AGENT_TARGET_NONE = 0,
-	AGENT_TARGET_SET = 1,
-	AGENT_TARGET_ACQUIRED = 2,
-	AGENT_TARGET_PATH = 3,
-	AGENT_TARGET_FAILED = 4,
-};
-
-static const int AGENT_MAX_PATH = 256;
-static const int AGENT_MAX_CORNERS = 4;
-static const int AGENT_MAX_TRAIL = 64;
-static const int AGENT_MAX_COLSEGS = 32;
-static const int AGENT_MAX_NEIS = 8;
-
-enum AgentApproach
-{
-	AGENT_APPROACH_CORNER = 0,
-	AGENT_APPROACH_OFFMESH_CON = 0,
-	AGENT_APPROACH_END = 0,
-};
-
-struct Agent
-{
-	float pos[3];
-	float radius, height;
-
-	float dvel[3];
-	float nvel[3];
-	float vel[3];
-	float npos[3];
-	float disp[3];
-
-	float opts[3], opte[3];
-
-	float maxspeed;
-	float t;
-	float var;
-
-	float colradius;
-	float colcenter[3];
-	float colsegs[AGENT_MAX_COLSEGS*6];
-	int ncolsegs;
-
-	float trail[AGENT_MAX_TRAIL*3];
-	int htrail;
-
-	unsigned char targetState;
-	float target[3];
-	dtPolyRef targetRef;
-
-	dtPolyRef path[AGENT_MAX_PATH];
-	int npath;
-	float corners[AGENT_MAX_CORNERS*3];
-	int ncorners;
-
-	unsigned char active;
-};
-
-
-
-struct Isect
-{
-	float u;
-	int inside;
-};
-
-static const int FORM_MAX_ISECT = 32;
-static const int FORM_MAX_SEGS = 16;
-static const int FORM_MAX_POLYS = 32;
-
-struct FormationSeg
-{
-	float p[3], q[3];
-	Isect ints[FORM_MAX_ISECT];
-	int nints;
-};
-
-struct Formation
-{
-	FormationSeg segs[FORM_MAX_SEGS];
-	int nsegs;
-	dtPolyRef polys[FORM_MAX_POLYS];
-	int npolys;
-};
-
-
-enum UpdateFlags
-{
-	CROWDMAN_ANTICIPATE_TURNS = 1,
-	CROWDMAN_USE_VO = 2,
-	CROWDMAN_DRUNK = 4,
-};
-
-class CrowdManager
-{
-	static const int MAX_AGENTS = 32;
-	Agent m_agents[MAX_AGENTS];
-	dtObstacleAvoidanceDebugData* m_vodebug[MAX_AGENTS];
-
-	ValueHistory m_totalTime;
-	ValueHistory m_rvoTime;
-	ValueHistory m_sampleCount;
-	
-	dtObstacleAvoidanceQuery* m_obstacleQuery;
-
-public:
-	CrowdManager();
-	~CrowdManager();
-	
-	void reset();
-	const Agent* getAgent(const int idx);
-	const int getAgentCount() const;
-	int addAgent(const float* pos, const float radius, const float height);
-	void removeAgent(const int idx);
-	void setMoveTarget(const int idx, const float* pos);
-
-	void update(const float dt, unsigned int flags, dtNavMeshQuery* navquery);
-
-	const dtObstacleAvoidanceDebugData* getVODebugData(const int idx) const { return m_vodebug[idx]; }
-
-	const ValueHistory* getTotalTimeGraph() const { return &m_totalTime; }
-	const ValueHistory* getRVOTimeGraph() const { return &m_rvoTime; }
-	const ValueHistory* getSampleCountGraph() const { return &m_sampleCount; }
-};
-
-class CrowdTool : public SampleTool
-{
-	Sample* m_sample;
-	float m_targetPos[3];
-	bool m_targetPosSet;
-	
-	Formation m_form;
-	
-	bool m_expandDebugDraw;
-	bool m_showLabels;
+	bool m_expandSelectedDebugDraw;
 	bool m_showCorners;
-	bool m_showTargets;
 	bool m_showCollisionSegments;
 	bool m_showPath;
 	bool m_showVO;
 	bool m_showOpt;
+	bool m_showNeis;
+	
+	bool m_expandDebugDraw;
+	bool m_showLabels;
+	bool m_showGrid;
+	bool m_showNodes;
+	bool m_showPerfGraph;
+	bool m_showDetailAll;
 	
 	bool m_expandOptions;
 	bool m_anticipateTurns;
-	bool m_useVO;
-	bool m_drunkMove;
+	bool m_optimizeVis;
+	bool m_optimizeTopo;
+	bool m_obstacleAvoidance;
+	float m_obstacleAvoidanceType;
+	bool m_separation;
+	float m_separationWeight;
+};
+
+class CrowdToolState : public SampleToolState
+{
+	Sample* m_sample;
+	dtNavMesh* m_nav;
+	dtCrowd* m_crowd;
 	
+	float m_targetPos[3];
+	dtPolyRef m_targetRef;
+
+	dtCrowdAgentDebugInfo m_agentDebug;
+	dtObstacleAvoidanceDebugData* m_vod;
+	
+	static const int AGENT_MAX_TRAIL = 64;
+	static const int MAX_AGENTS = 128;
+	struct AgentTrail
+	{
+		float trail[AGENT_MAX_TRAIL*3];
+		int htrail;
+	};
+	AgentTrail m_trails[MAX_AGENTS];
+	
+	ValueHistory m_crowdTotalTime;
+	ValueHistory m_crowdSampleCount;
+
+	CrowdToolParams m_toolParams;
+
 	bool m_run;
+
+public:
+	CrowdToolState();
+	virtual ~CrowdToolState();
 	
-	CrowdManager m_crowd;
-		
+	virtual void init(class Sample* sample);
+	virtual void reset();
+	virtual void handleRender();
+	virtual void handleRenderOverlay(double* proj, double* model, int* view);
+	virtual void handleUpdate(const float dt);
+
+	inline bool isRunning() const { return m_run; }
+	inline void setRunning(const bool s) { m_run = s; }
+	
+	void addAgent(const float* pos);
+	void removeAgent(const int idx);
+	void hilightAgent(const int idx);
+	void updateAgentParams();
+	int hitTestAgents(const float* s, const float* p);
+	void setMoveTarget(const float* p, bool adjust);
+	void updateTick(const float dt);
+
+	inline CrowdToolParams* getToolParams() { return &m_toolParams; }
+};
+
+
+class CrowdTool : public SampleTool
+{
+	Sample* m_sample;
+	CrowdToolState* m_state;
+	
 	enum ToolMode
 	{
 		TOOLMODE_CREATE,
-		TOOLMODE_MOVE,
+		TOOLMODE_MOVE_TARGET,
+		TOOLMODE_SELECT,
+		TOOLMODE_TOGGLE_POLYS,
 	};
 	ToolMode m_mode;
 	
+	void updateAgentParams();
+	void updateTick(const float dt);
+	
 public:
 	CrowdTool();
-	~CrowdTool();
+	virtual ~CrowdTool();
 	
 	virtual int type() { return TOOL_CROWD; }
 	virtual void init(Sample* sample);
 	virtual void reset();
 	virtual void handleMenu();
 	virtual void handleClick(const float* s, const float* p, bool shift);
+	virtual void handleToggle();
 	virtual void handleStep();
 	virtual void handleUpdate(const float dt);
 	virtual void handleRender();

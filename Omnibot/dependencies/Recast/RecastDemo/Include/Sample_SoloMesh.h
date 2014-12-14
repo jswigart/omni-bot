@@ -1,73 +1,81 @@
+//
+// Copyright (c) 2009-2010 Mikko Mononen memon@inside.org
+//
+// This software is provided 'as-is', without any express or implied
+// warranty.  In no event will the authors be held liable for any damages
+// arising from the use of this software.
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+//
+
 #ifndef RECASTSAMPLESOLOMESH_H
 #define RECASTSAMPLESOLOMESH_H
 
 #include "Sample.h"
 #include "DetourNavMesh.h"
 #include "Recast.h"
-#include "RecastLog.h"
 
 class Sample_SoloMesh : public Sample
 {
 protected:
+	bool m_keepInterResults;
+	float m_totalBuildTimeMs;
+
+	unsigned char* m_triareas;
+	rcHeightfield* m_solid;
+	rcCompactHeightfield* m_chf;
+	rcContourSet* m_cset;
+	rcPolyMesh* m_pmesh;
+	rcConfig m_cfg;	
+	rcPolyMeshDetail* m_dmesh;
 	
-	dtNavMesh* m_navMesh;
-	
-	enum ToolMode
+	enum DrawMode
 	{
-		TOOLMODE_PATHFIND,
-		TOOLMODE_RAYCAST,
-		TOOLMODE_DISTANCE_TO_WALL,
-		TOOLMODE_FIND_POLYS_AROUND,
+		DRAWMODE_NAVMESH,
+		DRAWMODE_NAVMESH_TRANS,
+		DRAWMODE_NAVMESH_BVTREE,
+		DRAWMODE_NAVMESH_NODES,
+		DRAWMODE_NAVMESH_INVIS,
+		DRAWMODE_MESH,
+		DRAWMODE_VOXELS,
+		DRAWMODE_VOXELS_WALKABLE,
+		DRAWMODE_COMPACT,
+		DRAWMODE_COMPACT_DISTANCE,
+		DRAWMODE_COMPACT_REGIONS,
+		DRAWMODE_REGION_CONNECTIONS,
+		DRAWMODE_RAW_CONTOURS,
+		DRAWMODE_BOTH_CONTOURS,
+		DRAWMODE_CONTOURS,
+		DRAWMODE_POLYMESH,
+		DRAWMODE_POLYMESH_DETAIL,
+		MAX_DRAWMODE
 	};
 	
-	ToolMode m_toolMode;
+	DrawMode m_drawMode;
 	
-	static const int MAX_POLYS = 256;
-	static const int MAX_SMOOTH = 2048;
-	
-	dtPolyRef m_startRef;
-	dtPolyRef m_endRef;
-	dtPolyRef m_polys[MAX_POLYS];
-	dtPolyRef m_parent[MAX_POLYS];
-	int m_npolys;
-	float m_straightPath[MAX_POLYS*3];
-	int m_nstraightPath;
-	float m_polyPickExt[3];
-	float m_smoothPath[MAX_SMOOTH*3];
-	int m_nsmoothPath;
-	
-	float m_spos[3];
-	float m_epos[3];
-	float m_hitPos[3];
-	float m_hitNormal[3];
-	float m_distanceToWall;
-	bool m_sposSet;
-	bool m_eposSet;
-	
-	enum ToolRenderFlags
-	{
-		NAVMESH_POLYS = 0x01,
-		NAVMESH_BVTREE = 0x02,
-		NAVMESH_TOOLS = 0x04,
-	};
-	
-	void toolCleanup();
-	void toolReset();
-	void toolRecalc();
-	void toolRender(int flags);
-	void toolRenderOverlay(double* proj, double* model, int* view);
-	
-	void drawAgent(const float* pos, float r, float h, float c, const float* col);
-
-
+	void cleanup();
+		
 public:
 	Sample_SoloMesh();
 	virtual ~Sample_SoloMesh();
 	
+	virtual void handleSettings();
 	virtual void handleTools();
-	virtual void setToolStartPos(const float* p);
-	virtual void setToolEndPos(const float* p);	
+	virtual void handleDebugMode();
+	
+	virtual void handleRender();
+	virtual void handleRenderOverlay(double* proj, double* model, int* view);
+	virtual void handleMeshChanged(class InputGeom* geom);
+	virtual bool handleBuild();
 };
 
 
-#endif // RECASTSAMPLESOLOMESH_H
+#endif // RECASTSAMPLESOLOMESHSIMPLE_H

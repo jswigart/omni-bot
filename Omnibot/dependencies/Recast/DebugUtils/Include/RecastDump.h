@@ -19,8 +19,6 @@
 #ifndef RECAST_DUMP_H
 #define RECAST_DUMP_H
 
-#include "DebugDraw.h"
-
 struct duFileIO
 {
 	virtual ~duFileIO() = 0;
@@ -41,42 +39,5 @@ bool duReadCompactHeightfield(struct rcCompactHeightfield& chf, duFileIO* io);
 
 void duLogBuildTimes(rcContext& ctx, const int totalTileUsec);
 
-//////////////////////////////////////////////////////////////////////////
-
-struct duDebugDrawDump : public duDebugDraw
-{
-public:
-	void depthMask(bool state);
-	void begin(duDebugDrawPrimitives prim, float size = 1.0f);
-	void vertex(const float* pos, unsigned int color);
-	void vertex(const float x, const float y, const float z, unsigned int color);
-	void end();
-
-	duDebugDrawDump( duFileIO* objFile, duFileIO* matFile, const char * matname );
-private:
-	struct duDebugVert
-	{
-		unsigned int color;
-		float x,y,z;
-	};
-
-	duDebugDrawPrimitives	currentPrimitive;
-	float					currentSize;
-	int						currentVert;
-	int						currentFace;
-
-	duDebugVert				cache[4];
-	int						cacheIndex;
-
-	enum { NumMaterials = 1024 };
-	unsigned int			materials[NumMaterials];
-	int						numMaterials;
-
-	duFileIO *				objectFile;
-	duFileIO *				materialFile;
-
-	void addMaterial(unsigned int color);
-	void updateDump();
-};
 
 #endif // RECAST_DUMP_H
