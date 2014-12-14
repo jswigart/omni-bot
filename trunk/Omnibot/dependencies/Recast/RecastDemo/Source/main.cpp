@@ -30,13 +30,14 @@
 #include "Filelist.h"
 #include "SlideShow.h"
 
-#include "Sample_SoloMeshSimple.h"
-#include "Sample_SoloMeshTiled.h"
+#include "Sample_SoloMesh.h"
 #include "Sample_TileMesh.h"
+#include "Sample_TempObstacles.h"
 #include "Sample_Debug.h"
 
 #ifdef WIN32
 #	define snprintf _snprintf
+#	define putenv _putenv
 #endif
 
 struct SampleItem
@@ -45,17 +46,17 @@ struct SampleItem
 	const char* name;
 };
 
-Sample* createSoloSimple() { return new Sample_SoloMeshSimple(); }
-Sample* createSoloTiled() { return new Sample_SoloMeshTiled(); }
+Sample* createSolo() { return new Sample_SoloMesh(); }
 Sample* createTile() { return new Sample_TileMesh(); }
+Sample* createTempObstacle() { return new Sample_TempObstacles(); }
 Sample* createDebug() { return new Sample_Debug(); }
 
 static SampleItem g_samples[] =
 {
-	{ createSoloSimple, "Solo Mesh Simple" },
-	{ createSoloTiled, "Solo Mesh Tiled" },
+	{ createSolo, "Solo Mesh" },
 	{ createTile, "Tile Mesh" },
-	{ createDebug, "Debug" },
+	{ createTempObstacle, "Temp Obstacles" },
+//	{ createDebug, "Debug" },
 };
 static const int g_nsamples = sizeof(g_samples)/sizeof(SampleItem); 
 
@@ -69,6 +70,10 @@ int main(int /*argc*/, char** /*argv*/)
 		return -1;
 	}
 	
+	// Center window
+	char env[] = "SDL_VIDEO_CENTERED=1";
+	putenv(env);
+
 	// Init OpenGL
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
@@ -76,7 +81,11 @@ int main(int /*argc*/, char** /*argv*/)
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-	
+//#ifndef WIN32
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+//#endif
+
 	const SDL_VideoInfo* vi = SDL_GetVideoInfo();
 
 	bool presentationMode = false;
@@ -92,7 +101,8 @@ int main(int /*argc*/, char** /*argv*/)
 	}
 	else
 	{	
-		width = vi->current_w - 20;
+		width = rcMin(vi->current_w, (int)(vi->current_h * 16.0 / 9.0));
+		width = width - 80;
 		height = vi->current_h - 80;
 		screen = SDL_SetVideoMode(width, height, 0, SDL_OPENGL);
 	}
@@ -102,7 +112,9 @@ int main(int /*argc*/, char** /*argv*/)
 		printf("Could not initialise SDL opengl\n");
 		return -1;
 	}
-	
+
+	glEnable(GL_MULTISAMPLE);
+
 	SDL_WM_SetCaption("Recast Demo", 0);
 	
 	if (!imguiRenderGLInit("DroidSans.ttf"))
@@ -129,7 +141,6 @@ int main(int /*argc*/, char** /*argv*/)
 	bool mouseOverMenu = false;
 	bool showMenu = !presentationMode;
 	bool showLog = false;
-	bool showDebugMode = true;
 	bool showTools = true;
 	bool showLevels = false;
 	bool showSample = false;
@@ -138,7 +149,6 @@ int main(int /*argc*/, char** /*argv*/)
 	int propScroll = 0;
 	int logScroll = 0;
 	int toolsScroll = 0;
-	int debugScroll = 0;
 	
 	char sampleName[64] = "Choose Sample..."; 
 	
@@ -159,17 +169,14 @@ int main(int /*argc*/, char** /*argv*/)
 	
 	glEnable(GL_CULL_FACE);
 	
-	float fogCol[4] = { 0.32f,0.25f,0.25f,1 };
+	float fogCol[4] = { 0.32f, 0.31f, 0.30f, 1.0f };
 	glEnable(GL_FOG);
 	glFogi(GL_FOG_MODE, GL_LINEAR);
-	glFogf(GL_FOG_START, camr*0.2f);
+	glFogf(GL_FOG_START, camr*0.1f);
 	glFogf(GL_FOG_END, camr*1.25f);
 	glFogfv(GL_FOG_COLOR, fogCol);
 	
 	glDepthFunc(GL_LEQUAL);
-	
-	glEnable(GL_POINT_SMOOTH);
-	glEnable(GL_LINE_SMOOTH);
 	
 	bool done = false;
 	while(!done)
@@ -204,14 +211,19 @@ int main(int /*argc*/, char** /*argv*/)
 					else if (event.key.keysym.sym == SDLK_SPACE)
 					{
 						if (sample)
-							sample->handleStep();
+							sample->handleToggle();
 					}
 					else if (event.key.keysym.sym == SDLK_1)
+					{
+						if (sample)
+							sample->handleStep();
+					}
+					else if (event.key.keysym.sym == SDLK_9)
 					{
 						if (geom)
 							geom->save("geomset.txt");
 					}
-					else if (event.key.keysym.sym == SDLK_2)
+					else if (event.key.keysym.sym == SDLK_0)
 					{
 						delete geom;
 						geom = new InputGeom;
@@ -364,23 +376,25 @@ int main(int /*argc*/, char** /*argv*/)
 		// Hit test mesh.
 		if (processHitTest && geom && sample)
 		{
-			float t;
-			if (geom->raycastMesh(rays, raye, t))
+			float hitt;
+			bool hit = geom->raycastMesh(rays, raye, hitt);
+			
+			if (hit)
 			{
 				if (SDL_GetModState() & KMOD_CTRL)
 				{
 					// Marker
 					mposSet = true;
-					mpos[0] = rays[0] + (raye[0] - rays[0])*t;
-					mpos[1] = rays[1] + (raye[1] - rays[1])*t;
-					mpos[2] = rays[2] + (raye[2] - rays[2])*t;
+					mpos[0] = rays[0] + (raye[0] - rays[0])*hitt;
+					mpos[1] = rays[1] + (raye[1] - rays[1])*hitt;
+					mpos[2] = rays[2] + (raye[2] - rays[2])*hitt;
 				}
 				else
 				{
 					float pos[3];
-					pos[0] = rays[0] + (raye[0] - rays[0])*t;
-					pos[1] = rays[1] + (raye[1] - rays[1])*t;
-					pos[2] = rays[2] + (raye[2] - rays[2])*t;
+					pos[0] = rays[0] + (raye[0] - rays[0])*hitt;
+					pos[1] = rays[1] + (raye[1] - rays[1])*hitt;
+					pos[2] = rays[2] + (raye[2] - rays[2])*hitt;
 					sample->handleClick(rays, pos, processHitTestShift);
 				}
 			}
@@ -409,7 +423,18 @@ int main(int /*argc*/, char** /*argv*/)
 			}
 			simIter++;
 		}
- 		
+
+		// Clamp the framerate so that we do not hog all the CPU.
+		const float MIN_FRAME_TIME = 1.0f/40.0f;
+		if (dt < MIN_FRAME_TIME)
+		{
+			int ms = (int)((MIN_FRAME_TIME - dt)*1000.0f);
+			if (ms > 10) ms = 10;
+			if (ms >= 0)
+				SDL_Delay(ms);
+		}
+		
+		
 		// Update and render
 		glViewport(0, 0, width, height);
 		glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
@@ -473,7 +498,7 @@ int main(int /*argc*/, char** /*argv*/)
 			sample->handleRender();
 		if (test)
 			test->handleRender();
-
+		
 		glDisable(GL_FOG);
 		
 		// Render GUI
@@ -501,24 +526,19 @@ int main(int /*argc*/, char** /*argv*/)
 		// Help text.
 		if (showMenu)
 		{
-			const char msg[] = "W/S/A/D: Move  RMB: Rotate   LMB+SHIFT: Place Start   LMB: Place End";
-			imguiDrawText(width/2, height-20, IMGUI_ALIGN_CENTER, msg, imguiRGBA(255,255,255,128));
+			const char msg[] = "W/S/A/D: Move  RMB: Rotate";
+			imguiDrawText(280, height-20, IMGUI_ALIGN_LEFT, msg, imguiRGBA(255,255,255,128));
 		}
 		
 		if (showMenu)
 		{
-			int propDiv = showDebugMode ? (int)(height*0.6f) : height;
-			
-			if (imguiBeginScrollArea("Properties",
-									 width-250-10, 10+height-propDiv, 250, propDiv-20, &propScroll))
+			if (imguiBeginScrollArea("Properties", width-250-10, 10, 250, height-20, &propScroll))
 				mouseOverMenu = true;
 
 			if (imguiCheck("Show Log", showLog))
 				showLog = !showLog;
 			if (imguiCheck("Show Tools", showTools))
 				showTools = !showTools;
-			if (imguiCheck("Show Debug Mode", showDebugMode))
-				showDebugMode = !showDebugMode;
 
 			imguiSeparator();
 			imguiLabel("Sample");
@@ -561,9 +581,11 @@ int main(int /*argc*/, char** /*argv*/)
 				imguiValue(text);
 			}
 			imguiSeparator();
-					
+
 			if (geom && sample)
 			{
+				imguiSeparatorLine();
+				
 				sample->handleSettings();
 
 				if (imguiButton("Build"))
@@ -584,20 +606,13 @@ int main(int /*argc*/, char** /*argv*/)
 				imguiSeparator();
 			}
 			
-			imguiEndScrollArea();
-			
-			if (showDebugMode)
+			if (sample)
 			{
-				if (imguiBeginScrollArea("Debug Mode",
-										 width-250-10, 10,
-										 250, height-propDiv-10, &debugScroll))
-					mouseOverMenu = true;
-
-				if (sample)
-					sample->handleDebugMode();
-
-				imguiEndScrollArea();
+				imguiSeparatorLine();
+				sample->handleDebugMode();
 			}
+
+			imguiEndScrollArea();
 		}
 		
 		// Sample selection dialog.
@@ -656,7 +671,7 @@ int main(int /*argc*/, char** /*argv*/)
 				}
 				rx = 45;
 				ry = -45;
-				glFogf(GL_FOG_START, camr*0.2f);
+				glFogf(GL_FOG_START, camr*0.1f);
 				glFogf(GL_FOG_END, camr*1.25f);
 			}
 			
@@ -732,7 +747,7 @@ int main(int /*argc*/, char** /*argv*/)
 					}
 					rx = 45;
 					ry = -45;
-					glFogf(GL_FOG_START, camr*0.2f);
+					glFogf(GL_FOG_START, camr*0.1f);
 					glFogf(GL_FOG_END, camr*1.25f);
 				}
 			}
@@ -803,7 +818,6 @@ int main(int /*argc*/, char** /*argv*/)
 					{
 						delete geom;
 						geom = 0;
-						
 						showLog = true;
 						logScroll = 0;
 						ctx.dumpLog("Geom load log %s:", meshName);
@@ -812,6 +826,10 @@ int main(int /*argc*/, char** /*argv*/)
 					{
 						sample->handleMeshChanged(geom);
 					}
+
+					// This will ensure that tile & poly bits are updated in tiled sample.
+					if (sample)
+						sample->handleSettings();
 
 					ctx.resetLog();
 					if (sample && !sample->handleBuild())
@@ -863,7 +881,7 @@ int main(int /*argc*/, char** /*argv*/)
 		// Log
 		if (showLog && showMenu)
 		{
-			if (imguiBeginScrollArea("Log", 10, 10, width - 300, 200, &logScroll))
+			if (imguiBeginScrollArea("Log", 250+20, 10, width - 300 - 250, 200, &logScroll))
 				mouseOverMenu = true;
 			for (int i = 0; i < ctx.getLogCount(); ++i)
 				imguiLabel(ctx.getLogText(i));
@@ -871,12 +889,13 @@ int main(int /*argc*/, char** /*argv*/)
 		}
 		
 		// Tools
-		if (!showTestCases && showTools && showMenu && geom && sample)
+		if (!showTestCases && showTools && showMenu) // && geom && sample)
 		{
-			if (imguiBeginScrollArea("Tools", 10, height - 10 - 350, 250, 350, &toolsScroll))
+			if (imguiBeginScrollArea("Tools", 10, 10, 250, height-20, &toolsScroll))
 				mouseOverMenu = true;
 
-			sample->handleTools();
+			if (sample)
+				sample->handleTools();
 			
 			imguiEndScrollArea();
 		}
@@ -894,7 +913,7 @@ int main(int /*argc*/, char** /*argv*/)
 			const float r = 25.0f;
 			for (int i = 0; i < 20; ++i)
 			{
-				const float a = (float)i / 20.0f * (float)M_PI*2;
+				const float a = (float)i / 20.0f * RC_PI*2;
 				const float fx = (float)x + cosf(a)*r;
 				const float fy = (float)y + sinf(a)*r;
 				glVertex2f(fx,fy);

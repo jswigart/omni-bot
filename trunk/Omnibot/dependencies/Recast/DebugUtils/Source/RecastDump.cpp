@@ -117,12 +117,12 @@ bool duDumpPolyMeshDetailToObj(rcPolyMeshDetail& dmesh, duFileIO* io)
 	
 	for (int i = 0; i < dmesh.nmeshes; ++i)
 	{
-		const unsigned short* m = &dmesh.meshes[i*4];
-		const unsigned short bverts = m[0];
-		const unsigned short btris = m[2];
-		const unsigned short ntris = m[3];
+		const unsigned int* m = &dmesh.meshes[i*4];
+		const unsigned int bverts = m[0];
+		const unsigned int btris = m[2];
+		const unsigned int ntris = m[3];
 		const unsigned char* tris = &dmesh.tris[btris*4];
-		for (int j = 0; j < ntris; ++j)
+		for (unsigned int j = 0; j < ntris; ++j)
 		{
 			ioprintf(io, "f %d %d %d\n",
 					(int)(bverts+tris[j*4+0])+1,
@@ -135,7 +135,7 @@ bool duDumpPolyMeshDetailToObj(rcPolyMeshDetail& dmesh, duFileIO* io)
 }
 
 static const int CSET_MAGIC = ('c' << 24) | ('s' << 16) | ('e' << 8) | 't';
-static const int CSET_VERSION = 1;
+static const int CSET_VERSION = 2;
 
 bool duDumpContourSet(struct rcContourSet& cset, duFileIO* io)
 {
@@ -160,6 +160,10 @@ bool duDumpContourSet(struct rcContourSet& cset, duFileIO* io)
 	
 	io->write(&cset.cs, sizeof(cset.cs));
 	io->write(&cset.ch, sizeof(cset.ch));
+
+	io->write(&cset.width, sizeof(cset.width));
+	io->write(&cset.height, sizeof(cset.height));
+	io->write(&cset.borderSize, sizeof(cset.borderSize));
 
 	for (int i = 0; i < cset.nconts; ++i)
 	{
@@ -221,6 +225,10 @@ bool duReadContourSet(struct rcContourSet& cset, duFileIO* io)
 	io->read(&cset.cs, sizeof(cset.cs));
 	io->read(&cset.ch, sizeof(cset.ch));
 	
+	io->read(&cset.width, sizeof(cset.width));
+	io->read(&cset.height, sizeof(cset.height));
+	io->read(&cset.borderSize, sizeof(cset.borderSize));
+	
 	for (int i = 0; i < cset.nconts; ++i)
 	{
 		rcContour& cont = cset.conts[i];
@@ -251,7 +259,7 @@ bool duReadContourSet(struct rcContourSet& cset, duFileIO* io)
 	
 
 static const int CHF_MAGIC = ('r' << 24) | ('c' << 16) | ('h' << 8) | 'f';
-static const int CHF_VERSION = 2;
+static const int CHF_VERSION = 3;
 
 bool duDumpCompactHeightfield(struct rcCompactHeightfield& chf, duFileIO* io)
 {
@@ -275,6 +283,7 @@ bool duDumpCompactHeightfield(struct rcCompactHeightfield& chf, duFileIO* io)
 
 	io->write(&chf.walkableHeight, sizeof(chf.walkableHeight));
 	io->write(&chf.walkableClimb, sizeof(chf.walkableClimb));
+	io->write(&chf.borderSize, sizeof(chf.borderSize));
 
 	io->write(&chf.maxDistance, sizeof(chf.maxDistance));
 	io->write(&chf.maxRegions, sizeof(chf.maxRegions));
@@ -341,7 +350,8 @@ bool duReadCompactHeightfield(struct rcCompactHeightfield& chf, duFileIO* io)
 	
 	io->read(&chf.walkableHeight, sizeof(chf.walkableHeight));
 	io->read(&chf.walkableClimb, sizeof(chf.walkableClimb));
-	
+	io->write(&chf.borderSize, sizeof(chf.borderSize));
+
 	io->read(&chf.maxDistance, sizeof(chf.maxDistance));
 	io->read(&chf.maxRegions, sizeof(chf.maxRegions));
 	
@@ -419,7 +429,8 @@ void duLogBuildTimes(rcContext& ctx, const int totalTimeUsec)
 	logLine(ctx, RC_TIMER_MEDIAN_AREA,				"- Median Area", pc);
 	logLine(ctx, RC_TIMER_MARK_BOX_AREA,				"- Mark Box Area", pc);
 	logLine(ctx, RC_TIMER_MARK_CONVEXPOLY_AREA,		"- Mark Convex Area", pc);
-	logLine(ctx, RC_TIMER_BUILD_DISTANCEFIELD,		"- Build Disntace Field", pc);
+	logLine(ctx, RC_TIMER_MARK_CYLINDER_AREA,		"- Mark Cylinder Area", pc);
+	logLine(ctx, RC_TIMER_BUILD_DISTANCEFIELD,		"- Build Distance Field", pc);
 	logLine(ctx, RC_TIMER_BUILD_DISTANCEFIELD_DIST,	"    - Distance", pc);
 	logLine(ctx, RC_TIMER_BUILD_DISTANCEFIELD_BLUR,	"    - Blur", pc);
 	logLine(ctx, RC_TIMER_BUILD_REGIONS,				"- Build Regions", pc);
@@ -427,6 +438,7 @@ void duLogBuildTimes(rcContext& ctx, const int totalTimeUsec)
 	logLine(ctx, RC_TIMER_BUILD_REGIONS_EXPAND,		"      - Expand", pc);
 	logLine(ctx, RC_TIMER_BUILD_REGIONS_FLOOD,		"      - Find Basins", pc);
 	logLine(ctx, RC_TIMER_BUILD_REGIONS_FILTER,		"    - Filter", pc);
+	logLine(ctx, RC_TIMER_BUILD_LAYERS,				"- Build Layers", pc);
 	logLine(ctx, RC_TIMER_BUILD_CONTOURS,			"- Build Contours", pc);
 	logLine(ctx, RC_TIMER_BUILD_CONTOURS_TRACE,		"    - Trace", pc);
 	logLine(ctx, RC_TIMER_BUILD_CONTOURS_SIMPLIFY,	"    - Simplify", pc);
@@ -437,162 +449,3 @@ void duLogBuildTimes(rcContext& ctx, const int totalTimeUsec)
 	ctx.log(RC_LOG_PROGRESS, "=== TOTAL:\t%.2fms", totalTimeUsec/1000.0f);
 }
 
-//////////////////////////////////////////////////////////////////////////
-
-duDebugDrawDump::duDebugDrawDump( duFileIO* objFile, duFileIO* matFile, const char * matname )
-{
-	objectFile = objFile;
-	materialFile = matFile;
-
-	currentVert = 0;
-	currentFace = 0;
-	cacheIndex = 0;
-	numMaterials = 0;
-
-	ioprintf(objectFile, "# Recast Navmesh\n");
-	ioprintf(objectFile, "o NavMesh\n");
-	ioprintf(objectFile, "\n");
-	ioprintf(objectFile, "mltlib %s\n",matname);
-	ioprintf(objectFile, "\n");
-}
-
-void duDebugDrawDump::depthMask(bool state)
-{
-	state;
-}
-
-void duDebugDrawDump::begin(duDebugDrawPrimitives prim, float size)
-{
-	updateDump();
-
-	currentPrimitive = prim;
-	currentSize = size;
-	cacheIndex = 0;
-}
-
-void duDebugDrawDump::vertex(const float* pos, unsigned int color)
-{
-	cache[cacheIndex].x = pos[0];
-	cache[cacheIndex].y = pos[1];
-	cache[cacheIndex].z = pos[2];
-	cache[cacheIndex].color = color;
-	cacheIndex++;
-
-	updateDump();
-}
-
-void duDebugDrawDump::vertex(const float x, const float y, const float z, unsigned int color)
-{
-	cache[cacheIndex].x = x;
-	cache[cacheIndex].y = y;
-	cache[cacheIndex].z = z;
-	cache[cacheIndex].color = color;
-	cacheIndex++;
-
-	updateDump();
-}
-
-void duDebugDrawDump::end()
-{
-	updateDump();
-}
-
-void duDebugDrawDump::addMaterial(unsigned int color)
-{
-	for(int i = 0; i < numMaterials; ++i)
-	{
-		if(materials[i] == color)
-			return;
-	}
-
-	if(numMaterials < NumMaterials)
-	{
-		materials[numMaterials++] = color;
-
-		float r = 0.f,g = 0.f,b = 0.f,a = 0.f;
-		duDecodeRGBA( color, r, g, b, a );
-
-		ioprintf(materialFile, "newmtl %X\n", color);
-		ioprintf(materialFile, "Ka %.3f %.3f %.3f\n", r, g, b, a );
-		ioprintf(materialFile, "Kd %.3f %.3f %.3f\n", r, g, b, a );
-		ioprintf(materialFile, "illum 1\n", color);
-		ioprintf(materialFile, "\n");
-
-	}
-}
-
-void duDebugDrawDump::updateDump()
-{
-	switch (currentPrimitive)
-	{
-	case DU_DRAW_POINTS:
-		if(cacheIndex == 1)
-		{
-			const int firstVert = currentVert;
-			for(int i = 0; i < cacheIndex; ++i, ++currentVert)
-				ioprintf(objectFile, "v %f %f %f\n", cache[i].x, cache[i].y, cache[i].z);
-
-			addMaterial(cache[firstVert].color);
-			ioprintf(objectFile, "usemtl %X\n", cache[cacheIndex].color);
-
-			ioprintf(objectFile, "f %d %d %d\n", 1+firstVert, 1+firstVert+1, 1+firstVert+1); 
-
-			ioprintf(objectFile, "\n");
-
-			cacheIndex = 0;
-		}
-		break;
-	case DU_DRAW_LINES:
-		if(cacheIndex == 2)
-		{
-			const int firstVert = currentVert;
-			for(int i = 0; i < cacheIndex; ++i, ++currentVert)
-				ioprintf(objectFile, "v %f %f %f\n", cache[i].x, cache[i].y, cache[i].z);
-
-			addMaterial(cache[firstVert].color);
-			ioprintf(objectFile, "usemtl %X\n", cache[cacheIndex].color);
-
-			ioprintf(objectFile, "f %d %d %d\n", 1+firstVert, 1+firstVert+1, 1+firstVert+1); 
-
-			ioprintf(objectFile, "\n");
-
-			cacheIndex = 0;
-		}
-		break;
-	case DU_DRAW_TRIS:
-		if(cacheIndex == 3)
-		{
-			const int firstVert = currentVert;
-			for(int i = 0; i < cacheIndex; ++i, ++currentVert)
-				ioprintf(objectFile, "v %f %f %f\n", cache[i].x, cache[i].y, cache[i].z);
-
-			addMaterial(cache[firstVert].color);
-			ioprintf(objectFile, "usemtl %X\n", cache[cacheIndex].color);
-
-			ioprintf(objectFile, "f %d %d %d\n", 1+firstVert, 1+firstVert+1, 1+firstVert+2); 
-
-			ioprintf(objectFile, "\n");
-
-			cacheIndex = 0;
-		}
-		break;
-	case DU_DRAW_QUADS:
-		if(cacheIndex == 4)
-		{
-			const int firstVert = currentVert;
-			for(int i = 0; i < cacheIndex; ++i)
-				ioprintf(objectFile, "v %f %f %f\n", cache->x, cache->y, cache->z);
-
-			addMaterial(cache[firstVert].color);
-			ioprintf(objectFile, "usemtl %X\n", cache[cacheIndex].color);
-
-			ioprintf(objectFile, "f %d %d %d\n", 1+firstVert, 1+firstVert+1, 1+firstVert+2);
-			ioprintf(objectFile, "f %d %d %d\n", 1+firstVert+2, 1+firstVert+1, 1+firstVert+3);
-
-			ioprintf(objectFile, "\n");
-
-			cacheIndex = 0;
-		}
-		break;
-	}
-}

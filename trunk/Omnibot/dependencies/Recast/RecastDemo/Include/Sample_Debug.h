@@ -23,7 +23,7 @@
 #include "DetourNavMesh.h"
 #include "Recast.h"
 
-// Sample used for random debugging.
+/// Sample used for random debugging.
 class Sample_Debug : public Sample
 {
 protected:
@@ -44,7 +44,7 @@ public:
 	virtual void handleTools();
 	virtual void handleDebugMode();
 	virtual void handleClick(const float* s, const float* p, bool shift);
-	virtual void handleStep();
+	virtual void handleToggle();
 	virtual void handleRender();
 	virtual void handleRenderOverlay(double* proj, double* model, int* view);
 	virtual void handleMeshChanged(class InputGeom* geom);

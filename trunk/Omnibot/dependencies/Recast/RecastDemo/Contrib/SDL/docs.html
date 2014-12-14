@@ -14,6 +14,247 @@ The latest stable release may be found on the
 
 <H2> <A HREF="docs/index.html">API Documentation</A> </H2>
 
+<IMG SRC="docs/images/rainbow.gif" ALT="[separator]" WIDTH="100%">
+
+<H2> SDL 1.2.15 Release Notes </H2>
+<P>
+SDL 1.2.15 is a minor bug fix release.
+</P>
+
+<H3> General Notes </H3>
+
+<BLOCKQUOTE>
+<P>
+	Fixed assembly register clobbering in CPU info routines
+</P>
+<P>
+	Fixed memory stomp when using stretch blit on large images
+</P>
+<P>
+	Fixed pixel corruption with overlapping blits
+</P>
+<P>
+	SDL_JOYSTICK_DEVICE can be a colon separated list of joystick devices
+</P>
+<P>
+	Disabled MMX blitters since they don't compile on modern compilers
+</P>
+</BLOCKQUOTE>
+
+<H3> Unix Notes </H3>
+
+<BLOCKQUOTE>
+<P>
+	Fixed crash in joystick code on newer Linux kernels
+</P>
+<P>
+	Fixed channel swizzling for ALSA target with 6-channel output
+</P>
+<P>
+	Use the OpenGL GLX_EXT_swap_control extension if available
+</P>
+<P>
+	XRandR support is disabled by default because it causes desktop reconfiguring.  It can be enabled with the SDL_VIDEO_X11_XRANDR=1 environment variable, or by applying this patch: <a href="http://hg.libsdl.org/SDL/raw-rev/8ec3036098df">http://hg.libsdl.org/SDL/raw-rev/8ec3036098df</a>
+</P>
+</BLOCKQUOTE>
+
+<H3> Windows Notes </H3>
+
+<BLOCKQUOTE>
+<P>
+	Fixed SDL_GL_ACCELERATED_VISUAL handling
+</P>
+<P>
+	Fixed application state handling with ALT-Tab
+</P>
+<P>
+	Fixed occasional crash handling WM_ACTIVATEAPP in Direct X code
+</P>
+<P>
+	Fixed UTF-8 decoding of Russian characters
+</P>
+</BLOCKQUOTE>
+
+<H3> Mac OS X Notes </H3>
+
+<BLOCKQUOTE>
+<P>
+	Fixed building and running on Mac OS X 10.7 (Lion)
+</P>
+</BLOCKQUOTE>
+
+<IMG SRC="docs/images/rainbow.gif" ALT="[separator]" WIDTH="100%">
+
+<H2> SDL 1.2.14 Release Notes </H2>
+<P>
+SDL 1.2.14 is a significant bug fix release and a recommended update.
+</P>
+
+<H3> General Notes </H3>
+
+<BLOCKQUOTE>
+<P>
+	Fixed flicker when resizing the SDL window
+</P>
+<P>
+	Fixed crash in SDL_SetGammaRamp()
+</P>
+<P>
+	Fixed freeze in SDL_memset() with 0 length when assembly code is disabled.
+</P>
+<P>
+	Added SDL_DISABLE_LOCK_KEYS environment variable to enable normal up/down events for Caps-Lock and Num-Lock keys.
+</P>
+<P>
+	Fixed audio quality problem when converting between 22050 Hz and 44100 Hz.
+</P>
+<P>
+	Fixed a threading crash when a few threads are rapidly created and complete.
+</P>
+<P>
+	Increased accuracy of alpha blending routines.
+</P>
+<P>
+	Fixed crash loading BMP files saved with the scanlines inverted.
+</P>
+<P>
+	Fixed mouse coordinate clamping if SDL_SetVideoMode() isn't called in response to SDL_VIDEORESIZE event.
+</P>
+<P>
+	Added doxygen documentation for the SDL API headers.
+</P>
+</BLOCKQUOTE>
+
+<H3> Unix Notes </H3>
+
+<BLOCKQUOTE>
+<P>
+	Fixed potential memory corruption due to assembly bug with SDL_revcpy()
+</P>
+<P>
+	Fixed crashes trying to detect SSE features on x86_64 architecture.
+</P>
+<P>
+	Fixed assembly for GCC optimized 50% alpha blending blits.
+</P>
+<P>
+	Added configure option --enable-screensaver, to allow enabling the screensaver by default.
+</P>
+<P>
+	Use XResetScreenSaver() instead of disabling screensaver entirely.
+</P>
+<P>
+	Removed the maximum window size limitation on X11.
+</P>
+<P>
+	Fixed SDL_GL_SWAP_CONTROL on X11.
+</P>
+<P>
+	Fixed setting the X11 window input hint.
+</P>
+<P>
+	Fixed distorted X11 window icon for some visuals.
+</P>
+<P>
+	Fixed detecting X11 libraries for dynamic loading on 64-bit Linux.
+</P>
+<P>
+	SDL_GL_GetAttribute(SDL_GL_SWAP_CONTROL) returns the correct value with GLX_SGI_swap_control.
+</P>
+<P>
+	Added SDL_VIDEO_FULLSCREEN_DISPLAY as a preferred synonym for SDL_VIDEO_FULLSCREEN_HEAD on X11.
+</P>
+<P>
+	The SDL_VIDEO_FULLSCREEN_DISPLAY environment variable can be set to 0 to place fullscreen SDL windows on the first Xinerama screen.
+</P>
+<P>
+	Added the SDL_VIDEO_FBCON_ROTATION environment variable to control output orientation on the framebuffer console.
+	<BR>
+	Valid values are:
+	<UL>
+	<LI>not set   - Not rotating, no shadow.
+	<LI>"NONE"    - Not rotating, but still using shadow.
+	<LI>"CW"      - Rotating screen clockwise.
+	<LI>"UD"      - Rotating screen upside down.
+	<LI>"CCW"     - Rotating screen counter clockwise.
+	</UL>
+</P>
+<P>
+	Fixed DirectFB detection on some Linux distributions.
+</P>
+<P>
+	Added code to use the PS3 SPE processors for YUV conversion on Linux.
+</P>
+<P>
+	Updated ALSA support to the latest stable API
+</P>
+<P>
+	ALSA is now preferred over OSS audio.  (SDL_AUDIODRIVER=dsp will restore the previous behavior.)
+</P>
+<P>
+	Improved support for PulseAudio
+</P>
+<P>
+	The Network Audio System support is now dynamically loaded at runtime.
+</P>
+<P>
+	Fixed crash with the MP-8866 Dual USB Joypad on newer Linux kernels.
+</P>
+<P>
+	Fixed crash in SDL_Quit() when a joystick has been unplugged.
+</P>
+</BLOCKQUOTE>
+
+<H3> Windows Notes </H3>
+
+<BLOCKQUOTE>
+<P>
+	Verified 100% compatibility with Windows 7.
+</P>
+<P>
+	Prevent loss of OpenGL context when setting the video mode in response to a window resize event.
+</P>
+<P>
+	Fixed video initialization with SDL_WINDOWID on Windows XP.
+</P>
+<P>
+	Improved mouse input responsiveness for first-person-shooter games.
+</P>
+<P>
+	IME messages are now generated for localized input.
+</P>
+<P>
+	SDL_RWFromFile() takes a UTF-8 filename when opening a file.
+</P>
+<P>
+	The SDL_STDIO_REDIRECT environment variable can be used to override whether SDL redirects stdio to stdout.txt and stderr.txt.
+</P>
+<P>
+	Fixed dynamic object loading on Windows CE.
+</P>
+</BLOCKQUOTE>
+
+<H3> Mac OS X Notes </H3>
+
+<BLOCKQUOTE>
+<P>
+	SDL now builds on Mac OS X 10.6 (Snow Leopard).
+	<BR>
+	Eric Wing posted a good rundown on the numerous changes here: <A HREF="http://playcontrol.net/ewing/jibberjabber/big_behind-the-scenes_chang.html">http://playcontrol.net/ewing/jibberjabber/big_behind-the-scenes_chang.html</A>
+</P>
+<P>
+	The X11 video driver is built by default.
+</P>
+<P>
+	Fixed SDL_VIDEO_WINDOW_POS environment variable for Quartz target.
+</P>
+<P>
+	Fixed setting the starting working directory in release builds.
+</P>
+</BLOCKQUOTE>
+
+<IMG SRC="docs/images/rainbow.gif" ALT="[separator]" WIDTH="100%">
+
 <H2> SDL 1.2.13 Release Notes </H2>
 <P>
 SDL 1.2.13 is a minor bug fix release.

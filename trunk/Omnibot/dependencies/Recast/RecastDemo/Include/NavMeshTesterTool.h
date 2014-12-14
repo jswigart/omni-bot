@@ -32,7 +32,7 @@ class NavMeshTesterTool : public SampleTool
 
 	dtQueryFilter m_filter;
 
-	dtQueryState m_pathFindState;
+	dtStatus m_pathFindStatus;
 
 	enum ToolMode
 	{
@@ -47,6 +47,8 @@ class NavMeshTesterTool : public SampleTool
 	};
 	
 	ToolMode m_toolMode;
+
+	int m_straightPathOptions;
 	
 	static const int MAX_POLYS = 256;
 	static const int MAX_SMOOTH = 2048;
@@ -64,6 +66,11 @@ class NavMeshTesterTool : public SampleTool
 	float m_smoothPath[MAX_SMOOTH*3];
 	int m_nsmoothPath;
 	float m_queryPoly[4*3];
+
+	static const int MAX_RAND_POINTS = 64;
+	float m_randPoints[MAX_RAND_POINTS*3];
+	int m_nrandPoints;
+	bool m_randPointsInCircle;
 	
 	float m_spos[3];
 	float m_epos[3];
@@ -72,6 +79,7 @@ class NavMeshTesterTool : public SampleTool
 	bool m_hitResult;
 	float m_distanceToWall;
 	float m_neighbourhoodRadius;
+	float m_randomRadius;
 	bool m_sposSet;
 	bool m_eposSet;
 
@@ -93,6 +101,7 @@ public:
 	virtual void reset();
 	virtual void handleMenu();
 	virtual void handleClick(const float* s, const float* p, bool shift);
+	virtual void handleToggle();
 	virtual void handleStep();
 	virtual void handleUpdate(const float dt);
 	virtual void handleRender();

@@ -82,7 +82,7 @@ static void freeSpan(rcHeightfield& hf, rcSpan* ptr)
 	hf.freelist = ptr;
 }
 
-static bool addSpan(rcHeightfield& hf, const int x, const int y,
+static void addSpan(rcHeightfield& hf, const int x, const int y,
 					const unsigned short smin, const unsigned short smax,
 					const unsigned char area, const int flagMergeThr)
 {
@@ -95,13 +95,11 @@ static bool addSpan(rcHeightfield& hf, const int x, const int y,
 	s->area = area;
 	s->next = 0;
 	
-	bool spanAdded = true;
-
-	// Empty cell, add he first span.
+	// Empty cell, add the first span.
 	if (!hf.spans[idx])
 	{
 		hf.spans[idx] = s;
-		return spanAdded;
+		return;
 	}
 	rcSpan* prev = 0;
 	rcSpan* cur = hf.spans[idx];
@@ -131,11 +129,7 @@ static bool addSpan(rcHeightfield& hf, const int x, const int y,
 			// Merge flags.
 			if (rcAbs((int)s->smax - (int)cur->smax) <= flagMergeThr)
 				s->area = rcMax(s->area, cur->area);
-
-			// new span is already handled?
-			if (cur->smin >= s->smin && cur->smax <= s->smax)
-				spanAdded = false;
-
+			
 			// Remove current span.
 			rcSpan* next = cur->next;
 			freeSpan(hf, cur);
@@ -158,9 +152,15 @@ static bool addSpan(rcHeightfield& hf, const int x, const int y,
 		s->next = hf.spans[idx];
 		hf.spans[idx] = s;
 	}
-	return spanAdded;
 }
 
+/// @par
+///
+/// The span addition can be set to favor flags. If the span is merged to
+/// another span and the new @p smax is within @p flagMergeThr units
+/// from the existing span, the span flags are merged.
+///
+/// @see rcHeightfield, rcSpan.
 void rcAddSpan(rcContext* /*ctx*/, rcHeightfield& hf, const int x, const int y,
 			   const unsigned short smin, const unsigned short smax,
 			   const unsigned char area, const int flagMergeThr)
@@ -169,34 +169,60 @@ void rcAddSpan(rcContext* /*ctx*/, rcHeightfield& hf, const int x, const int y,
 	addSpan(hf, x,y, smin, smax, area, flagMergeThr);
 }
 
-static int clipPoly(const float* in, int n, float* out, float pnx, float pnz, float pd)
+// divides a convex polygons into two convex polygons on both sides of a line
+static void dividePoly(const float* in, int nin,
+					  float* out1, int* nout1,
+					  float* out2, int* nout2,
+					  float x, int axis)
 {
 	float d[12];
-	for (int i = 0; i < n; ++i)
-		d[i] = pnx*in[i*3+0] + pnz*in[i*3+2] + pd;
+	for (int i = 0; i < nin; ++i)
+		d[i] = x - in[i*3+axis];
 	
-	int m = 0;
-	for (int i = 0, j = n-1; i < n; j=i, ++i)
+	int m = 0, n = 0;
+	for (int i = 0, j = nin-1; i < nin; j=i, ++i)
 	{
 		bool ina = d[j] >= 0;
 		bool inb = d[i] >= 0;
 		if (ina != inb)
 		{
 			float s = d[j] / (d[j] - d[i]);
-			out[m*3+0] = in[j*3+0] + (in[i*3+0] - in[j*3+0])*s;
-			out[m*3+1] = in[j*3+1] + (in[i*3+1] - in[j*3+1])*s;
-			out[m*3+2] = in[j*3+2] + (in[i*3+2] - in[j*3+2])*s;
+			out1[m*3+0] = in[j*3+0] + (in[i*3+0] - in[j*3+0])*s;
+			out1[m*3+1] = in[j*3+1] + (in[i*3+1] - in[j*3+1])*s;
+			out1[m*3+2] = in[j*3+2] + (in[i*3+2] - in[j*3+2])*s;
+			rcVcopy(out2 + n*3, out1 + m*3);
+			m++;
+			n++;
+			// add the i'th point to the right polygon. Do NOT add points that are on the dividing line
+			// since these were already added above
+			if (d[i] > 0)
+			{
+				rcVcopy(out1 + m*3, in + i*3);
 			m++;
 		}
-		if (inb)
+			else if (d[i] < 0)
 		{
-			out[m*3+0] = in[i*3+0];
-			out[m*3+1] = in[i*3+1];
-			out[m*3+2] = in[i*3+2];
+				rcVcopy(out2 + n*3, in + i*3);
+				n++;
+			}
+		}
+		else // same side
+		{
+			// add the i'th point to the right polygon. Addition is done even for points on the dividing line
+			if (d[i] >= 0)
+			{
+				rcVcopy(out1 + m*3, in + i*3);
 			m++;
+				if (d[i] != 0)
+					continue;
+			}
+			rcVcopy(out2 + n*3, in + i*3);
+			n++;
 		}
 	}
-	return m;
+
+	*nout1 = m;
+	*nout2 = n;
 }
 
 static void rasterizeTri(const float* v0, const float* v1, const float* v2,
@@ -222,48 +248,57 @@ static void rasterizeTri(const float* v0, const float* v1, const float* v2,
 	if (!overlapBounds(bmin, bmax, tmin, tmax))
 		return;
 	
-	// Calculate the footpring of the triangle on the grid.
-	int x0 = (int)((tmin[0] - bmin[0])*ics);
+	// Calculate the footprint of the triangle on the grid's y-axis
 	int y0 = (int)((tmin[2] - bmin[2])*ics);
-	int x1 = (int)((tmax[0] - bmin[0])*ics);
 	int y1 = (int)((tmax[2] - bmin[2])*ics);
-	x0 = rcClamp(x0, 0, w-1);
 	y0 = rcClamp(y0, 0, h-1);
-	x1 = rcClamp(x1, 0, w-1);
 	y1 = rcClamp(y1, 0, h-1);
 	
 	// Clip the triangle into all grid cells it touches.
-	float in[7*3], out[7*3], inrow[7*3];
+	float buf[7*3*4];
+	float *in = buf, *inrow = buf+7*3, *p1 = inrow+7*3, *p2 = p1+7*3;
 	
-	for (int y = y0; y <= y1; ++y)
-	{
-		// Clip polygon to row.
 		rcVcopy(&in[0], v0);
 		rcVcopy(&in[1*3], v1);
 		rcVcopy(&in[2*3], v2);
-		int nvrow = 3;
+	int nvrow, nvIn = 3;
+	
+	for (int y = y0; y <= y1; ++y)
+	{
+		// Clip polygon to row. Store the remaining polygon as well
 		const float cz = bmin[2] + y*cs;
-		nvrow = clipPoly(in, nvrow, out, 0, 1, -cz);
-		if (nvrow < 3) continue;
-		nvrow = clipPoly(out, nvrow, inrow, 0, -1, cz+cs);
+		dividePoly(in, nvIn, inrow, &nvrow, p1, &nvIn, cz+cs, 2);
+		rcSwap(in, p1);
 		if (nvrow < 3) continue;
 		
+		// find the horizontal bounds in the row
+		float minX = inrow[0], maxX = inrow[0];
+		for (int i=1; i<nvrow; ++i)
+		{
+			if (minX > inrow[i*3])	minX = inrow[i*3];
+			if (maxX < inrow[i*3])	maxX = inrow[i*3];
+		}
+		int x0 = (int)((minX - bmin[0])*ics);
+		int x1 = (int)((maxX - bmin[0])*ics);
+		x0 = rcClamp(x0, 0, w-1);
+		x1 = rcClamp(x1, 0, w-1);
+
+		int nv, nv2 = nvrow;
+
 		for (int x = x0; x <= x1; ++x)
 		{
-			// Clip polygon to column.
-			int nv = nvrow;
+			// Clip polygon to column. store the remaining polygon as well
 			const float cx = bmin[0] + x*cs;
-			nv = clipPoly(inrow, nv, out, 1, 0, -cx);
-			if (nv < 3) continue;
-			nv = clipPoly(out, nv, in, -1, 0, cx+cs);
+			dividePoly(inrow, nv2, p1, &nv, p2, &nv2, cx+cs, 0);
+			rcSwap(inrow, p2);
 			if (nv < 3) continue;
 			
 			// Calculate min and max of the span.
-			float smin = in[1], smax = in[1];
+			float smin = p1[1], smax = p1[1];
 			for (int i = 1; i < nv; ++i)
 			{
-				smin = rcMin(smin, in[i*3+1]);
-				smax = rcMax(smax, in[i*3+1]);
+				smin = rcMin(smin, p1[i*3+1]);
+				smax = rcMax(smax, p1[i*3+1]);
 			}
 			smin -= bmin[1];
 			smax -= bmin[1];
@@ -283,6 +318,11 @@ static void rasterizeTri(const float* v0, const float* v1, const float* v2,
 	}
 }
 
+/// @par
+///
+/// No spans will be added if the triangle does not overlap the heightfield grid.
+///
+/// @see rcHeightfield
 void rcRasterizeTriangle(rcContext* ctx, const float* v0, const float* v1, const float* v2,
 						 const unsigned char area, rcHeightfield& solid,
 						 const int flagMergeThr)
@@ -298,6 +338,11 @@ void rcRasterizeTriangle(rcContext* ctx, const float* v0, const float* v1, const
 	ctx->stopTimer(RC_TIMER_RASTERIZE_TRIANGLES);
 }
 
+/// @par
+///
+/// Spans will only be added for triangles that overlap the heightfield grid.
+///
+/// @see rcHeightfield
 void rcRasterizeTriangles(rcContext* ctx, const float* verts, const int /*nv*/,
 						  const int* tris, const unsigned char* areas, const int nt,
 						  rcHeightfield& solid, const int flagMergeThr)
@@ -321,6 +366,11 @@ void rcRasterizeTriangles(rcContext* ctx, const float* verts, const int /*nv*/,
 	ctx->stopTimer(RC_TIMER_RASTERIZE_TRIANGLES);
 }
 
+/// @par
+///
+/// Spans will only be added for triangles that overlap the heightfield grid.
+///
+/// @see rcHeightfield
 void rcRasterizeTriangles(rcContext* ctx, const float* verts, const int /*nv*/,
 						  const unsigned short* tris, const unsigned char* areas, const int nt,
 						  rcHeightfield& solid, const int flagMergeThr)
@@ -344,6 +394,11 @@ void rcRasterizeTriangles(rcContext* ctx, const float* verts, const int /*nv*/,
 	ctx->stopTimer(RC_TIMER_RASTERIZE_TRIANGLES);
 }
 
+/// @par
+///
+/// Spans will only be added for triangles that overlap the heightfield grid.
+///
+/// @see rcHeightfield
 void rcRasterizeTriangles(rcContext* ctx, const float* verts, const unsigned char* areas, const int nt,
 						  rcHeightfield& solid, const int flagMergeThr)
 {
@@ -364,49 +419,4 @@ void rcRasterizeTriangles(rcContext* ctx, const float* verts, const unsigned cha
 	}
 	
 	ctx->stopTimer(RC_TIMER_RASTERIZE_TRIANGLES);
-}
-
-bool rcRasterizeVertex(rcContext* ctx, const float* vert, unsigned char area, rcHeightfield& solid, const int flagMergeThr)
-{
-	ctx->startTimer(RC_TIMER_RASTERIZE_TRIANGLES);
-
-	const float ics = 1.0f/solid.cs;
-	const float ich = 1.0f/solid.ch;
-
-	const int w = solid.width;
-	const int h = solid.height;
-	float tmin[3], tmax[3];
-	const float by = solid.bmax[1] - solid.bmin[1];
-
-	// Calculate the bounding box of the triangle.
-	rcVcopy(tmin, vert);
-	rcVcopy(tmax, vert);
-
-	// If the triangle does not touch the bbox of the heightfield, skip the triagle.
-	if (!overlapBounds(solid.bmin, solid.bmax, tmin, tmax))
-		return false;
-
-	// Calculate the footprint of the vertex on the grid.
-	int x0 = (int)((vert[0] - solid.bmin[0])*ics);
-	int y0 = (int)((vert[2] - solid.bmin[2])*ics);
-	x0 = rcClamp(x0, 0, w-1);
-	y0 = rcClamp(y0, 0, h-1);
-
-	// Calculate min and max of the span.
-	float smin = vert[1] - solid.bmin[1];
-	float smax = vert[1] - solid.bmin[1];
-
-	// Skip the span if it is outside the heightfield bbox
-	if (smax < 0.0f) return false;
-	if (smin > by) return false;
-	// Clamp the span to the heightfield bbox.
-	if (smin < 0.0f) smin = 0;
-	if (smax > by) smax = by;
-
-	unsigned short ismin = (unsigned short)rcClamp((int)floorf(smin * ich), 0, 0x7fff);
-	unsigned short ismax = (unsigned short)rcClamp((int)ceilf(smax * ich), 0, 0x7fff);
-
-	const bool b = addSpan(solid, x0, y0, ismin, ismax, area, flagMergeThr);
-	ctx->stopTimer(RC_TIMER_RASTERIZE_TRIANGLES);
-	return b;
 }
