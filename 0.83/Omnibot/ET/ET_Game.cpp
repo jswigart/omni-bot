@@ -704,8 +704,10 @@ void ET_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 			cp->m_DesiredClass = _msg->m_DesiredClass;
 
 			g_EngineFuncs->ChangeClass(_msg->m_GameId, cp->m_DesiredClass, NULL);
+			if(!cp) return; //some mods can kick bot in ClientUserinfoChanged
 			g_EngineFuncs->ChangeTeam(_msg->m_GameId, cp->m_DesiredTeam, NULL);
-			
+			if(!cp) return;
+
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();
 		}
