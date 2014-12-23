@@ -221,6 +221,14 @@ void PathPlannerWaypoint::cmdWaypointStats(const StringVector &_args)
 	EngineFuncs::ConsoleMessage("-= Waypoint Stats =-");
 	EngineFuncs::ConsoleMessage(va("Map : %s", g_EngineFuncs->GetMapName()));
 	EngineFuncs::ConsoleMessage(va("# Waypoints : %d", m_WaypointList.size()));		
+
+	int n=0;
+	for(WaypointList::iterator it = m_WaypointList.begin(); it != m_WaypointList.end(); ++it)
+	{
+		n+= (*it)->m_Connections.size();
+	}
+	EngineFuncs::ConsoleMessage(va("# Connections : %d", n));
+	EngineFuncs::ConsoleMessage(va("# Blockable connections : %d", m_BlockableList.size()));
 	EngineFuncs::ConsoleMessage(va("A* Open List : %d", m_OpenCount));
 	EngineFuncs::ConsoleMessage(va("A* Closed List : %d", m_ClosedCount));
 }
