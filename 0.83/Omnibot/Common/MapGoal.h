@@ -325,7 +325,8 @@ public:
 	Vector3f CalculateFarthestFacing();
 
 	static void SetPersistentPriorityForClass(const String &_exp, int _team, int _class, float _priority);
-	void CheckForPersistentPriority();
+	static void SetPersistentRole(const String &_exp, BitFlag32 _role);
+	void CheckForPersistentProperty();
 
 	// function: GetSerialNum
 	//		Unique id for this goal. Useful for blackboard target or other identification.

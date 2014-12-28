@@ -309,7 +309,7 @@ void MapGoal::GenerateName(int _instance, bool _skipdupecheck)
 			GenerateName(_instance+1);
 		}
 	}
-	CheckForPersistentPriority();
+	CheckForPersistentProperty();
 }
 
 bool MapGoal::IsAvailable(int _team) const
@@ -1413,16 +1413,47 @@ void MapGoal::SetPersistentPriorityForClass(const String &_exp, int _team, int _
 	gPriorityList.push_back(pp);
 }
 
-void MapGoal::CheckForPersistentPriority()
+struct PersistentRole
 {
-	for(obuint32 i = 0; i < gPriorityList.size(); ++i)
+	String	m_Expression;
+	BitFlag32	m_Role;
+};
+
+typedef std::vector<PersistentRole> PersRoleList;
+PersRoleList gRoleList;
+
+void MapGoal::SetPersistentRole(const String &_exp, BitFlag32 _role)
+{
+	for(PersRoleList::iterator it = gRoleList.begin(); it != gRoleList.end(); ++it)
 	{
-		if( Utils::RegexMatch( gPriorityList[i].m_Expression.c_str(), GetName().c_str() ) ) {
-			SetPriorityForClass(
-				gPriorityList[i].m_Team,
-				gPriorityList[i].m_Class,
-				gPriorityList[i].m_Priority);
+		if(_exp == it->m_Expression)
+		{
+			it->m_Role = _role;
 			return;
+		}
+	}
+
+	PersistentRole p;
+	p.m_Expression = _exp;
+	p.m_Role = _role;
+	gRoleList.push_back(p);
+}
+
+void MapGoal::CheckForPersistentProperty()
+{
+	for(PersPriorityList::iterator it = gPriorityList.begin(); it != gPriorityList.end(); ++it)
+	{
+		if(Utils::RegexMatch(it->m_Expression.c_str(), GetName().c_str())) {
+			SetPriorityForClass(it->m_Team, it->m_Class, it->m_Priority);
+			break;
+		}
+	}
+
+	for(PersRoleList::iterator it = gRoleList.begin(); it != gRoleList.end(); ++it)
+	{
+		if(Utils::RegexMatch(it->m_Expression.c_str(), GetName().c_str())) {
+			SetRoleMask(GetRoleMask() | it->m_Role);
+			break;
 		}
 	}
 }
