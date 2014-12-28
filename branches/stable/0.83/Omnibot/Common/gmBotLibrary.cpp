@@ -667,7 +667,7 @@ static int GM_CDECL gmfSetAvailableMapGoals(gmThread *a_thread)
 		{
 			if(!pNode->m_value.IsString())
 			{
-				GM_EXCEPTION_MSG("expecting param 3 as table of string, got %s", a_thread->GetMachine()->GetTypeName(pNode->m_value.m_type));
+				GM_EXCEPTION_MSG("expecting param 2 as table of string, got %s", a_thread->GetMachine()->GetTypeName(pNode->m_value.m_type));
 				return GM_EXCEPTION;
 			}
 			size += SetAvailableMapGoals(a_thread, team, enable != 0, pNode->m_value.GetCStringSafe(0));
@@ -693,6 +693,7 @@ static int GM_CDECL gmfSetAvailableMapGoals(gmThread *a_thread)
 //		int		- Team Id to set priority for.
 //		int		- Class Id to set priority for.
 //		float	- The priority to set
+//		int - OPTIONAL - true for dynamic goals (FLAGRETURN, DEFUSE)
 //
 // Returns:
 //		none
@@ -720,6 +721,87 @@ static int GM_CDECL gmfSetGoalPriorityForTeamClass(gmThread *a_thread)
 	}
 	return GM_OK;
 }
+
+static int GM_CDECL SetOrClearGoalRole(gmThread *a_thread, bool enable)
+{
+	GM_CHECK_NUM_PARAMS(2);
+	GM_CHECK_STRING_PARAM(exp, 0);
+
+	obint32 roleInt = 0;
+	switch(a_thread->ParamType(1))
+	{
+		case GM_INT:
+			roleInt = 1<<a_thread->ParamInt(1);
+			break;
+		case GM_TABLE:
+		{
+			gmTableObject* tbl = a_thread->ParamTable(1);
+			gmTableIterator tIt;
+			for(gmTableNode *pNode = tbl->GetFirst(tIt); pNode; pNode = tbl->GetNext(tIt))
+			{
+				if(!pNode->m_value.IsInt())
+				{
+					GM_EXCEPTION_MSG("expecting param 1 as table of int, got %s", a_thread->GetMachine()->GetTypeName(pNode->m_value.m_type));
+					return GM_EXCEPTION;
+				}
+				roleInt |= 1<<pNode->m_value.GetInt();
+			}
+			break;
+		}
+		default:
+			GM_EXCEPTION_MSG("expecting param 1 as int or table, got %s", a_thread->ParamTypeName(1));
+			return GM_EXCEPTION;
+	}
+	BitFlag32 role(roleInt);
+
+	GoalManager::Query qry;
+	qry.Expression(exp);
+	qry.NoFilters();
+	GoalManager::GetInstance()->GetGoals(qry);
+	for(MapGoalList::iterator it = qry.m_List.begin(); it != qry.m_List.end(); ++it)
+	{
+		BitFlag32 oldRole = (*it)->GetRoleMask();
+		(*it)->SetRoleMask(enable ? (oldRole | role) : (oldRole & ~role));
+	}
+
+	if(enable){
+		GM_INT_PARAM(persis, 2, 0);
+		if(persis) MapGoal::SetPersistentRole(exp, role);
+	}
+	return GM_OK;
+}
+
+// function: SetGoalRole
+//		This function sets roles for goals, it preserves existing roles
+//
+// Parameters:
+//
+//		string	- The regular expression to use to match the goal names.
+//		int	- roles bit mask
+//		int - OPTIONAL - true for dynamic goals (DEFUSE)
+//
+// Returns:
+//		none
+static int GM_CDECL gmfSetGoalRole(gmThread *a_thread)
+{
+	return SetOrClearGoalRole(a_thread, true);
+}
+
+// function: ClearGoalRole
+//		This function clears roles for goals
+//
+// Parameters:
+//
+//		string	- The regular expression to use to match the goal names.
+//		int	- roles bit mask
+//
+// Returns:
+//		none
+static int GM_CDECL gmfClearGoalRole(gmThread *a_thread)
+{
+	return SetOrClearGoalRole(a_thread, false);
+}
+
 
 // function: SetGoalGroup
 //		This function sets the group for a selection of goals
@@ -2805,6 +2887,8 @@ static gmFunctionEntry s_botLib[] =
 	{"SetAvailableMapGoals",	gmfSetAvailableMapGoals},
 	{"SetGoalPriority",			gmfSetGoalPriorityForTeamClass},
 	{"SetGoalGroup",			gmfSetGoalGroup},	
+	{"SetGoalRole",		gmfSetGoalRole},
+	{"ClearGoalRole",		gmfClearGoalRole},
 
 	{"CreateMapGoal",			gmfCreateMapGoal},
 
