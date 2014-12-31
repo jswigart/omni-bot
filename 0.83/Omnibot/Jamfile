@@ -7,6 +7,8 @@
 import modules ;
 
 BOOST = [ modules.peek : BOOST ] ; 
+BOOST_LIB = [ modules.peek : BOOST_LIB ] ; 
+BOOST_SUFFIX = [ modules.peek : BOOST_SUFFIX ] ; 
 
 # define requirements common to all subprojects
 project Omnibot
@@ -32,15 +34,10 @@ project Omnibot
 	;
 
 # define external libs
-lib boost_filesystem : : <variant>release <file>$(BOOST)/lib/libboost_filesystem-gcc41-mt-1_44.a ;
-lib boost_regex : : <variant>release <file>$(BOOST)/lib/libboost_regex-gcc41-mt-1_44.a ;
-lib boost_date_time : : <variant>release <file>$(BOOST)/lib/libboost_date_time-gcc41-mt-1_44.a ;
-lib boost_system : : <variant>release <file>$(BOOST)/lib/libboost_system-gcc41-mt-1_44.a ;
-
-#lib boost_filesystem : : <variant>release <file>/usr/local/lib/libboost_filesystem.a ;
-#lib boost_regex : : <variant>release <file>/usr/local/lib/libboost_regex.a ;
-#lib boost_date_time : : <variant>release <file>/usr/local/lib/libboost_date_time.a ;
-#lib boost_system : : <variant>release <file>/usr/local/lib/libboost_system.a ;
+lib boost_filesystem : : <variant>release <file>$(BOOST_LIB)/libboost_filesystem$(BOOST_SUFFIX).a ;
+lib boost_regex : : <variant>release <file>$(BOOST_LIB)/libboost_regex$(BOOST_SUFFIX).a ;
+lib boost_date_time : : <variant>release <file>$(BOOST_LIB)/libboost_date_time$(BOOST_SUFFIX).a ;
+lib boost_system : : <variant>release <file>$(BOOST_LIB)/libboost_system$(BOOST_SUFFIX).a ;
 
 # define aliases for convenience and to force static linking
 alias boost_fs : boost_filesystem : <link>static ;
