@@ -46,6 +46,7 @@ static const NavFlags F_NAV_SCRIPT		= (NavFlags(1)<<26);
 static const NavFlags F_NAV_JUMP		= (NavFlags(1)<<27);
 static const NavFlags F_NAV_ROUTEPT		= (NavFlags(1)<<28);
 static const NavFlags F_NAV_DONTSAVE	= (NavFlags(1)<<29);
+static const NavFlags F_NAV_INFILTRATOR	= (NavFlags(1)<<30);
 
 // We skip a few so we can leave a few slots for default flags, so adding them later
 // won't invalidate previously saved waypoint flags.
