@@ -157,7 +157,7 @@ void PathPlannerWaypoint::UpdateSelectedWpRender()
 			FlagMap::const_iterator flagIt = m_WaypointFlags.begin();
 			for( ; flagIt != m_WaypointFlags.end(); ++flagIt)
 			{
-				if(pWaypoint->IsFlagOn(flagIt->second))
+				if(pWaypoint->IsFlagOn(flagIt->second) && flagIt->second != F_NAV_TEAMONLY)
 				{
 					flagString += flagIt->first;
 					flagString += ", ";
@@ -817,7 +817,8 @@ void PathPlannerWaypoint::_RunDijkstra(const NavFlags _team)
 				continue;
 
 			// Don't use waypoints we're not allowed to.
-			if(pNextWp->IsFlagOn(F_NAV_TEAMONLY) && !pNextWp->IsFlagOn(_team) && _team)
+			if(pNextWp->IsFlagOn(F_NAV_TEAMONLY) && !pNextWp->IsFlagOn(_team) && _team
+				&& (!pNextWp->IsFlagOn(F_NAV_INFILTRATOR) || !m_Client || !m_Client->IsInfiltrator()))
 				continue;
 
 			// TODO: take flags into account.
@@ -930,7 +931,8 @@ void PathPlannerWaypoint::_RunAStar(const NavFlags _team, const Vector3f &_goalP
 				continue;
 
 			// Don't use waypoints we're not allowed to.
-			if(pNextWp->IsFlagOn(F_NAV_TEAMONLY) && !pNextWp->IsFlagOn(_team) && _team)
+			if(pNextWp->IsFlagOn(F_NAV_TEAMONLY) && !pNextWp->IsFlagOn(_team) && _team
+				&& (!pNextWp->IsFlagOn(F_NAV_INFILTRATOR) || !m_Client || !m_Client->IsInfiltrator()))
 				continue;
 
 			// TODO: take flags into account.
@@ -2158,7 +2160,8 @@ void PathPlannerWaypoint::_FindAllReachable(Client *_client, const Vector3f &_po
 					continue;
 
 				// Don't use waypoints we're not allowed to.
-				if(_team && pNextWp->IsFlagOn(F_NAV_TEAMONLY) && !pNextWp->IsFlagOn(_team))
+				if(_team && pNextWp->IsFlagOn(F_NAV_TEAMONLY) && !pNextWp->IsFlagOn(_team)
+					&& (!pNextWp->IsFlagOn(F_NAV_INFILTRATOR) || !_client || !_client->IsInfiltrator()))
 					continue;
 
 				// TODO: take flags into account.

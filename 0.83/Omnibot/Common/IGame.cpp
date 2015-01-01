@@ -296,7 +296,7 @@ static IntEnum Generic_RoleEnum[] =
 	IntEnum("ATTACKER"			,0),
 	IntEnum("DEFENDER"			,1),
 	IntEnum("ROAMER"			,2),
-	IntEnum("INFILTRATOR"		,3),
+	IntEnum("INFILTRATOR"		,3), // the constant must be same as in function Client.IsInfiltrator
 	IntEnum("SNIPER"			,4),
 	IntEnum("AMBUSHER"			,5),
 	IntEnum("TEAMCAPTAIN"		,6),
@@ -646,6 +646,7 @@ void IGame::RegisterNavigationFlags(PathPlannerBase *_planner)
 	_planner->RegisterNavFlag("ATTACK",		F_NAV_ATTACK);	
 	_planner->RegisterNavFlag("SCRIPT",		F_NAV_SCRIPT);
 	_planner->RegisterNavFlag("ROUTE",		F_NAV_ROUTEPT);	
+	_planner->RegisterNavFlag("INFILTRATOR", F_NAV_INFILTRATOR);
 }
 
 void IGame::UpdateGame()
