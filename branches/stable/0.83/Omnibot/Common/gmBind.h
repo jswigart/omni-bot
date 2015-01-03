@@ -1698,7 +1698,7 @@ public:
 		if (_userObj->GetType() == GetType())
 		{
 			gmBindUserObject *gmbUser = (gmBindUserObject *)_userObj->m_user;
-			GM_ASSERT(gmbUser->m_native); 
+			GM_ASSERT(gmbUser->m_native == true); 
 			gmbUser->m_object = NULL;
 		}
 	}
@@ -2673,7 +2673,7 @@ template < typename T_NATIVE, typename T_API >
 typename gmBind< T_NATIVE, T_API >::gmBindOperatorMap gmBind< T_NATIVE, T_API >::m_operatorFunctions;
 
 template < typename T_NATIVE, typename T_API >
-gmMemFixed gmBind< T_NATIVE, T_API >::m_gmUserObjects( 16, 1024 );
+gmMemFixed gmBind< T_NATIVE, T_API >::m_gmUserObjects( 8+2*sizeof(void*), 1024 );
 
 
 //////////////////////////////////////////////
