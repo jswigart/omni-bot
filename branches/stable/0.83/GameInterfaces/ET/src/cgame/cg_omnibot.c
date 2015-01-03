@@ -85,6 +85,7 @@ void CG_DrawDebugLine(UdpDebugLineMessage *_lineinfo)
 	vec3_t		forward, right;
 	polyVert_t	verts[4];
 	vec3_t		line;
+	const float fLineWidth = 2.0f;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Check the distance.
@@ -92,8 +93,8 @@ void CG_DrawDebugLine(UdpDebugLineMessage *_lineinfo)
 	// A very long line is invisible if the player is near line center.
 	{
 		vec3_t toline;
-		VectorSubtract(cg_entities[0].currentState.pos.trBase, _lineinfo->start, toline);
 		float fRenderDistanceSq = cg_omnibot_render_distance.integer * cg_omnibot_render_distance.integer;
+		VectorSubtract(cg_entities[0].currentState.pos.trBase, _lineinfo->start, toline);
 		if(VectorLengthSquared(toline) > fRenderDistanceSq){
 			VectorSubtract(cg_entities[0].currentState.pos.trBase, _lineinfo->end, toline);
 			if(VectorLengthSquared(toline) > fRenderDistanceSq)
@@ -112,8 +113,6 @@ void CG_DrawDebugLine(UdpDebugLineMessage *_lineinfo)
 	VectorNormalize( right );
 
 	//////////////////////////////////////////////////////////////////////////
-
-	const float fLineWidth = 2.0f;
 
 	VectorMA( _lineinfo->end, fLineWidth, right, verts[0].xyz );
 	verts[0].st[0] = 1;
@@ -308,6 +307,7 @@ void ClearDebugDraw()
 
 UdpDebugLines_t* AddToLineList()
 {
+	UdpDebugLines_t *lne;
 	LineList *_list = &g_DebugLines;
 
 	if(_list->m_NumDebugLines >= _list->m_MaxDebugLines)
@@ -331,13 +331,14 @@ UdpDebugLines_t* AddToLineList()
 	}
 
 	// Add it to the list.
-	UdpDebugLines_t *lne = &_list->m_pDebugLines[_list->m_NumDebugLines++];
+	lne = &_list->m_pDebugLines[_list->m_NumDebugLines++];
 	lne->expiretime = 0;
 	return lne;
 }
 
 UdpDebugPolygon_t* AddToPolygonList()
 {
+	UdpDebugPolygon_t *lne;
 	PolygonList *_list = &g_DebugPolygons;
 
 	if(_list->m_NumDebugPolygons >= _list->m_MaxDebugPolygons)
@@ -360,7 +361,7 @@ UdpDebugPolygon_t* AddToPolygonList()
 	}
 
 	// Add it to the list.
-	UdpDebugPolygon_t *lne = &_list->m_pDebugPolygons[_list->m_NumDebugPolygons++];
+	lne = &_list->m_pDebugPolygons[_list->m_NumDebugPolygons++];
 	lne->expiretime = 0;
 	return lne;
 }
@@ -521,6 +522,7 @@ void OmnibotRenderDebugLines()
 	// ensiform's updated func to fix fpinfo
 	if(InfoText[0])
 	{
+		vec4_t v4Color;
 		union
 		{
 			char		m_RGBA[4];
@@ -528,7 +530,6 @@ void OmnibotRenderDebugLines()
 		} ColorUnion;
 		ColorUnion.m_RGBAi = InfoColor;
 
-		vec4_t v4Color;
 		Vector4Set(v4Color, (float)ColorUnion.m_RGBA[0]/255.f,
 			(float)ColorUnion.m_RGBA[1]/255.f,
 			(float)ColorUnion.m_RGBA[2]/255.f,
