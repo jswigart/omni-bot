@@ -620,7 +620,7 @@ void TriggerManager::Update()
 	while(IGame::IterateEntity(ent))
 	{
 		bool aabbValid = false;
-		for(int x = m_TriggerShapes.size() - 1; x >= 0; --x)
+		for(int x = (int) m_TriggerShapes.size() - 1; x >= 0; --x)
 		{
 			TriggerShape* shape = m_TriggerShapes[x].get();
 			if(shape->TriggerableEntity(ent.GetEnt()))
