@@ -59,7 +59,11 @@ MessageQueuePtr g_MessageQueue;
 static int dl_iterate_callback(struct dl_phdr_info *info, size_t size, void *data)
 {
 	const char *name=info->dlpi_name;
+#if __x86_64__
+	if(strstr(name, "/cgame.mp.x86_64.so")){
+#else
 	if(strstr(name, "/cgame.mp.i386.so")){
+#endif
 		void *hmod = dlopen(name, RTLD_NOW|RTLD_NOLOAD);
 		if(hmod){
 			*(void**)data = hmod;
@@ -107,7 +111,11 @@ namespace InterProcess
 #else
 
 #ifdef WIN32
+#ifdef _WIN64
+			HMODULE hmod = GetModuleHandle("cgame_mp_x64");
+#else
 			HMODULE hmod = GetModuleHandle("cgame_mp_x86");
+#endif
 			if(hmod){
 				pfnGetClientFunctionsFromDLL pfnGetBotFuncs = (pfnGetClientFunctionsFromDLL)GetProcAddress(hmod, "ExportClientFunctionsFromDLL");
 #else
