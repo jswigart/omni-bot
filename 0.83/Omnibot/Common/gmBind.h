@@ -882,7 +882,11 @@ public:
 	{
 		// m_gmType is static, but a_machine is not static
 		// gmMachine is deleted at the end of each match and new gmMachine is created when next match starts
+		// static data are cleared and initialized on Windows when DLL is loaded
+		// static data are never cleared on Linux because dlclose does not work in current version of gcc
+#ifdef WIN32
 		GM_ASSERT(!GetType());
+#endif
 
 		// Registery library
 		a_machine->RegisterLibrary( T_API::m_gmTypeLib, 1 );

@@ -225,7 +225,7 @@ void PathPlannerWaypoint::cmdWaypointStats(const StringVector &_args)
 	int n=0;
 	for(WaypointList::iterator it = m_WaypointList.begin(); it != m_WaypointList.end(); ++it)
 	{
-		n+= (*it)->m_Connections.size();
+		n+= (int) (*it)->m_Connections.size();
 	}
 	EngineFuncs::ConsoleMessage(va("# Connections : %d", n));
 	EngineFuncs::ConsoleMessage(va("# Blockable connections : %d", m_BlockableList.size()));
