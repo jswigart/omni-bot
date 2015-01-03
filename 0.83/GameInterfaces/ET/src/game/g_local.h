@@ -1619,7 +1619,7 @@ extern	gentity_t		g_entities[];	//DAJ was explicit set to MAX_ENTITIES
 extern g_campaignInfo_t g_campaigns[];
 extern int				saveGamePending;
 
-#define	FOFS(x) ((int)&(((gentity_t *)0)->x))
+#define	FOFS(x) ((size_t)&(((gentity_t *)0)->x))
 
 // omnibot
 extern	vmCvar_t	g_OmniBotPath;
