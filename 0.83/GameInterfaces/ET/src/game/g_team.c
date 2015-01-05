@@ -1094,6 +1094,11 @@ DEFAULT_ALLIES - This spawn region belongs to the Alles at the start of the map
 */
 static int numobjectives = 0; // TTimo
 
+void reset_numobjectives(void)
+{
+	numobjectives = 0;
+}
+
 // swaps the team
 void team_wolf_objective_use( gentity_t *self, gentity_t *other, gentity_t *activator ) {
 	char cs[MAX_STRING_CHARS];
