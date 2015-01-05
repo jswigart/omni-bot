@@ -18,5 +18,5 @@ SOURCES = [ glob ../botai/ai_*.c ]
 		  q_shared.c
 		;
 
-lib qagame.mp.i386.so : $(SOURCES) ..//dl_lib : <toolset>gcc:<cflags>-w <cflags>-fno-strict-aliasing ;
+lib qagame.mp.so : $(SOURCES) ..//dl_lib : <tag>@tag <toolset>gcc:<cflags>-w <cflags>-fno-strict-aliasing ;
 

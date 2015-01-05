@@ -13,6 +13,22 @@ project omnibot_et
 # define external libs
 lib dl_lib : : <name>dl ;
 
+# target suffix
+rule tag ( name : type ? : property-set )
+{
+	if $(type) = SHARED_LIB
+	{
+		if [ $(property-set).get <address-model> ] = 64
+		{
+			return $(name).x86_64.so ;
+		}
+		else
+		{
+			return $(name).i386.so ;
+		}
+	}
+}
+
 build-project cgame ;
 build-project game ;
 build-project ui ;

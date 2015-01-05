@@ -45,6 +45,23 @@ alias boost_regx : boost_regex : <link>static ;
 alias boost_dt : boost_date_time : <link>static ;
 alias boost_sys : boost_system : <link>static ;
 
+# target suffix
+rule tag ( name : type ? : property-set )
+{
+	if $(type) = SHARED_LIB
+	{
+		if [ $(property-set).get <address-model> ] = 64
+		{
+			return $(name).x86_64.so ;
+		}
+		else
+		{
+			return $(name).so ;
+		}
+	}
+}
+
+
 build-project Common ; 
 #build-project MC ;
 build-project ET ;

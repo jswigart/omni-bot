@@ -100,9 +100,9 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">omnibot_et</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">omnibot_et</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">omnibot_et_x64</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">omnibot_et</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">omnibot_et</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">omnibot_et_x64</TargetName>
     <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</PostBuildEventUseInBuild>
     <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</PostBuildEventUseInBuild>
     <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</PostBuildEventUseInBuild>
@@ -112,6 +112,12 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

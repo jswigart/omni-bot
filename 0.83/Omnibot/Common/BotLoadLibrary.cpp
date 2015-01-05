@@ -232,24 +232,36 @@ HINSTANCE Omnibot_LL(const char *file)
 eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *path)
 {
 	eomnibot_error r = BOT_ERROR_NONE;
+
 #ifdef WIN32
-	g_BotLibrary = Omnibot_LL( OB_VA("%s\\%s.dll", path ? path : ".", lib) );
-	if(g_BotLibrary == 0)
-		g_BotLibrary = Omnibot_LL( OB_VA(".\\omni-bot\\%s.dll", lib) );
-	if(g_BotLibrary == 0)
-		g_BotLibrary = Omnibot_LL( OB_VA("%s.dll", lib) );
+#ifdef _WIN64
+#define SUFFIX "_x64"
 #else
-	g_BotLibrary = Omnibot_LL(OB_VA("%s/%s.so", path ? path : ".", lib));
+#define SUFFIX
+#endif
+	g_BotLibrary = Omnibot_LL( OB_VA("%s\\%s" SUFFIX ".dll", path ? path : ".", lib) );
+	if(g_BotLibrary == 0)
+		g_BotLibrary = Omnibot_LL(OB_VA(".\\omni-bot\\%s" SUFFIX ".dll", lib));
+	if(g_BotLibrary == 0)
+		g_BotLibrary = Omnibot_LL(OB_VA("%s" SUFFIX ".dll", lib));
+
+#else
+#ifdef __x86_64__
+#define SUFFIX ".x86_64"
+#else
+#define SUFFIX
+#endif
+	g_BotLibrary = Omnibot_LL(OB_VA("%s/%s" SUFFIX ".so", path ? path : ".", lib));
 	if(!g_BotLibrary)
-		g_BotLibrary = Omnibot_LL(OB_VA("./%s.so", lib));
+		g_BotLibrary = Omnibot_LL(OB_VA("./%s" SUFFIX ".so", lib));
 	if(!g_BotLibrary)
 	{
 		char *homeDir = getenv("HOME");
 		if(homeDir)
-			g_BotLibrary = Omnibot_LL(OB_VA("%s/omni-bot/%s.so", homeDir, lib));
+			g_BotLibrary = Omnibot_LL(OB_VA("%s/omni-bot/%s" SUFFIX ".so", homeDir, lib));
 	}
 	if(!g_BotLibrary)
-		g_BotLibrary = Omnibot_LL(OB_VA("%s.so", lib));
+		g_BotLibrary = Omnibot_LL(OB_VA("%s" SUFFIX ".so", lib));
 #endif
 
 	if(g_BotLibrary == 0)

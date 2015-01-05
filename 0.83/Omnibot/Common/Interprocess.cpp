@@ -59,7 +59,7 @@ MessageQueuePtr g_MessageQueue;
 static int dl_iterate_callback(struct dl_phdr_info *info, size_t size, void *data)
 {
 	const char *name=info->dlpi_name;
-#if __x86_64__
+#ifdef __x86_64__
 	if(strstr(name, "/cgame.mp.x86_64.so")){
 #else
 	if(strstr(name, "/cgame.mp.i386.so")){
