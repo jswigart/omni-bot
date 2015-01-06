@@ -95,10 +95,12 @@ GameEntity HandleFromEntity(gentity_t *_ent)
 }
 
 //////////////////////////////////////////////////////////////////////////
+bool g_GoalSubmitReady = false;
+
+#if 0
 enum { MaxDeferredGoals = 64 };
 MapGoalDef g_DeferredGoals[MaxDeferredGoals];
 int g_NumDeferredGoals = 0;
-bool g_GoalSubmitReady = false;
 
 void AddDeferredGoal(gentity_t *ent)
 {
@@ -147,7 +149,9 @@ void SendDeferredGoals()
 		g_NumDeferredGoals = 0;
 	}
 }
+#endif
 
+//MG42 entity
 void UpdateGoalEntity( gentity_t *oldent, gentity_t *newent )
 {
 	if(g_GoalSubmitReady)
@@ -170,34 +174,28 @@ struct mg42s_t {
 };
 
 mg42s_t mg42s[ 64 ];
-int numofmg42s = 0;
-bool havemg42s = true;
+int numofmg42s;
 
 void GetMG42s()
 {
-	if ( !numofmg42s && havemg42s )
+	numofmg42s = 0;
+	gentity_t *trav = NULL;
+	char *name;
+
+	while((trav = G_Find(trav, FOFS(classname), "misc_mg42"))!=NULL && numofmg42s<64)
 	{
-		gentity_t *trav = NULL;
-		char *name;
+		mg42s_t& mg42 = mg42s[numofmg42s++];
+		mg42.ent = trav;
+		GetEntityCenter( trav, mg42.position );
 
-		while ((trav = G_Find(trav, FOFS(classname), "misc_mg42"))!=NULL)
-		{
-			name = (char *)_GetEntityName( trav );
-			mg42s[ numofmg42s ].ent = trav;
-			GetEntityCenter( trav, mg42s[ numofmg42s ].position );
+		name = (char *)_GetEntityName(trav);
+		if(name)
+			strcpy(mg42.name, name);
+		else
+			mg42.name[ 0 ] = (char)0;
 
-			if ( name )
-				strcpy(mg42s[ numofmg42s ].name, name);
-			else
-				mg42s[ numofmg42s ].name[ 0 ] = (char)NULL;
-
-			mg42s[ numofmg42s ].buildable = false;
-			numofmg42s++;
-		}
+		mg42.buildable = false;
 	}
-
-	if ( !numofmg42s )
-		havemg42s = false;
 }
 
 void UpdateMG42( gentity_t *ent )
@@ -1571,9 +1569,9 @@ static int _GetEntityClass(gentity_t *_ent)
 		}
 	case ET_ITEM:
 		{
-			if(!Q_strncmp(_ent->classname, "item_health", strlen("item_health")))
+			if(!Q_strncmp(_ent->classname, "item_health", 11))
 				return ENT_CLASS_GENERIC_HEALTH;
-			else if(!Q_strncmp(_ent->classname, "weapon_magicammo", strlen("weapon_magicammo")))
+			else if(!Q_strncmp(_ent->classname, "weapon_magicammo", 16))
 				return ENT_CLASS_GENERIC_AMMO;
 			else if(!Q_stricmp(_ent->classname, "item_treasure"))
 				return ET_CLASSEX_TREASURE;
@@ -2882,12 +2880,12 @@ public:
 				{
 					res = InvalidEntity;
 				}
-				else if(!Q_strncmp(pEnt->classname, "item_health", strlen("item_health")))
+				else if(!Q_strncmp(pEnt->classname, "item_health", 11))
 				{
 					_category.SetFlag(ENT_CAT_PICKUP);
 					_category.SetFlag(ENT_CAT_PICKUP_HEALTH);
 				}
-				else if(!Q_strncmp(pEnt->classname, "weapon_magicammo", strlen("weapon_magicammo")))
+				else if(!Q_strncmp(pEnt->classname, "weapon_magicammo", 16))
 				{
 					_category.SetFlag(ENT_CAT_PICKUP);
 					_category.SetFlag(ENT_CAT_PICKUP_AMMO);
@@ -3858,7 +3856,7 @@ public:
 		g_GoalSubmitReady = true;
 		gentity_t *e;
 
-		SendDeferredGoals();
+		//SendDeferredGoals();
 		GetMG42s();
 
 		for (int i = MAX_CLIENTS; i < level.num_entities; ++i)
@@ -5804,7 +5802,7 @@ void Bot_Interface_Update()
 				}
 			}
 		}
-		SendDeferredGoals();
+		//SendDeferredGoals();
 		//////////////////////////////////////////////////////////////////////////
 		// Call the libraries update.
 		g_BotFunctions.pfnUpdate();
