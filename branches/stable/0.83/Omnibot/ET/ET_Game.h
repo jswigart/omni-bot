@@ -73,6 +73,7 @@ protected:
 	void InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table);
 	void InitScriptPowerups(gmMachine *_machine, gmTableObject *_table);
 	void InitVoiceMacros(gmMachine *_machine, gmTableObject *_table);
+	void InitWeaponEnum();
 
 	// Commands
 	void InitCommands();
@@ -84,6 +85,7 @@ protected:
 	static const float ET_GetEntityClassAvoidRadius(const int _class);
 
 	StringBuffer m_ExtraWeaponNames;
+	int m_NumWeapons;
 };
 
 #endif

@@ -136,6 +136,8 @@ bool ET_Game::Init()
 	AiState::SensoryMemory::SetEntityVisDistanceCallback(ET_Game::ET_GetEntityVisDistance);
 	AiState::SensoryMemory::SetCanSensoreEntityCallback(ET_Game::ET_CanSensoreEntity);
 
+	InitWeaponEnum();
+
 	if(!IGame::Init())
 		return false;
 
@@ -228,18 +230,20 @@ static IntEnum ET_WeaponEnum[128] =
 	IntEnum("MOUNTABLE_MG42",ET_WP_MOUNTABLE_MG42),	
 };
 
+static int NumETweapons = 0;
+
+void ET_Game::InitWeaponEnum()
+{
+	if(NumETweapons==0)
+	{
+		while(ET_WeaponEnum[NumETweapons].m_Key) ++NumETweapons;
+	}
+	m_NumWeapons = NumETweapons;
+}
+
 void ET_Game::GetWeaponEnumeration(const IntEnum *&_ptr, int &num)
 {
-	const int arraySize = sizeof(ET_WeaponEnum) / sizeof(ET_WeaponEnum[0]);
-	int n = 0;
-	for(int i = 0; i < arraySize; ++i)
-	{
-		if(ET_WeaponEnum[i].m_Key)
-		{
-			++n;
-		}
-	}
-	num = n;
+	num = m_NumWeapons;
 	_ptr = ET_WeaponEnum;	
 }
 
@@ -248,14 +252,12 @@ bool ET_Game::AddWeaponId(const char * weaponName, int weaponId)
 	const char * wpnName = m_ExtraWeaponNames.AddUniqueString(weaponName);
 
 	const int arraySize = sizeof(ET_WeaponEnum) / sizeof(ET_WeaponEnum[0]);
-	for(int i = 0; i < arraySize; ++i)
+	if(m_NumWeapons < arraySize)
 	{
-		if(!ET_WeaponEnum[i].m_Key)
-		{
-			ET_WeaponEnum[i].m_Key = wpnName;			
-			ET_WeaponEnum[i].m_Value = weaponId;
-			return true;
-		}
+		ET_WeaponEnum[m_NumWeapons].m_Key = wpnName;
+		ET_WeaponEnum[m_NumWeapons].m_Value = weaponId;
+		m_NumWeapons++;
+		return true;
 	}
 	return false;
 }

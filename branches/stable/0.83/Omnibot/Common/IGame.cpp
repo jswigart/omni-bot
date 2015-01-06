@@ -94,6 +94,7 @@ bool IGame::Init()
 		m_GameEntities[i].m_EntityCategory.ClearAll();
 		m_GameEntities[i].m_TimeStamp = 0;
 	}
+	m_MaxEntity = 0;
 
 	InitCommands();
 	InitScriptSupport();
