@@ -356,6 +356,8 @@ void ScriptManager::Shutdown()
 	}
 #endif
 	
+	g_LiveUpdate.clear();
+
 	gmGCRootManager::Get()->DestroyMachine(m_ScriptEngine);
 	gmGCRootManager::Destroy();
 

@@ -2266,6 +2266,8 @@ void MapGoal_AsString(MapGoal *a_var, char * a_buffer, int a_bufferSize)
 
 void MapGoal::Bind(gmMachine *_m)
 {
+	sNextSerialNum = 0;
+
 	gmBind2::Global(_m,"InternalGoalState")
 		.var((int)GoalStateFlagState,"FlagState")
 		//.var((int)GoalStateFlagHoldState,"FlagHoldState")

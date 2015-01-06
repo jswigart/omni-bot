@@ -9,7 +9,7 @@
 #include "PrecompCommon.h"
 #include "BlackBoard.h"
 
-static int g_NextScriptItem = bbk_FirstScript;
+static int g_NextScriptItem;
 
 BlackBoard::BlackBoard()
 {
@@ -333,6 +333,8 @@ static int GM_CDECL gmfPrint(gmThread *a_thread)
 
 void BlackBoard::Bind(gmMachine *a_machine)
 {
+	g_NextScriptItem = bbk_FirstScript;
+
 	gmBind2::Global(a_machine,"Blackboard")
 		.func(BlackBoard::MakeKey,"MakeKey"/*,"Creates a new unique key for blackboard data."*/)
 		.func(gmfRecordExistsOwner,"RecordExistsOwner"/*,"Checks if a record of a certain type exists for a specific owner id."*/)
