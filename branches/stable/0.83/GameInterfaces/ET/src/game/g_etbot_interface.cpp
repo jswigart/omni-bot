@@ -79,10 +79,16 @@ int ENTINDEX(gentity_t *_ent)
 gentity_t *EntityFromHandle(GameEntity _ent)
 {
 	obint16 index = _ent.GetIndex();
-	if(m_EntityHandles[index].m_HandleSerial == _ent.GetSerial() && g_entities[index].inuse)
-		return &g_entities[index];
-	if(index == ENTITYNUM_WORLD)
-		return &g_entities[ENTITYNUM_WORLD];
+	if((unsigned)(int)index < MAX_GENTITIES)
+	{
+		if(m_EntityHandles[index].m_HandleSerial == _ent.GetSerial())
+		{
+			gentity_t *pEnt = &g_entities[index];
+			if(pEnt->inuse) return pEnt;
+		}
+		if(index == ENTITYNUM_WORLD)
+			return &g_entities[ENTITYNUM_WORLD];
+	}
 	return NULL;
 }
 
