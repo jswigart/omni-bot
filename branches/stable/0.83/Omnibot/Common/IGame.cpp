@@ -1887,12 +1887,15 @@ bool IGame::IsEntityValid(const GameEntity &_hnl)
 	if(_hnl.IsValid())
 	{
 		const int index = _hnl.GetIndex();
-		if(index >= 0 && index < Constants::MAX_ENTITIES)
+		if(unsigned(index) < Constants::MAX_ENTITIES)
 		{
 			EntityInstance &ei = m_GameEntities[index];
-			UpdateEntity( ei );
-			if(ei.m_EntityClass && ei.m_Entity.IsValid())
-				return true;
+			if(ei.m_Entity.IsValid())
+			{
+				UpdateEntity(ei);
+				if(ei.m_EntityClass)
+					return true;
+			}
 		}
 	}
 	return false;
