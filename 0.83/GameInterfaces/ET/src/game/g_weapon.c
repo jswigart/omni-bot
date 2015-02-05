@@ -2096,43 +2096,47 @@ evilbanigoto:
 							G_Script_ScriptEvent( hit->target_ent, "defused", "" );
 							// end omnibot
 
-							if (ent->client->sess.sessionTeam == TEAM_AXIS && dynamiteDropTeam != TEAM_AXIS) {
-								if ((hit->spawnflags & AXIS_OBJECTIVE) && (!scored)) {
-									AddScore(ent,WOLF_DYNAMITE_DIFFUSE);
-									G_AddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f );
-									G_DebugAddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite" );
-									scored++;
-								}
+							if (ent->client->sess.sessionTeam == TEAM_AXIS) {
+								if(dynamiteDropTeam != TEAM_AXIS){
+									if((hit->spawnflags & AXIS_OBJECTIVE) && (!scored)) {
+										AddScore(ent, WOLF_DYNAMITE_DIFFUSE);
+										G_AddSkillPoints(ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f);
+										G_DebugAddSkillPoints(ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite");
+										scored++;
+									}
 
-								{
-									gentity_t* pm = G_PopupMessage( PM_DYNAMITE );
-									pm->s.effect2Time = 1; // 1 = defused
-									pm->s.effect3Time = hit->s.teamNum;
-									pm->s.teamNum = ent->client->sess.sessionTeam;
-								}
+									{
+										gentity_t* pm = G_PopupMessage(PM_DYNAMITE);
+										pm->s.effect2Time = 1; // 1 = defused
+										pm->s.effect3Time = hit->s.teamNum;
+										pm->s.teamNum = ent->client->sess.sessionTeam;
+									}
 
-//								trap_SendServerCommand(-1, "cp \"Axis engineer disarmed the Dynamite!\n\"");
-								//bani
-								defusedObj = qtrue;
-							} else if (dynamiteDropTeam != TEAM_ALLIES) { // TEAM_ALLIES
-								if ((hit->spawnflags & ALLIED_OBJECTIVE) && (!scored)) {
-									AddScore(ent,WOLF_DYNAMITE_DIFFUSE);
-									G_AddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f );
-									G_DebugAddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite" );
-									scored++; 
-									hit->spawnflags &= ~OBJECTIVE_DESTROYED; // "re-activate" objective since it wasn't destroyed
+									//								trap_SendServerCommand(-1, "cp \"Axis engineer disarmed the Dynamite!\n\"");
+									//bani
+									defusedObj = qtrue;
 								}
+							} else { // TEAM_ALLIES
+								if(dynamiteDropTeam != TEAM_ALLIES) {
+									if((hit->spawnflags & ALLIED_OBJECTIVE) && (!scored)) {
+										AddScore(ent, WOLF_DYNAMITE_DIFFUSE);
+										G_AddSkillPoints(ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f);
+										G_DebugAddSkillPoints(ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite");
+										scored++;
+										hit->spawnflags &= ~OBJECTIVE_DESTROYED; // "re-activate" objective since it wasn't destroyed
+									}
 
-								{
-									gentity_t* pm = G_PopupMessage( PM_DYNAMITE );
-									pm->s.effect2Time = 1; // 1 = defused
-									pm->s.effect3Time = hit->s.teamNum;
-									pm->s.teamNum = ent->client->sess.sessionTeam;
+									{
+										gentity_t* pm = G_PopupMessage(PM_DYNAMITE);
+										pm->s.effect2Time = 1; // 1 = defused
+										pm->s.effect3Time = hit->s.teamNum;
+										pm->s.teamNum = ent->client->sess.sessionTeam;
+									}
+
+									//								trap_SendServerCommand(-1, "cp \"Allied engineer disarmed the Dynamite!\n\"");
+									//bani
+									defusedObj = qtrue;
 								}
-
-//								trap_SendServerCommand(-1, "cp \"Allied engineer disarmed the Dynamite!\n\"");
-								//bani
-								defusedObj = qtrue;
 							}
 						}
 					}
@@ -2177,40 +2181,44 @@ evilbanigoto:
 							// end omnibot
 
 							// we got somthing to destroy
-							if (ent->client->sess.sessionTeam == TEAM_AXIS && dynamiteDropTeam != TEAM_AXIS) {
-								if ( hit->s.teamNum == TEAM_AXIS && (!scored)) {
-									AddScore(ent,WOLF_DYNAMITE_DIFFUSE);
-									if(ent && ent->client) G_LogPrintf("Dynamite_Diffuse: %d\n", ent - g_entities);	// OSP
-									G_AddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f );
-									G_DebugAddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite" );
-									scored++;
-								}
+							if (ent->client->sess.sessionTeam == TEAM_AXIS) {
+								if(dynamiteDropTeam != TEAM_AXIS) {
+									if(hit->s.teamNum == TEAM_AXIS && (!scored)) {
+										AddScore(ent, WOLF_DYNAMITE_DIFFUSE);
+										if(ent && ent->client) G_LogPrintf("Dynamite_Diffuse: %d\n", ent - g_entities);	// OSP
+										G_AddSkillPoints(ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f);
+										G_DebugAddSkillPoints(ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite");
+										scored++;
+									}
 
-								{
-									gentity_t* pm = G_PopupMessage( PM_DYNAMITE );
-									pm->s.effect2Time = 1; // 1 = defused
-									pm->s.effect3Time = hit->parent->s.teamNum;
-									pm->s.teamNum = ent->client->sess.sessionTeam;
-								}
+									{
+										gentity_t* pm = G_PopupMessage(PM_DYNAMITE);
+										pm->s.effect2Time = 1; // 1 = defused
+										pm->s.effect3Time = hit->parent->s.teamNum;
+										pm->s.teamNum = ent->client->sess.sessionTeam;
+									}
 
 //								trap_SendServerCommand(-1, "cp \"Axis engineer disarmed the Dynamite!\" 2");
-							} else if (dynamiteDropTeam != TEAM_ALLIES) { // TEAM_ALLIES
-								if ( hit->s.teamNum == TEAM_ALLIES && (!scored)) {
-									AddScore(ent,WOLF_DYNAMITE_DIFFUSE);
-									if(ent && ent->client) G_LogPrintf("Dynamite_Diffuse: %d\n", ent - g_entities);	// OSP
-									G_AddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f );
-									G_DebugAddSkillPoints( ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite" );
-									scored++; 
 								}
+							} else { // TEAM_ALLIES
+								if(dynamiteDropTeam != TEAM_ALLIES) {
+									if(hit->s.teamNum == TEAM_ALLIES && (!scored)) {
+										AddScore(ent, WOLF_DYNAMITE_DIFFUSE);
+										if(ent && ent->client) G_LogPrintf("Dynamite_Diffuse: %d\n", ent - g_entities);	// OSP
+										G_AddSkillPoints(ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f);
+										G_DebugAddSkillPoints(ent, SK_EXPLOSIVES_AND_CONSTRUCTION, 6.f, "defusing enemy dynamite");
+										scored++;
+									}
 
-								{
-									gentity_t* pm = G_PopupMessage( PM_DYNAMITE );
-									pm->s.effect2Time = 1; // 1 = defused
-									pm->s.effect3Time = hit->parent->s.teamNum;
-									pm->s.teamNum = ent->client->sess.sessionTeam;
-								}
+									{
+										gentity_t* pm = G_PopupMessage(PM_DYNAMITE);
+										pm->s.effect2Time = 1; // 1 = defused
+										pm->s.effect3Time = hit->parent->s.teamNum;
+										pm->s.teamNum = ent->client->sess.sessionTeam;
+									}
 
 //								trap_SendServerCommand(-1, "cp \"Allied engineer disarmed the Dynamite!\" 2");
+								}
 							}
 
 							return;
