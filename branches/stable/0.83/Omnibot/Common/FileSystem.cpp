@@ -696,7 +696,6 @@ bool File::ReadInt16(obuint16 &i)
 		}
 		else if(PHYSFS_readULE16(m_pFile->m_pPrivate, &i))
 		{
-			i = PHYSFS_swapSLE16(i);
 			return true;
 		}
 	}
@@ -714,7 +713,6 @@ bool File::ReadInt32(obuint32 &i)
 		}
 		else if(PHYSFS_readULE32(m_pFile->m_pPrivate, &i))
 		{
-			i = PHYSFS_swapSLE32(i);
 			return true;
 		}
 	}
@@ -732,7 +730,6 @@ bool File::ReadInt64(obuint64 &i)
 		}
 		else if(PHYSFS_readULE64(m_pFile->m_pPrivate, &i))
 		{
-			i = PHYSFS_swapSLE64(i);
 			return true;
 		}
 	}
@@ -751,7 +748,6 @@ bool File::ReadFloat(float &f)
 		}
 		else if(PHYSFS_readULE32(m_pFile->m_pPrivate, &tmp))
 		{
-			tmp = PHYSFS_swapSLE32(tmp);
 			memcpy(&f, &tmp, sizeof(f));
 			return true;
 		}
