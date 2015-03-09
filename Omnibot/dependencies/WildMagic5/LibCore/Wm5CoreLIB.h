@@ -192,7 +192,7 @@ typedef unsigned __int64    uint64_t;
 // and shut-down
 //   WildMagic5/Documentation/Wm5InitTerm.pdf
 //
-#define WM5_USE_MEMORY
+//#define WM5_USE_MEMORY
 #ifdef WM5_USE_MEMORY
     // Enable an assertion when a allocation occurs before
     // Memory::Initialize was called or when a deallocation occurs after

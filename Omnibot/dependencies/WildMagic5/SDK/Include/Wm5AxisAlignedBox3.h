@@ -9,6 +9,7 @@
 #ifndef WM5AXISALIGNEDBOX3_H
 #define WM5AXISALIGNEDBOX3_H
 
+#include <limits>
 #include "Wm5MathematicsLIB.h"
 #include "Wm5Vector3.h"
 
@@ -24,12 +25,13 @@ namespace Wm5
 
 		// The caller must ensure that xmin <= xmax, ymin <= ymax, and
 		// zmin <= zmax.
+		AxisAlignedBox3 (const Real * mins, const Real * maxs);
 		AxisAlignedBox3 (Real xmin, Real xmax, Real ymin, Real ymax,
 			Real zmin, Real zmax);
 
 		// Compute the center of the box and the extents (half-lengths)
 		// of the box edges.
-		void GetCenterExtents (Vector3<Real>& center, Real extent[3]);
+		void GetCenterExtents (Vector3<Real>& center, Real extent[3]) const;
 
 		// Overlap testing is in the strict sense.  If the two boxes are just
 		// touching along a common edge or a common face, the boxes are reported
@@ -67,7 +69,13 @@ namespace Wm5
 				Max[ 2 ] - Min[ 2 ]);
 		}
 
-		void Expand( const Vector3<Real> & pos )
+		void ExpandAABB( const AxisAlignedBox3<Real> & other )
+		{
+			ExpandPt( other.Min );
+			ExpandPt( other.Max );
+		}
+
+		void ExpandPt( const Vector3<Real> & pos )
 		{
 			for ( int i = 0; i < 3; ++i )
 			{
@@ -80,24 +88,34 @@ namespace Wm5
 
 		void Extend( float _x, float _y, float _z )
 		{
-			Min.X() -= _x;
-			Min.Y() -= _y;
-			Min.Z() -= _z;
+			Min[ 0 ] -= _x;
+			Min[ 1 ] -= _y;
+			Min[ 2 ] -= _z;
 
-			Max.X() += _x;
-			Max.Y() += _y;
-			Max.Z() += _z;
+			Max[ 0 ] += _x;
+			Max[ 1 ] += _y;
+			Max[ 2 ] += _z;
 		}
 
 		void Clear()
 		{
-			Min.X() = std::numeric_limits<Real>::max();
-			Min.Y() = std::numeric_limits<Real>::max();
-			Min.Z() = std::numeric_limits<Real>::max();
+			Min[ 0 ] = std::numeric_limits<Real>::max();
+			Min[ 1 ] = std::numeric_limits<Real>::max();
+			Min[ 2 ] = std::numeric_limits<Real>::max();
 
-			Max.X() = std::numeric_limits<Real>::lowest();
-			Max.Y() = std::numeric_limits<Real>::lowest();
-			Max.Z() = std::numeric_limits<Real>::lowest();
+			Max[ 0 ] = std::numeric_limits<Real>::lowest();
+			Max[ 1 ] = std::numeric_limits<Real>::lowest();
+			Max[ 2 ] = std::numeric_limits<Real>::lowest();
+		}
+
+		bool IsValid() const
+		{
+			for ( int i = 0; i < 3; ++i )
+			{
+				if ( Min[ i ] > Max[ i ] )
+					return false;
+			}
+			return false;
 		}
 	};
 

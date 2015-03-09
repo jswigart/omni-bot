@@ -153,7 +153,7 @@ namespace Wm5
 
 		///////////////////////////////////////////////////////////////////////////
 		// Custom functions
-		bool Vector3<Real>::IsZero () const;
+		bool IsZero () const;
 
 		Vector3 Reflect(const Vector3& normal) const;
 		Vector3 MidPoint(const Vector3& vec) const;
@@ -171,6 +171,8 @@ namespace Wm5
 		void FromHeading(Real fHeading);
 
 		Vector3<Real> Flatten(Real _z = 0.f) const;
+
+		bool IsValid() const { return !isnan( X() ) && !isnan( Y() ) && !isnan( Z() ); }
 		///////////////////////////////////////////////////////////////////////////
 	protected:
 		using Tuple<3,Real>::mTuple;

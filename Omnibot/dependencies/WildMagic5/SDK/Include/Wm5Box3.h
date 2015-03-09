@@ -34,6 +34,28 @@ namespace Wm5
 			const Vector3<Real>& axis1, const Vector3<Real>& axis2,
 			const Real extent0, const Real extent1, const Real extent2);
 
+		bool operator==( const Box3<Real> & other )
+		{
+			return Center == other.Center &&
+				Axis[ 0 ] == other.Axis[ 0 ] && 
+				Axis[ 1 ] == other.Axis[ 1 ] && 
+				Axis[ 2 ] == other.Axis[ 2 ] && 
+				Extent[ 0 ] == other.Extent[ 0 ] && 
+				Extent[ 1 ] == other.Extent[ 1 ] && 
+				Extent[ 2 ] == other.Extent[ 2 ];
+		}
+
+		bool operator!=( const Box3<Real> & other )
+		{
+			return Center != other.Center ||
+				Axis[ 0 ] != other.Axis[ 0 ] ||
+				Axis[ 1 ] != other.Axis[ 1 ] ||
+				Axis[ 2 ] != other.Axis[ 2 ] ||
+				Extent[ 0 ] != other.Extent[ 0 ] ||
+				Extent[ 1 ] != other.Extent[ 1 ] ||
+				Extent[ 2 ] != other.Extent[ 2 ];
+		}
+
 		void ComputeVertices (Vector3<Real> vertex[8]) const;
 
 		Vector3<Real> Center;
@@ -42,9 +64,25 @@ namespace Wm5
 
 		void Identity( float defaultSize );
 
+		Vector3f GetCenterTop() const
+		{
+			return Center + Axis[ 2 ] * Extent[ 2 ];
+		}
 		Vector3f GetCenterBottom() const
 		{
 			return Center - Axis[ 2 ] * Extent[ 2 ];
+		}
+
+		Real GetArea() const
+		{
+			return Extent[ 0 ] * Extent[ 1 ] * Extent[ 2 ];
+		}
+
+		void Expand( Real amount )
+		{
+			Extent[ 0 ] += amount;
+			Extent[ 1 ] += amount;
+			Extent[ 2 ] += amount;
 		}
 	};
 
