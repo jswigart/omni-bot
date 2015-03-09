@@ -132,10 +132,14 @@ ICEMATHS_API void IceMaths::NormalizePRSMatrix(Matrix4x4& dest, Point& scale, co
 	dest = src;
 	for( int i=0;i<3;i++)
 	{
-		src.GetRow(i,row);
-		// computes scales
-		scale[i] = row.Magnitude();
-		row /= scale[i];
+		src.GetRow(i,row);
+
+		// computes scales
+
+		scale[i] = row.Magnitude();
+
+		row /= scale[i];
+
 		dest.SetRow(i,row);
 	}
 }

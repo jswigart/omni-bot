@@ -117,9 +117,9 @@
 		 *	\return		true if success
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-						bool				SetPointers(const IceMaths::IndexedTriangle* tris, const IceMaths::Point* verts);
+						bool						SetPointers(const IceMaths::IndexedTriangle* tris, const IceMaths::Point* verts);
 		inline_	const	IceMaths::IndexedTriangle*	GetTris()			const	{ return mTris;			}
-		inline_	const	IceMaths::Point*				GetVerts()			const	{ return mVerts;		}
+		inline_	const	IceMaths::Point*			GetVerts()			const	{ return mVerts;		}
 
 	#ifdef OPC_USE_STRIDE
 		// Strides settings

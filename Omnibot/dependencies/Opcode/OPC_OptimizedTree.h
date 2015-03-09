@@ -116,15 +116,15 @@
 													base_class();													\
 		virtual										~base_class();													\
 		/* Builds from a standard tree */																			\
-		override(AABBOptimizedTree)	bool			Build(AABBTree* tree);											\
+		virtual	bool			Build(AABBTree* tree);											\
 		/* Refits the tree */																						\
-		override(AABBOptimizedTree)	bool			Refit(const MeshInterface* mesh_interface);						\
+		virtual	bool			Refit(const MeshInterface* mesh_interface);						\
 		/* Walks the tree */																						\
-		override(AABBOptimizedTree)	bool			Walk(GenericWalkingCallback callback, void* user_data) const;	\
+		virtual	bool			Walk(GenericWalkingCallback callback, void* user_data) const;	\
 		/* Data access */																							\
 		inline_						const node*		GetNodes()		const	{ return mNodes;					}	\
 		/* Stats */																									\
-		override(AABBOptimizedTree)	udword			GetUsedBytes()	const	{ return mNbNodes*sizeof(node);		}	\
+		virtual	udword			GetUsedBytes()	const	{ return mNbNodes*sizeof(node);		}	\
 		private:																									\
 									node*			mNodes;
 

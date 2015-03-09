@@ -87,7 +87,7 @@
 	#define FUNCTION				extern "C"
 
 	// Cosmetic stuff [mainly useful with multiple inheritance]
-	#define	override(base_class)	virtual
+	//#define	override(base_class)	virtual
 
 	// Our own inline keyword, so that:
 	// - we can switch to __forceinline to check it's really better or not
