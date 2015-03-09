@@ -24,12 +24,13 @@ namespace Wm5
 
 		// The caller must ensure that xmin <= xmax, ymin <= ymax, and
 		// zmin <= zmax.
+		AxisAlignedBox3 (const Real * mins, const Real * maxs);
 		AxisAlignedBox3 (Real xmin, Real xmax, Real ymin, Real ymax,
 			Real zmin, Real zmax);
 
 		// Compute the center of the box and the extents (half-lengths)
 		// of the box edges.
-		void GetCenterExtents (Vector3<Real>& center, Real extent[3]);
+		void GetCenterExtents( Vector3<Real>& center, Real extent[ 3 ] ) const;
 
 		// Overlap testing is in the strict sense.  If the two boxes are just
 		// touching along a common edge or a common face, the boxes are reported
@@ -67,7 +68,13 @@ namespace Wm5
 				Max[ 2 ] - Min[ 2 ]);
 		}
 
-		void Expand( const Vector3<Real> & pos )
+		void ExpandAABB( const AxisAlignedBox3<Real> & other )
+		{
+			Expand( other.Min );
+			Expand( other.Max );
+		}
+
+		void ExpandPt( const Vector3<Real> & pos )
 		{
 			for ( int i = 0; i < 3; ++i )
 			{
@@ -98,6 +105,16 @@ namespace Wm5
 			Max[ 0 ] = std::numeric_limits<Real>::lowest();
 			Max[ 1 ] = std::numeric_limits<Real>::lowest();
 			Max[ 2 ] = std::numeric_limits<Real>::lowest();
+		}
+
+		bool IsValid() const
+		{
+			for ( int i = 0; i < 3; ++i )
+			{
+				if ( Min[ i ] > Max[ i ] )
+					return false;
+			}
+			return false;
 		}
 	};
 

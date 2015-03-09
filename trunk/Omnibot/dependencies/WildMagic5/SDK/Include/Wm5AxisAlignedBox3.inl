@@ -30,8 +30,21 @@ AxisAlignedBox3<Real>::AxisAlignedBox3 (Real xmin, Real xmax, Real ymin,
 }
 //----------------------------------------------------------------------------
 template <typename Real>
+AxisAlignedBox3<Real>::AxisAlignedBox3 (const Real * mins, const Real * maxs)
+{
+	Min[0] = mins[0];
+	Min[1] = mins[1];
+	Min[2] = mins[2];
+
+	Max[0] = maxs[0];
+	Max[1] = maxs[1];
+	Max[2] = maxs[2];
+}
+
+//----------------------------------------------------------------------------
+template <typename Real>
 void AxisAlignedBox3<Real>::GetCenterExtents (Vector3<Real>& center,
-    Real extent[3])
+    Real extent[3]) const
 {
     center[0] = ((Real)0.5)*(Max[0] + Min[0]);
     center[1] = ((Real)0.5)*(Max[1] + Min[1]);
