@@ -25,7 +25,10 @@
 
 		public:
 		//! Empty constructor.
-		inline_						Matrix4x4()									{}
+		inline_						Matrix4x4()
+			{
+				Identity();
+			}
 		//! Constructor from 16 values
 		inline_						Matrix4x4(	float m00, float m01, float m02, float m03,
 												float m10, float m11, float m12, float m13,
@@ -440,6 +443,15 @@
 		dest.x = rot.m[3][0] + source.x * rot.m[0][0] + source.y * rot.m[1][0] + source.z * rot.m[2][0];
 		dest.y = rot.m[3][1] + source.x * rot.m[0][1] + source.y * rot.m[1][1] + source.z * rot.m[2][1];
 		dest.z = rot.m[3][2] + source.x * rot.m[0][2] + source.y * rot.m[1][2] + source.z * rot.m[2][2];
+	}
+
+	inline_ Point TransformPoint4x3(const Point& source, const Matrix4x4& rot)
+	{
+		Point dest;
+		dest.x = rot.m[3][0] + source.x * rot.m[0][0] + source.y * rot.m[1][0] + source.z * rot.m[2][0];
+		dest.y = rot.m[3][1] + source.x * rot.m[0][1] + source.y * rot.m[1][1] + source.z * rot.m[2][1];
+		dest.z = rot.m[3][2] + source.x * rot.m[0][2] + source.y * rot.m[1][2] + source.z * rot.m[2][2];
+		return dest;
 	}
 
 	//! Quickly rotates a vector, using the 3x3 part of a 4x4 matrix
