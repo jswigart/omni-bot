@@ -13,7 +13,7 @@
 
 #include "FiberManager.h"
 #include "StateMachine.h"
-#include "gmbinder2_functraits.h"
+#include "gmbinder2/gmbinder2_functraits.h"
 
 namespace AiState
 {

@@ -29,8 +29,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 bool					g_IsOmnibotLoaded = false;
-Bot_EngineFuncs_t		g_BotFunctions = {0};
-IEngineInterface		*g_InterfaceFunctions = 0;
+Bot_EngineFuncs			gBotFunctions = {0};
+IEngineInterface		*gGameFunctions = 0;
 std::string				g_OmnibotLibPath;
 
 void Omnibot_Load_PrintMsg(const char *_msg);
@@ -71,7 +71,7 @@ void Omnibot_strncpy(char *dest, const char *source, int count)
 			*dest++ = '\0';
 }
 
-const char *Omnibot_ErrorString(eomnibot_error err)
+const char *Omnibot_ErrorString( omnibot_error err )
 {
 	return ((err >= BOT_ERROR_NONE) && (err < BOT_NUM_ERRORS)) ? BOTERRORS[err] : "";
 }
@@ -209,9 +209,9 @@ HINSTANCE Omnibot_LL(const char *file)
 	return hndl;
 }
 
-eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *path)
+omnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *path)
 {
-	eomnibot_error r = BOT_ERROR_NONE;
+	omnibot_error r = BOT_ERROR_NONE;
 	g_BotLibrary = Omnibot_LL( OB_VA("%s\\%s.dll", path ? path : ".", lib) );
 	if(g_BotLibrary == 0)
 		g_BotLibrary = Omnibot_LL( OB_VA(".\\omni-bot\\%s.dll", lib) );
@@ -226,7 +226,7 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 	{
 		Omnibot_Load_PrintMsg(OB_VA("Found Omni-bot: %s, Attempting to Initialize", g_OmnibotLibPath.c_str()));
 		pfnGetFunctionsFromDLL pfnGetBotFuncs = 0;
-		memset(&g_BotFunctions, 0, sizeof(g_BotFunctions));
+		memset(&gBotFunctions, 0, sizeof(gBotFunctions));
 		pfnGetBotFuncs = (pfnGetFunctionsFromDLL)GetProcAddress(g_BotLibrary, "ExportBotFunctionsFromDLL");
 		if(pfnGetBotFuncs == 0)
 		{
@@ -235,11 +235,11 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 		}
 		else
 		{
-			r = pfnGetBotFuncs(&g_BotFunctions, sizeof(g_BotFunctions));
+			r = pfnGetBotFuncs(&gBotFunctions, sizeof(gBotFunctions));
 			if(r == BOT_ERROR_NONE)
 			{
 				Omnibot_Load_PrintMsg("Omni-bot Loaded Successfully");
-				r = g_BotFunctions.pfnInitialize(g_InterfaceFunctions, version);
+				r = gBotFunctions.pfnInitialize(gGameFunctions, version);
 				g_IsOmnibotLoaded = (r == BOT_ERROR_NONE);
 			}
 
@@ -261,10 +261,10 @@ void Omnibot_FreeLibrary()
 		FreeLibrary(g_BotLibrary);
 		g_BotLibrary = 0;
 	}
-	memset(&g_BotFunctions, 0, sizeof(g_BotFunctions));
+	memset(&gBotFunctions, 0, sizeof(gBotFunctions));
 
-	delete g_InterfaceFunctions;
-	g_InterfaceFunctions = 0;
+	delete gGameFunctions;
+	gGameFunctions = 0;
 
 	g_IsOmnibotLoaded = false;
 }
@@ -338,9 +338,9 @@ void *Omnibot_LL(const char *file)
 	return pLib;
 }
 
-eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *path)
+omnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *path)
 {
-	eomnibot_error r = BOT_ERROR_NONE;
+	omnibot_error r = BOT_ERROR_NONE;
 	g_BotLibrary = Omnibot_LL(OB_VA("%s/%s.so", path ? path : ".", lib));
 	if(!g_BotLibrary)
 	{
@@ -367,7 +367,7 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 	{
 		Omnibot_Load_PrintMsg(OB_VA("Found Omni-bot: %s, Attempting to Initialize", g_OmnibotLibPath.c_str()));
 		pfnGetFunctionsFromDLL pfnGetBotFuncs = 0;
-		memset(&g_BotFunctions, 0, sizeof(g_BotFunctions));
+		memset(&gBotFunctions, 0, sizeof(gBotFunctions));
 		pfnGetBotFuncs = (pfnGetFunctionsFromDLL)GetProcAddress(g_BotLibrary, "ExportBotFunctionsFromDLL");
 		if(!pfnGetBotFuncs)
 		{
@@ -377,11 +377,11 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 		}
 		else
 		{
-			r = pfnGetBotFuncs(&g_BotFunctions, sizeof(g_BotFunctions));
+			r = pfnGetBotFuncs(&gBotFunctions, sizeof(gBotFunctions));
 			if(r == BOT_ERROR_NONE)
 			{
 				Omnibot_Load_PrintMsg("Omni-bot Loaded Successfully");
-				r = g_BotFunctions.pfnInitialize(g_InterfaceFunctions, version);
+				r = gBotFunctions.pfnInitialize(gGameFunctions, version);
 				g_IsOmnibotLoaded = (r == BOT_ERROR_NONE);
 			}
 		}
@@ -396,8 +396,8 @@ void Omnibot_FreeLibrary()
 		dlclose(g_BotLibrary);
 		g_BotLibrary = 0;
 	}
-	memset(&g_BotFunctions, 0, sizeof(g_BotFunctions));
-	memset(&g_InterfaceFunctions, 0, sizeof(g_InterfaceFunctions));
+	memset(&gBotFunctions, 0, sizeof(gBotFunctions));
+	memset(&gGameFunctions, 0, sizeof(gGameFunctions));
 	g_IsOmnibotLoaded = false;
 }
 

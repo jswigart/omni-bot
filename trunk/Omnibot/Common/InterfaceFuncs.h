@@ -63,6 +63,7 @@ namespace InterfaceFuncs
 
 	bool IsMoverAt(const Vector3f &_pos1, const Vector3f &_pos2);
 	GameEntity GetMoverAt( const Vector3f &_pos );
+	bool GetEntityForMapModel( int mapModelId, Msg_EntityForMapModel & entityOut );
 
 	template <typename T>
 	bool SetLoadOut(GameEntity _ent, T &_info)

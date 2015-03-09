@@ -10,9 +10,9 @@ System::System()
 	, mScript( NULL )
 	, mNavigation( NULL )
 	, mGoalManager( NULL )
-	, mTaskManager( NULL )
 	, mTriggerManager( NULL )
 	, mNameManager( NULL )
+	, mAnalytics( NULL )
 {
 	assert( mInstance == NULL );
 	mInstance = this;

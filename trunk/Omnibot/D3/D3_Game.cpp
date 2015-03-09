@@ -65,10 +65,9 @@ const char *D3_Game::GetScriptSubfolder() const
 	return "d3\\scripts\\";
 }
 
-eNavigatorID D3_Game::GetDefaultNavigator() const
+NavigatorID D3_Game::GetDefaultNavigator() const
 {
-	//return NAVID_RECAST;
-	return NAVID_WP;
+	return NAVID_RECAST;
 }
 
 bool D3_Game::Init( System & system )
@@ -233,15 +232,6 @@ void D3_Game::InitScriptEvents(gmMachine *_machine, gmTableObject *_table)
 	IGame::InitScriptEvents(_machine, _table);
 }
 
-void D3_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
-{
-	// Should always register the default flags
-	IGame::RegisterNavigationFlags(_planner);
-
-	_planner->RegisterNavFlag("RED", F_NAV_TEAM1);
-	_planner->RegisterNavFlag("BLUE", F_NAV_TEAM2);
-}
-
 const float D3_Game::D3_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags)
 {
 	if (_class > D3_CLASS_NULL && _class < D3_CLASS_MAX)
@@ -264,21 +254,4 @@ const float D3_Game::D3_GetEntityClassAimOffset(const int _class, const BitFlag6
 		return 48.0f;
 	}
 	return 0.0f;
-}
-
-// PathPlannerWaypointInterface
-NavFlags D3_Game::WaypointBlockableFlags() const
-{
-	return (NavFlags)0;
-}
-
-NavFlags D3_Game::WaypointCallbackFlags() const
-{
-	return (NavFlags)0;
-}
-
-PathPlannerWaypointInterface::BlockableStatus D3_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const
-{
-	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
-	return res;
 }

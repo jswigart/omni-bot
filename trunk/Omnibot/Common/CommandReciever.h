@@ -32,6 +32,9 @@ class gmFunctionObject;
 	float VAR; if(_args.size() < ((PARAM)+1) || !Utils::ConvertString(_args[PARAM], VAR)) \
 { PRINT_USAGE(USAGE); return; }
 
+#define CHECK_STRING_PARAM(VAR, PARAM, USAGE) \
+	std::string VAR; if(_args.size() < ((PARAM)+1) ) { PRINT_USAGE(USAGE); return; } else { VAR = _args[PARAM]; } \
+
 #define OPTIONAL_INT_PARAM(VAR, PARAM, DEF) \
 	int VAR = DEF; if(_args.size() < ((PARAM)+1) || !Utils::ConvertString(_args[PARAM], VAR)) \
 { }
@@ -41,7 +44,7 @@ class gmFunctionObject;
 { }
 
 #define OPTIONAL_STRING_PARAM(VAR, PARAM, DEF) \
-	std::string VAR = DEF; if(_args.size() < ((PARAM)+1)) {} else VAR = _args[PARAM]; \
+	std::string VAR = DEF; if(_args.size() < ((PARAM)+1)) {} else { VAR = _args[PARAM]; } \
 
 #define CHECK_BOOL_PARAM(VAR, PARAM, USAGE) \
 	bool VAR = false; if(_args.size() < ((PARAM)+1)) \

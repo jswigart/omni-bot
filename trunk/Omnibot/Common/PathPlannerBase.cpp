@@ -12,6 +12,16 @@
 
 #include "RenderBuffer.h"
 
+PathPlannerBase::PathPlannerBase()
+{
+	mNavigationBounds.Min = Vector3f( -1000.0f, -1000.0f, -1000.0f );
+	mNavigationBounds.Max = Vector3f(  1000.0f,  1000.0f,  1000.0f );
+}
+
+PathPlannerBase::~PathPlannerBase()
+{
+}
+
 void PathPlannerBase::InitCommands()
 {
 	SetEx("nav_logfailedpath", "Saves info about failed path attempts for debugging.",
@@ -169,23 +179,20 @@ void PathPlannerBase::RenderFailedPaths()
 	if(!m_PlannerFlags.CheckFlag(NAV_SAVEFAILEDPATHS))
 		return;
 
-	FailedPathList::iterator it = m_FailedPathList.begin(), itEnd = m_FailedPathList.end();
-	for(;it != itEnd; ++it)
+	for ( FailedPathList::iterator it = m_FailedPathList.begin(); 
+		it != m_FailedPathList.end(); 
+		++it )
 	{
 		FailedPath &fp = (*it);
 		if(fp.m_Render)
 		{
-			AABB aabb;
+			AABB local;
 			Vector3f pos;
 			GameEntity ge = Utils::GetLocalEntity();
-			if(ge.IsValid() &&
-				EngineFuncs::EntityPosition(ge, pos) &&
-				EngineFuncs::EntityWorldAABB(ge, aabb))
+			if ( ge.IsValid() && EngineFuncs::EntityPosition( ge, pos ) && EngineFuncs::EntityLocalAABB( ge, local ) )
 			{
-				aabb.UnTranslate(pos);
-
-				RenderBuffer::AddAABB(aabb.TranslateCopy(fp.m_Start), COLOR::GREEN);
-				RenderBuffer::AddAABB(aabb.TranslateCopy(fp.m_End), COLOR::RED);
+				RenderBuffer::AddAABB( local.TranslateCopy( fp.m_Start ), COLOR::GREEN );
+				RenderBuffer::AddAABB( local.TranslateCopy( fp.m_End ), COLOR::RED );
 			}
 		}
 	}

@@ -20,7 +20,7 @@
 //		BOT_ERROR_CANTINITBOT - Unable to init bot
 //		BOT_ERROR_BAD_INTERFACE - Bad interface passed to bot
 //		BOT_ERROR_WRONGVERSION - Version mismatch between interface and bot
-typedef enum eomnibot_error
+enum omnibot_error
 {
 	BOT_ERROR_NONE,
 	BOT_ERROR_CANTLOADDLL,
@@ -32,9 +32,9 @@ typedef enum eomnibot_error
 
 	// THIS MUST STAY LAST
 	BOT_NUM_ERRORS
-} omnibot_error;
+};
 
-typedef enum eMessageType
+enum MessageType
 {
 	kNormal,
 	kInfo,
@@ -42,7 +42,7 @@ typedef enum eMessageType
 	kError,
 	kDebug,
 	kScript
-} MessageType;
+};
 
 // typedef: GameEntity
 //		Represents an entity to the bot for every game.
@@ -103,20 +103,20 @@ typedef obuint64 NavFlags;
 // enum: obBool
 //		Since theres no promise that we're running in C or C++, and therefor no
 //		guarantee that bools are supported, lets use an enumerated value instead.
-typedef enum eobBool
+enum obBool
 {
 	Invalid = -1,
 	False,
 	True
-} obBool;
+};
 
 // enum: obFunctionStatus
 //		Represents the status of some function.
-typedef enum eobFunctionStatus
+enum obFunctionStatus
 {
 	Function_Finished,
 	Function_InProgress,
-} obFunctionStatus;
+};
 
 // enumerations: obResult
 //		Success - Successful.
@@ -124,7 +124,7 @@ typedef enum eobFunctionStatus
 //		UnableToAddBot - Unable to add bot for some reason.
 //		InvalidEntity - Invalid entity parameter.
 //		InvalidParameter - Invalid parameter.
-typedef enum eobResult
+enum obResult
 {
 	Success = 0,
 	OutOfPVS,
@@ -132,7 +132,7 @@ typedef enum eobResult
 	InvalidEntity,
 	InvalidParameter,
 	UnknownMessageType,
-} obResult;
+};
 
 #ifdef __cplusplus
 inline bool SUCCESS(obResult _res)
@@ -148,7 +148,7 @@ inline int MAKE_KEY(char _v1, char _v2, char _v3, char _v4)
 #define MAKE_KEY(_v1, _v2, _v3, _v4) (((_v1)<<24) | ((_v2)<<16) | ((_v3)<<8) | (_v4))
 #endif
 
-typedef enum eFireMode
+enum FireMode
 {
 	Primary,
 	Secondary,
@@ -158,16 +158,16 @@ typedef enum eFireMode
 
 	// Cept for this
 	InvalidFireMode
-} FireMode;
+};
 
-typedef enum eConnDir
+enum ConnDir
 {
 	CON_SOURCE,
 	CON_DEST,
 	CON_TWO_WAY,
-} ConnDir;
+};
 
-typedef enum eStance
+enum Stance
 {
 	StanceStand,
 	StanceCrouch,
@@ -175,14 +175,14 @@ typedef enum eStance
 
 	// last
 	StanceNum,
-} Stance;
+};
 
 // enumerations: WeaponType
 //		INVALID_WEAPON - Used for invalid weapon id.
-typedef enum eWeaponType
+enum WeaponType
 {
 	INVALID_WEAPON = 0,
-} WeaponType;
+};
 
 // enumerations: BotDebugFlag
 //		BOT_DEBUG_LOG - Debug log for this bot.
@@ -190,7 +190,7 @@ typedef enum eWeaponType
 //		BOT_DEBUG_SCRIPT - Output info about bot script events/signals.
 //		BOT_DEBUG_FPINFO - Output first person info.
 //		BOT_DEBUG_EVENTS - Print out events bot recieves.
-typedef enum eBotDebugFlag
+enum BotDebugFlag
 {
 	BOT_DEBUG_LOG = 0,
 	BOT_DEBUG_MOVEVEC,
@@ -202,9 +202,9 @@ typedef enum eBotDebugFlag
 
 	// THIS MUST STAY LAST
 	NUM_BOT_DEBUG_FLAGS = 16,
-} BotDebugFlag;
+};
 
-typedef enum eTeamBase
+enum TeamBase
 {
 	OB_TEAM_ALL = -2,
 	OB_TEAM_SPECTATOR = -1,
@@ -213,24 +213,24 @@ typedef enum eTeamBase
 	OB_TEAM_2,
 	OB_TEAM_3,
 	OB_TEAM_4,
-} TeamBase;
+};
 
 // enumerations: Helpers
 //		RANDOM_CLASS - Pick a random class.
 //		RANDOM_CLASS_IF_NO_CLASS - Pick a random class if we don't already have a class.
 //		RANDOM_TEAM - Pick a random team.
 //		RANDOM_TEAM_IF_NO_TEAM -  - Pick a random team if we don't already have a team.
-typedef enum eHelpers
+enum Helpers
 {
 	RANDOM_CLASS				= -1,
 	RANDOM_CLASS_IF_NO_CLASS	= -2,
 	RANDOM_TEAM					= -1,
 	RANDOM_TEAM_IF_NO_TEAM		= -2,
-} Helpers;
+};
 
 // typedef: AABB
 //		Represents the axis aligned bounding box of an object
-typedef struct AABB_t
+struct AABB
 {
 	float	m_Mins[3];
 	float	m_Maxs[3];
@@ -258,7 +258,16 @@ typedef struct AABB_t
 		}
 		return true;
 	}
+	void Set(const float _x, const float _y, const float _z)
+	{
+		m_Mins[0] = _x;
+		m_Mins[1] = _y;
+		m_Mins[2] = _z;
 
+		m_Maxs[0] = _x;
+		m_Maxs[1] = _y;
+		m_Maxs[2] = _z;
+	}
 	void Set(const float _pt[3])
 	{
 		for(int i = 0; i < 3; ++i)
@@ -309,7 +318,7 @@ typedef struct AABB_t
 			m_Maxs[i] += _out[i];
 		}
 	}
-	bool Intersects(const AABB_t &_bbox) const
+	bool Intersects(const AABB &_bbox) const
 	{
 		for (int i = 0; i < 3; i++)
 		{
@@ -327,7 +336,7 @@ typedef struct AABB_t
 		}
 		return true;
 	}
-	bool FindIntersection(const AABB_t &_bbox, AABB_t& _overlap) const
+	bool FindIntersection(const AABB &_bbox, AABB& _overlap) const
 	{
 		if(Intersects(_bbox))
 		{
@@ -347,9 +356,16 @@ typedef struct AABB_t
 		}
 		return false;
 	}
+
 	float GetAxisLength(int _axis) const
 	{
 		return m_Maxs[_axis] - m_Mins[_axis];
+	}
+	void GetSize( float size[ 3 ] )
+	{
+		size[ 0 ] = GetAxisLength( 0 );
+		size[ 1 ] = GetAxisLength( 1 );
+		size[ 2 ] = GetAxisLength( 2 );
 	}
 	float GetArea() const
 	{
@@ -371,9 +387,9 @@ typedef struct AABB_t
 			m_Maxs[i] *= _scale;
 		}
 	}
-	AABB_t ScaleCopy(float _scale)
+	AABB ScaleCopy(float _scale)
 	{
-		AABB_t out = *this; // cs: was AABB, but gcc said NO
+		AABB out = *this; // cs: was AABB, but gcc said NO
 		for(int i = 0; i < 3; ++i)
 		{
 			out.m_Mins[i] *= _scale;
@@ -409,7 +425,7 @@ typedef struct AABB_t
 				m_Maxs[i] = _pt[i];
 		}
 	}
-	void Expand(const AABB_t &_bbox)
+	void Expand(const AABB &_bbox)
 	{
 		Expand(_bbox.m_Mins);
 		Expand(_bbox.m_Maxs);
@@ -470,9 +486,9 @@ typedef struct AABB_t
 			m_Maxs[i] -= _pos[i];
 		}
 	}
-	AABB_t TranslateCopy(const float _pos[3]) const
+	AABB TranslateCopy(const float _pos[3]) const
 	{
-		AABB_t aabb = *this;
+		AABB aabb = *this;
 		for(int i = 0; i < 3; ++i)
 		{
 			aabb.m_Mins[i] += _pos[i];
@@ -480,15 +496,15 @@ typedef struct AABB_t
 		}
 		return aabb;
 	}
-	AABB_t(const float _mins[3], const float _maxs[3])
+	AABB(const float _mins[3], const float _maxs[3])
 	{
 		Set(_mins, _maxs);
 	}
-	AABB_t(const float _center[3])
+	AABB(const float _center[3])
 	{
 		Set(_center);
 	}
-	AABB_t()
+	AABB()
 	{
 		for(int i = 0; i < 3; ++i)
 		{
@@ -497,7 +513,7 @@ typedef struct AABB_t
 		}
 	}
 #endif
-} AABB;
+};
 
 // enumerations: ButtonFlags
 //		BOT_BUTTON_ATTACK1 - If the bot is pressing primary attack.
@@ -520,7 +536,7 @@ typedef struct AABB_t
 //		BOT_BUTTON_LEANRIGHT - If the bot wants to lean right.
 //		BOT_BUTTON_AIM - If the bot wants to drop current item.
 //		BOT_BUTTON_RESPAWN - Bot wants to respawn.
-typedef enum eButtonFlags
+enum ButtonFlags
 {
 	BOT_BUTTON_ATTACK1 = 0,
 	BOT_BUTTON_ATTACK2,
@@ -546,7 +562,7 @@ typedef enum eButtonFlags
 
 	// THIS MUST BE LAST
 	BOT_BUTTON_FIRSTUSER
-} ButtonFlags;
+};
 
 // enumerations: EntityFlags
 //		ENT_FLAG_TEAM1 - This entity is only available/visible for team 1
@@ -569,7 +585,7 @@ typedef enum eButtonFlags
 //		ENT_FLAG_HUMANCONTROLLED - Human player controls this entity.
 //		ENT_FLAG_IRONSIGHT - Entity is aiming down their weapon.
 //		ENT_FLAG_INVEHICLE - Entity is inside a vehicle
-typedef enum eEntityFlag
+enum EntityFlag
 {
 	ENT_FLAG_TEAM1,
 	ENT_FLAG_TEAM2,
@@ -594,21 +610,22 @@ typedef enum eEntityFlag
 	ENT_FLAG_FROZEN,
 	ENT_FLAG_TAUNTING,
 	ENT_FLAG_AIMING,
+	ENT_FLAG_COLLIDABLE,
 
 	// THIS MUST BE LAST
 	ENT_FLAG_FIRST_USER	= 32
-} EntityFlags;
+};
 
 // enumerations: Powerups
 //		PW_INVINCIBLE - The entity is invincible.
-typedef enum ePowerups
+enum Powerups
 {
 	PWR_NONE = 0,
 	PWR_INVINCIBLE,
 
 	// THIS MUST BE LAST
 	PWR_FIRST_USER		= 8,
-} Powerups;
+};
 
 // enumerations: EntityCategory
 //		ENT_CAT_PLAYER - This entity is a player of some sort.
@@ -621,8 +638,8 @@ typedef enum ePowerups
 //		ENT_CAT_AVOID - This entity is something bots should avoid.
 //		ENT_CAT_MOUNTEDWEAPON - This entity is something bots can mount and use.
 //		ENT_CAT_MISC - Miscellaneous entity category.
-//		ENT_CAT_STATIC - Static entities don't need to be seen. This allows the bot to skip LOS checks.
-typedef enum eEntityCategory
+//		ENT_CAT_NOLOS - This allows the bot to skip LOS checks. Entity is considered always percieved
+enum EntityCategory
 {
 	ENT_CAT_PLAYER,
 	ENT_CAT_VEHICLE,
@@ -636,10 +653,9 @@ typedef enum eEntityCategory
 	ENT_CAT_PICKUP_ARMOR,
 	ENT_CAT_TRIGGER,
 	ENT_CAT_MOVER,
-	ENT_CAT_AVOID,
 	ENT_CAT_MOUNTEDWEAPON,
 	ENT_CAT_MISC,
-	ENT_CAT_STATIC,
+	ENT_CAT_NOLOS,
 	ENT_CAT_PROP,
 	ENT_CAT_AUTODEFENSE,
 	ENT_CAT_OBSTACLE,
@@ -647,11 +663,11 @@ typedef enum eEntityCategory
 
 	// THIS MUST BE LAST
 	ENT_CAT_MAX,
-} EntityCategory;
+};
 
 // package: EntityClassGeneric
 //		Class values for generic entities.
-typedef enum eEntityClassGeneric
+enum EntityClassGeneric
 {
 	ENT_CLASS_GENERIC_START = 10000,
 	ENT_CLASS_GENERIC_SPECTATOR,
@@ -674,10 +690,12 @@ typedef enum eEntityClassGeneric
 	ENT_CLASS_GENERIC_JUMPPAD_TARGET,
 	ENT_CLASS_GENERIC_GOAL,
 	ENT_CLASS_EXPLODING_BARREL,
-	ENT_CLASS_GENERIC_WEAPON,
+	ENT_CLASS_GENERIC_WEAPON,	
 	ENT_CLASS_GENERIC_PROP,
 	ENT_CLASS_GENERIC_PROP_EXPLODE,
-} EntityClassGeneric;
+	ENT_CLASS_GENERIC_PROP_BREAKABLE,
+	ENT_CLASS_GENERIC_PROP_STATIC,
+};
 
 // enumerations: SoundType
 //		SND_JUMP - Sound of jump from another entity.
@@ -692,7 +710,7 @@ typedef enum eEntityClassGeneric
 //		SND_VOICE_TAUNT - Sound of a voice taunt.
 //		SND_VOICE_TEAM - Sound of a voice team message.
 //		SND_VOICE_ENEMY - Sound of a voice enemy message.
-typedef enum eSoundType
+enum SoundType
 {
 	SND_NONE,
 	SND_JUMP,
@@ -710,7 +728,7 @@ typedef enum eSoundType
 
 	// THIS MUST BE LAST
 	SND_MAX_SOUNDS
-} SoundType;
+};
 
 // enumerations: Contents
 //		CONT_SOLID - Solid object.
@@ -721,8 +739,9 @@ typedef enum eSoundType
 //		CONT_MOVER - In mover.
 //		CONT_TRIGGER - In trigger.
 //		CONT_LAVA - In lava.
-typedef enum eContents
+enum ContentFlags
 {
+	CONT_NONE		= 0,
 	CONT_SOLID		= (1<<0),
 	CONT_WATER		= (1<<1),
 	CONT_SLIME		= (1<<2),
@@ -734,21 +753,33 @@ typedef enum eContents
 	CONT_TELEPORTER = (1<<8),
 	CONT_MOVABLE	= (1<<9),
 	CONT_PLYRCLIP	= (1<<10),
+	CONT_NONSOLID	= (1<<11),
+	CONT_JUMPPAD	= (1<<12),
+	CONT_HITBOX		= (1<<13),
 
 	// THIS MUST BE LAST
 	CONT_START_USER = (1<<24)
-} Contents;
+};
 
 // enumerations: SurfaceFlags
 //		SURFACE_SLICK - Low friction surface.
-typedef enum eSurfaceFlags
+enum SurfaceFlags
 {
-	SURFACE_SLICK	= (1<<0),
-	SURFACE_LADDER	= (1<<1),
+	SURFACE_NONE			= 0,
+	SURFACE_NONSOLID		= (1<<0),
+	SURFACE_SLICK			= (1<<1),
+	SURFACE_LADDER			= (1<<2),	
+	SURFACE_NOFALLDAMAGE	= (1<<3),
+	SURFACE_SKY				= (1<<4),
+	SURFACE_IGNORE			= (1<<5),
+	SURFACE_NOFOOTSTEP		= (1<<6),
+	SURFACE_NODRAW			= (1<<7),
+	SURFACE_HITBOX			= (1<<8),
 
 	// THIS MUST BE LAST
-	SURFACE_START_USER = (1<<24)
-} SurfaceFlags;
+	SURFACE_START_USER		= (1<<24)
+};
+
 // enumerations: SkeletonBone
 //		BONE_TORSO - Torso bone
 //		BONE_PELVIS - Pelvis bone
@@ -761,7 +792,7 @@ typedef enum eSurfaceFlags
 //		BONE_LEFTLEG - Left leg bone
 //		BONE_RIGHTFOOT - Right foot bone
 //		BONE_LEFTFOOT - Left foot bone
-typedef enum eSkeletonBone
+enum SkeletonBone
 {
 	BONE_TORSO,
 	BONE_PELVIS,
@@ -777,25 +808,25 @@ typedef enum eSkeletonBone
 
 	// THIS MUST BE LAST
 	BONE_LAST_BONE = 1000
-} SkeletonBone;
+};
 
 // enumerations: NavigationID
 //		NAVID_WP - Waypoint-based path planning implementation.
 //		NAVID_NAVMESH - Navigation mesh path planning implementation.
-typedef enum eNavigatorID
+enum NavigatorID
 {
 	NAVID_NONE,
-	NAVID_WP,
+	NAVID_WAYPOINT,
 	NAVID_NAVMESH,
 	NAVID_FLOODFILL,
 	NAVID_RECAST,
 
 	// THIS MUST BE LAST
 	NAVID_MAX
-} NavigatorID;
+};
 
 // enumerations: TraceMasks
-typedef enum eTraceMasks
+enum TraceMasks
 {
 	TR_MASK_ALL			= (1<<0), // hit everything
 	TR_MASK_SOLID		= (1<<1), // blocked by solids/world
@@ -815,12 +846,12 @@ typedef enum eTraceMasks
 
 	// combo masks can be defined separately
 	TR_MASK_VISIBLE		= TR_MASK_SOLID|TR_MASK_OPAQUE|TR_MASK_SLIME, // can see but not necessarily shoot
-} TraceMasks;
+};
 
 // struct: BotUserData
 //		Generic data structure that uses a union to hold various types
 //		of information.
-typedef struct obUserData_t
+struct obUserData
 {
 	// enum: DataType
 	//		This allows a small level of type safety with the messages
@@ -845,39 +876,39 @@ typedef struct obUserData_t
 	} udata;
 	// Easy Constructors for C++
 #ifdef __cplusplus
-	obUserData_t() : DataType(dtNone) {};
-	obUserData_t(const char * _str) : DataType(dtString) { udata.m_String = _str; };
-	obUserData_t(int _int) : DataType(dtInt) { udata.m_Int = _int; };
-	//obUserData_t(obint64 _int) : DataType(dtInt64) { udata.m_Int64 = _int; };
-	obUserData_t(float _float) : DataType(dtFloat) { udata.m_Float = _float; };
-	obUserData_t(const GameEntity &_ent) : DataType(dtEntity) { udata.m_Entity = _ent.AsInt(); };
-	obUserData_t(float _x, float _y, float _z) :
+	obUserData() : DataType(dtNone) {};
+	obUserData(const char * _str) : DataType(dtString) { udata.m_String = _str; };
+	obUserData(int _int) : DataType(dtInt) { udata.m_Int = _int; };
+	//obUserData(obint64 _int) : DataType(dtInt64) { udata.m_Int64 = _int; };
+	obUserData(float _float) : DataType(dtFloat) { udata.m_Float = _float; };
+	obUserData(const GameEntity &_ent) : DataType(dtEntity) { udata.m_Entity = _ent.AsInt(); };
+	obUserData(float _x, float _y, float _z) :
 		DataType(dtVector)
 	{
 		udata.m_Vector[0] = _x;
 		udata.m_Vector[1] = _y;
 		udata.m_Vector[2] = _z;
 	};
-	obUserData_t(float *_v) :
+	obUserData(float *_v) :
 		DataType(dtVector)
 	{
 		udata.m_Vector[0] = _v[0];
 		udata.m_Vector[1] = _v[1];
 		udata.m_Vector[2] = _v[2];
 	};
-	obUserData_t(int _v0, int _v1, int _v2) : DataType(dt3_4byteFlags)
+	obUserData(int _v0, int _v1, int _v2) : DataType(dt3_4byteFlags)
 	{
 		udata.m_4ByteFlags[0] = _v0;
 		udata.m_4ByteFlags[1] = _v1;
 		udata.m_4ByteFlags[2] = _v2;
 	};
-	obUserData_t(char *_v0, char *_v1, char *_v2) : DataType(dt3_Strings)
+	obUserData(char *_v0, char *_v1, char *_v2) : DataType(dt3_Strings)
 	{
 		udata.m_CharPtrs[0] = _v0;
 		udata.m_CharPtrs[1] = _v1;
 		udata.m_CharPtrs[2] = _v2;
 	};
-	obUserData_t(short _v0, short _v1, short _v2, short _v3, short _v4, short _v5) :
+	obUserData(short _v0, short _v1, short _v2, short _v3, short _v4, short _v5) :
 		DataType(dt6_2byteFlags)
 	{
 		udata.m_2ByteFlags[0] = _v0;
@@ -887,7 +918,7 @@ typedef struct obUserData_t
 		udata.m_2ByteFlags[4] = _v4;
 		udata.m_2ByteFlags[5] = _v5;
 	};
-	obUserData_t(char _v0, char _v1, char _v2, char _v3, char _v4, char _v5, char _v6, char _v7, char _v8, char _v9, char _v10, char _v11) :
+	obUserData(char _v0, char _v1, char _v2, char _v3, char _v4, char _v5, char _v6, char _v7, char _v8, char _v9, char _v10, char _v11) :
 		DataType(dt12_1byteFlags)
 	{
 		udata.m_1ByteFlags[0] = _v0;
@@ -1009,7 +1040,7 @@ typedef struct obUserData_t
 	}
 	//////////////////////////////////////////////////////////////////////////
 #endif
-} obUserData;
+};
 
 class KeyVals
 {
@@ -1056,7 +1087,7 @@ private:
 
 // struct: TriggerInfo
 enum { TriggerBufferSize = 72 };
-typedef struct TriggerInfo_t
+struct TriggerInfo
 {
 	// ptr: m_TagName
 	//		The tagname of this trigger, usually a name given by the mapper.
@@ -1071,12 +1102,12 @@ typedef struct TriggerInfo_t
 	//		The entity that activated this trigger
 	GameEntity m_Activator;
 #ifdef __cplusplus
-	TriggerInfo_t()
+	TriggerInfo()
 	{
 		for(int i = 0; i < TriggerBufferSize; ++i)
 			m_TagName[i] = m_Action[i] = 0;
 	}
-	TriggerInfo_t(const TriggerInfo_t &_ti)
+	TriggerInfo(const TriggerInfo &_ti)
 	{
 		m_Entity = _ti.m_Entity;
 		m_Activator = _ti.m_Activator;
@@ -1086,16 +1117,16 @@ typedef struct TriggerInfo_t
 			m_Action[i] = _ti.m_Action[i];
 		}
 	}
-	TriggerInfo_t(GameEntity _ent, GameEntity _activator) :
+	TriggerInfo(GameEntity _ent, GameEntity _activator) :
 		m_Entity(_ent), m_Activator(_activator)
 	{
 		m_TagName[0] = m_Action[0] = 0;
 	}
 #endif
-} TriggerInfo;
+};
 
 // struct: MapGoalDef
-typedef struct MapGoalDef_t
+struct MapGoalDef
 {
 	KeyVals			Props;
 #ifdef __cplusplus
@@ -1104,12 +1135,12 @@ typedef struct MapGoalDef_t
 	{
 		Props.Reset();
 	}
-	MapGoalDef_t() { Reset(); }
+	MapGoalDef() { Reset(); }
 #endif
-} MapGoalDef;
+};
 
 // struct: AutoNavFeature
-typedef struct AutoNavFeature_t
+struct AutoNavFeature
 {
 	int			m_Type;
 	int			m_Team;
@@ -1121,7 +1152,7 @@ typedef struct AutoNavFeature_t
 	AABB		m_Bounds;
 	bool		m_ObstacleEntity;
 	bool		m_BiDirectional;
-} AutoNavFeature;
+};
 
 // Generic Enumerations
 
@@ -1132,7 +1163,7 @@ typedef struct AutoNavFeature_t
 //		S_PLAYED_WAITING_CLASS - Player waiting on class selection.
 //		S_PLAYED_WAITING_NEXTROUND - Player waiting on on the next round. Died or something.
 //		S_PLAYER_PLAYING - Player is good to go, and fully joined.
-typedef enum ePlayerState
+enum PlayerState
 {
 	S_PLAYER_INVALID = 0,			// Player doesn't exist
 	S_PLAYER_SPECTATOR,			// Player is in spectator mode.
@@ -1140,7 +1171,7 @@ typedef enum ePlayerState
 	S_PLAYED_WAITING_CLASS,		// Player waiting on class selection.
 	S_PLAYED_WAITING_NEXTROUND,	// Player waiting on on the next round. Died or something.
 	S_PLAYER_PLAYING			// Player is good to go, and fully joined.
-} PlayerState;
+};
 
 // enumerations: FlagState
 //		S_FLAG_NOT_A_FLAG - The entity isn't a flag. Typically an error condition.
@@ -1148,7 +1179,7 @@ typedef enum ePlayerState
 //		S_FLAG_DROPPED - The flag has been dropped in the field somewhere.
 //		S_FLAG_CARRIED - The flag is being carried by someone/something. Should have valid owner entity.
 //		S_FLAG_UNAVAILABLE - Flag is not available for some reason.
-typedef enum eFlagState
+enum FlagState
 {
 	S_FLAG_NOT_A_FLAG = 0,
 	S_FLAG_AT_BASE,
@@ -1156,7 +1187,7 @@ typedef enum eFlagState
 	S_FLAG_CARRIED,
 	S_FLAG_UNAVAILABLE,
 	S_FLAG_UNKNOWN
-} FlagState;
+};
 
 // enumerations: GameState
 //		GAME_STATE_INVALID - Invalid game state.
@@ -1168,7 +1199,7 @@ typedef enum eFlagState
 //		GAME_STATE_PAUSED - Game is currently paused.
 //		GAME_STATE_SUDDENDEATH - Sudden Death Overtime.
 //		GAME_STATE_SCOREBOARD - Game finished, looking at scoreboard.
-typedef enum eGameState
+enum GameState
 {
 	GAME_STATE_INVALID = 0,
 	GAME_STATE_INTERMISSION,
@@ -1179,7 +1210,7 @@ typedef enum eGameState
 	GAME_STATE_SUDDENDEATH,
 	GAME_STATE_SCOREBOARD,
 	GAME_STATE_PAUSED,
-} GameState;
+};
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -1202,71 +1233,6 @@ public:
 
 struct obVec3 { float x,y,z; };
 
-typedef enum
-{
-	DRAW_LINE,
-	DRAW_RADIUS,
-	DRAW_BOUNDS,
-	DRAW_POLYGON,
-	DRAW_TEXT,
-} DebugMsgType;
-
-typedef struct
-{
-	obVec3			m_Start, m_End;
-	int				m_Color;
-} IPC_DebugLineMessage;
-
-typedef struct
-{
-	obVec3			m_Pos;
-	float			m_Radius;
-	int				m_Color;
-} IPC_DebugRadiusMessage;
-
-typedef struct
-{
-	obVec3			m_Mins, m_Maxs;
-	int				m_Color;
-	int				m_Sides;
-} IPC_DebugAABBMessage;
-
-typedef struct
-{
-	enum { MaxPolyVerts=32 };
-	obVec3			m_Verts[MaxPolyVerts];
-	int				m_NumVerts;
-	int				m_Color;
-} IPC_DebugPolygonMessage;
-
-typedef struct
-{
-	enum { BufferSize=256 };
-	obVec3			m_Pos;
-	char			m_Buffer[BufferSize];
-	int				m_Color;
-} IPC_DebugTextMessage;
-
-typedef struct
-{
-	int			m_NumDebugMessages;
-	int			m_MaxDebugMessages;
-} IPC_DebugDrawHeader;
-
-typedef struct
-{
-	union
-	{
-		IPC_DebugLineMessage	m_Line;
-		IPC_DebugRadiusMessage	m_Radius;
-		IPC_DebugAABBMessage	m_AABB;
-		IPC_DebugPolygonMessage m_Polygon;
-		IPC_DebugTextMessage	m_Text;
-	} data;
-
-	int				m_Duration;
-	DebugMsgType	m_Debugtype;
-} IPC_DebugDrawMsg;
 //////////////////////////////////////////////////////////////////////////
 
 #endif

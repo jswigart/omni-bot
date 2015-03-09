@@ -14,8 +14,8 @@
 #include "InterfaceFuncs.h"
 #include "BotTargetingSystem.h"
 
-#include "gmbinder2.h"
-#include "gmbinder2_class.h"
+#include "gmbinder2/gmbinder2.h"
+#include "gmbinder2/gmbinder2_class.h"
 #include "gmCall.h"
 #include "gmWeapon.h"
 

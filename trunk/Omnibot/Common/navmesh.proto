@@ -64,8 +64,7 @@ message SectorData
 	optional bool			ladder			= 8		[default = false, (doc)="This area represents a climbable ladder"];
 	optional bool			crouch			= 9		[default = false, (doc)="This area represents a crouch area(Must crouch to traverse)"];
 	optional bool			ledge			= 10	[default = false, (doc)="This area represents a ledge area where underlying areas can be reached via jumping"];
-	
-
+	optional bool			noroam			= 11	[default = false, (doc)="Sector should not be selected for roaming"];
 
 	optional float			waterdepth		= 200	[default = 0.0, (settable)=false, (doc)="The sector to water surface height"];
 	optional MoverEntity	mover			= 201	[(hidden)=true, (settable)=false];

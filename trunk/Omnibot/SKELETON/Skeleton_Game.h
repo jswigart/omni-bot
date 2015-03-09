@@ -11,13 +11,11 @@
 #ifndef __SKELETON_GAME_H__
 #define __SKELETON_GAME_H__
 
-class Waypoint;
 class gmMachine;
 class gmTableObject;
 
 #include "IGame.h"
 #include "Skeleton_Config.h"
-#include "Skeleton_NavigationFlags.h"
 
 // class: Skeleton_Game
 //		Basic Game subclass
@@ -25,9 +23,7 @@ class Skeleton_Game : public IGame
 {
 public:
 	bool Init( System & system );
-
-	void RegisterNavigationFlags(PathPlannerBase *_planner);
-
+	
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
@@ -42,12 +38,7 @@ public:
 
 	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
-
-	// PathPlannerWaypointInterface
-	NavFlags WaypointBlockableFlags() const;
-	NavFlags WaypointCallbackFlags() const;
-	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const;
-
+	
 	Skeleton_Game() {};
 	virtual ~Skeleton_Game() {};
 protected:

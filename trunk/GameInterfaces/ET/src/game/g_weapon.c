@@ -250,7 +250,7 @@ void Weapon_Medic( gentity_t *ent ) {
 	//ent2->count = 20;
 
 	// omnibot
-	Bot_Event_FireWeapon(ent-g_entities, Bot_WeaponGameToBot(ent->s.weapon), ent2);
+	Bot_Event_FireWeapon(ent, Bot_WeaponGameToBot(ent->s.weapon), ent2);
 	// end omnibot
 }
 
@@ -420,7 +420,7 @@ void Weapon_MagicAmmo( gentity_t *ent )  {
 	}
 
 	// omnibot
-	Bot_Event_FireWeapon(ent-g_entities, Bot_WeaponGameToBot(ent->s.weapon), ent2);
+	Bot_Event_FireWeapon(ent, Bot_WeaponGameToBot(ent->s.weapon), ent2);
 	// end omnibot
 }
 // jpw
@@ -465,7 +465,7 @@ qboolean ReviveEntity(gentity_t *ent, gentity_t *traceEnt)
 	ClientSpawn(traceEnt, qtrue);
 
 	// omnibot
-	Bot_Event_Revived(traceEnt-g_entities, ent);
+	Bot_Event_Revived(traceEnt, ent);
 	// end omnibot
 
 	traceEnt->client->ps.stats[STAT_PLAYER_CLASS] = traceEnt->client->sess.playerType;
@@ -2809,7 +2809,7 @@ void Weapon_Artillery(gentity_t *ent) {
 		ent->client->sess.aWeaponStats[WS_ARTILLERY].atts++;
 
 	// omnibot
-	Bot_Event_FireWeapon(ent-g_entities, Bot_WeaponGameToBot(WP_ARTY), 0);
+	Bot_Event_FireWeapon(ent, Bot_WeaponGameToBot(WP_ARTY), 0);
 	// end omnibot
 }
 
@@ -4223,7 +4223,7 @@ void FireWeapon( gentity_t *ent ) {
 
 	// omnibot
 	if(callEvent) {
-		Bot_Event_FireWeapon(ent-g_entities, Bot_WeaponGameToBot(ent->s.weapon), pFiredShot);
+		Bot_Event_FireWeapon(ent, Bot_WeaponGameToBot(ent->s.weapon), pFiredShot);
 	}
 	// end omnibot
 

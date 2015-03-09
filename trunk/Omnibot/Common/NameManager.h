@@ -18,10 +18,16 @@ class NameReference
 public:
 	friend class NameManager;
 
-	const std::string &GetName() { return m_Name; }
-	const std::string &GetProfileName() { return m_ProfileName; }
+	const std::string &GetName()
+	{
+		return m_Name;
+	}
+	const std::string &GetProfileName()
+	{
+		return m_ProfileName;
+	}
 
-	NameReference(const std::string &_name = "", const std::string &_profile = "");
+	NameReference( const std::string &_name = "", const std::string &_profile = "" );
 	~NameReference();
 private:
 	std::string		m_Name;
@@ -35,16 +41,16 @@ class NameManager
 {
 public:
 
-	bool AddName(const std::string &_name, const std::string &_profile);
-	void DeleteName(const std::string &_name);
+	bool AddName( const std::string &_name, const std::string &_profile );
+	void DeleteName( const std::string &_name );
 	void ClearNames();
 
-	void SetProfileForClass(const int _class, const std::string &_name);
+	void SetProfileForClass( const int _class, const std::string &_name );
 
-	NamePtr GetName(const std::string &_preferred = "");
+	NamePtr GetName( const std::string &_preferred = "" );
 
-	const std::string GetProfileForName(const std::string &_name) const;
-	const std::string GetProfileForClass(int _class) const;
+	const std::string GetProfileForName( const std::string &_name ) const;
+	const std::string GetProfileForClass( int _class ) const;
 
 	//void LoadBotNames();
 
@@ -61,9 +67,13 @@ protected:
 	DefaultProfileMap		m_ProfileMap;
 
 	static NameManager		*m_Instance;
-	NameManager() {};
-	~NameManager() {};
-	NameManager &operator=(const NameManager&);
+	NameManager()
+	{
+	};
+	~NameManager()
+	{
+	};
+	NameManager &operator=( const NameManager& );
 };
 
 #endif

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -27,23 +27,23 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -372,14 +372,10 @@ copy "$(TargetPath)" "$(ETDIR)\omnibot"
     <ClCompile Include="g_etbot_interface.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\botai\ai_botScriptTrigger.h" />
-    <ClInclude Include="..\botai\ai_botScriptTriggerX.h" />
     <ClInclude Include="..\botai\ai_cmd.h" />
     <ClInclude Include="..\botai\ai_distances.h" />
     <ClInclude Include="..\botai\ai_dmgoal_mp.h" />
-    <ClInclude Include="..\botai\ai_dmgoal_sp.h" />
     <ClInclude Include="..\botai\ai_dmnet_mp.h" />
-    <ClInclude Include="..\botai\ai_dmnet_sp.h" />
     <ClInclude Include="..\botai\ai_dmq3.h" />
     <ClInclude Include="..\botai\ai_main.h" />
     <ClInclude Include="..\botai\ai_matrix.h" />

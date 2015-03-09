@@ -9,28 +9,17 @@ RecastBuildContext::~RecastBuildContext() {
 // Virtual functions for custom implementations.
 void RecastBuildContext::doResetLog()
 {
-	m_messageCount = 0;
-	m_textPoolSize = 0;
+	m_messages.resize( 0 );
 }
 
 void RecastBuildContext::doLog(const rcLogCategory category, const char* msg, const int len)
 {
-	if (!len) return;
-	if (m_messageCount >= MAX_MESSAGES)
+	if (!len) 
 		return;
-	char* dst = &m_textPool[m_textPoolSize];
-	int n = TEXT_POOL_SIZE - m_textPoolSize;
-	if (n < 2)
-		return;
-	// Store category
-	*dst = (char)category;
-	n--;
-	// Store message
-	const int count = rcMin(len+1, n);
-	memcpy(dst+1, msg, count);
-	dst[count+1] = '\0';
-	m_textPoolSize += count+1;
-	m_messages[m_messageCount++] = dst;
+	
+	m_messages.push_back( Msg() );
+	m_messages.back().mCategory = category;
+	m_messages.back().mMsg.assign( msg, len );
 }
 
 void RecastBuildContext::doResetTimers()
@@ -61,56 +50,56 @@ int RecastBuildContext::doGetAccumulatedTime(const rcTimerLabel label) const
 void RecastBuildContext::dumpLog(const char* format, ...)
 {
 	// Print header.
-	va_list ap;
-	va_start(ap, format);
-	vprintf(format, ap);
-	va_end(ap);
-	printf("\n");
+	//va_list ap;
+	//va_start(ap, format);
+	//vprintf(format, ap);
+	//va_end(ap);
+	//printf("\n");
 
-	// Print messages
-	const int TAB_STOPS[4] = { 28, 36, 44, 52 };
-	for (int i = 0; i < m_messageCount; ++i)
-	{
-		const char* msg = m_messages[i]+1;
-		int n = 0;
-		while (*msg)
-		{
-			if (*msg == '\t')
-			{
-				int count = 1;
-				for (int j = 0; j < 4; ++j)
-				{
-					if (n < TAB_STOPS[j])
-					{
-						count = TAB_STOPS[j] - n;
-						break;
-					}
-				}
-				while (--count)
-				{
-					putchar(' ');
-					n++;
-				}
-			}
-			else
-			{
-				putchar(*msg);
-				n++;
-			}
-			msg++;
-		}
-		putchar('\n');
-	}
+	//// Print messages
+	//const int TAB_STOPS[4] = { 28, 36, 44, 52 };
+	//for (int i = 0; i < m_messageCount; ++i)
+	//{
+	//	const char* msg = m_messages[i]+1;
+	//	int n = 0;
+	//	while (*msg)
+	//	{
+	//		if (*msg == '\t')
+	//		{
+	//			int count = 1;
+	//			for (int j = 0; j < 4; ++j)
+	//			{
+	//				if (n < TAB_STOPS[j])
+	//				{
+	//					count = TAB_STOPS[j] - n;
+	//					break;
+	//				}
+	//			}
+	//			while (--count)
+	//			{
+	//				putchar(' ');
+	//				n++;
+	//			}
+	//		}
+	//		else
+	//		{
+	//			putchar(*msg);
+	//			n++;
+	//		}
+	//		msg++;
+	//	}
+	//	putchar('\n');
+	//}
 }
 
 int RecastBuildContext::getLogCount() const
 {
-	return m_messageCount;
+	return m_messages.size();
 }
 
 const char* RecastBuildContext::getLogText(const int i) const
 {
-	return m_messages[i]+1;
+	return m_messages[i].mMsg.c_str();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

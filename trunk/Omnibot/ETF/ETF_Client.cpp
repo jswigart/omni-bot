@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "ETF_Client.h"
-#include "TF_NavigationFlags.h"
 #include "ETF_Messages.h"
 #include "TF_BaseStates.h"
 #include "FilterClosestETF.h"
@@ -47,42 +46,63 @@ void ETF_Client::Init(int _gameid)
 	}*/
 }
 
-NavFlags ETF_Client::GetTeamFlag(int _team)
+NavFlags ETF_Client::GetTeamFlag(int _team) const
 {
 	static const NavFlags defaultTeam = 0;
 	switch(_team)
 	{
 	case ETF_TEAM_RED:
-		return F_NAV_TEAM1;
+		return NAVFLAGS_TEAM1_ONLY;
 	case ETF_TEAM_BLUE:
-		return F_NAV_TEAM2;
+		return NAVFLAGS_TEAM2_ONLY;
 	case ETF_TEAM_YELLOW:
-		return F_NAV_TEAM3;
+		return NAVFLAGS_TEAM3_ONLY;
 	case ETF_TEAM_GREEN:
-		return F_NAV_TEAM4;
+		return NAVFLAGS_TEAM4_ONLY;
 	default:
 		return defaultTeam;
 	}
 }
 
-float ETF_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
+void ETF_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 {
-	using namespace AiState;
+	includeFlags = NAVFLAGS_WALK;
 
-	WeaponSystem *wsys = GetWeaponSystem();
-	if(_flag & F_TF_NAV_ROCKETJUMP)
+	switch ( GetTeam() )
 	{
-		if(wsys->HasWeapon(TF_Options::ROCKETJUMP_WPN) && wsys->HasAmmo(TF_Options::ROCKETJUMP_WPN))
-			return 1.f;
+		case ETF_TEAM_RED:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			break;
+		case ETF_TEAM_BLUE:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			break;
+		case ETF_TEAM_YELLOW:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM3_ONLY & sTeamMask );
+			break;
+		case ETF_TEAM_GREEN:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM4_ONLY & sTeamMask );
+			break;
 	}
-
-	if(_flag & F_TF_NAV_CONCJUMP)
-	{
-		int iCls = GetClass(), iGren2s = 0, iGren2sMax = 0;
-		g_EngineFuncs->GetCurrentAmmo(GetGameEntity(), TF_WP_GRENADE2, Primary, iGren2s, iGren2sMax);
-		if((iCls == TF_CLASS_SCOUT || iCls == TF_CLASS_MEDIC) && iGren2s)
-			return 1.f;
-	}
-
-	return 0.f;
 }
+
+//float ETF_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
+//{
+//	using namespace AiState;
+//
+//	WeaponSystem *wsys = GetWeaponSystem();
+//	if(_flag & F_TF_NAV_ROCKETJUMP)
+//	{
+//		if(wsys->HasWeapon(TF_Options::ROCKETJUMP_WPN) && wsys->HasAmmo(TF_Options::ROCKETJUMP_WPN))
+//			return 1.f;
+//	}
+//
+//	if(_flag & F_TF_NAV_CONCJUMP)
+//	{
+//		int iCls = GetClass(), iGren2s = 0, iGren2sMax = 0;
+//		g_EngineFuncs->GetCurrentAmmo(GetGameEntity(), TF_WP_GRENADE2, Primary, iGren2s, iGren2sMax);
+//		if((iCls == TF_CLASS_SCOUT || iCls == TF_CLASS_MEDIC) && iGren2s)
+//			return 1.f;
+//	}
+//
+//	return 0.f;
+//}

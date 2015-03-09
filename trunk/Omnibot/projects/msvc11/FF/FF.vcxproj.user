@@ -8,5 +8,6 @@
     <LocalDebuggerCommandArguments>-allowdebug -dev -sw -game "D:\Steam\steamapps\sourcemods\FortressForever"</LocalDebuggerCommandArguments>
     <LocalDebuggerWorkingDirectory>D:\Steam\steamapps\tgdrevil@yahoo.com\source sdk base</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerAttach>true</LocalDebuggerAttach>
   </PropertyGroup>
 </Project>

@@ -3,16 +3,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir>..\build\$(ProjectName)\$(Configuration)\</OutDir>
-    <IntDir>..\build\$(ProjectName)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)build\$(ProjectName)\$(Configuration)\</IntDir>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisIgnoreGeneratedCode>false</CodeAnalysisIgnoreGeneratedCode>
+    <OutDir>$(SolutionDir)build\$(ProjectName)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemGroup />
   <ItemDefinitionGroup>
     <ClCompile>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>$(PROTO_BUFF)/src;$(BOOST);$(WILDMAGIC)\SDK\Include;$(Dependencies)\iprof;$(Dependencies)\gmsrc_ex\src\3rdParty\mathlib;$(Dependencies)\gmsrc_ex\src\3rdParty\gmbinder2;$(Dependencies)\gmsrc_ex\src\gm;$(Dependencies)\gmsrc_ex\src\binds;$(Dependencies)\gmsrc_ex\src\platform\win32msvc;$(Dependencies)\VisualLeakDetector\include;$(Dependencies)\sqlite3;$(Dependencies)\Recast\Recast\Include;$(Dependencies)\Recast\Detour\Include;$(Dependencies)\Recast\DebugUtils\Include;$(Dependencies)\Opcode;$(Dependencies)\clipper\cpp;$(Dependencies)\polypartition\src;$(REMOTEDEBUGLIB);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(PROTO_BUFF)/src;$(BOOST);$(WILDMAGIC)\SDK\Include;$(GAMEANALYTICS);$(JSONCPP);$(SQLITE);$(Dependencies)\iprof;$(Dependencies)\gmsrc_ex\src\3rdParty\mathlib;$(Dependencies)\gmsrc_ex\src\3rdParty\gmbinder2;$(Dependencies)\gmsrc_ex\src\gm;$(Dependencies)\gmsrc_ex\src\binds;$(Dependencies)\gmsrc_ex\src\platform\win32msvc;$(Dependencies)\VisualLeakDetector\include;$(Dependencies)\sqlite3;$(RECAST);$(RECAST)\DebugUtils\Include;$(RECAST)\Detour\Include;$(RECAST)\DetourCrowd\Include;$(RECAST)\DetourTileCache\Include;$(RECAST)\Recast\Include;$(RECAST)\RecastDemo\Include;$(RECAST)\RecastDemo\Contrib;$(Dependencies)\Opcode;$(Dependencies)\clipper\cpp;$(Dependencies)\polypartition\src;$(REMOTEDEBUGLIB);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;VC_EXTRA_LEAN;WIN32_EXTRA_LEAN;NOWINRES;NOSERVICE;NOMCX;NOIME;NOMINMAX;DETOURS_X86;_WIN32_WINNT=0x0501;_USE_32BIT_TIME_T;BAN_OPCODE_AUTOLINK;ICE_NO_DLL;FREEGLUT_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -20,6 +20,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <EnablePREfast>true</EnablePREfast>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName)_$(ConfigurationName).pdb</ProgramDatabaseFile>

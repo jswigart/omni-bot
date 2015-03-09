@@ -10,14 +10,11 @@
 #include "MC_Messages.h"
 #include "MC_InterfaceFuncs.h"
 
-#include "NavigationFlags.h"
-
 #include "IGame.h"
 #include "IGameManager.h"
 
 MC_Client::MC_Client()
 	: m_ModuleTimeStamp(0)
-	, m_UpgradeTimeStamp(0)
 	, m_PlayerTimeStamp(0)
 {
 }
@@ -26,24 +23,37 @@ MC_Client::~MC_Client()
 {
 }
 
-NavFlags MC_Client::GetTeamFlag()
-{
-	return GetTeamFlag(GetTeam());
-}
-
-NavFlags MC_Client::GetTeamFlag(int _team)
+NavFlags MC_Client::GetTeamFlag(int _team) const
 {
 	static const NavFlags defaultTeam = 0;
 	switch(_team)
 	{
 	case MC_TEAM_COMBINE:
-		return F_NAV_TEAM1;
+		return NAVFLAGS_TEAM1_ONLY;
 	case MC_TEAM_SCIENCE:
-		return F_NAV_TEAM2;
+		return NAVFLAGS_TEAM2_ONLY;
 	case MC_TEAM_REBELS:
-		return F_NAV_TEAM3;
+		return NAVFLAGS_TEAM3_ONLY;
 	default:
 		return defaultTeam;
+	}
+}
+
+void MC_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
+{
+	includeFlags = NAVFLAGS_WALK;
+
+	switch ( GetTeam() )
+	{
+		case MC_TEAM_COMBINE:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			break;
+		case MC_TEAM_SCIENCE:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			break;
+		case MC_TEAM_REBELS:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM3_ONLY & sTeamMask );
+			break;
 	}
 }
 
@@ -131,14 +141,4 @@ const MC_ModuleStats &MC_Client::GetModuleStats()
 		InterfaceFuncs::GetModuleStats(GetGameEntity(),m_ModuleStats);
 	}
 	return m_ModuleStats;
-}
-
-const MC_WeaponUpgradeStats &MC_Client::GetUpgradeStats()
-{
-	if(m_UpgradeTimeStamp != IGame::GetTime())
-	{
-		m_UpgradeTimeStamp = IGame::GetTime();
-		InterfaceFuncs::GetWeaponStats(GetGameEntity(),m_UpgradeStats);
-	}
-	return m_UpgradeStats;
 }

@@ -37,16 +37,38 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Common\floodfill.pb.cc" />
-    <ClCompile Include="..\..\..\Common\influencemap.pb.cc" />
-    <ClCompile Include="..\..\..\Common\navmesh.pb.cc" />
+    <ClCompile Include="..\..\..\Common\floodfill.pb.cc">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\influencemap.pb.cc">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\navmesh.pb.cc">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
     <ClCompile Include="..\..\..\Common\ProtoBufUtility.cpp" />
+    <ClCompile Include="..\..\..\Common\recast.pb.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Common\floodfill.pb.h" />
     <ClInclude Include="..\..\..\Common\influencemap.pb.h" />
     <ClInclude Include="..\..\..\Common\navmesh.pb.h" />
     <ClInclude Include="..\..\..\Common\ProtoBufUtility.h" />
+    <ClInclude Include="..\..\..\Common\recast.pb.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\Common\recast.proto">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) -I=$(PROTO_BUFF)/src --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) -I=$(PROTO_BUFF)/src --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename)%(Extension)</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling %(Filename)%(Extension)</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>
+    </CustomBuild>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2EFFCC5E-DD17-49FB-8775-B70140C0A069}</ProjectGuid>

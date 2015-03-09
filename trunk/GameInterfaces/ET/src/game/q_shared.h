@@ -2,6 +2,8 @@
 #ifndef __Q_SHARED_H__
 #define __Q_SHARED_H__
 
+#pragma warning(disable:4706) //assignment within conditional expression
+
 // q_shared.h -- included first by ALL program modules.
 // A user mod should never modify this file
 

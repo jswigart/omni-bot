@@ -11,6 +11,7 @@
 #ifndef __MAPGOAL_H__
 #define __MAPGOAL_H__
 
+#include <algorithm>
 #include <boost/dynamic_bitset.hpp>
 
 #include "GoalManager.h"
@@ -18,7 +19,7 @@
 #include "PropertyBinding.h"
 #include "TrackablePtr.h"
 #include "gmGCRoot.h"
-#include "gmbinder2.h"
+#include "gmbinder2/gmbinder2.h"
 
 typedef boost::dynamic_bitset<obuint32> DynBitSet32;
 
@@ -250,7 +251,7 @@ public:
 
 	// function: GetRadius
 	//		Gets the radius of this goal
-	inline float GetRadius() const { return std::max(m_Radius, m_MinRadius); }
+	inline float GetRadius() const;
 
 	// function: GetName
 	//		Gets the name of this goal

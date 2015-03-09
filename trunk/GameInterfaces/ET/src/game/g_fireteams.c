@@ -250,8 +250,8 @@ void G_RegisterFireteam(/*const char* name,*/ int entityNum) {
 	}
 
 	// omnibot
-	Bot_Event_FireTeamCreated(entityNum,ft->ident);
-	Bot_Event_JoinedFireTeam(leader - g_entities,leader);
+	Bot_Event_FireTeamCreated(leader,ft->ident);
+	Bot_Event_JoinedFireTeam(leader,leader,ft->ident);
 	// end omnibot
 
 //	Q_strncpyz(ft->name, name, 32);
@@ -296,7 +296,7 @@ void G_AddClientToFireteam( int entityNum, int leaderNum ) {
 			ft->joinOrder[i] = entityNum;
 
 			// omnibot
-			Bot_Event_JoinedFireTeam(entityNum,&g_entities[leaderNum]);
+			Bot_Event_JoinedFireTeam(&g_entities[entityNum],&g_entities[leaderNum],ft->ident);
 			// end omnibot
 
 			G_UpdateFireteamConfigString(ft);
@@ -338,7 +338,7 @@ void G_RemoveClientFromFireteams( int entityNum, qboolean update, qboolean print
 	}
 
 	// omnibot
-	Bot_Event_LeftFireTeam(entityNum);
+	Bot_Event_LeftFireTeam(&g_entities[entityNum],ft->ident);
 
 	/*if( ft->joinOrder[0] != -1 ) {
 		if( g_entities[(int)ft->joinOrder[0]].r.svFlags & SVF_BOT ) {
@@ -397,7 +397,7 @@ void G_InviteToFireTeam( int entityNum, int otherEntityNum ) {
 	}
 
 	// omnibot
-	Bot_Event_InviteFireTeam(entityNum, otherEntityNum);
+	Bot_Event_InviteFireTeam(&g_entities[entityNum], &g_entities[otherEntityNum],ft->ident);
 	// end omnibot
 }
 
@@ -415,7 +415,7 @@ void G_DestroyFireteam( int entityNum ) {
 	while( ft->joinOrder[0] != -1 ) {
 		if( ft->joinOrder[0] != entityNum ) {
 			// omnibot
-			Bot_Event_FireTeamDestroyed(ft->joinOrder[0]);
+			Bot_Event_FireTeamDestroyed(&g_entities[ft->joinOrder[0]],ft->ident);
 			// end omnibot
 			trap_SendServerCommand( ft->joinOrder[0], "cpm \"The Fireteam you are on has been disbanded\"\n" );
 		}
@@ -452,7 +452,7 @@ void G_WarnFireTeamPlayer( int entityNum, int otherEntityNum ) {
 	trap_SendServerCommand( otherEntityNum, "cpm \"You have been warned by your Fireteam Commander\n\"" );
 
 	// omnibot
-	Bot_Event_FireTeam_Warn(entityNum, otherEntityNum);
+	Bot_Event_FireTeam_Warn(&g_entities[entityNum], &g_entities[otherEntityNum], ft->ident);
 	// end omnibot
 }
 
@@ -480,7 +480,7 @@ void G_KickFireTeamPlayer( int entityNum, int otherEntityNum ) {
 	}
 
 	// omnibot
-	Bot_Event_LeftFireTeam(otherEntityNum);
+	Bot_Event_LeftFireTeam( &g_entities[otherEntityNum], ft->ident );
 	// end omnibot
 	G_RemoveClientFromFireteams( otherEntityNum, qtrue, qfalse );
 
@@ -565,7 +565,7 @@ void G_ProposeFireTeamPlayer( int entityNum, int otherEntityNum ) {
 	leader->client->pers.propositionEndTime =	level.time + 20000;
 
 	// omnibot
-	Bot_Event_FireTeam_Proposal(leader-g_entities,otherEntityNum);
+	Bot_Event_FireTeam_Proposal(leader,&g_entities[otherEntityNum],ft->ident);
 	// end omnibot
 }
 

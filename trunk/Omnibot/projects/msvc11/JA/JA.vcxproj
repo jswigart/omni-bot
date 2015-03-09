@@ -143,6 +143,15 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ClInclude Include="..\..\..\JA\JA_FilterClosest.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\..\..\git\assimp-jswigart\code\assimp.vcxproj">
+      <Project>{50dd28ed-fb13-4460-afdf-36162143032d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\dependencies\gameanalytics\GameAnalytics.vcxproj">
+      <Project>{2104fd7c-f7aa-4f69-bcd4-b842a61d87b5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\dependencies\protobuf\vsprojects\libprotobuf.vcxproj">
+      <Project>{3e283f37-a4ed-41b7-a3e6-a2d89d131a30}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.vcxproj">
       <Project>{2740aa5f-ab52-4d24-ae5a-97033aaecd7a}</Project>
     </ProjectReference>

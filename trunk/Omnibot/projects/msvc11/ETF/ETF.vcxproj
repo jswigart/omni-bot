@@ -70,7 +70,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>TeamFortressLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\build\TeamFortressLib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
@@ -80,10 +80,7 @@
       <Message>Copying to "$(OMNIBOT_INST)"</Message>
       <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)"
 copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
-copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"
-copy "$(TargetPath)" D:\Games\ETF\omnibot
-copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" D:\Games\ETF\omnibot
-copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" D:\Games\ETF\omnibot</Command>
+copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -94,7 +91,7 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" D:\Games\ETF\omnibot</
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>TeamFortressLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\build\TeamFortressLib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
@@ -139,8 +136,30 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <None Include="..\..\..\ETF\Jamfile" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\..\..\git\assimp-jswigart\code\assimp.vcxproj">
+      <Project>{50dd28ed-fb13-4460-afdf-36162143032d}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\dependencies\gameanalytics\GameAnalytics.vcxproj">
+      <Project>{2104fd7c-f7aa-4f69-bcd4-b842a61d87b5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\dependencies\libcurl\vs\vc11\lib\vc11libcurl.vcxproj">
+      <Project>{87ee9da4-de1e-4448-8324-183c98dca588}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\dependencies\protobuf\vsprojects\libprotobuf.vcxproj">
+      <Project>{3e283f37-a4ed-41b7-a3e6-a2d89d131a30}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.vcxproj">
       <Project>{2740aa5f-ab52-4d24-ae5a-97033aaecd7a}</Project>
+      <Private>false</Private>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <ProjectReference Include="..\TeamFortressLib\TeamFortressLib.vcxproj">
       <Project>{e39bfbee-1060-42b3-bff4-8693edef65c1}</Project>

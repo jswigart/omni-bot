@@ -11,13 +11,11 @@
 #ifndef __Q4_GAME_H__
 #define __Q4_GAME_H__
 
-class Waypoint;
 class gmMachine;
 class gmTableObject;
 
 #include "IGame.h"
 #include "Q4_Config.h"
-#include "Q4_NavigationFlags.h"
 
 // class: Q4_Game
 //		Basic Game subclass
@@ -28,9 +26,7 @@ public:
 	void StartGame();
 
 	void AddBot(Msg_Addbot &_addbot, bool _createnow = true);
-
-	void RegisterNavigationFlags(PathPlannerBase *_planner);
-
+	
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
@@ -40,20 +36,13 @@ public:
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
 	const char *GetGameDatabaseAbbrev() const { return "quake4"; }
-	eNavigatorID GetDefaultNavigator() const;
-
-	GoalManager *GetGoalManager();
-
+	NavigatorID GetDefaultNavigator() const;
+	
 	const char *FindClassName(obint32 _classId);
 
 	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
-
-	// PathPlannerWaypointInterface
-	NavFlags WaypointBlockableFlags() const;
-	NavFlags WaypointCallbackFlags() const;
-	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const;
-
+	
 	Q4_Game() {};
 	virtual ~Q4_Game() {};
 protected:

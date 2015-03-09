@@ -72,23 +72,20 @@ namespace AiState
 			m_MoveVec = Vector3f::ZERO;
 			return;
 		}
-
-		// Calculate the vector to the current target.
-		/*m_vMoveVec = (m_vTargetVector - m_Client->GetPosition());
-		m_vMoveVec.Normalize();*/
-		//obstacleManager.ModifyForObstacles( GetClient(), m_TargetVector );
+		
+		const Vector3f bottomBounds = GetClient()->GetWorldBounds().GetCenterBottom();
 
 		m_DistanceToTarget = 0.f;
 		switch(m_MoveType)
 		{
 		case Normal:
-			m_MoveVec = m_TargetVector - GetClient()->GetPosition();
+			m_MoveVec = m_TargetVector - bottomBounds;
 			if(!m_TargetVector3d)
 				m_MoveVec = m_MoveVec.Flatten();
 			m_DistanceToTarget = m_MoveVec.Normalize();
 			break;
 		case Arrive:
-			m_MoveVec = m_TargetVector - GetClient()->GetPosition();
+			m_MoveVec = m_TargetVector - bottomBounds;
 			if(!m_TargetVector3d)
 				m_MoveVec = m_MoveVec.Flatten();
 			m_DistanceToTarget = m_MoveVec.Normalize();
@@ -107,7 +104,7 @@ namespace AiState
 
 		if(GetClient()->IsDebugEnabled(BOT_DEBUG_MOVEVEC))
 		{
-			Vector3f vPos = GetClient()->GetPosition();
+			Vector3f vPos = GetClient()->GetWorldBounds().Center;
 			RenderBuffer::AddLine(vPos, vPos+m_MoveVec * 64.f, COLOR::GREEN, 0.1f);
 		}
 
@@ -121,7 +118,7 @@ namespace AiState
 
 	void SteeringSystem::Enter()
 	{
-		m_TargetVector = GetClient()->GetPosition();
+		m_TargetVector = GetClient()->GetWorldBounds().GetCenterBottom();
 		GetClient()->SetMovementVector(Vector3f::ZERO);
 		FINDSTATEIF(FollowPath,GetRootState(),Stop());
 	}

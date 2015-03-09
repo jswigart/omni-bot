@@ -24,6 +24,9 @@
     <ClCompile Include="..\..\..\Common\ProtoBufUtility.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Common\recast.pb.cc">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Common\floodfill.pb.h">
@@ -38,6 +41,9 @@
     <ClInclude Include="..\..\..\Common\ProtoBufUtility.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Common\recast.pb.h">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\..\Common\floodfill.proto">
@@ -47,6 +53,9 @@
       <Filter>Protocol Buffer Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\..\Common\navmesh.proto">
+      <Filter>Protocol Buffer Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\Common\recast.proto">
       <Filter>Protocol Buffer Files</Filter>
     </CustomBuild>
   </ItemGroup>

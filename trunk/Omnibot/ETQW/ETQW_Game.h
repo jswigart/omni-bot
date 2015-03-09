@@ -11,7 +11,6 @@
 #ifndef __ETQW_GAME_H__
 #define __ETQW_GAME_H__
 
-class Waypoint;
 class gmMachine;
 class gmTableObject;
 
@@ -23,9 +22,7 @@ class ETQW_Game : public IGame
 {
 public:
 	bool Init( System & system );
-
-	void RegisterNavigationFlags(PathPlannerBase *_planner);
-
+	
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
@@ -36,9 +33,7 @@ public:
 	const char *GetScriptSubfolder() const;
 	const char *GetGameDatabaseAbbrev() const { return "etqw"; }
 	bool ReadyForDebugWindow() const;
-
-	GoalManager *GetGoalManager();
-
+	
 	void AddBot(Msg_Addbot &_addbot, bool _createnow = true);
 
 	void ClientJoined(const Event_SystemClientConnected *_msg);
@@ -47,12 +42,7 @@ public:
 
 	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
-
-	// PathPlannerWaypointInterface
-	NavFlags WaypointBlockableFlags() const;
-	NavFlags WaypointCallbackFlags() const;
-	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const;
-
+	
 	ETQW_Game() {};
 	virtual ~ETQW_Game() {};
 protected:

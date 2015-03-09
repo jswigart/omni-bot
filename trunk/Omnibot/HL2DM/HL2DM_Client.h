@@ -19,9 +19,9 @@
 class HL2DM_Client : public Client
 {
 public:
+	NavFlags GetTeamFlag(int _team) const;
 
-	NavFlags GetTeamFlag();
-	NavFlags GetTeamFlag(int _team);
+	void GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags );
 
 	void SendVoiceMacro(int _macroId) {};
 

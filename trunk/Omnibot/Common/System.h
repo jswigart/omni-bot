@@ -7,9 +7,9 @@ class IGame;
 class ScriptManager;
 class PathPlannerBase;
 class GoalManager;
-class TaskManager;
 class TriggerManager;
 class NameManager;
+class GameAnalyticsLogger;
 
 class System
 {
@@ -18,9 +18,9 @@ public:
 	ScriptManager *			mScript;
 	PathPlannerBase *       mNavigation;
 	GoalManager	*			mGoalManager;
-	TaskManager *			mTaskManager;
 	TriggerManager *		mTriggerManager;
 	NameManager *			mNameManager;
+	GameAnalyticsLogger *	mAnalytics;
 
 	static System * mInstance;
 

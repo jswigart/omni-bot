@@ -1455,7 +1455,7 @@ void G_SayTo( gentity_t *ent, gentity_t *other, int mode, int color, const char 
 		trap_SendServerCommand( other-g_entities, va("%s \"%s%c%c%s\" %i %i", mode == SAY_TEAM || mode == SAY_BUDDY ? "tchat" : "chat", name, Q_COLOR_ESCAPE, color, message, ent-g_entities, localize ));
 
 		// omnibot
-		Bot_Event_ChatMessage(other-g_entities, ent, mode, message);
+		Bot_Event_ChatMessage(other, ent, mode, message);
 		// end omnibot
 	}
 }
@@ -1593,7 +1593,7 @@ void G_VoiceTo( gentity_t *ent, gentity_t *other, int mode, const char *id, qboo
 #endif
 
 	// omnibot
-	Bot_Event_VoiceMacro(other-g_entities, ent, mode, id);
+	Bot_Event_VoiceMacro(other, ent, mode, id);
 	// end omnibot
 
 

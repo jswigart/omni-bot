@@ -9,7 +9,6 @@
 #include "ScriptManager.h"
 
 #include "ETQW_Client.h"
-#include "ETQW_NavigationFlags.h"
 #include "ETQW_VoiceMacros.h"
 #include "ETQW_FilterClosest.h"
 #include "ETQW_Messages.h"
@@ -124,22 +123,32 @@ void ETQW_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters
 	Client::ProcessEvent(_message, _cb);
 }
 
-NavFlags ETQW_Client::GetTeamFlag()
-{
-	return GetTeamFlag(GetTeam());
-}
-
-NavFlags ETQW_Client::GetTeamFlag(int _team)
+NavFlags ETQW_Client::GetTeamFlag(int _team) const
 {
 	static const NavFlags defaultTeam = 0;
 	switch(_team)
 	{
 	case ETQW_TEAM_STROGG:
-		return F_NAV_TEAM1;
+		return NAVFLAGS_TEAM1_ONLY;
 	case ETQW_TEAM_GDF:
-		return F_NAV_TEAM2;
+		return NAVFLAGS_TEAM2_ONLY;
 	default:
 		return defaultTeam;
+	}
+}
+
+void ETQW_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
+{
+	includeFlags = NAVFLAGS_WALK;
+
+	switch ( GetTeam() )
+	{
+		case ETQW_TEAM_STROGG:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			break;
+		case ETQW_TEAM_GDF:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			break;
 	}
 }
 
@@ -244,13 +253,13 @@ int ETQW_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 
 void ETQW_Client::ProcessGotoNode(const Path &_path)
 {
-	Path::PathPoint pt;
+	/*Path::PathPoint pt;
 	_path.GetCurrentPt(pt);
 
 	if(pt.m_NavFlags & F_ETQW_NAV_SPRINT)
 	{
 		PressButton(BOT_BUTTON_SPRINT);
-	}
+	}*/
 }
 
 float ETQW_Client::GetGameVar(GameVar _var) const
@@ -334,17 +343,17 @@ bool ETQW_Client::GetSkills(gmMachine *machine, gmTableObject *tbl)
 	return false;
 }
 
-float ETQW_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
-{
-	using namespace AiState;
-	if(_flag & F_ETQW_NAV_DISGUISE)
-	{
-		if(/*GetClass() == ETQW_CLASS_COVERTOPS && */HasEntityFlag(ETQW_ENT_FLAG_DISGUISED))
-			return 1.f;
-		return 0.f;
-	}
-	return 0.f;
-}
+//float ETQW_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
+//{
+//	using namespace AiState;
+//	if(_flag & F_ETQW_NAV_DISGUISE)
+//	{
+//		if(/*GetClass() == ETQW_CLASS_COVERTOPS && */HasEntityFlag(ETQW_ENT_FLAG_DISGUISED))
+//			return 1.f;
+//		return 0.f;
+//	}
+//	return 0.f;
+//}
 
 //////////////////////////////////////////////////////////////////////////
 

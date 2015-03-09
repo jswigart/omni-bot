@@ -21,7 +21,7 @@ class gmFunctionObject;
 typedef boost::shared_ptr<TriggerShape> ShapePtr;
 typedef std::vector<ShapePtr> ShapeList;
 
-bool operator<(const GameEntity& _1, const GameEntity& _2);
+bool operator<( const GameEntity& _1, const GameEntity& _2 );
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -37,17 +37,17 @@ public:
 	// typedef: ScriptCallback
 	typedef std::multimap<std::string, gmGCRoot<gmFunctionObject> > ScriptCallback;
 
-	void SetScriptCallback(const std::string &_name, gmGCRoot<gmFunctionObject> _func);
+	void SetScriptCallback( const std::string &_name, gmGCRoot<gmFunctionObject> _func );
 
-	void HandleTrigger(const TriggerInfo &_triggerInfo);
+	void HandleTrigger( const TriggerInfo &_triggerInfo );
 
 	void Update( System & system );
 
 	//////////////////////////////////////////////////////////////////////////
-	int AddTrigger(const Vector3f &_pos, float _radius, gmMachine *_m, gmTableObject *tbl);
-	int AddTrigger(const AABB &_aabb, gmMachine *_m, gmTableObject *tbl);
-	void DeleteTrigger(int _serial);
-	void DeleteTrigger(const std::string &_name);
+	int AddTrigger( const Vector3f &_pos, float _radius, gmMachine *_m, gmTableObject *tbl );
+	int AddTrigger( const Box3f & obb, gmMachine *_m, gmTableObject *tbl );
+	void DeleteTrigger( int _serial );
+	void DeleteTrigger( const std::string &_name );
 	//////////////////////////////////////////////////////////////////////////
 
 	static TriggerManager *GetInstance();
@@ -59,8 +59,8 @@ protected:
 
 	// Commands
 	virtual void InitCommands();
-	void cmdDebugTriggers(const StringVector &_args);
-	void cmdDrawTriggers(const StringVector &_args);
+	void cmdDebugTriggers( const StringVector &_args );
+	void cmdDrawTriggers( const StringVector &_args );
 
 	std::string 	m_DebugTriggersExpr;
 
@@ -70,8 +70,10 @@ protected:
 	static TriggerManager	*m_Instance;
 
 	TriggerManager();
-	~TriggerManager() {}
-	TriggerManager &operator=(const TriggerManager&);
+	~TriggerManager()
+	{
+	}
+	TriggerManager &operator=( const TriggerManager& );
 };
 
 #endif

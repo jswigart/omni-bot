@@ -134,6 +134,14 @@ CommandReciever::CommandReciever()
 CommandReciever::~CommandReciever()
 {
 	m_RecieverList.remove(this);
+
+	for ( CommandMap::iterator it = m_CommandMap.begin(); it != m_CommandMap.end(); )
+	{
+		if ( (*it).second.second->IsObj( this ) )
+			it = m_CommandMap.erase( it );
+		else
+			++it;
+	}
 }
 
 bool CommandReciever::DispatchCommand(const StringVector &_args)

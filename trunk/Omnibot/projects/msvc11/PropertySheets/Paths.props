@@ -4,24 +4,35 @@
   <PropertyGroup Label="UserMacros">
     <RTCWDIR>C:\games\Return to Castle Wolfenstein</RTCWDIR>
     <DEPENDENCIES>$(SolutionDir)../../dependencies</DEPENDENCIES>
-    <PROTO_BUFF>$(DEPENDENCIES)\protobuf-2.4.1</PROTO_BUFF>
+    <PROTO_BUFF>$(DEPENDENCIES)\protobuf</PROTO_BUFF>
     <REPO_ROOT>$(SolutionDir)..\..\..\</REPO_ROOT>
-    <BOOST>$(REPO_ROOT)\libs\boost\boost_1_53_0</BOOST>
+    <BOOST>$(REPO_ROOT)\libs\boost\boost_1_55_0</BOOST>
     <InterfaceDir>$(REPO_ROOT)\GameInterfaces</InterfaceDir>
     <OMNIBOT_INST>$(REPO_ROOT)\Installer\Files</OMNIBOT_INST>
     <REMOTEDEBUGLIB>$(REPO_ROOT)\Tools\RemoteDebugWindow\RemoteDebugLib</REMOTEDEBUGLIB>
-    <ETDIR>D:\Games\WET</ETDIR>
     <WILDMAGIC>$(DEPENDENCIES)\WildMagic5</WILDMAGIC>
+    <MD5>$(DEPENDENCIES)\md5</MD5>
+    <GAMEANALYTICS>$(DEPENDENCIES)\gameanalytics</GAMEANALYTICS>
+    <LIBCURL>$(DEPENDENCIES)\libcurl\include</LIBCURL>
+    <JSONCPP>$(DEPENDENCIES)\json-cpp</JSONCPP>
+    <SHA1>$(DEPENDENCIES)\smallsha1</SHA1>
+    <SQLITE>$(DEPENDENCIES)\sqlite</SQLITE>
+    <RECAST>$(DEPENDENCIES)\Recast</RECAST>
+    <ASSIMP>D:\git\assimp-jswigart</ASSIMP>
+    <ETDIR>D:\Games\WET</ETDIR>
     <JADIR>D:\Games\JediAcademy\GameData\</JADIR>
   </PropertyGroup>
   <PropertyGroup>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <OutDir>$(SolutionDir)build\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile />
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnablePREfast>false</EnablePREfast>
+      <AdditionalIncludeDirectories>$(ASSIMP)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -53,12 +64,44 @@
       <Value>$(REMOTEDEBUGLIB)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
-    <BuildMacro Include="ETDIR">
-      <Value>$(ETDIR)</Value>
-      <EnvironmentVariable>true</EnvironmentVariable>
-    </BuildMacro>
     <BuildMacro Include="WILDMAGIC">
       <Value>$(WILDMAGIC)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="MD5">
+      <Value>$(MD5)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="GAMEANALYTICS">
+      <Value>$(GAMEANALYTICS)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="LIBCURL">
+      <Value>$(LIBCURL)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="JSONCPP">
+      <Value>$(JSONCPP)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="SHA1">
+      <Value>$(SHA1)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="SQLITE">
+      <Value>$(SQLITE)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="RECAST">
+      <Value>$(RECAST)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="ASSIMP">
+      <Value>$(ASSIMP)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="ETDIR">
+      <Value>$(ETDIR)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
     <BuildMacro Include="JADIR">

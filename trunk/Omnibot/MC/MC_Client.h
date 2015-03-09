@@ -20,13 +20,11 @@
 class MC_Client : public Client
 {
 public:
-
-	NavFlags GetTeamFlag();
-	NavFlags GetTeamFlag(int _team);
+	NavFlags GetTeamFlag(int _team) const;
+	void GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags );
 
 	const MC_PlayerStats &GetPlayerStats();
 	const MC_ModuleStats &GetModuleStats();
-	const MC_WeaponUpgradeStats &GetUpgradeStats();
 
 	void SendVoiceMacro(int _macroId) {};
 
@@ -45,9 +43,6 @@ protected:
 
 	MC_ModuleStats			m_ModuleStats;
 	int						m_ModuleTimeStamp;
-
-	MC_WeaponUpgradeStats	m_UpgradeStats;
-	int						m_UpgradeTimeStamp;
 };
 
 #endif

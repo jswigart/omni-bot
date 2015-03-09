@@ -68,6 +68,7 @@ public:
 			SearchQueue empty;
 			mSearchFrontier.swap( empty );
 
+			mInfluences.resize( mSpanMap->mNumSpans, std::numeric_limits<float>::max() );
 			mInfluences.assign( mInfluences.size(), std::numeric_limits<float>::max() );
 
 			mMinValue = std::numeric_limits<float>::max();
@@ -155,6 +156,31 @@ public:
 		return y * mNumCellsX + x;
 	}
 
+	void MarkDirtyBounds( const Box3f & obb )
+	{
+		// dirty the whole AABB
+		Vector3f vertices[ 8 ];
+		obb.ComputeVertices( vertices );
+
+		AxisAlignedBox3f aabb;
+		aabb.Clear();
+
+		for ( size_t i = 0; i < 8; ++i )
+			aabb.ExpandPt( vertices[ i ] );
+		
+		const int minx = ClampT<int>( (int)( ( aabb.Min.X() - mMin.X() ) / mCellSize ), 0, mNumCellsX-1 );
+		const int miny = ClampT<int>( (int)( ( aabb.Min.Y() - mMin.Y() ) / mCellSize ), 0, mNumCellsY-1 );
+		const int maxx = ClampT<int>( (int)( ( aabb.Max.X() - mMin.X() ) / mCellSize ), 0, mNumCellsX-1 );
+		const int maxy = ClampT<int>( (int)( ( aabb.Max.Y() - mMin.Y() ) / mCellSize ), 0, mNumCellsY-1 );
+
+		for ( int x = minx; x < maxx; ++x )
+		{
+			for ( int y = miny; y < maxy; ++y )
+			{
+				//mSpans[ IDX( x,y ) ] = NULL;
+			}
+		}
+	}
 	bool AddOpenSpan( const Vector3f & pos, const float height )
 	{
 		const unsigned int ix = (unsigned int)( ( pos.X() - mMin.X() ) / mCellSize );
@@ -334,7 +360,7 @@ public:
 		}
 	}
 
-	void Clear()
+	void ClearSpans()
 	{
 		for ( unsigned int i = 0; i < mNumCellsX; ++i )
 		{
@@ -347,8 +373,14 @@ public:
 					s = s->mNext;
 					delete d;
 				}
+				mSpans[ IDX( i,j ) ] = NULL;
 			}
 		}
+	}
+
+	void Clear()
+	{
+		ClearSpans();
 
 		delete [] mSpans;
 		mSpans = NULL;
@@ -382,6 +414,7 @@ public:
 
 	struct RenderFunctor
 	{
+		virtual ~RenderFunctor() {}
 		virtual void RenderCell( const Vector3f & pos, float cellSize, float influenceRatio ) = 0;
 	};
 	void RenderWithCallback( RenderFunctor & renderCb, InfluenceMap * influenceMap ) const
@@ -404,8 +437,11 @@ public:
 
 					const float influence = influenceMap ?
 						influenceMap->GetWeight( s->mIndex ) : 1.0f;
-
-					renderCb.RenderCell( spanPos, mCellSize, (influence - weightMin) / influenceRange);
+					
+					if ( influence == std::numeric_limits<float>::max() )
+						renderCb.RenderCell( spanPos, mCellSize, -1.0f );
+					else
+						renderCb.RenderCell( spanPos, mCellSize, (influence - weightMin) / influenceRange);
 
 					s = s->mNext;
 				}
@@ -583,6 +619,8 @@ private:
 	unsigned int	mNumCellsY;
 	unsigned int	mNumSpans;
 	Span **			mSpans;
+
+
 };
 
 #endif

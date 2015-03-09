@@ -59,7 +59,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\dependencies\physfs;..\..\..\dependencies\physfs\lzma\C;..\..\..\dependencies\physfs\zlib123;..\..\..\dependencies\glext;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\dependencies\physfs;..\..\..\dependencies\physfs\lzma\C;..\..\..\dependencies\physfs\zlib123;$(LIBCURL);$(MD5);$(JSONCPP);$(SHA1);..\..\..\dependencies\glext;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;REPLICANET_VISUALDEBUGGER;PHYSFS_SUPPORTS_ZIP=1;PHYSFS_SUPPORTS_7Z=1;PHYSFS_NO_CDROM_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -80,7 +80,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\..\dependencies\physfs;..\..\..\dependencies\physfs\lzma\C;..\..\..\dependencies\physfs\zlib123;..\..\..\dependencies\sfml\include;..\..\..\dependencies\glext;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\dependencies\physfs;..\..\..\dependencies\physfs\lzma\C;..\..\..\dependencies\physfs\zlib123;$(LIBCURL);$(MD5);$(JSONCPP);$(SHA1);..\..\..\dependencies\sfml\include;..\..\..\dependencies\glext;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_DEPRECATE;PHYSFS_SUPPORTS_ZIP=1;PHYSFS_SUPPORTS_7Z=1;PHYSFS_NO_CDROM_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -139,7 +139,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\..\Common\PathPlannerFloodFillPathInterface.cpp" />
+    <ClCompile Include="..\..\..\Common\PathPlannerNavMeshPathInterface.cpp" />
     <ClCompile Include="..\..\..\Common\PathPlannerNavMeshScript.cpp" />
+    <ClCompile Include="..\..\..\Common\PathPlannerRecastPathInterface.cpp" />
     <ClCompile Include="..\..\..\Common\RecastInterfaces.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -207,22 +210,7 @@
     <ClCompile Include="..\..\..\Common\BotGlobalStates.cpp" />
     <ClCompile Include="..\..\..\Common\Weapon.cpp" />
     <ClCompile Include="..\..\..\Common\WeaponDatabase.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourAlloc.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNavMeshQuery.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourObstacleAvoidance.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastAlloc.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\md5\md5.cpp" />
     <ClCompile Include="..\..\..\dependencies\physfs\physfs.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -501,100 +489,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\Recast.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastArea.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastContour.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastFilter.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastMesh.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastMeshDetail.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastRasterization.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastRegion.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastTimer.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourCommon.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNavMesh.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNavMeshBuilder.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNode.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\DebugUtils\Source\DebugDraw.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\DebugUtils\Source\DetourDebugDraw.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\DebugUtils\Source\RecastDebugDraw.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\Recast\DebugUtils\Source\RecastDump.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\BotLoadLibrary.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -644,6 +538,37 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\Omni-Bot.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\DebugUtils\Source\DebugDraw.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\DebugUtils\Source\DetourDebugDraw.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\DebugUtils\Source\RecastDebugDraw.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\DebugUtils\Source\RecastDump.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\DetourCrowd\Source\DetourCrowd.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\DetourCrowd\Source\DetourLocalBoundary.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\DetourCrowd\Source\DetourObstacleAvoidance.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\DetourCrowd\Source\DetourPathCorridor.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\DetourCrowd\Source\DetourPathQueue.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\DetourCrowd\Source\DetourProximityGrid.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\DetourTileCache\Source\DetourTileCache.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\DetourTileCache\Source\DetourTileCacheBuilder.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourAlloc.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourCommon.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNavMesh.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNavMeshBuilder.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNavMeshQuery.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNode.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\RecastDemo\Contrib\fastlz\fastlz.c" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\Recast.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastAlloc.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastArea.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastContour.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastFilter.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastLayers.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastMesh.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastMeshDetail.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastRasterization.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastRegion.cpp" />
+    <ClCompile Include="..\..\..\dependencies\sqlite\shell.c" />
+    <ClCompile Include="..\..\..\dependencies\sqlite\sqlite3.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Tools\RemoteDebugWindow\RemoteDebugLib\connection.h" />
@@ -671,9 +596,13 @@
     <ClInclude Include="..\..\..\Common\Omni-Bot_BasicTypes.h" />
     <ClInclude Include="..\..\..\Common\Omni-Bot_BitFlags.h" />
     <ClInclude Include="..\..\..\Common\Omni-Bot_Events.h" />
+    <ClInclude Include="..\..\..\Common\Omni-bot_GameEvents.h" />
     <ClInclude Include="..\..\..\Common\Omni-Bot_Types.h" />
     <ClInclude Include="..\..\..\Common\BlackBoard.h" />
     <ClInclude Include="..\..\..\Common\BlackBoardItems.h" />
+    <ClInclude Include="..\..\..\Common\PathPlannerFloodFillPathInterface.h" />
+    <ClInclude Include="..\..\..\Common\PathPlannerNavMeshPathInterface.h" />
+    <ClInclude Include="..\..\..\Common\PathPlannerRecastPathInterface.h" />
     <ClInclude Include="..\..\..\Common\PathPlannerWaypointInterface.h" />
     <ClInclude Include="..\..\..\Common\platformspecifics.h" />
     <ClInclude Include="..\..\..\Common\Pool.h" />
@@ -739,10 +668,7 @@
     <ClInclude Include="..\..\..\Common\Weapon.h" />
     <ClInclude Include="..\..\..\Common\WeaponDatabase.h" />
     <CustomBuildStep Include="..\..\..\Common\obParser.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourAlloc.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNavMeshQuery.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourObstacleAvoidance.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastAlloc.h" />
+    <ClInclude Include="..\..\..\dependencies\md5\md5.h" />
     <ClInclude Include="..\..\..\dependencies\physfs\physfs.h" />
     <ClInclude Include="..\..\..\dependencies\physfs\physfs_casefolding.h" />
     <ClInclude Include="..\..\..\dependencies\physfs\physfs_internal.h" />
@@ -781,15 +707,6 @@
     <ClInclude Include="..\..\..\dependencies\iprof\prof_gather.h" />
     <ClInclude Include="..\..\..\dependencies\iprof\prof_internal.h" />
     <ClInclude Include="..\..\..\dependencies\iprof\prof_win32.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\Recast.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastTimer.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourCommon.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNavMesh.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNode.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DebugUtils\Include\DebugDraw.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DebugUtils\Include\DetourDebugDraw.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DebugUtils\Include\RecastDebugDraw.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DebugUtils\Include\RecastDump.h" />
     <ClInclude Include="..\..\..\Common\CallbackParameters.h" />
     <ClInclude Include="..\..\..\Common\CommandFunctor.h" />
     <ClInclude Include="..\..\..\Common\CommandReciever.h" />
@@ -819,6 +736,33 @@
     <ClInclude Include="..\..\..\Common\TriggerManager.h" />
     <ClInclude Include="..\..\..\Common\Utilities.h" />
     <ClInclude Include="..\..\..\Common\BotExports.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\DebugUtils\Include\DebugDraw.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\DebugUtils\Include\DetourDebugDraw.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\DebugUtils\Include\RecastDebugDraw.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\DebugUtils\Include\RecastDump.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\DetourCrowd\Include\DetourCrowd.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\DetourCrowd\Include\DetourLocalBoundary.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\DetourCrowd\Include\DetourObstacleAvoidance.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\DetourCrowd\Include\DetourPathCorridor.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\DetourCrowd\Include\DetourPathQueue.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\DetourCrowd\Include\DetourProximityGrid.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\DetourTileCache\Include\DetourTileCache.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\DetourTileCache\Include\DetourTileCacheBuilder.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourAlloc.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourAssert.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourCommon.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourMath.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNavMesh.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNavMeshBuilder.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNavMeshQuery.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNode.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourStatus.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\RecastDemo\Contrib\fastlz\fastlz.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\Recast.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastAlloc.h" />
+    <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastAssert.h" />
+    <ClInclude Include="..\..\..\dependencies\sqlite\sqlite3.h" />
+    <ClInclude Include="..\..\..\dependencies\sqlite\sqlite3ext.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -850,14 +794,6 @@
     </ProjectReference>
     <ProjectReference Include="..\..\..\dependencies\polypartition\polypartition2012.vcxproj">
       <Project>{c6ee526f-5b56-4f29-8ed2-8558d157dfb3}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\dependencies\protobuf-2.4.1\vsprojects\libprotobuf.vcxproj">
-      <Project>{3e283f37-a4ed-41b7-a3e6-a2d89d131a30}</Project>
-      <Private>true</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
     </ProjectReference>
     <ProjectReference Include="..\..\..\dependencies\WildMagic5\LibCore\LibCore_VC110.vcxproj">
       <Project>{2da95cd7-8454-497e-b25d-6840527b73f3}</Project>

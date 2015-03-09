@@ -14,8 +14,8 @@ class BotIdentity
 public:
 
 	BotIdentity()
-		: m_DesiredClassId(RANDOM_CLASS_IF_NO_CLASS)
-		, m_DesiredTeamId(RANDOM_TEAM_IF_NO_TEAM)
+		: m_DesiredClassId( RANDOM_CLASS_IF_NO_CLASS )
+		, m_DesiredTeamId( RANDOM_TEAM_IF_NO_TEAM )
 	{
 	}
 private:
@@ -25,9 +25,9 @@ private:
 };
 //////////////////////////////////////////////////////////////////////////
 
-NameReference::NameReference(const std::string &_name, const std::string &_profile) :
-	m_Name(_name),
-	m_ProfileName(_profile)
+NameReference::NameReference( const std::string &_name, const std::string &_profile ) :
+m_Name( _name ),
+m_ProfileName( _profile )
 {
 }
 
@@ -39,49 +39,49 @@ NameManager *NameManager::m_Instance = NULL;
 
 NameManager *NameManager::GetInstance()
 {
-	if(!m_Instance)
+	if ( !m_Instance )
 		m_Instance = new NameManager;
 	return m_Instance;
 }
 
 void NameManager::DeleteInstance()
 {
-	OB_DELETE(m_Instance);
+	OB_DELETE( m_Instance );
 }
 
-bool NameManager::AddName(const std::string &_name, const std::string &_profile)
+bool NameManager::AddName( const std::string &_name, const std::string &_profile )
 {
-	NamesMap::const_iterator cIt = m_NamesMap.find(_name);
-	if(cIt == m_NamesMap.end())
+	NamesMap::const_iterator cIt = m_NamesMap.find( _name );
+	if ( cIt == m_NamesMap.end() )
 	{
-		NamePtr np(new NameReference(_name, _profile));
-		m_NamesMap.insert(std::make_pair(_name, np));
+		NamePtr np( new NameReference( _name, _profile ) );
+		m_NamesMap.insert( std::make_pair( _name, np ) );
 		return true;
 	}
 	return false;
 }
 
-void NameManager::DeleteName(const std::string &_name)
+void NameManager::DeleteName( const std::string &_name )
 {
-	NamesMap::iterator it = m_NamesMap.find(_name);
-	if(it != m_NamesMap.end())
-		m_NamesMap.erase(it);
+	NamesMap::iterator it = m_NamesMap.find( _name );
+	if ( it != m_NamesMap.end() )
+		m_NamesMap.erase( it );
 }
 
-const std::string NameManager::GetProfileForName(const std::string &_name) const
+const std::string NameManager::GetProfileForName( const std::string &_name ) const
 {
-	NamesMap::const_iterator cIt = m_NamesMap.find(_name);
-	if(cIt != m_NamesMap.end())
+	NamesMap::const_iterator cIt = m_NamesMap.find( _name );
+	if ( cIt != m_NamesMap.end() )
 	{
 		return cIt->second->GetProfileName();
 	}
 	return std::string();
 }
 
-const std::string NameManager::GetProfileForClass(const int _class) const
+const std::string NameManager::GetProfileForClass( const int _class ) const
 {
-	DefaultProfileMap::const_iterator it = m_ProfileMap.find(_class);
-	if(it != m_ProfileMap.end())
+	DefaultProfileMap::const_iterator it = m_ProfileMap.find( _class );
+	if ( it != m_ProfileMap.end() )
 	{
 		return it->second;
 	}
@@ -93,39 +93,39 @@ void NameManager::ClearNames()
 	m_NamesMap.clear();
 }
 
-NamePtr NameManager::GetName(const std::string &_preferred)
+NamePtr NameManager::GetName( const std::string &_preferred )
 {
-	if(!_preferred.empty())
+	if ( !_preferred.empty() )
 	{
-		NamesMap::iterator it = m_NamesMap.find(_preferred);
-		if(it != m_NamesMap.end())
+		NamesMap::iterator it = m_NamesMap.find( _preferred );
+		if ( it != m_NamesMap.end() )
 			return it->second;
-		return NamePtr(new NameReference(_preferred));
+		return NamePtr( new NameReference( _preferred ) );
 	}
 
 	StringVector lst;
 	NamesMap::iterator it = m_NamesMap.begin(),
 		itEnd = m_NamesMap.end();
-	for( ; it != itEnd; ++it)
+	for ( ; it != itEnd; ++it )
 	{
-		if(it->second.use_count() <= 1)
-			lst.push_back(it->first);
+		if ( it->second.use_count() <= 1 )
+			lst.push_back( it->first );
 	}
 
-	if(!lst.empty())
+	if ( !lst.empty() )
 	{
-		std::random_shuffle(lst.begin(), lst.end());
-		return GetName(lst.front());
+		std::random_shuffle( lst.begin(), lst.end() );
+		return GetName( lst.front() );
 	}
 
 	return NamePtr();
 }
 
-void NameManager::SetProfileForClass(const int _class, const std::string &_name)
+void NameManager::SetProfileForClass( const int _class, const std::string &_name )
 {
-	m_ProfileMap.insert(std::make_pair(_class, _name));
-	const char *clsname = Utils::FindClassName(_class);
-	LOG("Class " << (clsname?clsname:"unknown") << " : using profile " << _name.c_str());
+	m_ProfileMap.insert( std::make_pair( _class, _name ) );
+	const char *clsname = Utils::FindClassName( _class );
+	LOG( "Class " << ( clsname ? clsname : "unknown" ) << " : using profile " << _name.c_str() );
 }
 
 /*void NameManager::LoadBotNames()

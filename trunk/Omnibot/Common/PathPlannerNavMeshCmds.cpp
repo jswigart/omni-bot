@@ -9,7 +9,6 @@
 #include "PathPlannerNavMesh.h"
 #include "ScriptManager.h"
 #include "IGameManager.h"
-#include "Waypoint.h"
 #include "IGame.h"
 #include "Client.h"
 #include "Timer.h"
@@ -38,7 +37,10 @@ void PathPlannerNavMesh::InitCommands()
 		this, &PathPlannerNavMesh::cmdNavViewConnections);
 	SetEx("nav_viewflags", "Turn on/off navmesh flag visibility.",
 		this, &PathPlannerNavMesh::cmdNavViewFlags);
-
+	SetEx("nav_enableobstacles", "Turn on/off runtime obstacles.",
+		this, &PathPlannerNavMesh::cmdNavDisableObstacles);
+	SetEx("nav_showobstacles", "Turn on/off runtime obstacles rendering.",
+		this, &PathPlannerNavMesh::cmdNavShowObstacles);	
 	//////////////////////////////////////////////////////////////////////////
 	SetEx("nav_enablestep", "Enable step by step generation process.",
 		this, &PathPlannerNavMesh::cmdNavEnableStep);
@@ -47,7 +49,6 @@ void PathPlannerNavMesh::InitCommands()
 	//////////////////////////////////////////////////////////////////////////
 	SetEx("nav_autofeature", "Automatically waypoints jump pads, teleporters, player spawns.",
 		this, &PathPlannerNavMesh::cmdAutoBuildFeatures);
-
 	SetEx("nav_stats", "Step to the next nav process.",
 		this, &PathPlannerNavMesh::cmdNavStats);
 
@@ -110,6 +111,10 @@ void PathPlannerNavMesh::InitCommands()
 
 	SetEx("nav_obstacleadd", "Creates an obstacle.",
 		this, &PathPlannerNavMesh::cmdObstacleAdd);
+
+	SetEx("nav_saveobj", "Save To .obj file.",
+		this, &PathPlannerNavMesh::cmdSaveToObjFile);
+	
 }
 
 void PathPlannerNavMesh::cmdNavSave(const StringVector &_args)
@@ -150,6 +155,47 @@ void PathPlannerNavMesh::cmdNavView(const StringVector &_args)
 	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
 
 	m_PlannerFlags.SetFlag( NAV_VIEW, bEnable );
+}
+
+void PathPlannerNavMesh::cmdNavShowObstacles(const StringVector &_args)
+{
+	const char *strUsage[] =
+	{
+		"nav_showobstacles enable[bool]",
+		"> enable: Render runtime obstacles. true/false/on/off/1/0",
+	};
+
+	CHECK_NUM_PARAMS(_args, 2, strUsage);
+	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
+
+	m_PlannerFlags.SetFlag( NAVMESH_SHOWOBSTACLES, bEnable );
+}
+
+void PathPlannerNavMesh::cmdNavDisableObstacles(const StringVector &_args)
+{
+	const char *strUsage[] =
+	{
+		"nav_enableobstacles enable[bool]",
+		"> enable: Enable runtime obstacles. true/false/on/off/1/0",
+	};
+
+	CHECK_NUM_PARAMS(_args, 2, strUsage);
+	CHECK_BOOL_PARAM(bEnable, 1, strUsage);
+
+	m_PlannerFlags.SetFlag( NAVMESH_DISABLEOBSTACLES, bEnable );
+
+	if ( bEnable )
+	{
+		for ( size_t i = 0; i < mObstacles.size(); ++i )
+		{
+			mObstacles[ i ]->mActive = false;
+		}
+
+		for ( size_t i = 0; i < mRuntimeSectors.size(); ++i )
+		{
+			mRuntimeSectors[ i ].mUpdateObstacles = true;
+		}
+	}
 }
 
 void PathPlannerNavMesh::cmdNavViewConnections(const StringVector &_args)
@@ -221,12 +267,16 @@ void PathPlannerNavMesh::cmdNavStats(const StringVector &_args)
 		if ( mRuntimeSectorCollision[ i ] )
 			dynTris += mRuntimeSectorCollision[ i ]->NumTriangles();
 
+	EngineFuncs::ConsoleMessage( "-= Navigation Mesh =-" );
 	EngineFuncs::ConsoleMessage( va( "%d Sectors", mNavSectors.size() ) );
 	EngineFuncs::ConsoleMessage( va( "%d Total Sectors(with mirrored)", mRuntimeSectors.size() ) );
 	EngineFuncs::ConsoleMessage( va( "%d Portals", numPortals ) );
 	EngineFuncs::ConsoleMessage( va( "%d Tris in Static NavMesh Collision", mSectorCollision.NumTriangles() ) );
 	EngineFuncs::ConsoleMessage( va( "%d Tris in Dynamic NavMesh Collision", dynTris ) );
 	
+	EngineFuncs::ConsoleMessage( "-= Obstacles =-" );
+	EngineFuncs::ConsoleMessage( va( "%d Obstacles", mObstacles.size() ) );
+
 	const float fmin = std::numeric_limits<float>::lowest();
 	const float fmax = std::numeric_limits<float>::max();
 
@@ -234,17 +284,14 @@ void PathPlannerNavMesh::cmdNavStats(const StringVector &_args)
 	mapbounds.Set( Vector3f( fmax, fmax, fmax ), Vector3f( fmin, fmin, fmin ) );
 	for ( size_t i = 0; i < mRuntimeSectors.size(); ++i )
 	{
-		for ( size_t v = 0; v != mRuntimeSectors[i].mPoly.size(); ++v )
-		{
-			mapbounds.Expand( mRuntimeSectors[i].mPoly[ v ] );
-		}
+		const AxisAlignedBox3f aabb = mRuntimeSectors[i].CalculateAABB();
+		mapbounds.Expand( aabb.Min );
+		mapbounds.Expand( aabb.Max );
 	}
 
 	EngineFuncs::ConsoleMessage( va( "Bounds Min( %.4f, %.4f, %.4f )", mapbounds.m_Mins[ 0 ], mapbounds.m_Mins[ 1 ], mapbounds.m_Mins[ 2 ] ) );
 	EngineFuncs::ConsoleMessage( va( "Bounds Max( %.4f, %.4f, %.4f )", mapbounds.m_Maxs[ 0 ], mapbounds.m_Maxs[ 1 ], mapbounds.m_Maxs[ 2 ] ) );
 }
-
-extern float g_fBottomWaypointOffset;
 
 void PathPlannerNavMesh::cmdAutoBuildFeatures(const StringVector &_args)
 {
@@ -266,12 +313,10 @@ void PathPlannerNavMesh::cmdAutoBuildFeatures(const StringVector &_args)
 		if(!features[i].m_Bounds.IsZero())
 		{
 			features[i].m_Bounds.CenterBottom(vPos);
-			vPos.Z() -= g_fBottomWaypointOffset;
 		}
 		if(!features[i].m_TargetBounds.IsZero())
 		{
 			features[i].m_TargetBounds.CenterBottom(vTarget);
-			vTarget.Z() -= g_fBottomWaypointOffset;
 		}
 
 		//AddFloodStart(vPos);
@@ -306,13 +351,13 @@ Vector3f PathPlannerNavMesh::_SectorVertWithin(const Vector3f &_pos1, const Vect
 	{
 		const RuntimeNavSector & ns = mRuntimeSectors[s];
 
-		for(obuint32 v = 0; v < ns.mPoly.size(); ++v)
+		for(obuint32 v = 0; v < ns.GetNumVerts(); ++v)
 		{
-			DistPoint3Segment3f dist( ns.mPoly[v], Segment3f( _pos1,_pos2 ) );
+			DistPoint3Segment3f dist( ns.GetVert( v ), Segment3f( _pos1,_pos2 ) );
 			const float fLenSq = dist.GetSquared();
 			if( fLenSq < fRangeSq && fLenSq < fClosest )
 			{
-				r = ns.mPoly[v];
+				r = ns.GetVert( v );
 				fClosest = fLenSq;
 
 				if(_snapped)
@@ -381,7 +426,7 @@ public:
 		if ( mPoly.size() >= 3 )
 		{
 			PathPlannerNavMesh::NavSector ns;
-			ns.mPoly = mPoly;
+			ns.Init( mPoly );
 			system->mNavSectors.push_back( ns );
 			system->InitSectors();
 		}
@@ -420,6 +465,10 @@ public:
 		if( !Utils::GetLocalAimPoint( aimPt, &aimNormal ) )
 			return false;
 
+		// don't allow inverted polygons
+		if ( aimNormal.Z() < 0.0 )
+			aimNormal = -aimNormal;
+
 		system->mEditSectorStart = aimPt;
 		system->mEditSectorPlane = Plane3f( aimNormal, aimPt );
 
@@ -430,11 +479,8 @@ public:
 		Vector3f aimPt;
 		if( !Utils::GetLocalAimPoint( aimPt ) )
 			return false;
-
-		system->mEditSector.mPoly = Utils::CreatePolygon(
-			aimPt,
-			system->mEditSectorPlane.Normal,
-			32768.f);
+		
+		system->mEditSector.InitNew( aimPt, system->mEditSectorPlane.Normal );
 
 		// we want it to cancel the tool here to use the tool as a toggle
 		return false;
@@ -485,7 +531,7 @@ public:
 
 	virtual bool Enter( PathPlannerNavMesh * system )
 	{
-		if(system->mEditSector.mPoly.empty())
+		if(system->mEditSector.GetNumVerts() == 0)
 		{
 			EngineFuncs::ConsoleError("No Active Sector");
 			return false;
@@ -494,6 +540,10 @@ public:
 		Vector3f aimPt, aimNormal;
 		if( !Utils::GetLocalAimPoint( aimPt, &aimNormal ) )
 			return false;
+
+		// don't allow inverted polygons
+		if ( aimNormal.Z() < 0.0 )
+			aimNormal = -aimNormal;
 
 		system->mEditSlicePlane = Plane3f( aimNormal, aimPt );
 
@@ -504,8 +554,7 @@ public:
 		const Plane3f clipPlane = ( system->mEditSlicePlane.WhichSide( system->mEditSectorStart ) > 0 ) ?
 			-system->mEditSlicePlane : system->mEditSlicePlane;
 
-		system->mEditSector.mPoly =
-			Utils::ClipPolygonToPlanes( system->mEditSector.mPoly, clipPlane );
+		system->mEditSector.Init( Utils::ClipPolygonToPlanes( system->mEditSector.GetVerts(), clipPlane ) );
 
 		// we want it to cancel the tool here to use the tool as a toggle
 		return false;
@@ -576,7 +625,7 @@ public:
 		if( !Utils::GetLocalAimPoint( aimPt ) )
 			return false;
 
-		system->mEditSector.mPlane = Plane3f( system->mEditSector.mPlane.Normal, aimPt );
+		system->mEditSector.InitNew( aimPt, system->mEditSector.GetPlane().Normal );
 		system->mEditSector.SetPointsToPlane();
 
 		return true;
@@ -651,7 +700,7 @@ public:
 
 	virtual bool Enter( PathPlannerNavMesh * system )
 	{
-		if ( system->mEditSector.mPoly.empty() )
+		if ( system->mEditSector.GetNumVerts() == 0 )
 		{
 			EngineFuncs::ConsoleError("No Active Sector");
 			return false;
@@ -684,8 +733,8 @@ public:
 	}
 	virtual void Commit( PathPlannerNavMesh * system )
 	{
-		Vector3List s1 = Utils::ClipPolygonToPlanes( system->mEditSector.mPoly, system->mEditSlicePlane );
-		Vector3List s2 = Utils::ClipPolygonToPlanes( system->mEditSector.mPoly, -system->mEditSlicePlane );
+		Vector3List s1 = Utils::ClipPolygonToPlanes( system->mEditSector.GetVerts(), system->mEditSlicePlane );
+		Vector3List s2 = Utils::ClipPolygonToPlanes( system->mEditSector.GetVerts(), -system->mEditSlicePlane );
 
 		Utils::WeldVertices( s1, 1.0f );
 		Utils::WeldVertices( s2, 1.0f );
@@ -694,13 +743,13 @@ public:
 		if( s1.size() >= 3 )
 		{
 			PathPlannerNavMesh::NavSector sec = system->mEditSector;
-			sec.mPoly = s1;
+			sec.Init( s1 );
 			system->mNavSectors.push_back( sec );
 		}
 		if( s2.size() >= 3 )
 		{
 			PathPlannerNavMesh::NavSector sec = system->mEditSector;
-			sec.mPoly = s2;
+			sec.Init( s2 );
 			system->mNavSectors.push_back( sec );
 		}
 
@@ -738,9 +787,9 @@ void PathPlannerNavMesh::cmdGroundSector(const StringVector &_args)
 	RuntimeNavSector * ns = nc.HitSector();
 
 	obTraceResult tr;
-	for ( obuint32 i = 0; i < ns->mPoly.size(); ++i )
+	for ( obuint32 i = 0; i < ns->GetNumVerts(); ++i )
 	{
-		Vector3f vPt = ns->mSector->mPoly[i];
+		Vector3f vPt = ns->mSector->GetVert( i );
 		EngineFuncs::TraceLine(tr,
 			vPt+Vector3f(0.f,0.f,1.f),
 			vPt+Vector3f(0.f,0.f,-1024.f),
@@ -749,7 +798,7 @@ void PathPlannerNavMesh::cmdGroundSector(const StringVector &_args)
 			-1,
 			False);
 
-		ns->mSector->mPoly[i].Z() = tr.m_Endpos[2];
+		ns->mSector->SetVertZ( i, tr.m_Endpos[2] );
 	}
 
 	InitSectors();
@@ -769,9 +818,9 @@ void PathPlannerNavMesh::cmdCommitPoly(const StringVector &_args)
 	}
 	else
 	{
-		Utils::WeldVertices( mEditSector.mPoly, 1.0f );
+		mEditSector.Optimize();
 
-		if ( mEditSector.mPoly.size() > 2 )
+		if ( mEditSector.GetNumVerts() > 2 )
 		{
 			mNavSectors.push_back( mEditSector );
 			InitSectors();
@@ -964,92 +1013,92 @@ void PathPlannerNavMesh::cmdObstacleAdd(const StringVector &_args)
 
 	Vector3f v = Vector3f::UNIT_X;
 
-	Obstacle obs;
-	obs.mPoly.push_back( vObsPoint + v * Mathf::IntervalRandom( 32.0f, 64.0f ) );
+	Obstacle * obs = new Obstacle;
+	obs->mPoly.push_back( vObsPoint + v * Mathf::IntervalRandom( 32.0f, 64.0f ) );
 	for ( int i = 0; i < numPoints - 1; ++i )
 	{
 		v = q.Rotate(v);
-		obs.mPoly.push_back( vObsPoint + v * Mathf::IntervalRandom( 32.0f, 64.0f ) );
+		obs->mPoly.push_back( vObsPoint + v * Mathf::IntervalRandom( 32.0f, 64.0f ) );
 	}
 	
-	obs.mPosition = vObsPoint;
-	obs.mCost = cost;
-	obs.mExpireTime = IGame::GetTime() + 5000;
+	obs->mPosition = vObsPoint;
+	obs->mCost = cost;
+	obs->mExpireTime = IGame::GetTime() + 5000;
 	mPendingObstacles.push_back( obs );
 }
 
 void PathPlannerNavMesh::_BenchmarkPathFinder(const StringVector &_args)
 {
-	EngineFuncs::ConsoleMessage("-= NavMesh PathFind Benchmark =-");
+	//EngineFuncs::ConsoleMessage("-= NavMesh PathFind Benchmark =-");
 
-	// cache all sector center positions so we don't include that as part of the benchmark
-	Vector3List sectorCenters;
-	sectorCenters.reserve( mRuntimeSectors.size() );
-	for( size_t i = 0; i < mRuntimeSectors.size(); ++i)
-	{
-		sectorCenters.push_back( mRuntimeSectors[ i ].CalculateCenter() );
-	}
+	//// cache all sector center positions so we don't include that as part of the benchmark
+	//Vector3List sectorCenters;
+	//sectorCenters.reserve( mRuntimeSectors.size() );
+	//for( size_t i = 0; i < mRuntimeSectors.size(); ++i)
+	//{
+	//	sectorCenters.push_back( mRuntimeSectors[ i ].CalculateCenter() );
+	//}
 
-	Timer tme;
-	tme.Reset();
-	for ( size_t s1 = 0; s1 < sectorCenters.size(); ++s1 )
-	{
-		for ( size_t s2 = 0; s2 < sectorCenters.size(); ++s2 )
-		{
-			PlanPathToGoal(NULL,sectorCenters[ s1 ],sectorCenters[ s2 ],0);
-		}
-	}
-	const double dTimeTaken = tme.GetElapsedSeconds();
+	//Timer tme;
+	//tme.Reset();
+	//for ( size_t s1 = 0; s1 < sectorCenters.size(); ++s1 )
+	//{
+	//	for ( size_t s2 = 0; s2 < sectorCenters.size(); ++s2 )
+	//	{
+	//		PlanPathToGoal(NULL,sectorCenters[ s1 ],sectorCenters[ s2 ],0);
+	//	}
+	//}
+	//const double dTimeTaken = tme.GetElapsedSeconds();
 
-	EngineFuncs::ConsoleMessage(va("generated %d paths in %f seconds: %f paths/sec",
-		(sectorCenters.size()*sectorCenters.size()),
-		dTimeTaken,
-		dTimeTaken != 0.0f ? (float)(sectorCenters.size()*sectorCenters.size()) / dTimeTaken : 0.0f));
+	//EngineFuncs::ConsoleMessage(va("generated %d paths in %f seconds: %f paths/sec",
+	//	(sectorCenters.size()*sectorCenters.size()),
+	//	dTimeTaken,
+	//	dTimeTaken != 0.0f ? (float)(sectorCenters.size()*sectorCenters.size()) / dTimeTaken : 0.0f));
 }
 
 void PathPlannerNavMesh::_BenchmarkGetNavPoint(const StringVector &_args)
 {
-	obuint32 iNumIterations = 1;
-	if(_args.size() > 1)
-	{
-		iNumIterations = atoi(_args[1].c_str());
-		if(iNumIterations <= 0)
-			iNumIterations = 1;
-	}
+	//obuint32 iNumIterations = 1;
+	//if(_args.size() > 1)
+	//{
+	//	iNumIterations = atoi(_args[1].c_str());
+	//	if(iNumIterations <= 0)
+	//		iNumIterations = 1;
+	//}
 
-	EngineFuncs::ConsoleMessage("-= NavMesh GetNavPoint Benchmark  =-");
+	//EngineFuncs::ConsoleMessage("-= NavMesh GetNavPoint Benchmark  =-");
 
-	// cache all sector center positions so we don't include that as part of the benchmark
-	Vector3List sectorCenters;
-	sectorCenters.reserve( mRuntimeSectors.size() );
-	for(obuint32 i = 0; i < mRuntimeSectors.size(); ++i)
-	{
-		sectorCenters.push_back( mRuntimeSectors[ i ].CalculateCenter() );
-	}
+	//// cache all sector center positions so we don't include that as part of the benchmark
+	//Vector3List sectorCenters;
+	//sectorCenters.reserve( mRuntimeSectors.size() );
+	//for(obuint32 i = 0; i < mRuntimeSectors.size(); ++i)
+	//{
+	//	sectorCenters.push_back( mRuntimeSectors[ i ].CalculateCenter() );
+	//}
 
-	Timer tme;
+	//Timer tme;
 
-	obuint32 iHits = 0, iMisses = 0;
-	tme.Reset();
-	for(obuint32 i = 0; i < iNumIterations; ++i)
-	{
-		for(obuint32 s = 0; s < sectorCenters.size(); ++s)
-		{
-			RuntimeNavSector * sector = GetSectorAt( sectorCenters[ s ] );
-			if ( sector )
-				++iHits;
-			else
-				++iMisses;
-		}
-	}
+	//obuint32 iHits = 0, iMisses = 0;
+	//tme.Reset();
+	//for(obuint32 i = 0; i < iNumIterations; ++i)
+	//{
+	//	for(obuint32 s = 0; s < sectorCenters.size(); ++s)
+	//	{
+	//		RuntimeNavSector * sector = GetSectorAt( sectorCenters[ s ] );
+	//		if ( sector )
+	//			++iHits;
+	//		else
+	//			++iMisses;
+	//	}
+	//}
 
-	const double dTimeTaken = tme.GetElapsedSeconds();
+	//const double dTimeTaken = tme.GetElapsedSeconds();
 
-	EngineFuncs::ConsoleMessage( va( "BenchmarkGetNavPoint() %d calls, %d hits, %d misses : avg %f per second",
-		mRuntimeSectors.size() * iNumIterations,
-		iHits,
-		iMisses,
-		dTimeTaken != 0.0f ? ((float)(mRuntimeSectors.size() * iNumIterations) / dTimeTaken) : 0.0f ) );
+	//EngineFuncs::ConsoleMessage( va( "BenchmarkGetNavPoint() %d calls, %d hits, %d misses : avg %f per second",
+	//	mRuntimeSectors.size() * iNumIterations,
+	//	iHits,
+	//	iMisses,
+	//	dTimeTaken != 0.0f ? ((float)(mRuntimeSectors.size() * iNumIterations) / dTimeTaken) : 0.0f ) );
 }
 
 void PathPlannerNavMesh::cmdUpdateContents(const StringVector &_args)
@@ -1080,11 +1129,11 @@ public:
 		m0 = m1 = 0;
 
 		float nearest = std::numeric_limits<float>::max();
-		for ( size_t i = 1; i <= mSector->mPoly.size(); ++i )
+		for ( size_t i = 1; i <= mSector->GetNumVerts(); ++i )
 		{
 			const int s0 = i-1;
-			const int s1 = i%mSector->mPoly.size();
-			DistPoint3Segment3f dist( aimPt, Segment3f( mSector->mPoly[ s0 ], mSector->mPoly[ s1 ] ) );
+			const int s1 = i%mSector->GetNumVerts();
+			DistPoint3Segment3f dist( aimPt, Segment3f( mSector->GetVert( s0 ), mSector->GetVert( s1 ) ) );
 
 			const float d = dist.Get();
 			if ( d < nearest )
@@ -1103,16 +1152,16 @@ public:
 		if( !Utils::GetLocalAimPoint( aimPt ) )
 			return false;
 
-		mSector->mPoly[ m0 ].Z() = aimPt.Z();
-		mSector->mPoly[ m1 ].Z() = aimPt.Z();
+		mSector->SetVertZ( m0, aimPt.Z() );
+		mSector->SetVertZ( m1, aimPt.Z() );
 
 		// update the runtime sectors too
 		for ( size_t i = 0; i < system->mRuntimeSectors.size(); ++i )
 		{
 			if ( system->mRuntimeSectors[ i ].mSector == mSector )
 			{
-				system->mRuntimeSectors[ i ].mPoly[ m0 ].Z() = aimPt.Z();
-				system->mRuntimeSectors[ i ].mPoly[ m1 ].Z() = aimPt.Z();
+				system->mRuntimeSectors[ i ].SetVertZ( m0, aimPt.Z() );
+				system->mRuntimeSectors[ i ].SetVertZ( m1, aimPt.Z() );
 			}
 		}
 		return true;
@@ -1163,7 +1212,7 @@ private:
 
 void PathPlannerNavMesh::cmdPortalCreate(const StringVector &_args)
 {
-	mCurrentTool = new ToolPortalCreate;
+	SetCurrentTool<ToolPortalCreate>();
 }
 
 class ToolPortalEdgeMask : public EditTool<PathPlannerNavMesh>
@@ -1198,21 +1247,21 @@ public:
 		if( !Utils::GetLocalFacing( eyeDir ) )
 			return false;
 
-		for ( size_t i = 0; i < mSector->mPoly.size(); ++i )
+		for ( size_t i = 0; i < mSector->GetNumVerts(); ++i )
 		{
 			const size_t i0 = i;
-			const size_t i1 = (i+1) % mSector->mPoly.size();
+			const size_t i1 = (i+1) % mSector->GetNumVerts();
 			IntrRay2Segment2f intr(
 				Ray2f( To2d( eyePos ), To2d( eyeDir ) ),
-				Segment2f( Vector2f( To2d( mSector->mPoly[ i0 ] ) ), Vector2f( To2d( mSector->mPoly[ i1 ] ) ) ) );
+				Segment2f( Vector2f( To2d( mSector->GetVert( i0 ) ) ), Vector2f( To2d( mSector->GetVert( i1 ) ) ) ) );
 
 			if ( intr.Test() )
 			{
 				const bool edgedisabled = ( mSector->mSectorData->edgeportalmask() & (1<<i) ) != 0;
 
 				RenderBuffer::AddTri(
-					mSector->mPoly[ i0 ] + Vector3f(0.0f,0.0f,4.0f),
-					mSector->mPoly[ i1 ] + Vector3f(0.0f,0.0f,4.0f),
+					mSector->GetVert( i0 ) + Vector3f(0.0f,0.0f,4.0f),
+					mSector->GetVert( i1 ) + Vector3f(0.0f,0.0f,4.0f),
 					mSector->CalculateCenter(),
 					edgedisabled ? COLOR::GREEN.fade(100) : COLOR::RED.fade(100) );
 
@@ -1278,7 +1327,7 @@ static void PrintSetFieldUsage( const google::protobuf::Message & msg, const std
 		const std::string doc = fieldDesc->options().GetExtension( NavmeshIO::doc );
 		EngineFuncs::ConsoleError( va( "%s ( %s ) = %s - %s",
 			fullvarname.c_str(),
-			protobuf::FieldDescriptor::kTypeToName[ fieldDesc->type() ],
+			fieldDesc->type_name(),
 			GetFieldString( msg, fieldDesc ).c_str(),
 			doc.c_str() ) );
 	}
@@ -1506,161 +1555,56 @@ void PathPlannerNavMesh::cmdSetField(const StringVector &_args)
 		EngineFuncs::ConsoleError(
 			va( "Can't convert '%s' to appropriate type %s ( %s )",
 			_args.at( 2 ).c_str(),
-			protobuf::FieldDescriptor::kTypeToName[ fieldDesc->type() ],
+			fieldDesc->type_name(),
 			ex.what() ) );
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-//STATE_ENTER(PathPlannerNavMesh, SliceSectorWithSector)
-//{
-//	if(mEditSector.mPoly.empty())
-//	{
-//		EngineFuncs::ConsoleError("No Active Sector");
-//		SetNextState(NoOp);
-//		return;
-//	}
-//
-//	//////////////////////////////////////////////////////////////////////////
-//	Vector3f vFacing, vPos;
-//	if(!Utils::GetLocalEyePosition(vPos) || !Utils::GetLocalFacing(vFacing))
-//	{
-//		EngineFuncs::ConsoleError("can't get facing or eye position");
-//		SetNextState(NoOp);
-//		return;
-//	}
-//
-//	NavCollision nc = FindCollision(vPos, vPos + vFacing * 2048.f);
-//	if(!nc.DidHit())
-//	{
-//		EngineFuncs::ConsoleError("no sector at cursor");
-//		SetNextState(NoOp);
-//		return;
-//	}
-//	//////////////////////////////////////////////////////////////////////////
-//
-//	mEditSlicePlane = Plane3f( nc.HitNormal(), nc.HitPosition() );
-//
-//	const Plane3f clipPlane = ( mEditSlicePlane.WhichSide( mEditSectorStart ) > 0 ) ?
-//		-mEditSlicePlane : mEditSlicePlane;
-//
-//	mEditSector.mPoly = Utils::ClipPolygonToPlanes( mEditSector.mPoly, clipPlane );
-//
-//	SetNextState(NoOp);
-//}
-//
-//STATE_UPDATE(PathPlannerNavMesh, SliceSectorWithSector)
-//{
-//}
-//
-//STATE_EXIT(PathPlannerNavMesh, SliceSectorWithSector)
-//{
-//}
-
-//////////////////////////////////////////////////////////////////////////
-
-const float SpanHeightMin = 32.0f;
-const float SpanStepHeight = 32.0f;
-
-static bool TestForValidNode( Vector3f & spanPos, float & spanHeight )
+void PathPlannerNavMesh::cmdSaveToObjFile(const StringVector &_args) 
 {
-	const Vector3f dn0(0.f,0.f,SpanStepHeight);
-	const Vector3f dn1(0.f,0.f,-1024.f);
-
-	const Vector3f up0(0.f,0.f,1.f);
-	const Vector3f up1(0.f,0.f,1024.f);
-
-	obTraceResult tr;
-	EngineFuncs::TraceLine(tr,spanPos+dn0,spanPos+dn1,NULL,TR_MASK_FLOODFILL,-1,False);
-	if ( tr.m_Fraction < 1.0f )
+	if(_args.size() < 2)
 	{
-		if ( tr.m_Normal[ 2 ] < 0.707f )
-			return false;
+		EngineFuncs::ConsoleError("nav_saveobj filename");
+		return;
+	}
 
-		spanPos = tr.m_Endpos;
-		EngineFuncs::TraceLine(tr,spanPos+up0,spanPos+up1,NULL,TR_MASK_FLOODFILL,-1,False);
+	RenderBuffer::TriList triangles;
+	CollisionModel::MaterialIndices attribs;
+	mSectorCollision.GetTriangles( ModelTransform::sIdentity, triangles, attribs );
 
-		spanHeight = (spanPos+up1).Z() - spanPos.Z();
-		if ( tr.m_Fraction < 1.0f )
-			spanHeight = tr.m_Endpos[2] - spanPos.Z();
+	const std::string objfilename = _args[ 1 ] + ".obj";
+	const std::string matfilename = _args[ 1 ] + ".mat";
 
-		if ( spanHeight > SpanHeightMin )
+	File objFile, matFile;
+	if ( objFile.OpenForWrite( objfilename.c_str(), File::Text, false ) &&
+		matFile.OpenForWrite( matfilename.c_str(), File::Text, false ))
+	{
+		// material
+		matFile.WriteString( va( "# Materials Navmesh - %s\n\n", g_EngineFuncs->GetMapName() ).c_str() );
+		matFile.WriteString( "Kd 0.000 1.000 0.000     # green" );
+
+		// Mesh
+		objFile.WriteString( va( "# Navmesh - %s\n\n", g_EngineFuncs->GetMapName() ).c_str() );		
+		objFile.WriteString( va( "mltlib %s\n", matfilename.c_str() ).c_str() );
+		objFile.WriteString( va( "# Vertices %d\n", triangles.size() * 3 ).c_str() );		
+		for ( size_t t = 0; t < triangles.size(); ++t )
 		{
-			return true;
+			for ( size_t i = 0; i < 3; ++i )
+			{
+				objFile.WriteString( va( "v %f %f %f\n", 
+					triangles[ t ].v[i].X(), 
+					triangles[ t ].v[i].Y(), 
+					triangles[ t ].v[i].Z() ).c_str() );
+			}
+		}
+
+		objFile.WriteString( va( "\n# Faces %d\n", triangles.size() ).c_str() );
+
+		for ( size_t t = 0; t < triangles.size(); ++t )
+		{
+			objFile.WriteString( va( "f %d %d %d\n", t*3+1,t*3+2,t*3+3 ).c_str() );
 		}
 	}
-	return false;
 }
-
-//STATE_ENTER(PathPlannerNavMesh, FloodSpanMap)
-//{
-//	EngineFuncs::ConsoleMessage( "Flooding Influence Map..." );
-//	m_ToolCancelled = false;
-//}
-//
-//STATE_UPDATE(PathPlannerNavMesh, FloodSpanMap)
-//{
-//	if ( m_SpanFrontier.empty() )
-//		SetNextState( NoOp );
-//
-//	const float cs = m_SpanMap->GetCellSize();
-//
-//	const Vector3f step[] =
-//	{
-//		Vector3f( -cs, 0.0f, SpanStepHeight ),
-//		Vector3f(  cs, 0.0f, SpanStepHeight ),
-//		Vector3f( 0.0f, -cs, SpanStepHeight ),
-//		Vector3f( 0.0f,  cs, SpanStepHeight ),
-//	};
-//	const int stepdirs = sizeof(step) / sizeof(step[0]);
-//
-//	static int maxIterations = std::numeric_limits<int>::max();
-//	int iterations = maxIterations;
-//	while ( !m_SpanFrontier.empty() && (iterations--) > 0 )
-//	{
-//		Vector3f spanPos = m_SpanFrontier.front();
-//		m_SpanFrontier.pop();
-//
-//		float spanHeight = 0.0f;
-//		if ( TestForValidNode( spanPos, spanHeight ) && m_SpanMap->AddOpenSpan( spanPos, spanHeight ) )
-//		{
-//			//RenderBuffer::AddCircle( spanPos, 16.0f, COLOR::GREEN, 0.1f );
-//
-//			for ( int i = 0; i < stepdirs; ++i )
-//			{
-//				Vector3f expandPos = spanPos + step[ i ];
-//
-//				obTraceResult tr;
-//				EngineFuncs::TraceLine(tr,
-//					spanPos + Vector3f(0,0,4),
-//					expandPos,
-//					NULL,
-//					TR_MASK_FLOODFILL,
-//					-1,
-//					False);
-//
-//				if ( tr.m_Fraction == 1.0f )
-//					m_SpanFrontier.push( expandPos );
-//			}
-//		}
-//	}
-//}
-//
-//STATE_EXIT(PathPlannerNavMesh, FloodSpanMap)
-//{
-//	if ( m_ToolCancelled )
-//	{
-//		OB_DELETE( m_SpanMap );
-//		OB_DELETE( m_Influence );
-//		return;
-//	}
-//
-//	unsigned int numIndices = m_SpanMap->IndexSpanNodes();
-//
-//	EngineFuncs::ConsoleMessage(va("Finalize %d x %d ( %d nodes ) span map( %s )",
-//		m_SpanMap->GetNumCellsX(),
-//		m_SpanMap->GetNumCellsY(),
-//		numIndices,
-//		Utils::FormatByteString( m_SpanMap->CalculateMemUsage() ).c_str() ) );
-//}

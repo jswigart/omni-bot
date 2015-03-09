@@ -414,16 +414,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////
 //
-//extern float g_fTopWaypointOffset;
-//extern float g_fBottomWaypointOffset;
-//extern float g_fWaypointPathOffset;
-//extern float g_fTopPathOffset;
-//extern float g_fBottomPathOffset;
-//extern float g_fBlockablePathOffset;
-//extern float g_fFacingOffset;
-//extern float g_fWaypointTextOffset;
-//extern float g_fWaypointTextDuration;
-//extern float g_fPathLevelOffset;
 //
 ////////////////////////////////////////////////////////////////////////////
 //

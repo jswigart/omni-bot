@@ -1,0 +1,65 @@
+package RecastIO;
+
+message Vec3 
+{
+	optional float x							= 1;
+	optional float y							= 2;
+	optional float z							= 3;
+}
+
+message AxisAlignedBounds
+{
+	required Vec3		mins					= 1;
+	required Vec3		maxs					= 2;
+}
+
+message NavMeshParams
+{
+	required float			agentHeightStand	= 1;
+	required float			agentHeightCrouch	= 2;
+	required float			agentRadius			= 3;
+	required float			agentClimb			= 4;
+	required float			walkSlopeAngle		= 5;
+	required float			cellSize			= 6;
+	required float			cellHeight			= 7;
+	required float			edgeMaxLength		= 8;
+	required float			edgeMaxError		= 9;
+	required int32			tileSize			= 10;
+	required float			detailSampleDist	= 11;
+	required float			detailSampleMaxErr	= 12;
+}
+
+message Tile
+{
+	required int32			unCompressedSize	= 1;
+	required bytes			compressedData		= 2;
+}
+
+message OffMeshConnection
+{
+	required Vec3			entryPos			= 1;
+	required Vec3			exitPos				= 2;
+	repeated Vec3			intermediatePos		= 3;
+	required float			radius				= 4;
+	required uint32			areaType			= 5;
+	required uint32			flags				= 6;
+	optional bool			biDirectional		= 7 [default=false];
+}
+
+message SubModel
+{
+	required int32		submodelId				= 1;
+	optional bool		disabled				= 2;
+	optional bool		mover					= 3;
+	optional bool		nonsolid				= 4;
+}
+
+message NavigationMesh 
+{
+	required int32				version				= 1;
+	required NavMeshParams		navMeshParams		= 2;
+	repeated Tile				tiles				= 3;
+	repeated AxisAlignedBounds	exclusionZone		= 4;
+	repeated OffMeshConnection	offMeshConnection	= 5;
+	repeated SubModel			subModelInfo		= 6;
+}

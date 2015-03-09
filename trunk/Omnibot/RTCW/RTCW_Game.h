@@ -11,7 +11,6 @@
 #ifndef __RTCW_GAME_H__
 #define __RTCW_GAME_H__
 
-class Waypoint;
 class gmMachine;
 class gmTableObject;
 
@@ -23,9 +22,7 @@ class RTCW_Game : public IGame
 {
 public:
 	bool Init( System & system );
-
-	void RegisterNavigationFlags(PathPlannerBase *_planner);
-
+	
 	virtual void StartGame();
 	virtual Client *CreateGameClient();
 
@@ -36,11 +33,9 @@ public:
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
 	const char *GetGameDatabaseAbbrev() const { return "rtcw"; }
-	eNavigatorID GetDefaultNavigator() const;
+	NavigatorID GetDefaultNavigator() const;
 	bool ReadyForDebugWindow() const;
-
-	GoalManager *GetGoalManager();
-
+	
 	void AddBot(Msg_Addbot &_addbot, bool _createnow = true);
 	void ClientJoined(const Event_SystemClientConnected *_msg);
 
@@ -48,12 +43,7 @@ public:
 
 	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
-
-	// PathPlannerWaypointInterface
-	NavFlags WaypointBlockableFlags() const;
-	NavFlags WaypointCallbackFlags() const;
-	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const;
-
+	
 	RTCW_Game() {};
 	virtual ~RTCW_Game() {};
 protected:

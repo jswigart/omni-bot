@@ -18,6 +18,7 @@
 #include "GoalManager.h"
 #include "IGameManager.h"
 #include "TriggerManager.h"
+#include "PathPlannerBase.h"
 
 IGameManager *g_GameManager = 0;
 

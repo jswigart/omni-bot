@@ -249,7 +249,7 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace, int impactDamage ) {
 	G_FreeEntity( ent );
 
 	if( ent->s.weapon == WP_MORTAR_SET ) {
-		Bot_Event_MortarImpact(ent->r.ownerNum, trace->endpos);
+		Bot_Event_MortarImpact(ent, trace->endpos);
 	}
 }
 
@@ -1613,7 +1613,7 @@ void G_LandmineThink( gentity_t *self ) {
 	if( trigger && ent ) 
 	{
 		// omnibot
-		Bot_Event_PreTriggerMine(ent-g_entities, self);
+		Bot_Event_PreTriggerMine(ent, self);
 		// end omnibot
 
 		LandMineTrigger( self );
@@ -1653,7 +1653,7 @@ void LandminePostThink( gentity_t *self ) {
 	if(!trigger && ent) 
 	{
 		// omnibot
-		Bot_Event_PostTriggerMine(ent-g_entities, self);
+		Bot_Event_PostTriggerMine(ent, self);
 		// end omnibot
 
 		LandMinePostTrigger(self);

@@ -39,7 +39,7 @@
 
 // Custom Objects
 #include "gmBind.h"
-#include "gmbinder2.h"
+#include "gmbinder2/gmbinder2.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -596,9 +596,25 @@ void ScriptManager::LogAnyMachineErrorMessages(gmMachine *_machine)
 	const char *pMessage = 0;
 	while((pMessage = _machine->GetLog().GetEntry(bFirst)))
 	{
+		std::string msg = pMessage;
+
+		// remove line endings at the end, its already handled elsewhere
+		while ( !msg.empty() )
+		{
+			if ( msg.back() == '\n' )
+				msg.pop_back();
+			else if ( msg.back() == '\r' )
+				msg.pop_back();
+			else break;
+		}
+
+		// convert internal line endings
+		boost::replace_all(msg, "\t", "    "); // tabs to spaces
+		boost::replace_all(msg, "\r\n", "\n"); // tabs to spaces
+
 		Utils::OutputDebugBasic(kError, "Script Error:");
-		Utils::OutputDebugBasic(kError, pMessage);
-		LOGERR(pMessage);
+		Utils::OutputDebugBasic(kError, msg.c_str());
+		LOGERR( msg.c_str() );
 
 #ifdef ENABLE_DEBUG_WINDOW
 		std::string s = pMessage;
@@ -606,7 +622,7 @@ void ScriptManager::LogAnyMachineErrorMessages(gmMachine *_machine)
 #endif
 		if(_machine->GetDebugMode())
 		{
-			EngineFuncs::ConsoleError(pMessage);
+			EngineFuncs::ConsoleError( msg.c_str() );
 		}
 	}
 	_machine->GetLog().Reset();

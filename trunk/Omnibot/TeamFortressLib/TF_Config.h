@@ -17,26 +17,7 @@
 #include "Omni-Bot_Events.h"
 
 // enumerations: TF_ButtonFlags
-//		TF_BOT_BUTTON_GREN1 - Prime grenade 1.
-//		TF_BOT_BUTTON_GREN2 - Prime grenade 2.
-//		TF_BOT_BUTTON_DROPITEM - Drop carried item(flag).
-//		TF_BOT_BUTTON_DROPAMMO - Drop ammo(discard).
-//		TF_BOT_BUTTON_BUILDSENTRY - Build sentry
-//		TF_BOT_BUTTON_BUILDDISPENSER - Build dispenser.
-//		TF_BOT_BUTTON_BUILDDETPACK_5 - Build detpack, 5 seconds.
-//		TF_BOT_BUTTON_BUILDDETPACK_10 - Build detpack, 10 seconds.
-//		TF_BOT_BUTTON_BUILDDETPACK_20 - Build detpack, 20 seconds.
-//		TF_BOT_BUTTON_BUILDDETPACK_30 - Build detpack, 30 seconds.
-//		TF_BOT_BUTTON_AIMSENTRY - Aim sentry along current facing.
-//		TF_BOT_BUTTON_DETSENTRY - Detonate sentry gun.
-//		TF_BOT_BUTTON_DETDISPENSER - Detonate dispenser.
-//		TF_BOT_BUTTON_DETPIPES - Detonate deployed pipes.
-//		TF_BOT_BUTTON_CALLFORMEDIC - Calls for medic.
-//		TF_BOT_BUTTON_CALLFORENGY - Calls for engineer.
-//		TF_BOT_BUTTON_DISCARD - Drops spare ammo.
-//		TF_BOT_BUTTON_SABOTAGE_SENTRY - Detonate enemy dispenser.
-//		TF_BOT_BUTTON_SABOTAGE_DISPENSER - Detonate enemy dispenser.
-typedef enum eTF_ButtonFlags
+enum TF_ButtonFlags
 {
 	TF_BOT_BUTTON_GREN1 = BOT_BUTTON_FIRSTUSER,
 	TF_BOT_BUTTON_GREN2,
@@ -67,50 +48,21 @@ typedef enum eTF_ButtonFlags
 
 	// THIS MUST BE LAST
 	TF_BOT_BUTTON_FIRSTUSER
-} TF_ButtonFlags;
+};
 
 // enumerations: TF_EntityCategory
 //		TF_ENT_CAT_BUILDABLE - Buildable entities
-typedef enum eTF_EntityCategory
+enum TF_EntityCategory
 {
 	TF_ENT_CAT_BUILDABLE = ENT_CAT_MAX,
+	TF_ENT_CAT_PHYSPICKUP,
 
 	// THIS MUST BE LAST
 	TF_ENT_CAT_MAX,
-} TF_EntityCategory;
+};
 
 // enumerations: TF_EntityClass
-//		TF_CLASS_SCOUT - Scout player class.
-//		TF_CLASS_SNIPER - Sniper player class.
-//		TF_CLASS_SOLDIER - Soldier player class.
-//		TF_CLASS_DEMOMAN - Demo-man player class.
-//		TF_CLASS_MEDIC - Medic player class.
-//		TF_CLASS_HWGUY - HWGuy player class.
-//		TF_CLASS_PYRO - Pyro player class.
-//		TF_CLASS_SPY - Spy player class.
-//		TF_CLASS_ENGINEER - Engineer player class.
-//		TF_CLASS_CIVILIAN - Civilian player class.
-//		TF_CLASSEX_SENTRY - Sentry entity.
-//		TF_CLASSEX_DISPENSER - Dispenser entity.
-//		TF_CLASSEX_DETPACK - Detpack entity.
-//		TF_CLASSEX_GRENADE - Grenade entity.
-//		TF_CLASSEX_EMP_GRENADE - EMP Grenade entity.
-//		TF_CLASSEX_NAIL_GRENADE - Nail Grenade entity.
-//		TF_CLASSEX_MIRV_GRENADE - Mirvlet Grenade entity.
-//		TF_CLASSEX_MIRVLET_GRENADE - Mirvlet Grenade entity.
-//		TF_CLASSEX_NAPALM_GRENADE - Napalm Grenade entity.
-//		TF_CLASSEX_GAS_GRENADE - Gas Grenade entity.
-//		TF_CLASSEX_CONC_GRENADE - Concussion Grenade entity.
-//		TF_CLASSEX_CALTROP - Caltrop Grenade entity.
-//		TF_CLASSEX_PIPE - Pipe Grenade entity.
-//		TF_CLASSEX_ROCKET - Rocket Grenade entity.
-//		TF_CLASSEX_NAPALM - Napalm Rocket entity.
-//		TF_CLASSEX_SYRINGE - Syringe Gun entity.
-//		TF_CLASSEX_BACKPACK_AMMO - Backpack entity.
-//		TF_CLASSEX_BACKPACK_HEALTH - Backpack entity.
-//		TF_CLASSEX_BACKPACK_ARMOR - Backpack entity.
-//		TF_CLASSEX_BACKPACK_GRENADES - Backpack entity.
-typedef enum eTF_EntityClass
+enum TF_EntityClass
 {
 	TF_CLASS_UNKNOWN = 0,
 	TF_CLASS_NONE = 0,
@@ -146,6 +98,8 @@ typedef enum eTF_EntityClass
 	TF_CLASSEX_NAPALM_GRENADE,
 	TF_CLASSEX_GAS_GRENADE,
 	TF_CLASSEX_CONC_GRENADE,
+	TF_CLASSEX_LASER_GRENADE,
+	TF_CLASSEX_SLOW_GRENADE,
 	TF_CLASSEX_CALTROP,
 	TF_CLASSEX_PIPE,
 	TF_CLASSEX_GLGRENADE,
@@ -156,31 +110,14 @@ typedef enum eTF_EntityClass
 	TF_CLASSEX_HUNTEDESCAPE,
 	TF_CLASSEX_VEHICLE,
 	TF_CLASSEX_VEHICLE_NODAMAGE,
+	TF_CLASSEX_MANCANNON,
 
 	// THIS MUST STAY LAST
 	TF_NUM_CLASSES
-} TF_EntityClass;
+};
 
 // enumerations: TF_EntityFlags
-//		TF_ENT_FLAG_SAVEME - This entity is has called for medic.
-//		TF_ENT_FLAG_ARMORME - This entity has called for armor.
-//		TF_ENT_FLAG_BURNING - This entity is on fire.
-//		TF_ENT_FLAG_TRANQED - This entity is tranquilized.
-//		TF_ENT_FLAG_INFECTED - This entity is infected.
-//		TF_ENT_FLAG_GASSED - This entity is gassed(hallucinating).
-//		TF_ENT_SNIPERAIMING - This entity is aiming a scoped weapon.
-//		TF_ENT_ASSAULTFIRING - This entity is shooting an assault weapon.
-//		TF_ENT_LEGSHOT - This entity is suffering from a leg shot.
-//		TF_ENT_CALTROP - This entity is suffering from a caltrop.
-//		TF_ENT_RADIOTAGGED - This entity has been radio tagged.
-//		TF_ENT_CAN_SABOTAGE - This entity can be sabotaged.
-//		TF_ENT_SABOTAGED - This entity has been sabotaged.
-//		TF_ENT_SABOTAGING - This entity is sabotaging something.
-//		TF_ENT_FLAG_BUILDING_SG - Entity is building a sentry.
-//		TF_ENT_FLAG_BUILDING_DISP - Entity is building a dispenser.
-//		TF_ENT_FLAG_BUILDING_DETP - Entity is building a detpack.
-//		TF_ENT_FLAG_BUILDINPROGRESS - Entity is currently being built.
-typedef enum eTF_EntityFlags
+enum TF_EntityFlags
 {
 	TF_ENT_FLAG_SAVEME = ENT_FLAG_FIRST_USER,
 	TF_ENT_FLAG_ARMORME,
@@ -194,7 +131,9 @@ typedef enum eTF_EntityFlags
 	TF_ENT_FLAG_RADIOTAGGED,
 	TF_ENT_FLAG_CAN_SABOTAGE,
 	TF_ENT_FLAG_SABOTAGED,
+	TF_ENT_FLAG_SABOTAGED2,
 	TF_ENT_FLAG_SABOTAGING,
+	TF_ENT_FLAG_MALFUNCTION,
 	TF_ENT_FLAG_BUILDING_SG,
 	TF_ENT_FLAG_BUILDING_DISP,
 	TF_ENT_FLAG_BUILDING_DETP,
@@ -204,24 +143,10 @@ typedef enum eTF_EntityFlags
 	TF_ENT_FLAG_LEVEL2,
 	TF_ENT_FLAG_LEVEL3,
 	TF_LAST_FLAG
-} TF_EntityFlags;
+};
 
 // enumerations: TF_Powerups
-//		TF_PWR_DISGUISE_BLUE - Disguised as blue team.
-//		TF_PWR_DISGUISE_RED - Disguised as red team.
-//		TF_PWR_DISGUISE_YELLOW - Disguised as yellow team.
-//		TF_PWR_DISGUISE_GREEN - Disguised as green team.
-//		TF_PWR_DISGUISE_SCOUT - Disguised as scout.
-//		TF_PWR_DISGUISE_SNIPER - Disguised as sniper.
-//		TF_PWR_DISGUISE_SOLDIER - Disguised as soldier.
-//		TF_PWR_DISGUISE_DEMOMAN - Disguised as demo-man.
-//		TF_PWR_DISGUISE_MEDIC - Disguised as medic.
-//		TF_PWR_DISGUISE_HWGUY - Disguised as hwguy.
-//		TF_PWR_DISGUISE_PYRO - Disguised as pyro.
-//		TF_PWR_DISGUISE_SPY - Disguised as spy.
-//		TF_PWR_DISGUISE_CIVILIAN - Disguised as civilian.
-//		TF_PWR_FEIGNED - Entity is feigned.
-typedef enum eTF_Powerups
+ enum TF_Powerups
 {
 	// Team Disguise
 	TF_PWR_DISGUISE_BLUE = PWR_FIRST_USER,
@@ -243,31 +168,10 @@ typedef enum eTF_Powerups
 
 	// Other powerups
 	TF_PWR_CLOAKED,
-} TF_Powerups;
+};
 
 // enumerations: TF_Weapon
-// 		WP_UMBRELLA - Umbrella.
-// 		WP_AXE - Axe.
-// 		WP_CROWBAR - Crowbar.
-// 		WP_MEDKIT - Med-kit.
-// 		WP_KNIFE - Knife.
-// 		WP_SPANNER - Spanner/wrench.
-// 		WP_SHOTGUN - Shotgun.
-// 		WP_SUPERSHOTGUN - Super shotgun.
-// 		WP_NAILGUN - Nailgun.
-// 		WP_SUPERNAILGUN - Super Nailgun.
-// 		WP_GRENADE_LAUNCHER - Grenade Launcher.
-// 		WP_ROCKET_LAUNCHER - Rocket Launcher.
-// 		WP_SNIPER_RIFLE - Sniper Rifle.
-// 		WP_RAILGUN - Railgun.
-// 		WP_FLAMETHROWER - Flamethrower.
-// 		WP_MINIGUN - Minigun/Assault cannon.
-// 		WP_AUTORIFLE - Auto-rifle.
-// 		WP_DARTGUN - Dart gun.
-// 		WP_PIPELAUNCHER - Pipe Launcher.
-// 		WP_NAPALMCANNON - Napalm Cannon.
-//		TF_WP_GRENADE - Offhand Grenade.
-typedef enum eTF_Weapon
+enum TF_Weapon
 {
 	TF_WP_NONE = INVALID_WEAPON,
 	TF_WP_UMBRELLA,
@@ -313,51 +217,27 @@ typedef enum eTF_Weapon
 
 	// THIS MUST STAY LAST
 	TF_WP_MAX
-} TF_Weapon;
-
-// constants: TF_ItemTypes
-//		TF_GREN_NORMAL - Normal grenade.
-//		TF_GREN_CONCUSS - Concussion grenade.
-//		TF_GREN_FLASH - Flash grenade.
-//		TF_GREN_FLARE - Flare grenade.
-//		TF_GREN_NAIL - Nail grenade.
-//		TF_GREN_CLUSTER - Cluster Grenade(Mirv).
-//		TF_GREN_CLUSTERSECTION - Cluster Section(Mirvlet).
-//		TF_GREN_NAPALM - Napalm/Incendiary grenade.
-//		TF_GREN_GAS - Gas/Hallucinogen grenade.
-//		TF_GREN_EMP - EMP grenade.
-typedef enum eTF_ItemTypes
-{
-	TF_GREN_NORMAL = 1,
-	TF_GREN_CONCUSS,
-	TF_GREN_FLASH,
-	TF_GREN_FLARE,
-	TF_GREN_NAIL,
-	TF_GREN_CLUSTER,
-	TF_GREN_CLUSTERSECTION,
-	TF_GREN_NAPALM,
-	TF_GREN_GAS,
-	TF_GREN_EMP,
-
-	// THIS MUST STAY LAST
-	TF_NUM_GRENADES
-} TF_ItemTypes;
+};
 
 // enumerations: TF_Team
 //		TF_TEAM_BLUE - Blue team.
 //		TF_TEAM_RED - Red team.
 //		TF_TEAM_YELLOW - Yellow team.
 //		TF_TEAM_GREEN - Green team.
-typedef enum eTF_Team
+enum TF_Team
 {
 	TF_TEAM_NONE = 0,
+	TF_TEAM_BLUE, // - Blue team.
+	TF_TEAM_RED, // - Red team.
+	TF_TEAM_YELLOW, //  - Yellow team.
+	TF_TEAM_GREEN, //  - Green team.
 	TF_TEAM_MAX = 5
-} TF_Team;
+};
 
-// typedef: TF_Events
+// enum:  TF_Events
 //		Defines the events specific to the TF game, numbered starting at the end of
 //		the global events.
-typedef enum eTF_Events
+enum TF_Events
 {
 	TF_MSG_BEGIN = EVENT_NUM_EVENTS,
 
@@ -407,6 +287,7 @@ typedef enum eTF_Events
 	TF_MSG_DETPACK_CANTBUILD,
 	TF_MSG_DETPACK_ALREADYBUILT,
 	TF_MSG_DETPACK_DETONATED,
+	TF_MSG_PIPE_DETONATED,
 	// Internal Events
 	TF_MSG_PIPE_PROXIMITY,
 	TF_MSG_DETPIPES,		// The bot has detected the desire to det pipes.
@@ -514,19 +395,19 @@ typedef enum eTF_Events
 
 	// THIS MUST STAY LAST
 	TF_MSG_END_EVENTS
-} TF_Events;
+};
 
-typedef enum eTF_SoundType
+enum TF_SoundType
 {
 	TF_SND_RADAR = SND_MAX_SOUNDS,
 
 	// THIS MUST BE LAST
 	TF_SND_MAX_SOUNDS
-} TF_SoundType;
+};
 
-// typedef: TF_GameMessage
+// enum:  TF_GameMessage
 //		Events that allow the bot to query for information from the game.
-typedef enum eTF_GameMessage
+enum TF_GameMessage
 {
 	TF_MSG_START = GEN_MSG_END,
 
@@ -549,14 +430,15 @@ typedef enum eTF_GameMessage
 
 	// THIS MUST STAY LAST
 	TF_MSG_END
-} TF_GameMessage;
+};
 
-// typedef: TF_BuildableStatus
+// enum:  TF_BuildableStatus
 //		Enumerations for TF building status.
-typedef enum eTF_BuildableStatus
+enum TF_BuildableStatus
 {
 	BUILDABLE_INVALID,
 	BUILDABLE_BUILDING,
 	BUILDABLE_BUILT,
-} TF_BuildableStatus;
+};
+
 #endif

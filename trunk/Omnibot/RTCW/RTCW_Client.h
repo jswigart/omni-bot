@@ -23,12 +23,12 @@ public:
 
 	void Init(int _gameid);
 
-	NavFlags GetTeamFlag();
-	NavFlags GetTeamFlag(int _team);
+	NavFlags GetTeamFlag(int _team) const;
+	void GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags );
 
 	void SendVoiceMacro(int _macroId);
 
-	void ProcessGotoNode( const PathInterface::PathEdge edges[ 2 ], const size_t numEdges );
+	void ProcessGotoNode( const PathInterface::PathCorner corners[ 2 ], const size_t numEdges );
 	void ProcessGotoNode(const Path &_path);
 
 	float GetGameVar(GameVar _var) const;
@@ -45,9 +45,7 @@ public:
 	float GetAmmoEntityDist() const { return m_AmmoEntityDistance; }
 	float GetWeaponEntityDist() const { return m_WeaponEntityDistance; }
 	float GetProjectileEntityDist() const { return m_ProjectileEntityDistance; }
-
-	float NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) ;
-
+	
 	void SetupBehaviorTree();
 
 	RTCW_Client();

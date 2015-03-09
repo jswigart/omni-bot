@@ -11,7 +11,6 @@
 #ifndef __ET_GAME_H__
 #define __ET_GAME_H__
 
-class Waypoint;
 class gmMachine;
 class gmTableObject;
 
@@ -23,9 +22,7 @@ class ET_Game : public IGame
 {
 public:
 	bool Init( System & system );
-
-	void RegisterNavigationFlags(PathPlannerBase *_planner);
-
+	
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
@@ -35,12 +32,12 @@ public:
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
 	const char *GetGameDatabaseAbbrev() const { return "et"; }
-	eNavigatorID GetDefaultNavigator() const;
+	NavigatorID GetDefaultNavigator() const;
 	bool ReadyForDebugWindow() const;
 	virtual const char *IsDebugDrawSupported() const;
 
-	GoalManager *GetGoalManager();
-
+	virtual bool GetAnalyticsKeys( GameAnalyticsKeys & keys );
+	
 	void AddBot(Msg_Addbot &_addbot, bool _createnow = true);
 
 	void ClientJoined(const Event_SystemClientConnected *_msg);
@@ -54,11 +51,7 @@ public:
 
 	static int CLASSEXoffset;
 	static bool IsETBlight, IsBastardmod;
-
-	NavFlags WaypointBlockableFlags() const;
-	NavFlags WaypointCallbackFlags() const;
-	BlockableStatus WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw) const;
-
+		
 	ET_Game() {};
 	virtual ~ET_Game() {};
 protected:

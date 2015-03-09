@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "TF_Client.h"
-#include "TF_NavigationFlags.h"
 #include "TF_BaseStates.h"
 #include "FilterClosestTF.h"
 
@@ -463,42 +462,42 @@ bool TF_Client::GetSniperWeapon(int &nonscoped, int &scoped)
 	return false;
 }
 
-float TF_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
+//float TF_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
+//{
+//	using namespace AiState;
+//
+//	WeaponSystem *wsys = GetWeaponSystem();
+//	if(_flag & F_TF_NAV_ROCKETJUMP)
+//	{
+//		if(wsys->HasWeapon(TF_Options::ROCKETJUMP_WPN) && wsys->HasAmmo(TF_Options::ROCKETJUMP_WPN))
+//			return 1.f;
+//	}
+//
+//	if(_flag & F_TF_NAV_CONCJUMP)
+//	{
+//		if(wsys->HasWeapon(TF_WP_GRENADE_CONC) && wsys->HasAmmo(TF_WP_GRENADE_CONC))
+//			return 1.f;
+//	}
+//
+//	if(_flag & F_NAV_TELEPORT)
+//	{
+//		// todo:
+//		return 1.f;
+//	}
+//
+//	if(_flag & F_TF_NAV_DOUBLEJUMP)
+//	{
+//		if(GetClass() == TF_CLASS_SCOUT)
+//			return 1.f;
+//	}
+//
+//	return 0.f;
+//}
+
+void TF_Client::ProcessGotoNode( const PathInterface::PathCorner corners[ 2 ], const size_t numEdges )
 {
-	using namespace AiState;
-
-	WeaponSystem *wsys = GetWeaponSystem();
-	if(_flag & F_TF_NAV_ROCKETJUMP)
-	{
-		if(wsys->HasWeapon(TF_Options::ROCKETJUMP_WPN) && wsys->HasAmmo(TF_Options::ROCKETJUMP_WPN))
-			return 1.f;
-	}
-
-	if(_flag & F_TF_NAV_CONCJUMP)
-	{
-		if(wsys->HasWeapon(TF_WP_GRENADE_CONC) && wsys->HasAmmo(TF_WP_GRENADE_CONC))
-			return 1.f;
-	}
-
-	if(_flag & F_NAV_TELEPORT)
-	{
-		// todo:
-		return 1.f;
-	}
-
-	if(_flag & F_TF_NAV_DOUBLEJUMP)
-	{
-		if(GetClass() == TF_CLASS_SCOUT)
-			return 1.f;
-	}
-
-	return 0.f;
-}
-
-void TF_Client::ProcessGotoNode( const PathInterface::PathEdge edges[ 2 ], const size_t numEdges )
-{
-	if ( numEdges == 0 )
-		return;
+	/*if ( numEdges == 0 )
+		return;*/
 
 	//const bool OnGround = GetEntityFlags().CheckFlag(ENT_FLAG_ONGROUND);
 	//if(OnGround)
@@ -545,50 +544,50 @@ void TF_Client::ProcessGotoNode( const PathInterface::PathEdge edges[ 2 ], const
 
 void TF_Client::ProcessGotoNode(const Path &_path)
 {
-	const bool OnGround = GetEntityFlags().CheckFlag(ENT_FLAG_ONGROUND);
-	if(OnGround)
-		m_DoubleJumping = false;
+	//const bool OnGround = GetEntityFlags().CheckFlag(ENT_FLAG_ONGROUND);
+	//if(OnGround)
+	//	m_DoubleJumping = false;
 
-	Path::PathPoint pt;
-	_path.GetCurrentPt(pt);
+	//Path::PathPoint pt;
+	//_path.GetCurrentPt(pt);
 
-	if(pt.m_NavFlags & F_TF_NAV_DOUBLEJUMP)
-	{
-		if(!m_DoubleJumping && (GetPosition()-pt.m_Pt).Length() < pt.m_Radius)
-		{
-			//const float Speed = GetVelocity().Length();
-			const Vector3f Vel = Normalize(GetVelocity());
-			const Vector3f IdealVel = Normalize(pt.m_Pt - GetPosition());
-			const float fDot = IdealVel.Dot(Vel);
+	//if(pt.m_NavFlags & F_TF_NAV_DOUBLEJUMP)
+	//{
+	//	if(!m_DoubleJumping && (GetPosition()-pt.m_Pt).Length() < pt.m_Radius)
+	//	{
+	//		//const float Speed = GetVelocity().Length();
+	//		const Vector3f Vel = Normalize(GetVelocity());
+	//		const Vector3f IdealVel = Normalize(pt.m_Pt - GetPosition());
+	//		const float fDot = IdealVel.Dot(Vel);
 
-			if(OnGround && fDot > 0.9f)
-			{
-				m_DoubleJumping = true;
-				PressButton(BOT_BUTTON_JUMP);
-			}
+	//		if(OnGround && fDot > 0.9f)
+	//		{
+	//			m_DoubleJumping = true;
+	//			PressButton(BOT_BUTTON_JUMP);
+	//		}
 
-			static float JumpVelocity = 10.f;
-			if(!OnGround && GetVelocity().Z() > JumpVelocity)
-			{
-				m_DoubleJumping = true;
-			}
+	//		static float JumpVelocity = 10.f;
+	//		if(!OnGround && GetVelocity().Z() > JumpVelocity)
+	//		{
+	//			m_DoubleJumping = true;
+	//		}
 
-			m_DoubleJumpHeight = GetPosition().Z();
-		}
-	}
+	//		m_DoubleJumpHeight = GetPosition().Z();
+	//	}
+	//}
 
-	if(m_DoubleJumping)
-	{
-		const float NextHeight = GetPosition().Z() + GetVelocity().Z() * IGame::GetDeltaTimeSecs();
-		if(NextHeight < m_DoubleJumpHeight)
-		{
-			PressButton(BOT_BUTTON_JUMP);
-			m_DoubleJumping = false;
-		}
-		return;
-	}
+	//if(m_DoubleJumping)
+	//{
+	//	const float NextHeight = GetPosition().Z() + GetVelocity().Z() * IGame::GetDeltaTimeSecs();
+	//	if(NextHeight < m_DoubleJumpHeight)
+	//	{
+	//		PressButton(BOT_BUTTON_JUMP);
+	//		m_DoubleJumping = false;
+	//	}
+	//	return;
+	//}
 
-	m_DoubleJumping = false;
+	//m_DoubleJumping = false;
 }
 
 void TF_Client::SetupBehaviorTree()

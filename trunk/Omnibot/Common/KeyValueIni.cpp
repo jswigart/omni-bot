@@ -548,6 +548,7 @@ namespace KEYVALUEINI
 		{
 			for (int i=0; i<len; i++)
 			{
+				data[i];
 				assert( data[i] );
 			}
 		}

@@ -7,8 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "ET_Game.h"
-#include "ET_GoalManager.h"
-#include "ET_NavigationFlags.h"
 #include "ET_VoiceMacros.h"
 #include "ET_InterfaceFuncs.h"
 #include "ET_Client.h"
@@ -16,7 +14,6 @@
 #include "System.h"
 #include "RenderBuffer.h"
 
-#include "Waypoint.h"
 #include "PathPlannerBase.h"
 #include "BotPathing.h"
 #include "NameManager.h"
@@ -81,10 +78,18 @@ const char *ET_Game::GetScriptSubfolder() const
 #endif
 }
 
-eNavigatorID ET_Game::GetDefaultNavigator() const
+bool ET_Game::GetAnalyticsKeys( GameAnalyticsKeys & keys ) 
 {
-	//return NAVID_RECAST;
-	return NAVID_NAVMESH;
+	keys.mGameKey		= "508391d546e97c34dca527038b9df10c";
+	keys.mSecretKey		= "c6eecafbb67e602b45f32ca2948ae520276c291e";
+	keys.mDataApiKey	= "19ea5d05b850d0b9379f1b9c381e2dfd7e636d13";
+	keys.mVersionKey	= va( "%s:v%s", GetGameName(), GetVersion() );
+	return true; 
+}
+
+NavigatorID ET_Game::GetDefaultNavigator() const
+{
+	return NAVID_RECAST;
 }
 
 bool ET_Game::ReadyForDebugWindow() const
@@ -107,20 +112,13 @@ const char *ET_Game::IsDebugDrawSupported() const
 	return NULL;
 }
 
-GoalManager *ET_Game::GetGoalManager()
-{
-	return new ET_GoalManager;
-}
-
 bool ET_Game::Init( System & system )
 {
 	const char *modName = g_EngineFuncs->GetModName();
 	IsETBlight = !strcmp(modName, "etblight");
 	IsBastardmod = !strcmp(modName, "bastardmod");
 	CLASSEXoffset = IsETBlight ? 2 : 0;
-
-	AiState::FollowPath::m_OldLadderStyle = false;
-
+	
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(ET_Game::ET_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(ET_Game::ET_GetEntityClassAimOffset);
@@ -526,40 +524,6 @@ void ET_Game::InitScriptPowerups(gmMachine *_machine, gmTableObject *_table)
 {
 }
 
-void ET_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
-{
-	// Should always register the default flags
-	IGame::RegisterNavigationFlags(_planner);
-
-	_planner->RegisterNavFlag("AXIS",			F_NAV_TEAM1);
-	_planner->RegisterNavFlag("ALLIES",			F_NAV_TEAM2);
-
-	_planner->RegisterNavFlag("MOBILEMG42",		F_ET_NAV_MG42SPOT);
-	//_planner->RegisterNavFlag("PANZERFAUST",	F_ET_NAV_PANZERFSPOT);
-
-	_planner->RegisterNavFlag("MOBILEMORTAR",	F_ET_NAV_MORTAR);
-	_planner->RegisterNavFlag("PLANTMINE",		F_ET_NAV_MINEAREA);
-	//_planner->RegisterNavFlag("AIRSTRIKE",	F_ET_NAV_AIRSTRAREA);
-
-	_planner->RegisterNavFlag("BLOCKWALL",		F_ET_NAV_WALL);
-	_planner->RegisterNavFlag("BLOCKBRIDGE",	F_ET_NAV_BRIDGE);
-	_planner->RegisterNavFlag("BLOCKWATER",		F_ET_NAV_WATERBLOCKABLE);
-
-	_planner->RegisterNavFlag("SPRINT",			F_ET_NAV_SPRINT);
-	_planner->RegisterNavFlag("PRONE",			F_NAV_PRONE);
-	_planner->RegisterNavFlag("CAPPOINT",		F_ET_NAV_CAPPOINT);
-	_planner->RegisterNavFlag("CALLARTILLERY",	F_ET_NAV_ARTSPOT);
-	_planner->RegisterNavFlag("ARTILLERY_S",	F_ET_NAV_ARTYTARGET_S);
-	_planner->RegisterNavFlag("ARTILLERY_D",	F_ET_NAV_ARTYTARGET_D);
-	_planner->RegisterNavFlag("DISGUISE",		F_ET_NAV_DISGUISE);
-	_planner->RegisterNavFlag("FLAME",			F_ET_NAV_FLAMETHROWER);
-	_planner->RegisterNavFlag("PANZER",			F_ET_NAV_PANZER);
-	_planner->RegisterNavFlag("STRAFE_L",		F_ET_NAV_STRAFE_L);
-	_planner->RegisterNavFlag("STRAFE_R",		F_ET_NAV_STRAFE_R);
-	_planner->RegisterNavFlag("UGOAL",			F_ET_NAV_USERGOAL);
-	_planner->RegisterNavFlag("USEPATH",		F_ET_NAV_USEPATH);
-}
-
 void ET_Game::InitCommands()
 {
 	IGame::InitCommands();
@@ -689,78 +653,4 @@ void ET_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 			cp->CheckClassEvent();
 		}
 	}
-}
-
-// PathPlannerWaypointInterface
-NavFlags ET_Game::WaypointBlockableFlags() const
-{
-	return F_ET_NAV_WALL|F_ET_NAV_BRIDGE|F_ET_NAV_WATERBLOCKABLE;
-}
-
-NavFlags ET_Game::WaypointCallbackFlags() const
-{
-	return F_ET_NAV_DISGUISE|F_ET_NAV_USEPATH;
-}
-
-PathPlannerWaypointInterface::BlockableStatus ET_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw) const
-{
-	static bool bRender = false;
-	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
-
-	Vector3f vStart, vEnd;
-
-	if(/*_wp1->IsFlagOn(F_ET_NAV_WALL) &&*/ _wp2->IsFlagOn(F_ET_NAV_WALL))
-	{
-		static float fOffset = 25.0f;
-		static Vector3f vMins(-5.f, -5.f, -5.f), vMaxs(5.f, 5.f, 5.f);
-		AABB aabb(vMins, vMaxs);
-		vStart = _wp1->GetPosition() + Vector3f(0, 0, fOffset);
-		vEnd = _wp2->GetPosition() + Vector3f(0, 0, fOffset);
-
-		if(bRender)
-		{
-			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE, 2.f);
-		}
-
-		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStart, vEnd, &aabb, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_OPEN : PathPlannerWaypointInterface::B_PATH_CLOSED;
-	}
-
-	if(res != PathPlannerWaypointInterface::B_PATH_CLOSED && _wp1->IsFlagOn(F_ET_NAV_BRIDGE) && _wp2->IsFlagOn(F_ET_NAV_BRIDGE))
-	{
-		vStart = _wp1->GetPosition() + (_wp2->GetPosition() - _wp1->GetPosition()) * 0.5;
-		vEnd = vStart +  Vector3f(0,0,-48);
-
-		if(bRender)
-		{
-			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE, 2.f);
-		}
-
-		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStart, vEnd, NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_CLOSED : PathPlannerWaypointInterface::B_PATH_OPEN;
-	}
-
-	if(res != PathPlannerWaypointInterface::B_PATH_CLOSED && _wp2->IsFlagOn(F_ET_NAV_WATERBLOCKABLE))
-	{
-		vStart = _wp1->GetPosition();
-		vEnd = vStart + Vector3f(0.0f, 0.0f, 5.0f);
-
-		if(bRender)
-		{
-			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE, 2.f);
-		}
-
-		int iContents = g_EngineFuncs->GetPointContents(vStart);
-		res = (iContents & CONT_WATER) ? PathPlannerWaypointInterface::B_PATH_CLOSED : PathPlannerWaypointInterface::B_PATH_OPEN;
-	}
-
-	if(_draw && (res != PathPlannerWaypointInterface::B_INVALID_FLAGS))
-	{
-		RenderBuffer::AddLine(vStart, vEnd,
-			(res == PathPlannerWaypointInterface::B_PATH_OPEN) ? COLOR::GREEN : COLOR::RED, 2.0f);
-	}
-
-	return res;
 }

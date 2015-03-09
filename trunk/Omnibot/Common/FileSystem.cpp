@@ -15,7 +15,7 @@
 
 extern "C"
 {
-#include "7zCrc.h"
+#include "lzma\C\7zCrc.h"
 };
 
 #if defined WIN32
@@ -82,6 +82,8 @@ void FileSystem::FindAllFiles(const std::string &_path, DirectoryList &_list, co
 
 bool FileSystem::InitFileSystem()
 {
+	LOGFUNC;
+
 	PHYSFS_Version compiled;
 	PHYSFS_VERSION(&compiled);
 	LOG("Initializing PhysFS: Version " <<
@@ -89,7 +91,6 @@ bool FileSystem::InitFileSystem()
 		(int)compiled.minor << "." <<
 		(int)compiled.patch);
 
-	LOGFUNC;
 	fs::path basePath = GetBaseFolder();
 	LOG("Your base directory is: "<<basePath.string().c_str());
 	if(!PHYSFS_init(basePath.string().c_str()))
@@ -547,7 +548,7 @@ fs::path FileSystem::GetModFolder()
 	if( System::mInstance->mGame )
 	{
 		// Append the script subfolder
-		navFolder /= fs::path(System::mInstance->mGame->GetModSubFolder(), fs::native);
+		navFolder /= fs::path(System::mInstance->mGame->GetModSubFolder());
 		return navFolder;
 	}
 
@@ -561,7 +562,7 @@ fs::path FileSystem::GetNavFolder()
 	if( System::mInstance->mGame )
 	{
 		// Append the script subfolder
-		navFolder /= fs::path(System::mInstance->mGame->GetNavSubfolder(), fs::native);
+		navFolder /= fs::path(System::mInstance->mGame->GetNavSubfolder());
 		return navFolder;
 	}
 
@@ -575,7 +576,7 @@ fs::path FileSystem::GetScriptFolder()
 	if(System::mInstance->mGame)
 	{
 		// Append the script subfolder
-		scriptFolder /= fs::path(System::mInstance->mGame->GetScriptSubfolder(), fs::native);
+		scriptFolder /= fs::path(System::mInstance->mGame->GetScriptSubfolder());
 		return scriptFolder;
 	}
 
@@ -926,7 +927,7 @@ bool File::ReadString(std::string &_str)
 				boost::shared_array<char> pBuffer(new char[len+1]);
 				if(!Read(pBuffer.get(), len, 1)) return false;
 				pBuffer.get()[len] = 0;
-				_str = pBuffer.get();
+				_str.insert( 0, pBuffer.get(), len );
 			}
 		}
 		return true;

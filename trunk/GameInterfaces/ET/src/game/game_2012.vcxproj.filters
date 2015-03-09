@@ -205,12 +205,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\botai\ai_botScriptTrigger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\botai\ai_botScriptTriggerX.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\botai\ai_cmd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -220,13 +214,7 @@
     <ClInclude Include="..\botai\ai_dmgoal_mp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\botai\ai_dmgoal_sp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\botai\ai_dmnet_mp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\botai\ai_dmnet_sp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\botai\ai_dmq3.h">

@@ -27,17 +27,6 @@ namespace InterfaceFuncs
 		MessageHelper msg(MC_MSG_UPGRADE_MODULE, &data, sizeof(data));
 		return SUCCESS(InterfaceMsg(msg, _ent));
 	}
-	bool GetWeaponStats(GameEntity _ent, MC_WeaponUpgradeStats &stats)
-	{
-		MessageHelper msg(MC_MSG_GET_WEAPON_UPGRADE_STATS, &stats, sizeof(stats));
-		return SUCCESS(InterfaceMsg(msg, _ent));
-	}
-	bool UpgradeWeapon(GameEntity _ent, int upgradeId)
-	{
-		MC_UpgradeWeapon data = { upgradeId };
-		MessageHelper msg(MC_MSG_UPGRADE_WEAPON, &data, sizeof(data));
-		return SUCCESS(InterfaceMsg(msg, _ent));
-	}
 	bool CanPhysPickup(GameEntity _ent, GameEntity _pickup)
 	{
 		MC_CanPhysPickup data = { _pickup, False };

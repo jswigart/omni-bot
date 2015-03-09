@@ -4562,7 +4562,9 @@ void CG_DrawActive( stereoFrame_t stereoView ) {
 	CG_DrawMiscGamemodels();
 
 	if( !(cg.limboEndCinematicTime > cg.time && cg.showGameView) ) {
+		cg.refdef_current->rdflags |= RDF_RENDEROMNIBOT; // cvar this flag?
 		trap_R_RenderScene( cg.refdef_current );
+		cg.refdef_current->rdflags &= ~RDF_RENDEROMNIBOT; // cvar this flag?
 	}
 
 	// restore original viewpoint if running stereo
@@ -4718,7 +4720,7 @@ void CG_DrawOnScreenText(void) {
 				const char *tok = 0;
 				char temp[1024];
 				int heightOffset = 0;
-				vec4_t v4Color = 
+				const vec4_t v4Color = 
 				{
 					(float)ColorUnion.m_RGBA[0]/255.f,
 					(float)ColorUnion.m_RGBA[1]/255.f,

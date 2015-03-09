@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Q4_Client.h"
-#include "Q4_NavigationFlags.h"
 #include "Q4_Messages.h"
 
 #include "IGame.h"
@@ -24,22 +23,32 @@ Q4_Client::~Q4_Client()
 {
 }
 
-NavFlags Q4_Client::GetTeamFlag()
-{
-	return GetTeamFlag(GetTeam());
-}
-
-NavFlags Q4_Client::GetTeamFlag(int _team)
+NavFlags Q4_Client::GetTeamFlag(int _team) const
 {
 	static const NavFlags defaultTeam = 0;
 	switch(_team)
 	{
 	case Q4_TEAM_MARINE:
-		return F_NAV_TEAM1;
+		return NAVFLAGS_TEAM1_ONLY;
 	case Q4_TEAM_STROGG:
-		return F_NAV_TEAM2;
+		return NAVFLAGS_TEAM2_ONLY;
 	default:
 		return defaultTeam;
+	}
+}
+
+void Q4_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
+{
+	includeFlags = NAVFLAGS_WALK;
+
+	switch ( GetTeam() )
+	{
+		case Q4_TEAM_MARINE:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			break;
+		case Q4_TEAM_STROGG:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			break;
 	}
 }
 

@@ -7,8 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "gmAABB.h"
-#include "gmbinder2.h"
-#include "gmbinder2_class.h"
+#include "gmbinder2/gmbinder2.h"
+#include "gmbinder2/gmbinder2_class.h"
 
 #include "RenderBuffer.h"
 

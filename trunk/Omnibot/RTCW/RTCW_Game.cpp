@@ -8,14 +8,11 @@
 
 #include "RTCW_Game.h"
 #include "RTCW_Client.h"
-#include "RTCW_GoalManager.h"
-#include "RTCW_NavigationFlags.h"
 #include "RTCW_VoiceMacros.h"
 #include "RTCW_InterfaceFuncs.h"
 
 #include "gmCall.h"
 
-#include "Waypoint.h"
 #include "PathPlannerBase.h"
 #include "BotPathing.h"
 #include "NameManager.h"
@@ -79,9 +76,9 @@ const char *RTCW_Game::GetScriptSubfolder() const
 #endif
 }
 
-eNavigatorID RTCW_Game::GetDefaultNavigator() const
+NavigatorID RTCW_Game::GetDefaultNavigator() const
 {
-	return NAVID_WP;
+	return NAVID_RECAST;
 }
 
 bool RTCW_Game::ReadyForDebugWindow() const
@@ -89,15 +86,8 @@ bool RTCW_Game::ReadyForDebugWindow() const
 	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING;
 }
 
-GoalManager *RTCW_Game::GetGoalManager()
-{
-	return new RTCW_GoalManager;
-}
-
 bool RTCW_Game::Init( System & system )
 {
-	AiState::FollowPath::m_OldLadderStyle = false;
-
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(RTCW_Game::RTCW_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(RTCW_Game::RTCW_GetEntityClassAimOffset);
@@ -389,36 +379,6 @@ void RTCW_Game::InitScriptPowerups(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "BALL",			gmVariable(RTCW_PWR_BALL));
 }
 
-void RTCW_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
-{
-	// Should always register the default flags
-	IGame::RegisterNavigationFlags(_planner);
-
-	_planner->RegisterNavFlag("AXIS",			F_NAV_TEAM1);
-	_planner->RegisterNavFlag("ALLIES",			F_NAV_TEAM2);
-	_planner->RegisterNavFlag("WALL",			F_RTCW_NAV_WALL);
-	_planner->RegisterNavFlag("BRIDGE",			F_RTCW_NAV_BRIDGE);
-
-	_planner->RegisterNavFlag("SPRINT",			F_RTCW_NAV_SPRINT);
-
-	_planner->RegisterNavFlag("WATERBLOCKABLE", F_RTCW_NAV_WATERBLOCKABLE);
-
-	_planner->RegisterNavFlag("CAPPOINT",		F_RTCW_NAV_CAPPOINT);
-
-	_planner->RegisterNavFlag("ARTY_SPOT",		F_RTCW_NAV_ARTSPOT);
-	_planner->RegisterNavFlag("ARTY_TARGET_S",	F_RTCW_NAV_ARTYTARGET_S);
-	_planner->RegisterNavFlag("ARTY_TARGET_D",	F_RTCW_NAV_ARTYTARGET_D);
-	_planner->RegisterNavFlag("STRAFE_L",		F_RTCW_NAV_STRAFE_L);
-	_planner->RegisterNavFlag("STRAFE_R",		F_RTCW_NAV_STRAFE_R);
-	_planner->RegisterNavFlag("PANZER",			F_RTCW_NAV_PANZER);
-	_planner->RegisterNavFlag("VENOM",			F_RTCW_NAV_VENOM);
-	_planner->RegisterNavFlag("FLAME",			F_RTCW_NAV_FLAMETHROWER);
-	_planner->RegisterNavFlag("UGOAL",			F_RTCW_NAV_USERGOAL);
-	_planner->RegisterNavFlag("USEPATH",		F_RTCW_NAV_USEPATH);
-	_planner->RegisterNavFlag("STRAFE_JUMP_L",	F_RTCW_NAV_STRAFE_JUMP_L);
-	_planner->RegisterNavFlag("STRAFE_JUMP_R",	F_RTCW_NAV_STRAFE_JUMP_R);
-}
-
 void RTCW_Game::InitCommands()
 {
 	IGame::InitCommands();
@@ -587,77 +547,4 @@ void RTCW_Game::StartGame()
 
 	// Other initialization.
 	m_SettingLimiter.reset(new Regulator(2000));
-}
-
-// PathPlannerWaypointInterface
-NavFlags RTCW_Game::WaypointBlockableFlags() const
-{
-	return F_RTCW_NAV_WALL|F_RTCW_NAV_BRIDGE|F_RTCW_NAV_WATERBLOCKABLE;
-}
-
-NavFlags RTCW_Game::WaypointCallbackFlags() const
-{
-	return F_RTCW_NAV_USEPATH;
-}
-
-PathPlannerWaypointInterface::BlockableStatus RTCW_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw) const
-{
-	static bool bRender = false;
-	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
-	Vector3f vStart, vEnd;
-
-	if(/*_wp1->IsFlagOn(F_ET_NAV_WALL) &&*/ _wp2->IsFlagOn(F_RTCW_NAV_WALL))
-	{
-		static float fOffset = 25.0f;
-		static Vector3f vMins(-5.f, -5.f, -5.f), vMaxs(5.f, 5.f, 5.f);
-		AABB aabb(vMins, vMaxs);
-		vStart = _wp1->GetPosition() + Vector3f(0, 0, fOffset);
-		vEnd = _wp2->GetPosition() + Vector3f(0, 0, fOffset);
-
-		if(bRender)
-		{
-			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE, 2.f);
-		}
-
-		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStart, vEnd, &aabb, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_OPEN : PathPlannerWaypointInterface::B_PATH_CLOSED;
-	}
-
-	if(res != PathPlannerWaypointInterface::B_PATH_CLOSED && _wp1->IsFlagOn(F_RTCW_NAV_BRIDGE) && _wp2->IsFlagOn(F_RTCW_NAV_BRIDGE))
-	{
-		vStart = _wp1->GetPosition() + (_wp2->GetPosition() - _wp1->GetPosition()) * 0.5;
-		vEnd = vStart +  Vector3f(0,0,-48);
-
-		if(bRender)
-		{
-			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE, 2.f);
-		}
-
-		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStart, vEnd, NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_CLOSED : PathPlannerWaypointInterface::B_PATH_OPEN;
-	}
-
-	if(res != PathPlannerWaypointInterface::B_PATH_CLOSED && _wp2->IsFlagOn(F_RTCW_NAV_WATERBLOCKABLE))
-	{
-		vStart = _wp1->GetPosition();
-		vEnd = vStart + Vector3f(0.0f, 0.0f, 5.0f);
-
-		if(bRender)
-		{
-			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE, 2.f);
-		}
-
-		int iContents = g_EngineFuncs->GetPointContents(vStart);
-		res = (iContents & CONT_WATER) ? PathPlannerWaypointInterface::B_PATH_CLOSED : PathPlannerWaypointInterface::B_PATH_OPEN;
-	}
-
-	if(_draw && (res != PathPlannerWaypointInterface::B_INVALID_FLAGS))
-	{
-		RenderBuffer::AddLine(vStart, vEnd,
-			(res == PathPlannerWaypointInterface::B_PATH_OPEN) ? COLOR::GREEN : COLOR::RED, 2.0f);
-	}
-
-	return res;
 }

@@ -11,7 +11,7 @@
 #ifndef __EVENTRECIEVER_H__
 #define __EVENTRECIEVER_H__
 
-#include "Omni-Bot_BasicTypes.h"
+#include "Omni-Bot_Types.h"
 #include "MessageHelper.h"
 
 class CallbackParameters;

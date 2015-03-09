@@ -68,9 +68,6 @@
     <ClInclude Include="keycodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\main\ui\menudef.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\game\q_shared.h">
       <Filter>Header Files</Filter>
     </ClInclude>

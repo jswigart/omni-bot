@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "RTCW_Client.h"
-#include "RTCW_NavigationFlags.h"
 #include "RTCW_VoiceMacros.h"
 #include "RTCW_FilterClosest.h"
 #include "RTCW_Messages.h"
@@ -15,7 +14,6 @@
 #include "RTCW_InterfaceFuncs.h"
 
 #include "System.h"
-#include "Waypoint.h"
 #include "BotTargetingSystem.h"
 #include "BotWeaponSystem.h"
 
@@ -114,22 +112,32 @@ void RTCW_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters
 	Client::ProcessEvent(_message, _cb);
 }
 
-NavFlags RTCW_Client::GetTeamFlag()
-{
-	return GetTeamFlag(GetTeam());
-}
-
-NavFlags RTCW_Client::GetTeamFlag(int _team)
+NavFlags RTCW_Client::GetTeamFlag(int _team) const
 {
 	static const NavFlags defaultTeam = 0;
 	switch(_team)
 	{
 	case RTCW_TEAM_AXIS:
-		return F_NAV_TEAM1;
+		return NAVFLAGS_TEAM1_ONLY;
 	case RTCW_TEAM_ALLIES:
-		return F_NAV_TEAM2;
+		return NAVFLAGS_TEAM2_ONLY;
 	default:
 		return defaultTeam;
+	}
+}
+
+void RTCW_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
+{
+	includeFlags = NAVFLAGS_WALK;
+
+	switch ( GetTeam() )
+	{
+		case RTCW_TEAM_AXIS:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			break;
+		case RTCW_TEAM_ALLIES:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			break;
 	}
 }
 
@@ -209,136 +217,136 @@ int RTCW_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 	return iVoiceId;
 }
 
-void RTCW_Client::ProcessGotoNode( const PathInterface::PathEdge edges[ 2 ], const size_t numEdges )
+void RTCW_Client::ProcessGotoNode( const PathInterface::PathCorner corners[ 2 ], const size_t numEdges )
 {
-	if ( numEdges == 0 )
-		return;
+	//if ( numEdges == 0 )
+	//	return;
 
-	if(edges[ 0 ].mFlags & F_RTCW_NAV_SPRINT)
-	{
-		PressButton(BOT_BUTTON_SPRINT);
-	}
+	//if(corners[ 0 ].mFlags & F_RTCW_NAV_SPRINT)
+	//{
+	//	PressButton(BOT_BUTTON_SPRINT);
+	//}
 
-	// test for inwater / jump to move to surface
-	if(edges[ 0 ].mFlags & F_NAV_INWATER)
-	{
-		PressButton(BOT_BUTTON_JUMP);
-	}
+	//// test for inwater / jump to move to surface
+	//if(corners[ 0 ].mFlags & F_NAV_INWATER)
+	//{
+	//	PressButton(BOT_BUTTON_JUMP);
+	//}
 
-	if(edges[ 0 ].mFlags & F_RTCW_NAV_STRAFE_L)
-	{
-		PressButton(BOT_BUTTON_LSTRAFE);
-	}
-	else if(edges[ 0 ].mFlags & F_RTCW_NAV_STRAFE_R)
-	{
-		PressButton(BOT_BUTTON_RSTRAFE);
-	}
+	//if(corners[ 0 ].mFlags & F_RTCW_NAV_STRAFE_L)
+	//{
+	//	PressButton(BOT_BUTTON_LSTRAFE);
+	//}
+	//else if(corners[ 0 ].mFlags & F_RTCW_NAV_STRAFE_R)
+	//{
+	//	PressButton(BOT_BUTTON_RSTRAFE);
+	//}
 
-	if (m_StrafeJump)
-	{
-		if(edges[ 0 ].mFlags & F_RTCW_NAV_STRAFE_JUMP_L)
-		{
-			if (IGame::GetFrameNumber() % 20 == 0)
-			{
-				GameEntity targetent;
-				targetent = this->GetTargetingSystem()->GetCurrentTarget();
-				if (!targetent.IsValid())
-				{
-					BitFlag64 b;
-					b.SetFlag(BOT_BUTTON_LSTRAFE,true);
-					//b.SetFlag(BOT_BUTTON_FWD,true);
+	//if (m_StrafeJump)
+	//{
+	//	if(corners[ 0 ].mFlags & F_RTCW_NAV_STRAFE_JUMP_L)
+	//	{
+	//		if (IGame::GetFrameNumber() % 20 == 0)
+	//		{
+	//			GameEntity targetent;
+	//			targetent = this->GetTargetingSystem()->GetCurrentTarget();
+	//			if (!targetent.IsValid())
+	//			{
+	//				BitFlag64 b;
+	//				b.SetFlag(BOT_BUTTON_LSTRAFE,true);
+	//				//b.SetFlag(BOT_BUTTON_FWD,true);
 
-					PressButton(BOT_BUTTON_JUMP);
-					HoldButton(b, 750);
-				}
-			}
-			PressButton(BOT_BUTTON_SPRINT);
-		}
-		else if(edges[ 0 ].mFlags & F_RTCW_NAV_STRAFE_JUMP_R)
-		{
-			if (IGame::GetFrameNumber() % 20 == 0)
-			{
-				GameEntity targetent;
-				targetent = this->GetTargetingSystem()->GetCurrentTarget();
-				if (!targetent.IsValid())
-				{
-					BitFlag64 b;
-					b.SetFlag(BOT_BUTTON_LSTRAFE,true);
-					//b.SetFlag(BOT_BUTTON_FWD,true);
+	//				PressButton(BOT_BUTTON_JUMP);
+	//				HoldButton(b, 750);
+	//			}
+	//		}
+	//		PressButton(BOT_BUTTON_SPRINT);
+	//	}
+	//	else if(corners[ 0 ].mFlags & F_RTCW_NAV_STRAFE_JUMP_R)
+	//	{
+	//		if (IGame::GetFrameNumber() % 20 == 0)
+	//		{
+	//			GameEntity targetent;
+	//			targetent = this->GetTargetingSystem()->GetCurrentTarget();
+	//			if (!targetent.IsValid())
+	//			{
+	//				BitFlag64 b;
+	//				b.SetFlag(BOT_BUTTON_LSTRAFE,true);
+	//				//b.SetFlag(BOT_BUTTON_FWD,true);
 
-					PressButton(BOT_BUTTON_JUMP);
-					HoldButton(b, 750);
-				}
-			}
-			PressButton(BOT_BUTTON_SPRINT);
-		}
-	}
+	//				PressButton(BOT_BUTTON_JUMP);
+	//				HoldButton(b, 750);
+	//			}
+	//		}
+	//		PressButton(BOT_BUTTON_SPRINT);
+	//	}
+	//}
 }
 
 void RTCW_Client::ProcessGotoNode(const Path &_path)
 {
-	Path::PathPoint pt;
-	_path.GetCurrentPt(pt);
+	//Path::PathPoint pt;
+	//_path.GetCurrentPt(pt);
 
-	if(pt.m_NavFlags & F_RTCW_NAV_SPRINT)
-	{
-		PressButton(BOT_BUTTON_SPRINT);
-	}
+	//if(pt.m_NavFlags & F_RTCW_NAV_SPRINT)
+	//{
+	//	PressButton(BOT_BUTTON_SPRINT);
+	//}
 
-	// test for inwater / jump to move to surface
-	if(pt.m_NavFlags & F_NAV_INWATER)
-	{
-		PressButton(BOT_BUTTON_JUMP);
-	}
+	//// test for inwater / jump to move to surface
+	//if(pt.m_NavFlags & F_NAV_INWATER)
+	//{
+	//	PressButton(BOT_BUTTON_JUMP);
+	//}
 
-	if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_L)
-	{
-		PressButton(BOT_BUTTON_LSTRAFE);
-	}
-	else if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_R)
-	{
-		PressButton(BOT_BUTTON_RSTRAFE);
-	}
+	//if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_L)
+	//{
+	//	PressButton(BOT_BUTTON_LSTRAFE);
+	//}
+	//else if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_R)
+	//{
+	//	PressButton(BOT_BUTTON_RSTRAFE);
+	//}
 
-	if (m_StrafeJump)
-	{
-		if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_L)
-		{
-			if (IGame::GetFrameNumber() % 20 == 0)
-			{
-				GameEntity targetent;
-				targetent = this->GetTargetingSystem()->GetCurrentTarget();
-				if (!targetent.IsValid())
-				{
-					BitFlag64 b;
-					b.SetFlag(BOT_BUTTON_LSTRAFE,true);
-					//b.SetFlag(BOT_BUTTON_FWD,true);
+	//if (m_StrafeJump)
+	//{
+	//	if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_L)
+	//	{
+	//		if (IGame::GetFrameNumber() % 20 == 0)
+	//		{
+	//			GameEntity targetent;
+	//			targetent = this->GetTargetingSystem()->GetCurrentTarget();
+	//			if (!targetent.IsValid())
+	//			{
+	//				BitFlag64 b;
+	//				b.SetFlag(BOT_BUTTON_LSTRAFE,true);
+	//				//b.SetFlag(BOT_BUTTON_FWD,true);
 
-					PressButton(BOT_BUTTON_JUMP);
-					HoldButton(b, 750);
-				}
-			}
-			PressButton(BOT_BUTTON_SPRINT);
-		}
-		else if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_R)
-		{
-			if (IGame::GetFrameNumber() % 20 == 0)
-			{
-				GameEntity targetent;
-				targetent = this->GetTargetingSystem()->GetCurrentTarget();
-				if (!targetent.IsValid())
-				{
-					BitFlag64 b;
-					b.SetFlag(BOT_BUTTON_LSTRAFE,true);
-					//b.SetFlag(BOT_BUTTON_FWD,true);
+	//				PressButton(BOT_BUTTON_JUMP);
+	//				HoldButton(b, 750);
+	//			}
+	//		}
+	//		PressButton(BOT_BUTTON_SPRINT);
+	//	}
+	//	else if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_R)
+	//	{
+	//		if (IGame::GetFrameNumber() % 20 == 0)
+	//		{
+	//			GameEntity targetent;
+	//			targetent = this->GetTargetingSystem()->GetCurrentTarget();
+	//			if (!targetent.IsValid())
+	//			{
+	//				BitFlag64 b;
+	//				b.SetFlag(BOT_BUTTON_LSTRAFE,true);
+	//				//b.SetFlag(BOT_BUTTON_FWD,true);
 
-					PressButton(BOT_BUTTON_JUMP);
-					HoldButton(b, 750);
-				}
-			}
-			PressButton(BOT_BUTTON_SPRINT);
-		}
-	}
+	//				PressButton(BOT_BUTTON_JUMP);
+	//				HoldButton(b, 750);
+	//			}
+	//		}
+	//		PressButton(BOT_BUTTON_SPRINT);
+	//	}
+	//}
 }
 
 float RTCW_Client::GetGameVar(GameVar _var) const
@@ -415,36 +423,36 @@ bool RTCW_Client::GetSniperWeapon(int &nonscoped, int &scoped)
 	return false;
 }
 
-float RTCW_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
-{
-	using namespace AiState;
-	std::string gn;
-
-	if(_flag & F_RTCW_NAV_USEPATH)
-	{
-		const PropertyMap::ValueMap &pm = to->GetPropertyMap().GetProperties();
-		PropertyMap::ValueMap::const_iterator cIt = pm.begin();
-		FINDSTATE(hl,HighLevel,this->GetStateRoot());
-
-		if(hl && hl->GetActiveState())
-		{
-			gn = Utils::StringToLower(hl->GetActiveState()->GetName());
-
-			//EngineFuncs::ConsoleMessage("current goal: %s", gn.c_str());
-
-			for(; cIt != pm.end(); ++cIt)
-			{
-				//	EngineFuncs::ConsoleMessage("property: %s = %s",
-				//		(*cIt).first.c_str(), (*cIt).second.c_str());
-
-				if ( gn == (*cIt).first && (*cIt).second == "true" )
-					return 1.0f;
-			}
-		}
-	}
-
-	return 0.f;
-}
+//float RTCW_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
+//{
+//	using namespace AiState;
+//	std::string gn;
+//
+//	if(_flag & F_RTCW_NAV_USEPATH)
+//	{
+//		const PropertyMap::ValueMap &pm = to->GetPropertyMap().GetProperties();
+//		PropertyMap::ValueMap::const_iterator cIt = pm.begin();
+//		FINDSTATE(hl,HighLevel,this->GetStateRoot());
+//
+//		if(hl && hl->GetActiveState())
+//		{
+//			gn = Utils::StringToLower(hl->GetActiveState()->GetName());
+//
+//			//EngineFuncs::ConsoleMessage("current goal: %s", gn.c_str());
+//
+//			for(; cIt != pm.end(); ++cIt)
+//			{
+//				//	EngineFuncs::ConsoleMessage("property: %s = %s",
+//				//		(*cIt).first.c_str(), (*cIt).second.c_str());
+//
+//				if ( gn == (*cIt).first && (*cIt).second == "true" )
+//					return 1.0f;
+//			}
+//		}
+//	}
+//
+//	return 0.f;
+//}
 
 //////////////////////////////////////////////////////////////////////////
 
