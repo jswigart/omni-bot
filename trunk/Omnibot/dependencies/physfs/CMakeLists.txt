@@ -365,6 +365,11 @@ MACRO(MESSAGE_BOOL_OPTION _NAME _VALUE)
     ENDIF(${_VALUE})
 ENDMACRO(MESSAGE_BOOL_OPTION)
 
+get_property(includes DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+
+# Store the includes so parent scripts can reference them if needed
+set ( PHYSFS_INCLUDES ${includes} CACHE INTERNAL "PHYSFS Includes" )
+
 MESSAGE(STATUS "PhysicsFS will build with the following options:")
 MESSAGE_BOOL_OPTION("ZIP support" PHYSFS_ARCHIVE_ZIP)
 MESSAGE_BOOL_OPTION("7zip support" PHYSFS_ARCHIVE_7Z)
