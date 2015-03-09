@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Sample-Allegro" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="../../../bin/AllegroSample.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="../../../bin" />
+				<Option object_output="obj/Release/Sample-Allegro" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-msse" />
+					<Add option="-O2" />
+					<Add option="-ffast-math" />
+					<Add option="-DNDEBUG" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<Linker>
+					<Add option="-mwindows" />
+					<Add directory="../../../lib" />
+					<Add directory="../../../lib/windows" />
+					<Add directory="../../../lib/windows/codeblocks" />
+					<Add library="unittest" />
+					<Add library="GWEN-Renderer-Allegro" />
+					<Add library="gwen_static" />
+					<Add library="allegro-5.0.4-monolith-mt" />
+				</Linker>
+			</Target>
+			<Target title="Debug">
+				<Option output="../../../bin/AllegroSample_Dd" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="../../../bin" />
+				<Option object_output="obj/Debug/Sample-Allegro" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-msse" />
+					<Add option="-D_DEBUG" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<Linker>
+					<Add option="-mwindows" />
+					<Add directory="../../../lib" />
+					<Add directory="../../../lib/windows" />
+					<Add directory="../../../lib/windows/codeblocks" />
+					<Add library="unittest" />
+					<Add library="GWEND-Renderer-Allegro" />
+					<Add library="gwen_static" />
+					<Add library="allegro-5.0.4-monolith-mt-debug" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="../../../Samples/Allegro/AllegroSample.cpp">
+		</Unit>
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>
+

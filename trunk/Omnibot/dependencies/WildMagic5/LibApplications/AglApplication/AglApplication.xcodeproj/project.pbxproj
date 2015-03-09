@@ -1,0 +1,727 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 44;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3C64D1D71256CCF400F4B0B0 /* Wm5WindowApplication3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDDD10FD17DF00C42DBB /* Wm5WindowApplication3.cpp */; };
+		3C64D1D81256CCF400F4B0B0 /* Wm5Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD410FD17DF00C42DBB /* Wm5Command.cpp */; };
+		3C64D1D91256CCF400F4B0B0 /* Wm5ApplicationPCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD210FD17DF00C42DBB /* Wm5ApplicationPCH.cpp */; };
+		3C64D1DA1256CCF400F4B0B0 /* Wm5AglApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDCB10FD17C100C42DBB /* Wm5AglApplication.cpp */; };
+		3C64D1DB1256CCF400F4B0B0 /* Wm5Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD010FD17DF00C42DBB /* Wm5Application.cpp */; };
+		3C64D1DC1256CCF400F4B0B0 /* Wm5WindowApplication2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDDB10FD17DF00C42DBB /* Wm5WindowApplication2.cpp */; };
+		3C64D1DD1256CCF400F4B0B0 /* Wm5WindowApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD810FD17DF00C42DBB /* Wm5WindowApplication.cpp */; };
+		3C64D1DE1256CCF400F4B0B0 /* Wm5ConsoleApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD610FD17DF00C42DBB /* Wm5ConsoleApplication.cpp */; };
+		3C64D1DF1256CCFE00F4B0B0 /* Wm5WindowApplication3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDDE10FD17DF00C42DBB /* Wm5WindowApplication3.h */; };
+		3C64D1E01256CCFE00F4B0B0 /* Wm5WindowApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD910FD17DF00C42DBB /* Wm5WindowApplication.h */; };
+		3C64D1E11256CCFE00F4B0B0 /* Wm5Command.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD510FD17DF00C42DBB /* Wm5Command.h */; };
+		3C64D1E21256CCFE00F4B0B0 /* Wm5ApplicationPCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD310FD17DF00C42DBB /* Wm5ApplicationPCH.h */; };
+		3C64D1E31256CCFE00F4B0B0 /* Wm5WindowApplication2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDDC10FD17DF00C42DBB /* Wm5WindowApplication2.h */; };
+		3C64D1E41256CCFE00F4B0B0 /* Wm5ConsoleApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD710FD17DF00C42DBB /* Wm5ConsoleApplication.h */; };
+		3C64D1E51256CCFE00F4B0B0 /* Wm5Application.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD110FD17DF00C42DBB /* Wm5Application.h */; };
+		3C64D1E61256CD0400F4B0B0 /* DrawSprocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C6FBA33083E496B0068AA05 /* DrawSprocket.framework */; };
+		3C64D1E71256CD0500F4B0B0 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C6FBA29083E492C0068AA05 /* Carbon.framework */; };
+		3C64D1E81256CD0500F4B0B0 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C6FBA2E083E49470068AA05 /* AGL.framework */; };
+		3C64D2131256CECB00F4B0B0 /* libWm5AglGraphicsd.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64D20E1256CECB00F4B0B0 /* libWm5AglGraphicsd.dylib */; };
+		3C64D2141256CECB00F4B0B0 /* libWm5Cored.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64D20F1256CECB00F4B0B0 /* libWm5Cored.dylib */; };
+		3C64D2151256CECB00F4B0B0 /* libWm5Imagicsd.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64D2101256CECB00F4B0B0 /* libWm5Imagicsd.dylib */; };
+		3C64D2161256CECB00F4B0B0 /* libWm5Mathematicsd.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64D2111256CECB00F4B0B0 /* libWm5Mathematicsd.dylib */; };
+		3C64D2171256CECB00F4B0B0 /* libWm5Physicsd.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64D2121256CECB00F4B0B0 /* libWm5Physicsd.dylib */; };
+		3C64D22F1256CFA900F4B0B0 /* Wm5WindowApplication3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDDD10FD17DF00C42DBB /* Wm5WindowApplication3.cpp */; };
+		3C64D2301256CFA900F4B0B0 /* Wm5Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD410FD17DF00C42DBB /* Wm5Command.cpp */; };
+		3C64D2311256CFA900F4B0B0 /* Wm5ApplicationPCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD210FD17DF00C42DBB /* Wm5ApplicationPCH.cpp */; };
+		3C64D2321256CFA900F4B0B0 /* Wm5AglApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDCB10FD17C100C42DBB /* Wm5AglApplication.cpp */; };
+		3C64D2331256CFA900F4B0B0 /* Wm5Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD010FD17DF00C42DBB /* Wm5Application.cpp */; };
+		3C64D2341256CFA900F4B0B0 /* Wm5WindowApplication2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDDB10FD17DF00C42DBB /* Wm5WindowApplication2.cpp */; };
+		3C64D2351256CFA900F4B0B0 /* Wm5WindowApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD810FD17DF00C42DBB /* Wm5WindowApplication.cpp */; };
+		3C64D2361256CFA900F4B0B0 /* Wm5ConsoleApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD610FD17DF00C42DBB /* Wm5ConsoleApplication.cpp */; };
+		3C64D2371256CFB500F4B0B0 /* Wm5WindowApplication3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDDE10FD17DF00C42DBB /* Wm5WindowApplication3.h */; };
+		3C64D2381256CFB500F4B0B0 /* Wm5WindowApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD910FD17DF00C42DBB /* Wm5WindowApplication.h */; };
+		3C64D2391256CFB500F4B0B0 /* Wm5Command.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD510FD17DF00C42DBB /* Wm5Command.h */; };
+		3C64D23A1256CFB500F4B0B0 /* Wm5ApplicationPCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD310FD17DF00C42DBB /* Wm5ApplicationPCH.h */; };
+		3C64D23B1256CFB500F4B0B0 /* Wm5WindowApplication2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDDC10FD17DF00C42DBB /* Wm5WindowApplication2.h */; };
+		3C64D23C1256CFB500F4B0B0 /* Wm5ConsoleApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD710FD17DF00C42DBB /* Wm5ConsoleApplication.h */; };
+		3C64D23D1256CFB500F4B0B0 /* Wm5Application.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD110FD17DF00C42DBB /* Wm5Application.h */; };
+		3C64D23E1256CFC300F4B0B0 /* DrawSprocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C6FBA33083E496B0068AA05 /* DrawSprocket.framework */; };
+		3C64D23F1256CFC300F4B0B0 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C6FBA29083E492C0068AA05 /* Carbon.framework */; };
+		3C64D2401256CFC400F4B0B0 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C6FBA2E083E49470068AA05 /* AGL.framework */; };
+		3C64D24B1256CFE300F4B0B0 /* libWm5AglGraphics.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64D2461256CFE300F4B0B0 /* libWm5AglGraphics.dylib */; };
+		3C64D24C1256CFE300F4B0B0 /* libWm5Core.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64D2471256CFE300F4B0B0 /* libWm5Core.dylib */; };
+		3C64D24D1256CFE300F4B0B0 /* libWm5Imagics.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64D2481256CFE300F4B0B0 /* libWm5Imagics.dylib */; };
+		3C64D24E1256CFE300F4B0B0 /* libWm5Mathematics.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64D2491256CFE300F4B0B0 /* libWm5Mathematics.dylib */; };
+		3C64D24F1256CFE300F4B0B0 /* libWm5Physics.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C64D24A1256CFE300F4B0B0 /* libWm5Physics.dylib */; };
+		3CC4FDCC10FD17C100C42DBB /* Wm5AglApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDCB10FD17C100C42DBB /* Wm5AglApplication.cpp */; };
+		3CC4FDCD10FD17C100C42DBB /* Wm5AglApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDCB10FD17C100C42DBB /* Wm5AglApplication.cpp */; };
+		3CC4FDDF10FD17DF00C42DBB /* Wm5Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD010FD17DF00C42DBB /* Wm5Application.cpp */; };
+		3CC4FDE010FD17DF00C42DBB /* Wm5Application.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD110FD17DF00C42DBB /* Wm5Application.h */; };
+		3CC4FDE110FD17DF00C42DBB /* Wm5ApplicationPCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD210FD17DF00C42DBB /* Wm5ApplicationPCH.cpp */; };
+		3CC4FDE210FD17DF00C42DBB /* Wm5ApplicationPCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD310FD17DF00C42DBB /* Wm5ApplicationPCH.h */; };
+		3CC4FDE310FD17DF00C42DBB /* Wm5Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD410FD17DF00C42DBB /* Wm5Command.cpp */; };
+		3CC4FDE410FD17DF00C42DBB /* Wm5Command.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD510FD17DF00C42DBB /* Wm5Command.h */; };
+		3CC4FDE510FD17DF00C42DBB /* Wm5ConsoleApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD610FD17DF00C42DBB /* Wm5ConsoleApplication.cpp */; };
+		3CC4FDE610FD17DF00C42DBB /* Wm5ConsoleApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD710FD17DF00C42DBB /* Wm5ConsoleApplication.h */; };
+		3CC4FDE710FD17DF00C42DBB /* Wm5WindowApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD810FD17DF00C42DBB /* Wm5WindowApplication.cpp */; };
+		3CC4FDE810FD17DF00C42DBB /* Wm5WindowApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD910FD17DF00C42DBB /* Wm5WindowApplication.h */; };
+		3CC4FDE910FD17DF00C42DBB /* Wm5WindowApplication2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDDB10FD17DF00C42DBB /* Wm5WindowApplication2.cpp */; };
+		3CC4FDEA10FD17DF00C42DBB /* Wm5WindowApplication2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDDC10FD17DF00C42DBB /* Wm5WindowApplication2.h */; };
+		3CC4FDEB10FD17DF00C42DBB /* Wm5WindowApplication3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDDD10FD17DF00C42DBB /* Wm5WindowApplication3.cpp */; };
+		3CC4FDEC10FD17DF00C42DBB /* Wm5WindowApplication3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDDE10FD17DF00C42DBB /* Wm5WindowApplication3.h */; };
+		3CC4FDED10FD17DF00C42DBB /* Wm5Application.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD010FD17DF00C42DBB /* Wm5Application.cpp */; };
+		3CC4FDEE10FD17DF00C42DBB /* Wm5Application.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD110FD17DF00C42DBB /* Wm5Application.h */; };
+		3CC4FDEF10FD17DF00C42DBB /* Wm5ApplicationPCH.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD210FD17DF00C42DBB /* Wm5ApplicationPCH.cpp */; };
+		3CC4FDF010FD17DF00C42DBB /* Wm5ApplicationPCH.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD310FD17DF00C42DBB /* Wm5ApplicationPCH.h */; };
+		3CC4FDF110FD17DF00C42DBB /* Wm5Command.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD410FD17DF00C42DBB /* Wm5Command.cpp */; };
+		3CC4FDF210FD17DF00C42DBB /* Wm5Command.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD510FD17DF00C42DBB /* Wm5Command.h */; };
+		3CC4FDF310FD17DF00C42DBB /* Wm5ConsoleApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD610FD17DF00C42DBB /* Wm5ConsoleApplication.cpp */; };
+		3CC4FDF410FD17DF00C42DBB /* Wm5ConsoleApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD710FD17DF00C42DBB /* Wm5ConsoleApplication.h */; };
+		3CC4FDF510FD17DF00C42DBB /* Wm5WindowApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDD810FD17DF00C42DBB /* Wm5WindowApplication.cpp */; };
+		3CC4FDF610FD17DF00C42DBB /* Wm5WindowApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDD910FD17DF00C42DBB /* Wm5WindowApplication.h */; };
+		3CC4FDF710FD17DF00C42DBB /* Wm5WindowApplication2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDDB10FD17DF00C42DBB /* Wm5WindowApplication2.cpp */; };
+		3CC4FDF810FD17DF00C42DBB /* Wm5WindowApplication2.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDDC10FD17DF00C42DBB /* Wm5WindowApplication2.h */; };
+		3CC4FDF910FD17DF00C42DBB /* Wm5WindowApplication3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4FDDD10FD17DF00C42DBB /* Wm5WindowApplication3.cpp */; };
+		3CC4FDFA10FD17DF00C42DBB /* Wm5WindowApplication3.h in Headers */ = {isa = PBXBuildFile; fileRef = 3CC4FDDE10FD17DF00C42DBB /* Wm5WindowApplication3.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3C64D1D11256CCBF00F4B0B0 /* libWm5AglApplicationd.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libWm5AglApplicationd.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C64D20E1256CECB00F4B0B0 /* libWm5AglGraphicsd.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5AglGraphicsd.dylib; path = ../../SDK/Library/DebugDLL/libWm5AglGraphicsd.dylib; sourceTree = SOURCE_ROOT; };
+		3C64D20F1256CECB00F4B0B0 /* libWm5Cored.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Cored.dylib; path = ../../SDK/Library/DebugDLL/libWm5Cored.dylib; sourceTree = SOURCE_ROOT; };
+		3C64D2101256CECB00F4B0B0 /* libWm5Imagicsd.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Imagicsd.dylib; path = ../../SDK/Library/DebugDLL/libWm5Imagicsd.dylib; sourceTree = SOURCE_ROOT; };
+		3C64D2111256CECB00F4B0B0 /* libWm5Mathematicsd.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Mathematicsd.dylib; path = ../../SDK/Library/DebugDLL/libWm5Mathematicsd.dylib; sourceTree = SOURCE_ROOT; };
+		3C64D2121256CECB00F4B0B0 /* libWm5Physicsd.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Physicsd.dylib; path = ../../SDK/Library/DebugDLL/libWm5Physicsd.dylib; sourceTree = SOURCE_ROOT; };
+		3C64D2291256CF8500F4B0B0 /* libWm5AglApplication.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libWm5AglApplication.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C64D2461256CFE300F4B0B0 /* libWm5AglGraphics.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5AglGraphics.dylib; path = ../../SDK/Library/ReleaseDLL/libWm5AglGraphics.dylib; sourceTree = SOURCE_ROOT; };
+		3C64D2471256CFE300F4B0B0 /* libWm5Core.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Core.dylib; path = ../../SDK/Library/ReleaseDLL/libWm5Core.dylib; sourceTree = SOURCE_ROOT; };
+		3C64D2481256CFE300F4B0B0 /* libWm5Imagics.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Imagics.dylib; path = ../../SDK/Library/ReleaseDLL/libWm5Imagics.dylib; sourceTree = SOURCE_ROOT; };
+		3C64D2491256CFE300F4B0B0 /* libWm5Mathematics.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Mathematics.dylib; path = ../../SDK/Library/ReleaseDLL/libWm5Mathematics.dylib; sourceTree = SOURCE_ROOT; };
+		3C64D24A1256CFE300F4B0B0 /* libWm5Physics.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libWm5Physics.dylib; path = ../../SDK/Library/ReleaseDLL/libWm5Physics.dylib; sourceTree = SOURCE_ROOT; };
+		3C6FBA29083E492C0068AA05 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		3C6FBA2E083E49470068AA05 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
+		3C6FBA33083E496B0068AA05 /* DrawSprocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DrawSprocket.framework; path = /System/Library/Frameworks/DrawSprocket.framework; sourceTree = "<absolute>"; };
+		3CC4FDCB10FD17C100C42DBB /* Wm5AglApplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Wm5AglApplication.cpp; sourceTree = "<group>"; };
+		3CC4FDD010FD17DF00C42DBB /* Wm5Application.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Application.cpp; path = ../Wm5Application.cpp; sourceTree = SOURCE_ROOT; };
+		3CC4FDD110FD17DF00C42DBB /* Wm5Application.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Application.h; path = ../Wm5Application.h; sourceTree = SOURCE_ROOT; };
+		3CC4FDD210FD17DF00C42DBB /* Wm5ApplicationPCH.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5ApplicationPCH.cpp; path = ../Wm5ApplicationPCH.cpp; sourceTree = SOURCE_ROOT; };
+		3CC4FDD310FD17DF00C42DBB /* Wm5ApplicationPCH.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5ApplicationPCH.h; path = ../Wm5ApplicationPCH.h; sourceTree = SOURCE_ROOT; };
+		3CC4FDD410FD17DF00C42DBB /* Wm5Command.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5Command.cpp; path = ../Wm5Command.cpp; sourceTree = SOURCE_ROOT; };
+		3CC4FDD510FD17DF00C42DBB /* Wm5Command.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5Command.h; path = ../Wm5Command.h; sourceTree = SOURCE_ROOT; };
+		3CC4FDD610FD17DF00C42DBB /* Wm5ConsoleApplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5ConsoleApplication.cpp; path = ../Wm5ConsoleApplication.cpp; sourceTree = SOURCE_ROOT; };
+		3CC4FDD710FD17DF00C42DBB /* Wm5ConsoleApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5ConsoleApplication.h; path = ../Wm5ConsoleApplication.h; sourceTree = SOURCE_ROOT; };
+		3CC4FDD810FD17DF00C42DBB /* Wm5WindowApplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5WindowApplication.cpp; path = ../Wm5WindowApplication.cpp; sourceTree = SOURCE_ROOT; };
+		3CC4FDD910FD17DF00C42DBB /* Wm5WindowApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5WindowApplication.h; path = ../Wm5WindowApplication.h; sourceTree = SOURCE_ROOT; };
+		3CC4FDDA10FD17DF00C42DBB /* Wm5WindowApplication.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Wm5WindowApplication.inl; path = ../Wm5WindowApplication.inl; sourceTree = SOURCE_ROOT; };
+		3CC4FDDB10FD17DF00C42DBB /* Wm5WindowApplication2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5WindowApplication2.cpp; path = ../Wm5WindowApplication2.cpp; sourceTree = SOURCE_ROOT; };
+		3CC4FDDC10FD17DF00C42DBB /* Wm5WindowApplication2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5WindowApplication2.h; path = ../Wm5WindowApplication2.h; sourceTree = SOURCE_ROOT; };
+		3CC4FDDD10FD17DF00C42DBB /* Wm5WindowApplication3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wm5WindowApplication3.cpp; path = ../Wm5WindowApplication3.cpp; sourceTree = SOURCE_ROOT; };
+		3CC4FDDE10FD17DF00C42DBB /* Wm5WindowApplication3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wm5WindowApplication3.h; path = ../Wm5WindowApplication3.h; sourceTree = SOURCE_ROOT; };
+		74D6E86F07F34B2200267169 /* libWm5AglApplicationd.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libWm5AglApplicationd.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		74D6E87507F34B7400267169 /* libWm5AglApplication.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libWm5AglApplication.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3C64D1CF1256CCBF00F4B0B0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64D1E61256CD0400F4B0B0 /* DrawSprocket.framework in Frameworks */,
+				3C64D1E71256CD0500F4B0B0 /* Carbon.framework in Frameworks */,
+				3C64D1E81256CD0500F4B0B0 /* AGL.framework in Frameworks */,
+				3C64D2131256CECB00F4B0B0 /* libWm5AglGraphicsd.dylib in Frameworks */,
+				3C64D2141256CECB00F4B0B0 /* libWm5Cored.dylib in Frameworks */,
+				3C64D2151256CECB00F4B0B0 /* libWm5Imagicsd.dylib in Frameworks */,
+				3C64D2161256CECB00F4B0B0 /* libWm5Mathematicsd.dylib in Frameworks */,
+				3C64D2171256CECB00F4B0B0 /* libWm5Physicsd.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C64D2271256CF8500F4B0B0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64D23E1256CFC300F4B0B0 /* DrawSprocket.framework in Frameworks */,
+				3C64D23F1256CFC300F4B0B0 /* Carbon.framework in Frameworks */,
+				3C64D2401256CFC400F4B0B0 /* AGL.framework in Frameworks */,
+				3C64D24B1256CFE300F4B0B0 /* libWm5AglGraphics.dylib in Frameworks */,
+				3C64D24C1256CFE300F4B0B0 /* libWm5Core.dylib in Frameworks */,
+				3C64D24D1256CFE300F4B0B0 /* libWm5Imagics.dylib in Frameworks */,
+				3C64D24E1256CFE300F4B0B0 /* libWm5Mathematics.dylib in Frameworks */,
+				3C64D24F1256CFE300F4B0B0 /* libWm5Physics.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D6E86D07F34B2200267169 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D6E87407F34B7400267169 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3C64D1EB1256CD1000F4B0B0 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				3C64D1EF1256CD1800F4B0B0 /* DebugDLL */,
+				3C64D1F21256CD1F00F4B0B0 /* ReleaseDLL */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		3C64D1EF1256CD1800F4B0B0 /* DebugDLL */ = {
+			isa = PBXGroup;
+			children = (
+				3C64D20E1256CECB00F4B0B0 /* libWm5AglGraphicsd.dylib */,
+				3C64D20F1256CECB00F4B0B0 /* libWm5Cored.dylib */,
+				3C64D2101256CECB00F4B0B0 /* libWm5Imagicsd.dylib */,
+				3C64D2111256CECB00F4B0B0 /* libWm5Mathematicsd.dylib */,
+				3C64D2121256CECB00F4B0B0 /* libWm5Physicsd.dylib */,
+			);
+			name = DebugDLL;
+			sourceTree = "<group>";
+		};
+		3C64D1F21256CD1F00F4B0B0 /* ReleaseDLL */ = {
+			isa = PBXGroup;
+			children = (
+				3C64D2461256CFE300F4B0B0 /* libWm5AglGraphics.dylib */,
+				3C64D2471256CFE300F4B0B0 /* libWm5Core.dylib */,
+				3C64D2481256CFE300F4B0B0 /* libWm5Imagics.dylib */,
+				3C64D2491256CFE300F4B0B0 /* libWm5Mathematics.dylib */,
+				3C64D24A1256CFE300F4B0B0 /* libWm5Physics.dylib */,
+			);
+			name = ReleaseDLL;
+			sourceTree = "<group>";
+		};
+		3C6FBA26083E49060068AA05 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3C6FBA33083E496B0068AA05 /* DrawSprocket.framework */,
+				3C6FBA2E083E49470068AA05 /* AGL.framework */,
+				3C6FBA29083E492C0068AA05 /* Carbon.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3CC4FDC310FD178A00C42DBB /* PlatformIndependent */ = {
+			isa = PBXGroup;
+			children = (
+				3CC4FDD010FD17DF00C42DBB /* Wm5Application.cpp */,
+				3CC4FDD110FD17DF00C42DBB /* Wm5Application.h */,
+				3CC4FDD210FD17DF00C42DBB /* Wm5ApplicationPCH.cpp */,
+				3CC4FDD310FD17DF00C42DBB /* Wm5ApplicationPCH.h */,
+				3CC4FDD410FD17DF00C42DBB /* Wm5Command.cpp */,
+				3CC4FDD510FD17DF00C42DBB /* Wm5Command.h */,
+				3CC4FDD610FD17DF00C42DBB /* Wm5ConsoleApplication.cpp */,
+				3CC4FDD710FD17DF00C42DBB /* Wm5ConsoleApplication.h */,
+				3CC4FDD810FD17DF00C42DBB /* Wm5WindowApplication.cpp */,
+				3CC4FDD910FD17DF00C42DBB /* Wm5WindowApplication.h */,
+				3CC4FDDA10FD17DF00C42DBB /* Wm5WindowApplication.inl */,
+				3CC4FDDB10FD17DF00C42DBB /* Wm5WindowApplication2.cpp */,
+				3CC4FDDC10FD17DF00C42DBB /* Wm5WindowApplication2.h */,
+				3CC4FDDD10FD17DF00C42DBB /* Wm5WindowApplication3.cpp */,
+				3CC4FDDE10FD17DF00C42DBB /* Wm5WindowApplication3.h */,
+			);
+			name = PlatformIndependent;
+			sourceTree = "<group>";
+		};
+		3CC4FDC810FD17AA00C42DBB /* AglApplication */ = {
+			isa = PBXGroup;
+			children = (
+				3CC4FDCB10FD17C100C42DBB /* Wm5AglApplication.cpp */,
+			);
+			name = AglApplication;
+			sourceTree = "<group>";
+		};
+		74D6E86107F34AF400267169 = {
+			isa = PBXGroup;
+			children = (
+				74D6E87807F34BA900267169 /* Sources */,
+				3C64D1EB1256CD1000F4B0B0 /* Libraries */,
+				3C6FBA26083E49060068AA05 /* Frameworks */,
+				74D6E87007F34B2200267169 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		74D6E87007F34B2200267169 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				74D6E86F07F34B2200267169 /* libWm5AglApplicationd.a */,
+				74D6E87507F34B7400267169 /* libWm5AglApplication.a */,
+				3C64D1D11256CCBF00F4B0B0 /* libWm5AglApplicationd.dylib */,
+				3C64D2291256CF8500F4B0B0 /* libWm5AglApplication.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		74D6E87807F34BA900267169 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				3CC4FDC810FD17AA00C42DBB /* AglApplication */,
+				3CC4FDC310FD178A00C42DBB /* PlatformIndependent */,
+			);
+			name = Sources;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		3C64D1CD1256CCBF00F4B0B0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64D1DF1256CCFE00F4B0B0 /* Wm5WindowApplication3.h in Headers */,
+				3C64D1E01256CCFE00F4B0B0 /* Wm5WindowApplication.h in Headers */,
+				3C64D1E11256CCFE00F4B0B0 /* Wm5Command.h in Headers */,
+				3C64D1E21256CCFE00F4B0B0 /* Wm5ApplicationPCH.h in Headers */,
+				3C64D1E31256CCFE00F4B0B0 /* Wm5WindowApplication2.h in Headers */,
+				3C64D1E41256CCFE00F4B0B0 /* Wm5ConsoleApplication.h in Headers */,
+				3C64D1E51256CCFE00F4B0B0 /* Wm5Application.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C64D2251256CF8500F4B0B0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64D2371256CFB500F4B0B0 /* Wm5WindowApplication3.h in Headers */,
+				3C64D2381256CFB500F4B0B0 /* Wm5WindowApplication.h in Headers */,
+				3C64D2391256CFB500F4B0B0 /* Wm5Command.h in Headers */,
+				3C64D23A1256CFB500F4B0B0 /* Wm5ApplicationPCH.h in Headers */,
+				3C64D23B1256CFB500F4B0B0 /* Wm5WindowApplication2.h in Headers */,
+				3C64D23C1256CFB500F4B0B0 /* Wm5ConsoleApplication.h in Headers */,
+				3C64D23D1256CFB500F4B0B0 /* Wm5Application.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D6E86B07F34B2200267169 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CC4FDE010FD17DF00C42DBB /* Wm5Application.h in Headers */,
+				3CC4FDE210FD17DF00C42DBB /* Wm5ApplicationPCH.h in Headers */,
+				3CC4FDE410FD17DF00C42DBB /* Wm5Command.h in Headers */,
+				3CC4FDE610FD17DF00C42DBB /* Wm5ConsoleApplication.h in Headers */,
+				3CC4FDE810FD17DF00C42DBB /* Wm5WindowApplication.h in Headers */,
+				3CC4FDEA10FD17DF00C42DBB /* Wm5WindowApplication2.h in Headers */,
+				3CC4FDEC10FD17DF00C42DBB /* Wm5WindowApplication3.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D6E87207F34B7400267169 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CC4FDEE10FD17DF00C42DBB /* Wm5Application.h in Headers */,
+				3CC4FDF010FD17DF00C42DBB /* Wm5ApplicationPCH.h in Headers */,
+				3CC4FDF210FD17DF00C42DBB /* Wm5Command.h in Headers */,
+				3CC4FDF410FD17DF00C42DBB /* Wm5ConsoleApplication.h in Headers */,
+				3CC4FDF610FD17DF00C42DBB /* Wm5WindowApplication.h in Headers */,
+				3CC4FDF810FD17DF00C42DBB /* Wm5WindowApplication2.h in Headers */,
+				3CC4FDFA10FD17DF00C42DBB /* Wm5WindowApplication3.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		3C64D1D01256CCBF00F4B0B0 /* Debug Dynamic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C64D1EC1256CD1000F4B0B0 /* Build configuration list for PBXNativeTarget "Debug Dynamic" */;
+			buildPhases = (
+				3C64D1CD1256CCBF00F4B0B0 /* Headers */,
+				3C64D1CE1256CCBF00F4B0B0 /* Sources */,
+				3C64D1CF1256CCBF00F4B0B0 /* Frameworks */,
+				3C64D1D61256CCCC00F4B0B0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Debug Dynamic";
+			productName = "Debug Dynamic";
+			productReference = 3C64D1D11256CCBF00F4B0B0 /* libWm5AglApplicationd.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		3C64D2281256CF8500F4B0B0 /* Release Dynamic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C64D2451256CFCB00F4B0B0 /* Build configuration list for PBXNativeTarget "Release Dynamic" */;
+			buildPhases = (
+				3C64D2251256CF8500F4B0B0 /* Headers */,
+				3C64D2261256CF8500F4B0B0 /* Sources */,
+				3C64D2271256CF8500F4B0B0 /* Frameworks */,
+				3C64D22E1256CF9100F4B0B0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Release Dynamic";
+			productName = "Release Dynamic";
+			productReference = 3C64D2291256CF8500F4B0B0 /* libWm5AglApplication.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		74D6E86E07F34B2200267169 /* Debug Static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C0273AF088FE76A00A93309 /* Build configuration list for PBXNativeTarget "Debug Static" */;
+			buildPhases = (
+				74D6E86B07F34B2200267169 /* Headers */,
+				74D6E86C07F34B2200267169 /* Sources */,
+				74D6E86D07F34B2200267169 /* Frameworks */,
+				3C9DBB6A083D2765006BA80C /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Debug Static";
+			productName = "Static Debug";
+			productReference = 74D6E86F07F34B2200267169 /* libWm5AglApplicationd.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		74D6E87107F34B7400267169 /* Release Static */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C0273B2088FE76A00A93309 /* Build configuration list for PBXNativeTarget "Release Static" */;
+			buildPhases = (
+				74D6E87207F34B7400267169 /* Headers */,
+				74D6E87307F34B7400267169 /* Sources */,
+				74D6E87407F34B7400267169 /* Frameworks */,
+				3C9DBB71083D2786006BA80C /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Release Static";
+			productName = "Static Debug";
+			productReference = 74D6E87507F34B7400267169 /* libWm5AglApplication.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		74D6E86507F34AF400267169 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 3C0273C4088FE76A00A93309 /* Build configuration list for PBXProject "AglApplication" */;
+			compatibilityVersion = "Xcode 3.0";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 74D6E86107F34AF400267169;
+			productRefGroup = 74D6E87007F34B2200267169 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				74D6E86E07F34B2200267169 /* Debug Static */,
+				74D6E87107F34B7400267169 /* Release Static */,
+				3C64D1D01256CCBF00F4B0B0 /* Debug Dynamic */,
+				3C64D2281256CF8500F4B0B0 /* Release Dynamic */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3C64D1D61256CCCC00F4B0B0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkDebugDynamic.sh;
+		};
+		3C64D22E1256CF9100F4B0B0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkReleaseDynamic.sh;
+		};
+		3C9DBB6A083D2765006BA80C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkDebugStatic.sh;
+		};
+		3C9DBB71083D2786006BA80C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ./CopySdkReleaseStatic.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3C64D1CE1256CCBF00F4B0B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64D1D71256CCF400F4B0B0 /* Wm5WindowApplication3.cpp in Sources */,
+				3C64D1D81256CCF400F4B0B0 /* Wm5Command.cpp in Sources */,
+				3C64D1D91256CCF400F4B0B0 /* Wm5ApplicationPCH.cpp in Sources */,
+				3C64D1DA1256CCF400F4B0B0 /* Wm5AglApplication.cpp in Sources */,
+				3C64D1DB1256CCF400F4B0B0 /* Wm5Application.cpp in Sources */,
+				3C64D1DC1256CCF400F4B0B0 /* Wm5WindowApplication2.cpp in Sources */,
+				3C64D1DD1256CCF400F4B0B0 /* Wm5WindowApplication.cpp in Sources */,
+				3C64D1DE1256CCF400F4B0B0 /* Wm5ConsoleApplication.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C64D2261256CF8500F4B0B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C64D22F1256CFA900F4B0B0 /* Wm5WindowApplication3.cpp in Sources */,
+				3C64D2301256CFA900F4B0B0 /* Wm5Command.cpp in Sources */,
+				3C64D2311256CFA900F4B0B0 /* Wm5ApplicationPCH.cpp in Sources */,
+				3C64D2321256CFA900F4B0B0 /* Wm5AglApplication.cpp in Sources */,
+				3C64D2331256CFA900F4B0B0 /* Wm5Application.cpp in Sources */,
+				3C64D2341256CFA900F4B0B0 /* Wm5WindowApplication2.cpp in Sources */,
+				3C64D2351256CFA900F4B0B0 /* Wm5WindowApplication.cpp in Sources */,
+				3C64D2361256CFA900F4B0B0 /* Wm5ConsoleApplication.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D6E86C07F34B2200267169 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CC4FDCC10FD17C100C42DBB /* Wm5AglApplication.cpp in Sources */,
+				3CC4FDDF10FD17DF00C42DBB /* Wm5Application.cpp in Sources */,
+				3CC4FDE110FD17DF00C42DBB /* Wm5ApplicationPCH.cpp in Sources */,
+				3CC4FDE310FD17DF00C42DBB /* Wm5Command.cpp in Sources */,
+				3CC4FDE510FD17DF00C42DBB /* Wm5ConsoleApplication.cpp in Sources */,
+				3CC4FDE710FD17DF00C42DBB /* Wm5WindowApplication.cpp in Sources */,
+				3CC4FDE910FD17DF00C42DBB /* Wm5WindowApplication2.cpp in Sources */,
+				3CC4FDEB10FD17DF00C42DBB /* Wm5WindowApplication3.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		74D6E87307F34B7400267169 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CC4FDCD10FD17C100C42DBB /* Wm5AglApplication.cpp in Sources */,
+				3CC4FDED10FD17DF00C42DBB /* Wm5Application.cpp in Sources */,
+				3CC4FDEF10FD17DF00C42DBB /* Wm5ApplicationPCH.cpp in Sources */,
+				3CC4FDF110FD17DF00C42DBB /* Wm5Command.cpp in Sources */,
+				3CC4FDF310FD17DF00C42DBB /* Wm5ConsoleApplication.cpp in Sources */,
+				3CC4FDF510FD17DF00C42DBB /* Wm5WindowApplication.cpp in Sources */,
+				3CC4FDF710FD17DF00C42DBB /* Wm5WindowApplication2.cpp in Sources */,
+				3CC4FDF910FD17DF00C42DBB /* Wm5WindowApplication3.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		3C0273B1088FE76A00A93309 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ../Wm5ApplicationPCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+					WM5_USE_OPENGL,
+				);
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/..",
+					"${SRCROOT}/../../SDK/Include",
+				);
+				LIBRARY_STYLE = STATIC;
+				PREBINDING = NO;
+				PRODUCT_NAME = Wm5AglApplicationd;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/DebugStatic";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		3C0273B4088FE76A00A93309 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ../Wm5ApplicationPCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+					WM5_USE_OPENGL,
+				);
+				HEADER_SEARCH_PATHS = (
+					"${SRCROOT}/..",
+					"${SRCROOT}/../../SDK/Include",
+				);
+				LIBRARY_STYLE = STATIC;
+				PREBINDING = NO;
+				PRODUCT_NAME = Wm5AglApplication;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/ReleaseStatic";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
+		3C0273C6088FE76A00A93309 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Default;
+		};
+		3C64D1D21256CCBF00F4B0B0 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ../Wm5ApplicationPCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+					WM5_USE_OPENGL,
+				);
+				HEADER_SEARCH_PATHS = "${SRCROOT}/../../SDK/Include";
+				INSTALL_PATH = "${SRCROOT}/../../SDK/Library/DebugDLL";
+				LIBRARY_SEARCH_PATHS = "${SRCROOT}/../../SDK/Library/DebugDLL";
+				OTHER_LDFLAGS = (
+					"-seg1addr",
+					0x08000000,
+					"-framework",
+					OpenGL,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Wm5AglApplicationd;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/DebugDynamic";
+			};
+			name = Default;
+		};
+		3C64D22A1256CF8600F4B0B0 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = ../Wm5ApplicationPCH.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					NDEBUG,
+					WM5_USE_PRECOMPILED_HEADERS,
+					WM5_USE_OPENGL,
+				);
+				HEADER_SEARCH_PATHS = "${SRCROOT}/../../SDK/Include";
+				INSTALL_PATH = "${SRCROOT}/../../SDK/Library/ReleaseDLL";
+				LIBRARY_SEARCH_PATHS = "${SRCROOT}/../../SDK/Library/ReleaseDLL";
+				OTHER_LDFLAGS = (
+					"-seg1addr",
+					0x08000000,
+					"-framework",
+					OpenGL,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Wm5AglApplication;
+				SHARED_PRECOMPS_DIR = "$(BUILD_DIR)/$(CONFIGURATION)/ReleaseDynamic";
+			};
+			name = Default;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3C0273AF088FE76A00A93309 /* Build configuration list for PBXNativeTarget "Debug Static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C0273B1088FE76A00A93309 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C0273B2088FE76A00A93309 /* Build configuration list for PBXNativeTarget "Release Static" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C0273B4088FE76A00A93309 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C0273C4088FE76A00A93309 /* Build configuration list for PBXProject "AglApplication" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C0273C6088FE76A00A93309 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C64D1EC1256CD1000F4B0B0 /* Build configuration list for PBXNativeTarget "Debug Dynamic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C64D1D21256CCBF00F4B0B0 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+		3C64D2451256CFCB00F4B0B0 /* Build configuration list for PBXNativeTarget "Release Dynamic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C64D22A1256CF8600F4B0B0 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 74D6E86507F34AF400267169 /* Project object */;
+}

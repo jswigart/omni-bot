@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="GWEN-Static">
+  <VirtualDirectory Name="include">
+    <VirtualDirectory Name="Gwen">
+      <File Name="../../../include/Gwen/Align.h"/>
+      <File Name="../../../include/Gwen/Anim.h"/>
+      <File Name="../../../include/Gwen/BaseRender.h"/>
+      <File Name="../../../include/Gwen/Config.h"/>
+      <File Name="../../../include/Gwen/ControlList.h"/>
+      <VirtualDirectory Name="Controls">
+        <File Name="../../../include/Gwen/Controls/Base.h"/>
+        <File Name="../../../include/Gwen/Controls/Button.h"/>
+        <File Name="../../../include/Gwen/Controls/Canvas.h"/>
+        <File Name="../../../include/Gwen/Controls/CheckBox.h"/>
+        <File Name="../../../include/Gwen/Controls/CollapsibleCategory.h"/>
+        <File Name="../../../include/Gwen/Controls/CollapsibleList.h"/>
+        <File Name="../../../include/Gwen/Controls/ColorControls.h"/>
+        <File Name="../../../include/Gwen/Controls/ColorPicker.h"/>
+        <File Name="../../../include/Gwen/Controls/ComboBox.h"/>
+        <File Name="../../../include/Gwen/Controls/CrossSplitter.h"/>
+        <VirtualDirectory Name="Dialogs">
+          <File Name="../../../include/Gwen/Controls/Dialogs/FileOpen.h"/>
+          <File Name="../../../include/Gwen/Controls/Dialogs/FileSave.h"/>
+          <File Name="../../../include/Gwen/Controls/Dialogs/FolderOpen.h"/>
+          <File Name="../../../include/Gwen/Controls/Dialogs/Query.h"/>
+        </VirtualDirectory>
+        <File Name="../../../include/Gwen/Controls/DockBase.h"/>
+        <File Name="../../../include/Gwen/Controls/DockedTabControl.h"/>
+        <File Name="../../../include/Gwen/Controls/Dragger.h"/>
+        <File Name="../../../include/Gwen/Controls/FieldLabel.h"/>
+        <File Name="../../../include/Gwen/Controls/FilePicker.h"/>
+        <File Name="../../../include/Gwen/Controls/FolderPicker.h"/>
+        <File Name="../../../include/Gwen/Controls/GroupBox.h"/>
+        <File Name="../../../include/Gwen/Controls/HSVColorPicker.h"/>
+        <File Name="../../../include/Gwen/Controls/Highlight.h"/>
+        <File Name="../../../include/Gwen/Controls/HorizontalScrollBar.h"/>
+        <File Name="../../../include/Gwen/Controls/HorizontalSlider.h"/>
+        <File Name="../../../include/Gwen/Controls/ImagePanel.h"/>
+        <File Name="../../../include/Gwen/Controls/Label.h"/>
+        <File Name="../../../include/Gwen/Controls/LabelClickable.h"/>
+        <VirtualDirectory Name="Layout">
+          <File Name="../../../include/Gwen/Controls/Layout/Position.h"/>
+          <File Name="../../../include/Gwen/Controls/Layout/Table.h"/>
+          <File Name="../../../include/Gwen/Controls/Layout/Tile.h"/>
+        </VirtualDirectory>
+        <File Name="../../../include/Gwen/Controls/ListBox.h"/>
+        <File Name="../../../include/Gwen/Controls/Menu.h"/>
+        <File Name="../../../include/Gwen/Controls/MenuItem.h"/>
+        <File Name="../../../include/Gwen/Controls/MenuStrip.h"/>
+        <File Name="../../../include/Gwen/Controls/Modal.h"/>
+        <File Name="../../../include/Gwen/Controls/NumericUpDown.h"/>
+        <File Name="../../../include/Gwen/Controls/PageControl.h"/>
+        <File Name="../../../include/Gwen/Controls/ProgressBar.h"/>
+        <File Name="../../../include/Gwen/Controls/Properties.h"/>
+        <VirtualDirectory Name="Property">
+          <File Name="../../../include/Gwen/Controls/Property/BaseProperty.h"/>
+          <File Name="../../../include/Gwen/Controls/Property/Checkbox.h"/>
+          <File Name="../../../include/Gwen/Controls/Property/ColorSelector.h"/>
+          <File Name="../../../include/Gwen/Controls/Property/ComboBox.h"/>
+          <File Name="../../../include/Gwen/Controls/Property/File.h"/>
+          <File Name="../../../include/Gwen/Controls/Property/Folder.h"/>
+          <File Name="../../../include/Gwen/Controls/Property/Text.h"/>
+        </VirtualDirectory>
+        <File Name="../../../include/Gwen/Controls/PropertyTree.h"/>
+        <File Name="../../../include/Gwen/Controls/RadioButton.h"/>
+        <File Name="../../../include/Gwen/Controls/RadioButtonController.h"/>
+        <File Name="../../../include/Gwen/Controls/Rectangle.h"/>
+        <File Name="../../../include/Gwen/Controls/ResizableControl.h"/>
+        <File Name="../../../include/Gwen/Controls/Resizer.h"/>
+        <File Name="../../../include/Gwen/Controls/RichLabel.h"/>
+        <File Name="../../../include/Gwen/Controls/ScrollBar.h"/>
+        <File Name="../../../include/Gwen/Controls/ScrollBarBar.h"/>
+        <File Name="../../../include/Gwen/Controls/ScrollBarButton.h"/>
+        <File Name="../../../include/Gwen/Controls/ScrollControl.h"/>
+        <File Name="../../../include/Gwen/Controls/Slider.h"/>
+        <File Name="../../../include/Gwen/Controls/SplitterBar.h"/>
+        <File Name="../../../include/Gwen/Controls/Splitters.h"/>
+        <File Name="../../../include/Gwen/Controls/StatusBar.h"/>
+        <File Name="../../../include/Gwen/Controls/TabButton.h"/>
+        <File Name="../../../include/Gwen/Controls/TabControl.h"/>
+        <File Name="../../../include/Gwen/Controls/TabStrip.h"/>
+        <File Name="../../../include/Gwen/Controls/TabTitleBar.h"/>
+        <File Name="../../../include/Gwen/Controls/Text.h"/>
+        <File Name="../../../include/Gwen/Controls/TextBox.h"/>
+        <File Name="../../../include/Gwen/Controls/ToolBar.h"/>
+        <File Name="../../../include/Gwen/Controls/TreeControl.h"/>
+        <File Name="../../../include/Gwen/Controls/TreeNode.h"/>
+        <File Name="../../../include/Gwen/Controls/VerticalScrollBar.h"/>
+        <File Name="../../../include/Gwen/Controls/VerticalSlider.h"/>
+        <File Name="../../../include/Gwen/Controls/WindowButtons.h"/>
+        <File Name="../../../include/Gwen/Controls/WindowCanvas.h"/>
+        <File Name="../../../include/Gwen/Controls/WindowControl.h"/>
+      </VirtualDirectory>
+      <File Name="../../../include/Gwen/Controls.h"/>
+      <File Name="../../../include/Gwen/DragAndDrop.h"/>
+      <File Name="../../../include/Gwen/Events.h"/>
+      <File Name="../../../include/Gwen/Exports.h"/>
+      <File Name="../../../include/Gwen/Font.h"/>
+      <File Name="../../../include/Gwen/Gwen.h"/>
+      <File Name="../../../include/Gwen/Hook.h"/>
+      <VirtualDirectory Name="Input">
+        <File Name="../../../include/Gwen/Input/Allegro.h"/>
+        <File Name="../../../include/Gwen/Input/SDL13.h"/>
+        <File Name="../../../include/Gwen/Input/SFML.h"/>
+        <File Name="../../../include/Gwen/Input/Windows.h"/>
+      </VirtualDirectory>
+      <File Name="../../../include/Gwen/InputHandler.h"/>
+      <File Name="../../../include/Gwen/Macros.h"/>
+      <File Name="../../../include/Gwen/Platform.h"/>
+      <VirtualDirectory Name="Renderers">
+        <File Name="../../../include/Gwen/Renderers/Allegro.h"/>
+        <File Name="../../../include/Gwen/Renderers/Direct2D.h"/>
+        <File Name="../../../include/Gwen/Renderers/DirectX9.h"/>
+        <File Name="../../../include/Gwen/Renderers/GDIPlus.h"/>
+        <File Name="../../../include/Gwen/Renderers/OpenGL.h"/>
+        <File Name="../../../include/Gwen/Renderers/OpenGL_DebugFont.h"/>
+        <File Name="../../../include/Gwen/Renderers/SFML.h"/>
+      </VirtualDirectory>
+      <File Name="../../../include/Gwen/Skin.h"/>
+      <VirtualDirectory Name="Skins">
+        <File Name="../../../include/Gwen/Skins/Simple.h"/>
+        <File Name="../../../include/Gwen/Skins/TexturedBase.h"/>
+        <File Name="../../../include/Gwen/Skins/Texturing.h"/>
+      </VirtualDirectory>
+      <File Name="../../../include/Gwen/Structures.h"/>
+      <File Name="../../../include/Gwen/TextObject.h"/>
+      <File Name="../../../include/Gwen/Texture.h"/>
+      <File Name="../../../include/Gwen/ToolTip.h"/>
+      <VirtualDirectory Name="UnitTest">
+        <File Name="../../../include/Gwen/UnitTest/UnitTest.h"/>
+      </VirtualDirectory>
+      <File Name="../../../include/Gwen/UserData.h"/>
+      <VirtualDirectory Name="Util">
+        <File Name="../../../include/Gwen/Util/ControlFactory.h"/>
+        <File Name="../../../include/Gwen/Util/ImportExport.h"/>
+      </VirtualDirectory>
+      <File Name="../../../include/Gwen/Utility.h"/>
+      <File Name="../../../include/Gwen/WindowProvider.h"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <VirtualDirectory Name="src">
+    <File Name="../../../src/Anim.cpp"/>
+    <File Name="../../../src/BaseRender.cpp"/>
+    <File Name="../../../src/ControlList.cpp"/>
+    <VirtualDirectory Name="Controls">
+      <File Name="../../../src/Controls/Base.cpp"/>
+      <File Name="../../../src/Controls/Button.cpp"/>
+      <File Name="../../../src/Controls/Canvas.cpp"/>
+      <File Name="../../../src/Controls/CheckBox.cpp"/>
+      <File Name="../../../src/Controls/CollapsibleCategory.cpp"/>
+      <File Name="../../../src/Controls/ColorControls.cpp"/>
+      <File Name="../../../src/Controls/ColorPicker.cpp"/>
+      <File Name="../../../src/Controls/ComboBox.cpp"/>
+      <File Name="../../../src/Controls/CrossSplitter.cpp"/>
+      <VirtualDirectory Name="Dialog">
+        <File Name="../../../src/Controls/Dialog/FileOpen.cpp"/>
+        <File Name="../../../src/Controls/Dialog/FileSave.cpp"/>
+        <File Name="../../../src/Controls/Dialog/FolderOpen.cpp"/>
+        <File Name="../../../src/Controls/Dialog/Query.cpp"/>
+      </VirtualDirectory>
+      <File Name="../../../src/Controls/DockBase.cpp"/>
+      <File Name="../../../src/Controls/DockedTabControl.cpp"/>
+      <File Name="../../../src/Controls/Dragger.cpp"/>
+      <File Name="../../../src/Controls/GroupBox.cpp"/>
+      <File Name="../../../src/Controls/HSVColorPicker.cpp"/>
+      <File Name="../../../src/Controls/HorizontalScrollBar.cpp"/>
+      <File Name="../../../src/Controls/HorizontalSlider.cpp"/>
+      <File Name="../../../src/Controls/ImagePanel.cpp"/>
+      <File Name="../../../src/Controls/Label.cpp"/>
+      <File Name="../../../src/Controls/LabelClickable.cpp"/>
+      <File Name="../../../src/Controls/ListBox.cpp"/>
+      <File Name="../../../src/Controls/Menu.cpp"/>
+      <File Name="../../../src/Controls/MenuItem.cpp"/>
+      <File Name="../../../src/Controls/MenuStrip.cpp"/>
+      <File Name="../../../src/Controls/NumericUpDown.cpp"/>
+      <File Name="../../../src/Controls/PageControl.cpp"/>
+      <File Name="../../../src/Controls/ProgressBar.cpp"/>
+      <File Name="../../../src/Controls/Properties.cpp"/>
+      <File Name="../../../src/Controls/PropertyTree.cpp"/>
+      <File Name="../../../src/Controls/RadioButton.cpp"/>
+      <File Name="../../../src/Controls/RadioButtonController.cpp"/>
+      <File Name="../../../src/Controls/Rectangle.cpp"/>
+      <File Name="../../../src/Controls/ResizableControl.cpp"/>
+      <File Name="../../../src/Controls/Resizer.cpp"/>
+      <File Name="../../../src/Controls/RichLabel.cpp"/>
+      <File Name="../../../src/Controls/ScrollBar.cpp"/>
+      <File Name="../../../src/Controls/ScrollBarBar.cpp"/>
+      <File Name="../../../src/Controls/ScrollBarButton.cpp"/>
+      <File Name="../../../src/Controls/ScrollControl.cpp"/>
+      <File Name="../../../src/Controls/Slider.cpp"/>
+      <File Name="../../../src/Controls/SplitterBar.cpp"/>
+      <File Name="../../../src/Controls/TabButton.cpp"/>
+      <File Name="../../../src/Controls/TabControl.cpp"/>
+      <File Name="../../../src/Controls/TabStrip.cpp"/>
+      <File Name="../../../src/Controls/Text.cpp"/>
+      <File Name="../../../src/Controls/TextBox.cpp"/>
+      <File Name="../../../src/Controls/TextBoxNumeric.cpp"/>
+      <File Name="../../../src/Controls/TreeControl.cpp"/>
+      <File Name="../../../src/Controls/TreeNode.cpp"/>
+      <File Name="../../../src/Controls/VerticalScrollBar.cpp"/>
+      <File Name="../../../src/Controls/VerticalSlider.cpp"/>
+      <File Name="../../../src/Controls/WindowCanvas.cpp"/>
+      <File Name="../../../src/Controls/WindowControl.cpp"/>
+    </VirtualDirectory>
+    <File Name="../../../src/DragAndDrop.cpp"/>
+    <File Name="../../../src/Gwen.cpp"/>
+    <File Name="../../../src/Hook.cpp"/>
+    <VirtualDirectory Name="Platforms">
+      <File Name="../../../src/Platforms/Null.cpp"/>
+      <File Name="../../../src/Platforms/Windows.cpp"/>
+    </VirtualDirectory>
+    <File Name="../../../src/Skin.cpp"/>
+    <File Name="../../../src/ToolTip.cpp"/>
+    <File Name="../../../src/Utility.cpp"/>
+    <File Name="../../../src/events.cpp"/>
+    <File Name="../../../src/inputhandler.cpp"/>
+  </VirtualDirectory>
+  <Settings Type="Static Library">
+    <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library">
+      <General OutputFile="../../../lib/windows/codelite/libgwen_static.a" IntermediateDirectory="obj/Release/GWEN-Static" Command="./libgwen_static.a" CommandArguments="" WorkingDirectory="../../../lib/windows/codelite" PauseExecWhenProcTerminates="yes"/>
+      <Compiler Required="yes" Options="-g;-msse;-O2;-ffast-math">
+        <IncludePath Value="../../../include"/>
+        <Preprocessor Value="NDEBUG"/>
+        <Preprocessor Value="GWEN_COMPILE_STATIC"/>
+      </Compiler>
+      <Linker Required="yes" Options="">
+        <LibraryPath Value="../../../lib" />
+        <LibraryPath Value="../../../lib/windows" />
+      </Linker>
+      <ResourceCompiler Required="no" Options=""/>
+      <CustomBuild Enabled="no">
+        <CleanCommand></CleanCommand>
+        <BuildCommand></BuildCommand>
+        <SingleFileCommand></SingleFileCommand>
+        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory></WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild></CustomPostBuild>
+        <CustomPreBuild></CustomPreBuild>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Static Library">
+      <General OutputFile="../../../lib/windows/codelite/libgwen_staticd" IntermediateDirectory="obj/Debug/GWEN-Static" Command="./libgwen_staticd" CommandArguments="" WorkingDirectory="../../../lib/windows/codelite" PauseExecWhenProcTerminates="yes"/>
+      <Compiler Required="yes" Options="-g;-msse">
+        <IncludePath Value="../../../include"/>
+        <Preprocessor Value="_DEBUG"/>
+        <Preprocessor Value="GWEN_COMPILE_STATIC"/>
+      </Compiler>
+      <Linker Required="yes" Options="">
+        <LibraryPath Value="../../../lib" />
+        <LibraryPath Value="../../../lib/windows" />
+      </Linker>
+      <ResourceCompiler Required="no" Options=""/>
+      <CustomBuild Enabled="no">
+        <CleanCommand></CleanCommand>
+        <BuildCommand></BuildCommand>
+        <SingleFileCommand></SingleFileCommand>
+        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory></WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild></CustomPostBuild>
+        <CustomPreBuild></CustomPreBuild>
+      </AdditionalRules>
+    </Configuration>
+  </Settings>
+  <Dependencies name="Release">
+  </Dependencies>
+  <Dependencies name="Debug">
+  </Dependencies>
+</CodeLite_Project>

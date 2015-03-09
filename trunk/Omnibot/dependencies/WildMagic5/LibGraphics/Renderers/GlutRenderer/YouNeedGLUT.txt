@@ -1,0 +1,18 @@
+To use the GLUT renderer:
+
+1. You must download the GLUT distribution for Windows from the Internet.
+
+2. Copy the header and library files to directories that can be found
+   by the compiler.  On our 64-bit machines we have these as follows:
+
+   C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include\gl\glut.h
+   C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include\Lib\glut32.lib
+   C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include\Lib\glut32.def
+   C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include\Lib\IA64\glut32.lib
+   C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include\Lib\IA64\glut32.def
+   C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include\Lib\x64\glut32.lib
+   C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include\Lib\x64\glut32.def
+   C:\Windows\System32\glut32.dll
+
+   On a 32-bit machine, you will probably use "C:\Program Files".
+

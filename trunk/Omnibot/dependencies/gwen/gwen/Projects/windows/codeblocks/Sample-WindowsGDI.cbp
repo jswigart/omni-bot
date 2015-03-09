@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Sample-WindowsGDI" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="../../../bin/WindowsGDISample.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="../../../bin" />
+				<Option object_output="obj/Release/Sample-WindowsGDI" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-msse" />
+					<Add option="-O2" />
+					<Add option="-ffast-math" />
+					<Add option="-DNDEBUG" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<Linker>
+					<Add option="-mwindows" />
+					<Add directory="../../../lib" />
+					<Add directory="../../../lib/windows" />
+					<Add directory="../../../lib/windows/codeblocks" />
+					<Add library="unittest" />
+					<Add library="GWEN-Renderer-GDI" />
+					<Add library="gwen_static" />
+				</Linker>
+			</Target>
+			<Target title="Debug">
+				<Option output="../../../bin/WindowsGDISample_Dd" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="../../../bin" />
+				<Option object_output="obj/Debug/Sample-WindowsGDI" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-msse" />
+					<Add option="-D_DEBUG" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<Linker>
+					<Add option="-mwindows" />
+					<Add directory="../../../lib" />
+					<Add directory="../../../lib/windows" />
+					<Add directory="../../../lib/windows/codeblocks" />
+					<Add library="unittest" />
+					<Add library="GWEND-Renderer-GDI" />
+					<Add library="gwen_static" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="../../../Samples/WindowsGDI/WindowsGDI.cpp">
+		</Unit>
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>
+

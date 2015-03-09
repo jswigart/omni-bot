@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="GWEN">
+		<Project filename="GWEN-DLL.cbp" active="1">
+		</Project>
+		<Project filename="GWEN-Static.cbp">
+		</Project>
+		<Project filename="UnitTest.cbp">
+		</Project>
+		<Project filename="Renderer-OpenGL.cbp">
+		</Project>
+		<Project filename="Renderer-OpenGL_DebugFont.cbp">
+		</Project>
+		<Project filename="Renderer-SFML.cbp">
+		</Project>
+		<Project filename="Renderer-Allegro.cbp">
+		</Project>
+		<Project filename="Renderer-DirectX9.cbp">
+		</Project>
+		<Project filename="Renderer-Direct2D.cbp">
+		</Project>
+		<Project filename="Renderer-GDI.cbp">
+		</Project>
+		<Project filename="Sample-CrossPlatform.cbp">
+			<Depends filename="UnitTest.cbp" />
+			<Depends filename="Renderer-OpenGL_DebugFont.cbp" />
+			<Depends filename="GWEN-Static.cbp" />
+		</Project>
+		<Project filename="Sample-SFML.cbp">
+			<Depends filename="UnitTest.cbp" />
+			<Depends filename="Renderer-SFML.cbp" />
+			<Depends filename="GWEN-Static.cbp" />
+		</Project>
+		<Project filename="Sample-Allegro.cbp">
+			<Depends filename="UnitTest.cbp" />
+			<Depends filename="Renderer-Allegro.cbp" />
+			<Depends filename="GWEN-Static.cbp" />
+		</Project>
+		<Project filename="Sample-Direct2D.cbp">
+			<Depends filename="UnitTest.cbp" />
+			<Depends filename="Renderer-Direct2D.cbp" />
+			<Depends filename="GWEN-Static.cbp" />
+		</Project>
+		<Project filename="Sample-DirectX9.cbp">
+			<Depends filename="UnitTest.cbp" />
+			<Depends filename="Renderer-DirectX9.cbp" />
+			<Depends filename="GWEN-Static.cbp" />
+		</Project>
+		<Project filename="Sample-WindowsGDI.cbp">
+			<Depends filename="UnitTest.cbp" />
+			<Depends filename="Renderer-GDI.cbp" />
+			<Depends filename="GWEN-Static.cbp" />
+		</Project>
+		<Project filename="Sample-OpenGL.cbp">
+			<Depends filename="UnitTest.cbp" />
+			<Depends filename="Renderer-OpenGL.cbp" />
+			<Depends filename="GWEN-Static.cbp" />
+		</Project>
+		<Project filename="Sample-OpenGL_DebugFont.cbp">
+			<Depends filename="UnitTest.cbp" />
+			<Depends filename="Renderer-OpenGL_DebugFont.cbp" />
+			<Depends filename="GWEN-Static.cbp" />
+		</Project>
+		<Project filename="ControlFactory.cbp">
+		</Project>
+		<Project filename="ImportExport.cbp">
+		</Project>
+	</Workspace>
+</CodeBlocks_workspace_file>

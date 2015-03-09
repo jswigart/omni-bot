@@ -1,0 +1,41 @@
+CFG ?= Debug
+SYS ?= Linux
+GRF ?= Glx
+
+build :
+	@mkdir -p ../SDK/Include
+	@mkdir -p ../SDK/Library/$(CFG)
+	@mkdir -p $(CFG)
+	@cp -fp *.h ../SDK/Include
+	cd Controllers     ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd CurvesSurfaces  ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd DataTypes       ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Detail          ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd GlobalEffects   ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd ImageProcessing ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd LocalEffects    ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Resources       ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd SceneGraph      ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd ShaderFloats    ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Shaders         ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Sorting         ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Terrain         ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Renderers/$(GRF)Renderer ; make -f makerend.wm5 CFG=$(CFG) SYS=$(SYS)
+
+clean :
+	cd Controllers     ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd CurvesSurfaces  ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd DataTypes       ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Detail          ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd GlobalEffects   ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd ImageProcessing ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd LocalEffects    ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Resources       ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd SceneGraph      ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd ShaderFloats    ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Shaders         ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Sorting         ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Terrain         ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Renderers/$(GRF)Renderer ; make clean -f makerend.wm5 CFG=$(CFG) SYS=$(SYS)
+	@rm -f $(CFG)/*.*
+	@rmdir $(CFG)
