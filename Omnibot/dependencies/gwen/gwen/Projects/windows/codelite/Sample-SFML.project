@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="Sample-SFML">
+  <VirtualDirectory Name="Samples">
+    <VirtualDirectory Name="SFML">
+      <File Name="../../../Samples/SFML/SFML.cpp"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <Settings Type="Executable">
+    <Configuration Name="Release" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable">
+      <General OutputFile="../../../bin/SFMLSample.exe" IntermediateDirectory="obj/Release/Sample-SFML" Command="./SFMLSample.exe" CommandArguments="" WorkingDirectory="../../../bin" PauseExecWhenProcTerminates="no"/>
+      <Compiler Required="yes" Options="-g;-msse;-O2;-ffast-math">
+        <IncludePath Value="../../../include"/>
+        <Preprocessor Value="NDEBUG"/>
+      </Compiler>
+      <Linker Required="yes" Options="-mwindows">
+        <LibraryPath Value="../../../lib" />
+        <LibraryPath Value="../../../lib/windows" />
+        <LibraryPath Value="../../../lib/windows/codelite" />
+        <Library Value="unittest" />
+        <Library Value="GWEN-Renderer-SFML" />
+        <Library Value="gwen_static" />
+        <Library Value="sfml-main" />
+        <Library Value="sfml-graphics-s" />
+        <Library Value="sfml-window-s" />
+        <Library Value="sfml-system-s" />
+        <Library Value="opengl32" />
+      </Linker>
+      <ResourceCompiler Required="no" Options=""/>
+      <CustomBuild Enabled="no">
+        <CleanCommand></CleanCommand>
+        <BuildCommand></BuildCommand>
+        <SingleFileCommand></SingleFileCommand>
+        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory></WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild></CustomPostBuild>
+        <CustomPreBuild></CustomPreBuild>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Debug" CompilerType="gnu g++" DebuggerType="GNU gdb debugger" Type="Executable">
+      <General OutputFile="../../../bin/SFMLSample_Dd" IntermediateDirectory="obj/Debug/Sample-SFML" Command="./SFMLSample_Dd" CommandArguments="" WorkingDirectory="../../../bin" PauseExecWhenProcTerminates="no"/>
+      <Compiler Required="yes" Options="-g;-msse">
+        <IncludePath Value="../../../include"/>
+        <Preprocessor Value="_DEBUG"/>
+      </Compiler>
+      <Linker Required="yes" Options="-mwindows">
+        <LibraryPath Value="../../../lib" />
+        <LibraryPath Value="../../../lib/windows" />
+        <LibraryPath Value="../../../lib/windows/codelite" />
+        <Library Value="unittest" />
+        <Library Value="GWEND-Renderer-SFML" />
+        <Library Value="gwen_static" />
+        <Library Value="sfml-main-d" />
+        <Library Value="sfml-graphics-s-d" />
+        <Library Value="sfml-window-s-d" />
+        <Library Value="sfml-system-s-d" />
+        <Library Value="opengl32" />
+      </Linker>
+      <ResourceCompiler Required="no" Options=""/>
+      <CustomBuild Enabled="no">
+        <CleanCommand></CleanCommand>
+        <BuildCommand></BuildCommand>
+        <SingleFileCommand></SingleFileCommand>
+        <MakefileGenerationCommand></MakefileGenerationCommand>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory></WorkingDirectory>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild></CustomPostBuild>
+        <CustomPreBuild></CustomPreBuild>
+      </AdditionalRules>
+    </Configuration>
+  </Settings>
+  <Dependencies name="Release">
+    <Project Name="UnitTest"/>
+    <Project Name="Renderer-SFML"/>
+    <Project Name="GWEN-Static"/>
+  </Dependencies>
+  <Dependencies name="Debug">
+    <Project Name="UnitTest"/>
+    <Project Name="Renderer-SFML"/>
+    <Project Name="GWEN-Static"/>
+  </Dependencies>
+</CodeLite_Project>

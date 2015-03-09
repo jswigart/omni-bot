@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="_PrecompiledHeaders">
+      <UniqueIdentifier>{522dab0b-1d92-4dc3-95dd-31928722dd3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlatformDependent">
+      <UniqueIdentifier>{de51b720-39ea-4367-8447-fd29784f634f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlatformIndependent">
+      <UniqueIdentifier>{1114a366-9df1-425e-bc22-0668f4842bdf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Wm5ApplicationPCH.cpp">
+      <Filter>_PrecompiledHeaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Wm5Application.cpp">
+      <Filter>PlatformIndependent</Filter>
+    </ClCompile>
+    <ClCompile Include="Wm5Command.cpp">
+      <Filter>PlatformIndependent</Filter>
+    </ClCompile>
+    <ClCompile Include="Wm5ConsoleApplication.cpp">
+      <Filter>PlatformIndependent</Filter>
+    </ClCompile>
+    <ClCompile Include="Wm5WindowApplication.cpp">
+      <Filter>PlatformIndependent</Filter>
+    </ClCompile>
+    <ClCompile Include="Wm5WindowApplication2.cpp">
+      <Filter>PlatformIndependent</Filter>
+    </ClCompile>
+    <ClCompile Include="Wm5WindowApplication3.cpp">
+      <Filter>PlatformIndependent</Filter>
+    </ClCompile>
+    <ClCompile Include="GlutApplication\Wm5GlutApplication.cpp">
+      <Filter>PlatformDependent</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Wm5ApplicationPCH.h">
+      <Filter>_PrecompiledHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Wm5Application.h">
+      <Filter>PlatformIndependent</Filter>
+    </ClInclude>
+    <ClInclude Include="Wm5Command.h">
+      <Filter>PlatformIndependent</Filter>
+    </ClInclude>
+    <ClInclude Include="Wm5ConsoleApplication.h">
+      <Filter>PlatformIndependent</Filter>
+    </ClInclude>
+    <ClInclude Include="Wm5WindowApplication.h">
+      <Filter>PlatformIndependent</Filter>
+    </ClInclude>
+    <ClInclude Include="Wm5WindowApplication2.h">
+      <Filter>PlatformIndependent</Filter>
+    </ClInclude>
+    <ClInclude Include="Wm5WindowApplication3.h">
+      <Filter>PlatformIndependent</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Wm5WindowApplication.inl">
+      <Filter>PlatformIndependent</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,1054 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugDLL|Win32">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugDLL|x64">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|Win32">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|x64">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{2A7A6A7F-D459-447A-B901-E3A71C775B65}</ProjectGuid>
+    <RootNamespace>LibGraphics</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">_Output\$(PlatformToolset)\$(Platform)\Wgl$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Wm5WglGraphicsD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Wm5WglGraphicsD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">Wm5WglGraphicsD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">Wm5WglGraphicsD</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Wm5WglGraphics</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Wm5WglGraphics</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">Wm5WglGraphics</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">Wm5WglGraphics</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;Controllers;CurvesSurfaces;DataTypes;Detail;GlobalEffects;ImageProcessing;LocalEffects;Renderers;Renderers\OpenGLRenderer;Renderers\WglRenderer;Resources;SceneGraph;ShaderFloats;Shaders;Sorting;Terrain;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_USE_OPENGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5GraphicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Graphics.h ..\SDK\Include
+xcopy /DY Wm5GraphicsLIB.h ..\SDK\Include
+xcopy /DY Controllers\*.h ..\SDK\Include
+xcopy /DY Controllers\*.inl ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.h ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.inl ..\SDK\Include
+xcopy /DY DataTypes\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.inl ..\SDK\Include
+xcopy /DY Detail\*.h ..\SDK\Include
+xcopy /DY Detail\*.inl ..\SDK\Include
+xcopy /DY GlobalEffects\*.h ..\SDK\Include
+xcopy /DY GlobalEffects\*.inl ..\SDK\Include
+xcopy /DY ImageProcessing\*.h ..\SDK\Include
+xcopy /DY ImageProcessing\*.inl ..\SDK\Include
+xcopy /DY LocalEffects\*.h ..\SDK\Include
+xcopy /DY Renderers\*.h ..\SDK\Include
+xcopy /DY Renderers\*.inl ..\SDK\Include
+xcopy /DY Renderers\OpenGLRenderer\*.h ..\SDK\Include
+xcopy /DY Renderers\WglRenderer\*.h ..\SDK\Include
+xcopy /DY Resources\*.h ..\SDK\Include
+xcopy /DY Resources\*.inl ..\SDK\Include
+xcopy /DY SceneGraph\*.h ..\SDK\Include
+xcopy /DY SceneGraph\*.inl ..\SDK\Include
+xcopy /DY ShaderFloats\*.h ..\SDK\Include
+xcopy /DY ShaderFloats\*.inl ..\SDK\Include
+xcopy /DY Shaders\*.h ..\SDK\Include
+xcopy /DY Shaders\*.inl ..\SDK\Include
+xcopy /DY Sorting\*.h ..\SDK\Include
+xcopy /DY Sorting\*.inl ..\SDK\Include
+xcopy /DY Terrain\*.h ..\SDK\Include
+xcopy /DY Terrain\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;Controllers;CurvesSurfaces;DataTypes;Detail;GlobalEffects;ImageProcessing;LocalEffects;Renderers;Renderers\OpenGLRenderer;Renderers\WglRenderer;Resources;SceneGraph;ShaderFloats;Shaders;Sorting;Terrain;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_USE_OPENGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5GraphicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Graphics.h ..\SDK\Include
+xcopy /DY Wm5GraphicsLIB.h ..\SDK\Include
+xcopy /DY Controllers\*.h ..\SDK\Include
+xcopy /DY Controllers\*.inl ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.h ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.inl ..\SDK\Include
+xcopy /DY DataTypes\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.inl ..\SDK\Include
+xcopy /DY Detail\*.h ..\SDK\Include
+xcopy /DY Detail\*.inl ..\SDK\Include
+xcopy /DY GlobalEffects\*.h ..\SDK\Include
+xcopy /DY GlobalEffects\*.inl ..\SDK\Include
+xcopy /DY ImageProcessing\*.h ..\SDK\Include
+xcopy /DY ImageProcessing\*.inl ..\SDK\Include
+xcopy /DY LocalEffects\*.h ..\SDK\Include
+xcopy /DY Renderers\*.h ..\SDK\Include
+xcopy /DY Renderers\*.inl ..\SDK\Include
+xcopy /DY Renderers\OpenGLRenderer\*.h ..\SDK\Include
+xcopy /DY Renderers\WglRenderer\*.h ..\SDK\Include
+xcopy /DY Resources\*.h ..\SDK\Include
+xcopy /DY Resources\*.inl ..\SDK\Include
+xcopy /DY SceneGraph\*.h ..\SDK\Include
+xcopy /DY SceneGraph\*.inl ..\SDK\Include
+xcopy /DY ShaderFloats\*.h ..\SDK\Include
+xcopy /DY ShaderFloats\*.inl ..\SDK\Include
+xcopy /DY Shaders\*.h ..\SDK\Include
+xcopy /DY Shaders\*.inl ..\SDK\Include
+xcopy /DY Sorting\*.h ..\SDK\Include
+xcopy /DY Sorting\*.inl ..\SDK\Include
+xcopy /DY Terrain\*.h ..\SDK\Include
+xcopy /DY Terrain\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;Controllers;CurvesSurfaces;DataTypes;Detail;GlobalEffects;ImageProcessing;LocalEffects;Renderers;Renderers\OpenGLRenderer;Renderers\WglRenderer;Resources;SceneGraph;ShaderFloats;Shaders;Sorting;Terrain;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_IMPORT;WM5_GRAPHICS_DLL_EXPORT;WM5_USE_OPENGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5GraphicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Graphics.h ..\SDK\Include
+xcopy /DY Wm5GraphicsLIB.h ..\SDK\Include
+xcopy /DY Controllers\*.h ..\SDK\Include
+xcopy /DY Controllers\*.inl ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.h ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.inl ..\SDK\Include
+xcopy /DY DataTypes\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.inl ..\SDK\Include
+xcopy /DY Detail\*.h ..\SDK\Include
+xcopy /DY Detail\*.inl ..\SDK\Include
+xcopy /DY GlobalEffects\*.h ..\SDK\Include
+xcopy /DY GlobalEffects\*.inl ..\SDK\Include
+xcopy /DY ImageProcessing\*.h ..\SDK\Include
+xcopy /DY ImageProcessing\*.inl ..\SDK\Include
+xcopy /DY LocalEffects\*.h ..\SDK\Include
+xcopy /DY Renderers\*.h ..\SDK\Include
+xcopy /DY Renderers\*.inl ..\SDK\Include
+xcopy /DY Renderers\OpenGLRenderer\*.h ..\SDK\Include
+xcopy /DY Renderers\WglRenderer\*.h ..\SDK\Include
+xcopy /DY Resources\*.h ..\SDK\Include
+xcopy /DY Resources\*.inl ..\SDK\Include
+xcopy /DY SceneGraph\*.h ..\SDK\Include
+xcopy /DY SceneGraph\*.inl ..\SDK\Include
+xcopy /DY ShaderFloats\*.h ..\SDK\Include
+xcopy /DY ShaderFloats\*.inl ..\SDK\Include
+xcopy /DY Shaders\*.h ..\SDK\Include
+xcopy /DY Shaders\*.inl ..\SDK\Include
+xcopy /DY Sorting\*.h ..\SDK\Include
+xcopy /DY Sorting\*.inl ..\SDK\Include
+xcopy /DY Terrain\*.h ..\SDK\Include
+xcopy /DY Terrain\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wm5CoreD.lib;Wm5MathematicsD.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>.\;Controllers;CurvesSurfaces;DataTypes;Detail;GlobalEffects;ImageProcessing;LocalEffects;Renderers;Renderers\OpenGLRenderer;Renderers\WglRenderer;Resources;SceneGraph;ShaderFloats;Shaders;Sorting;Terrain;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_IMPORT;WM5_GRAPHICS_DLL_EXPORT;WM5_USE_OPENGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5GraphicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Graphics.h ..\SDK\Include
+xcopy /DY Wm5GraphicsLIB.h ..\SDK\Include
+xcopy /DY Controllers\*.h ..\SDK\Include
+xcopy /DY Controllers\*.inl ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.h ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.inl ..\SDK\Include
+xcopy /DY DataTypes\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.inl ..\SDK\Include
+xcopy /DY Detail\*.h ..\SDK\Include
+xcopy /DY Detail\*.inl ..\SDK\Include
+xcopy /DY GlobalEffects\*.h ..\SDK\Include
+xcopy /DY GlobalEffects\*.inl ..\SDK\Include
+xcopy /DY ImageProcessing\*.h ..\SDK\Include
+xcopy /DY ImageProcessing\*.inl ..\SDK\Include
+xcopy /DY LocalEffects\*.h ..\SDK\Include
+xcopy /DY Renderers\*.h ..\SDK\Include
+xcopy /DY Renderers\*.inl ..\SDK\Include
+xcopy /DY Renderers\OpenGLRenderer\*.h ..\SDK\Include
+xcopy /DY Renderers\WglRenderer\*.h ..\SDK\Include
+xcopy /DY Resources\*.h ..\SDK\Include
+xcopy /DY Resources\*.inl ..\SDK\Include
+xcopy /DY SceneGraph\*.h ..\SDK\Include
+xcopy /DY SceneGraph\*.inl ..\SDK\Include
+xcopy /DY ShaderFloats\*.h ..\SDK\Include
+xcopy /DY ShaderFloats\*.inl ..\SDK\Include
+xcopy /DY Shaders\*.h ..\SDK\Include
+xcopy /DY Shaders\*.inl ..\SDK\Include
+xcopy /DY Sorting\*.h ..\SDK\Include
+xcopy /DY Sorting\*.inl ..\SDK\Include
+xcopy /DY Terrain\*.h ..\SDK\Include
+xcopy /DY Terrain\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wm5CoreD.lib;Wm5MathematicsD.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;Controllers;CurvesSurfaces;DataTypes;Detail;GlobalEffects;ImageProcessing;LocalEffects;Renderers;Renderers\OpenGLRenderer;Renderers\WglRenderer;Resources;SceneGraph;ShaderFloats;Shaders;Sorting;Terrain;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_USE_OPENGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5GraphicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Graphics.h ..\SDK\Include
+xcopy /DY Wm5GraphicsLIB.h ..\SDK\Include
+xcopy /DY Controllers\*.h ..\SDK\Include
+xcopy /DY Controllers\*.inl ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.h ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.inl ..\SDK\Include
+xcopy /DY DataTypes\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.inl ..\SDK\Include
+xcopy /DY Detail\*.h ..\SDK\Include
+xcopy /DY Detail\*.inl ..\SDK\Include
+xcopy /DY GlobalEffects\*.h ..\SDK\Include
+xcopy /DY GlobalEffects\*.inl ..\SDK\Include
+xcopy /DY ImageProcessing\*.h ..\SDK\Include
+xcopy /DY ImageProcessing\*.inl ..\SDK\Include
+xcopy /DY LocalEffects\*.h ..\SDK\Include
+xcopy /DY Renderers\*.h ..\SDK\Include
+xcopy /DY Renderers\*.inl ..\SDK\Include
+xcopy /DY Renderers\OpenGLRenderer\*.h ..\SDK\Include
+xcopy /DY Renderers\WglRenderer\*.h ..\SDK\Include
+xcopy /DY Resources\*.h ..\SDK\Include
+xcopy /DY Resources\*.inl ..\SDK\Include
+xcopy /DY SceneGraph\*.h ..\SDK\Include
+xcopy /DY SceneGraph\*.inl ..\SDK\Include
+xcopy /DY ShaderFloats\*.h ..\SDK\Include
+xcopy /DY ShaderFloats\*.inl ..\SDK\Include
+xcopy /DY Shaders\*.h ..\SDK\Include
+xcopy /DY Shaders\*.inl ..\SDK\Include
+xcopy /DY Sorting\*.h ..\SDK\Include
+xcopy /DY Sorting\*.inl ..\SDK\Include
+xcopy /DY Terrain\*.h ..\SDK\Include
+xcopy /DY Terrain\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;Controllers;CurvesSurfaces;DataTypes;Detail;GlobalEffects;ImageProcessing;LocalEffects;Renderers;Renderers\OpenGLRenderer;Renderers\WglRenderer;Resources;SceneGraph;ShaderFloats;Shaders;Sorting;Terrain;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_USE_OPENGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5GraphicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Graphics.h ..\SDK\Include
+xcopy /DY Wm5GraphicsLIB.h ..\SDK\Include
+xcopy /DY Controllers\*.h ..\SDK\Include
+xcopy /DY Controllers\*.inl ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.h ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.inl ..\SDK\Include
+xcopy /DY DataTypes\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.inl ..\SDK\Include
+xcopy /DY Detail\*.h ..\SDK\Include
+xcopy /DY Detail\*.inl ..\SDK\Include
+xcopy /DY GlobalEffects\*.h ..\SDK\Include
+xcopy /DY GlobalEffects\*.inl ..\SDK\Include
+xcopy /DY ImageProcessing\*.h ..\SDK\Include
+xcopy /DY ImageProcessing\*.inl ..\SDK\Include
+xcopy /DY LocalEffects\*.h ..\SDK\Include
+xcopy /DY Renderers\*.h ..\SDK\Include
+xcopy /DY Renderers\*.inl ..\SDK\Include
+xcopy /DY Renderers\OpenGLRenderer\*.h ..\SDK\Include
+xcopy /DY Renderers\WglRenderer\*.h ..\SDK\Include
+xcopy /DY Resources\*.h ..\SDK\Include
+xcopy /DY Resources\*.inl ..\SDK\Include
+xcopy /DY SceneGraph\*.h ..\SDK\Include
+xcopy /DY SceneGraph\*.inl ..\SDK\Include
+xcopy /DY ShaderFloats\*.h ..\SDK\Include
+xcopy /DY ShaderFloats\*.inl ..\SDK\Include
+xcopy /DY Shaders\*.h ..\SDK\Include
+xcopy /DY Shaders\*.inl ..\SDK\Include
+xcopy /DY Sorting\*.h ..\SDK\Include
+xcopy /DY Sorting\*.inl ..\SDK\Include
+xcopy /DY Terrain\*.h ..\SDK\Include
+xcopy /DY Terrain\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;Controllers;CurvesSurfaces;DataTypes;Detail;GlobalEffects;ImageProcessing;LocalEffects;Renderers;Renderers\OpenGLRenderer;Renderers\WglRenderer;Resources;SceneGraph;ShaderFloats;Shaders;Sorting;Terrain;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_IMPORT;WM5_GRAPHICS_DLL_EXPORT;WM5_USE_OPENGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5GraphicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Graphics.h ..\SDK\Include
+xcopy /DY Wm5GraphicsLIB.h ..\SDK\Include
+xcopy /DY Controllers\*.h ..\SDK\Include
+xcopy /DY Controllers\*.inl ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.h ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.inl ..\SDK\Include
+xcopy /DY DataTypes\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.inl ..\SDK\Include
+xcopy /DY Detail\*.h ..\SDK\Include
+xcopy /DY Detail\*.inl ..\SDK\Include
+xcopy /DY GlobalEffects\*.h ..\SDK\Include
+xcopy /DY GlobalEffects\*.inl ..\SDK\Include
+xcopy /DY ImageProcessing\*.h ..\SDK\Include
+xcopy /DY ImageProcessing\*.inl ..\SDK\Include
+xcopy /DY LocalEffects\*.h ..\SDK\Include
+xcopy /DY Renderers\*.h ..\SDK\Include
+xcopy /DY Renderers\*.inl ..\SDK\Include
+xcopy /DY Renderers\OpenGLRenderer\*.h ..\SDK\Include
+xcopy /DY Renderers\WglRenderer\*.h ..\SDK\Include
+xcopy /DY Resources\*.h ..\SDK\Include
+xcopy /DY Resources\*.inl ..\SDK\Include
+xcopy /DY SceneGraph\*.h ..\SDK\Include
+xcopy /DY SceneGraph\*.inl ..\SDK\Include
+xcopy /DY ShaderFloats\*.h ..\SDK\Include
+xcopy /DY ShaderFloats\*.inl ..\SDK\Include
+xcopy /DY Shaders\*.h ..\SDK\Include
+xcopy /DY Shaders\*.inl ..\SDK\Include
+xcopy /DY Sorting\*.h ..\SDK\Include
+xcopy /DY Sorting\*.inl ..\SDK\Include
+xcopy /DY Terrain\*.h ..\SDK\Include
+xcopy /DY Terrain\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wm5Core.lib;Wm5Mathematics.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>.\;Controllers;CurvesSurfaces;DataTypes;Detail;GlobalEffects;ImageProcessing;LocalEffects;Renderers;Renderers\OpenGLRenderer;Renderers\WglRenderer;Resources;SceneGraph;ShaderFloats;Shaders;Sorting;Terrain;..\SDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WM5_USE_PRECOMPILED_HEADERS;WM5_CORE_DLL_IMPORT;WM5_MATHEMATICS_DLL_IMPORT;WM5_GRAPHICS_DLL_EXPORT;WM5_USE_OPENGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Wm5GraphicsPCH.h</PrecompiledHeaderFile>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(TargetPath)</OutputFile>
+    </Lib>
+    <PostBuildEvent>
+      <Command>mkdir ..\SDK\Include
+xcopy /DY Wm5Graphics.h ..\SDK\Include
+xcopy /DY Wm5GraphicsLIB.h ..\SDK\Include
+xcopy /DY Controllers\*.h ..\SDK\Include
+xcopy /DY Controllers\*.inl ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.h ..\SDK\Include
+xcopy /DY CurvesSurfaces\*.inl ..\SDK\Include
+xcopy /DY DataTypes\*.h ..\SDK\Include
+xcopy /DY DataTypes\*.inl ..\SDK\Include
+xcopy /DY Detail\*.h ..\SDK\Include
+xcopy /DY Detail\*.inl ..\SDK\Include
+xcopy /DY GlobalEffects\*.h ..\SDK\Include
+xcopy /DY GlobalEffects\*.inl ..\SDK\Include
+xcopy /DY ImageProcessing\*.h ..\SDK\Include
+xcopy /DY ImageProcessing\*.inl ..\SDK\Include
+xcopy /DY LocalEffects\*.h ..\SDK\Include
+xcopy /DY Renderers\*.h ..\SDK\Include
+xcopy /DY Renderers\*.inl ..\SDK\Include
+xcopy /DY Renderers\OpenGLRenderer\*.h ..\SDK\Include
+xcopy /DY Renderers\WglRenderer\*.h ..\SDK\Include
+xcopy /DY Resources\*.h ..\SDK\Include
+xcopy /DY Resources\*.inl ..\SDK\Include
+xcopy /DY SceneGraph\*.h ..\SDK\Include
+xcopy /DY SceneGraph\*.inl ..\SDK\Include
+xcopy /DY ShaderFloats\*.h ..\SDK\Include
+xcopy /DY ShaderFloats\*.inl ..\SDK\Include
+xcopy /DY Shaders\*.h ..\SDK\Include
+xcopy /DY Shaders\*.inl ..\SDK\Include
+xcopy /DY Sorting\*.h ..\SDK\Include
+xcopy /DY Sorting\*.inl ..\SDK\Include
+xcopy /DY Terrain\*.h ..\SDK\Include
+xcopy /DY Terrain\*.inl ..\SDK\Include
+mkdir ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(TargetPath)" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)
+xcopy /DY "$(OutDir)$(TargetName).lib" ..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</Command>
+    </PostBuildEvent>
+    <Link>
+      <AdditionalLibraryDirectories>..\SDK\Library\$(PlatformToolset)\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Wm5Core.lib;Wm5Mathematics.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="SceneGraph\Wm5Camera.cpp" />
+    <ClCompile Include="SceneGraph\Wm5CameraNode.cpp" />
+    <ClCompile Include="SceneGraph\Wm5Culler.cpp" />
+    <ClCompile Include="SceneGraph\Wm5Light.cpp" />
+    <ClCompile Include="SceneGraph\Wm5LightNode.cpp" />
+    <ClCompile Include="SceneGraph\Wm5Material.cpp" />
+    <ClCompile Include="SceneGraph\Wm5Node.cpp" />
+    <ClCompile Include="SceneGraph\Wm5Particles.cpp" />
+    <ClCompile Include="SceneGraph\Wm5Picker.cpp" />
+    <ClCompile Include="SceneGraph\Wm5Polypoint.cpp" />
+    <ClCompile Include="SceneGraph\Wm5Polysegment.cpp" />
+    <ClCompile Include="SceneGraph\Wm5Projector.cpp" />
+    <ClCompile Include="SceneGraph\Wm5ScreenTarget.cpp" />
+    <ClCompile Include="SceneGraph\Wm5Spatial.cpp" />
+    <ClCompile Include="SceneGraph\Wm5StandardMesh.cpp" />
+    <ClCompile Include="SceneGraph\Wm5Triangles.cpp" />
+    <ClCompile Include="SceneGraph\Wm5TriFan.cpp" />
+    <ClCompile Include="SceneGraph\Wm5TriMesh.cpp" />
+    <ClCompile Include="SceneGraph\Wm5TriStrip.cpp" />
+    <ClCompile Include="SceneGraph\Wm5VisibleSet.cpp" />
+    <ClCompile Include="SceneGraph\Wm5Visual.cpp" />
+    <ClCompile Include="Controllers\Wm5BlendTransformController.cpp" />
+    <ClCompile Include="Controllers\Wm5ControlledObject.cpp" />
+    <ClCompile Include="Controllers\Wm5Controller.cpp" />
+    <ClCompile Include="Controllers\Wm5IKController.cpp" />
+    <ClCompile Include="Controllers\Wm5IKGoal.cpp" />
+    <ClCompile Include="Controllers\Wm5IKJoint.cpp" />
+    <ClCompile Include="Controllers\Wm5KeyframeController.cpp" />
+    <ClCompile Include="Controllers\Wm5MorphController.cpp" />
+    <ClCompile Include="Controllers\Wm5ParticleController.cpp" />
+    <ClCompile Include="Controllers\Wm5PointController.cpp" />
+    <ClCompile Include="Controllers\Wm5SkinController.cpp" />
+    <ClCompile Include="Controllers\Wm5TransformController.cpp" />
+    <ClCompile Include="DataTypes\Wm5Bound.cpp" />
+    <ClCompile Include="DataTypes\Wm5Color.cpp" />
+    <ClCompile Include="DataTypes\Wm5HalfFloat.cpp" />
+    <ClCompile Include="DataTypes\Wm5SpecializedIO.cpp" />
+    <ClCompile Include="DataTypes\Wm5Transform.cpp" />
+    <ClCompile Include="DataTypes\Wm5Utility.cpp" />
+    <ClCompile Include="Resources\Wm5Buffer.cpp" />
+    <ClCompile Include="Resources\Wm5IndexBuffer.cpp" />
+    <ClCompile Include="Resources\Wm5RenderTarget.cpp" />
+    <ClCompile Include="Resources\Wm5Texture.cpp" />
+    <ClCompile Include="Resources\Wm5Texture1D.cpp" />
+    <ClCompile Include="Resources\Wm5Texture2D.cpp" />
+    <ClCompile Include="Resources\Wm5Texture3D.cpp" />
+    <ClCompile Include="Resources\Wm5TextureCube.cpp" />
+    <ClCompile Include="Resources\Wm5VertexBuffer.cpp" />
+    <ClCompile Include="Resources\Wm5VertexBufferAccessor.cpp" />
+    <ClCompile Include="Resources\Wm5VertexFormat.cpp" />
+    <ClCompile Include="Detail\Wm5BillboardNode.cpp" />
+    <ClCompile Include="Detail\Wm5ClodMesh.cpp" />
+    <ClCompile Include="Detail\Wm5CollapseRecord.cpp" />
+    <ClCompile Include="Detail\Wm5CollapseRecordArray.cpp" />
+    <ClCompile Include="Detail\Wm5CreateClodMesh.cpp" />
+    <ClCompile Include="Detail\Wm5DlodNode.cpp" />
+    <ClCompile Include="Detail\Wm5SwitchNode.cpp" />
+    <ClCompile Include="Shaders\Wm5AlphaState.cpp" />
+    <ClCompile Include="Shaders\Wm5CullState.cpp" />
+    <ClCompile Include="Shaders\Wm5DepthState.cpp" />
+    <ClCompile Include="Shaders\Wm5OffsetState.cpp" />
+    <ClCompile Include="Shaders\Wm5PixelShader.cpp" />
+    <ClCompile Include="Shaders\Wm5Shader.cpp" />
+    <ClCompile Include="Shaders\Wm5ShaderParameters.cpp" />
+    <ClCompile Include="Shaders\Wm5StencilState.cpp" />
+    <ClCompile Include="Shaders\Wm5VertexShader.cpp" />
+    <ClCompile Include="Shaders\Wm5VisualEffect.cpp" />
+    <ClCompile Include="Shaders\Wm5VisualEffectInstance.cpp" />
+    <ClCompile Include="Shaders\Wm5VisualPass.cpp" />
+    <ClCompile Include="Shaders\Wm5VisualTechnique.cpp" />
+    <ClCompile Include="Shaders\Wm5WireState.cpp" />
+    <ClCompile Include="CurvesSurfaces\Wm5BoxSurface.cpp" />
+    <ClCompile Include="CurvesSurfaces\Wm5BSplineSurfacePatch.cpp" />
+    <ClCompile Include="CurvesSurfaces\Wm5CurveMesh.cpp" />
+    <ClCompile Include="CurvesSurfaces\Wm5CurveSegment.cpp" />
+    <ClCompile Include="CurvesSurfaces\Wm5Float2Array.cpp" />
+    <ClCompile Include="CurvesSurfaces\Wm5FloatArray.cpp" />
+    <ClCompile Include="CurvesSurfaces\Wm5RectangleSurface.cpp" />
+    <ClCompile Include="CurvesSurfaces\Wm5RevolutionSurface.cpp" />
+    <ClCompile Include="CurvesSurfaces\Wm5SurfaceMesh.cpp" />
+    <ClCompile Include="CurvesSurfaces\Wm5SurfacePatch.cpp" />
+    <ClCompile Include="CurvesSurfaces\Wm5TubeSurface.cpp" />
+    <ClCompile Include="Terrain\Wm5Terrain.cpp" />
+    <ClCompile Include="Terrain\Wm5TerrainPage.cpp" />
+    <ClCompile Include="Sorting\Wm5BspNode.cpp" />
+    <ClCompile Include="Sorting\Wm5ConvexRegion.cpp" />
+    <ClCompile Include="Sorting\Wm5ConvexRegionManager.cpp" />
+    <ClCompile Include="Sorting\Wm5CRMCuller.cpp" />
+    <ClCompile Include="Sorting\Wm5Portal.cpp" />
+    <ClCompile Include="Wm5GraphicsPCH.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="ShaderFloats\Wm5CameraModelDVectorConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5CameraModelPositionConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5CameraWorldDVectorConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5CameraWorldPositionConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5LightAmbientConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5LightAttenuationConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5LightDiffuseConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5LightModelDVectorConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5LightModelPositionConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5LightSpecularConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5LightSpotConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5LightWorldDVectorConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5LightWorldPositionConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5MaterialAmbientConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5MaterialDiffuseConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5MaterialEmissiveConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5MaterialSpecularConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5PMatrixConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5ProjectorMatrixConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5ProjectorWorldPositionConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5PVMatrixConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5PVWMatrixConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5ShaderFloat.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5VMatrixConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5VWMatrixConstant.cpp" />
+    <ClCompile Include="ShaderFloats\Wm5WMatrixConstant.cpp" />
+    <ClCompile Include="LocalEffects\Wm5DefaultEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5LightAmbEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5LightDirPerPixEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5LightDirPerVerEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5LightPntPerPixEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5LightPntPerVerEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5LightSptPerPixEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5LightSptPerVerEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5MaterialEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5MaterialTextureEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5Texture1DEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5Texture2AddEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5Texture2ColorBlendEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5Texture2DEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5Texture2MulEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5Texture3DEffect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5VertexColor3Effect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5VertexColor4Effect.cpp" />
+    <ClCompile Include="LocalEffects\Wm5VertexColor4TextureEffect.cpp" />
+    <ClCompile Include="ImageProcessing\Wm5ImageProcessing.cpp" />
+    <ClCompile Include="ImageProcessing\Wm5ImageProcessing2.cpp" />
+    <ClCompile Include="ImageProcessing\Wm5ImageProcessing3.cpp" />
+    <ClCompile Include="GlobalEffects\Wm5GlobalEffect.cpp" />
+    <ClCompile Include="GlobalEffects\Wm5PlanarReflectionEffect.cpp" />
+    <ClCompile Include="GlobalEffects\Wm5PlanarShadowEffect.cpp" />
+    <ClCompile Include="Renderers\Wm5Renderer.cpp" />
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5GlExtensions.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5GlPlugin.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5OpenGLIndexBuffer.cpp" />
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5OpenGLMapping.cpp" />
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5OpenGLPixelShader.cpp" />
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5OpenGLRenderer.cpp" />
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5OpenGLRendererData.cpp" />
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5OpenGLRenderTarget.cpp" />
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5OpenGLShader.cpp" />
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5OpenGLTexture1D.cpp" />
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5OpenGLTexture2D.cpp" />
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5OpenGLTexture3D.cpp" />
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5OpenGLTextureCube.cpp" />
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5OpenGLVerdanaS16B0I0.cpp" />
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5OpenGLVertexBuffer.cpp" />
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5OpenGLVertexFormat.cpp" />
+    <ClCompile Include="Renderers\OpenGLRenderer\Wm5OpenGLVertexShader.cpp" />
+    <ClCompile Include="Renderers\WglRenderer\Wm5WglExtensions.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="Renderers\WglRenderer\Wm5WglRenderer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SceneGraph\Wm5Camera.h" />
+    <ClInclude Include="SceneGraph\Wm5CameraNode.h" />
+    <ClInclude Include="SceneGraph\Wm5Culler.h" />
+    <ClInclude Include="SceneGraph\Wm5Light.h" />
+    <ClInclude Include="SceneGraph\Wm5LightNode.h" />
+    <ClInclude Include="SceneGraph\Wm5Material.h" />
+    <ClInclude Include="SceneGraph\Wm5Node.h" />
+    <ClInclude Include="SceneGraph\Wm5Particles.h" />
+    <ClInclude Include="SceneGraph\Wm5Picker.h" />
+    <ClInclude Include="SceneGraph\Wm5PickRecord.h" />
+    <ClInclude Include="SceneGraph\Wm5Polypoint.h" />
+    <ClInclude Include="SceneGraph\Wm5Polysegment.h" />
+    <ClInclude Include="SceneGraph\Wm5Projector.h" />
+    <ClInclude Include="SceneGraph\Wm5ScreenTarget.h" />
+    <ClInclude Include="SceneGraph\Wm5Spatial.h" />
+    <ClInclude Include="SceneGraph\Wm5StandardMesh.h" />
+    <ClInclude Include="SceneGraph\Wm5Triangles.h" />
+    <ClInclude Include="SceneGraph\Wm5TriFan.h" />
+    <ClInclude Include="SceneGraph\Wm5TriMesh.h" />
+    <ClInclude Include="SceneGraph\Wm5TriStrip.h" />
+    <ClInclude Include="SceneGraph\Wm5VisibleSet.h" />
+    <ClInclude Include="SceneGraph\Wm5Visual.h" />
+    <ClInclude Include="Controllers\Wm5BlendTransformController.h" />
+    <ClInclude Include="Controllers\Wm5ControlledObject.h" />
+    <ClInclude Include="Controllers\Wm5Controller.h" />
+    <ClInclude Include="Controllers\Wm5IKController.h" />
+    <ClInclude Include="Controllers\Wm5IKGoal.h" />
+    <ClInclude Include="Controllers\Wm5IKJoint.h" />
+    <ClInclude Include="Controllers\Wm5KeyframeController.h" />
+    <ClInclude Include="Controllers\Wm5MorphController.h" />
+    <ClInclude Include="Controllers\Wm5ParticleController.h" />
+    <ClInclude Include="Controllers\Wm5PointController.h" />
+    <ClInclude Include="Controllers\Wm5SkinController.h" />
+    <ClInclude Include="Controllers\Wm5TransformController.h" />
+    <ClInclude Include="DataTypes\Wm5Bound.h" />
+    <ClInclude Include="DataTypes\Wm5Color.h" />
+    <ClInclude Include="DataTypes\Wm5HalfFloat.h" />
+    <ClInclude Include="DataTypes\Wm5SpecializedIO.h" />
+    <ClInclude Include="DataTypes\Wm5Transform.h" />
+    <ClInclude Include="DataTypes\Wm5Utility.h" />
+    <ClInclude Include="Resources\Wm5Buffer.h" />
+    <ClInclude Include="Resources\Wm5IndexBuffer.h" />
+    <ClInclude Include="Resources\Wm5RenderTarget.h" />
+    <ClInclude Include="Resources\Wm5Texture.h" />
+    <ClInclude Include="Resources\Wm5Texture1D.h" />
+    <ClInclude Include="Resources\Wm5Texture2D.h" />
+    <ClInclude Include="Resources\Wm5Texture3D.h" />
+    <ClInclude Include="Resources\Wm5TextureCube.h" />
+    <ClInclude Include="Resources\Wm5VertexBuffer.h" />
+    <ClInclude Include="Resources\Wm5VertexBufferAccessor.h" />
+    <ClInclude Include="Resources\Wm5VertexFormat.h" />
+    <ClInclude Include="Detail\Wm5BillboardNode.h" />
+    <ClInclude Include="Detail\Wm5ClodMesh.h" />
+    <ClInclude Include="Detail\Wm5CollapseRecord.h" />
+    <ClInclude Include="Detail\Wm5CollapseRecordArray.h" />
+    <ClInclude Include="Detail\Wm5CreateClodMesh.h" />
+    <ClInclude Include="Detail\Wm5DlodNode.h" />
+    <ClInclude Include="Detail\Wm5SwitchNode.h" />
+    <ClInclude Include="Shaders\Wm5AlphaState.h" />
+    <ClInclude Include="Shaders\Wm5CullState.h" />
+    <ClInclude Include="Shaders\Wm5DepthState.h" />
+    <ClInclude Include="Shaders\Wm5OffsetState.h" />
+    <ClInclude Include="Shaders\Wm5PixelShader.h" />
+    <ClInclude Include="Shaders\Wm5Shader.h" />
+    <ClInclude Include="Shaders\Wm5ShaderParameters.h" />
+    <ClInclude Include="Shaders\Wm5StencilState.h" />
+    <ClInclude Include="Shaders\Wm5VertexShader.h" />
+    <ClInclude Include="Shaders\Wm5VisualEffect.h" />
+    <ClInclude Include="Shaders\Wm5VisualEffectInstance.h" />
+    <ClInclude Include="Shaders\Wm5VisualPass.h" />
+    <ClInclude Include="Shaders\Wm5VisualTechnique.h" />
+    <ClInclude Include="Shaders\Wm5WireState.h" />
+    <ClInclude Include="CurvesSurfaces\Wm5BoxSurface.h" />
+    <ClInclude Include="CurvesSurfaces\Wm5BSplineSurfacePatch.h" />
+    <ClInclude Include="CurvesSurfaces\Wm5CurveMesh.h" />
+    <ClInclude Include="CurvesSurfaces\Wm5CurveSegment.h" />
+    <ClInclude Include="CurvesSurfaces\Wm5Float2Array.h" />
+    <ClInclude Include="CurvesSurfaces\Wm5FloatArray.h" />
+    <ClInclude Include="CurvesSurfaces\Wm5RectangleSurface.h" />
+    <ClInclude Include="CurvesSurfaces\Wm5RevolutionSurface.h" />
+    <ClInclude Include="CurvesSurfaces\Wm5SurfaceMesh.h" />
+    <ClInclude Include="CurvesSurfaces\Wm5SurfacePatch.h" />
+    <ClInclude Include="CurvesSurfaces\Wm5TubeSurface.h" />
+    <ClInclude Include="Terrain\Wm5Terrain.h" />
+    <ClInclude Include="Terrain\Wm5TerrainPage.h" />
+    <ClInclude Include="Sorting\Wm5BspNode.h" />
+    <ClInclude Include="Sorting\Wm5ConvexRegion.h" />
+    <ClInclude Include="Sorting\Wm5ConvexRegionManager.h" />
+    <ClInclude Include="Sorting\Wm5CRMCuller.h" />
+    <ClInclude Include="Sorting\Wm5Portal.h" />
+    <ClInclude Include="Wm5GraphicsPCH.h" />
+    <ClInclude Include="ShaderFloats\Wm5CameraModelDVectorConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5CameraModelPositionConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5CameraWorldDVectorConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5CameraWorldPositionConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5LightAmbientConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5LightAttenuationConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5LightDiffuseConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5LightModelDVectorConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5LightModelPositionConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5LightSpecularConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5LightSpotConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5LightWorldDVectorConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5LightWorldPositionConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5MaterialAmbientConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5MaterialDiffuseConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5MaterialEmissiveConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5MaterialSpecularConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5PMatrixConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5ProjectorMatrixConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5ProjectorWorldPositionConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5PVMatrixConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5PVWMatrixConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5ShaderFloat.h" />
+    <ClInclude Include="ShaderFloats\Wm5VMatrixConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5VWMatrixConstant.h" />
+    <ClInclude Include="ShaderFloats\Wm5WMatrixConstant.h" />
+    <ClInclude Include="LocalEffects\Wm5DefaultEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5LightAmbEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5LightDirPerPixEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5LightDirPerVerEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5LightPntPerPixEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5LightPntPerVerEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5LightSptPerPixEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5LightSptPerVerEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5MaterialEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5MaterialTextureEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5Texture1DEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5Texture2AddEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5Texture2ColorBlendEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5Texture2DEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5Texture2MulEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5Texture3DEffect.h" />
+    <ClInclude Include="LocalEffects\Wm5VertexColor3Effect.h" />
+    <ClInclude Include="LocalEffects\Wm5VertexColor4Effect.h" />
+    <ClInclude Include="LocalEffects\Wm5VertexColor4TextureEffect.h" />
+    <ClInclude Include="ImageProcessing\Wm5ImageProcessing.h" />
+    <ClInclude Include="ImageProcessing\Wm5ImageProcessing2.h" />
+    <ClInclude Include="ImageProcessing\Wm5ImageProcessing3.h" />
+    <ClInclude Include="GlobalEffects\Wm5GlobalEffect.h" />
+    <ClInclude Include="GlobalEffects\Wm5PlanarReflectionEffect.h" />
+    <ClInclude Include="GlobalEffects\Wm5PlanarShadowEffect.h" />
+    <ClInclude Include="Renderers\Wm5Renderer.h" />
+    <ClInclude Include="Renderers\Wm5Renderers.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5GlExtensions.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5GlPlugin.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5GlUtility.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5OpenGLBitmapFont.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5OpenGLIndexBuffer.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5OpenGLMapping.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5OpenGLPixelShader.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5OpenGLRendererData.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5OpenGLRendererLIB.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5OpenGLRenderTarget.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5OpenGLShader.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5OpenGLTexture1D.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5OpenGLTexture2D.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5OpenGLTexture3D.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5OpenGLTextureCube.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5OpenGLVertexBuffer.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5OpenGLVertexFormat.h" />
+    <ClInclude Include="Renderers\OpenGLRenderer\Wm5OpenGLVertexShader.h" />
+    <ClInclude Include="Renderers\WglRenderer\Wm5WglExtensions.h" />
+    <ClInclude Include="Renderers\WglRenderer\Wm5WglRendererData.h" />
+    <ClInclude Include="Renderers\WglRenderer\Wm5WglRendererInput.h" />
+    <ClInclude Include="Wm5Graphics.h" />
+    <ClInclude Include="Wm5GraphicsLIB.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SceneGraph\Wm5Camera.inl" />
+    <None Include="SceneGraph\Wm5CameraNode.inl" />
+    <None Include="SceneGraph\Wm5Culler.inl" />
+    <None Include="SceneGraph\Wm5Light.inl" />
+    <None Include="SceneGraph\Wm5LightNode.inl" />
+    <None Include="SceneGraph\Wm5Node.inl" />
+    <None Include="SceneGraph\Wm5Particles.inl" />
+    <None Include="SceneGraph\Wm5Picker.inl" />
+    <None Include="SceneGraph\Wm5PickRecord.inl" />
+    <None Include="SceneGraph\Wm5Polypoint.inl" />
+    <None Include="SceneGraph\Wm5Polysegment.inl" />
+    <None Include="SceneGraph\Wm5Spatial.inl" />
+    <None Include="SceneGraph\Wm5Triangles.inl" />
+    <None Include="SceneGraph\Wm5VisibleSet.inl" />
+    <None Include="SceneGraph\Wm5Visual.inl" />
+    <None Include="Controllers\Wm5BlendTransformController.inl" />
+    <None Include="Controllers\Wm5ControlledObject.inl" />
+    <None Include="Controllers\Wm5Controller.inl" />
+    <None Include="Controllers\Wm5IKGoal.inl" />
+    <None Include="Controllers\Wm5KeyframeController.inl" />
+    <None Include="Controllers\Wm5MorphController.inl" />
+    <None Include="Controllers\Wm5ParticleController.inl" />
+    <None Include="Controllers\Wm5PointController.inl" />
+    <None Include="Controllers\Wm5SkinController.inl" />
+    <None Include="Controllers\Wm5TransformController.inl" />
+    <None Include="DataTypes\Wm5Bound.inl" />
+    <None Include="DataTypes\Wm5Color.inl" />
+    <None Include="DataTypes\Wm5Transform.inl" />
+    <None Include="Resources\Wm5Buffer.inl" />
+    <None Include="Resources\Wm5IndexBuffer.inl" />
+    <None Include="Resources\Wm5RenderTarget.inl" />
+    <None Include="Resources\Wm5Texture.inl" />
+    <None Include="Resources\Wm5Texture1D.inl" />
+    <None Include="Resources\Wm5Texture2D.inl" />
+    <None Include="Resources\Wm5Texture3D.inl" />
+    <None Include="Resources\Wm5TextureCube.inl" />
+    <None Include="Resources\Wm5VertexBuffer.inl" />
+    <None Include="Resources\Wm5VertexBufferAccessor.inl" />
+    <None Include="Resources\Wm5VertexFormat.inl" />
+    <None Include="Detail\Wm5BillboardNode.inl" />
+    <None Include="Detail\Wm5ClodMesh.inl" />
+    <None Include="Detail\Wm5CollapseRecordArray.inl" />
+    <None Include="Detail\Wm5DlodNode.inl" />
+    <None Include="Detail\Wm5SwitchNode.inl" />
+    <None Include="Shaders\Wm5Shader.inl" />
+    <None Include="Shaders\Wm5ShaderParameters.inl" />
+    <None Include="Shaders\Wm5VisualEffect.inl" />
+    <None Include="Shaders\Wm5VisualEffectInstance.inl" />
+    <None Include="Shaders\Wm5VisualPass.inl" />
+    <None Include="Shaders\Wm5VisualTechnique.inl" />
+    <None Include="CurvesSurfaces\Wm5BoxSurface.inl" />
+    <None Include="CurvesSurfaces\Wm5Float2Array.inl" />
+    <None Include="CurvesSurfaces\Wm5FloatArray.inl" />
+    <None Include="CurvesSurfaces\Wm5RectangleSurface.inl" />
+    <None Include="CurvesSurfaces\Wm5RevolutionSurface.inl" />
+    <None Include="CurvesSurfaces\Wm5TubeSurface.inl" />
+    <None Include="Terrain\Wm5Terrain.inl" />
+    <None Include="Terrain\Wm5TerrainPage.inl" />
+    <None Include="Sorting\Wm5BspNode.inl" />
+    <None Include="Sorting\Wm5ConvexRegion.inl" />
+    <None Include="ShaderFloats\Wm5ShaderFloat.inl" />
+    <None Include="ImageProcessing\Wm5ImageProcessing.inl" />
+    <None Include="ImageProcessing\Wm5ImageProcessing2.inl" />
+    <None Include="ImageProcessing\Wm5ImageProcessing3.inl" />
+    <None Include="GlobalEffects\Wm5PlanarReflectionEffect.inl" />
+    <None Include="GlobalEffects\Wm5PlanarShadowEffect.inl" />
+    <None Include="Renderers\Wm5Renderer.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

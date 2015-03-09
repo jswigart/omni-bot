@@ -1,0 +1,328 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="API">
+      <UniqueIdentifier>{c24754bb-e725-434d-a4d9-0e199935e3bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Trees">
+      <UniqueIdentifier>{94218fe0-c504-480a-9ad5-0aa8393674c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Trees\Collision queries">
+      <UniqueIdentifier>{97be3b93-750c-4908-adfa-b8ecdaed1e78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Trees\Collision queries\Base colliders">
+      <UniqueIdentifier>{119aef87-f95b-4240-9c06-7b4ec9ace78d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Trees\Collision queries\Standard colliders">
+      <UniqueIdentifier>{d116f1a8-a253-4d63-88b5-4be627ec4d2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Overlap tests">
+      <UniqueIdentifier>{39043f74-1304-4bf3-82fb-061a72fa0caa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SweepAndPrune">
+      <UniqueIdentifier>{fe7c1a6d-eb1d-4025-8cb5-e8fe3f89e708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Usages">
+      <UniqueIdentifier>{79354f33-7753-433d-aef8-3f324930a566}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Ice">
+      <UniqueIdentifier>{6ea724bd-6c24-405f-96d5-5b9f6aaea6e9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="OPC_BaseModel.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_HybridModel.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_Model.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="Opcode.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="StdAfx.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_AABBTree.cpp">
+      <Filter>Trees</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_Common.cpp">
+      <Filter>Trees</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_MeshInterface.cpp">
+      <Filter>Trees</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_OptimizedTree.cpp">
+      <Filter>Trees</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_TreeBuilders.cpp">
+      <Filter>Trees</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_Collider.cpp">
+      <Filter>Trees\Collision queries\Base colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_VolumeCollider.cpp">
+      <Filter>Trees\Collision queries\Base colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_AABBCollider.cpp">
+      <Filter>Trees\Collision queries\Standard colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_LSSCollider.cpp">
+      <Filter>Trees\Collision queries\Standard colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_OBBCollider.cpp">
+      <Filter>Trees\Collision queries\Standard colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_PlanesCollider.cpp">
+      <Filter>Trees\Collision queries\Standard colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_RayCollider.cpp">
+      <Filter>Trees\Collision queries\Standard colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_SphereCollider.cpp">
+      <Filter>Trees\Collision queries\Standard colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_TreeCollider.cpp">
+      <Filter>Trees\Collision queries\Standard colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_BoxPruning.cpp">
+      <Filter>SweepAndPrune</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_SweepAndPrune.cpp">
+      <Filter>SweepAndPrune</Filter>
+    </ClCompile>
+    <ClCompile Include="OPC_Picking.cpp">
+      <Filter>Usages</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice\IceAABB.cpp">
+      <Filter>Ice</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice\IceContainer.cpp">
+      <Filter>Ice</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice\IceHPoint.cpp">
+      <Filter>Ice</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice\IceIndexedTriangle.cpp">
+      <Filter>Ice</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice\IceMatrix3x3.cpp">
+      <Filter>Ice</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice\IceMatrix4x4.cpp">
+      <Filter>Ice</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice\IceOBB.cpp">
+      <Filter>Ice</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice\IcePlane.cpp">
+      <Filter>Ice</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice\IcePoint.cpp">
+      <Filter>Ice</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice\IceRandom.cpp">
+      <Filter>Ice</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice\IceRay.cpp">
+      <Filter>Ice</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice\IceRevisitedRadix.cpp">
+      <Filter>Ice</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice\IceSegment.cpp">
+      <Filter>Ice</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice\IceTriangle.cpp">
+      <Filter>Ice</Filter>
+    </ClCompile>
+    <ClCompile Include="Ice\IceUtils.cpp">
+      <Filter>Ice</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="OPC_BaseModel.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_HybridModel.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_IceHook.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_Model.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_Settings.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="Opcode.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="StdAfx.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_AABBTree.h">
+      <Filter>Trees</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_Common.h">
+      <Filter>Trees</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_MeshInterface.h">
+      <Filter>Trees</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_OptimizedTree.h">
+      <Filter>Trees</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_TreeBuilders.h">
+      <Filter>Trees</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_Collider.h">
+      <Filter>Trees\Collision queries\Base colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_VolumeCollider.h">
+      <Filter>Trees\Collision queries\Base colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_AABBCollider.h">
+      <Filter>Trees\Collision queries\Standard colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_LSSCollider.h">
+      <Filter>Trees\Collision queries\Standard colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_OBBCollider.h">
+      <Filter>Trees\Collision queries\Standard colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_PlanesCollider.h">
+      <Filter>Trees\Collision queries\Standard colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_RayCollider.h">
+      <Filter>Trees\Collision queries\Standard colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_SphereCollider.h">
+      <Filter>Trees\Collision queries\Standard colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_TreeCollider.h">
+      <Filter>Trees\Collision queries\Standard colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_BoxBoxOverlap.h">
+      <Filter>Overlap tests</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_LSSAABBOverlap.h">
+      <Filter>Overlap tests</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_LSSTriOverlap.h">
+      <Filter>Overlap tests</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_PlanesAABBOverlap.h">
+      <Filter>Overlap tests</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_PlanesTriOverlap.h">
+      <Filter>Overlap tests</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_RayAABBOverlap.h">
+      <Filter>Overlap tests</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_RayTriOverlap.h">
+      <Filter>Overlap tests</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_SphereAABBOverlap.h">
+      <Filter>Overlap tests</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_SphereTriOverlap.h">
+      <Filter>Overlap tests</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_TriBoxOverlap.h">
+      <Filter>Overlap tests</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_TriTriOverlap.h">
+      <Filter>Overlap tests</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_BoxPruning.h">
+      <Filter>SweepAndPrune</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_SweepAndPrune.h">
+      <Filter>SweepAndPrune</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_Picking.h">
+      <Filter>Usages</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceAABB.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceAxes.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceBoundingSphere.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceContainer.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceFPU.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceHPoint.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceIndexedTriangle.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceLSS.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceMatrix3x3.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceMatrix4x4.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceMemoryMacros.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceOBB.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IcePairs.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IcePlane.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IcePoint.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IcePreprocessor.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceRandom.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceRay.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceRevisitedRadix.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceSegment.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceTriangle.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceTrilist.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceTypes.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="Ice\IceUtils.h">
+      <Filter>Ice</Filter>
+    </ClInclude>
+    <ClInclude Include="OPC_TriTriOverlapGilvan.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>

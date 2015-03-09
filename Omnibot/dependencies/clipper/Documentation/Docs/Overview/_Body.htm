@@ -1,0 +1,81 @@
+<html>
+
+<head>
+    
+  <script type="text/javascript" src="../../Scripts/jquery.js">
+  </script>
+    
+  <script type="text/javascript" src="../../Scripts/SyntaxHighlighter/scripts/shCore.js">
+  </script>
+    
+  <script type="text/javascript" src="../../Scripts/SyntaxHighlighter/scripts/shBrushDelphi.js">
+  </script>
+    
+  <script type="text/javascript" src="../../Scripts/SyntaxHighlighter/scripts/shBrushCpp.js">
+  </script>
+    
+  <script type="text/javascript" src="../../Scripts/SyntaxHighlighter/scripts/shBrushCSharp.js">
+  </script>
+    
+  <link type="text/css" rel="stylesheet" href="../../Scripts/SyntaxHighlighter/styles/shCoreDefault.css">
+    
+  <link type="text/css" rel="stylesheet" href="../../Scripts/SyntaxHighlighter/styles/shThemeDefault.css">
+  
+
+  <title>Overview</title>
+
+  <link rel="stylesheet" href="../../Styles/default.css" type="text/css">
+
+  <meta name="Order" content="Features">
+
+    
+  <script type="text/javascript" src="../../Scripts/bootstrap.js">
+  </script>
+  
+</head>
+
+<body bgcolor="#FFFFFF">
+    
+  <!-- THIS FILE HAS BEEN AUTOMATICALLY PROCESSED FROM A SOURCE COPY -->
+    
+  <!-- DO NOT EDIT MANUALLY !!! -->
+  
+  <table class="Banner" cellspacing="0" cellpadding="0" border="1" bordercolorlight="#303080" bordercolordark="#7070B0">
+    <tr>
+      <td class="Banner" nowrap=""><a href="../_Body.htm" class="Banner"><img src="../../Images/_Home.gif" align="absmiddle">Home</a>
+      </td>
+      <td class="Banner" width="100%" align="right"><img src="../../Images/_Project_Logo.gif" align="absmiddle">
+      </td>
+    </tr>
+  </table>
+  <h1>Overview</h1>
+
+
+  <p class="Body"> The <a href="../_Body.htm">Clipper Library</a> is based on but significantly extends Bala Vatti's polygon clipping algorithm as described in <a href="http://portal.acm.org/citation.cfm?id=129906" target="_blank">"A generic solution to polygon clipping"</a>, Communications of the ACM, Vol 35, Issue 7 (July 1992) pp 56-63.<br><br> A section in <a href="http://books.google.com/books?q=vatti+clipping+agoston" target="_blank">"Computer graphics and geometric modeling: implementation and algorithms"</a> by By Max K. Agoston (Springer, 2005) discussing <em>Vatti Polygon Clipping</em> was also helpful in creating the initial Clipper implementation.<br><br> The library performs each of the four boolean clipping operations - <strong>intersection</strong>, <strong>union</strong>, <strong>difference</strong> and <strong>exclusive-or</strong> (xor). It can accept any number of, and any type of polygon as input (including self-intersecting polygons).<br><br> Several features set Clipper apart from other polygon clipping libraries: <ol style="margin: .6em 0 .2em 1cm;  list-style: inside;">	
+      
+      <li>it's <strong>very fast</strong> compared to <a href="http://www.angusj.com/delphi/clipper.php#features" target="_blank">other libraries</a></li>
+	  
+      <li>its ability to handle <b>self-intersecting polygons</b></li>
+      
+      <li>it's <strong>free</strong>, under its <a href="./License.htm">Boost license</a>, for both freeware and commercial applications.</li>
+      
+      <li>its support for <b>EvenOdd</b>, <b>NonZero</b>, <b>Positive</b> and <b>Negative</b> polygon filling modes.</li>
+	  
+      <li>its ability to perform <b>polygon offsetting</b>.</li>
+
+    </ol> <br> </p>
+
+
+  <p class="Body"> The ZIP distribution package contains the Clipper library's source code, a Windows CHM help file, HTML help, and a number of compiled demo applications (including full source code). The library was initially written in <strong>Delphi Pascal</strong> (compiling in Delphi ver. 7+) but now contains <strong>C++</strong>, <strong>C#</strong> and <strong>Python</strong> translations too. The library's source code in each language is a little over 3500 lines including comments (though the comments are most extensive in the Delphi code). The included demo applications show how Clipper can be used with the different languages using a number of graphics libraries including - <b>AGG, Cairo, OpenGL, Graphics32, GDI+</b> and <b>SVG</b>.<br><br> <img src="../../Images/int.png" alt="" border="0">  </p>
+
+      
+
+  <h2 id="Auto-SeeAlso">See Also</h2>
+  <p class="Body"><a href="../_Body.htm">Source</a>, <a href="License.htm">License</a>, <a href="../Units/ClipperLib/Classes/Clipper/_Body.htm">Clipper</a></p>
+    
+  <p class="Copyright" id="auto"> <br><br> Copyright &copy;2010-2012 Angus Johnson&nbsp; - &nbsp; Clipper version 5.1.0 &nbsp; - &nbsp; Help file built on 19-February-2013 <br><br> </p>
+  
+</body>
+
+
+</html>

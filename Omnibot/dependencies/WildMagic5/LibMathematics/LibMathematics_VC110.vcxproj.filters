@@ -1,0 +1,2233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Base">
+      <UniqueIdentifier>{3ff77b43-67d5-4fd0-96fe-39480741d22a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Algebra">
+      <UniqueIdentifier>{11a0c19b-3ca5-4577-a6ac-05abf697856e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects2D">
+      <UniqueIdentifier>{646d33f7-aef4-4046-b177-b114c9d0afd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects3D">
+      <UniqueIdentifier>{d5e27d77-f5bc-4fbf-a716-79534ffac294}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NumericalAnalysis">
+      <UniqueIdentifier>{1ca5679d-fbe9-4e98-9559-5a5fcc1a54b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Meshes">
+      <UniqueIdentifier>{63025c20-0e00-4228-a1b8-9d4aa40fcf51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Query">
+      <UniqueIdentifier>{70833c08-aec7-460f-9888-f488a9704f7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rational">
+      <UniqueIdentifier>{4d4d7056-3aed-44e6-bacc-d8ac5b34c601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Approximation">
+      <UniqueIdentifier>{e129f593-4184-4d07-b447-e4f7d2528472}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Approximation\2D">
+      <UniqueIdentifier>{97d58453-2b7d-46fb-8240-ca8d88403e5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Approximation\3D">
+      <UniqueIdentifier>{48646769-1a11-45c1-b6b9-056bd5d69f00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containment">
+      <UniqueIdentifier>{b2623774-4fc1-42a1-8e5c-6291bf6452d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containment\2D">
+      <UniqueIdentifier>{41f12c9e-9500-4640-8a3d-7302b73cd7f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Containment\3D">
+      <UniqueIdentifier>{8ad2be30-19a3-475a-887a-0217d0d6816e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ComputationalGeometry">
+      <UniqueIdentifier>{0c5a7e88-dbd6-4526-a403-d61d0b331c2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Distance">
+      <UniqueIdentifier>{da8bc9de-8b3a-4de5-8138-c250a5f37c1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Distance\2D">
+      <UniqueIdentifier>{217e462c-a913-4d88-86e2-08f82e9b4489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Distance\3D">
+      <UniqueIdentifier>{e00d4361-203a-4f7e-8a81-e95e7d6a2b04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Intersection">
+      <UniqueIdentifier>{cf046a65-3dbb-4639-80d9-006961bb9cc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Intersection\2D">
+      <UniqueIdentifier>{f9823522-232f-4d5e-a96c-e64b2b95ebc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Intersection\3D">
+      <UniqueIdentifier>{d59d8ab9-73a9-4524-878a-53e06806fad2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CurvesSurfacesVolumes">
+      <UniqueIdentifier>{f1074e72-d1f4-490a-98fe-894ab7c11a53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CurvesSurfacesVolumes\Curves 2D">
+      <UniqueIdentifier>{18fc5e63-6d86-49e9-9e27-f21c67f5c95a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CurvesSurfacesVolumes\Curves 3D">
+      <UniqueIdentifier>{f6cfc40a-d716-4dfc-95fb-f34e4651ce59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CurvesSurfacesVolumes\Surfaces">
+      <UniqueIdentifier>{134d5289-22d2-4c28-9b18-b623298d665d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CurvesSurfacesVolumes\Volumes">
+      <UniqueIdentifier>{2b761a82-c856-4478-8c5b-773097c5a489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CurvesSurfacesVolumes\Geodesics">
+      <UniqueIdentifier>{eca22a7e-c1b5-49bc-8b4a-3a9b81443366}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interpolation">
+      <UniqueIdentifier>{c64c9497-56fb-4398-93ab-39c1c778d783}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_PrecompiledHeaders">
+      <UniqueIdentifier>{feac5e5c-90a0-4e2d-9880-4ef3967dc2b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Approximation\4D">
+      <UniqueIdentifier>{62ef7181-d72b-4c2e-b68c-46d16d5b24ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Miscellaneous">
+      <UniqueIdentifier>{c9026988-931a-40fd-8d1d-4228324968e8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Base\Wm5BitHacks.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\Wm5Math.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Algebra\Wm5APoint.cpp">
+      <Filter>Algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="Algebra\Wm5AVector.cpp">
+      <Filter>Algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="Algebra\Wm5HMatrix.cpp">
+      <Filter>Algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="Algebra\Wm5HPlane.cpp">
+      <Filter>Algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="Algebra\Wm5HPoint.cpp">
+      <Filter>Algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="Algebra\Wm5HQuaternion.cpp">
+      <Filter>Algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="Algebra\Wm5Matrix2.cpp">
+      <Filter>Algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="Algebra\Wm5Matrix3.cpp">
+      <Filter>Algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="Algebra\Wm5Matrix4.cpp">
+      <Filter>Algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="Algebra\Wm5Quaternion.cpp">
+      <Filter>Algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="Algebra\Wm5Vector2.cpp">
+      <Filter>Algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="Algebra\Wm5Vector3.cpp">
+      <Filter>Algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="Algebra\Wm5Vector4.cpp">
+      <Filter>Algebra</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5Bisect1.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5Bisect2.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5Bisect3.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5EigenDecomposition.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5Integrate1.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5LinearSystem.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5Minimize1.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5MinimizeN.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5NoniterativeEigen3x3.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5OdeEuler.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5OdeImplicitEuler.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5OdeMidpoint.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5OdeRungeKutta4.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5OdeSolver.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5PolynomialRoots.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5PolynomialRootsR.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5SingularValueDecomposition.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\Wm5BasicMesh.cpp">
+      <Filter>Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\Wm5ConformalMap.cpp">
+      <Filter>Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\Wm5ETManifoldMesh.cpp">
+      <Filter>Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\Wm5ETNonmanifoldMesh.cpp">
+      <Filter>Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\Wm5MeshCurvature.cpp">
+      <Filter>Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\Wm5MeshSmoother.cpp">
+      <Filter>Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\Wm5VEManifoldMesh.cpp">
+      <Filter>Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Query\Wm5Query.cpp">
+      <Filter>Query</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprCircleFit2.cpp">
+      <Filter>Approximation\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprEllipseByArcs2.cpp">
+      <Filter>Approximation\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprEllipseFit2.cpp">
+      <Filter>Approximation\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprGaussPointsFit2.cpp">
+      <Filter>Approximation\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprLineFit2.cpp">
+      <Filter>Approximation\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprQuadraticFit2.cpp">
+      <Filter>Approximation\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprCylinderFit3.cpp">
+      <Filter>Approximation\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprEllipsoidFit3.cpp">
+      <Filter>Approximation\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprGaussPointsFit3.cpp">
+      <Filter>Approximation\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprGreatCircleFit3.cpp">
+      <Filter>Approximation\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprLineFit3.cpp">
+      <Filter>Approximation\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprParaboloidFit3.cpp">
+      <Filter>Approximation\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprPlaneFit3.cpp">
+      <Filter>Approximation\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprQuadraticFit3.cpp">
+      <Filter>Approximation\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprSphereFit3.cpp">
+      <Filter>Approximation\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprPolyFit4.cpp">
+      <Filter>Approximation\4D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContBox2.cpp">
+      <Filter>Containment\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContEllipse2.cpp">
+      <Filter>Containment\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContEllipse2MinCR.cpp">
+      <Filter>Containment\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContMinBox2.cpp">
+      <Filter>Containment\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContMinCircle2.cpp">
+      <Filter>Containment\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContPointInPolygon2.cpp">
+      <Filter>Containment\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContScribeCircle2.cpp">
+      <Filter>Containment\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContSeparatePoints2.cpp">
+      <Filter>Containment\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContBox3.cpp">
+      <Filter>Containment\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContCapsule3.cpp">
+      <Filter>Containment\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContCylinder3.cpp">
+      <Filter>Containment\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContEllipsoid3.cpp">
+      <Filter>Containment\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContEllipsoid3MinCR.cpp">
+      <Filter>Containment\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContLozenge3.cpp">
+      <Filter>Containment\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContMinBox3.cpp">
+      <Filter>Containment\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContMinSphere3.cpp">
+      <Filter>Containment\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContPointInPolyhedron3.cpp">
+      <Filter>Containment\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContScribeCircle3Sphere3.cpp">
+      <Filter>Containment\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContSeparatePoints3.cpp">
+      <Filter>Containment\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Containment\Wm5ContSphere3.cpp">
+      <Filter>Containment\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputationalGeometry\Wm5ConvexHull.cpp">
+      <Filter>ComputationalGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputationalGeometry\Wm5ConvexHull1.cpp">
+      <Filter>ComputationalGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputationalGeometry\Wm5ConvexHull2.cpp">
+      <Filter>ComputationalGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputationalGeometry\Wm5ConvexHull3.cpp">
+      <Filter>ComputationalGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputationalGeometry\Wm5Delaunay.cpp">
+      <Filter>ComputationalGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputationalGeometry\Wm5Delaunay1.cpp">
+      <Filter>ComputationalGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputationalGeometry\Wm5Delaunay2.cpp">
+      <Filter>ComputationalGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputationalGeometry\Wm5Delaunay3.cpp">
+      <Filter>ComputationalGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputationalGeometry\Wm5IncrementalDelaunay2.cpp">
+      <Filter>ComputationalGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputationalGeometry\Wm5TriangulateEC.cpp">
+      <Filter>ComputationalGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5Distance.cpp">
+      <Filter>Distance</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistLine2Line2.cpp">
+      <Filter>Distance\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistLine2Ray2.cpp">
+      <Filter>Distance\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistLine2Segment2.cpp">
+      <Filter>Distance\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint2Box2.cpp">
+      <Filter>Distance\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint2Ellipse2.cpp">
+      <Filter>Distance\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint2Line2.cpp">
+      <Filter>Distance\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint2Ray2.cpp">
+      <Filter>Distance\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint2Segment2.cpp">
+      <Filter>Distance\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistRay2Ray2.cpp">
+      <Filter>Distance\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistRay2Segment2.cpp">
+      <Filter>Distance\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistSegment2Segment2.cpp">
+      <Filter>Distance\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistCircle3Circle3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistLine3Box3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistLine3Circle3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistLine3Line3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistLine3Ray3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistLine3Rectangle3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistLine3Segment3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistLine3Triangle3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint3Box3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint3Circle3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint3Ellipsoid3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint3Frustum3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint3Line3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint3Plane3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint3Ray3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint3Rectangle3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint3Segment3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint3Tetrahedron3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistPoint3Triangle3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistRay3Box3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistRay3Ray3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistRay3Rectangle3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistRay3Segment3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistRay3Triangle3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistRectangle3Rectangle3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistSegment3Box3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistSegment3Rectangle3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistSegment3Segment3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistSegment3Triangle3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistTriangle3Rectangle3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Distance\Wm5DistTriangle3Triangle3.cpp">
+      <Filter>Distance\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5Intersector.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5Intersector1.cpp">
+      <Filter>Intersection</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrArc2Arc2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrArc2Circle2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrBox2Box2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrBox2Circle2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrCircle2Circle2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrEllipse2Ellipse2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine2Arc2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine2Box2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine2Circle2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine2Line2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine2Ray2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine2Segment2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine2Triangle2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrRay2Arc2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrRay2Box2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrRay2Circle2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrRay2Ray2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrRay2Segment2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrRay2Triangle2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSegment2Arc2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSegment2Box2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSegment2Circle2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSegment2Segment2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSegment2Triangle2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrTriangle2Triangle2.cpp">
+      <Filter>Intersection\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrBox3Box3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrBox3Frustum3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrBox3Sphere3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrCapsule3Capsule3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrCircle3Plane3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrHalfspace3Box3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrHalfspace3Segment3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrHalfspace3Sphere3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrHalfspace3Triangle3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine3Box3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine3Capsule3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine3Cone3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine3Cylinder3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine3Ellipsoid3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine3Lozenge3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine3Plane3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine3Sphere3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine3Torus3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLine3Triangle3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrLozenge3Lozenge3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrPlane3Box3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrPlane3Capsule3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrPlane3Cylinder3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrPlane3Ellipsoid3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrPlane3Lozenge3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrPlane3Plane3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrPlane3Sphere3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrPlane3Triangle3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrRay3Box3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrRay3Capsule3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrRay3Cylinder3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrRay3Ellipsoid3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrRay3Lozenge3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrRay3Plane3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrRay3Sphere3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrRay3Triangle3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSegment3Box3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSegment3Capsule3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSegment3Cylinder3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSegment3Ellipsoid3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSegment3Lozenge3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSegment3Plane3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSegment3Sphere3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSegment3Triangle3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSphere3Cone3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSphere3Frustum3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrSphere3Sphere3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrTetrahedron3Tetrahedron3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrTriangle3Box3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrTriangle3Cone3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrTriangle3Sphere3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrTriangle3Triangle3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrUtility3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineBasis.cpp">
+      <Filter>CurvesSurfacesVolumes</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineCurveFit.cpp">
+      <Filter>CurvesSurfacesVolumes</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineFitBasis.cpp">
+      <Filter>CurvesSurfacesVolumes</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineReduction.cpp">
+      <Filter>CurvesSurfacesVolumes</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5NaturalSpline1.cpp">
+      <Filter>CurvesSurfacesVolumes</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BezierCurve2.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineCurve2.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5CubicPolynomialCurve2.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5Curve2.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5MultipleCurve2.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5NaturalSpline2.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5NURBSCurve2.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5PolynomialCurve2.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5SingleCurve2.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5TCBSpline2.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BezierCurve3.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineCurve3.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5CubicPolynomialCurve3.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5Curve3.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5MultipleCurve3.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5NaturalSpline3.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5NURBSCurve3.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5PolynomialCurve3.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5SingleCurve3.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5TCBSpline3.cpp">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineRectangle.cpp">
+      <Filter>CurvesSurfacesVolumes\Surfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineSurfaceFit.cpp">
+      <Filter>CurvesSurfacesVolumes\Surfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5ImplicitSurface.cpp">
+      <Filter>CurvesSurfacesVolumes\Surfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5NURBSRectangle.cpp">
+      <Filter>CurvesSurfacesVolumes\Surfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5ParametricSurface.cpp">
+      <Filter>CurvesSurfacesVolumes\Surfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5QuadricSurface.cpp">
+      <Filter>CurvesSurfacesVolumes\Surfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5Surface.cpp">
+      <Filter>CurvesSurfacesVolumes\Surfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineVolume.cpp">
+      <Filter>CurvesSurfacesVolumes\Volumes</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5BSplineGeodesic.cpp">
+      <Filter>CurvesSurfacesVolumes\Geodesics</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5EllipsoidGeodesic.cpp">
+      <Filter>CurvesSurfacesVolumes\Geodesics</Filter>
+    </ClCompile>
+    <ClCompile Include="CurvesSurfacesVolumes\Wm5RiemannianGeodesic.cpp">
+      <Filter>CurvesSurfacesVolumes\Geodesics</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpAkima1.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpAkimaNonuniform1.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpAkimaUniform1.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpAkimaUniform2.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpAkimaUniform3.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpBicubic2.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpBilinear2.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpBSplineUniform.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpBSplineUniform1.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpBSplineUniform2.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpBSplineUniform3.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpBSplineUniform4.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpBSplineUniformN.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpLinearNonuniform2.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpLinearNonuniform3.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpQdrNonuniform2.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpSphere2.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpThinPlateSpline2.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpThinPlateSpline3.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpTricubic3.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpTrilinear3.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpolation\Wm5IntpVectorField2.cpp">
+      <Filter>Interpolation</Filter>
+    </ClCompile>
+    <ClCompile Include="Wm5MathematicsPCH.cpp">
+      <Filter>_PrecompiledHeaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Miscellaneous\Wm5GridGraph2.cpp">
+      <Filter>Miscellaneous</Filter>
+    </ClCompile>
+    <ClCompile Include="Miscellaneous\Wm5NormalCompression.cpp">
+      <Filter>Miscellaneous</Filter>
+    </ClCompile>
+    <ClCompile Include="Miscellaneous\Wm5PerspProjEllipsoid.cpp">
+      <Filter>Miscellaneous</Filter>
+    </ClCompile>
+    <ClCompile Include="Miscellaneous\Wm5QuadToQuadTransforms.cpp">
+      <Filter>Miscellaneous</Filter>
+    </ClCompile>
+    <ClCompile Include="Miscellaneous\Wm5RandomHypersphere.cpp">
+      <Filter>Miscellaneous</Filter>
+    </ClCompile>
+    <ClCompile Include="Miscellaneous\Wm5TangentsToCircles.cpp">
+      <Filter>Miscellaneous</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprPolyFit2.cpp">
+      <Filter>Approximation\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprPolyFit3.cpp">
+      <Filter>Approximation\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprPolynomialFit2.cpp">
+      <Filter>Approximation\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprPolynomialFit3.cpp">
+      <Filter>Approximation\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Approximation\Wm5ApprPolynomialFit4.cpp">
+      <Filter>Approximation\4D</Filter>
+    </ClCompile>
+    <ClCompile Include="Rational\Wm5IVector2.cpp">
+      <Filter>Rational</Filter>
+    </ClCompile>
+    <ClCompile Include="Rational\Wm5IVector3.cpp">
+      <Filter>Rational</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrEllipsoid3Ellipsoid3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection\Wm5IntrTriangle3Cylinder3.cpp">
+      <Filter>Intersection\3D</Filter>
+    </ClCompile>
+    <ClCompile Include="NumericalAnalysis\Wm5BrentsMethod.cpp">
+      <Filter>NumericalAnalysis</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Base\Wm5BitHacks.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Wm5Float1.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Wm5Float2.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Wm5Float3.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Wm5Float4.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\Wm5Math.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5APoint.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5AVector.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5BandedMatrix.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5GMatrix.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5GVector.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5HMatrix.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5HPlane.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5HPoint.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5HQuaternion.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5Matrix2.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5Matrix3.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5Matrix4.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5Polynomial1.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5Quaternion.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5Vector2.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5Vector3.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Algebra\Wm5Vector4.h">
+      <Filter>Algebra</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects2D\Wm5Arc2.h">
+      <Filter>Objects2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects2D\Wm5AxisAlignedBox2.h">
+      <Filter>Objects2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects2D\Wm5Box2.h">
+      <Filter>Objects2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects2D\Wm5Circle2.h">
+      <Filter>Objects2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects2D\Wm5ConvexPolygon2.h">
+      <Filter>Objects2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects2D\Wm5Ellipse2.h">
+      <Filter>Objects2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects2D\Wm5Line2.h">
+      <Filter>Objects2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects2D\Wm5Polygon2.h">
+      <Filter>Objects2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects2D\Wm5Ray2.h">
+      <Filter>Objects2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects2D\Wm5Segment2.h">
+      <Filter>Objects2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects2D\Wm5Triangle2.h">
+      <Filter>Objects2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5AxisAlignedBox3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Box3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Capsule3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Circle3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Cone3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5ConvexPolyhedron3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Cylinder3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Ellipse3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Ellipsoid3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Frustum3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Line3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Lozenge3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Plane3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Polyhedron3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Ray3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Rectangle3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Segment3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Sphere3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Tetrahedron3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Torus3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects3D\Wm5Triangle3.h">
+      <Filter>Objects3D</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5Bisect1.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5Bisect2.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5Bisect3.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5EigenDecomposition.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5Integrate1.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5LinearSystem.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5Minimize1.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5MinimizeN.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5NoniterativeEigen3x3.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5OdeEuler.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5OdeImplicitEuler.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5OdeMidpoint.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5OdeRungeKutta4.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5OdeSolver.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5PolynomialRoots.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5PolynomialRootsR.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5SingularValueDecomposition.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Wm5BasicMesh.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Wm5ConformalMap.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Wm5EdgeKey.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Wm5ETManifoldMesh.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Wm5ETNonmanifoldMesh.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Wm5MeshCurvature.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Wm5MeshSmoother.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Wm5PlanarGraph.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Wm5TriangleKey.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Wm5UniqueVerticesTriangles.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Wm5VEManifoldMesh.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Query\Wm5Query.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="Query\Wm5Query2.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="Query\Wm5Query2Filtered.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="Query\Wm5Query2Int64.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="Query\Wm5Query2Integer.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="Query\Wm5Query2Rational.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="Query\Wm5Query3.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="Query\Wm5Query3Filtered.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="Query\Wm5Query3Int64.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="Query\Wm5Query3Integer.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="Query\Wm5Query3Rational.h">
+      <Filter>Query</Filter>
+    </ClInclude>
+    <ClInclude Include="Rational\Wm5Integer.h">
+      <Filter>Rational</Filter>
+    </ClInclude>
+    <ClInclude Include="Rational\Wm5IVector.h">
+      <Filter>Rational</Filter>
+    </ClInclude>
+    <ClInclude Include="Rational\Wm5IVector2.h">
+      <Filter>Rational</Filter>
+    </ClInclude>
+    <ClInclude Include="Rational\Wm5IVector3.h">
+      <Filter>Rational</Filter>
+    </ClInclude>
+    <ClInclude Include="Rational\Wm5Rational.h">
+      <Filter>Rational</Filter>
+    </ClInclude>
+    <ClInclude Include="Rational\Wm5RVector.h">
+      <Filter>Rational</Filter>
+    </ClInclude>
+    <ClInclude Include="Rational\Wm5RVector2.h">
+      <Filter>Rational</Filter>
+    </ClInclude>
+    <ClInclude Include="Rational\Wm5RVector3.h">
+      <Filter>Rational</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprCircleFit2.h">
+      <Filter>Approximation\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprEllipseByArcs2.h">
+      <Filter>Approximation\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprEllipseFit2.h">
+      <Filter>Approximation\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprGaussPointsFit2.h">
+      <Filter>Approximation\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprLineFit2.h">
+      <Filter>Approximation\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprQuadraticFit2.h">
+      <Filter>Approximation\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprCylinderFit3.h">
+      <Filter>Approximation\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprEllipsoidFit3.h">
+      <Filter>Approximation\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprGaussPointsFit3.h">
+      <Filter>Approximation\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprGreatCircleFit3.h">
+      <Filter>Approximation\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprLineFit3.h">
+      <Filter>Approximation\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprParaboloidFit3.h">
+      <Filter>Approximation\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprPlaneFit3.h">
+      <Filter>Approximation\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprQuadraticFit3.h">
+      <Filter>Approximation\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprSphereFit3.h">
+      <Filter>Approximation\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprPolyFit4.h">
+      <Filter>Approximation\4D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContBox2.h">
+      <Filter>Containment\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContEllipse2.h">
+      <Filter>Containment\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContEllipse2MinCR.h">
+      <Filter>Containment\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContMinBox2.h">
+      <Filter>Containment\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContMinCircle2.h">
+      <Filter>Containment\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContPointInPolygon2.h">
+      <Filter>Containment\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContScribeCircle2.h">
+      <Filter>Containment\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContSeparatePoints2.h">
+      <Filter>Containment\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContBox3.h">
+      <Filter>Containment\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContCapsule3.h">
+      <Filter>Containment\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContCylinder3.h">
+      <Filter>Containment\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContEllipsoid3.h">
+      <Filter>Containment\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContEllipsoid3MinCR.h">
+      <Filter>Containment\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContLozenge3.h">
+      <Filter>Containment\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContMinBox3.h">
+      <Filter>Containment\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContMinSphere3.h">
+      <Filter>Containment\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContPointInPolyhedron3.h">
+      <Filter>Containment\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContScribeCircle3Sphere3.h">
+      <Filter>Containment\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContSeparatePoints3.h">
+      <Filter>Containment\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Containment\Wm5ContSphere3.h">
+      <Filter>Containment\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputationalGeometry\Wm5ConvexHull.h">
+      <Filter>ComputationalGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputationalGeometry\Wm5ConvexHull1.h">
+      <Filter>ComputationalGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputationalGeometry\Wm5ConvexHull2.h">
+      <Filter>ComputationalGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputationalGeometry\Wm5ConvexHull3.h">
+      <Filter>ComputationalGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputationalGeometry\Wm5Delaunay.h">
+      <Filter>ComputationalGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputationalGeometry\Wm5Delaunay1.h">
+      <Filter>ComputationalGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputationalGeometry\Wm5Delaunay2.h">
+      <Filter>ComputationalGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputationalGeometry\Wm5Delaunay3.h">
+      <Filter>ComputationalGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputationalGeometry\Wm5IncrementalDelaunay2.h">
+      <Filter>ComputationalGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputationalGeometry\Wm5TriangulateEC.h">
+      <Filter>ComputationalGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5Distance.h">
+      <Filter>Distance</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistLine2Line2.h">
+      <Filter>Distance\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistLine2Ray2.h">
+      <Filter>Distance\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistLine2Segment2.h">
+      <Filter>Distance\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint2Box2.h">
+      <Filter>Distance\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint2Ellipse2.h">
+      <Filter>Distance\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint2Line2.h">
+      <Filter>Distance\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint2Ray2.h">
+      <Filter>Distance\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint2Segment2.h">
+      <Filter>Distance\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistRay2Ray2.h">
+      <Filter>Distance\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistRay2Segment2.h">
+      <Filter>Distance\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistSegment2Segment2.h">
+      <Filter>Distance\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistCircle3Circle3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistLine3Box3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistLine3Circle3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistLine3Line3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistLine3Ray3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistLine3Rectangle3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistLine3Segment3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistLine3Triangle3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint3Box3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint3Circle3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint3Ellipsoid3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint3Frustum3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint3Line3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint3Plane3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint3Ray3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint3Rectangle3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint3Segment3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint3Tetrahedron3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistPoint3Triangle3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistRay3Box3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistRay3Ray3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistRay3Rectangle3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistRay3Segment3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistRay3Triangle3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistRectangle3Rectangle3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistSegment3Box3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistSegment3Rectangle3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistSegment3Segment3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistSegment3Triangle3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistTriangle3Rectangle3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Distance\Wm5DistTriangle3Triangle3.h">
+      <Filter>Distance\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5Intersector.h">
+      <Filter>Intersection</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5Intersector1.h">
+      <Filter>Intersection</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrArc2Arc2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrArc2Circle2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrBox2Box2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrBox2Circle2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrCircle2Circle2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrEllipse2Ellipse2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine2Arc2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine2Box2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine2Circle2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine2Line2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine2Ray2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine2Segment2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine2Triangle2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrRay2Arc2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrRay2Box2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrRay2Circle2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrRay2Ray2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrRay2Segment2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrRay2Triangle2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSegment2Arc2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSegment2Box2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSegment2Circle2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSegment2Segment2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSegment2Triangle2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrTriangle2Triangle2.h">
+      <Filter>Intersection\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrBox3Box3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrBox3Frustum3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrBox3Sphere3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrCapsule3Capsule3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrCircle3Plane3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrHalfspace3Box3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrHalfspace3Segment3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrHalfspace3Sphere3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrHalfspace3Triangle3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine3Box3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine3Capsule3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine3Cone3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine3Cylinder3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine3Ellipsoid3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine3Lozenge3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine3Plane3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine3Sphere3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine3Torus3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLine3Triangle3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrLozenge3Lozenge3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrPlane3Box3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrPlane3Capsule3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrPlane3Cylinder3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrPlane3Ellipsoid3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrPlane3Lozenge3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrPlane3Plane3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrPlane3Sphere3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrPlane3Triangle3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrRay3Box3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrRay3Capsule3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrRay3Cylinder3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrRay3Ellipsoid3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrRay3Lozenge3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrRay3Plane3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrRay3Sphere3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrRay3Triangle3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSegment3Box3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSegment3Capsule3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSegment3Cylinder3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSegment3Ellipsoid3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSegment3Lozenge3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSegment3Plane3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSegment3Sphere3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSegment3Triangle3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSphere3Cone3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSphere3Frustum3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrSphere3Sphere3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrTetrahedron3Tetrahedron3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrTriangle3Box3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrTriangle3Cone3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrTriangle3Sphere3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrTriangle3Triangle3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrUtility3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineBasis.h">
+      <Filter>CurvesSurfacesVolumes</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineCurveFit.h">
+      <Filter>CurvesSurfacesVolumes</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineFitBasis.h">
+      <Filter>CurvesSurfacesVolumes</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineReduction.h">
+      <Filter>CurvesSurfacesVolumes</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5NaturalSpline1.h">
+      <Filter>CurvesSurfacesVolumes</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BezierCurve2.h">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineCurve2.h">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5CubicPolynomialCurve2.h">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5Curve2.h">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5MultipleCurve2.h">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5NaturalSpline2.h">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5NURBSCurve2.h">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5PolynomialCurve2.h">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5SingleCurve2.h">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5TCBSpline2.h">
+      <Filter>CurvesSurfacesVolumes\Curves 2D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BezierCurve3.h">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineCurve3.h">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5CubicPolynomialCurve3.h">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5Curve3.h">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5MultipleCurve3.h">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5NaturalSpline3.h">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5NURBSCurve3.h">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5PolynomialCurve3.h">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5SingleCurve3.h">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5TCBSpline3.h">
+      <Filter>CurvesSurfacesVolumes\Curves 3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineRectangle.h">
+      <Filter>CurvesSurfacesVolumes\Surfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineSurfaceFit.h">
+      <Filter>CurvesSurfacesVolumes\Surfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5ImplicitSurface.h">
+      <Filter>CurvesSurfacesVolumes\Surfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5NURBSRectangle.h">
+      <Filter>CurvesSurfacesVolumes\Surfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5ParametricSurface.h">
+      <Filter>CurvesSurfacesVolumes\Surfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5QuadricSurface.h">
+      <Filter>CurvesSurfacesVolumes\Surfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5Surface.h">
+      <Filter>CurvesSurfacesVolumes\Surfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineVolume.h">
+      <Filter>CurvesSurfacesVolumes\Volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5BSplineGeodesic.h">
+      <Filter>CurvesSurfacesVolumes\Geodesics</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5EllipsoidGeodesic.h">
+      <Filter>CurvesSurfacesVolumes\Geodesics</Filter>
+    </ClInclude>
+    <ClInclude Include="CurvesSurfacesVolumes\Wm5RiemannianGeodesic.h">
+      <Filter>CurvesSurfacesVolumes\Geodesics</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpAkima1.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpAkimaNonuniform1.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpAkimaUniform1.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpAkimaUniform2.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpAkimaUniform3.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpBicubic2.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpBilinear2.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpBSplineUniform.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpBSplineUniform1.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpBSplineUniform2.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpBSplineUniform3.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpBSplineUniform4.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpBSplineUniformN.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpLinearNonuniform2.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpLinearNonuniform3.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpQdrNonuniform2.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpSphere2.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpThinPlateSpline2.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpThinPlateSpline3.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpTricubic3.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpTrilinear3.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Interpolation\Wm5IntpVectorField2.h">
+      <Filter>Interpolation</Filter>
+    </ClInclude>
+    <ClInclude Include="Wm5MathematicsPCH.h">
+      <Filter>_PrecompiledHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Wm5Mathematics.h" />
+    <ClInclude Include="Wm5MathematicsLIB.h" />
+    <ClInclude Include="Miscellaneous\Wm5TangentsToCircles.h">
+      <Filter>Miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="Miscellaneous\Wm5GridGraph2.h">
+      <Filter>Miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="Miscellaneous\Wm5NormalCompression.h">
+      <Filter>Miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="Miscellaneous\Wm5PerspProjEllipsoid.h">
+      <Filter>Miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="Miscellaneous\Wm5QuadToQuadTransforms.h">
+      <Filter>Miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="Miscellaneous\Wm5RandomHypersphere.h">
+      <Filter>Miscellaneous</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprPolyFit2.h">
+      <Filter>Approximation\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprPolyFit3.h">
+      <Filter>Approximation\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprPolynomialFit2.h">
+      <Filter>Approximation\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprPolynomialFit3.h">
+      <Filter>Approximation\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Approximation\Wm5ApprPolynomialFit4.h">
+      <Filter>Approximation\4D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrEllipsoid3Ellipsoid3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection\Wm5IntrTriangle3Cylinder3.h">
+      <Filter>Intersection\3D</Filter>
+    </ClInclude>
+    <ClInclude Include="NumericalAnalysis\Wm5BrentsMethod.h">
+      <Filter>NumericalAnalysis</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Base\Wm5BitHacks.inl">
+      <Filter>Base</Filter>
+    </None>
+    <None Include="Base\Wm5Math.inl">
+      <Filter>Base</Filter>
+    </None>
+    <None Include="Algebra\Wm5APoint.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5AVector.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5BandedMatrix.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5GMatrix.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5GVector.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5HMatrix.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5HPlane.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5HPoint.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5HQuaternion.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5Matrix2.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5Matrix3.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5Matrix4.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5Polynomial1.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5Quaternion.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5Vector2.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5Vector3.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Algebra\Wm5Vector4.inl">
+      <Filter>Algebra</Filter>
+    </None>
+    <None Include="Objects2D\Wm5Arc2.inl">
+      <Filter>Objects2D</Filter>
+    </None>
+    <None Include="Objects2D\Wm5AxisAlignedBox2.inl">
+      <Filter>Objects2D</Filter>
+    </None>
+    <None Include="Objects2D\Wm5Box2.inl">
+      <Filter>Objects2D</Filter>
+    </None>
+    <None Include="Objects2D\Wm5Circle2.inl">
+      <Filter>Objects2D</Filter>
+    </None>
+    <None Include="Objects2D\Wm5ConvexPolygon2.inl">
+      <Filter>Objects2D</Filter>
+    </None>
+    <None Include="Objects2D\Wm5Ellipse2.inl">
+      <Filter>Objects2D</Filter>
+    </None>
+    <None Include="Objects2D\Wm5Line2.inl">
+      <Filter>Objects2D</Filter>
+    </None>
+    <None Include="Objects2D\Wm5Polygon2.inl">
+      <Filter>Objects2D</Filter>
+    </None>
+    <None Include="Objects2D\Wm5Ray2.inl">
+      <Filter>Objects2D</Filter>
+    </None>
+    <None Include="Objects2D\Wm5Segment2.inl">
+      <Filter>Objects2D</Filter>
+    </None>
+    <None Include="Objects2D\Wm5Triangle2.inl">
+      <Filter>Objects2D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5AxisAlignedBox3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Box3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Capsule3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Circle3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Cone3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5ConvexPolyhedron3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Cylinder3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Ellipse3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Ellipsoid3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Frustum3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Line3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Lozenge3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Plane3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Polyhedron3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Ray3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Rectangle3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Segment3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Sphere3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Tetrahedron3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Torus3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Objects3D\Wm5Triangle3.inl">
+      <Filter>Objects3D</Filter>
+    </None>
+    <None Include="Meshes\Wm5BasicMesh.inl">
+      <Filter>Meshes</Filter>
+    </None>
+    <None Include="Meshes\Wm5EdgeKey.inl">
+      <Filter>Meshes</Filter>
+    </None>
+    <None Include="Meshes\Wm5ETManifoldMesh.inl">
+      <Filter>Meshes</Filter>
+    </None>
+    <None Include="Meshes\Wm5ETNonmanifoldMesh.inl">
+      <Filter>Meshes</Filter>
+    </None>
+    <None Include="Meshes\Wm5PlanarGraph.inl">
+      <Filter>Meshes</Filter>
+    </None>
+    <None Include="Meshes\Wm5TriangleKey.inl">
+      <Filter>Meshes</Filter>
+    </None>
+    <None Include="Meshes\Wm5UniqueVerticesTriangles.inl">
+      <Filter>Meshes</Filter>
+    </None>
+    <None Include="Meshes\Wm5VEManifoldMesh.inl">
+      <Filter>Meshes</Filter>
+    </None>
+    <None Include="Query\Wm5Query2.inl">
+      <Filter>Query</Filter>
+    </None>
+    <None Include="Query\Wm5Query2Filtered.inl">
+      <Filter>Query</Filter>
+    </None>
+    <None Include="Query\Wm5Query2Int64.inl">
+      <Filter>Query</Filter>
+    </None>
+    <None Include="Query\Wm5Query2Integer.inl">
+      <Filter>Query</Filter>
+    </None>
+    <None Include="Query\Wm5Query2Rational.inl">
+      <Filter>Query</Filter>
+    </None>
+    <None Include="Query\Wm5Query3.inl">
+      <Filter>Query</Filter>
+    </None>
+    <None Include="Query\Wm5Query3Filtered.inl">
+      <Filter>Query</Filter>
+    </None>
+    <None Include="Query\Wm5Query3Int64.inl">
+      <Filter>Query</Filter>
+    </None>
+    <None Include="Query\Wm5Query3Integer.inl">
+      <Filter>Query</Filter>
+    </None>
+    <None Include="Query\Wm5Query3Rational.inl">
+      <Filter>Query</Filter>
+    </None>
+    <None Include="Rational\Wm5Integer.inl">
+      <Filter>Rational</Filter>
+    </None>
+    <None Include="Rational\Wm5IVector.inl">
+      <Filter>Rational</Filter>
+    </None>
+    <None Include="Rational\Wm5IVector2.inl">
+      <Filter>Rational</Filter>
+    </None>
+    <None Include="Rational\Wm5IVector3.inl">
+      <Filter>Rational</Filter>
+    </None>
+    <None Include="Rational\Wm5Rational.inl">
+      <Filter>Rational</Filter>
+    </None>
+    <None Include="Rational\Wm5RVector.inl">
+      <Filter>Rational</Filter>
+    </None>
+    <None Include="Rational\Wm5RVector2.inl">
+      <Filter>Rational</Filter>
+    </None>
+    <None Include="Rational\Wm5RVector3.inl">
+      <Filter>Rational</Filter>
+    </None>
+    <None Include="Base\Wm5Float1.inl">
+      <Filter>Base</Filter>
+    </None>
+    <None Include="Base\Wm5Float2.inl">
+      <Filter>Base</Filter>
+    </None>
+    <None Include="Base\Wm5Float3.inl">
+      <Filter>Base</Filter>
+    </None>
+    <None Include="Base\Wm5Float4.inl">
+      <Filter>Base</Filter>
+    </None>
+  </ItemGroup>
+</Project>

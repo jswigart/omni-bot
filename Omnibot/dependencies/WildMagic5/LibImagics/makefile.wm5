@@ -1,0 +1,24 @@
+CFG ?= Debug
+SYS ?= linux
+
+build :
+	@mkdir -p ../SDK/Include
+	@mkdir -p ../SDK/Library/$(CFG)
+	@mkdir -p $(CFG)
+	@cp -fp *.h ../SDK/Include
+	cd BinaryOperations ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Extraction       ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Filters          ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Images           ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd RasterDrawing    ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Segmenters       ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+
+clean :
+	cd BinaryOperations ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Extraction       ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Filters          ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Images           ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd RasterDrawing    ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Segmenters       ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	@rm -f $(CFG)/*.*
+	@rmdir $(CFG)

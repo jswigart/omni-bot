@@ -1,0 +1,33 @@
+CFG ?= Debug
+SYS ?= Linux
+GRF ?= Glx
+
+build :
+	@mkdir -p SDK/Include
+	@mkdir -p SDK/Library/$(CFGDIR)
+	cd LibCore                           && make -f makefile.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd LibMathematics                    && make -f makefile.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd LibImagics                        && make -f makefile.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd LibPhysics                        && make -f makefile.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd LibGraphics                       && make -f makefile.wm5 CFG=$(CFG) SYS=$(SYS) GRF=$(GRF)
+	cd LibApplications                   && make -f makefile.wm5 CFG=$(CFG) SYS=$(SYS) GRF=$(GRF)
+	cd SampleMathematics                 && make -f makefile.wm5 CFG=$(CFG) SYS=$(SYS) GRF=$(GRF)
+	cd SampleImagics                     && make -f makefile.wm5 CFG=$(CFG) SYS=$(SYS) GRF=$(GRF)
+	cd SamplePhysics                     && make -f makefile.wm5 CFG=$(CFG) SYS=$(SYS) GRF=$(GRF)
+	cd SampleGraphics                    && make -f makefile.wm5 CFG=$(CFG) SYS=$(SYS) GRF=$(GRF)
+
+clean :
+	cd LibCore                           && make clean -f makefile.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd LibMathematics                    && make clean -f makefile.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd LibImagics                        && make clean -f makefile.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd LibPhysics                        && make clean -f makefile.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd LibGraphics                       && make clean -f makefile.wm5 CFG=$(CFG) SYS=$(SYS) GRF=$(GRF)
+	cd LibApplications                   && make clean -f makefile.wm5 CFG=$(CFG) SYS=$(SYS) GRF=$(GRF)
+	cd SampleMathematics                 && make clean -f makefile.wm5 CFG=$(CFG) SYS=$(SYS) GRF=$(GRF)
+	cd SampleImagics                     && make clean -f makefile.wm5 CFG=$(CFG) SYS=$(SYS) GRF=$(GRF)
+	cd SamplePhysics                     && make clean -f makefile.wm5 CFG=$(CFG) SYS=$(SYS) GRF=$(GRF)
+	cd SampleGraphics                    && make clean -f makefile.wm5 CFG=$(CFG) SYS=$(SYS) GRF=$(GRF)
+	@rm -f SDK/Include/*.*
+	@rm -f SDK/Library/$(CFGDIR)/*.*
+	@rmdir SDK/Library/$(CFGDIR)
+

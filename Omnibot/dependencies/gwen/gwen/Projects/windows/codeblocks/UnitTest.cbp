@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="UnitTest" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="../../../lib/windows/codeblocks/libunittest.a" prefix_auto="0" extension_auto="0" />
+				<Option object_output="obj/Release/UnitTest" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-msse" />
+					<Add option="-O2" />
+					<Add option="-ffast-math" />
+					<Add option="-DNDEBUG" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<Linker>
+					<Add directory="../../../lib" />
+					<Add directory="../../../lib/windows" />
+				</Linker>
+			</Target>
+			<Target title="Debug">
+				<Option output="../../../lib/windows/codeblocks/libunittestd" prefix_auto="0" extension_auto="0" />
+				<Option object_output="obj/Debug/UnitTest" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-msse" />
+					<Add option="-D_DEBUG" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<Linker>
+					<Add directory="../../../lib" />
+					<Add directory="../../../lib/windows" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="../../../UnitTest/Button.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/Checkbox.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/CollapsibleList.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/ColorPicker.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/ComboBox.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/CrossSplitter.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/GroupBox.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/ImagePanel.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/Label.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/LabelMultiline.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/ListBox.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/MenuStrip.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/Numeric.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/PageControl.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/ProgressBar.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/Properties.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/RadioButton.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/ReadMe.txt">
+		</Unit>
+		<Unit filename="../../../UnitTest/ScrollControl.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/Slider.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/StatusBar.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/TabControl.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/TextBox.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/TreeControl.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/UnitTest.cpp">
+		</Unit>
+		<Unit filename="../../../UnitTest/Window.cpp">
+		</Unit>
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>
+

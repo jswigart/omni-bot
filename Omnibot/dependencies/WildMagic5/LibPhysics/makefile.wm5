@@ -1,0 +1,24 @@
+CFG ?= Debug
+SYS ?= Linux
+
+build :
+	@mkdir -p ../SDK/Include
+	@mkdir -p ../SDK/Library/$(CFG)
+	@mkdir -p $(CFG)
+	@cp -fp *.h ../SDK/Include
+	cd Fluid              ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd CollisionDetection ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Intersection       ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd LCPSolver          ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd ParticleSystem     ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd RigidBody          ; make -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+
+clean :
+	cd Fluid              ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd CollisionDetection ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd Intersection       ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd LCPSolver          ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd ParticleSystem     ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	cd RigidBody          ; make clean -f ../makeprj.wm5 CFG=$(CFG) SYS=$(SYS)
+	@rm -f $(CFG)/*.*
+	@rmdir $(CFG)
