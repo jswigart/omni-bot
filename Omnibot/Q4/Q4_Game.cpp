@@ -8,7 +8,6 @@
 
 #include "Q4_Game.h"
 #include "Q4_Client.h"
-#include "Q4_GoalManager.h"
 #include "Q4_InterfaceFuncs.h"
 
 #include "System.h"
@@ -73,15 +72,9 @@ const char *Q4_Game::GetScriptSubfolder() const
 #endif
 }
 
-eNavigatorID Q4_Game::GetDefaultNavigator() const
+NavigatorID Q4_Game::GetDefaultNavigator() const
 {
-	//return NAVID_RECAST;
-	return NAVID_WP;
-}
-
-GoalManager *Q4_Game::GetGoalManager()
-{
-	return new Q4_GoalManager;
+	return NAVID_RECAST;
 }
 
 bool Q4_Game::Init( System & system )
@@ -272,17 +265,6 @@ void Q4_Game::InitScriptEvents(gmMachine *_machine, gmTableObject *_table)
 	IGame::InitScriptEvents(_machine, _table);
 }
 
-void Q4_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
-{
-	// Should always register the default flags
-	IGame::RegisterNavigationFlags(_planner);
-
-	_planner->RegisterNavFlag("MARINE", F_NAV_TEAM1);
-	_planner->RegisterNavFlag("STROGG", F_NAV_TEAM2);
-	_planner->RegisterNavFlag("CAPPOINT", F_Q4_NAV_CAPPOINT);
-	_planner->RegisterNavFlag("DEADZONE", F_Q4_NAV_DEADZONE);
-}
-
 const float Q4_Game::Q4_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags)
 {
 	if (_class > Q4_CLASS_NULL && _class < Q4_CLASS_MAX)
@@ -303,21 +285,4 @@ const float Q4_Game::Q4_GetEntityClassAimOffset(const int _class, const BitFlag6
 		return 48.0f;
 	}
 	return 0.0f;
-}
-
-// PathPlannerWaypointInterface
-NavFlags Q4_Game::WaypointBlockableFlags() const
-{
-	return (NavFlags)0;
-}
-
-NavFlags Q4_Game::WaypointCallbackFlags() const
-{
-	return (NavFlags)0;
-}
-
-PathPlannerWaypointInterface::BlockableStatus Q4_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const
-{
-	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
-	return res;
 }

@@ -14,8 +14,6 @@
 #include "System.h"
 #include "ScriptManager.h"
 
-BOOST_STATIC_ASSERT( FF_TEAM_MAX == TF_TEAM_MAX );
-
 IGame *CreateGameInstance()
 {
 	return new FF_Game;
@@ -83,33 +81,33 @@ bool FF_Game::Init( System & system )
 
 	// Run the games autoexec.
 	int threadId;
-	system.mScript->ExecuteFile("scripts/ff_autoexec.gm", threadId);
+	system.mScript->ExecuteFile( "scripts/ff_autoexec.gm", threadId );
 
-	TF_Options::DisguiseTeamFlags[ FF_TEAM_BLUE ] = TF_PWR_DISGUISE_BLUE;
-	TF_Options::DisguiseTeamFlags[ FF_TEAM_RED ] = TF_PWR_DISGUISE_RED;
-	TF_Options::DisguiseTeamFlags[ FF_TEAM_GREEN ] = TF_PWR_DISGUISE_GREEN;
-	TF_Options::DisguiseTeamFlags[ FF_TEAM_YELLOW ] = TF_PWR_DISGUISE_YELLOW;
+	TF_Options::DisguiseTeamFlags[ TF_TEAM_BLUE ] = TF_PWR_DISGUISE_BLUE;
+	TF_Options::DisguiseTeamFlags[ TF_TEAM_RED ] = TF_PWR_DISGUISE_RED;
+	TF_Options::DisguiseTeamFlags[ TF_TEAM_GREEN ] = TF_PWR_DISGUISE_GREEN;
+	TF_Options::DisguiseTeamFlags[ TF_TEAM_YELLOW ] = TF_PWR_DISGUISE_YELLOW;
 
 	return true;
 }
 
-static IntEnum FF_TeamEnum[] =
+static IntEnum FF_TeamEnum [] =
 {
-	IntEnum("SPECTATOR",OB_TEAM_SPECTATOR),
-	IntEnum("NONE",FF_TEAM_NONE),
-	IntEnum("RED",FF_TEAM_RED),
-	IntEnum("BLUE",FF_TEAM_BLUE),
-	IntEnum("YELLOW",FF_TEAM_YELLOW),
-	IntEnum("GREEN",FF_TEAM_GREEN),
+	IntEnum( "SPECTATOR", OB_TEAM_SPECTATOR ),
+	IntEnum( "NONE", TF_TEAM_NONE ),
+	IntEnum( "RED", TF_TEAM_RED ),
+	IntEnum( "BLUE", TF_TEAM_BLUE ),
+	IntEnum( "YELLOW", TF_TEAM_YELLOW ),
+	IntEnum( "GREEN", TF_TEAM_GREEN ),
 };
 
-void FF_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
+void FF_Game::GetTeamEnumeration( const IntEnum *&_ptr, int &num )
 {
-	num = sizeof(FF_TeamEnum) / sizeof(FF_TeamEnum[0]);
+	num = sizeof( FF_TeamEnum ) / sizeof( FF_TeamEnum[ 0 ] );
 	_ptr = FF_TeamEnum;
 }
 
-void FF_Game::GetGameVars(GameVars &_gamevars)
+void FF_Game::GetGameVars( GameVars &_gamevars )
 {
 	_gamevars.mPlayerHeight = 72.f;
 }
@@ -140,9 +138,9 @@ void FF_Game::GetGameVars(GameVars &_gamevars)
 //	return TF_Game::TF_GetEntityClassAimOffset(_class,_entflags);
 //}
 
-ClientPtr &FF_Game::GetClientFromCorrectedGameId(int _gameid)
+ClientPtr &FF_Game::GetClientFromCorrectedGameId( int _gameid )
 {
-	return m_ClientList[_gameid-1];
+	return m_ClientList[ _gameid - 1 ];
 }
 
 //void FF_Game::AddBot(const std::string &_name, int _team, int _class, const std::string _profile, bool _createnow)

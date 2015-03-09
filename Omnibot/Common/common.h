@@ -39,16 +39,16 @@
 #pragma warning( disable: 6355 )	// _alloca indicates failure by raising a stack overflow exception. Consider using _malloca instead
 #pragma warning( disable: 4512 )	// 'class' : assignment operator could not be generated
 #pragma warning( disable: 6384 )	// Dividing sizeof a pointer by another value
+#pragma warning( disable: 4710 )	// function '...' not inlined
 #endif // _WIN32
 
 // Enable some useful ones that are disabled by default
 // http://msdn2.microsoft.com/en-us/library/23k5d385(VS.80).aspx
-#pragma warning( default: 4062)		// enumerator 'identifier' in switch of enum 'enumeration' is not handled
-#pragma warning( default: 4265)		// class has virtual functions, but destructor is not virtual
-#pragma warning( default: 4431)		// missing type specifier - int assumed. Note: C no longer supports default-int
+#pragma warning( default: 4062 )	// enumerator 'identifier' in switch of enum 'enumeration' is not handled
+#pragma warning( default: 4265 )	// class has virtual functions, but destructor is not virtual
+#pragma warning( default: 4431 )	// missing type specifier - int assumed. Note: C no longer supports default-int
 
 // Disable if these get annoying.
-#pragma warning( default: 4710 )	// function '...' not inlined
 #pragma warning( default: 4711 )	// function '...' selected for automatic inline expansion
 
 #ifdef _OPENMP
@@ -87,6 +87,7 @@
 #include <boost/array.hpp>
 #include <boost/multi_array.hpp>
 #include <boost/thread.hpp>
+#include <boost/atomic.hpp>
 
 #ifdef _WIN32
 #pragma warning( pop )
@@ -113,11 +114,7 @@ using namespace Wm5;
 
 #ifdef WIN32
 //#define ENABLE_REMOTE_DEBUGGER
-//#define ENABLE_FILE_DOWNLOADER
-//#define ENABLE_REMOTE_DEBUGGING
 #endif
-
-//#define ENABLE_REMOTE_DEBUGGING
 
 // remote debug
 #ifdef ENABLE_REMOTE_DEBUGGING

@@ -242,8 +242,9 @@ namespace AiState
 		FINDSTATE(fp, FollowPath, GetRootState());
 		if(fp)
 		{
-			Vector3f vDestination = System::mInstance->mNavigation->GetRandomDestination(GetClient(),GetClient()->GetPosition(),GetClient()->GetTeamFlag());
-			return fp->Goto(this, vDestination, options.Radius, options.Mode);
+			Vector3f vDestination;
+			if ( System::mInstance->mNavigation->GetRandomDestination( vDestination, GetClient() ) )
+				return fp->Goto(this, vDestination, options.Radius, options.Mode);
 		}
 		return false;
 	}
@@ -793,12 +794,12 @@ namespace AiState
 		{
 			SensoryMemory *sensory = GetClient()->GetSensoryMemory();
 
-			RecordHandle records[SensoryMemory::NumRecords];
+			RecordHandle records[SensoryMemory::MaxRecords];
 			const int numEnts = sensory->FindEntityByCategoryInRadius(
 				m_WatchEntities.m_Radius,
 				m_WatchEntities.m_Category,
 				records,
-				SensoryMemory::NumRecords);
+				SensoryMemory::MaxRecords);
 
 			// figure out which ones just entered, and which ones left so we can send the appropriate events
 			for(int e = 0; e < numEnts; ++e)

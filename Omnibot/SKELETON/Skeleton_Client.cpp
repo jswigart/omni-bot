@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Skeleton_Client.h"
-#include "Skeleton_NavigationFlags.h"
 
 #include "IGame.h"
 #include "IGameManager.h"
@@ -20,22 +19,32 @@ Skeleton_Client::~Skeleton_Client()
 {
 }
 
-NavFlags Skeleton_Client::GetTeamFlag()
-{
-	return GetTeamFlag(GetTeam());
-}
-
-NavFlags Skeleton_Client::GetTeamFlag(int _team)
+NavFlags Skeleton_Client::GetTeamFlag(int _team) const
 {
 	static const NavFlags defaultTeam = 0;
 	switch(_team)
 	{
 	case SKELETON_TEAM_1:
-		return F_NAV_TEAM1;
+		return NAVFLAGS_TEAM1_ONLY;
 	case SKELETON_TEAM_2:
-		return F_NAV_TEAM2;
+		return NAVFLAGS_TEAM2_ONLY;
 	default:
 		return defaultTeam;
+	}
+}
+
+void Skeleton_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
+{
+	includeFlags = NAVFLAGS_WALK;
+
+	switch ( GetTeam() )
+	{
+		case SKELETON_TEAM_1:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			break;
+		case SKELETON_TEAM_2:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			break;
 	}
 }
 

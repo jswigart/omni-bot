@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "JA_BaseStates.h"
-#include "JA_NavigationFlags.h"
 #include "JA_Client.h"
 
 #include "RenderBuffer.h"
@@ -47,12 +46,10 @@ namespace AiState
 		FINDSTATE(fp,FollowPath,GetParent());
 		if(fp)
 		{
-			if(fp->IsMoving() &&
-				fp->GetCurrentPath().GetCurrentPt(m_NextPt) &&
-				(m_NextPt.m_NavFlags & F_JA_NAV_FORCEJUMP))
+			/*if(fp->IsMoving() && fp->IsOnCustomLink(F_JA_NAV_FORCEJUMP))
 			{
 				return 1.f;
-			}
+			}*/
 		}
 		return 0.f;
 	}

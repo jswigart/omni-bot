@@ -36,6 +36,7 @@
 #define RDF_DRAWINGSKY		(1<<5)
 #define RDF_SNOOPERVIEW		(1<<6)	//----(SA)	added
 
+#define RDF_RENDEROMNIBOT	(1<<31)
 
 typedef struct {
 	vec3_t		xyz;

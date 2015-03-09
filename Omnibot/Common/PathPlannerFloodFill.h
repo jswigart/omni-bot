@@ -15,10 +15,7 @@
 #include "InternalFsm.h"
 #include "SpanHeightMap.h"
 
-#include <queue>
-
 //////////////////////////////////////////////////////////////////////////
-
 // class: PathPlannerFloodFill
 //		Path planner interface for the navmesh system for hl2
 class PathPlannerFloodFill : public PathPlannerBase
@@ -37,6 +34,8 @@ public:
 		float		m_CharacterStepHeight;
 		float		m_CharacterJumpHeight;
 		float		m_GridRadius;
+
+		FloodFillOptions();
 	};
 
 	struct CellData
@@ -61,18 +60,10 @@ public:
 	void Shutdown();
 	bool IsReady() const;
 
-	Vector3f GetRandomDestination(Client *_client, const Vector3f &_start, const NavFlags _team);
-
-	void PlanPathToGoal(Client *_client, const Vector3f &_start, const Vector3f &_goal, const NavFlags _team);
-	int PlanPathToNearest(Client *_client, const Vector3f &_start, const Vector3List &_goals, const NavFlags &_team);
-	int PlanPathToNearest(Client *_client, const Vector3f &_start, const DestinationVector &_goals, const NavFlags &_team);
-
 	bool GetNavFlagByName(const std::string &_flagname, NavFlags &_flag) const;
 
 	Vector3f GetDisplayPosition(const Vector3f &_pos);
 
-	bool IsDone() const;
-	bool FoundGoal() const;
 	bool Load(const std::string &_mapname, bool _dl = true);
 	bool Save(const std::string &_mapname);
 	void Unload();
@@ -81,7 +72,6 @@ public:
 	void RegisterGameGoals();
 	void GetPath(Path &_path);
 
-	virtual void RegisterNavFlag(const std::string &_name, const NavFlags &_bits);
 	virtual void RegisterScriptFunctions(gmMachine *a_machine);
 
 	bool GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name);
@@ -93,6 +83,14 @@ public:
 	int GetPlannerType() const { return NAVID_FLOODFILL; };
 
 	int GetLatestFileVersion() const { return 1; }
+
+	typedef SpanHeightMap<obuint8> SpanMap;
+
+	SpanMap::InfluenceMap * AllocInfluenceMap();
+	PathInterface * AllocPathInterface( Client * client );
+
+	void EntityCreated( const EntityInstance &ei );
+	void EntityDeleted( const EntityInstance &ei );
 
 	PathPlannerFloodFill();
 	virtual ~PathPlannerFloodFill();
@@ -123,6 +121,7 @@ protected:
 
 	// Process Functions
 	int Process_FloodFill();
+	void UpdateFloodFill();
 
 	//////////////////////////////////////////////////////////////////////////
 	void AddFloodStart(const Vector3f &_vec);
@@ -130,7 +129,7 @@ protected:
 	void SaveFloodStarts();
 	void LoadFloodStarts();
 	void FloodFill(const FloodFillOptions &_options);
-
+	
 	//////////////////////////////////////////////////////////////////////////
 	// Friend functions
 	friend int GM_CDECL gmfFloodFillView(gmThread *a_thread);
@@ -142,14 +141,13 @@ protected:
 	friend int GM_CDECL gmfFloodFillLoadFloodStarts(gmThread *a_thread);
 	friend int GM_CDECL gmfFloodFillSaveFloodStarts(gmThread *a_thread);
 	friend int GM_CDECL gmfFloodFillFloodFill(gmThread *a_thread);
-
+	
 	//////////////////////////////////////////////////////////////////////////
 protected:
 	//////////////////////////////////////////////////////////////////////////
 
 	Vector3List			m_StartPositions;
-
-	typedef SpanHeightMap<obuint8> SpanMap;
+	
 	typedef std::queue<Vector3f> VectorQueue;
 
 	SpanMap 				mSpanMap;
@@ -157,10 +155,32 @@ protected:
 	VectorQueue				mSpanFrontier;
 
 	obuint32				mInfluenceBufferId;
+	bool					mUpdateInfluenceBuffer;
 
-	//////////////////////////////////////////////////////////////////////////
-	// Tool state machine
-	//STATE_PROTOTYPE(NoOp);
+	FloodFillOptions		mFillOptions;
+	
+	typedef std::vector<SpanMap::InfluenceMap*> InfluenceMaps;
+	InfluenceMaps			mActiveInfluences;
+
+	struct Obstacle
+	{
+		GameEntity				mEntity;
+
+		Box3f					mObb;
+				
+		obint32					mExpireTime;
+		
+		bool					mActive;
+		
+		bool Expired() const;
+		bool IsActive() const;
+
+		Obstacle();
+		~Obstacle();
+	};
+	typedef std::vector<Obstacle> ObstacleList;
+
+	ObstacleList				mObstacles;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Current tool variables
@@ -171,8 +191,8 @@ protected:
 	std::string _GetNavFileExtension() { return ".nav"; }
 	virtual void _BenchmarkPathFinder(const StringVector &_args);
 	virtual void _BenchmarkGetNavPoint(const StringVector &_args);
-
-	void _Render();
+	
+	void UpdateObstacles();
 };
 
 #endif

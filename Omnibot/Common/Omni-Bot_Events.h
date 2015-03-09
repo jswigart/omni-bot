@@ -13,6 +13,8 @@
 #ifndef __OMNIBOT_EVENTS_H__
 #define __OMNIBOT_EVENTS_H__
 
+//#include "Omni-bot_GameEvents.h"
+
 // typedef: EventId
 //		Readable identifier for various events that can be sent to the bot
 //		and considered for state changes or behavioral modifications.
@@ -40,6 +42,7 @@ typedef enum
 	GAME_SCRIPTSIGNAL,
 	GAME_SOUND,
 	GAME_ADD_ENTITY_CONNECTION,
+	GAME_ANALYTIC_EVENT,
 	GAME_ID_LAST,
 
 	EVENT_ID_FIRST,
@@ -105,7 +108,78 @@ typedef enum
 	EVENT_NUM_EVENTS
 } EventId;
 
-////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//struct EventParmSpawn
+//{
+//};
+//typedef GameEvent<MESSAGE_SPAWN,EventParmSpawn> EventSpawn;
+////////////////////////////////////////////////////////////////////////////
+//struct EventParmsGravity
+//{
+//	const float			mGravity;
+//
+//	EventParmsGravity( float grav ) : mGravity( grav ) {}
+//	EventParmsGravity& operator=( const EventParmsGravity& ); // non copyable
+//};
+//typedef GameEvent<GAME_GRAVITY,EventParmsGravity> EventGameGravity;
+//////////////////////////////////////////////////////////////////////////
+//
+//struct EventParmsWeaponFire
+//{
+//	const int			mWeaponId;
+//	const FireMode		mFireMode;
+//	const GameEntity	mProjectile;
+//
+//	EventParmsWeaponFire( int weaponId, FireMode mode, GameEntity projectile )
+//		: mWeaponId( weaponId ), mFireMode( mode ), mProjectile( projectile ) {}
+//	EventParmsWeaponFire& operator=( const EventParmsWeaponFire& ); // non copyable
+//};
+//typedef GameEvent<ACTION_WEAPON_FIRE,EventParmsWeaponFire> EventWeaponFire;
+//////////////////////////////////////////////////////////////////////////
+//
+//struct EventSystemClientConnected
+//{
+//	const GameEntity	mEntity;
+//	const obBool		mIsBot;
+//	const int			mDesiredClass;
+//	const int			mDesiredTeam;
+//
+//	EventSystemClientConnected( GameEntity ent, obBool isbot, int desireClass, int desireTeam )
+//		: mEntity( ent )
+//		, mIsBot( isbot )
+//		, mDesiredClass( desireClass )
+//		, mDesiredTeam( desireTeam )
+//	{
+//	}
+//	EventSystemClientConnected& operator=( const EventSystemClientConnected& ); // non copyable
+//};
+//typedef GameEvent<GAME_CLIENTCONNECTED,EventSystemClientConnected> EventClientConnected;
+//////////////////////////////////////////////////////////////////////////
+//
+//struct EventSystemClientDisConnected
+//{
+//	const GameEntity	mEntity;
+//
+//	EventSystemClientDisConnected( GameEntity ent )
+//		: mEntity( ent )
+//	{
+//	}
+//	EventSystemClientDisConnected& operator=( const EventSystemClientDisConnected& ); // non copyable
+//};
+//typedef GameEvent<GAME_CLIENTDISCONNECTED,EventSystemClientDisConnected> EventClientDisConnected;
+////////////////////////////////////////////////////////////////////////////
+//
+//struct EventDeath
+//{
+//	const GameEntity		mWhoKilledMe;
+//	const StringParm32		mMeansOfDeath;
+//
+//	EventDeath( GameEntity whokilled, const char * meansofdeath ) 
+//		: mWhoKilledMe( whokilled ), mMeansOfDeath( meansofdeath )
+//	{
+//	}
+//	EventDeath& operator=( const EventDeath& ); // non copyable
+//};
 
 // enumerations: GameMessage
 //		GEN_MSG_NONE - Invalid message reserved as 0.
@@ -168,6 +242,8 @@ typedef enum
 	GEN_MSG_MOVERAT,
 
 	GEN_MSG_SETLOADOUT,
+
+	GEN_MSG_MAPMODEL_FOR_ID,
 
 	// This must stay last.
 	GEN_MSG_END

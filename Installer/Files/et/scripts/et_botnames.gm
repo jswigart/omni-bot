@@ -82,3 +82,4 @@ Names["^o[BOT]^7Zarna"] = "";
 Names["^o[BOT]^7PillowPants"] = "";
 Names["^o[BOT]^7ListerFiend"] = "";
 Names["^o[BOT]^7Ilikechocmilk"] = "";
+Names["testbot"] = "testbot.gm";

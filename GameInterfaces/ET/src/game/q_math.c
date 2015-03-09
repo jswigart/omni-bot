@@ -1344,7 +1344,7 @@ void MatrixMultiply(float in1[3][3], float in2[3][3], float out[3][3]) {
 
 void AngleVectors( const vec3_t angles, vec3_t forward, vec3_t right, vec3_t up) {
 	float		angle;
-	static float		sr, sp, sy, cr, cp, cy;
+	float		sr, sp, sy, cr, cp, cy;
 	// static to help MS compiler fp bugs
 
 	angle = angles[YAW] * (M_PI*2 / 360);

@@ -15,7 +15,7 @@
 
 #include "Omni-Bot_Events.h"
 
-typedef enum eET_Version
+enum ET_Version
 {
 	ET_VERSION_0_52_beta1 = 1,
 	ET_VERSION_0_52_beta2,
@@ -37,9 +37,14 @@ typedef enum eET_Version
 	ET_VERSION_0_8,
 	ET_VERSION_LAST,
 	ET_VERSION_LATEST = ET_VERSION_LAST - 1
-} ET_Version;
+} ;
 
-typedef enum eET_Events
+enum ET_SurfaceFlags
+{
+	ET_SURFACE_LANDMINE	=	SURFACE_START_USER
+};
+
+enum ET_Event
 {
 	ET_EVENT_BEGIN = EVENT_NUM_EVENTS,
 	ET_EVENT_PRETRIGGER_MINE,
@@ -56,9 +61,9 @@ typedef enum eET_Events
 	ET_EVENT_RECIEVEDAMMO,
 
 	ET_EVENT_END
-} ET_Event;
+};
 
-typedef enum eET_Msgs
+enum ET_Msg
 {
 	ET_MSG_BEGIN = GEN_MSG_END,
 
@@ -109,9 +114,9 @@ typedef enum eET_Msgs
 	ET_MSG_DISABLEBOTPUSH,
 
 	ET_MSG_END
-} ET_Msg;
+};
 
-typedef enum eET_Weapons
+enum ET_Weapon
 {
 	ET_WP_UNKNOWN = INVALID_WEAPON,
 	ET_WP_NONE = INVALID_WEAPON,
@@ -181,18 +186,18 @@ typedef enum eET_Weapons
 	ET_WP_MOUNTABLE_MG42,
 
 	ET_WP_MAX = ET_WP_NONE+128
-} ET_Weapon;
+};
 
 // enumerations: EntityCategory
-typedef enum eET_EntityCategory
+enum ET_EntityCategory
 {
 	ET_ENT_CAT_MINE = ENT_CAT_MAX,
 
 	// THIS MUST BE LAST
 	ET_ENT_CAT_MAX,
-} ET_EntityCategory;
+} ;
 
-typedef enum eET_PlayerClass
+enum ET_PlayerClass
 {
 	ET_CLASS_UNKNOWN = 0,
 	ET_CLASS_NULL = 0,
@@ -205,6 +210,7 @@ typedef enum eET_PlayerClass
 	ET_CLASS_ANY = ET_CLASS_MAX,
 
 	// Other values to identify the "class"
+	ET_CLASSEX_MG42BASE,
 	ET_CLASSEX_MG42MOUNT,
 	ET_CLASSEX_DYNAMITE,
 	ET_CLASSEX_MINE,
@@ -234,19 +240,19 @@ typedef enum eET_PlayerClass
 	ET_CLASSEX_WEAPON_LAST = ET_CLASSEX_WEAPON+ET_WP_MAX,
 
 	ET_NUM_CLASSES
-} ET_PlayerClass;
+};
 
 // typedef: ET_Team
 //		The available teams for this gametype.
-typedef enum eET_Team
+enum ET_Team
 {
 	ET_TEAM_NONE = OB_TEAM_NONE,
 	ET_TEAM_AXIS,
 	ET_TEAM_ALLIES,
 	ET_TEAM_MAX
-} ET_Team;
+} ;
 
-typedef enum eET_Skills
+enum ET_Skills
 {
 	ET_SKILL_BATTLE_SENSE,
 	ET_SKILL_ENGINEERING,
@@ -258,9 +264,9 @@ typedef enum eET_Skills
 
 	// THIS MUST STAY LAST
 	ET_SKILLS_NUM_SKILLS,
-} ET_Skills;
+} ;
 
-typedef enum eET_EntityFlags
+enum ET_EntityFlags
 {
 	// bit: ET_ENT_FLAG_DISGUISED
 	//		This entity is disguised
@@ -289,11 +295,11 @@ typedef enum eET_EntityFlags
 	// bit: ET_ENT_FLAG_POISONED
 	//		This entity is poisoned.
 	ET_ENT_FLAG_POISONED,
-} ET_EntityFlags;
+} ;
 
 //////////////////////////////////////////////////////////////////////////
 
-typedef enum eCursorHintType
+enum CursorHintType
 {
 	CURSOR_HINT_NONE,
 	CURSOR_HINT_PLAYER,
@@ -342,22 +348,22 @@ typedef enum eCursorHintType
 	CURSOR_HINT_TANK,
 	CURSOR_HINT_SATCHELCHARGE,
 	CURSOR_HINT_LOCKPICK
-} CursorHintType;
+};
 
-typedef enum eExplosiveTargetType
+enum ExplosiveTargetType
 {
 	XPLO_TYPE_DYNAMITE	= 1<<0,
 	XPLO_TYPE_SATCHEL	= 1<<1
-} ExplosiveTargetType;
+};
 
-typedef enum eExplosiveState
+enum ExplosiveState
 {
 	XPLO_INVALID			= -1,
 	XPLO_ARMED				= 0,
 	XPLO_UNARMED			= 1,
-} ExplosiveState;
+};
 
-typedef enum eConstructableState
+enum ConstructableState
 {
 	CONST_INVALID			= -1,
 
@@ -368,6 +374,6 @@ typedef enum eConstructableState
 	CONST_DESTROYABLE		= 1,
 
 	CONST_BROKEN			= 2,
-} ConstructableState;
+};
 
 #endif

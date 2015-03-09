@@ -6,206 +6,429 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <omp.h>
+
 #include "PathPlannerRecast.h"
 #include "IGameManager.h"
 #include "IGame.h"
 #include "GoalManager.h"
-#include "NavigationFlags.h"
 #include "Path.h"
 #include "gmUtilityLib.h"
-
-#include "RecastInterfaces.h"
+#include "Client.h"
+#include "InterfaceFuncs.h"
 
 #include "RenderBuffer.h"
+
+#include "PathPlannerRecastPathInterface.h"
+
+#include <assimp/config.h>
+#include <assimp/cimport.h>
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
 #include <DebugDraw.h>
 
 #include <Recast.h>
 #include <RecastDebugDraw.h>
 
+#include <DetourCommon.h>
+#include <DetourTileCache.h>
+#include <DetourTileCacheBuilder.h>
 #include <DetourNavMesh.h>
 #include <DetourNavMeshBuilder.h>
-
 #include <DetourDebugDraw.h>
 
-duDebugDraw * gDDraw = 0;
+#include "recast.pb.h"
+#include "modeldata.pb.h"
 
-static const obuint32 NAVMESH_MAGIC = 'OMNI';
-static const int NAVMESH_VERSION = 2;
+#include "google/protobuf/text_format.h"
+#include "google/protobuf/io/coded_stream.h"
+//#include "google/protobuf/io/gzip_stream.h"
+#include "google/protobuf/io/zero_copy_stream_impl.h"
 
-static const bool DUMP_OBJS = true;
+#include "fastlz/fastlz.h"
 
-RecastBuildContext buildContext;
+#include "sqlite3.h"
 
-void calcPolyCenter(float* tc, const unsigned short* idx, int nidx, const float* verts);
-
-//////////////////////////////////////////////////////////////////////////
-
-PathPlannerRecast	*gRecastPlanner = 0;
-
-struct RecastOptions_t
+const char * ModelStateName( PathPlannerRecast::ModelState state )
 {
-	float DrawOffset;
-	float TimeShare;
-	bool DrawSolidNodes;
-
-	enum DrawMode
+	switch ( state )
 	{
-		DRAWMODE_NAVMESH,
-		DRAWMODE_NAVMESH_BVTREE,
-		DRAWMODE_VOXELS,
-		DRAWMODE_VOXELS_WALKABLE,
-		DRAWMODE_COMPACT,
-		DRAWMODE_COMPACT_DISTANCE,
-		DRAWMODE_COMPACT_REGIONS,
-		DRAWMODE_REGION_CONNECTIONS,
-		DRAWMODE_RAW_CONTOURS,
-		DRAWMODE_BOTH_CONTOURS,
-		DRAWMODE_CONTOURS,
-		DRAWMODE_POLYMESH,
-		DRAWMODE_POLYMESH_DETAIL,
-		MAX_DRAWMODE
-	};
-
-	DrawMode	RenderMode;
-
-	bool FilterLedges;
-	bool FilterLowHeight;
-
-	bool ClimbWalls;
-} RecastOptions = {};
-
-struct RecastStats_t
-{
-	int		ExploredCells;
-	int		BorderCells;
-	double	FloodTime;
-
-	RecastStats_t()
-		: ExploredCells(0)
-		, BorderCells(0)
-		, FloodTime(0.0)
-	{
+		case PathPlannerRecast::StateUnknown:
+			return "Unknown";
+		case PathPlannerRecast::StateNonCollidable:
+			return "NonCollidable";
+		case PathPlannerRecast::StateCollidable:
+			return "Collidable";
+		case PathPlannerRecast::StateMoved:
+			return "StateMoved";
+		case PathPlannerRecast::StateMarkedForDelete:
+			return "MarkForDelete";
 	}
-} RecastStats;
-
-enum FloodFillStatus
-{
-	Process_Init,
-	Process_Flood,
-	Process_FloodFinished,
-	Process_BuildNavMesh,
-	Process_BuildStaticMesh,
-	Process_BuildTiledMesh,
-	Process_FinishedNavMesh,
-};
-
-static FloodFillStatus gFloodStatus = Process_Init;
-
-struct RecastNode
-{
-	Vector3f	Pos;
-};
-
-typedef std::list<RecastNode> RecastNodeList;
-RecastNodeList RecastOpenList;
-RecastNodeList RecastExploredList;
-RecastNodeList RecastSolidList;
-
-rcConfig				RecastCfg;
-
-// todo: init these from game
-float AgentHeight = 64.f;
-float AgentRadius = 18.f;
-float AgentMaxClimb = 18.f;
-
-rcHeightfield * FloodHeightField = 0; // voxel height field
-
-struct rcBuildData
-{
-	rcCompactHeightfield	* Chf;
-	rcContourSet			* Contour;
-	rcPolyMesh				* PolyMesh;
-	rcPolyMeshDetail		* PolyMeshDetail;
-
-	rcBuildData() : Chf(0), Contour(0), PolyMesh(0), PolyMeshDetail(0)
-	{
-	}
-	void Alloc()
-	{
-		Chf = rcAllocCompactHeightfield();
-		Contour = rcAllocContourSet();
-		PolyMesh = rcAllocPolyMesh();
-		PolyMeshDetail = rcAllocPolyMeshDetail();
-	}
-	~rcBuildData()
-	{
-		rcFreeCompactHeightfield( Chf ); Chf = NULL;
-		rcFreeContourSet( Contour ); Contour = NULL;
-		rcFreePolyMesh( PolyMesh ); PolyMesh = NULL;
-		rcFreePolyMeshDetail( PolyMeshDetail ); PolyMeshDetail = NULL;
-	}
-};
-typedef std::list<rcBuildData> BuildDataList;
-BuildDataList			BuildData;
-
-//typedef std::vector<dtPathLink> LinkList;
-//LinkList				LinkData;
-
-enum NavMeshType { NavMeshStatic,NavMeshTiled,NavMeshNum };
-NavMeshType				CurrentNavMeshType = NavMeshStatic;
-
-dtNavMesh * DetourNavmesh = 0;
-
-typedef std::list<AABB> BoundsList;
-BoundsList				FloodEntityBounds;
-
-enum { MaxConnections=256 };
-int				OffMeshConnectionNum = 0;
-Vector3f		OffMeshConnections[MaxConnections*2] = {};
-float			OffMeshConnectionRadius[MaxConnections] = {};
-unsigned char	OffMeshConnectionDirection[MaxConnections] = {};
-unsigned char	OffMeshConnectionArea[MaxConnections] = {};
-unsigned short	OffMeshConnectionFlags[MaxConnections] = {};
-
-//////////////////////////////////////////////////////////////////////////
-
-struct NavObstacles
-{
-	GameEntity		Entity;
-	AABB			EntityWorldBounds;
-	/*AABB			EntityBounds;
-	Matrix3f		EntityOrientation;
-	Vector3f		EntityPosition;*/
-
-	enum ObstacleState { OBS_NONE,OBS_PENDING,OBS_ADDING,OBS_ADDED,OBS_REMOVING };
-	ObstacleState	State;
-
-	void Free() { Entity.Reset(); State = OBS_NONE; }
-
-	NavObstacles() : State(OBS_NONE) {}
-};
-
-enum { MaxObstacles = 256 };
-static NavObstacles	gNavObstacles[MaxObstacles];
-
-//////////////////////////////////////////////////////////////////////////
-Vector3f ToRecast(const Vector3f &v)
-{
-	return Vector3f(v.X(),v.Z(),v.Y());
+	return "Unknown";
 }
+
+static IceMaths::Matrix4x4 Convert( const aiMatrix4x4 & mat4 )
+{
+	IceMaths::Matrix4x4 matOut;
+	matOut.SetRow( 0, IceMaths::HPoint( mat4.a1, mat4.b1, mat4.c1, mat4.d1 ) );
+	matOut.SetRow( 1, IceMaths::HPoint( mat4.a2, mat4.b2, mat4.c2, mat4.d2 ) );
+	matOut.SetRow( 2, IceMaths::HPoint( mat4.a3, mat4.b3, mat4.c3, mat4.d3 ) );
+	matOut.SetRow( 3, IceMaths::HPoint( mat4.a4, mat4.b4, mat4.c4, mat4.d4 ) );
+	return matOut;
+}
+static Vector3f Convert( const IceMaths::Point & pt )
+{
+	return Vector3f( pt.x, pt.y, pt.z );
+}
+static IceMaths::Point Convert( const aiVector3D & pt )
+{
+	return IceMaths::Point( pt.x, pt.y, pt.z );
+}
+
+static Vector3f Convert( const modeldata::Vec3 & vec )
+{
+	return Vector3f( vec.x(), vec.y(), vec.z() );
+}
+
+static Vector3f Convert( const RecastIO::Vec3 & vec )
+{
+	return Vector3f( vec.x(), vec.y(), vec.z() );
+}
+
+IceMaths::Matrix4x4 Convert( const modeldata::Node & node )
+{
+	IceMaths::Matrix4x4 nodeXform;
+	nodeXform.Identity();
+	if ( node.has_transformation() )
+	{
+		const modeldata::Vec4 & r0 = node.transformation().row0();
+		const modeldata::Vec4 & r1 = node.transformation().row1();
+		const modeldata::Vec4 & r2 = node.transformation().row2();
+		const modeldata::Vec4 & r3 = node.transformation().row3();
+		nodeXform.SetRow( 0, IceMaths::HPoint( r0.x(), r0.y(), r0.z(), r0.w() ) );
+		nodeXform.SetRow( 1, IceMaths::HPoint( r1.x(), r1.y(), r1.z(), r1.w() ) );
+		nodeXform.SetRow( 2, IceMaths::HPoint( r2.x(), r2.y(), r2.z(), r2.w() ) );
+		nodeXform.SetRow( 3, IceMaths::HPoint( r3.x(), r3.y(), r3.z(), r3.w() ) );
+	}
+	return nodeXform;
+}
+
+void MarkDirtyTiles( const dtMeshTile * tile, void * userdata )
+{
+	PathPlannerRecast * sys = static_cast<PathPlannerRecast*>( userdata );
+	sys->MarkTileForBuilding( tile );
+}
+
+class BotAllocator : public MemoryAllocator
+{
+public:
+	virtual char * AllocateMemory( unsigned int numBytes )
+	{
+		return ( char *)malloc( numBytes );
+	}
+	virtual void FreeMemory( void * ptr )
+	{
+		free( ptr );
+	}
+} allocatorBot;
+
+//////////////////////////////////////////////////////////////////////////
+
+const EnumDef sPolyAreas [] =
+{
+	{ NAVAREA_GROUND, "ground" },
+	{ NAVAREA_WATER, "water" },
+	{ NAVAREA_MOVER, "mover" },
+	{ NAVAREA_REGION, "region" },	
+	{ NAVAREA_JUMP, "jump" },
+	{ NAVAREA_LADDER, "ladder" },
+	{ NAVAREA_TELEPORT, "teleport" },
+};
+const size_t sNumPolyAreas = sizeof( sPolyAreas ) / sizeof( sPolyAreas[ 0 ] );
+
+const EnumDef sPolyFlags [] =
+{
+	{ NAVFLAGS_WALK, "walk" },
+	{ NAVFLAGS_DISABLED, "disabled" },
+	{ NAVFLAGS_TEAM1_ONLY, "team1" },
+	{ NAVFLAGS_TEAM2_ONLY, "team2" },
+	{ NAVFLAGS_TEAM3_ONLY, "team3" },
+	{ NAVFLAGS_TEAM4_ONLY, "team4" },
+	{ NAVFLAGS_SWIM, "swim" },
+};
+const size_t sNumPolyFlags = sizeof( sPolyFlags ) / sizeof( sPolyFlags[ 0 ] );
+
+bool PolyAreaToString( size_t area, std::string & strOut )
+{
+	for ( size_t i = 0; i < sNumPolyAreas; ++i )
+	{
+		if ( sPolyAreas[ i ].mValue == area )
+		{
+			strOut = sPolyAreas[ i ].mName;
+			return true;
+		}
+	}
+	assert( 0 && "Unhandled PolyArea Type" );
+	return false;
+}
+
+bool StringToPolyArea( const std::string & name, size_t & areaOut )
+{
+	for ( size_t i = 0; i < sNumPolyAreas; ++i )
+	{
+		if ( name == sPolyAreas[ i ].mName )
+		{
+			areaOut = sPolyAreas[ i ].mValue;
+			return true;
+		}
+	}
+	assert( 0 && "Unknown PolyArea Type" );
+	return false;
+}
+
+bool PolyFlagsToString( size_t flags, std::string & strOut )
+{
+	strOut = "";
+
+	for ( size_t i = 0; i < sNumPolyFlags; ++i )
+	{
+		if ( ( flags & sPolyFlags[ i ].mValue ) != 0 )
+			strOut += va( "%s%s", strOut.empty() ? "" : ", ", sPolyFlags[ i ].mName );
+	}
+
+	return( flags == 0 || !strOut.empty() );
+}
+
+bool StringToPolyFlags( const std::string & name, size_t & flagsOut )
+{
+	flagsOut = 0;
+
+	StringVector tokens;
+	Utils::Tokenize( name, ",", tokens );
+	for ( size_t i = 0; i < tokens.size(); ++i )
+	{
+		for ( size_t j = 0; j < sNumPolyFlags; ++j )
+		{
+			if ( tokens[ i ] == sPolyFlags[ j ].mName )
+				flagsOut |= sPolyFlags[ j ].mValue;
+		}
+	}
+
+	return( flagsOut != 0 || name.empty() );
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+PathPlannerRecast::RecastSettings::RecastSettings()
+{
+	AgentHeightStand = 64.f;
+	AgentHeightCrouch = 32.f;
+	AgentRadius = 14.f;
+	AgentMaxClimb = 18.f;
+
+	WalkableSlopeAngle = 45.0f;
+
+	CellSize = 4.0f;
+	CellHeight = 4.0f;
+
+	EdgeMaxLen = 1000.0f;
+	MaxSimplificationError = 1.f;
+	TileSize = 128;
+	DetailSampleDist = 6.0f;
+	DetailSampleMaxError = 1.0f;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+Vector3f rcToLocal( const float * vec )
+{
+	return Vector3f( vec[ 0 ], vec[ 2 ], vec[ 1 ] );
+}
+
+Vector3f localToRc( const float * vec )
+{
+	return Vector3f( vec[ 0 ], vec[ 2 ], vec[ 1 ] );
+}
+
+struct DebugDraw : public duDebugDraw
+{
+	DebugDraw() : mVertCount( 0 ), mSizeHint( 1.0f )
+	{
+	}
+
+	virtual void depthMask( bool state )
+	{
+		// not supported
+	}
+
+	virtual void texture( bool state )
+	{
+		// not supported
+	}
+
+	virtual void begin( duDebugDrawPrimitives prim, float size = 1.0f )
+	{
+		mActivePrim = prim;
+		mSizeHint = size;
+		mVertCount = 0;
+	}
+
+	virtual void vertex( const float* pos, unsigned int color )
+	{
+		vertex( pos[ 0 ], pos[ 1 ], pos[ 2 ], color );
+	}
+
+	virtual void vertex( const float x, const float y, const float z, unsigned int color )
+	{
+		mVertCache[ mVertCount++ ] = Vector3f( x, z, y );
+
+		switch ( mActivePrim )
+		{
+			case DU_DRAW_POINTS:
+				if ( mVertCount == 1 )
+				{
+					int r, g, b, a;
+					duRGBASplit( color, r, g, b, a );
+
+					RenderBuffer::AddPoint( mVertCache[ 0 ], obColor( (obuint8)r, (obuint8)g, (obuint8)b, (obuint8)a ), mSizeHint );
+					mVertCount = 0;
+				}
+				break;
+			case DU_DRAW_LINES:
+				if ( mVertCount == 2 )
+				{
+					int r, g, b, a;
+					duRGBASplit( color, r, g, b, a );
+
+					RenderBuffer::AddLine( mVertCache[ 0 ], mVertCache[ 1 ], obColor( (obuint8)r, (obuint8)g, (obuint8)b, (obuint8)a ), mSizeHint );
+					mVertCount = 0;
+				}
+				break;
+			case DU_DRAW_TRIS:
+				if ( mVertCount == 3 )
+				{
+					int r, g, b, a;
+					duRGBASplit( color, r, g, b, a );
+
+					RenderBuffer::AddTri( mVertCache[ 0 ], mVertCache[ 1 ], mVertCache[ 2 ], obColor( (obuint8)r, (obuint8)g, (obuint8)b, (obuint8)a ) );
+					mVertCount = 0;
+				}
+				break;
+			case DU_DRAW_QUADS:
+				if ( mVertCount == 4 )
+				{
+					int r, g, b, a;
+					duRGBASplit( color, r, g, b, a );
+
+					RenderBuffer::AddQuad( mVertCache[ 0 ], mVertCache[ 1 ], mVertCache[ 2 ], mVertCache[ 3 ], obColor( (obuint8)r, (obuint8)g, (obuint8)b, (obuint8)a ) );
+					mVertCount = 0;
+				}
+				break;
+		}
+	}
+
+	virtual void vertex( const float* pos, unsigned int color, const float* uv )
+	{
+		vertex( pos[ 0 ], pos[ 1 ], pos[ 2 ], color );
+	}
+
+	virtual void vertex( const float x, const float y, const float z, unsigned int color, const float u, const float v )
+	{
+		// uvs not supported
+		vertex( x, y, z, color );
+	}
+
+	virtual void end()
+	{
+		mVertCount = 0;
+	}
+private:
+	duDebugDrawPrimitives	mActivePrim;
+	float					mSizeHint;
+	Vector3f				mVertCache[ 4 ];
+	int						mVertCount;
+} ddraw;
+
+float dtRandom()
+{
+	return Mathf::UnitRandom();
+}
+
+static const int MAX_LAYERS = 32;
+
+//////////////////////////////////////////////////////////////////////////
+
+struct RasterizationContext
+{
+	RasterizationContext()
+		: solid( NULL )
+		, triareas( NULL )
+		, lset( NULL )
+		, chf( NULL )
+		, cset( NULL )
+		, polymesh( NULL )
+		, meshdetail( NULL )
+	{
+	}
+
+	~RasterizationContext()
+	{
+		rcFreeHeightField( solid );
+		delete [] triareas;
+		rcFreeHeightfieldLayerSet( lset );
+		rcFreeCompactHeightfield( chf );
+		rcFreeContourSet( cset );
+		rcFreePolyMesh( polymesh );
+		rcFreePolyMeshDetail( meshdetail );
+	}
+
+	rcHeightfield			* solid;
+	unsigned char			* triareas;
+	rcHeightfieldLayerSet	* lset;
+	rcCompactHeightfield	* chf;
+	rcContourSet			* cset;
+	rcPolyMesh				* polymesh;
+	rcPolyMeshDetail		* meshdetail;
+};
+
+static bool gAsyncBuildRunning = true;
+
+void AsyncTileBuild( PathPlannerRecast * nav )
+{
+	while ( gAsyncBuildRunning )
+	{
+		PathPlannerRecast::TileRebuild buildTile;
+		if ( nav->AsyncGetTileRebuild( buildTile ) )
+		{
+			const int tx = buildTile.mX;
+			const int ty = buildTile.mY;
+
+			nav->RasterizeTileLayers( tx, ty );
+		}
+	}
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 PathPlannerRecast::PathPlannerRecast()
+	: mNavMesh( NULL )
+	, mCurrentTool( NULL )
+	, mCacheDb( NULL )
+	, mBuildBaseNav( false )
 {
-	m_PlannerFlags.SetFlag(NAV_VIEW);
-	gRecastPlanner = this;
+	mTileBuildQueue.reserve( 128 );
+	mModels.reserve( 2048 );
+	//m_PlannerFlags.SetFlag( NAV_VIEW );
+
+	mCollisionWorld = new btCollisionWorld();
+	//mCollisionWorld->setDebugDrawer();
+	mCollisionWorld->setBroadphase( new btDbvtBroadphase() );
 }
 
 PathPlannerRecast::~PathPlannerRecast()
 {
 	Shutdown();
-	gRecastPlanner = NULL;
 }
 
 int PathPlannerRecast::GetLatestFileVersion() const
@@ -215,1951 +438,1937 @@ int PathPlannerRecast::GetLatestFileVersion() const
 
 bool PathPlannerRecast::Init( System & system )
 {
-	RecastOptions.DrawSolidNodes = false;
-	RecastOptions.DrawOffset = 4.f;
-	RecastOptions.TimeShare = 0.01f;
-
-	RecastCfg.cs = 8.f;
-	RecastCfg.ch = 8.f;
-	RecastCfg.walkableSlopeAngle = 45;
-	RecastCfg.maxEdgeLen = 32;
-	RecastCfg.maxSimplificationError = 1.f;
-	RecastCfg.minRegionSize = 0;
-	RecastCfg.mergeRegionSize = 0;
-	RecastCfg.maxVertsPerPoly = 6;
-	RecastCfg.borderSize = 0;
-	RecastCfg.detailSampleDist = 6.f;
-	RecastCfg.detailSampleMaxError = 8.f;
-
-	RecastCfg.walkableHeight = (int)ceilf(AgentHeight / RecastCfg.ch);
-	RecastCfg.walkableClimb = (int)floorf(AgentMaxClimb / RecastCfg.ch);
-	RecastCfg.walkableRadius = (int)ceilf(AgentRadius / RecastCfg.cs);
-
 	InitCommands();
+
+	OpenCachedDatabase();
+
+	// subtract a thread to try and leave the current core free
+	int numBuildThreads = boost::thread::hardware_concurrency() - 1;
+	Options::GetValue( "Navigation", "TileBuildThreads", numBuildThreads );
+	if ( numBuildThreads < 1 )
+		numBuildThreads = 1;
+
+	for ( int i = 0; i < numBuildThreads; ++i )
+		mThreadGroup.add_thread( new boost::thread( AsyncTileBuild, this ) );
+
+	EngineFuncs::ConsoleMessage( va( "Created %d threads to rebuild navigation tiles", mThreadGroup.size() ) );
+
 	return true;
 }
 
-void PathPlannerRecast::RegisterNavFlag(const std::string &_name, const NavFlags &_bits)
+void PathPlannerRecast::OpenCachedDatabase()
+{
+	bool cacheToFile = true;
+	Options::GetValue( "Navigation", "CacheModelsToFile", cacheToFile );
+
+	fs::path filepath = FileSystem::GetNavFolder() / "_modelcache.db";	
+	if ( cacheToFile )
+	{
+		if ( CheckSqliteError( mCacheDb, sqlite3_open_v2( filepath.string().c_str(), &mCacheDb, SQLITE_OPEN_READWRITE, NULL ) ) == SQLITE_OK )
+		{
+			// opened existing database, see if we can purge some data
+			bool trimOutdatedModels = true;
+			if ( Options::GetValue( "Navigation", "TrimOutdatedModels", trimOutdatedModels ) && trimOutdatedModels )
+			{
+				char * errMsg = NULL;
+				sqlite3_exec( mCacheDb, va( "DELETE from modelCache WHERE (version!=%d)", VERSION_MODELCACHE ), 0, 0, &errMsg );
+			}
+			return;
+		}
+	}
+
+	// Need to create the database and the tables
+	if ( CheckSqliteError( mCacheDb, sqlite3_open_v2( cacheToFile ? filepath.string().c_str() : ":memory:", &mCacheDb, SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, NULL ) ) != SQLITE_OK )
+		return;
+
+	sqlite3_stmt * statement = NULL;
+	if ( SQLITE_OK == CheckSqliteError( mCacheDb, sqlite3_prepare_v2( mCacheDb, va( "CREATE TABLE modelCache (name TEXT PRIMARY KEY, crc INTEGER, fullSize INTEGER, modeldata BLOB, version INTEGER)" ), -1, &statement, NULL ) ) )
+	{
+		CheckSqliteError( mCacheDb, sqlite3_step( statement ) );
+		CheckSqliteError( mCacheDb, sqlite3_finalize( statement ) );
+	}
+}
+
+void PathPlannerRecast::RegisterScriptFunctions( gmMachine *a_machine )
 {
 }
 
-void PathPlannerRecast::RegisterScriptFunctions(gmMachine *a_machine)
+void PathPlannerRecast::MarkTileForBuilding( const Vector3f & pos )
 {
+	boost::lock_guard<boost::recursive_mutex> lock( mGuardBuildQueue );
+	mNavMesh->queryTiles( localToRc( pos ), localToRc( pos ), MarkDirtyTiles, this );
+}
+
+void PathPlannerRecast::MarkTileForBuilding( const int tx, const int ty )
+{
+	for ( size_t j = 0; j < mTileBuildQueue.size(); ++j )
+	{
+		if ( mTileBuildQueue[ j ].mX == tx && mTileBuildQueue[ j ].mY == ty )
+		{
+			return;
+		}
+	}
+	mTileBuildQueue.push_back( PathPlannerRecast::TileRebuild( tx, ty ) );
+}
+
+void PathPlannerRecast::MarkTileForBuilding( const dtMeshTile * tile )
+{
+	for ( size_t j = 0; j < mTileBuildQueue.size(); ++j )
+	{
+		if ( mTileBuildQueue[ j ].mX == tile->header->x &&
+			mTileBuildQueue[ j ].mY == tile->header->y )
+		{
+			return;
+		}
+	}
+	mTileBuildQueue.push_back( PathPlannerRecast::TileRebuild( tile->header->x, tile->header->y ) );
+}
+
+bool PathPlannerRecast::AsyncGetTileRebuild( TileRebuild & buildTile )
+{
+	boost::lock_guard<boost::recursive_mutex> lock( mGuardBuildQueue );
+	if ( mTileBuildQueue.size() > 0 )
+	{
+		buildTile = mTileBuildQueue.front();
+		mTileBuildQueue.erase( mTileBuildQueue.begin() );
+
+		EngineFuncs::ConsoleMessage( va( "AsyncTileBuild(%d,%d): %d tiles remaining", buildTile.mX, buildTile.mY, mTileBuildQueue.size() ) );
+		return true;
+	}
+	return false;
 }
 
 void PathPlannerRecast::Update( System & system )
 {
-	Prof(PathPlannerRecast);
+	Prof( PathPlannerRecast );
 
-	if(m_PlannerFlags.CheckFlag(NAV_VIEW))
+	if ( mCurrentTool )
 	{
-		for( int i = 0; i < buildContext.getLogCount(); ++i ) {
-			const char * logTxt = buildContext.getLogText( i );
-			EngineFuncs::ConsoleMessage(logTxt);
+		if ( !mCurrentTool->Update( this ) )
+			OB_DELETE( mCurrentTool );
+	}
+
+	UpdateModelState();
+
+	if ( mBuildBaseNav )
+	{
+		boost::lock_guard<boost::recursive_mutex> lock( mGuardBuildQueue );
+		if ( mTileBuildQueue.size() == 0 )
+		{
+			// This navmesh should be the 'world' model only
+			if ( Save( g_EngineFuncs->GetMapName() ) )
+				EngineFuncs::ConsoleMessage( "Saved Base Nav." );
+			else
+				EngineFuncs::ConsoleError( "ERROR Saving Base Nav." );
+
+			mBuildBaseNav = false;
 		}
-		buildContext.resetLog();
+	}
+
+	if ( m_PlannerFlags.CheckFlag( NAV_VIEW ) )
+	{
+		for ( int i = 0; i < mContext.getLogCount(); ++i )
+		{
+			const char * logTxt = mContext.getLogText( i );
+			EngineFuncs::ConsoleMessage( logTxt );
+		}
+		mContext.resetLog();
+		
+		for ( size_t i = 0; i < mExclusionZones.size(); ++i )
+			RenderBuffer::AddAABB( mExclusionZones[ i ], COLOR::RED );
+
+		RenderBuffer::AddAABB( mNavigationBounds, COLOR::MAGENTA );
+
+		for ( size_t i = 0; i < mOffMeshConnections.size(); ++i )
+			mOffMeshConnections[ i ].Render();
 
 		// surface probe
 		int contents = 0, surface = 0;
 		Vector3f vAimPt, vAimNormal;
-		if(Utils::GetLocalAimPoint(vAimPt, &vAimNormal, TR_MASK_FLOODFILL, &contents, &surface))
+		if ( Utils::GetLocalAimPoint( vAimPt, &vAimNormal, TR_MASK_FLOODFILLENT, &contents, &surface ) )
 		{
 			obColor clr = COLOR::WHITE;
-			if(surface & SURFACE_LADDER)
+
+			if ( surface & SURFACE_LADDER )
 			{
 				clr = COLOR::ORANGE;
 			}
-			RenderBuffer::AddLine(vAimPt, vAimPt + vAimNormal * 16.f, clr, IGame::GetDeltaTimeSecs()*2.f);
+			RenderBuffer::AddLine( vAimPt, vAimPt + vAimNormal * 16.f, clr );
+		}
+
+		if ( mNavMesh != NULL )
+		{
+			Vector3f
+				vMins = localToRc( mNavigationBounds.Min ),
+				vMaxs = localToRc( mNavigationBounds.Max );
+
+			int gw = 0, gh = 0;
+			rcCalcGridSize( vMins, vMaxs, mSettings.CellSize, &gw, &gh );
+			const int ts = mSettings.TileSize;
+			const int tw = ( gw + ts - 1 ) / ts;
+			const int th = ( gh + ts - 1 ) / ts;
+			const float s = mSettings.TileSize * mSettings.CellSize;
+
+			duDebugDrawGridXZ( &ddraw,
+				vMins[ 0 ],
+				vAimPt.Z(),
+				vMins[ 2 ],
+				tw, th,
+				s,
+				duRGBA( 0, 0, 0, 64 ),
+				1.0f );
+		}
+
+		size_t aimedModelIndex, triangleIndex;
+		Vector3f aimedPos, aimedNormal;
+		if ( GetAimedAtModel( aimedModelIndex, triangleIndex, aimedPos, aimedNormal ) )
+		{
+			const ModelCache & mdl = mModels[ aimedModelIndex ];
+			
+			static bool renderMdl = false;
+			if ( renderMdl )
+				mdl.mModel->Render( mdl.mTransform, Vector3f( 0.0f, 0.0f, 0.0f ) );
+			mdl.mModel->RenderAxis( mdl.mTransform );
+
+			Vector3f v0, v1, v2;
+
+			size_t materialIndex;
+			mdl.mModel->GetTriangle( mdl.mTransform, triangleIndex, v0, v1, v2, materialIndex );
+			RenderBuffer::AddTri( v0, v1, v2, ( mdl.mDisabled ? COLOR::RED : COLOR::GREEN ).fade( 128 ) );
+
+			const Material & mtl = mdl.mModel->GetMaterial( materialIndex );
+
+			std::string contentStr = "cnt: ", surfaceStr = "srf: ";
+
+			if ( mtl.mContents & CONT_SOLID )
+				contentStr += " sld";
+			if ( mtl.mContents & CONT_WATER )
+				contentStr += " wtr";
+			if ( mtl.mContents & CONT_SLIME )
+				contentStr += " slm";
+			if ( mtl.mContents & CONT_FOG )
+				contentStr += " fog";
+			if ( mtl.mContents & CONT_MOVER )
+				contentStr += " mvr";
+			if ( mtl.mContents & CONT_TRIGGER )
+				contentStr += " trg";
+			if ( mtl.mContents & CONT_LAVA )
+				contentStr += " lav";
+			if ( mtl.mContents & CONT_LADDER )
+				contentStr += " ldr";
+			if ( mtl.mContents & CONT_TELEPORTER )
+				contentStr += " tlp";
+			if ( mtl.mContents & CONT_MOVABLE )
+				contentStr += " mov";
+			if ( mtl.mContents & CONT_PLYRCLIP )
+				contentStr += " pclp";
+
+			if ( mtl.mSurface & SURFACE_NONSOLID )
+				surfaceStr += " nonsol";
+			if ( mtl.mSurface & SURFACE_SLICK )
+				surfaceStr += " slick";
+			if ( mtl.mSurface & SURFACE_LADDER )
+				surfaceStr += " ldr";
+			if ( mtl.mSurface & SURFACE_NOFALLDAMAGE )
+				surfaceStr += " nofalldam";
+			if ( mtl.mSurface & SURFACE_SKY )
+				surfaceStr += " sky";
+			if ( mtl.mSurface & SURFACE_IGNORE )
+				surfaceStr += " ignore";
+			if ( mtl.mSurface & SURFACE_NOFOOTSTEP )
+				surfaceStr += " nofootstep";
+			if ( mtl.mSurface & SURFACE_NODRAW )
+				surfaceStr += " nodraw";
+
+			const Vector3f normalOffset = aimedPos + aimedNormal * 24.0f;
+			RenderBuffer::AddLine( aimedPos, aimedPos + vAimNormal * 16.0f, COLOR::BLUE );
+			RenderBuffer::AddString3d( normalOffset, COLOR::CYAN, va( "%d %s\n%s\n%s\n%s",
+				aimedModelIndex, mtl.mName.c_str(), ModelStateName( mdl.mActiveState ), contentStr.c_str(), surfaceStr.c_str() ) );
+
+			const Box3f obb = mdl.mModel->GetWorldOBB( mdl.mTransform );
+			const AxisAlignedBox3f & aabb = ComputeAABB( mdl.mModel->GetWorldOBB( mdl.mTransform ) );
+			RenderBuffer::AddOBB( obb, COLOR::MAGENTA );
+			RenderBuffer::AddAABB( aabb, COLOR::YELLOW );
+		}
+
+		static bool showNonWorld = false;
+		if ( showNonWorld )
+		{
+			static float zOffset = 1.0f;
+			
+			static bool showWorld = false;
+			for ( size_t i = showWorld?0:1; i < mModels.size(); ++i )
+			{
+				BitFlag64 entFlags;
+				if ( InterfaceFuncs::GetEntityFlags( mModels[ i ].mEntity, entFlags ) )
+					mModels[ i ].mModel->Render( mModels[ i ].mTransform, Vector3f( 0.0f, 0.0f, zOffset ), entFlags.CheckFlag( ENT_FLAG_COLLIDABLE ) ? COLOR::GREEN.fade( 100 ) : COLOR::ORANGE.fade( 100 ) );
+			}
+		}
+
+		Vector3f eyePos;
+		if ( Utils::GetLocalEyePosition( eyePos ) )
+		{
+			static float renderRadius = 1024.0f;
+			if ( mNavMesh != NULL )
+				duDebugDrawNavMeshInRadius( &ddraw, *mNavMesh, DU_DRAWNAVMESH_OFFMESHCONS, localToRc( eyePos ), renderRadius );
+		}
+	}
+
+	{
+		// only modifications to the nav mesh at the end of the frame so the rebuilding
+		// can happen asynchronously, but the navmesh usage and updating is done in
+		// the main thread
+		boost::lock_guard<boost::recursive_mutex> lock( mGuardAddTile );
+
+		for ( size_t i = 0; i < mAddTileQueue.size(); ++i )
+		{
+			const TileAddData & tile = mAddTileQueue[ i ];
+
+			mNavMesh->removeTile( mNavMesh->getTileRefAt( tile.mX, tile.mY, 0 ), 0, 0 );
+
+			if ( dtStatusFailed( mNavMesh->addTile( tile.mNavData, tile.mNavDataSize, DT_TILE_FREE_DATA, 0, 0 ) ) )
+			{
+				dtFree( tile.mNavData );
+			}
+		}
+
+		mAddTileQueue.resize( 0 );
+	}
+}
+
+void PathPlannerRecast::UpdateModelState()
+{
+	// update the state of models for dynamic navigation rebuiling
+	for ( size_t i = 0; i < mModels.size(); ++i )
+	{
+		ModelCache & mdl = mModels[ i ];
+
+		// default non collidable, unless the game tells us we should be
+		ModelState currentState = StateNonCollidable;
+
+		if ( mdl.mActiveState == StateMarkedForDelete )
+			currentState = StateMarkedForDelete;
+		else if ( mdl.mDisabled )
+			currentState = StateNonCollidable;
+		else if ( mdl.mBaseStaticMesh )
+			currentState = StateCollidable;
+		else
+		{
+			BitFlag64 entFlags;
+			if ( mdl.mEntity.IsValid() && InterfaceFuncs::GetEntityFlags( mdl.mEntity, entFlags ) )
+				currentState = entFlags.CheckFlag( ENT_FLAG_COLLIDABLE ) ? StateCollidable : StateNonCollidable;
+		}
+
+		mdl.mTransform.UpdateStableTime();
+
+		const AxisAlignedBox3f oldBounds = ComputeAABB( mdl.mModel->GetWorldOBB( mdl.mTransform ) );
+
+		// Is it moving?
+		if ( mdl.mEntity.IsValid() )
+		{
+			const bool checkStable = mdl.mActiveState != StateUnknown;
+
+			Vector3f origin = Vector3f::ZERO;
+			if ( EngineFuncs::EntityPosition( mdl.mEntity, origin ) )
+				mdl.mTransform.SetPosition( origin, checkStable );
+
+			Vector3f vFwd, vRight, vUp;
+			if ( EngineFuncs::EntityOrientation( mdl.mEntity, vFwd, vRight, vUp ) )
+				mdl.mTransform.SetOrientation( Matrix3f( vFwd, -vRight, vUp, true ), checkStable );
+		}
+
+		if ( mdl.mTransform.GetStableTime() < 1.0f )
+			currentState = StateMoved;
+
+		// when building the base navigation, all non world models should stay unknown
+		// so they aren't used in the tile building.
+		if ( mBuildBaseNav && !mdl.mBaseStaticMesh )
+			currentState = StateUnknown;
+
+		if ( mdl.mActiveState != currentState || currentState == StateMarkedForDelete )
+		{
+			if ( currentState == StateMarkedForDelete )
+			{
+				EngineFuncs::ConsoleMessage( va( "Deleting model model %d", i ) );
+			}
+			else if ( mdl.mEntity.IsValid() )
+			{
+				std::string entName = EngineFuncs::EntityName( mdl.mEntity, "" );
+				EngineFuncs::ConsoleMessage( va( "Entity '%s', model %d change state %s->%s", entName.c_str(), i, ModelStateName( mdl.mActiveState ), ModelStateName( currentState ) ) );
+			}
+
+			mdl.mActiveState = currentState;
+
+			// which tiles does this model touch? we need to queue them for rebuilding
+			const AxisAlignedBox3f bounds = ComputeAABB( mdl.mModel->GetWorldOBB( mdl.mTransform ) );
+
+			// we dirty both the source and destination tiles to account for large movements, teleportations, 
+			boost::lock_guard<boost::recursive_mutex> lock( mGuardBuildQueue );
+			mNavMesh->queryTiles( localToRc( oldBounds.Min ), localToRc( oldBounds.Max ), MarkDirtyTiles, this );
+			mNavMesh->queryTiles( localToRc( bounds.Min ), localToRc( bounds.Max ), MarkDirtyTiles, this );
+		}
+
+		if ( currentState == StateMarkedForDelete )
+		{
+			mdl.mModel.reset();
+			mModels.erase( mModels.begin() + i );
+			--i;
+			continue;
 		}
 	}
 }
 
 void PathPlannerRecast::Shutdown()
 {
+	gAsyncBuildRunning = false;
+	//mThreadGroup.interrupt_all();
+	mThreadGroup.join_all();
+
 	Unload();
+
+	sqlite3_close_v2( mCacheDb );
+	mCacheDb = NULL;
 }
 
-bool PathPlannerRecast::Load(const std::string &_mapname, bool _dl)
+bool PathPlannerRecast::Load( const std::string &_mapname, bool _dl )
 {
 	Unload();
 
-	std::string waypointName	= _mapname + ".nav";
-	std::string navPath	= std::string("nav/") + waypointName;
-	std::string error;
+	const std::string navName = _mapname + _GetNavFileExtension();
+	const std::string navPathBinary = std::string( "nav/" ) + navName;
+	const std::string navPathText = std::string( "nav/" ) + navName + "_txt";
 
-	dtFreeNavMesh( DetourNavmesh );
-	DetourNavmesh = NULL;
+	bool success = true;
 
-	File f;
-	if(f.OpenForRead(navPath.c_str(),File::Binary))
+	try
 	{
-		obuint32 MagicNum = 0;
-		if(!f.ReadInt32(MagicNum) || MagicNum != NAVMESH_MAGIC)
-			goto errorLabel;
+		RecastIO::NavigationMesh ioNavmesh;
 
-		obuint32 Version = 0;
-		if(!f.ReadInt32(Version) || Version != NAVMESH_VERSION)
-			goto errorLabel;
+		std::string dataIn;
 
-		obuint32 NumTiles = 0;
-		if(!f.ReadInt32(NumTiles))
-			goto errorLabel;
-
-		dtNavMeshParams params;
-		memset( &params, 0, sizeof( params ) );
-		if(!f.Read(&params,sizeof(params), 1))
-			goto errorLabel;
-
-		DetourNavmesh = dtAllocNavMesh();
-		if( !DetourNavmesh->init( &params ) )
-			goto errorLabel;
-
-		for(obuint32 t = 0; t < NumTiles; ++t)
+		File fileBin, fileTxt;
+		if ( !fileBin.OpenForRead( navPathBinary.c_str(), File::Binary ) ||
+			!fileBin.ReadWholeFile( dataIn ) ||
+			!ioNavmesh.ParseFromString( dataIn ) )
 		{
-			obuint32 tileRef = 0, dataSize = 0;
-			if(!f.ReadInt32( tileRef ))
-				goto errorLabel;
+			dataIn.clear();
 
-			if(!f.ReadInt32( dataSize ))
-				goto errorLabel;
+			// try to fall back to a text formatted file
+			if ( !fileTxt.OpenForRead( navPathText.c_str(), File::Text ) ||
+				 !fileTxt.ReadWholeFile( dataIn ) ||
+				 !google::protobuf::TextFormat::ParseFromString( dataIn, &ioNavmesh ) )
+			{
+				throw std::exception( va( "PathPlannerRecast:: Load failed %s", navPathBinary.c_str() ) );
+			}
+		}
 
-			unsigned char* data = (unsigned char*)dtAlloc( dataSize, DT_ALLOC_PERM );
-			if(!f.Read( data, dataSize, 1 ))
-				goto errorLabel;
+		LoadWorldModel();
+		InitNavmesh();
+		
+		const int fileVersion = ioNavmesh.version();
+		fileVersion; // todo: check this?
 
-			DetourNavmesh->addTile(data, dataSize, DT_TILE_FREE_DATA, tileRef);
+		mSettings.AgentHeightStand = ioNavmesh.navmeshparams().agentheightstand();
+		mSettings.AgentHeightCrouch = ioNavmesh.navmeshparams().agentheightcrouch();
+		mSettings.AgentRadius = ioNavmesh.navmeshparams().agentradius();
+		mSettings.AgentMaxClimb = ioNavmesh.navmeshparams().agentclimb();
+		mSettings.WalkableSlopeAngle = ioNavmesh.navmeshparams().walkslopeangle();
+		mSettings.CellSize = ioNavmesh.navmeshparams().cellsize();
+		mSettings.CellHeight = ioNavmesh.navmeshparams().cellheight();
+		mSettings.EdgeMaxLen = ioNavmesh.navmeshparams().edgemaxlength();
+		mSettings.MaxSimplificationError = ioNavmesh.navmeshparams().edgemaxerror();
+		mSettings.TileSize = ioNavmesh.navmeshparams().tilesize();
+		mSettings.DetailSampleDist = ioNavmesh.navmeshparams().detailsampledist();
+		mSettings.DetailSampleMaxError = ioNavmesh.navmeshparams().detailsamplemaxerr();
+
+		for ( int i = 0; i < ioNavmesh.exclusionzone_size(); ++i )
+		{
+			AxisAlignedBox3f bounds;
+			bounds.Min = Convert( ioNavmesh.exclusionzone( i ).mins() );
+			bounds.Max = Convert( ioNavmesh.exclusionzone( i ).maxs() );
+			mExclusionZones.push_back( bounds );
+		}
+
+		for ( int i = 0; i < ioNavmesh.offmeshconnection_size(); ++i )
+		{
+			const RecastIO::OffMeshConnection & ioConn = ioNavmesh.offmeshconnection( i );
+
+			OffMeshConnection conn;
+			conn.mEntry = Convert( ioConn.entrypos() );
+			conn.mNumPts = std::min( ioConn.intermediatepos_size(), (int)OffMeshConnection::MaxPoints );
+			for ( size_t p = 0; p < conn.mNumPts; ++p )
+				conn.mIntermediates[ p ] = Convert( ioConn.intermediatepos( p ) );
+			conn.mExit = Convert( ioConn.exitpos() );
+			conn.mRadius = ioConn.radius();
+			conn.mAreaType = (NavArea)ioConn.areatype();
+			conn.mFlags = (NavAreaFlags)ioConn.flags();
+			conn.mBiDir = ioConn.bidirectional();
+			mOffMeshConnections.push_back( conn );
+		}
+
+		for ( int i = 0; i < ioNavmesh.submodelinfo_size(); ++i )
+		{
+			const RecastIO::SubModel & submdl = ioNavmesh.submodelinfo( i );
+
+			for ( size_t m = 0; m < mModels.size(); ++m )
+			{				
+				if ( mModels[ m ].mSubModel == submdl.submodelid() )
+				{
+					if ( submdl.has_disabled() )
+						mModels[ m ].mDisabled = submdl.disabled();
+					if ( submdl.has_mover() )
+						mModels[ m ].mMover = submdl.mover();
+					if ( submdl.has_nonsolid() )
+						mModels[ m ].mNonSolid = submdl.nonsolid();
+				}
+			}
+		}
+
+		for ( int i = 0; i < ioNavmesh.tiles_size(); ++i )
+		{
+			const RecastIO::Tile & tile = ioNavmesh.tiles( i );
+			const std::string & tileCompressedData = tile.compresseddata();
+
+			unsigned char * decompressedBuffer = new unsigned char[ tile.uncompressedsize() ];
+			const int sizeD = fastlz_decompress( tileCompressedData.c_str(), tileCompressedData.size(), decompressedBuffer, tile.uncompressedsize() );
+			if ( sizeD == tile.uncompressedsize() )
+			{
+				mNavMesh->addTile( decompressedBuffer, sizeD, DT_TILE_FREE_DATA, 0, 0 );
+			}
+			else
+			{
+				EngineFuncs::ConsoleError( "Invalid Tile Data(compressed size mismatch)" );
+			}
+		}
+	}
+	catch ( const std::exception & ex )
+	{
+		EngineFuncs::ConsoleError( va( "PathPlannerRecast:: Load failed %s", ex.what() ) );
+		success = false;
+
+		LoadWorldModel();
+
+		// no matter if we loaded data or not we need to load the world geometry
+		// and initialize the navmesh
+		InitNavmesh();
+	}
+	return success;
+}
+
+bool PathPlannerRecast::Save( const std::string &_mapname )
+{
+	if ( mNavMesh != NULL )
+	{
+		const std::string navName = _mapname + _GetNavFileExtension();
+		const std::string navPathBinary = std::string( "nav/" ) + navName;
+		const std::string navPathText = std::string( "nav/" ) + navName + "_txt";
+
+		RecastIO::NavigationMesh ioNavmesh;
+		ioNavmesh.set_version( 1 );
+
+		ioNavmesh.mutable_navmeshparams()->set_agentheightstand( mSettings.AgentHeightStand );
+		ioNavmesh.mutable_navmeshparams()->set_agentheightcrouch( mSettings.AgentHeightCrouch );
+		ioNavmesh.mutable_navmeshparams()->set_agentradius( mSettings.AgentRadius );
+		ioNavmesh.mutable_navmeshparams()->set_agentclimb( mSettings.AgentMaxClimb );
+		ioNavmesh.mutable_navmeshparams()->set_walkslopeangle( mSettings.WalkableSlopeAngle );
+		ioNavmesh.mutable_navmeshparams()->set_cellsize( mSettings.CellSize );
+		ioNavmesh.mutable_navmeshparams()->set_cellheight( mSettings.CellHeight );
+		ioNavmesh.mutable_navmeshparams()->set_edgemaxlength( mSettings.EdgeMaxLen );
+		ioNavmesh.mutable_navmeshparams()->set_edgemaxerror( mSettings.MaxSimplificationError );
+		ioNavmesh.mutable_navmeshparams()->set_tilesize( mSettings.TileSize );
+		ioNavmesh.mutable_navmeshparams()->set_detailsampledist( mSettings.DetailSampleDist );
+		ioNavmesh.mutable_navmeshparams()->set_detailsamplemaxerr( mSettings.DetailSampleMaxError );
+
+		for ( size_t i = 0; i < mExclusionZones.size(); ++i )
+		{
+			RecastIO::AxisAlignedBounds * bnds = ioNavmesh.add_exclusionzone();
+			bnds->mutable_mins()->set_x( mExclusionZones[ i ].Min[ 0 ] );
+			bnds->mutable_mins()->set_y( mExclusionZones[ i ].Min[ 1 ] );
+			bnds->mutable_mins()->set_z( mExclusionZones[ i ].Min[ 2 ] );
+			bnds->mutable_maxs()->set_x( mExclusionZones[ i ].Max[ 0 ] );
+			bnds->mutable_maxs()->set_y( mExclusionZones[ i ].Max[ 1 ] );
+			bnds->mutable_maxs()->set_z( mExclusionZones[ i ].Max[ 2 ] );
+		}
+
+		for ( size_t i = 0; i < mOffMeshConnections.size(); ++i )
+		{
+			RecastIO::OffMeshConnection * conn = ioNavmesh.add_offmeshconnection();
+			conn->mutable_entrypos()->set_x( mOffMeshConnections[ i ].mEntry[ 0 ] );
+			conn->mutable_entrypos()->set_y( mOffMeshConnections[ i ].mEntry[ 1 ] );
+			conn->mutable_entrypos()->set_z( mOffMeshConnections[ i ].mEntry[ 2 ] );
+			conn->mutable_exitpos()->set_x( mOffMeshConnections[ i ].mExit[ 0 ] );
+			conn->mutable_exitpos()->set_y( mOffMeshConnections[ i ].mExit[ 1 ] );
+			conn->mutable_exitpos()->set_z( mOffMeshConnections[ i ].mExit[ 2 ] );
+			conn->set_radius( mOffMeshConnections[ i ].mRadius );
+			conn->set_areatype( mOffMeshConnections[ i ].mAreaType );
+			conn->set_flags( mOffMeshConnections[ i ].mFlags );
+
+			for ( size_t p = 0; p < mOffMeshConnections[ i ].mNumPts; ++p )
+			{
+				RecastIO::Vec3 * ioPos = conn->add_intermediatepos();
+				ioPos->set_x( mOffMeshConnections[ i ].mIntermediates[ p ].X() );
+				ioPos->set_y( mOffMeshConnections[ i ].mIntermediates[ p ].Y() );
+				ioPos->set_z( mOffMeshConnections[ i ].mIntermediates[ p ].Z() );
+			}
+			if ( mOffMeshConnections[ i ].mBiDir != conn->bidirectional() )
+				conn->set_bidirectional( true );
+		}
+
+		for ( int i = 0; i < mNavMesh->getMaxTiles(); ++i )
+		{
+			const dtMeshTile* tile = ( (const dtNavMesh *)mNavMesh )->getTile( i );
+			if ( tile && tile->header && tile->dataSize )
+			{
+				// compress the tile data
+				const size_t bufferSize = tile->dataSize + (size_t)( tile->dataSize * 0.1 );
+				boost::shared_array<char> compressBuffer( new char[ bufferSize ] );
+				const int sizeCompressed = fastlz_compress_level( 2, tile->data, tile->dataSize, compressBuffer.get() );
+
+				RecastIO::Tile * ioTile = ioNavmesh.add_tiles();
+				ioTile->set_uncompressedsize( tile->dataSize );
+				ioTile->set_compresseddata( compressBuffer.get(), sizeCompressed );
+			}
+		}
+
+		for ( size_t m = 0; m < mModels.size(); ++m )
+		{
+			if ( mModels[ m ].mSubModel != -1 )
+			{
+				RecastIO::SubModel * submdl = ioNavmesh.add_submodelinfo();
+				submdl->set_submodelid( mModels[ m ].mSubModel );
+				submdl->set_disabled( mModels[ m ].mDisabled );
+				submdl->set_mover( mModels[ m ].mMover );
+				submdl->set_nonsolid( mModels[ m ].mNonSolid );
+				//ioNavmesh.add_disabledsubmodels( mModels[ m ].mSubModel );
+			}
+		}
+
+		try
+		{
+			/*File outBinary;
+			if ( outBinary.OpenForWrite( navPathBinary.c_str(), File::Binary, false ) )
+			{
+				outBinary.Write( fbbl.GetBufferPointer(), fbbl.GetSize() );
+				outBinary.Close();
+			}*/
+
+			std::string dataOut;
+
+			// binary file
+			if ( ioNavmesh.SerializeToString( &dataOut ) )
+			{
+				File outBinary;
+				if ( outBinary.OpenForWrite( navPathBinary.c_str(), File::Binary, false ) )
+				{
+					outBinary.Write( dataOut.c_str(), dataOut.length() );
+					outBinary.Close();
+				}
+			}
+
+			if ( google::protobuf::TextFormat::PrintToString( ioNavmesh, &dataOut ) )
+			{
+				File outText;
+				if ( outText.OpenForWrite( navPathText.c_str(), File::Text, false ) )
+				{
+					outText.Write( dataOut.c_str(), dataOut.length() );
+					outText.Close();
+				}
+			}
+		}
+		catch ( const std::exception & ex )
+		{
+			EngineFuncs::ConsoleError( va( "PathPlannerRecast:: Save failed %s", ex.what() ) );
+			return false;
 		}
 		return true;
-	}
-
-errorLabel:
-	dtFreeNavMesh( DetourNavmesh );
-	DetourNavmesh = NULL;
-	return false;
-}
-
-bool PathPlannerRecast::Save(const std::string &_mapname)
-{
-	std::string waypointName	= _mapname + ".nav";
-	std::string navPath	= std::string("nav/") + waypointName;
-
-	const dtNavMesh * SaveMesh = DetourNavmesh;
-
-	if(SaveMesh)
-	{
-		File f;
-		if(f.OpenForWrite(navPath.c_str(),File::Binary))
-		{
-			f.WriteInt32(NAVMESH_MAGIC);
-			f.WriteInt32(NAVMESH_VERSION);
-
-			int numTiles = 0;
-			for(int t = 0; t < SaveMesh->getMaxTiles(); ++t)
-			{
-				const dtMeshTile * tile = SaveMesh->getTile(t);
-				if( !tile || !tile->header || !tile->dataSize ) {
-					continue;
-				}
-				numTiles++;
-			}
-			f.WriteInt32(numTiles);
-
-			const dtNavMeshParams * params = SaveMesh->getParams();
-			f.Write( params, sizeof( dtNavMeshParams ), 1);
-
-			// Store tiles.
-			for(int t = 0; t < SaveMesh->getMaxTiles(); ++t)
-			{
-				const dtMeshTile* tile = SaveMesh->getTile(t);
-				if( !tile || !tile->header || !tile->dataSize ) {
-					continue;
-				}
-
-				dtTileRef tileRef = SaveMesh->getTileRef( tile );
-				const int tileDataSize = tile->dataSize;
-
-				f.WriteInt32( tileRef );
-				f.WriteInt32( tileDataSize );
-				f.Write( tile->data, tile->dataSize, 1 );
-			}
-			f.Close();
-			return true;
-		}
 	}
 	return false;
 }
 
 bool PathPlannerRecast::IsReady() const
 {
-	return DetourNavmesh && DetourNavmesh->getMaxTiles() > 0;
+	return mNavMesh != NULL;
 }
 
-bool PathPlannerRecast::GetNavFlagByName(const std::string &_flagname, NavFlags &_flag) const
+bool PathPlannerRecast::GetNavFlagByName( const std::string &_flagname, NavFlags &_flag ) const
 {
 	_flag = 0;
 	return false;
 }
 
-Vector3f PathPlannerRecast::GetRandomDestination(Client *_client, const Vector3f &_start, const NavFlags _team)
-{
-	Vector3f dest = _start;
-	if(DetourNavmesh && DetourNavmesh->getMaxTiles() > 0)
-	{
-		//DetourNavmesh->getRandomPolyPosition(rand(),dest);
-	}
-	return Vector3f(dest.X(),dest.Z(),dest.Y());
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-int PathPlannerRecast::PlanPathToNearest(Client *_client, const Vector3f &_start, const Vector3List &_goals, const NavFlags &_team)
-{
-	DestinationVector dst;
-	for(obuint32 i = 0; i < _goals.size(); ++i)
-		dst.push_back(Destination(_goals[i],32.f));
-	return PlanPathToNearest(_client,_start,dst,_team);
-}
-
-static int NumPathPoints = 0;
-
-enum { MaxPathPoints = 1024 };
-static float StraightPath[MaxPathPoints*3];
-static int StraightPathPoints = 0;
-static unsigned char StraightPathFlags[MaxPathPoints];
-static dtPolyRef StraightPathPolys[MaxPathPoints];
-
-int PathPlannerRecast::PlanPathToNearest(Client *_client, const Vector3f &_start, const DestinationVector &_goals, const NavFlags &_team)
-{
-	//if(DetourNavmesh)
-	//{
-	//	if(CurrentNavMeshType == NavMeshStatic)
-	//	{
-	//		dtPolyRef PathPolys[MaxPathPoints];
-
-	//		Vector3f startPos, destPos;
-	//		dtQueryFilter query;
-	//		Vector3f extents(512.f,512.f,512.f);
-	//		const dtPolyRef startPoly = DetourNavmesh->findNearestPoly(ToRecast(_start), extents, &query, startPos);
-	//		const dtPolyRef destPoly = DetourNavmesh->findNearestPoly(ToRecast(_goals[0].m_Position), extents, &query, destPos);
-
-	//		// TODO: search for all goals
-	//		NumPathPoints = DetourNavmesh->findPath(
-	//			startPoly,destPoly,
-	//			startPos,
-	//			destPos,
-	//			&query,
-	//			PathPolys, MaxPathPoints);
-
-	//		StraightPathPoints = NumPathPoints > 0 ? DetourNavmesh->findStraightPath(
-	//			startPos,
-	//			destPos,
-	//			PathPolys,
-	//			NumPathPoints,
-	//			StraightPath,
-	//			StraightPathFlags,
-	//			StraightPathPolys,
-	//			MaxPathPoints) : 0;
-
-	//		return NumPathPoints > 0 ? 0 : -1;
-	//	}
-	//	else if(CurrentNavMeshType == NavMeshTiled)
-	//	{
-	//		//dtTilePolyRef PathPolys[MaxPathPoints];
-
-	//		//Vector3f extents(512.f,512.f,512.f);
-	//		//const dtTilePolyRef startPoly = DetourTiledNavmesh.findNearestPoly(ToRecast(_start), extents);
-	//		//const dtTilePolyRef destPoly = DetourTiledNavmesh.findNearestPoly(ToRecast(_goals[0].m_Position), extents);
-
-	//		//// TODO: search for all goals
-	//		//NumPathPoints = DetourTiledNavmesh.findPath(
-	//		//	startPoly,destPoly,
-	//		//	ToRecast(_start),
-	//		//	ToRecast(_goals[0].m_Position),
-	//		//	PathPolys, MaxPathPoints);
-
-	//		//StraightPathPoints = NumPathPoints > 0 ? DetourTiledNavmesh.findStraightPath(
-	//		//	ToRecast(_start),
-	//		//	ToRecast(_goals[0].m_Position),
-	//		//	PathPolys,
-	//		//	NumPathPoints,
-	//		//	StraightPath,
-	//		//	MaxPathPoints) : 0;
-	//		return NumPathPoints > 0 ? 0 : -1;
-	//	}
-	//}
-	return -1;
-}
-
-void PathPlannerRecast::PlanPathToGoal(Client *_client, const Vector3f &_start, const Vector3f &_goal, const NavFlags _team)
-{
-	DestinationVector dst;
-	dst.push_back(Destination(_goal,32.f));
-	PlanPathToNearest(_client,_start,dst,_team);
-}
-
-bool PathPlannerRecast::IsDone() const
-{
-	return true;
-}
-bool PathPlannerRecast::FoundGoal() const
-{
-	//return g_PathFinder.FoundGoal();
-	return NumPathPoints > 0;
-}
-
 void PathPlannerRecast::Unload()
 {
-	FloodEntityBounds.clear();
-	RecastOpenList.clear();
+	OB_DELETE( mCurrentTool );
 
-	RecastSolidList.clear();
+	dtFreeNavMesh( mNavMesh );
+	mNavMesh = NULL;
 
-	BuildData.clear();
+	mExclusionZones.resize( 0 );
 
-	rcFreeHeightField( FloodHeightField );
-	FloodHeightField = NULL;
-	dtFreeNavMesh( DetourNavmesh );
-	DetourNavmesh = NULL;
+	mOffMeshConnections.resize( 0 );
+
+	for ( size_t i = 0; i < mModels.size(); ++i )
+		mModels[ i ].Free();
+
+	mModels.resize( 0 );
 }
 
 void PathPlannerRecast::RegisterGameGoals()
 {
 }
 
-void PathPlannerRecast::GetPath(Path &_path)
+//////////////////////////////////////////////////////////////////////////
+
+void PathPlannerRecast::InitNavmesh()
 {
-	for(int i = 0; i < StraightPathPoints; ++i)
-	{
-		_path.AddPt(
-			Vector3f(
-			StraightPath[i*3],
-			StraightPath[i*3+2],
-			StraightPath[i*3+1]),
-			32.f);
-	}
+	Vector3f
+		vMins = localToRc( mNavigationBounds.Min ),
+		vMaxs = localToRc( mNavigationBounds.Max );
+
+	dtFreeNavMesh( mNavMesh );
+	mNavMesh = dtAllocNavMesh();
+
+	dtNavMeshParams parms;
+	rcVcopy( parms.orig, vMins );
+	parms.tileWidth = mSettings.TileSize * mSettings.CellSize;
+	parms.tileHeight = mSettings.TileSize * mSettings.CellSize;
+	parms.maxTiles = (int)( parms.tileWidth * parms.tileHeight * 2.0 );
+	parms.maxPolys = 16384;
+
+	mNavMesh->init( &parms );
+
+	for ( size_t i = 0; i < RecastPathInterface::sInterfaces.size(); ++i )
+		RecastPathInterface::sInterfaces[ i ]->ReInit();
 }
 
 //////////////////////////////////////////////////////////////////////////
-
-static int GetFloodTraceMask(const Vector3f &v, const AABB &voxel)
-{
-	/*for(BoundsList::const_iterator cIt = FloodEntityBounds.begin();
-	cIt != FloodEntityBounds.end();
-	++cIt)
-	{
-	AABB voxelWorld = voxel;
-	voxelWorld.Translate(v);
-	if((*cIt).Intersects(voxelWorld))
-	return TR_MASK_FLOODFILLENT;
-	}*/
-	return TR_MASK_FLOODFILL;
-}
-
-//////////////////////////////////////////////////////////////////////////
-int PathPlannerRecast::Process_FloodFill()
-{
-	Prof(Process_FloodFill);
-
-	switch(gFloodStatus)
-	{
-	case Process_Init:
-		{
-			RecastStats = RecastStats_t();
-
-			RecastSolidList.clear();
-			RecastOpenList.clear();
-
-			rcFreeHeightField( FloodHeightField );
-			FloodHeightField = NULL;
-			dtFreeNavMesh( DetourNavmesh );
-			DetourNavmesh = NULL;
-
-			FloodHeightField = rcAllocHeightfield();
-			DetourNavmesh = dtAllocNavMesh();
-
-			buildContext.enableLog( true );
-			buildContext.resetLog();
-			buildContext.enableTimer( true );
-			buildContext.resetTimers();
-
-			AABB mapSize;
-			g_EngineFuncs->GetMapExtents(mapSize);
-
-			// convert to recast space
-			RecastCfg.bmin[0] = mapSize.m_Mins[0];
-			RecastCfg.bmin[1] = -4096.f;//mapSize.m_Mins[2];
-			RecastCfg.bmin[2] = mapSize.m_Mins[1];
-			RecastCfg.bmax[0] = mapSize.m_Maxs[0];
-			RecastCfg.bmax[1] = 4096.f;//mapSize.m_Maxs[2];
-			RecastCfg.bmax[2] = mapSize.m_Maxs[1];
-
-			rcCalcGridSize(
-				RecastCfg.bmin,
-				RecastCfg.bmax,
-				RecastCfg.cs,
-				&RecastCfg.width,
-				&RecastCfg.height);
-
-			rcCreateHeightfield(
-				&buildContext,
-				*FloodHeightField,
-				RecastCfg.width,
-				RecastCfg.height,
-				RecastCfg.bmin,
-				RecastCfg.bmax,
-				RecastCfg.cs,
-				RecastCfg.ch);
-
-			//////////////////////////////////////////////////////////////////////////
-			// Look for special entity types that we might need to treat differently
-			const int iMaxFeatures = 1024;
-			AutoNavFeature features[iMaxFeatures] = {};
-			int iNumFeatures = g_EngineFuncs->GetAutoNavFeatures(features, iMaxFeatures);
-			for(int i = 0; i < iNumFeatures; ++i)
-			{
-				Vector3f vPos(features[i].m_Position);
-				Vector3f vFace(features[i].m_Facing);
-				Vector3f vTarget(features[i].m_TargetPosition);
-
-				AddFloodSeed(vPos);
-				if(vPos != vTarget)
-				{
-					AddFloodSeed(vTarget);
-					//pFeature->ConnectTo(pTarget);
-				}
-
-				if(features[i].m_ObstacleEntity)
-				{
-					AddFloodEntityBounds(features[i].m_Bounds);
-
-					//RenderBuffer::AddOBB(features[i].m_Bounds,COLOR::MAGENTA,30.f);
-					continue;
-				}
-
-				OffMeshConnections[OffMeshConnectionNum*2] = ToRecast(vPos);
-				OffMeshConnections[OffMeshConnectionNum*2+1] = ToRecast(vTarget);
-				OffMeshConnectionRadius[OffMeshConnectionNum] = AgentRadius;
-				OffMeshConnectionDirection[OffMeshConnectionNum] = features[i].m_BiDirectional;
-				OffMeshConnectionArea[OffMeshConnectionNum] = NAV_AREA_GROUND;
-				OffMeshConnectionFlags[OffMeshConnectionNum] = 0;
-
-				switch (features[i].m_Type)
-				{
-				case ENT_CLASS_GENERIC_TELEPORTER:
-					OffMeshConnectionFlags[OffMeshConnectionNum] = NAV_FLAG_WALK;
-					break;
-				case ENT_CLASS_GENERIC_LADDER:
-					OffMeshConnectionFlags[OffMeshConnectionNum] = NAV_FLAG_LADDER;
-					break;
-					/*case ENT_CLASS_GENERIC_LIFT:
-					case ENT_CLASS_GENERIC_MOVER:
-					case ENT_CLASS_GENERIC_JUMPPAD:
-					break;*/
-				default:
-					OffMeshConnectionFlags[OffMeshConnectionNum] = 0;
-					break;
-				}
-
-				if(OffMeshConnectionFlags[OffMeshConnectionNum])
-				{
-					++OffMeshConnectionNum;
-				}
-			}
-
-			for(obuint32 i = 0; i < ladders.size(); ++i)
-			{
-				OffMeshConnections[OffMeshConnectionNum*2] = ToRecast(ladders[i].bottom);
-				OffMeshConnections[OffMeshConnectionNum*2+1] = ToRecast(ladders[i].top);
-				OffMeshConnectionRadius[OffMeshConnectionNum] = AgentRadius;
-				OffMeshConnectionDirection[OffMeshConnectionNum] = 0/*features[i].m_BiDirectional*/;
-				OffMeshConnectionArea[OffMeshConnectionNum] = NAV_AREA_LADDER;
-				OffMeshConnectionFlags[OffMeshConnectionNum] = NAV_FLAG_LADDER;
-				++OffMeshConnectionNum;
-			}
-
-			RecastStats.FloodTime = 0.0;
-			gFloodStatus = Process_Flood;
-			break;
-		}
-	case Process_Flood:
-		{
-			Timer tme;
-
-			const float walkableThr = cosf(RecastCfg.walkableSlopeAngle/180.0f*(float)Mathf::PI);
-
-			AABB voxel;
-			voxel.m_Mins[0] = -(RecastCfg.cs * 0.5f);
-			voxel.m_Mins[1] = -(RecastCfg.cs * 0.5f);
-			voxel.m_Mins[2] = -(RecastCfg.cs * 0.5f);
-			voxel.m_Maxs[0] =  (RecastCfg.cs * 0.5f);
-			voxel.m_Maxs[1] =  (RecastCfg.cs * 0.5f);
-			voxel.m_Maxs[2] =  (RecastCfg.cs * 0.5f);
-
-			const float timeshare = RecastOptions.TimeShare;
-			const bool infiniteTime = timeshare == 100.f;
-
-			bool DidSomething = false;
-			while(!RecastOpenList.empty())
-			{
-				DidSomething = true;
-				const double elapsed = tme.GetElapsedSeconds();
-				if(!infiniteTime && elapsed > timeshare)
-				{
-					RecastStats.FloodTime += elapsed;
-					return Function_InProgress;
-				}
-
-				const RecastNode currentNode = RecastOpenList.front();
-				RecastOpenList.pop_front();
-
-				if(!infiniteTime)
-					RecastExploredList.push_back(currentNode);
-				RecastStats.ExploredCells++;
-
-				const int TRACE_MASK = GetFloodTraceMask(currentNode.Pos,voxel);
-
-				// find the floor
-				obTraceResult trFloor;
-				EngineFuncs::TraceLine(
-					trFloor,
-					currentNode.Pos + Vector3f::UNIT_Z * RecastCfg.ch,
-					currentNode.Pos + -Vector3f::UNIT_Z * 1024.f,
-					&voxel,
-					TRACE_MASK,
-					-1,
-					False);
-
-				if(trFloor.m_Surface & SURFACE_LADDER) {
-					RenderBuffer::AddLine(
-						Vector3f(trFloor.m_Endpos),
-						Vector3f(trFloor.m_Endpos)+Vector3f(trFloor.m_Normal),
-						COLOR::ORANGE,
-						20.f);
-				}
-
-				// didnt hit anything? skip it
-				if(trFloor.m_Fraction==1.f || trFloor.m_Endpos[2] < RecastCfg.bmin[1])
-					continue;
-
-				// climb the walls
-				if(trFloor.m_StartSolid)
-				{
-					RecastSolidList.push_back(currentNode);
-					RecastStats.BorderCells++;
-
-					if(RecastOptions.ClimbWalls)
-					{
-						obTraceResult trWall;
-						Vector3f vWall = currentNode.Pos;
-
-						do
-						{
-							rcRasterizeVertex( &buildContext,
-								ToRecast( vWall ),
-								RC_NULL_AREA,
-								*FloodHeightField);
-
-							vWall.Z() += RecastCfg.ch;
-							EngineFuncs::TraceLine(
-								trFloor,
-								vWall,
-								vWall + -Vector3f::UNIT_Z * 1024.f,
-								&voxel,
-								TRACE_MASK,
-								-1,
-								False);
-
-							if(!infiniteTime)
-							{
-								RecastNode rcn = { vWall };
-								RecastExploredList.push_back(rcn);
-							}
-							RecastStats.ExploredCells++;
-						} while(trFloor.m_StartSolid && (vWall.Z() - currentNode.Pos.Z()) <= 512.f);
-
-						// if we found a non solid, add it to the open list to explore further.
-						if(!trFloor.m_StartSolid)
-						{
-							RecastNode expand;
-							expand.Pos = vWall;
-							RecastOpenList.push_back(expand);
-						}
-					}
-					continue;
-				}
-
-				obuint8 area = RC_NULL_AREA;
-				if(trFloor.m_Normal[2] > walkableThr)
-					area |= (obuint8)RC_WALKABLE_AREA;
-				//if(trFloor.m_Contents & CONT_WATER)
-
-				const Vector3f floorPos(trFloor.m_Endpos);
-				if( !rcRasterizeVertex( &buildContext, ToRecast(floorPos), area, *FloodHeightField ) )
-					continue;
-
-				// get the ceiling height
-				static bool doCeiling = false;
-				if(doCeiling)
-				{
-					obTraceResult trCeiling;
-					EngineFuncs::TraceLine(
-						trCeiling,
-						currentNode.Pos,
-						currentNode.Pos + Vector3f::UNIT_Z * 1024.f,
-						&voxel,
-						TRACE_MASK,
-						-1,
-						False);
-					if(trCeiling.m_Fraction < 1.f)
-					{
-						const Vector3f ceilPos(trCeiling.m_Endpos);
-						rcRasterizeVertex(&buildContext,ToRecast(ceilPos),RC_NULL_AREA,*FloodHeightField);
-					}
-				}
-
-				// explore neighbors
-				const Vector3f Expand[4] =
-				{
-					Vector3f(1.0f, 0.0f, 0.0f),
-					Vector3f(0.0f, 1.0f, 0.0f),
-					Vector3f(-1.0f, 0.0f, 0.0f),
-					Vector3f(0.0f, -1.0f, 0.0f),
-				};
-
-				for(int d = 0; d < 4; ++d)
-				{
-					RecastNode expand;
-					expand.Pos = floorPos + Expand[d] * RecastCfg.cs;
-					expand.Pos.Z() += RecastCfg.walkableClimb;
-					RecastOpenList.push_back(expand);
-				}
-			}
-			if(DidSomething)
-				RecastStats.FloodTime += tme.GetElapsedSeconds();
-			gFloodStatus = Process_FloodFinished;
-			break;
-		}
-	case Process_FloodFinished:
-		{
-			if(!RecastOpenList.empty())
-				gFloodStatus = Process_Flood;
-			break;
-		}
-	case Process_BuildNavMesh:
-		{
-			BuildData.clear();
-			switch(CurrentNavMeshType)
-			{
-			case NavMeshStatic:
-				gFloodStatus = Process_BuildStaticMesh;
-				break;
-			case NavMeshTiled:
-				gFloodStatus = Process_BuildTiledMesh;
-				break;
-			default:
-				break;
-			}
-			break;
-		}
-	case Process_BuildStaticMesh:
-		{
-			dtFreeNavMesh( DetourNavmesh );
-			DetourNavmesh = NULL;
-
-			DetourNavmesh = dtAllocNavMesh();
-
-			BuildData.push_back(rcBuildData());
-			rcBuildData &build = BuildData.back();
-			build.Alloc();
-			// TODO: rcMarkWalkableTriangles
-			// TODO: rcFilterWalkableLowHeightSpans
-			// TODO: rcFilterLedgeSpans
-			// TODO: rcFilterWalkableBorderSpans
-
-			if(RecastOptions.FilterLedges)
-			{
-				rcFilterLedgeSpans(
-					&buildContext,
-					RecastCfg.walkableHeight,
-					RecastCfg.walkableClimb,
-					*FloodHeightField);
-			}
-
-			if(RecastOptions.FilterLowHeight)
-			{
-				rcFilterWalkableLowHeightSpans(
-					&buildContext,
-					RecastCfg.walkableHeight,
-					*FloodHeightField);
-			}
-
-			rcFilterLowHangingWalkableObstacles( &buildContext,
-				RecastCfg.walkableClimb,
-				*FloodHeightField );
-
-			rcFilterLedgeSpans( &buildContext,
-				RecastCfg.walkableHeight,
-				RecastCfg.walkableClimb,
-				*FloodHeightField );
-
-			rcFilterWalkableLowHeightSpans( &buildContext,
-				RecastCfg.walkableHeight,
-				*FloodHeightField );
-
-			if ( DUMP_OBJS ) {
-				const char * mapName = g_EngineFuncs->GetMapName();
-				rcFileIO obj, mat;
-				const char * objFileName = va( "%s_walkhf.obj", mapName );
-				const char * matFileName = va( "%s_walkhf.mat", mapName );
-				if ( obj.openForWrite( objFileName ) && mat.openForWrite( matFileName )) {
-					duDebugDrawDump dmp( &obj, &mat, matFileName );
-					duDebugDrawHeightfieldWalkable( &dmp, *FloodHeightField );
-				}
-			}
-
-			if(!rcBuildCompactHeightfield(
-				&buildContext,
-				RecastCfg.walkableHeight,
-				RecastCfg.walkableClimb,
-				*FloodHeightField,
-				*build.Chf))
-			{
-				gFloodStatus = Process_FinishedNavMesh;
-				break;
-			}
-
-			if(!rcBuildDistanceField(&buildContext,*build.Chf))
-			{
-				gFloodStatus = Process_FinishedNavMesh;
-				break;
-			}
-
-			if ( DUMP_OBJS ) {
-				const char * mapName = g_EngineFuncs->GetMapName();
-				rcFileIO obj, mat;
-				const char * objFileName = va( "%s_disthf.obj", mapName );
-				const char * matFileName = va( "%s_disthf.mat", mapName );
-				if ( obj.openForWrite( objFileName ) && mat.openForWrite( matFileName )) {
-					duDebugDrawDump dmp( &obj, &mat, matFileName );
-					duDebugDrawCompactHeightfieldDistance( &dmp, *build.Chf );
-				}
-			}
-
-			if(!rcBuildRegions(&buildContext,
-				*build.Chf,
-				RecastCfg.borderSize,
-				RecastCfg.minRegionSize,
-				RecastCfg.mergeRegionSize))
-			{
-				gFloodStatus = Process_FinishedNavMesh;
-				break;
-			}
-
-			if(!rcBuildContours(&buildContext,
-				*build.Chf,
-				RecastCfg.maxSimplificationError,
-				RecastCfg.maxEdgeLen,
-				*build.Contour))
-			{
-				gFloodStatus = Process_FinishedNavMesh;
-				break;
-			}
-
-			if(!rcBuildPolyMesh(&buildContext,
-				*build.Contour,
-				RecastCfg.maxVertsPerPoly,
-				*build.PolyMesh))
-			{
-				gFloodStatus = Process_FinishedNavMesh;
-				break;
-			}
-
-			if ( DUMP_OBJS ) {
-				rcFileIO obj;
-				if ( obj.openForWrite( va( "%s_pm.obj", g_EngineFuncs->GetMapName() ) ) )
-					duDumpPolyMeshToObj( *build.PolyMesh, &obj );
-			}
-
-			if(!rcBuildPolyMeshDetail(&buildContext,
-				*build.PolyMesh,
-				*build.Chf,
-				RecastCfg.detailSampleDist,
-				RecastCfg.detailSampleMaxError,
-				*build.PolyMeshDetail))
-			{
-				gFloodStatus = Process_FinishedNavMesh;
-				break;
-			}
-
-			if ( DUMP_OBJS ) {
-				rcFileIO obj;
-				if ( obj.openForWrite( va( "%s_pmd.obj", g_EngineFuncs->GetMapName() ) ) )
-					duDumpPolyMeshDetailToObj( *build.PolyMeshDetail, &obj );
-			}
-
-			dtNavMeshCreateParams params;
-			memset(&params, 0, sizeof(params));
-			params.cs = RecastCfg.cs;
-			params.ch = RecastCfg.ch;
-			params.verts =  build.PolyMesh->verts;
-			params.vertCount =  build.PolyMesh->nverts;
-			params.polys =  build.PolyMesh->polys;
-			params.polyAreas =  build.PolyMesh->areas;
-			params.polyFlags =  build.PolyMesh->flags;
-			params.polyCount =  build.PolyMesh->npolys;
-			params.nvp =  build.PolyMesh->nvp;
-			params.detailMeshes = build.PolyMeshDetail->meshes;
-			params.detailVerts = build.PolyMeshDetail->verts;
-			params.detailVertsCount = build.PolyMeshDetail->nverts;
-			params.detailTris = build.PolyMeshDetail->tris;
-			params.detailTriCount = build.PolyMeshDetail->ntris;
-			params.offMeshConVerts = (float*)OffMeshConnections;
-			params.offMeshConRad = OffMeshConnectionRadius;
-			params.offMeshConDir = OffMeshConnectionDirection;
-			params.offMeshConAreas = OffMeshConnectionArea;
-			params.offMeshConFlags = OffMeshConnectionFlags;
-			params.offMeshConCount = OffMeshConnectionNum;
-			params.walkableHeight = ceilf(AgentHeight / params.ch);
-			params.walkableClimb = floorf(AgentMaxClimb / params.ch);
-			params.walkableRadius = ceilf(AgentRadius / params.cs);
-
-			rcVcopy(params.bmin, build.PolyMesh->bmin);
-			rcVcopy(params.bmax, build.PolyMesh->bmax);
-
-			unsigned char* navData = 0;
-			int navDataSize = 0;
-			if(!dtCreateNavMeshData(&params, &navData, &navDataSize))
-			{
-				buildContext.log( RC_LOG_ERROR, "Could not build Detour NavMesh." );
-				gFloodStatus = Process_FinishedNavMesh;
-				break;
-			}
-
-			if (!DetourNavmesh->init(navData, navDataSize, DT_TILE_FREE_DATA))
-			{
-				delete [] navData;
-				buildContext.log( RC_LOG_ERROR, "Could not init Detour NavMesh." );
-				gFloodStatus = Process_FinishedNavMesh;
-				break;
-			}
-
-			EngineFuncs::ConsoleMessage("Navigation Mesh Generation.");
-			/*EngineFuncs::ConsoleMessage("Heightfield Memory: %s",
-			Utils::FormatByteString(FloodHeightField->getMemUsed()).c_str());
-			EngineFuncs::ConsoleMessage("Compact Heightfield Memory: %s",
-			Utils::FormatByteString(build.Chf->getMemUsed()).c_str());*/
-
-			EngineFuncs::ConsoleMessage("Navigation Mesh Generated.");
-			EngineFuncs::ConsoleMessage(va("Size: %s",Utils::FormatByteString(navDataSize).c_str()));
-			//EngineFuncs::ConsoleMessage("# Polygons: %d",DetourNavmesh.getPolyCount());
-			//EngineFuncs::ConsoleMessage("# Vertices: %d",DetourNavmesh.getVertexCount());
-			gFloodStatus = Process_FinishedNavMesh;
-			break;
-		}
-	case Process_BuildTiledMesh:
-		{
-			//DetourNavmesh.clear();
-
-			//static float tileSize = 256.f, portalHeight = 512.f;
-			//if (!DetourNavmesh.init(RecastCfg.bmin, tileSize, portalHeight))
-			//{
-			//	if (rcGetLog())
-			//		rcGetLog()->log(RC_LOG_ERROR, "Could not init Detour Tiled NavMesh");
-			//	gFloodStatus = Process_FinishedNavMesh;
-			//	break;
-			//}
-
-			//rcConfig tileCfg = RecastCfg;
-			//tileCfg.borderSize += RecastCfg.walkableRadius * 2 + 2;
-			//tileCfg.width = tileCfg.tileSize + tileCfg.borderSize*2;
-			//tileCfg.height = tileCfg.tileSize + tileCfg.borderSize*2;
-
-			//static int buildTiles = 5;
-			//const int ts = (int)DetourTiledNavmesh.getTileSize();
-			//const int tw = (int)(FloodHeightField.width * FloodHeightField.cs) / ts;
-			//const int th = (int)(FloodHeightField.height * FloodHeightField.cs) / ts;
-
-			//int numBuilt = 0;
-			//for(int x = 0; x < tw; ++x)
-			//{
-			//	for(int y = 0; y < th; ++y)
-			//	{
-			//		BuildData.push_back(rcBuildData());
-			//		rcBuildData &build = BuildData.back();
-
-			//		// grab a piece of the global map
-			//		float mins[3] =
-			//		{
-			//			FloodHeightField.bmin[0]+x*ts,
-			//			FloodHeightField.bmin[1],
-			//			FloodHeightField.bmin[2]+y*ts
-			//		};
-			//		float maxs[3] =
-			//		{
-			//			mins[0] + ts,
-			//			FloodHeightField.bmax[1],
-			//			mins[2] + ts
-			//		};
-
-			//		mins[0] -= tileCfg.borderSize*tileCfg.cs;
-			//		mins[2] -= tileCfg.borderSize*tileCfg.cs;
-			//		maxs[0] += tileCfg.borderSize*tileCfg.cs;
-			//		maxs[2] += tileCfg.borderSize*tileCfg.cs;
-
-			//		rcHeightfield Tilehf;
-			//		rcGetHeightfieldSubRegion(FloodHeightField,Tilehf,mins,maxs);
-
-			//		if(!rcBuildCompactHeightfield(
-			//			tileCfg.walkableHeight,
-			//			tileCfg.walkableClimb,
-			//			RC_WALKABLE,
-			//			Tilehf,
-			//			build.Chf))
-			//		{
-			//			gFloodStatus = Process_FinishedNavMesh;
-			//			break;
-			//		}
-			//
-			//		//////////////////////////////////////////////////////////////////////////
-			//
-			//		if(!rcBuildDistanceField(build.Chf))
-			//		{
-			//			gFloodStatus = Process_FinishedNavMesh;
-			//			break;
-			//		}
-
-			//		if(!rcBuildRegions(build.Chf,
-			//			tileCfg.walkableRadius,
-			//			tileCfg.borderSize,
-			//			tileCfg.minRegionSize,
-			//			tileCfg.mergeRegionSize))
-			//		{
-			//			gFloodStatus = Process_FinishedNavMesh;
-			//			break;
-			//		}
-
-			//		if(!rcBuildContours(build.Chf,
-			//			tileCfg.maxSimplificationError,
-			//			tileCfg.maxEdgeLen,
-			//			build.Contour))
-			//		{
-			//			gFloodStatus = Process_FinishedNavMesh;
-			//			break;
-			//		}
-
-			//		if(build.Contour.nconts==0)
-			//		{
-			//			if (rcGetLog())
-			//				rcGetLog()->log(RC_LOG_WARNING, "rcBuildContours: no contours created(%d,%d).",x,y);
-			//			continue;
-			//		}
-
-			//		if(!rcBuildPolyMesh(build.Contour,
-			//			tileCfg.maxVertsPerPoly,
-			//			build.PolyMesh))
-			//		{
-			//			gFloodStatus = Process_FinishedNavMesh;
-			//			break;
-			//		}
-
-			//		if(!rcBuildPolyMeshDetail(build.PolyMesh,
-			//			build.Chf,
-			//			tileCfg.detailSampleDist,
-			//			tileCfg.detailSampleMaxError,
-			//			build.PolyMeshDetail))
-			//		{
-			//			gFloodStatus = Process_FinishedNavMesh;
-			//			break;
-			//		}
-			//		//////////////////////////////////////////////////////////////////////////
-
-			//		unsigned char *navData = 0;
-			//		int navDataSize = 0;
-			//		if (!dtCreateNavMeshTileData(
-			//			build.PolyMesh.verts,
-			//			build.PolyMesh.nverts,
-			//			build.PolyMesh.polys,
-			//			build.PolyMesh.npolys,
-			//			build.PolyMesh.nvp,
-			//			build.PolyMeshDetail.meshes,
-			//			build.PolyMeshDetail.verts,
-			//			build.PolyMeshDetail.nverts,
-			//			build.PolyMeshDetail.tris,
-			//			build.PolyMeshDetail.ntris,
-			//			build.Chf.bmin,
-			//			build.Chf.bmax,
-			//			tileCfg.cs,
-			//			tileCfg.ch,
-			//			ts,
-			//			tileCfg.walkableClimb,
-			//			&navData,
-			//			&navDataSize))
-			//		{
-			//			if (rcGetLog())
-			//				rcGetLog()->log(RC_LOG_ERROR, "Could not build Detour tiles.");
-			//			gFloodStatus = Process_FinishedNavMesh;
-			//			break;
-			//		}
-
-			//		if(!DetourTiledNavmesh.addTileAt(x,y,navData,navDataSize,true))
-			//		{
-			//			if (rcGetLog())
-			//				rcGetLog()->log(RC_LOG_ERROR, "addTileAt failed.");
-			//			gFloodStatus = Process_FinishedNavMesh;
-			//			break;
-			//		}
-
-			//		++numBuilt;
-			//		if(numBuilt > buildTiles)
-			//		{
-			//			gFloodStatus = Process_FinishedNavMesh;
-			//			return Function_InProgress;
-			//		}
-			//	}
-			//}
-
-			gFloodStatus = Process_FinishedNavMesh;
-			break;
-		}
-	case Process_FinishedNavMesh:
-		{
-			//gDDraw->ClearCache();
-			gFloodStatus = Process_FloodFinished;
-			break;
-		}
-		/*case Process_FinishedNavMesh:
-		{
-		gDDraw->ClearCache();
-
-		RecastOpenList.clear();
-		RecastSolidList.clear();
-
-		gFloodStatus = Process_Init;
-		return Function_Finished;
-		break;
-		}*/
-	}
-	return Function_InProgress;
-}
-
-void PathPlannerRecast::AddFloodSeed(const Vector3f &_vec)
-{
-	RecastNode n = { _vec };
-	RecastOpenList.push_back(n);
-	//EngineFuncs::ConsoleMessage("Added Flood Fill Start");
-}
-
-void PathPlannerRecast::AddFloodEntityBounds(const AABB &_bnds)
-{
-	FloodEntityBounds.push_back(_bnds);
-	//EngineFuncs::ConsoleMessage("Added Flood Entity Bounds");
-}
-
-void PathPlannerRecast::FloodFill()
-{
-	if( System::mInstance->mGame->RemoveUpdateFunction("Recast_FloodFill") )
-		return;
-
-	gFloodStatus = Process_Init;
-
-	FunctorPtr f(new ObjFunctor<PathPlannerRecast>(this, &PathPlannerRecast::Process_FloodFill));
-	System::mInstance->mGame->AddUpdateFunction("Recast_FloodFill", f);
-}
 
 void PathPlannerRecast::BuildNav()
 {
-	gFloodStatus = Process_BuildNavMesh;
-}
+	InitNavmesh();
 
-//bool PathPlannerRecast::DoesSectorAlreadyExist(const NavSector &_ns)
-//{
-//	Vector3f vAvg = Utils::AveragePoint(_ns.m_Boundary);
-//
-//	for(obuint32 s = 0; s < m_NavSectors.size(); ++s)
-//	{
-//		Vector3f vSecAvg = Utils::AveragePoint(m_NavSectors[s].m_Boundary);
-//		if(Length(vAvg, vSecAvg) < Mathf::EPSILON)
-//			return true;
-//	}
-//	return false;
-//}
+	rcConfig cfg;
+	BuildConfig( cfg );
+
+	int gw = 0, gh = 0;
+	rcCalcGridSize( cfg.bmin, cfg.bmax, mSettings.CellSize, &gw, &gh );
+	const int ts = mSettings.TileSize;
+	const int tw = ( gw + ts - 1 ) / ts;
+	const int th = ( gh + ts - 1 ) / ts;
+
+	// prevent the worker threads from changing anything
+	boost::lock_guard<boost::recursive_mutex> lock( mGuardBuildQueue );
+
+	// clear any pending tile rebuilds
+	mTileBuildQueue.resize( 0 );
+
+	mBuildBaseNav = true;
+
+	for ( int y = 0; y < th; ++y )
+	{
+		for ( int x = 0; x < tw; ++x )
+		{
+			MarkTileForBuilding( x, y );
+		}
+	}
+
+	// mark all but the world model(0) as unknown so they won't be used in the rebuild process
+	for ( size_t i = 1; i < mModels.size(); ++i )
+		mModels[ i ].mActiveState = StateUnknown;
+}
 
 //////////////////////////////////////////////////////////////////////////
 
-bool PathPlannerRecast::GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name)
+void PathPlannerRecast::BuildConfig( rcConfig & cfg )
+{
+	memset( &cfg, 0, sizeof( cfg ) );
+	cfg.cs = mSettings.CellSize;
+	cfg.ch = mSettings.CellHeight;
+	cfg.walkableSlopeAngle = mSettings.WalkableSlopeAngle;
+	cfg.walkableHeight = (int)ceilf( mSettings.AgentHeightStand / cfg.ch );
+	cfg.walkableClimb = (int)floorf( mSettings.AgentMaxClimb / cfg.ch );
+	cfg.walkableRadius = (int)ceilf( mSettings.AgentRadius / cfg.cs );
+	cfg.maxEdgeLen = (int)( mSettings.EdgeMaxLen / mSettings.CellSize );
+	cfg.maxSimplificationError = mSettings.MaxSimplificationError;
+	cfg.minRegionArea = rcSqr<int>( 8 ); // Note: area = size*size
+	cfg.mergeRegionArea = rcSqr<int>( 20 );	// Note: area = size*size
+	cfg.maxVertsPerPoly = DT_VERTS_PER_POLYGON;
+	cfg.tileSize = mSettings.TileSize;
+	cfg.borderSize = cfg.walkableRadius + 3; // Reserve enough padding.
+	cfg.width = cfg.tileSize + cfg.borderSize * 2;
+	cfg.height = cfg.tileSize + cfg.borderSize * 2;
+	cfg.detailSampleDist = mSettings.DetailSampleDist < 0.9f ? 0 : mSettings.CellSize * mSettings.DetailSampleDist;
+	cfg.detailSampleMaxError = cfg.ch * mSettings.DetailSampleMaxError;
+
+	Vector3f
+		vMins = localToRc( mNavigationBounds.Min ),
+		vMaxs = localToRc( mNavigationBounds.Max );
+
+	rcVcopy( cfg.bmin, vMins );
+	rcVcopy( cfg.bmax, vMaxs );
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+void PathPlannerRecast::BuildNavTile()
+{
+	if ( mNavMesh == NULL )
+		InitNavmesh();
+
+	Vector3f aimPos;
+	if ( Utils::GetLocalAimPoint( aimPos ) )
+	{
+		aimPos = localToRc( aimPos );
+
+		int tileX = 0, tileY = 0;
+		mNavMesh->calcTileLoc( aimPos, &tileX, &tileY );
+
+		MarkTileForBuilding( tileX, tileY );
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
+{
+	RasterizationContext rc;
+
+	rcConfig cfg;
+	BuildConfig( cfg );
+
+	// Tile bounds.
+	const float tcs = cfg.tileSize * cfg.cs;
+
+	rcConfig tcfg;
+	memcpy( &tcfg, &cfg, sizeof( tcfg ) );
+
+	tcfg.bmin[ 0 ] = cfg.bmin[ 0 ] + tx*tcs;
+	tcfg.bmin[ 1 ] = cfg.bmin[ 1 ];
+	tcfg.bmin[ 2 ] = cfg.bmin[ 2 ] + ty*tcs;
+	tcfg.bmax[ 0 ] = cfg.bmin[ 0 ] + ( tx + 1 )*tcs;
+	tcfg.bmax[ 1 ] = cfg.bmax[ 1 ];
+	tcfg.bmax[ 2 ] = cfg.bmin[ 2 ] + ( ty + 1 )*tcs;
+
+	// border size
+	tcfg.bmin[ 0 ] -= tcfg.borderSize * tcfg.cs;
+	tcfg.bmin[ 2 ] -= tcfg.borderSize * tcfg.cs;
+	tcfg.bmax[ 0 ] += tcfg.borderSize * tcfg.cs;
+	tcfg.bmax[ 2 ] += tcfg.borderSize * tcfg.cs;
+
+	// Allocate voxel heightfield where we rasterize our input data to.
+	rc.solid = rcAllocHeightfield();
+	if ( !rc.solid )
+	{
+		mContext.log( RC_LOG_ERROR, "buildNavigation: Out of memory 'solid'." );
+		return;
+	}
+
+	if ( !rcCreateHeightfield( &mContext, *rc.solid, tcfg.width, tcfg.height, tcfg.bmin, tcfg.bmax, tcfg.cs, tcfg.ch ) )
+	{
+		mContext.log( RC_LOG_ERROR, "buildNavigation: Could not create solid heightfield." );
+		return;
+	}
+		
+	size_t tileTriCount = 0;
+
+	for ( size_t m = 0; m < mModels.size(); ++m )
+	{
+		const ModelCache & model = mModels[ m ];
+		
+		// skip models not currently active
+		switch ( mModels[ m ].mActiveState )
+		{
+			case StateCollidable:
+				break;
+			case StateUnknown:
+			default:
+				continue;
+		}
+
+		// accounted for in 2nd pass later
+		if ( model.mNonSolid )
+			continue;
+
+		// todo: collect only relevant triangles
+		//model.mModel->CollideAABB();
+
+		// for now use all triangles for testing
+		for ( size_t t = 0; t < model.mModel->GetNumTris(); ++t )
+		{
+			size_t materialIndex;
+			Vector3f verts[ 3 ];
+			model.mModel->GetTriangle( model.mTransform, t, verts[ 0 ], verts[ 1 ], verts[ 2 ], materialIndex );
+			const Material & mat = model.mModel->GetMaterial( materialIndex );
+
+			if ( mat.mSurface & ( SURFACE_NONSOLID | SURFACE_IGNORE | SURFACE_SKY ) )
+				continue;
+
+			NavArea areaType = NAVAREA_GROUND;
+#if(0)
+			if ( mat.mContents & CONT_WATER )
+				continue; // skip to process later as an open region
+			if ( model.mEntityCategory.CheckFlag( ENT_CAT_TRIGGER ) )
+				continue; // skip to process later as an open region
+			if ( model.mEntityCategory.CheckFlag( ENT_CAT_MOVER ) )
+				continue; // skip to process later as an open region
+#endif
+
+			// everything else we can process as solid
+
+			// in game space
+			if ( verts[ 0 ].Z() < mNavigationBounds.Min.Z() &&
+				verts[ 1 ].Z() < mNavigationBounds.Min.Z() &&
+				verts[ 2 ].Z() < mNavigationBounds.Min.Z() )
+			{
+				continue;
+			}
+
+			if ( verts[ 0 ].Z() > mNavigationBounds.Max.Z() &&
+				verts[ 1 ].Z() > mNavigationBounds.Max.Z() &&
+				verts[ 2 ].Z() > mNavigationBounds.Max.Z() )
+			{
+				continue;
+			}
+
+			// in recast space
+			verts[ 0 ] = localToRc( verts[ 0 ] );
+			verts[ 1 ] = localToRc( verts[ 1 ] );
+			verts[ 2 ] = localToRc( verts[ 2 ] );
+
+			unsigned char areaFlag = 0;
+			const int tris[ 3 ] = { 0, 1, 2 };
+			rcMarkWalkableTriangles( &mContext,
+				tcfg.walkableSlopeAngle,
+				(float*)verts, 3,
+				tris, 1,
+				&areaFlag );
+
+			if ( areaFlag == RC_WALKABLE_AREA && areaType != NAVAREA_GROUND )
+				areaFlag = (unsigned char)areaType;
+			
+			rcRasterizeTriangle( &mContext, verts[ 0 ], verts[ 1 ], verts[ 2 ], areaFlag, *rc.solid );
+			++tileTriCount;
+		}
+	}
+
+	// Once all geometry is rasterized, we do initial pass of filtering to
+	// remove unwanted overhangs caused by the conservative rasterization
+	// as well as filter spans where the character cannot possibly stand.
+	rcFilterLowHangingWalkableObstacles( &mContext, tcfg.walkableClimb, *rc.solid );
+	//rcFilterLedgeSpans( &mContext, tcfg.walkableHeight, tcfg.walkableClimb, *rc.solid );
+	rcFilterWalkableLowHeightSpans( &mContext, tcfg.walkableHeight, *rc.solid );
+
+	rc.chf = rcAllocCompactHeightfield();
+	if ( !rc.chf )
+	{
+		mContext.log( RC_LOG_ERROR, "buildNavigation: Out of memory 'chf'." );
+		return;
+	}
+	if ( !rcBuildCompactHeightfield( &mContext, tcfg.walkableHeight, tcfg.walkableClimb, *rc.solid, *rc.chf ) )
+	{
+		mContext.log( RC_LOG_ERROR, "buildNavigation: Could not build compact data." );
+		return;
+	}
+
+	// Erode the walkable area by agent radius.
+	if ( !rcErodeWalkableArea( &mContext, tcfg.walkableRadius, *rc.chf ) )
+	{
+		mContext.log( RC_LOG_ERROR, "buildNavigation: Could not erode." );
+		return;
+	}
+
+	// use any non solid geometry for marking additional regions
+	for ( size_t m = 0; m < mModels.size(); ++m )
+	{
+		const ModelCache & model = mModels[ m ];
+
+		switch ( model.mActiveState )
+		{
+			case StateCollidable:
+				break;
+			case StateUnknown:
+			default:
+				continue;
+		}
+
+		if ( !model.mNonSolid )
+			continue;
+
+		for ( size_t t = 0; t < model.mModel->GetNumTris(); ++t )
+		{
+			size_t materialIndex;
+			Vector3f verts[ 3 ];
+			model.mModel->GetTriangle( model.mTransform, t, verts[ 0 ], verts[ 1 ], verts[ 2 ], materialIndex );
+			const Material & mat = model.mModel->GetMaterial( materialIndex );
+			
+			if ( mat.mSurface & ( SURFACE_NONSOLID | SURFACE_IGNORE | SURFACE_SKY ) )
+				continue;
+
+			NavArea areaType = NAVAREA_GROUND;
+
+			if ( mat.mContents & CONT_WATER )
+				areaType = NAVAREA_WATER;
+			if ( model.mEntityCategory.CheckFlag( ENT_CAT_TRIGGER ) )
+				areaType = NAVAREA_REGION; // mark off triggers
+			if ( model.mEntityCategory.CheckFlag( ENT_CAT_MOVER ) )
+				areaType = NAVAREA_MOVER; // mark off movers
+
+			// only proceed with special areas
+			if ( areaType == NAVAREA_GROUND )
+				continue;
+
+			// in game space
+			if ( verts[ 0 ].Z() < mNavigationBounds.Min.Z() &&
+				verts[ 1 ].Z() < mNavigationBounds.Min.Z() &&
+				verts[ 2 ].Z() < mNavigationBounds.Min.Z() )
+			{
+				continue;
+			}
+
+			if ( verts[ 0 ].Z() > mNavigationBounds.Max.Z() &&
+				verts[ 1 ].Z() > mNavigationBounds.Max.Z() &&
+				verts[ 2 ].Z() > mNavigationBounds.Max.Z() )
+			{
+				continue;
+			}
+
+			// in recast space
+			verts[ 0 ] = localToRc( verts[ 0 ] );
+			verts[ 1 ] = localToRc( verts[ 1 ] );
+			verts[ 2 ] = localToRc( verts[ 2 ] );
+
+			float hmin = FLT_MAX;
+			float hmax = -FLT_MAX;
+
+			for ( int v = 0; v < 3; ++v )
+			{
+				hmin = rcMin( hmin, verts[ v ].Y() );
+				hmax = rcMax( hmax, verts[ v ].Y() );
+			}
+
+			static float maxAdj = 4.0f;
+			
+			hmin -= mSettings.AgentHeightStand;
+			hmax += maxAdj;
+
+			rcMarkConvexPolyArea( &mContext, (float*)verts, 3, hmin, hmax, (unsigned char)areaType, *rc.chf );
+		}
+	}
+
+	for ( size_t x = 0; x < mExclusionZones.size(); ++x )
+	{
+		const AxisAlignedBox3f & aabb = mExclusionZones[ x ];
+
+		const Vector3f verts[ 4 ] =
+		{
+			localToRc( Vector3f( aabb.Min[ 0 ], aabb.Min[ 1 ], aabb.Min[ 2 ] ) ),
+			localToRc( Vector3f( aabb.Max[ 0 ], aabb.Min[ 1 ], aabb.Min[ 2 ] ) ),
+			localToRc( Vector3f( aabb.Max[ 0 ], aabb.Max[ 1 ], aabb.Min[ 2 ] ) ),
+			localToRc( Vector3f( aabb.Min[ 0 ], aabb.Max[ 1 ], aabb.Min[ 2 ] ) ),
+		};
+		
+		rcMarkConvexPolyArea( &mContext, (float*)&verts[0], 4, aabb.Min.Z(), aabb.Max.Z(), RC_NULL_AREA, *rc.chf );
+	}
+
+	enum PartitionType
+	{
+		PARTITION_WATERSHED,
+		PARTITION_MONOTONE,
+		PARTITION_LAYERS,
+	};
+
+	static PartitionType usePartitionType = PARTITION_MONOTONE;
+
+	if ( usePartitionType == PARTITION_WATERSHED )
+	{
+		// Prepare for region partitioning, by calculating distance field along the walkable surface.
+		if ( !rcBuildDistanceField( &mContext, *rc.chf ) )
+		{
+			mContext.log( RC_LOG_ERROR, "buildNavigation: Could not build distance field." );
+			return;
+		}
+
+		// Partition the walkable surface into simple regions without holes.
+		if ( !rcBuildRegions( &mContext, *rc.chf, tcfg.borderSize, tcfg.minRegionArea, tcfg.mergeRegionArea ) )
+		{
+			mContext.log( RC_LOG_ERROR, "buildNavigation: Could not build watershed regions." );
+			return;
+		}
+	}
+	else if ( usePartitionType == PARTITION_MONOTONE )
+	{
+		// Partition the walkable surface into simple regions without holes.
+		// Monotone partitioning does not need distance field.
+		if ( !rcBuildRegionsMonotone( &mContext, *rc.chf, tcfg.borderSize, tcfg.minRegionArea, tcfg.mergeRegionArea ) )
+		{
+			mContext.log( RC_LOG_ERROR, "buildNavigation: Could not build monotone regions." );
+			return;
+		}
+	}
+	else // PARTITION_LAYERS
+	{
+		// Partition the walkable surface into simple regions without holes.
+		if ( !rcBuildLayerRegions( &mContext, *rc.chf, tcfg.borderSize, tcfg.minRegionArea ) )
+		{
+			mContext.log( RC_LOG_ERROR, "buildNavigation: Could not build layer regions." );
+			return;
+		}
+	}
+	
+	// Create contours.
+	rc.cset = rcAllocContourSet();
+	if ( !rc.cset )
+	{
+		mContext.log( RC_LOG_ERROR, "buildNavigation: Out of memory 'cset'." );
+		return;
+	}
+	if ( !rcBuildContours( &mContext, *rc.chf, tcfg.maxSimplificationError, tcfg.maxEdgeLen, *rc.cset ) )
+	{
+		mContext.log( RC_LOG_ERROR, "buildNavigation: Could not create contours." );
+		return;
+	}
+
+	if ( rc.cset->nconts == 0 )
+	{
+		return;
+	}
+
+	// Build polygon navmesh from the contours.
+	rc.polymesh = rcAllocPolyMesh();
+	if ( !rc.polymesh )
+	{
+		mContext.log( RC_LOG_ERROR, "buildNavigation: Out of memory 'pmesh'." );
+		return;
+	}
+	if ( !rcBuildPolyMesh( &mContext, *rc.cset, tcfg.maxVertsPerPoly, *rc.polymesh ) )
+	{
+		mContext.log( RC_LOG_ERROR, "buildNavigation: Could not triangulate contours." );
+		return;
+	}
+
+	// Build detail mesh.
+	rc.meshdetail = rcAllocPolyMeshDetail();
+	if ( !rc.meshdetail )
+	{
+		mContext.log( RC_LOG_ERROR, "buildNavigation: Out of memory 'dmesh'." );
+		return;
+	}
+
+	if ( !rcBuildPolyMeshDetail( &mContext, *rc.polymesh, *rc.chf,
+		tcfg.detailSampleDist, tcfg.detailSampleMaxError,
+		*rc.meshdetail ) )
+	{
+		mContext.log( RC_LOG_ERROR, "buildNavigation: Could build polymesh detail." );
+		return;
+	}
+
+	rcFreeCompactHeightfield( rc.chf );
+	rc.chf = 0;
+	rcFreeContourSet( rc.cset );
+	rc.cset = 0;
+
+	if ( tcfg.maxVertsPerPoly <= DT_VERTS_PER_POLYGON )
+	{
+		//if ( rc.polymesh->nverts >= 0xffff )
+		//{
+		//	// The vertex indices are ushorts, and cannot point to more than 0xffff vertices.
+		//	mContext.log(RC_LOG_ERROR, "Too many vertices per tile %d (max: %d).", rc.polymesh->nverts, 0xffff);
+		//	return 0;
+		//}
+
+		// Update poly flags from areas.
+		for ( int i = 0; i < rc.polymesh->npolys; ++i )
+		{
+			if ( rc.polymesh->areas[ i ] == RC_WALKABLE_AREA )
+				rc.polymesh->areas[ i ] = NAVAREA_GROUND;
+
+			if ( rc.polymesh->areas[ i ] == NAVAREA_GROUND ||
+				rc.polymesh->areas[ i ] == NAVAREA_MOVER )
+			{
+				rc.polymesh->flags[ i ] = NAVFLAGS_WALK;
+			}
+			else if ( rc.polymesh->areas[ i ] == NAVAREA_WATER )
+			{
+				rc.polymesh->flags[ i ] = NAVFLAGS_SWIM;
+			}
+		}
+
+		struct ConnPts
+		{
+			Vector3f	mStart;
+			Vector3f	mEnd;
+		};
+
+		std::vector<ConnPts>			offMeshPoints( mOffMeshConnections.size() );
+		std::vector<float>				offMeshRadius( mOffMeshConnections.size() );
+		std::vector<unsigned char>		offMeshConDir( mOffMeshConnections.size() );
+		std::vector<unsigned char>		offMeshConAreas( mOffMeshConnections.size() );
+		std::vector<unsigned short>		offMeshConFlags( mOffMeshConnections.size() );
+		std::vector<unsigned int>		offMeshUserIds( mOffMeshConnections.size() );
+
+		for ( size_t c = 0; c < mOffMeshConnections.size(); ++c )
+		{
+			const OffMeshConnection & conn = mOffMeshConnections[ c ];
+			offMeshPoints[ c ].mStart = localToRc( conn.mEntry );
+			offMeshPoints[ c ].mEnd = localToRc( conn.mExit );
+			offMeshRadius[ c ] = conn.mRadius;
+			offMeshConDir[ c ] = conn.mBiDir ? DT_OFFMESH_CON_BIDIR : 0;
+			offMeshConAreas[ c ] = (unsigned char)conn.mAreaType;
+			offMeshConFlags[ c ] = (unsigned short)conn.mFlags;
+			offMeshUserIds[ c ] = c;
+		}
+
+		dtNavMeshCreateParams params;
+		memset( &params, 0, sizeof( params ) );
+		params.verts = rc.polymesh->verts;
+		params.vertCount = rc.polymesh->nverts;
+		params.polys = rc.polymesh->polys;
+		params.polyAreas = rc.polymesh->areas;
+		params.polyFlags = rc.polymesh->flags;
+		params.polyCount = rc.polymesh->npolys;
+		params.nvp = rc.polymesh->nvp;
+		params.detailMeshes = rc.meshdetail->meshes;
+		params.detailVerts = rc.meshdetail->verts;
+		params.detailVertsCount = rc.meshdetail->nverts;
+		params.detailTris = rc.meshdetail->tris;
+		params.detailTriCount = rc.meshdetail->ntris;
+		if ( mOffMeshConnections.size() > 0 )
+		{
+			params.offMeshConVerts = offMeshPoints[ 0 ].mStart;
+			params.offMeshConRad = &offMeshRadius[ 0 ];
+			params.offMeshConDir = &offMeshConDir[ 0 ];
+			params.offMeshConAreas = &offMeshConAreas[ 0 ];
+			params.offMeshConFlags = &offMeshConFlags[ 0 ];
+			params.offMeshConUserID = &offMeshUserIds[ 0 ];
+			params.offMeshConCount = mOffMeshConnections.size();
+		}
+		params.walkableHeight = mSettings.AgentHeightStand;
+		params.walkableRadius = mSettings.AgentRadius;
+		params.walkableClimb = mSettings.AgentMaxClimb;
+		params.tileX = tx;
+		params.tileY = ty;
+		params.tileLayer = 0;
+		rcVcopy( params.bmin, rc.polymesh->bmin );
+		rcVcopy( params.bmax, rc.polymesh->bmax );
+		params.cs = tcfg.cs;
+		params.ch = tcfg.ch;
+		params.buildBvTree = true;
+
+		TileAddData add;
+		add.mX = tx;
+		add.mY = ty;
+		
+		if ( !dtCreateNavMeshData( &params, &add.mNavData, &add.mNavDataSize ) )
+		{
+			mContext.log( RC_LOG_ERROR, "Could not build Detour navmesh." );
+			return;
+		}
+
+		{
+			boost::lock_guard<boost::recursive_mutex> lock( mGuardAddTile );
+			
+			mAddTileQueue.push_back( add );
+
+			/*mNavMesh->removeTile( mNavMesh->getTileRefAt( tx, ty, 0 ), 0, 0 );
+
+			if ( dtStatusFailed( mNavMesh->addTile( navData, navDataSize, DT_TILE_FREE_DATA, 0, 0 ) ) )
+			{
+				dtFree( navData );
+			}*/
+		}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+bool PathPlannerRecast::GetNavInfo( const Vector3f &pos, obint32 &_id, std::string &_name )
 {
 	return false;
 }
 
-void PathPlannerRecast::AddEntityConnection(const Event_EntityConnection &_conn)
+void PathPlannerRecast::AddEntityConnection( const Event_EntityConnection &_conn )
 {
 }
 
-void PathPlannerRecast::RemoveEntityConnection(GameEntity _ent)
+void PathPlannerRecast::RemoveEntityConnection( GameEntity _ent )
 {
 }
 
-Vector3f PathPlannerRecast::GetDisplayPosition(const Vector3f &_pos)
+Vector3f PathPlannerRecast::GetDisplayPosition( const Vector3f &_pos )
 {
 	return _pos;
 }
 
-void PathPlannerRecast::_BenchmarkPathFinder(const StringVector &_args)
+void PathPlannerRecast::CountStats( const modeldata::Scene & ioScene, const modeldata::Node & ioNode, size_t & numTris, size_t & numMeshes )
 {
-	if(!DetourNavmesh)
-		return;
-
-	EngineFuncs::ConsoleMessage("-= Recast PathFind Benchmark =-");
-
-	/*dtQueryFilter query;
-
-	enum { MaxPolys=4096};
-	dtPolyRef polys[MaxPolys];
-	const float extents[3] = { 9999999.f,9999999.f,9999999.f };
-	const int NumPolys = DetourNavmesh->queryPolygons(Vector3f::ZERO, extents, &query, polys, MaxPolys);
-	const obint32 NumPaths = NumPolys * NumPolys;
-
-	Timer tme;
-	tme.Reset();
-	for(obint32 w1 = 0; w1 < NumPolys; ++w1)
+	// count all children
+	for ( int i = 0; i < ioNode.children_size(); ++i )
 	{
-	for(obint32 w2 = 0; w2 < NumPolys; ++w2)
+		CountStats( ioScene, ioNode.children( i ), numTris, numMeshes );
+	}
+
+	for ( int m = 0; m < ioNode.meshindex_size(); ++m )
 	{
-	const dtMeshTile *tile0 = DetourNavmesh->getTileByRef(polys[w1],0);
-	const dtMeshTile *tile1 = DetourNavmesh->getTileByRef(polys[w2],0);
-	const dtPoly * poly0 = DetourNavmesh->getPolyByRef(polys[w1]);
-	const dtPoly * poly1 = DetourNavmesh->getPolyByRef(polys[w2]);
-
-	float v0[3] = {};
-	float v1[3] = {};
-
-	calcPolyCenter(v0,poly0->verts,poly0->vertCount,tile0->header->verts);
-	calcPolyCenter(v1,poly1->verts,poly1->vertCount,tile1->header->verts);
-
-	PlanPathToGoal(NULL,
-	Vector3f(v0[0],v0[2],v0[1]),
-	Vector3f(v1[0],v1[2],v1[1]),
-	0);
+		const modeldata::Mesh & ioMesh = ioScene.meshes( ioNode.meshindex( m ) );
+		numTris += ( ioMesh.faces().size() / sizeof( IceMaths::IndexedTriangle ) );
 	}
-	}
-	double dTimeTaken = tme.GetElapsedSeconds();
-	EngineFuncs::ConsoleMessage("generated %d paths in %f seconds: %f paths/sec",
-	NumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)NumPaths / dTimeTaken : 0.0f);*/
 }
 
-void PathPlannerRecast::_BenchmarkGetNavPoint(const StringVector &_args)
+void PathPlannerRecast::GatherModel( ModelCache & cache, const modeldata::Scene & ioScene, const modeldata::Node & ioNode, const BitFlag32 category, const IceMaths::Matrix4x4 & nodeXform )
 {
-	obuint32 iNumIterations = 1;
-	if(_args.size() > 1)
+	for ( int i = 0; i < ioNode.children_size(); ++i )
 	{
-		iNumIterations = atoi(_args[1].c_str());
-		if(iNumIterations <= 0)
-			iNumIterations = 1;
+		GatherModel( cache, ioScene, ioNode.children( i ), category, nodeXform );
 	}
 
-	EngineFuncs::ConsoleMessage("-= Recast GetNavPoint Benchmark  =-");
-
-	if(CurrentNavMeshType == NavMeshStatic)
+	for ( int m = 0; m < ioNode.meshindex_size(); ++m )
 	{
-		/*double dTimeTaken = 0.0f;
-		const obuint32 NumPolys = (obuint32)DetourNavmesh.getPolyCount();
-		Timer tme;
+		const modeldata::Mesh & ioMesh = ioScene.meshes( ioNode.meshindex( m ) );
+		const auto materialIndex = ioMesh.materialindex();
+		const modeldata::Material & ioMaterial = ioScene.materials( materialIndex );
 
-		obuint32 iHits = 0, iMisses = 0;
-		tme.Reset();
-		for(obuint32 i = 0; i < iNumIterations; ++i)
+		const int sf = ioMaterial.surfaceflags();
+		const int cf = ioMaterial.contents();
+
+		Material mtl;
+		mtl.mName = ioMaterial.name();
+		mtl.mSurface = (SurfaceFlags)g_EngineFuncs->ConvertValue( sf, IEngineInterface::ConvertSurfaceFlags, IEngineInterface::ConvertGameToBot );
+		mtl.mContents = (ContentFlags)g_EngineFuncs->ConvertValue( cf, IEngineInterface::ConvertContentsFlags, IEngineInterface::ConvertGameToBot );
+		
+		// just skip some face types entirely
+		if ( mtl.mSurface & ( SURFACE_NONSOLID | SURFACE_IGNORE | SURFACE_SKY ) )
+			continue;
+
+		const Vector3f * vertices = reinterpret_cast<const Vector3f*>( &ioMesh.vertices()[ 0 ] );
+
+		const std::string & facesBytes = ioMesh.faces();
+		const size_t numFaces = facesBytes.size() / sizeof( IceMaths::IndexedTriangle );
+
+		const IceMaths::IndexedTriangle * faces = reinterpret_cast<const IceMaths::IndexedTriangle*>( &facesBytes[ 0 ] );
+		
+		for ( size_t i = 0; i < numFaces; ++i )
 		{
-		for(obuint32 w1 = 0; w1 < NumPolys; ++w1)
-		{
-		const dtStatPoly * poly0 = DetourNavmesh.getPoly(w1);
-		float v0[3] = {};
-		DetourNavmesh.getCenter(v0,poly0);
+			const Vector3f & ioV0 = vertices[ faces[ i ].mVRef[ 0 ] ];
+			const Vector3f & ioV1 = vertices[ faces[ i ].mVRef[ 1 ] ];
+			const Vector3f & ioV2 = vertices[ faces[ i ].mVRef[ 2 ] ];
 
-		float extents[3] = { 512.f,512.f,512.f };
-		const dtStatPolyRef polyRef = DetourNavmesh.findNearestPoly(v0,extents);
-		if(polyRef)
-		++iHits;
-		else
-		++iMisses;
+			/*bool excluded = false;
+			for ( size_t x = 0; x < mExclusionZones.size() && !excluded; ++x )
+			{
+			Triangle3f intrTri( ioV0, ioV1, ioV2 );
+			Box3f intrBox;
+
+			IntrTriangle3Box3f intr( intrTri, intrBox );
+			excluded = intr.Test();
+			}
+
+			if ( excluded )
+			continue;*/
+
+			const aiVector3D v0( ioV0.X(), ioV0.Y(), ioV0.Z() );
+			const aiVector3D v1( ioV1.X(), ioV1.Y(), ioV1.Z() );
+			const aiVector3D v2( ioV2.X(), ioV2.Y(), ioV2.Z() );
+
+			const Vector3f p0 = IceMaths::TransformPoint4x3( Convert( v0 ), nodeXform );
+			const Vector3f p1 = IceMaths::TransformPoint4x3( Convert( v1 ), nodeXform );
+			const Vector3f p2 = IceMaths::TransformPoint4x3( Convert( v2 ), nodeXform );
+
+			// if no inclusion zones are set, we include everything by default
+			cache.mModel->AddTri( p0, p1, p2, mtl );
 		}
-		}
-
-		dTimeTaken = tme.GetElapsedSeconds();
-
-		EngineFuncs::ConsoleMessage("findNearestPoly() %d calls, %d hits, %d misses : avg %f per second",
-		NumPolys * iNumIterations,
-		iHits,
-		iMisses,
-		dTimeTaken != 0.0f ? ((float)(NumPolys * iNumIterations) / dTimeTaken) : 0.0f);	*/
-	}
-	else if(CurrentNavMeshType == NavMeshTiled)
-	{
-		// TODO
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-void PathPlannerRecast::EntityCreated(const EntityInstance &ei)
+void PathPlannerRecast::CreateModels( GameEntity entity, const IceMaths::Matrix4x4 & baseXform, const modeldata::Scene & ioScene, const modeldata::Node & ioNode, bool baseStaticMesh )
 {
-	if(ei.m_EntityCategory.CheckFlag(ENT_CAT_OBSTACLE))
+	// accumulate the triangles associated with this node
+	// so we can preallocate the vertex arrays
+	size_t numTriangles = 0;
+	size_t numMeshes = 0;
+	CountStats( ioScene, ioNode, numTriangles, numMeshes );
+	
+	if ( numTriangles > 0 )
 	{
-		int freeSlot = -1;
+		IceMaths::Matrix4x4 nodeXform = Convert( ioNode );
 
-		for(int i = 0; i < MaxObstacles; ++i)
+		BitFlag32 category;
+		
+		if ( ioNode.has_submodel() )
 		{
-			if(freeSlot == -1 && !gNavObstacles[i].Entity.IsValid())
-			{
-				freeSlot = i;
-			}
+			Msg_EntityForMapModel msg;
+			if ( !InterfaceFuncs::GetEntityForMapModel( ioNode.submodel(), msg ) || msg.m_EntityDeleted )
+				return;
 
-			if(gNavObstacles[i].Entity == ei.m_Entity)
+			entity = msg.m_Entity;
+		}
+
+		if ( entity.IsValid() )
+		{
+			const std::string entname = EngineFuncs::EntityName( entity, "<unknown>" );
+
+			InterfaceFuncs::GetEntityCategory( entity, category );
+			if ( !category.CheckFlag( ENT_CAT_OBSTACLE ) )
 			{
+				EngineFuncs::ConsoleMessage( va( "Entity '%s' not an obstacle", entname.c_str() ) );
 				return;
 			}
+
+			EngineFuncs::ConsoleMessage( va( "Entity '%s' is an obstacle", entname.c_str() ) );
 		}
 
-		if(freeSlot != -1)
+		mModels.reserve( mModels.size() + numMeshes );
+
+		mModels.push_back( ModelCache() );
+		
+		ModelCache & cache = mModels.back();
+		cache.mEntity = entity;
+		cache.mEntityCategory = category;
+		cache.mSubModel = ioNode.has_submodel() ? ioNode.submodel() : -1;
+		cache.mModel.reset( new CollisionModel() );
+		cache.mActiveState = baseStaticMesh ? StateCollidable : StateUnknown;
+		cache.mBaseStaticMesh = baseStaticMesh;
+
+		// preallocate attributes list to limit dynamic resizing
+		GatherModel( cache, ioScene, ioNode, category, IceMaths::Matrix4x4() );
+
+		cache.mModel->Build( false );
+		cache.mTransform.SetTransform( baseXform * nodeXform, false );
+	}
+
+	// see if we have any external references
+	for ( int m = 0; m < ioNode.meshindex_size(); ++m )
+	{
+		const modeldata::Mesh & ioMesh = ioScene.meshes( ioNode.meshindex( m ) );
+
+		// is this an external mesh reference?
+		if ( ioMesh.externalref() )
 		{
-			gNavObstacles[freeSlot].State = NavObstacles::OBS_PENDING;
-			gNavObstacles[freeSlot].Entity = ei.m_Entity;
-		}
-		else
-		{
-			OBASSERT(0,"NO FREE OBSTACLE SLOTS");
+			const fs::path ext = fs::path( ioMesh.name() ).extension();
+			if ( !ext.empty() )
+			{
+				fs::path mdlname( ioMesh.name() );
+
+				GameModelInfo modelInfo;
+				strncpy( modelInfo.mModelName, mdlname.string().c_str(), sizeof( modelInfo.mModelName ) );
+				strncpy( modelInfo.mModelType, ext.string().c_str() + 1, ext.string().length() );
+
+				g_EngineFuncs->GetModel( modelInfo, allocatorBot );
+				if ( modelInfo.mDataBuffer != NULL )
+				{
+					const IceMaths::Matrix4x4 nodeXform = Convert( ioNode );
+					LoadModel( modelInfo, entity, nodeXform, true );
+				}
+				else if ( !modelInfo.mAABB.IsZero() )
+				{
+					CreateModels( GameEntity(), modelInfo.mAABB, true );
+				}
+			}
 		}
 	}
 }
 
-void PathPlannerRecast::EntityDeleted(const EntityInstance &ei)
+//////////////////////////////////////////////////////////////////////////
+
+void PathPlannerRecast::CreateModels( GameEntity entity, const AABB & localaabb, bool baseStaticMesh )
 {
-	for(int i = 0; i < MaxObstacles; ++i)
-	{
-		if(gNavObstacles[i].Entity == ei.m_Entity)
-		{
-			gNavObstacles[i].Free();
-		}
-	}
-}
-//
-////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
-//
-//void PathPlannerRecast::OverlayRender(RenderOverlay *overlay, const ReferencePoint &viewer)
-//{
-//	AABB voxel;
-//	voxel.m_Mins[0] = -(RecastCfg.cs * 0.5f);
-//	voxel.m_Mins[1] = -(RecastCfg.cs * 0.5f);
-//	voxel.m_Mins[2] = -(RecastCfg.cs * 0.5f);
-//	voxel.m_Maxs[0] =  (RecastCfg.cs * 0.5f);
-//	voxel.m_Maxs[1] =  (RecastCfg.cs * 0.5f);
-//	voxel.m_Maxs[2] =  (RecastCfg.cs * 0.5f);
-//
-//	//////////////////////////////////////////////////////////////////////////
-//	// render explored nodes for visualization
-//	for(RecastNodeList::iterator it = RecastExploredList.begin();
-//		it != RecastExploredList.end();
-//		++it)
-//	{
-//		AABB voxelWorld = voxel;
-//		voxelWorld.Translate((*it).Pos);
-//		overlay->SetColor(COLOR::GREEN);
-//		overlay->DrawAABB(voxelWorld);
-//	}
-//	RecastExploredList.clear();
-//	//////////////////////////////////////////////////////////////////////////
-//	if(RecastOptions.DrawSolidNodes)
-//	{
-//		for(RecastNodeList::iterator it = RecastSolidList.begin();
-//			it != RecastSolidList.end();
-//			++it)
-//		{
-//			AABB voxelWorld = voxel;
-//			voxelWorld.Translate((*it).Pos);
-//			overlay->SetColor(COLOR::RED);
-//			overlay->DrawAABB(voxelWorld);
-//		}
-//	}
-//	//////////////////////////////////////////////////////////////////////////
-//	if ( m_PlannerFlags.CheckFlag(NAV_VIEW) )
-//	{
-//		overlay->PushMatrix();
-//		overlay->Translate(Vector3f(0,0,RecastOptions.DrawOffset));
-//
-//		//gDDraw->StartFrame();
-//
-//		// attempt to render from the cache, if implemented.
-//		//if(!gDDraw->RenderCache())
-//		{
-//			//gDDraw->StartCache();
-//
-//			switch(RecastOptions.RenderMode)
-//			{
-//			case RecastOptions_t::DRAWMODE_NAVMESH:
-//				if ( DetourNavmesh )
-//					duDebugDrawNavMesh(gDDraw,*DetourNavmesh,DU_DRAWNAVMESH_OFFMESHCONS);
-//				break;
-//			case RecastOptions_t::DRAWMODE_NAVMESH_BVTREE:
-//				if ( DetourNavmesh )
-//					duDebugDrawNavMeshBVTree(gDDraw,*DetourNavmesh);
-//				break;
-//			case RecastOptions_t::DRAWMODE_VOXELS:
-//				if ( FloodHeightField )
-//					duDebugDrawHeightfieldSolid(gDDraw,*FloodHeightField);
-//				break;
-//			case RecastOptions_t::DRAWMODE_VOXELS_WALKABLE:
-//				if ( FloodHeightField )
-//					duDebugDrawHeightfieldWalkable(gDDraw,*FloodHeightField);
-//				break;
-//			case RecastOptions_t::DRAWMODE_COMPACT:
-//				for(BuildDataList::iterator it = BuildData.begin();
-//					it != BuildData.end();
-//					++it)
-//				{
-//					duDebugDrawCompactHeightfieldSolid(gDDraw,*it->Chf);
-//				}
-//				break;
-//			case RecastOptions_t::DRAWMODE_COMPACT_DISTANCE:
-//				for(BuildDataList::iterator it = BuildData.begin();
-//					it != BuildData.end();
-//					++it)
-//				{
-//					duDebugDrawCompactHeightfieldDistance(gDDraw,*it->Chf);
-//				}
-//				break;
-//			case RecastOptions_t::DRAWMODE_COMPACT_REGIONS:
-//				for(BuildDataList::iterator it = BuildData.begin();
-//					it != BuildData.end();
-//					++it)
-//				{
-//					duDebugDrawCompactHeightfieldRegions(gDDraw,*it->Chf);
-//				}
-//				break;
-//			case RecastOptions_t::DRAWMODE_REGION_CONNECTIONS:
-//				for(BuildDataList::iterator it = BuildData.begin();
-//					it != BuildData.end();
-//					++it)
-//				{
-//					duDebugDrawRegionConnections(gDDraw,*it->Contour);
-//				}
-//				break;
-//			case RecastOptions_t::DRAWMODE_RAW_CONTOURS:
-//				for(BuildDataList::iterator it = BuildData.begin();
-//					it != BuildData.end();
-//					++it)
-//				{
-//					duDebugDrawRawContours(gDDraw,*it->Contour);
-//				}
-//				break;
-//			case RecastOptions_t::DRAWMODE_BOTH_CONTOURS:
-//				for(BuildDataList::iterator it = BuildData.begin();
-//					it != BuildData.end();
-//					++it)
-//				{
-//					duDebugDrawRawContours(gDDraw,*it->Contour);
-//					duDebugDrawContours(gDDraw,*it->Contour);
-//				}
-//				break;
-//			case RecastOptions_t::DRAWMODE_CONTOURS:
-//				for(BuildDataList::iterator it = BuildData.begin();
-//					it != BuildData.end();
-//					++it)
-//				{
-//					duDebugDrawContours(gDDraw,*it->Contour);
-//				}
-//				break;
-//			case RecastOptions_t::DRAWMODE_POLYMESH:
-//				for(BuildDataList::iterator it = BuildData.begin();
-//					it != BuildData.end();
-//					++it)
-//				{
-//					duDebugDrawPolyMesh(gDDraw,*it->PolyMesh);
-//				}
-//				break;
-//			case RecastOptions_t::DRAWMODE_POLYMESH_DETAIL:
-//				for(BuildDataList::iterator it = BuildData.begin();
-//					it != BuildData.end();
-//					++it)
-//				{
-//					duDebugDrawPolyMeshDetail(gDDraw,*it->PolyMeshDetail);
-//				}
-//				break;
-//			default:
-//				break;
-//			}
-//
-//			/*overlay->SetColor(COLOR::MAGENTA);
-//			for(int i = 0; i < LinkData.size(); ++i)
-//			{
-//			overlay->DrawLine(LinkData[i].start,LinkData[i].end);
-//			}*/
-//			//gDDraw->EndCache();
-//		}
-//		overlay->PopMatrix();
-//
-//		for(obuint32 i = 0; i < ladders.size(); ++i)
-//		{
-//			ladders[i].Render(overlay);
-//		}
-//	}
-//
-//	//////////////////////////////////////////////////////////////////////////
-//	// Highlight obstacles.
-//	for(int i = 0; i < MaxObstacles; ++i)
-//	{
-//		if(gNavObstacles[i].Entity.IsValid())
-//		{
-//			obColor color = COLOR::CYAN;
-//			switch(gNavObstacles[i].State)
-//			{
-//			case NavObstacles::OBS_NONE:
-//				color = COLOR::RED;
-//				break;
-//			case NavObstacles::OBS_PENDING:
-//				color = COLOR::YELLOW;
-//				break;
-//			case NavObstacles::OBS_ADDING:
-//				color = COLOR::MAGENTA;
-//				break;
-//			case NavObstacles::OBS_ADDED:
-//				color = COLOR::GREEN;
-//				break;
-//			case NavObstacles::OBS_REMOVING:
-//				color = COLOR::ORANGE;
-//				break;
-//			}
-//
-//			AABB localbounds;
-//			EngineFuncs::EntityLocalAABB(gNavObstacles[i].Entity,localbounds);
-//
-//			Vector3f pos, fwd, right, up;
-//			EngineFuncs::EntityPosition(gNavObstacles[i].Entity,pos);
-//			EngineFuncs::EntityOrientation(gNavObstacles[i].Entity,fwd, right, up);
-//
-//			static float offsetZ = 0.f;
-//			Vector3f st = pos + up * offsetZ;
-//
-//			static bool matrixmode = false;
-//			static bool renderbox = false;
-//			if(renderbox)
-//			{
-//				gOverlay->SetColor(color);
-//				gOverlay->DrawAABB(localbounds,pos,Matrix3f(right,fwd,up,matrixmode));
-//			}
-//
-//			gOverlay->SetColor(COLOR::BLUE);
-//			//gOverlay->DrawLine(st,st+fwd*128.f);
-//			gOverlay->DrawLine(st+fwd*localbounds.m_Mins[0],st+fwd*localbounds.m_Maxs[0]);
-//			gOverlay->SetColor(COLOR::RED);
-//			//gOverlay->DrawLine(st,st+right*128.f);
-//			gOverlay->DrawLine(st+right*localbounds.m_Mins[1],st+right*localbounds.m_Maxs[1]);
-//			gOverlay->SetColor(COLOR::GREEN);
-//			//gOverlay->DrawLine(st,st+up*128.f);
-//			gOverlay->DrawLine(st+up*localbounds.m_Mins[2],st+up*localbounds.m_Maxs[2]);
-//		}
-//	}
-//}
-
-#ifdef ENABLE_DEBUG_WINDOW
-class RecastActionListener : public gcn::ActionListener
-{
-	void UpdateRecastCfg()
-	{
-		gcn::contrib::PropertySheet *ps = static_cast<gcn::contrib::PropertySheet*>(DW.Nav.mAdjCtr->findWidgetById("prop_sheet"));
-		CurrentNavMeshType = (NavMeshType)static_cast<gcn::DropDown*>(ps->findWidgetById("navtype"))->getSelected();
-
-		RecastCfg.cs = static_cast<gcn::Slider*>(ps->findWidgetById("vox_size"))->getValue();
-		RecastCfg.ch = static_cast<gcn::Slider*>(ps->findWidgetById("vox_height"))->getValue();
-		RecastCfg.walkableSlopeAngle = static_cast<gcn::Slider*>(ps->findWidgetById("walk_slope"))->getValue();
-		RecastCfg.maxEdgeLen = static_cast<gcn::Slider*>(ps->findWidgetById("max_edgelen"))->getValueInt();
-		RecastCfg.maxSimplificationError = static_cast<gcn::Slider*>(ps->findWidgetById("simpl_err"))->getValue();
-		RecastCfg.minRegionSize = static_cast<gcn::Slider*>(ps->findWidgetById("min_rgnsize"))->getValueInt();
-		RecastCfg.mergeRegionSize = static_cast<gcn::Slider*>(ps->findWidgetById("merge_rgnsize"))->getValueInt();
-		RecastCfg.maxVertsPerPoly = static_cast<gcn::Slider*>(ps->findWidgetById("max_polyverts"))->getValueInt();
-		RecastCfg.borderSize = static_cast<gcn::Slider*>(ps->findWidgetById("bordersize"))->getValueInt();
-		RecastCfg.detailSampleDist = static_cast<gcn::Slider*>(ps->findWidgetById("det_sample_dist"))->getValue();
-		RecastCfg.detailSampleMaxError = static_cast<gcn::Slider*>(ps->findWidgetById("det_sample_err"))->getValue();
-
-		AgentHeight = (static_cast<gcn::Slider*>(ps->findWidgetById("walk_height"))->getValue());
-		AgentMaxClimb = (static_cast<gcn::Slider*>(ps->findWidgetById("walk_climb"))->getValue());
-		AgentRadius = (static_cast<gcn::Slider*>(ps->findWidgetById("walk_radius"))->getValue());
-
-		RecastCfg.walkableHeight = (int)ceilf(AgentHeight / RecastCfg.ch);
-		RecastCfg.walkableClimb = (int)floorf(AgentMaxClimb / RecastCfg.ch);
-		RecastCfg.walkableRadius = (int)ceilf(AgentRadius / RecastCfg.cs);
-	}
-
-	void action(const gcn::ActionEvent& actionEvent)
-	{
-		UpdateRecastCfg();
-		if(actionEvent.getId()=="build_floodfill")
-		{
-			gRecastPlanner->FloodFill();
-		}
-		else if(actionEvent.getId()=="build_recast")
-		{
-			gRecastPlanner->BuildNav();
-		}
-		else if(actionEvent.getId()=="add_seed")
-		{
-			Vector3f vPt;
-			if(Utils::GetLocalAimPoint(vPt))
-				gRecastPlanner->AddFloodSeed(vPt);
-		}
-		else if(actionEvent.getId()=="drawOptions")
-		{
-			//gDDraw->ClearCache();
-		}
-	}
-} BuildListenerRecast;
-
-class RecastNavType : public gcn::ListModel
-{
-public:
-	int getNumberOfElements() { return NavMeshNum; }
-	std::string getElementAt(int i, int column)
-	{
-		switch(i)
-		{
-		case NavMeshStatic:
-			return "NavMesh Static";
-		case NavMeshTiled:
-			return "NavMesh Tiled";
-		default:
-			break;
-		}
-		return "";
-	}
-} RecastNavTypes;
-
-class RecastDrawOptions : public gcn::ListModel
-{
-public:
-	int getNumberOfElements() { return RecastOptions_t::MAX_DRAWMODE; }
-	std::string getElementAt(int i, int column)
-	{
-		switch(i)
-		{
-		case RecastOptions_t::DRAWMODE_NAVMESH:
-			return "NavMesh";
-		case RecastOptions_t::DRAWMODE_NAVMESH_BVTREE:
-			return "NavMesh BV Tree";
-		case RecastOptions_t::DRAWMODE_VOXELS:
-			return "Voxels";
-		case RecastOptions_t::DRAWMODE_VOXELS_WALKABLE:
-			return "Voxels Walkable";
-		case RecastOptions_t::DRAWMODE_COMPACT:
-			return "Compact Heightfield";
-		case RecastOptions_t::DRAWMODE_COMPACT_DISTANCE:
-			return "Compact Heightfield Distance";
-		case RecastOptions_t::DRAWMODE_COMPACT_REGIONS:
-			return "Compact Regions";
-		case RecastOptions_t::DRAWMODE_REGION_CONNECTIONS:
-			return "Region Connections";
-		case RecastOptions_t::DRAWMODE_RAW_CONTOURS:
-			return "Contours - Raw";
-		case RecastOptions_t::DRAWMODE_BOTH_CONTOURS:
-			return "Contours - Both";
-		case RecastOptions_t::DRAWMODE_CONTOURS:
-			return "Contours";
-		case RecastOptions_t::DRAWMODE_POLYMESH:
-			return "PolyMesh";
-		case RecastOptions_t::DRAWMODE_POLYMESH_DETAIL:
-			return "PolyMesh Detail";
-		default:
-			break;
-		}
-		return "";
-	}
-} DrawOptionsRecast;
-
-void PathPlannerRecast::CreateGui()
-{
-	DW.Nav.mAdjCtr->clear(true);
-	gcn::contrib::PropertySheet *propsheet = new gcn::contrib::PropertySheet;
-	propsheet->setId("prop_sheet");
-	DW.Nav.mAdjCtr->add(propsheet);
-
-	gcn::TextBox *stats = new gcn::TextBox;
-	stats->setEnabled(false);
-	stats->setId("stats");
-	propsheet->addProperty("Stats",stats);
-
-	gcn::DropDown *navMeshType = new gcn::DropDown(&RecastNavTypes);
-	navMeshType->getScrollArea()->setDimension(navMeshType->getListBox()->getDimension());
-	navMeshType->setWidth(navMeshType->getListBox()->getWidth());
-	navMeshType->setId("navtype");
-	propsheet->addProperty("NavMesh Type",navMeshType);
-
-	gcn::DropDown *drawOptions = new gcn::DropDown(&DrawOptionsRecast);
-	drawOptions->getScrollArea()->setDimension(drawOptions->getListBox()->getDimension());
-	drawOptions->setWidth(drawOptions->getListBox()->getWidth());
-	drawOptions->setActionEventId("drawOptions");
-	drawOptions->setId("drawOptions");
-	drawOptions->addActionListener(&BuildListenerRecast);
-	propsheet->addProperty("Render",drawOptions);
-
-	gcn::Slider *RenderOffset = new gcn::Slider(0.f, 200.f);
-	RenderOffset->setId("renderoff");
-	RenderOffset->setValue(RecastOptions.DrawOffset);
-	propsheet->addProperty("Render Offset",RenderOffset);
-
-	gcn::Slider *RenderTimeShare = new gcn::Slider(0.01f, 100.f);
-	RenderTimeShare->setId("timeshare");
-	RenderTimeShare->setValue(RecastOptions.TimeShare);
-	propsheet->addProperty("Render TimeShare",RenderTimeShare);
-
-	gcn::Slider *VoxSize = new gcn::Slider(0.f, 64.f);
-	VoxSize->setId("vox_size");
-	VoxSize->setValue(RecastCfg.cs);
-	propsheet->addProperty("Voxel Size",VoxSize);
-
-	gcn::Slider *VoxHeight = new gcn::Slider(0.f, 64.f);
-	VoxHeight->setId("vox_height");
-	VoxHeight->setValue(RecastCfg.ch);
-	propsheet->addProperty("Voxel Height",VoxHeight);
-
-	gcn::Slider *WalkSlope = new gcn::Slider(0.f, 90.f);
-	WalkSlope->setId("walk_slope");
-	WalkSlope->setValue(RecastCfg.walkableSlopeAngle);
-	propsheet->addProperty("Walk Slope",WalkSlope);
-
-	gcn::Slider *WalkHeight = new gcn::Slider(0.f, 128.f);
-	WalkHeight->setId("walk_height");
-	WalkHeight->setValue(AgentHeight);
-	propsheet->addProperty("Walk Height",WalkHeight);
-
-	gcn::Slider *WalkClimb = new gcn::Slider(0.f, 100.f);
-	WalkClimb->setId("walk_climb");
-	WalkClimb->setValue(AgentMaxClimb);
-	propsheet->addProperty("Walk Climb",WalkClimb);
-
-	gcn::Slider *WalkRadius = new gcn::Slider(0.f, 100.f);
-	WalkRadius->setId("walk_radius");
-	WalkRadius->setValue(AgentRadius);
-	propsheet->addProperty("Walk Radius",WalkRadius);
-
-	gcn::Slider *MaxEdgeLen = new gcn::Slider(0.f, 100.f);
-	MaxEdgeLen->setId("max_edgelen");
-	MaxEdgeLen->setValue(RecastCfg.maxEdgeLen);
-	propsheet->addProperty("Max Edge Length",MaxEdgeLen);
-
-	gcn::Slider *MeshSimplErr = new gcn::Slider(0.f, 100.f);
-	MeshSimplErr->setId("simpl_err");
-	MeshSimplErr->setValue(RecastCfg.maxSimplificationError);
-	propsheet->addProperty("Mesh Simpl. Err",MeshSimplErr);
-
-	gcn::Slider *MinRgnSize = new gcn::Slider(0.f, 100.f);
-	MinRgnSize->setId("min_rgnsize");
-	MinRgnSize->setValue(RecastCfg.minRegionSize);
-	propsheet->addProperty("Min Region Size",MinRgnSize);
-
-	gcn::Slider *MergeRgnSize = new gcn::Slider(0.f, 100.f);
-	MergeRgnSize->setId("merge_rgnsize");
-	MergeRgnSize->setValue(RecastCfg.mergeRegionSize);
-	propsheet->addProperty("Merge Region Size",MergeRgnSize);
-
-	gcn::Slider *MaxPolyVerts = new gcn::Slider(0.f, (float)DT_VERTS_PER_POLYGON);
-	MaxPolyVerts->setId("max_polyverts");
-	MaxPolyVerts->setValue(RecastCfg.maxVertsPerPoly);
-	propsheet->addProperty("Max PolyVerts",MaxPolyVerts);
-
-	gcn::Slider *BorderSize = new gcn::Slider(0.f, 200.f);
-	BorderSize->setId("bordersize");
-	BorderSize->setValue(RecastCfg.borderSize);
-	propsheet->addProperty("BorderSize",BorderSize);
-
-	gcn::Slider *DetailSampleDist = new gcn::Slider(0.f, 200.f);
-	DetailSampleDist->setId("det_sample_dist");
-	DetailSampleDist->setValue(RecastCfg.detailSampleDist);
-	propsheet->addProperty("Detail Sample Dist",DetailSampleDist);
-
-	gcn::Slider *DetailSampleErr = new gcn::Slider(0.f, 200.f);
-	DetailSampleErr->setId("det_sample_err");
-	DetailSampleErr->setValue(RecastCfg.detailSampleMaxError);
-	propsheet->addProperty("Detail Sample Err",DetailSampleErr);
-
-	{
-		gcn::contrib::AdjustingContainer *options = new gcn::contrib::AdjustingContainer;
-		options->setId("buttons");
-		options->setNumberOfColumns(3);
-
-		gcn::Button *FFBtn = new gcn::Button("FloodFill");
-		FFBtn->setActionEventId("build_floodfill");
-		FFBtn->addActionListener(&BuildListenerRecast);
-		options->add(FFBtn);
-
-		gcn::Button *BuildBtn = new gcn::Button("Build");
-		BuildBtn->setId("build");
-		BuildBtn->setActionEventId("build_recast");
-		BuildBtn->addActionListener(&BuildListenerRecast);
-		options->add(BuildBtn);
-
-		gcn::Button *SeedBtn = new gcn::Button("Add Seed");
-		SeedBtn->setActionEventId("add_seed");
-		SeedBtn->addActionListener(&BuildListenerRecast);
-		options->add(SeedBtn);
-
-		propsheet->addProperty("Functions",options);
-	}
-
-	{
-		gcn::contrib::AdjustingContainer *options = new gcn::contrib::AdjustingContainer;
-		options->setNumberOfColumns(3);
-
-		gcn::CheckBox *cb = NULL;
-		cb = new gcn::CheckBox("Filter Ledges");
-		cb->setId("filter_ledges");
-		options->add(cb);
-
-		cb = new gcn::CheckBox("Filter Low Height");
-		cb->setId("filter_lowheight");
-		options->add(cb);
-
-		cb = new gcn::CheckBox("Climb Walls");
-		cb->setId("climb_walls");
-		options->add(cb);
-
-		cb = new gcn::CheckBox("Draw Solids");
-		cb->setSelected(false);
-		cb->setId("draw_solids");
-		options->add(cb);
-
-		propsheet->addProperty("Options",options);
-	}
-}
-
-void PathPlannerRecast::UpdateGui()
-{
-	if(!DW.Nav.mAdjCtr)
+	Vector3f origin = Vector3f::ZERO;
+	if ( !EngineFuncs::EntityPosition( entity, origin ) )
 		return;
 
-	gcn::contrib::PropertySheet *ps = static_cast<gcn::contrib::PropertySheet*>(DW.Nav.mAdjCtr->findWidgetById("prop_sheet"));
-	gcn::TextBox *stats = static_cast<gcn::TextBox*>(ps->findWidgetById("stats"));
-	if(stats)
-	{
-		std::string str = va(
-			"Explored Cells: %d\nBorder Cells: %d\nCells/Sec: %.2f\nOpen Nodes: %d\n",
-			RecastStats.ExploredCells,
-			RecastStats.BorderCells,
-			(double)RecastStats.ExploredCells/(RecastStats.FloodTime+Mathf::EPSILON),
-			RecastOpenList.size()
-			);
-		//str += va("Memory (Hf): %s\n",Utils::FormatByteString(FloodHeightField.getMemUsed()).c_str());
+	Vector3f vFwd, vRight, vUp;
+	if ( !EngineFuncs::EntityOrientation( entity, vFwd, vRight, vUp ) )
+		return;
 
-		/*int chfMem = 0;
-		for(BuildDataList::iterator it = BuildData.begin();
-		it != BuildData.end();
-		++it)
+	const Vector3f extAxis0 = localaabb.GetAxisLength( 0 ) * 0.5f * vFwd;
+	const Vector3f extAxis1 = localaabb.GetAxisLength( 1 ) * 0.5f * vRight;
+	const Vector3f extAxis2 = localaabb.GetAxisLength( 2 ) * 0.5f * vUp;
+
+	Vector3f center;
+	localaabb.CenterPoint( center );
+
+	Vector3f vertex[ 8 ];
+	vertex[ 0 ] = center - extAxis0 - extAxis1 - extAxis2;
+	vertex[ 1 ] = center + extAxis0 - extAxis1 - extAxis2;
+	vertex[ 2 ] = center + extAxis0 + extAxis1 - extAxis2;
+	vertex[ 3 ] = center - extAxis0 + extAxis1 - extAxis2;
+	vertex[ 4 ] = center - extAxis0 - extAxis1 + extAxis2;
+	vertex[ 5 ] = center + extAxis0 - extAxis1 + extAxis2;
+	vertex[ 6 ] = center + extAxis0 + extAxis1 + extAxis2;
+	vertex[ 7 ] = center - extAxis0 + extAxis1 + extAxis2;/**/
+	
+	mModels.push_back( ModelCache() );
+
+	ModelCache & cache = mModels.back();
+	cache.mEntity = entity;	
+	cache.mModel.reset( new CollisionModel() );
+	cache.mActiveState = StateUnknown;
+	cache.mBaseStaticMesh = baseStaticMesh;
+	
+	static const int indices[ 36 ] =
+	{
+		// bottom
+		0, 1, 2,
+		0, 2, 3,
+
+		0, 3, 4,
+		3, 4, 7,
+
+		0, 1, 4,
+		1, 4, 5,
+
+		1, 2, 5,
+		2, 5, 6,
+
+		2, 3, 6,
+		3, 6, 7,
+
+		// top
+		4, 5, 6,
+		4, 6, 7,
+	};
+
+	Material mat;
+	mat.mName = va( "entity_%s", EngineFuncs::EntityName( entity ).c_str() );
+	mat.mSurface = SURFACE_NONE;
+	mat.mContents = CONT_PLYRCLIP;
+
+	// build a model from the bounding box
+	for ( int i = 0; i < 36; i += 3 )
+	{
+		// if no inclusion zones are set, we include everything by default
+		cache.mModel->AddTri(
+			vertex[ indices[ i + 0 ] ],
+			vertex[ indices[ i + 1 ] ],
+			vertex[ indices[ i + 2 ] ],
+			mat );
+	}
+
+	cache.mModel->Build( false );
+	cache.mTransform.SetPosition( origin, false );
+	cache.mTransform.SetOrientation( Matrix3f( vFwd, -vRight, vUp, true ), false );
+}
+
+PathInterface * PathPlannerRecast::AllocPathInterface( Client * client )
+{
+	return new RecastPathInterface( client, this );
+}
+
+static void BuildNodeTree( aiNode * sceneNode, modeldata::Node * ioNode, const IceMaths::Matrix4x4 & xform )
+{
+	ioNode->set_name( sceneNode->mName.C_Str() );
+	if ( !xform.IsIdentity() )
+	{
+		ioNode->mutable_transformation()->mutable_row0()->set_x( xform.GetRow( 0 ).x );
+		ioNode->mutable_transformation()->mutable_row0()->set_y( xform.GetRow( 0 ).y );
+		ioNode->mutable_transformation()->mutable_row0()->set_z( xform.GetRow( 0 ).z );
+		ioNode->mutable_transformation()->mutable_row0()->set_w( xform.GetRow( 0 ).w );
+		ioNode->mutable_transformation()->mutable_row1()->set_x( xform.GetRow( 1 ).x );
+		ioNode->mutable_transformation()->mutable_row1()->set_y( xform.GetRow( 1 ).y );
+		ioNode->mutable_transformation()->mutable_row1()->set_z( xform.GetRow( 1 ).z );
+		ioNode->mutable_transformation()->mutable_row1()->set_w( xform.GetRow( 1 ).w );
+		ioNode->mutable_transformation()->mutable_row2()->set_x( xform.GetRow( 2 ).x );
+		ioNode->mutable_transformation()->mutable_row2()->set_y( xform.GetRow( 2 ).y );
+		ioNode->mutable_transformation()->mutable_row2()->set_z( xform.GetRow( 2 ).z );
+		ioNode->mutable_transformation()->mutable_row2()->set_w( xform.GetRow( 2 ).w );
+		ioNode->mutable_transformation()->mutable_row3()->set_x( xform.GetRow( 3 ).x );
+		ioNode->mutable_transformation()->mutable_row3()->set_y( xform.GetRow( 3 ).y );
+		ioNode->mutable_transformation()->mutable_row3()->set_z( xform.GetRow( 3 ).z );
+		ioNode->mutable_transformation()->mutable_row3()->set_w( xform.GetRow( 3 ).w );
+	}
+
+	if ( sceneNode->mMetaData )
+	{
+		aiString value;
+		if ( sceneNode->mMetaData->Get( aiString( "submodel" ), value ) )
+			ioNode->set_submodel( atoi( value.C_Str() ) );
+	}
+
+	for ( unsigned int i = 0; i < sceneNode->mNumMeshes; ++i )
+	{
+		ioNode->add_meshindex( sceneNode->mMeshes[ i ] );
+	}
+
+	for ( unsigned int i = 0; i < sceneNode->mNumChildren; ++i )
+	{
+		aiNode * childSceneNode = sceneNode->mChildren[ i ];
+
+		IceMaths::Matrix4x4	xform = Convert( childSceneNode->mTransformation );
+		modeldata::Node * childIONode = ioNode->add_children();
+		BuildNodeTree( childSceneNode, childIONode, xform );
+	}
+}
+
+void PathPlannerRecast::LoadModel( const GameModelInfo & modelInfo, GameEntity entity, const IceMaths::Matrix4x4 & xform, bool baseStaticMesh )
+{
+	LOGFUNC;
+	
+	Timer loadTimer;
+	loadTimer.Reset();
+
+	const obuint32 fileCrc = FileSystem::CalculateCrc( modelInfo.mDataBuffer, modelInfo.mDataBufferSize );
+
+	LOG( "LoadModel " << modelInfo.mModelName );
+	LOG( "LoadModel calculate crc [" << va( "0x%08x", fileCrc ) << "] in " << loadTimer.GetElapsedSeconds() << " seconds" );
+
+	static bool loadFromCache = true;
+
+	bool cachedFileLoaded = false;
+
+	loadTimer.Reset();
+
+	// first check if it's a model we can instance
+	for ( size_t i = 0; i < mModels.size(); ++i )
+	{
+		if ( mModels[ i ].mModel->GetName() == modelInfo.mModelName )
 		{
-		chfMem += it->Chf.getMemUsed();
+			EngineFuncs::ConsoleMessage( va("Instanceable model '%s'\n", modelInfo.mModelName) );
+#if(0)
+			mModels.push_back( ModelCache() );
+
+			ModelCache & cache = mModels.back();
+			cache.mEntity = entity;
+			cache.mModel = mModels[ i ].mModel;
+			cache.mActiveState = baseStaticMesh ? StateCollidable : StateUnknown;
+			cache.mBaseStaticMesh = baseStaticMesh;
+
+			cache.mTransform.SetTransform( nodeXform, false );
+			return;
+#endif
 		}
-		str += va("Memory (CHf): %s\n",Utils::FormatByteString(chfMem).c_str());
-
-		if(CurrentNavMeshType == NavMeshStatic)
+	}
+	
+	modeldata::Scene ioScene;
+	if ( mCacheDb != NULL && loadFromCache )
+	{
+		sqlite3_stmt * statement = NULL;
+		if ( SQLITE_OK == CheckSqliteError( mCacheDb,
+			sqlite3_prepare_v2( mCacheDb,
+			"SELECT fullSize, modelData FROM modelCache WHERE ( name=? AND crc=? AND version=? )",
+			-1, &statement, NULL ) ) )
 		{
-		str += va("NavMesh Size: %s\n",Utils::FormatByteString(DetourNavmesh->getMemUsed()).c_str());
-		}*/
-		stats->setText(str);
+			sqlite3_bind_text( statement, 1, modelInfo.mModelName, strlen( modelInfo.mModelName ), NULL );
+			sqlite3_bind_int( statement, 2, fileCrc );
+			sqlite3_bind_int( statement, 3, VERSION_MODELCACHE );
+		}
+
+		if ( SQLITE_ROW == CheckSqliteError( mCacheDb, sqlite3_step( statement ) ) )
+		{
+			const int dbFileSize = sqlite3_column_int( statement, 0 );
+			const void * dbFileData = sqlite3_column_blob( statement, 1 );
+			const int dbFileDataSize = sqlite3_column_bytes( statement, 1 );
+
+			boost::shared_array<char> decompressBuffer( new char[ dbFileSize ] );
+			const int sizeD = fastlz_decompress( dbFileData, dbFileDataSize, decompressBuffer.get(), dbFileSize );
+
+			if ( ( dbFileSize == sizeD ) && ioScene.ParseFromArray( decompressBuffer.get(), sizeD ) )
+			{
+				LOG( "LoadModel loaded from cache db " << loadTimer.GetElapsedSeconds() << " seconds" );
+				cachedFileLoaded = true;
+			}
+		}
+
+		CheckSqliteError( mCacheDb, sqlite3_finalize( statement ) );
 	}
 
-	gcn::Button *buildBtn = static_cast<gcn::Button*>(ps->findWidgetById("build"));
-	if(buildBtn)
+	// Make a cached version of the file to 
+	if ( !cachedFileLoaded )
 	{
-		buildBtn->setEnabled(gFloodStatus == Process_FloodFinished);
+		loadTimer.Reset();
+
+		//const int ignoreSurfaces = (SurfaceFlags)g_EngineFuncs->ConvertValue( SURFACE_IGNORE | SURFACE_NONSOLID, IEngineInterface::ConvertSurfaceFlags, IEngineInterface::ConvertBotToGame );
+		//const int onlyContents = (ContentFlags)g_EngineFuncs->ConvertValue( CONT_SOLID | CONT_PLYRCLIP | CONT_WATER | CONT_TRIGGER, IEngineInterface::ConvertContentsFlags, IEngineInterface::ConvertBotToGame );
+
+		aiPropertyStore * props = NULL;// aiCreatePropertyStore();
+
+		/*aiSetImportPropertyInteger( props, AI_CONFIG_IMPORT_Q3BSP_ALLOW_0_CONTENTS, 1 );
+		aiSetImportPropertyInteger( props, AI_CONFIG_IMPORT_Q3BSP_ALLOW_0_SURFACES, 1 );
+
+		aiSetImportPropertyInteger( props, AI_CONFIG_IMPORT_Q3BSP_FILTER_CONTENTS, onlyContents );
+		aiSetImportPropertyInteger( props, AI_CONFIG_IMPORT_Q3BSP_IGNORE_SURFACES, ignoreSurfaces );*/
+
+		const unsigned int flags = aiProcess_Triangulate /*| aiProcess_JoinIdenticalVertices*/;
+		const aiScene * scene = aiImportFileFromMemoryWithProperties( (const char*)modelInfo.mDataBuffer, modelInfo.mDataBufferSize, flags, modelInfo.mModelType, props );
+		if ( scene && scene->mRootNode )
+		{
+			IceMaths::Matrix4x4	nodeXform = Convert( scene->mRootNode->mTransformation );
+			nodeXform.Scale( modelInfo.mScale[ 0 ], modelInfo.mScale[ 1 ], modelInfo.mScale[ 2 ] );
+
+			// cache the materials
+			ioScene.mutable_materials()->Reserve( scene->mNumMaterials );
+			for ( unsigned int m = 0; m < scene->mNumMaterials; ++m )
+			{
+				aiMaterial * sceneMaterial = scene->mMaterials[ m ];
+
+				modeldata::Material * ioMaterial = ioScene.add_materials();
+
+				aiString matName;
+				int sf = 0, cf = 0;
+
+				sceneMaterial->Get( AI_MATKEY_NAME, matName );
+				ioMaterial->set_name( matName.C_Str() );
+
+				if ( sceneMaterial->Get( "SURFACEFLAGS", 0, 0, sf ) == aiReturn_SUCCESS )
+					ioMaterial->set_surfaceflags( sf );
+				if ( sceneMaterial->Get( "CONTENTFLAGS", 0, 0, cf ) == aiReturn_SUCCESS )
+					ioMaterial->set_contents( cf );
+			}
+
+			// cache the meshes
+			ioScene.mutable_meshes()->Reserve( scene->mNumMeshes );
+			for ( unsigned int m = 0; m < scene->mNumMeshes; ++m )
+			{
+				aiMesh * sceneMesh = scene->mMeshes[ m ];
+				modeldata::Mesh * ioMesh = ioScene.add_meshes();
+				
+				if ( sceneMesh->mName.length > 0 )
+					ioMesh->set_name( sceneMesh->mName.C_Str() );
+				
+				ioMesh->set_materialindex( sceneMesh->mMaterialIndex );
+
+				// meshes may have no vertices or faces if they are external mesh references
+				if ( sceneMesh->mNumVertices > 0 )
+				{
+					std::vector<Vector3f> vertices( sceneMesh->mNumVertices );
+					for ( unsigned int v = 0; v < sceneMesh->mNumVertices; ++v )
+					{
+						vertices[ v ] = Vector3f( sceneMesh->mVertices[ v ].x, sceneMesh->mVertices[ v ].y, sceneMesh->mVertices[ v ].z );
+					}
+					ioMesh->mutable_vertices()->insert( 0, (const char*)&vertices[ 0 ], sizeof( Vector3f ) * vertices.size() );
+				}
+				else
+				{
+					ioMesh->set_externalref( true );
+				}
+				
+				if ( sceneMesh->mNumFaces > 0 )
+				{
+					std::vector<IceMaths::IndexedTriangle> faces;
+					faces.reserve( sceneMesh->mNumFaces );
+
+					for ( unsigned int f = 0; f < sceneMesh->mNumFaces; ++f )
+					{
+						const aiFace & meshFace = sceneMesh->mFaces[ f ];
+
+						assert( meshFace.mNumIndices == 3 && "Unhandled PolyArea Type" );
+						if ( meshFace.mNumIndices == 3 )
+							faces.emplace_back( IceMaths::IndexedTriangle( meshFace.mIndices[ 0 ], meshFace.mIndices[ 1 ], meshFace.mIndices[ 2 ] ) );
+					}
+					ioMesh->mutable_faces()->insert( 0, (const char*)&faces[ 0 ], sizeof( IceMaths::IndexedTriangle ) * faces.size() );
+				}
+				else
+				{
+					ioMesh->set_externalref( true );
+				}
+			}
+			
+			// build the node tree
+			scene->mRootNode->mName.Set( "root" );
+			modeldata::Node * rootNode = ioScene.mutable_rootnode();
+			BuildNodeTree( scene->mRootNode, rootNode, nodeXform );
+
+			aiReleaseImport( scene );
+		}
+		aiReleasePropertyStore( props );
+
+		if ( !ioScene.IsInitialized() )
+		{
+			EngineFuncs::ConsoleError( va( "Error Loading Model '%s'", modelInfo.mModelName ) );
+			return;
+		}
+		
+		// Save the cached file out for later loading
+		std::string cachedFileData;
+		if ( mCacheDb && ioScene.SerializeToString( &cachedFileData ) )
+		{
+			const size_t bufferSize = cachedFileData.size() + (size_t)( cachedFileData.size() * 0.1 );
+			boost::shared_array<char> compressBuffer( new char[ bufferSize ] );
+			const int sizeCompressed = fastlz_compress_level( 2, cachedFileData.c_str(), cachedFileData.size(), compressBuffer.get() );
+
+			sqlite3_stmt * statement = NULL;
+			if ( SQLITE_OK == CheckSqliteError( mCacheDb, sqlite3_prepare_v2( mCacheDb, "INSERT into modelCache ( name, crc, fullSize, modeldata, version ) VALUES( ?, ?, ?, ?, ? )", -1, &statement, NULL ) ) )
+			{
+				sqlite3_bind_text( statement, 1, modelInfo.mModelName, strlen( modelInfo.mModelName ), NULL );
+				sqlite3_bind_int( statement, 2, fileCrc );
+				sqlite3_bind_int( statement, 3, cachedFileData.size() );
+				sqlite3_bind_blob( statement, 4, compressBuffer.get(), sizeCompressed, NULL );
+				sqlite3_bind_int( statement, 5, VERSION_MODELCACHE );
+				
+				const int err = sqlite3_step( statement );
+				if ( CheckSqliteError( mCacheDb, err ) != SQLITE_DONE )
+				{
+					EngineFuncs::ConsoleError( va( "Error Saving to model cache db '%s'", modelInfo.mModelName ) );
+				}
+			}
+			CheckSqliteError( mCacheDb, sqlite3_finalize( statement ) );
+		}
 	}
 
-	// rendering stuff.
-	RecastOptions_t::DrawMode OldRenderMode = RecastOptions.RenderMode;
-	RecastOptions.RenderMode =
-		(RecastOptions_t::DrawMode)static_cast<gcn::DropDown*>(ps->findWidgetById("drawOptions"))->getSelected();
-	if(OldRenderMode != RecastOptions.RenderMode)
+	// Load from the custom format
+	if ( ioScene.IsInitialized() )
 	{
-		//gDDraw->ClearCache();
+		// Send the data to the analytics viewer about this model
+		if ( System::mInstance->mAnalytics && System::mInstance->mAnalytics->IsNetworkActive() )
+		{
+			std::string cachedFileData;
+			if ( ioScene.SerializeToString( &cachedFileData ) )
+			{
+				Analytics::MessageUnion msgUnion;
+				msgUnion.set_timestamp( 0 );
+
+				Analytics::SystemModelData* mdlData = msgUnion.mutable_systemmodeldata();
+				mdlData->set_compressiontype( Analytics::Compression_FastLZ );
+
+				// compress the tile data
+				/*const size_t bufferSize = cachedFileData.size() + (size_t)( cachedFileData.size() * 0.1 );
+				boost::shared_array<char> compressBuffer( new char[ bufferSize ] );
+				const int sizeCompressed = fastlz_compress_level( 2, cachedFileData.c_str(), cachedFileData.size(), compressBuffer.get() );
+				*/
+
+				mdlData->set_modelname( modelInfo.mModelName );
+				mdlData->set_modelbytes( cachedFileData  );
+				if ( msgUnion.IsInitialized() )
+					System::mInstance->mAnalytics->AddEvent( msgUnion );
+			}
+		}
+
+		Timer loadTimer;
+		loadTimer.Reset();
+
+		const modeldata::Node & ioNode = ioScene.rootnode();
+
+		for ( int n = 0; n < ioNode.children_size(); ++n )
+		{
+			const modeldata::Node & childNode = ioNode.children( n );
+
+			CreateModels( entity, xform, ioScene, childNode, baseStaticMesh );
+		}
+
+		LOG( "LoadWorldModel generated models in " << loadTimer.GetElapsedSeconds() << " seconds" );
+	}
+}
+
+void PathPlannerRecast::LoadWorldModel()
+{
+	LOGFUNC;
+
+	mNavigationBounds.Clear();
+
+	GameModelInfo modelInfo;
+	g_EngineFuncs->GetWorldModel( modelInfo, allocatorBot );
+
+	if ( modelInfo.mDataBuffer == NULL )
+		return;
+
+	LoadModel( modelInfo, GameEntity(), IceMaths::Matrix4x4(), true );
+	
+	// calculate the world bounds
+	mNavigationBounds.Clear();
+	for ( size_t i = 0; i < mModels.size(); ++i )
+	{
+		if ( mModels[ i ].mModel->IsValid() )
+			mNavigationBounds.ExpandAABB( ComputeAABB( mModels[ i ].mModel->GetWorldOBB( mModels[ i ].mTransform ) ) );
 	}
 
-	RecastOptions.FilterLedges =
-		static_cast<gcn::CheckBox*>(ps->findWidgetById("filter_ledges"))->isSelected();
-	RecastOptions.FilterLowHeight =
-		static_cast<gcn::CheckBox*>(ps->findWidgetById("filter_lowheight"))->isSelected();
-
-	RecastOptions.ClimbWalls =
-		static_cast<gcn::CheckBox*>(ps->findWidgetById("climb_walls"))->isSelected();
-	RecastOptions.DrawSolidNodes =
-		static_cast<gcn::CheckBox*>(ps->findWidgetById("draw_solids"))->isSelected();
-
-	RecastOptions.DrawOffset = static_cast<gcn::Slider*>(ps->findWidgetById("renderoff"))->getValue();
-	RecastOptions.TimeShare = static_cast<gcn::Slider*>(ps->findWidgetById("timeshare"))->getValue();
+	allocatorBot.FreeMemory( modelInfo.mDataBuffer );
 }
 
-Vector3f FromWorld(const AABB &_world, const Vector3f &_wp);
+//////////////////////////////////////////////////////////////////////////
 
-void PathPlannerRecast::RenderToMapViewPort(gcn::Widget *widget, gcn::Graphics *graphics)
+void PathPlannerRecast::EntityCreated( const EntityInstance &ei )
 {
-	using namespace gcn;
+	if ( ei.m_EntityCategory.CheckFlag( ENT_CAT_OBSTACLE ) )
+	{
+		for ( size_t i = 0; i < mModels.size(); ++i )
+		{
+			if ( mModels[ i ].mEntity == ei.m_Entity )
+				return;
+		}
 
-	Color colLinks(255,127,0);
-	Color colBot(0,0,255);
-	Color colBotPath(255,0,255);
+		Timer loadTimer;
+		loadTimer.Reset();
 
-#ifdef USE_TILED_NAVMESH
-	// TODO
-#else
-	//// find the nav extents
-	//AABB navextents;
-	//for (int i = 0; i < DetourNavmesh.getPolyCount(); ++i)
-	//{
-	//	const dtStatPoly* p = DetourNavmesh.getPoly(i);
-	//	unsigned short vi[3];
-	//	for (int j = 2; j < (int)p->nv; ++j)
-	//	{
-	//		vi[0] = p->v[0];
-	//		vi[1] = p->v[j-1];
-	//		vi[2] = p->v[j];
-	//		for (int k = 0; k < 3; ++k)
-	//		{
-	//			const float* v = DetourNavmesh.getVertex(vi[k]);
+		GameModelInfo modelInfo;
+		g_EngineFuncs->GetEntityModel( ei.m_Entity, modelInfo, allocatorBot );
 
-	//			Vector3f vec(v[0], v[2], v[1]);
-	//			if(i==0 && j==2)
-	//				navextents.Set(vec);
-	//			else
-	//				navextents.Expand(vec);
-	//		}
-	//	}
-	//}
-	//const int MapWidth = widget->getWidth();
-	//const int MapHeight = widget->getHeight();
-	//const float fDesiredAspectRatio = (float)MapWidth / (float)MapHeight;
-
-	//float fCurrentAspect = navextents.GetAxisLength(0) / navextents.GetAxisLength(1);
-	//if(fCurrentAspect < fDesiredAspectRatio)
-	//{
-	//	float fDesiredHeight = navextents.GetAxisLength(0) * fDesiredAspectRatio/fCurrentAspect;
-	//	navextents.ExpandAxis(0, (fDesiredHeight-navextents.GetAxisLength(0)) * 0.5f);
-	//}
-	//else if(fCurrentAspect > fDesiredAspectRatio)
-	//{
-	//	float fDesiredHeight = navextents.GetAxisLength(1) * fCurrentAspect/fDesiredAspectRatio;
-	//	navextents.ExpandAxis(1, (fDesiredHeight-navextents.GetAxisLength(1)) * 0.5f);
-	//}
-
-	//// Expand a small edge buffer
-	//navextents.ExpandAxis(0, 256.f);
-	//navextents.ExpandAxis(1, 256.f);
-
-	//gcn::Color col = gcn::Color(0,196,255,64);
-	//
-	//for (int i = 0; i < DetourNavmesh.getPolyCount(); ++i)
-	//{
-	//	const dtStatPoly* p = DetourNavmesh.getPoly(i);
-
-	//	int NumTriangles = 0;
-	//	gcn::Graphics::Triangle Triangles[64];
-
-	//	for (int j = 2; j < (int)p->nv; ++j)
-	//	{
-	//		Vector3f v0 = Vector3f(DetourNavmesh.getVertex(p->v[0]));
-	//		Vector3f v1 = Vector3f(DetourNavmesh.getVertex(p->v[j-1]));
-	//		Vector3f v2 = Vector3f(DetourNavmesh.getVertex(p->v[j]));
-	//		Vector2f vP0 = FromWorld(navextents, ToRecast(v0)).As2d();
-	//		Vector2f vP1 = FromWorld(navextents, ToRecast(v1)).As2d();
-	//		Vector2f vP2 = FromWorld(navextents, ToRecast(v2)).As2d();
-	//		//graphics->drawLine((int)vP1.X(), (int)vP1.Y(), (int)vP2.X(), (int)vP2.Y());
-
-	//		Triangles[NumTriangles].v0 = gcn::Graphics::Point((int)vP0.X(), (int)vP0.Y(), col);
-	//		Triangles[NumTriangles].v1 = gcn::Graphics::Point((int)vP1.X(), (int)vP1.Y(), col);
-	//		Triangles[NumTriangles].v2 = gcn::Graphics::Point((int)vP2.X(), (int)vP2.Y(), col);
-	//		NumTriangles++;
-	//	}
-	//	graphics->drawPolygon(Triangles,NumTriangles);
-	//}
-
-	//graphics->setColor(colLinks);
-	//for (int i = 0; i < DetourNavmesh.getPolyCount(); ++i)
-	//{
-	//	const dtStatPoly* p = DetourNavmesh.getPoly(i);
-	//	for(int l = 0; l < DT_STAT_LINKS_PER_POLYGON; ++l)
-	//	{
-	//		const dtStatPolyLink *link = DetourNavmesh.getLinkByRef(p->links[l]);
-	//		if(link)
-	//		{
-	//			Vector2f linkStart = FromWorld(navextents, ToRecast(link->start)).As2d();
-	//			Vector2f linkEnd = FromWorld(navextents, ToRecast(link->end)).As2d();
-	//			graphics->drawLine((int)linkStart.X(), (int)linkStart.Y(), (int)linkEnd.X(), (int)linkEnd.Y());
-	//		}
-	//	}
-	//}
-
-	//for(int i = 0; i < IGame::MAX_PLAYERS; ++i)
-	//{
-	//	ClientPtr c = IGameManager::GetInstance()->GetGame()->GetClientByIndex(i);
-	//	if(c)
-	//	{
-	//		Vector3f vViewPortPos = FromWorld(navextents, c->GetPosition());
-	//		Vector3f vViewPortFace = FromWorld(navextents, c->GetPosition() + c->GetFacingVector() * 50.f);
-
-	//		graphics->setColor(colBot);
-	//		graphics->drawLine((int)vViewPortPos.X(), (int)vViewPortPos.Y(), (int)vViewPortFace.X(), (int)vViewPortFace.Y());
-
-	//		//DrawBuffer::Add(graphics, Graphics::Line((int)vViewPortPos.X(), (int)vViewPortPos.Y(), (int)vViewPortFace.X(), (int)vViewPortFace.Y(), colBot));
-
-	//		/*if(selectedPlayer && selectedPlayer==c)
-	//			drawCircle(graphics, vViewPortPos, 3.f+Mathf::Sin(IGame::GetTimeSecs()*3.f), colSelectedBot);
-	//		else
-	//			drawCircle(graphics, vViewPortPos, 2, colBot);*/
-
-	//		//if(m_DrawBotPaths->value())
-	//		{
-	//			using namespace AiState;
-	//			FINDSTATE(follow, FollowPath, c->GetStateRoot());
-	//			if(follow)
-	//			{
-	//				Vector3f vLastPosition = c->GetPosition();
-
-	//				Path::PathPoint ppt;
-	//				Path pth = follow->GetCurrentPath();
-
-	//				while(pth.GetCurrentPt(ppt) && !pth.IsEndOfPath())
-	//				{
-	//					Vector3f vP1 = FromWorld(navextents, vLastPosition);
-	//					Vector3f vP2 = FromWorld(navextents, ppt.m_Pt);
-
-	//					graphics->setColor(colBotPath);
-	//					graphics->drawLine((int)vP1.X(), (int)vP1.Y(), (int)vP2.X(), (int)vP2.Y());
-
-	//					//drawCircle(graphics, FromWorld(navextents, ppt.m_Pt), ppt.m_Radius*fRadiusScaler, colBotPath);
-
-	//					vLastPosition =  ppt.m_Pt;
-	//					pth.NextPt();
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
-#endif
+		if ( modelInfo.mDataBuffer != NULL )
+		{
+			LoadModel( modelInfo, ei.m_Entity, IceMaths::Matrix4x4(), false );
+			allocatorBot.FreeMemory( modelInfo.mDataBuffer );
+		}
+		else if ( !modelInfo.mAABB.IsZero() )
+		{
+			CreateModels( ei.m_Entity, modelInfo.mAABB, false );
+		}
+	}
 }
-#endif
 
-bool PathPlannerRecast::ladder_t::OverLaps(const ladder_t & other) const
+void PathPlannerRecast::EntityDeleted( const EntityInstance &ei )
 {
-	AABB myBounds(bottom);
-	myBounds.Expand(top);
-	myBounds.Expand(width);
-
-	AABB otherBounds(other.bottom);
-	otherBounds.Expand(other.top);
-	otherBounds.Expand(other.width);
-
-	return myBounds.Intersects(otherBounds);
+	for ( size_t i = 0; i < mModels.size(); ++i )
+	{
+		if ( mModels[ i ].mEntity == ei.m_Entity )
+		{
+			mModels[ i ].mActiveState = StateMarkedForDelete;
+		}
+	}
 }
 
-//void PathPlannerRecast::ladder_t::Render(RenderOverlay *overlay) const
-//{
-//	Vector3f midPt = top.MidPoint(bottom);
-//	Vector3f side = Normalize(top-bottom).Cross(normal);
-//
-//	overlay->SetColor(COLOR::GREEN);
-//	overlay->DrawLine(top,bottom);
-//	overlay->DrawLine(midPt+side*width*0.5f,midPt-side*width*0.5f);
-//}
+bool PathPlannerRecast::GetAimedAtModel( size_t & modelIndex, size_t & triangleIndex, Vector3f & hitPos, Vector3f & hitNormal )
+{
+	Vector3f rayStart, rayDir;
+	if ( Utils::GetLocalEyePosition( rayStart ) && Utils::GetLocalFacing( rayDir ) )
+	{
+		float closestDist = FLT_MAX;
+		size_t closestIndex = 0;
+		CollisionModel::RayResult bestResult;
+
+		for ( size_t i = 0; i < mModels.size(); ++i )
+		{
+			CollisionModel::RayResult result;
+			if ( mModels[ i ].mModel->CollideRay( mModels[ i ].mTransform, result, rayStart, rayStart + rayDir * 4096.0f ) )
+			{
+				const float dist = ( rayStart - result.mHitPos ).Length();
+				if ( dist < closestDist )
+				{
+					closestDist = dist;
+					closestIndex = i;
+					bestResult = result;
+				}
+			}
+		}
+
+		if ( closestDist < FLT_MAX )
+		{
+			modelIndex = closestIndex;
+			triangleIndex = bestResult.mHitTriangle;
+			hitPos = bestResult.mHitPos;
+			hitNormal = bestResult.mHitNormal;
+			return true;
+		}
+	}
+	return false;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+void OffMeshConnection::Render()
+{
+	std::string areaStr, flagStr;
+	PolyAreaToString( mAreaType, areaStr );
+	PolyFlagsToString( mFlags, flagStr );
+
+	Vector3f lastPt = mEntry;
+	for ( size_t i = 0; i < mNumPts; ++i )
+	{
+		RenderBuffer::AddLine( lastPt, mIntermediates[ i ], COLOR::GREEN );
+		lastPt = mIntermediates[ i ];
+	}
+
+	RenderBuffer::AddCircle( mEntry, mRadius, COLOR::GREEN );
+	RenderBuffer::AddCircle( mExit, mRadius, COLOR::GREEN );
+	RenderBuffer::AddLine( lastPt, mExit, COLOR::GREEN );
+	RenderBuffer::AddString3d( mEntry + Vector3f( 0.f, 0.f, 40.f ), COLOR::BLUE, va( "%s (%s)", areaStr.c_str(), flagStr.c_str() ) );
+	RenderBuffer::AddString3d( mExit + Vector3f( 0.f, 0.f, 40.f ), COLOR::BLUE, va( "%s (%s)", areaStr.c_str(), flagStr.c_str() ) );
+}

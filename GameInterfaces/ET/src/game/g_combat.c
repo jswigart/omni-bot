@@ -247,7 +247,7 @@ void body_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int d
 
 
 // these are just for logging, the client prints its own messages
-char *modNames[] =
+const char *modNames[] =
 {
 	"MOD_UNKNOWN",
 	"MOD_MACHINEGUN",
@@ -332,6 +332,8 @@ char *modNames[] =
 	// OSP -- keep these 2 entries last
 	"MOD_SWITCHTEAM"
 };
+
+const int numModNames = sizeof(modNames) / sizeof(modNames[0]);
 
 /*
 ==================
@@ -461,8 +463,7 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 	}
 
 	if(g_gamestate.integer == GS_PLAYING) {
-		char *obit;
-
+		const char * obit = NULL;
 		if(meansOfDeath < 0 || meansOfDeath >= sizeof(modNames) / sizeof(modNames[0])) {
 			obit = "<bad obituary>";
 		} else {
@@ -470,8 +471,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		}
 
 		// omnibot
-		Bot_Event_Death(self-g_entities, &g_entities[attacker-g_entities], obit);
-		Bot_Event_KilledSomeone(attacker-g_entities, &g_entities[self-g_entities], obit);
+		Bot_Event_Death(self, attacker, obit);
+		Bot_Event_KilledSomeone(attacker, self, obit);
 		// end omnibot
 
 		G_LogPrintf("Kill: %i %i %i: %s killed %s by %s\n", killer, self->s.number, meansOfDeath, killerName, self->client->pers.netname, obit );
@@ -1699,7 +1700,10 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,  vec3
 			BotRecordPain( targ->s.number, attacker->s.number, mod );
 #endif
 			// omnibot
-			Bot_Event_TakeDamage(targ-g_entities, attacker);
+			const char * damageType = NULL;
+			if ( mod >= 0 && mod < numModNames )
+				damageType = modNames[ mod ];
+			Bot_Event_TakeDamage(targ, attacker,damageType,take);
 			// end omnibot
 		}
 	}

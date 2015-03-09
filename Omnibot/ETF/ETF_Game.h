@@ -36,16 +36,14 @@ public:
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
 	const char *GetGameDatabaseAbbrev() const { return "etf"; }
-	virtual eNavigatorID GetDefaultNavigator() const { return NAVID_NAVMESH; }
+	virtual NavigatorID GetDefaultNavigator() const { return NAVID_RECAST; }
 	bool ReadyForDebugWindow() const { return true; }
 	virtual const char *IsDebugDrawSupported() const;
 
+	virtual bool GetAnalyticsKeys( GameAnalyticsKeys & keys );
+
 	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
-
-	NavFlags WaypointBlockableFlags() const;
-	NavFlags WaypointCallbackFlags() const;
-	BlockableStatus WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw) const;
-
+	
 	ETF_Game() { }
 	virtual ~ETF_Game() {}
 protected:

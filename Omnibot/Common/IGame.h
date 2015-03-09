@@ -13,12 +13,11 @@
 
 #include "CommandReciever.h"
 #include "EventReciever.h"
-#include "PathPlannerWaypointInterface.h"
 #include "Weapon.h"
-#include "Module.h"
 #include "Base_Messages.h"
 #include "PropertyBinding.h"
 #include "Regulator.h"
+#include "GameAnalytics.h"
 
 class System;
 class State;
@@ -50,10 +49,7 @@ struct EntityInstance
 //		This class provides common functionality for various game types.
 //		Specific games will derive from this class to expand and implement
 //		their required functionality.
-class IGame :
-	public CommandReciever,
-	public EventReciever,
-	public PathPlannerWaypointInterface // waypoint system specific callbacks
+class IGame : public CommandReciever, public EventReciever
 {
 public:
 	struct GameVars
@@ -61,7 +57,10 @@ public:
 		float	mPlayerHeight;
 		GameVars();
 	};
-	static const GameVars &GetGameVars() { return m_GameVars; }
+	static const GameVars &GetGameVars()
+	{
+		return m_GameVars;
+	}
 
 	virtual bool Init( System & system );
 	virtual void Shutdown();
@@ -70,71 +69,121 @@ public:
 	virtual void EndGame();
 	virtual void NewRound();
 	virtual void StartTraining();
-	virtual void RegisterNavigationFlags(PathPlannerBase *_planner);
 	virtual void InitMapScript();
 
-	virtual void ClientJoined(const Event_SystemClientConnected *_msg);
-	virtual void ClientLeft(const Event_SystemClientDisConnected *_msg);
+	virtual void ClientJoined( const Event_SystemClientConnected *_msg );
+	virtual void ClientLeft( const Event_SystemClientDisConnected *_msg );
 
 	void UpdateTime();
-	static inline obint32 GetTime()				{ return m_GameMsec; };
-	static inline obReal GetTimeSecs()			{ return (float)m_GameMsec / 1000.f; };
-	static inline obint32 GetDeltaTime()		{ return m_DeltaMsec; };
-	static inline obReal GetDeltaTimeSecs()		{ return (float)m_DeltaMsec * 0.001f; };
-	static inline obint32 GetTimeSinceStart()	{ return m_GameMsec - m_StartTimeMsec; };
-	static inline obint32 GetFrameNumber()		{ return m_GameFrame; }
-	static inline void SetTime(obint32 _newtime){ m_GameMsec = _newtime; }
-	static inline obReal GetGravity()			{ return m_Gravity; }
-	static inline bool GetCheatsEnabled()		{ return m_CheatsEnabled; }
+	static inline obint32 GetTime()
+	{
+		return m_GameMsec;
+	};
+	static inline obReal GetTimeSecs()
+	{
+		return (float)m_GameMsec / 1000.f;
+	};
+	static inline obint32 GetDeltaTime()
+	{
+		return m_DeltaMsec;
+	};
+	static inline obReal GetDeltaTimeSecs()
+	{
+		return (float)m_DeltaMsec * 0.001f;
+	};
+	static inline obint32 GetTimeSinceStart()
+	{
+		return m_GameMsec - m_StartTimeMsec;
+	};
+	static inline obint32 GetFrameNumber()
+	{
+		return m_GameFrame;
+	}
+	static inline void SetTime( obint32 _newtime )
+	{
+		m_GameMsec = _newtime;
+	}
+	static inline obReal GetGravity()
+	{
+		return m_Gravity;
+	}
+	static inline bool GetCheatsEnabled()
+	{
+		return m_CheatsEnabled;
+	}
 
-	void DispatchEvent(int _dest, const MessageHelper &_message);
-	void DispatchGlobalEvent(const MessageHelper &_message);
+	void DispatchEvent( int _dest, const MessageHelper &_message );
+	void DispatchGlobalEvent( const MessageHelper &_message );
 
 	virtual const char *GetVersion() const;
 	virtual int GetVersionNum() const = 0;
-	virtual bool CheckVersion(int _version);
+	virtual bool CheckVersion( int _version );
 	virtual const char *GetGameName() const = 0;
 	virtual const char *GetDLLName() const = 0;
 	virtual const char *GetModSubFolder() const = 0;
 	virtual const char *GetNavSubfolder() const = 0;
 	virtual const char *GetScriptSubfolder() const = 0;
 	virtual const char *GetGameDatabaseAbbrev() const = 0;
-	virtual eNavigatorID GetDefaultNavigator() const { return NAVID_NAVMESH; }
+	virtual NavigatorID GetDefaultNavigator() const
+	{
+		return NAVID_RECAST;
+	}
 
-	virtual bool RendersToGame() const { return false; }
+	virtual bool RendersToGame() const
+	{
+		return false;
+	}
 
-	virtual bool ReadyForDebugWindow() const { return true; }
-	virtual const char *IsDebugDrawSupported() const { return NULL; }
+	virtual bool ReadyForDebugWindow() const
+	{
+		return true;
+	}
+	virtual const char *IsDebugDrawSupported() const
+	{
+		return NULL;
+	}
 
-	ClientPtr GetClientByGameId(int _gameId);
-	ClientPtr GetClientByIndex(int _index);
+	ClientPtr GetClientByGameId( int _gameId );
+	ClientPtr GetClientByIndex( int _index );
 
-	virtual const char *FindClassName(obint32 _classId);
-	virtual int FindWeaponId(obint32 _classId);
+	virtual const char *FindClassName( obint32 _classId );
+	virtual int FindWeaponId( obint32 _classId );
 
 	// Mod specific subclasses.
-	virtual GoalManager *GetGoalManager();
+	virtual GoalManager * AllocGoalManager();
 	virtual Client *CreateGameClient() = 0;
 
-	virtual void GetWeaponEnumeration(const IntEnum *&_ptr, int &num) = 0;
-	virtual void GetTeamEnumeration(const IntEnum *&_ptr, int &num) = 0;
-	virtual void GetRoleEnumeration(const IntEnum *&_ptr, int &num);
-	
-	virtual void AddBot(Msg_Addbot &_addbot, bool _createnow = true);
+	virtual void GetWeaponEnumeration( const IntEnum *&_ptr, int &num ) = 0;
+	virtual void GetTeamEnumeration( const IntEnum *&_ptr, int &num ) = 0;
+	virtual void GetRoleEnumeration( const IntEnum *&_ptr, int &num );
 
-	virtual void CheckServerSettings(bool managePlayers = true);
+	virtual void AddBot( Msg_Addbot &_addbot, bool _createnow = true );
 
-	inline bool DrawBlockableTests()				{ return m_bDrawBlockableTests; }
+	virtual void CheckServerSettings( bool managePlayers = true );
 
-	void LoadGoalScripts(bool _clearold);
+	inline bool DrawBlockableTests()
+	{
+		return m_bDrawBlockableTests;
+	}
 
-	virtual ClientPtr &GetClientFromCorrectedGameId(int _gameid);
+	void LoadGoalScripts( bool _clearold );
 
-	virtual bool CreateCriteria(gmThread *_thread, CheckCriteria &_criteria, std::stringstream &err);
+	virtual ClientPtr &GetClientFromCorrectedGameId( int _gameid );
 
-	static GameState GetGameState() { return m_GameState; }
-	static GameState GetLastGameState() { return m_LastGameState; }
-	static bool GameStarted() { return m_GameState != GAME_STATE_INVALID; }
+	virtual bool CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::stringstream &err );
+
+	static GameState GetGameState()
+	{
+		return m_GameState;
+	}
+	static GameState GetLastGameState()
+	{
+		return m_LastGameState;
+	}
+	static bool GameStarted()
+	{
+		return m_GameState != GAME_STATE_INVALID;
+	}
 
 	// Game Entity Stuff
 	class EntityIterator
@@ -143,31 +192,50 @@ public:
 		friend class IGame;
 		operator bool() const;
 		void Clear();
-		EntityInstance &GetEnt() { return m_Current; }
-		const EntityInstance &GetEnt() const { return m_Current; }
-		const int GetIndex() const { return m_Index; }
-		EntityIterator() {}
+		EntityInstance &GetEnt()
+		{
+			return m_Current;
+		}
+		const EntityInstance &GetEnt() const
+		{
+			return m_Current;
+		}
+		const int GetIndex() const
+		{
+			return m_Index;
+		}
+		EntityIterator()
+		{
+		}
 	private:
 		EntityInstance	m_Current;
 		int				m_Index;
 	};
 
-	static bool IsEntityValid(const GameEntity &_hnl);
-	static bool IterateEntity(IGame::EntityIterator &_it);
-	static void UpdateEntity(EntityInstance &_ent);
+	static bool IsEntityValid( const GameEntity &_hnl );
+	static bool IterateEntity( IGame::EntityIterator &_it );
+	static void UpdateEntity( EntityInstance &_ent );
 
-	void AddDeletedThread(int threadId);
+	void AddDeletedThread( int threadId );
 	void PropogateDeletedThreads();
 
 	// Debug Window
 	int GetDebugWindowNumClients() const;
-	ClientPtr GetDebugWindowClient(int index) const;
+	ClientPtr GetDebugWindowClient( int index ) const;
 
-	virtual void InitGlobalStates() {}
+	virtual void InitGlobalStates()
+	{
+	}
 
-	virtual bool AddWeaponId(const char * weaponName, int weaponId) { return false; }
+	virtual bool AddWeaponId( const char * weaponName, int weaponId )
+	{
+		return false;
+	}
 
-	virtual const char * RemoteConfigName() const { return "Omnibot"; }
+	virtual const char * RemoteConfigName() const
+	{
+		return "Omnibot";
+	}
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 	void UpdateSync( RemoteLib::DebugConnection * connection, Remote::Game & cached, Remote::Game & update );
@@ -175,18 +243,23 @@ public:
 	virtual void InternalSyncEntity( const EntityInstance & ent, RemoteLib::DebugConnection * connection );
 #endif
 
-	bool AddUpdateFunction(const std::string &_name, FunctorPtr _func);
-	bool RemoveUpdateFunction(const std::string &_name);
+	bool AddUpdateFunction( const std::string &_name, FunctorPtr _func );
+	bool RemoveUpdateFunction( const std::string &_name );
+
+	virtual bool GetAnalyticsKeys( GameAnalyticsKeys & keys )
+	{
+		return false;
+	}
 
 	IGame();
 	virtual ~IGame();
 protected:
-	ClientPtr			m_ClientList[Constants::MAX_PLAYERS];
+	ClientPtr			m_ClientList[ Constants::MAX_PLAYERS ];
 
 	State				*m_StateRoot;
 
 	static int					m_MaxEntity;
-	static EntityInstance		m_GameEntities[Constants::MAX_ENTITIES];
+	static EntityInstance		m_GameEntities[ Constants::MAX_ENTITIES ];
 
 	static GameState	m_GameState;
 	static GameState	m_LastGameState;
@@ -201,60 +274,69 @@ protected:
 
 	static GameVars		m_GameVars;
 
-	Module				m_AttachedGui;
-
 	FunctorMap			m_UpdateMap;
 
-	enum { MaxDeletedThreads = 1024 };
-	int			m_DeletedThreads[MaxDeletedThreads];
+	enum
+	{
+		MaxDeletedThreads = 1024
+	};
+	int			m_DeletedThreads[ MaxDeletedThreads ];
 	int			m_NumDeletedThreads;
 
-	virtual void GetGameVars(GameVars &_gamevars) = 0;
+	virtual void GetGameVars( GameVars &_gamevars ) = 0;
 
 	void CheckGameState();
 
 	// Script support.
 	void InitScriptSupport();
-	virtual void InitScriptBinds(gmMachine *_machine) {}
-	virtual void InitScriptTeams(gmMachine *_machine, gmTableObject *_table);
-	virtual void InitScriptWeapons(gmMachine *_machine, gmTableObject *_table);
-	virtual void InitScriptRoles(gmMachine *_machine, gmTableObject *_table);
-	virtual void InitScriptClasses(gmMachine *_machine, gmTableObject *_table);
-	virtual void InitScriptWeaponClasses(gmMachine *_machine, gmTableObject *_table, int weaponClassId);
-	virtual void InitScriptSkills(gmMachine *_machine, gmTableObject *_table);
-	virtual void InitScriptItems(gmMachine *_machine, gmTableObject *_table) {};
-	virtual void InitScriptEvents(gmMachine *_machine, gmTableObject *_table);
-	virtual void InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table);
-	virtual void InitScriptPowerups(gmMachine *_machine, gmTableObject *_table);
-	virtual void InitScriptCategories(gmMachine *_machine, gmTableObject *_table);
-	virtual void InitScriptBotButtons(gmMachine *_machine, gmTableObject *_table);
-	virtual void InitScriptTraceMasks(gmMachine *_machine, gmTableObject *_table);
-	virtual void InitScriptContentFlags(gmMachine *_machine, gmTableObject *_table);
-	virtual void InitScriptBlackboardKeys(gmMachine *_machine, gmTableObject *_table);
-	virtual void InitScriptBuyMenu(gmMachine *_machine, gmTableObject *_table) {};
-	virtual void InitDebugFlags(gmMachine *_machine, gmTableObject *_table);
-	virtual void InitBoneIds(gmMachine *_machine, gmTableObject *_table);
+	virtual void InitScriptBinds( gmMachine *_machine )
+	{
+	}
+	virtual void InitScriptTeams( gmMachine *_machine, gmTableObject *_table );
+	virtual void InitScriptWeapons( gmMachine *_machine, gmTableObject *_table );
+	virtual void InitScriptRoles( gmMachine *_machine, gmTableObject *_table );
+	virtual void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
+	virtual void InitScriptWeaponClasses( gmMachine *_machine, gmTableObject *_table, int weaponClassId );
+	virtual void InitScriptSkills( gmMachine *_machine, gmTableObject *_table );
+	virtual void InitScriptItems( gmMachine *_machine, gmTableObject *_table )
+	{
+	};
+	virtual void InitScriptEvents( gmMachine *_machine, gmTableObject *_table );
+	virtual void InitScriptEntityFlags( gmMachine *_machine, gmTableObject *_table );
+	virtual void InitScriptPowerups( gmMachine *_machine, gmTableObject *_table );
+	virtual void InitScriptCategories( gmMachine *_machine, gmTableObject *_table );
+	virtual void InitScriptBotButtons( gmMachine *_machine, gmTableObject *_table );
+	virtual void InitScriptTraceMasks( gmMachine *_machine, gmTableObject *_table );
+	virtual void InitScriptContentFlags( gmMachine *_machine, gmTableObject *_table );
+	virtual void InitScriptBlackboardKeys( gmMachine *_machine, gmTableObject *_table );
+	virtual void InitScriptBuyMenu( gmMachine *_machine, gmTableObject *_table )
+	{
+	};
+	virtual void InitDebugFlags( gmMachine *_machine, gmTableObject *_table );
+	virtual void InitBoneIds( gmMachine *_machine, gmTableObject *_table );
 
-	virtual void InitVoiceMacros(gmMachine *_machine, gmTableObject *_table) {};
+	virtual void InitVoiceMacros( gmMachine *_machine, gmTableObject *_table )
+	{
+	};
 
 	int	m_WeaponClassIdStart; // start value of weapon class id range
 
 	// Commands
 	virtual void InitCommands();
-	bool UnhandledCommand(const StringVector &_args);
-	void cmdRevision(const StringVector &_args);
-	void cmdAddbot(const StringVector &_args);
-	void cmdKickbot(const StringVector &_args);
-	void cmdDebugBot(const StringVector &_args);
-	void cmdKickAll(const StringVector &_args);
-	void cmdBotDontShoot(const StringVector &_args);
-	void cmdDumpBlackboard(const StringVector &_args);
-	void cmdReloadWeaponDatabase(const StringVector &_args);
-	void cmdDrawBlockableTests(const StringVector &_args);
-	void cmdPrintFileSystem(const StringVector &_args);
-	void cmdTraceBenchmark(const StringVector &_args);
-	void cmdShowProcesses(const StringVector &_args);
-	void cmdStopProcess(const StringVector &_args);
+	bool UnhandledCommand( const StringVector &_args );
+	void cmdRevision( const StringVector &_args );
+	void cmdAddbot( const StringVector &_args );
+	void cmdKickbot( const StringVector &_args );
+	void cmdDebugBot( const StringVector &_args );
+	void cmdKickAll( const StringVector &_args );
+	void cmdBotDontShoot( const StringVector &_args );
+	void cmdDumpBlackboard( const StringVector &_args );
+	void cmdReloadWeaponDatabase( const StringVector &_args );
+	void cmdDrawBlockableTests( const StringVector &_args );
+	void cmdPrintFileSystem( const StringVector &_args );
+	void cmdTraceBenchmark( const StringVector &_args );
+	void cmdShowProcesses( const StringVector &_args );
+	void cmdStopProcess( const StringVector &_args );
 
 	// Server settings
 	RegulatorPtr	m_SettingLimiter;
@@ -263,7 +345,7 @@ protected:
 	// Misc
 	bool			m_bDrawBlockableTests;
 
-	void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+	void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
 	void UpdateProcesses();
 };

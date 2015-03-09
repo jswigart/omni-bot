@@ -397,15 +397,6 @@ void State::ExitAll()
 	InternalExit();
 }
 
-void State::CheckForCallbacks(const MessageHelper &_message, CallbackParameters &_cb)
-{
-	if(IsRoot() || IsActive() || AlwaysRecieveEvents())
-		InternalProcessEvent(_message, _cb);
-
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
-		pState->CheckForCallbacks(_message, _cb);
-}
-
 void State::SignalThreads(const gmVariable &_signal)
 {
 	if(!IsRoot() && !IsActive() && !m_StateFlags.CheckFlag(State_AlwaysRecieveSignals))
@@ -416,6 +407,15 @@ void State::SignalThreads(const gmVariable &_signal)
 	InternalSignal(_signal);
 	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
 		pState->SignalThreads(_signal);
+}
+
+void State::CheckForCallbacks(const MessageHelper &_message, CallbackParameters &_cb)
+{
+	if(IsRoot() || IsActive() || AlwaysRecieveEvents())
+		InternalProcessEvent(_message, _cb);
+
+	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
+		pState->CheckForCallbacks(_message, _cb);
 }
 
 void State::InternalProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)

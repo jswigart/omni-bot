@@ -9,15 +9,12 @@
 #include "ScriptManager.h"
 
 #include "ET_Client.h"
-#include "ET_NavigationFlags.h"
 #include "ET_VoiceMacros.h"
 #include "ET_FilterClosest.h"
 #include "ET_Messages.h"
 #include "ET_BaseStates.h"
 #include "ET_InterfaceFuncs.h"
 #include "ET_Game.h"
-
-#include "Waypoint.h"
 
 //////////////////////////////////////////////////////////////////////////
 // MOVE THIS
@@ -158,7 +155,8 @@ void ET_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 		HANDLER(ET_EVENT_FIRETEAM_DISBANDED)
 		{
 			_cb.CallScript();
-			//const Event_FireTeamDisbanded *m = _message.Get<Event_FireTeamDisbanded>();
+			const Event_FireTeamDisbanded *m = _message.Get<Event_FireTeamDisbanded>();
+			_cb.AddInt("fireteamnum",m->m_FireTeamNum);
 			break;
 		}
 		HANDLER(ET_EVENT_FIRETEAM_JOINED)
@@ -166,12 +164,14 @@ void ET_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 			_cb.CallScript();
 			const Event_FireTeamJoined *m = _message.Get<Event_FireTeamJoined>();
 			_cb.AddEntity("teamleader",m->m_TeamLeader);
+			_cb.AddInt("fireteamnum",m->m_FireTeamNum);
 			break;
 		}
 		HANDLER(ET_EVENT_FIRETEAM_LEFT)
 		{
 			_cb.CallScript();
-			//const Event_FireTeamLeft *m = _message.Get<Event_FireTeamLeft>();
+			const Event_FireTeamLeft *m = _message.Get<Event_FireTeamLeft>();
+			_cb.AddInt("fireteamnum",m->m_FireTeamNum);
 			break;
 		}
 		HANDLER(ET_EVENT_FIRETEAM_INVITED)
@@ -179,6 +179,7 @@ void ET_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 			_cb.CallScript();
 			const Event_FireTeamInvited *m = _message.Get<Event_FireTeamInvited>();
 			_cb.AddEntity("teamleader",m->m_TeamLeader);
+			_cb.AddInt("fireteamnum",m->m_FireTeamNum);
 			break;
 		}
 		HANDLER(ET_EVENT_FIRETEAM_PROPOSAL)
@@ -186,6 +187,7 @@ void ET_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 			_cb.CallScript();
 			const Event_FireTeamProposal *m = _message.Get<Event_FireTeamProposal>();
 			_cb.AddEntity("invitee",m->m_Invitee);
+			_cb.AddInt("fireteamnum",m->m_FireTeamNum);
 			break;
 		}
 		HANDLER(ET_EVENT_FIRETEAM_WARNED)
@@ -193,6 +195,7 @@ void ET_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 			_cb.CallScript();
 			const Event_FireTeamWarning *m = _message.Get<Event_FireTeamWarning>();
 			_cb.AddEntity("warnedby",m->m_WarnedBy);
+			_cb.AddInt("fireteamnum",m->m_FireTeamNum);
 			break;
 		}
 		HANDLER(ET_EVENT_RECIEVEDAMMO)
@@ -206,20 +209,30 @@ void ET_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &
 	Client::ProcessEvent(_message, _cb);
 }
 
-NavFlags ET_Client::GetTeamFlag()
+void ET_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 {
-	return GetTeamFlag(GetTeam());
+	includeFlags = NAVFLAGS_WALK;
+
+	switch ( GetTeam() )
+	{
+		case ET_TEAM_AXIS:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			break;
+		case ET_TEAM_ALLIES:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			break;		
+	}
 }
 
-NavFlags ET_Client::GetTeamFlag(int _team)
+NavFlags ET_Client::GetTeamFlag(int _team) const
 {
 	static const NavFlags defaultTeam = 0;
 	switch(_team)
 	{
 	case ET_TEAM_AXIS:
-		return F_NAV_TEAM1;
+		return NAVFLAGS_TEAM1_ONLY;
 	case ET_TEAM_ALLIES:
-		return F_NAV_TEAM2;
+		return NAVFLAGS_TEAM2_ONLY;
 	default:
 		return defaultTeam;
 	}
@@ -324,30 +337,30 @@ int ET_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
 	return iVoiceId;
 }
 
-void ET_Client::ProcessGotoNode( const PathInterface::PathEdge edges[ 2 ], const size_t numEdges )
+void ET_Client::ProcessGotoNode( const PathInterface::PathCorner corners[ 2 ], const size_t numEdges )
 {
-	if ( numEdges > 0 )
-	{
-		if(edges[ 0 ].mFlags & F_ET_NAV_SPRINT)
-		{
-			PressButton(BOT_BUTTON_SPRINT);
-		}
+	//if ( numEdges > 0 )
+	//{
+	//	if(corners[ 0 ].mFlags & F_ET_NAV_SPRINT)
+	//	{
+	//		PressButton(BOT_BUTTON_SPRINT);
+	//	}
 
-		// test for inwater / jump to move to surface
-		if(edges[ 0 ].mFlags & F_NAV_INWATER)
-		{
-			PressButton(BOT_BUTTON_JUMP);
-		}
+	//	// test for inwater / jump to move to surface
+	//	if(corners[ 0 ].mFlags & F_NAV_INWATER)
+	//	{
+	//		PressButton(BOT_BUTTON_JUMP);
+	//	}
 
-		if(edges[ 0 ].mFlags & F_ET_NAV_STRAFE_L)
-		{
-			PressButton(BOT_BUTTON_LSTRAFE);
-		}
-		else if(edges[ 0 ].mFlags & F_ET_NAV_STRAFE_R)
-		{
-			PressButton(BOT_BUTTON_RSTRAFE);
-		}
-	}
+	//	if(corners[ 0 ].mFlags & F_ET_NAV_STRAFE_L)
+	//	{
+	//		PressButton(BOT_BUTTON_LSTRAFE);
+	//	}
+	//	else if(corners[ 0 ].mFlags & F_ET_NAV_STRAFE_R)
+	//	{
+	//		PressButton(BOT_BUTTON_RSTRAFE);
+	//	}
+	//}
 }
 
 void ET_Client::ProcessGotoNode(const Path &_path)
@@ -355,25 +368,25 @@ void ET_Client::ProcessGotoNode(const Path &_path)
 	Path::PathPoint pt;
 	_path.GetCurrentPt(pt);
 
-	if(pt.m_NavFlags & F_ET_NAV_SPRINT)
-	{
-		PressButton(BOT_BUTTON_SPRINT);
-	}
+	//if(pt.m_NavFlags & F_ET_NAV_SPRINT)
+	//{
+	//	PressButton(BOT_BUTTON_SPRINT);
+	//}
 
-	// test for inwater / jump to move to surface
-	if(pt.m_NavFlags & F_NAV_INWATER)
-	{
-		PressButton(BOT_BUTTON_JUMP);
-	}
+	//// test for inwater / jump to move to surface
+	//if(pt.m_NavFlags & F_NAV_INWATER)
+	//{
+	//	PressButton(BOT_BUTTON_JUMP);
+	//}
 
-	if(pt.m_NavFlags & F_ET_NAV_STRAFE_L)
-	{
-		PressButton(BOT_BUTTON_LSTRAFE);
-	}
-	else if(pt.m_NavFlags & F_ET_NAV_STRAFE_R)
-	{
-		PressButton(BOT_BUTTON_RSTRAFE);
-	}
+	//if(pt.m_NavFlags & F_ET_NAV_STRAFE_L)
+	//{
+	//	PressButton(BOT_BUTTON_LSTRAFE);
+	//}
+	//else if(pt.m_NavFlags & F_ET_NAV_STRAFE_R)
+	//{
+	//	PressButton(BOT_BUTTON_RSTRAFE);
+	//}
 }
 
 float ET_Client::GetGameVar(GameVar _var) const
@@ -480,36 +493,36 @@ bool ET_Client::GetSkills(gmMachine *machine, gmTableObject *tbl)
 	return false;
 }
 
-float ET_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
-{
-	using namespace AiState;
-
-	if(_flag & F_ET_NAV_DISGUISE)
-	{
-		if(HasEntityFlag(ET_ENT_FLAG_DISGUISED))
-			return 1.f;
-		return 0.f;
-	}
-
-	if(_flag & F_ET_NAV_USEPATH)
-	{
-		const PropertyMap::ValueMap &pm = to->GetPropertyMap().GetProperties();
-		PropertyMap::ValueMap::const_iterator cIt = pm.begin();
-		FINDSTATE(hl,HighLevel,this->GetStateRoot());
-
-		if(hl != NULL && hl->GetActiveState())
-		{
-			std::string gn = Utils::StringToLower(hl->GetActiveState()->GetName());
-			for(; cIt != pm.end(); ++cIt)
-			{
-				if ( gn == (*cIt).first && (*cIt).second == "true" )
-					return 1.0f;
-			}
-		}
-	}
-
-	return 0.f;
-}
+//float ET_Client::NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to)
+//{
+//	using namespace AiState;
+//
+//	if(_flag & F_ET_NAV_DISGUISE)
+//	{
+//		if(HasEntityFlag(ET_ENT_FLAG_DISGUISED))
+//			return 1.f;
+//		return 0.f;
+//	}
+//
+//	if(_flag & F_ET_NAV_USEPATH)
+//	{
+//		const PropertyMap::ValueMap &pm = to->GetPropertyMap().GetProperties();
+//		PropertyMap::ValueMap::const_iterator cIt = pm.begin();
+//		FINDSTATE(hl,HighLevel,this->GetStateRoot());
+//
+//		if(hl != NULL && hl->GetActiveState())
+//		{
+//			std::string gn = Utils::StringToLower(hl->GetActiveState()->GetName());
+//			for(; cIt != pm.end(); ++cIt)
+//			{
+//				if ( gn == (*cIt).first && (*cIt).second == "true" )
+//					return 1.0f;
+//			}
+//		}
+//	}
+//
+//	return 0.f;
+//}
 
 //////////////////////////////////////////////////////////////////////////
 

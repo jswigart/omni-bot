@@ -23,8 +23,9 @@ public:
 
 	void Init(int _gameid);
 
-	NavFlags GetTeamFlag();
-	NavFlags GetTeamFlag(int _team);
+	NavFlags GetTeamFlag(int _team) const;
+
+	void GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags );
 
 	void SendVoiceMacro(int _macroId);
 
@@ -41,9 +42,7 @@ public:
 	bool GetSkills(gmMachine *machine, gmTableObject *tbl);
 
 	float GetBreakableTargetDist() const { return m_BreakableTargetDistance; }
-
-	float NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) ;
-
+	
 	void SetupBehaviorTree();
 
 	ETQW_Client();

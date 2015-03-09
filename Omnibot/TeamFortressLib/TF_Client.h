@@ -43,11 +43,9 @@ public:
 	bool CanBotSnipe();
 	bool GetSniperWeapon(int &nonscoped, int &scoped);
 
-	void ProcessGotoNode( const PathInterface::PathEdge edges[ 2 ], const size_t numEdges );
+	void ProcessGotoNode( const PathInterface::PathCorner corners[ 2 ], const size_t numEdges );
 	void ProcessGotoNode(const Path &_path);
-
-	float NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to);
-
+	
 	void SetupBehaviorTree();
 
 	TF_Client();

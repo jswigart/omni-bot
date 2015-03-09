@@ -164,7 +164,7 @@ namespace AiState
 
 		StateStatus Update(float fDt);
 
-		enum { NumRecords = 256 };
+		enum { MaxRecords = Constants::MAX_ENTITIES };
 
 		int GetAllRecords(MemoryRecord *_records, int _max);
 
@@ -173,7 +173,7 @@ namespace AiState
 		SensoryMemory();
 		virtual ~SensoryMemory();
 	protected:
-		MemoryRecord	m_Records[NumRecords];
+		MemoryRecord	m_Records[MaxRecords];
 
 		// int: m_MemorySpan
 		//		The amount of time this bot can 'remember' an entity, before

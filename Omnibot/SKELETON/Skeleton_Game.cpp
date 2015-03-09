@@ -133,15 +133,6 @@ void Skeleton_Game::InitScriptEvents(gmMachine *_machine, gmTableObject *_table)
 	IGame::InitScriptEvents(_machine, _table);
 }
 
-void Skeleton_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
-{
-	// Should always register the default flags
-	IGame::RegisterNavigationFlags(_planner);
-
-	_planner->RegisterNavFlag("TEAM1", SKELETON_TEAM_1);
-	_planner->RegisterNavFlag("TEAM2", SKELETON_TEAM_2);
-}
-
 void Skeleton_Game::InitCommands()
 {
 	IGame::InitCommands();
@@ -167,21 +158,4 @@ const float Skeleton_Game::Skeleton_GetEntityClassAimOffset(const int _class, co
 		return 48.0f;
 	}
 	return 0.0f;
-}
-
-// PathPlannerWaypointInterface
-NavFlags Skeleton_Game::WaypointBlockableFlags() const
-{
-	return (NavFlags)0;
-}
-
-NavFlags Skeleton_Game::WaypointCallbackFlags() const
-{
-	return (NavFlags)0;
-}
-
-PathPlannerWaypointInterface::BlockableStatus Skeleton_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const
-{
-	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
-	return res;
 }

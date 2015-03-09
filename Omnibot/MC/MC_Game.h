@@ -11,7 +11,6 @@
 #ifndef __MC_GAME_H__
 #define __MC_GAME_H__
 
-class Waypoint;
 class gmMachine;
 class gmTableObject;
 
@@ -26,12 +25,10 @@ public:
 	bool Init( System & system );
 
 	void InitScriptBinds(gmMachine *_machine);
-
-	void RegisterNavigationFlags(PathPlannerBase *_planner);
-
+	
 	virtual Client *CreateGameClient();
 
-	eNavigatorID GetDefaultNavigator() const ;
+	NavigatorID GetDefaultNavigator() const ;
 
 	int GetVersionNum() const;
 	const char *GetDLLName() const;
@@ -41,18 +38,15 @@ public:
 	const char *GetScriptSubfolder() const;
 	const char *GetGameDatabaseAbbrev() const { return "MC"; }
 
+	virtual bool RendersToGame() const { return true; }
+
 	ClientPtr &GetClientFromCorrectedGameId(int _gameid);
 
 	const char *FindClassName(obint32 _classId);
 
 	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
-
-	// PathPlannerWaypointInterface
-	NavFlags WaypointBlockableFlags() const;
-	NavFlags WaypointCallbackFlags() const;
-	BlockableStatus WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const;
-
+	
 	MC_Game() {};
 	virtual ~MC_Game() {};
 protected:
@@ -67,7 +61,6 @@ protected:
 	void InitScriptTraceMasks(gmMachine *_machine, gmTableObject *_table);
 
 	void InitScriptModules(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptUpgrades(gmMachine *_machine, gmTableObject *_table);
 
 	// Commands
 	void InitCommands();

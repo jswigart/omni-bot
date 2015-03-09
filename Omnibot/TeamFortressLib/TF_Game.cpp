@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "TF_Game.h"
-#include "TF_GoalManager.h"
 
 #include "System.h"
 
@@ -17,13 +16,6 @@
 #include "BotSensoryMemory.h"
 #include "BotSteeringSystem.h"
 #include "FilterSensory.h"
-
-#include "PathPlannerWaypoint.h"
-
-GoalManager *TF_Game::GetGoalManager()
-{
-	return new TF_GoalManager;
-}
 
 bool TF_Game::Init( System & system )
 {
@@ -71,6 +63,10 @@ static IntEnum TF_WeaponEnum[] =
 	IntEnum("GRENADE_GAS",		TF_WP_GRENADE_GAS),
 	IntEnum("GRENADE_CALTROPS",TF_WP_GRENADE_CALTROPS),
 	IntEnum("GRENADE_NAPALM",	TF_WP_GRENADE_NAPALM),
+	IntEnum("DEPLOY_SENTRY",	TF_WP_DEPLOY_SG),
+	IntEnum("DEPLOY_DISPENSER",	TF_WP_DEPLOY_DISP),
+	IntEnum("DEPLOY_DETPACK",	TF_WP_DEPLOY_DETP),
+	IntEnum("DEPLOY_JUMPPAD",	TF_WP_DEPLOY_JUMPPAD),
 };
 
 void TF_Game::GetWeaponEnumeration(const IntEnum *&_ptr, int &num)
@@ -158,26 +154,31 @@ void TF_Game::InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table)
 {
 	IGame::InitScriptEntityFlags(_machine, _table);
 
-	_table->Set(_machine, "NEED_HEALTH",	gmVariable(TF_ENT_FLAG_SAVEME));
-	_table->Set(_machine, "NEED_ARMOR",		gmVariable(TF_ENT_FLAG_ARMORME));
-	_table->Set(_machine, "BURNING",		gmVariable(TF_ENT_FLAG_BURNING));
-	_table->Set(_machine, "TRANQUED",		gmVariable(TF_ENT_FLAG_TRANQED));
-	_table->Set(_machine, "INFECTED",		gmVariable(TF_ENT_FLAG_INFECTED));
-	_table->Set(_machine, "GASSED",			gmVariable(TF_ENT_FLAG_GASSED));
-	_table->Set(_machine, "SNIPE_AIMING",	gmVariable(ENT_FLAG_IRONSIGHT));
-	_table->Set(_machine, "AC_FIRING",		gmVariable(TF_ENT_FLAG_ASSAULTFIRING));
-	_table->Set(_machine, "LEGSHOT",		gmVariable(TF_ENT_FLAG_LEGSHOT));
-	_table->Set(_machine, "CALTROP",		gmVariable(TF_ENT_FLAG_CALTROP));
-	_table->Set(_machine, "RADIOTAGGED",	gmVariable(TF_ENT_FLAG_RADIOTAGGED));
-	_table->Set(_machine, "CAN_SABOTAGE",	gmVariable(TF_ENT_FLAG_CAN_SABOTAGE));
-	_table->Set(_machine, "SABOTAGED",		gmVariable(TF_ENT_FLAG_SABOTAGED));
-	_table->Set(_machine, "SABOTAGING",		gmVariable(TF_ENT_FLAG_SABOTAGING));
-	_table->Set(_machine, "BUILDING_SG",	gmVariable(TF_ENT_FLAG_BUILDING_SG));
-	_table->Set(_machine, "BUILDING_DISP",	gmVariable(TF_ENT_FLAG_BUILDING_DISP));
-	_table->Set(_machine, "BUILDING_DETP",	gmVariable(TF_ENT_FLAG_BUILDING_DETP));
-	_table->Set(_machine, "BUILDINPROGRESS",gmVariable(TF_ENT_FLAG_BUILDINPROGRESS));
-	_table->Set(_machine, "LEVEL2",			gmVariable(TF_ENT_FLAG_LEVEL2));
-	_table->Set(_machine, "LEVEL3",			gmVariable(TF_ENT_FLAG_LEVEL3));
+	_table->Set( _machine, "NEED_HEALTH", gmVariable( TF_ENT_FLAG_SAVEME ) );
+	_table->Set( _machine, "NEED_ARMOR", gmVariable( TF_ENT_FLAG_ARMORME ) );
+	_table->Set( _machine, "BURNING", gmVariable( TF_ENT_FLAG_BURNING ) );
+	_table->Set( _machine, "TRANQUED", gmVariable( TF_ENT_FLAG_TRANQED ) );
+	_table->Set( _machine, "INFECTED", gmVariable( TF_ENT_FLAG_INFECTED ) );
+	_table->Set( _machine, "GASSED", gmVariable( TF_ENT_FLAG_GASSED ) );
+	_table->Set( _machine, "SNIPE_AIMING", gmVariable( ENT_FLAG_IRONSIGHT ) );
+	_table->Set( _machine, "AC_FIRING", gmVariable( TF_ENT_FLAG_ASSAULTFIRING ) );
+	_table->Set( _machine, "LEGSHOT", gmVariable( TF_ENT_FLAG_LEGSHOT ) );
+	_table->Set( _machine, "CALTROP", gmVariable( TF_ENT_FLAG_CALTROP ) );
+	_table->Set( _machine, "RADIOTAGGED", gmVariable( TF_ENT_FLAG_RADIOTAGGED ) );
+	_table->Set( _machine, "CAN_SABOTAGE", gmVariable( TF_ENT_FLAG_CAN_SABOTAGE ) );
+	_table->Set( _machine, "SABOTAGED", gmVariable( TF_ENT_FLAG_SABOTAGED ) );
+	_table->Set( _machine, "SABOTAGED2", gmVariable( TF_ENT_FLAG_SABOTAGED2 ) );
+	_table->Set( _machine, "SABOTAGING", gmVariable( TF_ENT_FLAG_SABOTAGING ) );
+	_table->Set( _machine, "MALFUNCTION", gmVariable( TF_ENT_FLAG_MALFUNCTION ) );
+	_table->Set( _machine, "BUILDING_SG", gmVariable( TF_ENT_FLAG_BUILDING_SG ) );
+	_table->Set( _machine, "BUILDING_DISP", gmVariable( TF_ENT_FLAG_BUILDING_DISP ) );
+	_table->Set( _machine, "BUILDING_DETP", gmVariable( TF_ENT_FLAG_BUILDING_DETP ) );
+
+	_table->Set( _machine, "BUILDING_ENTRANCE", gmVariable( TF_ENT_FLAG_BUILDING_ENTRANCE ) );
+	_table->Set( _machine, "BUILDING_EXIT", gmVariable( TF_ENT_FLAG_BUILDING_EXIT ) );
+	_table->Set( _machine, "BUILDINPROGRESS", gmVariable( TF_ENT_FLAG_BUILDINPROGRESS ) );
+	_table->Set( _machine, "LEVEL2", gmVariable( TF_ENT_FLAG_LEVEL2 ) );
+	_table->Set( _machine, "LEVEL3", gmVariable( TF_ENT_FLAG_LEVEL3 ) );
 }
 
 void TF_Game::InitScriptPowerups(gmMachine *_machine, gmTableObject *_table)
@@ -332,26 +333,6 @@ void TF_Game::InitScriptBotButtons(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "RADAR",gmVariable(TF_BOT_BUTTON_RADAR));
 }
 
-void TF_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
-{
-	// Should always register the default flags
-	IGame::RegisterNavigationFlags(_planner);
-
-	_planner->RegisterNavFlag("RED",		F_NAV_TEAM1);
-	_planner->RegisterNavFlag("BLUE",		F_NAV_TEAM2);
-	_planner->RegisterNavFlag("YELLOW",		F_NAV_TEAM3);
-	_planner->RegisterNavFlag("GREEN",		F_NAV_TEAM4);
-	_planner->RegisterNavFlag("SENTRY",		F_TF_NAV_SENTRY);
-	_planner->RegisterNavFlag("DISPENSER",	F_TF_NAV_DISPENSER);
-	_planner->RegisterNavFlag("PIPETRAP",	F_TF_NAV_PIPETRAP);
-	_planner->RegisterNavFlag("DETPACK",	F_TF_NAV_DETPACK);
-	_planner->RegisterNavFlag("CAPPOINT",	F_TF_NAV_CAPPOINT);
-	_planner->RegisterNavFlag("GRENADES",	F_TF_NAV_GRENADES);
-	_planner->RegisterNavFlag("ROCKETJUMP",	F_TF_NAV_ROCKETJUMP);
-	_planner->RegisterNavFlag("CONCJUMP",	F_TF_NAV_CONCJUMP);
-	_planner->RegisterNavFlag("WALL",		F_TF_NAV_WALL);
-}
-
 const float TF_Game::TF_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags)
 {
 	if(InRangeT<int>(_class, 0, 4))
@@ -428,46 +409,6 @@ void TF_Game::ProcessEvent(const MessageHelper &_message, CallbackParameters &_c
 
 						//Utils::GetLocalEntity();
 						//RenderBuffer::AddLine(GetClient()->GetEyePosition(), _aimpos, COLOR::GREEN, 20.f);
-
-						// Auto Nav
-						if( System::mInstance->mNavigation->GetPlannerType() == NAVID_WP )
-						{
-							vEntPosition.Z() -= g_fBottomWaypointOffset;
-							//vWpPosition.Z() -= g_fBottomWaypointOffset;
-
-							PathPlannerWaypoint *pWp = static_cast<PathPlannerWaypoint*>( System::mInstance->mNavigation );
-							Waypoint *pWaypoint = pWp->AddWaypoint(vWpPosition, vWpFacing, true);
-
-							pWaypoint->GetPropertyMap().AddPropertyT("BuildPosition", vEntPosition);
-
-							if(m->m_EntityClass == TF_CLASSEX_SENTRY)
-							{
-								Vector3f vAimPos = vEntPosition+vEntFacing*4096.f;
-								pWaypoint->GetPropertyMap().AddPropertyT("AimPoint", vAimPos);
-								pWaypoint->AddFlag(F_TF_NAV_SENTRY);
-							}
-							if(m->m_EntityClass == TF_CLASSEX_DISPENSER)
-							{
-								pWaypoint->AddFlag(F_TF_NAV_DISPENSER);
-							}
-							if(m->m_EntityClass == TF_CLASSEX_DETPACK)
-							{
-								pWaypoint->AddFlag(F_TF_NAV_DETPACK);
-							}
-							if(m->m_EntityClass == TF_CLASSEX_TELEPORTER_ENTRANCE)
-							{
-								pWaypoint->AddFlag(F_TF_NAV_TELE_ENTER);
-							}
-							if(m->m_EntityClass == TF_CLASSEX_TELEPORTER_EXIT)
-							{
-								pWaypoint->AddFlag(F_TF_NAV_TELE_EXIT);
-							}
-
-							ClientPtr cl(CreateGameClient()); // FIXME
-							NavFlags teamFlags = cl->GetTeamFlag(g_EngineFuncs->GetEntityTeam(m->m_Entity));
-							if(teamFlags)
-								pWaypoint->AddFlag(teamFlags);
-						}
 					}
 				}
 				break;
@@ -659,50 +600,4 @@ obReal TF_Game::_GetDesirabilityFromTargetClass(int _grentype, int _class)
 		}
 	}
 	return 0.f;
-}
-
-// PathPlannerWaypointInterface
-
-NavFlags TF_Game::WaypointBlockableFlags() const
-{
-	return F_TF_NAV_WALL | F_TF_NAV_DETPACK;
-}
-
-NavFlags TF_Game::WaypointCallbackFlags() const
-{
-	return F_TF_NAV_ROCKETJUMP |
-		F_TF_NAV_CONCJUMP |
-		F_NAV_TELEPORT |
-		F_TF_NAV_DOUBLEJUMP;
-}
-
-PathPlannerWaypointInterface::BlockableStatus TF_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw) const
-{
-	static bool bRender = false;
-	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
-
-	Vector3f vStart, vEnd;
-
-	if(/*_wp1->IsFlagOn(F_TF_NAV_WALL) &&*/ _wp2->IsFlagOn(F_TF_NAV_WALL))
-	{
-		static float fOffset = 0.0f;
-		static Vector3f vMins(-5.f, -5.f, -5.f), vMaxs(5.f, 5.f, 5.f);
-		AABB aabb(vMins, vMaxs);
-		vStart = _wp1->GetPosition() + Vector3f(0, 0, fOffset);
-		vEnd = _wp2->GetPosition() + Vector3f(0, 0, fOffset);
-
-		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStart, vEnd, &aabb, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_OPEN : PathPlannerWaypointInterface::B_PATH_CLOSED;
-	}
-	else if(_wp1->IsFlagOn(F_TF_NAV_DETPACK) && _wp2->IsFlagOn(F_TF_NAV_DETPACK))
-	{
-		Vector3f vStart = _wp1->GetPosition() + Vector3f(0, 0, 40.0f);
-		Vector3f vEnd = _wp2->GetPosition() + Vector3f(0, 0, 40.0f);
-
-		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStart, vEnd, NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_OPEN : PathPlannerWaypointInterface::B_PATH_CLOSED;
-	}
-	return res;
 }

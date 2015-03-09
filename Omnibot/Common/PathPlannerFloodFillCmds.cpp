@@ -9,7 +9,6 @@
 #include "PathPlannerFloodFill.h"
 #include "ScriptManager.h"
 #include "IGameManager.h"
-#include "Waypoint.h"
 #include "IGame.h"
 #include "Client.h"
 #include "Timer.h"
@@ -17,14 +16,6 @@
 #include "RenderBuffer.h"
 
 using namespace std;
-
-extern float g_fBottomWaypointOffset;
-
-extern float g_CharacterHeight;;
-extern float g_CharacterCrouchHeight;;
-extern float g_CharacterStepHeight;
-extern float g_CharacterJumpHeight;
-extern float g_GridRadius;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -176,12 +167,11 @@ void PathPlannerFloodFill::cmdAddFloodStart(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
+	
 	Vector3f vPosition;
 	if(SUCCESS(g_EngineFuncs->GetEntityPosition(Utils::GetLocalEntity(), vPosition)))
 	{
-		ScriptManager::GetInstance()->ExecuteStringLogged(
-			(std::string)va("Nav.AddFloodStart( Vector3(%f, %f, %f) );",
-			vPosition.X(), vPosition.Y(), vPosition.Z()));
+		AddFloodStart( vPosition );
 	}
 }
 
@@ -189,21 +179,34 @@ void PathPlannerFloodFill::cmdClearFloodStarts(const StringVector &_args)
 {
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
-	ScriptManager::GetInstance()->ExecuteStringLogged("Nav.ClearFloodStarts();");
+
+	
+	ClearFloodStarts();
 }
 
 void PathPlannerFloodFill::cmdSaveFloodStarts(const StringVector &_args)
 {
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
-	ScriptManager::GetInstance()->ExecuteStringLogged("Nav.SaveFloodStarts();");
+
+	SaveFloodStarts();
 }
 
 void PathPlannerFloodFill::cmdLoadFloodStarts(const StringVector &_args)
 {
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
-	ScriptManager::GetInstance()->ExecuteStringLogged("Nav.LoadFloodStarts();");
+
+	LoadFloodStarts();
+}
+
+PathPlannerFloodFill::FloodFillOptions::FloodFillOptions()
+{
+	m_CharacterHeight = 64.0f;
+	m_CharacterCrouchHeight = 48.0f;
+	m_CharacterStepHeight = 18.0f;
+	m_CharacterJumpHeight = 60.0f;
+	m_GridRadius = 16.0f;
 }
 
 void PathPlannerFloodFill::cmdNavMeshFloodFill(const StringVector &_args)
@@ -223,19 +226,15 @@ void PathPlannerFloodFill::cmdNavMeshFloodFill(const StringVector &_args)
 
 	PRINT_USAGE(strUsage);
 
-	OPTIONAL_FLOAT_PARAM(fGridRadius, 1, g_GridRadius);
-	OPTIONAL_FLOAT_PARAM(fStepHeight, 2, g_CharacterStepHeight);
-	OPTIONAL_FLOAT_PARAM(fJumpHeight, 3, g_CharacterJumpHeight);
-	OPTIONAL_FLOAT_PARAM(fCrouchHeight, 4, g_CharacterCrouchHeight);
-	OPTIONAL_FLOAT_PARAM(fCharacterHeight, 5, g_CharacterHeight);
+	FloodFillOptions options;
 
-	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(std::string)va("Nav.FloodFill( %f, %f, %f, %f, %f );",
-		fGridRadius,
-		fStepHeight,
-		fJumpHeight,
-		fCrouchHeight,
-		fCharacterHeight));
+	OPTIONAL_FLOAT_PARAM(fGridRadius, 1, options.m_GridRadius);
+	OPTIONAL_FLOAT_PARAM(fStepHeight, 2, options.m_CharacterStepHeight);
+	OPTIONAL_FLOAT_PARAM(fJumpHeight, 3, options.m_CharacterJumpHeight);
+	OPTIONAL_FLOAT_PARAM(fCrouchHeight, 4, options.m_CharacterCrouchHeight);
+	OPTIONAL_FLOAT_PARAM(fCharacterHeight, 5, options.m_CharacterHeight);
+
+	FloodFill( options );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -258,12 +257,10 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 		if(!features[i].m_Bounds.IsZero())
 		{
 			features[i].m_Bounds.CenterBottom(vPos);
-			vPos.Z() -= g_fBottomWaypointOffset;
 		}
 		if(!features[i].m_TargetBounds.IsZero())
 		{
 			features[i].m_TargetBounds.CenterBottom(vTarget);
-			vTarget.Z() -= g_fBottomWaypointOffset;
 		}
 
 		AddFloodStart(vPos);
@@ -285,267 +282,6 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 	}
 	EngineFuncs::ConsoleMessage(va("Found %d nav features.", iNumFeatures));
 }
-
-//void PathPlannerFloodFill::cmdLoadObj(const StringVector &_args)
-//{
-//	std::string s = "J:/CVS/decompilers/" + std::string(g_EngineFuncs->GetMapName()) + ".obj";
-//	std::string line;
-//	char trash;
-//
-//	m_PolyIndexList.clear();
-//
-//	std::fstream f;
-//	f.open(s.c_str(), std::ios_base::in);
-//	if(f.is_open())
-//	{
-//		while(!f.eof())
-//		{
-//			std::getline(f, line);
-//			if(line[0] == '#')
-//				continue;
-//			if(line.empty())
-//				continue;
-//
-//			if(line.compare(0,1,"v",0,1) == 0)
-//			{
-//				Vector3f v;
-//
-//				std::stringstream st;
-//				st << line;
-//				st >> trash >> v;
-//
-//				m_Vertices.push_back(v);
-//				continue;
-//			}
-//
-//			if(line.compare(0,2,"vt",0,2) == 0)
-//			{
-//				// textures
-//				continue;
-//			}
-//
-//			if(line.compare(0,2,"vn",0,2) == 0)
-//			{
-//				// normals
-//				continue;
-//			}
-//
-//			if(line.compare(0,1,"f",0,1) == 0)
-//			{
-//				StringList tokens;
-//				std::string buffer;
-//				std::stringstream st;
-//				st << line;
-//				while(st >> buffer)
-//					tokens.push_back(buffer);
-//
-//				int vindex, tindex, nindex;
-//				IndexList il;
-//
-//				StringList::iterator it = tokens.begin(), itEnd = tokens.end();
-//				for(; it != itEnd; ++it)
-//				{
-//					const std::string &token = (*it);
-//					if(token == "f")
-//						continue;
-//
-//					std::stringstream st;
-//					st << token;
-//
-//					obuint32 c = std::count(token.begin(), token.end(), '/');
-//					switch(c)
-//					{
-//					case 0:
-//						st >> vindex;
-//						il.push_back(vindex-1);
-//						break;
-//					case 1:
-//						st >> vindex >> trash >> tindex;
-//						il.push_back(vindex-1);
-//						break;
-//					case 3:
-//						st >> vindex >> trash >> tindex >> trash >> nindex;
-//						il.push_back(vindex-1);
-//						break;
-//					}
-//				}
-//
-//				// Skip all with a bad normal.
-//				obuint32 c = 0;
-//				Vector3f vNormal = Vector3f::ZERO;
-//				while(vNormal == Vector3f::ZERO)
-//				{
-//					Vector3f v1 = m_Vertices[il[c+1]] - m_Vertices[il[c]];
-//					Vector3f v2 = m_Vertices[il[c+2]] - m_Vertices[il[c]];
-//					vNormal = v1.UnitCross(v2);
-//					++c;
-//				}
-//
-//				if(Utils::AngleBetween(vNormal, Vector3f::UNIT_Z) > Mathf::DegToRad(45.f))
-//					continue;
-//
-//				m_PolyIndexList.push_back(il);
-//				continue;
-//			}
-//		}
-//		f.close();
-//	}
-//}
-
-//void PathPlannerFloodFill::cmdLoadMap(const StringVector &_args)
-//{
-//	//std::string s = "J:/CVS/decompilers/" + std::string(g_EngineFuncs->GetMapName()) + ".map";
-//	std::string s = "J:/CVS/decompilers/q4ctf1.map";
-//
-//	std::string line, tmp;
-//	char trash;
-//	int versionnum = 3;
-//	//int bracket = 0;
-//
-//	m_NavSectors.clear();
-//	ReleaseCollision();
-//
-//	enum MapMode
-//	{
-//		MAP_UNKNOWN,
-//		MAP_PRIMITIVE,
-//	};
-//
-//	MapMode m = MAP_UNKNOWN;
-//
-//	obuint32 iNumBrushes = 0;
-//
-//	std::fstream f;
-//	f.open(s.c_str(), std::ios_base::in);
-//	if(f.is_open())
-//	{
-//		while(!f.eof())
-//		{
-//			std::getline(f, line);
-//			if(line[0] == '/' && line[1] == '/')
-//				continue;
-//			if(line.empty())
-//				continue;
-//
-//			if(line.compare(0,7,"Version",0,7) == 0)
-//			{
-//				std::stringstream st;
-//				st << line;
-//				st >> tmp >> versionnum;
-//				continue;
-//			}
-//
-//			if(line[0]=='{' || line[0]=='}')
-//				continue;
-//
-//			int c = 0;
-//			while(line[c] == ' ')
-//				++c;
-//
-//			if(line.compare(0,11,"\"classname\"",0,11) == 0)
-//			{
-//				continue;
-//			}
-//
-//			/*if(line[c]=='{')
-//				bracket++;
-//			if(line[c]=='}')
-//				bracket--;*/
-//
-//			if(c != 0)
-//				line.erase(0,c);
-//
-//			if(line.compare(0,8,"brushDef",0,8) == 0)
-//			{
-//				m = MAP_PRIMITIVE;
-//				continue;
-//			}
-//
-//			if(line[0]=='{')
-//			{
-//				switch(m)
-//				{
-//				case MAP_PRIMITIVE:
-//					{
-//						++iNumBrushes;
-//
-//						PlaneList planes;
-//
-//						while(line[0]!='}')
-//						{
-//							std::getline(f, line);
-//
-//							Plane3f pl;
-//
-//							std::stringstream st;
-//							st << line;
-//							st >> trash >> pl >> trash;
-//							if(st.good())
-//								planes.push_back(pl);
-//						}
-//
-//						// contruct polys from the list
-//						obuint32 wp = 0;
-//						bool bDidSomething = true;
-//						while(bDidSomething)
-//						{
-//							m_CurrentSector.clear();
-//							bDidSomething = false;
-//
-//							for(; wp < planes.size(); ++wp)
-//							{
-//								if(Utils::AngleBetween(planes[wp].Normal, Vector3f::UNIT_Z) > Mathf::DegToRad(45.f))
-//									continue;
-//
-//								// build a poly from this walkface
-//								bDidSomething = true;
-//								m_CurrentSector = Utils::CreatePolygon(planes[wp].Normal*planes[wp].Constant, planes[wp].Normal);
-//								break;
-//							}
-//
-//							// Clip the polygon
-//							if(!m_CurrentSector.empty())
-//							{
-//								for(obuint32 p = 0; p < planes.size(); ++p)
-//								{
-//									if(wp==p)
-//										continue;
-//
-//									if(planes[p].Normal == planes[wp].Normal ||
-//										planes[p].Normal == -planes[wp].Normal)
-//										continue;
-//
-//									m_CurrentSector = Utils::ClipPolygonToPlanes(m_CurrentSector, planes[p], true);
-//
-//									if(m_CurrentSector.empty())
-//										break;
-//								}
-//							}
-//
-//							// Commit the polygon
-//							if(m_CurrentSector.size() > 2)
-//							{
-//								NavSector ns;
-//								ns.m_Boundary = m_CurrentSector;
-//								m_NavSectors.push_back(ns);
-//
-//								m_CurrentSector.clear();
-//							}
-//
-//							++wp;
-//						}
-//						break;
-//					}
-//				case MAP_UNKNOWN:
-//					continue;
-//				}
-//			}
-//		}
-//		f.close();
-//	}
-//
-//	InitCollision();
-//}
 
 void PathPlannerFloodFill::_BenchmarkPathFinder(const StringVector &_args)
 {
@@ -628,9 +364,6 @@ void PathPlannerFloodFill::cmdNext(const StringVector &_args)
 
 void PathPlannerFloodFill::cmdInfluenceMapCreate(const StringVector &_args)
 {
-	const float fmin = std::numeric_limits<float>::lowest();
-	const float fmax = std::numeric_limits<float>::max();
-
 	AABB mapbounds;
 	mapbounds.Set( Vector3f( -4400,-2000,-800 ), Vector3f( 4400, 2000, 230 ) );
 	
@@ -663,48 +396,6 @@ void PathPlannerFloodFill::cmdInfluenceMapSeed(const StringVector &_args)
 		mSpanFrontier.push( features[ i ].m_Position );
 		mSpanFrontier.push( features[ i ].m_TargetPosition );
 	}
-	
-	/*if ( mSpanMap == NULL )
-	{
-		EngineFuncs::ConsoleMessage( "No Influence Map Created, use nav_mapcreate" );
-		return;
-	}
-	
-	while( !mSpanFrontier.empty() )
-	{
-		Vector3f search = mSpanFrontier.front();
-		mSpanFrontier.pop();
-
-		Vector3f floor, ceiling;
-
-		obTraceResult tr;
-		EngineFuncs::TraceLine(tr,
-			search + Vector3f( 0.f, 0.f, 1.f ),
-			search - Vector3f( 0.f, 0.f, 1024.f ),
-			NULL,TR_MASK_FLOODFILL,-1,False);
-		
-		floor = Vector3f( tr.m_Endpos );
-
-		EngineFuncs::TraceLine(tr,
-			floor + Vector3f( 0.f, 0.f, 1.f ),
-			floor + Vector3f( 0.f, 0.f, 1024.f ),
-			NULL,TR_MASK_FLOODFILL,-1,False);
-
-		if ( mSpanMap->AddOpenSpan( floor, tr.m_Endpos[ 2 ] - floor.Z() ) )
-		{
-			const Vector3f directions[4] =
-			{
-				Vector3f( -mSpanMap->GetCellSize(), 0.0f ),
-				Vector3f(  mSpanMap->GetCellSize(), 0.0f ),
-				Vector3f( 0.0f, -mSpanMap->GetCellSize() ),
-				Vector3f( 0.0f, mSpanMap->GetCellSize() )
-			};
-
-			for ( int i = 0; i < 4; ++i )
-			{
-			}
-		}
-	}*/
 }
 
 void PathPlannerFloodFill::cmdInfluenceMapMem(const StringVector &_args)
@@ -763,14 +454,20 @@ void PathPlannerFloodFill::cmdInfluenceMapFlood(const StringVector &_args)
 	if ( !Utils::GetLocalAimPoint( vAimPt ))
 		return;
 
-	mInfluence = mSpanMap.CreateInfluenceLayer();
+	if ( mInfluence == NULL )
+		mInfluence = AllocInfluenceMap();
+
 	mInfluence->Reset();
 	mInfluence->AddSeed( vAimPt, 0.0f );
 
 	Timer t;
+
+	// do an immediate full update
 	while( !mInfluence->UpdateInfluences( std::numeric_limits<int>::max() ) )
 	{
 	}
+
+	mUpdateInfluenceBuffer = true;
 
 	EngineFuncs::ConsoleError( va( "Influence Flooded in %.3f sec ( %s )",
 		t.GetElapsedSeconds(),

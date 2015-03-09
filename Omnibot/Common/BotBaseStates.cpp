@@ -14,7 +14,6 @@
 #include "BotTargetingSystem.h"
 #include "IGameManager.h"
 #include "InterfaceFuncs.h"
-#include "NavigationFlags.h"
 #include "PathPlannerBase.h"
 #include "RenderBuffer.h"
 
@@ -29,72 +28,72 @@ namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////
 
-	FollowPathUser::FollowPathUser(const std::string &_user)
-		: m_UserName(0)
-		, m_CallingThread(GM_INVALID_THREAD)
-		, m_DestinationIndex(0)
-		, m_PathFailed(None)
-		, m_PathSuccess(false)
+	FollowPathUser::FollowPathUser( const std::string &_user )
+		: m_UserName( 0 )
+		, m_CallingThread( GM_INVALID_THREAD )
+		, m_DestinationIndex( 0 )
+		, m_PathFailed( None )
+		, m_PathSuccess( false )
 	{
-		m_UserName = Utils::MakeHash32(_user);
+		m_UserName = Utils::MakeHash32( _user );
 	}
-	FollowPathUser::FollowPathUser(obuint32 _name)
-		: m_UserName(_name)
-		, m_CallingThread(GM_INVALID_THREAD)
-		, m_PathFailed(None)
-		, m_PathSuccess(false)
+	FollowPathUser::FollowPathUser( obuint32 _name )
+		: m_UserName( _name )
+		, m_CallingThread( GM_INVALID_THREAD )
+		, m_PathFailed( None )
+		, m_PathSuccess( false )
 	{
 	}
 
-	void FollowPathUser::SetFollowUserName(obuint32 _name)
+	void FollowPathUser::SetFollowUserName( obuint32 _name )
 	{
 		m_UserName = _name;
 	}
 
-	void FollowPathUser::SetFollowUserName(const std::string &_name)
+	void FollowPathUser::SetFollowUserName( const std::string &_name )
 	{
-		SetFollowUserName(Utils::MakeHash32(_name));
+		SetFollowUserName( Utils::MakeHash32( _name ) );
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 	CaptureTheFlag::CaptureTheFlag()
-		: StateChild("CaptureTheFlag")
-		, FollowPathUser("CaptureTheFlag")
-		, m_GoalState(Idle)
-		, m_LastFlagState(0)
-		, m_NextMoveTime(0)
+		: StateChild( "CaptureTheFlag" )
+		, FollowPathUser( "CaptureTheFlag" )
+		, m_GoalState( Idle )
+		, m_LastFlagState( 0 )
+		, m_NextMoveTime( 0 )
 	{
 	}
 
-	void CaptureTheFlag::GetDebugString(std::stringstream &out)
+	void CaptureTheFlag::GetDebugString( std::stringstream &out )
 	{
-		if(!IsActive())
+		if ( !IsActive() )
 			return;
 
-		switch(m_GoalState)
+		switch ( m_GoalState )
 		{
-		case Idle:
-			out << "Idle";
-			break;
-		case GettingFlag:
-			out << "Getting Flag";
-			break;
-		case CarryingToCap:
-			out << "Carrying To Cap";
-			break;
-		case CarryingToHold:
-			out << "Carrying To Hold";
-			break;
-		case HoldingFlag:
-			out << "Holding Flag";
-			break;
-		default:
-			break;
+			case Idle:
+				out << "Idle";
+				break;
+			case GettingFlag:
+				out << "Getting Flag";
+				break;
+			case CarryingToCap:
+				out << "Carrying To Cap";
+				break;
+			case CarryingToHold:
+				out << "Carrying To Hold";
+				break;
+			case HoldingFlag:
+				out << "Holding Flag";
+				break;
+			default:
+				break;
 		}
 
-		if(m_MapGoalFlag)
+		if ( m_MapGoalFlag )
 			out << std::endl << m_MapGoalFlag->GetName();
-		if(m_MapGoalCap)
+		if ( m_MapGoalCap )
 			out << std::endl << m_MapGoalCap->GetName();
 	}
 
@@ -105,103 +104,103 @@ namespace AiState
 
 	void CaptureTheFlag::RenderDebug()
 	{
-		if(m_MapGoalFlag)
+		if ( m_MapGoalFlag )
 		{
-			RenderBuffer::AddOBB(m_MapGoalFlag->GetWorldBounds(), COLOR::GREEN);
+			RenderBuffer::AddOBB( m_MapGoalFlag->GetWorldBounds(), COLOR::GREEN );
 		}
-		if(m_MapGoalCap)
+		if ( m_MapGoalCap )
 		{
-			RenderBuffer::AddOBB(m_MapGoalCap->GetWorldBounds(), COLOR::GREEN);
+			RenderBuffer::AddOBB( m_MapGoalCap->GetWorldBounds(), COLOR::GREEN );
 		}
 	}
 
-	bool CaptureTheFlag::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	bool CaptureTheFlag::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		switch(GetGoalState())
+		switch ( GetGoalState() )
 		{
-		case GettingFlag:
+			case GettingFlag:
 			{
-				if(!m_MapGoalFlag)
+				if ( !m_MapGoalFlag )
 					return false;
 
-				_final = !m_MapGoalFlag->RouteTo(GetClient(), _desination);
+				_final = !m_MapGoalFlag->RouteTo( GetClient(), _desination );
 				return true;
 			}
-		case CarryingToCap:
-		case CarryingToHold:
-		case HoldingFlag:
+			case CarryingToCap:
+			case CarryingToHold:
+			case HoldingFlag:
 			{
-				_final = !m_MapGoalCap->RouteTo(GetClient(), _desination);
+				_final = !m_MapGoalCap->RouteTo( GetClient(), _desination );
 				return true;
 			}
-		case Idle:
-			break;
+			case Idle:
+				break;
 		}
 		return false;
 	}
 
 	obReal CaptureTheFlag::GetPriority()
 	{
-		if(!IsActive())
+		if ( !IsActive() )
 		{
-			if(!m_MapGoalFlag)
+			if ( !m_MapGoalFlag )
 			{
 				MapGoalPtr available, carrying;
-				GoalManager::Query qry(0xbdeaa8d7 /* flag */, GetClient());
-				GoalManager::GetInstance()->GetGoals(qry);
-				for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+				GoalManager::Query qry( 0xbdeaa8d7 /* flag */, GetClient() );
+				GoalManager::GetInstance()->GetGoals( qry );
+				for ( obuint32 i = 0; i < qry.m_List.size(); ++i )
 				{
-					if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+					if ( BlackboardIsDelayed( qry.m_List[ i ]->GetSerialNum() ) )
 						continue;
 
-					if(qry.m_List[i]->GetOwner() == GetClient()->GetGameEntity())
+					if ( qry.m_List[ i ]->GetOwner() == GetClient()->GetGameEntity() )
 					{
-						carrying = qry.m_List[i];
+						carrying = qry.m_List[ i ];
 						continue;
 					}
 
-					if(!GetClient()->IsFlagGrabbable(qry.m_List[i]))
+					if ( !GetClient()->IsFlagGrabbable( qry.m_List[ i ] ) )
 						continue;
 
-					if(!available)
+					if ( !available )
 					{
-						if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+						if ( qry.m_List[ i ]->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) < 1 )
 							continue;
 
-						if(qry.m_List[i]->GetGoalState() != S_FLAG_CARRIED)
+						if ( qry.m_List[ i ]->GetGoalState() != S_FLAG_CARRIED )
 						{
-							available = qry.m_List[i];
+							available = qry.m_List[ i ];
 							continue;
 						}
 					}
 				}
 
-				if(carrying)
+				if ( carrying )
 				{
 					m_MapGoalFlag = carrying;
 				}
-				else if(available)
+				else if ( available )
 				{
 					m_GoalState = GettingFlag;
 					m_MapGoalFlag = available;
 				}
 			}
 
-			if(GetClient()->DoesBotHaveFlag(m_MapGoalFlag) && !m_MapGoalCap)
+			if ( GetClient()->DoesBotHaveFlag( m_MapGoalFlag ) && !m_MapGoalCap )
 			{
 				// if we got a flag but not cap lets not activate
 				// TODO: consider an evade substate?
-				if(!LookForCapGoal(m_MapGoalCap,m_GoalState))
+				if ( !LookForCapGoal( m_MapGoalCap, m_GoalState ) )
 					m_MapGoalFlag.reset();
 			}
 		}
 
 		// cs: check m_MapGoalCap first in case the bot randomly walks over a dropped flag
 		// otherwise it will return zero priority since m_MapGoalFlag is set to 'carrying' above
-		if(m_MapGoalCap)
-			return m_MapGoalCap->GetPriorityForClient(GetClient());
-		if(m_MapGoalFlag)
-			return m_MapGoalFlag->GetPriorityForClient(GetClient());
+		if ( m_MapGoalCap )
+			return m_MapGoalCap->GetPriorityForClient( GetClient() );
+		if ( m_MapGoalFlag )
+			return m_MapGoalFlag->GetPriorityForClient( GetClient() );
 
 		return 0.f;
 	}
@@ -211,12 +210,12 @@ namespace AiState
 		m_LastFlagState = m_MapGoalFlag ? m_MapGoalFlag->GetGoalState() : 0;
 
 		Tracker.InProgress = m_MapGoalFlag;
-		FINDSTATEIF(FollowPath,GetRootState(),Goto(this));
+		FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
 	}
 
 	void CaptureTheFlag::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
 		m_GoalState = Idle;
 		m_NextMoveTime = 0;
@@ -227,30 +226,31 @@ namespace AiState
 		Tracker.Reset();
 	}
 
-	State::StateStatus CaptureTheFlag::Update(float fDt)
+	State::StateStatus CaptureTheFlag::Update( float fDt )
 	{
-		switch(GetGoalState())
+		switch ( GetGoalState() )
 		{
-		case GettingFlag:
+			case GettingFlag:
 			{
 				// cs: this is a hack. if too many are in progress, bail.
-				if ( m_MapGoalFlag && m_MapGoalFlag->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 0 ) {
-					BlackboardDelay(10.f, m_MapGoalFlag->GetSerialNum());
+				if ( m_MapGoalFlag && m_MapGoalFlag->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) < 0 )
+				{
+					BlackboardDelay( 10.f, m_MapGoalFlag->GetSerialNum() );
 					return State_Finished;
 				}
 
-				if(m_MapGoalFlag && !GetClient()->IsFlagGrabbable(m_MapGoalFlag))
+				if ( m_MapGoalFlag && !GetClient()->IsFlagGrabbable( m_MapGoalFlag ) )
 					return State_Finished;
 
-				if(GetClient()->DoesBotHaveFlag(m_MapGoalFlag))
+				if ( GetClient()->DoesBotHaveFlag( m_MapGoalFlag ) )
 				{
 					m_MapGoalCap.reset();
-					if(!LookForCapGoal(m_MapGoalCap,m_GoalState))
+					if ( !LookForCapGoal( m_MapGoalCap, m_GoalState ) )
 					{
 						return State_Finished;
 					}
 					Tracker.InUse = m_MapGoalFlag;
-					FINDSTATEIF(FollowPath, GetRootState(), Goto(this));
+					FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
 				}
 				else
 				{
@@ -265,83 +265,83 @@ namespace AiState
 					}*/
 
 					// Someone else grab it?
-					if(m_MapGoalFlag->GetGoalState() == S_FLAG_CARRIED)
+					if ( m_MapGoalFlag->GetGoalState() == S_FLAG_CARRIED )
 					{
-						FINDSTATEIF(FollowPath,GetRootState(),Stop());
+						FINDSTATEIF( FollowPath, GetRootState(), Stop() );
 						return State_Finished;
 					}
 
 					const int iMyTeam = GetClient()->GetTeam();
-					if(m_MapGoalFlag->GetControllingTeam(iMyTeam))
+					if ( m_MapGoalFlag->GetControllingTeam( iMyTeam ) )
 						return State_Finished;
 
-					if(DidPathSucceed())
-						GetClient()->GetSteeringSystem()->SetTarget(m_MapGoalFlag->GetPosition(), m_MapGoalFlag->GetRadius());
+					if ( DidPathSucceed() )
+						GetClient()->GetSteeringSystem()->SetTarget( m_MapGoalFlag->GetPosition(), m_MapGoalFlag->GetRadius() );
 				}
 
 				// Doing this last so we can change state before finishing
 				// flag may be disabled as part of pickup process, and we
 				// want to be able to go into the cap state before that.
-				if(m_MapGoalFlag && !m_MapGoalFlag->IsAvailable(GetClient()->GetTeam()))
+				if ( m_MapGoalFlag && !m_MapGoalFlag->IsAvailable( GetClient()->GetTeam() ) )
 					return State_Finished;
 				break;
 			}
-		case CarryingToCap:
+			case CarryingToCap:
 			{
-				if(!m_MapGoalCap->IsAvailable(GetClient()->GetTeam()))
+				if ( !m_MapGoalCap->IsAvailable( GetClient()->GetTeam() ) )
 					return State_Finished;
 
-				if(!GetClient()->DoesBotHaveFlag(m_MapGoalFlag))
+				if ( !GetClient()->DoesBotHaveFlag( m_MapGoalFlag ) )
 					return State_Finished;
 
-				if(DidPathSucceed())
-					GetClient()->GetSteeringSystem()->SetTarget(m_MapGoalCap->GetPosition(), m_MapGoalCap->GetRadius());
+				if ( DidPathSucceed() )
+					GetClient()->GetSteeringSystem()->SetTarget( m_MapGoalCap->GetPosition(), m_MapGoalCap->GetRadius() );
 
-				if(m_MapGoalCap && !m_MapGoalCap->IsAvailable(GetClient()->GetTeam()))
+				if ( m_MapGoalCap && !m_MapGoalCap->IsAvailable( GetClient()->GetTeam() ) )
 					return State_Finished;
 				break;
 			}
-		case CarryingToHold:
+			case CarryingToHold:
 			{
-				if(DidPathSucceed())
+				if ( DidPathSucceed() )
 				{
 					// shift positions?
 					m_GoalState = HoldingFlag;
-					m_NextMoveTime = IGame::GetTime() + Utils::SecondsToMilliseconds(Mathf::UnitRandom() * 10.f);
+					m_NextMoveTime = IGame::GetTime() + Utils::SecondsToMilliseconds( Mathf::UnitRandom() * 10.f );
 				}
 
-				if(m_MapGoalCap && !m_MapGoalCap->IsAvailable(GetClient()->GetTeam()))
+				if ( m_MapGoalCap && !m_MapGoalCap->IsAvailable( GetClient()->GetTeam() ) )
 					return State_Finished;
 				break;
 			}
-		case HoldingFlag:
+			case HoldingFlag:
 			{
 				// We don't care about path failure in here, so we return instead of letting it
 				// check m_PathFailed below.
-				if(IGame::GetTime() >= m_NextMoveTime)
+				if ( IGame::GetTime() >= m_NextMoveTime )
 				{
 					m_GoalState = CarryingToHold;
-					FINDSTATEIF(FollowPath, GetRootState(), Goto(this));
+					FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
 				}
 
-				if(m_MapGoalCap && !m_MapGoalCap->IsAvailable(GetClient()->GetTeam()))
+				if ( m_MapGoalCap && !m_MapGoalCap->IsAvailable( GetClient()->GetTeam() ) )
 					return State_Finished;
 
 				return State_Busy;
 			}
-		case Idle:
+			case Idle:
 			{
-				OBASSERT(0, "Invalid Flag State!");
+				OBASSERT( 0, "Invalid Flag State!" );
 				return State_Finished;
 			}
 		}
 
 		//////////////////////////////////////////////////////////////////////////
-		if(DidPathFail())
+		if ( DidPathFail() )
 		{
 			// Delay it from being used for a while.
-			if(m_MapGoalFlag)
-				BlackboardDelay(10.f, m_MapGoalFlag->GetSerialNum());
+			if ( m_MapGoalFlag )
+				BlackboardDelay( 10.f, m_MapGoalFlag->GetSerialNum() );
 			return State_Finished;
 		}
 		//////////////////////////////////////////////////////////////////////////
@@ -349,13 +349,13 @@ namespace AiState
 		return State_Busy;
 	}
 
-	bool CaptureTheFlag::LookForCapGoal(MapGoalPtr &ptr, GoalState &st)
+	bool CaptureTheFlag::LookForCapGoal( MapGoalPtr &ptr, GoalState &st )
 	{
 		//////////////////////////////////////////////////////////////////////////
 		{
-			GoalManager::Query qry(0xc9326a43 /* cappoint */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			if(qry.GetBest(ptr))
+			GoalManager::Query qry( 0xc9326a43 /* cappoint */, GetClient() );
+			GoalManager::GetInstance()->GetGoals( qry );
+			if ( qry.GetBest( ptr ) )
 			{
 				m_GoalState = CarryingToCap;
 				return true;
@@ -363,9 +363,9 @@ namespace AiState
 		}
 		//////////////////////////////////////////////////////////////////////////
 		{
-			GoalManager::Query qry(0xc7ab68ba /* caphold */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			if(qry.GetBest(ptr))
+			GoalManager::Query qry( 0xc7ab68ba /* caphold */, GetClient() );
+			GoalManager::GetInstance()->GetGoals( qry );
+			if ( qry.GetBest( ptr ) )
 			{
 				m_GoalState = CarryingToHold;
 				return true;
@@ -534,8 +534,8 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	ReturnTheFlag::ReturnTheFlag()
-		: StateChild("ReturnTheFlag")
-		, FollowPathUser("ReturnTheFlag")
+		: StateChild( "ReturnTheFlag" )
+		, FollowPathUser( "ReturnTheFlag" )
 	{
 		m_LastGoalPosition = Vector3f::ZERO;
 	}
@@ -552,98 +552,98 @@ namespace AiState
 
 	void ReturnTheFlag::RenderDebug()
 	{
-		if(m_MapGoal)
+		if ( m_MapGoal )
 		{
-			RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::GREEN); // todo: convert to renderbuffer
+			RenderBuffer::AddOBB( m_MapGoal->GetWorldBounds(), COLOR::GREEN ); // todo: convert to renderbuffer
 			RenderBuffer::AddLine( GetClient()->GetEyePosition(), m_MapGoal->GetWorldUsePoint(), COLOR::MAGENTA );
 		}
 	}
 
 	obReal ReturnTheFlag::GetPriority()
 	{
-		if(!m_MapGoal)
+		if ( !m_MapGoal )
 		{
-			if(!m_MapGoal)
+			if ( !m_MapGoal )
 			{
-				GoalManager::Query qry(0xa06840e5 /* flagreturn */, GetClient());
-				GoalManager::GetInstance()->GetGoals(qry);
-				for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+				GoalManager::Query qry( 0xa06840e5 /* flagreturn */, GetClient() );
+				GoalManager::GetInstance()->GetGoals( qry );
+				for ( obuint32 i = 0; i < qry.m_List.size(); ++i )
 				{
-					if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+					if ( BlackboardIsDelayed( qry.m_List[ i ]->GetSerialNum() ) )
 						continue;
 
-					if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INUSE) < 1)
+					if ( qry.m_List[ i ]->GetSlotsOpen( MapGoal::TRACK_INUSE ) < 1 )
 						continue;
 
-					const int iGoalState = qry.m_List[i]->GetGoalState();
+					const int iGoalState = qry.m_List[ i ]->GetGoalState();
 
-					if(iGoalState == S_FLAG_DROPPED || iGoalState == S_FLAG_CARRIED)
+					if ( iGoalState == S_FLAG_DROPPED || iGoalState == S_FLAG_CARRIED )
 					{
-						m_MapGoal = qry.m_List[i];
+						m_MapGoal = qry.m_List[ i ];
 						break;
 					}
-					else if(iGoalState == S_FLAG_AT_BASE)
+					else if ( iGoalState == S_FLAG_AT_BASE )
 					{
 						continue;
 					}
-					else if(GetClient()->IsFlagGrabbable(qry.m_List[i]))
+					else if ( GetClient()->IsFlagGrabbable( qry.m_List[ i ] ) )
 					{
-						m_MapGoal = qry.m_List[i];
+						m_MapGoal = qry.m_List[ i ];
 						break;
 					}
 				}
 			}
 		}
 
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+		return m_MapGoal ? m_MapGoal->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 
 	void ReturnTheFlag::Enter()
 	{
 		m_MapGoalProg = m_MapGoal;
 		m_LastGoalPosition = m_MapGoal->GetWorldUsePoint();
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, m_LastGoalPosition, m_MapGoal->GetRadius()));
+		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, m_LastGoalPosition, m_MapGoal->GetRadius() ) );
 	}
 
 	void ReturnTheFlag::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
 		m_MapGoalProg.Reset();
 		m_MapGoal.reset();
 		m_LastGoalPosition = Vector3f::ZERO;
 	}
 
-	State::StateStatus ReturnTheFlag::Update(float fDt)
+	State::StateStatus ReturnTheFlag::Update( float fDt )
 	{
-		OBASSERT(m_MapGoal, "No Map Goal!");
+		OBASSERT( m_MapGoal, "No Map Goal!" );
 		//////////////////////////////////////////////////////////////////////////
-		if(DidPathFail())
+		if ( DidPathFail() )
 		{
 			// Delay it from being used for a while.
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+			BlackboardDelay( 10.f, m_MapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 
-		if(m_MapGoal->GetDeleteMe())
+		if ( m_MapGoal->GetDeleteMe() )
 			return State_Finished;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Re-plan if it has moved a bit from last position
 		// Predict path?
 		Vector3f vUpdatedPosition = m_MapGoal->GetWorldUsePoint();
-		if(SquaredLength(m_LastGoalPosition, vUpdatedPosition) > Mathf::Sqr(100.f))
+		if ( SquaredLength( m_LastGoalPosition, vUpdatedPosition ) > Mathf::Sqr( 100.f ) )
 		{
 			m_LastGoalPosition = vUpdatedPosition;
-			FINDSTATEIF(FollowPath, GetRootState(), Goto(this, m_LastGoalPosition, m_MapGoal->GetRadius()));
+			FINDSTATEIF( FollowPath, GetRootState(), Goto( this, m_LastGoalPosition, m_MapGoal->GetRadius() ) );
 		}
 
-		if(m_MapGoal->GetGoalState() == S_FLAG_AT_BASE || !GetClient()->IsFlagGrabbable(m_MapGoal))
+		if ( m_MapGoal->GetGoalState() == S_FLAG_AT_BASE || !GetClient()->IsFlagGrabbable( m_MapGoal ) )
 			return State_Finished;
 
-		FINDSTATE(follow, FollowPath, GetRootState());
-		if(follow != NULL && !follow->IsActive())
-			follow->Goto(this, m_LastGoalPosition, m_MapGoal->GetRadius());
+		FINDSTATE( follow, FollowPath, GetRootState() );
+		if ( follow != NULL && !follow->IsActive() )
+			follow->Goto( this, m_LastGoalPosition, m_MapGoal->GetRadius() );
 
 		return State_Busy;
 	}
@@ -980,8 +980,8 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	Roam::Roam()
-		: StateChild("Roam")
-		, FollowPathUser("Roam")
+		: StateChild( "Roam" )
+		, FollowPathUser( "Roam" )
 	{
 	}
 
@@ -992,26 +992,26 @@ namespace AiState
 
 	void Roam::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 	}
 
-	State::StateStatus Roam::Update(float fDt)
+	State::StateStatus Roam::Update( float fDt )
 	{
-		FINDSTATE(follow, FollowPath, GetRootState());
-		if(follow != NULL && !follow->IsActive())
-			follow->GotoRandomPt(this);
+		FINDSTATE( follow, FollowPath, GetRootState() );
+		if ( follow != NULL && !follow->IsActive() )
+			follow->GotoRandomPt( this );
 		return State_Busy;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 
 	HighLevel::HighLevel()
-		: StatePrioritized("HighLevel")
+		: StatePrioritized( "HighLevel" )
 	{
-		AppendState(new CaptureTheFlag);
-		AppendState(new ReturnTheFlag);
+		AppendState( new CaptureTheFlag );
+		AppendState( new ReturnTheFlag );
 
-		AppendState(new Roam);
+		AppendState( new Roam );
 	}
 
 	/*obReal HighLevel::GetPriority()
@@ -1039,48 +1039,48 @@ namespace AiState
 	}
 
 	Aimer::Aimer()
-		: StateChild("Aimer")
-		, m_BestAimOwner(0)
+		: StateChild( "Aimer" )
+		, m_BestAimOwner( 0 )
 	{
-		for(obint32 i = 0; i < MaxAimRequests; ++i)
-			m_AimRequests[i].Reset();
+		for ( obint32 i = 0; i < MaxAimRequests; ++i )
+			m_AimRequests[ i ].Reset();
 
 		// Initialize default aim request.
-		m_AimRequests[0].m_Priority = Priority::Min;
-		m_AimRequests[0].m_AimerUser = 0;
-		m_AimRequests[0].m_AimVector = Vector3f::UNIT_X;
-		m_AimRequests[0].m_AimType = WorldFacing;
-		m_AimRequests[0].m_Owner = GetNameHash();
+		m_AimRequests[ 0 ].m_Priority = Priority::Min;
+		m_AimRequests[ 0 ].m_AimerUser = 0;
+		m_AimRequests[ 0 ].m_AimVector = Vector3f::UNIT_X;
+		m_AimRequests[ 0 ].m_AimType = WorldFacing;
+		m_AimRequests[ 0 ].m_Owner = GetNameHash();
 	}
 
-	Aimer::AimRequest *Aimer::FindAimRequest(obuint32 _owner)
+	Aimer::AimRequest *Aimer::FindAimRequest( obuint32 _owner )
 	{
 		int iOpen = -1;
-		for(obint32 i = 0; i < MaxAimRequests; ++i)
+		for ( obint32 i = 0; i < MaxAimRequests; ++i )
 		{
-			if(m_AimRequests[i].m_Owner == _owner)
+			if ( m_AimRequests[ i ].m_Owner == _owner )
 			{
 				iOpen = i;
 				break;
 			}
-			if(m_AimRequests[i].m_Priority == Priority::Zero)
+			if ( m_AimRequests[ i ].m_Priority == Priority::Zero )
 			{
-				if(iOpen == -1)
+				if ( iOpen == -1 )
 					iOpen = i;
 			}
 		}
 
-		if(iOpen != -1)
+		if ( iOpen != -1 )
 		{
-			return &m_AimRequests[iOpen];
+			return &m_AimRequests[ iOpen ];
 		}
 		return NULL;
 	}
 
-	bool Aimer::AddAimRequest(Priority::ePriority _prio, AimerUser *_owner, obuint32 _ownername)
+	bool Aimer::AddAimRequest( Priority::ePriority _prio, AimerUser *_owner, obuint32 _ownername )
 	{
-		AimRequest *pRequest = FindAimRequest(_ownername);
-		if(pRequest)
+		AimRequest *pRequest = FindAimRequest( _ownername );
+		if ( pRequest )
 		{
 			pRequest->m_Priority = _prio;
 			pRequest->m_Owner = _ownername;
@@ -1091,10 +1091,10 @@ namespace AiState
 		return false;
 	}
 
-	bool Aimer::AddAimFacingRequest(Priority::ePriority _prio, obuint32 _owner, const Vector3f &_v)
+	bool Aimer::AddAimFacingRequest( Priority::ePriority _prio, obuint32 _owner, const Vector3f &_v )
 	{
-		AimRequest *pRequest = FindAimRequest(_owner);
-		if(pRequest)
+		AimRequest *pRequest = FindAimRequest( _owner );
+		if ( pRequest )
 		{
 			pRequest->m_Priority = _prio;
 			pRequest->m_Owner = _owner;
@@ -1106,10 +1106,10 @@ namespace AiState
 		return false;
 	}
 
-	bool Aimer::AddAimPositionRequest(Priority::ePriority _prio, obuint32 _owner, const Vector3f &_v)
+	bool Aimer::AddAimPositionRequest( Priority::ePriority _prio, obuint32 _owner, const Vector3f &_v )
 	{
-		AimRequest *pRequest = FindAimRequest(_owner);
-		if(pRequest)
+		AimRequest *pRequest = FindAimRequest( _owner );
+		if ( pRequest )
 		{
 			pRequest->m_Priority = _prio;
 			pRequest->m_Owner = _owner;
@@ -1121,10 +1121,10 @@ namespace AiState
 		return false;
 	}
 
-	bool Aimer::AddAimMoveDirRequest(Priority::ePriority _prio, obuint32 _owner)
+	bool Aimer::AddAimMoveDirRequest( Priority::ePriority _prio, obuint32 _owner )
 	{
-		AimRequest *pRequest = FindAimRequest(_owner);
-		if(pRequest)
+		AimRequest *pRequest = FindAimRequest( _owner );
+		if ( pRequest )
 		{
 			pRequest->m_Priority = _prio;
 			pRequest->m_Owner = _owner;
@@ -1135,46 +1135,46 @@ namespace AiState
 		return false;
 	}
 
-	void Aimer::ReleaseAimRequest(obuint32 _owner)
+	void Aimer::ReleaseAimRequest( obuint32 _owner )
 	{
-		for(obint32 i = 0; i < MaxAimRequests; ++i)
+		for ( obint32 i = 0; i < MaxAimRequests; ++i )
 		{
-			if(m_AimRequests[i].m_Owner == _owner)
+			if ( m_AimRequests[ i ].m_Owner == _owner )
 			{
-				m_AimRequests[i].Reset();
+				m_AimRequests[ i ].Reset();
 				break;
 			}
 		}
 	}
 
-	void Aimer::UpdateAimRequest(obuint32 _owner, const Vector3f &_pos)
+	void Aimer::UpdateAimRequest( obuint32 _owner, const Vector3f &_pos )
 	{
-		for(obint32 i = 0; i < MaxAimRequests; ++i)
+		for ( obint32 i = 0; i < MaxAimRequests; ++i )
 		{
-			if(m_AimRequests[i].m_Owner == _owner)
+			if ( m_AimRequests[ i ].m_Owner == _owner )
 			{
-				m_AimRequests[i].m_AimVector = _pos;
+				m_AimRequests[ i ].m_AimVector = _pos;
 				break;
 			}
 		}
 	}
 
-	void Aimer::GetDebugString(std::stringstream &out)
+	void Aimer::GetDebugString( std::stringstream &out )
 	{
-		out << Utils::HashToString(m_BestAimOwner);
+		out << Utils::HashToString( m_BestAimOwner );
 	}
 
-	int Aimer::GetAllRequests(AimRequest *_records, int _max)
+	int Aimer::GetAllRequests( AimRequest *_records, int _max )
 	{
 		int iNum = 0;
-		for(int i = 0; i < MaxAimRequests; ++i)
+		for ( int i = 0; i < MaxAimRequests; ++i )
 		{
-			if(m_AimRequests[i].m_Priority==Priority::Zero)
+			if ( m_AimRequests[ i ].m_Priority == Priority::Zero )
 				continue;
 
-			_records[iNum++] = m_AimRequests[i];
+			_records[ iNum++ ] = m_AimRequests[ i ];
 
-			if(iNum>=_max-1)
+			if ( iNum >= _max - 1 )
 				break;
 		}
 		return iNum;
@@ -1182,35 +1182,35 @@ namespace AiState
 
 	void Aimer::RenderDebug()
 	{
-		const Aimer::AimRequest *pCurrent = Aimer::GetHighestAimRequest(false);
+		const Aimer::AimRequest *pCurrent = Aimer::GetHighestAimRequest( false );
 
-		for(obint32 i = 1; i < MaxAimRequests; ++i)
+		for ( obint32 i = 1; i < MaxAimRequests; ++i )
 		{
-			if(m_AimRequests[i].m_Priority > Priority::Zero)
+			if ( m_AimRequests[ i ].m_Priority > Priority::Zero )
 			{
-				obColor c = pCurrent==&m_AimRequests[i] ? COLOR::MAGENTA : COLOR::WHITE;
-				if(m_AimRequests[i].m_AimType!=WorldFacing)
-					RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_AimRequests[i].m_AimVector, c );
+				obColor c = pCurrent == &m_AimRequests[ i ] ? COLOR::MAGENTA : COLOR::WHITE;
+				if ( m_AimRequests[ i ].m_AimType != WorldFacing )
+					RenderBuffer::AddLine( GetClient()->GetEyePosition(), m_AimRequests[ i ].m_AimVector, c );
 				else
-					RenderBuffer::AddLine(GetClient()->GetEyePosition(),GetClient()->GetEyePosition()+GetClient()->GetFacingVector() * 128.f, c );
+					RenderBuffer::AddLine( GetClient()->GetEyePosition(), GetClient()->GetEyePosition() + GetClient()->GetFacingVector() * 128.f, c );
 			}
 		}
 	}
 
-	Aimer::AimRequest *Aimer::GetHighestAimRequest(bool _clearontarget)
+	Aimer::AimRequest *Aimer::GetHighestAimRequest( bool _clearontarget )
 	{
 		int iBestAim = 0;
-		for(obint32 i = 1; i < MaxAimRequests; ++i)
+		for ( obint32 i = 1; i < MaxAimRequests; ++i )
 		{
-			if(m_AimRequests[i].m_Priority > m_AimRequests[iBestAim].m_Priority)
+			if ( m_AimRequests[ i ].m_Priority > m_AimRequests[ iBestAim ].m_Priority )
 				iBestAim = i;
 		}
-		return &m_AimRequests[iBestAim];
+		return &m_AimRequests[ iBestAim ];
 	}
 
 	void Aimer::OnSpawn()
 	{
-		m_AimRequests[0].m_AimVector = GetClient()->GetFacingVector();
+		m_AimRequests[ 0 ].m_AimVector = GetClient()->GetFacingVector();
 	}
 
 	void Aimer::Enter()
@@ -1221,51 +1221,51 @@ namespace AiState
 	{
 	}
 
-	State::StateStatus Aimer::Update(float fDt)
+	State::StateStatus Aimer::Update( float fDt )
 	{
-		Prof(Aimer);
+		Prof( Aimer );
 		{
-			Prof(Update);
+			Prof( Update );
 
-			AimRequest *curAim = GetHighestAimRequest(true);
+			AimRequest *curAim = GetHighestAimRequest( true );
 			m_BestAimOwner = curAim->m_Owner;
-			switch(curAim->m_AimType)
+			switch ( curAim->m_AimType )
 			{
-			case WorldPosition:
+				case WorldPosition:
 				{
-					GetClient()->TurnTowardPosition(curAim->m_AimVector);
+					GetClient()->TurnTowardPosition( curAim->m_AimVector );
 					break;
 				}
-			case WorldFacing:
+				case WorldFacing:
 				{
-					GetClient()->TurnTowardFacing(curAim->m_AimVector);
+					GetClient()->TurnTowardFacing( curAim->m_AimVector );
 					break;
 				}
-			case MoveDirection:
+				case MoveDirection:
 				{
-					FINDSTATE(fp, FollowPath, GetRootState());
-					if(fp != NULL && fp->IsActive())
+					FINDSTATE( fp, FollowPath, GetRootState() );
+					if ( fp != NULL && fp->IsActive() )
 					{
 						curAim->m_AimVector = fp->GetLookAheadPt();
-						GetClient()->TurnTowardPosition(curAim->m_AimVector);
+						GetClient()->TurnTowardPosition( curAim->m_AimVector );
 						break;
 					}
-					FINDSTATE(steer, SteeringSystem, GetParent());
-					if(steer)
+					FINDSTATE( steer, SteeringSystem, GetParent() );
+					if ( steer )
 					{
 						curAim->m_AimVector = steer->GetTarget();
 						curAim->m_AimVector.Z() = GetClient()->GetEyePosition().Z();
-						GetClient()->TurnTowardPosition(curAim->m_AimVector);
+						GetClient()->TurnTowardPosition( curAim->m_AimVector );
 					}
 					break;
 				}
-			case UserCallback:
+				case UserCallback:
 				{
-					Prof(UserCallback);
-					OBASSERT(curAim->m_AimerUser, "No Aim User");
-					if(curAim->m_AimerUser &&
-						curAim->m_AimerUser->GetAimPosition(curAim->m_AimVector) &&
-						GetClient()->TurnTowardPosition(curAim->m_AimVector))
+					Prof( UserCallback );
+					OBASSERT( curAim->m_AimerUser, "No Aim User" );
+					if ( curAim->m_AimerUser &&
+						curAim->m_AimerUser->GetAimPosition( curAim->m_AimVector ) &&
+						GetClient()->TurnTowardPosition( curAim->m_AimVector ) )
 					{
 						curAim->m_AimerUser->OnTarget();
 					}
@@ -1279,14 +1279,14 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	LookAround::LookAround()
-		: StateChild("LookAround")
-		, m_NextLookTime(0)
+		: StateChild( "LookAround" )
+		, m_NextLookTime( 0 )
 	{
 	}
 
 	int LookAround::GetNextLookTime()
 	{
-		return IGame::GetTime()+Utils::SecondsToMilliseconds(Mathf::IntervalRandom(5.f,15.f));
+		return IGame::GetTime() + Utils::SecondsToMilliseconds( Mathf::IntervalRandom( 5.f, 15.f ) );
 	}
 
 	void LookAround::OnSpawn()
@@ -1296,14 +1296,14 @@ namespace AiState
 
 	obReal LookAround::GetPriority()
 	{
-		if(IGame::GetTime() > m_NextLookTime)
+		if ( IGame::GetTime() > m_NextLookTime )
 		{
-			FINDSTATE(fp,FollowPath,GetParent());
-			if(fp)
+			FINDSTATE( fp, FollowPath, GetParent() );
+			if ( fp )
 			{
 				Path::PathPoint pp;
-				
-				if(fp->IsMoving() && fp->IsNavFlagActive( F_NAV_CLIMB|F_NAV_DOOR ))
+
+				if ( fp->IsMoving() && fp->IsOnCustomLink( NAVAREA_ANY ) )
 				{
 					m_NextLookTime = GetNextLookTime();
 					return 0.f;
@@ -1318,20 +1318,20 @@ namespace AiState
 	{
 		//Quaternionf q(Vector3f::UNIT_Z, Mathf::IntervalRandom(-Mathf::PI, Mathf::PI));
 		//Vector3f vStartAim = q.Rotate(GetClient()->GetFacingVector());
-		FINDSTATE(aim, Aimer, GetParent());
-		if(aim)
-			aim->AddAimFacingRequest(Priority::Low, GetNameHash(), -GetClient()->GetFacingVector());
+		FINDSTATE( aim, Aimer, GetParent() );
+		if ( aim )
+			aim->AddAimFacingRequest( Priority::Low, GetNameHash(), -GetClient()->GetFacingVector() );
 	}
 
 	void LookAround::Exit()
 	{
-		FINDSTATEIF(Aimer, GetParent(), ReleaseAimRequest(GetNameHash()));
+		FINDSTATEIF( Aimer, GetParent(), ReleaseAimRequest( GetNameHash() ) );
 		m_NextLookTime = GetNextLookTime();
 	}
 
-	State::StateStatus LookAround::Update(float fDt)
+	State::StateStatus LookAround::Update( float fDt )
 	{
-		return (GetStateTime() > 1.f) ? State_Finished : State_Busy;
+		return ( GetStateTime() > 1.f ) ? State_Finished : State_Busy;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -1339,12 +1339,12 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	MotorControl::MotorControl()
-		: StateSimultaneous("MotorControl")
+		: StateSimultaneous( "MotorControl" )
 	{
-		AppendState(new FollowPath);
-		AppendState(new SteeringSystem);
-		AppendState(new Aimer);
-		AppendState(new LookAround);
+		AppendState( new FollowPath );
+		AppendState( new SteeringSystem );
+		AppendState( new Aimer );
+		AppendState( new LookAround );
 		//AppendState(new ClimbLadder);
 		//AppendState(new RideElevator);
 	}
@@ -1352,29 +1352,29 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	LowLevel::LowLevel()
-		: StateSimultaneous("LowLevel")
+		: StateSimultaneous( "LowLevel" )
 	{
-		AppendState(new MotorControl);
-		AppendState(new WeaponSystem);
-		AppendState(new TargetingSystem);
-		AppendState(new SensoryMemory);
-		AppendState(new ProximityWatcher);
+		AppendState( new MotorControl );
+		AppendState( new WeaponSystem );
+		AppendState( new TargetingSystem );
+		AppendState( new SensoryMemory );
+		AppendState( new ProximityWatcher );
 		//AppendState(new FloodFiller);
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 
 	Main::Main()
-		: StateSimultaneous("Main"),
-		m_OnSpawnCalled(false)
+		: StateSimultaneous( "Main" ),
+		m_OnSpawnCalled( false )
 	{
-		AppendState(new LowLevel);
-		AppendState(new HighLevel);
+		AppendState( new LowLevel );
+		AppendState( new HighLevel );
 	}
 
 	obReal Main::GetPriority()
 	{
-		if(IGame::GetGameState() != IGame::GetLastGameState())
+		if ( IGame::GetGameState() != IGame::GetLastGameState() )
 			return 0.f;
 
 		//return StateSimultaneous::GetPriority();
@@ -1383,10 +1383,10 @@ namespace AiState
 
 	void Main::Enter()
 	{
-		if(!m_OnSpawnCalled)
+		if ( !m_OnSpawnCalled )
 			GetRootState()->OnSpawn();
 		m_OnSpawnCalled = false;
-		GetClient()->SendEvent(MessageHelper(MESSAGE_SPAWN));
+		GetClient()->SendEvent( MessageHelper( MESSAGE_SPAWN ) );
 	}
 
 	void Main::OnSpawn()
@@ -1398,45 +1398,45 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	Dead::Dead()
-		: StateChild("Dead")
-		, bForceActivate(true)
+		: StateChild( "Dead" )
+		, bForceActivate( true )
 	{
 	}
 
 	obReal Dead::GetPriority()
 	{
-		if(bForceActivate)
+		if ( bForceActivate )
 		{
 			bForceActivate = false;
 			return 1.f;
 		}
-		return !InterfaceFuncs::IsAlive(GetClient()->GetGameEntity()) ? 1.f : 0.f;
+		return !InterfaceFuncs::IsAlive( GetClient()->GetGameEntity() ) ? 1.f : 0.f;
 	}
 
-	State::StateStatus Dead::Update(float fDt)
+	State::StateStatus Dead::Update( float fDt )
 	{
-		if(IGame::GetFrameNumber() & 2)
+		if ( IGame::GetFrameNumber() & 2 )
 		{
-			GetClient()->PressButton(BOT_BUTTON_RESPAWN);
+			GetClient()->PressButton( BOT_BUTTON_RESPAWN );
 		}
-		GetClient()->SetMovementVector(Vector3f::ZERO);
+		GetClient()->SetMovementVector( Vector3f::ZERO );
 		return State_Busy;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 
 	Warmup::Warmup()
-		: StateChild("Warmup")
+		: StateChild( "Warmup" )
 	{
 	}
 
 	obReal Warmup::GetPriority()
 	{
 		GameState gs = InterfaceFuncs::GetGameState();
-		return (gs != GAME_STATE_PLAYING && gs != GAME_STATE_SUDDENDEATH) ? 1.f : 0.f;
+		return ( gs != GAME_STATE_PLAYING && gs != GAME_STATE_SUDDENDEATH ) ? 1.f : 0.f;
 	}
 
-	State::StateStatus Warmup::Update(float fDt)
+	State::StateStatus Warmup::Update( float fDt )
 	{
 		// need to do something special here?
 		return State_Busy;
@@ -1444,104 +1444,104 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	Root::Root() : StateFirstAvailable("Root")
+	Root::Root() : StateFirstAvailable( "Root" )
 	{
-		AppendState(new Dead);
-		AppendState(new Main);
+		AppendState( new Dead );
+		AppendState( new Main );
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 
 	ProximityWatcher::ProximityWatcher()
-		: StateChild("ProximityWatcher")
+		: StateChild( "ProximityWatcher" )
 	{
-		for(int i = 0; i < MaxTriggers; ++i)
+		for ( int i = 0; i < MaxTriggers; ++i )
 		{
-			m_Triggers[i].m_OwnerState = 0;
-			m_Triggers[i].m_DeleteOnFire = true;
+			m_Triggers[ i ].m_OwnerState = 0;
+			m_Triggers[ i ].m_DeleteOnFire = true;
 		}
 	}
 	void ProximityWatcher::RenderDebug()
 	{
-		for(int i = 0; i < MaxTriggers; ++i)
+		for ( int i = 0; i < MaxTriggers; ++i )
 		{
-			if(m_Triggers[i].m_SensoryFilter)
+			if ( m_Triggers[ i ].m_SensoryFilter )
 			{
-				for(int p = 0; p < m_Triggers[i].m_SensoryFilter->GetNumPositions(); ++p)
+				for ( int p = 0; p < m_Triggers[ i ].m_SensoryFilter->GetNumPositions(); ++p )
 				{
-					float r = std::max(m_Triggers[i].m_SensoryFilter->GetMaxDistance(), 10.f);
+					float r = std::max( m_Triggers[ i ].m_SensoryFilter->GetMaxDistance(), 10.f );
 
-					RenderBuffer::AddCircle( m_Triggers[i].m_SensoryFilter->GetPosition(p),
+					RenderBuffer::AddCircle( m_Triggers[ i ].m_SensoryFilter->GetPosition( p ),
 						r, COLOR::MAGENTA );
 				}
 			}
 		}
 	}
-	void ProximityWatcher::AddWatch(obuint32 _owner, FilterPtr _filter, bool _fireonce)
+	void ProximityWatcher::AddWatch( obuint32 _owner, FilterPtr _filter, bool _fireonce )
 	{
-		for(int i = 0; i < MaxTriggers; ++i)
+		for ( int i = 0; i < MaxTriggers; ++i )
 		{
-			if(!m_Triggers[i].m_SensoryFilter)
+			if ( !m_Triggers[ i ].m_SensoryFilter )
 			{
-				m_Triggers[i].m_OwnerState = _owner;
-				m_Triggers[i].m_SensoryFilter = _filter;
-				m_Triggers[i].m_DeleteOnFire = _fireonce;
+				m_Triggers[ i ].m_OwnerState = _owner;
+				m_Triggers[ i ].m_SensoryFilter = _filter;
+				m_Triggers[ i ].m_DeleteOnFire = _fireonce;
 			}
 		}
 	}
-	void ProximityWatcher::RemoveWatch(obuint32 _owner)
+	void ProximityWatcher::RemoveWatch( obuint32 _owner )
 	{
-		for(int i = 0; i < MaxTriggers; ++i)
+		for ( int i = 0; i < MaxTriggers; ++i )
 		{
-			if(m_Triggers[i].m_SensoryFilter && m_Triggers[i].m_OwnerState == _owner)
+			if ( m_Triggers[ i ].m_SensoryFilter && m_Triggers[ i ].m_OwnerState == _owner )
 			{
-				m_Triggers[i].m_OwnerState = 0;
-				m_Triggers[i].m_SensoryFilter.reset();
-				m_Triggers[i].m_DeleteOnFire = false;
+				m_Triggers[ i ].m_OwnerState = 0;
+				m_Triggers[ i ].m_SensoryFilter.reset();
+				m_Triggers[ i ].m_DeleteOnFire = false;
 			}
 		}
 	}
 
 	obReal ProximityWatcher::GetPriority()
 	{
-		for(int i = 0; i < MaxTriggers; ++i)
+		for ( int i = 0; i < MaxTriggers; ++i )
 		{
-			if(m_Triggers[i].m_SensoryFilter)
+			if ( m_Triggers[ i ].m_SensoryFilter )
 				return 1.f;
 		}
 		return 0.f;
 	}
 
-	State::StateStatus ProximityWatcher::Update(float fDt)
+	State::StateStatus ProximityWatcher::Update( float fDt )
 	{
 		SensoryMemory *sensory = GetClient()->GetSensoryMemory();
 
-		for(int i = 0; i < MaxTriggers; ++i)
+		for ( int i = 0; i < MaxTriggers; ++i )
 		{
-			if(m_Triggers[i].m_SensoryFilter)
+			if ( m_Triggers[ i ].m_SensoryFilter )
 			{
-				m_Triggers[i].m_SensoryFilter->Reset();
+				m_Triggers[ i ].m_SensoryFilter->Reset();
 
 				// Set up ignore list so we don't get events every frame from
 				// entities that are still inside the trigger
 				// basically only want the event when they enter.
 				//m_Triggers[i].m_SensoryFilter->ResetIgnoreEntity();
 
-				sensory->QueryMemory(*m_Triggers[i].m_SensoryFilter);
+				sensory->QueryMemory( *m_Triggers[ i ].m_SensoryFilter );
 
-				if(m_Triggers[i].m_SensoryFilter->DetectedSomething())
+				if ( m_Triggers[ i ].m_SensoryFilter->DetectedSomething() )
 				{
 					Event_ProximityTrigger trig;
-					trig.m_OwnerState = m_Triggers[i].m_OwnerState;
-					trig.m_Entity = m_Triggers[i].m_SensoryFilter->GetBestEntity();
-					trig.m_Position = m_Triggers[i].m_SensoryFilter->GetTriggerPosition();
-					GetClient()->SendEvent(MessageHelper(MESSAGE_PROXIMITY_TRIGGER, &trig, sizeof(trig)));
+					trig.m_OwnerState = m_Triggers[ i ].m_OwnerState;
+					trig.m_Entity = m_Triggers[ i ].m_SensoryFilter->GetBestEntity();
+					trig.m_Position = m_Triggers[ i ].m_SensoryFilter->GetTriggerPosition();
+					GetClient()->SendEvent( MessageHelper( MESSAGE_PROXIMITY_TRIGGER, &trig, sizeof( trig ) ) );
 
-					if(m_Triggers[i].m_DeleteOnFire)
+					if ( m_Triggers[ i ].m_DeleteOnFire )
 					{
-						m_Triggers[i].m_OwnerState = 0;
-						m_Triggers[i].m_SensoryFilter.reset();
-						m_Triggers[i].m_DeleteOnFire = false;
+						m_Triggers[ i ].m_OwnerState = 0;
+						m_Triggers[ i ].m_SensoryFilter.reset();
+						m_Triggers[ i ].m_DeleteOnFire = false;
 					}
 				}
 			}
@@ -1552,21 +1552,21 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	TrackTargetZone::TrackTargetZone()
-		: m_Radius(0.f)
+		: m_Radius( 0.f )
 	{
-		Restart(0.f);
+		Restart( 0.f );
 	}
-	void TrackTargetZone::Restart(float _radius)
+	void TrackTargetZone::Restart( float _radius )
 	{
 		m_Radius = _radius;
 		m_ValidAim = false;
 
 		m_LastTarget.Reset();
-		for(int i = 0; i < MaxTargetZones; ++i)
+		for ( int i = 0; i < MaxTargetZones; ++i )
 		{
-			m_TargetZones[i].m_InUse = false;
-			m_TargetZones[i].m_TargetCount = 0;
-			m_TargetZones[i].m_Position = Vector3f::ZERO;
+			m_TargetZones[ i ].m_InUse = false;
+			m_TargetZones[ i ].m_TargetCount = 0;
+			m_TargetZones[ i ].m_Position = Vector3f::ZERO;
 		}
 	}
 
@@ -1574,24 +1574,24 @@ namespace AiState
 	{
 		int iNumZones = 0;
 		float fTotalWeight = 0.f;
-		for(int i = 0; i < MaxTargetZones; ++i)
+		for ( int i = 0; i < MaxTargetZones; ++i )
 		{
-			if(m_TargetZones[i].m_InUse)
+			if ( m_TargetZones[ i ].m_InUse )
 			{
-				fTotalWeight += (float)m_TargetZones[i].m_TargetCount;
+				fTotalWeight += (float)m_TargetZones[ i ].m_TargetCount;
 				iNumZones++;
 			}
 		}
 
-		float fRand = Mathf::IntervalRandom(0.f, fTotalWeight);
-		for(int i = 0; i < MaxTargetZones; ++i)
+		float fRand = Mathf::IntervalRandom( 0.f, fTotalWeight );
+		for ( int i = 0; i < MaxTargetZones; ++i )
 		{
-			if(m_TargetZones[i].m_InUse)
+			if ( m_TargetZones[ i ].m_InUse )
 			{
-				fRand -= (float)m_TargetZones[i].m_TargetCount;
-				if(fRand < 0.f)
+				fRand -= (float)m_TargetZones[ i ].m_TargetCount;
+				if ( fRand < 0.f )
 				{
-					m_AimPosition = m_TargetZones[i].m_Position;
+					m_AimPosition = m_TargetZones[ i ].m_Position;
 					m_ValidAim = true;
 					return;
 				}
@@ -1602,53 +1602,53 @@ namespace AiState
 
 	void TrackTargetZone::RenderDebug()
 	{
-		for(int i = 0; i < MaxTargetZones; ++i)
+		for ( int i = 0; i < MaxTargetZones; ++i )
 		{
-			if(m_TargetZones[i].m_InUse)
+			if ( m_TargetZones[ i ].m_InUse )
 			{
 				RenderBuffer::AddCircle(
-					m_TargetZones[i].m_Position,
+					m_TargetZones[ i ].m_Position,
 					m_Radius,
 					COLOR::MAGENTA );
 
 				RenderBuffer::AddString3d(
-					m_TargetZones[i].m_Position,
+					m_TargetZones[ i ].m_Position,
 					COLOR::WHITE,
-					va( "%d", m_TargetZones[i].m_TargetCount ) );
+					va( "%d", m_TargetZones[ i ].m_TargetCount ) );
 			}
 		}
 	}
 
-	void TrackTargetZone::Update(Client *_client)
+	void TrackTargetZone::Update( Client *_client )
 	{
 		const MemoryRecord *pTargetRec = _client->GetTargetingSystem()->GetCurrentTargetRecord();
-		if(pTargetRec != NULL && pTargetRec->GetEntity() != m_LastTarget)
+		if ( pTargetRec != NULL && pTargetRec->GetEntity() != m_LastTarget )
 		{
-			for(int i = 0; i < MaxTargetZones; ++i)
+			for ( int i = 0; i < MaxTargetZones; ++i )
 			{
 				// if new target, add it to the zone counter
 				bool bFound = false;
 				TargetZone *pFreeZone = 0;
-				for(int z = 0; z < MaxTargetZones; ++z)
+				for ( int z = 0; z < MaxTargetZones; ++z )
 				{
-					if(m_TargetZones[z].m_InUse)
+					if ( m_TargetZones[ z ].m_InUse )
 					{
-						const float fSqDistance = SquaredLength(m_TargetZones[z].m_Position,pTargetRec->GetLastSensedPosition());
+						const float fSqDistance = SquaredLength( m_TargetZones[ z ].m_Position, pTargetRec->GetLastSensedPosition() );
 
-						if(fSqDistance < Mathf::Sqr(m_Radius))
+						if ( fSqDistance < Mathf::Sqr( m_Radius ) )
 						{
-							m_TargetZones[z].m_TargetCount++;
+							m_TargetZones[ z ].m_TargetCount++;
 							bFound = true;
 						}
 					}
 					else
 					{
-						if(!pFreeZone)
-							pFreeZone = &m_TargetZones[z];
+						if ( !pFreeZone )
+							pFreeZone = &m_TargetZones[ z ];
 					}
 				}
 
-				if(!bFound && pFreeZone)
+				if ( !bFound && pFreeZone )
 				{
 					pFreeZone->m_InUse = true;
 					pFreeZone->m_Position = pTargetRec->GetLastSensedPosition();
@@ -1659,61 +1659,61 @@ namespace AiState
 			m_LastTarget = pTargetRec->GetEntity();
 		}
 
-		if(m_LastTarget.IsValid() && !InterfaceFuncs::IsAlive(m_LastTarget))
+		if ( m_LastTarget.IsValid() && !InterfaceFuncs::IsAlive( m_LastTarget ) )
 			m_LastTarget.Reset();
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 
 	DeferredCaster::DeferredCaster()
-		: StateChild("DeferredCaster")
-		, CastReadPosition(0)
-		, CastWritePosition(0)
-		, GroupNext(0)
+		: StateChild( "DeferredCaster" )
+		, CastReadPosition( 0 )
+		, CastWritePosition( 0 )
+		, GroupNext( 0 )
 	{
-		for(int i = 0; i < MaxCasts; ++i)
+		for ( int i = 0; i < MaxCasts; ++i )
 		{
-			GroupId[i] = 0;
-			CastOutputs[i].Reset();
+			GroupId[ i ] = 0;
+			CastOutputs[ i ].Reset();
 		}
 	}
 
-	int DeferredCaster::AddDeferredCasts(const CastInput *_CastIn, int _NumCasts, const char *_UserName)
+	int DeferredCaster::AddDeferredCasts( const CastInput *_CastIn, int _NumCasts, const char *_UserName )
 	{
-		int InputIndices[MaxCasts] = {0};
+		int InputIndices[ MaxCasts ] = { 0 };
 
 		// verify we have room to add them
-		for(int i = 0; i < _NumCasts; ++i)
+		for ( int i = 0; i < _NumCasts; ++i )
 		{
-			const int ix = (CastWritePosition+i)%MaxCasts;
+			const int ix = ( CastWritePosition + i ) % MaxCasts;
 
-			if(GroupId[ix] != InvalidGroup) // not enough room
+			if ( GroupId[ ix ] != InvalidGroup ) // not enough room
 				return InvalidGroup;
 
-			InputIndices[i] = ix;
+			InputIndices[ i ] = ix;
 		}
 
 		// copy them over to the internal buffer
-		while(GroupNext==0) ++GroupNext;
+		while ( GroupNext == 0 ) ++GroupNext;
 
-		for(int i = 0; i < _NumCasts; ++i)
+		for ( int i = 0; i < _NumCasts; ++i )
 		{
-			const int ix = InputIndices[i];
-			CastInputs[ix] = _CastIn[i];
-			UserName[ix] = _UserName;
-			CastOutputs[ix].Done = false;
-			GroupId[ix] = GroupNext;
+			const int ix = InputIndices[ i ];
+			CastInputs[ ix ] = _CastIn[ i ];
+			UserName[ ix ] = _UserName;
+			CastOutputs[ ix ].Done = false;
+			GroupId[ ix ] = GroupNext;
 		}
-		CastWritePosition = (CastWritePosition+_NumCasts)%MaxCasts;
+		CastWritePosition = ( CastWritePosition + _NumCasts ) % MaxCasts;
 		return GroupNext++;
 	}
 
-	DeferredCaster::Status DeferredCaster::GetDeferredCasts(int GroupId, CastOutput *_CastOut, int _NumCasts)
+	DeferredCaster::Status DeferredCaster::GetDeferredCasts( int GroupId, CastOutput *_CastOut, int _NumCasts )
 	{
 		return Pending;
 	}
 
-	void DeferredCaster::GetDebugString(std::stringstream &out)
+	void DeferredCaster::GetDebugString( std::stringstream &out )
 	{
 	}
 
@@ -1731,7 +1731,7 @@ namespace AiState
 	void DeferredCaster::Exit()
 	{
 	}
-	State::StateStatus DeferredCaster::Update(float fDt)
+	State::StateStatus DeferredCaster::Update( float fDt )
 	{
 		return State_Busy;
 	}
@@ -1744,7 +1744,7 @@ namespace AiState
 		Jump = false;
 	}
 
-	void FloodFiller::Node::Init(obint16 _X, obint16 _Y, float _Height, bool _Open /* = false */)
+	void FloodFiller::Node::Init( obint16 _X, obint16 _Y, float _Height, bool _Open /* = false */ )
 	{
 		MinOffset.X = MaxOffset.X = _X;
 		MinOffset.Y = MaxOffset.Y = _Y;
@@ -1754,8 +1754,8 @@ namespace AiState
 
 		OpenNess = 0;
 
-		for(int i = 0; i < DIR_NUM; ++i)
-			Connections[i].Reset();
+		for ( int i = 0; i < DIR_NUM; ++i )
+			Connections[ i ].Reset();
 
 		NearObject = false;
 		NearEdge = false;
@@ -1772,35 +1772,35 @@ namespace AiState
 	const float MAX_COVER_HEIGHT = 60.f;
 
 	FloodFiller::FloodFiller()
-		: StateChild("FloodFiller")
+		: StateChild( "FloodFiller" )
 	{
 		Reset();
 		State = FillDone;
 	}
 
-	Vector3f FloodFiller::_GetNodePosition(const Node &_Node)
+	Vector3f FloodFiller::_GetNodePosition( const Node &_Node )
 	{
 		Vector3f vNodePos = Start;
 
-		const float nX = (float)(_Node.MinOffset.X + _Node.MaxOffset.X) * 0.5f;
-		const float nY = (float)(_Node.MinOffset.Y + _Node.MaxOffset.Y) * 0.5f;
+		const float nX = (float)( _Node.MinOffset.X + _Node.MaxOffset.X ) * 0.5f;
+		const float nY = (float)( _Node.MinOffset.Y + _Node.MaxOffset.Y ) * 0.5f;
 
-		vNodePos.X() += ((Radius*2.f) * nX);
-		vNodePos.Y() += ((Radius*2.f) * nY);
+		vNodePos.X() += ( ( Radius*2.f ) * nX );
+		vNodePos.Y() += ( ( Radius*2.f ) * nY );
 		vNodePos.Z() = _Node.Height;
 
 		return vNodePos;
 	}
 
-	FloodFiller::Node *FloodFiller::_NodeExists(obint16 _X, obint16 _Y, float _Height)
+	FloodFiller::Node *FloodFiller::_NodeExists( obint16 _X, obint16 _Y, float _Height )
 	{
-		for(int i = 0; i < FreeNode; ++i)
+		for ( int i = 0; i < FreeNode; ++i )
 		{
-			if(Nodes[i].MinOffset.X >= _X && Nodes[i].MinOffset.Y >= _Y &&
-				Nodes[i].MaxOffset.X <= _X && Nodes[i].MaxOffset.Y <= _Y)
+			if ( Nodes[ i ].MinOffset.X >= _X && Nodes[ i ].MinOffset.Y >= _Y &&
+				Nodes[ i ].MaxOffset.X <= _X && Nodes[ i ].MaxOffset.Y <= _Y )
 			{
-				if(Mathf::FAbs(_Height-Nodes[i].Height) < CHARACTER_HEIGHT)
-					return &Nodes[i];
+				if ( Mathf::FAbs( _Height - Nodes[ i ].Height ) < CHARACTER_HEIGHT )
+					return &Nodes[ i ];
 			}
 		}
 		return NULL;
@@ -1808,75 +1808,75 @@ namespace AiState
 
 	FloodFiller::Node *FloodFiller::_NextOpenNode()
 	{
-		for(int i = 0; i < FreeNode; ++i)
+		for ( int i = 0; i < FreeNode; ++i )
 		{
-			if(Nodes[i].Open)
+			if ( Nodes[ i ].Open )
 			{
-				return &Nodes[i];
+				return &Nodes[ i ];
 			}
 		}
 		return NULL;
 	}
 
-	bool FloodFiller::_TestNode(const Node *_Node)
+	bool FloodFiller::_TestNode( const Node *_Node )
 	{
-		Vector3f vPos = _GetNodePosition(*_Node);
+		Vector3f vPos = _GetNodePosition( *_Node );
 
 		obTraceResult tr;
-		EngineFuncs::TraceLine(tr,
+		EngineFuncs::TraceLine( tr,
 			vPos,
 			vPos,
 			&FloodBlock,
 			TR_MASK_FLOODFILL,
 			-1,
-			False);
+			False );
 
-		return (tr.m_Fraction == 1.0f);
+		return ( tr.m_Fraction == 1.0f );
 	}
 
-	bool FloodFiller::_DropToGround(Node *_Node)
+	bool FloodFiller::_DropToGround( Node *_Node )
 	{
-		Vector3f vPos = _GetNodePosition(*_Node);
+		Vector3f vPos = _GetNodePosition( *_Node );
 
 		const float fDropDistance = 512.f;
 
 		AABB bounds = FloodBlock;
-		bounds.m_Maxs[2] = CHARACTER_HEIGHT - CHARACTER_JUMPHEIGHT;
+		bounds.m_Maxs[ 2 ] = CHARACTER_HEIGHT - CHARACTER_JUMPHEIGHT;
 
 		static float START_OFFSET = CHARACTER_JUMPHEIGHT + 10.f;
 		static float END_OFFSET = -fDropDistance;
 
 		obTraceResult tr;
-		EngineFuncs::TraceLine(tr,
-			vPos + Vector3f(0.f,0.f,START_OFFSET),
-			vPos + Vector3f(0.f,0.f,END_OFFSET),
+		EngineFuncs::TraceLine( tr,
+			vPos + Vector3f( 0.f, 0.f, START_OFFSET ),
+			vPos + Vector3f( 0.f, 0.f, END_OFFSET ),
 			&bounds,
 			TR_MASK_FLOODFILL,
 			-1,
-			False);
+			False );
 
 		bool bGood = true;
 
 		// adjust node height
-		if(tr.m_Fraction < 1.f)
-			_Node->Height = tr.m_Endpos[2] + CHARACTER_STEPHEIGHT;
+		if ( tr.m_Fraction < 1.f )
+			_Node->Height = tr.m_Endpos[ 2 ] + CHARACTER_STEPHEIGHT;
 
-		if(tr.m_StartSolid)
+		if ( tr.m_StartSolid )
 			bGood = false;
 
 		return bGood;
 	}
 
-	void FloodFiller::_MakeConnection(Node *_NodeA, Node *_NodeB, Direction _Dir)
+	void FloodFiller::_MakeConnection( Node *_NodeA, Node *_NodeB, Direction _Dir )
 	{
 		{
-			_NodeA->Connections[_Dir].Destination = _NodeB;
-			_NodeA->Connections[_Dir].Jump = (_NodeB->Height - _NodeA->Height) >= CHARACTER_STEPHEIGHT;
+			_NodeA->Connections[ _Dir ].Destination = _NodeB;
+			_NodeA->Connections[ _Dir ].Jump = ( _NodeB->Height - _NodeA->Height ) >= CHARACTER_STEPHEIGHT;
 
-			if((_NodeB->Height - _NodeA->Height) >= MIN_COVER_HEIGHT &&
-				(_NodeB->Height - _NodeA->Height) <= MAX_COVER_HEIGHT)
+			if ( ( _NodeB->Height - _NodeA->Height ) >= MIN_COVER_HEIGHT &&
+				( _NodeB->Height - _NodeA->Height ) <= MAX_COVER_HEIGHT )
 			{
-				_NodeA->Connections[_Dir].Cover |= (1<<_Dir);
+				_NodeA->Connections[ _Dir ].Cover |= ( 1 << _Dir );
 			}
 		}
 
@@ -1898,26 +1898,26 @@ namespace AiState
 		}
 	}
 
-	void FloodFiller::_FillOpenNess(bool _ResetAll)
+	void FloodFiller::_FillOpenNess( bool _ResetAll )
 	{
 		//////////////////////////////////////////////////////////////////////////
-		for(int i = 0; i < FreeNode; ++i)
+		for ( int i = 0; i < FreeNode; ++i )
 		{
-			if(_ResetAll)
-				Nodes[i].OpenNess = 0;
+			if ( _ResetAll )
+				Nodes[ i ].OpenNess = 0;
 
-			if(!Nodes[i].Sectorized)
+			if ( !Nodes[ i ].Sectorized )
 			{
-				if(Nodes[i].NearEdge || Nodes[i].NearObject)
-					Nodes[i].OpenNess = 1;
+				if ( Nodes[ i ].NearEdge || Nodes[ i ].NearObject )
+					Nodes[ i ].OpenNess = 1;
 
 				// bordering another sector also resets
-				for(int d = 0; d < DIR_NUM; ++d)
+				for ( int d = 0; d < DIR_NUM; ++d )
 				{
-					if(Nodes[i].Connections[d].Destination)
+					if ( Nodes[ i ].Connections[ d ].Destination )
 					{
-						if(Nodes[i].Connections[d].Destination->Sectorized)
-							Nodes[i].OpenNess = 1;
+						if ( Nodes[ i ].Connections[ d ].Destination->Sectorized )
+							Nodes[ i ].OpenNess = 1;
 					}
 				}
 			}
@@ -1926,22 +1926,22 @@ namespace AiState
 
 		obuint8 iCurrentDistance = 1;
 		bool bKeepGoing = true;
-		while(bKeepGoing)
+		while ( bKeepGoing )
 		{
 			bKeepGoing = false;
 
-			for(int i = 0; i < FreeNode; ++i)
+			for ( int i = 0; i < FreeNode; ++i )
 			{
-				if(Nodes[i].OpenNess == iCurrentDistance)
+				if ( Nodes[ i ].OpenNess == iCurrentDistance )
 				{
-					for(int d = 0; d < DIR_NUM; ++d)
+					for ( int d = 0; d < DIR_NUM; ++d )
 					{
-						if(Nodes[i].Connections[d].Destination)
+						if ( Nodes[ i ].Connections[ d ].Destination )
 						{
-							if(!Nodes[i].Connections[d].Destination->OpenNess)
+							if ( !Nodes[ i ].Connections[ d ].Destination->OpenNess )
 							{
 								bKeepGoing = true;
-								Nodes[i].Connections[d].Destination->OpenNess = Nodes[i].OpenNess+1;
+								Nodes[ i ].Connections[ d ].Destination->OpenNess = Nodes[ i ].OpenNess + 1;
 							}
 						}
 					}
@@ -1951,15 +1951,15 @@ namespace AiState
 		}
 	}
 
-	bool FloodFiller::_CanMergeWith(Node *_Node, Node *_WithNode)
+	bool FloodFiller::_CanMergeWith( Node *_Node, Node *_WithNode )
 	{
-		if(!_WithNode)
+		if ( !_WithNode )
 			return false;
 
-		if(Mathf::FAbs(_WithNode->Height - _Node->Height) >= CHARACTER_STEPHEIGHT)
+		if ( Mathf::FAbs( _WithNode->Height - _Node->Height ) >= CHARACTER_STEPHEIGHT )
 			return false;
 
-		if(_WithNode->SectorId != 0)
+		if ( _WithNode->SectorId != 0 )
 			return false;
 
 		return true;
@@ -1967,28 +1967,28 @@ namespace AiState
 
 	void FloodFiller::_MergeSectors()
 	{
-		_FillOpenNess(true);
+		_FillOpenNess( true );
 
 		obuint16 NextSectorId = 0;
 
-		while(true)
+		while ( true )
 		{
 			NextSectorId++;
 			//////////////////////////////////////////////////////////////////////////
 			Node *pLargestNode = 0;
 			obuint8 iLargestOpenness = 0;
-			for(int i = 0; i < FreeNode; ++i)
+			for ( int i = 0; i < FreeNode; ++i )
 			{
-				if(!Nodes[i].Sectorized && Nodes[i].OpenNess > iLargestOpenness)
+				if ( !Nodes[ i ].Sectorized && Nodes[ i ].OpenNess > iLargestOpenness )
 				{
-					pLargestNode = &Nodes[i];
-					iLargestOpenness = Nodes[i].OpenNess;
+					pLargestNode = &Nodes[ i ];
+					iLargestOpenness = Nodes[ i ].OpenNess;
 				}
 			}
-			if(!pLargestNode)
+			if ( !pLargestNode )
 				break;
 			//////////////////////////////////////////////////////////////////////////
-			if(pLargestNode)
+			if ( pLargestNode )
 			{
 				/*RenderBuffer::AddString3d(
 				_GetNodePosition(*pLargestNode) + Vector3f(0,0,64),
@@ -1999,40 +1999,40 @@ namespace AiState
 				pLargestNode->SectorId = NextSectorId;
 
 				Node s;
-				s.Init(pLargestNode->MinOffset.X,pLargestNode->MinOffset.Y,pLargestNode->Height,false);
+				s.Init( pLargestNode->MinOffset.X, pLargestNode->MinOffset.Y, pLargestNode->Height, false );
 
-				int ExpansionMask = (1<<DIR_NORTH)|(1<<DIR_EAST)|(1<<DIR_SOUTH)|(1<<DIR_WEST);
+				int ExpansionMask = ( 1 << DIR_NORTH ) | ( 1 << DIR_EAST ) | ( 1 << DIR_SOUTH ) | ( 1 << DIR_WEST );
 
 				int NumMergeNodes = 0;
-				Node *MergeNodes[2048] = {};
+				Node *MergeNodes[ 2048 ] = {};
 
-				MergeNodes[NumMergeNodes++] = pLargestNode;
+				MergeNodes[ NumMergeNodes++ ] = pLargestNode;
 
-				while(ExpansionMask)
+				while ( ExpansionMask )
 				{
-					for(int d = DIR_NORTH; d < DIR_NUM; ++d)
+					for ( int d = DIR_NORTH; d < DIR_NUM; ++d )
 					{
 						int NumMergeEdge = 0;
-						Node *MergeEdge[2048] = {};
+						Node *MergeEdge[ 2048 ] = {};
 
-						if(ExpansionMask & (1<<d))
+						if ( ExpansionMask & ( 1 << d ) )
 						{
-							switch(d)
+							switch ( d )
 							{
-							case DIR_NORTH:
-							case DIR_SOUTH:
+								case DIR_NORTH:
+								case DIR_SOUTH:
 								{
 									//for(int c = 0)
 
 									obint16 y = 0;
-									if(d==DIR_NORTH)
+									if ( d == DIR_NORTH )
 										y = s.MaxOffset.Y + 1;
 									else
 										y = s.MinOffset.Y - 1;
-									for(obint16 x = s.MinOffset.X; x <= s.MaxOffset.X; ++x)
+									for ( obint16 x = s.MinOffset.X; x <= s.MaxOffset.X; ++x )
 									{
-										Node *pNext = _NodeExists(x,y,s.Height);
-										if(!_CanMergeWith(pLargestNode,pNext))
+										Node *pNext = _NodeExists( x, y, s.Height );
+										if ( !_CanMergeWith( pLargestNode, pNext ) )
 										{
 											/*Node tn;
 											tn.MinOffset.X = tn.MaxOffset.X = x;
@@ -2045,26 +2045,26 @@ namespace AiState
 											COLOR::ORANGE,
 											20.f);*/
 
-											ExpansionMask &= ~(1<<d);
+											ExpansionMask &= ~( 1 << d );
 											break;
 										}
 
-										MergeEdge[NumMergeEdge++] = pNext;
+										MergeEdge[ NumMergeEdge++ ] = pNext;
 									}
 									break;
 								}
-							case DIR_EAST:
-							case DIR_WEST:
+								case DIR_EAST:
+								case DIR_WEST:
 								{
 									obint16 x = 0;
-									if(d==DIR_EAST)
+									if ( d == DIR_EAST )
 										x = s.MaxOffset.X + 1;
 									else
 										x = s.MinOffset.X - 1;
-									for(obint16 y = s.MinOffset.Y; y <= s.MaxOffset.Y; ++y)
+									for ( obint16 y = s.MinOffset.Y; y <= s.MaxOffset.Y; ++y )
 									{
-										Node *pNext = _NodeExists(x,y,s.Height);
-										if(!_CanMergeWith(pLargestNode,pNext))
+										Node *pNext = _NodeExists( x, y, s.Height );
+										if ( !_CanMergeWith( pLargestNode, pNext ) )
 										{
 											/*Node tn;
 											tn.MinOffset.X = tn.MaxOffset.X = x;
@@ -2077,94 +2077,94 @@ namespace AiState
 											COLOR::ORANGE,
 											20.f);*/
 
-											ExpansionMask &= ~(1<<d);
+											ExpansionMask &= ~( 1 << d );
 											break;
 										}
 
-										MergeEdge[NumMergeEdge++] = pNext;
+										MergeEdge[ NumMergeEdge++ ] = pNext;
 									}
 									break;
 								}
 							}
 							//////////////////////////////////////////////////////////////////////////
-							if(ExpansionMask & (1<<d))
+							if ( ExpansionMask & ( 1 << d ) )
 							{
 								// adjust the bounds
-								switch(d)
+								switch ( d )
 								{
-								case DIR_NORTH:
-									s.MaxOffset.Y++;
-									break;
-								case DIR_SOUTH:
-									s.MinOffset.Y--;
-									break;
-								case DIR_EAST:
-									s.MaxOffset.X++;
-									break;
-								case DIR_WEST:
-									s.MinOffset.X--;
-									break;
+									case DIR_NORTH:
+										s.MaxOffset.Y++;
+										break;
+									case DIR_SOUTH:
+										s.MinOffset.Y--;
+										break;
+									case DIR_EAST:
+										s.MaxOffset.X++;
+										break;
+									case DIR_WEST:
+										s.MinOffset.X--;
+										break;
 								}
 
 								// add to the merge list
-								for(int m = 0; m < NumMergeEdge; ++m)
+								for ( int m = 0; m < NumMergeEdge; ++m )
 								{
-									MergeEdge[m]->Sectorized = true;
-									MergeEdge[m]->SectorId = NextSectorId;
-									MergeNodes[NumMergeNodes++] = MergeEdge[m];
+									MergeEdge[ m ]->Sectorized = true;
+									MergeEdge[ m ]->SectorId = NextSectorId;
+									MergeNodes[ NumMergeNodes++ ] = MergeEdge[ m ];
 								}
 							}
 						}
 					}
 				}
 
-				_FillOpenNess(false);
+				_FillOpenNess( false );
 
 				// done merging sector, debug render
-				Node *EdgeNodes[DIR_NUM][2048] = {};
-				int NumEdges[DIR_NUM] = {};
+				Node *EdgeNodes[ DIR_NUM ][ 2048 ] = {};
+				int NumEdges[ DIR_NUM ] = {};
 
-				for(int s = 0; s < NumMergeNodes; ++s)
+				for ( int s = 0; s < NumMergeNodes; ++s )
 				{
-					for(int d = DIR_NORTH; d < DIR_NUM; ++d)
+					for ( int d = DIR_NORTH; d < DIR_NUM; ++d )
 					{
 						bool bHasDirectionConnection = false;
-						if(MergeNodes[s]->Connections[d].Destination)
+						if ( MergeNodes[ s ]->Connections[ d ].Destination )
 						{
 							bHasDirectionConnection = true;
-							if(MergeNodes[s]->SectorId != MergeNodes[s]->Connections[d].Destination->SectorId)
+							if ( MergeNodes[ s ]->SectorId != MergeNodes[ s ]->Connections[ d ].Destination->SectorId )
 							{
-								EdgeNodes[d][NumEdges[d]++] = MergeNodes[s];
+								EdgeNodes[ d ][ NumEdges[ d ]++ ] = MergeNodes[ s ];
 							}
 						}
-						if(!bHasDirectionConnection)
-							EdgeNodes[d][NumEdges[d]++] = MergeNodes[s];
+						if ( !bHasDirectionConnection )
+							EdgeNodes[ d ][ NumEdges[ d ]++ ] = MergeNodes[ s ];
 					}
 				}
 
 				static float RT = 10.f;
-				if(RT>0.f)
+				if ( RT > 0.f )
 				{
-					for(int d = DIR_NORTH; d < DIR_NUM; ++d)
+					for ( int d = DIR_NORTH; d < DIR_NUM; ++d )
 					{
 						Vector3f vP1, vP2;
 						float fFurthestPoints = 0.f;
 
-						for(int i1 = 0; i1 < NumEdges[d]; ++i1)
+						for ( int i1 = 0; i1 < NumEdges[ d ]; ++i1 )
 						{
-							for(int i2 = 0; i2 < NumEdges[d]; ++i2)
+							for ( int i2 = 0; i2 < NumEdges[ d ]; ++i2 )
 							{
-								Vector3f p1 = _GetNodePosition(*EdgeNodes[d][i1]);
-								Vector3f p2 = _GetNodePosition(*EdgeNodes[d][i2]);
-								float fDist = Length(p1,p2);
+								Vector3f p1 = _GetNodePosition( *EdgeNodes[ d ][ i1 ] );
+								Vector3f p2 = _GetNodePosition( *EdgeNodes[ d ][ i2 ] );
+								float fDist = Length( p1, p2 );
 
-								if(fFurthestPoints==0.f)
+								if ( fFurthestPoints == 0.f )
 								{
 									vP1 = p1;
 									vP2 = p2;
 								}
 
-								if(fDist > fFurthestPoints)
+								if ( fDist > fFurthestPoints )
 								{
 									fFurthestPoints = fDist;
 									vP1 = p1;
@@ -2172,12 +2172,12 @@ namespace AiState
 								}
 							}
 						}
-						if(fFurthestPoints>0.f)
+						if ( fFurthestPoints > 0.f )
 						{
 							RenderBuffer::AddLine(
-								vP1 + Vector3f(0,0,64),
-								vP2 + Vector3f(0,0,64),
-								COLOR::BLUE,RT);
+								vP1 + Vector3f( 0, 0, 64 ),
+								vP2 + Vector3f( 0, 0, 64 ),
+								COLOR::BLUE, RT );
 						}
 					}
 				}
@@ -2187,57 +2187,57 @@ namespace AiState
 
 	void FloodFiller::Reset()
 	{
-		for(int i = 0; i < NumSectors; ++i)
+		for ( int i = 0; i < NumSectors; ++i )
 		{
-			Nodes[i].Init();
+			Nodes[ i ].Init();
 		}
 		FreeNode = 0;
 	}
 
 	void FloodFiller::NextFillState()
 	{
-		if(State < FillDone)
-			State = (FillState)(State+1);
+		if ( State < FillDone )
+			State = (FillState)( State + 1 );
 	}
 
-	void FloodFiller::StartFloodFill(const Vector3f &_Start, float _Radius)
+	void FloodFiller::StartFloodFill( const Vector3f &_Start, float _Radius )
 	{
 		Start = _Start;
 		Radius = _Radius;
 
-		FloodBlock = AABB(Vector3f::ZERO);
-		FloodBlock.ExpandAxis(0,Radius);
-		FloodBlock.ExpandAxis(1,Radius);
-		FloodBlock.m_Maxs[2] = CHARACTER_HEIGHT - CHARACTER_STEPHEIGHT;
+		FloodBlock = AABB( Vector3f::ZERO );
+		FloodBlock.ExpandAxis( 0, Radius );
+		FloodBlock.ExpandAxis( 1, Radius );
+		FloodBlock.m_Maxs[ 2 ] = CHARACTER_HEIGHT - CHARACTER_STEPHEIGHT;
 
 		State = FillInit;
 	}
 
-	void FloodFiller::GetDebugString(std::stringstream &out)
+	void FloodFiller::GetDebugString( std::stringstream &out )
 	{
 	}
 
 	void FloodFiller::RenderDebug()
 	{
 		Vector3f vAim;
-		Utils::GetLocalAimPoint(vAim);
+		Utils::GetLocalAimPoint( vAim );
 
 		float fNearestSector = 99999999.f;
 		const Node *pNearestSector = 0;
 
-		for(int i = 0; i < FreeNode; ++i)
+		for ( int i = 0; i < FreeNode; ++i )
 		{
 			//if(FloodNode[i].OffsetX && FloodNode[i].OffsetY)
 			{
-				const Node &node = Nodes[i];
+				const Node &node = Nodes[ i ];
 
 				obColor nodeCol = COLOR::GREEN;
-				if(node.NearEdge)
+				if ( node.NearEdge )
 					nodeCol = COLOR::MAGENTA;
-				if(node.NearObject)
+				if ( node.NearObject )
 					nodeCol = COLOR::RED;
 
-				Vector3f vNodePos = _GetNodePosition(node);
+				Vector3f vNodePos = _GetNodePosition( node );
 
 				/*static bool RenderOpenness = false;
 				if (RenderOpenness)
@@ -2250,33 +2250,33 @@ namespace AiState
 				node.OpenNess);
 				}*/
 
-				float fSectorDist = Length(vNodePos,vAim);
-				if(fSectorDist < fNearestSector)
+				float fSectorDist = Length( vNodePos, vAim );
+				if ( fSectorDist < fNearestSector )
 				{
 					fNearestSector = fSectorDist;
 					pNearestSector = &node;
 				}
 
-				for(int d = 0; d < DIR_NUM; ++d)
+				for ( int d = 0; d < DIR_NUM; ++d )
 				{
-					if(node.Connections[d].Destination)
+					if ( node.Connections[ d ].Destination )
 					{
-						Vector3f vNeighbor = _GetNodePosition(*node.Connections[d].Destination);
-						RenderBuffer::AddLine(vNodePos+ Vector3f(0.f,0.f,8.f), vNeighbor, nodeCol);
+						Vector3f vNeighbor = _GetNodePosition( *node.Connections[ d ].Destination );
+						RenderBuffer::AddLine( vNodePos + Vector3f( 0.f, 0.f, 8.f ), vNeighbor, nodeCol );
 
-						const float fDist = Length(vNodePos, vNeighbor);
-						if(fDist > 128.f)
+						const float fDist = Length( vNodePos, vNeighbor );
+						if ( fDist > 128.f )
 						{
-							Utils::OutputDebug(kNormal,"bad connection: %f", fDist);
+							Utils::OutputDebug( kNormal, "bad connection: %f", fDist );
 						}
 					}
 
 					static bool bDrawCover = false;
-					if(bDrawCover)
+					if ( bDrawCover )
 					{
-						if(node.Connections[d].Cover)
+						if ( node.Connections[ d ].Cover )
 						{
-							obint16 Offset[DIR_NUM][2] =
+							obint16 Offset[ DIR_NUM ][ 2 ] =
 							{
 								{ 0, 1 },
 								{ 1, 0 },
@@ -2284,17 +2284,17 @@ namespace AiState
 								{ -1, 0 },
 							};
 
-							Vector3f vNodePos2 = _GetNodePosition(node);
-							for(int j = 0; j < DIR_NUM; ++j)
+							Vector3f vNodePos2 = _GetNodePosition( node );
+							for ( int j = 0; j < DIR_NUM; ++j )
 							{
-								if(node.Connections[d].Cover & (1<<j))
+								if ( node.Connections[ d ].Cover & ( 1 << j ) )
 								{
 									Vector3f vNeighborPos = vNodePos2;
-									vNeighborPos.X() += (Radius*2.f) * Offset[j][0];
-									vNeighborPos.Y() += (Radius*2.f) * Offset[j][1];
+									vNeighborPos.X() += ( Radius*2.f ) * Offset[ j ][ 0 ];
+									vNeighborPos.Y() += ( Radius*2.f ) * Offset[ j ][ 1 ];
 									RenderBuffer::AddLine(
-										vNodePos2 + Vector3f(0.f,0.f,32.f),
-										vNeighborPos + Vector3f(0.f,0.f,32.f),
+										vNodePos2 + Vector3f( 0.f, 0.f, 32.f ),
+										vNeighborPos + Vector3f( 0.f, 0.f, 32.f ),
 										COLOR::BLUE );
 								}
 							}
@@ -2304,18 +2304,18 @@ namespace AiState
 			}
 		}
 
-		if(pNearestSector)
+		if ( pNearestSector )
 		{
 			int iNumConnections = 0;
-			for(int d = 0; d < DIR_NUM; ++d)
-				if(pNearestSector->Connections[d].Destination)
+			for ( int d = 0; d < DIR_NUM; ++d )
+				if ( pNearestSector->Connections[ d ].Destination )
 					++iNumConnections;
-			Vector3f vNodePos = _GetNodePosition(*pNearestSector);
+			Vector3f vNodePos = _GetNodePosition( *pNearestSector );
 			RenderBuffer::AddString3d(
-				vNodePos+Vector3f(0,0,32),
+				vNodePos + Vector3f( 0, 0, 32 ),
 				COLOR::WHITE,
-				va("%d, sid %d",pNearestSector-Nodes,pNearestSector->Sectorized?pNearestSector->SectorId:-1));
-			RenderBuffer::AddLine(vNodePos, vNodePos + Vector3f(0,0,32.f),COLOR::CYAN );
+				va( "%d, sid %d", pNearestSector - Nodes, pNearestSector->Sectorized ? pNearestSector->SectorId : -1 ) );
+			RenderBuffer::AddLine( vNodePos, vNodePos + Vector3f( 0, 0, 32.f ), COLOR::CYAN );
 		}
 	}
 
@@ -2326,35 +2326,35 @@ namespace AiState
 	}
 	void FloodFiller::Enter()
 	{
-		DebugDraw(true);
+		DebugDraw( true );
 	}
 	void FloodFiller::Exit()
 	{
 		//DebugDraw(false);
 	}
-	State::StateStatus FloodFiller::Update(float fDt)
+	State::StateStatus FloodFiller::Update( float fDt )
 	{
 		//Timer tmr;
-		if(Length(Start,GetClient()->GetPosition()) > 256.f)
-			StartFloodFill(GetClient()->GetPosition());
+		if ( Length( Start, GetClient()->GetPosition() ) > 256.f )
+			StartFloodFill( GetClient()->GetPosition() );
 
 		//////////////////////////////////////////////////////////////////////////
-		if(State == FillInit)
+		if ( State == FillInit )
 		{
 			Reset();
 
 			// Add a starting flood node
-			Nodes[FreeNode++].Init(0,0,Start.Z(),true);
+			Nodes[ FreeNode++ ].Init( 0, 0, Start.Z(), true );
 
-			_DropToGround(&Nodes[0]);
+			_DropToGround( &Nodes[ 0 ] );
 
 			NextFillState();
 		}
 		//////////////////////////////////////////////////////////////////////////
-		while(State == FillSearching)
+		while ( State == FillSearching )
 		{
 			Node *currentNode = _NextOpenNode();
-			if(!currentNode)
+			if ( !currentNode )
 			{
 				NextFillState();
 				return State_Busy;
@@ -2363,9 +2363,9 @@ namespace AiState
 			currentNode->Open = false;
 
 			// Expand in each direction
-			for(int d = DIR_NORTH; d < DIR_NUM; ++d)
+			for ( int d = DIR_NORTH; d < DIR_NUM; ++d )
 			{
-				obint16 Offset[DIR_NUM][2] =
+				obint16 Offset[ DIR_NUM ][ 2 ] =
 				{
 					{ 0, 1 },
 					{ 1, 0 },
@@ -2373,23 +2373,23 @@ namespace AiState
 					{ -1, 0 },
 				};
 
-				obint16 iOffX = currentNode->MinOffset.X + Offset[d][0];
-				obint16 iOffY = currentNode->MinOffset.Y + Offset[d][1];
+				obint16 iOffX = currentNode->MinOffset.X + Offset[ d ][ 0 ];
+				obint16 iOffY = currentNode->MinOffset.Y + Offset[ d ][ 1 ];
 				float fHeight = currentNode->Height;
 
-				Node *pNeighbor = _NodeExists(iOffX, iOffY, fHeight);
-				if(pNeighbor)
+				Node *pNeighbor = _NodeExists( iOffX, iOffY, fHeight );
+				if ( pNeighbor )
 				{
-					_MakeConnection(currentNode,pNeighbor,(Direction)d);
+					_MakeConnection( currentNode, pNeighbor, (Direction)d );
 					continue;
 				}
 
-				if(FreeNode==NumSectors)
+				if ( FreeNode == NumSectors )
 				{
 					_MergeSectors();
 
 					// fail if that didn't free up anything.
-					if(FreeNode==NumSectors)
+					if ( FreeNode == NumSectors )
 					{
 						NextFillState();
 						return State_Busy;
@@ -2397,50 +2397,50 @@ namespace AiState
 				}
 
 				// next node
-				pNeighbor = &Nodes[FreeNode];
-				pNeighbor->Init(iOffX,iOffY,fHeight,false);
+				pNeighbor = &Nodes[ FreeNode ];
+				pNeighbor->Init( iOffX, iOffY, fHeight, false );
 
 				static float FLOOD_RADIUS = 512.f;
-				Vector3f vNodePos = _GetNodePosition(*pNeighbor);
-				if(Length(vNodePos, Start) > FLOOD_RADIUS)
+				Vector3f vNodePos = _GetNodePosition( *pNeighbor );
+				if ( Length( vNodePos, Start ) > FLOOD_RADIUS )
 				{
 					currentNode->NearEdge = true;
 					continue;
 				}
 
-				if(!_DropToGround(pNeighbor))
+				if ( !_DropToGround( pNeighbor ) )
 				{
 					currentNode->NearObject |= true;
 					continue;
 				}
 
-				currentNode->NearEdge |= (currentNode->Height - pNeighbor->Height) > CHARACTER_JUMPHEIGHT;
+				currentNode->NearEdge |= ( currentNode->Height - pNeighbor->Height ) > CHARACTER_JUMPHEIGHT;
 
 				// make the connection.
-				_MakeConnection(currentNode,pNeighbor,(Direction)d);
+				_MakeConnection( currentNode, pNeighbor, (Direction)d );
 
 				pNeighbor->Open = true;
 
 				++FreeNode;
 			}
 
-			if(currentNode->NearObject || currentNode->NearEdge)
+			if ( currentNode->NearObject || currentNode->NearEdge )
 				currentNode->OpenNess = 1;
 		}
 		//////////////////////////////////////////////////////////////////////////
-		if(State==FillOpenNess)
+		if ( State == FillOpenNess )
 		{
 			NextFillState();
 			//_FillOpenNess();
 		}
 		//////////////////////////////////////////////////////////////////////////
-		if(State==FillSectorize)
+		if ( State == FillSectorize )
 		{
 			_MergeSectors();
 			NextFillState();
 		}
 		//////////////////////////////////////////////////////////////////////////
-		if(State == FillDone)
+		if ( State == FillDone )
 		{
 		}
 		return State_Busy;

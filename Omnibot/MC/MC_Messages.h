@@ -98,25 +98,6 @@ struct MC_UpgradeModule
 	int			m_ModuleId;
 };
 
-// struct: MC_WeaponUpgradeStats
-struct MC_WeaponUpgradeStats
-{
-	struct WeaponUpgradeInfo
-	{
-		int		m_Lvl;
-		int		m_MaxLvl;
-		int		m_UpgradeCost;
-		WeaponUpgradeInfo() : m_Lvl(0), m_MaxLvl(0), m_UpgradeCost(0) {}
-	};
-	WeaponUpgradeInfo	m_Upgrade[MC_UPGRADE_MAX];
-};
-
-// struct: MC_UpgradeWeapon
-struct MC_UpgradeWeapon
-{
-	int			m_WeaponId;
-};
-
 // struct: MC_CanPhysPickup
 struct MC_CanPhysPickup
 {

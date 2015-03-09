@@ -7,8 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "JA_Game.h"
-#include "JA_GoalManager.h"
-#include "JA_NavigationFlags.h"
 #include "JA_VoiceMacros.h"
 #include "JA_InterfaceFuncs.h"
 #include "JA_Client.h"
@@ -19,7 +17,6 @@
 #include "PathPlannerBase.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
-#include "Waypoint.h"
 
 #include "FilterSensory.h"
 #include "BotSensoryMemory.h"
@@ -83,11 +80,6 @@ const char *JA_Game::GetScriptSubfolder() const
 bool JA_Game::ReadyForDebugWindow() const
 {
 	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING;
-}
-
-GoalManager *JA_Game::GetGoalManager()
-{
-	return new JA_GoalManager;
 }
 
 bool JA_Game::Init( System & system )
@@ -362,21 +354,6 @@ void JA_Game::InitScriptBotButtons(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "FORCEDRAIN",gmVariable(BOT_BUTTON_FORCEDRAIN));
 }
 
-void JA_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
-{
-	// Should always register the default flags
-	IGame::RegisterNavigationFlags(_planner);
-
-	_planner->RegisterNavFlag("RED",		F_NAV_TEAM1);
-	_planner->RegisterNavFlag("BLUE",		F_NAV_TEAM2);
-
-	_planner->RegisterNavFlag("CAPPOINT",	F_JA_NAV_CAPPOINT);
-	_planner->RegisterNavFlag("WALL",		F_JA_NAV_WALL);
-	_planner->RegisterNavFlag("BRIDGE",		F_JA_NAV_BRIDGE);
-
-	_planner->RegisterNavFlag("FORCEJUMP",	F_JA_NAV_FORCEJUMP);
-}
-
 void JA_Game::InitCommands()
 {
 	IGame::InitCommands();
@@ -467,63 +444,4 @@ void JA_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 			cp->CheckClassEvent();
 		}
 	}
-}
-
-// PathPlannerWaypointInterface
-NavFlags JA_Game::WaypointBlockableFlags() const
-{
-	return F_JA_NAV_WALL|F_JA_NAV_BRIDGE;
-}
-
-NavFlags JA_Game::WaypointCallbackFlags() const
-{
-	return F_JA_NAV_FORCEJUMP;
-}
-
-PathPlannerWaypointInterface::BlockableStatus JA_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw) const
-{
-	static bool bRender = false;
-	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
-
-	Vector3f vStart, vEnd;
-
-	if(/*_wp1->IsFlagOn(F_JA_NAV_WALL) &&*/ _wp2->IsFlagOn(F_JA_NAV_WALL))
-	{
-		static float fOffset = 25.0f;
-		static Vector3f vMins(-5.f, -5.f, -5.f), vMaxs(5.f, 5.f, 5.f);
-		AABB aabb(vMins, vMaxs);
-		vStart = _wp1->GetPosition() + Vector3f(0, 0, fOffset);
-		vEnd = _wp2->GetPosition() + Vector3f(0, 0, fOffset);
-
-		if(bRender)
-		{
-			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE);
-		}
-
-		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStart, vEnd, &aabb, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_OPEN : PathPlannerWaypointInterface::B_PATH_CLOSED;
-	}
-	else if(_wp1->IsFlagOn(F_JA_NAV_BRIDGE) && _wp2->IsFlagOn(F_JA_NAV_BRIDGE))
-	{
-		vStart = _wp1->GetPosition() + (_wp2->GetPosition() - _wp1->GetPosition()) * 0.5;
-		vEnd = vStart +  Vector3f(0,0,-48);
-
-		if(bRender)
-		{
-			RenderBuffer::AddLine(vStart, vEnd, COLOR::ORANGE, 2.f);
-		}
-
-		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStart, vEnd, NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_CLOSED : PathPlannerWaypointInterface::B_PATH_OPEN;
-	}
-
-	if(_draw && (res != PathPlannerWaypointInterface::B_INVALID_FLAGS))
-	{
-		RenderBuffer::AddLine(vStart, vEnd,
-			(res == PathPlannerWaypointInterface::B_PATH_OPEN) ? COLOR::GREEN : COLOR::RED, 2.0f);
-	}
-
-	return res;
 }

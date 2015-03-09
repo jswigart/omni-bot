@@ -27,7 +27,7 @@ class IGameManager : public CommandReciever
 public:
 	IGameManager();
 	virtual ~IGameManager() {};
-
+	
 	/*
 	Function: CreateGame
 	Initializes the bot library based on the provided game type
@@ -54,6 +54,8 @@ public:
 	*/
 	void UpdateGame();
 
+	static boost::thread::id sMainThread;
+
 #ifdef ENABLE_REMOTE_DEBUGGING
 	void SyncRemoteDelete( int entityHandle );
 	void SyncRemoteMessage( const RemoteLib::DataBuffer & db );
@@ -71,15 +73,12 @@ protected:
 	void cmdVersion(const StringVector &_args);
 	void cmdNavSystem(const StringVector &_args);
 	void cmdPrintAllFiles(const StringVector &_args);
-#ifdef ENABLE_FILE_DOWNLOADER
 	void cmdUpdateNavFile(const StringVector &_args);
 	void cmdUpdateAllNavFiles(const StringVector &_args);
-#endif
+	void cmdSaveHeatMapScript(const StringVector &_args);
+	void cmdSaveAllHeatMapScript(const StringVector &_args);
 
 	IGameManager &operator=(const IGameManager&);
 };
-
-void ThreadAddMessage(const std::string &_msg);
-void ThreadAddError(const std::string &_msg);
 
 #endif

@@ -12,6 +12,8 @@
 #include "TargetInfo.h"
 #include "BotWeaponSystem.h"
 
+#include "sqlite3.h"
+
 #ifdef WIN32
 #include "windows.h"
 #endif
@@ -27,9 +29,9 @@ static std::string			g_StringRepository;
 
 namespace Priority
 {
-	const char *AsString(int n)
+	const char *AsString( int n )
 	{
-		static const char *str[] =
+		static const char *str [] =
 		{
 			"Zero",
 			"Min",
@@ -42,9 +44,9 @@ namespace Priority
 			"VeryHigh",
 			"Override",
 		};
-		BOOST_STATIC_ASSERT(sizeof(str) / sizeof(str[0]) == Priority::NumPriority);
-		if(n >= 0 && n < Priority::NumPriority)
-			return str[n];
+		BOOST_STATIC_ASSERT( sizeof( str ) / sizeof( str[ 0 ] ) == Priority::NumPriority );
+		if ( n >= 0 && n < Priority::NumPriority )
+			return str[ n ];
 		return "";
 	}
 };
@@ -53,118 +55,119 @@ namespace Priority
 
 namespace Utils
 {
-	bool RegexMatch( const char * exp, const char * str ) {
+	bool RegexMatch( const char * exp, const char * str )
+	{
 		try
 		{
 			boost::regex expression( exp, REGEX_OPTIONS );
 			return boost::regex_match( str, expression );
 		}
-		catch(const std::exception & ex)
+		catch ( const std::exception & ex )
 		{
 			ex;
-			OBASSERT(0, ex.what());
+			OBASSERT( 0, ex.what() );
 		}
 		return false;
 	}
 
 	float FloatMax = std::numeric_limits<float>::max();
 
-	void StringCopy(char *_destination, const char *_source, int _buffersize)
+	void StringCopy( char *_destination, const char *_source, int _buffersize )
 	{
-		strncpy(_destination, _source, _buffersize);
+		strncpy( _destination, _source, _buffersize );
 	}
 
-	obint32 StringCompare(const char *_s1, const char *_s2)
+	obint32 StringCompare( const char *_s1, const char *_s2 )
 	{
-		return strcmp(_s1, _s2);
+		return strcmp( _s1, _s2 );
 	}
 
-	obint32 StringCompareNoCase(const char *_s1, const char *_s2)
+	obint32 StringCompareNoCase( const char *_s1, const char *_s2 )
 	{
 #ifdef __GNUC__
 		return strcasecmp(_s1, _s2);
 #else
-		return stricmp(_s1, _s2);
+		return stricmp( _s1, _s2 );
 #endif
 	}
 
-	obint32 StringCompare(const std::string &_s1, const std::string &_s2)
+	obint32 StringCompare( const std::string &_s1, const std::string &_s2 )
 	{
-		return StringCompare(_s1.c_str(), _s2.c_str());
+		return StringCompare( _s1.c_str(), _s2.c_str() );
 	}
-	obint32 StringCompareNoCase(const std::string &_s1, const std::string &_s2)
+	obint32 StringCompareNoCase( const std::string &_s1, const std::string &_s2 )
 	{
-		return StringCompareNoCase(_s1.c_str(), _s2.c_str());
+		return StringCompareNoCase( _s1.c_str(), _s2.c_str() );
 	}
 
-	std::string StringToLower(const std::string &_s1)
+	std::string StringToLower( const std::string &_s1 )
 	{
 		std::string s = _s1;
-		std::transform(s.begin(), s.end(), s.begin(), toLower());
+		std::transform( s.begin(), s.end(), s.begin(), toLower() );
 		return s;
 	}
 
-	obint32 MakeId32(obint16 a, obint16 b)
+	obint32 MakeId32( obint16 a, obint16 b )
 	{
-		return (((a)<<16) | (b));
+		return ( ( ( a ) << 16 ) | ( b ) );
 	}
 
-	void SplitId32(obint32 id, obint16 &id1, obint16 &id2)
+	void SplitId32( obint32 id, obint16 &id1, obint16 &id2 )
 	{
-		id1 = (obint16)(id>>16);
+		id1 = (obint16)( id >> 16 );
 		id2 = (obint16)id & 0xFF;
 	}
 
-	obint32 MakeId32(obint8 a, obint8 b, obint8 c, obint8 d )
+	obint32 MakeId32( obint8 a, obint8 b, obint8 c, obint8 d )
 	{
-		return (((d)<<24) | ((c)<<16) | ((b)<<8) | (a));
+		return ( ( ( d ) << 24 ) | ( ( c ) << 16 ) | ( ( b ) << 8 ) | ( a ) );
 	}
 
-	obint32 MakeId32(const char *_st)
+	obint32 MakeId32( const char *_st )
 	{
-		return MakeId32(_st[0], _st[1], _st[2], _st[3]);
+		return MakeId32( _st[ 0 ], _st[ 1 ], _st[ 2 ], _st[ 3 ] );
 	}
 
-	obuint32 MakeHash32(const std::string &_str, bool _log /*= true*/)
+	obuint32 MakeHash32( const std::string &_str, bool _log /*= true*/ )
 	{
-		if(_str.empty())
+		if ( _str.empty() )
 			return 0;
 
-		if(_log)
-			AddHashedString(_str);
-		return Hash32(_str.c_str());
+		if ( _log )
+			AddHashedString( _str );
+		return Hash32( _str.c_str() );
 	}
 
-	std::string FormatEntityString(GameEntity _e)
+	std::string FormatEntityString( GameEntity _e )
 	{
-		return std::string(va("%d:%d", _e.GetIndex(), _e.GetSerial()));
+		return std::string( va( "%d:%d", _e.GetIndex(), _e.GetSerial() ) );
 	}
-	std::string FormatVectorString(const Vector3f &v)
+	std::string FormatVectorString( const Vector3f &v )
 	{
-		return std::string(va("(%.3f, %.3f, %.3f)",v.X(),v.Y(),v.Z()));
+		return std::string( va( "(%.3f, %.3f, %.3f)", v.X(), v.Y(), v.Z() ) );
 	}
 
-	std::string FormatMatrixString(const Matrix3f &m)
+	std::string FormatMatrixString( const Matrix3f &m )
 	{
-		return std::string(va("(%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f)",
-			m.GetColumn(0)[0],m.GetColumn(0)[1],m.GetColumn(0)[2],
-			m.GetColumn(1)[0],m.GetColumn(1)[1],m.GetColumn(1)[2],
-			m.GetColumn(2)[0],m.GetColumn(2)[1],m.GetColumn(2)[2]));
+		return std::string( va( "(%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f)",
+			m.GetColumn( 0 )[ 0 ], m.GetColumn( 0 )[ 1 ], m.GetColumn( 0 )[ 2 ],
+			m.GetColumn( 1 )[ 0 ], m.GetColumn( 1 )[ 1 ], m.GetColumn( 1 )[ 2 ],
+			m.GetColumn( 2 )[ 0 ], m.GetColumn( 2 )[ 1 ], m.GetColumn( 2 )[ 2 ] ) );
 	}
 
 	/*
 	* FNV-1a hash 32 bit http://www.isthe.com/chongo/tech/comp/fnv/
 	*/
-	obuint32 Hash32(const char *_name)
+	obuint32 Hash32( const char *_name )
 	{
-		const obuint32 FNV_32_PRIME = ((obuint32)0x01000193);
-		const obuint32 FNV1A_32_INIT = ((obuint32)0x811c9dc5);
+		const obuint32 FNV_32_PRIME = ( (obuint32)0x01000193 );
+		const obuint32 FNV1A_32_INIT = ( (obuint32)0x811c9dc5 );
 
 		const char *s = _name;
 		obuint32 hval = FNV1A_32_INIT;
-		while (*s)
+		while ( *s )
 		{
-			char c = (char)tolower(*s++);
+			char c = (char)tolower( *s++ );
 			hval ^= (obuint32)c;
 			hval *= FNV_32_PRIME;
 		}
@@ -173,48 +176,48 @@ namespace Utils
 	/*
 	* FNV-1a hash 64 bit http://www.isthe.com/chongo/tech/comp/fnv/
 	*/
-	obuint64 Hash64(const char *_name)
+	obuint64 Hash64( const char *_name )
 	{
-		const obuint64 FNV_64_PRIME = ((obuint64)0x100000001b3ULL);
-		const obuint64 FNV1A_64_INIT = ((obuint64)0x84222325 << 32 | (obuint64)0x1b3);
+		const obuint64 FNV_64_PRIME = ( (obuint64)0x100000001b3ULL );
+		const obuint64 FNV1A_64_INIT = ( (obuint64)0x84222325 << 32 | (obuint64)0x1b3 );
 
 		const char *s = _name;
 		obuint64 hval = FNV1A_64_INIT;
-		while (*s)
+		while ( *s )
 		{
-			char c = (char)tolower(*s++);
+			char c = (char)tolower( *s++ );
 			hval ^= (obuint64)c;
 			hval *= FNV_64_PRIME;
 		}
 		return hval;
 	}
 
-	void AddHashedString(const std::string &_str)
+	void AddHashedString( const std::string &_str )
 	{
-		obuint32 hash = Hash32(_str.c_str());
-		HashIndexMap::iterator it = g_HashIndexMap.find(hash);
-		if(it == g_HashIndexMap.end())
+		obuint32 hash = Hash32( _str.c_str() );
+		HashIndexMap::iterator it = g_HashIndexMap.find( hash );
+		if ( it == g_HashIndexMap.end() )
 		{
 			obuint32 iOffset = (obuint32)g_StringRepository.size();
-			g_StringRepository.append(_str.c_str(), (int)_str.size()+1);
-			g_HashIndexMap.insert(std::make_pair(hash, iOffset));
+			g_StringRepository.append( _str.c_str(), (int)_str.size() + 1 );
+			g_HashIndexMap.insert( std::make_pair( hash, iOffset ) );
 		}
 	}
 
-	std::string HashToString(obuint32 _hash)
+	std::string HashToString( obuint32 _hash )
 	{
-		HashIndexMap::iterator it = g_HashIndexMap.find(_hash);
-		if(it != g_HashIndexMap.end())
+		HashIndexMap::iterator it = g_HashIndexMap.find( _hash );
+		if ( it != g_HashIndexMap.end() )
 		{
-			if(it->second < g_StringRepository.size())
+			if ( it->second < g_StringRepository.size() )
 			{
-				return &g_StringRepository[it->second];
+				return &g_StringRepository[ it->second ];
 			}
 		}
-		return std::string(va("%x", _hash));
+		return std::string( va( "%x", _hash ) );
 	}
 
-	bool IsWhiteSpace(const char _ch)
+	bool IsWhiteSpace( const char _ch )
 	{
 		const obuint8 cr = 0x0D;
 		const obuint8 lf = 0x0A;
@@ -226,74 +229,78 @@ namespace Utils
 			_ch == ' ';
 	}
 
-	void Tokenize(const std::string &_s, const std::string &_separators, StringVector &_tokens)
+	void Tokenize( const std::string &_s, const std::string &_separators, StringVector &_tokens )
 	{
 		size_t pos_start, pos_end;
 
-		pos_start = _s.find_first_not_of(_separators);
-		if (pos_start == std::string::npos)
+		pos_start = _s.find_first_not_of( _separators );
+		if ( pos_start == std::string::npos )
 			return;
 
-		pos_end = _s.find_first_of(_separators, pos_start);
-		if (pos_end == std::string::npos)
+		pos_end = _s.find_first_of( _separators, pos_start );
+		if ( pos_end == std::string::npos )
 		{
-			_tokens.push_back(_s);
+			_tokens.push_back( _s );
 			return;
 		}
-		_tokens.push_back(_s.substr(pos_start, pos_end - pos_start));
+		_tokens.push_back( _s.substr( pos_start, pos_end - pos_start ) );
 
-		while ((pos_start = _s.find_first_not_of (_separators, pos_end)) != std::string::npos)
+		while ( ( pos_start = _s.find_first_not_of( _separators, pos_end ) ) != std::string::npos )
 		{
-			pos_end = _s.find_first_of(_separators, pos_start);
-			if (pos_end == std::string::npos) {
-				_tokens.push_back(_s.substr (pos_start));
+			pos_end = _s.find_first_of( _separators, pos_start );
+			if ( pos_end == std::string::npos )
+			{
+				_tokens.push_back( _s.substr( pos_start ) );
 				return;
 			}
-			_tokens.push_back(_s.substr(pos_start, pos_end - pos_start));
+			_tokens.push_back( _s.substr( pos_start, pos_end - pos_start ) );
 		}
 	}
 
-	const char *VarArgs(char *_outbuffer, int _buffsize, const char* _msg, ...)
+	const char *VarArgs( char *_outbuffer, int _buffsize, const char* _msg, ... )
 	{
 		va_list list;
-		va_start(list, _msg);
+		va_start( list, _msg );
 #ifdef WIN32
-		_vsnprintf(_outbuffer, _buffsize, _msg, list);
+		_vsnprintf( _outbuffer, _buffsize, _msg, list );
 #else
 		vsnprintf(_outbuffer, _buffsize, _msg, list);
 #endif
-		va_end(list);
+		va_end( list );
 		return _outbuffer;
 	}
 
-	void OutputDebugBasic(eMessageType _type, const char* _msg)
+	void OutputDebugBasic( MessageType _type, const char* _msg )
 	{
 #ifdef WIN32
-		OutputDebugString(_msg);
-		OutputDebugString("\n");
+		OutputDebugString( _msg );
+		OutputDebugString( "\n" );
 #endif
 #ifdef ENABLE_DEBUG_WINDOW
 		DW.Log.AddLine(_type,_msg);
 #endif
 	}
-	void OutputDebug(eMessageType _type, const char* _msg, ...)
+	void OutputDebug( MessageType _type, const char* _msg, ... )
 	{
-		enum { BufferSize=2048 };
-		char buffer[BufferSize] = {0};
+		enum
+		{
+			BufferSize = 2048
+		};
+		char buffer[ BufferSize ] = { 0 };
 		va_list list;
-		va_start(list, _msg);
+		va_start( list, _msg );
 #ifdef WIN32
-		_vsnprintf(buffer, BufferSize, _msg, list);
+		_vsnprintf( buffer, BufferSize, _msg, list );
 #else
 		vsnprintf(buffer, BufferSize, _msg, list);
 #endif
-		va_end(list);
-		OutputDebugBasic(_type,buffer);
+		va_end( list );
+		OutputDebugBasic( _type, buffer );
 	}
 
 	int GetLocalGameId()
 	{
-		return g_EngineFuncs->IDFromEntity(GetLocalEntity());
+		return g_EngineFuncs->IDFromEntity( GetLocalEntity() );
 	}
 
 	GameEntity GetLocalEntity()
@@ -301,21 +308,21 @@ namespace Utils
 		return g_EngineFuncs->GetLocalGameEntity();
 	}
 
-	bool GetLocalPosition(Vector3f &_pos)
+	bool GetLocalPosition( Vector3f &_pos )
 	{
-		return EngineFuncs::EntityPosition(GetLocalEntity(), _pos);
+		return EngineFuncs::EntityPosition( GetLocalEntity(), _pos );
 	}
 
-	bool GetLocalGroundPosition(Vector3f &_pos, int _tracemask)
+	bool GetLocalGroundPosition( Vector3f &_pos, int _tracemask )
 	{
 		obTraceResult tr;
 		Vector3f vPos;
-		if(GetLocalEyePosition(vPos))
+		if ( GetLocalEyePosition( vPos ) )
 		{
-			EngineFuncs::TraceLine(tr, vPos, vPos - Vector3f::UNIT_Z * 4096.f,
-				NULL, _tracemask, GetLocalGameId(), False);
+			EngineFuncs::TraceLine( tr, vPos, vPos - Vector3f::UNIT_Z * 4096.f,
+				NULL, _tracemask, GetLocalGameId(), False );
 
-			if(tr.m_Fraction < 1.f)
+			if ( tr.m_Fraction < 1.f )
 			{
 				_pos = Vector3f( tr.m_Endpos );
 				return true;
@@ -324,19 +331,19 @@ namespace Utils
 		return false;
 	}
 
-	bool GetLocalGroundPosition(Vector3f &_pos, Vector3f *_normal, int _tracemask /*= TR_MASK_FLOODFILL*/)
+	bool GetLocalGroundPosition( Vector3f &_pos, Vector3f *_normal, int _tracemask /*= TR_MASK_FLOODFILL*/ )
 	{
 		obTraceResult tr;
 		Vector3f vPos;
-		if(GetLocalEyePosition(vPos))
+		if ( GetLocalEyePosition( vPos ) )
 		{
-			EngineFuncs::TraceLine(tr, vPos, vPos - Vector3f::UNIT_Z * 4096.f,
-				NULL, _tracemask, GetLocalGameId(), False);
+			EngineFuncs::TraceLine( tr, vPos, vPos - Vector3f::UNIT_Z * 4096.f,
+				NULL, _tracemask, GetLocalGameId(), False );
 
-			if(tr.m_Fraction < 1.f)
+			if ( tr.m_Fraction < 1.f )
 			{
 				_pos = Vector3f( tr.m_Endpos );
-				if(_normal)
+				if ( _normal )
 					*_normal = Vector3f( tr.m_Normal );
 				return true;
 			}
@@ -344,45 +351,49 @@ namespace Utils
 		return false;
 	}
 
-	bool GetLocalEyePosition(Vector3f &_pos)
+	bool GetLocalEyePosition( Vector3f &_pos )
 	{
-		return EngineFuncs::EntityEyePosition(GetLocalEntity(), _pos);
+		return EngineFuncs::EntityEyePosition( GetLocalEntity(), _pos );
 	}
 
-	bool GetLocalFacing(Vector3f &_face)
+	bool GetLocalFacing( Vector3f &_face )
 	{
-		return EngineFuncs::EntityOrientation(GetLocalEntity(), _face, NULL, NULL);
+		return EngineFuncs::EntityOrientation( GetLocalEntity(), _face, NULL, NULL );
 	}
 
-	bool GetLocalAABB(AABB &_aabb)
+	bool GetLocalAABB( AABB &_aabb )
 	{
-		return EngineFuncs::EntityWorldAABB(GetLocalEntity(), _aabb);
+		return EngineFuncs::EntityLocalAABB( GetLocalEntity(), _aabb );
 	}
 
-	bool GetLocalAimPoint(Vector3f &_pos, Vector3f *_normal, int _tracemask /*= TR_MASK_FLOODFILLENT*/, int * _contents, int * _surface)
+	bool GetLocalWorldOBB( Box3f & obb )
 	{
-		if(_contents)
+		return EngineFuncs::EntityWorldOBB( GetLocalEntity(), obb );
+	}
+	bool GetLocalAimPoint( Vector3f &_pos, Vector3f *_normal, int _tracemask /*= TR_MASK_FLOODFILLENT*/, int * _contents, int * _surface )
+	{
+		if ( _contents )
 			*_contents = 0;
-		if(_surface)
+		if ( _surface )
 			*_surface = 0;
 
 		obTraceResult tr;
 		Vector3f vNewStart, vPos, vFace;
-		if(GetLocalEyePosition(vPos) &&
-			GetLocalFacing(vFace) &&
-			GetNearestNonSolid(vNewStart, vPos, vPos + vFace * 4096.f, _tracemask))
+		if ( GetLocalEyePosition( vPos ) &&
+			GetLocalFacing( vFace ) &&
+			GetNearestNonSolid( vNewStart, vPos, vPos + vFace * 4096.f, _tracemask ) )
 		{
-			EngineFuncs::TraceLine(tr, vNewStart, vNewStart + vFace * 4096.f,
-				NULL, _tracemask, GetLocalGameId(), False);
+			EngineFuncs::TraceLine( tr, vNewStart, vNewStart + vFace * 4096.f,
+				NULL, _tracemask, GetLocalGameId(), False );
 
-			if(tr.m_Fraction < 1.f)
+			if ( tr.m_Fraction < 1.f )
 			{
 				_pos = Vector3f( tr.m_Endpos );
-				if(_normal)
+				if ( _normal )
 					*_normal = Vector3f( tr.m_Normal );
-				if(_contents)
+				if ( _contents )
 					*_contents = tr.m_Contents;
-				if(_surface)
+				if ( _surface )
 					*_surface = tr.m_Surface;
 				return true;
 			}
@@ -390,7 +401,7 @@ namespace Utils
 		return false;
 	}
 
-	bool GetNearestNonSolid(Vector3f &_pos, const Vector3f &_start, const Vector3f &_end, int _tracemask /*= TR_MASK_FLOODFILL*/)
+	bool GetNearestNonSolid( Vector3f &_pos, const Vector3f &_start, const Vector3f &_end, int _tracemask /*= TR_MASK_FLOODFILL*/ )
 	{
 		obTraceResult tr;
 		Vector3f vStart = _start;
@@ -399,12 +410,12 @@ namespace Utils
 		float fLength = vDir.Normalize();
 
 		const float fStepSize = 32.f;
-		while(fLength > 0.f)
+		while ( fLength > 0.f )
 		{
-			EngineFuncs::TraceLine(tr, vStart, vEnd,
-				NULL, _tracemask, GetLocalGameId(), False);
+			EngineFuncs::TraceLine( tr, vStart, vEnd,
+				NULL, _tracemask, GetLocalGameId(), False );
 
-			if(!tr.m_StartSolid)
+			if ( !tr.m_StartSolid )
 			{
 				_pos = vStart;
 				return true;
@@ -416,9 +427,9 @@ namespace Utils
 		return false;
 	}
 
-	std::string FormatByteString(obuint64 _bytes)
+	std::string FormatByteString( obuint64 _bytes )
 	{
-		const char * byteUnits[] =
+		const char * byteUnits [] =
 		{
 			" bytes",
 			" KB",
@@ -427,40 +438,40 @@ namespace Utils
 			" TB"
 		};
 
-		obuint64 iNumUnits = sizeof(byteUnits) / sizeof(byteUnits[0]);
+		obuint64 iNumUnits = sizeof( byteUnits ) / sizeof( byteUnits[ 0 ] );
 		int iUnit = 0;
-		for(int i = 1; i < iNumUnits; ++i)
+		for ( int i = 1; i < iNumUnits; ++i )
 		{
-			if(_bytes / pow(1024.0, i) >= 1)
+			if ( _bytes / pow( 1024.0, i ) >= 1 )
 				iUnit = i;
 		}
 
-		OBASSERT(iUnit >= 0 && iUnit < iNumUnits, "Out of Bounds!");
+		OBASSERT( iUnit >= 0 && iUnit < iNumUnits, "Out of Bounds!" );
 
 		std::stringstream str;
-		str << (iUnit > 0 ? (_bytes / pow(1024.0, iUnit)) : _bytes) << byteUnits[iUnit];
+		str << ( iUnit > 0 ? ( _bytes / pow( 1024.0, iUnit ) ) : _bytes ) << byteUnits[ iUnit ];
 
 		return str.str();
 	}
 
-	void GetAABBBoundary(const AABB &_aabb, Vector3List &_list)
+	void GetAABBBoundary( const AABB &_aabb, Vector3List &_list )
 	{
-		Vector3f vVertex[8] = { Vector3f::ZERO };
+		Vector3f vVertex[ 8 ] = { Vector3f::ZERO };
 
-		vVertex[0] = Vector3f(_aabb.m_Mins[0], _aabb.m_Mins[1], _aabb.m_Mins[2]);
-		vVertex[1] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Mins[1], _aabb.m_Mins[2]);
-		vVertex[2] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Maxs[1], _aabb.m_Mins[2]);
-		vVertex[3] = Vector3f(_aabb.m_Mins[0], _aabb.m_Maxs[1], _aabb.m_Mins[2]);
+		vVertex[ 0 ] = Vector3f( _aabb.m_Mins[ 0 ], _aabb.m_Mins[ 1 ], _aabb.m_Mins[ 2 ] );
+		vVertex[ 1 ] = Vector3f( _aabb.m_Maxs[ 0 ], _aabb.m_Mins[ 1 ], _aabb.m_Mins[ 2 ] );
+		vVertex[ 2 ] = Vector3f( _aabb.m_Maxs[ 0 ], _aabb.m_Maxs[ 1 ], _aabb.m_Mins[ 2 ] );
+		vVertex[ 3 ] = Vector3f( _aabb.m_Mins[ 0 ], _aabb.m_Maxs[ 1 ], _aabb.m_Mins[ 2 ] );
 
-		vVertex[4] = Vector3f(_aabb.m_Mins[0], _aabb.m_Mins[1], _aabb.m_Maxs[2]);
-		vVertex[5] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Mins[1], _aabb.m_Maxs[2]);
-		vVertex[6] = Vector3f(_aabb.m_Maxs[0], _aabb.m_Maxs[1], _aabb.m_Maxs[2]);
-		vVertex[7] = Vector3f(_aabb.m_Mins[0], _aabb.m_Maxs[1], _aabb.m_Maxs[2]);
+		vVertex[ 4 ] = Vector3f( _aabb.m_Mins[ 0 ], _aabb.m_Mins[ 1 ], _aabb.m_Maxs[ 2 ] );
+		vVertex[ 5 ] = Vector3f( _aabb.m_Maxs[ 0 ], _aabb.m_Mins[ 1 ], _aabb.m_Maxs[ 2 ] );
+		vVertex[ 6 ] = Vector3f( _aabb.m_Maxs[ 0 ], _aabb.m_Maxs[ 1 ], _aabb.m_Maxs[ 2 ] );
+		vVertex[ 7 ] = Vector3f( _aabb.m_Mins[ 0 ], _aabb.m_Maxs[ 1 ], _aabb.m_Maxs[ 2 ] );
 
-		_list.push_back(vVertex[0]);
-		_list.push_back(vVertex[1]);
-		_list.push_back(vVertex[2]);
-		_list.push_back(vVertex[3]);
+		_list.push_back( vVertex[ 0 ] );
+		_list.push_back( vVertex[ 1 ] );
+		_list.push_back( vVertex[ 2 ] );
+		_list.push_back( vVertex[ 3 ] );
 	}
 
 	void WeldVertices( Vector3List & poly, float epsilon )
@@ -468,7 +479,7 @@ namespace Utils
 		for ( size_t i = 0; i < poly.size(); ++i )
 		{
 			const size_t i0 = i;
-			const size_t i1 = (i+1) % poly.size();
+			const size_t i1 = ( i + 1 ) % poly.size();
 
 			const Vector3f p0 = poly[ i0 ];
 			const Vector3f p1 = poly[ i1 ];
@@ -481,34 +492,34 @@ namespace Utils
 		}
 	}
 
-	const char *FindClassName(obint32 _classId)
+	const char *FindClassName( obint32 _classId )
 	{
-		return System::mInstance->mGame->FindClassName(_classId);
+		return System::mInstance->mGame->FindClassName( _classId );
 	}
 
-	obint32 GetRoleMask(const std::string &_name)
+	obint32 GetRoleMask( const std::string &_name )
 	{
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-		gmTableObject *pTbl = pMachine->GetGlobals()->Get(pMachine,"Role").GetTableObjectSafe();
-		if(pTbl)
+		gmTableObject *pTbl = pMachine->GetGlobals()->Get( pMachine, "Role" ).GetTableObjectSafe();
+		if ( pTbl )
 		{
 			gmTableIterator it;
-			gmTableNode *pNode = pTbl->GetFirst(it);
-			while(pNode)
+			gmTableNode *pNode = pTbl->GetFirst( it );
+			while ( pNode )
 			{
-				const char *pName = pNode->m_key.GetCStringSafe(0);
-				if(pName && pNode->m_value.IsInt() && !StringCompareNoCase(_name,pName))
+				const char *pName = pNode->m_key.GetCStringSafe( 0 );
+				if ( pName && pNode->m_value.IsInt() && !StringCompareNoCase( _name, pName ) )
 				{
 					return pNode->m_value.GetInt();
 				}
-				pTbl->GetNext(it);
+				pTbl->GetNext( it );
 			}
 		}
 		return 0;
 	}
-	std::string BuildRoleName(obint32 _mask)
+	std::string BuildRoleName( obint32 _mask )
 	{
-		if(_mask==0)
+		if ( _mask == 0 )
 			return "None";
 
 		bool AllRoles = true;
@@ -516,13 +527,13 @@ namespace Utils
 
 		int EnumSize = 0;
 		const IntEnum *Enum = 0;
-		System::mInstance->mGame->GetRoleEnumeration(Enum,EnumSize);
+		System::mInstance->mGame->GetRoleEnumeration( Enum, EnumSize );
 
-		for(int r = 0; r < EnumSize; ++r)
+		for ( int r = 0; r < EnumSize; ++r )
 		{
-			if((1<<Enum[r].m_Value) & _mask)
+			if ( ( 1 << Enum[ r ].m_Value ) & _mask )
 			{
-				ret += Enum[r].m_Key;
+				ret += Enum[ r ].m_Key;
 				ret += " ";
 			}
 			else
@@ -531,51 +542,51 @@ namespace Utils
 			}
 		}
 
-		if(AllRoles)
+		if ( AllRoles )
 			return "All Roles";
 		return ret;
 	}
 
-	bool ToLocalSpace(GameEntity _ent, const Vector3f &_worldpos, Vector3f &_out)
+	bool ToLocalSpace( GameEntity _ent, const Vector3f &_worldpos, Vector3f &_out )
 	{
 		Vector3f vPos, vForward, vRight, vUp;
-		if(EngineFuncs::EntityPosition(_ent, vPos) &&
-			EngineFuncs::EntityOrientation(_ent, vForward, vRight, vUp))
+		if ( EngineFuncs::EntityPosition( _ent, vPos ) &&
+			EngineFuncs::EntityOrientation( _ent, vForward, vRight, vUp ) )
 		{
-			Matrix3f mTransform(vRight, vForward, vUp, true);
+			Matrix3f mTransform( vRight, vForward, vUp, true );
 			mTransform.Inverse();
-			_out = (_worldpos - vPos) * mTransform;
+			_out = ( _worldpos - vPos ) * mTransform;
 			return true;
 		}
 		return false;
 	}
 
-	bool ToWorldSpace(GameEntity _ent, const Vector3f &_localpos, Vector3f &_out)
+	bool ToWorldSpace( GameEntity _ent, const Vector3f &_localpos, Vector3f &_out )
 	{
 		Vector3f vPos, vForward, vRight, vUp;
-		if(EngineFuncs::EntityPosition(_ent, vPos) &&
-			EngineFuncs::EntityOrientation(_ent, vForward, vRight, vUp))
+		if ( EngineFuncs::EntityPosition( _ent, vPos ) &&
+			EngineFuncs::EntityOrientation( _ent, vForward, vRight, vUp ) )
 		{
-			Matrix3f mTransform(vRight, vForward, vUp, true);
+			Matrix3f mTransform( vRight, vForward, vUp, true );
 			//Vector3f vOffset = mTransform.Inverse() * _localpos;
 
-			_out = vPos + (mTransform * _localpos);
+			_out = vPos + ( mTransform * _localpos );
 			return true;
 		}
 
 		return false;
 	}
 
-	Vector3f PredictFuturePositionOfTarget(const Vector3f &_tgpos, const Vector3f &_tgvel, float _timeahead)
+	Vector3f PredictFuturePositionOfTarget( const Vector3f &_tgpos, const Vector3f &_tgvel, float _timeahead )
 	{
-		return _tgpos + (_tgvel * _timeahead);
+		return _tgpos + ( _tgvel * _timeahead );
 	}
 
 	Vector3f PredictFuturePositionOfTarget(
 		const Vector3f &_mypos,
 		float _projspeed,
 		const Vector3f &_tgpos,
-		const Vector3f &_tgvel)
+		const Vector3f &_tgvel )
 	{
 		//if the target is ahead and facing the agent shoot at its current pos
 		Vector3f vToEnemy = _tgpos - _mypos;
@@ -583,10 +594,10 @@ namespace Utils
 		//the lookahead time is proportional to the distance between the enemy
 		//and the pursuer; and is inversely proportional to the sum of the
 		//agent's velocities
-		float fLookAheadTime = vToEnemy.Length() / (_projspeed + _tgvel.Length());
+		float fLookAheadTime = vToEnemy.Length() / ( _projspeed + _tgvel.Length() );
 
 		//return the predicted future position of the enemy
-		return _tgpos + (_tgvel * fLookAheadTime);
+		return _tgpos + ( _tgvel * fLookAheadTime );
 	}
 
 	Vector3f PredictFuturePositionOfTarget(
@@ -595,7 +606,7 @@ namespace Utils
 		const TargetInfo &_tg,
 		const Vector3f &_extravelocity,
 		float _minleaderror,
-		float _maxleaderror)
+		float _maxleaderror )
 	{
 		//if the target is ahead and facing the agent shoot at its current pos
 		Vector3f vToEnemy = _tg.m_LastPosition - _mypos;
@@ -603,15 +614,15 @@ namespace Utils
 		//the lookahead time is proportional to the distance between the enemy
 		//and the pursuer; and is inversely proportional to the sum of the
 		//agent's velocities
-		float fLookAheadTime = vToEnemy.Length() / (_projspeed + _tg.m_LastVelocity.Length());
+		float fLookAheadTime = vToEnemy.Length() / ( _projspeed + _tg.m_LastVelocity.Length() );
 
-		if(_minleaderror != _maxleaderror)
-			fLookAheadTime += Mathf::IntervalRandom(_minleaderror,_maxleaderror);
+		if ( _minleaderror != _maxleaderror )
+			fLookAheadTime += Mathf::IntervalRandom( _minleaderror, _maxleaderror );
 		else
 			fLookAheadTime += _minleaderror;
 
 		//return the predicted future position of the enemy
-		Vector3f vPredictedPos = _tg.m_LastPosition + ((_tg.m_LastVelocity-_extravelocity) * fLookAheadTime);
+		Vector3f vPredictedPos = _tg.m_LastPosition + ( ( _tg.m_LastVelocity - _extravelocity ) * fLookAheadTime );
 
 		// Compensate for airborne target?
 		//if(!_tg.m_EntityFlags.CheckFlag(ENT_FLAG_ONGROUND))
@@ -626,35 +637,35 @@ namespace Utils
 		return vPredictedPos;
 	}
 
-	bool InFieldOfView(const Vector3f &_face1, const Vector3f &_face2, float _fovAngles)
+	bool InFieldOfView( const Vector3f &_face1, const Vector3f &_face2, float _fovAngles )
 	{
 		const float fFovInRadians = Mathf::DEG_TO_RAD * _fovAngles;
-		return (_face1.Dot(_face2) >= cosf(fFovInRadians/2.0f) * _face1.Length() * _face2.Length());
+		return ( _face1.Dot( _face2 ) >= cosf( fFovInRadians / 2.0f ) * _face1.Length() * _face2.Length() );
 	}
 
-	bool InFieldOfView2d(const Vector3f &_face1, const Vector3f &_face2, float _fovAngles)
+	bool InFieldOfView2d( const Vector3f &_face1, const Vector3f &_face2, float _fovAngles )
 	{
 		const Vector2f v1( _face1.X(), _face1.Y() );
 		const Vector2f v2( _face2.X(), _face2.Y() );
 
 		float fFovInRadians = Mathf::DEG_TO_RAD * _fovAngles;
-		return (v1.Dot(v2) >= cosf(fFovInRadians/2.0f) * v1.Length() * v2.Length());
+		return ( v1.Dot( v2 ) >= cosf( fFovInRadians / 2.0f ) * v1.Length() * v2.Length() );
 	}
 
-	float AngleBetween(const Vector3f &_v1, const Vector3f &_v2)
+	float AngleBetween( const Vector3f &_v1, const Vector3f &_v2 )
 	{
-		return Mathf::ACos(_v1.Dot(_v2));
+		return Mathf::ACos( _v1.Dot( _v2 ) );
 	}
 
-	Vector3f AveragePoint(const Vector3List &_list)
+	Vector3f AveragePoint( const Vector3List &_list )
 	{
 		Vector3f vAvg = Vector3f::ZERO;
 
-		if(!_list.empty())
+		if ( !_list.empty() )
 		{
-			for(obuint32 v = 0; v < _list.size(); ++v)
+			for ( obuint32 v = 0; v < _list.size(); ++v )
 			{
-				vAvg += _list[v];
+				vAvg += _list[ v ];
 			}
 
 			vAvg /= (float)_list.size();
@@ -662,56 +673,59 @@ namespace Utils
 		return vAvg;
 	}
 
-	float ClosestPointOfApproachTime(const Vector3f& aP1, const Vector3f& aV1, const Vector3f& aP2, const Vector3f& aV2)
+	float ClosestPointOfApproachTime( const Vector3f& aP1, const Vector3f& aV1, const Vector3f& aP2, const Vector3f& aV2 )
 	{
 		Vector3f dv = aV1 - aV2;
-		float dv2 = dv.Dot(dv);
-		if(dv2 < Mathf::EPSILON)
+		float dv2 = dv.Dot( dv );
+		if ( dv2 < Mathf::EPSILON )
 			return 0.0;
-		return -(aP1 - aP2).Dot(dv) / dv2;
+		return -( aP1 - aP2 ).Dot( dv ) / dv2;
 	}
 
-	void StringTrimCharacters(std::string &_out, const std::string &_trim)
+	void StringTrimCharacters( std::string &_out, const std::string &_trim )
 	{
 		obuint32 i;
-		for(obuint32 t = 0; t < _trim.size(); ++t)
+		for ( obuint32 t = 0; t < _trim.size(); ++t )
 		{
-			while((i = (obuint32)_out.find(_trim[t])) != _out.npos)
-				_out.erase(i, 1);
+			while ( ( i = (obuint32)_out.find( _trim[ t ] ) ) != _out.npos )
+				_out.erase( i, 1 );
 		}
 	}
 
-	bool StringToTrue(const std::string &_str)
+	bool StringToTrue( const std::string &_str )
 	{
-		return (_str == "1" || _str == "on" || _str == "true");
+		return ( _str == "1" || _str == "on" || _str == "true" );
 	}
 
-	bool StringToFalse(const std::string &_str)
+	bool StringToFalse( const std::string &_str )
 	{
-		return (_str == "0" || _str == "off" || _str == "false");
+		return ( _str == "0" || _str == "off" || _str == "false" );
 	}
 
-	bool AssertFunction(bool _bexp, const char* _exp, const char* _file, int _line, const char *_msg, ...)
+	bool AssertFunction( bool _bexp, const char* _exp, const char* _file, int _line, const char *_msg, ... )
 	{
-		if(!_bexp)
+		if ( !_bexp )
 		{
-			enum { BufferSize=2048 };
-			char buffer[BufferSize] = {0};
+			enum
+			{
+				BufferSize = 2048
+			};
+			char buffer[ BufferSize ] = { 0 };
 			va_list list;
-			va_start(list, _msg);
+			va_start( list, _msg );
 #ifdef WIN32
-			_vsnprintf(buffer, BufferSize, _msg, list);
+			_vsnprintf( buffer, BufferSize, _msg, list );
 #else
 			vsnprintf(buffer, BufferSize, _msg, list);
 #endif
-			va_end(list);
+			va_end( list );
 
 #ifdef WIN32
-			char strBigBuffer[BufferSize] = {};
-			sprintf(strBigBuffer, "Assertion: %s\n%s\n%s : %d\nAbort to break\nRetry to continue\nIgnore to ignore this assert",
-				_exp, buffer, _file, _line);
-			int iRes = MessageBox(NULL, strBigBuffer, "Omni-bot: Assertion Failed", MB_ABORTRETRYIGNORE | MB_ICONWARNING);
-			if(iRes == IDABORT)
+			char strBigBuffer[ BufferSize ] = {};
+			sprintf( strBigBuffer, "Assertion: %s\n%s\n%s : %d\nAbort to break\nRetry to continue\nIgnore to ignore this assert",
+				_exp, buffer, _file, _line );
+			int iRes = MessageBox( NULL, strBigBuffer, "Omni-bot: Assertion Failed", MB_ABORTRETRYIGNORE | MB_ICONWARNING );
+			if ( iRes == IDABORT )
 				DebugBreak();
 			return iRes != IDIGNORE;
 #else
@@ -723,29 +737,32 @@ namespace Utils
 		return true;
 	}
 
-	bool SoftAssertFunction(AssertMode _mode, bool _bexp, const char* _exp, const char* _file, int _line, const char *_msg, ...)
+	bool SoftAssertFunction( AssertMode _mode, bool _bexp, const char* _exp, const char* _file, int _line, const char *_msg, ... )
 	{
-		if(!_bexp)
+		if ( !_bexp )
 		{
-			enum { BufferSize=2048 };
-			char buffer[BufferSize] = {0};
+			enum
+			{
+				BufferSize = 2048
+			};
+			char buffer[ BufferSize ] = { 0 };
 			va_list list;
-			va_start(list, _msg);
+			va_start( list, _msg );
 #ifdef WIN32
-			_vsnprintf(buffer, BufferSize, _msg, list);
+			_vsnprintf( buffer, BufferSize, _msg, list );
 #else
 			vsnprintf(buffer, BufferSize, _msg, list);
 #endif
-			va_end(list);
+			va_end( list );
 
-			char strBigBuffer[BufferSize] = {};
-			sprintf(strBigBuffer, "--------------------\nAssertion: %s\n%s\n%s : %d\n--------------------\n",
-				_exp, buffer, _file, _line);
+			char strBigBuffer[ BufferSize ] = {};
+			sprintf( strBigBuffer, "--------------------\nAssertion: %s\n%s\n%s : %d\n--------------------\n",
+				_exp, buffer, _file, _line );
 			/*int iRes = MessageBox(NULL, strBigBuffer, "Omni-bot: Assertion Failed", MB_ABORTRETRYIGNORE | MB_ICONWARNING);
 			if(iRes == IDABORT)
 			DebugBreak();*/
 #ifdef _WIN32
-			OutputDebugString(strBigBuffer);
+			OutputDebugString( strBigBuffer );
 			return _mode != FireOnce;
 #else
 			std::cout << strBigBuffer;
@@ -759,7 +776,7 @@ namespace Utils
 	{
 		// FIX THIS! CHECK WITH ENGINE
 		static int nextIndex = 0;
-		return std::string(va("OmniBot[%i]", nextIndex++));
+		return std::string( va( "OmniBot[%i]", nextIndex++ ) );
 	}
 
 	std::string IndentString( const int indentlevel )
@@ -770,9 +787,9 @@ namespace Utils
 		return s;
 	}
 
-	bool TestSegmentForOcclusion(const Segment3f &seg)
+	bool TestSegmentForOcclusion( const Segment3f &seg )
 	{
-		AABB b(Vector3f(-32,-32,0), Vector3f(32,32,64));
+		AABB b( Vector3f( -32, -32, 0 ), Vector3f( 32, 32, 64 ) );
 
 		obTraceResult tr;
 		EngineFuncs::TraceLine( tr, seg.Center, seg.Center, &b, TR_MASK_FLOODFILL, -1, False );
@@ -782,7 +799,7 @@ namespace Utils
 		return false;
 	}
 
-	bool GetSegmentOverlap(const Segment3f &_seg1, const Segment3f &_seg2, Segment3f &out)
+	bool GetSegmentOverlap( const Segment3f &_seg1, const Segment3f &_seg2, Segment3f &out )
 	{
 		static float DotThreshold = -0.98f;
 		//static float DistanceThreshold = 8.f;
@@ -795,11 +812,11 @@ namespace Utils
 		static float MaxHorizontalDist = 32.f;
 
 		// make sure the direction is proper
-		const float fDot = _seg1.Direction.Dot(_seg2.Direction);
-		if(fDot > DotThreshold)
+		const float fDot = _seg1.Direction.Dot( _seg2.Direction );
+		if ( fDot > DotThreshold )
 			return false;
 
-		DistPoint3Segment3f dist( _seg1.Center, Segment3f( _seg2.P0,_seg2.P1 ) );
+		DistPoint3Segment3f dist( _seg1.Center, Segment3f( _seg2.P0, _seg2.P1 ) );
 		dist.Get();
 
 		Vector3f cp =
@@ -807,49 +824,49 @@ namespace Utils
 			dist.GetSegmentParameter() * dist.GetSegment().Direction;
 
 		// make sure the lines 'overlap' on the same line
-		const float f2dDist = Length2d(cp,_seg1.Center);
+		const float f2dDist = Length2d( cp, _seg1.Center );
 
-		const float fStepDist = (cp.Z() - _seg1.Center.Z());
-		if(f2dDist > MaxHorizontalDist)
+		const float fStepDist = ( cp.Z() - _seg1.Center.Z() );
+		if ( f2dDist > MaxHorizontalDist )
 			return false;
-		if(fStepDist > MaxStepHeight)
+		if ( fStepDist > MaxStepHeight )
 			return false;
-		if(fStepDist < -MaxDropHeight)
+		if ( fStepDist < -MaxDropHeight )
 			return false;
 
 		// make sure they overlap in segment space
 		const float Dist = Length( _seg1.Center, _seg2.Center );
-		if(Dist > (_seg1.Extent + _seg2.Extent))
+		if ( Dist > ( _seg1.Extent + _seg2.Extent ) )
 			return false;
 
-		Vector3f vMin = _seg1.Center,vMax = _seg2.Center;
+		Vector3f vMin = _seg1.Center, vMax = _seg2.Center;
 
 		float fT = 0.f;
 		//////////////////////////////////////////////////////////////////////////
 
-		fT = ClosestPtOnLine_Unclamped(_seg1.P0,_seg1.P1,_seg2.P0,cp);
-		if(fT > 1.f)
+		fT = ClosestPtOnLine_Unclamped( _seg1.P0, _seg1.P1, _seg2.P0, cp );
+		if ( fT > 1.f )
 		{
 			vMax = _seg1.P1;
 		}
-		else if(fT >= 0.f)
+		else if ( fT >= 0.f )
 		{
 			vMax = _seg2.P0;
 		}
 		else
-			OBASSERT(0,"Unexpected");
+			OBASSERT( 0, "Unexpected" );
 
-		fT = ClosestPtOnLine_Unclamped(_seg1.P0,_seg1.P1,_seg2.P1,cp);
-		if(fT < 0.f)
+		fT = ClosestPtOnLine_Unclamped( _seg1.P0, _seg1.P1, _seg2.P1, cp );
+		if ( fT < 0.f )
 		{
 			vMin = _seg1.P0;
 		}
-		else if(fT <= 1.f)
+		else if ( fT <= 1.f )
 		{
 			vMin = _seg2.P1;
 		}
 		else
-			OBASSERT(0,"Unexpected");
+			OBASSERT( 0, "Unexpected" );
 		//////////////////////////////////////////////////////////////////////////
 		/*fT = ClosestPtOnLine_Unclamped(_seg2.P1,_seg2.P0,_seg1.P1,cp);
 		if(fT > 1.f)
@@ -876,9 +893,9 @@ namespace Utils
 		OBASSERT(0,"Unexpected");*/
 		//////////////////////////////////////////////////////////////////////////
 
-		out = Segment3f(vMin,vMax);
+		out = Segment3f( vMin, vMax );
 
-		if(out.Extent * 2.f < MinOverlapWidth)
+		if ( out.Extent * 2.f < MinOverlapWidth )
 			return false;
 
 		/*Vector3f cp;
@@ -907,17 +924,17 @@ namespace Utils
 		return true;
 	}
 
-	float ClosestPtOnLine(const Vector3f& p1, const Vector3f& p2, const Vector3f& p, Vector3f &cp)
+	float ClosestPtOnLine( const Vector3f& p1, const Vector3f& p2, const Vector3f& p, Vector3f &cp )
 	{
 		Vector3f norm = p2 - p1;
 		float len = norm.Normalize();
-		float t = norm.Dot(p - p1);
-		if(t <= 0.f || len <= Mathf::EPSILON)
+		float t = norm.Dot( p - p1 );
+		if ( t <= 0.f || len <= Mathf::EPSILON )
 		{
 			t = 0.f;
 			cp = p1;
 		}
-		else if(t >= len)
+		else if ( t >= len )
 		{
 			t = 1.f;
 			cp = p2;
@@ -930,76 +947,76 @@ namespace Utils
 		return t;
 	}
 
-	float ClosestPtOnLine_Unclamped(const Vector3f& p1, const Vector3f& p2, const Vector3f& p, Vector3f &cp)
+	float ClosestPtOnLine_Unclamped( const Vector3f& p1, const Vector3f& p2, const Vector3f& p, Vector3f &cp )
 	{
 		Vector3f norm = p2 - p1;
 		float len = norm.Normalize();
-		float t = norm.Dot(p - p1);
+		float t = norm.Dot( p - p1 );
 
 		cp = p1 + norm * t;
 		t /= len;
 		return t;
 	}
 
-	Vector3f ChangePitch(const Vector3f &fwd, float _pitchangle)
+	Vector3f ChangePitch( const Vector3f &fwd, float _pitchangle )
 	{
 		float fHeading = fwd.XYHeading();
 		Vector3f vNewFacing;
-		vNewFacing.FromSpherical(fHeading, Mathf::DegToRad(_pitchangle), 1.f);
+		vNewFacing.FromSpherical( fHeading, Mathf::DegToRad( _pitchangle ), 1.f );
 		return vNewFacing;
 	}
 
-	bool ClosestPtOnLine(const Vector3List &list, const Vector3f &pos, Vector3f &cp, bool loop)
+	bool ClosestPtOnLine( const Vector3List &list, const Vector3f &pos, Vector3f &cp, bool loop )
 	{
-		if(list.size() < 2)
+		if ( list.size() < 2 )
 			return false;
 
 		Vector3f vClosestPt, vPtOnLine;
 		float fClosestDist = Utils::FloatMax;
-		for(obuint32 v = 0; v < list.size()-1; ++v)
+		for ( obuint32 v = 0; v < list.size() - 1; ++v )
 		{
-			Utils::ClosestPtOnLine(list[v], list[v+1],pos,vPtOnLine);
+			Utils::ClosestPtOnLine( list[ v ], list[ v + 1 ], pos, vPtOnLine );
 
-			float fDist = SquaredLength(pos,vPtOnLine);
-			if(fDist < fClosestDist)
+			float fDist = SquaredLength( pos, vPtOnLine );
+			if ( fDist < fClosestDist )
 			{
 				fClosestDist = fDist;
 				vClosestPt = vPtOnLine;
 			}
 		}
 
-		if(loop)
+		if ( loop )
 		{
-			Utils::ClosestPtOnLine(list.front(), list.back(),pos,vPtOnLine);
-			float fDist = SquaredLength(pos,vPtOnLine);
-			if(fDist < fClosestDist)
+			Utils::ClosestPtOnLine( list.front(), list.back(), pos, vPtOnLine );
+			float fDist = SquaredLength( pos, vPtOnLine );
+			if ( fDist < fClosestDist )
 			{
 				fClosestDist = fDist;
 				vClosestPt = vPtOnLine;
 			}
 		}
 
-		cp =  vClosestPt;
+		cp = vClosestPt;
 		return true;
 	}
 
-	Vector3List CreatePolygon(const Vector3f &_pos, const Vector3f &_normal, float _size)
+	Vector3List CreatePolygon( const Vector3f &_pos, const Vector3f &_normal, float _size )
 	{
 		Vector3List vl;
 
-		Plane3f p = Plane3f(_normal,_pos);
+		Plane3f p = Plane3f( _normal, _pos );
 
 		Quaternionf q;
-		q.FromAxisAngle(_normal, Mathf::DegToRad(90.f));
+		q.FromAxisAngle( _normal, Mathf::DegToRad( 90.f ) );
 
 		Vector3f v = _normal.Perpendicular();
 		v *= _size;
 
-		vl.push_back(_pos+v);
-		for(int i = 0; i < 3; ++i)
+		vl.push_back( _pos + v );
+		for ( int i = 0; i < 3; ++i )
 		{
-			v = q.Rotate(v);
-			vl.push_back(_pos+v);
+			v = q.Rotate( v );
+			vl.push_back( _pos + v );
 		}
 		return vl;
 	}
@@ -1035,30 +1052,32 @@ namespace Utils
 	//    Input:  a point P, and a collinear segment S
 	//    Return: 1 = P is inside S
 	//            0 = P is not inside S
-	int inSegment(Vector3f P, Segment3f _S)
+	int inSegment( Vector3f P, Segment3f _S )
 	{
-		if (_S.P0.X() != _S.P1.X()) {    // S is not vertical
-			if (_S.P0.X() <= P.X() && P.X() <= _S.P1.X())
+		if ( _S.P0.X() != _S.P1.X() )
+		{    // S is not vertical
+			if ( _S.P0.X() <= P.X() && P.X() <= _S.P1.X() )
 				return 1;
-			if (_S.P0.X() >= P.X() && P.X() >= _S.P1.X())
+			if ( _S.P0.X() >= P.X() && P.X() >= _S.P1.X() )
 				return 1;
 		}
-		else {    // S is vertical, so test y coordinate
-			if (_S.P0.Y() <= P.Y() && P.Y() <= _S.P1.Y())
+		else
+		{    // S is vertical, so test y coordinate
+			if ( _S.P0.Y() <= P.Y() && P.Y() <= _S.P1.Y() )
 				return 1;
-			if (_S.P0.Y() >= P.Y() && P.Y() >= _S.P1.Y())
+			if ( _S.P0.Y() >= P.Y() && P.Y() >= _S.P1.Y() )
 				return 1;
 		}
 		return 0;
 	}
 
-	inline float dot(const Vector3f &u,const Vector3f &v)
+	inline float dot( const Vector3f &u, const Vector3f &v )
 	{
-		return ((u).X() * (v).X() + (u).Y() * (v).Y() + (u).Z() * (v).Z());
+		return ( ( u ).X() * ( v ).X() + ( u ).Y() * ( v ).Y() + ( u ).Z() * ( v ).Z() );
 	}
-	inline float perp(const Vector3f &u,const Vector3f &v)
+	inline float perp( const Vector3f &u, const Vector3f &v )
 	{
-		return ((u).X() * (v).Y() - (u).Y() * (v).X());
+		return ( ( u ).X() * ( v ).Y() - ( u ).Y() * ( v ).X() );
 	}
 
 	// intersect2D_2Segments(): the intersection of 2 finite 2D segments
@@ -1068,41 +1087,41 @@ namespace Utils
 	//    Return: 0=disjoint (no intersect)
 	//            1=intersect in unique point I0
 	//            2=overlap in segment from I0 to I1
-	int intersect2D_Segments(const Segment3f &S1,const Segment3f &S2, Vector3f* I0, Vector3f* I1 )
+	int intersect2D_Segments( const Segment3f &S1, const Segment3f &S2, Vector3f* I0, Vector3f* I1 )
 	{
 		Vector3f    u = S1.P1 - S1.P0;
 		Vector3f    v = S2.P1 - S2.P0;
 		Vector3f    w = S1.P0 - S2.P0;
-		float		D = perp(u,v);
+		float		D = perp( u, v );
 
 		// test if they are parallel (includes either being a point)
-		if (fabs(D) < Mathf::EPSILON)
+		if ( fabs( D ) < Mathf::EPSILON )
 		{          // S1 and S2 are parallel
-			if (perp(u,w) != 0 || perp(v,w) != 0)
+			if ( perp( u, w ) != 0 || perp( v, w ) != 0 )
 			{
 				return 0;                   // they are NOT collinear
 			}
 			// they are collinear or degenerate
 			// check if they are degenerate points
-			float du = dot(u,u);
-			float dv = dot(v,v);
-			if (du==0 && dv==0)
+			float du = dot( u, u );
+			float dv = dot( v, v );
+			if ( du == 0 && dv == 0 )
 			{           // both segments are points
-				if (S1.P0 != S2.P0)         // they are distinct points
+				if ( S1.P0 != S2.P0 )         // they are distinct points
 					return 0;
 				*I0 = S1.P0;                // they are the same point
 				return 1;
 			}
-			if (du==0)
+			if ( du == 0 )
 			{                    // S1 is a single point
-				if (inSegment(S1.P0, S2) == 0)  // but is not in S2
+				if ( inSegment( S1.P0, S2 ) == 0 )  // but is not in S2
 					return 0;
 				*I0 = S1.P0;
 				return 1;
 			}
-			if (dv==0)
+			if ( dv == 0 )
 			{                    // S2 a single point
-				if (inSegment(S2.P0, S1) == 0)  // but is not in S1
+				if ( inSegment( S2.P0, S1 ) == 0 )  // but is not in S1
 					return 0;
 				*I0 = S2.P0;
 				return 1;
@@ -1110,7 +1129,7 @@ namespace Utils
 			// they are collinear segments - get overlap (or not)
 			float t0, t1;                   // endpoints of S1 in eqn for S2
 			Vector3f w2 = S1.P1 - S2.P0;
-			if (v.X() != 0)
+			if ( v.X() != 0 )
 			{
 				t0 = w.X() / v.X();
 				t1 = w2.X() / v.X();
@@ -1120,17 +1139,17 @@ namespace Utils
 				t0 = w.Y() / v.Y();
 				t1 = w2.Y() / v.Y();
 			}
-			if (t0 > t1)
+			if ( t0 > t1 )
 			{                  // must have t0 smaller than t1
-				float t=t0; t0=t1; t1=t;    // swap if not
+				float t = t0; t0 = t1; t1 = t;    // swap if not
 			}
-			if (t0 > 1 || t1 < 0)
+			if ( t0 > 1 || t1 < 0 )
 			{
 				return 0;     // NO overlap
 			}
-			t0 = t0<0? 0 : t0;              // clip to min 0
-			t1 = t1>1? 1 : t1;              // clip to max 1
-			if (t0 == t1)
+			t0 = t0 < 0 ? 0 : t0;              // clip to min 0
+			t1 = t1 > 1 ? 1 : t1;              // clip to max 1
+			if ( t0 == t1 )
 			{                 // intersect is a point
 				*I0 = S2.P0 + t0 * v;
 				return 1;
@@ -1144,22 +1163,22 @@ namespace Utils
 
 		// the segments are skew and may intersect in a point
 		// get the intersect parameter for S1
-		float     sI = perp(v,w) / D;
+		float     sI = perp( v, w ) / D;
 
 		// no intersect with S1
-		if (sI < 0 || sI > 1)
+		if ( sI < 0 || sI > 1 )
 			return 0;
 
 		// get the intersect parameter for S2
-		float     tI = perp(u,w) / D;
+		float     tI = perp( u, w ) / D;
 
 		// no intersect with S2
-		if (tI < 0.f)
+		if ( tI < 0.f )
 		{
 			*I0 = S2.P0;
 			return 1;
 		}
-		if (tI > 1.f)
+		if ( tI > 1.f )
 		{
 			*I0 = S2.P1;
 			return 1;
@@ -1199,58 +1218,58 @@ namespace Utils
 			poly[ 0 ] );
 	}
 
-	gmVariable UserDataToGmVar(gmMachine *_machine, const obUserData &bud)
+	gmVariable UserDataToGmVar( gmMachine *_machine, const obUserData &bud )
 	{
-		DisableGCInScope gcEn(_machine);
+		DisableGCInScope gcEn( _machine );
 
-		switch(bud.DataType)
+		switch ( bud.DataType )
 		{
-		case obUserData::dtNone:
-			return gmVariable::s_null;
-		case obUserData::dtVector:
-			return gmVariable(bud.GetVector()[0], bud.GetVector()[1], bud.GetVector()[2]);
-		case obUserData::dtString:
-			return gmVariable(_machine->AllocStringObject(bud.GetString() ? bud.GetString() : ""));
-		case obUserData::dtInt:
-			return gmVariable(bud.GetInt());
-			break;
-		case obUserData::dtFloat:
-			return gmVariable(bud.GetFloat());
-			break;
-		case obUserData::dtEntity:
+			case obUserData::dtNone:
+				return gmVariable::s_null;
+			case obUserData::dtVector:
+				return gmVariable( bud.GetVector()[ 0 ], bud.GetVector()[ 1 ], bud.GetVector()[ 2 ] );
+			case obUserData::dtString:
+				return gmVariable( _machine->AllocStringObject( bud.GetString() ? bud.GetString() : "" ) );
+			case obUserData::dtInt:
+				return gmVariable( bud.GetInt() );
+				break;
+			case obUserData::dtFloat:
+				return gmVariable( bud.GetFloat() );
+				break;
+			case obUserData::dtEntity:
 			{
 				gmVariable v;
-				v.SetEntity(bud.GetEntity().AsInt());
+				v.SetEntity( bud.GetEntity().AsInt() );
 				return v;
 			}
-		case obUserData::dt3_4byteFlags:
+			case obUserData::dt3_4byteFlags:
 			{
 				gmTableObject *pTbl = _machine->AllocTableObject();
-				for(int i = 0; i < 3; ++i)
-					pTbl->Set(_machine, i, gmVariable(bud.Get4ByteFlags()[i]));
-				return gmVariable(pTbl);
+				for ( int i = 0; i < 3; ++i )
+					pTbl->Set( _machine, i, gmVariable( bud.Get4ByteFlags()[ i ] ) );
+				return gmVariable( pTbl );
 			}
-		case obUserData::dt3_Strings:
+			case obUserData::dt3_Strings:
 			{
 				gmTableObject *pTbl = _machine->AllocTableObject();
-				for(int i = 0; i < 3; ++i)
-					if(bud.GetStrings(i))
-						pTbl->Set(_machine, i, gmVariable(_machine->AllocStringObject(bud.GetStrings(i))));
-				return gmVariable(pTbl);
+				for ( int i = 0; i < 3; ++i )
+					if ( bud.GetStrings( i ) )
+						pTbl->Set( _machine, i, gmVariable( _machine->AllocStringObject( bud.GetStrings( i ) ) ) );
+				return gmVariable( pTbl );
 			}
-		case obUserData::dt6_2byteFlags:
+			case obUserData::dt6_2byteFlags:
 			{
 				gmTableObject *pTbl = _machine->AllocTableObject();
-				for(int i = 0; i < 6; ++i)
-					pTbl->Set(_machine, i, gmVariable(bud.Get2ByteFlags()[i]));
-				return gmVariable(pTbl);
+				for ( int i = 0; i < 6; ++i )
+					pTbl->Set( _machine, i, gmVariable( bud.Get2ByteFlags()[ i ] ) );
+				return gmVariable( pTbl );
 			}
-		case obUserData::dt12_1byteFlags:
+			case obUserData::dt12_1byteFlags:
 			{
 				gmTableObject *pTbl = _machine->AllocTableObject();
-				for(int i = 0; i < 12; ++i)
-					pTbl->Set(_machine, i, gmVariable(bud.Get1ByteFlags()[i]));
-				return gmVariable(pTbl);
+				for ( int i = 0; i < 12; ++i )
+					pTbl->Set( _machine, i, gmVariable( bud.Get1ByteFlags()[ i ] ) );
+				return gmVariable( pTbl );
 			}
 		};
 		return gmVariable::s_null;
@@ -1259,16 +1278,16 @@ namespace Utils
 
 //////////////////////////////////////////////////////////////////////////
 
-va::va(const char* msg, ...)
+va::va( const char* msg, ... )
 {
 	va_list list;
-	va_start(list, msg);
+	va_start( list, msg );
 #ifdef WIN32
-	_vsnprintf(buffer, BufferSize, msg, list);
+	_vsnprintf( buffer, BufferSize, msg, list );
 #else
 	vsnprintf(buffer, BufferSize, msg, list);
 #endif
-	va_end(list);
+	va_end( list );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1278,16 +1297,16 @@ filePath::filePath()
 	buffer[ 0 ] = 0;
 }
 
-filePath::filePath(const char* msg, ...)
+filePath::filePath( const char* msg, ... )
 {
 	va_list list;
-	va_start(list, msg);
+	va_start( list, msg );
 #ifdef WIN32
-	_vsnprintf(buffer, BufferSize, msg, list);
+	_vsnprintf( buffer, BufferSize, msg, list );
 #else
 	vsnprintf(buffer, BufferSize, msg, list);
 #endif
-	va_end(list);
+	va_end( list );
 	FixPath();
 }
 
@@ -1295,10 +1314,10 @@ std::string filePath::FileName() const
 {
 	const char * fileName = buffer;
 	const char *pC = buffer;
-	while(*pC != '\0')
+	while ( *pC != '\0' )
 	{
-		if(*pC == '\\' || *pC == '/')
-			fileName = pC+1;
+		if ( *pC == '\\' || *pC == '/' )
+			fileName = pC + 1;
 		++pC;
 	}
 	return fileName;
@@ -1308,150 +1327,151 @@ void filePath::FixPath()
 {
 	// unixify the path slashes
 	char *pC = buffer;
-	while(*pC != '\0')
+	while ( *pC != '\0' )
 	{
-		if(*pC == '\\')
+		if ( *pC == '\\' )
 			*pC = '/';
 		++pC;
 	}
 
 	// trim any trailing slash
-	while(*pC == '/' && pC > buffer)
+	while ( *pC == '/' && pC > buffer )
 	{
 		*pC = '\0';
 		--pC;
 	}
 }
 
-std::ostream& operator <<(std::ostream& _o, const filePath& _filePath) {
+std::ostream& operator <<( std::ostream& _o, const filePath& _filePath )
+{
 	_o << _filePath.c_str();
 	return _o;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-bool PropertyMap::AddProperty(const std::string &_name, const std::string &_data)
+bool PropertyMap::AddProperty( const std::string &_name, const std::string &_data )
 {
-	if(_name.empty())
+	if ( _name.empty() )
 	{
-		LOGERR("Invalid Waypoint Property Name or Data");
+		LOGERR( "Invalid Waypoint Property Name or Data" );
 		return false;
 	}
 
 	// remove the old, case insensitive version
 	ValueMap::iterator iter = m_Properties.begin();
-	for(; iter != m_Properties.end(); ++iter)
+	for ( ; iter != m_Properties.end(); ++iter )
 	{
-		if(!Utils::StringCompareNoCase(iter->first,_name))
+		if ( !Utils::StringCompareNoCase( iter->first, _name ) )
 		{
-			m_Properties.erase(iter);
+			m_Properties.erase( iter );
 			break;
 		}
 	}
 
-	m_Properties.insert(std::make_pair(_name, _data));
+	m_Properties.insert( std::make_pair( _name, _data ) );
 	return true;
 }
 
-void PropertyMap::DelProperty(const std::string &_name)
+void PropertyMap::DelProperty( const std::string &_name )
 {
-	ValueMap::iterator iter = m_Properties.find(_name);
-	if(iter != m_Properties.end())
-		m_Properties.erase(iter);
+	ValueMap::iterator iter = m_Properties.find( _name );
+	if ( iter != m_Properties.end() )
+		m_Properties.erase( iter );
 }
 
-std::string PropertyMap::GetProperty(const std::string &_name) const
+std::string PropertyMap::GetProperty( const std::string &_name ) const
 {
-	ValueMap::const_iterator iter = m_Properties.find(_name);
-	return (iter != m_Properties.end()) ? iter->second : std::string();
+	ValueMap::const_iterator iter = m_Properties.find( _name );
+	return ( iter != m_Properties.end() ) ? iter->second : std::string();
 }
 
-void PropertyMap::GetAsKeyVal(KeyVals &kv)
+void PropertyMap::GetAsKeyVal( KeyVals &kv )
 {
 	PropertyMap::ValueMap::const_iterator cIt = m_Properties.begin();
-	for(;cIt != m_Properties.end(); ++cIt)
+	for ( ; cIt != m_Properties.end(); ++cIt )
 	{
-		kv.SetString(cIt->first.c_str(),cIt->second.c_str());
+		kv.SetString( cIt->first.c_str(), cIt->second.c_str() );
 	}
 }
 
-std::ostream& operator <<(std::ostream& _o, const obUserData_t& _bud)
+std::ostream& operator <<( std::ostream& _o, const obUserData& _bud )
 {
 	_o << "UserData(";
-	switch(_bud.DataType)
+	switch ( _bud.DataType )
 	{
-	case obUserData_t::dtNone:
-		_o << "dtNone";
-		break;
-	case obUserData_t::dtVector:
-		_o << "dtVector, " <<
-			_bud.udata.m_Vector[0] <<  ", " <<
-			_bud.udata.m_Vector[1] <<  ", " <<
-			_bud.udata.m_Vector[2];
-		break;
-	case obUserData_t::dtString:
-		if(_bud.udata.m_String) _o << "dtString, " << _bud.udata.m_String;
-		break;
-	case obUserData_t::dtInt:
-		_o << "dtInt, " << _bud.udata.m_Int;
-		break;
-	case obUserData_t::dtFloat:
-		_o << "dtFloat, " << _bud.udata.m_Float;
-		break;
-	case obUserData_t::dtEntity:
-		_o << "dtEntity, " << _bud.udata.m_Entity;
-		break;
-	case obUserData_t::dt3_4byteFlags:
-		_o << "dt3_4byteFlags, " <<
-			_bud.udata.m_4ByteFlags[0] << ", " <<
-			_bud.udata.m_4ByteFlags[1] << ", " <<
-			_bud.udata.m_4ByteFlags[2];
-		break;
-	case obUserData_t::dt3_Strings:
-		_o << "dt3_Strings";
-		if(_bud.udata.m_CharPtrs[0]) _o << ", " << _bud.udata.m_CharPtrs[0];
-		if(_bud.udata.m_CharPtrs[1]) _o << ", " <<  _bud.udata.m_CharPtrs[1];
-		if(_bud.udata.m_CharPtrs[2]) _o << ", " << _bud.udata.m_CharPtrs[2];
-		break;
-	case obUserData_t::dt6_2byteFlags:
-		_o << "dt6_2byteFlags, " <<
-			_bud.udata.m_2ByteFlags[0] << ", " <<
-			_bud.udata.m_2ByteFlags[1] << ", " <<
-			_bud.udata.m_2ByteFlags[2] << ", " <<
-			_bud.udata.m_2ByteFlags[3] << ", " <<
-			_bud.udata.m_2ByteFlags[4] << ", " <<
-			_bud.udata.m_2ByteFlags[5];
-		break;
-	case obUserData_t::dt12_1byteFlags:
-		_o << "dt12_1byteFlags, " <<
-			(int)_bud.udata.m_1ByteFlags[0] << ", " <<
-			(int)_bud.udata.m_1ByteFlags[1] << ", " <<
-			(int)_bud.udata.m_1ByteFlags[2] << ", " <<
-			(int)_bud.udata.m_1ByteFlags[3] << ", " <<
-			(int)_bud.udata.m_1ByteFlags[4] << ", " <<
-			(int)_bud.udata.m_1ByteFlags[5] << ", " <<
-			(int)_bud.udata.m_1ByteFlags[6] << ", " <<
-			(int)_bud.udata.m_1ByteFlags[7] << ", " <<
-			(int)_bud.udata.m_1ByteFlags[8] << ", " <<
-			(int)_bud.udata.m_1ByteFlags[9] << ", " <<
-			(int)_bud.udata.m_1ByteFlags[10] << ", " <<
-			(int)_bud.udata.m_1ByteFlags[11];
-		break;
+		case obUserData::dtNone:
+			_o << "dtNone";
+			break;
+		case obUserData::dtVector:
+			_o << "dtVector, " <<
+				_bud.udata.m_Vector[ 0 ] << ", " <<
+				_bud.udata.m_Vector[ 1 ] << ", " <<
+				_bud.udata.m_Vector[ 2 ];
+			break;
+		case obUserData::dtString:
+			if ( _bud.udata.m_String ) _o << "dtString, " << _bud.udata.m_String;
+			break;
+		case obUserData::dtInt:
+			_o << "dtInt, " << _bud.udata.m_Int;
+			break;
+		case obUserData::dtFloat:
+			_o << "dtFloat, " << _bud.udata.m_Float;
+			break;
+		case obUserData::dtEntity:
+			_o << "dtEntity, " << _bud.udata.m_Entity;
+			break;
+		case obUserData::dt3_4byteFlags:
+			_o << "dt3_4byteFlags, " <<
+				_bud.udata.m_4ByteFlags[ 0 ] << ", " <<
+				_bud.udata.m_4ByteFlags[ 1 ] << ", " <<
+				_bud.udata.m_4ByteFlags[ 2 ];
+			break;
+		case obUserData::dt3_Strings:
+			_o << "dt3_Strings";
+			if ( _bud.udata.m_CharPtrs[ 0 ] ) _o << ", " << _bud.udata.m_CharPtrs[ 0 ];
+			if ( _bud.udata.m_CharPtrs[ 1 ] ) _o << ", " << _bud.udata.m_CharPtrs[ 1 ];
+			if ( _bud.udata.m_CharPtrs[ 2 ] ) _o << ", " << _bud.udata.m_CharPtrs[ 2 ];
+			break;
+		case obUserData::dt6_2byteFlags:
+			_o << "dt6_2byteFlags, " <<
+				_bud.udata.m_2ByteFlags[ 0 ] << ", " <<
+				_bud.udata.m_2ByteFlags[ 1 ] << ", " <<
+				_bud.udata.m_2ByteFlags[ 2 ] << ", " <<
+				_bud.udata.m_2ByteFlags[ 3 ] << ", " <<
+				_bud.udata.m_2ByteFlags[ 4 ] << ", " <<
+				_bud.udata.m_2ByteFlags[ 5 ];
+			break;
+		case obUserData::dt12_1byteFlags:
+			_o << "dt12_1byteFlags, " <<
+				(int)_bud.udata.m_1ByteFlags[ 0 ] << ", " <<
+				(int)_bud.udata.m_1ByteFlags[ 1 ] << ", " <<
+				(int)_bud.udata.m_1ByteFlags[ 2 ] << ", " <<
+				(int)_bud.udata.m_1ByteFlags[ 3 ] << ", " <<
+				(int)_bud.udata.m_1ByteFlags[ 4 ] << ", " <<
+				(int)_bud.udata.m_1ByteFlags[ 5 ] << ", " <<
+				(int)_bud.udata.m_1ByteFlags[ 6 ] << ", " <<
+				(int)_bud.udata.m_1ByteFlags[ 7 ] << ", " <<
+				(int)_bud.udata.m_1ByteFlags[ 8 ] << ", " <<
+				(int)_bud.udata.m_1ByteFlags[ 9 ] << ", " <<
+				(int)_bud.udata.m_1ByteFlags[ 10 ] << ", " <<
+				(int)_bud.udata.m_1ByteFlags[ 11 ];
+			break;
 	}
 	_o << ")";
 	return _o;
 }
 
-std::ostream& operator <<(std::ostream& _o, const TriggerInfo_t& _ti)
+std::ostream& operator <<( std::ostream& _o, const TriggerInfo& _ti )
 {
 	_o << "Trigger:";
-	if(_ti.m_TagName) _o << " TagName: " << _ti.m_TagName;
-	if(_ti.m_Action) _o << " Action: " << _ti.m_Action;
-	if(_ti.m_Entity.IsValid())
+	if ( _ti.m_TagName ) _o << " TagName: " << _ti.m_TagName;
+	if ( _ti.m_Action ) _o << " Action: " << _ti.m_Action;
+	if ( _ti.m_Entity.IsValid() )
 		_o << " Entity: (" << _ti.m_Entity.GetIndex() << ":" << _ti.m_Entity.GetSerial() << ")";
 	else
 		_o << " Entity: (null)";
-	if(_ti.m_Entity.IsValid())
+	if ( _ti.m_Entity.IsValid() )
 		_o << " Activator: (" << _ti.m_Activator.GetIndex() << ":" << _ti.m_Activator.GetSerial() << ")";
 	else
 		_o << " Activator: (null)";
@@ -1470,89 +1490,89 @@ void Options::Init()
 
 void Options::Shutdown()
 {
-	if(FileOptions)
+	if ( FileOptions )
 	{
-		releaseKeyValueIni(FileOptions);
+		releaseKeyValueIni( FileOptions );
 		FileOptions = 0;
 	}
 }
 
-bool Options::LoadConfigFile(const std::string &_file)
+bool Options::LoadConfigFile( const std::string &_file )
 {
 	obuint32 NumSections = 0;
 
 	File f;
-	if(f.OpenForRead(_file.c_str(),File::Text))
+	if ( f.OpenForRead( _file.c_str(), File::Text ) )
 	{
 		std::string contents;
-		const obuint64 FileSize = f.ReadWholeFile(contents);
-		if(FileSize)
+		const obuint64 FileSize = f.ReadWholeFile( contents );
+		if ( FileSize )
 		{
-			if(FileOptions)
+			if ( FileOptions )
 			{
-				releaseKeyValueIni(FileOptions);
+				releaseKeyValueIni( FileOptions );
 				FileOptions = 0;
 			}
 
-			FileOptions = loadKeyValueIni(contents.c_str(),(unsigned int)contents.size(),NumSections);
+			FileOptions = loadKeyValueIni( contents.c_str(), (unsigned int)contents.size(), NumSections );
 		}
 		return true;
 	}
 	return false;
 }
 
-bool Options::SaveConfigFile(const std::string &_file)
+bool Options::SaveConfigFile( const std::string &_file )
 {
-	if(FileOptions)
+	if ( FileOptions )
 	{
 		File f;
-		if(f.OpenForWrite(_file.c_str(),File::Text))
+		if ( f.OpenForWrite( _file.c_str(), File::Text ) )
 		{
 			obuint32 FileLength = 0;
-			void *FileData = saveKeyValueIniMem(FileOptions,FileLength);
+			void *FileData = saveKeyValueIniMem( FileOptions, FileLength );
 
-			f.Write(FileData,FileLength);
+			f.Write( FileData, FileLength );
 			f.Close();
 
-			releaseIniMem(FileData);
+			releaseIniMem( FileData );
 			return true;
 		}
 	}
 	return false;
 }
 
-bool Options::SaveConfigFileIfChanged(const std::string &_file)
+bool Options::SaveConfigFileIfChanged( const std::string &_file )
 {
-	if(OptionsChanged)
+	if ( OptionsChanged )
 	{
 		OptionsChanged = false;
-		return SaveConfigFile(_file);
+		return SaveConfigFile( _file );
 	}
 	return false;
 }
 
-const char *Options::GetRawValue(const char *_section, const char *_key)
+const char *Options::GetRawValue( const char *_section, const char *_key )
 {
-	if(FileOptions)
+	if ( FileOptions )
 	{
 		obuint32 KeyCount = 0, LineNo = 0;
-		const KeyValueSection *Section = locateSection(FileOptions,_section,KeyCount,LineNo);
-		if(Section)
+		const KeyValueSection *Section = locateSection( FileOptions, _section, KeyCount, LineNo );
+		if ( Section )
 		{
-			return locateValue(Section,_key,LineNo);
+			return locateValue( Section, _key, LineNo );
 		}
 	}
 	return 0;
 }
 
-bool Options::GetValue(const char *_section, const char *_key, bool &_out)
+bool Options::GetValue( const char *_section, const char *_key, bool &_out )
 {
-	const char *Value = GetRawValue(_section,_key);
-	if(Value)
+	const char *Value = GetRawValue( _section, _key );
+	if ( Value )
 	{
-		if(Utils::StringToTrue(Value))
+		if ( Utils::StringToTrue( Value ) )
 			_out = true;
-		else if(Utils::StringToFalse(Value))
+		else if ( Utils::StringToFalse( Value ) )
 			_out = false;
 		else
 			return false;
@@ -1561,30 +1581,30 @@ bool Options::GetValue(const char *_section, const char *_key, bool &_out)
 	return false;
 }
 
-bool Options::GetValue(const char *_section, const char *_key, int &_out)
+bool Options::GetValue( const char *_section, const char *_key, int &_out )
 {
-	const char *Value = GetRawValue(_section,_key);
-	if(Value && Utils::ConvertString(std::string(Value),_out))
+	const char *Value = GetRawValue( _section, _key );
+	if ( Value && Utils::ConvertString( std::string( Value ), _out ) )
 	{
 		return true;
 	}
 	return false;
 }
 
-bool Options::GetValue(const char *_section, const char *_key, float &_out)
+bool Options::GetValue( const char *_section, const char *_key, float &_out )
 {
-	const char *Value = GetRawValue(_section,_key);
-	if(Value && Utils::ConvertString(std::string(Value),_out))
+	const char *Value = GetRawValue( _section, _key );
+	if ( Value && Utils::ConvertString( std::string( Value ), _out ) )
 	{
 		return true;
 	}
 	return false;
 }
 
-bool Options::GetValue(const char *_section, const char *_key, std::string &_out)
+bool Options::GetValue( const char *_section, const char *_key, std::string &_out )
 {
-	const char *Value = GetRawValue(_section,_key);
-	if(Value)
+	const char *Value = GetRawValue( _section, _key );
+	if ( Value )
 	{
 		_out = Value;
 		return true;
@@ -1592,47 +1612,47 @@ bool Options::GetValue(const char *_section, const char *_key, std::string &_out
 	return false;
 }
 
-bool Options::SetValue(const char *_section, const char *_key, bool _val, bool _overwrite)
+bool Options::SetValue( const char *_section, const char *_key, bool _val, bool _overwrite )
 {
-	std::string sVal = _val?"true":"false";
-	return SetValue(_section,_key,sVal,_overwrite);
+	std::string sVal = _val ? "true" : "false";
+	return SetValue( _section, _key, sVal, _overwrite );
 }
 
-bool Options::SetValue(const char *_section, const char *_key, int _val, bool _overwrite)
+bool Options::SetValue( const char *_section, const char *_key, int _val, bool _overwrite )
 {
 	std::string s;
-	if(Utils::ConvertString(_val,s))
-		return SetValue(_section,_key,s,_overwrite);
+	if ( Utils::ConvertString( _val, s ) )
+		return SetValue( _section, _key, s, _overwrite );
 	return false;
 }
 
-bool Options::SetValue(const char *_section, const char *_key, float _val, bool _overwrite)
+bool Options::SetValue( const char *_section, const char *_key, float _val, bool _overwrite )
 {
 	std::string s;
-	if(Utils::ConvertString(_val,s))
-		return SetValue(_section,_key,s,_overwrite);
+	if ( Utils::ConvertString( _val, s ) )
+		return SetValue( _section, _key, s, _overwrite );
 	return false;
 }
 
-bool Options::SetValue(const char *_section, const char *_key, const char *_val, bool _overwrite)
+bool Options::SetValue( const char *_section, const char *_key, const char *_val, bool _overwrite )
 {
-	return SetValue(_section,_key,std::string(_val),_overwrite);
+	return SetValue( _section, _key, std::string( _val ), _overwrite );
 }
 
-bool Options::SetValue(const char *_section, const char *_key, const std::string &_val, bool _overwrite)
+bool Options::SetValue( const char *_section, const char *_key, const std::string &_val, bool _overwrite )
 {
-	if(!FileOptions)
+	if ( !FileOptions )
 		FileOptions = createKeyValueIni();
 
-	if(FileOptions)
+	if ( FileOptions )
 	{
-		KeyValueSection *Section = createKeyValueSection(FileOptions,_section,false);
+		KeyValueSection *Section = createKeyValueSection( FileOptions, _section, false );
 
 		obuint32 LineNo = 0;
-		if(!_overwrite && locateValue(Section,_key,LineNo))
+		if ( !_overwrite && locateValue( Section, _key, LineNo ) )
 			return false;
 
-		bool bGood = addKeyValue(Section,_key,_val.c_str());
+		bool bGood = addKeyValue( Section, _key, _val.c_str() );
 
 		OptionsChanged = true;
 		return bGood;
@@ -1642,32 +1662,32 @@ bool Options::SetValue(const char *_section, const char *_key, const std::string
 
 //////////////////////////////////////////////////////////////////////////
 
-bool Utils::TeamExists(obint32 _team)
+bool Utils::TeamExists( obint32 _team )
 {
 	gmMachine *pM = ScriptManager::GetInstance()->GetMachine();
-	gmTableObject *pTeams = pM->GetGlobals()->Get(pM,"TEAM").GetTableObjectSafe();
+	gmTableObject *pTeams = pM->GetGlobals()->Get( pM, "TEAM" ).GetTableObjectSafe();
 	gmTableIterator tit;
-	gmTableNode *pNode = pTeams->GetFirst(tit);
-	while(pNode)
+	gmTableNode *pNode = pTeams->GetFirst( tit );
+	while ( pNode )
 	{
-		if(pNode->m_value.GetInt()==_team)
+		if ( pNode->m_value.GetInt() == _team )
 			return true;
-		pNode = pTeams->GetNext(tit);
+		pNode = pTeams->GetNext( tit );
 	}
 	return false;
 }
 
-bool Utils::ClassExists(obint32 _class)
+bool Utils::ClassExists( obint32 _class )
 {
-	if(_class > 0 && _class <= FilterSensory::ANYPLAYERCLASS)
+	if ( _class > 0 && _class <= FilterSensory::ANYPLAYERCLASS )
 		return true;
 	return false;
 }
 
-std::string Utils::GetTeamString(obint32 _team)
+std::string Utils::GetTeamString( obint32 _team )
 {
 	gmMachine *pM = ScriptManager::GetInstance()->GetMachine();
-	gmTableObject *pTeams = pM->GetGlobals()->Get(pM,"TEAM").GetTableObjectSafe();
+	gmTableObject *pTeams = pM->GetGlobals()->Get( pM, "TEAM" ).GetTableObjectSafe();
 
 	std::string sOut;
 
@@ -1676,67 +1696,67 @@ std::string Utils::GetTeamString(obint32 _team)
 
 	// append all effecting teams.
 	gmTableIterator tit;
-	gmTableNode *pNode = pTeams->GetFirst(tit);
-	while(pNode)
+	gmTableNode *pNode = pTeams->GetFirst( tit );
+	while ( pNode )
 	{
-		if(pNode->m_value.GetInt()!=OB_TEAM_SPECTATOR)
+		if ( pNode->m_value.GetInt() != OB_TEAM_SPECTATOR )
 		{
-			if(_team & (1<<pNode->m_value.GetInt()))
+			if ( _team & ( 1 << pNode->m_value.GetInt() ) )
 			{
 				bNoTeams = false;
-				sOut += pNode->m_key.GetCStringSafe("!!!");
+				sOut += pNode->m_key.GetCStringSafe( "!!!" );
 				sOut += " ";
 			}
 			else
 				bAllTeams = false;
 		}
-		pNode = pTeams->GetNext(tit);
+		pNode = pTeams->GetNext( tit );
 	}
 
-	if(bAllTeams)
+	if ( bAllTeams )
 		sOut = "All Teams";
-	if(bNoTeams)
+	if ( bNoTeams )
 		sOut = "None";
 
 	return sOut;
 }
 
-std::string Utils::GetClassString(obint32 _class)
+std::string Utils::GetClassString( obint32 _class )
 {
 	std::string sOut;
 	bool bAllClasses = true;
 
 	// append all effecting classes
-	for(int c = 1; c < FilterSensory::ANYPLAYERCLASS; ++c)
+	for ( int c = 1; c < FilterSensory::ANYPLAYERCLASS; ++c )
 	{
-		if(_class & (1<<c))
+		if ( _class & ( 1 << c ) )
 		{
-			const char *classname = System::mInstance->mGame->FindClassName(c);
-			sOut += (classname?classname:"!!!");
+			const char *classname = System::mInstance->mGame->FindClassName( c );
+			sOut += ( classname ? classname : "!!!" );
 			sOut += " ";
 		}
 		else
 			bAllClasses = false;
 	}
 
-	if(bAllClasses)
+	if ( bAllClasses )
 		sOut = "All Classes";
 
 	return sOut;
 }
 
-void Utils::KeyValsToTable(const KeyVals &_kv, gmGCRoot<gmTableObject> _tbl, gmMachine *_machine)
+void Utils::KeyValsToTable( const KeyVals &_kv, gmGCRoot<gmTableObject> _tbl, gmMachine *_machine )
 {
-	for(int i = 0; i < KeyVals::MaxArgs; ++i)
+	for ( int i = 0; i < KeyVals::MaxArgs; ++i )
 	{
 		const char *Key = 0;
 		obUserData Val;
-		_kv.GetKV(i,Key,Val);
-		if(Key)
+		_kv.GetKV( i, Key, Val );
+		if ( Key )
 		{
-			_tbl->Set(_machine,
-				gmVariable(_machine->AllocPermanantStringObject(Key)),
-				UserDataToGmVar(_machine,Val)
+			_tbl->Set( _machine,
+				gmVariable( _machine->AllocPermanantStringObject( Key ) ),
+				UserDataToGmVar( _machine, Val )
 				);
 		}
 	}
@@ -1744,54 +1764,54 @@ void Utils::KeyValsToTable(const KeyVals &_kv, gmGCRoot<gmTableObject> _tbl, gmM
 
 //////////////////////////////////////////////////////////////////////////
 
-int LimitChecker::FromScript(gmThread *a_thread)
+int LimitChecker::FromScript( gmThread *a_thread )
 {
-	GM_CHECK_NUM_PARAMS(1);
+	GM_CHECK_NUM_PARAMS( 1 );
 	Get().ClearAll();
-	for(int i = 0; i < a_thread->GetNumParams(); ++i)
+	for ( int i = 0; i < a_thread->GetNumParams(); ++i )
 	{
-		gmTableObject *Tbl = a_thread->Param(i).GetTableObjectSafe();
-		if(Tbl)
+		gmTableObject *Tbl = a_thread->Param( i ).GetTableObjectSafe();
+		if ( Tbl )
 		{
 			gmTableIterator tIt;
-			gmTableNode *pNode = Tbl->GetFirst(tIt);
-			while(pNode)
+			gmTableNode *pNode = Tbl->GetFirst( tIt );
+			while ( pNode )
 			{
-				if(pNode->m_key.IsInt())
-					Get().SetFlag(pNode->m_key.GetInt());
-				pNode = Tbl->GetNext(tIt);
+				if ( pNode->m_key.IsInt() )
+					Get().SetFlag( pNode->m_key.GetInt() );
+				pNode = Tbl->GetNext( tIt );
 			}
 		}
 		else
 		{
-			GM_CHECK_INT_PARAM(id, i);
-			Get().SetFlag(id);
+			GM_CHECK_INT_PARAM( id, i );
+			Get().SetFlag( id );
 		}
 	}
 	return GM_OK;
 }
 
-bool LimitWeapons::IsAllowed(Client *_client)
+bool LimitWeapons::IsAllowed( Client *_client )
 {
-	if(mFlags.AnyFlagSet())
+	if ( mFlags.AnyFlagSet() )
 	{
 		AiState::WeaponSystem *ws = _client->GetWeaponSystem();
 
-		BitFlag128 hasWeapons = (mFlags & ws->GetWeaponMask());
-		if(!hasWeapons.AnyFlagSet())
+		BitFlag128 hasWeapons = ( mFlags & ws->GetWeaponMask() );
+		if ( !hasWeapons.AnyFlagSet() )
 			return false;
 
 		bool bOutOfAmmo = true;
-		for(int i = 0; i < 128; ++i)
+		for ( int i = 0; i < 128; ++i )
 		{
-			if(hasWeapons.CheckFlag(i))
+			if ( hasWeapons.CheckFlag( i ) )
 			{
-				WeaponPtr w = ws->GetWeapon(i);
-				if(w)
+				WeaponPtr w = ws->GetWeapon( i );
+				if ( w )
 				{
 					w->UpdateAmmo();
 
-					if(w->OutOfAmmo()==InvalidFireMode)
+					if ( w->OutOfAmmo() == InvalidFireMode )
 					{
 						bOutOfAmmo = false;
 						break;
@@ -1799,68 +1819,68 @@ bool LimitWeapons::IsAllowed(Client *_client)
 				}
 			}
 		}
-		if(bOutOfAmmo)
+		if ( bOutOfAmmo )
 			return false;
 	}
 	return true;
 }
 
-void ErrorObj::AddInfo(const char* _msg, ...)
+void ErrorObj::AddInfo( const char* _msg, ... )
 {
-	char buffer[8192] = {0};
+	char buffer[ 8192 ] = { 0 };
 	va_list list;
-	va_start(list, _msg);
+	va_start( list, _msg );
 #ifdef WIN32
-	_vsnprintf(buffer, 8192, _msg, list);
+	_vsnprintf( buffer, 8192, _msg, list );
 #else
 	vsnprintf(buffer, 8192, _msg, list);
 #endif
-	va_end(list);
+	va_end( list );
 
-	mInfo.push_back(buffer);
+	mInfo.push_back( buffer );
 }
 
-void ErrorObj::AddError(const char* _msg, ...)
+void ErrorObj::AddError( const char* _msg, ... )
 {
-	char buffer[8192] = {0};
+	char buffer[ 8192 ] = { 0 };
 	va_list list;
-	va_start(list, _msg);
+	va_start( list, _msg );
 #ifdef WIN32
-	_vsnprintf(buffer, 8192, _msg, list);
+	_vsnprintf( buffer, 8192, _msg, list );
 #else
 	vsnprintf(buffer, 8192, _msg, list);
 #endif
-	va_end(list);
+	va_end( list );
 
-	mErrors.push_back(buffer);
+	mErrors.push_back( buffer );
 }
 
 void ErrorObj::PrintToConsole()
 {
-	for(StringList::iterator it = mInfo.begin();
+	for ( StringList::iterator it = mInfo.begin();
 		it != mInfo.end();
-		++it)
+		++it )
 	{
-		EngineFuncs::ConsoleMessage((*it).c_str());
+		EngineFuncs::ConsoleMessage( ( *it ).c_str() );
 	}
 
-	for(StringList::iterator it = mErrors.begin();
+	for ( StringList::iterator it = mErrors.begin();
 		it != mErrors.end();
-		++it)
+		++it )
 	{
-		EngineFuncs::ConsoleError((*it).c_str());
+		EngineFuncs::ConsoleError( ( *it ).c_str() );
 	}
 }
 
-StringBuffer::StringBuffer(obuint32 _maxStrings, obuint32 _bufferSize)
-	: m_BufferSize(_bufferSize)
-	, m_MaxStrings(_maxStrings)
+StringBuffer::StringBuffer( obuint32 _maxStrings, obuint32 _bufferSize )
+	: m_BufferSize( _bufferSize )
+	, m_MaxStrings( _maxStrings )
 {
-	m_Buffer = new char[m_BufferSize];
-	m_Strings = new char*[m_MaxStrings];
+	m_Buffer = new char[ m_BufferSize ];
+	m_Strings = new char*[ m_MaxStrings ];
 
-	memset(m_Strings,0,sizeof(char*)*m_MaxStrings);
-	memset(m_Buffer,0,sizeof(char)*m_BufferSize);
+	memset( m_Strings, 0, sizeof( char* )*m_MaxStrings );
+	memset( m_Buffer, 0, sizeof( char )*m_BufferSize );
 	m_BufferOffset = 0;
 }
 
@@ -1870,41 +1890,41 @@ StringBuffer::~StringBuffer()
 	delete [] m_Buffer;
 }
 
-const char *StringBuffer::AddUniqueString(const std::string & _str)
+const char *StringBuffer::AddUniqueString( const std::string & _str )
 {
-	const char * exists = Find(_str);
-	if(exists)
+	const char * exists = Find( _str );
+	if ( exists )
 		return exists;
 
-	if(m_BufferOffset + _str.length() + 1 >= m_BufferSize)
+	if ( m_BufferOffset + _str.length() + 1 >= m_BufferSize )
 		return NULL;
 
-	for(obuint32 s = 0; s < m_MaxStrings; ++s)
+	for ( obuint32 s = 0; s < m_MaxStrings; ++s )
 	{
-		if(!m_Strings[s])
+		if ( !m_Strings[ s ] )
 		{
-			m_Strings[s] = &m_Buffer[m_BufferOffset];
-			Utils::StringCopy(&m_Buffer[m_BufferOffset],_str.c_str(),(int)_str.length()+1);
-			m_BufferOffset += (obuint32)_str.length()+1;
-			return m_Strings[s];
+			m_Strings[ s ] = &m_Buffer[ m_BufferOffset ];
+			Utils::StringCopy( &m_Buffer[ m_BufferOffset ], _str.c_str(), (int)_str.length() + 1 );
+			m_BufferOffset += (obuint32)_str.length() + 1;
+			return m_Strings[ s ];
 		}
 	}
 	return NULL;
 }
 
-const char *StringBuffer::Find(const std::string & _str)
+const char *StringBuffer::Find( const std::string & _str )
 {
-	for(obuint32 s = 0; s < m_MaxStrings; ++s)
+	for ( obuint32 s = 0; s < m_MaxStrings; ++s )
 	{
-		if(m_Strings[s] && _str == m_Strings[s])
-			return m_Strings[s];
+		if ( m_Strings[ s ] && _str == m_Strings[ s ] )
+			return m_Strings[ s ];
 	}
 	return 0;
 }
 
 obColor GetCoolWarmColor( float scalar )
 {
-	const obColor mapping[] = {
+	const obColor mapping [] = {
 		obColor( 59, 76, 192 ),
 		obColor( 60, 78, 194 ),
 		obColor( 61, 80, 195 ),
@@ -2163,6 +2183,41 @@ obColor GetCoolWarmColor( float scalar )
 		obColor( 181, 11, 39 ),
 		obColor( 180, 4, 38 ),
 	};
-	const int numMappings = sizeof(mapping)/sizeof(mapping[0]);
-	return mapping[ ClampT<int>( (int)(scalar * numMappings), 0, numMappings ) ];
+	const int numMappings = sizeof( mapping ) / sizeof( mapping[ 0 ] );
+	return mapping[ ClampT<int>( (int)( scalar * numMappings ), 0, numMappings ) ];
+}
+
+int CheckSqliteError( sqlite3 * db, int errcode )
+{
+	switch ( errcode )
+	{
+		case SQLITE_OK:
+		case SQLITE_ROW:
+		case SQLITE_DONE:
+			break;
+		default:
+		{
+			const int excode = sqlite3_extended_errcode( db );
+			const char * exerr = sqlite3_errstr( excode );
+
+			std::string str = va( "sqlite3 error: %s%s%s",
+				exerr ? exerr : "",
+				exerr ? "\n" : "",
+				sqlite3_errmsg( db ) );
+
+			LOGERR( str );
+		}
+	}
+	return errcode;
+}
+
+AxisAlignedBox3f ComputeAABB( const Box3f & obb )
+{
+	Vector3f verts[ 8 ];
+	obb.ComputeVertices( verts );
+
+	AxisAlignedBox3f aabb( verts[ 0 ], verts[ 0 ] );
+	for ( int i = 1; i < 8; ++i )
+		aabb.ExpandPt( verts[ i ] );
+	return aabb;	
 }

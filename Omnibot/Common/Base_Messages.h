@@ -356,6 +356,20 @@ struct Msg_MoverAt
 	}
 };
 
+struct Msg_EntityForMapModel
+{
+	int				m_MapModelId;
+
+	GameEntity		m_Entity;
+	bool			m_EntityDeleted;
+
+	Msg_EntityForMapModel()
+		: m_MapModelId( 0 )
+		, m_EntityDeleted( false )
+	{
+	}
+};
+
 //////////////////////////////////////////////////////////////////////////
 // Events
 
@@ -424,6 +438,7 @@ struct Event_KilledSomeone
 struct Event_TakeDamage
 {
 	GameEntity	m_Inflictor;
+	char		m_DamageType[32];
 };
 
 struct Event_Healed
@@ -585,6 +600,16 @@ struct Event_CvarGet
 {
 	const char *		m_Cvar;
 	int					m_Value;
+};
+
+struct Event_Analytics
+{
+	const char *		m_Name;
+	const char *		m_Area;
+	float				m_Value;
+	float				m_Position[3];
+	bool				m_HasValue;
+	bool				m_HasPosition;
 };
 
 #pragma pack(pop)

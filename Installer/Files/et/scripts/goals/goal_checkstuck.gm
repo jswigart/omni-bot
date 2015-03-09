@@ -1,7 +1,7 @@
 this.Name = "CheckStuck";
 this.Parent = "LowLevel";
 this.AutoAdd = true;
-this.KillWhenStuck = true;
+this.KillWhenStuck = false;
 this.LogStuckage = true;
 this.Interval = 0.6;
 this.KillTime = 5.0; // time before /killing

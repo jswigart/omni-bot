@@ -6,9 +6,17 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <mutex>
+#include <thread>
+
 #include "EngineFuncs.h"
 #include "Utilities.h"
 #include "RenderBuffer.h"
+#include "IGameManager.h"
+
+StringVector		gThreadMessages;
+StringVector		gThreadErrors;
+boost::mutex		gMessageMutex;
 
 namespace EngineFuncs
 {
@@ -112,18 +120,9 @@ namespace EngineFuncs
 	{
 		//Prof_Scope(EngineFuncs);
 		{
-			Prof(EntityWorldAABB);
+			Prof( EntityLocalAABB );
 
 			return SUCCESS(g_EngineFuncs->GetEntityLocalAABB(_ent, _bounds));
-		}
-	}
-	bool EntityWorldAABB(const GameEntity _ent, AABB &_bounds)
-	{
-		//Prof_Scope(EngineFuncs);
-		{
-			Prof(EntityWorldAABB);
-
-			return SUCCESS(g_EngineFuncs->GetEntityWorldAABB(_ent, _bounds));
 		}
 	}
 	bool EntityWorldOBB(const GameEntity _ent, Box3f &_bounds)
@@ -183,80 +182,45 @@ namespace EngineFuncs
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-
-	//StringList			g_ThreadMessages;
-	//StringList			g_ThreadErrors;
-
-	//TryMutex			g_MessageMutex;
-
-	void ThreadAddMessage(const std::string &_msg)
-	{
-		//TryMutex::scoped_lock sl(g_MessageMutex);
-		//g_ThreadMessages.push_back(_msg);
-	}
-
-	void ThreadAddError(const std::string &_msg)
-	{
-		//TryMutex::scoped_lock sl(g_MessageMutex);
-		//g_ThreadErrors.push_back(_msg);
-	}
-
+	
 	void FlushAsyncMessages()
 	{
-		/*TryMutex::scoped_try_lock sl(g_MessageMutex,boost::defer_lock);
-		if(sl.try_lock())
+		if ( gMessageMutex.try_lock() )
 		{
-		while(!g_ThreadErrors.empty())
-		{
-		g_EngineFuncs->PrintError(g_ThreadErrors.front().c_str());
-		g_ThreadErrors.pop_front();
+			for ( size_t i = 0; i < gThreadErrors.size(); ++i )
+				g_EngineFuncs->PrintError( gThreadErrors[ i ].c_str() );
+
+			for ( size_t i = 0; i < gThreadMessages.size(); ++i )
+				g_EngineFuncs->PrintMessage( gThreadMessages[ i ].c_str() );
+
+			gThreadErrors.resize( 0 );
+			gThreadMessages.resize( 0 );
+
+			gMessageMutex.unlock();
 		}
-		while(!g_ThreadMessages.empty())
-		{
-		g_EngineFuncs->PrintMessage(g_ThreadMessages.front().c_str());
-		g_ThreadMessages.pop_front();
-		}
-		sl.unlock();
-		}*/
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-
+	
 	void ConsoleMessage(const char* _msg)
 	{
-		g_EngineFuncs->PrintMessage(_msg);
-		//ThreadAddMessage(_msg);
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-		/*RemoteLib::DataBufferStatic<2048> db;
-		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-		db.startSizeHeader();
-		db.writeInt32( RemoteLib::ID_scriptPrint );
-		db.writeInt32( COLOR::BLACK.rgba() );
-		db.writeString( _msg );
-		db.endSizeHeader();
-		if ( db.endWrite() == 0 ) {
-		IGameManager::GetInstance()->SyncRemoteMessage( db );
-		}*/
-#endif
+		if ( IGameManager::sMainThread == boost::this_thread::get_id() )
+			g_EngineFuncs->PrintMessage(_msg);
+		else
+		{
+			boost::lock_guard<boost::mutex> lk( gMessageMutex );
+			gThreadMessages.push_back( _msg );
+		}
 	}
 
 	void ConsoleError(const char* _msg)
-	{
-		g_EngineFuncs->PrintError(_msg);
-		//ThreadAddError(_msg);
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-		/*RemoteLib::DataBufferStatic<2048> db;
-		db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-		db.startSizeHeader();
-		db.writeInt32( RemoteLib::ID_scriptPrint );
-		db.writeInt32( COLOR::RED.rgba() );
-		db.writeString( _msg );
-		db.endSizeHeader();
-		if ( db.endWrite() == 0 ) {
-		IGameManager::GetInstance()->SyncRemoteMessage( db );
-		}*/
-#endif
+	{		
+		if ( IGameManager::sMainThread == boost::this_thread::get_id() )
+			g_EngineFuncs->PrintError( _msg );
+		else
+		{
+			boost::lock_guard<boost::mutex> lk( gMessageMutex );
+			gThreadErrors.push_back( _msg );
+		}
 	}
 };

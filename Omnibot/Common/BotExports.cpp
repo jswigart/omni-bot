@@ -31,9 +31,9 @@ BOOL APIENTRY DllMain( HANDLE hModule, DWORD ul_reason_for_call, LPVOID )
 }
 #endif
 
-OMNIBOT_API eomnibot_error ExportBotFunctionsFromDLL(Bot_EngineFuncs_t *_pBotFuncs, int _size)
+OMNIBOT_API omnibot_error ExportBotFunctionsFromDLL(Bot_EngineFuncs *_pBotFuncs, int _size)
 {
-	if(sizeof(Bot_EngineFuncs_t) == _size)
+	if(sizeof(Bot_EngineFuncs) == _size)
 	{
 		_pBotFuncs->pfnInitialize			= BotInitialise;
 		_pBotFuncs->pfnUpdate				= BotUpdate;
@@ -56,7 +56,7 @@ OMNIBOT_API eomnibot_error ExportBotFunctionsFromDLL(Bot_EngineFuncs_t *_pBotFun
 
 		_pBotFuncs->pfnUpdateEntity			= BotUpdateEntity;
 		_pBotFuncs->pfnDeleteGoal			= BotDeleteMapGoal;
-
+		
 		return BOT_ERROR_NONE;
 	}
 	return BOT_ERROR_BAD_INTERFACE;

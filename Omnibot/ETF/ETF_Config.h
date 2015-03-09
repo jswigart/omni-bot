@@ -42,6 +42,11 @@ typedef enum eETF_Team
 	ETF_TEAM_MAX
 } ETF_Team;
 
+enum ETF_SurfaceFlags
+{
+	ETF_SURFACE_LANDMINE	=	SURFACE_START_USER
+};
+
 // Override this to new value
 #ifdef MAX_DEMO_TEAM_PIPES
 #undef MAX_DEMO_TEAM_PIPES

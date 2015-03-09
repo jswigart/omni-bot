@@ -11,7 +11,6 @@
 #ifndef __FF_GAME_H__
 #define __FF_GAME_H__
 
-class Waypoint;
 class gmMachine;
 class gmTableObject;
 
@@ -36,7 +35,7 @@ public:
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
 	const char *GetGameDatabaseAbbrev() const { return "ff"; }
-	virtual eNavigatorID GetDefaultNavigator() const { return NAVID_NAVMESH; }
+	virtual NavigatorID GetDefaultNavigator() const { return NAVID_RECAST; }
 
 	virtual bool RendersToGame() const { return true; }
 

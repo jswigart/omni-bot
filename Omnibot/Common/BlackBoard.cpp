@@ -9,7 +9,7 @@
 #include "BlackBoard.h"
 #include "BlackBoardItems.h"
 #include "IGame.h"
-#include "gmbinder2.h"
+#include "gmbinder2/gmbinder2.h"
 
 static int g_NextScriptItem = bbk_FirstScript;
 

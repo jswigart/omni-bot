@@ -46,6 +46,10 @@ MapGoalPtr MapGoalDatabase::GetNewMapGoal(const std::string &_type)
 		ptr->CopyFrom(it->second.get());
 		ptr->SetSmartPtr(ptr);
 	}
+	else
+	{
+		Utils::OutputDebug(kError, va("Unknown Goal Type: %s", _type.c_str()));
+	}
 	return ptr;
 }
 

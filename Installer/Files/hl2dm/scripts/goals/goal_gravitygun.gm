@@ -1,0 +1,73 @@
+// a script for the bots to use the grav gun to pickup breakables, standard pickup items, etc
+this.Name = "GravityGun";
+this.Parent = "HighLevel";
+this.AutoAdd = true;
+this.AlwaysRecieveEvents = true;
+this.Debug = true;
+
+this.Initialize = function()
+{
+	watchParams = {
+		Radius = 400,
+		Category = CAT.PICKUP,
+		RequireLOS = TRACE.PHYSGUN,
+	};
+	this.WatchForEntityCategory(watchParams);
+	
+	this.Bot.GravGunInfo = {};
+};
+
+this.Enter = function()
+{
+	this.AddFinishCriteria(this.PickupEnt, "hasentflag", ENTFLAG.DISABLED);
+	this.EntPos = GetEntPosition(this.PickupEnt);
+};
+
+this.Exit = function()
+{
+	this.Bot.ReleaseButton(BTN.ATTACK2);
+	this.ReleaseWeaponRequest();
+};
+
+this.Update = function()
+{
+	if ( this.Debug ) {
+		print( this.Bot.Name, " picking up ", GetEntName(this.PickupEnt), " with grav gun" );
+		DrawEntityOBB( this.PickupEnt, 20, COLOR.GREEN );
+		DrawLine( this.Bot.GetEyePosition(), this.EntPos, COLOR.RED, 20 );
+	}
+	
+	tableClear(this.Bot.GravGunInfo);
+	this.AddAimRequest(Priority.High, "position", this.EntPos);
+	this.AddWeaponRequest(Priority.High, WEAPON.GRAVGUN );
+	this.BlockForWeaponChange( WEAPON.GRAVGUN );
+	this.Bot.HoldButton(BTN.ATTACK2, 99);
+	
+	timeOut = 0;
+	
+	while( timeOut < 3 ) {
+		this.Bot.GetPhysGunInfo(this.Bot.GravGunInfo);
+		if (this.Bot.GravGunInfo.HeldObject != null) {
+			this.Bot.PressButton(BTN.ATTACK1);
+		}
+		
+		this.Bot.MoveTowards(this.EntPos);
+		sleep(1);
+		timeOut += 1;
+	}
+	
+	this.Finished();
+};
+
+this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent) 
+{	
+	if ( ent == this.Bot.PickupItem ) {
+		this.PickupEnt = ent;
+		this.Priority = 1.0;
+	}
+};
+
+this.Events[EVENT.ENT_LEAVE_RADIUS] = function(ent) 
+{
+	this.Finished();
+};

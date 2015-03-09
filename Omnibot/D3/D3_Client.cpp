@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "D3_Client.h"
-#include "D3_NavigationFlags.h"
 #include "D3_Messages.h"
 #include "D3_InterfaceFuncs.h"
 
@@ -29,9 +28,9 @@ namespace AiState
 		{
 			if(m_ShootBarrel.IsValid())
 			{
-				AABB aabb;
-				EngineFuncs::EntityWorldAABB(m_ShootBarrel, aabb);
-				RenderBuffer::AddAABB(aabb, COLOR::GREEN);
+				Box3f obb;
+				EngineFuncs::EntityWorldOBB( m_ShootBarrel, obb );
+				RenderBuffer::AddOBB( obb, COLOR::GREEN );
 			}
 		}
 
@@ -97,12 +96,10 @@ namespace AiState
 
 		bool GetAimPosition(Vector3f &_aimpos)
 		{
-			AABB aabb;
-			if(m_ShootBarrel.IsValid() && EngineFuncs::EntityWorldAABB(m_ShootBarrel, aabb))
+			Box3f obb;
+			if ( m_ShootBarrel.IsValid() && EngineFuncs::EntityWorldOBB( m_ShootBarrel, obb ) )
 			{
-				Vector3f vAimPos;
-				aabb.CenterPoint(vAimPos);
-				_aimpos = vAimPos;
+				_aimpos = obb.Center;
 				return true;
 			}
 			return false;
@@ -148,22 +145,32 @@ D3_Client::~D3_Client()
 {
 }
 
-NavFlags D3_Client::GetTeamFlag()
-{
-	return GetTeamFlag(GetTeam());
-}
-
-NavFlags D3_Client::GetTeamFlag(int _team)
+NavFlags D3_Client::GetTeamFlag(int _team) const
 {
 	static const NavFlags defaultTeam = 0;
 	switch(_team)
 	{
 	case D3_TEAM_RED:
-		return F_NAV_TEAM1;
+		return NAVFLAGS_TEAM1_ONLY;
 	case D3_TEAM_BLUE:
-		return F_NAV_TEAM2;
+		return NAVFLAGS_TEAM2_ONLY;
 	default:
 		return defaultTeam;
+	}
+}
+
+void D3_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
+{
+	includeFlags = NAVFLAGS_WALK;
+
+	switch ( GetTeam() )
+	{
+		case D3_TEAM_RED:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			break;
+		case D3_TEAM_BLUE:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			break;
 	}
 }
 

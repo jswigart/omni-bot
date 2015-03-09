@@ -37,23 +37,6 @@ namespace IceMaths
 	class Point;
 }
 
-template< typename T >
-class EditTool
-{
-public:
-	EditTool( const char * toolname ) : mToolName( toolname ) {}
-	virtual ~EditTool() {}
-
-	virtual bool Enter( T * system ) = 0;
-	virtual bool ReEnter( T * system ) { return true; }
-	virtual bool Update( T * system ) = 0;
-	virtual void Commit( T * system ) = 0;
-	virtual void Undo( T * system ) { EngineFuncs::ConsoleError( va( "No Undo functionality for tool %s",mToolName ) ); }
-protected:
-	std::string		mToolError;
-	const char *	mToolName;
-};
-
 // class: PathPlannerNavMesh
 //		Path planner interface for the navmesh system for hl2
 class PathPlannerNavMesh : public PathPlannerBase
@@ -66,6 +49,8 @@ public:
 		NAVMESH_STEPPROCESS = NUM_BASE_NAVFLAGS,
 		NAVMESH_TAKESTEP,
 		NAVMESH_SHOWCOLLISION,
+		NAVMESH_DISABLEOBSTACLES,
+		NAVMESH_SHOWOBSTACLES,
 	};
 
 	typedef std::vector<RuntimeNavSector*> RuntimeSectorRefs;
@@ -73,32 +58,30 @@ public:
 
 	struct Obstacle
 	{
-		obuint32				mHandle;
-
 		GameEntity				mEntity;
 		Vector3f				mPosition;
-
+		
 		Vector3List				mPoly;
 		float					mCost; // NavPortal::MAX_COST is blocked
 		
 		obint32					mExpireTime;
 		RuntimeSectorRefs		mAffectedSectors;
-
-		bool operator==( const Obstacle & other )
-		{
-			return mHandle == other.mHandle;
-		}
+		
+		bool					mActive;
 
 		bool Expired() const;
+		bool IsActive() const;
 
 		Obstacle();
+		~Obstacle();
 	};
-	typedef std::vector<Obstacle> ObstacleList;
+	typedef std::vector<Obstacle*> ObstacleList;
 	
 	struct NavPortal
 	{
 		Segment3f			mSegment;
 		Segment3f			mSegmentLocal;
+		Vector3f			mSegmentFwd;
 
 		RuntimeNavSector *  mSrcSector;
 		RuntimeNavSector *  mDstSector;
@@ -107,6 +90,8 @@ public:
 		{
 			FL_DISABLED,
 			FL_JUMP,
+			FL_WATER_SWIM,
+			FL_WATER_EXIT,
 		};
 
 		BitFlag64		mFlags;
@@ -128,13 +113,35 @@ public:
 	/////////////////////////////////////////////////////////
 	struct NavSectorBase
 	{
-		Vector3List						mPoly;
-		Plane3f							mPlane;
+		void InitNew( const Vector3f & pos, const Vector3f & normal );
+		void Init( const Vector3List & poly );
 
+		void SetPlane( const Plane3f & plane ) { mPlane = plane; }
+		const Plane3f & GetPlane() const { return mPlane; }
+		const Vector3f GetVert( size_t i  ) const { return mPoly[ i ]; }
+		size_t GetNumVerts() const { return mPoly.size(); }
+		const Vector3List & GetVerts() const { return mPoly; }
+		Vector3List & GetVertsMutable() { return mPoly; }
+		void SetVertZ( size_t i, float z );
+
+		float GetArea2d() const { return mArea2d; }
+
+		AxisAlignedBox3f CalculateAABB() const;
 		Vector3f CalculateCenter() const;
 		void GetMirroredCopy(const Vector3f & mirrorAxis,NavmeshIO::Sector_MirrorDir mirror,NavSectorBase & dest) const;
 		void GetEdgeSegments(SegmentList &_list) const;
 		void SetPointsToPlane();
+
+		void Optimize();
+
+		NavSectorBase();
+	protected:
+		Vector3List						mPoly;
+		Plane3f							mPlane;
+		float							mArea2d;
+
+		void CalculateArea();
+		void CalculatePlane();
 	};
 
 	struct NavSector : public NavSectorBase
@@ -151,7 +158,8 @@ public:
 
 	typedef std::vector<NavSector> NavSectorList;
 	typedef std::vector<RuntimeNavSector> RuntimeSectorList;
-
+	typedef std::set<RuntimeNavSector*> SectorSet;
+	
 	struct RuntimeNavSector : public NavSectorBase
 	{
 		obuint32					mIndex;
@@ -171,7 +179,13 @@ public:
 
 		// current obstacles influencing this sector
 		ObstacleList				mObstacles;
+		
+		// Drop connections are portals that should be maintained
+		// to portals they overlap vertically
+		SectorSet					mDropConnections;
 
+		SectorSet					mPortalDependencies;
+		
 		RuntimeSectorList			mSubSectors;
 		
 		obuint32					mVersion;
@@ -185,11 +199,13 @@ public:
 
 		bool						IsMirroredSector() const;
 
+		bool						IsUsableBy( const Client * client ) const;
+
 		void UpdateAutoFlags();
 
 		// build portals for this sector
 		void RebuildPortals( PathPlannerNavMesh * navmesh );
-		void RebuildLedgePortals( PathPlannerNavMesh * navmesh );		
+		void RebuildDropPortals( PathPlannerNavMesh * navmesh );		
 
 		// rebuild subsectors due to change in obstacles
 		void RebuildObstacles( PathPlannerNavMesh * navmesh );
@@ -217,28 +233,19 @@ public:
 	bool IsReady() const;
 
 	int GetLatestFileVersion() const { return 1; }
-
-	Vector3f GetRandomDestination(Client *_client, const Vector3f &_start, const NavFlags _team);
-
-	void PlanPathToGoal(Client *_client, const Vector3f &_start, const Vector3f &_goal, const NavFlags _team);
-	int PlanPathToNearest(Client *_client, const Vector3f &_start, const Vector3List &_goals, const NavFlags &_team);
-	int PlanPathToNearest(Client *_client, const Vector3f &_start, const DestinationVector &_goals, const NavFlags &_team);
-
+	
 	bool GetNavFlagByName(const std::string &_flagname, NavFlags &_flag) const;
 
 	Vector3f GetDisplayPosition(const Vector3f &_pos);
 
-	bool IsDone() const;
-	bool FoundGoal() const;
+	
 	bool Load(const std::string &_mapname, bool _dl = true);
 	bool Save(const std::string &_mapname);
 	void Unload();
 	bool SetFileComments(const std::string &_text);
 
 	void RegisterGameGoals();
-	void GetPath(Path &_path);
 
-	virtual void RegisterNavFlag(const std::string &_name, const NavFlags &_bits);
 	virtual void RegisterScriptFunctions(gmMachine *a_machine);
 
 	bool GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name);
@@ -252,7 +259,7 @@ public:
 	const char *GetPlannerName() const { return "Navigation Mesh Path Planner"; } ;
 	int GetPlannerType() const { return NAVID_NAVMESH; };
 
-	PathInterface * AllocPathInterface();
+	PathInterface * AllocPathInterface( Client * client );
 
 	PathPlannerNavMesh();
 	virtual ~PathPlannerNavMesh();
@@ -261,6 +268,8 @@ protected:
 	void cmdNavSave(const StringVector &_args);
 	void cmdNavLoad(const StringVector &_args);
 	void cmdNavView(const StringVector &_args);
+	void cmdNavShowObstacles(const StringVector &_args);
+	void cmdNavDisableObstacles(const StringVector &_args);
 	void cmdNavViewConnections(const StringVector &_args);
 	void cmdNavViewFlags(const StringVector &_args);
 	void cmdNavStep(const StringVector &_args);
@@ -284,11 +293,12 @@ protected:
 	void cmdUpdateContents(const StringVector &_args);
 	void cmdSectorEdgeDrop(const StringVector &_args);
 	void cmdSetField(const StringVector &_args);
+	void cmdSaveToObjFile(const StringVector &_args);
 	void cmdPortalCreate(const StringVector &_args);
 	void cmdPortalBlockCreate(const StringVector &_args);
 
 	void cmdObstacleAdd(const StringVector &_args);
-
+	
 	NavSector * GetSectorAtCursor();
 
 	//////////////////////////////////////////////////////////////////////////
@@ -325,7 +335,7 @@ protected:
 		obuint32			mActiveSectorId;
 	};
 
-	NavCollision FindCollision(const Vector3f &_from, const Vector3f &_to);
+	NavCollision FindCollision( const Vector3f &_from, const Vector3f &_to, CollisionModel::CacheId * lastHit = NULL );
 	int FindRuntimeSectors( const AABB & aabb,
 		RuntimeSectorRefs & sectorsOut,
 		const bool staticOnly );
@@ -342,7 +352,6 @@ protected:
 	RuntimeSectorList		mRuntimeSectors;
 	SectorCollisionList		mRuntimeSectorCollision;
 	ObstacleList			mPendingObstacles;
-	ObstacleList			mDynamicObstacles;
 	ObstacleList			mObstacles;
 	
 	CollisionModel			mSectorCollision;
@@ -367,12 +376,12 @@ protected:
 
 	void SectorsFromAttribs( RuntimeSectorRefs & sectorsOut,
 		const AABB & aabb,
-		const CollisionModel::AttribSet & attribs,
+		const CollisionModel::MaterialSet & attribs,
 		const bool staticOnly );
 
 	void SectorsFromAttribs( RuntimeSectorRefs & sectorsOut,
 		const Box3f & obb,
-		const CollisionModel::AttribSet & attribs,
+		const CollisionModel::MaterialSet & attribs,
 		const bool staticOnly );
 
 	//////////////////////////////////////////////////////////////////////////
@@ -380,6 +389,8 @@ protected:
 	std::string _GetNavFileExtension() { return ".nav"; }
 	virtual void _BenchmarkPathFinder(const StringVector &_args);
 	virtual void _BenchmarkGetNavPoint(const StringVector &_args);
+
+	void ShowAimSector();
 
 	void UpdateMoverSectors();
 	void UpdateRuntimeSectors();

@@ -793,7 +793,7 @@ qboolean AddWeaponToPlayer( gclient_t *client, weapon_t weapon, int ammo, int am
 	AddExtraSpawnAmmo( client, weapon );
 
 	// omnibot
-	Bot_Event_AddWeapon(client->ps.clientNum, Bot_WeaponGameToBot(weapon));
+	Bot_Event_AddWeapon(&g_entities[client->ps.clientNum], Bot_WeaponGameToBot(weapon));
 	// end omnibot
 	return qtrue;
 }
@@ -819,7 +819,7 @@ void SetWolfSpawnWeapons( gclient_t *client )
 	// omnibot
 	if (isBot)
 	{
-		Bot_Event_ResetWeapons(client->ps.clientNum);
+		Bot_Event_ResetWeapons(&g_entities[client->ps.clientNum]);
 	}
 	// end omnibot
 
@@ -1632,7 +1632,7 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	G_UpdateCharacter( client );
 
 	// omnibot
-	Bot_Event_ClientConnected(clientNum, isBot);
+	Bot_Event_ClientConnected(ent, isBot);
 	// end omnibot
 
 	ClientUserinfoChanged( clientNum );
@@ -2243,6 +2243,9 @@ void ClientSpawn( gentity_t *ent, qboolean revived )
 	// run the presend to set anything else
 	ClientEndFrame( ent );
 
+	if ( !revived ) 
+		Bot_Event_Spawn( ent );
+
 	// set idle animation on weapon
 	ent->client->ps.weapAnim = ( ( ent->client->ps.weapAnim & ANIM_TOGGLEBIT ) ^ ANIM_TOGGLEBIT ) | PM_IdleAnimForWeapon( ent->client->ps.weapon );
 
@@ -2300,7 +2303,7 @@ void ClientDisconnect( int clientNum ) {
 	}
 
 	// omnibot
-	Bot_Event_ClientDisConnected(clientNum);
+	Bot_Event_ClientDisConnected(ent);
 	// end omnibot
 
 #ifdef USEXPSTORAGE
@@ -2418,7 +2421,7 @@ void ClientDisconnect( int clientNum ) {
 	ent->client->ps.persistant[PERS_TEAM] = TEAM_FREE;
 	i = ent->client->sess.sessionTeam;
 	ent->client->sess.sessionTeam = TEAM_FREE;
-	ent->active = 0;
+	ent->active = qfalse;
 
 	trap_SetConfigstring( CS_PLAYERS + clientNum, "");
 

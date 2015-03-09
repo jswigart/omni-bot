@@ -6,7 +6,9 @@
 
 #include <boost/lexical_cast.hpp>
 
-std::string GetFieldString( const google::protobuf::Message & msg, const google::protobuf::FieldDescriptor * fieldDesc )
+using namespace google;
+
+std::string GetFieldString( const protobuf::Message & msg, const protobuf::FieldDescriptor * fieldDesc )
 {
 	using namespace google;
 
@@ -62,7 +64,7 @@ std::string GetFieldString( const google::protobuf::Message & msg, const google:
 	return "";
 }
 
-void ClearDefaultedValues( google::protobuf::Message & msg )
+void ClearDefaultedValues( protobuf::Message & msg )
 {
 	using namespace google;
 	const protobuf::Reflection * refl = msg.GetReflection();

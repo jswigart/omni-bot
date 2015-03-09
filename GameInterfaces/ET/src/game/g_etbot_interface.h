@@ -56,39 +56,44 @@ void Bot_Event_EntityDeleted(gentity_t *pEnt);
 
 //////////////////////////////////////////////////////////////////////////
 
-void Bot_Event_ClientConnected(int _client, qboolean _isbot);
-void Bot_Event_ClientDisConnected(int _client);
+void Bot_Event_ClientConnected(gentity_t * _player, qboolean _isbot);
+void Bot_Event_ClientDisConnected(gentity_t * _player);
 
-void Bot_Event_ResetWeapons(int _client);
-void Bot_Event_AddWeapon(int _client, int _weaponId);
-void Bot_Event_RemoveWeapon(int _client, int _weaponId);
+void Bot_Event_Spawn(gentity_t * _player);
 
-void Bot_Event_TakeDamage(int _client, gentity_t *_ent);
-void Bot_Event_Death(int _client, gentity_t *_killer, const char *_meansofdeath);
-void Bot_Event_KilledSomeone(int _client, gentity_t *_victim, const char *_meansofdeath);
-void Bot_Event_Revived(int _client, gentity_t *_whodoneit);
-void Bot_Event_Healed(int _client, gentity_t *_whodoneit);
-void Bot_Event_RecievedAmmo(int _client, gentity_t *_whodoneit);
+void Bot_Event_ResetWeapons(gentity_t * _player);
+void Bot_Event_AddWeapon(gentity_t * _player, int _weaponId);
+void Bot_Event_RemoveWeapon(gentity_t * _player, int _weaponId);
 
-void Bot_Event_FireWeapon(int _client, int _weaponId, gentity_t *_projectile);
-void Bot_Event_PreTriggerMine(int _client, gentity_t *_mine);
-void Bot_Event_PostTriggerMine(int _client, gentity_t *_mine);
-void Bot_Event_MortarImpact(int _client, vec3_t _pos);
+void Bot_Event_TakeDamage(gentity_t * _player, gentity_t * _attacker, const char * damagetype, float damage);
+void Bot_Event_Death(gentity_t * _victim, gentity_t * _killer, const char * damagetype);
+void Bot_Event_KilledSomeone(gentity_t * _attacker, gentity_t * _victim, const char *_meansofdeath);
+void Bot_Event_Revived(gentity_t * _player, gentity_t * _whodoneit);
+void Bot_Event_Healed(gentity_t * _player, gentity_t * _whodoneit);
+void Bot_Event_RecievedAmmo(gentity_t * _player, gentity_t * _whodoneit);
 
-void Bot_Event_Spectated(int _client, int _who);
+void Bot_Event_FireWeapon(gentity_t * _player, int _weaponId, gentity_t *_projectile);
+void Bot_Event_PreTriggerMine(gentity_t * _player, gentity_t *_mine);
+void Bot_Event_PostTriggerMine(gentity_t * _player, gentity_t *_mine);
+void Bot_Event_MortarImpact(gentity_t * _player, vec3_t _pos);
 
-void Bot_Event_ChatMessage(int _client, gentity_t *_source, int _type, const char *_message);
-void Bot_Event_VoiceMacro(int _client, gentity_t *_source, int _type, const char *_message);
+void Bot_Event_Spectated(gentity_t * _player, int _who);
+
+void Bot_Event_ChatMessage(gentity_t * _player, gentity_t *_source, int _type, const char *_message);
+void Bot_Event_VoiceMacro(gentity_t * _player, gentity_t *_source, int _type, const char *_message);
 
 void Bot_Event_Sound(gentity_t *_source, int _sndtype, const char *_name);
 
-void Bot_Event_FireTeamCreated(int _client, int _fireteamnum);
-void Bot_Event_FireTeamDestroyed(int _client);
-void Bot_Event_JoinedFireTeam(int _client, gentity_t *leader);
-void Bot_Event_LeftFireTeam(int _client);
-void Bot_Event_InviteFireTeam(int _inviter, int _invitee);
-void Bot_Event_FireTeam_Proposal(int _client, int _proposed);
-void Bot_Event_FireTeam_Warn(int _client, int _warned);
+void Analytic_Event( const char * eventName, const float * optionalPos );
+void Analytic_EventWithValue( const char * eventName, float value, const float * optionalPos );
+
+void Bot_Event_FireTeamCreated(gentity_t * _player, int _fireteamnum);
+void Bot_Event_FireTeamDestroyed(gentity_t * _player, int _fireteamnum);
+void Bot_Event_JoinedFireTeam(gentity_t * _player, gentity_t *leader, int _fireteamnum);
+void Bot_Event_LeftFireTeam(gentity_t * _player, int _fireteamnum);
+void Bot_Event_InviteFireTeam(gentity_t * _player, gentity_t * _invitee, int _fireteamnum);
+void Bot_Event_FireTeam_Proposal(gentity_t * _player, gentity_t * _proposed, int _fireteamnum);
+void Bot_Event_FireTeam_Warn(gentity_t * _player, gentity_t * _warned, int _fireteamnum);
 
 // goal helpers
 void Bot_AddDynamiteGoal(gentity_t *_ent, int _team, const char *_tag);

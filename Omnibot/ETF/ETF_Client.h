@@ -21,10 +21,10 @@ class ETF_Client : public TF_Client
 public:
 	void Init(int _gameid);
 
-	NavFlags GetTeamFlag(int _team);
+	NavFlags GetTeamFlag(int _team) const;
 
-	float NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to);
-
+	virtual void GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags );
+	
 	ETF_Client();
 	virtual ~ETF_Client();
 };

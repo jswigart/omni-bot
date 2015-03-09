@@ -192,30 +192,36 @@ struct Event_FireTeamCreated
 
 struct Event_FireTeamDisbanded
 {
+	int			m_FireTeamNum;
 };
 
 struct Event_FireTeamJoined
 {
 	GameEntity	m_TeamLeader;
+	int			m_FireTeamNum;
 };
 
 struct Event_FireTeamLeft
 {
+	int			m_FireTeamNum;
 };
 
 struct Event_FireTeamInvited
 {
 	GameEntity	m_TeamLeader;
+	int			m_FireTeamNum;
 };
 
 struct Event_FireTeamProposal
 {
 	GameEntity	m_Invitee;
+	int			m_FireTeamNum;
 };
 
 struct Event_FireTeamWarning
 {
 	GameEntity	m_WarnedBy;
+	int			m_FireTeamNum;
 };
 
 struct Event_Ammo

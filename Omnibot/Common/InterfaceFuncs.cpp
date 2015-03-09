@@ -9,9 +9,6 @@
 #include "InterfaceFuncs.h"
 #include "Client.h"
 
-extern float g_fTopWaypointOffset;
-extern float g_fBottomWaypointOffset;
-
 obResult InterfaceMsg(const MessageHelper &_data, const GameEntity _ent)
 {
 	obResult res = g_EngineFuncs->InterfaceSendMessage(_data, _ent);
@@ -351,7 +348,13 @@ namespace InterfaceFuncs
 		MessageHelper msg(GEN_MSG_MOVERAT, &data, sizeof(data));
 		return SUCCESS(InterfaceMsg(msg)) ? data.m_Entity : GameEntity();
 	}
+	bool GetEntityForMapModel( int mapModelId, Msg_EntityForMapModel & entityOut )
+	{
+		entityOut.m_MapModelId = mapModelId;
 
+		MessageHelper msg(GEN_MSG_MAPMODEL_FOR_ID, &entityOut, sizeof(entityOut));
+		return SUCCESS(InterfaceMsg(msg));
+	}
 	int GetGameType()
 	{
 		Event_GameType data = { 0 };

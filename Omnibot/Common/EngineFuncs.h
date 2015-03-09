@@ -28,7 +28,7 @@ namespace EngineFuncs
 	bool EntityOrientation(const GameEntity _ent, Matrix3f & mat);
 	bool EntityVelocity(const GameEntity _ent, Vector3f &_vel);
 	bool EntityLocalAABB(const GameEntity _ent, AABB &_bounds);
-	bool EntityWorldAABB(const GameEntity _ent, AABB &_bounds);
+
 	bool EntityWorldOBB(const GameEntity _ent, Box3f &_bounds);
 	bool EntityGroundEntity(const GameEntity _ent, GameEntity &moveent);
 	bool IsInPvs(const Vector3f &_source, const Vector3f &_target);

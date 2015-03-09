@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "HL2DM_Client.h"
-#include "HL2DM_NavigationFlags.h"
 
 #include "IGame.h"
 #include "IGameManager.h"
@@ -20,22 +19,32 @@ HL2DM_Client::~HL2DM_Client()
 {
 }
 
-NavFlags HL2DM_Client::GetTeamFlag()
-{
-	return GetTeamFlag(GetTeam());
-}
-
-NavFlags HL2DM_Client::GetTeamFlag(int _team)
+NavFlags HL2DM_Client::GetTeamFlag(int _team) const
 {
 	static const NavFlags defaultTeam = 0;
 	switch(_team)
 	{
-	case HL2DM_TEAM_1:
-		return F_NAV_TEAM1;
-	case HL2DM_TEAM_2:
-		return F_NAV_TEAM2;
+	case HL2DM_TEAM_COMBINE:
+		return NAVFLAGS_TEAM1_ONLY;
+	case HL2DM_TEAM_REBELS:
+		return NAVFLAGS_TEAM2_ONLY;
 	default:
 		return defaultTeam;
+	}
+}
+
+void HL2DM_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
+{
+	includeFlags = NAVFLAGS_WALK;
+
+	switch ( GetTeam() )
+	{
+		case HL2DM_TEAM_COMBINE:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			break;
+		case HL2DM_TEAM_REBELS:
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			break;
 	}
 }
 

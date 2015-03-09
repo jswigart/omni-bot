@@ -19,11 +19,11 @@
 
 // Title: Functions Bot
 
-// typedef: Bot_EngineFuncs_t
+// typedef: Bot_EngineFuncs
 //		This struct defines all the function pointers that the bot will fill in
 //		and give to the interface so that the interface can request the entire
 //		suite of functions at once from the bot.
-typedef struct
+struct Bot_EngineFuncs
 {
 	omnibot_error (*pfnInitialize)(IEngineInterface *_pEngineFuncs, int _version);
 	void (*pfnUpdate)();
@@ -37,11 +37,13 @@ typedef struct
 	void (*pfnSendEvent)(int _dest, const MessageHelper &_message);
 	void (*pfnSendGlobalEvent)(const MessageHelper &_message);
 
+	void (*pfnSendEventEx)(GameEntity dest, const int msgId, const void * msgPayload, const size_t msgSize );
+
 	// goals
 	void (*pfnAddGoal)(const MapGoalDef &goaldef);
 	void (*pfnDeleteGoal)(const char *goalname);
 	void (*pfnUpdateEntity)(GameEntity oldent,GameEntity newent);
-} Bot_EngineFuncs_t;
+} ;
 
 //#define DllExport __declspec( dllexport )
 //

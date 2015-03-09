@@ -19,9 +19,8 @@
 class Q4_Client : public Client
 {
 public:
-
-	NavFlags GetTeamFlag();
-	NavFlags GetTeamFlag(int _team);
+	NavFlags GetTeamFlag(int _team) const;
+	void GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags );
 
 	void SendVoiceMacro(int _macroId) {};
 

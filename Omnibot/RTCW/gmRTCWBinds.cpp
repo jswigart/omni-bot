@@ -55,7 +55,7 @@ static int GM_CDECL gmfSendPrivateMessage(gmThread *a_thread)
 		const char *pAsString = a_thread->Param(0).AsString(a_thread->GetMachine(), buffer, bufferSize);
 		if(pAsString)
 		{
-			size_t len = strlen(pAsString);
+			int len = strlen(pAsString);
 			if(chatMsgSize - iMsgPos > len)
 			{
 				Utils::StringCopy(&targName[iMsgPos], pAsString, len);
@@ -70,7 +70,7 @@ static int GM_CDECL gmfSendPrivateMessage(gmThread *a_thread)
 			const char *pAsString = a_thread->Param(i).AsString(a_thread->GetMachine(), buffer, bufferSize);
 			if(pAsString)
 			{
-				size_t len = strlen(pAsString);
+				int len = strlen( pAsString );
 				if(chatMsgSize - iMsgPos > len)
 				{
 					Utils::StringCopy(&chatMsg[iMsgPos], pAsString, len);

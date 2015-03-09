@@ -11,7 +11,6 @@
 #ifndef __OF_GAME_H__
 #define __OF_GAME_H__
 
-class Waypoint;
 class gmMachine;
 class gmTableObject;
 

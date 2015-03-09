@@ -7,15 +7,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "ETF_Game.h"
-#include "TF_GoalManager.h"
-#include "TF_NavigationFlags.h"
 #include "TF_InterfaceFuncs.h"
 #include "ETF_Client.h"
 
 #include "System.h"
 #include "RenderBuffer.h"
 
-#include "Waypoint.h"
 #include "PathPlannerBase.h"
 #include "BotPathing.h"
 #include "TF_BaseStates.h"
@@ -80,6 +77,15 @@ const char *ETF_Game::GetScriptSubfolder() const
 #endif
 }
 
+bool ETF_Game::GetAnalyticsKeys( GameAnalyticsKeys & keys ) 
+{
+	keys.mGameKey		= "68aa5fcc90a58d3de2ba80e8dc6f6a88";
+	keys.mSecretKey		= "283e40eb98703bedef2a5fa3e6a996b4c3233545";
+	keys.mDataApiKey	= "73a8f10945d4ac7bb1bde2fddb7905ddcbc7dbe1";
+	keys.mVersionKey	= va( "%s:v%s", GetGameName(), GetVersion() );
+	return true; 
+}
+
 const char *ETF_Game::IsDebugDrawSupported() const
 {
 	if(InterfaceFuncs::GetCvar("sv_running") != 1 && InterfaceFuncs::GetCvar("cl_running") != 1)
@@ -99,9 +105,7 @@ bool ETF_Game::Init( System & system )
 {
 	if ( !TF_Game::Init( system ) )
 		return false;
-
-	AiState::FollowPath::m_OldLadderStyle = false;
-
+	
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(ETF_Game::ETF_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(ETF_Game::ETF_GetEntityClassAimOffset);
@@ -255,48 +259,4 @@ const float ETF_Game::ETF_GetEntityClassAimOffset(const int _class, const BitFla
 		return 24.0f;
 	}
 	return TF_Game::TF_GetEntityClassAimOffset(_class,_entflags);
-}
-
-// PathPlannerWaypointInterface
-
-NavFlags ETF_Game::WaypointBlockableFlags() const
-{
-	return F_TF_NAV_WALL | F_TF_NAV_DETPACK;
-}
-
-NavFlags ETF_Game::WaypointCallbackFlags() const
-{
-	return F_TF_NAV_ROCKETJUMP |
-		F_TF_NAV_CONCJUMP;
-}
-
-PathPlannerWaypointInterface::BlockableStatus ETF_Game::WaypointPathCheck(const Waypoint * _wp1, const Waypoint * _wp2, bool _draw) const
-{
-	static bool bRender = false;
-	PathPlannerWaypointInterface::BlockableStatus res = PathPlannerWaypointInterface::B_INVALID_FLAGS;
-
-	Vector3f vStart, vEnd;
-
-	if(/*_wp1->IsFlagOn(F_TF_NAV_WALL) &&*/ _wp2->IsFlagOn(F_TF_NAV_WALL))
-	{
-		static float fOffset = 0.0f;
-		static Vector3f vMins(-5.f, -5.f, -5.f), vMaxs(5.f, 5.f, 5.f);
-		AABB aabb(vMins, vMaxs);
-		vStart = _wp1->GetPosition() + Vector3f(0, 0, fOffset);
-		vEnd = _wp2->GetPosition() + Vector3f(0, 0, fOffset);
-
-		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStart, vEnd, &aabb, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_OPEN : PathPlannerWaypointInterface::B_PATH_CLOSED;
-	}
-	else if(_wp1->IsFlagOn(F_TF_NAV_DETPACK) && _wp2->IsFlagOn(F_TF_NAV_DETPACK))
-	{
-		Vector3f vStart = _wp1->GetPosition() + Vector3f(0, 0, 40.0f);
-		Vector3f vEnd = _wp2->GetPosition() + Vector3f(0, 0, 40.0f);
-
-		obTraceResult tr;
-		EngineFuncs::TraceLine(tr, vStart, vEnd, NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
-		res = (tr.m_Fraction == 1.0f) ? PathPlannerWaypointInterface::B_PATH_OPEN : PathPlannerWaypointInterface::B_PATH_CLOSED;
-	}
-	return res;
 }

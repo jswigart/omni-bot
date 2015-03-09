@@ -185,6 +185,8 @@ foreach ( botName and loadout in AlliedBots ) {
 	}
 }
 
+Names[ "testbot" ] = "testbot.gm";
+
 /////////////////////////////////////////////////////////////////////
 // pick a bot to add based on team / class needed
 global OnBotAutoJoin = function()

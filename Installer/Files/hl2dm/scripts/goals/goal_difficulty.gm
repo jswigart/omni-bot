@@ -1,0 +1,239 @@
+// This script sets difficulty settings for the bots
+this.Name = "Difficulty";
+this.Parent = "LowLevel";
+
+// initialize defaults in case the entry isn't in omni-bot.cfg
+this.CurrentDifficulty = 3;
+this.AdjustAim = true;
+
+this.CurrentDifficulty = ConfigGet("Difficulty","CurrentDifficulty", this.CurrentDifficulty);
+this.AdjustAim = ConfigGet("Difficulty","AdjustAim", AdjustAim);
+
+this.GetPriority = function()
+{
+	this.CurrentDifficulty = ConfigGet("Difficulty","CurrentDifficulty", this.CurrentDifficulty);
+
+	// if a bot profile sets a ProfileSkill, this will run only once per round.
+	if ( !this.Bot.LockSkill && this.CurrentDifficulty != this.Bot.aimskill )
+	{
+		if (!this.Bot.ProfileSkill)
+		{
+			this.Bot.aimskill = this.CurrentDifficulty;
+		}
+		else
+		{
+			this.Bot.aimskill = this.Bot.ProfileSkill;
+			this.Bot.LockSkill = true;
+		}
+		
+		if( this.Bot.aimskill < 0 )
+		{
+			n = tableCount(this.difficulties);
+			r = RandInt(0, n-1);
+			useDiff = r;
+		}
+		else
+		{
+			useDiff = this.Bot.aimskill;
+		}
+		
+		if ( !this.difficulties[useDiff] )
+		{
+			useDiff = 4; // use original default
+		}
+		
+		this.Bot.FieldOfView = this.difficulties[useDiff].FieldOfView;
+		this.Bot.ReactionTime = this.difficulties[useDiff].ReactionTime;
+		this.Bot.MemorySpan = this.difficulties[useDiff].MemorySpan;
+		this.Bot.AimPersistance = this.difficulties[useDiff].AimPersistance;
+		this.Bot.MaxTurnSpeed = this.difficulties[useDiff].MaxTurnSpeed;
+		this.Bot.AimStiffness = this.difficulties[useDiff].AimStiffness;
+		this.Bot.AimDamping = this.difficulties[useDiff].AimDamping;
+
+		if ( AdjustAim )
+		{
+			this.AdjustWeaponProperties(this.Bot, useDiff);
+		}
+	}
+	
+	sleep(2);
+};
+
+this.difficulties = 
+{
+	// Difficulty 0
+	{
+		FieldOfView = 90.0,
+		ReactionTime = 4.0,
+		MemorySpan = 2.0,
+		AimPersistance = 1.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		AimErrorX = 17,
+		AimErrorY = 17,
+		AimOffsetX = 0,
+		AimOffsetY = -10,
+		AimOffsetZ = 0,
+	},
+	// Difficulty 1
+	{
+		FieldOfView = 90.0,
+		ReactionTime = 3.0,
+		MemorySpan = 2.0,
+		AimPersistance = 1.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		AimErrorX = 15,
+		AimErrorY = 15,
+		AimOffsetX = 0,
+		AimOffsetY = -10,
+		AimOffsetZ = 0,
+	},
+	// Difficulty 2
+	{
+		FieldOfView = 90.0,
+		ReactionTime = 2.0,
+		MemorySpan = 2.0,
+		AimPersistance = 1.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		AimErrorX = 10,
+		AimErrorY = 10,
+		AimOffsetX = 0,
+		AimOffsetY = -7,
+		AimOffsetZ = 0,
+	},
+	// Difficulty 3
+	{
+		FieldOfView = 90.0,
+		ReactionTime = 1.0,
+		MemorySpan = 2.0,
+		AimPersistance = 1.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		AimErrorX = 7,
+		AimErrorY = 7,
+		AimOffsetX = 0,
+		AimOffsetY = -7,
+		AimOffsetZ = 0,
+	},
+	// Difficulty 4
+	{
+		FieldOfView = 90.0,
+		ReactionTime = 0.75,
+		MemorySpan = 2.5,
+		AimPersistance = 1.5,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		AimErrorX = 5,
+		AimErrorY = 5,
+		AimOffsetX = 0,
+		AimOffsetY = -5,
+		AimOffsetZ = 0,
+	},
+	// Difficulty 5
+	{
+		FieldOfView = 100.0,
+		ReactionTime = 0.5,
+		MemorySpan = 3.0,
+		AimPersistance = 2.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		AimErrorX = 5,
+		AimErrorY = 5,
+		AimOffsetX = 0,
+		AimOffsetY = 0,
+		AimOffsetZ = 0,
+	},
+	// Difficulty 6
+	{
+		FieldOfView = 105.0,
+		ReactionTime = 0.0,
+		MemorySpan = 5.0,
+		AimPersistance = 5.0,
+		MaxTurnSpeed = 720.0,
+		AimStiffness = 75.0,
+		AimDamping = 10.0,
+		AimErrorX = 0,
+		AimErrorY = 0,
+		AimOffsetX = 0,
+		AimOffsetY = 0,
+		AimOffsetZ = 0,
+	},
+};
+
+this.AdjustWeaponProperties = function(bot, skill)
+{	
+	AdjustableWeapons = 
+	{
+		WEAPON.MAGNUM,
+		WEAPON.ANNABELLE,
+		WEAPON.AR2,
+//		WEAPON.BUG_BAIT,
+//		WEAPON.CAMERA,
+//		WEAPON.PACKAGE,
+//		WEAPON.SUITCASE,
+		WEAPON.CROSSBOW,
+//		WEAPON.CROWBAR,
+//		WEAPON.CUBEMAP,
+		WEAPON.FRAG,
+//		WEAPON.GRAVGUN,
+		WEAPON.PISTOL,	
+		WEAPON.RPG,		
+		WEAPON.SHOTGUN,
+		WEAPON.SLAM,		
+		WEAPON.SMG,
+//		WEAPON.STUNSTICK,
+	};
+	
+	foreach ( id and weap in AdjustableWeapons )
+	{
+		w = bot.GetWeapon(weap);
+		if ( w ) 
+		{
+			errorX = this.difficulties[skill].AimErrorX;
+			errorY = this.difficulties[skill].AimErrorY;
+			offsetX = this.difficulties[skill].AimOffsetX;
+			offsetY = this.difficulties[skill].AimOffsetY;
+			offsetZ = this.difficulties[skill].AimOffsetZ;
+
+			w.PrimaryFire.MaxAimError = Vector2(errorX, errorY);
+			w.PrimaryFire.AimOffset = Vector3(offsetX, offsetY, offsetZ);
+		}
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["difficulty"] =
+{
+	Func = function( _params )
+	{
+		if(_params[0] != null)
+		{
+			CurrentDifficulty = ToInt(_params[0], 4);			
+			ConfigSet("Difficulty","CurrentDifficulty", CurrentDifficulty);
+			print("Difficulty Changed", CurrentDifficulty);
+		}
+		
+		CurrentDifficulty = ConfigGet("Difficulty","CurrentDifficulty", CurrentDifficulty);
+		print("Difficulty:", CurrentDifficulty);
+	},
+
+	Help = 
+	{
+		"Sets the bots difficulty, -1 is random, default 4",
+	},
+};
+
+
+
+
+
+ 

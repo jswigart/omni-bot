@@ -20,10 +20,10 @@ class FF_Client : public TF_Client
 {
 public:
 	void Init(int _gameid);
+	
+	NavFlags GetTeamFlag(int _team) const;
 
-	float NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to);
-
-	NavFlags GetTeamFlag(int _team);
+	void GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags );
 
 	FF_Client();
 	virtual ~FF_Client();

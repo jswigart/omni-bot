@@ -150,6 +150,41 @@ public:
 	}
 };
 
+class MemoryAllocator
+{
+public:
+	virtual char * AllocateMemory( unsigned int numBytes ) = 0;
+	virtual void FreeMemory( void * ptr ) = 0;
+};
+
+struct GameModelInfo
+{
+	enum { BufferSize = 128 };
+	char 			mModelName[BufferSize];
+	char 			mModelType[BufferSize];
+	char *			mDataBuffer;
+	int				mDataBufferSize;
+	float			mScale[3];
+
+	// oriented bounding box
+	AABB			mAABB;
+	
+	GameModelInfo() 
+		: mDataBuffer( 0 )
+		, mDataBufferSize( 0 )
+	{
+		mModelName[ 0 ] = 0;
+		mModelType[ 0 ] = 0;
+
+		for ( int i = 0; i < 3; ++i )
+		{
+			mScale[ i ] = 1.0f;
+		}
+
+		mAABB.Set( 0.f, 0.f, 0.f );
+	}
+};
+
 // typedef: IEngineInterface
 //		This struct defines all the function that the game will implement
 //		and give to the bot so that the bot may perform generic
@@ -161,6 +196,17 @@ public:
 	{
 		DR_NODEPTHTEST = (1<<0),
 	};
+	enum ConvertType
+	{
+		ConvertSurfaceFlags,
+		ConvertContentsFlags,
+	};
+	enum ConvertDirection
+	{
+		ConvertBotToGame,
+		ConvertGameToBot,
+	};
+	
 
 	// Function: AddBot
 	//		This function should add a bot to the game with the name specified,
@@ -199,6 +245,10 @@ public:
 	// Function: GetPointContents
 	//		Gets the content bitflags for a location.
 	virtual int GetPointContents(const float _pos[3]) = 0;
+	
+	// Function: GetSurfaceFromGame
+	//		Gets the surface bitflags for a surface masks.
+	virtual int ConvertValue( int value, ConvertType ctype, ConvertDirection cdir ) = 0;
 
 	// Function: GetLocalGameEntity
 	//		Gets the game entity of the local client. For listen servers only.
@@ -249,10 +299,6 @@ public:
 	//		This function should return the axis aligned box of a <GameEntity> in local space
 	virtual obResult GetEntityLocalAABB(const GameEntity _ent, AABB &_aabb) = 0;
 
-	// Function: GetEntityWorldAABB
-	//		This function should return the axis aligned box of a <GameEntity> in world space
-	virtual obResult GetEntityWorldAABB(const GameEntity _ent, AABB &_aabb) = 0;
-
 	// Function: GetEntityWorldOBB
 	//		This function should return the oriented box of a <GameEntity> in world space
 	virtual obResult GetEntityWorldOBB(const GameEntity _ent, float *_center, float *_axis0, float *_axis1, float *_axis2, float *_extents) = 0;
@@ -272,6 +318,15 @@ public:
 	// Function: GetClientName
 	//		This function should give access to the in-game name of the client
 	virtual const char *GetEntityName(const GameEntity _ent) = 0;
+
+	// Function: GetEntityModel
+	virtual obResult GetEntityModel( const GameEntity _ent, GameModelInfo & modelOut, MemoryAllocator & alloc ) = 0;
+
+	// Function: GetWorldModel
+	virtual obResult GetWorldModel( GameModelInfo & modelOut, MemoryAllocator & alloc ) = 0;
+
+	// Function: GetModel
+	virtual obResult GetModel( GameModelInfo & modelOut, MemoryAllocator & alloc ) = 0;
 
 	// Function: GetCurrentWeaponClip
 	//		This function should update weapon clip count for the current weapon
@@ -430,8 +485,6 @@ public:
 //	virtual obResult GetEntityVelocity(const GameEntity _ent, float _velocity[3]) = 0;
 //
 //	virtual obResult GetEntityPosition(const GameEntity _ent, float _pos[3]) = 0;
-//
-//	virtual obResult GetEntityWorldAABB(const GameEntity _ent, AABB &_aabb) = 0;
 //
 //	virtual int GetEntityOwner(const GameEntity _ent) = 0;
 //

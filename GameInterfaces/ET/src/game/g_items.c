@@ -495,7 +495,7 @@ void G_DropWeapon( gentity_t *ent, weapon_t weapon )
 	client->ps.ammoclip[BG_FindClipForWeapon(weapon)] = 0;
 
 	// omnibot
-	Bot_Event_RemoveWeapon(client->ps.clientNum, Bot_WeaponGameToBot(weapon));
+	Bot_Event_RemoveWeapon(ent, Bot_WeaponGameToBot(weapon));
 	// end omnibot
 }
 
@@ -552,7 +552,7 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 
 				// omnibot
 				if ( ent->parent ) {
-					Bot_Event_RecievedAmmo(other-g_entities, ent->parent);
+					Bot_Event_RecievedAmmo(other, ent->parent);
 				}
 				// end omnibot
 
@@ -652,7 +652,7 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 #endif
 
 	// omnibot
-	Bot_Event_AddWeapon(other->client->ps.clientNum, Bot_WeaponGameToBot(ent->item->giTag));
+	Bot_Event_AddWeapon(other, Bot_WeaponGameToBot(ent->item->giTag));
 	// end omnibot
 	return -1;
 }
@@ -690,7 +690,7 @@ int Pickup_Health (gentity_t *ent, gentity_t *other) {
 
 	// omnibot
 	if ( ent->parent ) {
-		Bot_Event_Healed(other-g_entities, ent->parent);
+		Bot_Event_Healed(other, ent->parent);
 	}
 	// end omnibot
 

@@ -17,7 +17,8 @@
 
 class System;
 class Client;
-class Waypoint;
+
+struct EntityInstance;
 
 // Title: GoalManager
 
@@ -144,20 +145,16 @@ public:
 
 	MapGoalPtr GetGoal(const std::string &_goalname);
 	MapGoalPtr GetGoal(int _serialNum);
-
-	virtual void CheckWaypointForGoal(Waypoint *_wp, BitFlag64 _used = BitFlag64());
-	void RegisterWaypointGoals(Waypoint *_wp, MapGoalDef *_def, int _num);
-
+	
 	const MapGoalList &GetGoalList() const { return m_MapGoalList; }
 
 	static GoalManager *GetInstance();
 	static void DeleteInstance();
 	void UpdateGoalEntity( GameEntity oldent, GameEntity newent );
 	void RemoveGoalByName( const char *_goalname );
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-	virtual void Sync( RemoteLib::DebugConnection * connection );
-#endif
+	
+	void EntityCreated( const EntityInstance &ei );
+	void EntityDeleted( const EntityInstance &ei );
 
 	GoalManager();
 	virtual ~GoalManager();
@@ -206,6 +203,8 @@ private:
 	gmGCRoot<gmTableObject>	m_LoadedMapGoals;
 
 	void OnGoalDelete(const MapGoalPtr &_goal);
+
+	void CheckEntityForGoal( const EntityInstance &ei );
 };
 
 #endif

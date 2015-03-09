@@ -7,8 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "ETQW_Game.h"
-#include "ETQW_GoalManager.h"
-#include "ETQW_NavigationFlags.h"
 #include "ETQW_VoiceMacros.h"
 #include "ETQW_InterfaceFuncs.h"
 #include "ETQW_Client.h"
@@ -80,11 +78,6 @@ const char *ETQW_Game::GetScriptSubfolder() const
 bool ETQW_Game::ReadyForDebugWindow() const
 {
 	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING;
-}
-
-GoalManager *ETQW_Game::GetGoalManager()
-{
-	return new ETQW_GoalManager;
 }
 
 bool ETQW_Game::Init( System & system )
@@ -399,41 +392,6 @@ void ETQW_Game::InitScriptPowerups(gmMachine *_machine, gmTableObject *_table)
 {
 }
 
-void ETQW_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
-{
-	// Should always register the default flags
-	IGame::RegisterNavigationFlags(_planner);
-
-	_planner->RegisterNavFlag("AXIS",			F_NAV_TEAM1);
-	_planner->RegisterNavFlag("ALLIES",			F_NAV_TEAM2);
-
-	_planner->RegisterNavFlag("MG42",			F_ETQW_NAV_MG42SPOT);
-	//_planner->RegisterNavFlag("PANZERFAUST",	F_ETQW_NAV_PANZERFSPOT);
-
-	_planner->RegisterNavFlag("MORTAR",			F_ETQW_NAV_MORTAR);
-	_planner->RegisterNavFlag("MORTAR_TARGETQW_S",F_ETQW_NAV_MORTARTARGETQW_S);
-	_planner->RegisterNavFlag("MORTAR_TARGETQW_D",F_ETQW_NAV_MORTARTARGETQW_D);
-
-	_planner->RegisterNavFlag("MINE",			F_ETQW_NAV_MINEAREA);
-	//_planner->RegisterNavFlag("AIRSTRIKE",		F_ETQW_NAV_AIRSTRAREA);
-
-	_planner->RegisterNavFlag("WALL",			F_ETQW_NAV_WALL);
-	_planner->RegisterNavFlag("BRIDGE",			F_ETQW_NAV_BRIDGE);
-
-	_planner->RegisterNavFlag("SPRINT",			F_ETQW_NAV_SPRINT);
-	_planner->RegisterNavFlag("PRONE",			F_NAV_PRONE);
-
-	_planner->RegisterNavFlag("WATERBLOCKABLE", F_ETQW_NAV_WATERBLOCKABLE);
-
-	_planner->RegisterNavFlag("CAPPOINT",		F_ETQW_NAV_CAPPOINT);
-
-	_planner->RegisterNavFlag("ARTY_SPOT",		F_ETQW_NAV_ARTSPOT);
-	_planner->RegisterNavFlag("ARTY_TARGETQW_S",	F_ETQW_NAV_ARTYTARGETQW_S);
-	_planner->RegisterNavFlag("ARTY_TARGETQW_D",	F_ETQW_NAV_ARTYTARGETQW_D);
-
-	_planner->RegisterNavFlag("DISGUISE",		F_ETQW_NAV_DISGUISE);
-}
-
 void ETQW_Game::InitCommands()
 {
 	IGame::InitCommands();
@@ -532,21 +490,4 @@ void ETQW_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 			cp->CheckClassEvent();
 		}
 	}
-}
-
-// PathPlannerWaypointInterface
-NavFlags ETQW_Game::WaypointBlockableFlags() const
-{
-	return (NavFlags)0;
-}
-
-NavFlags ETQW_Game::WaypointCallbackFlags() const
-{
-	return F_ETQW_NAV_DISGUISE;
-}
-
-PathPlannerWaypointInterface::BlockableStatus ETQW_Game::WaypointPathCheck(const Waypoint*, const Waypoint*, bool _draw) const
-{
-	// todo
-	return PathPlannerWaypointInterface::B_PATH_OPEN;
 }

@@ -8,15 +8,22 @@
 
 #include "FileDownloader.h"
 #include "System.h"
+#include "FileSystem.h"
+#include "PathPlannerBase.h"
+#include "IGame.h"
 
-#ifdef ENABLE_FILE_DOWNLOADER
+#include "boost/thread.hpp"
+#include "boost/thread/mutex.hpp"
+
+#if ( ENABLE_FILE_DOWNLOADER )
 
 #include <boost/asio.hpp>
 using boost::asio::ip::tcp;
 
 //////////////////////////////////////////////////////////////////////////
 
-ThreadGroup g_MasterThreadGroup;
+boost::thread_group g_MasterThreadGroup;
+bool gReloadNavigation = false;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -299,35 +306,6 @@ private:
 
 //////////////////////////////////////////////////////////////////////////
 
-std::string	gGameAbbrev;
-int		gNavFileVersion = 0;
-
-bool FileDownloader::Init()
-{
-	gGameAbbrev = System::mInstance->mGame->GetGameDatabaseAbbrev();
-	gNavFileVersion = NavigationManager::GetInstance()->GetCurrentPathPlanner()->GetLatestFileVersion();
-
-	FileSystem::MakeDirectory("user/download");
-
-	return true;
-}
-
-void FileDownloader::Shutdown()
-{
-	g_MasterThreadGroup.join_all();
-}
-
-bool gReloadNavigation = false;
-void FileDownloader::Poll()
-{
-	if(gReloadNavigation)
-	{
-		gReloadNavigation = false;
-		NavigationManager::GetInstance()->GetCurrentPathPlanner()->Load(false);
-		IGameManager::GetInstance()->GetGame()->InitMapScript();
-	}
-}
-
 struct AsIOThread
 {
 	void operator()()
@@ -388,11 +366,40 @@ private:
 
 //////////////////////////////////////////////////////////////////////////
 
-TryMutex			gDlMapMutex;
+boost::try_mutex	gDlMapMutex;
 StringList			gDlMapList;
+
+#endif
+
+bool FileDownloader::Init()
+{
+	FileSystem::MakeDirectory("user/download");
+	return true;
+}
+
+void FileDownloader::Shutdown()
+{
+#if ( ENABLE_FILE_DOWNLOADER )
+	g_MasterThreadGroup.join_all();
+#endif
+}
+
+void FileDownloader::Poll()
+{
+#if ( ENABLE_FILE_DOWNLOADER )
+	if(gReloadNavigation)
+	{
+		gReloadNavigation = false;
+		
+		System::mInstance->mNavigation->Load(false);
+		System::mInstance->mGame->InitMapScript();
+	}
+#endif
+}
 
 bool FileDownloader::NavigationMissing(const std::string &_name)
 {
+#if ( ENABLE_FILE_DOWNLOADER )
 	bool DownloadMissingNavigation = false;
 	Options::GetValue("Downloader","DownloadMissingNav",DownloadMissingNavigation);
 	if(DownloadMissingNavigation)
@@ -402,16 +409,22 @@ bool FileDownloader::NavigationMissing(const std::string &_name)
 		return true;
 	}
 	EngineFuncs::ConsoleError(va("No nav for %s, auto-download disabled.", _name.c_str()));
+#endif
 	return false;
 }
 
 void FileDownloader::UpdateWaypoints(const std::string &_mapname, bool _load)
 {
-	//g_MasterThreadGroup.create_thread(AsIOThread(_mapname,gGameAbbrev,gNavFileVersion,_load));
+#if ( ENABLE_FILE_DOWNLOADER )	
+	const std::string abbrev = System::mInstance->mGame->GetGameDatabaseAbbrev();
+	const int navVersion = System::mInstance->mNavigation->GetLatestFileVersion();
+	g_MasterThreadGroup.create_thread(AsIOThread(_mapname, abbrev, navVersion,_load));
+#endif
 }
 
 void FileDownloader::UpdateAllWaypoints(bool _getnew)
 {
+#if ( ENABLE_FILE_DOWNLOADER )
 	StringList maplist;
 
 	DirectoryList navFiles;
@@ -421,10 +434,14 @@ void FileDownloader::UpdateAllWaypoints(bool _getnew)
 		const std::string &mapname = fs::basename(navFiles[i]);
 		maplist.push_back(mapname);
 	}
-	g_MasterThreadGroup.create_thread(AsIOThread(maplist,gGameAbbrev,gNavFileVersion));
-}
 
+	const std::string abbrev = System::mInstance->mGame->GetGameDatabaseAbbrev();
+	const int navVersion = System::mInstance->mNavigation->GetLatestFileVersion();
+	g_MasterThreadGroup.create_thread(AsIOThread(maplist,abbrev,navVersion));
+#else
+	EngineFuncs::ConsoleError( "File Downloader Disabled" );
 #endif
+}
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
