@@ -1162,9 +1162,6 @@ void IGame::CheckServerSettings(bool managePlayers)
 {
 	Prof(CheckServerSettings);
 
-	if(!NavigationManager::GetInstance()->GetCurrentPathPlanner()->IsReady())
-		return;
-
 	obPlayerInfo pi;
 	g_EngineFuncs->GetPlayerInfo(pi);
 
@@ -1209,7 +1206,7 @@ void IGame::CheckServerSettings(bool managePlayers)
 		}
 	}
 
-	if(managePlayers)
+	if(managePlayers && NavigationManager::GetInstance()->GetCurrentPathPlanner()->IsReady())
 	{
 		gmCall call;
 		if(call.BeginGlobalFunction(pM,"ManagePlayers"))
@@ -1395,12 +1392,6 @@ void IGame::cmdKickAll(const StringVector &_args)
 
 void IGame::cmdAddbot(const StringVector &_args)
 {
-	if(!NavigationManager::GetInstance()->GetCurrentPathPlanner()->IsReady())
-	{
-		EngineFuncs::ConsoleError(va("No navigation file loaded, unable to add bots."));
-		return;
-	}
-
 	int iTeam = -1; // -1 for autochoose in interface
 	int iClass = -1; // -1 for autochoose in interface
 
@@ -1504,6 +1495,11 @@ void IGame::cmdReloadWeaponDatabase(const StringVector &_args)
 
 void IGame::AddBot(Msg_Addbot &_addbot, bool _createnow)
 {
+	if(_createnow && !NavigationManager::GetInstance()->GetCurrentPathPlanner()->IsReady())
+	{
+		EngineFuncs::ConsoleError(va("No navigation file loaded, unable to add bots."));
+		return;
+	}
 	//////////////////////////////////////////////////////////////////////////
 	if(!_addbot.m_Name[0])
 	{

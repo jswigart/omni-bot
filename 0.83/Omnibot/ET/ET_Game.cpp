@@ -448,6 +448,11 @@ void ET_Game::InitVoiceMacros(gmMachine *_machine, gmTableObject *_table)
 
 void ET_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 {
+	if(_createnow && !NavigationManager::GetInstance()->GetCurrentPathPlanner()->IsReady())
+	{
+		EngineFuncs::ConsoleError(va("No navigation file loaded, unable to add bots."));
+		return;
+	}
 	//////////////////////////////////////////////////////////////////////////
 	if(!_addbot.m_Name[0])
 	{
