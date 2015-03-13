@@ -217,6 +217,25 @@ namespace AiState
 		m_NumThreads = 0;
 	}
 
+	void ScriptGoal::RunCallback(FunctionCallback callback, bool whenNotActive)
+	{
+		if(m_Callbacks[callback])
+		{
+			if(!whenNotActive || !m_ActiveThread[callback].IsActive())
+			{
+				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
+				gmCall call;
+				if(call.BeginFunction(pMachine, m_Callbacks[callback], gmVariable(GetScriptObject(pMachine))))
+				{
+					call.End();
+					
+					if(whenNotActive)
+						m_ActiveThread[callback] = call.DidReturnVariable() ? GM_INVALID_THREAD : call.GetThreadId();
+				}
+			}
+		}
+	}
+
 	bool ScriptGoal::Goto(const Vector3f &_pos, const MoveOptions &options)
 	{
 		m_SkipLastWp = false;
@@ -409,31 +428,29 @@ namespace AiState
 
 			if(m_Callbacks[ON_SPAWN])
 			{
-				if(m_ActiveThread[ON_SPAWN])
-					m_ActiveThread[ON_SPAWN].Kill();
+				m_ActiveThread[ON_SPAWN].Kill();
 
 				// don't call it unless we can
-				if(CanBeSelected() != NoSelectReasonNone)
-					return;
-
-				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-				gmCall call;
-				if(call.BeginFunction(pMachine, m_Callbacks[ON_SPAWN], gmVariable(GetScriptObject(pMachine))))
-				{
-					if(call.End() == gmThread::EXCEPTION)
-					{
-						SetEnable(false, va("Error in OnSpawn Callback in Goal: %s", GetName().c_str()));
-						return;
-					}
-
-					m_ActiveThread[ON_SPAWN] = call.GetThreadId();
-					if(call.DidReturnVariable())
-					{
-						m_ActiveThread[ON_SPAWN].Reset();
-					}
-				}
+				if(CanBeSelected() == NoSelectReasonNone)
+					RunCallback(ON_SPAWN, true);
 			}
 		}
+	}
+
+	void ScriptGoal::OnException()
+	{
+		MapGoal* mg = GetMapGoal().get();
+		if(mg)
+		{
+			//disable current MapGoal temporarily
+			BlackboardDelay(Mathf::IntervalRandom(20,50), mg->GetSerialNum());
+		}
+		else
+		{
+			//disable this ScriptGoal until map restart
+			SetEnable(false);
+		}
+		SetFinished();
 	}
 
 	void ScriptGoal::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
@@ -459,27 +476,20 @@ namespace AiState
 
 			if(m_Callbacks[ON_PATH_THROUGH])
 			{
-				//if(!m_ActiveThread[ON_PATH_THROUGH].IsActive())
+				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
+				gmCall call;
+				if(call.BeginFunction(pMachine, m_Callbacks[ON_PATH_THROUGH], gmVariable(GetScriptObject(pMachine))))
 				{
-					gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-					gmCall call;
-					if(call.BeginFunction(pMachine, m_Callbacks[ON_PATH_THROUGH], gmVariable(GetScriptObject(pMachine))))
-					{
-						call.AddParamString(_s.c_str());
-						if(call.End() == gmThread::EXCEPTION)
-						{
-							SetEnable(false, va("Error in OnPathThrough Callback in Goal: %s", GetName().c_str()));
-							return false;
-						}
+					call.AddParamString(_s.c_str());
+					call.End();
 
-						int iRetVal = 0;
-						if(call.DidReturnVariable() && call.GetReturnedInt(iRetVal) && iRetVal)
-						{
-							SetScriptPriority(1.f);
-							SetLastPriority(1.f);
-							return true;
-						}						
-					}
+					int iRetVal = 0;
+					if(call.DidReturnVariable() && call.GetReturnedInt(iRetVal) && iRetVal)
+					{
+						SetScriptPriority(1.f);
+						SetLastPriority(1.f);
+						return true;
+					}						
 				}
 			}
 			return false;
@@ -513,26 +523,7 @@ namespace AiState
 				{
 					DelayGetPriority(m_NextGetPriorityDelay);
 
-					if(m_Callbacks[ON_GETPRIORITY])
-					{
-						if(!m_ActiveThread[ON_GETPRIORITY].IsActive())
-						{
-							gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-							gmCall call;
-							if(call.BeginFunction(pMachine, m_Callbacks[ON_GETPRIORITY], gmVariable(GetScriptObject(pMachine))))
-							{
-								if(call.End() == gmThread::EXCEPTION)
-								{
-									SetEnable(false, va("Error in GetPriority Callback in Goal: %s", GetName().c_str()));
-									return 0.f;
-								}
-
-								m_ActiveThread[ON_GETPRIORITY] = call.GetThreadId();
-								if(call.DidReturnVariable())
-									m_ActiveThread[ON_GETPRIORITY].Reset();
-							}
-						}
-					}
+					RunCallback(ON_GETPRIORITY, true);
 				}
 			}
 			UpdateEntityInRadius();
@@ -555,20 +546,7 @@ namespace AiState
 
 			m_Finished = false;
 
-			if (m_Callbacks[ON_ENTER])
-			{
-				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-				gmCall call;
-				if(call.BeginFunction(pMachine, m_Callbacks[ON_ENTER], gmVariable(GetScriptObject(pMachine))))
-				{
-					if(call.End() == gmThread::EXCEPTION)
-					{
-						SetEnable(false, va("Error in Enter Callback in Goal: %s", GetName().c_str()));
-						return;
-					}
-					//KillAllGoalThreads();
-				}
-			}
+			RunCallback(ON_ENTER);
 		}
 	}
 
@@ -585,19 +563,7 @@ namespace AiState
 
 			SetScriptPriority( 0.0f );
 
-			if(m_Callbacks[ON_EXIT])
-			{
-				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-				gmCall call;
-				if(call.BeginFunction(pMachine, m_Callbacks[ON_EXIT], gmVariable(GetScriptObject(pMachine))))
-				{
-					if(call.End() == gmThread::EXCEPTION)
-					{
-						SetEnable(false, va("Error in Exit Callback in Goal: %s", GetName().c_str()));
-						return;
-					}
-				}
-			}
+			RunCallback(ON_EXIT);
 
 			//////////////////////////////////////////////////////////////////////////
 			// Automatically release requests on exit.
@@ -678,27 +644,8 @@ namespace AiState
 
 				UpdateMapGoalsInRadius();
 				
-				if(!m_Finished && m_Callbacks[ON_UPDATE])
-				{
-					if(!m_ActiveThread[ON_UPDATE].IsActive())
-					{
-						gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-						gmCall call;
-						if(call.BeginFunction(pMachine, m_Callbacks[ON_UPDATE], gmVariable(GetScriptObject(pMachine))))
-						{
-							//GetClient()->AddSignalThreadId(call.GetThreadId());
-							if(call.End() == gmThread::EXCEPTION)
-							{
-								SetEnable(false, va("Error in Update Callback in Goal: %s", GetName().c_str()));
-								return State_Finished;
-							}
-
-							m_ActiveThread[ON_UPDATE] = call.GetThreadId();
-							if(call.DidReturnVariable())
-								m_ActiveThread[ON_UPDATE] = 0;
-						}
-					}
-				}
+				if(!m_Finished)
+					RunCallback(ON_UPDATE, true);
 			}
 		}
 		return m_Finished ? State_Finished : State_Busy;
