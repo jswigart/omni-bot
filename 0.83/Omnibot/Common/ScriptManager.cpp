@@ -641,6 +641,17 @@ bool GM_CDECL ScriptManager::ScriptSysCallback_Machine(gmMachine* a_machine, gmM
 	case MC_THREAD_EXCEPTION:
 		{
 			LogAnyMachineErrorMessages(a_machine);
+
+			const gmVariable *pThis = pThread->GetThis();
+			if(pThis){
+				gmUserObject *pUserObj = pThis->GetUserObjectSafe(gmScriptGoal::GetType());
+				if(pUserObj){
+					AiState::ScriptGoal *pScriptGoal = gmScriptGoal::GetNative(pUserObj);
+					if(pScriptGoal){
+						pScriptGoal->OnException();
+					}
+				}
+			}
 			break;
 		}
 	case MC_THREAD_CREATE: 

@@ -77,6 +77,7 @@ namespace AiState
 
 		gmGCRoot<gmFunctionObject> GetCallback(FunctionCallback cb) { return m_Callbacks[cb]; }
 		void SetCallback(FunctionCallback cb, gmGCRoot<gmFunctionObject> f) { m_Callbacks[cb] = f; }
+		void RunCallback(FunctionCallback callback, bool whenNotActive = false);
 
 		// functionality
 		bool Goto(const Vector3f &_pos, const MoveOptions &options);
@@ -138,6 +139,7 @@ namespace AiState
 		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
 		bool OnInit(gmMachine *_machine);
 		void OnSpawn();
+		void OnException();
 
 		//ThreadList &GetThreadList() { return m_ThreadList; }
 
