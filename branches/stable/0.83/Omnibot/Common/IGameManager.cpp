@@ -18,6 +18,7 @@
 #include "Timer.h"
 #include "Interprocess.h"
 #include "DebugWindow.h"
+#include "Revision.h"
 
 #include "WeaponDatabase.h"
 #include "FileSystem.h"
@@ -419,6 +420,7 @@ void IGameManager::cmdVersion(const StringVector &_args)
 		EngineFuncs::ConsoleMessage(va("Omni-Bot : %s %s", __DATE__, __TIME__));
 #endif
 		EngineFuncs::ConsoleMessage(va("Version : %s", m_Game->GetVersion()));
+		EngineFuncs::ConsoleMessage(va("Revision : %s", Revision::Number().c_str()));
 		EngineFuncs::ConsoleMessage(va("Interface # : %d", m_InterfaceVersionNum));
 	}
 }
