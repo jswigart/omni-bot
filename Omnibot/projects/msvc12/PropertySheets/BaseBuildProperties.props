@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <IntDir>$(SolutionDir)build\$(ProjectName)\$(Configuration)\</IntDir>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisIgnoreGeneratedCode>false</CodeAnalysisIgnoreGeneratedCode>
+    <OutDir>$(SolutionDir)build\$(ProjectName)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>$(PROTO_BUFF)/src;$(FLATBUFFERS)/include;$(BOOST);$(WILDMAGIC)\SDK\Include;$(GAMEANALYTICS);$(JSONCPP);$(SQLITE);$(Dependencies)\iprof;$(GMEX)\src\3rdParty;$(GMEX)\src\gm;$(GMEX)\src\binds;$(GMEX)\src\platform\win32msvc;$(Dependencies)\VisualLeakDetector\include;$(Dependencies)\sqlite3;$(RECAST);$(RECAST)\DebugUtils\Include;$(RECAST)\Detour\Include;$(RECAST)\DetourCrowd\Include;$(RECAST)\DetourTileCache\Include;$(RECAST)\Recast\Include;$(RECAST)\RecastDemo\Include;$(RECAST)\RecastDemo\Contrib;$(Dependencies)\Opcode;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32_LEAN_AND_MEAN;VC_EXTRA_LEAN;WIN32_EXTRA_LEAN;NOWINRES;NOSERVICE;NOMCX;NOIME;NOMINMAX;DETOURS_X86;_WIN32_WINNT=0x0501;_USE_32BIT_TIME_T;BAN_OPCODE_AUTOLINK;ICE_NO_DLL;FREEGLUT_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <EnablePREfast>true</EnablePREfast>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <OpenMPSupport>true</OpenMPSupport>
+    </ClCompile>
+    <Link>
+      <ProgramDatabaseFile>$(TargetDir)$(TargetName)_$(ConfigurationName).pdb</ProgramDatabaseFile>
+    </Link>
+    <Link>
+      <GenerateMapFile>true</GenerateMapFile>
+    </Link>
+    <Link>
+      <MapFileName>$(TargetDir)$(TargetName)_$(ConfigurationName).map</MapFileName>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalOptions>/ignore:4221 %(AdditionalOptions)</AdditionalOptions>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+  </ItemDefinitionGroup>
+</Project>

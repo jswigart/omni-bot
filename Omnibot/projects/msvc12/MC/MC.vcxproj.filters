@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Dlls">
+      <UniqueIdentifier>{8dfd9514-6783-49fb-afb4-c86e2a81cb2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{c4cedcc1-2861-4303-97ab-73bcd3f54f3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Scripting">
+      <UniqueIdentifier>{f69cb0c0-677a-4b7d-8c0d-6ac3819f131b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\common\BotExports.cpp">
+      <Filter>Dlls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\MC\MC_Client.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\MC\MC_Game.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\MC\MC_InterfaceFuncs.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\MC\gmMCBinds.cpp">
+      <Filter>Core\Scripting</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\Common\Common.rc">
+      <Filter>Dlls</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\MC\Jamfile" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\MC\MC_Client.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\MC\MC_Config.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\MC\MC_Game.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\MC\MC_InterfaceFuncs.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\MC\MC_Messages.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

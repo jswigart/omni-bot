@@ -23,7 +23,6 @@
 #include "InterfaceFuncs.h"
 
 #include "PathPlannerFloodFill.h"
-#include "PathPlannerNavmesh.h"
 #include "PathPlannerRecast.h"
 
 IEngineInterface *g_EngineFuncs = 0;
@@ -178,9 +177,6 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 	// Create the navigation system
 	switch ( mBotSystem.mGame->GetDefaultNavigator() )
 	{
-		case NAVID_NAVMESH:
-			mBotSystem.mNavigation = new PathPlannerNavMesh;
-			break;
 		case NAVID_FLOODFILL:
 			mBotSystem.mNavigation = new PathPlannerFloodFill;
 			break;
@@ -471,9 +467,8 @@ void IGameManager::cmdNavSystem( const StringVector &_args )
 	NavigatorID navId = NAVID_RECAST;
 	/*if(_args[1] == "waypoint")
 		navId = NAVID_WAYPOINT;
-		else*/ if ( _args[ 1 ] == "navmesh" )
-			navId = NAVID_NAVMESH;
-		else if ( _args[ 1 ] == "flood" )
+		else*/
+		if ( _args[ 1 ] == "flood" )
 			navId = NAVID_FLOODFILL;
 		else if ( _args[ 1 ] == "recast" )
 			navId = NAVID_RECAST;
@@ -493,9 +488,6 @@ void IGameManager::cmdNavSystem( const StringVector &_args )
 				/*case NAVID_WAYPOINT:
 				mBotSystem.mNavigation = new PathPlannerWaypoint;
 				break;*/
-				case NAVID_NAVMESH:
-					mBotSystem.mNavigation = new PathPlannerNavMesh;
-					break;
 				case NAVID_FLOODFILL:
 					mBotSystem.mNavigation = new PathPlannerFloodFill;
 					break;

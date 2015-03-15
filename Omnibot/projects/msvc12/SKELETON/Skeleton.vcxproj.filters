@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{900da45c-3b31-4f18-b09a-9c6535ac79b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dlls">
+      <UniqueIdentifier>{16845ff9-fc4b-478f-9eb8-41e0317c3378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Build">
+      <UniqueIdentifier>{1aad4a25-79bb-416e-a6b4-98b3aea01c7f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\SKELETON\Skeleton_Client.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\SKELETON\Skeleton_Game.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\common\BotExports.cpp">
+      <Filter>Dlls</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\SKELETON\Skeleton_Client.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SKELETON\Skeleton_Config.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\SKELETON\Skeleton_Game.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\Common\Common.rc">
+      <Filter>Dlls</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\SKELETON\Jamfile" />
+  </ItemGroup>
+</Project>

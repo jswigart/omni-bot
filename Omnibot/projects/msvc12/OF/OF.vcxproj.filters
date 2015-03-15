@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Dlls">
+      <UniqueIdentifier>{45cbf79b-aa1f-444d-a2ec-c620dcba3326}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{8ebe8a49-9758-4337-a55d-02ab5f50e1fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Filters">
+      <UniqueIdentifier>{4eea2450-1279-4c51-b95e-7f6d131b009e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\common\BotExports.cpp">
+      <Filter>Dlls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OF\OF_Client.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OF\OF_Game.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\OF\FilterClosestOF.cpp">
+      <Filter>Core\Filters</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\Common\Common.rc">
+      <Filter>Dlls</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\OF\OF_Client.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OF\OF_Config.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OF\OF_Game.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\OF\FilterClosestOF.h">
+      <Filter>Core\Filters</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\OF\Jamfile" />
+  </ItemGroup>
+</Project>
