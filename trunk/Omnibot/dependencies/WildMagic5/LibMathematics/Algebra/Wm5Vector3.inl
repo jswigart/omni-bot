@@ -727,6 +727,12 @@ Real Length(const Vector3<Real>& v1, const Vector3<Real>& v2)
 }
 //----------------------------------------------------------------------------
 template <class Real>
+Real Length2d(const Vector3<Real>& v1, const Vector3<Real>& v2)
+{
+	return (v1-v2).Length2d();
+}
+//----------------------------------------------------------------------------
+template <class Real>
 Real SquaredLength(const Vector3<Real>& v1, const Vector3<Real>& v2)
 {
 	return (v1-v2).SquaredLength();
