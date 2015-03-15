@@ -421,9 +421,9 @@ PathPlannerRecast::PathPlannerRecast()
 	mModels.reserve( 2048 );
 	//m_PlannerFlags.SetFlag( NAV_VIEW );
 
-	mCollisionWorld = new btCollisionWorld();
+	//mCollisionWorld = new btCollisionWorld();
 	//mCollisionWorld->setDebugDrawer();
-	mCollisionWorld->setBroadphase( new btDbvtBroadphase() );
+	//mCollisionWorld->setBroadphase( new btDbvtBroadphase() );
 }
 
 PathPlannerRecast::~PathPlannerRecast()
@@ -1312,6 +1312,9 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 			if ( model.mEntityCategory.CheckFlag( ENT_CAT_MOVER ) )
 				continue; // skip to process later as an open region
 #endif
+			if ( model.mEntityCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
+				continue; // skip to process later as an open region
+			
 
 			// everything else we can process as solid
 
@@ -1391,7 +1394,7 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 				continue;
 		}
 
-		if ( !model.mNonSolid )
+		if ( !model.mNonSolid && !model.mEntityCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
 			continue;
 
 		for ( size_t t = 0; t < model.mModel->GetNumTris(); ++t )
@@ -1412,6 +1415,8 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 				areaType = NAVAREA_REGION; // mark off triggers
 			if ( model.mEntityCategory.CheckFlag( ENT_CAT_MOVER ) )
 				areaType = NAVAREA_MOVER; // mark off movers
+			if ( model.mEntityCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
+				areaType = NAVAREA_PUSHABLE;
 
 			// only proceed with special areas
 			if ( areaType == NAVAREA_GROUND )
