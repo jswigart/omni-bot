@@ -1,2 +1,5 @@
 /Omnibot/projects/msvc12/ProtoBuffMessages/Debug/*.idb
 /Omnibot/projects/msvc12/ProtoBuffMessages/Debug/*.lastbuildstate
+/Omnibot/projects/msvc12/build
+/Omnibot/projects/msvc12/*.sdf
+/Omnibot/projects/msvc12/*.opensdf
