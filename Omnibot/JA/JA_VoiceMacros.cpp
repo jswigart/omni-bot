@@ -79,11 +79,11 @@ void JA_VoiceMacros::SendVoiceMacro(Client *_bot, int _msg)
 	if((_msg < VCHAT_TEAM_NUMMESSAGES) && (_msg > VCHAT_NONE))
 	{
 		sprintf(buffer, "vsay_team %s", strVoiceMacros[_msg]);
-		g_EngineFuncs->BotCommand(_bot->GetGameID(), buffer);
+		gEngineFuncs->BotCommand(_bot->GetGameID(), buffer);
 	}
 	/*else if((_msg < VCHAT_GLOBAL_NUMMESSAGES) && (_msg > VCHAT_TEAM_NUMMESSAGES))
 	{ // no global chatting for now
 	sprintf(buffer, "vsay %s", strVoiceMacros[_msg]);
-	g_EngineFuncs->BotCommand(_bot->GetGameID(), buffer);
+	gEngineFuncs->BotCommand(_bot->GetGameID(), buffer);
 	}*/
 }

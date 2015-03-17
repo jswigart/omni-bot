@@ -23,7 +23,9 @@ class HL2DM_Game : public IGame
 {
 public:
 	bool Init( System & system );
-	
+
+	void InitScriptBinds( gmMachine *_machine );
+
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
@@ -32,30 +34,41 @@ public:
 	const char *GetModSubFolder() const;
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const { return "hl2dm"; }
+	const char *GetGameDatabaseAbbrev() const
+	{
+		return "hl2dm";
+	}
 
-	virtual bool RendersToGame() const { return true; }
+	virtual bool RendersToGame() const
+	{
+		return true;
+	}
 
-	const char *FindClassName(obint32 _classId);
+	const char *FindClassName( obint32 _classId );
 
-	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
-	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
-	
-	HL2DM_Game() {};
-	virtual ~HL2DM_Game() {};
+	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
+	void GetWeaponEnumeration( const IntEnum *&_ptr, int &num );
+
+	HL2DM_Game()
+	{
+	};
+	virtual ~HL2DM_Game()
+	{
+	};
 protected:
 
-	void GetGameVars(GameVars &_gamevars);
+	void GetGameVars( GameVars &_gamevars );
 
 	// Script support.
-	void InitScriptClasses(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptEvents(gmMachine *_machine, gmTableObject *_table);
+	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptEvents( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptTraceMasks( gmMachine *_machine, gmTableObject *_table );
 
 	// Commands
 	void InitCommands();
 
-	static const float HL2DM_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags);
-	static const float HL2DM_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags);
+	static const float HL2DM_GetEntityClassTraceOffset( const int _class, const BitFlag64 &_entflags );
+	static const float HL2DM_GetEntityClassAimOffset( const int _class, const BitFlag64 &_entflags );
 };
 
 #endif

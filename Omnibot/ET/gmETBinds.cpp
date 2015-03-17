@@ -303,7 +303,7 @@ int gmfSayFireTeam(gmThread *a_thread)
 			}
 		}
 
-		g_EngineFuncs->BotCommand(native->GetGameID(), va("say_buddy \"%s\"", chatMsg));
+		gEngineFuncs->BotCommand(native->GetGameID(), va("say_buddy \"%s\"", chatMsg));
 		return GM_OK;
 	}
 

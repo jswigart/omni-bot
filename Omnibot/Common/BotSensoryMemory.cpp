@@ -231,7 +231,7 @@ namespace AiState
 			MemoryRecord *pRecord = GetMemoryRecord( _sourceent, true, false );
 			if ( pRecord )
 			{
-				pRecord->m_TargetInfo.m_EntityClass = g_EngineFuncs->GetEntityClass( _sourceent );
+				pRecord->m_TargetInfo.m_EntityClass = gEngineFuncs->GetEntityClass( _sourceent );
 				if ( !pRecord->m_TargetInfo.m_EntityClass )
 					return;
 

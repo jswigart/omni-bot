@@ -301,7 +301,7 @@ namespace AiState
 	obReal MobileMortar::GetPriority()
 	{
 		int curAmmo = 0, maxAmmo = 0;
-		g_EngineFuncs->GetCurrentAmmo(GetClient()->GetGameEntity(),ET_WP_MORTAR,Primary,curAmmo,maxAmmo);
+		gEngineFuncs->GetCurrentAmmo(GetClient()->GetGameEntity(),ET_WP_MORTAR,Primary,curAmmo,maxAmmo);
 		if(curAmmo <= 0)
 			return 0.f;
 
@@ -1526,7 +1526,7 @@ namespace AiState
 	//					{
 	//						AABB aabb, mapaabb;
 	//						EngineFuncs::EntityWorldAABB(m_MapGoal->GetEntity(), aabb);
-	//						//g_EngineFuncs->GetMapExtents(mapaabb);
+	//						//gEngineFuncs->GetMapExtents(mapaabb);
 
 	//						//m_TargetEntity->SetDeleteMe(true);
 	//						return State_Finished;
@@ -1716,7 +1716,7 @@ namespace AiState
 	//obReal Flamethrower::GetPriority()
 	//{
 	//	int curAmmo = 0, maxAmmo = 0;
-	//	g_EngineFuncs->GetCurrentAmmo(GetClient()->GetGameEntity(),ET_WP_FLAMETHROWER,Primary,curAmmo,maxAmmo);
+	//	gEngineFuncs->GetCurrentAmmo(GetClient()->GetGameEntity(),ET_WP_FLAMETHROWER,Primary,curAmmo,maxAmmo);
 	//	if(curAmmo <= 0)
 	//		return 0.f;
 
@@ -1864,7 +1864,7 @@ namespace AiState
 	//obReal Panzer::GetPriority()
 	//{
 	//	int curAmmo = 0, maxAmmo = 0;
-	//	g_EngineFuncs->GetCurrentAmmo(GetClient()->GetGameEntity(),ET_WP_PANZERFAUST,Primary,curAmmo,maxAmmo);
+	//	gEngineFuncs->GetCurrentAmmo(GetClient()->GetGameEntity(),ET_WP_PANZERFAUST,Primary,curAmmo,maxAmmo);
 	//	if(curAmmo <= 0)
 	//		return 0.f;
 

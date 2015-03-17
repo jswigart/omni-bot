@@ -86,7 +86,7 @@ void PathPlannerFloodFill::cmdNavSave(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	if(Save(g_EngineFuncs->GetMapName()))
+	if(Save(gEngineFuncs->GetMapName()))
 	{
 		EngineFuncs::ConsoleMessage("Saved Nav.");
 	}
@@ -99,7 +99,7 @@ void PathPlannerFloodFill::cmdNavLoad(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	if(Load(g_EngineFuncs->GetMapName()))
+	if(Load(gEngineFuncs->GetMapName()))
 	{
 		EngineFuncs::ConsoleMessage("Loaded Nav.");
 	}
@@ -169,7 +169,7 @@ void PathPlannerFloodFill::cmdAddFloodStart(const StringVector &_args)
 
 	
 	Vector3f vPosition;
-	if(SUCCESS(g_EngineFuncs->GetEntityPosition(Utils::GetLocalEntity(), vPosition)))
+	if(SUCCESS(gEngineFuncs->GetEntityPosition(Utils::GetLocalEntity(), vPosition)))
 	{
 		AddFloodStart( vPosition );
 	}
@@ -246,7 +246,7 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures(const StringVector &_args)
 
 	const int iMaxFeatures = 128;
 	AutoNavFeature features[iMaxFeatures];
-	int iNumFeatures = g_EngineFuncs->GetAutoNavFeatures(features, iMaxFeatures);
+	int iNumFeatures = gEngineFuncs->GetAutoNavFeatures(features, iMaxFeatures);
 	for(int i = 0; i < iNumFeatures; ++i)
 	{
 		Vector3f vPos(features[i].m_Position);
@@ -390,7 +390,7 @@ void PathPlannerFloodFill::cmdInfluenceMapSeed(const StringVector &_args)
 
 	enum { MaxFeatures = 64 };
 	AutoNavFeature features[ MaxFeatures ];
-	const int numFeatures = g_EngineFuncs->GetAutoNavFeatures( features, MaxFeatures );
+	const int numFeatures = gEngineFuncs->GetAutoNavFeatures( features, MaxFeatures );
 	for ( int i = 0; i < numFeatures; ++i )
 	{
 		mSpanFrontier.push( features[ i ].m_Position );
@@ -408,7 +408,7 @@ void PathPlannerFloodFill::cmdInfluenceMapMem(const StringVector &_args)
 
 void PathPlannerFloodFill::cmdInfluenceMapSave(const StringVector &_args)
 {
-	const std::string filePath	= std::string("nav/") + std::string(g_EngineFuncs->GetMapName()) + ".influence";
+	const std::string filePath	= std::string("nav/") + std::string(gEngineFuncs->GetMapName()) + ".influence";
 
 	std::string data;
 	if ( mSpanMap.Serialize( data ) )
@@ -423,7 +423,7 @@ void PathPlannerFloodFill::cmdInfluenceMapSave(const StringVector &_args)
 
 void PathPlannerFloodFill::cmdInfluenceMapLoad(const StringVector &_args)
 {
-	const std::string filePath	= std::string("nav/") + std::string(g_EngineFuncs->GetMapName()) + ".influence";
+	const std::string filePath	= std::string("nav/") + std::string(gEngineFuncs->GetMapName()) + ".influence";
 
 	mSpanMap.Clear();
 

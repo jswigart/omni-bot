@@ -94,7 +94,7 @@ static int GM_CDECL gmfEchoMessageToScreen( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 2 );
 	GM_CHECK_FLOAT_OR_INT_PARAM( duration, 0 );
 	GM_CHECK_STRING_PARAM( msg, 1 );
-	//g_EngineFuncs->PrintScreenText(NULL, duration, COLOR::WHITE, msg);
+	//gEngineFuncs->PrintScreenText(NULL, duration, COLOR::WHITE, msg);
 	RenderBuffer::AddString3d( Vector3f::ZERO, COLOR::WHITE, msg );
 	return GM_OK;
 }
@@ -766,7 +766,7 @@ static int gmfGetGameEntityFromId( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_INT_PARAM( Id, 0 );
 
-	GameEntity ent = g_EngineFuncs->EntityFromID( Id );
+	GameEntity ent = gEngineFuncs->EntityFromID( Id );
 
 	if ( ent.IsValid() )
 	{
@@ -801,7 +801,7 @@ static int gmfGetGameIdFromEntity( gmThread *a_thread )
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
 
-	GameId Id = g_EngineFuncs->IDFromEntity( gameEnt );
+	GameId Id = gEngineFuncs->IDFromEntity( gameEnt );
 	if ( Id != -1 )
 		a_thread->PushInt( Id );
 	else
@@ -840,7 +840,7 @@ static int gmfTraceLine( gmThread *a_thread )
 
 	GM_INT_PARAM( iUsePVS, 5, false );
 
-	const int iUser = gameEnt.IsValid() ? g_EngineFuncs->IDFromEntity( gameEnt ) : -1;
+	const int iUser = gameEnt.IsValid() ? gEngineFuncs->IDFromEntity( gameEnt ) : -1;
 
 	obTraceResult tr;
 	EngineFuncs::TraceLine( tr, Vector3f( sv.x, sv.y, sv.z ), Vector3f( ev.x, ev.y, ev.z ), bbox,
@@ -1135,7 +1135,7 @@ static int GM_CDECL gmfGetMapName( gmThread *a_thread )
 {
 	GM_CHECK_NUM_PARAMS( 0 );
 
-	const char *pMapName = g_EngineFuncs->GetMapName();
+	const char *pMapName = gEngineFuncs->GetMapName();
 	if ( pMapName )
 	{
 		a_thread->PushString( a_thread->GetMachine()->AllocStringObject( pMapName ) );
@@ -1164,7 +1164,7 @@ static int GM_CDECL gmfGetMapExtents( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 0 );
 	GM_GMBIND_PARAM( AABB*, gmAABB, aabb, 0, NULL );
 	AABB mapaabb;
-	g_EngineFuncs->GetMapExtents( mapaabb );
+	gEngineFuncs->GetMapExtents( mapaabb );
 	if ( aabb )
 		*aabb = mapaabb;
 	else
@@ -1187,7 +1187,7 @@ static int GM_CDECL gmfGetPointContents( gmThread *a_thread )
 {
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_VECTOR_PARAM( v, 0 );
-	a_thread->PushInt( g_EngineFuncs->GetPointContents( Vector3f( v.x, v.y, v.z ) ) );
+	a_thread->PushInt( gEngineFuncs->GetPointContents( Vector3f( v.x, v.y, v.z ) ) );
 	return GM_OK;
 }
 
@@ -1236,7 +1236,7 @@ static int gmfGetEntityName( gmThread *a_thread )
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
 
-	const char *pName = g_EngineFuncs->GetEntityName( gameEnt );
+	const char *pName = gEngineFuncs->GetEntityName( gameEnt );
 	if ( pName )
 		a_thread->PushNewString( pName );
 	else
@@ -1634,7 +1634,7 @@ static int gmfGetEntityOwner( gmThread *a_thread )
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
 
-	GameEntity owner = g_EngineFuncs->GetEntityOwner( gameEnt );
+	GameEntity owner = gEngineFuncs->GetEntityOwner( gameEnt );
 	if ( owner.IsValid() )
 		a_thread->PushEntity( owner.AsInt() );
 	else
@@ -1887,7 +1887,7 @@ static int gmfGetEntityInSphere( gmThread *a_thread )
 	GameEntity gameEnt;
 	GM_GAMEENTITY_FROM_PARAM( gameEnt, 3, GameEntity() );
 
-	GameEntity ent = g_EngineFuncs->FindEntityInSphere( Vector3f( v.x, v.y, v.z ), radius, gameEnt, classId );
+	GameEntity ent = gEngineFuncs->FindEntityInSphere( Vector3f( v.x, v.y, v.z ), radius, gameEnt, classId );
 	if ( ent.IsValid() )
 	{
 		gmVariable out;
@@ -1906,7 +1906,7 @@ static int gmfGetEntityByName( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_STRING_PARAM( entname, 0 );
 
-	GameEntity ent = g_EngineFuncs->EntityByName( entname );
+	GameEntity ent = gEngineFuncs->EntityByName( entname );
 	if ( ent.IsValid() )
 	{
 		gmVariable v;
@@ -1969,7 +1969,7 @@ static int gmfEntityIsValid( gmThread *a_thread )
 	bool valid = gameEnt.IsValid();
 
 	if ( valid && a_thread->ParamType( 0 ) == GM_ENTITY &&
-		g_EngineFuncs->IDFromEntity( gameEnt ) == -1 )
+		gEngineFuncs->IDFromEntity( gameEnt ) == -1 )
 		valid = false;
 
 	a_thread->PushInt( valid ? 1 : 0 );
@@ -2273,8 +2273,8 @@ static int GM_CDECL gmfExecCommandOnClient( gmThread *a_thread )
 	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
 	if ( gameEnt.IsValid() )
 	{
-		int iGameId = g_EngineFuncs->IDFromEntity( gameEnt );
-		g_EngineFuncs->BotCommand( iGameId, msg );
+		int iGameId = gEngineFuncs->IDFromEntity( gameEnt );
+		gEngineFuncs->BotCommand( iGameId, msg );
 	}
 	return GM_OK;
 }
@@ -2290,7 +2290,7 @@ static int GM_CDECL gmfExecCommandOnClient( gmThread *a_thread )
 static int GM_CDECL gmfGetGameName( gmThread *a_thread )
 {
 	GM_CHECK_NUM_PARAMS( 0 );
-	a_thread->PushNewString( g_EngineFuncs->GetGameName() );
+	a_thread->PushNewString( gEngineFuncs->GetGameName() );
 	return GM_OK;
 }
 
@@ -2305,7 +2305,7 @@ static int GM_CDECL gmfGetGameName( gmThread *a_thread )
 static int GM_CDECL gmfGetModName( gmThread *a_thread )
 {
 	GM_CHECK_NUM_PARAMS( 0 );
-	a_thread->PushNewString( g_EngineFuncs->GetModName() );
+	a_thread->PushNewString( gEngineFuncs->GetModName() );
 	return GM_OK;
 }
 
@@ -2320,7 +2320,7 @@ static int GM_CDECL gmfGetModName( gmThread *a_thread )
 static int GM_CDECL gmfGetModVersion( gmThread *a_thread )
 {
 	GM_CHECK_NUM_PARAMS( 0 );
-	a_thread->PushNewString( g_EngineFuncs->GetModVers() );
+	a_thread->PushNewString( gEngineFuncs->GetModVers() );
 	return GM_OK;
 }
 

@@ -465,7 +465,7 @@ fs::path FileSystem::GetBaseFolder()
 	fs::path basePath;
 
 	// First try to get a path from the game.
-	const char *pPathOverride = g_EngineFuncs->GetBotPath();
+	const char *pPathOverride = gEngineFuncs->GetBotPath();
 	try
 	{
 		fs::path pathOverride(pPathOverride, fs::native);

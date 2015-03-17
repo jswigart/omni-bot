@@ -504,7 +504,7 @@ void GoalManager::Init( System & system )
 
 void GoalManager::InitGameGoals()
 {
-	g_EngineFuncs->GetGoals();
+	gEngineFuncs->GetGoals();
 
 	// re-register goals from entities if we can
 	IGame::EntityIterator ent;
@@ -797,7 +797,7 @@ const char *MapGoalTable = "_MG";
 
 bool GoalManager::Save( const std::string &_map, ErrorObj &_err )
 {
-	const std::string filePath = std::string( "nav/" ) + std::string( g_EngineFuncs->GetMapName() ) + "_goals.gm";
+	const std::string filePath = std::string( "nav/" ) + std::string( gEngineFuncs->GetMapName() ) + "_goals.gm";
 
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 
@@ -972,14 +972,14 @@ bool GoalManager::Load( const std::string &_map, ErrorObj &_err )
 void GoalManager::cmdGoalSave( const StringVector &_args )
 {
 	ErrorObj err;
-	Save( g_EngineFuncs->GetMapName(), err );
+	Save( gEngineFuncs->GetMapName(), err );
 	err.PrintToConsole();
 }
 
 void GoalManager::cmdGoalLoad( const StringVector &_args )
 {
 	ErrorObj err;
-	Load( g_EngineFuncs->GetMapName(), err );
+	Load( gEngineFuncs->GetMapName(), err );
 	err.PrintToConsole();
 }
 

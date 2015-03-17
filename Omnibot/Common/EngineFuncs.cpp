@@ -39,7 +39,7 @@ namespace EngineFuncs
 		_tr.m_Endpos[0] = _end.X();
 		_tr.m_Endpos[1] = _end.Y();
 		_tr.m_Endpos[2] = _end.Z();
-		return SUCCESS(g_EngineFuncs->TraceLine(_tr, _start, _end, _aabb, _mask, _user, _usepvs));
+		return SUCCESS(gEngineFuncs->TraceLine(_tr, _start, _end, _aabb, _mask, _user, _usepvs));
 	}
 	std::string EntityName(const GameEntity _ent, const char *_default)
 	{
@@ -47,7 +47,7 @@ namespace EngineFuncs
 		{
 			Prof(EntityName);
 
-			const char *pName = g_EngineFuncs->GetEntityName(_ent);
+			const char *pName = gEngineFuncs->GetEntityName(_ent);
 			if(!_default) _default = "";
 			return pName ? pName : _default;
 		}
@@ -58,7 +58,7 @@ namespace EngineFuncs
 		{
 			Prof(EntityOwner);
 
-			return g_EngineFuncs->GetEntityOwner(_ent);
+			return gEngineFuncs->GetEntityOwner(_ent);
 		}
 	}
 	bool EntityPosition(const GameEntity _ent, Vector3f &_pos)
@@ -67,7 +67,7 @@ namespace EngineFuncs
 		{
 			Prof(EntityPosition);
 
-			return SUCCESS(g_EngineFuncs->GetEntityPosition(_ent, _pos));
+			return SUCCESS(gEngineFuncs->GetEntityPosition(_ent, _pos));
 		}
 	}
 	bool EntityEyePosition(const GameEntity _ent, Vector3f &_pos)
@@ -76,7 +76,7 @@ namespace EngineFuncs
 		{
 			Prof(EntityEyePosition);
 
-			return SUCCESS(g_EngineFuncs->GetEntityEyePosition(_ent, _pos));
+			return SUCCESS(gEngineFuncs->GetEntityEyePosition(_ent, _pos));
 		}
 	}
 	bool EntityBonePosition(const GameEntity _ent, int _boneid, Vector3f &_pos)
@@ -85,7 +85,7 @@ namespace EngineFuncs
 		{
 			Prof(EntityBonePosition);
 
-			return SUCCESS(g_EngineFuncs->GetEntityBonePosition(_ent, _boneid, _pos));
+			return SUCCESS(gEngineFuncs->GetEntityBonePosition(_ent, _boneid, _pos));
 		}
 	}
 	bool EntityOrientation(const GameEntity _ent, float _fwd[3], float _right[3], float _up[3])
@@ -94,13 +94,13 @@ namespace EngineFuncs
 		{
 			Prof(EntityOrientation);
 
-			return SUCCESS(g_EngineFuncs->GetEntityOrientation(_ent, _fwd, _right, _up));
+			return SUCCESS(gEngineFuncs->GetEntityOrientation(_ent, _fwd, _right, _up));
 		}
 	}
 	bool EntityOrientation(const GameEntity _ent, Matrix3f & mat)
 	{
 		Vector3f fwd, right, up;
-		if (SUCCESS(g_EngineFuncs->GetEntityOrientation(_ent, fwd, right, up)))
+		if (SUCCESS(gEngineFuncs->GetEntityOrientation(_ent, fwd, right, up)))
 		{
 			mat = Matrix3f(fwd, right, up, true);
 			return true;
@@ -113,7 +113,7 @@ namespace EngineFuncs
 		{
 			Prof(EntityVelocity);
 
-			return SUCCESS(g_EngineFuncs->GetEntityVelocity(_ent, _vel));
+			return SUCCESS(gEngineFuncs->GetEntityVelocity(_ent, _vel));
 		}
 	}
 	bool EntityLocalAABB(const GameEntity _ent, AABB &_bounds)
@@ -122,7 +122,7 @@ namespace EngineFuncs
 		{
 			Prof( EntityLocalAABB );
 
-			return SUCCESS(g_EngineFuncs->GetEntityLocalAABB(_ent, _bounds));
+			return SUCCESS(gEngineFuncs->GetEntityLocalAABB(_ent, _bounds));
 		}
 	}
 	bool EntityWorldOBB(const GameEntity _ent, Box3f &_bounds)
@@ -130,7 +130,7 @@ namespace EngineFuncs
 		//Prof_Scope(EngineFuncs);
 		{
 			Prof(EntityWorldOBB);
-			if(SUCCESS(g_EngineFuncs->GetEntityWorldOBB(_ent,
+			if(SUCCESS(gEngineFuncs->GetEntityWorldOBB(_ent,
 				_bounds.Center,
 				_bounds.Axis[0],
 				_bounds.Axis[1],
@@ -147,7 +147,7 @@ namespace EngineFuncs
 		{
 			Prof(EntityGroundEntity);
 
-			return SUCCESS(g_EngineFuncs->GetEntityGroundEntity(_ent, moveent));
+			return SUCCESS(gEngineFuncs->GetEntityGroundEntity(_ent, moveent));
 		}
 	}
 	bool IsInPvs(const Vector3f &_source,const Vector3f &_target)
@@ -156,7 +156,7 @@ namespace EngineFuncs
 		{
 			Prof(IsInPvs);
 
-			return g_EngineFuncs->IsInPVS(_source, _target)==True;
+			return gEngineFuncs->IsInPVS(_source, _target)==True;
 		}
 	}
 	bool GroundPosition(const Vector3f &_pos, Vector3f &_outPosition, Vector3f &_outNormal, float _offset)
@@ -188,10 +188,10 @@ namespace EngineFuncs
 		if ( gMessageMutex.try_lock() )
 		{
 			for ( size_t i = 0; i < gThreadErrors.size(); ++i )
-				g_EngineFuncs->PrintError( gThreadErrors[ i ].c_str() );
+				gEngineFuncs->PrintError( gThreadErrors[ i ].c_str() );
 
 			for ( size_t i = 0; i < gThreadMessages.size(); ++i )
-				g_EngineFuncs->PrintMessage( gThreadMessages[ i ].c_str() );
+				gEngineFuncs->PrintMessage( gThreadMessages[ i ].c_str() );
 
 			gThreadErrors.resize( 0 );
 			gThreadMessages.resize( 0 );
@@ -205,7 +205,7 @@ namespace EngineFuncs
 	void ConsoleMessage(const char* _msg)
 	{
 		if ( IGameManager::sMainThread == boost::this_thread::get_id() )
-			g_EngineFuncs->PrintMessage(_msg);
+			gEngineFuncs->PrintMessage(_msg);
 		else
 		{
 			boost::lock_guard<boost::mutex> lk( gMessageMutex );
@@ -216,7 +216,7 @@ namespace EngineFuncs
 	void ConsoleError(const char* _msg)
 	{		
 		if ( IGameManager::sMainThread == boost::this_thread::get_id() )
-			g_EngineFuncs->PrintError( _msg );
+			gEngineFuncs->PrintError( _msg );
 		else
 		{
 			boost::lock_guard<boost::mutex> lk( gMessageMutex );

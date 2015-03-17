@@ -300,12 +300,12 @@ namespace Utils
 
 	int GetLocalGameId()
 	{
-		return g_EngineFuncs->IDFromEntity( GetLocalEntity() );
+		return gEngineFuncs->IDFromEntity( GetLocalEntity() );
 	}
 
 	GameEntity GetLocalEntity()
 	{
-		return g_EngineFuncs->GetLocalGameEntity();
+		return gEngineFuncs->GetLocalGameEntity();
 	}
 
 	bool GetLocalPosition( Vector3f &_pos )

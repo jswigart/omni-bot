@@ -11,7 +11,7 @@
 
 obResult InterfaceMsg(const MessageHelper &_data, const GameEntity _ent)
 {
-	obResult res = g_EngineFuncs->InterfaceSendMessage(_data, _ent);
+	obResult res = gEngineFuncs->InterfaceSendMessage(_data, _ent);
 	OBASSERT(res != UnknownMessageType, "Unknown Interface Message: %d", _data.GetMessageId());
 	return res;
 }
@@ -22,13 +22,13 @@ namespace InterfaceFuncs
 	{
 		OBASSERT(_addbot.m_Name[0], "Invalid Name!");
 		MessageHelper msg(GEN_MSG_ADDBOT, &_addbot, sizeof(_addbot));
-		return g_EngineFuncs->AddBot(msg);
+		return gEngineFuncs->AddBot(msg);
 	}
 
 	void Kickbot(Msg_Kickbot &_kickbot)
 	{
 		MessageHelper msg(GEN_MSG_KICKBOT, &_kickbot, sizeof(_kickbot));
-		g_EngineFuncs->RemoveBot(msg);
+		gEngineFuncs->RemoveBot(msg);
 	}
 
 	bool IsAlive(const GameEntity _ent)
@@ -74,27 +74,27 @@ namespace InterfaceFuncs
 
 	int GetEntityTeam(const GameEntity _ent)
 	{
-		return g_EngineFuncs->GetEntityTeam(_ent);
+		return gEngineFuncs->GetEntityTeam(_ent);
 	}
 
 	int GetEntityClass(const GameEntity _ent)
 	{
-		return g_EngineFuncs->GetEntityClass(_ent);
+		return gEngineFuncs->GetEntityClass(_ent);
 	}
 
 	bool GetEntityCategory(const GameEntity _ent, BitFlag32 &_category)
 	{
-		return SUCCESS(g_EngineFuncs->GetEntityCategory(_ent, _category));
+		return SUCCESS(gEngineFuncs->GetEntityCategory(_ent, _category));
 	}
 
 	bool GetEntityFlags(const GameEntity _ent, BitFlag64 &_flags)
 	{
-		return SUCCESS(g_EngineFuncs->GetEntityFlags(_ent, _flags));
+		return SUCCESS(gEngineFuncs->GetEntityFlags(_ent, _flags));
 	}
 
 	bool GetEntityPowerUps(const GameEntity _ent, BitFlag64 &_powerups)
 	{
-		return SUCCESS(g_EngineFuncs->GetEntityPowerups(_ent, _powerups));
+		return SUCCESS(gEngineFuncs->GetEntityPowerups(_ent, _powerups));
 	}
 
 	WeaponStatus GetEquippedWeapon(const GameEntity _ent)

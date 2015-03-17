@@ -65,7 +65,7 @@ void PathPlannerRecast::cmdNavLoad( const StringVector &_args )
 	if ( !m_PlannerFlags.CheckFlag( NAV_VIEW ) )
 		return;
 
-	if ( Load( g_EngineFuncs->GetMapName() ) )
+	if ( Load( gEngineFuncs->GetMapName() ) )
 	{
 		EngineFuncs::ConsoleMessage( "Loaded Nav." );
 	}
@@ -275,7 +275,7 @@ void PathPlannerRecast::cmdAutoBuildFeatures( const StringVector &_args )
 
 	const int iMaxFeatures = 128;
 	AutoNavFeature features[ iMaxFeatures ];
-	int iNumFeatures = g_EngineFuncs->GetAutoNavFeatures( features, iMaxFeatures );
+	int iNumFeatures = gEngineFuncs->GetAutoNavFeatures( features, iMaxFeatures );
 	for ( int i = 0; i < iNumFeatures; ++i )
 	{
 		const float fTime = 30.f;
@@ -381,11 +381,11 @@ void PathPlannerRecast::cmdSaveToObjFile( const StringVector &_args )
 		matFile.OpenForWrite( matfilename.c_str(), File::Text, false ) )
 	{
 		// material
-		matFile.WriteString( va( "# Materials Navmesh - %s\n\n", g_EngineFuncs->GetMapName() ).c_str() );
+		matFile.WriteString( va( "# Materials Navmesh - %s\n\n", gEngineFuncs->GetMapName() ).c_str() );
 		matFile.WriteString( "Kd 0.000 1.000 0.000     # green" );
 
 		// Mesh
-		objFile.WriteString( va( "# Navmesh - %s\n\n", g_EngineFuncs->GetMapName() ).c_str() );
+		objFile.WriteString( va( "# Navmesh - %s\n\n", gEngineFuncs->GetMapName() ).c_str() );
 		objFile.WriteString( va( "mltlib %s\n", matfilename.c_str() ).c_str() );
 		objFile.WriteString( va( "# Vertices %d\n", triangles.size() * 3 ).c_str() );
 		

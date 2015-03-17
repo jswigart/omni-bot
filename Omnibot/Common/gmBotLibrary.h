@@ -20,7 +20,7 @@ class gmMachine;
 } \
 	else if(a_thread->ParamType(paramnum) == GM_INT) \
 { \
-	ent = g_EngineFuncs->EntityFromID(a_thread->Param(paramnum).m_value.m_int); \
+	ent = gEngineFuncs->EntityFromID(a_thread->Param(paramnum).m_value.m_int); \
 } \
 	else \
 { \
@@ -35,7 +35,7 @@ class gmMachine;
 } \
 	else if(a_thread->ParamType(paramnum) == GM_INT) \
 { \
-	ent = g_EngineFuncs->EntityFromID(a_thread->Param(paramnum).m_value.m_int); \
+	ent = gEngineFuncs->EntityFromID(a_thread->Param(paramnum).m_value.m_int); \
 } \
 	else \
 { \

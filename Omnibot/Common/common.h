@@ -123,7 +123,7 @@ using namespace Wm5;
 
 // global: g_EngineFuncs is a bot-wide global so that game functionality
 //		can be used from anywhere
-extern IEngineInterface *g_EngineFuncs;
+extern IEngineInterface *gEngineFuncs;
 
 #ifdef Prof_ENABLED
 typedef ProfileZones<> CustomProfilerZone;

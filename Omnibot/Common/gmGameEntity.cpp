@@ -25,7 +25,7 @@ static int gmEntityOpEQ2(gmThread * a_thread, gmVariable * a_operands)
 			{
 				GameEntity ent0;
 				ent0.FromInt(a_operands[0].m_value.m_enthndl);
-				GameEntity ent1 = g_EngineFuncs->EntityFromID(a_operands[1].m_value.m_int);
+				GameEntity ent1 = gEngineFuncs->EntityFromID(a_operands[1].m_value.m_int);
 				a_operands[0].SetInt(ent0 == ent1 ? 1 : 0);
 				return GM_OK;
 			}
@@ -42,7 +42,7 @@ static int gmEntityOpEQ2(gmThread * a_thread, gmVariable * a_operands)
 		{
 		case GM_INT:
 			{
-				GameEntity ent0 = g_EngineFuncs->EntityFromID(a_operands[0].m_value.m_int);
+				GameEntity ent0 = gEngineFuncs->EntityFromID(a_operands[0].m_value.m_int);
 				GameEntity ent1;
 				ent1.FromInt(a_operands[1].m_value.m_enthndl);
 				a_operands[0].SetInt(ent0 == ent1 ? 1 : 0);
@@ -74,7 +74,7 @@ static int gmEntityOpNEQ2(gmThread * a_thread, gmVariable * a_operands)
 			{
 				GameEntity ent0;
 				ent0.FromInt(a_operands[0].m_value.m_enthndl);
-				GameEntity ent1 = g_EngineFuncs->EntityFromID(a_operands[1].m_value.m_int);
+				GameEntity ent1 = gEngineFuncs->EntityFromID(a_operands[1].m_value.m_int);
 				a_operands[0].SetInt(ent0 != ent1 ? 1 : 0);
 				return GM_OK;
 			}
@@ -91,7 +91,7 @@ static int gmEntityOpNEQ2(gmThread * a_thread, gmVariable * a_operands)
 		{
 		case GM_INT:
 			{
-				GameEntity ent0 = g_EngineFuncs->EntityFromID(a_operands[0].m_value.m_int);
+				GameEntity ent0 = gEngineFuncs->EntityFromID(a_operands[0].m_value.m_int);
 				GameEntity ent1;
 				ent1.FromInt(a_operands[1].m_value.m_enthndl);
 				a_operands[0].SetInt(ent0 != ent1 ? 1 : 0);

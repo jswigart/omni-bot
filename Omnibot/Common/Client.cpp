@@ -120,8 +120,8 @@ void Client::Update()
 	InterfaceFuncs::GetHealthAndArmor( GetGameEntity(), m_HealthArmor );
 	m_EntityFlags.ClearAll();
 	m_EntityPowerUps.ClearAll();
-	g_EngineFuncs->GetEntityFlags( m_GameEntity, m_EntityFlags );
-	g_EngineFuncs->GetEntityPowerups( m_GameEntity, m_EntityPowerUps );
+	gEngineFuncs->GetEntityFlags( m_GameEntity, m_EntityFlags );
+	gEngineFuncs->GetEntityPowerups( m_GameEntity, m_EntityPowerUps );
 
 	if ( CheckUserFlag( Client::FL_DISABLED ) )
 	{
@@ -206,12 +206,12 @@ void Client::Update()
 
 void Client::UpdateBotInput()
 {
-	g_EngineFuncs->UpdateBotInput( m_GameID, m_ClientInput );
+	gEngineFuncs->UpdateBotInput( m_GameID, m_ClientInput );
 }
 
 const char *Client::GetName( bool _clean ) const
 {
-	return g_EngineFuncs->GetEntityName( GetGameEntity() );
+	return gEngineFuncs->GetEntityName( GetGameEntity() );
 }
 
 Vector3f Client::GetEyePosition()
@@ -351,7 +351,7 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 					strOutString << "No Target" << std::endl;
 
 				GetWeaponSystem()->GetSpectateMessage( strOutString );
-				//g_EngineFuncs->PrintScreenText(NULL,
+				//gEngineFuncs->PrintScreenText(NULL,
 				//	IGame::GetDeltaTimeSecs()*2.f, COLOR::WHITE, strOutString.str().c_str());
 				RenderBuffer::AddString2d( Vector2f( 0.5f, 0.5f ), COLOR::WHITE, strOutString.str().c_str() );
 			}
@@ -577,12 +577,12 @@ void Client::Init( int _gameid )
 {
 	// Set the game id, which is the index into the m_Clients array.
 	m_GameID = _gameid;
-	m_GameEntity = g_EngineFuncs->EntityFromID( m_GameID );
+	m_GameEntity = gEngineFuncs->EntityFromID( m_GameID );
 
 	//m_SoundSubscriber = g_SoundDepot.Subscribe("Client");
 
 	// mark name as taken
-	if ( const char *pName = g_EngineFuncs->GetEntityName( GetGameEntity() ) )
+	if ( const char *pName = gEngineFuncs->GetEntityName( GetGameEntity() ) )
 		m_NameReference = NameManager::GetInstance()->GetName( pName );
 
 	// Only create these if they aren't already defined,
@@ -876,13 +876,13 @@ bool Client::DistributeUnhandledCommand( const StringVector &_args )
 void Client::ChangeTeam( int _team )
 {
 	// needs testing
-	g_EngineFuncs->ChangeTeam( GetGameID(), _team, NULL );
+	gEngineFuncs->ChangeTeam( GetGameID(), _team, NULL );
 }
 
 void Client::ChangeClass( int _class )
 {
 	// needs testing
-	g_EngineFuncs->ChangeClass( GetGameID(), _class, NULL );
+	gEngineFuncs->ChangeClass( GetGameID(), _class, NULL );
 }
 
 Vector3f Client::ToLocalSpace( const Vector3f &_worldpos )
@@ -910,13 +910,13 @@ void Client::GameCommand( const char* _msg, ... )
 	vsnprintf(buffer, iBufferSize, _msg, list);
 #endif
 	va_end( list );
-	g_EngineFuncs->BotCommand( GetGameID(), buffer );
+	gEngineFuncs->BotCommand( GetGameID(), buffer );
 }
 
 void Client::CheckTeamEvent()
 {
 	// Check our team.
-	int iCurrentTeam = g_EngineFuncs->GetEntityTeam( GetGameEntity() );
+	int iCurrentTeam = gEngineFuncs->GetEntityTeam( GetGameEntity() );
 	if ( iCurrentTeam != m_Team )
 	{
 		// Update our team.
@@ -930,7 +930,7 @@ void Client::CheckTeamEvent()
 
 void Client::CheckClassEvent()
 {
-	int iCurrentClass = g_EngineFuncs->GetEntityClass( GetGameEntity() );
+	int iCurrentClass = gEngineFuncs->GetEntityClass( GetGameEntity() );
 	if ( iCurrentClass != m_Class )
 	{
 		m_Class = iCurrentClass;

@@ -298,8 +298,8 @@ void JA_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 		// Magik: As there's no instant team/class switching in JA, this is order dependent
 		// always call pfnChangeClass() _before_ pfnChangeTeam()!
 		// todo: send the weapon preferences as 3rd param
-		g_EngineFuncs->ChangeClass(iGameID, cp->m_DesiredClass, NULL);
-		g_EngineFuncs->ChangeTeam(iGameID, cp->m_DesiredTeam, NULL);
+		gEngineFuncs->ChangeClass(iGameID, cp->m_DesiredClass, NULL);
+		gEngineFuncs->ChangeTeam(iGameID, cp->m_DesiredTeam, NULL);
 
 		cp->CheckTeamEvent();
 		cp->CheckClassEvent();
@@ -437,8 +437,8 @@ void JA_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 			cp->m_DesiredTeam = _msg->m_DesiredTeam;
 			cp->m_DesiredClass = _msg->m_DesiredClass;
 
-			g_EngineFuncs->ChangeClass(_msg->m_GameId, cp->m_DesiredClass, NULL);
-			g_EngineFuncs->ChangeTeam(_msg->m_GameId, cp->m_DesiredTeam, NULL);
+			gEngineFuncs->ChangeClass(_msg->m_GameId, cp->m_DesiredClass, NULL);
+			gEngineFuncs->ChangeTeam(_msg->m_GameId, cp->m_DesiredTeam, NULL);
 
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();

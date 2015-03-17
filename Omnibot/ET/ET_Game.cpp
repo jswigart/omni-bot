@@ -101,7 +101,7 @@ const char *ET_Game::IsDebugDrawSupported() const
 {
 	if(InterfaceFuncs::GetCvar("dedicated")!=0)
 		return "Can't draw waypoints on dedicated server.";
-	if(strcmp(g_EngineFuncs->GetModName(), "etmain"))
+	if(strcmp(gEngineFuncs->GetModName(), "etmain"))
 		return "Only omnibot mod can draw waypoints.";
 	bool EnableIpc = false;
 	Options::GetValue("Debug Render","EnableInterProcess",EnableIpc);
@@ -114,7 +114,7 @@ const char *ET_Game::IsDebugDrawSupported() const
 
 bool ET_Game::Init( System & system )
 {
-	const char *modName = g_EngineFuncs->GetModName();
+	const char *modName = gEngineFuncs->GetModName();
 	IsETBlight = !strcmp(modName, "etblight");
 	IsBastardmod = !strcmp(modName, "bastardmod");
 	CLASSEXoffset = IsETBlight ? 2 : 0;
@@ -473,8 +473,8 @@ void ET_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 		// Magik: As there's no instant team/class switching in ET, this is order dependent
 		// always call pfnChangeClass() _before_ pfnChangeTeam()!
 		// todo: send the weapon preferences as 3rd param
-		g_EngineFuncs->ChangeTeam(iGameID, cp->m_DesiredTeam, NULL);
-		g_EngineFuncs->ChangeClass(iGameID, cp->m_DesiredClass, NULL);
+		gEngineFuncs->ChangeTeam(iGameID, cp->m_DesiredTeam, NULL);
+		gEngineFuncs->ChangeClass(iGameID, cp->m_DesiredClass, NULL);
 
 		cp->CheckTeamEvent();
 		cp->CheckClassEvent();
@@ -646,8 +646,8 @@ void ET_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 			cp->m_DesiredTeam = _msg->m_DesiredTeam;
 			cp->m_DesiredClass = _msg->m_DesiredClass;
 
-			g_EngineFuncs->ChangeClass(_msg->m_GameId, cp->m_DesiredClass, NULL);
-			g_EngineFuncs->ChangeTeam(_msg->m_GameId, cp->m_DesiredTeam, NULL);
+			gEngineFuncs->ChangeClass(_msg->m_GameId, cp->m_DesiredClass, NULL);
+			gEngineFuncs->ChangeTeam(_msg->m_GameId, cp->m_DesiredTeam, NULL);
 
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();

@@ -267,7 +267,7 @@ bool PathPlannerFloodFill::Load(const std::string &_mapname, bool _dl)
 
 	// Initialize a map that can contain the entire level
 	AABB mapbounds;
-	g_EngineFuncs->GetMapExtents( mapbounds );
+	gEngineFuncs->GetMapExtents( mapbounds );
 
 	VectorQueue empty;
 	mSpanFrontier.swap( empty );
@@ -287,7 +287,7 @@ bool PathPlannerFloodFill::Load(const std::string &_mapname, bool _dl)
 	std::vector< AutoNavFeature > features;
 	features.resize( 4096 );
 
-	const int numFeatures = g_EngineFuncs->GetAutoNavFeatures( &features[ 0 ], features.size() );
+	const int numFeatures = gEngineFuncs->GetAutoNavFeatures( &features[ 0 ], features.size() );
 	for ( int i = 0; i < numFeatures; ++i )
 	{
 		mSpanFrontier.push( features[ i ].m_Position );
@@ -463,7 +463,7 @@ void PathPlannerFloodFill::ClearFloodStarts()
 
 void PathPlannerFloodFill::SaveFloodStarts()
 {
-	std::string strMap = g_EngineFuncs->GetMapName();
+	std::string strMap = gEngineFuncs->GetMapName();
 	strMap += ".navstarts";
 
 	char strBuffer[1024] = {};
@@ -490,7 +490,7 @@ void PathPlannerFloodFill::SaveFloodStarts()
 
 void PathPlannerFloodFill::LoadFloodStarts()
 {
-	std::string strMap = g_EngineFuncs->GetMapName();
+	std::string strMap = gEngineFuncs->GetMapName();
 	strMap += ".navstarts";
 
 	char strBuffer[1024] = {};

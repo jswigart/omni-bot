@@ -162,6 +162,12 @@ void HL2DM_Game::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
 	IGame::InitScriptEvents( _machine, _table );
 }
 
+void HL2DM_Game::InitScriptTraceMasks( gmMachine *_machine, gmTableObject *_table )
+{
+	IGame::InitScriptTraceMasks( _machine, _table );
+	_table->Set( _machine, "PHYSGUN", gmVariable( HL2DM_TR_MASK_PHYSGUN ) );
+}
+
 void HL2DM_Game::InitCommands()
 {
 	IGame::InitCommands();

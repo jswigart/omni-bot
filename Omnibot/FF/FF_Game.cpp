@@ -180,7 +180,7 @@ ClientPtr &FF_Game::GetClientFromCorrectedGameId( int _gameid )
 //			m_ClientList[iGameID-1]->m_DesiredClass = vclass.IsInt() ? vclass.GetInt() : -1;
 //		}
 //		//////////////////////////////////////////////////////////////////////////
-//		g_EngineFuncs->ChangeTeam(iGameID, m_ClientList[iGameID-1]->m_DesiredTeam, NULL);
-//		g_EngineFuncs->ChangeClass(iGameID, m_ClientList[iGameID-1]->m_DesiredClass, NULL);
+//		gEngineFuncs->ChangeTeam(iGameID, m_ClientList[iGameID-1]->m_DesiredTeam, NULL);
+//		gEngineFuncs->ChangeClass(iGameID, m_ClientList[iGameID-1]->m_DesiredClass, NULL);
 //	}
 //}

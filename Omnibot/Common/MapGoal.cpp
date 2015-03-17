@@ -224,7 +224,7 @@ bool MapGoal::LoadFromFile( const filePath & _file )
 
 void MapGoal::GenerateName( int _instance, bool _skipdupecheck )
 {
-	obint32 iNavId = g_EngineFuncs->IDFromEntity( GetEntity() );
+	obint32 iNavId = gEngineFuncs->IDFromEntity( GetEntity() );
 	if ( m_TagName.empty() )
 	{
 		System::mInstance->mNavigation->GetNavInfo( GetPosition(), iNavId, m_TagName );

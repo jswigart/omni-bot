@@ -28,7 +28,7 @@ namespace InterfaceFuncs
 	{
 		Q4_PlayerCash data = { 0.0f };
 		MessageHelper msg(Q4_MSG_GETPLAYERCASH, &data, sizeof(data));
-		g_EngineFuncs->InterfaceSendMessage(msg, _player);
+		gEngineFuncs->InterfaceSendMessage(msg, _player);
 		return data.m_Cash;
 	}
 

@@ -85,7 +85,7 @@ namespace AiState
 	bool SentryBuild::HasEnoughAmmo( int _ammotype, int _ammorequired )
 	{
 		int iAmmo = 0, iMaxAmmo = 0;
-		g_EngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), _ammotype, Primary, iAmmo, iMaxAmmo );
+		gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), _ammotype, Primary, iAmmo, iMaxAmmo );
 		if ( iAmmo < _ammorequired )
 		{
 			return false;
@@ -371,8 +371,8 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		int iShells = 0, iShellsMax = 0;
 		int iSpanner = 0, iSpannerMax = 0;
-		g_EngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_WP_SHOTGUN, Primary, iShells, iShellsMax );
-		g_EngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_WP_SPANNER, Primary, iSpanner, iSpannerMax );
+		gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_WP_SHOTGUN, Primary, iShells, iShellsMax );
+		gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_WP_SPANNER, Primary, iSpanner, iSpannerMax );
 		if ( iSpanner == 0 || iShells == 0 )
 		{
 			m_NeedAmmoAmount = 200;
@@ -756,7 +756,7 @@ namespace AiState
 			FINDSTATE( sg, Sentry, GetParent() );
 
 			int iAmmo = 0, iMaxAmmo = 0;
-			g_EngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_Options::BUILD_AMMO_TYPE, Primary, iAmmo, iMaxAmmo );
+			gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_Options::BUILD_AMMO_TYPE, Primary, iAmmo, iMaxAmmo );
 
 			MemoryRecords rcs;
 			FilterAllType filter( GetClient(), AiState::SensoryMemory::EntAny, rcs );
@@ -823,7 +823,7 @@ namespace AiState
 			return State_Finished;
 
 		int iAmmo = 0, iMaxAmmo = 0;
-		g_EngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_Options::BUILD_AMMO_TYPE, Primary, iAmmo, iMaxAmmo );
+		gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_Options::BUILD_AMMO_TYPE, Primary, iAmmo, iMaxAmmo );
 
 		switch ( m_State )
 		{
@@ -1001,7 +1001,7 @@ namespace AiState
 			m_NextAmmoCheck = IGame::GetTime() + 1000;
 
 			int iAmmo = 0, iMaxAmmo = 0;
-			g_EngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_Options::BUILD_AMMO_TYPE, Primary, iAmmo, iMaxAmmo );
+			gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_Options::BUILD_AMMO_TYPE, Primary, iAmmo, iMaxAmmo );
 			if ( m_State == DISP_GETTING_AMMO && iAmmo >= TF_Options::DISPENSER_BUILD_AMMO )
 				return State_Finished;
 			if ( m_State != DISP_GETTING_AMMO && iAmmo < TF_Options::DISPENSER_BUILD_AMMO )
@@ -1415,7 +1415,7 @@ namespace AiState
 				return 0.f;
 
 			int iDetpacks = 0, iMaxDetpacks = 0;
-			g_EngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_WP_DETPACK, Primary, iDetpacks, iMaxDetpacks );
+			gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_WP_DETPACK, Primary, iDetpacks, iMaxDetpacks );
 			if ( iDetpacks == 0 )
 				return 0.f;
 
@@ -2031,7 +2031,7 @@ namespace AiState
 	bool PipeTrap::ShouldGoForAmmo()
 	{
 		int iPipes = 0, iMaxPipes = 0;
-		g_EngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_Options::PIPE_AMMO, Primary, iPipes, iMaxPipes );
+		gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_Options::PIPE_AMMO, Primary, iPipes, iMaxPipes );
 		return iPipes == 0;
 	}
 	//////////////////////////////////////////////////////////////////////////
@@ -2375,8 +2375,8 @@ namespace AiState
 	}
 	void ThrowGrenade::_UpdateAmmo()
 	{
-		g_EngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_WP_GRENADE1, Primary, m_Gren1Ammo, m_Gren1AmmoMax );
-		g_EngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_WP_GRENADE2, Primary, m_Gren2Ammo, m_Gren2AmmoMax );
+		gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_WP_GRENADE1, Primary, m_Gren1Ammo, m_Gren1AmmoMax );
+		gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_WP_GRENADE2, Primary, m_Gren2Ammo, m_Gren2AmmoMax );
 	}
 	void ThrowGrenade::_UpdateGrenadeTypes()
 	{
@@ -2768,7 +2768,7 @@ namespace AiState
 			m_NextAmmoCheck = IGame::GetTime() + 1000;
 
 			int iAmmo = 0, iMaxAmmo = 0;
-			g_EngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_Options::BUILD_AMMO_TYPE, Primary, iAmmo, iMaxAmmo );
+			gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_Options::BUILD_AMMO_TYPE, Primary, iAmmo, iMaxAmmo );
 			if ( m_State == GETTING_AMMO && iAmmo >= TF_Options::TELEPORT_BUILD_AMMO )
 				return State_Finished;
 			if ( m_State != GETTING_AMMO && iAmmo < TF_Options::TELEPORT_BUILD_AMMO )

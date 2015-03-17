@@ -376,11 +376,11 @@ namespace RenderBuffer
 	}
 	void AddAABB( const AABB &_aabb, const obColor &_color, AABB::Direction _dir/* = AABB::DIR_ALL*/ )
 	{
-		//if(g_EngineFuncs->DebugBox(Vector3f::ZERO,Vector3f::ZERO,COLOR::WHITE,0.f))
+		//if(gEngineFuncs->DebugBox(Vector3f::ZERO,Vector3f::ZERO,COLOR::WHITE,0.f))
 		//{
 		//	if(_dir == AABB::DIR_ALL)
 		//	{
-		//		g_EngineFuncs->DebugBox(_aabb.m_Mins,_aabb.m_Maxs,_color,DEFAULT_TIME);
+		//		gEngineFuncs->DebugBox(_aabb.m_Mins,_aabb.m_Maxs,_color,DEFAULT_TIME);
 		//		return;
 		//	}
 
@@ -1062,7 +1062,7 @@ namespace RenderBuffer
 			if ( ( prim.v[ 0 ] - vEyePos ).SquaredLength() > cullDistSq )
 				continue;
 
-			g_EngineFuncs->DebugLine(
+			gEngineFuncs->DebugLine(
 				prim.v[ 0 ],
 				prim.v[ 0 ] + Vector3f( 0.0f, 0.0f, prim.pointSize ),
 				prim.c,
@@ -1077,7 +1077,7 @@ namespace RenderBuffer
 			if ( dist.GetSquared() > cullDistSq )
 				continue;
 
-			g_EngineFuncs->DebugLine(
+			gEngineFuncs->DebugLine(
 				prim.v[ 0 ],
 				prim.v[ 1 ],
 				prim.c,
@@ -1095,14 +1095,14 @@ namespace RenderBuffer
 			static bool noDepth = false;
 			const int renderFlags = noDepth ? IEngineInterface::DR_NODEPTHTEST : 0;
 
-			g_EngineFuncs->DebugPolygon( (const obVec3 *)prim.v, 3, prim.c, DEFAULT_TIME, renderFlags );
+			gEngineFuncs->DebugPolygon( (const obVec3 *)prim.v, 3, prim.c, DEFAULT_TIME, renderFlags );
 			++renderedTris;
 		}
 
 		for ( size_t i = 0; i < mCircleList.size(); ++i )
 		{
 			const Circle & prim = mCircleList[ i ];
-			g_EngineFuncs->DebugRadius( prim.v, prim.radius, prim.c, DEFAULT_TIME );
+			gEngineFuncs->DebugRadius( prim.v, prim.radius, prim.c, DEFAULT_TIME );
 		}
 
 		for ( size_t i = 0; i < mStringList3d.size(); ++i )
@@ -1112,7 +1112,7 @@ namespace RenderBuffer
 			if ( ( vEyePos - prim.v ).Length() > TEXT_DIST )
 				continue;
 
-			g_EngineFuncs->PrintScreenText( prim.v, DEFAULT_TIME, prim.c, prim.str.c_str() );
+			gEngineFuncs->PrintScreenText( prim.v, DEFAULT_TIME, prim.c, prim.str.c_str() );
 		}
 	}
 };

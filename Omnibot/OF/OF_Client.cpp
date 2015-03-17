@@ -99,7 +99,7 @@ void OF_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 //	if(_flag & F_TF_NAV_CONCJUMP)
 //	{
 //		int iCls = GetClass(), iGren2s = 0, iGren2sMax = 0;
-//		g_EngineFuncs->GetCurrentAmmo(GetGameEntity(), TF_WP_GRENADE2, Primary, iGren2s, iGren2sMax);
+//		gEngineFuncs->GetCurrentAmmo(GetGameEntity(), TF_WP_GRENADE2, Primary, iGren2s, iGren2sMax);
 //		if((iCls == TF_CLASS_SCOUT || iCls == TF_CLASS_MEDIC) && iGren2s)
 //			return 1.f;
 //	}

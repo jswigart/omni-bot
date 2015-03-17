@@ -206,7 +206,6 @@ public:
 		ConvertBotToGame,
 		ConvertGameToBot,
 	};
-	
 
 	// Function: AddBot
 	//		This function should add a bot to the game with the name specified,
@@ -444,101 +443,5 @@ public:
 	IEngineInterface() {}
 	virtual ~IEngineInterface() {}
 };
-
-//class SkeletonInterface : public IEngineInterface
-//{
-//public:
-//	virtual int AddBot(const MessageHelper &_data) = 0;
-//
-//	virtual int RemoveBot(const char *_name) = 0;
-//
-//	virtual obResult ChangeTeam(int _client, int _newteam, const MessageHelper *_data) = 0;
-//
-//	virtual obResult ChangeClass(int _client, int _newclass, const MessageHelper *_data) = 0;
-//
-//	virtual void UpdateBotInput(int _client, const ClientInput &_input) = 0;
-//
-//	virtual void BotCommand(int _client, const char *_cmd) = 0;
-//
-//	virtual obBool IsInPVS(const float _pos[3], const float _target[3]) = 0;
-//
-//	virtual obResult TraceLine(obTraceResult &_result, const float _start[3], const float _end[3], const AABB *_pBBox , int _mask, int _user, obBool _bUsePVS) = 0;
-//
-//	virtual int GetPointContents(const float _pos[3]) = 0;
-//
-//	virtual GameEntity FindEntityInSphere(const float _pos[3], float _radius, GameEntity _pStart, int classId) = 0;
-//
-//	virtual int GetEntityClass(const GameEntity _ent) = 0;
-//
-//	virtual obResult  GetEntityCategory(const GameEntity _ent, BitFlag32 &_category) = 0;
-//
-//	virtual obResult GetEntityFlags(const GameEntity _ent, BitFlag64 &_flags) = 0;
-//
-//	virtual obResult GetEntityPowerups(const GameEntity _ent, BitFlag64 &_flags) = 0;
-//
-//	virtual obResult GetEntityEyePosition(const GameEntity _ent, float _pos[3]) = 0;
-//
-//	virtual obResult GetEntityBonePosition(const GameEntity _ent, int _boneid, float _pos[3]) = 0;
-//
-//	virtual obResult GetEntityOrientation(const GameEntity _ent, float _fwd[3], float _right[3], float _up[3]) = 0;
-//
-//	virtual obResult GetEntityVelocity(const GameEntity _ent, float _velocity[3]) = 0;
-//
-//	virtual obResult GetEntityPosition(const GameEntity _ent, float _pos[3]) = 0;
-//
-//	virtual int GetEntityOwner(const GameEntity _ent) = 0;
-//
-//	virtual int GetEntityTeam(const GameEntity _ent) = 0;
-//
-//	virtual const char *GetEntityName(const GameEntity _ent) = 0;
-//
-//	virtual obResult GetCurrentWeaponClip(const GameEntity _ent, FireMode _mode, int &_curclip, int &_maxclip) = 0;
-//
-//	virtual obResult GetCurrentAmmo(const GameEntity _ent, int _weaponId, FireMode _mode, int &_cur, int &_max) = 0;
-//
-//	virtual int GetGameTime() = 0;
-//
-//	virtual void GetGoals() = 0;
-//
-//	virtual void GetThreats() = 0;
-//
-//	virtual int GetMaxNumPlayers() = 0;
-//
-//	virtual int GetCurNumPlayers() = 0;
-//
-//	virtual obResult InterfaceSendMessage(const MessageHelper &_data, const GameEntity _ent) = 0;
-//
-//	virtual bool DebugLine(const float _start[3], const float _end[3], const obColor &_color, float _time)
-//	{
-//	}
-//
-//	virtual bool DebugRadius(const float _pos[3], const float _radius, const obColor &_color, float _time)
-//	{
-//	}
-//
-//	virtual void PrintError(const char *_error) = 0;
-//
-//	virtual void PrintMessage(const char *_msg) = 0;
-//
-//	virtual void PrintScreenText(const float _pos[3], float _duration, const obColor &_color, const char *_msg) = 0;
-//
-//	virtual const char *GetMapName() = 0;
-//
-//	virtual void GetMapExtents(AABB &_aabb) = 0;
-//
-//	virtual GameEntity EntityFromID(const int _gameId) = 0;
-//
-//	virtual int IDFromEntity(const GameEntity _ent) = 0;
-//
-//	virtual const char *GetGameName() = 0;
-//
-//	virtual const char *GetModName() = 0;
-//
-//	virtual const char *GetModVers() = 0;
-//
-//	virtual const char *GetBotPath() = 0;
-//
-//	virtual const char *GetLogPath() = 0;
-//};
 
 #endif

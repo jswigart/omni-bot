@@ -794,7 +794,7 @@ public:
 		int v;
 		if(Utils::ConvertString(_str,v))
 		{
-			m_Value = g_EngineFuncs->EntityFromID(v);
+			m_Value = gEngineFuncs->EntityFromID(v);
 			return true;
 		}
 		return false;

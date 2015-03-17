@@ -83,7 +83,7 @@ bool IGame::Init( System & system )
 {
 	GetGameVars( m_GameVars );
 
-	m_StartTimeMsec = g_EngineFuncs->GetGameTime();
+	m_StartTimeMsec = gEngineFuncs->GetGameTime();
 
 	for ( int i = 0; i < MaxDeletedThreads; ++i )
 	{
@@ -389,6 +389,7 @@ void IGame::InitScriptCategories( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "PROP", gmVariable( ENT_CAT_PROP ) );
 	_table->Set( _machine, "AUTODEFENSE", gmVariable( ENT_CAT_AUTODEFENSE ) );
 	_table->Set( _machine, "OBSTACLE", gmVariable( ENT_CAT_OBSTACLE ) );
+	_table->Set( _machine, "PROP_PUSHABLE", gmVariable( ENT_CAT_PROP_PUSHABLE ) );	
 }
 
 static const IntEnum g_BaseClassMappings [] =
@@ -1051,8 +1052,8 @@ void IGame::ClientJoined( const Event_SystemClientConnected *_msg )
 			cp->m_DesiredTeam = _msg->m_DesiredTeam;
 			cp->m_DesiredClass = _msg->m_DesiredClass;
 
-			g_EngineFuncs->ChangeTeam( _msg->m_GameId, cp->m_DesiredTeam, NULL );
-			g_EngineFuncs->ChangeClass( _msg->m_GameId, cp->m_DesiredClass, NULL );
+			gEngineFuncs->ChangeTeam( _msg->m_GameId, cp->m_DesiredTeam, NULL );
+			gEngineFuncs->ChangeClass( _msg->m_GameId, cp->m_DesiredClass, NULL );
 
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();
@@ -1121,7 +1122,7 @@ void IGame::NewRound()
 
 void IGame::StartTraining()
 {
-	const char *pMapName = g_EngineFuncs->GetMapName();
+	const char *pMapName = gEngineFuncs->GetMapName();
 	if ( pMapName )
 	{
 		filePath script( "scripts/%s_train.gm", pMapName );
@@ -1140,7 +1141,7 @@ void IGame::InitMapScript()
 	GoalManager::GetInstance()->Reset();
 
 	ErrorObj err;
-	const bool goalsLoaded = GoalManager::GetInstance()->Load( std::string( g_EngineFuncs->GetMapName() ), err );
+	const bool goalsLoaded = GoalManager::GetInstance()->Load( std::string( gEngineFuncs->GetMapName() ), err );
 	err.PrintToConsole();
 
 	if ( !goalsLoaded )
@@ -1154,7 +1155,7 @@ void IGame::InitMapScript()
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 	DisableGCInScope gcEn( pMachine );
 
-	filePath script( "nav/%s.gm", g_EngineFuncs->GetMapName() );
+	filePath script( "nav/%s.gm", gEngineFuncs->GetMapName() );
 
 	// Load the script for the current map.
 	int iThreadId = GM_INVALID_THREAD;
@@ -1192,7 +1193,7 @@ void IGame::InitMapScript()
 
 void IGame::UpdateTime()
 {
-	int iCurrentTime = g_EngineFuncs->GetGameTime();
+	int iCurrentTime = gEngineFuncs->GetGameTime();
 	m_DeltaMsec = iCurrentTime - m_GameMsec;
 	m_GameMsec = iCurrentTime;
 }
@@ -1205,7 +1206,7 @@ void IGame::CheckServerSettings( bool managePlayers )
 		return;
 
 	obPlayerInfo pi;
-	g_EngineFuncs->GetPlayerInfo( pi );
+	gEngineFuncs->GetPlayerInfo( pi );
 
 	//////////////////////////////////////////////////////////////////////////
 	gmMachine *pM = ScriptManager::GetInstance()->GetMachine();
@@ -1634,8 +1635,8 @@ void IGame::AddBot( Msg_Addbot &_addbot, bool _createnow )
 			cp->m_DesiredClass = vclass.IsInt() ? vclass.GetInt() : -1;
 		}
 		//////////////////////////////////////////////////////////////////////////
-		g_EngineFuncs->ChangeTeam( iGameID, cp->m_DesiredTeam, NULL );
-		g_EngineFuncs->ChangeClass( iGameID, cp->m_DesiredClass, NULL );
+		gEngineFuncs->ChangeTeam( iGameID, cp->m_DesiredTeam, NULL );
+		gEngineFuncs->ChangeClass( iGameID, cp->m_DesiredClass, NULL );
 
 		cp->CheckTeamEvent();
 		cp->CheckClassEvent();
@@ -2009,8 +2010,8 @@ void IGame::UpdateEntity( EntityInstance &_ent )
 {
 	if ( _ent.m_EntityClass < FilterSensory::ANYPLAYERCLASS && _ent.m_TimeStamp < IGame::GetTime() )
 	{
-		_ent.m_EntityClass = g_EngineFuncs->GetEntityClass( _ent.m_Entity );
-		g_EngineFuncs->GetEntityCategory( _ent.m_Entity, _ent.m_EntityCategory );
+		_ent.m_EntityClass = gEngineFuncs->GetEntityClass( _ent.m_Entity );
+		gEngineFuncs->GetEntityCategory( _ent.m_Entity, _ent.m_EntityCategory );
 		_ent.m_TimeStamp = IGame::GetTime();
 	}
 }

@@ -153,7 +153,7 @@ void PathPlannerBase::cmdResaveNav(const StringVector &_args)
 	}
 
 	// reload current map wps
-	Load(std::string(g_EngineFuncs->GetMapName()));
+	Load(std::string(gEngineFuncs->GetMapName()));
 }
 
 void PathPlannerBase::AddFailedPath(const Vector3f &_start, const Vector3f &_end)
@@ -169,7 +169,7 @@ void PathPlannerBase::AddFailedPath(const Vector3f &_start, const Vector3f &_end
 
 bool PathPlannerBase::Load(bool _dl)
 {
-	return Load(g_EngineFuncs->GetMapName(),_dl);
+	return Load(gEngineFuncs->GetMapName(),_dl);
 }
 
 void PathPlannerBase::RenderFailedPaths()

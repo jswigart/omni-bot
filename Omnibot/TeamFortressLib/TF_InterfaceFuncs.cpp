@@ -37,7 +37,7 @@ namespace InterfaceFuncs
 	void GetDisguiseInfo(GameEntity _ent, int &_team, int &_class)
 	{
 		BitFlag64 entityPowerups;
-		g_EngineFuncs->GetEntityPowerups(_ent, entityPowerups);
+		gEngineFuncs->GetEntityPowerups(_ent, entityPowerups);
 		GetDisguiseInfo(entityPowerups, _team, _class);
 	}
 
@@ -143,7 +143,7 @@ namespace InterfaceFuncs
 	//	if(InRangeT<int>(_team, TF_TEAM_NONE, TF_TEAM_MAX-1))
 	//	{
 	//		MessageHelper msg(TF_MSG_TEAMPIPEINFO, &m_TeamPipeInfo[_team], sizeof(m_TeamPipeInfo[_team]));
-	//		g_EngineFuncs->InterfaceSendMessage(msg, NULL);
+	//		gEngineFuncs->InterfaceSendMessage(msg, NULL);
 	//		return &m_TeamPipeInfo[_team];
 	//	}
 	//	OBASSERT("Invalid Team!");

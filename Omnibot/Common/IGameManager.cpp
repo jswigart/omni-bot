@@ -25,7 +25,7 @@
 #include "PathPlannerFloodFill.h"
 #include "PathPlannerRecast.h"
 
-IEngineInterface *g_EngineFuncs = 0;
+IEngineInterface *gEngineFuncs = 0;
 
 boost::recursive_mutex gGlobalUpdate;
 
@@ -54,7 +54,7 @@ boost::thread::id IGameManager::sMainThread;
 
 IGameManager::IGameManager()
 {
-	memset( &g_EngineFuncs, 0, sizeof( g_EngineFuncs ) );
+	memset( &gEngineFuncs, 0, sizeof( gEngineFuncs ) );
 }
 
 omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _version )
@@ -73,7 +73,7 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 
 	srand( (unsigned int)time( NULL ) );
 
-	g_EngineFuncs = _pEngineFuncs;
+	gEngineFuncs = _pEngineFuncs;
 
 	mBotSystem.mGame = CreateGameInstance();
 
@@ -209,8 +209,8 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 	if ( mBotSystem.mGame->Init( mBotSystem ) )
 	{
 		LOG( "Created Game Interface : " << mBotSystem.mGame->GetGameName() );
-		LOG( "Game Interface : " << g_EngineFuncs->GetGameName() );
-		LOG( "Mod Interface : " << g_EngineFuncs->GetModName() );
+		LOG( "Game Interface : " << gEngineFuncs->GetGameName() );
+		LOG( "Mod Interface : " << gEngineFuncs->GetModName() );
 	}
 	else
 	{
@@ -524,7 +524,7 @@ void IGameManager::cmdUpdateNavFile( const StringVector &_args )
 	};
 
 	CHECK_NUM_PARAMS( _args, 1, strUsage );
-	OPTIONAL_STRING_PARAM( mapname, 1, g_EngineFuncs->GetMapName() );
+	OPTIONAL_STRING_PARAM( mapname, 1, gEngineFuncs->GetMapName() );
 
 	FileDownloader::UpdateWaypoints( mapname );
 #else
@@ -592,7 +592,7 @@ void IGameManager::cmdSaveHeatMapScript( const StringVector &_args )
 		const AxisAlignedBox3f & bnds = System::mInstance->mNavigation->GetNavigationBounds();
 
 		GameAnalyticsLogger::HeatmapDef def;
-		def.mAreaId = g_EngineFuncs->GetMapName();
+		def.mAreaId = gEngineFuncs->GetMapName();
 		def.mEventId = eventName.c_str();
 		def.mEventRadius = eventRadius;
 		def.mImageSize = imageSize;

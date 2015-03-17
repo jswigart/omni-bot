@@ -333,8 +333,8 @@ void RTCW_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 		// Magik: As there's no instant team/class switching in ET, this is order dependent
 		// always call pfnChangeClass() _before_ pfnChangeTeam()!
 		// todo: send the weapon preferences as 3rd param
-		g_EngineFuncs->ChangeClass(iGameID, cp->m_DesiredClass, NULL);
-		g_EngineFuncs->ChangeTeam(iGameID, cp->m_DesiredTeam, NULL);
+		gEngineFuncs->ChangeClass(iGameID, cp->m_DesiredClass, NULL);
+		gEngineFuncs->ChangeTeam(iGameID, cp->m_DesiredTeam, NULL);
 
 		cp->CheckTeamEvent();
 		cp->CheckClassEvent();
@@ -480,8 +480,8 @@ void RTCW_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 			cp->m_DesiredTeam = _msg->m_DesiredTeam;
 			cp->m_DesiredClass = _msg->m_DesiredClass;
 
-			g_EngineFuncs->ChangeClass(_msg->m_GameId, cp->m_DesiredClass, NULL);
-			g_EngineFuncs->ChangeTeam(_msg->m_GameId, cp->m_DesiredTeam, NULL);
+			gEngineFuncs->ChangeClass(_msg->m_GameId, cp->m_DesiredClass, NULL);
+			gEngineFuncs->ChangeTeam(_msg->m_GameId, cp->m_DesiredTeam, NULL);
 
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();
@@ -500,7 +500,7 @@ void RTCW_Game::StartGame()
 	GoalManager::GetInstance()->Reset();
 
 	ErrorObj err;
-	const bool goalsLoaded = GoalManager::GetInstance()->Load(std::string(g_EngineFuncs->GetMapName()),err);
+	const bool goalsLoaded = GoalManager::GetInstance()->Load(std::string(gEngineFuncs->GetMapName()),err);
 	err.PrintToConsole();
 
 	if(!goalsLoaded)
@@ -517,7 +517,7 @@ void RTCW_Game::StartGame()
 	// Load the script for the current map.
 	int iThreadId = GM_INVALID_THREAD;
 
-	const char * mapName = g_EngineFuncs->GetMapName();
+	const char * mapName = gEngineFuncs->GetMapName();
 	filePath script( "nav/%s.gm", mapName );
 	if ( InterfaceFuncs::GetCvar("g_deathmatch") != 0 )
 		script = filePath( "nav/%s_dm.gm", mapName );

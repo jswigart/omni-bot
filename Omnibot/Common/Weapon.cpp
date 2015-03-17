@@ -937,7 +937,7 @@ void Weapon::UpdateClipAmmo(FireMode _mode)
 	// This function is meant to be called when the weapon is currently equipped.
 	if(GetFireMode(_mode).CheckFlag(RequiresAmmo))
 	{
-		g_EngineFuncs->GetCurrentWeaponClip(
+		gEngineFuncs->GetCurrentWeaponClip(
 			m_Client->GetGameEntity(),
 			_mode,
 			GetFireMode(_mode).m_ClipCurrent,
@@ -953,7 +953,7 @@ void Weapon::UpdateAmmo(FireMode _mode)
 	m_LastAmmoUpdate = IGame::GetTime();
 	if(GetFireMode(_mode).CheckFlag(RequiresAmmo))
 	{
-		g_EngineFuncs->GetCurrentAmmo(
+		gEngineFuncs->GetCurrentAmmo(
 			m_Client->GetGameEntity(),
 			GetWeaponID(),
 			_mode,

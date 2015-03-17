@@ -449,7 +449,7 @@ int gmBot::gmfExecCommand(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_STRING_PARAM(msg, 0);
 
-	g_EngineFuncs->BotCommand(native->GetGameID(), msg);
+	gEngineFuncs->BotCommand(native->GetGameID(), msg);
 	return GM_OK;
 }
 
@@ -509,7 +509,7 @@ int gmBot::gmfSay(gmThread *a_thread)
 			}
 		}
 
-		g_EngineFuncs->BotCommand(native->GetGameID(), va("say \"%s\"", chatMsg));
+		gEngineFuncs->BotCommand(native->GetGameID(), va("say \"%s\"", chatMsg));
 		return GM_OK;
 	}
 
@@ -553,7 +553,7 @@ int gmBot::gmfSayTeam(gmThread *a_thread)
 			}
 		}
 
-		g_EngineFuncs->BotCommand(native->GetGameID(), va("say_team \"%s\"", chatMsg));
+		gEngineFuncs->BotCommand(native->GetGameID(), va("say_team \"%s\"", chatMsg));
 		return GM_OK;
 	}
 

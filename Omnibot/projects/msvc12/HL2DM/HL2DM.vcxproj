@@ -117,6 +117,7 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeaderOutputFile>
     </ClCompile>
+    <ClCompile Include="..\..\..\HL2DM\gmHL2DMBinds.cpp" />
     <ClCompile Include="..\..\..\HL2DM\HL2DM_Client.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
@@ -125,6 +126,7 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
     </ClCompile>
+    <ClCompile Include="..\..\..\HL2DM\HL2DM_InterfaceFuncs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\Common\Common.rc" />
@@ -133,6 +135,7 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ClInclude Include="..\..\..\HL2DM\HL2DM_Client.h" />
     <ClInclude Include="..\..\..\HL2DM\HL2DM_Config.h" />
     <ClInclude Include="..\..\..\HL2DM\HL2DM_Game.h" />
+    <ClInclude Include="..\..\..\HL2DM\HL2DM_InterfaceFuncs.h" />
     <ClInclude Include="..\..\..\HL2DM\HL2DM_Messages.h" />
   </ItemGroup>
   <ItemGroup>

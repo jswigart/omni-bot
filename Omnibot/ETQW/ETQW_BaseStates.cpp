@@ -514,7 +514,7 @@ namespace AiState
 		//				{
 		//					AABB aabb, mapaabb;
 		//					EngineFuncs::EntityWorldAABB(m_MapGoal->GetEntity(), aabb);
-		//					//g_EngineFuncs->GetMapExtents(mapaabb);
+		//					//gEngineFuncs->GetMapExtents(mapaabb);
 
 		//					//m_TargetEntity->SetDeleteMe(true);
 		//					return State_Finished;

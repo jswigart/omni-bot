@@ -52,7 +52,7 @@ bool Base_CheckCriteria(CheckCriteria &crit,Client * bot)
 	case ON_ENTITY_FLAG:
 		{
 			BitFlag64 f;
-			if(SUCCESS(g_EngineFuncs->GetEntityFlags(crit.m_Subject.GetEntity(),f)))
+			if(SUCCESS(gEngineFuncs->GetEntityFlags(crit.m_Subject.GetEntity(),f)))
 			{
 				bool bResult = f.CheckFlag(crit.m_Operand[0].GetInt());
 				if(crit.m_Negated)

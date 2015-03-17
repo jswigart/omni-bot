@@ -556,7 +556,7 @@ void PathPlannerRecast::Update( System & system )
 		if ( mTileBuildQueue.size() == 0 )
 		{
 			// This navmesh should be the 'world' model only
-			if ( Save( g_EngineFuncs->GetMapName() ) )
+			if ( Save( gEngineFuncs->GetMapName() ) )
 				EngineFuncs::ConsoleMessage( "Saved Base Nav." );
 			else
 				EngineFuncs::ConsoleError( "ERROR Saving Base Nav." );
@@ -1737,8 +1737,8 @@ void PathPlannerRecast::GatherModel( ModelCache & cache, const modeldata::Scene 
 
 		Material mtl;
 		mtl.mName = ioMaterial.name();
-		mtl.mSurface = (SurfaceFlags)g_EngineFuncs->ConvertValue( sf, IEngineInterface::ConvertSurfaceFlags, IEngineInterface::ConvertGameToBot );
-		mtl.mContents = (ContentFlags)g_EngineFuncs->ConvertValue( cf, IEngineInterface::ConvertContentsFlags, IEngineInterface::ConvertGameToBot );
+		mtl.mSurface = (SurfaceFlags)gEngineFuncs->ConvertValue( sf, IEngineInterface::ConvertSurfaceFlags, IEngineInterface::ConvertGameToBot );
+		mtl.mContents = (ContentFlags)gEngineFuncs->ConvertValue( cf, IEngineInterface::ConvertContentsFlags, IEngineInterface::ConvertGameToBot );
 		
 		// just skip some face types entirely
 		if ( mtl.mSurface & ( SURFACE_NONSOLID | SURFACE_IGNORE | SURFACE_SKY ) )
@@ -1859,7 +1859,7 @@ void PathPlannerRecast::CreateModels( GameEntity entity, const IceMaths::Matrix4
 				strncpy( modelInfo.mModelName, mdlname.string().c_str(), sizeof( modelInfo.mModelName ) );
 				strncpy( modelInfo.mModelType, ext.string().c_str() + 1, ext.string().length() );
 
-				g_EngineFuncs->GetModel( modelInfo, allocatorBot );
+				gEngineFuncs->GetModel( modelInfo, allocatorBot );
 				if ( modelInfo.mDataBuffer != NULL )
 				{
 					const IceMaths::Matrix4x4 nodeXform = Convert( ioNode );
@@ -2082,8 +2082,8 @@ void PathPlannerRecast::LoadModel( const GameModelInfo & modelInfo, GameEntity e
 	{
 		loadTimer.Reset();
 
-		//const int ignoreSurfaces = (SurfaceFlags)g_EngineFuncs->ConvertValue( SURFACE_IGNORE | SURFACE_NONSOLID, IEngineInterface::ConvertSurfaceFlags, IEngineInterface::ConvertBotToGame );
-		//const int onlyContents = (ContentFlags)g_EngineFuncs->ConvertValue( CONT_SOLID | CONT_PLYRCLIP | CONT_WATER | CONT_TRIGGER, IEngineInterface::ConvertContentsFlags, IEngineInterface::ConvertBotToGame );
+		//const int ignoreSurfaces = (SurfaceFlags)gEngineFuncs->ConvertValue( SURFACE_IGNORE | SURFACE_NONSOLID, IEngineInterface::ConvertSurfaceFlags, IEngineInterface::ConvertBotToGame );
+		//const int onlyContents = (ContentFlags)gEngineFuncs->ConvertValue( CONT_SOLID | CONT_PLYRCLIP | CONT_WATER | CONT_TRIGGER, IEngineInterface::ConvertContentsFlags, IEngineInterface::ConvertBotToGame );
 
 		aiPropertyStore * props = NULL;// aiCreatePropertyStore();
 
@@ -2261,7 +2261,7 @@ void PathPlannerRecast::LoadWorldModel()
 	mNavigationBounds.Clear();
 
 	GameModelInfo modelInfo;
-	g_EngineFuncs->GetWorldModel( modelInfo, allocatorBot );
+	gEngineFuncs->GetWorldModel( modelInfo, allocatorBot );
 
 	if ( modelInfo.mDataBuffer == NULL )
 		return;
@@ -2295,7 +2295,7 @@ void PathPlannerRecast::EntityCreated( const EntityInstance &ei )
 		loadTimer.Reset();
 
 		GameModelInfo modelInfo;
-		g_EngineFuncs->GetEntityModel( ei.m_Entity, modelInfo, allocatorBot );
+		gEngineFuncs->GetEntityModel( ei.m_Entity, modelInfo, allocatorBot );
 
 		if ( modelInfo.mDataBuffer != NULL )
 		{
