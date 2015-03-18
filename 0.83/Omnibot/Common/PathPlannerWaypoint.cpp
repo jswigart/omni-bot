@@ -1430,7 +1430,7 @@ Waypoint *PathPlannerWaypoint::_GetClosestWaypoint(const Vector3f &_pos,
 	// only proceed if we got waypoints
 	if (IsReady())
 	{
-		obuint32 size = m_WaypointList.size();
+		obuint32 size = (obuint32) m_WaypointList.size();
 		for(obuint32 i = 0; i < size; ++i)
 		{
 			Waypoint *pWaypoint = m_WaypointList[i];
