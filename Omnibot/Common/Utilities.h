@@ -13,6 +13,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <stdint.h>
 
 #include "Trajectory.h"
 #include "gmGCRoot.h"
@@ -59,18 +60,19 @@ namespace Utils
 
 	void StringCopy( char *_destination, const char *_source, int _buffersize );
 
-	obint32 StringCompare( const char *_s1, const char *_s2 );
-	obint32 StringCompareNoCase( const char *_s1, const char *_s2 );
+	int32_t StringCompare( const char *_s1, const char *_s2 );
+	int32_t StringCompareNoCase( const char *_s1, const char *_s2 );
 
-	obint32 StringCompare( const std::string &_s1, const std::string &_s2 );
-	obint32 StringCompareNoCase( const std::string &_s1, const std::string &_s2 );
+	int32_t StringCompare( const std::string &_s1, const std::string &_s2 );
+	int32_t StringCompareNoCase( const std::string &_s1, const std::string &_s2 );
 
 	std::string StringToLower( const std::string &_s1 );
 
 	bool IsWhiteSpace( const char _ch );
 
-	const char *FindClassName( obint32 _classId );
-	std::string BuildRoleName( obint32 _mask );
+	void FindClassName( std::string& groupName, std::string& className, const EntityInfo& entInfo );
+
+	std::string BuildRoleName( int32_t _mask );
 
 	// todo: depracate these for type safe time types
 	inline float MillisecondsToSeconds( int _ms )
@@ -124,22 +126,22 @@ namespace Utils
 	bool GetLocalAimPoint( Vector3f &_pos, Vector3f *_normal = 0, int _tracemask = TR_MASK_FLOODFILLENT, int * _contents = 0, int * _surface = 0 );
 	bool GetNearestNonSolid( Vector3f &_pos, const Vector3f &_start, const Vector3f &_end, int _tracemask = TR_MASK_FLOODFILL );
 
-	obint32 MakeId32( obint8 a, obint8 b, obint8 c, obint8 d );
-	obint32 MakeId32( obint16 a, obint16 b );
-	obint32 MakeId32( const char *_st );
-	void SplitId32( obint32 id, obint16 &id1, obint16 &id2 );
+	int32_t MakeId32( int8_t a, int8_t b, int8_t c, int8_t d );
+	int32_t MakeId32( int16_t a, int16_t b );
+	int32_t MakeId32( const char *_st );
+	void SplitId32( int32_t id, int16_t &id1, int16_t &id2 );
 
-	obuint32 MakeHash32( const std::string &_str, bool _log = true );
-	obuint32 Hash32( const char *_name );
-	obuint64 Hash64( const char *_name );
+	uint32_t MakeHash32( const std::string &_str, bool _log = true );
+	uint32_t Hash32( const char *_name );
+	uint64_t Hash64( const char *_name );
 
 	void AddHashedString( const std::string &_str );
-	std::string HashToString( obuint32 _hash );
+	std::string HashToString( uint32_t _hash );
 
 	// function: FormatByteString
 	//		Formats a byte value into a readable std::string
 	//		with a byte unit postfix, kB, MB, etc...
-	std::string FormatByteString( obuint64 _bytes );
+	std::string FormatByteString( uint64_t _bytes );
 
 	std::string FormatEntityString( GameEntity _e );
 	std::string FormatVectorString( const Vector3f &v );
@@ -202,11 +204,11 @@ namespace Utils
 	bool StringToFalse( const std::string &_str );
 	void StringTrimCharacters( std::string &_out, const std::string &_trim );
 
-	std::string GetTeamString( obint32 _team );
-	std::string GetClassString( obint32 _class );
+	std::string GetTeamString( int32_t _team );
+	std::string GetClassString( int32_t _class );
 
-	bool TeamExists( obint32 _team );
-	bool ClassExists( obint32 _class );
+	bool TeamExists( int32_t _team );
+	bool ClassExists( int32_t _class );
 
 	void KeyValsToTable( const KeyVals &_kv, gmGCRoot<gmTableObject> _tbl, gmMachine *_machine );
 
@@ -272,9 +274,9 @@ public:
 	void DelProperty( const std::string &_name );
 	std::string GetProperty( const std::string &_name ) const;
 
-	obuint32 GetNumProperties() const
+	uint32_t GetNumProperties() const
 	{
-		return (obuint32)m_Properties.size();
+		return (uint32_t)mProperties.size();
 	}
 
 	template <typename T>
@@ -300,10 +302,10 @@ public:
 
 	const ValueMap &GetProperties() const
 	{
-		return m_Properties;
+		return mProperties;
 	}
 private:
-	ValueMap m_Properties;
+	ValueMap mProperties;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -502,15 +504,15 @@ public:
 	const char *AddUniqueString( const std::string & _str );
 	const char *Find( const std::string & _str );
 
-	StringBuffer( obuint32 _maxStrings = 64, obuint32 _bufferSize = 1024 );
+	StringBuffer( uint32_t _maxStrings = 64, uint32_t _bufferSize = 1024 );
 	~StringBuffer();
 private:
-	obuint32	m_BufferOffset;
-	char **		m_Strings;
-	char *		m_Buffer;
+	uint32_t mBufferOffset;
+	char **	 mStrings;
+	char *	 mBuffer;
 
-	const obuint32 m_BufferSize;
-	const obuint32 m_MaxStrings;
+	const uint32_t mBufferSize;
+	const uint32_t mMaxStrings;
 };
 
 obColor GetCoolWarmColor( float scalar );

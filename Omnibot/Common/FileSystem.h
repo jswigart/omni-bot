@@ -49,14 +49,14 @@ public:
 	static bool MakeDirectory(const char *_folder);
 	static bool FileDelete(const filePath &_file);
 	static bool FileExists(const filePath &_file);
-	static obint64 FileModifiedTime(const filePath &_file);
+	static int64_t FileModifiedTime(const filePath &_file);
 
 	enum MountOrder { MountFirst,MountLast };
 	static bool Mount(const fs::path &_path, const char *_mountpoint = 0, MountOrder _order = MountFirst);
 	static bool UnMount(const fs::path &_path);
 
-	static obuint32 GetFileCrc(const std::string &_file);
-	static obuint32 CalculateCrc(const void *_data, obuint32 _size);
+	static uint32_t GetFileCrc(const std::string &_file);
+	static uint32_t CalculateCrc(const void *_data, uint32_t _size);
 
 	static fs::path FindFile(const fs::path &_file);
 	static fs::path GetModFolder();
@@ -81,49 +81,49 @@ public:
 		Text
 	};
 
-	FileMode GetFileMode() const { return m_TextMode ? Text : Binary; }
+	FileMode GetFileMode() const { return mTextMode ? Text : Binary; }
 
 	bool OpenForWrite(const char *_name, FileMode _mode, bool _append = false);
 	bool OpenForRead(const char *_name, FileMode _mode);
 	void Close();
 	bool IsOpen();
 
-	bool WriteInt8(obuint8 i);
-	bool WriteInt16(obuint16 i);
-	bool WriteInt32(obuint32 i, bool spaceatend = true);
-	bool WriteInt64(obuint64 i, bool spaceatend = true);
+	bool WriteInt8(uint8_t i);
+	bool WriteInt16(uint16_t i);
+	bool WriteInt32(uint32_t i, bool spaceatend = true);
+	bool WriteInt64(uint64_t i, bool spaceatend = true);
 	bool WriteFloat(float f);
-	obuint64 Write(const void *_buffer, obuint32 _size, obuint32 _numitems = 1);
+	uint64_t Write(const void *_buffer, uint32_t _size, uint32_t _numitems = 1);
 	bool WriteString(const std::string &_str);
 	void Printf(CHECK_PRINTF_ARGS const char* _msg, ...);
 	bool WriteNewLine();
 
-	bool ReadInt8(obuint8 &i);
-	bool ReadInt16(obuint16 &i);
-	bool ReadInt32(obuint32 &i);
-	bool ReadInt64(obuint64 &i);
+	bool ReadInt8(uint8_t &i);
+	bool ReadInt16(uint16_t &i);
+	bool ReadInt32(uint32_t &i);
+	bool ReadInt64(uint64_t &i);
 	bool ReadFloat(float &f);
-	obint64 Read(void *_buffer, obuint32 _size, obuint32 _numitems = 1);
+	int64_t Read(void *_buffer, uint32_t _size, uint32_t _numitems = 1);
 	bool ReadString(std::string &_str);
 	bool ReadLine(std::string &_str);
 
-	obuint64 ReadWholeFile(std::string &_readto);
+	uint64_t ReadWholeFile(std::string &_readto);
 
-	bool Seek(obuint64 _pos);
-	obint64 Tell();
+	bool Seek(uint64_t _pos);
+	int64_t Tell();
 	bool EndOfFile();
-	bool SetBuffer(obuint64 _size);
+	bool SetBuffer(uint64_t _size);
 	bool Flush();
-	obint64 FileLength();
+	int64_t FileLength();
 
 	std::string GetLastError();
 
 	File();
 	~File();
 private:
-	File_Private *m_pFile;
+	File_Private * mpFile;
 
-	bool		m_TextMode : 1;
+	bool		mTextMode : 1;
 };
 
 #endif

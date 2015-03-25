@@ -57,7 +57,7 @@ typedef enum eOF_EntityClass
 typedef enum eOF_EntityFlags
 {
 	OF_ENT_FLAG_BLIND = TF_ENT_FLAG_CALTROP, // remapping this
-	OF_ENT_FLAG_CONCED = TF_ENT_FLAG_LEVEL3 + 1,
+	//OF_ENT_FLAG_CONCED = TF_ENT_FLAG_LEVEL3 + 1,
 } OF_EntityFlags;
 
 typedef enum eOF_Powerups

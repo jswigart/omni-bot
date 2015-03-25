@@ -32,7 +32,7 @@ class gmTableObject;
 class WeaponScriptResource : public ScriptResource
 {
 public:
-	virtual bool InitScriptSource(const filePath &_path);
+	virtual bool InitScriptSource( const filePath &_path );
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -91,7 +91,7 @@ public:
 		CrouchToMoveWhenZoomed,
 
 		// THIS MUST STAY LAST
-		Num_Properties
+		NumProperties
 	} WeaponProperty;
 
 	// class: FireMode
@@ -102,22 +102,28 @@ public:
 		friend class gmFireMode;
 
 		//////////////////////////////////////////////////////////////////////////
-		enum { MaxDesirabilities = 4 };
+		enum
+		{
+			MaxDesirabilities = 4
+		};
 		struct DesirabilityWindow
 		{
-			float	m_MinRange;
-			float	m_MaxRange;
-			float	m_Desirability;
+			float mMinRange;
+			float mMaxRange;
+			float mDesirability;
 		};
 		//////////////////////////////////////////////////////////////////////////
-		enum { MaxBurstWindows = 4 };
+		enum
+		{
+			MaxBurstWindows = 4
+		};
 		struct BurstWindow
 		{
-			int		m_BurstRounds;
-			float	m_MinRange;
-			float	m_MaxRange;
-			float	m_MinBurstDelay;
-			float	m_MaxBurstDelay;
+			int	 mBurstRounds;
+			float mMinRange;
+			float mMaxRange;
+			float mMinBurstDelay;
+			float mMaxBurstDelay;
 		};
 		//////////////////////////////////////////////////////////////////////////
 
@@ -130,8 +136,8 @@ public:
 		//		None
 		//
 		// Returns:
-		//		obReal - The default desirability for this weapon
-		obReal CalculateDefaultDesirability(Client *_bot);
+		//		float - The default desirability for this weapon
+		float CalculateDefaultDesirability( Client *_bot );
 
 		// function: CalculateDesirability
 		//		Calculates the desirability for this weapon, based on the current targets info.
@@ -141,8 +147,8 @@ public:
 		//		<TargetInfo> - Known information about the current target.
 		//
 		// Returns:
-		//		obReal - The desirability for this weapon against the target.
-		obReal CalculateDesirability(Client *_bot, const TargetInfo &_targetinfo);
+		//		float - The desirability for this weapon against the target.
+		float CalculateDesirability( Client *_bot, const TargetInfo &_targetinfo );
 
 		// function: UpdateBurstWindow
 		//		Updates the burst window currently in use by the weapon burst fire.
@@ -153,7 +159,7 @@ public:
 		//
 		// Returns:
 		//		None
-		void UpdateBurstWindow(const TargetInfo *_targetinfo);
+		void UpdateBurstWindow( const TargetInfo *_targetinfo );
 
 		// function: GetCurrentClip
 		//		Number of rounds in the current clip
@@ -164,7 +170,10 @@ public:
 		//
 		// Returns:
 		//		int - rounds in the current clip.
-		inline int GetCurrentClip() const				{ return m_ClipCurrent; }
+		inline int GetCurrentClip() const
+		{
+			return mClipCurrent;
+		}
 
 		// function: GetMaxClip
 		//		Number of max rounds in the current clip
@@ -175,7 +184,10 @@ public:
 		//
 		// Returns:
 		//		int - max rounds in the clip
-		inline int GetMaxClip() const				{ return m_ClipMax; }
+		inline int GetMaxClip() const
+		{
+			return mClipMax;
+		}
 
 		// function: GetCurrentAmmo
 		//		Current amount of ammo for a given ammo type
@@ -186,7 +198,10 @@ public:
 		//
 		// Returns:
 		//		int - number of rounds
-		inline int GetCurrentAmmo() const			{ return m_AmmoCurrent; }
+		inline int GetCurrentAmmo() const
+		{
+			return mAmmoCurrent;
+		}
 
 		// function: GetMaxAmmo
 		//		Max amount of ammo for a given ammo type
@@ -197,7 +212,10 @@ public:
 		//
 		// Returns:
 		//		int - max number of rounds
-		inline int GetMaxAmmo() const				{ return m_AmmoMax; }
+		inline int GetMaxAmmo() const
+		{
+			return mAmmoMax;
+		}
 
 		// function: GetLowAmmoThreshold
 		//		Get the script defined value at which the bot should attempt to resupply ammo.
@@ -208,7 +226,10 @@ public:
 		//
 		// Returns:
 		//		int - max number of total ammo
-		inline int GetLowAmmoThreshold() const		{ return m_LowAmmoThreshold; }
+		inline int GetLowAmmoThreshold() const
+		{
+			return mLowAmmoThreshold;
+		}
 
 		// function: GetLowAmmoPriority
 		//		If the weapon needs ammo, what's the priority for it.
@@ -219,9 +240,15 @@ public:
 		//
 		// Returns:
 		//		float - priority if the weapon needs ammo
-		inline obReal GetLowAmmoPriority() const		{ return m_LowAmmoPriority; }
+		inline float GetLowAmmoPriority() const
+		{
+			return mLowAmmoPriority;
+		}
 
-		inline int GetLowAmmoGetAmmoAmount() const { return m_LowAmmoGetAmmoAmount; }
+		inline int GetLowAmmoGetAmmoAmount() const
+		{
+			return mLowAmmoGetAmmoAmount;
+		}
 		// function: HasAmmo
 		//		Checks if this weapon currently has enough ammo to fire.
 		//
@@ -231,7 +258,7 @@ public:
 		//
 		// Returns:
 		//		bool - true if it has enough ammo to fire, false if not
-		bool HasAmmo(int _amount = 0) const;
+		bool HasAmmo( int _amount = 0 ) const;
 
 		// function: NeedsAmmo
 		//		Checks if this weapon currently needs ammo to use.
@@ -279,174 +306,198 @@ public:
 		//		bool - true if there is enough ammo to reload, false if not.
 		bool EnoughAmmoToReload() const;
 
-		Vector3f GetAimPoint(Client *_bot, const GameEntity &_target, const TargetInfo &_targetinfo);
-		void AddAimError(Client *_bot, Vector3f &_aimpoint, const TargetInfo &_info);
+		Vector3f GetAimPoint( Client *_bot, const GameEntity &_target, const TargetInfo &_targetinfo );
+		void AddAimError( Client *_bot, Vector3f &_aimpoint, const TargetInfo &_info );
 
-		bool SetDesirabilityWindow(float _minrange, float _maxrange, float _desir);
-		bool SetBurstWindow(float _minrange, float _maxrange, int _burst, float _mindelay, float _maxdelay);
+		bool SetDesirabilityWindow( float _minrange, float _maxrange, float _desir );
+		bool SetBurstWindow( float _minrange, float _maxrange, int _burst, float _mindelay, float _maxdelay );
 
-		obReal GetWeaponBias() const { return m_WeaponBias; }
+		float GetWeaponBias() const
+		{
+			return mWeaponBias;
+		}
 
-		obReal GetTargetBias(int _targetclass, const BitFlag64 & entFlags);
+		float GetTargetBias( const EntityInfo& classInfo );
 
-		void SetTargetBias(int _targetclass, obReal _bias);
+		void SetTargetBias( uint16_t classId, float bias );
 
-		BitFlag64 & GetIgnoreEntFlags() { return m_TargetEntFlagIgnore; }
+		BitFlag64 & GetIgnoreEntFlags()
+		{
+			return mTargetEntFlagIgnore;
+		}
 
 		bool IsCharging() const;
 		bool HasChargeTimes() const;
 		bool IsBurstDelaying() const;
 
 		//////////////////////////////////////////////////////////////////////////
-		inline int GetChargeTime() const { return m_ChargeTime; }
-		inline int GetBurstTime() const { return m_BurstTime; }
-		inline int GetBurstRound() const { return m_BurstRound; }
-		inline const BurstWindow &GetBurstWindow() const { return m_BurstWindows[m_CurrentBurstWindow]; }
+		inline int GetChargeTime() const
+		{
+			return mChargeTime;
+		}
+		inline int GetBurstTime() const
+		{
+			return mBurstTime;
+		}
+		inline int GetBurstRound() const
+		{
+			return mBurstRound;
+		}
+		inline const BurstWindow &GetBurstWindow() const
+		{
+			return mBurstWindows[ mCurrentBurstWindow ];
+		}
 
 		//////////////////////////////////////////////////////////////////////////
 		// Events the fire mode can respond to.
-		void OnPreFire(Weapon *_weapon, Client *_client, const TargetInfo *_target);
-		void OnStartShooting(Weapon *_weapon, Client *_client);
-		void OnStopShooting(Weapon *_weapon, Client *_client);
-		void OnReload(Weapon *_weapon, Client *_client);
-		bool OnNeedToReload(Weapon *_weapon, Client *_client);
-		void OnChargeWeapon(Weapon *_weapon, Client *_client);
-		void OnZoomWeapon(Weapon *_weapon, Client *_client);
-		void OnShotFired(Weapon *_weapon, Client *_client, GameEntity _projectile = GameEntity());
+		void OnPreFire( Weapon *_weapon, Client *_client, const TargetInfo *_target );
+		void OnStartShooting( Weapon *_weapon, Client *_client );
+		void OnStopShooting( Weapon *_weapon, Client *_client );
+		void OnReload( Weapon *_weapon, Client *_client );
+		bool OnNeedToReload( Weapon *_weapon, Client *_client );
+		void OnChargeWeapon( Weapon *_weapon, Client *_client );
+		void OnZoomWeapon( Weapon *_weapon, Client *_client );
+		void OnShotFired( Weapon *_weapon, Client *_client, GameEntity _projectile = GameEntity() );
 
 		//////////////////////////////////////////////////////////////////////////
 		// Utility
 		bool IsDefined() const;
 		bool CheckDefined() const;
-		bool CheckFlag(obint32 _flag) const { return BitFlag32(m_WeaponFlags).CheckFlag(_flag); }
-		void SetFlag(obint32 _flag, bool _set) { BitFlag32 bf(m_WeaponFlags); bf.SetFlag(_flag,_set); m_WeaponFlags = bf.GetRawFlags(); }
+		bool CheckFlag( int32_t _flag ) const
+		{
+			return BitFlag32( mWeaponFlags ).CheckFlag( _flag );
+		}
+		void SetFlag( int32_t _flag, bool _set )
+		{
+			BitFlag32 bf( mWeaponFlags ); bf.SetFlag( _flag, _set ); mWeaponFlags = bf.GetRawFlags();
+		}
 
-		gmGCRoot<gmUserObject> GetScriptObject(gmMachine *_machine) const;
+		gmGCRoot<gmUserObject> GetScriptObject( gmMachine *_machine ) const;
 
-		WeaponFireMode & operator=(const WeaponFireMode &_rh);
+		WeaponFireMode & operator=( const WeaponFireMode &_rh );
 
-		static void Bind(gmMachine *_m);
+		static void Bind( gmMachine *_m );
 
 		WeaponFireMode();
 		~WeaponFireMode();
 	private:
-		// var: m_WeaponType
+		// var: mWeaponType
 		//		The enumerated type of the weapon.
-		WeaponType		m_WeaponType;
+		WeaponType	 mWeaponType;
 
-		// var: m_WeaponFlags
+		// var: mWeaponFlags
 		//		Bit flags representing weapon properties.
-		int				m_WeaponFlags;
+		int			 mWeaponFlags;
 
-		int				m_ShootButton;
-		int				m_ZoomButton;
+		int			 mShootButton;
+		int			 mZoomButton;
 
-		obReal			m_ProjectileSpeed;
-		obReal			m_ProjectileGravity;
+		float		 mProjectileSpeed;
+		float		 mProjectileGravity;
 
-		obReal			m_MinChargeTime;
-		obReal			m_MaxChargeTime;
+		float		 mMinChargeTime;
+		float		 mMaxChargeTime;
 
-		obReal			m_MinLeadError;
-		obReal			m_MaxLeadError;
+		float		 mMinLeadError;
+		float		 mMaxLeadError;
 
-		obReal			m_DelayAfterFiring;
+		float		 mDelayAfterFiring;
 
-		obReal			m_FuseTime;
-		obReal			m_SplashRadius;
+		float		 mFuseTime;
+		float		 mSplashRadius;
 
-		float			m_PitchOffset;
+		float		 mPitchOffset;
 
-		int				m_LowAmmoThreshold;
-		obReal			m_LowAmmoPriority;
-		int				m_LowAmmoGetAmmoAmount;
+		int			 mLowAmmoThreshold;
+		float		 mLowAmmoPriority;
+		int			 mLowAmmoGetAmmoAmount;
 
-		PIDController	m_HeatController;
+		PIDController mHeatController;
 
-		typedef std::vector<obReal> TargetBiasList;
-		TargetBiasList	m_TargetBias;
+		typedef std::map<uint16_t,float> TargetBiasMap;
+		TargetBiasMap mTargetBias;
 
 		//////////////////////////////////////////////////////////////////////////
-		DesirabilityWindow	m_Desirabilities[MaxDesirabilities];
+		DesirabilityWindow mDesirabilities[ MaxDesirabilities ];
 
-		BurstWindow			m_BurstWindows[MaxBurstWindows];
-		int					m_CurrentBurstWindow;
+		BurstWindow		 mBurstWindows[ MaxBurstWindows ];
+		int				 mCurrentBurstWindow;
 		//////////////////////////////////////////////////////////////////////////
 
-		// var: m_AmmoCurrent
+		// var: mAmmoCurrent
 		//		The current amount of ammo this weapon has.
-		int				m_AmmoCurrent;
+		int			 mAmmoCurrent;
 
-		// var: m_AmmoMax
+		// var: mAmmoMax
 		//		The max amount of ammo this weapon can use
-		int				m_AmmoMax;
+		int			 mAmmoMax;
 
-		// var: m_ClipCurrent
+		// var: mClipCurrent
 		//		The ammo count in the current clip.
-		int				m_ClipCurrent;
+		int			 mClipCurrent;
 
-		// var: m_ClipMax
+		// var: mClipMax
 		//		The ammo count in the max clip.
-		int				m_ClipMax;
+		int			 mClipMax;
 
-		// var: m_AimOffset
+		// var: mAimOffset
 		//		The <Vector3> aim offset that should be applied to weapon aim points to modify targeting.
-		Vector3f		m_AimOffset;
+		Vector3f	 mAimOffset;
 
-		// var: m_AimErrorMax
+		// var: mAimErrorMax
 		//		The max <Vector2> aim error range to apply to aiming. horizontal(x), vertical(y)
-		Vector2f		m_AimErrorMax;
+		Vector2f	 mAimErrorMax;
 
-		// var: m_AimErrorCurrent
+		// var: mAimErrorCurrent
 		//		The current <Vector3> aim error used to apply a error to the aim functions points.
-		Vector3f		m_AimErrorCurrent;
+		Vector3f	 mAimErrorCurrent;
 
-		// var: m_MinAimAdjustmentDelay;
+		// var: mMinAimAdjustmentDelay;
 		//		The min time between aim adjustments.
-		obReal			m_MinAimAdjustmentSecs;
+		float		 mMinAimAdjustmentSecs;
 
-		// var: m_MaxAimAdjustmentDelay;
+		// var: mMaxAimAdjustmentDelay;
 		//		The max time between aim adjustments.
-		obReal			m_MaxAimAdjustmentSecs;
+		float		 mMaxAimAdjustmentSecs;
 
-		// var: m_NextAimAdjustmentTime
+		// var: mNextAimAdjustmentTime
 		//		The time the next aim adjustment should take place.
-		int				m_NextAimAdjustmentTime;
+		int			 mNextAimAdjustmentTime;
 
-		// var: m_LastDesirability
+		// var: mLastDesirability
 		//		The last desirability calculated for this weapon.
-		obReal			m_LastDesirability;
+		float		 mLastDesirability;
 
-		// var: m_DefaultDesirability
+		// var: mDefaultDesirability
 		//		The last default desirability calculated for this weapon.
-		obReal			m_DefaultDesirability;
+		float		 mDefaultDesirability;
 
-		// var: m_WeaponBias
-		//		The m_Client's current bias for this weapon.
-		obReal			m_WeaponBias;
+		// var: mWeaponBias
+		//		The mClient's current bias for this weapon.
+		float		 mWeaponBias;
 
-		// var: m_TargetEntFlagIgnore
+		// var: mTargetEntFlagIgnore
 		//		If any entity flags exist on a target, this weapon should ignore it
-		BitFlag64		m_TargetEntFlagIgnore;
+		BitFlag64	 mTargetEntFlagIgnore;
 
 		// For scripting
-		mutable gmGCRoot<gmUserObject> m_ScriptObject;
+		mutable gmGCRoot<gmUserObject> mScriptObject;
 
-		gmGCRoot<gmFunctionObject>		m_scrCalcDefDesir;
-		gmGCRoot<gmFunctionObject>		m_scrCalcDesir;
-		gmGCRoot<gmFunctionObject>		m_scrCalcAimPoint;
+		gmGCRoot<gmFunctionObject>	 mscrCalcDefDesir;
+		gmGCRoot<gmFunctionObject>	 mscrCalcDesir;
+		gmGCRoot<gmFunctionObject>	 mscrCalcAimPoint;
 	private:
 
-		Vector3f _GetAimPoint_Melee(Client *_bot, const GameEntity &_target, const TargetInfo &_targetinfo);
-		Vector3f _GetAimPoint_InstantHit(Client *_bot, const GameEntity &_target, const TargetInfo &_targetinfo);
-		Vector3f _GetAimPoint_Projectile(Client *_bot, const GameEntity &_target, const TargetInfo &_targetinfo);
-		Vector3f _GetAimPoint_Grenade(Client *_bot, const GameEntity &_target, const TargetInfo &_targetinfo);
+		Vector3f _GetAimPoint_Melee( Client *_bot, const GameEntity &_target, const TargetInfo &_targetinfo );
+		Vector3f _GetAimPoint_InstantHit( Client *_bot, const GameEntity &_target, const TargetInfo &_targetinfo );
+		Vector3f _GetAimPoint_Projectile( Client *_bot, const GameEntity &_target, const TargetInfo &_targetinfo );
+		Vector3f _GetAimPoint_Grenade( Client *_bot, const GameEntity &_target, const TargetInfo &_targetinfo );
 
 		// Internal variables
-		int		m_ChargeTime;
-		int		m_DelayChooseTime;
-		int		m_BurstTime;
-		int		m_BurstRound;
+		int	 mChargeTime;
+		int	 mDelayChooseTime;
+		int	 mBurstTime;
+		int	 mBurstRound;
 
 		struct
 		{
@@ -462,7 +513,7 @@ public:
 		static bool setAimOffset( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands );
 	};
 
-	void Update(FireMode _mode);
+	void Update( FireMode _mode );
 
 	struct MoveOptions
 	{
@@ -471,9 +522,9 @@ public:
 		bool	CrouchToMove;
 
 		MoveOptions()
-			: MustWalk(false)
-			, MustStop(false)
-			, CrouchToMove(false)
+			: MustWalk( false )
+			, MustStop( false )
+			, CrouchToMove( false )
 		{
 		}
 	};
@@ -488,7 +539,7 @@ public:
 	//
 	// Returns:
 	//		None
-	void UpdateClipAmmo(FireMode _mode = Primary);
+	void UpdateClipAmmo( FireMode _mode = Primary );
 
 	// function: UpdateAmmo
 	//		Updates the ammo stats for the weapon from the game, using the
@@ -500,7 +551,7 @@ public:
 	//
 	// Returns:
 	//		None
-	void UpdateAmmo(FireMode _mode = Primary);
+	void UpdateAmmo( FireMode _mode = Primary );
 
 	// function: ReloadWeapon
 	//		Initiates a reload action on the weapon.
@@ -511,7 +562,7 @@ public:
 	//
 	// Returns:
 	//		None
-	void ReloadWeapon(FireMode _mode = Primary);
+	void ReloadWeapon( FireMode _mode = Primary );
 
 	// function: ChargeWeapon
 	//		Initiates a charge action on the weapon.
@@ -522,7 +573,7 @@ public:
 	//
 	// Returns:
 	//		None
-	void ChargeWeapon(FireMode _mode = Primary);
+	void ChargeWeapon( FireMode _mode = Primary );
 
 	// function: ZoomWeapon
 	//		Initiates a zoom action on the weapon.
@@ -533,7 +584,7 @@ public:
 	//
 	// Returns:
 	//		None
-	void ZoomWeapon(FireMode _mode = Primary);
+	void ZoomWeapon( FireMode _mode = Primary );
 
 	// function: ShotFired
 	//		Notifies the weapon that it fired a shot.
@@ -544,7 +595,7 @@ public:
 	//
 	// Returns:
 	//		None
-	void ShotFired(FireMode _mode, GameEntity _projectile = GameEntity());
+	void ShotFired( FireMode _mode, GameEntity _projectile = GameEntity() );
 
 	// function: Select
 	//		Called when the weapon is initially selected, giving the weapon a
@@ -560,7 +611,7 @@ public:
 
 	bool SelectionLocked();
 
-	bool CanShoot(FireMode _mode, const TargetInfo &_targetinfo);
+	bool CanShoot( FireMode _mode, const TargetInfo &_targetinfo );
 
 	// function: PreShoot
 	//		Called during the time the weapon has been chosen and the bot
@@ -574,7 +625,7 @@ public:
 	//
 	// Returns:
 	//		bool - true if weapon is charged, false if still charging.
-	void PreShoot(FireMode _mode, bool _facingTarget = false, const TargetInfo *_target = 0);
+	void PreShoot( FireMode _mode, bool _facingTarget = false, const TargetInfo *_target = 0 );
 
 	// function: Shoot
 	//		Initiates a shoot action on the weapon.
@@ -585,7 +636,7 @@ public:
 	//
 	// Returns:
 	//		None
-	void Shoot(FireMode _mode = Primary, const TargetInfo *_target = 0);
+	void Shoot( FireMode _mode = Primary, const TargetInfo *_target = 0 );
 
 	// function: StopShooting
 	//		Cancels a shooting action for the weapon.
@@ -596,7 +647,7 @@ public:
 	//
 	// Returns:
 	//		None
-	void StopShooting(FireMode _mode = Primary);
+	void StopShooting( FireMode _mode = Primary );
 
 	// function: GetAimPoint
 	//		Calculates an aim point for this weapon based on a targets information.
@@ -608,7 +659,7 @@ public:
 	//
 	// Returns:
 	//		Vector3 - The point we should attempt to aim for this weapon.
-	Vector3f GetAimPoint(FireMode _mode, const GameEntity &_target, const TargetInfo &_targetinfo);
+	Vector3f GetAimPoint( FireMode _mode, const GameEntity &_target, const TargetInfo &_targetinfo );
 
 	// function: AddAimError
 	//		Adds an error offset to an aim point vector.
@@ -619,7 +670,7 @@ public:
 	//
 	// Returns:
 	//		None
-	void AddAimError(FireMode _mode, Vector3f &_aimpoint, const TargetInfo &_info);
+	void AddAimError( FireMode _mode, Vector3f &_aimpoint, const TargetInfo &_info );
 
 	// function: CanReload
 	//		Checks if either fire mode of this weapon can reload(not full clip), and we have ammo to do it.
@@ -653,8 +704,14 @@ public:
 	//
 	// Returns:
 	//		int - The weapon Id
-	inline int GetWeaponID() const			{ return m_WeaponID; }
-	inline int GetWeaponAliasID() const		{ return m_WeaponAliasID; }
+	inline int GetWeaponID() const
+	{
+		return mWeaponID;
+	}
+	inline int GetWeaponAliasID() const
+	{
+		return mWeaponAliasID;
+	}
 
 	// function: GetWeaponName
 	//		Gets the weapon name for this weapon.
@@ -665,63 +722,75 @@ public:
 	//
 	// Returns:
 	//		std::string - The weapon name.
-	obuint32 GetWeaponNameHash() const { return m_WeaponNameHash; }
+	uint32_t GetWeaponNameHash() const
+	{
+		return mWeaponNameHash;
+	}
 	std::string GetWeaponName() const;
-	void SetWeaponName(const char *_name);
-	gmGCRoot<gmUserObject> GetScriptObject(gmMachine *_machine) const;
+	void SetWeaponName( const char *_name );
+	gmGCRoot<gmUserObject> GetScriptObject( gmMachine *_machine ) const;
 
-	WeaponFireMode &GetFireMode(FireMode _mode)		{ return m_FireModes[_mode]; }
-	const WeaponFireMode &GetFireMode(FireMode _mode) const { return m_FireModes[_mode]; }
+	WeaponFireMode &GetFireMode( FireMode _mode )
+	{
+		return mFireModes[ _mode ];
+	}
+	const WeaponFireMode &GetFireMode( FireMode _mode ) const
+	{
+		return mFireModes[ _mode ];
+	}
 
 	void GetSpectateMessage( std::stringstream &_outstring );
 
-	obReal CalculateDefaultDesirability();
-	obReal CalculateDesirability(const TargetInfo &_targetinfo);
+	float CalculateDefaultDesirability();
+	float CalculateDesirability( const TargetInfo &_targetinfo );
 
-	obReal LowOnAmmoPriority(FireMode _mode, int &_ammotype, int &_getammo);
+	float LowOnAmmoPriority( FireMode _mode, int &_ammotype, int &_getammo );
 
-	bool IsWeapon(int _id) const { return GetWeaponID()==_id || GetWeaponAliasID()==_id; }
+	bool IsWeapon( int _id ) const
+	{
+		return GetWeaponID() == _id || GetWeaponAliasID() == _id;
+	}
 
-	static FireMode GetFireMode(int _mode);
+	static FireMode GetFireMode( int _mode );
 
-	static void Bind(gmMachine *_m);
+	static void Bind( gmMachine *_m );
 
-	Weapon(Client *_client = 0);
-	Weapon(Client *_client, const Weapon *_wpn);
+	Weapon( Client *_client = 0 );
+	Weapon( Client *_client, const Weapon *_wpn );
 	~Weapon();
 protected:
-	// var: m_Client
+	// var: mClient
 	//		The client that owns this weapon evaluator.
-	Client			*m_Client;
+	Client			* mClient;
 
-	// var: m_WeaponID
+	// var: mWeaponID
 	//		The weapon type Id that this weapon uses. See global WEAPON table.
-	int				m_WeaponID;
-	int				m_WeaponAliasID;
+	int			 mWeaponID;
+	int			 mWeaponAliasID;
 
-	int				m_WeaponLockTime;
+	int			 mWeaponLockTime;
 
 	//////////////////////////////////////////////////////////////////////////
 
-	WeaponLimits	m_WeaponLimits;
+	WeaponLimits mWeaponLimits;
 
-	// var: m_WeaponName
+	// var: mWeaponName
 	//		The name for this weapon.
-	obuint32		m_WeaponNameHash;
+	uint32_t	 mWeaponNameHash;
 
-	WeaponFireMode	m_FireModes[Num_FireModes];
+	WeaponFireMode mFireModes[ NumFireModes ];
 
-	// var: m_MinUseTime
+	// var: mMinUseTime
 	//		The minimum time to use a weapon when equipped.
-	obReal			m_MinUseTime;
+	float		 mMinUseTime;
 
-	int				m_LastAmmoUpdate;
+	int			 mLastAmmoUpdate;
 
 	// For scripting
-	mutable gmGCRoot<gmUserObject>	m_ScriptObject;
+	mutable gmGCRoot<gmUserObject> mScriptObject;
 private:
-	bool _MeetsRequirements(FireMode _mode);
-	bool _MeetsRequirements(FireMode _mode, const TargetInfo &_targetinfo);
+	bool _MeetsRequirements( FireMode _mode );
+	bool _MeetsRequirements( FireMode _mode, const TargetInfo &_targetinfo );
 
 	// script binding helpers
 	static bool getName( Weapon *a_native, gmThread *a_thread, gmVariable *a_operands );

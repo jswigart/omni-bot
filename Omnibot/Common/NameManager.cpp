@@ -14,20 +14,20 @@ class BotIdentity
 public:
 
 	BotIdentity()
-		: m_DesiredClassId( RANDOM_CLASS_IF_NO_CLASS )
-		, m_DesiredTeamId( RANDOM_TEAM_IF_NO_TEAM )
+		: mDesiredClassId( RANDOM_CLASS_IF_NO_CLASS )
+		, mDesiredTeamId( RANDOM_TEAM_IF_NO_TEAM )
 	{
 	}
 private:
-	std::string		m_Name;
-	obint32		m_DesiredClassId;
-	obint32		m_DesiredTeamId;
+	std::string	 mName;
+	int32_t	 mDesiredClassId;
+	int32_t	 mDesiredTeamId;
 };
 //////////////////////////////////////////////////////////////////////////
 
-NameReference::NameReference( const std::string &_name, const std::string &_profile ) :
-m_Name( _name ),
-m_ProfileName( _profile )
+NameReference::NameReference( const std::string &_name, const std::string &_profile )
+	: mName( _name )
+	, mProfileName( _profile )
 {
 }
 
@@ -35,27 +35,27 @@ NameReference::~NameReference()
 {
 }
 
-NameManager *NameManager::m_Instance = NULL;
+NameManager *NameManager::mInstance = NULL;
 
 NameManager *NameManager::GetInstance()
 {
-	if ( !m_Instance )
-		m_Instance = new NameManager;
-	return m_Instance;
+	if ( !mInstance )
+		mInstance = new NameManager;
+	return mInstance;
 }
 
 void NameManager::DeleteInstance()
 {
-	OB_DELETE( m_Instance );
+	OB_DELETE( mInstance );
 }
 
 bool NameManager::AddName( const std::string &_name, const std::string &_profile )
 {
-	NamesMap::const_iterator cIt = m_NamesMap.find( _name );
-	if ( cIt == m_NamesMap.end() )
+	NamesMap::const_iterator cIt = mNamesMap.find( _name );
+	if ( cIt == mNamesMap.end() )
 	{
 		NamePtr np( new NameReference( _name, _profile ) );
-		m_NamesMap.insert( std::make_pair( _name, np ) );
+		mNamesMap.insert( std::make_pair( _name, np ) );
 		return true;
 	}
 	return false;
@@ -63,15 +63,15 @@ bool NameManager::AddName( const std::string &_name, const std::string &_profile
 
 void NameManager::DeleteName( const std::string &_name )
 {
-	NamesMap::iterator it = m_NamesMap.find( _name );
-	if ( it != m_NamesMap.end() )
-		m_NamesMap.erase( it );
+	NamesMap::iterator it = mNamesMap.find( _name );
+	if ( it != mNamesMap.end() )
+		mNamesMap.erase( it );
 }
 
 const std::string NameManager::GetProfileForName( const std::string &_name ) const
 {
-	NamesMap::const_iterator cIt = m_NamesMap.find( _name );
-	if ( cIt != m_NamesMap.end() )
+	NamesMap::const_iterator cIt = mNamesMap.find( _name );
+	if ( cIt != mNamesMap.end() )
 	{
 		return cIt->second->GetProfileName();
 	}
@@ -80,8 +80,8 @@ const std::string NameManager::GetProfileForName( const std::string &_name ) con
 
 const std::string NameManager::GetProfileForClass( const int _class ) const
 {
-	DefaultProfileMap::const_iterator it = m_ProfileMap.find( _class );
-	if ( it != m_ProfileMap.end() )
+	DefaultProfileMap::const_iterator it = mProfileMap.find( _class );
+	if ( it != mProfileMap.end() )
 	{
 		return it->second;
 	}
@@ -90,22 +90,22 @@ const std::string NameManager::GetProfileForClass( const int _class ) const
 
 void NameManager::ClearNames()
 {
-	m_NamesMap.clear();
+	mNamesMap.clear();
 }
 
 NamePtr NameManager::GetName( const std::string &_preferred )
 {
 	if ( !_preferred.empty() )
 	{
-		NamesMap::iterator it = m_NamesMap.find( _preferred );
-		if ( it != m_NamesMap.end() )
+		NamesMap::iterator it = mNamesMap.find( _preferred );
+		if ( it != mNamesMap.end() )
 			return it->second;
 		return NamePtr( new NameReference( _preferred ) );
 	}
 
 	StringVector lst;
-	NamesMap::iterator it = m_NamesMap.begin(),
-		itEnd = m_NamesMap.end();
+	NamesMap::iterator it = mNamesMap.begin(),
+		itEnd = mNamesMap.end();
 	for ( ; it != itEnd; ++it )
 	{
 		if ( it->second.use_count() <= 1 )
@@ -121,45 +121,15 @@ NamePtr NameManager::GetName( const std::string &_preferred )
 	return NamePtr();
 }
 
-void NameManager::SetProfileForClass( const int _class, const std::string &_name )
+void NameManager::SetProfileForClass( const int classId, const std::string & name )
 {
-	m_ProfileMap.insert( std::make_pair( _class, _name ) );
-	const char *clsname = Utils::FindClassName( _class );
-	LOG( "Class " << ( clsname ? clsname : "unknown" ) << " : using profile " << _name.c_str() );
+	mProfileMap.insert( std::make_pair( classId, name ) );
+
+	EntityInfo entInfo;
+	entInfo.mGroup = ENT_GRP_PLAYER;
+	entInfo.mClassId = (uint16_t)classId;
+
+	std::string groupName, className;
+	Utils::FindClassName( groupName, className, entInfo );
+	LOG( "Class " << groupName.c_str() << ":" << className.c_str() << " : using profile " << name.c_str() );
 }
-
-/*void NameManager::LoadBotNames()
-{
-boost::regex ex("*.bot");
-DirectoryList botFiles;
-FileSystem::FindAllFiles("scripts/bots", botFiles, ex);
-
-LOG((Format("Loading %1% bot scripts from: scripts/bots") % botFiles.size()).str());
-DirectoryList::const_iterator cIt = botFiles.begin(), cItEnd = botFiles.end();
-for(; cIt != cItEnd; ++cIt)
-{
-WeaponPtr wpn(new Weapon);
-
-int iThreadId;
-gmUserObject *pUserObj = wpn->GetScriptObject(ScriptManager::GetInstance()->GetMachine());
-gmVariable varThis(pUserObj);
-
-ScriptManager::GetInstance()->ExecuteFile("scripts/weapons/weapon_defaults.gm", iThreadId, &varThis);
-
-if((*cIt).leaf() == "weapon_defaults.gm")
-continue;
-
-LOG((Format("Loading Weapon Definition: %1%") % (*cIt).string()).str());
-if(ScriptManager::GetInstance()->ExecuteFile(*cIt, iThreadId, &varThis))
-{
-if(wpn->GetWeaponID() != 0 && wpn->GetWeaponNameHash())
-{
-RegisterWeapon(wpn->GetWeaponID(), wpn);
-}
-}
-else
-{
-OBASSERT(0, "Error Running Weapon Script");
-}
-}
-}*/

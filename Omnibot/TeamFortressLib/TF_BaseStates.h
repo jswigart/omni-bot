@@ -45,7 +45,7 @@ namespace TF_Options
 	extern bool POLL_SENTRY_STATUS;
 	extern bool REPAIR_ON_SABOTAGED;
 
-	extern int DisguiseTeamFlags[TF_TEAM_MAX];
+	extern int DisguiseTeamFlags[ TF_TEAM_MAX ];
 };
 
 namespace AiState
@@ -67,54 +67,57 @@ namespace AiState
 		public StateChild,
 		public FollowPathUser,
 		public AimerUser,
-		public InternalFSM<SentryBuild,SG_NUMBUILDSTATES>
+		public InternalFSM < SentryBuild, SG_NUMBUILDSTATES >
 	{
 	public:
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 
-		MapGoalPtr GetBuiltSentryMapGoal() const { return m_BuiltSentry; }
+		MapGoalPtr GetBuiltSentryMapGoal() const
+		{
+			return mBuiltSentry;
+		}
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
 		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
 		static int BuildEquipWeapon;
 
 		SentryBuild();
 	private:
-		MapGoalPtr		m_MapGoalSentry;
-		MapGoalPtr		m_BuiltSentry;
-		int				m_NextBuildTry;
-		int				m_NeedAmmoAmount;
+		MapGoalPtr	 mMapGoalSentry;
+		MapGoalPtr	 mBuiltSentry;
+		int			 mNextBuildTry;
+		int			 mNeedAmmoAmount;
 
-		obReal			m_SentryPriority;
+		float		 mSentryPriority;
 
-		RecordHandle	m_AmmoPack;
+		RecordHandle mAmmoPack;
 
-		bool			m_CantBuild : 1;
+		bool		 mCantBuild : 1;
 
-		bool HasEnoughAmmo(int _ammotype, int _ammorequired);
+		bool HasEnoughAmmo( int _ammotype, int _ammorequired );
 
-		STATE_PROTOTYPE(SG_NONE);
-		STATE_PROTOTYPE(SG_GETTING_AMMO);
-		STATE_PROTOTYPE(SG_BUILDING);
-		STATE_PROTOTYPE(SG_AIMING);
-		STATE_PROTOTYPE(SG_AIMED);
-		STATE_PROTOTYPE(SG_UPGRADING);
-		STATE_PROTOTYPE(SG_REPAIRING);
-		STATE_PROTOTYPE(SG_RESUPPLY);
-		STATE_PROTOTYPE(SG_DONE);
+		STATE_PROTOTYPE( SG_NONE );
+		STATE_PROTOTYPE( SG_GETTING_AMMO );
+		STATE_PROTOTYPE( SG_BUILDING );
+		STATE_PROTOTYPE( SG_AIMING );
+		STATE_PROTOTYPE( SG_AIMED );
+		STATE_PROTOTYPE( SG_UPGRADING );
+		STATE_PROTOTYPE( SG_REPAIRING );
+		STATE_PROTOTYPE( SG_RESUPPLY );
+		STATE_PROTOTYPE( SG_DONE );
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -128,24 +131,24 @@ namespace AiState
 			RESUPPLY,
 		};
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
 		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
 		SentryAlly();
 	private:
-		RecordHandle	m_AllySentry;
-		SubState		m_State;
+		RecordHandle mAllySentry;
+		SubState	 mState;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -162,32 +165,32 @@ namespace AiState
 			DISP_NUMBUILDSTATES,
 		};
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
 		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
 		static int BuildEquipWeapon;
 
 		DispenserBuild();
 	private:
-		MapGoalPtr		m_MapGoalDisp;
-		MapGoalPtr		m_BuiltDisp;
-		int				m_NextBuildTry;
-		int				m_NextAmmoCheck;
-		SubState		m_State;
-		bool			m_CantBuild : 1;
+		MapGoalPtr	 mMapGoalDisp;
+		MapGoalPtr	 mBuiltDisp;
+		int			 mNextBuildTry;
+		int			 mNextAmmoCheck;
+		SubState	 mState;
+		bool		 mCantBuild : 1;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -196,48 +199,60 @@ namespace AiState
 	public:
 		typedef struct
 		{
-			TF_BuildableStatus	m_Status;
-			GameEntity			m_Entity;
-			Vector3f			m_Position;
-			Vector3f			m_Facing;
-			int					m_Level;
-			int					m_Health;
-			int					m_MaxHealth;
-			int					m_Shells[2];
-			int					m_Rockets[2];
-			bool				m_Sabotaged;
+			TF_BuildableStatus mStatus;
+			GameEntity		 mEntity;
+			Vector3f		 mPosition;
+			Vector3f		 mFacing;
+			int				 mLevel;
+			int				 mHealth;
+			int				 mMaxHealth;
+			int				 mShells[ 2 ];
+			int				 mRockets[ 2 ];
+			bool			 mSabotaged;
 
 			void Reset()
 			{
-				m_Status = BUILDABLE_INVALID;
-				m_Entity.Reset();
-				m_Position = Vector3f::ZERO;
-				m_Facing = Vector3f::ZERO;
-				m_Level = 0;
-				m_Health = m_MaxHealth = 0;
-				m_Shells[0] = m_Shells[1] = 0;
-				m_Shells[0] = m_Rockets[1] = 0;
-				m_Sabotaged = false;
+				mStatus = BUILDABLE_INVALID;
+				mEntity.Reset();
+				mPosition = Vector3f::ZERO;
+				mFacing = Vector3f::ZERO;
+				mLevel = 0;
+				mHealth = mMaxHealth = 0;
+				mShells[ 0 ] = mShells[ 1 ] = 0;
+				mShells[ 0 ] = mRockets[ 1 ] = 0;
+				mSabotaged = false;
 			}
 		} SentryStatus;
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 
-		bool SentryFullyBuilt() const { return (m_SentryStatus.m_Status == BUILDABLE_BUILT); }
-		bool HasSentry() const { return m_SentryStatus.m_Entity.IsValid(); }
-		bool SentryBuilding() const { return (m_SentryStatus.m_Status == BUILDABLE_BUILDING); }
+		bool SentryFullyBuilt() const
+		{
+			return ( mSentryStatus.mStatus == BUILDABLE_BUILT );
+		}
+		bool HasSentry() const
+		{
+			return mSentryStatus.mEntity.IsValid();
+		}
+		bool SentryBuilding() const
+		{
+			return ( mSentryStatus.mStatus == BUILDABLE_BUILDING );
+		}
 
-		const SentryStatus &GetSentryStatus() const { return m_SentryStatus; }
+		const SentryStatus &GetSentryStatus() const
+		{
+			return mSentryStatus;
+		}
 
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
-		void UpdateSentryStatus(const Event_SentryStatus_TF &_stats);
+		void UpdateSentryStatus( const Event_SentryStatus_TF &_stats );
 
 		Sentry();
 	private:
-		SentryStatus	m_SentryStatus;
+		SentryStatus mSentryStatus;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -246,51 +261,63 @@ namespace AiState
 	public:
 		typedef struct
 		{
-			TF_BuildableStatus	m_Status;
-			GameEntity			m_Entity;
-			Vector3f			m_Position;
-			Vector3f			m_Facing;
-			int					m_Health;
-			int					m_Cells;
-			int					m_Nails;
-			int					m_Rockets;
-			int					m_Shells;
-			int					m_Armor;
-			bool				m_Sabotaged;
+			TF_BuildableStatus mStatus;
+			GameEntity		 mEntity;
+			Vector3f		 mPosition;
+			Vector3f		 mFacing;
+			int				 mHealth;
+			int				 mCells;
+			int				 mNails;
+			int				 mRockets;
+			int				 mShells;
+			int				 mArmor;
+			bool			 mSabotaged;
 
 			void Reset()
 			{
-				m_Status = BUILDABLE_INVALID;
-				m_Entity.Reset();
-				m_Position = Vector3f::ZERO;
-				m_Facing = Vector3f::ZERO;
-				m_Health = 0;
-				m_Cells = 0;
-				m_Nails = 0;
-				m_Rockets = 0;
-				m_Shells = 0;
-				m_Armor = 0;
-				m_Sabotaged = false;
+				mStatus = BUILDABLE_INVALID;
+				mEntity.Reset();
+				mPosition = Vector3f::ZERO;
+				mFacing = Vector3f::ZERO;
+				mHealth = 0;
+				mCells = 0;
+				mNails = 0;
+				mRockets = 0;
+				mShells = 0;
+				mArmor = 0;
+				mSabotaged = false;
 			}
 		} DispenserStatus;
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 
-		bool DispenserFullyBuilt() const { return (m_DispenserStatus.m_Status == BUILDABLE_BUILT); }
-		bool HasDispenser() const { return m_DispenserStatus.m_Entity.IsValid(); }
-		bool DispenserBuilding() const { return (m_DispenserStatus.m_Status == BUILDABLE_BUILDING); }
+		bool DispenserFullyBuilt() const
+		{
+			return ( mDispenserStatus.mStatus == BUILDABLE_BUILT );
+		}
+		bool HasDispenser() const
+		{
+			return mDispenserStatus.mEntity.IsValid();
+		}
+		bool DispenserBuilding() const
+		{
+			return ( mDispenserStatus.mStatus == BUILDABLE_BUILDING );
+		}
 
-		const DispenserStatus &GetDispenserStatus() const { return m_DispenserStatus; }
+		const DispenserStatus &GetDispenserStatus() const
+		{
+			return mDispenserStatus;
+		}
 
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
-		void UpdateDispenserStatus(const Event_DispenserStatus_TF &_stats);
+		void UpdateDispenserStatus( const Event_DispenserStatus_TF &_stats );
 
 		Dispenser();
 	private:
-		DispenserStatus		m_DispenserStatus;
+		DispenserStatus	 mDispenserStatus;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -303,29 +330,29 @@ namespace AiState
 			DETPACK_BUILDING,
 		};
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
 		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
 		DetpackBuild();
 	private:
-		MapGoalPtr		m_MapGoal;
-		int				m_NextBuildTry;
-		SubState		m_State;
-		int				m_DetpackFuse;
-		bool			m_CantBuild : 1;
+		MapGoalPtr	 mMapGoal;
+		int			 mNextBuildTry;
+		SubState	 mState;
+		int			 mDetpackFuse;
+		bool		 mCantBuild : 1;
 	};
 	//////////////////////////////////////////////////////////////////////////
 
@@ -334,26 +361,38 @@ namespace AiState
 	public:
 		typedef struct
 		{
-			TF_BuildableStatus	m_Status;
-			GameEntity			m_Entity;
-			Vector3f			m_Position;
+			TF_BuildableStatus mStatus;
+			GameEntity		 mEntity;
+			Vector3f		 mPosition;
 		} DetpackStatus;
 
-		bool DetpackFullyBuilt() const { return (m_DetpackStatus.m_Status == BUILDABLE_BUILT); }
-		bool HasDetpack() const { return m_DetpackStatus.m_Entity.IsValid(); }
-		bool DetpackBuilding() const { return (m_DetpackStatus.m_Status == BUILDABLE_BUILDING); }
+		bool DetpackFullyBuilt() const
+		{
+			return ( mDetpackStatus.mStatus == BUILDABLE_BUILT );
+		}
+		bool HasDetpack() const
+		{
+			return mDetpackStatus.mEntity.IsValid();
+		}
+		bool DetpackBuilding() const
+		{
+			return ( mDetpackStatus.mStatus == BUILDABLE_BUILDING );
+		}
 
-		const DetpackStatus &GetDetpackStatus() const { return m_DetpackStatus; }
+		const DetpackStatus &GetDetpackStatus() const
+		{
+			return mDetpackStatus;
+		}
 
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
-		void UpdateDetpackStatus(GameEntity _ent);
+		void UpdateDetpackStatus( GameEntity _ent );
 
 		Detpack();
 	private:
-		DetpackStatus	m_DetpackStatus;
+		DetpackStatus mDetpackStatus;
 	};
 	//////////////////////////////////////////////////////////////////////////
 
@@ -377,89 +416,101 @@ namespace AiState
 
 		struct PipeInfo
 		{
-			GameEntity	m_Entity;
-			Vector3f	m_Position;
-			obuint32	m_TrapIndex : 4;
-			obuint32	m_Moving : 1;
+			GameEntity mEntity;
+			Vector3f mPosition;
+			uint32_t mTrapIndex : 4;
+			uint32_t mMoving : 1;
 		};
 
 		struct Pipes
 		{
-			enum { MaxPipes = 8 };
-			PipeInfo	m_Pipes[MaxPipes];
-			int			m_PipeCount;
+			enum
+			{
+				MaxPipes = 8
+			};
+			PipeInfo mPipes[ MaxPipes ];
+			int		 mPipeCount;
 		};
 
 		struct Trap
 		{
-			Vector3f	m_Source;
-			Vector3f	m_Facing;
+			Vector3f mSource;
+			Vector3f mFacing;
 			void Reset()
 			{
-				m_Source = Vector3f::ZERO;
-				m_Facing = Vector3f::ZERO;
+				mSource = Vector3f::ZERO;
+				mFacing = Vector3f::ZERO;
 			}
 		};
 
 		struct WaitPos
 		{
-			Vector3f	m_Position;
-			Vector3f	m_Facing;
-			int			m_MinWaitTime;
-			int			m_MaxWaitTime;
+			Vector3f mPosition;
+			Vector3f mFacing;
+			int		 mMinWaitTime;
+			int		 mMaxWaitTime;
 
 			void Reset()
 			{
-				m_Position = Vector3f::ZERO;
-				m_Facing = Vector3f::ZERO;
-				m_MinWaitTime = 2000;
-				m_MaxWaitTime = 6000;
+				mPosition = Vector3f::ZERO;
+				mFacing = Vector3f::ZERO;
+				mMinWaitTime = 2000;
+				mMaxWaitTime = 6000;
 			}
 		};
 
-		const Pipes &GetPipes() const { return m_Pipes; }
-		int GetPipeCount() const { return m_Pipes.m_PipeCount; }
+		const Pipes &GetPipes() const
+		{
+			return mPipes;
+		}
+		int GetPipeCount() const
+		{
+			return mPipes.mPipeCount;
+		}
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
-		void GetDebugString(std::stringstream &out);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void GetDebugString( std::stringstream &out );
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
 		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
 		PipeTrap();
 	private:
-		SubState	m_Substate;
-		Pipes		m_Pipes;
+		SubState mSubstate;
+		Pipes	 mPipes;
 
-		enum { MaxPlacementPts = 8, MaxWaitPositions = 8 };
-		Trap		m_Traps[MaxPlacementPts];
-		WaitPos		m_Wait[MaxWaitPositions];
+		enum
+		{
+			MaxPlacementPts = 8, MaxWaitPositions = 8
+		};
+		Trap	 mTraps[ MaxPlacementPts ];
+		WaitPos	 mWait[ MaxWaitPositions ];
 
-		MapGoalPtr	m_MapGoal;
-		FilterPtr	m_WatchFilter;
+		MapGoalPtr mMapGoal;
+		FilterPtr mWatchFilter;
 
-		obint32		m_PlaceOrder;
-		obint32		m_WaitOrder;
+		int32_t	 mPlaceOrder;
+		int32_t	 mWaitOrder;
 
-		obint32		m_ExpireTime;
+		int32_t	 mExpireTime;
 
-		obuint32	m_NumTraps : 4;
-		obuint32	m_NumWaits : 4;
+		uint32_t mNumTraps : 4;
+		uint32_t mNumWaits : 4;
 
-		obuint32	m_CurrentTrap : 4;
-		obuint32	m_CurrentWait : 4;
+		uint32_t mCurrentTrap : 4;
+		uint32_t mCurrentWait : 4;
 
-		bool		CacheGoalInfo(MapGoalPtr mg);
+		bool		CacheGoalInfo( MapGoalPtr mg );
 		bool		ShouldGoForAmmo();
 	};
 
@@ -471,22 +522,22 @@ namespace AiState
 
 		void RenderDebug();
 
-		obReal GetPriority();
-		StateStatus Update(float fDt);
+		float GetPriority();
+		StateStatus Update( float fDt );
 
 		void Enter();
 		void Exit();
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
 		RocketJump();
 	private:
-		Path::PathPoint m_NextPt;
-		bool			m_IsDone : 1;
+		Path::PathPoint mNextPt;
+		bool		 mIsDone : 1;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -497,21 +548,21 @@ namespace AiState
 
 		void RenderDebug();
 
-		obReal GetPriority();
-		StateStatus Update(float fDt);
+		float GetPriority();
+		StateStatus Update( float fDt );
 
 		void Enter();
 		void Exit();
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
 		ConcussionJump();
 	private:
-		Path::PathPoint m_NextPt;
+		Path::PathPoint mNextPt;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -525,45 +576,45 @@ namespace AiState
 			GRENADE_RID,
 		};
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 		void RenderDebug();
 
-		obReal GetPriority();
-		StateStatus Update(float fDt);
+		float GetPriority();
+		StateStatus Update( float fDt );
 
 		void Enter();
 		void Exit();
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
 		void OnSpawn();
 
-		float GetGrenadeSpeed(int _type) const;
+		float GetGrenadeSpeed( int _type ) const;
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
 		ThrowGrenade();
 	private:
-		int		m_PrimaryGrenade;
-		int		m_SecondaryGrenade;
+		int	 mPrimaryGrenade;
+		int	 mSecondaryGrenade;
 
-		int		m_Gren1Ammo, m_Gren1AmmoMax;
-		int		m_Gren2Ammo, m_Gren2AmmoMax;
+		int	 mGren1Ammo, mGren1AmmoMax;
+		int	 mGren2Ammo, mGren2AmmoMax;
 
-		int		m_GrenType;
+		int	 mGrenType;
 
-		int		m_LastThrowTime;
+		int	 mLastThrowTime;
 
-		Vector3f m_AimPos;
+		Vector3f mAimPos;
 
-		AimMode	m_AimMode;
+		AimMode mAimMode;
 
-		bool	m_OnTarget;
+		bool mOnTarget;
 
-		float _GetProjectileSpeed(int _type) const;
-		float _GetProjectileGravity(int _type) const;
+		float _GetProjectileSpeed( int _type ) const;
+		float _GetProjectileGravity( int _type ) const;
 		void _UpdateAmmo();
 		void _UpdateGrenadeTypes();
 	};
@@ -574,47 +625,68 @@ namespace AiState
 	public:
 		typedef struct
 		{
-			TF_BuildableStatus	m_StatusEntrance;
-			TF_BuildableStatus	m_StatusExit;
-			GameEntity			m_EntityEntrance;
-			GameEntity			m_EntityExit;
+			TF_BuildableStatus mStatusEntrance;
+			TF_BuildableStatus mStatusExit;
+			GameEntity		 mEntityEntrance;
+			GameEntity		 mEntityExit;
 
-			Vector3f			m_EntrancePos;
-			Vector3f			m_ExitPos;
+			Vector3f		 mEntrancePos;
+			Vector3f		 mExitPos;
 
-			bool				m_SabotagedEntry;
-			bool				m_SabotagedExit;
+			bool			 mSabotagedEntry;
+			bool			 mSabotagedExit;
 
 			void Reset()
 			{
-				m_StatusEntrance = BUILDABLE_INVALID;
-				m_StatusExit = BUILDABLE_INVALID;
-				m_EntityEntrance.Reset();
-				m_EntityExit.Reset();
+				mStatusEntrance = BUILDABLE_INVALID;
+				mStatusExit = BUILDABLE_INVALID;
+				mEntityEntrance.Reset();
+				mEntityExit.Reset();
 
-				m_SabotagedEntry = false;
-				m_SabotagedExit = false;
+				mSabotagedEntry = false;
+				mSabotagedExit = false;
 			}
 		} TeleporterStatus;
 
-		bool TeleporterEntranceFullyBuilt() const { return (m_TeleporterStatus.m_StatusEntrance == BUILDABLE_BUILT); }
-		bool TeleporterExitFullyBuilt() const { return (m_TeleporterStatus.m_StatusExit == BUILDABLE_BUILT); }
-		bool HasTeleporterEntrance() const { return m_TeleporterStatus.m_EntityEntrance.IsValid(); }
-		bool HasTeleporterExit() const { return m_TeleporterStatus.m_EntityExit.IsValid(); }
-		bool TeleporterEntranceBuilding() const { return (m_TeleporterStatus.m_StatusEntrance == BUILDABLE_BUILDING); }
-		bool TeleporterExitBuilding() const { return (m_TeleporterStatus.m_StatusExit == BUILDABLE_BUILDING); }
+		bool TeleporterEntranceFullyBuilt() const
+		{
+			return ( mTeleporterStatus.mStatusEntrance == BUILDABLE_BUILT );
+		}
+		bool TeleporterExitFullyBuilt() const
+		{
+			return ( mTeleporterStatus.mStatusExit == BUILDABLE_BUILT );
+		}
+		bool HasTeleporterEntrance() const
+		{
+			return mTeleporterStatus.mEntityEntrance.IsValid();
+		}
+		bool HasTeleporterExit() const
+		{
+			return mTeleporterStatus.mEntityExit.IsValid();
+		}
+		bool TeleporterEntranceBuilding() const
+		{
+			return ( mTeleporterStatus.mStatusEntrance == BUILDABLE_BUILDING );
+		}
+		bool TeleporterExitBuilding() const
+		{
+			return ( mTeleporterStatus.mStatusExit == BUILDABLE_BUILDING );
+		}
 
-		const TeleporterStatus &GetTeleporterStatus() const { return m_TeleporterStatus; }
+		const TeleporterStatus &GetTeleporterStatus() const
+		{
+			return mTeleporterStatus;
+		}
 
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
-		void UpdateTeleporterStatus(const Event_TeleporterStatus_TF &_stats);
+		void UpdateTeleporterStatus( const Event_TeleporterStatus_TF &_stats );
 
 		Teleporter();
 	private:
-		TeleporterStatus		m_TeleporterStatus;
+		TeleporterStatus	 mTeleporterStatus;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -629,36 +701,36 @@ namespace AiState
 			TELE_BUILDING_EXIT,
 		};
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
 		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
 		static int BuildEquipWeapon;
 
 		TeleporterBuild();
 	private:
-		MapGoalPtr		m_MapGoalTeleEntrance;
-		MapGoalPtr		m_BuiltTeleEntrance;
+		MapGoalPtr	 mMapGoalTeleEntrance;
+		MapGoalPtr	 mBuiltTeleEntrance;
 
-		MapGoalPtr		m_MapGoalTeleExit;
-		MapGoalPtr		m_BuiltTeleExit;
+		MapGoalPtr	 mMapGoalTeleExit;
+		MapGoalPtr	 mBuiltTeleExit;
 
-		int				m_NextBuildTry;
-		int				m_NextAmmoCheck;
-		SubState		m_State;
-		bool			m_CantBuild : 1;
+		int			 mNextBuildTry;
+		int			 mNextAmmoCheck;
+		SubState	 mState;
+		bool		 mCantBuild : 1;
 	};
 };
 

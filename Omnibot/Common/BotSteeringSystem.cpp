@@ -16,16 +16,16 @@
 namespace AiState
 {
 	SteeringSystem::SteeringSystem()
-		: StateChild("SteeringSystem")
-		, m_TargetVector	(Vector3f::ZERO)
-		, m_TargetRadius	(32.f)
-		, m_MoveMode		(Run)
-		, m_DistanceToTarget(0.f)
-		, m_MoveVec			(Vector3f::ZERO)
-		, m_NoAvoidTime		(0)
-		, m_MoveType		(Normal)
-		, m_bMoveEnabled	(true)
-		, m_TargetVector3d	(false)
+		: StateChild( "SteeringSystem" )
+		, mTargetVector( Vector3f::ZERO )
+		, mTargetRadius( 32.f )
+		, mMoveMode( Run )
+		, mDistanceToTarget( 0.f )
+		, mMoveVec( Vector3f::ZERO )
+		, mNoAvoidTime( 0 )
+		, mMoveType( Normal )
+		, mbMoveEnabled( true )
+		, mTargetVector3d( false )
 	{
 	}
 
@@ -35,82 +35,82 @@ namespace AiState
 
 	void SteeringSystem::RenderDebug()
 	{
-		RenderBuffer::AddLine(GetClient()->GetEyePosition(), GetTarget(), COLOR::GREEN, IGame::GetDeltaTimeSecs()*2.f);
+		RenderBuffer::AddLine( GetClient()->GetEyePosition(), GetTarget(), COLOR::GREEN, IGame::GetDeltaTimeSecs()*2.f );
 	}
 
 	bool SteeringSystem::InTargetRadius() const
 	{
-		return m_DistanceToTarget <= m_TargetRadius;
+		return mDistanceToTarget <= mTargetRadius;
 	}
 
-	Vector3f SteeringSystem::GetMoveVector(MoveType _movetype)
+	Vector3f SteeringSystem::GetMoveVector( MoveType _movetype )
 	{
-		return m_bMoveEnabled ? m_MoveVec : Vector3f::ZERO;
+		return mbMoveEnabled ? mMoveVec : Vector3f::ZERO;
 	}
 
-	bool SteeringSystem::SetTarget(const Vector3f &_pos, float _radius, MoveMode _movemode, bool _in3d)
+	bool SteeringSystem::SetTarget( const Vector3f &_pos, float _radius, MoveMode _movemode, bool _in3d )
 	{
-		m_TargetVector = _pos;
-		m_TargetRadius = _radius;
-		m_TargetVector3d = _in3d;
-		m_MoveMode = _movemode;
-		m_MoveType = Arrive;
+		mTargetVector = _pos;
+		mTargetRadius = _radius;
+		mTargetVector3d = _in3d;
+		mMoveMode = _movemode;
+		mMoveType = Arrive;
 		return true;
 	}
 
-	void SteeringSystem::SetNoAvoidTime(int _time)
+	void SteeringSystem::SetNoAvoidTime( int _time )
 	{
-		m_NoAvoidTime = IGame::GetTime() + _time;
+		mNoAvoidTime = IGame::GetTime() + _time;
 	}
 
 	void SteeringSystem::UpdateSteering()
 	{
-		Prof(UpdateSteering);
+		Prof( UpdateSteering );
 
-		if(!m_bMoveEnabled)
+		if ( !mbMoveEnabled )
 		{
-			m_MoveVec = Vector3f::ZERO;
+			mMoveVec = Vector3f::ZERO;
 			return;
 		}
-		
+
 		const Vector3f bottomBounds = GetClient()->GetWorldBounds().GetCenterBottom();
 
-		m_DistanceToTarget = 0.f;
-		switch(m_MoveType)
+		mDistanceToTarget = 0.f;
+		switch ( mMoveType )
 		{
-		case Normal:
-			m_MoveVec = m_TargetVector - bottomBounds;
-			if(!m_TargetVector3d)
-				m_MoveVec = m_MoveVec.Flatten();
-			m_DistanceToTarget = m_MoveVec.Normalize();
-			break;
-		case Arrive:
-			m_MoveVec = m_TargetVector - bottomBounds;
-			if(!m_TargetVector3d)
-				m_MoveVec = m_MoveVec.Flatten();
-			m_DistanceToTarget = m_MoveVec.Normalize();
-			//m_vMoveVec *= _Arrive(m_vTargetVector, normal);
-			break;
+			case Normal:
+				mMoveVec = mTargetVector - bottomBounds;
+				if ( !mTargetVector3d )
+					mMoveVec = mMoveVec.Flatten();
+				mDistanceToTarget = mMoveVec.Normalize();
+				break;
+			case Arrive:
+				mMoveVec = mTargetVector - bottomBounds;
+				if ( !mTargetVector3d )
+					mMoveVec = mMoveVec.Flatten();
+				mDistanceToTarget = mMoveVec.Normalize();
+				//.mvMoveVec *= _Arrive(.mvTargetVector, normal);
+				break;
 		}
 
 		//////////////////////////////////////////////////////////////////////////
-		if(m_DistanceToTarget <= m_TargetRadius)
+		if ( mDistanceToTarget <= mTargetRadius )
 		{
-			m_MoveVec = Vector3f::ZERO;
+			mMoveVec = Vector3f::ZERO;
 			return;
 		}
 
 		//////////////////////////////////////////////////////////////////////////
 
-		if(GetClient()->IsDebugEnabled(BOT_DEBUG_MOVEVEC))
+		if ( GetClient()->IsDebugEnabled( BOT_DEBUG_MOVEVEC ) )
 		{
 			Vector3f vPos = GetClient()->GetWorldBounds().Center;
-			RenderBuffer::AddLine(vPos, vPos+m_MoveVec * 64.f, COLOR::GREEN, 0.1f);
+			RenderBuffer::AddLine( vPos, vPos + mMoveVec * 64.f, COLOR::GREEN, 0.1f );
 		}
 
-		if(GetClient()->HasEntityFlag(ENT_FLAG_ON_ICE))
+		if ( GetClient()->HasEntityFlag( ENT_FLAG_ON_ICE ) )
 		{
-			GetClient()->PressButton(BOT_BUTTON_WALK);
+			GetClient()->PressButton( BOT_BUTTON_WALK );
 		}
 	}
 
@@ -118,25 +118,25 @@ namespace AiState
 
 	void SteeringSystem::Enter()
 	{
-		m_TargetVector = GetClient()->GetWorldBounds().GetCenterBottom();
-		GetClient()->SetMovementVector(Vector3f::ZERO);
-		FINDSTATEIF(FollowPath,GetRootState(),Stop());
+		mTargetVector = GetClient()->GetWorldBounds().GetCenterBottom();
+		GetClient()->SetMovementVector( Vector3f::ZERO );
+		FINDSTATEIF( FollowPath, GetRootState(), Stop() );
 	}
 
-	State::StateStatus SteeringSystem::Update(float fDt)
+	State::StateStatus SteeringSystem::Update( float fDt )
 	{
-		Prof(SteeringSystem);
+		Prof( SteeringSystem );
 		UpdateSteering();
-		GetClient()->SetMovementVector(GetMoveVector());
-		switch(m_MoveMode)
+		GetClient()->SetMovementVector( GetMoveVector() );
+		switch ( mMoveMode )
 		{
-		case Walk:
-			GetClient()->PressButton(BOT_BUTTON_WALK);
-			break;
-		case Run:
-		default:
-			/*GetClient()->ReleaseButton(BOT_BUTTON_WALK);*/
-			break;
+			case Walk:
+				GetClient()->PressButton( BOT_BUTTON_WALK );
+				break;
+			case Run:
+			default:
+				/*GetClient()->ReleaseButton(BOT_BUTTON_WALK);*/
+				break;
 		}
 		return State_Busy;
 	}

@@ -29,7 +29,10 @@ GMBIND_PROPERTY_MAP_BEGIN( gmTargetInfo )
 	GMBIND_PROPERTY( "Position", getPosition, NULL )
 	GMBIND_PROPERTY( "Facing", getFacing, NULL )
 	GMBIND_PROPERTY( "Velocity", getVelocity, NULL )
+	GMBIND_PROPERTY( "Group", getGroup, NULL )
 	GMBIND_PROPERTY( "Class", getClass, NULL )
+	GMBIND_PROPERTY( "Quantity", getQuantity, NULL )
+	GMBIND_PROPERTY( "QuantityMax", getQuantityMax, NULL )
 GMBIND_PROPERTY_MAP_END();
 
 //////////////////////////////////////////////////////////////////////////
@@ -56,7 +59,7 @@ int gmTargetInfo::gmIsA(gmThread *a_thread)
 	if ( pNative == NULL ) {
 		return GM_EXCEPTION;
 	}
-	a_thread->PushInt(pNative->IsA(checkclass) ? 1 : 0);
+	a_thread->PushInt( pNative->mEntInfo.mClassId == checkclass ? 1 : 0 );
 	return GM_OK;
 }
 
@@ -65,40 +68,58 @@ int gmTargetInfo::gmIsA(gmThread *a_thread)
 
 bool gmTargetInfo::getDistanceTo( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
-	a_operands[0].SetFloat(a_native->m_DistanceTo);
+	a_operands[0].SetFloat(a_native->mDistanceTo);
 	return true;
 }
 
 bool gmTargetInfo::getPosition( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
 	a_operands[0].SetVector(
-		a_native->m_LastPosition.X(), 
-		a_native->m_LastPosition.Y(), 
-		a_native->m_LastPosition.Z());
+		a_native->mLastPosition.X(), 
+		a_native->mLastPosition.Y(), 
+		a_native->mLastPosition.Z());
 	return true;
 }
 
 bool gmTargetInfo::getFacing( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
 	a_operands[0].SetVector(
-		a_native->m_LastFacing.X(), 
-		a_native->m_LastFacing.Y(), 
-		a_native->m_LastFacing.Z());
+		a_native->mLastFacing.X(), 
+		a_native->mLastFacing.Y(), 
+		a_native->mLastFacing.Z());
 	return true;
 }
 
 bool gmTargetInfo::getVelocity( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
 	a_operands[0].SetVector(
-		a_native->m_LastVelocity.X(), 
-		a_native->m_LastVelocity.Y(), 
-		a_native->m_LastVelocity.Z());
+		a_native->mLastVelocity.X(), 
+		a_native->mLastVelocity.Y(), 
+		a_native->mLastVelocity.Z());
+	return true;
+}
+
+bool gmTargetInfo::getGroup( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
+{
+	a_operands[ 0 ].SetInt( a_native->mEntInfo.mGroup );
 	return true;
 }
 
 bool gmTargetInfo::getClass( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
-	a_operands[0].SetInt(a_native->m_EntityClass);
+	a_operands[ 0 ].SetInt( a_native->mEntInfo.mClassId );
+	return true;
+}
+
+bool gmTargetInfo::getQuantity( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
+{
+	a_operands[ 0 ].SetInt( a_native->mEntInfo.mQuantity );
+	return true;
+}
+
+bool gmTargetInfo::getQuantityMax( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
+{
+	a_operands[ 0 ].SetInt( a_native->mEntInfo.mQuantityMax );
 	return true;
 }
 

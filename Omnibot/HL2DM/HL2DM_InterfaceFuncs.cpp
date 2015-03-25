@@ -22,9 +22,4 @@ namespace InterfaceFuncs
 		MessageHelper msg( HL2DM_MSG_PHYSGUNINFO, &info, sizeof( info ) );
 		return SUCCESS( InterfaceMsg( msg, _ent ) );
 	}
-	bool GetChargerStatus( GameEntity _ent, HL2DM_ChargerStatus &status )
-	{
-		MessageHelper msg( HL2DM_MSG_CHARGER_STATUS, &status, sizeof( status ) );
-		return SUCCESS( InterfaceMsg( msg, _ent ) );
-	}
 };

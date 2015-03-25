@@ -20,6 +20,14 @@ IGame *CreateGameInstance()
 	return new MC_Game;
 }
 
+MC_Game::MC_Game()
+{
+}
+
+MC_Game::~MC_Game()
+{
+}
+
 int MC_Game::GetVersionNum() const
 {
 	return MC_VERSION_LATEST;
@@ -67,7 +75,10 @@ const char *MC_Game::GetScriptSubfolder() const
 {
 	return "mc\\scripts\\";
 }
-
+const char *MC_Game::GetGameDatabaseAbbrev() const
+{
+	return "mc";
+}
 bool MC_Game::Init( System & system )
 {
 	// Set the sensory systems callback for getting aim offsets for entity types.
@@ -91,7 +102,7 @@ void MC_Game::GetGameVars( GameVars &_gamevars )
 
 ClientPtr &MC_Game::GetClientFromCorrectedGameId( int _gameid )
 {
-	return m_ClientList[ _gameid - 1 ];
+	return mClientList[ _gameid - 1 ];
 }
 
 static IntEnum MC_TeamEnum [] =
@@ -139,9 +150,9 @@ void MC_Game::InitScriptCategories( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "WALLUNIT", gmVariable( MC_ENT_CAT_WALLUNIT ) );
 }
 
-static IntEnum MC_ClassEnum [] =
+static const IntEnum gClassMapping [] =
 {
-	IntEnum( "DEFAULT", MC_CLASS_DEFAULT ),
+	IntEnum( "PLAYER", MC_CLASS_DEFAULT ),
 	IntEnum( "ANYPLAYER", MC_CLASS_ANY ),
 
 	IntEnum( "NPC_ZOMBIE", MC_CLASSEX_ZOMBIE ),
@@ -152,11 +163,11 @@ static IntEnum MC_ClassEnum [] =
 	IntEnum( "NPC_HEADCRAB", MC_CLASSEX_HEADCRAB ),
 	IntEnum( "NPC_HEADCRAB_FAST", MC_CLASSEX_HEADCRAB_FAST ),
 	IntEnum( "NPC_VORTIGAUNT", MC_CLASSEX_VORTIGAUNT ),
-	IntEnum( "NPC_HUNTER", MC_CLASSEX_HUNTER ),	
+	IntEnum( "NPC_HUNTER", MC_CLASSEX_HUNTER ),
 	IntEnum( "NPC_MANHACK", MC_CLASSEX_MANHACK ),
 	IntEnum( "NPC_CROW", MC_CLASSEX_CROW ),
 	IntEnum( "NPC_ROLLERMINE", MC_CLASSEX_ROLLERMINE ),
-	
+
 	IntEnum( "PROPBREAKABLE", MC_CLASSEX_PROPBREAKABLE ),
 	IntEnum( "PROPEXPLOSIVE", MC_CLASSEX_PROPEXPLOSIVE ),
 
@@ -192,30 +203,17 @@ static IntEnum MC_ClassEnum [] =
 	IntEnum( "TURRET", MC_CLASSEX_TURRET ),
 };
 
-const char *MC_Game::FindClassName( obint32 _classId )
-{
-	obint32 iNumMappings = sizeof( MC_ClassEnum ) / sizeof( MC_ClassEnum[ 0 ] );
-	for ( int i = 0; i < iNumMappings; ++i )
-	{
-		if ( MC_ClassEnum[ i ].m_Value == _classId )
-			return MC_ClassEnum[ i ].m_Key;
-	}
-	return IGame::FindClassName( _classId );
-}
-
 void MC_Game::InitScriptClasses( gmMachine *_machine, gmTableObject *_table )
 {
 	IGame::InitScriptClasses( _machine, _table );
 
 	FilterSensory::ANYPLAYERCLASS = MC_CLASS_ANY;
 
-	obint32 iNumMappings = sizeof( MC_ClassEnum ) / sizeof( MC_ClassEnum[ 0 ] );
+	const int32_t iNumMappings = sizeof( gClassMapping ) / sizeof( gClassMapping[ 0 ] );
 	for ( int i = 0; i < iNumMappings; ++i )
 	{
-		_table->Set( _machine, MC_ClassEnum[ i ].m_Key, gmVariable( MC_ClassEnum[ i ].m_Value ) );
+		_table->Set( _machine, gClassMapping[ i ].mKey, gmVariable( gClassMapping[ i ].mValue ) );
 	}
-
-	InitScriptWeaponClasses( _machine, _table, MC_CLASSEX_WEAPON );
 }
 
 void MC_Game::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
@@ -277,14 +275,14 @@ void MC_Game::InitScriptModules( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "AUX_CAPACITY", gmVariable( MC_MODULE_AUX_CAPACITY ) );
 	_table->Set( _machine, "ARMOR_CAPACITY", gmVariable( MC_MODULE_ARMOR_CAPACITY ) );
 	_table->Set( _machine, "ARMOR_REGEN", gmVariable( MC_MODULE_ARMOR_REGEN ) );
-	
+
 	// weapons
 	_table->Set( _machine, "IMPACT_STRENGTH", gmVariable( MC_MODULE_IMPACT_STRENGTH ) );
 	_table->Set( _machine, "BRUTE_FORCE", gmVariable( MC_MODULE_BRUTE_FORCE ) );
 	_table->Set( _machine, "CRITICAL_HIT", gmVariable( MC_MODULE_CRITICAL_HIT ) );
 	_table->Set( _machine, "CLIP_SIZE", gmVariable( MC_MODULE_CLIP_SIZE ) );
 	_table->Set( _machine, "AMMO_REGEN", gmVariable( MC_MODULE_AMMO_REGEN ) );
-	
+
 	// mobility
 	_table->Set( _machine, "MODULE_CLOAK", gmVariable( MC_MODULE_CLOAK ) );
 	_table->Set( _machine, "JETPACK", gmVariable( MC_MODULE_JETPACK ) );
@@ -327,80 +325,88 @@ void MC_Game::InitCommands()
 	IGame::InitCommands();
 }
 
-const float MC_Game::MC_GetEntityClassTraceOffset( const int _class, const BitFlag64 &_entflags )
+const float MC_Game::MC_GetEntityClassTraceOffset( const TargetInfo &_target )
 {
-	switch ( _class )
+	if ( _target.mEntInfo.mGroup == ENT_GRP_PLAYER )
 	{
-		case MC_CLASS_DEFAULT:
+		if ( _target.mEntInfo.mClassId > MC_CLASS_NULL && _target.mEntInfo.mClassId < FilterSensory::ANYPLAYERCLASS )
 		{
-			if ( _entflags.CheckFlag( ENT_FLAG_CROUCHED ) )
-				return 20.0f;
+			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_PRONED ) )
+				return 16.0f;
+			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_CROUCHED ) )
+				return 24.0f;
 			return 48.0f;
 		}
-		case MC_CLASSEX_ZOMBIE:
-		case MC_CLASSEX_ZOMBIE_FAST:
-			return 48.f;
-		case MC_CLASSEX_ANTLION_WORKER:
-			return 20.f;
-		case MC_CLASSEX_ANTLION:
-		case MC_CLASSEX_ANTLION_GUARD:
-			return 32.f;
-		case MC_CLASSEX_HEADCRAB:
-		case MC_CLASSEX_HEADCRAB_FAST:
-			return 2.f;
-		case MC_CLASSEX_VORTIGAUNT:
-			return 48.f;
-		case MC_CLASSEX_MANHACK:
-			return 0.f;
-		case MC_CLASSEX_TURRET:
-			return 40.f;
-		case MC_CLASSEX_ROLLERMINE:
-			return 4.f;
-		case MC_CLASSEX_HUNTER:
-			return 45.f;
 	}
-
-	if ( _class >= MC_CLASSEX_WEAPON && _class < MC_CLASSEX_WEAPON_LAST )
-		return 4.f;
-
+	else if ( _target.mEntInfo.mGroup == ENT_GRP_MONSTER )
+	{
+		switch ( _target.mEntInfo.mClassId )
+		{
+			case MC_CLASSEX_ZOMBIE:
+			case MC_CLASSEX_ZOMBIE_FAST:
+				return 48.f;
+			case MC_CLASSEX_ANTLION_WORKER:
+				return 20.f;
+			case MC_CLASSEX_ANTLION:
+			case MC_CLASSEX_ANTLION_GUARD:
+				return 32.f;
+			case MC_CLASSEX_HEADCRAB:
+			case MC_CLASSEX_HEADCRAB_FAST:
+				return 2.f;
+			case MC_CLASSEX_VORTIGAUNT:
+				return 48.f;
+			case MC_CLASSEX_MANHACK:
+				return 0.f;
+			case MC_CLASSEX_TURRET:
+				return 40.f;
+			case MC_CLASSEX_ROLLERMINE:
+				return 4.f;
+			case MC_CLASSEX_HUNTER:
+				return 45.f;
+		}
+	}
 	return 0.0f;
 }
 
-const float MC_Game::MC_GetEntityClassAimOffset( const int _class, const BitFlag64 &_entflags )
+const float MC_Game::MC_GetEntityClassAimOffset( const TargetInfo &_target )
 {
-	switch ( _class )
+	if ( _target.mEntInfo.mGroup == ENT_GRP_PLAYER )
 	{
-		case MC_CLASS_DEFAULT:
+		if ( _target.mEntInfo.mClassId > MC_CLASS_NULL && _target.mEntInfo.mClassId < FilterSensory::ANYPLAYERCLASS )
 		{
-			if ( _entflags.CheckFlag( ENT_FLAG_CROUCHED ) )
-				return 20.0f;
+			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_PRONED ) )
+				return 16.0f;
+			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_CROUCHED ) )
+				return 24.0f;
 			return 48.0f;
 		}
-		case MC_CLASSEX_ZOMBIE:
-		case MC_CLASSEX_ZOMBIE_FAST:
-			return 48.f;
-		case MC_CLASSEX_ANTLION_WORKER:
-			return 20.f;
-		case MC_CLASSEX_ANTLION:		
-		case MC_CLASSEX_ANTLION_GUARD:
-			return 32.f;
-		case MC_CLASSEX_HEADCRAB:
-		case MC_CLASSEX_HEADCRAB_FAST:
-			return 2.f;
-		case MC_CLASSEX_VORTIGAUNT:
-			return 48.f;
-		case MC_CLASSEX_MANHACK:
-			return 0.f;
-		case MC_CLASSEX_TURRET:
-			return 40.f;
-		case MC_CLASSEX_ROLLERMINE:
-			return 4.f;
-		case MC_CLASSEX_HUNTER:
-			return 45.f;
 	}
-
-	if ( _class >= MC_CLASSEX_WEAPON && _class < MC_CLASSEX_WEAPON_LAST )
-		return 4.f;
-
+	else if ( _target.mEntInfo.mGroup == ENT_GRP_MONSTER )
+	{
+		switch ( _target.mEntInfo.mClassId )
+		{
+			case MC_CLASSEX_ZOMBIE:
+			case MC_CLASSEX_ZOMBIE_FAST:
+				return 48.f;
+			case MC_CLASSEX_ANTLION_WORKER:
+				return 20.f;
+			case MC_CLASSEX_ANTLION:
+			case MC_CLASSEX_ANTLION_GUARD:
+				return 32.f;
+			case MC_CLASSEX_HEADCRAB:
+			case MC_CLASSEX_HEADCRAB_FAST:
+				return 2.f;
+			case MC_CLASSEX_VORTIGAUNT:
+				return 48.f;
+			case MC_CLASSEX_MANHACK:
+				return 0.f;
+			case MC_CLASSEX_TURRET:
+				return 40.f;
+			case MC_CLASSEX_ROLLERMINE:
+				return 4.f;
+			case MC_CLASSEX_HUNTER:
+				return 45.f;
+		}
+	}
 	return 0.0f;
 }

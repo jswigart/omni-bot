@@ -53,9 +53,9 @@ void gmTriggerInfo::Destructor(TriggerInfo *_native)
 
 bool gmTriggerInfo::getName( TriggerInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
-	if(a_native->m_TagName)
+	if(a_native->mTagName)
 	{
-		gmStringObject *pString = a_thread->GetMachine()->AllocStringObject(a_native->m_TagName);
+		gmStringObject *pString = a_thread->GetMachine()->AllocStringObject(a_native->mTagName);
 		a_operands[0].SetString(pString);
 	}
 	else
@@ -65,9 +65,9 @@ bool gmTriggerInfo::getName( TriggerInfo *a_native, gmThread *a_thread, gmVariab
 
 bool gmTriggerInfo::getAction( TriggerInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
-	if(a_native->m_Action)
+	if(a_native->mAction)
 	{
-		gmStringObject *pString = a_thread->GetMachine()->AllocStringObject(a_native->m_Action);
+		gmStringObject *pString = a_thread->GetMachine()->AllocStringObject(a_native->mAction);
 		a_operands[0].SetString(pString);
 	}
 	else
@@ -77,10 +77,10 @@ bool gmTriggerInfo::getAction( TriggerInfo *a_native, gmThread *a_thread, gmVari
 
 bool gmTriggerInfo::getActivator( TriggerInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
-	if(a_native->m_Activator.IsValid())
+	if(a_native->mActivator.IsValid())
 	{
 		gmVariable v;
-		a_operands[0].SetEntity(a_native->m_Activator.AsInt());
+		a_operands[0].SetEntity(a_native->mActivator.AsInt());
 	}
 	else
 		a_operands[0].Nullify();
@@ -89,10 +89,10 @@ bool gmTriggerInfo::getActivator( TriggerInfo *a_native, gmThread *a_thread, gmV
 
 bool gmTriggerInfo::getEntity( TriggerInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
-	if(a_native->m_Entity.IsValid())
+	if(a_native->mEntity.IsValid())
 	{
 		gmVariable v;
-		a_operands[0].SetEntity(a_native->m_Entity.AsInt());
+		a_operands[0].SetEntity(a_native->mEntity.AsInt());
 	}
 	else
 		a_operands[0].Nullify();

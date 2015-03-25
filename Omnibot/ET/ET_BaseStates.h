@@ -25,33 +25,33 @@ namespace AiState
 	{
 	public:
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
 		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
 		PlantMine();
 	private:
 
 		Trackers			Tracker;
-		MapGoalPtr			m_MapGoal;
+		MapGoalPtr		 mMapGoal;
 
-		GameEntity			m_LandMineEntity;
-		Vector3f			m_LandMinePosition;
-		Vector3f			m_LandMineVelocity;
+		GameEntity		 mLandMineEntity;
+		Vector3f		 mLandMinePosition;
+		Vector3f		 mLandMineVelocity;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -59,37 +59,40 @@ namespace AiState
 	class MobileMortar : public StateChild, public FollowPathUser, public AimerUser
 	{
 	public:
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
 		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
 		MobileMortar();
 	private:
-		enum { MaxMortarAims = 8 };
-		Vector3f			m_MortarAim[MaxMortarAims];
-		int					m_CurrentAim;
-		int					m_NumMortarAims;
-		int					m_FireDelay;
+		enum
+		{
+			MaxMortarAims = 8
+		};
+		Vector3f		 mMortarAim[ MaxMortarAims ];
+		int				 mCurrentAim;
+		int				 mNumMortarAims;
+		int				 mFireDelay;
 
-		WeaponLimits		m_Limits;
-		MapGoalPtr			m_MapGoal;
+		WeaponLimits	 mLimits;
+		MapGoalPtr		 mMapGoal;
 		Trackers			Tracker;
 
-		bool CacheGoalInfo(MapGoalPtr mg);
+		bool CacheGoalInfo( MapGoalPtr mg );
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -98,40 +101,40 @@ namespace AiState
 	{
 	public:
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
 		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
 		CallArtillery();
 	private:
 		Trackers			Tracker;
-		MapGoalPtr			m_MapGoal;
-		MapGoalPtr			m_MapGoalTarget;
-		GameEntity			m_TargetEntity;
-		int					m_FireTime;
+		MapGoalPtr		 mMapGoal;
+		MapGoalPtr		 mMapGoalTarget;
+		GameEntity		 mTargetEntity;
+		int				 mFireTime;
 
-		FilterPtr			m_WatchFilter;
+		FilterPtr		 mWatchFilter;
 
-		bool				m_Fired;
-		Seconds				m_MinCampTime;
-		Seconds				m_MaxCampTime;
-		int					m_Stance;
+		bool			 mFired;
+		Seconds			 mMinCampTime;
+		Seconds			 mMaxCampTime;
+		int				 mStance;
 
-		int					m_ExpireTime;
+		int				 mExpireTime;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -142,39 +145,39 @@ namespace AiState
 		enum CabinetType
 		{
 			Health,
-			Ammo,
+			mmo,
 		};
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
 		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
 		UseCabinet();
 	private:
 		Trackers			Tracker;
-		MapGoalPtr			m_MapGoal;
-		CabinetType			m_CabinetType;
-		int					m_AmmoType;
-		int					m_GetAmmoAmount;
-		obint32				m_UseTime;
+		MapGoalPtr		 mMapGoal;
+		CabinetType		 mCabinetType;
+		int				 mAmmoType;
+		int				 mGetAmmoAmount;
+		int32_t			 mUseTime;
 
-		float				m_HealthPriority;
-		float				m_AmmoPriority;
-		float				m_Range;
+		float			 mHealthPriority;
+		float			 mAmmoPriority;
+		float			 mRange;
 
-		GoalManager::Query	m_Query;
+		GoalManager::Query mQuery;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -186,7 +189,7 @@ namespace AiState
 	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
-	//	obReal GetPriority();
+	//	float GetPriority();
 	//	void Enter();
 	//	void Exit();
 	//	StateStatus Update(float fDt);
@@ -201,16 +204,16 @@ namespace AiState
 	//	Flamethrower();
 	//private:
 	//	Trackers		Tracker;
-	//	MapGoalPtr		m_MapGoal;
-	//	Vector3f		m_AimPosition;
+	//	MapGoalPtr	 mMapGoal;
+	//	Vector3f	 mAimPosition;
 	//
-	//	TrackTargetZone m_TargetZone;
+	//	TrackTargetZone .mTargetZone;
 
-	//	int				m_MinCampTime;
-	//	int				m_MaxCampTime;
-	//	int				m_Stance;
+	//	int			 mMinCampTime;
+	//	int			 mMaxCampTime;
+	//	int			 mStance;
 
-	//	int				m_ExpireTime;
+	//	int			 mExpireTime;
 	//};
 
 	////////////////////////////////////////////////////////////////////////////
@@ -222,7 +225,7 @@ namespace AiState
 	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
-	//	obReal GetPriority();
+	//	float GetPriority();
 	//	void Enter();
 	//	void Exit();
 	//	StateStatus Update(float fDt);
@@ -237,16 +240,16 @@ namespace AiState
 	//	Panzer();
 	//private:
 	//	Trackers		Tracker;
-	//	MapGoalPtr		m_MapGoal;
-	//	Vector3f		m_AimPosition;
+	//	MapGoalPtr	 mMapGoal;
+	//	Vector3f	 mAimPosition;
 	//
-	//	TrackTargetZone m_TargetZone;
+	//	TrackTargetZone .mTargetZone;
 
-	//	int				m_MinCampTime;
-	//	int				m_MaxCampTime;
-	//	int				m_Stance;
+	//	int			 mMinCampTime;
+	//	int			 mMaxCampTime;
+	//	int			 mStance;
 
-	//	int				m_ExpireTime;
+	//	int			 mExpireTime;
 	//};
 
 	//class BuildConstruction : public StateChild, public FollowPathUser, public AimerUser
@@ -256,7 +259,7 @@ namespace AiState
 	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
-	//	obReal GetPriority();
+	//	float GetPriority();
 	//	void Enter();
 	//	void Exit();
 	//	StateStatus Update(float fDt);
@@ -272,12 +275,12 @@ namespace AiState
 	//private:
 	//	Trackers		Tracker;
 
-	//	MapGoalPtr		m_MapGoal;
-	//	Vector3f		m_ConstructionPos;
-	//	bool			m_AdjustedPosition;
-	//	bool			m_Crouch;
-	//	bool			m_Prone;
-	//	bool			m_IgnoreTargets;
+	//	MapGoalPtr	 mMapGoal;
+	//	Vector3f	 mConstructionPos;
+	//	bool		 mAdjustedPosition;
+	//	bool		 mCrouch;
+	//	bool		 mProne;
+	//	bool		 mIgnoreTargets;
 	//};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -290,7 +293,7 @@ namespace AiState
 	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
-	//	obReal GetPriority();
+	//	float GetPriority();
 	//	void Enter();
 	//	void Exit();
 	//	StateStatus Update(float fDt);
@@ -315,14 +318,14 @@ namespace AiState
 	//	} GoalState;
 
 	//	Trackers			Tracker;
-	//	MapGoalPtr			m_MapGoal;
+	//	MapGoalPtr		 mMapGoal;
 
-	//	GoalState			m_GoalState;
-	//	Vector3f			m_TargetPosition;
-	//	GameEntity			m_ExplosiveEntity;
-	//	Vector3f			m_ExplosivePosition;
-	//	bool				m_AdjustedPosition;
-	//	bool				m_IgnoreTargets;
+	//	GoalState		 mGoalState;
+	//	Vector3f		 mTargetPosition;
+	//	GameEntity		 mExplosiveEntity;
+	//	Vector3f		 mExplosivePosition;
+	//	bool			 mAdjustedPosition;
+	//	bool			 mIgnoreTargets;
 
 	//	State::StateStatus _UpdateDynamite();
 	//	State::StateStatus _UpdateSatchel();
@@ -337,7 +340,7 @@ namespace AiState
 	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
-	//	obReal GetPriority();
+	//	float GetPriority();
 	//	void Enter();
 	//	void Exit();
 	//	StateStatus Update(float fDt);
@@ -351,7 +354,7 @@ namespace AiState
 
 	//	MountMg42();
 	//private:
-	//	MapGoalPtr			m_MapGoal;
+	//	MapGoalPtr		 mMapGoal;
 	//	Trackers			Tracker;
 
 	//	enum ScanType
@@ -364,39 +367,39 @@ namespace AiState
 
 	//		NUM_SCAN_TYPES
 	//	};
-	//	int					m_ScanDirection;
-	//	int					m_NextScanTime;
+	//	int				 mScanDirection;
+	//	int				 mNextScanTime;
 
-	//	TrackTargetZone		m_TargetZone;
+	//	TrackTargetZone	 mTargetZone;
 
-	//	Seconds					m_MinCampTime;
-	//	Seconds					m_MaxCampTime;
-	//	int					m_Stance;
+	//	Seconds				 mMinCampTime;
+	//	Seconds				 mMaxCampTime;
+	//	int				 mStance;
 
 	//	//////////////////////////////////////////////////////////////////////////
-	//	Vector3f			m_MG42Position;
+	//	Vector3f		 mMG42Position;
 
-	//	Vector3f			m_AimPoint;
+	//	Vector3f		 mAimPoint;
 
-	//	Vector3f			m_GunCenterArc;
-	//	Vector3f			m_CurrentMountedAngles;
+	//	Vector3f		 mGunCenterArc;
+	//	Vector3f		 mCurrentMountedAngles;
 	//
-	//	Vector3f			m_ScanLeft;
-	//	Vector3f			m_ScanRight;
+	//	Vector3f		 mScanLeft;
+	//	Vector3f		 mScanRight;
 
-	//	float				m_MinHorizontalArc;
-	//	float				m_MaxHorizontalArc;
-	//	float				m_MinVerticalArc;
-	//	float				m_MaxVerticalArc;
+	//	float			 mMinHorizontalArc;
+	//	float			 mMaxHorizontalArc;
+	//	float			 mMinVerticalArc;
+	//	float			 mMaxVerticalArc;
 
-	//	int					m_ExpireTime;
-	//	int					m_StartTime;
+	//	int				 mExpireTime;
+	//	int				 mStartTime;
 
-	//	bool				m_GotGunProperties;
+	//	bool			 mGotGunProperties;
 	//	//////////////////////////////////////////////////////////////////////////
 
-	//	bool				m_AdjustedPosition;
-	//	bool				m_IgnoreTargets;
+	//	bool			 mAdjustedPosition;
+	//	bool			 mIgnoreTargets;
 
 	//	bool				_GetMG42Properties();
 	//};
@@ -410,7 +413,7 @@ namespace AiState
 	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
-	//	obReal GetPriority();
+	//	float GetPriority();
 	//	void Enter();
 	//	void Exit();
 	//	StateStatus Update(float fDt);
@@ -424,16 +427,16 @@ namespace AiState
 
 	//	MobileMg42();
 	//private:
-	//	Vector3f			m_AimPosition;
-	//	WeaponLimits		m_Limits;
-	//	MapGoalPtr			m_MapGoal;
-	//	TrackTargetZone		m_TargetZone;
+	//	Vector3f		 mAimPosition;
+	//	WeaponLimits	 mLimits;
+	//	MapGoalPtr		 mMapGoal;
+	//	TrackTargetZone	 mTargetZone;
 	//	Trackers			Tracker;
 
-	//	Seconds					m_MinCampTime;
-	//	Seconds					m_MaxCampTime;
+	//	Seconds				 mMinCampTime;
+	//	Seconds				 mMaxCampTime;
 
-	//	int					m_ExpireTime;
+	//	int				 mExpireTime;
 	//};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -444,7 +447,7 @@ namespace AiState
 	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
-	//	obReal GetPriority();
+	//	float GetPriority();
 	//	void Enter();
 	//	void Exit();
 	//	StateStatus Update(float fDt);
@@ -458,11 +461,11 @@ namespace AiState
 
 	//	RepairMg42();
 	//private:
-	//	Vector3f			m_MG42Position;
-	//	MapGoalPtr			m_MapGoal;
+	//	Vector3f		 mMG42Position;
+	//	MapGoalPtr		 mMapGoal;
 	//	Trackers			Tracker;
 
-	//	bool				m_IgnoreTargets;
+	//	bool			 mIgnoreTargets;
 	//};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -474,7 +477,7 @@ namespace AiState
 	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
-	//	obReal GetPriority();
+	//	float GetPriority();
 	//	void Enter();
 	//	void Exit();
 	//	StateStatus Update(float fDt);
@@ -486,8 +489,8 @@ namespace AiState
 	//private:
 	//	Trackers		Tracker;
 
-	//	MapGoalPtr		m_MapGoal;
-	//	Vector3f		m_TargetPosition;
+	//	MapGoalPtr	 mMapGoal;
+	//	Vector3f	 mTargetPosition;
 	//};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -504,7 +507,7 @@ namespace AiState
 	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
-	//	obReal GetPriority();
+	//	float GetPriority();
 	//	void Enter();
 	//	void Exit();
 	//	StateStatus Update(float fDt);
@@ -518,14 +521,14 @@ namespace AiState
 
 	//	ReviveTeammate();
 	//private:
-	//	GoalState			m_GoalState;
+	//	GoalState		 mGoalState;
 
-	//	GameTimer			m_CheckReviveTimer;
+	//	GameTimer		 mCheckReviveTimer;
 
 	//	Trackers			Tracker;
-	//	MapGoalPtr			m_MapGoal;
-	//	MapGoalList			m_List;
-	//	float				m_Range;
+	//	MapGoalPtr		 mMapGoal;
+	//	MapGoalList		 mList;
+	//	float			 mRange;
 
 	//	bool AreThereNewReviveGoals();
 	//};
@@ -539,7 +542,7 @@ namespace AiState
 	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
-	//	obReal GetPriority();
+	//	float GetPriority();
 	//	void Enter();
 	//	void Exit();
 	//	StateStatus Update(float fDt);
@@ -553,10 +556,10 @@ namespace AiState
 
 	//	DefuseDynamite();
 	//private:
-	//	Vector3f			m_TargetPosition;
+	//	Vector3f		 mTargetPosition;
 
 	//	Trackers			Tracker;
-	//	MapGoalPtr			m_MapGoal;
+	//	MapGoalPtr		 mMapGoal;
 	//};
 };
 

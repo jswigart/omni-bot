@@ -23,20 +23,20 @@ public:
 	typedef boost::weak_ptr<Type> WPtr;
 
 	TrackablePtr() :
-		m_TrackType(TrackType)
+		mTrackType( TrackType )
 	{
 	}
-	TrackablePtr(const TrackPtr &_ptr) :
-		m_TrackType(TrackType)
+	TrackablePtr( const TrackPtr &_ptr ) :
+		mTrackType( TrackType )
 	{
 		*this = _ptr;
 	}
 	~TrackablePtr()
 	{
-		ShPtr shPtr = m_pObject.lock();
-		if(shPtr)
+		ShPtr shPtr = mObject.lock();
+		if ( shPtr )
 		{
-			shPtr->DelReference(m_TrackType);
+			shPtr->DelReference( mTrackType );
 		}
 	}
 
@@ -45,114 +45,117 @@ public:
 	///////////////////////////
 
 	// Assigning a shared pointer
-	inline TrackPtr& operator=(ShPtr &_obj)
+	inline TrackPtr& operator=( ShPtr &_obj )
 	{
 		// Release the obj if necessary to decrement the reference counter.
-		if(!m_pObject.expired())
+		if ( !mObject.expired() )
 		{
-			ShPtr shPtr = m_pObject.lock();
+			ShPtr shPtr = mObject.lock();
 
 			// assigning the same thing!
-			if(shPtr == _obj)
+			if ( shPtr == _obj )
 				return *this;
 
-			if(shPtr)
+			if ( shPtr )
 			{
-				shPtr->DelReference(m_TrackType);
+				shPtr->DelReference( mTrackType );
 			}
 		}
 
 		// Assign the new object
-		m_pObject = _obj;
+		mObject = _obj;
 
 		// Addref to increment the new objects reference counter.
-		if(!m_pObject.expired())
+		if ( !mObject.expired() )
 		{
-			ShPtr shPtr = m_pObject.lock();
-			if(shPtr)
+			ShPtr shPtr = mObject.lock();
+			if ( shPtr )
 			{
-				shPtr->AddReference(m_TrackType);
+				shPtr->AddReference( mTrackType );
 			}
 		}
 		return *this;
 	}
 	// Assigning a shared pointer
-	inline Type& operator=(WPtr &_obj)
+	inline Type& operator=( WPtr &_obj )
 	{
 		// assigning the same thing!
-		if(m_pObject == _obj)
+		if ( mObject == _obj )
 			return *this;
 
 		// Release the obj if necessary to decrement the reference counter.
-		ShPtr shPtr = m_pObject.lock();
-		if(shPtr)
+		ShPtr shPtr = mObject.lock();
+		if ( shPtr )
 		{
-			shPtr->DelReference(m_TrackType);
+			shPtr->DelReference( mTrackType );
 		}
 
 		// Assign the new object
-		m_pObject = _obj;
+		.mObject = _obj;
 
 		// Addref to increment the new objects reference counter.
-		ShPtr shPtr2 = m_pObject.lock();
-		if(shPtr2)
+		ShPtr shPtr2 = mObject.lock();
+		if ( shPtr2 )
 		{
-			shPtr2->AddReference(m_TrackType);
+			shPtr2->AddReference( mTrackType );
 		}
-		return *m_pObject;
+		return *.mObject;
 	}
 	// comparison
-	inline bool operator==(ShPtr &_obj)
+	inline bool operator==( ShPtr &_obj )
 	{
-		ShPtr shPtr = m_pObject.lock();
+		ShPtr shPtr = mObject.lock();
 		return shPtr == _obj;
 	}
-	inline bool operator!=(ShPtr &_obj)
+	inline bool operator!=( ShPtr &_obj )
 	{
-		ShPtr shPtr = m_pObject.lock();
+		ShPtr shPtr = mObject.lock();
 		return shPtr != _obj;
 	}
 	inline void Reset()
 	{
 		// Release the obj if necessary to decrement the reference counter.
-		ShPtr shPtr = m_pObject.lock();
-		if(shPtr)
+		ShPtr shPtr = mObject.lock();
+		if ( shPtr )
 		{
-			shPtr->DelReference(m_TrackType);
+			shPtr->DelReference( mTrackType );
 		}
 
 		// Clear the reference.
-		m_pObject.reset();
+		mObject.reset();
 	}
 
 	///////////////
 	// Accessors //
 	///////////////
-	operator bool() const { return !m_pObject.expired(); }
+	operator bool() const
+	{
+		return !mObject.expired();
+	}
 	// Access as a reference
 	/*inline Type& operator*() const
 	{
-	assert(m_pObject && "Tried to * on a NULL TrackablePtr");
-	return *m_pObject;
+	assert(.mObject && "Tried to * on a NULL TrackablePtr");
+	return *.mObject;
 	}*/
 	// Access as a pointer
 	/*inline Type* operator->() const
 	{
-	assert(m_pObject && "Tried to -> on a NULL TrackablePtr");
-	return m_pObject;
+	assert(.mObject && "Tried to -> on a NULL TrackablePtr");
+	return mObject;
 	}*/
 
 	////////////////////////////////////
 	// Conversions to normal pointers //
 	////////////////////////////////////
-	/*inline operator Type*() const { return m_pObject; }
-	inline bool isValid() const { return (m_pObject!=0); }
-	inline bool operator!() { return !(m_pObject); }
-	inline bool operator==(const TrackablePtr<Type, TrackType> &p) const { return (m_pObject == p.m_pObject); }
-	inline bool operator ==(const Type* o) const { return (m_pObject==o); }*/
+	/*inline operator Type*() const { return mObject; }
+	inline bool isValid() const { return (.mObject!=0); }
+	inline bool operator!() { return !(.mObject); }
+	inline bool operator==(const TrackablePtr<Type, TrackType> &p) const { return (.mObject == p..mObject); }
+	inline bool operator ==(const Type* o) const { return (.mObject==o); }*/
 private:
-	WPtr	m_pObject;
-	int		m_TrackType;
+	WPtr	mObject;
+	int		mTrackType;
 };
 
 #endif

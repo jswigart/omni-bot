@@ -23,7 +23,7 @@ class D3_Game : public IGame
 public:
 	bool Init( System & system );
 	void StartGame();
-	
+
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
@@ -32,29 +32,27 @@ public:
 	const char *GetModSubFolder() const;
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const { return "doom3"; }
+	const char *GetGameDatabaseAbbrev() const;
 	NavigatorID GetDefaultNavigator() const;
-
-	const char *FindClassName(obint32 _classId);
-
-	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
-	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
 	
-	D3_Game() {};
-	virtual ~D3_Game() {};
+	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
+	void GetWeaponEnumeration( const IntEnum *&_ptr, int &num );
+
+	D3_Game();
+	~D3_Game();
 protected:
 
-	void GetGameVars(GameVars &_gamevars);
+	void GetGameVars( GameVars &_gamevars );
 
 	// Script support.
-	void InitScriptBinds(gmMachine *_machine);
-	void InitScriptClasses(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptEvents(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptPowerups(gmMachine *_machine, gmTableObject *_table);
+	void InitScriptBinds( gmMachine *_machine );
+	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptEvents( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptEntityFlags( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptPowerups( gmMachine *_machine, gmTableObject *_table );
 
-	static const float D3_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags);
-	static const float D3_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags);
+	static const float D3_GetEntityClassTraceOffset( const TargetInfo &_target );
+	static const float D3_GetEntityClassAimOffset( const TargetInfo &_target );
 };
 
 #endif

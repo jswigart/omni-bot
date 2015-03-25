@@ -22,7 +22,7 @@
 
 #include "RenderBuffer.h"
 
-const obReal SENTRY_UPGRADE_PRIORITY = 0.5f;
+const float SENTRY_UPGRADE_PRIORITY = 0.5f;
 
 namespace TF_Options
 {
@@ -68,8 +68,8 @@ namespace AiState
 	SentryBuild::SentryBuild()
 		: StateChild( "SentryBuild" )
 		, FollowPathUser( "SentryBuild" )
-		, m_NeedAmmoAmount( 0 )
-		, m_CantBuild( false )
+		, mNeedAmmoAmount( 0 )
+		, mCantBuild( false )
 	{
 		REGISTER_STATE( SentryBuild, SG_NONE );
 		REGISTER_STATE( SentryBuild, SG_GETTING_AMMO );
@@ -107,22 +107,22 @@ namespace AiState
 			FINDSTATE( sg, Sentry, GetParent() );
 			if ( sg && sg->HasSentry() && sg->SentryFullyBuilt() )
 			{
-				if ( sg->GetSentryStatus().m_Level < 3 )
+				if ( sg->GetSentryStatus().mLevel < 3 )
 				{
 					SetNextState( SG_UPGRADING );
 					return;
 				}
 
 				const Sentry::SentryStatus &ss = sg->GetSentryStatus();
-				if ( ( ss.m_Sabotaged && TF_Options::REPAIR_ON_SABOTAGED ) ||
-					( ss.m_Health < ss.m_MaxHealth ) )
+				if ( ( ss.mSabotaged && TF_Options::REPAIR_ON_SABOTAGED ) ||
+					( ss.mHealth < ss.mMaxHealth ) )
 				{
 					SetNextState( SG_REPAIRING );
 					return;
 				}
 
-				if ( ss.m_Rockets[ 0 ] < ss.m_Rockets[ 1 ] / 2 ||
-					ss.m_Shells[ 0 ] < ss.m_Shells[ 1 ] / 2 )
+				if ( ss.mRockets[ 0 ] < ss.mRockets[ 1 ] / 2 ||
+					ss.mShells[ 0 ] < ss.mShells[ 1 ] / 2 )
 				{
 					SetNextState( SG_RESUPPLY );
 					return;
@@ -144,14 +144,12 @@ namespace AiState
 
 		FilterAllType filter( GetClient(), AiState::SensoryMemory::EntAny, records );
 		filter.MemorySpan( Utils::SecondsToMilliseconds( 7.f ) );
-		filter.AddClass( TF_CLASSEX_RESUPPLY );
-		filter.AddClass( TF_CLASSEX_BACKPACK );
-		filter.AddClass( TF_CLASSEX_BACKPACK_AMMO );
+		filter.AddGroup( ENT_GRP_AMMO1 );
 		sensory->QueryMemory( filter );
 
 		sensory->GetRecordInfo( records, &recordpos, NULL );
 
-		m_AmmoPack.Reset();
+		mAmmoPack.Reset();
 
 		if ( !recordpos.empty() )
 		{
@@ -159,12 +157,12 @@ namespace AiState
 			FINDSTATEIF( FollowPath, GetRootState(), Goto( this, recordpos ) );
 
 			const int x = GetDestinationIndex();
-			m_AmmoPack = records[ x ];
+			mAmmoPack = records[ x ];
 		}
 		else
 		{
-			if ( m_MapGoalSentry )
-				BlackboardDelay( 10.f, m_MapGoalSentry->GetSerialNum() );
+			if ( mMapGoalSentry )
+				BlackboardDelay( 10.f, mMapGoalSentry->GetSerialNum() );
 			SetNextState( SG_DONE );
 		}
 	}
@@ -173,27 +171,27 @@ namespace AiState
 	}
 	STATE_UPDATE( SentryBuild, SG_GETTING_AMMO )
 	{
-		if ( HasEnoughAmmo( TF_Options::BUILD_AMMO_TYPE, m_NeedAmmoAmount ) )
+		if ( HasEnoughAmmo( TF_Options::BUILD_AMMO_TYPE, mNeedAmmoAmount ) )
 		{
 			SetNextState( SG_NONE );
 			return;
 		}
 
-		if ( m_AmmoPack.IsValid() )
+		if ( mAmmoPack.IsValid() )
 		{
 			SensoryMemory *sensory = GetClient()->GetSensoryMemory();
 			if ( sensory )
 			{
-				const MemoryRecord *mr = sensory->GetMemoryRecord( m_AmmoPack );
+				const MemoryRecord *mr = sensory->GetMemoryRecord( mAmmoPack );
 				if ( !mr )
 				{
-					m_AmmoPack.Reset();
+					mAmmoPack.Reset();
 					SetNextState( SG_GETTING_AMMO );
 					return;
 				}
-				if ( mr->m_TargetInfo.m_EntityFlags.CheckFlag( ENT_FLAG_DISABLED ) )
+				if ( mr->mTargetInfo.mEntInfo.mFlags.CheckFlag( ENT_FLAG_DISABLED ) )
 				{
-					m_AmmoPack.Reset();
+					mAmmoPack.Reset();
 					SetNextState( SG_GETTING_AMMO );
 					return;
 				}
@@ -224,8 +222,8 @@ namespace AiState
 		}
 
 		//////////////////////////////////////////////////////////////////////////
-		m_NeedAmmoAmount = TF_Options::SENTRY_BUILD_AMMO;
-		if ( !HasEnoughAmmo( TF_Options::BUILD_AMMO_TYPE, m_NeedAmmoAmount ) )
+		mNeedAmmoAmount = TF_Options::SENTRY_BUILD_AMMO;
+		if ( !HasEnoughAmmo( TF_Options::BUILD_AMMO_TYPE, mNeedAmmoAmount ) )
 		{
 			SetNextState( SG_GETTING_AMMO );
 			return;
@@ -234,7 +232,7 @@ namespace AiState
 
 		if ( DidPathFail() )
 		{
-			BlackboardDelay( 10.f, m_MapGoalSentry->GetSerialNum() );
+			BlackboardDelay( 10.f, mMapGoalSentry->GetSerialNum() );
 			SetNextState( SG_DONE );
 			return;
 		}
@@ -246,11 +244,11 @@ namespace AiState
 			if ( BuildEquipWeapon )
 				FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), BuildEquipWeapon ) );
 
-			if ( m_CantBuild )
+			if ( mCantBuild )
 			{
-				GetClient()->SetMovementVector( -m_MapGoalSentry->GetFacing() );
+				GetClient()->SetMovementVector( -mMapGoalSentry->GetFacing() );
 				GetClient()->PressButton( BOT_BUTTON_WALK );
-				m_NextBuildTry = 0;
+				mNextBuildTry = 0;
 			}
 			else
 				GetClient()->SetMovementVector( Vector3f::ZERO );
@@ -293,8 +291,8 @@ namespace AiState
 	STATE_UPDATE( SentryBuild, SG_UPGRADING )
 	{
 		//////////////////////////////////////////////////////////////////////////
-		m_NeedAmmoAmount = TF_Options::SENTRY_UPGRADE_AMMO;
-		if ( !HasEnoughAmmo( TF_Options::BUILD_AMMO_TYPE, m_NeedAmmoAmount ) )
+		mNeedAmmoAmount = TF_Options::SENTRY_UPGRADE_AMMO;
+		if ( !HasEnoughAmmo( TF_Options::BUILD_AMMO_TYPE, mNeedAmmoAmount ) )
 		{
 			SetNextState( SG_GETTING_AMMO );
 			return;
@@ -302,7 +300,7 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 
 		FINDSTATE( sg, Sentry, GetRootState() );
-		if ( sg && sg->GetSentryStatus().m_Level == 3 )
+		if ( sg && sg->GetSentryStatus().mLevel == 3 )
 		{
 			SetNextState( SG_DONE );
 			return;
@@ -315,7 +313,7 @@ namespace AiState
 
 			FINDSTATE( sg, Sentry, GetRootState() );
 			if ( sg )
-				GetClient()->GetSteeringSystem()->SetTarget( sg->GetSentryStatus().m_Position );
+				GetClient()->GetSteeringSystem()->SetTarget( sg->GetSentryStatus().mPosition );
 		}
 	}
 
@@ -331,8 +329,8 @@ namespace AiState
 	STATE_UPDATE( SentryBuild, SG_REPAIRING )
 	{
 		//////////////////////////////////////////////////////////////////////////
-		m_NeedAmmoAmount = TF_Options::SENTRY_REPAIR_AMMO;
-		if ( !HasEnoughAmmo( TF_Options::BUILD_AMMO_TYPE, m_NeedAmmoAmount ) )
+		mNeedAmmoAmount = TF_Options::SENTRY_REPAIR_AMMO;
+		if ( !HasEnoughAmmo( TF_Options::BUILD_AMMO_TYPE, mNeedAmmoAmount ) )
 		{
 			SetNextState( SG_GETTING_AMMO );
 			return;
@@ -340,7 +338,7 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 
 		FINDSTATE( sg, Sentry, GetRootState() );
-		if ( sg && sg->GetSentryStatus().m_Health == sg->GetSentryStatus().m_MaxHealth )
+		if ( sg && sg->GetSentryStatus().mHealth == sg->GetSentryStatus().mMaxHealth )
 		{
 			SetNextState( SG_DONE );
 			return;
@@ -353,7 +351,7 @@ namespace AiState
 
 			FINDSTATE( sg, Sentry, GetRootState() );
 			if ( sg )
-				GetClient()->GetSteeringSystem()->SetTarget( sg->GetSentryStatus().m_Position );
+				GetClient()->GetSteeringSystem()->SetTarget( sg->GetSentryStatus().mPosition );
 		}
 	}
 
@@ -375,7 +373,7 @@ namespace AiState
 		gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_WP_SPANNER, Primary, iSpanner, iSpannerMax );
 		if ( iSpanner == 0 || iShells == 0 )
 		{
-			m_NeedAmmoAmount = 200;
+			mNeedAmmoAmount = 200;
 			SetNextState( SG_GETTING_AMMO );
 			return;
 		}
@@ -384,8 +382,8 @@ namespace AiState
 		FINDSTATE( sg, Sentry, GetRootState() );
 		if ( sg )
 		{
-			if ( sg->GetSentryStatus().m_Shells[ 0 ] == sg->GetSentryStatus().m_Shells[ 1 ] &&
-				sg->GetSentryStatus().m_Rockets[ 0 ] == sg->GetSentryStatus().m_Rockets[ 1 ] )
+			if ( sg->GetSentryStatus().mShells[ 0 ] == sg->GetSentryStatus().mShells[ 1 ] &&
+				sg->GetSentryStatus().mRockets[ 0 ] == sg->GetSentryStatus().mRockets[ 1 ] )
 			{
 				SetNextState( SG_DONE );
 				return;
@@ -399,7 +397,7 @@ namespace AiState
 
 			FINDSTATE( sg, Sentry, GetRootState() );
 			if ( sg )
-				GetClient()->GetSteeringSystem()->SetTarget( sg->GetSentryStatus().m_Position );
+				GetClient()->GetSteeringSystem()->SetTarget( sg->GetSentryStatus().mPosition );
 		}
 	}
 
@@ -425,7 +423,7 @@ namespace AiState
 					out << "Getting Ammo ";
 					break;
 				case SG_BUILDING:
-					out << ( m_CantBuild ? "Cant Build " : "Building " );
+					out << ( mCantBuild ? "Cant Build " : "Building " );
 					break;
 				case SG_AIMING:
 					out << "Aiming ";
@@ -447,21 +445,21 @@ namespace AiState
 					break;
 			}
 
-			if ( m_BuiltSentry )
-				out << m_BuiltSentry->GetName() << " ";
-			else if ( m_MapGoalSentry )
-				out << m_MapGoalSentry->GetName() << " ";
+			if ( mBuiltSentry )
+				out << mBuiltSentry->GetName() << " ";
+			else if ( mMapGoalSentry )
+				out << mMapGoalSentry->GetName() << " ";
 
 			FINDSTATE( sg, Sentry, GetParent() );
 			if ( sg && sg->HasSentry() && sg->SentryFullyBuilt() )
 			{
 				const Sentry::SentryStatus &ss = sg->GetSentryStatus();
-				const float hlthpc = 100.f * ( (float)ss.m_Health / (float)ss.m_MaxHealth );
+				const float hlthpc = 100.f * ( (float)ss.mHealth / (float)ss.mMaxHealth );
 
 				out << std::setprecision( 3 );
 				out << "H(" << hlthpc << ") ";
-				out << "S(" << ss.m_Shells[ 0 ] << "/" << ss.m_Shells[ 1 ] << ") ";
-				out << "R(" << ss.m_Rockets[ 0 ] << "/" << ss.m_Rockets[ 1 ] << ") ";
+				out << "S(" << ss.mShells[ 0 ] << "/" << ss.mShells[ 1 ] << ") ";
+				out << "R(" << ss.mRockets[ 0 ] << "/" << ss.mRockets[ 1 ] << ") ";
 			}
 		}
 	}
@@ -470,12 +468,12 @@ namespace AiState
 		FINDSTATE( sg, Sentry, GetParent() );
 		if ( sg && sg->HasSentry() )
 		{
-			_desination.push_back( Destination( sg->GetSentryStatus().m_Position, 64.f ) );
+			_desination.push_back( Destination( sg->GetSentryStatus().mPosition, 64.f ) );
 			_final = true;
 		}
 		else
 		{
-			if ( m_MapGoalSentry->RouteTo( GetClient(), _desination ) )
+			if ( mMapGoalSentry->RouteTo( GetClient(), _desination ) )
 				_final = false;
 			else
 				_final = true;
@@ -488,15 +486,15 @@ namespace AiState
 		{
 			case SG_BUILDING:
 			{
-				_aimpos = GetClient()->GetEyePosition() + m_MapGoalSentry->GetFacing() * 1024.f;
+				_aimpos = GetClient()->GetEyePosition() + mMapGoalSentry->GetFacing() * 1024.f;
 				break;
 			}
 			case SG_AIMING:
 			{
-				_aimpos = GetClient()->GetEyePosition() - m_MapGoalSentry->GetFacing() * 1024.f;
+				_aimpos = GetClient()->GetEyePosition() - mMapGoalSentry->GetFacing() * 1024.f;
 
 				Vector3f vAimPos;
-				if ( m_MapGoalSentry->GetProperty( "AimPosition", vAimPos ) )
+				if ( mMapGoalSentry->GetProperty( "AimPosition", vAimPos ) )
 				{
 					if ( !vAimPos.IsZero() )
 						_aimpos = vAimPos;
@@ -512,7 +510,7 @@ namespace AiState
 				FINDSTATE( sg, Sentry, GetParent() );
 				if ( sg )
 				{
-					_aimpos = sg->GetSentryStatus().m_Position;
+					_aimpos = sg->GetSentryStatus().mPosition;
 					return true;
 				}
 			}
@@ -531,10 +529,10 @@ namespace AiState
 		{
 			case SG_BUILDING:
 			{
-				if ( !sg->HasSentry() && IGame::GetTime() >= m_NextBuildTry )
+				if ( !sg->HasSentry() && IGame::GetTime() >= mNextBuildTry )
 				{
 					GetClient()->PressButton( TF_BOT_BUTTON_BUILDSENTRY );
-					m_NextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
+					mNextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
 				}
 				break;
 			}
@@ -557,58 +555,58 @@ namespace AiState
 				OBASSERT( 0, "Invalid State" );
 		}
 	}
-	obReal SentryBuild::GetPriority()
+	float SentryBuild::GetPriority()
 	{
 		// If we built somewhere, but that spot is now unavailable, abandon it.
-		if ( m_BuiltSentry )
+		if ( mBuiltSentry )
 		{
-			if ( !m_BuiltSentry->IsAvailable( GetClient()->GetTeam() ) )
+			if ( !mBuiltSentry->IsAvailable( GetClient()->GetTeam() ) )
 			{
 				GetClient()->PressButton( TF_BOT_BUTTON_DETSENTRY );
-				m_BuiltSentry.reset();
+				mBuiltSentry.reset();
 			}
 		}
 
-		if ( !m_MapGoalSentry )
+		if ( !mMapGoalSentry )
 		{
 			FINDSTATE( sg, Sentry, GetParent() );
 			if ( sg && sg->HasSentry() && sg->SentryFullyBuilt() )
 			{
 				if ( IsActive() )
-					return m_SentryPriority;
+					return mSentryPriority;
 
-				if ( sg->GetSentryStatus().m_Level < 3 )
+				if ( sg->GetSentryStatus().mLevel < 3 )
 				{
-					return m_SentryPriority;
+					return mSentryPriority;
 				}
 
-				if ( sg->GetSentryStatus().m_Health < sg->GetSentryStatus().m_MaxHealth )
+				if ( sg->GetSentryStatus().mHealth < sg->GetSentryStatus().mMaxHealth )
 				{
-					return m_SentryPriority;
+					return mSentryPriority;
 				}
 
 				const Sentry::SentryStatus &status = sg->GetSentryStatus();
-				if ( status.m_Rockets[ 0 ] < status.m_Rockets[ 1 ] / 2 ||
-					status.m_Shells[ 0 ] < status.m_Shells[ 1 ] / 2 )
+				if ( status.mRockets[ 0 ] < status.mRockets[ 1 ] / 2 ||
+					status.mShells[ 0 ] < status.mShells[ 1 ] / 2 )
 				{
-					return m_SentryPriority;
+					return mSentryPriority;
 				}
 				return 0.f;
 			}
 
 			GoalManager::Query qry( 0xca96590a /* sentry */, GetClient() );
 			GoalManager::GetInstance()->GetGoals( qry );
-			qry.GetBest( m_MapGoalSentry );
+			qry.GetBest( mMapGoalSentry );
 		}
-		m_SentryPriority = m_MapGoalSentry ? m_MapGoalSentry->GetPriorityForClient( GetClient() ) : 0.f;
-		return m_SentryPriority;
+		mSentryPriority = mMapGoalSentry ? mMapGoalSentry->GetPriorityForClient( GetClient() ) : 0.f;
+		return mSentryPriority;
 	}
 	void SentryBuild::Enter()
 	{
-		OBASSERT( m_MapGoalSentry || m_BuiltSentry, "No Map Goal!" );
+		OBASSERT( mMapGoalSentry || mBuiltSentry, "No Map Goal!" );
 
-		m_NextBuildTry = 0;
-		m_CantBuild = false;
+		mNextBuildTry = 0;
+		mCantBuild = false;
 
 		SetNextState( SG_NONE );
 	}
@@ -619,13 +617,13 @@ namespace AiState
 		SetNextState( SG_NONE );
 		UpdateFsm( 0.f );
 
-		m_MapGoalSentry.reset();
+		mMapGoalSentry.reset();
 		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
 		GetClient()->PressButton( TF_BOT_BUTTON_CANCELBUILD );
 	}
 	State::StateStatus SentryBuild::Update( float fDt )
 	{
-		OBASSERT( m_MapGoalSentry || m_BuiltSentry, "No Map Goal!" );
+		OBASSERT( mMapGoalSentry || mBuiltSentry, "No Map Goal!" );
 
 		UpdateFsm( fDt );
 
@@ -635,8 +633,8 @@ namespace AiState
 		if ( DidPathFail() )
 		{
 			// Delay it from being used for a while.
-			if ( m_MapGoalSentry )
-				BlackboardDelay( 10.f, m_MapGoalSentry->GetSerialNum() );
+			if ( mMapGoalSentry )
+				BlackboardDelay( 10.f, mMapGoalSentry->GetSerialNum() );
 			return State_Finished;
 		}
 
@@ -648,39 +646,39 @@ namespace AiState
 		{
 			HANDLER( TF_MSG_SENTRY_BUILDING )
 			{
-				if ( m_MapGoalSentry )
-					m_BuiltSentry = m_MapGoalSentry;
+				if ( mMapGoalSentry )
+					mBuiltSentry = mMapGoalSentry;
 				break;
 			}
 			HANDLER( TF_MSG_SENTRY_BUILT )
 			{
-				if ( m_MapGoalSentry )
-					m_BuiltSentry = m_MapGoalSentry;
+				if ( mMapGoalSentry )
+					mBuiltSentry = mMapGoalSentry;
 				break;
 			}
 			HANDLER( TF_MSG_SENTRY_BUILDCANCEL )
 			{
-				m_BuiltSentry.reset();
+				mBuiltSentry.reset();
 				break;
 			}
 			HANDLER( TF_MSG_SENTRY_DESTROYED )
 			{
-				m_BuiltSentry.reset();
+				mBuiltSentry.reset();
 				break;
 			}
 			HANDLER( TF_MSG_SENTRY_DETONATED )
 			{
-				m_BuiltSentry.reset();
+				mBuiltSentry.reset();
 				break;
 			}
 			HANDLER( TF_MSG_SENTRY_DISMANTLED )
 			{
-				m_BuiltSentry.reset();
+				mBuiltSentry.reset();
 				break;
 			}
 			HANDLER( TF_MSG_SENTRY_CANTBUILD )
 			{
-				m_CantBuild = true;
+				mCantBuild = true;
 				break;
 			}
 		}
@@ -696,7 +694,7 @@ namespace AiState
 	{
 		if ( IsActive() )
 		{
-			switch ( m_State )
+			switch ( mState )
 			{
 				case UPGRADING:
 					out << "Upgrading Sentry ";
@@ -709,7 +707,7 @@ namespace AiState
 					break;
 			}
 
-			const MemoryRecord *rec = GetClient()->GetSensoryMemory()->GetMemoryRecord( m_AllySentry );
+			const MemoryRecord *rec = GetClient()->GetSensoryMemory()->GetMemoryRecord( mAllySentry );
 			if ( rec )
 			{
 				GameEntity owner = EngineFuncs::EntityOwner( rec->GetEntity() );
@@ -724,7 +722,7 @@ namespace AiState
 	}
 	bool SentryAlly::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		const MemoryRecord *rec = GetClient()->GetSensoryMemory()->GetMemoryRecord( m_AllySentry );
+		const MemoryRecord *rec = GetClient()->GetSensoryMemory()->GetMemoryRecord( mAllySentry );
 		if ( rec )
 		{
 			_desination.push_back( Destination( rec->GetLastSensedPosition(), 64.f ) );
@@ -735,7 +733,7 @@ namespace AiState
 	}
 	bool SentryAlly::GetAimPosition( Vector3f &_aimpos )
 	{
-		const MemoryRecord *rec = GetClient()->GetSensoryMemory()->GetMemoryRecord( m_AllySentry );
+		const MemoryRecord *rec = GetClient()->GetSensoryMemory()->GetMemoryRecord( mAllySentry );
 		_aimpos = rec->GetLastSensedPosition();
 		return rec != NULL;
 	}
@@ -745,7 +743,7 @@ namespace AiState
 		if ( ws && ws->CurrentWeaponIs( TF_Options::SENTRY_UPGRADE_WPN ) )
 			ws->FireWeapon();
 	}
-	obReal SentryAlly::GetPriority()
+	float SentryAlly::GetPriority()
 	{
 		if ( IsActive() )
 			return GetLastPriority();
@@ -764,31 +762,26 @@ namespace AiState
 			filter.AddClass( TF_CLASSEX_SENTRY );
 			sensory->QueryMemory( filter );
 
-			for ( obuint32 i = 0; i < rcs.size(); ++i )
+			for ( uint32_t i = 0; i < rcs.size(); ++i )
 			{
 				const MemoryRecord *pRec = sensory->GetMemoryRecord( rcs[ i ] );
 				if ( pRec )
 				{
-					if ( sg && sg->HasSentry() && sg->GetSentryStatus().m_Entity == pRec->GetEntity() )
+					if ( sg && sg->HasSentry() && sg->GetSentryStatus().mEntity == pRec->GetEntity() )
 						continue;
-
-					const BitFlag64 entflags = pRec->m_TargetInfo.m_EntityFlags;
-					if ( !entflags.CheckFlag( TF_ENT_FLAG_BUILDINPROGRESS ) &&
-						!entflags.CheckFlag( TF_ENT_FLAG_LEVEL3 ) &&
-						iAmmo >= TF_Options::SENTRY_UPGRADE_AMMO )
+					
+					const BitFlag64 entflags = pRec->mTargetInfo.mEntInfo.mFlags;
+					if ( !entflags.CheckFlag( TF_ENT_FLAG_BUILDINPROGRESS ) && iAmmo >= TF_Options::SENTRY_UPGRADE_AMMO )
 					{
-						m_State = UPGRADING;
-						m_AllySentry = rcs[ i ];
+						mState = UPGRADING;
+						mAllySentry = rcs[ i ];
 						return GetLastPriority();
 					}
-
-					Msg_HealthArmor hlth;
-					if ( InterfaceFuncs::GetHealthAndArmor( pRec->GetEntity(), hlth ) &&
-						hlth.m_CurrentHealth <= hlth.m_MaxHealth / 2 &&
-						iAmmo >= TF_Options::SENTRY_REPAIR_AMMO )
+					
+					if ( pRec->mTargetInfo.mEntInfo.HealthPercent() && iAmmo >= TF_Options::SENTRY_REPAIR_AMMO )
 					{
-						m_State = REPAIRING;
-						m_AllySentry = rcs[ i ];
+						mState = REPAIRING;
+						mAllySentry = rcs[ i ];
 						return GetLastPriority();
 					}
 				}
@@ -812,27 +805,27 @@ namespace AiState
 		if ( DidPathFail() )
 		{
 			// Delay it from being used for a while.
-			//BlackboardDelay(10.f, m_MapGoalSentry->GetSerialNum());
+			//BlackboardDelay(10.f, mMapGoalSentry->GetSerialNum());
 			return State_Finished;
 		}
 		//////////////////////////////////////////////////////////////////////////
 
 		// Abandon ally upgrade if it gets upgraded to l3 in the mean time.
-		const MemoryRecord *rec = GetClient()->GetSensoryMemory()->GetMemoryRecord( m_AllySentry );
+		const MemoryRecord *rec = GetClient()->GetSensoryMemory()->GetMemoryRecord( mAllySentry );
 		if ( !rec )
 			return State_Finished;
 
 		int iAmmo = 0, iMaxAmmo = 0;
 		gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_Options::BUILD_AMMO_TYPE, Primary, iAmmo, iMaxAmmo );
 
-		switch ( m_State )
+		switch ( mState )
 		{
 			case UPGRADING:
 			{
 				if ( iAmmo < TF_Options::SENTRY_UPGRADE_AMMO )
 					return State_Finished;
 
-				if ( rec->m_TargetInfo.m_EntityFlags.CheckFlag( TF_ENT_FLAG_LEVEL3 ) )
+				if ( rec->mTargetInfo.mEntInfo.mClassId == TF_CLASSEX_SENTRY )
 					return State_Finished;
 				break;
 			}
@@ -841,9 +834,7 @@ namespace AiState
 				if ( iAmmo < TF_Options::SENTRY_REPAIR_AMMO )
 					return State_Finished;
 
-				Msg_HealthArmor hlth;
-				if ( InterfaceFuncs::GetHealthAndArmor( rec->GetEntity(), hlth ) &&
-					hlth.m_CurrentHealth == hlth.m_MaxHealth )
+				if ( rec->mTargetInfo.mEntInfo.HealthPercent() >= 1.0 )
 				{
 					return State_Finished;
 				}
@@ -860,7 +851,7 @@ namespace AiState
 			FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
 			FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), TF_Options::SENTRY_UPGRADE_WPN ) );
 
-			GetClient()->GetSteeringSystem()->SetTarget( rec->m_TargetInfo.m_LastPosition );
+			GetClient()->GetSteeringSystem()->SetTarget( rec->mTargetInfo.mLastPosition );
 		}
 		return State_Busy;
 	}
@@ -870,14 +861,14 @@ namespace AiState
 	DispenserBuild::DispenserBuild()
 		: StateChild( "DispenserBuild" )
 		, FollowPathUser( "DispenserBuild" )
-		, m_CantBuild( false )
+		, mCantBuild( false )
 	{
 	}
 	void DispenserBuild::GetDebugString( std::stringstream &out )
 	{
 		if ( IsActive() )
 		{
-			switch ( m_State )
+			switch ( mState )
 			{
 				default:
 				case DISP_NONE:
@@ -886,16 +877,16 @@ namespace AiState
 					out << "Getting Ammo";
 					break;
 				case DISP_BUILDING:
-					out << ( m_CantBuild ? "Cant Build " : "Building " );
-					if ( m_MapGoalDisp )
-						out << m_MapGoalDisp->GetName();
+					out << ( mCantBuild ? "Cant Build " : "Building " );
+					if ( mMapGoalDisp )
+						out << mMapGoalDisp->GetName();
 					break;
 			}
 		}
 	}
 	bool DispenserBuild::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if ( m_MapGoalDisp->RouteTo( GetClient(), _desination ) )
+		if ( mMapGoalDisp->RouteTo( GetClient(), _desination ) )
 			_final = false;
 		else
 			_final = true;
@@ -903,10 +894,10 @@ namespace AiState
 	}
 	bool DispenserBuild::GetAimPosition( Vector3f &_aimpos )
 	{
-		switch ( m_State )
+		switch ( mState )
 		{
 			case DISP_BUILDING:
-				_aimpos = GetClient()->GetEyePosition() + m_MapGoalDisp->GetFacing() * 1024.f;
+				_aimpos = GetClient()->GetEyePosition() + mMapGoalDisp->GetFacing() * 1024.f;
 				break;
 			default:
 				OBASSERT( 0, "Invalid State" );
@@ -919,14 +910,14 @@ namespace AiState
 		if ( !disp )
 			return;
 
-		switch ( m_State )
+		switch ( mState )
 		{
 			case DISP_BUILDING:
 			{
-				if ( !disp->HasDispenser() && IGame::GetTime() >= m_NextBuildTry )
+				if ( !disp->HasDispenser() && IGame::GetTime() >= mNextBuildTry )
 				{
 					GetClient()->PressButton( TF_BOT_BUTTON_BUILDDISPENSER );
-					m_NextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
+					mNextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
 				}
 				break;
 			}
@@ -934,18 +925,18 @@ namespace AiState
 				OBASSERT( 0, "Invalid State" );
 		}
 	}
-	obReal DispenserBuild::GetPriority()
+	float DispenserBuild::GetPriority()
 	{
-		if ( m_BuiltDisp )
+		if ( mBuiltDisp )
 		{
-			if ( !m_BuiltDisp->IsAvailable( GetClient()->GetTeam() ) )
+			if ( !mBuiltDisp->IsAvailable( GetClient()->GetTeam() ) )
 			{
 				GetClient()->PressButton( TF_BOT_BUTTON_DETDISPENSER );
-				m_BuiltDisp.reset();
+				mBuiltDisp.reset();
 			}
 		}
 
-		if ( !m_MapGoalDisp )
+		if ( !mMapGoalDisp )
 		{
 			FINDSTATE( disp, Dispenser, GetParent() );
 			if ( disp && disp->HasDispenser() )
@@ -953,35 +944,35 @@ namespace AiState
 
 			GoalManager::Query qry( 0x4961e1a8 /* dispenser */, GetClient() );
 			GoalManager::GetInstance()->GetGoals( qry );
-			qry.GetBest( m_MapGoalDisp );
+			qry.GetBest( mMapGoalDisp );
 		}
-		return m_MapGoalDisp ? m_MapGoalDisp->GetPriorityForClient( GetClient() ) : 0.f;
+		return mMapGoalDisp ? mMapGoalDisp->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 	void DispenserBuild::Enter()
 	{
-		m_NextAmmoCheck = 0;
-		m_NextBuildTry = 0;
-		m_State = DISP_BUILDING;
-		m_CantBuild = false;
+		mNextAmmoCheck = 0;
+		mNextBuildTry = 0;
+		mState = DISP_BUILDING;
+		mCantBuild = false;
 		FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
 	}
 	void DispenserBuild::Exit()
 	{
 		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
-		m_State = DISP_NONE;
-		m_MapGoalDisp.reset();
+		mState = DISP_NONE;
+		mMapGoalDisp.reset();
 		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
 		GetClient()->PressButton( TF_BOT_BUTTON_CANCELBUILD );
 		FINDSTATEIF( WeaponSystem, GetRootState(), ReleaseWeaponRequest( GetNameHash() ) );
 	}
 	State::StateStatus DispenserBuild::Update( float fDt )
 	{
-		OBASSERT( m_MapGoalDisp, "No Map Goal!" );
+		OBASSERT( mMapGoalDisp, "No Map Goal!" );
 		//////////////////////////////////////////////////////////////////////////
 		if ( DidPathFail() )
 		{
 			// Delay it from being used for a while.
-			BlackboardDelay( 10.f, m_MapGoalDisp->GetSerialNum() );
+			BlackboardDelay( 10.f, mMapGoalDisp->GetSerialNum() );
 			return State_Finished;
 		}
 		//////////////////////////////////////////////////////////////////////////
@@ -991,20 +982,20 @@ namespace AiState
 		FINDSTATE( disp, Dispenser, GetParent() );
 		if ( disp && disp->DispenserFullyBuilt() )
 		{
-			m_BuiltDisp = m_MapGoalDisp;
+			mBuiltDisp = mMapGoalDisp;
 			return State_Finished;
 		}
 		//////////////////////////////////////////////////////////////////////////
 		// Need ammo?
-		if ( IGame::GetTime() >= m_NextAmmoCheck )
+		if ( IGame::GetTime() >= mNextAmmoCheck )
 		{
-			m_NextAmmoCheck = IGame::GetTime() + 1000;
+			mNextAmmoCheck = IGame::GetTime() + 1000;
 
 			int iAmmo = 0, iMaxAmmo = 0;
 			gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_Options::BUILD_AMMO_TYPE, Primary, iAmmo, iMaxAmmo );
-			if ( m_State == DISP_GETTING_AMMO && iAmmo >= TF_Options::DISPENSER_BUILD_AMMO )
+			if ( mState == DISP_GETTING_AMMO && iAmmo >= TF_Options::DISPENSER_BUILD_AMMO )
 				return State_Finished;
-			if ( m_State != DISP_GETTING_AMMO && iAmmo < TF_Options::DISPENSER_BUILD_AMMO )
+			if ( mState != DISP_GETTING_AMMO && iAmmo < TF_Options::DISPENSER_BUILD_AMMO )
 			{
 				SensoryMemory *sensory = GetClient()->GetSensoryMemory();
 
@@ -1013,44 +1004,42 @@ namespace AiState
 
 				FilterAllType filter( GetClient(), AiState::SensoryMemory::EntAny, records );
 				filter.MemorySpan( Utils::SecondsToMilliseconds( 7.f ) );
-				filter.AddClass( TF_CLASSEX_RESUPPLY );
-				filter.AddClass( TF_CLASSEX_BACKPACK );
-				filter.AddClass( TF_CLASSEX_BACKPACK_AMMO );
+				filter.AddGroup( ENT_GRP_AMMO2 );
 				sensory->QueryMemory( filter );
 
 				sensory->GetRecordInfo( records, &recordpos, NULL );
 
 				if ( !recordpos.empty() )
 				{
-					m_State = DISP_GETTING_AMMO;
+					mState = DISP_GETTING_AMMO;
 					FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
 					FINDSTATEIF( FollowPath, GetRootState(), Goto( this, recordpos ) );
 				}
 				else
 				{
-					//BlackboardDelay(10.f, m_MapGoalSentry->GetSerialNum());
+					//BlackboardDelay(10.f, mMapGoalSentry->GetSerialNum());
 					return State_Finished;
 				}
 			}
 		}
 		//////////////////////////////////////////////////////////////////////////
-		if ( m_State == DISP_BUILDING && !m_MapGoalDisp->IsAvailable( GetClient()->GetTeam() ) )
+		if ( mState == DISP_BUILDING && !mMapGoalDisp->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
 
 		if ( DidPathSucceed() )
 		{
-			if ( m_State == DISP_GETTING_AMMO )
+			if ( mState == DISP_GETTING_AMMO )
 				return State_Finished;
 
 			FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
 			if ( BuildEquipWeapon )
 				FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), BuildEquipWeapon ) );
 
-			if ( m_CantBuild )
+			if ( mCantBuild )
 			{
-				GetClient()->SetMovementVector( -m_MapGoalDisp->GetFacing() );
+				GetClient()->SetMovementVector( -mMapGoalDisp->GetFacing() );
 				GetClient()->PressButton( BOT_BUTTON_WALK );
-				m_NextBuildTry = 0;
+				mNextBuildTry = 0;
 			}
 			else
 				GetClient()->SetMovementVector( Vector3f::ZERO );
@@ -1063,39 +1052,39 @@ namespace AiState
 		{
 			HANDLER( TF_MSG_DISPENSER_BUILDING )
 			{
-				if ( m_MapGoalDisp )
-					m_BuiltDisp = m_MapGoalDisp;
+				if ( mMapGoalDisp )
+					mBuiltDisp = mMapGoalDisp;
 				break;
 			}
 			HANDLER( TF_MSG_DISPENSER_BUILT )
 			{
-				if ( m_MapGoalDisp )
-					m_BuiltDisp = m_MapGoalDisp;
+				if ( mMapGoalDisp )
+					mBuiltDisp = mMapGoalDisp;
 				break;
 			}
 			HANDLER( TF_MSG_DISPENSER_BUILDCANCEL )
 			{
-				m_BuiltDisp.reset();
+				mBuiltDisp.reset();
 				break;
 			}
 			HANDLER( TF_MSG_DISPENSER_DESTROYED )
 			{
-				m_BuiltDisp.reset();
+				mBuiltDisp.reset();
 				break;
 			}
 			HANDLER( TF_MSG_DISPENSER_DETONATED )
 			{
-				m_BuiltDisp.reset();
+				mBuiltDisp.reset();
 				break;
 			}
 			HANDLER( TF_MSG_DISPENSER_DISMANTLED )
 			{
-				m_BuiltDisp.reset();
+				mBuiltDisp.reset();
 				break;
 			}
 			HANDLER( TF_MSG_DISPENSER_CANTBUILD )
 			{
-				m_CantBuild = true;
+				mCantBuild = true;
 				break;
 			}
 		}
@@ -1111,11 +1100,11 @@ namespace AiState
 	}
 	void Sentry::GetDebugString( std::stringstream &out )
 	{
-		switch ( m_SentryStatus.m_Status )
+		switch ( mSentryStatus.mStatus )
 		{
 			case BUILDABLE_BUILDING:
 			case BUILDABLE_BUILT:
-				out << m_SentryStatus.m_Health << "/" << m_SentryStatus.m_MaxHealth;
+				out << mSentryStatus.mHealth << "/" << mSentryStatus.mMaxHealth;
 				break;
 			case BUILDABLE_INVALID:
 			default:
@@ -1125,14 +1114,14 @@ namespace AiState
 	}
 	void Sentry::UpdateSentryStatus( const Event_SentryStatus_TF &_stats )
 	{
-		if ( _stats.m_Entity.IsValid() )
+		if ( _stats.mEntity.IsValid() )
 		{
-			if ( m_SentryStatus.m_Entity != _stats.m_Entity )
+			if ( mSentryStatus.mEntity != _stats.mEntity )
 			{
-				Event_SentryBuilding_TF d1 = { _stats.m_Entity };
+				Event_SentryBuilding_TF d1 = { _stats.mEntity };
 				GetClient()->SendEvent( MessageHelper( TF_MSG_SENTRY_BUILDING, &d1, sizeof( d1 ) ) );
 
-				Event_SentryBuilt_TF d2 = { _stats.m_Entity };
+				Event_SentryBuilt_TF d2 = { _stats.mEntity };
 				GetClient()->SendEvent( MessageHelper( TF_MSG_SENTRY_BUILT, &d2, sizeof( d2 ) ) );
 			}
 
@@ -1141,7 +1130,7 @@ namespace AiState
 		}
 		else
 		{
-			if ( m_SentryStatus.m_Entity != _stats.m_Entity )
+			if ( mSentryStatus.mEntity != _stats.mEntity )
 			{
 				Event_BuildableDestroyed_TF d = { GameEntity() };
 				GetClient()->SendEvent( MessageHelper( TF_MSG_SENTRY_DESTROYED, &d, sizeof( d ) ) );
@@ -1159,65 +1148,65 @@ namespace AiState
 			HANDLER( TF_MSG_SENTRY_BUILDING )
 			{
 				const Event_SentryBuilding_TF *m = _message.Get<Event_SentryBuilding_TF>();
-				OBASSERT( m->m_Sentry.IsValid(), "Entity Expected" );
-				m_SentryStatus.Reset();
-				m_SentryStatus.m_Status = BUILDABLE_BUILDING;
-				m_SentryStatus.m_Entity = m->m_Sentry;
+				OBASSERT( m->mSentry.IsValid(), "Entity Expected" );
+				mSentryStatus.Reset();
+				mSentryStatus.mStatus = BUILDABLE_BUILDING;
+				mSentryStatus.mEntity = m->mSentry;
 				DBG_MSG( 0, GetClient(), kNormal, "Sentry Building" );
 				break;
 			}
 			HANDLER( TF_MSG_SENTRY_BUILT )
 			{
 				const Event_SentryBuilt_TF *m = _message.Get<Event_SentryBuilt_TF>();
-				OBASSERT( m->m_Sentry.IsValid(), "Entity Expected" );
-				m_SentryStatus.m_Entity = m->m_Sentry;
-				m_SentryStatus.m_Level = 1;
+				OBASSERT( m->mSentry.IsValid(), "Entity Expected" );
+				mSentryStatus.mEntity = m->mSentry;
+				mSentryStatus.mLevel = 1;
 
-				EngineFuncs::EntityPosition( m->m_Sentry, m_SentryStatus.m_Position );
-				EngineFuncs::EntityOrientation( m->m_Sentry, m_SentryStatus.m_Facing, NULL, NULL );
-				m_SentryStatus.m_Status = BUILDABLE_BUILT;
+				EngineFuncs::EntityPosition( m->mSentry, mSentryStatus.mPosition );
+				EngineFuncs::EntityOrientation( m->mSentry, mSentryStatus.mFacing, NULL, NULL );
+				mSentryStatus.mStatus = BUILDABLE_BUILT;
 				DBG_MSG( 0, GetClient(), kNormal, "Sentry Built" );
 				break;
 			}
 			HANDLER( TF_MSG_SENTRY_BUILDCANCEL )
 			{
-				m_SentryStatus.Reset();
+				mSentryStatus.Reset();
 				break;
 			}
 			HANDLER( TF_MSG_SENTRY_DESTROYED )
 			{
-				m_SentryStatus.Reset();
+				mSentryStatus.Reset();
 				DBG_MSG( 0, GetClient(), kNormal, "Sentry Destroyed" );
 				break;
 			}
 			HANDLER( TF_MSG_SENTRY_DETONATED )
 			{
-				m_SentryStatus.Reset();
+				mSentryStatus.Reset();
 				DBG_MSG( 0, GetClient(), kNormal, "Sentry Detonated" );
 				break;
 			}
 			HANDLER( TF_MSG_SENTRY_DISMANTLED )
 			{
-				m_SentryStatus.Reset();
+				mSentryStatus.Reset();
 				DBG_MSG( 0, GetClient(), kNormal, "Sentry Dismantled" );
 				break;
 			}
 			HANDLER( TF_MSG_SENTRY_STATS )
 			{
 				const Event_SentryStatus_TF		*m = _message.Get<Event_SentryStatus_TF>();
-				m_SentryStatus.m_Health = m->m_Health;
-				m_SentryStatus.m_MaxHealth = m->m_MaxHealth;
-				m_SentryStatus.m_Shells[ 0 ] = m->m_Shells[ 0 ];
-				m_SentryStatus.m_Shells[ 1 ] = m->m_Shells[ 1 ];
-				m_SentryStatus.m_Rockets[ 0 ] = m->m_Rockets[ 0 ];
-				m_SentryStatus.m_Rockets[ 1 ] = m->m_Rockets[ 1 ];
-				m_SentryStatus.m_Level = m->m_Level;
+				mSentryStatus.mHealth = m->mHealth;
+				mSentryStatus.mMaxHealth = m->mMaxHealth;
+				mSentryStatus.mShells[ 0 ] = m->mShells[ 0 ];
+				mSentryStatus.mShells[ 1 ] = m->mShells[ 1 ];
+				mSentryStatus.mRockets[ 0 ] = m->mRockets[ 0 ];
+				mSentryStatus.mRockets[ 1 ] = m->mRockets[ 1 ];
+				mSentryStatus.mLevel = m->mLevel;
 
 				/*DBG_MSG(0, GetClient(), kNormal, "Sentry Stats");
-				DBG_MSG(0, GetClient(), kNormal, va("Level: %d", m_SentryStatus.m_Level));
-				DBG_MSG(0, GetClient(), kNormal, va("Health: %d/%d", m_SentryStatus.m_Health, m_SentryStatus.m_MaxHealth));
-				DBG_MSG(0, GetClient(), kNormal, va("Shells: %d/%d", m_SentryStatus.m_Shells[0], m_SentryStatus.m_Shells[1]));
-				DBG_MSG(0, GetClient(), kNormal, va("Rockets: %d/%d", m_SentryStatus.m_Rockets[0], m_SentryStatus.m_Rockets[1]));*/
+				DBG_MSG(0, GetClient(), kNormal, va("Level: %d", mSentryStatus.mLevel));
+				DBG_MSG(0, GetClient(), kNormal, va("Health: %d/%d", mSentryStatus.mHealth, mSentryStatus.mMaxHealth));
+				DBG_MSG(0, GetClient(), kNormal, va("Shells: %d/%d", mSentryStatus.mShells[0], mSentryStatus.mShells[1]));
+				DBG_MSG(0, GetClient(), kNormal, va("Rockets: %d/%d", mSentryStatus.mRockets[0], mSentryStatus.mRockets[1]));*/
 				break;
 			}
 		}
@@ -1232,11 +1221,11 @@ namespace AiState
 	}
 	void Dispenser::GetDebugString( std::stringstream &out )
 	{
-		switch ( m_DispenserStatus.m_Status )
+		switch ( mDispenserStatus.mStatus )
 		{
 			case BUILDABLE_BUILDING:
 			case BUILDABLE_BUILT:
-				out << m_DispenserStatus.m_Health;
+				out << mDispenserStatus.mHealth;
 				return;
 			case BUILDABLE_INVALID:
 			default:
@@ -1246,14 +1235,14 @@ namespace AiState
 	}
 	void Dispenser::UpdateDispenserStatus( const Event_DispenserStatus_TF &_stats )
 	{
-		if ( _stats.m_Entity.IsValid() )
+		if ( _stats.mEntity.IsValid() )
 		{
-			if ( m_DispenserStatus.m_Entity != _stats.m_Entity )
+			if ( mDispenserStatus.mEntity != _stats.mEntity )
 			{
-				Event_DispenserBuilding_TF d1 = { _stats.m_Entity };
+				Event_DispenserBuilding_TF d1 = { _stats.mEntity };
 				GetClient()->SendEvent( MessageHelper( TF_MSG_DISPENSER_BUILDING, &d1, sizeof( d1 ) ) );
 
-				Event_DispenserBuilt_TF d2 = { _stats.m_Entity };
+				Event_DispenserBuilt_TF d2 = { _stats.mEntity };
 				GetClient()->SendEvent( MessageHelper( TF_MSG_DISPENSER_BUILT, &d2, sizeof( d2 ) ) );
 			}
 
@@ -1262,7 +1251,7 @@ namespace AiState
 		}
 		else
 		{
-			if ( m_DispenserStatus.m_Entity != _stats.m_Entity )
+			if ( mDispenserStatus.mEntity != _stats.mEntity )
 			{
 				Event_BuildableDestroyed_TF d = { GameEntity() };
 				GetClient()->SendEvent( MessageHelper( TF_MSG_DISPENSER_DESTROYED, &d, sizeof( d ) ) );
@@ -1280,64 +1269,64 @@ namespace AiState
 			HANDLER( TF_MSG_DISPENSER_BUILDING )
 			{
 				const Event_DispenserBuilding_TF *m = _message.Get<Event_DispenserBuilding_TF>();
-				OBASSERT( m->m_Dispenser.IsValid(), "Entity Expected" );
-				m_DispenserStatus.Reset();
-				m_DispenserStatus.m_Status = BUILDABLE_BUILDING;
-				m_DispenserStatus.m_Entity = m->m_Dispenser;
+				OBASSERT( m->mDispenser.IsValid(), "Entity Expected" );
+				mDispenserStatus.Reset();
+				mDispenserStatus.mStatus = BUILDABLE_BUILDING;
+				mDispenserStatus.mEntity = m->mDispenser;
 				DBG_MSG( 0, GetClient(), kNormal, "Dispenser Building" );
 				break;
 			}
 			HANDLER( TF_MSG_DISPENSER_BUILT )
 			{
 				const Event_DispenserBuilt_TF *m = _message.Get<Event_DispenserBuilt_TF>();
-				OBASSERT( m->m_Dispenser.IsValid(), "Entity Expected" );
-				m_DispenserStatus.m_Entity = m->m_Dispenser;
-				EngineFuncs::EntityPosition( m->m_Dispenser, m_DispenserStatus.m_Position );
-				EngineFuncs::EntityOrientation( m->m_Dispenser, m_DispenserStatus.m_Facing, NULL, NULL );
-				m_DispenserStatus.m_Status = BUILDABLE_BUILT;
+				OBASSERT( m->mDispenser.IsValid(), "Entity Expected" );
+				mDispenserStatus.mEntity = m->mDispenser;
+				EngineFuncs::EntityPosition( m->mDispenser, mDispenserStatus.mPosition );
+				EngineFuncs::EntityOrientation( m->mDispenser, mDispenserStatus.mFacing, NULL, NULL );
+				mDispenserStatus.mStatus = BUILDABLE_BUILT;
 				DBG_MSG( 0, GetClient(), kNormal, "Dispenser Built" );
 				break;
 			}
 			HANDLER( TF_MSG_DISPENSER_BUILDCANCEL )
 			{
-				m_DispenserStatus.Reset();
+				mDispenserStatus.Reset();
 				break;
 			}
 			HANDLER( TF_MSG_DISPENSER_DESTROYED )
 			{
-				m_DispenserStatus.Reset();
+				mDispenserStatus.Reset();
 				DBG_MSG( 0, GetClient(), kNormal, "Dispenser Destroyed" );
 				break;
 			}
 			HANDLER( TF_MSG_DISPENSER_DETONATED )
 			{
-				m_DispenserStatus.Reset();
+				mDispenserStatus.Reset();
 				DBG_MSG( 0, GetClient(), kNormal, "Dispenser Detonated" );
 				break;
 			}
 			HANDLER( TF_MSG_DISPENSER_DISMANTLED )
 			{
-				m_DispenserStatus.Reset();
+				mDispenserStatus.Reset();
 				DBG_MSG( 0, GetClient(), kNormal, "Dispenser Dismantled" );
 				break;
 			}
 			HANDLER( TF_MSG_DISPENSER_STATS )
 			{
 				const Event_DispenserStatus_TF	*m = _message.Get<Event_DispenserStatus_TF>();
-				m_DispenserStatus.m_Health = m->m_Health;
-				m_DispenserStatus.m_Shells = m->m_Shells;
-				m_DispenserStatus.m_Nails = m->m_Nails;
-				m_DispenserStatus.m_Rockets = m->m_Rockets;
-				m_DispenserStatus.m_Cells = m->m_Cells;
-				m_DispenserStatus.m_Armor = m->m_Armor;
+				mDispenserStatus.mHealth = m->mHealth;
+				mDispenserStatus.mShells = m->mShells;
+				mDispenserStatus.mNails = m->mNails;
+				mDispenserStatus.mRockets = m->mRockets;
+				mDispenserStatus.mCells = m->mCells;
+				mDispenserStatus.mArmor = m->mArmor;
 
 				/*DBG_MSG(0, GetClient(), kNormal, "Dispenser Stats");
-				DBG_MSG(0, GetClient(), kNormal, va("Health: %d", m_DispenserStatus.m_Health));
-				DBG_MSG(0, GetClient(), kNormal, va("Shells: %d", m_DispenserStatus.m_Shells));
-				DBG_MSG(0, GetClient(), kNormal, va("Nails: %d", m_DispenserStatus.m_Nails));
-				DBG_MSG(0, GetClient(), kNormal, va("Rockets: %d", m_DispenserStatus.m_Rockets));
-				DBG_MSG(0, GetClient(), kNormal, va("Cells: %d", m_DispenserStatus.m_Cells));
-				DBG_MSG(0, GetClient(), kNormal, va("Armor: %d", m_DispenserStatus.m_Armor));*/
+				DBG_MSG(0, GetClient(), kNormal, va("Health: %d", mDispenserStatus.mHealth));
+				DBG_MSG(0, GetClient(), kNormal, va("Shells: %d", mDispenserStatus.mShells));
+				DBG_MSG(0, GetClient(), kNormal, va("Nails: %d", mDispenserStatus.mNails));
+				DBG_MSG(0, GetClient(), kNormal, va("Rockets: %d", mDispenserStatus.mRockets));
+				DBG_MSG(0, GetClient(), kNormal, va("Cells: %d", mDispenserStatus.mCells));
+				DBG_MSG(0, GetClient(), kNormal, va("Armor: %d", mDispenserStatus.mArmor));*/
 				break;
 			}
 		}
@@ -1346,28 +1335,28 @@ namespace AiState
 	DetpackBuild::DetpackBuild()
 		: StateChild( "DetpackBuild" )
 		, FollowPathUser( "DetpackBuild" )
-		, m_DetpackFuse( TF_BOT_BUTTON_BUILDDETPACK_5 )
-		, m_CantBuild( false )
+		, mDetpackFuse( TF_BOT_BUTTON_BUILDDETPACK_5 )
+		, mCantBuild( false )
 	{
 	}
 	void DetpackBuild::GetDebugString( std::stringstream &out )
 	{
 		if ( IsActive() )
 		{
-			switch ( m_State )
+			switch ( mState )
 			{
 				case NONE:
 					break;
 				case DETPACK_BUILDING:
-					out << ( m_CantBuild ? "Cant Build " : "Building " );
-					if ( m_MapGoal )
-						out << m_MapGoal->GetName();
+					out << ( mCantBuild ? "Cant Build " : "Building " );
+					if ( mMapGoal )
+						out << mMapGoal->GetName();
 			}
 		}
 	}
 	bool DetpackBuild::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if ( m_MapGoal->RouteTo( GetClient(), _desination ) )
+		if ( mMapGoal->RouteTo( GetClient(), _desination ) )
 			_final = false;
 		else
 			_final = true;
@@ -1375,10 +1364,10 @@ namespace AiState
 	}
 	bool DetpackBuild::GetAimPosition( Vector3f &_aimpos )
 	{
-		switch ( m_State )
+		switch ( mState )
 		{
 			case DETPACK_BUILDING:
-				_aimpos = GetClient()->GetEyePosition() + m_MapGoal->GetFacing() * 1024.f;
+				_aimpos = GetClient()->GetEyePosition() + mMapGoal->GetFacing() * 1024.f;
 				break;
 			default:
 				OBASSERT( 0, "Invalid State" );
@@ -1391,14 +1380,14 @@ namespace AiState
 		if ( !detp )
 			return;
 
-		switch ( m_State )
+		switch ( mState )
 		{
 			case DETPACK_BUILDING:
 			{
-				if ( !detp->HasDetpack() && IGame::GetTime() >= m_NextBuildTry )
+				if ( !detp->HasDetpack() && IGame::GetTime() >= mNextBuildTry )
 				{
 					GetClient()->PressButton( TF_BOT_BUTTON_BUILDDETPACK_5 );
-					m_NextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
+					mNextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
 				}
 				break;
 			}
@@ -1406,9 +1395,9 @@ namespace AiState
 				OBASSERT( 0, "Invalid State" );
 		}
 	}
-	obReal DetpackBuild::GetPriority()
+	float DetpackBuild::GetPriority()
 	{
-		if ( !m_MapGoal )
+		if ( !mMapGoal )
 		{
 			FINDSTATE( detp, Detpack, GetParent() );
 			if ( detp && detp->HasDetpack() )
@@ -1421,27 +1410,27 @@ namespace AiState
 
 			GoalManager::Query qry( 0x3b15b60b /* detpack */, GetClient() );
 			GoalManager::GetInstance()->GetGoals( qry );
-			qry.GetBest( m_MapGoal );
+			qry.GetBest( mMapGoal );
 		}
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient( GetClient() ) : 0.f;
+		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 	void DetpackBuild::Enter()
 	{
-		m_NextBuildTry = 0;
-		m_State = DETPACK_BUILDING;
-		m_CantBuild = false;
+		mNextBuildTry = 0;
+		mState = DETPACK_BUILDING;
+		mCantBuild = false;
 
 		float fuse = 5.f;
-		if ( m_MapGoal->GetProperty( "Fuse", fuse ) )
+		if ( mMapGoal->GetProperty( "Fuse", fuse ) )
 		{
 			if ( fuse > 30.f )
-				m_DetpackFuse = TF_BOT_BUTTON_BUILDDETPACK_30;
+				mDetpackFuse = TF_BOT_BUTTON_BUILDDETPACK_30;
 			else if ( fuse > 20.f )
-				m_DetpackFuse = TF_BOT_BUTTON_BUILDDETPACK_20;
+				mDetpackFuse = TF_BOT_BUTTON_BUILDDETPACK_20;
 			else if ( fuse > 10.f )
-				m_DetpackFuse = TF_BOT_BUTTON_BUILDDETPACK_10;
+				mDetpackFuse = TF_BOT_BUTTON_BUILDDETPACK_10;
 			else
-				m_DetpackFuse = TF_BOT_BUTTON_BUILDDETPACK_5;
+				mDetpackFuse = TF_BOT_BUTTON_BUILDDETPACK_5;
 		}
 
 		FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
@@ -1449,24 +1438,24 @@ namespace AiState
 	void DetpackBuild::Exit()
 	{
 		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
-		m_State = NONE;
-		m_MapGoal.reset();
+		mState = NONE;
+		mMapGoal.reset();
 		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
 		GetClient()->PressButton( TF_BOT_BUTTON_CANCELBUILD );
 	}
 	State::StateStatus DetpackBuild::Update( float fDt )
 	{
-		OBASSERT( m_MapGoal, "No Map Goal!" );
+		OBASSERT( mMapGoal, "No Map Goal!" );
 		//////////////////////////////////////////////////////////////////////////
 		if ( DidPathFail() )
 		{
 			// Delay it from being used for a while.
-			BlackboardDelay( 10.f, m_MapGoal->GetSerialNum() );
+			BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 
 		//////////////////////////////////////////////////////////////////////////
-		if ( m_State == DETPACK_BUILDING && !m_MapGoal->IsAvailable( GetClient()->GetTeam() ) )
+		if ( mState == DETPACK_BUILDING && !mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
 
 		if ( DidPathSucceed() )
@@ -1477,11 +1466,11 @@ namespace AiState
 
 			FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
 
-			if ( m_CantBuild )
+			if ( mCantBuild )
 			{
-				GetClient()->SetMovementVector( -m_MapGoal->GetFacing() );
+				GetClient()->SetMovementVector( -mMapGoal->GetFacing() );
 				GetClient()->PressButton( BOT_BUTTON_WALK );
-				m_NextBuildTry = 0;
+				mNextBuildTry = 0;
 			}
 			else
 				GetClient()->SetMovementVector( Vector3f::ZERO );
@@ -1494,7 +1483,7 @@ namespace AiState
 		{
 			HANDLER( TF_MSG_DETPACK_CANTBUILD )
 			{
-				m_CantBuild = true;
+				mCantBuild = true;
 				break;
 			}
 		}
@@ -1511,14 +1500,14 @@ namespace AiState
 
 	void Detpack::UpdateDetpackStatus( GameEntity _ent )
 	{
-		m_DetpackStatus.m_Entity = _ent;
-		if ( m_DetpackStatus.m_Entity.IsValid() )
+		mDetpackStatus.mEntity = _ent;
+		if ( mDetpackStatus.mEntity.IsValid() )
 		{
-			m_DetpackStatus.m_Status = BUILDABLE_BUILT;
+			mDetpackStatus.mStatus = BUILDABLE_BUILT;
 		}
 		else
 		{
-			m_DetpackStatus.m_Status = BUILDABLE_INVALID;
+			mDetpackStatus.mStatus = BUILDABLE_INVALID;
 		}
 	}
 
@@ -1534,34 +1523,34 @@ namespace AiState
 			HANDLER( TF_MSG_DETPACK_BUILDING )
 			{
 				const Event_DetpackBuilding_TF *m = _message.Get<Event_DetpackBuilding_TF>();
-				OBASSERT( m->m_Detpack.IsValid(), "Entity Expected" );
-				m_DetpackStatus.m_Entity = m->m_Detpack;
-				m_DetpackStatus.m_Status = BUILDABLE_BUILDING;
+				OBASSERT( m->mDetpack.IsValid(), "Entity Expected" );
+				mDetpackStatus.mEntity = m->mDetpack;
+				mDetpackStatus.mStatus = BUILDABLE_BUILDING;
 				DBG_MSG( 0, GetClient(), kNormal, "Detpack Building" );
 				break;
 			}
 			HANDLER( TF_MSG_DETPACK_BUILT )
 			{
 				const Event_DetpackBuilt_TF *m = _message.Get<Event_DetpackBuilt_TF>();
-				OBASSERT( m->m_Detpack.IsValid(), "Entity Expected" );
-				m_DetpackStatus.m_Entity = m->m_Detpack;
-				m_DetpackStatus.m_Status = BUILDABLE_BUILDING;
+				OBASSERT( m->mDetpack.IsValid(), "Entity Expected" );
+				mDetpackStatus.mEntity = m->mDetpack;
+				mDetpackStatus.mStatus = BUILDABLE_BUILDING;
 				DBG_MSG( 0, GetClient(), kNormal, "Detpack Building" );
-				EngineFuncs::EntityPosition( m->m_Detpack, m_DetpackStatus.m_Position );
-				m_DetpackStatus.m_Status = BUILDABLE_BUILT;
+				EngineFuncs::EntityPosition( m->mDetpack, mDetpackStatus.mPosition );
+				mDetpackStatus.mStatus = BUILDABLE_BUILT;
 				DBG_MSG( 0, GetClient(), kNormal, "Detpack Built" );
 				break;
 			}
 			HANDLER( TF_MSG_DETPACK_BUILDCANCEL )
 			{
-				memset( &m_DetpackStatus, 0, sizeof( m_DetpackStatus ) );
-				m_DetpackStatus.m_Entity.Reset();
+				memset( &mDetpackStatus, 0, sizeof( mDetpackStatus ) );
+				mDetpackStatus.mEntity.Reset();
 				break;
 			}
 			HANDLER( TF_MSG_DETPACK_DETONATED )
 			{
-				memset( &m_DetpackStatus, 0, sizeof( m_DetpackStatus ) );
-				m_DetpackStatus.m_Entity.Reset();
+				memset( &mDetpackStatus, 0, sizeof( mDetpackStatus ) );
+				mDetpackStatus.mEntity.Reset();
 				break;
 			}
 		}
@@ -1571,28 +1560,28 @@ namespace AiState
 	PipeTrap::PipeTrap()
 		: StateChild( "PipeTrap" )
 		, FollowPathUser( "PipeTrap" )
-		, m_Substate( IDLE )
+		, mSubstate( IDLE )
 	{
 		LimitToClass().SetFlag( TF_CLASS_DEMOMAN );
 		SetAlwaysRecieveEvents( true );
 
-		m_Pipes.m_PipeCount = 0;
+		mPipes.mPipeCount = 0;
 
-		m_NumTraps = 0;
-		m_NumWaits = 0;
+		mNumTraps = 0;
+		mNumWaits = 0;
 
-		m_CurrentTrap = 0;
-		m_CurrentWait = 0;
+		mCurrentTrap = 0;
+		mCurrentWait = 0;
 
-		m_PlaceOrder = OrderRandomAll;
-		m_WaitOrder = OrderRandomAll;
+		mPlaceOrder = OrderRandomAll;
+		mWaitOrder = OrderRandomAll;
 	}
 	void PipeTrap::GetDebugString( std::stringstream &out )
 	{
 		if ( IsActive() )
 		{
-			if ( m_MapGoal )
-				out << m_MapGoal->GetName() << " ";
+			if ( mMapGoal )
+				out << mMapGoal->GetName() << " ";
 			out << "# Pipes: " << GetPipeCount();
 		}
 	}
@@ -1600,12 +1589,12 @@ namespace AiState
 	{
 		for ( int i = 0; i < Pipes::MaxPipes; ++i )
 		{
-			if ( m_Pipes.m_Pipes[ i ].m_Entity.IsValid() )
+			if ( mPipes.mPipes[ i ].mEntity.IsValid() )
 			{
 				Box3f b;
-				if ( EngineFuncs::EntityWorldOBB( m_Pipes.m_Pipes[ i ].m_Entity, b ) )
+				if ( EngineFuncs::EntityWorldOBB( mPipes.mPipes[ i ].mEntity, b ) )
 				{
-					RenderBuffer::AddOBB( b, m_Pipes.m_Pipes[ i ].m_Moving ? COLOR::GREEN : COLOR::RED );
+					RenderBuffer::AddOBB( b, mPipes.mPipes[ i ].mMoving ? COLOR::GREEN : COLOR::RED );
 				}
 			}
 		}
@@ -1614,10 +1603,10 @@ namespace AiState
 	// FollowPathUser functions.
 	bool PipeTrap::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if ( !m_MapGoal )
+		if ( !mMapGoal )
 			return false;
 
-		if ( m_MapGoal->RouteTo( GetClient(), _desination ) )
+		if ( mMapGoal->RouteTo( GetClient(), _desination ) )
 			_final = false;
 		else
 			_final = true;
@@ -1627,13 +1616,13 @@ namespace AiState
 	// AimerUser functions.
 	bool PipeTrap::GetAimPosition( Vector3f &_aimpos )
 	{
-		switch ( m_Substate )
+		switch ( mSubstate )
 		{
 			case LAY_PIPES:
-				_aimpos = GetClient()->GetEyePosition() + m_Traps[ m_CurrentTrap ].m_Facing * 256.f;
+				_aimpos = GetClient()->GetEyePosition() + mTraps[ mCurrentTrap ].mFacing * 256.f;
 				break;
 			case WATCH_PIPES:
-				_aimpos = GetClient()->GetEyePosition() + m_Wait[ m_CurrentWait ].m_Facing * 256.f;
+				_aimpos = GetClient()->GetEyePosition() + mWait[ mCurrentWait ].mFacing * 256.f;
 				break;
 			case IDLE:
 			case GETTING_AMMO:
@@ -1644,7 +1633,7 @@ namespace AiState
 
 	void PipeTrap::OnTarget()
 	{
-		if ( m_Substate == LAY_PIPES )
+		if ( mSubstate == LAY_PIPES )
 		{
 			if ( GetClient()->GetSteeringSystem()->InTargetRadius() )
 			{
@@ -1657,98 +1646,98 @@ namespace AiState
 
 	bool PipeTrap::CacheGoalInfo( MapGoalPtr mg )
 	{
-		m_CurrentTrap = 0;
-		m_CurrentWait = 0;
+		mCurrentTrap = 0;
+		mCurrentWait = 0;
 
-		m_NumTraps = 0;
-		m_NumWaits = 0;
+		mNumTraps = 0;
+		mNumWaits = 0;
 
-		mg->GetProperty( "PlaceOrder", m_PlaceOrder );
-		mg->GetProperty( "WaitOrder", m_WaitOrder );
+		mg->GetProperty( "PlaceOrder", mPlaceOrder );
+		mg->GetProperty( "WaitOrder", mWaitOrder );
 
 		for ( int i = 0; i < MaxPlacementPts; ++i )
 		{
-			m_Traps[ m_NumTraps ].Reset();
-			if ( mg->GetProperty( va( "Place[%d].Position", i ), m_Traps[ m_NumTraps ].m_Source ) &&
-				mg->GetProperty( va( "Place[%d].Facing", i ), m_Traps[ m_NumTraps ].m_Facing ) )
+			mTraps[ mNumTraps ].Reset();
+			if ( mg->GetProperty( va( "Place[%d].Position", i ), mTraps[ mNumTraps ].mSource ) &&
+				mg->GetProperty( va( "Place[%d].Facing", i ), mTraps[ mNumTraps ].mFacing ) )
 			{
-				if ( !m_Traps[ m_NumTraps ].m_Facing.IsZero() )
+				if ( !mTraps[ mNumTraps ].mFacing.IsZero() )
 				{
-					++m_NumTraps;
+					++mNumTraps;
 				}
 			}
 		}
 
 		for ( int i = 0; i < MaxWaitPositions; ++i )
 		{
-			m_Wait[ m_NumWaits ].Reset();
+			mWait[ mNumWaits ].Reset();
 
-			mg->GetProperty( va( "Wait[%d].Position", i ), m_Wait[ m_NumWaits ].m_Position );
-			mg->GetProperty( va( "Wait[%d].Facing", i ), m_Wait[ m_NumWaits ].m_Facing );
-			/*mg->GetProperty("MinWaitTime",m_MinWaitTime);
-			mg->GetProperty("MaxWaitTime",m_MaxWaitTime);*/
+			mg->GetProperty( va( "Wait[%d].Position", i ), mWait[ mNumWaits ].mPosition );
+			mg->GetProperty( va( "Wait[%d].Facing", i ), mWait[ mNumWaits ].mFacing );
+			/*mg->GetProperty("MinWaitTime",.mMinWaitTime);
+			mg->GetProperty("MaxWaitTime",.mMaxWaitTime);*/
 
-			if ( !m_Wait[ m_NumWaits ].m_Position.IsZero() && !m_Wait[ m_NumWaits ].m_Facing.IsZero() )
+			if ( !mWait[ mNumWaits ].mPosition.IsZero() && !mWait[ mNumWaits ].mFacing.IsZero() )
 			{
-				++m_NumWaits;
+				++mNumWaits;
 			}
 		}
-		if ( m_NumWaits == 0 )
+		if ( mNumWaits == 0 )
 		{
-			m_Wait[ m_NumWaits ].m_Position = mg->GetPosition();
-			m_Wait[ m_NumWaits ].m_Facing = mg->GetFacing();
-			++m_NumWaits;
+			mWait[ mNumWaits ].mPosition = mg->GetPosition();
+			mWait[ mNumWaits ].mFacing = mg->GetFacing();
+			++mNumWaits;
 		}
 
 		//////////////////////////////////////////////////////////////////////////
-		switch ( m_PlaceOrder )
+		switch ( mPlaceOrder )
 		{
 			case OrderRandomAll:
-				std::random_shuffle( m_Traps, m_Traps + m_NumTraps );
+				std::random_shuffle( mTraps, mTraps + mNumTraps );
 				break;
 			case OrderRandomPick1:
-				std::random_shuffle( m_Traps, m_Traps + m_NumTraps );
-				m_NumTraps = ClampT<int>( m_NumTraps, 0, 1 );
+				std::random_shuffle( mTraps, mTraps + mNumTraps );
+				mNumTraps = ClampT<int>( mNumTraps, 0, 1 );
 				break;
 			case OrderSequentialAll:
 				break;
 		}
 		//////////////////////////////////////////////////////////////////////////
-		switch ( m_WaitOrder )
+		switch ( mWaitOrder )
 		{
 			case OrderRandomAll:
-				std::random_shuffle( m_Wait, m_Wait + m_NumWaits );
+				std::random_shuffle( mWait, mWait + mNumWaits );
 				break;
 			case OrderRandomPick1:
-				std::random_shuffle( m_Wait, m_Wait + m_NumWaits );
-				m_NumWaits = ClampT<int>( m_NumWaits, 0, 1 );
+				std::random_shuffle( mWait, mWait + mNumWaits );
+				mNumWaits = ClampT<int>( mNumWaits, 0, 1 );
 				break;
 			case OrderSequentialAll:
 				break;
 		}
 		//////////////////////////////////////////////////////////////////////////
-		return m_NumTraps > 0;
+		return mNumTraps > 0;
 	}
 
-	obReal PipeTrap::GetPriority()
+	float PipeTrap::GetPriority()
 	{
-		m_Substate = LAY_PIPES;
+		mSubstate = LAY_PIPES;
 
 		if ( GetPipeCount() >= TF_Options::PIPE_MAX_DEPLOYED )
 		{
-			m_Substate = WATCH_PIPES;
+			mSubstate = WATCH_PIPES;
 			return 1.f;
 		}
 
-		if ( !m_MapGoal )
+		if ( !mMapGoal )
 		{
 			GoalManager::Query qry( 0x7e67445e /* pipetrap */, GetClient() );
 			GoalManager::GetInstance()->GetGoals( qry );
 
-			if ( !qry.GetBest( m_MapGoal ) || !CacheGoalInfo( m_MapGoal ) )
-				m_MapGoal.reset();
+			if ( !qry.GetBest( mMapGoal ) || !CacheGoalInfo( mMapGoal ) )
+				mMapGoal.reset();
 		}
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient( GetClient() ) : 0.f;
+		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 	void PipeTrap::Enter()
 	{
@@ -1757,70 +1746,70 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
 
-		m_ExpireTime = 0;
+		mExpireTime = 0;
 	}
 	void PipeTrap::Exit()
 	{
 		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
-		m_Substate = IDLE;
+		mSubstate = IDLE;
 
 		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
 		FINDSTATEIF( WeaponSystem, GetRootState(), ReleaseWeaponRequest( GetNameHash() ) );
 
 		FINDSTATEIF( ProximityWatcher, GetRootState(), RemoveWatch( GetNameHash() ) );
-		m_WatchFilter.reset();
+		mWatchFilter.reset();
 	}
 	State::StateStatus PipeTrap::Update( float fDt )
 	{
-		OBASSERT( m_MapGoal, "No Map Goal!" );
+		OBASSERT( mMapGoal, "No Map Goal!" );
 
 		// Update Pipe Positions
-		m_Pipes.m_PipeCount = 0;
+		mPipes.mPipeCount = 0;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Make sure pipes are valid and update their positions.
 		bool bRebuildWatchPositions = false;
 		for ( int i = 0; i < Pipes::MaxPipes; ++i )
 		{
-			if ( m_Pipes.m_Pipes[ i ].m_Entity.IsValid() )
+			if ( mPipes.mPipes[ i ].mEntity.IsValid() )
 			{
-				if ( !IGame::IsEntityValid( m_Pipes.m_Pipes[ i ].m_Entity ) )
+				if ( !IGame::IsEntityValid( mPipes.mPipes[ i ].mEntity ) )
 				{
-					m_Pipes.m_Pipes[ i ].m_Entity.Reset();
+					mPipes.mPipes[ i ].mEntity.Reset();
 					bRebuildWatchPositions = true;
 					continue;
 				}
 
-				m_Pipes.m_PipeCount++;
+				mPipes.mPipeCount++;
 
 				Vector3f vVelocity( Vector3f::ZERO );
-				if ( m_Pipes.m_Pipes[ i ].m_Moving )
+				if ( mPipes.mPipes[ i ].mMoving )
 				{
-					if ( !EngineFuncs::EntityVelocity( m_Pipes.m_Pipes[ i ].m_Entity, vVelocity ) ||
-						!EngineFuncs::EntityPosition( m_Pipes.m_Pipes[ i ].m_Entity, m_Pipes.m_Pipes[ i ].m_Position ) )
+					if ( !EngineFuncs::EntityVelocity( mPipes.mPipes[ i ].mEntity, vVelocity ) ||
+						!EngineFuncs::EntityPosition( mPipes.mPipes[ i ].mEntity, mPipes.mPipes[ i ].mPosition ) )
 					{
-						m_Pipes.m_Pipes[ i ].m_Entity.Reset();
+						mPipes.mPipes[ i ].mEntity.Reset();
 						continue;
 					}
 
 					if ( vVelocity.SquaredLength() <= Mathf::EPSILON )
 					{
-						m_Pipes.m_Pipes[ i ].m_Moving = false;
+						mPipes.mPipes[ i ].mMoving = false;
 
-						if ( m_WatchFilter )
+						if ( mWatchFilter )
 						{
-							m_WatchFilter->AddPosition( m_Pipes.m_Pipes[ i ].m_Position );
+							mWatchFilter->AddPosition( mPipes.mPipes[ i ].mPosition );
 						}
 						else
 						{
-							m_WatchFilter.reset( new FilterClosestTF( GetClient(), AiState::SensoryMemory::EntEnemy ) );
-							m_WatchFilter->AddClass( FilterSensory::ANYPLAYERCLASS );
-							m_WatchFilter->AddClass( TF_CLASSEX_SENTRY );
-							m_WatchFilter->AddClass( TF_CLASSEX_DISPENSER );
-							m_WatchFilter->AddPosition( m_Pipes.m_Pipes[ i ].m_Position );
-							m_WatchFilter->SetMaxDistance( 100.f );
-							FINDSTATEIF( ProximityWatcher, GetRootState(), AddWatch( GetNameHash(), m_WatchFilter, false ) );
+							mWatchFilter.reset( new FilterClosestTF( GetClient(), AiState::SensoryMemory::EntEnemy ) );
+							mWatchFilter->AddClass( FilterSensory::ANYPLAYERCLASS );
+							mWatchFilter->AddGroup( ENT_GRP_BUILDABLE );
+							mWatchFilter->AddClass( TF_CLASSEX_DISPENSER );
+							mWatchFilter->AddPosition( mPipes.mPipes[ i ].mPosition );
+							mWatchFilter->SetMaxDistance( 100.f );
+							FINDSTATEIF( ProximityWatcher, GetRootState(), AddWatch( GetNameHash(), mWatchFilter, false ) );
 						}
 					}
 				}
@@ -1829,21 +1818,21 @@ namespace AiState
 
 		//////////////////////////////////////////////////////////////////////////
 		// Rebuild the positions so it's not watching for targets at old expired pipe positions
-		if ( bRebuildWatchPositions && m_WatchFilter )
+		if ( bRebuildWatchPositions && mWatchFilter )
 		{
-			m_WatchFilter->ClearPositions();
+			mWatchFilter->ClearPositions();
 			for ( int i = 0; i < Pipes::MaxPipes; ++i )
 			{
-				if ( m_Pipes.m_Pipes[ i ].m_Entity.IsValid() && !m_Pipes.m_Pipes[ i ].m_Moving )
+				if ( mPipes.mPipes[ i ].mEntity.IsValid() && !mPipes.mPipes[ i ].mMoving )
 				{
-					m_WatchFilter->AddPosition( m_Pipes.m_Pipes[ i ].m_Position );
+					mWatchFilter->AddPosition( mPipes.mPipes[ i ].mPosition );
 				}
 			}
 		}
 
 		//////////////////////////////////////////////////////////////////////////
 		const bool bGoForAmmo = ShouldGoForAmmo();
-		if ( m_Substate != GETTING_AMMO && bGoForAmmo )
+		if ( mSubstate != GETTING_AMMO && bGoForAmmo )
 		{
 			SensoryMemory *sensory = GetClient()->GetSensoryMemory();
 
@@ -1852,33 +1841,31 @@ namespace AiState
 
 			FilterAllType filter( GetClient(), AiState::SensoryMemory::EntAny, records );
 			filter.MemorySpan( Utils::SecondsToMilliseconds( 7.f ) );
-			filter.AddClass( TF_CLASSEX_RESUPPLY );
-			filter.AddClass( TF_CLASSEX_BACKPACK );
-			filter.AddClass( TF_CLASSEX_BACKPACK_AMMO );
+			filter.AddGroup( ENT_GRP_AMMO2 );
 			sensory->QueryMemory( filter );
 
 			sensory->GetRecordInfo( records, &recordpos, NULL );
 
 			if ( !recordpos.empty() )
 			{
-				m_Substate = GETTING_AMMO;
+				mSubstate = GETTING_AMMO;
 				FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
 				FINDSTATEIF( FollowPath, GetRootState(), Goto( this, recordpos ) );
 			}
 			else
 			{
-				//BlackboardDelay(10.f, m_MapGoalSentry->GetSerialNum());
+				//BlackboardDelay(10.f, mMapGoalSentry->GetSerialNum());
 				return State_Finished;
 			}
 		}
-		else if ( m_Substate == GETTING_AMMO && !bGoForAmmo )
+		else if ( mSubstate == GETTING_AMMO && !bGoForAmmo )
 			return State_Finished;
 
 		//////////////////////////////////////////////////////////////////////////
 		if ( DidPathFail() )
 		{
 			// Delay it from being used for a while.
-			BlackboardDelay( 10.f, m_MapGoal->GetSerialNum() );
+			BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 		//////////////////////////////////////////////////////////////////////////
@@ -1888,18 +1875,18 @@ namespace AiState
 		Priority::ePriority AimPriority = Priority::Low;
 		Priority::ePriority WeaponPriority = ts&&ts->HasTarget() ? Priority::Min : Priority::Low;
 
-		obint32 wpn = TF_Options::PIPE_WEAPON;
-		switch ( m_Substate )
+		int32_t wpn = TF_Options::PIPE_WEAPON;
+		switch ( mSubstate )
 		{
 			case LAY_PIPES:
 			{
-				m_ExpireTime = 0; // reset expire
+				mExpireTime = 0; // reset expire
 
 				wpn = TF_Options::PIPE_WEAPON;
 				if ( GetPipeCount() >= TF_Options::PIPE_MAX_DEPLOYED )
 				{
-					m_Substate = WATCH_PIPES;
-					m_CurrentWait = rand() % m_NumWaits;
+					mSubstate = WATCH_PIPES;
+					mCurrentWait = rand() % mNumWaits;
 				}
 				break;
 			}
@@ -1907,7 +1894,7 @@ namespace AiState
 			{
 				if ( GetPipeCount() < TF_Options::PIPE_MAX_DEPLOYED )
 				{
-					m_Substate = LAY_PIPES;
+					mSubstate = LAY_PIPES;
 					break;
 				}
 
@@ -1938,36 +1925,36 @@ namespace AiState
 			ws->AddWeaponRequest( WeaponPriority, GetNameHash(), wpn );
 
 			SteeringSystem *steer = GetClient()->GetSteeringSystem();
-			switch ( m_Substate )
+			switch ( mSubstate )
 			{
 				case LAY_PIPES:
 				{
-					steer->SetTarget( m_Traps[ m_CurrentTrap ].m_Source );
+					steer->SetTarget( mTraps[ mCurrentTrap ].mSource );
 					break;
 				}
 				case WATCH_PIPES:
 				{
-					steer->SetTarget( m_Wait[ m_CurrentWait ].m_Position );
+					steer->SetTarget( mWait[ mCurrentWait ].mPosition );
 					//////////////////////////////////////////////////////////////////////////
 					// Cycle?
-					if ( m_NumWaits > 1 && m_WaitOrder != OrderRandomPick1 )
+					if ( mNumWaits > 1 && mWaitOrder != OrderRandomPick1 )
 					{
-						if ( m_ExpireTime == 0 && steer->InTargetRadius() )
+						if ( mExpireTime == 0 && steer->InTargetRadius() )
 						{
-							m_ExpireTime = IGame::GetTime() +
-								Mathf::IntervalRandomInt( m_Wait[ m_CurrentWait ].m_MinWaitTime, m_Wait[ m_CurrentWait ].m_MaxWaitTime );
+							mExpireTime = IGame::GetTime() +
+								Mathf::IntervalRandomInt( mWait[ mCurrentWait ].mMinWaitTime, mWait[ mCurrentWait ].mMaxWaitTime );
 						}
-						else if ( IGame::GetTime() > m_ExpireTime )
+						else if ( IGame::GetTime() > mExpireTime )
 						{
-							m_ExpireTime = 0;
+							mExpireTime = 0;
 
-							switch ( m_WaitOrder )
+							switch ( mWaitOrder )
 							{
 								case OrderRandomAll:
-									m_CurrentWait = rand() % m_NumWaits;
+									mCurrentWait = rand() % mNumWaits;
 									break;
 								case OrderSequentialAll:
-									m_CurrentWait = ( m_CurrentWait + 1 ) % m_NumWaits;
+									mCurrentWait = ( mCurrentWait + 1 ) % mNumWaits;
 									break;
 							}
 						}
@@ -1990,7 +1977,7 @@ namespace AiState
 			HANDLER( MESSAGE_PROXIMITY_TRIGGER )
 			{
 				const AiState::Event_ProximityTrigger *m = _message.Get<AiState::Event_ProximityTrigger>();
-				if ( m->m_OwnerState == GetNameHash() )
+				if ( m->mOwnerState == GetNameHash() )
 				{
 					if ( IGame::GetFrameNumber() & 1 )
 						GetClient()->PressButton( TF_BOT_BUTTON_DETPIPES );
@@ -2001,24 +1988,28 @@ namespace AiState
 			HANDLER( ACTION_WEAPON_FIRE )
 			{
 				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-				if ( m && m->m_Projectile.IsValid() )
+				if ( m && m->mProjectile.IsValid() )
 				{
-					if ( InterfaceFuncs::GetEntityClass( m->m_Projectile ) == TF_CLASSEX_PIPE )
+					EntityInfo entInfo;					
+					if ( IGame::GetEntityInfo( m->mProjectile, entInfo ) )
 					{
-						for ( int i = 0; i < Pipes::MaxPipes; ++i )
+						if ( entInfo.mGroup == ENT_GRP_PROJECTILE && entInfo.mClassId == TF_CLASSEX_PIPE )
 						{
-							if ( !m_Pipes.m_Pipes[ i ].m_Entity.IsValid() )
+							for ( int i = 0; i < Pipes::MaxPipes; ++i )
 							{
-								//Utils::OutputDebug(kInfo, "--Adding Pipe To Pipe List--");
-								if ( EngineFuncs::EntityPosition( m->m_Projectile, m_Pipes.m_Pipes[ i ].m_Position ) )
+								if ( !mPipes.mPipes[ i ].mEntity.IsValid() )
 								{
-									m_CurrentTrap = ( m_CurrentTrap + 1 ) % m_NumTraps;
+									//Utils::OutputDebug(kInfo, "--Adding Pipe To Pipe List--");
+									if ( EngineFuncs::EntityPosition( m->mProjectile, mPipes.mPipes[ i ].mPosition ) )
+									{
+										mCurrentTrap = ( mCurrentTrap + 1 ) % mNumTraps;
 
-									m_Pipes.m_Pipes[ i ].m_Entity = m->m_Projectile;
-									m_Pipes.m_Pipes[ i ].m_Moving = true;
-									m_Pipes.m_PipeCount++;
+										mPipes.mPipes[ i ].mEntity = m->mProjectile;
+										mPipes.mPipes[ i ].mMoving = true;
+										mPipes.mPipeCount++;
+									}
+									break;
 								}
-								break;
 							}
 						}
 					}
@@ -2037,7 +2028,7 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 	RocketJump::RocketJump()
 		: StateChild( "RocketJump" )
-		, m_IsDone( false )
+		, mIsDone( false )
 	{
 		LimitToClass().SetFlag( TF_CLASS_SOLDIER );
 		//LimitToClass().SetFlag(TF_CLASS_PYRO);
@@ -2045,14 +2036,14 @@ namespace AiState
 
 	bool RocketJump::GetAimPosition( Vector3f &_aimpos )
 	{
-		Vector3f vFlatFacing = Vector3f( m_NextPt.m_Pt - GetClient()->GetPosition() ).Flatten();
+		Vector3f vFlatFacing = Vector3f( mNextPt.mPt - GetClient()->GetPosition() ).Flatten();
 		_aimpos = GetClient()->GetEyePosition() + Utils::ChangePitch( vFlatFacing, -89.f ) * 32.f;
 		return true;
 	}
 
 	void RocketJump::OnTarget()
 	{
-		bool bInRange = SquaredLength2d( GetClient()->GetPosition(), m_NextPt.m_Pt ) <= Mathf::Sqr( m_NextPt.m_Radius );
+		bool bInRange = SquaredLength2d( GetClient()->GetPosition(), mNextPt.mPt ) <= Mathf::Sqr( mNextPt.mRadius );
 		if ( bInRange )
 		{
 			FINDSTATE( ws, WeaponSystem, GetRootState() );
@@ -2060,14 +2051,14 @@ namespace AiState
 			{
 				GetClient()->PressButton( BOT_BUTTON_JUMP );
 				ws->FireWeapon();
-				m_IsDone = true;
+				mIsDone = true;
 			}
 		}
 	}
 
 	void RocketJump::Enter()
 	{
-		m_IsDone = false;
+		mIsDone = false;
 		FINDSTATEIF( Aimer, GetParent(), AddAimRequest( Priority::Override, this, GetNameHash() ) );
 		FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Override, GetNameHash(), TF_Options::ROCKETJUMP_WPN ) );
 	}
@@ -2082,11 +2073,11 @@ namespace AiState
 	{
 		if ( IsActive() )
 		{
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), m_NextPt.m_Pt, COLOR::GREEN, IGame::GetDeltaTimeSecs()*2.f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mNextPt.mPt, COLOR::GREEN, IGame::GetDeltaTimeSecs()*2.f );
 		}
 	}
 
-	obReal RocketJump::GetPriority()
+	float RocketJump::GetPriority()
 	{
 		FINDSTATE( fp, FollowPath, GetParent() );
 		if ( fp )
@@ -2101,7 +2092,7 @@ namespace AiState
 
 	State::StateStatus RocketJump::Update( float fDt )
 	{
-		return m_IsDone ? State_Finished : State_Busy;
+		return mIsDone ? State_Finished : State_Busy;
 	}
 	void RocketJump::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
 	{
@@ -2110,11 +2101,13 @@ namespace AiState
 			HANDLER( ACTION_WEAPON_FIRE )
 			{
 				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-				if ( m && m->m_Projectile.IsValid() )
+				if ( m && m->mProjectile.IsValid() )
 				{
-					if ( InterfaceFuncs::GetEntityClass( m->m_Projectile ) == TF_CLASSEX_ROCKET )
+					EntityInfo entInfo;
+					
+					if ( IGame::GetEntityInfo( m->mProjectile, entInfo ) && entInfo.mClassId == TF_CLASSEX_ROCKET )
 					{
-						m_IsDone = true;
+						mIsDone = true;
 					}
 				}
 				break;
@@ -2131,18 +2124,18 @@ namespace AiState
 	{
 		if ( IsActive() )
 		{
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), m_NextPt.m_Pt, COLOR::GREEN, IGame::GetDeltaTimeSecs()*2.f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mNextPt.mPt, COLOR::GREEN, IGame::GetDeltaTimeSecs()*2.f );
 		}
 	}
 	bool ConcussionJump::GetAimPosition( Vector3f &_aimpos )
 	{
-		_aimpos = m_NextPt.m_Pt;
+		_aimpos = mNextPt.mPt;
 		return true;
 	}
 	void ConcussionJump::OnTarget()
 	{
 	}
-	obReal ConcussionJump::GetPriority()
+	float ConcussionJump::GetPriority()
 	{
 		/*FINDSTATE(fp,FollowPath,GetParent());
 		if(fp)
@@ -2158,9 +2151,9 @@ namespace AiState
 		for(int i = ix; i < p.GetNumPts(); ++i)
 		{
 		p.GetCurrentPt(pt);
-		if(pt.m_NavFlags & F_TF_NAV_CONCJUMP)
+		if(pt.mNavFlags & F_TF_NAV_CONCJUMP)
 		{
-		m_NextPt = pt;
+		mNextPt = pt;
 		return 1.f;
 		}
 		}
@@ -2187,11 +2180,11 @@ namespace AiState
 		HANDLER(ACTION_WEAPON_FIRE)
 		{
 		const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-		if(m && m->m_Projectile.IsValid())
+		if(m && m->mProjectile.IsValid())
 		{
-		if(InterfaceFuncs::GetEntityClass(m->m_Projectile) == TF_CLASSEX_CONC_GRENADE)
+		if(InterfaceFuncs::GetEntityClass(m->mProjectile) == TF_CLASSEX_CONC_GRENADE)
 		{
-		m_IsDone = true;
+		mIsDone = true;
 		}
 		}
 		break;
@@ -2201,21 +2194,21 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 	ThrowGrenade::ThrowGrenade()
 		: StateChild( "ThrowGrenade" )
-		, m_PrimaryGrenade( 0 )
-		, m_SecondaryGrenade( 0 )
-		, m_Gren1Ammo( 0 )
-		, m_Gren1AmmoMax( 0 )
-		, m_Gren2Ammo( 0 )
-		, m_Gren2AmmoMax( 0 )
-		, m_GrenType( 0 )
-		, m_LastThrowTime( 0 )
+		, mPrimaryGrenade( 0 )
+		, mSecondaryGrenade( 0 )
+		, mGren1Ammo( 0 )
+		, mGren1AmmoMax( 0 )
+		, mGren2Ammo( 0 )
+		, mGren2AmmoMax( 0 )
+		, mGrenType( 0 )
+		, mLastThrowTime( 0 )
 	{
 	}
 	void ThrowGrenade::GetDebugString( std::stringstream &out )
 	{
 		if ( IsActive() )
 		{
-			out << ( m_GrenType == TF_BOT_BUTTON_GREN1 ?
+			out << ( mGrenType == TF_BOT_BUTTON_GREN1 ?
 				"Throwing Primary Grenade" :
 				"Throwing Secondary Grenade" );
 		}
@@ -2223,22 +2216,22 @@ namespace AiState
 	void ThrowGrenade::RenderDebug()
 	{
 		if ( IsActive() )
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), m_AimPos, m_OnTarget ? COLOR::GREEN : COLOR::RED, 0.1f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mAimPos, mOnTarget ? COLOR::GREEN : COLOR::RED, 0.1f );
 	}
 	bool ThrowGrenade::GetAimPosition( Vector3f &_aimpos )
 	{
-		_aimpos = m_AimPos;
+		_aimpos = mAimPos;
 		return true;
 	}
 	void ThrowGrenade::OnTarget()
 	{
-		m_OnTarget = true;
+		mOnTarget = true;
 	}
 	void ThrowGrenade::OnSpawn()
 	{
 		_UpdateGrenadeTypes();
 	}
-	obReal ThrowGrenade::GetPriority()
+	float ThrowGrenade::GetPriority()
 	{
 		const float FF_MIN_GREN_DIST = 200.f;
 		const float FF_MAX_GREN_DIST = 800.f;
@@ -2249,28 +2242,28 @@ namespace AiState
 
 			if ( pRecord && pRecord->IsShootable() )
 			{
-				/*const GameEntity &vTargetEntity = m_Client->GetTargetingSystem()->GetCurrentTarget();
-				const TargetInfo *pTargetInfo = m_Client->GetSensoryMemory()->GetTargetInfo(vTargetEntity);*/
-				const TargetInfo &targetInfo = pRecord->m_TargetInfo;
+				/*const GameEntity &vTargetEntity = mClient->GetTargetingSystem()->GetCurrentTarget();
+				const TargetInfo *pTargetInfo = mClient->GetSensoryMemory()->GetTargetInfo(vTargetEntity);*/
+				const TargetInfo &targetInfo = pRecord->mTargetInfo;
 
 				// Range check.
-				if ( !InRangeT<float>( targetInfo.m_DistanceTo, FF_MIN_GREN_DIST, FF_MAX_GREN_DIST ) )
+				if ( !InRangeT<float>( targetInfo.mDistanceTo, FF_MIN_GREN_DIST, FF_MAX_GREN_DIST ) )
 					return 0.f;
 
 				// Calculate the desirability to use this item.
-				obReal fDesirability = 0.0;
-				obReal fGren1Desir = TF_Game::_GetDesirabilityFromTargetClass( m_PrimaryGrenade, targetInfo.m_EntityClass );
-				obReal fGren2Desir = TF_Game::_GetDesirabilityFromTargetClass( m_SecondaryGrenade, targetInfo.m_EntityClass );
+				float fDesirability = 0.0;
+				float fGren1Desir = TF_Game::_GetDesirabilityFromTargetClass( mPrimaryGrenade, targetInfo.mEntInfo.mClassId );
+				float fGren2Desir = TF_Game::_GetDesirabilityFromTargetClass( mSecondaryGrenade, targetInfo.mEntInfo.mClassId );
 
 				if ( fGren1Desir >= fGren2Desir )
 				{
 					fDesirability = fGren1Desir;
-					m_GrenType = TF_BOT_BUTTON_GREN1;
+					mGrenType = TF_BOT_BUTTON_GREN1;
 				}
 				else
 				{
 					fDesirability = fGren2Desir;
-					m_GrenType = TF_BOT_BUTTON_GREN2;
+					mGrenType = TF_BOT_BUTTON_GREN2;
 				}
 
 				// Prefer more when reloading.
@@ -2278,20 +2271,20 @@ namespace AiState
 					fDesirability += 0.1f;
 
 				// Take the last thrown time into account.
-				int iTimeSinceLast = IGame::GetTime() - m_LastThrowTime;
-				fDesirability *= ClampT<obReal>( (obReal)iTimeSinceLast / 7500.f, 0.f, 2.f );
+				int iTimeSinceLast = IGame::GetTime() - mLastThrowTime;
+				fDesirability *= ClampT<float>( (float)iTimeSinceLast / 7500.f, 0.f, 2.f );
 
 				// How about some randomness?
 				//dDesirability *= Mathd::UnitRandom() * 1.1;
 
 				// With bias
-				m_GrenType = TF_BOT_BUTTON_GREN1;
+				mGrenType = TF_BOT_BUTTON_GREN1;
 
-				const obReal fUseThreshhold = 0.9f;
+				const float fUseThreshhold = 0.9f;
 				if ( fDesirability >= fUseThreshhold )
 				{
 					//Dbg::dout << Dbg::info << "Using " << GetItemName() << std::endl;
-					m_AimMode = GRENADE_AIM;
+					mAimMode = GRENADE_AIM;
 					return 1.f;
 				}
 			}
@@ -2301,8 +2294,8 @@ namespace AiState
 	}
 	void ThrowGrenade::Enter()
 	{
-		m_OnTarget = false;
-		m_LastThrowTime = IGame::GetTime();
+		mOnTarget = false;
+		mLastThrowTime = IGame::GetTime();
 		//FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::High,this,GetNameHash()));
 	}
 	void ThrowGrenade::Exit()
@@ -2312,25 +2305,25 @@ namespace AiState
 	State::StateStatus ThrowGrenade::Update( float fDt )
 	{
 		const Vector3f vEyePos = GetClient()->GetEyePosition();
-		const float fProjectileSpeed = _GetProjectileSpeed( m_GrenType );
-		//const float fProjectileGravity = _GetProjectileGravity(m_GrenType);
+		const float fProjectileSpeed = _GetProjectileSpeed( mGrenType );
+		//const float fProjectileGravity = _GetProjectileGravity(.mGrenType);
 		const float fTimeToDet = 4.0f - GetStateTime();
 
 		// We need to aim the grenade.
 		const MemoryRecord *pRecord = GetClient()->GetTargetingSystem()->GetCurrentTargetRecord();
 		if ( pRecord )
 		{
-			const TargetInfo &targetInfo = pRecord->m_TargetInfo;
-			m_AimPos = Utils::PredictFuturePositionOfTarget( GetClient()->GetPosition(),
+			const TargetInfo &targetInfo = pRecord->mTargetInfo;
+			mAimPos = Utils::PredictFuturePositionOfTarget( GetClient()->GetPosition(),
 				fProjectileSpeed, targetInfo, Vector3f::ZERO );
 
 			// Add a vertical aim offset
-			m_AimPos.Z() += targetInfo.m_DistanceTo * 0.25f;
+			mAimPos.Z() += targetInfo.mDistanceTo * 0.25f;
 
 			bool bThrow = fTimeToDet < 1.0;
 
 			// Calculate the timer for the grenade based on the distance to the aim point.
-			float fExplodeDistToTarget = ( m_AimPos - GetClient()->GetPosition() ).Length();
+			float fExplodeDistToTarget = ( mAimPos - GetClient()->GetPosition() ).Length();
 
 			if ( !bThrow )
 			{
@@ -2340,10 +2333,10 @@ namespace AiState
 
 				if ( fExplodeDistToTarget >= fFakeGrenadeRange )
 				{
-					m_AimMode = GRENADE_AIM;
+					mAimMode = GRENADE_AIM;
 					FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::High, this, GetNameHash() ) );
 				}
-				if ( m_OnTarget && fExplodeDistToTarget >= fGrenadeRange )
+				if ( mOnTarget && fExplodeDistToTarget >= fGrenadeRange )
 				{
 					bThrow = true;
 				}
@@ -2356,18 +2349,18 @@ namespace AiState
 		}
 		else
 		{
-			if ( m_OnTarget && m_AimMode == GRENADE_RID )
+			if ( mOnTarget && mAimMode == GRENADE_RID )
 				return State_Finished;
 
 			if ( fTimeToDet <= 1.f )
 			{
-				m_AimMode = GRENADE_RID;
+				mAimMode = GRENADE_RID;
 				FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::High, this, GetNameHash() ) );
-				m_AimPos = vEyePos - GetClient()->GetVelocity() * 256.f; // face back
+				mAimPos = vEyePos - GetClient()->GetVelocity() * 256.f; // face back
 			}
 		}
-		m_OnTarget = false;
-		GetClient()->PressButton( m_GrenType );
+		mOnTarget = false;
+		GetClient()->PressButton( mGrenType );
 		return State_Busy;
 	}
 	void ThrowGrenade::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
@@ -2375,53 +2368,53 @@ namespace AiState
 	}
 	void ThrowGrenade::_UpdateAmmo()
 	{
-		gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_WP_GRENADE1, Primary, m_Gren1Ammo, m_Gren1AmmoMax );
-		gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_WP_GRENADE2, Primary, m_Gren2Ammo, m_Gren2AmmoMax );
+		gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_WP_GRENADE1, Primary, mGren1Ammo, mGren1AmmoMax );
+		gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_WP_GRENADE2, Primary, mGren2Ammo, mGren2AmmoMax );
 	}
 	void ThrowGrenade::_UpdateGrenadeTypes()
 	{
 		switch ( GetClient()->GetClass() )
 		{
 			case TF_CLASS_SCOUT:
-				m_PrimaryGrenade = TF_WP_GRENADE_CALTROPS;
-				m_SecondaryGrenade = TF_WP_GRENADE_CONC;
+				mPrimaryGrenade = TF_WP_GRENADE_CALTROPS;
+				mSecondaryGrenade = TF_WP_GRENADE_CONC;
 				break;
 			case TF_CLASS_SNIPER:
-				m_PrimaryGrenade = TF_WP_GRENADE;
-				m_SecondaryGrenade = TF_WP_NONE;
+				mPrimaryGrenade = TF_WP_GRENADE;
+				mSecondaryGrenade = TF_WP_NONE;
 				break;
 			case TF_CLASS_SOLDIER:
-				m_PrimaryGrenade = TF_WP_GRENADE;
-				m_SecondaryGrenade = TF_WP_GRENADE_NAIL;
+				mPrimaryGrenade = TF_WP_GRENADE;
+				mSecondaryGrenade = TF_WP_GRENADE_NAIL;
 				break;
 			case TF_CLASS_DEMOMAN:
-				m_PrimaryGrenade = TF_WP_GRENADE;
-				m_SecondaryGrenade = TF_WP_GRENADE_MIRV;
+				mPrimaryGrenade = TF_WP_GRENADE;
+				mSecondaryGrenade = TF_WP_GRENADE_MIRV;
 				break;
 			case TF_CLASS_MEDIC:
-				m_PrimaryGrenade = TF_WP_GRENADE;
-				m_SecondaryGrenade = TF_WP_GRENADE_CONC;
+				mPrimaryGrenade = TF_WP_GRENADE;
+				mSecondaryGrenade = TF_WP_GRENADE_CONC;
 				break;
 			case TF_CLASS_HWGUY:
-				m_PrimaryGrenade = TF_WP_GRENADE;
-				m_SecondaryGrenade = TF_WP_GRENADE_MIRV;
+				mPrimaryGrenade = TF_WP_GRENADE;
+				mSecondaryGrenade = TF_WP_GRENADE_MIRV;
 				break;
 			case TF_CLASS_PYRO:
-				m_PrimaryGrenade = TF_WP_GRENADE;
-				m_SecondaryGrenade = TF_WP_GRENADE_NAPALM;
+				mPrimaryGrenade = TF_WP_GRENADE;
+				mSecondaryGrenade = TF_WP_GRENADE_NAPALM;
 				break;
 			case TF_CLASS_SPY:
-				m_PrimaryGrenade = TF_WP_GRENADE;
-				m_SecondaryGrenade = TF_WP_GRENADE_GAS;
+				mPrimaryGrenade = TF_WP_GRENADE;
+				mSecondaryGrenade = TF_WP_GRENADE_GAS;
 				break;
 			case TF_CLASS_ENGINEER:
-				m_PrimaryGrenade = TF_WP_GRENADE;
-				m_SecondaryGrenade = TF_WP_GRENADE_EMP;
+				mPrimaryGrenade = TF_WP_GRENADE;
+				mSecondaryGrenade = TF_WP_GRENADE_EMP;
 				break;
 			case TF_CLASS_CIVILIAN:
 			default:
-				m_PrimaryGrenade = 0;
-				m_SecondaryGrenade = 0;
+				mPrimaryGrenade = 0;
+				mSecondaryGrenade = 0;
 				break;
 		}
 	}
@@ -2444,26 +2437,26 @@ namespace AiState
 	}
 	void Teleporter::UpdateTeleporterStatus( const Event_TeleporterStatus_TF &_stats )
 	{
-		if ( m_TeleporterStatus.m_EntityEntrance.IsValid() )
+		if ( mTeleporterStatus.mEntityEntrance.IsValid() )
 		{
-			m_TeleporterStatus.m_StatusEntrance = BUILDABLE_BUILT;
+			mTeleporterStatus.mStatusEntrance = BUILDABLE_BUILT;
 		}
 		else
 		{
-			m_TeleporterStatus.m_StatusEntrance = BUILDABLE_INVALID;
+			mTeleporterStatus.mStatusEntrance = BUILDABLE_INVALID;
 		}
 
-		if ( m_TeleporterStatus.m_EntityExit.IsValid() )
+		if ( mTeleporterStatus.mEntityExit.IsValid() )
 		{
-			m_TeleporterStatus.m_StatusExit = BUILDABLE_BUILT;
+			mTeleporterStatus.mStatusExit = BUILDABLE_BUILT;
 		}
 		else
 		{
-			m_TeleporterStatus.m_StatusExit = BUILDABLE_INVALID;
+			mTeleporterStatus.mStatusExit = BUILDABLE_INVALID;
 		}
 
-		m_TeleporterStatus.m_EntityEntrance = _stats.m_EntityEntrance;
-		m_TeleporterStatus.m_EntityExit = _stats.m_EntityExit;
+		mTeleporterStatus.mEntityEntrance = _stats.mEntityEntrance;
+		mTeleporterStatus.mEntityExit = _stats.mEntityExit;
 	}
 	State::StateStatus Teleporter::Update( float fDt )
 	{
@@ -2476,49 +2469,49 @@ namespace AiState
 			HANDLER( TF_MSG_TELE_ENTRANCE_BUILDING )
 			{
 				const Event_TeleporterBuilding_TF *m = _message.Get<Event_TeleporterBuilding_TF>();
-				OBASSERT( m->m_Teleporter.IsValid(), "Entity Expected" );
-				m_TeleporterStatus.m_StatusEntrance = BUILDABLE_BUILDING;
-				m_TeleporterStatus.m_EntityEntrance = m->m_Teleporter;
+				OBASSERT( m->mTeleporter.IsValid(), "Entity Expected" );
+				mTeleporterStatus.mStatusEntrance = BUILDABLE_BUILDING;
+				mTeleporterStatus.mEntityEntrance = m->mTeleporter;
 				DBG_MSG( 0, GetClient(), kNormal, "Tele Entrance Building" );
 				break;
 			}
 			HANDLER( TF_MSG_TELE_EXIT_BUILDING )
 			{
 				const Event_TeleporterBuilding_TF *m = _message.Get<Event_TeleporterBuilding_TF>();
-				OBASSERT( m->m_Teleporter.IsValid(), "Entity Expected" );
-				m_TeleporterStatus.m_StatusExit = BUILDABLE_BUILDING;
-				m_TeleporterStatus.m_EntityExit = m->m_Teleporter;
+				OBASSERT( m->mTeleporter.IsValid(), "Entity Expected" );
+				mTeleporterStatus.mStatusExit = BUILDABLE_BUILDING;
+				mTeleporterStatus.mEntityExit = m->mTeleporter;
 				DBG_MSG( 0, GetClient(), kNormal, "Tele Exit Building" );
 				break;
 			}
 			HANDLER( TF_MSG_TELE_ENTRANCE_BUILT )
 			{
 				const Event_TeleporterBuilt_TF *m = _message.Get<Event_TeleporterBuilt_TF>();
-				OBASSERT( m->m_Teleporter.IsValid(), "Entity Expected" );
-				m_TeleporterStatus.m_EntityEntrance = m->m_Teleporter;
-				EngineFuncs::EntityPosition( m->m_Teleporter, m_TeleporterStatus.m_EntrancePos );
-				m_TeleporterStatus.m_StatusEntrance = BUILDABLE_BUILT;
+				OBASSERT( m->mTeleporter.IsValid(), "Entity Expected" );
+				mTeleporterStatus.mEntityEntrance = m->mTeleporter;
+				EngineFuncs::EntityPosition( m->mTeleporter, mTeleporterStatus.mEntrancePos );
+				mTeleporterStatus.mStatusEntrance = BUILDABLE_BUILT;
 				DBG_MSG( 0, GetClient(), kNormal, "Tele Entrance Built" );
 				break;
 			}
 			HANDLER( TF_MSG_TELE_EXIT_BUILT )
 			{
 				const Event_TeleporterBuilt_TF *m = _message.Get<Event_TeleporterBuilt_TF>();
-				OBASSERT( m->m_Teleporter.IsValid(), "Entity Expected" );
-				m_TeleporterStatus.m_EntityExit = m->m_Teleporter;
-				EngineFuncs::EntityPosition( m->m_Teleporter, m_TeleporterStatus.m_ExitPos );
-				m_TeleporterStatus.m_StatusExit = BUILDABLE_BUILT;
+				OBASSERT( m->mTeleporter.IsValid(), "Entity Expected" );
+				mTeleporterStatus.mEntityExit = m->mTeleporter;
+				EngineFuncs::EntityPosition( m->mTeleporter, mTeleporterStatus.mExitPos );
+				mTeleporterStatus.mStatusExit = BUILDABLE_BUILT;
 				DBG_MSG( 0, GetClient(), kNormal, "Tele Exit Built" );
 				break;
 			}
 			HANDLER( TF_MSG_TELE_ENTRANCE_DESTROYED )
 			{
-				m_TeleporterStatus.m_EntityEntrance.Reset();
+				mTeleporterStatus.mEntityEntrance.Reset();
 				break;
 			}
 			HANDLER( TF_MSG_TELE_EXIT_DESTROYED )
 			{
-				m_TeleporterStatus.m_EntityExit.Reset();
+				mTeleporterStatus.mEntityExit.Reset();
 				break;
 			}
 			HANDLER( TF_MSG_TELE_STATS )
@@ -2526,12 +2519,12 @@ namespace AiState
 				const Event_TeleporterStatus_TF	*m = _message.Get<Event_TeleporterStatus_TF>();
 				m;
 				/*DBG_MSG(0, GetClient(), kNormal, "Dispenser Stats");
-				DBG_MSG(0, GetClient(), kNormal, va("Health: %d", m_DispenserStatus.m_Health));
-				DBG_MSG(0, GetClient(), kNormal, va("Shells: %d", m_DispenserStatus.m_Shells));
-				DBG_MSG(0, GetClient(), kNormal, va("Nails: %d", m_DispenserStatus.m_Nails));
-				DBG_MSG(0, GetClient(), kNormal, va("Rockets: %d", m_DispenserStatus.m_Rockets));
-				DBG_MSG(0, GetClient(), kNormal, va("Cells: %d", m_DispenserStatus.m_Cells));
-				DBG_MSG(0, GetClient(), kNormal, va("Armor: %d", m_DispenserStatus.m_Armor));*/
+				DBG_MSG(0, GetClient(), kNormal, va("Health: %d", mDispenserStatus.mHealth));
+				DBG_MSG(0, GetClient(), kNormal, va("Shells: %d", mDispenserStatus.mShells));
+				DBG_MSG(0, GetClient(), kNormal, va("Nails: %d", mDispenserStatus.mNails));
+				DBG_MSG(0, GetClient(), kNormal, va("Rockets: %d", mDispenserStatus.mRockets));
+				DBG_MSG(0, GetClient(), kNormal, va("Cells: %d", mDispenserStatus.mCells));
+				DBG_MSG(0, GetClient(), kNormal, va("Armor: %d", mDispenserStatus.mArmor));*/
 				break;
 			}
 		}
@@ -2542,14 +2535,14 @@ namespace AiState
 	TeleporterBuild::TeleporterBuild()
 		: StateChild( "TeleporterBuild" )
 		, FollowPathUser( "TeleporterBuild" )
-		, m_CantBuild( false )
+		, mCantBuild( false )
 	{
 	}
 	void TeleporterBuild::GetDebugString( std::stringstream &out )
 	{
 		if ( IsActive() )
 		{
-			switch ( m_State )
+			switch ( mState )
 			{
 				case NONE:
 					break;
@@ -2557,30 +2550,30 @@ namespace AiState
 					out << "Getting Ammo";
 					break;
 				case TELE_BUILDING_ENTRANCE:
-					out << ( m_CantBuild ? "Cant Build " : "Building " );
-					if ( m_MapGoalTeleEntrance )
-						out << m_MapGoalTeleEntrance->GetName();
+					out << ( mCantBuild ? "Cant Build " : "Building " );
+					if ( mMapGoalTeleEntrance )
+						out << mMapGoalTeleEntrance->GetName();
 					break;
 				case TELE_BUILDING_EXIT:
-					out << ( m_CantBuild ? "Cant Build " : "Building " );
-					if ( m_MapGoalTeleExit )
-						out << m_MapGoalTeleExit->GetName();
+					out << ( mCantBuild ? "Cant Build " : "Building " );
+					if ( mMapGoalTeleExit )
+						out << mMapGoalTeleExit->GetName();
 					break;
 			}
 		}
 	}
 	bool TeleporterBuild::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		switch ( m_State )
+		switch ( mState )
 		{
 			case TELE_BUILDING_ENTRANCE:
-				if ( m_MapGoalTeleEntrance->RouteTo( GetClient(), _desination ) )
+				if ( mMapGoalTeleEntrance->RouteTo( GetClient(), _desination ) )
 					_final = false;
 				else
 					_final = true;
 				break;
 			case TELE_BUILDING_EXIT:
-				if ( m_MapGoalTeleExit->RouteTo( GetClient(), _desination ) )
+				if ( mMapGoalTeleExit->RouteTo( GetClient(), _desination ) )
 					_final = false;
 				else
 					_final = true;
@@ -2594,13 +2587,13 @@ namespace AiState
 	}
 	bool TeleporterBuild::GetAimPosition( Vector3f &_aimpos )
 	{
-		switch ( m_State )
+		switch ( mState )
 		{
 			case TELE_BUILDING_ENTRANCE:
-				_aimpos = GetClient()->GetEyePosition() + m_MapGoalTeleEntrance->GetFacing() * 1024.f;
+				_aimpos = GetClient()->GetEyePosition() + mMapGoalTeleEntrance->GetFacing() * 1024.f;
 				break;
 			case TELE_BUILDING_EXIT:
-				_aimpos = GetClient()->GetEyePosition() + m_MapGoalTeleExit->GetFacing() * 1024.f;
+				_aimpos = GetClient()->GetEyePosition() + mMapGoalTeleExit->GetFacing() * 1024.f;
 				break;
 			default:
 				OBASSERT( 0, "Invalid State" );
@@ -2613,23 +2606,23 @@ namespace AiState
 		if ( !tele )
 			return;
 
-		switch ( m_State )
+		switch ( mState )
 		{
 			case TELE_BUILDING_ENTRANCE:
 			{
-				if ( !tele->HasTeleporterEntrance() && IGame::GetTime() >= m_NextBuildTry )
+				if ( !tele->HasTeleporterEntrance() && IGame::GetTime() >= mNextBuildTry )
 				{
 					GetClient()->PressButton( TF_BOT_BUTTON_BUILD_TELE_ENTRANCE );
-					m_NextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
+					mNextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
 				}
 				break;
 			}
 			case TELE_BUILDING_EXIT:
 			{
-				if ( !tele->HasTeleporterExit() && IGame::GetTime() >= m_NextBuildTry )
+				if ( !tele->HasTeleporterExit() && IGame::GetTime() >= mNextBuildTry )
 				{
 					GetClient()->PressButton( TF_BOT_BUTTON_BUILD_TELE_EXIT );
-					m_NextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
+					mNextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
 				}
 				break;
 			}
@@ -2637,30 +2630,30 @@ namespace AiState
 				OBASSERT( 0, "Invalid State" );
 		}
 	}
-	obReal TeleporterBuild::GetPriority()
+	float TeleporterBuild::GetPriority()
 	{
-		if ( m_MapGoalTeleEntrance )
+		if ( mMapGoalTeleEntrance )
 		{
-			if ( !m_MapGoalTeleEntrance->IsAvailable( GetClient()->GetTeam() ) )
+			if ( !mMapGoalTeleEntrance->IsAvailable( GetClient()->GetTeam() ) )
 			{
 				GetClient()->PressButton( TF_BOT_BUTTON_DETTELE_ENTRANCE );
-				m_MapGoalTeleEntrance.reset();
+				mMapGoalTeleEntrance.reset();
 			}
 		}
-		if ( m_MapGoalTeleExit )
+		if ( mMapGoalTeleExit )
 		{
-			if ( !m_MapGoalTeleExit->IsAvailable( GetClient()->GetTeam() ) )
+			if ( !mMapGoalTeleExit->IsAvailable( GetClient()->GetTeam() ) )
 			{
 				GetClient()->PressButton( TF_BOT_BUTTON_DETTELE_EXIT );
-				m_MapGoalTeleExit.reset();
+				mMapGoalTeleExit.reset();
 			}
 		}
 
 		if ( IsActive() )
 			return GetLastPriority();
 
-		m_MapGoalTeleEntrance.reset();
-		m_MapGoalTeleExit.reset();
+		mMapGoalTeleEntrance.reset();
+		mMapGoalTeleExit.reset();
 
 		FINDSTATE( tp, Teleporter, GetParent() );
 		if ( tp == NULL )
@@ -2670,46 +2663,46 @@ namespace AiState
 		{
 			GoalManager::Query qry( 0xed2f457b /* TeleEntrance */, GetClient() );
 			GoalManager::GetInstance()->GetGoals( qry );
-			qry.GetBest( m_MapGoalTeleEntrance );
-			m_State = TELE_BUILDING_ENTRANCE;
+			qry.GetBest( mMapGoalTeleEntrance );
+			mState = TELE_BUILDING_ENTRANCE;
 
-			if ( m_MapGoalTeleEntrance )
-				return m_MapGoalTeleEntrance->GetPriorityForClient( GetClient() );
+			if ( mMapGoalTeleEntrance )
+				return mMapGoalTeleEntrance->GetPriorityForClient( GetClient() );
 		}
 		if ( !tp->HasTeleporterExit() )
 		{
 			GoalManager::Query qry( 0x31bccf2d /* TeleExit */, GetClient() );
-			if ( m_BuiltTeleEntrance )
+			if ( mBuiltTeleEntrance )
 			{
-				const std::string &groupName = m_BuiltTeleEntrance->GetGroupName();
+				const std::string &groupName = mBuiltTeleEntrance->GetGroupName();
 				if ( !groupName.empty() )
 					qry.Group( groupName.c_str() );
 			}
 
 			GoalManager::GetInstance()->GetGoals( qry );
-			qry.GetBest( m_MapGoalTeleExit );
-			m_State = TELE_BUILDING_EXIT;
+			qry.GetBest( mMapGoalTeleExit );
+			mState = TELE_BUILDING_EXIT;
 
-			if ( m_MapGoalTeleExit )
-				return m_MapGoalTeleExit->GetPriorityForClient( GetClient() );
+			if ( mMapGoalTeleExit )
+				return mMapGoalTeleExit->GetPriorityForClient( GetClient() );
 		}
 		return 0.f;
 	}
 	void TeleporterBuild::Enter()
 	{
-		m_NextAmmoCheck = 0;
-		m_NextBuildTry = 0;
-		m_CantBuild = false;
+		mNextAmmoCheck = 0;
+		mNextBuildTry = 0;
+		mCantBuild = false;
 		FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
 	}
 	void TeleporterBuild::Exit()
 	{
 		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
-		m_State = NONE;
+		mState = NONE;
 
-		m_MapGoalTeleEntrance.reset();
-		m_MapGoalTeleExit.reset();
+		mMapGoalTeleEntrance.reset();
+		mMapGoalTeleExit.reset();
 
 		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
 		GetClient()->PressButton( TF_BOT_BUTTON_CANCELBUILD );
@@ -2721,11 +2714,11 @@ namespace AiState
 		if ( tp == NULL )
 			return State_Finished;
 
-		switch ( m_State )
+		switch ( mState )
 		{
 			case TELE_BUILDING_ENTRANCE:
 			{
-				if ( !m_MapGoalTeleEntrance )
+				if ( !mMapGoalTeleEntrance )
 					return State_Finished;
 
 				if ( tp->HasTeleporterEntrance() )
@@ -2734,7 +2727,7 @@ namespace AiState
 			}
 			case TELE_BUILDING_EXIT:
 			{
-				if ( !m_MapGoalTeleExit )
+				if ( !mMapGoalTeleExit )
 					return State_Finished;
 
 				if ( tp->HasTeleporterExit() )
@@ -2750,10 +2743,10 @@ namespace AiState
 		if ( DidPathFail() )
 		{
 			// Delay it from being used for a while.
-			if ( m_State == TELE_BUILDING_ENTRANCE && m_MapGoalTeleEntrance )
-				BlackboardDelay( 10.f, m_MapGoalTeleEntrance->GetSerialNum() );
-			else if ( m_State == TELE_BUILDING_EXIT && m_MapGoalTeleExit )
-				BlackboardDelay( 10.f, m_MapGoalTeleExit->GetSerialNum() );
+			if ( mState == TELE_BUILDING_ENTRANCE && mMapGoalTeleEntrance )
+				BlackboardDelay( 10.f, mMapGoalTeleEntrance->GetSerialNum() );
+			else if ( mState == TELE_BUILDING_EXIT && mMapGoalTeleExit )
+				BlackboardDelay( 10.f, mMapGoalTeleExit->GetSerialNum() );
 
 			return State_Finished;
 		}
@@ -2763,15 +2756,15 @@ namespace AiState
 
 		//////////////////////////////////////////////////////////////////////////
 		// Need ammo?
-		if ( IGame::GetTime() >= m_NextAmmoCheck )
+		if ( IGame::GetTime() >= mNextAmmoCheck )
 		{
-			m_NextAmmoCheck = IGame::GetTime() + 1000;
+			mNextAmmoCheck = IGame::GetTime() + 1000;
 
 			int iAmmo = 0, iMaxAmmo = 0;
 			gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), TF_Options::BUILD_AMMO_TYPE, Primary, iAmmo, iMaxAmmo );
-			if ( m_State == GETTING_AMMO && iAmmo >= TF_Options::TELEPORT_BUILD_AMMO )
+			if ( mState == GETTING_AMMO && iAmmo >= TF_Options::TELEPORT_BUILD_AMMO )
 				return State_Finished;
-			if ( m_State != GETTING_AMMO && iAmmo < TF_Options::TELEPORT_BUILD_AMMO )
+			if ( mState != GETTING_AMMO && iAmmo < TF_Options::TELEPORT_BUILD_AMMO )
 			{
 				SensoryMemory *sensory = GetClient()->GetSensoryMemory();
 
@@ -2780,22 +2773,20 @@ namespace AiState
 
 				FilterAllType filter( GetClient(), AiState::SensoryMemory::EntAny, records );
 				filter.MemorySpan( Utils::SecondsToMilliseconds( 7.f ) );
-				filter.AddClass( TF_CLASSEX_RESUPPLY );
-				filter.AddClass( TF_CLASSEX_BACKPACK );
-				filter.AddClass( TF_CLASSEX_BACKPACK_AMMO );
+				filter.AddGroup( ENT_GRP_AMMO2 );
 				sensory->QueryMemory( filter );
 
 				sensory->GetRecordInfo( records, &recordpos, NULL );
 
 				if ( !recordpos.empty() )
 				{
-					m_State = GETTING_AMMO;
+					mState = GETTING_AMMO;
 					FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
 					FINDSTATEIF( FollowPath, GetRootState(), Goto( this, recordpos ) );
 				}
 				else
 				{
-					//BlackboardDelay(10.f, m_MapGoalSentry->GetSerialNum());
+					//BlackboardDelay(10.f, mMapGoalSentry->GetSerialNum());
 					return State_Finished;
 				}
 			}
@@ -2803,22 +2794,22 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		if ( DidPathSucceed() )
 		{
-			if ( m_State == GETTING_AMMO )
+			if ( mState == GETTING_AMMO )
 				return State_Finished;
 
 			FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
 			if ( BuildEquipWeapon )
 				FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), BuildEquipWeapon ) );
 
-			if ( m_CantBuild )
+			if ( mCantBuild )
 			{
-				if ( m_State == TELE_BUILDING_ENTRANCE && m_MapGoalTeleEntrance )
-					GetClient()->SetMovementVector( -m_MapGoalTeleEntrance->GetFacing() );
-				else if ( m_State == TELE_BUILDING_EXIT && m_MapGoalTeleExit )
-					GetClient()->SetMovementVector( -m_MapGoalTeleExit->GetFacing() );
+				if ( mState == TELE_BUILDING_ENTRANCE && mMapGoalTeleEntrance )
+					GetClient()->SetMovementVector( -mMapGoalTeleEntrance->GetFacing() );
+				else if ( mState == TELE_BUILDING_EXIT && mMapGoalTeleExit )
+					GetClient()->SetMovementVector( -mMapGoalTeleExit->GetFacing() );
 
 				GetClient()->PressButton( BOT_BUTTON_WALK );
-				m_NextBuildTry = 0;
+				mNextBuildTry = 0;
 			}
 			else
 				GetClient()->SetMovementVector( Vector3f::ZERO );
@@ -2831,42 +2822,42 @@ namespace AiState
 		{
 			HANDLER( TF_MSG_TELE_ENTRANCE_BUILDING )
 			{
-				m_BuiltTeleEntrance = m_MapGoalTeleEntrance;
+				mBuiltTeleEntrance = mMapGoalTeleEntrance;
 				break;
 			}
 			HANDLER( TF_MSG_TELE_EXIT_BUILDING )
 			{
-				m_BuiltTeleExit = m_MapGoalTeleExit;
+				mBuiltTeleExit = mMapGoalTeleExit;
 				break;
 			}
 			HANDLER( TF_MSG_TELE_ENTRANCE_CANCEL )
 			{
-				m_BuiltTeleEntrance.reset();
+				mBuiltTeleEntrance.reset();
 				break;
 			}
 			HANDLER( TF_MSG_TELE_EXIT_CANCEL )
 			{
-				m_BuiltTeleExit.reset();
+				mBuiltTeleExit.reset();
 				break;
 			}
 			HANDLER( TF_MSG_TELE_ENTRANCE_DESTROYED )
 			{
-				m_BuiltTeleEntrance.reset();
+				mBuiltTeleEntrance.reset();
 				break;
 			}
 			HANDLER( TF_MSG_TELE_EXIT_DESTROYED )
 			{
-				m_BuiltTeleExit.reset();
+				mBuiltTeleExit.reset();
 				break;
 			}
 			HANDLER( TF_MSG_TELE_ENTRANCE_CANTBUILD )
 			{
-				m_CantBuild = true;
+				mCantBuild = true;
 				break;
 			}
 			HANDLER( TF_MSG_TELE_EXIT_CANTBUILD )
 			{
-				m_CantBuild = true;
+				mCantBuild = true;
 				break;
 			}
 		}

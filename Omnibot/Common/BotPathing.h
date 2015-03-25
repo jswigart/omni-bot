@@ -55,7 +55,7 @@ namespace AiState
 
 		const Vector3f &GetLookAheadPt() const
 		{
-			return m_LookAheadPt;
+			return mLookAheadPt;
 		}
 
 		bool IsMoving() const;
@@ -64,7 +64,7 @@ namespace AiState
 		void NotifyUserSuccess();
 		void NotifyUserFailed( FollowPathUser::FailType _how );
 
-		virtual obReal GetPriority();
+		virtual float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update( float fDt );
@@ -82,29 +82,29 @@ namespace AiState
 	private:
 		struct Query
 		{
-			FollowPathUser	*	m_User;
-			DestinationVector	m_Destination;
-			MoveMode			m_MoveMode;
-			bool				m_SkipLastPt;
-			bool				m_Final;
+			FollowPathUser	*	mUser;
+			DestinationVector	mDestination;
+			MoveMode			mMoveMode;
+			bool				mSkipLastPt;
+			bool				mFinal;
 
 			Query()
-				: m_User( 0 )
-				, m_MoveMode( Run )
-				, m_SkipLastPt( false )
-				, m_Final( false )
+				: mUser( 0 )
+				, mMoveMode( Run )
+				, mSkipLastPt( false )
+				, mFinal( false )
 			{
 			}
 		};
 
-		Query				m_Query;
-		Query				m_SavedQuery;
+		Query			 mQuery;
+		Query			 mSavedQuery;
 
 		// Internal Data
-		PathStatus	m_PathStatus;
-		Vector3f	m_LookAheadPt;
-		int			m_LadderDirection;
-		obint32		m_JumpTime;
+		PathStatus mPathStatus;
+		Vector3f mLookAheadPt;
+		int		 mLadderDirection;
+		int32_t	 mJumpTime;
 
 		enum
 		{
@@ -113,17 +113,17 @@ namespace AiState
 		PathInterface::PathCorner		mCachedCorners[ CachedEdges ];
 		size_t							mNumCachedCorners;
 
-		obuint32	m_PassThroughState;
-		int			m_PathThroughPtIndex;
+		uint32_t mPassThroughState;
+		int		 mPathThroughPtIndex;
 
 		// For jump behaviors.
-		float		m_RayDistance;
+		float	 mRayDistance;
 
 		bool CheckForMover( const Vector3f &_pos );
 		void CheckForLowJumps( const Vector3f &_destination );
 		void CheckForGapJumps( const Vector3f &_destination );
 
-		PathInterface * m_PathInterface;
+		PathInterface * mPathInterface;
 	};
 };
 

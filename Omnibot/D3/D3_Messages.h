@@ -23,8 +23,8 @@
 
 struct D3_Location
 {
-	float	m_Position[3];
-	char	m_LocationName[64];
+	float	mPosition[3];
+	char	mLocationName[64];
 };
 
 //////////////////////////////////////////////////////////////////////////

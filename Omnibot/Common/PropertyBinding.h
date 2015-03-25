@@ -54,9 +54,9 @@ namespace Prop
 
 struct IntEnum
 {
-	const char *m_Key;
-	int			m_Value;
-	IntEnum(const char *_key = 0, int _val = 0) : m_Key(_key), m_Value(_val) {}
+	const char *mKey;
+	int			mValue;
+	IntEnum(const char *_key = 0, int _val = 0) : mKey(_key), mValue(_val) {}
 };
 
 class PropertyBinding
@@ -65,16 +65,16 @@ public:
 	typedef boost::shared_ptr<Property> PropertyPtr;
 	typedef std::vector<PropertyPtr> PropertyList;
 
-	void BindProperty(const std::string &_name, bool &_val, obuint32 _flags = 0);
-	void BindProperty(const std::string &_name, const char *&_val, obuint32 _flags = 0);
-	void BindProperty(const std::string &_name, std::string &_val, obuint32 _flags = 0);
-	void BindProperty(const std::string &_name, Vector3f &_val, obuint32 _flags = Prop::PF_POSITION);
-	void BindProperty(const std::string &_name, Matrix3f &_val, obuint32 _flags = 0);
-	void BindProperty(const std::string &_name, int &_val, obuint32 _flags = 0, const IntEnum *_enum = 0, int _numenum = 0);
-	void BindProperty(const std::string &_name, BitFlag32 &_val, obuint32 _flags = 0, const IntEnum *_enum = 0, int _numenum = 0);
-	void BindProperty(const std::string &_name, float &_val, obuint32 _flags = 0);
-	void BindProperty(const std::string &_name, GameEntity &_val, obuint32 _flags = 0);
-	void BindProperty(const std::string &_name, AABB &_val, obuint32 _flags = 0);
+	void BindProperty(const std::string &_name, bool &_val, uint32_t _flags = 0);
+	void BindProperty(const std::string &_name, const char *&_val, uint32_t _flags = 0);
+	void BindProperty(const std::string &_name, std::string &_val, uint32_t _flags = 0);
+	void BindProperty(const std::string &_name, Vector3f &_val, uint32_t _flags = Prop::PF_POSITION);
+	void BindProperty(const std::string &_name, Matrix3f &_val, uint32_t _flags = 0);
+	void BindProperty(const std::string &_name, int &_val, uint32_t _flags = 0, const IntEnum *_enum = 0, int _numenum = 0);
+	void BindProperty(const std::string &_name, BitFlag32 &_val, uint32_t _flags = 0, const IntEnum *_enum = 0, int _numenum = 0);
+	void BindProperty(const std::string &_name, float &_val, uint32_t _flags = 0);
+	void BindProperty(const std::string &_name, GameEntity &_val, uint32_t _flags = 0);
+	void BindProperty(const std::string &_name, AABB &_val, uint32_t _flags = 0);
 
 	template <typename T, typename Fn>
 	void BindFunction(const std::string _name, T *_src, Fn _fn)
@@ -107,7 +107,7 @@ public:
 	PropertyBinding();
 	virtual ~PropertyBinding() {}
 private:
-	PropertyList		m_PropertyList;
+	PropertyList		mPropertyList;
 
 	PropertyPtr Get(const std::string &_name);
 };

@@ -28,7 +28,7 @@ namespace AiState
 		fiberExit( StateFiber::FIBER_EXIT, scriptState ),
 		fiberUpdate( StateFiber::FIBER_UPDATE, scriptState ) {
 	}
-	obReal FiberState::GetPriority() {
+	float FiberState::GetPriority() {
 		fiberGetPriority.Execute();
 		return fiberGetPriority.GetPriority();
 	}

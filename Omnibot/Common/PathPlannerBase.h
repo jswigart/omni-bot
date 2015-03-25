@@ -191,9 +191,9 @@ public:
 
 	virtual Vector3f GetDisplayPosition(const Vector3f &_pos) = 0; // deprecated
 
-	bool IsViewOn() const { return m_PlannerFlags.CheckFlag(NAV_VIEW); }
-	bool IsViewConnectionOn() const { return m_PlannerFlags.CheckFlag(NAV_VIEWCONNECTIONS); }
-	bool IsAutoDetectFlagsOn() const { return m_PlannerFlags.CheckFlag(NAV_AUTODETECTFLAGS); }
+	bool IsViewOn() const { return mPlannerFlags.CheckFlag(NAV_VIEW); }
+	bool IsViewConnectionOn() const { return mPlannerFlags.CheckFlag(NAV_VIEWCONNECTIONS); }
+	bool IsAutoDetectFlagsOn() const { return mPlannerFlags.CheckFlag(NAV_AUTODETECTFLAGS); }
 
 	virtual bool Load(bool _dl = true);
 	virtual bool Load(const std::string &_mapname,bool _dl = true) = 0;
@@ -211,14 +211,14 @@ public:
 
 	struct AvoidData
 	{
-		int		m_Team;
-		float	m_Radius;
-		float	m_AvoidWeight;
+		int	 mTeam;
+		float mRadius;
+		float mAvoidWeight;
 	};
 
 	virtual void MarkAvoid(const Vector3f &_pos, const AvoidData&_data) {}
 
-	virtual bool GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name) = 0;
+	virtual bool GetNavInfo(const Vector3f &pos,int32_t &_id,std::string &_name) = 0;
 
 	virtual void AddEntityConnection(const Event_EntityConnection &_conn) = 0;
 	virtual void RemoveEntityConnection(GameEntity _ent) = 0;
@@ -238,13 +238,13 @@ public:
 protected:
 	struct FailedPath
 	{
-		Vector3f	m_Start;
-		Vector3f	m_End;
-		bool		m_Render;
+		Vector3f mStart;
+		Vector3f mEnd;
+		bool	 mRender;
 	};
 	typedef std::list<FailedPath> FailedPathList;
 
-	FailedPathList	m_FailedPathList;
+	FailedPathList mFailedPathList;
 
 	void AddFailedPath(const Vector3f &_start, const Vector3f &_end);
 
@@ -257,7 +257,7 @@ protected:
 	void cmdBenchmarkGetNavPoint(const StringVector &_args);
 	void cmdResaveNav(const StringVector &_args);
 
-	BitFlag32			m_PlannerFlags;
+	BitFlag32		 mPlannerFlags;
 
 	AxisAlignedBox3f	mNavigationBounds;
 

@@ -19,11 +19,14 @@
 
 #include "WeaponDatabase.h"
 #include "FileSystem.h"
-#include "FileDownloader.h"
 #include "InterfaceFuncs.h"
 
 #include "PathPlannerFloodFill.h"
 #include "PathPlannerRecast.h"
+
+#if ( ENABLE_FILE_DOWNLOADER )
+#include "FileDownloader.h"
+#endif
 
 IEngineInterface *gEngineFuncs = 0;
 
@@ -139,7 +142,7 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 	Options::SetValue("RemoteWindow","Enabled",0,false);
-	Options::SetValue("RemoteWindow","Port",m_Remote.getPort(),false);
+	Options::SetValue("RemoteWindow","Port",.mRemote.getPort(),false);
 #endif
 
 	//////////////////////////////////////////////////////////////////////////
@@ -161,14 +164,14 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 	{
 		int numConnections = 0;
 		if(Options::GetValue("RemoteWindow","Enabled",numConnections)) {
-			m_Remote.setMaxConnections( (unsigned short)numConnections );
+			.mRemote.setMaxConnections( (unsigned short)numConnections );
 		}
-		int remotePort = m_Remote.getPort();
+		int remotePort = .mRemote.getPort();
 		if(Options::GetValue("RemoteWindow","Port",remotePort)) {
-			m_Remote.setPort( (uint16)remotePort );
+			.mRemote.setPort( (uint16)remotePort );
 		}
 
-		m_Remote.init( 8192, 4096, true );
+		.mRemote.init( 8192, 4096, true );
 	}
 #endif
 
@@ -218,7 +221,9 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 		return BOT_ERROR_CANTINITBOT;
 	}
 
+#if ( ENABLE_FILE_DOWNLOADER )
 	FileDownloader::Init();
+#endif
 
 	GameAnalyticsKeys analyticsKeys;
 	//if ( mBotSystem.mGame->GetAnalyticsKeys( analyticsKeys ) )
@@ -282,9 +287,9 @@ void IGameManager::UpdateGame()
 #ifdef ENABLE_REMOTE_DEBUGGING
 		{
 			Prof(RemoteSync);
-			m_Remote.updateConnections( this );
-			for( int i = 0; i < m_Remote.getNumConnections(); ++i ) {
-				RemoteLib::DebugConnection * conn = static_cast<RemoteLib::DebugConnection*>( m_Remote.getConnection( i ) );
+			.mRemote.updateConnections( this );
+			for( int i = 0; i < .mRemote.getNumConnections(); ++i ) {
+				RemoteLib::DebugConnection * conn = static_cast<RemoteLib::DebugConnection*>( .mRemote.getConnection( i ) );
 				if ( conn->isConnected() ) {
 					/*RemoteLib::DataBuffer & sendBuffer = conn->getSendBuffer();
 					// keep alive
@@ -300,8 +305,8 @@ void IGameManager::UpdateGame()
 					conn->updateState.Clear();
 
 					mBotSystem.mGame->UpdateSync( conn, conn->cachedState, conn->updateState );
-					//m_PathPlanner->Sync( conn );
-					m_GoalManager->Sync( conn );
+					//.mPathPlanner->Sync( conn );
+					.mGoalManager->Sync( conn );
 				}
 			}
 		}
@@ -330,16 +335,19 @@ void IGameManager::UpdateGame()
 			while ( IGame::IterateEntity( it ) )
 			{
 				Vector3f entPos( Vector3f::ZERO ), entFace( Vector3f::ZERO );
-				EngineFuncs::EntityPosition( it.GetEnt().m_Entity, entPos );
-				EngineFuncs::EntityOrientation( it.GetEnt().m_Entity, entFace, NULL, NULL );
-				
+				EngineFuncs::EntityPosition( it.GetEnt().mEntity, entPos );
+				EngineFuncs::EntityOrientation( it.GetEnt().mEntity, entFace, NULL, NULL );
+								
 				float hdg, pitch, roll;
 				entFace.ToSpherical( hdg, pitch, roll );
 
 				Analytics::GameEntityList * lst = msgUnion.mutable_gameentitylist();
 				Analytics::GameEntityInfo * ent = lst->add_entities();
-				ent->set_entityid( it.GetEnt().m_Entity.AsInt() );
-				ent->set_classid( InterfaceFuncs::GetEntityClass( it.GetEnt().m_Entity ) );
+				ent->set_entityid( it.GetEnt().mEntity.AsInt() );
+				ent->set_groupid( it.GetEnt().mEntInfo.mGroup );
+				ent->set_classid( it.GetEnt().mEntInfo.mClassId );
+				ent->set_quantity( it.GetEnt().mEntInfo.mQuantity );
+				ent->set_quantitymax( it.GetEnt().mEntInfo.mQuantityMax );
 				ent->mutable_position()->set_x( entPos.X() );
 				ent->mutable_position()->set_y( entPos.Y() );
 				ent->mutable_position()->set_z( entPos.Z() );
@@ -355,7 +363,9 @@ void IGameManager::UpdateGame()
 
 	Options::SaveConfigFileIfChanged( "user/omni-bot.cfg" );
 
+#if ( ENABLE_FILE_DOWNLOADER )
 	FileDownloader::Poll();
+#endif
 
 	if ( mBotSystem.mGame->RendersToGame() )
 		RenderBuffer::RenderToGame();
@@ -365,10 +375,12 @@ void IGameManager::UpdateGame()
 
 void IGameManager::Shutdown()
 {
+#if ( ENABLE_FILE_DOWNLOADER )
 	FileDownloader::Shutdown();
+#endif
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-	m_Remote.shutdown();
+	.mRemote.shutdown();
 #endif
 
 	if ( mBotSystem.mAnalytics != NULL )
@@ -407,7 +419,7 @@ void IGameManager::Shutdown()
 	OB_DELETE( mBotSystem.mGame );
 	LOG( "Successfully Shut down Game Interface" );
 
-	g_WeaponDatabase.Unload();
+	gWeaponDatabase.Unload();
 
 	mBotSystem.mScript->Shutdown();
 	mBotSystem.mScript = NULL;
@@ -429,10 +441,12 @@ void IGameManager::InitCommands()
 	SetEx( "printfs", "Prints the whole file system.",
 		this, &IGameManager::cmdPrintAllFiles );
 
+#if ( ENABLE_FILE_DOWNLOADER )
 	SetEx( "update_nav", "Checks the remote waypoint database for updated navigation.",
 		this, &IGameManager::cmdUpdateNavFile );
 	SetEx( "update_all_nav", "Attempts to download all nav files from the database, including updating existing files.",
 		this, &IGameManager::cmdUpdateAllNavFiles );
+#endif
 
 	SetEx( "heatmap_save", "Saves a heat map script used to generate a heat map image.",
 		this, &IGameManager::cmdSaveHeatMapScript );
@@ -620,7 +634,7 @@ void IGameManager::cmdSaveHeatMapScript( const StringVector &_args )
 #ifdef ENABLE_REMOTE_DEBUGGING
 void IGameManager::SyncRemoteDelete( int entityHandle )
 {
-	/*if ( m_Remote.getNumConnections() > 0 ) {
+	/*if ( .mRemote.getNumConnections() > 0 ) {
 	RemoteLib::DataBufferStatic<128> db;
 
 	db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
@@ -629,12 +643,12 @@ void IGameManager::SyncRemoteDelete( int entityHandle )
 	db.writeInt32( entityHandle );
 	db.endSizeHeader();
 	db.endWrite();
-	m_Remote.sendToAll( db );
+	.mRemote.sendToAll( db );
 	}*/
 }
 
 void IGameManager::SyncRemoteMessage( const RemoteLib::DataBuffer & db ) {
-	m_Remote.sendToAll( db );
+	.mRemote.sendToAll( db );
 }
 
 RemoteLib::Connection * IGameManager::CreateNewConnection( RemoteLib::TcpSocket & socket ) {

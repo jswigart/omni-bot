@@ -14,8 +14,8 @@
 #include "IGameManager.h"
 
 MC_Client::MC_Client()
-	: m_ModuleTimeStamp(0)
-	, m_PlayerTimeStamp(0)
+	: mModuleTimeStamp( 0 )
+	, mPlayerTimeStamp( 0 )
 {
 }
 
@@ -23,19 +23,19 @@ MC_Client::~MC_Client()
 {
 }
 
-NavFlags MC_Client::GetTeamFlag(int _team) const
+NavFlags MC_Client::GetTeamFlag( int _team ) const
 {
 	static const NavFlags defaultTeam = 0;
-	switch(_team)
+	switch ( _team )
 	{
-	case MC_TEAM_COMBINE:
-		return NAVFLAGS_TEAM1_ONLY;
-	case MC_TEAM_SCIENCE:
-		return NAVFLAGS_TEAM2_ONLY;
-	case MC_TEAM_REBELS:
-		return NAVFLAGS_TEAM3_ONLY;
-	default:
-		return defaultTeam;
+		case MC_TEAM_COMBINE:
+			return NAVFLAGS_TEAM1_ONLY;
+		case MC_TEAM_SCIENCE:
+			return NAVFLAGS_TEAM2_ONLY;
+		case MC_TEAM_REBELS:
+			return NAVFLAGS_TEAM3_ONLY;
+		default:
+			return defaultTeam;
 	}
 }
 
@@ -57,88 +57,83 @@ void MC_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 	}
 }
 
-float MC_Client::GetGameVar(GameVar _var) const
+float MC_Client::GetGameVar( GameVar _var ) const
 {
-	switch(_var)
+	switch ( _var )
 	{
-	case JumpGapOffset:
-		return 0.0f;
+		case JumpGapOffset:
+			return 0.0f;
 	}
 	return 0.0f;
 }
 
-float MC_Client::GetAvoidRadius(int _class) const
-{
-	return 0.0f;
-}
-
-bool MC_Client::DoesBotHaveFlag(MapGoalPtr _mapgoal)
+bool MC_Client::DoesBotHaveFlag( MapGoalPtr _mapgoal )
 {
 	return false;
 }
 
-void MC_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+void MC_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
 {
-	switch(_message.GetMessageId())
+	switch ( _message.GetMessageId() )
 	{
-		HANDLER(Event_PlayerSpree::EventId)
+		HANDLER( Event_PlayerSpree::EventId )
 		{
 			_cb.CallScript();
 			const Event_PlayerSpree *m = _message.Get<Event_PlayerSpree>();
-			_cb.AddEntity("who", m->m_Player);
-			_cb.AddInt("kills",m->m_Kills);
+			_cb.AddEntity( "who", m->mPlayer );
+			_cb.AddInt( "kills", m->mKills );
 			break;
 		}
-		HANDLER(Event_PlayerSpreeEnd::EventId)
+		HANDLER( Event_PlayerSpreeEnd::EventId )
 		{
 			_cb.CallScript();
 			const Event_PlayerSpreeEnd *m = _message.Get<Event_PlayerSpreeEnd>();
-			_cb.AddEntity("who", m->m_Player);
-			_cb.AddEntity("bywho", m->m_ByWho);
-			_cb.AddInt("kills",m->m_Kills);
+			_cb.AddEntity( "who", m->mPlayer );
+			_cb.AddEntity( "bywho", m->mByWho );
+			_cb.AddInt( "kills", m->mKills );
 			break;
 		}
-		HANDLER(Event_SpreeWarStart::EventId)
+		HANDLER( Event_SpreeWarStart::EventId )
 		{
 			_cb.CallScript();
 			const Event_SpreeWarStart *m = _message.Get<Event_SpreeWarStart>();
-			_cb.AddEntity("victim", m->m_Victim);
+			_cb.AddEntity( "victim", m->mVictim );
 			break;
 		}
-		HANDLER(Event_SpreeWarEnd::EventId)
+		HANDLER( Event_SpreeWarEnd::EventId )
 		{
 			_cb.CallScript();
 			/*const MC_SpreeWarEnd *m = _message.Get<MC_SpreeWarEnd>();
-			_cb.AddEntity("victim", m->m_Victim);*/
+			_cb.AddEntity("victim", m->mVictim);*/
 			break;
 		}
-		HANDLER(Event_LevelUp::EventId)
+		HANDLER( Event_LevelUp::EventId )
 		{
 			const Event_LevelUp *m = _message.Get<Event_LevelUp>();
 			_cb.CallScript();
-			_cb.AddInt("level",m->m_Level);
+			_cb.AddInt( "level", m->mLevel );
 			break;
 		}
 	}
-	Client::ProcessEvent(_message, _cb);
+	Client::ProcessEvent( _message, _cb );
 }
 
 const MC_PlayerStats &MC_Client::GetPlayerStats()
 {
-	if(m_PlayerTimeStamp != IGame::GetTime())
+	if ( mPlayerTimeStamp != IGame::GetTime() )
 	{
-		m_PlayerTimeStamp = IGame::GetTime();
-		InterfaceFuncs::GetPlayerStats(GetGameEntity(),m_PlayerStats);
+		mPlayerTimeStamp = IGame::GetTime();
+		InterfaceFuncs::GetPlayerStats( GetGameEntity(), mPlayerStats );
 	}
-	return m_PlayerStats;
+	return mPlayerStats;
 }
 
 const MC_ModuleStats &MC_Client::GetModuleStats()
 {
-	if(m_ModuleTimeStamp != IGame::GetTime())
+	if ( mModuleTimeStamp != IGame::GetTime() )
 	{
-		m_ModuleTimeStamp = IGame::GetTime();
-		InterfaceFuncs::GetModuleStats(GetGameEntity(),m_ModuleStats);
+		mModuleTimeStamp = IGame::GetTime();
+		InterfaceFuncs::GetModuleStats( GetGameEntity(), mModuleStats );
 	}
-	return m_ModuleStats;
+	return mModuleStats;
 }

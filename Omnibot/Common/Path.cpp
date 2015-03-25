@@ -10,39 +10,39 @@
 #include "RenderBuffer.h"
 
 Path::Path() :
-	m_CurrentPt		(0),
-	m_NumPts		(0)
+mCurrentPt( 0 ),
+mNumPts( 0 )
 {
 }
 
 void Path::Clear()
 {
-	m_CurrentPt = 0;
-	m_NumPts = 0;
+	mCurrentPt = 0;
+	mNumPts = 0;
 }
 
-Path::PathPoint &Path::AddPt(const Vector3f &_pt, float _radius)
+Path::PathPoint &Path::AddPt( const Vector3f &_pt, float _radius )
 {
 	static PathPoint s_pp;
 
-	if(m_NumPts < MAX_PATH_PTS-1)
+	if ( mNumPts < MAX_PATH_PTS - 1 )
 	{
-		m_Pts[m_NumPts].m_Pt = _pt;
-		m_Pts[m_NumPts].m_Radius = _radius;
-		m_Pts[m_NumPts].m_NavFlags = 0;
-		m_Pts[m_NumPts].m_OnPathThrough = 0;
+		mPts[ mNumPts ].mPt = _pt;
+		mPts[ mNumPts ].mRadius = _radius;
+		mPts[ mNumPts ].mNavFlags = 0;
+		mPts[ mNumPts ].mOnPathThrough = 0;
 
 		// If this isn't the first node in the path, update the cached distances.
-		if(m_NumPts > 0)
+		if ( mNumPts > 0 )
 		{
-			m_Links[m_NumPts].m_Distance =
-				m_Links[m_NumPts-1].m_Distance + (m_Pts[m_NumPts].m_Pt - m_Pts[m_NumPts-1].m_Pt).Length();
+			mLinks[ mNumPts ].mDistance =
+				mLinks[ mNumPts - 1 ].mDistance + ( mPts[ mNumPts ].mPt - mPts[ mNumPts - 1 ].mPt ).Length();
 		}
 		else
 		{
-			m_Links[0].m_Distance = 0.f;
+			mLinks[ 0 ].mDistance = 0.f;
 		}
-		return m_Pts[m_NumPts++];
+		return mPts[ mNumPts++ ];
 	}
 
 	return s_pp;
@@ -50,9 +50,9 @@ Path::PathPoint &Path::AddPt(const Vector3f &_pt, float _radius)
 
 bool Path::NextPt()
 {
-	if(m_CurrentPt < m_NumPts-1)
+	if ( mCurrentPt < mNumPts - 1 )
 	{
-		m_CurrentPt++;
+		mCurrentPt++;
 		return true;
 	}
 	else
@@ -61,99 +61,99 @@ bool Path::NextPt()
 	}
 }
 
-void Path::Append(const Path &_path)
+void Path::Append( const Path &_path )
 {
-	for(int i = 0; i < MAX_PATH_PTS; ++i)
+	for ( int i = 0; i < MAX_PATH_PTS; ++i )
 	{
-		m_Pts[i] = _path.m_Pts[i];
-		m_Links[i] = _path.m_Links[i];
+		mPts[ i ] = _path.mPts[ i ];
+		mLinks[ i ] = _path.mLinks[ i ];
 	}
-	m_NumPts += _path.GetNumPts();
+	mNumPts += _path.GetNumPts();
 }
 
-bool Path::GetCurrentPt(PathPoint &_pt) const
+bool Path::GetCurrentPt( PathPoint &_pt ) const
 {
-	if(m_NumPts > 0)
+	if ( mNumPts > 0 )
 	{
-		_pt = m_Pts[m_CurrentPt];
+		_pt = mPts[ mCurrentPt ];
 		return true;
 	}
 	return false;
 }
 
-bool Path::GetNextPt(PathPoint &_pt) const
+bool Path::GetNextPt( PathPoint &_pt ) const
 {
-	if(m_NumPts > 0 && m_CurrentPt+1 < m_NumPts)
+	if ( mNumPts > 0 && mCurrentPt + 1 < mNumPts )
 	{
-		_pt = m_Pts[m_CurrentPt+1];
+		_pt = mPts[ mCurrentPt + 1 ];
 		return true;
 	}
 	return false;
 }
 
-bool Path::GetPreviousPt(PathPoint &_pt) const
+bool Path::GetPreviousPt( PathPoint &_pt ) const
 {
-	if(m_NumPts > 0 && m_CurrentPt > 0)
+	if ( mNumPts > 0 && mCurrentPt > 0 )
 	{
-		_pt = m_Pts[m_CurrentPt-1];
+		_pt = mPts[ mCurrentPt - 1 ];
 		return true;
 	}
 	return false;
 }
 
-bool Path::GetFirstPt(PathPoint &_pt) const
+bool Path::GetFirstPt( PathPoint &_pt ) const
 {
-	if(m_NumPts > 0)
+	if ( mNumPts > 0 )
 	{
-		_pt = m_Pts[0];
+		_pt = mPts[ 0 ];
 		return true;
 	}
 	return false;
 }
 
-bool Path::GetLastPt(PathPoint &_pt) const
+bool Path::GetLastPt( PathPoint &_pt ) const
 {
-	if(m_NumPts > 0)
+	if ( mNumPts > 0 )
 	{
-		_pt = m_Pts[m_NumPts-1];
+		_pt = mPts[ mNumPts - 1 ];
 		return true;
 	}
 	return false;
 }
 
-bool Path::GetPt(int _index, PathPoint &_pt) const
+bool Path::GetPt( int _index, PathPoint &_pt ) const
 {
-	if(_index >= m_NumPts || _index > MAX_PATH_PTS-1)
-		return GetLastPt(_pt);
-	if(_index < 0)
-		return GetFirstPt(_pt);
-	_pt = m_Pts[_index];
+	if ( _index >= mNumPts || _index > MAX_PATH_PTS - 1 )
+		return GetLastPt( _pt );
+	if ( _index < 0 )
+		return GetFirstPt( _pt );
+	_pt = mPts[ _index ];
 	return true;
 }
 
 float Path::GetTotalLength() const
 {
-	return m_Links[m_NumPts-1].m_Distance;
+	return mLinks[ mNumPts - 1 ].mDistance;
 }
 
-void Path::DebugRender(obColor _color)
+void Path::DebugRender( obColor _color )
 {
-	for(obint32 i = 1; i < m_NumPts; ++i)
+	for ( int32_t i = 1; i < mNumPts; ++i )
 	{
-		RenderBuffer::AddLine( m_Pts[i-1].m_Pt, m_Pts[i].m_Pt, _color );
+		RenderBuffer::AddLine( mPts[ i - 1 ].mPt, mPts[ i ].mPt, _color );
 	}
 }
 
-Vector3f Path::FindNearestPtOnPath(const Vector3f &_position, Vector3f *_outLookAhead /*= NULL*/, float _lookAheadDistance/* = 0.f*/)
+Vector3f Path::FindNearestPtOnPath( const Vector3f &_position, Vector3f *_outLookAhead /*= NULL*/, float _lookAheadDistance/* = 0.f*/ )
 {
 	Vector3f vClosestPt = _position;
-	if(_outLookAhead)
+	if ( _outLookAhead )
 		*_outLookAhead = _position;
 
-	if(/*m_CurrentPt <= 0 || */m_NumPts == 1)
+	if (/*.mCurrentPt <= 0 || */mNumPts == 1 )
 	{
-		vClosestPt = m_Pts[0].m_Pt;
-		if(_outLookAhead)
+		vClosestPt = mPts[ 0 ].mPt;
+		if ( _outLookAhead )
 			*_outLookAhead = vClosestPt;
 	}
 	else
@@ -163,49 +163,49 @@ Vector3f Path::FindNearestPtOnPath(const Vector3f &_position, Vector3f *_outLook
 
 		float fClosestDist = Utils::FloatMax;
 		int iStartPt = 0, iEndPt = 0;
-		int iStart = MaxT(m_CurrentPt-1,0);
-		int iEnd = MinT(iStart + 2, m_NumPts-1);
-		for(int i = iStart; i < iEnd; ++i)
+		int iStart = MaxT( mCurrentPt - 1, 0 );
+		int iEnd = MinT( iStart + 2, mNumPts - 1 );
+		for ( int i = iStart; i < iEnd; ++i )
 		{
 			float fRatioOnSeg;
-			float fDist = PointToSegmentDistance(_position, m_Pts[i].m_Pt, m_Pts[i+1].m_Pt, vPtOnSeg, fRatioOnSeg);
-			if(fDist < fClosestDist)
+			float fDist = PointToSegmentDistance( _position, mPts[ i ].mPt, mPts[ i + 1 ].mPt, vPtOnSeg, fRatioOnSeg );
+			if ( fDist < fClosestDist )
 			{
 				fClosestDist = fDist;
 				vClosestPt = vPtOnSeg;
 				fClosestRatioOnSeg = fRatioOnSeg;
 				iStartPt = i;
-				iEndPt = i+1;
+				iEndPt = i + 1;
 			}
 		}
 
 		// calculate lookahead point
-		if(_outLookAhead && _lookAheadDistance > 0.f && (iStartPt != 0 || iEndPt != 0))
+		if ( _outLookAhead && _lookAheadDistance > 0.f && ( iStartPt != 0 || iEndPt != 0 ) )
 		{
-			const float fCurrentDistanceOnPath = m_Links[iStartPt].m_Distance +
-				(m_Links[iEndPt].m_Distance - m_Links[iStartPt].m_Distance) * fClosestRatioOnSeg;
+			const float fCurrentDistanceOnPath = mLinks[ iStartPt ].mDistance +
+				( mLinks[ iEndPt ].mDistance - mLinks[ iStartPt ].mDistance ) * fClosestRatioOnSeg;
 
 			const float fDesiredDistanceOnPath = fCurrentDistanceOnPath + _lookAheadDistance;
 
 			bool bFound = false;
-			for(int i = iStartPt; i < m_NumPts-1; ++i)
+			for ( int i = iStartPt; i < mNumPts - 1; ++i )
 			{
-				if(m_Links[i+1].m_Distance >= fDesiredDistanceOnPath)
+				if ( mLinks[ i + 1 ].mDistance >= fDesiredDistanceOnPath )
 				{
-					float fDistanceLeft = fDesiredDistanceOnPath - m_Links[i].m_Distance;
+					float fDistanceLeft = fDesiredDistanceOnPath - mLinks[ i ].mDistance;
 
-					const float fT = fDistanceLeft / (m_Links[i+1].m_Distance - m_Links[i].m_Distance);
-					OBASSERT(fT >= 0.f && fT <= 1.f, "Bad Ratio");
+					const float fT = fDistanceLeft / ( mLinks[ i + 1 ].mDistance - mLinks[ i ].mDistance );
+					OBASSERT( fT >= 0.f && fT <= 1.f, "Bad Ratio" );
 					*_outLookAhead = Interpolate(
-						m_Pts[i].m_Pt,
-						m_Pts[i+1].m_Pt,
-						ClampT(fT, 0.f, 1.f));
+						mPts[ i ].mPt,
+						mPts[ i + 1 ].mPt,
+						ClampT( fT, 0.f, 1.f ) );
 					bFound = true;
 					break;
 				}
 			}
-			if(!bFound)
-				*_outLookAhead = m_Pts[m_NumPts-1].m_Pt; // last point
+			if ( !bFound )
+				*_outLookAhead = mPts[ mNumPts - 1 ].mPt; // last point
 		}
 	}
 	return vClosestPt;

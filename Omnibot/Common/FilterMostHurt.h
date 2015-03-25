@@ -19,18 +19,20 @@
 class FilterMostHurt : public FilterSensory
 {
 public:
-
-	virtual void Check(int _index, const MemoryRecord &_record);
+	virtual void Check( int _index, const MemoryRecord &_record );
 
 	virtual void Reset();
 
-	inline float GetMostHurtHealth() { return m_MostHurtHealthPc; }
+	inline float GetMostHurtHealth()
+	{
+		return mMostHurtHealthPc;
+	}
 
-	FilterMostHurt(Client *_client, AiState::SensoryMemory::Type _type);
+	FilterMostHurt( Client *_client, AiState::SensoryMemory::Type _type );
 	virtual ~FilterMostHurt();
 protected:
 
-	float		m_MostHurtHealthPc;
+	float		mMostHurtHealthPc;
 
 	FilterMostHurt();
 };

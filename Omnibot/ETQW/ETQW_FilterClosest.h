@@ -23,12 +23,14 @@ class ETQW_FilterClosest : public FilterClosest
 {
 public:
 
-	virtual bool CheckEx(const MemoryRecord &_record);
+	virtual bool CheckEx( const MemoryRecord &_record );
 
-	ETQW_FilterClosest(Client *_client, AiState::SensoryMemory::Type _type);
-	virtual ~ETQW_FilterClosest() {}
+	ETQW_FilterClosest( Client *_client, AiState::SensoryMemory::Type _type );
+	virtual ~ETQW_FilterClosest()
+	{
+	}
 protected:
-	float	m_BestDistance;
+	float mBestDistance;
 
 	ETQW_FilterClosest();
 };

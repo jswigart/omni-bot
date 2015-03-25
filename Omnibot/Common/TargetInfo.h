@@ -21,59 +21,42 @@ class gmUserObject;
 class TargetInfo
 {
 public:
-	// float: m_DistanceTo
+	// float: .mDistanceTo
 	//		Distance to this target
-	float		m_DistanceTo;
+	float				mDistanceTo;
 
-	// int: m_EntityClass
+	// int: .mEntityClass
 	//		The Classification for this entity
-	int			m_EntityClass;
+	EntityInfo		mEntInfo;
 
-	// int: m_CurrentWeapon
+	// int: .mCurrentWeapon
 	//		The currently equipped weapon
-	int			m_CurrentWeapon;
-
-	// BitFlag64: m_EntityFlags
-	//		Bit flags for this entity representing extra info
-	BitFlag64	m_EntityFlags;
-
-	// BitFlag64: m_EntityPowerups
-	//		Current power-ups of this entity, see <Powerups>
-	BitFlag64	m_EntityPowerups;
-
-	// int: m_EntityCategory
-	//		The category of entities this belongs to.
-	BitFlag32	m_EntityCategory;
-
-	// var: m_LastPosition
+	int					mCurrentWeapon;
+	
+	// var: .mLastPosition
 	//		The last position observed.
-	Vector3f	m_LastPosition;
+	Vector3f			mLastPosition;
 
-	// var: m_LastVelocity
+	// var: .mLastVelocity
 	//		The last velocity observed.
-	Vector3f	m_LastVelocity;
+	Vector3f			mLastVelocity;
 
-	// var: m_LastFacing
+	// var: .mLastFacing
 	//		The last facing direction observed.
-	Vector3f	m_LastFacing;
-
-	// function: IsA
-	//		Quick easy access to check if this target matches a
-	//		specific entity class
-	bool IsA(int _class) { return (m_EntityClass == _class); }
+	Vector3f			mLastFacing;
 
 	bool Update();
 
-	gmUserObject *GetScriptObject(gmMachine *_machine) const;
+	gmUserObject *GetScriptObject( gmMachine *_machine ) const;
 
 	TargetInfo();
 	~TargetInfo();
 private:
 
-	// var: m_ScriptObject
+	// var: .mScriptObject
 	//		This objects script instance, so that the object can clear its script
 	//		references when deleted.
-	mutable gmGCRoot<gmUserObject> m_ScriptObject;
+	mutable gmGCRoot<gmUserObject> mScriptObject;
 };
 
 #endif

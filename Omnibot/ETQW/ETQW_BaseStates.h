@@ -21,7 +21,7 @@ namespace AiState
 	public:
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);
@@ -37,9 +37,9 @@ namespace AiState
 	private:
 		Trackers		Tracker;
 
-		MapGoalPtr		m_MapGoal;
-		Vector3f		m_ConstructionPos;
-		bool			m_AdjustedPosition;
+		MapGoalPtr	 mMapGoal;
+		Vector3f	 mConstructionPos;
+		bool		 mAdjustedPosition;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -49,7 +49,7 @@ namespace AiState
 	public:
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);
@@ -74,13 +74,13 @@ namespace AiState
 		} GoalState;
 
 		Trackers			Tracker;
-		MapGoalPtr			m_MapGoal;
+		MapGoalPtr		 mMapGoal;
 
-		GoalState			m_GoalState;
-		Vector3f			m_TargetPosition;
-		GameEntity			m_ExplosiveEntity;
-		Vector3f			m_ExplosivePosition;
-		bool				m_AdjustedPosition : 1;
+		GoalState		 mGoalState;
+		Vector3f		 mTargetPosition;
+		GameEntity		 mExplosiveEntity;
+		Vector3f		 mExplosivePosition;
+		bool			 mAdjustedPosition : 1;
 
 		State::StateStatus _UpdateDynamite();
 		State::StateStatus _UpdateSatchel();
@@ -95,7 +95,7 @@ namespace AiState
 		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);
@@ -109,7 +109,7 @@ namespace AiState
 
 		MountMg42();
 	private:
-		MapGoalPtr			m_MapGoal;
+		MapGoalPtr		 mMapGoal;
 		Trackers			Tracker;
 
 		enum ScanType
@@ -122,31 +122,31 @@ namespace AiState
 
 			NUM_SCAN_TYPES
 		};
-		int					m_ScanDirection;
-		int					m_NextScanTime;
+		int				 mScanDirection;
+		int				 mNextScanTime;
 
-		TrackTargetZone		m_TargetZone;
+		TrackTargetZone	 mTargetZone;
 
 		//////////////////////////////////////////////////////////////////////////
-		Vector3f			m_MG42Position;
+		Vector3f		 mMG42Position;
 
-		Vector3f			m_AimPoint;
+		Vector3f		 mAimPoint;
 
-		Vector3f			m_GunCenterArc;
-		Vector3f			m_CurrentMountedAngles;
+		Vector3f		 mGunCenterArc;
+		Vector3f		 mCurrentMountedAngles;
 
-		Vector3f			m_ScanLeft;
-		Vector3f			m_ScanRight;
+		Vector3f		 mScanLeft;
+		Vector3f		 mScanRight;
 
-		float				m_MinHorizontalArc;
-		float				m_MaxHorizontalArc;
-		float				m_MinVerticalArc;
-		float				m_MaxVerticalArc;
+		float			 mMinHorizontalArc;
+		float			 mMaxHorizontalArc;
+		float			 mMinVerticalArc;
+		float			 mMaxVerticalArc;
 
-		bool				m_GotGunProperties;
+		bool			 mGotGunProperties;
 		//////////////////////////////////////////////////////////////////////////
 
-		bool				m_AdjustedPosition;
+		bool			 mAdjustedPosition;
 
 		bool				_GetMG42Properties();
 	};
@@ -158,7 +158,7 @@ namespace AiState
 	public:
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);
@@ -170,8 +170,8 @@ namespace AiState
 	private:
 		Trackers		Tracker;
 
-		MapGoalPtr		m_MapGoal;
-		Vector3f		m_TargetPosition;
+		MapGoalPtr	 mMapGoal;
+		Vector3f	 mTargetPosition;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -181,7 +181,7 @@ namespace AiState
 	public:
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);
@@ -199,12 +199,12 @@ namespace AiState
 	private:
 
 		Trackers			Tracker;
-		MapGoalPtr			m_MapGoal;
+		MapGoalPtr		 mMapGoal;
 
-		Vector3f			m_TargetPosition;
-		GameEntity			m_LandMineEntity;
-		Vector3f			m_LandMinePosition;
-		Vector3f			m_LandMineVelocity;
+		Vector3f		 mTargetPosition;
+		GameEntity		 mLandMineEntity;
+		Vector3f		 mLandMinePosition;
+		Vector3f		 mLandMineVelocity;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -214,7 +214,7 @@ namespace AiState
 	public:
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);
@@ -230,7 +230,7 @@ namespace AiState
 	private:
 
 		Trackers			Tracker;
-		MapGoalPtr			m_MapGoal;
+		MapGoalPtr		 mMapGoal;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -247,7 +247,7 @@ namespace AiState
 		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);
@@ -261,10 +261,10 @@ namespace AiState
 
 		ReviveTeammate();
 	private:
-		GoalState			m_GoalState;
+		GoalState		 mGoalState;
 
 		Trackers			Tracker;
-		MapGoalPtr			m_MapGoal;
+		MapGoalPtr		 mMapGoal;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -275,7 +275,7 @@ namespace AiState
 
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);
@@ -289,10 +289,10 @@ namespace AiState
 
 		DefuseDynamite();
 	private:
-		Vector3f			m_TargetPosition;
+		Vector3f		 mTargetPosition;
 
 		Trackers			Tracker;
-		MapGoalPtr			m_MapGoal;
+		MapGoalPtr		 mMapGoal;
 	};
 };
 

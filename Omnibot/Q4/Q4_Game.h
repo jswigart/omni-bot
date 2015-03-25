@@ -25,8 +25,8 @@ public:
 	bool Init( System & system );
 	void StartGame();
 
-	void AddBot(Msg_Addbot &_addbot, bool _createnow = true);
-	
+	void AddBot( Msg_Addbot &_addbot, bool _createnow = true );
+
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
@@ -35,30 +35,28 @@ public:
 	const char *GetModSubFolder() const;
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const { return "quake4"; }
+	const char *GetGameDatabaseAbbrev() const;
 	NavigatorID GetDefaultNavigator() const;
 	
-	const char *FindClassName(obint32 _classId);
+	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
+	void GetWeaponEnumeration( const IntEnum *&_ptr, int &num );
 
-	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
-	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
-	
-	Q4_Game() {};
-	virtual ~Q4_Game() {};
+	Q4_Game();
+	~Q4_Game();
 protected:
 
-	void GetGameVars(GameVars &_gamevars);
+	void GetGameVars( GameVars &_gamevars );
 
 	// Script support.
-	void InitScriptBinds(gmMachine *_machine);
-	void InitScriptClasses(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptEvents(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptPowerups(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptBuyMenu(gmMachine *_machine, gmTableObject *_table);
+	void InitScriptBinds( gmMachine *_machine );
+	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptEvents( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptEntityFlags( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptPowerups( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptBuyMenu( gmMachine *_machine, gmTableObject *_table );
 
-	static const float Q4_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags);
-	static const float Q4_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags);
+	static const float Q4_GetEntityClassTraceOffset( const TargetInfo &_target );
+	static const float Q4_GetEntityClassAimOffset( const TargetInfo &_target );
 };
 
 #endif

@@ -14,147 +14,147 @@
 #include "BlackBoardItems.h"
 #include "gmCall.h"
 
-State::State(const char * _name, const UpdateDelay &_ur)
-	: m_Sibling(0)
-	, m_Parent(0)
-	, m_FirstChild(0)
-	, m_Root(0)
-	, m_Client(0)
-	, m_NextUpdate(0)
-	, m_LastUpdateTime(0)
-	, m_StateTime(0.f)
-	, m_StateTimeUser(0.f)
-	, m_LastPriority(0.f)
-	, m_LastPriorityTime(0)
-	, m_UpdateRate(_ur)
-	, m_NameHash(0)
-	, m_DebugIcon(Ico_Default)
-	, m_SyncCrc( 0 )
-	, m_NumThreads(0)
+State::State( const char * _name, const UpdateDelay &_ur )
+	: mSibling( 0 )
+	, mParent( 0 )
+	, mFirstChild( 0 )
+	, mRoot( 0 )
+	, mClient( 0 )
+	, mNextUpdate( 0 )
+	, mLastUpdateTime( 0 )
+	, mStateTime( 0.f )
+	, mStateTimeUser( 0.f )
+	, mLastPriority( 0.f )
+	, mLastPriorityTime( 0 )
+	, mUpdateRate( _ur )
+	, mNameHash( 0 )
+	, mDebugIcon( Ico_Default )
+	, mSyncCrc( 0 )
+	, mNumThreads( 0 )
 {
-	SetName(_name);
-	DebugExpand(true);
+	SetName( _name );
+	DebugExpand( true );
 
-	for(int i = 0; i < MaxThreads; ++i)
-		m_ThreadList[i] = GM_INVALID_THREAD;
+	for ( int i = 0; i < MaxThreads; ++i )
+		mThreadList[ i ] = GM_INVALID_THREAD;
 }
 
 State::~State()
 {
-	while(m_FirstChild)
+	while ( mFirstChild )
 	{
-		State *pSt = m_FirstChild;
-		m_FirstChild = pSt->m_Sibling;
+		State *pSt = mFirstChild;
+		mFirstChild = pSt->mSibling;
 		delete pSt;
 	}
 }
 
-void State::SetName(const char *_name)
+void State::SetName( const char *_name )
 {
-	m_NameHash = Utils::MakeHash32(_name);
+	mNameHash = Utils::MakeHash32( _name );
 #ifdef _DEBUG
-	m_DebugName = _name ? _name : "";
+	mDebugName = _name ? _name : "";
 #endif
 }
 
 std::string State::GetName() const
 {
-	return Utils::HashToString(GetNameHash());
+	return Utils::HashToString( GetNameHash() );
 }
 
-void State::AppendState(State *_state)
+void State::AppendState( State *_state )
 {
-	OBASSERT(_state, "AppendState: No State Given");
-	_state->m_Parent = this;
-	if(m_FirstChild)
+	OBASSERT( _state, "AppendState: No State Given" );
+	_state->mParent = this;
+	if ( mFirstChild )
 	{
-		State *pLastState = m_FirstChild;
-		while(pLastState && pLastState->m_Sibling)
-			pLastState = pLastState->m_Sibling;
+		State *pLastState = mFirstChild;
+		while ( pLastState && pLastState->mSibling )
+			pLastState = pLastState->mSibling;
 
-		pLastState->m_Sibling = _state;
+		pLastState->mSibling = _state;
 	}
 	else
 	{
-		m_FirstChild = _state;
+		mFirstChild = _state;
 	}
 
-	_state->m_Sibling = NULL;
+	_state->mSibling = NULL;
 }
 
-bool State::AppendTo(const char * _name, State *_insertstate)
+bool State::AppendTo( const char * _name, State *_insertstate )
 {
-	return AppendTo(Utils::Hash32(_name), _insertstate);
+	return AppendTo( Utils::Hash32( _name ), _insertstate );
 }
 
-bool State::AppendTo(obuint32 _name, State *_insertstate)
+bool State::AppendTo( uint32_t _name, State *_insertstate )
 {
-	if(!_name)
+	if ( !_name )
 		return false;
 
-	State *pFoundState = FindState(_name);
-	if(pFoundState)
+	State *pFoundState = FindState( _name );
+	if ( pFoundState )
 	{
-		pFoundState->AppendState(_insertstate);
-		_insertstate->m_Root = pFoundState->m_Root;
+		pFoundState->AppendState( _insertstate );
+		_insertstate->mRoot = pFoundState->mRoot;
 		return true;
 	}
 	return false;
 }
 
-void State::PrependState(State *_state)
+void State::PrependState( State *_state )
 {
-	_state->m_Sibling = m_FirstChild;
-	m_FirstChild = _state;
+	_state->mSibling = mFirstChild;
+	mFirstChild = _state;
 
-	_state->m_Parent = this;
+	_state->mParent = this;
 }
 
-bool State::PrependTo(const char * _name, State *_insertstate)
+bool State::PrependTo( const char * _name, State *_insertstate )
 {
-	return PrependTo(Utils::Hash32(_name), _insertstate);
+	return PrependTo( Utils::Hash32( _name ), _insertstate );
 }
 
-bool State::PrependTo(obuint32 _name, State *_insertstate)
+bool State::PrependTo( uint32_t _name, State *_insertstate )
 {
-	if(!_name)
+	if ( !_name )
 		return false;
 
-	State *pFoundState = FindState(_name);
-	if(pFoundState)
+	State *pFoundState = FindState( _name );
+	if ( pFoundState )
 	{
-		pFoundState->PrependState(_insertstate);
-		_insertstate->m_Root = pFoundState->m_Root;
+		pFoundState->PrependState( _insertstate );
+		_insertstate->mRoot = pFoundState->mRoot;
 		return true;
 	}
 	return false;
 }
 
-State *State::ReplaceState(const char * _name, State *_insertstate)
+State *State::ReplaceState( const char * _name, State *_insertstate )
 {
-	State *pReplaceState = FindState(_name);
-	if(pReplaceState)
+	State *pReplaceState = FindState( _name );
+	if ( pReplaceState )
 	{
 		State *pLastState = NULL;
-		for(State *pState = pReplaceState->m_Parent->m_FirstChild;
+		for ( State *pState = pReplaceState->mParent->mFirstChild;
 			pState;
-			pState = pState->m_Sibling)
+			pState = pState->mSibling )
 		{
-			if(pState == pReplaceState)
+			if ( pState == pReplaceState )
 			{
-				if(pState->m_Parent && pState->m_Parent->m_FirstChild == pState)
-					pState->m_Parent->m_FirstChild = _insertstate;
+				if ( pState->mParent && pState->mParent->mFirstChild == pState )
+					pState->mParent->mFirstChild = _insertstate;
 
 				// splice it out
-				if(pLastState)
-					pLastState->m_Sibling = _insertstate;
-				_insertstate->m_Sibling = pState->m_Sibling;
-				_insertstate->m_Parent = pState->m_Parent;
-				_insertstate->m_Root = pState->m_Root;
+				if ( pLastState )
+					pLastState->mSibling = _insertstate;
+				_insertstate->mSibling = pState->mSibling;
+				_insertstate->mParent = pState->mParent;
+				_insertstate->mRoot = pState->mRoot;
 
 				// fix the old one and return it
-				pState->m_Parent = 0;
-				pState->m_Sibling = 0;
+				pState->mParent = 0;
+				pState->mSibling = 0;
 
 				return pState;
 			}
@@ -164,63 +164,63 @@ State *State::ReplaceState(const char * _name, State *_insertstate)
 	return _insertstate;
 }
 
-bool State::InsertAfter(const char * _name, State *_insertstate)
+bool State::InsertAfter( const char * _name, State *_insertstate )
 {
-	return InsertAfter(Utils::Hash32(_name), _insertstate);
+	return InsertAfter( Utils::Hash32( _name ), _insertstate );
 }
 
-bool State::InsertAfter(obuint32 _name, State *_insertstate)
+bool State::InsertAfter( uint32_t _name, State *_insertstate )
 {
-	if(!_name)
+	if ( !_name )
 		return false;
 
-	State *pFoundState = FindState(_name);
-	if(pFoundState)
+	State *pFoundState = FindState( _name );
+	if ( pFoundState )
 	{
 		// splice it in
-		_insertstate->m_Sibling = pFoundState->m_Sibling;
-		_insertstate->m_Parent = pFoundState->m_Parent;
-		_insertstate->m_Root = pFoundState->m_Root;
-		pFoundState->m_Sibling = _insertstate;
+		_insertstate->mSibling = pFoundState->mSibling;
+		_insertstate->mParent = pFoundState->mParent;
+		_insertstate->mRoot = pFoundState->mRoot;
+		pFoundState->mSibling = _insertstate;
 		return true;
 	}
 	return false;
 }
 
-bool State::InsertBefore(const char * _name, State *_insertstate)
+bool State::InsertBefore( const char * _name, State *_insertstate )
 {
-	return InsertBefore(Utils::Hash32(_name), _insertstate);
+	return InsertBefore( Utils::Hash32( _name ), _insertstate );
 }
 
-bool State::InsertBefore(obuint32 _name, State *_insertstate)
+bool State::InsertBefore( uint32_t _name, State *_insertstate )
 {
-	if(!_name)
+	if ( !_name )
 		return false;
 
 	bool bGood = false;
-	State *pFoundState = FindState(_name);
-	if(pFoundState)
+	State *pFoundState = FindState( _name );
+	if ( pFoundState )
 	{
-		_insertstate->m_Parent = pFoundState->m_Parent;
-		_insertstate->m_Root = pFoundState->m_Root;
+		_insertstate->mParent = pFoundState->mParent;
+		_insertstate->mRoot = pFoundState->mRoot;
 
-		if(pFoundState->m_Parent->m_FirstChild == pFoundState)
+		if ( pFoundState->mParent->mFirstChild == pFoundState )
 		{
-			_insertstate->m_Sibling = pFoundState;
-			pFoundState->m_Parent->m_FirstChild = _insertstate;
+			_insertstate->mSibling = pFoundState;
+			pFoundState->mParent->mFirstChild = _insertstate;
 			bGood = true;
 		}
 		else
 		{
 			bGood = false;
-			for(State *pS = pFoundState->m_Parent->m_FirstChild;
+			for ( State *pS = pFoundState->mParent->mFirstChild;
 				pS;
-				pS = pS->m_Sibling)
+				pS = pS->mSibling )
 			{
-				if(pS->m_Sibling == pFoundState)
+				if ( pS->mSibling == pFoundState )
 				{
-					pS->m_Sibling = _insertstate;
-					_insertstate->m_Sibling = pFoundState;
+					pS->mSibling = _insertstate;
+					_insertstate->mSibling = pFoundState;
 					bGood = true;
 					break;
 				}
@@ -230,29 +230,29 @@ bool State::InsertBefore(obuint32 _name, State *_insertstate)
 	return bGood;
 }
 
-State *State::RemoveState(const char * _name)
+State *State::RemoveState( const char * _name )
 {
-	State *pDeleteState = FindState(_name);
-	if(pDeleteState)
+	State *pDeleteState = FindState( _name );
+	if ( pDeleteState )
 	{
 		pDeleteState->InternalExit();
 
 		State *pLastState = NULL;
-		for(State *pState = pDeleteState->m_Parent->m_FirstChild;
+		for ( State *pState = pDeleteState->mParent->mFirstChild;
 			pState;
-			pState = pState->m_Sibling)
+			pState = pState->mSibling )
 		{
-			if(pState == pDeleteState)
+			if ( pState == pDeleteState )
 			{
-				if(pState->m_Parent && pState->m_Parent->m_FirstChild == pState)
-					pState->m_Parent->m_FirstChild = pState->m_Sibling;
+				if ( pState->mParent && pState->mParent->mFirstChild == pState )
+					pState->mParent->mFirstChild = pState->mSibling;
 
-				if(pLastState)
-					pLastState->m_Sibling = pState->m_Sibling;
+				if ( pLastState )
+					pLastState->mSibling = pState->mSibling;
 
 				// fix the old one and return it
-				pState->m_Parent = 0;
-				pState->m_Sibling = 0;
+				pState->mParent = 0;
+				pState->mSibling = 0;
 
 				return pState;
 			}
@@ -265,129 +265,129 @@ State *State::RemoveState(const char * _name)
 void State::InitializeStates()
 {
 	Initialize();
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
 		pState->InitializeStates();
 }
 
 void State::FixRoot()
 {
 	// Find the root state
-	m_Root = GetParent();
-	while(m_Root != NULL && m_Root->m_Parent)
-		m_Root = m_Root->m_Parent;
-	OBASSERT(!m_Parent || m_Root, "No Root State");
+	mRoot = GetParent();
+	while ( mRoot != NULL && mRoot->mParent )
+		mRoot = mRoot->mParent;
+	OBASSERT( !mParent || mRoot, "No Root State" );
 
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
 		pState->FixRoot();
 }
 
-void State::SetClient(Client *_client)
+void State::SetClient( Client *_client )
 {
-	OBASSERT(_client, "No Client!");
+	OBASSERT( _client, "No Client!" );
 
-	m_Client = _client;
+	mClient = _client;
 
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
-		pState->SetClient(_client);
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
+		pState->SetClient( _client );
 }
 
-State *State::FindState(const char *_name)
+State *State::FindState( const char *_name )
 {
-	return FindState(Utils::Hash32(_name));
+	return FindState( Utils::Hash32( _name ) );
 }
 
-State *State::FindStateRecurse(obuint32 _namehash)
+State *State::FindStateRecurse( uint32_t _namehash )
 {
-	if(m_NameHash == _namehash)
+	if ( mNameHash == _namehash )
 		return this;
 
 	State *ptr = NULL;
-	for(State *pState = m_FirstChild; pState && !ptr; pState = pState->m_Sibling)
-		ptr = pState->FindStateRecurse(_namehash);
+	for ( State *pState = mFirstChild; pState && !ptr; pState = pState->mSibling )
+		ptr = pState->FindStateRecurse( _namehash );
 	return ptr;
 }
 
-State *State::FindState(obuint32 _namehash)
+State *State::FindState( uint32_t _namehash )
 {
-	return FindStateRecurse(_namehash);
+	return FindStateRecurse( _namehash );
 }
 
 void State::RootUpdate()
 {
-	Prof(RootUpdate);
-	if(!IsActive())
+	Prof( RootUpdate );
+	if ( !IsActive() )
 		InternalEnter();
 	InternalUpdateState();
 }
 
-obReal State::InternalGetPriority()
+float State::InternalGetPriority()
 {
-	if(m_LastPriorityTime < IGame::GetTime())
+	if ( mLastPriorityTime < IGame::GetTime() )
 	{
 		const noSelectReason_t rsn = CanBeSelected();
 		SetSelectable( rsn == NoSelectReasonNone );
-		m_LastPriority =
+		mLastPriority =
 			!IsDisabled() //&&
 			/*IsSelectable() &&
 			!IsUserDisabled() &&*/
 			//(GetCurrentPriority()!=0.f)
 			? GetPriority() : 0.f;
-		m_LastPriorityTime = IGame::GetTime();
+		mLastPriorityTime = IGame::GetTime();
 	}
-	return m_LastPriority;
+	return mLastPriority;
 }
 
 void State::InternalEnter()
 {
-	OBASSERT(!IsActive(), "Entering Active State!");
+	OBASSERT( !IsActive(), "Entering Active State!" );
 	//Utils::OutputDebug(kInfo,"%s: State: %s Enter (%d)\n", GetClient()->GetName(), GetName().c_str(),IGame::GetTime());
 
-	if(m_LimitCallback.m_OnlyWhenActive) m_LimitCallback.m_Result = true;
+	if ( mLimitCallback.mOnlyWhenActive ) mLimitCallback.mResult = true;
 
-	m_StateTime = m_StateTimeUser = IGame::GetTimeSecs();
-	m_StateFlags.SetFlag(State_Active, true);
+	mStateTime = mStateTimeUser = IGame::GetTimeSecs();
+	mStateFlags.SetFlag( State_Active, true );
 	Enter();
 
-	if(m_StateFlags.CheckFlag(State_DebugExpandOnActive))
-		DebugExpand(true);
+	if ( mStateFlags.CheckFlag( State_DebugExpandOnActive ) )
+		DebugExpand( true );
 }
 
 void State::InternalExit()
 {
-	if(IsActive())
+	if ( IsActive() )
 	{
 		//Utils::OutputDebug(kInfo,"%s: State: %s Exit (%d)\n", GetClient()->GetName(), GetName().c_str(),IGame::GetTime());
 
 		// exit all child states
-		for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
+		for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
 			pState->InternalExit();
 
-		m_StateTime = m_StateTimeUser = 0.f;
+		mStateTime = mStateTimeUser = 0.f;
 		SetLastPriority( 0.0f );
-		m_StateFlags.SetFlag(State_Active, false);
+		mStateFlags.SetFlag( State_Active, false );
 
 		InternalParentExit();
 		Exit();
 
-		if(m_StateFlags.CheckFlag(State_DebugExpandOnActive))
-			DebugExpand(false);
+		if ( mStateFlags.CheckFlag( State_DebugExpandOnActive ) )
+			DebugExpand( false );
 	}
 }
 
 State::StateStatus State::InternalUpdateState()
 {
-	if(DebugDrawingEnabled())
+	if ( DebugDrawingEnabled() )
 		RenderDebug();
 
-	if(m_NextUpdate <= IGame::GetTime())
+	if ( mNextUpdate <= IGame::GetTime() )
 	{
-		const int iMsPassed = IGame::GetTime() - m_LastUpdateTime;
+		const int iMsPassed = IGame::GetTime() - mLastUpdateTime;
 		float fDt = (float)iMsPassed / 1000.f;
 
-		m_NextUpdate = IGame::GetTime() + m_UpdateRate.GetDelayMsec();
-		m_LastUpdateTime = IGame::GetTime();
+		mNextUpdate = IGame::GetTime() + mUpdateRate.GetDelayMsec();
+		mLastUpdateTime = IGame::GetTime();
 
-		return UpdateState(fDt);
+		return UpdateState( fDt );
 	}
 	return State_Busy;
 }
@@ -397,30 +397,30 @@ void State::ExitAll()
 	InternalExit();
 }
 
-void State::SignalThreads(const gmVariable &_signal)
+void State::SignalThreads( const gmVariable &_signal )
 {
-	if(!IsRoot() && !IsActive() && !m_StateFlags.CheckFlag(State_AlwaysRecieveSignals))
+	if ( !IsRoot() && !IsActive() && !mStateFlags.CheckFlag( State_AlwaysRecieveSignals ) )
 		return;
 
-	Prof(SignalThreads);
+	Prof( SignalThreads );
 
-	InternalSignal(_signal);
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
-		pState->SignalThreads(_signal);
+	InternalSignal( _signal );
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
+		pState->SignalThreads( _signal );
 }
 
-void State::CheckForCallbacks(const MessageHelper &_message, CallbackParameters &_cb)
+void State::CheckForCallbacks( const MessageHelper &_message, CallbackParameters &_cb )
 {
-	if(IsRoot() || IsActive() || AlwaysRecieveEvents())
-		InternalProcessEvent(_message, _cb);
+	if ( IsRoot() || IsActive() || AlwaysRecieveEvents() )
+		InternalProcessEvent( _message, _cb );
 
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
-		pState->CheckForCallbacks(_message, _cb);
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
+		pState->CheckForCallbacks( _message, _cb );
 }
 
-void State::InternalProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+void State::InternalProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
 {
-	SignalThreads(gmVariable(_message.GetMessageId()));
+	SignalThreads( gmVariable( _message.GetMessageId() ) );
 
 	/*switch(_message.GetMessageId())
 	{
@@ -432,93 +432,95 @@ void State::InternalProcessEvent(const MessageHelper &_message, CallbackParamete
 	HANDLER(SYSTEM_THREAD_DESTROYED)
 	{
 	const Event_SystemThreadDestroyed *m = _message.Get<Event_SystemThreadDestroyed>();
-	RemoveThreadReference(m->m_ThreadId);
+	RemoveThreadReference(m->mThreadId);
 	break;
 	}
 	}*/
 
 	// Attempt script callbacks.
-	const bool eventRelevent = _cb.GetTargetState()==0 || _cb.GetTargetState() == GetNameHash();
-	if(m_EventTable && eventRelevent)
+	const bool eventRelevent = _cb.GetTargetState() == 0 || _cb.GetTargetState() == GetNameHash();
+	if ( mEventTable && eventRelevent )
 	{
-		gmVariable callback = m_EventTable->Get(_cb.GetMessageId());
-		if(gmFunctionObject *pFunc = callback.GetFunctionObjectSafe())
+		gmVariable callback = mEventTable->Get( _cb.GetMessageId() );
+		if ( gmFunctionObject *pFunc = callback.GetFunctionObjectSafe() )
 		{
-			OBASSERT(GetScriptObject(_cb.GetMachine()),"No Script Object!");
-			gmVariable varThis = gmVariable(GetScriptObject(_cb.GetMachine()));
-			int ThreadId = _cb.CallFunction(pFunc, varThis, !_cb.CallImmediate());
+			OBASSERT( GetScriptObject( _cb.GetMachine() ), "No Script Object!" );
+			gmVariable varThis = gmVariable( GetScriptObject( _cb.GetMachine() ) );
+			int ThreadId = _cb.CallFunction( pFunc, varThis, !_cb.CallImmediate() );
 
 			// add it to the tracking list for management of its lifetime.
 			// don't add thread if AlwaysRecieveEvents=true, because events REVIVED, CHANGETEAM, DEATH would not be executed
-			if(ThreadId != GM_INVALID_THREAD && !AlwaysRecieveEvents())
-				AddForkThreadId(ThreadId);
+			if ( ThreadId != GM_INVALID_THREAD && !AlwaysRecieveEvents() )
+				AddForkThreadId( ThreadId );
 		}
 	}
-	ProcessEvent(_message,_cb);
+	ProcessEvent( _message, _cb );
 }
 
-void State::AddForkThreadId(int _threadId)
+void State::AddForkThreadId( int _threadId )
 {
 	int freeIndex = -1;
-	for(int i = 0; i < m_NumThreads; ++i)
+	for ( int i = 0; i < mNumThreads; ++i )
 	{
-		if(m_ThreadList[i] == GM_INVALID_THREAD)
+		if ( mThreadList[ i ] == GM_INVALID_THREAD )
 		{
-			if(freeIndex == -1)
+			if ( freeIndex == -1 )
 				freeIndex = i;
 			continue;
 		}
-		if(m_ThreadList[i] == _threadId)
+		if ( mThreadList[ i ] == _threadId )
 			return;
 	}
-	if(freeIndex < 0 && m_NumThreads < MaxThreads)
+	if ( freeIndex < 0 && mNumThreads < MaxThreads )
 	{
-		freeIndex = m_NumThreads++;
+		freeIndex = mNumThreads++;
 	}
-	OBASSERT(freeIndex != -1,"No Free Slots in m_ThreadList, max %d", MaxThreads);
-	if(freeIndex != -1)
+	OBASSERT( freeIndex != -1, "No Free Slots in mThreadList, max %d", MaxThreads );
+	if ( freeIndex != -1 )
 	{
-		m_ThreadList[freeIndex] = _threadId;
+		mThreadList[ freeIndex ] = _threadId;
 	}
 }
 
-void State::ClearThreadReference(int index)
+void State::ClearThreadReference( int index )
 {
-	m_ThreadList[index] = GM_INVALID_THREAD;
-	if(index == m_NumThreads-1)
+	mThreadList[ index ] = GM_INVALID_THREAD;
+	if ( index == mNumThreads - 1 )
 	{
-		do {
-			m_NumThreads--;
-		} while(m_NumThreads > 0 && m_ThreadList[m_NumThreads-1] == GM_INVALID_THREAD);
+		do
+		{
+			mNumThreads--;
+		}
+		while ( mNumThreads > 0 && mThreadList[ mNumThreads - 1 ] == GM_INVALID_THREAD );
 	}
 }
 
-bool State::DeleteForkThread(int _threadId)
+bool State::DeleteForkThread( int _threadId )
 {
 	gmMachine * pM = ScriptManager::GetInstance()->GetMachine();
-	for(int i = 0; i < m_NumThreads; ++i)
+	for ( int i = 0; i < mNumThreads; ++i )
 	{
-		if(m_ThreadList[i] == _threadId)
+		if ( mThreadList[ i ] == _threadId )
 		{
-			pM->KillThread(_threadId);
-			ClearThreadReference(i);
+			pM->KillThread( _threadId );
+			ClearThreadReference( i );
 			return true;
 		}
 	}
 	return false;
 }
 
-bool State::RemoveThreadReference(const int * _threadId, int _numThreadIds)
+bool State::RemoveThreadReference( const int * _threadId, int _numThreadIds )
 {
 	bool b = false;
-	for(int t = 0; t < _numThreadIds; ++t)
+	for ( int t = 0; t < _numThreadIds; ++t )
 	{
-		int id = _threadId[t];
-		for(int i = 0; i < m_NumThreads; ++i)
+		int id = _threadId[ t ];
+		for ( int i = 0; i < mNumThreads; ++i )
 		{
-			if(m_ThreadList[i] == id)
+			if ( mThreadList[ i ] == id )
 			{
-				ClearThreadReference(i);
+				ClearThreadReference( i );
 				b = true;
 				break;
 			}
@@ -527,30 +529,30 @@ bool State::RemoveThreadReference(const int * _threadId, int _numThreadIds)
 	return b;
 }
 
-void State::PropogateDeletedThreads(const int *_threadIds, int _numThreads)
+void State::PropogateDeletedThreads( const int *_threadIds, int _numThreads )
 {
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
-		pState->PropogateDeletedThreads(_threadIds, _numThreads);
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
+		pState->PropogateDeletedThreads( _threadIds, _numThreads );
 
-	RemoveThreadReference(_threadIds, _numThreads);
+	RemoveThreadReference( _threadIds, _numThreads );
 }
 
-bool State::StateCommand(const StringVector &_args)
+bool State::StateCommand( const StringVector &_args )
 {
 	bool handled = false;
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
-		handled |= pState->StateCommand(_args);
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
+		handled |= pState->StateCommand( _args );
 
-	if(m_CommandTable)
+	if ( mCommandTable )
 	{
 		gmMachine * pMachine = ScriptManager::GetInstance()->GetMachine();
 		gmVariable varThis = gmVariable::s_null;
-		gmUserObject * pScriptObject = GetScriptObject(pMachine);
-		if(pScriptObject)
-			varThis.SetUser(pScriptObject);
+		gmUserObject * pScriptObject = GetScriptObject( pMachine );
+		if ( pScriptObject )
+			varThis.SetUser( pScriptObject );
 
-		ScriptCommandExecutor cmdExec(pMachine,m_CommandTable);
-		if(cmdExec.Exec(_args,varThis))
+		ScriptCommandExecutor cmdExec( pMachine, mCommandTable );
+		if ( cmdExec.Exec( _args, varThis ) )
 			handled |= true;
 	}
 	return handled;
@@ -560,62 +562,62 @@ void State::OnSpawn()
 {
 	SetLastPriority( 0.0f );
 
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
-		if(!pState->IsUserDisabled())
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
+		if ( !pState->IsUserDisabled() )
 			pState->OnSpawn();
 }
 
-void State::SetSelectable(bool _selectable)
+void State::SetSelectable( bool _selectable )
 {
-	m_StateFlags.SetFlag(State_UnSelectable, !_selectable);
+	mStateFlags.SetFlag( State_UnSelectable, !_selectable );
 }
 
-void State::SetEnable(bool _enable, const char *_error)
+void State::SetEnable( bool _enable, const char *_error )
 {
-	if(_error)
+	if ( _error )
 	{
-		OBASSERT(0, _error);
-		LOGERR(_error);
+		OBASSERT( 0, _error );
+		LOGERR( _error );
 	}
-	m_StateFlags.SetFlag(State_UserDisabled, !_enable);
+	mStateFlags.SetFlag( State_UserDisabled, !_enable );
 }
 
 State::noSelectReason_t State::CanBeSelected()
 {
-	if(m_OnlyClass.AnyFlagSet() && !m_OnlyClass.CheckFlag(GetClient()->GetClass()))
+	if ( mOnlyClass.AnyFlagSet() && !mOnlyClass.CheckFlag( GetClient()->GetClass() ) )
 		return NoSelectReason_OnlyClass;
-	if(m_OnlyTeam.AnyFlagSet() && !m_OnlyTeam.CheckFlag(GetClient()->GetTeam()))
+	if ( mOnlyTeam.AnyFlagSet() && !mOnlyTeam.CheckFlag( GetClient()->GetTeam() ) )
 		return NoSelectReason_OnlyTeam;
-	if(m_OnlyPowerUp.AnyFlagSet() && !(m_OnlyPowerUp & GetClient()->GetPowerUpFlags()).AnyFlagSet())
+	if ( mOnlyPowerUp.AnyFlagSet() && !( mOnlyPowerUp & GetClient()->GetPowerUpFlags() ).AnyFlagSet() )
 		return NoSelectReason_OnlyPowerup;
-	if(m_OnlyNoPowerUp.AnyFlagSet() && (m_OnlyNoPowerUp & GetClient()->GetEntityFlags()).AnyFlagSet())
+	if ( mOnlyNoPowerUp.AnyFlagSet() && ( mOnlyNoPowerUp & GetClient()->GetPowerUpFlags() ).AnyFlagSet() )
 		return NoSelectReason_OnlyNoPowerup;
-	if(m_OnlyEntFlag.AnyFlagSet() && !(m_OnlyEntFlag & GetClient()->GetEntityFlags()).AnyFlagSet())
+	if ( mOnlyEntFlag.AnyFlagSet() && !( mOnlyEntFlag & GetClient()->GetEntityFlags() ).AnyFlagSet() )
 		return NoSelectReason_OnlyEntFlag;
-	if(m_OnlyNoEntFlag.AnyFlagSet() && (m_OnlyNoEntFlag & GetClient()->GetEntityFlags()).AnyFlagSet())
+	if ( mOnlyNoEntFlag.AnyFlagSet() && ( mOnlyNoEntFlag & GetClient()->GetEntityFlags() ).AnyFlagSet() )
 		return NoSelectReason_OnlyNoEntFlag;
-	if(m_OnlyRole.AnyFlagSet() && !(m_OnlyRole & GetClient()->GetRoleMask()).AnyFlagSet())
+	if ( mOnlyRole.AnyFlagSet() && !( mOnlyRole & GetClient()->GetRoleMask() ).AnyFlagSet() )
 		return NoSelectReason_OnlyRole;
 
-	if(m_OnlyWeapon.AnyFlagSet())
+	if ( mOnlyWeapon.AnyFlagSet() )
 	{
 		AiState::WeaponSystem *ws = GetClient()->GetWeaponSystem();
 
-		BitFlag128 hasWeapons = (m_OnlyWeapon & ws->GetWeaponMask());
-		if(!hasWeapons.AnyFlagSet())
+		BitFlag128 hasWeapons = ( mOnlyWeapon & ws->GetWeaponMask() );
+		if ( !hasWeapons.AnyFlagSet() )
 			return NoSelectReason_OnlyWeapon;
 
 		bool bOutOfAmmo = true;
-		for(int i = 0; i < 128; ++i)
+		for ( int i = 0; i < 128; ++i )
 		{
-			if(hasWeapons.CheckFlag(i))
+			if ( hasWeapons.CheckFlag( i ) )
 			{
-				WeaponPtr w = ws->GetWeapon(i);
-				if(w)
+				WeaponPtr w = ws->GetWeapon( i );
+				if ( w )
 				{
 					w->UpdateAmmo();
 
-					if(w->OutOfAmmo()==InvalidFireMode)
+					if ( w->OutOfAmmo() == InvalidFireMode )
 					{
 						bOutOfAmmo = false;
 						break;
@@ -623,116 +625,116 @@ State::noSelectReason_t State::CanBeSelected()
 				}
 			}
 		}
-		if(bOutOfAmmo)
+		if ( bOutOfAmmo )
 			return NoSelectReason_OnlyWeaponNoAmmo;
 	}
 
-	if(m_OnlyTargetClass.AnyFlagSet() ||
-		m_OnlyTargetTeam.AnyFlagSet() ||
-		m_OnlyTargetPowerUp.AnyFlagSet() ||
-		m_OnlyTargetEntFlag.AnyFlagSet() ||
-		m_OnlyTargetNoPowerUp.AnyFlagSet() ||
-		m_OnlyTargetNoEntFlag.AnyFlagSet() ||
-		m_OnlyTargetWeapon.AnyFlagSet())
+	if ( mOnlyTargetClass.AnyFlagSet() ||
+		mOnlyTargetTeam.AnyFlagSet() ||
+		mOnlyTargetPowerUp.AnyFlagSet() ||
+		mOnlyTargetEntFlag.AnyFlagSet() ||
+		mOnlyTargetNoPowerUp.AnyFlagSet() ||
+		mOnlyTargetNoEntFlag.AnyFlagSet() ||
+		mOnlyTargetWeapon.AnyFlagSet() )
 	{
 		AiState::TargetingSystem *ts = GetClient()->GetTargetingSystem();
-		if(ts)
+		if ( ts )
 		{
 			const MemoryRecord *target = ts->GetCurrentTargetRecord();
-			const bool NoTargetAllowed = m_OnlyTargetClass.CheckFlag(0);
+			const bool NoTargetAllowed = mOnlyTargetClass.CheckFlag( 0 );
 
-			if(!target && NoTargetAllowed)
+			if ( !target && NoTargetAllowed )
 			{
 				// noop
 			}
-			else if(!target)
+			else if ( !target )
 				return NoSelectReason_OnlyTarget;
 			else
 			{
-				if(m_OnlyTargetClass.AnyFlagSet())
+				if ( mOnlyTargetClass.AnyFlagSet() )
 				{
-					if(m_OnlyTargetClass.CheckFlag(FilterSensory::ANYPLAYERCLASS) &&
-						target->m_TargetInfo.m_EntityClass < FilterSensory::ANYPLAYERCLASS)
+					if ( mOnlyTargetClass.CheckFlag( FilterSensory::ANYPLAYERCLASS ) &&
+						target->mTargetInfo.mEntInfo.mClassId < FilterSensory::ANYPLAYERCLASS )
 					{
 						// success
 					}
-					else if(!m_OnlyTargetClass.CheckFlag(target->m_TargetInfo.m_EntityClass))
+					else if ( !mOnlyTargetClass.CheckFlag( target->mTargetInfo.mEntInfo.mClassId ) )
 						return NoSelectReason_OnlyTargetClass;
 				}
 
-				if(m_OnlyTargetTeam.AnyFlagSet())
+				if ( mOnlyTargetTeam.AnyFlagSet() )
 				{
-					if(!m_OnlyTargetTeam.CheckFlag(InterfaceFuncs::GetEntityTeam(target->GetEntity())))
+					if ( !mOnlyTargetTeam.CheckFlag( InterfaceFuncs::GetEntityTeam( target->GetEntity() ) ) )
 						return NoSelectReason_OnlyTargetTeam;
 				}
 
 				// only if target has powerup
-				if(m_OnlyTargetPowerUp.AnyFlagSet())
+				if ( mOnlyTargetPowerUp.AnyFlagSet() )
 				{
-					if((target->m_TargetInfo.m_EntityPowerups & m_OnlyTargetPowerUp) != m_OnlyTargetPowerUp)
+					if ( ( target->mTargetInfo.mEntInfo.mPowerUps & mOnlyTargetPowerUp ) != mOnlyTargetPowerUp )
 					{
 						return NoSelectReason_OnlyTargetPowerup;
 					}
 				}
 
 				// only if target doesn't have powerup
-				if(m_OnlyTargetNoPowerUp.AnyFlagSet())
+				if ( mOnlyTargetNoPowerUp.AnyFlagSet() )
 				{
-					if((target->m_TargetInfo.m_EntityPowerups & m_OnlyTargetNoPowerUp).AnyFlagSet())
+					if ( ( target->mTargetInfo.mEntInfo.mPowerUps & mOnlyTargetNoPowerUp ).AnyFlagSet() )
 					{
 						return NoSelectReason_OnlyTargetNoPowerup;
 					}
 				}
 
 				// only if target has ent flag
-				if(m_OnlyTargetEntFlag.AnyFlagSet())
+				if ( mOnlyTargetEntFlag.AnyFlagSet() )
 				{
-					if((target->m_TargetInfo.m_EntityFlags & m_OnlyTargetEntFlag) != m_OnlyTargetEntFlag)
+					if ( ( target->mTargetInfo.mEntInfo.mFlags & mOnlyTargetEntFlag ) != mOnlyTargetEntFlag )
 					{
 						return NoSelectReason_OnlyTargetEntFlag;
 					}
 				}
 
 				// only if target doesn't have ent flag
-				if(m_OnlyTargetNoEntFlag.AnyFlagSet())
+				if ( mOnlyTargetNoEntFlag.AnyFlagSet() )
 				{
-					if((target->m_TargetInfo.m_EntityFlags & m_OnlyTargetNoEntFlag).AnyFlagSet())
+					if ( ( target->mTargetInfo.mEntInfo.mFlags & mOnlyTargetNoEntFlag ).AnyFlagSet() )
 					{
 						return NoSelectReason_OnlyTargetNoEntFlag;
 					}
 				}
 
 				// only if target has one of these weapons
-				if(m_OnlyTargetWeapon.AnyFlagSet())
+				if ( mOnlyTargetWeapon.AnyFlagSet() )
 				{
-					if(!m_OnlyTargetWeapon.CheckFlag(target->m_TargetInfo.m_CurrentWeapon))
+					if ( !mOnlyTargetWeapon.CheckFlag( target->mTargetInfo.mCurrentWeapon ) )
 						return NoSelectReason_OnlyTargetWeapon;
 				}
 			}
 		}
 	}
-	if(m_LimitCallback.m_LimitTo)
+	if ( mLimitCallback.mLimitTo )
 	{
-		if(!m_LimitCallback.m_OnlyWhenActive || IsActive())
+		if ( !mLimitCallback.mOnlyWhenActive || IsActive() )
 		{
-			if(m_LimitCallback.m_NextCallback <= IGame::GetTime())
+			if ( mLimitCallback.mNextCallback <= IGame::GetTime() )
 			{
-				m_LimitCallback.m_NextCallback = IGame::GetTime() + m_LimitCallback.m_Delay;
+				mLimitCallback.mNextCallback = IGame::GetTime() + mLimitCallback.mDelay;
 
 				gmMachine *pM = ScriptManager::GetInstance()->GetMachine();
 
 				gmCall call;
-				if(call.BeginFunction(pM, m_LimitCallback.m_LimitTo, m_LimitCallback.m_This))
+				if ( call.BeginFunction( pM, mLimitCallback.mLimitTo, mLimitCallback.mThis ) )
 				{
 					call.End();
 
 					int iCancel = 0;
-					if(call.GetReturnedInt(iCancel))
-						m_LimitCallback.m_Result = iCancel!=0;
+					if ( call.GetReturnedInt( iCancel ) )
+						mLimitCallback.mResult = iCancel != 0;
 				}
 			}
 
-			if(!m_LimitCallback.m_Result)
+			if ( !mLimitCallback.mResult )
 				return NoSelectReason_LimitCallback;
 		}
 	}
@@ -740,46 +742,49 @@ State::noSelectReason_t State::CanBeSelected()
 	return NoSelectReasonNone;
 }
 
-void State::LimitTo(const gmVariable &varThis, gmGCRoot<gmFunctionObject> &_fn, int _delay, bool _onlywhenactive)
+void State::LimitTo( const gmVariable &varThis, gmGCRoot<gmFunctionObject> &_fn, int _delay, bool _onlywhenactive )
 {
-	m_LimitCallback.m_This = varThis;
-	m_LimitCallback.m_LimitTo = _fn;
-	m_LimitCallback.m_Delay = _delay;
-	m_LimitCallback.m_OnlyWhenActive = _onlywhenactive;
-	m_LimitCallback.m_NextCallback = IGame::GetTime() + m_LimitCallback.m_Delay;
+	mLimitCallback.mThis = varThis;
+	mLimitCallback.mLimitTo = _fn;
+	mLimitCallback.mDelay = _delay;
+	mLimitCallback.mOnlyWhenActive = _onlywhenactive;
+	mLimitCallback.mNextCallback = IGame::GetTime() + mLimitCallback.mDelay;
 }
 
 void State::ClearLimitTo()
 {
-	m_LimitCallback = LimitToCallback();
+	mLimitCallback = LimitToCallback();
 }
 
-void State::BlackboardDelay(float _delayseconds, int _targetId)
+void State::BlackboardDelay( float _delayseconds, int _targetId )
 {
-	enum { NumDelays = 4 };
-	BBRecordPtr delays[NumDelays];
-	int n = GetClient()->GetBB().GetBBRecords(bbk_DelayGoal,delays,NumDelays);
-	for(int i = 0; i < n; ++i)
+	enum
 	{
-		if(delays[i]->m_Target == _targetId &&
-			delays[i]->m_Owner == GetClient()->GetGameID())
+		NumDelays = 4
+	};
+	BBRecordPtr delays[ NumDelays ];
+	int n = GetClient()->GetBB().GetBBRecords( bbk_DelayGoal, delays, NumDelays );
+	for ( int i = 0; i < n; ++i )
+	{
+		if ( delays[ i ]->mTarget == _targetId &&
+			delays[ i ]->mOwner == GetClient()->GetGameID() )
 		{
-			delays[i]->m_ExpireTime = IGame::GetTime() + Utils::SecondsToMilliseconds(_delayseconds);
+			delays[ i ]->mExpireTime = IGame::GetTime() + Utils::SecondsToMilliseconds( _delayseconds );
 			return;
 		}
 	}
 
-	BBRecordPtr bbp(new bbDelayGoal);
-	bbp->m_Owner = GetClient()->GetGameID();
-	bbp->m_Target = _targetId;
-	bbp->m_ExpireTime = IGame::GetTime() + Utils::SecondsToMilliseconds(_delayseconds);
-	bbp->m_DeleteOnExpire = true;
-	GetClient()->GetBB().PostBBRecord(bbp);
+	BBRecordPtr bbp( new bbDelayGoal );
+	bbp->mOwner = GetClient()->GetGameID();
+	bbp->mTarget = _targetId;
+	bbp->mExpireTime = IGame::GetTime() + Utils::SecondsToMilliseconds( _delayseconds );
+	bbp->mDeleteOnExpire = true;
+	GetClient()->GetBB().PostBBRecord( bbp );
 }
 
-bool State::BlackboardIsDelayed(int _targetId)
+bool State::BlackboardIsDelayed( int _targetId )
 {
-	return GetClient()->GetBB().GetNumBBRecords(bbk_DelayGoal, _targetId) > 0;
+	return GetClient()->GetBB().GetNumBBRecords( bbk_DelayGoal, _targetId ) > 0;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -795,20 +800,20 @@ void State::RenderDebugWindow(gcn::DrawInfo drawinfo)
 	if(GetParent())
 	{
 		const char *prefix = "  ";
-		if(m_FirstChild)
+		if(.mFirstChild)
 			prefix = IsDebugExpanded() ? "- ": "+ ";
 
-		gcn::Color renderColor = IsActive()||m_LastUpdateTime==IGame::GetTime() ? gcn::Color(0,160,0) : gcn::Color(0,0,0);
-		if(m_StateFlags.CheckFlag(State_UnSelectable))
+		gcn::Color renderColor = IsActive()||.mLastUpdateTime==IGame::GetTime() ? gcn::Color(0,160,0) : gcn::Color(0,0,0);
+		if(.mStateFlags.CheckFlag(State_UnSelectable))
 			renderColor = gcn::Color(255,255,255);
 		if(IsDisabled())
 			renderColor = gcn::Color(255,0,0);
 
-		const int fontHeight = drawinfo.m_Widget->getFont()->getHeight();
-		int iX = drawinfo.m_Indent * 12;
-		int iY = drawinfo.m_Line * fontHeight;
+		const int fontHeight = drawinfo.mWidget->getFont()->getHeight();
+		int iX = drawinfo.mIndent * 12;
+		int iY = drawinfo.mLine * fontHeight;
 
-		gcn::Rectangle l(0, iY, drawinfo.m_Widget->getWidth(), fontHeight);
+		gcn::Rectangle l(0, iY, drawinfo.mWidget->getWidth(), fontHeight);
 
 		if(l.isPointInRect(drawinfo.Mouse.X, drawinfo.Mouse.Y))
 		{
@@ -822,23 +827,23 @@ void State::RenderDebugWindow(gcn::DrawInfo drawinfo)
 				DebugDraw(!DebugDrawingEnabled());
 		}
 
-		drawinfo.m_Graphics->setColor(renderColor);
-		drawinfo.m_Graphics->fillRectangle(l);
-		drawinfo.m_Graphics->setColor(drawinfo.m_Widget->getForegroundColor());
+		drawinfo.mGraphics->setColor(renderColor);
+		drawinfo.mGraphics->fillRectangle(l);
+		drawinfo.mGraphics->setColor(drawinfo.mWidget->getForegroundColor());
 
 		std::stringstream s;
 		GetDebugString(s);
 
-		drawinfo.m_Graphics->drawText((std::string)va("%s %s (%.2f) - %s:",
+		drawinfo.mGraphics->drawText((std::string)va("%s %s (%.2f) - %s:",
 			prefix,GetName().c_str(),
 			GetLastPriority(),
 			s.str().c_str()),iX,iY);
 
-		++drawinfo.m_Line;
+		++drawinfo.mLine;
 
 		if(IsDebugExpanded())
 		{
-			for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
+			for(State *pState = mFirstChild; pState; pState = pState->mSibling)
 				pState->RenderDebugWindow(drawinfo.indent());
 		}
 		return;
@@ -846,7 +851,7 @@ void State::RenderDebugWindow(gcn::DrawInfo drawinfo)
 
 	if(IsDebugExpanded() || !GetParent())
 	{
-		for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
+		for(State *pState = mFirstChild; pState; pState = pState->mSibling)
 			pState->RenderDebugWindow(drawinfo.indent());
 	}
 }
@@ -858,8 +863,8 @@ void State::Sync( RemoteLib::DebugConnection * connection, Remote::Behavior & ca
 
 	std::stringstream s;
 	GetDebugString(s);
-	obColor renderColor = IsActive()||m_LastUpdateTime==IGame::GetTime() ? obColor( 0, 160, 0) : obColor(0,0,0);
-	if(m_StateFlags.CheckFlag(State_UnSelectable))
+	obColor renderColor = IsActive()||.mLastUpdateTime==IGame::GetTime() ? obColor( 0, 160, 0) : obColor(0,0,0);
+	if(.mStateFlags.CheckFlag(State_UnSelectable))
 		renderColor = obColor(255,255,255);
 	if(IsDisabled())
 		renderColor = obColor(255,0,0);
@@ -869,7 +874,7 @@ void State::Sync( RemoteLib::DebugConnection * connection, Remote::Behavior & ca
 	SET_IF_DIFF( cached, update, s.str().c_str(), info );
 
 	int childIndex = 0;
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling) {
+	for(State *pState = mFirstChild; pState; pState = pState->mSibling) {
 		if ( cached.children().Capacity() <= childIndex ) {
 			cached.mutable_children()->Reserve( childIndex + 1 );
 		}
@@ -895,22 +900,22 @@ void State::Sync( RemoteLib::DebugConnection * connection, Remote::Behavior & ca
 
 //////////////////////////////////////////////////////////////////////////
 
-StateSimultaneous::StateSimultaneous(const char * _name, const UpdateDelay &_ur)
-	: State(_name, _ur)
+StateSimultaneous::StateSimultaneous( const char * _name, const UpdateDelay &_ur )
+	: State( _name, _ur )
 {
 }
 
-obReal StateSimultaneous::GetPriority()
+float StateSimultaneous::GetPriority()
 {
 	//State *pBestState = NULL;
 	float fBestPriority = 0.f;
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
 	{
-		if(pState->IsUserDisabled())
+		if ( pState->IsUserDisabled() )
 			continue;
 
 		float fPriority = pState->InternalGetPriority();
-		if(fPriority > fBestPriority)
+		if ( fPriority > fBestPriority )
 		{
 			fBestPriority = fPriority;
 			//pBestState = pState;
@@ -919,65 +924,65 @@ obReal StateSimultaneous::GetPriority()
 	return fBestPriority;
 }
 
-State::StateStatus StateSimultaneous::UpdateState(float fDt)
+State::StateStatus StateSimultaneous::UpdateState( float fDt )
 {
-	OBASSERT(!IsDisabled(), "State Disabled, UpdateState called!");
+	OBASSERT( !IsDisabled(), "State Disabled, UpdateState called!" );
 
 	State *pLastState = NULL;
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
 	{
 		bool bWantsActive = !pState->IsDisabled() ? pState->InternalGetPriority() > 0.0 : false;
 
 		// Handle exits
-		if(pState->IsActive() && (!bWantsActive || pState->IsDisabled()))
+		if ( pState->IsActive() && ( !bWantsActive || pState->IsDisabled() ) )
 		{
 			pState->InternalExit(); // call internal version
-			if(!bWantsActive && pState->CheckFlag(State_DeleteOnFinished))
+			if ( !bWantsActive && pState->CheckFlag( State_DeleteOnFinished ) )
 			{
-				if(pLastState)
-					pLastState = pState->m_Sibling;
+				if ( pLastState )
+					pLastState = pState->mSibling;
 				delete pState;
 			}
 			continue;
 		}
 
-		if(!pState->IsActive() && bWantsActive)
+		if ( !pState->IsActive() && bWantsActive )
 			pState->InternalEnter(); // call internal version
 
-		if(pState->IsActive())
+		if ( pState->IsActive() )
 		{
-			if(pState->InternalUpdateState() == State_Finished)
+			if ( pState->InternalUpdateState() == State_Finished )
 				pState->InternalExit();
 		}
 		pLastState = pState;
 	}
-	Update(fDt);
+	Update( fDt );
 	return State_Busy;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-StateFirstAvailable::StateFirstAvailable(const char * _name, const UpdateDelay &_ur)
-	: State(_name, _ur)
-	, m_CurrentState(0)
+StateFirstAvailable::StateFirstAvailable( const char * _name, const UpdateDelay &_ur )
+	: State( _name, _ur )
+	, mCurrentState( 0 )
 {
 }
 
-void StateFirstAvailable::GetDebugString(std::stringstream &out)
+void StateFirstAvailable::GetDebugString( std::stringstream &out )
 {
-	if(m_CurrentState)
-		m_CurrentState->GetDebugString(out);
+	if ( mCurrentState )
+		mCurrentState->GetDebugString( out );
 }
 
-obReal StateFirstAvailable::GetPriority()
+float StateFirstAvailable::GetPriority()
 {
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
 	{
-		if(pState->IsUserDisabled())
+		if ( pState->IsUserDisabled() )
 			continue;
 
 		float fPriority = pState->InternalGetPriority();
-		if(fPriority > 0.f)
+		if ( fPriority > 0.f )
 			return fPriority;
 	}
 	return 0.f;
@@ -985,21 +990,21 @@ obReal StateFirstAvailable::GetPriority()
 
 void StateFirstAvailable::InternalParentExit()
 {
-	if(m_CurrentState && m_CurrentState->IsActive())
-		m_CurrentState->InternalExit();
-	m_CurrentState = 0;
+	if ( mCurrentState && mCurrentState->IsActive() )
+		mCurrentState->InternalExit();
+	mCurrentState = 0;
 }
 
-State::StateStatus StateFirstAvailable::UpdateState(float fDt)
+State::StateStatus StateFirstAvailable::UpdateState( float fDt )
 {
 	State *pBestState = NULL;
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
 	{
-		if(pState->IsUserDisabled())
+		if ( pState->IsUserDisabled() )
 			continue;
 
 		float fPriority = pState->InternalGetPriority();
-		if(fPriority > 0.f)
+		if ( fPriority > 0.f )
 		{
 			pBestState = pState;
 			break;
@@ -1007,64 +1012,64 @@ State::StateStatus StateFirstAvailable::UpdateState(float fDt)
 	}
 
 	// Exit active states that are not our best
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
 	{
-		if(pBestState != pState && pState->IsActive())
+		if ( pBestState != pState && pState->IsActive() )
 		{
 			pState->InternalExit();
 
-			if(m_CurrentState == pState)
-				m_CurrentState = 0;
+			if ( mCurrentState == pState )
+				mCurrentState = 0;
 		}
 	}
 
-	if(pBestState && m_CurrentState != pBestState)
+	if ( pBestState && mCurrentState != pBestState )
 	{
-		OBASSERT(!pBestState->IsActive(), "State not active!");
-		m_CurrentState = pBestState;
-		m_CurrentState->InternalEnter();
+		OBASSERT( !pBestState->IsActive(), "State not active!" );
+		mCurrentState = pBestState;
+		mCurrentState->InternalEnter();
 	}
 
-	if(m_CurrentState)
+	if ( mCurrentState )
 	{
-		OBASSERT(m_CurrentState->IsActive() || m_CurrentState->IsRoot(), "State not active!");
-		if(m_CurrentState->InternalUpdateState() == State_Finished)
+		OBASSERT( mCurrentState->IsActive() || mCurrentState->IsRoot(), "State not active!" );
+		if ( mCurrentState->InternalUpdateState() == State_Finished )
 		{
-			m_CurrentState->InternalExit();
-			m_CurrentState = 0;
+			mCurrentState->InternalExit();
+			mCurrentState = 0;
 		}
 	}
 
-	Update(fDt);
+	Update( fDt );
 
-	return m_CurrentState || InternalGetPriority()>0.f ? State_Busy : State_Finished;
+	return mCurrentState || InternalGetPriority() > 0.f ? State_Busy : State_Finished;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-StatePrioritized::StatePrioritized(const char * _name, const UpdateDelay &_ur)
-	: State(_name, _ur)
-	, m_CurrentState(0)
+StatePrioritized::StatePrioritized( const char * _name, const UpdateDelay &_ur )
+	: State( _name, _ur )
+	, mCurrentState( 0 )
 {
 }
 
-void StatePrioritized::GetDebugString(std::stringstream &out)
+void StatePrioritized::GetDebugString( std::stringstream &out )
 {
-	if(m_CurrentState)
-		m_CurrentState->GetDebugString(out);
+	if ( mCurrentState )
+		mCurrentState->GetDebugString( out );
 }
 
-obReal StatePrioritized::GetPriority()
+float StatePrioritized::GetPriority()
 {
 	//State *pBestState = NULL;
 	float fBestPriority = 0.f;
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
 	{
-		if(pState->IsUserDisabled())
+		if ( pState->IsUserDisabled() )
 			continue;
 
 		float fPriority = pState->InternalGetPriority();
-		if(fPriority > fBestPriority)
+		if ( fPriority > fBestPriority )
 		{
 			fBestPriority = fPriority;
 			//pBestState = pState;
@@ -1075,12 +1080,12 @@ obReal StatePrioritized::GetPriority()
 
 void StatePrioritized::InternalParentExit()
 {
-	if(m_CurrentState && m_CurrentState->IsActive())
-		m_CurrentState->InternalExit();
-	m_CurrentState = 0;
+	if ( mCurrentState && mCurrentState->IsActive() )
+		mCurrentState->InternalExit();
+	mCurrentState = 0;
 }
 
-State::StateStatus StatePrioritized::UpdateState(float fDt)
+State::StateStatus StatePrioritized::UpdateState( float fDt )
 {
 	State *pBestState = NULL;
 	float fBestPriority = 0.f;
@@ -1088,39 +1093,39 @@ State::StateStatus StatePrioritized::UpdateState(float fDt)
 
 #ifdef _DEBUG
 	const int N = 64; // cs: was 32
-	float STATES_PRIO[N] = {};
-	State *STATES_P[N] = {}; int NumPriorities = 0;
-	State *STATES_X[N] = {}; int NumExited = 0;
-	State *OLD_BEST = m_CurrentState; OLD_BEST;
+	float STATES_PRIO[ N ] = {};
+	State *STATES_P[ N ] = {}; int NumPriorities = 0;
+	State *STATES_X[ N ] = {}; int NumExited = 0;
+	State *OLD_BEST = mCurrentState; OLD_BEST;
 	const char *BOT_NAME = GetClient() ? GetClient()->GetName() : 0; BOT_NAME;
 #endif
 
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
 	{
-		if(pState->IsUserDisabled())
+		if ( pState->IsUserDisabled() )
 			continue;
 
 		float fPriority = pState->InternalGetPriority();
 
 #ifdef _DEBUG
-		STATES_PRIO[NumPriorities] = fPriority;
-		STATES_P[NumPriorities] = pState;
+		STATES_PRIO[ NumPriorities ] = fPriority;
+		STATES_P[ NumPriorities ] = pState;
 		NumPriorities++;
 #endif
 
-		if(fPriority >= fBestPriority)
+		if ( fPriority >= fBestPriority )
 		{
-			if(fPriority > fBestPriority)
+			if ( fPriority > fBestPriority )
 			{
 				fBestPriority = fPriority;
 				pBestState = pState;
 				iBestRand = 0;
 			}
-			else if(fPriority > 0)
+			else if ( fPriority > 0 )
 			{
 				int iRand = rand();
-				if (iBestRand == 0) iBestRand = rand();
-				if (iRand > iBestRand)
+				if ( iBestRand == 0 ) iBestRand = rand();
+				if ( iRand > iBestRand )
 				{
 					iBestRand = iRand;
 					pBestState = pState;
@@ -1132,123 +1137,125 @@ State::StateStatus StatePrioritized::UpdateState(float fDt)
 	// if the current state has an equal priority to the 'best', the current
 	// state has the edge, to prevent order dependency causing goals to override
 	// on equal priorities
-	if ( m_CurrentState ) {
-		if ( m_CurrentState->GetLastPriority() >= fBestPriority ) {
-			pBestState = m_CurrentState;
+	if ( mCurrentState )
+	{
+		if ( mCurrentState->GetLastPriority() >= fBestPriority )
+		{
+			pBestState = mCurrentState;
 		}
 	}
 
 	// Exit active states that are not our best
-	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
+	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
 	{
-		if(pBestState != pState && pState->IsActive())
+		if ( pBestState != pState && pState->IsActive() )
 		{
 #ifdef _DEBUG
-			STATES_X[NumExited++] = pState;
+			STATES_X[ NumExited++ ] = pState;
 #endif
 			pState->InternalExit();
 		}
 	}
 
-	if(pBestState && m_CurrentState != pBestState)
+	if ( pBestState && mCurrentState != pBestState )
 	{
-		OBASSERT(!pBestState->IsActive(), "State not active!");
-		m_CurrentState = pBestState;
-		m_CurrentState->InternalEnter();
+		OBASSERT( !pBestState->IsActive(), "State not active!" );
+		mCurrentState = pBestState;
+		mCurrentState->InternalEnter();
 	}
 
-	if(m_CurrentState)
+	if ( mCurrentState )
 	{
-		OBASSERT(m_CurrentState->IsActive() || m_CurrentState->IsRoot(), "State not active!");
-		if(m_CurrentState->InternalUpdateState() == State_Finished)
+		OBASSERT( mCurrentState->IsActive() || mCurrentState->IsRoot(), "State not active!" );
+		if ( mCurrentState->InternalUpdateState() == State_Finished )
 		{
-			m_CurrentState->InternalExit();
-			m_CurrentState = 0;
+			mCurrentState->InternalExit();
+			mCurrentState = 0;
 		}
 	}
 
-	Update(fDt);
+	Update( fDt );
 
-	return m_CurrentState || InternalGetPriority()>0.f ? State_Busy : State_Finished;
+	return mCurrentState || InternalGetPriority() > 0.f ? State_Busy : State_Finished;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-StateSequential::StateSequential(const char * _name, const UpdateDelay &_ur)
-	: State(_name, _ur)
-	, m_CurrentState(0)
+StateSequential::StateSequential( const char * _name, const UpdateDelay &_ur )
+	: State( _name, _ur )
+	, mCurrentState( 0 )
 {
 }
 
-void StateSequential::GetDebugString(std::stringstream &out)
+void StateSequential::GetDebugString( std::stringstream &out )
 {
-	if(m_CurrentState)
-		m_CurrentState->GetDebugString(out);
+	if ( mCurrentState )
+		mCurrentState->GetDebugString( out );
 }
 
 void StateSequential::Exit()
 {
-	if(m_CurrentState && m_CurrentState->IsActive())
-		m_CurrentState->InternalExit();
-	m_CurrentState = 0;
+	if ( mCurrentState && mCurrentState->IsActive() )
+		mCurrentState->InternalExit();
+	mCurrentState = 0;
 }
 
-State::StateStatus StateSequential::UpdateState(float fDt)
+State::StateStatus StateSequential::UpdateState( float fDt )
 {
-	/*if(m_CurrentState)
+	/*if(.mCurrentState)
 	{
-	if(m_StateList.front()->IsActive())
-	return m_StateList.front()->InternalUpdateState();
+	if(.mStateList.front()->IsActive())
+	return mStateList.front()->InternalUpdateState();
 	}*/
 	return State_Busy;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-StateSequentialLooping::StateSequentialLooping(const char * _name, const UpdateDelay &_ur)
-	: State(_name, _ur)
+StateSequentialLooping::StateSequentialLooping( const char * _name, const UpdateDelay &_ur )
+	: State( _name, _ur )
 {
 }
 
-State::StateStatus StateSequentialLooping::UpdateState(float fDt)
+State::StateStatus StateSequentialLooping::UpdateState( float fDt )
 {
 	return State_Busy;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-StateProbabilistic::StateProbabilistic(const char * _name, const UpdateDelay &_ur)
-	: State(_name, _ur)
+StateProbabilistic::StateProbabilistic( const char * _name, const UpdateDelay &_ur )
+	: State( _name, _ur )
 {
 }
 
-State::StateStatus StateProbabilistic::UpdateState(float fDt)
+State::StateStatus StateProbabilistic::UpdateState( float fDt )
 {
 	return State_Busy;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-StateOneOff::StateOneOff(const char * _name, const UpdateDelay &_ur)
-	: State(_name, _ur)
+StateOneOff::StateOneOff( const char * _name, const UpdateDelay &_ur )
+	: State( _name, _ur )
 {
 }
 
-State::StateStatus StateOneOff::UpdateState(float fDt)
+State::StateStatus StateOneOff::UpdateState( float fDt )
 {
 	return State_Busy;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-StateChild::StateChild(const char * _name, const UpdateDelay &_ur)
-	: State(_name, _ur)
+StateChild::StateChild( const char * _name, const UpdateDelay &_ur )
+	: State( _name, _ur )
 {
 }
 
-State::StateStatus StateChild::UpdateState(float fDt)
+State::StateStatus StateChild::UpdateState( float fDt )
 {
-	return Update(fDt);
+	return Update( fDt );
 }
 
 //////////////////////////////////////////////////////////////////////////

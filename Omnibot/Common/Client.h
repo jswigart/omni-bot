@@ -74,7 +74,7 @@ public:
 		{
 			NumButtons = 64
 		};
-		obuint32	m_StopHoldTime[ NumButtons ];
+		uint32_t mStopHoldTime[ NumButtons ];
 
 		HoldButtons();
 	};
@@ -87,74 +87,74 @@ public:
 	//		Get the current team this bot is on
 	inline int GetTeam() const
 	{
-		return m_Team;
+		return mTeam;
 	}
 
 	inline int GetClass() const
 	{
-		return m_Class;
+		return mEntInfo.mClassId;
 	}
 
 	// Function: GetGameID
 	//		Get the current <GameId> of this bot
 	inline GameId GetGameID() const
 	{
-		return m_GameID;
+		return mGameID;
 	}
 
 	// Function: GetGameEntity
 	//		Get the current <GameEntity> of this bot
 	inline const GameEntity &GetGameEntity() const
 	{
-		return m_GameEntity;
+		return mGameEntity;
 	}
 
 	inline const Vector3f &GetPosition() const
 	{
-		return m_Position;
+		return mPosition;
 	}
 	inline const Vector3f &GetFacingVector() const
 	{
-		return m_FacingVector;
+		return mFacingVector;
 	}
 	inline const Vector3f &GetUpVector() const
 	{
-		return m_UpVector;
+		return mUpVector;
 	}
 	inline const Vector3f &GetRightVector() const
 	{
-		return m_RightVector;
+		return mRightVector;
 	}
 	inline const Vector3f &GetVelocity() const
 	{
-		return m_Velocity;
+		return mVelocity;
 	}
 	inline const Vector3f &GetMovementVector() const
 	{
-		return m_MoveVector;
+		return mMoveVector;
 	}
 	inline const AABB &GetLocalBounds() const
 	{
-		return m_LocalBounds;
+		return mLocalBounds;
 	}
 	inline const Box3f &GetWorldBounds() const
 	{
-		return m_WorldBounds;
+		return mWorldBounds;
 	}
 	const Matrix3f &GetOrientation() const
 	{
-		return m_Orientation;
+		return mOrientation;
 	}
 	inline Vector3f GetCenterBounds() const
 	{
-		return m_WorldBounds.Center;
+		return mWorldBounds.Center;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 
 	inline void SetMovementVector( const Vector3f &_vec )
 	{
-		m_MoveVector = _vec;
+	 mMoveVector = _vec;
 	}
 
 	inline bool InFieldOfView( const Vector3f &_pos );
@@ -168,37 +168,37 @@ public:
 	Vector3f GetEyePosition();
 	Vector3f GetEyeGroundOffset();
 
-	virtual bool CanGetPowerUp( obint32 _powerup ) const;
+	virtual bool CanGetPowerUp( int32_t _powerup ) const;
 
 	inline const BitFlag32 GetMovementCaps() const
 	{
-		return m_MovementCaps;
+		return mMovementCaps;
 	}
 
 	inline const BitFlag64 &GetEntityFlags() const
 	{
-		return m_EntityFlags;
+		return mEntInfo.mFlags;
 	}
-	inline const BitFlag64 &GetPowerUpFlags() const
+	inline const BitFlag32  &GetPowerUpFlags() const
 	{
-		return m_EntityPowerUps;
+		return mEntInfo.mPowerUps;
 	}
 	inline const BitFlag32 &GetRoleMask() const
 	{
-		return m_RoleMask;
+		return mRoleMask;
 	}
 	inline void SetRoleMask( BitFlag32 &_bf )
 	{
-		m_RoleMask = _bf;
+	 mRoleMask = _bf;
 	}
 
-	inline bool HasEntityFlag( obint32 _flag ) const
+	inline bool HasEntityFlag( int32_t _flag ) const
 	{
-		return m_EntityFlags.CheckFlag( _flag );
+		return mEntInfo.mFlags.CheckFlag( _flag );
 	}
-	inline bool HasPowerup( obint32 _flag ) const
+	inline bool HasPowerup( int32_t _flag ) const
 	{
-		return m_EntityPowerUps.CheckFlag( _flag );
+		return mEntInfo.mPowerUps.CheckFlag( _flag );
 	}
 
 	inline void SetUserFlag( int _flag, bool _enable );
@@ -227,52 +227,52 @@ public:
 	// todo: put error checking in here, not gmBot
 	inline float GetFieldOfView() const
 	{
-		return m_FieldOfView;
+		return mFieldOfView;
 	}
 	inline void SetFieldOfView( float _fov )
 	{
-		m_FieldOfView = _fov;
+	 mFieldOfView = _fov;
 	}
 	inline float GetMaxViewDistance() const
 	{
-		return m_MaxViewDistance;
+		return mMaxViewDistance;
 	}
 	inline void SetMaxViewDistance( float _dist )
 	{
-		m_MaxViewDistance = _dist;
+	 mMaxViewDistance = _dist;
 	}
 	inline bool IsWithinViewDistance( const Vector3f &_pos );
 	inline float GetMaxTurnSpeed() const
 	{
-		return m_MaxTurnSpeed;
+		return mMaxTurnSpeed;
 	}
 	inline void SetMaxTurnSpeed( float _speed )
 	{
-		m_MaxTurnSpeed = _speed;
+	 mMaxTurnSpeed = _speed;
 	}
 	inline float GetAimStiffness() const
 	{
-		return m_AimStiffness;
+		return mAimStiffness;
 	}
 	inline void SetAimStiffness( float _stiffness )
 	{
-		m_AimStiffness = _stiffness;
+	 mAimStiffness = _stiffness;
 	}
 	inline float GetAimDamping() const
 	{
-		return m_AimDamping;
+		return mAimDamping;
 	}
 	inline void SetAimDamping( float _damping )
 	{
-		m_AimDamping = _damping;
+	 mAimDamping = _damping;
 	}
 	inline float GetAimTolerance() const
 	{
-		return m_AimTolerance;
+		return mAimTolerance;
 	}
 	inline void SetAimTolerance( float _tolerance )
 	{
-		m_AimTolerance = _tolerance;
+	 mAimTolerance = _tolerance;
 	}
 
 	AiState::SensoryMemory		*GetSensoryMemory();
@@ -282,29 +282,29 @@ public:
 
 	inline int GetCurrentHealth() const
 	{
-		return m_HealthArmor.m_CurrentHealth;
+		return mEntInfo.mHealth;
 	}
 	inline int GetMaxHealth() const
 	{
-		return m_HealthArmor.m_MaxHealth;
+		return mEntInfo.mHealthMax;
 	}
-	inline obReal GetHealthPercent() const;
+	inline float GetHealthPercent() const;
 	inline int GetCurrentArmor() const
 	{
-		return m_HealthArmor.m_CurrentArmor;
+		return mEntInfo.mArmor;
 	}
 	inline int GetMaxArmor() const
 	{
-		return m_HealthArmor.m_MaxArmor;
+		return mEntInfo.mArmorMax;
 	}
-	inline obReal GetArmorPercent() const;
+	inline float GetArmorPercent() const;
 	inline float GetStepHeight() const
 	{
-		return m_StepHeight;
+		return mStepHeight;
 	}
 	inline float GetMaxSpeed() const
 	{
-		return m_MaxSpeed;
+		return mMaxSpeed;
 	}
 
 	virtual void Init( int _gameid );
@@ -337,19 +337,19 @@ public:
 	//AimRequestPtr GetAimRequest(const char *_owner);
 
 	void EnableDebug( const int _flag, bool _enable );
-	inline bool IsDebugEnabled( obint32 _flag ) const
+	inline bool IsDebugEnabled( int32_t _flag ) const
 	{
-		return m_DebugFlags.CheckFlag( _flag );
+		return mDebugFlags.CheckFlag( _flag );
 	}
 
 	void CheckStuck();
 	inline int GetStuckTime() const
 	{
-		return m_StuckTime;
+		return mStuckTime;
 	}
 	inline void ResetStuckTime()
 	{
-		m_StuckTime = 0;
+	 mStuckTime = 0;
 	}
 
 	virtual void GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags ) = 0;
@@ -360,7 +360,7 @@ public:
 	virtual NavFlags GetTeamFlag( int _team ) const = 0;
 	inline BlackBoard &GetBB()
 	{
-		return m_Blackboard;
+		return mBlackboard;
 	}
 
 	void GameCommand( CHECK_PRINTF_ARGS const char* _msg, ... );
@@ -382,7 +382,6 @@ public:
 	} GameVar;
 
 	virtual float GetGameVar( GameVar _var ) const = 0;
-	virtual float GetAvoidRadius( int _class ) const = 0;
 
 	virtual void SendVoiceMacro( int _macroId ) = 0;
 	virtual int HandleVoiceMacroEvent( const MessageHelper &_message )
@@ -411,12 +410,12 @@ public:
 
 	inline int GetProfileType() const
 	{
-		return m_ProfileType;
+		return mProfileType;
 	}
 
 	State *GetStateRoot()
 	{
-		return m_StateRoot;
+		return mStateRoot;
 	}
 
 	void InitBehaviorTree();
@@ -426,8 +425,8 @@ public:
 	{
 	}
 
-	int				m_DesiredTeam;
-	int				m_DesiredClass;
+	int			 mDesiredTeam;
+	int			 mDesiredClass;
 
 	void CheckTeamEvent();
 	void CheckClassEvent();
@@ -440,109 +439,105 @@ public:
 	virtual ~Client();
 protected:
 
-	float			m_StepHeight;
-	float			m_MaxSpeed;
+	float		 mStepHeight;
+	float		 mMaxSpeed;
 
-	AABB			m_StuckBounds;
-	int				m_StuckTime;
+	AABB		 mStuckBounds;
+	int			 mStuckTime;
 
-	State			*m_StateRoot;
+	State			* mStateRoot;
 
-	ClientInput		m_ClientInput;
+	ClientInput	 mClientInput;
 
 	void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
-	void ProcessEventImpl( const MessageHelper &_message, obuint32 _targetState );
+	void ProcessEventImpl( const MessageHelper &_message, uint32_t _targetState );
 private:
-	Vector3f		m_Position;
-	Vector3f		m_EyePosition;
-	Vector3f		m_MoveVector;
-	Vector3f		m_Velocity;
-	Vector3f		m_FacingVector;
-	Vector3f		m_UpVector;
-	Vector3f		m_RightVector;
-	AABB			m_LocalBounds;
-	Box3f			m_WorldBounds;
-	Matrix3f		m_Orientation;
+	Vector3f	 mPosition;
+	Vector3f	 mEyePosition;
+	Vector3f	 mMoveVector;
+	Vector3f	 mVelocity;
+	Vector3f	 mFacingVector;
+	Vector3f	 mUpVector;
+	Vector3f	 mRightVector;
+	AABB		 mLocalBounds;
+	Box3f		 mWorldBounds;
+	Matrix3f	 mOrientation;
 
-	GameEntity		m_MoveEntity;
+	GameEntity	 mMoveEntity;
 
-	BitFlag64		m_ButtonFlags;
+	BitFlag64	 mButtonFlags;
 
-	float			m_FieldOfView;
-	float			m_MaxViewDistance;
+	float		 mFieldOfView;
+	float		 mMaxViewDistance;
 
 	// Bot Properties
-	BitFlag32		m_MovementCaps;
-	BitFlag32		m_RoleMask;
-	BitFlag64		m_EntityFlags;
-	BitFlag64		m_EntityPowerUps;
-	BitFlag64		m_InternalFlags;
+	EntityInfo		mEntInfo;
+	BitFlag32		mMovementCaps;
+	BitFlag32		mRoleMask;
+	BitFlag64		mInternalFlags;
+	
+	int			 mTeam;
+	GameId		 mGameID;
+	GameEntity	 mGameEntity;
 
-	Msg_HealthArmor	m_HealthArmor;
-
-	int				m_Team;
-	int				m_Class;
-	GameId			m_GameID;
-	GameEntity		m_GameEntity;
-
-	gmUserObject	*m_ScriptObject;
+	gmUserObject	* mScriptObject;
 
 	// Aiming properties
-	float			m_CurrentTurnSpeed;
-	float			m_MaxTurnSpeed;
-	float			m_AimStiffness;
-	float			m_AimDamping;
-	float			m_AimTolerance;
+	float		 mCurrentTurnSpeed;
+	float		 mMaxTurnSpeed;
+	float		 mAimStiffness;
+	float		 mAimDamping;
+	float		 mAimTolerance;
 
-	HoldButtons		m_HoldButtons;
+	HoldButtons	 mHoldButtons;
 
-	ProfileType		m_ProfileType;
+	ProfileType	 mProfileType;
 
-	BlackBoard		m_Blackboard;
+	BlackBoard	 mBlackboard;
 
-	File			m_DebugLog;
-	BitFlag32		m_DebugFlags;
+	File		 mDebugLog;
+	BitFlag32	 mDebugFlags;
 
-	NamePtr			m_NameReference;
+	NamePtr		 mNameReference;
 
-	//int				m_SoundSubscriber;
+	//int			 mSoundSubscriber;
 };
 
-inline obReal Client::GetHealthPercent() const
+inline float Client::GetHealthPercent() const
 {
-	return( m_HealthArmor.m_MaxHealth > 0 ) ?
-		(obReal)m_HealthArmor.m_CurrentHealth / (obReal)m_HealthArmor.m_MaxHealth : ( obReal )1.0;
+	return( mEntInfo.mHealthMax > 0 ) ?
+		(float)mEntInfo.mHealth / (float)mEntInfo.mHealthMax : ( float )1.0;
 }
 
-inline obReal Client::GetArmorPercent() const
+inline float Client::GetArmorPercent() const
 {
-	return ( m_HealthArmor.m_MaxArmor > 0 ) ?
-		(obReal)m_HealthArmor.m_CurrentArmor / (obReal)m_HealthArmor.m_MaxArmor : ( obReal )1.0;
+	return ( mEntInfo.mArmorMax > 0 ) ?
+		(float)mEntInfo.mArmor / (float)mEntInfo.mArmorMax : ( float )1.0;
 }
 
 inline bool Client::InFieldOfView( const Vector3f &_pos )
 {
 	Vector3f toTarget = _pos - GetEyePosition();
 	toTarget.Normalize();
-	return Utils::InFieldOfView2d( m_FacingVector, toTarget, m_FieldOfView );
+	return Utils::InFieldOfView2d( mFacingVector, toTarget, mFieldOfView );
 }
 
 inline bool Client::IsWithinViewDistance( const Vector3f &_pos )
 {
-	return ( ( _pos - m_Position ).SquaredLength() <= ( m_MaxViewDistance*m_MaxViewDistance ) );
+	return ( ( _pos - mPosition ).SquaredLength() <= ( mMaxViewDistance* mMaxViewDistance ) );
 }
 
 inline void Client::SetUserFlag( int _flag, bool _enable )
 {
 	if ( _enable )
-		m_InternalFlags.SetFlag( _flag );
+	 mInternalFlags.SetFlag( _flag );
 	else
-		m_InternalFlags.ClearFlag( _flag );
+	 mInternalFlags.ClearFlag( _flag );
 }
 
 inline bool Client::CheckUserFlag( int _flag ) const
 {
-	return m_InternalFlags.CheckFlag( _flag );
+	return mInternalFlags.CheckFlag( _flag );
 }
 
 #endif

@@ -18,45 +18,21 @@
 
 // Title: Engine Interface
 
-// struct: EntityInfo
-//		Used to store information about an entity
-typedef struct
-{
-	// BitFlag32: m_Team
-	//		If this != 0, this entity should only be visible to certain teams.
-	BitFlag32	m_Team;
-	// int: m_EntityClass
-	//		The specific classification of this entity
-	int			m_EntityClass;
-	// BitFlag64: m_EntityCategoty
-	//		Current category of this entity, see <EntityCategory>
-	BitFlag64	m_EntityCategory;
-	// BitFlag64: m_EntityFlags
-	//		Current flags of this entity, see <EntityFlags>
-	BitFlag64	m_EntityFlags;
-	// BitFlag64: m_EntityPowerups
-	//		Current power-ups of this entity, see <Powerups>
-	BitFlag64	m_EntityPowerups;
-} EntityInfo;
-
 // struct: ClientInput
-//		Generic data structure representing the bots input and movement states
-//		Game is responsible for translating this into a format suitable for use
-//		by the game.
 typedef struct
 {
-	// float: m_Facing
+	// float: mFacing
 	//		The direction the bot is facing/aiming
-	float		m_Facing[3];
-	// float: m_MoveDir
+	float		mFacing[ 3 ];
+	// float: mMoveDir
 	//		The direction the bot is moving
-	float		m_MoveDir[3];
-	// int: m_ButtonFlags
+	float		mMoveDir[ 3 ];
+	// int: mButtonFlags
 	//		64 bit int of bits representing bot keypresses, see <ButtonFlags>
-	BitFlag64	m_ButtonFlags;
-	// int: m_CurrentWeapon
+	BitFlag64	mButtonFlags;
+	// int: mCurrentWeapon
 	//		The current weapon Id this bot wants to use.
-	int			m_CurrentWeapon;
+	int			mCurrentWeapon;
 } ClientInput;
 
 // class: obTraceResult
@@ -64,33 +40,33 @@ typedef struct
 class obTraceResult
 {
 public:
-	// float: m_Fraction
+	// float: mFraction
 	//		0.0 - 1.0 how far the trace went
-	float		m_Fraction;
-	// float: m_Normal
+	float		mFraction;
+	// float: mNormal
 	//		The plane normal that was struck
-	float		m_Normal[3];
-	// float: m_Endpos
+	float		mNormal[ 3 ];
+	// float: mEndpos
 	//		The end point the trace ended at
-	float		m_Endpos[3];
-	// var: m_HitEntity
+	float		mEndpos[ 3 ];
+	// var: mHitEntity
 	//		The entity that was hit by the trace
-	GameEntity	m_HitEntity;
-	// int: m_StartSolid
+	GameEntity	mHitEntity;
+	// int: mStartSolid
 	//		Did the trace start inside a solid?
-	int			m_StartSolid;
-	// int: m_Contents
+	int			mStartSolid;
+	// int: mContents
 	//		Content flags.
-	int			m_Contents;
-	// int: m_Surface;
+	int			mContents;
+	// int: mSurface;
 	//		Flags representing the surface struct by the trace.
-	int			m_Surface;
+	int			mSurface;
 
 	obTraceResult() :
-		m_Fraction	(0.f),
-		m_StartSolid(0),
-		m_Contents	(0),
-		m_Surface	(0)
+		mFraction( 0.f ),
+		mStartSolid( 0 ),
+		mContents( 0 ),
+		mSurface( 0 )
 	{
 	}
 };
@@ -98,36 +74,41 @@ public:
 class obPlayerInfo
 {
 public:
-	enum { MaxPlayers=64,MaxTeams=6 };
-	enum Controller { Bot = 0, Human, Both };
+	enum
+	{
+		MaxPlayers = 64, MaxTeams = 6
+	};
+	enum Controller
+	{
+		Bot = 0, Human, Both
+	};
 	struct PInfo
 	{
-		int			m_Team;
-		int			m_Class;
-		Controller	m_Controller;
+		EntityInfo		mEntInfo;
+		int					mTeam;
+		Controller			mController;
 
 		PInfo()
 		{
-			m_Team = OB_TEAM_NONE;
-			m_Class = 0;
-			m_Controller = Bot;
+			mTeam = OB_TEAM_NONE;
+			mController = Bot;
 		}
 	};
 
-	PInfo		m_Players[MaxPlayers];
-	int			m_MaxPlayers;
-	int			m_AvailableTeams;
+	PInfo		mPlayers[ MaxPlayers ];
+	int			mMaxPlayers;
+	int			mAvailableTeams;
 
-	int GetNumPlayers(int t = OB_TEAM_ALL, Controller c = Both) const
+	int GetNumPlayers( int t = OB_TEAM_ALL, Controller c = Both ) const
 	{
 		int n = 0;
-		for(int i = 0; i < MaxPlayers; ++i)
+		for ( int i = 0; i < MaxPlayers; ++i )
 		{
-			if(m_Players[i].m_Team==0)
+			if ( mPlayers[ i ].mTeam == 0 )
 				continue;
-			if(t!=OB_TEAM_ALL&&m_Players[i].m_Team!=t)
+			if ( t != OB_TEAM_ALL&&mPlayers[ i ].mTeam != t )
 				continue;
-			if(c!=Both&&m_Players[i].m_Controller!=c)
+			if ( c != Both &&mPlayers[ i ].mController != c )
 				continue;
 			++n;
 		}
@@ -135,18 +116,18 @@ public:
 	}
 	int GetMaxPlayers() const
 	{
-		return m_MaxPlayers;
+		return mMaxPlayers;
 	}
 	int GetAvailableTeams() const
 	{
-		return m_AvailableTeams;
+		return mAvailableTeams;
 	}
 	obPlayerInfo()
 	{
-		for(int i = 0; i < MaxPlayers; ++i)
-			m_Players[i] = PInfo();
-		m_AvailableTeams = 0;
-		m_MaxPlayers = 0;
+		for ( int i = 0; i < MaxPlayers; ++i )
+			mPlayers[ i ] = PInfo();
+		mAvailableTeams = 0;
+		mMaxPlayers = 0;
 	}
 };
 
@@ -159,17 +140,20 @@ public:
 
 struct GameModelInfo
 {
-	enum { BufferSize = 128 };
-	char 			mModelName[BufferSize];
-	char 			mModelType[BufferSize];
+	enum
+	{
+		BufferSize = 128
+	};
+	char 			mModelName[ BufferSize ];
+	char 			mModelType[ BufferSize ];
 	char *			mDataBuffer;
 	int				mDataBufferSize;
-	float			mScale[3];
+	float			mScale[ 3 ];
 
 	// oriented bounding box
 	AABB			mAABB;
-	
-	GameModelInfo() 
+
+	GameModelInfo()
 		: mDataBuffer( 0 )
 		, mDataBufferSize( 0 )
 	{
@@ -194,7 +178,7 @@ class IEngineInterface
 public:
 	enum DebugRenderFlags
 	{
-		DR_NODEPTHTEST = (1<<0),
+		DR_NODEPTHTEST = ( 1 << 0 ),
 	};
 	enum ConvertType
 	{
@@ -210,41 +194,41 @@ public:
 	// Function: AddBot
 	//		This function should add a bot to the game with the name specified,
 	//		and return the bots GameID
-	virtual int AddBot(const MessageHelper &_data) = 0;
+	virtual int AddBot( const MessageHelper &_data ) = 0;
 
 	// Function: RemoveBot
 	//		This function should remove/kick a bot from the game by its name or id
-	virtual void RemoveBot(const MessageHelper &_data) = 0;
+	virtual void RemoveBot( const MessageHelper &_data ) = 0;
 
 	// Function: ChangeTeam
 	//		This function should force a bot to a certain team
-	virtual obResult ChangeTeam(int _client, int _newteam, const MessageHelper *_data) = 0;
+	virtual obResult ChangeTeam( int _client, int _newteam, const MessageHelper *_data ) = 0;
 
 	// Function: ChangeClass
 	//		This function should force a bot to change to a certain class
-	virtual obResult ChangeClass(int _client, int _newclass, const MessageHelper *_data) = 0;
+	virtual obResult ChangeClass( int _client, int _newclass, const MessageHelper *_data ) = 0;
 
 	// Function: UpdateBotInput
 	//		This function should interpret and handle the bots input
-	virtual void UpdateBotInput(int _client, const ClientInput &_input) = 0;
+	virtual void UpdateBotInput( int _client, const ClientInput &_input ) = 0;
 
 	// Function: BotCommand
 	//		This function should perform a bot 'console command'
-	virtual void BotCommand(int _client, const char *_cmd) = 0;
+	virtual void BotCommand( int _client, const char *_cmd ) = 0;
 
 	// Function: IsInPVS
 	//		This function should check if a target position is within pvs of another position.
-	virtual obBool IsInPVS(const float _pos[3], const float _target[3]) = 0;
+	virtual obBool IsInPVS( const float _pos[ 3 ], const float _target[ 3 ] ) = 0;
 
 	// Function: TraceLine
 	//		This bot should intepret and perform a traceline, returning
 	//		the results into the <BotTraceResult> parameter.
-	virtual obResult TraceLine(obTraceResult &_result, const float _start[3], const float _end[3], const AABB *_pBBox , int _mask, int _user, obBool _bUsePVS) = 0;
+	virtual obResult TraceLine( obTraceResult &_result, const float _start[ 3 ], const float _end[ 3 ], const AABB *_pBBox, int _mask, int _user, obBool _bUsePVS ) = 0;
 
 	// Function: GetPointContents
 	//		Gets the content bitflags for a location.
-	virtual int GetPointContents(const float _pos[3]) = 0;
-	
+	virtual int GetPointContents( const float _pos[ 3 ] ) = 0;
+
 	// Function: GetSurfaceFromGame
 	//		Gets the surface bitflags for a surface masks.
 	virtual int ConvertValue( int value, ConvertType ctype, ConvertDirection cdir ) = 0;
@@ -253,70 +237,56 @@ public:
 	//		Gets the game entity of the local client. For listen servers only.
 	virtual GameEntity GetLocalGameEntity() = 0;
 
-	// Function: FindEntityInSphere
-	//		This function should return entities matching the class id, and in a radius, and should be
-	//		compatible with a while loop using the _pStart and returning 0 at the end of search
-	virtual GameEntity FindEntityInSphere(const float _pos[3], float _radius, GameEntity _pStart, int classId) = 0;
-
-	// Function: GetEntityClass
-	//		This function should return the bot class of the entity.
-	virtual int GetEntityClass(const GameEntity _ent) = 0;
-
-	// Function: GetEntityCategory
-	//		This function should return the bot class of the entity.
-	virtual obResult  GetEntityCategory(const GameEntity _ent, BitFlag32 &_category) = 0;
-
-	// Function: GetEntityFlags
-	//		This function should return the entity flags for an entity
-	virtual obResult GetEntityFlags(const GameEntity _ent, BitFlag64 &_flags) = 0;
-
-	// Function: GetEntityPowerups
-	//		This function should return the powerup flags for an entity.
-	virtual obResult GetEntityPowerups(const GameEntity _ent, BitFlag64 &_flags) = 0;
-
+	// Function: GetEntityInfo
+	//		This function should return the core information about an entity.
+	virtual obResult GetEntityInfo( const GameEntity _ent, EntityInfo& classInfo ) = 0;
+	
 	// Function: GetEntityEyePosition
 	//		This function should return the eye position of an entity
-	virtual obResult GetEntityEyePosition(const GameEntity _ent, float _pos[3]) = 0;
+	virtual obResult GetEntityEyePosition( const GameEntity _ent, float _pos[ 3 ] ) = 0;
 
 	// Function: GetEntityEyePosition
 	//		This function should return the bone position of an entity
-	virtual obResult GetEntityBonePosition(const GameEntity _ent, int _boneid, float _pos[3]) = 0;
+	virtual obResult GetEntityBonePosition( const GameEntity _ent, int _boneid, float _pos[ 3 ] ) = 0;
 
 	// Function: GetEntityOrientation
 	//		This function should return the orientation of a <GameEntity> as fwd, right, up vectors
-	virtual obResult GetEntityOrientation(const GameEntity _ent, float _fwd[3], float _right[3], float _up[3]) = 0;
+	virtual obResult GetEntityOrientation( const GameEntity _ent, float _fwd[ 3 ], float _right[ 3 ], float _up[ 3 ] ) = 0;
 
 	// Function: GetEntityVelocity
 	//		This function should return the velocity of a <GameEntity> in world space
-	virtual obResult GetEntityVelocity(const GameEntity _ent, float _velocity[3]) = 0;
+	virtual obResult GetEntityVelocity( const GameEntity _ent, float _velocity[ 3 ] ) = 0;
 
 	// Function: GetEntityPosition
 	//		This function should return the position of a <GameEntity> in world space
-	virtual obResult GetEntityPosition(const GameEntity _ent, float _pos[3]) = 0;
+	virtual obResult GetEntityPosition( const GameEntity _ent, float _pos[ 3 ] ) = 0;
 
 	// Function: GetEntityLocalAABB
 	//		This function should return the axis aligned box of a <GameEntity> in local space
-	virtual obResult GetEntityLocalAABB(const GameEntity _ent, AABB &_aabb) = 0;
+	virtual obResult GetEntityLocalAABB( const GameEntity _ent, AABB &_aabb ) = 0;
 
 	// Function: GetEntityWorldOBB
 	//		This function should return the oriented box of a <GameEntity> in world space
-	virtual obResult GetEntityWorldOBB(const GameEntity _ent, float *_center, float *_axis0, float *_axis1, float *_axis2, float *_extents) = 0;
+	virtual obResult GetEntityWorldOBB( const GameEntity _ent, float *_center, float *_axis0, float *_axis1, float *_axis2, float *_extents ) = 0;
 
 	// Function: GetEntityGroundEntity
 	//		This function should return any entity being rested/stood on.
-	virtual obResult GetEntityGroundEntity(const GameEntity _ent, GameEntity &moveent) = 0;
+	virtual obResult GetEntityGroundEntity( const GameEntity _ent, GameEntity &moveent ) = 0;
 
 	// Function: GetEntityOwner
 	//		This function should return the <GameID> of a client that owns this item
-	virtual GameEntity GetEntityOwner(const GameEntity _ent) = 0;
+	virtual GameEntity GetEntityOwner( const GameEntity _ent ) = 0;
 
 	// Function: GetEntityTeam
 	//		This function should return the bot team of the entity.
-	virtual int GetEntityTeam(const GameEntity _ent) = 0;
+	virtual int GetEntityTeam( const GameEntity _ent ) = 0;
 
 	// Function: GetClientName
 	//		This function should give access to the in-game name of the client
-	virtual const char *GetEntityName(const GameEntity _ent) = 0;
+	virtual const char *GetEntityName( const GameEntity _ent ) = 0;
+
+	// Function: GetEntityForMapModel
+	virtual obResult GetEntityForMapModel( int mapModelId, GameEntity& entityOut ) = 0;
 
 	// Function: GetEntityModel
 	virtual obResult GetEntityModel( const GameEntity _ent, GameModelInfo & modelOut, MemoryAllocator & alloc ) = 0;
@@ -327,13 +297,16 @@ public:
 	// Function: GetModel
 	virtual obResult GetModel( GameModelInfo & modelOut, MemoryAllocator & alloc ) = 0;
 
+	// Function: GetCurrentWeapons
+	virtual int GetCurrentWeapons( const GameEntity ent, int weaponIds [], int maxWeapons ) = 0;
+
 	// Function: GetCurrentWeaponClip
 	//		This function should update weapon clip count for the current weapon
-	virtual obResult GetCurrentWeaponClip(const GameEntity _ent, FireMode _mode, int &_curclip, int &_maxclip) = 0;
+	virtual obResult GetCurrentWeaponClip( const GameEntity _ent, FireMode _mode, int &_curclip, int &_maxclip ) = 0;
 
 	// Function: BotGetCurrentAmmo
 	//		This function should update ammo stats for a client and ammotype
-	virtual obResult GetCurrentAmmo(const GameEntity _ent, int _weaponId, FireMode _mode, int &_cur, int &_max) = 0;
+	virtual obResult GetCurrentAmmo( const GameEntity _ent, int _weaponId, FireMode _mode, int &_cur, int &_max ) = 0;
 
 	// Function: GetGameTime
 	//		This function should return the current game time in milli-seconds
@@ -345,52 +318,64 @@ public:
 
 	// Function: GetPlayerInfo
 	//		Collects team,class,controller info for all players.
-	virtual void GetPlayerInfo(obPlayerInfo &info) = 0;
+	virtual void GetPlayerInfo( obPlayerInfo &info ) = 0;
 
 	// Function: InterfaceSendMessage
 	//		This function sends a message to the game with optional <MessageHelper> in/out parameters
 	//		to request additional or mod specific info from the game
-	virtual obResult InterfaceSendMessage(const MessageHelper &_data, const GameEntity _ent) = 0;
+	virtual obResult InterfaceSendMessage( const MessageHelper &_data, const GameEntity _ent ) = 0;
 
 	// Function: DebugLine
 	//		Adds a line to immediately display between 2 positions, with a specific color
-	virtual bool DebugLine(const float _start[3], const float _end[3], const obColor &_color, float _time)
-	{ _start; _end; _color; _time; return false; }
+	virtual bool DebugLine( const float _start[ 3 ], const float _end[ 3 ], const obColor &_color, float _time )
+	{
+		_start; _end; _color; _time; return false;
+	}
 
 	// Function: DebugBox
 	//		Adds a line to immediately display between 2 positions, with a specific color
-	virtual bool DebugBox(const float _mins[3], const float _maxs[3], const obColor &_color, float _time)
-	{ _mins; _maxs; _color; _time; return false; }
+	virtual bool DebugBox( const float _mins[ 3 ], const float _maxs[ 3 ], const obColor &_color, float _time )
+	{
+		_mins; _maxs; _color; _time; return false;
+	}
 
 	// Function: DebugArrow
 	//		Adds a line to immediately display between 2 positions, with a specific color
-	virtual bool DebugArrow(const float _start[3], const float _end[3], const obColor &_color, float _time)
-	{ return DebugLine(_start, _end, _color, _time); }
+	virtual bool DebugArrow( const float _start[ 3 ], const float _end[ 3 ], const obColor &_color, float _time )
+	{
+		return DebugLine( _start, _end, _color, _time );
+	}
 
 	// Function: DebugRadius
 	//		Adds a radius indicator to be displayed at a certain position with radius and color
-	virtual bool DebugRadius(const float _pos[3], const float _radius, const obColor &_color, float _time)
-	{ _pos; _radius; _color; _time; return false; }
+	virtual bool DebugRadius( const float _pos[ 3 ], const float _radius, const obColor &_color, float _time )
+	{
+		_pos; _radius; _color; _time; return false;
+	}
 
 	// Function: DebugPolygon
 	//		Draw a shaded polygon.
-	virtual bool DebugPolygon(const obVec3 *_verts, const int _numverts, const obColor &_color, float _time, int _flags)
-	{ _verts; _numverts; _color; _time; _flags; return false; }
+	virtual bool DebugPolygon( const obVec3 *_verts, const int _numverts, const obColor &_color, float _time, int _flags )
+	{
+		_verts; _numverts; _color; _time; _flags; return false;
+	}
 
 	// Function: PrintScreenMessage
 	//		This function should print a message the the game screen if possible
-	virtual bool PrintScreenText(const float _pos[3], float _duration, const obColor &_color, const char *_msg)
-	{ _pos; _duration; _color; _msg; return false; }
+	virtual bool PrintScreenText( const float _pos[ 3 ], float _duration, const obColor &_color, const char *_msg )
+	{
+		_pos; _duration; _color; _msg; return false;
+	}
 
 	// Function: PrintError
 	//		This function should print an error the the game however desired,
 	//		whether it be to the console, messagebox,...
-	virtual void PrintError(const char *_error) = 0;
+	virtual void PrintError( const char *_error ) = 0;
 
 	// Function: PrintMessage
 	//		This function should print a message the the game however desired,
 	//		whether it be to the console, messagebox,...
-	virtual void PrintMessage(const char *_msg) = 0;
+	virtual void PrintMessage( const char *_msg ) = 0;
 
 	// Function: GetMapName
 	//		This function should give access to the name of the currently loaded map
@@ -398,27 +383,27 @@ public:
 
 	// Function: GetMapExtents
 	//		This function gets the extents of the current map.
-	virtual void GetMapExtents(AABB &_aabb) = 0;
+	virtual void GetMapExtents( AABB &_aabb ) = 0;
 
 	// Function: EntityFromID
 	//		This function should return the <GameEntity> that matches the provided Id
-	virtual GameEntity EntityFromID(const int _gameId) = 0;
+	virtual GameEntity EntityFromID( const int _gameId ) = 0;
 
 	// Function: EntityByName
 	//		This function should return the <GameEntity> that matches a name
-	virtual GameEntity EntityByName(const char *_name) = 0;
+	virtual GameEntity EntityByName( const char *_name ) = 0;
 
 	// Function: IDFromEntity
 	//		This function should return the Id that matches the provided <GameEntity>
-	virtual int IDFromEntity(const GameEntity _ent) = 0;
+	virtual int IDFromEntity( const GameEntity _ent ) = 0;
 
 	// Function: DoesEntityStillExist
 	//		Checks to see if the entity that corresponds to a handle still exists.
-	virtual bool DoesEntityStillExist(const GameEntity &_hndl) = 0;
+	virtual bool DoesEntityStillExist( const GameEntity &_hndl ) = 0;
 
 	// Function: GetAutoNavFeatures
 	//		Gets information from the game that is used to automatically place navigation.
-	virtual int GetAutoNavFeatures(AutoNavFeature *_feature, int _max) = 0;
+	virtual int GetAutoNavFeatures( AutoNavFeature *_feature, int _max ) = 0;
 
 	// Function: GetGameName
 	//		This function should give access to the name of the currently loaded game
@@ -440,8 +425,51 @@ public:
 	//		This function should get the log path to the bot dll and base path to supplemental files.
 	virtual const char *GetLogPath() = 0;
 
-	IEngineInterface() {}
-	virtual ~IEngineInterface() {}
+	IEngineInterface()
+	{
+	}
+	virtual ~IEngineInterface()
+	{
+	}
+};
+
+class OmnibotFunctionInterface
+{
+public:
+	enum Version
+	{
+		VERSION_0,
+		VERSION_1,
+		VERSION_LATEST,
+	};
+
+	virtual omnibot_error Initialize( IEngineInterface *_pEngineFuncs, int _version ) = 0;
+
+	virtual void Update() = 0;
+	virtual void Shutdown() = 0;
+	virtual void ConsoleCommand( const Arguments &_args ) = 0;
+
+	virtual void SendTrigger( const TriggerInfo &_triggerInfo ) = 0;
+	virtual void AddBlackboardRecord( BlackBoard_Key _type, int _posterID, int _targetID, obUserData *_data ) = 0;
+
+	// events
+	virtual void SendEvent( int _dest, const MessageHelper &_message ) = 0;
+	virtual void SendGlobalEvent( const MessageHelper &_message ) = 0;
+	
+	virtual void EntityAdded( GameEntity ent, const EntityInfo& entInfo ) = 0;
+	virtual void EntityDestroyed( GameEntity ent ) = 0;
+
+	// goals
+	virtual void AddGoal( const MapGoalDef &goaldef ) = 0;
+	virtual void DeleteGoal( const char *goalname ) = 0;
+	virtual void UpdateEntity( GameEntity oldent, GameEntity newent ) = 0;
+
+	OmnibotFunctionInterface()
+	{
+	}
+	virtual ~OmnibotFunctionInterface()
+	{
+	}
 };
 
 #endif

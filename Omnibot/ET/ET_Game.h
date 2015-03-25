@@ -22,7 +22,7 @@ class ET_Game : public IGame
 {
 public:
 	bool Init( System & system );
-	
+
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
@@ -31,53 +31,47 @@ public:
 	const char *GetModSubFolder() const;
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const { return "et"; }
+	const char *GetGameDatabaseAbbrev() const;
 	NavigatorID GetDefaultNavigator() const;
 	bool ReadyForDebugWindow() const;
-	virtual const char *IsDebugDrawSupported() const;
 
 	virtual bool GetAnalyticsKeys( GameAnalyticsKeys & keys );
+
+	void AddBot( Msg_Addbot &_addbot, bool _createnow = true );
+
+	void ClientJoined( const Event_SystemClientConnected *_msg );
 	
-	void AddBot(Msg_Addbot &_addbot, bool _createnow = true);
+	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
+	void GetWeaponEnumeration( const IntEnum *&_ptr, int &num );
 
-	void ClientJoined(const Event_SystemClientConnected *_msg);
-
-	const char *FindClassName(obint32 _classId);
-
-	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
-	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
-
-	virtual bool AddWeaponId(const char * weaponName, int weaponId);
+	virtual bool AddWeaponId( const char * weaponName, int weaponId );
 
 	static int CLASSEXoffset;
 	static bool IsETBlight, IsBastardmod;
-		
-	ET_Game() {};
-	virtual ~ET_Game() {};
+
+	ET_Game();
+	virtual ~ET_Game();
 protected:
 
-	void GetGameVars(GameVars &_gamevars);
+	void GetGameVars( GameVars &_gamevars );
 
 	// Script support.
-	void InitScriptBinds(gmMachine *_machine);
-	void InitScriptCategories(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptClasses(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptSkills(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptEvents(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptPowerups(gmMachine *_machine, gmTableObject *_table);
-	void InitVoiceMacros(gmMachine *_machine, gmTableObject *_table);
+	void InitScriptBinds( gmMachine *_machine );
+	void InitScriptCategories( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptSkills( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptEvents( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptEntityFlags( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptPowerups( gmMachine *_machine, gmTableObject *_table );
+	void InitVoiceMacros( gmMachine *_machine, gmTableObject *_table );
 
 	// Commands
 	void InitCommands();
 
-	static const float ET_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags);
-	static const float ET_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags);
-	static const void ET_GetEntityVisDistance(float &_distance, const TargetInfo &_target, const Client *_client);
-	static const bool ET_CanSensoreEntity(const EntityInstance &_ent);
-	static const float ET_GetEntityClassAvoidRadius(const int _class);
+	static const float ET_GetEntityClassTraceOffset( const TargetInfo &_target );
+	static const float ET_GetEntityClassAimOffset( const TargetInfo &_target );
 
-	StringBuffer m_ExtraWeaponNames;
+	StringBuffer mExtraWeaponNames;
 };
 
 #endif

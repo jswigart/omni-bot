@@ -19,6 +19,14 @@ IGame *CreateGameInstance()
 	return new FF_Game;
 }
 
+FF_Game::FF_Game()
+{
+}
+
+FF_Game::~FF_Game()
+{
+}
+
 int FF_Game::GetVersionNum() const
 {
 	return FF_VERSION_LATEST;
@@ -69,7 +77,10 @@ const char *FF_Game::GetScriptSubfolder() const
 	return "ff/scripts";
 #endif
 }
-
+const char *FF_Game::GetGameDatabaseAbbrev() const
+{
+	return "ff";
+}
 bool FF_Game::Init( System & system )
 {
 	if ( !TF_Game::Init( system ) )
@@ -112,75 +123,49 @@ void FF_Game::GetGameVars( GameVars &_gamevars )
 	_gamevars.mPlayerHeight = 72.f;
 }
 
-//const float FF_Game::FF_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags)
-//{
-//	if(InRangeT<int>(_class, TF_TEAM_NONE, TF_CLASS_MAX))
-//	{
-//		if (_entflags.CheckFlag(ENT_FLAG_PRONED))
-//			return -20.0f;
-//		if (_entflags.CheckFlag(ENT_FLAG_CROUCHED))
-//			return -10.0f;
-//		return 5.0f;
-//	}
-//	return TF_Game::TF_GetEntityClassTraceOffset(_class,_entflags);
-//}
-//
-//const float FF_Game::FF_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags)
-//{
-//	if(InRangeT<int>(_class, TF_TEAM_NONE, TF_CLASS_MAX))
-//	{
-//		if (_entflags.CheckFlag(ENT_FLAG_PRONED))
-//			return -20.0f;
-//		if (_entflags.CheckFlag(ENT_FLAG_CROUCHED))
-//			return -10.0f;
-//		return 5.0f;
-//	}
-//	return TF_Game::TF_GetEntityClassAimOffset(_class,_entflags);
-//}
-
 ClientPtr &FF_Game::GetClientFromCorrectedGameId( int _gameid )
 {
-	return m_ClientList[ _gameid - 1 ];
+	return mClientList[ _gameid - 1 ];
 }
 
 //void FF_Game::AddBot(const std::string &_name, int _team, int _class, const std::string _profile, bool _createnow)
 //{
 //	// Attempt to spawn a bot into the game.
 //	if(_createnow)
-//		m_BotJoining = true;
+//		.mBotJoining = true;
 //	int iGameID = InterfaceFuncs::Addbot(_name, _team, _class);
 //	if(_createnow)
-//		m_BotJoining = false;
+//		.mBotJoining = false;
 //	if(iGameID != -1 && _createnow)
 //	{
-//		if(!m_ClientList[iGameID-1])
+//		if(!.mClientList[iGameID-1])
 //		{
 //			// Initialize the appropriate slot in the list.
-//			m_ClientList[iGameID-1].reset(CreateGameClient());
-//			m_ClientList[iGameID-1]->Init(iGameID);
+//			.mClientList[iGameID-1].reset(CreateGameClient());
+//			.mClientList[iGameID-1]->Init(iGameID);
 //		}
 //
-//		m_ClientList[iGameID-1]->m_DesiredTeam = _team;
-//		m_ClientList[iGameID-1]->m_DesiredClass = _class;
+//		.mClientList[iGameID-1]->mDesiredTeam = _team;
+//		.mClientList[iGameID-1]->mDesiredClass = _class;
 //
 //		//////////////////////////////////////////////////////////////////////////
 //		// Script callbacks
-//		if(m_ClientList[iGameID-1]->m_DesiredTeam == -1)
+//		if(.mClientList[iGameID-1]->mDesiredTeam == -1)
 //		{
 //			gmVariable vteam = ScriptManager::GetInstance()->ExecBotCallback(
-//				m_ClientList[iGameID-1].get(),
+//				.mClientList[iGameID-1].get(),
 //				"SelectTeam");
-//			m_ClientList[iGameID-1]->m_DesiredTeam = vteam.IsInt() ? vteam.GetInt() : -1;
+//			.mClientList[iGameID-1]->mDesiredTeam = vteam.IsInt() ? vteam.GetInt() : -1;
 //		}
-//		if(m_ClientList[iGameID-1]->m_DesiredClass == -1)
+//		if(.mClientList[iGameID-1]->mDesiredClass == -1)
 //		{
 //			gmVariable vclass = ScriptManager::GetInstance()->ExecBotCallback(
-//				m_ClientList[iGameID-1].get(),
+//				.mClientList[iGameID-1].get(),
 //				"SelectClass");
-//			m_ClientList[iGameID-1]->m_DesiredClass = vclass.IsInt() ? vclass.GetInt() : -1;
+//			.mClientList[iGameID-1]->mDesiredClass = vclass.IsInt() ? vclass.GetInt() : -1;
 //		}
 //		//////////////////////////////////////////////////////////////////////////
-//		gEngineFuncs->ChangeTeam(iGameID, m_ClientList[iGameID-1]->m_DesiredTeam, NULL);
-//		gEngineFuncs->ChangeClass(iGameID, m_ClientList[iGameID-1]->m_DesiredClass, NULL);
+//		gEngineFuncs->ChangeTeam(iGameID, .mClientList[iGameID-1]->mDesiredTeam, NULL);
+//		gEngineFuncs->ChangeClass(iGameID, .mClientList[iGameID-1]->mDesiredClass, NULL);
 //	}
 //}

@@ -159,5 +159,5 @@ void ETQW_Game::InitScriptBinds(gmMachine *_machine)
 
 	// var: TargetBreakableDistance
 	//		The distance the bot will target breakable entities. Targets beyond this range will be ignored.
-	gmBot::RegisterAutoProperty("TargetBreakableDist", GM_FLOAT, offsetof(ETQW_Client, m_BreakableTargetDistance), 0);
+	gmBot::RegisterAutoProperty("TargetBreakableDist", GM_FLOAT, offsetof(ETQW_Client, mBreakableTargetDistance), 0);
 }

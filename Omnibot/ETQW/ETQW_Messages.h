@@ -23,135 +23,135 @@
 
 struct ETQW_WeaponOverheated
 {
-	ETQW_Weapon	m_Weapon;
-	obBool		m_IsOverheated;
+	ETQW_Weapon mWeapon;
+	obBool	 mIsOverheated;
 };
 
 struct ETQW_WeaponHeatLevel
 {
-	GameEntity	m_Entity;
-	int			m_Current;
-	int			m_Max;
+	GameEntity mEntity;
+	int		 mCurrent;
+	int		 mMax;
 };
 
 struct ETQW_ExplosiveState
 {
-	GameEntity		m_Explosive;
-	ExplosiveState	m_State;
+	GameEntity	 mExplosive;
+	ExplosiveState mState;
 };
 
 struct ETQW_ConstructionState
 {
-	GameEntity			m_Constructable;
-	ConstructableState	m_State;
+	GameEntity		 mConstructable;
+	ConstructableState mState;
 };
 
 struct ETQW_Destroyable
 {
-	GameEntity			m_Entity;
-	ConstructableState	m_State;
+	GameEntity		 mEntity;
+	ConstructableState mState;
 };
 
 struct ETQW_HasFlag
 {
-	obBool		m_HasFlag;
+	obBool	 mHasFlag;
 };
 
 struct ETQW_CanBeGrabbed
 {
-	GameEntity	m_Entity;
-	obBool		m_CanBeGrabbed;
+	GameEntity mEntity;
+	obBool	 mCanBeGrabbed;
 };
 
 struct ETQW_TeamMines
 {
-	int			m_Current;
-	int			m_Max;
+	int		 mCurrent;
+	int		 mMax;
 };
 
 struct ETQW_WaitingForMedic
 {
-	obBool		m_WaitingForMedic;
+	obBool	 mWaitingForMedic;
 };
 
 struct ETQW_SelectWeapon
 {
-	ETQW_Weapon	m_Selection;
-	obBool		m_Good;
+	ETQW_Weapon mSelection;
+	obBool	 mGood;
 };
 
 struct ETQW_ReinforceTime
 {
-	int			m_ReinforceTime;
+	int		 mReinforceTime;
 };
 
 struct ETQW_MedicNear
 {
-	obBool		m_MedicNear;
+	obBool	 mMedicNear;
 };
 
 struct ETQW_GoLimbo
 {
-	obBool		m_GoLimbo;
+	obBool	 mGoLimbo;
 };
 
 struct ETQW_MG42MountedPlayer
 {
-	GameEntity	m_MG42Entity;
-	GameEntity	m_MountedEntity;
+	GameEntity mMG42Entity;
+	GameEntity mMountedEntity;
 };
 
 struct ETQW_MG42MountedRepairable
 {
-	GameEntity	m_MG42Entity;
-	obBool		m_Repairable;
+	GameEntity mMG42Entity;
+	obBool	 mRepairable;
 };
 
 struct ETQW_MG42Health
 {
-	GameEntity	m_MG42Entity;
-	int			m_Health;
+	GameEntity mMG42Entity;
+	int		 mHealth;
 };
 
 struct ETQW_CursorHint
 {
-	int			m_Type;
-	int			m_Value;
+	int		 mType;
+	int		 mValue;
 };
 struct ETQW_SpawnPoint
 {
-	int			m_SpawnPoint;
+	int		 mSpawnPoint;
 };
 
 struct ETQW_MG42Info
 {
-	float		m_CenterFacing[3];
-	float		m_MinHorizontalArc, m_MaxHorizontalArc;
-	float		m_MinVerticalArc, m_MaxVerticalArc;
+	float	 mCenterFacing[ 3 ];
+	float	 mMinHorizontalArc, mMaxHorizontalArc;
+	float	 mMinVerticalArc, mMaxVerticalArc;
 };
 
 struct ETQW_CabinetData
 {
-	int			m_CurrentAmount;
-	int			m_MaxAmount;
-	int			m_Rate;
+	int		 mCurrentAmount;
+	int		 mMaxAmount;
+	int		 mRate;
 };
 
 struct ETQW_PlayerSkills
 {
-	int		m_Skill[ETQW_SKILLS_NUM_SKILLS];
+	int	 mSkill[ ETQW_SKILLS_NUM_SKILLS ];
 };
 
 //////////////////////////////////////////////////////////////////////////
 
 struct Event_MortarImpact_ETQW
 {
-	float	m_Position[3];
+	float mPosition[ 3 ];
 };
 
 struct Event_TriggerMine_ETQW
 {
-	GameEntity	m_MineEntity;
+	GameEntity mMineEntity;
 };
 
 #pragma pack(pop)

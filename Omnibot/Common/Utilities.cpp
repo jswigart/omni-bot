@@ -18,8 +18,8 @@
 #include "windows.h"
 #endif
 
-typedef std::map<obuint32, obuint32> HashIndexMap;
-static HashIndexMap		g_HashIndexMap;
+typedef std::map<uint32_t, uint32_t> HashIndexMap;
+static HashIndexMap			g_HashIndexMap;
 static std::string			g_StringRepository;
 
 //////////////////////////////////////////////////////////////////////////
@@ -77,12 +77,12 @@ namespace Utils
 		strncpy( _destination, _source, _buffersize );
 	}
 
-	obint32 StringCompare( const char *_s1, const char *_s2 )
+	int32_t StringCompare( const char *_s1, const char *_s2 )
 	{
 		return strcmp( _s1, _s2 );
 	}
 
-	obint32 StringCompareNoCase( const char *_s1, const char *_s2 )
+	int32_t StringCompareNoCase( const char *_s1, const char *_s2 )
 	{
 #ifdef __GNUC__
 		return strcasecmp(_s1, _s2);
@@ -91,11 +91,11 @@ namespace Utils
 #endif
 	}
 
-	obint32 StringCompare( const std::string &_s1, const std::string &_s2 )
+	int32_t StringCompare( const std::string &_s1, const std::string &_s2 )
 	{
 		return StringCompare( _s1.c_str(), _s2.c_str() );
 	}
-	obint32 StringCompareNoCase( const std::string &_s1, const std::string &_s2 )
+	int32_t StringCompareNoCase( const std::string &_s1, const std::string &_s2 )
 	{
 		return StringCompareNoCase( _s1.c_str(), _s2.c_str() );
 	}
@@ -107,28 +107,28 @@ namespace Utils
 		return s;
 	}
 
-	obint32 MakeId32( obint16 a, obint16 b )
+	int32_t MakeId32( int16_t a, int16_t b )
 	{
 		return ( ( ( a ) << 16 ) | ( b ) );
 	}
 
-	void SplitId32( obint32 id, obint16 &id1, obint16 &id2 )
+	void SplitId32( int32_t id, int16_t &id1, int16_t &id2 )
 	{
-		id1 = (obint16)( id >> 16 );
-		id2 = (obint16)id & 0xFF;
+		id1 = (int16_t)( id >> 16 );
+		id2 = (int16_t)id & 0xFF;
 	}
 
-	obint32 MakeId32( obint8 a, obint8 b, obint8 c, obint8 d )
+	int32_t MakeId32( int8_t a, int8_t b, int8_t c, int8_t d )
 	{
 		return ( ( ( d ) << 24 ) | ( ( c ) << 16 ) | ( ( b ) << 8 ) | ( a ) );
 	}
 
-	obint32 MakeId32( const char *_st )
+	int32_t MakeId32( const char *_st )
 	{
 		return MakeId32( _st[ 0 ], _st[ 1 ], _st[ 2 ], _st[ 3 ] );
 	}
 
-	obuint32 MakeHash32( const std::string &_str, bool _log /*= true*/ )
+	uint32_t MakeHash32( const std::string &_str, bool _log /*= true*/ )
 	{
 		if ( _str.empty() )
 			return 0;
@@ -158,17 +158,17 @@ namespace Utils
 	/*
 	* FNV-1a hash 32 bit http://www.isthe.com/chongo/tech/comp/fnv/
 	*/
-	obuint32 Hash32( const char *_name )
+	uint32_t Hash32( const char *_name )
 	{
-		const obuint32 FNV_32_PRIME = ( (obuint32)0x01000193 );
-		const obuint32 FNV1A_32_INIT = ( (obuint32)0x811c9dc5 );
+		const uint32_t FNV_32_PRIME = ( (uint32_t)0x01000193 );
+		const uint32_t FNV1A_32_INIT = ( (uint32_t)0x811c9dc5 );
 
 		const char *s = _name;
-		obuint32 hval = FNV1A_32_INIT;
+		uint32_t hval = FNV1A_32_INIT;
 		while ( *s )
 		{
 			char c = (char)tolower( *s++ );
-			hval ^= (obuint32)c;
+			hval ^= (uint32_t)c;
 			hval *= FNV_32_PRIME;
 		}
 		return hval;
@@ -176,17 +176,17 @@ namespace Utils
 	/*
 	* FNV-1a hash 64 bit http://www.isthe.com/chongo/tech/comp/fnv/
 	*/
-	obuint64 Hash64( const char *_name )
+	uint64_t Hash64( const char *_name )
 	{
-		const obuint64 FNV_64_PRIME = ( (obuint64)0x100000001b3ULL );
-		const obuint64 FNV1A_64_INIT = ( (obuint64)0x84222325 << 32 | (obuint64)0x1b3 );
+		const uint64_t FNV_64_PRIME = ( (uint64_t)0x100000001b3ULL );
+		const uint64_t FNV1A_64_INIT = ( (uint64_t)0x84222325 << 32 | (uint64_t)0x1b3 );
 
 		const char *s = _name;
-		obuint64 hval = FNV1A_64_INIT;
+		uint64_t hval = FNV1A_64_INIT;
 		while ( *s )
 		{
 			char c = (char)tolower( *s++ );
-			hval ^= (obuint64)c;
+			hval ^= (uint64_t)c;
 			hval *= FNV_64_PRIME;
 		}
 		return hval;
@@ -194,17 +194,17 @@ namespace Utils
 
 	void AddHashedString( const std::string &_str )
 	{
-		obuint32 hash = Hash32( _str.c_str() );
+		uint32_t hash = Hash32( _str.c_str() );
 		HashIndexMap::iterator it = g_HashIndexMap.find( hash );
 		if ( it == g_HashIndexMap.end() )
 		{
-			obuint32 iOffset = (obuint32)g_StringRepository.size();
+			uint32_t iOffset = (uint32_t)g_StringRepository.size();
 			g_StringRepository.append( _str.c_str(), (int)_str.size() + 1 );
 			g_HashIndexMap.insert( std::make_pair( hash, iOffset ) );
 		}
 	}
 
-	std::string HashToString( obuint32 _hash )
+	std::string HashToString( uint32_t _hash )
 	{
 		HashIndexMap::iterator it = g_HashIndexMap.find( _hash );
 		if ( it != g_HashIndexMap.end() )
@@ -219,8 +219,8 @@ namespace Utils
 
 	bool IsWhiteSpace( const char _ch )
 	{
-		const obuint8 cr = 0x0D;
-		const obuint8 lf = 0x0A;
+		const uint8_t cr = 0x0D;
+		const uint8_t lf = 0x0A;
 		return
 			_ch == cr ||
 			_ch == lf ||
@@ -322,9 +322,9 @@ namespace Utils
 			EngineFuncs::TraceLine( tr, vPos, vPos - Vector3f::UNIT_Z * 4096.f,
 				NULL, _tracemask, GetLocalGameId(), False );
 
-			if ( tr.m_Fraction < 1.f )
+			if ( tr.mFraction < 1.f )
 			{
-				_pos = Vector3f( tr.m_Endpos );
+				_pos = Vector3f( tr.mEndpos );
 				return true;
 			}
 		}
@@ -340,11 +340,11 @@ namespace Utils
 			EngineFuncs::TraceLine( tr, vPos, vPos - Vector3f::UNIT_Z * 4096.f,
 				NULL, _tracemask, GetLocalGameId(), False );
 
-			if ( tr.m_Fraction < 1.f )
+			if ( tr.mFraction < 1.f )
 			{
-				_pos = Vector3f( tr.m_Endpos );
+				_pos = Vector3f( tr.mEndpos );
 				if ( _normal )
-					*_normal = Vector3f( tr.m_Normal );
+					*_normal = Vector3f( tr.mNormal );
 				return true;
 			}
 		}
@@ -386,15 +386,15 @@ namespace Utils
 			EngineFuncs::TraceLine( tr, vNewStart, vNewStart + vFace * 4096.f,
 				NULL, _tracemask, GetLocalGameId(), False );
 
-			if ( tr.m_Fraction < 1.f )
+			if ( tr.mFraction < 1.f )
 			{
-				_pos = Vector3f( tr.m_Endpos );
+				_pos = Vector3f( tr.mEndpos );
 				if ( _normal )
-					*_normal = Vector3f( tr.m_Normal );
+					*_normal = Vector3f( tr.mNormal );
 				if ( _contents )
-					*_contents = tr.m_Contents;
+					*_contents = tr.mContents;
 				if ( _surface )
-					*_surface = tr.m_Surface;
+					*_surface = tr.mSurface;
 				return true;
 			}
 		}
@@ -415,7 +415,7 @@ namespace Utils
 			EngineFuncs::TraceLine( tr, vStart, vEnd,
 				NULL, _tracemask, GetLocalGameId(), False );
 
-			if ( !tr.m_StartSolid )
+			if ( !tr.mStartSolid )
 			{
 				_pos = vStart;
 				return true;
@@ -427,7 +427,7 @@ namespace Utils
 		return false;
 	}
 
-	std::string FormatByteString( obuint64 _bytes )
+	std::string FormatByteString( uint64_t _bytes )
 	{
 		const char * byteUnits [] =
 		{
@@ -438,7 +438,7 @@ namespace Utils
 			" TB"
 		};
 
-		obuint64 iNumUnits = sizeof( byteUnits ) / sizeof( byteUnits[ 0 ] );
+		uint64_t iNumUnits = sizeof( byteUnits ) / sizeof( byteUnits[ 0 ] );
 		int iUnit = 0;
 		for ( int i = 1; i < iNumUnits; ++i )
 		{
@@ -458,15 +458,15 @@ namespace Utils
 	{
 		Vector3f vVertex[ 8 ] = { Vector3f::ZERO };
 
-		vVertex[ 0 ] = Vector3f( _aabb.m_Mins[ 0 ], _aabb.m_Mins[ 1 ], _aabb.m_Mins[ 2 ] );
-		vVertex[ 1 ] = Vector3f( _aabb.m_Maxs[ 0 ], _aabb.m_Mins[ 1 ], _aabb.m_Mins[ 2 ] );
-		vVertex[ 2 ] = Vector3f( _aabb.m_Maxs[ 0 ], _aabb.m_Maxs[ 1 ], _aabb.m_Mins[ 2 ] );
-		vVertex[ 3 ] = Vector3f( _aabb.m_Mins[ 0 ], _aabb.m_Maxs[ 1 ], _aabb.m_Mins[ 2 ] );
+		vVertex[ 0 ] = Vector3f( _aabb.mMins[ 0 ], _aabb.mMins[ 1 ], _aabb.mMins[ 2 ] );
+		vVertex[ 1 ] = Vector3f( _aabb.mMaxs[ 0 ], _aabb.mMins[ 1 ], _aabb.mMins[ 2 ] );
+		vVertex[ 2 ] = Vector3f( _aabb.mMaxs[ 0 ], _aabb.mMaxs[ 1 ], _aabb.mMins[ 2 ] );
+		vVertex[ 3 ] = Vector3f( _aabb.mMins[ 0 ], _aabb.mMaxs[ 1 ], _aabb.mMins[ 2 ] );
 
-		vVertex[ 4 ] = Vector3f( _aabb.m_Mins[ 0 ], _aabb.m_Mins[ 1 ], _aabb.m_Maxs[ 2 ] );
-		vVertex[ 5 ] = Vector3f( _aabb.m_Maxs[ 0 ], _aabb.m_Mins[ 1 ], _aabb.m_Maxs[ 2 ] );
-		vVertex[ 6 ] = Vector3f( _aabb.m_Maxs[ 0 ], _aabb.m_Maxs[ 1 ], _aabb.m_Maxs[ 2 ] );
-		vVertex[ 7 ] = Vector3f( _aabb.m_Mins[ 0 ], _aabb.m_Maxs[ 1 ], _aabb.m_Maxs[ 2 ] );
+		vVertex[ 4 ] = Vector3f( _aabb.mMins[ 0 ], _aabb.mMins[ 1 ], _aabb.mMaxs[ 2 ] );
+		vVertex[ 5 ] = Vector3f( _aabb.mMaxs[ 0 ], _aabb.mMins[ 1 ], _aabb.mMaxs[ 2 ] );
+		vVertex[ 6 ] = Vector3f( _aabb.mMaxs[ 0 ], _aabb.mMaxs[ 1 ], _aabb.mMaxs[ 2 ] );
+		vVertex[ 7 ] = Vector3f( _aabb.mMins[ 0 ], _aabb.mMaxs[ 1 ], _aabb.mMaxs[ 2 ] );
 
 		_list.push_back( vVertex[ 0 ] );
 		_list.push_back( vVertex[ 1 ] );
@@ -492,12 +492,12 @@ namespace Utils
 		}
 	}
 
-	const char *FindClassName( obint32 _classId )
+	void FindClassName( std::string& groupName, std::string& className, const EntityInfo& entInfo )
 	{
-		return System::mInstance->mGame->FindClassName( _classId );
+		System::mInstance->mGame->FindClassName( groupName, className, entInfo );
 	}
 
-	obint32 GetRoleMask( const std::string &_name )
+	int32_t GetRoleMask( const std::string &_name )
 	{
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 		gmTableObject *pTbl = pMachine->GetGlobals()->Get( pMachine, "Role" ).GetTableObjectSafe();
@@ -517,7 +517,7 @@ namespace Utils
 		}
 		return 0;
 	}
-	std::string BuildRoleName( obint32 _mask )
+	std::string BuildRoleName( int32_t _mask )
 	{
 		if ( _mask == 0 )
 			return "None";
@@ -531,9 +531,9 @@ namespace Utils
 
 		for ( int r = 0; r < EnumSize; ++r )
 		{
-			if ( ( 1 << Enum[ r ].m_Value ) & _mask )
+			if ( ( 1 << Enum[ r ].mValue ) & _mask )
 			{
-				ret += Enum[ r ].m_Key;
+				ret += Enum[ r ].mKey;
 				ret += " ";
 			}
 			else
@@ -609,12 +609,12 @@ namespace Utils
 		float _maxleaderror )
 	{
 		//if the target is ahead and facing the agent shoot at its current pos
-		Vector3f vToEnemy = _tg.m_LastPosition - _mypos;
+		Vector3f vToEnemy = _tg.mLastPosition - _mypos;
 
 		//the lookahead time is proportional to the distance between the enemy
 		//and the pursuer; and is inversely proportional to the sum of the
 		//agent's velocities
-		float fLookAheadTime = vToEnemy.Length() / ( _projspeed + _tg.m_LastVelocity.Length() );
+		float fLookAheadTime = vToEnemy.Length() / ( _projspeed + _tg.mLastVelocity.Length() );
 
 		if ( _minleaderror != _maxleaderror )
 			fLookAheadTime += Mathf::IntervalRandom( _minleaderror, _maxleaderror );
@@ -622,15 +622,15 @@ namespace Utils
 			fLookAheadTime += _minleaderror;
 
 		//return the predicted future position of the enemy
-		Vector3f vPredictedPos = _tg.m_LastPosition + ( ( _tg.m_LastVelocity - _extravelocity ) * fLookAheadTime );
+		Vector3f vPredictedPos = _tg.mLastPosition + ( ( _tg.mLastVelocity - _extravelocity ) * fLookAheadTime );
 
 		// Compensate for airborne target?
-		//if(!_tg.m_EntityFlags.CheckFlag(ENT_FLAG_ONGROUND))
+		//if(!_tg.mEntityFlags.CheckFlag(ENT_FLAG_ONGROUND))
 		//{
-		//	//vPredictedPos.Z() -= _tg.m_LastVelocity.Z() + IGame::GetGravity() * fLookAheadTime;
+		//	//vPredictedPos.Z() -= _tg.mLastVelocity.Z() + IGame::GetGravity() * fLookAheadTime;
 		//	vPredictedPos.Z() = Trajectory::HeightForTrajectory(
 		//		vPredictedPos,
-		//		_tg.m_LastVelocity.Z(),
+		//		_tg.mLastVelocity.Z(),
 		//		IGame::GetGravity(),
 		//		fLookAheadTime);
 		//}
@@ -663,7 +663,7 @@ namespace Utils
 
 		if ( !_list.empty() )
 		{
-			for ( obuint32 v = 0; v < _list.size(); ++v )
+			for ( uint32_t v = 0; v < _list.size(); ++v )
 			{
 				vAvg += _list[ v ];
 			}
@@ -684,10 +684,10 @@ namespace Utils
 
 	void StringTrimCharacters( std::string &_out, const std::string &_trim )
 	{
-		obuint32 i;
-		for ( obuint32 t = 0; t < _trim.size(); ++t )
+		uint32_t i;
+		for ( uint32_t t = 0; t < _trim.size(); ++t )
 		{
-			while ( ( i = (obuint32)_out.find( _trim[ t ] ) ) != _out.npos )
+			while ( ( i = (uint32_t)_out.find( _trim[ t ] ) ) != _out.npos )
 				_out.erase( i, 1 );
 		}
 	}
@@ -793,7 +793,7 @@ namespace Utils
 
 		obTraceResult tr;
 		EngineFuncs::TraceLine( tr, seg.Center, seg.Center, &b, TR_MASK_FLOODFILL, -1, False );
-		if ( tr.m_Fraction < 0.f )
+		if ( tr.mFraction < 0.f )
 			return true;
 
 		return false;
@@ -973,7 +973,7 @@ namespace Utils
 
 		Vector3f vClosestPt, vPtOnLine;
 		float fClosestDist = Utils::FloatMax;
-		for ( obuint32 v = 0; v < list.size() - 1; ++v )
+		for ( uint32_t v = 0; v < list.size() - 1; ++v )
 		{
 			Utils::ClosestPtOnLine( list[ v ], list[ v + 1 ], pos, vPtOnLine );
 
@@ -1359,37 +1359,37 @@ bool PropertyMap::AddProperty( const std::string &_name, const std::string &_dat
 	}
 
 	// remove the old, case insensitive version
-	ValueMap::iterator iter = m_Properties.begin();
-	for ( ; iter != m_Properties.end(); ++iter )
+	ValueMap::iterator iter = mProperties.begin();
+	for ( ; iter != mProperties.end(); ++iter )
 	{
 		if ( !Utils::StringCompareNoCase( iter->first, _name ) )
 		{
-			m_Properties.erase( iter );
+			mProperties.erase( iter );
 			break;
 		}
 	}
 
-	m_Properties.insert( std::make_pair( _name, _data ) );
+	mProperties.insert( std::make_pair( _name, _data ) );
 	return true;
 }
 
 void PropertyMap::DelProperty( const std::string &_name )
 {
-	ValueMap::iterator iter = m_Properties.find( _name );
-	if ( iter != m_Properties.end() )
-		m_Properties.erase( iter );
+	ValueMap::iterator iter = mProperties.find( _name );
+	if ( iter != mProperties.end() )
+		mProperties.erase( iter );
 }
 
 std::string PropertyMap::GetProperty( const std::string &_name ) const
 {
-	ValueMap::const_iterator iter = m_Properties.find( _name );
-	return ( iter != m_Properties.end() ) ? iter->second : std::string();
+	ValueMap::const_iterator iter = mProperties.find( _name );
+	return ( iter != mProperties.end() ) ? iter->second : std::string();
 }
 
 void PropertyMap::GetAsKeyVal( KeyVals &kv )
 {
-	PropertyMap::ValueMap::const_iterator cIt = m_Properties.begin();
-	for ( ; cIt != m_Properties.end(); ++cIt )
+	PropertyMap::ValueMap::const_iterator cIt = mProperties.begin();
+	for ( ; cIt != mProperties.end(); ++cIt )
 	{
 		kv.SetString( cIt->first.c_str(), cIt->second.c_str() );
 	}
@@ -1405,57 +1405,57 @@ std::ostream& operator <<( std::ostream& _o, const obUserData& _bud )
 			break;
 		case obUserData::dtVector:
 			_o << "dtVector, " <<
-				_bud.udata.m_Vector[ 0 ] << ", " <<
-				_bud.udata.m_Vector[ 1 ] << ", " <<
-				_bud.udata.m_Vector[ 2 ];
+				_bud.udata.mVector[ 0 ] << ", " <<
+				_bud.udata.mVector[ 1 ] << ", " <<
+				_bud.udata.mVector[ 2 ];
 			break;
 		case obUserData::dtString:
-			if ( _bud.udata.m_String ) _o << "dtString, " << _bud.udata.m_String;
+			if ( _bud.udata.mString ) _o << "dtString, " << _bud.udata.mString;
 			break;
 		case obUserData::dtInt:
-			_o << "dtInt, " << _bud.udata.m_Int;
+			_o << "dtInt, " << _bud.udata.mInt;
 			break;
 		case obUserData::dtFloat:
-			_o << "dtFloat, " << _bud.udata.m_Float;
+			_o << "dtFloat, " << _bud.udata.mFloat;
 			break;
 		case obUserData::dtEntity:
-			_o << "dtEntity, " << _bud.udata.m_Entity;
+			_o << "dtEntity, " << _bud.udata.mEntity;
 			break;
 		case obUserData::dt3_4byteFlags:
 			_o << "dt3_4byteFlags, " <<
-				_bud.udata.m_4ByteFlags[ 0 ] << ", " <<
-				_bud.udata.m_4ByteFlags[ 1 ] << ", " <<
-				_bud.udata.m_4ByteFlags[ 2 ];
+				_bud.udata.m4ByteFlags[ 0 ] << ", " <<
+				_bud.udata.m4ByteFlags[ 1 ] << ", " <<
+				_bud.udata.m4ByteFlags[ 2 ];
 			break;
 		case obUserData::dt3_Strings:
 			_o << "dt3_Strings";
-			if ( _bud.udata.m_CharPtrs[ 0 ] ) _o << ", " << _bud.udata.m_CharPtrs[ 0 ];
-			if ( _bud.udata.m_CharPtrs[ 1 ] ) _o << ", " << _bud.udata.m_CharPtrs[ 1 ];
-			if ( _bud.udata.m_CharPtrs[ 2 ] ) _o << ", " << _bud.udata.m_CharPtrs[ 2 ];
+			if ( _bud.udata.mCharPtrs[ 0 ] ) _o << ", " << _bud.udata.mCharPtrs[ 0 ];
+			if ( _bud.udata.mCharPtrs[ 1 ] ) _o << ", " << _bud.udata.mCharPtrs[ 1 ];
+			if ( _bud.udata.mCharPtrs[ 2 ] ) _o << ", " << _bud.udata.mCharPtrs[ 2 ];
 			break;
 		case obUserData::dt6_2byteFlags:
 			_o << "dt6_2byteFlags, " <<
-				_bud.udata.m_2ByteFlags[ 0 ] << ", " <<
-				_bud.udata.m_2ByteFlags[ 1 ] << ", " <<
-				_bud.udata.m_2ByteFlags[ 2 ] << ", " <<
-				_bud.udata.m_2ByteFlags[ 3 ] << ", " <<
-				_bud.udata.m_2ByteFlags[ 4 ] << ", " <<
-				_bud.udata.m_2ByteFlags[ 5 ];
+				_bud.udata.m2ByteFlags[ 0 ] << ", " <<
+				_bud.udata.m2ByteFlags[ 1 ] << ", " <<
+				_bud.udata.m2ByteFlags[ 2 ] << ", " <<
+				_bud.udata.m2ByteFlags[ 3 ] << ", " <<
+				_bud.udata.m2ByteFlags[ 4 ] << ", " <<
+				_bud.udata.m2ByteFlags[ 5 ];
 			break;
 		case obUserData::dt12_1byteFlags:
 			_o << "dt12_1byteFlags, " <<
-				(int)_bud.udata.m_1ByteFlags[ 0 ] << ", " <<
-				(int)_bud.udata.m_1ByteFlags[ 1 ] << ", " <<
-				(int)_bud.udata.m_1ByteFlags[ 2 ] << ", " <<
-				(int)_bud.udata.m_1ByteFlags[ 3 ] << ", " <<
-				(int)_bud.udata.m_1ByteFlags[ 4 ] << ", " <<
-				(int)_bud.udata.m_1ByteFlags[ 5 ] << ", " <<
-				(int)_bud.udata.m_1ByteFlags[ 6 ] << ", " <<
-				(int)_bud.udata.m_1ByteFlags[ 7 ] << ", " <<
-				(int)_bud.udata.m_1ByteFlags[ 8 ] << ", " <<
-				(int)_bud.udata.m_1ByteFlags[ 9 ] << ", " <<
-				(int)_bud.udata.m_1ByteFlags[ 10 ] << ", " <<
-				(int)_bud.udata.m_1ByteFlags[ 11 ];
+				(int)_bud.udata.m1ByteFlags[ 0 ] << ", " <<
+				(int)_bud.udata.m1ByteFlags[ 1 ] << ", " <<
+				(int)_bud.udata.m1ByteFlags[ 2 ] << ", " <<
+				(int)_bud.udata.m1ByteFlags[ 3 ] << ", " <<
+				(int)_bud.udata.m1ByteFlags[ 4 ] << ", " <<
+				(int)_bud.udata.m1ByteFlags[ 5 ] << ", " <<
+				(int)_bud.udata.m1ByteFlags[ 6 ] << ", " <<
+				(int)_bud.udata.m1ByteFlags[ 7 ] << ", " <<
+				(int)_bud.udata.m1ByteFlags[ 8 ] << ", " <<
+				(int)_bud.udata.m1ByteFlags[ 9 ] << ", " <<
+				(int)_bud.udata.m1ByteFlags[ 10 ] << ", " <<
+				(int)_bud.udata.m1ByteFlags[ 11 ];
 			break;
 	}
 	_o << ")";
@@ -1465,14 +1465,14 @@ std::ostream& operator <<( std::ostream& _o, const obUserData& _bud )
 std::ostream& operator <<( std::ostream& _o, const TriggerInfo& _ti )
 {
 	_o << "Trigger:";
-	if ( _ti.m_TagName ) _o << " TagName: " << _ti.m_TagName;
-	if ( _ti.m_Action ) _o << " Action: " << _ti.m_Action;
-	if ( _ti.m_Entity.IsValid() )
-		_o << " Entity: (" << _ti.m_Entity.GetIndex() << ":" << _ti.m_Entity.GetSerial() << ")";
+	if ( _ti.mTagName ) _o << " TagName: " << _ti.mTagName;
+	if ( _ti.mAction ) _o << " Action: " << _ti.mAction;
+	if ( _ti.mEntity.IsValid() )
+		_o << " Entity: (" << _ti.mEntity.GetIndex() << ":" << _ti.mEntity.GetSerial() << ")";
 	else
 		_o << " Entity: (null)";
-	if ( _ti.m_Entity.IsValid() )
-		_o << " Activator: (" << _ti.m_Activator.GetIndex() << ":" << _ti.m_Activator.GetSerial() << ")";
+	if ( _ti.mEntity.IsValid() )
+		_o << " Activator: (" << _ti.mActivator.GetIndex() << ":" << _ti.mActivator.GetSerial() << ")";
 	else
 		_o << " Activator: (null)";
 
@@ -1499,13 +1499,13 @@ void Options::Shutdown()
 
 bool Options::LoadConfigFile( const std::string &_file )
 {
-	obuint32 NumSections = 0;
+	uint32_t NumSections = 0;
 
 	File f;
 	if ( f.OpenForRead( _file.c_str(), File::Text ) )
 	{
 		std::string contents;
-		const obuint64 FileSize = f.ReadWholeFile( contents );
+		const uint64_t FileSize = f.ReadWholeFile( contents );
 		if ( FileSize )
 		{
 			if ( FileOptions )
@@ -1528,7 +1528,7 @@ bool Options::SaveConfigFile( const std::string &_file )
 		File f;
 		if ( f.OpenForWrite( _file.c_str(), File::Text ) )
 		{
-			obuint32 FileLength = 0;
+			uint32_t FileLength = 0;
 			void *FileData = saveKeyValueIniMem( FileOptions, FileLength );
 
 			f.Write( FileData, FileLength );
@@ -1555,7 +1555,7 @@ const char *Options::GetRawValue( const char *_section, const char *_key )
 {
 	if ( FileOptions )
 	{
-		obuint32 KeyCount = 0, LineNo = 0;
+		uint32_t KeyCount = 0, LineNo = 0;
 		const KeyValueSection *Section = locateSection( FileOptions, _section, KeyCount, LineNo );
 		if ( Section )
 		{
@@ -1648,7 +1648,7 @@ bool Options::SetValue( const char *_section, const char *_key, const std::strin
 	{
 		KeyValueSection *Section = createKeyValueSection( FileOptions, _section, false );
 
-		obuint32 LineNo = 0;
+		uint32_t LineNo = 0;
 		if ( !_overwrite && locateValue( Section, _key, LineNo ) )
 			return false;
 
@@ -1662,7 +1662,7 @@ bool Options::SetValue( const char *_section, const char *_key, const std::strin
 
 //////////////////////////////////////////////////////////////////////////
 
-bool Utils::TeamExists( obint32 _team )
+bool Utils::TeamExists( int32_t _team )
 {
 	gmMachine *pM = ScriptManager::GetInstance()->GetMachine();
 	gmTableObject *pTeams = pM->GetGlobals()->Get( pM, "TEAM" ).GetTableObjectSafe();
@@ -1677,14 +1677,14 @@ bool Utils::TeamExists( obint32 _team )
 	return false;
 }
 
-bool Utils::ClassExists( obint32 _class )
+bool Utils::ClassExists( int32_t _class )
 {
 	if ( _class > 0 && _class <= FilterSensory::ANYPLAYERCLASS )
 		return true;
 	return false;
 }
 
-std::string Utils::GetTeamString( obint32 _team )
+std::string Utils::GetTeamString( int32_t _team )
 {
 	gmMachine *pM = ScriptManager::GetInstance()->GetMachine();
 	gmTableObject *pTeams = pM->GetGlobals()->Get( pM, "TEAM" ).GetTableObjectSafe();
@@ -1721,26 +1721,26 @@ std::string Utils::GetTeamString( obint32 _team )
 	return sOut;
 }
 
-std::string Utils::GetClassString( obint32 _class )
+std::string Utils::GetClassString( int32_t _class )
 {
-	std::string sOut;
+	std::string sOut = "IMPLEMENTME";
 	bool bAllClasses = true;
 
 	// append all effecting classes
-	for ( int c = 1; c < FilterSensory::ANYPLAYERCLASS; ++c )
+	/*for ( int c = 1; c < FilterSensory::ANYPLAYERCLASS; ++c )
 	{
-		if ( _class & ( 1 << c ) )
-		{
-			const char *classname = System::mInstance->mGame->FindClassName( c );
-			sOut += ( classname ? classname : "!!!" );
-			sOut += " ";
-		}
-		else
-			bAllClasses = false;
+	if ( _class & ( 1 << c ) )
+	{
+	const char *classname = System::mInstance->mGame->FindClassName( c );
+	sOut += ( classname ? classname : "!!!" );
+	sOut += " ";
+	}
+	else
+	bAllClasses = false;
 	}
 
 	if ( bAllClasses )
-		sOut = "All Classes";
+	sOut = "All Classes";*/
 
 	return sOut;
 }
@@ -1872,22 +1872,22 @@ void ErrorObj::PrintToConsole()
 	}
 }
 
-StringBuffer::StringBuffer( obuint32 _maxStrings, obuint32 _bufferSize )
-	: m_BufferSize( _bufferSize )
-	, m_MaxStrings( _maxStrings )
+StringBuffer::StringBuffer( uint32_t _maxStrings, uint32_t _bufferSize )
+	: mBufferSize( _bufferSize )
+	, mMaxStrings( _maxStrings )
 {
-	m_Buffer = new char[ m_BufferSize ];
-	m_Strings = new char*[ m_MaxStrings ];
+	mBuffer = new char[ mBufferSize ];
+	mStrings = new char*[ mMaxStrings ];
 
-	memset( m_Strings, 0, sizeof( char* )*m_MaxStrings );
-	memset( m_Buffer, 0, sizeof( char )*m_BufferSize );
-	m_BufferOffset = 0;
+	memset( mStrings, 0, sizeof( char* )*mMaxStrings );
+	memset( mBuffer, 0, sizeof( char )*mBufferSize );
+	mBufferOffset = 0;
 }
 
 StringBuffer::~StringBuffer()
 {
-	delete [] m_Strings;
-	delete [] m_Buffer;
+	delete [] mStrings;
+	delete [] mBuffer;
 }
 
 const char *StringBuffer::AddUniqueString( const std::string & _str )
@@ -1896,17 +1896,17 @@ const char *StringBuffer::AddUniqueString( const std::string & _str )
 	if ( exists )
 		return exists;
 
-	if ( m_BufferOffset + _str.length() + 1 >= m_BufferSize )
+	if ( mBufferOffset + _str.length() + 1 >= mBufferSize )
 		return NULL;
 
-	for ( obuint32 s = 0; s < m_MaxStrings; ++s )
+	for ( uint32_t s = 0; s < mMaxStrings; ++s )
 	{
-		if ( !m_Strings[ s ] )
+		if ( !mStrings[ s ] )
 		{
-			m_Strings[ s ] = &m_Buffer[ m_BufferOffset ];
-			Utils::StringCopy( &m_Buffer[ m_BufferOffset ], _str.c_str(), (int)_str.length() + 1 );
-			m_BufferOffset += (obuint32)_str.length() + 1;
-			return m_Strings[ s ];
+			mStrings[ s ] = &mBuffer[ mBufferOffset ];
+			Utils::StringCopy( &mBuffer[ mBufferOffset ], _str.c_str(), (int)_str.length() + 1 );
+			mBufferOffset += (uint32_t)_str.length() + 1;
+			return mStrings[ s ];
 		}
 	}
 	return NULL;
@@ -1914,10 +1914,10 @@ const char *StringBuffer::AddUniqueString( const std::string & _str )
 
 const char *StringBuffer::Find( const std::string & _str )
 {
-	for ( obuint32 s = 0; s < m_MaxStrings; ++s )
+	for ( uint32_t s = 0; s < mMaxStrings; ++s )
 	{
-		if ( m_Strings[ s ] && _str == m_Strings[ s ] )
-			return m_Strings[ s ];
+		if ( mStrings[ s ] && _str == mStrings[ s ] )
+			return mStrings[ s ];
 	}
 	return 0;
 }
@@ -2219,5 +2219,5 @@ AxisAlignedBox3f ComputeAABB( const Box3f & obb )
 	AxisAlignedBox3f aabb( verts[ 0 ], verts[ 0 ] );
 	for ( int i = 1; i < 8; ++i )
 		aabb.ExpandPt( verts[ i ] );
-	return aabb;	
+	return aabb;
 }

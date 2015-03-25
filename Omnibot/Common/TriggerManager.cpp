@@ -21,8 +21,8 @@ class TriggerShape
 public:
 	struct InTrigger
 	{
-		GameEntity	m_Entity;
-		int			m_TimeStamp;
+		GameEntity mEntity;
+		int		 mTimeStamp;
 	};
 	enum
 	{
@@ -31,29 +31,29 @@ public:
 		MaxInTrigger = 128,
 	};
 
-	void SetNameHash( obuint32 _name )
+	void SetNameHash( uint32_t _name )
 	{
-		m_NameHash = _name;
+		mNameHash = _name;
 	}
-	obuint32 GetNameHash() const
+	uint32_t GetNameHash() const
 	{
-		return m_NameHash;
+		return mNameHash;
 	}
 	int GetSerial() const
 	{
-		return m_SerialNum;
+		return mSerialNum;
 	}
 	void SetDeleteMe()
 	{
-		m_DeleteMe = true;
+		mDeleteMe = true;
 	} // cs: added so script function can 'schedule' a deletion
 	bool DeleteMe() const
 	{
-		return m_DeleteMe;
+		return mDeleteMe;
 	}
 	bool Expired() const
 	{
-		return DeleteMe() || ( m_ExpireTime && IGame::GetTime() >= m_ExpireTime );
+		return DeleteMe() || ( mExpireTime && IGame::GetTime() >= mExpireTime );
 	}
 
 	virtual void UpdatePosition( const Vector3f &pos ) = 0;
@@ -62,45 +62,45 @@ public:
 
 	void SetOnEnter( gmGCRoot<gmFunctionObject> &_onenter )
 	{
-		m_OnEnterFunction = _onenter;
+		mOnEnterFunction = _onenter;
 	}
 	void SetOnExit( gmGCRoot<gmFunctionObject> &_onexit )
 	{
-		m_OnExitFunction = _onexit;
+		mOnExitFunction = _onexit;
 	}
 
 	bool TriggerableEntity( const EntityInstance &_ent )
 	{
 		// check category
-		if ( m_TriggerOnCategory.AnyFlagSet() )
+		if ( mTriggerOnCategory.AnyFlagSet() )
 		{
-			if ( ( _ent.m_EntityCategory & m_TriggerOnCategory ).AnyFlagSet() )
+			if ( ( _ent.mEntInfo.mCategory & mTriggerOnCategory ).AnyFlagSet() )
 				return true;
 		}
 
 		// check class
 		for ( int i = 0; i < MaxClassCount; ++i )
 		{
-			if ( m_TriggerOnClass[ i ] == 0 )
+			if ( mTriggerOnClass[ i ] == 0 )
 				break;
 
-			if ( m_TriggerOnClass[ i ] == FilterSensory::ANYPLAYERCLASS )
+			if ( mTriggerOnClass[ i ] == FilterSensory::ANYPLAYERCLASS )
 			{
-				if ( _ent.m_EntityClass < FilterSensory::ANYPLAYERCLASS )
+				if ( _ent.mEntInfo.mClassId < FilterSensory::ANYPLAYERCLASS )
 					return true;
 			}
 
-			if ( m_TriggerOnClass[ i ] == _ent.m_EntityClass )
+			if ( mTriggerOnClass[ i ] == _ent.mEntInfo.mClassId )
 				return true;
 		}
 
 		// check specific entities.
 		for ( int i = 0; i < MaxEntCount; ++i )
 		{
-			if ( !m_TriggerOnEntity[ i ].IsValid() )
+			if ( !mTriggerOnEntity[ i ].IsValid() )
 				break;
 
-			if ( m_TriggerOnEntity[ i ] == _ent.m_Entity )
+			if ( mTriggerOnEntity[ i ] == _ent.mEntity )
 				return true;
 		}
 		return false;
@@ -108,37 +108,37 @@ public:
 
 	void FireEnterEvent( GameEntity _ent )
 	{
-		if ( m_OnEnterFunction )
+		if ( mOnEnterFunction )
 		{
 			gmMachine *m = ScriptManager::GetInstance()->GetMachine();
 
 			gmCall call;
-			if ( call.BeginFunction( m, m_OnEnterFunction, m_ThisObject ) )
+			if ( call.BeginFunction( m, mOnEnterFunction, mThisObject ) )
 			{
 				call.AddParamEntity( _ent.AsInt() );
 				call.End();
 
 				int iRet = 0;
 				if ( call.GetReturnedInt( iRet ) && iRet == 1 )
-					m_DeleteMe = true;
+					mDeleteMe = true;
 			}
 		}
 	}
 	void FireExitEvent( GameEntity _ent )
 	{
-		if ( m_OnExitFunction )
+		if ( mOnExitFunction )
 		{
 			gmMachine *m = ScriptManager::GetInstance()->GetMachine();
 
 			gmCall call;
-			if ( call.BeginFunction( m, m_OnExitFunction, m_ThisObject ) )
+			if ( call.BeginFunction( m, mOnExitFunction, mThisObject ) )
 			{
 				call.AddParamEntity( _ent.AsInt() );
 				call.End();
 
 				int iRet = 0;
 				if ( call.GetReturnedInt( iRet ) && iRet == 1 )
-					m_DeleteMe = true;
+					mDeleteMe = true;
 			}
 		}
 	}
@@ -150,12 +150,12 @@ public:
 		// If it's already in the trigger, just update the timestamp.
 		for ( int i = 0; i < MaxInTrigger; ++i )
 		{
-			if ( !it && !m_InTrigger[ i ].m_Entity.IsValid() )
-				it = &m_InTrigger[ i ];
+			if ( !it && !mInTrigger[ i ].mEntity.IsValid() )
+				it = &mInTrigger[ i ];
 
-			if ( m_InTrigger[ i ].m_Entity == _ent.m_Entity )
+			if ( mInTrigger[ i ].mEntity == _ent.mEntity )
 			{
-				m_InTrigger[ i ].m_TimeStamp = IGame::GetTime();
+				mInTrigger[ i ].mTimeStamp = IGame::GetTime();
 				return;
 			}
 		}
@@ -163,9 +163,9 @@ public:
 		if ( it )
 		{
 			// otherwise add it to the list of entities in trigger, and fire an enter event.
-			it->m_Entity = _ent.m_Entity;
-			it->m_TimeStamp = IGame::GetTime();
-			FireEnterEvent( _ent.m_Entity );
+			it->mEntity = _ent.mEntity;
+			it->mTimeStamp = IGame::GetTime();
+			FireEnterEvent( _ent.mEntity );
 		}
 		else
 		{
@@ -175,7 +175,7 @@ public:
 
 	void Update()
 	{
-		if ( m_NextUpdateTime > IGame::GetTime() )
+		if ( mNextUpdateTime > IGame::GetTime() )
 			return;
 
 		IGame::EntityIterator ent;
@@ -184,9 +184,9 @@ public:
 			if ( TriggerableEntity( ent.GetEnt() ) )
 			{
 				Box3f obb;
-				if ( EngineFuncs::EntityWorldOBB( ent.GetEnt().m_Entity, obb ) )
+				if ( EngineFuncs::EntityWorldOBB( ent.GetEnt().mEntity, obb ) )
 				{
-					if ( Test( ent.GetEnt().m_Entity, obb ) )
+					if ( Test( ent.GetEnt().mEntity, obb ) )
 					{
 						FireTrigger( ent.GetEnt() );
 
@@ -200,13 +200,13 @@ public:
 		// fire exit events for any expired objects.
 		for ( int i = 0; i < MaxInTrigger; ++i )
 		{
-			if ( m_InTrigger[ i ].m_Entity.IsValid() &&
-				m_InTrigger[ i ].m_TimeStamp != IGame::GetTime() )
+			if ( mInTrigger[ i ].mEntity.IsValid() &&
+				mInTrigger[ i ].mTimeStamp != IGame::GetTime() )
 			{
-				FireExitEvent( m_InTrigger[ i ].m_Entity );
+				FireExitEvent( mInTrigger[ i ].mEntity );
 
-				m_InTrigger[ i ].m_Entity.Reset();
-				m_InTrigger[ i ].m_TimeStamp = 0;
+				mInTrigger[ i ].mEntity.Reset();
+				mInTrigger[ i ].mTimeStamp = 0;
 				return;
 			}
 		}
@@ -216,10 +216,10 @@ public:
 	{
 		for ( int i = 0; i < MaxInTrigger; ++i )
 		{
-			if ( m_InTrigger[ i ].m_Entity.IsValid() )
+			if ( mInTrigger[ i ].mEntity.IsValid() )
 			{
 				Box3f bounds;
-				if ( EngineFuncs::EntityWorldOBB( m_InTrigger[ i ].m_Entity, bounds ) )
+				if ( EngineFuncs::EntityWorldOBB( mInTrigger[ i ].mEntity, bounds ) )
 				{
 					RenderBuffer::AddOBB( bounds, COLOR::ORANGE );
 
@@ -236,15 +236,15 @@ public:
 		gmVariable vOnEnter = tbl->Get( _m, "OnEnter" );
 		gmVariable vOnExit = tbl->Get( _m, "OnExit" );
 		gmVariable vUpdateDelay = tbl->Get( _m, "UpdateDelay" );
-		m_ThisObject = tbl->Get( _m, "CallbackObject" );
+		mThisObject = tbl->Get( _m, "CallbackObject" );
 
 		if ( vOnEnter.GetFunctionObjectSafe() )
-			m_OnEnterFunction.Set( vOnEnter.GetFunctionObjectSafe(), _m );
+			mOnEnterFunction.Set( vOnEnter.GetFunctionObjectSafe(), _m );
 		if ( vOnExit.GetFunctionObjectSafe() )
-			m_OnExitFunction.Set( vOnExit.GetFunctionObjectSafe(), _m );
+			mOnExitFunction.Set( vOnExit.GetFunctionObjectSafe(), _m );
 
 		// must have at least 1 callback
-		if ( !m_OnEnterFunction && !m_OnExitFunction )
+		if ( !mOnEnterFunction && !mOnExitFunction )
 			return false;
 
 		bool bHasTriggerCondition = false;
@@ -254,7 +254,7 @@ public:
 			if ( vTriggerOnClass.IsInt() )
 			{
 				bHasTriggerCondition = true;
-				m_TriggerOnClass[ 0 ] = vTriggerOnClass.GetInt();
+				mTriggerOnClass[ 0 ] = vTriggerOnClass.GetInt();
 			}
 			else
 			{
@@ -269,10 +269,10 @@ public:
 						{
 							for ( int c = 0; c < MaxClassCount; ++c )
 							{
-								if ( m_TriggerOnClass[ c ] == 0 )
+								if ( mTriggerOnClass[ c ] == 0 )
 								{
 									bHasTriggerCondition = true;
-									m_TriggerOnClass[ c ] = pNode->m_value.GetInt();
+									mTriggerOnClass[ c ] = pNode->m_value.GetInt();
 									break;
 								}
 							}
@@ -287,7 +287,7 @@ public:
 			if ( vTriggerOnCategory.IsInt() )
 			{
 				bHasTriggerCondition = true;
-				m_TriggerOnCategory.SetFlag( vTriggerOnCategory.GetInt(), true );
+				mTriggerOnCategory.SetFlag( vTriggerOnCategory.GetInt(), true );
 			}
 			else
 			{
@@ -300,7 +300,7 @@ public:
 					{
 						if ( pNode->m_value.IsInt() )
 						{
-							m_TriggerOnCategory.SetFlag( pNode->m_value.GetInt(), true );
+							mTriggerOnCategory.SetFlag( pNode->m_value.GetInt(), true );
 						}
 						pNode = tbl->GetNext( tIt );
 					}
@@ -312,7 +312,7 @@ public:
 			if ( vTriggerOnEntity.IsEntity() )
 			{
 				bHasTriggerCondition = true;
-				m_TriggerOnEntity[ 0 ].FromInt( vTriggerOnEntity.GetEntity() );
+				mTriggerOnEntity[ 0 ].FromInt( vTriggerOnEntity.GetEntity() );
 			}
 			else
 			{
@@ -326,10 +326,10 @@ public:
 						if ( pNode->m_value.IsEntity() )
 						{
 							for ( int i = 0; i < MaxClassCount; ++i )
-								if ( !m_TriggerOnEntity[ i ].IsValid() )
+								if ( !mTriggerOnEntity[ i ].IsValid() )
 								{
 									bHasTriggerCondition = true;
-									m_TriggerOnEntity[ i ].FromInt( pNode->m_value.GetEntity() );
+									mTriggerOnEntity[ i ].FromInt( pNode->m_value.GetEntity() );
 								}
 						}
 						pNode = tbl->GetNext( tIt );
@@ -339,60 +339,60 @@ public:
 		}
 
 		if ( vName.GetCStringSafe( NULL ) )
-			m_NameHash = Utils::MakeHash32( vName.GetCStringSafe() );
+			mNameHash = Utils::MakeHash32( vName.GetCStringSafe() );
 		if ( vUpdateDelay.IsNumber() )
-			m_UpdateDelay = Utils::SecondsToMilliseconds( vUpdateDelay.GetFloatSafe() );
+			mUpdateDelay = Utils::SecondsToMilliseconds( vUpdateDelay.GetFloatSafe() );
 
 		return bHasTriggerCondition;
 	}
 
 	TriggerShape()
-		: m_NameHash( 0 )
-		, m_ExpireTime( 0 )
-		, m_NextUpdateTime( 0 )
-		, m_UpdateDelay( 0 )
-		, m_SerialNum( 0 )
-		, m_ThisObject( gmVariable::s_null )
-		, m_DeleteMe( false )
+		: mNameHash( 0 )
+		, mExpireTime( 0 )
+		, mNextUpdateTime( 0 )
+		, mUpdateDelay( 0 )
+		, mSerialNum( 0 )
+		, mThisObject( gmVariable::s_null )
+		, mDeleteMe( false )
 	{
 		static int sNextSerial = 1;
 
-		m_SerialNum = sNextSerial++;
+		mSerialNum = sNextSerial++;
 
 		for ( int i = 0; i < MaxEntCount; ++i )
-			m_TriggerOnEntity[ i ].Reset();
+			mTriggerOnEntity[ i ].Reset();
 		for ( int i = 0; i < MaxClassCount; ++i )
-			m_TriggerOnClass[ i ] = 0;
+			mTriggerOnClass[ i ] = 0;
 		for ( int i = 0; i < MaxInTrigger; ++i )
 		{
-			m_InTrigger[ i ].m_Entity.Reset();
-			m_InTrigger[ i ].m_TimeStamp = 0;
+			mInTrigger[ i ].mEntity.Reset();
+			mInTrigger[ i ].mTimeStamp = 0;
 		}
 	}
 	virtual ~TriggerShape()
 	{
 	}
 private:
-	obuint32	m_NameHash;
-	int			m_ExpireTime;
+	uint32_t mNameHash;
+	int		 mExpireTime;
 
-	int			m_NextUpdateTime;
-	int			m_UpdateDelay;
+	int		 mNextUpdateTime;
+	int		 mUpdateDelay;
 
-	int			m_SerialNum;
+	int		 mSerialNum;
 
-	GameEntity	m_TriggerOnEntity[ MaxEntCount ];
-	int			m_TriggerOnClass[ MaxClassCount ];
-	BitFlag32	m_TriggerOnCategory;
+	GameEntity mTriggerOnEntity[ MaxEntCount ];
+	int		 mTriggerOnClass[ MaxClassCount ];
+	BitFlag32 mTriggerOnCategory;
 
-	InTrigger	m_InTrigger[ MaxInTrigger ];
+	InTrigger mInTrigger[ MaxInTrigger ];
 
-	gmGCRoot<gmFunctionObject>	m_OnEnterFunction;
-	gmGCRoot<gmFunctionObject>	m_OnExitFunction;
+	gmGCRoot<gmFunctionObject> mOnEnterFunction;
+	gmGCRoot<gmFunctionObject> mOnExitFunction;
 
-	gmVariable					m_ThisObject;
+	gmVariable				 mThisObject;
 
-	bool		m_DeleteMe;
+	bool	 mDeleteMe;
 };
 //////////////////////////////////////////////////////////////////////////
 class TriggerShapeSphere : public TriggerShape
@@ -400,28 +400,28 @@ class TriggerShapeSphere : public TriggerShape
 public:
 	void UpdatePosition( const Vector3f &pos )
 	{
-		m_Position = pos;
+		mPosition = pos;
 	}
 	bool Test( GameEntity e, const Box3f & worldObb )
 	{
-		return SquaredLength( worldObb.Center, m_Position ) <= Mathf::Sqr( m_Radius );
+		return SquaredLength( worldObb.Center, mPosition ) <= Mathf::Sqr( mRadius );
 	}
 	void RenderDebug()
 	{
 		TriggerShape::RenderDebug();
-		RenderBuffer::AddCircle( m_Position, m_Radius, COLOR::GREEN );
+		RenderBuffer::AddCircle( mPosition, mRadius, COLOR::GREEN );
 
 		std::string name = Utils::HashToString( GetNameHash() );
-		RenderBuffer::AddString3d( m_Position, COLOR::GREEN, name.c_str() );
+		RenderBuffer::AddString3d( mPosition, COLOR::GREEN, name.c_str() );
 	}
 	TriggerShapeSphere( const Vector3f &p, float r )
-		: m_Position( p )
-		, m_Radius( r )
+		: mPosition( p )
+		, mRadius( r )
 	{
 	}
 private:
-	Vector3f	m_Position;
-	float		m_Radius;
+	Vector3f mPosition;
+	float	 mRadius;
 };
 //////////////////////////////////////////////////////////////////////////
 class TriggerShapeOBB : public TriggerShape
@@ -458,7 +458,7 @@ int TriggerManager::AddTrigger( const Vector3f &_pos, float _radius, gmMachine *
 	ShapePtr trig( new TriggerShapeSphere( _pos, _radius ) );
 	if ( trig->FromTable( _m, tbl ) )
 	{
-		m_TriggerShapes.push_back( trig );
+		mTriggerShapes.push_back( trig );
 		return trig->GetSerial();
 	}
 	return 0;
@@ -469,7 +469,7 @@ int TriggerManager::AddTrigger( const Box3f & obb, gmMachine *_m, gmTableObject 
 	ShapePtr trig( new TriggerShapeOBB( obb ) );
 	if ( trig->FromTable( _m, tbl ) )
 	{
-		m_TriggerShapes.push_back( trig );
+		mTriggerShapes.push_back( trig );
 		return trig->GetSerial();
 	}
 	return 0;
@@ -477,12 +477,12 @@ int TriggerManager::AddTrigger( const Box3f & obb, gmMachine *_m, gmTableObject 
 
 void TriggerManager::DeleteTrigger( int _serial )
 {
-	ShapeList::iterator it = m_TriggerShapes.begin();
-	for ( ; it != m_TriggerShapes.end(); )
+	ShapeList::iterator it = mTriggerShapes.begin();
+	for ( ; it != mTriggerShapes.end(); )
 	{
 		if ( ( *it )->GetSerial() == _serial )
 		{
-			//it = m_TriggerShapes.erase(it);
+			//it = mTriggerShapes.erase(it);
 			( *it )->SetDeleteMe(); // update handles the delete now
 			return;
 		}
@@ -492,14 +492,14 @@ void TriggerManager::DeleteTrigger( int _serial )
 
 void TriggerManager::DeleteTrigger( const std::string &_name )
 {
-	const obuint32 uiName = Utils::Hash32( _name.c_str() );
-	ShapeList::iterator it = m_TriggerShapes.begin();
-	for ( ; it != m_TriggerShapes.end(); )
+	const uint32_t uiName = Utils::Hash32( _name.c_str() );
+	ShapeList::iterator it = mTriggerShapes.begin();
+	for ( ; it != mTriggerShapes.end(); )
 	{
 		if ( ( *it )->GetNameHash() == uiName )
 		{
 			// cs: this crashes if trigger is active
-			//it = m_TriggerShapes.erase(it);
+			//it = mTriggerShapes.erase(it);
 			//continue;
 
 			( *it )->SetDeleteMe(); // update handles the delete now
@@ -511,25 +511,25 @@ void TriggerManager::DeleteTrigger( const std::string &_name )
 
 //////////////////////////////////////////////////////////////////////////
 
-TriggerManager *TriggerManager::m_Instance = 0;
+TriggerManager *TriggerManager::mInstance = 0;
 
 TriggerManager::TriggerManager()
-	: m_DebugTriggers( false )
-	, m_DrawTriggers( false )
+	: mDebugTriggers( false )
+	, mDrawTriggers( false )
 {
 	InitCommands();
 }
 
 TriggerManager *TriggerManager::GetInstance()
 {
-	if ( !m_Instance )
-		m_Instance = new TriggerManager;
-	return m_Instance;
+	if ( !mInstance )
+		mInstance = new TriggerManager;
+	return mInstance;
 }
 
 void TriggerManager::DeleteInstance()
 {
-	OB_DELETE( m_Instance );
+	OB_DELETE( mInstance );
 }
 
 void TriggerManager::InitCommands()
@@ -540,8 +540,8 @@ void TriggerManager::InitCommands()
 		this, &TriggerManager::cmdDrawTriggers );
 
 	//////////////////////////////////////////////////////////////////////////
-	Options::GetValue( "Debug Render", "DrawTriggers", m_DrawTriggers );
-	Options::GetValue( "Debug Render", "DebugTriggers", m_DebugTriggers );
+	Options::GetValue( "Debug Render", "DrawTriggers", mDrawTriggers );
+	Options::GetValue( "Debug Render", "DebugTriggers", mDebugTriggers );
 	//////////////////////////////////////////////////////////////////////////
 }
 
@@ -549,15 +549,15 @@ void TriggerManager::cmdDrawTriggers( const StringVector &_args )
 {
 	if ( _args.size() >= 2 )
 	{
-		if ( !m_DrawTriggers && Utils::StringToTrue( _args[ 1 ] ) )
-			m_DrawTriggers = true;
-		else if ( m_DrawTriggers && Utils::StringToFalse( _args[ 1 ] ) )
-			m_DrawTriggers = false;
+		if ( !mDrawTriggers && Utils::StringToTrue( _args[ 1 ] ) )
+			mDrawTriggers = true;
+		else if ( mDrawTriggers && Utils::StringToFalse( _args[ 1 ] ) )
+			mDrawTriggers = false;
 	}
 	else
-		m_DrawTriggers = !m_DrawTriggers;
+		mDrawTriggers = !mDrawTriggers;
 
-	if ( m_DrawTriggers )
+	if ( mDrawTriggers )
 		EngineFuncs::ConsoleMessage( "Trigger Drawing on." );
 	else
 		EngineFuncs::ConsoleMessage( "Trigger Drawing off." );
@@ -566,22 +566,22 @@ void TriggerManager::cmdDrawTriggers( const StringVector &_args )
 void TriggerManager::cmdDebugTriggers( const StringVector &_args )
 {
 	int numArgs = (int)_args.size();
-	m_DebugTriggersExpr = ".*";
+	mDebugTriggersExpr = ".*";
 
 	if ( numArgs >= 2 )
 	{
-		if ( !m_DebugTriggers && Utils::StringToTrue( _args[ 1 ] ) )
-			m_DebugTriggers = true;
-		else if ( m_DebugTriggers && Utils::StringToFalse( _args[ 1 ] ) )
-			m_DebugTriggers = false;
+		if ( !mDebugTriggers && Utils::StringToTrue( _args[ 1 ] ) )
+			mDebugTriggers = true;
+		else if ( mDebugTriggers && Utils::StringToFalse( _args[ 1 ] ) )
+			mDebugTriggers = false;
 
 		if ( numArgs >= 3 )
-			m_DebugTriggersExpr = va( "%s", _args[ 2 ].c_str() );
+			mDebugTriggersExpr = va( "%s", _args[ 2 ].c_str() );
 	}
 	else
-		m_DebugTriggers = !m_DebugTriggers;
+		mDebugTriggers = !mDebugTriggers;
 
-	if ( m_DebugTriggers )
+	if ( mDebugTriggers )
 		EngineFuncs::ConsoleMessage( "Trigger Debug on." );
 	else
 		EngineFuncs::ConsoleMessage( "Trigger Debug off." );
@@ -589,7 +589,7 @@ void TriggerManager::cmdDebugTriggers( const StringVector &_args )
 
 void TriggerManager::SetScriptCallback( const std::string &_name, gmGCRoot<gmFunctionObject> _func )
 {
-	m_ScriptCallbacks.insert( std::make_pair( _name, _func ) );
+	mScriptCallbacks.insert( std::make_pair( _name, _func ) );
 }
 
 void TriggerManager::HandleTrigger( const TriggerInfo &_triggerInfo )
@@ -598,10 +598,10 @@ void TriggerManager::HandleTrigger( const TriggerInfo &_triggerInfo )
 
 	//////////////////////////////////////////////////////////////////////////
 	// Call any script callbacks.
-	if ( _triggerInfo.m_TagName[ 0 ] )
+	if ( _triggerInfo.mTagName[ 0 ] )
 	{
-		ScriptCallback::iterator it = m_ScriptCallbacks.lower_bound( _triggerInfo.m_TagName ),
-			itEnd = m_ScriptCallbacks.upper_bound( _triggerInfo.m_TagName );
+		ScriptCallback::iterator it = mScriptCallbacks.lower_bound( _triggerInfo.mTagName ),
+			itEnd = mScriptCallbacks.upper_bound( _triggerInfo.mTagName );
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 		DisableGCInScope gcEn( pMachine );
 
@@ -619,9 +619,9 @@ void TriggerManager::HandleTrigger( const TriggerInfo &_triggerInfo )
 		}
 	}
 
-	if ( m_DebugTriggers )
+	if ( mDebugTriggers )
 	{
-		if ( _triggerInfo.m_TagName[ 0 ] && Utils::RegexMatch( m_DebugTriggersExpr.c_str(), va( "%s", _triggerInfo.m_TagName ) ) )
+		if ( _triggerInfo.mTagName[ 0 ] && Utils::RegexMatch( mDebugTriggersExpr.c_str(), va( "%s", _triggerInfo.mTagName ) ) )
 		{
 			std::stringstream msg;
 			msg << "<" << ( bScriptCallback ? "+++" : "---" ) << ">" << ( _triggerInfo );
@@ -644,19 +644,19 @@ void TriggerManager::Update( System & system )
 {
 	Prof( TriggerManager_Update );
 
-	ShapeList::iterator it = m_TriggerShapes.begin();
+	ShapeList::iterator it = mTriggerShapes.begin();
 
 	unsigned int x = 0;
-	for ( ; x < m_TriggerShapes.size(); )
+	for ( ; x < mTriggerShapes.size(); )
 	{
-		if ( m_DrawTriggers )
-			m_TriggerShapes[ x ]->RenderDebug();
+		if ( mDrawTriggers )
+			mTriggerShapes[ x ]->RenderDebug();
 
-		m_TriggerShapes[ x ]->Update();
+		mTriggerShapes[ x ]->Update();
 
-		if ( m_TriggerShapes[ x ]->Expired() )
+		if ( mTriggerShapes[ x ]->Expired() )
 		{
-			it = m_TriggerShapes.erase( m_TriggerShapes.begin() + x );
+			it = mTriggerShapes.erase( mTriggerShapes.begin() + x );
 			continue;
 		}
 

@@ -291,7 +291,7 @@ struct DebugDraw : public duDebugDraw
 					int r, g, b, a;
 					duRGBASplit( color, r, g, b, a );
 
-					RenderBuffer::AddPoint( mVertCache[ 0 ], obColor( (obuint8)r, (obuint8)g, (obuint8)b, (obuint8)a ), mSizeHint );
+					RenderBuffer::AddPoint( mVertCache[ 0 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ), mSizeHint );
 					mVertCount = 0;
 				}
 				break;
@@ -301,7 +301,7 @@ struct DebugDraw : public duDebugDraw
 					int r, g, b, a;
 					duRGBASplit( color, r, g, b, a );
 
-					RenderBuffer::AddLine( mVertCache[ 0 ], mVertCache[ 1 ], obColor( (obuint8)r, (obuint8)g, (obuint8)b, (obuint8)a ), mSizeHint );
+					RenderBuffer::AddLine( mVertCache[ 0 ], mVertCache[ 1 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ), mSizeHint );
 					mVertCount = 0;
 				}
 				break;
@@ -311,7 +311,7 @@ struct DebugDraw : public duDebugDraw
 					int r, g, b, a;
 					duRGBASplit( color, r, g, b, a );
 
-					RenderBuffer::AddTri( mVertCache[ 0 ], mVertCache[ 1 ], mVertCache[ 2 ], obColor( (obuint8)r, (obuint8)g, (obuint8)b, (obuint8)a ) );
+					RenderBuffer::AddTri( mVertCache[ 0 ], mVertCache[ 1 ], mVertCache[ 2 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ) );
 					mVertCount = 0;
 				}
 				break;
@@ -321,7 +321,7 @@ struct DebugDraw : public duDebugDraw
 					int r, g, b, a;
 					duRGBASplit( color, r, g, b, a );
 
-					RenderBuffer::AddQuad( mVertCache[ 0 ], mVertCache[ 1 ], mVertCache[ 2 ], mVertCache[ 3 ], obColor( (obuint8)r, (obuint8)g, (obuint8)b, (obuint8)a ) );
+					RenderBuffer::AddQuad( mVertCache[ 0 ], mVertCache[ 1 ], mVertCache[ 2 ], mVertCache[ 3 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ) );
 					mVertCount = 0;
 				}
 				break;
@@ -419,7 +419,7 @@ PathPlannerRecast::PathPlannerRecast()
 {
 	mTileBuildQueue.reserve( 128 );
 	mModels.reserve( 2048 );
-	//m_PlannerFlags.SetFlag( NAV_VIEW );
+	//.mPlannerFlags.SetFlag( NAV_VIEW );
 
 	//mCollisionWorld = new btCollisionWorld();
 	//mCollisionWorld->setDebugDrawer();
@@ -565,7 +565,7 @@ void PathPlannerRecast::Update( System & system )
 		}
 	}
 
-	if ( m_PlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( mPlannerFlags.CheckFlag( NAV_VIEW ) )
 	{
 		for ( int i = 0; i < mContext.getLogCount(); ++i )
 		{
@@ -699,9 +699,9 @@ void PathPlannerRecast::Update( System & system )
 			static bool showWorld = false;
 			for ( size_t i = showWorld?0:1; i < mModels.size(); ++i )
 			{
-				BitFlag64 entFlags;
-				if ( InterfaceFuncs::GetEntityFlags( mModels[ i ].mEntity, entFlags ) )
-					mModels[ i ].mModel->Render( mModels[ i ].mTransform, Vector3f( 0.0f, 0.0f, zOffset ), entFlags.CheckFlag( ENT_FLAG_COLLIDABLE ) ? COLOR::GREEN.fade( 100 ) : COLOR::ORANGE.fade( 100 ) );
+				EntityInfo entInfo;
+				if ( IGame::GetEntityInfo( mModels[ i ].mEntity, entInfo ) )
+					mModels[ i ].mModel->Render( mModels[ i ].mTransform, Vector3f( 0.0f, 0.0f, zOffset ), entInfo.mFlags.CheckFlag( ENT_FLAG_COLLIDABLE ) ? COLOR::GREEN.fade( 100 ) : COLOR::ORANGE.fade( 100 ) );
 			}
 		}
 
@@ -754,9 +754,9 @@ void PathPlannerRecast::UpdateModelState()
 			currentState = StateCollidable;
 		else
 		{
-			BitFlag64 entFlags;
-			if ( mdl.mEntity.IsValid() && InterfaceFuncs::GetEntityFlags( mdl.mEntity, entFlags ) )
-				currentState = entFlags.CheckFlag( ENT_FLAG_COLLIDABLE ) ? StateCollidable : StateNonCollidable;
+			EntityInfo entInfo;
+			if ( IGame::GetEntityInfo( mdl.mEntity, entInfo ) )
+				currentState = entInfo.mFlags.CheckFlag( ENT_FLAG_COLLIDABLE ) ? StateCollidable : StateNonCollidable;
 		}
 
 		mdl.mTransform.UpdateStableTime();
@@ -1312,10 +1312,9 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 			if ( model.mEntityCategory.CheckFlag( ENT_CAT_MOVER ) )
 				continue; // skip to process later as an open region
 #endif
-			if ( model.mEntityCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
+			if ( model.mEntInfo.mCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
 				continue; // skip to process later as an open region
 			
-
 			// everything else we can process as solid
 
 			// in game space
@@ -1394,7 +1393,7 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 				continue;
 		}
 
-		if ( !model.mNonSolid && !model.mEntityCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
+		if ( !model.mNonSolid && !model.mEntInfo.mCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
 			continue;
 
 		for ( size_t t = 0; t < model.mModel->GetNumTris(); ++t )
@@ -1411,11 +1410,11 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 
 			if ( mat.mContents & CONT_WATER )
 				areaType = NAVAREA_WATER;
-			if ( model.mEntityCategory.CheckFlag( ENT_CAT_TRIGGER ) )
+			if ( model.mEntInfo.mCategory.CheckFlag( ENT_CAT_TRIGGER ) )
 				areaType = NAVAREA_REGION; // mark off triggers
-			if ( model.mEntityCategory.CheckFlag( ENT_CAT_MOVER ) )
+			if ( model.mEntInfo.mCategory.CheckFlag( ENT_CAT_MOVER ) )
 				areaType = NAVAREA_MOVER; // mark off movers
-			if ( model.mEntityCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
+			if ( model.mEntInfo.mCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
 				areaType = NAVAREA_PUSHABLE;
 
 			// only proceed with special areas
@@ -1686,7 +1685,7 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 
 //////////////////////////////////////////////////////////////////////////
 
-bool PathPlannerRecast::GetNavInfo( const Vector3f &pos, obint32 &_id, std::string &_name )
+bool PathPlannerRecast::GetNavInfo( const Vector3f &pos, int32_t &_id, std::string &_name )
 {
 	return false;
 }
@@ -1719,11 +1718,11 @@ void PathPlannerRecast::CountStats( const modeldata::Scene & ioScene, const mode
 	}
 }
 
-void PathPlannerRecast::GatherModel( ModelCache & cache, const modeldata::Scene & ioScene, const modeldata::Node & ioNode, const BitFlag32 category, const IceMaths::Matrix4x4 & nodeXform )
+void PathPlannerRecast::GatherModel( ModelCache & cache, const modeldata::Scene & ioScene, const modeldata::Node & ioNode, const IceMaths::Matrix4x4 & nodeXform )
 {
 	for ( int i = 0; i < ioNode.children_size(); ++i )
 	{
-		GatherModel( cache, ioScene, ioNode.children( i ), category, nodeXform );
+		GatherModel( cache, ioScene, ioNode.children( i ), nodeXform );
 	}
 
 	for ( int m = 0; m < ioNode.meshindex_size(); ++m )
@@ -1794,27 +1793,23 @@ void PathPlannerRecast::CreateModels( GameEntity entity, const IceMaths::Matrix4
 	size_t numMeshes = 0;
 	CountStats( ioScene, ioNode, numTriangles, numMeshes );
 	
+	EntityInfo entInfo;
+
 	if ( numTriangles > 0 )
 	{
 		IceMaths::Matrix4x4 nodeXform = Convert( ioNode );
-
-		BitFlag32 category;
-		
+				
 		if ( ioNode.has_submodel() )
 		{
-			Msg_EntityForMapModel msg;
-			if ( !InterfaceFuncs::GetEntityForMapModel( ioNode.submodel(), msg ) || msg.m_EntityDeleted )
+			if ( !SUCCESS( gEngineFuncs->GetEntityForMapModel( ioNode.submodel(), entity ) ) )
 				return;
-
-			entity = msg.m_Entity;
 		}
 
-		if ( entity.IsValid() )
+		if ( entity.IsValid() && IGame::GetEntityInfo( entity, entInfo ) )
 		{
 			const std::string entname = EngineFuncs::EntityName( entity, "<unknown>" );
 
-			InterfaceFuncs::GetEntityCategory( entity, category );
-			if ( !category.CheckFlag( ENT_CAT_OBSTACLE ) )
+			if ( !entInfo.mCategory.CheckFlag( ENT_CAT_OBSTACLE ) )
 			{
 				EngineFuncs::ConsoleMessage( va( "Entity '%s' not an obstacle", entname.c_str() ) );
 				return;
@@ -1829,14 +1824,14 @@ void PathPlannerRecast::CreateModels( GameEntity entity, const IceMaths::Matrix4
 		
 		ModelCache & cache = mModels.back();
 		cache.mEntity = entity;
-		cache.mEntityCategory = category;
+		cache.mEntInfo = entInfo;
 		cache.mSubModel = ioNode.has_submodel() ? ioNode.submodel() : -1;
 		cache.mModel.reset( new CollisionModel() );
 		cache.mActiveState = baseStaticMesh ? StateCollidable : StateUnknown;
 		cache.mBaseStaticMesh = baseStaticMesh;
 
 		// preallocate attributes list to limit dynamic resizing
-		GatherModel( cache, ioScene, ioNode, category, IceMaths::Matrix4x4() );
+		GatherModel( cache, ioScene, ioNode, IceMaths::Matrix4x4() );
 
 		cache.mModel->Build( false );
 		cache.mTransform.SetTransform( baseXform * nodeXform, false );
@@ -2012,7 +2007,7 @@ void PathPlannerRecast::LoadModel( const GameModelInfo & modelInfo, GameEntity e
 	Timer loadTimer;
 	loadTimer.Reset();
 
-	const obuint32 fileCrc = FileSystem::CalculateCrc( modelInfo.mDataBuffer, modelInfo.mDataBufferSize );
+	const uint32_t fileCrc = FileSystem::CalculateCrc( modelInfo.mDataBuffer, modelInfo.mDataBufferSize );
 
 	LOG( "LoadModel " << modelInfo.mModelName );
 	LOG( "LoadModel calculate crc [" << va( "0x%08x", fileCrc ) << "] in " << loadTimer.GetElapsedSeconds() << " seconds" );
@@ -2283,11 +2278,11 @@ void PathPlannerRecast::LoadWorldModel()
 
 void PathPlannerRecast::EntityCreated( const EntityInstance &ei )
 {
-	if ( ei.m_EntityCategory.CheckFlag( ENT_CAT_OBSTACLE ) )
+	if ( ei.mEntInfo.mCategory.CheckFlag( ENT_CAT_OBSTACLE ) )
 	{
 		for ( size_t i = 0; i < mModels.size(); ++i )
 		{
-			if ( mModels[ i ].mEntity == ei.m_Entity )
+			if ( mModels[ i ].mEntity == ei.mEntity )
 				return;
 		}
 
@@ -2295,16 +2290,16 @@ void PathPlannerRecast::EntityCreated( const EntityInstance &ei )
 		loadTimer.Reset();
 
 		GameModelInfo modelInfo;
-		gEngineFuncs->GetEntityModel( ei.m_Entity, modelInfo, allocatorBot );
+		gEngineFuncs->GetEntityModel( ei.mEntity, modelInfo, allocatorBot );
 
 		if ( modelInfo.mDataBuffer != NULL )
 		{
-			LoadModel( modelInfo, ei.m_Entity, IceMaths::Matrix4x4(), false );
+			LoadModel( modelInfo, ei.mEntity, IceMaths::Matrix4x4(), false );
 			allocatorBot.FreeMemory( modelInfo.mDataBuffer );
 		}
 		else if ( !modelInfo.mAABB.IsZero() )
 		{
-			CreateModels( ei.m_Entity, modelInfo.mAABB, false );
+			CreateModels( ei.mEntity, modelInfo.mAABB, false );
 		}
 	}
 }
@@ -2313,7 +2308,7 @@ void PathPlannerRecast::EntityDeleted( const EntityInstance &ei )
 {
 	for ( size_t i = 0; i < mModels.size(); ++i )
 	{
-		if ( mModels[ i ].mEntity == ei.m_Entity )
+		if ( mModels[ i ].mEntity == ei.mEntity )
 		{
 			mModels[ i ].mActiveState = StateMarkedForDelete;
 		}

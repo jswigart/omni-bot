@@ -18,7 +18,7 @@ namespace InterfaceFuncs
 		ETQW_WeaponOverheated data = { _weapon, False };
 		MessageHelper msg(ETQW_MSG_WPOVERHEATED, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_IsOverheated == True;
+		return data.mIsOverheated == True;
 	}
 
 	void GetMountedGunHeat(Client *_bot, const GameEntity _gun, int &_cur, int &_max)
@@ -26,8 +26,8 @@ namespace InterfaceFuncs
 		ETQW_WeaponHeatLevel data = { _gun, 0, 0 };
 		MessageHelper msg(ETQW_MSG_GETGUNHEAT, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		_cur = data.m_Current;
-		_max = data.m_Max;
+		_cur = data.mCurrent;
+		_max = data.mMax;
 	}
 
 	ExplosiveState GetExplosiveState(Client *_bot, const GameEntity _dynamite)
@@ -35,7 +35,7 @@ namespace InterfaceFuncs
 		ETQW_ExplosiveState data = { _dynamite, XPLO_INVALID };
 		MessageHelper msg(ETQW_MSG_GEXPLOSIVESTATE, &data, sizeof(data));
 		InterfaceMsg(msg, _bot ? _bot->GetGameEntity() : GameEntity());
-		return data.m_State;
+		return data.mState;
 	}
 
 	ConstructableState GetConstructableState(Client *_bot, const GameEntity _constructable)
@@ -43,7 +43,7 @@ namespace InterfaceFuncs
 		ETQW_ConstructionState data = { _constructable, CONST_INVALID };
 		MessageHelper msg(ETQW_MSG_GCONSTRUCTABLE, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_State;
+		return data.mState;
 	}
 
 	ConstructableState IsDestroyable(Client *_bot, const GameEntity _ent)
@@ -51,7 +51,7 @@ namespace InterfaceFuncs
 		ETQW_Destroyable data = { _ent, CONST_INVALID };
 		MessageHelper msg(ETQW_MSG_GDYNDESTROYABLE, &data, sizeof(data));
 		InterfaceMsg(msg, _bot ? _bot->GetGameEntity() : GameEntity());
-		return data.m_State;
+		return data.mState;
 	}
 
 	bool HasFlag(Client *_bot)
@@ -59,7 +59,7 @@ namespace InterfaceFuncs
 		ETQW_HasFlag data = { False };
 		MessageHelper msg(ETQW_MSG_GHASFLAG, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_HasFlag == True;
+		return data.mHasFlag == True;
 	}
 
 	bool ItemCanBeGrabbed(Client *_bot, const GameEntity _ent)
@@ -67,7 +67,7 @@ namespace InterfaceFuncs
 		ETQW_CanBeGrabbed data = { _ent, False };
 		MessageHelper msg(ETQW_MSG_GCANBEGRABBED, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_CanBeGrabbed == True;
+		return data.mCanBeGrabbed == True;
 	}
 
 	void NumTeamMines(Client *_bot, int &_current, int &_max)
@@ -75,8 +75,8 @@ namespace InterfaceFuncs
 		ETQW_TeamMines data = { 0, 0 };
 		MessageHelper msg(ETQW_MSG_GNUMTEAMMINES, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		_current = data.m_Current;
-		_max = data.m_Max;
+		_current = data.mCurrent;
+		_max = data.mMax;
 	}
 
 	obBool IsWaitingForMedic(Client *_bot, const GameEntity _ent)
@@ -84,7 +84,7 @@ namespace InterfaceFuncs
 		ETQW_WaitingForMedic data = { False };
 		MessageHelper msg(ETQW_MSG_ISWAITINGFORMEDIC, &data, sizeof(data));
 		InterfaceMsg(msg, _ent);
-		return data.m_WaitingForMedic;
+		return data.mWaitingForMedic;
 	}
 
 	bool SelectPrimaryWeapon(Client *_bot, ETQW_Weapon _weapon)
@@ -92,7 +92,7 @@ namespace InterfaceFuncs
 		ETQW_SelectWeapon data = { _weapon };
 		MessageHelper msg(ETQW_MSG_PICKWEAPON, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_Good == True;
+		return data.mGood == True;
 	}
 
 	bool SelectSecondaryWeapon(Client *_bot, ETQW_Weapon _weapon)
@@ -100,7 +100,7 @@ namespace InterfaceFuncs
 		ETQW_SelectWeapon data = { _weapon };
 		MessageHelper msg(ETQW_MSG_PICKWEAPON2, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_Good == True;
+		return data.mGood == True;
 	}
 
 	float GetReinforceTime(Client *_bot)
@@ -108,7 +108,7 @@ namespace InterfaceFuncs
 		ETQW_ReinforceTime data = { 0 };
 		MessageHelper msg(ETQW_MSG_REINFORCETIME, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return (float)data.m_ReinforceTime / 1000.0f;
+		return (float)data.mReinforceTime / 1000.0f;
 	}
 
 	bool IsMedicNear(Client *_bot)
@@ -116,7 +116,7 @@ namespace InterfaceFuncs
 		ETQW_MedicNear data = { False };
 		MessageHelper msg(ETQW_MSG_ISMEDICNEAR, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_MedicNear == True;
+		return data.mMedicNear == True;
 	}
 
 	bool GoToLimbo(Client *_bot)
@@ -124,7 +124,7 @@ namespace InterfaceFuncs
 		ETQW_GoLimbo data = { False };
 		MessageHelper msg(ETQW_MSG_GOTOLIMBO, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_GoLimbo == True;
+		return data.mGoLimbo == True;
 	}
 
 	GameEntity GetMountedPlayerOnMG42(Client *_bot, GameEntity _gun)
@@ -132,7 +132,7 @@ namespace InterfaceFuncs
 		ETQW_MG42MountedPlayer data = { _gun, GameEntity() };
 		MessageHelper msg(ETQW_MSG_ISGUNMOUNTED, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_MountedEntity;
+		return data.mMountedEntity;
 	}
 
 	bool IsMountableGunRepairable(Client *_bot, GameEntity _gun)
@@ -140,7 +140,7 @@ namespace InterfaceFuncs
 		ETQW_MG42MountedRepairable data = { _gun, False };
 		MessageHelper msg(ETQW_MSG_ISGUNREPAIRABLE, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_Repairable == True;
+		return data.mRepairable == True;
 	}
 
 	int GetGunHealth(Client *_bot, const GameEntity _gun)
@@ -148,7 +148,7 @@ namespace InterfaceFuncs
 		ETQW_MG42Health data = { _gun, 0 };
 		MessageHelper msg(ETQW_MSG_GETGUNHEALTH, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_Health;
+		return data.mHealth;
 	}
 
 	void GetCurrentCursorHint(Client *_bot, int &_type, int &_val)
@@ -157,8 +157,8 @@ namespace InterfaceFuncs
 		MessageHelper msg(ETQW_MSG_GETHINT, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
 
-		_type = data.m_Type;
-		_val = data.m_Value;
+		_type = data.mType;
+		_val = data.mValue;
 	}
 
 	void ChangeSpawnPoint(Client *_bot, int _spawnpoint)

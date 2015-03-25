@@ -34,7 +34,7 @@ gentity_t       *g_SmokeGrenadeCache[MAX_CACHE] = {0};
 
 struct BotEntity
 {
-	obint16 m_HandleSerial;
+	int16_t m_HandleSerial;
 	bool m_NewEntity : 1;
 	bool m_Used : 1;
 };
@@ -141,7 +141,7 @@ int ENTINDEX( gentity_t *_ent ) {
 }
 
 gentity_t *EntityFromHandle( GameEntity _ent ) {
-	obint16 index = _ent.GetIndex();
+	int16_t index = _ent.GetIndex();
 	if ( index >= 0 && index < MAX_GENTITIES ) {
 		if ( m_EntityHandles[index].m_HandleSerial == _ent.GetSerial() && g_entities[index].inuse ) {
 			return &g_entities[index];
@@ -201,7 +201,7 @@ void SendDeferredGoals() {
 	if ( g_GoalSubmitReady ) {
 		for ( int i = 0; i < g_NumDeferredGoals; ++i )
 		{
-			g_BotFunctions.pfnAddGoal( g_DeferredGoals[i] );
+			gBotFunctions.pfnAddGoal( g_DeferredGoals[i] );
 		}
 		g_NumDeferredGoals = 0;
 	}
@@ -660,23 +660,6 @@ static int _choosePriWeap( int playerClass, int team ) {
 	}
 }
 
-static void ReTransmitWeapons( const gentity_t* bot ) {
-	int weapon;
-
-	if ( !bot || !bot->client ) {
-		return;
-	}
-
-	Bot_Event_ResetWeapons( bot - g_entities );
-
-	for ( weapon = WP_NONE + 1; weapon < WP_NUM_WEAPONS; weapon++ )
-	{
-		if ( COM_BitCheck( bot->client->ps.weapons, weapon ) ) {
-			Bot_Event_AddWeapon( bot - g_entities, Bot_WeaponGameToBot( weapon ) );
-		}
-	}
-}
-
 #define MAX_SMOKE_RADIUS 320.0
 #define MAX_SMOKE_RADIUS_TIME 10000.0
 #define UNAFFECTED_BY_SMOKE_DIST SQR( 100 )
@@ -742,7 +725,7 @@ void Bot_Util_AddGoal( const char *_type, gentity_t *_ent, int _team, const char
 		if ( _extrakey && _extraval ) {
 			goaldef.Props.Set( _extrakey,*_extraval );
 		}
-		g_BotFunctions.pfnAddGoal( goaldef );
+		gBotFunctions.pfnAddGoal( goaldef );
 	}
 }
 
@@ -952,6 +935,15 @@ void Omnibot_Load_PrintMsg( const char *_msg ) {
 
 void Omnibot_Load_PrintErr( const char *_msg ) {
 	G_Printf( "Omni-bot: %s%s\n", S_COLOR_RED, _msg );
+}
+
+inline void ConvertBit( int & srcValue, int & dstValue, int matchBit, int toBit )
+{
+	if ( srcValue & matchBit )
+	{
+		dstValue |= toBit;
+		srcValue &= ~matchBit; // so we can debug bits we dont handle
+	}
 }
 
 int g_LastScreenMessageTime = 0;
@@ -1216,7 +1208,6 @@ public:
 		}
 
 		SetTeam( bot, teamName, qfalse );
-		//ReTransmitWeapons(bot);
 		return Success;
 	}
 
@@ -1294,10 +1285,6 @@ public:
 
 			// always clear this on class change. util scripts set it per class
 			bot->client->sess.botSuicidePersist = qfalse;
-		}
-		else {
-			// also retransmit weapons stuff
-			ReTransmitWeapons( bot );
 		}
 
 		return Success;
@@ -1548,10 +1535,116 @@ public:
 		return EntityFromID( 0 );
 	}
 
-	int GetPointContents( const float _pos[3] ) {
-		vec3_t vpos = { _pos[0], _pos[1], _pos[2] };
-		int iContents = trap_PointContents( vpos, -1 );
-		return obUtilBotContentsFromGameContents( iContents );
+	virtual int GetPointContents( const float _pos[ 3 ] )
+	{
+		vec3_t vpos = { _pos[ 0 ], _pos[ 1 ], _pos[ 2 ] };
+		const int iContents = trap_PointContents( vpos, -1 );
+		return ConvertValue( iContents, ConvertContentsFlags, ConvertGameToBot );
+	}
+
+	virtual int ConvertValue( int value, ConvertType ctype, ConvertDirection cdir )
+	{
+		if ( cdir == ConvertGameToBot )
+		{
+			switch ( ctype )
+			{
+				case ConvertSurfaceFlags:
+				{
+					// clear flags we don't care about
+					value &= ~( SURF_NOIMPACT | SURF_NOMARKS |
+						SURF_HINT |
+						SURF_NOLIGHTMAP | SURF_POINTLIGHT |
+						SURF_LIGHTFILTER | SURF_ALPHASHADOW |
+						SURF_NODLIGHT | SURF_METAL | SURF_WOOD |
+						SURF_GRASS | SURF_GRAVEL |
+						SURF_GLASS | SURF_SNOW |
+						SURF_ROOF | SURF_RUBBLE | SURF_CARPET );
+
+					int iBotSurface = 0;
+					ConvertBit( value, iBotSurface, SURF_NONSOLID, SURFACE_NONSOLID );
+					ConvertBit( value, iBotSurface, SURF_NOSTEPS, SURFACE_NOFOOTSTEP );
+					ConvertBit( value, iBotSurface, SURF_SKY, SURFACE_SKY );
+					ConvertBit( value, iBotSurface, SURF_SKIP, SURFACE_IGNORE );
+					ConvertBit( value, iBotSurface, SURF_NODAMAGE, SURFACE_NOFALLDAMAGE );
+					ConvertBit( value, iBotSurface, SURF_SLICK, SURFACE_SLICK );
+					ConvertBit( value, iBotSurface, SURF_LADDER, SURFACE_LADDER );
+					ConvertBit( value, iBotSurface, SURF_NODRAW, SURFACE_NODRAW );
+
+					assert( value == 0 && "Unhandled flag" );
+					return iBotSurface;
+				}
+				case ConvertContentsFlags:
+				{
+					const int CLIPSHOT_I_THINK = 0x00002000;
+
+					value &= ~( CONTENTS_LIGHTGRID | CONTENTS_MISSILECLIP |
+						CONTENTS_ITEM | CONTENTS_AREAPORTAL | CONTENTS_MONSTERCLIP |
+						CONTENTS_CLUSTERPORTAL | CONTENTS_DONOTENTER |
+						CONTENTS_DONOTENTER_LARGE | CONTENTS_ORIGIN |
+						CONTENTS_STRUCTURAL | CONTENTS_TRANSLUCENT |
+						CONTENTS_NODROP | CONTENTS_BODY | CONTENTS_CORPSE |
+						CLIPSHOT_I_THINK );
+
+					int iBotContents = 0;
+					ConvertBit( value, iBotContents, CONTENTS_SOLID, CONT_SOLID );
+					ConvertBit( value, iBotContents, CONTENTS_WATER, CONT_WATER );
+					ConvertBit( value, iBotContents, CONTENTS_SLIME, CONT_SLIME );
+					ConvertBit( value, iBotContents, CONTENTS_FOG, CONT_FOG );
+					ConvertBit( value, iBotContents, CONTENTS_TELEPORTER, CONT_TELEPORTER );
+					ConvertBit( value, iBotContents, CONTENTS_JUMPPAD, CONT_JUMPPAD );
+					ConvertBit( value, iBotContents, CONTENTS_MOVER, CONT_MOVER );
+					ConvertBit( value, iBotContents, CONTENTS_TRIGGER, CONT_TRIGGER );
+					ConvertBit( value, iBotContents, CONTENTS_LAVA, CONT_LAVA );
+					ConvertBit( value, iBotContents, CONTENTS_PLAYERCLIP, CONT_PLYRCLIP );
+					ConvertBit( value, iBotContents, CONTENTS_DETAIL, CONT_NONSOLID );
+					ConvertBit( value, iBotContents, CONTENTS_FOG, CONT_FOG );
+
+					assert( value == 0 && "Unhandled flag" );
+					return iBotContents;
+				}
+			}
+		}
+		else
+		{
+			switch ( ctype )
+			{
+				case ConvertSurfaceFlags:
+				{
+					int iBotSurface = 0;
+					ConvertBit( value, iBotSurface, SURFACE_NONSOLID, SURF_NONSOLID );
+					ConvertBit( value, iBotSurface, SURFACE_NOFOOTSTEP, SURF_NOSTEPS );
+					ConvertBit( value, iBotSurface, SURFACE_SKY, SURF_SKY );
+					ConvertBit( value, iBotSurface, SURFACE_IGNORE, SURF_SKIP );
+					ConvertBit( value, iBotSurface, SURFACE_NOFALLDAMAGE, SURF_NODAMAGE );
+					ConvertBit( value, iBotSurface, SURFACE_SLICK, SURF_SLICK );
+					ConvertBit( value, iBotSurface, SURFACE_LADDER, SURF_LADDER );
+
+					assert( value == 0 && "Unhandled flag" );
+					return iBotSurface;
+				}
+				case ConvertContentsFlags:
+				{
+					int iBotContents = 0;
+					ConvertBit( value, iBotContents, CONT_SOLID, CONTENTS_SOLID );
+					ConvertBit( value, iBotContents, CONT_WATER, CONTENTS_WATER );
+					ConvertBit( value, iBotContents, CONT_SLIME, CONTENTS_SLIME );
+					ConvertBit( value, iBotContents, CONT_FOG, CONTENTS_FOG );
+					ConvertBit( value, iBotContents, CONT_TELEPORTER, CONTENTS_TELEPORTER );
+					ConvertBit( value, iBotContents, CONT_JUMPPAD, CONTENTS_JUMPPAD );
+					ConvertBit( value, iBotContents, CONT_MOVER, CONTENTS_MOVER );
+					ConvertBit( value, iBotContents, CONT_TRIGGER, CONTENTS_TRIGGER );
+					ConvertBit( value, iBotContents, CONT_LAVA, CONTENTS_LAVA );
+					ConvertBit( value, iBotContents, CONT_PLYRCLIP, CONTENTS_PLAYERCLIP );
+					ConvertBit( value, iBotContents, CONT_NONSOLID, CONTENTS_DETAIL );
+					ConvertBit( value, iBotContents, CONT_FOG, CONTENTS_FOG );
+
+					assert( value == 0 && "Unhandled flag" );
+					return iBotContents;
+				}
+			}
+		}
+		assert( 0 && "Unhandled conversion" );
+		return 0;
 	}
 
 	GameEntity FindEntityInSphere( const float _pos[3], float _radius, GameEntity _pStart, int classId ) {
@@ -1656,12 +1749,12 @@ public:
 					{
 					case HINT_BUTTON:
 						_category.SetFlag( ENT_CAT_TRIGGER );
-						_category.SetFlag( ENT_CAT_STATIC );
+						_category.SetFlag( ENT_CAT_NOLOS );
 						break;
 					}
 				} else if ( !Q_stricmp( pEnt->classname, "func_button" ) ) {
 					_category.SetFlag( ENT_CAT_TRIGGER );
-					_category.SetFlag( ENT_CAT_STATIC );
+					_category.SetFlag( ENT_CAT_NOLOS );
 					// continue for now so it doesnt get regged
 					//continue;
 				} else if(!Q_stricmp(pEnt->classname, "info_player_deathmatch") ||
@@ -1736,12 +1829,12 @@ public:
 				case WP_SMOKE_GRENADE:
 				case WP_ARTY:
 				case WP_DYNAMITE:
-					_category.SetFlag( ENT_CAT_AVOID );
+					_category.SetFlag( ENT_CAT_OBSTACLE );
 					_category.SetFlag( ENT_CAT_PROJECTILE );
 					break;
 				default:
 					if ( !Q_strncmp( pEnt->classname, "air strike", sizeof( "air strike" ) ) ) {
-						_category.SetFlag( ENT_CAT_AVOID );
+						_category.SetFlag( ENT_CAT_OBSTACLE );
 						_category.SetFlag( ENT_CAT_PROJECTILE );
 						break;
 					} else {
@@ -1752,7 +1845,6 @@ public:
 			}
 		case ET_FLAMETHROWER_CHUNK:
 			{
-				_category.SetFlag( ENT_CAT_AVOID );
 				_category.SetFlag( ENT_CAT_PROJECTILE );
 				break;
 			}
@@ -1765,7 +1857,7 @@ public:
 						_category.SetFlag( ENT_CAT_MOVER );
 					}
 
-					_category.SetFlag( ENT_CAT_STATIC );
+					_category.SetFlag( ENT_CAT_NOLOS );
 					if ( ( pEnt->health > 0 ) && ( pEnt->takedamage == qtrue ) ) {
 						_category.SetFlag( ENT_CAT_SHOOTABLE );
 					}
@@ -2325,6 +2417,60 @@ public:
 		return NULL;
 	}
 
+	obResult GetModel( GameModelInfo & modelOut, MemoryAllocator & alloc )
+	{
+		fileHandle_t f;
+		const int fileSize = trap_FS_FOpenFile( va( "maps/%s.bsp", level.rawmapname ), &f, FS_READ );
+		if ( fileSize > 0 )
+		{
+			char * mapBuffer = alloc.AllocateMemory( fileSize );
+			trap_FS_Read( mapBuffer, fileSize, f );
+			trap_FS_FCloseFile( f );
+
+			Com_sprintf( modelOut.mModelName, sizeof( modelOut.mModelName ), "%s.bsp", level.rawmapname );
+			Com_sprintf( modelOut.mModelType, sizeof( modelOut.mModelType ), "bsp" );
+			modelOut.mDataBuffer = mapBuffer;
+			modelOut.mDataBufferSize = fileSize;
+			return InvalidParameter;
+		}
+		return Success;
+	}
+
+	obResult GetWorldModel( GameModelInfo & modelOut, MemoryAllocator & alloc )
+	{
+		Com_sprintf( modelOut.mModelName, sizeof( modelOut.mModelName ), "maps/%s.bsp", GetMapName() );
+		Com_sprintf( modelOut.mModelType, sizeof( modelOut.mModelName ), "bsp" );
+		return GetModel( modelOut, alloc );
+	}
+
+	obResult GetEntityModel( const GameEntity _ent, GameModelInfo & modelOut, MemoryAllocator & alloc )
+	{
+		gentity_t *pEnt = EntityFromHandle( _ent );
+		if ( pEnt )
+		{
+			if ( pEnt->s.eType == ET_GAMEMODEL )
+			{
+				// only this type can be scaled?
+				modelOut.mScale[ 0 ] = pEnt->s.angles2[ 0 ];
+				modelOut.mScale[ 1 ] = pEnt->s.angles2[ 1 ];
+				modelOut.mScale[ 2 ] = pEnt->s.angles2[ 2 ];
+			}
+
+			if ( G_FindConfigstringByIndex( pEnt->s.modelindex, CS_MODELS, MAX_MODELS, modelOut.mModelName, sizeof( modelOut.mModelName ) ) > 0 )
+			{
+				const int len = strlen( modelOut.mModelName );
+				for ( int i = 0; i < len; ++i )
+				{
+					if ( modelOut.mModelName[ i ] == '.' )
+						strncpy( modelOut.mModelType, &modelOut.mModelName[ i + 1 ], sizeof( modelOut.mModelName ) );
+				}
+
+				return GetModel( modelOut, alloc );
+			}
+		}
+		return InvalidEntity;
+	}
+
 	obResult GetCurrentWeaponClip( const GameEntity _ent, FireMode _mode, int &_curclip, int &_maxclip ) {
 		gentity_t *bot = EntityFromHandle( _ent );
 		if ( bot && bot->inuse && bot->client ) {
@@ -2361,6 +2507,27 @@ public:
 			return Success;
 		}
 		return InvalidEntity;
+	}
+
+	int GetCurrentWeapons( const GameEntity ent, int weaponIds [], int maxWeapons )
+	{
+		gentity_t *bot = EntityFromHandle( ent );
+		if ( bot && bot->inuse && bot->client )
+		{
+			int weaponCount = 0;
+
+			for ( int i = 0; i < WP_NUM_WEAPONS; i++ )
+			{
+				if ( COM_BitCheck( bot->client->ps.weapons, i ) )
+				{
+					weaponIds[ weaponCount ] = Bot_WeaponGameToBot( i );
+					if ( weaponIds[ weaponCount ] != RTCW_WP_NONE )
+						++weaponCount;
+				}
+			}
+			return weaponCount;
+		}
+		return 0;
 	}
 
 	obResult GetCurrentAmmo( const GameEntity _ent, int _weaponId, FireMode _mode, int &_cur, int &_max ) {
@@ -3459,8 +3626,8 @@ int Bot_Interface_Init() {
 
 	g_GoalSubmitReady = false;
 
-	g_InterfaceFunctions = new RTCWInterface;
-	eomnibot_error err = Omnibot_LoadLibrary( RTCW_VERSION_LATEST,
+	gGameFunctions = new RTCWInterface;
+	omnibot_error err = Omnibot_LoadLibrary( RTCW_VERSION_LATEST,
 		"omnibot_rtcw", Omnibot_FixPath( g_OmniBotPath.string ) );
 	if ( err == BOT_ERROR_NONE ) {
 		return true;
@@ -3470,7 +3637,7 @@ int Bot_Interface_Init() {
 
 int Bot_Interface_Shutdown() {
 	if ( IsOmnibotLoaded() ) {
-		g_BotFunctions.pfnShutdown();
+		gBotFunctions.pfnShutdown();
 	}
 	Omnibot_FreeLibrary();
 	return 1;
@@ -3503,13 +3670,13 @@ void Bot_Interface_Update() {
 			static float serverGravity = 0.0f;
 			if ( serverGravity != g_gravity.value ) {
 				Event_SystemGravity d = { -g_gravity.value };
-				g_BotFunctions.pfnSendGlobalEvent( MessageHelper( GAME_GRAVITY, &d, sizeof( d ) ) );
+				gBotFunctions.pfnSendGlobalEvent( MessageHelper( GAME_GRAVITY, &d, sizeof( d ) ) );
 				serverGravity = g_gravity.value;
 			}
 			static int cheatsEnabled = 0;
 			if ( g_cheats.integer != cheatsEnabled ) {
 				Event_SystemCheats d = { g_cheats.integer ? True : False };
-				g_BotFunctions.pfnSendGlobalEvent( MessageHelper( GAME_CHEATS, &d, sizeof( d ) ) );
+				gBotFunctions.pfnSendGlobalEvent( MessageHelper( GAME_CHEATS, &d, sizeof( d ) ) );
 				cheatsEnabled = g_cheats.integer;
 			}
 		}
@@ -3569,7 +3736,7 @@ void Bot_Interface_Update() {
 		SendDeferredGoals();
 		//////////////////////////////////////////////////////////////////////////
 		// Call the libraries update.
-		g_BotFunctions.pfnUpdate();
+		gBotFunctions.pfnUpdate();
 		//////////////////////////////////////////////////////////////////////////
 	}
 }
@@ -3611,7 +3778,7 @@ int Bot_Interface_ConsoleCommand() {
 		{
 			trap_Argv( i, args.m_Args[args.m_NumArgs++], Arguments::MaxArgLength );
 		}
-		g_BotFunctions.pfnConsoleCommand( args );
+		gBotFunctions.pfnConsoleCommand( args );
 	} else
 	{
 		G_Printf( "%s%s\n", S_COLOR_RED, "Omni-bot not loaded." );
@@ -3625,49 +3792,21 @@ void Bot_Event_ClientConnected( int _client, qboolean _isbot ) {
 		Event_SystemClientConnected d;
 		d.m_GameId = _client;
 		d.m_IsBot = _isbot == qtrue ? True : False;
-		g_BotFunctions.pfnSendGlobalEvent( MessageHelper( GAME_CLIENTCONNECTED, &d, sizeof( d ) ) );
+		gBotFunctions.pfnSendGlobalEvent( MessageHelper( GAME_CLIENTCONNECTED, &d, sizeof( d ) ) );
 	}
 }
 
 void Bot_Event_ClientDisConnected( int _client ) {
 	if ( IsOmnibotLoaded() ) {
 		Event_SystemClientDisConnected d = { _client };
-		g_BotFunctions.pfnSendGlobalEvent( MessageHelper( GAME_CLIENTDISCONNECTED, &d, sizeof( d ) ) );
-	}
-}
-
-void Bot_Event_ResetWeapons( int _client ) {
-	if ( IsOmnibotLoaded() ) {
-		if ( IsBot( &g_entities[_client] ) ) {
-			g_BotFunctions.pfnSendEvent( _client, MessageHelper( MESSAGE_RESETWEAPONS ) );
-		}
-	}
-}
-
-void Bot_Event_AddWeapon( int _client, int _weaponId ) {
-	if ( IsOmnibotLoaded() ) {
-		if ( IsBot( &g_entities[_client] ) ) {
-			Event_AddWeapon d = { _weaponId };
-			g_BotFunctions.pfnSendEvent( _client, MessageHelper( MESSAGE_ADDWEAPON, &d, sizeof( d ) ) );
-		}
-	}
-}
-
-void Bot_Event_RemoveWeapon( int _client, int _weaponId ) {
-	if ( IsOmnibotLoaded() ) {
-		gentity_t *e = &g_entities[_client];
-		// cs: don't send the event if the bot is dead so b.HasWeapon() will work in Limbo
-		if ( e && e->client && IsBot(e) && e->client->ps.pm_type != PM_DEAD ) {
-			Event_RemoveWeapon d = { _weaponId };
-			g_BotFunctions.pfnSendEvent( _client, MessageHelper( MESSAGE_REMOVEWEAPON, &d, sizeof( d ) ) );
-		}
+		gBotFunctions.pfnSendGlobalEvent( MessageHelper( GAME_CLIENTDISCONNECTED, &d, sizeof( d ) ) );
 	}
 }
 
 void Bot_Event_Drowning( int _client ) {
 	if ( IsOmnibotLoaded() ) {
 		if ( IsBot( &g_entities[_client] ) ) {
-			g_BotFunctions.pfnSendEvent( _client, MessageHelper( RTCW_EVENT_DROWNING ) );
+			gBotFunctions.pfnSendEvent( _client, MessageHelper( RTCW_EVENT_DROWNING ) );
 		}
 	}
 }
@@ -3676,7 +3815,7 @@ void Bot_Event_TakeDamage( int _client, gentity_t *_ent ) {
 	if ( IsOmnibotLoaded() ) {
 		if ( IsBot( &g_entities[_client] ) ) {
 			Event_TakeDamage d = { HandleFromEntity( _ent ) };
-			g_BotFunctions.pfnSendEvent( _client, MessageHelper( PERCEPT_FEEL_PAIN, &d, sizeof( d ) ) );
+			gBotFunctions.pfnSendEvent( _client, MessageHelper( PERCEPT_FEEL_PAIN, &d, sizeof( d ) ) );
 		}
 	}
 }
@@ -3688,7 +3827,7 @@ void Bot_Event_Death( int _client, gentity_t *_killer, const char *_meansofdeath
 			d.m_WhoKilledMe = HandleFromEntity( _killer );
 			Q_strncpyz( d.m_MeansOfDeath,
 				_meansofdeath ? _meansofdeath : "<unknown>", sizeof( d.m_MeansOfDeath ) );
-			g_BotFunctions.pfnSendEvent( _client, MessageHelper( MESSAGE_DEATH, &d, sizeof( d ) ) );
+			gBotFunctions.pfnSendEvent( _client, MessageHelper( MESSAGE_DEATH, &d, sizeof( d ) ) );
 		}
 	}
 }
@@ -3697,7 +3836,7 @@ void Bot_Event_Healed( int _client, gentity_t *_whodoneit ) {
 	if ( IsOmnibotLoaded() ) {
 		if ( IsBot( &g_entities[_client] ) ) {
 			Event_Healed d = { HandleFromEntity( _whodoneit ) };
-			g_BotFunctions.pfnSendEvent( _client, MessageHelper( MESSAGE_HEALED, &d, sizeof( d ) ) );
+			gBotFunctions.pfnSendEvent( _client, MessageHelper( MESSAGE_HEALED, &d, sizeof( d ) ) );
 		}
 	}
 }
@@ -3706,7 +3845,7 @@ void Bot_Event_RecievedAmmo( int _client, gentity_t *_whodoneit ) {
 	if ( IsOmnibotLoaded() ) {
 		if ( IsBot( &g_entities[_client] ) ) {
 			Event_Ammo d = { HandleFromEntity( _whodoneit ) };
-			g_BotFunctions.pfnSendEvent( _client, MessageHelper( RTCW_EVENT_RECIEVEDAMMO, &d, sizeof( d ) ) );
+			gBotFunctions.pfnSendEvent( _client, MessageHelper( RTCW_EVENT_RECIEVEDAMMO, &d, sizeof( d ) ) );
 		}
 	}
 }
@@ -3715,7 +3854,7 @@ void Bot_Event_Revived( int _client, gentity_t *_whodoneit ) {
 	if ( IsOmnibotLoaded() ) {
 		if ( IsBot( &g_entities[_client] ) ) {
 			Event_Revived d = { HandleFromEntity( _whodoneit ) };
-			g_BotFunctions.pfnSendEvent( _client, MessageHelper( MESSAGE_REVIVED, &d, sizeof( d ) ) );
+			gBotFunctions.pfnSendEvent( _client, MessageHelper( MESSAGE_REVIVED, &d, sizeof( d ) ) );
 		}
 	}
 }
@@ -3728,7 +3867,7 @@ void Bot_Event_KilledSomeone( int _client, gentity_t *_victim, const char *_mean
 			Q_strncpyz( d.m_MeansOfDeath,
 				_meansofdeath ? _meansofdeath : "<unknown>",
 				sizeof( d.m_MeansOfDeath ) / sizeof( d.m_MeansOfDeath[0] ) );
-			g_BotFunctions.pfnSendEvent( _client, MessageHelper( MESSAGE_KILLEDSOMEONE, &d, sizeof( d ) ) );
+			gBotFunctions.pfnSendEvent( _client, MessageHelper( MESSAGE_KILLEDSOMEONE, &d, sizeof( d ) ) );
 		}
 	}
 }
@@ -3740,7 +3879,7 @@ void Bot_Event_FireWeapon( int _client, int _weaponId, gentity_t *_projectile ) 
 			d.m_WeaponId = _weaponId;
 			d.m_Projectile = HandleFromEntity( _projectile );
 			d.m_FireMode = Primary;
-			g_BotFunctions.pfnSendEvent( _client, MessageHelper( ACTION_WEAPON_FIRE, &d, sizeof( d ) ) );
+			gBotFunctions.pfnSendEvent( _client, MessageHelper( ACTION_WEAPON_FIRE, &d, sizeof( d ) ) );
 		}
 	}
 }
@@ -3749,7 +3888,7 @@ void Bot_Event_Spectated( int _client, int _who ) {
 	if ( IsOmnibotLoaded() ) {
 		if ( IsBot( &g_entities[_client] ) ) {
 			Event_Spectated d = { _who };
-			g_BotFunctions.pfnSendEvent( _client, MessageHelper( MESSAGE_SPECTATED, &d, sizeof( d ) ) );
+			gBotFunctions.pfnSendEvent( _client, MessageHelper( MESSAGE_SPECTATED, &d, sizeof( d ) ) );
 		}
 	}
 }
@@ -3776,7 +3915,7 @@ void Bot_Event_ChatMessage( int _to, gentity_t *_source, int _type, const char *
 			d.m_WhoSaidIt = HandleFromEntity( _source );
 			Q_strncpyz( d.m_Message, _message ? _message : "<unknown>",
 				sizeof( d.m_Message ) / sizeof( d.m_Message[0] ) );
-			g_BotFunctions.pfnSendEvent( _to, MessageHelper( iMsg, &d, sizeof( d ) ) );
+			gBotFunctions.pfnSendEvent( _to, MessageHelper( iMsg, &d, sizeof( d ) ) );
 		}
 	}
 }
@@ -3793,7 +3932,7 @@ void Bot_Event_VoiceMacro( int _client, gentity_t *_source, int _type, const cha
 			d.m_WhoSaidIt = HandleFromEntity( _source );
 			Q_strncpyz( d.m_MacroString, _message ? _message : "<unknown>",
 				sizeof( d.m_MacroString ) / sizeof( d.m_MacroString[0] ) );
-			g_BotFunctions.pfnSendEvent( _client, MessageHelper( iMessageId, &d, sizeof( d ) ) );
+			gBotFunctions.pfnSendEvent( _client, MessageHelper( iMessageId, &d, sizeof( d ) ) );
 		}
 	}
 }
@@ -3803,9 +3942,9 @@ void Bot_Event_Sound( gentity_t *_source, int _sndtype, const char *_name ) {
 		Event_Sound d = {};
 		d.m_Source = HandleFromEntity( _source );
 		d.m_SoundType = _sndtype;
-		g_InterfaceFunctions->GetEntityPosition( d.m_Source,d.m_Origin );
+		gGameFunctions->GetEntityPosition( d.m_Source,d.m_Origin );
 		Q_strncpyz( d.m_SoundName, _name ? _name : "<unknown>", sizeof( d.m_SoundName ) / sizeof( d.m_SoundName[0] ) );
-		g_BotFunctions.pfnSendGlobalEvent( MessageHelper( GAME_SOUND, &d, sizeof( d ) ) );
+		gBotFunctions.pfnSendGlobalEvent( MessageHelper( GAME_SOUND, &d, sizeof( d ) ) );
 	}
 }
 
@@ -3814,14 +3953,14 @@ void Bot_Event_EntityCreated( gentity_t *pEnt ) {
 		// Get common properties.
 		const int iEntNum = pEnt - g_entities;
 		GameEntity ent = HandleFromEntity( pEnt );
-		int iClass = g_InterfaceFunctions->GetEntityClass( ent );
+		int iClass = gGameFunctions->GetEntityClass( ent );
 		if ( iClass ) {
 			Event_EntityCreated d;
 			d.m_Entity = GameEntity( iEntNum, m_EntityHandles[iEntNum].m_HandleSerial );
 
 			d.m_EntityClass = iClass;
-			g_InterfaceFunctions->GetEntityCategory( ent, d.m_EntityCategory );
-			g_BotFunctions.pfnSendGlobalEvent( MessageHelper( GAME_ENTITYCREATED, &d, sizeof( d ) ) );
+			gGameFunctions->GetEntityCategory( ent, d.m_EntityCategory );
+			gBotFunctions.pfnSendGlobalEvent( MessageHelper( GAME_ENTITYCREATED, &d, sizeof( d ) ) );
 			m_EntityHandles[iEntNum].m_Used = true;
 		}
 
@@ -3842,7 +3981,7 @@ extern "C"
 			if ( IsOmnibotLoaded() ) {
 				Event_EntityDeleted d;
 				d.m_Entity = GameEntity( iEntNum, m_EntityHandles[iEntNum].m_HandleSerial );
-				g_BotFunctions.pfnSendGlobalEvent( MessageHelper( GAME_ENTITYDELETED, &d, sizeof( d ) ) );
+				gBotFunctions.pfnSendGlobalEvent( MessageHelper( GAME_ENTITYDELETED, &d, sizeof( d ) ) );
 			}
 			m_EntityHandles[iEntNum].m_Used = false;
 			m_EntityHandles[iEntNum].m_NewEntity = false;
@@ -3858,7 +3997,7 @@ extern "C"
 			triggerInfo.m_Entity = HandleFromEntity( _ent );
 			Q_strncpyz( triggerInfo.m_TagName, _tagname, TriggerBufferSize );
 			Q_strncpyz( triggerInfo.m_Action, _action, TriggerBufferSize );
-			g_BotFunctions.pfnSendTrigger( triggerInfo );
+			gBotFunctions.pfnSendTrigger( triggerInfo );
 		}
 	}
 

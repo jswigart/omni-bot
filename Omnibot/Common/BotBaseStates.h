@@ -38,38 +38,38 @@ namespace AiState
 
 		virtual bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt) { OBASSERT(0, "Not Implemented"); return false; }
 
-		virtual void OnPathSucceeded() { m_PathSuccess = true; };
-		virtual void OnPathFailed(FailType _how) { m_PathFailed = _how; };
+		virtual void OnPathSucceeded() { mPathSuccess = true; };
+		virtual void OnPathFailed(FailType _how) { mPathFailed = _how; };
 
-		bool DidPathSucceed() const { return m_PathSuccess; }
-		bool DidPathFail() const { return m_PathFailed!=0; }
-		FailType GetFailType() const { return m_PathFailed; }
+		bool DidPathSucceed() const { return mPathSuccess; }
+		bool DidPathFail() const { return mPathFailed!=0; }
+		FailType GetFailType() const { return mPathFailed; }
 
-		int GetDestinationIndex() const { return m_DestinationIndex; }
+		int GetDestinationIndex() const { return mDestinationIndex; }
 
-		void ResetPathUser() { m_PathFailed = None; m_PathSuccess = false; }
-		bool InProgress() const { return m_PathFailed==None&&!m_PathSuccess; }
+		void ResetPathUser() { mPathFailed = None; mPathSuccess = false; }
+		bool InProgress() const { return mPathFailed==None&&!mPathSuccess; }
 
-		void SetSourceThread(int _threadId) { m_CallingThread = _threadId; }
-		int GetSourceThread() const { return m_CallingThread; }
+		void SetSourceThread(int _threadId) { mCallingThread = _threadId; }
+		int GetSourceThread() const { return mCallingThread; }
 
-		obuint32 GetFollowUserName() const { return m_UserName; }
+		uint32_t GetFollowUserName() const { return mUserName; }
 
-		void SetFollowUserName(obuint32 _name);
+		void SetFollowUserName(uint32_t _name);
 		void SetFollowUserName(const std::string &_name);
 
 		FollowPathUser(const std::string &_user);
-		FollowPathUser(obuint32 _name);
+		FollowPathUser(uint32_t _name);
 		virtual ~FollowPathUser() {}
 	private:
-		obuint32					m_UserName;
+		uint32_t				 mUserName;
 
-		int							m_CallingThread;
+		int						 mCallingThread;
 
-		int							m_DestinationIndex;
+		int						 mDestinationIndex;
 
-		FailType					m_PathFailed : 3;
-		obuint8						m_PathSuccess : 1;
+		FailType				 mPathFailed : 3;
+		uint8_t					 mPathSuccess : 1;
 
 		FollowPathUser();
 	};
@@ -81,18 +81,18 @@ namespace AiState
 		enum { MaxTargetZones = 8 };
 		struct TargetZone
 		{
-			Vector3f	m_Position;
-			obint32		m_TargetCount;
-			bool		m_InUse : 1;
+			Vector3f mPosition;
+			int32_t	 mTargetCount;
+			bool	 mInUse : 1;
 		};
 
 		void Restart(float _radius);
 
 		void UpdateAimPosition();
 
-		bool HasAim() const { return m_ValidAim; }
+		bool HasAim() const { return mValidAim; }
 
-		const Vector3f &GetAimPosition() { return m_AimPosition; }
+		const Vector3f &GetAimPosition() { return mAimPosition; }
 
 		void RenderDebug();
 
@@ -100,11 +100,11 @@ namespace AiState
 
 		TrackTargetZone();
 	private:
-		float			m_Radius;
-		Vector3f		m_AimPosition;
-		GameEntity		m_LastTarget;
-		TargetZone		m_TargetZones[MaxTargetZones];
-		bool			m_ValidAim;
+		float		 mRadius;
+		Vector3f	 mAimPosition;
+		GameEntity	 mLastTarget;
+		TargetZone	 mTargetZones[MaxTargetZones];
+		bool		 mValidAim;
 	};
 	//////////////////////////////////////////////////////////////////////////
 	class AimerUser
@@ -132,11 +132,11 @@ namespace AiState
 		{
 			friend class Aimer;
 
-			Priority::ePriority		m_Priority;
-			obuint32 				m_Owner;
-			AimType					m_AimType;
-			Vector3f				m_AimVector;
-			AimerUser				*m_AimerUser;
+			Priority::ePriority	 mPriority;
+			uint32_t 			 mOwner;
+			AimType				 mAimType;
+			Vector3f			 mAimVector;
+			AimerUser			*mAimerUser;
 
 			void Reset();
 			AimRequest();
@@ -144,13 +144,13 @@ namespace AiState
 
 		enum { MaxAimRequests = 8 };
 
-		bool AddAimRequest(Priority::ePriority _prio, AimerUser *_owner, obuint32 _ownername);
-		bool AddAimFacingRequest(Priority::ePriority _prio, obuint32 _owner, const Vector3f &_v);
-		bool AddAimPositionRequest(Priority::ePriority _prio, obuint32 _owner, const Vector3f &_v);
-		bool AddAimMoveDirRequest(Priority::ePriority _prio, obuint32 _owner);
+		bool AddAimRequest(Priority::ePriority _prio, AimerUser *_owner, uint32_t _ownername);
+		bool AddAimFacingRequest(Priority::ePriority _prio, uint32_t _owner, const Vector3f &_v);
+		bool AddAimPositionRequest(Priority::ePriority _prio, uint32_t _owner, const Vector3f &_v);
+		bool AddAimMoveDirRequest(Priority::ePriority _prio, uint32_t _owner);
 
-		void ReleaseAimRequest(obuint32 _owner);
-		void UpdateAimRequest(obuint32 _owner, const Vector3f &_pos);
+		void ReleaseAimRequest(uint32_t _owner);
+		void UpdateAimRequest(uint32_t _owner, const Vector3f &_pos);
 
 		AimRequest *GetHighestAimRequest(bool _clearontarget);
 
@@ -167,10 +167,10 @@ namespace AiState
 
 		Aimer();
 	private:
-		AimRequest	m_AimRequests[MaxAimRequests];
-		obuint32 	m_BestAimOwner;
+		AimRequest mAimRequests[MaxAimRequests];
+		uint32_t  mBestAimOwner;
 
-		AimRequest *FindAimRequest(obuint32 _owner);
+		AimRequest *FindAimRequest(uint32_t _owner);
 	};
 	
 	//////////////////////////////////////////////////////////////////////////
@@ -187,12 +187,12 @@ namespace AiState
 			HoldingFlag,
 		};
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);
 
-		GoalState GetGoalState() const { return m_GoalState; }
+		GoalState GetGoalState() const { return mGoalState; }
 
 		void GetDebugString(std::stringstream &out);
 		MapGoal *GetMapGoalPtr();
@@ -203,11 +203,11 @@ namespace AiState
 
 		CaptureTheFlag();
 	private:
-		GoalState					m_GoalState;
-		int							m_LastFlagState;
-		obint32						m_NextMoveTime;
-		MapGoalPtr					m_MapGoalFlag;
-		MapGoalPtr					m_MapGoalCap;
+		GoalState				 mGoalState;
+		int						 mLastFlagState;
+		int32_t					 mNextMoveTime;
+		MapGoalPtr				 mMapGoalFlag;
+		MapGoalPtr				 mMapGoalCap;
 
 		Trackers					Tracker;
 
@@ -220,7 +220,7 @@ namespace AiState
 	{
 	public:
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);
@@ -233,10 +233,10 @@ namespace AiState
 
 		ReturnTheFlag();
 	private:
-		Vector3f			m_LastGoalPosition;
-		MapGoalPtr			m_MapGoal;
+		Vector3f		 mLastGoalPosition;
+		MapGoalPtr		 mMapGoal;
 
-		TrackInUse			m_MapGoalProg;
+		TrackInUse		 mMapGoalProg;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -248,7 +248,7 @@ namespace AiState
 	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
-	//	obReal GetPriority();
+	//	float GetPriority();
 	//	void Enter();
 	//	void Exit();
 	//	StateStatus Update(float fDt);
@@ -263,17 +263,17 @@ namespace AiState
 	//	Defend();
 	//private:
 	//	Trackers		Tracker;
-	//	MapGoalPtr		m_MapGoal;
-	//	Vector3f		m_AimPosition;
+	//	MapGoalPtr	 mMapGoal;
+	//	Vector3f	 mAimPosition;
 	//
-	//	TrackTargetZone m_TargetZone;
+	//	TrackTargetZone mTargetZone;
 
-	//	Seconds			m_MinCampTime;
-	//	Seconds			m_MaxCampTime;
-	//	int				m_EquipWeapon;
-	//	int				m_Stance;
+	//	Seconds		 mMinCampTime;
+	//	Seconds		 mMaxCampTime;
+	//	int			 mEquipWeapon;
+	//	int			 mStance;
 
-	//	int				m_ExpireTime;
+	//	int			 mExpireTime;
 	//};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -285,7 +285,7 @@ namespace AiState
 	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
-	//	obReal GetPriority();
+	//	float GetPriority();
 	//	void Enter();
 	//	void Exit();
 	//	StateStatus Update(float fDt);
@@ -300,17 +300,17 @@ namespace AiState
 	//	Attack();
 	//private:
 	//	Trackers		Tracker;
-	//	MapGoalPtr		m_MapGoal;
-	//	Vector3f		m_AimPosition;
+	//	MapGoalPtr	 mMapGoal;
+	//	Vector3f	 mAimPosition;
 
-	//	TrackTargetZone m_TargetZone;
+	//	TrackTargetZone mTargetZone;
 
-	//	Seconds			m_MinCampTime;
-	//	Seconds			m_MaxCampTime;
-	//	int				m_EquipWeapon;
-	//	int				m_Stance;
+	//	Seconds		 mMinCampTime;
+	//	Seconds		 mMaxCampTime;
+	//	int			 mEquipWeapon;
+	//	int			 mStance;
 
-	//	int				m_ExpireTime;
+	//	int			 mExpireTime;
 	//};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -319,7 +319,7 @@ namespace AiState
 	{
 	public:
 
-		obReal GetPriority();
+		float GetPriority();
 
 		void Exit();
 		StateStatus Update(float fDt);
@@ -333,7 +333,7 @@ namespace AiState
 	class HighLevel : public StatePrioritized
 	{
 	public:
-		//obReal GetPriority();
+		//float GetPriority();
 
 		HighLevel();
 	private:
@@ -349,16 +349,16 @@ namespace AiState
 
 		void OnSpawn();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);
 
 		LookAround();
 	private:
-		int		m_NextLookTime;
+		int	 mNextLookTime;
 
-		float	m_Awareness[8]; // 8 cardinal directions
+		float mAwareness[8]; // 8 cardinal directions
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -384,12 +384,12 @@ namespace AiState
 	class Main : public StateSimultaneous
 	{
 	public:
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		Main();
 		void OnSpawn();
 	private:
-		bool	m_OnSpawnCalled;
+		bool mOnSpawnCalled;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -397,7 +397,7 @@ namespace AiState
 	class Dead : public StateChild
 	{
 	public:
-		obReal GetPriority();
+		float GetPriority();
 		StateStatus Update(float fDt);
 		Dead();
 	private:
@@ -409,7 +409,7 @@ namespace AiState
 	class Warmup : public StateChild
 	{
 	public:
-		obReal GetPriority();
+		float GetPriority();
 		StateStatus Update(float fDt);
 		Warmup();
 	private:
@@ -428,9 +428,9 @@ namespace AiState
 
 	struct Event_ProximityTrigger
 	{
-		obuint32	m_OwnerState;
-		GameEntity	m_Entity;
-		Vector3f	m_Position;
+		uint32_t mOwnerState;
+		GameEntity mEntity;
+		Vector3f mPosition;
 	};
 
 	class ProximityWatcher : public StateChild
@@ -440,22 +440,22 @@ namespace AiState
 		enum { MaxTriggers = 8 };
 		struct Trigger
 		{
-			obuint32	m_OwnerState;
-			FilterPtr	m_SensoryFilter;
-			bool		m_DeleteOnFire : 1;
+			uint32_t mOwnerState;
+			FilterPtr mSensoryFilter;
+			bool	 mDeleteOnFire : 1;
 		};
 
-		void AddWatch(obuint32 _owner, FilterPtr _filter, bool _fireonce = true);
-		void RemoveWatch(obuint32 _owner);
+		void AddWatch(uint32_t _owner, FilterPtr _filter, bool _fireonce = true);
+		void RemoveWatch(uint32_t _owner);
 
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		StateStatus Update(float fDt);
 
 		ProximityWatcher();
 	private:
-		Trigger		m_Triggers[MaxTriggers];
+		Trigger	 mTriggers[MaxTriggers];
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -467,7 +467,7 @@ namespace AiState
 	//	void GetDebugString(std::stringstream &out);
 	//	void RenderDebug();
 
-	//	obReal GetPriority();
+	//	float GetPriority();
 	//	void Enter();
 	//	void Exit();
 	//	StateStatus Update(float fDt);
@@ -482,24 +482,24 @@ namespace AiState
 	//	Snipe();
 	//private:
 	//	Trackers			Tracker;
-	//	MapGoalPtr			m_MapGoal;
+	//	MapGoalPtr		 mMapGoal;
 
-	//	Vector3f			m_AimPosition;
+	//	Vector3f		 mAimPosition;
 
-	//	GameEntity			m_TargetEntity;
-	//	Vector3f			m_LastTargetPos;
+	//	GameEntity		 mTargetEntity;
+	//	Vector3f		 mLastTargetPos;
 
-	//	int					m_ScopedWeaponId;
-	//	int					m_NonScopedWeaponId;
+	//	int				 mScopedWeaponId;
+	//	int				 mNonScopedWeaponId;
 
-	//	TrackTargetZone		m_TargetZone;
+	//	TrackTargetZone	 mTargetZone;
 
-	//	Seconds				m_MinCampTime;
-	//	Seconds				m_MaxCampTime;
-	//	int					m_Stance;
+	//	Seconds			 mMinCampTime;
+	//	Seconds			 mMaxCampTime;
+	//	int				 mStance;
 
-	//	int					m_ExpireTime;
-	//	int					m_NextScanTime;
+	//	int				 mExpireTime;
+	//	int				 mNextScanTime;
 	//};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -531,7 +531,7 @@ namespace AiState
 		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);
@@ -585,7 +585,7 @@ namespace AiState
 		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);
@@ -602,16 +602,16 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		struct IntOffset2d
 		{
-			obint16		X;
-			obint16		Y;
+			int16_t		X;
+			int16_t		Y;
 		};
 		//////////////////////////////////////////////////////////////////////////
 		struct Node;
 		struct Connection
 		{
 			Node		*Destination;
-			obuint8		Cover : 4;
-			obuint8		Jump : 1;
+			uint8_t		Cover : 4;
+			uint8_t		Jump : 1;
 
 			void Reset();
 		};
@@ -623,21 +623,21 @@ namespace AiState
 
 			Connection		Connections[DIR_NUM];
 
-			obuint16		SectorId;
+			uint16_t		SectorId;
 
-			obuint8			OpenNess;
+			uint8_t			OpenNess;
 
-			obuint8			Open : 1;
-			obuint8			NearObject : 1;
-			obuint8			NearEdge : 1;
-			obuint8			Sectorized : 1;
+			uint8_t			Open : 1;
+			uint8_t			NearObject : 1;
+			uint8_t			NearEdge : 1;
+			uint8_t			Sectorized : 1;
 
-			void Init(obint16 _X = 0, obint16 _Y = 0, float _Height = 0.f, bool _Open = false);
+			void Init(int16_t _X = 0, int16_t _Y = 0, float _Height = 0.f, bool _Open = false);
 		};
 
 		Vector3f				_GetNodePosition(const Node &_Node);
 		FloodFiller::Node *		_NextOpenNode();
-		Node *					_NodeExists(obint16 _X, obint16 _Y, float _Height);
+		Node *					_NodeExists(int16_t _X, int16_t _Y, float _Height);
 		bool					_TestNode(const Node *_Node);
 		bool					_DropToGround(Node *_Node);
 		void					_MakeConnection(Node *_NodeA, Node *_NodeB, Direction _Dir);

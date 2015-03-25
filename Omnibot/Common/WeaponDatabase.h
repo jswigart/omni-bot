@@ -39,10 +39,10 @@ public:
 	WeaponDatabase();
 	~WeaponDatabase();
 private:
-	WeaponMap	m_WeaponMap;
+	WeaponMap	mWeaponMap;
 };
 
-extern WeaponDatabase g_WeaponDatabase;
+extern WeaponDatabase gWeaponDatabase;
 
 //////////////////////////////////////////////////////////////////////////
 

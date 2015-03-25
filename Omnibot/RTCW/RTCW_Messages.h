@@ -23,145 +23,145 @@
 
 struct RTCW_GetPlayerClass
 {
-	GameEntity	m_Entity;
-	int			m_PlayerClass;
+	GameEntity mEntity;
+	int		 mPlayerClass;
 };
 
 struct RTCW_WeaponOverheated
 {
-	RTCW_Weapon	m_Weapon;
-	obBool		m_IsOverheated;
+	RTCW_Weapon mWeapon;
+	obBool	 mIsOverheated;
 };
 
 struct RTCW_WeaponHeatLevel
 {
-	GameEntity	m_Entity;
-	int			m_Current;
-	int			m_Max;
+	GameEntity mEntity;
+	int		 mCurrent;
+	int		 mMax;
 };
 
 struct RTCW_ExplosiveState
 {
-	GameEntity		m_Explosive;
-	ExplosiveState	m_State;
+	GameEntity	 mExplosive;
+	ExplosiveState mState;
 };
 
 struct RTCW_Destroyable
 {
-	GameEntity			m_Entity;
-	ConstructableState	m_State;
+	GameEntity		 mEntity;
+	ConstructableState mState;
 };
 
 struct RTCW_HasFlag
 {
-	obBool		m_HasFlag;
+	obBool	 mHasFlag;
 };
 
 struct RTCW_CanBeGrabbed
 {
-	GameEntity	m_Entity;
-	obBool		m_CanBeGrabbed;
+	GameEntity mEntity;
+	obBool	 mCanBeGrabbed;
 };
 
 struct RTCW_WaitingForMedic
 {
-	obBool		m_WaitingForMedic;
+	obBool	 mWaitingForMedic;
 };
 
 struct RTCW_SelectWeapon
 {
-	RTCW_Weapon	m_Selection;
-	obBool		m_Good;
+	RTCW_Weapon mSelection;
+	obBool	 mGood;
 };
 
 struct RTCW_ReinforceTime
 {
-	int			m_ReinforceTime;
+	int		 mReinforceTime;
 };
 
 struct RTCW_MedicNear
 {
-	obBool		m_MedicNear;
+	obBool	 mMedicNear;
 };
 
 struct RTCW_GoLimbo
 {
-	obBool		m_GoLimbo;
+	obBool	 mGoLimbo;
 };
 
 struct RTCW_MG42MountedPlayer
 {
-	GameEntity	m_MG42Entity;
-	GameEntity	m_MountedEntity;
+	GameEntity mMG42Entity;
+	GameEntity mMountedEntity;
 };
 
 struct RTCW_MG42MountedRepairable
 {
-	GameEntity	m_MG42Entity;
-	obBool		m_Repairable;
+	GameEntity mMG42Entity;
+	obBool	 mRepairable;
 };
 
 struct RTCW_MG42Health
 {
-	GameEntity	m_MG42Entity;
-	int			m_Health;
+	GameEntity mMG42Entity;
+	int		 mHealth;
 };
 
 struct RTCW_CursorHint
 {
-	int			m_Type;
-	int			m_Value;
+	int		 mType;
+	int		 mValue;
 };
 
 struct RTCW_SpawnPoint
 {
-	int			m_SpawnPoint;
+	int		 mSpawnPoint;
 };
 
 struct RTCW_GetSpawnPoint
 {
-	int			m_SpawnPoint;
+	int		 mSpawnPoint;
 };
 
 struct RTCW_MG42Info
 {
-	float		m_CenterFacing[3];
-	float		m_MinHorizontalArc, m_MaxHorizontalArc;
-	float		m_MinVerticalArc, m_MaxVerticalArc;
+	float	 mCenterFacing[ 3 ];
+	float	 mMinHorizontalArc, mMaxHorizontalArc;
+	float	 mMinVerticalArc, mMaxVerticalArc;
 };
 
 struct RTCW_SendPM
 {
-	char *		m_TargetName;
-	char *		m_Message;
+	char *	 mTargetName;
+	char *	 mMessage;
 };
 
 struct RTCW_CvarSet
 {
-	char *		m_Cvar;
-	char *		m_Value;
+	char *	 mCvar;
+	char *	 mValue;
 };
 
 struct RTCW_CvarGet
 {
-	char *		m_Cvar;
-	int			m_Value;
+	char *	 mCvar;
+	int		 mValue;
 };
 
 struct RTCW_SetSuicide
 {
-	int			m_Suicide;
-	int			m_Persist;
+	int		 mSuicide;
+	int		 mPersist;
 };
 
 struct RTCW_DisableBotPush
 {
-	int			m_Push;
+	int		 mPush;
 };
 
 struct Event_Ammo
 {
-	GameEntity	m_WhoDoneIt;
+	GameEntity mWhoDoneIt;
 };
 
 #pragma pack(pop)

@@ -957,6 +957,8 @@ void limbo( gentity_t *ent, qboolean makeCorpse );
 //
 // Ridah
 int G_FindConfigstringIndex( const char *name, int start, int max, qboolean create );
+int G_FindConfigstringByIndex( int index, int start, int max, char * nameOut, int nameBufferSize );
+
 // done.
 int G_ModelIndex( char *name );
 int     G_SoundIndex( const char *name );

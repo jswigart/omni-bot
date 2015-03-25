@@ -1055,8 +1055,6 @@ void ClientThink_real( gentity_t *ent ) {
 							ent2->item->quantity = client->ps.ammo[BG_FindClipForWeapon( (weapon_t)weapon )];
 							client->ps.ammoclip[BG_FindClipForWeapon( (weapon_t)weapon )] = 0;
 							client->ps.ammo[BG_FindClipForWeapon( (weapon_t)weapon )] = 0;
-
-							Bot_Event_RemoveWeapon( client->ps.clientNum, Bot_WeaponGameToBot( weapon ) );
 						}
 					}
 				}

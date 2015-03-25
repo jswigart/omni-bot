@@ -18,90 +18,90 @@ namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////
 	ForceJump::ForceJump()
-		: StateChild("ForceJump")
-		, m_IsJumping(false)
+		: StateChild( "ForceJump" )
+		, mIsJumping( false )
 	{
 	}
 
 	void ForceJump::Enter()
 	{
-		m_IsJumping = false;
-		m_IsOnGround = true;
-		m_DistanceLeft = m_DistanceTotal = 0.f;
+		mIsJumping = false;
+		mIsOnGround = true;
+		mDistanceLeft = mDistanceTotal = 0.f;
 	}
 
 	void ForceJump::RenderDebug()
 	{
-		if(IsActive())
+		if ( IsActive() )
 		{
-			RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_NextPt.m_Pt,COLOR::GREEN,IGame::GetDeltaTimeSecs()*2.f);
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mNextPt.mPt, COLOR::GREEN, IGame::GetDeltaTimeSecs()*2.f );
 		}
 	}
 
-	obReal ForceJump::GetPriority()
+	float ForceJump::GetPriority()
 	{
-		if(IsActive())
+		if ( IsActive() )
 			return 1.f;
 
-		FINDSTATE(fp,FollowPath,GetParent());
-		if(fp)
+		FINDSTATE( fp, FollowPath, GetParent() );
+		if ( fp )
 		{
 			/*if(fp->IsMoving() && fp->IsOnCustomLink(F_JA_NAV_FORCEJUMP))
 			{
-				return 1.f;
+			return 1.f;
 			}*/
 		}
 		return 0.f;
 	}
 
-	State::StateStatus ForceJump::Update(float fDt)
+	State::StateStatus ForceJump::Update( float fDt )
 	{
 		Vector3f vMyPos = GetClient()->GetPosition();
 
-		const float fDistanceToPt = SquaredLength2d( vMyPos, m_NextPt.m_Pt );
-		bool bInRadius = fDistanceToPt <= m_NextPt.m_Radius;
+		const float fDistanceToPt = SquaredLength2d( vMyPos, mNextPt.mPt );
+		bool bInRadius = fDistanceToPt <= mNextPt.mRadius;
 
-		FINDSTATEIF(SteeringSystem, GetRootState(), SetTarget(m_NextPt.m_Pt));
+		FINDSTATEIF( SteeringSystem, GetRootState(), SetTarget( mNextPt.mPt ) );
 
 		/*Trajectory::AimTrajectory traj[2];
 		int t = Trajectory::Calculate(
 		vMyPos,
-		m_NextPt.m_Pt,
+		mNextPt.mPt,
 		GetClient()->GetMaxSpeed(),
 		IGame::GetGravity(),
 		traj);*/
 
-		if(!m_IsJumping)
+		if ( !mIsJumping )
 		{
 			// Wait till we get in radius to jump
-			if(!bInRadius)
+			if ( !bInRadius )
 				return State_Busy;
 
-			if(GetClient()->HasEntityFlag(ENT_FLAG_ONGROUND))
+			if ( GetClient()->HasEntityFlag( ENT_FLAG_ONGROUND ) )
 			{
-				m_IsJumping = true;
-				m_IsOnGround = true;
+				mIsJumping = true;
+				mIsOnGround = true;
 			}
 		}
 
-		GetClient()->PressButton(BOT_BUTTON_JUMP);
+		GetClient()->PressButton( BOT_BUTTON_JUMP );
 
 		// Detect when we leave the ground
-		if(m_IsOnGround && !GetClient()->HasEntityFlag(ENT_FLAG_ONGROUND))
+		if ( mIsOnGround && !GetClient()->HasEntityFlag( ENT_FLAG_ONGROUND ) )
 		{
-			m_DistanceTotal = fDistanceToPt;
-			m_IsOnGround = false;
+			mDistanceTotal = fDistanceToPt;
+			mIsOnGround = false;
 		}
 
-		m_DistanceLeft = fDistanceToPt;
+		mDistanceLeft = fDistanceToPt;
 
 		// When we touch the ground again after leaving it, we consider it done.
-		if(!m_IsOnGround && GetClient()->HasEntityFlag(ENT_FLAG_ONGROUND))
+		if ( !mIsOnGround && GetClient()->HasEntityFlag( ENT_FLAG_ONGROUND ) )
 			return State_Finished;
 
 		// Finish when we exceed the targets height, because of this, it isn't usable for
 		// long distance force jumps, only height based force jumps.
-		if(m_IsJumping && vMyPos.Z() >= m_NextPt.m_Pt.Z() && (m_DistanceLeft < m_DistanceTotal*0.35f))
+		if ( mIsJumping && vMyPos.Z() >= mNextPt.mPt.Z() && ( mDistanceLeft < mDistanceTotal*0.35f ) )
 			return State_Finished;
 
 		return State_Busy;

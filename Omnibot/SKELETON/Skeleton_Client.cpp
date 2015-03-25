@@ -58,11 +58,6 @@ float Skeleton_Client::GetGameVar(GameVar _var) const
 	return 0.0f;
 }
 
-float Skeleton_Client::GetAvoidRadius(int _class) const
-{
-	return 0.0f;
-}
-
 bool Skeleton_Client::DoesBotHaveFlag(MapGoalPtr _mapgoal)
 {
 	return false;

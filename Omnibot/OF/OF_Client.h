@@ -19,9 +19,9 @@
 class OF_Client : public TF_Client
 {
 public:
-	void Init(int _gameid);
-	
-	NavFlags GetTeamFlag(int _team) const;
+	void Init( int _gameid );
+
+	NavFlags GetTeamFlag( int _team ) const;
 	void GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags );
 
 	OF_Client();

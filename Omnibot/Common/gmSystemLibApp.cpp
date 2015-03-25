@@ -247,7 +247,7 @@ static int GM_CDECL gmfFileEnumerate(gmThread * a_thread)
 //
 //		gmTableObject *pTable = pMachine->AllocTableObject();
 //
-//		for(obuint32 i = 0; i < lst.size(); ++i)
+//		for(uint32_t i = 0; i < lst.size(); ++i)
 //		{
 //			pTable->Set(pMachine, i, gmVariable(pMachine->AllocStringObject(lst[i].string().c_str())));
 //		}
@@ -392,7 +392,7 @@ int gmFile::gmfTell(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
-	a_thread->PushInt((obuint32)pNative->Tell());
+	a_thread->PushInt((uint32_t)pNative->Tell());
 	return GM_OK;
 }
 
@@ -488,7 +488,7 @@ int gmFile::gmfReadInt32(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 
-	obuint32 out;
+	uint32_t out;
 	if(pNative->ReadInt32(out))
 		a_thread->PushInt(out);
 	else
@@ -513,7 +513,7 @@ int gmFile::gmfReadInt16(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 
-	obuint16 out;
+	uint16_t out;
 	if(pNative->ReadInt16(out))
 		a_thread->PushInt(out);
 	else
@@ -538,7 +538,7 @@ int gmFile::gmfReadInt8(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 
-	obuint8 out;
+	uint8_t out;
 	if(pNative->ReadInt8(out))
 		a_thread->PushInt(out);
 	else
@@ -638,7 +638,7 @@ int gmFile::gmfWrite(gmThread *a_thread)
 	File *pNative = gmFile::GetThisObject( a_thread );
 
 	int nParams = a_thread->GetNumParams();
-	for(obint32 i = 0; i < nParams; ++i)
+	for(int32_t i = 0; i < nParams; ++i)
 	{
 		gmVariable v = a_thread->Param(i);
 		switch(v.m_type)

@@ -75,8 +75,8 @@ public:
 
 	ScriptCommandExecutor(gmMachine * a_machine, gmTableObject * a_commandTable);
 private:
-	gmMachine		* m_Machine;
-	gmTableObject	* m_CommandTable;
+	gmMachine		* mMachine;
+	gmTableObject	* mCommandTable;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -99,22 +99,22 @@ protected:
 
 	typedef std::list<CommandReciever*> RecieverList;
 
-	static CommandMap			m_CommandMap;
-	static RecieverList			m_RecieverList;
+	static CommandMap		 mCommandMap;
+	static RecieverList		 mRecieverList;
 
 	void Remove(const std::string _name);
 
 	template <typename T, typename Fn>
 	void SetEx(const std::string _name, const std::string _info, T *_src, Fn _fn)
 	{
-		CommandMap::iterator it = m_CommandMap.find(_name);
-		if(it != m_CommandMap.end())
+		CommandMap::iterator it = mCommandMap.find(_name);
+		if(it != mCommandMap.end())
 		{
 			it->second.second = CommandFunctorPtr(new Delegate<T,Fn>(_src,_fn));
 		}
 		else
 		{
-			m_CommandMap[_name] = CommandInfo(_info, CommandFunctorPtr(new Delegate<T,Fn>(_src,_fn)));
+		 mCommandMap[_name] = CommandInfo(_info, CommandFunctorPtr(new Delegate<T,Fn>(_src,_fn)));
 		}
 	}
 

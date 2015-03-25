@@ -15,16 +15,15 @@
 
 namespace AiState
 {
-	SensoryMemory::pfnGetEntityOffset SensoryMemory::m_pfnGetTraceOffset = NULL;
-	SensoryMemory::pfnGetEntityOffset SensoryMemory::m_pfnGetAimOffset = NULL;
-	SensoryMemory::pfnGetEntityVisDistance SensoryMemory::m_pfnGetVisDistance = NULL;
-	SensoryMemory::pfnCanSensoreEntity SensoryMemory::m_pfnCanSensoreEntity = NULL;
+	SensoryMemory::pfnGetEntityOffset SensoryMemory::mpfnGetTraceOffset = NULL;
+	SensoryMemory::pfnGetEntityOffset SensoryMemory::mpfnGetAimOffset = NULL;
 
-	SensoryMemory::SensoryMemory() : StateChild( "SensoryMemory", UpdateDelay( Utils::HzToSeconds( 10 ) ) ),
-		m_MemorySpan( 5000 )
+	SensoryMemory::SensoryMemory()
+		: StateChild( "SensoryMemory", UpdateDelay( Utils::HzToSeconds( 10 ) ) ),
+		mMemorySpan( 5000 )
 	{
-		m_DebugFlags.SetFlag( Dbg_ShowPerception, true );
-		m_DebugFlags.SetFlag( Dbg_ShowEntities, true );
+		mDebugFlags.SetFlag( Dbg_ShowPerception, true );
+		mDebugFlags.SetFlag( Dbg_ShowEntities, true );
 	}
 
 	SensoryMemory::~SensoryMemory()
@@ -36,10 +35,10 @@ namespace AiState
 		int iNum = 0;
 		for ( int i = 0; i < MaxRecords; ++i )
 		{
-			if ( !m_Records[ i ].GetEntity().IsValid() )
+			if ( !mRecords[ i ].GetEntity().IsValid() )
 				continue;
 
-			_records[ iNum++ ] = m_Records[ i ];
+			_records[ iNum++ ] = mRecords[ i ];
 
 			if ( iNum >= _max - 1 )
 				break;
@@ -52,7 +51,7 @@ namespace AiState
 		int iNumRecords = 0;
 		for ( int i = 0; i < MaxRecords; ++i )
 		{
-			if ( m_Records[ i ].GetEntity().IsValid() )
+			if ( mRecords[ i ].GetEntity().IsValid() )
 				++iNumRecords;
 		}
 		out << iNumRecords;
@@ -62,11 +61,11 @@ namespace AiState
 	{
 		for ( int i = 0; i < MaxRecords; ++i )
 		{
-			if ( m_Records[ i ].GetEntity().IsValid() )
+			if ( mRecords[ i ].GetEntity().IsValid() )
 			{
-				const MemoryRecord &r = m_Records[ i ];
+				const MemoryRecord &r = mRecords[ i ];
 
-				if ( m_DebugFlags.CheckFlag( Dbg_ShowEntities ) )
+				if ( mDebugFlags.CheckFlag( Dbg_ShowEntities ) )
 				{
 					Box3f worldObb;
 					EngineFuncs::EntityWorldOBB( r.GetEntity(), worldObb );
@@ -75,17 +74,18 @@ namespace AiState
 
 					obColor col = r.IsShootable() ? COLOR::GREEN : COLOR::RED;
 
-					if ( r.m_TargetInfo.m_EntityFlags.CheckFlag( ENT_FLAG_DEAD ) ||
-						r.m_TargetInfo.m_EntityFlags.CheckFlag( ENT_FLAG_DISABLED ) )
+					if ( r.mTargetInfo.mEntInfo.mFlags.CheckFlag( ENT_FLAG_DEAD ) ||
+						r.mTargetInfo.mEntInfo.mFlags.CheckFlag( ENT_FLAG_DISABLED ) )
 						col = COLOR::BLACK;
 
 					RenderBuffer::AddOBB( worldObb, col );
 
-					const char *ClassName = Utils::FindClassName( m_Records[ i ].m_TargetInfo.m_EntityClass );
+					std::string groupName, className;
+					Utils::FindClassName( groupName, className, mRecords[ i ].mTargetInfo.mEntInfo );
 					RenderBuffer::AddString3d(
 						worldObb.Center,
 						COLOR::WHITE,
-						ClassName ? ClassName : "<unknown>" );
+						va( "%s:%s", groupName.c_str(), className.c_str() ) );
 				}
 			}
 		}
@@ -100,28 +100,20 @@ namespace AiState
 		// clear all shootable ents
 		for ( int i = 0; i < MaxRecords; ++i )
 		{
-			m_Records[ i ].m_IsShootable = false;
-			m_Records[ i ].m_InFOV = false;
-			m_Records[ i ].m_TimeLastSensed = -1;
+			mRecords[ i ].mIsShootable = false;
+			mRecords[ i ].mInFOV = false;
+			mRecords[ i ].mTimeLastSensed = -1;
 		}
 	}
 
 	void SensoryMemory::SetEntityTraceOffsetCallback( pfnGetEntityOffset _pfnCallback )
 	{
-		m_pfnGetTraceOffset = _pfnCallback;
+		mpfnGetTraceOffset = _pfnCallback;
 	}
 
 	void SensoryMemory::SetEntityAimOffsetCallback( pfnGetEntityOffset _pfnCallback )
 	{
-		m_pfnGetAimOffset = _pfnCallback;
-	}
-	void SensoryMemory::SetEntityVisDistanceCallback( pfnGetEntityVisDistance _pfnCallback )
-	{
-		m_pfnGetVisDistance = _pfnCallback;
-	}
-	void SensoryMemory::SetCanSensoreEntityCallback( pfnCanSensoreEntity _pfnCallback )
-	{
-		m_pfnCanSensoreEntity = _pfnCallback;
+		mpfnGetAimOffset = _pfnCallback;
 	}
 
 	void SensoryMemory::UpdateEntities()
@@ -135,31 +127,27 @@ namespace AiState
 		IGame::EntityIterator ent;
 		while ( IGame::IterateEntity( ent ) )
 		{
-			if ( m_pfnCanSensoreEntity && !m_pfnCanSensoreEntity( ent.GetEnt() ) )
-				continue;
-
 			// skip myself
-			if ( selfEntity == ent.GetEnt().m_Entity )
+			if ( selfEntity == ent.GetEnt().mEntity )
 				continue;
 
 			// skip internal entities
-			if ( ent.GetEnt().m_EntityCategory.CheckFlag( ENT_CAT_INTERNAL ) )
+			if ( ent.GetEnt().mEntInfo.mCategory.CheckFlag( ENT_CAT_INTERNAL ) )
 				continue;
 
-			obint32 iFreeRecord = -1;
+			int32_t iFreeRecord = -1;
 			bFoundEntity = false;
 
 			const int iStartIndex =
-				ent.GetEnt().m_EntityClass < FilterSensory::ANYPLAYERCLASS ||
-				ent.GetEnt().m_EntityClass == ENT_CLASS_GENERIC_SPECTATOR ? 0 : 64;
+				ent.GetEnt().mEntInfo.mClassId < FilterSensory::ANYPLAYERCLASS /*|| ent.GetEnt().mEntInfo.mClassId == ENT_CLASS_SPECTATOR*/ ? 0 : 64;
 
 			for ( int i = iStartIndex; i < MaxRecords; ++i )
 			{
-				if ( m_Records[ i ].GetEntity().IsValid() )
+				if ( mRecords[ i ].GetEntity().IsValid() )
 				{
-					if ( m_Records[ i ].GetEntity().GetIndex() == ent.GetEnt().m_Entity.GetIndex() )
+					if ( mRecords[ i ].GetEntity().GetIndex() == ent.GetEnt().mEntity.GetIndex() )
 					{
-						m_Records[ i ].m_Entity = ent.GetEnt().m_Entity; // update just in case
+						mRecords[ i ].mEntity = ent.GetEnt().mEntity; // update just in case
 						bFoundEntity = true;
 						break;
 					}
@@ -176,10 +164,9 @@ namespace AiState
 				OBASSERT( iFreeRecord != -1, "No Free Record Slot!" );
 				if ( iFreeRecord != -1 )
 				{
-					m_Records[ iFreeRecord ].m_Entity = ent.GetEnt().m_Entity;
-					m_Records[ iFreeRecord ].m_TargetInfo.m_EntityCategory = ent.GetEnt().m_EntityCategory;
-					m_Records[ iFreeRecord ].m_TargetInfo.m_EntityClass = ent.GetEnt().m_EntityClass;
-					m_Records[ iFreeRecord ].m_TimeLastUpdated = -1; // initial update
+					mRecords[ iFreeRecord ].mEntity = ent.GetEnt().mEntity;
+					mRecords[ iFreeRecord ].mTargetInfo.mEntInfo = ent.GetEnt().mEntInfo;
+					mRecords[ iFreeRecord ].mTimeLastUpdated = -1; // initial update
 				}
 			}
 		}
@@ -192,14 +179,14 @@ namespace AiState
 		int iUpdated = 0;
 		for ( int i = 0; i < MaxRecords; ++i )
 		{
-			if ( m_Records[ i ].GetEntity().IsValid() )
+			if ( mRecords[ i ].GetEntity().IsValid() )
 			{
-				if ( !IGame::IsEntityValid( m_Records[ i ].GetEntity() ) )
+				if ( !IGame::IsEntityValid( mRecords[ i ].GetEntity() ) )
 				{
-					m_Records[ i ].Reset();
+					mRecords[ i ].Reset();
 					continue;
 				}
-				UpdateRecord( m_Records[ i ] );
+				UpdateRecord( mRecords[ i ] );
 				++iUpdated;
 			}
 		}
@@ -218,7 +205,7 @@ namespace AiState
 	void SensoryMemory::UpdateWithSoundSource( const Event_Sound *_sound )
 	{
 		// TODO: don't bother storing sound memory from myself.
-		if ( _sound->m_Source.IsValid() && ( GetClient()->GetGameEntity() != _sound->m_Source ) )
+		if ( _sound->mSource.IsValid() && ( GetClient()->GetGameEntity() != _sound->mSource ) )
 		{
 		}
 	}
@@ -231,29 +218,26 @@ namespace AiState
 			MemoryRecord *pRecord = GetMemoryRecord( _sourceent, true, false );
 			if ( pRecord )
 			{
-				pRecord->m_TargetInfo.m_EntityClass = gEngineFuncs->GetEntityClass( _sourceent );
-				if ( !pRecord->m_TargetInfo.m_EntityClass )
+				EntityInfo classInfo;
+				if ( !gEngineFuncs->GetEntityInfo( _sourceent, pRecord->mTargetInfo.mEntInfo ) )
 					return;
-
-				pRecord->m_TargetInfo.m_EntityCategory.ClearAll();
-				InterfaceFuncs::GetEntityCategory( _sourceent, pRecord->m_TargetInfo.m_EntityCategory );
-
+				
 				// Get the entity position.
 				Vector3f vThreatPosition( Vector3f::ZERO );
 				EngineFuncs::EntityPosition( _sourceent, vThreatPosition );
 
 				// Add it to the list.
-				pRecord->m_InFOV = true;
-				pRecord->m_IsShootable = GetClient()->HasLineOfSightTo( vThreatPosition, _sourceent );
-				pRecord->m_TimeLastSensed = IGame::GetTime();
-				pRecord->m_IsAllied = GetClient()->IsAllied( _sourceent );
+				pRecord->mInFOV = true;
+				pRecord->mIsShootable = GetClient()->HasLineOfSightTo( vThreatPosition, _sourceent );
+				pRecord->mTimeLastSensed = IGame::GetTime();
+				pRecord->mIsAllied = GetClient()->IsAllied( _sourceent );
 
 				// Update Target Info.
-				pRecord->m_TargetInfo.m_LastPosition = vThreatPosition;
+				pRecord->mTargetInfo.mLastPosition = vThreatPosition;
 
-				if ( pRecord->m_IsShootable )
+				if ( pRecord->mIsShootable )
 				{
-					pRecord->m_TimeLastVisible = IGame::GetTime();
+					pRecord->mTimeLastVisible = IGame::GetTime();
 				}
 			}
 		}
@@ -268,50 +252,42 @@ namespace AiState
 
 		_record.MarkUpdated();
 
-		TargetInfo &ti = _record.m_TargetInfo;
+		TargetInfo &ti = _record.mTargetInfo;
 
-		const bool bNoLos = ti.m_EntityCategory.CheckFlag( ENT_CAT_NOLOS );
-		const bool bShootable = ti.m_EntityCategory.CheckFlag( ENT_CAT_SHOOTABLE );
+		const bool bNoLos = ti.mEntInfo.mCategory.CheckFlag( ENT_CAT_NOLOS );
+		const bool bShootable = ti.mEntInfo.mCategory.CheckFlag( ENT_CAT_SHOOTABLE );
 
 		GameEntity ent = _record.GetEntity();
 
 		//////////////////////////////////////////////////////////////////////////
 		// Some entity flags are persistent and won't be overwritten until the subject is perceived again.
 		const BitFlag64 bfPersistantMask
-			( ( (obint64)1 << ENT_FLAG_DEAD )
-			| ( (obint64)1 << ENT_FLAG_DISABLED ) );
+			( ( (int64_t)1 << ENT_FLAG_DEAD )
+			| ( (int64_t)1 << ENT_FLAG_DISABLED ) );
 
-		BitFlag64 bfPersistantFlags = bfPersistantMask&ti.m_EntityFlags;
+		BitFlag64 bfPersistantFlags = bfPersistantMask & ti.mEntInfo.mFlags;
 		//////////////////////////////////////////////////////////////////////////
 
 		// clear targeting info
-		if ( ti.m_EntityFlags.CheckFlag( ENT_FLAG_DEAD ) || ti.m_EntityFlags.CheckFlag( ENT_FLAG_DISABLED ) )
+		if ( ti.mEntInfo.mFlags.CheckFlag( ENT_FLAG_DEAD ) || ti.mEntInfo.mFlags.CheckFlag( ENT_FLAG_DISABLED ) )
 		{
-			_record.m_IsShootable = false;
-			_record.m_InFOV = false;
-			_record.m_TimeLastSensed = -1;
+			_record.mIsShootable = false;
+			_record.mInFOV = false;
+			_record.mTimeLastSensed = -1;
 		}
 
 		// Update data that changes.
-		ti.m_EntityFlags.ClearAll();
-		ti.m_EntityPowerups.ClearAll();
-		ti.m_EntityClass = InterfaceFuncs::GetEntityClass( ent );
-		ti.m_EntityCategory.ClearAll();
+		if ( !gEngineFuncs->GetEntityInfo( ent, ti.mEntInfo ) )
+			return false;
 
 		Vector3f vNewPosition;
-		if ( !InterfaceFuncs::GetEntityFlags( ent, ti.m_EntityFlags ) )
-			return false;
-		if ( !InterfaceFuncs::GetEntityPowerUps( ent, ti.m_EntityPowerups ) )
-			return false;
 		if ( !EngineFuncs::EntityPosition( ent, vNewPosition ) )
-			return false;
-		if ( !InterfaceFuncs::GetEntityCategory( ent, ti.m_EntityCategory ) )
 			return false;
 
 		//////////////////////////////////////////////////////////////////////////
 		Vector3f vTracePosition = vNewPosition;
-		if ( m_pfnGetTraceOffset )
-			vTracePosition.Z() += m_pfnGetTraceOffset( ti.m_EntityClass, ti.m_EntityFlags );
+		if ( mpfnGetTraceOffset )
+			vTracePosition.Z() += mpfnGetTraceOffset( ti );
 
 		if ( bNoLos ||
 			( GetClient()->IsWithinViewDistance( vTracePosition ) &&
@@ -319,94 +295,95 @@ namespace AiState
 		{
 			const float DistanceToEntity = Length( vTracePosition, GetClient()->GetEyePosition() );
 			float EntityViewDistance = Utils::FloatMax;
-			if ( m_pfnGetVisDistance )
-				m_pfnGetVisDistance( EntityViewDistance, ti, GetClient() );
+			/*if ( mpfnGetVisDistance )
+				mpfnGetVisDistance( EntityViewDistance, ti, GetClient() );*/
 
-			if ( DebugDrawingEnabled() && m_DebugFlags.CheckFlag( Dbg_ShowPerception ) )
+			if ( DebugDrawingEnabled() && mDebugFlags.CheckFlag( Dbg_ShowPerception ) )
 			{
 				RenderBuffer::AddLine( GetClient()->GetEyePosition(), vTracePosition, COLOR::YELLOW, 0.2f );
 			}
 
 			if ( bNoLos ||
 				( DistanceToEntity < EntityViewDistance &&
-				( !ti.m_EntityFlags.CheckFlag( ENT_FLAG_VISTEST ) ||
+				( !ti.mEntInfo.mFlags.CheckFlag( ENT_FLAG_VISTEST ) ||
 				GetClient()->HasLineOfSightTo( vTracePosition, ent ) ) ) )
 			{
-				//const bool bNewlySeen = (IGame::GetTime() - _record.GetTimeLastSensed()) > m_MemorySpan;
+				//const bool bNewlySeen = (IGame::GetTime() - _record.GetTimeLastSensed()) > mMemorySpan;
 
 				// Still do the raycast on shootable statics
 				if ( bNoLos )
 				{
-					//const bool bWasShootable = _record.m_IsShootable;
-					//const bool bWasInFov = _record.m_InFOV;
+					//const bool bWasShootable = _record.mIsShootable;
+					//const bool bWasInFov = _record.mInFOV;
 
-					_record.m_IsShootable = false;
+					_record.mIsShootable = false;
 					if ( bShootable )
 					{
 						if ( !GetClient()->HasLineOfSightTo( vTracePosition, ent ) )
 						{
-							_record.m_IsShootable = false;
-							_record.m_InFOV = false;
+							_record.mIsShootable = false;
+							_record.mInFOV = false;
 							return true;
 						}
 					}
 				}
 
-				_record.m_IsShootable = true;
-				_record.m_TimeLastSensed = IGame::GetTime();
-				_record.m_TimeLastVisible = IGame::GetTime();
-				_record.m_IsAllied = GetClient()->IsAllied( ent );
+				_record.mIsShootable = true;
+				_record.mTimeLastSensed = IGame::GetTime();
+				_record.mTimeLastVisible = IGame::GetTime();
+				_record.mIsAllied = GetClient()->IsAllied( ent );
 
-				_record.m_TargetInfo.m_CurrentWeapon = InterfaceFuncs::GetEquippedWeapon( ent ).m_WeaponId;
+				_record.mTargetInfo.mCurrentWeapon = InterfaceFuncs::GetEquippedWeapon( ent ).mWeaponId;
 
 				if ( !_record.IsShootable() && !bNoLos )
 				{
 					// restore the old flags
-					ti.m_EntityFlags &= ~bfPersistantMask;
-					ti.m_EntityFlags |= bfPersistantFlags;
+					ti.mEntInfo.mFlags &= ~bfPersistantMask;
+					ti.mEntInfo.mFlags |= bfPersistantFlags;
 				}
+
 				//////////////////////////////////////////////////////////////////////////
 				// Update Target Info.
-				ti.m_LastPosition = vNewPosition;
-				if ( m_pfnGetAimOffset )
-					ti.m_LastPosition.Z() += m_pfnGetAimOffset( ti.m_EntityClass, ti.m_EntityFlags );
+				ti.mLastPosition = vNewPosition;
+				if ( mpfnGetAimOffset )
+					ti.mLastPosition.Z() += mpfnGetAimOffset( ti );
 
-				if ( DebugDrawingEnabled() && m_DebugFlags.CheckFlag( Dbg_ShowPerception ) )
+				if ( DebugDrawingEnabled() && mDebugFlags.CheckFlag( Dbg_ShowPerception ) )
 				{
-					RenderBuffer::AddLine( GetClient()->GetEyePosition(), ti.m_LastPosition, COLOR::YELLOW, 0.2f );
+					RenderBuffer::AddLine( GetClient()->GetEyePosition(), ti.mLastPosition, COLOR::YELLOW, 0.2f );
 				}
 
-				_record.m_TargetInfo.m_DistanceTo = Length( ti.m_LastPosition, GetClient()->GetEyePosition() );
+				_record.mTargetInfo.mDistanceTo = Length( ti.mLastPosition, GetClient()->GetEyePosition() );
 				if ( !bNoLos )
 				{
-					EngineFuncs::EntityOrientation( ent, ti.m_LastFacing, 0, 0 );
-					EngineFuncs::EntityVelocity( ent, ti.m_LastVelocity );
+					EngineFuncs::EntityOrientation( ent, ti.mLastFacing, 0, 0 );
+					EngineFuncs::EntityVelocity( ent, ti.mLastVelocity );
 				}
 				//////////////////////////////////////////////////////////////////////////
 
-				if ( _record.m_InFOV == false )
+				if ( _record.mInFOV == false )
 				{
-					_record.m_InFOV = true;
-					_record.m_TimeBecameVisible = IGame::GetTime();
+					_record.mInFOV = true;
+					_record.mTimeBecameVisible = IGame::GetTime();
 				}
 
 				/*if(bNewlySeen)
 				{
 				Event_EntitySensed d;
-				d.m_EntityClass = ti.m_EntityClass;
-				d.m_Entity = ent;
+				d.mEntityClass = ti.mEntityClass;
+				d.mEntity = ent;
 				GetClient()->SendEvent(MessageHelper(PERCEPT_SENSE_ENTITY, &d, sizeof(d)));
 				}*/
 			}
 			else
 			{
 				// restore the old flags
-				ti.m_EntityFlags &= ~bfPersistantMask;
-				ti.m_EntityFlags |= bfPersistantFlags;
+				ti.mEntInfo.mFlags &= ~bfPersistantMask;
+				ti.mEntInfo.mFlags |= bfPersistantFlags;
 
 				// Can't see him.
-				_record.m_IsShootable = false;
-				_record.m_InFOV = false;
+				_record.mIsShootable = false;
+				_record.mInFOV = false;
 			}
 		}
 		return true;
@@ -417,8 +394,8 @@ namespace AiState
 		Prof( QueryMemory );
 		for ( int i = 0; i < MaxRecords; ++i )
 		{
-			if ( m_Records[ i ].GetEntity().IsValid() )
-				_filter.Check( i, m_Records[ i ] );
+			if ( mRecords[ i ].GetEntity().IsValid() )
+				_filter.Check( i, mRecords[ i ] );
 		}
 		_filter.PostQuery();
 	}
@@ -427,9 +404,9 @@ namespace AiState
 	{
 		for ( int i = 0; i < MaxRecords; ++i )
 		{
-			if ( m_Records[ i ].GetEntity().IsValid() && m_Records[ i ].GetEntity() == _ent )
+			if ( mRecords[ i ].GetEntity().IsValid() && mRecords[ i ].GetEntity() == _ent )
 			{
-				return &m_Records[ i ].m_TargetInfo;
+				return &mRecords[ i ].mTargetInfo;
 			}
 		}
 		return NULL;
@@ -443,12 +420,12 @@ namespace AiState
 
 		EntityList entList;
 
-		FilterAllType all(entList, m_Client, _type, _category, BitFlag64(0));
+		FilterAllType all(entList, mClient, _type, _category, BitFlag64(0));
 		all.SetSortType(FilterSensory::Sort_NearToFar);
-		m_Client->GetSensoryMemory()->QueryMemory(all);
+		mClient->GetSensoryMemory()->QueryMemory(all);
 
 		Vector3f vPos;
-		for(obuint32 i = 0; i < entList.size(); ++i)
+		for(uint32_t i = 0; i < entList.size(); ++i)
 		{
 		if(GetLastRecordedPosition(entList[i], vPos))
 		{
@@ -468,11 +445,11 @@ namespace AiState
 		int iFreeSlot = -1;
 		for ( int i = 0; i < MaxRecords; ++i )
 		{
-			if ( m_Records[ i ].GetEntity().IsValid() )
+			if ( mRecords[ i ].GetEntity().IsValid() )
 			{
-				if ( m_Records[ i ].GetEntity() == _ent )
+				if ( mRecords[ i ].GetEntity() == _ent )
 				{
-					pRecord = &m_Records[ i ];
+					pRecord = &mRecords[ i ];
 					break;
 				}
 			}
@@ -484,7 +461,7 @@ namespace AiState
 
 		if ( !pRecord && _add && iFreeSlot != -1 )
 		{
-			pRecord = &m_Records[ iFreeSlot ];
+			pRecord = &mRecords[ iFreeSlot ];
 			pRecord->Reset( _ent );
 		}
 
@@ -502,9 +479,9 @@ namespace AiState
 		{
 			int ix = (int)_hndl.GetIndex();
 			if ( InRangeT<int>( ix, 0, MaxRecords - 1 ) &&
-				( m_Records[ _hndl.GetIndex() ].m_Serial == _hndl.GetSerial() ) )
+				( mRecords[ _hndl.GetIndex() ].mSerial == _hndl.GetSerial() ) )
 			{
-				pRecord = &m_Records[ _hndl.GetIndex() ];
+				pRecord = &mRecords[ _hndl.GetIndex() ];
 			}
 		}
 		return pRecord;
@@ -512,7 +489,7 @@ namespace AiState
 
 	void SensoryMemory::GetRecordInfo( const MemoryRecords &_hndls, Vector3List *_pos, Vector3List *_vel )
 	{
-		for ( obuint32 i = 0; i < _hndls.size(); ++i )
+		for ( uint32_t i = 0; i < _hndls.size(); ++i )
 		{
 			const MemoryRecord *pRec = GetMemoryRecord( _hndls[ i ] );
 			if ( pRec )
@@ -528,15 +505,15 @@ namespace AiState
 		int numRecords = 0;
 		for ( int i = 0; i < MaxRecords && numRecords < maxHandles; ++i )
 		{
-			if ( m_Records[ i ].GetEntity().IsValid() )
+			if ( mRecords[ i ].GetEntity().IsValid() )
 			{
-				if ( !m_Records[ i ].m_TargetInfo.m_EntityFlags.CheckFlag( ENT_FLAG_DISABLED ) )
+				if ( !mRecords[ i ].mTargetInfo.mEntInfo.mFlags.CheckFlag( ENT_FLAG_DISABLED ) )
 				{
-					if ( ( m_Records[ i ].m_TargetInfo.m_EntityCategory & category ).AnyFlagSet() )
+					if ( ( mRecords[ i ].mTargetInfo.mEntInfo.mCategory & category ).AnyFlagSet() )
 					{
-						if ( m_Records[ i ].m_TargetInfo.m_DistanceTo <= radius && m_Records[ i ].GetTimeLastSensed() >= 0 )
+						if ( mRecords[ i ].mTargetInfo.mDistanceTo <= radius && mRecords[ i ].GetTimeLastSensed() >= 0 )
 						{
-							hndls[ numRecords++ ] = RecordHandle( (obint16)i, m_Records[ i ].GetSerial() );
+							hndls[ numRecords++ ] = RecordHandle( (int16_t)i, mRecords[ i ].GetSerial() );
 						}
 					}
 				}
@@ -550,15 +527,15 @@ namespace AiState
 		int numRecords = 0;
 		for ( int i = 0; i < MaxRecords && numRecords < maxEnts; ++i )
 		{
-			if ( m_Records[ i ].GetEntity().IsValid() )
+			if ( mRecords[ i ].GetEntity().IsValid() )
 			{
-				if ( !m_Records[ i ].m_TargetInfo.m_EntityFlags.CheckFlag( ENT_FLAG_DISABLED ) )
+				if ( !mRecords[ i ].mTargetInfo.mEntInfo.mFlags.CheckFlag( ENT_FLAG_DISABLED ) )
 				{
-					if ( ( m_Records[ i ].m_TargetInfo.m_EntityCategory & category ).AnyFlagSet() )
+					if ( ( mRecords[ i ].mTargetInfo.mEntInfo.mCategory & category ).AnyFlagSet() )
 					{
-						if ( m_Records[ i ].m_TargetInfo.m_DistanceTo <= radius && m_Records[ i ].GetTimeLastSensed() >= 0 )
+						if ( mRecords[ i ].mTargetInfo.mDistanceTo <= radius && mRecords[ i ].GetTimeLastSensed() >= 0 )
 						{
-							ents[ numRecords++ ] = m_Records[ i ].GetEntity();
+							ents[ numRecords++ ] = mRecords[ i ].GetEntity();
 						}
 					}
 				}
@@ -569,9 +546,9 @@ namespace AiState
 
 	bool SensoryMemory::HasLineOfSightTo( const MemoryRecord &mr, int customTraceMask )
 	{
-		Vector3f vTracePosition = mr.m_TargetInfo.m_LastPosition;
-		if ( m_pfnGetTraceOffset )
-			vTracePosition.Z() += m_pfnGetTraceOffset( mr.m_TargetInfo.m_EntityClass, mr.m_TargetInfo.m_EntityFlags );
+		Vector3f vTracePosition = mr.mTargetInfo.mLastPosition;
+		if ( mpfnGetTraceOffset )
+			vTracePosition.Z() += mpfnGetTraceOffset( mr.mTargetInfo );
 		return GetClient()->HasLineOfSightTo( vTracePosition, mr.GetEntity(), customTraceMask );
 	}
 

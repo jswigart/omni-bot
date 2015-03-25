@@ -64,32 +64,9 @@ static int GM_CDECL gmfPhysGunInfo( gmThread *a_thread )
 		if ( !statTable )
 			a_thread->GetMachine()->AllocTableObject();
 
-		statTable->Set( a_thread->GetMachine(), "HeldObject", gmVariable::EntityVar( info.m_HeldEntity.AsInt() ) );
-		//statTable->Set(a_thread->GetMachine(),"PullObject",gmVariable::EntityVar(info.m_PullingEntity.AsInt()));
-		statTable->Set( a_thread->GetMachine(), "LaunchSpeed", gmVariable( info.m_LaunchSpeed ) );
-		a_thread->PushTable( statTable );
-	}
-	return GM_OK;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-// Function: GetChargerStatus
-static int GM_CDECL gmfGetChargerStatus( gmThread *a_thread )
-{
-	GM_CHECK_NUM_PARAMS( 1 );
-	GameEntity unit;
-	GM_CHECK_GAMEENTITY_FROM_PARAM( unit, 0 );
-	GM_TABLE_PARAM( statTable, 1, 0 );
-
-	HL2DM_ChargerStatus info = {};
-	if ( InterfaceFuncs::GetChargerStatus( unit, info ) )
-	{
-		if ( !statTable )
-			statTable = a_thread->GetMachine()->AllocTableObject();
-
-		statTable->Set( a_thread->GetMachine(), "Charge", gmVariable( info.m_CurrentCharge ) );
-		statTable->Set( a_thread->GetMachine(), "MaxCharge", gmVariable( info.m_MaxCharge ) );
+		statTable->Set( a_thread->GetMachine(), "HeldObject", gmVariable::EntityVar( info.mHeldEntity.AsInt() ) );
+		//statTable->Set(a_thread->GetMachine(),"PullObject",gmVariable::EntityVar(info.mPullingEntity.AsInt()));
+		statTable->Set( a_thread->GetMachine(), "LaunchSpeed", gmVariable( info.mLaunchSpeed ) );
 		a_thread->PushTable( statTable );
 	}
 	return GM_OK;
@@ -97,17 +74,17 @@ static int GM_CDECL gmfGetChargerStatus( gmThread *a_thread )
 
 //////////////////////////////////////////////////////////////////////////
 // package: Modular Combat Bot Library Functions
-static gmFunctionEntry s_HL2DMbotLib [] =
-{
-	//	{"LockPlayerPosition",		gmfLockPlayerPosition},
-	//	{"HudHint",					gmfHudHint},
-	//	{"HudMessage",				gmfHudTextBox},
-	//	{"HudAlert",				gmfHudAlert},
-	//	{"HudMenu",					gmfHudMenu},
-	//	{"HudTextMsg",				gmfHudTextMsg},
-
-	{ "GetChargerStatus", gmfGetChargerStatus },
-};
+//static gmFunctionEntry s_HL2DMbotLib [] =
+//{
+//	//	{"LockPlayerPosition",		gmfLockPlayerPosition},
+//	//	{"HudHint",					gmfHudHint},
+//	//	{"HudMessage",				gmfHudTextBox},
+//	//	{"HudAlert",				gmfHudAlert},
+//	//	{"HudMenu",					gmfHudMenu},
+//	//	{"HudTextMsg",				gmfHudTextMsg},
+//
+//	{ "GetChargerStatus", gmfGetChargerStatus },
+//};
 
 //////////////////////////////////////////////////////////////////////////
 // package: Modular Combat Bot Script Functions
@@ -119,10 +96,10 @@ static gmFunctionEntry s_HL2DMbotTypeLib [] =
 
 void HL2DM_Game::InitScriptBinds( gmMachine *_machine )
 {
-	LOG( "Binding HL2DM Library..." );
+	LOG( "Binding HL2DM Library.." );
 
 	// Register the bot functions.
-	_machine->RegisterLibrary( s_HL2DMbotLib, sizeof( s_HL2DMbotLib ) / sizeof( s_HL2DMbotLib[ 0 ] ) );
+	//_machine->RegisterLibrary( s_HL2DMbotLib, sizeof( s_HL2DMbotLib ) / sizeof( s_HL2DMbotLib[ 0 ] ) );
 	//////////////////////////////////////////////////////////////////////////
 	_machine->RegisterTypeLibrary( gmBot::GetType(), s_HL2DMbotTypeLib, sizeof( s_HL2DMbotTypeLib ) / sizeof( s_HL2DMbotTypeLib[ 0 ] ) );
 }

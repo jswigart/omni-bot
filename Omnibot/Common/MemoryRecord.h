@@ -26,116 +26,172 @@ class MemoryRecord
 public:
 	friend class AiState::SensoryMemory;
 
-	// var: m_TargetInfo
+	// var: mTargetInfo
 	//		Latest info about this target entity
-	TargetInfo	m_TargetInfo;
+	TargetInfo mTargetInfo;
 
-	inline GameEntity GetEntity() const { return m_Entity; }
+	inline GameEntity GetEntity() const
+	{
+		return mEntity;
+	}
 
-	inline int GetTimeLastSensed() const { return m_TimeLastSensed; }
-	inline int GetTimeBecameVisible() const { return m_TimeBecameVisible; }
-	inline int GetTimeLastVisible() const { return m_TimeLastVisible; }
+	inline int GetTimeLastSensed() const
+	{
+		return mTimeLastSensed;
+	}
+	inline int GetTimeBecameVisible() const
+	{
+		return mTimeBecameVisible;
+	}
+	inline int GetTimeLastVisible() const
+	{
+		return mTimeLastVisible;
+	}
 
 	int GetTimeTargetHasBeenVisible() const;
 	int GetTimeHasBeenOutOfView() const;
-	inline int GetIgnoreTargetTime() const { return m_IgnoreForTargeting; }
+	inline int GetIgnoreTargetTime() const
+	{
+		return mIgnoreForTargeting;
+	}
 
-	inline void IgnoreAsTarget(bool _ignore) { m_IgnoreAsTarget = _ignore; }
-	void IgnoreAsTargetForTime(int _milliseconds);
+	inline void IgnoreAsTarget( bool _ignore )
+	{
+		mIgnoreAsTarget = _ignore;
+	}
+	void IgnoreAsTargetForTime( int _milliseconds );
 	bool ShouldIgnore() const;
 
-	inline const Vector3f &GetLastSensedPosition() const { return m_TargetInfo.m_LastPosition; }
-	inline const Vector3f &GetLastSensedVelocity() const { return m_TargetInfo.m_LastVelocity; }
-	inline bool IsInFOV() const { return m_InFOV; }
-	inline bool IsAllied() const { return m_IsAllied; }
-	inline bool IsShootable() const { return m_IsShootable; }
+	inline const Vector3f &GetLastSensedPosition() const
+	{
+		return mTargetInfo.mLastPosition;
+	}
+	inline const Vector3f &GetLastSensedVelocity() const
+	{
+		return mTargetInfo.mLastVelocity;
+	}
+	inline bool IsInFOV() const
+	{
+		return mInFOV;
+	}
+	inline bool IsAllied() const
+	{
+		return mIsAllied;
+	}
+	inline bool IsShootable() const
+	{
+		return mIsShootable;
+	}
 
-	Vector3f PredictPosition(float _time) const;
+	Vector3f PredictPosition( float _time ) const;
 
-	bool IsMovingTowards(const Vector3f &_pos) const;
+	bool IsMovingTowards( const Vector3f &_pos ) const;
 
 	int GetAge() const;
 	void MarkUpdated();
 
-	void Reset(GameEntity _ent = GameEntity());
+	void Reset( GameEntity _ent = GameEntity() );
 
-	obint16 GetSerial() const { return m_Serial; }
+	int16_t GetSerial() const
+	{
+		return mSerial;
+	}
 
 	MemoryRecord()
-		: m_Serial(0)
+		: mSerial( 0 )
 	{
 		Reset();
 	}
-	~MemoryRecord() {};
+	~MemoryRecord()
+	{
+	};
 private:
-	GameEntity		m_Entity;
+	GameEntity	 mEntity;
 
-	// int: m_TimeLastSensed
+	// int: mTimeLastSensed
 	//		Records the time the entity was last sensed (seen or heard).
 	//		Used to determine if a bot can 'remember' this record or not.
-	int				m_TimeLastSensed;
+	int			 mTimeLastSensed;
 
-	// int: m_TimeBecameVisible
+	// int: mTimeBecameVisible
 	//		How long the opponent has been visible. Useful for implementing reaction time.
-	int				m_TimeBecameVisible;
+	int			 mTimeBecameVisible;
 
-	// int: m_TimeLastVisible
+	// int: mTimeLastVisible
 	//		The last time this opponent was seen. "Freshness" of this sensed entity
-	int				m_TimeLastVisible;
+	int			 mTimeLastVisible;
 
-	int				m_TimeLastUpdated;
+	int			 mTimeLastUpdated;
 
-	// int: m_IgnoreForTargeting
+	// int: mIgnoreForTargeting
 	//		The time until which the target should not be considered for targeting.
-	int				m_IgnoreForTargeting;
+	int			 mIgnoreForTargeting;
 
-	obint16			m_Serial;
+	int16_t		 mSerial;
 
-	// bool: m_InFOV
+	// bool: mInFOV
 	//		Marks whether this entity is current in this bots field of view.
-	bool			m_InFOV : 1;
+	bool		 mInFOV : 1;
 
-	// bool: m_IsShootable
+	// bool: mIsShootable
 	//		Marks whether this entity can be shot(has clear line of sight)
-	bool			m_IsShootable : 1;
+	bool		 mIsShootable : 1;
 
-	// bool: m_IsAllied
+	// bool: mIsAllied
 	//		Marks whether this entity is an ally of this bot.
-	bool			m_IsAllied : 1;
+	bool		 mIsAllied : 1;
 
-	// bool: m_IgnoreAsTarget
+	// bool: mIgnoreAsTarget
 	//		Ignore this entity as a valid target.
-	bool			m_IgnoreAsTarget : 1;
+	bool		 mIgnoreAsTarget : 1;
 };
 
 class RecordHandle
 {
 public:
-	obint16 GetIndex() const { return udata.m_Short[0]; }
-	obint16 GetSerial() const { return udata.m_Short[1]; }
-
-	obint32 AsInt() const { return udata.m_Int; }
-	void FromInt(obint32 _n) { udata.m_Int = _n; }
-
-	void Reset() { *this = RecordHandle(); }
-
-	bool IsValid() const { return udata.m_Short[0] >= 0; }
-
-	explicit RecordHandle(obint16 _index, obint16 _serial)
+	int16_t GetIndex() const
 	{
-		udata.m_Short[0] = _index;
-		udata.m_Short[1] = _serial;
+		return udata.mShort[ 0 ];
+	}
+	int16_t GetSerial() const
+	{
+		return udata.mShort[ 1 ];
+	}
+
+	int32_t AsInt() const
+	{
+		return udata.mInt;
+	}
+	void FromInt( int32_t _n )
+	{
+		udata.mInt = _n;
+	}
+
+	void Reset()
+	{
+		*this = RecordHandle();
+	}
+
+	bool IsValid() const
+	{
+		return udata.mShort[ 0 ] >= 0;
+	}
+
+	explicit RecordHandle( int16_t _index, int16_t _serial )
+	{
+		udata.mShort[ 0 ] = _index;
+		udata.mShort[ 1 ] = _serial;
 	}
 	RecordHandle()
 	{
-		udata.m_Short[0] = -1;
-		udata.m_Short[1] = 0;
+		udata.mShort[ 0 ] = -1;
+		udata.mShort[ 1 ] = 0;
 	}
 private:
 	union udatatype
 	{
-		obint32			m_Int;
-		obint16			m_Short[2];
+		int32_t		 mInt;
+		int16_t		 mShort[ 2 ];
 	} udata;
 };
 

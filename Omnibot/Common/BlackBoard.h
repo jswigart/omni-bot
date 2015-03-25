@@ -56,7 +56,7 @@ protected:
 	//	one entry per key.
 	typedef std::multimap<int, BBRecordPtr> BlackBoardDatabase;
 
-	BlackBoardDatabase m_DB;
+	BlackBoardDatabase mDB;
 };
 
 extern BlackBoard g_Blackboard;

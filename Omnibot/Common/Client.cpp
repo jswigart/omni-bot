@@ -29,58 +29,56 @@
 Client::HoldButtons::HoldButtons()
 {
 	for ( int i = 0; i < NumButtons; ++i )
-		m_StopHoldTime[ i ] = 0;
+		mStopHoldTime[ i ] = 0;
 }
 
 Client::Client()
-	: m_DesiredTeam( RANDOM_TEAM_IF_NO_TEAM )
-	, m_DesiredClass( RANDOM_CLASS_IF_NO_CLASS )
-	, m_StepHeight( 0.0f )
-	, m_StateRoot( NULL )
-	, m_Position( Vector3f::ZERO )
-	, m_EyePosition( Vector3f::ZERO )
-	, m_MoveVector( Vector3f::ZERO )
-	, m_Velocity( Vector3f::ZERO )
-	, m_FacingVector( Vector3f::UNIT_Y )
-	, m_UpVector( Vector3f::UNIT_Z )
-	, m_RightVector( Vector3f::UNIT_X )
-	, m_WorldBounds()
-	, m_ButtonFlags( 0 )
-	, m_FieldOfView( 90.0f )
-	, m_MaxViewDistance( 10000.0f )
-	, m_RoleMask( 0 )
-	, m_Team( 0 )
-	, m_Class( 0 )
-	, m_GameID( -1 )
-	, m_ScriptObject( 0 )
-	, m_CurrentTurnSpeed( 0.0f )
-	, m_MaxTurnSpeed( 720.0f )
-	, m_AimStiffness( 75.0f )
-	, m_AimDamping( 10.0f )
-	, m_AimTolerance( 48.0f )
-	, m_ProfileType( PROFILE_NONE )
+	: mDesiredTeam( RANDOM_TEAM_IF_NO_TEAM )
+	, mDesiredClass( RANDOM_CLASS_IF_NO_CLASS )
+	, mStepHeight( 0.0f )
+	, mStateRoot( NULL )
+	, mPosition( Vector3f::ZERO )
+	, mEyePosition( Vector3f::ZERO )
+	, mMoveVector( Vector3f::ZERO )
+	, mVelocity( Vector3f::ZERO )
+	, mFacingVector( Vector3f::UNIT_Y )
+	, mUpVector( Vector3f::UNIT_Z )
+	, mRightVector( Vector3f::UNIT_X )
+	, mWorldBounds()
+	, mButtonFlags( 0 )
+	, mFieldOfView( 90.0f )
+	, mMaxViewDistance( 10000.0f )
+	, mRoleMask( 0 )
+	, mTeam( 0 )
+	, mGameID( -1 )
+	, mScriptObject( 0 )
+	, mCurrentTurnSpeed( 0.0f )
+	, mMaxTurnSpeed( 720.0f )
+	, mAimStiffness( 75.0f )
+	, mAimDamping( 10.0f )
+	, mAimTolerance( 48.0f )
+	, mProfileType( PROFILE_NONE )
 {
-	memset( &m_ClientInput, 0, sizeof( m_ClientInput ) );
-	memset( &m_HealthArmor, 0, sizeof( m_HealthArmor ) );
+	memset( &mClientInput, 0, sizeof( mClientInput ) );
 #ifdef _DEBUG
-	m_DebugFlags.SetFlag( BOT_DEBUG_FPINFO );
+	mDebugFlags.SetFlag( BOT_DEBUG_FPINFO );
 #endif
 
-	m_StuckBounds.Set( Vector3f( -32.f, -32.f, -32.f ), Vector3f( 32.f, 32.f, 32.f ) );
+	mStuckBounds.Set( Vector3f( -32.f, -32.f, -32.f ), Vector3f( 32.f, 32.f, 32.f ) );
 
 	// Initialize default movement capability
-	m_MovementCaps.SetFlag( Movement::MOVE_WALK, true );
-	m_MovementCaps.SetFlag( Movement::MOVE_JUMP, true );
+	mMovementCaps.SetFlag( Movement::MOVE_WALK, true );
+	mMovementCaps.SetFlag( Movement::MOVE_JUMP, true );
 }
 
 Client::~Client()
 {
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-	if ( m_ScriptObject )
+	if ( mScriptObject )
 	{
-		pMachine->RemoveCPPOwnedGMObject( m_ScriptObject );
-		gmBot::NullifyObject( m_ScriptObject );
-		m_ScriptObject = NULL;
+		pMachine->RemoveCPPOwnedGMObject( mScriptObject );
+		gmBot::NullifyObject( mScriptObject );
+		mScriptObject = NULL;
 	}
 }
 
@@ -91,58 +89,48 @@ void Client::Update()
 	using namespace AiState;
 
 	// Set dirty flags to invalidate caches.
-	m_InternalFlags.SetFlag( FL_DIRTYEYEPOS );
-
-	// for remote syncing
-	const Vector3f oldPosition = m_Position;
-	const Vector3f oldFacing = m_FacingVector;
-	const Msg_HealthArmor oldHealthArmor = m_HealthArmor;
-
+	mInternalFlags.SetFlag( FL_DIRTYEYEPOS );
+	
 	// update my locally properties with the one the game has for me.
-	EngineFuncs::EntityPosition( m_GameEntity, m_Position );
-	EngineFuncs::EntityLocalAABB( m_GameEntity, m_LocalBounds );
-	EngineFuncs::EntityWorldOBB( m_GameEntity, m_WorldBounds );
-	EngineFuncs::EntityGroundEntity( m_GameEntity, m_MoveEntity );
+	EngineFuncs::EntityPosition( mGameEntity, mPosition );
+	EngineFuncs::EntityLocalAABB( mGameEntity, mLocalBounds );
+	EngineFuncs::EntityWorldOBB( mGameEntity, mWorldBounds );
+	EngineFuncs::EntityGroundEntity( mGameEntity, mMoveEntity );
 
 	// Update the bots orientation if we haven't turned this frame(script might be controlling)
-	EngineFuncs::EntityOrientation( m_GameEntity, m_FacingVector, m_RightVector, m_UpVector );
-	m_Orientation = Matrix3f( m_RightVector, m_FacingVector, m_UpVector, true );
+	EngineFuncs::EntityOrientation( mGameEntity, mFacingVector, mRightVector, mUpVector );
+	mOrientation = Matrix3f( mRightVector, mFacingVector, mUpVector, true );
 
-	EngineFuncs::EntityVelocity( m_GameEntity, m_Velocity );
+	EngineFuncs::EntityVelocity( mGameEntity, mVelocity );
 
 	Msg_PlayerMaxSpeed maxSpeed;
-	if ( InterfaceFuncs::GetMaxSpeed( m_GameEntity, maxSpeed ) )
+	if ( InterfaceFuncs::GetMaxSpeed( mGameEntity, maxSpeed ) )
 	{
-		m_MaxSpeed = maxSpeed.m_MaxSpeed;
+		mMaxSpeed = maxSpeed.mMaxSpeed;
 	}
 
-	// Update my health/armor
-	InterfaceFuncs::GetHealthAndArmor( GetGameEntity(), m_HealthArmor );
-	m_EntityFlags.ClearAll();
-	m_EntityPowerUps.ClearAll();
-	gEngineFuncs->GetEntityFlags( m_GameEntity, m_EntityFlags );
-	gEngineFuncs->GetEntityPowerups( m_GameEntity, m_EntityPowerUps );
+	CheckTeamEvent();
+	CheckClassEvent();
 
+	// Update my internal state
+	gEngineFuncs->GetEntityInfo( GetGameEntity(), mEntInfo );
+	
 	if ( CheckUserFlag( Client::FL_DISABLED ) )
 	{
 		// stop when disabled.
-		m_MoveVector = Vector3f::ZERO;
+		mMoveVector = Vector3f::ZERO;
 	}
 	else
 	{
 		CheckStuck();
 
-		// Check for various events.
-		CheckTeamEvent();
-		CheckClassEvent();
-
 		//////////////////////////////////////////////////////////////////////////
 		// Process Sounds
-		//const int numMsgs = g_SoundDepot.GetNumMessagesForSubscriber(m_SoundSubscriber);
+		//const int numMsgs = g_SoundDepot.GetNumMessagesForSubscriber(.mSoundSubscriber);
 		//if(numMsgs>0)
 		//{
 		//	Event_Sound *snds = (Event_Sound*)StackAlloc(sizeof(Event_Sound)*numMsgs);
-		//	int n = g_SoundDepot.Collect(snds,numMsgs,m_SoundSubscriber);
+		//	int n = g_SoundDepot.Collect(snds,numMsgs,.mSoundSubscriber);
 		//	OBASSERT(n==numMsgs,"Problem getting events.");
 		//	for(int i = 0; i < numMsgs; ++i)
 		//	{
@@ -152,9 +140,9 @@ void Client::Update()
 		//////////////////////////////////////////////////////////////////////////
 
 		// Check if we're dead or alive so we know what update function to call.
-		if ( m_StateRoot )
+		if ( mStateRoot )
 		{
-			m_StateRoot->RootUpdate();
+			mStateRoot->RootUpdate();
 
 			FINDSTATE( path, FollowPath, GetStateRoot() );
 			path->RenderDebug();
@@ -164,7 +152,7 @@ void Client::Update()
 		GetBB().PurgeExpiredRecords();
 
 		// Set any buttons that should be held down.
-		if ( !m_ButtonFlags.CheckFlag( BOT_BUTTON_RESPAWN ) )
+		if ( !mButtonFlags.CheckFlag( BOT_BUTTON_RESPAWN ) )
 		{
 			for ( int i = 0; i < HoldButtons::NumButtons; ++i )
 			{
@@ -172,7 +160,7 @@ void Client::Update()
 				if ( !IsButtonDown( i ) )
 				{
 					// Should this button be held down?
-					if ( m_HoldButtons.m_StopHoldTime[ i ] > ( obuint32 )IGame::GetTime() )
+					if ( mHoldButtons.mStopHoldTime[ i ] > ( uint32_t )IGame::GetTime() )
 					{
 						PressButton( i );
 					}
@@ -182,31 +170,31 @@ void Client::Update()
 	}
 
 	// Update my input with the engine
-	m_ClientInput.m_MoveDir[ 0 ] = m_MoveVector.X();
-	m_ClientInput.m_MoveDir[ 1 ] = m_MoveVector.Y();
-	m_ClientInput.m_MoveDir[ 2 ] = m_MoveVector.Z();
-	m_ClientInput.m_Facing[ 0 ] = m_FacingVector.X();
-	m_ClientInput.m_Facing[ 1 ] = m_FacingVector.Y();
-	m_ClientInput.m_Facing[ 2 ] = m_FacingVector.Z();
-	m_ClientInput.m_ButtonFlags = m_ButtonFlags;
-	m_ClientInput.m_CurrentWeapon = GetWeaponSystem()->GetDesiredWeaponID();
+	mClientInput.mMoveDir[ 0 ] = mMoveVector.X();
+	mClientInput.mMoveDir[ 1 ] = mMoveVector.Y();
+	mClientInput.mMoveDir[ 2 ] = mMoveVector.Z();
+	mClientInput.mFacing[ 0 ] = mFacingVector.X();
+	mClientInput.mFacing[ 1 ] = mFacingVector.Y();
+	mClientInput.mFacing[ 2 ] = mFacingVector.Z();
+	mClientInput.mButtonFlags = mButtonFlags;
+	mClientInput.mCurrentWeapon = GetWeaponSystem()->GetDesiredWeaponID();
 	{
 		Prof( UpdateBotInput );
 		UpdateBotInput();
 	}
 
 #ifdef _DEBUG
-	OBASSERT( m_FacingVector != Vector3f::ZERO, "Zero Facing Vector" );
+	OBASSERT( mFacingVector != Vector3f::ZERO, "Zero Facing Vector" );
 #endif
 
 	// Zero the button flags here, if we do it before the UpdateBotInput, any script
 	// controlling the bot will get overridden.
-	m_ButtonFlags.ClearAll();
+	mButtonFlags.ClearAll();
 }
 
 void Client::UpdateBotInput()
 {
-	gEngineFuncs->UpdateBotInput( m_GameID, m_ClientInput );
+	gEngineFuncs->UpdateBotInput( mGameID, mClientInput );
 }
 
 const char *Client::GetName( bool _clean ) const
@@ -216,12 +204,12 @@ const char *Client::GetName( bool _clean ) const
 
 Vector3f Client::GetEyePosition()
 {
-	if ( m_InternalFlags.CheckFlag( FL_DIRTYEYEPOS ) )
+	if ( mInternalFlags.CheckFlag( FL_DIRTYEYEPOS ) )
 	{
-		EngineFuncs::EntityEyePosition( m_GameEntity, m_EyePosition );
-		m_InternalFlags.ClearFlag( FL_DIRTYEYEPOS );
+		EngineFuncs::EntityEyePosition( mGameEntity, mEyePosition );
+		mInternalFlags.ClearFlag( FL_DIRTYEYEPOS );
 	}
-	return m_EyePosition;
+	return mEyePosition;
 }
 
 Vector3f Client::GetEyeGroundOffset()
@@ -231,12 +219,12 @@ Vector3f Client::GetEyeGroundOffset()
 
 gmUserObject *Client::GetScriptObject()
 {
-	return m_ScriptObject;
+	return mScriptObject;
 }
 
 gmVariable Client::GetScriptVariable()
 {
-	return m_ScriptObject ? gmVariable( m_ScriptObject ) : gmVariable::s_null;
+	return mScriptObject ? gmVariable( mScriptObject ) : gmVariable::s_null;
 }
 
 void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
@@ -247,8 +235,8 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 		{
 			_cb.CallScript( true );
 			const Event_SystemClientDisConnected *m = _message.Get<Event_SystemClientDisConnected>();
-			GetBB().RemoveBBRecordByPoster( m->m_GameId, bbk_All );
-			GetBB().RemoveBBRecordByTarget( m->m_GameId, bbk_All );
+			GetBB().RemoveBBRecordByPoster( m->mGameId, bbk_All );
+			GetBB().RemoveBBRecordByTarget( m->mGameId, bbk_All );
 			break;
 		}
 		HANDLER( MESSAGE_SPAWN )
@@ -263,45 +251,45 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 		{
 			const Event_Death *m = _message.Get<Event_Death>();
 			_cb.CallScript();
-			_cb.AddEntity( "inflictor", m->m_WhoKilledMe );
-			_cb.AddString( "meansofdeath", m->m_MeansOfDeath );
+			_cb.AddEntity( "inflictor", m->mWhoKilledMe );
+			_cb.AddString( "meansofdeath", m->mMeansOfDeath );
 			break;
 		}
 		HANDLER( MESSAGE_HEALED )
 		{
 			const Event_Healed *m = _message.Get<Event_Healed>();
 			_cb.CallScript();
-			_cb.AddEntity( "who", m->m_WhoHealedMe );
+			_cb.AddEntity( "who", m->mWhoHealedMe );
 			break;
 		}
 		HANDLER( MESSAGE_REVIVED )
 		{
 			const Event_Revived *m = _message.Get<Event_Revived>();
 			_cb.CallScript();
-			_cb.AddEntity( "who", m->m_WhoRevivedMe );
+			_cb.AddEntity( "who", m->mWhoRevivedMe );
 			break;
 		}
 		HANDLER( MESSAGE_KILLEDSOMEONE )
 		{
 			const Event_KilledSomeone *m = _message.Get<Event_KilledSomeone>();
 			_cb.CallScript();
-			_cb.AddEntity( "victim", m->m_WhoIKilled );
-			_cb.AddString( "meansofdeath", m->m_MeansOfDeath );
+			_cb.AddEntity( "victim", m->mWhoIKilled );
+			_cb.AddString( "meansofdeath", m->mMeansOfDeath );
 			break;
 		}
 		HANDLER( MESSAGE_CHANGETEAM )
 		{
 			const Event_ChangeTeam *m = _message.Get<Event_ChangeTeam>();
 			_cb.CallScript();
-			_cb.AddInt( "newteam", m->m_NewTeam );
-			m_Team = m->m_NewTeam;
+			_cb.AddInt( "newteam", m->mNewTeam );
+			mTeam = m->mNewTeam;
 			break;
 		}
 		HANDLER( MESSAGE_CHANGECLASS )
 		{
 			const Event_ChangeClass *m = _message.Get<Event_ChangeClass>();
 			_cb.CallScript();
-			_cb.AddInt( "classId", m->m_NewClass );
+			_cb.AddInt( "classId", m->mNewClass );
 
 			if ( GetProfileType() != Client::PROFILE_CUSTOM )
 				LoadProfile( Client::PROFILE_CLASS );
@@ -337,13 +325,13 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 				if ( pTargetRecord )
 				{
 					//strOutString << "Target: " <<
-					//	pTargetRecord->m_TargetInfo.m_DistanceTo <<
+					//	pTargetRecord->mTargetInfo.mDistanceTo <<
 					//	" units away." << std::endl;
 					strOutString
 						<< "Target: "
 						<< EngineFuncs::EntityName( pTargetRecord->GetEntity(), "<unknown>" )
 						<< " "
-						<< pTargetRecord->m_TargetInfo.m_DistanceTo
+						<< pTargetRecord->mTargetInfo.mDistanceTo
 						<< " units away."
 						<< std::endl;
 				}
@@ -361,31 +349,31 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 		{
 			const Event_ScriptMessage *m = _message.Get<Event_ScriptMessage>();
 			_cb.CallScript();
-			_cb.AddString( "msg", m->m_MessageName );
-			_cb.AddString( "data1", m->m_MessageData1 );
-			_cb.AddString( "data2", m->m_MessageData2 );
-			_cb.AddString( "data3", m->m_MessageData3 );
+			_cb.AddString( "msg", m->mMessageName );
+			_cb.AddString( "data1", m->mMessageData1 );
+			_cb.AddString( "data2", m->mMessageData2 );
+			_cb.AddString( "data3", m->mMessageData3 );
 			break;
 		}
 		HANDLER( MESSAGE_PROXIMITY_TRIGGER )
 		{
 			const AiState::Event_ProximityTrigger *m = _message.Get<AiState::Event_ProximityTrigger>();
 			_cb.CallScript();
-			_cb.AddString( "owner", Utils::HashToString( m->m_OwnerState ).c_str() );
-			_cb.AddEntity( "ent", m->m_Entity );
-			_cb.AddVector( "position", m->m_Position );
+			_cb.AddString( "owner", Utils::HashToString( m->mOwnerState ).c_str() );
+			_cb.AddEntity( "ent", m->mEntity );
+			_cb.AddVector( "position", m->mPosition );
 			break;
 		}
 		HANDLER( MESSAGE_ADDWEAPON )
 		{
 			const Event_AddWeapon *m = _message.Get<Event_AddWeapon>();
-			if ( !GetWeaponSystem()->HasWeapon( m->m_WeaponId ) )
+			if ( !GetWeaponSystem()->HasWeapon( m->mWeaponId ) )
 			{
 				// Add weapons according to the event.
-				if ( GetWeaponSystem()->AddWeaponToInventory( m->m_WeaponId ) )
+				if ( GetWeaponSystem()->AddWeaponToInventory( m->mWeaponId ) )
 				{
 					_cb.CallScript();
-					_cb.AddInt( "weapon", m->m_WeaponId );
+					_cb.AddInt( "weapon", m->mWeaponId );
 				}
 				else
 				{
@@ -396,17 +384,17 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 					bool foundName = false;
 					for ( int i = 0; i < NumElements; ++i )
 					{
-						if ( Enum[ i ].m_Value == m->m_WeaponId )
+						if ( Enum[ i ].mValue == m->mWeaponId )
 						{
 							foundName = true;
-							EngineFuncs::ConsoleError( va( "AddWeaponToInventory: Unknown Weapon( %s )", Enum[ i ].m_Key ) );
+							EngineFuncs::ConsoleError( va( "AddWeaponToInventory: Unknown Weapon( %s )", Enum[ i ].mKey ) );
 							break;
 						}
 					}
 
 					if ( !foundName )
 					{
-						EngineFuncs::ConsoleError( va( "AddWeaponToInventory: Unknown Weapon Id( %d )", m->m_WeaponId ) );
+						EngineFuncs::ConsoleError( va( "AddWeaponToInventory: Unknown Weapon Id( %d )", m->mWeaponId ) );
 					}
 				}
 			}
@@ -415,18 +403,12 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 		HANDLER( MESSAGE_REMOVEWEAPON )
 		{
 			const Event_RemoveWeapon *m = _message.Get<Event_RemoveWeapon>();
-			if ( GetWeaponSystem()->HasWeapon( m->m_WeaponId ) )
+			if ( GetWeaponSystem()->HasWeapon( m->mWeaponId ) )
 			{
 				_cb.CallScript();
-				_cb.AddInt( "weapon", m->m_WeaponId );
-				GetWeaponSystem()->RemoveWeapon( m->m_WeaponId );
+				_cb.AddInt( "weapon", m->mWeaponId );
+				GetWeaponSystem()->RemoveWeapon( m->mWeaponId );
 			}
-			break;
-		}
-		HANDLER( MESSAGE_RESETWEAPONS )
-		{
-			_cb.CallScript();
-			GetWeaponSystem()->ClearWeapons();
 			break;
 		}
 		HANDLER( MESSAGE_REFRESHALLWEAPONS )
@@ -437,36 +419,36 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 		HANDLER( MESSAGE_REFRESHWEAPON )
 		{
 			const Event_RefreshWeapon *m = _message.Get<Event_RefreshWeapon>();
-			GetWeaponSystem()->RefreshWeapon( m->m_WeaponId );
+			GetWeaponSystem()->RefreshWeapon( m->mWeaponId );
 
 			_cb.CallScript();
-			_cb.AddInt( "weapon", m->m_WeaponId );
+			_cb.AddInt( "weapon", m->mWeaponId );
 			break;
 		}
 		HANDLER( MESSAGE_ENT_ENTER_RADIUS )
 		{
 			const Event_EntEnterRadius *m = _message.Get<Event_EntEnterRadius>();
 			//_cb.CallScript();
-			_cb.AddEntity( "ent", m->m_Entity );
+			_cb.AddEntity( "ent", m->mEntity );
 			break;
 		}
 		HANDLER( MESSAGE_ENT_LEAVE_RADIUS )
 		{
 			const Event_EntLeaveRadius *m = _message.Get<Event_EntLeaveRadius>();
 			//_cb.CallScript();
-			_cb.AddEntity( "ent", m->m_Entity );
+			_cb.AddEntity( "ent", m->mEntity );
 			break;
 		}
 		HANDLER( ACTION_WEAPON_CHANGE )
 		{
 			const Event_WeaponChanged *m = _message.Get<Event_WeaponChanged>();
-			if ( GetWeaponSystem()->HasWeapon( m->m_WeaponId ) )
+			if ( GetWeaponSystem()->HasWeapon( m->mWeaponId ) )
 			{
 				_cb.CallScript();
-				_cb.AddInt( "weapon", m->m_WeaponId );
+				_cb.AddInt( "weapon", m->mWeaponId );
 
 				// Special case signal.
-				GetStateRoot()->SignalThreads( gmVariable( Utils::MakeId32( (obint16)ACTION_WEAPON_CHANGE, (obint16)m->m_WeaponId ) ) );
+				GetStateRoot()->SignalThreads( gmVariable( Utils::MakeId32( (int16_t)ACTION_WEAPON_CHANGE, (int16_t)m->mWeaponId ) ) );
 			}
 			break;
 		}
@@ -474,39 +456,38 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 		{
 			const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
 			_cb.CallScript();
-			_cb.AddInt( "weapon", m->m_WeaponId );
-			_cb.AddEntity( "projectile", m->m_Projectile );
+			_cb.AddInt( "weapon", m->mWeaponId );
+			_cb.AddEntity( "projectile", m->mProjectile );
 
 			// Shot fired callback.
 			WeaponPtr curWpn = GetWeaponSystem()->GetCurrentWeapon();
-			if ( curWpn && curWpn->GetWeaponID() == m->m_WeaponId )
-				curWpn->ShotFired( m->m_FireMode, m->m_Projectile );
+			if ( curWpn && curWpn->GetWeaponID() == m->mWeaponId )
+				curWpn->ShotFired( m->mFireMode, m->mProjectile );
 
 			// Special case signal.
-			GetStateRoot()->SignalThreads( gmVariable( Utils::MakeId32( (obint16)ACTION_WEAPON_FIRE, (obint16)m->m_WeaponId ) ) );
+			GetStateRoot()->SignalThreads( gmVariable( Utils::MakeId32( (int16_t)ACTION_WEAPON_FIRE, (int16_t)m->mWeaponId ) ) );
 			break;
 		}
 		HANDLER( PERCEPT_FEEL_PLAYER_USE )
 		{
 			const Event_PlayerUsed *m = _message.Get<Event_PlayerUsed>();
 			_cb.CallScript();
-			_cb.AddEntity( "toucher", m->m_WhoDidIt );
+			_cb.AddEntity( "toucher", m->mWhoDidIt );
 			break;
 		}
 		HANDLER( PERCEPT_FEEL_PAIN )
 		{
 			const Event_TakeDamage *m = _message.Get<Event_TakeDamage>();
 			_cb.CallScript();
-			_cb.AddEntity( "inflictor", m->m_Inflictor );
-
+			_cb.AddEntity( "inflictor", m->mInflictor );
 			_cb.AddInt( "previoushealth", GetCurrentHealth() );
-			InterfaceFuncs::GetHealthAndArmor( GetGameEntity(), m_HealthArmor );
+			gEngineFuncs->GetEntityInfo( GetGameEntity(), mEntInfo );
 			_cb.AddInt( "currenthealth", GetCurrentHealth() );
-			_cb.AddString( "damageType", m->m_DamageType );
+			_cb.AddString( "damageType", m->mDamageType );
 
-			if ( m->m_Inflictor.IsValid() && IGame::IsEntityValid( m->m_Inflictor ) )
+			if ( m->mInflictor.IsValid() && IGame::IsEntityValid( m->mInflictor ) )
 			{
-				GetSensoryMemory()->UpdateWithTouchSource( m->m_Inflictor );
+				GetSensoryMemory()->UpdateWithTouchSource( m->mInflictor );
 			}
 			break;
 		}
@@ -515,17 +496,17 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 			HANDLER( PERCEPT_HEAR_PRIVATEVOICEMACRO )
 		{
 			const Event_VoiceMacro *m = _message.Get<Event_VoiceMacro>();
-			if ( m->m_WhoSaidIt != GetGameEntity() ) // Ignore messages from myself.
+			if ( m->mWhoSaidIt != GetGameEntity() ) // Ignore messages from myself.
 			{
 				_cb.CallScript();
 
 				int macroId = HandleVoiceMacroEvent( _message );
 
-				_cb.AddEntity( "who", m->m_WhoSaidIt );
+				_cb.AddEntity( "who", m->mWhoSaidIt );
 				_cb.AddInt( "macro", macroId );
 
 				// signal any pending threads
-				gmVariable s( Utils::MakeId32( (obint16)PERCEPT_HEAR_VOICEMACRO, (obint16)macroId ) );
+				gmVariable s( Utils::MakeId32( (int16_t)PERCEPT_HEAR_VOICEMACRO, (int16_t)macroId ) );
 				GetStateRoot()->SignalThreads( s );
 			}
 			else
@@ -538,11 +519,11 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 			HANDLER( PERCEPT_HEAR_GROUPCHATMSG )
 		{
 			const Event_ChatMessage *m = _message.Get<Event_ChatMessage>();
-			if ( m->m_WhoSaidIt != GetGameEntity() ) // Ignore messages from myself.
+			if ( m->mWhoSaidIt != GetGameEntity() ) // Ignore messages from myself.
 			{
 				_cb.CallScript();
-				_cb.AddEntity( "who", m->m_WhoSaidIt );
-				_cb.AddString( "msg", m->m_Message );
+				_cb.AddEntity( "who", m->mWhoSaidIt );
+				_cb.AddString( "msg", m->mMessage );
 			}
 			else
 				_cb.DontPropogateEvent();
@@ -551,13 +532,13 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 		HANDLER( PERCEPT_HEAR_SOUND )
 		{
 			const Event_Sound *m = _message.Get<Event_Sound>();
-			if ( m->m_Source != GetGameEntity() )
+			if ( m->mSource != GetGameEntity() )
 			{
 				_cb.CallScript();
-				_cb.AddEntity( "source", m->m_Source );
-				_cb.AddVector( "origin", m->m_Origin[ 0 ], m->m_Origin[ 1 ], m->m_Origin[ 2 ] );
-				_cb.AddInt( "soundId", m->m_SoundType );
-				_cb.AddString( "soundName", m->m_SoundName );
+				_cb.AddEntity( "source", m->mSource );
+				_cb.AddVector( "origin", m->mOrigin[ 0 ], m->mOrigin[ 1 ], m->mOrigin[ 2 ] );
+				_cb.AddInt( "soundId", m->mSoundType );
+				_cb.AddString( "soundName", m->mSoundName );
 				GetSensoryMemory()->UpdateWithSoundSource( m );
 			}
 			break;
@@ -566,8 +547,8 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 		{
 			const Event_EntitySensed *m = _message.Get<Event_EntitySensed>();
 			_cb.CallScript();
-			_cb.AddInt( "sensedclass", m->m_EntityClass );
-			_cb.AddEntity( "sensedentity", m->m_Entity );
+			_cb.AddInt( "sensedclass", m->mEntityClass );
+			_cb.AddEntity( "sensedentity", m->mEntity );
 			break;
 		}
 	}
@@ -575,21 +556,21 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 
 void Client::Init( int _gameid )
 {
-	// Set the game id, which is the index into the m_Clients array.
-	m_GameID = _gameid;
-	m_GameEntity = gEngineFuncs->EntityFromID( m_GameID );
+	// Set the game id, which is the index into the mClients array.
+	mGameID = _gameid;
+	mGameEntity = gEngineFuncs->EntityFromID( mGameID );
 
-	//m_SoundSubscriber = g_SoundDepot.Subscribe("Client");
+	//.mSoundSubscriber = g_SoundDepot.Subscribe("Client");
 
 	// mark name as taken
 	if ( const char *pName = gEngineFuncs->GetEntityName( GetGameEntity() ) )
-		m_NameReference = NameManager::GetInstance()->GetName( pName );
+		mNameReference = NameManager::GetInstance()->GetName( pName );
 
 	// Only create these if they aren't already defined,
 	// the mod may override them with derived classes.
 
 	// Add this bot to the global script table.
-	m_ScriptObject = ScriptManager::GetInstance()->AddBotToGlobalTable( this );
+	mScriptObject = ScriptManager::GetInstance()->AddBotToGlobalTable( this );
 
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 
@@ -603,8 +584,8 @@ void Client::Init( int _gameid )
 	gmCall call;
 	if ( call.BeginGlobalFunction( pMachine, "OnBotJoin", gmVariable::s_null, true ) )
 	{
-		OBASSERT( m_ScriptObject, "No Script object." );
-		call.AddParamUser( m_ScriptObject );
+		OBASSERT( mScriptObject, "No Script object." );
+		call.AddParamUser( mScriptObject );
 		call.End();
 	}
 	//////////////////////////////////////////////////////////////////////////
@@ -618,32 +599,32 @@ void Client::Shutdown()
 	gmCall call;
 	if ( call.BeginGlobalFunction( pMachine, "OnBotLeave", gmVariable::s_null, true ) )
 	{
-		OBASSERT( m_ScriptObject, "No Script object." );
-		call.AddParamUser( m_ScriptObject );
+		OBASSERT( mScriptObject, "No Script object." );
+		call.AddParamUser( mScriptObject );
 		call.End();
 	}
 
-	if ( m_StateRoot )
+	if ( mStateRoot )
 	{
-		m_StateRoot->ExitAll();
+		mStateRoot->ExitAll();
 	}
-	OB_DELETE( m_StateRoot );
+	OB_DELETE( mStateRoot );
 
 	ScriptManager::GetInstance()->RemoveFromGlobalTable( this );
 }
 
 void Client::CheckStuck()
 {
-	if ( m_StuckBounds.Contains( GetPosition() ) )
-		m_StuckTime += IGame::GetDeltaTime();
+	if ( mStuckBounds.Contains( GetPosition() ) )
+		mStuckTime += IGame::GetDeltaTime();
 	else
 	{
 		ResetStuckTime();
-		m_StuckBounds.Set( Vector3f( -32.f, -32.f, -32.f ), Vector3f( 32.f, 32.f, 32.f ) );
-		m_StuckBounds.SetCenter( GetPosition() );
+		mStuckBounds.Set( Vector3f( -32.f, -32.f, -32.f ), Vector3f( 32.f, 32.f, 32.f ) );
+		mStuckBounds.SetCenter( GetPosition() );
 	}
 
-	/*if(m_Velocity.SquaredLength() < (m_MinSpeed*m_MinSpeed))
+	/*if(.mVelocity.SquaredLength() < (.mMinSpeed*.mMinSpeed))
 	return true;
 	else
 	return false;*/
@@ -669,10 +650,10 @@ bool Client::TurnTowardPosition( const Vector3f &_pos )
 
 	if ( newFacing == Vector3f::ZERO )
 		return false;
-	OBASSERT( m_FacingVector != Vector3f::ZERO, "Zero Facing Vector" );
+	OBASSERT( mFacingVector != Vector3f::ZERO, "Zero Facing Vector" );
 
 	// See how close we are to
-	float fDot = m_FacingVector.Dot( newFacing );
+	float fDot = mFacingVector.Dot( newFacing );
 
 	// Determine the angle between the 2 different facings.
 	float fAngle = Mathf::ACos( fDot );
@@ -682,40 +663,40 @@ bool Client::TurnTowardPosition( const Vector3f &_pos )
 	float fDistance = dist.Get();
 
 	// If it's very close, just snap it.
-	bool bInTolerance = fDistance < m_AimTolerance ? true : false;
+	bool bInTolerance = fDistance < mAimTolerance ? true : false;
 
 	// Calculate the frame time.
 	const float fFrameTime = IGame::GetDeltaTimeSecs();
 
 	// Calculate the Turn speed and clamp it to the max.
 	const float fTurnSpeedRadians = Mathf::DegToRad( GetMaxTurnSpeed() );
-	m_CurrentTurnSpeed += ( fFrameTime * ( ( m_AimStiffness * fAngle ) - ( m_AimDamping * m_CurrentTurnSpeed ) ) );
-	m_CurrentTurnSpeed = ClampT<float>( m_CurrentTurnSpeed, -fTurnSpeedRadians, fTurnSpeedRadians );
+	mCurrentTurnSpeed += ( fFrameTime * ( ( mAimStiffness * fAngle ) - ( mAimDamping * mCurrentTurnSpeed ) ) );
+	mCurrentTurnSpeed = ClampT<float>( mCurrentTurnSpeed, -fTurnSpeedRadians, fTurnSpeedRadians );
 
-	OBASSERT( m_FacingVector != Vector3f::ZERO, "Zero Facing Vector" );
+	OBASSERT( mFacingVector != Vector3f::ZERO, "Zero Facing Vector" );
 
 	Quaternionf qQuat, qPartial;
-	qQuat.Align( m_FacingVector, newFacing );
+	qQuat.Align( mFacingVector, newFacing );
 
 	if ( fAngle > Mathf::ZERO_TOLERANCE )
 	{
-		qPartial.Slerp( ( m_CurrentTurnSpeed / fAngle ) * fFrameTime, Quaternionf::IDENTITY, qQuat );
-		m_FacingVector = qPartial.Rotate( m_FacingVector );
-		m_FacingVector.Normalize();
+		qPartial.Slerp( ( mCurrentTurnSpeed / fAngle ) * fFrameTime, Quaternionf::IDENTITY, qQuat );
+		mFacingVector = qPartial.Rotate( mFacingVector );
+		mFacingVector.Normalize();
 	}
 	else
 	{
 		qPartial = qQuat;
-		m_FacingVector = newFacing;
+		mFacingVector = newFacing;
 	}
-	assert( m_FacingVector != Vector3f::ZERO );
+	assert( mFacingVector != Vector3f::ZERO );
 	return bInTolerance;
 }
 
 bool Client::HasLineOfSightTo( const Vector3f &_pos, GameEntity _entity, int customTraceMask )
 {
 	Vector3f vStart = GetEyePosition();
-	return HasLineOfSightTo( vStart, _pos, _entity, m_GameID, customTraceMask );
+	return HasLineOfSightTo( vStart, _pos, _entity, mGameID, customTraceMask );
 }
 
 bool Client::HasLineOfSightTo( const Vector3f &_pos1, const Vector3f &_pos2,
@@ -725,7 +706,7 @@ bool Client::HasLineOfSightTo( const Vector3f &_pos1, const Vector3f &_pos2,
 	obTraceResult tr;
 	EngineFuncs::TraceLine( tr, _pos1, _pos2,
 		NULL, customTraceMask ? customTraceMask : TR_MASK_SHOT | TR_MASK_SMOKEBOMB, _ignoreent, True );
-	return ( tr.m_Fraction == 1.0f ) || ( ( _ent.IsValid() ) && ( tr.m_HitEntity == _ent ) );
+	return ( tr.mFraction == 1.0f ) || ( ( _ent.IsValid() ) && ( tr.mHitEntity == _ent ) );
 }
 
 bool Client::MoveTo( const Vector3f &_pos, float _tolerance, MoveMode _m )
@@ -738,29 +719,29 @@ void Client::EnableDebug( const int _flag, bool _enable )
 {
 	if ( _enable )
 	{
-		m_DebugFlags.SetFlag( _flag );
+		mDebugFlags.SetFlag( _flag );
 	}
 	else
 	{
-		m_DebugFlags.ClearFlag( _flag );
+		mDebugFlags.ClearFlag( _flag );
 	}
 
-	if ( m_DebugFlags.CheckFlag( BOT_DEBUG_LOG ) )
+	if ( mDebugFlags.CheckFlag( BOT_DEBUG_LOG ) )
 	{
 		if ( IsDebugEnabled( BOT_DEBUG_LOG ) )
 		{
-			m_DebugLog.OpenForWrite( va( "user/log_%s.rtf", GetName() ), File::Text );
+			mDebugLog.OpenForWrite( va( "user/log_%s.rtf", GetName() ), File::Text );
 
-			if ( m_DebugLog.IsOpen() )
+			if ( mDebugLog.IsOpen() )
 			{
-				m_DebugLog.WriteString( "Debug Log : " );
-				m_DebugLog.WriteString( GetName() );
-				m_DebugLog.WriteNewLine();
+				mDebugLog.WriteString( "Debug Log : " );
+				mDebugLog.WriteString( GetName() );
+				mDebugLog.WriteNewLine();
 			}
 		}
 		else
 		{
-			m_DebugLog.Close();
+			mDebugLog.Close();
 		}
 	}
 
@@ -781,10 +762,10 @@ void Client::OutputDebug( MessageType _type, const char * _str )
 	if ( IsDebugEnabled( BOT_DEBUG_LOG ) )
 	{
 		// dump to cout
-		if ( m_DebugLog.IsOpen() )
+		if ( mDebugLog.IsOpen() )
 		{
-			m_DebugLog.WriteString( _str );
-			m_DebugLog.WriteNewLine();
+			mDebugLog.WriteString( _str );
+			mDebugLog.WriteNewLine();
 		}
 	}
 }
@@ -816,10 +797,10 @@ void Client::LoadProfile( ProfileType _type )
 	// Load the profile.
 	if ( !strProfileName.empty() )
 	{
-		if ( !strProfileName.empty() && m_ScriptObject )
+		if ( !strProfileName.empty() && mScriptObject )
 		{
 			int threadId;
-			gmVariable thisVar( m_ScriptObject );
+			gmVariable thisVar( mScriptObject );
 			if ( ScriptManager::GetInstance()->ExecuteFile( filePath( "scripts/%s", strProfileName.c_str() ), threadId, &thisVar ) ||
 				ScriptManager::GetInstance()->ExecuteFile( filePath( "global_scripts/%s", strProfileName.c_str() ), threadId, &thisVar ) )
 			{
@@ -830,7 +811,7 @@ void Client::LoadProfile( ProfileType _type )
 				DBG_MSG( BOT_DEBUG_SCRIPT, this, kError, va( "Unable to load profile: %s", strProfileName.c_str() ) );
 			}
 
-			m_ProfileType = _type;
+			mProfileType = _type;
 		}
 	}
 }
@@ -840,10 +821,10 @@ void Client::ClearProfile()
 	// No class profile for this new class, so clear the profile
 	ScriptManager::GetInstance()->RemoveFromGlobalTable( this );
 	ScriptManager::GetInstance()->AddBotToGlobalTable( this );
-	m_ProfileType = PROFILE_NONE;
+	mProfileType = PROFILE_NONE;
 }
 
-void Client::ProcessEventImpl( const MessageHelper &_message, obuint32 _targetState )
+void Client::ProcessEventImpl( const MessageHelper &_message, uint32_t _targetState )
 {
 	Prof( Client_ProcessEvent );
 
@@ -865,12 +846,12 @@ void Client::ProcessEventImpl( const MessageHelper &_message, obuint32 _targetSt
 
 void Client::PropogateDeletedThreads( const int *_threadIds, int _numThreads )
 {
-	m_StateRoot->PropogateDeletedThreads( _threadIds, _numThreads );
+	mStateRoot->PropogateDeletedThreads( _threadIds, _numThreads );
 }
 
 bool Client::DistributeUnhandledCommand( const StringVector &_args )
 {
-	return m_StateRoot->StateCommand( _args );
+	return mStateRoot->StateCommand( _args );
 }
 
 void Client::ChangeTeam( int _team )
@@ -917,10 +898,10 @@ void Client::CheckTeamEvent()
 {
 	// Check our team.
 	int iCurrentTeam = gEngineFuncs->GetEntityTeam( GetGameEntity() );
-	if ( iCurrentTeam != m_Team )
+	if ( iCurrentTeam != mTeam )
 	{
 		// Update our team.
-		m_Team = iCurrentTeam;
+		mTeam = iCurrentTeam;
 
 		// Send a change team event.
 		Event_ChangeTeam d = { iCurrentTeam };
@@ -930,13 +911,12 @@ void Client::CheckTeamEvent()
 
 void Client::CheckClassEvent()
 {
-	int iCurrentClass = gEngineFuncs->GetEntityClass( GetGameEntity() );
-	if ( iCurrentClass != m_Class )
+	EntityInfo currentInfo;
+	gEngineFuncs->GetEntityInfo( GetGameEntity(), currentInfo );
+	if ( currentInfo.mClassId != mEntInfo.mClassId )
 	{
-		m_Class = iCurrentClass;
-
 		// Send a change class event.
-		Event_ChangeClass d = { iCurrentClass };
+		Event_ChangeClass d = { currentInfo.mClassId };
 		SendEvent( MessageHelper( MESSAGE_CHANGECLASS, &d, sizeof( d ) ) );
 	}
 }
@@ -948,17 +928,17 @@ bool Client::IsAllied( const GameEntity _ent ) const
 
 void Client::PressButton( int _button )
 {
-	m_ButtonFlags.SetFlag( _button );
+	mButtonFlags.SetFlag( _button );
 }
 
 void Client::ReleaseButton( int _button )
 {
-	m_ButtonFlags.ClearFlag( _button );
+	mButtonFlags.ClearFlag( _button );
 }
 
 bool Client::IsButtonDown( int _button ) const
 {
-	return m_ButtonFlags.CheckFlag( _button );
+	return mButtonFlags.CheckFlag( _button );
 }
 
 void Client::HoldButton( const BitFlag64 &_buttons, int _mstime )
@@ -967,7 +947,7 @@ void Client::HoldButton( const BitFlag64 &_buttons, int _mstime )
 	{
 		if ( _buttons.CheckFlag( i ) )
 		{
-			m_HoldButtons.m_StopHoldTime[ i ] =
+			mHoldButtons.mStopHoldTime[ i ] =
 				( _mstime > 0 ) ? IGame::GetTime() + _mstime : std::numeric_limits<int>::max();
 		}
 	}
@@ -979,7 +959,7 @@ void Client::ReleaseHeldButton( const BitFlag64 &_buttons )
 	{
 		if ( _buttons.CheckFlag( i ) )
 		{
-			m_HoldButtons.m_StopHoldTime[ i ] = 0;
+			mHoldButtons.mStopHoldTime[ i ] = 0;
 		}
 	}
 }
@@ -988,11 +968,11 @@ void Client::ReleaseAllHeldButtons()
 {
 	for ( int i = 0; i < HoldButtons::NumButtons; ++i )
 	{
-		m_HoldButtons.m_StopHoldTime[ i ] = 0;
+		mHoldButtons.mStopHoldTime[ i ] = 0;
 	}
 }
 
-bool Client::CanGetPowerUp( obint32 _powerup ) const
+bool Client::CanGetPowerUp( int32_t _powerup ) const
 {
 	return !GetPowerUpFlags().CheckFlag( _powerup );
 }
@@ -1033,12 +1013,12 @@ AiState::SensoryMemory *Client::GetSensoryMemory()
 
 void Client::InitBehaviorTree()
 {
-	m_StateRoot = new AiState::Root;
-	m_StateRoot->FixRoot();
+	mStateRoot = new AiState::Root;
+	mStateRoot->FixRoot();
 	SetupBehaviorTree();
-	m_StateRoot->FixRoot();
-	m_StateRoot->SetClient( this );
-	m_StateRoot->InitializeStates();
+	mStateRoot->FixRoot();
+	mStateRoot->SetClient( this );
+	mStateRoot->InitializeStates();
 }
 
 bool Client::AddScriptGoal( const std::string &_name )

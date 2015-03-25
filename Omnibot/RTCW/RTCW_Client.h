@@ -21,45 +21,59 @@ class RTCW_Client : public Client
 public:
 	friend class RTCW_Game;
 
-	void Init(int _gameid);
+	void Init( int _gameid );
 
-	NavFlags GetTeamFlag(int _team) const;
+	NavFlags GetTeamFlag( int _team ) const;
 	void GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags );
 
-	void SendVoiceMacro(int _macroId);
+	void SendVoiceMacro( int _macroId );
 
 	void ProcessGotoNode( const PathInterface::PathCorner corners[ 2 ], const size_t numEdges );
-	void ProcessGotoNode(const Path &_path);
+	void ProcessGotoNode( const Path &_path );
 
-	float GetGameVar(GameVar _var) const;
-	float GetAvoidRadius(int _class) const;
+	float GetGameVar( GameVar _var ) const;
 
-	bool DoesBotHaveFlag(MapGoalPtr _mapgoal);
-	bool IsFlagGrabbable(MapGoalPtr _mapgoal);
+	bool DoesBotHaveFlag( MapGoalPtr _mapgoal );
+	bool IsFlagGrabbable( MapGoalPtr _mapgoal );
 
 	bool CanBotSnipe();
-	bool GetSniperWeapon(int &nonscoped, int &scoped);
+	bool GetSniperWeapon( int &nonscoped, int &scoped );
 
-	float GetBreakableTargetDist() const { return m_BreakableTargetDistance; }
-	float GetHealthEntityDist() const { return m_HealthEntityDistance; }
-	float GetAmmoEntityDist() const { return m_AmmoEntityDistance; }
-	float GetWeaponEntityDist() const { return m_WeaponEntityDistance; }
-	float GetProjectileEntityDist() const { return m_ProjectileEntityDistance; }
-	
+	float GetBreakableTargetDist() const
+	{
+		return mBreakableTargetDistance;
+	}
+	float GetHealthEntityDist() const
+	{
+		return mHealthEntityDistance;
+	}
+	float GetAmmoEntityDist() const
+	{
+		return mAmmoEntityDistance;
+	}
+	float GetWeaponEntityDist() const
+	{
+		return mWeaponEntityDistance;
+	}
+	float GetProjectileEntityDist() const
+	{
+		return mProjectileEntityDistance;
+	}
+
 	void SetupBehaviorTree();
 
 	RTCW_Client();
 	virtual ~RTCW_Client();
 protected:
-	void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
-	int HandleVoiceMacroEvent(const MessageHelper &_message);
+	void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+	int HandleVoiceMacroEvent( const MessageHelper &_message );
 
-	float		m_BreakableTargetDistance;
-	float		m_HealthEntityDistance;
-	float		m_AmmoEntityDistance;
-	float		m_WeaponEntityDistance;
-	float		m_ProjectileEntityDistance;
-	int		m_StrafeJump;
+	float	 mBreakableTargetDistance;
+	float	 mHealthEntityDistance;
+	float	 mAmmoEntityDistance;
+	float	 mWeaponEntityDistance;
+	float	 mProjectileEntityDistance;
+	int	 mStrafeJump;
 };
 
 #endif

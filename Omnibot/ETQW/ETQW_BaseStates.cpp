@@ -19,26 +19,26 @@
 namespace AiState
 {
 	BuildConstruction::BuildConstruction()
-		: StateChild("BuildConstruction")
-		, FollowPathUser("BuildConstruction")
-		, m_AdjustedPosition(false)
+		: StateChild( "BuildConstruction" )
+		, FollowPathUser( "BuildConstruction" )
+		, mAdjustedPosition( false )
 	{
-		LimitToClass().SetFlag(ETQW_CLASS_ENGINEER);
+		LimitToClass().SetFlag( ETQW_CLASS_ENGINEER );
 	}
 
 	void BuildConstruction::RenderDebug()
 	{
-		if(IsActive())
+		if ( IsActive() )
 		{
-			RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
-			RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_ConstructionPos,COLOR::GREEN);
+			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mConstructionPos, COLOR::GREEN );
 		}
 	}
 
 	// FollowPathUser functions.
-	bool BuildConstruction::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	bool BuildConstruction::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if(m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+		if ( mMapGoal->RouteTo( GetClient(), _desination, 64.f ) )
 			_final = false;
 		else
 			_final = true;
@@ -46,137 +46,137 @@ namespace AiState
 	}
 
 	// AimerUser functions.
-	bool BuildConstruction::GetAimPosition(Vector3f &_aimpos)
+	bool BuildConstruction::GetAimPosition( Vector3f &_aimpos )
 	{
-		_aimpos = m_ConstructionPos;
+		_aimpos = mConstructionPos;
 		return true;
 	}
 
 	void BuildConstruction::OnTarget()
 	{
-		FINDSTATE(ws, WeaponSystem, GetRootState());
-		if(ws && ws->CurrentWeaponIs(ETQW_WP_PLIERS))
+		FINDSTATE( ws, WeaponSystem, GetRootState() );
+		if ( ws && ws->CurrentWeaponIs( ETQW_WP_PLIERS ) )
 			ws->FireWeapon();
 
 		//InterfaceFuncs::GetCurrentCursorHint
 	}
 
-	obReal BuildConstruction::GetPriority()
+	float BuildConstruction::GetPriority()
 	{
-		if(IsActive())
+		if ( IsActive() )
 			return GetLastPriority();
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
-		GoalManager::Query qry(0xc39bf2a3 /* BUILD */, GetClient());
-		GoalManager::GetInstance()->GetGoals(qry);
-		for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+		GoalManager::Query qry( 0xc39bf2a3 /* BUILD */, GetClient() );
+		GoalManager::GetInstance()->GetGoals( qry );
+		for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 		{
-			if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+			if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
 				continue;
 
-			if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+			if ( qry.mList[ i ]->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) < 1 )
 				continue;
 
-			ConstructableState cState = InterfaceFuncs::GetConstructableState(GetClient(),qry.m_List[i]->GetEntity());
-			if(cState == CONST_UNBUILT)
+			ConstructableState cState = InterfaceFuncs::GetConstructableState( GetClient(), qry.mList[ i ]->GetEntity() );
+			if ( cState == CONST_UNBUILT )
 			{
-				m_MapGoal = qry.m_List[i];
+				mMapGoal = qry.mList[ i ];
 				break;
 			}
 		}
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 
 	void BuildConstruction::Enter()
 	{
-		m_AdjustedPosition = false;
-		m_ConstructionPos = m_MapGoal->GetWorldBounds().Center;
+		mAdjustedPosition = false;
+		mConstructionPos = mMapGoal->GetWorldBounds().Center;
 
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
+		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run, true ) );
 
-		Tracker.InProgress = m_MapGoal;
+		Tracker.InProgress = mMapGoal;
 	}
 
 	void BuildConstruction::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
-		m_MapGoal.reset();
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(), ReleaseWeaponRequest(GetNameHash()));
+		mMapGoal.reset();
+		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
+		FINDSTATEIF( WeaponSystem, GetRootState(), ReleaseWeaponRequest( GetNameHash() ) );
 
 		Tracker.Reset();
 	}
 
-	State::StateStatus BuildConstruction::Update(float fDt)
+	State::StateStatus BuildConstruction::Update( float fDt )
 	{
-		if(DidPathFail())
+		if ( DidPathFail() )
 		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+			BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+		if ( !mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Check the construction status
-		ConstructableState cState = InterfaceFuncs::GetConstructableState(GetClient(),m_MapGoal->GetEntity());
-		switch(cState)
+		ConstructableState cState = InterfaceFuncs::GetConstructableState( GetClient(), mMapGoal->GetEntity() );
+		switch ( cState )
 		{
-		case CONST_INVALID: // Invalid constructable, fail
-			return State_Finished;
-		case CONST_BUILT:	// It's built, consider it a success.
-			return State_Finished;
-		case CONST_UNBUILT:
-		case CONST_BROKEN:
-			// This is what we want.
-			break;
+			case CONST_INVALID: // Invalid constructable, fail
+				return State_Finished;
+			case CONST_BUILT:	// It's built, consider it a success.
+				return State_Finished;
+			case CONST_UNBUILT:
+			case CONST_BROKEN:
+				// This is what we want.
+				break;
 		}
 		//////////////////////////////////////////////////////////////////////////
 
-		if(DidPathSucceed())
+		if ( DidPathSucceed() )
 		{
-			float fDistanceToConstruction = (m_ConstructionPos - GetClient()->GetPosition()).SquaredLength();
-			if (fDistanceToConstruction > 4096.0f)
+			float fDistanceToConstruction = ( mConstructionPos - GetClient()->GetPosition() ).SquaredLength();
+			if ( fDistanceToConstruction > 4096.0f )
 			{
 				// check for badly waypointed maps
-				if (!m_AdjustedPosition)
+				if ( !mAdjustedPosition )
 				{
 					// use our z value because some trigger entities may be below the ground
-					Vector3f checkPos(m_ConstructionPos.X(), m_ConstructionPos.Y(), GetClient()->GetEyePosition().Z());
+					Vector3f checkPos( mConstructionPos.X(), mConstructionPos.Y(), GetClient()->GetEyePosition().Z() );
 
 					obTraceResult tr;
-					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(),checkPos,
-						NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), GetClient()->GetGameID(), True);
+					EngineFuncs::TraceLine( tr, GetClient()->GetEyePosition(), checkPos,
+						NULL, ( TR_MASK_SOLID | TR_MASK_PLAYERCLIP ), GetClient()->GetGameID(), True );
 
-					if (tr.m_Fraction != 1.0f && !tr.m_HitEntity.IsValid())
+					if ( tr.mFraction != 1.0f && !tr.mHitEntity.IsValid() )
 					{
-						m_MapGoal->SetDeleteMe(true);
+						mMapGoal->SetDeleteMe( true );
 						return State_Finished;
 					}
 
 					// do a trace to adjust position
-					EngineFuncs::TraceLine(tr,
+					EngineFuncs::TraceLine( tr,
 						GetClient()->GetEyePosition(),
-						m_ConstructionPos,
-						NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, False);
+						mConstructionPos,
+						NULL, ( TR_MASK_SOLID | TR_MASK_PLAYERCLIP ), -1, False );
 
-					if (tr.m_Fraction != 1.0f)
+					if ( tr.mFraction != 1.0f )
 					{
-						m_ConstructionPos = *(Vector3f*)tr.m_Endpos;
+						mConstructionPos = *(Vector3f*)tr.mEndpos;
 					}
 
-					m_AdjustedPosition = true;
+					mAdjustedPosition = true;
 				}
 			}
 			else
 			{
-				FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-				FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ETQW_WP_PLIERS));
+				FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
+				FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), ETQW_WP_PLIERS ) );
 			}
-			GetClient()->GetSteeringSystem()->SetTarget(m_ConstructionPos, 64.f);
+			GetClient()->GetSteeringSystem()->SetTarget( mConstructionPos, 64.f );
 		}
 		return State_Busy;
 	}
@@ -184,27 +184,27 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	PlantExplosive::PlantExplosive()
-		: StateChild("PlantExplosive")
-		, FollowPathUser("PlantExplosive")
+		: StateChild( "PlantExplosive" )
+		, FollowPathUser( "PlantExplosive" )
 	{
-		LimitToClass().SetFlag(ETQW_CLASS_ENGINEER);
-		LimitToClass().SetFlag(ETQW_CLASS_COVERTOPS);
-		SetAlwaysRecieveEvents(true);
+		LimitToClass().SetFlag( ETQW_CLASS_ENGINEER );
+		LimitToClass().SetFlag( ETQW_CLASS_COVERTOPS );
+		SetAlwaysRecieveEvents( true );
 	}
 
 	void PlantExplosive::RenderDebug()
 	{
-		if(IsActive())
+		if ( IsActive() )
 		{
-			RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
-			RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
 		}
 	}
 
 	// FollowPathUser functions.
-	bool PlantExplosive::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	bool PlantExplosive::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+		if ( mMapGoal && mMapGoal->RouteTo( GetClient(), _desination, 64.f ) )
 			_final = false;
 		else
 			_final = true;
@@ -212,41 +212,41 @@ namespace AiState
 	}
 
 	// AimerUser functions.
-	bool PlantExplosive::GetAimPosition(Vector3f &_aimpos)
+	bool PlantExplosive::GetAimPosition( Vector3f &_aimpos )
 	{
-		switch(m_GoalState)
+		switch ( mGoalState )
 		{
-		case LAY_EXPLOSIVE:
-			_aimpos = m_TargetPosition;
-			break;
-		case ARM_EXPLOSIVE:
-			_aimpos = m_ExplosivePosition;
-			break;
-		case RUNAWAY:
-		case DETONATE_EXPLOSIVE:
-		default:
-			OBASSERT(0, "Invalid Aim State");
-			return false;
+			case LAY_EXPLOSIVE:
+				_aimpos = mTargetPosition;
+				break;
+			case ARM_EXPLOSIVE:
+				_aimpos = mExplosivePosition;
+				break;
+			case RUNAWAY:
+			case DETONATE_EXPLOSIVE:
+			default:
+				OBASSERT( 0, "Invalid Aim State" );
+				return false;
 		}
 		return true;
 	}
 
 	void PlantExplosive::OnTarget()
 	{
-		FINDSTATE(ws, WeaponSystem, GetRootState());
-		if(ws)
+		FINDSTATE( ws, WeaponSystem, GetRootState() );
+		if ( ws )
 		{
-			if(m_GoalState == LAY_EXPLOSIVE)
+			if ( mGoalState == LAY_EXPLOSIVE )
 			{
-				if(ws->CurrentWeaponIs(ETQW_WP_HE_CHARGE))
+				if ( ws->CurrentWeaponIs( ETQW_WP_HE_CHARGE ) )
 					ws->FireWeapon();
 			}
-			else if(m_GoalState == ARM_EXPLOSIVE)
+			else if ( mGoalState == ARM_EXPLOSIVE )
 			{
-				if(ws->CurrentWeaponIs(ETQW_WP_PLIERS))
+				if ( ws->CurrentWeaponIs( ETQW_WP_PLIERS ) )
 					ws->FireWeapon();
 			}
-			else if(m_GoalState == DETONATE_EXPLOSIVE)
+			else if ( mGoalState == DETONATE_EXPLOSIVE )
 			{
 				/*if(ws->CurrentWeaponIs(ETQW_WP_SATCHEL_DET))
 				ws->FireWeapon();*/
@@ -254,16 +254,16 @@ namespace AiState
 		}
 	}
 
-	obReal PlantExplosive::GetPriority()
+	float PlantExplosive::GetPriority()
 	{
-		if(IsActive())
+		if ( IsActive() )
 			return GetLastPriority();
 
 		ExplosiveTargetType myTargetType = XPLO_TYPE_DYNAMITE;
 		ETQW_Weapon weaponType = ETQW_WP_HE_CHARGE;
-		switch(GetClient()->GetClass())
+		switch ( GetClient()->GetClass() )
 		{
-		case ETQW_CLASS_ENGINEER:
+			case ETQW_CLASS_ENGINEER:
 			{
 				weaponType = ETQW_WP_HE_CHARGE;
 				myTargetType = XPLO_TYPE_DYNAMITE;
@@ -275,108 +275,108 @@ namespace AiState
 			myTargetType = XPLO_TYPE_SATCHEL;
 			break;
 			}*/
-		default:
-			OBASSERT(0, "Wrong Class with Evaluator_PlantExplosive");
-			return 0.0;
+			default:
+				OBASSERT( 0, "Wrong Class with Evaluator_PlantExplosive" );
+				return 0.0;
 		}
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
-		if(InterfaceFuncs::IsWeaponCharged(GetClient(), weaponType, Primary))
+		if ( InterfaceFuncs::IsWeaponCharged( GetClient(), weaponType, Primary ) )
 		{
 			{
-				GoalManager::Query qry(0xbbcae592 /* PLANT */, GetClient());
-				GoalManager::GetInstance()->GetGoals(qry);
-				for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+				GoalManager::Query qry( 0xbbcae592 /* PLANT */, GetClient() );
+				GoalManager::GetInstance()->GetGoals( qry );
+				for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 				{
-					if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+					if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
 						continue;
 
-					if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+					if ( qry.mList[ i ]->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) < 1 )
 						continue;
 
-					ConstructableState cState = InterfaceFuncs::IsDestroyable(GetClient(), qry.m_List[i]->GetEntity());
-					if(cState == CONST_DESTROYABLE)
+					ConstructableState cState = InterfaceFuncs::IsDestroyable( GetClient(), qry.mList[ i ]->GetEntity() );
+					if ( cState == CONST_DESTROYABLE )
 					{
-						m_MapGoal = qry.m_List[i];
+						mMapGoal = qry.mList[ i ];
 						break;
 					}
 				}
 			}
 
-			if(!m_MapGoal)
+			if ( !mMapGoal )
 			{
-				GoalManager::Query qry(0xa411a092 /* MOVER */, GetClient());
-				GoalManager::GetInstance()->GetGoals(qry);
-				for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+				GoalManager::Query qry( 0xa411a092 /* MOVER */, GetClient() );
+				GoalManager::GetInstance()->GetGoals( qry );
+				for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 				{
-					if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+					if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
 						continue;
 
-					m_MapGoal = qry.m_List[i];
+					mMapGoal = qry.mList[ i ];
 					break;
 				}
 			}
 		}
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 
 	void PlantExplosive::Enter()
 	{
 		// set position to base of construction
-		Box3f obb = m_MapGoal->GetWorldBounds();
-		m_ExplosivePosition = obb.GetCenterBottom();
-		m_TargetPosition = m_ExplosivePosition;
+		Box3f obb = mMapGoal->GetWorldBounds();
+		mExplosivePosition = obb.GetCenterBottom();
+		mTargetPosition = mExplosivePosition;
 
-		m_AdjustedPosition = false;
-		m_GoalState = LAY_EXPLOSIVE;
+		mAdjustedPosition = false;
+		mGoalState = LAY_EXPLOSIVE;
 
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
+		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run, true ) );
 
-		Tracker.InProgress = m_MapGoal;
+		Tracker.InProgress = mMapGoal;
 	}
 
 	void PlantExplosive::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
-		m_ExplosiveEntity.Reset();
+		mExplosiveEntity.Reset();
 
-		m_MapGoal.reset();
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(), ReleaseWeaponRequest(GetNameHash()));
+		mMapGoal.reset();
+		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
+		FINDSTATEIF( WeaponSystem, GetRootState(), ReleaseWeaponRequest( GetNameHash() ) );
 
 		Tracker.Reset();
 	}
 
-	State::StateStatus PlantExplosive::Update(float fDt)
+	State::StateStatus PlantExplosive::Update( float fDt )
 	{
-		if(DidPathFail())
+		if ( DidPathFail() )
 		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+			BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+		if ( !mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
 
 		// If it's not destroyable, consider it a success.
-		if(!InterfaceFuncs::IsDestroyable(GetClient(), m_MapGoal->GetEntity()))
+		if ( !InterfaceFuncs::IsDestroyable( GetClient(), mMapGoal->GetEntity() ) )
 			return State_Finished;
 
-		if(m_ExplosiveEntity.IsValid() && !IGame::IsEntityValid(m_ExplosiveEntity))
+		if ( mExplosiveEntity.IsValid() && !IGame::IsEntityValid( mExplosiveEntity ) )
 			return State_Finished;
 
-		if(DidPathSucceed())
+		if ( DidPathSucceed() )
 		{
-			switch(GetClient()->GetClass())
+			switch ( GetClient()->GetClass() )
 			{
-			case ETQW_CLASS_ENGINEER:
-				return _UpdateDynamite();
-			case ETQW_CLASS_COVERTOPS:
-				return _UpdateSatchel();
-			default:
-				OBASSERT(0, "Wrong Class in PlantExplosive");
+				case ETQW_CLASS_ENGINEER:
+					return _UpdateDynamite();
+				case ETQW_CLASS_COVERTOPS:
+					return _UpdateSatchel();
+				default:
+					OBASSERT( 0, "Wrong Class in PlantExplosive" );
 			}
 		}
 		return State_Busy;
@@ -384,56 +384,56 @@ namespace AiState
 
 	State::StateStatus PlantExplosive::_UpdateDynamite()
 	{
-		switch(m_GoalState)
+		switch ( mGoalState )
 		{
-		case LAY_EXPLOSIVE:
+			case LAY_EXPLOSIVE:
 			{
-				if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ETQW_WP_HE_CHARGE, Primary))
+				if ( !InterfaceFuncs::IsWeaponCharged( GetClient(), ETQW_WP_HE_CHARGE, Primary ) )
 					return State_Finished;
 
-				/*if(m_Client->IsDebugEnabled(BOT_DEBUG_GOALS))
+				/*if(.mClient->IsDebugEnabled(BOT_DEBUG_GOALS))
 				{
-				RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
+				RenderBuffer::AddOBB(.mMapGoal->GetWorldBounds(), COLOR::ORANGE);
 
 				Vector3f vCenter;
-				m_MapGoal->GetWorldBounds().CenterPoint(vCenter);
-				RenderBuffer::AddLine(m_Client->GetPosition(), vCenter, COLOR::GREEN, 1.0f);
-				RenderBuffer::AddLine(m_Client->GetPosition(), m_MapGoal->GetPosition(), COLOR::RED, 1.0f);
+				mMapGoal->GetWorldBounds().CenterPoint(vCenter);
+				RenderBuffer::AddLine(.mClient->GetPosition(), vCenter, COLOR::GREEN, 1.0f);
+				RenderBuffer::AddLine(.mClient->GetPosition(), mMapGoal->GetPosition(), COLOR::RED, 1.0f);
 				}*/
 
-				float fDistanceToTarget = (m_TargetPosition - GetClient()->GetPosition()).SquaredLength();
-				if (fDistanceToTarget > 10000.0f)
+				float fDistanceToTarget = ( mTargetPosition - GetClient()->GetPosition() ).SquaredLength();
+				if ( fDistanceToTarget > 10000.0f )
 				{
 					// Move toward it.
-					//m_Client->GetSteeringSystem()->SetTarget(m_TargetPosition);
+					//.mClient->GetSteeringSystem()->SetTarget(.mTargetPosition);
 
 					// check for badly waypointed maps
-					if (!m_AdjustedPosition)
+					if ( !mAdjustedPosition )
 					{
-						m_AdjustedPosition = true;
+						mAdjustedPosition = true;
 
 						// use our z value because some trigger entities may be below the ground
-						Vector3f vCheckPos(m_TargetPosition.X(), m_TargetPosition.Y(), GetClient()->GetEyePosition().Z());
-						/*if(m_Client->IsDebugEnabled(BOT_DEBUG_GOALS))
+						Vector3f vCheckPos( mTargetPosition.X(), mTargetPosition.Y(), GetClient()->GetEyePosition().Z() );
+						/*if(.mClient->IsDebugEnabled(BOT_DEBUG_GOALS))
 						{
 						RenderBuffer::AddLine(GetClient()->GetEyePosition(), vCheckPos, COLOR::GREEN, 2.0f);
 						}*/
 
 						obTraceResult tr;
-						EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), vCheckPos,
-							NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), GetClient()->GetGameID(), True);
-						if (tr.m_Fraction != 1.0f && !tr.m_HitEntity.IsValid())
+						EngineFuncs::TraceLine( tr, GetClient()->GetEyePosition(), vCheckPos,
+							NULL, ( TR_MASK_SOLID | TR_MASK_PLAYERCLIP ), GetClient()->GetGameID(), True );
+						if ( tr.mFraction != 1.0f && !tr.mHitEntity.IsValid() )
 						{
-							//m_TargetEntity->SetDeleteMe(true);
+							//.mTargetEntity->SetDeleteMe(true);
 							return State_Finished;
 						}
 
 						// do a trace to adjust position
-						EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), m_TargetPosition,
-							NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, False);
-						if (tr.m_Fraction != 1.0f)
+						EngineFuncs::TraceLine( tr, GetClient()->GetEyePosition(), mTargetPosition,
+							NULL, ( TR_MASK_SOLID | TR_MASK_PLAYERCLIP ), -1, False );
+						if ( tr.mFraction != 1.0f )
 						{
-							m_TargetPosition = Vector3f(tr.m_Endpos);
+							mTargetPosition = Vector3f( tr.mEndpos );
 						}
 					}
 				}
@@ -441,91 +441,91 @@ namespace AiState
 				{
 					// We're within range, so let's start laying.
 					GetClient()->ResetStuckTime();
-					FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-					FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ETQW_WP_HE_CHARGE));
+					FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
+					FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), ETQW_WP_HE_CHARGE ) );
 				}
 				break;
 			}
-		case ARM_EXPLOSIVE:
+			case ARM_EXPLOSIVE:
 			{
-				if(InterfaceFuncs::GetExplosiveState(GetClient(), m_ExplosiveEntity) == XPLO_ARMED)
+				if ( InterfaceFuncs::GetExplosiveState( GetClient(), mExplosiveEntity ) == XPLO_ARMED )
 				{
-					BlackboardDelay(30.f, m_MapGoal->GetSerialNum());
+					BlackboardDelay( 30.f, mMapGoal->GetSerialNum() );
 					return State_Finished;
 				}
 
 				// Disable avoidance for this frame.
-				GetClient()->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime());
+				GetClient()->GetSteeringSystem()->SetNoAvoidTime( IGame::GetTime() );
 
 				// update dynamite position
-				EngineFuncs::EntityPosition(m_ExplosiveEntity, m_ExplosivePosition);
+				EngineFuncs::EntityPosition( mExplosiveEntity, mExplosivePosition );
 
 				// move a little bit close if dyno too far away
-				if ((m_ExplosivePosition - GetClient()->GetPosition()).SquaredLength() > 2500.0f)
+				if ( ( mExplosivePosition - GetClient()->GetPosition() ).SquaredLength() > 2500.0f )
 				{
-					GetClient()->GetSteeringSystem()->SetTarget(m_ExplosivePosition);
+					GetClient()->GetSteeringSystem()->SetTarget( mExplosivePosition );
 				}
 				else
 				{
 					GetClient()->ResetStuckTime();
-					FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-					FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ETQW_WP_PLIERS));
+					FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
+					FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), ETQW_WP_PLIERS ) );
 				}
 				break;
 			}
-		default:
-			// keep processing
-			break;
+			default:
+				// keep processing
+				break;
 		}
 		return State_Busy;
 	}
 
 	State::StateStatus PlantExplosive::_UpdateSatchel()
 	{
-		//switch(m_GoalState)
+		//switch(.mGoalState)
 		//{
 		//case LAY_EXPLOSIVE:
 		//	{
 		//		if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ETQW_WP_SATCHEL, Primary))
 		//			return State_Finished;
 
-		//		float fDistanceToTarget = (m_TargetPosition - GetClient()->GetPosition()).SquaredLength();
+		//		float fDistanceToTarget = (.mTargetPosition - GetClient()->GetPosition()).SquaredLength();
 		//		if (fDistanceToTarget > 10000.0f)
 		//		{
 		//			// Move toward it.
-		//			//GetClient()->GetSteeringSystem()->SetTarget(m_TargetPosition);
+		//			//GetClient()->GetSteeringSystem()->SetTarget(.mTargetPosition);
 
 		//			// check for badly waypointed maps
-		//			if (!m_AdjustedPosition)
+		//			if (!mAdjustedPosition)
 		//			{
-		//				m_AdjustedPosition = true;
+		//			 mAdjustedPosition = true;
 
 		//				// use our z value because some trigger entities may be below the ground
-		//				Vector3f vCheckPos(m_TargetPosition.X(), m_TargetPosition.Y(), GetClient()->GetEyePosition().Z());
-		//				/*if(m_Client->IsDebugEnabled(BOT_DEBUG_GOALS))
+		//				Vector3f vCheckPos(.mTargetPosition.X(), mTargetPosition.Y(), GetClient()->GetEyePosition().Z());
+		//				/*if(.mClient->IsDebugEnabled(BOT_DEBUG_GOALS))
 		//				{
-		//					RenderBuffer::AddLine(m_Client->GetEyePosition(), vCheckPos, COLOR::GREEN, 2.0f);
+		//					RenderBuffer::AddLine(.mClient->GetEyePosition(), vCheckPos, COLOR::GREEN, 2.0f);
 		//				}*/
 
 		//				obTraceResult tr;
 		//				EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), vCheckPos,
 		//					NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), GetClient()->GetGameID(), True);
-		//				if (tr.m_Fraction != 1.0f && !tr.m_HitEntity.IsValid())
+		//				if (tr.mFraction != 1.0f && !tr.mHitEntity.IsValid())
 		//				{
 		//					AABB aabb, mapaabb;
-		//					EngineFuncs::EntityWorldAABB(m_MapGoal->GetEntity(), aabb);
+		//					EngineFuncs::EntityWorldAABB(.mMapGoal->GetEntity(), aabb);
 		//					//gEngineFuncs->GetMapExtents(mapaabb);
 
-		//					//m_TargetEntity->SetDeleteMe(true);
+		//					//.mTargetEntity->SetDeleteMe(true);
 		//					return State_Finished;
 		//				}
 
 		//				// do a trace to adjust position
-		//				EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), m_TargetPosition,
+		//				EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), mTargetPosition,
 		//					NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, False);
-		//				if (tr.m_Fraction != 1.0f)
+		//				if (tr.mFraction != 1.0f)
 		//				{
-		//					m_TargetPosition = Vector3f(tr.m_Endpos);
+		//				 mTargetPosition = Vector3f(tr.mEndpos);
 		//				}
 		//			}
 		//		}
@@ -541,11 +541,11 @@ namespace AiState
 		//case ARM_EXPLOSIVE:
 		//case RUNAWAY:
 		//	{
-		//		OBASSERT(m_ExplosiveEntity.IsValid(), "No Explosive Entity!");
+		//		OBASSERT(.mExplosiveEntity.IsValid(), "No Explosive Entity!");
 
 		//		// Generate a random goal.
 		//		FINDSTATEIF(FollowPath,GetRootState(),GotoRandomPt(this));
-		//		m_GoalState = DETONATE_EXPLOSIVE;
+		//	 mGoalState = DETONATE_EXPLOSIVE;
 		//		break;
 		//	}
 		//case DETONATE_EXPLOSIVE:
@@ -555,7 +555,7 @@ namespace AiState
 		//		const bool BLOW_TARGETQW_OR_NOT = true;
 
 		//		Vector3f vSatchelPos;
-		//		if(EngineFuncs::EntityPosition(m_ExplosiveEntity, vSatchelPos))
+		//		if(EngineFuncs::EntityPosition(.mExplosiveEntity, vSatchelPos))
 		//		{
 		//			if((GetClient()->GetPosition() - vSatchelPos).Length() >= SATCHEL_DETQW_DISTANCE)
 		//			{
@@ -563,7 +563,7 @@ namespace AiState
 		//				if(BLOW_TARGETQW_OR_NOT || !GetClient()->GetTargetingSystem()->HasTarget())
 		//				{
 		//					FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(1.f, GetNameHash(), ETQW_WP_SATCHEL_DET));
-		//					ExplosiveState eState = InterfaceFuncs::GetExplosiveState(GetClient(), m_ExplosiveEntity);
+		//					ExplosiveState eState = InterfaceFuncs::GetExplosiveState(GetClient(), mExplosiveEntity);
 		//					if(eState == XPLO_INVALID)
 		//						return State_Finished;
 		//				}
@@ -575,22 +575,22 @@ namespace AiState
 		return State_Busy;
 	}
 
-	void PlantExplosive::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+	void PlantExplosive::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
 	{
-		switch(_message.GetMessageId())
+		switch ( _message.GetMessageId() )
 		{
-			HANDLER(ACTION_WEAPON_FIRE)
+			HANDLER( ACTION_WEAPON_FIRE )
 			{
 				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-				if(m->m_WeaponId == ETQW_WP_HE_CHARGE && m->m_Projectile.IsValid())
+				if ( m->mWeaponId == ETQW_WP_HE_CHARGE && m->mProjectile.IsValid() )
 				{
-					m_ExplosiveEntity = m->m_Projectile;
-					m_GoalState = ARM_EXPLOSIVE;
+					mExplosiveEntity = m->mProjectile;
+					mGoalState = ARM_EXPLOSIVE;
 				}
-				/*else if(m->m_WeaponId == ETQW_WP_SATCHEL && m->m_Projectile.IsValid())
+				/*else if(m->mWeaponId == ETQW_WP_SATCHEL && m->mProjectile.IsValid())
 				{
-				m_ExplosiveEntity = m->m_Projectile;
-				m_GoalState = RUNAWAY;
+				mExplosiveEntity = m->mProjectile;
+				mGoalState = RUNAWAY;
 				}*/
 				break;
 			}
@@ -600,57 +600,57 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	MountMg42::MountMg42()
-		: StateChild("MountMg42")
-		, FollowPathUser("MountMg42")
-		, m_ScanDirection(SCAN_DEFAULT)
-		, m_NextScanTime(0)
+		: StateChild( "MountMg42" )
+		, FollowPathUser( "MountMg42" )
+		, mScanDirection( SCAN_DEFAULT )
+		, mNextScanTime( 0 )
 	{
 	}
 
-	void MountMg42::GetDebugString(std::stringstream &out)
+	void MountMg42::GetDebugString( std::stringstream &out )
 	{
-		if(IsActive())
+		if ( IsActive() )
 		{
-			if(!GetClient()->HasEntityFlag(ETQW_ENT_FLAG_MOUNTED))
+			if ( !GetClient()->HasEntityFlag( ETQW_ENT_FLAG_MOUNTED ) )
 				out << "Mounting ";
 			else
 			{
-				switch(m_ScanDirection)
+				switch ( mScanDirection )
 				{
-				case SCAN_DEFAULT:
-					out << "Scan Facing ";
-					break;
-				case SCAN_MIDDLE:
-					out << "Scan Middle ";
-					break;
-				case SCAN_LEFT:
-					out << "Scan Left ";
-					break;
-				case SCAN_RIGHT:
-					out << "Scan Right ";
-					break;
+					case SCAN_DEFAULT:
+						out << "Scan Facing ";
+						break;
+					case SCAN_MIDDLE:
+						out << "Scan Middle ";
+						break;
+					case SCAN_LEFT:
+						out << "Scan Left ";
+						break;
+					case SCAN_RIGHT:
+						out << "Scan Right ";
+						break;
 				}
 			}
 
-			if(m_MapGoal)
-				out << m_MapGoal->GetName();
+			if ( mMapGoal )
+				out << mMapGoal->GetName();
 		}
 	}
 
 	void MountMg42::RenderDebug()
 	{
-		if(IsActive())
+		if ( IsActive() )
 		{
-			RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
-			RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
-			m_TargetZone.RenderDebug();
+			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
+			mTargetZone.RenderDebug();
 		}
 	}
 
 	// FollowPathUser functions.
-	bool MountMg42::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	bool MountMg42::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+		if ( mMapGoal && mMapGoal->RouteTo( GetClient(), _desination, 64.f ) )
 			_final = false;
 		else
 			_final = true;
@@ -658,167 +658,167 @@ namespace AiState
 	}
 
 	// AimerUser functions.
-	bool MountMg42::GetAimPosition(Vector3f &_aimpos)
+	bool MountMg42::GetAimPosition( Vector3f &_aimpos )
 	{
-		_aimpos = m_AimPoint;
+		_aimpos = mAimPoint;
 		return true;
 	}
 
 	void MountMg42::OnTarget()
 	{
-		if(!GetClient()->HasEntityFlag(ETQW_ENT_FLAG_MOUNTED))
-			GetClient()->PressButton(BOT_BUTTON_USE);
+		if ( !GetClient()->HasEntityFlag( ETQW_ENT_FLAG_MOUNTED ) )
+			GetClient()->PressButton( BOT_BUTTON_USE );
 	}
 
-	obReal MountMg42::GetPriority()
+	float MountMg42::GetPriority()
 	{
-		if(IsActive() || GetClient()->HasEntityFlag(ETQW_ENT_FLAG_MOUNTED))
+		if ( IsActive() || GetClient()->HasEntityFlag( ETQW_ENT_FLAG_MOUNTED ) )
 			return GetLastPriority();
 
 		BitFlag64 entFlags;
 
-		GoalManager::Query qry(0xe1a2b09c /* MOUNTMG42 */, GetClient());
-		GoalManager::GetInstance()->GetGoals(qry);
-		for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+		GoalManager::Query qry( 0xe1a2b09c /* MOUNTMG42 */, GetClient() );
+		GoalManager::GetInstance()->GetGoals( qry );
+		for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 		{
-			if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+			if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
 				continue;
 
-			GameEntity gunOwner = InterfaceFuncs::GetMountedPlayerOnMG42(GetClient(), qry.m_List[i]->GetEntity());
-			int gunHealth = InterfaceFuncs::GetGunHealth(GetClient(), qry.m_List[i]->GetEntity());
-			bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), qry.m_List[i]->GetEntity());
+			GameEntity gunOwner = InterfaceFuncs::GetMountedPlayerOnMG42( GetClient(), qry.mList[ i ]->GetEntity() );
+			int gunHealth = InterfaceFuncs::GetGunHealth( GetClient(), qry.mList[ i ]->GetEntity() );
+			bool bBroken = InterfaceFuncs::IsMountableGunRepairable( GetClient(), qry.mList[ i ]->GetEntity() );
 
-			if(bBroken)
+			if ( bBroken )
 				continue;
-
-			if(!InterfaceFuncs::GetEntityFlags(qry.m_List[i]->GetEntity(), entFlags) ||
-				!entFlags.CheckFlag(ETQW_ENT_FLAG_ISMOUNTABLE))
+			
+			EntityInfo entInfo;			
+			if ( !IGame::GetEntityInfo( qry.mList[ i ]->GetEntity(), entInfo ) || !entInfo.mFlags.CheckFlag( ETQW_ENT_FLAG_ISMOUNTABLE ) )
 				continue;
 
 			// Make sure nobody has it mounted.
-			if((!gunOwner.IsValid() || !GetClient()->IsAllied(gunOwner)) && (gunHealth > 0))
+			if ( ( !gunOwner.IsValid() || !GetClient()->IsAllied( gunOwner ) ) && ( gunHealth > 0 ) )
 			{
-				m_MapGoal = qry.m_List[i];
+				mMapGoal = qry.mList[ i ];
 				break;
 			}
 		}
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 
 	void MountMg42::Enter()
 	{
-		m_ScanDirection = SCAN_MIDDLE;
-		m_NextScanTime = IGame::GetTime() + (int)Mathf::IntervalRandom(2000.0f, 7000.0f);
+		mScanDirection = SCAN_MIDDLE;
+		mNextScanTime = IGame::GetTime() + (int)Mathf::IntervalRandom( 2000.0f, 7000.0f );
 
-		m_AimPoint = m_MapGoal->GetPosition();
-		m_MG42Position = m_AimPoint;
+		mAimPoint = mMapGoal->GetPosition();
+		mMG42Position = mAimPoint;
 
-		m_ScanLeft = Vector3f::ZERO;
-		m_ScanRight = Vector3f::ZERO;
+		mScanLeft = Vector3f::ZERO;
+		mScanRight = Vector3f::ZERO;
 
-		m_GotGunProperties = false;
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
+		mGotGunProperties = false;
+		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run, true ) );
 
-		Tracker.InProgress = m_MapGoal;
+		Tracker.InProgress = mMapGoal;
 
-		m_TargetZone.Restart(256.f);
+		mTargetZone.Restart( 256.f );
 	}
 
 	void MountMg42::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
-		m_MapGoal.reset();
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
+		mMapGoal.reset();
+		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
 
-		if(GetClient()->HasEntityFlag(ETQW_ENT_FLAG_MOUNTED))
-			GetClient()->PressButton(BOT_BUTTON_USE);
+		if ( GetClient()->HasEntityFlag( ETQW_ENT_FLAG_MOUNTED ) )
+			GetClient()->PressButton( BOT_BUTTON_USE );
 
 		Tracker.Reset();
 	}
 
-	State::StateStatus MountMg42::Update(float fDt)
+	State::StateStatus MountMg42::Update( float fDt )
 	{
-		if(DidPathFail())
+		if ( DidPathFail() )
 		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+			BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+		if ( !mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Only fail if a friendly player is on this gun or gun has been destroyed in the meantime
-		//int gunHealth = InterfaceFuncs::GetGunHealth(m_Client, m_MG42Goal->GetEntity());
-		GameEntity mounter = InterfaceFuncs::GetMountedPlayerOnMG42(GetClient(), m_MapGoal->GetEntity());
-		if(InterfaceFuncs::IsMountableGunRepairable(GetClient(), m_MapGoal->GetEntity()) ||
-			(mounter.IsValid() && (mounter != GetClient()->GetGameEntity()) && GetClient()->IsAllied(mounter)))
+		//int gunHealth = InterfaceFuncs::GetGunHealth(.mClient, mMG42Goal->GetEntity());
+		GameEntity mounter = InterfaceFuncs::GetMountedPlayerOnMG42( GetClient(), mMapGoal->GetEntity() );
+		if ( InterfaceFuncs::IsMountableGunRepairable( GetClient(), mMapGoal->GetEntity() ) ||
+			( mounter.IsValid() && ( mounter != GetClient()->GetGameEntity() ) && GetClient()->IsAllied( mounter ) ) )
 		{
 			return State_Finished;
 		}
 		//////////////////////////////////////////////////////////////////////////
 
-		if(DidPathSucceed())
+		if ( DidPathSucceed() )
 		{
-			GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
-			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
+			GetClient()->GetSteeringSystem()->SetTarget( mMapGoal->GetPosition() );
+			FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
 
-			if(GetClient()->HasEntityFlag(ETQW_ENT_FLAG_MOUNTED))
+			if ( GetClient()->HasEntityFlag( ETQW_ENT_FLAG_MOUNTED ) )
 			{
-				m_TargetZone.Update(GetClient());
+				mTargetZone.Update( GetClient() );
 
-				if(!m_GotGunProperties)
+				if ( !mGotGunProperties )
 				{
-					m_GotGunProperties = true;
+					mGotGunProperties = true;
 					_GetMG42Properties();
-					m_AimPoint = m_MapGoal->GetPosition() + m_GunCenterArc * 512.f;
+					mAimPoint = mMapGoal->GetPosition() + mGunCenterArc * 512.f;
 				}
 
-				if(m_NextScanTime < IGame::GetTime())
+				if ( mNextScanTime < IGame::GetTime() )
 				{
-					m_NextScanTime = IGame::GetTime() + (int)Mathf::IntervalRandom(2000.0f, 7000.0f);
-					m_ScanDirection = (int)Mathf::IntervalRandom(0.0f, (float)NUM_SCAN_TYPES);
+					mNextScanTime = IGame::GetTime() + (int)Mathf::IntervalRandom( 2000.0f, 7000.0f );
+					mScanDirection = (int)Mathf::IntervalRandom( 0.0f, (float)NUM_SCAN_TYPES );
 
 					// we're mounted, so lets look around mid view.
-					m_TargetZone.UpdateAimPosition();
+					mTargetZone.UpdateAimPosition();
 				}
 
-				if(m_TargetZone.HasAim())
-					m_ScanDirection = SCAN_ZONES;
+				if ( mTargetZone.HasAim() )
+					mScanDirection = SCAN_ZONES;
 
-				switch(m_ScanDirection)
+				switch ( mScanDirection )
 				{
-				case SCAN_DEFAULT:
-					if(m_MapGoal->GetFacing() != Vector3f::ZERO)
+					case SCAN_DEFAULT:
+						if ( mMapGoal->GetFacing() != Vector3f::ZERO )
+						{
+							mAimPoint = mMG42Position + mMapGoal->GetFacing() * 1024.f;
+							break;
+						}
+					case SCAN_MIDDLE:
 					{
-						m_AimPoint = m_MG42Position + m_MapGoal->GetFacing() * 1024.f;
+						mAimPoint = mMG42Position + mGunCenterArc * 1024.f;
 						break;
 					}
-				case SCAN_MIDDLE:
+					case SCAN_LEFT:
+						if ( mScanLeft != Vector3f::ZERO )
+						{
+							mAimPoint = mMG42Position + mScanLeft * 1024.f;
+							break;
+						}
+					case SCAN_RIGHT:
+						if ( mScanRight != Vector3f::ZERO )
+						{
+							mAimPoint = mMG42Position + mScanRight * 1024.f;
+							break;
+						}
+					case SCAN_ZONES:
 					{
-						m_AimPoint = m_MG42Position + m_GunCenterArc * 1024.f;
+						mAimPoint = mTargetZone.GetAimPosition();
 						break;
 					}
-				case SCAN_LEFT:
-					if(m_ScanLeft != Vector3f::ZERO)
-					{
-						m_AimPoint = m_MG42Position + m_ScanLeft * 1024.f;
+					default:
 						break;
-					}
-				case SCAN_RIGHT:
-					if(m_ScanRight != Vector3f::ZERO)
-					{
-						m_AimPoint = m_MG42Position + m_ScanRight * 1024.f;
-						break;
-					}
-				case SCAN_ZONES:
-					{
-						m_AimPoint = m_TargetZone.GetAimPosition();
-						break;
-					}
-				default:
-					break;
 				}
 			}
 		}
@@ -828,38 +828,38 @@ namespace AiState
 	bool MountMg42::_GetMG42Properties()
 	{
 		ETQW_MG42Info data;
-		if(!InterfaceFuncs::GetMg42Properties(GetClient(), data))
+		if ( !InterfaceFuncs::GetMg42Properties( GetClient(), data ) )
 			return false;
 
-		m_GunCenterArc = Vector3f(data.m_CenterFacing);
+		mGunCenterArc = Vector3f( data.mCenterFacing );
 
-		m_MinHorizontalArc = data.m_MinHorizontalArc;
-		m_MaxHorizontalArc = data.m_MaxHorizontalArc;
-		m_MinVerticalArc = data.m_MinVerticalArc;
-		m_MaxVerticalArc = data.m_MaxVerticalArc;
+		mMinHorizontalArc = data.mMinHorizontalArc;
+		mMaxHorizontalArc = data.mMaxHorizontalArc;
+		mMinVerticalArc = data.mMinVerticalArc;
+		mMaxVerticalArc = data.mMaxVerticalArc;
 
 		// Calculate the planes for the MG42
 
 		/*Matrix3f planeMatrices[4];
-		planeMatrices[0].FromEulerAnglesXYZ(m_MinHorizontalArc, 0.0f, 0.0f);
-		planeMatrices[1].FromEulerAnglesXYZ(m_MaxHorizontalArc, 0.0f, 0.0f);
-		planeMatrices[2].FromEulerAnglesXYZ(0.0f, m_MinHorizontalArc, 0.0f);
-		planeMatrices[3].FromEulerAnglesXYZ(0.0f, m_MaxHorizontalArc, 0.0f);
+		planeMatrices[0].FromEulerAnglesXYZ(.mMinHorizontalArc, 0.0f, 0.0f);
+		planeMatrices[1].FromEulerAnglesXYZ(.mMaxHorizontalArc, 0.0f, 0.0f);
+		planeMatrices[2].FromEulerAnglesXYZ(0.0f, mMinHorizontalArc, 0.0f);
+		planeMatrices[3].FromEulerAnglesXYZ(0.0f, mMaxHorizontalArc, 0.0f);
 
-		m_GunArcPlanes[0] = Plane3f(m_GunCenterArc * planeMatrices[0], m_MG42Position);
-		m_GunArcPlanes[1] = Plane3f(m_GunCenterArc * planeMatrices[1], m_MG42Position);
-		m_GunArcPlanes[2] = Plane3f(m_GunCenterArc * planeMatrices[2], m_MG42Position);
-		m_GunArcPlanes[3] = Plane3f(m_GunCenterArc * planeMatrices[3], m_MG42Position);*/
+		mGunArcPlanes[0] = Plane3f(.mGunCenterArc * planeMatrices[0], mMG42Position);
+		mGunArcPlanes[1] = Plane3f(.mGunCenterArc * planeMatrices[1], mMG42Position);
+		mGunArcPlanes[2] = Plane3f(.mGunCenterArc * planeMatrices[2], mMG42Position);
+		mGunArcPlanes[3] = Plane3f(.mGunCenterArc * planeMatrices[3], mMG42Position);*/
 
 		const float fScanPc = 0.4f;
 
 		Quaternionf ql;
-		ql.FromAxisAngle(Vector3f::UNIT_Z, Mathf::DegToRad(m_MinHorizontalArc * fScanPc));
-		m_ScanLeft = ql.Rotate(m_GunCenterArc);
+		ql.FromAxisAngle( Vector3f::UNIT_Z, Mathf::DegToRad( mMinHorizontalArc * fScanPc ) );
+		mScanLeft = ql.Rotate( mGunCenterArc );
 
 		Quaternionf qr;
-		qr.FromAxisAngle(Vector3f::UNIT_Z, Mathf::DegToRad(m_MaxHorizontalArc * fScanPc));
-		m_ScanRight = qr.Rotate(m_GunCenterArc);
+		qr.FromAxisAngle( Vector3f::UNIT_Z, Mathf::DegToRad( mMaxHorizontalArc * fScanPc ) );
+		mScanRight = qr.Rotate( mGunCenterArc );
 
 		return true;
 	}
@@ -867,79 +867,79 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	TakeCheckPoint::TakeCheckPoint()
-		: StateChild("TakeCheckPoint")
-		, FollowPathUser("TakeCheckPoint")
+		: StateChild( "TakeCheckPoint" )
+		, FollowPathUser( "TakeCheckPoint" )
 	{
 	}
 
 	void TakeCheckPoint::RenderDebug()
 	{
-		if(IsActive())
+		if ( IsActive() )
 		{
-			RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
-			RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
 		}
 	}
 
 	// FollowPathUser functions.
-	bool TakeCheckPoint::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	bool TakeCheckPoint::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if(m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+		if ( mMapGoal->RouteTo( GetClient(), _desination, 64.f ) )
 			_final = false;
 		else
 			_final = true;
 		return true;
 	}
 
-	obReal TakeCheckPoint::GetPriority()
+	float TakeCheckPoint::GetPriority()
 	{
-		if(IsActive())
+		if ( IsActive() )
 			return GetLastPriority();
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
-		GoalManager::Query qry(0xf7e4a57f /* CHECKPOINT */, GetClient());
-		GoalManager::GetInstance()->GetGoals(qry);
-		qry.GetBest(m_MapGoal);
+		GoalManager::Query qry( 0xf7e4a57f /* CHECKPOINT */, GetClient() );
+		GoalManager::GetInstance()->GetGoals( qry );
+		qry.GetBest( mMapGoal );
 
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 
 	void TakeCheckPoint::Enter()
 	{
-		m_TargetPosition = m_MapGoal->GetWorldBounds().Center;
+		mTargetPosition = mMapGoal->GetWorldBounds().Center;
 
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
+		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run, true ) );
 
-		Tracker.InProgress = m_MapGoal;
+		Tracker.InProgress = mMapGoal;
 	}
 
 	void TakeCheckPoint::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
-		m_MapGoal.reset();
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(), ReleaseWeaponRequest(GetNameHash()));
+		mMapGoal.reset();
+		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
+		FINDSTATEIF( WeaponSystem, GetRootState(), ReleaseWeaponRequest( GetNameHash() ) );
 
 		Tracker.Reset();
 	}
 
-	State::StateStatus TakeCheckPoint::Update(float fDt)
+	State::StateStatus TakeCheckPoint::Update( float fDt )
 	{
-		if(DidPathFail())
+		if ( DidPathFail() )
 		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+			BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+		if ( !mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
 
-		if(DidPathSucceed())
+		if ( DidPathSucceed() )
 		{
-			m_TargetPosition.Z() = GetClient()->GetPosition().Z();
-			GetClient()->GetSteeringSystem()->SetTarget(m_TargetPosition, 32.f);
+			mTargetPosition.Z() = GetClient()->GetPosition().Z();
+			GetClient()->GetSteeringSystem()->SetTarget( mTargetPosition, 32.f );
 		}
 		return State_Busy;
 	}
@@ -947,26 +947,26 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	PlantMine::PlantMine()
-		: StateChild("PlantMine")
-		, FollowPathUser("PlantMine")
+		: StateChild( "PlantMine" )
+		, FollowPathUser( "PlantMine" )
 	{
-		LimitToClass().SetFlag(ETQW_CLASS_ENGINEER);
-		SetAlwaysRecieveEvents(true);
+		LimitToClass().SetFlag( ETQW_CLASS_ENGINEER );
+		SetAlwaysRecieveEvents( true );
 	}
 
 	void PlantMine::RenderDebug()
 	{
-		if(IsActive())
+		if ( IsActive() )
 		{
-			RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
-			RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
 		}
 	}
 
 	// FollowPathUser functions.
-	bool PlantMine::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	bool PlantMine::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+		if ( mMapGoal && mMapGoal->RouteTo( GetClient(), _desination, 64.f ) )
 			_final = false;
 		else
 			_final = true;
@@ -974,87 +974,87 @@ namespace AiState
 	}
 
 	// AimerUser functions.
-	bool PlantMine::GetAimPosition(Vector3f &_aimpos)
+	bool PlantMine::GetAimPosition( Vector3f &_aimpos )
 	{
-		if(!m_LandMineEntity.IsValid())
-			_aimpos = m_TargetPosition;
+		if ( !mLandMineEntity.IsValid() )
+			_aimpos = mTargetPosition;
 		else
-			_aimpos = m_LandMinePosition;
+			_aimpos = mLandMinePosition;
 		return true;
 	}
 
 	void PlantMine::OnTarget()
 	{
-		FINDSTATE(ws, WeaponSystem, GetRootState());
-		if(ws)
+		FINDSTATE( ws, WeaponSystem, GetRootState() );
+		if ( ws )
 		{
-			if(m_LandMineEntity.IsValid() && ws->CurrentWeaponIs(ETQW_WP_PLIERS))
+			if ( mLandMineEntity.IsValid() && ws->CurrentWeaponIs( ETQW_WP_PLIERS ) )
 				ws->FireWeapon();
-			else if(!m_LandMineEntity.IsValid() && ws->CurrentWeaponIs(ETQW_WP_LANDMINE))
+			else if ( !mLandMineEntity.IsValid() && ws->CurrentWeaponIs( ETQW_WP_LANDMINE ) )
 				ws->FireWeapon();
 		}
 	}
 
-	obReal PlantMine::GetPriority()
+	float PlantMine::GetPriority()
 	{
-		if(IsActive())
+		if ( IsActive() )
 			return GetLastPriority();
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
-		if(InterfaceFuncs::IsWeaponCharged(GetClient(), ETQW_WP_LANDMINE, Primary))
+		if ( InterfaceFuncs::IsWeaponCharged( GetClient(), ETQW_WP_LANDMINE, Primary ) )
 		{
-			GoalManager::Query qry(0xf2dffa59 /* PLANTMINE */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			qry.GetBest(m_MapGoal);
+			GoalManager::Query qry( 0xf2dffa59 /* PLANTMINE */, GetClient() );
+			GoalManager::GetInstance()->GetGoals( qry );
+			qry.GetBest( mMapGoal );
 		}
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 
 	void PlantMine::Enter()
 	{
 		// generate a random position in the goal radius
-		float fRandDistance = Mathf::IntervalRandom(0.0f, m_MapGoal->GetRadius());
-		Quaternionf quat(Vector3f::UNIT_Y, Mathf::DegToRad(Mathf::IntervalRandom(0.0f, 360.0f)));
-		m_TargetPosition = m_MapGoal->GetPosition() + quat.Rotate(Vector3f::UNIT_Y * fRandDistance);
+		float fRandDistance = Mathf::IntervalRandom( 0.0f, mMapGoal->GetRadius() );
+		Quaternionf quat( Vector3f::UNIT_Y, Mathf::DegToRad( Mathf::IntervalRandom( 0.0f, 360.0f ) ) );
+		mTargetPosition = mMapGoal->GetPosition() + quat.Rotate( Vector3f::UNIT_Y * fRandDistance );
 
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
+		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run, true ) );
 
-		Tracker.InProgress = m_MapGoal;
+		Tracker.InProgress = mMapGoal;
 	}
 
 	void PlantMine::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
-		m_MapGoal.reset();
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(), ReleaseWeaponRequest(GetNameHash()));
+		mMapGoal.reset();
+		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
+		FINDSTATEIF( WeaponSystem, GetRootState(), ReleaseWeaponRequest( GetNameHash() ) );
 
 		Tracker.Reset();
 	}
 
-	State::StateStatus PlantMine::Update(float fDt)
+	State::StateStatus PlantMine::Update( float fDt )
 	{
-		if(DidPathFail())
+		if ( DidPathFail() )
 		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+			BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+		if ( !mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
 
 		// If it's not destroyable, consider it a success.
-		if (!InterfaceFuncs::IsDestroyable(GetClient(), m_MapGoal->GetEntity()))
+		if ( !InterfaceFuncs::IsDestroyable( GetClient(), mMapGoal->GetEntity() ) )
 		{
 			return State_Finished;
 		}
 
-		if(m_LandMineEntity.IsValid() && !IGame::IsEntityValid(m_LandMineEntity))
+		if ( mLandMineEntity.IsValid() && !IGame::IsEntityValid( mLandMineEntity ) )
 			return State_Finished;
 
-		if(DidPathSucceed())
+		if ( DidPathSucceed() )
 		{
 			GetClient()->ResetStuckTime();
 
@@ -1062,52 +1062,52 @@ namespace AiState
 			static float MIN_DIST_TO_MINE = 32.0f;
 
 			// Have we already thrown out a mine?
-			if(m_LandMineEntity.IsValid())
+			if ( mLandMineEntity.IsValid() )
 			{
 				// Is it armed yet?
-				if(InterfaceFuncs::GetExplosiveState(GetClient(), m_LandMineEntity) == XPLO_ARMED)
+				if ( InterfaceFuncs::GetExplosiveState( GetClient(), mLandMineEntity ) == XPLO_ARMED )
 					return State_Finished;
 
 				// Disable avoidance for this frame.
-				//m_Client->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime());
+				//.mClient->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime());
 
 				// Not armed yet, keep trying.
-				if(EngineFuncs::EntityPosition(m_LandMineEntity, m_LandMinePosition) &&
-					EngineFuncs::EntityVelocity(m_LandMineEntity, m_LandMineVelocity))
+				if ( EngineFuncs::EntityPosition( mLandMineEntity, mLandMinePosition ) &&
+					EngineFuncs::EntityVelocity( mLandMineEntity, mLandMineVelocity ) )
 				{
-					GetClient()->PressButton(BOT_BUTTON_CROUCH);
+					GetClient()->PressButton( BOT_BUTTON_CROUCH );
 
-					FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-					FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ETQW_WP_PLIERS));
+					FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
+					FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), ETQW_WP_PLIERS ) );
 
 					// Do we need to get closer?
-					bool bCloseEnough = (GetClient()->GetPosition() - m_LandMinePosition).Length() < MIN_DIST_TO_MINE;
-					GetClient()->GetSteeringSystem()->SetTarget(bCloseEnough ? GetClient()->GetPosition() : m_LandMinePosition);
+					bool bCloseEnough = ( GetClient()->GetPosition() - mLandMinePosition ).Length() < MIN_DIST_TO_MINE;
+					GetClient()->GetSteeringSystem()->SetTarget( bCloseEnough ? GetClient()->GetPosition() : mLandMinePosition );
 				}
 				return State_Busy;
 			}
 
 			// Move closer if necessary.
-			bool bCloseEnough = (GetClient()->GetPosition() - m_TargetPosition).Length() < MIN_DIST_TO_TARGETPOS;
-			GetClient()->GetSteeringSystem()->SetTarget(bCloseEnough ? GetClient()->GetPosition() : m_TargetPosition);
+			bool bCloseEnough = ( GetClient()->GetPosition() - mTargetPosition ).Length() < MIN_DIST_TO_TARGETPOS;
+			GetClient()->GetSteeringSystem()->SetTarget( bCloseEnough ? GetClient()->GetPosition() : mTargetPosition );
 
 			// keep watching the target position.
-			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-			FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ETQW_WP_LANDMINE));
+			FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
+			FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), ETQW_WP_LANDMINE ) );
 		}
 		return State_Busy;
 	}
 
-	void PlantMine::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+	void PlantMine::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
 	{
-		switch(_message.GetMessageId())
+		switch ( _message.GetMessageId() )
 		{
-			HANDLER(ACTION_WEAPON_FIRE)
+			HANDLER( ACTION_WEAPON_FIRE )
 			{
 				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-				if(m->m_WeaponId == ETQW_WP_LANDMINE && m->m_Projectile.IsValid())
+				if ( m->mWeaponId == ETQW_WP_LANDMINE && m->mProjectile.IsValid() )
 				{
-					m_LandMineEntity = m->m_Projectile;
+					mLandMineEntity = m->mProjectile;
 				}
 				break;
 			}
@@ -1117,25 +1117,25 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	MobileMg42::MobileMg42()
-		: StateChild("MobileMg42")
-		, FollowPathUser("MobileMg42")
+		: StateChild( "MobileMg42" )
+		, FollowPathUser( "MobileMg42" )
 	{
-		LimitToClass().SetFlag(ETQW_CLASS_SOLDIER);
+		LimitToClass().SetFlag( ETQW_CLASS_SOLDIER );
 	}
 
 	void MobileMg42::RenderDebug()
 	{
-		if(IsActive())
+		if ( IsActive() )
 		{
-			RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
-			RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
 		}
 	}
 
 	// FollowPathUser functions.
-	bool MobileMg42::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	bool MobileMg42::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+		if ( mMapGoal && mMapGoal->RouteTo( GetClient(), _desination, 64.f ) )
 			_final = false;
 		else
 			_final = true;
@@ -1143,9 +1143,9 @@ namespace AiState
 	}
 
 	// AimerUser functions.
-	bool MobileMg42::GetAimPosition(Vector3f &_aimpos)
+	bool MobileMg42::GetAimPosition( Vector3f &_aimpos )
 	{
-		_aimpos = m_MapGoal->GetPosition() + m_MapGoal->GetFacing() * 1024.f;
+		_aimpos = mMapGoal->GetPosition() + mMapGoal->GetFacing() * 1024.f;
 		return true;
 	}
 
@@ -1154,57 +1154,57 @@ namespace AiState
 		//FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(1.f, GetNameHash(), ETQW_WP_MOBILE_MG42_SET));
 	}
 
-	obReal MobileMg42::GetPriority()
+	float MobileMg42::GetPriority()
 	{
-		if(IsActive())
+		if ( IsActive() )
 			return GetLastPriority();
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
-		if(InterfaceFuncs::IsWeaponCharged(GetClient(), ETQW_WP_LANDMINE, Primary))
+		if ( InterfaceFuncs::IsWeaponCharged( GetClient(), ETQW_WP_LANDMINE, Primary ) )
 		{
-			GoalManager::Query qry(0xbe8488ed /* MOBILEMG42 */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			qry.GetBest(m_MapGoal);
+			GoalManager::Query qry( 0xbe8488ed /* MOBILEMG42 */, GetClient() );
+			GoalManager::GetInstance()->GetGoals( qry );
+			qry.GetBest( mMapGoal );
 		}
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 
 	void MobileMg42::Enter()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
+		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run ) );
 
-		Tracker.InProgress = m_MapGoal;
+		Tracker.InProgress = mMapGoal;
 	}
 
 	void MobileMg42::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(), ReleaseWeaponRequest(GetNameHash()));
+		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
+		FINDSTATEIF( WeaponSystem, GetRootState(), ReleaseWeaponRequest( GetNameHash() ) );
 
 		Tracker.Reset();
 	}
 
-	State::StateStatus MobileMg42::Update(float fDt)
+	State::StateStatus MobileMg42::Update( float fDt )
 	{
-		if(DidPathFail())
+		if ( DidPathFail() )
 		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+			BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+		if ( !mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
 
-		if(DidPathSucceed())
+		if ( DidPathSucceed() )
 		{
-			GetClient()->PressButton(BOT_BUTTON_PRONE);
-			if(GetClient()->HasEntityFlag(ENT_FLAG_PRONED))
-				FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
+			GetClient()->PressButton( BOT_BUTTON_PRONE );
+			if ( GetClient()->HasEntityFlag( ENT_FLAG_PRONED ) )
+				FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
 		}
 		return State_Busy;
 	}
@@ -1212,42 +1212,42 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	ReviveTeammate::ReviveTeammate()
-		: StateChild("ReviveTeammate")
-		, FollowPathUser("ReviveTeammate")
+		: StateChild( "ReviveTeammate" )
+		, FollowPathUser( "ReviveTeammate" )
 	{
-		LimitToClass().SetFlag(ETQW_CLASS_MEDIC);
+		LimitToClass().SetFlag( ETQW_CLASS_MEDIC );
 	}
 
-	void ReviveTeammate::GetDebugString(std::stringstream &out)
+	void ReviveTeammate::GetDebugString( std::stringstream &out )
 	{
-		switch(m_GoalState)
+		switch ( mGoalState )
 		{
-		case REVIVING:
-			out << "Reviving ";
-			break;
-		case HEALING:
-			out << "Healing ";
-			break;
+			case REVIVING:
+				out << "Reviving ";
+				break;
+			case HEALING:
+				out << "Healing ";
+				break;
 		}
 
-		if(m_MapGoal && m_MapGoal->GetEntity().IsValid())
-			out << EngineFuncs::EntityName(m_MapGoal->GetEntity(), "<noname>");
+		if ( mMapGoal && mMapGoal->GetEntity().IsValid() )
+			out << EngineFuncs::EntityName( mMapGoal->GetEntity(), "<noname>" );
 	}
 
 	void ReviveTeammate::RenderDebug()
 	{
-		if(IsActive())
+		if ( IsActive() )
 		{
-			RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
-			RenderBuffer::AddLine(GetClient()->GetPosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
-			RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::MAGENTA,5.f);
+			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
+			RenderBuffer::AddLine( GetClient()->GetPosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::MAGENTA, 5.f );
 		}
 	}
 
 	// FollowPathUser functions.
-	bool ReviveTeammate::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	bool ReviveTeammate::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+		if ( mMapGoal && mMapGoal->RouteTo( GetClient(), _desination, 64.f ) )
 			_final = false;
 		else
 			_final = true;
@@ -1255,112 +1255,112 @@ namespace AiState
 	}
 
 	// AimerUser functions.
-	bool ReviveTeammate::GetAimPosition(Vector3f &_aimpos)
+	bool ReviveTeammate::GetAimPosition( Vector3f &_aimpos )
 	{
-		_aimpos = m_MapGoal->GetWorldBounds().GetCenterBottom();
+		_aimpos = mMapGoal->GetWorldBounds().GetCenterBottom();
 		return true;
 	}
 
 	void ReviveTeammate::OnTarget()
 	{
-		FINDSTATE(ws, WeaponSystem, GetRootState());
-		if(ws)
+		FINDSTATE( ws, WeaponSystem, GetRootState() );
+		if ( ws )
 		{
-			if(InterfaceFuncs::IsAlive(m_MapGoal->GetEntity()))
+			if ( InterfaceFuncs::IsAlive( mMapGoal->GetEntity() ) )
 			{
-				if(ws->CurrentWeaponIs(ETQW_WP_HEALTH))
+				if ( ws->CurrentWeaponIs( ETQW_WP_HEALTH ) )
 					ws->FireWeapon();
 			}
 			else
 			{
-				if(ws->CurrentWeaponIs(ETQW_WP_NEEDLE))
+				if ( ws->CurrentWeaponIs( ETQW_WP_NEEDLE ) )
 					ws->FireWeapon();
 			}
 		}
 	}
 
-	obReal ReviveTeammate::GetPriority()
+	float ReviveTeammate::GetPriority()
 	{
-		if(IsActive())
+		if ( IsActive() )
 			return GetLastPriority();
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
-		GoalManager::Query qry(0x2086cdf0 /* REVIVE */, GetClient());
-		GoalManager::GetInstance()->GetGoals(qry);
-		qry.GetBest(m_MapGoal);
+		GoalManager::Query qry( 0x2086cdf0 /* REVIVE */, GetClient() );
+		GoalManager::GetInstance()->GetGoals( qry );
+		qry.GetBest( mMapGoal );
 
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 
 	void ReviveTeammate::Enter()
 	{
-		m_GoalState = REVIVING;
+		mGoalState = REVIVING;
 
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
+		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run ) );
 
-		Tracker.InProgress = m_MapGoal;
+		Tracker.InProgress = mMapGoal;
 	}
 
 	void ReviveTeammate::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(),ReleaseWeaponRequest(GetNameHash()));
+		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
+		FINDSTATEIF( WeaponSystem, GetRootState(), ReleaseWeaponRequest( GetNameHash() ) );
 
 		Tracker.Reset();
 	}
 
-	State::StateStatus ReviveTeammate::Update(float fDt)
+	State::StateStatus ReviveTeammate::Update( float fDt )
 	{
-		if(DidPathFail())
+		if ( DidPathFail() )
 		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+			BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+		if ( !mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
 
-		GameEntity reviveEnt = m_MapGoal->GetEntity();
+		GameEntity reviveEnt = mMapGoal->GetEntity();
 
-		if(DidPathSucceed())
+		if ( DidPathSucceed() )
 		{
 			Vector3f vEntPos;
-			if(!EngineFuncs::EntityPosition(reviveEnt, vEntPos))
+			if ( !EngineFuncs::EntityPosition( reviveEnt, vEntPos ) )
 				return State_Finished;
 
-			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-			GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
+			FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
+			GetClient()->GetSteeringSystem()->SetTarget( mMapGoal->GetPosition() );
 
-			switch(m_GoalState)
+			switch ( mGoalState )
 			{
-			case REVIVING:
+				case REVIVING:
 				{
-					if(InterfaceFuncs::IsAlive(reviveEnt))
-						m_GoalState = HEALING;
+					if ( InterfaceFuncs::IsAlive( reviveEnt ) )
+						mGoalState = HEALING;
 
-					GetClient()->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime() + 1000);
-					FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ETQW_WP_NEEDLE));
+					GetClient()->GetSteeringSystem()->SetNoAvoidTime( IGame::GetTime() + 1000 );
+					FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), ETQW_WP_NEEDLE ) );
 					break;
 				}
-			case HEALING:
+				case HEALING:
 				{
-					if(GetClient()->GetTargetingSystem()->HasTarget())
+					if ( GetClient()->GetTargetingSystem()->HasTarget() )
 						return State_Finished;
 
-					if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ETQW_WP_HEALTH, Primary))
+					if ( !InterfaceFuncs::IsWeaponCharged( GetClient(), ETQW_WP_HEALTH, Primary ) )
 						return State_Finished;
 
-					Msg_HealthArmor ha;
-					if(InterfaceFuncs::GetHealthAndArmor(reviveEnt, ha) && ha.m_CurrentHealth >= ha.m_MaxHealth)
+					EntityInfo entInfo;					
+					if ( IGame::GetEntityInfo( reviveEnt, entInfo ) && entInfo.HealthPercent() >= 1.0f )
 						return State_Finished;
 
-					GetClient()->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime() + 1000);
-					FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ETQW_WP_NEEDLE));
+					GetClient()->GetSteeringSystem()->SetNoAvoidTime( IGame::GetTime() + 1000 );
+					FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), ETQW_WP_NEEDLE ) );
 					break;
 				}
 			}
@@ -1371,25 +1371,25 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	DefuseDynamite::DefuseDynamite()
-		: StateChild("DefuseDynamite")
-		, FollowPathUser("DefuseDynamite")
+		: StateChild( "DefuseDynamite" )
+		, FollowPathUser( "DefuseDynamite" )
 	{
-		LimitToClass().SetFlag(ETQW_CLASS_ENGINEER);
+		LimitToClass().SetFlag( ETQW_CLASS_ENGINEER );
 	}
 
 	void DefuseDynamite::RenderDebug()
 	{
-		if(IsActive())
+		if ( IsActive() )
 		{
-			RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
-			RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
 		}
 	}
 
 	// FollowPathUser functions.
-	bool DefuseDynamite::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	bool DefuseDynamite::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+		if ( mMapGoal && mMapGoal->RouteTo( GetClient(), _desination, 64.f ) )
 			_final = false;
 		else
 			_final = true;
@@ -1397,105 +1397,105 @@ namespace AiState
 	}
 
 	// AimerUser functions.
-	bool DefuseDynamite::GetAimPosition(Vector3f &_aimpos)
+	bool DefuseDynamite::GetAimPosition( Vector3f &_aimpos )
 	{
-		_aimpos = m_MapGoal->GetPosition();
+		_aimpos = mMapGoal->GetPosition();
 		return true;
 	}
 
 	void DefuseDynamite::OnTarget()
 	{
-		FINDSTATE(ws, WeaponSystem, GetRootState());
-		if(ws && ws->CurrentWeaponIs(ETQW_WP_PLIERS))
+		FINDSTATE( ws, WeaponSystem, GetRootState() );
+		if ( ws && ws->CurrentWeaponIs( ETQW_WP_PLIERS ) )
 			ws->FireWeapon();
 	}
 
-	obReal DefuseDynamite::GetPriority()
+	float DefuseDynamite::GetPriority()
 	{
-		if(IsActive())
+		if ( IsActive() )
 			return GetLastPriority();
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
-		GoalManager::Query qry(0x1899efc7 /* DEFUSE */, GetClient());
-		GoalManager::GetInstance()->GetGoals(qry);
-		for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+		GoalManager::Query qry( 0x1899efc7 /* DEFUSE */, GetClient() );
+		GoalManager::GetInstance()->GetGoals( qry );
+		for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 		{
-			if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+			if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
 				continue;
 
-			if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+			if ( qry.mList[ i ]->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) < 1 )
 				continue;
 
-			if(InterfaceFuncs::GetExplosiveState(GetClient(), qry.m_List[i]->GetEntity()) == XPLO_ARMED)
+			if ( InterfaceFuncs::GetExplosiveState( GetClient(), qry.mList[ i ]->GetEntity() ) == XPLO_ARMED )
 			{
-				m_MapGoal = qry.m_List[i];
+				mMapGoal = qry.mList[ i ];
 				break;
 			}
 			else
 			{
-				qry.m_List[i]->SetDeleteMe(true);
+				qry.mList[ i ]->SetDeleteMe( true );
 			}
 		}
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 
 	void DefuseDynamite::Enter()
 	{
-		m_TargetPosition = m_MapGoal->GetWorldBounds().Center;
+		mTargetPosition = mMapGoal->GetWorldBounds().Center;
 
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
+		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run ) );
 
-		Tracker.InProgress = m_MapGoal;
+		Tracker.InProgress = mMapGoal;
 	}
 
 	void DefuseDynamite::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(),ReleaseWeaponRequest(GetNameHash()));
+		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
+		FINDSTATEIF( WeaponSystem, GetRootState(), ReleaseWeaponRequest( GetNameHash() ) );
 
 		Tracker.Reset();
 	}
 
-	State::StateStatus DefuseDynamite::Update(float fDt)
+	State::StateStatus DefuseDynamite::Update( float fDt )
 	{
-		if(DidPathFail())
+		if ( DidPathFail() )
 		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+			BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+		if ( !mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
 
-		if(DidPathSucceed())
+		if ( DidPathSucceed() )
 		{
-			ExplosiveState eState = InterfaceFuncs::GetExplosiveState(GetClient(), m_MapGoal->GetEntity());
-			switch(eState)
+			ExplosiveState eState = InterfaceFuncs::GetExplosiveState( GetClient(), mMapGoal->GetEntity() );
+			switch ( eState )
 			{
-			case XPLO_INVALID:
-			case XPLO_UNARMED:
-				return State_Finished;
-			default:
-				break; // keep processing
+				case XPLO_INVALID:
+				case XPLO_UNARMED:
+					return State_Finished;
+				default:
+					break; // keep processing
 			}
 
-			m_TargetPosition = m_MapGoal->GetWorldBounds().Center;
-			float fDistanceToDynamite = (m_TargetPosition - GetClient()->GetPosition()).SquaredLength();
+			mTargetPosition = mMapGoal->GetWorldBounds().Center;
+			float fDistanceToDynamite = ( mTargetPosition - GetClient()->GetPosition() ).SquaredLength();
 
-			if(fDistanceToDynamite > 2500.0f)
+			if ( fDistanceToDynamite > 2500.0f )
 			{
-				GetClient()->GetSteeringSystem()->SetTarget(m_TargetPosition);
+				GetClient()->GetSteeringSystem()->SetTarget( mTargetPosition );
 			}
 			else
 			{
-				GetClient()->PressButton(BOT_BUTTON_CROUCH);
-				FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-				FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ETQW_WP_PLIERS));
+				GetClient()->PressButton( BOT_BUTTON_CROUCH );
+				FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
+				FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), ETQW_WP_PLIERS ) );
 			}
 		}
 		return State_Busy;

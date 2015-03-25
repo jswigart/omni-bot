@@ -16,7 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #define HANDLE_OPERATORS(VAR,OPERAND0,OPERAND1) \
-	switch(crit.m_Operator) \
+	switch(crit.mOperator) \
 { \
 	case OP_NONE: \
 { \
@@ -68,7 +68,7 @@ namespace Criteria
 };
 
 class CheckCriteria;
-typedef bool (*pfnCheckCriteria)(CheckCriteria &crit, Client * bot);
+typedef bool( *pfnCheckCriteria )( CheckCriteria &crit, Client * bot );
 
 class CheckCriteria
 {
@@ -81,33 +81,39 @@ public:
 		TOK_DONE,
 	};
 
-	enum { MaxOperands=2 };
+	enum
+	{
+		MaxOperands = 2
+	};
 
-	Criteria::eCriteria		m_Criteria;
-	obUserData				m_Subject;
-	obUserData				m_Operand[MaxOperands];
-	Criteria::Operator		m_Operator;
+	Criteria::eCriteria	 mCriteria;
+	obUserData			 mSubject;
+	obUserData			 mOperand[ MaxOperands ];
+	Criteria::Operator	 mOperator;
 
-	bool ParseOperator(obuint32 sHash);
+	bool ParseOperator( uint32_t sHash );
 
-	void Clear() { m_Criteria = Criteria::NONE; }
+	void Clear()
+	{
+		mCriteria = Criteria::NONE;
+	}
 
-	bool Check(Client * bot);
+	bool Check( Client * bot );
 
-	bool		m_Persistent : 1;
-	bool		m_Negated : 1;
+	bool	 mPersistent : 1;
+	bool	 mNegated : 1;
 
-	static pfnCheckCriteria m_pfnCheckCriteria;
+	static pfnCheckCriteria mpfnCheckCriteria;
 
 	CheckCriteria()
-		: m_Criteria(Criteria::NONE)
-		, m_Operator(Criteria::OP_NONE)
-		, m_Persistent(false)
-		, m_Negated(false)
+		: mCriteria( Criteria::NONE )
+		, mOperator( Criteria::OP_NONE )
+		, mPersistent( false )
+		, mNegated( false )
 	{
 	}
 };
 
-bool Base_CheckCriteria(CheckCriteria &crit,Client * bot);
+bool Base_CheckCriteria( CheckCriteria &crit, Client * bot );
 
 #endif

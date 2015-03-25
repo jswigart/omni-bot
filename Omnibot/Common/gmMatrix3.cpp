@@ -72,8 +72,8 @@ gmMat3Type *gmMatrix3::Constructor(gmThread *a_thread)
 			float fX, fY, fZ;
 			Vector3f vAxis[3] = { Vector3f::ZERO, Vector3f::ZERO, Vector3f::ZERO };
 			if(a_thread->ParamType(0) == GM_VEC3 &&
-				a_thread->ParamType(1) == GM_VEC3 &&
-				a_thread->ParamType(2) == GM_VEC3)
+				a_thread->ParamType( 1 ) == GM_VEC3 &&
+				a_thread->ParamType( 2 ) == GM_VEC3 )
 			{
 				vAxis[0] = Vector3f(
 					a_thread->Param(0).m_value.m_vec3.x,
@@ -214,7 +214,7 @@ bool gmMatrix3::opMul( gmThread *a_thread, gmVariable *a_operands )
 	if(a_operands[0].m_type == gmMatrix3::GetType() && (a_operands[1].m_type != gmMatrix3::GetType()))
 	{
 		// Get operands
-		gmMat3Type *vecObjA = gmMatrix3::GetNative(reinterpret_cast<gmUserObject*>(a_operands[0].m_value.m_ref));
+		gmMat3Type *vecObjA = gmMatrix3::GetNative( reinterpret_cast<gmUserObject*>( a_operands[ 0 ].m_value.m_ref ) );
 
 		float fScalar = 0.0f;
 		if(!gmGetFloatOrIntParamAsFloat(a_operands[1], fScalar))
@@ -228,7 +228,7 @@ bool gmMatrix3::opMul( gmThread *a_thread, gmVariable *a_operands )
 	else if((a_operands[0].m_type != gmMatrix3::GetType()) && a_operands[1].m_type == gmMatrix3::GetType())
 	{
 		// Get operands
-		gmMat3Type *vecObjB = gmMatrix3::GetNative(reinterpret_cast<gmUserObject*>(a_operands[1].m_value.m_ref));
+		gmMat3Type *vecObjB = gmMatrix3::GetNative( reinterpret_cast<gmUserObject*>( a_operands[ 1 ].m_value.m_ref ) );
 
 		float fScalar = 0.0f;
 		if(!gmGetFloatOrIntParamAsFloat(a_operands[0], fScalar))
@@ -253,8 +253,8 @@ bool gmMatrix3::opIsEqual( gmThread *a_thread, gmVariable *a_operands )
 	if(a_operands[0].m_type == gmMatrix3::GetType() && a_operands[1].m_type == gmMatrix3::GetType())
 	{
 		// Get operands
-		gmMat3Type *vecObjA = gmMatrix3::GetNative(reinterpret_cast<gmUserObject*>(a_operands[0].m_value.m_ref));
-		gmMat3Type *vecObjB = gmMatrix3::GetNative(reinterpret_cast<gmUserObject*>(a_operands[1].m_value.m_ref));
+		gmMat3Type *vecObjA = gmMatrix3::GetNative( reinterpret_cast<gmUserObject*>( a_operands[ 0 ].m_value.m_ref ) );
+		gmMat3Type *vecObjB = gmMatrix3::GetNative( reinterpret_cast<gmUserObject*>( a_operands[ 1 ].m_value.m_ref ) );
 		a_operands[0].SetInt((*vecObjA) == (*vecObjB) ? 1 : 0);
 	}
 	else
@@ -271,8 +271,8 @@ bool gmMatrix3::opIsNotEqual( gmThread *a_thread, gmVariable *a_operands )
 	if(a_operands[0].m_type == gmMatrix3::GetType() && a_operands[1].m_type == gmMatrix3::GetType())
 	{
 		// Get operands
-		gmMat3Type *vecObjA = gmMatrix3::GetNative(reinterpret_cast<gmUserObject*>(a_operands[0].m_value.m_ref));
-		gmMat3Type *vecObjB = gmMatrix3::GetNative(reinterpret_cast<gmUserObject*>(a_operands[1].m_value.m_ref));
+		gmMat3Type *vecObjA = gmMatrix3::GetNative( reinterpret_cast<gmUserObject*>( a_operands[ 0 ].m_value.m_ref ) );
+		gmMat3Type *vecObjB = gmMatrix3::GetNative( reinterpret_cast<gmUserObject*>( a_operands[ 1 ].m_value.m_ref ) );
 		a_operands[0].SetInt((*vecObjA) != (*vecObjB) ? 1 : 0);
 	}
 	else

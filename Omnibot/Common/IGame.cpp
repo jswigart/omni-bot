@@ -21,29 +21,26 @@
 #include "IGameManager.h"
 #include "gmCall.h"
 
-// temp
-//#include "D:/Sourcecode/RemoteDebugger/RemoteDebugger/guiinterface.h"
+int32_t IGame::mGameMsec = 0;
+int32_t IGame::mDeltaMsec = 0;
+int32_t IGame::mStartTimeMsec = 0;
+int32_t IGame::mGameFrame = 0;
+float IGame::mGravity = 0;
+bool IGame::mCheatsEnabled = false;
+bool IGame::mBotJoining = false;
 
-obint32 IGame::m_GameMsec = 0;
-obint32 IGame::m_DeltaMsec = 0;
-obint32 IGame::m_StartTimeMsec = 0;
-obint32 IGame::m_GameFrame = 0;
-obReal IGame::m_Gravity = 0;
-bool IGame::m_CheatsEnabled = false;
-bool IGame::m_BotJoining = false;
+IGame::GameVars IGame::mGameVars;
 
-IGame::GameVars IGame::m_GameVars;
-
-GameState IGame::m_GameState = GAME_STATE_INVALID;
-GameState IGame::m_LastGameState = GAME_STATE_INVALID;
+GameState IGame::mGameState = GAME_STATE_INVALID;
+GameState IGame::mLastGameState = GAME_STATE_INVALID;
 
 IGame::GameVars::GameVars()
 	: mPlayerHeight( 100 )
 {
 }
 
-EntityInstance IGame::m_GameEntities[ Constants::MAX_ENTITIES ];
-int IGame::m_MaxEntity = 0;
+EntityInstance IGame::mGameEntities[ Constants::MAX_ENTITIES ];
+int IGame::mMaxEntity = 0;
 
 typedef boost::shared_ptr<AiState::ScriptGoal> ScriptGoalPtr;
 typedef std::list<ScriptGoalPtr> ScriptGoalList;
@@ -53,10 +50,9 @@ ScriptGoalList g_ScriptGoalList;
 #include "google/protobuf/io/zero_copy_stream_impl.h"
 
 IGame::IGame()
-	: m_StateRoot( 0 )
-	, m_NumDeletedThreads( 0 )
-	, m_WeaponClassIdStart( 0 )
-	, m_bDrawBlockableTests( false )
+	: mStateRoot( 0 )
+	, mNumDeletedThreads( 0 )
+	, mbDrawBlockableTests( false )
 {
 }
 
@@ -81,38 +77,37 @@ GoalManager *IGame::AllocGoalManager()
 
 bool IGame::Init( System & system )
 {
-	GetGameVars( m_GameVars );
+	GetGameVars( mGameVars );
 
-	m_StartTimeMsec = gEngineFuncs->GetGameTime();
+	mStartTimeMsec = gEngineFuncs->GetGameTime();
 
 	for ( int i = 0; i < MaxDeletedThreads; ++i )
 	{
-		m_DeletedThreads[ i ] = GM_INVALID_THREAD;
+		mDeletedThreads[ i ] = GM_INVALID_THREAD;
 	}
 
-	for ( int i = 0; i < m_MaxEntity; ++i )
+	for ( int i = 0; i < mMaxEntity; ++i )
 	{
-		m_GameEntities[ i ].m_Entity = GameEntity();
-		m_GameEntities[ i ].m_EntityClass = 0;
-		m_GameEntities[ i ].m_EntityCategory.ClearAll();
-		m_GameEntities[ i ].m_TimeStamp = 0;
+		mGameEntities[ i ].mEntity = GameEntity();
+		mGameEntities[ i ].mEntInfo = EntityInfo();
+		mGameEntities[ i ].mTimeStamp = 0;
 	}
 
 	InitCommands();
 	InitScriptSupport();
 
-	g_WeaponDatabase.LoadWeaponDefinitions( true );
-	g_MapGoalDatabase.LoadMapGoalDefinitions( true );
+	gWeaponDatabase.LoadWeaponDefinitions( true );
+	gMapGoalDatabase.LoadMapGoalDefinitions( true );
 
 	// Reset the global blackboard.
 	g_Blackboard.RemoveAllBBRecords( bbk_All );
-	
+
 	//////////////////////////////////////////////////////////////////////////
-	/*m_StateRoot = new AiState::GlobalRoot;
-	m_StateRoot->FixRoot();
-	InitGlobalStates();
-	m_StateRoot->FixRoot();
-	m_StateRoot->InitializeStates();*/
+	/*.mStateRoot = new AiState::GlobalRoot;
+ mStateRoot->FixRoot();
+ InitGlobalStates();
+ mStateRoot->FixRoot();
+ mStateRoot->InitializeStates();*/
 	//////////////////////////////////////////////////////////////////////////
 
 	return true;
@@ -120,27 +115,27 @@ bool IGame::Init( System & system )
 
 void IGame::Shutdown()
 {
-	m_UpdateMap.clear();
+	mUpdateMap.clear();
 
 	if ( GameStarted() )
 	{
 		EndGame();
-		m_LastGameState = m_GameState = GAME_STATE_INVALID;
+		mLastGameState = mGameState = GAME_STATE_INVALID;
 	}
 
 	for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
 	{
-		if ( m_ClientList[ i ] )
+		if ( mClientList[ i ] )
 		{
-			m_ClientList[ i ]->Shutdown();
-			m_ClientList[ i ].reset();
+			mClientList[ i ]->Shutdown();
+			mClientList[ i ].reset();
 		}
 	}
 
-	g_MapGoalDatabase.Unload();
+	gMapGoalDatabase.Unload();
 	g_ScriptGoalList.clear();
 
-	OB_DELETE( m_StateRoot );
+	OB_DELETE( mStateRoot );
 }
 
 void IGame::InitScriptSupport()
@@ -149,12 +144,12 @@ void IGame::InitScriptSupport()
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 
 	// Bind scripts
-	LOG( "Initializing Game Bindings..." );
+	LOG( "Initializing Game Bindings.." );
 	InitScriptBinds( pMachine );
 	LOG( "done." );
 
 	// Register Script Constants.
-	LOG( "Registering Script Constants..." );
+	LOG( "Registering Script Constants.." );
 
 	DisableGCInScope gcEn( pMachine );
 
@@ -172,6 +167,11 @@ void IGame::InitScriptSupport()
 	gmTableObject *pItemTable = pMachine->AllocTableObject();
 	pMachine->GetGlobals()->Set( pMachine, "ITEM", gmVariable( pItemTable ) );
 	InitScriptItems( pMachine, pItemTable );
+
+	// Register Classes to Script
+	gmTableObject *pGroupTable = pMachine->AllocTableObject();
+	pMachine->GetGlobals()->Set( pMachine, "GROUP", gmVariable( pGroupTable ) );
+	InitScriptGroups( pMachine, pGroupTable );
 
 	// Register Classes to Script
 	gmTableObject *pClassTable = pMachine->AllocTableObject();
@@ -263,7 +263,7 @@ void IGame::InitScriptTeams( gmMachine *_machine, gmTableObject *_table )
 
 	for ( int i = 0; i < NumElements; ++i )
 	{
-		_table->Set( _machine, Enum[ i ].m_Key, gmVariable( Enum[ i ].m_Value ) );
+		_table->Set( _machine, Enum[ i ].mKey, gmVariable( Enum[ i ].mValue ) );
 	}
 }
 
@@ -275,7 +275,7 @@ void IGame::InitScriptWeapons( gmMachine *_machine, gmTableObject *_table )
 
 	for ( int i = 0; i < NumElements; ++i )
 	{
-		_table->Set( _machine, Enum[ i ].m_Key, gmVariable( Enum[ i ].m_Value ) );
+		_table->Set( _machine, Enum[ i ].mKey, gmVariable( Enum[ i ].mValue ) );
 	}
 }
 
@@ -287,7 +287,7 @@ void IGame::InitScriptRoles( gmMachine *_machine, gmTableObject *_table )
 
 	for ( int i = 0; i < NumElements; ++i )
 	{
-		_table->Set( _machine, Enum[ i ].m_Key, gmVariable( Enum[ i ].m_Value ) );
+		_table->Set( _machine, Enum[ i ].mKey, gmVariable( Enum[ i ].mValue ) );
 	}
 }
 
@@ -345,7 +345,6 @@ void IGame::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "REVIVED", gmVariable( MESSAGE_REVIVED ) );
 	_table->Set( _machine, "ADDWEAPON", gmVariable( MESSAGE_ADDWEAPON ) );
 	_table->Set( _machine, "REMOVEWEAPON", gmVariable( MESSAGE_REMOVEWEAPON ) );
-	_table->Set( _machine, "RESET_WEAPONS", gmVariable( MESSAGE_RESETWEAPONS ) );
 	_table->Set( _machine, "REFRESH_WEAPON", gmVariable( MESSAGE_REFRESHWEAPON ) );
 	_table->Set( _machine, "KILLEDSOMEONE", gmVariable( MESSAGE_KILLEDSOMEONE ) );
 	_table->Set( _machine, "PROXIMITY_TRIGGER", gmVariable( MESSAGE_PROXIMITY_TRIGGER ) );
@@ -374,7 +373,6 @@ void IGame::InitScriptCategories( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "VEHICLE", gmVariable( ENT_CAT_VEHICLE ) );
 	_table->Set( _machine, "PROJECTILE", gmVariable( ENT_CAT_PROJECTILE ) );
 	_table->Set( _machine, "SHOOTABLE", gmVariable( ENT_CAT_SHOOTABLE ) );
-	_table->Set( _machine, "PICKUP", gmVariable( ENT_CAT_PICKUP ) );
 	_table->Set( _machine, "PICKUP_AMMO", gmVariable( ENT_CAT_PICKUP_AMMO ) );
 	_table->Set( _machine, "PICKUP_WEAPON", gmVariable( ENT_CAT_PICKUP_WEAPON ) );
 	_table->Set( _machine, "PICKUP_HEALTH", gmVariable( ENT_CAT_PICKUP_HEALTH ) );
@@ -389,100 +387,100 @@ void IGame::InitScriptCategories( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "PROP", gmVariable( ENT_CAT_PROP ) );
 	_table->Set( _machine, "AUTODEFENSE", gmVariable( ENT_CAT_AUTODEFENSE ) );
 	_table->Set( _machine, "OBSTACLE", gmVariable( ENT_CAT_OBSTACLE ) );
-	_table->Set( _machine, "PROP_PUSHABLE", gmVariable( ENT_CAT_PROP_PUSHABLE ) );	
+	_table->Set( _machine, "PROP_PUSHABLE", gmVariable( ENT_CAT_PROP_PUSHABLE ) );
 }
 
-static const IntEnum g_BaseClassMappings [] =
+static const IntEnum gGroupMapping [] =
 {
-	IntEnum( "SPECTATOR", ENT_CLASS_GENERIC_SPECTATOR ),
-	IntEnum( "PLAYERSTART", ENT_CLASS_GENERIC_PLAYERSTART ),
-	IntEnum( "PLAYERSTART_TEAM1", ENT_CLASS_GENERIC_PLAYERSTART_TEAM1 ),
-	IntEnum( "PLAYERSTART_TEAM2", ENT_CLASS_GENERIC_PLAYERSTART_TEAM2 ),
-	IntEnum( "PLAYERSTART_TEAM3", ENT_CLASS_GENERIC_PLAYERSTART_TEAM3 ),
-	IntEnum( "PLAYERSTART_TEAM4", ENT_CLASS_GENERIC_PLAYERSTART_TEAM4 ),
-	IntEnum( "BUTTON", ENT_CLASS_GENERIC_BUTTON ),
-	IntEnum( "HEALTH", ENT_CLASS_GENERIC_HEALTH ),
-	IntEnum( "ARMOR", ENT_CLASS_GENERIC_ARMOR ),
-	IntEnum( "AMMO", ENT_CLASS_GENERIC_AMMO ),
-	IntEnum( "LADDER", ENT_CLASS_GENERIC_LADDER ),
-	IntEnum( "TELEPORTER", ENT_CLASS_GENERIC_TELEPORTER ),
-	IntEnum( "LIFT", ENT_CLASS_GENERIC_LIFT ),
-	IntEnum( "MOVER", ENT_CLASS_GENERIC_MOVER ),
-	IntEnum( "EXPLODING_BARREL", ENT_CLASS_EXPLODING_BARREL ),
-	IntEnum( "JUMPPAD", ENT_CLASS_GENERIC_JUMPPAD ),
-	IntEnum( "JUMPPAD_TARGET", ENT_CLASS_GENERIC_JUMPPAD_TARGET ),
-	IntEnum( "GOAL", ENT_CLASS_GENERIC_GOAL ),
-	IntEnum( "WEAPON", ENT_CLASS_GENERIC_WEAPON ),
-	IntEnum( "FLAG", ENT_CLASS_GENERIC_FLAG ),
-	IntEnum( "CAPPOINT", ENT_CLASS_GENERIC_FLAGCAPPOINT ),
-
-	IntEnum( "PROP", ENT_CLASS_GENERIC_PROP ),
-	IntEnum( "PROP_EXPLODE", ENT_CLASS_GENERIC_PROP_EXPLODE ),
+	IntEnum( "SPECTATOR", ENT_GRP_SPECTATOR ),
+	IntEnum( "PLAYER", ENT_GRP_PLAYER ),
+	IntEnum( "PLAYERSTART", ENT_GRP_PLAYERSTART ),
+	IntEnum( "BUTTON", ENT_GRP_BUTTON ),
+	IntEnum( "HEALTH", ENT_GRP_HEALTH ),
+	IntEnum( "AMMO1", ENT_GRP_AMMO1 ),
+	IntEnum( "AMMO2", ENT_GRP_AMMO2 ),
+	IntEnum( "ARMOR", ENT_GRP_ARMOR ),
+	IntEnum( "ENERGY", ENT_GRP_ENERGY ),
+	IntEnum( "LADDER", ENT_GRP_LADDER ),
+	IntEnum( "TELEPORTER", ENT_GRP_TELEPORTER ),
+	IntEnum( "LIFT", ENT_GRP_LIFT ),
+	IntEnum( "MOVER", ENT_GRP_MOVER ),
+	IntEnum( "JUMPPAD", ENT_GRP_JUMPPAD ),
+	IntEnum( "JUMPPAD_TARGET", ENT_GRP_JUMPPAD_TARGET ),
+	IntEnum( "GOAL", ENT_GRP_GOAL ),
+	IntEnum( "WEAPON", ENT_GRP_WEAPON ),
+	IntEnum( "FLAG", ENT_GRP_FLAG ),
+	IntEnum( "CAPPOINT", ENT_GRP_FLAGCAPPOINT ),
+	IntEnum( "PROP", ENT_GRP_PROP ),
+	IntEnum( "PROP_STATIC", ENT_GRP_PROP_STATIC ),
+	IntEnum( "PROP_EXPLODE", ENT_GRP_PROP_EXPLODE ),
+	IntEnum( "PROP_BREAKABLE", ENT_GRP_PROP_BREAKABLE ),
+	IntEnum( "MONSTER", ENT_GRP_MONSTER ),
+	IntEnum( "PROJECTILE", ENT_GRP_PROJECTILE ),
+	IntEnum( "POWERUP", ENT_GRP_POWERUP ),
 };
 
-const char *IGame::FindClassName( obint32 _classId )
+static const IntEnum gClassMapping [] =
 {
-	obint32 iNumMappings = sizeof( g_BaseClassMappings ) / sizeof( g_BaseClassMappings[ 0 ] );
+	IntEnum( "INVALID", ENT_CLASS_NONE ),
+};
+
+void IGame::FindClassName( std::string& groupName, std::string& className, const EntityInfo& classInfo )
+{
+	const size_t iNumMappings = sizeof( gGroupMapping ) / sizeof( gGroupMapping[ 0 ] );
 	for ( int i = 0; i < iNumMappings; ++i )
 	{
-		if ( g_BaseClassMappings[ i ].m_Value == _classId )
-			return g_BaseClassMappings[ i ].m_Key;
+		if ( gGroupMapping[ i ].mValue == classInfo.mGroup )
+		{
+			groupName = gGroupMapping[ i ].mKey;
+			break;
+		}
 	}
-	// if this is set, we should do additional checks to see if the classId represents a weapon class
-	if ( m_WeaponClassIdStart != 0 )
+
+	if ( classInfo.mGroup == ENT_GRP_WEAPON )
 	{
-		// see if it's a weapon id
 		int numWpns = 0;
 		const IntEnum *wpnEnum = 0;
 		GetWeaponEnumeration( wpnEnum, numWpns );
 		for ( int i = 0; i < numWpns; ++i )
 		{
-			if ( _classId == ( m_WeaponClassIdStart + wpnEnum[ i ].m_Value ) )
-				return wpnEnum[ i ].m_Key;
+			if ( classInfo.mClassId == wpnEnum[ i ].mValue )
+			{
+				className = wpnEnum[ i ].mKey;
+				break;
+			}
 		}
 	}
-	return 0;
 }
 
-int IGame::FindWeaponId( obint32 _classId )
+void IGame::InitScriptGroups( gmMachine *_machine, gmTableObject *_table )
 {
-	if ( m_WeaponClassIdStart != 0 )
+	const size_t count = sizeof( gGroupMapping ) / sizeof( gGroupMapping[ 0 ] );
+	for ( int i = 0; i < count; ++i )
 	{
-		// see if it's a weapon id
-		int numWpns = 0;
-		const IntEnum *wpnEnum = 0;
-		GetWeaponEnumeration( wpnEnum, numWpns );
-
-		int weaponId = _classId - m_WeaponClassIdStart;
-		if ( weaponId > 0 && weaponId < numWpns )
-		{
-			return weaponId;
-		}
+		_table->Set( _machine, gGroupMapping[ i ].mKey, gmVariable( gGroupMapping[ i ].mValue ) );
 	}
-	return 0;
 }
 
 void IGame::InitScriptClasses( gmMachine *_machine, gmTableObject *_table )
 {
 	// register base classes
-	obint32 iNumMappings = sizeof( g_BaseClassMappings ) / sizeof( g_BaseClassMappings[ 0 ] );
-	for ( int i = 0; i < iNumMappings; ++i )
+	const size_t count = sizeof( gClassMapping ) / sizeof( gClassMapping[ 0 ] );
+	for ( int i = 0; i < count; ++i )
 	{
-		_table->Set( _machine, g_BaseClassMappings[ i ].m_Key, gmVariable( g_BaseClassMappings[ i ].m_Value ) );
+		_table->Set( _machine, gClassMapping[ i ].mKey, gmVariable( gClassMapping[ i ].mValue ) );
 	}
 }
 
-void IGame::InitScriptWeaponClasses( gmMachine *_machine, gmTableObject *_table, int weaponClassId )
+void IGame::InitScriptWeaponClasses( gmMachine *_machine, gmTableObject *_table )
 {
-	m_WeaponClassIdStart = weaponClassId;
-
 	int numWpns = 0;
 	const IntEnum *wpnEnum = 0;
 	GetWeaponEnumeration( wpnEnum, numWpns );
 	for ( int i = 0; i < numWpns; ++i )
 	{
-		OBASSERT( _table->Get( _machine, wpnEnum[ i ].m_Key ).IsNull(), "Weapon class overwrite!" );
-		_table->Set( _machine, wpnEnum[ i ].m_Key, gmVariable( m_WeaponClassIdStart + wpnEnum[ i ].m_Value ) );
+		OBASSERT( _table->Get( _machine, wpnEnum[ i ].mKey ).IsNull(), "Weapon class overwrite!" );
+		_table->Set( _machine, wpnEnum[ i ].mKey, gmVariable( wpnEnum[ i ].mValue ) );
 	}
 }
 
@@ -619,27 +617,27 @@ void IGame::UpdateGame( System & system )
 
 	CheckGameState();
 
-	if ( m_GameFrame > 0 )
+	if ( mGameFrame > 0 )
 	{
-		if ( m_SettingLimiter && m_SettingLimiter->IsReady() )
+		if ( mSettingLimiter && mSettingLimiter->IsReady() )
 			CheckServerSettings( true );
-		else if ( m_PlayersChanged )
+		else if ( mPlayersChanged )
 			CheckServerSettings( false );
-		m_PlayersChanged = false;
+		mPlayersChanged = false;
 	}
 
 	// Check if we're dead or alive so we know what update function to call.
-	if ( m_StateRoot )
+	if ( mStateRoot )
 	{
-		m_StateRoot->RootUpdate();
+		mStateRoot->RootUpdate();
 	}
 
 	// This is called often to update the state of the bots and perform their "thinking"
 	for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
 	{
-		if ( m_ClientList[ i ] )
+		if ( mClientList[ i ] )
 		{
-			m_ClientList[ i ]->Update();
+			mClientList[ i ]->Update();
 		}
 	}
 
@@ -650,20 +648,20 @@ void IGame::UpdateGame( System & system )
 	UpdateProcesses();
 
 	// Increment the game frame.
-	++m_GameFrame;
+	++mGameFrame;
 }
 
 void IGame::UpdateProcesses()
 {
 	Prof( Processes );
 
-	FunctorMap::iterator it = m_UpdateMap.begin();
-	for ( ; it != m_UpdateMap.end(); )
+	FunctorMap::iterator it = mUpdateMap.begin();
+	for ( ; it != mUpdateMap.end(); )
 	{
 		if ( ( *( *it ).second )( ) == Function_Finished )
 		{
 			EngineFuncs::ConsoleMessage( va( "Finished Process: %s", ( *it ).first.c_str() ) );
-			m_UpdateMap.erase( it++ );
+			mUpdateMap.erase( it++ );
 		}
 		else
 			++it;
@@ -707,7 +705,7 @@ void IGame::UpdateSync( RemoteLib::DebugConnection * connection, Remote::Game & 
 		entityUpdate->GetReflection()->ListFields( *entityUpdate, &fieldList );
 
 		if ( fieldList.size() > 0 ) {
-			entityUpdate->set_uid( ent.GetEnt().m_Entity.AsInt() );
+			entityUpdate->set_uid( ent.GetEnt().mEntity.AsInt() );
 
 			OBASSERT( entityUpdate->IsInitialized(), "Error Building Entity Message:" );
 
@@ -757,12 +755,12 @@ void IGame::SyncEntity( const EntityInstance & ent, RemoteLib::DebugConnection *
 			upVector = Vector3f::ZERO;
 
 		Msg_HealthArmor hlth;
-		EngineFuncs::EntityPosition( ent.m_Entity, entPosition );
-		const int entClass = InterfaceFuncs::GetEntityClass( ent.m_Entity );
-		const int entTeam = InterfaceFuncs::GetEntityTeam( ent.m_Entity );
-		const std::string entName = EngineFuncs::EntityName( ent.m_Entity );
+		EngineFuncs::EntityPosition( ent.mEntity, entPosition );
+		const int entClass = InterfaceFuncs::GetEntityClass( ent.mEntity );
+		const int entTeam = InterfaceFuncs::GetEntityTeam( ent.mEntity );
+		const std::string entName = EngineFuncs::EntityName( ent.mEntity );
 
-		EngineFuncs::EntityOrientation( ent.m_Entity, facingVector, rightVector, upVector );
+		EngineFuncs::EntityOrientation( ent.mEntity, facingVector, rightVector, upVector );
 
 		SET_IF_DIFF( cachedEntity, entityUpdate, entName.c_str(), name );
 		SET_IF_DIFF( cachedEntity.position(), *entityUpdate.mutable_position(), entPosition.X(), x );
@@ -774,21 +772,21 @@ void IGame::SyncEntity( const EntityInstance & ent, RemoteLib::DebugConnection *
 		SET_IF_DIFF( cachedEntity, entityUpdate, entClass, classid );
 		SET_IF_DIFF( cachedEntity, entityUpdate, entTeam, teamid );
 
-		if ( InterfaceFuncs::GetHealthAndArmor( ent.m_Entity, hlth ) ) {
-			SET_IF_DIFF( cachedEntity, entityUpdate, hlth.m_CurrentHealth, health );
-			SET_IF_DIFF( cachedEntity, entityUpdate, hlth.m_MaxHealth, healthmax );
-			SET_IF_DIFF( cachedEntity, entityUpdate, hlth.m_CurrentArmor, armor );
-			SET_IF_DIFF( cachedEntity, entityUpdate, hlth.m_MaxArmor, armormax );
+		if ( InterfaceFuncs::GetHealthAndArmor( ent.mEntity, hlth ) ) {
+			SET_IF_DIFF( cachedEntity, entityUpdate, hlth.mCurrentHealth, health );
+			SET_IF_DIFF( cachedEntity, entityUpdate, hlth.mMaxHealth, healthmax );
+			SET_IF_DIFF( cachedEntity, entityUpdate, hlth.mCurrentArmor, armor );
+			SET_IF_DIFF( cachedEntity, entityUpdate, hlth.mMaxArmor, armormax );
 		}
 
 		Box3f worldBounds;
-		if ( EngineFuncs::EntityWorldOBB( ent.m_Entity, worldBounds ) ) {
+		if ( EngineFuncs::EntityWorldOBB( ent.mEntity, worldBounds ) ) {
 			SET_IF_DIFF( cachedEntity.size(), *entityUpdate.mutable_size(), worldBounds.Extent[0], x );
 			SET_IF_DIFF( cachedEntity.size(), *entityUpdate.mutable_size(), worldBounds.Extent[1], y );
 			SET_IF_DIFF( cachedEntity.size(), *entityUpdate.mutable_size(), worldBounds.Extent[2], z );
 		}
 
-		ClientPtr bot = GetClientByIndex( ent.m_Entity.GetIndex() );
+		ClientPtr bot = GetClientByIndex( ent.mEntity.GetIndex() );
 		if ( bot ) {
 			bot->InternalSyncEntity( connection, cachedEntity, entityUpdate );
 		}
@@ -806,7 +804,7 @@ void IGame::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb
 		case GAME_STARTGAME:
 		{
 			StartGame();
-			m_LastGameState = m_GameState = GAME_STATE_WAITINGFORPLAYERS;
+			mLastGameState = mGameState = GAME_STATE_WAITINGFORPLAYERS;
 			break;
 		}
 		case GAME_ENDGAME:
@@ -822,14 +820,14 @@ void IGame::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb
 		{
 			const Event_SystemClientConnected *m = _message.Get<Event_SystemClientConnected>();
 			ClientJoined( m );
-			m_PlayersChanged = true;
+			mPlayersChanged = true;
 			break;
 		}
 		case GAME_CLIENTDISCONNECTED:
 		{
 			const Event_SystemClientDisConnected *m = _message.Get<Event_SystemClientDisConnected>();
 			ClientLeft( m );
-			m_PlayersChanged = true;
+			mPlayersChanged = true;
 			break;
 		}
 		case GAME_ENTITYCREATED:
@@ -837,37 +835,36 @@ void IGame::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb
 			const Event_EntityCreated *m = _message.Get<Event_EntityCreated>();
 			if ( m )
 			{
-				const int index = m->m_Entity.GetIndex();
+				const int index = m->mEntity.GetIndex();
 
 				// special case don't replace existing entities with goal entities
-				if ( m_GameEntities[ index ].m_Entity.IsValid() &&
-					m->m_EntityClass == ENT_CLASS_GENERIC_GOAL )
+				if ( mGameEntities[ index ].mEntity.IsValid() && m->mEntityInfo.mGroup == ENT_GRP_GOAL )
 				{
 					break;
 				}
-
-				if ( m->m_EntityCategory.CheckFlag( ENT_CAT_OBSTACLE ) )
+				
+				if ( m->mEntityInfo.mCategory.CheckFlag( ENT_CAT_OBSTACLE ) )
 				{
-					//obstacleManager.AddObstacle( m->m_Entity );
+					//obstacleManager.AddObstacle( m->mEntity );
 				}
 
-				assert( m->m_Entity.GetIndex() >= 0 && m->m_Entity.GetIndex() < Constants::MAX_ENTITIES );
-				m_GameEntities[ index ].m_Entity = m->m_Entity;
-				m_GameEntities[ index ].m_EntityClass = m->m_EntityClass;
-				m_GameEntities[ index ].m_EntityCategory = m->m_EntityCategory;
-				m_GameEntities[ index ].m_TimeStamp = IGame::GetTime();
+				assert( m->mEntity.GetIndex() >= 0 && m->mEntity.GetIndex() < Constants::MAX_ENTITIES );
+				mGameEntities[ index ].mEntity = m->mEntity;
+				mGameEntities[ index ].mEntInfo = m->mEntityInfo;
+				mGameEntities[ index ].mTimeStamp = IGame::GetTime();
 
-				System::mInstance->mGoalManager->EntityCreated( m_GameEntities[ index ] );
-				System::mInstance->mNavigation->EntityCreated( m_GameEntities[ index ] );
+				System::mInstance->mGoalManager->EntityCreated( mGameEntities[ index ] );
+				System::mInstance->mNavigation->EntityCreated( mGameEntities[ index ] );
 
 #ifdef _DEBUG
-				const char *pClassName = FindClassName( m->m_EntityClass );
-				Utils::OutputDebug( kNormal, "Entity: %d created: %s\n", index, pClassName ? pClassName : "<unknown>" );
+				std::string groupName, className;
+				FindClassName( groupName, className, m->mEntityInfo );
+				Utils::OutputDebug( kNormal, "Entity: %d created: (%s:%s)\n", index, groupName.c_str(), className.c_str() );
 #endif
 
 				// increase the upper limit if necessary.
-				if ( m_MaxEntity <= index )
-					m_MaxEntity = index + 1;
+				if ( mMaxEntity <= index )
+					mMaxEntity = index + 1;
 			}
 			break;
 		}
@@ -876,39 +873,39 @@ void IGame::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb
 			const Event_EntityDeleted *m = _message.Get<Event_EntityDeleted>();
 			if ( m )
 			{
-				//obstacleManager.RemoveObstacle(m->m_Entity);
+				//obstacleManager.RemoveObstacle(m->mEntity);
 
-				int index = m->m_Entity.GetIndex();
-				if ( m_GameEntities[ index ].m_Entity.IsValid() )
+				int index = m->mEntity.GetIndex();
+				if ( mGameEntities[ index ].mEntity.IsValid() )
 				{
 #ifdef _DEBUG
-					const char *pClassName = FindClassName( m_GameEntities[ index ].m_EntityClass );
-					Utils::OutputDebug( kNormal, "Entity: %d deleted: %s\n", index, pClassName ? pClassName : "<unknown>" );
+					std::string groupName, className;
+					FindClassName( groupName, className, mGameEntities[ index ].mEntInfo );
+					Utils::OutputDebug( kNormal, "Entity: %d deleted: (%s:%s)\n", index, groupName.c_str(), className.c_str() );
 #endif
-					System::mInstance->mGoalManager->EntityDeleted( m_GameEntities[ index ] );
-					System::mInstance->mNavigation->EntityDeleted( m_GameEntities[ index ] );
+					System::mInstance->mGoalManager->EntityDeleted( mGameEntities[ index ] );
+					System::mInstance->mNavigation->EntityDeleted( mGameEntities[ index ] );
 
-					m_GameEntities[ index ].m_Entity.Reset();
-					m_GameEntities[ index ].m_EntityClass = 0;
-					m_GameEntities[ index ].m_EntityCategory.ClearAll();
-					m_GameEntities[ index ].m_TimeStamp = 0;
+					mGameEntities[ index ].mEntity.Reset();
+					mGameEntities[ index ].mEntInfo = EntityInfo();
+					mGameEntities[ index ].mTimeStamp = 0;
 
 					// decrease the upper limit if necessary.
-					if ( m_MaxEntity == index + 1 )
+					if ( mMaxEntity == index + 1 )
 					{
 						do
 						{
-							m_MaxEntity--;
+							mMaxEntity--;
 						}
-						while ( m_MaxEntity > 0 && !m_GameEntities[ m_MaxEntity - 1 ].m_Entity.IsValid() );
+						while ( mMaxEntity > 0 && !mGameEntities[ mMaxEntity - 1 ].mEntity.IsValid() );
 					}
 				}
 
-				GoalManager::GetInstance()->RemoveGoalByEntity( m->m_Entity );
+				GoalManager::GetInstance()->RemoveGoalByEntity( m->mEntity );
 				//////////////////////////////////////////////////////////////////////////
 				if ( System::mInstance->mNavigation )
 				{
-					System::mInstance->mNavigation->RemoveEntityConnection( m->m_Entity );
+					System::mInstance->mNavigation->RemoveEntityConnection( m->mEntity );
 				}
 			}
 			break;
@@ -926,13 +923,13 @@ void IGame::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb
 		case GAME_GRAVITY:
 		{
 			const Event_SystemGravity *m = _message.Get<Event_SystemGravity>();
-			m_Gravity = m->m_Gravity;
+			mGravity = m->mGravity;
 			break;
 		}
 		case GAME_CHEATS:
 		{
 			const Event_SystemCheats *m = _message.Get<Event_SystemCheats>();
-			m_CheatsEnabled = m->m_Enabled == True;
+			mCheatsEnabled = m->mEnabled == True;
 			break;
 		}
 		case GAME_SCRIPTSIGNAL:
@@ -940,8 +937,8 @@ void IGame::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb
 			const Event_ScriptSignal *m = _message.Get<Event_ScriptSignal>();
 			gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 
-			if ( m->m_SignalName[ 0 ] )
-				pMachine->Signal( gmVariable( pMachine->AllocStringObject( m->m_SignalName ) ), GM_INVALID_THREAD, GM_INVALID_THREAD );
+			if ( m->mSignalName[ 0 ] )
+				pMachine->Signal( gmVariable( pMachine->AllocStringObject( m->mSignalName ) ), GM_INVALID_THREAD, GM_INVALID_THREAD );
 		}
 		case GAME_SOUND:
 		{
@@ -969,10 +966,10 @@ void IGame::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb
 			{
 				if ( System::mInstance->mAnalytics )
 				{
-					if ( m->m_HasPosition )
-						System::mInstance->mAnalytics->AddGameEvent( m->m_Area, m->m_Name, m->m_Position );
+					if ( m->mHasPosition )
+						System::mInstance->mAnalytics->AddGameEvent( m->mArea, m->mName, m->mPosition );
 					else
-						System::mInstance->mAnalytics->AddGameEvent( m->m_Area, m->m_Name );
+						System::mInstance->mAnalytics->AddGameEvent( m->mArea, m->mName );
 				}
 			}
 		}
@@ -987,7 +984,7 @@ void IGame::DispatchGlobalEvent( const MessageHelper &_message )
 		case SYSTEM_SCRIPT_CHANGED:
 		{
 			const Event_SystemScriptUpdated *m = _message.Get<Event_SystemScriptUpdated>();
-			g_WeaponDatabase.ReloadScript( (LiveUpdateKey)m->m_ScriptKey );
+			gWeaponDatabase.ReloadScript( (LiveUpdateKey)m->mScriptKey );
 			return;
 		}
 		case GAME_ENTITYCREATED:
@@ -998,8 +995,8 @@ void IGame::DispatchGlobalEvent( const MessageHelper &_message )
 			// Send this event to everyone.
 			for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
 			{
-				if ( m_ClientList[ i ] )
-					m_ClientList[ i ]->SendEvent( _message );
+				if ( mClientList[ i ] )
+					mClientList[ i ]->SendEvent( _message );
 			}
 			break;
 		}
@@ -1033,27 +1030,27 @@ void IGame::DispatchEvent( int _dest, const MessageHelper &_message )
 
 void IGame::ClientJoined( const Event_SystemClientConnected *_msg )
 {
-	Utils::OutputDebug( kInfo, "Client Joined Game, IsBot: %d, ClientNum: %d", _msg->m_IsBot, _msg->m_GameId );
-	if ( _msg->m_IsBot && !m_BotJoining )
+	Utils::OutputDebug( kInfo, "Client Joined Game, IsBot: %d, ClientNum: %d", _msg->mIsBot, _msg->mGameId );
+	if ( _msg->mIsBot && !mBotJoining )
 	{
 		CheckGameState();
 		OBASSERT( GameStarted(), "Game Not Started Yet" );
-		OBASSERT( _msg->m_GameId < Constants::MAX_PLAYERS && _msg->m_GameId >= 0, "Invalid Client Index!" );
+		OBASSERT( _msg->mGameId < Constants::MAX_PLAYERS && _msg->mGameId >= 0, "Invalid Client Index!" );
 		// If a bot isn't created by now, it has probably been a map change,
 		// and the game has re-added the clients itself.
 
-		ClientPtr &cp = GetClientFromCorrectedGameId( _msg->m_GameId );
+		ClientPtr &cp = GetClientFromCorrectedGameId( _msg->mGameId );
 		if ( !cp )
 		{
 			// Initialize the appropriate slot in the list.
 			cp.reset( CreateGameClient() );
-			cp->Init( _msg->m_GameId );
+			cp->Init( _msg->mGameId );
 
-			cp->m_DesiredTeam = _msg->m_DesiredTeam;
-			cp->m_DesiredClass = _msg->m_DesiredClass;
+			cp->mDesiredTeam = _msg->mDesiredTeam;
+			cp->mDesiredClass = _msg->mDesiredClass;
 
-			gEngineFuncs->ChangeTeam( _msg->m_GameId, cp->m_DesiredTeam, NULL );
-			gEngineFuncs->ChangeClass( _msg->m_GameId, cp->m_DesiredClass, NULL );
+			gEngineFuncs->ChangeTeam( _msg->mGameId, cp->mDesiredTeam, NULL );
+			gEngineFuncs->ChangeClass( _msg->mGameId, cp->mDesiredClass, NULL );
 
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();
@@ -1063,10 +1060,10 @@ void IGame::ClientJoined( const Event_SystemClientConnected *_msg )
 
 void IGame::ClientLeft( const Event_SystemClientDisConnected *_msg )
 {
-	Utils::OutputDebug( kInfo, "Client Left Game, ClientNum: %d", _msg->m_GameId );
-	OBASSERT( _msg->m_GameId < Constants::MAX_PLAYERS && _msg->m_GameId >= 0, "Invalid Client Index!" );
+	Utils::OutputDebug( kInfo, "Client Left Game, ClientNum: %d", _msg->mGameId );
+	OBASSERT( _msg->mGameId < Constants::MAX_PLAYERS && _msg->mGameId >= 0, "Invalid Client Index!" );
 
-	ClientPtr &cp = GetClientFromCorrectedGameId( _msg->m_GameId );
+	ClientPtr &cp = GetClientFromCorrectedGameId( _msg->mGameId );
 	if ( cp )
 	{
 		cp->Shutdown();
@@ -1094,8 +1091,8 @@ void IGame::CheckGameState()
 		case GAME_STATE_PAUSED:
 			return;
 	}
-	m_LastGameState = m_GameState;
-	m_GameState = gs;
+	mLastGameState = mGameState;
+	mGameState = gs;
 }
 
 void IGame::StartGame()
@@ -1188,14 +1185,14 @@ void IGame::InitMapScript()
 	}
 
 	// Other initialization.
-	m_SettingLimiter.reset( new Regulator( 2000 ) );
+	mSettingLimiter.reset( new Regulator( 2000 ) );
 }
 
 void IGame::UpdateTime()
 {
 	int iCurrentTime = gEngineFuncs->GetGameTime();
-	m_DeltaMsec = iCurrentTime - m_GameMsec;
-	m_GameMsec = iCurrentTime;
+	mDeltaMsec = iCurrentTime - mGameMsec;
+	mGameMsec = iCurrentTime;
 }
 
 void IGame::CheckServerSettings( bool managePlayers )
@@ -1295,9 +1292,9 @@ bool IGame::UnhandledCommand( const StringVector &_args )
 	bool handled = false;
 	for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
 	{
-		if ( m_ClientList[ i ] )
+		if ( mClientList[ i ] )
 		{
-			handled |= m_ClientList[ i ]->DistributeUnhandledCommand( _args );
+			handled |= mClientList[ i ]->DistributeUnhandledCommand( _args );
 		}
 	}
 	return handled;
@@ -1324,12 +1321,12 @@ void IGame::cmdBotDontShoot( const StringVector &_args )
 		{
 			for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
 			{
-				if ( m_ClientList[ i ] )
+				if ( mClientList[ i ] )
 				{
-					m_ClientList[ i ]->SetUserFlag( Client::FL_SHOOTINGDISABLED, bDontShoot == True );
+					mClientList[ i ]->SetUserFlag( Client::FL_SHOOTINGDISABLED, bDontShoot == True );
 
 					EngineFuncs::ConsoleMessage( va( "%s: shooting %s",
-						m_ClientList[ i ]->GetName(),
+						mClientList[ i ]->GetName(),
 						bDontShoot ? "disabled" : "enabled" ) );
 				}
 			}
@@ -1368,12 +1365,12 @@ void IGame::cmdDebugBot( const StringVector &_args )
 
 	for ( int p = 0; p < Constants::MAX_PLAYERS; ++p )
 	{
-		if ( m_ClientList[ p ] )
+		if ( mClientList[ p ] )
 		{
-			ClientPtr bot = m_ClientList[ p ];
+			ClientPtr bot = mClientList[ p ];
 			if ( botname == bot->GetName() || bAll )
 			{
-				for ( obuint32 i = 2; i < _args.size(); ++i )
+				for ( uint32_t i = 2; i < _args.size(); ++i )
 				{
 					using namespace AiState;
 
@@ -1427,11 +1424,11 @@ void IGame::cmdKickAll( const StringVector &_args )
 	// Kick all bots from the game.
 	for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
 	{
-		if ( m_ClientList[ i ] )
+		if ( mClientList[ i ] )
 		{
 			StringVector tl;
 			tl.push_back( "kickbot" );
-			tl.push_back( ( std::string )va( "%i", m_ClientList[ i ]->GetGameID() ) );
+			tl.push_back( ( std::string )va( "%i", mClientList[ i ]->GetGameID() ) );
 			CommandReciever::DispatchCommand( tl );
 		}
 	}
@@ -1476,10 +1473,10 @@ void IGame::cmdAddbot( const StringVector &_args )
 	}
 
 	Msg_Addbot b;
-	Utils::StringCopy( b.m_Name, nextName.c_str(), sizeof( b.m_Name ) );
-	Utils::StringCopy( b.m_Profile, profile.c_str(), sizeof( b.m_Profile ) );
-	b.m_Team = iTeam;
-	b.m_Class = iClass;
+	Utils::StringCopy( b.mName, nextName.c_str(), sizeof( b.mName ) );
+	Utils::StringCopy( b.mProfile, profile.c_str(), sizeof( b.mProfile ) );
+	b.mTeam = iTeam;
+	b.mClass = iClass;
 	AddBot( b, true );
 }
 
@@ -1490,15 +1487,15 @@ void IGame::cmdKickbot( const StringVector &_args )
 	for ( int i = 1; i < (int)_args.size(); ++i )
 	{
 		Msg_Kickbot b;
-		if ( !Utils::ConvertString( _args[ i ], b.m_GameId ) )
-			Utils::StringCopy( b.m_Name, _args[ i ].c_str(), Msg_Kickbot::BufferSize );
+		if ( !Utils::ConvertString( _args[ i ], b.mGameId ) )
+			Utils::StringCopy( b.mName, _args[ i ].c_str(), Msg_Kickbot::BufferSize );
 		InterfaceFuncs::Kickbot( b );
 		bDidSomething = true;
 	}
 
 	if ( !bDidSomething )
 	{
-		EngineFuncs::ConsoleError( "kickbot [std::string/gameid] ..." );
+		EngineFuncs::ConsoleError( "kickbot [std::string/gameid] .." );
 	}
 }
 
@@ -1506,19 +1503,19 @@ void IGame::cmdDrawBlockableTests( const StringVector &_args )
 {
 	if ( _args.size() >= 2 )
 	{
-		if ( !m_bDrawBlockableTests && Utils::StringToTrue( _args[ 1 ] ) )
+		if ( !mbDrawBlockableTests && Utils::StringToTrue( _args[ 1 ] ) )
 		{
 			EngineFuncs::ConsoleMessage( "Draw Blockable Tests on." );
-			m_bDrawBlockableTests = true;
+			mbDrawBlockableTests = true;
 		}
-		else if ( m_bDrawBlockableTests && Utils::StringToFalse( _args[ 1 ] ) )
+		else if ( mbDrawBlockableTests && Utils::StringToFalse( _args[ 1 ] ) )
 		{
 			EngineFuncs::ConsoleMessage( "Draw Blockable Tests off." );
-			m_bDrawBlockableTests = false;
+			mbDrawBlockableTests = false;
 		}
 		else
 		{
-			m_bDrawBlockableTests = !m_bDrawBlockableTests;
+			mbDrawBlockableTests = !mbDrawBlockableTests;
 		}
 	}
 }
@@ -1533,7 +1530,7 @@ void IGame::cmdPrintFileSystem( const StringVector &_args )
 
 	EngineFuncs::ConsoleMessage( "------------------------------------" );
 	EngineFuncs::ConsoleMessage( va( "%d Files %s, in %s", dlist.size(), ex.c_str(), pth.c_str() ) );
-	for ( obuint32 i = 0; i < dlist.size(); ++i )
+	for ( uint32_t i = 0; i < dlist.size(); ++i )
 	{
 		EngineFuncs::ConsoleMessage( dlist[ i ].string().c_str() );
 	}
@@ -1542,14 +1539,14 @@ void IGame::cmdPrintFileSystem( const StringVector &_args )
 
 void IGame::cmdReloadWeaponDatabase( const StringVector &_args )
 {
-	g_WeaponDatabase.LoadWeaponDefinitions( true );
+	gWeaponDatabase.LoadWeaponDefinitions( true );
 	DispatchGlobalEvent( MessageHelper( MESSAGE_REFRESHALLWEAPONS ) );
 }
 
 void IGame::cmdShowProcesses( const StringVector &_args )
 {
-	EngineFuncs::ConsoleMessage( va( "# Processes: %d!", m_UpdateMap.size() ) );
-	FunctorMap::iterator it = m_UpdateMap.begin(), itEnd = m_UpdateMap.end();
+	EngineFuncs::ConsoleMessage( va( "# Processes: %d!", mUpdateMap.size() ) );
+	FunctorMap::iterator it = mUpdateMap.begin(), itEnd = mUpdateMap.end();
 	for ( ; it != itEnd; ++it )
 	{
 		EngineFuncs::ConsoleMessage( va( "Process: %s!", ( *it ).first.c_str() ) );
@@ -1566,23 +1563,23 @@ void IGame::cmdStopProcess( const StringVector &_args )
 
 bool IGame::AddUpdateFunction( const std::string &_name, FunctorPtr _func )
 {
-	if ( m_UpdateMap.find( _name ) != m_UpdateMap.end() )
+	if ( mUpdateMap.find( _name ) != mUpdateMap.end() )
 	{
 		EngineFuncs::ConsoleError( "That process is already running!" );
 		return false;
 	}
 	EngineFuncs::ConsoleMessage( va( "Process %s has been started! ", _name.c_str() ) );
-	m_UpdateMap.insert( std::make_pair( _name, _func ) );
+	mUpdateMap.insert( std::make_pair( _name, _func ) );
 	return true;
 }
 
 bool IGame::RemoveUpdateFunction( const std::string &_name )
 {
-	FunctorMap::iterator it = m_UpdateMap.find( _name );
-	if ( it != m_UpdateMap.end() )
+	FunctorMap::iterator it = mUpdateMap.find( _name );
+	if ( it != mUpdateMap.end() )
 	{
 		EngineFuncs::ConsoleMessage( va( "Process %s has been stopped! ", _name.c_str() ) );
-		m_UpdateMap.erase( _name.c_str() );
+		mUpdateMap.erase( _name.c_str() );
 		return true;
 	}
 	return false;
@@ -1591,19 +1588,19 @@ bool IGame::RemoveUpdateFunction( const std::string &_name )
 void IGame::AddBot( Msg_Addbot &_addbot, bool _createnow )
 {
 	//////////////////////////////////////////////////////////////////////////
-	if ( !_addbot.m_Name[ 0 ] )
+	if ( !_addbot.mName[ 0 ] )
 	{
 		NamePtr nr = NameManager::GetInstance()->GetName();
 		std::string name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
-		Utils::StringCopy( _addbot.m_Name, name.c_str(), sizeof( _addbot.m_Name ) );
+		Utils::StringCopy( _addbot.mName, name.c_str(), sizeof( _addbot.mName ) );
 	}
 	//////////////////////////////////////////////////////////////////////////
 	OBASSERT( GameStarted(), "Game Not Started Yet" );
 	if ( _createnow )
-		m_BotJoining = true;
+		mBotJoining = true;
 	int iGameID = InterfaceFuncs::Addbot( _addbot );
 	if ( _createnow )
-		m_BotJoining = false;
+		mBotJoining = false;
 	if ( iGameID != -1 && _createnow )
 	{
 		ClientPtr &cp = GetClientFromCorrectedGameId( iGameID );
@@ -1615,28 +1612,28 @@ void IGame::AddBot( Msg_Addbot &_addbot, bool _createnow )
 			cp->Init( iGameID );
 		}
 
-		cp->m_DesiredTeam = _addbot.m_Team;
-		cp->m_DesiredClass = _addbot.m_Class;
+		cp->mDesiredTeam = _addbot.mTeam;
+		cp->mDesiredClass = _addbot.mClass;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Script callbacks
-		if ( cp->m_DesiredTeam == -1 )
+		if ( cp->mDesiredTeam == -1 )
 		{
 			gmVariable vteam = ScriptManager::GetInstance()->ExecBotCallback(
 				cp.get(),
 				"SelectTeam" );
-			cp->m_DesiredTeam = vteam.IsInt() ? vteam.GetInt() : -1;
+			cp->mDesiredTeam = vteam.IsInt() ? vteam.GetInt() : -1;
 		}
-		if ( cp->m_DesiredClass == -1 )
+		if ( cp->mDesiredClass == -1 )
 		{
 			gmVariable vclass = ScriptManager::GetInstance()->ExecBotCallback(
 				cp.get(),
 				"SelectClass" );
-			cp->m_DesiredClass = vclass.IsInt() ? vclass.GetInt() : -1;
+			cp->mDesiredClass = vclass.IsInt() ? vclass.GetInt() : -1;
 		}
 		//////////////////////////////////////////////////////////////////////////
-		gEngineFuncs->ChangeTeam( iGameID, cp->m_DesiredTeam, NULL );
-		gEngineFuncs->ChangeClass( iGameID, cp->m_DesiredClass, NULL );
+		gEngineFuncs->ChangeTeam( iGameID, cp->mDesiredTeam, NULL );
+		gEngineFuncs->ChangeClass( iGameID, cp->mDesiredClass, NULL );
 
 		cp->CheckTeamEvent();
 		cp->CheckClassEvent();
@@ -1646,21 +1643,21 @@ void IGame::AddBot( Msg_Addbot &_addbot, bool _createnow )
 ClientPtr IGame::GetClientByGameId( int _gameId )
 {
 	for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
-		if ( m_ClientList[ i ] && m_ClientList[ i ]->GetGameID() == _gameId )
-			return ClientPtr( m_ClientList[ i ] );
+		if ( mClientList[ i ] && mClientList[ i ]->GetGameID() == _gameId )
+			return ClientPtr( mClientList[ i ] );
 	return ClientPtr();
 }
 
 ClientPtr IGame::GetClientByIndex( int _index )
 {
 	if ( InRangeT<int>( _index, 0, Constants::MAX_PLAYERS ) )
-		return m_ClientList[ _index ];
+		return mClientList[ _index ];
 	return ClientPtr();
 }
 
 ClientPtr &IGame::GetClientFromCorrectedGameId( int _gameid )
 {
-	return m_ClientList[ _gameid ];
+	return mClientList[ _gameid ];
 }
 
 bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::stringstream &err )
@@ -1700,7 +1697,7 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 	{
 		GameEntity e;
 		e.FromInt( _thread->Param( NextArg ).GetEntity() );
-		_criteria.m_Subject.SetEntity( e );
+		_criteria.mSubject.SetEntity( e );
 
 		NextArg++;
 	}
@@ -1716,9 +1713,9 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 
 		StringVector sv;
 		Utils::Tokenize( pExpression, " ", sv );
-		for ( obuint32 t = 0; t < sv.size(); ++t )
+		for ( uint32_t t = 0; t < sv.size(); ++t )
 		{
-			const obuint32 sHash = Utils::Hash32( sv[ t ].c_str() );
+			const uint32_t sHash = Utils::Hash32( sv[ t ].c_str() );
 
 			if ( iToken == CheckCriteria::TOK_CRITERIA )
 			{
@@ -1726,12 +1723,12 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 				{
 					case 0x29b19c8a /* not */:
 					case 0x8fd958a1 /* doesnot */:
-						_criteria.m_Negated = true;
+						_criteria.mNegated = true;
 						break;
 					case 0x84d1546a /* deleted */:
-						_criteria.m_Criteria = Criteria::ON_ENTITY_DELETED;
-						_criteria.m_Operator = Criteria::OP_EQUALS;
-						_criteria.m_Operand[ 0 ] = obUserData( 1 );
+						_criteria.mCriteria = Criteria::ON_ENTITY_DELETED;
+						_criteria.mOperator = Criteria::OP_EQUALS;
+						_criteria.mOperand[ 0 ] = obUserData( 1 );
 						NumExpectedOperands = 0;
 						++iToken;
 						break;
@@ -1739,40 +1736,40 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 					case 0xabcfd8b3 /* hasentflags */:
 					case 0x8770b3da /* haveentflag */:
 					case 0xdf6ad30b /* haveentflags */:
-						_criteria.m_Criteria = Criteria::ON_ENTITY_FLAG;
-						_criteria.m_Operator = Criteria::OP_EQUALS;
+						_criteria.mCriteria = Criteria::ON_ENTITY_FLAG;
+						_criteria.mOperator = Criteria::OP_EQUALS;
 						ExpectedArgTypes[ NumExpectedOperands++ ] = kTypeInt;
 						++iToken;
 						break;
 					case 0x6b98ed8f /* health */:
-						_criteria.m_Criteria = Criteria::ON_ENTITY_HEALTH;
+						_criteria.mCriteria = Criteria::ON_ENTITY_HEALTH;
 						NumExpectedOperands = 1;
 						ExpectedArgTypes[ 0 ] = kTypeNum;
 						++iToken;
 						break;
 					case 0x7962a87c /* weaponequipped */:
-						_criteria.m_Criteria = Criteria::ON_ENTITY_WEAPON;
+						_criteria.mCriteria = Criteria::ON_ENTITY_WEAPON;
 						ExpectedArgTypes[ NumExpectedOperands++ ] = kTypeInt; // weaponid
 						++iToken;
 						break;
 					case 0x32741c32 /* velocity */:
-						_criteria.m_Criteria = Criteria::ON_ENTITY_VELOCITY;
+						_criteria.mCriteria = Criteria::ON_ENTITY_VELOCITY;
 						ExpectedArgTypes[ NumExpectedOperands++ ] = kTypeVector; // velocity vector
 						++iToken;
 						break;
 					case 0x3f44af2b /* weaponcharged */:
-						_criteria.m_Criteria = Criteria::ON_ENTITY_WEAPONCHARGED;
+						_criteria.mCriteria = Criteria::ON_ENTITY_WEAPONCHARGED;
 						ExpectedArgTypes[ NumExpectedOperands++ ] = kTypeInt; // weaponid
 						++iToken;
 						break;
 					case 0x79e3594d /* weaponhasammo */:
-						_criteria.m_Criteria = Criteria::ON_ENTITY_WEAPONHASAMMO;
+						_criteria.mCriteria = Criteria::ON_ENTITY_WEAPONHASAMMO;
 						ExpectedArgTypes[ NumExpectedOperands++ ] = kTypeInt; // weaponid
 						ExpectedArgTypes[ NumExpectedOperands++ ] = kTypeInt; // ammo amount
 						++iToken;
 						break;
 					case 0x8ad3b7b9 /* mapgoalavailable */:
-						_criteria.m_Criteria = Criteria::ON_MAPGOAL_AVAILABLE;
+						_criteria.mCriteria = Criteria::ON_MAPGOAL_AVAILABLE;
 						ExpectedArgTypes[ NumExpectedOperands++ ] = kTypeMapGoal;
 						++iToken;
 						break;
@@ -1802,7 +1799,7 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 					if ( !o.IsInt() )
 						goto argError;
 
-					_criteria.m_Operand[ i ] = obUserData( o.GetInt() );
+					_criteria.mOperand[ i ] = obUserData( o.GetInt() );
 					break;
 				}
 				case kTypeFloat:
@@ -1810,7 +1807,7 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 					if ( !o.IsFloat() )
 						goto argError;
 
-					_criteria.m_Operand[ i ] = obUserData( o.GetFloat() );
+					_criteria.mOperand[ i ] = obUserData( o.GetFloat() );
 					break;
 				}
 				case kTypeNum:
@@ -1818,7 +1815,7 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 					if ( !o.IsNumber() )
 						goto argError;
 
-					_criteria.m_Operand[ i ] = obUserData( o.GetFloatSafe() );
+					_criteria.mOperand[ i ] = obUserData( o.GetFloatSafe() );
 					break;
 				}
 				case kTypeVector:
@@ -1828,7 +1825,7 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 
 					Vector3f v;
 					o.GetVector( v );
-					_criteria.m_Operand[ i ] = obUserData( v.X(), v.Y(), v.Z() );
+					_criteria.mOperand[ i ] = obUserData( v.X(), v.Y(), v.Z() );
 					break;
 				}
 				case kTypeEntity:
@@ -1838,7 +1835,7 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 
 					GameEntity e;
 					e.FromInt( o.GetEntity() );
-					_criteria.m_Operand[ i ].SetEntity( e );
+					_criteria.mOperand[ i ].SetEntity( e );
 					break;
 				}
 				case kTypeMapGoal:
@@ -1849,7 +1846,7 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 						MapGoalPtr mg = GoalManager::GetInstance()->GetGoal( goalName );
 						if ( mg )
 						{
-							_criteria.m_Operand[ i ] = obUserData( mg->GetSerialNum() );
+							_criteria.mOperand[ i ] = obUserData( mg->GetSerialNum() );
 						}
 						else
 						{
@@ -1862,7 +1859,7 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 						MapGoal *Mg = 0;
 						if ( gmBind2::Class<MapGoal>::FromVar( _thread, o, Mg ) && Mg )
 						{
-							_criteria.m_Operand[ i ] = Mg->GetSerialNum();
+							_criteria.mOperand[ i ] = Mg->GetSerialNum();
 							return true;
 						}
 						else
@@ -1935,7 +1932,7 @@ int IGame::GetDebugWindowNumClients() const
 {
 	int num = 0;
 	for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
-		if ( m_ClientList[ i ] )
+		if ( mClientList[ i ] )
 			++num;
 	return num;
 }
@@ -1944,10 +1941,10 @@ ClientPtr IGame::GetDebugWindowClient( int index ) const
 {
 	for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
 	{
-		if ( m_ClientList[ i ] )
+		if ( mClientList[ i ] )
 		{
 			if ( index == 0 )
-				return m_ClientList[ i ];
+				return mClientList[ i ];
 			--index;
 		}
 	}
@@ -1958,14 +1955,13 @@ ClientPtr IGame::GetDebugWindowClient( int index ) const
 
 IGame::EntityIterator::operator bool() const
 {
-	return m_Current.m_Entity.IsValid();
+	return mCurrent.mEntity.IsValid();
 }
 
 void IGame::EntityIterator::Clear()
 {
-	m_Current.m_Entity = GameEntity();
-	m_Current.m_EntityClass = 0;
-	m_Current.m_EntityCategory.ClearAll();
+	mCurrent.mEntity = GameEntity();
+	mCurrent.mEntInfo = EntityInfo();
 }
 
 bool IGame::IsEntityValid( const GameEntity &_hnl )
@@ -1975,13 +1971,34 @@ bool IGame::IsEntityValid( const GameEntity &_hnl )
 		const int index = _hnl.GetIndex();
 		if ( index >= 0 && index < Constants::MAX_ENTITIES )
 		{
-			EntityInstance &ei = m_GameEntities[ index ];
-			if ( !ei.m_Entity.IsValid() )
+			EntityInstance &ei = mGameEntities[ index ];
+			if ( !ei.mEntity.IsValid() )
 				return false;
 
 			UpdateEntity( ei );
-			if ( ei.m_EntityClass && ei.m_Entity.IsValid() )
+			if ( ei.mEntInfo.mGroup != ENT_GRP_UNKNOWN && ei.mEntity.IsValid() )
 				return true;
+		}
+	}
+	return false;
+}
+
+bool IGame::GetEntityInfo( const GameEntity &_hnl, EntityInfo& entInfo )
+{
+	if ( _hnl.IsValid() )
+	{
+		const int index = _hnl.GetIndex();
+		if ( index >= 0 && index < Constants::MAX_ENTITIES )
+		{
+			EntityInstance &ei = mGameEntities[ index ];
+			if ( !ei.mEntity.IsValid() )
+				return false;
+
+			if ( ei.mEntInfo.mGroup != ENT_GRP_UNKNOWN && ei.mEntity.IsValid() )
+			{
+				entInfo = ei.mEntInfo;
+				return true;
+			}
 		}
 	}
 	return false;
@@ -1991,47 +2008,43 @@ bool IGame::IterateEntity( IGame::EntityIterator &_it )
 {
 	int iStartIndex = 0;
 	if ( _it )
-		iStartIndex = _it.m_Current.m_Entity.GetIndex() + 1;
+		iStartIndex = _it.mCurrent.mEntity.GetIndex() + 1;
 
-	for ( int i = iStartIndex; i < m_MaxEntity; ++i )
+	for ( int i = iStartIndex; i < mMaxEntity; ++i )
 	{
-		if ( m_GameEntities[ i ].m_Entity.IsValid() )
+		if ( mGameEntities[ i ].mEntity.IsValid() )
 		{
-			UpdateEntity( m_GameEntities[ i ] );
-			_it.m_Current = m_GameEntities[ i ];
-			_it.m_Index = i;
+			UpdateEntity( mGameEntities[ i ] );
+			_it.mCurrent = mGameEntities[ i ];
+			_it.mIndex = i;
 			return true;
 		}
 	}
 	return false;
 }
 
-void IGame::UpdateEntity( EntityInstance &_ent )
+void IGame::UpdateEntity( EntityInstance& ent )
 {
-	if ( _ent.m_EntityClass < FilterSensory::ANYPLAYERCLASS && _ent.m_TimeStamp < IGame::GetTime() )
-	{
-		_ent.m_EntityClass = gEngineFuncs->GetEntityClass( _ent.m_Entity );
-		gEngineFuncs->GetEntityCategory( _ent.m_Entity, _ent.m_EntityCategory );
-		_ent.m_TimeStamp = IGame::GetTime();
-	}
+	ent.mTimeStamp = IGame::GetTime();
+	gEngineFuncs->GetEntityInfo( ent.mEntity, ent.mEntInfo );
 }
 
 void IGame::AddDeletedThread( int threadId )
 {
 	// process the full buffer
-	if ( m_NumDeletedThreads == MaxDeletedThreads )
+	if ( mNumDeletedThreads == MaxDeletedThreads )
 	{
 		PropogateDeletedThreads();
 	}
 
 	// paranoid check
-	if ( m_NumDeletedThreads < MaxDeletedThreads )
+	if ( mNumDeletedThreads < MaxDeletedThreads )
 	{
-		m_DeletedThreads[ m_NumDeletedThreads++ ] = threadId;
+		mDeletedThreads[ mNumDeletedThreads++ ] = threadId;
 	}
 	else
 	{
-		OBASSERT( m_NumDeletedThreads < MaxDeletedThreads, "out of slots" );
+		OBASSERT( mNumDeletedThreads < MaxDeletedThreads, "out of slots" );
 	}
 }
 
@@ -2047,17 +2060,17 @@ static bool _ThreadIdSort( int id1, int id2 )
 void IGame::PropogateDeletedThreads()
 {
 	Prof( PropogateDeletedThreads );
-	if ( m_NumDeletedThreads > 0 )
+	if ( mNumDeletedThreads > 0 )
 	{
-		std::sort( m_DeletedThreads, m_DeletedThreads + m_NumDeletedThreads, _ThreadIdSort );
+		std::sort( mDeletedThreads, mDeletedThreads + mNumDeletedThreads, _ThreadIdSort );
 		for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
 		{
-			if ( m_ClientList[ i ] )
+			if ( mClientList[ i ] )
 			{
-				m_ClientList[ i ]->PropogateDeletedThreads( m_DeletedThreads, m_NumDeletedThreads );
+				mClientList[ i ]->PropogateDeletedThreads( mDeletedThreads, mNumDeletedThreads );
 			}
 		}
-		m_NumDeletedThreads = 0;
+		mNumDeletedThreads = 0;
 	}
 }
 

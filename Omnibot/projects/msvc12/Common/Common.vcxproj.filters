@@ -193,9 +193,6 @@
     <ClCompile Include="..\..\..\Common\EventReciever.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\FileDownloader.cpp">
-      <Filter>System</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\FileSystem.cpp">
       <Filter>System</Filter>
     </ClCompile>
@@ -654,9 +651,6 @@
     <ClInclude Include="..\..\..\Common\EventReciever.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Common\FileDownloader.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Common\FileSystem.h">
       <Filter>System</Filter>
     </ClInclude>
@@ -738,9 +732,6 @@
     <ClInclude Include="..\..\..\Common\GoalManager.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Common\Functions_Bot.h">
-      <Filter>Interface</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Common\EngineFuncs.h">
       <Filter>Interface</Filter>
     </ClInclude>
@@ -755,9 +746,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Common\Logger.h">
       <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\Omni-Bot_BasicTypes.h">
-      <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\Omni-Bot_BitFlags.h">
       <Filter>Interface</Filter>

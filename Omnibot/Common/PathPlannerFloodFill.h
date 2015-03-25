@@ -29,11 +29,11 @@ public:
 
 	struct FloodFillOptions
 	{
-		float		m_CharacterHeight;
-		float		m_CharacterCrouchHeight;
-		float		m_CharacterStepHeight;
-		float		m_CharacterJumpHeight;
-		float		m_GridRadius;
+		float	 mCharacterHeight;
+		float	 mCharacterCrouchHeight;
+		float	 mCharacterStepHeight;
+		float	 mCharacterJumpHeight;
+		float	 mGridRadius;
 
 		FloodFillOptions();
 	};
@@ -74,7 +74,7 @@ public:
 
 	virtual void RegisterScriptFunctions(gmMachine *a_machine);
 
-	bool GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name);
+	bool GetNavInfo(const Vector3f &pos,int32_t &_id,std::string &_name);
 
 	void AddEntityConnection(const Event_EntityConnection &_conn);
 	void RemoveEntityConnection(GameEntity _ent);
@@ -84,7 +84,7 @@ public:
 
 	int GetLatestFileVersion() const { return 1; }
 
-	typedef SpanHeightMap<obuint8> SpanMap;
+	typedef SpanHeightMap<uint8_t> SpanMap;
 
 	SpanMap::InfluenceMap * AllocInfluenceMap();
 	PathInterface * AllocPathInterface( Client * client );
@@ -146,7 +146,7 @@ protected:
 protected:
 	//////////////////////////////////////////////////////////////////////////
 
-	Vector3List			m_StartPositions;
+	Vector3List		 mStartPositions;
 	
 	typedef std::queue<Vector3f> VectorQueue;
 
@@ -154,7 +154,7 @@ protected:
 	SpanMap::InfluenceMap *	mInfluence;
 	VectorQueue				mSpanFrontier;
 
-	obuint32				mInfluenceBufferId;
+	uint32_t				mInfluenceBufferId;
 	bool					mUpdateInfluenceBuffer;
 
 	FloodFillOptions		mFillOptions;
@@ -168,7 +168,7 @@ protected:
 
 		Box3f					mObb;
 				
-		obint32					mExpireTime;
+		int32_t					mExpireTime;
 		
 		bool					mActive;
 		
@@ -184,7 +184,7 @@ protected:
 
 	//////////////////////////////////////////////////////////////////////////
 	// Current tool variables
-	obColor				m_CursorColor;
+	obColor			 mCursorColor;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Internal Implementations of base class functionality

@@ -19,6 +19,14 @@ IGame *CreateGameInstance()
 	return new OF_Game;
 }
 
+OF_Game::OF_Game()
+{
+}
+
+OF_Game::~OF_Game()
+{
+}
+
 int OF_Game::GetVersionNum() const
 {
 	return OF_VERSION_LATEST;
@@ -68,6 +76,11 @@ const char *OF_Game::GetScriptSubfolder() const
 #else
 	return "of/scripts";
 #endif
+}
+
+const char *OF_Game::GetGameDatabaseAbbrev() const
+{
+	return "of";
 }
 
 bool OF_Game::Init( System & system )
@@ -136,54 +149,36 @@ void OF_Game::InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "BUILDING_DISP",	gmVariable(TF_ENT_FLAG_BUILDING_DISP));
 	_table->Set(_machine, "BUILDING_DETP",	gmVariable(TF_ENT_FLAG_BUILDING_DETP));
 	_table->Set(_machine, "BUILDINPROGRESS",gmVariable(TF_ENT_FLAG_BUILDINPROGRESS));
-	_table->Set(_machine, "LEVEL2",			gmVariable(TF_ENT_FLAG_LEVEL2));
-	_table->Set(_machine, "LEVEL3",			gmVariable(TF_ENT_FLAG_LEVEL3));
 }
 
-const float OF_Game::OF_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags)
+const float OF_Game::OF_GetEntityClassTraceOffset( const TargetInfo &_target )
 {
-	if(InRangeT<int>(_class, TF_CLASS_NONE, TF_CLASS_MAX))
+	if ( _target.mEntInfo.mGroup == ENT_GRP_PLAYER )
 	{
-		if (_entflags.CheckFlag(ENT_FLAG_CROUCHED))
+		if ( _target.mEntInfo.mClassId > TF_CLASS_NONE && _target.mEntInfo.mClassId < FilterSensory::ANYPLAYERCLASS )
 		{
-			switch(_class)
-			{
-			case TF_CLASS_HWGUY:
-				return 34.0f;
-			case TF_CLASS_SCOUT:
-			case TF_CLASS_SNIPER:
-				return 22.4f;
-			default:
-				return 24.0f;
-			}
-		}
-		if(_class == TF_CLASS_HWGUY)
-			return 40.0f;
-		return 32.0f;
-	}
-	return TF_Game::TF_GetEntityClassTraceOffset(_class,_entflags);
-}
-
-const float OF_Game::OF_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags)
-{
-	if(InRangeT<int>(_class, TF_CLASS_NONE, TF_CLASS_MAX))
-	{
-		if (_entflags.CheckFlag(ENT_FLAG_CROUCHED))
-		{
-			switch(_class)
-			{
-			case TF_CLASS_HWGUY:
-				return 26.0f;
-			case TF_CLASS_SCOUT:
-			case TF_CLASS_SNIPER:
-				return 14.4f;
-			default:
+			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_PRONED ) )
 				return 16.0f;
-			}
+			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_CROUCHED ) )
+				return 24.0f;
+			return 48.0f;
 		}
-		if(_class == TF_CLASS_HWGUY)
-			return 32.0f;
-		return 24.0f;
 	}
-	return TF_Game::TF_GetEntityClassAimOffset(_class,_entflags);
+	return TF_Game::TF_GetEntityClassTraceOffset( _target );
+}
+
+const float OF_Game::OF_GetEntityClassAimOffset( const TargetInfo &_target )
+{
+	if ( _target.mEntInfo.mGroup == ENT_GRP_PLAYER )
+	{
+		if ( _target.mEntInfo.mClassId > TF_CLASS_NONE && _target.mEntInfo.mClassId < FilterSensory::ANYPLAYERCLASS )
+		{
+			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_PRONED ) )
+				return 16.0f;
+			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_CROUCHED ) )
+				return 24.0f;
+			return 48.0f;
+		}
+	}
+	return TF_Game::TF_GetEntityClassAimOffset( _target );
 }

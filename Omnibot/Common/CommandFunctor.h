@@ -18,8 +18,11 @@
 class ICommandFunctor
 {
 public:
-	virtual bool IsObj( void * ptr ) const { return false; }
-	virtual void operator()(const StringVector &_args) = 0;
+	virtual bool IsObj( void * ptr ) const
+	{
+		return false;
+	}
+	virtual void operator()( const StringVector &_args ) = 0;
 };
 
 typedef boost::shared_ptr<ICommandFunctor> CommandFunctorPtr;
@@ -30,20 +33,26 @@ template <typename T, typename Fn>
 class Delegate : public ICommandFunctor
 {
 public:
-	virtual bool IsObj( void * ptr ) const { return m_Object == ptr; }
-	const T * GetObj() const { return m_Object; }
-	void operator()(const StringVector &_args)
+	virtual bool IsObj( void * ptr ) const
 	{
-		(m_Object->*m_Function)(_args);
+		return mObject == ptr;
 	}
-	Delegate(T *obj, Fn fnc)
-		: m_Object(obj)
-		, m_Function(fnc)
+	const T * GetObj() const
+	{
+		return mObject;
+	}
+	void operator()( const StringVector &_args )
+	{
+		( mObject->*mFunction )( _args );
+	}
+	Delegate( T *obj, Fn fnc )
+		: mObject( obj )
+		, mFunction( fnc )
 	{
 	}
 private:
-	T		*m_Object;
-	Fn		m_Function;
+	T*			mObject;
+	Fn			mFunction;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -52,18 +61,18 @@ template <typename T, typename Fn>
 class Delegate0 : public ICommandFunctor
 {
 public:
-	void operator()(const StringVector &_args)
+	void operator()( const StringVector &_args )
 	{
-		(m_Object->*m_Function)();
+		( mObject->*mFunction )( );
 	}
-	Delegate0(T *obj, Fn fnc)
-		: m_Object(obj)
-		, m_Function(fnc)
+	Delegate0( T *obj, Fn fnc )
+		: mObject( obj )
+		, mFunction( fnc )
 	{
 	}
 private:
-	T		*m_Object;
-	Fn		m_Function;
+	T		* mObject;
+	Fn	 mFunction;
 };
 
 //////////////////////////////////////////////////////////////////////////

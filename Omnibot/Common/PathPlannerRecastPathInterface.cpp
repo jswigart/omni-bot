@@ -85,8 +85,8 @@ void RecastPathInterface::UpdateSourcePosition( const Vector3f & srcPos )
 void RecastPathInterface::UpdateGoalPosition( const Vector3f & goal, float radius )
 {
 	mGoals.resize( 1 );
-	mGoals[ 0 ].m_Position = goal;
-	mGoals[ 0 ].m_Radius = radius;
+	mGoals[ 0 ].mPosition = goal;
+	mGoals[ 0 ].mRadius = radius;
 }
 
 void RecastPathInterface::UpdateGoalPositions( const DestinationVector & goals )
@@ -97,14 +97,14 @@ void RecastPathInterface::UpdateGoalPositions( const DestinationVector & goals )
 bool RecastPathInterface::UpdateGoalPositionRandom()
 {
 	Destination dest;
-	dest.m_Position = mSrc;
-	dest.m_Radius = 4.0f;
+	dest.mPosition = mSrc;
+	dest.mRadius = 4.0f;
 	
 	Vector3f randomPos;
 	dtPolyRef randomPoly;
 	if ( dtStatusSucceed( mQuery->findRandomPoint( &mFilter, dtRandom, &randomPoly, randomPos ) ) )
 	{
-		dest.m_Position = rcToLocal( randomPos );
+		dest.mPosition = rcToLocal( randomPos );
 		mGoals.resize( 0 );
 		mGoals.push_back( dest );
 		return true;
@@ -129,7 +129,7 @@ void RecastPathInterface::UpdatePath()
 
 	dtPolyRef startPoly, endPoly;
 	Vector3f startPos = localToRc( mSrc );
-	Vector3f endPos = localToRc( mGoals[ 0 ].m_Position );
+	Vector3f endPos = localToRc( mGoals[ 0 ].mPosition );
 	if ( dtStatusSucceed( mQuery->findNearestPoly( startPos, extents, &mFilter, &startPoly, startPos ) ) )
 	{
 		mCorridor.reset( startPoly, startPos );

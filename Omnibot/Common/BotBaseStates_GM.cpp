@@ -154,7 +154,7 @@ namespace AiState
 	{
 		GM_CHECK_INT_PARAM(weaponId, 0);
 
-		gmVariable varSig(Utils::MakeId32((obint16)ACTION_WEAPON_CHANGE, (obint16)weaponId));
+		gmVariable varSig(Utils::MakeId32((int16_t)ACTION_WEAPON_CHANGE, (int16_t)weaponId));
 
 		AiState::WeaponSystem *ws = GetClient()->GetWeaponSystem();
 		if(ws != NULL && ws->CurrentWeaponIs(weaponId))
@@ -175,7 +175,7 @@ namespace AiState
 	int ScriptGoal::gmfBlockForWeaponFire(gmThread *a_thread)
 	{
 		GM_CHECK_INT_PARAM(weaponId, 0);
-		gmVariable varSig(Utils::MakeId32((obint16)ACTION_WEAPON_FIRE, (obint16)weaponId));
+		gmVariable varSig(Utils::MakeId32((int16_t)ACTION_WEAPON_FIRE, (int16_t)weaponId));
 		int res = a_thread->GetMachine()->Sys_Block(a_thread, 1, &varSig);
 		if(res == -1)
 			return GM_SYS_BLOCK;
@@ -192,7 +192,7 @@ namespace AiState
 		for(int i = 0; i < a_thread->GetNumParams(); ++i)
 		{
 			GM_CHECK_INT_PARAM(macroId,i);
-			signals[iNumMacros++]= gmVariable(Utils::MakeId32((obint16)PERCEPT_HEAR_VOICEMACRO, (obint16)macroId));
+			signals[iNumMacros++]= gmVariable(Utils::MakeId32((int16_t)PERCEPT_HEAR_VOICEMACRO, (int16_t)macroId));
 		}
 
 		int res = a_thread->GetMachine()->Sys_Block(a_thread, iNumMacros, signals);

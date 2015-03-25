@@ -18,11 +18,11 @@ namespace InterfaceFuncs
 		JA_ForceData data = { 0 };
 		MessageHelper msg(JA_MSG_FORCEDATA, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		if (data.m_Force < 0)
+		if (data.mForce < 0)
 			return 0;
-		if (data.m_Force > 100)
+		if (data.mForce > 100)
 			return 100;
-		return data.m_Force;
+		return data.mForce;
 	}
 	int GetForceLevel(Client *_bot, int _force)
 	{
@@ -31,21 +31,21 @@ namespace InterfaceFuncs
 		InterfaceMsg(msg, _bot->GetGameEntity());
 		if (_force < JA_FP_HEAL || _force > JA_FP_SABERTHROW)
 			return 0;
-		return data.m_Levels[_force];
+		return data.mLevels[_force];
 	}
 	int GetForceKnown(Client *_bot)
 	{
 		JA_ForceData data = { 0 };
 		MessageHelper msg(JA_MSG_FORCEDATA, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_KnownBits;
+		return data.mKnownBits;
 	}
 	int GetForceActive(Client *_bot)
 	{
 		JA_ForceData data = { 0 };
 		MessageHelper msg(JA_MSG_FORCEDATA, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_ActiveBits;
+		return data.mActiveBits;
 	}
 
 	bool HasFlag(Client *_bot)
@@ -53,7 +53,7 @@ namespace InterfaceFuncs
 		JA_HasFlag data = { False };
 		MessageHelper msg(JA_MSG_GHASFLAG, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_HasFlag == True;
+		return data.mHasFlag == True;
 	}
 
 	bool HasMeMindTricked(Client *_bot, const GameEntity _ent)
@@ -61,7 +61,7 @@ namespace InterfaceFuncs
 		JA_Mindtricked data = { _ent, False };
 		MessageHelper msg(JA_MSG_MINDTRICKED, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_IsMindtricked == True;
+		return data.mIsMindtricked == True;
 	}
 
 	bool ItemCanBeGrabbed(Client *_bot, const GameEntity _ent)
@@ -69,7 +69,7 @@ namespace InterfaceFuncs
 		JA_CanBeGrabbed data = { _ent, False };
 		MessageHelper msg(JA_MSG_GCANBEGRABBED, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_CanBeGrabbed == True;
+		return data.mCanBeGrabbed == True;
 	}
 
 	void NumTeamMines(Client *_bot, int &_current, int &_max)
@@ -77,8 +77,8 @@ namespace InterfaceFuncs
 		JA_TeamMines data = { 0, 0 };
 		MessageHelper msg(JA_MSG_GNUMTEAMMINES, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		_current = data.m_Current;
-		_max = data.m_Max;
+		_current = data.mCurrent;
+		_max = data.mMax;
 	}
 
 	void NumTeamDetpacks(Client *_bot, int &_current, int &_max)
@@ -86,15 +86,15 @@ namespace InterfaceFuncs
 		JA_TeamDetpacks data = { 0, 0 };
 		MessageHelper msg(JA_MSG_GNUMTEAMDETPACKS, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
-		_current = data.m_Current;
-		_max = data.m_Max;
+		_current = data.mCurrent;
+		_max = data.mMax;
 	}
 	/*bool IsWeaponOverheated(Client *_bot, ET_Weapon _weapon)
 	{
 	ET_WeaponOverheated data = { _weapon, False };
 	MessageHelper msg(ET_MSG_WPOVERHEATED, &data, sizeof(data));
 	InterfaceMsg(msg, _bot->GetGameEntity());
-	return data.m_IsOverheated == True;
+	return data.mIsOverheated == True;
 	}
 
 	void GetMountedGunHeat(Client *_bot, const GameEntity _gun, int &_cur, int &_max)
@@ -102,8 +102,8 @@ namespace InterfaceFuncs
 	ET_WeaponHeatLevel data = { _gun, 0, 0 };
 	MessageHelper msg(ET_MSG_GETGUNHEAT, &data, sizeof(data));
 	InterfaceMsg(msg, _bot->GetGameEntity());
-	_cur = data.m_Current;
-	_max = data.m_Max;
+	_cur = data.mCurrent;
+	_max = data.mMax;
 	}
 
 	ExplosiveState GetExplosiveState(Client *_bot, const GameEntity _dynamite)
@@ -111,7 +111,7 @@ namespace InterfaceFuncs
 	ET_ExplosiveState data = { _dynamite, XPLO_INVALID };
 	MessageHelper msg(ET_MSG_GEXPLOSIVESTATE, &data, sizeof(data));
 	InterfaceMsg(msg, _bot ? _bot->GetGameEntity() : NULL);
-	return data.m_State;
+	return data.mState;
 	}
 
 	ConstructableState GetConstructableState(Client *_bot, const GameEntity _constructable)
@@ -119,7 +119,7 @@ namespace InterfaceFuncs
 	ET_ConstructionState data = { _constructable, CONST_INVALID };
 	MessageHelper msg(ET_MSG_GCONSTRUCTABLE, &data, sizeof(data));
 	InterfaceMsg(msg, _bot->GetGameEntity());
-	return data.m_State;
+	return data.mState;
 	}
 
 	ConstructableState IsDestroyable(Client *_bot, const GameEntity _ent)
@@ -127,7 +127,7 @@ namespace InterfaceFuncs
 	ET_Destroyable data = { _ent, CONST_INVALID };
 	MessageHelper msg(ET_MSG_GDYNDESTROYABLE, &data, sizeof(data));
 	InterfaceMsg(msg, _bot ? _bot->GetGameEntity() : NULL);
-	return data.m_State;
+	return data.mState;
 	}
 
 	bool HasFlag(Client *_bot)
@@ -135,7 +135,7 @@ namespace InterfaceFuncs
 	ET_HasFlag data = { False };
 	MessageHelper msg(ET_MSG_GHASFLAG, &data, sizeof(data));
 	InterfaceMsg(msg, _bot->GetGameEntity());
-	return data.m_HasFlag == True;
+	return data.mHasFlag == True;
 	}
 
 	bool ItemCanBeGrabbed(Client *_bot, const GameEntity _ent)
@@ -143,7 +143,7 @@ namespace InterfaceFuncs
 	ET_CanBeGrabbed data = { _ent, False };
 	MessageHelper msg(ET_MSG_GCANBEGRABBED, &data, sizeof(data));
 	InterfaceMsg(msg, _bot->GetGameEntity());
-	return data.m_CanBeGrabbed == True;
+	return data.mCanBeGrabbed == True;
 	}
 
 	void NumTeamMines(Client *_bot, int &_current, int &_max)
@@ -151,8 +151,8 @@ namespace InterfaceFuncs
 	ET_TeamMines data = { 0, 0 };
 	MessageHelper msg(ET_MSG_GNUMTEAMMINES, &data, sizeof(data));
 	InterfaceMsg(msg, _bot->GetGameEntity());
-	_current = data.m_Current;
-	_max = data.m_Max;
+	_current = data.mCurrent;
+	_max = data.mMax;
 	}
 
 	obBool IsWaitingForMedic(Client *_bot, const GameEntity _ent)
@@ -160,7 +160,7 @@ namespace InterfaceFuncs
 	ET_WaitingForMedic data = { False };
 	MessageHelper msg(ET_MSG_ISWAITINGFORMEDIC, &data, sizeof(data));
 	InterfaceMsg(msg, _ent);
-	return data.m_WaitingForMedic;
+	return data.mWaitingForMedic;
 	}
 
 	bool SelectPrimaryWeapon(Client *_bot, ET_Weapon _weapon)
@@ -168,7 +168,7 @@ namespace InterfaceFuncs
 	ET_SelectWeapon data = { _weapon };
 	MessageHelper msg(ET_MSG_PICKWEAPON, &data, sizeof(data));
 	InterfaceMsg(msg, _bot->GetGameEntity());
-	return data.m_Good == True;
+	return data.mGood == True;
 	}
 
 	bool SelectSecondaryWeapon(Client *_bot, ET_Weapon _weapon)
@@ -176,7 +176,7 @@ namespace InterfaceFuncs
 	ET_SelectWeapon data = { _weapon };
 	MessageHelper msg(ET_MSG_PICKWEAPON2, &data, sizeof(data));
 	InterfaceMsg(msg, _bot->GetGameEntity());
-	return data.m_Good == True;
+	return data.mGood == True;
 	}
 
 	float GetReinforceTime(Client *_bot)
@@ -184,7 +184,7 @@ namespace InterfaceFuncs
 	ET_ReinforceTime data = { 0 };
 	MessageHelper msg(ET_MSG_REINFORCETIME, &data, sizeof(data));
 	InterfaceMsg(msg, _bot->GetGameEntity());
-	return (float)data.m_ReinforceTime / 1000.0f;
+	return (float)data.mReinforceTime / 1000.0f;
 	}
 
 	bool IsMedicNear(Client *_bot)
@@ -192,7 +192,7 @@ namespace InterfaceFuncs
 	ET_MedicNear data = { False };
 	MessageHelper msg(ET_MSG_ISMEDICNEAR, &data, sizeof(data));
 	InterfaceMsg(msg, _bot->GetGameEntity());
-	return data.m_MedicNear == True;
+	return data.mMedicNear == True;
 	}
 
 	bool GoToLimbo(Client *_bot)
@@ -200,7 +200,7 @@ namespace InterfaceFuncs
 	ET_GoLimbo data = { False };
 	MessageHelper msg(ET_MSG_GOTOLIMBO, &data, sizeof(data));
 	InterfaceMsg(msg, _bot->GetGameEntity());
-	return data.m_GoLimbo == True;
+	return data.mGoLimbo == True;
 	}
 
 	GameEntity GetMountedPlayerOnMG42(Client *_bot, GameEntity _gun)
@@ -208,7 +208,7 @@ namespace InterfaceFuncs
 	ET_MG42MountedPlayer data = { _gun, NULL };
 	MessageHelper msg(ET_MSG_ISGUNMOUNTED, &data, sizeof(data));
 	InterfaceMsg(msg, _bot->GetGameEntity());
-	return data.m_MountedEntity;
+	return data.mMountedEntity;
 	}
 
 	bool IsMountableGunRepairable(Client *_bot, GameEntity _gun)
@@ -216,7 +216,7 @@ namespace InterfaceFuncs
 	ET_MG42MountedRepairable data = { _gun, False };
 	MessageHelper msg(ET_MSG_ISGUNREPAIRABLE, &data, sizeof(data));
 	InterfaceMsg(msg, _bot->GetGameEntity());
-	return data.m_Repairable == True;
+	return data.mRepairable == True;
 	}
 
 	int GetGunHealth(Client *_bot, const GameEntity _gun)
@@ -224,7 +224,7 @@ namespace InterfaceFuncs
 	ET_MG42Health data = { _gun, 0 };
 	MessageHelper msg(ET_MSG_GETGUNHEALTH, &data, sizeof(data));
 	InterfaceMsg(msg, _bot->GetGameEntity());
-	return data.m_Health;
+	return data.mHealth;
 	}
 
 	void GetCurrentCursorHint(Client *_bot, int &_type, int &_val)
@@ -233,8 +233,8 @@ namespace InterfaceFuncs
 	MessageHelper msg(ET_MSG_GETHINT, &data, sizeof(data));
 	InterfaceMsg(msg, _bot->GetGameEntity());
 
-	_type = data.m_Type;
-	_val = data.m_Value;
+	_type = data.mType;
+	_val = data.mValue;
 	}
 
 	bool GetCheckPointTeam(GameEntity _ent, int &_owningteam)
@@ -243,7 +243,7 @@ namespace InterfaceFuncs
 	MessageHelper msg(ET_MSG_CHECKPOINTTEAM, &data, sizeof(data));
 	if(SUCCESS(InterfaceMsg(msg, _ent)))
 	{
-	_owningteam = data.m_OwningTeam;
+	_owningteam = data.mOwningTeam;
 	return true;
 	}
 	return false;

@@ -136,14 +136,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <None Include="..\..\..\ETF\Jamfile" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\dependencies\libcurl\vs\vc11\lib\vc11libcurl.vcxproj">
-      <Project>{87ee9da4-de1e-4448-8324-183c98dca588}</Project>
-      <Private>false</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
     <ProjectReference Include="..\Common\Common.vcxproj">
       <Project>{2740aa5f-ab52-4d24-ae5a-97033aaecd7a}</Project>
       <Private>false</Private>

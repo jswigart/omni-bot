@@ -26,24 +26,24 @@ namespace AiState
 
 		void RenderDebug()
 		{
-			if(m_ShootBarrel.IsValid())
+			if ( mShootBarrel.IsValid() )
 			{
 				Box3f obb;
-				EngineFuncs::EntityWorldOBB( m_ShootBarrel, obb );
+				EngineFuncs::EntityWorldOBB( mShootBarrel, obb );
 				RenderBuffer::AddOBB( obb, COLOR::GREEN );
 			}
 		}
 
-		obReal GetPriority()
+		float GetPriority()
 		{
 			const MemoryRecord *pTarget = GetClient()->GetTargetingSystem()->GetCurrentTargetRecord();
-			if(!pTarget)
+			if ( !pTarget )
 				return 0.f;
 
-			if(m_ShootBarrel.IsValid())
+			if ( mShootBarrel.IsValid() )
 				return 1.f;
 
-			Vector3f vTargetPos = pTarget->PredictPosition(1.f);
+			Vector3f vTargetPos = pTarget->PredictPosition( 1.f );
 
 			static float fSplashRadius = 256.f;
 
@@ -53,22 +53,21 @@ namespace AiState
 			MemoryRecords records;
 			Vector3List recordpos;
 
-			FilterAllType filter(GetClient(), AiState::SensoryMemory::EntAny, records);
-			filter.MemorySpan(Utils::SecondsToMilliseconds(7.f));
-			filter.AddCategory(ENT_CAT_MISC);
-			filter.AddClass(ENT_CLASS_EXPLODING_BARREL);
-			sensory->QueryMemory(filter);
+			FilterAllType filter( GetClient(), AiState::SensoryMemory::EntAny, records );
+			filter.MemorySpan( Utils::SecondsToMilliseconds( 7.f ) );
+			filter.AddGroup( ENT_GRP_PROP_EXPLODE );
+			//filter.AddClass( ENT_CLASS_EXPLODING_BARREL );
+			sensory->QueryMemory( filter );
+			sensory->GetRecordInfo( records, &recordpos, NULL );
 
-			sensory->GetRecordInfo(records, &recordpos, NULL);
-
-			for(obuint32 i = 0; i < recordpos.size(); ++i)
+			for ( uint32_t i = 0; i < recordpos.size(); ++i )
 			{
-				if(SquaredLength(recordpos[i], vTargetPos) < Mathf::Sqr(fSplashRadius))
+				if ( SquaredLength( recordpos[ i ], vTargetPos ) < Mathf::Sqr( fSplashRadius ) )
 				{
-					MemoryRecord *pRec = sensory->GetMemoryRecord(records[i]);
-					if(pRec)
+					MemoryRecord *pRec = sensory->GetMemoryRecord( records[ i ] );
+					if ( pRec )
 					{
-						m_ShootBarrel = pRec->GetEntity();
+						mShootBarrel = pRec->GetEntity();
 						return 1.f;
 					}
 				}
@@ -78,26 +77,26 @@ namespace AiState
 
 		void Enter()
 		{
-			FINDSTATEIF(Aimer, GetParent(), AddAimRequest(Priority::Medium, this, GetNameHash()));
+			FINDSTATEIF( Aimer, GetParent(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
 		}
 
 		void Exit()
 		{
-			m_ShootBarrel.Reset();
-			FINDSTATEIF(Aimer, GetParent(), ReleaseAimRequest(GetNameHash()));
+			mShootBarrel.Reset();
+			FINDSTATEIF( Aimer, GetParent(), ReleaseAimRequest( GetNameHash() ) );
 		}
 
-		State::StateStatus Update(float fDt)
+		State::StateStatus Update( float fDt )
 		{
-			if(!m_ShootBarrel.IsValid() || !InterfaceFuncs::IsAlive(m_ShootBarrel))
+			if ( !mShootBarrel.IsValid() || !InterfaceFuncs::IsAlive( mShootBarrel ) )
 				return State_Finished;
 			return State_Busy;
 		}
 
-		bool GetAimPosition(Vector3f &_aimpos)
+		bool GetAimPosition( Vector3f &_aimpos )
 		{
 			Box3f obb;
-			if ( m_ShootBarrel.IsValid() && EngineFuncs::EntityWorldOBB( m_ShootBarrel, obb ) )
+			if ( mShootBarrel.IsValid() && EngineFuncs::EntityWorldOBB( mShootBarrel, obb ) )
 			{
 				_aimpos = obb.Center;
 				return true;
@@ -107,30 +106,30 @@ namespace AiState
 
 		void OnTarget()
 		{
-			FINDSTATE(wsys, WeaponSystem, GetParent());
-			if(wsys)
+			FINDSTATE( wsys, WeaponSystem, GetParent() );
+			if ( wsys )
 			{
 				WeaponPtr wpn = wsys->GetCurrentWeapon();
-				if(wpn)
+				if ( wpn )
 				{
-					if(wsys->ReadyToFire())
+					if ( wsys->ReadyToFire() )
 					{
-						wpn->PreShoot(Primary);
+						wpn->PreShoot( Primary );
 						wpn->Shoot();
 					}
 					else
 					{
-						wpn->StopShooting(Primary);
+						wpn->StopShooting( Primary );
 					}
 				}
 			}
 		}
 
-		ShootExplodingBarrel() : StateChild("ShootExplodingBarrel")
+		ShootExplodingBarrel() : StateChild( "ShootExplodingBarrel" )
 		{
 		}
 	private:
-		GameEntity	m_ShootBarrel;
+		GameEntity mShootBarrel;
 	};
 };
 
@@ -138,24 +137,24 @@ namespace AiState
 
 D3_Client::D3_Client()
 {
-	m_StepHeight = 15.0f; // it's actually 16
+	mStepHeight = 15.0f; // it's actually 16
 }
 
 D3_Client::~D3_Client()
 {
 }
 
-NavFlags D3_Client::GetTeamFlag(int _team) const
+NavFlags D3_Client::GetTeamFlag( int _team ) const
 {
 	static const NavFlags defaultTeam = 0;
-	switch(_team)
+	switch ( _team )
 	{
-	case D3_TEAM_RED:
-		return NAVFLAGS_TEAM1_ONLY;
-	case D3_TEAM_BLUE:
-		return NAVFLAGS_TEAM2_ONLY;
-	default:
-		return defaultTeam;
+		case D3_TEAM_RED:
+			return NAVFLAGS_TEAM1_ONLY;
+		case D3_TEAM_BLUE:
+			return NAVFLAGS_TEAM2_ONLY;
+		default:
+			return defaultTeam;
 	}
 }
 
@@ -174,40 +173,30 @@ void D3_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 	}
 }
 
-float D3_Client::GetAvoidRadius(int _class) const
+float D3_Client::GetGameVar( GameVar _var ) const
 {
-	switch(_class)
+	switch ( _var )
 	{
-	case D3_CLASS_PLAYER:
-		return 32.0f;
+		case JumpGapOffset:
+			return 0.0f;
 	}
 	return 0.0f;
 }
 
-float D3_Client::GetGameVar(GameVar _var) const
-{
-	switch(_var)
-	{
-	case JumpGapOffset:
-		return 0.0f;
-	}
-	return 0.0f;
-}
-
-bool D3_Client::DoesBotHaveFlag(MapGoalPtr _mapgoal)
+bool D3_Client::DoesBotHaveFlag( MapGoalPtr _mapgoal )
 {
 	int iTeamFlags = 0;
-	switch(GetTeam())
+	switch ( GetTeam() )
 	{
-	case D3_TEAM_RED:
-		iTeamFlags = D3_PWR_REDFLAG;
-		break;
-	case D3_TEAM_BLUE:
-		iTeamFlags = D3_PWR_BLUEFLAG;
-		break;
+		case D3_TEAM_RED:
+			iTeamFlags = D3_PWR_REDFLAG;
+			break;
+		case D3_TEAM_BLUE:
+			iTeamFlags = D3_PWR_BLUEFLAG;
+			break;
 	}
 
-	if(HasPowerup(iTeamFlags))
+	if ( HasPowerup( iTeamFlags ) )
 		return true;
 	return false;
 }
@@ -215,5 +204,5 @@ bool D3_Client::DoesBotHaveFlag(MapGoalPtr _mapgoal)
 void D3_Client::SetupBehaviorTree()
 {
 	using namespace AiState;
-	FINDSTATEIF(LowLevel,GetStateRoot(),AppendState(new ShootExplodingBarrel))
+	FINDSTATEIF( LowLevel, GetStateRoot(), AppendState( new ShootExplodingBarrel ) )
 }

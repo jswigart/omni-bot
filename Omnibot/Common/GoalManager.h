@@ -60,14 +60,14 @@ public:
 			QueryBadGroupExpression,
 		};
 
-		Query &AddType(obuint32 _type);
+		Query &AddType(uint32_t _type);
 		Query &Team(int _team);
 		Query &Bot(Client *_client);
 		Query &TagName(const char *_tagname);
 		Query &Sort(SortType _sort);
 		Query &Expression(const char *_exp);
 		Query &Group(const char *_exp);
-		Query &RoleMask(obuint32 _i);
+		Query &RoleMask(uint32_t _i);
 		Query &Ent(GameEntity _ent);
 		Query &CheckInRadius(const Vector3f & pos, float radius);
 		Query &CheckRangeProperty(bool checkRange);
@@ -78,7 +78,7 @@ public:
 		Query &SkipNoInUse(bool _skip);
 		Query &SkipInUse(bool _skip);
 
-		QueryError GetError() const { return m_Error; }
+		QueryError GetError() const { return mError; }
 
 		bool CheckForMatch(MapGoalPtr & mg);
 
@@ -88,7 +88,7 @@ public:
 
 		bool GetBest(MapGoalPtr &_mg);
 
-		Query(obuint32 _type = 0, Client *_client = 0);
+		Query(uint32_t _type = 0, Client *_client = 0);
 		virtual ~Query() {}
 
 		void DefaultGlobalQuery();
@@ -96,34 +96,34 @@ public:
 
 		const char *QueryErrorString();
 
-		MapGoalList		m_List;
+		MapGoalList	 mList;
 
 		enum { MaxGoalTypes = 8 };
 	private:
-		int				m_NumTypes;
-		obuint32		m_GoalTypeList[MaxGoalTypes];
-		int				m_Team;
-		BitFlag32 		m_RoleMask;
-		Client *		m_Client;
-		const char *	m_TagName;
-		SortType		m_SortType;
-		GameEntity		m_Entity;
+		int			 mNumTypes;
+		uint32_t	 mGoalTypeList[MaxGoalTypes];
+		int			 mTeam;
+		BitFlag32 	 mRoleMask;
+		Client *	 mClient;
+		const char * mTagName;
+		SortType	 mSortType;
+		GameEntity	 mEntity;
 
-		Vector3f		m_Position;
-		float			m_Radius;
+		Vector3f	 mPosition;
+		float		 mRadius;
 
-		std::string			m_NameExp;
-		std::string			m_GroupExp;
+		std::string		 mNameExp;
+		std::string		 mGroupExp;
 
-		QueryError		m_Error;
+		QueryError	 mError;
 
 		// filters
-		bool			m_SkipNoInProgressSlots;
-		bool			m_SkipNoInUseSlots;
-		bool			m_SkipDelayed;
-		bool			m_SkipInUse;
-		bool			m_CheckInRadius;
-		bool			m_CheckRangeProperty;
+		bool		 mSkipNoInProgressSlots;
+		bool		 mSkipNoInUseSlots;
+		bool		 mSkipDelayed;
+		bool		 mSkipInUse;
+		bool		 mCheckInRadius;
+		bool		 mCheckRangeProperty;
 	};
 	//////////////////////////////////////////////////////////////////////////
 	void InitGameGoals();
@@ -146,7 +146,7 @@ public:
 	MapGoalPtr GetGoal(const std::string &_goalname);
 	MapGoalPtr GetGoal(int _serialNum);
 	
-	const MapGoalList &GetGoalList() const { return m_MapGoalList; }
+	const MapGoalList &GetGoalList() const { return mMapGoalList; }
 
 	static GoalManager *GetInstance();
 	static void DeleteInstance();
@@ -190,17 +190,17 @@ protected:
 	void _SetActiveGoal(MapGoalPtr _mg);
 	void _UpdateEditModes();
 
-	static GoalManager	*m_Instance;
+	static GoalManager	* mInstance;
 private:
-	MapGoalList		m_MapGoalList;
+	MapGoalList	 mMapGoalList;
 
-	MapGoalPtr		m_ActiveGoal;
+	MapGoalPtr	 mActiveGoal;
 
-	EditMode		m_EditMode;
+	EditMode	 mEditMode;
 
-	MapGoalPtr		m_HighlightedGoal;
+	MapGoalPtr	 mHighlightedGoal;
 
-	gmGCRoot<gmTableObject>	m_LoadedMapGoals;
+	gmGCRoot<gmTableObject> mLoadedMapGoals;
 
 	void OnGoalDelete(const MapGoalPtr &_goal);
 

@@ -33,8 +33,8 @@ void FloodFillPathInterface::UpdateSourcePosition( const Vector3f & srcPos )
 void FloodFillPathInterface::UpdateGoalPosition( const Vector3f & goal, float radius )
 {
 	mGoals.resize( 1 );
-	mGoals[ 0 ].m_Position = goal;
-	mGoals[ 0 ].m_Radius = radius;
+	mGoals[ 0 ].mPosition = goal;
+	mGoals[ 0 ].mRadius = radius;
 }
 
 void FloodFillPathInterface::UpdateGoalPositions( const DestinationVector & goals )
@@ -47,14 +47,14 @@ bool FloodFillPathInterface::UpdateGoalPositionRandom()
 	mGoals.resize( 0 );
 
 	Destination dest;
-	dest.m_Position = mSrc;
-	dest.m_Radius = 4.0f;
+	dest.mPosition = mSrc;
+	dest.mRadius = 4.0f;
 
 	/*const PathPlannerNavMesh::RuntimeSectorList & sectors = mNavMesh->mRuntimeSectors;
 	if ( !sectors.empty() )
 	{
 		const PathPlannerNavMesh::RuntimeNavSector & sec = sectors[ rand()% sectors.size() ];
-		dest.m_Position = sec.CalculateCenter();
+		dest.mPosition = sec.CalculateCenter();
 	}*/
 	mGoals.push_back( dest );
 	return true;
@@ -70,8 +70,8 @@ void FloodFillPathInterface::UpdatePath()
 	//mPathFind.StartNewSearch();
 	//mPathFind.AddStart( mSrc );
 
-	//for(obuint32 i = 0; i < mGoals.size(); ++i)
-	//	mPathFind.AddGoal( mGoals[i].m_Position );
+	//for(uint32_t i = 0; i < mGoals.size(); ++i)
+	//	mPathFind.AddGoal( mGoals[i].mPosition );
 
 	//// todo: time splice?
 	//while(!mPathFind.IsFinished())

@@ -12,82 +12,82 @@
 #include "gmTableObject.h"
 #include "gmCall.h"
 
-CallbackParameters::CallbackParameters(int _messageId, gmMachine *_machine)
-	: m_MessageId(_messageId)
-	, m_NumParameters(0)
-	, m_Machine(_machine)
-	, m_MessageName(0)
-	, m_TargetState(0)
-	, m_ShouldCallScript(false)
-	, m_CallImmediate(false)
-	, m_PropogateEvent(true)
+CallbackParameters::CallbackParameters( int _messageId, gmMachine *_machine )
+	: mMessageId( _messageId )
+	, mNumParameters( 0 )
+	, mMachine( _machine )
+	, mMessageName( 0 )
+	, mTargetState( 0 )
+	, mShouldCallScript( false )
+	, mCallImmediate( false )
+	, mPropogateEvent( true )
 {
-	for(int i = 0; i < MaxVariables; ++i)
+	for ( int i = 0; i < MaxVariables; ++i )
 	{
-		m_Variables[i] = gmVariable::s_null;
+		mVariables[ i ] = gmVariable::s_null;
 	}
 }
 
-void CallbackParameters::DebugName(const char *_name)
+void CallbackParameters::DebugName( const char *_name )
 {
-	m_MessageName = _name;
+	mMessageName = _name;
 }
 
 void CallbackParameters::PrintDebug()
 {
 #if(DEBUG_PARAMS)
-	Utils::OutputDebug(kInfo, "- Message: %s %d\n", m_MessageName ? m_MessageName : "<unknown>", GetMessageId());
-	for(int i = 0; i < m_NumParameters; ++i)
+	Utils::OutputDebug(kInfo, "- Message: %s %d\n", mMessageName ? mMessageName : "<unknown>", GetMessageId());
+	for(int i = 0; i < mNumParameters; ++i)
 	{
-		switch(m_Variables[i].m_type)
+		switch(mVariables[i].mtype)
 		{
-		case GM_NULL:
+			case GM_NULL:
 			{
-				EngineFuncs::ConsoleMessage(va("	+ Null: %s\n", m_DebugNames[i]));
+				EngineFuncs::ConsoleMessage(va("	+ Null: %s\n", mDebugNames[i]));
 				break;
 			}
-		case GM_INT:
+			case GM_INT:
 			{
-				EngineFuncs::ConsoleMessage(va("	+ Int: %s, %d\n", m_DebugNames[i], m_Variables[i].GetInt()));
+				EngineFuncs::ConsoleMessage(va("	+ Int: %s, %d\n", mDebugNames[i], mVariables[i].GetInt()));
 				break;
 			}
-		case GM_FLOAT:
+			case GM_FLOAT:
 			{
-				EngineFuncs::ConsoleMessage(va("	+ Float: %s, %f\n", m_DebugNames[i], m_Variables[i].GetFloat()));
+				EngineFuncs::ConsoleMessage(va("	+ Float: %s, %f\n", mDebugNames[i], mVariables[i].GetFloat()));
 				break;
 			}
-		case GM_VEC3:
+			case GM_VEC3:
 			{
 				float x,y,z;
-				m_Variables[i].GetVector(x,y,z);
-				EngineFuncs::ConsoleMessage(va("	+ Vector: %s, (%f, %f, %f)\n", m_DebugNames[i], x,y,z));
+				mVariables[i].GetVector(x,y,z);
+				EngineFuncs::ConsoleMessage(va("	+ Vector: %s, (%f, %f, %f)\n", mDebugNames[i], x,y,z));
 				break;
 			}
-		case GM_ENTITY:
+			case GM_ENTITY:
 			{
-				EngineFuncs::ConsoleMessage(va("	+ Entity: %s, %X\n", m_DebugNames[i], m_Variables[i].GetEntity()));
+				EngineFuncs::ConsoleMessage(va("	+ Entity: %s, %X\n", mDebugNames[i], mVariables[i].GetEntity()));
 				break;
 			}
-		case GM_STRING:
+			case GM_STRING:
 			{
-				gmStringObject *pStr = m_Variables[i].GetStringObjectSafe();
-				EngineFuncs::ConsoleMessage(va("	+ std::string: %s, \"%s\"\n", m_DebugNames[i], pStr->GetString()));
+				gmStringObject *pStr = mVariables[i].GetStringObjectSafe();
+				EngineFuncs::ConsoleMessage(va("	+ std::string: %s, \"%s\"\n", mDebugNames[i], pStr->GetString()));
 				break;
 			}
-		case GM_TABLE:
+			case GM_TABLE:
 			{
-				EngineFuncs::ConsoleMessage(va("	+ Table: %s, %X\n", m_DebugNames[i], m_Variables[i].GetTableObjectSafe()));
+				EngineFuncs::ConsoleMessage(va("	+ Table: %s, %X\n", mDebugNames[i], mVariables[i].GetTableObjectSafe()));
 				break;
 			}
-		case GM_FUNCTION:
+			case GM_FUNCTION:
 			{
-				gmFunctionObject *pFunc = m_Variables[i].GetFunctionObjectSafe();
-				EngineFuncs::ConsoleMessage(va("	+ Func: %s, %s\n", m_DebugNames[i], pFunc->GetDebugName()));
+				gmFunctionObject *pFunc = mVariables[i].GetFunctionObjectSafe();
+				EngineFuncs::ConsoleMessage(va("	+ Func: %s, %s\n", mDebugNames[i], pFunc->GetDebugName()));
 				break;
 			}
-		default:
+			default:
 			{
-				EngineFuncs::ConsoleMessage(va("	+ UserObj: %s, %X\n", m_DebugNames[i], m_Variables[i].m_value.m_ref));
+				EngineFuncs::ConsoleMessage(va("	+ UserObj: %s, %X\n", mDebugNames[i], mVariables[i]..mvalue..mref));
 			}
 		}
 	}
@@ -96,115 +96,113 @@ void CallbackParameters::PrintDebug()
 
 void CallbackParameters::CheckParameters()
 {
-	OBASSERT(m_Machine,"No Machine Specified!");
-	OBASSERT(m_NumParameters<MaxVariables-1, "Out of Parameters!");
+	OBASSERT( mMachine, "No Machine Specified!" );
+	OBASSERT( mNumParameters < MaxVariables - 1, "Out of Parameters!" );
 }
 
-void CallbackParameters::AddNull(const char *_name)
+void CallbackParameters::AddNull( const char *_name )
 {
 	CheckParameters();
-	m_Variables[m_NumParameters].Nullify();
+	mVariables[ mNumParameters ].Nullify();
 #if(DEBUG_PARAMS)
-	m_DebugNames[m_NumParameters] = _name;
+	mDebugNames[.mNumParameters] = _name;
 #endif
-	m_NumParameters++;
+	mNumParameters++;
 }
 
-void CallbackParameters::AddInt(const char *_name, int _param)
+void CallbackParameters::AddInt( const char *_name, int _param )
 {
 	CheckParameters();
-	m_Variables[m_NumParameters].SetInt(_param);
+	mVariables[ mNumParameters ].SetInt( _param );
 #if(DEBUG_PARAMS)
-	m_DebugNames[m_NumParameters] = _name;
+	mDebugNames[.mNumParameters] = _name;
 #endif
-	m_NumParameters++;
+	mNumParameters++;
 }
 
-void CallbackParameters::AddFloat(const char *_name, float _param)
+void CallbackParameters::AddFloat( const char *_name, float _param )
 {
 	CheckParameters();
-	m_Variables[m_NumParameters].SetFloat(_param);
+	mVariables[ mNumParameters ].SetFloat( _param );
 #if(DEBUG_PARAMS)
-	m_DebugNames[m_NumParameters] = _name;
+	mDebugNames[.mNumParameters] = _name;
 #endif
-	m_NumParameters++;
+	mNumParameters++;
 }
 
-void CallbackParameters::AddVector(const char *_name, const Vector3f &_vec)
+void CallbackParameters::AddVector( const char *_name, const Vector3f &_vec )
 {
-	AddVector(_name, _vec.X(), _vec.Y(), _vec.Z());
+	AddVector( _name, _vec.X(), _vec.Y(), _vec.Z() );
 }
 
-void CallbackParameters::AddVector(const char *_name, float _x, float _y, float _z)
+void CallbackParameters::AddVector( const char *_name, float _x, float _y, float _z )
 {
 	CheckParameters();
-	m_Variables[m_NumParameters].SetVector(_x, _y, _z);
+	mVariables[ mNumParameters ].SetVector( _x, _y, _z );
 #if(DEBUG_PARAMS)
-	m_DebugNames[m_NumParameters] = _name;
+	mDebugNames[.mNumParameters] = _name;
 #endif
-	m_NumParameters++;
+	mNumParameters++;
 }
 
-void CallbackParameters::AddEntity(const char *_name, GameEntity _param)
+void CallbackParameters::AddEntity( const char *_name, GameEntity _param )
 {
-	if(!_param.IsValid())
+	if ( !_param.IsValid() )
 	{
-		AddNull(_name);
+		AddNull( _name );
 		return;
 	}
 
 	CheckParameters();
-	m_Variables[m_NumParameters].SetEntity(_param.AsInt());
+	mVariables[ mNumParameters ].SetEntity( _param.AsInt() );
 #if(DEBUG_PARAMS)
-	m_DebugNames[m_NumParameters] = _name;
+	mDebugNames[.mNumParameters] = _name;
 #endif
-	m_NumParameters++;
+	mNumParameters++;
 }
 
-void CallbackParameters::AddUserObj(const char *_name, gmUserObject *_param)
+void CallbackParameters::AddUserObj( const char *_name, gmUserObject *_param )
 {
 	CheckParameters();
-	m_Variables[m_NumParameters].SetUser(_param);
+	mVariables[ mNumParameters ].SetUser( _param );
 #if(DEBUG_PARAMS)
-	m_DebugNames[m_NumParameters] = _name;
+	mDebugNames[.mNumParameters] = _name;
 #endif
-	m_NumParameters++;
+	mNumParameters++;
 }
 
-void CallbackParameters::AddString(const char *_name, const char *_param)
+void CallbackParameters::AddString( const char *_name, const char *_param )
 {
 	CheckParameters();
-	m_Variables[m_NumParameters].SetString(m_Machine->AllocStringObject(_param?_param:"<unknown>"));
+	mVariables[ mNumParameters ].SetString( mMachine->AllocStringObject( _param ? _param : "<unknown>" ) );
 #if(DEBUG_PARAMS)
-	m_DebugNames[m_NumParameters] = _name;
+	mDebugNames[.mNumParameters] = _name;
 #endif
-	m_NumParameters++;
+	mNumParameters++;
 }
 
-void CallbackParameters::AddTable(const char *_name, gmTableObject *_param)
+void CallbackParameters::AddTable( const char *_name, gmTableObject *_param )
 {
 	CheckParameters();
-	m_Variables[m_NumParameters].SetTable(_param);
+	mVariables[ mNumParameters ].SetTable( _param );
 #if(DEBUG_PARAMS)
-	m_DebugNames[m_NumParameters] = _name;
+	mDebugNames[.mNumParameters] = _name;
 #endif
-	m_NumParameters++;
+	mNumParameters++;
 }
 
-int CallbackParameters::CallFunction(gmFunctionObject *_func,
-									 const gmVariable &a_thisVar,
-									 bool a_delayExecuteFlag) const
+int CallbackParameters::CallFunction( gmFunctionObject *_func, const gmVariable &a_thisVar, bool a_delayExecuteFlag ) const
 {
 	gmCall call;
-	if(call.BeginFunction(m_Machine, _func, a_thisVar, a_delayExecuteFlag))
+	if ( call.BeginFunction( mMachine, _func, a_thisVar, a_delayExecuteFlag ) )
 	{
-		for(int i = 0; i < m_NumParameters; ++i)
-			call.AddParam(m_Variables[i]);
+		for ( int i = 0; i < mNumParameters; ++i )
+			call.AddParam( mVariables[ i ] );
 		call.End();
 
 #if(DEBUG_PARAMS)
 		const char *pName = _func->GetDebugName();
-		Utils::OutputDebug(kInfo, "	Func %s Params: %d\n", pName ? pName : "<unknown>", m_NumParameters);
+		Utils::OutputDebug(kInfo, "	Func %s Params: %d\n", pName ? pName : "<unknown>", mNumParameters);
 #endif
 	}
 	return call.GetThreadId();

@@ -21,14 +21,13 @@ class MapGoal;
 class UpdateDelay
 {
 public:
+	float GetDelay() const { return mUpdateDelay; }
+	int GetDelayMsec() const { return Utils::SecondsToMilliseconds(mUpdateDelay); }
+	float GetRate() const { return mUpdateDelay / 1000.f; }
 
-	obReal GetDelay() const { return m_UpdateDelay; }
-	int GetDelayMsec() const { return Utils::SecondsToMilliseconds(m_UpdateDelay); }
-	obReal GetRate() const { return m_UpdateDelay / 1000.f; }
-
-	UpdateDelay(obReal _delay = 0) : m_UpdateDelay(_delay) {}
+	UpdateDelay(float _delay = 0) : mUpdateDelay(_delay) {}
 private:
-	obReal m_UpdateDelay;
+	float mUpdateDelay;
 };
 
 // class: State
@@ -82,33 +81,33 @@ public:
 
 	void AppendState(CHECK_PARAM_VALID State *_state);
 	bool AppendTo(const char * _name, State *_insertstate);
-	bool AppendTo(obuint32 _name, State *_insertstate);
+	bool AppendTo(uint32_t _name, State *_insertstate);
 	void PrependState(State *_state);
 	bool PrependTo(const char * _name, State *_insertstate);
-	bool PrependTo(obuint32 _name, State *_insertstate);
+	bool PrependTo(uint32_t _name, State *_insertstate);
 	State *ReplaceState(const char * _name, State *_insertstate);
 	bool InsertAfter(const char * _name, State *_insertstate);
-	bool InsertAfter(obuint32 _name, State *_insertstate);
+	bool InsertAfter(uint32_t _name, State *_insertstate);
 	bool InsertBefore(const char * _name, State *_insertstate);
-	bool InsertBefore(obuint32 _name, State *_insertstate);
+	bool InsertBefore(uint32_t _name, State *_insertstate);
 	State *RemoveState(const char * _name);
 
 	void SetClient(Client *_client);
 	void SetName(const char *_name);
 
 	State *FindState(const char *_name);
-	State *FindState(obuint32 _namehash);
+	State *FindState(uint32_t _namehash);
 
-	virtual obReal GetPriority() { return (obReal)1.0; }
+	virtual float GetPriority() { return (float)1.0; }
 	virtual bool OnPathThrough(const std::string &_s) { return false; }
 	virtual void EndPathThrough() { }
-	inline obReal GetLastPriority() const { return m_LastPriority; }
-	inline void SetLastPriority(obReal _p) { m_LastPriority = _p; }
+	inline float GetLastPriority() const { return mLastPriority; }
+	inline void SetLastPriority(float _p) { mLastPriority = _p; }
 
-	State *GetParent() const { return m_Parent; }
-	State *GetRootState() const { return m_Root; }
-	State *GetFirstChild() const { return m_FirstChild; }
-	State *GetSibling() const { return m_Sibling; }
+	State *GetParent() const { return mParent; }
+	State *GetRootState() const { return mRoot; }
+	State *GetFirstChild() const { return mFirstChild; }
+	State *GetSibling() const { return mSibling; }
 
 	virtual State *GetActiveState() const { return NULL; }
 
@@ -148,71 +147,71 @@ public:
 
 	virtual StateStatus UpdateState(float fDt) = 0;
 
-	inline bool IsActive() const { return m_StateFlags.CheckFlag(State_Active); }
-	inline bool IsUserDisabled() const { return m_StateFlags.CheckFlag(State_UserDisabled); }
-	inline bool IsSelectable() const { return !m_StateFlags.CheckFlag(State_UnSelectable); }
+	inline bool IsActive() const { return mStateFlags.CheckFlag(State_Active); }
+	inline bool IsUserDisabled() const { return mStateFlags.CheckFlag(State_UserDisabled); }
+	inline bool IsSelectable() const { return !mStateFlags.CheckFlag(State_UnSelectable); }
 	inline bool IsDisabled() const { return IsUserDisabled() || !IsSelectable(); }
-	inline bool IsScriptGoal() const { return m_StateFlags.CheckFlag(State_ScriptGoal); }
-	inline bool IsAutoAdd() const { return !m_StateFlags.CheckFlag(State_DontAutoAdd); }
+	inline bool IsScriptGoal() const { return mStateFlags.CheckFlag(State_ScriptGoal); }
+	inline bool IsAutoAdd() const { return !mStateFlags.CheckFlag(State_DontAutoAdd); }
 
-	inline void SetScriptGoal(bool _b) { m_StateFlags.SetFlag(State_ScriptGoal, _b); }
-	inline void SetAutoAdd(bool _b) { m_StateFlags.SetFlag(State_DontAutoAdd, !_b); }
-	inline void SetUserDisabled(bool _b) { m_StateFlags.SetFlag(State_UserDisabled, _b); }
+	inline void SetScriptGoal(bool _b) { mStateFlags.SetFlag(State_ScriptGoal, _b); }
+	inline void SetAutoAdd(bool _b) { mStateFlags.SetFlag(State_DontAutoAdd, !_b); }
+	inline void SetUserDisabled(bool _b) { mStateFlags.SetFlag(State_UserDisabled, _b); }
 
-	inline bool CheckFlag(obint32 _flag) { return m_StateFlags.CheckFlag(_flag); }
-	inline void SetFlag(obint32 _flag) { m_StateFlags.SetFlag(_flag); }
+	inline bool CheckFlag(int32_t _flag) { return mStateFlags.CheckFlag(_flag); }
+	inline void SetFlag(int32_t _flag) { mStateFlags.SetFlag(_flag); }
 
 	virtual void SetSelectable(bool _selectable);
 	virtual void SetEnable(bool _enable, const char *_error = 0);
 
-	DebugIcon GetDebugIcon() const { return m_DebugIcon; }
+	DebugIcon GetDebugIcon() const { return mDebugIcon; }
 
 	void InitializeStates();
 
-	inline bool DebugDrawingEnabled() const { return m_StateFlags.CheckFlag(State_DebugDraw); }
-	inline void DebugDraw(bool _draw) { m_StateFlags.SetFlag(State_DebugDraw, _draw); }
+	inline bool DebugDrawingEnabled() const { return mStateFlags.CheckFlag(State_DebugDraw); }
+	inline void DebugDraw(bool _draw) { mStateFlags.SetFlag(State_DebugDraw, _draw); }
 
-	inline bool IsDebugExpanded() { return m_StateFlags.CheckFlag(State_DebugExpanded); }
-	inline void DebugExpand(bool b) { m_StateFlags.SetFlag(State_DebugExpanded, b); }
+	inline bool IsDebugExpanded() { return mStateFlags.CheckFlag(State_DebugExpanded); }
+	inline void DebugExpand(bool b) { mStateFlags.SetFlag(State_DebugExpanded, b); }
 
 	inline void ToggleDebugDraw() { DebugDraw(!DebugDrawingEnabled()); }
 
-	inline bool DontDrawDebugWindow() const { return m_StateFlags.CheckFlag(State_DebugDontRender); }
+	inline bool DontDrawDebugWindow() const { return mStateFlags.CheckFlag(State_DebugDontRender); }
 
-	inline obReal GetStateTime() const { return m_StateTime != 0.f ? IGame::GetTimeSecs()-m_StateTime : 0.f; }
-	inline obReal GetUserStateTime() const { return m_StateTimeUser != 0.f ? IGame::GetTimeSecs()-m_StateTimeUser : 0.f; }
-	inline void ResetStateTimeUser() { m_StateTimeUser = IGame::GetTimeSecs(); }
+	inline float GetStateTime() const { return mStateTime != 0.f ? IGame::GetTimeSecs()-mStateTime : 0.f; }
+	inline float GetUserStateTime() const { return mStateTimeUser != 0.f ? IGame::GetTimeSecs()-mStateTimeUser : 0.f; }
+	inline void ResetStateTimeUser() { mStateTimeUser = IGame::GetTimeSecs(); }
 
-	void SetAlwaysRecieveEvents(bool _b) { m_StateFlags.SetFlag(State::State_AlwaysRecieveEvents, _b); }
-	bool AlwaysRecieveEvents() const { return m_StateFlags.CheckFlag(State::State_AlwaysRecieveEvents); }
+	void SetAlwaysRecieveEvents(bool _b) { mStateFlags.SetFlag(State::State_AlwaysRecieveEvents, _b); }
+	bool AlwaysRecieveEvents() const { return mStateFlags.CheckFlag(State::State_AlwaysRecieveEvents); }
 
-	bool IsRoot() { return !m_Parent && !m_Root; }
+	bool IsRoot() { return !mParent && !mRoot; }
 	void FixRoot();
 
 	std::string GetName() const;
-	inline obuint32 GetNameHash() const { return m_NameHash; }
+	inline uint32_t GetNameHash() const { return mNameHash; }
 
-	Client *GetClient() const { return m_Client; }
+	Client *GetClient() const { return mClient; }
 
 	// Filters
-	BitFlag32 &LimitToClass() { return m_OnlyClass; }
-	BitFlag32 &LimitToTeam() { return m_OnlyTeam; }
-	BitFlag32 &LimitToRole() { return m_OnlyRole; }
-	BitFlag64 &LimitToPowerup() { return m_OnlyPowerUp; }
-	BitFlag64 &LimitToEntFlag() { return m_OnlyEntFlag; }
+	BitFlag32 &LimitToClass() { return mOnlyClass; }
+	BitFlag32 &LimitToTeam() { return mOnlyTeam; }
+	BitFlag32 &LimitToRole() { return mOnlyRole; }
+	BitFlag32 &LimitToPowerup() { return mOnlyPowerUp; }
+	BitFlag64 &LimitToEntFlag() { return mOnlyEntFlag; }
 
-	BitFlag64 &LimitToNoEntFlag() { return m_OnlyNoEntFlag; }
-	BitFlag64 &LimitToNoPowerup() { return m_OnlyNoPowerUp; }
+	BitFlag64 &LimitToNoEntFlag() { return mOnlyNoEntFlag; }
+	BitFlag32 &LimitToNoPowerup() { return mOnlyNoPowerUp; }
 
-	BitFlag128 &LimitToWeapon() { return m_OnlyWeapon; }
+	BitFlag128 &LimitToWeapon() { return mOnlyWeapon; }
 
-	BitFlag32 &LimitToTargetClass() { return m_OnlyTargetClass; }
-	BitFlag32 &LimitToTargetTeam() { return m_OnlyTargetTeam; }
-	BitFlag64 &LimitToTargetPowerup() { return m_OnlyTargetPowerUp; }
-	BitFlag64 &LimitToTargetNoPowerup() { return m_OnlyTargetNoPowerUp; }
-	BitFlag64 &LimitToTargetEntFlag() { return m_OnlyTargetEntFlag; }
-	BitFlag64 &LimitToTargetNoEntFlag() { return m_OnlyTargetNoEntFlag; }
-	BitFlag32 &LimitToTargetWeapon() { return m_OnlyTargetWeapon; }
+	BitFlag32 &LimitToTargetClass() { return mOnlyTargetClass; }
+	BitFlag32 &LimitToTargetTeam() { return mOnlyTargetTeam; }
+	BitFlag32 &LimitToTargetPowerup() { return mOnlyTargetPowerUp; }
+	BitFlag32 &LimitToTargetNoPowerup() { return mOnlyTargetNoPowerUp; }
+	BitFlag64 &LimitToTargetEntFlag() { return mOnlyTargetEntFlag; }
+	BitFlag64 &LimitToTargetNoEntFlag() { return mOnlyTargetNoEntFlag; }
+	BitFlag32 &LimitToTargetWeapon() { return mOnlyTargetWeapon; }
 
 	void LimitTo(const gmVariable &varThis, gmGCRoot<gmFunctionObject> &_fn, int _delay, bool _onlywhenactive);
 	void ClearLimitTo();
@@ -248,20 +247,20 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	struct LimitToCallback
 	{
-		gmGCRoot<gmFunctionObject>	m_LimitTo;
-		int							m_NextCallback;
-		int							m_Delay;
-		gmVariable					m_This;
-		bool						m_OnlyWhenActive;
-		bool						m_Result;
+		gmGCRoot<gmFunctionObject>	mLimitTo;
+		int							mNextCallback;
+		int							mDelay;
+		gmVariable					mThis;
+		bool						mOnlyWhenActive;
+		bool						mResult;
 
 		LimitToCallback()
-			: m_LimitTo(0)
-			, m_NextCallback(0)
-			, m_Delay(0)
-			, m_This(gmVariable::s_null)
-			, m_OnlyWhenActive(false)
-			, m_Result(false)
+			: mLimitTo(0)
+			, mNextCallback(0)
+			, mDelay(0)
+			, mThis(gmVariable::s_null)
+			, mOnlyWhenActive(false)
+			, mResult(false)
 		{}
 	};
 	int gmfLimitToClass(gmThread *a_thread);
@@ -281,7 +280,7 @@ public:
 	virtual ~State();
 protected:
 
-	obReal InternalGetPriority();
+	float InternalGetPriority();
 	void InternalEnter();
 	virtual void InternalExit();
 	virtual void InternalParentExit() {}
@@ -290,64 +289,63 @@ protected:
 	void InternalProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
 	virtual void InternalSignal(const gmVariable &_signal) {}
 
-	State *FindStateRecurse(obuint32 _namehash);
+	State *FindStateRecurse(uint32_t _namehash);
 
-	BitFlag32		m_StateFlags;
+	BitFlag32	 mStateFlags;
 
 	// limitations
-	BitFlag32		m_OnlyClass;
-	BitFlag32		m_OnlyTeam;
-	BitFlag32		m_OnlyRole;
-	BitFlag64		m_OnlyPowerUp;
-	BitFlag64		m_OnlyNoPowerUp;
-	BitFlag64		m_OnlyEntFlag;
-	BitFlag64		m_OnlyNoEntFlag;
-	BitFlag128		m_OnlyWeapon;
+	BitFlag32	 mOnlyClass;
+	BitFlag32	 mOnlyTeam;
+	BitFlag32	 mOnlyRole;
+	BitFlag32	 mOnlyPowerUp;
+	BitFlag32	 mOnlyNoPowerUp;
+	BitFlag64	 mOnlyEntFlag;
+	BitFlag64	 mOnlyNoEntFlag;
+	BitFlag128	 mOnlyWeapon;
 
-	BitFlag32		m_OnlyTargetClass;
-	BitFlag32		m_OnlyTargetTeam;
-	BitFlag32		m_OnlyTargetWeapon;
-	BitFlag64		m_OnlyTargetPowerUp;
-	BitFlag64		m_OnlyTargetEntFlag;
+	BitFlag32	 mOnlyTargetClass;
+	BitFlag32	 mOnlyTargetTeam;
+	BitFlag32	 mOnlyTargetWeapon;
+	BitFlag32	 mOnlyTargetPowerUp;
+	BitFlag32	 mOnlyTargetNoPowerUp;
+	BitFlag64	 mOnlyTargetEntFlag;	
+	BitFlag64	 mOnlyTargetNoEntFlag;
 
-	BitFlag64		m_OnlyTargetNoPowerUp;
-	BitFlag64		m_OnlyTargetNoEntFlag;
+	LimitToCallback mLimitCallback;
 
-	LimitToCallback	m_LimitCallback;
-
-	State			*m_Sibling;
-	State			*m_Parent;
-	State			*m_FirstChild;
-	State			*m_Root;
+	State*		 mSibling;
+	State*		 mParent;
+	State*		 mFirstChild;
+	State*		 mRoot;
 
 	enum { MaxThreads = 128 };
-	int				m_NumThreads;
-	int				m_ThreadList[MaxThreads];
+	int			 mNumThreads;
+	int			 mThreadList[MaxThreads];
 
-	gmGCRoot<gmTableObject>		m_EventTable;
-	gmGCRoot<gmTableObject>		m_CommandTable;
-	gmGCRoot<gmUserObject>		m_ScriptObject;
+	gmGCRoot<gmTableObject>	 mEventTable;
+	gmGCRoot<gmTableObject>	 mCommandTable;
+	gmGCRoot<gmUserObject>	 mScriptObject;
 private:
 	void ClearThreadReference(int index);
 
-	Client			*m_Client;
+	Client			* mClient;
 
-	obint32			m_NextUpdate;
-	obint32			m_LastUpdateTime;
-	obReal			m_StateTime;
-	obReal			m_StateTimeUser;
-	obReal			m_LastPriority;
-	obint32			m_LastPriorityTime;
-	UpdateDelay		m_UpdateRate;
+	int32_t		 mNextUpdate;
+	int32_t		 mLastUpdateTime;
+	float		 mStateTime;
+	float		 mStateTimeUser;
+	float		 mLastPriority;
+	int32_t		 mLastPriorityTime;
+	UpdateDelay	 mUpdateRate;
 
-	obuint32		m_NameHash;
+	uint32_t	 mNameHash;
 
-	DebugIcon		m_DebugIcon;
+	DebugIcon	 mDebugIcon;
 
-	obuint32		m_SyncCrc;
+	uint32_t	 mSyncCrc;
 
 #ifdef _DEBUG
-	std::string			m_DebugName;
+	std::string		 mDebugName;
 #endif
 
 	State();
@@ -361,7 +359,7 @@ class StateSimultaneous : public State
 {
 public:
 
-	obReal GetPriority();
+	float GetPriority();
 	StateStatus UpdateState(float fDt);
 
 	StateSimultaneous(const char * _name, const UpdateDelay &_ur = UpdateDelay());
@@ -380,14 +378,14 @@ public:
 
 	void GetDebugString(std::stringstream &out);
 
-	obReal GetPriority();
+	float GetPriority();
 	void InternalParentExit();
 	StateStatus UpdateState(float fDt);
 
 	StateFirstAvailable(const char * _name, const UpdateDelay &_ur = UpdateDelay());
 protected:
 private:
-	State	*m_CurrentState;
+	State	* mCurrentState;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -401,16 +399,16 @@ public:
 
 	void GetDebugString(std::stringstream &out);
 
-	obReal GetPriority();
+	float GetPriority();
 	void InternalParentExit();
 	StateStatus UpdateState(float fDt);
 
-	virtual State *GetActiveState() const { return m_CurrentState; }
+	virtual State *GetActiveState() const { return mCurrentState; }
 
 	StatePrioritized(const char * _name, const UpdateDelay &_ur = UpdateDelay());
 protected:
 private:
-	State	*m_CurrentState;
+	State	* mCurrentState;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -428,12 +426,12 @@ public:
 	void Exit();
 	StateStatus UpdateState(float fDt);
 
-	virtual State *GetActiveState() const { return m_CurrentState; }
+	virtual State *GetActiveState() const { return mCurrentState; }
 
 	StateSequential(const char * _name, const UpdateDelay &_ur = UpdateDelay());
 protected:
 private:
-	State	*m_CurrentState;
+	State	* mCurrentState;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -447,7 +445,7 @@ public:
 
 	StateStatus UpdateState(float fDt);
 
-	//virtual State *GetActiveState() const { return m_CurrentState; }
+	//virtual State *GetActiveState() const { return mCurrentState; }
 
 	StateSequentialLooping(const char * _name, const UpdateDelay &_ur = UpdateDelay());
 protected:
@@ -464,7 +462,7 @@ public:
 
 	StateStatus UpdateState(float fDt);
 
-	//virtual State *GetActiveState() const { return m_CurrentState; }
+	//virtual State *GetActiveState() const { return mCurrentState; }
 
 	StateProbabilistic(const char * _name, const UpdateDelay &_ur = UpdateDelay());
 protected:
@@ -481,7 +479,7 @@ public:
 
 	StateStatus UpdateState(float fDt);
 
-	//virtual State *GetActiveState() const { return m_CurrentState; }
+	//virtual State *GetActiveState() const { return mCurrentState; }
 
 	StateOneOff(const char * _name, const UpdateDelay &_ur = UpdateDelay(0));
 protected:
@@ -498,7 +496,7 @@ public:
 
 	StateStatus UpdateState(float fDt);
 
-	//virtual State *GetActiveState() const { return m_CurrentState; }
+	//virtual State *GetActiveState() const { return mCurrentState; }
 
 	StateChild(const char * _name, const UpdateDelay &_ur = UpdateDelay(0));
 protected:

@@ -25,7 +25,7 @@ namespace AiState
 		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);
@@ -42,19 +42,19 @@ namespace AiState
 		CallArtillery();
 	private:
 		Trackers			Tracker;
-		MapGoalPtr			m_MapGoal;
-		MapGoalPtr			m_MapGoalTarget;
-		GameEntity			m_TargetEntity;
-		int					m_FireTime;
+		MapGoalPtr		 mMapGoal;
+		MapGoalPtr		 mMapGoalTarget;
+		GameEntity		 mTargetEntity;
+		int				 mFireTime;
 
-		FilterPtr			m_WatchFilter;
+		FilterPtr		 mWatchFilter;
 
-		bool				m_Fired;
-		Seconds				m_MinCampTime;
-		Seconds				m_MaxCampTime;
-		int					m_Stance;
+		bool			 mFired;
+		Seconds			 mMinCampTime;
+		Seconds			 mMaxCampTime;
+		int				 mStance;
 
-		int					m_ExpireTime;
+		int				 mExpireTime;
 	};
 
 	//////////////////////////////////////////////////////////////////////////

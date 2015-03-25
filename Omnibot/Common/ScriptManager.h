@@ -20,7 +20,7 @@ class gmUserObject;
 class gmStringObject;
 class gmTableObject;
 
-//typedef MessageDepot<Event_SystemThreadDestroyed, 256, obuint64> ThreadDestroyDepot;
+//typedef MessageDepot<Event_SystemThreadDestroyed, 256, uint64_t> ThreadDestroyDepot;
 //extern ThreadDestroyDepot g_ThreadDestroyedDepot;
 
 typedef std::vector< std::pair<std::string, int> > AutoCompleteList;
@@ -28,23 +28,23 @@ typedef std::vector< std::pair<std::string, int> > AutoCompleteList;
 class ThreadScoper
 {
 public:
-	bool operator==(const ThreadScoper& r) const { return m_ThreadId == r.ThreadId(); }
-	bool operator!=(const ThreadScoper& r) const { return m_ThreadId != r.ThreadId(); }
+	bool operator==(const ThreadScoper& r) const { return mThreadId == r.ThreadId(); }
+	bool operator!=(const ThreadScoper& r) const { return mThreadId != r.ThreadId(); }
 
-	ThreadScoper& operator=(int _i) { m_ThreadId = _i; return *this; }
-	operator bool() const { return m_ThreadId != GM_INVALID_THREAD; }
-	operator int() const { return m_ThreadId; }
+	ThreadScoper& operator=(int _i) { mThreadId = _i; return *this; }
+	operator bool() const { return mThreadId != GM_INVALID_THREAD; }
+	operator int() const { return mThreadId; }
 
-	int ThreadId() const { return m_ThreadId; }
+	int ThreadId() const { return mThreadId; }
 	bool IsActive();
-	void Reset() { m_ThreadId = GM_INVALID_THREAD; }
+	void Reset() { mThreadId = GM_INVALID_THREAD; }
 
 	void Kill();
 
 	ThreadScoper(int _id = GM_INVALID_THREAD);
 	~ThreadScoper();
 private:
-	int		m_ThreadId;
+	int	 mThreadId;
 };
 
 typedef boost::shared_ptr<ThreadScoper> ThreadPtr;
@@ -87,8 +87,8 @@ public:
 	gmTableObject *GetBotTable(const Client *_client);
 	gmVariable ExecBotCallback(Client *_client, const char *_func);
 
-	inline void SetScriptDebugEnabled(bool _enable) { m_DebugScripts = _enable; }
-	inline bool IsScriptDebugEnabled() { return m_DebugScripts; }
+	inline void SetScriptDebugEnabled(bool _enable) { mDebugScripts = _enable; }
+	inline bool IsScriptDebugEnabled() { return mDebugScripts; }
 
 	void EnableRemoteDebugger(bool _enable);
 
@@ -99,19 +99,19 @@ public:
 
 	static void LogAnyMachineErrorMessages(gmMachine *_machine);
 
-	inline gmMachine* GetMachine() { return m_ScriptEngine; }
+	inline gmMachine* GetMachine() { return mScriptEngine; }
 	static ScriptManager* GetInstance();
 	static void DeleteInstance();
 	static bool IsInstantiated();
 protected:
-	gmMachine*	m_ScriptEngine;
+	gmMachine* mScriptEngine;
 
-	bool		m_DebugScripts;
+	bool	 mDebugScripts;
 
 	static void GM_CDECL ScriptSysCallback_Print(gmMachine* a_machine, const char* a_string);
 	static bool GM_CDECL ScriptSysCallback_Machine(gmMachine* a_machine, gmMachineCommand a_command, const void* a_context);
 
-	static ScriptManager* m_Instance;
+	static ScriptManager* mInstance;
 
 	virtual void InitCommands();
 	void cmdScriptStats(const StringVector &_args);
@@ -135,8 +135,8 @@ class ScriptResource
 public:
 	virtual bool InitScriptSource(const filePath &_path);
 
-	LiveUpdateKey GetLiveUpdateKey() const { return m_Key; }
-	const filePath GetScriptPath() const { return m_Script; }
+	LiveUpdateKey GetLiveUpdateKey() const { return mKey; }
+	const filePath GetScriptPath() const { return mScript; }
 
 	virtual gmGCRoot<gmUserObject> GetScriptObject(gmMachine *_machine) const = 0;
 
@@ -144,8 +144,8 @@ public:
 	ScriptResource();
 	virtual ~ScriptResource();
 private:
-	filePath		m_Script;
-	LiveUpdateKey	m_Key;
+	filePath	 mScript;
+	LiveUpdateKey mKey;
 };
 
 #endif

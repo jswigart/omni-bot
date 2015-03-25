@@ -24,9 +24,9 @@ class Limbo : public StateSimultaneous
 {
 public:
 
-	obReal GetPriority()
+	float GetPriority()
 	{
-		return GetClient()->HasEntityFlag(RTCW_ENT_FLAG_INLIMBO) ? 1.f : 0.f;
+		return GetClient()->HasEntityFlag( RTCW_ENT_FLAG_INLIMBO ) ? 1.f : 0.f;
 	}
 
 	void Exit()
@@ -34,13 +34,13 @@ public:
 		GetRootState()->OnSpawn();
 	}
 
-	State::StateStatus Update(float fDt)
+	State::StateStatus Update( float fDt )
 	{
 		// need to do something special here?
 		return State_Busy;
 	}
 
-	Limbo() : StateSimultaneous("Limbo")
+	Limbo() : StateSimultaneous( "Limbo" )
 	{
 	}
 protected:
@@ -49,18 +49,18 @@ protected:
 class Incapacitated : public StateSimultaneous
 {
 public:
-	obReal GetPriority()
+	float GetPriority()
 	{
-		return !InterfaceFuncs::IsAlive(GetClient()->GetGameEntity()) ? 1.f : 0.f;
+		return !InterfaceFuncs::IsAlive( GetClient()->GetGameEntity() ) ? 1.f : 0.f;
 	}
 
-	State::StateStatus Update(float fDt)
+	State::StateStatus Update( float fDt )
 	{
-		GetClient()->SetMovementVector(Vector3f::ZERO);
+		GetClient()->SetMovementVector( Vector3f::ZERO );
 		return State_Busy;
 	}
 
-	Incapacitated() : StateSimultaneous("Incapacitated")
+	Incapacitated() : StateSimultaneous( "Incapacitated" )
 	{
 	}
 protected:
@@ -69,60 +69,60 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 
 RTCW_Client::RTCW_Client() :
-	m_BreakableTargetDistance(0.f),
-	m_HealthEntityDistance(1000.0f),
-	m_AmmoEntityDistance(2000.0f),
-	m_WeaponEntityDistance(1500.0f),
-	m_ProjectileEntityDistance(500.0f),
-	m_StrafeJump(0)
+mBreakableTargetDistance( 0.f ),
+mHealthEntityDistance( 1000.0f ),
+mAmmoEntityDistance( 2000.0f ),
+mWeaponEntityDistance( 1500.0f ),
+mProjectileEntityDistance( 500.0f ),
+mStrafeJump( 0 )
 {
-	m_StepHeight = 8.0f; // subtract a small value as a buffer to jump
+	mStepHeight = 8.0f; // subtract a small value as a buffer to jump
 }
 
 RTCW_Client::~RTCW_Client()
 {
 }
 
-void RTCW_Client::Init(int _gameid)
+void RTCW_Client::Init( int _gameid )
 {
-	Client::Init(_gameid);
+	Client::Init( _gameid );
 
-	FilterPtr filter(new RTCW_FilterClosest(this, AiState::SensoryMemory::EntEnemy));
-	filter->AddCategory(ENT_CAT_SHOOTABLE);
-	GetTargetingSystem()->SetDefaultTargetingFilter(filter);
+	FilterPtr filter( new RTCW_FilterClosest( this, AiState::SensoryMemory::EntEnemy ) );
+	filter->AddCategory( ENT_CAT_SHOOTABLE );
+	GetTargetingSystem()->SetDefaultTargetingFilter( filter );
 }
 
-void RTCW_Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+void RTCW_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
 {
-	switch(_message.GetMessageId())
+	switch ( _message.GetMessageId() )
 	{
-		HANDLER(RTCW_EVENT_DROWNING)
+		HANDLER( RTCW_EVENT_DROWNING )
 		{
 			_cb.CallScript();
 			break;
 		}
-		HANDLER(RTCW_EVENT_RECIEVEDAMMO)
+		HANDLER( RTCW_EVENT_RECIEVEDAMMO )
 		{
 			const Event_Ammo *m = _message.Get<Event_Ammo>();
 			_cb.CallScript();
-			_cb.AddEntity("who", m->m_WhoDoneIt);
+			_cb.AddEntity( "who", m->mWhoDoneIt );
 			break;
 		}
 	}
-	Client::ProcessEvent(_message, _cb);
+	Client::ProcessEvent( _message, _cb );
 }
 
-NavFlags RTCW_Client::GetTeamFlag(int _team) const
+NavFlags RTCW_Client::GetTeamFlag( int _team ) const
 {
 	static const NavFlags defaultTeam = 0;
-	switch(_team)
+	switch ( _team )
 	{
-	case RTCW_TEAM_AXIS:
-		return NAVFLAGS_TEAM1_ONLY;
-	case RTCW_TEAM_ALLIES:
-		return NAVFLAGS_TEAM2_ONLY;
-	default:
-		return defaultTeam;
+		case RTCW_TEAM_AXIS:
+			return NAVFLAGS_TEAM1_ONLY;
+		case RTCW_TEAM_ALLIES:
+			return NAVFLAGS_TEAM2_ONLY;
+		default:
+			return defaultTeam;
 	}
 }
 
@@ -141,16 +141,16 @@ void RTCW_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags 
 	}
 }
 
-void RTCW_Client::SendVoiceMacro(int _macroId)
+void RTCW_Client::SendVoiceMacro( int _macroId )
 {
-	RTCW_VoiceMacros::SendVoiceMacro(this, _macroId);
+	RTCW_VoiceMacros::SendVoiceMacro( this, _macroId );
 }
 
-int RTCW_Client::HandleVoiceMacroEvent(const MessageHelper &_message)
+int RTCW_Client::HandleVoiceMacroEvent( const MessageHelper &_message )
 {
 	const Event_VoiceMacro *m = _message.Get<Event_VoiceMacro>();
 
-	int iVoiceId = RTCW_VoiceMacros::GetVChatId(m->m_MacroString);
+	int iVoiceId = RTCW_VoiceMacros::GetVChatId( m->mMacroString );
 	/*switch(iVoiceId)
 	{
 	case VCHAT_TEAM_PATHCLEARED:
@@ -242,7 +242,7 @@ void RTCW_Client::ProcessGotoNode( const PathInterface::PathCorner corners[ 2 ],
 	//	PressButton(BOT_BUTTON_RSTRAFE);
 	//}
 
-	//if (m_StrafeJump)
+	//if (.mStrafeJump)
 	//{
 	//	if(corners[ 0 ].mFlags & F_RTCW_NAV_STRAFE_JUMP_L)
 	//	{
@@ -283,34 +283,34 @@ void RTCW_Client::ProcessGotoNode( const PathInterface::PathCorner corners[ 2 ],
 	//}
 }
 
-void RTCW_Client::ProcessGotoNode(const Path &_path)
+void RTCW_Client::ProcessGotoNode( const Path &_path )
 {
 	//Path::PathPoint pt;
 	//_path.GetCurrentPt(pt);
 
-	//if(pt.m_NavFlags & F_RTCW_NAV_SPRINT)
+	//if(pt..mNavFlags & F_RTCW_NAV_SPRINT)
 	//{
 	//	PressButton(BOT_BUTTON_SPRINT);
 	//}
 
 	//// test for inwater / jump to move to surface
-	//if(pt.m_NavFlags & F_NAV_INWATER)
+	//if(pt..mNavFlags & F_NAV_INWATER)
 	//{
 	//	PressButton(BOT_BUTTON_JUMP);
 	//}
 
-	//if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_L)
+	//if(pt..mNavFlags & F_RTCW_NAV_STRAFE_L)
 	//{
 	//	PressButton(BOT_BUTTON_LSTRAFE);
 	//}
-	//else if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_R)
+	//else if(pt..mNavFlags & F_RTCW_NAV_STRAFE_R)
 	//{
 	//	PressButton(BOT_BUTTON_RSTRAFE);
 	//}
 
-	//if (m_StrafeJump)
+	//if (.mStrafeJump)
 	//{
-	//	if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_L)
+	//	if(pt..mNavFlags & F_RTCW_NAV_STRAFE_JUMP_L)
 	//	{
 	//		if (IGame::GetFrameNumber() % 20 == 0)
 	//		{
@@ -328,7 +328,7 @@ void RTCW_Client::ProcessGotoNode(const Path &_path)
 	//		}
 	//		PressButton(BOT_BUTTON_SPRINT);
 	//	}
-	//	else if(pt.m_NavFlags & F_RTCW_NAV_STRAFE_JUMP_R)
+	//	else if(pt..mNavFlags & F_RTCW_NAV_STRAFE_JUMP_R)
 	//	{
 	//		if (IGame::GetFrameNumber() % 20 == 0)
 	//		{
@@ -349,71 +349,46 @@ void RTCW_Client::ProcessGotoNode(const Path &_path)
 	//}
 }
 
-float RTCW_Client::GetGameVar(GameVar _var) const
+float RTCW_Client::GetGameVar( GameVar _var ) const
 {
-	switch(_var)
+	switch ( _var )
 	{
-	case JumpGapOffset:
-		return 0.32f;
+		case JumpGapOffset:
+			return 0.32f;
 	}
 	return 0.0f;
 }
 
-float RTCW_Client::GetAvoidRadius(int _class) const
+bool RTCW_Client::DoesBotHaveFlag( MapGoalPtr _mapgoal )
 {
-	switch(_class)
-	{
-		//case ENT_CLASS_GENERIC_BUTTON:
-	case ENT_CLASS_GENERIC_HEALTH:
-	case ENT_CLASS_GENERIC_AMMO:
-	case ENT_CLASS_GENERIC_ARMOR:
-		return 5.0f;
-	}
-
-	switch(_class)
-	{
-	case RTCW_CLASS_SOLDIER:
-	case RTCW_CLASS_MEDIC:
-	case RTCW_CLASS_ENGINEER:
-	case RTCW_CLASS_LIEUTENANT:
-		return 16.0f;
-	case RTCW_CLASSEX_DYNAMITE:
-		return 32.0f;
-	}
-
-	return 32.0f;
+	return InterfaceFuncs::HasFlag( this );
 }
 
-bool RTCW_Client::DoesBotHaveFlag(MapGoalPtr _mapgoal)
+bool RTCW_Client::IsFlagGrabbable( MapGoalPtr _mapgoal )
 {
-	return InterfaceFuncs::HasFlag(this);
-}
-
-bool RTCW_Client::IsFlagGrabbable(MapGoalPtr _mapgoal)
-{
-	return InterfaceFuncs::ItemCanBeGrabbed(this, _mapgoal->GetEntity());
+	return InterfaceFuncs::ItemCanBeGrabbed( this, _mapgoal->GetEntity() );
 }
 
 bool RTCW_Client::CanBotSnipe()
 {
-	if(GetClass() == RTCW_CLASS_SOLDIER)
+	if ( GetClass() == RTCW_CLASS_SOLDIER )
 	{
 		// Make sure we have a sniping weapon.
-		if (GetWeaponSystem()->HasAmmo(RTCW_WP_MAUSER) ||
-			GetWeaponSystem()->HasAmmo(RTCW_WP_SNIPERRIFLE))
+		if ( GetWeaponSystem()->HasAmmo( RTCW_WP_MAUSER ) ||
+			GetWeaponSystem()->HasAmmo( RTCW_WP_SNIPERRIFLE ) )
 			return true;
 	}
 	return false;
 }
 
-bool RTCW_Client::GetSniperWeapon(int &nonscoped, int &scoped)
+bool RTCW_Client::GetSniperWeapon( int &nonscoped, int &scoped )
 {
 	nonscoped = 0;
 	scoped = 0;
 
-	if(GetClass() == RTCW_CLASS_SOLDIER)
+	if ( GetClass() == RTCW_CLASS_SOLDIER )
 	{
-		if(GetWeaponSystem()->HasWeapon(RTCW_WP_SNIPERRIFLE))
+		if ( GetWeaponSystem()->HasWeapon( RTCW_WP_SNIPERRIFLE ) )
 		{
 			nonscoped = RTCW_WP_MAUSER;
 			scoped = RTCW_WP_SNIPERRIFLE;
@@ -459,8 +434,8 @@ bool RTCW_Client::GetSniperWeapon(int &nonscoped, int &scoped)
 void RTCW_Client::SetupBehaviorTree()
 {
 	using namespace AiState;
-	delete GetStateRoot()->ReplaceState("Dead", new Limbo);
-	GetStateRoot()->InsertAfter("Limbo", new Incapacitated);
+	delete GetStateRoot()->ReplaceState( "Dead", new Limbo );
+	GetStateRoot()->InsertAfter( "Limbo", new Incapacitated );
 
-	GetStateRoot()->AppendTo("HighLevel", new CallArtillery);
+	GetStateRoot()->AppendTo( "HighLevel", new CallArtillery );
 }

@@ -26,18 +26,18 @@ namespace AiState
 
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		StateStatus Update(float fDt);
 
 		void Enter();
 
 		ForceJump();
 	private:
-		Path::PathPoint m_NextPt;
-		float			m_DistanceLeft;
-		float			m_DistanceTotal;
-		bool			m_IsJumping : 1;
-		bool			m_IsOnGround : 1;
+		Path::PathPoint		mNextPt;
+		float				mDistanceLeft;
+		float				mDistanceTotal;
+		bool				mIsJumping : 1;
+		bool				mIsOnGround : 1;
 	};
 	//////////////////////////////////////////////////////////////////////////
 };

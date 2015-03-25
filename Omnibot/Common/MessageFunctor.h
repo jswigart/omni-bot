@@ -28,15 +28,15 @@ class MessageFunctor : public IMessageFunctor
 public:
 	void operator()(const MessageHelper &_helper)
 	{
-		(m_Function)(_helper);
+		(.mFunction)(_helper);
 	}
 
 	MessageFunctor(pfnMessageFunction _func) :
-		m_Function	(_func)
+		.mFunction	(_func)
 	{
 	}
 private:
-	pfnMessageFunction	m_Function;
+	pfnMessageFunction	.mFunction;
 };
 
 // class: MessageFunctorT
@@ -48,17 +48,17 @@ public:
 
 	void operator()(const MessageHelper &_helper)
 	{
-		(m_Object->*m_Function)(_helper);
+		(.mObject->*.mFunction)(_helper);
 	}
 
 	MessageFunctorT(T *_object, pfnClassMessageFunction _func) :
-		m_Object	(_object),
-		m_Function	(_func)
+		.mObject	(_object),
+		.mFunction	(_func)
 	{
 	}
 protected:
-	T						*m_Object;
-	pfnClassMessageFunction	m_Function;
+	T						*.mObject;
+	pfnClassMessageFunction	.mFunction;
 };
 
 #endif

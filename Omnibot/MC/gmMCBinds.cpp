@@ -48,17 +48,17 @@
 //	{
 //		if(!statTable)
 //			a_thread->GetMachine()->AllocTableObject();
-//		statTable->Set(a_thread->GetMachine(),"TotalXp",gmVariable(stats.m_ExperienceTotal));
-//		statTable->Set(a_thread->GetMachine(),"GameXp",gmVariable(stats.m_ExperienceGame));
-//		statTable->Set(a_thread->GetMachine(),"ModulePoints",gmVariable(stats.m_ModulePoints));
-//		statTable->Set(a_thread->GetMachine(),"WeaponPoints",gmVariable(stats.m_WeaponPoints));
-//		statTable->Set(a_thread->GetMachine(),"Credits",gmVariable(stats.m_Credits));
-//		statTable->Set(a_thread->GetMachine(),"Level",gmVariable(stats.m_Level));
-//		statTable->Set(a_thread->GetMachine(),"Minions",gmVariable(stats.m_Minions));
-//		statTable->Set(a_thread->GetMachine(),"MinionsMax",gmVariable(stats.m_MinionsMax));
-//		statTable->Set(a_thread->GetMachine(),"AuxPower",gmVariable(stats.m_AuxPower));
-//		statTable->Set(a_thread->GetMachine(),"AuxPowerMax",gmVariable(stats.m_AuxPowerMax));
-//		statTable->Set(a_thread->GetMachine(),"AuxRegenRate",gmVariable(stats.m_AuxRegenRate));
+//		statTable->Set(a_thread->GetMachine(),"TotalXp",gmVariable(stats.mExperienceTotal));
+//		statTable->Set(a_thread->GetMachine(),"GameXp",gmVariable(stats.mExperienceGame));
+//		statTable->Set(a_thread->GetMachine(),"ModulePoints",gmVariable(stats.mModulePoints));
+//		statTable->Set(a_thread->GetMachine(),"WeaponPoints",gmVariable(stats.mWeaponPoints));
+//		statTable->Set(a_thread->GetMachine(),"Credits",gmVariable(stats.mCredits));
+//		statTable->Set(a_thread->GetMachine(),"Level",gmVariable(stats.mLevel));
+//		statTable->Set(a_thread->GetMachine(),"Minions",gmVariable(stats.mMinions));
+//		statTable->Set(a_thread->GetMachine(),"MinionsMax",gmVariable(stats.mMinionsMax));
+//		statTable->Set(a_thread->GetMachine(),"AuxPower",gmVariable(stats.mAuxPower));
+//		statTable->Set(a_thread->GetMachine(),"AuxPowerMax",gmVariable(stats.mAuxPowerMax));
+//		statTable->Set(a_thread->GetMachine(),"AuxRegenRate",gmVariable(stats.mAuxRegenRate));
 //		a_thread->PushTable(statTable);
 //		return GM_OK;
 //	}
@@ -84,11 +84,11 @@ static int GM_CDECL gmfGetModuleStats( gmThread *a_thread )
 	if ( !statTable )
 		a_thread->GetMachine()->AllocTableObject();
 	const MC_ModuleStats &modStats = native->GetModuleStats();
-	statTable->Set( a_thread->GetMachine(), "Lvl", gmVariable( modStats.m_Module[ moduleType ].m_Lvl ) );
-	statTable->Set( a_thread->GetMachine(), "MaxLvl", gmVariable( modStats.m_Module[ moduleType ].m_MaxLvl ) );
-	statTable->Set( a_thread->GetMachine(), "UpgradeCost", gmVariable( modStats.m_Module[ moduleType ].m_UpgradeCost ) );
-	statTable->Set( a_thread->GetMachine(), "AuxDrain", gmVariable( modStats.m_Module[ moduleType ].m_AuxDrain ) );
-	statTable->Set( a_thread->GetMachine(), "Cooldown", gmVariable( modStats.m_Module[ moduleType ].m_Cooldown ) );
+	statTable->Set( a_thread->GetMachine(), "Lvl", gmVariable( modStats.mModule[ moduleType ].mLvl ) );
+	statTable->Set( a_thread->GetMachine(), "MaxLvl", gmVariable( modStats.mModule[ moduleType ].mMaxLvl ) );
+	statTable->Set( a_thread->GetMachine(), "UpgradeCost", gmVariable( modStats.mModule[ moduleType ].mUpgradeCost ) );
+	statTable->Set( a_thread->GetMachine(), "AuxDrain", gmVariable( modStats.mModule[ moduleType ].mAuxDrain ) );
+	statTable->Set( a_thread->GetMachine(), "Cooldown", gmVariable( modStats.mModule[ moduleType ].mCooldown ) );
 	a_thread->PushTable( statTable );
 	return GM_OK;
 }
@@ -137,9 +137,9 @@ static int GM_CDECL gmfPhysGunInfo( gmThread *a_thread )
 		if ( !statTable )
 			a_thread->GetMachine()->AllocTableObject();
 
-		statTable->Set( a_thread->GetMachine(), "HeldObject", gmVariable::EntityVar( info.m_HeldEntity.AsInt() ) );
-		//statTable->Set(a_thread->GetMachine(),"PullObject",gmVariable::EntityVar(info.m_PullingEntity.AsInt()));
-		statTable->Set( a_thread->GetMachine(), "LaunchSpeed", gmVariable( info.m_LaunchSpeed ) );
+		statTable->Set( a_thread->GetMachine(), "HeldObject", gmVariable::EntityVar( info.mHeldEntity.AsInt() ) );
+		//statTable->Set(a_thread->GetMachine(),"PullObject",gmVariable::EntityVar(info.mPullingEntity.AsInt()));
+		statTable->Set( a_thread->GetMachine(), "LaunchSpeed", gmVariable( info.mLaunchSpeed ) );
 		a_thread->PushTable( statTable );
 	}
 	return GM_OK;
@@ -161,8 +161,8 @@ static int GM_CDECL gmfGetChargerStatus( gmThread *a_thread )
 		if ( !statTable )
 			statTable = a_thread->GetMachine()->AllocTableObject();
 
-		statTable->Set( a_thread->GetMachine(), "Charge", gmVariable( info.m_CurrentCharge ) );
-		statTable->Set( a_thread->GetMachine(), "MaxCharge", gmVariable( info.m_MaxCharge ) );
+		statTable->Set( a_thread->GetMachine(), "Charge", gmVariable( info.mCurrentCharge ) );
+		statTable->Set( a_thread->GetMachine(), "MaxCharge", gmVariable( info.mMaxCharge ) );
 		a_thread->PushTable( statTable );
 	}
 	return GM_OK;
@@ -201,7 +201,7 @@ static bool getTotalXp( Client *a_native, gmThread *a_thread, gmVariable *a_oper
 	if ( a_native )
 	{
 		const MC_PlayerStats stats = ( (MC_Client*)a_native )->GetPlayerStats();
-		a_operands[ 0 ] = gmVariable( stats.m_ExperienceTotal );
+		a_operands[ 0 ] = gmVariable( stats.mExperienceTotal );
 	}
 	else
 		a_operands[ 0 ].Nullify();
@@ -213,7 +213,7 @@ static bool getGameXp( Client *a_native, gmThread *a_thread, gmVariable *a_opera
 	if ( a_native )
 	{
 		const MC_PlayerStats stats = ( (MC_Client*)a_native )->GetPlayerStats();
-		a_operands[ 0 ] = gmVariable( stats.m_ExperienceGame );
+		a_operands[ 0 ] = gmVariable( stats.mExperienceGame );
 	}
 	else
 		a_operands[ 0 ].Nullify();
@@ -225,7 +225,7 @@ static bool getModulePts( Client *a_native, gmThread *a_thread, gmVariable *a_op
 	if ( a_native )
 	{
 		const MC_PlayerStats stats = ( (MC_Client*)a_native )->GetPlayerStats();
-		a_operands[ 0 ] = gmVariable( stats.m_ModulePoints );
+		a_operands[ 0 ] = gmVariable( stats.mModulePoints );
 	}
 	else
 		a_operands[ 0 ].Nullify();
@@ -237,7 +237,7 @@ static bool getWeaponPts( Client *a_native, gmThread *a_thread, gmVariable *a_op
 	if ( a_native )
 	{
 		const MC_PlayerStats stats = ( (MC_Client*)a_native )->GetPlayerStats();
-		a_operands[ 0 ] = gmVariable( stats.m_WeaponPoints );
+		a_operands[ 0 ] = gmVariable( stats.mWeaponPoints );
 	}
 	else
 		a_operands[ 0 ].Nullify();
@@ -249,7 +249,7 @@ static bool getCredits( Client *a_native, gmThread *a_thread, gmVariable *a_oper
 	if ( a_native )
 	{
 		const MC_PlayerStats stats = ( (MC_Client*)a_native )->GetPlayerStats();
-		a_operands[ 0 ] = gmVariable( stats.m_WeaponPoints );
+		a_operands[ 0 ] = gmVariable( stats.mWeaponPoints );
 	}
 	else
 		a_operands[ 0 ].Nullify();
@@ -261,7 +261,7 @@ static bool getLevel( Client *a_native, gmThread *a_thread, gmVariable *a_operan
 	if ( a_native )
 	{
 		const MC_PlayerStats stats = ( (MC_Client*)a_native )->GetPlayerStats();
-		a_operands[ 0 ] = gmVariable( stats.m_Level );
+		a_operands[ 0 ] = gmVariable( stats.mLevel );
 	}
 	else
 		a_operands[ 0 ].Nullify();
@@ -273,7 +273,7 @@ static bool getMinions( Client *a_native, gmThread *a_thread, gmVariable *a_oper
 	if ( a_native )
 	{
 		const MC_PlayerStats stats = ( (MC_Client*)a_native )->GetPlayerStats();
-		a_operands[ 0 ] = gmVariable( stats.m_Minions );
+		a_operands[ 0 ] = gmVariable( stats.mMinions );
 	}
 	else
 		a_operands[ 0 ].Nullify();
@@ -285,7 +285,7 @@ static bool getMinionsMax( Client *a_native, gmThread *a_thread, gmVariable *a_o
 	if ( a_native )
 	{
 		const MC_PlayerStats stats = ( (MC_Client*)a_native )->GetPlayerStats();
-		a_operands[ 0 ] = gmVariable( stats.m_MinionsMax );
+		a_operands[ 0 ] = gmVariable( stats.mMinionsMax );
 	}
 	else
 		a_operands[ 0 ].Nullify();
@@ -297,7 +297,7 @@ static bool getAuxPower( Client *a_native, gmThread *a_thread, gmVariable *a_ope
 	if ( a_native )
 	{
 		const MC_PlayerStats stats = ( (MC_Client*)a_native )->GetPlayerStats();
-		a_operands[ 0 ] = gmVariable( stats.m_AuxPower );
+		a_operands[ 0 ] = gmVariable( stats.mAuxPower );
 	}
 	else
 		a_operands[ 0 ].Nullify();
@@ -309,7 +309,7 @@ static bool getAuxPowerMax( Client *a_native, gmThread *a_thread, gmVariable *a_
 	if ( a_native )
 	{
 		const MC_PlayerStats stats = ( (MC_Client*)a_native )->GetPlayerStats();
-		a_operands[ 0 ] = gmVariable( stats.m_AuxPowerMax );
+		a_operands[ 0 ] = gmVariable( stats.mAuxPowerMax );
 	}
 	else
 		a_operands[ 0 ].Nullify();
@@ -321,7 +321,7 @@ static bool getAuxPowerRegen( Client *a_native, gmThread *a_thread, gmVariable *
 	if ( a_native )
 	{
 		const MC_PlayerStats stats = ( (MC_Client*)a_native )->GetPlayerStats();
-		a_operands[ 0 ] = gmVariable( stats.m_AuxPowerMax );
+		a_operands[ 0 ] = gmVariable( stats.mAuxPowerMax );
 	}
 	else
 		a_operands[ 0 ].Nullify();
@@ -330,7 +330,7 @@ static bool getAuxPowerRegen( Client *a_native, gmThread *a_thread, gmVariable *
 
 void MC_Game::InitScriptBinds( gmMachine *_machine )
 {
-	LOG( "Binding MC Library..." );
+	LOG( "Binding MC Library.." );
 
 	// Register the bot functions.
 	_machine->RegisterLibrary( s_MCbotLib, sizeof( s_MCbotLib ) / sizeof( s_MCbotLib[ 0 ] ) );

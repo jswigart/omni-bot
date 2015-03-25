@@ -22,9 +22,9 @@ namespace Trajectory
 {
 	struct AimTrajectory
 	{
-		Vector3f			m_AimVector;	// vector to aim at to accomplish this trajectory.
-		float				m_Angle;		// angle in degrees in the range [-180, 180]
-		float				m_Time;			// time it takes before the projectile arrives
+		Vector3f		 mAimVector;	// vector to aim at to accomplish this trajectory.
+		float			 mAngle;		// angle in degrees in the range [-180, 180]
+		float			 mTime;			// time it takes before the projectile arrives
 	};
 
 	int Calculate( const Vector3f &start, const Vector3f &end, float speed, float gravity, AimTrajectory bal[2] );
@@ -33,20 +33,20 @@ namespace Trajectory
 
 	struct TrajectorySim
 	{
-		Vector3f		m_Position;
-		Vector3f		m_Velocity;
+		Vector3f	 mPosition;
+		Vector3f	 mVelocity;
 
-		float			m_Interval;
-		float			m_Duration;
+		float		 mInterval;
+		float		 mDuration;
 
-		float			m_BounceLoss;
-		float			m_GravityMultiplier;
+		float		 mBounceLoss;
+		float		 mGravityMultiplier;
 
-		bool			m_TraceBounce;
-		bool			m_StopAtHit;
+		bool		 mTraceBounce;
+		bool		 mStopAtHit;
 
 		//////////////////////////////////////////////////////////////////////////
-		Vector3f		m_StopPos;
+		Vector3f	 mStopPos;
 
 		int FromTable(gmThread *a_thread, gmTableObject *a_table);
 

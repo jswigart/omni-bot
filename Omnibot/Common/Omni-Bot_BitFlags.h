@@ -11,82 +11,87 @@
 #ifndef __USERFLAGS_H__
 #define __USERFLAGS_H__
 
-#include "Omni-Bot_BasicTypes.h"
+#include <stdint.h>
 
 class BitFlag32
 {
 public:
 	bool AnyFlagSet() const
 	{
-		return m_Flags != 0;
+		return mFlags != 0;
 	}
-	bool CheckFlag(obint32 _flag) const
+	bool CheckFlag( int32_t _flag ) const
 	{
-		return (m_Flags & ((obint32)1<<_flag)) != 0;
+		return ( mFlags & ( (int32_t)1 << _flag ) ) != 0;
 	}
-	void SetFlag(obint32 _flag)
+	void SetFlag( int32_t _flag )
 	{
-		m_Flags |= ((obint32)1<<_flag);
+		mFlags |= ( (int32_t)1 << _flag );
 	}
-	void SetFlag(obint32 _flag, bool _set)
+	void SetFlag( int32_t _flag, bool _set )
 	{
-		if(_set)
-			SetFlag(_flag);
+		if ( _set )
+			SetFlag( _flag );
 		else
-			ClearFlag(_flag);
+			ClearFlag( _flag );
 	}
-	void ClearFlag(obint32 _flag)
+	void ClearFlag( int32_t _flag )
 	{
-		m_Flags &= ~((obint32)1<<_flag);
+		mFlags &= ~( (int32_t)1 << _flag );
 	}
 	void ClearAll()
 	{
-		m_Flags = 0;
+		mFlags = 0;
 	}
-	BitFlag32& operator&=(const BitFlag32& rhs)
+	BitFlag32& operator&=( const BitFlag32& rhs )
 	{
-		m_Flags &= rhs.m_Flags;
+		mFlags &= rhs.mFlags;
 		return *this;
 	}
-	BitFlag32 operator&(const BitFlag32& rhs) const
+	BitFlag32 operator&( const BitFlag32& rhs ) const
 	{
-		BitFlag32 bf(*this);
+		BitFlag32 bf( *this );
 		bf &= rhs;
 		return bf;
 	}
-	BitFlag32& operator|=(const BitFlag32& rhs)
+	BitFlag32& operator|=( const BitFlag32& rhs )
 	{
-		m_Flags |= rhs.m_Flags;
+		mFlags |= rhs.mFlags;
 		return *this;
 	}
-	BitFlag32 operator|(const BitFlag32& rhs) const
+	BitFlag32 operator|( const BitFlag32& rhs ) const
 	{
-		BitFlag32 bf(*this);
+		BitFlag32 bf( *this );
 		bf |= rhs;
 		return bf;
 	}
-	BitFlag32 operator~() const
+	BitFlag32 operator~( ) const
 	{
-		BitFlag32 bf(*this);
-		bf.m_Flags = ~bf.m_Flags;
+		BitFlag32 bf( *this );
+		bf.mFlags = ~bf.mFlags;
 		return bf;
 	}
-	bool operator<(obint32 _rhs) const
+	bool operator<( int32_t _rhs ) const
 	{
-		return m_Flags < _rhs;
+		return mFlags < _rhs;
 	}
-	bool operator==(const BitFlag32& r) const
+	bool operator==( const BitFlag32& r ) const
 	{
-		return m_Flags==r.m_Flags;
+		return mFlags == r.mFlags;
 	}
-	bool operator!=(const BitFlag32& r) const
+	bool operator!=( const BitFlag32& r ) const
 	{
-		return m_Flags!=r.m_Flags;
+		return mFlags != r.mFlags;
 	}
-	obint32 GetRawFlags() const { return m_Flags; }
-	explicit BitFlag32(obint32 flgs = 0) : m_Flags(flgs) {}
+	int32_t GetRawFlags() const
+	{
+		return mFlags;
+	}
+	explicit BitFlag32( int32_t flgs = 0 ) : mFlags( flgs )
+	{
+	}
 private:
-	obint32	m_Flags;
+	int32_t mFlags;
 };
 
 class BitFlag64
@@ -94,75 +99,77 @@ class BitFlag64
 public:
 	bool AnyFlagSet() const
 	{
-		return m_Flags != 0;
+		return mFlags != 0;
 	}
-	bool CheckFlag(obint32 _flag) const
+	bool CheckFlag( int32_t _flag ) const
 	{
-		obint64 flg = (obint64)1<<_flag;
-		return (m_Flags & flg) != 0;
+		int64_t flg = (int64_t)1 << _flag;
+		return ( mFlags & flg ) != 0;
 	}
-	void SetFlag(obint32 _flag)
+	void SetFlag( int32_t _flag )
 	{
-		m_Flags |= ((obint64)1<<_flag);
+		mFlags |= ( (int64_t)1 << _flag );
 	}
-	void SetFlag(obint32 _flag, bool _set)
+	void SetFlag( int32_t _flag, bool _set )
 	{
-		if(_set)
-			SetFlag(_flag);
+		if ( _set )
+			SetFlag( _flag );
 		else
-			ClearFlag(_flag);
+			ClearFlag( _flag );
 	}
-	void ClearFlag(obint32 _flag)
+	void ClearFlag( int32_t _flag )
 	{
-		m_Flags &= ~((obint64)1<<_flag);
+		mFlags &= ~( (int64_t)1 << _flag );
 	}
 	void ClearAll()
 	{
-		m_Flags = 0;
+		mFlags = 0;
 	}
-	BitFlag64& operator&=(const BitFlag64& rhs)
+	BitFlag64& operator&=( const BitFlag64& rhs )
 	{
-		m_Flags &= rhs.m_Flags;
+		mFlags &= rhs.mFlags;
 		return *this;
 	}
-	BitFlag64 operator&(const BitFlag64& rhs) const
+	BitFlag64 operator&( const BitFlag64& rhs ) const
 	{
-		BitFlag64 bf(*this);
+		BitFlag64 bf( *this );
 		bf &= rhs;
 		return bf;
 	}
-	BitFlag64& operator|=(const BitFlag64& rhs)
+	BitFlag64& operator|=( const BitFlag64& rhs )
 	{
-		m_Flags |= rhs.m_Flags;
+		mFlags |= rhs.mFlags;
 		return *this;
 	}
-	BitFlag64 operator|(const BitFlag64& rhs) const
+	BitFlag64 operator|( const BitFlag64& rhs ) const
 	{
-		BitFlag64 bf(*this);
+		BitFlag64 bf( *this );
 		bf |= rhs;
 		return bf;
 	}
-	BitFlag64 operator~() const
+	BitFlag64 operator~( ) const
 	{
-		BitFlag64 bf(*this);
-		bf.m_Flags = ~bf.m_Flags;
+		BitFlag64 bf( *this );
+		bf.mFlags = ~bf.mFlags;
 		return bf;
 	}
-	bool operator<(obint64 _rhs) const
+	bool operator<( int64_t _rhs ) const
 	{
-		return m_Flags < _rhs;
+		return mFlags < _rhs;
 	}
-	bool operator==(const BitFlag64& r) const
+	bool operator==( const BitFlag64& r ) const
 	{
-		return m_Flags==r.m_Flags;
+		return mFlags == r.mFlags;
 	}
-	bool operator!=(const BitFlag64& r) const
+	bool operator!=( const BitFlag64& r ) const
 	{
-		return m_Flags!=r.m_Flags;
+		return mFlags != r.mFlags;
 	}
-	explicit BitFlag64(obint64 flgs = 0) : m_Flags(flgs) {}
+	explicit BitFlag64( int64_t flgs = 0 ) : mFlags( flgs )
+	{
+	}
 private:
-	obint64	m_Flags;
+	int64_t mFlags;
 };
 
 class BitFlag128
@@ -170,50 +177,61 @@ class BitFlag128
 public:
 	bool AnyFlagSet() const
 	{
-		return (m_Lo|m_Hi) != 0;
+		return ( mLo | mHi ) != 0;
 	}
-	bool CheckFlag(obint32 _flag) const
+	bool CheckFlag( int32_t _flag ) const
 	{
-		if(_flag < 64){
-			return (m_Lo & ((obint64)1<<_flag)) != 0;
-		}else{
-			return (m_Hi & ((obint64)1<<(_flag-64))) != 0;
+		if ( _flag < 64 )
+		{
+			return ( mLo & ( (int64_t)1 << _flag ) ) != 0;
 		}
-	}
-	void SetFlag(obint32 _flag)
-	{
-		if(_flag < 64){
-			m_Lo |= ((obint64)1<<_flag);
-		}else{
-			m_Hi |= ((obint64)1<<(_flag-64));
-		}
-	}
-	void SetFlag(obint32 _flag, bool _set)
-	{
-		if(_set)
-			SetFlag(_flag);
 		else
-			ClearFlag(_flag);
+		{
+			return ( mHi & ( (int64_t)1 << ( _flag - 64 ) ) ) != 0;
+		}
 	}
-	void ClearFlag(obint32 _flag)
+	void SetFlag( int32_t _flag )
 	{
-		if(_flag < 64){
-			m_Lo &= ~((obint64)1<<_flag);
-		}else{
-			m_Hi &= ~((obint64)1<<(_flag-64));
+		if ( _flag < 64 )
+		{
+			mLo |= ( (int64_t)1 << _flag );
+		}
+		else
+		{
+			mHi |= ( (int64_t)1 << ( _flag - 64 ) );
+		}
+	}
+	void SetFlag( int32_t _flag, bool _set )
+	{
+		if ( _set )
+			SetFlag( _flag );
+		else
+			ClearFlag( _flag );
+	}
+	void ClearFlag( int32_t _flag )
+	{
+		if ( _flag < 64 )
+		{
+			mLo &= ~( (int64_t)1 << _flag );
+		}
+		else
+		{
+			mHi &= ~( (int64_t)1 << ( _flag - 64 ) );
 		}
 	}
 	void ClearAll()
 	{
-		m_Lo = m_Hi = 0;
+		mLo = mHi = 0;
 	}
-	BitFlag128 operator&(const BitFlag128& rhs) const
+	BitFlag128 operator&( const BitFlag128& rhs ) const
 	{
-		return BitFlag128(m_Lo & rhs.m_Lo, m_Hi & rhs.m_Hi);
+		return BitFlag128( mLo & rhs.mLo, mHi & rhs.mHi );
 	}
-	explicit BitFlag128(obint64 lo = 0, obint64 hi = 0) : m_Lo(lo),m_Hi(hi) {}
+	explicit BitFlag128( int64_t lo = 0, int64_t hi = 0 ) : mLo( lo ), mHi( hi )
+	{
+	}
 private:
-	obint64	m_Lo, m_Hi;
+	int64_t mLo, mHi;
 };
 
 #endif

@@ -26,7 +26,6 @@ public:
 	void SendVoiceMacro(int _macroId) {};
 
 	float GetGameVar(GameVar _var) const;
-	float GetAvoidRadius(int _class) const;
 
 	bool DoesBotHaveFlag(MapGoalPtr _mapgoal);
 

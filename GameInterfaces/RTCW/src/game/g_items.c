@@ -530,7 +530,6 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 		return g_weaponTeamRespawn.integer;
 	}
 
-	Bot_Event_AddWeapon( other->client->ps.clientNum, Bot_WeaponGameToBot( ent->item->giTag ) );
 	return g_weaponRespawn.integer;
 }
 

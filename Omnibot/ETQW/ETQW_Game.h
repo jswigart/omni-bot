@@ -22,7 +22,7 @@ class ETQW_Game : public IGame
 {
 public:
 	bool Init( System & system );
-	
+
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
@@ -31,39 +31,36 @@ public:
 	const char *GetModSubFolder() const;
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const { return "etqw"; }
+	const char *GetGameDatabaseAbbrev() const;
 	bool ReadyForDebugWindow() const;
+
+	void AddBot( Msg_Addbot &_addbot, bool _createnow = true );
+
+	void ClientJoined( const Event_SystemClientConnected *_msg );
 	
-	void AddBot(Msg_Addbot &_addbot, bool _createnow = true);
+	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
+	void GetWeaponEnumeration( const IntEnum *&_ptr, int &num );
 
-	void ClientJoined(const Event_SystemClientConnected *_msg);
-
-	const char *FindClassName(obint32 _classId);
-
-	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
-	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
-	
-	ETQW_Game() {};
-	virtual ~ETQW_Game() {};
+	ETQW_Game();
+	virtual ~ETQW_Game();
 protected:
 
-	void GetGameVars(GameVars &_gamevars);
+	void GetGameVars( GameVars &_gamevars );
 
 	// Script support.
-	void InitScriptBinds(gmMachine *_machine);
-	void InitScriptClasses(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptSkills(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptEvents(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptPowerups(gmMachine *_machine, gmTableObject *_table);
-	void InitVoiceMacros(gmMachine *_machine, gmTableObject *_table);
+	void InitScriptBinds( gmMachine *_machine );
+	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptSkills( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptEvents( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptEntityFlags( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptPowerups( gmMachine *_machine, gmTableObject *_table );
+	void InitVoiceMacros( gmMachine *_machine, gmTableObject *_table );
 
 	// Commands
 	void InitCommands();
 
-	static const float ETQW_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags);
-	static const float ETQW_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags);
-	static const float ETQW_GetEntityClassAvoidRadius(const int _class);
+	static const float ETQW_GetEntityClassTraceOffset( const TargetInfo &_target );
+	static const float ETQW_GetEntityClassAimOffset( const TargetInfo &_target );
 };
 
 #endif

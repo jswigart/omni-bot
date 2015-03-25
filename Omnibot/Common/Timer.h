@@ -11,7 +11,7 @@
 #ifndef __TIMER_H__
 #define __TIMER_H__
 
-#include "Omni-Bot_BasicTypes.h"
+#include <stdint.h>
 
 // class: Timer
 //		High performance timer class for timing functions, with
@@ -37,7 +37,7 @@ public:
 
 protected:
 #ifdef WIN32
-	obint64		mLastTimer;
+	int64_t		mLastTimer;
 #else
 	clock_t		mLastTimer;
 #endif
@@ -47,17 +47,17 @@ class GameTimer
 {
 public:
 
-	void Delay(float _seconds);
-	void DelayRandom(float _min, float _max);
+	void Delay( float _seconds );
+	void DelayRandom( float _min, float _max );
 
-	void Delay(int _ms);
-	void DelayRandom(int _min, int _max);
+	void Delay( int _ms );
+	void DelayRandom( int _min, int _max );
 
 	bool IsExpired() const;
 
 	GameTimer();
 private:
-	int		m_TriggerTime;
+	int	 mTriggerTime;
 };
 
 #endif

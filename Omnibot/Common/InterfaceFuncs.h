@@ -23,13 +23,8 @@ namespace InterfaceFuncs
 
 	bool IsAlive(const GameEntity _ent);
 	bool IsAllied(const GameEntity _ent1, const GameEntity _ent2);
-	bool GetHealthAndArmor(const GameEntity _ent, Msg_HealthArmor &_out);
 	bool GetMaxSpeed(const GameEntity _ent, Msg_PlayerMaxSpeed &_out);
 	int GetEntityTeam(const GameEntity _ent);
-	int GetEntityClass(const GameEntity _ent);
-	bool GetEntityCategory(const GameEntity _ent, BitFlag32 &_category);
-	bool GetEntityFlags(const GameEntity _ent, BitFlag64 &_flags);
-	bool GetEntityPowerUps(const GameEntity _ent, BitFlag64 &_powerups);
 	WeaponStatus GetEquippedWeapon(const GameEntity _ent);
 	WeaponStatus GetMountedWeapon(Client *_bot);
 	bool GetWeaponLimits(Client *_bot, int _weapon, WeaponLimits &_limits);
@@ -46,7 +41,7 @@ namespace InterfaceFuncs
 
 	bool IsWeaponCharged(Client *_bot, int _weapon, FireMode _mode = Primary);
 	bool IsEntWeaponCharged(GameEntity _ent, int _weapon);
-	obReal WeaponHeat(Client *_bot, FireMode _mode, float &_current, float &_max);
+	float WeaponHeat(Client *_bot, FireMode _mode, float &_current, float &_max);
 	bool IsOutSide(const Vector3f &_pos);
 	void ChangeName(Client *_bot, const char *_newname);
 
@@ -63,7 +58,6 @@ namespace InterfaceFuncs
 
 	bool IsMoverAt(const Vector3f &_pos1, const Vector3f &_pos2);
 	GameEntity GetMoverAt( const Vector3f &_pos );
-	bool GetEntityForMapModel( int mapModelId, Msg_EntityForMapModel & entityOut );
 
 	template <typename T>
 	bool SetLoadOut(GameEntity _ent, T &_info)

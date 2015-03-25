@@ -24,12 +24,12 @@ public:
 
 	virtual void Reset();
 
-	inline float GetBestDistanceSq() { return m_BestDistanceSq; }
+	inline float GetBestDistanceSq() { return mBestDistanceSq; }
 
 	FilterClosest(Client *_client, AiState::SensoryMemory::Type _type);
 	virtual ~FilterClosest();
 protected:
-	float		m_BestDistanceSq;
+	float	 mBestDistanceSq;
 
 	FilterClosest();
 };

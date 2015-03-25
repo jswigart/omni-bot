@@ -21,17 +21,17 @@
 #include "gmGCRoot.h"
 #include "gmbinder2/gmbinder2.h"
 
-typedef boost::dynamic_bitset<obuint32> DynBitSet32;
+typedef boost::dynamic_bitset<uint32_t> DynBitSet32;
 
 struct Destination
 {
-	Vector3f	m_Position;
-	float		m_Radius;
+	Vector3f	mPosition;
+	float		mRadius;
 
-	Destination() : m_Position(0.f,0.f,0.f), m_Radius(0.f) {}
+	Destination() : mPosition(0.f,0.f,0.f), mRadius(0.f) {}
 	Destination(const Vector3f &_pos, float _radius)
-		: m_Position(_pos)
-		, m_Radius(_radius)
+		: mPosition(_pos)
+		, mRadius(_radius)
 	{
 	}
 };
@@ -51,38 +51,38 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 #define PROPERTY_BOOL(name) \
 public: \
-	bool Get##name() const { return (m_##name); } \
-	void Set##name(bool _b) { (m_##name) = _b; } \
+	bool Get##name() const { return (m##name); } \
+	void Set##name(bool _b) { (m##name) = _b; } \
 private: \
-	bool m_##name; \
+	bool m##name; \
 public:
 	//////////////////////////////////////////////////////////////////////////
 #define PROPERTY_INT(name) \
 public: \
-	int Get##name() const { return (m_##name); } \
-	void Set##name(int _b) { (m_##name) = _b; } \
+	int Get##name() const { return (m##name); } \
+	void Set##name(int _b) { (m##name) = _b; } \
 private: \
-	int m_##name; \
+	int m##name; \
 public:
 	//////////////////////////////////////////////////////////////////////////
 #define PROPERTY_FLOAT(name) \
 public: \
-	float Get##name() const { return (m_##name); } \
-	void Set##name(float _b) { (m_##name) = _b; } \
+	float Get##name() const { return (m##name); } \
+	void Set##name(float _b) { (m##name) = _b; } \
 private: \
-	float m_##name; \
+	float m##name; \
 public:
 	//////////////////////////////////////////////////////////////////////////
 #define PROPERTY_BITFLAG64(name) \
 public: \
-	BitFlag64 Get##name() const { return (m_##name); } \
-	void Set##name(BitFlag64 _b) { (m_##name) = _b; } \
+	BitFlag64 Get##name() const { return (m##name); } \
+	void Set##name(BitFlag64 _b) { (m##name) = _b; } \
 private: \
-	BitFlag64 m_##name; \
+	BitFlag64 m##name; \
 public:
 	//////////////////////////////////////////////////////////////////////////
-#define PROPERTY_INIT(name, def) m_##name = def;
-#define PROPERTY_PROPOGATE(name) m_##name =  _other->m_##name;
+#define PROPERTY_INIT(name, def) m##name = def;
+#define PROPERTY_PROPOGATE(name) m##name =  _other->m##name;
 	//////////////////////////////////////////////////////////////////////////
 
 	PROPERTY_BITFLAG64(DisableWithEntityFlag);
@@ -139,9 +139,9 @@ public:
 
 	struct Route
 	{
-		MapGoalPtr	m_Start;
-		MapGoalPtr	m_End;
-		float		m_Weight;
+		MapGoalPtr	mStart;
+		MapGoalPtr	mEnd;
+		float		mWeight;
 	};
 	typedef std::vector<Route> Routes;
 
@@ -161,9 +161,9 @@ public:
 
 	// function: SetAvailabilityFlags
 	//		Sets the availability flags of this goal
-	inline void SetAvailabilityTeams(int _flags) { m_AvailableTeams = BitFlag32(_flags); }
+	inline void SetAvailabilityTeams(int _flags) { mAvailableTeams = BitFlag32(_flags); }
 
-	inline void SetAvailabilityTeamsInit(int _flags) { m_AvailableTeamsInit = BitFlag32(_flags); }
+	inline void SetAvailabilityTeamsInit(int _flags) { mAvailableTeamsInit = BitFlag32(_flags); }
 
 	// function: SetAvailable
 	//		Set the availability status for a certain team
@@ -181,31 +181,31 @@ public:
 	//		Check the availability status for a certain team
 	bool IsAvailableInitial(int _team) const;
 
-	BitFlag32 GetAvailableFlags() const { return m_AvailableTeams; }
+	BitFlag32 GetAvailableFlags() const { return mAvailableTeams; }
 
 	// function: SetEntity
 	//		Set the <GameEntity> that represents this goal
-	inline void SetEntity(GameEntity _ent) { m_Entity = _ent; }
+	inline void SetEntity(GameEntity _ent) { mEntity = _ent; }
 
 	// function: GetEntity
 	//		Get the <GameEntity> that represents this goal
-	inline const GameEntity GetEntity() const { return m_Entity; }
+	inline const GameEntity GetEntity() const { return mEntity; }
 
 	// function: SetOwner
 	//		Set the <GameEntity> that represents the owner
-	inline void SetOwner(GameEntity _ent) { m_CurrentOwner = _ent; }
+	inline void SetOwner(GameEntity _ent) { mCurrentOwner = _ent; }
 
 	// function: GetOwner
 	//		Get the <GameEntity> that represents the owner
-	inline const GameEntity GetOwner() const { return m_CurrentOwner; }
+	inline const GameEntity GetOwner() const { return mCurrentOwner; }
 
 	// function: SetTagName
 	//		Sets the tag name of this goal
-	inline void SetTagName(const std::string &_name) { m_TagName = _name; }
+	inline void SetTagName(const std::string &_name) { mTagName = _name; }
 
 	// function: GetTagName
 	//		Gets the tag name of this goal
-	inline const std::string &GetTagName() { return m_TagName; }
+	inline const std::string &GetTagName() { return mTagName; }
 
 	// function: SetPosition
 	//		Sets the position of this goal
@@ -245,9 +245,9 @@ public:
 
 	// function: SetRadius
 	//		Sets the radius of this goal
-	inline void SetRadius(float _rad) { m_Radius = _rad; }
+	inline void SetRadius(float _rad) { mRadius = _rad; }
 
-	inline void SetMinRadius(float _rad) { m_MinRadius = _rad; }
+	inline void SetMinRadius(float _rad) { mMinRadius = _rad; }
 
 	// function: GetRadius
 	//		Gets the radius of this goal
@@ -255,66 +255,66 @@ public:
 
 	// function: GetName
 	//		Gets the name of this goal
-	inline const std::string &GetName() const { return m_Name; }
+	inline const std::string &GetName() const { return mName; }
 
-	void SetGroupName(const std::string &_name) { m_GroupName = _name; }
-	const std::string &GetGroupName() const { return m_GroupName; }
+	void SetGroupName(const std::string &_name) { mGroupName = _name; }
+	const std::string &GetGroupName() const { return mGroupName; }
 
-	void SetRoleMask(BitFlag32 _i) { m_RoleMask = _i; }
-	BitFlag32 GetRoleMask() const { return m_RoleMask; }
+	void SetRoleMask(BitFlag32 _i) { mRoleMask = _i; }
+	BitFlag32 GetRoleMask() const { return mRoleMask; }
 
-	void SetDefaultPriority(obReal _f) { m_DefaultPriority = _f; }
-	obReal GetDefaultPriority() const { return m_DefaultPriority; }
+	void SetDefaultPriority(float _f) { mDefaultPriority = _f; }
+	float GetDefaultPriority() const { return mDefaultPriority; }
 
-	obReal GetPriorityForClient(Client *_client);
-	obReal GetPriorityForClass(int _teamid, int _classId);
+	float GetPriorityForClient(Client *_client);
+	float GetPriorityForClass(int _teamid, int _classId);
 	void ResetGoalPriorities();
-	void SetPriorityForClass(int _teamid, int _classId, obReal _priority);
+	void SetPriorityForClass(int _teamid, int _classId, float _priority);
 
 	// function: GetGoalType
 	//		Gets the type identifier for this goal
-	inline const std::string GetGoalType() const { return m_GoalType; }
-	inline obuint32 GetGoalTypeHash() const { return m_GoalTypeHash; }
+	inline const std::string GetGoalType() const { return mGoalType; }
+	inline uint32_t GetGoalTypeHash() const { return mGoalTypeHash; }
 
 	// function: SetNavFlags
 	//		Sets the navigation flags for this goal
-	inline void SetNavFlags(NavFlags _flags) { m_NavFlags = _flags; }
+	inline void SetNavFlags(NavFlags _flags) { mNavFlags = _flags; }
 
 	// function: GetFlags
 	//		Gets the navigation flags for this goal
-	inline NavFlags GetFlags() const { return m_NavFlags; } // deprecated
+	inline NavFlags GetFlags() const { return mNavFlags; } // deprecated
 
-	inline obint32 GetSlotsOpen(TrackingCat _cat)
+	inline int32_t GetSlotsOpen(TrackingCat _cat)
 	{
-		obint32 curUsers = GetCurrentUsers(_cat);
+		int32_t curUsers = GetCurrentUsers(_cat);
 		return GetMaxUsers(_cat) - curUsers;
 	}
 
-	inline obint32 GetCurrentUsers(TrackingCat _cat)
+	inline int32_t GetCurrentUsers(TrackingCat _cat)
 	{
 		OBASSERT(_cat < NUM_TRACK_CATS, "Invalid Tracking Category");
 		return GetRefCount(_cat);
 	}
 
-	inline void SetMaxUsers(TrackingCat _cat, obint32 _val)
+	inline void SetMaxUsers(TrackingCat _cat, int32_t _val)
 	{
 		OBASSERT(_cat < NUM_TRACK_CATS, "Invalid Tracking Category");
 		if ( _cat < NUM_TRACK_CATS ) {
-			m_MaxUsers[_cat] = _val;
+			mMaxUsers[_cat] = _val;
 		}
 	}
-	inline obint32 GetMaxUsers(TrackingCat _cat)
+	inline int32_t GetMaxUsers(TrackingCat _cat)
 	{
 		OBASSERT(_cat < NUM_TRACK_CATS, "Invalid Tracking Category");
 		if ( _cat < NUM_TRACK_CATS ) {
-			return m_MaxUsers[_cat];
+			return mMaxUsers[_cat];
 		}
 		return 0;
 	}
 
-	obint32 GetNumUsePoints() const { return (obint32)m_LocalUsePoints.size(); }
+	int32_t GetNumUsePoints() const { return (int32_t)mLocalUsePoints.size(); }
 	void AddUsePoint(const Vector3f &_pos, bool _relative = false);
-	Vector3f GetWorldUsePoint(obint32 _index = -1);
+	Vector3f GetWorldUsePoint(int32_t _index = -1);
 	void GetAllUsePoints(Vector3List &_pv);
 
 	bool AddRoute_Script(const std::string &_start, const std::string &_end, float _weight);
@@ -329,13 +329,13 @@ public:
 
 	// function: GetSerialNum
 	//		Unique id for this goal. Useful for blackboard target or other identification.
-	inline obint32 GetSerialNum() const { return m_SerialNum; }
+	inline int32_t GetSerialNum() const { return mSerialNum; }
 
 	void TriggerHandler(const TriggerInfo &) {};
 
 	// function: GetGoalState
 	//		Allows users to query a numeric state value from the goal.
-	int GetGoalState() const { return m_GoalState; };
+	int GetGoalState() const { return mGoalState; };
 
 	// function: GetControllingTeam
 	//		Gets the team currently controlling the goal.
@@ -347,7 +347,7 @@ public:
 
 	gmGCRoot<gmUserObject> GetScriptObject(gmMachine *_machine) const;
 
-	const Routes &GetRoutes() const { return m_Routes; }
+	const Routes &GetRoutes() const { return mRoutes; }
 
 	void RenderDebug(bool _editing, bool _highlighted);
 	void RenderDefault();
@@ -357,14 +357,14 @@ public:
 	struct ClassPriority
 	{
 		enum { MaxTeams=4,MaxClasses=10 };
-		obReal	Priorities[MaxTeams][MaxClasses];
+		float	Priorities[MaxTeams][MaxClasses];
 
 		void GetPriorityText(std::string &_txtout) const;
 	};
 
 	void DrawRoute( const obColor _color, float _duration );
 
-	const ClassPriority &GetClassPriorities() const { return m_ClassPriority; }
+	const ClassPriority &GetClassPriorities() const { return mClassPriority; }
 
 	static void Bind(gmMachine *_m);
 
@@ -392,7 +392,7 @@ public:
 	MapGoalPtr GetSmartPtr();
 	void SetSmartPtr(MapGoalPtr ptr);
 
-	LimitWeapons &GetLimitWeapons() { return m_LimitWeapon; }
+	LimitWeapons &GetLimitWeapons() { return mLimitWeapon; }
 
 	void ShowHelp();
 
@@ -404,10 +404,10 @@ public:
 	void CreateGuiFromBluePrint(gmMachine *a_machine, gmTableObject *a_schema);
 	void HudDisplay();
 
-	int GetRandomUsePoint() const { return m_RandomUsePoint; };
+	int GetRandomUsePoint() const { return mRandomUsePoint; };
 
-	int GetRange() const { return m_Range; };
-	void SetRange(int _range) { m_Range = _range; };
+	int GetRange() const { return mRange; };
+	void SetRange(int _range) { mRange = _range; };
 
 	void CreateGuiFromSchema(gmMachine *a_machine, gmTableObject *a_schema);
 
@@ -418,77 +418,79 @@ public:
 	MapGoal(const char *_goaltype);
 	~MapGoal();
 private:
-	std::string			m_GoalType;
-	obuint32		m_GoalTypeHash;
+	std::string		mGoalType;
+	uint32_t		mGoalTypeHash;
 
-	BitFlag32		m_AvailableTeams;
-	BitFlag32		m_AvailableTeamsInit;
-	int				m_ControllingTeam;
+	BitFlag32		mAvailableTeams;
+	BitFlag32		mAvailableTeamsInit;
+	int				mControllingTeam;
 
-	BitFlag32		m_RoleMask;
+	BitFlag32		mRoleMask;
 
-	GameEntity		m_Entity;
-	GameEntity		m_CurrentOwner;
+	GameEntity		mEntity;
+	GameEntity		mCurrentOwner;
 
-	Vector3f		m_Position;
-	Vector3f		m_InterfacePosition; //cache the auto detected position
-	Matrix3f		m_Orientation;
-	AABB			m_LocalBounds; // deprecated
-	//BoundingBox	m_Bounds;
+	Vector3f		mPosition;
+	Vector3f		mInterfacePosition; //cache the auto detected position
+	Matrix3f		mOrientation;
+	AABB			mLocalBounds; // deprecated
+	//BoundingBox	mBounds;
 
-	LimitWeapons	m_LimitWeapon;
+	LimitWeapons	mLimitWeapon;
 
-	float			m_Radius;
-	float			m_MinRadius;
+	float			mRadius;
+	float			mMinRadius;
 
-	obint32			m_MaxUsers[NUM_TRACK_CATS];
+	int32_t			mMaxUsers[NUM_TRACK_CATS];
 
-	obint32			m_SerialNum;
+	int32_t			mSerialNum;
 
-	NavFlags		m_NavFlags;
+	NavFlags		mNavFlags;
 
-	Vector3List		m_LocalUsePoints;
-	DynBitSet32		m_RelativeUsePoints;
+	Vector3List		mLocalUsePoints;
+	DynBitSet32		mRelativeUsePoints;
 
-	Routes			m_Routes;
+	Routes			mRoutes;
 
-	ClassPriority	m_ClassPriority;
-	obReal			m_DefaultPriority;
-	obReal			m_RolePriorityBonus;
+	ClassPriority	mClassPriority;
+	float			mDefaultPriority;
+	float			mRolePriorityBonus;
 
-	int				m_GoalStateFunction;
-	int				m_GoalState;
+	int				mGoalStateFunction;
+	int				mGoalState;
 
-	int				m_Version;
+	int				mVersion;
 
-	bool			m_NeedsSynced;
+	bool			mNeedsSynced;
 
-	// var: m_ScriptObject
+	EntityInfo	mEntInfo;
+
+	// var: mScriptObject
 	//		This objects script instance, so that the object can clear its script
 	//		references when deleted.
-	mutable gmGCRoot<gmUserObject> m_ScriptObject;
+	mutable gmGCRoot<gmUserObject> mScriptObject;
 
-	gmGCRoot<gmFunctionObject>	m_InitNewFunc;
-	gmGCRoot<gmFunctionObject>	m_UpgradeFunc;
-	gmGCRoot<gmFunctionObject>	m_RenderFunc;
-	gmGCRoot<gmFunctionObject>	m_SerializeFunc;
-	gmGCRoot<gmFunctionObject>	m_SetPropertyFunc;
-	gmGCRoot<gmFunctionObject>	m_HelpFunc;
-	gmGCRoot<gmFunctionObject>	m_UpdateFunc;
-	gmGCRoot<gmFunctionObject>	m_HudDisplay;
-	ThreadScoper				m_ActiveThread[NUM_CALLBACKS];
+	gmGCRoot<gmFunctionObject>	mInitNewFunc;
+	gmGCRoot<gmFunctionObject>	mUpgradeFunc;
+	gmGCRoot<gmFunctionObject>	mRenderFunc;
+	gmGCRoot<gmFunctionObject>	mSerializeFunc;
+	gmGCRoot<gmFunctionObject>	mSetPropertyFunc;
+	gmGCRoot<gmFunctionObject>	mHelpFunc;
+	gmGCRoot<gmFunctionObject>	mUpdateFunc;
+	gmGCRoot<gmFunctionObject>	mHudDisplay;
+	ThreadScoper				mActiveThread[NUM_CALLBACKS];
 
-	gmGCRoot<gmStringObject>	m_ExtraDebugText;
+	gmGCRoot<gmStringObject>	mExtraDebugText;
 
-	std::string		m_TagName;
-	std::string		m_Name;
-	std::string		m_GroupName;
+	std::string		mTagName;
+	std::string		mName;
+	std::string		mGroupName;
 
-	int			m_RandomUsePoint; // randomly select a usepoint to use?
-	int			m_Range;  // distance limited
+	int			mRandomUsePoint; // randomly select a usepoint to use?
+	int			mRange;  // distance limited
 
 #ifdef Prof_ENABLED
-	Prof_Zone					*m_ProfZone;
+	Prof_Zone					*mProfZone;
 #endif
 
 	//////////////////////////////////////////////////////////////////////////
@@ -513,7 +515,7 @@ private:
 	void SetRange_Script(const int &_range);
 	int GetRange_Script();
 
-	MapGoalWPtr	m_WeakPtr;
+	MapGoalWPtr	mWeakPtr;
 
 	static bool pfnSetDotEx(gmThread * a_thread, MapGoal * a_goal, const char *a_key, gmVariable * a_operands);
 	static bool pfnGetDotEx(gmThread * a_thread, MapGoal * a_goal, const char *a_key, gmVariable * a_operands);
@@ -534,6 +536,6 @@ struct Trackers
 	}
 };
 
-obint32 GetMapGoalSerial();
+int32_t GetMapGoalSerial();
 
 #endif

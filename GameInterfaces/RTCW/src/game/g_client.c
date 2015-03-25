@@ -725,7 +725,6 @@ void AddPlayerWeapon(gclient_t *client, weapon_t weapon, int ammo, int ammoclip)
 	COM_BitSet( client->ps.weapons, weapon );
 	client->ps.ammo[BG_FindAmmoForWeapon( weapon )] = ammo;
 	client->ps.ammoclip[BG_FindClipForWeapon( weapon )] = ammoclip;
-	Bot_Event_AddWeapon( client->ps.clientNum, Bot_WeaponGameToBot( weapon ) );
 }
 
 // cs: todo: rewrite this function ...
@@ -746,9 +745,7 @@ void SetWolfSpawnWeapons( gclient_t *client ) {
 	if ( client->sess.sessionTeam == TEAM_SPECTATOR ) {
 		return;
 	}
-
-	Bot_Event_ResetWeapons( client->ps.clientNum );
-
+	
 	// Reset special weapon time
 	client->ps.classWeaponTime = -999999;
 

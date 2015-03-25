@@ -23,21 +23,21 @@ class gmTableObject;
 class bbItem
 {
 public:
-	int		m_Owner;
-	int		m_Target;
-	int		m_ExpireTime;
-	bool	m_DeleteOnExpire : 1;
-	bool	m_DeleteOnRefCount1 : 1;
+	int		mOwner;
+	int		mTarget;
+	int		mExpireTime;
+	bool	mDeleteOnExpire : 1;
+	bool	mDeleteOnRefCount1 : 1;
 
 	virtual bool FromScriptTable(gmMachine *_machine, gmTableObject *_from);
 	virtual bool ToScriptTable(gmMachine *_machine, gmTableObject *&_to);
 
-	inline int GetType() const { return m_Type; }
+	inline int GetType() const { return mType; }
 	bbItem(int _type);
 	virtual ~bbItem() {}
 private:
-	int		m_Type;
-	bool	m_InBB;
+	int		mType;
+	bool	mInBB;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -62,10 +62,10 @@ class bbRunAway : public bbItem
 {
 public:
 
-	Vector3f	m_Position;
-	float		m_Radius;
+	Vector3f	mPosition;
+	float		mRadius;
 
-	bbRunAway() : bbItem(bbk_RunAway), m_Position(0.f,0.f,0.f), m_Radius(0.f) {}
+	bbRunAway() : bbItem(bbk_RunAway), mPosition(0.f,0.f,0.f), mRadius(0.f) {}
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -79,7 +79,7 @@ public:
 
 	bbScriptItem(int _type) : bbItem(_type) {}
 
-	gmGCRoot<gmTableObject> m_DataTable;
+	gmGCRoot<gmTableObject> mDataTable;
 };
 
 #endif

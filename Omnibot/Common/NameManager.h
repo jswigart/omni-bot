@@ -20,18 +20,18 @@ public:
 
 	const std::string &GetName()
 	{
-		return m_Name;
+		return mName;
 	}
 	const std::string &GetProfileName()
 	{
-		return m_ProfileName;
+		return mProfileName;
 	}
 
 	NameReference( const std::string &_name = "", const std::string &_profile = "" );
 	~NameReference();
 private:
-	std::string		m_Name;
-	std::string		m_ProfileName;
+	std::string	 mName;
+	std::string	 mProfileName;
 };
 
 typedef boost::shared_ptr<NameReference> NamePtr;
@@ -60,13 +60,13 @@ protected:
 
 	typedef std::map<std::string, NamePtr> NamesMap;
 
-	NamesMap	m_NamesMap;
+	NamesMap mNamesMap;
 
 	// typedef: DefaultProfileMap
 	typedef std::map<int, std::string> DefaultProfileMap;
-	DefaultProfileMap		m_ProfileMap;
+	DefaultProfileMap	 mProfileMap;
 
-	static NameManager		*m_Instance;
+	static NameManager		* mInstance;
 	NameManager()
 	{
 	};

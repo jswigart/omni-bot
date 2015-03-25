@@ -28,7 +28,7 @@ public:
 	ET_FilterClosest(Client *_client, AiState::SensoryMemory::Type _type);
 	virtual ~ET_FilterClosest() {}
 protected:
-	float	m_BestDistance;
+	float	mBestDistance;
 
 	ET_FilterClosest();
 };

@@ -22,12 +22,12 @@ public:
 
 	virtual void Check(int _index, const MemoryRecord &_record);
 
-	inline MemoryRecords &GetList() { return m_List; }
+	inline MemoryRecords &GetList() { return mList; }
 
 	FilterAllType(Client *_client, AiState::SensoryMemory::Type _type, MemoryRecords &_list);
 	virtual ~FilterAllType() {}
 protected:
-	MemoryRecords	&m_List;
+	MemoryRecords & mList;
 
 	FilterAllType();
 };

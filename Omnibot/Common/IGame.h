@@ -39,10 +39,9 @@ typedef boost::weak_ptr<Client> ClientWPtr;
 
 struct EntityInstance
 {
-	GameEntity						m_Entity;
-	BitFlag32						m_EntityCategory;
-	int								m_EntityClass;
-	int								m_TimeStamp;
+	GameEntity					 mEntity;	
+	EntityInfo				 mEntInfo;
+	int							 mTimeStamp;
 };
 
 // class: IGame
@@ -59,7 +58,7 @@ public:
 	};
 	static const GameVars &GetGameVars()
 	{
-		return m_GameVars;
+		return mGameVars;
 	}
 
 	virtual bool Init( System & system );
@@ -75,41 +74,41 @@ public:
 	virtual void ClientLeft( const Event_SystemClientDisConnected *_msg );
 
 	void UpdateTime();
-	static inline obint32 GetTime()
+	static inline int32_t GetTime()
 	{
-		return m_GameMsec;
+		return mGameMsec;
 	};
-	static inline obReal GetTimeSecs()
+	static inline float GetTimeSecs()
 	{
-		return (float)m_GameMsec / 1000.f;
+		return ( float )mGameMsec / 1000.f;
 	};
-	static inline obint32 GetDeltaTime()
+	static inline int32_t GetDeltaTime()
 	{
-		return m_DeltaMsec;
+		return mDeltaMsec;
 	};
-	static inline obReal GetDeltaTimeSecs()
+	static inline float GetDeltaTimeSecs()
 	{
-		return (float)m_DeltaMsec * 0.001f;
+		return ( float )mDeltaMsec * 0.001f;
 	};
-	static inline obint32 GetTimeSinceStart()
+	static inline int32_t GetTimeSinceStart()
 	{
-		return m_GameMsec - m_StartTimeMsec;
+		return mGameMsec - mStartTimeMsec;
 	};
-	static inline obint32 GetFrameNumber()
+	static inline int32_t GetFrameNumber()
 	{
-		return m_GameFrame;
+		return mGameFrame;
 	}
-	static inline void SetTime( obint32 _newtime )
+	static inline void SetTime( int32_t _newtime )
 	{
-		m_GameMsec = _newtime;
+		mGameMsec = _newtime;
 	}
-	static inline obReal GetGravity()
+	static inline float GetGravity()
 	{
-		return m_Gravity;
+		return mGravity;
 	}
 	static inline bool GetCheatsEnabled()
 	{
-		return m_CheatsEnabled;
+		return mCheatsEnabled;
 	}
 
 	void DispatchEvent( int _dest, const MessageHelper &_message );
@@ -138,16 +137,11 @@ public:
 	{
 		return true;
 	}
-	virtual const char *IsDebugDrawSupported() const
-	{
-		return NULL;
-	}
 
 	ClientPtr GetClientByGameId( int _gameId );
 	ClientPtr GetClientByIndex( int _index );
 
-	virtual const char *FindClassName( obint32 _classId );
-	virtual int FindWeaponId( obint32 _classId );
+	void FindClassName( std::string& groupName, std::string& className, const EntityInfo& classInfo );
 
 	// Mod specific subclasses.
 	virtual GoalManager * AllocGoalManager();
@@ -163,7 +157,7 @@ public:
 
 	inline bool DrawBlockableTests()
 	{
-		return m_bDrawBlockableTests;
+		return mbDrawBlockableTests;
 	}
 
 	void LoadGoalScripts( bool _clearold );
@@ -174,15 +168,15 @@ public:
 
 	static GameState GetGameState()
 	{
-		return m_GameState;
+		return mGameState;
 	}
 	static GameState GetLastGameState()
 	{
-		return m_LastGameState;
+		return mLastGameState;
 	}
 	static bool GameStarted()
 	{
-		return m_GameState != GAME_STATE_INVALID;
+		return mGameState != GAME_STATE_INVALID;
 	}
 
 	// Game Entity Stuff
@@ -194,25 +188,26 @@ public:
 		void Clear();
 		EntityInstance &GetEnt()
 		{
-			return m_Current;
+			return mCurrent;
 		}
 		const EntityInstance &GetEnt() const
 		{
-			return m_Current;
+			return mCurrent;
 		}
 		const int GetIndex() const
 		{
-			return m_Index;
+			return mIndex;
 		}
 		EntityIterator()
 		{
 		}
 	private:
-		EntityInstance	m_Current;
-		int				m_Index;
+		EntityInstance	mCurrent;
+		int				mIndex;
 	};
 
 	static bool IsEntityValid( const GameEntity &_hnl );
+	static bool GetEntityInfo( const GameEntity &_hnl, EntityInfo& entInfo );
 	static bool IterateEntity( IGame::EntityIterator &_it );
 	static void UpdateEntity( EntityInstance &_ent );
 
@@ -254,34 +249,34 @@ public:
 	IGame();
 	virtual ~IGame();
 protected:
-	ClientPtr			m_ClientList[ Constants::MAX_PLAYERS ];
+	ClientPtr		 mClientList[ Constants::MAX_PLAYERS ];
 
-	State				*m_StateRoot;
+	State				* mStateRoot;
 
-	static int					m_MaxEntity;
-	static EntityInstance		m_GameEntities[ Constants::MAX_ENTITIES ];
+	static int				 mMaxEntity;
+	static EntityInstance	 mGameEntities[ Constants::MAX_ENTITIES ];
 
-	static GameState	m_GameState;
-	static GameState	m_LastGameState;
+	static GameState mGameState;
+	static GameState mLastGameState;
 
-	static obint32		m_GameMsec;
-	static obint32		m_DeltaMsec;
-	static obint32		m_StartTimeMsec;
-	static obint32		m_GameFrame;
-	static obReal		m_Gravity;
-	static bool			m_CheatsEnabled;
-	static bool			m_BotJoining;
+	static int32_t	 mGameMsec;
+	static int32_t	 mDeltaMsec;
+	static int32_t	 mStartTimeMsec;
+	static int32_t	 mGameFrame;
+	static float	 mGravity;
+	static bool		 mCheatsEnabled;
+	static bool		 mBotJoining;
 
-	static GameVars		m_GameVars;
+	static GameVars	 mGameVars;
 
-	FunctorMap			m_UpdateMap;
+	FunctorMap		 mUpdateMap;
 
 	enum
 	{
 		MaxDeletedThreads = 1024
 	};
-	int			m_DeletedThreads[ MaxDeletedThreads ];
-	int			m_NumDeletedThreads;
+	int		 mDeletedThreads[ MaxDeletedThreads ];
+	int		 mNumDeletedThreads;
 
 	virtual void GetGameVars( GameVars &_gamevars ) = 0;
 
@@ -295,8 +290,9 @@ protected:
 	virtual void InitScriptTeams( gmMachine *_machine, gmTableObject *_table );
 	virtual void InitScriptWeapons( gmMachine *_machine, gmTableObject *_table );
 	virtual void InitScriptRoles( gmMachine *_machine, gmTableObject *_table );
+	virtual void InitScriptGroups( gmMachine *_machine, gmTableObject *_table );
 	virtual void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
-	virtual void InitScriptWeaponClasses( gmMachine *_machine, gmTableObject *_table, int weaponClassId );
+	virtual void InitScriptWeaponClasses( gmMachine *_machine, gmTableObject *_table );
 	virtual void InitScriptSkills( gmMachine *_machine, gmTableObject *_table );
 	virtual void InitScriptItems( gmMachine *_machine, gmTableObject *_table )
 	{
@@ -319,8 +315,6 @@ protected:
 	{
 	};
 
-	int	m_WeaponClassIdStart; // start value of weapon class id range
-
 	// Commands
 	virtual void InitCommands();
 	bool UnhandledCommand( const StringVector &_args );
@@ -339,11 +333,11 @@ protected:
 	void cmdStopProcess( const StringVector &_args );
 
 	// Server settings
-	RegulatorPtr	m_SettingLimiter;
-	bool			m_PlayersChanged;
+	RegulatorPtr mSettingLimiter;
+	bool		 mPlayersChanged;
 
 	// Misc
-	bool			m_bDrawBlockableTests;
+	bool		 mbDrawBlockableTests;
 
 	void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 

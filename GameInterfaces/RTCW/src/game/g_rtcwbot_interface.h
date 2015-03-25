@@ -56,10 +56,6 @@ void Bot_Event_ClientConnected( int _client, qboolean _isbot );
 void Bot_Event_ClientDisConnected( int _client );
 void Bot_Event_Drowning( int _client );
 
-void Bot_Event_ResetWeapons( int _client );
-void Bot_Event_AddWeapon( int _client, int _weaponId );
-void Bot_Event_RemoveWeapon( int _client, int _weaponId );
-
 void Bot_Event_TakeDamage( int _client, gentity_t *_ent );
 void Bot_Event_Death( int _client, gentity_t *_killer, const char *_meansofdeath );
 void Bot_Event_KilledSomeone( int _client, gentity_t *_victim, const char *_meansofdeath );

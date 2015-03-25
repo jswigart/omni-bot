@@ -33,13 +33,13 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		// typedef: pfnGetEntityOffset
 		//		Callback function for getting an offset for an entity type
-		typedef const float (*pfnGetEntityOffset)(const int _entclass, const BitFlag64 &_entflags);
+		typedef const float( *pfnGetEntityOffset )( const TargetInfo &_target );
 		// typedef: pfnGetEntityOffset
 		//		Callback function for getting an offset for an entity type
-		typedef const void (*pfnGetEntityVisDistance)(float &_distance, const TargetInfo &_target, const Client *_client);
+		typedef const void( *pfnGetEntityVisDistance )( float &_distance, const TargetInfo &_target, const Client *_client );
 		// typedef: pfnCanSensoreEntity
 		//		Callback function for checking whether an entity can be shot or watched
-		typedef const bool (*pfnCanSensoreEntity)(const EntityInstance &_ent);
+		typedef const bool( *pfnCanSensoreEntity )( const EntityInstance &_ent );
 		//////////////////////////////////////////////////////////////////////////
 
 		enum DebugFlags
@@ -52,7 +52,10 @@ namespace AiState
 		//		EntAny - Identifies ANY type of entity, friend or foe
 		//		EntEnemy - Identifies enemy entities
 		//		EntAlly - Identifies ally entities
-		enum Type { EntAny, EntEnemy, EntAlly };
+		enum Type
+		{
+			EntAny, EntEnemy, EntAlly
+		};
 
 		// typedef: MemoryMap
 		//	stdext::hash_map of entities to their memory record.
@@ -66,11 +69,11 @@ namespace AiState
 
 		// function: UpdateWithSoundSource
 		//		Updates memory record from sound input.
-		void UpdateWithSoundSource(const Event_Sound *_sound);
+		void UpdateWithSoundSource( const Event_Sound *_sound );
 
 		// function: UpdateWithTouchSource
 		//		Updates memory record from touch input.
-		void UpdateWithTouchSource(GameEntity _sourceent);
+		void UpdateWithTouchSource( GameEntity _sourceent );
 
 		// function: RemoveBotFromMemory
 		//		Removes an entity from memory of this bot.
@@ -90,55 +93,53 @@ namespace AiState
 		//		Allows the bot to update its smell from the game.
 		void UpdateSmell();
 
-		bool UpdateRecord(MemoryRecord &_record);
+		bool UpdateRecord( MemoryRecord &_record );
 
 		// function: GetTargetInfo
 		//		Gets the target info for an entity, this includes things such
 		//		as position, velocity, facing, distance to, class, flags, category
-		const TargetInfo *GetTargetInfo(const GameEntity _ent);
+		const TargetInfo *GetTargetInfo( const GameEntity _ent );
 
 		// function: QueryMemory
 		//		Performs a query on the sensory memory, taking a custom filter to use.
 		//		The filter is responsible for determining the result of a query.
 		//		See <FilterAllType>, <FilterClosest>, <FilterMostHurt>, for default examples
-		void QueryMemory(FilterSensory &_filter);
+		void QueryMemory( FilterSensory &_filter );
 
 		// function: SetEntityTraceOffsetCallback
-		//		Sets a callback to be used as <m_pfnGetTraceOffset>
-		static void SetEntityTraceOffsetCallback(pfnGetEntityOffset _pfnCallback);
+		//		Sets a callback to be used as <.mpfnGetTraceOffset>
+		static void SetEntityTraceOffsetCallback( pfnGetEntityOffset _pfnCallback );
 
 		// function: SetEntityAimOffsetCallback
-		//		Sets a callback to be used as <m_pfnGetAimOffset>
-		static void SetEntityAimOffsetCallback(pfnGetEntityOffset _pfnCallback);
-
-		// function: SetEntityVisDistance
-		//		Sets a callback to be used as <m_pfnGetVisDistance>
-		static void SetEntityVisDistanceCallback(pfnGetEntityVisDistance _pfnCallback);
-
-		// function: SetCanSensoreEntityCallback
-		//		Sets a callback to be used as <m_pfnCanSensoreEntity>
-		static void SetCanSensoreEntityCallback(pfnCanSensoreEntity _pfnCallback);
-
+		//		Sets a callback to be used as <.mpfnGetAimOffset>
+		static void SetEntityAimOffsetCallback( pfnGetEntityOffset _pfnCallback );
+		
 		// function: GetMemorySpan
 		//		Accessor for the bots memory span
-		inline int GetMemorySpan() const { return m_MemorySpan; }
+		inline int GetMemorySpan() const
+		{
+			return mMemorySpan;
+		}
 
 		// function: SetMemorySpan
 		//		Modifier for the bots memory span
-		inline void SetMemorySpan(int _memspan) { m_MemorySpan = _memspan; }
+		inline void SetMemorySpan( int _memspan )
+		{
+			mMemorySpan = _memspan;
+		}
 
 		// function: GetMemoryRecord
 		//		Accessor for an entities memory record.
-		MemoryRecord *GetMemoryRecord(GameEntity _ent, bool _add = false, bool _update = false);
+		MemoryRecord *GetMemoryRecord( GameEntity _ent, bool _add = false, bool _update = false );
 
-		MemoryRecord *GetMemoryRecord(const RecordHandle &_hndl);
+		MemoryRecord *GetMemoryRecord( const RecordHandle &_hndl );
 
-		void GetRecordInfo(const MemoryRecords &_hndls, Vector3List *_pos, Vector3List *_vel);
+		void GetRecordInfo( const MemoryRecords &_hndls, Vector3List *_pos, Vector3List *_vel );
 
-		int FindEntityByCategoryInRadius(float radius, BitFlag32 category, RecordHandle hndls[], int maxHandles);
-		int FindEntityByCategoryInRadius(float radius, BitFlag32 category, GameEntity ents[], int maxEnts);
+		int FindEntityByCategoryInRadius( float radius, BitFlag32 category, RecordHandle hndls [], int maxHandles );
+		int FindEntityByCategoryInRadius( float radius, BitFlag32 category, GameEntity ents [], int maxEnts );
 
-		bool HasLineOfSightTo(const MemoryRecord &mr, int customTraceMask = 0);
+		bool HasLineOfSightTo( const MemoryRecord &mr, int customTraceMask = 0 );
 
 		// function: CheckTargetsInRadius
 		//		Static helper function for counting the number of target types in a given
@@ -153,50 +154,49 @@ namespace AiState
 		//
 		// Returns:
 		//		Vector3 - A point along the targets current velocity to aim towards.
-		int CheckTargetsInRadius(const Vector3f &_pos, float _radius,
-			SensoryMemory::Type _type, const BitFlag64 &_category);
+		int CheckTargetsInRadius( const Vector3f &_pos, float _radius,
+			SensoryMemory::Type _type, const BitFlag64 &_category );
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 		void RenderDebug();
 
 		void Enter();
 		void Exit();
 
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		enum { MaxRecords = Constants::MAX_ENTITIES };
+		enum
+		{
+			MaxRecords = Constants::MAX_ENTITIES
+		};
 
-		int GetAllRecords(MemoryRecord *_records, int _max);
+		int GetAllRecords( MemoryRecord *_records, int _max );
 
-		BitFlag32		m_DebugFlags;
+		BitFlag32	 mDebugFlags;
 
 		SensoryMemory();
 		virtual ~SensoryMemory();
 	protected:
-		MemoryRecord	m_Records[MaxRecords];
+		MemoryRecord mRecords[ MaxRecords ];
 
-		// int: m_MemorySpan
+		// int: mMemorySpan
 		//		The amount of time this bot can 'remember' an entity, before
 		//		the memory record is treated as invalid
-		int				m_MemorySpan;
+		int			 mMemorySpan;
 
 		// function: AddRecordIfNotPresent
 		//		Adds a memory record for an entity if not already present.
 		//MemoryRecord &AddRecordIfNotPresent(const GameEntity _ent);
 
-		// callback: m_pfnGetTraceOffset
+		// callback: mpfnGetTraceOffset
 		//		Method the Sensory memory uses to request a trace offset from the game
-		static pfnGetEntityOffset	m_pfnGetTraceOffset;
-		// callback: m_pfnGetAimOffset
+		static pfnGetEntityOffset mpfnGetTraceOffset;
+		// callback: mpfnGetAimOffset
 		//		Method the Sensory memory uses to request an aim offset from the game
-		static pfnGetEntityOffset	m_pfnGetAimOffset;
-		// callback: m_pfnGetVisDistance
+		static pfnGetEntityOffset mpfnGetAimOffset;
+		// callback: mpfnGetVisDistance
 		//		Method the Sensory memory uses to request an entity visibility distance from the game.
-		static pfnGetEntityVisDistance		m_pfnGetVisDistance;
-		// callback: m_pfnCanSensoreEntity
-		//		Method the Sensory memory uses to check whether an entity can be shot or watched
-		static pfnCanSensoreEntity		m_pfnCanSensoreEntity;
-	private:
+		static pfnGetEntityVisDistance	 mpfnGetVisDistance;
 	};
 };
 #endif

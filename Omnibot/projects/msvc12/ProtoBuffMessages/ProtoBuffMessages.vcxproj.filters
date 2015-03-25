@@ -18,9 +18,6 @@
     <ClCompile Include="..\..\..\Common\influencemap.pb.cc">
       <Filter>Protocol Buffer Files\autogen</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\navmesh.pb.cc">
-      <Filter>Protocol Buffer Files\autogen</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\ProtoBufUtility.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
@@ -35,9 +32,6 @@
     <ClInclude Include="..\..\..\Common\influencemap.pb.h">
       <Filter>Protocol Buffer Files\autogen</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Common\navmesh.pb.h">
-      <Filter>Protocol Buffer Files\autogen</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Common\ProtoBufUtility.h">
       <Filter>Utility</Filter>
     </ClInclude>
@@ -50,9 +44,6 @@
       <Filter>Protocol Buffer Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\..\Common\influencemap.proto">
-      <Filter>Protocol Buffer Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\..\Common\navmesh.proto">
       <Filter>Protocol Buffer Files</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\..\Common\recast.proto">

@@ -744,7 +744,7 @@ int gmScriptGoal::gmfBlockForWeaponChange( gmThread *a_thread )
 	CHECK_THIS_SGOAL();
 	GM_CHECK_INT_PARAM( weaponId, 0 );
 
-	gmVariable varSig( Utils::MakeId32( (obint16)ACTION_WEAPON_CHANGE, (obint16)weaponId ) );
+	gmVariable varSig( Utils::MakeId32( (int16_t)ACTION_WEAPON_CHANGE, (int16_t)weaponId ) );
 
 	AiState::WeaponSystem *ws = native->GetClient()->GetWeaponSystem();
 	if ( ws != NULL && ws->CurrentWeaponIs( weaponId ) )
@@ -766,7 +766,7 @@ int gmScriptGoal::gmfBlockForWeaponFire( gmThread *a_thread )
 {
 	CHECK_THIS_SGOAL();
 	GM_CHECK_INT_PARAM( weaponId, 0 );
-	gmVariable varSig( Utils::MakeId32( (obint16)ACTION_WEAPON_FIRE, (obint16)weaponId ) );
+	gmVariable varSig( Utils::MakeId32( (int16_t)ACTION_WEAPON_FIRE, (int16_t)weaponId ) );
 	int res = a_thread->GetMachine()->Sys_Block( a_thread, 1, &varSig );
 	if ( res == -1 )
 		return GM_SYS_BLOCK;
@@ -785,7 +785,7 @@ int gmScriptGoal::gmfBlockForVoiceMacro( gmThread *a_thread )
 	for ( int i = 0; i < a_thread->GetNumParams(); ++i )
 	{
 		GM_CHECK_INT_PARAM( macroId, i );
-		signals[ iNumMacros++ ] = gmVariable( Utils::MakeId32( (obint16)PERCEPT_HEAR_VOICEMACRO, (obint16)macroId ) );
+		signals[ iNumMacros++ ] = gmVariable( Utils::MakeId32( (int16_t)PERCEPT_HEAR_VOICEMACRO, (int16_t)macroId ) );
 	}
 
 	int res = a_thread->GetMachine()->Sys_Block( a_thread, iNumMacros, signals );
@@ -1090,21 +1090,21 @@ int gmScriptGoal::gmfQueryMapGoals( gmThread *a_thread )
 		return GM_EXCEPTION;
 	}
 
-	if ( !qry.m_List.empty() )
+	if ( !qry.mList.empty() )
 	{
 		gmMachine *pMachine = a_thread->GetMachine();
 
 		DisableGCInScope gcEn( pMachine );
 
-		for ( obuint32 i = 0; i < qry.m_List.size(); ++i )
+		for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 		{
-			gmUserObject *pUser = qry.m_List[ i ]->GetScriptObject( a_thread->GetMachine() );
+			gmUserObject *pUser = qry.mList[ i ]->GetScriptObject( a_thread->GetMachine() );
 			OBASSERT( pUser, "Invalid Object" );
 
 			table->Set( pMachine, i, gmVariable( pUser ) );
 		}
 	}
-	a_thread->PushInt( (gmint)qry.m_List.size() );
+	a_thread->PushInt( (gmint)qry.mList.size() );
 	return GM_OK;
 }
 
@@ -1595,7 +1595,7 @@ bool gmScriptGoal::setAlwaysRecieveEvents( AiState::ScriptGoal *a_native, gmThre
 
 bool gmScriptGoal::getEvents( AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
-	a_operands[ 0 ].SetTable( a_native->m_EventTable );
+	a_operands[ 0 ].SetTable( a_native->mEventTable );
 	return true;
 }
 
@@ -1603,13 +1603,13 @@ bool gmScriptGoal::setEvents( AiState::ScriptGoal *a_native, gmThread *a_thread,
 {
 	gmTableObject *pTbl = a_operands[ 1 ].GetTableObjectSafe();
 	if ( pTbl )
-		a_native->m_EventTable.Set( pTbl, a_thread->GetMachine() );
+		a_native->mEventTable.Set( pTbl, a_thread->GetMachine() );
 	return true;
 }
 
 bool gmScriptGoal::getCommands( AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
-	a_operands[ 0 ].SetTable( a_native->m_CommandTable );
+	a_operands[ 0 ].SetTable( a_native->mCommandTable );
 	return true;
 }
 
@@ -1617,7 +1617,7 @@ bool gmScriptGoal::setCommands( AiState::ScriptGoal *a_native, gmThread *a_threa
 {
 	gmTableObject *pTbl = a_operands[ 1 ].GetTableObjectSafe();
 	if ( pTbl )
-		a_native->m_CommandTable.Set( pTbl, a_thread->GetMachine() );
+		a_native->mCommandTable.Set( pTbl, a_thread->GetMachine() );
 	return true;
 }
 

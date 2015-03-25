@@ -18,36 +18,36 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	PlantMine::PlantMine()
-		: StateChild("PlantMine")
-		, FollowPathUser("PlantMine")
+		: StateChild( "PlantMine" )
+		, FollowPathUser( "PlantMine" )
 	{
-		LimitToWeapon().SetFlag(ET_WP_LANDMINE);
-		SetAlwaysRecieveEvents(true);
+		LimitToWeapon().SetFlag( ET_WP_LANDMINE );
+		SetAlwaysRecieveEvents( true );
 	}
 
-	void PlantMine::GetDebugString(std::stringstream &out)
+	void PlantMine::GetDebugString( std::stringstream &out )
 	{
-		out << (m_MapGoal ? m_MapGoal->GetName() : "");
+		out << ( mMapGoal ? mMapGoal->GetName() : "" );
 	}
 
 	MapGoal *PlantMine::GetMapGoalPtr()
 	{
-		return m_MapGoal.get();
+		return mMapGoal.get();
 	}
 
 	void PlantMine::RenderDebug()
 	{
-		if(IsActive())
+		if ( IsActive() )
 		{
-			RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
-			RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
 		}
 	}
 
 	// FollowPathUser functions.
-	bool PlantMine::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	bool PlantMine::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 32.f))
+		if ( mMapGoal && mMapGoal->RouteTo( GetClient(), _desination, 32.f ) )
 			_final = false;
 		else
 			_final = true;
@@ -55,173 +55,173 @@ namespace AiState
 	}
 
 	// AimerUser functions.
-	bool PlantMine::GetAimPosition(Vector3f &_aimpos)
+	bool PlantMine::GetAimPosition( Vector3f &_aimpos )
 	{
 		static float MINE_PITCH = -75.f;
-		if(!m_LandMineEntity.IsValid())
-			_aimpos = GetClient()->GetEyePosition() + Utils::ChangePitch(m_MapGoal->GetFacing(),MINE_PITCH) * 32.f;
+		if ( mLandMineEntity.IsValid() )
+			_aimpos = GetClient()->GetEyePosition() + Utils::ChangePitch( mMapGoal->GetFacing(), MINE_PITCH ) * 32.f;
 		else
-			_aimpos = m_LandMinePosition;
+			_aimpos = mLandMinePosition;
 		return true;
 	}
 
 	void PlantMine::OnTarget()
 	{
-		FINDSTATE(ws, WeaponSystem, GetRootState());
-		if(ws)
+		FINDSTATE( ws, WeaponSystem, GetRootState() );
+		if ( ws )
 		{
-			if(m_LandMineEntity.IsValid() && ws->CurrentWeaponIs(ET_WP_PLIERS))
+			if ( mLandMineEntity.IsValid() && ws->CurrentWeaponIs( ET_WP_PLIERS ) )
 				ws->FireWeapon();
-			else if(!m_LandMineEntity.IsValid() && ws->CurrentWeaponIs(ET_WP_LANDMINE))
+			else if ( mLandMineEntity.IsValid() && ws->CurrentWeaponIs( ET_WP_LANDMINE ) )
 				ws->FireWeapon();
 		}
 	}
 
-	obReal PlantMine::GetPriority()
+	float PlantMine::GetPriority()
 	{
 		int currentMines, maxMines;
-		InterfaceFuncs::NumTeamMines(GetClient(), currentMines, maxMines);
+		InterfaceFuncs::NumTeamMines( GetClient(), currentMines, maxMines );
 		if ( currentMines >= maxMines ) return 0.f;
 
-		if(IsActive())
+		if ( IsActive() )
 			return GetLastPriority();
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
-		if(InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_LANDMINE, Primary))
+		if ( InterfaceFuncs::IsWeaponCharged( GetClient(), ET_WP_LANDMINE, Primary ) )
 		{
-			GoalManager::Query qry(0xf2dffa59 /* PLANTMINE */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			qry.GetBest(m_MapGoal);
+			GoalManager::Query qry( 0xf2dffa59 /* PLANTMINE */, GetClient() );
+			GoalManager::GetInstance()->GetGoals( qry );
+			qry.GetBest( mMapGoal );
 		}
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 
 	void PlantMine::Enter()
 	{
-		Tracker.InProgress = m_MapGoal;
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
+		Tracker.InProgress = mMapGoal;
+		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run, true ) );
 	}
 
 	void PlantMine::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
-		m_LandMineEntity.Reset();
-		m_MapGoal.reset();
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(), ReleaseWeaponRequest(GetNameHash()));
+		mLandMineEntity.Reset();
+		mMapGoal.reset();
+		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
+		FINDSTATEIF( WeaponSystem, GetRootState(), ReleaseWeaponRequest( GetNameHash() ) );
 
 		Tracker.Reset();
 	}
 
-	State::StateStatus PlantMine::Update(float fDt)
+	State::StateStatus PlantMine::Update( float fDt )
 	{
-		if(DidPathFail())
+		if ( DidPathFail() )
 		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+			BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+		if ( mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
 
 		// If it's not destroyable, consider it a success.
-		if (!InterfaceFuncs::IsDestroyable(GetClient(), m_MapGoal->GetEntity()))
+		if ( !InterfaceFuncs::IsDestroyable( GetClient(), mMapGoal->GetEntity() ) )
 		{
 			return State_Finished;
 		}
 
-		if(m_LandMineEntity.IsValid() && !IGame::IsEntityValid(m_LandMineEntity))
+		if ( mLandMineEntity.IsValid() && !IGame::IsEntityValid( mLandMineEntity ) )
 			return State_Finished;
 
-		if(DidPathSucceed())
+		if ( DidPathSucceed() )
 		{
 			GetClient()->ResetStuckTime();
 
 			// abort if they have a target
-			if(GetClient()->GetTargetingSystem()->HasTarget())
+			if ( GetClient()->GetTargetingSystem()->HasTarget() )
 				return State_Finished;
 
 			static float THROW_DISTANCE = 40.f;
 			static float ARM_DISTANCE = 32.f;
 
 			// Have we already thrown out a mine?
-			if(m_LandMineEntity.IsValid())
+			if ( mLandMineEntity.IsValid() )
 			{
 				// Is it armed yet?
-				if(InterfaceFuncs::GetExplosiveState(GetClient(), m_LandMineEntity) == XPLO_ARMED)
+				if ( InterfaceFuncs::GetExplosiveState( GetClient(), mLandMineEntity ) == XPLO_ARMED )
 				{
-					BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+					BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 					return State_Finished;
 				}
 
 				// Disable avoidance for this frame.
-				//m_Client->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime());
+				//mClient->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime());
 
 				// Not armed yet, keep trying.
-				if(EngineFuncs::EntityPosition(m_LandMineEntity, m_LandMinePosition) &&
-					EngineFuncs::EntityVelocity(m_LandMineEntity, m_LandMineVelocity))
+				if ( EngineFuncs::EntityPosition( mLandMineEntity, mLandMinePosition ) &&
+					EngineFuncs::EntityVelocity( mLandMineEntity, mLandMineVelocity ) )
 				{
-					GetClient()->PressButton(BOT_BUTTON_CROUCH);
+					GetClient()->PressButton( BOT_BUTTON_CROUCH );
 
-					FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-					FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_PLIERS));
+					FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
+					FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), ET_WP_PLIERS ) );
 
 					// Get into position?
-					Vector3f vMineToMe = GetClient()->GetPosition() - m_LandMinePosition;
+					Vector3f vMineToMe = GetClient()->GetPosition() - mLandMinePosition;
 					vMineToMe.Flatten();
 
-					/*RenderBuffer::AddLine(m_LandMinePosition,
-					m_LandMinePosition + Normalize(vMineToMe) * ARM_DISTANCE,
-					COLOR::GREEN,
-					5.f);*/
+					/*RenderBuffer::AddLine(.mLandMinePosition,
+				mLandMinePosition + Normalize(vMineToMe) * ARM_DISTANCE,
+				COLOR::GREEN,
+				5.f);*/
 
 					GetClient()->GetSteeringSystem()->SetTarget(
-						m_LandMinePosition + Normalize(vMineToMe) * ARM_DISTANCE);
+						mLandMinePosition + Normalize( vMineToMe ) * ARM_DISTANCE );
 				}
 				return State_Busy;
 			}
 
 			// Get into position?
-			Vector3f vMineToMe = GetClient()->GetPosition() - m_MapGoal->GetPosition();
+			Vector3f vMineToMe = GetClient()->GetPosition() - mMapGoal->GetPosition();
 			vMineToMe.Flatten();
 
-			/*RenderBuffer::AddLine(m_MapGoal->GetPosition(),
-			m_MapGoal->GetPosition() + Normalize(vMineToMe) * THROW_DISTANCE,
-			COLOR::GREEN,
-			5.f);*/
+			/*RenderBuffer::AddLine(.mMapGoal->GetPosition(),
+		mMapGoal->GetPosition() + Normalize(vMineToMe) * THROW_DISTANCE,
+		COLOR::GREEN,
+		5.f);*/
 
 			GetClient()->GetSteeringSystem()->SetTarget(
-				m_MapGoal->GetPosition() + Normalize(vMineToMe) * THROW_DISTANCE);
+				mMapGoal->GetPosition() + Normalize( vMineToMe ) * THROW_DISTANCE );
 
 			// keep watching the target position.
 			// cs: make sure they are within bounds before planting
 			// TODO: FIXME: check for unreachable.
-			const float fDistanceToTarget = SquaredLength2d(m_MapGoal->GetPosition(), GetClient()->GetPosition());
+			const float fDistanceToTarget = SquaredLength2d( mMapGoal->GetPosition(), GetClient()->GetPosition() );
 			if ( fDistanceToTarget <= 1024 ) // 32 units.
 			{
-				FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-				FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_LANDMINE));
+				FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
+				FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), ET_WP_LANDMINE ) );
 			}
 			else
 			{
-				GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
+				GetClient()->GetSteeringSystem()->SetTarget( mMapGoal->GetPosition() );
 			}
 		}
 		return State_Busy;
 	}
 
-	void PlantMine::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+	void PlantMine::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
 	{
-		switch(_message.GetMessageId())
+		switch ( _message.GetMessageId() )
 		{
-			HANDLER(ACTION_WEAPON_FIRE)
+			HANDLER( ACTION_WEAPON_FIRE )
 			{
-				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-				if(m->m_WeaponId == ET_WP_LANDMINE && m->m_Projectile.IsValid())
+				const Event_WeaponFire* m = _message.Get<Event_WeaponFire>();
+				if ( m->mWeaponId == ET_WP_LANDMINE && m->mProjectile.IsValid() )
 				{
-					m_LandMineEntity = m->m_Projectile;
+					mLandMineEntity = m->mProjectile;
 				}
 				break;
 			}
@@ -231,34 +231,34 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	MobileMortar::MobileMortar()
-		: StateChild("MobileMortar")
-		, FollowPathUser("MobileMortar")
+		: StateChild( "MobileMortar" )
+		, FollowPathUser( "MobileMortar" )
 	{
-		LimitToWeapon().SetFlag(ET_WP_MORTAR);
+		LimitToWeapon().SetFlag( ET_WP_MORTAR );
 	}
 
-	void MobileMortar::GetDebugString(std::stringstream &out)
+	void MobileMortar::GetDebugString( std::stringstream &out )
 	{
-		out << (m_MapGoal ? m_MapGoal->GetName() : "");
+		out << ( mMapGoal ? mMapGoal->GetName() : "" );
 	}
 
 	MapGoal *MobileMortar::GetMapGoalPtr()
 	{
-		return m_MapGoal.get();
+		return mMapGoal.get();
 	}
 
 	void MobileMortar::RenderDebug()
 	{
-		if(IsActive())
+		if ( IsActive() )
 		{
-			RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::CYAN,5.f);
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::CYAN, 5.f );
 		}
 	}
 
 	// FollowPathUser functions.
-	bool MobileMortar::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	bool MobileMortar::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 32.f))
+		if ( mMapGoal && mMapGoal->RouteTo( GetClient(), _desination, 32.f ) )
 			_final = false;
 		else
 			_final = true;
@@ -266,31 +266,31 @@ namespace AiState
 	}
 
 	// AimerUser functions.
-	bool MobileMortar::GetAimPosition(Vector3f &_aimpos)
+	bool MobileMortar::GetAimPosition( Vector3f &_aimpos )
 	{
-		FINDSTATE(wp,WeaponSystem,GetRootState());
-		if(wp != NULL && wp->CurrentWeaponIs(ET_WP_MORTAR_SET))
-			_aimpos = GetClient()->GetEyePosition() + m_MortarAim[m_CurrentAim];
+		FINDSTATE( wp, WeaponSystem, GetRootState() );
+		if ( wp != NULL && wp->CurrentWeaponIs( ET_WP_MORTAR_SET ) )
+			_aimpos = GetClient()->GetEyePosition() + mMortarAim[ mCurrentAim ];
 		else
-			_aimpos = GetClient()->GetEyePosition() + m_MapGoal->GetFacing();
+			_aimpos = GetClient()->GetEyePosition() + mMapGoal->GetFacing();
 		return true;
 	}
 
 	void MobileMortar::OnTarget()
 	{
-		FINDSTATE(wp,WeaponSystem,GetRootState());
-		if(wp)
+		FINDSTATE( wp, WeaponSystem, GetRootState() );
+		if ( wp )
 		{
-			if(!wp->CurrentWeaponIs(ET_WP_MORTAR_SET))
+			if ( !wp->CurrentWeaponIs( ET_WP_MORTAR_SET ) )
 			{
-				if(wp->CurrentWeaponIs(ET_WP_MORTAR))
-					wp->AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_MORTAR_SET);
+				if ( wp->CurrentWeaponIs( ET_WP_MORTAR ) )
+					wp->AddWeaponRequest( Priority::Medium, GetNameHash(), ET_WP_MORTAR_SET );
 				else
-					wp->AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_MORTAR);
+					wp->AddWeaponRequest( Priority::Medium, GetNameHash(), ET_WP_MORTAR );
 			}
 			else
 			{
-				if(IGame::GetTime() >= m_FireDelay)
+				if ( IGame::GetTime() >= mFireDelay )
 				{
 					wp->FireWeapon();
 				}
@@ -298,95 +298,99 @@ namespace AiState
 		}
 	}
 
-	obReal MobileMortar::GetPriority()
+	float MobileMortar::GetPriority()
 	{
 		int curAmmo = 0, maxAmmo = 0;
-		gEngineFuncs->GetCurrentAmmo(GetClient()->GetGameEntity(),ET_WP_MORTAR,Primary,curAmmo,maxAmmo);
-		if(curAmmo <= 0)
+		gEngineFuncs->GetCurrentAmmo( GetClient()->GetGameEntity(), ET_WP_MORTAR, Primary, curAmmo, maxAmmo );
+		if ( curAmmo <= 0 )
 			return 0.f;
 
-		if(IsActive())
+		if ( IsActive() )
 			return GetLastPriority();
 
 		/*if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_MORTAR_SET))
 		return 0.f;*/
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
-		GoalManager::Query qry(0x74708d7a /* MOBILEMORTAR */, GetClient());
-		GoalManager::GetInstance()->GetGoals(qry);
-		if(!qry.GetBest(m_MapGoal) || !CacheGoalInfo(m_MapGoal))
-			m_MapGoal.reset();
+		GoalManager::Query qry( 0x74708d7a /* MOBILEMORTAR */, GetClient() );
+		GoalManager::GetInstance()->GetGoals( qry );
+		if ( !qry.GetBest( mMapGoal ) || !CacheGoalInfo( mMapGoal ) )
+			mMapGoal.reset();
 
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 
 	void MobileMortar::Enter()
 	{
-		Tracker.InProgress = m_MapGoal;
-		m_FireDelay = 0;
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
+		Tracker.InProgress = mMapGoal;
+		mFireDelay = 0;
+		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run ) );
 	}
 
 	void MobileMortar::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
-		m_MapGoal.reset();
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem,GetRootState(),ReleaseWeaponRequest(GetNameHash()));
+		mMapGoal.reset();
+		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
+		FINDSTATEIF( WeaponSystem, GetRootState(), ReleaseWeaponRequest( GetNameHash() ) );
 		Tracker.Reset();
 	}
 
-	State::StateStatus MobileMortar::Update(float fDt)
+	State::StateStatus MobileMortar::Update( float fDt )
 	{
-		if(DidPathFail())
+		if ( DidPathFail() )
 		{
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+			BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 
-		if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+		if ( mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
 
-		if(!Tracker.InUse && m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE) < 1)
+		if ( !Tracker.InUse && mMapGoal->GetSlotsOpen( MapGoal::TRACK_INUSE ) < 1 )
 			return State_Finished;
 
-		if(DidPathSucceed())
+		if ( DidPathSucceed() )
 		{
-			if(m_FireDelay == 0)
+			if ( mFireDelay == 0 )
 			{
-				Tracker.InUse = m_MapGoal;
-				m_FireDelay = IGame::GetTime() + 2000;
+				Tracker.InUse = mMapGoal;
+				mFireDelay = IGame::GetTime() + 2000;
 			}
 
 			// TODO: FIXME: check for unreachable.
-			const float fDistanceToTarget = SquaredLength2d(m_MapGoal->GetPosition(), GetClient()->GetPosition());
+			const float fDistanceToTarget = SquaredLength2d( mMapGoal->GetPosition(), GetClient()->GetPosition() );
 			if ( fDistanceToTarget <= 1024 ) // 32 units.
 			{
-				FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
+				FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
 			}
 			else
 			{
-				GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
+				GetClient()->GetSteeringSystem()->SetTarget( mMapGoal->GetPosition() );
 			}
 		}
 		return State_Busy;
 	}
 
-	void MobileMortar::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+	void MobileMortar::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
 	{
-		switch(_message.GetMessageId())
+		switch ( _message.GetMessageId() )
 		{
-			HANDLER(ACTION_WEAPON_FIRE)
+			HANDLER( ACTION_WEAPON_FIRE )
 			{
-				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-				if(m != NULL && m->m_Projectile.IsValid())
+				const Event_WeaponFire* m = _message.Get<Event_WeaponFire>();
+				if ( m != NULL && m->mProjectile.IsValid() )
 				{
-					if(InterfaceFuncs::GetEntityClass(m->m_Projectile) == ET_CLASSEX_MORTAR)
+					EntityInfo entInfo;
+					if ( IGame::GetEntityInfo( m->mProjectile, entInfo ) )
 					{
-						m_CurrentAim = (m_CurrentAim+1)%m_NumMortarAims;
-						m_FireDelay = IGame::GetTime() + 2000;
+						if ( entInfo.mGroup == ENT_GRP_PROJECTILE && entInfo.mClassId == ET_CLASSEX_MORTAR )
+						{
+							mCurrentAim = ( mCurrentAim + 1 ) % mNumMortarAims;
+							mFireDelay = IGame::GetTime() + 2000;
+						}
 					}
 				}
 				break;
@@ -394,64 +398,64 @@ namespace AiState
 		}
 	}
 
-	bool MobileMortar::CacheGoalInfo(MapGoalPtr mg)
+	bool MobileMortar::CacheGoalInfo( MapGoalPtr mg )
 	{
-		m_CurrentAim = 0;
-		m_NumMortarAims = 0;
+		mCurrentAim = 0;
+		mNumMortarAims = 0;
 
-		for(int i = 0; i < MaxMortarAims; ++i)
+		for ( int i = 0; i < MaxMortarAims; ++i )
 		{
-			if(m_MapGoal->GetProperty(va("MortarAim[%d]",i),m_MortarAim[m_NumMortarAims]))
+			if ( mMapGoal->GetProperty( va( "MortarAim[%d]", i ), mMortarAim[ mNumMortarAims ] ) )
 			{
-				if(!m_MortarAim[m_NumMortarAims].IsZero())
+				if ( mMortarAim[ mNumMortarAims ].IsZero() )
 				{
-					++m_NumMortarAims;
+					++mNumMortarAims;
 				}
 			}
 		}
-		std::random_shuffle(m_MortarAim, m_MortarAim + m_NumMortarAims);
-		return m_NumMortarAims > 0;
+		std::random_shuffle( mMortarAim, mMortarAim + mNumMortarAims );
+		return mNumMortarAims > 0;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 
 	CallArtillery::CallArtillery()
-		: StateChild("CallArtillery")
-		, FollowPathUser("CallArtillery")
-		, m_MinCampTime(1.f)
-		, m_MaxCampTime(2.f)
-		, m_Stance(StanceStand)
-		, m_ExpireTime(0)
+		: StateChild( "CallArtillery" )
+		, FollowPathUser( "CallArtillery" )
+		, mMinCampTime( 1.f )
+		, mMaxCampTime( 2.f )
+		, mStance( StanceStand )
+		, mExpireTime( 0 )
 	{
-		LimitToWeapon().SetFlag(ET_WP_BINOCULARS);
+		LimitToWeapon().SetFlag( ET_WP_BINOCULARS );
 	}
 
-	void CallArtillery::GetDebugString(std::stringstream &out)
+	void CallArtillery::GetDebugString( std::stringstream &out )
 	{
-		out << (m_MapGoal ? m_MapGoal->GetName() : "");
+		out << ( mMapGoal ? mMapGoal->GetName() : "" );
 	}
 
 	MapGoal *CallArtillery::GetMapGoalPtr()
 	{
-		return m_MapGoal.get();
+		return mMapGoal.get();
 	}
 
 	void CallArtillery::RenderDebug()
 	{
-		if(IsActive())
+		if ( IsActive() )
 		{
-			if(m_MapGoal)
+			if ( mMapGoal )
 			{
-				RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(),COLOR::ORANGE);
-				RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+				RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
+				RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
 			}
 		}
 	}
 
 	// FollowPathUser functions.
-	bool CallArtillery::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	bool CallArtillery::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+		if ( mMapGoal && mMapGoal->RouteTo( GetClient(), _desination, 64.f ) )
 			_final = false;
 		else
 			_final = true;
@@ -459,22 +463,22 @@ namespace AiState
 	}
 
 	// AimerUser functions.
-	bool CallArtillery::GetAimPosition(Vector3f &_aimpos)
+	bool CallArtillery::GetAimPosition( Vector3f &_aimpos )
 	{
-		if(m_MapGoalTarget)
+		if ( mMapGoalTarget )
 		{
-			_aimpos = m_MapGoalTarget->GetPosition();
+			_aimpos = mMapGoalTarget->GetPosition();
 		}
-		else if(m_TargetEntity.IsValid())
+		else if ( mTargetEntity.IsValid() )
 		{
 			const float LOOKAHEAD_TIME = 5.0f;
-			const MemoryRecord *mr = GetClient()->GetSensoryMemory()->GetMemoryRecord(m_TargetEntity);
-			if(mr)
+			const MemoryRecord* mr = GetClient()->GetSensoryMemory()->GetMemoryRecord( mTargetEntity );
+			if ( mr )
 			{
-				const Vector3f vVehicleOffset = Vector3f(0.0f, 0.0f, 32.0f);
-				_aimpos = vVehicleOffset + mr->m_TargetInfo.m_LastPosition +
-					mr->m_TargetInfo.m_LastVelocity * LOOKAHEAD_TIME;
-				m_FireTime = IGame::GetTime() + 1000;
+				const Vector3f vVehicleOffset = Vector3f( 0.0f, 0.0f, 32.0f );
+				_aimpos = vVehicleOffset + mr->mTargetInfo.mLastPosition +
+					mr->mTargetInfo.mLastVelocity * LOOKAHEAD_TIME;
+				mFireTime = IGame::GetTime() + 1000;
 			}
 		}
 		return true;
@@ -482,13 +486,13 @@ namespace AiState
 
 	void CallArtillery::OnTarget()
 	{
-		FINDSTATE(ws, WeaponSystem, GetRootState());
-		if(ws != NULL && ws->CurrentWeaponIs(ET_WP_BINOCULARS))
+		FINDSTATE( ws, WeaponSystem, GetRootState() );
+		if ( ws != NULL && ws->CurrentWeaponIs( ET_WP_BINOCULARS ) )
 		{
-			GetClient()->PressButton(BOT_BUTTON_AIM);
-			if(m_FireTime < IGame::GetTime())
+			GetClient()->PressButton( BOT_BUTTON_AIM );
+			if ( mFireTime < IGame::GetTime() )
 			{
-				if(GetClient()->HasEntityFlag(ENT_FLAG_ZOOMING))
+				if ( GetClient()->HasEntityFlag( ENT_FLAG_ZOOMING ) )
 				{
 					ws->FireWeapon();
 				}
@@ -496,213 +500,213 @@ namespace AiState
 		}
 	}
 
-	obReal CallArtillery::GetPriority()
+	float CallArtillery::GetPriority()
 	{
-		if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_BINOCULARS, Primary))
+		if ( !InterfaceFuncs::IsWeaponCharged( GetClient(), ET_WP_BINOCULARS, Primary ) )
 			return 0.f;
 
-		if(IsActive())
+		if ( IsActive() )
 			return GetLastPriority();
 
-		m_MapGoal.reset();
-		m_MapGoalTarget.reset();
+		mMapGoal.reset();
+		mMapGoalTarget.reset();
 
 		//////////////////////////////////////////////////////////////////////////
-		ET_FilterClosest filter(GetClient(), AiState::SensoryMemory::EntEnemy);
-		filter.AddCategory(ENT_CAT_SHOOTABLE);
-		filter.AddClass(ET_CLASSEX_VEHICLE);
-		filter.AddClass(ET_CLASSEX_VEHICLE_HVY);
-		FINDSTATE(sensory,SensoryMemory,GetRootState());
-		if(sensory)
+		ET_FilterClosest filter( GetClient(), AiState::SensoryMemory::EntEnemy );
+		filter.AddCategory( ENT_CAT_SHOOTABLE );
+		filter.AddClass( ET_CLASSEX_VEHICLE );
+		filter.AddClass( ET_CLASSEX_VEHICLE_HVY );
+		FINDSTATE( sensory, SensoryMemory, GetRootState() );
+		if ( sensory )
 		{
-			sensory->QueryMemory(filter);
+			sensory->QueryMemory( filter );
 
-			if(filter.GetBestEntity().IsValid())
+			if ( filter.GetBestEntity().IsValid() )
 			{
-				GoalManager::Query q(0xa411a092 /* MOVER */);
-				q.Ent(filter.GetBestEntity());
-				GoalManager::GetInstance()->GetGoals(q);
+				GoalManager::Query q( 0xa411a092 /* MOVER */ );
+				q.Ent( filter.GetBestEntity() );
+				GoalManager::GetInstance()->GetGoals( q );
 
-				if(!q.m_List.empty())
+				if ( !q.mList.empty() )
 				{
-					m_TargetEntity = filter.GetBestEntity();
-					return q.m_List.front()->GetDefaultPriority();
+					mTargetEntity = filter.GetBestEntity();
+					return q.mList.front()->GetDefaultPriority();
 				}
 			}
 		}
 		//////////////////////////////////////////////////////////////////////////
 		{
-			GoalManager::Query qry(0x312ad48d /* CALLARTILLERY */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+			GoalManager::Query qry( 0x312ad48d /* CALLARTILLERY */, GetClient() );
+			GoalManager::GetInstance()->GetGoals( qry );
+			for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 			{
-				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+				if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
 					continue;
 
-				if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+				if ( qry.mList[ i ]->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) < 1 )
 					continue;
 
-				m_MapGoal = qry.m_List[i];
+				mMapGoal = qry.mList[ i ];
 				break;
 			}
 		}
-		if(!m_MapGoal)
+		if ( mMapGoal )
 			return 0.f;
 		//////////////////////////////////////////////////////////////////////////
-		Vector3f vSource = m_MapGoal->GetPosition();
+		Vector3f vSource = mMapGoal->GetPosition();
 		//vSource = vSource + Vector3(0,0,60);
 		vSource.Z() = vSource.Z() + 60;
 		//////////////////////////////////////////////////////////////////////////
-		if(!m_MapGoalTarget)
+		if ( mMapGoalTarget )
 		{
-			GoalManager::Query qry(0xb708821b /* ARTILLERY_S */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+			GoalManager::Query qry( 0xb708821b /* ARTILLERY_S */, GetClient() );
+			GoalManager::GetInstance()->GetGoals( qry );
+			for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 			{
-				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+				if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
 					continue;
 
-				if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+				if ( qry.mList[ i ]->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) < 1 )
 					continue;
 
-				if(!Client::HasLineOfSightTo(vSource,qry.m_List[i]->GetPosition()))
+				if ( !Client::HasLineOfSightTo( vSource, qry.mList[ i ]->GetPosition() ) )
 					continue;
 
-				m_MapGoalTarget = qry.m_List[i];
+				mMapGoalTarget = qry.mList[ i ];
 				break;
 			}
 		}
 		//////////////////////////////////////////////////////////////////////////
-		if(!m_MapGoalTarget)
+		if ( mMapGoalTarget )
 		{
-			GoalManager::Query qry(0xac0870ca /* ARTILLERY_D */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+			GoalManager::Query qry( 0xac0870ca /* ARTILLERY_D */, GetClient() );
+			GoalManager::GetInstance()->GetGoals( qry );
+			for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 			{
-				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+				if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
 					continue;
 
-				if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+				if ( qry.mList[ i ]->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) < 1 )
 					continue;
 
-				if(!Client::HasLineOfSightTo(vSource,qry.m_List[i]->GetPosition()))
+				if ( !Client::HasLineOfSightTo( vSource, qry.mList[ i ]->GetPosition() ) )
 					continue;
 
-				m_MapGoalTarget = qry.m_List[i];
+				mMapGoalTarget = qry.mList[ i ];
 				break;
 			}
 		}
-		return m_MapGoalTarget ? m_MapGoalTarget->GetPriorityForClient(GetClient()) : 0.f;
+		return mMapGoalTarget ? mMapGoalTarget->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 
 	void CallArtillery::Enter()
 	{
-		if(m_MapGoalTarget && m_MapGoalTarget->GetGoalType()=="ARTILLERY_D")
-			m_FireTime = std::numeric_limits<int>::max();
+		if ( mMapGoalTarget && mMapGoalTarget->GetGoalType() == "ARTILLERY_D" )
+			mFireTime = std::numeric_limits<int>::max();
 		else
-			m_FireTime = 0;
+			mFireTime = 0;
 
-		m_Fired = false;
-		m_ExpireTime = 0;
+		mFired = false;
+		mExpireTime = 0;
 
-		if(m_MapGoal)
+		if ( mMapGoal )
 		{
-			m_MapGoal->GetProperty("Stance",m_Stance);
-			m_MapGoal->GetProperty("MinCampTime",m_MinCampTime);
-			m_MapGoal->GetProperty("MaxCampTime",m_MaxCampTime);
+			mMapGoal->GetProperty( "Stance", mStance );
+			mMapGoal->GetProperty( "MinCampTime", mMinCampTime );
+			mMapGoal->GetProperty( "MaxCampTime", mMaxCampTime );
 		}
 
-		if(m_MapGoalTarget)
+		if ( mMapGoalTarget )
 		{
-			if(!m_WatchFilter)
+			if ( mWatchFilter )
 			{
-				m_WatchFilter.reset(new ET_FilterClosest(GetClient(), AiState::SensoryMemory::EntEnemy));
+				mWatchFilter.reset( new ET_FilterClosest( GetClient(), AiState::SensoryMemory::EntEnemy ) );
 			}
 
-			m_WatchFilter->AddClass(FilterSensory::ANYPLAYERCLASS);
-			m_WatchFilter->AddPosition(m_MapGoalTarget->GetPosition());
-			m_WatchFilter->SetMaxDistance(100.f);
-			FINDSTATEIF(ProximityWatcher, GetRootState(), AddWatch(GetNameHash(),m_WatchFilter,false));
+			mWatchFilter->AddClass( FilterSensory::ANYPLAYERCLASS );
+			mWatchFilter->AddPosition( mMapGoalTarget->GetPosition() );
+			mWatchFilter->SetMaxDistance( 100.f );
+			FINDSTATEIF( ProximityWatcher, GetRootState(), AddWatch( GetNameHash(), mWatchFilter, false ) );
 		}
-		Tracker.InProgress = m_MapGoal;
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
+		Tracker.InProgress = mMapGoal;
+		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run ) );
 	}
 
 	void CallArtillery::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(),ReleaseWeaponRequest(GetNameHash()));
-		FINDSTATEIF(ProximityWatcher, GetRootState(), RemoveWatch(GetNameHash()));
+		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
+		FINDSTATEIF( WeaponSystem, GetRootState(), ReleaseWeaponRequest( GetNameHash() ) );
+		FINDSTATEIF( ProximityWatcher, GetRootState(), RemoveWatch( GetNameHash() ) );
 
 		Tracker.Reset();
 	}
 
-	State::StateStatus CallArtillery::Update(float fDt)
+	State::StateStatus CallArtillery::Update( float fDt )
 	{
-		if(DidPathFail())
+		if ( DidPathFail() )
 		{
-			if(m_MapGoal)
-				BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+			if ( mMapGoal )
+				BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 
-		if(m_MapGoal && !m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+		if ( mMapGoal && mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
-		if(m_MapGoalTarget && !m_MapGoalTarget->IsAvailable(GetClient()->GetTeam()))
+		if ( mMapGoalTarget && mMapGoalTarget->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
 
-		if(DidPathSucceed())
+		if ( DidPathSucceed() )
 		{
-			if(m_Fired)
+			if ( mFired )
 				return State_Finished;
 
-			if(m_ExpireTime==0)
+			if ( mExpireTime == 0 )
 			{
-				m_ExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(m_MinCampTime.GetMs(),m_MaxCampTime.GetMs());
-				Tracker.InUse = m_MapGoal;
+				mExpireTime = IGame::GetTime() + Mathf::IntervalRandomInt( mMinCampTime.GetMs(), mMaxCampTime.GetMs() );
+				Tracker.InUse = mMapGoal;
 			}
-			else if(IGame::GetTime() > m_ExpireTime)
+			else if ( IGame::GetTime() > mExpireTime )
 			{
 				// Delay it from being used for a while.
-				if(m_MapGoal)
-					BlackboardDelay(30.f, m_MapGoal->GetSerialNum());
+				if ( mMapGoal )
+					BlackboardDelay( 30.f, mMapGoal->GetSerialNum() );
 				return State_Finished;
 			}
 
-			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-			FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), ET_WP_BINOCULARS));
+			FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
+			FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), ET_WP_BINOCULARS ) );
 
-			if (m_Stance==StanceProne)
-				GetClient()->PressButton(BOT_BUTTON_PRONE);
-			else if (m_Stance==StanceCrouch)
-				GetClient()->PressButton(BOT_BUTTON_CROUCH);
+			if ( mStance == StanceProne )
+				GetClient()->PressButton( BOT_BUTTON_PRONE );
+			else if ( mStance == StanceCrouch )
+				GetClient()->PressButton( BOT_BUTTON_CROUCH );
 		}
 		return State_Busy;
 	}
 
-	void CallArtillery::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+	void CallArtillery::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
 	{
-		switch(_message.GetMessageId())
+		switch ( _message.GetMessageId() )
 		{
-			HANDLER(MESSAGE_PROXIMITY_TRIGGER)
+			HANDLER( MESSAGE_PROXIMITY_TRIGGER )
 			{
-				const AiState::Event_ProximityTrigger *m = _message.Get<AiState::Event_ProximityTrigger>();
-				if(m->m_OwnerState == GetNameHash())
+				const AiState::Event_ProximityTrigger* m = _message.Get<AiState::Event_ProximityTrigger>();
+				if ( m->mOwnerState == GetNameHash() )
 				{
-					m_FireTime = IGame::GetTime();// + 1000;
+					mFireTime = IGame::GetTime();// + 1000;
 				}
 				break;
 			}
-			HANDLER(ACTION_WEAPON_FIRE)
+			HANDLER( ACTION_WEAPON_FIRE )
 			{
-				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-				if(m != NULL && m->m_WeaponId == ET_WP_BINOCULARS)
+				const Event_WeaponFire* m = _message.Get<Event_WeaponFire>();
+				if ( m != NULL && m->mWeaponId == ET_WP_BINOCULARS )
 				{
-					m_Fired = true;
+					mFired = true;
 				}
 				break;
 			}
@@ -712,40 +716,40 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	UseCabinet::UseCabinet()
-		: StateChild("UseCabinet")
-		, FollowPathUser("UseCabinet")
-		, m_Range(1250.f)
+		: StateChild( "UseCabinet" )
+		, FollowPathUser( "UseCabinet" )
+		, mRange( 1250.f )
 	{
 	}
 
-	void UseCabinet::GetDebugString(std::stringstream &out)
+	void UseCabinet::GetDebugString( std::stringstream &out )
 	{
 		out <<
-			(m_MapGoal ? m_MapGoal->GetName() : "") <<
-			" (" << m_HealthPriority << "," << m_AmmoPriority << ")";
+			( mMapGoal ? mMapGoal->GetName() : "" ) <<
+			" (" << mHealthPriority << "," << mAmmoPriority << ")";
 	}
 
 	MapGoal *UseCabinet::GetMapGoalPtr()
 	{
-		return m_MapGoal.get();
+		return mMapGoal.get();
 	}
 
 	void UseCabinet::RenderDebug()
 	{
-		if(IsActive())
+		if ( IsActive() )
 		{
-			if(m_MapGoal)
+			if ( mMapGoal )
 			{
-				RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(),COLOR::ORANGE);
-				RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+				RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
+				RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
 			}
 		}
 	}
 
 	// FollowPathUser functions.
-	bool UseCabinet::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	bool UseCabinet::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+		if ( mMapGoal && mMapGoal->RouteTo( GetClient(), _desination, 64.f ) )
 			_final = false;
 		else
 			_final = true;
@@ -755,20 +759,20 @@ namespace AiState
 	// AimerUser functions.
 	/*bool UseHealthCabinet::GetAimPosition(Vector3f &_aimpos)
 	{
-	if(m_MapGoalTarget)
+	if(.mMapGoalTarget)
 	{
-	_aimpos = m_MapGoalTarget->GetPosition();
+	_aimpos = mMapGoalTarget->GetPosition();
 	}
-	else if(m_TargetEntity.IsValid())
+	else if(.mTargetEntity.IsValid())
 	{
 	const float LOOKAHEAD_TIME = 5.0f;
-	const MemoryRecord *mr = GetClient()->GetSensoryMemory()->GetMemoryRecord(m_TargetEntity);
+	const MemoryRecord mr = GetClient()->GetSensoryMemory()->GetMemoryRecord(.mTargetEntity);
 	if(mr)
 	{
 	const Vector3f vVehicleOffset = Vector3f(0.0f, 0.0f, 32.0f);
-	_aimpos = vVehicleOffset + mr->m_TargetInfo.m_LastPosition +
-	mr->m_TargetInfo.m_LastVelocity * LOOKAHEAD_TIME;
-	m_FireTime = IGame::GetTime() + 1000;
+	_aimpos = vVehicleOffset + mr->mTargetInfo.mLastPosition +
+	mr->mTargetInfo.mLastVelocity * LOOKAHEAD_TIME;
+	mFireTime = IGame::GetTime() + 1000;
 	}
 	}
 	return true;
@@ -780,7 +784,7 @@ namespace AiState
 	if(ws && ws->CurrentWeaponIs(ET_WP_BINOCULARS))
 	{
 	GetClient()->PressButton(BOT_BUTTON_AIM);
-	if(m_FireTime < IGame::GetTime())
+	if(.mFireTime < IGame::GetTime())
 	{
 	if(GetClient()->HasEntityFlag(ENT_FLAG_ZOOMING))
 	{
@@ -790,181 +794,181 @@ namespace AiState
 	}
 	}*/
 
-	obReal UseCabinet::GetPriority()
+	float UseCabinet::GetPriority()
 	{
-		if(IsActive())
+		if ( IsActive() )
 			return GetLastPriority();
 
-		m_HealthPriority = 0.f;
-		m_AmmoPriority = 0.f;
+		mHealthPriority = 0.f;
+		mAmmoPriority = 0.f;
 
 		const float fHealthPc = GetClient()->GetHealthPercent();
-		const float fHealthPcInv = ClampT(1.f - fHealthPc,0.f,1.f);
+		const float fHealthPcInv = ClampT( 1.f - fHealthPc, 0.f, 1.f );
 		const float fHealthPriority = fHealthPcInv;
-		const float fAmmoPriority = GetClient()->GetWeaponSystem()->GetMostDesiredAmmo(m_AmmoType,m_GetAmmoAmount);
+		const float fAmmoPriority = GetClient()->GetWeaponSystem()->GetMostDesiredAmmo( mAmmoType, mGetAmmoAmount );
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
 		//MapGoalPtr mgHealth;
 		//MapGoalPtr mgAmmo;
 
 		// don't bother if desire for health is too low
-		if(fHealthPriority > 0.7f)
+		if ( fHealthPriority > 0.7f )
 		{
-			GoalManager::Query qryHealth(0x63217fa7 /* HEALTHCAB */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qryHealth);
+			GoalManager::Query qryHealth( 0x63217fa7 /* HEALTHCAB */, GetClient() );
+			GoalManager::GetInstance()->GetGoals( qryHealth );
 			float fDistToHealthCabinet;
 
-			MapGoalList::iterator mIt = qryHealth.m_List.begin();
-			for(; mIt != qryHealth.m_List.end(); )
+			MapGoalList::iterator mIt = qryHealth.mList.begin();
+			for ( ; mIt != qryHealth.mList.end(); )
 			{
-				if(BlackboardIsDelayed((*mIt)->GetSerialNum()) ||
-					(*mIt)->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+				if ( BlackboardIsDelayed( ( *mIt )->GetSerialNum() ) ||
+					( *mIt )->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) < 1 )
 				{
-					mIt = qryHealth.m_List.erase(mIt);
+					mIt = qryHealth.mList.erase( mIt );
 					continue;
 				}
 
-				fDistToHealthCabinet = SquaredLength2d((*mIt)->GetPosition(), GetClient()->GetPosition());
-				(*mIt)->GetProperty("Range",m_Range);
-				if ( fDistToHealthCabinet > m_Range * m_Range )
+				fDistToHealthCabinet = SquaredLength2d( ( *mIt )->GetPosition(), GetClient()->GetPosition() );
+				( *mIt )->GetProperty( "Range", mRange );
+				if ( fDistToHealthCabinet > mRange * mRange )
 				{
-					mIt = qryHealth.m_List.erase(mIt);
+					mIt = qryHealth.mList.erase( mIt );
 					continue;
 				}
 
 				++mIt;
 			}
 
-			if(!qryHealth.m_List.empty())
+			if ( !qryHealth.mList.empty() )
 			{
 				//mgAmmo = mgHealth;
-				m_Query = qryHealth;
-				m_CabinetType = Health;
-				m_HealthPriority = fHealthPriority;
+				mQuery = qryHealth;
+				mCabinetType = Health;
+				mHealthPriority = fHealthPriority;
 			}
 		}
 
-		// don't bother if we need health more than ammo or if desire for ammo is too low
-		if(fAmmoPriority > fHealthPriority && fAmmoPriority > 0.7f && m_AmmoType != -1)
+		// don't bother if we need health more than mmo or if desire for mmo is too low
+		if ( fAmmoPriority > fHealthPriority && fAmmoPriority > 0.7f && mAmmoType != -1 )
 		{
-			GoalManager::Query qryAmmo(0x52ad0a47 /* AMMOCAB */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qryAmmo);
+			GoalManager::Query qryAmmo( 0x52ad0a47 /* AMMOCAB */, GetClient() );
+			GoalManager::GetInstance()->GetGoals( qryAmmo );
 			float fDistToAmmoCabinet;
 
-			MapGoalList::iterator mIt = qryAmmo.m_List.begin();
-			for(; mIt != qryAmmo.m_List.end(); )
+			MapGoalList::iterator mIt = qryAmmo.mList.begin();
+			for ( ; mIt != qryAmmo.mList.end(); )
 			{
-				if(BlackboardIsDelayed((*mIt)->GetSerialNum()) ||
-					(*mIt)->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+				if ( BlackboardIsDelayed( ( *mIt )->GetSerialNum() ) ||
+					( *mIt )->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) < 1 )
 				{
-					mIt = qryAmmo.m_List.erase(mIt);
+					mIt = qryAmmo.mList.erase( mIt );
 					continue;
 				}
 
-				fDistToAmmoCabinet = SquaredLength2d((*mIt)->GetPosition(), GetClient()->GetPosition());
-				(*mIt)->GetProperty("Range",m_Range);
-				if ( fDistToAmmoCabinet > m_Range * m_Range )
+				fDistToAmmoCabinet = SquaredLength2d( ( *mIt )->GetPosition(), GetClient()->GetPosition() );
+				( *mIt )->GetProperty( "Range", mRange );
+				if ( fDistToAmmoCabinet > mRange * mRange )
 				{
-					mIt = qryAmmo.m_List.erase(mIt);
+					mIt = qryAmmo.mList.erase( mIt );
 					continue;
 				}
 
 				++mIt;
 			}
 
-			if(!qryAmmo.m_List.empty())
+			if ( !qryAmmo.mList.empty() )
 			{
-				//m_MapGoal = mgAmmo;
-				m_Query = qryAmmo;
-				m_CabinetType = Ammo;
-				m_AmmoPriority = fAmmoPriority;
+				//.mMapGoal = mgAmmo;
+				mQuery = qryAmmo;
+				mCabinetType = mmo;
+				mAmmoPriority = fAmmoPriority;
 			}
 		}
 
-		return m_HealthPriority > m_AmmoPriority ? m_HealthPriority : m_AmmoPriority;
+		return mHealthPriority > mAmmoPriority ? mHealthPriority : mAmmoPriority;
 	}
 
 	void UseCabinet::Enter()
 	{
-		m_UseTime = 0;
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this,m_Query.m_List,Run,true));
-		if(!DidPathFail())
+		mUseTime = 0;
+		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, mQuery.mList, Run, true ) );
+		if ( !DidPathFail() )
 		{
-			m_MapGoal = m_Query.m_List[GetDestinationIndex()];
-			Tracker.InProgress = m_MapGoal;
+			mMapGoal = mQuery.mList[ GetDestinationIndex() ];
+			Tracker.InProgress = mMapGoal;
 		}
 	}
 
 	void UseCabinet::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
 		//FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(),ReleaseWeaponRequest(GetNameHash()));
+		FINDSTATEIF( WeaponSystem, GetRootState(), ReleaseWeaponRequest( GetNameHash() ) );
 
 		Tracker.Reset();
 	}
 
-	State::StateStatus UseCabinet::Update(float fDt)
+	State::StateStatus UseCabinet::Update( float fDt )
 	{
-		if(!m_MapGoal || DidPathFail())
+		if ( mMapGoal || DidPathFail() )
 		{
-			// delay all of em.
-			for(obuint32 i = 0; i < m_Query.m_List.size(); ++i)
-				BlackboardDelay(10.f, m_Query.m_List[i]->GetSerialNum());
+			// delay all of m.
+			for ( uint32_t i = 0; i < mQuery.mList.size(); ++i )
+				BlackboardDelay( 10.f, mQuery.mList[ i ]->GetSerialNum() );
 			return State_Finished;
 		}
-		OBASSERT(m_MapGoal,"No Map Goal!");
+		OBASSERT( mMapGoal, "No Map Goal!" );
 
 		ET_CabinetData cData;
-		if(InterfaceFuncs::GetCabinetData(m_MapGoal->GetEntity(),cData) &&
-			cData.m_CurrentAmount == 0)
+		if ( InterfaceFuncs::GetCabinetData( mMapGoal->GetEntity(), cData ) &&
+			cData.mCurrentAmount == 0 )
 		{
-			BlackboardDelay(20.f, m_MapGoal->GetSerialNum());
+			BlackboardDelay( 20.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 
-		if(m_MapGoal && !m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+		if ( mMapGoal && mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
 
-		switch(m_CabinetType)
+		switch ( mCabinetType )
 		{
-		case Health:
-			if(GetClient()->GetHealthPercent() >= 1.0)
-				return State_Finished;
-			break;
-		case Ammo:
+			case Health:
+				if ( GetClient()->GetHealthPercent() >= 1.0 )
+					return State_Finished;
+				break;
+			case mmo:
 			{
-				if(m_GetAmmoAmount>0)
+				if ( mGetAmmoAmount > 0 )
 				{
-					if(GetClient()->GetWeaponSystem()->HasAmmo(m_AmmoType,Primary,m_GetAmmoAmount))
+					if ( GetClient()->GetWeaponSystem()->HasAmmo( mAmmoType, Primary, mGetAmmoAmount ) )
 						return State_Finished;
 				}
 				else
 				{
-					int AmmoType = 0, GetAmmo = 0;
-					if(GetClient()->GetWeaponSystem()->GetMostDesiredAmmo(AmmoType,GetAmmo) <= 0.f)
+					int mmoType = 0, GetAmmo = 0;
+					if ( GetClient()->GetWeaponSystem()->GetMostDesiredAmmo( mmoType, GetAmmo ) <= 0.f )
 						return State_Finished;
 				}
 				break;
 			}
 		}
 
-		if(DidPathSucceed())
+		if ( DidPathSucceed() )
 		{
-			GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetWorldUsePoint());
+			GetClient()->GetSteeringSystem()->SetTarget( mMapGoal->GetWorldUsePoint() );
 
-			if(m_UseTime==0)
+			if ( mUseTime == 0 )
 			{
-				m_UseTime = IGame::GetTime();
+				mUseTime = IGame::GetTime();
 			}
-			else if(IGame::GetTime() - m_UseTime > 15000)
+			else if ( IGame::GetTime() - mUseTime > 15000 )
 			{
 				//timeout
-				BlackboardDelay(30.f, m_MapGoal->GetSerialNum());
+				BlackboardDelay( 30.f, mMapGoal->GetSerialNum() );
 				return State_Finished;
 			}
 		}
@@ -976,32 +980,32 @@ namespace AiState
 	//BuildConstruction::BuildConstruction()
 	//	: StateChild("BuildConstruction")
 	//	, FollowPathUser("BuildConstruction")
-	//	, m_AdjustedPosition(false)
-	//	, m_Crouch(true)
-	//	, m_Prone(false)
-	//	, m_IgnoreTargets(false)
+	//	, mAdjustedPosition(false)
+	//	, mCrouch(true)
+	//	, mProne(false)
+	//	, mIgnoreTargets(false)
 	//{
 	//	LimitToWeapon().SetFlag(ET_WP_PLIERS);
 	//}
 
 	//void BuildConstruction::GetDebugString(std::stringstream &out)
 	//{
-	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
+	//	out << (.mMapGoal ? mMapGoal->GetName() : "");
 	//}
 
 	//void BuildConstruction::RenderDebug()
 	//{
 	//	if(IsActive())
 	//	{
-	//		RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_ConstructionPos,COLOR::GREEN,5.f);
+	//		RenderBuffer::AddOBB(.mMapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),.mConstructionPos,COLOR::GREEN,5.f);
 	//	}
 	//}
 
 	//// FollowPathUser functions.
 	//bool BuildConstruction::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
 	//{
-	//	if(m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//	if(.mMapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
 	//	else
 	//	{
@@ -1014,7 +1018,7 @@ namespace AiState
 	//// AimerUser functions.
 	//bool BuildConstruction::GetAimPosition(Vector3f &_aimpos)
 	//{
-	//	_aimpos = m_ConstructionPos;
+	//	_aimpos = mConstructionPos;
 	//	return true;
 	//}
 
@@ -1027,42 +1031,42 @@ namespace AiState
 	//	//InterfaceFuncs::GetCurrentCursorHint
 	//}
 
-	//obReal BuildConstruction::GetPriority()
+	//float BuildConstruction::GetPriority()
 	//{
 	//	if(IsActive())
 	//		return GetLastPriority();
 	//
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 
 	//	GoalManager::Query qry(0xc39bf2a3 /* BUILD */, GetClient());
 	//	GoalManager::GetInstance()->GetGoals(qry);
-	//	for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//	for(uint32_t i = 0; i < qry.mList.size(); ++i)
 	//	{
-	//		if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+	//		if(BlackboardIsDelayed(qry.mList[i]->GetSerialNum()))
 	//			continue;
 
-	//		if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+	//		if(qry.mList[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
 	//			continue;
 
-	//		ConstructableState cState = InterfaceFuncs::GetConstructableState(GetClient(),qry.m_List[i]->GetEntity());
+	//		ConstructableState cState = InterfaceFuncs::GetConstructableState(GetClient(),qry.mList[i]->GetEntity());
 	//		if(cState == CONST_UNBUILT)
 	//		{
-	//			m_MapGoal = qry.m_List[i];
+	//		mMapGoal = qry.mList[i];
 	//			break;
 	//		}
 	//	}
-	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//	return mMapGoal ? mMapGoal->GetPriorityForClient(GetClient()) : 0.f;
 	//}
 
 	//void BuildConstruction::Enter()
 	//{
-	//	m_AdjustedPosition = false;
-	//	m_MapGoal->GetWorldBounds().CenterPoint(m_ConstructionPos);
-	//	Tracker.InProgress = m_MapGoal;
+	//mAdjustedPosition = false;
+	//mMapGoal->GetWorldBounds().CenterPoint(.mConstructionPos);
+	//	Tracker.InProgress = mMapGoal;
 
-	//	m_MapGoal->GetProperty("Crouch",m_Crouch);
-	//	m_MapGoal->GetProperty("Prone",m_Prone);
-	//	m_MapGoal->GetProperty("IgnoreTargets",m_IgnoreTargets);
+	//mMapGoal->GetProperty("Crouch",.mCrouch);
+	//mMapGoal->GetProperty("Prone",.mProne);
+	//mMapGoal->GetProperty("IgnoreTargets",.mIgnoreTargets);
 	//
 	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
 	//}
@@ -1071,7 +1075,7 @@ namespace AiState
 	//{
 	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 	//	Tracker.Reset();
 
 	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
@@ -1082,16 +1086,16 @@ namespace AiState
 	//{
 	//	if(DidPathFail())
 	//	{
-	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		BlackboardDelay(10.f, mMapGoal->GetSerialNum());
 	//		return State_Finished;
 	//	}
 
-	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//	if(!mMapGoal->IsAvailable(GetClient()->GetTeam()))
 	//		return State_Finished;
 
 	//	//////////////////////////////////////////////////////////////////////////
 	//	// Check the construction status
-	//	ConstructableState cState = InterfaceFuncs::GetConstructableState(GetClient(),m_MapGoal->GetEntity());
+	//	ConstructableState cState = InterfaceFuncs::GetConstructableState(GetClient(),.mMapGoal->GetEntity());
 	//	switch(cState)
 	//	{
 	//	case CONST_INVALID: // Invalid constructable, fail
@@ -1107,51 +1111,51 @@ namespace AiState
 
 	//	if(DidPathSucceed())
 	//	{
-	//		const float fDistanceToConstruction = SquaredLength2d(m_ConstructionPos, GetClient()->GetPosition());
+	//		const float fDistanceToConstruction = SquaredLength2d(.mConstructionPos, GetClient()->GetPosition());
 	//		if (fDistanceToConstruction > 4096.0f)
 	//		{
 	//			// check for badly waypointed maps
-	//			if (!m_AdjustedPosition)
+	//			if (!mAdjustedPosition)
 	//			{
 	//				// use our z value because some trigger entities may be below the ground
-	//				Vector3f checkPos(m_ConstructionPos.X(), m_ConstructionPos.Y(), GetClient()->GetEyePosition().Z());
+	//				Vector3f checkPos(.mConstructionPos.X(), mConstructionPos.Y(), GetClient()->GetEyePosition().Z());
 
 	//				obTraceResult tr;
 	//				EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(),checkPos,
 	//					NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), GetClient()->GetGameID(), True);
 
-	//				if (tr.m_Fraction != 1.0f && !tr.m_HitEntity.IsValid())
+	//				if (tr.mFraction != 1.0f && !tr.mHitEntity.IsValid())
 	//				{
-	//					m_MapGoal->SetDeleteMe(true);
+	//				mMapGoal->SetDeleteMe(true);
 	//					return State_Finished;
 	//				}
 
 	//				// do a trace to adjust position
 	//				EngineFuncs::TraceLine(tr,
 	//					GetClient()->GetEyePosition(),
-	//					m_ConstructionPos,
+	//				mConstructionPos,
 	//					NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, False);
 
-	//				if (tr.m_Fraction != 1.0f)
+	//				if (tr.mFraction != 1.0f)
 	//				{
-	//					m_ConstructionPos = *(Vector3f*)tr.m_Endpos;
+	//				mConstructionPos = *(Vector3f*)tr.mEndpos;
 	//				}
 
-	//				m_AdjustedPosition = true;
+	//			mAdjustedPosition = true;
 	//			}
 	//		}
 	//		else
 	//		{
-	//			if(m_Prone)
+	//			if(.mProne)
 	//				GetClient()->PressButton(BOT_BUTTON_PRONE);
-	//			else if(m_Crouch)
+	//			else if(.mCrouch)
 	//				GetClient()->PressButton(BOT_BUTTON_CROUCH);
 
-	//			Priority::ePriority pri = m_IgnoreTargets ? Priority::High : Priority::Medium;
+	//			Priority::ePriority pri = mIgnoreTargets ? Priority::High : Priority::Medium;
 	//			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(pri,this,GetNameHash()));
 	//			FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(pri, GetNameHash(), ET_WP_PLIERS));
 	//		}
-	//		GetClient()->GetSteeringSystem()->SetTarget(m_ConstructionPos, 64.f);
+	//		GetClient()->GetSteeringSystem()->SetTarget(.mConstructionPos, 64.f);
 	//	}
 	//	return State_Busy;
 	//}
@@ -1161,7 +1165,7 @@ namespace AiState
 	//PlantExplosive::PlantExplosive()
 	//	: StateChild("PlantExplosive")
 	//	, FollowPathUser("PlantExplosive")
-	//	, m_IgnoreTargets(false)
+	//	, mIgnoreTargets(false)
 	//{
 	//	LimitToWeapon().SetFlag(ET_WP_DYNAMITE);
 	//	LimitToWeapon().SetFlag(ET_WP_SATCHEL);
@@ -1171,7 +1175,7 @@ namespace AiState
 
 	//void PlantExplosive::GetDebugString(std::stringstream &out)
 	//{
-	//	switch(m_GoalState)
+	//	switch(.mGoalState)
 	//	{
 	//	case LAY_EXPLOSIVE:
 	//		out << "Lay Explosive ";
@@ -1188,22 +1192,22 @@ namespace AiState
 	//	default:
 	//		break;
 	//	}
-	//	out << std::endl << (m_MapGoal ? m_MapGoal->GetName() : "");
+	//	out << std::endl << (.mMapGoal ? mMapGoal->GetName() : "");
 	//}
 
 	//void PlantExplosive::RenderDebug()
 	//{
 	//	if(IsActive())
 	//	{
-	//		RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
-	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//		RenderBuffer::AddOBB(.mMapGoal->GetWorldBounds(), COLOR::ORANGE, 5.f);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),.mMapGoal->GetPosition(),COLOR::GREEN,5.f);
 	//	}
 	//}
 
 	//// FollowPathUser functions.
 	//bool PlantExplosive::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
 	//{
-	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//	if(.mMapGoal && mMapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
 	//	else
 	//		_final = true;
@@ -1213,13 +1217,13 @@ namespace AiState
 	//// AimerUser functions.
 	//bool PlantExplosive::GetAimPosition(Vector3f &_aimpos)
 	//{
-	//	switch(m_GoalState)
+	//	switch(.mGoalState)
 	//	{
 	//	case LAY_EXPLOSIVE:
-	//		_aimpos = m_TargetPosition;
+	//		_aimpos = mTargetPosition;
 	//		break;
 	//	case ARM_EXPLOSIVE:
-	//		_aimpos = m_ExplosivePosition;
+	//		_aimpos = mExplosivePosition;
 	//		break;
 	//	case RUNAWAY:
 	//	case DETONATE_EXPLOSIVE:
@@ -1235,12 +1239,12 @@ namespace AiState
 	//	FINDSTATE(ws, WeaponSystem, GetRootState());
 	//	if(ws)
 	//	{
-	//		if(m_GoalState == LAY_EXPLOSIVE)
+	//		if(.mGoalState == LAY_EXPLOSIVE)
 	//		{
 	//			if(ws->CurrentWeaponIs(ET_WP_DYNAMITE) || ws->CurrentWeaponIs(ET_WP_SATCHEL))
 	//				ws->FireWeapon();
 	//		}
-	//		else if(m_GoalState == ARM_EXPLOSIVE)
+	//		else if(.mGoalState == ARM_EXPLOSIVE)
 	//		{
 	//			if(ws->CurrentWeaponIs(ET_WP_PLIERS))
 	//				ws->FireWeapon();
@@ -1248,7 +1252,7 @@ namespace AiState
 	//	}
 	//}
 
-	//obReal PlantExplosive::GetPriority()
+	//float PlantExplosive::GetPriority()
 	//{
 	//	if(IsActive())
 	//		return GetLastPriority();
@@ -1274,71 +1278,71 @@ namespace AiState
 	//		return 0.0;
 	//	}
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 
 	//	if(InterfaceFuncs::IsWeaponCharged(GetClient(), weaponType, Primary))
 	//	{
 	//		{
 	//			GoalManager::Query qry(0xbbcae592 /* PLANT */, GetClient());
 	//			GoalManager::GetInstance()->GetGoals(qry);
-	//			for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//			for(uint32_t i = 0; i < qry.mList.size(); ++i)
 	//			{
-	//				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+	//				if(BlackboardIsDelayed(qry.mList[i]->GetSerialNum()))
 	//					continue;
 
-	//				/*if(!(qry.m_List[i]->GetGoalState() & targetType))
+	//				/*if(!(qry.mList[i]->GetGoalState() & targetType))
 	//					continue;*/
 
-	//				if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+	//				if(qry.mList[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
 	//					continue;
 
-	//				if(!_IsGoalAchievable(qry.m_List[i], weaponType))
+	//				if(!_IsGoalAchievable(qry.mList[i], weaponType))
 	//					continue;
 
-	//				ConstructableState cState = InterfaceFuncs::IsDestroyable(GetClient(), qry.m_List[i]->GetEntity());
+	//				ConstructableState cState = InterfaceFuncs::IsDestroyable(GetClient(), qry.mList[i]->GetEntity());
 	//				if(cState == CONST_DESTROYABLE)
 	//				{
-	//					m_MapGoal = qry.m_List[i];
+	//				mMapGoal = qry.mList[i];
 	//					break;
 	//				}
 	//			}
 	//		}
 
-	//		if(!m_MapGoal)
+	//		if(!mMapGoal)
 	//		{
 	//			GoalManager::Query qry(0xa411a092 /* MOVER */, GetClient());
 	//			GoalManager::GetInstance()->GetGoals(qry);
-	//			for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//			for(uint32_t i = 0; i < qry.mList.size(); ++i)
 	//			{
-	//				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+	//				if(BlackboardIsDelayed(qry.mList[i]->GetSerialNum()))
 	//					continue;
 
-	//				if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+	//				if(qry.mList[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
 	//					continue;
 	//
-	//				if(!(qry.m_List[i]->GetGoalState() & targetType))
+	//				if(!(qry.mList[i]->GetGoalState() & targetType))
 	//					continue;
 
-	//				m_MapGoal = qry.m_List[i];
+	//			mMapGoal = qry.mList[i];
 	//				break;
 	//			}
 	//		}
 	//	}
-	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//	return mMapGoal ? mMapGoal->GetPriorityForClient(GetClient()) : 0.f;
 	//}
 
 	//void PlantExplosive::Enter()
 	//{
-	//	m_MapGoal->GetProperty("IgnoreTargets",m_IgnoreTargets);
+	//mMapGoal->GetProperty("IgnoreTargets",.mIgnoreTargets);
 	//
 	//	// set position to base of construction
-	//	AABB aabb = m_MapGoal->GetWorldBounds();
-	//	aabb.CenterPoint(m_ExplosivePosition);
-	//	m_ExplosivePosition.Z() = aabb.m_Mins[2];
-	//	m_TargetPosition = m_ExplosivePosition;
-	//	m_AdjustedPosition = false;
-	//	m_GoalState = LAY_EXPLOSIVE;
-	//	Tracker.InProgress = m_MapGoal;
+	//	AABB aabb = mMapGoal->GetWorldBounds();
+	//	aabb.CenterPoint(.mExplosivePosition);
+	//mExplosivePosition.Z() = aabb.mMins[2];
+	//mTargetPosition = mExplosivePosition;
+	//mAdjustedPosition = false;
+	//mGoalState = LAY_EXPLOSIVE;
+	//	Tracker.InProgress = mMapGoal;
 	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
 	//}
 
@@ -1346,9 +1350,9 @@ namespace AiState
 	//{
 	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-	//	m_ExplosiveEntity.Reset();
+	//mExplosiveEntity.Reset();
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
 	//	FINDSTATEIF(WeaponSystem, GetRootState(), ReleaseWeaponRequest(GetNameHash()));
 
@@ -1357,17 +1361,17 @@ namespace AiState
 
 	//State::StateStatus PlantExplosive::Update(float fDt)
 	//{
-	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//	if(!mMapGoal->IsAvailable(GetClient()->GetTeam()))
 	//		return State_Finished;
 
 	//	// If it's not destroyable, consider it a success.
-	//	if(!InterfaceFuncs::IsDestroyable(GetClient(), m_MapGoal->GetEntity()))
+	//	if(!InterfaceFuncs::IsDestroyable(GetClient(), mMapGoal->GetEntity()))
 	//		return State_Finished;
 
-	//	if(m_ExplosiveEntity.IsValid() && !IGame::IsEntityValid(m_ExplosiveEntity))
+	//	if(.mExplosiveEntity.IsValid() && !IGame::IsEntityValid(.mExplosiveEntity))
 	//		return State_Finished;
 
-	//	if(DidPathSucceed() || m_GoalState==DETONATE_EXPLOSIVE)
+	//	if(DidPathSucceed() || mGoalState==DETONATE_EXPLOSIVE)
 	//	{
 	//		switch(GetClient()->GetClass())
 	//		{
@@ -1382,7 +1386,7 @@ namespace AiState
 
 	//	if(DidPathFail())
 	//	{
-	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		BlackboardDelay(10.f, mMapGoal->GetSerialNum());
 	//		return State_Finished;
 	//	}
 	//	return State_Busy;
@@ -1390,36 +1394,36 @@ namespace AiState
 
 	//State::StateStatus PlantExplosive::_UpdateDynamite()
 	//{
-	//	Priority::ePriority pri = m_IgnoreTargets ? Priority::High : Priority::Medium;
+	//	Priority::ePriority pri = mIgnoreTargets ? Priority::High : Priority::Medium;
 
-	//	switch(m_GoalState)
+	//	switch(.mGoalState)
 	//	{
 	//	case LAY_EXPLOSIVE:
 	//		{
 	//			if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_DYNAMITE, Primary))
 	//				return State_Finished;
 
-	//			/*if(m_Client->IsDebugEnabled(BOT_DEBUG_GOALS))
+	//			/*if(mClient->IsDebugEnabled(BOT_DEBUG_GOALS))
 	//			{
-	//				RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE, 1.f);
+	//				RenderBuffer::AddOBB(.mMapGoal->GetWorldBounds(), COLOR::ORANGE, 1.f);
 
 	//				Vector3f vCenter;
-	//				m_MapGoal->GetWorldBounds().CenterPoint(vCenter);
-	//				RenderBuffer::AddLine(m_Client->GetPosition(), vCenter, COLOR::GREEN, 1.0f);
-	//				RenderBuffer::AddLine(m_Client->GetPosition(), m_MapGoal->GetPosition(), COLOR::RED, 1.0f);
+	//			mMapGoal->GetWorldBounds().CenterPoint(vCenter);
+	//				RenderBuffer::AddLine(mClient->GetPosition(), vCenter, COLOR::GREEN, 1.0f);
+	//				RenderBuffer::AddLine(mClient->GetPosition(), mMapGoal->GetPosition(), COLOR::RED, 1.0f);
 	//			}*/
 
-	//			const float fDistanceToTarget = SquaredLength2d(m_TargetPosition, GetClient()->GetPosition());
+	//			const float fDistanceToTarget = SquaredLength2d(.mTargetPosition, GetClient()->GetPosition());
 	//			if (fDistanceToTarget > Mathf::Sqr(100.0f))
 	//			{
 	//				// check for badly waypointed maps
-	//				if (!m_AdjustedPosition)
+	//				if (!mAdjustedPosition)
 	//				{
-	//					m_AdjustedPosition = true;
+	//				mAdjustedPosition = true;
 
 	//					// use our z value because some trigger entities may be below the ground
-	//					Vector3f vCheckPos(m_TargetPosition.X(), m_TargetPosition.Y(), GetClient()->GetEyePosition().Z());
-	//					/*if(m_Client->IsDebugEnabled(BOT_DEBUG_GOALS))
+	//					Vector3f vCheckPos(.mTargetPosition.X(), mTargetPosition.Y(), GetClient()->GetEyePosition().Z());
+	//					/*if(mClient->IsDebugEnabled(BOT_DEBUG_GOALS))
 	//					{
 	//						RenderBuffer::AddLine(GetClient()->GetEyePosition(), vCheckPos, COLOR::GREEN, 2.0f);
 	//					}*/
@@ -1427,23 +1431,23 @@ namespace AiState
 	//					obTraceResult tr;
 	//					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), vCheckPos,
 	//						NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), GetClient()->GetGameID(), True);
-	//					if (tr.m_Fraction != 1.0f && !tr.m_HitEntity.IsValid())
+	//					if (tr.mFraction != 1.0f && !tr.mHitEntity.IsValid())
 	//					{
-	//						//m_TargetEntity->SetDeleteMe(true);
+	//						//.mTargetEntity->SetDeleteMe(true);
 	//						return State_Finished;
 	//					}
 
 	//					// do a trace to adjust position
-	//					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), m_TargetPosition,
+	//					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), mTargetPosition,
 	//						NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, False);
-	//					if (tr.m_Fraction != 1.0f)
+	//					if (tr.mFraction != 1.0f)
 	//					{
-	//						m_TargetPosition = Vector3f(tr.m_Endpos);
+	//					mTargetPosition = Vector3f(tr.mEndpos);
 	//					}
 	//				}
 
 	//				// Move toward it.
-	//				GetClient()->GetSteeringSystem()->SetTarget(m_TargetPosition);
+	//				GetClient()->GetSteeringSystem()->SetTarget(.mTargetPosition);
 	//			}
 	//			else
 	//			{
@@ -1458,9 +1462,9 @@ namespace AiState
 	//		{
 	//			GetClient()->PressButton(BOT_BUTTON_CROUCH);
 
-	//			if(InterfaceFuncs::GetExplosiveState(GetClient(), m_ExplosiveEntity) == XPLO_ARMED)
+	//			if(InterfaceFuncs::GetExplosiveState(GetClient(), mExplosiveEntity) == XPLO_ARMED)
 	//			{
-	//				BlackboardDelay(30.f, m_MapGoal->GetSerialNum());
+	//				BlackboardDelay(30.f, mMapGoal->GetSerialNum());
 	//				return State_Finished;
 	//			}
 
@@ -1468,12 +1472,12 @@ namespace AiState
 	//			GetClient()->GetSteeringSystem()->SetNoAvoidTime(IGame::GetTime());
 
 	//			// update dynamite position
-	//			EngineFuncs::EntityPosition(m_ExplosiveEntity, m_ExplosivePosition);
+	//			EngineFuncs::EntityPosition(.mExplosiveEntity, mExplosivePosition);
 
 	//			// move a little bit close if dyno too far away
-	//			if ((m_ExplosivePosition - GetClient()->GetPosition()).SquaredLength() > 2500.0f)
+	//			if ((.mExplosivePosition - GetClient()->GetPosition()).SquaredLength() > 2500.0f)
 	//			{
-	//				GetClient()->GetSteeringSystem()->SetTarget(m_ExplosivePosition);
+	//				GetClient()->GetSteeringSystem()->SetTarget(.mExplosivePosition);
 	//			}
 	//			else
 	//			{
@@ -1492,52 +1496,52 @@ namespace AiState
 
 	//State::StateStatus PlantExplosive::_UpdateSatchel()
 	//{
-	//	Priority::ePriority pri = m_IgnoreTargets ? Priority::High : Priority::Medium;
+	//	Priority::ePriority pri = mIgnoreTargets ? Priority::High : Priority::Medium;
 
-	//	switch(m_GoalState)
+	//	switch(.mGoalState)
 	//	{
 	//	case LAY_EXPLOSIVE:
 	//		{
 	//			if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_SATCHEL, Primary))
 	//				return State_Finished;
 
-	//			const float fDistanceToTarget = SquaredLength2d(m_TargetPosition, GetClient()->GetPosition());
+	//			const float fDistanceToTarget = SquaredLength2d(.mTargetPosition, GetClient()->GetPosition());
 	//			if (fDistanceToTarget > 10000.0f)
 	//			{
 	//				// Move toward it.
-	//				//GetClient()->GetSteeringSystem()->SetTarget(m_TargetPosition);
+	//				//GetClient()->GetSteeringSystem()->SetTarget(.mTargetPosition);
 
 	//				// check for badly waypointed maps
-	//				if (!m_AdjustedPosition)
+	//				if (!mAdjustedPosition)
 	//				{
-	//					m_AdjustedPosition = true;
+	//				mAdjustedPosition = true;
 
 	//					// use our z value because some trigger entities may be below the ground
-	//					Vector3f vCheckPos(m_TargetPosition.X(), m_TargetPosition.Y(), GetClient()->GetEyePosition().Z());
-	//					/*if(m_Client->IsDebugEnabled(BOT_DEBUG_GOALS))
+	//					Vector3f vCheckPos(.mTargetPosition.X(), mTargetPosition.Y(), GetClient()->GetEyePosition().Z());
+	//					/*if(mClient->IsDebugEnabled(BOT_DEBUG_GOALS))
 	//					{
-	//						RenderBuffer::AddLine(m_Client->GetEyePosition(), vCheckPos, COLOR::GREEN, 2.0f);
+	//						RenderBuffer::AddLine(mClient->GetEyePosition(), vCheckPos, COLOR::GREEN, 2.0f);
 	//					}*/
 
 	//					obTraceResult tr;
 	//					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), vCheckPos,
 	//						NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), GetClient()->GetGameID(), True);
-	//					if (tr.m_Fraction != 1.0f && !tr.m_HitEntity.IsValid())
+	//					if (tr.mFraction != 1.0f && !tr.mHitEntity.IsValid())
 	//					{
 	//						AABB aabb, mapaabb;
-	//						EngineFuncs::EntityWorldAABB(m_MapGoal->GetEntity(), aabb);
+	//						EngineFuncs::EntityWorldAABB(.mMapGoal->GetEntity(), aabb);
 	//						//gEngineFuncs->GetMapExtents(mapaabb);
 
-	//						//m_TargetEntity->SetDeleteMe(true);
+	//						//.mTargetEntity->SetDeleteMe(true);
 	//						return State_Finished;
 	//					}
 
 	//					// do a trace to adjust position
-	//					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), m_TargetPosition,
+	//					EngineFuncs::TraceLine(tr, GetClient()->GetEyePosition(), mTargetPosition,
 	//						NULL, (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, False);
-	//					if (tr.m_Fraction != 1.0f)
+	//					if (tr.mFraction != 1.0f)
 	//					{
-	//						m_TargetPosition = Vector3f(tr.m_Endpos);
+	//					mTargetPosition = Vector3f(tr.mEndpos);
 	//					}
 	//				}
 	//			}
@@ -1553,11 +1557,11 @@ namespace AiState
 	//	case ARM_EXPLOSIVE:
 	//	case RUNAWAY:
 	//		{
-	//			OBASSERT(m_ExplosiveEntity.IsValid(), "No Explosive Entity!");
+	//			OBASSERT(.mExplosiveEntity.IsValid(), "No Explosive Entity!");
 
 	//			// Generate a random goal.
 	//			FINDSTATEIF(FollowPath,GetRootState(),GotoRandomPt(this));
-	//			m_GoalState = DETONATE_EXPLOSIVE;
+	//		mGoalState = DETONATE_EXPLOSIVE;
 	//			break;
 	//		}
 	//	case DETONATE_EXPLOSIVE:
@@ -1573,7 +1577,7 @@ namespace AiState
 	//			const bool BLOW_TARGET_OR_NOT = true;
 
 	//			Vector3f vSatchelPos;
-	//			if(EngineFuncs::EntityPosition(m_ExplosiveEntity, vSatchelPos))
+	//			if(EngineFuncs::EntityPosition(.mExplosiveEntity, vSatchelPos))
 	//			{
 	//				if(Length(GetClient()->GetPosition(), vSatchelPos) >= SATCHEL_DET_DISTANCE)
 	//				{
@@ -1588,7 +1592,7 @@ namespace AiState
 	//								ws->FireWeapon();
 	//						}
 
-	//						ExplosiveState eState = InterfaceFuncs::GetExplosiveState(GetClient(), m_ExplosiveEntity);
+	//						ExplosiveState eState = InterfaceFuncs::GetExplosiveState(GetClient(), mExplosiveEntity);
 	//						if(eState == XPLO_INVALID)
 	//							return State_Finished;
 	//					}
@@ -1604,26 +1608,26 @@ namespace AiState
 	//{
 	//	if(IsActive())
 	//	{
-	//		Priority::ePriority pri = m_IgnoreTargets ? Priority::High : Priority::Medium;
+	//		Priority::ePriority pri = mIgnoreTargets ? Priority::High : Priority::Medium;
 	//		switch(_message.GetMessageId())
 	//		{
 	//			HANDLER(ACTION_WEAPON_FIRE)
 	//			{
-	//				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-	//				if(m->m_WeaponId == ET_WP_DYNAMITE && m->m_Projectile.IsValid())
+	//				const Event_WeaponFire m = message.Get<Event_WeaponFire>();
+	//				if(m->mWeaponId == ET_WP_DYNAMITE && m->mProjectile.IsValid())
 	//				{
 	//					SetLastPriority(2.f); // up the priority so we aren't interrupted(to arm/det)
-	//					m_ExplosiveEntity = m->m_Projectile;
-	//					m_GoalState = ARM_EXPLOSIVE;
+	//				mExplosiveEntity = m->mProjectile;
+	//				mGoalState = ARM_EXPLOSIVE;
 	//					SetLastPriority(2.f); // up the priority so we aren't interrupted(to arm/det)
 
 	//					FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(pri, GetNameHash(), ET_WP_PLIERS));
 	//				}
-	//				else if(m->m_WeaponId == ET_WP_SATCHEL && m->m_Projectile.IsValid())
+	//				else if(m->mWeaponId == ET_WP_SATCHEL && m->mProjectile.IsValid())
 	//				{
 	//					SetLastPriority(2.f); // up the priority so we aren't interrupted(to arm/det)
-	//					m_ExplosiveEntity = m->m_Projectile;
-	//					m_GoalState = RUNAWAY;
+	//				mExplosiveEntity = m->mProjectile;
+	//				mGoalState = RUNAWAY;
 	//					SetLastPriority(2.f); // up the priority so we aren't interrupted(to arm/det)
 
 	//					FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
@@ -1667,36 +1671,36 @@ namespace AiState
 	//Flamethrower::Flamethrower()
 	//	: StateChild("Flamethrower")
 	//	, FollowPathUser("Flamethrower")
-	//	, m_MinCampTime(2000)
-	//	, m_MaxCampTime(8000)
-	//	, m_ExpireTime(0)
-	//	, m_Stance(StanceStand)
+	//	, mMinCampTime(2000)
+	//	, mMaxCampTime(8000)
+	//	, mExpireTime(0)
+	//	, mStance(StanceStand)
 	//{
 	//	LimitToWeapon().SetFlag(ET_WP_FLAMETHROWER);
 	//}
 
 	//void Flamethrower::GetDebugString(std::stringstream &out)
 	//{
-	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
+	//	out << (.mMapGoal ? mMapGoal->GetName() : "");
 	//}
 
 	//void Flamethrower::RenderDebug()
 	//{
 	//	if(IsActive())
 	//	{
-	//		m_TargetZone.RenderDebug();
+	//	mTargetZone.RenderDebug();
 	//	}
 	//}
 
 	//bool Flamethrower::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
 	//{
-	//	_final = !m_MapGoal->RouteTo(GetClient(), _desination);
+	//	_final = mMapGoal->RouteTo(GetClient(), _desination);
 	//	return true;
 	//}
 
 	//bool Flamethrower::GetAimPosition(Vector3f &_aimpos)
 	//{
-	//	_aimpos = m_AimPosition;
+	//	_aimpos = mAimPosition;
 	//	return true;
 	//}
 
@@ -1713,7 +1717,7 @@ namespace AiState
 	//	}
 	//}
 
-	//obReal Flamethrower::GetPriority()
+	//float Flamethrower::GetPriority()
 	//{
 	//	int curAmmo = 0, maxAmmo = 0;
 	//	gEngineFuncs->GetCurrentAmmo(GetClient()->GetGameEntity(),ET_WP_FLAMETHROWER,Primary,curAmmo,maxAmmo);
@@ -1723,27 +1727,27 @@ namespace AiState
 	//	if(IsActive())
 	//		return GetLastPriority();
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 
 	//	GoalManager::Query qry(0x86584d00 /* FLAME */, GetClient());
 	//	GoalManager::GetInstance()->GetGoals(qry);
-	//	qry.GetBest(m_MapGoal);
+	//	qry.GetBest(.mMapGoal);
 
-	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//	return mMapGoal ? mMapGoal->GetPriorityForClient(GetClient()) : 0.f;
 	//}
 
 	//void Flamethrower::Enter()
 	//{
-	//	m_AimPosition = m_MapGoal->GetPosition() + m_MapGoal->GetFacing() * 1024.f;
+	//mAimPosition = mMapGoal->GetPosition() + mMapGoal->GetFacing() * 1024.f;
 
-	//	Tracker.InProgress = m_MapGoal;
+	//	Tracker.InProgress = mMapGoal;
 
-	//	m_TargetZone.Restart(256.f);
-	//	m_ExpireTime = 0;
+	//mTargetZone.Restart(256.f);
+	//mExpireTime = 0;
 
-	//	m_MapGoal->GetProperty("Stance",m_Stance);
-	//	m_MapGoal->GetProperty("MinCampTime",m_MinCampTime);
-	//	m_MapGoal->GetProperty("MaxCampTime",m_MaxCampTime);
+	//mMapGoal->GetProperty("Stance",.mStance);
+	//mMapGoal->GetProperty("MinCampTime",.mMinCampTime);
+	//mMapGoal->GetProperty("MaxCampTime",.mMaxCampTime);
 
 	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
 	//}
@@ -1752,7 +1756,7 @@ namespace AiState
 	//{
 	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
 	//	FINDSTATEIF(WeaponSystem,GetRootState(),ReleaseWeaponRequest(GetNameHash()));
 	//	Tracker.Reset();
@@ -1760,51 +1764,51 @@ namespace AiState
 
 	//State::StateStatus Flamethrower::Update(float fDt)
 	//{
-	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//	if(!mMapGoal->IsAvailable(GetClient()->GetTeam()))
 	//		return State_Finished;
 
 	//	//////////////////////////////////////////////////////////////////////////
 	//	if(DidPathFail())
 	//	{
 	//		// Delay it from being used for a while.
-	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		BlackboardDelay(10.f, mMapGoal->GetSerialNum());
 	//		return State_Finished;
 	//	}
 	//	//////////////////////////////////////////////////////////////////////////
 
-	//	if(!Tracker.InUse && m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE) < 1)
+	//	if(!Tracker.InUse && mMapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE) < 1)
 	//		return State_Finished;
 
 	//	if(DidPathSucceed())
 	//	{
-	//		// Only hang around here for a certain amount of time
-	//		if(m_ExpireTime==0)
+	//		// Only hang around here for a certain mount of time
+	//		if(.mExpireTime==0)
 	//		{
-	//			m_ExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(m_MinCampTime,m_MaxCampTime);
-	//			Tracker.InUse = m_MapGoal;
+	//		mExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(.mMinCampTime,.mMaxCampTime);
+	//			Tracker.InUse = mMapGoal;
 	//		}
-	//		else if(IGame::GetTime() > m_ExpireTime)
+	//		else if(IGame::GetTime() > mExpireTime)
 	//		{
 	//			// Delay it from being used for a while.
-	//			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//			BlackboardDelay(10.f, mMapGoal->GetSerialNum());
 	//			return State_Finished;
 	//		}
 
 	//		FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Low,this,GetNameHash()));
 
-	//		m_AimPosition = m_MapGoal->GetPosition() + m_MapGoal->GetFacing() * 1024.f;
+	//	mAimPosition = mMapGoal->GetPosition() + mMapGoal->GetFacing() * 1024.f;
 
-	//		m_TargetZone.Update(GetClient());
+	//	mTargetZone.Update(GetClient());
 
-	//		if(m_TargetZone.HasAim())
-	//			m_AimPosition = m_TargetZone.GetAimPosition();
+	//		if(.mTargetZone.HasAim())
+	//		mAimPosition = mTargetZone.GetAimPosition();
 
-	//		GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition(), m_MapGoal->GetRadius());
+	//		GetClient()->GetSteeringSystem()->SetTarget(.mMapGoal->GetPosition(), mMapGoal->GetRadius());
 
-	//		NavFlags nodeFlags = m_MapGoal->GetFlags();
-	//		if (nodeFlags & F_NAV_PRONE || m_Stance==StanceProne)
+	//		NavFlags nodeFlags = mMapGoal->GetFlags();
+	//		if (nodeFlags & F_NAV_PRONE || mStance==StanceProne)
 	//			GetClient()->PressButton(BOT_BUTTON_PRONE);
-	//		else if (nodeFlags & F_NAV_CROUCH || m_Stance==StanceCrouch)
+	//		else if (nodeFlags & F_NAV_CROUCH || mStance==StanceCrouch)
 	//			GetClient()->PressButton(BOT_BUTTON_CROUCH);
 	//	}
 	//	return State_Busy;
@@ -1815,36 +1819,36 @@ namespace AiState
 	//Panzer::Panzer()
 	//	: StateChild("Panzer")
 	//	, FollowPathUser("Panzer")
-	//	, m_MinCampTime(2000)
-	//	, m_MaxCampTime(8000)
-	//	, m_ExpireTime(0)
-	//	, m_Stance(StanceStand)
+	//	, mMinCampTime(2000)
+	//	, mMaxCampTime(8000)
+	//	, mExpireTime(0)
+	//	, mStance(StanceStand)
 	//{
 	//	LimitToWeapon().SetFlag(ET_WP_PANZERFAUST);
 	//}
 
 	//void Panzer::GetDebugString(std::stringstream &out)
 	//{
-	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
+	//	out << (.mMapGoal ? mMapGoal->GetName() : "");
 	//}
 
 	//void Panzer::RenderDebug()
 	//{
 	//	if(IsActive())
 	//	{
-	//		m_TargetZone.RenderDebug();
+	//	mTargetZone.RenderDebug();
 	//	}
 	//}
 
 	//bool Panzer::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
 	//{
-	//	_final = !m_MapGoal->RouteTo(GetClient(), _desination);
+	//	_final = mMapGoal->RouteTo(GetClient(), _desination);
 	//	return true;
 	//}
 
 	//bool Panzer::GetAimPosition(Vector3f &_aimpos)
 	//{
-	//	_aimpos = m_AimPosition;
+	//	_aimpos = mAimPosition;
 	//	return true;
 	//}
 
@@ -1861,7 +1865,7 @@ namespace AiState
 	//	}
 	//}
 
-	//obReal Panzer::GetPriority()
+	//float Panzer::GetPriority()
 	//{
 	//	int curAmmo = 0, maxAmmo = 0;
 	//	gEngineFuncs->GetCurrentAmmo(GetClient()->GetGameEntity(),ET_WP_PANZERFAUST,Primary,curAmmo,maxAmmo);
@@ -1874,27 +1878,27 @@ namespace AiState
 	//	if(IsActive())
 	//		return GetLastPriority();
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 
 	//	GoalManager::Query qry(0x731f6315 /* PANZER */, GetClient());
 	//	GoalManager::GetInstance()->GetGoals(qry);
-	//	qry.GetBest(m_MapGoal);
+	//	qry.GetBest(.mMapGoal);
 
-	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//	return mMapGoal ? mMapGoal->GetPriorityForClient(GetClient()) : 0.f;
 	//}
 
 	//void Panzer::Enter()
 	//{
-	//	m_AimPosition = m_MapGoal->GetPosition() + m_MapGoal->GetFacing() * 1024.f;
+	//mAimPosition = mMapGoal->GetPosition() + mMapGoal->GetFacing() * 1024.f;
 
-	//	Tracker.InProgress = m_MapGoal;
+	//	Tracker.InProgress = mMapGoal;
 
-	//	m_TargetZone.Restart(256.f);
-	//	m_ExpireTime = 0;
+	//mTargetZone.Restart(256.f);
+	//mExpireTime = 0;
 	//
-	//	m_MapGoal->GetProperty("Stance",m_Stance);
-	//	m_MapGoal->GetProperty("MinCampTime",m_MinCampTime);
-	//	m_MapGoal->GetProperty("MaxCampTime",m_MaxCampTime);
+	//mMapGoal->GetProperty("Stance",.mStance);
+	//mMapGoal->GetProperty("MinCampTime",.mMinCampTime);
+	//mMapGoal->GetProperty("MaxCampTime",.mMaxCampTime);
 
 	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
 	//}
@@ -1903,7 +1907,7 @@ namespace AiState
 	//{
 	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
 	//	FINDSTATEIF(WeaponSystem,GetRootState(),ReleaseWeaponRequest(GetNameHash()));
 	//	Tracker.Reset();
@@ -1911,51 +1915,51 @@ namespace AiState
 
 	//State::StateStatus Panzer::Update(float fDt)
 	//{
-	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//	if(!mMapGoal->IsAvailable(GetClient()->GetTeam()))
 	//		return State_Finished;
 
 	//	//////////////////////////////////////////////////////////////////////////
 	//	if(DidPathFail())
 	//	{
 	//		// Delay it from being used for a while.
-	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		BlackboardDelay(10.f, mMapGoal->GetSerialNum());
 	//		return State_Finished;
 	//	}
 	//	//////////////////////////////////////////////////////////////////////////
 
-	//	if(!Tracker.InUse && m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE) < 1)
+	//	if(!Tracker.InUse && mMapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE) < 1)
 	//		return State_Finished;
 
 	//	if(DidPathSucceed())
 	//	{
-	//		// Only hang around here for a certain amount of time
-	//		if(m_ExpireTime==0)
+	//		// Only hang around here for a certain mount of time
+	//		if(.mExpireTime==0)
 	//		{
-	//			m_ExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(m_MinCampTime,m_MaxCampTime);
-	//			Tracker.InUse = m_MapGoal;
+	//		mExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(.mMinCampTime,.mMaxCampTime);
+	//			Tracker.InUse = mMapGoal;
 	//		}
-	//		else if(IGame::GetTime() > m_ExpireTime)
+	//		else if(IGame::GetTime() > mExpireTime)
 	//		{
 	//			// Delay it from being used for a while.
-	//			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//			BlackboardDelay(10.f, mMapGoal->GetSerialNum());
 	//			return State_Finished;
 	//		}
 
 	//		FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Low,this,GetNameHash()));
 
-	//		m_AimPosition = m_MapGoal->GetPosition() + m_MapGoal->GetFacing() * 1024.f;
+	//	mAimPosition = mMapGoal->GetPosition() + mMapGoal->GetFacing() * 1024.f;
 
-	//		m_TargetZone.Update(GetClient());
+	//	mTargetZone.Update(GetClient());
 
-	//		if(m_TargetZone.HasAim())
-	//			m_AimPosition = m_TargetZone.GetAimPosition();
+	//		if(.mTargetZone.HasAim())
+	//		mAimPosition = mTargetZone.GetAimPosition();
 
-	//		GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition(), m_MapGoal->GetRadius());
+	//		GetClient()->GetSteeringSystem()->SetTarget(.mMapGoal->GetPosition(), mMapGoal->GetRadius());
 
-	//		NavFlags nodeFlags = m_MapGoal->GetFlags();
-	//		if (nodeFlags & F_NAV_PRONE || m_Stance==StanceProne)
+	//		NavFlags nodeFlags = mMapGoal->GetFlags();
+	//		if (nodeFlags & F_NAV_PRONE || mStance==StanceProne)
 	//			GetClient()->PressButton(BOT_BUTTON_PRONE);
-	//		else if (nodeFlags & F_NAV_CROUCH || m_Stance==StanceCrouch)
+	//		else if (nodeFlags & F_NAV_CROUCH || mStance==StanceCrouch)
 	//			GetClient()->PressButton(BOT_BUTTON_CROUCH);
 	//	}
 	//	return State_Busy;
@@ -1966,13 +1970,13 @@ namespace AiState
 	//MountMg42::MountMg42()
 	//	: StateChild("MountMg42")
 	//	, FollowPathUser("MountMg42")
-	//	, m_MinCampTime(6.f)
-	//	, m_MaxCampTime(10.f)
-	//	, m_ExpireTime(0)
-	//	, m_StartTime(0)
-	//	, m_ScanDirection(SCAN_DEFAULT)
-	//	, m_NextScanTime(0)
-	//	, m_IgnoreTargets(false)
+	//	, mMinCampTime(6.f)
+	//	, mMaxCampTime(10.f)
+	//	, mExpireTime(0)
+	//	, mStartTime(0)
+	//	, mScanDirection(SCAN_DEFAULT)
+	//	, mNextScanTime(0)
+	//	, mIgnoreTargets(false)
 	//{
 	//}
 
@@ -1984,7 +1988,7 @@ namespace AiState
 	//			out << "Mounting ";
 	//		else
 	//		{
-	//			switch(m_ScanDirection)
+	//			switch(.mScanDirection)
 	//			{
 	//			case SCAN_DEFAULT:
 	//				out << "Scan Facing ";
@@ -2001,8 +2005,8 @@ namespace AiState
 	//			}
 	//		}
 
-	//		if(m_MapGoal)
-	//			out << m_MapGoal->GetName();
+	//		if(.mMapGoal)
+	//			out << mMapGoal->GetName();
 	//	}
 	//}
 
@@ -2010,16 +2014,16 @@ namespace AiState
 	//{
 	//	if(IsActive())
 	//	{
-	//		RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
-	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
-	//		m_TargetZone.RenderDebug();
+	//		RenderBuffer::AddOBB(.mMapGoal->GetWorldBounds(), COLOR::ORANGE);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),.mMapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//	mTargetZone.RenderDebug();
 	//	}
 	//}
 
 	//// FollowPathUser functions.
 	//bool MountMg42::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
 	//{
-	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//	if(.mMapGoal && mMapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
 	//	else
 	//		_final = true;
@@ -2029,7 +2033,7 @@ namespace AiState
 	//// AimerUser functions.
 	//bool MountMg42::GetAimPosition(Vector3f &_aimpos)
 	//{
-	//	_aimpos = m_AimPoint;
+	//	_aimpos = mAimPoint;
 	//	return true;
 	//}
 
@@ -2039,7 +2043,7 @@ namespace AiState
 	//		GetClient()->PressButton(BOT_BUTTON_USE);
 	//}
 
-	//obReal MountMg42::GetPriority()
+	//float MountMg42::GetPriority()
 	//{
 	//	if(IsActive())
 	//		return GetLastPriority();
@@ -2048,52 +2052,52 @@ namespace AiState
 
 	//	GoalManager::Query qry(0xe1a2b09c /* MOUNTMG42 */, GetClient());
 	//	GoalManager::GetInstance()->GetGoals(qry);
-	//	for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//	for(uint32_t i = 0; i < qry.mList.size(); ++i)
 	//	{
-	//		if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+	//		if(BlackboardIsDelayed(qry.mList[i]->GetSerialNum()))
 	//			continue;
 
-	//		if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+	//		if(qry.mList[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
 	//			continue;
 
-	//		GameEntity gunOwner = InterfaceFuncs::GetMountedPlayerOnMG42(GetClient(), qry.m_List[i]->GetEntity());
-	//		int gunHealth = InterfaceFuncs::GetGunHealth(GetClient(), qry.m_List[i]->GetEntity());
-	//		bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), qry.m_List[i]->GetEntity());
+	//		GameEntity gunOwner = InterfaceFuncs::GetMountedPlayerOnMG42(GetClient(), qry.mList[i]->GetEntity());
+	//		int gunHealth = InterfaceFuncs::GetGunHealth(GetClient(), qry.mList[i]->GetEntity());
+	//		bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), qry.mList[i]->GetEntity());
 
 	//		if(bBroken)
 	//			continue;
 
-	//		if(!InterfaceFuncs::GetEntityFlags(qry.m_List[i]->GetEntity(), entFlags) ||
+	//		if(!InterfaceFuncs::GetEntityFlags(qry.mList[i]->GetEntity(), entFlags) ||
 	//			!entFlags.CheckFlag(ET_ENT_FLAG_ISMOUNTABLE))
 	//			continue;
 
 	//		// Make sure nobody has it mounted.
 	//		if((!gunOwner.IsValid() || !GetClient()->IsAllied(gunOwner)) && (gunHealth > 0))
 	//		{
-	//			m_MapGoal = qry.m_List[i];
+	//		mMapGoal = qry.mList[i];
 	//			break;
 	//		}
 	//	}
-	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//	return mMapGoal ? mMapGoal->GetPriorityForClient(GetClient()) : 0.f;
 	//}
 
 	//void MountMg42::Enter()
 	//{
-	//	m_MapGoal->GetProperty("MinCampTime",m_MinCampTime);
-	//	m_MapGoal->GetProperty("MaxCampTime",m_MaxCampTime);
-	//	m_MapGoal->GetProperty("IgnoreTargets",m_IgnoreTargets);
+	//mMapGoal->GetProperty("MinCampTime",.mMinCampTime);
+	//mMapGoal->GetProperty("MaxCampTime",.mMaxCampTime);
+	//mMapGoal->GetProperty("IgnoreTargets",.mIgnoreTargets);
 
-	//	m_ExpireTime = 0;
+	//mExpireTime = 0;
 
-	//	m_ScanDirection = SCAN_MIDDLE;
-	//	m_NextScanTime = IGame::GetTime() + (int)Mathf::IntervalRandom(2000.0f, 7000.0f);
-	//	m_AimPoint = m_MapGoal->GetPosition();
-	//	m_MG42Position = m_AimPoint;
-	//	m_ScanLeft = Vector3f::ZERO;
-	//	m_ScanRight = Vector3f::ZERO;
-	//	m_GotGunProperties = false;
-	//	Tracker.InProgress = m_MapGoal;
-	//	m_TargetZone.Restart(256.f);
+	//mScanDirection = SCAN_MIDDLE;
+	//mNextScanTime = IGame::GetTime() + (int)Mathf::IntervalRandom(2000.0f, 7000.0f);
+	//mAimPoint = mMapGoal->GetPosition();
+	//mMG42Position = mAimPoint;
+	//mScanLeft = Vector3f::ZERO;
+	//mScanRight = Vector3f::ZERO;
+	//mGotGunProperties = false;
+	//	Tracker.InProgress = mMapGoal;
+	//mTargetZone.Restart(256.f);
 	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
 	//}
 
@@ -2101,7 +2105,7 @@ namespace AiState
 	//{
 	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
 
 	//	if(GetClient()->HasEntityFlag(ET_ENT_FLAG_MOUNTED))
@@ -2114,19 +2118,19 @@ namespace AiState
 	//{
 	//	if(DidPathFail())
 	//	{
-	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		BlackboardDelay(10.f, mMapGoal->GetSerialNum());
 	//		return State_Finished;
 	//	}
 
-	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//	if(!mMapGoal->IsAvailable(GetClient()->GetTeam()))
 	//		return State_Finished;
 
 	//	//////////////////////////////////////////////////////////////////////////
 	//	// Only fail if a friendly player is on this gun or gun has been destroyed in the meantime
-	//	//int gunHealth = InterfaceFuncs::GetGunHealth(m_Client, m_MG42Goal->GetEntity());
-	//	GameEntity mounter = InterfaceFuncs::GetMountedPlayerOnMG42(GetClient(), m_MapGoal->GetEntity());
-	//	if(InterfaceFuncs::IsMountableGunRepairable(GetClient(), m_MapGoal->GetEntity()) ||
-	//		(mounter.IsValid() && (mounter != GetClient()->GetGameEntity()) && GetClient()->IsAllied(mounter)))
+	//	//int gunHealth = InterfaceFuncs::GetGunHealth(.mClient, mMG42Goal->GetEntity());
+	//	GameEntity mounter = InterfaceFuncs::GetMountedPlayerOnMG42(GetClient(), mMapGoal->GetEntity());
+	//	if(InterfaceFuncs::IsMountableGunRepairable(GetClient(), mMapGoal->GetEntity()) ||
+	//	mounter.IsValid() && mounter != GetClient()->GetGameEntity()) && GetClient()->IsAllied(mounter)))
 	//	{
 	//		return State_Finished;
 	//	}
@@ -2134,79 +2138,79 @@ namespace AiState
 
 	//	if(DidPathSucceed())
 	//	{
-	//		GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
+	//		GetClient()->GetSteeringSystem()->SetTarget(.mMapGoal->GetPosition());
 
 	//		const bool bMounted = GetClient()->HasEntityFlag(ET_ENT_FLAG_MOUNTED);
 	//		const int currentTime = IGame::GetTime();
 
-	//		Priority::ePriority pri = m_IgnoreTargets && !bMounted ? Priority::High : Priority::Low;
+	//		Priority::ePriority pri = mIgnoreTargets && !bMounted ? Priority::High : Priority::Low;
 	//		FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(pri,this,GetNameHash()));
 
-	//		// Only hang around here for a certain amount of time. 3 seconds max if they don't get mounted.
-	//		if(m_ExpireTime==0)
+	//		// Only hang around here for a certain mount of time. 3 seconds max if they don't get mounted.
+	//		if(.mExpireTime==0)
 	//		{
-	//			m_ExpireTime = currentTime+Mathf::IntervalRandomInt(m_MinCampTime.GetMs(),m_MaxCampTime.GetMs());
-	//			m_StartTime = currentTime;
-	//			Tracker.InUse = m_MapGoal;
+	//		mExpireTime = currentTime+Mathf::IntervalRandomInt(.mMinCampTime.GetMs(),.mMaxCampTime.GetMs());
+	//		mStartTime = currentTime;
+	//			Tracker.InUse = mMapGoal;
 	//		}
-	//		else if(currentTime > m_ExpireTime || (!bMounted && currentTime - m_StartTime > 3000))
+	//		else if(currentTime > mExpireTime || (!bMounted && currentTime - mStartTime > 3000))
 	//		{
 	//			// Delay it from being used for a while.
-	//			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//			BlackboardDelay(10.f, mMapGoal->GetSerialNum());
 	//			return State_Finished;
 	//		}
 
 	//		if(bMounted)
 	//		{
-	//			m_TargetZone.Update(GetClient());
+	//		mTargetZone.Update(GetClient());
 
-	//			if(!m_GotGunProperties)
+	//			if(!mGotGunProperties)
 	//			{
-	//				m_GotGunProperties = true;
+	//			mGotGunProperties = true;
 	//				_GetMG42Properties();
-	//				m_AimPoint = m_MapGoal->GetPosition() + m_GunCenterArc * 512.f;
+	//			mAimPoint = mMapGoal->GetPosition() + mGunCenterArc * 512.f;
 	//			}
 
-	//			if(m_NextScanTime < IGame::GetTime())
+	//			if(.mNextScanTime < IGame::GetTime())
 	//			{
-	//				m_NextScanTime = IGame::GetTime() + (int)Mathf::IntervalRandom(2000.0f, 7000.0f);
-	//				m_ScanDirection = (int)Mathf::IntervalRandom(0.0f, (float)NUM_SCAN_TYPES);
+	//			mNextScanTime = IGame::GetTime() + (int)Mathf::IntervalRandom(2000.0f, 7000.0f);
+	//			mScanDirection = (int)Mathf::IntervalRandom(0.0f, (float)NUM_SCAN_TYPES);
 
 	//				// we're mounted, so lets look around mid view.
-	//				m_TargetZone.UpdateAimPosition();
+	//			mTargetZone.UpdateAimPosition();
 	//			}
 
-	//			if(m_TargetZone.HasAim())
-	//				m_ScanDirection = SCAN_ZONES;
+	//			if(.mTargetZone.HasAim())
+	//			mScanDirection = SCAN_ZONES;
 
-	//			switch(m_ScanDirection)
+	//			switch(.mScanDirection)
 	//			{
 	//			case SCAN_DEFAULT:
-	//				if(m_MapGoal->GetFacing() != Vector3f::ZERO)
+	//				if(.mMapGoal->GetFacing() != Vector3f::ZERO)
 	//				{
-	//					m_AimPoint = m_MG42Position + m_MapGoal->GetFacing() * 1024.f;
+	//				mAimPoint = mMG42Position + mMapGoal->GetFacing() * 1024.f;
 	//					break;
 	//				}
 	//			case SCAN_MIDDLE:
 	//				{
-	//					m_AimPoint = m_MG42Position + m_GunCenterArc * 1024.f;
+	//				mAimPoint = mMG42Position + mGunCenterArc * 1024.f;
 	//					break;
 	//				}
 	//			case SCAN_LEFT:
-	//				if(m_ScanLeft != Vector3f::ZERO)
+	//				if(.mScanLeft != Vector3f::ZERO)
 	//				{
-	//					m_AimPoint = m_MG42Position + m_ScanLeft * 1024.f;
+	//				mAimPoint = mMG42Position + mScanLeft * 1024.f;
 	//					break;
 	//				}
 	//			case SCAN_RIGHT:
-	//				if(m_ScanRight != Vector3f::ZERO)
+	//				if(.mScanRight != Vector3f::ZERO)
 	//				{
-	//					m_AimPoint = m_MG42Position + m_ScanRight * 1024.f;
+	//				mAimPoint = mMG42Position + mScanRight * 1024.f;
 	//					break;
 	//				}
 	//			case SCAN_ZONES:
 	//				{
-	//					m_AimPoint = m_TargetZone.GetAimPosition();
+	//				mAimPoint = mTargetZone.GetAimPosition();
 	//					break;
 	//				}
 	//			default:
@@ -2223,35 +2227,35 @@ namespace AiState
 	//	if(!InterfaceFuncs::GetMg42Properties(GetClient(), data))
 	//		return false;
 
-	//	m_GunCenterArc = Vector3f(data.m_CenterFacing);
+	//mGunCenterArc = Vector3f(data.mCenterFacing);
 
-	//	m_MinHorizontalArc = data.m_MinHorizontalArc;
-	//	m_MaxHorizontalArc = data.m_MaxHorizontalArc;
-	//	m_MinVerticalArc = data.m_MinVerticalArc;
-	//	m_MaxVerticalArc = data.m_MaxVerticalArc;
+	//mMinHorizontalArc = data.mMinHorizontalArc;
+	//mMaxHorizontalArc = data.mMaxHorizontalArc;
+	//mMinVerticalArc = data.mMinVerticalArc;
+	//mMaxVerticalArc = data.mMaxVerticalArc;
 
 	//	// Calculate the planes for the MG42
 
 	//	/*Matrix3f planeMatrices[4];
-	//	planeMatrices[0].FromEulerAnglesXYZ(m_MinHorizontalArc, 0.0f, 0.0f);
-	//	planeMatrices[1].FromEulerAnglesXYZ(m_MaxHorizontalArc, 0.0f, 0.0f);
-	//	planeMatrices[2].FromEulerAnglesXYZ(0.0f, m_MinHorizontalArc, 0.0f);
-	//	planeMatrices[3].FromEulerAnglesXYZ(0.0f, m_MaxHorizontalArc, 0.0f);
+	//	planeMatrices[0].FromEulerAnglesXYZ(.mMinHorizontalArc, 0.0f, 0.0f);
+	//	planeMatrices[1].FromEulerAnglesXYZ(.mMaxHorizontalArc, 0.0f, 0.0f);
+	//	planeMatrices[2].FromEulerAnglesXYZ(0.0f, mMinHorizontalArc, 0.0f);
+	//	planeMatrices[3].FromEulerAnglesXYZ(0.0f, mMaxHorizontalArc, 0.0f);
 
-	//	m_GunArcPlanes[0] = Plane3f(m_GunCenterArc * planeMatrices[0], m_MG42Position);
-	//	m_GunArcPlanes[1] = Plane3f(m_GunCenterArc * planeMatrices[1], m_MG42Position);
-	//	m_GunArcPlanes[2] = Plane3f(m_GunCenterArc * planeMatrices[2], m_MG42Position);
-	//	m_GunArcPlanes[3] = Plane3f(m_GunCenterArc * planeMatrices[3], m_MG42Position);*/
+	//mGunArcPlanes[0] = Plane3f(.mGunCenterArc * planeMatrices[0], mMG42Position);
+	//mGunArcPlanes[1] = Plane3f(.mGunCenterArc * planeMatrices[1], mMG42Position);
+	//mGunArcPlanes[2] = Plane3f(.mGunCenterArc * planeMatrices[2], mMG42Position);
+	//mGunArcPlanes[3] = Plane3f(.mGunCenterArc * planeMatrices[3], mMG42Position);*/
 
 	//	const float fScanPc = 0.4f;
 
 	//	Quaternionf ql;
-	//	ql.FromAxisAngle(Vector3f::UNIT_Z, Mathf::DegToRad(m_MinHorizontalArc * fScanPc));
-	//	m_ScanLeft = ql.Rotate(m_GunCenterArc);
+	//	ql.FromAxisAngle(Vector3f::UNIT_Z, Mathf::DegToRad(.mMinHorizontalArc * fScanPc));
+	//mScanLeft = ql.Rotate(.mGunCenterArc);
 
 	//	Quaternionf qr;
-	//	qr.FromAxisAngle(Vector3f::UNIT_Z, Mathf::DegToRad(m_MaxHorizontalArc * fScanPc));
-	//	m_ScanRight = qr.Rotate(m_GunCenterArc);
+	//	qr.FromAxisAngle(Vector3f::UNIT_Z, Mathf::DegToRad(.mMaxHorizontalArc * fScanPc));
+	//mScanRight = qr.Rotate(.mGunCenterArc);
 
 	//	return true;
 	//}
@@ -2261,31 +2265,31 @@ namespace AiState
 	//MobileMg42::MobileMg42()
 	//	: StateChild("MobileMg42")
 	//	, FollowPathUser("MobileMg42")
-	//	, m_MinCampTime(6.f)
-	//	, m_MaxCampTime(10.f)
-	//	, m_ExpireTime(0)
+	//	, mMinCampTime(6.f)
+	//	, mMaxCampTime(10.f)
+	//	, mExpireTime(0)
 	//{
 	//	LimitToWeapon().SetFlag(ET_WP_MOBILE_MG42);
 	//}
 
 	//void MobileMg42::GetDebugString(std::stringstream &out)
 	//{
-	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
+	//	out << (.mMapGoal ? mMapGoal->GetName() : "");
 	//}
 
 	//void MobileMg42::RenderDebug()
 	//{
 	//	if(IsActive())
 	//	{
-	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::CYAN,5.f);
-	//		m_TargetZone.RenderDebug();
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),.mMapGoal->GetPosition(),COLOR::CYAN,5.f);
+	//	mTargetZone.RenderDebug();
 	//	}
 	//}
 
 	//// FollowPathUser functions.
 	//bool MobileMg42::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
 	//{
-	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//	if(.mMapGoal && mMapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
 	//	else
 	//		_final = true;
@@ -2295,7 +2299,7 @@ namespace AiState
 	//// AimerUser functions.
 	//bool MobileMg42::GetAimPosition(Vector3f &_aimpos)
 	//{
-	//	_aimpos = m_AimPosition;
+	//	_aimpos = mAimPosition;
 	//	return true;
 	//}
 
@@ -2318,7 +2322,7 @@ namespace AiState
 	//	}
 	//}
 
-	//obReal MobileMg42::GetPriority()
+	//float MobileMg42::GetPriority()
 	//{
 	//	FINDSTATE(at,AttackTarget,GetRootState());
 	//	if(at != NULL && at->IsActive() && at->TargetExceedsWeaponLimits())
@@ -2327,23 +2331,23 @@ namespace AiState
 	//	if(IsActive())
 	//		return GetLastPriority();
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 
 	//	GoalManager::Query qry(0xbe8488ed /* MOBILEMG42 */, GetClient());
 	//	GoalManager::GetInstance()->GetGoals(qry);
-	//	qry.GetBest(m_MapGoal);
-	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//	qry.GetBest(.mMapGoal);
+	//	return mMapGoal ? mMapGoal->GetPriorityForClient(GetClient()) : 0.f;
 	//}
 
 	//void MobileMg42::Enter()
 	//{
-	//	m_MapGoal->GetProperty("MinCampTime",m_MinCampTime);
-	//	m_MapGoal->GetProperty("MaxCampTime",m_MaxCampTime);
-	//	m_ExpireTime = 0;
+	//mMapGoal->GetProperty("MinCampTime",.mMinCampTime);
+	//mMapGoal->GetProperty("MaxCampTime",.mMaxCampTime);
+	//mExpireTime = 0;
 
-	//	m_TargetZone.Restart(256.f);
-	//	Tracker.InProgress = m_MapGoal;
-	//	m_AimPosition = m_MapGoal->GetPosition() + m_MapGoal->GetFacing() * 1024.f;
+	//mTargetZone.Restart(256.f);
+	//	Tracker.InProgress = mMapGoal;
+	//mAimPosition = mMapGoal->GetPosition() + mMapGoal->GetFacing() * 1024.f;
 	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
 	//}
 
@@ -2351,7 +2355,7 @@ namespace AiState
 	//{
 	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 
 	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
 	//	FINDSTATE(wp,WeaponSystem,GetRootState());
@@ -2367,43 +2371,43 @@ namespace AiState
 	//{
 	//	if(DidPathFail())
 	//	{
-	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		BlackboardDelay(10.f, mMapGoal->GetSerialNum());
 	//		return State_Finished;
 	//	}
 
-	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//	if(!mMapGoal->IsAvailable(GetClient()->GetTeam()))
 	//		return State_Finished;
 
-	//	if(!Tracker.InUse && m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE) < 1)
+	//	if(!Tracker.InUse && mMapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE) < 1)
 	//		return State_Finished;
 
 	//	if(DidPathSucceed())
 	//	{
-	//		// Only hang around here for a certain amount of time
-	//		if(m_ExpireTime==0)
+	//		// Only hang around here for a certain mount of time
+	//		if(.mExpireTime==0)
 	//		{
-	//			m_ExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(m_MinCampTime.GetMs(),m_MaxCampTime.GetMs());
-	//			Tracker.InUse = m_MapGoal;
+	//		mExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(.mMinCampTime.GetMs(),.mMaxCampTime.GetMs());
+	//			Tracker.InUse = mMapGoal;
 	//		}
-	//		else if(IGame::GetTime() > m_ExpireTime)
+	//		else if(IGame::GetTime() > mExpireTime)
 	//		{
 	//			// Delay it from being used for a while.
-	//			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//			BlackboardDelay(10.f, mMapGoal->GetSerialNum());
 	//			return State_Finished;
 	//		}
 
 	//		GetClient()->PressButton(BOT_BUTTON_PRONE);
 
-	//		Priority::ePriority pri = /*m_IgnoreTargets ? Priority::High :*/ Priority::Low;
+	//		Priority::ePriority pri = /*.mIgnoreTargets ? Priority::High :*/ Priority::Low;
 	//		FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(pri,this,GetNameHash()));
 
 	//		// Handle aim limitations.
 	//		FINDSTATE(wp,WeaponSystem,GetRootState());
 	//		if(wp != NULL && wp->CurrentWeaponIs(ET_WP_MOBILE_MG42_SET))
 	//		{
-	//			m_TargetZone.Update(GetClient());
-	//			if(m_TargetZone.HasAim())
-	//				m_AimPosition = m_TargetZone.GetAimPosition();
+	//		mTargetZone.Update(GetClient());
+	//			if(.mTargetZone.HasAim())
+	//			mAimPosition = mTargetZone.GetAimPosition();
 	//		}
 	//	}
 	//	return State_Busy;
@@ -2414,7 +2418,7 @@ namespace AiState
 	//RepairMg42::RepairMg42()
 	//	: StateChild("RepairMg42")
 	//	, FollowPathUser("RepairMg42")
-	//	, m_IgnoreTargets(false)
+	//	, mIgnoreTargets(false)
 	//{
 	//	LimitToWeapon().SetFlag(ET_WP_PLIERS);
 	//}
@@ -2424,7 +2428,7 @@ namespace AiState
 	//	if(IsActive())
 	//	{
 	//		//if(!GetClient()->HasEntityFlag(ET_ENT_FLAG_MOUNTED))
-	//		out << "Repairing " + (m_MapGoal?m_MapGoal->GetName():"");
+	//		out << "Repairing " + (.mMapGoal?.mMapGoal->GetName():"");
 	//	}
 	//}
 
@@ -2432,15 +2436,15 @@ namespace AiState
 	//{
 	//	if(IsActive())
 	//	{
-	//		RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
-	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//		RenderBuffer::AddOBB(.mMapGoal->GetWorldBounds(), COLOR::ORANGE);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),.mMapGoal->GetPosition(),COLOR::GREEN,5.f);
 	//	}
 	//}
 
 	//// FollowPathUser functions.
 	//bool RepairMg42::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
 	//{
-	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//	if(.mMapGoal && mMapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
 	//	else
 	//		_final = true;
@@ -2450,7 +2454,7 @@ namespace AiState
 	//// AimerUser functions.
 	//bool RepairMg42::GetAimPosition(Vector3f &_aimpos)
 	//{
-	//	_aimpos = m_MG42Position;
+	//	_aimpos = mMG42Position;
 	//	return true;
 	//}
 
@@ -2461,7 +2465,7 @@ namespace AiState
 	//		ws->FireWeapon();
 	//}
 
-	//obReal RepairMg42::GetPriority()
+	//float RepairMg42::GetPriority()
 	//{
 	//	if(IsActive())
 	//		return GetLastPriority();
@@ -2470,28 +2474,28 @@ namespace AiState
 
 	//	GoalManager::Query qry(0x17929136 /* REPAIRMG42 */, GetClient());
 	//	GoalManager::GetInstance()->GetGoals(qry);
-	//	for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//	for(uint32_t i = 0; i < qry.mList.size(); ++i)
 	//	{
-	//		if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+	//		if(BlackboardIsDelayed(qry.mList[i]->GetSerialNum()))
 	//			continue;
 
-	//		bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), qry.m_List[i]->GetEntity());
+	//		bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), qry.mList[i]->GetEntity());
 	//		if(!bBroken)
 	//			continue;
 
-	//		m_MapGoal = qry.m_List[i];
+	//	mMapGoal = qry.mList[i];
 	//		break;
 	//	}
-	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//	return mMapGoal ? mMapGoal->GetPriorityForClient(GetClient()) : 0.f;
 	//}
 
 	//void RepairMg42::Enter()
 	//{
-	//	m_MapGoal->GetProperty("IgnoreTargets",m_IgnoreTargets);
+	//mMapGoal->GetProperty("IgnoreTargets",.mIgnoreTargets);
 
-	//	Tracker.InProgress = m_MapGoal;
-	//	m_MG42Position = m_MapGoal->GetWorldBounds().Center;
-	//	//m_MapGoal->GetWorldBounds().CenterBottom(m_MG42Position);
+	//	Tracker.InProgress = mMapGoal;
+	//mMG42Position = mMapGoal->GetWorldBounds().Center;
+	//	//.mMapGoal->GetWorldBounds().CenterBottom(.mMG42Position);
 	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
 	//}
 
@@ -2499,7 +2503,7 @@ namespace AiState
 	//{
 	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 	//	Tracker.Reset();
 	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
 	//	FINDSTATEIF(WeaponSystem,GetRootState(),ReleaseWeaponRequest(GetNameHash()));
@@ -2509,20 +2513,20 @@ namespace AiState
 	//{
 	//	if(DidPathFail())
 	//	{
-	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		BlackboardDelay(10.f, mMapGoal->GetSerialNum());
 	//		return State_Finished;
 	//	}
 
-	//	bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), m_MapGoal->GetEntity());
-	//	if(!bBroken || !m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//	bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), mMapGoal->GetEntity());
+	//	if(!bBroken || mMapGoal->IsAvailable(GetClient()->GetTeam()))
 	//		return State_Finished;
 
 	//	if(DidPathSucceed())
 	//	{
 	//		GetClient()->PressButton(BOT_BUTTON_CROUCH);
-	//		GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
+	//		GetClient()->GetSteeringSystem()->SetTarget(.mMapGoal->GetPosition());
 
-	//		Priority::ePriority pri = m_IgnoreTargets ? Priority::High : Priority::Medium;
+	//		Priority::ePriority pri = mIgnoreTargets ? Priority::High : Priority::Medium;
 	//		FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(pri,this,GetNameHash()));
 	//		FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(pri, GetNameHash(), ET_WP_PLIERS));
 	//	}
@@ -2539,46 +2543,46 @@ namespace AiState
 
 	//void TakeCheckPoint::GetDebugString(std::stringstream &out)
 	//{
-	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
+	//	out << (.mMapGoal ? mMapGoal->GetName() : "");
 	//}
 
 	//void TakeCheckPoint::RenderDebug()
 	//{
 	//	if(IsActive())
 	//	{
-	//		RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
-	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//		RenderBuffer::AddOBB(.mMapGoal->GetWorldBounds(), COLOR::ORANGE);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),.mMapGoal->GetPosition(),COLOR::GREEN,5.f);
 	//	}
 	//}
 
 	//// FollowPathUser functions.
 	//bool TakeCheckPoint::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
 	//{
-	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//	if(.mMapGoal && mMapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
 	//	else
 	//		_final = true;
 	//	return true;
 	//}
 
-	//obReal TakeCheckPoint::GetPriority()
+	//float TakeCheckPoint::GetPriority()
 	//{
 	//	if(IsActive())
 	//		return GetLastPriority();
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 
 	//	GoalManager::Query qry(0xf7e4a57f /* CHECKPOINT */, GetClient());
 	//	GoalManager::GetInstance()->GetGoals(qry);
-	//	qry.GetBest(m_MapGoal);
+	//	qry.GetBest(.mMapGoal);
 
-	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//	return mMapGoal ? mMapGoal->GetPriorityForClient(GetClient()) : 0.f;
 	//}
 
 	//void TakeCheckPoint::Enter()
 	//{
-	//	m_TargetPosition = m_MapGoal->GetWorldBounds().Center;
-	//	Tracker.InProgress = m_MapGoal;
+	//mTargetPosition = mMapGoal->GetWorldBounds().Center;
+	//	Tracker.InProgress = mMapGoal;
 	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run, true));
 	//}
 
@@ -2586,7 +2590,7 @@ namespace AiState
 	//{
 	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
 	//	FINDSTATEIF(WeaponSystem, GetRootState(), ReleaseWeaponRequest(GetNameHash()));
 
@@ -2597,17 +2601,17 @@ namespace AiState
 	//{
 	//	if(DidPathFail())
 	//	{
-	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		BlackboardDelay(10.f, mMapGoal->GetSerialNum());
 	//		return State_Finished;
 	//	}
 
-	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//	if(!mMapGoal->IsAvailable(GetClient()->GetTeam()))
 	//		return State_Finished;
 
 	//	if(DidPathSucceed())
 	//	{
-	//		m_TargetPosition.Z() = GetClient()->GetPosition().Z();
-	//		GetClient()->GetSteeringSystem()->SetTarget(m_TargetPosition, 32.f);
+	//	mTargetPosition.Z() = GetClient()->GetPosition().Z();
+	//		GetClient()->GetSteeringSystem()->SetTarget(.mTargetPosition, 32.f);
 	//	}
 	//	return State_Busy;
 	//}
@@ -2617,14 +2621,14 @@ namespace AiState
 	//ReviveTeammate::ReviveTeammate()
 	//	: StateChild("ReviveTeammate")
 	//	, FollowPathUser("ReviveTeammate")
-	//	, m_Range(2000.f)
+	//	, mRange(2000.f)
 	//{
 	//	LimitToWeapon().SetFlag(ET_WP_SYRINGE);
 	//}
 
 	//void ReviveTeammate::GetDebugString(std::stringstream &out)
 	//{
-	//	switch(m_GoalState)
+	//	switch(.mGoalState)
 	//	{
 	//	case REVIVING:
 	//		out << "Reviving ";
@@ -2634,24 +2638,24 @@ namespace AiState
 	//		break;
 	//	}
 
-	//	if(m_MapGoal && m_MapGoal->GetEntity().IsValid())
-	//		out << std::endl << EngineFuncs::EntityName(m_MapGoal->GetEntity(), "<noname>");
+	//	if(.mMapGoal && mMapGoal->GetEntity().IsValid())
+	//		out << std::endl << EngineFuncs::EntityName(.mMapGoal->GetEntity(), "<noname>");
 	//}
 
 	//void ReviveTeammate::RenderDebug()
 	//{
 	//	if(IsActive())
 	//	{
-	//		RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
-	//		RenderBuffer::AddLine(GetClient()->GetPosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
-	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::MAGENTA,5.f);
+	//		RenderBuffer::AddOBB(.mMapGoal->GetWorldBounds(), COLOR::ORANGE);
+	//		RenderBuffer::AddLine(GetClient()->GetPosition(),.mMapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),.mMapGoal->GetPosition(),COLOR::MAGENTA,5.f);
 	//	}
 	//}
 
 	//// FollowPathUser functions.
 	//bool ReviveTeammate::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
 	//{
-	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//	if(.mMapGoal && mMapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
 	//	else
 	//		_final = true;
@@ -2661,8 +2665,8 @@ namespace AiState
 	//// AimerUser functions.
 	//bool ReviveTeammate::GetAimPosition(Vector3f &_aimpos)
 	//{
-	//	const Box3f obb = m_MapGoal->GetWorldBounds();
-	//	if ( m_GoalState == REVIVING )
+	//	const Box3f obb = mMapGoal->GetWorldBounds();
+	//	if ( mGoalState == REVIVING )
 	//		_aimpos = obb.GetCenterBottom();
 	//	else
 	//		_aimpos = obb.Center;
@@ -2674,7 +2678,7 @@ namespace AiState
 	//	FINDSTATE(ws, WeaponSystem, GetRootState());
 	//	if(ws)
 	//	{
-	//		if(InterfaceFuncs::IsAlive(m_MapGoal->GetEntity()))
+	//		if(InterfaceFuncs::IsAlive(.mMapGoal->GetEntity()))
 	//		{
 	//			if(ws->CurrentWeaponIs(ET_WP_MEDKIT))
 	//				ws->FireWeapon();
@@ -2687,28 +2691,28 @@ namespace AiState
 	//	}
 	//}
 
-	//obReal ReviveTeammate::GetPriority()
+	//float ReviveTeammate::GetPriority()
 	//{
 	//	if(IsActive())
 	//		return GetLastPriority();
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 
 	//	GoalManager::Query qry(0x2086cdf0 /* REVIVE */, GetClient());
 	//	GoalManager::GetInstance()->GetGoals(qry);
-	//	//qry.GetBest(m_MapGoal);
+	//	//qry.GetBest(.mMapGoal);
 
 	//	float fDistToRevive;
 	//	float fClosestRevive = 0.f;
-	//	MapGoalList::iterator mIt = qry.m_List.begin();
-	//	for(; mIt != qry.m_List.end(); )
+	//	MapGoalList::iterator mIt = qry.mList.begin();
+	//	for(; mIt != qry.mList.end(); )
 	//	{
 	//		fDistToRevive = SquaredLength2d((*mIt)->GetPosition(), GetClient()->GetPosition());
-	//		(*mIt)->GetProperty("Range",m_Range);
-	//		if ( fDistToRevive > m_Range * m_Range )
+	//		(*mIt)->GetProperty("Range",.mRange);
+	//		if ( fDistToRevive > mRange * mRange )
 	//		{
 	//			BlackboardDelay(5.f, (*mIt)->GetSerialNum()); // ignore it for a while so dist calcs aren't done every frame
-	//			mIt = qry.m_List.erase(mIt);
+	//	mIt = qry.mList.erase(mIt);
 	//			continue;
 	//		}
 
@@ -2716,38 +2720,38 @@ namespace AiState
 	//		if ( fClosestRevive == 0.f || (fDistToRevive < fClosestRevive && fDistToRevive > 40000.f) )
 	//		{
 	//			fClosestRevive = fDistToRevive;
-	//			m_MapGoal = (*mIt);
+	//		mMapGoal = (*mIt);
 	//		}
 
 	//		++mIt;
 	//	}
 
-	//	m_List = qry.m_List;
-	//	// m_MapGoal.reset();
+	//mList = qry.mList;
+	//	// mMapGoal.reset();
 	//	// TODO: check weapon capability vs target underwater?
 
-	//	return !m_List.empty() && m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//	return mList.empty() && mMapGoal ? mMapGoal->GetPriorityForClient(GetClient()) : 0.f;
 	//}
 
 	//void ReviveTeammate::Enter()
 	//{
-	//	m_GoalState = REVIVING;
+	//mGoalState = REVIVING;
 
-	//	m_CheckReviveTimer.Delay(2.f);
+	//mCheckReviveTimer.Delay(2.f);
 
 	//	FINDSTATE(fp, FollowPath, GetRootState());
-	//	if(fp != NULL && fp->Goto(this, m_List, Run))
+	//	if(fp != NULL && fp->Goto(this, mList, Run))
 	//	{
-	//		m_MapGoal = m_List[GetDestinationIndex()];
-	//		Tracker.InProgress = m_MapGoal;
+	//	mMapGoal = mList[GetDestinationIndex()];
+	//		Tracker.InProgress = mMapGoal;
 	//	}
 	//	else
 	//	{
-	//		m_MapGoal.reset();
+	//	mMapGoal.reset();
 	//		Tracker.Reset();
-	//		for(obuint32 i = 0; i < m_List.size(); ++i)
+	//		for(uint32_t i = 0; i < mList.size(); ++i)
 	//		{
-	//			BlackboardDelay(10.f, m_List[i]->GetSerialNum());
+	//			BlackboardDelay(10.f, mList[i]->GetSerialNum());
 	//		}
 	//	}
 	//}
@@ -2756,7 +2760,7 @@ namespace AiState
 	//{
 	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 
 	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
 	//	FINDSTATEIF(WeaponSystem, GetRootState(),ReleaseWeaponRequest(GetNameHash()));
@@ -2766,31 +2770,31 @@ namespace AiState
 
 	//State::StateStatus ReviveTeammate::Update(float fDt)
 	//{
-	//	if(!m_MapGoal)
+	//	if(!mMapGoal)
 	//		return State_Finished;
 
-	//	if(m_CheckReviveTimer.IsExpired())
+	//	if(.mCheckReviveTimer.IsExpired())
 	//	{
 	//		// finish if there's new goals, so we can activate again and go to a new goal
 	//		if(AreThereNewReviveGoals())
 	//			return State_Finished;
-	//		m_CheckReviveTimer.Delay(2.f);
+	//	mCheckReviveTimer.Delay(2.f);
 	//	}
 
 	//	if(DidPathFail())
 	//	{
-	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		BlackboardDelay(10.f, mMapGoal->GetSerialNum());
 	//		return State_Finished;
 	//	}
 
-	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//	if(!mMapGoal->IsAvailable(GetClient()->GetTeam()))
 	//		return State_Finished;
 
-	//	GameEntity reviveEnt = m_MapGoal->GetEntity();
+	//	GameEntity reviveEnt = mMapGoal->GetEntity();
 
 	//	//////////////////////////////////////////////////////////////////////////
 	//	Msg_HealthArmor ha;
-	//	if(InterfaceFuncs::GetHealthAndArmor(reviveEnt, ha) && ha.m_CurrentHealth >= ha.m_MaxHealth)
+	//	if(InterfaceFuncs::GetHealthAndArmor(reviveEnt, ha) && ha.mCurrentHealth >= ha.mMaxHealth)
 	//		return State_Finished;
 
 	//	BitFlag64 ef;
@@ -2805,20 +2809,20 @@ namespace AiState
 	//	{
 	//		if(GetClient()->GetStuckTime() > 2000)
 	//		{
-	//			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//			BlackboardDelay(10.f, mMapGoal->GetSerialNum());
 	//			return State_Finished;
 	//		}
 
 	//		FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::High,this,GetNameHash()));
-	//		GetClient()->GetSteeringSystem()->SetTarget(m_MapGoal->GetPosition());
+	//		GetClient()->GetSteeringSystem()->SetTarget(.mMapGoal->GetPosition());
 
-	//		switch(m_GoalState)
+	//		switch(.mGoalState)
 	//		{
 	//		case REVIVING:
 	//			{
 	//				if(InterfaceFuncs::IsAlive(reviveEnt))
 	//				{
-	//					m_GoalState = HEALING;
+	//				mGoalState = HEALING;
 	//				}
 	//				else
 	//				{
@@ -2851,13 +2855,13 @@ namespace AiState
 
 	//				if(GetClient()->GetTargetingSystem()->HasTarget())
 	//				{
-	//					BlackboardDelay(5.f, m_MapGoal->GetSerialNum());
+	//					BlackboardDelay(5.f, mMapGoal->GetSerialNum());
 	//					return State_Finished;
 	//				}
 
 	//				if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_MEDKIT, Primary))
 	//				{
-	//					BlackboardDelay(5.f, m_MapGoal->GetSerialNum());
+	//					BlackboardDelay(5.f, mMapGoal->GetSerialNum());
 	//					return State_Finished;
 	//				}
 
@@ -2875,9 +2879,9 @@ namespace AiState
 	//	GoalManager::Query qry(0x2086cdf0 /* REVIVE */, GetClient());
 	//	GoalManager::GetInstance()->GetGoals(qry);
 
-	//	for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//	for(uint32_t i = 0; i < qry.mList.size(); ++i)
 	//	{
-	//		if(std::find(m_List.begin(),m_List.end(),qry.m_List[i]) == m_List.end())
+	//		if(std::find(.mList.begin(),.mList.end(),qry.mList[i]) == mList.end())
 	//			return true;
 	//	}
 
@@ -2895,22 +2899,22 @@ namespace AiState
 
 	//void DefuseDynamite::GetDebugString(std::stringstream &out)
 	//{
-	//	out << (m_MapGoal ? m_MapGoal->GetName() : "");
+	//	out << (.mMapGoal ? mMapGoal->GetName() : "");
 	//}
 
 	//void DefuseDynamite::RenderDebug()
 	//{
 	//	if(IsActive())
 	//	{
-	//		RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(), COLOR::ORANGE);
-	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+	//		RenderBuffer::AddOBB(.mMapGoal->GetWorldBounds(), COLOR::ORANGE);
+	//		RenderBuffer::AddLine(GetClient()->GetEyePosition(),.mMapGoal->GetPosition(),COLOR::GREEN,5.f);
 	//	}
 	//}
 
 	//// FollowPathUser functions.
 	//bool DefuseDynamite::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
 	//{
-	//	if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+	//	if(.mMapGoal && mMapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
 	//	else
 	//		_final = true;
@@ -2920,7 +2924,7 @@ namespace AiState
 	//// AimerUser functions.
 	//bool DefuseDynamite::GetAimPosition(Vector3f &_aimpos)
 	//{
-	//	_aimpos = m_MapGoal->GetWorldBounds().Center;
+	//	_aimpos = mMapGoal->GetWorldBounds().Center;
 	//	return true;
 	//}
 
@@ -2931,40 +2935,40 @@ namespace AiState
 	//		ws->FireWeapon();
 	//}
 
-	//obReal DefuseDynamite::GetPriority()
+	//float DefuseDynamite::GetPriority()
 	//{
 	//	if(IsActive())
 	//		return GetLastPriority();
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 
 	//	GoalManager::Query qry(0x1899efc7 /* DEFUSE */, GetClient());
 	//	GoalManager::GetInstance()->GetGoals(qry);
-	//	for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//	for(uint32_t i = 0; i < qry.mList.size(); ++i)
 	//	{
-	//		if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+	//		if(BlackboardIsDelayed(qry.mList[i]->GetSerialNum()))
 	//			continue;
 
-	//		if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+	//		if(qry.mList[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
 	//			continue;
 
-	//		if(InterfaceFuncs::GetExplosiveState(GetClient(), qry.m_List[i]->GetEntity()) == XPLO_ARMED)
+	//		if(InterfaceFuncs::GetExplosiveState(GetClient(), qry.mList[i]->GetEntity()) == XPLO_ARMED)
 	//		{
-	//			m_MapGoal = qry.m_List[i];
+	//		mMapGoal = qry.mList[i];
 	//			break;
 	//		}
 	//		else
 	//		{
-	//			qry.m_List[i]->SetDeleteMe(true);
+	//			qry.mList[i]->SetDeleteMe(true);
 	//		}
 	//	}
-	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//	return mMapGoal ? mMapGoal->GetPriorityForClient(GetClient()) : 0.f;
 	//}
 
 	//void DefuseDynamite::Enter()
 	//{
-	//	m_TargetPosition = m_MapGoal->GetWorldBounds().Center;
-	//	Tracker.InProgress = m_MapGoal;
+	//mTargetPosition = mMapGoal->GetWorldBounds().Center;
+	//	Tracker.InProgress = mMapGoal;
 	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
 	//}
 
@@ -2972,7 +2976,7 @@ namespace AiState
 	//{
 	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-	//	m_MapGoal.reset();
+	//mMapGoal.reset();
 
 	//	FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
 	//	FINDSTATEIF(WeaponSystem, GetRootState(),ReleaseWeaponRequest(GetNameHash()));
@@ -2984,16 +2988,16 @@ namespace AiState
 	//{
 	//	if(DidPathFail())
 	//	{
-	//		BlackboardDelay(2.f, m_MapGoal->GetSerialNum()); // cs: was 10 seconds
+	//		BlackboardDelay(2.f, mMapGoal->GetSerialNum()); // cs: was 10 seconds
 	//		return State_Finished;
 	//	}
 
-	//	if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+	//	if(!mMapGoal->IsAvailable(GetClient()->GetTeam()))
 	//		return State_Finished;
 
 	//	if(DidPathSucceed())
 	//	{
-	//		ExplosiveState eState = InterfaceFuncs::GetExplosiveState(GetClient(), m_MapGoal->GetEntity());
+	//		ExplosiveState eState = InterfaceFuncs::GetExplosiveState(GetClient(), mMapGoal->GetEntity());
 	//		switch(eState)
 	//		{
 	//		case XPLO_INVALID:
@@ -3003,12 +3007,12 @@ namespace AiState
 	//			break; // keep processing
 	//		}
 
-	//		m_TargetPosition = m_MapGoal->GetWorldBounds().Center;
+	//	mTargetPosition = mMapGoal->GetWorldBounds().Center;
 
-	//		const float fDistanceToDynamite = SquaredLength2d(m_TargetPosition, GetClient()->GetPosition());
+	//		const float fDistanceToDynamite = SquaredLength2d(.mTargetPosition, GetClient()->GetPosition());
 	//		if(fDistanceToDynamite > 2500.0f)
 	//		{
-	//			GetClient()->GetSteeringSystem()->SetTarget(m_TargetPosition);
+	//			GetClient()->GetSteeringSystem()->SetTarget(.mTargetPosition);
 	//		}
 	//		else
 	//		{

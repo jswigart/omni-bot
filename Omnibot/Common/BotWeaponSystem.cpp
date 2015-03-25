@@ -14,6 +14,7 @@
 #include "BotBaseStates.h"
 #include "InterfaceFuncs.h"
 #include "RenderBuffer.h"
+#include "System.h"
 
 namespace AiState
 {
@@ -21,75 +22,78 @@ namespace AiState
 	class ReloadOther : public StateChild
 	{
 	public:
-		void GetDebugString(std::stringstream &out)
+		void GetDebugString( std::stringstream &out )
 		{
-			out << g_WeaponDatabase.GetWeaponName(m_WeaponNeedsReloading);
+			out << gWeaponDatabase.GetWeaponName( mWeaponNeedsReloading );
 		}
-		obReal GetPriority()
+		float GetPriority()
 		{
-			FINDSTATE(tsys, TargetingSystem, GetParent()->GetParent());
-			if(!tsys || tsys->HasTarget() || GetClient()->CheckUserFlag(Client::FL_USINGMOUNTEDWEAPON))
+			FINDSTATE( tsys, TargetingSystem, GetParent()->GetParent() );
+			if ( !tsys || tsys->HasTarget() || GetClient()->CheckUserFlag( Client::FL_USINGMOUNTEDWEAPON ) )
 				return 0.f;
 
-			FINDSTATE(wsys, WeaponSystem, GetParent());
-			if(wsys)
+			FINDSTATE( wsys, WeaponSystem, GetParent() );
+			if ( wsys )
 			{
 				int wpn = wsys->GetWeaponNeedingReload();
-				if(wpn!=m_WeaponNeedsReloading)
+				if ( wpn != mWeaponNeedsReloading )
 				{
-					if(wpn && m_WeaponNeedsReloading){
-						wsys->UpdateWeaponRequest(GetNameHash(), wpn);
+					if ( wpn && mWeaponNeedsReloading )
+					{
+						wsys->UpdateWeaponRequest( GetNameHash(), wpn );
 					}
-					m_WeaponNeedsReloading = wpn;
+					mWeaponNeedsReloading = wpn;
 				}
 			}
-			return m_WeaponNeedsReloading ? 1.f : 0.f;
+			return mWeaponNeedsReloading ? 1.f : 0.f;
 		}
 		void Enter()
 		{
-			FINDSTATEIF(WeaponSystem, GetParent(), AddWeaponRequest(Priority::Low, GetNameHash(), m_WeaponNeedsReloading));
+			FINDSTATEIF( WeaponSystem, GetParent(), AddWeaponRequest( Priority::Low, GetNameHash(), mWeaponNeedsReloading ) );
 		}
 		void Exit()
 		{
-			m_WeaponNeedsReloading = 0;
-			FINDSTATEIF(WeaponSystem, GetParent(), ReleaseWeaponRequest(GetNameHash()));
+			mWeaponNeedsReloading = 0;
+			FINDSTATEIF( WeaponSystem, GetParent(), ReleaseWeaponRequest( GetNameHash() ) );
 		}
-		StateStatus Update(float fDt)
+		StateStatus Update( float fDt )
 		{
-			Prof(ReloadOther);
+			Prof( ReloadOther );
 			{
-				Prof(Update);
+				Prof( Update );
 
-				FINDSTATE(wsys, WeaponSystem, GetParent());
-				if(wsys != NULL && wsys->GetCurrentRequestOwner() == GetNameHash())
+				FINDSTATE( wsys, WeaponSystem, GetParent() );
+				if ( wsys != NULL && wsys->GetCurrentRequestOwner() == GetNameHash() )
 				{
-					if(wsys && wsys->CurrentWeaponIs(m_WeaponNeedsReloading))
+					if ( wsys && wsys->CurrentWeaponIs( mWeaponNeedsReloading ) )
 						wsys->GetCurrentWeapon()->ReloadWeapon();
 				}
 				return State_Busy;
 			}
 		}
-		ReloadOther() : StateChild("ReloadOther"), m_WeaponNeedsReloading(0) { }
+		ReloadOther() : StateChild( "ReloadOther" ), mWeaponNeedsReloading( 0 )
+		{
+		}
 	private:
-		int		m_WeaponNeedsReloading;
+		int mWeaponNeedsReloading;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
 
 	AttackTarget::AttackTarget()
-		: StateChild("AttackTarget")
-		, m_AimPosition(Vector3f::ZERO)
-		, m_CurrentWeaponHash(0)
-		, m_ShootTheBastard(0)
-		, m_TargetExceedsWeaponLimits(0)
+		: StateChild( "AttackTarget" )
+		, mAimPosition( Vector3f::ZERO )
+		, mCurrentWeaponHash( 0 )
+		, mShootTheBastard( 0 )
+		, mTargetExceedsWeaponLimits( 0 )
 	{
 	}
 	void AttackTarget::RenderDebug()
 	{
-		if(m_WeaponLimits.m_Limited==True)
+		if ( mWeaponLimits.mLimited == True )
 		{
-			Vector3f vGunCenter(m_WeaponLimits.m_CenterFacing);
-			Vector3f vAimVector(Normalize(m_AimPosition-GetClient()->GetEyePosition()));
+			Vector3f vGunCenter( mWeaponLimits.mCenterFacing );
+			Vector3f vAimVector( Normalize( mAimPosition - GetClient()->GetEyePosition() ) );
 
 			const float fGunHeading = vGunCenter.XYHeading();
 			const float fAimHeading = vAimVector.XYHeading();
@@ -97,30 +101,30 @@ namespace AiState
 			const float fGunPitch = vGunCenter.GetPitch();
 			const float fAimPitch = vAimVector.GetPitch();
 
-			float fHeadingDiff = Mathf::RadToDeg(Mathf::UnitCircleNormalize(fAimHeading-fGunHeading));
-			float fPitchDiff = Mathf::RadToDeg(fAimPitch-fGunPitch);
-			if(fHeadingDiff < m_WeaponLimits.m_MinYaw || fHeadingDiff > m_WeaponLimits.m_MaxYaw)
-				m_TargetExceedsWeaponLimits = true;
-			if(fPitchDiff < m_WeaponLimits.m_MinPitch || fPitchDiff > m_WeaponLimits.m_MaxPitch)
-				m_TargetExceedsWeaponLimits = true;
+			float fHeadingDiff = Mathf::RadToDeg( Mathf::UnitCircleNormalize( fAimHeading - fGunHeading ) );
+			float fPitchDiff = Mathf::RadToDeg( fAimPitch - fGunPitch );
+			if ( fHeadingDiff < mWeaponLimits.mMinYaw || fHeadingDiff > mWeaponLimits.mMaxYaw )
+				mTargetExceedsWeaponLimits = true;
+			if ( fPitchDiff < mWeaponLimits.mMinPitch || fPitchDiff > mWeaponLimits.mMaxPitch )
+				mTargetExceedsWeaponLimits = true;
 
 			Quaternionf ql, qr;
-			ql.FromAxisAngle(Vector3f::UNIT_Z, Mathf::DegToRad(m_WeaponLimits.m_MinYaw));
-			qr.FromAxisAngle(Vector3f::UNIT_Z, Mathf::DegToRad(m_WeaponLimits.m_MaxYaw));
-			Vector3f vLeft = ql.Rotate(vGunCenter);
-			Vector3f vRght = qr.Rotate(vGunCenter);
+			ql.FromAxisAngle( Vector3f::UNIT_Z, Mathf::DegToRad( mWeaponLimits.mMinYaw ) );
+			qr.FromAxisAngle( Vector3f::UNIT_Z, Mathf::DegToRad( mWeaponLimits.mMaxYaw ) );
+			Vector3f vLeft = ql.Rotate( vGunCenter );
+			Vector3f vRght = qr.Rotate( vGunCenter );
 
 			Vector3f vEye = GetClient()->GetEyePosition();
-			RenderBuffer::AddLine(vEye,vEye+vGunCenter*64.f,COLOR::ORANGE,0.1f);
-			RenderBuffer::AddLine(vEye,vEye+vLeft*64.f,COLOR::RED,0.1f);
-			RenderBuffer::AddLine(vEye,vEye+vRght*64.f,COLOR::RED,0.1f);
+			RenderBuffer::AddLine( vEye, vEye + vGunCenter*64.f, COLOR::ORANGE, 0.1f );
+			RenderBuffer::AddLine( vEye, vEye + vLeft*64.f, COLOR::RED, 0.1f );
+			RenderBuffer::AddLine( vEye, vEye + vRght*64.f, COLOR::RED, 0.1f );
 		}
 	}
-	void AttackTarget::GetDebugString(std::stringstream &out)
+	void AttackTarget::GetDebugString( std::stringstream &out )
 	{
-		out << Utils::HashToString(m_CurrentWeaponHash);
+		out << Utils::HashToString( mCurrentWeaponHash );
 	}
-	obReal AttackTarget::GetPriority()
+	float AttackTarget::GetPriority()
 	{
 		return GetClient()->GetTargetingSystem()->HasTarget() ? 1.f : 0.f;
 	}
@@ -130,68 +134,68 @@ namespace AiState
 	}
 	void AttackTarget::Exit()
 	{
-		m_ShootTheBastard = false;
-		m_CurrentWeaponHash = 0;
-		FINDSTATEIF(Aimer, GetRootState(), ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetParent(), ReleaseWeaponRequest(GetNameHash()));
+		mShootTheBastard = false;
+		mCurrentWeaponHash = 0;
+		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
+		FINDSTATEIF( WeaponSystem, GetParent(), ReleaseWeaponRequest( GetNameHash() ) );
 	}
-	State::StateStatus AttackTarget::Update(float fDt)
+	State::StateStatus AttackTarget::Update( float fDt )
 	{
-		Prof(AttackTarget);
+		Prof( AttackTarget );
 		{
-			Prof(Update);
+			Prof( Update );
 
 			const MemoryRecord *pRecord = GetClient()->GetTargetingSystem()->GetCurrentTargetRecord();
-			if(!pRecord)
+			if ( !pRecord )
 				return State_Finished;
 
 			// Add the aim request when reaction time has been met
-			FINDSTATE(wsys, WeaponSystem, GetParent());
-			if( wsys != NULL &&
-				(pRecord->GetTimeTargetHasBeenVisible() >= wsys->GetReactionTime()) &&
-				(pRecord->IsShootable() || (pRecord->GetTimeHasBeenOutOfView() < wsys->GetAimPersistance())))
+			FINDSTATE( wsys, WeaponSystem, GetParent() );
+			if ( wsys != NULL &&
+				( pRecord->GetTimeTargetHasBeenVisible() >= wsys->GetReactionTime() ) &&
+				( pRecord->IsShootable() || ( pRecord->GetTimeHasBeenOutOfView() < wsys->GetAimPersistance() ) ) )
 			{
-				FINDSTATEIF(Aimer, GetRootState(), AddAimRequest(Priority::LowMed, this, GetNameHash()));
+				FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::LowMed, this, GetNameHash() ) );
 			}
 
 			return State_Busy;
 		}
 	}
-	bool AttackTarget::GetAimPosition(Vector3f &_aimpos)
+	bool AttackTarget::GetAimPosition( Vector3f &_aimpos )
 	{
 		const MemoryRecord *pRecord = GetClient()->GetTargetingSystem()->GetCurrentTargetRecord();
-		if(!pRecord)
+		if ( !pRecord )
 		{
-			m_ShootTheBastard = false;
+			mShootTheBastard = false;
 			return false;
 		}
 
-		m_ShootTheBastard = pRecord->IsShootable();
+		mShootTheBastard = pRecord->IsShootable();
 
 		const GameEntity vTargetEnt = pRecord->GetEntity();
-		const TargetInfo &targetInfo = pRecord->m_TargetInfo;
+		const TargetInfo &targetInfo = pRecord->mTargetInfo;
 
-		FINDSTATE(wsys, WeaponSystem, GetParent());
-		if(wsys)
+		FINDSTATE( wsys, WeaponSystem, GetParent() );
+		if ( wsys )
 		{
 			WeaponPtr wpn = wsys->GetCurrentWeapon();
-			if(wpn)
+			if ( wpn )
 			{
-				m_CurrentWeaponHash = wpn->GetWeaponNameHash();
+				mCurrentWeaponHash = wpn->GetWeaponNameHash();
 
 				// Calculate the position the bot will aim at, the weapon itself should account
 				// for any leading that may need to take place
-				m_AimPosition = wpn->GetAimPoint(Primary, vTargetEnt, targetInfo);
-				wpn->AddAimError(Primary, m_AimPosition, targetInfo);
-				_aimpos = m_AimPosition;
+				mAimPosition = wpn->GetAimPoint( Primary, vTargetEnt, targetInfo );
+				wpn->AddAimError( Primary, mAimPosition, targetInfo );
+				_aimpos = mAimPosition;
 
 				// Check limits
-				m_TargetExceedsWeaponLimits = false;
-				if(InterfaceFuncs::GetWeaponLimits(GetClient(), wpn->GetWeaponID(), m_WeaponLimits)
-					&& m_WeaponLimits.m_Limited==True)
+				mTargetExceedsWeaponLimits = false;
+				if ( InterfaceFuncs::GetWeaponLimits( GetClient(), wpn->GetWeaponID(), mWeaponLimits )
+					&& mWeaponLimits.mLimited == True )
 				{
-					Vector3f vGunCenter(m_WeaponLimits.m_CenterFacing);
-					Vector3f vAimVector(Normalize(_aimpos-GetClient()->GetEyePosition()));
+					Vector3f vGunCenter( mWeaponLimits.mCenterFacing );
+					Vector3f vAimVector( Normalize( _aimpos - GetClient()->GetEyePosition() ) );
 
 					const float fGunHeading = vGunCenter.XYHeading();
 					const float fAimHeading = vAimVector.XYHeading();
@@ -199,38 +203,38 @@ namespace AiState
 					const float fGunPitch = vGunCenter.GetPitch();
 					const float fAimPitch = vAimVector.GetPitch();
 
-					float fHeadingDiff = Mathf::RadToDeg(Mathf::UnitCircleNormalize(fAimHeading-fGunHeading));
-					float fPitchDiff = Mathf::RadToDeg(fAimPitch-fGunPitch);
-					if(fHeadingDiff < m_WeaponLimits.m_MinYaw || fHeadingDiff > m_WeaponLimits.m_MaxYaw)
-						m_TargetExceedsWeaponLimits = true;
-					if(fPitchDiff < m_WeaponLimits.m_MinPitch || fPitchDiff > m_WeaponLimits.m_MaxPitch)
-						m_TargetExceedsWeaponLimits = true;
+					float fHeadingDiff = Mathf::RadToDeg( Mathf::UnitCircleNormalize( fAimHeading - fGunHeading ) );
+					float fPitchDiff = Mathf::RadToDeg( fAimPitch - fGunPitch );
+					if ( fHeadingDiff < mWeaponLimits.mMinYaw || fHeadingDiff > mWeaponLimits.mMaxYaw )
+						mTargetExceedsWeaponLimits = true;
+					if ( fPitchDiff < mWeaponLimits.mMinPitch || fPitchDiff > mWeaponLimits.mMaxPitch )
+						mTargetExceedsWeaponLimits = true;
 				}
 				return true;
 			}
 		}
-		_aimpos = m_AimPosition = pRecord->GetLastSensedPosition();
+		_aimpos = mAimPosition = pRecord->GetLastSensedPosition();
 		return false;
 	}
 	void AttackTarget::OnTarget()
 	{
-		if(!m_ShootTheBastard)
+		if ( !mShootTheBastard )
 			return;
 
-		FINDSTATE(wsys, WeaponSystem, GetParent());
-		if(wsys != NULL && wsys->CurrentWeaponIsAttackReady())
+		FINDSTATE( wsys, WeaponSystem, GetParent() );
+		if ( wsys != NULL && wsys->CurrentWeaponIsAttackReady() )
 		{
 			WeaponPtr wpn = wsys->GetCurrentWeapon();
-			if(wpn && !GetClient()->CheckUserFlag(Client::FL_SHOOTINGDISABLED))
+			if ( wpn && !GetClient()->CheckUserFlag( Client::FL_SHOOTINGDISABLED ) )
 			{
-				if(wsys->ReadyToFire())
+				if ( wsys->ReadyToFire() )
 				{
-					wpn->PreShoot(Primary);
+					wpn->PreShoot( Primary );
 					wpn->Shoot();
 				}
 				else
 				{
-					wpn->StopShooting(Primary);
+					wpn->StopShooting( Primary );
 				}
 			}
 		}
@@ -244,24 +248,24 @@ namespace AiState
 
 	void WeaponSystem::WeaponRequest::Reset()
 	{
-		m_Priority = Priority::Zero;
-		m_Owner = 0;
-		m_WeaponId = 0;
+		mPriority = Priority::Zero;
+		mOwner = 0;
+		mWeaponId = 0;
 	}
 
 	WeaponSystem::WeaponSystem()
-		: StateFirstAvailable("WeaponSystem")
-		, m_ReactionTimeInMS	(0)
-		, m_AimPersistance		(2000)
-		, m_DesiredWeaponID		(0)
-		, m_DefaultWeapon		(0)
-		, m_OverrideWeapon		(0)
-		, m_CurrentRequestOwner	(0)
+		: StateFirstAvailable( "WeaponSystem" )
+		, mReactionTimeInMS( 0 )
+		, mAimPersistance( 2000 )
+		, mDesiredWeaponID( 0 )
+		, mDefaultWeapon( 0 )
+		, mOverrideWeapon( 0 )
+		, mCurrentRequestOwner( 0 )
 	{
 		//AppendState(new AttackTargetOffhand);
-		AppendState(new AttackTarget);
+		AppendState( new AttackTarget );
 		//AppendState(new ChooseMountedWeapon);
-		AppendState(new ReloadOther);
+		AppendState( new ReloadOther );
 	}
 
 	WeaponSystem::~WeaponSystem()
@@ -270,83 +274,83 @@ namespace AiState
 
 	void WeaponSystem::GrabAllWeapons()
 	{
-		g_WeaponDatabase.CopyAllWeapons(GetClient(), m_AllWeaponList);
+		gWeaponDatabase.CopyAllWeapons( GetClient(), mAllWeaponList );
 	}
 
-	void WeaponSystem::RefreshWeapon(int _weaponId)
+	void WeaponSystem::RefreshWeapon( int _weaponId )
 	{
-		const bool HasWeapon = m_WeaponMask.CheckFlag(_weaponId);
+		const bool HasWeapon = mWeaponMask.CheckFlag( _weaponId );
 
-		RemoveWeapon(_weaponId);
+		RemoveWeapon( _weaponId );
 
 		// update our inventory
-		for(WeaponList::iterator it = m_AllWeaponList.begin(); it != m_AllWeaponList.end(); ++it)
+		for ( WeaponList::iterator it = mAllWeaponList.begin(); it != mAllWeaponList.end(); ++it )
 		{
-			if((*it)->GetWeaponID() == _weaponId)
+			if ( ( *it )->GetWeaponID() == _weaponId )
 			{
-				WeaponPtr wpn = g_WeaponDatabase.CopyWeapon(GetClient(), _weaponId);
-				OBASSERT(wpn,"Unknown Weapon!");
-				(*it) = wpn;
+				WeaponPtr wpn = gWeaponDatabase.CopyWeapon( GetClient(), _weaponId );
+				OBASSERT( wpn, "Unknown Weapon!" );
+				( *it ) = wpn;
 			}
 		}
 
-		if(HasWeapon)
-			AddWeaponToInventory(_weaponId);
+		if ( HasWeapon )
+			AddWeaponToInventory( _weaponId );
 	}
 
 	void WeaponSystem::RefreshAllWeapons()
 	{
-		const BitFlag128 HasWeapons = m_WeaponMask;
+		const BitFlag128 HasWeapons = mWeaponMask;
 
 		ClearWeapons();
 
-		m_AllWeaponList.clear();
-		g_WeaponDatabase.CopyAllWeapons(GetClient(), m_AllWeaponList);
+		mAllWeaponList.clear();
+		gWeaponDatabase.CopyAllWeapons( GetClient(), mAllWeaponList );
 
-		for(int i = 0; i < 128; ++i)
+		for ( int i = 0; i < 128; ++i )
 		{
-			if(HasWeapons.CheckFlag(i))
-				AddWeaponToInventory(i);
+			if ( HasWeapons.CheckFlag( i ) )
+				AddWeaponToInventory( i );
 		}
 	}
 
-	bool WeaponSystem::AddWeaponToInventory(int _weaponId)
+	bool WeaponSystem::AddWeaponToInventory( int _weaponId )
 	{
-		WeaponList::iterator it = m_AllWeaponList.begin();
-		for( ; it != m_AllWeaponList.end(); ++it)
+		WeaponList::iterator it = mAllWeaponList.begin();
+		for ( ; it != mAllWeaponList.end(); ++it )
 		{
-			if((*it)->GetWeaponID() == _weaponId)
+			if ( ( *it )->GetWeaponID() == _weaponId )
 			{
-				AddWeapon(*it);
+				AddWeapon( *it );
 				return true;
 			}
 		}
 		return false;
 	}
 
-	void WeaponSystem::AddWeapon(WeaponPtr _weapon)
+	void WeaponSystem::AddWeapon( WeaponPtr _weapon )
 	{
-		OBASSERT(!HasWeapon(_weapon->GetWeaponID()), "Already Have Weapon %s!", _weapon->GetWeaponName().c_str());
-		if(!HasWeapon(_weapon->GetWeaponID()))
+		OBASSERT( !HasWeapon( _weapon->GetWeaponID() ), "Already Have Weapon %s!", _weapon->GetWeaponName().c_str() );
+		if ( !HasWeapon( _weapon->GetWeaponID() ) )
 		{
-			m_WeaponList.push_back(_weapon);
-			m_WeaponMask.SetFlag(_weapon->GetWeaponID(), true);
+			mWeaponList.push_back( _weapon );
+			mWeaponMask.SetFlag( _weapon->GetWeaponID(), true );
 		}
 	}
 
-	void WeaponSystem::RemoveWeapon(int _weaponId)
+	void WeaponSystem::RemoveWeapon( int _weaponId )
 	{
 		// clear the current weapon if we're removing it.
-		if(m_CurrentWeapon && m_CurrentWeapon->GetWeaponID() == _weaponId)
-			m_CurrentWeapon.reset();
+		if ( mCurrentWeapon && mCurrentWeapon->GetWeaponID() == _weaponId )
+			mCurrentWeapon.reset();
 
-		WeaponList::iterator it = m_WeaponList.begin();
-		for( ; it != m_WeaponList.end(); )
+		WeaponList::iterator it = mWeaponList.begin();
+		for ( ; it != mWeaponList.end(); )
 		{
-			if((*it)->GetWeaponID() == _weaponId)
+			if ( ( *it )->GetWeaponID() == _weaponId )
 			{
-				m_WeaponList.erase(it++);
-				m_WeaponMask.SetFlag(_weaponId, false);
+				mWeaponList.erase( it++ );
+				mWeaponMask.SetFlag( _weaponId, false );
 			}
 			else
 				++it;
@@ -356,112 +360,112 @@ namespace AiState
 	void WeaponSystem::ClearWeapons()
 	{
 		// Clear all the weapons
-		m_CurrentWeapon.reset();
-		m_WeaponList.clear();
-		m_WeaponMask.ClearAll();
+		mCurrentWeapon.reset();
+		mWeaponList.clear();
+		mWeaponMask.ClearAll();
 	}
 
-	void WeaponSystem::ChargeWeapon(FireMode _mode)
+	void WeaponSystem::ChargeWeapon( FireMode _mode )
 	{
-		if(m_CurrentWeapon)
-			m_CurrentWeapon->ChargeWeapon(_mode);
+		if ( mCurrentWeapon )
+			mCurrentWeapon->ChargeWeapon( _mode );
 	}
 
-	void WeaponSystem::ZoomWeapon(FireMode _mode)
+	void WeaponSystem::ZoomWeapon( FireMode _mode )
 	{
-		if(m_CurrentWeapon)
-			m_CurrentWeapon->ZoomWeapon(_mode);
+		if ( mCurrentWeapon )
+			mCurrentWeapon->ZoomWeapon( _mode );
 	}
 
-	void WeaponSystem::FireWeapon(FireMode _mode)
+	void WeaponSystem::FireWeapon( FireMode _mode )
 	{
-		if(m_CurrentWeapon)
-			m_CurrentWeapon->Shoot(_mode);
+		if ( mCurrentWeapon )
+			mCurrentWeapon->Shoot( _mode );
 	}
 
-	WeaponPtr WeaponSystem::GetWeapon(int _weaponId, bool _inventory) const
+	WeaponPtr WeaponSystem::GetWeapon( int _weaponId, bool _inventory ) const
 	{
 		WeaponPtr ret;
 
 		WeaponList::const_iterator it, itEnd;
-		if(_inventory)
+		if ( _inventory )
 		{
-			it = m_WeaponList.begin();
-			itEnd = m_WeaponList.end();
+			it = mWeaponList.begin();
+			itEnd = mWeaponList.end();
 		}
 		else
 		{
-			it = m_AllWeaponList.begin();
-			itEnd = m_AllWeaponList.end();
+			it = mAllWeaponList.begin();
+			itEnd = mAllWeaponList.end();
 		}
 
-		for( ; it != itEnd; ++it)
+		for ( ; it != itEnd; ++it )
 		{
-			if((*it)->GetWeaponID() == _weaponId)
+			if ( ( *it )->GetWeaponID() == _weaponId )
 			{
-				ret = (*it);
+				ret = ( *it );
 				break;
 			}
 		}
 		return ret;
 	}
 
-	WeaponPtr WeaponSystem::GetWeaponByIndex(int _index, bool _inventory)
+	WeaponPtr WeaponSystem::GetWeaponByIndex( int _index, bool _inventory )
 	{
 		WeaponPtr ret;
 
 		WeaponList::const_iterator it, itEnd;
-		if(_inventory)
+		if ( _inventory )
 		{
-			it = m_WeaponList.begin();
-			itEnd = m_WeaponList.end();
+			it = mWeaponList.begin();
+			itEnd = mWeaponList.end();
 		}
 		else
 		{
-			it = m_AllWeaponList.begin();
-			itEnd = m_AllWeaponList.end();
+			it = mAllWeaponList.begin();
+			itEnd = mAllWeaponList.end();
 		}
 
-		std::advance(it, _index);
+		std::advance( it, _index );
 		return *it;
 	}
 
-	bool WeaponSystem::HasWeapon(int _weaponId) const
+	bool WeaponSystem::HasWeapon( int _weaponId ) const
 	{
-		return GetWeapon(_weaponId)!=NULL;
+		return GetWeapon( _weaponId ) != NULL;
 	}
 
-	bool WeaponSystem::HasAmmo(FireMode _mode) const
+	bool WeaponSystem::HasAmmo( FireMode _mode ) const
 	{
-		return m_CurrentWeapon && m_CurrentWeapon->GetFireMode(_mode).IsDefined() ?
-			m_CurrentWeapon->GetFireMode(_mode).HasAmmo() : false;
+		return mCurrentWeapon && mCurrentWeapon->GetFireMode( _mode ).IsDefined() ?
+			mCurrentWeapon->GetFireMode( _mode ).HasAmmo() : false;
 	}
 
-	bool WeaponSystem::HasAmmo(int _weaponid, FireMode _mode, int _amount) const
+	bool WeaponSystem::HasAmmo( int _weaponid, FireMode _mode, int _amount ) const
 	{
-		WeaponList::const_iterator it = m_WeaponList.begin(), itEnd = m_WeaponList.end();
-		for( ; it != itEnd; ++it)
+		WeaponList::const_iterator it = mWeaponList.begin(), itEnd = mWeaponList.end();
+		for ( ; it != itEnd; ++it )
 		{
-			if((*it)->GetWeaponID() == _weaponid)
+			if ( ( *it )->GetWeaponID() == _weaponid )
 			{
-				return (*it)->GetFireMode(_mode).IsDefined() ? (*it)->GetFireMode(_mode).HasAmmo(_amount) : false;
+				return ( *it )->GetFireMode( _mode ).IsDefined() ? ( *it )->GetFireMode( _mode ).HasAmmo( _amount ) : false;
 			}
 		}
 		return false;
 	}
 
-	bool WeaponSystem::CanShoot(const MemoryRecord &_record)
+	bool WeaponSystem::CanShoot( const MemoryRecord &_record )
 	{
-		Prof(CanShoot);
+		Prof( CanShoot );
 
 		// Target filters use this, so if we're mounted only check current weapon(which should be the mounted weapon)
-		if(m_CurrentWeapon && GetClient()->CheckUserFlag(Client::FL_USINGMOUNTEDWEAPON))
-			return m_CurrentWeapon->CanShoot(Primary, _record.m_TargetInfo);
+		if ( mCurrentWeapon && GetClient()->CheckUserFlag( Client::FL_USINGMOUNTEDWEAPON ) )
+			return mCurrentWeapon->CanShoot( Primary, _record.mTargetInfo );
 
-		WeaponList::const_iterator it = m_WeaponList.begin(), itEnd = m_WeaponList.end();
-		for( ; it != itEnd; ++it)
+		WeaponList::const_iterator it = mWeaponList.begin(), itEnd = mWeaponList.end();
+		for ( ; it != itEnd; ++it )
 		{
-			if((*it)->CanShoot(Primary, _record.m_TargetInfo))
+			if ( ( *it )->CanShoot( Primary, _record.mTargetInfo ) )
 				return true;
 		}
 		return false;
@@ -469,94 +473,134 @@ namespace AiState
 
 	WeaponStatus WeaponSystem::_UpdateWeaponFromGame()
 	{
-		return InterfaceFuncs::GetEquippedWeapon(GetClient()->GetGameEntity());
+		return InterfaceFuncs::GetEquippedWeapon( GetClient()->GetGameEntity() );
 	}
 
-	void WeaponSystem::_UpdateCurrentWeapon(FireMode _mode)
+	void WeaponSystem::_UpdateCurrentWeapon( FireMode _mode )
 	{
 		// Get the weapon from the game.
-		WeaponStatus mounted = InterfaceFuncs::GetMountedWeapon(GetClient());
-		if(mounted.m_WeaponId != 0)
+		WeaponStatus mounted = InterfaceFuncs::GetMountedWeapon( GetClient() );
+		if ( mounted.mWeaponId != 0 )
 		{
-			GetClient()->SetUserFlag(Client::FL_USINGMOUNTEDWEAPON, true);
-			m_CurrentWeapon = GetWeapon(mounted.m_WeaponId, false);
-			OBASSERT(m_CurrentWeapon, "Unknown Mountable Weapon: %d", mounted.m_WeaponId);
-			m_DesiredWeaponID = mounted.m_WeaponId;
-			m_CurrentRequestOwner = GetNameHash();
+			GetClient()->SetUserFlag( Client::FL_USINGMOUNTEDWEAPON, true );
+			mCurrentWeapon = GetWeapon( mounted.mWeaponId, false );
+			OBASSERT( mCurrentWeapon, "Unknown Mountable Weapon: %d", mounted.mWeaponId );
+			mDesiredWeaponID = mounted.mWeaponId;
+			mCurrentRequestOwner = GetNameHash();
 		}
 		else
 		{
-			GetClient()->SetUserFlag(Client::FL_USINGMOUNTEDWEAPON, false);
+			GetClient()->SetUserFlag( Client::FL_USINGMOUNTEDWEAPON, false );
 			WeaponStatus currentWeapon = _UpdateWeaponFromGame();
 
 			// If it has changed, set our new weapon.
-			if(!m_CurrentWeapon || !m_CurrentWeapon->IsWeapon(currentWeapon.m_WeaponId))
+			if ( !mCurrentWeapon || !mCurrentWeapon->IsWeapon( currentWeapon.mWeaponId ) )
 			{
 				//bool bFound = false;
-				WeaponList::const_iterator it = m_WeaponList.begin(), itEnd = m_WeaponList.end();
-				for( ; it != itEnd; ++it)
+				WeaponList::const_iterator it = mWeaponList.begin(), itEnd = mWeaponList.end();
+				for ( ; it != itEnd; ++it )
 				{
-					if((*it)->IsWeapon(currentWeapon.m_WeaponId))
+					if ( ( *it )->IsWeapon( currentWeapon.mWeaponId ) )
 					{
-						m_CurrentWeapon = (*it);
-						m_CurrentWeapon->Select();
+						mCurrentWeapon = ( *it );
+						mCurrentWeapon->Select();
 						//bFound = true;
 
-						Event_WeaponChanged weapChanged = { currentWeapon.m_WeaponId };
-						MessageHelper hlpr(ACTION_WEAPON_CHANGE, &weapChanged, sizeof(weapChanged));
-						GetClient()->SendEvent(hlpr);
+						Event_WeaponChanged weapChanged = { currentWeapon.mWeaponId };
+						MessageHelper hlpr( ACTION_WEAPON_CHANGE, &weapChanged, sizeof( weapChanged ) );
+						GetClient()->SendEvent( hlpr );
 						break;
 					}
 				}
-				//OBASSERT(bFound, va("Unknown Weapon: %d", currentWeapon.m_WeaponId));
+				//OBASSERT(bFound, va("Unknown Weapon: %d", currentWeapon.mWeaponId));
 			}
 		}
 
-		if(m_CurrentWeapon)
+		if ( mCurrentWeapon )
 		{
-			m_CurrentWeapon->Update(_mode);
-			m_CurrentWeapon->UpdateClipAmmo(_mode);
+			mCurrentWeapon->Update( _mode );
+			mCurrentWeapon->UpdateClipAmmo( _mode );
+		}
+	}
+
+	void WeaponSystem::UpdateWeapons()
+	{
+		const int MAX_WEAPONS = 128;
+		int currentWeapons[ MAX_WEAPONS ] = {};
+		const int numCurrentWeapons = gEngineFuncs->GetCurrentWeapons( GetClient()->GetGameEntity(), currentWeapons, MAX_WEAPONS );
+
+		// keep track of what we have so we can add/remove whatever we need to meet the current list
+		for ( size_t i = 0; i < mWeaponList.size(); ++i )
+		{
+			const int weaponId = mWeaponList[ i ]->GetWeaponID();
+
+			bool hasWeapon = false;
+			for ( int w = 0; w < numCurrentWeapons; ++w )
+			{
+				if ( weaponId == currentWeapons[ w ] )
+				{
+					hasWeapon = true;
+					currentWeapons[ w ] = -1;
+				}
+			}
+
+			if ( !hasWeapon )
+			{
+				Event_RemoveWeapon d = { weaponId };
+				System::mInstance->mGame->DispatchEvent( GetClient()->GetGameID(), MessageHelper( MESSAGE_REMOVEWEAPON, &d, sizeof( d ) ) );
+			}
+		}
+
+		// anything not handled yet we need to add
+		for ( int w = 0; w < numCurrentWeapons; ++w )
+		{
+			if ( currentWeapons[ w ] != -1 )
+			{
+				Event_AddWeapon msg = { currentWeapons[ w ] };
+				System::mInstance->mGame->DispatchEvent( GetClient()->GetGameID(), MessageHelper( MESSAGE_ADDWEAPON, &msg, sizeof( msg ) ) );
+				currentWeapons[ w ] = -1;
+			}
 		}
 	}
 
 	void WeaponSystem::UpdateAllWeaponAmmo()
 	{
 		// Update the primary weapons.
-		WeaponList::iterator it = m_WeaponList.begin();
-		WeaponList::iterator itEnd = m_WeaponList.end();
-		for( ; it != itEnd; ++it)
+		WeaponList::iterator it = mWeaponList.begin();
+		WeaponList::iterator itEnd = mWeaponList.end();
+		for ( ; it != itEnd; ++it )
 		{
-			(*it)->UpdateAmmo(Primary);
+			( *it )->UpdateAmmo( Primary );
 		}
 	}
 
 	bool WeaponSystem::ReadyToFire()
 	{
-		return InterfaceFuncs::IsReadyToFire(GetClient()->GetGameEntity());
+		return InterfaceFuncs::IsReadyToFire( GetClient()->GetGameEntity() );
 	}
 
 	bool WeaponSystem::IsReloading()
 	{
-		return InterfaceFuncs::IsReloading(GetClient()->GetGameEntity());
+		return InterfaceFuncs::IsReloading( GetClient()->GetGameEntity() );
 	}
 
-	obReal WeaponSystem::GetMostDesiredAmmo(int &_weapon, int &_getammo)
+	float WeaponSystem::GetMostDesiredAmmo( int &_weapon, int &_getammo )
 	{
-		obReal fMostDesirable = 0.0f;
+		float fMostDesirable = 0.0f;
 		int iMostDesirableAmmo = 0;
 		int iGetAmmoAmount = 1;
 
 		// Get the most desirable ammo currently.
-		WeaponList::iterator it = m_WeaponList.begin();
-		WeaponList::iterator itEnd = m_WeaponList.end();
-		for( ; it != itEnd; ++it)
+		WeaponList::iterator it = mWeaponList.begin();
+		WeaponList::iterator itEnd = mWeaponList.end();
+		for ( ; it != itEnd; ++it )
 		{
-			(*it)->UpdateAmmo(Primary);
+			( *it )->UpdateAmmo( Primary );
 
 			int iThisWeaponType = 0;
 			int iThisGetAmmo = 1;
-			obReal dDesirability = (*it)->LowOnAmmoPriority(Primary, iThisWeaponType, iThisGetAmmo);
-			if(dDesirability > fMostDesirable)
+			float dDesirability = ( *it )->LowOnAmmoPriority( Primary, iThisWeaponType, iThisGetAmmo );
+			if ( dDesirability > fMostDesirable )
 			{
 				fMostDesirable = dDesirability;
 				iMostDesirableAmmo = iThisWeaponType;
@@ -570,39 +614,39 @@ namespace AiState
 		return fMostDesirable;
 	}
 
-	void WeaponSystem::GetSpectateMessage(std::stringstream &_outstring)
+	void WeaponSystem::GetSpectateMessage( std::stringstream &_outstring )
 	{
-		if(m_CurrentWeapon)
-			m_CurrentWeapon->GetSpectateMessage(_outstring);
+		if ( mCurrentWeapon )
+			mCurrentWeapon->GetSpectateMessage( _outstring );
 
-		std::string desired = g_WeaponDatabase.GetWeaponName(m_DesiredWeaponID);
+		std::string desired = gWeaponDatabase.GetWeaponName( mDesiredWeaponID );
 		_outstring << " Desired: " << desired.c_str() << " ";
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 
-	void WeaponSystem::GetDebugString(std::stringstream &out)
+	void WeaponSystem::GetDebugString( std::stringstream &out )
 	{
 		out <<
-			Utils::HashToString(m_CurrentRequestOwner) <<
+			Utils::HashToString( mCurrentRequestOwner ) <<
 			" : " <<
-			g_WeaponDatabase.GetWeaponName(m_DesiredWeaponID);
+			gWeaponDatabase.GetWeaponName( mDesiredWeaponID );
 	}
 
-	obReal WeaponSystem::GetPriority()
+	float WeaponSystem::GetPriority()
 	{
 		return 1.f;
 	}
 
 	void WeaponSystem::Enter()
 	{
-		m_DefaultWeapon = SelectBestWeapon();
-		AddWeaponRequest(Priority::Idle, GetNameHash(), m_DefaultWeapon);
+		mDefaultWeapon = SelectBestWeapon();
+		AddWeaponRequest( Priority::Idle, GetNameHash(), mDefaultWeapon );
 	}
 
 	void WeaponSystem::Exit()
 	{
-		ReleaseWeaponRequest(GetNameHash());
+		ReleaseWeaponRequest( GetNameHash() );
 	}
 
 	void WeaponSystem::Initialize()
@@ -610,73 +654,73 @@ namespace AiState
 		GrabAllWeapons();
 	}
 
-	State::StateStatus WeaponSystem::Update(float fDt)
+	State::StateStatus WeaponSystem::Update( float fDt )
 	{
-		Prof(WeaponSystem);
+		Prof( WeaponSystem );
 		{
-			Prof(Update);
+			Prof( Update );
 
 			//////////////////////////////////////////////////////////////////////////
-			m_DefaultWeapon = SelectBestWeapon();
-			UpdateWeaponRequest(GetNameHash(), m_DefaultWeapon);
+			mDefaultWeapon = SelectBestWeapon();
+			UpdateWeaponRequest( GetNameHash(), mDefaultWeapon );
 			//////////////////////////////////////////////////////////////////////////
 
 			// Update the preferred weapon.
 			const WeaponRequest &bestWpn = GetHighestWeaponRequest();
-			m_DesiredWeaponID = bestWpn.m_WeaponId;
-			m_CurrentRequestOwner = bestWpn.m_Owner;
+			mDesiredWeaponID = bestWpn.mWeaponId;
+			mCurrentRequestOwner = bestWpn.mOwner;
 
-			_UpdateCurrentWeapon(Primary);
+			_UpdateCurrentWeapon( Primary );
 		}
 		return State_Busy;
 	}
 
-	bool WeaponSystem::AddWeaponRequest(Priority::ePriority _prio, obuint32 _owner, int _weaponId)
+	bool WeaponSystem::AddWeaponRequest( Priority::ePriority _prio, uint32_t _owner, int _weaponId )
 	{
 		int iOpen = -1;
-		for(obint32 i = 0; i < MaxWeaponRequests; ++i)
+		for ( int32_t i = 0; i < MaxWeaponRequests; ++i )
 		{
-			if(m_WeaponRequests[i].m_Owner == _owner)
+			if ( mWeaponRequests[ i ].mOwner == _owner )
 			{
 				iOpen = i;
 				break;
 			}
-			if(m_WeaponRequests[i].m_Priority == Priority::Zero)
+			if ( mWeaponRequests[ i ].mPriority == Priority::Zero )
 			{
-				if(iOpen == -1)
+				if ( iOpen == -1 )
 					iOpen = i;
 			}
 		}
 
-		if(iOpen != -1)
+		if ( iOpen != -1 )
 		{
-			m_WeaponRequests[iOpen].m_Priority = _prio;
-			m_WeaponRequests[iOpen].m_Owner = _owner;
-			m_WeaponRequests[iOpen].m_WeaponId = _weaponId;
+			mWeaponRequests[ iOpen ].mPriority = _prio;
+			mWeaponRequests[ iOpen ].mOwner = _owner;
+			mWeaponRequests[ iOpen ].mWeaponId = _weaponId;
 			return true;
 		}
 		return false;
 	}
 
-	void WeaponSystem::ReleaseWeaponRequest(obuint32 _owner)
+	void WeaponSystem::ReleaseWeaponRequest( uint32_t _owner )
 	{
-		for(obint32 i = 0; i < MaxWeaponRequests; ++i)
+		for ( int32_t i = 0; i < MaxWeaponRequests; ++i )
 		{
-			if(m_WeaponRequests[i].m_Owner == _owner)
+			if ( mWeaponRequests[ i ].mOwner == _owner )
 			{
-				m_WeaponRequests[i].Reset();
+				mWeaponRequests[ i ].Reset();
 				break;
 			}
 		}
 	}
 
-	bool WeaponSystem::UpdateWeaponRequest(obuint32 _owner, int _weaponId)
+	bool WeaponSystem::UpdateWeaponRequest( uint32_t _owner, int _weaponId )
 	{
-		for(obint32 i = 0; i < MaxWeaponRequests; ++i)
+		for ( int32_t i = 0; i < MaxWeaponRequests; ++i )
 		{
-			if(m_WeaponRequests[i].m_Owner == _owner)
+			if ( mWeaponRequests[ i ].mOwner == _owner )
 			{
-				m_WeaponRequests[i].m_WeaponId = _weaponId;
+				mWeaponRequests[ i ].mWeaponId = _weaponId;
 				return true;
 			}
 		}
@@ -686,87 +730,88 @@ namespace AiState
 	const WeaponSystem::WeaponRequest &WeaponSystem::GetHighestWeaponRequest()
 	{
 		int iBestWpn = 0;
-		for(obint32 i = 1; i < MaxWeaponRequests; ++i)
+		for ( int32_t i = 1; i < MaxWeaponRequests; ++i )
 		{
-			if(m_WeaponRequests[i].m_Priority > m_WeaponRequests[iBestWpn].m_Priority)
+			if ( mWeaponRequests[ i ].mPriority > mWeaponRequests[ iBestWpn ].mPriority )
 			{
 				iBestWpn = i;
 			}
 		}
-		return m_WeaponRequests[iBestWpn];
+		return mWeaponRequests[ iBestWpn ];
 	}
 
 	int WeaponSystem::GetWeaponNeedingReload()
 	{
 		// Look for other weapons that need reloading.
-		WeaponList::const_iterator it = m_WeaponList.begin(), itEnd = m_WeaponList.end();
-		for( ; it != itEnd; ++it)
+		WeaponList::const_iterator it = mWeaponList.begin(), itEnd = mWeaponList.end();
+		for ( ; it != itEnd; ++it )
 		{
 			// Magik: Added enough ammo check
-			FireMode m = (*it)->CanReload();
-			if(m != InvalidFireMode)
-				return (*it)->GetWeaponID();
+			FireMode m = ( *it )->CanReload();
+			if ( m != InvalidFireMode )
+				return ( *it )->GetWeaponID();
 		}
 		return 0;
 	}
 
-	int WeaponSystem::SelectBestWeapon(GameEntity _targetent /*= NULL*/)
+	int WeaponSystem::SelectBestWeapon( GameEntity _targetent /*= NULL*/ )
 	{
-		Prof(SelectBestWeaponNew);
+		Prof( SelectBestWeaponNew );
 
+		UpdateWeapons();
 		UpdateAllWeaponAmmo();
 
 		int iBestWeaponID = 0;
 
 		// If an override isn't provided, use the current target.
-		if(!_targetent.IsValid())
+		if ( !_targetent.IsValid() )
 			_targetent = GetClient()->GetTargetingSystem()->GetCurrentTarget();
 
 		// Evaluate weapons with target data.
-		if(_targetent.IsValid())
+		if ( _targetent.IsValid() )
 		{
-			const TargetInfo *pTargetInfo = GetClient()->GetSensoryMemory()->GetTargetInfo(_targetent);
+			const TargetInfo *pTargetInfo = GetClient()->GetSensoryMemory()->GetTargetInfo( _targetent );
 
-			if(!pTargetInfo)
+			if ( !pTargetInfo )
 				return iBestWeaponID;
 
-			obReal fBestDesirability = 0.0;
+			float fBestDesirability = 0.0;
 
 			// Evaluate my primary weapons.
-			WeaponList::const_iterator it = m_WeaponList.begin(), itEnd = m_WeaponList.end();
-			for( ; it != itEnd; ++it)
+			WeaponList::const_iterator it = mWeaponList.begin(), itEnd = mWeaponList.end();
+			for ( ; it != itEnd; ++it )
 			{
-				obReal fDesirability = (*it)->CalculateDesirability(*pTargetInfo);
-				if(fDesirability > fBestDesirability)
+				float fDesirability = ( *it )->CalculateDesirability( *pTargetInfo );
+				if ( fDesirability > fBestDesirability )
 				{
 					fBestDesirability = fDesirability;
-					iBestWeaponID = (*it)->GetWeaponID();
+					iBestWeaponID = ( *it )->GetWeaponID();
 				}
 			}
 		}
 		else
 		{
 			// Are we idly holding a weapon?
-			obReal fBestIdleDesirability = 0.0;
+			float fBestIdleDesirability = 0.0;
 
 			// Does the current weapon need reloading?
-			/*FireMode m = m_CurrentWeapon ? m_CurrentWeapon->CanReload() : InvalidFireMode;
+			/*FireMode m = mCurrentWeapon ? mCurrentWeapon->CanReload() : InvalidFireMode;
 			if(m != InvalidFireMode)
 			{
-			m_CurrentWeapon->ReloadWeapon(m);
+			mCurrentWeapon->ReloadWeapon(m);
 			}
 			else*/
 			{
 				// Look for other weapons that need reloading.
-				WeaponList::const_iterator it = m_WeaponList.begin(), itEnd = m_WeaponList.end();
-				for( ; it != itEnd; ++it)
+				WeaponList::const_iterator it = mWeaponList.begin(), itEnd = mWeaponList.end();
+				for ( ; it != itEnd; ++it )
 				{
 					// Get the best idle weapon.
-					obReal fBestDesirability = (*it)->CalculateDefaultDesirability();
-					if(fBestDesirability > fBestIdleDesirability)
+					float fBestDesirability = ( *it )->CalculateDefaultDesirability();
+					if ( fBestDesirability > fBestIdleDesirability )
 					{
 						fBestIdleDesirability = fBestDesirability;
-						iBestWeaponID = (*it)->GetWeaponID();
+						iBestWeaponID = ( *it )->GetWeaponID();
 					}
 				}
 			}
@@ -776,14 +821,14 @@ namespace AiState
 
 	int WeaponSystem::SelectRandomWeapon()
 	{
-		int WeaponIds[64] = {};
+		int WeaponIds[ 64 ] = {};
 		int NumWeaponIds = 0;
 
-		WeaponList::const_iterator it = m_WeaponList.begin(), itEnd = m_WeaponList.end();
-		for( ; it != itEnd; ++it)
+		WeaponList::const_iterator it = mWeaponList.begin(), itEnd = mWeaponList.end();
+		for ( ; it != itEnd; ++it )
 		{
-			WeaponIds[NumWeaponIds++] = (*it)->GetWeaponID();
+			WeaponIds[ NumWeaponIds++ ] = ( *it )->GetWeaponID();
 		}
-		return NumWeaponIds ? (WeaponIds[rand() % NumWeaponIds]) : 0;
+		return NumWeaponIds ? ( WeaponIds[ rand() % NumWeaponIds ] ) : 0;
 	}
 };

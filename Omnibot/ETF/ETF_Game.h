@@ -35,28 +35,35 @@ public:
 	const char *GetGameName() const;
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const { return "etf"; }
-	virtual NavigatorID GetDefaultNavigator() const { return NAVID_RECAST; }
-	bool ReadyForDebugWindow() const { return true; }
-	virtual const char *IsDebugDrawSupported() const;
+	const char *GetGameDatabaseAbbrev() const
+	{
+		return "etf";
+	}
+	virtual NavigatorID GetDefaultNavigator() const
+	{
+		return NAVID_RECAST;
+	}
+	bool ReadyForDebugWindow() const
+	{
+		return true;
+	}
 
 	virtual bool GetAnalyticsKeys( GameAnalyticsKeys & keys );
 
-	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
-	
-	ETF_Game() { }
-	virtual ~ETF_Game() {}
+	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
+
+	ETF_Game();
+	~ETF_Game();
 protected:
 
-	void GetGameVars(GameVars &_gamevars);
+	void GetGameVars( GameVars &_gamevars );
 
 	// Script support.
-	void InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptPowerups(gmMachine *_machine, gmTableObject *_table);
+	void InitScriptEntityFlags( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptPowerups( gmMachine *_machine, gmTableObject *_table );
 
-	static const float ETF_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags);
-	static const float ETF_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags);
-	static const void ETF_GetEntityVisDistance(float &_distance, const TargetInfo &_target, const Client *_client);
+	static const float ETF_GetEntityClassTraceOffset( const TargetInfo &_target );
+	static const float ETF_GetEntityClassAimOffset( const TargetInfo &_target );
 };
 
 #endif

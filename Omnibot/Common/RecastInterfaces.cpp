@@ -1,53 +1,55 @@
 #include "RecastInterfaces.h"
 
-RecastBuildContext::RecastBuildContext() {
+RecastBuildContext::RecastBuildContext()
+{
 }
 
-RecastBuildContext::~RecastBuildContext() {
+RecastBuildContext::~RecastBuildContext()
+{
 }
 
 // Virtual functions for custom implementations.
 void RecastBuildContext::doResetLog()
 {
-	m_messages.resize( 0 );
+	messages.resize( 0 );
 }
 
-void RecastBuildContext::doLog(const rcLogCategory category, const char* msg, const int len)
+void RecastBuildContext::doLog( const rcLogCategory category, const char* msg, const int len )
 {
-	if (!len) 
+	if ( !len )
 		return;
-	
-	m_messages.push_back( Msg() );
-	m_messages.back().mCategory = category;
-	m_messages.back().mMsg.assign( msg, len );
+
+	messages.push_back( Msg() );
+	messages.back().mCategory = category;
+	messages.back().mMsg.assign( msg, len );
 }
 
 void RecastBuildContext::doResetTimers()
 {
-	for (int i = 0; i < RC_MAX_TIMERS; ++i)
-		m_accTime[i] = -1;
+	for ( int i = 0; i < RC_MAX_TIMERS; ++i )
+		maccTime[ i ] = -1;
 }
 
-void RecastBuildContext::doStartTimer(const rcTimerLabel label)
+void RecastBuildContext::doStartTimer( const rcTimerLabel label )
 {
-	m_timers[label].Reset();
+	mtimers[ label ].Reset();
 }
 
-void RecastBuildContext::doStopTimer(const rcTimerLabel label)
+void RecastBuildContext::doStopTimer( const rcTimerLabel label )
 {
-	const float deltaTime = (float)m_timers[label].GetElapsedSeconds();
-	if (m_accTime[label] == -1)
-		m_accTime[label] = deltaTime;
+	const float deltaTime = (float)mtimers[ label ].GetElapsedSeconds();
+	if ( maccTime[ label ] == -1 )
+		maccTime[ label ] = deltaTime;
 	else
-		m_accTime[label] += deltaTime;
+		maccTime[ label ] += deltaTime;
 }
 
-int RecastBuildContext::doGetAccumulatedTime(const rcTimerLabel label) const
+int RecastBuildContext::doGetAccumulatedTime( const rcTimerLabel label ) const
 {
-	return (int)(m_accTime[label] * 1000.0f);
+	return (int)( maccTime[ label ] * 1000.0f );
 }
 
-void RecastBuildContext::dumpLog(const char* format, ...)
+void RecastBuildContext::dumpLog( const char* format, ... )
 {
 	// Print header.
 	//va_list ap;
@@ -58,9 +60,9 @@ void RecastBuildContext::dumpLog(const char* format, ...)
 
 	//// Print messages
 	//const int TAB_STOPS[4] = { 28, 36, 44, 52 };
-	//for (int i = 0; i < m_messageCount; ++i)
+	//for (int i = 0; i < mmessageCount; ++i)
 	//{
-	//	const char* msg = m_messages[i]+1;
+	//	const char* msg = messages[i]+1;
 	//	int n = 0;
 	//	while (*msg)
 	//	{
@@ -94,61 +96,63 @@ void RecastBuildContext::dumpLog(const char* format, ...)
 
 int RecastBuildContext::getLogCount() const
 {
-	return m_messages.size();
+	return messages.size();
 }
 
-const char* RecastBuildContext::getLogText(const int i) const
+const char* RecastBuildContext::getLogText( const int i ) const
 {
-	return m_messages[i].mMsg.c_str();
+	return messages[ i ].mMsg.c_str();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 rcFileIO::rcFileIO() :
-	m_mode(-1)
+	mmode( -1 )
 {
 }
 
 rcFileIO::~rcFileIO()
 {
-	m_file.Close();
+	mfile.Close();
 }
 
-bool rcFileIO::openForWrite(const char* path)
+bool rcFileIO::openForWrite( const char* path )
 {
-	m_mode = 1;
-	return m_file.OpenForWrite( path, File::Text, false );
+	mmode = 1;
+	return mfile.OpenForWrite( path, File::Text, false );
 }
 
-bool rcFileIO::openForRead(const char* path)
+bool rcFileIO::openForRead( const char* path )
 {
-	m_mode = 2;
-	return m_file.OpenForRead( path, File::Text );
+	mmode = 2;
+	return mfile.OpenForRead( path, File::Text );
 }
 
 bool rcFileIO::isWriting() const
 {
-	return m_mode == 1;
+	return mmode == 1;
 }
 
 bool rcFileIO::isReading() const
 {
-	return m_mode == 2;
+	return mmode == 2;
 }
 
-bool rcFileIO::write(const void* ptr, const size_t size)
+bool rcFileIO::write( const void* ptr, const size_t size )
 {
-	if( m_file.IsOpen() ) {
-		m_file.Write( ptr, size, 1 );
+	if ( mfile.IsOpen() )
+	{
+		mfile.Write( ptr, size, 1 );
 		return true;
 	}
 	return false;
 }
 
-bool rcFileIO::read(void* ptr, const size_t size)
+bool rcFileIO::read( void* ptr, const size_t size )
 {
-	if( m_file.IsOpen() ) {
-		m_file.Read( ptr, size, 1 );
+	if ( mfile.IsOpen() )
+	{
+		mfile.Read( ptr, size, 1 );
 		return true;
 	}
 	return false;

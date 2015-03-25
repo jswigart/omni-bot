@@ -15,7 +15,6 @@
 #ifndef __BOTEXPORTS_H__
 #define __BOTEXPORTS_H__
 
-#include "Functions_Bot.h"
 #include "Omni-Bot_Types.h"
 #include "Omni-Bot_Events.h"
 #include "IEngineInterface.h"
@@ -29,7 +28,7 @@
 #endif
 
 // Typedef for the only exported bot function.
-typedef omnibot_error (*pfnGetFunctionsFromDLL)(Bot_EngineFuncs *_pBotFuncs, int _size);
+typedef OmnibotFunctionInterface* ( *pfnCreateBotInterface )( OmnibotFunctionInterface::Version interfaceVersion );
 
 // note: Export Functions with C Linkage
 //	Export with C Linkage so the game interface can acccess it easier.
@@ -42,7 +41,7 @@ extern "C"
 	// function: ExportBotFunctionsFromDLL
 	//		Allow the bot dll to fill in a struct of bot functions the interface
 	//		can then call.
-	OMNIBOT_API omnibot_error ExportBotFunctionsFromDLL(Bot_EngineFuncs *_pBotFuncs, int _size);
+	OMNIBOT_API OmnibotFunctionInterface* CreateBotInterface( OmnibotFunctionInterface::Version interfaceVersion );
 
 	OMNIBOT_API void RenderOpenGL();
 #ifdef __cplusplus
@@ -52,8 +51,8 @@ extern "C"
 //////////////////////////////////////////////////////////////////////////
 // Interfaces
 
-extern Bot_EngineFuncs	gBotFunctions;
-extern IEngineInterface		*gGameFunctions;
+extern OmnibotFunctionInterface*	gBotFunctions;
+extern IEngineInterface*			gGameFunctions;
 
 //////////////////////////////////////////////////////////////////////////
 // Utility Function

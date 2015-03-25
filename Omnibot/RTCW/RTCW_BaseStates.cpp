@@ -18,37 +18,37 @@ namespace AiState
 	//////////////////////////////////////////////////////////////////////////
 
 	CallArtillery::CallArtillery()
-		: StateChild("CallArtillery")
-		, FollowPathUser("CallArtillery")
-		, m_MinCampTime(1000)
-		, m_MaxCampTime(2000)
-		, m_ExpireTime(0)
-		, m_Stance(StanceStand)
+		: StateChild( "CallArtillery" )
+		, FollowPathUser( "CallArtillery" )
+		, mMinCampTime( 1000 )
+		, mMaxCampTime( 2000 )
+		, mExpireTime( 0 )
+		, mStance( StanceStand )
 	{
-		LimitToWeapon().SetFlag(RTCW_WP_BINOCULARS);
+		LimitToWeapon().SetFlag( RTCW_WP_BINOCULARS );
 	}
 
-	void CallArtillery::GetDebugString(std::stringstream &out)
+	void CallArtillery::GetDebugString( std::stringstream &out )
 	{
-		out << (m_MapGoal ? m_MapGoal->GetName() : "");
+		out << ( mMapGoal ? mMapGoal->GetName() : "" );
 	}
 
 	void CallArtillery::RenderDebug()
 	{
-		if(IsActive())
+		if ( IsActive() )
 		{
-			if(m_MapGoal)
+			if ( mMapGoal )
 			{
-				RenderBuffer::AddOBB(m_MapGoal->GetWorldBounds(),COLOR::ORANGE);
-				RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::GREEN,5.f);
+				RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
+				RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
 			}
 		}
 	}
 
 	// FollowPathUser functions.
-	bool CallArtillery::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	bool CallArtillery::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		if(m_MapGoal && m_MapGoal->RouteTo(GetClient(), _desination, 64.f))
+		if ( mMapGoal && mMapGoal->RouteTo( GetClient(), _desination, 64.f ) )
 			_final = false;
 		else
 			_final = true;
@@ -56,22 +56,22 @@ namespace AiState
 	}
 
 	// AimerUser functions.
-	bool CallArtillery::GetAimPosition(Vector3f &_aimpos)
+	bool CallArtillery::GetAimPosition( Vector3f &_aimpos )
 	{
-		if(m_MapGoalTarget)
+		if ( mMapGoalTarget )
 		{
-			_aimpos = m_MapGoalTarget->GetPosition();
+			_aimpos = mMapGoalTarget->GetPosition();
 		}
-		else if(m_TargetEntity.IsValid())
+		else if ( mTargetEntity.IsValid() )
 		{
 			const float LOOKAHEAD_TIME = 5.0f;
-			const MemoryRecord *mr = GetClient()->GetSensoryMemory()->GetMemoryRecord(m_TargetEntity);
-			if(mr)
+			const MemoryRecord *mr = GetClient()->GetSensoryMemory()->GetMemoryRecord( mTargetEntity );
+			if ( mr )
 			{
-				const Vector3f vVehicleOffset = Vector3f(0.0f, 0.0f, 32.0f);
-				_aimpos = vVehicleOffset + mr->m_TargetInfo.m_LastPosition +
-					mr->m_TargetInfo.m_LastVelocity * LOOKAHEAD_TIME;
-				m_FireTime = IGame::GetTime() + 1000;
+				const Vector3f vVehicleOffset = Vector3f( 0.0f, 0.0f, 32.0f );
+				_aimpos = vVehicleOffset + mr->mTargetInfo.mLastPosition +
+					mr->mTargetInfo.mLastVelocity * LOOKAHEAD_TIME;
+				mFireTime = IGame::GetTime() + 1000;
 			}
 		}
 		return true;
@@ -79,13 +79,13 @@ namespace AiState
 
 	void CallArtillery::OnTarget()
 	{
-		FINDSTATE(ws, WeaponSystem, GetRootState());
-		if(ws && ws->CurrentWeaponIs(RTCW_WP_BINOCULARS))
+		FINDSTATE( ws, WeaponSystem, GetRootState() );
+		if ( ws && ws->CurrentWeaponIs( RTCW_WP_BINOCULARS ) )
 		{
-			GetClient()->PressButton(BOT_BUTTON_AIM);
-			if(m_FireTime < IGame::GetTime())
+			GetClient()->PressButton( BOT_BUTTON_AIM );
+			if ( mFireTime < IGame::GetTime() )
 			{
-				if(GetClient()->HasEntityFlag(ENT_FLAG_ZOOMING))
+				if ( GetClient()->HasEntityFlag( ENT_FLAG_ZOOMING ) )
 				{
 					ws->FireWeapon();
 				}
@@ -93,207 +93,207 @@ namespace AiState
 		}
 	}
 
-	obReal CallArtillery::GetPriority()
+	float CallArtillery::GetPriority()
 	{
-		if(!InterfaceFuncs::IsWeaponCharged(GetClient(), RTCW_WP_BINOCULARS, Primary))
+		if ( !InterfaceFuncs::IsWeaponCharged( GetClient(), RTCW_WP_BINOCULARS, Primary ) )
 			return 0.f;
 
-		if(IsActive())
+		if ( IsActive() )
 			return GetLastPriority();
 
-		m_MapGoal.reset();
-		m_MapGoalTarget.reset();
+		mMapGoal.reset();
+		mMapGoalTarget.reset();
 
 		//////////////////////////////////////////////////////////////////////////
-		RTCW_FilterClosest filter(GetClient(), AiState::SensoryMemory::EntEnemy);
-		filter.AddCategory(ENT_CAT_SHOOTABLE);
-		FINDSTATE(sensory,SensoryMemory,GetRootState());
-		if(sensory)
+		RTCW_FilterClosest filter( GetClient(), AiState::SensoryMemory::EntEnemy );
+		filter.AddCategory( ENT_CAT_SHOOTABLE );
+		FINDSTATE( sensory, SensoryMemory, GetRootState() );
+		if ( sensory )
 		{
-			sensory->QueryMemory(filter);
-			m_TargetEntity = filter.GetBestEntity();
-			if(m_TargetEntity.IsValid())
+			sensory->QueryMemory( filter );
+			mTargetEntity = filter.GetBestEntity();
+			if ( mTargetEntity.IsValid() )
 				return GetLastPriority();
 		}
 		//////////////////////////////////////////////////////////////////////////
 		{
-			GoalManager::Query qry(0x312ad48d /* CALLARTILLERY */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+			GoalManager::Query qry( 0x312ad48d /* CALLARTILLERY */, GetClient() );
+			GoalManager::GetInstance()->GetGoals( qry );
+			for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 			{
-				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+				if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
 					continue;
 
-				if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+				if ( qry.mList[ i ]->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) < 1 )
 					continue;
 
-				m_MapGoal = qry.m_List[i];
+				mMapGoal = qry.mList[ i ];
 				break;
 			}
 		}
-		if(!m_MapGoal)
+		if ( !mMapGoal )
 			return 0.f;
 		//////////////////////////////////////////////////////////////////////////
-		Vector3f vSource = m_MapGoal->GetPosition();
+		Vector3f vSource = mMapGoal->GetPosition();
 		//vSource = vSource + Vector3(0,0,60);
 		vSource.Z() = vSource.Z() + 60;
 		//////////////////////////////////////////////////////////////////////////
-		if(!m_MapGoalTarget)
+		if ( !mMapGoalTarget )
 		{
-			GoalManager::Query qry(0xb708821b /* ARTILLERY_S */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+			GoalManager::Query qry( 0xb708821b /* ARTILLERY_S */, GetClient() );
+			GoalManager::GetInstance()->GetGoals( qry );
+			for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 			{
-				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+				if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
 					continue;
 
-				if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+				if ( qry.mList[ i ]->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) < 1 )
 					continue;
 
 				{
-					Vector3f vTarget = qry.m_List[i]->GetPosition();
+					Vector3f vTarget = qry.mList[ i ]->GetPosition();
 					vTarget.Z() = vTarget.Z() + 20;
-					if(!Client::HasLineOfSightTo(vSource,vTarget))
+					if ( !Client::HasLineOfSightTo( vSource, vTarget ) )
 						continue;
 				}
 
-				m_MapGoalTarget = qry.m_List[i];
+				mMapGoalTarget = qry.mList[ i ];
 				break;
 			}
 		}
 		//////////////////////////////////////////////////////////////////////////
-		if(!m_MapGoalTarget)
+		if ( !mMapGoalTarget )
 		{
-			GoalManager::Query qry(0xac0870ca /* ARTILLERY_D */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+			GoalManager::Query qry( 0xac0870ca /* ARTILLERY_D */, GetClient() );
+			GoalManager::GetInstance()->GetGoals( qry );
+			for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 			{
-				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+				if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
 					continue;
 
-				if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
+				if ( qry.mList[ i ]->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) < 1 )
 					continue;
 
 				{
-					Vector3f vTarget = qry.m_List[i]->GetPosition();
+					Vector3f vTarget = qry.mList[ i ]->GetPosition();
 					vTarget.Z() = vTarget.Z() + 20;
-					if(!Client::HasLineOfSightTo(vSource,vTarget))
+					if ( !Client::HasLineOfSightTo( vSource, vTarget ) )
 						continue;
 				}
 
-				m_MapGoalTarget = qry.m_List[i];
+				mMapGoalTarget = qry.mList[ i ];
 				break;
 			}
 		}
-		return m_MapGoalTarget ? m_MapGoalTarget->GetPriorityForClient(GetClient()) : 0.f;
+		return mMapGoalTarget ? mMapGoalTarget->GetPriorityForClient( GetClient() ) : 0.f;
 	}
 
 	void CallArtillery::Enter()
 	{
-		if(m_MapGoalTarget && m_MapGoalTarget->GetGoalType()=="ARTILLERY_D")
-			m_FireTime = std::numeric_limits<int>::max();
+		if ( mMapGoalTarget && mMapGoalTarget->GetGoalType() == "ARTILLERY_D" )
+			mFireTime = std::numeric_limits<int>::max();
 		else
-			m_FireTime = 0;
+			mFireTime = 0;
 
-		m_Fired = false;
-		m_ExpireTime = 0;
+		mFired = false;
+		mExpireTime = 0;
 
-		if(m_MapGoal)
+		if ( mMapGoal )
 		{
-			m_MapGoal->GetProperty("Stance",m_Stance);
-			m_MapGoal->GetProperty("MinCampTime",m_MinCampTime);
-			m_MapGoal->GetProperty("MaxCampTime",m_MaxCampTime);
+			mMapGoal->GetProperty( "Stance", mStance );
+			mMapGoal->GetProperty( "MinCampTime", mMinCampTime );
+			mMapGoal->GetProperty( "MaxCampTime", mMaxCampTime );
 		}
 
-		if(m_MapGoalTarget)
+		if ( mMapGoalTarget )
 		{
-			if(!m_WatchFilter)
+			if ( !mWatchFilter )
 			{
-				m_WatchFilter.reset(new RTCW_FilterClosest(GetClient(), AiState::SensoryMemory::EntEnemy));
+				mWatchFilter.reset( new RTCW_FilterClosest( GetClient(), AiState::SensoryMemory::EntEnemy ) );
 			}
 
-			m_WatchFilter->AddClass(FilterSensory::ANYPLAYERCLASS);
-			m_WatchFilter->AddPosition(m_MapGoalTarget->GetPosition());
-			m_WatchFilter->SetMaxDistance(100.f);
-			FINDSTATEIF(ProximityWatcher, GetRootState(), AddWatch(GetNameHash(),m_WatchFilter,false));
+			mWatchFilter->AddClass( FilterSensory::ANYPLAYERCLASS );
+			mWatchFilter->AddPosition( mMapGoalTarget->GetPosition() );
+			mWatchFilter->SetMaxDistance( 100.f );
+			FINDSTATEIF( ProximityWatcher, GetRootState(), AddWatch( GetNameHash(), mWatchFilter, false ) );
 		}
-		Tracker.InProgress = m_MapGoal;
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, Run));
+		Tracker.InProgress = mMapGoal;
+		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run ) );
 	}
 
 	void CallArtillery::Exit()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 
-		m_MapGoal.reset();
+		mMapGoal.reset();
 
-		FINDSTATEIF(Aimer,GetRootState(),ReleaseAimRequest(GetNameHash()));
-		FINDSTATEIF(WeaponSystem, GetRootState(),ReleaseWeaponRequest(GetNameHash()));
-		FINDSTATEIF(ProximityWatcher, GetRootState(), RemoveWatch(GetNameHash()));
+		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
+		FINDSTATEIF( WeaponSystem, GetRootState(), ReleaseWeaponRequest( GetNameHash() ) );
+		FINDSTATEIF( ProximityWatcher, GetRootState(), RemoveWatch( GetNameHash() ) );
 
 		Tracker.Reset();
 	}
 
-	State::StateStatus CallArtillery::Update(float fDt)
+	State::StateStatus CallArtillery::Update( float fDt )
 	{
-		if(DidPathFail())
+		if ( DidPathFail() )
 		{
-			if(m_MapGoal)
-				BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+			if ( mMapGoal )
+				BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
 		}
 
-		if(m_MapGoal && !m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+		if ( mMapGoal && !mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
-		if(m_MapGoalTarget && !m_MapGoalTarget->IsAvailable(GetClient()->GetTeam()))
+		if ( mMapGoalTarget && !mMapGoalTarget->IsAvailable( GetClient()->GetTeam() ) )
 			return State_Finished;
 
-		if(DidPathSucceed())
+		if ( DidPathSucceed() )
 		{
-			if(m_Fired)
+			if ( mFired )
 				return State_Finished;
 
-			if(m_ExpireTime==0)
+			if ( mExpireTime == 0 )
 			{
-				m_ExpireTime = IGame::GetTime()+Mathf::IntervalRandomInt(m_MinCampTime.GetMs(),m_MaxCampTime.GetMs());
-				Tracker.InUse = m_MapGoal;
+				mExpireTime = IGame::GetTime() + Mathf::IntervalRandomInt( mMinCampTime.GetMs(), mMaxCampTime.GetMs() );
+				Tracker.InUse = mMapGoal;
 			}
-			else if(IGame::GetTime() > m_ExpireTime)
+			else if ( IGame::GetTime() > mExpireTime )
 			{
 				// Delay it from being used for a while.
-				if(m_MapGoal)
-					BlackboardDelay(30.f, m_MapGoal->GetSerialNum());
+				if ( mMapGoal )
+					BlackboardDelay( 30.f, mMapGoal->GetSerialNum() );
 				return State_Finished;
 			}
 
-			FINDSTATEIF(Aimer,GetRootState(),AddAimRequest(Priority::Medium,this,GetNameHash()));
-			FINDSTATEIF(WeaponSystem, GetRootState(), AddWeaponRequest(Priority::Medium, GetNameHash(), RTCW_WP_BINOCULARS));
+			FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
+			FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), RTCW_WP_BINOCULARS ) );
 
-			if (m_Stance==StanceCrouch)
-				GetClient()->PressButton(BOT_BUTTON_CROUCH);
+			if ( mStance == StanceCrouch )
+				GetClient()->PressButton( BOT_BUTTON_CROUCH );
 		}
 		return State_Busy;
 	}
 
-	void CallArtillery::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+	void CallArtillery::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
 	{
-		switch(_message.GetMessageId())
+		switch ( _message.GetMessageId() )
 		{
-			HANDLER(MESSAGE_PROXIMITY_TRIGGER)
+			HANDLER( MESSAGE_PROXIMITY_TRIGGER )
 			{
 				const AiState::Event_ProximityTrigger *m = _message.Get<AiState::Event_ProximityTrigger>();
-				if(m->m_OwnerState == GetNameHash())
+				if ( m->mOwnerState == GetNameHash() )
 				{
-					m_FireTime = IGame::GetTime();// + 1000;
+					mFireTime = IGame::GetTime();// + 1000;
 				}
 				break;
 			}
-			HANDLER(ACTION_WEAPON_FIRE)
+			HANDLER( ACTION_WEAPON_FIRE )
 			{
 				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-				if(m && m->m_WeaponId == RTCW_WP_BINOCULARS)
+				if ( m && m->mWeaponId == RTCW_WP_BINOCULARS )
 				{
-					m_Fired = true;
+					mFired = true;
 				}
 				break;
 			}

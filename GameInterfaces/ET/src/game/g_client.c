@@ -792,9 +792,6 @@ qboolean AddWeaponToPlayer( gclient_t *client, weapon_t weapon, int ammo, int am
 	// skill handling
 	AddExtraSpawnAmmo( client, weapon );
 
-	// omnibot
-	Bot_Event_AddWeapon(&g_entities[client->ps.clientNum], Bot_WeaponGameToBot(weapon));
-	// end omnibot
 	return qtrue;
 }
 
@@ -808,21 +805,9 @@ SetWolfSpawnWeapons
 void SetWolfSpawnWeapons( gclient_t *client ) 
 {
 	int		pc = client->sess.playerType;
-	// omnibot
-	qboolean	isBot = (g_entities[client->ps.clientNum].r.svFlags & SVF_BOT) ? qtrue : qfalse;
-	// end omnibot
-	
-
 	if ( client->sess.sessionTeam == TEAM_SPECTATOR )
 		return;
-
-	// omnibot
-	if (isBot)
-	{
-		Bot_Event_ResetWeapons(&g_entities[client->ps.clientNum]);
-	}
-	// end omnibot
-
+	
 	// Reset special weapon time
 	client->ps.classWeaponTime = -999999;
 

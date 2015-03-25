@@ -26,6 +26,14 @@ IGame *CreateGameInstance()
 	return new ETF_Game;
 }
 
+ETF_Game::ETF_Game()
+{
+}
+
+ETF_Game::~ETF_Game()
+{
+}
+
 int ETF_Game::GetVersionNum() const
 {
 	return ETF_VERSION_LATEST;
@@ -77,44 +85,28 @@ const char *ETF_Game::GetScriptSubfolder() const
 #endif
 }
 
-bool ETF_Game::GetAnalyticsKeys( GameAnalyticsKeys & keys ) 
+bool ETF_Game::GetAnalyticsKeys( GameAnalyticsKeys & keys )
 {
-	keys.mGameKey		= "68aa5fcc90a58d3de2ba80e8dc6f6a88";
-	keys.mSecretKey		= "283e40eb98703bedef2a5fa3e6a996b4c3233545";
-	keys.mDataApiKey	= "73a8f10945d4ac7bb1bde2fddb7905ddcbc7dbe1";
-	keys.mVersionKey	= va( "%s:v%s", GetGameName(), GetVersion() );
-	return true; 
-}
-
-const char *ETF_Game::IsDebugDrawSupported() const
-{
-	if(InterfaceFuncs::GetCvar("sv_running") != 1 && InterfaceFuncs::GetCvar("cl_running") != 1)
-		return "Can't draw waypoints non-server client.";
-	if(InterfaceFuncs::GetCvar("dedicated") != 0)
-		return "Can't draw waypoints on dedicated server.";
-	bool EnableIpc = false;
-	Options::GetValue("Debug Render","EnableInterProcess",EnableIpc);
-	if(!EnableIpc)
-		return "Waypoints are not visible because option EnableInterProcess in file omni-bot.cfg is false.";
-	if(InterfaceFuncs::GetCvar("cg_omnibotdrawing")==0)
-		return "Waypoints are not visible because cg_omnibotdrawing is \"0\".";
-	return NULL;
+	keys.mGameKey = "68aa5fcc90a58d3de2ba80e8dc6f6a88";
+	keys.mSecretKey = "283e40eb98703bedef2a5fa3e6a996b4c3233545";
+	keys.mDataApiKey = "73a8f10945d4ac7bb1bde2fddb7905ddcbc7dbe1";
+	keys.mVersionKey = va( "%s:v%s", GetGameName(), GetVersion() );
+	return true;
 }
 
 bool ETF_Game::Init( System & system )
 {
 	if ( !TF_Game::Init( system ) )
 		return false;
-	
+
 	// Set the sensory systems callback for getting aim offsets for entity types.
-	AiState::SensoryMemory::SetEntityTraceOffsetCallback(ETF_Game::ETF_GetEntityClassTraceOffset);
-	AiState::SensoryMemory::SetEntityAimOffsetCallback(ETF_Game::ETF_GetEntityClassAimOffset);
-	AiState::SensoryMemory::SetEntityVisDistanceCallback(ETF_Game::ETF_GetEntityVisDistance);
+	AiState::SensoryMemory::SetEntityTraceOffsetCallback( ETF_Game::ETF_GetEntityClassTraceOffset );
+	AiState::SensoryMemory::SetEntityAimOffsetCallback( ETF_Game::ETF_GetEntityClassAimOffset );
 
 	// Run the games autoexec.
 	int threadId;
 
-	system.mScript->ExecuteFile("scripts/etf_autoexec.gm", threadId);
+	system.mScript->ExecuteFile( "scripts/etf_autoexec.gm", threadId );
 
 	// Set up ETF specific data.
 	using namespace AiState;
@@ -129,134 +121,92 @@ bool ETF_Game::Init( System & system )
 	return true;
 }
 
-void ETF_Game::GetGameVars(GameVars &_gamevars)
+void ETF_Game::GetGameVars( GameVars &_gamevars )
 {
 	_gamevars.mPlayerHeight = 64.f;
 }
 
-static IntEnum ETF_TeamEnum[] =
+static IntEnum ETF_TeamEnum [] =
 {
-	IntEnum("SPECTATOR",OB_TEAM_SPECTATOR),
-	IntEnum("NONE",ETF_TEAM_NONE),
-	IntEnum("RED",ETF_TEAM_RED),
-	IntEnum("BLUE",ETF_TEAM_BLUE),
-	IntEnum("YELLOW",ETF_TEAM_YELLOW),
-	IntEnum("GREEN",ETF_TEAM_GREEN),
+	IntEnum( "SPECTATOR", OB_TEAM_SPECTATOR ),
+	IntEnum( "NONE", ETF_TEAM_NONE ),
+	IntEnum( "RED", ETF_TEAM_RED ),
+	IntEnum( "BLUE", ETF_TEAM_BLUE ),
+	IntEnum( "YELLOW", ETF_TEAM_YELLOW ),
+	IntEnum( "GREEN", ETF_TEAM_GREEN ),
 };
 
-void ETF_Game::GetTeamEnumeration(const IntEnum *&_ptr, int &num)
+void ETF_Game::GetTeamEnumeration( const IntEnum *&_ptr, int &num )
 {
-	num = sizeof(ETF_TeamEnum) / sizeof(ETF_TeamEnum[0]);
+	num = sizeof( ETF_TeamEnum ) / sizeof( ETF_TeamEnum[ 0 ] );
 	_ptr = ETF_TeamEnum;
 }
 
-void ETF_Game::InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table)
+void ETF_Game::InitScriptEntityFlags( gmMachine *_machine, gmTableObject *_table )
 {
 	//Override TF_Game, because we don't want caltrops, sabotage or radiotagged but we do want blind flag
-	IGame::InitScriptEntityFlags(_machine, _table);
+	IGame::InitScriptEntityFlags( _machine, _table );
 
-	_table->Set(_machine, "NEED_HEALTH",	gmVariable(TF_ENT_FLAG_SAVEME));
-	_table->Set(_machine, "NEED_ARMOR",		gmVariable(TF_ENT_FLAG_ARMORME));
-	_table->Set(_machine, "BURNING",		gmVariable(TF_ENT_FLAG_BURNING));
-	_table->Set(_machine, "TRANQUED",		gmVariable(TF_ENT_FLAG_TRANQED));
-	_table->Set(_machine, "INFECTED",		gmVariable(TF_ENT_FLAG_INFECTED));
-	_table->Set(_machine, "GASSED",			gmVariable(TF_ENT_FLAG_GASSED));
-	_table->Set(_machine, "SNIPE_AIMING",	gmVariable(ENT_FLAG_IRONSIGHT));
-	_table->Set(_machine, "AC_FIRING",		gmVariable(TF_ENT_FLAG_ASSAULTFIRING));
-	_table->Set(_machine, "LEGSHOT",		gmVariable(TF_ENT_FLAG_LEGSHOT));
-	_table->Set(_machine, "BLIND",			gmVariable(ETF_ENT_FLAG_BLIND));
-	_table->Set(_machine, "BUILDING_SG",	gmVariable(TF_ENT_FLAG_BUILDING_SG));
-	_table->Set(_machine, "BUILDING_DISP",	gmVariable(TF_ENT_FLAG_BUILDING_DISP));
-	_table->Set(_machine, "BUILDING_DETP",	gmVariable(TF_ENT_FLAG_BUILDING_DETP));
-	_table->Set(_machine, "BUILDINPROGRESS",gmVariable(TF_ENT_FLAG_BUILDINPROGRESS));
-	_table->Set(_machine, "LEVEL2",			gmVariable(TF_ENT_FLAG_LEVEL2));
-	_table->Set(_machine, "LEVEL3",			gmVariable(TF_ENT_FLAG_LEVEL3));
-
-	_table->Set(_machine, "DISGUISED",		gmVariable(ETF_ENT_FLAG_DISGUISED));
+	_table->Set( _machine, "NEED_HEALTH", gmVariable( TF_ENT_FLAG_SAVEME ) );
+	_table->Set( _machine, "NEED_ARMOR", gmVariable( TF_ENT_FLAG_ARMORME ) );
+	_table->Set( _machine, "BURNING", gmVariable( TF_ENT_FLAG_BURNING ) );
+	_table->Set( _machine, "TRANQUED", gmVariable( TF_ENT_FLAG_TRANQED ) );
+	_table->Set( _machine, "INFECTED", gmVariable( TF_ENT_FLAG_INFECTED ) );
+	_table->Set( _machine, "GASSED", gmVariable( TF_ENT_FLAG_GASSED ) );
+	_table->Set( _machine, "SNIPE_AIMING", gmVariable( ENT_FLAG_IRONSIGHT ) );
+	_table->Set( _machine, "AC_FIRING", gmVariable( TF_ENT_FLAG_ASSAULTFIRING ) );
+	_table->Set( _machine, "LEGSHOT", gmVariable( TF_ENT_FLAG_LEGSHOT ) );
+	_table->Set( _machine, "BLIND", gmVariable( ETF_ENT_FLAG_BLIND ) );
+	_table->Set( _machine, "BUILDING_SG", gmVariable( TF_ENT_FLAG_BUILDING_SG ) );
+	_table->Set( _machine, "BUILDING_DISP", gmVariable( TF_ENT_FLAG_BUILDING_DISP ) );
+	_table->Set( _machine, "BUILDING_DETP", gmVariable( TF_ENT_FLAG_BUILDING_DETP ) );
+	_table->Set( _machine, "BUILDINPROGRESS", gmVariable( TF_ENT_FLAG_BUILDINPROGRESS ) );
+	_table->Set( _machine, "DISGUISED", gmVariable( ETF_ENT_FLAG_DISGUISED ) );
 }
 
-void ETF_Game::InitScriptPowerups(gmMachine *_machine, gmTableObject *_table)
+void ETF_Game::InitScriptPowerups( gmMachine *_machine, gmTableObject *_table )
 {
-	TF_Game::InitScriptPowerups(_machine, _table);
+	TF_Game::InitScriptPowerups( _machine, _table );
 
-	_table->Set(_machine, "QUAD",		gmVariable(ETF_PWR_QUAD));
-	_table->Set(_machine, "SUIT",		gmVariable(ETF_PWR_SUIT));
-	_table->Set(_machine, "HASTE",		gmVariable(ETF_PWR_HASTE));
-	_table->Set(_machine, "INVIS",		gmVariable(ETF_PWR_INVIS));
-	_table->Set(_machine, "REGEN",		gmVariable(ETF_PWR_REGEN));
-	_table->Set(_machine, "FLIGHT",		gmVariable(ETF_PWR_FLIGHT));
-	_table->Set(_machine, "INVULN",		gmVariable(ETF_PWR_INVULN));
-	_table->Set(_machine, "AQUALUNG",	gmVariable(ETF_PWR_AQUALUNG));
+	_table->Set( _machine, "QUAD", gmVariable( ETF_PWR_QUAD ) );
+	_table->Set( _machine, "SUIT", gmVariable( ETF_PWR_SUIT ) );
+	_table->Set( _machine, "HASTE", gmVariable( ETF_PWR_HASTE ) );
+	_table->Set( _machine, "INVIS", gmVariable( ETF_PWR_INVIS ) );
+	_table->Set( _machine, "REGEN", gmVariable( ETF_PWR_REGEN ) );
+	_table->Set( _machine, "FLIGHT", gmVariable( ETF_PWR_FLIGHT ) );
+	_table->Set( _machine, "INVULN", gmVariable( ETF_PWR_INVULN ) );
+	_table->Set( _machine, "AQUALUNG", gmVariable( ETF_PWR_AQUALUNG ) );
 	//_table->Set(_machine, "CEASEFIRE",	gmVariable(ETF_PWR_CEASEFIRE));
 }
 
-const void ETF_Game::ETF_GetEntityVisDistance(float &_distance, const TargetInfo &_target, const Client *_client)
+const float ETF_Game::ETF_GetEntityClassTraceOffset( const TargetInfo &_target )
 {
-	switch(_target.m_EntityClass)
+	if ( _target.mEntInfo.mGroup == ENT_GRP_PLAYER )
 	{
-	case TF_CLASSEX_RESUPPLY:
-	case TF_CLASSEX_BACKPACK:
-	case TF_CLASSEX_BACKPACK_AMMO:
-	case TF_CLASSEX_BACKPACK_HEALTH:
-	case TF_CLASSEX_BACKPACK_ARMOR:
-	case TF_CLASSEX_BACKPACK_GRENADES:
-		_distance = 2000.0f;
-	default:
-		//if(_target.m_EntityClass - ET_Game::CLASSEXoffset == ET_CLASSEX_BREAKABLE)
-		//	_distance = static_cast<const ET_Client*>(_client)->GetBreakableTargetDist();
-		//else if(_target.m_EntityCategory.CheckFlag(ENT_CAT_PICKUP_WEAPON))
-		//	_distance = 1500.0f;
-		//if(_target.m_EntityCategory.CheckFlag(TF_ENT_CAT_BUILDABLE))
-		//	_distance = 1000.0f;
-		/*else */if(_target.m_EntityCategory.CheckFlag(ENT_CAT_PROJECTILE))
-			_distance = 500.0f;
-	}
-}
-
-const float ETF_Game::ETF_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags)
-{
-	if(InRangeT<int>(_class, TF_CLASS_NONE, TF_CLASS_MAX))
-	{
-		if (_entflags.CheckFlag(ENT_FLAG_CROUCHED))
+		if ( _target.mEntInfo.mClassId > TF_CLASS_NONE && _target.mEntInfo.mClassId < FilterSensory::ANYPLAYERCLASS )
 		{
-			switch(_class)
-			{
-			case TF_CLASS_HWGUY:
+			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_PRONED ) )
 				return 34.0f;
-			case TF_CLASS_SCOUT:
-			case TF_CLASS_SNIPER:
-				return 22.4f;
-			default:
+			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_CROUCHED ) )
 				return 24.0f;
-			}
+			return 48.0f;
 		}
-		if(_class == TF_CLASS_HWGUY)
-			return 40.0f;
-		return 32.0f;
 	}
-	return TF_Game::TF_GetEntityClassTraceOffset(_class,_entflags);
+	return TF_Game::TF_GetEntityClassTraceOffset( _target );
 }
 
-const float ETF_Game::ETF_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags)
+const float ETF_Game::ETF_GetEntityClassAimOffset( const TargetInfo &_target )
 {
-	if(InRangeT<int>(_class, TF_CLASS_NONE, TF_CLASS_MAX))
+	if ( _target.mEntInfo.mGroup == ENT_GRP_PLAYER )
 	{
-		if (_entflags.CheckFlag(ENT_FLAG_CROUCHED))
+		if ( _target.mEntInfo.mClassId > TF_CLASS_NONE && _target.mEntInfo.mClassId < FilterSensory::ANYPLAYERCLASS )
 		{
-			switch(_class)
-			{
-			case TF_CLASS_HWGUY:
-				return 26.0f;
-			case TF_CLASS_SCOUT:
-			case TF_CLASS_SNIPER:
-				return 14.4f;
-			default:
-				return 16.0f;
-			}
+			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_PRONED ) )
+				return 34.0f;
+			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_CROUCHED ) )
+				return 24.0f;
+			return 48.0f;
 		}
-		if(_class == TF_CLASS_HWGUY)
-			return 32.0f;
-		return 24.0f;
 	}
-	return TF_Game::TF_GetEntityClassAimOffset(_class,_entflags);
+	return TF_Game::TF_GetEntityClassAimOffset( _target );
 }

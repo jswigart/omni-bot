@@ -34,7 +34,7 @@ bool PathPlannerFloodFill::Obstacle::IsActive() const
 	return mActive;
 }
 
-PathPlannerFloodFill::Obstacle::Obstacle() 
+PathPlannerFloodFill::Obstacle::Obstacle()
 	: mActive( false )
 	, mExpireTime( -1 )
 {
@@ -49,10 +49,10 @@ PathPlannerFloodFill::Obstacle::~Obstacle()
 PathPlannerFloodFill::PathPlannerFloodFill()
 {
 	// TEMP
-	m_PlannerFlags.SetFlag(NAV_VIEW);
-	m_PlannerFlags.SetFlag(NAVMESH_STEPPROCESS);
+	mPlannerFlags.SetFlag( NAV_VIEW );
+	mPlannerFlags.SetFlag( NAVMESH_STEPPROCESS );
 
-	m_CursorColor = COLOR::BLUE;
+	mCursorColor = COLOR::BLUE;
 
 	mInfluenceBufferId = 0;
 	mUpdateInfluenceBuffer = false;
@@ -67,27 +67,28 @@ PathPlannerFloodFill::~PathPlannerFloodFill()
 bool PathPlannerFloodFill::Init( System & system )
 {
 	InitCommands();
-	
+
 	return true;
 }
 
-void PathPlannerFloodFill::RegisterScriptFunctions(gmMachine *a_machine)
+void PathPlannerFloodFill::RegisterScriptFunctions( gmMachine *a_machine )
 {
 }
-struct compare 
+struct compare
 {
-	bool operator ()(const type_info & a, const type_info & b) const {
+	bool operator ()( const type_info & a, const type_info & b ) const
+	{
 		return a.before( b );
 	}
 };
 
 void PathPlannerFloodFill::Update( System & system )
 {
-	Prof(PathPlannerFloodFill);
-	
+	Prof( PathPlannerFloodFill );
+
 	UpdateObstacles();
-	
-	if(m_PlannerFlags.CheckFlag(NAV_VIEW))
+
+	if ( mPlannerFlags.CheckFlag( NAV_VIEW ) )
 	{
 		bool influenceDone = true;
 		if ( mInfluence )
@@ -95,7 +96,7 @@ void PathPlannerFloodFill::Update( System & system )
 			static int iterations = 200;
 			influenceDone = mInfluence->UpdateInfluences( iterations );
 		}
-		
+
 		float influenceMinWeight = 0.0f;
 		float influenceMaxWeight = 1.0f;
 
@@ -116,16 +117,16 @@ void PathPlannerFloodFill::Update( System & system )
 
 			virtual void RenderCell( const Vector3f & pos, float cellSize, float influenceRatio )
 			{
-				if ( (mViewPos - pos).SquaredLength() > mRadiusSq )
+				if ( ( mViewPos - pos ).SquaredLength() > mRadiusSq )
 					return;
 
-				static obuint8 alpha = 255;
+				static uint8_t alpha = 255;
 
 				RenderBuffer::Quad q;
 				q.v[ 0 ] = pos + Vector3f( -cellSize, -cellSize, 0.0f );
-				q.v[ 1 ] = pos + Vector3f(  cellSize, -cellSize, 0.0f );
-				q.v[ 2 ] = pos + Vector3f(  cellSize,  cellSize, 0.0f );
-				q.v[ 3 ] = pos + Vector3f( -cellSize,  cellSize, 0.0f );
+				q.v[ 1 ] = pos + Vector3f( cellSize, -cellSize, 0.0f );
+				q.v[ 2 ] = pos + Vector3f( cellSize, cellSize, 0.0f );
+				q.v[ 3 ] = pos + Vector3f( -cellSize, cellSize, 0.0f );
 				if ( influenceRatio == -1.0f )
 					q.c = COLOR::BLACK.fade( 100 );
 				else
@@ -186,32 +187,32 @@ void PathPlannerFloodFill::Update( System & system )
 
 		//////////////////////////////////////////////////////////////////////////
 		Vector3f vLocalPos, vLocalAim, vAimPos, vAimNormal;
-		Utils::GetLocalEyePosition(vLocalPos);
-		Utils::GetLocalFacing(vLocalAim);
-		if(Utils::GetLocalAimPoint(vAimPos, &vAimNormal))
+		Utils::GetLocalEyePosition( vLocalPos );
+		Utils::GetLocalFacing( vLocalAim );
+		if ( Utils::GetLocalAimPoint( vAimPos, &vAimNormal ) )
 		{
-			RenderBuffer::AddLine(vAimPos,
+			RenderBuffer::AddLine( vAimPos,
 				vAimPos + vAimNormal * 16.f,
-				m_CursorColor,
-				IGame::GetDeltaTimeSecs()*2.f);
+				mCursorColor,
+				IGame::GetDeltaTimeSecs()*2.f );
 
-			RenderBuffer::AddLine(vAimPos,
-				vAimPos + vAimNormal.Perpendicular() * 16.f, m_CursorColor,
-				IGame::GetDeltaTimeSecs()*2.f);
+			RenderBuffer::AddLine( vAimPos,
+				vAimPos + vAimNormal.Perpendicular() * 16.f, mCursorColor,
+				IGame::GetDeltaTimeSecs()*2.f );
 		}
-		m_CursorColor = COLOR::BLUE; // back to default
+		mCursorColor = COLOR::BLUE; // back to default
 
 		//////////////////////////////////////////////////////////////////////////
 
-		Vector3List::const_iterator cIt = m_StartPositions.begin();
-		for(; cIt != m_StartPositions.end(); ++cIt)
+		Vector3List::const_iterator cIt = mStartPositions.begin();
+		for ( ; cIt != mStartPositions.end(); ++cIt )
 		{
-			AABB aabb(Vector3f::ZERO);
-			aabb.Expand(Vector3f(mFillOptions.m_GridRadius, mFillOptions.m_GridRadius, 0.0f));
-			aabb.Expand(Vector3f(-mFillOptions.m_GridRadius, -mFillOptions.m_GridRadius, 0.0f));
-			aabb.m_Maxs[2] = mFillOptions.m_CharacterHeight - mFillOptions.m_CharacterStepHeight;
-			aabb.Translate(*cIt);
-			RenderBuffer::AddAABB(aabb, COLOR::BLACK);
+			AABB aabb( Vector3f::ZERO );
+			aabb.Expand( Vector3f( mFillOptions.mGridRadius, mFillOptions.mGridRadius, 0.0f ) );
+			aabb.Expand( Vector3f( -mFillOptions.mGridRadius, -mFillOptions.mGridRadius, 0.0f ) );
+			aabb.mMaxs[ 2 ] = mFillOptions.mCharacterHeight - mFillOptions.mCharacterStepHeight;
+			aabb.Translate( *cIt );
+			RenderBuffer::AddAABB( aabb, COLOR::BLACK );
 		}
 	}
 }
@@ -222,18 +223,18 @@ void PathPlannerFloodFill::UpdateObstacles()
 	{
 		Obstacle & obs = mObstacles[ o ];
 
+		EntityInfo entInfo;
 		Vector3f vel;
-		BitFlag64 flags;
 		Box3f obb;
-		if ( !EngineFuncs::EntityVelocity( obs.mEntity, vel ) || 
-			!InterfaceFuncs::GetEntityFlags( obs.mEntity, flags ) ||
+		if ( !IGame::GetEntityInfo( obs.mEntity, entInfo ) ||
+			!EngineFuncs::EntityVelocity( obs.mEntity, vel ) ||
 			!EngineFuncs::EntityWorldOBB( obs.mEntity, obb ) )
 		{
 			obs.mExpireTime = 0;
 		}
 		else
 		{
-			const bool nowActive = vel.IsZero() && !flags.CheckFlag( ENT_FLAG_DISABLED );
+			const bool nowActive = vel.IsZero() && !entInfo.mFlags.CheckFlag( ENT_FLAG_DISABLED );
 			if ( obs.mActive != nowActive )
 			{
 				obs.mActive = nowActive;
@@ -260,9 +261,9 @@ void PathPlannerFloodFill::Shutdown()
 	Unload();
 }
 
-bool PathPlannerFloodFill::Load(const std::string &_mapname, bool _dl)
+bool PathPlannerFloodFill::Load( const std::string &_mapname, bool _dl )
 {
-	if(_mapname.empty())
+	if ( _mapname.empty() )
 		return false;
 
 	// Initialize a map that can contain the entire level
@@ -278,11 +279,11 @@ bool PathPlannerFloodFill::Load(const std::string &_mapname, bool _dl)
 	OB_DELETE( mInfluence );
 
 	mSpanMap.Clear();
-	mSpanMap.Init( Vector3f(mapbounds.m_Mins), Vector3f(mapbounds.m_Maxs), 16.0f );
+	mSpanMap.Init( Vector3f( mapbounds.mMins ), Vector3f( mapbounds.mMaxs ), 16.0f );
 
-	EngineFuncs::ConsoleMessage(va("Created %d x %d span map",
+	EngineFuncs::ConsoleMessage( va( "Created %d x %d span map",
 		mSpanMap.GetNumCellsX(), mSpanMap.GetNumCellsY() ) );
-	
+
 	// Automatically seed the flood fill with known features
 	std::vector< AutoNavFeature > features;
 	features.resize( 4096 );
@@ -290,16 +291,16 @@ bool PathPlannerFloodFill::Load(const std::string &_mapname, bool _dl)
 	const int numFeatures = gEngineFuncs->GetAutoNavFeatures( &features[ 0 ], features.size() );
 	for ( int i = 0; i < numFeatures; ++i )
 	{
-		mSpanFrontier.push( features[ i ].m_Position );
-		mSpanFrontier.push( features[ i ].m_TargetPosition );
+		mSpanFrontier.push( features[ i ].mPosition );
+		mSpanFrontier.push( features[ i ].mTargetPosition );
 	}
-	
+
 	return false;
 }
 
-bool PathPlannerFloodFill::Save(const std::string &_mapname)
+bool PathPlannerFloodFill::Save( const std::string &_mapname )
 {
-	if(_mapname.empty())
+	if ( _mapname.empty() )
 		return false;
 
 	return false;
@@ -310,7 +311,7 @@ bool PathPlannerFloodFill::IsReady() const
 	return true;//!mRuntimeSectors.empty();
 }
 
-bool PathPlannerFloodFill::GetNavFlagByName(const std::string &_flagname, NavFlags &_flag) const
+bool PathPlannerFloodFill::GetNavFlagByName( const std::string &_flagname, NavFlags &_flag ) const
 {
 	_flag = 0;
 	return false;
@@ -328,16 +329,16 @@ void PathPlannerFloodFill::RegisterGameGoals()
 static bool GetGroundPos( const Vector3f & pos, Vector3f & groundPosOut )
 {
 	obTraceResult tr;
-	EngineFuncs::TraceLine(tr,
+	EngineFuncs::TraceLine( tr,
 		pos,
 		pos - Vector3f::UNIT_Z * 100000.0f,
 		NULL/*&bounds*/,
 		TR_MASK_FLOODFILL,
 		-1,
-		False);
-	if ( tr.m_Fraction > 0.0f && tr.m_Fraction < 1.0f )
+		False );
+	if ( tr.mFraction > 0.0f && tr.mFraction < 1.0f )
 	{
-		groundPosOut = tr.m_Endpos;
+		groundPosOut = tr.mEndpos;
 		return true;
 	}
 	return false;
@@ -346,16 +347,16 @@ static bool GetGroundPos( const Vector3f & pos, Vector3f & groundPosOut )
 static bool GetHeightAtPos( const Vector3f & pos, float & height )
 {
 	obTraceResult tr;
-	EngineFuncs::TraceLine(tr,
+	EngineFuncs::TraceLine( tr,
 		pos + Vector3f( 0.0f, 0.0f, 1.0f ),
 		pos + Vector3f::UNIT_Z * 100000.0f,
 		NULL/*&bounds*/,
 		TR_MASK_FLOODFILL,
 		-1,
-		False);
-	if ( tr.m_Fraction > 0.0f && tr.m_Fraction < 1.0f )
+		False );
+	if ( tr.mFraction > 0.0f && tr.mFraction < 1.0f )
 	{
-		height = tr.m_Endpos[ 2 ] - pos.Z();
+		height = tr.mEndpos[ 2 ] - pos.Z();
 		return true;
 	}
 	return false;
@@ -366,25 +367,25 @@ static bool TestForValidNode( Vector3f & spanPos, float & spanHeight )
 	const float SpanHeightMin = 32.0f;
 	const float SpanStepHeight = 32.0f;
 
-	const Vector3f dn0(0.f,0.f,SpanStepHeight);
-	const Vector3f dn1(0.f,0.f,-1024.f);
+	const Vector3f dn0( 0.f, 0.f, SpanStepHeight );
+	const Vector3f dn1( 0.f, 0.f, -1024.f );
 
-	const Vector3f up0(0.f,0.f,1.f);
-	const Vector3f up1(0.f,0.f,1024.f);
+	const Vector3f up0( 0.f, 0.f, 1.f );
+	const Vector3f up1( 0.f, 0.f, 1024.f );
 
 	obTraceResult tr;
-	EngineFuncs::TraceLine(tr,spanPos+dn0,spanPos+dn1,NULL,TR_MASK_FLOODFILL,-1,False);
-	if ( tr.m_Fraction < 1.0f )
+	EngineFuncs::TraceLine( tr, spanPos + dn0, spanPos + dn1, NULL, TR_MASK_FLOODFILL, -1, False );
+	if ( tr.mFraction < 1.0f )
 	{
-		if ( tr.m_Normal[ 2 ] < 0.707f )
+		if ( tr.mNormal[ 2 ] < 0.707f )
 			return false;
 
-		spanPos = tr.m_Endpos;
-		EngineFuncs::TraceLine(tr,spanPos+up0,spanPos+up1,NULL,TR_MASK_FLOODFILL,-1,False);
+		spanPos = tr.mEndpos;
+		EngineFuncs::TraceLine( tr, spanPos + up0, spanPos + up1, NULL, TR_MASK_FLOODFILL, -1, False );
 
-		spanHeight = (spanPos+up1).Z() - spanPos.Z();
-		if ( tr.m_Fraction < 1.0f )
-			spanHeight = tr.m_Endpos[2] - spanPos.Z();
+		spanHeight = ( spanPos + up1 ).Z() - spanPos.Z();
+		if ( tr.mFraction < 1.0f )
+			spanHeight = tr.mEndpos[ 2 ] - spanPos.Z();
 
 		if ( spanHeight > SpanHeightMin )
 		{
@@ -396,20 +397,20 @@ static bool TestForValidNode( Vector3f & spanPos, float & spanHeight )
 
 int PathPlannerFloodFill::Process_FloodFill()
 {
-	Prof(Process_FloodFill);
-	
-	const Vector3f step[] =
+	Prof( Process_FloodFill );
+
+	const Vector3f step [] =
 	{
-		Vector3f( -mFillOptions.m_GridRadius, 0.0f, mFillOptions.m_CharacterStepHeight ),
-		Vector3f(  mFillOptions.m_GridRadius, 0.0f, mFillOptions.m_CharacterStepHeight ),
-		Vector3f( 0.0f, -mFillOptions.m_GridRadius, mFillOptions.m_CharacterStepHeight ),
-		Vector3f( 0.0f,  mFillOptions.m_GridRadius, mFillOptions.m_CharacterStepHeight ),
+		Vector3f( -mFillOptions.mGridRadius, 0.0f, mFillOptions.mCharacterStepHeight ),
+		Vector3f( mFillOptions.mGridRadius, 0.0f, mFillOptions.mCharacterStepHeight ),
+		Vector3f( 0.0f, -mFillOptions.mGridRadius, mFillOptions.mCharacterStepHeight ),
+		Vector3f( 0.0f, mFillOptions.mGridRadius, mFillOptions.mCharacterStepHeight ),
 	};
-	const int stepdirs = sizeof(step) / sizeof(step[0]);
+	const int stepdirs = sizeof( step ) / sizeof( step[ 0 ] );
 
 	Timer tme;
 
-	while ( !mSpanFrontier.empty()  )
+	while ( !mSpanFrontier.empty() )
 	{
 		Vector3f spanPos = mSpanFrontier.front();
 		mSpanFrontier.pop();
@@ -424,41 +425,41 @@ int PathPlannerFloodFill::Process_FloodFill()
 				Vector3f expandPos = spanPos + step[ i ];
 
 				obTraceResult tr;
-				EngineFuncs::TraceLine(tr,
-					spanPos + Vector3f(0,0,4),
+				EngineFuncs::TraceLine( tr,
+					spanPos + Vector3f( 0, 0, 4 ),
 					expandPos,
 					NULL,
 					TR_MASK_FLOODFILL,
 					-1,
-					False);
+					False );
 
-				if ( tr.m_Fraction == 1.0f )
+				if ( tr.mFraction == 1.0f )
 					mSpanFrontier.push( expandPos );
 			}
 		}
 
-		if(tme.GetElapsedSeconds() > 0.01)
+		if ( tme.GetElapsedSeconds() > 0.01 )
 			return Function_InProgress;
 	}
 
 	mSpanMap.IndexSpanNodes();
-	
+
 	delete mInfluence;
 	mInfluence = NULL;
-	
+
 	return Function_Finished;
 }
 
-void PathPlannerFloodFill::AddFloodStart(const Vector3f &_vec)
+void PathPlannerFloodFill::AddFloodStart( const Vector3f &_vec )
 {
-	m_StartPositions.push_back(_vec);
-	EngineFuncs::ConsoleMessage("Added Flood Fill Start");
+	mStartPositions.push_back( _vec );
+	EngineFuncs::ConsoleMessage( "Added Flood Fill Start" );
 }
 
 void PathPlannerFloodFill::ClearFloodStarts()
 {
-	EngineFuncs::ConsoleMessage(va("Clearing %d flood start nodes.", m_StartPositions.size()));
-	m_StartPositions.clear();
+	EngineFuncs::ConsoleMessage( va( "Clearing %d flood start nodes.", mStartPositions.size() ) );
+	mStartPositions.clear();
 }
 
 void PathPlannerFloodFill::SaveFloodStarts()
@@ -466,26 +467,26 @@ void PathPlannerFloodFill::SaveFloodStarts()
 	std::string strMap = gEngineFuncs->GetMapName();
 	strMap += ".navstarts";
 
-	char strBuffer[1024] = {};
-	sprintf(strBuffer, "nav/%s", strMap.c_str());
+	char strBuffer[ 1024 ] = {};
+	sprintf( strBuffer, "nav/%s", strMap.c_str() );
 
 	File f;
-	f.OpenForWrite(strBuffer, File::Text);
-	if(f.IsOpen())
+	f.OpenForWrite( strBuffer, File::Text );
+	if ( f.IsOpen() )
 	{
-		f.WriteInt32((obuint32)m_StartPositions.size());
-		Vector3List::const_iterator cIt = m_StartPositions.begin();
-		for(; cIt != m_StartPositions.end(); ++cIt)
+		f.WriteInt32( ( uint32_t )mStartPositions.size() );
+		Vector3List::const_iterator cIt = mStartPositions.begin();
+		for ( ; cIt != mStartPositions.end(); ++cIt )
 		{
-			f.WriteFloat((*cIt).X());
-			f.WriteFloat((*cIt).Y());
-			f.WriteFloat((*cIt).Z());
+			f.WriteFloat( ( *cIt ).X() );
+			f.WriteFloat( ( *cIt ).Y() );
+			f.WriteFloat( ( *cIt ).Z() );
 			f.WriteNewLine();
 		}
 		f.Close();
 	}
-	EngineFuncs::ConsoleMessage(va("Saved %d nav starts from %s",
-		m_StartPositions.size(), strMap.c_str()));
+	EngineFuncs::ConsoleMessage( va( "Saved %d nav starts from %s",
+		mStartPositions.size(), strMap.c_str() ) );
 }
 
 void PathPlannerFloodFill::LoadFloodStarts()
@@ -493,74 +494,74 @@ void PathPlannerFloodFill::LoadFloodStarts()
 	std::string strMap = gEngineFuncs->GetMapName();
 	strMap += ".navstarts";
 
-	char strBuffer[1024] = {};
-	sprintf(strBuffer, "nav/%s", strMap.c_str());
+	char strBuffer[ 1024 ] = {};
+	sprintf( strBuffer, "nav/%s", strMap.c_str() );
 
 	File f;
-	f.OpenForRead(strBuffer, File::Text);
-	if(f.IsOpen())
+	f.OpenForRead( strBuffer, File::Text );
+	if ( f.IsOpen() )
 	{
-		obuint32 iNumPositions = 0;
-		f.ReadInt32(iNumPositions);
+		uint32_t iNumPositions = 0;
+		f.ReadInt32( iNumPositions );
 
-		m_StartPositions.resize(0);
-		m_StartPositions.reserve(iNumPositions);
+		mStartPositions.resize( 0 );
+		mStartPositions.reserve( iNumPositions );
 
 		Vector3f vPos;
-		for(obuint32 i = 0; i < iNumPositions; ++i)
+		for ( uint32_t i = 0; i < iNumPositions; ++i )
 		{
-			f.ReadFloat(vPos.X());
-			f.ReadFloat(vPos.Y());
-			f.ReadFloat(vPos.Z());
-			m_StartPositions.push_back( vPos );
+			f.ReadFloat( vPos.X() );
+			f.ReadFloat( vPos.Y() );
+			f.ReadFloat( vPos.Z() );
+			mStartPositions.push_back( vPos );
 		}
 		f.Close();
 	}
-	EngineFuncs::ConsoleMessage(va("Loaded %d nav starts from %s",
-		m_StartPositions.size(), strMap.c_str()));
+	EngineFuncs::ConsoleMessage( va( "Loaded %d nav starts from %s",
+		mStartPositions.size(), strMap.c_str() ) );
 }
 
-void PathPlannerFloodFill::FloodFill(const FloodFillOptions &_options)
+void PathPlannerFloodFill::FloodFill( const FloodFillOptions &_options )
 {
-	if( System::mInstance->mGame->RemoveUpdateFunction("NavMesh_FloodFill"))
+	if ( System::mInstance->mGame->RemoveUpdateFunction( "NavMesh_FloodFill" ) )
 		return;
 
-	EngineFuncs::ConsoleMessage("Initializing Flood Fill.");
+	EngineFuncs::ConsoleMessage( "Initializing Flood Fill." );
 
 	mFillOptions = _options;
 
 	VectorQueue empty;
 	mSpanFrontier.swap( empty );
 
-	for(obuint32 i = 0; i < m_StartPositions.size(); ++i)
+	for ( uint32_t i = 0; i < mStartPositions.size(); ++i )
 	{
-		mSpanFrontier.push( m_StartPositions[ i ] );
+		mSpanFrontier.push( mStartPositions[ i ] );
 	}
 
 	mSpanMap.ClearSpans();
 	OB_DELETE( mInfluence );
 
-	FunctorPtr f(new ObjFunctor<PathPlannerFloodFill>(this, &PathPlannerFloodFill::Process_FloodFill));
+	FunctorPtr f( new ObjFunctor<PathPlannerFloodFill>( this, &PathPlannerFloodFill::Process_FloodFill ) );
 
-	System::mInstance->mGame->AddUpdateFunction("NavMesh_FloodFill", f);
+	System::mInstance->mGame->AddUpdateFunction( "NavMesh_FloodFill", f );
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-bool PathPlannerFloodFill::GetNavInfo(const Vector3f &pos,obint32 &_id,std::string &_name)
+bool PathPlannerFloodFill::GetNavInfo( const Vector3f &pos, int32_t &_id, std::string &_name )
 {
 	return false;
 }
 
-void PathPlannerFloodFill::AddEntityConnection(const Event_EntityConnection &_conn)
+void PathPlannerFloodFill::AddEntityConnection( const Event_EntityConnection &_conn )
 {
 }
 
-void PathPlannerFloodFill::RemoveEntityConnection(GameEntity _ent)
+void PathPlannerFloodFill::RemoveEntityConnection( GameEntity _ent )
 {
 }
 
-Vector3f PathPlannerFloodFill::GetDisplayPosition(const Vector3f &_pos)
+Vector3f PathPlannerFloodFill::GetDisplayPosition( const Vector3f &_pos )
 {
 	return _pos;
 }
@@ -576,10 +577,10 @@ PathPlannerFloodFill::SpanMap::InfluenceMap * PathPlannerFloodFill::AllocInfluen
 
 void PathPlannerFloodFill::EntityCreated( const EntityInstance &ei )
 {
-	if ( ei.m_EntityCategory.CheckFlag(ENT_CAT_OBSTACLE) )
+	if ( ei.mEntInfo.mCategory.CheckFlag( ENT_CAT_OBSTACLE ) )
 	{
 		Obstacle obs;
-		obs.mEntity = ei.m_Entity;
+		obs.mEntity = ei.mEntity;
 		mObstacles.push_back( obs );
 	}
 }
@@ -588,7 +589,7 @@ void PathPlannerFloodFill::EntityDeleted( const EntityInstance &ei )
 {
 	for ( size_t i = 0; i < mObstacles.size(); ++i )
 	{
-		if ( mObstacles[ i ].mEntity == ei.m_Entity )
+		if ( mObstacles[ i ].mEntity == ei.mEntity )
 		{
 			// mark it for immediate removal
 			mObstacles[ i ].mExpireTime = 0;
@@ -598,5 +599,5 @@ void PathPlannerFloodFill::EntityDeleted( const EntityInstance &ei )
 
 PathInterface * PathPlannerFloodFill::AllocPathInterface( Client * client )
 {
-	return new FloodFillPathInterface( client, this ); 
+	return new FloodFillPathInterface( client, this );
 }

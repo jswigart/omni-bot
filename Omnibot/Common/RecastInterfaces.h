@@ -39,22 +39,22 @@ protected:
 	virtual int doGetAccumulatedTime(const rcTimerLabel /*label*/) const;
 
 private:
-	Timer				m_timers[RC_MAX_TIMERS];
-	float				m_accTime[RC_MAX_TIMERS];
+	Timer			 mtimers[RC_MAX_TIMERS];
+	float			 maccTime[RC_MAX_TIMERS];
 
 	struct Msg
 	{
 		rcLogCategory	mCategory;
 		std::string		mMsg;
 	};
-	std::vector< Msg > m_messages;
+	std::vector< Msg >  messages;
 };
 
 // stdio file implementation.
 class rcFileIO : public duFileIO
 {
-	File m_file;
-	int m_mode;
+	File mfile;
+	int mmode;
 public:
 	rcFileIO();
 	virtual ~rcFileIO();

@@ -227,8 +227,8 @@ bool CollisionModel::CollideAABB( const ModelTransform & mdlXform, const AABB & 
 	{
 		Opcode::CollisionAABB colaabb;
 		colaabb.SetMinMax(
-			IceMaths::Point( worldaabb.m_Mins ),
-			IceMaths::Point( worldaabb.m_Maxs ) );
+			IceMaths::Point( worldaabb.mMins ),
+			IceMaths::Point( worldaabb.mMaxs ) );
 
 		Opcode::AABBCollider collider;
 		collider.SetFirstContact( false );
@@ -289,8 +289,8 @@ bool CollisionModel::CollideAABB( const ModelTransform & mdlXform, const AABB & 
 	{
 		Opcode::CollisionAABB colaabb;
 		colaabb.SetMinMax(
-			IceMaths::Point( aabb.m_Mins ),
-			IceMaths::Point( aabb.m_Maxs ) );
+			IceMaths::Point( aabb.mMins ),
+			IceMaths::Point( aabb.mMaxs ) );
 
 		Opcode::AABBCollider collider;
 		collider.SetFirstContact( false );

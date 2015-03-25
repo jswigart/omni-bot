@@ -24,15 +24,15 @@ namespace AiState
 
 		// function: HasTarget
 		//		true/false whether the bot has a target or not.
-		inline bool HasTarget() const { return m_CurrentTarget.IsValid(); }
+		inline bool HasTarget() const { return mCurrentTarget.IsValid(); }
 
 		// function: GetCurrentTarget
 		//		Accessor for the bots current target.
-		inline GameEntity GetCurrentTarget() const { return m_CurrentTarget; }
+		inline GameEntity GetCurrentTarget() const { return mCurrentTarget; }
 
 		// function: GetLastTarget
 		//		Accessor for the bots last target.
-		inline const GameEntity &GetLastTarget() const { return m_LastTarget; }
+		inline const GameEntity &GetLastTarget() const { return mLastTarget; }
 
 		void ForceTarget(GameEntity _ent);
 
@@ -42,11 +42,11 @@ namespace AiState
 
 		// function: SetDefaultTargetingFilter
 		//		Set the <FilterSensory> that will be used for targeting
-		inline void SetDefaultTargetingFilter(FilterPtr _filter) { m_DefaultFilter = _filter; }
+		inline void SetDefaultTargetingFilter(FilterPtr _filter) { mDefaultFilter = _filter; }
 
 		// function: GetTargetingFilter
 		//		Get the current <FilterSensory> being used for targeting
-		inline FilterPtr GetTargetingFilter() const { return m_DefaultFilter; }
+		inline FilterPtr GetTargetingFilter() const { return mDefaultFilter; }
 
 		// State stuff
 
@@ -59,19 +59,19 @@ namespace AiState
 		TargetingSystem();
 		virtual ~TargetingSystem();
 	protected:
-		// ptr: m_DefaultFilter
+		// ptr: mDefaultFilter
 		//		Pointer to the filter to use for targeting.
-		FilterPtr		m_DefaultFilter;
+		FilterPtr	 mDefaultFilter;
 
-		// var: m_CurrentTarget
+		// var: mCurrentTarget
 		//		The currently targeted entity
-		GameEntity		m_CurrentTarget;
+		GameEntity	 mCurrentTarget;
 
-		// var: m_LastTarget
+		// var: mLastTarget
 		//		The last targeted entity
-		GameEntity		m_LastTarget;
+		GameEntity	 mLastTarget;
 
-		GameEntity		m_ForceTarget;
+		GameEntity	 mForceTarget;
 	};
 };
 #endif

@@ -22,16 +22,16 @@ public:
 	ObjFunctor(T *o, funcType f)
 	{
 		obj = o;
-		m_Function = f;
+		mFunction = f;
 	}
 	int operator ()()
 	{
-		return (obj->*m_Function)();
+		return (obj->*mFunction)();
 	}
 protected:
 	T *obj;
 
-	funcType m_Function;
+	funcType mFunction;
 };
 
 #endif

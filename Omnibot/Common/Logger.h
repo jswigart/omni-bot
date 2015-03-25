@@ -103,24 +103,24 @@ public:
 	{
 		LOG_INDENT = 0x00000001,
 		LOG_UNDENT = 0x00000002,
-		LOG_FLOW   = 0x00000004,
-		LOG_BLOK   = 0x00000008,
-		LOG_DATA   = 0x00000010,
-		LOG_INFO   = 0x00000012,
-		LOG_WARN   = 0x00000014,
-		LOG_ERR    = 0x00000018,
-		LOG_CRIT   = 0x00000020,
-		LOG_ALL    = 0xFFFFFFFF
+		LOG_FLOW = 0x00000004,
+		LOG_BLOK = 0x00000008,
+		LOG_DATA = 0x00000010,
+		LOG_INFO = 0x00000012,
+		LOG_WARN = 0x00000014,
+		LOG_ERR = 0x00000018,
+		LOG_CRIT = 0x00000020,
+		LOG_ALL = 0xFFFFFFFF
 	};
 
 	enum OutputFlags
 	{
-		WRITE_FILE = (1<<0),
-		WRITE_LINE = (1<<1),
-		WRITE_DATE = (1<<2),
-		WRITE_TIME = (1<<3),
+		WRITE_FILE = ( 1 << 0 ),
+		WRITE_LINE = ( 1 << 1 ),
+		WRITE_DATE = ( 1 << 2 ),
+		WRITE_TIME = ( 1 << 3 ),
 		WRITE_TIMESTAMP = WRITE_DATE | WRITE_TIME,
-		WRITE_ALL  = WRITE_FILE | WRITE_LINE | WRITE_TIMESTAMP,
+		WRITE_ALL = WRITE_FILE | WRITE_LINE | WRITE_TIMESTAMP,
 	};
 
 	// Construction/Destruction
@@ -128,48 +128,81 @@ public:
 	virtual ~Logger();
 
 	// Accessors
-	inline const bool&			LineCharsFlag() const	{return m_LineCharsFlag;}
-	inline bool&				LineCharsFlag() 		{return m_LineCharsFlag;}
+	inline const bool&			LineCharsFlag() const
+	{
+		return mLineCharsFlag;
+	}
+	inline bool&				LineCharsFlag()
+	{
+		return mLineCharsFlag;
+	}
 
-	inline const int&			FileSizeLimit() const	{return m_FileSizeLimit;}
-	inline int&					FileSizeLimit()			{return m_FileSizeLimit;}
+	inline const int&			FileSizeLimit() const
+	{
+		return mFileSizeLimit;
+	}
+	inline int&					FileSizeLimit()
+	{
+		return mFileSizeLimit;
+	}
 
-	inline const int&			LogMask() const			{return m_LogMask;}
-	inline int&					LogMask()				{return m_LogMask;}
+	inline const int&			LogMask() const
+	{
+		return mLogMask;
+	}
+	inline int&					LogMask()
+	{
+		return mLogMask;
+	}
 
-	inline const unsigned int	&SourceLine() const		{return m_SourceLine;}
-	inline unsigned int&		SourceLine()			{return m_SourceLine;}
+	inline const unsigned int	&SourceLine() const
+	{
+		return mSourceLine;
+	}
+	inline unsigned int&		SourceLine()
+	{
+		return mSourceLine;
+	}
 
-	inline const std::string&	SourceFile() const		{return m_SourceFile;}
-	inline std::string&			SourceFile()			{return m_SourceFile;}
+	inline const std::string&	SourceFile() const
+	{
+		return mSourceFile;
+	}
+	inline std::string&			SourceFile()
+	{
+		return mSourceFile;
+	}
 
-	inline std::fstream &		Stream()				{return m_LogFile;}
+	inline std::fstream &		Stream()
+	{
+		return mLogFile;
+	}
 
 	bool						LogStarted();
 
 	// Utilitarian (public)
-	void		Start(const std::string &_filename, const bool reset);
+	void		Start( const std::string &_filename, const bool reset );
 	void		Stop();
-	void		LogTex(const LogFlags logBits, CHECK_PRINTF_ARGS const char *s);
-	void		LogRaw(const std::string &s);
-	void		LogHex(const char *buffer, const unsigned int count, const LogFlags logBits = LOG_INFO);
-	void		Indent(const std::string &s, const LogFlags logBits = LOG_INDENT);
-	void		Undent(const std::string &s, const LogFlags logBits = LOG_UNDENT);
+	void		LogTex( const LogFlags logBits, CHECK_PRINTF_ARGS const char *s );
+	void		LogRaw( const std::string &s );
+	void		LogHex( const char *buffer, const unsigned int count, const LogFlags logBits = LOG_INFO );
+	void		Indent( const std::string &s, const LogFlags logBits = LOG_INDENT );
+	void		Undent( const std::string &s, const LogFlags logBits = LOG_UNDENT );
 
 	void		LimitFileSize();
-	const std::string&	HeaderString(const LogFlags logBits) const;
+	const std::string&	HeaderString( const LogFlags logBits ) const;
 private:
 
 	// Data
-	std::fstream	m_LogFile;
-	std::string		m_SourceFile;
-	unsigned int	m_SourceLine;
-	int				m_IndentCount;
-	int				m_IndentChars;
-	int				m_FileSizeLimit;
-	int				m_LogMask;
-	int				m_OutMask;
-	bool			m_LineCharsFlag;
+	std::fstream mLogFile;
+	std::string	 mSourceFile;
+	unsigned int mSourceLine;
+	int			 mIndentCount;
+	int			 mIndentChars;
+	int			 mFileSizeLimit;
+	int			 mLogMask;
+	int			 mOutMask;
+	bool		 mLineCharsFlag;
 };
 
 // ---------------------------------------------------------------------------------------------------------------------------------
@@ -179,17 +212,17 @@ private:
 class LogBlock
 {
 public:
-	inline LogBlock(const std::string &_s)/* :
-										  m_Str(_s)*/
+	inline LogBlock( const std::string &_s )/* :
+										  mStr(_s)*/
 	{
-		g_Logger.Indent("Begin block: " + _s, Logger::LOG_INDENT);
+		g_Logger.Indent( "Begin block: " + _s, Logger::LOG_INDENT );
 	}
 	inline ~LogBlock()
 	{
-		g_Logger.Undent("", Logger::LOG_UNDENT);
+		g_Logger.Undent( "", Logger::LOG_UNDENT );
 	}
 private:
-	//std::string		m_Str;
+	//std::string	 mStr;
 };
 
 // ---------------------------------------------------------------------------------------------------------------------------------
@@ -199,17 +232,17 @@ private:
 class LogFlow
 {
 public:
-	inline LogFlow(const std::string &_function)/* :
-												m_Str(_function)*/
+	inline LogFlow( const std::string &_function )/* :
+											 mStr(_function)*/
 	{
-		g_Logger.Indent(_function, Logger::LOG_FLOW);
+		g_Logger.Indent( _function, Logger::LOG_FLOW );
 	}
 	inline ~LogFlow()
 	{
-		g_Logger.Undent("", Logger::LOG_FLOW);
+		g_Logger.Undent( "", Logger::LOG_FLOW );
 	}
 private:
-	//std::string		m_Str;
+	//std::string	 mStr;
 };
 
 #endif

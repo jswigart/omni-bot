@@ -25,14 +25,14 @@ BlackBoard::~BlackBoard()
 
 bool BlackBoard::PostBBRecord(BBRecordPtr _item)
 {
-	m_DB.insert(std::make_pair(_item->GetType(), _item));
+	mDB.insert(std::make_pair(_item->GetType(), _item));
 	return true;
 }
 
 int BlackBoard::GetBBRecords(int _type, BBRecordPtr *_items, int _maxitems)
 {
-	BlackBoardDatabase::iterator it = m_DB.lower_bound(_type);
-	BlackBoardDatabase::iterator itEnd = m_DB.upper_bound(_type);
+	BlackBoardDatabase::iterator it = mDB.lower_bound(_type);
+	BlackBoardDatabase::iterator itEnd = mDB.upper_bound(_type);
 
 	int iNum = 0;
 	while(it != itEnd && iNum < _maxitems)
@@ -47,14 +47,14 @@ int BlackBoard::GetBBRecords(int _type, BBRecordPtr *_items, int _maxitems)
 
 int BlackBoard::GetNumBBRecords(int _type, int _target)
 {
-	BlackBoardDatabase::iterator it = m_DB.lower_bound(_type);
-	BlackBoardDatabase::iterator itEnd = m_DB.upper_bound(_type);
+	BlackBoardDatabase::iterator it = mDB.lower_bound(_type);
+	BlackBoardDatabase::iterator itEnd = mDB.upper_bound(_type);
 	int iNum = 0;
 	while(it != itEnd)
 	{
 		if(it->second->GetType() == _type)
 		{
-			if(_target == bbk_All || it->second->m_Target == _target)
+			if(_target == bbk_All || it->second->mTarget == _target)
 				++iNum;
 		}
 		++it;
@@ -64,11 +64,11 @@ int BlackBoard::GetNumBBRecords(int _type, int _target)
 
 bool BlackBoard::RecordExistsOwner(int _type, int _owner)
 {
-	BlackBoardDatabase::iterator it = m_DB.lower_bound(_type);
-	BlackBoardDatabase::iterator itEnd = m_DB.upper_bound(_type);
+	BlackBoardDatabase::iterator it = mDB.lower_bound(_type);
+	BlackBoardDatabase::iterator itEnd = mDB.upper_bound(_type);
 	while(it != itEnd)
 	{
-		if(it->second->GetType() == _type && it->second->m_Owner == _owner)
+		if(it->second->GetType() == _type && it->second->mOwner == _owner)
 			return true;
 		++it;
 	}
@@ -77,11 +77,11 @@ bool BlackBoard::RecordExistsOwner(int _type, int _owner)
 
 bool BlackBoard::RecordExistsTarget(int _type, int _target)
 {
-	BlackBoardDatabase::iterator it = m_DB.lower_bound(_type);
-	BlackBoardDatabase::iterator itEnd = m_DB.upper_bound(_type);
+	BlackBoardDatabase::iterator it = mDB.lower_bound(_type);
+	BlackBoardDatabase::iterator itEnd = mDB.upper_bound(_type);
 	while(it != itEnd)
 	{
-		if(it->second->GetType() == _type && it->second->m_Target == _target)
+		if(it->second->GetType() == _type && it->second->mTarget == _target)
 			return true;
 		++it;
 	}
@@ -96,20 +96,20 @@ int BlackBoard::RemoveBBRecordByPoster(int _poster, int _type /*= bbk_All*/)
 	BlackBoardDatabase::iterator itEnd;
 	if(_type == bbk_All)
 	{
-		it = m_DB.begin();
-		itEnd = m_DB.end();
+		it = mDB.begin();
+		itEnd = mDB.end();
 	}
 	else
 	{
-		it = m_DB.lower_bound(_type);
-		itEnd = m_DB.upper_bound(_type);
+		it = mDB.lower_bound(_type);
+		itEnd = mDB.upper_bound(_type);
 	}
 
 	while(it != itEnd)
 	{
-		if(it->second->m_Owner == _poster)
+		if(it->second->mOwner == _poster)
 		{
-			m_DB.erase(it++);
+			mDB.erase(it++);
 			++iCount;
 		}
 		else
@@ -129,20 +129,20 @@ int BlackBoard::RemoveBBRecordByTarget(int _target, int _type /*= bbk_All*/)
 	BlackBoardDatabase::iterator itEnd;
 	if(_type == bbk_All)
 	{
-		it = m_DB.begin();
-		itEnd = m_DB.end();
+		it = mDB.begin();
+		itEnd = mDB.end();
 	}
 	else
 	{
-		it = m_DB.lower_bound(_type);
-		itEnd = m_DB.upper_bound(_type);
+		it = mDB.lower_bound(_type);
+		itEnd = mDB.upper_bound(_type);
 	}
 
 	while(it != itEnd)
 	{
-		if(it->second->m_Target == _target)
+		if(it->second->mTarget == _target)
 		{
-			m_DB.erase(it++);
+			mDB.erase(it++);
 			++iCount;
 		}
 		else
@@ -156,31 +156,31 @@ int BlackBoard::RemoveBBRecordByTarget(int _target, int _type /*= bbk_All*/)
 
 int BlackBoard::RemoveAllBBRecords(int _type /*= bbk_All*/)
 {
-	int iCount = (int)m_DB.size();
+	int iCount = (int)mDB.size();
 	if(_type == bbk_All)
 	{
-		m_DB.clear();
+		mDB.clear();
 	}
 	else
 	{
-		m_DB.erase(_type);
+		mDB.erase(_type);
 	}
 	return iCount;
 }
 
 void BlackBoard::PurgeExpiredRecords()
 {
-	BlackBoardDatabase::iterator it = m_DB.begin();
-	BlackBoardDatabase::iterator itEnd = m_DB.end();
+	BlackBoardDatabase::iterator it = mDB.begin();
+	BlackBoardDatabase::iterator itEnd = mDB.end();
 	while(it != itEnd)
 	{
-		if(it->second->m_DeleteOnExpire && it->second->m_ExpireTime <= IGame::GetTime())
+		if(it->second->mDeleteOnExpire && it->second->mExpireTime <= IGame::GetTime())
 		{
-			m_DB.erase(it++);
+			mDB.erase(it++);
 		}
-		else if(it->second->m_DeleteOnRefCount1 && it->second.use_count() <= 1)
+		else if(it->second->mDeleteOnRefCount1 && it->second.use_count() <= 1)
 		{
-			m_DB.erase(it++);
+			mDB.erase(it++);
 		}
 		else
 		{
@@ -191,8 +191,8 @@ void BlackBoard::PurgeExpiredRecords()
 
 void BlackBoard::DumpBlackBoardContentsToGame(int _type /*= bbk_All*/)
 {
-	BlackBoardDatabase::iterator it = m_DB.begin();
-	BlackBoardDatabase::iterator itEnd = m_DB.end();
+	BlackBoardDatabase::iterator it = mDB.begin();
+	BlackBoardDatabase::iterator itEnd = mDB.end();
 
 	EngineFuncs::ConsoleMessage("-= Global Blackboard =-");
 	for( ; it != itEnd; ++it)
@@ -200,7 +200,7 @@ void BlackBoard::DumpBlackBoardContentsToGame(int _type /*= bbk_All*/)
 		if(it->first == bbk_All || it->first == _type)
 		{
 			EngineFuncs::ConsoleMessage(va("Type: %d, Poster: %d, Target: %d",
-				it->first, it->second->m_Owner, it->second->m_Target));
+				it->first, it->second->mOwner, it->second->mTarget));
 		}
 	}
 	EngineFuncs::ConsoleMessage("-= End Global Blackboard =-");

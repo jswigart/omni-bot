@@ -27,14 +27,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Include="..\..\..\Common\navmesh.proto">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) -I=$(PROTO_BUFF)/src --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compiling %(Filename)%(Extension)</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(PROTO_BUFF)/compiler/protoc.exe -I=%(RootDir)%(Directory) -I=$(PROTO_BUFF)/src --cpp_out=%(RootDir)%(Directory) %(FullPath)</Command>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compiling %(Filename)%(Extension)</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(RootDir)%(Directory)/%(FileName).pb.h;%(RootDir)%(Directory)/%(FileName).pb.cc;%(Outputs)</Outputs>
-    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Common\floodfill.pb.cc">
@@ -45,17 +37,12 @@
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
       <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\navmesh.pb.cc">
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">TurnOffAllWarnings</WarningLevel>
-      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">TurnOffAllWarnings</WarningLevel>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\ProtoBufUtility.cpp" />
     <ClCompile Include="..\..\..\Common\recast.pb.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Common\floodfill.pb.h" />
     <ClInclude Include="..\..\..\Common\influencemap.pb.h" />
-    <ClInclude Include="..\..\..\Common\navmesh.pb.h" />
     <ClInclude Include="..\..\..\Common\ProtoBufUtility.h" />
     <ClInclude Include="..\..\..\Common\recast.pb.h" />
   </ItemGroup>
@@ -71,7 +58,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\dependencies\protobuf\vsprojects\libprotobuf.vcxproj">
+    <ProjectReference Include="..\..\..\..\..\protobuf\vsprojects\libprotobuf.vcxproj">
       <Project>{3e283f37-a4ed-41b7-a3e6-a2d89d131a30}</Project>
     </ProjectReference>
   </ItemGroup>

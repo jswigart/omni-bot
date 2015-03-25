@@ -13,138 +13,140 @@
 
 namespace InterfaceFuncs
 {
-	int GetPlayerPipeCount(Client *_bot)
+	int GetPlayerPipeCount( Client *_bot )
 	{
 		TF_PlayerPipeCount data = { 0, 0 };
-		MessageHelper msg(TF_MSG_PLAYERPIPECOUNT, &data, sizeof(data));
-		InterfaceMsg(msg, _bot->GetGameEntity());
-		return data.m_NumPipes;
+		MessageHelper msg( TF_MSG_PLAYERPIPECOUNT, &data, sizeof( data ) );
+		InterfaceMsg( msg, _bot->GetGameEntity() );
+		return data.mNumPipes;
 	}
 
-	void Disguise(Client *_bot, obint32 _team, obint32 _class)
+	void Disguise( Client *_bot, int32_t _team, int32_t _class )
 	{
 		TF_Disguise data = { _team, _class };
-		MessageHelper msg(TF_MSG_DISGUISE, &data, sizeof(data));
-		InterfaceMsg(msg, _bot->GetGameEntity());
+		MessageHelper msg( TF_MSG_DISGUISE, &data, sizeof( data ) );
+		InterfaceMsg( msg, _bot->GetGameEntity() );
 	}
 
-	void DisguiseOptions(Client *_bot, TF_DisguiseOptions &_disguiseoptions)
+	void DisguiseOptions( Client *_bot, TF_DisguiseOptions &_disguiseoptions )
 	{
-		MessageHelper msg(TF_MSG_CANDISGUISE, &_disguiseoptions, sizeof(TF_DisguiseOptions));
-		InterfaceMsg(msg, _bot->GetGameEntity());
+		MessageHelper msg( TF_MSG_CANDISGUISE, &_disguiseoptions, sizeof( TF_DisguiseOptions ) );
+		InterfaceMsg( msg, _bot->GetGameEntity() );
 	}
 
-	void GetDisguiseInfo(GameEntity _ent, int &_team, int &_class)
+	void GetDisguiseInfo( GameEntity _ent, int &_team, int &_class )
 	{
-		BitFlag64 entityPowerups;
-		gEngineFuncs->GetEntityPowerups(_ent, entityPowerups);
-		GetDisguiseInfo(entityPowerups, _team, _class);
+		EntityInfo entInfo;
+		if ( IGame::GetEntityInfo( _ent, entInfo ) )
+		{
+			GetDisguiseInfo( entInfo, _team, _class );
+		}
 	}
 
-	void GetDisguiseInfo(const BitFlag64 &_flags, int &_team, int &_class)
+	void GetDisguiseInfo( const EntityInfo & entInfo, int &_team, int &_class )
 	{
 		// Check team.
 		_team = TF_TEAM_NONE;
 		for ( int i = 0; i < TF_TEAM_MAX; ++i )
 		{
-			if(_flags.CheckFlag( TF_Options::DisguiseTeamFlags[ i ] ) )
+			if ( entInfo.mPowerUps.CheckFlag( TF_Options::DisguiseTeamFlags[ i ] ) )
 			{
 				_team = i;
 				break;
 			}
 		}
-
+		
 		// Check class.
-		if(_flags.CheckFlag(TF_PWR_DISGUISE_SCOUT))
+		if ( entInfo.mPowerUps.CheckFlag( TF_PWR_DISGUISE_SCOUT ) )
 			_class = TF_CLASS_SCOUT;
-		else if(_flags.CheckFlag(TF_PWR_DISGUISE_SNIPER))
+		else if ( entInfo.mPowerUps.CheckFlag( TF_PWR_DISGUISE_SNIPER ) )
 			_class = TF_CLASS_SNIPER;
-		else if(_flags.CheckFlag(TF_PWR_DISGUISE_SOLDIER))
+		else if ( entInfo.mPowerUps.CheckFlag( TF_PWR_DISGUISE_SOLDIER ) )
 			_class = TF_CLASS_SOLDIER;
-		else if(_flags.CheckFlag(TF_PWR_DISGUISE_DEMOMAN))
+		else if ( entInfo.mPowerUps.CheckFlag( TF_PWR_DISGUISE_DEMOMAN ) )
 			_class = TF_CLASS_DEMOMAN;
-		else if(_flags.CheckFlag(TF_PWR_DISGUISE_MEDIC))
+		else if ( entInfo.mPowerUps.CheckFlag( TF_PWR_DISGUISE_MEDIC ) )
 			_class = TF_CLASS_MEDIC;
-		else if(_flags.CheckFlag(TF_PWR_DISGUISE_HWGUY))
+		else if ( entInfo.mPowerUps.CheckFlag( TF_PWR_DISGUISE_HWGUY ) )
 			_class = TF_CLASS_HWGUY;
-		else if(_flags.CheckFlag(TF_PWR_DISGUISE_PYRO))
+		else if ( entInfo.mPowerUps.CheckFlag( TF_PWR_DISGUISE_PYRO ) )
 			_class = TF_CLASS_PYRO;
-		else if(_flags.CheckFlag(TF_PWR_DISGUISE_ENGINEER))
+		else if ( entInfo.mPowerUps.CheckFlag( TF_PWR_DISGUISE_ENGINEER ) )
 			_class = TF_CLASS_ENGINEER;
-		else if(_flags.CheckFlag(TF_PWR_DISGUISE_SPY))
+		else if ( entInfo.mPowerUps.CheckFlag( TF_PWR_DISGUISE_SPY ) )
 			_class = TF_CLASS_SPY;
-		else if(_flags.CheckFlag(TF_PWR_DISGUISE_CIVILIAN))
+		else if ( entInfo.mPowerUps.CheckFlag( TF_PWR_DISGUISE_CIVILIAN ) )
 			_class = TF_CLASS_CIVILIAN;
 		else
 			_class = TF_CLASS_NONE;
 	}
 
-	TF_BuildInfo GetBuildInfo(Client *_bot)
+	TF_BuildInfo GetBuildInfo( Client *_bot )
 	{
 		TF_BuildInfo buildInfo = {};
-		MessageHelper msg(TF_MSG_GETBUILDABLES, &buildInfo, sizeof(buildInfo));
-		InterfaceMsg(msg, _bot->GetGameEntity());
+		MessageHelper msg( TF_MSG_GETBUILDABLES, &buildInfo, sizeof( buildInfo ) );
+		InterfaceMsg( msg, _bot->GetGameEntity() );
 		return buildInfo;
 	}
 
-	TF_HealTarget GetHealTargetInfo(Client *_bot)
+	TF_HealTarget GetHealTargetInfo( Client *_bot )
 	{
 		TF_HealTarget buildInfo = {};
-		MessageHelper msg(TF_MSG_GETHEALTARGET, &buildInfo, sizeof(buildInfo));
-		InterfaceMsg(msg, _bot->GetGameEntity());
+		MessageHelper msg( TF_MSG_GETHEALTARGET, &buildInfo, sizeof( buildInfo ) );
+		InterfaceMsg( msg, _bot->GetGameEntity() );
 		return buildInfo;
 	}
 
-	void Cloak(Client *_bot, bool _silent)
+	void Cloak( Client *_bot, bool _silent )
 	{
 		TF_FeignDeath data = { _silent ? True : False };
-		MessageHelper msg(TF_MSG_CLOAK, &data, sizeof(data));
-		InterfaceMsg(msg, _bot->GetGameEntity());
+		MessageHelper msg( TF_MSG_CLOAK, &data, sizeof( data ) );
+		InterfaceMsg( msg, _bot->GetGameEntity() );
 	}
 
-	bool LockPlayerPosition(GameEntity _ent, obBool _lock)
+	bool LockPlayerPosition( GameEntity _ent, obBool _lock )
 	{
 		TF_LockPosition data = { _ent, _lock, False };
-		MessageHelper msg(TF_MSG_LOCKPOSITION, &data, sizeof(data));
-		InterfaceMsg(msg);
-		return data.m_Succeeded != False;
+		MessageHelper msg( TF_MSG_LOCKPOSITION, &data, sizeof( data ) );
+		InterfaceMsg( msg );
+		return data.mSucceeded != False;
 	}
 
-	void ShowHudHint(GameEntity _player, obint32 _id, const char *_msg)
+	void ShowHudHint( GameEntity _player, int32_t _id, const char *_msg )
 	{
 		TF_HudHint data;
-		if(_msg && strlen(_msg) < sizeof(data.m_Message))
+		if ( _msg && strlen( _msg ) < sizeof( data.mMessage ) )
 		{
-			data.m_TargetPlayer = _player;
-			data.m_Id = _id;
-			Utils::StringCopy(data.m_Message, _msg, sizeof(data.m_Message));
-			MessageHelper msg(TF_MSG_HUDHINT, &data, sizeof(data));
-			InterfaceMsg(msg);
+			data.mTargetPlayer = _player;
+			data.mId = _id;
+			Utils::StringCopy( data.mMessage, _msg, sizeof( data.mMessage ) );
+			MessageHelper msg( TF_MSG_HUDHINT, &data, sizeof( data ) );
+			InterfaceMsg( msg );
 		}
 	}
 
-	void ShowHudMenu(TF_HudMenu &_data)
+	void ShowHudMenu( TF_HudMenu &_data )
 	{
-		MessageHelper msg(TF_MSG_HUDMENU, &_data, sizeof(_data));
-		InterfaceMsg(msg);
+		MessageHelper msg( TF_MSG_HUDMENU, &_data, sizeof( _data ) );
+		InterfaceMsg( msg );
 	}
 
-	void ShowHudText(TF_HudText &_data)
+	void ShowHudText( TF_HudText &_data )
 	{
-		MessageHelper msg(TF_MSG_HUDTEXT, &_data, sizeof(_data));
-		InterfaceMsg(msg);
+		MessageHelper msg( TF_MSG_HUDTEXT, &_data, sizeof( _data ) );
+		InterfaceMsg( msg );
 	}
 
-	//TF_TeamPipeInfo	m_TeamPipeInfo[TF_TEAM_MAX] = {0,0,0};
+	//TF_TeamPipeInfo	.mTeamPipeInfo[TF_TEAM_MAX] = {0,0,0};
 	//
 	//const TF_TeamPipeInfo *GetTeamPipeInfo(int _team)
 	//{
 	//	static const TF_TeamPipeInfo s_NullInfo = {0,0,0};
 	//	if(InRangeT<int>(_team, TF_TEAM_NONE, TF_TEAM_MAX-1))
 	//	{
-	//		MessageHelper msg(TF_MSG_TEAMPIPEINFO, &m_TeamPipeInfo[_team], sizeof(m_TeamPipeInfo[_team]));
+	//		MessageHelper msg(TF_MSG_TEAMPIPEINFO, &.mTeamPipeInfo[_team], sizeof(.mTeamPipeInfo[_team]));
 	//		gEngineFuncs->InterfaceSendMessage(msg, NULL);
-	//		return &m_TeamPipeInfo[_team];
+	//		return &.mTeamPipeInfo[_team];
 	//	}
 	//	OBASSERT("Invalid Team!");
 	//	return &s_NullInfo;

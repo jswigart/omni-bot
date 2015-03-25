@@ -36,7 +36,6 @@ public:
 	void SendVoiceMacro(int _macroId) {};
 
 	float GetGameVar(GameVar _var) const;
-	float GetAvoidRadius(int _class) const;
 
 	bool DoesBotHaveFlag(MapGoalPtr _mapgoal);
 
@@ -54,8 +53,8 @@ protected:
 
 	void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
 
-	bool	m_DoubleJumping;
-	float	m_DoubleJumpHeight;
+	bool	mDoubleJumping;
+	float	mDoubleJumpHeight;
 };
 
 #endif

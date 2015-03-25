@@ -32,14 +32,13 @@ public:
 	void ProcessGotoNode(const Path &_path);
 
 	float GetGameVar(GameVar _var) const;
-	float GetAvoidRadius(int _class) const;
 
 	bool DoesBotHaveFlag(MapGoalPtr _mapgoal);
 
 	bool CanBotSnipe();
 	bool GetSniperWeapon(int &nonscoped, int &scoped);
 
-	float GetBreakableTargetDist() const { return m_BreakableTargetDistance; }
+	float GetBreakableTargetDist() const { return mBreakableTargetDistance; }
 	
 	void SetupBehaviorTree();
 
@@ -49,7 +48,7 @@ protected:
 	void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
 	int HandleVoiceMacroEvent(const MessageHelper &_message);
 
-	float		m_BreakableTargetDistance;
+	float	 mBreakableTargetDistance;
 };
 
 #endif

@@ -12,13 +12,13 @@
 //////////////////////////////////////////////////////////////////////////
 
 bbItem::bbItem(int _type)
-	: m_Owner(0)
-	, m_Target(0)
-	, m_ExpireTime(std::numeric_limits<int>::max())
-	, m_DeleteOnExpire(false)
-	, m_DeleteOnRefCount1(false)
-	, m_Type(_type)
-	, m_InBB(false)
+	: mOwner(0)
+	, mTarget(0)
+	, mExpireTime(std::numeric_limits<int>::max())
+	, mDeleteOnExpire(false)
+	, mDeleteOnRefCount1(false)
+	, mType(_type)
+	, mInBB(false)
 {
 }
 
@@ -37,10 +37,10 @@ bool bbItem::FromScriptTable(gmMachine *_machine, gmTableObject *_from)
 
 	if(vOwner.IsInt() && vTarget.IsInt())
 	{
-		m_Owner = vOwner.GetInt();
-		m_Target = vTarget.GetInt();
-		m_ExpireTime = IGame::GetTime() + Utils::SecondsToMilliseconds(fDuration);
-		m_DeleteOnExpire = vDeleteOnExpire.GetInt()!=0;
+		mOwner = vOwner.GetInt();
+		mTarget = vTarget.GetInt();
+		mExpireTime = IGame::GetTime() + Utils::SecondsToMilliseconds(fDuration);
+		mDeleteOnExpire = vDeleteOnExpire.GetInt()!=0;
 		return true;
 	}
 	return false;
@@ -48,10 +48,10 @@ bool bbItem::FromScriptTable(gmMachine *_machine, gmTableObject *_from)
 
 bool bbItem::ToScriptTable(gmMachine *_machine, gmTableObject *&_to)
 {
-	_to->Set(_machine, "Owner", gmVariable(m_Owner));
-	_to->Set(_machine, "Target", gmVariable(m_Target));
-	_to->Set(_machine, "ExpireTime", gmVariable(m_ExpireTime));
-	_to->Set(_machine, "DeleteOnExpire", gmVariable(m_DeleteOnExpire ? 1 : 0));
+	_to->Set(_machine, "Owner", gmVariable(mOwner));
+	_to->Set(_machine, "Target", gmVariable(mTarget));
+	_to->Set(_machine, "ExpireTime", gmVariable(mExpireTime));
+	_to->Set(_machine, "DeleteOnExpire", gmVariable(mDeleteOnExpire ? 1 : 0));
 	return true;
 }
 
@@ -67,12 +67,12 @@ bool bbItem::ToScriptTable(gmMachine *_machine, gmTableObject *&_to)
 
 bool bbScriptItem::FromScriptTable(gmMachine *_machine, gmTableObject *_from)
 {
-	m_DataTable.Set(_from, _machine);
+	mDataTable.Set(_from, _machine);
 	return bbItem::FromScriptTable(_machine, _from);
 }
 
 bool bbScriptItem::ToScriptTable(gmMachine *_machine, gmTableObject *&_to)
 {
-	_to = m_DataTable;
+	_to = mDataTable;
 	return true;
 }

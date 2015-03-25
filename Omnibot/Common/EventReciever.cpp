@@ -18,12 +18,12 @@ EventReciever::~EventReciever()
 {
 }
 
-void EventReciever::SendEvent(const MessageHelper &_message, obuint32 _targetState)
+void EventReciever::SendEvent(const MessageHelper &_message, uint32_t _targetState)
 {
 	ProcessEventImpl(_message,_targetState);
 }
 
-void EventReciever::ProcessEventImpl(const MessageHelper &_message, obuint32 _targetState)
+void EventReciever::ProcessEventImpl(const MessageHelper &_message, uint32_t _targetState)
 {
 	// Subclasses can override this function to perform additional stuff
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();

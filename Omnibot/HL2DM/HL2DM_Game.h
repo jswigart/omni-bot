@@ -34,18 +34,13 @@ public:
 	const char *GetModSubFolder() const;
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const
-	{
-		return "hl2dm";
-	}
+	const char *GetGameDatabaseAbbrev() const;
 
 	virtual bool RendersToGame() const
 	{
 		return true;
 	}
-
-	const char *FindClassName( obint32 _classId );
-
+	
 	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
 	void GetWeaponEnumeration( const IntEnum *&_ptr, int &num );
 
@@ -67,8 +62,8 @@ protected:
 	// Commands
 	void InitCommands();
 
-	static const float HL2DM_GetEntityClassTraceOffset( const int _class, const BitFlag64 &_entflags );
-	static const float HL2DM_GetEntityClassAimOffset( const int _class, const BitFlag64 &_entflags );
+	static const float HL2DM_GetEntityClassTraceOffset( const TargetInfo &_target );
+	static const float HL2DM_GetEntityClassAimOffset( const TargetInfo &_target );
 };
 
 #endif

@@ -36,9 +36,9 @@ namespace EngineFuncs
 			}
 		}
 
-		_tr.m_Endpos[0] = _end.X();
-		_tr.m_Endpos[1] = _end.Y();
-		_tr.m_Endpos[2] = _end.Z();
+		_tr.mEndpos[0] = _end.X();
+		_tr.mEndpos[1] = _end.Y();
+		_tr.mEndpos[2] = _end.Z();
 		return SUCCESS(gEngineFuncs->TraceLine(_tr, _start, _end, _aabb, _mask, _user, _usepvs));
 	}
 	std::string EntityName(const GameEntity _ent, const char *_default)
@@ -171,10 +171,10 @@ namespace EngineFuncs
 				_pos - Vector3f::UNIT_Z * 2048.f,
 				NULL,
 				TR_MASK_FLOODFILL, -1, False);
-			if(tr.m_Fraction < 1.f)
+			if(tr.mFraction < 1.f)
 			{
-				_outPosition = Vector3f(tr.m_Endpos[0],tr.m_Endpos[1],tr.m_Endpos[2]);
-				_outNormal = Vector3f(tr.m_Normal[0],tr.m_Normal[1],tr.m_Normal[2]);
+				_outPosition = Vector3f(tr.mEndpos[0],tr.mEndpos[1],tr.mEndpos[2]);
+				_outNormal = Vector3f(tr.mNormal[0],tr.mNormal[1],tr.mNormal[2]);
 				return true;
 			}
 			return false;

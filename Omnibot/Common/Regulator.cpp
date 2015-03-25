@@ -11,10 +11,10 @@
 
 bool Regulator::IsReady()
 {
-	int iCurrentTime = IGame::GetTime();
-	if(iCurrentTime >= m_NextUpdateTime)
+	const int iCurrentTime = IGame::GetTime();
+	if ( iCurrentTime >= mNextUpdateTime )
 	{
-		m_NextUpdateTime = iCurrentTime + m_UpdateInterval;
+		mNextUpdateTime = iCurrentTime + mUpdateInterval;
 		return true;
 	}
 	return false;

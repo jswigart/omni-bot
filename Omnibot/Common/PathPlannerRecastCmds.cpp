@@ -53,7 +53,7 @@ void PathPlannerRecast::InitCommands()
 
 void PathPlannerRecast::cmdNavSave( const StringVector &_args )
 {
-	if ( !m_PlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
 		return;
 
 	// this should clear the non world models so the tiles that they effect are rebuilt
@@ -62,7 +62,7 @@ void PathPlannerRecast::cmdNavSave( const StringVector &_args )
 
 void PathPlannerRecast::cmdNavLoad( const StringVector &_args )
 {
-	if ( !m_PlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
 		return;
 
 	if ( Load( gEngineFuncs->GetMapName() ) )
@@ -83,7 +83,7 @@ void PathPlannerRecast::cmdNavView( const StringVector &_args )
 
 	CHECK_NUM_PARAMS( _args, 2, strUsage );
 	CHECK_BOOL_PARAM( bEnable, 1, strUsage );
-	m_PlannerFlags.SetFlag( PathPlannerRecast::NAV_VIEW, bEnable != 0 );
+	mPlannerFlags.SetFlag( PathPlannerRecast::NAV_VIEW, bEnable != 0 );
 }
 
 void PathPlannerRecast::cmdNavViewConnections( const StringVector &_args )
@@ -96,12 +96,12 @@ void PathPlannerRecast::cmdNavViewConnections( const StringVector &_args )
 
 	CHECK_NUM_PARAMS( _args, 2, strUsage );
 	CHECK_BOOL_PARAM( bEnable, 1, strUsage );
-	m_PlannerFlags.SetFlag( PathPlannerRecast::NAV_VIEWCONNECTIONS, bEnable != 0 );
+	mPlannerFlags.SetFlag( PathPlannerRecast::NAV_VIEWCONNECTIONS, bEnable != 0 );
 }
 
 void PathPlannerRecast::cmdBuildNav( const StringVector &_args )
 {
-	if ( !m_PlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
 		return;
 
 	BuildNav();
@@ -109,7 +109,7 @@ void PathPlannerRecast::cmdBuildNav( const StringVector &_args )
 
 void PathPlannerRecast::cmdBuildNavTile( const StringVector &_args )
 {
-	if ( !m_PlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
 		return;
 
 	BuildNavTile();
@@ -223,7 +223,7 @@ public:
 
 void PathPlannerRecast::cmdNavAddExclusionZone( const StringVector &_args )
 {
-	if ( !m_PlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
 		return;
 
 	SetCurrentTool<ToolCreateExclusion>();
@@ -231,7 +231,7 @@ void PathPlannerRecast::cmdNavAddExclusionZone( const StringVector &_args )
 
 void PathPlannerRecast::cmdNavAddOffMeshConnection( const StringVector &_args )
 {
-	if ( !m_PlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
 		return;
 	
 	OffMeshConnection conn;
@@ -262,7 +262,7 @@ showUsage:
 	for ( size_t i = 0; i < sNumPolyFlags; ++i )
 		flagsStr += va( "%s%s", flagsStr.empty() ? "" : ", ", sPolyFlags[ i ].mName );
 
-	EngineFuncs::ConsoleError( "nav_addconnection radius[#] type[string] flag(s)[string]..." );
+	EngineFuncs::ConsoleError( "nav_addconnection radius[#] type[string] flag(s)[string].." );
 	EngineFuncs::ConsoleError( va( "	radius - radius of connection" ) );
 	EngineFuncs::ConsoleError( va( "	type - one of (%s)", areasStr.c_str() ) );
 	EngineFuncs::ConsoleError( va( "	flags - combination of (%s)", flagsStr.c_str() ) );
@@ -270,7 +270,7 @@ showUsage:
 
 void PathPlannerRecast::cmdAutoBuildFeatures( const StringVector &_args )
 {
-	if ( !m_PlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
 		return;
 
 	const int iMaxFeatures = 128;
@@ -280,11 +280,11 @@ void PathPlannerRecast::cmdAutoBuildFeatures( const StringVector &_args )
 	{
 		const float fTime = 30.f;
 
-		if ( features[ i ].m_Type == ENT_CLASS_GENERIC_TELEPORTER )
+		if ( features[ i ].mEntityInfo.mGroup == ENT_GRP_TELEPORTER )
 		{
 			OffMeshConnection conn;
-			conn.mEntry = Vector3f( features[ i ].m_Position );
-			conn.mExit = Vector3f( features[ i ].m_TargetPosition );
+			conn.mEntry = Vector3f( features[ i ].mPosition );
+			conn.mExit = Vector3f( features[ i ].mTargetPosition );
 			conn.mAreaType = NAVAREA_TELEPORT;
 			conn.mFlags = NAVFLAGS_NONE;
 			conn.mRadius = 16.0f;
@@ -299,7 +299,7 @@ void PathPlannerRecast::cmdAutoBuildFeatures( const StringVector &_args )
 
 void PathPlannerRecast::cmdCommitPoly( const StringVector &_args )
 {
-	if ( !m_PlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
 		return;
 
 	if ( mCurrentTool )

@@ -11,7 +11,7 @@
 #ifndef __MAPGOALDATABASE_H__
 #define __MAPGOALDATABASE_H__
 
-typedef std::map<obuint32, MapGoalPtr> MapGoalMap;
+typedef std::map<uint32_t, MapGoalPtr> MapGoalMap;
 
 // class: MapGoalDatabase
 class MapGoalDatabase
@@ -31,9 +31,9 @@ public:
 	MapGoalDatabase();
 	~MapGoalDatabase();
 private:
-	MapGoalMap	m_MapGoalMap;
+	MapGoalMap	mMapGoalMap;
 };
 
-extern MapGoalDatabase g_MapGoalDatabase;
+extern MapGoalDatabase gMapGoalDatabase;
 
 #endif

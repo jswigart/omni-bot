@@ -40,19 +40,19 @@ LARGE_INTEGER iCounterFrequency;
 void Init()
 {
 #ifdef WIN32
-	QueryPerformanceFrequency(&iCounterFrequency);
+	QueryPerformanceFrequency( &iCounterFrequency );
 #endif
 	initialized = true;
 }
 
 Timer::Timer()
 {
-	if(!initialized)
+	if ( !initialized )
 		Init();
 
 #ifdef WIN32
 	LARGE_INTEGER li;
-	QueryPerformanceCounter(&li);
+	QueryPerformanceCounter( &li );
 	mLastTimer = li.QuadPart;
 #else
 	mLastTimer = clock();
@@ -63,7 +63,7 @@ void Timer::Reset()
 {
 #ifdef WIN32
 	LARGE_INTEGER li;
-	QueryPerformanceCounter(&li);
+	QueryPerformanceCounter( &li );
 	mLastTimer = li.QuadPart;
 #else
 	mLastTimer = clock();
@@ -82,10 +82,10 @@ double Timer::GetElapsedSeconds()
 	// Get the current count
 	LARGE_INTEGER iCurrent, iLastCount;
 	iLastCount.QuadPart = mLastTimer;
-	QueryPerformanceCounter(&iCurrent);
+	QueryPerformanceCounter( &iCurrent );
 
-	return double((iCurrent.QuadPart - iLastCount.QuadPart) /
-		double(iCounterFrequency.QuadPart));
+	return double( ( iCurrent.QuadPart - iLastCount.QuadPart ) /
+		double( iCounterFrequency.QuadPart ) );
 #else
 	return static_cast<double>(clock() - mLastTimer) / CLOCKS_PER_SEC;
 #endif
@@ -94,31 +94,31 @@ double Timer::GetElapsedSeconds()
 //////////////////////////////////////////////////////////////////////////
 
 GameTimer::GameTimer()
-	: m_TriggerTime(0)
+	: mTriggerTime( 0 )
 {
 }
 
-void GameTimer::Delay(float _seconds)
+void GameTimer::Delay( float _seconds )
 {
-	m_TriggerTime = IGame::GetTime() + Utils::SecondsToMilliseconds(_seconds);
+	mTriggerTime = IGame::GetTime() + Utils::SecondsToMilliseconds( _seconds );
 }
 
-void GameTimer::DelayRandom(float _min, float _max)
+void GameTimer::DelayRandom( float _min, float _max )
 {
-	m_TriggerTime = IGame::GetTime() + Utils::SecondsToMilliseconds(Mathf::IntervalRandom(_min,_max));
+	mTriggerTime = IGame::GetTime() + Utils::SecondsToMilliseconds( Mathf::IntervalRandom( _min, _max ) );
 }
 
-void GameTimer::Delay(int _ms)
+void GameTimer::Delay( int _ms )
 {
-	m_TriggerTime = IGame::GetTime() + _ms;
+	mTriggerTime = IGame::GetTime() + _ms;
 }
 
-void GameTimer::DelayRandom(int _min, int _max)
+void GameTimer::DelayRandom( int _min, int _max )
 {
-	m_TriggerTime = IGame::GetTime() + Mathf::IntervalRandomInt(_min,_max);
+	mTriggerTime = IGame::GetTime() + Mathf::IntervalRandomInt( _min, _max );
 }
 
 bool GameTimer::IsExpired() const
 {
-	return IGame::GetTime() >= m_TriggerTime;
+	return IGame::GetTime() >= mTriggerTime;
 }

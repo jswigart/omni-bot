@@ -16,38 +16,38 @@ Trackable::~Trackable()
 {
 }
 
-void Trackable::AddReference(obuint32 _type)
+void Trackable::AddReference(uint32_t _type)
 {
 	_CheckIndex(_type);
-	++m_TrackList[_type];
+	++mTrackList[_type];
 }
 
-void Trackable::DelReference(obuint32 _type)
+void Trackable::DelReference(uint32_t _type)
 {
 	_CheckIndex(_type);
-	--m_TrackList[_type];
-	OBASSERT(m_TrackList[_type] >= 0, "Counter got below 0!");
+	--mTrackList[_type];
+	OBASSERT(mTrackList[_type] >= 0, "Counter got below 0!");
 }
 
-obuint32 Trackable::GetRefCount(obuint32 _type)
+uint32_t Trackable::GetRefCount(uint32_t _type)
 {
 	_CheckIndex(_type);
-	return m_TrackList[_type];
+	return mTrackList[_type];
 }
 
-void Trackable::_CheckIndex(obuint32 _type)
+void Trackable::_CheckIndex(uint32_t _type)
 {
-	if(_type >= m_TrackList.size())
+	if(_type >= mTrackList.size())
 	{
-		m_TrackList.resize(_type+1, 0);
+		mTrackList.resize(_type+1, 0);
 	}
 }
 
 bool Trackable::IsReferenced()
 {
-	for(obuint32 i = 0; i < m_TrackList.size(); ++i)
+	for(uint32_t i = 0; i < mTrackList.size(); ++i)
 	{
-		if(m_TrackList[i] != 0)
+		if(mTrackList[i] != 0)
 		{
 			return true;
 		}

@@ -61,10 +61,6 @@ void Bot_Event_ClientDisConnected(gentity_t * _player);
 
 void Bot_Event_Spawn(gentity_t * _player);
 
-void Bot_Event_ResetWeapons(gentity_t * _player);
-void Bot_Event_AddWeapon(gentity_t * _player, int _weaponId);
-void Bot_Event_RemoveWeapon(gentity_t * _player, int _weaponId);
-
 void Bot_Event_TakeDamage(gentity_t * _player, gentity_t * _attacker, const char * damagetype, float damage);
 void Bot_Event_Death(gentity_t * _victim, gentity_t * _killer, const char * damagetype);
 void Bot_Event_KilledSomeone(gentity_t * _attacker, gentity_t * _victim, const char *_meansofdeath);

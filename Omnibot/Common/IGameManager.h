@@ -64,7 +64,7 @@ protected:
 	System				mBotSystem;
 
 #ifdef ENABLE_REMOTE_DEBUGGING
-	RemoteLib::ConnectionManagerServer	m_Remote;
+	RemoteLib::ConnectionManagerServer	.mRemote;
 
 	RemoteLib::Connection *			CreateNewConnection( class RemoteLib::TcpSocket & socket );
 #endif

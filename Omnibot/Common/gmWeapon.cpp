@@ -16,8 +16,8 @@
 //GMBIND_PROPERTY_MAP_BEGIN( gmWeapon )
 //	GMBIND_PROPERTY( "Name", getName, setName )
 //
-//	GMBIND_AUTOPROPERTY("WeaponId", GM_INT, m_WeaponID, 0);
-//	GMBIND_AUTOPROPERTY("MinUseTime", GM_FLOAT, m_MinUseTime, 0);
+//	GMBIND_AUTOPROPERTY("WeaponId", GM_INT, .mWeaponID, 0);
+//	GMBIND_AUTOPROPERTY("MinUseTime", GM_FLOAT, .mMinUseTime, 0);
 //
 //	GMBIND_PROPERTY( "PrimaryFire", getPrimaryFire, NULL )
 //	GMBIND_PROPERTY( "SecondaryFire", getSecondaryFire, NULL )
@@ -49,14 +49,14 @@
 //
 //bool gmWeapon::getPrimaryFire( Weapon *a_native, gmThread *a_thread, gmVariable *a_operands )
 //{
-//	gmUserObject *pObj = a_native->m_FireModes[Primary].GetScriptObject(a_thread->GetMachine());
+//	gmUserObject *pObj = a_native->mFireModes[Primary].GetScriptObject(a_thread->GetMachine());
 //	a_operands[0].SetUser(pObj);
 //	return true;
 //}
 //
 //bool gmWeapon::getSecondaryFire( Weapon *a_native, gmThread *a_thread, gmVariable *a_operands )
 //{
-//	gmUserObject *pObj = a_native->m_FireModes[Secondary].GetScriptObject(a_thread->GetMachine());
+//	gmUserObject *pObj = a_native->mFireModes[Secondary].GetScriptObject(a_thread->GetMachine());
 //	a_operands[0].SetUser(pObj);
 //	return true;
 //}
@@ -106,26 +106,26 @@
 //	GMBIND_PROPERTY("PitchOffset", getPitchOffset, setPitchOffset)
 //	//GMBIND_PROPERTY("MaxLeadError", getMaxLeadError, setMaxLeadError)
 //
-//	GMBIND_AUTOPROPERTY("ShootButton", GM_INT, m_ShootButton, 0);
-//	GMBIND_AUTOPROPERTY("ZoomButton", GM_INT, m_ZoomButton, 0);
+//	GMBIND_AUTOPROPERTY("ShootButton", GM_INT, .mShootButton, 0);
+//	GMBIND_AUTOPROPERTY("ZoomButton", GM_INT, .mZoomButton, 0);
 //
-//	GMBIND_AUTOPROPERTY("LowAmmoThreshold", GM_INT, m_LowAmmoThreshold, 0);
-//	GMBIND_AUTOPROPERTY("LowAmmoPriority", GM_FLOAT, m_LowAmmoPriority, 0);
-//	GMBIND_AUTOPROPERTY("LowAmmoGetAmmoAmount", GM_INT, m_LowAmmoGetAmmoAmount, 0);
+//	GMBIND_AUTOPROPERTY("LowAmmoThreshold", GM_INT, .mLowAmmoThreshold, 0);
+//	GMBIND_AUTOPROPERTY("LowAmmoPriority", GM_FLOAT, .mLowAmmoPriority, 0);
+//	GMBIND_AUTOPROPERTY("LowAmmoGetAmmoAmount", GM_INT, .mLowAmmoGetAmmoAmount, 0);
 //
-//	GMBIND_AUTOPROPERTY("FuseTime", GM_FLOAT, m_FuseTime, 0);
-//	GMBIND_AUTOPROPERTY("ProjectileSpeed", GM_FLOAT, m_ProjectileSpeed, 0);
-//	GMBIND_AUTOPROPERTY("MinRange", GM_FLOAT, m_MinRange, 0);
-//	GMBIND_AUTOPROPERTY("MaxRange", GM_FLOAT, m_MaxRange, 0);
-//	GMBIND_AUTOPROPERTY("MinChargeTime", GM_FLOAT, m_MinChargeTime, 0);
-//	GMBIND_AUTOPROPERTY("MaxChargeTime", GM_FLOAT, m_MaxChargeTime, 0);
-//	GMBIND_AUTOPROPERTY("DelayAfterFiring", GM_FLOAT, m_DelayAfterFiring, 0);
-//	GMBIND_AUTOPROPERTY("ProjectileGravity", GM_FLOAT, m_ProjectileGravity, 0); // gravity multiplier?
-//	GMBIND_AUTOPROPERTY("DefaultDesirability", GM_FLOAT, m_DefaultDesirability, 0);
-//	GMBIND_AUTOPROPERTY("Bias", GM_FLOAT, m_WeaponBias, 0);
+//	GMBIND_AUTOPROPERTY("FuseTime", GM_FLOAT, .mFuseTime, 0);
+//	GMBIND_AUTOPROPERTY("ProjectileSpeed", GM_FLOAT, .mProjectileSpeed, 0);
+//	GMBIND_AUTOPROPERTY("MinRange", GM_FLOAT, .mMinRange, 0);
+//	GMBIND_AUTOPROPERTY("MaxRange", GM_FLOAT, .mMaxRange, 0);
+//	GMBIND_AUTOPROPERTY("MinChargeTime", GM_FLOAT, .mMinChargeTime, 0);
+//	GMBIND_AUTOPROPERTY("MaxChargeTime", GM_FLOAT, .mMaxChargeTime, 0);
+//	GMBIND_AUTOPROPERTY("DelayAfterFiring", GM_FLOAT, .mDelayAfterFiring, 0);
+//	GMBIND_AUTOPROPERTY("ProjectileGravity", GM_FLOAT, .mProjectileGravity, 0); // gravity multiplier?
+//	GMBIND_AUTOPROPERTY("DefaultDesirability", GM_FLOAT, .mDefaultDesirability, 0);
+//	GMBIND_AUTOPROPERTY("Bias", GM_FLOAT, .mWeaponBias, 0);
 //
-//	GMBIND_AUTOPROPERTY("MinAimAdjustmentTime", GM_FLOAT, m_MinAimAdjustmentSecs, 0);
-//	GMBIND_AUTOPROPERTY("MaxAimAdjustmentTime", GM_FLOAT, m_MaxAimAdjustmentSecs, 0);
+//	GMBIND_AUTOPROPERTY("MinAimAdjustmentTime", GM_FLOAT, .mMinAimAdjustmentSecs, 0);
+//	GMBIND_AUTOPROPERTY("MaxAimAdjustmentTime", GM_FLOAT, .mMaxAimAdjustmentSecs, 0);
 //
 //	// Functions
 //	GMBIND_PROPERTY( "CalculateDefaultDesirability", NULL, setCalculateDefaultDesirability )
@@ -146,13 +146,13 @@
 //	if(pObj && pObj->GetString())
 //	{
 //		if(!_gmstricmp(pObj->GetString(), "melee"))
-//			a_native->m_WeaponType = Weapon::Melee;
+//			a_native->mWeaponType = Weapon::Melee;
 //		else if(!_gmstricmp(pObj->GetString(), "instant"))
-//			a_native->m_WeaponType = Weapon::InstantHit;
+//			a_native->mWeaponType = Weapon::InstantHit;
 //		else if(!_gmstricmp(pObj->GetString(), "projectile"))
-//			a_native->m_WeaponType = Weapon::Projectile;
+//			a_native->mWeaponType = Weapon::Projectile;
 //		else if(!_gmstricmp(pObj->GetString(), "grenade"))
-//			a_native->m_WeaponType = Weapon::Grenade;
+//			a_native->mWeaponType = Weapon::Grenade;
 //		else
 //			Utils::OutputDebug(kError, "Invalid Weapon Type specified: %s", pObj->GetString());
 //	}
@@ -161,7 +161,7 @@
 //
 //bool gmFireMode::getWeaponType( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands )
 //{
-//	switch(a_native->m_WeaponType)
+//	switch(a_native->mWeaponType)
 //	 {
 //	 case Weapon::Melee:
 //		 a_operands[0].SetString(a_thread->GetMachine()->AllocStringObject("melee"));
@@ -187,11 +187,11 @@
 ////	if(pObj && pObj->GetString())
 ////	{
 ////		if(!_gmstricmp(pObj->GetString(), "run"))
-////			a_native->m_MaxEquipMoveMode = Weapon::Run;
+////			a_native->mMaxEquipMoveMode = Weapon::Run;
 ////		else if(!_gmstricmp(pObj->GetString(), "walk"))
-////			a_native->m_MaxEquipMoveMode = Weapon::Walk;
+////			a_native->mMaxEquipMoveMode = Weapon::Walk;
 ////		else if(!_gmstricmp(pObj->GetString(), "still"))
-////			a_native->m_MaxEquipMoveMode = Weapon::Still;
+////			a_native->mMaxEquipMoveMode = Weapon::Still;
 ////		else
 ////			Utils::OutputDebug(kError, "Invalid Move Mode specified: %s", pObj->GetString());
 ////	}
@@ -200,7 +200,7 @@
 ////
 ////bool gmFireMode::getMaxEquipMoveMode( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands )
 ////{
-////	switch(a_native->m_MaxEquipMoveMode)
+////	switch(a_native->mMaxEquipMoveMode)
 ////	{
 ////	case Weapon::Run:
 ////		a_operands[0].SetString(a_thread->GetMachine()->AllocStringObject("run"));
@@ -475,16 +475,16 @@
 //{
 //	if(a_operands[1].m_type == GM_VEC3)
 //	{
-//		a_native->m_AimErrorMax = Vector2f(
-//			a_operands[1].m_value.m_vec3.X(),
-//			a_operands[1].m_value.m_vec3.Y());
+//		a_native->mAimErrorMax = Vector2f(
+//			a_operands[1].mvalue.mvec3.X(),
+//			a_operands[1].mvalue.mvec3.Y());
 //	}
 //	return true;
 //}
 //
 //bool gmFireMode::getMaxAimError( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands )
 //{
-//	a_operands[0].SetVector(a_native->m_AimErrorMax.X(), a_native->m_AimErrorMax.Y(), 0);
+//	a_operands[0].SetVector(a_native->mAimErrorMax.X(), a_native->mAimErrorMax.Y(), 0);
 //	return true;
 //}
 //
@@ -492,17 +492,17 @@
 //{
 //	if(a_operands[1].m_type == GM_VEC3)
 //	{
-//		a_native->m_AimOffset = Vector3f(
-//			a_operands[1].m_value.m_vec3.X(),
-//			a_operands[1].m_value.m_vec3.Y(),
-//			a_operands[1].m_value.m_vec3.Z());
+//		a_native->mAimOffset = Vector3f(
+//			a_operands[1].mvalue.mvec3.X(),
+//			a_operands[1].mvalue.mvec3.Y(),
+//			a_operands[1].mvalue.mvec3.Z());
 //	}
 //	return true;
 //}
 //
 //bool gmFireMode::getAimOffset( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands )
 //{
-//	a_operands[0].SetVector(a_native->m_AimOffset.X(), a_native->m_AimOffset.Y(), a_native->m_AimOffset.Z());
+//	a_operands[0].SetVector(a_native->mAimOffset.X(), a_native->mAimOffset.Y(), a_native->mAimOffset.Z());
 //	return true;
 //}
 //
@@ -510,13 +510,13 @@
 //{
 //	float fPitchOffset = 0.f;
 //	if(a_operands[1].GetFloatSafe(fPitchOffset))
-//		a_native->m_PitchOffset = Mathf::DegToRad(fPitchOffset);
+//		a_native->mPitchOffset = Mathf::DegToRad(fPitchOffset);
 //	return true;
 //}
 //
 //bool gmFireMode::getPitchOffset( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands )
 //{
-//	a_operands[0].SetFloat(a_native->m_PitchOffset);
+//	a_operands[0].SetFloat(a_native->mPitchOffset);
 //	return true;
 //}
 //
@@ -524,14 +524,14 @@
 //bool gmFireMode::setCalculateDefaultDesirability( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands )
 //{
 //	if(a_operands[1].m_type == GM_FUNCTION)
-//		a_native->m_scrCalcDefDesir.Set(a_operands[1].GetFunctionObjectSafe(), a_thread->GetMachine());
+//		a_native->mscrCalcDefDesir.Set(a_operands[1].GetFunctionObjectSafe(), a_thread->GetMachine());
 //	return true;
 //}
 //
 //bool gmFireMode::setCalculateDesirability( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands )
 //{
 //	if(a_operands[1].m_type == GM_FUNCTION)
-//		a_native->m_scrCalcDesir.Set(
+//		a_native->mscrCalcDesir.Set(
 //		a_operands[1].GetFunctionObjectSafe(), a_thread->GetMachine());
 //	return true;
 //}
@@ -539,7 +539,7 @@
 //bool gmFireMode::setCalculateAimPoint( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands )
 //{
 //	if(a_operands[1].m_type == GM_FUNCTION)
-//		a_native->m_scrCalcAimPoint.Set(
+//		a_native->mscrCalcAimPoint.Set(
 //		a_operands[1].GetFunctionObjectSafe(), a_thread->GetMachine());
 //	return true;
 //}
@@ -547,7 +547,7 @@
 //bool gmFireMode::setPreShoot( Weapon::WeaponFireMode *a_native, gmThread *a_thread, gmVariable *a_operands )
 //{
 //	if(a_operands[1].m_type == GM_FUNCTION)
-//		a_native->m_scrPreShoot.Set(
+//		a_native->mscrPreShoot.Set(
 //		a_operands[1].GetFunctionObjectSafe(), a_thread->GetMachine());
 //	return true;
 //}
@@ -611,7 +611,7 @@
 //}
 //
 //// function: SetTargetBias
-////		Sets a bias multiplier for this weapon towards certain target types..
+////		Sets a bias multiplier for this weapon towards certain target types.
 ////
 //// Parameters:
 ////

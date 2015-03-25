@@ -115,7 +115,6 @@ int G_FindConfigstringByIndex( int index, int start, int max, char * nameOut, in
 	return 0;
 }
 
-
 int G_ModelIndex( char *name ) {
 	return G_FindConfigstringIndex (name, CS_MODELS, MAX_MODELS, qtrue);
 }

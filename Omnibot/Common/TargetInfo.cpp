@@ -10,31 +10,29 @@
 #include "ScriptManager.h"
 #include "gmTargetInfo.h"
 
-TargetInfo::TargetInfo() :
-	m_DistanceTo		(0),
-	m_EntityClass		(0),
-	m_CurrentWeapon		(0),
-	m_EntityCategory	(0),
-	m_LastPosition		(Vector3f::ZERO),
-	m_LastVelocity		(Vector3f::ZERO),
-	m_LastFacing		(Vector3f::ZERO)
+TargetInfo::TargetInfo() 
+	: mDistanceTo( 0 )
+	, mCurrentWeapon( 0 )
+	, mLastPosition( Vector3f::ZERO )
+	, mLastVelocity( Vector3f::ZERO )
+	, mLastFacing( Vector3f::ZERO )
 {
 }
 
 TargetInfo::~TargetInfo()
 {
-	if(m_ScriptObject)
+	if ( mScriptObject )
 	{
-		gmTargetInfo::NullifyObject(m_ScriptObject);
-		m_ScriptObject = 0; //NULL;
+		gmTargetInfo::NullifyObject( mScriptObject );
+		mScriptObject = 0; //NULL;
 	}
 }
 
-gmUserObject *TargetInfo::GetScriptObject(gmMachine *_machine) const
+gmUserObject *TargetInfo::GetScriptObject( gmMachine *_machine ) const
 {
-	if(!m_ScriptObject)
+	if ( !mScriptObject )
 	{
-		m_ScriptObject.Set(gmTargetInfo::WrapObject(_machine, const_cast<TargetInfo*>(this)), _machine);
+		mScriptObject.Set( gmTargetInfo::WrapObject( _machine, const_cast<TargetInfo*>( this ) ), _machine );
 	}
-	return m_ScriptObject;
+	return mScriptObject;
 }

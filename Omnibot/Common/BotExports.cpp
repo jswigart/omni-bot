@@ -31,35 +31,13 @@ BOOL APIENTRY DllMain( HANDLE hModule, DWORD ul_reason_for_call, LPVOID )
 }
 #endif
 
-OMNIBOT_API omnibot_error ExportBotFunctionsFromDLL(Bot_EngineFuncs *_pBotFuncs, int _size)
+OMNIBOT_API OmnibotFunctionInterface* CreateBotInterface( OmnibotFunctionInterface::Version interfaceVersion )
 {
-	if(sizeof(Bot_EngineFuncs) == _size)
+	if ( interfaceVersion == OmnibotFunctionInterface::VERSION_LATEST )
 	{
-		_pBotFuncs->pfnInitialize			= BotInitialise;
-		_pBotFuncs->pfnUpdate				= BotUpdate;
-		_pBotFuncs->pfnShutdown				= BotShutdown;
-		_pBotFuncs->pfnConsoleCommand		= BotConsoleCommand;
-		_pBotFuncs->pfnAddGoal				= BotAddGoal;
-		_pBotFuncs->pfnSendTrigger			= BotSendTrigger;
-		_pBotFuncs->pfnAddBlackboardRecord	= BotAddBBRecord;
-
-		// New message functions.
-		_pBotFuncs->pfnSendEvent			= BotSendEvent;
-		_pBotFuncs->pfnSendGlobalEvent		= BotSendGlobalEvent;
-
-		/*_pBotFuncs->pfnSubscribeToMsg		= Message_SubscribeToMsg;
-		_pBotFuncs->pfnUnsubscribe			= Message_Unsubscribe;
-		_pBotFuncs->pfnBeginMessage			= Message_BeginMessage;
-		_pBotFuncs->pfnBeginMessageEx		= Message_BeginMessageEx;
-		_pBotFuncs->pfnEndMessage			= Message_EndMessage;
-		_pBotFuncs->pfnEndMessageEx			= Message_EndMessageEx;*/
-
-		_pBotFuncs->pfnUpdateEntity			= BotUpdateEntity;
-		_pBotFuncs->pfnDeleteGoal			= BotDeleteMapGoal;
-		
-		return BOT_ERROR_NONE;
+		return new OmnibotFunctions();
 	}
-	return BOT_ERROR_BAD_INTERFACE;
+	return NULL;
 }
 
 OMNIBOT_API void RenderOpenGL()

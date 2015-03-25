@@ -18,29 +18,29 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-Prof_Define(ScriptGoal);
+Prof_Define( ScriptGoal );
 
 namespace AiState
 {
 	MoveOptions::MoveOptions()
-		: Radius(32.f)
-		, ThreadId(GM_INVALID_THREAD)
-		, Mode(Run)
-		, NumAvoid(0)
+		: Radius( 32.f )
+		, ThreadId( GM_INVALID_THREAD )
+		, Mode( Run )
+		, NumAvoid( 0 )
 	{
 	}
 
-	void MoveOptions::FromTable(gmMachine *a_machine, gmTableObject *a_table)
+	void MoveOptions::FromTable( gmMachine *a_machine, gmTableObject *a_table )
 	{
-		Mode = a_table->Get(a_machine,"MoveMode").GetIntSafe(Run)==Walk?Walk:Run;
-		a_table->Get(a_machine,"Radius").GetFloat(Radius,Radius);
+		Mode = a_table->Get( a_machine, "MoveMode" ).GetIntSafe( Run ) == Walk ? Walk : Run;
+		a_table->Get( a_machine, "Radius" ).GetFloat( Radius, Radius );
 
-		gmTableObject *avoidTable = a_table->Get(a_machine,"Avoid").GetTableObjectSafe();
-		if(avoidTable)
+		gmTableObject *avoidTable = a_table->Get( a_machine, "Avoid" ).GetTableObjectSafe();
+		if ( avoidTable )
 		{
 			gmTableIterator tIt;
-			gmTableNode *pNode = avoidTable->GetFirst(tIt);
-			while(pNode)
+			gmTableNode *pNode = avoidTable->GetFirst( tIt );
+			while ( pNode )
 			{
 				/*const char *valueString = pNode->m_value.GetCStringSafe();
 				valueString;
@@ -51,130 +51,130 @@ namespace AiState
 				{
 				}*/
 
-				pNode = avoidTable->GetNext(tIt);
+				pNode = avoidTable->GetNext( tIt );
 			}
 		}
 	}
 
-	ScriptGoal::ScriptGoal(const char *_name)
-		: StateChild(_name)
-		, FollowPathUser(_name)
-		, m_AimVector(Vector3f::ZERO)
-		, m_AimWeaponId(0)
-		, m_ScriptAimType(Aimer::MoveDirection)
-		, m_ScriptPriority(0.0f)
-		, m_MinRadius(0.f)
-		, m_ParentNameHash(0)
-		, m_InsertBeforeHash(0)
-		, m_InsertAfterHash(0)
-		, m_NextGetPriorityUpdate(0)
-		, m_NextGetPriorityDelay(0)
-		, m_Finished(false)
-		, m_AimSignalled(false)
-		, m_AutoReleaseAim(true)
-		, m_AutoReleaseWpn(true)
-		, m_AutoReleaseTracker(true)
-		, m_AutoFinishOnUnavailable(true)
-		, m_AutoFinishOnNoProgressSlots(true)
-		, m_AutoFinishOnNoUseSlots(true)
-		, m_SkipGetPriorityWhenActive(false)
-		, m_SkipLastWp(false)
+	ScriptGoal::ScriptGoal( const char *_name )
+		: StateChild( _name )
+		, FollowPathUser( _name )
+		, mAimVector( Vector3f::ZERO )
+		, mAimWeaponId( 0 )
+		, mScriptAimType( Aimer::MoveDirection )
+		, mScriptPriority( 0.0f )
+		, mMinRadius( 0.f )
+		, mParentNameHash( 0 )
+		, mInsertBeforeHash( 0 )
+		, mInsertAfterHash( 0 )
+		, mNextGetPriorityUpdate( 0 )
+		, mNextGetPriorityDelay( 0 )
+		, mFinished( false )
+		, mAimSignalled( false )
+		, mAutoReleaseAim( true )
+		, mAutoReleaseWpn( true )
+		, mAutoReleaseTracker( true )
+		, mAutoFinishOnUnavailable( true )
+		, mAutoFinishOnNoProgressSlots( true )
+		, mAutoFinishOnNoUseSlots( true )
+		, mSkipGetPriorityWhenActive( false )
+		, mSkipLastWp( false )
 #ifdef Prof_ENABLED
-		, m_ProfZone(0)
+		, mProfZone(0)
 #endif
 	{
-		SetScriptGoal(true);
+		SetScriptGoal( true );
 	}
 
-	void ScriptGoal::SetProfilerZone(const std::string &_name)
+	void ScriptGoal::SetProfilerZone( const std::string &_name )
 	{
 #ifdef Prof_ENABLED
-		m_ProfZone = gDynamicZones.FindZone(_name.c_str());
-		OBASSERT(m_ProfZone,"No Profiler Zone Available!");
+		mProfZone = gDynamicZones.FindZone(_name.c_str());
+		OBASSERT(.mProfZone,"No Profiler Zone Available!");
 #endif
 	}
 
 	ScriptGoal::~ScriptGoal()
 	{
-		if(m_ScriptObject)
+		if ( mScriptObject )
 		{
-			gmScriptGoal::NullifyObject(m_ScriptObject);
-			m_ScriptObject = 0; //NULL;
+			gmScriptGoal::NullifyObject( mScriptObject );
+			mScriptObject = 0; //NULL;
 		}
 	}
 
-	void ScriptGoal::GetDebugString(std::stringstream &out)
+	void ScriptGoal::GetDebugString( std::stringstream &out )
 	{
-		if(m_DebugString)
-			out << m_DebugString->GetString();
-		else if(m_MapGoal)
-			out << m_MapGoal->GetName();
+		if ( mDebugString )
+			out << mDebugString->GetString();
+		else if ( mMapGoal )
+			out << mMapGoal->GetName();
 	}
 
 	void ScriptGoal::RenderDebug()
 	{
 		/*if(IsActive())
 		{
-		RenderBuffer::AddLine(GetClient()->GetEyePosition(),m_MapGoal->GetPosition(),COLOR::CYAN,5.f);
+		RenderBuffer::AddLine(GetClient()->GetEyePosition(),.mMapGoal->GetPosition(),COLOR::CYAN,5.f);
 		}*/
 	}
 
 	ScriptGoal *ScriptGoal::Clone()
 	{
-		ScriptGoal *pNewGoal = new ScriptGoal(GetName().c_str());
+		ScriptGoal *pNewGoal = new ScriptGoal( GetName().c_str() );
 		*pNewGoal = *this;
-		pNewGoal->m_ScriptObject = 0; //NULL; // dont want to copy this
+		pNewGoal->mScriptObject = 0; //NULL; // dont want to copy this
 
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-		gmTableObject *pTheirTable = gmScriptGoal::GetUserTable(GetScriptObject(pMachine));
+		gmTableObject *pTheirTable = gmScriptGoal::GetUserTable( GetScriptObject( pMachine ) );
 		gmScriptGoal::gmBindUserObject *pObj =
-			gmScriptGoal::GetUserBoundObject(pMachine, pNewGoal->GetScriptObject(pMachine));
-		pObj->m_table = pTheirTable->Duplicate(pMachine);
+			gmScriptGoal::GetUserBoundObject( pMachine, pNewGoal->GetScriptObject( pMachine ) );
+		pObj->m_table = pTheirTable->Duplicate( pMachine );
 
 		return pNewGoal;
 	}
 
-	void ScriptGoal::SetParentName(const char *_str)
+	void ScriptGoal::SetParentName( const char *_str )
 	{
-		m_ParentNameHash = Utils::MakeHash32(_str);
+		mParentNameHash = Utils::MakeHash32( _str );
 	}
 
 	std::string ScriptGoal::GetParentName() const
 	{
-		return Utils::HashToString(GetParentNameHash());
+		return Utils::HashToString( GetParentNameHash() );
 	}
 
-	void ScriptGoal::SetInsertBeforeName(const char *_str)
+	void ScriptGoal::SetInsertBeforeName( const char *_str )
 	{
-		m_InsertBeforeHash = Utils::MakeHash32(_str);
+		mInsertBeforeHash = Utils::MakeHash32( _str );
 	}
 
 	std::string ScriptGoal::GetInsertBeforeName() const
 	{
-		return Utils::HashToString(GetInsertBeforeHash());
+		return Utils::HashToString( GetInsertBeforeHash() );
 	}
 
-	void ScriptGoal::SetInsertAfterName(const char *_str)
+	void ScriptGoal::SetInsertAfterName( const char *_str )
 	{
-		m_InsertAfterHash = Utils::MakeHash32(_str);
+		mInsertAfterHash = Utils::MakeHash32( _str );
 	}
 
 	std::string ScriptGoal::GetInsertAfterName() const
 	{
-		return Utils::HashToString(GetInsertAfterHash());
+		return Utils::HashToString( GetInsertAfterHash() );
 	}
 
-	gmUserObject *ScriptGoal::GetScriptObject(gmMachine *_machine)
+	gmUserObject *ScriptGoal::GetScriptObject( gmMachine *_machine )
 	{
-		DisableGCInScope gcEn(_machine);
+		DisableGCInScope gcEn( _machine );
 
-		if(!m_EventTable)
-			m_EventTable.Set(_machine->AllocTableObject(), _machine);
-		if(!m_CommandTable)
-			m_CommandTable.Set(_machine->AllocTableObject(), _machine);
-		if(!m_ScriptObject)
-			m_ScriptObject.Set(gmScriptGoal::WrapObject(_machine, this), _machine);
-		return m_ScriptObject;
+		if ( !mEventTable )
+			mEventTable.Set( _machine->AllocTableObject(), _machine );
+		if ( !mCommandTable )
+			mCommandTable.Set( _machine->AllocTableObject(), _machine );
+		if ( !mScriptObject )
+			mScriptObject.Set( gmScriptGoal::WrapObject( _machine, this ), _machine );
+		return mScriptObject;
 	}
 
 	void ScriptGoal::InternalExit()
@@ -185,95 +185,95 @@ namespace AiState
 		KillAllGoalThreads();
 	}
 
-	void ScriptGoal::InternalSignal(const gmVariable &_signal)
+	void ScriptGoal::InternalSignal( const gmVariable &_signal )
 	{
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-		for(int i = 0; i < NUM_CALLBACKS; ++i)
+		for ( int i = 0; i < NUM_CALLBACKS; ++i )
 		{
-			if(m_ActiveThread[i])
+			if ( mActiveThread[ i ] )
 			{
-				pMachine->Signal(_signal, m_ActiveThread[i], GM_INVALID_THREAD);
+				pMachine->Signal( _signal, mActiveThread[ i ], GM_INVALID_THREAD );
 			}
 		}
-		for(int i = 0; i < m_NumThreads; ++i)
+		for ( int i = 0; i < mNumThreads; ++i )
 		{
-			if(m_ThreadList[i] != GM_INVALID_THREAD)
+			if ( mThreadList[ i ] != GM_INVALID_THREAD )
 			{
-				pMachine->Signal(_signal, m_ThreadList[i], GM_INVALID_THREAD);
+				pMachine->Signal( _signal, mThreadList[ i ], GM_INVALID_THREAD );
 			}
 		}
 	}
 
 	void ScriptGoal::KillAllGoalThreads()
 	{
-		for(int i = 0; i < NUM_CALLBACKS; ++i)
-			m_ActiveThread[i].Kill();
+		for ( int i = 0; i < NUM_CALLBACKS; ++i )
+			mActiveThread[ i ].Kill();
 
 		gmMachine * pM = ScriptManager::GetInstance()->GetMachine();
-		for(int i = 0; i < m_NumThreads; ++i)
+		for ( int i = 0; i < mNumThreads; ++i )
 		{
-			if(m_ThreadList[i] != GM_INVALID_THREAD)
+			if ( mThreadList[ i ] != GM_INVALID_THREAD )
 			{
-				pM->KillThread(m_ThreadList[i]);
-				m_ThreadList[i] = GM_INVALID_THREAD;
+				pM->KillThread( mThreadList[ i ] );
+				mThreadList[ i ] = GM_INVALID_THREAD;
 			}
 		}
-		m_NumThreads = 0;
+		mNumThreads = 0;
 	}
 
-	bool ScriptGoal::Goto(const Vector3f &_pos, const MoveOptions &options)
+	bool ScriptGoal::Goto( const Vector3f &_pos, const MoveOptions &options )
 	{
-		m_SkipLastWp = false;
-		m_MinRadius = options.Radius;
+		mSkipLastWp = false;
+		mMinRadius = options.Radius;
 
-		SetSourceThread(options.ThreadId);
-		FINDSTATE(fp, FollowPath, GetRootState());
-		if(fp)
-			return fp->Goto(this, _pos, options.Radius, options.Mode);
+		SetSourceThread( options.ThreadId );
+		FINDSTATE( fp, FollowPath, GetRootState() );
+		if ( fp )
+			return fp->Goto( this, _pos, options.Radius, options.Mode );
 		return false;
 	}
 
-	bool ScriptGoal::GotoRandom(const MoveOptions &options)
+	bool ScriptGoal::GotoRandom( const MoveOptions &options )
 	{
-		m_SkipLastWp = false;
-		m_MinRadius = options.Radius;
+		mSkipLastWp = false;
+		mMinRadius = options.Radius;
 
-		SetSourceThread(options.ThreadId);
-		FINDSTATE(fp, FollowPath, GetRootState());
-		if(fp)
+		SetSourceThread( options.ThreadId );
+		FINDSTATE( fp, FollowPath, GetRootState() );
+		if ( fp )
 		{
 			Vector3f vDestination;
 			if ( System::mInstance->mNavigation->GetRandomDestination( vDestination, GetClient() ) )
-				return fp->Goto(this, vDestination, options.Radius, options.Mode);
+				return fp->Goto( this, vDestination, options.Radius, options.Mode );
 		}
 		return false;
 	}
 
 	void ScriptGoal::Stop()
 	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop());
+		FINDSTATEIF( FollowPath, GetRootState(), Stop() );
 	}
 
-	bool ScriptGoal::RouteTo(MapGoalPtr mg, const MoveOptions &options)
+	bool ScriptGoal::RouteTo( MapGoalPtr mg, const MoveOptions &options )
 	{
-		if(mg)
+		if ( mg )
 		{
-			m_MapGoalRoute = mg;
-			m_MinRadius = options.Radius;
+			mMapGoalRoute = mg;
+			mMinRadius = options.Radius;
 
-			SetSourceThread(options.ThreadId);
-			FINDSTATE(fp, FollowPath, GetRootState());
-			if(fp)
-				return fp->Goto(this, options.Mode, m_SkipLastWp);
+			SetSourceThread( options.ThreadId );
+			FINDSTATE( fp, FollowPath, GetRootState() );
+			if ( fp )
+				return fp->Goto( this, options.Mode, mSkipLastWp );
 		}
 		return false;
 	}
 
 	// FollowPathUser functions.
-	bool ScriptGoal::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	bool ScriptGoal::GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
 	{
-		_skiplastpt = m_SkipLastWp;
-		if(m_MapGoalRoute && m_MapGoalRoute->RouteTo(GetClient(), _desination, m_MinRadius))
+		_skiplastpt = mSkipLastWp;
+		if ( mMapGoalRoute && mMapGoalRoute->RouteTo( GetClient(), _desination, mMinRadius ) )
 		{
 			_final = false;
 		}
@@ -287,59 +287,59 @@ namespace AiState
 	void ScriptGoal::OnPathSucceeded()
 	{
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-		if(GetSourceThread() == GM_INVALID_THREAD)
+		if ( GetSourceThread() == GM_INVALID_THREAD )
 		{
-			if(m_ActiveThread[ON_UPDATE].IsActive())
-				pMachine->Signal(gmVariable(PATH_SUCCESS), m_ActiveThread[ON_UPDATE].ThreadId(), GM_INVALID_THREAD);
+			if ( mActiveThread[ ON_UPDATE ].IsActive() )
+				pMachine->Signal( gmVariable( PATH_SUCCESS ), mActiveThread[ ON_UPDATE ].ThreadId(), GM_INVALID_THREAD );
 			// TODO: send it to forked threads also?
 		}
 		else
 		{
-			pMachine->Signal(gmVariable(PATH_SUCCESS), GetSourceThread(), GM_INVALID_THREAD);
+			pMachine->Signal( gmVariable( PATH_SUCCESS ), GetSourceThread(), GM_INVALID_THREAD );
 		}
 	}
 
-	void ScriptGoal::OnPathFailed(FollowPathUser::FailType _how)
+	void ScriptGoal::OnPathFailed( FollowPathUser::FailType _how )
 	{
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-		if(GetSourceThread() == GM_INVALID_THREAD)
+		if ( GetSourceThread() == GM_INVALID_THREAD )
 		{
-			if(m_ActiveThread[ON_UPDATE].IsActive())
-				pMachine->Signal(gmVariable(PATH_FAILED), m_ActiveThread[ON_UPDATE].ThreadId(), GM_INVALID_THREAD);
+			if ( mActiveThread[ ON_UPDATE ].IsActive() )
+				pMachine->Signal( gmVariable( PATH_FAILED ), mActiveThread[ ON_UPDATE ].ThreadId(), GM_INVALID_THREAD );
 			// TODO: send it to forked threads also?
 		}
 		else
 		{
-			pMachine->Signal(gmVariable(PATH_FAILED), GetSourceThread(), GM_INVALID_THREAD);
+			pMachine->Signal( gmVariable( PATH_FAILED ), GetSourceThread(), GM_INVALID_THREAD );
 		}
 	}
 
 	// AimerUser functions
-	bool ScriptGoal::GetAimPosition(Vector3f &_aimpos)
+	bool ScriptGoal::GetAimPosition( Vector3f &_aimpos )
 	{
-		if(m_AimWeaponId)
+		if ( mAimWeaponId )
 		{
 			const MemoryRecord *pRecord = GetClient()->GetTargetingSystem()->GetCurrentTargetRecord();
-			WeaponPtr w = GetClient()->GetWeaponSystem()->GetWeapon(m_AimWeaponId);
-			if(pRecord != NULL && w)
+			WeaponPtr w = GetClient()->GetWeaponSystem()->GetWeapon( mAimWeaponId );
+			if ( pRecord != NULL && w )
 			{
-				_aimpos = w->GetAimPoint(Primary,pRecord->GetEntity(), pRecord->m_TargetInfo);
+				_aimpos = w->GetAimPoint( Primary, pRecord->GetEntity(), pRecord->mTargetInfo );
 			}
 			else
 				return false;
 		}
 
-		_aimpos = m_AimVector;
-		switch(m_ScriptAimType)
+		_aimpos = mAimVector;
+		switch ( mScriptAimType )
 		{
-		case Aimer::WorldFacing:
-			_aimpos = GetClient()->GetEyePosition() + m_AimVector;
-			break;
-		case Aimer::WorldPosition:
-		case Aimer::MoveDirection:
-		case Aimer::UserCallback:
-		default:
-			break;
+			case Aimer::WorldFacing:
+				_aimpos = GetClient()->GetEyePosition() + mAimVector;
+				break;
+			case Aimer::WorldPosition:
+			case Aimer::MoveDirection:
+			case Aimer::UserCallback:
+			default:
+				break;
 		}
 		return true;
 	}
@@ -347,36 +347,36 @@ namespace AiState
 	void ScriptGoal::OnTarget()
 	{
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-		if(!m_AimSignalled && m_ActiveThread[ON_UPDATE].IsActive())
+		if ( !mAimSignalled && mActiveThread[ ON_UPDATE ].IsActive() )
 		{
-			pMachine->Signal(gmVariable(AIM_ONTARGET), m_ActiveThread[ON_UPDATE].ThreadId(), GM_INVALID_THREAD);
-			Signal(gmVariable(AIM_ONTARGET));
-			m_AimSignalled = true;
+			pMachine->Signal( gmVariable( AIM_ONTARGET ), mActiveThread[ ON_UPDATE ].ThreadId(), GM_INVALID_THREAD );
+			Signal( gmVariable( AIM_ONTARGET ) );
+			mAimSignalled = true;
 		}
 	}
 
-	bool ScriptGoal::OnInit(gmMachine *_machine)
+	bool ScriptGoal::OnInit( gmMachine *_machine )
 	{
-		Prof_Scope(ScriptGoal);
+		Prof_Scope( ScriptGoal );
 
 #ifdef Prof_ENABLED
-		Prof_Scope_Var Scope(*m_ProfZone, Prof_cache);
+		Prof_Scope_Var Scope(*.mProfZone, Prof_cache);
 #endif
 
 		{
-			Prof(OnInit);
+			Prof( OnInit );
 
-			if(m_Callbacks[ScriptGoal::ON_INIT])
+			if ( mCallbacks[ ScriptGoal::ON_INIT ] )
 			{
-				gmVariable varThis = gmVariable(GetScriptObject(_machine));
+				gmVariable varThis = gmVariable( GetScriptObject( _machine ) );
 
 				gmCall call;
-				if(call.BeginFunction(_machine, m_Callbacks[ScriptGoal::ON_INIT], varThis))
+				if ( call.BeginFunction( _machine, mCallbacks[ ScriptGoal::ON_INIT ], varThis ) )
 				{
 					call.End();
 
 					int iReturnVal = 0;
-					if(call.GetReturnedInt(iReturnVal) && iReturnVal == 0)
+					if ( call.GetReturnedInt( iReturnVal ) && iReturnVal == 0 )
 						return false;
 				}
 			}
@@ -386,91 +386,91 @@ namespace AiState
 
 	void ScriptGoal::OnSpawn()
 	{
-		Prof_Scope(ScriptGoal);
+		Prof_Scope( ScriptGoal );
 
 #ifdef Prof_ENABLED
-		Prof_Scope_Var Scope(*m_ProfZone, Prof_cache);
+		Prof_Scope_Var Scope(*.mProfZone, Prof_cache);
 #endif
 
 		{
-			Prof(OnSpawn);
+			Prof( OnSpawn );
 
-			m_NextGetPriorityUpdate = 0;
+			mNextGetPriorityUpdate = 0;
 			SetScriptPriority( 0.0f );
 			SetLastPriority( 0.0f );
 
 			KillAllGoalThreads();
 
-			if(m_Callbacks[ON_SPAWN])
+			if ( mCallbacks[ ON_SPAWN ] )
 			{
-				if(m_ActiveThread[ON_SPAWN])
-					m_ActiveThread[ON_SPAWN].Kill();
+				if ( mActiveThread[ ON_SPAWN ] )
+					mActiveThread[ ON_SPAWN ].Kill();
 
 				// don't call it unless we can
-				if(CanBeSelected() != NoSelectReasonNone)
+				if ( CanBeSelected() != NoSelectReasonNone )
 					return;
 
 				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 				gmCall call;
-				if(call.BeginFunction(pMachine, m_Callbacks[ON_SPAWN], gmVariable(GetScriptObject(pMachine))))
+				if ( call.BeginFunction( pMachine, mCallbacks[ ON_SPAWN ], gmVariable( GetScriptObject( pMachine ) ) ) )
 				{
-					if(call.End() == gmThread::EXCEPTION)
+					if ( call.End() == gmThread::EXCEPTION )
 					{
-						SetEnable(false, va("Error in OnSpawn Callback in Goal: %s", GetName().c_str()));
+						SetEnable( false, va( "Error in OnSpawn Callback in Goal: %s", GetName().c_str() ) );
 						return;
 					}
 
-					m_ActiveThread[ON_SPAWN] = call.GetThreadId();
-					if(call.DidReturnVariable())
+					mActiveThread[ ON_SPAWN ] = call.GetThreadId();
+					if ( call.DidReturnVariable() )
 					{
-						m_ActiveThread[ON_SPAWN].Reset();
+						mActiveThread[ ON_SPAWN ].Reset();
 					}
 				}
 			}
 		}
 	}
 
-	void ScriptGoal::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+	void ScriptGoal::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
 	{
-		Signal(gmVariable(_message.GetMessageId()));
+		Signal( gmVariable( _message.GetMessageId() ) );
 	}
 
-	void ScriptGoal::Signal(const gmVariable &_var)
+	void ScriptGoal::Signal( const gmVariable &_var )
 	{
-		InternalSignal(_var);
+		InternalSignal( _var );
 	}
 
-	bool ScriptGoal::OnPathThrough(const std::string &_s)
+	bool ScriptGoal::OnPathThrough( const std::string &_s )
 	{
-		Prof_Scope(ScriptGoal);
+		Prof_Scope( ScriptGoal );
 
 #ifdef Prof_ENABLED
-		Prof_Scope_Var Scope(*m_ProfZone, Prof_cache);
+		Prof_Scope_Var Scope(*.mProfZone, Prof_cache);
 #endif
 
 		{
-			Prof(OnPathThrough);
+			Prof( OnPathThrough );
 
-			if(m_Callbacks[ON_PATH_THROUGH])
+			if ( mCallbacks[ ON_PATH_THROUGH ] )
 			{
-				//if(!m_ActiveThread[ON_PATH_THROUGH].IsActive())
+				//if(!mActiveThread[ON_PATH_THROUGH].IsActive())
 				{
 					gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 					gmCall call;
-					if(call.BeginFunction(pMachine, m_Callbacks[ON_PATH_THROUGH], gmVariable(GetScriptObject(pMachine))))
+					if ( call.BeginFunction( pMachine, mCallbacks[ ON_PATH_THROUGH ], gmVariable( GetScriptObject( pMachine ) ) ) )
 					{
-						call.AddParamString(_s.c_str());
-						if(call.End() == gmThread::EXCEPTION)
+						call.AddParamString( _s.c_str() );
+						if ( call.End() == gmThread::EXCEPTION )
 						{
-							SetEnable(false, va("Error in OnPathThrough Callback in Goal: %s", GetName().c_str()));
+							SetEnable( false, va( "Error in OnPathThrough Callback in Goal: %s", GetName().c_str() ) );
 							return false;
 						}
 
 						int iRetVal = 0;
-						if(call.DidReturnVariable() && call.GetReturnedInt(iRetVal) && iRetVal)
+						if ( call.DidReturnVariable() && call.GetReturnedInt( iRetVal ) && iRetVal )
 						{
-							SetScriptPriority(1.f);
-							SetLastPriority(1.f);
+							SetScriptPriority( 1.f );
+							SetLastPriority( 1.f );
 							return true;
 						}
 					}
@@ -482,48 +482,48 @@ namespace AiState
 
 	void ScriptGoal::EndPathThrough()
 	{
-		SetScriptPriority(0.f);
-		SetLastPriority(0.f);
+		SetScriptPriority( 0.f );
+		SetLastPriority( 0.f );
 	}
 
-	obReal ScriptGoal::GetPriority()
+	float ScriptGoal::GetPriority()
 	{
-		Prof_Scope(ScriptGoal);
+		Prof_Scope( ScriptGoal );
 
 #ifdef Prof_ENABLED
-		Prof_Scope_Var Scope(*m_ProfZone, Prof_cache);
+		Prof_Scope_Var Scope(*.mProfZone, Prof_cache);
 #endif
 
 		{
-			Prof(GetPriority);
+			Prof( GetPriority );
 
-			if(m_SkipGetPriorityWhenActive && IsActive())
+			if ( mSkipGetPriorityWhenActive && IsActive() )
 			{
 				// don't call getpriority while active
 			}
 			else
 			{
-				if(m_NextGetPriorityUpdate <= IGame::GetTime())
+				if ( mNextGetPriorityUpdate <= IGame::GetTime() )
 				{
-					DelayGetPriority(m_NextGetPriorityDelay);
+					DelayGetPriority( mNextGetPriorityDelay );
 
-					if(m_Callbacks[ON_GETPRIORITY])
+					if ( mCallbacks[ ON_GETPRIORITY ] )
 					{
-						if(!m_ActiveThread[ON_GETPRIORITY].IsActive())
+						if ( !mActiveThread[ ON_GETPRIORITY ].IsActive() )
 						{
 							gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 							gmCall call;
-							if(call.BeginFunction(pMachine, m_Callbacks[ON_GETPRIORITY], gmVariable(GetScriptObject(pMachine))))
+							if ( call.BeginFunction( pMachine, mCallbacks[ ON_GETPRIORITY ], gmVariable( GetScriptObject( pMachine ) ) ) )
 							{
-								if(call.End() == gmThread::EXCEPTION)
+								if ( call.End() == gmThread::EXCEPTION )
 								{
-									SetEnable(false, va("Error in GetPriority Callback in Goal: %s", GetName().c_str()));
+									SetEnable( false, va( "Error in GetPriority Callback in Goal: %s", GetName().c_str() ) );
 									return 0.f;
 								}
 
-								m_ActiveThread[ON_GETPRIORITY] = call.GetThreadId();
-								if(call.DidReturnVariable())
-									m_ActiveThread[ON_GETPRIORITY].Reset();
+								mActiveThread[ ON_GETPRIORITY ] = call.GetThreadId();
+								if ( call.DidReturnVariable() )
+									mActiveThread[ ON_GETPRIORITY ].Reset();
 							}
 						}
 					}
@@ -531,63 +531,63 @@ namespace AiState
 			}
 			UpdateEntityInRadius();
 		}
-		return m_ScriptPriority;
+		return mScriptPriority;
 	}
 
 	void ScriptGoal::Enter()
 	{
-		Prof_Scope(ScriptGoal);
+		Prof_Scope( ScriptGoal );
 
 #ifdef Prof_ENABLED
-		Prof_Scope_Var Scope(*m_ProfZone, Prof_cache);
+		Prof_Scope_Var Scope(*.mProfZone, Prof_cache);
 #endif
 		//Fiber * fiber = new Fiber<ScriptGoal, ScriptGoal::Enter>( this, &ScriptGoal::Enter );
 
 		{
-			Prof(Enter);
+			Prof( Enter );
 
-			m_ActiveThread[ON_GETPRIORITY].Kill();
+			mActiveThread[ ON_GETPRIORITY ].Kill();
 
-			if(m_Callbacks[ON_ENTER])
+			if ( mCallbacks[ ON_ENTER ] )
 			{
 				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 				gmCall call;
-				if(call.BeginFunction(pMachine, m_Callbacks[ON_ENTER], gmVariable(GetScriptObject(pMachine))))
+				if ( call.BeginFunction( pMachine, mCallbacks[ ON_ENTER ], gmVariable( GetScriptObject( pMachine ) ) ) )
 				{
-					if(call.End() == gmThread::EXCEPTION)
+					if ( call.End() == gmThread::EXCEPTION )
 					{
-						SetEnable(false, va("Error in Enter Callback in Goal: %s", GetName().c_str()));
+						SetEnable( false, va( "Error in Enter Callback in Goal: %s", GetName().c_str() ) );
 						return;
 					}
 					//KillAllGoalThreads();
 				}
 			}
-			m_Finished = false;
+			mFinished = false;
 		}
 	}
 
 	void ScriptGoal::Exit()
 	{
-		Prof_Scope(ScriptGoal);
+		Prof_Scope( ScriptGoal );
 
 #ifdef Prof_ENABLED
-		Prof_Scope_Var Scope(*m_ProfZone, Prof_cache);
+		Prof_Scope_Var Scope(*.mProfZone, Prof_cache);
 #endif
 
 		{
-			Prof(Exit);
+			Prof( Exit );
 
 			SetScriptPriority( 0.0f );
 
-			if(m_Callbacks[ON_EXIT])
+			if ( mCallbacks[ ON_EXIT ] )
 			{
 				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 				gmCall call;
-				if(call.BeginFunction(pMachine, m_Callbacks[ON_EXIT], gmVariable(GetScriptObject(pMachine))))
+				if ( call.BeginFunction( pMachine, mCallbacks[ ON_EXIT ], gmVariable( GetScriptObject( pMachine ) ) ) )
 				{
-					if(call.End() == gmThread::EXCEPTION)
+					if ( call.End() == gmThread::EXCEPTION )
 					{
-						SetEnable(false, va("Error in Exit Callback in Goal: %s", GetName().c_str()));
+						SetEnable( false, va( "Error in Exit Callback in Goal: %s", GetName().c_str() ) );
 						return;
 					}
 				}
@@ -595,331 +595,334 @@ namespace AiState
 
 			//////////////////////////////////////////////////////////////////////////
 			// Automatically release requests on exit.
-			if(AutoReleaseAim())
+			if ( AutoReleaseAim() )
 			{
 				using namespace AiState;
-				FINDSTATE(aim, Aimer, GetClient()->GetStateRoot());
-				if(aim)
-					aim->ReleaseAimRequest(GetNameHash());
+				FINDSTATE( aim, Aimer, GetClient()->GetStateRoot() );
+				if ( aim )
+					aim->ReleaseAimRequest( GetNameHash() );
 			}
-			if(AutoReleaseWeapon())
+			if ( AutoReleaseWeapon() )
 			{
 				using namespace AiState;
-				FINDSTATE(weapsys, WeaponSystem, GetClient()->GetStateRoot());
-				if(weapsys)
-					weapsys->ReleaseWeaponRequest(GetNameHash());
+				FINDSTATE( weapsys, WeaponSystem, GetClient()->GetStateRoot() );
+				if ( weapsys )
+					weapsys->ReleaseWeaponRequest( GetNameHash() );
 			}
-			if(AutoReleaseTracker())
+			if ( AutoReleaseTracker() )
 			{
-				m_Tracker.Reset();
+				mTracker.Reset();
 			}
 			//////////////////////////////////////////////////////////////////////////
 			ClearFinishCriteria();
 			KillAllGoalThreads();
 
-			if(GetParent() && GetParent()->GetNameHash() == 0xd9c27485 /* HighLevel */)
+			if ( GetParent() && GetParent()->GetNameHash() == 0xd9c27485 /* HighLevel */ )
 			{
-				FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+				FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 			}
 		}
 	}
 
-	State::StateStatus ScriptGoal::Update(float fDt)
+	State::StateStatus ScriptGoal::Update( float fDt )
 	{
-		Prof_Scope(ScriptGoal);
+		Prof_Scope( ScriptGoal );
 
 #ifdef Prof_ENABLED
-		Prof_Scope_Var Scope(*m_ProfZone, Prof_cache);
+		Prof_Scope_Var Scope(*.mProfZone, Prof_cache);
 #endif
 		{
-			Prof(Update);
+			Prof( Update );
 
-			if(!m_Finished)
+			if ( !mFinished )
 			{
 				// check the finish criteria before running the update
-				for(int i = 0; i < MaxCriteria; ++i)
+				for ( int i = 0; i < MaxCriteria; ++i )
 				{
-					if(m_FinishCriteria[i].m_Criteria!=Criteria::NONE)
+					if ( mFinishCriteria[ i ].mCriteria != Criteria::NONE )
 					{
-						if(m_FinishCriteria[i].Check(GetClient()))
-							m_Finished = true;
+						if ( mFinishCriteria[ i ].Check( GetClient() ) )
+							mFinished = true;
 					}
 				}
 
 				// and mapgoal too
-				if(m_MapGoal)
+				if ( mMapGoal )
 				{
-					if(m_AutoFinishOnUnavailable)
+					if ( mAutoFinishOnUnavailable )
 					{
-						if(!m_MapGoal->IsAvailable(GetClient()->GetTeam()))
+						if ( !mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
 							return State_Finished;
 					}
 
-					if(m_AutoFinishOnNoProgressSlots)
+					if ( mAutoFinishOnNoProgressSlots )
 					{
-						if(!m_Tracker.InProgress || m_Tracker.InProgress != m_MapGoal)
-							if(m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INPROGRESS)==0)
+						if ( !mTracker.InProgress || mTracker.InProgress != mMapGoal )
+							if ( mMapGoal->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) == 0 )
 								return State_Finished;
 					}
 
-					if(m_AutoFinishOnNoUseSlots)
+					if ( mAutoFinishOnNoUseSlots )
 					{
-						if(!m_Tracker.InUse || m_Tracker.InUse != m_MapGoal)
-							if(m_MapGoal->GetSlotsOpen(MapGoal::TRACK_INUSE)==0)
+						if ( !mTracker.InUse || mTracker.InUse != mMapGoal )
+							if ( mMapGoal->GetSlotsOpen( MapGoal::TRACK_INUSE ) == 0 )
 								return State_Finished;
 					}
 				}
 
 				UpdateMapGoalsInRadius();
 
-				if(!m_Finished && m_Callbacks[ON_UPDATE])
+				if ( !mFinished && mCallbacks[ ON_UPDATE ] )
 				{
-					if(!m_ActiveThread[ON_UPDATE].IsActive())
+					if ( !mActiveThread[ ON_UPDATE ].IsActive() )
 					{
 						gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 						gmCall call;
-						if(call.BeginFunction(pMachine, m_Callbacks[ON_UPDATE], gmVariable(GetScriptObject(pMachine))))
+						if ( call.BeginFunction( pMachine, mCallbacks[ ON_UPDATE ], gmVariable( GetScriptObject( pMachine ) ) ) )
 						{
 							//GetClient()->AddSignalThreadId(call.GetThreadId());
-							if(call.End() == gmThread::EXCEPTION)
+							if ( call.End() == gmThread::EXCEPTION )
 							{
-								SetEnable(false, va("Error in Update Callback in Goal: %s", GetName().c_str()));
+								SetEnable( false, va( "Error in Update Callback in Goal: %s", GetName().c_str() ) );
 								return State_Finished;
 							}
 
-							m_ActiveThread[ON_UPDATE] = call.GetThreadId();
-							if(call.DidReturnVariable())
-								m_ActiveThread[ON_UPDATE] = 0;
+							mActiveThread[ ON_UPDATE ] = call.GetThreadId();
+							if ( call.DidReturnVariable() )
+								mActiveThread[ ON_UPDATE ] = 0;
 						}
 					}
 				}
 			}
 		}
-		return m_Finished ? State_Finished : State_Busy;
+		return mFinished ? State_Finished : State_Busy;
 	}
 
-	bool ScriptGoal::MarkInProgress(MapGoalPtr _p)
+	bool ScriptGoal::MarkInProgress( MapGoalPtr _p )
 	{
-		m_Tracker.InProgress.Reset();
-		if(!_p || _p->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) > 0)
+		mTracker.InProgress.Reset();
+		if ( !_p || _p->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) > 0 )
 		{
-			m_Tracker.InProgress = _p;
+			mTracker.InProgress = _p;
 			return true;
 		}
 		return false;
 	}
 
-	bool ScriptGoal::MarkInUse(MapGoalPtr _p)
+	bool ScriptGoal::MarkInUse( MapGoalPtr _p )
 	{
-		m_Tracker.InUse.Reset();
-		if(!_p || _p->GetSlotsOpen(MapGoal::TRACK_INUSE) > 0)
+		mTracker.InUse.Reset();
+		if ( !_p || _p->GetSlotsOpen( MapGoal::TRACK_INUSE ) > 0 )
 		{
-			m_Tracker.InUse = _p;
+			mTracker.InUse = _p;
 			return true;
 		}
 		return false;
 	}
 
-	void ScriptGoal::SetEnable(bool _enable, const char *_error /*= 0*/)
+	void ScriptGoal::SetEnable( bool _enable, const char *_error /*= 0*/ )
 	{
-		if(!_enable && IsActive())
+		if ( !_enable && IsActive() )
 			InternalExit();
 		KillAllGoalThreads();
-		return State::SetEnable(_enable, _error);
+		return State::SetEnable( _enable, _error );
 	}
 
-	void ScriptGoal::SetSelectable(bool _selectable)
+	void ScriptGoal::SetSelectable( bool _selectable )
 	{
-		if(_selectable == IsSelectable())
+		if ( _selectable == IsSelectable() )
 			return;
 
-		if(!_selectable && IsActive())
+		if ( !_selectable && IsActive() )
 			InternalExit();
 		KillAllGoalThreads();
-		State::SetSelectable(_selectable);
+		State::SetSelectable( _selectable );
 	}
 
-	bool ScriptGoal::AddScriptAimRequest(Priority::ePriority _prio, Aimer::AimType _type, Vector3f _v)
+	bool ScriptGoal::AddScriptAimRequest( Priority::ePriority _prio, Aimer::AimType _type, Vector3f _v )
 	{
-		m_ScriptAimType = _type;
-		m_AimVector = _v;
-		FINDSTATE(aim,Aimer,GetRootState());
-		if(aim)
+		mScriptAimType = _type;
+		mAimVector = _v;
+		FINDSTATE( aim, Aimer, GetRootState() );
+		if ( aim )
 		{
-			if(_type==Aimer::MoveDirection)
-				return aim->AddAimMoveDirRequest(_prio,GetNameHash());
+			if ( _type == Aimer::MoveDirection )
+				return aim->AddAimMoveDirRequest( _prio, GetNameHash() );
 			else
-				return aim->AddAimRequest(_prio,this,GetNameHash());
+				return aim->AddAimRequest( _prio, this, GetNameHash() );
 		}
 		return false;
 	}
 
-	bool ScriptGoal::AddFinishCriteria(const CheckCriteria &_crit)
+	bool ScriptGoal::AddFinishCriteria( const CheckCriteria &_crit )
 	{
-		for(int i = 0; i < MaxCriteria; ++i)
+		for ( int i = 0; i < MaxCriteria; ++i )
 		{
-			if(m_FinishCriteria[i].m_Criteria == Criteria::NONE)
+			if ( mFinishCriteria[ i ].mCriteria == Criteria::NONE )
 			{
-				m_FinishCriteria[i] = _crit;
+				mFinishCriteria[ i ] = _crit;
 				return true;
 			}
 		}
 		return false;
 	}
 
-	void ScriptGoal::ClearFinishCriteria(bool _clearpersistent)
+	void ScriptGoal::ClearFinishCriteria( bool _clearpersistent )
 	{
-		for(int i = 0; i < MaxCriteria; ++i)
+		for ( int i = 0; i < MaxCriteria; ++i )
 		{
-			if(!m_FinishCriteria[i].m_Persistent || _clearpersistent)
-				m_FinishCriteria[i] = CheckCriteria();
+			if ( !mFinishCriteria[ i ].mPersistent || _clearpersistent )
+				mFinishCriteria[ i ] = CheckCriteria();
 		}
 	}
 
-	void ScriptGoal::WatchForEntityCategory(float radius, const BitFlag32 &category, int customTrace)
+	void ScriptGoal::WatchForEntityCategory( float radius, const BitFlag32 &category, int customTrace )
 	{
-		m_WatchEntities.m_Radius = radius;
-		m_WatchEntities.m_Category = category;
-		m_WatchEntities.m_CustomTrace = customTrace;
-		for(int i = 0; i < WatchEntity::MaxEntities; ++i)
+		mWatchEntities.mRadius = radius;
+		mWatchEntities.mCategory = category;
+		mWatchEntities.mCustomTrace = customTrace;
+		for ( int i = 0; i < WatchEntity::MaxEntities; ++i )
 		{
-			m_WatchEntities.m_Entry[i].Reset();
+			mWatchEntities.mEntry[ i ].Reset();
 		}
 	}
 
 	void ScriptGoal::UpdateEntityInRadius()
 	{
-		if(m_WatchEntities.m_Category.AnyFlagSet() && m_WatchEntities.m_Radius > 0.f
-			&& (AlwaysRecieveEvents() || IsActive()))
+		if ( mWatchEntities.mCategory.AnyFlagSet() && mWatchEntities.mRadius > 0.f
+			&& ( AlwaysRecieveEvents() || IsActive() ) )
 		{
 			SensoryMemory *sensory = GetClient()->GetSensoryMemory();
 
-			RecordHandle records[SensoryMemory::MaxRecords];
+			RecordHandle records[ SensoryMemory::MaxRecords ];
 			const int numEnts = sensory->FindEntityByCategoryInRadius(
-				m_WatchEntities.m_Radius,
-				m_WatchEntities.m_Category,
+				mWatchEntities.mRadius,
+				mWatchEntities.mCategory,
 				records,
-				SensoryMemory::MaxRecords);
+				SensoryMemory::MaxRecords );
 
 			// figure out which ones just entered, and which ones left so we can send the appropriate events
-			for(int e = 0; e < numEnts; ++e)
+			for ( int e = 0; e < numEnts; ++e )
 			{
-				const MemoryRecord *mr = sensory->GetMemoryRecord(records[e]);
+				const MemoryRecord *mr = sensory->GetMemoryRecord( records[ e ] );
 
 				// does it already exist?
 				bool found = false;
 				int emptySlot = -1;
 
 				bool hasLOS = true;
-				if(m_WatchEntities.m_CustomTrace)
+				if ( mWatchEntities.mCustomTrace )
 				{
-					hasLOS = sensory->HasLineOfSightTo(*mr, m_WatchEntities.m_CustomTrace);
+					hasLOS = sensory->HasLineOfSightTo( *mr, mWatchEntities.mCustomTrace );
 				}
 
-				if(!hasLOS)
+				if ( !hasLOS )
 					continue;
 
-				for(int i = 0; i < WatchEntity::MaxEntities; ++i)
+				for ( int i = 0; i < WatchEntity::MaxEntities; ++i )
 				{
-					if(m_WatchEntities.m_Entry[i].m_Ent == mr->GetEntity())
+					if ( mWatchEntities.mEntry[ i ].mEnt == mr->GetEntity() )
 					{
-						m_WatchEntities.m_Entry[i].m_TimeStamp = IGame::GetTime();
+						mWatchEntities.mEntry[ i ].mTimeStamp = IGame::GetTime();
 						found = true;
 						break;
 					}
-					else if(!m_WatchEntities.m_Entry[i].m_Ent.IsValid() && emptySlot==-1)
+					else if ( !mWatchEntities.mEntry[ i ].mEnt.IsValid() && emptySlot == -1 )
 					{
 						emptySlot = i;
 					}
 				}
 
-				if(!found)
+				if ( !found )
 				{
 					// new entity adding to list
-					m_WatchEntities.m_Entry[emptySlot].m_Ent = mr->GetEntity();
-					m_WatchEntities.m_Entry[emptySlot].m_TimeStamp = IGame::GetTime();
+					mWatchEntities.mEntry[ emptySlot ].mEnt = mr->GetEntity();
+					mWatchEntities.mEntry[ emptySlot ].mTimeStamp = IGame::GetTime();
 
 					Event_EntEnterRadius data = { mr->GetEntity() };
 					GetClient()->SendEvent(
-						MessageHelper(MESSAGE_ENT_ENTER_RADIUS,&data,sizeof(data)),
-						GetNameHash());
+						MessageHelper( MESSAGE_ENT_ENTER_RADIUS, &data, sizeof( data ) ),
+						GetNameHash() );
 				}
 			}
 
 			// check for anyone that needs exiting
-			for(int i = 0; i < WatchEntity::MaxEntities; ++i)
+			for ( int i = 0; i < WatchEntity::MaxEntities; ++i )
 			{
-				if(m_WatchEntities.m_Entry[i].m_Ent.IsValid() &&
-					m_WatchEntities.m_Entry[i].m_TimeStamp != IGame::GetTime())
+				if ( mWatchEntities.mEntry[ i ].mEnt.IsValid() &&
+					mWatchEntities.mEntry[ i ].mTimeStamp != IGame::GetTime() )
 				{
-					Event_EntLeaveRadius data = { m_WatchEntities.m_Entry[i].m_Ent };
+					Event_EntLeaveRadius data = { mWatchEntities.mEntry[ i ].mEnt };
 					GetClient()->SendEvent(
-						MessageHelper(MESSAGE_ENT_LEAVE_RADIUS,&data,sizeof(data)),
-						GetNameHash());
+						MessageHelper( MESSAGE_ENT_LEAVE_RADIUS, &data, sizeof( data ) ),
+						GetNameHash() );
 
-					m_WatchEntities.m_Entry[i].Reset();
+					mWatchEntities.mEntry[ i ].Reset();
 				}
 			}
 		}
 	}
 
-	void ScriptGoal::WatchForMapGoalsInRadius(const GoalManager::Query &qry, const GameEntity & ent, float radius)
+	void ScriptGoal::WatchForMapGoalsInRadius( const GoalManager::Query &qry, const GameEntity & ent, float radius )
 	{
-		m_MapGoalInRadius.m_Query = qry;
-		m_MapGoalInRadius.m_PositionEnt = ent;
-		m_MapGoalInRadius.m_Radius = radius;
-		m_MapGoalInRadius.m_InRadius.clear();
+		mMapGoalInRadius.mQuery = qry;
+		mMapGoalInRadius.mPositionEnt = ent;
+		mMapGoalInRadius.mRadius = radius;
+		mMapGoalInRadius.mInRadius.clear();
 	}
 
 	void ScriptGoal::ClearWatchForMapGoalsInRadius()
 	{
-		m_MapGoalInRadius.m_PositionEnt.Reset();
-		m_MapGoalInRadius.m_Radius = 0.f;
-		m_MapGoalInRadius.m_Query = GoalManager::Query();
-		m_MapGoalInRadius.m_InRadius.clear();
+		mMapGoalInRadius.mPositionEnt.Reset();
+		mMapGoalInRadius.mRadius = 0.f;
+		mMapGoalInRadius.mQuery = GoalManager::Query();
+		mMapGoalInRadius.mInRadius.clear();
 	}
 
 	void ScriptGoal::UpdateMapGoalsInRadius()
 	{
-		if(m_MapGoalInRadius.m_PositionEnt.IsValid())
+		if ( mMapGoalInRadius.mPositionEnt.IsValid() )
 		{
 			Vector3f entPos;
-			if(!EngineFuncs::EntityPosition(m_MapGoalInRadius.m_PositionEnt,entPos))
+			if ( !EngineFuncs::EntityPosition( mMapGoalInRadius.mPositionEnt, entPos ) )
 			{
-				m_MapGoalInRadius.m_PositionEnt.Reset();
+				mMapGoalInRadius.mPositionEnt.Reset();
 				return;
 			}
 
 			gmMachine * pMachine = ScriptManager::GetInstance()->GetMachine();
 
-			m_MapGoalInRadius.m_Query.CheckInRadius(entPos,m_MapGoalInRadius.m_Radius);
-			GoalManager::GetInstance()->GetGoals(m_MapGoalInRadius.m_Query);
+			mMapGoalInRadius.mQuery.CheckInRadius( entPos, mMapGoalInRadius.mRadius );
+			GoalManager::GetInstance()->GetGoals( mMapGoalInRadius.mQuery );
 
 			MgSet newInRadius;
-			MapGoalList::iterator it = m_MapGoalInRadius.m_Query.m_List.begin(),
-				itEnt = m_MapGoalInRadius.m_Query.m_List.end();
-			for( ; it != itEnt; ++it )
+			MapGoalList::iterator it = mMapGoalInRadius.mQuery.mList.begin(),
+				itEnt = mMapGoalInRadius.mQuery.mList.end();
+			for ( ; it != itEnt; ++it )
 			{
-				newInRadius.insert(*it);
+				newInRadius.insert( *it );
 			}
 
 			// look for all mapgoals that have left the radius or are still in
-			for(MgSet::iterator setIt = m_MapGoalInRadius.m_InRadius.begin();
-				setIt != m_MapGoalInRadius.m_InRadius.end();
+			for ( MgSet::iterator setIt = mMapGoalInRadius.mInRadius.begin();
+				setIt != mMapGoalInRadius.mInRadius.end();
 				)
 			{
-				if ( newInRadius.find(*setIt) == newInRadius.end() ) {
-					MessageHelper hlpr(MESSAGE_MG_LEAVE_RADIUS);
-					CallbackParameters cb(hlpr.GetMessageId(),pMachine);
-					cb.AddUserObj("MapGoal",(*setIt)->GetScriptObject(pMachine));
-					InternalProcessEvent(hlpr,cb);
+				if ( newInRadius.find( *setIt ) == newInRadius.end() )
+				{
+					MessageHelper hlpr( MESSAGE_MG_LEAVE_RADIUS );
+					CallbackParameters cb( hlpr.GetMessageId(), pMachine );
+					cb.AddUserObj( "MapGoal", ( *setIt )->GetScriptObject( pMachine ) );
+					InternalProcessEvent( hlpr, cb );
 
 					MapGoalPtr mg = *setIt;
 					++setIt;
-					m_MapGoalInRadius.m_InRadius.erase(mg);
-				} else {
+					mMapGoalInRadius.mInRadius.erase( mg );
+				}
+				else
+				{
 					// so we can trim it down to only new ones
-					newInRadius.erase(*setIt);
+					newInRadius.erase( *setIt );
 
 					// still in radius
 					++setIt;
@@ -927,17 +930,17 @@ namespace AiState
 			}
 
 			// only ones left are new ones!
-			for(MgSet::iterator newIt = newInRadius.begin();
+			for ( MgSet::iterator newIt = newInRadius.begin();
 				newIt != newInRadius.end();
-				++newIt)
+				++newIt )
 			{
-				OBASSERT( m_MapGoalInRadius.m_InRadius.find(*newIt)==m_MapGoalInRadius.m_InRadius.end(),"Err");
-				m_MapGoalInRadius.m_InRadius.insert(*newIt);
+				OBASSERT( mMapGoalInRadius.mInRadius.find( *newIt ) == mMapGoalInRadius.mInRadius.end(), "Err" );
+				mMapGoalInRadius.mInRadius.insert( *newIt );
 
-				MessageHelper hlpr(MESSAGE_MG_ENTER_RADIUS);
-				CallbackParameters cb(hlpr.GetMessageId(),pMachine);
-				cb.AddUserObj("MapGoal",(*newIt)->GetScriptObject(pMachine));
-				InternalProcessEvent(hlpr,cb);
+				MessageHelper hlpr( MESSAGE_MG_ENTER_RADIUS );
+				CallbackParameters cb( hlpr.GetMessageId(), pMachine );
+				cb.AddUserObj( "MapGoal", ( *newIt )->GetScriptObject( pMachine ) );
+				InternalProcessEvent( hlpr, cb );
 			}
 		}
 	}

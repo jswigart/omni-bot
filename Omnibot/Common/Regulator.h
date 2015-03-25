@@ -22,18 +22,27 @@ class Regulator
 public:
 
 	bool IsReady();
-	void SetMsInterval(int _msInterval) { m_UpdateInterval = _msInterval; }
-	void SetTickRate(int _hz) { m_UpdateInterval = 1000 / _hz; }
-	int GetInterval() const { return m_UpdateInterval; }
+	void SetMsInterval( int _msInterval )
+	{
+		mUpdateInterval = _msInterval;
+	}
+	void SetTickRate( int _hz )
+	{
+		mUpdateInterval = 1000 / _hz;
+	}
+	int GetInterval() const
+	{
+		return mUpdateInterval;
+	}
 
-	Regulator(int _msInterval = 0) :
-		m_UpdateInterval(_msInterval),
-		m_NextUpdateTime(0)
+	Regulator( int _msInterval = 0 )
+		: mUpdateInterval( _msInterval )
+		, mNextUpdateTime( 0 )
 	{
 	}
 protected:
-	int		m_UpdateInterval;
-	int		m_NextUpdateTime;
+	int	 mUpdateInterval;
+	int	 mNextUpdateTime;
 };
 
 // typedef: RegulatorPtr

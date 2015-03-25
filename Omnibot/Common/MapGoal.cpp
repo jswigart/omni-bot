@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "MapGoal.h"
-#include "gmBind.h"
 #include "gmbinder2/gmbinder2_class.h"
 #include "ScriptManager.h"
 #include "PathPlannerBase.h"
@@ -21,7 +20,7 @@
 #include "gmBot.h"
 #include "gmSchemaLib.h"
 
-static obint32 sNextSerialNum = 0;
+static int32_t sNextSerialNum = 0;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -33,68 +32,68 @@ Prof_Define( MapGoal );
 
 //////////////////////////////////////////////////////////////////////////
 
-obint32 GetMapGoalSerial()
+int32_t GetMapGoalSerial()
 {
 	return ++sNextSerialNum;
 }
 
 MapGoal::MapGoal( const char *_goaltype )
-	: m_GoalType( _goaltype ? _goaltype : "" )
-	, m_GoalTypeHash( _goaltype ? Utils::MakeHash32( _goaltype ) : 0 )
+	: mGoalType( _goaltype ? _goaltype : "" )
+	, mGoalTypeHash( _goaltype ? Utils::MakeHash32( _goaltype ) : 0 )
 {
 	_Init();
 }
 
 float MapGoal::GetRadius() const
 {
-	return std::max( m_Radius, m_MinRadius );
+	return std::max( mRadius, mMinRadius );
 }
 
 void MapGoal::CopyFrom( MapGoal *_other )
 {
 	_Init();
 
-	m_GoalType = _other->m_GoalType;
-	m_Radius = _other->m_Radius;
-	m_MinRadius = _other->m_MinRadius;
-	m_DefaultPriority = _other->m_DefaultPriority;
-	m_RolePriorityBonus = _other->m_RolePriorityBonus;
-	m_RandomUsePoint = _other->m_RandomUsePoint;
-	m_Range = _other->m_Range;
+	mGoalType = _other->mGoalType;
+	mRadius = _other->mRadius;
+	mMinRadius = _other->mMinRadius;
+	mDefaultPriority = _other->mDefaultPriority;
+	mRolePriorityBonus = _other->mRolePriorityBonus;
+	mRandomUsePoint = _other->mRandomUsePoint;
+	mRange = _other->mRange;
 
-	m_AvailableTeams = _other->m_AvailableTeams;
+	mAvailableTeams = _other->mAvailableTeams;
 
-	m_RoleMask = _other->m_RoleMask;
+	mRoleMask = _other->mRoleMask;
 
 	for ( int i = 0; i < NUM_TRACK_CATS; ++i )
-		m_MaxUsers[ i ] = _other->m_MaxUsers[ i ];
+		mMaxUsers[ i ] = _other->mMaxUsers[ i ];
 
 	// Copy goal priorities
 	for ( int t = 0; t < ClassPriority::MaxTeams; ++t )
 	{
 		for ( int c = 0; c < ClassPriority::MaxClasses; ++c )
 		{
-			m_ClassPriority.Priorities[ t ][ c ] = _other->m_ClassPriority.Priorities[ t ][ c ];
+			mClassPriority.Priorities[ t ][ c ] = _other->mClassPriority.Priorities[ t ][ c ];
 		}
 	}
 
-	m_GoalStateFunction = _other->m_GoalStateFunction;
+	mGoalStateFunction = _other->mGoalStateFunction;
 
-	m_Version = _other->m_Version;
-	m_UpgradeFunc = _other->m_UpgradeFunc;
-	m_RenderFunc = _other->m_RenderFunc;
-	m_SerializeFunc = _other->m_SerializeFunc;
-	m_InitNewFunc = _other->m_InitNewFunc;
-	m_SetPropertyFunc = _other->m_SetPropertyFunc;
-	m_HelpFunc = _other->m_HelpFunc;
-	m_UpdateFunc = _other->m_UpdateFunc;
-	m_HudDisplay = _other->m_HudDisplay;
+	mVersion = _other->mVersion;
+	mUpgradeFunc = _other->mUpgradeFunc;
+	mRenderFunc = _other->mRenderFunc;
+	mSerializeFunc = _other->mSerializeFunc;
+	mInitNewFunc = _other->mInitNewFunc;
+	mSetPropertyFunc = _other->mSetPropertyFunc;
+	mHelpFunc = _other->mHelpFunc;
+	mUpdateFunc = _other->mUpdateFunc;
+	mHudDisplay = _other->mHudDisplay;
 
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 	gmBind2::Class<MapGoal>::CloneTable( pMachine, _other->GetScriptObject( pMachine ), GetScriptObject( pMachine ) );
 
 #ifdef Prof_ENABLED
-	m_ProfZone = _other->m_ProfZone;
+	mProfZone = _other->mProfZone;
 #endif
 
 	// copy select flags.
@@ -113,42 +112,42 @@ void MapGoal::CopyFrom( MapGoal *_other )
 
 void MapGoal::_Init()
 {
-	m_AvailableTeams.ClearAll();
+	mAvailableTeams.ClearAll();
 
-	m_Position = Vector3f::ZERO;
-	m_InterfacePosition = Vector3f::ZERO;
-	m_Orientation = Matrix3f::IDENTITY;
-	m_LocalBounds = AABB( Vector3f::ZERO, Vector3f::ZERO );
-	m_Radius = 0.f;
-	m_MinRadius = 0.f;
-	m_NavFlags = 0;
-	m_SerialNum = 0;
-	m_DefaultPriority = 1.f;
-	m_RolePriorityBonus = 0.f;
-	m_RandomUsePoint = 0;
-	m_Range = 0;
+	mPosition = Vector3f::ZERO;
+	mInterfacePosition = Vector3f::ZERO;
+	mOrientation = Matrix3f::IDENTITY;
+	mLocalBounds = AABB( Vector3f::ZERO, Vector3f::ZERO );
+	mRadius = 0.f;
+	mMinRadius = 0.f;
+	mNavFlags = 0;
+	mSerialNum = 0;
+	mDefaultPriority = 1.f;
+	mRolePriorityBonus = 0.f;
+	mRandomUsePoint = 0;
+	mRange = 0;
 
-	m_SerialNum = GetMapGoalSerial();
+	mSerialNum = GetMapGoalSerial();
 
 	// By default, max out the counters.
 	for ( int i = 0; i < NUM_TRACK_CATS; ++i )
-		m_MaxUsers[ i ] = 10000;
+		mMaxUsers[ i ] = 10000;
 
 	ResetGoalPriorities();
 
-	m_RoleMask = BitFlag32( 0 );
+	mRoleMask = BitFlag32( 0 );
 
-	m_GoalStateFunction = GoalStateNone;
-	m_GoalState = 0;
+	mGoalStateFunction = GoalStateNone;
+	mGoalState = 0;
 
-	m_Version = 0;
+	mVersion = 0;
 
-	m_ControllingTeam = 0;
+	mControllingTeam = 0;
 
-	m_NeedsSynced = false;
+	mNeedsSynced = false;
 
 #ifdef Prof_ENABLED
-	m_ProfZone = 0;
+	mProfZone = 0;
 #endif
 
 	//////////////////////////////////////////////////////////////////////////
@@ -175,33 +174,33 @@ MapGoal::~MapGoal()
 {
 	//IGameManager::GetInstance()->SyncRemoteDelete( va( "MapGoal:%s", GetName().c_str() ) );
 
-	gmBind2::Class<MapGoal>::NullifyUserObject( m_ScriptObject );
+	gmBind2::Class<MapGoal>::NullifyUserObject( mScriptObject );
 }
 
 gmGCRoot<gmUserObject> MapGoal::GetScriptObject( gmMachine *_machine ) const
 {
-	if ( !m_ScriptObject )
-		m_ScriptObject = gmBind2::Class<MapGoal>::WrapObject( _machine, const_cast<MapGoal*>( this ), true );
-	return m_ScriptObject;
+	if ( !mScriptObject )
+		mScriptObject = gmBind2::Class<MapGoal>::WrapObject( _machine, const_cast<MapGoal*>( this ), true );
+	return mScriptObject;
 }
 
 void MapGoal::SetProfilerZone( const std::string &_name )
 {
 #ifdef Prof_ENABLED
-	m_ProfZone = gDynamicZones.FindZone(_name.c_str());
-	OBASSERT(m_ProfZone,"No Profiler Zone Available!");
+	mProfZone = gDynamicZones.FindZone(_name.c_str());
+	OBASSERT(mProfZone,"No Profiler Zone Available!");
 #endif
 }
 
 MapGoalPtr MapGoal::GetSmartPtr()
 {
-	MapGoalPtr ptr = m_WeakPtr.lock();
+	MapGoalPtr ptr = mWeakPtr.lock();
 	return ptr;
 }
 
 void MapGoal::SetSmartPtr( MapGoalPtr ptr )
 {
-	m_WeakPtr = ptr;
+	mWeakPtr = ptr;
 }
 
 bool MapGoal::LoadFromFile( const filePath & _file )
@@ -224,34 +223,34 @@ bool MapGoal::LoadFromFile( const filePath & _file )
 
 void MapGoal::GenerateName( int _instance, bool _skipdupecheck )
 {
-	obint32 iNavId = gEngineFuncs->IDFromEntity( GetEntity() );
-	if ( m_TagName.empty() )
+	int32_t iNavId = gEngineFuncs->IDFromEntity( GetEntity() );
+	if ( mTagName.empty() )
 	{
-		System::mInstance->mNavigation->GetNavInfo( GetPosition(), iNavId, m_TagName );
+		System::mInstance->mNavigation->GetNavInfo( GetPosition(), iNavId, mTagName );
 	}
 
 	std::string gtype = GetGoalType();
 	std::transform( gtype.begin(), gtype.end(), gtype.begin(), toUpper() );
 
-	if ( !m_TagName.empty() )
-		m_Name = va( "%s_%s", gtype.c_str(), m_TagName.c_str() );
+	if ( !mTagName.empty() )
+		mName = va( "%s_%s", gtype.c_str(), mTagName.c_str() );
 	else
 	{
-		m_Name = va( "%s_%d", gtype.c_str(), iNavId );
+		mName = va( "%s_%d", gtype.c_str(), iNavId );
 	}
-	boost::replace_all( m_Name, " ", "_" );
+	boost::replace_all( mName, " ", "_" );
 
 	//////////////////////////////////////////////////////////////////////////
 	// Dupe name handling, append an instance number
 	if ( _instance > 0 )
 	{
-		m_Name += va( "_%d", _instance );
+		mName += va( "_%d", _instance );
 	}
 
 	// see if it already exists
 	if ( !_skipdupecheck )
 	{
-		MapGoalPtr exists = GoalManager::GetInstance()->GetGoal( m_Name );
+		MapGoalPtr exists = GoalManager::GetInstance()->GetGoal( mName );
 		if ( exists && exists.get() != this )
 		{
 			GenerateName( _instance + 1 );
@@ -264,9 +263,9 @@ bool MapGoal::IsAvailable( int _team ) const
 {
 	if ( GetDisabled() )
 		return false;
-	if ( GetDisableForControllingTeam() && m_ControllingTeam == _team )
+	if ( GetDisableForControllingTeam() && mControllingTeam == _team )
 		return false;
-	return m_AvailableTeams.CheckFlag( _team ) && !GetDeleteMe();
+	return mAvailableTeams.CheckFlag( _team ) && !GetDeleteMe();
 }
 
 void MapGoal::SetAvailable( int _team, bool _available )
@@ -274,17 +273,17 @@ void MapGoal::SetAvailable( int _team, bool _available )
 	if ( _team == 0 )
 	{
 		for ( int t = 1; t <= 4; ++t )
-			m_AvailableTeams.SetFlag( t, _available );
+			mAvailableTeams.SetFlag( t, _available );
 	}
 	else
 	{
-		m_AvailableTeams.SetFlag( _team, _available );
+		mAvailableTeams.SetFlag( _team, _available );
 	}
 }
 
 bool MapGoal::IsAvailableInitial( int _team ) const
 {
-	return m_AvailableTeamsInit.CheckFlag( _team );
+	return mAvailableTeamsInit.CheckFlag( _team );
 }
 
 void MapGoal::SetAvailableInitial( int _team, bool _available )
@@ -292,11 +291,11 @@ void MapGoal::SetAvailableInitial( int _team, bool _available )
 	if ( _team == 0 )
 	{
 		for ( int t = 1; t <= 4; ++t )
-			m_AvailableTeamsInit.SetFlag( t, _available );
+			mAvailableTeamsInit.SetFlag( t, _available );
 	}
 	else
 	{
-		m_AvailableTeamsInit.SetFlag( _team, _available );
+		mAvailableTeamsInit.SetFlag( _team, _available );
 	}
 }
 
@@ -305,7 +304,7 @@ void MapGoal::Update()
 	Prof_Scope( MapGoal );
 
 #ifdef Prof_ENABLED
-	Prof_Scope_Var Scope(*m_ProfZone, Prof_cache);
+	Prof_Scope_Var Scope(*mProfZone, Prof_cache);
 #endif
 
 	{
@@ -314,6 +313,8 @@ void MapGoal::Update()
 		//////////////////////////////////////////////////////////////////////////
 		if ( GetEntity().IsValid() )
 		{
+			gEngineFuncs->GetEntityInfo( GetEntity(), mEntInfo );
+
 			if ( GetRemoveWithEntity() )
 			{
 				if ( !IGame::IsEntityValid( GetEntity() ) )
@@ -324,9 +325,7 @@ void MapGoal::Update()
 			}
 			if ( GetDeleteWithEntityFlag().AnyFlagSet() )
 			{
-				BitFlag64 bf;
-				InterfaceFuncs::GetEntityFlags( GetEntity(), bf );
-				if ( ( bf & GetDeleteWithEntityFlag() ).AnyFlagSet() )
+				if ( ( mEntInfo.mFlags & GetDeleteWithEntityFlag() ).AnyFlagSet() )
 				{
 					SetDeleteMe( true );
 					return;
@@ -334,9 +333,7 @@ void MapGoal::Update()
 			}
 			if ( GetDisableWithEntityFlag().AnyFlagSet() )
 			{
-				BitFlag64 bf;
-				InterfaceFuncs::GetEntityFlags( GetEntity(), bf );
-				if ( ( bf & GetDisableWithEntityFlag() ).AnyFlagSet() )
+				if ( ( mEntInfo.mFlags & GetDisableWithEntityFlag() ).AnyFlagSet() )
 				{
 					SetDisabled( true );
 				}
@@ -349,7 +346,7 @@ void MapGoal::Update()
 		//////////////////////////////////////////////////////////////////////////
 		_CheckControllingTeam();
 		//////////////////////////////////////////////////////////////////////////
-		switch ( m_GoalStateFunction )
+		switch ( mGoalStateFunction )
 		{
 			case GoalStateFlagState:
 				_UpdateFlagState();
@@ -362,22 +359,22 @@ void MapGoal::Update()
 				break;
 		}
 		//////////////////////////////////////////////////////////////////////////
-		if ( m_UpdateFunc )
+		if ( mUpdateFunc )
 		{
-			if ( !m_ActiveThread[ ON_UPDATE ].IsActive() )
+			if ( !mActiveThread[ ON_UPDATE ].IsActive() )
 			{
 				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 				gmCall call;
 				gmGCRoot<gmUserObject> mgref = GetScriptObject( pMachine );
-				if ( call.BeginFunction( pMachine, m_UpdateFunc, gmVariable( mgref ) ) )
+				if ( call.BeginFunction( pMachine, mUpdateFunc, gmVariable( mgref ) ) )
 				{
 					if ( call.End() == gmThread::EXCEPTION )
 					{
 					}
 
-					m_ActiveThread[ ON_UPDATE ] = call.GetThreadId();
+					mActiveThread[ ON_UPDATE ] = call.GetThreadId();
 					if ( call.DidReturnVariable() )
-						m_ActiveThread[ ON_UPDATE ] = 0;
+						mActiveThread[ ON_UPDATE ] = 0;
 				}
 			}
 		}
@@ -392,7 +389,7 @@ void MapGoal::_UpdateFlagState()
 	{
 		SetOwner( owner );
 
-		if ( newFlagState != m_GoalState )
+		if ( newFlagState != mGoalState )
 		{
 			const char *pFlagState = 0;
 			switch ( newFlagState )
@@ -420,17 +417,17 @@ void MapGoal::_UpdateFlagState()
 			if ( pFlagState )
 			{
 				TriggerInfo ti;
-				ti.m_Entity = GetEntity();
-				ti.m_Activator = owner;
-				Utils::VarArgs( ti.m_TagName, TriggerBufferSize, "Flag %s %s", GetTagName().c_str(), pFlagState );
-				Utils::StringCopy( ti.m_Action, pFlagState, TriggerBufferSize );
+				ti.mEntity = GetEntity();
+				ti.mActivator = owner;
+				Utils::VarArgs( ti.mTagName, TriggerBufferSize, "Flag %s %s", GetTagName().c_str(), pFlagState );
+				Utils::StringCopy( ti.mAction, pFlagState, TriggerBufferSize );
 				TriggerManager::GetInstance()->HandleTrigger( ti );
 			}
 			else
 			{
 				OBASSERT( 0, "Invalid Flag State" );
 			}
-			m_GoalState = newFlagState;
+			mGoalState = newFlagState;
 		}
 	}
 }
@@ -440,20 +437,20 @@ void MapGoal::_UpdateFlagState()
 //	if(GetEntity().IsValid())
 //	{
 //		const int newControllingTeam = InterfaceFuncs::GetControllingTeam(GetEntity());
-//		if(newControllingTeam != m_GoalState)
+//		if(newControllingTeam != mGoalState)
 //		{
 //			TriggerInfo ti;
-//			ti.m_Entity = GetEntity();
-//			ti.m_Activator = GameEntity();
-//			varArgs(ti.m_TagName,
+//			ti.mEntity = GetEntity();
+//			ti.mActivator = GameEntity();
+//			varArgs(ti.mTagName,
 //				TriggerBufferSize,
 //				"%s to team %d",
 //				GetName().c_str(),
 //				newControllingTeam);
-//			Utils::StringCopy(ti.m_Action, "controlling team", TriggerBufferSize);
+//			Utils::StringCopy(ti.mAction, "controlling team", TriggerBufferSize);
 //			TriggerManager::GetInstance()->HandleTrigger(ti);
 //
-//			m_GoalState = newControllingTeam;
+//			mGoalState = newControllingTeam;
 //		}
 //	}
 //}
@@ -463,19 +460,19 @@ void MapGoal::_CheckControllingTeam()
 	if ( GetEntity().IsValid() )
 	{
 		const int newControllingTeam = InterfaceFuncs::GetControllingTeam( GetEntity() );
-		if ( newControllingTeam != m_ControllingTeam )
+		if ( newControllingTeam != mControllingTeam )
 		{
-			m_ControllingTeam = newControllingTeam;
+			mControllingTeam = newControllingTeam;
 
 			TriggerInfo ti;
-			ti.m_Entity = GetEntity();
-			ti.m_Activator = GameEntity();
-			Utils::VarArgs( ti.m_TagName,
+			ti.mEntity = GetEntity();
+			ti.mActivator = GameEntity();
+			Utils::VarArgs( ti.mTagName,
 				TriggerBufferSize,
 				"%s to team %d",
 				GetName().c_str(),
 				newControllingTeam );
-			Utils::StringCopy( ti.m_Action, "controlling team", TriggerBufferSize );
+			Utils::StringCopy( ti.mAction, "controlling team", TriggerBufferSize );
 			TriggerManager::GetInstance()->HandleTrigger( ti );
 		}
 	}
@@ -486,22 +483,22 @@ void MapGoal::InternalInitEntityState()
 	// cache the values.
 	if ( GetEntity().IsValid() )
 	{
-		bool b1 = EngineFuncs::EntityLocalAABB( GetEntity(), m_LocalBounds );
-		bool b2 = EngineFuncs::EntityPosition( GetEntity(), m_Position );
+		bool b1 = EngineFuncs::EntityLocalAABB( GetEntity(), mLocalBounds );
+		bool b2 = EngineFuncs::EntityPosition( GetEntity(), mPosition );
 
 		// cache the auto detected position
-		if ( b2 ) m_InterfacePosition = m_Position;
+		if ( b2 ) mInterfacePosition = mPosition;
 		
 		Vector3f vFwd, vRight, vUp;
 		bool b3 = EngineFuncs::EntityOrientation( GetEntity(), vFwd, vRight, vUp );
-		if ( b3 ) m_Orientation = Matrix3f( vRight, vFwd, vUp, true );
+		if ( b3 ) mOrientation = Matrix3f( vRight, vFwd, vUp, true );
 
 		OBASSERT( b1&&b2&&b3, "Lost Entity!" );
 	}
 
-	if ( m_LocalBounds.IsZero() )
+	if ( mLocalBounds.IsZero() )
 	{
-		m_LocalBounds.Expand( 5.f );
+		mLocalBounds.Expand( 5.f );
 	}
 }
 
@@ -515,12 +512,12 @@ bool MapGoal::InternalInit( gmGCRoot<gmTableObject> &_propmap, bool _newgoal )
 	//////////////////////////////////////////////////////////////////////////
 	if ( _newgoal )
 	{
-		if ( m_InitNewFunc )
+		if ( mInitNewFunc )
 		{
 			gmCall call;
 
 			gmGCRoot<gmUserObject> mgref = GetScriptObject( pMachine );
-			if ( call.BeginFunction( pMachine, m_InitNewFunc, gmVariable( mgref ) ) )
+			if ( call.BeginFunction( pMachine, mInitNewFunc, gmVariable( mgref ) ) )
 			{
 				call.AddParamTable( _propmap );
 				call.End();
@@ -529,14 +526,14 @@ bool MapGoal::InternalInit( gmGCRoot<gmTableObject> &_propmap, bool _newgoal )
 	}
 	else
 	{
-		if ( m_UpgradeFunc )
+		if ( mUpgradeFunc )
 		{
 			while ( true )
 			{
 				gmCall call;
 
 				gmGCRoot<gmUserObject> mgref = GetScriptObject( pMachine );
-				if ( call.BeginFunction( pMachine, m_UpgradeFunc, gmVariable( mgref ) ) )
+				if ( call.BeginFunction( pMachine, mUpgradeFunc, gmVariable( mgref ) ) )
 				{
 					gmVariable gmVersionBefore = _propmap->Get( pMachine, "Version" );
 					call.AddParamTable( _propmap );
@@ -560,7 +557,7 @@ bool MapGoal::InternalInit( gmGCRoot<gmTableObject> &_propmap, bool _newgoal )
 						//EngineFuncs::ConsoleMessage("%s goal updated, version %d to %d",
 						//	GetName().c_str(),gmVersionBefore.GetInt(),gmVersionAfter.GetInt());
 					}
-					else if ( gmVersionAfter.GetInt() == m_Version )
+					else if ( gmVersionAfter.GetInt() == mVersion )
 					{
 						//EngineFuncs::ConsoleMessage("%s goal up to date, version %d",
 						//	GetName().c_str(),gmVersionAfter.GetInt());
@@ -582,22 +579,22 @@ bool MapGoal::InternalInit( gmGCRoot<gmTableObject> &_propmap, bool _newgoal )
 
 void MapGoal::SetPosition( const Vector3f &_pos )
 {
-	m_Position = _pos;
+	mPosition = _pos;
 }
 
 const Vector3f &MapGoal::GetPosition()
 {
 	if ( GetDynamicPosition() )
 	{
-		bool b = EngineFuncs::EntityPosition( GetEntity(), m_Position );
+		bool b = EngineFuncs::EntityPosition( GetEntity(), mPosition );
 		SOFTASSERTALWAYS( b, "Lost Entity for MapGoal %s!", GetName().c_str() );
 	}
-	return m_Position;
+	return mPosition;
 }
 
 void MapGoal::SetPosition_Script( const Vec3 &_pos )
 {
-	m_Position = Vector3f( _pos.x, _pos.y, _pos.z );
+	mPosition = Vector3f( _pos.x, _pos.y, _pos.z );
 }
 
 Vec3 MapGoal::GetPosition_Script()
@@ -607,7 +604,7 @@ Vec3 MapGoal::GetPosition_Script()
 
 void MapGoal::SetRange_Script( const int &_range )
 {
-	m_Range = _range;
+	mRange = _range;
 }
 
 int MapGoal::GetRange_Script()
@@ -617,13 +614,13 @@ int MapGoal::GetRange_Script()
 
 void MapGoal::SetFacing( const Vector3f &_facing )
 {
-	m_Orientation = Matrix3f( _facing.Cross( Vector3f::UNIT_Z ), _facing, Vector3f::UNIT_Z, true );
+	mOrientation = Matrix3f( _facing.Cross( Vector3f::UNIT_Z ), _facing, Vector3f::UNIT_Z, true );
 }
 
 void MapGoal::SetFacing_Script( const Vec3 &_facing )
 {
 	Vector3f facing( _facing.x, _facing.y, _facing.z );
-	m_Orientation = Matrix3f(
+	mOrientation = Matrix3f(
 		facing.Cross( Vector3f::UNIT_Z ),
 		facing,
 		Vector3f::UNIT_Z, true );
@@ -641,7 +638,7 @@ Vec3 MapGoal::GetFacing_Script()
 
 void MapGoal::SetMatrix( const Matrix3f &_mat )
 {
-	m_Orientation = _mat;
+	mOrientation = _mat;
 }
 
 Matrix3f MapGoal::GetMatrix()
@@ -651,22 +648,22 @@ Matrix3f MapGoal::GetMatrix()
 		Vector3f vFwd, vRight, vUp;
 		bool b = EngineFuncs::EntityOrientation( GetEntity(), vFwd, vRight, vUp );
 		OBASSERT( b, "Lost Entity!" );
-		if ( b ) m_Orientation = Matrix3f( vRight, vFwd, vUp, false );
+		if ( b ) mOrientation = Matrix3f( vRight, vFwd, vUp, false );
 	}
-	return m_Orientation;
+	return mOrientation;
 }
 
 void MapGoal::SetGoalBounds( const AABB &_bounds )
 {
-	m_LocalBounds = _bounds;
+	mLocalBounds = _bounds;
 }
 
 void MapGoal::SetBounds_Script( const Vec3 &_mins, const Vec3 &_maxs )
 {
 	for ( int i = 0; i < 3; ++i )
 	{
-		m_LocalBounds.m_Mins[ i ] = _mins[ i ];
-		m_LocalBounds.m_Maxs[ i ] = _maxs[ i ];
+		mLocalBounds.mMins[ i ] = _mins[ i ];
+		mLocalBounds.mMaxs[ i ] = _maxs[ i ];
 	}
 }
 
@@ -688,38 +685,38 @@ Box3f MapGoal::GetWorldBounds()
 
 const AABB &MapGoal::GetLocalBounds() const
 {
-	return m_LocalBounds;
+	return mLocalBounds;
 }
 
 void MapGoal::AddUsePoint( const Vector3f &_pos, bool _relative )
 {
-	m_LocalUsePoints.resize( m_LocalUsePoints.size() + 1 );
-	m_LocalUsePoints[ m_LocalUsePoints.size() - 1 ] = _pos;
+	mLocalUsePoints.resize( mLocalUsePoints.size() + 1 );
+	mLocalUsePoints[ mLocalUsePoints.size() - 1 ] = _pos;
 
-	m_RelativeUsePoints.resize( m_LocalUsePoints.size() );
-	m_RelativeUsePoints.set( m_RelativeUsePoints.size() - 1, _relative );
+	mRelativeUsePoints.resize( mLocalUsePoints.size() );
+	mRelativeUsePoints.set( mRelativeUsePoints.size() - 1, _relative );
 }
 
-Vector3f MapGoal::GetWorldUsePoint( obint32 _index )
+Vector3f MapGoal::GetWorldUsePoint( int32_t _index )
 {
-	if ( !m_LocalUsePoints.empty() )
+	if ( !mLocalUsePoints.empty() )
 	{
-		if ( _index == -1 || _index < 0 || _index >= (obint32)m_LocalUsePoints.size() )
+		if ( _index == -1 || _index < 0 || _index >= (int32_t)mLocalUsePoints.size() )
 		{
-			int iRand = Mathf::IntervalRandomInt( 0, (int)m_LocalUsePoints.size() );
+			int iRand = Mathf::IntervalRandomInt( 0, (int)mLocalUsePoints.size() );
 
-			Vector3f vUsePt = m_LocalUsePoints[ iRand ];
+			Vector3f vUsePt = mLocalUsePoints[ iRand ];
 
-			if ( m_RelativeUsePoints.test( iRand ) )
+			if ( mRelativeUsePoints.test( iRand ) )
 			{
 				vUsePt = GetPosition() + GetMatrix() * vUsePt;
 			}
 			return vUsePt;
 		}
 
-		Vector3f vUsePt = m_LocalUsePoints[ _index ];
+		Vector3f vUsePt = mLocalUsePoints[ _index ];
 
-		if ( m_RelativeUsePoints.test( _index ) )
+		if ( mRelativeUsePoints.test( _index ) )
 		{
 			vUsePt = GetPosition() + GetMatrix() * vUsePt;
 		}
@@ -749,21 +746,21 @@ bool MapGoal::AddRoute( const MapGoalPtr &_routeStart, const MapGoalPtr &_midpt,
 	if ( _routeStart && _midpt )
 	{
 		// find whether this route already exists
-		Routes::const_iterator cIt = m_Routes.begin(), cItEnd = m_Routes.end();
+		Routes::const_iterator cIt = mRoutes.begin(), cItEnd = mRoutes.end();
 		for ( ; cIt != cItEnd; ++cIt )
 		{
 			const Route &o = ( *cIt );
-			if ( o.m_Start == _routeStart && o.m_End == _midpt )
+			if ( o.mStart == _routeStart && o.mEnd == _midpt )
 				return true;
 		}
 
 		Route r;
-		r.m_Start = _routeStart;
-		r.m_End = _midpt;
-		r.m_Weight = _weight;
+		r.mStart = _routeStart;
+		r.mEnd = _midpt;
+		r.mWeight = _weight;
 
-		m_Routes.reserve( m_Routes.size() + 1 );
-		m_Routes.push_back( r );
+		mRoutes.reserve( mRoutes.size() + 1 );
+		mRoutes.push_back( r );
 		return true;
 	}
 	return false;
@@ -776,7 +773,7 @@ bool MapGoal::RouteTo( Client *_bot, DestinationVector &_dest, float _minradius 
 	float fTolerance = _bot->GetWorldBounds().Extent[ 2 ];
 
 	float fTotalWeight = 0.f;
-	Routes::const_iterator cIt = m_Routes.begin(), cItEnd = m_Routes.end();
+	Routes::const_iterator cIt = mRoutes.begin(), cItEnd = mRoutes.end();
 	for ( ; cIt != cItEnd; ++cIt )
 	{
 		const Route &r = ( *cIt );
@@ -784,17 +781,17 @@ bool MapGoal::RouteTo( Client *_bot, DestinationVector &_dest, float _minradius 
 		// RouteTo can be called when a bot is not yet within ROUTE goal radius,
 		// because FollowPath calculates 2D distance (that is less than 3D distance).
 		// Omni-bot 0.81 compared 3D distance here and skipped ROUTE goals on stairs, hillsides etc.
-		Vector3f vDist = _bot->GetPosition() - r.m_Start->GetPosition();
-		if ( vDist.X() * vDist.X() + vDist.Y() * vDist.Y() <= Mathf::Sqr( r.m_Start->GetRadius() ) &&
-			abs( vDist.Z() - fTolerance ) - 2 * fTolerance <= r.m_Start->GetRadius() &&
+		Vector3f vDist = _bot->GetPosition() - r.mStart->GetPosition();
+		if ( vDist.X() * vDist.X() + vDist.Y() * vDist.Y() <= Mathf::Sqr( r.mStart->GetRadius() ) &&
+			abs( vDist.Z() - fTolerance ) - 2 * fTolerance <= r.mStart->GetRadius() &&
 
 			// Most maps have all routes enabled for all teams,
 			// that's why it's better to check availability after checking radius.
-			r.m_End->IsAvailable( _bot->GetTeam() ) &&
-			r.m_Start->IsAvailable( _bot->GetTeam() ) )
+			r.mEnd->IsAvailable( _bot->GetTeam() ) &&
+			r.mStart->IsAvailable( _bot->GetTeam() ) )
 		{
 			routes.push_back( r );
-			fTotalWeight += r.m_Weight;
+			fTotalWeight += r.mWeight;
 		}
 	}
 
@@ -803,9 +800,9 @@ bool MapGoal::RouteTo( Client *_bot, DestinationVector &_dest, float _minradius 
 		int iIndex = (int)routes.size() - 1;
 
 		float fWght = Mathf::IntervalRandom( 0.f, fTotalWeight );
-		for ( obuint32 i = 0; i < routes.size(); ++i )
+		for ( uint32_t i = 0; i < routes.size(); ++i )
 		{
-			fWght -= routes[ i ].m_Weight;
+			fWght -= routes[ i ].mWeight;
 			if ( fWght <= 0.f )
 			{
 				iIndex = i;
@@ -814,8 +811,8 @@ bool MapGoal::RouteTo( Client *_bot, DestinationVector &_dest, float _minradius 
 		}
 
 		Destination d;
-		d.m_Position = routes[ iIndex ].m_End->GetPosition();
-		d.m_Radius = std::max( routes[ iIndex ].m_End->GetRadius(), _minradius );
+		d.mPosition = routes[ iIndex ].mEnd->GetPosition();
+		d.mRadius = std::max( routes[ iIndex ].mEnd->GetRadius(), _minradius );
 		_dest.push_back( d );
 
 		return true;
@@ -823,21 +820,21 @@ bool MapGoal::RouteTo( Client *_bot, DestinationVector &_dest, float _minradius 
 
 	if ( GetNumUsePoints() > 0 )
 	{
-		if ( m_RandomUsePoint )
+		if ( mRandomUsePoint )
 		{
 			int iRand = Mathf::IntervalRandomInt( 0, (int)GetNumUsePoints() );
 			Destination d;
-			d.m_Position = GetWorldUsePoint( iRand );
-			d.m_Radius = std::max( GetRadius(), _minradius );
+			d.mPosition = GetWorldUsePoint( iRand );
+			d.mRadius = std::max( GetRadius(), _minradius );
 			_dest.push_back( d );
 		}
 		else
 		{
-			for ( obint32 i = 0; i < GetNumUsePoints(); ++i )
+			for ( int32_t i = 0; i < GetNumUsePoints(); ++i )
 			{
 				Destination d;
-				d.m_Position = GetWorldUsePoint( i );
-				d.m_Radius = std::max( GetRadius(), _minradius );
+				d.mPosition = GetWorldUsePoint( i );
+				d.mRadius = std::max( GetRadius(), _minradius );
 				_dest.push_back( d );
 			}
 		}
@@ -845,8 +842,8 @@ bool MapGoal::RouteTo( Client *_bot, DestinationVector &_dest, float _minradius 
 	else
 	{
 		Destination d;
-		d.m_Position = GetWorldUsePoint();
-		d.m_Radius = std::max( GetRadius(), _minradius );
+		d.mPosition = GetWorldUsePoint();
+		d.mRadius = std::max( GetRadius(), _minradius );
 		_dest.push_back( d );
 	}
 	return false;
@@ -881,12 +878,12 @@ void MapGoal::SetProperty( const std::string &_propname, const obUserData &_val 
 
 	if ( !Processed )
 	{
-		if ( m_SetPropertyFunc )
+		if ( mSetPropertyFunc )
 		{
 			gmGCRoot<gmUserObject> mgref = GetScriptObject( pMachine );
 
 			gmCall call;
-			if ( call.BeginFunction( pMachine, m_SetPropertyFunc, gmVariable( mgref ) ) )
+			if ( call.BeginFunction( pMachine, mSetPropertyFunc, gmVariable( mgref ) ) )
 			{
 				call.AddParamString( _propname.c_str() );
 				call.AddParam( var );
@@ -907,7 +904,7 @@ void MapGoal::RenderDebug( bool _editing, bool _highlighted )
 	Prof_Scope( MapGoal );
 
 #ifdef Prof_ENABLED
-	Prof_Scope_Var Scope(*m_ProfZone, Prof_cache);
+	Prof_Scope_Var Scope(*mProfZone, Prof_cache);
 #endif
 
 	{
@@ -915,16 +912,16 @@ void MapGoal::RenderDebug( bool _editing, bool _highlighted )
 
 		if ( GetRenderGoal() )
 		{
-			if ( m_RenderFunc )
+			if ( mRenderFunc )
 			{
-				if ( !m_ActiveThread[ ON_RENDER ].IsActive() )
+				if ( !mActiveThread[ ON_RENDER ].IsActive() )
 				{
 					gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 
 					gmGCRoot<gmUserObject> mgref = GetScriptObject( pMachine );
 
 					gmCall call;
-					if ( call.BeginFunction( pMachine, m_RenderFunc, gmVariable( mgref ) ) )
+					if ( call.BeginFunction( pMachine, mRenderFunc, gmVariable( mgref ) ) )
 					{
 						call.AddParamInt( _editing ? 1 : 0 );
 						call.AddParamInt( _highlighted ? 1 : 0 );
@@ -934,9 +931,9 @@ void MapGoal::RenderDebug( bool _editing, bool _highlighted )
 							return State_Finished;*/
 						}/**/
 
-						m_ActiveThread[ ON_RENDER ] = call.GetThreadId();
+						mActiveThread[ ON_RENDER ] = call.GetThreadId();
 						if ( call.DidReturnVariable() )
-							m_ActiveThread[ ON_RENDER ] = 0;
+							mActiveThread[ ON_RENDER ] = 0;
 					}
 				}
 			}
@@ -947,7 +944,7 @@ void MapGoal::RenderDebug( bool _editing, bool _highlighted )
 		}
 		else
 		{
-			m_ActiveThread[ ON_RENDER ].Reset();
+			mActiveThread[ ON_RENDER ].Reset();
 		}
 
 		//////////////////////////////////////////////////////////////////////////
@@ -1015,17 +1012,17 @@ void MapGoal::RenderDefault()
 	if ( bf.CheckFlag( DrawInitialAvail ) )
 	{
 		// goals created by goal_create command are always initially enabled for all teams
-		if ( m_AvailableTeamsInit.GetRawFlags() != 30 || !GetCreateOnLoad() )
+		if ( mAvailableTeamsInit.GetRawFlags() != 30 || !GetCreateOnLoad() )
 		{
 			txtOut += "Initial: ";
-			txtOut += Utils::GetTeamString( m_AvailableTeamsInit.GetRawFlags() );
+			txtOut += Utils::GetTeamString( mAvailableTeamsInit.GetRawFlags() );
 			txtOut += "\n";
 		}
 	}
 	if ( bf.CheckFlag( DrawCurrentAvail ) )
 	{
 		txtOut += "Active: ";
-		txtOut += Utils::GetTeamString( m_AvailableTeams.GetRawFlags() );
+		txtOut += Utils::GetTeamString( mAvailableTeams.GetRawFlags() );
 		txtOut += "\n";
 	}
 	if ( bf.CheckFlag( DrawRandomUsePoint ) )
@@ -1052,8 +1049,8 @@ void MapGoal::RenderDefault()
 	// bounds
 	if ( bf.CheckFlag( DrawBounds ) )
 	{
-		/*if(m_bUseOrientedBox)
-		RenderBuffer::AddOBB(GetPosition(),GetMatrix(),m_OrientedBounds,COLOR::MAGENTA);
+		/*if(mbUseOrientedBox)
+		RenderBuffer::AddOBB(GetPosition(),GetMatrix(),mOrientedBounds,COLOR::MAGENTA);
 		else*/
 		RenderBuffer::AddOBB( GetWorldBounds(), COLOR::ORANGE );
 	}
@@ -1084,9 +1081,9 @@ void MapGoal::RenderDefault()
 		}
 	}
 
-	if ( m_ExtraDebugText )
+	if ( mExtraDebugText )
 	{
-		gmStringObject *so = m_ExtraDebugText;
+		gmStringObject *so = mExtraDebugText;
 		const char *str = so->GetString();
 		if ( str )
 		{
@@ -1114,7 +1111,7 @@ Vector3f MapGoal::CalculateFarthestFacing()
 		Quaternionf quat( Vector3f::UNIT_Z, Mathf::DEG_TO_RAD * fAng );
 		Vector3f vVec = quat.Rotate( Vector3f::UNIT_Y*fRayLength );
 		EngineFuncs::TraceLine( tr, GetPosition(), GetPosition() + vVec, NULL, TR_MASK_SHOT, -1, False );
-		float fSightLength = tr.m_Fraction * fRayLength;
+		float fSightLength = tr.mFraction * fRayLength;
 		if ( fSightLength > fBestVectorLength )
 		{
 			fBestVectorLength = fSightLength;
@@ -1136,33 +1133,33 @@ void MapGoal::CheckPropertiesBound()
 
 void MapGoal::BindProperties()
 {
-	BindProperty( "Name", m_Name, Prop::PF_READONLY );
-	BindProperty( "TagName", m_TagName );
-	BindProperty( "Group", m_GroupName );
-	BindProperty( "Type", m_GoalType );
-	BindProperty( "Entity", m_Entity );
-	BindProperty( "SerialNum", m_SerialNum );
-	BindProperty( "Priority", m_DefaultPriority );
-	BindProperty( "Radius", m_Radius );
-	BindProperty( "RandomUsePoint", m_RandomUsePoint );
-	BindProperty( "Range", m_Range );
+	BindProperty( "Name", mName, Prop::PF_READONLY );
+	BindProperty( "TagName", mTagName );
+	BindProperty( "Group", mGroupName );
+	BindProperty( "Type", mGoalType );
+	BindProperty( "Entity", mEntity );
+	BindProperty( "SerialNum", mSerialNum );
+	BindProperty( "Priority", mDefaultPriority );
+	BindProperty( "Radius", mRadius );
+	BindProperty( "RandomUsePoint", mRandomUsePoint );
+	BindProperty( "Range", mRange );
 
 	{
 		int EnumSize = 0;
 		const IntEnum *Enum = 0;
 		System::mInstance->mGame->GetTeamEnumeration( Enum, EnumSize );
-		BindProperty( "Available", m_AvailableTeamsInit, 0, Enum, EnumSize );
+		BindProperty( "Available", mAvailableTeamsInit, 0, Enum, EnumSize );
 	}
 
 	{
 		int EnumSize = 0;
 		const IntEnum *Enum = 0;
 		System::mInstance->mGame->GetRoleEnumeration( Enum, EnumSize );
-		BindProperty( "Roles", m_RoleMask, 0, Enum, EnumSize );
+		BindProperty( "Roles", mRoleMask, 0, Enum, EnumSize );
 	}
 
-	BindProperty( "Position", m_Position, Prop::PF_POSITION );
-	//BindProperty("Facing",m_Facing,Prop::PF_FACING);
+	BindProperty( "Position", mPosition, Prop::PF_POSITION );
+	//BindProperty("Facing",mFacing,Prop::PF_FACING);
 	//BindFunction("DebugRender",this,&MapGoal::ToggleRender);
 }
 
@@ -1172,12 +1169,12 @@ void MapGoal::ResetGoalPriorities()
 	{
 		for ( int c = 0; c < ClassPriority::MaxClasses; ++c )
 		{
-			m_ClassPriority.Priorities[ t ][ c ] = -1.f;
+			mClassPriority.Priorities[ t ][ c ] = -1.f;
 		}
 	}
 }
 
-void MapGoal::SetPriorityForClass( int _teamid, int _classId, obReal _priority )
+void MapGoal::SetPriorityForClass( int _teamid, int _classId, float _priority )
 {
 	//////////////////////////////////////////////////////////////////////////
 	if ( _teamid )
@@ -1197,31 +1194,31 @@ void MapGoal::SetPriorityForClass( int _teamid, int _classId, obReal _priority )
 		{
 			if ( ( 1 << t )&_teamid && ( 1 << c )&_classId )
 			{
-				m_ClassPriority.Priorities[ t - 1 ][ c - 1 ] = _priority;
+				mClassPriority.Priorities[ t - 1 ][ c - 1 ] = _priority;
 			}
 		}
 	}
 }
 
-obReal MapGoal::GetPriorityForClient( Client *_client )
+float MapGoal::GetPriorityForClient( Client *_client )
 {
 	float prio = GetPriorityForClass( _client->GetTeam(), _client->GetClass() );
 	if ( prio > 0.f && GetRoleMask().AnyFlagSet() )
 	{
 		if ( ( GetRoleMask() & _client->GetRoleMask() ).AnyFlagSet() )
 		{
-			prio += m_RolePriorityBonus;
+			prio += mRolePriorityBonus;
 		}
 	}
 	return prio;
 }
 
-obReal MapGoal::GetPriorityForClass( int _teamid, int _classId )
+float MapGoal::GetPriorityForClass( int _teamid, int _classId )
 {
 	if ( _teamid > 0 && _teamid < ClassPriority::MaxTeams &&
 		_classId>0 && _classId < ClassPriority::MaxClasses )
 	{
-		float classPrio = m_ClassPriority.Priorities[ _teamid - 1 ][ _classId - 1 ];
+		float classPrio = mClassPriority.Priorities[ _teamid - 1 ][ _classId - 1 ];
 		if ( classPrio != -1.f )
 		{
 			return classPrio;
@@ -1234,10 +1231,10 @@ obReal MapGoal::GetPriorityForClass( int _teamid, int _classId )
 
 struct PersistentPriority
 {
-	std::string	m_Expression;
-	int		m_Team;
-	int		m_Class;
-	float	m_Priority;
+	std::string	mExpression;
+	int		mTeam;
+	int		mClass;
+	float	mPriority;
 };
 
 typedef std::vector<PersistentPriority> PersPriorityList;
@@ -1253,9 +1250,9 @@ void MapGoal::ClassPriority::GetPriorityText( std::string &_txtout ) const
 	};
 	struct PrioritySummary
 	{
-		obint32		m_TeamId;
-		obint32		m_ClassId;
-		obReal		m_Priority;
+		int32_t		mTeamId;
+		int32_t		mClassId;
+		float		mPriority;
 	};
 	PrioritySummary Summary[ MaxClassPriority ];
 
@@ -1271,7 +1268,7 @@ void MapGoal::ClassPriority::GetPriorityText( std::string &_txtout ) const
 				continue;
 
 			// class and team ids start at 1
-			const obReal CurrentPriority = Priorities[ t - 1 ][ c - 1 ];
+			const float CurrentPriority = Priorities[ t - 1 ][ c - 1 ];
 
 			if ( CurrentPriority == -1.f )
 				continue;
@@ -1281,19 +1278,19 @@ void MapGoal::ClassPriority::GetPriorityText( std::string &_txtout ) const
 			// search for matching entry.
 			for ( int i = 0; i < CurrentIndex; ++i )
 			{
-				if ( Summary[ i ].m_Priority == CurrentPriority && Summary[ i ].m_TeamId & ( 1 << t ) )
+				if ( Summary[ i ].mPriority == CurrentPriority && Summary[ i ].mTeamId & ( 1 << t ) )
 				{
-					Summary[ i ].m_TeamId |= ( 1 << t );
-					Summary[ i ].m_ClassId |= ( 1 << c );
+					Summary[ i ].mTeamId |= ( 1 << t );
+					Summary[ i ].mClassId |= ( 1 << c );
 					bFound = true;
 				}
 			}
 
 			if ( !bFound )
 			{
-				Summary[ CurrentIndex ].m_Priority = CurrentPriority;
-				Summary[ CurrentIndex ].m_TeamId = ( 1 << t );
-				Summary[ CurrentIndex ].m_ClassId = ( 1 << c );
+				Summary[ CurrentIndex ].mPriority = CurrentPriority;
+				Summary[ CurrentIndex ].mTeamId = ( 1 << t );
+				Summary[ CurrentIndex ].mClassId = ( 1 << c );
 				++CurrentIndex;
 			}
 		}
@@ -1303,14 +1300,14 @@ void MapGoal::ClassPriority::GetPriorityText( std::string &_txtout ) const
 	// print the output
 	for ( int i = 0; i < CurrentIndex; ++i )
 	{
-		if ( Summary[ i ].m_ClassId && Summary[ i ].m_TeamId )
+		if ( Summary[ i ].mClassId && Summary[ i ].mTeamId )
 		{
 			_txtout = "    "; // indent
-			_txtout += Utils::GetTeamString( Summary[ i ].m_TeamId );
+			_txtout += Utils::GetTeamString( Summary[ i ].mTeamId );
 			_txtout += " ";
-			_txtout += Utils::GetClassString( Summary[ i ].m_ClassId );
+			_txtout += Utils::GetClassString( Summary[ i ].mClassId );
 			_txtout += " ";
-			_txtout += va( " %.2f", Summary[ i ].m_Priority );
+			_txtout += va( " %.2f", Summary[ i ].mPriority );
 			EngineFuncs::ConsoleMessage( _txtout.c_str() );
 		}
 	}
@@ -1318,35 +1315,35 @@ void MapGoal::ClassPriority::GetPriorityText( std::string &_txtout ) const
 
 void MapGoal::SetPersistentPriorityForClass( const std::string &_exp, int _team, int _class, float _priority )
 {
-	for ( obuint32 i = 0; i < gPriorityList.size(); ++i )
+	for ( uint32_t i = 0; i < gPriorityList.size(); ++i )
 	{
-		if ( _exp == gPriorityList[ i ].m_Expression )
+		if ( _exp == gPriorityList[ i ].mExpression )
 		{
-			gPriorityList[ i ].m_Team = _team;
-			gPriorityList[ i ].m_Class = _class;
-			gPriorityList[ i ].m_Priority = _priority;
+			gPriorityList[ i ].mTeam = _team;
+			gPriorityList[ i ].mClass = _class;
+			gPriorityList[ i ].mPriority = _priority;
 			return;
 		}
 	}
 
 	PersistentPriority pp;
-	pp.m_Expression = _exp;
-	pp.m_Team = _team;
-	pp.m_Class = _class;
-	pp.m_Priority = _priority;
+	pp.mExpression = _exp;
+	pp.mTeam = _team;
+	pp.mClass = _class;
+	pp.mPriority = _priority;
 	gPriorityList.push_back( pp );
 }
 
 void MapGoal::CheckForPersistentPriority()
 {
-	for ( obuint32 i = 0; i < gPriorityList.size(); ++i )
+	for ( uint32_t i = 0; i < gPriorityList.size(); ++i )
 	{
-		if ( Utils::RegexMatch( gPriorityList[ i ].m_Expression.c_str(), GetName().c_str() ) )
+		if ( Utils::RegexMatch( gPriorityList[ i ].mExpression.c_str(), GetName().c_str() ) )
 		{
 			SetPriorityForClass(
-				gPriorityList[ i ].m_Team,
-				gPriorityList[ i ].m_Class,
-				gPriorityList[ i ].m_Priority );
+				gPriorityList[ i ].mTeam,
+				gPriorityList[ i ].mClass,
+				gPriorityList[ i ].mPriority );
 			return;
 		}
 	}
@@ -1354,7 +1351,7 @@ void MapGoal::CheckForPersistentPriority()
 
 void MapGoal::DrawRoute( const obColor _color, float _duration )
 {
-	Routes::const_iterator cIt = m_Routes.begin(), cItEnd = m_Routes.end();
+	Routes::const_iterator cIt = mRoutes.begin(), cItEnd = mRoutes.end();
 	for ( ; cIt != cItEnd; ++cIt )
 	{
 		const Route &r = ( *cIt );
@@ -1362,8 +1359,8 @@ void MapGoal::DrawRoute( const obColor _color, float _duration )
 		PathInterface * path = System::mInstance->mNavigation->AllocPathInterface( NULL );
 		if ( path != NULL )
 		{
-			path->UpdateSourcePosition( r.m_Start->GetPosition() );
-			path->UpdateGoalPosition( r.m_End->GetPosition(), 0.0f );
+			path->UpdateSourcePosition( r.mStart->GetPosition() );
+			path->UpdateGoalPosition( r.mEnd->GetPosition(), 0.0f );
 			path->UpdatePath();
 
 			enum
@@ -1467,11 +1464,11 @@ bool MapGoal::SaveToTable( gmMachine *_machine, gmGCRoot<gmTableObject> &_saveta
 {
 	gmGCRoot<gmTableObject> GoalTable( _machine->AllocTableObject(), _machine );
 
-	if ( m_SerializeFunc )
+	if ( mSerializeFunc )
 	{
 		gmCall call;
 		gmGCRoot<gmUserObject> mgref = GetScriptObject( _machine );
-		if ( call.BeginFunction( _machine, m_SerializeFunc, gmVariable( mgref ) ) )
+		if ( call.BeginFunction( _machine, mSerializeFunc, gmVariable( mgref ) ) )
 		{
 			call.AddParamTable( GoalTable );
 			const int ThreadState = call.End();
@@ -1485,34 +1482,34 @@ bool MapGoal::SaveToTable( gmMachine *_machine, gmGCRoot<gmTableObject> &_saveta
 
 	//////////////////////////////////////////////////////////////////////////
 	// Standard info.
-	GoalTable->Set( _machine, "Version", gmVariable( m_Version ) );
+	GoalTable->Set( _machine, "Version", gmVariable( mVersion ) );
 	GoalTable->Set( _machine, "GoalType", GetGoalType().c_str() );
 	GoalTable->Set( _machine, "Name", GetName().c_str() );
 	GoalTable->Set( _machine, "TagName", GetTagName().c_str() );
 	GoalTable->Set( _machine, "GroupName", GetGroupName().c_str() );
-	GoalTable->Set( _machine, "Position", gmVariable( m_InterfacePosition.IsZero() ? m_Position : m_InterfacePosition ) );
-	GoalTable->Set( _machine, "Radius", gmVariable( m_Radius ) );
-	GoalTable->Set( _machine, "MinRadius", gmVariable( m_MinRadius ) );
+	GoalTable->Set( _machine, "Position", gmVariable( mInterfacePosition.IsZero() ? mPosition : mInterfacePosition ) );
+	GoalTable->Set( _machine, "Radius", gmVariable( mRadius ) );
+	GoalTable->Set( _machine, "MinRadius", gmVariable( mMinRadius ) );
 
 	// There's no reason to save SerialNum, because function LoadFromTable never loaded SerialNum from file.
-	//GoalTable->Set(_machine,"SerialNum",gmVariable(m_SerialNum));
+	//GoalTable->Set(_machine,"SerialNum",gmVariable(mSerialNum));
 
-	GoalTable->Set( _machine, "CreateOnLoad", gmVariable( m_CreateOnLoad ) );
-	if ( m_RandomUsePoint ) GoalTable->Set( _machine, "RandomUsePoint", gmVariable( m_RandomUsePoint ) );
-	if ( m_Range ) GoalTable->Set( _machine, "Range", gmVariable( m_Range ) );
+	GoalTable->Set( _machine, "CreateOnLoad", gmVariable( mCreateOnLoad ) );
+	if ( mRandomUsePoint ) GoalTable->Set( _machine, "RandomUsePoint", gmVariable( mRandomUsePoint ) );
+	if ( mRange ) GoalTable->Set( _machine, "Range", gmVariable( mRange ) );
 
-	/*gmGCRoot<gmUserObject> userBounds = gmBind2::Class<BoundingBox>::WrapObject(_machine,&m_Bounds,true);
+	/*gmGCRoot<gmUserObject> userBounds = gmBind2::Class<BoundingBox>::WrapObject(_machine,&mBounds,true);
 	GoalTable->Set(_machine,"Bounds",gmVariable(userBounds));*/
 
 	Vector3f Euler( 0, 0, 0 );
-	m_Orientation.ExtractEulerZXY( Euler.X(), Euler.Y(), Euler.Z() );
+	mOrientation.ExtractEulerZXY( Euler.X(), Euler.Y(), Euler.Z() );
 	GoalTable->Set( _machine, "Orientation", gmVariable( Euler ) );
 	//////////////////////////////////////////////////////////////////////////
 
-	GoalTable->Set( _machine, "TeamAvailability", gmVariable( m_AvailableTeamsInit.GetRawFlags() ) );
+	GoalTable->Set( _machine, "TeamAvailability", gmVariable( mAvailableTeamsInit.GetRawFlags() ) );
 
 	GoalTable->Set( _machine, "Roles", gmVariable::s_null );
-	if ( m_RoleMask.AnyFlagSet() )
+	if ( mRoleMask.AnyFlagSet() )
 	{
 		gmTableObject * roleTable = _machine->AllocTableObject();
 
@@ -1521,13 +1518,13 @@ bool MapGoal::SaveToTable( gmMachine *_machine, gmGCRoot<gmTableObject> &_saveta
 		System::mInstance->mGame->GetRoleEnumeration( Enum, NumElements );
 		for ( int i = 0; i < 32; ++i )
 		{
-			if ( m_RoleMask.CheckFlag( i ) )
+			if ( mRoleMask.CheckFlag( i ) )
 			{
 				for ( int e = 0; e < NumElements; ++e )
 				{
-					if ( Enum[ e ].m_Value == i )
+					if ( Enum[ e ].mValue == i )
 					{
-						roleTable->Set( _machine, roleTable->Count(), Enum[ e ].m_Key );
+						roleTable->Set( _machine, roleTable->Count(), Enum[ e ].mKey );
 						break;
 					}
 				}
@@ -1549,42 +1546,42 @@ bool MapGoal::LoadFromTable( gmMachine *_machine, gmGCRoot<gmTableObject> &_load
 	_loadtable->CopyTo( _machine, proptable );
 
 	if ( const char *TagName = proptable->Get( _machine, "TagName" ).GetCStringSafe( 0 ) )
-		m_TagName = TagName;
+		mTagName = TagName;
 	else
 	{
 		_err.AddError( "Goal.TagName Field Missing!" );
 		return false;
 	}
 	if ( const char *Name = proptable->Get( _machine, "Name" ).GetCStringSafe( 0 ) )
-		m_Name = Name;
+		mName = Name;
 	else
 	{
 		_err.AddError( "Goal.Name Field Missing!" );
 		return false;
 	}
 	if ( const char *GroupName = proptable->Get( _machine, "GroupName" ).GetCStringSafe( 0 ) )
-		m_GroupName = GroupName;
+		mGroupName = GroupName;
 	else
 	{
 		_err.AddError( "Goal.GroupName Field Missing!" );
 		return false;
 	}
-	if ( !proptable->Get( _machine, "Version" ).GetInt( m_Version, 0 ) )
+	if ( !proptable->Get( _machine, "Version" ).GetInt( mVersion, 0 ) )
 	{
 		_err.AddError( "Goal.Version Field Missing!" );
 		return false;
 	}
-	if ( !proptable->Get( _machine, "Position" ).GetVector( m_Position ) )
+	if ( !proptable->Get( _machine, "Position" ).GetVector( mPosition ) )
 	{
 		_err.AddError( "Goal.Position Field Missing!" );
 		return false;
 	}
-	if ( !proptable->Get( _machine, "Radius" ).GetFloatSafe( m_Radius ) )
+	if ( !proptable->Get( _machine, "Radius" ).GetFloatSafe( mRadius ) )
 	{
 		_err.AddError( "Goal.Radius Field Missing!" );
 		return false;
 	}
-	if ( !proptable->Get( _machine, "MinRadius" ).GetFloatSafe( m_MinRadius ) )
+	if ( !proptable->Get( _machine, "MinRadius" ).GetFloatSafe( mMinRadius ) )
 	{
 		_err.AddError( "Goal.MinRadius Field Missing!" );
 		return false;
@@ -1594,8 +1591,8 @@ bool MapGoal::LoadFromTable( gmMachine *_machine, gmGCRoot<gmTableObject> &_load
 	// If some goals are deleted, then newly created goals can have same serial number as existing goals.
 	// Because serial numbers in the file are not unique, it would be very dangerous to load them.
 	// Fortunatelly, omni-bot never loaded serial numbers from a file, because here is another bug.
-	// Function GetIntSafe cannot change value of m_SerialNum, because parameter is not passed by reference (see declaration in gmVariable.h)
-	//if(!proptable->Get(_machine,"SerialNum").GetIntSafe(m_SerialNum))
+	// Function GetIntSafe cannot change value of mSerialNum, because parameter is not passed by reference (see declaration in gmVariable.h)
+	//if(!proptable->Get(_machine,"SerialNum").GetIntSafe(mSerialNum))
 	//{
 	//	_err.AddError("Goal.SerialNum Field Missing!");
 	//	return false;
@@ -1607,7 +1604,7 @@ bool MapGoal::LoadFromTable( gmMachine *_machine, gmGCRoot<gmTableObject> &_load
 		_err.AddError( "Goal.Orientation Field Missing!" );
 		return false;
 	}
-	m_Orientation.MakeEulerZXY( Euler.X(), Euler.Y(), Euler.Z() );
+	mOrientation.MakeEulerZXY( Euler.X(), Euler.Y(), Euler.Z() );
 
 	int InitialTeams = 0;
 	if ( !proptable->Get( _machine, "TeamAvailability" ).GetIntSafe( InitialTeams, 0 ) )
@@ -1615,10 +1612,10 @@ bool MapGoal::LoadFromTable( gmMachine *_machine, gmGCRoot<gmTableObject> &_load
 		//_err.AddError("Goal.TeamAvailability Field Missing!");
 		//return false;
 	}
-	m_AvailableTeamsInit = BitFlag32( InitialTeams );
-	m_AvailableTeams = m_AvailableTeamsInit;
+	mAvailableTeamsInit = BitFlag32( InitialTeams );
+	mAvailableTeams = mAvailableTeamsInit;
 
-	m_RoleMask.ClearAll();
+	mRoleMask.ClearAll();
 	if ( gmTableObject * roleTable = proptable->Get( _machine, "Roles" ).GetTableObjectSafe() )
 	{
 		int NumElements = 0;
@@ -1634,9 +1631,9 @@ bool MapGoal::LoadFromTable( gmMachine *_machine, gmGCRoot<gmTableObject> &_load
 			{
 				for ( int e = 0; e < NumElements; ++e )
 				{
-					if ( !Utils::StringCompareNoCase( roleName, Enum[ e ].m_Key ) )
+					if ( !Utils::StringCompareNoCase( roleName, Enum[ e ].mKey ) )
 					{
-						m_RoleMask.SetFlag( Enum[ e ].m_Value );
+						mRoleMask.SetFlag( Enum[ e ].mValue );
 					}
 				}
 			}
@@ -1652,13 +1649,13 @@ bool MapGoal::LoadFromTable( gmMachine *_machine, gmGCRoot<gmTableObject> &_load
 	}
 	SetCreateOnLoad( CreateOnLoad != 0 );
 
-	if ( !proptable->Get( _machine, "RandomUsePoint" ).GetInt( m_RandomUsePoint, 0 ) )
+	if ( !proptable->Get( _machine, "RandomUsePoint" ).GetInt( mRandomUsePoint, 0 ) )
 	{
 		//_err.AddError("Goal.RandomUsePoint Field Missing!");
 		//return false;
 	}
 
-	if ( !proptable->Get( _machine, "Range" ).GetInt( m_Range, 0 ) )
+	if ( !proptable->Get( _machine, "Range" ).GetInt( mRange, 0 ) )
 	{
 		//_err.AddError("Goal.Range Field Missing!");
 		//return false;
@@ -1683,14 +1680,14 @@ bool MapGoal::LoadFromTable( gmMachine *_machine, gmGCRoot<gmTableObject> &_load
 
 void MapGoal::ShowHelp()
 {
-	if ( m_HelpFunc )
+	if ( mHelpFunc )
 	{
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 
 		gmGCRoot<gmUserObject> mgref = GetScriptObject( pMachine );
 
 		gmCall call;
-		if ( call.BeginFunction( pMachine, m_HelpFunc, gmVariable( mgref ) ) )
+		if ( call.BeginFunction( pMachine, mHelpFunc, gmVariable( mgref ) ) )
 		{
 			call.End();
 		}
@@ -1704,14 +1701,14 @@ void MapGoal::HudDisplay()
 	{
 		GatherProperties(DW.Hud.mPropertySheet);
 
-		if(m_HudDisplay)
+		if(mHudDisplay)
 		{
 			gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 
 			gmGCRoot<gmUserObject> mgref = GetScriptObject(pMachine);
 
 			gmCall call;
-			if(call.BeginFunction(pMachine, m_HudDisplay, gmVariable(mgref)))
+			if(call.BeginFunction(pMachine, mHudDisplay, gmVariable(mgref)))
 			{
 				call.AddParamUser(DW.Hud.mUserObject);
 				call.End();
@@ -1728,7 +1725,7 @@ void MapGoal::CreateGuiFromSchema( gmMachine *a_machine, gmTableObject *a_schema
 	gmTableNode *pNode = a_schema->GetFirst(it);
 	while(pNode)
 	{
-		const char *PropName = pNode->m_key.GetCStringSafe();
+		const char *PropName = pNode->mkey.GetCStringSafe();
 		if(PropName)
 		{
 			gmVariable thisObj(GetScriptObject(a_machine));
@@ -1802,7 +1799,7 @@ void MapGoal::action(const gcn::ActionEvent& actionEvent)
 
 #ifdef ENABLE_REMOTE_DEBUGGING
 void MapGoal::Sync( RemoteLib::DebugConnection * connection ) {
-	//if ( fullSync || m_NeedsSynced ) {
+	//if ( fullSync || mNeedsSynced ) {
 	//	snapShot.Clear();
 	//}
 
@@ -1860,7 +1857,7 @@ void MapGoal::Sync( RemoteLib::DebugConnection * connection ) {
 
 static int MG_HandleMaxUsers( gmThread *a_thread, MapGoal::TrackingCat _cat )
 {
-	obint32 iMaxUsers = 0;
+	int32_t iMaxUsers = 0;
 
 	MapGoal *NativePtr = 0;
 	if ( !gmBind2::Class<MapGoal>::FromThis( a_thread, NativePtr ) || !NativePtr )
@@ -2150,35 +2147,15 @@ static int gmfCreateGuiFromSchema( gmThread *a_thread )
 
 void MapGoal_AsString( MapGoal *a_var, char * a_buffer, int a_bufferSize )
 {
-	_gmsnprintf( a_buffer, a_bufferSize,
-		"MapGoal(%s::%s)", a_var->GetGoalType().c_str(), a_var->GetName().c_str() );
+	_gmsnprintf( a_buffer, a_bufferSize, "MapGoal(%s::%s)", a_var->GetGoalType().c_str(), a_var->GetName().c_str() );
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-//bool MapGoal::pfnSetDotEx(gmThread * a_thread, MapGoal * a_goal, const char *a_key, gmVariable * a_operands)
-//{
-//	MapGoal *Mg = 0;
-//	if(gmBind2::Class<MapGoal>::FromVar(a_thread,a_operands[1],Mg) && Mg)
-//	{
-//		MapGoalPtr mg = Mg->GetSmartPtr();
-//
-//		return true;
-//	}
-//
-//	return false;
-//}
-//bool MapGoal::pfnGetDotEx(gmThread * a_thread, MapGoal * a_goal, const char *a_key, gmVariable * a_operands)
-//{
-//	return false;
-//}
-
-void MapGoal::Bind( gmMachine *_m )
+void MapGoal::Bind( gmMachine* _m )
 {
 	gmBind2::Global( _m, "InternalGoalState" )
-		.var( (int)GoalStateFlagState, "FlagState" )
-		//.var((int)GoalStateFlagHoldState,"FlagHoldState")
-		;
+		.var( (int)GoalStateFlagState, "FlagState" );
 
 	gmBind2::Class<MapGoal>( "MapGoal", _m )
 		//.constructor()
@@ -2251,18 +2228,18 @@ void MapGoal::Bind( gmMachine *_m )
 		.func( &MapGoal::SetDeleteMe, "SetRemoveFlag", "Mark the goal for deletion." )
 
 		.func( &MapGoal::RenderDefault, "RenderDefault", "Render the default debug options." )
-		.var( &MapGoal::m_DefaultRenderRadius, "DefaultRenderRadius", "Radius in which debug options will be displayed." )
-		.var( &MapGoal::m_RenderHeight, "DefaultRenderHeight", "Goal height offset where rendering will take place." )
-		.var_bitfield( &MapGoal::m_DefaultDrawFlags, DrawName, "RenderDefaultName", "Draw the name of the goal." )
-		.var_bitfield( &MapGoal::m_DefaultDrawFlags, DrawGroup, "RenderDefaultGroup", "Draw the group of the goal." )
-		.var_bitfield( &MapGoal::m_DefaultDrawFlags, DrawRole, "RenderDefaultRole", "Draw the roles for the goal." )
-		.var_bitfield( &MapGoal::m_DefaultDrawFlags, DrawBounds, "RenderDefaultBounds", "Draw the bounds of the goal." )
-		.var_bitfield( &MapGoal::m_DefaultDrawFlags, DrawRadius, "RenderDefaultRadius", "Draw the radius of the goal." )
-		.var_bitfield( &MapGoal::m_DefaultDrawFlags, DrawInitialAvail, "RenderDefaultInitialAvailability", "Draw the initial availability of the goal." )
-		.var_bitfield( &MapGoal::m_DefaultDrawFlags, DrawCurrentAvail, "RenderDefaultCurrentAvailability", "Draw the current availability of the goal." )
-		.var_bitfield( &MapGoal::m_DefaultDrawFlags, DrawCenterBounds, "RenderDefaultAtCenterBounds", "Draw debug options using the center of the bounding box." )
-		.var_bitfield( &MapGoal::m_DefaultDrawFlags, DrawRandomUsePoint, "RenderRandomUsePoint", "Draw whether or not the goal randomly selects a usepoint." )
-		.var_bitfield( &MapGoal::m_DefaultDrawFlags, DrawRangeLimit, "RenderRangeLimit", "Draw the goals current range limit if greater than 0." )
+		.var( &MapGoal::mDefaultRenderRadius, "DefaultRenderRadius", "Radius in which debug options will be displayed." )
+		.var( &MapGoal::mRenderHeight, "DefaultRenderHeight", "Goal height offset where rendering will take place." )
+		.var_bitfield( &MapGoal::mDefaultDrawFlags, DrawName, "RenderDefaultName", "Draw the name of the goal." )
+		.var_bitfield( &MapGoal::mDefaultDrawFlags, DrawGroup, "RenderDefaultGroup", "Draw the group of the goal." )
+		.var_bitfield( &MapGoal::mDefaultDrawFlags, DrawRole, "RenderDefaultRole", "Draw the roles for the goal." )
+		.var_bitfield( &MapGoal::mDefaultDrawFlags, DrawBounds, "RenderDefaultBounds", "Draw the bounds of the goal." )
+		.var_bitfield( &MapGoal::mDefaultDrawFlags, DrawRadius, "RenderDefaultRadius", "Draw the radius of the goal." )
+		.var_bitfield( &MapGoal::mDefaultDrawFlags, DrawInitialAvail, "RenderDefaultInitialAvailability", "Draw the initial availability of the goal." )
+		.var_bitfield( &MapGoal::mDefaultDrawFlags, DrawCurrentAvail, "RenderDefaultCurrentAvailability", "Draw the current availability of the goal." )
+		.var_bitfield( &MapGoal::mDefaultDrawFlags, DrawCenterBounds, "RenderDefaultAtCenterBounds", "Draw debug options using the center of the bounding box." )
+		.var_bitfield( &MapGoal::mDefaultDrawFlags, DrawRandomUsePoint, "RenderRandomUsePoint", "Draw whether or not the goal randomly selects a usepoint." )
+		.var_bitfield( &MapGoal::mDefaultDrawFlags, DrawRangeLimit, "RenderRangeLimit", "Draw the goals current range limit if greater than 0." )
 
 		.func( gmfMaxUsers_InProgress, "MaxUsers_InProgress", "Set the max number of 'inprogress' users that can use the goal" )
 		.func( gmfMaxUsers_InUse, "MaxUsers_InUse", "Set the max number of 'inuse' users that can use the goal" )
@@ -2276,44 +2253,44 @@ void MapGoal::Bind( gmMachine *_m )
 
 		.func( gmfLimitToWeapon, "LimitToWeapon", "Adds a list of weapons that are required from any user of the goal." )
 
-		.var( &MapGoal::m_Version, "Version", "int", "Gets the goal version." )
+		.var( &MapGoal::mVersion, "Version", "int", "Gets the goal version." )
 
-		.var( &MapGoal::m_GoalState, "GoalState", "int", "Gets the goal state" )
-		.var( &MapGoal::m_GoalStateFunction, "GoalStateFunction", "enum InternalGoalState" )
+		.var( &MapGoal::mGoalState, "GoalState", "int", "Gets the goal state" )
+		.var( &MapGoal::mGoalStateFunction, "GoalStateFunction", "enum InternalGoalState" )
 
-		.var( &MapGoal::m_InitNewFunc, "InitNewGoal", "Callback", "Called on goal creation to initialize any internal variables." )
-		.var( &MapGoal::m_UpgradeFunc, "UpgradeVersion", "Callback", "Called to upgrade the goal to the latest used version." )
-		.var( &MapGoal::m_RenderFunc, "Render", "Callback", "Called when draw_goals is enabled for this goal. Used to render itself." )
-		.var( &MapGoal::m_UpdateFunc, "Update", "Callback", "Called every frame to update the state of the goal if needed." )
-		.var( &MapGoal::m_SerializeFunc, "SaveToTable", "Callback", "Called when the goals are saved to a file. Allows the goal to serialize persistent information." )
-		.var( &MapGoal::m_SetPropertyFunc, "SetProperty", "Callback", "Called on bot goal_setproperty x y, where x is a property name and y is a value or keyword." )
-		.var( &MapGoal::m_HelpFunc, "Help", "Callback", "Called on bot goal_help to print requirements and available properties for the goal." )
-		.var( &MapGoal::m_HudDisplay, "HudDisplay", "Callback", "Called when goal is highlighted to create gui elements for debug visualization." )
+		.var( &MapGoal::mInitNewFunc, "InitNewGoal", "Callback", "Called on goal creation to initialize any internal variables." )
+		.var( &MapGoal::mUpgradeFunc, "UpgradeVersion", "Callback", "Called to upgrade the goal to the latest used version." )
+		.var( &MapGoal::mRenderFunc, "Render", "Callback", "Called when draw_goals is enabled for this goal. Used to render itself." )
+		.var( &MapGoal::mUpdateFunc, "Update", "Callback", "Called every frame to update the state of the goal if needed." )
+		.var( &MapGoal::mSerializeFunc, "SaveToTable", "Callback", "Called when the goals are saved to a file. Allows the goal to serialize persistent information." )
+		.var( &MapGoal::mSetPropertyFunc, "SetProperty", "Callback", "Called on bot goal_setproperty x y, where x is a property name and y is a value or keyword." )
+		.var( &MapGoal::mHelpFunc, "Help", "Callback", "Called on bot goal_help to print requirements and available properties for the goal." )
+		.var( &MapGoal::mHudDisplay, "HudDisplay", "Callback", "Called when goal is highlighted to create gui elements for debug visualization." )
 
-		.var( &MapGoal::m_ExtraDebugText, "ExtraDebugText", "std::string", "Additional debug text to render in RenderDefault function." )
+		.var( &MapGoal::mExtraDebugText, "ExtraDebugText", "std::string", "Additional debug text to render in RenderDefault function." )
 
-		.var( &MapGoal::m_Radius, "Radius", "float", "Radius of the goal." )
-		.var( &MapGoal::m_MinRadius, "MinRadius", "float", "Minimum allowed radius of the goal." )
-		//.var(&MapGoal::m_Bounds,				"Bounds")
+		.var( &MapGoal::mRadius, "Radius", "float", "Radius of the goal." )
+		.var( &MapGoal::mMinRadius, "MinRadius", "float", "Minimum allowed radius of the goal." )
+		//.var(&MapGoal::mBounds,				"Bounds")
 
-		.var( &MapGoal::m_GoalType, "GoalType", "std::string", "Type of goal." )
+		.var( &MapGoal::mGoalType, "GoalType", "std::string", "Type of goal." )
 
-		.var( &MapGoal::m_DefaultPriority, "DefaultPriority", "float", "Default priority of the goal, if no class/team specific priorities." )
-		.var( &MapGoal::m_RolePriorityBonus, "RolePriorityBonus", "float", "Role priority bonus of the goal, for users matching role." )
+		.var( &MapGoal::mDefaultPriority, "DefaultPriority", "float", "Default priority of the goal, if no class/team specific priorities." )
+		.var( &MapGoal::mRolePriorityBonus, "RolePriorityBonus", "float", "Role priority bonus of the goal, for users matching role." )
 
-		.var_readonly( &MapGoal::m_SerialNum, "SerialNum", "int readonly", "Auto generated unique serial number of the goal." )
+		.var_readonly( &MapGoal::mSerialNum, "SerialNum", "int readonly", "Auto generated unique serial number of the goal." )
 
 		// flags
-		.var( &MapGoal::m_DeleteMe, "MarkForRemoval", "bool", "Mark the goal for deletion." )
-		.var( &MapGoal::m_DynamicPosition, "DynamicPosition", "bool", "Goal should update its position from its entity." )
-		.var( &MapGoal::m_DynamicOrientation, "DynamicOrientation", "bool", "Goal should update its orientation from its entity." )
-		.var( &MapGoal::m_RemoveWithEntity, "RemoveWithEntity", "bool", "Goal should be removed if its entity is removed." )
-		.var( &MapGoal::m_InUse, "InUse", "bool", "Goal is inuse and should not be chosen." )
-		.var( &MapGoal::m_DisableForControllingTeam, "DisableForControllingTeam", "bool", "Goal will be made unavailable for the team which controls it(GetOwner)" )
-		.var( &MapGoal::m_DontSave, "DontSave", "bool", "Dont save this goal into the map goal script." )
-		.var( &MapGoal::m_RenderGoal, "RenderGoal", "bool", "Enable rendering for this goal." )
-		.var( &MapGoal::m_RenderRoutes, "RenderRoutes", "bool", "Enable rendering of the routes for this goal." )
-		.var( &MapGoal::m_CreateOnLoad, "CreateOnLoad", "bool", "False to not create the goal at load time, but keep the data around for when created by the interface." )
+		.var( &MapGoal::mDeleteMe, "MarkForRemoval", "bool", "Mark the goal for deletion." )
+		.var( &MapGoal::mDynamicPosition, "DynamicPosition", "bool", "Goal should update its position from its entity." )
+		.var( &MapGoal::mDynamicOrientation, "DynamicOrientation", "bool", "Goal should update its orientation from its entity." )
+		.var( &MapGoal::mRemoveWithEntity, "RemoveWithEntity", "bool", "Goal should be removed if its entity is removed." )
+		.var( &MapGoal::mInUse, "InUse", "bool", "Goal is inuse and should not be chosen." )
+		.var( &MapGoal::mDisableForControllingTeam, "DisableForControllingTeam", "bool", "Goal will be made unavailable for the team which controls it(GetOwner)" )
+		.var( &MapGoal::mDontSave, "DontSave", "bool", "Dont save this goal into the map goal script." )
+		.var( &MapGoal::mRenderGoal, "RenderGoal", "bool", "Enable rendering for this goal." )
+		.var( &MapGoal::mRenderRoutes, "RenderRoutes", "bool", "Enable rendering of the routes for this goal." )
+		.var( &MapGoal::mCreateOnLoad, "CreateOnLoad", "bool", "False to not create the goal at load time, but keep the data around for when created by the interface." )
 
 		/*.setDotEx(pfnSetDotEx)
 		.getDotEx(pfnGetDotEx)*/

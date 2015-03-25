@@ -57,7 +57,7 @@ namespace RenderBuffer
 	typedef std::vector<Circle>		CircleList;
 	typedef std::vector<Str3d>		StringList3d;
 	typedef std::vector<Str2d>		StringList2d;
-	typedef std::vector<obuint32>	VBOList;
+	typedef std::vector<uint32_t>	VBOList;
 
 	void Init();
 	void BeginFrame();
@@ -84,10 +84,10 @@ namespace RenderBuffer
 	void AddAABB(const AABB &_aabb, const obColor &_color, AABB::Direction _dir = AABB::DIR_ALL);
 	void AddOBB(const Box3f &_obb, const obColor &_color, AABB::Direction _dir = AABB::DIR_ALL);
 	
-	bool StaticBufferCreate( obuint32 & bufferId, const TriList & primitives );
-	bool StaticBufferCreate( obuint32 & bufferId, const QuadList & primitives );
-	void StaticBufferDelete( obuint32 bufferId );
-	void StaticBufferDraw( obuint32 bufferId );
+	bool StaticBufferCreate( uint32_t & bufferId, const TriList & primitives );
+	bool StaticBufferCreate( uint32_t & bufferId, const QuadList & primitives );
+	void StaticBufferDelete( uint32_t bufferId );
+	void StaticBufferDraw( uint32_t bufferId );
 };
 
 #endif

@@ -16,24 +16,24 @@
 
 Q4_Client::Q4_Client()
 {
-	m_StepHeight = 15.0f; // it's actually 16
+	mStepHeight = 15.0f; // it's actually 16
 }
 
 Q4_Client::~Q4_Client()
 {
 }
 
-NavFlags Q4_Client::GetTeamFlag(int _team) const
+NavFlags Q4_Client::GetTeamFlag( int _team ) const
 {
 	static const NavFlags defaultTeam = 0;
-	switch(_team)
+	switch ( _team )
 	{
-	case Q4_TEAM_MARINE:
-		return NAVFLAGS_TEAM1_ONLY;
-	case Q4_TEAM_STROGG:
-		return NAVFLAGS_TEAM2_ONLY;
-	default:
-		return defaultTeam;
+		case Q4_TEAM_MARINE:
+			return NAVFLAGS_TEAM1_ONLY;
+		case Q4_TEAM_STROGG:
+			return NAVFLAGS_TEAM2_ONLY;
+		default:
+			return defaultTeam;
 	}
 }
 
@@ -52,40 +52,30 @@ void Q4_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 	}
 }
 
-float Q4_Client::GetAvoidRadius(int _class) const
+float Q4_Client::GetGameVar( GameVar _var ) const
 {
-	switch(_class)
+	switch ( _var )
 	{
-	case Q4_CLASS_PLAYER:
-		return 64.0f;
+		case JumpGapOffset:
+			return 0.0f;
 	}
 	return 0.0f;
 }
 
-float Q4_Client::GetGameVar(GameVar _var) const
-{
-	switch(_var)
-	{
-	case JumpGapOffset:
-		return 0.0f;
-	}
-	return 0.0f;
-}
-
-bool Q4_Client::DoesBotHaveFlag(MapGoalPtr _mapgoal)
+bool Q4_Client::DoesBotHaveFlag( MapGoalPtr _mapgoal )
 {
 	int iTeamFlags = 0;
-	switch(GetTeam())
+	switch ( GetTeam() )
 	{
-	case Q4_TEAM_MARINE:
-		iTeamFlags = Q4_PWR_STROGGFLAG;
-		break;
-	case Q4_TEAM_STROGG:
-		iTeamFlags = Q4_PWR_MARINEFLAG;
-		break;
+		case Q4_TEAM_MARINE:
+			iTeamFlags = Q4_PWR_STROGGFLAG;
+			break;
+		case Q4_TEAM_STROGG:
+			iTeamFlags = Q4_PWR_MARINEFLAG;
+			break;
 	}
 
-	if(HasPowerup(iTeamFlags) || HasPowerup(Q4_PWR_ONEFLAG) || HasPowerup(Q4_PWR_DEADZONE))
+	if ( HasPowerup( iTeamFlags ) || HasPowerup( Q4_PWR_ONEFLAG ) || HasPowerup( Q4_PWR_DEADZONE ) )
 		return true;
 	return false;
 }

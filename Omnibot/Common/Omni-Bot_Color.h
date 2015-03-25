@@ -11,7 +11,7 @@
 #ifndef __OMNICOLOR_H__
 #define __OMNICOLOR_H__
 
-#include "Omni-Bot_BasicTypes.h"
+#include <stdint.h>
 
 // class: obColor
 //		Helper class for defining color values.
@@ -21,21 +21,21 @@ public:
 	obColor()
 	{
 		// initialize to white
-		cdata.m_RGBA[0] = 255;
-		cdata.m_RGBA[1] = 255;
-		cdata.m_RGBA[2] = 255;
-		cdata.m_RGBA[3] = 255; // 255 is opaque, 0 is transparent
+		cdata.mRGBA[0] = 255;
+		cdata.mRGBA[1] = 255;
+		cdata.mRGBA[2] = 255;
+		cdata.mRGBA[3] = 255; // 255 is opaque, 0 is transparent
 	}
-	explicit obColor(obint32 _color)
+	explicit obColor(int32_t _color)
 	{
-		cdata.m_RGBAi = _color;
+		cdata.mRGBAi = _color;
 	}
-	obColor(obuint8 _r, obuint8 _g, obuint8 _b, obuint8 _a = 255)
+	obColor(uint8_t _r, uint8_t _g, uint8_t _b, uint8_t _a = 255)
 	{
-		cdata.m_RGBA[0] = _r;
-		cdata.m_RGBA[1] = _g;
-		cdata.m_RGBA[2] = _b;
-		cdata.m_RGBA[3] = _a; // 255 is opaque, 0 is transparent
+		cdata.mRGBA[0] = _r;
+		cdata.mRGBA[1] = _g;
+		cdata.mRGBA[2] = _b;
+		cdata.mRGBA[3] = _a; // 255 is opaque, 0 is transparent
 	}
 	obColor( const float * flt )
 	{
@@ -44,28 +44,28 @@ public:
 
 	operator int() const
 	{
-		return cdata.m_RGBAi;
+		return cdata.mRGBAi;
 	}
 
-	inline obuint8 r() const	{ return cdata.m_RGBA[0]; }
-	inline obuint8 g() const	{ return cdata.m_RGBA[1]; }
-	inline obuint8 b() const	{ return cdata.m_RGBA[2]; }
-	inline obuint8 a() const	{ return cdata.m_RGBA[3]; }
+	inline uint8_t r() const	{ return cdata.mRGBA[0]; }
+	inline uint8_t g() const	{ return cdata.mRGBA[1]; }
+	inline uint8_t b() const	{ return cdata.mRGBA[2]; }
+	inline uint8_t a() const	{ return cdata.mRGBA[3]; }
 
-	inline float rF() const	{ return (float)cdata.m_RGBA[0] / 255.0f; }
-	inline float gF() const	{ return (float)cdata.m_RGBA[1] / 255.0f; }
-	inline float bF() const	{ return (float)cdata.m_RGBA[2] / 255.0f; }
-	inline float aF() const	{ return (float)cdata.m_RGBA[3] / 255.0f; }
+	inline float rF() const	{ return (float)cdata.mRGBA[0] / 255.0f; }
+	inline float gF() const	{ return (float)cdata.mRGBA[1] / 255.0f; }
+	inline float bF() const	{ return (float)cdata.mRGBA[2] / 255.0f; }
+	inline float aF() const	{ return (float)cdata.mRGBA[3] / 255.0f; }
 
-	inline obColor fade(obuint8 _a) const { obColor c(cdata.m_RGBAi); c.cdata.m_RGBA[3]=_a; return c; }
+	inline obColor fade(uint8_t _a) const { obColor c(cdata.mRGBAi); c.cdata.mRGBA[3]=_a; return c; }
 
 	static obColor FromFloat(float _r, float _g, float _b, float _a = 1)
 	{
 		obColor c;
-		c.cdata.m_RGBA[0] = (obuint8)(_r * 255.f);
-		c.cdata.m_RGBA[1] = (obuint8)(_g * 255.f);
-		c.cdata.m_RGBA[2] = (obuint8)(_b * 255.f);
-		c.cdata.m_RGBA[3] = (obuint8)(_a * 255.f);// 255 is opaque, 0 is transparent
+		c.cdata.mRGBA[0] = (uint8_t)(_r * 255.f);
+		c.cdata.mRGBA[1] = (uint8_t)(_g * 255.f);
+		c.cdata.mRGBA[2] = (uint8_t)(_b * 255.f);
+		c.cdata.mRGBA[3] = (uint8_t)(_a * 255.f);// 255 is opaque, 0 is transparent
 		return c;
 	}
 
@@ -78,13 +78,13 @@ public:
 			from.aF() + (to.aF() - from.aF()) * t );
 	}
 
-	inline obint32 rgba() const { return cdata.m_RGBAi; }
-	inline obint32 argb() const { return obColor( a(), r(), g(), b() ); }
+	inline int32_t rgba() const { return cdata.mRGBAi; }
+	inline int32_t argb() const { return obColor( a(), r(), g(), b() ); }
 private:
 	union cdatatype
 	{
-		obuint8		m_RGBA[4];
-		obint32		m_RGBAi;
+		uint8_t	 mRGBA[4];
+		int32_t	 mRGBAi;
 	} cdata;
 };
 

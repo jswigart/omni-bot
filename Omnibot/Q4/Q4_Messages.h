@@ -23,30 +23,30 @@
 
 struct Q4_Location
 {
-	float	m_Position[3];
-	char	m_LocationName[64];
+	float mPosition[ 3 ];
+	char mLocationName[ 64 ];
 };
 
 struct Q4_PlayerCash
 {
-	float	m_Cash;
+	float mCash;
 };
 
 struct Q4_IsBuyingAllowed
 {
-	obBool	m_BuyingAllowed;
+	obBool mBuyingAllowed;
 };
 
 struct Q4_ItemBuy
 {
-	int		m_Item;
-	obBool	m_Success;
+	int	 mItem;
+	obBool mSuccess;
 };
 
 struct Q4_CanPickUp
 {
-	GameEntity	m_Entity;
-	obBool		m_CanPickUp;
+	GameEntity mEntity;
+	obBool	 mCanPickUp;
 };
 //////////////////////////////////////////////////////////////////////////
 

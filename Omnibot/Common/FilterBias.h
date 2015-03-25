@@ -39,8 +39,8 @@ public:
 
 	FilterBiasEntityFlag(const int _entflags, const float _multiplier);
 private:
-	const int	m_EntityFlag;
-	const float	m_DistanceMultiplier;
+	const int	mEntityFlag;
+	const float	mDistanceMultiplier;
 
 	FilterBiasEntityFlag();
 };

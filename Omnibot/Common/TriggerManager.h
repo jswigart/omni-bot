@@ -53,21 +53,21 @@ public:
 	static TriggerManager *GetInstance();
 	static void DeleteInstance();
 protected:
-	ScriptCallback		m_ScriptCallbacks;
+	ScriptCallback	 mScriptCallbacks;
 
-	ShapeList			m_TriggerShapes;
+	ShapeList		 mTriggerShapes;
 
 	// Commands
 	virtual void InitCommands();
 	void cmdDebugTriggers( const StringVector &_args );
 	void cmdDrawTriggers( const StringVector &_args );
 
-	std::string 	m_DebugTriggersExpr;
+	std::string  mDebugTriggersExpr;
 
-	bool	m_DebugTriggers;
-	bool	m_DrawTriggers;
+	bool mDebugTriggers;
+	bool mDrawTriggers;
 
-	static TriggerManager	*m_Instance;
+	static TriggerManager	* mInstance;
 
 	TriggerManager();
 	~TriggerManager()

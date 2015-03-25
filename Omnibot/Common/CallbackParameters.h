@@ -25,53 +25,87 @@ class gmFunctionObject;
 class CallbackParameters
 {
 public:
-	enum { MaxVariables = 8 };
+	enum
+	{
+		MaxVariables = 8
+	};
 
-	void CallScript(bool _immediate = false) { m_ShouldCallScript = true; m_CallImmediate = _immediate; }
-	bool CallImmediate() const { return m_CallImmediate; }
-	void DontPropogateEvent() { m_PropogateEvent = false; }
-	bool ShouldCallScript() const { return m_ShouldCallScript; }
-	bool ShouldPropogateEvent() const { return m_PropogateEvent; }
-	void DebugName(const char *_name);
+	void CallScript( bool _immediate = false )
+	{
+		mShouldCallScript = true; 
+		mCallImmediate = _immediate;
+	}
+	bool CallImmediate() const
+	{
+		return mCallImmediate;
+	}
+	void DontPropogateEvent()
+	{
+		mPropogateEvent = false;
+	}
+	bool ShouldCallScript() const
+	{
+		return mShouldCallScript;
+	}
+	bool ShouldPropogateEvent() const
+	{
+		return mPropogateEvent;
+	}
+	void DebugName( const char *_name );
 	void PrintDebug();
-	void SetTargetState(obuint32 _ts) { m_TargetState = _ts; }
-	obuint32 GetTargetState() const { return m_TargetState; }
-	int GetMessageId() const { return m_MessageId; }
-	gmMachine *GetMachine() const { return m_Machine; }
+	void SetTargetState( uint32_t _ts )
+	{
+		mTargetState = _ts;
+	}
+	uint32_t GetTargetState() const
+	{
+		return mTargetState;
+	}
+	int GetMessageId() const
+	{
+		return mMessageId;
+	}
+	gmMachine *GetMachine() const
+	{
+		return mMachine;
+	}
 
-	void ResetParams() { m_NumParameters = 0; }
+	void ResetParams()
+	{
+		mNumParameters = 0;
+	}
 
-	void AddNull(const char *_name);
-	void AddInt(const char *_name, int _param);
-	void AddFloat(const char *_name, float _param);
-	void AddVector(const char *_name, const Vector3f &_vec);
-	void AddVector(const char *_name, float _x, float _y, float _z);
-	void AddEntity(const char *_name, GameEntity _param);
-	void AddUserObj(const char *_name, gmUserObject *_param);
-	void AddString(const char *_name, const char *_param);
-	void AddTable(const char *_name, gmTableObject *_param);
+	void AddNull( const char *_name );
+	void AddInt( const char *_name, int _param );
+	void AddFloat( const char *_name, float _param );
+	void AddVector( const char *_name, const Vector3f &_vec );
+	void AddVector( const char *_name, float _x, float _y, float _z );
+	void AddEntity( const char *_name, GameEntity _param );
+	void AddUserObj( const char *_name, gmUserObject *_param );
+	void AddString( const char *_name, const char *_param );
+	void AddTable( const char *_name, gmTableObject *_param );
 
-	int CallFunction(gmFunctionObject *_func,
+	int CallFunction( gmFunctionObject *_func,
 		const gmVariable &a_thisVar = gmVariable::s_null,
-		bool a_delayExecuteFlag = false) const;
+		bool a_delayExecuteFlag = false ) const;
 
-	CallbackParameters(int _messageId, gmMachine *_machine);
+	CallbackParameters( int _messageId, gmMachine *_machine );
 private:
-	int			m_MessageId;
-	int			m_NumParameters;
-	gmMachine	*m_Machine;
-	const char	*m_MessageName;
-	obuint32	m_TargetState;
+	int		 mMessageId;
+	int		 mNumParameters;
+	gmMachine	* mMachine;
+	const char	* mMessageName;
+	uint32_t mTargetState;
 
-	gmVariable		m_Variables[MaxVariables];
+	gmVariable	 mVariables[ MaxVariables ];
 
 #if(DEBUG_PARAMS)
-	const char*		m_DebugNames[MaxVariables];
+	const char*	 mDebugNames[MaxVariables];
 #endif
 
-	bool		m_ShouldCallScript;
-	bool		m_CallImmediate;
-	bool		m_PropogateEvent;
+	bool	 mShouldCallScript;
+	bool	 mCallImmediate;
+	bool	 mPropogateEvent;
 
 	void CheckParameters();
 

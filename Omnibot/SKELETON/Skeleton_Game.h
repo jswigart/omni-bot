@@ -23,7 +23,7 @@ class Skeleton_Game : public IGame
 {
 public:
 	bool Init( System & system );
-	
+
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
@@ -32,28 +32,26 @@ public:
 	const char *GetModSubFolder() const;
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const { return "skele"; }
-
-	const char *FindClassName(obint32 _classId);
-
-	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
-	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
+	const char *GetGameDatabaseAbbrev() const;
 	
-	Skeleton_Game() {};
-	virtual ~Skeleton_Game() {};
+	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
+	void GetWeaponEnumeration( const IntEnum *&_ptr, int &num );
+
+	Skeleton_Game();
+	~Skeleton_Game();
 protected:
 
-	void GetGameVars(GameVars &_gamevars);
+	void GetGameVars( GameVars &_gamevars );
 
 	// Script support.
-	void InitScriptClasses(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptEvents(gmMachine *_machine, gmTableObject *_table);
+	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptEvents( gmMachine *_machine, gmTableObject *_table );
 
 	// Commands
 	void InitCommands();
 
-	static const float Skeleton_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags);
-	static const float Skeleton_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags);
+	static const float Skeleton_GetEntityClassTraceOffset( const TargetInfo &_target );
+	static const float Skeleton_GetEntityClassAimOffset( const TargetInfo &_target );
 };
 
 #endif

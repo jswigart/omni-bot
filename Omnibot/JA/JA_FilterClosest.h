@@ -28,7 +28,7 @@ public:
 	JA_FilterClosest(Client *_client, AiState::SensoryMemory::Type _type);
 	virtual ~JA_FilterClosest() {}
 protected:
-	float	m_BestDistance;
+	float	mBestDistance;
 
 	JA_FilterClosest();
 };

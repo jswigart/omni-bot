@@ -1,7 +1,7 @@
 // this script provides the functionality of picking up weapons / ammo
 this.Name = "Pickup";
 this.Parent = "HighLevel";
-this.AutoAdd = true;
+this.AutoAdd = false;
 this.AlwaysRecieveEvents = true;
 this.SkipGetPriorityWhenActive = true;
 

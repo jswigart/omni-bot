@@ -20,7 +20,7 @@ class MemoryRecord;
 
 // typedef: WeaponList
 //		Holds a list of weapons the bot currently has.
-typedef std::list<WeaponPtr> WeaponList;
+typedef std::vector<WeaponPtr> WeaponList;
 
 namespace AiState
 {
@@ -30,26 +30,29 @@ namespace AiState
 	public:
 
 		void RenderDebug();
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		bool TargetExceedsWeaponLimits() const { return m_TargetExceedsWeaponLimits; }
+		bool TargetExceedsWeaponLimits() const
+		{
+			return mTargetExceedsWeaponLimits;
+		}
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
 		AttackTarget();
 	private:
-		WeaponLimits	m_WeaponLimits;
-		Vector3f		m_AimPosition;
-		obuint32		m_CurrentWeaponHash;
-		bool			m_ShootTheBastard : 1;
-		bool			m_TargetExceedsWeaponLimits : 1;
+		WeaponLimits mWeaponLimits;
+		Vector3f	 mAimPosition;
+		uint32_t	 mCurrentWeaponHash;
+		bool		 mShootTheBastard : 1;
+		bool		 mTargetExceedsWeaponLimits : 1;
 	};
 
 	// class: WeaponSystem
@@ -60,22 +63,25 @@ namespace AiState
 	public:
 		struct WeaponRequest
 		{
-			Priority::ePriority		m_Priority;
-			obuint32 				m_Owner;
-			int						m_WeaponId;
+			Priority::ePriority	 mPriority;
+			uint32_t 			 mOwner;
+			int					 mWeaponId;
 
 			void Reset();
 			WeaponRequest();
 		private:
 		};
 
-		bool AddWeaponRequest(Priority::ePriority _prio, obuint32 _owner, int _weaponId);
-		void ReleaseWeaponRequest(const std::string &_owner);
-		void ReleaseWeaponRequest(obuint32 _owner);
-		bool UpdateWeaponRequest(obuint32 _owner, int _weaponId);
+		bool AddWeaponRequest( Priority::ePriority _prio, uint32_t _owner, int _weaponId );
+		void ReleaseWeaponRequest( const std::string &_owner );
+		void ReleaseWeaponRequest( uint32_t _owner );
+		bool UpdateWeaponRequest( uint32_t _owner, int _weaponId );
 		int GetWeaponNeedingReload();
 
-		BitFlag128 GetWeaponMask() const { return m_WeaponMask; }
+		BitFlag128 GetWeaponMask() const
+		{
+			return mWeaponMask;
+		}
 
 		// function: GrabAllWeapons
 		//		Gets a copy of all weapons from the weapon database.
@@ -83,7 +89,7 @@ namespace AiState
 
 		// function: RefreshWeapon
 		//		Refreshes a copy of a particular weapon.
-		void RefreshWeapon(int _weaponId);
+		void RefreshWeapon( int _weaponId );
 
 		// function: RefreshAllWeapons
 		//		Refreshes a copy of all weapons from the weapon database.
@@ -91,15 +97,15 @@ namespace AiState
 
 		// function: AddWeaponToInventory
 		//		Adds a pointer to a weapon into the inventory weapon list.
-		bool AddWeaponToInventory(int _weaponId);
+		bool AddWeaponToInventory( int _weaponId );
 
 		// function: AddWeapon
 		//		Gives a weapon to the bot for it to use
-		void AddWeapon(WeaponPtr _weapon);
+		void AddWeapon( WeaponPtr _weapon );
 
 		// function: RemoveWeapon
 		//		Removes a weapon from the bots inventory by its id.
-		void RemoveWeapon(int _weaponId);
+		void RemoveWeapon( int _weaponId );
 
 		// function: ClearWeapons
 		//		Strips the bot of all weapons
@@ -108,11 +114,14 @@ namespace AiState
 		// function: SelectBestWeapon
 		//		Evaluates all the bots current weapons and chooses the best one,
 		//		given the current target
-		int SelectBestWeapon(GameEntity _targetent = GameEntity());
+		int SelectBestWeapon( GameEntity _targetent = GameEntity() );
 
 		// function: SelectRandomWeapon
 		//		Returns weapon id for a random weapon
 		int SelectRandomWeapon();
+
+		// function: UpdateWeapons
+		void UpdateWeapons();
 
 		// function: UpdateAllWeaponAmmo
 		//		Allows each weapon to update the current status of its ammo
@@ -128,60 +137,78 @@ namespace AiState
 
 		// function: ChargeWeapon
 		//		Attempts to start 'charging' the current weapon.
-		void ChargeWeapon(FireMode _mode = Primary);
+		void ChargeWeapon( FireMode _mode = Primary );
 
 		// function: ZoomWeapon
 		//		Attempts to zoom the weapon(if HasZoom)
-		void ZoomWeapon(FireMode _mode = Primary);
+		void ZoomWeapon( FireMode _mode = Primary );
 
 		// function: FireWeapon
 		//		Attempts to fire the current weapon
-		void FireWeapon(FireMode _mode = Primary);
+		void FireWeapon( FireMode _mode = Primary );
 
 		// function: HasWeapon
 		//		Checks if the bot has this weapon
-		bool HasWeapon(int _weaponId) const;
+		bool HasWeapon( int _weaponId ) const;
 
 		// function: HasAmmo
 		//		Checks is the current weapon has ammo
-		bool HasAmmo(FireMode _mode) const;
+		bool HasAmmo( FireMode _mode ) const;
 
 		// function: HasAmmo
 		//		Checks if a specific weapon has ammo
-		bool HasAmmo(int _weaponid, FireMode _mode = Primary, int _amount = 0) const;
+		bool HasAmmo( int _weaponid, FireMode _mode = Primary, int _amount = 0 ) const;
 
 		// function: GetCurrentWeaponID
 		//		Gets the Id of the current weapon
-		inline int GetCurrentWeaponID() const			{ return m_CurrentWeapon ? m_CurrentWeapon->GetWeaponID() : -1; }
+		inline int GetCurrentWeaponID() const
+		{
+			return mCurrentWeapon ? mCurrentWeapon->GetWeaponID() : -1;
+		}
 
 		// function: GetDesiredWeaponID
 		//		Gets the Id of the desired weapon
-		inline int GetDesiredWeaponID() const			{ return m_DesiredWeaponID; }
+		inline int GetDesiredWeaponID() const
+		{
+			return mDesiredWeaponID;
+		}
 
-		inline obint32 GetDefaultWeaponID() const			{ return m_DefaultWeapon; }
-		inline obint32 GetOverrideWeaponID() const			{ return m_OverrideWeapon; }
+		inline int32_t GetDefaultWeaponID() const
+		{
+			return mDefaultWeapon;
+		}
+		inline int32_t GetOverrideWeaponID() const
+		{
+			return mOverrideWeapon;
+		}
 
-		inline void SetOverrideWeaponID(obint32 w) { m_OverrideWeapon = w; }
-		inline void ClearOverrideWeaponID() { m_OverrideWeapon = 0; }
+		inline void SetOverrideWeaponID( int32_t w )
+		{
+			mOverrideWeapon = w;
+		}
+		inline void ClearOverrideWeaponID()
+		{
+			mOverrideWeapon = 0;
+		}
 
 		// function: CurrentWeaponIs
 		//		Accessor to check if the current weapon is a particular weapon
-		inline bool CurrentWeaponIs(int _weaponid) const
+		inline bool CurrentWeaponIs( int _weaponid ) const
 		{
-			const int wId = m_CurrentWeapon ? m_CurrentWeapon->GetWeaponID() : 0;
-			return wId && wId==_weaponid;
+			const int wId = mCurrentWeapon ? mCurrentWeapon->GetWeaponID() : 0;
+			return wId && wId == _weaponid;
 		}
 
 		inline bool CurrentWeaponIsAttackReady() const
 		{
-			if(m_CurrentWeapon)
+			if ( mCurrentWeapon )
 			{
 				return
-					m_CurrentWeapon->IsWeapon(GetDefaultWeaponID()) ||
-					m_CurrentWeapon->IsWeapon(GetDesiredWeaponID());
+					mCurrentWeapon->IsWeapon( GetDefaultWeaponID() ) ||
+					mCurrentWeapon->IsWeapon( GetDesiredWeaponID() );
 			}
 			return false;
-			/*const int wId = m_CurrentWeapon ? m_CurrentWeapon->GetWeaponID() : 0;
+			/*const int wId = .mCurrentWeapon ? .mCurrentWeapon->GetWeaponID() : 0;
 			return wId && (
 			wId==GetDefaultWeaponID() ||
 			wId==GetOverrideWeaponID() ||
@@ -191,75 +218,99 @@ namespace AiState
 
 		// function: GetCurrentWeapon
 		//		Gets the actual current weapon
-		inline WeaponPtr GetCurrentWeapon()				{ return m_CurrentWeapon; }
+		inline WeaponPtr GetCurrentWeapon()
+		{
+			return mCurrentWeapon;
+		}
 
 		// function: GetWeapon
 		//		Gets the ptr to a specific weapon, if available.
-		WeaponPtr GetWeapon(int _weaponId, bool _inventory = true) const;
+		WeaponPtr GetWeapon( int _weaponId, bool _inventory = true ) const;
 
-		WeaponPtr GetWeaponByIndex(int _index, bool _inventory = true);
+		WeaponPtr GetWeaponByIndex( int _index, bool _inventory = true );
 
 		// function: GetMostDesiredAmmo
 		//		Calculates the most desired ammo based on the bots current weapons
 		//		fills the parameter with the ammo Id, and returns the desirability of it
-		obReal GetMostDesiredAmmo(int &_weapon, int &_getammo);
-		obuint32 GetCurrentRequestOwner() const { return m_CurrentRequestOwner; }
+		float GetMostDesiredAmmo( int &_weapon, int &_getammo );
+		uint32_t GetCurrentRequestOwner() const
+		{
+			return mCurrentRequestOwner;
+		}
 
-		bool CanShoot(const MemoryRecord &_record);
+		bool CanShoot( const MemoryRecord &_record );
 
-		inline int GetAimPersistance() const			{ return m_AimPersistance; }
-		inline void SetAimPersistance(int _aimperms)	{ m_AimPersistance = _aimperms; }
-		inline int GetReactionTime() const				{ return m_ReactionTimeInMS; }
-		inline void SetReactionTime(int _reactionms)	{ m_ReactionTimeInMS = _reactionms; }
+		inline int GetAimPersistance() const
+		{
+			return mAimPersistance;
+		}
+		inline void SetAimPersistance( int _aimperms )
+		{
+			mAimPersistance = _aimperms;
+		}
+		inline int GetReactionTime() const
+		{
+			return mReactionTimeInMS;
+		}
+		inline void SetReactionTime( int _reactionms )
+		{
+			mReactionTimeInMS = _reactionms;
+		}
 
-		void GetSpectateMessage(std::stringstream &_outstring);
+		void GetSpectateMessage( std::stringstream &_outstring );
 
-		WeaponList &GetWeaponList() { return m_WeaponList; }
+		WeaponList &GetWeaponList()
+		{
+			return mWeaponList;
+		}
 
 		// State Functions
 		void Initialize();
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 
 		const WeaponRequest &GetHighestWeaponRequest();
 
 		WeaponSystem();
 		virtual ~WeaponSystem();
 	protected:
-		// int: m_ReactionTimeInMS
+		// int: .mReactionTimeInMS
 		//		Minimum time the bot has to see an opponent before reacting
-		int				m_ReactionTimeInMS;
+		int			 mReactionTimeInMS;
 
-		// int: m_AimPersistance
+		// int: .mAimPersistance
 		//		Amount of time target will aim at the last enemy position,
 		//		after the target leaves view.
-		int				m_AimPersistance;
+		int			 mAimPersistance;
 
-		BitFlag128		m_WeaponMask;
+		BitFlag128	 mWeaponMask;
 
-		// var: m_WeaponList
+		// var: .mWeaponList
 		//		The list of all the bots current weapons
-		WeaponList		m_AllWeaponList;
-		WeaponList		m_WeaponList;
+		WeaponList	 mAllWeaponList;
+		WeaponList	 mWeaponList;
 
-		// int: m_DesiredWeaponID
+		// int: .mDesiredWeaponID
 		//		The Id of the currently desired weapon
-		int				m_DesiredWeaponID;
+		int			 mDesiredWeaponID;
 
-		obint32			m_DefaultWeapon;
-		obint32			m_OverrideWeapon;
+		int32_t		 mDefaultWeapon;
+		int32_t		 mOverrideWeapon;
 
-		enum { MaxWeaponRequests = 8 };
-		WeaponRequest	m_WeaponRequests[MaxWeaponRequests];
-		int				m_CurrentRequestOwner;
+		enum
+		{
+			MaxWeaponRequests = 8
+		};
+		WeaponRequest mWeaponRequests[ MaxWeaponRequests ];
+		int			 mCurrentRequestOwner;
 
-		// var: m_CurrentWeapon
+		// var: .mCurrentWeapon
 		//		The actual current weapon
-		WeaponPtr		m_CurrentWeapon;
+		WeaponPtr	 mCurrentWeapon;
 
 		// function: _UpdateWeaponFromGame
 		//		Asks the game what weapon the bot currently has
@@ -270,7 +321,7 @@ namespace AiState
 
 		// function: _UpdateCurrentWeapon
 		//		Chooses the current weapon based on the result of <_UpdateWeaponFromGame>
-		void _UpdateCurrentWeapon(FireMode _mode);
+		void _UpdateCurrentWeapon( FireMode _mode );
 	};
 };
 #endif

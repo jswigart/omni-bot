@@ -22,7 +22,7 @@ class RTCW_Game : public IGame
 {
 public:
 	bool Init( System & system );
-	
+
 	virtual void StartGame();
 	virtual Client *CreateGameClient();
 
@@ -32,40 +32,35 @@ public:
 	const char *GetModSubFolder() const;
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const { return "rtcw"; }
+	const char *GetGameDatabaseAbbrev() const;
 	NavigatorID GetDefaultNavigator() const;
 	bool ReadyForDebugWindow() const;
-	
-	void AddBot(Msg_Addbot &_addbot, bool _createnow = true);
-	void ClientJoined(const Event_SystemClientConnected *_msg);
 
-	const char *FindClassName(obint32 _classId);
-
-	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
-	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
+	void AddBot( Msg_Addbot &_addbot, bool _createnow = true );
+	void ClientJoined( const Event_SystemClientConnected *_msg );
 	
-	RTCW_Game() {};
-	virtual ~RTCW_Game() {};
+	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
+	void GetWeaponEnumeration( const IntEnum *&_ptr, int &num );
+
+	RTCW_Game();
+	~RTCW_Game();
 protected:
 
-	void GetGameVars(GameVars &_gamevars);
+	void GetGameVars( GameVars &_gamevars );
 
 	// Script support.
-	void InitScriptBinds(gmMachine *_machine);
-	void InitScriptClasses(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptEvents(gmMachine *_machine, gmTableObject *_table);
-	void InitScriptPowerups(gmMachine *_machine, gmTableObject *_table);
-	void InitVoiceMacros(gmMachine *_machine, gmTableObject *_table);
+	void InitScriptBinds( gmMachine *_machine );
+	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptEntityFlags( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptEvents( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptPowerups( gmMachine *_machine, gmTableObject *_table );
+	void InitVoiceMacros( gmMachine *_machine, gmTableObject *_table );
 
 	// Commands
 	void InitCommands();
 
-	static const float RTCW_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags);
-	static const float RTCW_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags);
-	static const void RTCW_GetEntityVisDistance(float &_distance, const TargetInfo &_target, const Client *_client);
-	static const bool RTCW_CanSensoreEntity(const EntityInstance &_ent);
-	static const float RTCW_GetEntityClassAvoidRadius(const int _class);
+	static const float RTCW_GetEntityClassTraceOffset( const TargetInfo &_target );
+	static const float RTCW_GetEntityClassAimOffset( const TargetInfo &_target );
 };
 
 #endif

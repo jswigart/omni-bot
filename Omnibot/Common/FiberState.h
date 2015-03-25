@@ -53,7 +53,7 @@ namespace AiState
 		}
 
 		void				SetDt( float t ) { dt = t; }
-		obReal				GetPriority() const { return statusPriority; }
+		float				GetPriority() const { return statusPriority; }
 		State::StateStatus	GetStatus() const { return statusUpdate; }
 
 		StateFiber( funcType_t func, ScriptState * state );
@@ -64,7 +64,7 @@ namespace AiState
 		float			dt;
 
 		// internal data
-		obReal				statusPriority;
+		float				statusPriority;
 		State::StateStatus	statusUpdate;
 
 		StateFiber() {}
@@ -78,7 +78,7 @@ namespace AiState
 		void GetDebugString(std::stringstream &out);
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
 		StateStatus Update(float fDt);

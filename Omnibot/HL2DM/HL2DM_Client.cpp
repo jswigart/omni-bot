@@ -58,11 +58,6 @@ float HL2DM_Client::GetGameVar(GameVar _var) const
 	return 0.0f;
 }
 
-float HL2DM_Client::GetAvoidRadius(int _class) const
-{
-	return 0.0f;
-}
-
 bool HL2DM_Client::DoesBotHaveFlag(MapGoalPtr _mapgoal)
 {
 	return false;

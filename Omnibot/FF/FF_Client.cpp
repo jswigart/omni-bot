@@ -19,7 +19,7 @@
 
 FF_Client::FF_Client()
 {
-	m_StepHeight = 8.0f; // subtract a small value as a buffer to jump
+	mStepHeight = 8.0f; // subtract a small value as a buffer to jump
 }
 
 FF_Client::~FF_Client()

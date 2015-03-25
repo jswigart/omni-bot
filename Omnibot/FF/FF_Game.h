@@ -34,23 +34,25 @@ public:
 	const char *GetGameName() const;
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const { return "ff"; }
-	virtual NavigatorID GetDefaultNavigator() const { return NAVID_RECAST; }
+	const char *GetGameDatabaseAbbrev() const;
+	virtual NavigatorID GetDefaultNavigator() const
+	{
+		return NAVID_RECAST;
+	}
 
-	virtual bool RendersToGame() const { return true; }
+	virtual bool RendersToGame() const
+	{
+		return true;
+	}
 
-	ClientPtr &GetClientFromCorrectedGameId(int _gameid);
+	ClientPtr &GetClientFromCorrectedGameId( int _gameid );
 
-	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
+	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
 
-	FF_Game() { }
-	virtual ~FF_Game() {}
+	FF_Game();
+	~FF_Game();
 protected:
-
-	void GetGameVars(GameVars &_gamevars);
-
-	//static const float FF_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags);
-	//static const float FF_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags);
+	void GetGameVars( GameVars &_gamevars );
 };
 
 #endif

@@ -23,12 +23,14 @@ class RTCW_FilterClosest : public FilterClosest
 {
 public:
 
-	virtual bool CheckEx(const MemoryRecord &_record);
+	virtual bool CheckEx( const MemoryRecord &_record );
 
-	RTCW_FilterClosest(Client *_client, AiState::SensoryMemory::Type _type);
-	virtual ~RTCW_FilterClosest() {}
+	RTCW_FilterClosest( Client *_client, AiState::SensoryMemory::Type _type );
+	virtual ~RTCW_FilterClosest()
+	{
+	}
 protected:
-	float	m_BestDistance;
+	float	mBestDistance;
 
 	RTCW_FilterClosest();
 };

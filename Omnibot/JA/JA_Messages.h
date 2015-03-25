@@ -23,50 +23,50 @@
 
 struct JA_HasFlag
 {
-	obBool		m_HasFlag;
+	obBool	 mHasFlag;
 };
 
 struct JA_CanBeGrabbed
 {
-	GameEntity	m_Entity;
-	obBool		m_CanBeGrabbed;
+	GameEntity mEntity;
+	obBool	 mCanBeGrabbed;
 };
 
 struct JA_TeamMines
 {
-	int			m_Current;
-	int			m_Max;
+	int		 mCurrent;
+	int		 mMax;
 };
 
 struct JA_TeamDetpacks
 {
-	int			m_Current;
-	int			m_Max;
+	int		 mCurrent;
+	int		 mMax;
 };
 
 struct JA_SelectWeapon
 {
-	JA_Weapon	m_Selection;
-	obBool		m_Good;
+	JA_Weapon mSelection;
+	obBool	 mGood;
 };
 
 /*struct JA_ReinforceTime
 {
-int			m_ReinforceTime;
+int		 mReinforceTime;
 };*/
 
 typedef struct
 {
-	int			m_Force;
-	int			m_KnownBits;
-	int			m_ActiveBits;
-	int			m_Levels[JA_MAX_FORCE_POWERS];
+	int		 mForce;
+	int		 mKnownBits;
+	int		 mActiveBits;
+	int		 mLevels[JA_MAX_FORCE_POWERS];
 } JA_ForceData;
 
 struct JA_Mindtricked
 {
-	GameEntity	m_Entity;
-	obBool		m_IsMindtricked;
+	GameEntity mEntity;
+	obBool	 mIsMindtricked;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -74,13 +74,13 @@ struct JA_Mindtricked
 
 struct Event_SystemGametype
 {
-	int		m_Gametype;
+	int	 mGametype;
 };
 
 struct Event_ForceInflicted
 {
-	GameEntity	m_Inflictor;
-	int			m_Type;
+	GameEntity mInflictor;
+	int		 mType;
 };
 
 #pragma pack(pop)

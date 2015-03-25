@@ -18,20 +18,20 @@ class Trackable
 {
 public:
 
-	void AddReference(obuint32 _type);
-	void DelReference(obuint32 _type);
+	void AddReference(uint32_t _type);
+	void DelReference(uint32_t _type);
 
-	obuint32 GetRefCount(obuint32 _type);
+	uint32_t GetRefCount(uint32_t _type);
 
 	bool IsReferenced();
 
 	Trackable();
 	virtual ~Trackable();
 protected:
-	void _CheckIndex(obuint32 _type);
+	void _CheckIndex(uint32_t _type);
 
-	typedef std::vector<obint32> TrackList;
-	TrackList	m_TrackList;
+	typedef std::vector<int32_t> TrackList;
+	TrackList	mTrackList;
 };
 
 #endif

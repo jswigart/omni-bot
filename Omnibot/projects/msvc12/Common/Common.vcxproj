@@ -451,7 +451,6 @@
     <ClCompile Include="..\..\..\Common\CommandReciever.cpp" />
     <ClCompile Include="..\..\..\Common\Criteria.cpp" />
     <ClCompile Include="..\..\..\Common\EngineFuncs.cpp" />
-    <ClCompile Include="..\..\..\Common\FileDownloader.cpp" />
     <ClCompile Include="..\..\..\Common\FileSystem.cpp" />
     <ClCompile Include="..\..\..\Common\InterfaceFuncs.cpp" />
     <ClCompile Include="..\..\..\Common\KeyValueIni.cpp">
@@ -529,12 +528,10 @@
     <ClInclude Include="..\..\..\Common\CollisionModel.h" />
     <ClInclude Include="..\..\..\Common\FiberManager.h" />
     <ClInclude Include="..\..\..\Common\FiberState.h" />
-    <ClInclude Include="..\..\..\Common\Functions_Bot.h" />
     <ClInclude Include="..\..\..\Common\Functor.h" />
     <ClInclude Include="..\..\..\Common\IGame.h" />
     <ClInclude Include="..\..\..\Common\IGameManager.h" />
     <ClInclude Include="..\..\..\Common\Omni-Bot.h" />
-    <ClInclude Include="..\..\..\Common\Omni-Bot_BasicTypes.h" />
     <ClInclude Include="..\..\..\Common\Omni-Bot_BitFlags.h" />
     <ClInclude Include="..\..\..\Common\Omni-Bot_Events.h" />
     <ClInclude Include="..\..\..\Common\Omni-bot_GameEvents.h" />
@@ -638,7 +635,6 @@
     <ClInclude Include="..\..\..\Common\common.h" />
     <ClInclude Include="..\..\..\Common\Criteria.h" />
     <ClInclude Include="..\..\..\Common\EngineFuncs.h" />
-    <ClInclude Include="..\..\..\Common\FileDownloader.h" />
     <ClInclude Include="..\..\..\Common\FileSystem.h" />
     <ClInclude Include="..\..\..\Common\IEngineInterface.h" />
     <ClInclude Include="..\..\..\Common\InterfaceFuncs.h" />
@@ -699,11 +695,11 @@
     <ProjectReference Include="..\..\..\..\..\..\..\git\assimp-jswigart\code\assimp.vcxproj">
       <Project>{50dd28ed-fb13-4460-afdf-36162143032d}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\..\..\Sourcecode\omnibot\trunk\Omnibot\dependencies\gmsrc_ex\src\gm\gm2013.vcxproj">
-      <Project>{8c9cc332-d582-453a-af10-20b100857587}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\..\..\game-analytics\GameAnalytics.vcxproj">
       <Project>{2104fd7c-f7aa-4f69-bcd4-b842a61d87b5}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\gmscriptex\gmsrc_ex\src\gm\gm2013.vcxproj">
+      <Project>{8c9cc332-d582-453a-af10-20b100857587}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\dependencies\Opcode\Opcode_vc2012.vcxproj">
       <Project>{6b19233c-49a3-467d-bfa0-2b5ce77745d9}</Project>

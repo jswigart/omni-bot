@@ -493,10 +493,6 @@ void G_DropWeapon( gentity_t *ent, weapon_t weapon )
 
 //	ent2->item->quantity = client->ps.ammoclip[BG_FindClipForWeapon(weapon)]; // Gordon: um, modifying an item is not a good idea
 	client->ps.ammoclip[BG_FindClipForWeapon(weapon)] = 0;
-
-	// omnibot
-	Bot_Event_RemoveWeapon(ent, Bot_WeaponGameToBot(weapon));
-	// end omnibot
 }
 
 // TAT 1/6/2003 - Bot picks up a new weapon
@@ -650,10 +646,6 @@ int Pickup_Weapon( gentity_t *ent, gentity_t *other ) {
 	if( other->r.svFlags & SVF_BOT )
 		BotPickupWeapon( other->s.number, ent->item->giTag, alreadyHave );
 #endif
-
-	// omnibot
-	Bot_Event_AddWeapon(other, Bot_WeaponGameToBot(ent->item->giTag));
-	// end omnibot
 	return -1;
 }
 

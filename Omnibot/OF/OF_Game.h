@@ -34,21 +34,21 @@ public:
 	const char *GetGameName() const;
 	const char *GetNavSubfolder() const;
 	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const { return "of"; }
+	const char *GetGameDatabaseAbbrev() const;
 
-	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
+	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
 
-	OF_Game() { }
-	virtual ~OF_Game() {}
+	OF_Game();
+	~OF_Game();
 protected:
 
-	void GetGameVars(GameVars &_gamevars);
+	void GetGameVars( GameVars &_gamevars );
 
 	// Script support.
-	void InitScriptEntityFlags(gmMachine *_machine, gmTableObject *_table);
+	void InitScriptEntityFlags( gmMachine *_machine, gmTableObject *_table );
 
-	static const float OF_GetEntityClassTraceOffset(const int _class, const BitFlag64 &_entflags);
-	static const float OF_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags);
+	static const float OF_GetEntityClassTraceOffset( const TargetInfo &_target );
+	static const float OF_GetEntityClassAimOffset( const TargetInfo &_target );
 };
 
 #endif

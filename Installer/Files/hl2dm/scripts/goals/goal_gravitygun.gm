@@ -19,6 +19,7 @@ this.Initialize = function()
 
 this.Enter = function()
 {
+	this.AddFinishCriteria(this.PickupEnt, "deleted");
 	this.AddFinishCriteria(this.PickupEnt, "hasentflag", ENTFLAG.DISABLED);
 	this.EntPos = GetEntPosition(this.PickupEnt);
 };
@@ -27,6 +28,7 @@ this.Exit = function()
 {
 	this.Bot.ReleaseButton(BTN.ATTACK2);
 	this.ReleaseWeaponRequest();
+	this.PickupEnt = null;
 };
 
 this.Update = function()
@@ -45,7 +47,7 @@ this.Update = function()
 	
 	timeOut = 0;
 	
-	while( timeOut < 3 ) {
+	while( true ) {
 		this.Bot.GetPhysGunInfo(this.Bot.GravGunInfo);
 		if (this.Bot.GravGunInfo.HeldObject != null) {
 			this.Bot.PressButton(BTN.ATTACK1);
@@ -56,12 +58,28 @@ this.Update = function()
 		timeOut += 1;
 	}
 	
-	this.Finished();
+	//this.Finished();
 };
 
 this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent) 
 {	
-	if ( ent == this.Bot.PickupItem ) {
+	if ( this.PickupEnt == null ) {
+	
+		if ( GetEntFlags(ent,ENTFLAG.DISABLED) )
+		{
+			return;
+		}
+		
+		// only grab health if we need it
+		entityClass = GetEntClass(ent);
+		if ( entityClass == CLASS.HEALTHKIT || entityClass == CLASS.HEALTHVIAL )
+		{
+			if ( this.Bot.GetHealthPercent() >= 1.0 )
+			{
+				return;
+			}
+		}
+	
 		this.PickupEnt = ent;
 		this.Priority = 1.0;
 	}
@@ -69,5 +87,5 @@ this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
 
 this.Events[EVENT.ENT_LEAVE_RADIUS] = function(ent) 
 {
-	this.Finished();
+	//this.Finished();
 };

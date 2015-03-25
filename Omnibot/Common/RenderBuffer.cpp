@@ -69,7 +69,7 @@ struct VBO
 	VBOVerts	mVerts;
 };
 
-typedef std::multimap<obuint32, VBO> VBOMap;
+typedef std::multimap<uint32_t, VBO> VBOMap;
 VBOMap	vbos;
 
 #ifdef WIN32
@@ -139,10 +139,10 @@ namespace RenderBuffer
 			0,
 			0,
 			0,
-			FW_BOLD, //m_bold? FW_BOLD : FW_NORMAL,
-			0, //m_italic? TRUE : FALSE,
-			0, //m_underline? TRUE : FALSE,
-			0, //m_strokeout? TRUE : FALSE,
+			FW_BOLD, //.mbold? FW_BOLD : FW_NORMAL,
+			0, //.mitalic? TRUE : FALSE,
+			0, //.munderline? TRUE : FALSE,
+			0, //.mstrokeout? TRUE : FALSE,
 			ANSI_CHARSET,
 			OUT_TT_PRECIS,
 			CLIP_DEFAULT_PRECIS,
@@ -380,21 +380,21 @@ namespace RenderBuffer
 		//{
 		//	if(_dir == AABB::DIR_ALL)
 		//	{
-		//		gEngineFuncs->DebugBox(_aabb.m_Mins,_aabb.m_Maxs,_color,DEFAULT_TIME);
+		//		gEngineFuncs->DebugBox(_aabb..mMins,_aabb..mMaxs,_color,DEFAULT_TIME);
 		//		return;
 		//	}
 
 		Vector3f vVertex[ 8 ] = { Vector3f::ZERO };
 
-		vVertex[ 0 ] = Vector3f( _aabb.m_Mins[ 0 ], _aabb.m_Mins[ 1 ], _aabb.m_Mins[ 2 ] );
-		vVertex[ 1 ] = Vector3f( _aabb.m_Maxs[ 0 ], _aabb.m_Mins[ 1 ], _aabb.m_Mins[ 2 ] );
-		vVertex[ 2 ] = Vector3f( _aabb.m_Maxs[ 0 ], _aabb.m_Maxs[ 1 ], _aabb.m_Mins[ 2 ] );
-		vVertex[ 3 ] = Vector3f( _aabb.m_Mins[ 0 ], _aabb.m_Maxs[ 1 ], _aabb.m_Mins[ 2 ] );
+		vVertex[ 0 ] = Vector3f( _aabb.mMins[ 0 ], _aabb.mMins[ 1 ], _aabb.mMins[ 2 ] );
+		vVertex[ 1 ] = Vector3f( _aabb.mMaxs[ 0 ], _aabb.mMins[ 1 ], _aabb.mMins[ 2 ] );
+		vVertex[ 2 ] = Vector3f( _aabb.mMaxs[ 0 ], _aabb.mMaxs[ 1 ], _aabb.mMins[ 2 ] );
+		vVertex[ 3 ] = Vector3f( _aabb.mMins[ 0 ], _aabb.mMaxs[ 1 ], _aabb.mMins[ 2 ] );
 
-		vVertex[ 4 ] = Vector3f( _aabb.m_Mins[ 0 ], _aabb.m_Mins[ 1 ], _aabb.m_Maxs[ 2 ] );
-		vVertex[ 5 ] = Vector3f( _aabb.m_Maxs[ 0 ], _aabb.m_Mins[ 1 ], _aabb.m_Maxs[ 2 ] );
-		vVertex[ 6 ] = Vector3f( _aabb.m_Maxs[ 0 ], _aabb.m_Maxs[ 1 ], _aabb.m_Maxs[ 2 ] );
-		vVertex[ 7 ] = Vector3f( _aabb.m_Mins[ 0 ], _aabb.m_Maxs[ 1 ], _aabb.m_Maxs[ 2 ] );
+		vVertex[ 4 ] = Vector3f( _aabb.mMins[ 0 ], _aabb.mMins[ 1 ], _aabb.mMaxs[ 2 ] );
+		vVertex[ 5 ] = Vector3f( _aabb.mMaxs[ 0 ], _aabb.mMins[ 1 ], _aabb.mMaxs[ 2 ] );
+		vVertex[ 6 ] = Vector3f( _aabb.mMaxs[ 0 ], _aabb.mMaxs[ 1 ], _aabb.mMaxs[ 2 ] );
+		vVertex[ 7 ] = Vector3f( _aabb.mMins[ 0 ], _aabb.mMaxs[ 1 ], _aabb.mMaxs[ 2 ] );
 
 		// Top
 		if ( _dir == AABB::DIR_TOP || _dir == AABB::DIR_ALL )
@@ -457,7 +457,7 @@ namespace RenderBuffer
 		}
 	}
 
-	bool StaticBufferCreate( obuint32 & bufferId, const TriList & primitives )
+	bool StaticBufferCreate( uint32_t & bufferId, const TriList & primitives )
 	{
 		StaticBufferDelete( bufferId );
 
@@ -568,7 +568,7 @@ namespace RenderBuffer
 		return true;
 	}
 
-	bool StaticBufferCreate( obuint32 & bufferId, const QuadList & primitives )
+	bool StaticBufferCreate( uint32_t & bufferId, const QuadList & primitives )
 	{
 		StaticBufferDelete( bufferId );
 
@@ -693,7 +693,7 @@ namespace RenderBuffer
 		return true;
 	}
 
-	void StaticBufferDelete( obuint32 bufferId )
+	void StaticBufferDelete( uint32_t bufferId )
 	{
 		VBOMap::_Pairii itR = vbos.equal_range( bufferId );
 		for ( VBOMap::iterator it = itR.first; it != itR.second; ++it )
@@ -704,7 +704,7 @@ namespace RenderBuffer
 		vbos.erase( itR.first, itR.second );
 	}
 
-	void StaticBufferDraw( obuint32 bufferId )
+	void StaticBufferDraw( uint32_t bufferId )
 	{
 		mVBOList.push_back( bufferId );
 	}
@@ -1019,7 +1019,7 @@ namespace RenderBuffer
 		if ( ch.mAABB.TestIntersection( viewBox ) )
 		{
 		AABB b( ch.mAABB.Min, ch.mAABB.Max );
-		b.m_Mins[ 2 ] = b.m_Maxs[ 2 ] = vEyePos.Z();
+		b.mMins[ 2 ] = b.mMaxs[ 2 ] = vEyePos.Z();
 
 		AddAABB( b, COLOR::CYAN, AABB::DIR_BOTTOM );
 

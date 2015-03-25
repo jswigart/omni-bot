@@ -75,7 +75,6 @@ typedef enum
 	MESSAGE_KILLEDSOMEONE,
 	MESSAGE_ADDWEAPON,		// gives a weapon to the bot, should add to list to be evaluated for use
 	MESSAGE_REMOVEWEAPON,	// remove a weapon from the bots inventory
-	MESSAGE_RESETWEAPONS,	// tells the bot to clear out all the weapons
 	MESSAGE_REFRESHWEAPON,
 	MESSAGE_REFRESHALLWEAPONS,
 	MESSAGE_SPECTATED,
@@ -219,7 +218,6 @@ typedef enum
 	GEN_MSG_GETEQUIPPEDWEAPON,
 	GEN_MSG_GETMOUNTEDWEAPON,
 	GEN_MSG_GETWEAPONLIMITS,
-	GEN_MSG_GETHEALTHARMOR,
 	GEN_MSG_GETMAXSPEED,
 	GEN_MSG_GETFLAGSTATE,
 	GEN_MSG_GETCONTROLLINGTEAM,
@@ -242,9 +240,7 @@ typedef enum
 	GEN_MSG_MOVERAT,
 
 	GEN_MSG_SETLOADOUT,
-
-	GEN_MSG_MAPMODEL_FOR_ID,
-
+	
 	// This must stay last.
 	GEN_MSG_END
 } GEN_GameMessage;

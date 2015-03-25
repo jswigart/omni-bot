@@ -120,7 +120,7 @@ public:
 
 	virtual void RegisterScriptFunctions( gmMachine *a_machine );
 
-	bool GetNavInfo( const Vector3f &pos, obint32 &_id, std::string &_name );
+	bool GetNavInfo( const Vector3f &pos, int32_t &_id, std::string &_name );
 
 	void AddEntityConnection( const Event_EntityConnection &_conn );
 	void RemoveEntityConnection( GameEntity _ent );
@@ -259,7 +259,7 @@ private:
 	struct ModelCache
 	{
 		GameEntity			mEntity;
-		BitFlag32			mEntityCategory;
+		EntityInfo		mEntInfo;
 		int					mSubModel;
 
 		ModelTransform		mTransform;
@@ -358,7 +358,7 @@ private:
 	void UpdateModelState();
 
 	void CountStats( const modeldata::Scene & ioScene, const modeldata::Node & ioNode, size_t & numTris, size_t & numMeshes );
-	void GatherModel( ModelCache & cache, const modeldata::Scene & ioScene, const modeldata::Node & ioNode, const BitFlag32 category, const IceMaths::Matrix4x4 & nodeXform );
+	void GatherModel( ModelCache & cache, const modeldata::Scene & ioScene, const modeldata::Node & ioNode, const IceMaths::Matrix4x4 & nodeXform );
 
 	bool GetAimedAtModel( size_t & modelIndex, size_t & triangleIndex, Vector3f & hitPos, Vector3f & hitNormal );
 };

@@ -28,16 +28,20 @@ namespace AiState
 		int			ThreadId;
 		MoveMode	Mode;
 
-		enum { MaxAvoidPts=32 };
-		Vector3f	Avoid[MaxAvoidPts];
+		enum
+		{
+			MaxAvoidPts = 32
+		};
+		Vector3f	Avoid[ MaxAvoidPts ];
 		int			NumAvoid;
 
-		void FromTable(gmMachine *a_machine, gmTableObject *a_table);
+		void FromTable( gmMachine *a_machine, gmTableObject *a_table );
 
 		MoveOptions();
 	};
 
-	class FiberState : public StateChild, public FollowPathUser, public AimerUser {
+	class FiberState : public StateChild, public FollowPathUser, public AimerUser
+	{
 	public:
 	};
 
@@ -59,218 +63,337 @@ namespace AiState
 			NUM_CALLBACKS
 		};
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 		void RenderDebug();
 
-		obReal GetPriority();
+		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		void SetEnable(bool _enable, const char *_error = 0);
-		void SetSelectable(bool _selectable);
+		void SetEnable( bool _enable, const char *_error = 0 );
+		void SetSelectable( bool _selectable );
 
-		bool AddScriptAimRequest(Priority::ePriority _prio, Aimer::AimType _type, Vector3f _v);
+		bool AddScriptAimRequest( Priority::ePriority _prio, Aimer::AimType _type, Vector3f _v );
 
-		void Signal(const gmVariable &_var);
+		void Signal( const gmVariable &_var );
 		void KillAllGoalThreads();
 
-		obReal GetScriptPriority() const { return m_ScriptPriority; }
-		void SetScriptPriority(obReal _p) { m_ScriptPriority = _p; }
-		void SetFinished() { m_Finished = true; }
+		float GetScriptPriority() const
+		{
+			return mScriptPriority;
+		}
+		void SetScriptPriority( float _p )
+		{
+			mScriptPriority = _p;
+		}
+		void SetFinished()
+		{
+			mFinished = true;
+		}
 
-		bool OnPathThrough(const std::string &_s);
+		bool OnPathThrough( const std::string &_s );
 		void EndPathThrough();
 
-		gmGCRoot<gmFunctionObject> GetCallback(FunctionCallback cb) { return m_Callbacks[cb]; }
-		void SetCallback(FunctionCallback cb, gmGCRoot<gmFunctionObject> f) { m_Callbacks[cb] = f; }
+		gmGCRoot<gmFunctionObject> GetCallback( FunctionCallback cb )
+		{
+			return mCallbacks[ cb ];
+		}
+		void SetCallback( FunctionCallback cb, gmGCRoot<gmFunctionObject> f )
+		{
+			mCallbacks[ cb ] = f;
+		}
 
 		// functionality
-		bool Goto(const Vector3f &_pos, const MoveOptions &options);
-		bool GotoRandom(const MoveOptions &options);
-		bool RouteTo(MapGoalPtr mg, const MoveOptions &options);
+		bool Goto( const Vector3f &_pos, const MoveOptions &options );
+		bool GotoRandom( const MoveOptions &options );
+		bool RouteTo( MapGoalPtr mg, const MoveOptions &options );
 		void Stop();
 
 		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
 		void OnPathSucceeded();
-		void OnPathFailed(FollowPathUser::FailType _how);
+		void OnPathFailed( FollowPathUser::FailType _how );
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
-		const Vector3f &GetAimVector() const { return m_AimVector; }
-		void SetAimVector(const Vector3f &_v) { m_AimVector = _v; m_AimSignalled = false; }
-		obint32 GetAimWeaponId() const { return m_AimWeaponId; }
-		void SetAimWeaponId(obint32 id) { m_AimWeaponId = id; }
+		const Vector3f &GetAimVector() const
+		{
+			return mAimVector;
+		}
+		void SetAimVector( const Vector3f &_v )
+		{
+			mAimVector = _v;
+			mAimSignalled = false;
+		}
+		int32_t GetAimWeaponId() const
+		{
+			return mAimWeaponId;
+		}
+		void SetAimWeaponId( int32_t id )
+		{
+			mAimWeaponId = id;
+		}
 
-		void SetGetPriorityDelay(obint32 _delay) { m_NextGetPriorityDelay = _delay; }
-		obint32 GetGetPriorityDelay() const { return m_NextGetPriorityDelay; }
-		void DelayGetPriority(obint32 _delay) { m_NextGetPriorityUpdate = IGame::GetTime() + _delay; }
+		void SetGetPriorityDelay( int32_t _delay )
+		{
+			mNextGetPriorityDelay = _delay;
+		}
+		int32_t GetGetPriorityDelay() const
+		{
+			return mNextGetPriorityDelay;
+		}
+		void DelayGetPriority( int32_t _delay )
+		{
+			mNextGetPriorityUpdate = IGame::GetTime() + _delay;
+		}
 
-		void AutoReleaseAim(bool _b) { m_AutoReleaseAim = _b; }
-		bool AutoReleaseAim() { return m_AutoReleaseAim; }
+		void AutoReleaseAim( bool _b )
+		{
+			mAutoReleaseAim = _b;
+		}
+		bool AutoReleaseAim()
+		{
+			return mAutoReleaseAim;
+		}
 
-		void AutoReleaseWeapon(bool _b) { m_AutoReleaseWpn = _b; }
-		bool AutoReleaseWeapon() { return m_AutoReleaseWpn; }
+		void AutoReleaseWeapon( bool _b )
+		{
+			mAutoReleaseWpn = _b;
+		}
+		bool AutoReleaseWeapon()
+		{
+			return mAutoReleaseWpn;
+		}
 
-		void AutoReleaseTracker(bool _b) { m_AutoReleaseTracker = _b; }
-		bool AutoReleaseTracker() { return m_AutoReleaseTracker; }
+		void AutoReleaseTracker( bool _b )
+		{
+			mAutoReleaseTracker = _b;
+		}
+		bool AutoReleaseTracker()
+		{
+			return mAutoReleaseTracker;
+		}
 
-		void AutoFinishOnUnAvailable(bool _b) { m_AutoFinishOnUnavailable = _b; }
-		bool AutoFinishOnUnAvailable() const { return m_AutoFinishOnUnavailable; }
+		void AutoFinishOnUnAvailable( bool _b )
+		{
+			mAutoFinishOnUnavailable = _b;
+		}
+		bool AutoFinishOnUnAvailable() const
+		{
+			return mAutoFinishOnUnavailable;
+		}
 
-		void AutoFinishOnNoProgressSlots(bool _b) { m_AutoFinishOnNoProgressSlots = _b; }
-		bool AutoFinishOnNoProgressSlots() const { return m_AutoFinishOnNoProgressSlots; }
+		void AutoFinishOnNoProgressSlots( bool _b )
+		{
+			mAutoFinishOnNoProgressSlots = _b;
+		}
+		bool AutoFinishOnNoProgressSlots() const
+		{
+			return mAutoFinishOnNoProgressSlots;
+		}
 
-		void AutoFinishOnNoUseSlots(bool _b) { m_AutoFinishOnNoUseSlots = _b; }
-		bool AutoFinishOnNoUseSlots() const { return m_AutoFinishOnNoUseSlots; }
+		void AutoFinishOnNoUseSlots( bool _b )
+		{
+			mAutoFinishOnNoUseSlots = _b;
+		}
+		bool AutoFinishOnNoUseSlots() const
+		{
+			return mAutoFinishOnNoUseSlots;
+		}
 
-		void SkipGetPriorityWhenActive(bool _b) { m_SkipGetPriorityWhenActive = _b; }
-		bool SkipGetPriorityWhenActive() const { return m_SkipGetPriorityWhenActive; }
+		void SkipGetPriorityWhenActive( bool _b )
+		{
+			mSkipGetPriorityWhenActive = _b;
+		}
+		bool SkipGetPriorityWhenActive() const
+		{
+			return mSkipGetPriorityWhenActive;
+		}
 
-		bool AddFinishCriteria(const CheckCriteria &_crit);
-		void ClearFinishCriteria(bool _clearpersistent = false);
+		bool AddFinishCriteria( const CheckCriteria &_crit );
+		void ClearFinishCriteria( bool _clearpersistent = false );
 
-		void WatchForEntityCategory(float radius, const BitFlag32 &category, int customTrace);
+		void WatchForEntityCategory( float radius, const BitFlag32 &category, int customTrace );
 		void UpdateEntityInRadius();
 
-		void WatchForMapGoalsInRadius(const GoalManager::Query &qry, const GameEntity & ent, float radius);
+		void WatchForMapGoalsInRadius( const GoalManager::Query &qry, const GameEntity & ent, float radius );
 		void ClearWatchForMapGoalsInRadius();
 		void UpdateMapGoalsInRadius();
 
 		// Special case callbacks.
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
-		bool OnInit(gmMachine *_machine);
+		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		bool OnInit( gmMachine *_machine );
 		void OnSpawn();
 
-		//ThreadList &GetThreadList() { return m_ThreadList; }
+		//ThreadList &GetThreadList() { return .mThreadList; }
 
-		MapGoalPtr &GetMapGoal() { return m_MapGoal; }
-		void SetMapGoal(MapGoalPtr &_mg) { m_MapGoal = _mg; m_Tracker.Reset(); }
-		MapGoal *GetMapGoalPtr() { return m_MapGoal.get(); }
+		MapGoalPtr &GetMapGoal()
+		{
+			return mMapGoal;
+		}
+		void SetMapGoal( MapGoalPtr &_mg )
+		{
+			mMapGoal = _mg;
+			mTracker.Reset();
+		}
+		MapGoal *GetMapGoalPtr()
+		{
+			return mMapGoal.get();
+		}
 
-		void SetParentName(const char *_str);
+		void SetParentName( const char *_str );
 		std::string GetParentName() const;
-		obuint32 GetParentNameHash() const { return m_ParentNameHash; }
+		uint32_t GetParentNameHash() const
+		{
+			return mParentNameHash;
+		}
 
-		void SetInsertBeforeName(const char *_str);
+		void SetInsertBeforeName( const char *_str );
 		std::string GetInsertBeforeName() const;
-		obuint32 GetInsertBeforeHash() const { return m_InsertBeforeHash; }
+		uint32_t GetInsertBeforeHash() const
+		{
+			return mInsertBeforeHash;
+		}
 
-		void SetInsertAfterName(const char *_str);
+		void SetInsertAfterName( const char *_str );
 		std::string GetInsertAfterName() const;
-		obuint32 GetInsertAfterHash() const { return m_InsertAfterHash; }
+		uint32_t GetInsertAfterHash() const
+		{
+			return mInsertAfterHash;
+		}
 
-		gmUserObject *GetScriptObject(gmMachine *_machine);
-
-		//////////////////////////////////////////////////////////////////////////
-		int gmfFinished(gmThread *a_thread);
-		int gmfGoto(gmThread *a_thread);
-		int gmfGotoAsync(gmThread *a_thread);
-		int gmfAddAimRequest(gmThread *a_thread);
-		int gmfReleaseAimRequest(gmThread *a_thread);
-		int gmfAddWeaponRequest(gmThread *a_thread);
-		int gmfReleaseWeaponRequest(gmThread *a_thread);
-		int gmfUpdateWeaponRequest(gmThread *a_thread);
-		int gmfBlockForWeaponChange(gmThread *a_thread);
-		int gmfBlockForWeaponFire(gmThread *a_thread);
-		int gmfBlockForVoiceMacro(gmThread *a_thread);
-		int gmfThreadFork(gmThread *a_thread);
-		int gmfSignal(gmThread *a_thread);
+		gmUserObject *GetScriptObject( gmMachine *_machine );
 
 		//////////////////////////////////////////////////////////////////////////
-
-		gmGCRoot<gmStringObject> &DebugString() { return m_DebugString; }
+		int gmfFinished( gmThread *a_thread );
+		int gmfGoto( gmThread *a_thread );
+		int gmfGotoAsync( gmThread *a_thread );
+		int gmfAddAimRequest( gmThread *a_thread );
+		int gmfReleaseAimRequest( gmThread *a_thread );
+		int gmfAddWeaponRequest( gmThread *a_thread );
+		int gmfReleaseWeaponRequest( gmThread *a_thread );
+		int gmfUpdateWeaponRequest( gmThread *a_thread );
+		int gmfBlockForWeaponChange( gmThread *a_thread );
+		int gmfBlockForWeaponFire( gmThread *a_thread );
+		int gmfBlockForVoiceMacro( gmThread *a_thread );
+		int gmfThreadFork( gmThread *a_thread );
+		int gmfSignal( gmThread *a_thread );
 
 		//////////////////////////////////////////////////////////////////////////
 
-		bool MarkInProgress(MapGoalPtr _p);
-		bool MarkInUse(MapGoalPtr _p);
+		gmGCRoot<gmStringObject> &DebugString()
+		{
+			return mDebugString;
+		}
 
 		//////////////////////////////////////////////////////////////////////////
-		void SetProfilerZone(const std::string &_name);
+
+		bool MarkInProgress( MapGoalPtr _p );
+		bool MarkInUse( MapGoalPtr _p );
+
+		//////////////////////////////////////////////////////////////////////////
+		void SetProfilerZone( const std::string &_name );
 
 		ScriptGoal *Clone();
-		ScriptGoal(const char *_name);
+		ScriptGoal( const char *_name );
 		~ScriptGoal();
 	protected:
-		void InternalSignal(const gmVariable &_signal);
-		void InternalExit() ;
+		void InternalSignal( const gmVariable &_signal );
+		void InternalExit();
 	private:
-		Vector3f					m_AimVector;
-		obint32						m_AimWeaponId;
+		Vector3f				 mAimVector;
+		int32_t					 mAimWeaponId;
 
-		Aimer::AimType				m_ScriptAimType;
+		Aimer::AimType			 mScriptAimType;
 
-		obReal						m_ScriptPriority;
-		obReal						m_MinRadius;
+		float					 mScriptPriority;
+		float					 mMinRadius;
 
-		gmGCRoot<gmFunctionObject>	m_Callbacks[NUM_CALLBACKS];
-		ThreadScoper				m_ActiveThread[NUM_CALLBACKS];
+		gmGCRoot<gmFunctionObject> mCallbacks[ NUM_CALLBACKS ];
+		ThreadScoper			 mActiveThread[ NUM_CALLBACKS ];
 
-		gmGCRoot<gmStringObject>	m_DebugString;
+		gmGCRoot<gmStringObject> mDebugString;
 
-		obuint32					m_ParentNameHash;
-		obuint32					m_InsertBeforeHash;
-		obuint32					m_InsertAfterHash;
+		uint32_t				 mParentNameHash;
+		uint32_t				 mInsertBeforeHash;
+		uint32_t				 mInsertAfterHash;
 
-		obint32						m_NextGetPriorityUpdate;
-		obint32						m_NextGetPriorityDelay;
+		int32_t					 mNextGetPriorityUpdate;
+		int32_t					 mNextGetPriorityDelay;
 
 		struct WatchEntity
 		{
-			enum { MaxEntities=64 };
-			float		m_Radius;
-			BitFlag32	m_Category;
-			int			m_CustomTrace;
+			enum
+			{
+				MaxEntities = 64
+			};
+			float	 mRadius;
+			BitFlag32 mCategory;
+			int		 mCustomTrace;
 			struct KnownEnt
 			{
-				GameEntity		m_Ent;
-				int				m_TimeStamp;
+				GameEntity	 mEnt;
+				int			 mTimeStamp;
 
-				KnownEnt() { Reset(); }
-				void Reset() { m_Ent.Reset(); m_TimeStamp = 0; }
-			} m_Entry[MaxEntities];
+				KnownEnt()
+				{
+					Reset();
+				}
+				void Reset()
+				{
+					mEnt.Reset();
+					mTimeStamp = 0;
+				}
+			} mEntry[ MaxEntities ];
 
-			WatchEntity() : m_Radius(0.f), m_CustomTrace(0) {}
-		} m_WatchEntities;
+			WatchEntity() : mRadius( 0.f ), mCustomTrace( 0 )
+			{
+			}
+		} mWatchEntities;
 
-		enum { MaxCriteria=8 };
-		CheckCriteria				m_FinishCriteria[MaxCriteria];
+		enum
+		{
+			MaxCriteria = 8
+		};
+		CheckCriteria			 mFinishCriteria[ MaxCriteria ];
 
 		typedef std::set<MapGoalPtr> MgSet;
 		struct WatchForMapGoal
 		{
-			GameEntity			m_PositionEnt;
-			float				m_Radius;
+			GameEntity		 mPositionEnt;
+			float			 mRadius;
 
-			MgSet				m_InRadius;
-			GoalManager::Query	m_Query;
+			MgSet			 mInRadius;
+			GoalManager::Query mQuery;
 
-			WatchForMapGoal() : m_Radius(0.f) {}
-		}							m_MapGoalInRadius;
+			WatchForMapGoal() 
+				: mRadius( 0.f )
+			{
+			}
+		}						 mMapGoalInRadius;
 
-		bool						m_Finished : 1;
-		bool						m_AimSignalled : 1;
+		bool					 mFinished : 1;
+		bool					 mAimSignalled : 1;
 
-		bool						m_AutoReleaseAim : 1;
-		bool						m_AutoReleaseWpn : 1;
-		bool						m_AutoReleaseTracker : 1;
-		bool						m_AutoFinishOnUnavailable : 1;
-		bool						m_AutoFinishOnNoProgressSlots : 1;
-		bool						m_AutoFinishOnNoUseSlots : 1;
-		bool						m_SkipGetPriorityWhenActive : 1;
+		bool					 mAutoReleaseAim : 1;
+		bool					 mAutoReleaseWpn : 1;
+		bool					 mAutoReleaseTracker : 1;
+		bool					 mAutoFinishOnUnavailable : 1;
+		bool					 mAutoFinishOnNoProgressSlots : 1;
+		bool					 mAutoFinishOnNoUseSlots : 1;
+		bool					 mSkipGetPriorityWhenActive : 1;
 
-		bool						m_SkipLastWp : 1;
+		bool					 mSkipLastWp : 1;
 
-		MapGoalPtr					m_MapGoal;
-		MapGoalPtr					m_MapGoalRoute;
-		Trackers					m_Tracker;
+		MapGoalPtr				 mMapGoal;
+		MapGoalPtr				 mMapGoalRoute;
+		Trackers				 mTracker;
 
 #ifdef Prof_ENABLED
-		Prof_Zone					*m_ProfZone;
+		Prof_Zone					*.mProfZone;
 #endif
 
 		ScriptGoal();

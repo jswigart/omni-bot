@@ -247,12 +247,12 @@ static int GM_CDECL gmfAddBot( gmThread *a_thread )
 		if ( vSkin.IsNull() )
 			vSkin = pTable->Get( a_thread->GetMachine(), "Skin" );
 
-		b.m_Team = vTeam.IsInt() ? vTeam.GetInt() : RANDOM_TEAM_IF_NO_TEAM;
-		b.m_Class = vClass.IsInt() ? vClass.GetInt() : RANDOM_CLASS_IF_NO_CLASS;
-		Utils::StringCopy( b.m_Name, vName.GetCStringSafe() ? vName.GetCStringSafe() : "", sizeof( b.m_Name ) );
-		Utils::StringCopy( b.m_Model, vModel.GetCStringSafe() ? vModel.GetCStringSafe() : "", sizeof( b.m_Model ) );
-		Utils::StringCopy( b.m_Skin, vSkin.GetCStringSafe() ? vSkin.GetCStringSafe() : "", sizeof( b.m_Skin ) );
-		Utils::StringCopy( b.m_SpawnPointName, vSpawnPoint.GetCStringSafe() ? vSpawnPoint.GetCStringSafe() : "", sizeof( b.m_SpawnPointName ) );
+		b.mTeam = vTeam.IsInt() ? vTeam.GetInt() : RANDOM_TEAM_IF_NO_TEAM;
+		b.mClass = vClass.IsInt() ? vClass.GetInt() : RANDOM_CLASS_IF_NO_CLASS;
+		Utils::StringCopy( b.mName, vName.GetCStringSafe() ? vName.GetCStringSafe() : "", sizeof( b.mName ) );
+		Utils::StringCopy( b.mModel, vModel.GetCStringSafe() ? vModel.GetCStringSafe() : "", sizeof( b.mModel ) );
+		Utils::StringCopy( b.mSkin, vSkin.GetCStringSafe() ? vSkin.GetCStringSafe() : "", sizeof( b.mSkin ) );
+		Utils::StringCopy( b.mSpawnPointName, vSpawnPoint.GetCStringSafe() ? vSpawnPoint.GetCStringSafe() : "", sizeof( b.mSpawnPointName ) );
 	}
 	else
 	{
@@ -263,12 +263,12 @@ static int GM_CDECL gmfAddBot( gmThread *a_thread )
 		GM_STRING_PARAM( model, 4, "" );
 		GM_STRING_PARAM( skin, 5, "" );
 
-		Utils::StringCopy( b.m_Name, pAddName, sizeof( b.m_Name ) );
-		Utils::StringCopy( b.m_Model, model, sizeof( b.m_Model ) );
-		Utils::StringCopy( b.m_Skin, skin, sizeof( b.m_Skin ) );
-		Utils::StringCopy( b.m_SpawnPointName, spawnPoint, sizeof( b.m_SpawnPointName ) );
-		b.m_Team = iAddTeam;
-		b.m_Class = iAddClass;
+		Utils::StringCopy( b.mName, pAddName, sizeof( b.mName ) );
+		Utils::StringCopy( b.mModel, model, sizeof( b.mModel ) );
+		Utils::StringCopy( b.mSkin, skin, sizeof( b.mSkin ) );
+		Utils::StringCopy( b.mSpawnPointName, spawnPoint, sizeof( b.mSpawnPointName ) );
+		b.mTeam = iAddTeam;
+		b.mClass = iAddClass;
 	}
 	System::mInstance->mGame->AddBot( b, true );
 	return GM_OK;
@@ -549,14 +549,14 @@ static int GM_CDECL gmfGetMapGoals( gmThread *a_thread )
 		return GM_EXCEPTION;
 	}
 
-	if ( !qry.m_List.empty() )
+	if ( !qry.mList.empty() )
 	{
 		gmMachine *pMachine = a_thread->GetMachine();
 		DisableGCInScope gcEn( pMachine );
 
-		for ( obuint32 i = 0; i < qry.m_List.size(); ++i )
+		for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 		{
-			gmUserObject *pUser = qry.m_List[ i ]->GetScriptObject( a_thread->GetMachine() );
+			gmUserObject *pUser = qry.mList[ i ]->GetScriptObject( a_thread->GetMachine() );
 			OBASSERT( pUser, "Invalid Object" );
 
 			table->Set( pMachine, i, gmVariable( pUser ) );
@@ -584,9 +584,9 @@ static int GM_CDECL gmfSetMapGoalProperties( gmThread *a_thread )
 	qry.NoFilters();
 	qry.Expression( expr );
 	GoalManager::GetInstance()->GetGoals( qry );
-	for ( obuint32 i = 0; i < qry.m_List.size(); ++i )
+	for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 	{
-		qry.m_List[ i ]->FromScriptTable( a_thread->GetMachine(), props, false );
+		qry.mList[ i ]->FromScriptTable( a_thread->GetMachine(), props, false );
 	}
 	return GM_OK;
 }
@@ -628,7 +628,7 @@ static int GM_CDECL gmfSetAvailableMapGoals( gmThread *a_thread )
 	qry.Expression( pExpression );
 	qry.NoFilters();
 	GoalManager::GetInstance()->GetGoals( qry );
-	for ( obuint32 i = 0; i < qry.m_List.size(); ++i )
+	for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 	{
 		if ( !bFoundGoal )
 			bFoundGoal = true;
@@ -636,11 +636,11 @@ static int GM_CDECL gmfSetAvailableMapGoals( gmThread *a_thread )
 		if ( team == 0 )
 		{
 			for ( int t = 1; t <= 4; ++t )
-				qry.m_List[ i ]->SetAvailable( t, enable != 0 );
+				qry.mList[ i ]->SetAvailable( t, enable != 0 );
 		}
 		else
 		{
-			qry.m_List[ i ]->SetAvailable( team, enable != 0 );
+			qry.mList[ i ]->SetAvailable( team, enable != 0 );
 		}
 	}
 
@@ -682,9 +682,9 @@ static int GM_CDECL gmfSetGoalPriorityForTeamClass( gmThread *a_thread )
 	qry.Expression( exp );
 	qry.NoFilters();
 	GoalManager::GetInstance()->GetGoals( qry );
-	for ( obuint32 i = 0; i < qry.m_List.size(); ++i )
+	for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 	{
-		qry.m_List[ i ]->SetPriorityForClass( teamId, classId, priority );
+		qry.mList[ i ]->SetPriorityForClass( teamId, classId, priority );
 	}
 
 	if ( persis )
@@ -735,9 +735,9 @@ static int GM_CDECL gmfSetGoalGroup( gmThread *a_thread )
 		qry.Expression( exp );
 		qry.NoFilters();
 		GoalManager::GetInstance()->GetGoals( qry );
-		for ( obuint32 i = 0; i < qry.m_List.size(); ++i )
+		for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 		{
-			qry.m_List[ i ]->SetGroupName( group );
+			qry.mList[ i ]->SetGroupName( group );
 		}
 	}
 	else
@@ -850,19 +850,19 @@ static int gmfTraceLine( gmThread *a_thread )
 	DisableGCInScope gcEn( pMachine );
 
 	gmTableObject *pTable = pMachine->AllocTableObject();
-	pTable->Set( pMachine, "fraction", gmVariable( tr.m_Fraction ) );
-	pTable->Set( pMachine, "startsolid", gmVariable( tr.m_StartSolid ? 1 : 0 ) );
-	if ( tr.m_Fraction < 1.0 )
+	pTable->Set( pMachine, "fraction", gmVariable( tr.mFraction ) );
+	pTable->Set( pMachine, "startsolid", gmVariable( tr.mStartSolid ? 1 : 0 ) );
+	if ( tr.mFraction < 1.0 )
 	{
-		if ( tr.m_HitEntity.IsValid() )
+		if ( tr.mHitEntity.IsValid() )
 		{
 			gmVariable v;
-			v.SetEntity( tr.m_HitEntity.AsInt() );
+			v.SetEntity( tr.mHitEntity.AsInt() );
 			pTable->Set( pMachine, "entity", v );
 		}
 
-		pTable->Set( pMachine, "normal", gmVariable( tr.m_Normal[ 0 ], tr.m_Normal[ 1 ], tr.m_Normal[ 2 ] ) );
-		pTable->Set( pMachine, "end", gmVariable( tr.m_Endpos[ 0 ], tr.m_Endpos[ 1 ], tr.m_Endpos[ 2 ] ) );
+		pTable->Set( pMachine, "normal", gmVariable( tr.mNormal[ 0 ], tr.mNormal[ 1 ], tr.mNormal[ 2 ] ) );
+		pTable->Set( pMachine, "end", gmVariable( tr.mEndpos[ 0 ], tr.mEndpos[ 1 ], tr.mEndpos[ 2 ] ) );
 	}
 
 	a_thread->PushTable( pTable );
@@ -892,8 +892,8 @@ static int gmfGroundPoint( gmThread *a_thread )
 
 	obTraceResult tr;
 	EngineFuncs::TraceLine( tr, vPt, vPt + Vector3f( 0, 0, -1024.f ), NULL, iMask, -1, False );
-	if ( tr.m_Fraction < 1.f )
-		vPt = tr.m_Endpos;
+	if ( tr.mFraction < 1.f )
+		vPt = tr.mEndpos;
 
 	vPt.Z() -= offset;
 
@@ -1113,7 +1113,7 @@ static int gmfDrawTrajectory( gmThread *a_thread )
 	if ( Res == GM_OK )
 	{
 		traj.Render( obColor( color ), duration );
-		a_thread->PushVector( traj.m_StopPos );
+		a_thread->PushVector( traj.mStopPos );
 	}
 	return Res;
 }
@@ -1449,7 +1449,7 @@ static int gmfGetEntRotationMatrix( gmThread *a_thread )
 //		- OR -
 //		<int> - The gameId for the entity to use
 //		<int> - The flag to check for
-//		... - Any number of additional flags to check for
+//		.. - Any number of additional flags to check for
 //
 // Returns:
 //		int - true if entity has ANY flag passed
@@ -1461,13 +1461,13 @@ static int gmfGetEntityFlags( gmThread *a_thread )
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
 
-	BitFlag64 targetFlags;
-	if ( gameEnt.IsValid() && InterfaceFuncs::GetEntityFlags( gameEnt, targetFlags ) )
+	EntityInfo entInfo;
+	if ( IGame::GetEntityInfo( gameEnt, entInfo ) )
 	{
 		for ( int i = 1; i < a_thread->GetNumParams(); ++i )
 		{
 			GM_CHECK_INT_PARAM( flag, i );
-			if ( targetFlags.CheckFlag( flag ) )
+			if ( entInfo.mFlags.CheckFlag( flag ) )
 			{
 				a_thread->PushInt( 1 );
 				return GM_OK;
@@ -1499,14 +1499,14 @@ static int gmfGetEntityPowerups( gmThread *a_thread )
 	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
 
 	//bool bSuccess = false;
-	BitFlag64 targetFlags;
-	if ( gameEnt.IsValid() && InterfaceFuncs::GetEntityPowerUps( gameEnt, targetFlags ) )
+	EntityInfo entInfo;
+	if ( IGame::GetEntityInfo( gameEnt, entInfo ) )
 	{
 		//bSuccess = true;
 		for ( int i = 1; i < a_thread->GetNumParams(); ++i )
 		{
 			GM_CHECK_INT_PARAM( flag, i );
-			if ( targetFlags.CheckFlag( flag ) )
+			if ( entInfo.mPowerUps.CheckFlag( flag ) )
 			{
 				a_thread->PushInt( 1 );
 				return GM_OK;
@@ -1547,13 +1547,13 @@ static int gmfGetEntityHealthAndArmor( gmThread *a_thread )
 	if ( !tbl )
 		tbl = a_thread->GetMachine()->AllocTableObject();
 
-	Msg_HealthArmor hlthArmor;
-	if ( tbl != NULL && gameEnt.IsValid() && InterfaceFuncs::GetHealthAndArmor( gameEnt, hlthArmor ) )
+	EntityInfo entInfo;
+	if ( tbl != NULL && IGame::GetEntityInfo( gameEnt, entInfo ) )
 	{
-		tbl->Set( a_thread->GetMachine(), "Health", gmVariable( hlthArmor.m_CurrentHealth ) );
-		tbl->Set( a_thread->GetMachine(), "MaxHealth", gmVariable( hlthArmor.m_MaxHealth ) );
-		tbl->Set( a_thread->GetMachine(), "Armor", gmVariable( hlthArmor.m_CurrentArmor ) );
-		tbl->Set( a_thread->GetMachine(), "MaxArmor", gmVariable( hlthArmor.m_MaxArmor ) );
+		tbl->Set( a_thread->GetMachine(), "Health", gmVariable( entInfo.mHealth ) );
+		tbl->Set( a_thread->GetMachine(), "MaxHealth", gmVariable( entInfo.mHealthMax ) );
+		tbl->Set( a_thread->GetMachine(), "Armor", gmVariable( entInfo.mArmor ) );
+		tbl->Set( a_thread->GetMachine(), "MaxArmor", gmVariable( entInfo.mArmorMax ) );
 		a_thread->PushInt( 1 );
 	}
 	else
@@ -1689,69 +1689,31 @@ static int gmfGetEntityTeam( gmThread *a_thread )
 //		int - team of the owner of this entity
 //		- OR -
 //		null - If no owner.
-static int gmfGetEntityClass( gmThread *a_thread )
+static int gmfGetEntityInfo( gmThread *a_thread )
 {
 	GM_CHECK_NUM_PARAMS( 1 );
 
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
+	GM_TABLE_PARAM( infoTbl, 1, 0 );
 
-	int iClass = gameEnt.IsValid() ? InterfaceFuncs::GetEntityClass( gameEnt ) : 0;
-	if ( iClass != 0 )
-		a_thread->PushInt( iClass );
-	else
-		a_thread->PushNull();
-	return GM_OK;
-}
+	EntityInfo entInfo;
+	if ( IGame::GetEntityInfo( gameEnt, entInfo ) )
+	{
+		gmMachine *pMachine = a_thread->GetMachine();
 
-//////////////////////////////////////////////////////////////////////////
+		DisableGCInScope gcEn( pMachine );
+		if ( infoTbl == NULL )
+			infoTbl = pMachine->AllocTableObject();
 
-// function: GetClassNameFromId
-//		This function gets the current class name from a class id.
-//
-// Parameters:
-//
-//		<int> - class id
-//
-// Returns:
-//		std::string - class name of id
-//		- OR -
-//		null - If not found.
-static int gmfGetClassNameFromId( gmThread *a_thread )
-{
-	GM_CHECK_NUM_PARAMS( 1 );
-	GM_CHECK_INT_PARAM( classId, 0 );
+		infoTbl->Set( pMachine, "Group", gmVariable( entInfo.mGroup ) );
+		infoTbl->Set( pMachine, "ClassId", gmVariable( entInfo.mClassId ) );
+		infoTbl->Set( pMachine, "Quantity", gmVariable( entInfo.mQuantity ) );
+		infoTbl->Set( pMachine, "QuantityMax", gmVariable( entInfo.mQuantityMax ) );
 
-	const char *pClassName = System::mInstance->mGame->FindClassName( classId );
-	if ( pClassName )
-		a_thread->PushNewString( pClassName );
-	else
-		a_thread->PushNull();
-	return GM_OK;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-// function: GetWeaponIdFromClassId
-//		This function gets the current weapon id from a class id.
-//
-// Parameters:
-//
-//		<int> - class id
-//
-// Returns:
-//		int - weapon Id(to match WEAPON table), if the classId is a weapon
-//		- OR -
-//		null - If not found.
-static int gmfGetWeaponIdFromClassId( gmThread *a_thread )
-{
-	GM_CHECK_NUM_PARAMS( 1 );
-	GM_CHECK_INT_PARAM( classId, 0 );
-
-	const int weaponId = System::mInstance->mGame->FindWeaponId( classId );
-	if ( weaponId )
-		a_thread->PushInt( weaponId );
+		a_thread->PushTable( infoTbl );
+	}
 	else
 		a_thread->PushNull();
 	return GM_OK;
@@ -1780,13 +1742,13 @@ static int gmfGetEntCategory( gmThread *a_thread )
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
 
-	BitFlag32 category;
-	if ( gameEnt.IsValid() && InterfaceFuncs::GetEntityCategory( gameEnt, category ) )
+	EntityInfo entInfo;
+	if ( IGame::GetEntityInfo( gameEnt, entInfo ) )
 	{
 		for ( int i = 1; i < a_thread->GetNumParams(); ++i )
 		{
 			GM_CHECK_INT_PARAM( flag, i );
-			if ( category.CheckFlag( flag ) )
+			if ( entInfo.mCategory.CheckFlag( flag ) )
 			{
 				a_thread->PushInt( 1 );
 				return GM_OK;
@@ -1882,12 +1844,13 @@ static int gmfGetEntityInSphere( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 4 );
 	GM_CHECK_VECTOR_PARAM( v, 0 );
 	GM_CHECK_FLOAT_OR_INT_PARAM( radius, 1 );
-	GM_CHECK_INT_PARAM( classId, 2 );
+	GM_CHECK_INT_PARAM( groupId, 2 );
+	GM_CHECK_INT_PARAM( classId, 3 );
 
 	GameEntity gameEnt;
 	GM_GAMEENTITY_FROM_PARAM( gameEnt, 3, GameEntity() );
 
-	GameEntity ent = gEngineFuncs->FindEntityInSphere( Vector3f( v.x, v.y, v.z ), radius, gameEnt, classId );
+	GameEntity ent;// = gEngineFuncs->FindEntityInSphere( Vector3f( v.x, v.y, v.z ), radius, gameEnt, classId );
 	if ( ent.IsValid() )
 	{
 		gmVariable out;
@@ -2108,7 +2071,7 @@ static int gmfCalculateTrajectory( gmThread *a_thread )
 
 			Vector3f vAimPt = Vector3f( v2.x, v2.y, v2.z ), vStartPos = Vector3f( v1.x, v1.y, v1.z );
 			Vector3f vAimDir = vAimPt - vStartPos;
-			vAimPt.Z() = vStartPos.Z() + Mathf::Tan( traj[ 0 ].m_Angle ) * Vector2f( vAimDir.X(), vAimDir.Y() ).Length();
+			vAimPt.Z() = vStartPos.Z() + Mathf::Tan( traj[ 0 ].mAngle ) * Vector2f( vAimDir.X(), vAimDir.Y() ).Length();
 			vAimDir = vAimPt - vStartPos;
 			vAimDir.Normalize();
 
@@ -2604,25 +2567,25 @@ static int GM_CDECL gmfSendTrigger( gmThread *a_thread )
 	{
 		gmVariable vEnt = tbl->Get( pM, "Entity" );
 		if ( vEnt.IsEntity() )
-			ti.m_Entity.FromInt( vEnt.GetEntity() );
+			ti.mEntity.FromInt( vEnt.GetEntity() );
 	}
 	{
 		gmVariable vActivator = tbl->Get( pM, "Activator" );
 		if ( vActivator.IsEntity() )
-			ti.m_Activator.FromInt( vActivator.GetEntity() );
+			ti.mActivator.FromInt( vActivator.GetEntity() );
 	}
 	{
 		gmVariable vTagName = tbl->Get( pM, "TagName" );
 		if ( vTagName.GetCStringSafe( 0 ) )
-			Utils::StringCopy( ti.m_TagName, vTagName.GetCStringSafe( 0 ), TriggerBufferSize );
+			Utils::StringCopy( ti.mTagName, vTagName.GetCStringSafe( 0 ), TriggerBufferSize );
 	}
 	{
 		gmVariable vAction = tbl->Get( pM, "Action" );
 		if ( vAction.GetCStringSafe( 0 ) )
-			Utils::StringCopy( ti.m_Action, vAction.GetCStringSafe( 0 ), TriggerBufferSize );
+			Utils::StringCopy( ti.mAction, vAction.GetCStringSafe( 0 ), TriggerBufferSize );
 	}
 
-	if ( ti.m_Action[ 0 ] && ti.m_TagName[ 0 ] )
+	if ( ti.mAction[ 0 ] && ti.mTagName[ 0 ] )
 	{
 		TriggerManager::GetInstance()->HandleTrigger( ti );
 		return GM_OK;
@@ -2694,7 +2657,7 @@ static int GM_CDECL gmfCreateMapGoal( gmThread *a_thread )
 {
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_STRING_PARAM( mgtype, 0 );
-	gmGCRoot<gmUserObject> obj = g_MapGoalDatabase.CreateMapGoalType( mgtype );
+	gmGCRoot<gmUserObject> obj = gMapGoalDatabase.CreateMapGoalType( mgtype );
 	a_thread->PushUser( obj );
 	return GM_OK;
 }
@@ -2734,7 +2697,7 @@ static int GM_CDECL gmfGetWeapon( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_INT_PARAM( weaponId, 0 );
 
-	WeaponPtr wp = g_WeaponDatabase.GetWeapon( weaponId );
+	WeaponPtr wp = gWeaponDatabase.GetWeapon( weaponId );
 	if ( wp )
 		a_thread->PushUser( wp->GetScriptObject( a_thread->GetMachine() ) );
 	else
@@ -2802,7 +2765,7 @@ static int GM_CDECL gmfSetCvar( gmThread *a_thread )
 		}
 
 		iPos = 0;
-		// and for the message...
+		// and for the message..
 		for ( int i = 1; i < a_thread->GetNumParams(); ++i )
 		{
 			const char *pAsString = a_thread->Param( i ).AsString( a_thread->GetMachine(), buffer, bufferSize );
@@ -2957,14 +2920,11 @@ static gmFunctionEntry s_botLib [] =
 	{ "GetEntLocalAABB", gmfGetEntityLocalAABB },
 	{ "GetEntOwner", gmfGetEntityOwner },
 	{ "GetEntTeam", gmfGetEntityTeam },
-	{ "GetEntClass", gmfGetEntityClass },
+	{ "GetEntInfo", gmfGetEntityInfo },
 	{ "GetEntCategory", gmfGetEntCategory },
 	{ "EntityIsValid", gmfEntityIsValid },
 	{ "EntityIsOutside", gmfEntityIsOutside },
-
-	{ "GetClassNameFromId", gmfGetClassNameFromId },
-	{ "GetWeaponIdFromClassId", gmfGetWeaponIdFromClassId },
-
+	
 	{ "DistanceBetween", gmfDistanceBetween },
 	{ "CalcTrajectory", gmfCalculateTrajectory },
 

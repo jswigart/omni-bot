@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <REPO_ROOT>$(SolutionDir)..\..\..\</REPO_ROOT>
+	<OMNIBOT_INST>$(REPO_ROOT)Installer\Files</OMNIBOT_INST>
+    <RTCWDIR>D:\Games\RTCW</RTCWDIR>    
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemDefinitionGroup />
+  <ItemGroup>
+    <BuildMacro Include="OMNIBOT_INST">
+      <Value>$(OMNIBOT_INST)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="RTCWDIR">
+      <Value>$(RTCWDIR)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="REPO_ROOT">
+      <Value>$(REPO_ROOT)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

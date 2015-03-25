@@ -16,13 +16,11 @@
 class FilterClosestETF : public FilterClosestTF
 {
 public:
+	virtual bool CheckEx( const GameEntity _ent, const MemoryRecord &_record );
 
-	virtual bool CheckEx(const GameEntity _ent, const MemoryRecord &_record);
-
-	FilterClosestETF(Client *_client, AiState::SensoryMemory::Type _type);
-	virtual ~FilterClosestETF() {}
+	FilterClosestETF( Client *_client, AiState::SensoryMemory::Type _type );
+	~FilterClosestETF();
 protected:
-
 	FilterClosestETF();
 };
 

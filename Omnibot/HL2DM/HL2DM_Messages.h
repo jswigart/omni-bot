@@ -21,30 +21,24 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-// struct: HL2DM_UpgradeModule
-struct HL2DM_UpgradeModule
-{
-	int			m_ModuleId;
-};
-
 // struct: HL2DM_CanPhysPickup
 struct HL2DM_CanPhysPickup
 {
-	GameEntity	m_Entity;
-	obBool		m_CanPickUp;
+	GameEntity	mEntity;
+	obBool		mCanPickUp;
 };
 
 // struct: HL2DM_PhysGunInfo
 struct HL2DM_PhysGunInfo
 {
-	GameEntity	m_HeldEntity;
-	float		m_LaunchSpeed;
+	GameEntity	mHeldEntity;
+	float		mLaunchSpeed;
 };
 
 struct HL2DM_ChargerStatus
 {
-	float	m_CurrentCharge;
-	float	m_MaxCharge;
+	float		mCurrentCharge;
+	float		mMaxCharge;
 };
 
 #pragma pack(pop)
