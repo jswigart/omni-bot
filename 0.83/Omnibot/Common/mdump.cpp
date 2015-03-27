@@ -23,7 +23,6 @@ String		g_AppName;
 #include <assert.h>
 #include <tchar.h>
 #include <stdio.h>
-#include "Revision.h"
 
 #if _MSC_VER < 1300
 #define DECLSPEC_DEPRECATED
@@ -86,10 +85,12 @@ static LONG WINAPI TopLevelFilter( struct _EXCEPTION_POINTERS *pExceptionInfo )
 			char szScratch[_MAX_PATH] = {0};
 			char szDumpPath[_MAX_PATH] = {0};
 
+			IGame *game = IGameManager::GetInstance()->GetGame();
+
 			// Get System Time for filename
 			SYSTEMTIME pTime;
 			GetSystemTime( &pTime );
-			sprintf( szDumpPath, "%s%s_%d.%d.%d.%d.%d.%d.r%s.dmp", 
+			sprintf( szDumpPath, "%s%s_%d.%d.%d.%d.%d.%d.v%s.dmp", 
 				"", 
 				g_AppName.c_str(), 
 				pTime.wMonth, 
@@ -98,7 +99,7 @@ static LONG WINAPI TopLevelFilter( struct _EXCEPTION_POINTERS *pExceptionInfo )
 				pTime.wHour,
 				pTime.wMinute,
 				pTime.wSecond, 
-				Revision::Number().c_str());
+				game ? game->GetVersion() : "");
 
 			// ask the user if they want to save a dump file
 			if (!EnableDumpDialog || ::MessageBox( NULL, 

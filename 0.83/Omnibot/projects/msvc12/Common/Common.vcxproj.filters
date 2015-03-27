@@ -849,9 +849,6 @@
     <ClCompile Include="..\..\..\Common\ResponseCurve.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\Revision.cpp">
-      <Filter>Miscellaneous</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\Timer.cpp">
       <Filter>Miscellaneous</Filter>
     </ClCompile>
@@ -1623,9 +1620,6 @@
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\ResponseCurve.h">
-      <Filter>Miscellaneous</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\Revision.h">
       <Filter>Miscellaneous</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\Timer.h">

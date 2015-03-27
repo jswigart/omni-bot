@@ -18,7 +18,6 @@
 #include "Timer.h"
 #include "Interprocess.h"
 #include "DebugWindow.h"
-#include "Revision.h"
 
 #include "WeaponDatabase.h"
 #include "FileSystem.h"
@@ -393,7 +392,9 @@ void IGameManager::InitCommands()
 {
 	Set("version", "Prints out the bot version number.", 
 		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdVersion)));
-	Set("stopprocess", "Stops a process by its name.", 
+	Set("revision", "Prints out the bot version number.",
+		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdVersion)));
+	Set("stopprocess", "Stops a process by its name.",
 		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdStopProcess)));
 	Set("showprocesses", "Shows current proccesses.", 
 		CommandFunctorPtr(new CommandFunctorT<IGameManager>(this, &IGameManager::cmdShowProcesses)));
@@ -415,12 +416,11 @@ void IGameManager::cmdVersion(const StringVector &_args)
 	if(m_Game)
 	{
 #ifdef _DEBUG
-		EngineFuncs::ConsoleMessage(va("Omni-Bot DEBUG Build : %s %s", __DATE__, __TIME__));
+		EngineFuncs::ConsoleMessage(va("Omni-Bot DEBUG Build : %s %s", m_Game->GetVersionDateTime()));
 #else
-		EngineFuncs::ConsoleMessage(va("Omni-Bot : %s %s", __DATE__, __TIME__));
+		EngineFuncs::ConsoleMessage(va("Omni-Bot : %s %s", m_Game->GetVersionDateTime()));
 #endif
 		EngineFuncs::ConsoleMessage(va("Version : %s", m_Game->GetVersion()));
-		EngineFuncs::ConsoleMessage(va("Revision : %s", Revision::Number().c_str()));
 		EngineFuncs::ConsoleMessage(va("Interface # : %d", m_InterfaceVersionNum));
 	}
 }

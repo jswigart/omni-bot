@@ -13,7 +13,6 @@
 #include "NavigationFlags.h"
 #include "WeaponDatabase.h"
 #include "MapGoalDatabase.h"
-#include "Revision.h"
 #include "IGame.h"
 #include "BotBaseStates.h"
 #include "BotGlobalStates.h"
@@ -63,7 +62,12 @@ IGame::~IGame()
 
 const char *IGame::GetVersion() const
 {
-	return "0.84";
+	return "0.84.2000";
+}
+
+const char *IGame::GetVersionDateTime() const
+{
+	return __DATE__ " " __TIME__;
 }
 
 bool IGame::CheckVersion(int _version)
@@ -1236,8 +1240,6 @@ void IGame::InitCommands()
 		this, &IGame::cmdReloadWeaponDatabase);
 	SetEx("show_bb", "Shows the contents of the global blackboard.", 
 		this, &IGame::cmdDumpBlackboard);
-	SetEx("revision", "Shows the revision the bot dll was built from.", 
-		this, &IGame::cmdRevision);
 	SetEx("print_filesystem", "Prints files from file system.", 
 		this, &IGame::cmdPrintFileSystem);
 }
@@ -1254,13 +1256,6 @@ bool IGame::UnhandledCommand(const StringVector &_args)
 		}
 	}
 	return handled; 
-}
-
-void IGame::cmdRevision(const StringVector &_args)
-{
-	EngineFuncs::ConsoleMessage(va("Omni-bot: Revision %s : %s", 
-		Revision::Number().c_str(), 
-		Revision::Date().c_str()));
 }
 
 void IGame::cmdBotDontShoot(const StringVector &_args)

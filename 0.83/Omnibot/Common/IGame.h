@@ -85,6 +85,7 @@ public:
 	void DispatchGlobalEvent(const MessageHelper &_message);
 
 	virtual const char *GetVersion() const;
+	virtual const char *GetVersionDateTime() const;
 	virtual int GetVersionNum() const = 0;
 	virtual bool CheckVersion(int _version);
 	virtual const char *GetGameName() const = 0;

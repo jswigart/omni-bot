@@ -2267,12 +2267,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\Revision.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\Timer.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -2586,7 +2580,6 @@
     <ClInclude Include="..\..\..\Common\QuadTree.h" />
     <ClInclude Include="..\..\..\Common\Regulator.h" />
     <ClInclude Include="..\..\..\Common\ResponseCurve.h" />
-    <ClInclude Include="..\..\..\Common\Revision.h" />
     <ClInclude Include="..\..\..\Common\Timer.h" />
     <ClInclude Include="..\..\..\Common\TrackablePtr.h" />
     <ClInclude Include="..\..\..\Common\Trajectory.h" />

@@ -17,7 +17,6 @@
 #include "IGame.h"
 #include "DebugWindow.h"
 #include "MapGoalDatabase.h"
-#include "Revision.h"
 
 #include "WeaponDatabase.h"
 
@@ -2451,8 +2450,6 @@ static int GM_CDECL gmfGetModVersion(gmThread *a_thread)
 //
 //		None
 //
-// Returns:
-//		<string> - Version of current mod.
 static int GM_CDECL gmfShowPaths(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);
@@ -2460,10 +2457,6 @@ static int GM_CDECL gmfShowPaths(gmThread *a_thread)
 	IGame *pGame = IGameManager::GetInstance()->GetGame();
 	if(pGame)
 	{
-		EngineFuncs::ConsoleMessage(va("Omni-bot %s, Revision %s, %s", 
-			pGame->GetVersion(),
-			Revision::Number().c_str(),
-			Revision::Date().c_str()));
 		EngineFuncs::ConsoleMessage(va("Game: %s", pGame->GetGameName()));
 		EngineFuncs::ConsoleMessage(va("Mod Folder: %s", Utils::GetModFolder().string().c_str()));
 		EngineFuncs::ConsoleMessage(va("Nav Folder: %s", Utils::GetNavFolder().string().c_str()));

@@ -9,7 +9,6 @@
 #include "PathPlannerFloodFill.h"
 #include "PathPlannerRecast.h"
 #include "ScriptManager.h"
-#include "Revision.h"
 
 static RenderOverlayType gOverlayType = OVERLAY_GAME;
 
@@ -1956,8 +1955,9 @@ void DebugWindow_s::Console_s::Init(const WindowProps &_mainwindow)
 
 	mContainer->setVisible(false);
 
-	AddLine("Omni-bot - Revision: %s, Date: %s", Revision::Number().c_str(), Revision::Date().c_str());
-	AddLine("Game: %s", IGameManager::GetInstance()->GetGame()->GetGameName());
+	IGame *game = IGameManager::GetInstance()->GetGame();
+	AddLine("Omni-bot - version: %s, Date: %s", game->GetVersion(), game->GetVersionDateTime());
+	AddLine("Game: %s", game->GetGameName());
 }
 void DebugWindow_s::Console_s::Update()
 {
