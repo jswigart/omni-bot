@@ -52,11 +52,12 @@ public:
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
 
 	virtual bool AddWeaponId(const char * weaponName, int weaponId);
-	
+	virtual int ConvertWeaponId(int weaponId);
+
 	int GetLogSize();
 
 	static int CLASSEXoffset;
-	static bool IsETBlight, IsBastardmod;
+	static bool IsETBlight, IsBastardmod, IsNoQuarter;
 
 	ET_Game() {};
 	virtual ~ET_Game() {};

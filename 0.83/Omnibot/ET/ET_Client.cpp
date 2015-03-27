@@ -91,6 +91,37 @@ void ET_Client::Init(int _gameid)
 	GetTargetingSystem()->SetDefaultTargetingFilter(filter);
 }
 
+int ET_Client::ConvertWeaponIdToMod(int weaponId)
+{
+	if(ET_Game::IsNoQuarter)
+	{
+		if(GetTeam()==OB_TEAM_1) { //Axis
+			switch(weaponId){
+				case ET_WP_MORTAR:
+					weaponId = 92; //GRANATWERFER
+					break;
+				case ET_WP_MORTAR_SET:
+					weaponId = 93; //GRANATWERFER_SET
+					break;
+			}
+		}
+		else { //Allies
+			switch(weaponId){
+				case ET_WP_MOBILE_MG42:
+					weaponId = 88; //MOBILE_BROWNING
+					break;
+				case ET_WP_MOBILE_MG42_SET:
+					weaponId = 89; //MOBILE_BROWNING_SET
+					break;
+				case ET_WP_KNIFE:
+					weaponId = 94; //KNIFE_KABAR
+					break;
+			}
+		}
+	}
+	return weaponId;
+}
+
 void ET_Client::UpdateBotInput()
 {
 	//ETBlight and bastardmod sniper hack
@@ -117,6 +148,9 @@ void ET_Client::UpdateBotInput()
 			}
 		}
 	}
+
+	m_ClientInput.m_CurrentWeapon = ConvertWeaponIdToMod(m_ClientInput.m_CurrentWeapon);
+
 	Client::UpdateBotInput();
 }
 

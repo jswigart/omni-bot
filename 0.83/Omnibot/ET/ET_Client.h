@@ -46,7 +46,9 @@ public:
 	float NavCallback(const NavFlags &_flag, Waypoint *from, Waypoint *to) ;
 
 	void SetupBehaviorTree();
-	
+
+	int ConvertWeaponIdToMod(int weaponId);
+
 	ET_Client();
 	virtual ~ET_Client();
 protected:

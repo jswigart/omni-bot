@@ -72,6 +72,7 @@ public:
 
 	inline IGame *GetGame()					{ return m_Game; } 	
 	inline PathPlannerBase *GetNavSystem()	{ return m_PathPlanner; }
+	inline int GetInterfaceVersionNum()	{ return m_InterfaceVersionNum; }
 
 	bool AddUpdateFunction(const String &_name, FunctorPtr _func);
 	bool RemoveUpdateFunction(const String &_name);

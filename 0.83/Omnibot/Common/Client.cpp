@@ -372,13 +372,14 @@ void Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb
 		HANDLER(MESSAGE_ADDWEAPON)
 		{
 			const Event_AddWeapon *m = _message.Get<Event_AddWeapon>();
-			if(!GetWeaponSystem()->HasWeapon(m->m_WeaponId))
+			int weaponId = IGameManager::GetInstance()->GetGame()->ConvertWeaponId(m->m_WeaponId);
+			if(!GetWeaponSystem()->HasWeapon(weaponId))
 			{
 				// Add weapons according to the event.
-				if(GetWeaponSystem()->AddWeaponToInventory(m->m_WeaponId))
+				if(GetWeaponSystem()->AddWeaponToInventory(weaponId))
 				{
 					_cb.CallScript();
-					_cb.AddInt("weapon", m->m_WeaponId);
+					_cb.AddInt("weapon", weaponId);
 				}
 			}
 			break;

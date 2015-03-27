@@ -105,6 +105,7 @@ namespace InterfaceFuncs
 		WeaponStatus data;
 		MessageHelper msg(GEN_MSG_GETEQUIPPEDWEAPON, &data, sizeof(data));
 		InterfaceMsg(msg, _ent);
+		data.m_WeaponId = IGameManager::GetInstance()->GetGame()->ConvertWeaponId(data.m_WeaponId);
 		return data;
 	}
 

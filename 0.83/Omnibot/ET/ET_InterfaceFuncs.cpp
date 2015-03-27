@@ -87,7 +87,7 @@ namespace InterfaceFuncs
 
 	bool SelectPrimaryWeapon(Client *_bot, ET_Weapon _weapon)
 	{
-		ET_SelectWeapon data = { _weapon };
+		ET_SelectWeapon data ={(ET_Weapon)_bot->ConvertWeaponIdToMod(_weapon)};
 		MessageHelper msg(ET_MSG_PICKWEAPON, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
 		return data.m_Good == True;

@@ -981,7 +981,7 @@ void Weapon::UpdateAmmo(FireMode _mode)
 	{
 		g_EngineFuncs->GetCurrentAmmo(
 			m_Client->GetGameEntity(),
-			GetWeaponID(),
+			m_Client->ConvertWeaponIdToMod(GetWeaponID()),
 			_mode,
 			fireMode.m_AmmoCurrent,
 			fireMode.m_AmmoMax);

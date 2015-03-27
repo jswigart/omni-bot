@@ -20,7 +20,7 @@
 #include "gmETBinds.h"
 
 int ET_Game::CLASSEXoffset;
-bool ET_Game::IsETBlight, ET_Game::IsBastardmod;
+bool ET_Game::IsETBlight, ET_Game::IsBastardmod, ET_Game::IsNoQuarter;
 
 IGame *CreateGameInstance()
 {
@@ -126,6 +126,7 @@ bool ET_Game::Init()
 	const char *modName = g_EngineFuncs->GetModName();
 	IsETBlight = !strcmp(modName, "etblight");
 	IsBastardmod = !strcmp(modName, "bastardmod");
+	IsNoQuarter = !strcmp(modName, "noquarter") && IGameManager::GetInstance()->GetInterfaceVersionNum() <= ET_VERSION_0_71;
 	CLASSEXoffset = IsETBlight ? 2 : 0;
 
 	AiState::FollowPath::m_OldLadderStyle = false;
@@ -792,4 +793,29 @@ void ET_Game::RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathChe
 int ET_Game::GetLogSize()
 {
 	return InterfaceFuncs::GetCvar("omnibot_logsize");
+}
+
+int ET_Game::ConvertWeaponId(int weaponId)
+{
+	if(IsNoQuarter)
+	{
+		switch(weaponId) {
+			case 88: //MOBILE_BROWNING
+				weaponId=ET_WP_MOBILE_MG42;
+				break;
+			case 89: //MOBILE_BROWNING_SET
+				weaponId=ET_WP_MOBILE_MG42_SET;
+				break;
+			case 92: //GRANATWERFER
+				weaponId=ET_WP_MORTAR;
+				break;
+			case 93:; //GRANATWERFER_SET
+				weaponId=ET_WP_MORTAR_SET;
+				break;
+			case 94: //KNIFE_KABAR
+				weaponId=ET_WP_KNIFE;
+				break;
+		}
+	}
+	return weaponId;
 }

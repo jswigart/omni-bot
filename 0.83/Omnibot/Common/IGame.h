@@ -158,6 +158,7 @@ public:
 	virtual void InitGlobalStates() {}
 
 	virtual bool AddWeaponId(const char * weaponName, int weaponId) { return false; }
+	virtual int ConvertWeaponId(int weaponId) { return weaponId; }
 
 	virtual const char * RemoteConfigName() const { return "Omnibot"; }
 
