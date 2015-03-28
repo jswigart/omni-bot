@@ -416,9 +416,9 @@ void IGameManager::cmdVersion(const StringVector &_args)
 	if(m_Game)
 	{
 #ifdef _DEBUG
-		EngineFuncs::ConsoleMessage(va("Omni-Bot DEBUG Build : %s %s", m_Game->GetVersionDateTime()));
+		EngineFuncs::ConsoleMessage(va("Omni-Bot DEBUG Build : %s", m_Game->GetVersionDateTime()));
 #else
-		EngineFuncs::ConsoleMessage(va("Omni-Bot : %s %s", m_Game->GetVersionDateTime()));
+		EngineFuncs::ConsoleMessage(va("Omni-Bot : %s", m_Game->GetVersionDateTime()));
 #endif
 		EngineFuncs::ConsoleMessage(va("Version : %s", m_Game->GetVersion()));
 		EngineFuncs::ConsoleMessage(va("Interface # : %d", m_InterfaceVersionNum));

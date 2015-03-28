@@ -20,8 +20,6 @@
 
 #include "WeaponDatabase.h"
 
-#include "quat.h"
-
 #include "gmBotLibrary.h"
 #include "gmBot.h"
 #include "gmAABB.h"
