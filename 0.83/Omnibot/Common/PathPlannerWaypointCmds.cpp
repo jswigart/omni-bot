@@ -1076,21 +1076,13 @@ void PathPlannerWaypoint::cmdWaypointMirror(const StringVector &_args)
 	
 	WaypointList mirroredWaypoints;
 
+	WaypointList *waypointList = &m_WaypointList;
+	if(!m_SelectedWaypoints.empty()) waypointList = &m_SelectedWaypoints;
+	mirroredWaypoints.reserve(waypointList->size());
+
 	WaypointList::iterator it, itEnd;
-	if(m_SelectedWaypoints.empty())
-	{
-		mirroredWaypoints.reserve(m_WaypointList.size());
-		it = m_WaypointList.begin();
-		itEnd = m_WaypointList.end();
-	}
-	else
-	{
-		mirroredWaypoints.reserve(m_SelectedWaypoints.size());
-		it = m_SelectedWaypoints.begin();
-		itEnd = m_SelectedWaypoints.end();
-	}
-	
-	for( ; it != itEnd; ++it)
+	itEnd = waypointList->end();
+	for(it = waypointList->begin(); it != itEnd; ++it)
 	{
 		Waypoint *pWp = new Waypoint;
 		*pWp = **it;
@@ -1158,26 +1150,25 @@ void PathPlannerWaypoint::cmdWaypointMirror(const StringVector &_args)
 			Waypoint::ConnectionList::iterator conIt = (*it)->m_Connections.begin(), 
 				conItEnd = (*it)->m_Connections.end();
 
-			for(; conIt != conItEnd; ++conIt)
+			while(conIt != conItEnd)
 			{
 				// which waypoint does this point to in the main list.
-				int index = -1;
-				for(int i = 0; i < (int)m_WaypointList.size(); ++i)
+				for(int i = 0; ; ++i)
 				{
-					if(m_WaypointList[i] == conIt->m_Connection)
+					if(i >= (int)waypointList->size())
 					{
-						index = i;
+						//remove connection which is outside mirrored list
+						Waypoint::ConnectionList::iterator conErase = conIt;
+						++conIt;
+						(*it)->m_Connections.erase(conErase);
 						break;
 					}
-				}
-				
-				if(index != -1)
-				{
-					conIt->m_Connection = mirroredWaypoints[index];
-				}
-				else
-				{
-					Utils::OutputDebug(kError, "Invalid Connection on waypoint.");
+					if((*waypointList)[i] == conIt->m_Connection)
+					{
+						conIt->m_Connection = mirroredWaypoints[i];
+						++conIt;
+						break;
+					}
 				}
 			}
 		}
