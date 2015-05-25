@@ -45,17 +45,24 @@ protected:
 
 class Incapacitated : public StateChild
 {
+	obint32 m_Timeout;
+
 public:
 	obReal GetPriority() 
 	{
 		return !InterfaceFuncs::IsAlive(GetClient()->GetGameEntity()) ? 1.f : 0.f; 
 	}
 
+	void Enter()
+	{
+		m_Timeout = IGame::GetTime() + 60000;
+	}
+
 	State::StateStatus Update(float fDt) 
 	{
 		if(InterfaceFuncs::GetReinforceTime(GetClient()) < 1.0f)
 		{
-			if(!InterfaceFuncs::IsMedicNear(GetClient())) 
+			if(!InterfaceFuncs::IsMedicNear(GetClient()) || IGame::GetTime() > m_Timeout) 
 			{
 				InterfaceFuncs::GoToLimbo(GetClient());
 			}
