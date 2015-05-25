@@ -461,6 +461,8 @@ void PathPlannerWaypoint::Update()
 	{
 		bool bDrawTests = IGameManager::GetInstance()->GetGame()->DrawBlockableTests();
 
+		std::vector<int> changedUID;
+
 		ConnectionList::iterator it = m_BlockableList.begin(), itEnd = m_BlockableList.end();
 		for( ; it != itEnd; ++it)
 		{
@@ -479,10 +481,8 @@ void PathPlannerWaypoint::Update()
 				{
 					(*it).second->m_ConnectionFlags |= F_LNK_CLOSED;
 
-					//////////////////////////////////////////////////////////////////////////
-					Event_DynamicPathsChanged m(0xFFFF, (*it).second->m_Connection->GetUID());
-					IGameManager::GetInstance()->GetGame()->DispatchGlobalEvent(
-						MessageHelper(MESSAGE_DYNAMIC_PATHS_CHANGED,&m,sizeof(m)));
+					if(std::find(changedUID.begin(), changedUID.end(), (*it).second->m_Connection->GetUID()) == changedUID.end())
+						changedUID.push_back((*it).second->m_Connection->GetUID());
 				}
 				break;
 			case B_INVALID_FLAGS:
@@ -501,6 +501,14 @@ void PathPlannerWaypoint::Update()
 					((*it).second->m_ConnectionFlags & F_LNK_CLOSED) ? g_BlockableBlocked : g_BlockableOpen,
 					(float)m_BlockableRegulator->GetInterval() / 1000.f);
 			}
+		}
+
+		//repath if current path goes through any blocked connection
+		for(std::vector<int>::iterator it2 = changedUID.begin(); it2 != changedUID.end(); ++it2)
+		{
+			Event_DynamicPathsChanged m(0xFFFF /* all teams */, (*it2));
+			IGameManager::GetInstance()->GetGame()->DispatchGlobalEvent(
+				MessageHelper(MESSAGE_DYNAMIC_PATHS_CHANGED, &m, sizeof(m)));
 		}
 	}
 

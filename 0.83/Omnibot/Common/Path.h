@@ -63,6 +63,7 @@ public:
 	bool GetFirstPt(PathPoint &_pt) const;
 	bool GetLastPt(PathPoint &_pt) const;
 	bool GetPt(int _index, PathPoint &_pt) const;
+	const PathPoint *GetPt(int _index) const { return &m_Pts[_index]; }
 
 	inline int GetNumPts() const { return m_NumPts; }
 	inline int GetCurrentPtIndex() const { return m_CurrentPt; }

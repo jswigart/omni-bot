@@ -1157,20 +1157,20 @@ namespace AiState
 
 	void FollowPath::DynamicPathUpdated(const Event_DynamicPathsChanged *_m)
 	{
-		Path::PathPoint p;
+		const Path::PathPoint *p;
 		for(int i = m_CurrentPath.GetCurrentPtIndex(); i < m_CurrentPath.GetNumPts(); ++i)
 		{
-			m_CurrentPath.GetPt(i,p);
+			p = m_CurrentPath.GetPt(i);
 
 			if(_m->m_NavId)
 			{
-				if(p.m_NavId==_m->m_NavId)
+				if(p->m_NavId==_m->m_NavId)
 				{
 					Repath();
 					break;
 				}
 			}
-			else if(p.m_NavFlags&F_NAV_DYNAMIC)
+			else if(p->m_NavFlags&F_NAV_DYNAMIC)
 			{
 				Repath();
 				break;
