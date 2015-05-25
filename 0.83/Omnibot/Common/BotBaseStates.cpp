@@ -1281,6 +1281,24 @@ namespace AiState
 			if(!m_Query.m_SkipLastPt)
 			{
 				Destination dest = m_Query.m_Destination[m_Query.m_User->m_DestinationIndex];
+				int num = m_CurrentPath.GetNumPts();
+				if(num >= 2){
+					Path::PathPoint pt1, pt2;
+					m_CurrentPath.GetPt(num-1, pt2);
+					if(Length(pt2.m_Pt, dest.m_Position) > pt2.m_Radius && !pt2.m_OnPathThrough){
+						m_CurrentPath.GetPt(num-2, pt1);
+						Vector3f vClosest;
+						float t = Utils::ClosestPtOnLine(pt1.m_Pt, pt2.m_Pt, dest.m_Position, vClosest);
+						if(t < 1.f && Length(vClosest, dest.m_Position) <= MaxT(dest.m_Radius, pt2.m_Radius)){
+							//destination is near connection between last two waypoints
+							m_CurrentPath.RemoveLastPt();
+							m_CurrentPath.AddPt(vClosest, MinT(dest.m_Radius, pt2.m_Radius))
+								.Flags(pt2.m_NavFlags)
+								.NavId(pt2.m_NavId);
+						}
+					}
+				}
+				//append destination to path
 				m_CurrentPath.AddPt(dest.m_Position, dest.m_Radius);
 			}
 			GetClient()->ResetStuckTime();

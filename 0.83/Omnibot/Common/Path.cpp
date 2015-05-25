@@ -61,14 +61,13 @@ bool Path::NextPt()
 	}
 }
 
-void Path::Append(const Path &_path)
+void Path::RemoveLastPt()
 {
-	for(int i = 0; i < MAX_PATH_PTS; ++i)
+	if(m_NumPts > 0)
 	{
-		m_Pts[i] = _path.m_Pts[i];
-		m_Links[i] = _path.m_Links[i];
+		m_NumPts--;
+		if(m_CurrentPt == m_NumPts && m_NumPts > 0) m_CurrentPt--;
 	}
-	m_NumPts += _path.GetNumPts();
 }
 
 bool Path::GetCurrentPt(PathPoint &_pt) const 

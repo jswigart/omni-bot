@@ -53,7 +53,7 @@ public:
 	Path::PathPoint &AddPt(const Vector3f &_pt, float _radius);
 	bool NextPt();
 
-	void Append(const Path &_path);
+	void RemoveLastPt();
 
 	Vector3f FindNearestPtOnPath(const Vector3f &_position, Vector3f *_outLookAhead = NULL, float _lookAheadDistance = 0.f);
 
