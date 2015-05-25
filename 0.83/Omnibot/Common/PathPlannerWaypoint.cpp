@@ -696,6 +696,14 @@ int PathPlannerWaypoint::PlanPathToNearest(Client *_client, const Vector3f &_sta
 
 int PathPlannerWaypoint::PlanPathToNearest(Client *_client, const Vector3f &_start, const DestinationVector &_goals, const NavFlags &_team)
 {
+	if(_goals.size() == 1 && Length(_goals[0].m_Position, _start) <= _goals[0].m_Radius)
+	{
+		//bot is already at goal
+		m_Solution.clear();
+		m_PlannerFlags.SetFlag(NAV_FOUNDGOAL);
+		return 0;
+	}
+
 	m_Client = _client;
 	m_GoalIndex = 0;
 

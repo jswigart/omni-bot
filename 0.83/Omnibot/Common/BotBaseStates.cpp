@@ -1278,7 +1278,7 @@ namespace AiState
 		{
 			m_CurrentPath.Clear();
 			pPathPlanner->GetPath(m_CurrentPath);
-			if(!m_Query.m_SkipLastPt)
+			if(!m_Query.m_SkipLastPt || m_CurrentPath.GetNumPts()==0)
 			{
 				Destination dest = m_Query.m_Destination[m_Query.m_User->m_DestinationIndex];
 				int num = m_CurrentPath.GetNumPts();
