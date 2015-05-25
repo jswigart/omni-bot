@@ -1892,7 +1892,8 @@ void PathPlannerWaypoint::GetPath(Path &_path, int _smoothiterations)
 	while(!m_Solution.empty())
 	{
 		// Center the waypoint position according to offsets.
-		Vector3f vWpPos = m_Solution.back()->GetPosition();
+		Waypoint *pWp = m_Solution.back();
+		Vector3f vWpPos = pWp->GetPosition();
 		vWpPos.z += g_fBottomWaypointOffset + fWpHalfHeight;
 
 		if(bFirst)
@@ -1901,22 +1902,18 @@ void PathPlannerWaypoint::GetPath(Path &_path, int _smoothiterations)
 
 			if(m_Solution.size() > 1)
 			{
-				if(m_Client)
+				if(m_Client && !pWp->OnPathThrough())
 				{
-					Vector3f vNextWpPos = m_Solution[m_Solution.size()-2]->GetPosition();
+					Waypoint *pWp2 = m_Solution[m_Solution.size()-2];
+					Vector3f vNextWpPos = pWp2->GetPosition();
 					vNextWpPos.z += g_fBottomWaypointOffset + fWpHalfHeight;
 					Vector3f vClosest;
 					float t = Utils::ClosestPtOnLine(vWpPos, vNextWpPos, m_Client->GetPosition(), vClosest);
-					if(t > 0.f)
+					if(t > 0.f) //bot is near connection between the first and second waypoint
 					{
-						_path.AddPt(vNextWpPos,m_Solution[m_Solution.size()-2]->GetRadius())
-							.Flags(m_Solution[m_Solution.size()-2]->GetNavigationFlags())
-							.OnPathThrough(m_Solution[m_Solution.size()-2]->OnPathThrough())
-							.OnPathThroughParam(m_Solution[m_Solution.size()-2]->OnPathThroughParam())
-							.NavId(m_Solution[m_Solution.size()-2]->GetUID()
-							);
+						_path.AddPt(vClosest, pWp->GetRadius() + t * (pWp2->GetRadius() - pWp->GetRadius()))
+							.Flags(pWp->GetNavigationFlags());
 
-						m_Solution.pop_back();
 						m_Solution.pop_back();
 						continue;
 					}
@@ -1924,11 +1921,11 @@ void PathPlannerWaypoint::GetPath(Path &_path, int _smoothiterations)
 			}
 		}
 
-		_path.AddPt(vWpPos,m_Solution.back()->GetRadius())
-			.Flags(m_Solution.back()->GetNavigationFlags())
-			.OnPathThrough(m_Solution.back()->OnPathThrough())
-			.NavId(m_Solution.back()->GetUID())
-			.OnPathThroughParam(m_Solution.back()->OnPathThroughParam());
+		_path.AddPt(vWpPos, pWp->GetRadius())
+			.Flags(pWp->GetNavigationFlags())
+			.OnPathThrough(pWp->OnPathThrough())
+			.NavId(pWp->GetUID())
+			.OnPathThroughParam(pWp->OnPathThroughParam());
 
 		m_Solution.pop_back();
 	}
