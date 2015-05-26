@@ -380,7 +380,7 @@ int gmBot::gmfIsStuck(gmThread *a_thread)
 	if(fp != NULL && fp->IsActive())
 	{
 		int iStuckTime = Utils::SecondsToMilliseconds(stuckTime);
-		Stuck = native->GetStuckTime() > iStuckTime ? true : false;
+		Stuck = native->GetStuckTime() >= iStuckTime;
 	}
 	a_thread->PushInt(Stuck?1:0);
 	return GM_OK;
