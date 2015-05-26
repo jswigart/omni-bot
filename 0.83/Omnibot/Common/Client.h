@@ -283,6 +283,7 @@ protected:
 
 	AABB			m_StuckBounds;
 	int				m_StuckTime;
+	bool			m_StuckExpanded;
 
 	State			*m_StateRoot;
 

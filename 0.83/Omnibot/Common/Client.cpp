@@ -61,8 +61,6 @@ Client::Client()
 	m_DebugFlags.SetFlag(BOT_DEBUG_FPINFO);
 #endif
 
-	m_StuckBounds.Set(Vector3f(-32.f, -32.f, -32.f), Vector3f(32.f, 32.f, 32.f));
-
 	// Initialize default movement capability
 	m_MovementCaps.SetFlag(Movement::MOVE_WALK, true);
 	m_MovementCaps.SetFlag(Movement::MOVE_JUMP, true);
@@ -608,10 +606,19 @@ void Client::Shutdown()
 void Client::CheckStuck()
 {
 	if(m_StuckBounds.Contains(GetPosition()))
+	{
 		m_StuckTime += IGame::GetDeltaTime();
+		if(m_StuckTime > 500 && !m_StuckExpanded){
+			m_StuckExpanded = true;
+			m_StuckBounds.ExpandAxis(0, 20);
+			m_StuckBounds.ExpandAxis(1, 20);
+			m_StuckBounds.ExpandAxis(2, 40); //must be higher than JUMP height
+		}
+	}
 	else
 	{
 		ResetStuckTime();
+		m_StuckExpanded = false;
 		m_StuckBounds.Set(Vector3f(-32.f, -32.f, -32.f), Vector3f(32.f, 32.f, 32.f));
 		m_StuckBounds.SetCenter(GetPosition());
 	}
