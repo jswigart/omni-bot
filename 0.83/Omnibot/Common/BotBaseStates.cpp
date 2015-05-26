@@ -1031,6 +1031,7 @@ namespace AiState
 		, m_PassThroughState(0)
 		, m_RayDistance(-1.0f)
 		, m_JumpTime(0)
+		, m_LastStuckTime(0)
 	{
 	}
 
@@ -1625,6 +1626,13 @@ namespace AiState
 
 			if(GetClient()->GetStuckTime() > 2000)
 			{
+				obint32 lastStuck = m_LastStuckTime;
+				m_LastStuckTime = IGame::GetTime();
+				if(IGame::GetTime() > lastStuck + 7000) {
+					// find new path to current goal
+					if(Repath()) return State_Busy;
+				}
+				// "pathfailed" error
 				FINDSTATEIF(SteeringSystem, GetRootState(), SetTarget(vPos));
 				NotifyUserFailed(FollowPathUser::Blocked);
 				m_PathStatus = PathFinished;

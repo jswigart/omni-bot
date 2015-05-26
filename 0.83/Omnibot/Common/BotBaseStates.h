@@ -255,6 +255,7 @@ namespace AiState
 		Vector3f	m_LookAheadPt;
 		int			m_LadderDirection;
 		obint32		m_JumpTime;
+		obint32		m_LastStuckTime;
 		
 		obuint32	m_PassThroughState;
 		int			m_PathThroughPtIndex;
