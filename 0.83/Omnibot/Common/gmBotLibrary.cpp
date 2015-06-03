@@ -2624,6 +2624,16 @@ static int GM_CDECL gmfGetNearestNonSolid(gmThread *a_thread)
 	return GM_OK;
 }
 
+static int GM_CDECL gmfGetLocalCommand(gmThread *a_thread)
+{
+	GM_CHECK_NUM_PARAMS(0);
+	if(CommandReciever::m_ConsoleCommandThreadId == a_thread->GetId())
+		a_thread->PushNewString(CommandReciever::m_ConsoleCommand.c_str());
+	else
+		a_thread->PushNull();
+	return GM_OK;
+}
+
 static int GM_CDECL gmfReloadGoalScripts(gmThread *a_thread)
 {	
 	GM_CHECK_NUM_PARAMS(0);
@@ -2981,6 +2991,7 @@ static gmFunctionEntry s_botLib[] =
 	{"GetLocalAimPosition",		gmfGetLocalAimPosition},
 	{"GetLocalAimNormal",		gmfGetLocalAimNormal},
 	{"GetNearestNonSolid",		gmfGetNearestNonSolid},
+	{"GetLocalCommand",			gmfGetLocalCommand},
 
 	{"ReloadGoalScripts",		gmfReloadGoalScripts},
 

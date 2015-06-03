@@ -82,28 +82,28 @@ bool ScriptCommandExecutor::Exec(const StringVector &_args, const gmVariable &_t
 			{
 				// Add all the params
 				gmTableObject *pParamTable = m_Machine->AllocTableObject();
-				if(_args.size() > 1)
+				for(obuint32 i = 1; i < _args.size(); ++i) 
 				{
-					for(obuint32 i = 1; i < _args.size(); ++i) 
+					int iNum;
+					float dNum;
+					if (Utils::ConvertString(_args[i], iNum))
 					{
-						int iNum;
-						float dNum;
-						if (Utils::ConvertString(_args[i], iNum))
-						{
-							pParamTable->Set(m_Machine, i-1, gmVariable(iNum));
-						}
-						else if(Utils::ConvertString(_args[i], dNum))
-						{
-							pParamTable->Set(m_Machine, i-1, gmVariable(dNum));
-						}
-						else
-						{
-							pParamTable->Set(m_Machine, i-1, gmVariable(m_Machine->AllocStringObject(_args[i].c_str())));
-						}
+						pParamTable->Set(m_Machine, i-1, gmVariable(iNum));
+					}
+					else if(Utils::ConvertString(_args[i], dNum))
+					{
+						pParamTable->Set(m_Machine, i-1, gmVariable(dNum));
+					}
+					else
+					{
+						pParamTable->Set(m_Machine, i-1, gmVariable(m_Machine->AllocStringObject(_args[i].c_str())));
 					}
 				}
 				call.AddParamTable(pParamTable);
 				call.End();
+
+				CommandReciever::m_ConsoleCommand = _args[0];
+				CommandReciever::m_ConsoleCommandThreadId = call.GetThreadId();
 				return true;
 			}
 		}
@@ -113,6 +113,8 @@ bool ScriptCommandExecutor::Exec(const StringVector &_args, const gmVariable &_t
 }
 
 //////////////////////////////////////////////////////////////////////////
+String CommandReciever::m_ConsoleCommand;
+int CommandReciever::m_ConsoleCommandThreadId;
 
 CommandReciever::CommandMap CommandReciever::m_CommandMap;
 CommandReciever::RecieverList CommandReciever::m_RecieverList;
