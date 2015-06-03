@@ -47,6 +47,7 @@ bool ScriptCommandExecutor::Exec(const StringVector &_args, const gmVariable &_t
 					if(pHelpString)
 					{
 						EngineFuncs::ConsoleMessage(pHelpString);
+						return true;
 					}
 					else
 					{
@@ -62,20 +63,20 @@ bool ScriptCommandExecutor::Exec(const StringVector &_args, const gmVariable &_t
 									EngineFuncs::ConsoleMessage(pHelp);
 								pNode = pUsageTbl->GetNext(tIt);
 							}
+							return true;
 						}
 					}
-					return true;
 				}
 			}
-		}
-		if(bPrintUsage)
-		{
-			EngineFuncs::ConsoleError(va("No Usage Info For Command: %s", _args[0].c_str()));
-			return true;
 		}
 
 		if(pFn)
 		{
+			if(bPrintUsage)
+			{
+				EngineFuncs::ConsoleError(va("No Usage Info For Command: %s", _args[0].c_str()));
+				return true;
+			}
 			gmCall call;
 			if(call.BeginFunction(m_Machine, pFn, _this, true))
 			{
@@ -135,10 +136,17 @@ CommandReciever::~CommandReciever()
 
 bool CommandReciever::DispatchCommand(const StringVector &_args)
 {
+	const bool bPrintUsage = _args.size() > 1 && _args[1] == "?";
+
 	// Look for default commands first.
 	CommandMap::iterator cit = m_CommandMap.find(_args[0]);
 	if(cit != m_CommandMap.end())
 	{
+		if(bPrintUsage)
+		{
+			EngineFuncs::ConsoleError("Usage info is available only for scripted commands.");
+			return false;
+		}
 		(*cit->second.second)(_args);
 		return true;
 	}
@@ -152,7 +160,10 @@ bool CommandReciever::DispatchCommand(const StringVector &_args)
 	{
 		ScriptCommandExecutor cmdExec(m_Machine,pCommandsTable);
 		if(cmdExec.Exec(_args))
+		{
+			if(bPrintUsage) return true;
 			handled = true;
+		}
 	}
 
 	// iterate all com
@@ -161,7 +172,10 @@ bool CommandReciever::DispatchCommand(const StringVector &_args)
 		++it)
 	{
 		if((*it)->UnhandledCommand(_args))
+		{
+			if(bPrintUsage) return true;
 			handled = true;
+		}
 	}
 	if(!handled) EngineFuncs::ConsoleError("Unrecognized command. Use /bot help for a list of commands.");
 	return handled;
@@ -212,6 +226,16 @@ bool _HelpItemAlphabetical(const HelpItem &_pt1, const HelpItem &_pt2)
 
 void CommandReciever::cmdHelp(const StringVector &_args)
 {
+	if(_args.size()==2)
+	{
+		//command usage info
+		StringVector _args2;
+		_args2.push_back(_args[1]);
+		_args2.push_back("?");
+		DispatchCommand(_args2);
+		return;
+	}
+
 	EngineFuncs::ConsoleMessage("---- Omni-bot Command Help ----");
 	CommandMap::const_iterator it = m_CommandMap.begin();
 	for( ; it != m_CommandMap.end(); ++it)
