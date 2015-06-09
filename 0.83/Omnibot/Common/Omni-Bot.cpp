@@ -6,13 +6,14 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "PrecompCommon.h"
+
 #ifdef WIN32
 #include "windows.h"	
 #else
 // TODO: linux shit here
 #endif
 
-#include "PrecompCommon.h"
 #include "Omni-Bot.h"
 
 #include "IGame.h"

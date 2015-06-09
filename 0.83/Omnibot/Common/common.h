@@ -91,6 +91,8 @@ typedef std::list<String> StringList;
 #endif
 
 #ifdef WIN32
+	// TODO: rename hash_map to unordered_map
+	#define _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS
 	#include <hash_map>
 #else
 	#if defined (__GNUC__) && (__GNUC__ <= 2)
