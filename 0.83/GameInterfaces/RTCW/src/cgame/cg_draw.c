@@ -3884,6 +3884,7 @@ typedef struct onsText_s
 {
 	struct onsText_s *next;
 	int			endtime;
+	int			duration;
 	int			color;
 	char		text[MAX_TEXTLENGTH];
 	vec3_t		origin;
@@ -3957,7 +3958,8 @@ qboolean CG_AddOnScreenText( const char *text, vec3_t origin, int _color, float 
 	VectorCopy(origin, worldtext->origin);
 	/*worldtext->x = x;
 	worldtext->y = y;*/
-	worldtext->endtime = cg.time + (int)((float)duration * 1000.f);
+	worldtext->endtime = 0;
+	worldtext->duration = (int)((float)duration * 1000.f);
 	worldtext->color = _color;
 	Q_strncpyz(worldtext->text,text,MAX_TEXTLENGTH);
 	return qtrue;
@@ -3985,14 +3987,19 @@ void CG_DrawOnScreenText(void) {
 		/* Check for expiration */
 		if(worldtext->endtime < cg.time) 
 		{
-			/* Clear up this world text */
-			*whereworldtext=worldtext->next;
-			worldtext->next=freeworldtext;
-			freeworldtext=worldtext;
-			worldtext=*whereworldtext;
-			continue;
+			if(!worldtext->endtime){
+				worldtext->endtime = cg.time + worldtext->duration;
+			}
+			else{
+				/* Clear up this world text */
+				*whereworldtext=worldtext->next;
+				worldtext->next=freeworldtext;
+				freeworldtext=worldtext;
+				worldtext=*whereworldtext;
+				continue;
+			}
 		}
-		
+
 		if( CG_WorldToScreen(worldtext->origin, &x, &y) && (cg_omnibotdrawing.integer == 2 && !PointVisible(worldtext->origin) ? qfalse : qtrue) && DistanceSquared(cg.refdef.vieworg, worldtext->origin) < MAX_RENDERDIST * MAX_RENDERDIST )
 		{
 			//CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, worldtext->origin, -1, CONTENTS_SOLID);
