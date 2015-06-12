@@ -108,6 +108,7 @@ bool RTCW_Game::Init()
 	// Run the games autoexec.
 	int threadId;
 	ScriptManager::GetInstance()->ExecuteFile("scripts/rtcw_autoexec.gm", threadId);
+	ScriptManager::GetInstance()->ExecuteFile("scripts/rtcw_autoexec_user.gm", threadId);
 
 	PathPlannerWaypoint::m_BlockableMask = F_RTCW_NAV_WALL|F_RTCW_NAV_BRIDGE|F_RTCW_NAV_WATERBLOCKABLE;
 
@@ -352,7 +353,9 @@ void RTCW_Game::AddBot(Msg_Addbot &_addbot, bool _createnow)
 		// always call pfnChangeClass() _before_ pfnChangeTeam()!
 		// todo: send the weapon preferences as 3rd param
 		g_EngineFuncs->ChangeClass(iGameID, cp->m_DesiredClass, NULL);
+		if(!cp) return;
 		g_EngineFuncs->ChangeTeam(iGameID, cp->m_DesiredTeam, NULL);
+		if(!cp) return;
 
 		cp->CheckTeamEvent();
 		cp->CheckClassEvent();
@@ -529,7 +532,9 @@ void RTCW_Game::ClientJoined(const Event_SystemClientConnected *_msg)
 			cp->m_DesiredClass = _msg->m_DesiredClass;
 
 			g_EngineFuncs->ChangeClass(_msg->m_GameId, cp->m_DesiredClass, NULL);
+			if(!cp) return;
 			g_EngineFuncs->ChangeTeam(_msg->m_GameId, cp->m_DesiredTeam, NULL);
+			if(!cp) return;
 
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();
@@ -662,4 +667,10 @@ void RTCW_Game::StartGame()
 
 	// Other initialization.
 	m_SettingLimiter.reset(new Regulator(2000));
+}
+
+
+int RTCW_Game::GetLogSize()
+{
+	return InterfaceFuncs::GetCvar("omnibot_logsize");
 }

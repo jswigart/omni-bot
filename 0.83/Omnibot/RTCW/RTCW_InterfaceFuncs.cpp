@@ -44,6 +44,7 @@ namespace InterfaceFuncs
 		{
 			RTCW_CvarGet data;
 			data.m_Cvar = _cvar;
+			data.m_Value = 0;
 			MessageHelper msg(RTCW_MSG_GETCVAR, &data, sizeof(data));
 			InterfaceMsg(msg);
 			return data.m_Value;

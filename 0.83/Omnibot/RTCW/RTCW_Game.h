@@ -48,6 +48,8 @@ public:
 	void GetTeamEnumeration(const IntEnum *&_ptr, int &num);
 	void GetWeaponEnumeration(const IntEnum *&_ptr, int &num);
 
+	int GetLogSize();
+
 	RTCW_Game() {};
 	virtual ~RTCW_Game() {};
 protected:
