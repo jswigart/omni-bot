@@ -542,6 +542,40 @@ static int gmfGetMG42Info(gmThread *a_thread)
 
 //////////////////////////////////////////////////////////////////////////
 
+// function: GetMountedPlayerOnMG42
+//		Returns entity currently mounted on the given mg42 entity
+//		
+//
+// Parameters:
+//
+//		GameEntity
+//
+// Returns:
+//		Entity of the owner
+static int gmfGetMountedPlayerOnMG42(gmThread *a_thread)
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS(1);
+	GameEntity gameEnt;
+	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
+	OBASSERT(gameEnt.IsValid(), "Bad Entity");
+
+	GameEntity owner = InterfaceFuncs::GetMountedPlayerOnMG42(native, gameEnt);
+	if(owner.IsValid())
+	{
+		gmVariable v;
+		v.SetEntity(owner.AsInt());
+		a_thread->Push(v);
+	}
+	else
+	{
+		a_thread->PushNull();
+	}
+	return GM_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 // function: IsMG42Repairable
 //		Returns whether or not the MG42 is repairable
 //		
@@ -625,7 +659,8 @@ static gmFunctionEntry s_ExtendedBotTypeLib[] =
 	{"GetExplosiveState",		gmfGetExplosiveState, NULL},
 	{"GetDestroyableState",		gmfGetDestroyableState, NULL},
 	{"GetMG42Info",			gmfGetMG42Info, NULL},
-	{"IsMG42Repairable",		gmfIsMG42Repairable, NULL},
+	{"GetMountedPlayerOnMG42", gmfGetMountedPlayerOnMG42, NULL},
+	{"IsMG42Repairable", gmfIsMG42Repairable, NULL},
 	{"IsMedicNear",			gmfIsMedicNear, NULL},
 	{"GoToLimbo",			gmfGoToLimbo, NULL},
 };
