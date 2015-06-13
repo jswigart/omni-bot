@@ -9,6 +9,7 @@
 #ifndef __ASTARSOLVER_H__
 #define __ASTARSOLVER_H__
 
+#include <boost/pool/pool_alloc.hpp>
 
 template<typename Node>
 class AStar
