@@ -114,7 +114,7 @@ bool ScriptCommandExecutor::Exec(const StringVector &_args, const gmVariable &_t
 
 //////////////////////////////////////////////////////////////////////////
 String CommandReciever::m_ConsoleCommand;
-int CommandReciever::m_ConsoleCommandThreadId;
+int CommandReciever::m_ConsoleCommandThreadId, CommandReciever::m_MapDebugPrintThreadId;
 
 CommandReciever::CommandMap CommandReciever::m_CommandMap;
 CommandReciever::RecieverList CommandReciever::m_RecieverList;

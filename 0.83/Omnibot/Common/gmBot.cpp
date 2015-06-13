@@ -1648,7 +1648,7 @@ int gmBot::gmfIsCarryingFlag(gmThread *a_thread)
 		if (name)
 		{
 			pGoal = GoalManager::GetInstance()->GetGoal(name);
-			if (!pGoal) LOGWARN("Map Goal not found: " << name);
+			if (!pGoal) MapDebugPrint(a_thread, va("IsCarryingFlag: goal %s not found", name));
 		}
 	}
 	a_thread->PushInt(native->DoesBotHaveFlag(pGoal) ? 1 : 0);
@@ -1679,8 +1679,7 @@ int gmBot::gmfCanGrabItem(gmThread *a_thread)
 		MapGoalPtr pGoal = GoalManager::GetInstance()->GetGoal(name);
 		if (!pGoal)
 		{
-			EngineFuncs::ConsoleMessage(va("CanGrabFlag: goal %s not found!", name));
-			LOGWARN("CanGrabFlag: goal " << name << " not found!");
+			MapDebugPrint(a_thread, va("CanGrabItem: goal %s not found", name));
 		}
 		else result = native->IsFlagGrabbable(pGoal);
 	}

@@ -125,6 +125,7 @@ static int GM_CDECL gmfEchoError(gmThread *a_thread)
 // Parameters:
 //
 //		string - The message to log.
+//		int - OPTIONAL - 0=info, 1=warning, 2=error, 3=critical
 //
 // Returns:
 //		None
@@ -132,7 +133,22 @@ static int GM_CDECL gmfLog(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_STRING_PARAM(msg, 0);
-	LOG(msg);
+	GM_INT_PARAM(level, 1, 0);
+
+	switch(level){
+		case 0:
+			LOG(msg);
+			break;
+		case 1:
+			LOGWARN(msg);
+			break;
+		case 2:
+			LOGERR(msg);
+			break;
+		default:
+			LOGCRIT(msg);
+			break;
+	}
 	return GM_OK;
 }
 
@@ -500,7 +516,6 @@ static int GM_CDECL gmfGetMapGoal(gmThread *a_thread)
 		else
 		{
 			a_thread->PushNull();
-			LOGWARN("Map Goal not found: " << name);
 		}
 	}	
 	return GM_OK;
@@ -592,6 +607,18 @@ static int GM_CDECL gmfSetMapGoalProperties(gmThread *a_thread)
 	return GM_OK;
 }
 
+void MapDebugPrint(gmThread *a_thread, const char *message)
+{
+	gmCall call;
+	if(call.BeginTableFunction(a_thread->GetMachine(), "MapDebugPrint", "Util"))
+	{
+		call.AddParamString(message);
+		call.AddParamInt(2);
+		if(a_thread->GetId() == CommandReciever::m_ConsoleCommandThreadId)
+			CommandReciever::m_MapDebugPrintThreadId = call.GetThread()->GetId();
+		call.End();
+	}
+}
 
 static int SetAvailableMapGoals(gmThread *a_thread, int _team, bool _available, const char* _expression)
 {
@@ -618,14 +645,7 @@ static int SetAvailableMapGoals(gmThread *a_thread, int _team, bool _available, 
 	}
 	else
 	{
-		gmCall call;
-		if(call.BeginTableFunction(a_thread->GetMachine(), "MapDebugPrint", "Util"))
-		{
-			call.AddParamString(va("SetAvailableMapGoals: goal query for %s has no results!", _expression));
-			call.AddParamInt(1);
-			call.End();
-		}
-		LOGWARN("SetAvailableMapGoals: goal query for " << _expression << " has no results!");
+		MapDebugPrint(a_thread, va("SetAvailableMapGoals: goal query for %s has no results", _expression));
 	}
 
 	return size;
@@ -672,8 +692,7 @@ static int GM_CDECL gmfSetAvailableMapGoals(gmThread *a_thread)
 	}
 	else
 	{
-		EngineFuncs::ConsoleMessage("SetAvailableMapGoals: Parameter 3 must be a string or table");
-		LOGWARN("SetAvailableMapGoals: Parameter 3 must be a string");
+		MapDebugPrint(a_thread, "SetAvailableMapGoals: Parameter 3 must be a string or table");
 	}
 
 	a_thread->PushInt(size);
@@ -2627,7 +2646,8 @@ static int GM_CDECL gmfGetNearestNonSolid(gmThread *a_thread)
 static int GM_CDECL gmfGetLocalCommand(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);
-	if(CommandReciever::m_ConsoleCommandThreadId == a_thread->GetId())
+	if(CommandReciever::m_ConsoleCommandThreadId == a_thread->GetId() 
+		|| CommandReciever::m_MapDebugPrintThreadId == a_thread->GetId())
 		a_thread->PushNewString(CommandReciever::m_ConsoleCommand.c_str());
 	else
 		a_thread->PushNull();

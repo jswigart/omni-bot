@@ -88,7 +88,7 @@ public:
 	virtual bool UnhandledCommand(const StringVector &_args) { return false; }
 
 	static String m_ConsoleCommand;
-	static int m_ConsoleCommandThreadId;
+	static int m_ConsoleCommandThreadId, m_MapDebugPrintThreadId;
 
 	CommandReciever();
 protected:
