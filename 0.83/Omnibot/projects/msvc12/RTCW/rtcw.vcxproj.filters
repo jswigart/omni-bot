@@ -48,9 +48,6 @@
     <ClCompile Include="..\..\..\RTCW\gmRTCWBinds.cpp">
       <Filter>Core\Scripting</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\RTCW\RTCW_BaseStates.cpp">
-      <Filter>Core\Goals</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\RTCW\RTCW_GoalManager.cpp">
       <Filter>Core\Goals</Filter>
     </ClCompile>
@@ -97,9 +94,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\RTCW\gmRTCWBinds.h">
       <Filter>Core\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\RTCW\RTCW_BaseStates.h">
-      <Filter>Core\Goals</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\RTCW\RTCW_GoalManager.h">
       <Filter>Core\Goals</Filter>

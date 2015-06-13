@@ -14,7 +14,6 @@
 #include "RTCW_VoiceMacros.h"
 #include "RTCW_FilterClosest.h"
 #include "RTCW_Messages.h"
-#include "RTCW_BaseStates.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -387,5 +386,6 @@ void RTCW_Client::SetupBehaviorTree()
 	delete GetStateRoot()->ReplaceState("Dead", new Limbo);
 	GetStateRoot()->InsertAfter("Limbo", new Incapacitated);
 
-	GetStateRoot()->AppendTo("HighLevel", new CallArtillery);
+	GetStateRoot()->RemoveState("CaptureTheFlag");
+	GetStateRoot()->RemoveState("ReturnTheFlag");
 }

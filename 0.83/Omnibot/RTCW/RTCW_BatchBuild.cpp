@@ -3,7 +3,6 @@
 
 #include "BotExports.cpp"
 #include "RTCW_FilterClosest.cpp"
-#include "RTCW_BaseStates.cpp"
 #include "RTCW_GoalManager.cpp"
 #include "gmRTCWBinds.cpp"
 #include "RTCW_Client.cpp"
