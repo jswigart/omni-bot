@@ -14,8 +14,6 @@
 #include "Waypoint.h"
 #include "gmbinder2.h"
 
-#include <boost/pool/pool_alloc.hpp>
-
 class Waypoint;
 class WaypointSerializerImp;
 
@@ -44,18 +42,6 @@ public:
 	// typedef: WaypointList
 	//	std::vector of pointers to waypoints.
 	typedef std::vector<Waypoint*> WaypointList;
-	// typedef: WaypointHashMap
-	//	stdext::hash_map of waypoint pointers using a specialized hash function
-	//	to map their 3d position into the hash map to allow fast lookups.
-	typedef boost::fast_pool_allocator< std::pair< const int, Waypoint* >, boost::default_user_allocator_new_delete, boost::details::pool::default_mutex, 769 > HashMapAllocator;
-
-#ifdef WIN32
-	typedef stdext::hash_compare<uintptr_t> HashMapCompare;
-	typedef stdext::hash_map<uintptr_t, Waypoint*, HashMapCompare, HashMapAllocator > WaypointHashMap;
-#else
-	typedef stdext::hash<uintptr_t> HashMapCompare;
-	typedef stdext::hash_map<uintptr_t, Waypoint*, HashMapCompare, stdext::equal_to<uintptr_t>, HashMapAllocator > WaypointHashMap;
-#endif
 
 	static void SetMovementCapFlags(const NavFlags &_flags);
 
@@ -222,7 +208,6 @@ protected:
 
 	WaypointList		m_Solution;
 	WaypointList		m_OpenList;
-	//WaypointHashMap		m_ClosedList;
 	int					m_OpenCount;
 	int					m_ClosedCount;
 
