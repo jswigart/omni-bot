@@ -679,24 +679,30 @@ void Weapon_Engineer( gentity_t *ent ) {
 
 								traceEnt = G_TempEntity( ent->s.pos.trBase, EV_GLOBAL_SOUND );
 								traceEnt->r.svFlags |= SVF_BROADCAST;
-								if ( ent->client->sess.sessionTeam == TEAM_RED && dynamiteDropTeam != TEAM_RED ) {
-									if ( ( hit->spawnflags & AXIS_OBJECTIVE ) && ( !scored ) ) {
-										AddScore( ent,WOLF_DYNAMITE_DIFFUSE ); // FIXME add team info to *dynamite* so we don't get points for diffusing own team dynamite
-										scored++;
-										hit->spawnflags &= ~OBJECTIVE_DESTROYED; // "re-activate" objective since it wasn't destroyed.  kludgy, I know; see G_ExplodeMissile for the other half
+								if ( ent->client->sess.sessionTeam == TEAM_RED ) {
+									if(dynamiteDropTeam != TEAM_RED)
+									{
+										if((hit->spawnflags & AXIS_OBJECTIVE) && (!scored)) {
+											AddScore(ent, WOLF_DYNAMITE_DIFFUSE); // FIXME add team info to *dynamite* so we don't get points for diffusing own team dynamite
+											scored++;
+											hit->spawnflags &= ~OBJECTIVE_DESTROYED; // "re-activate" objective since it wasn't destroyed.  kludgy, I know; see G_ExplodeMissile for the other half
+										}
+										trap_SendServerCommand(-1, "cp \"Axis engineer disarmed the Dynamite!\n\"2");
+										traceEnt->s.eventParm = G_SoundIndex("sound/multiplayer/axis/g-dynamite_defused.wav");
+										traceEnt->s.teamNum = TEAM_RED;
 									}
-									trap_SendServerCommand( -1, "cp \"Axis engineer disarmed the Dynamite!\n\"2" );
-									traceEnt->s.eventParm = G_SoundIndex( "sound/multiplayer/axis/g-dynamite_defused.wav" );
-									traceEnt->s.teamNum = TEAM_RED;
-								} else if ( dynamiteDropTeam != TEAM_BLUE ) { // TEAM_BLUE
-									if ( ( hit->spawnflags & ALLIED_OBJECTIVE ) && ( !scored ) ) {
-										AddScore( ent,WOLF_DYNAMITE_DIFFUSE );
-										scored++;
-										hit->spawnflags &= ~OBJECTIVE_DESTROYED; // "re-activate" objective since it wasn't destroyed
+								}
+								else { // TEAM_BLUE
+									if(dynamiteDropTeam != TEAM_BLUE) {
+										if((hit->spawnflags & ALLIED_OBJECTIVE) && (!scored)) {
+											AddScore(ent, WOLF_DYNAMITE_DIFFUSE);
+											scored++;
+											hit->spawnflags &= ~OBJECTIVE_DESTROYED; // "re-activate" objective since it wasn't destroyed
+										}
+										trap_SendServerCommand(-1, "cp \"Allied engineer disarmed the Dynamite!\n\"2");
+										traceEnt->s.eventParm = G_SoundIndex("sound/multiplayer/allies/a-dynamite_defused.wav");
+										traceEnt->s.teamNum = TEAM_BLUE;
 									}
-									trap_SendServerCommand( -1, "cp \"Allied engineer disarmed the Dynamite!\n\"2" );
-									traceEnt->s.eventParm = G_SoundIndex( "sound/multiplayer/allies/a-dynamite_defused.wav" );
-									traceEnt->s.teamNum = TEAM_BLUE;
 								}
 							}
 						}
