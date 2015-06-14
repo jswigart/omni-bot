@@ -33,6 +33,7 @@ public:
 
 	bool DoesBotHaveFlag(MapGoalPtr _mapgoal);
 	bool IsFlagGrabbable(MapGoalPtr _mapgoal);
+	bool IsItemGrabbable(GameEntity _ent);
 
 	bool CanBotSnipe();
 	bool GetSniperWeapon(int &nonscoped, int &scoped);

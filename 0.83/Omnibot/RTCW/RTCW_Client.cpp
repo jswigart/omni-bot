@@ -318,6 +318,11 @@ bool RTCW_Client::IsFlagGrabbable(MapGoalPtr _mapgoal)
 	return InterfaceFuncs::ItemCanBeGrabbed(this, _mapgoal->GetEntity());
 }
 
+bool RTCW_Client::IsItemGrabbable(GameEntity _ent)
+{
+	return InterfaceFuncs::ItemCanBeGrabbed(this, _ent);
+}
+
 bool RTCW_Client::CanBotSnipe() 
 {
 	if(GetClass() == RTCW_CLASS_SOLDIER)
