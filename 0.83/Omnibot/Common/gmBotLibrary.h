@@ -40,6 +40,7 @@
 class gmMachine;
 
 void gmBindBotLib(gmMachine * a_machine);
+void MapDebugPrint(const char *message);
 void MapDebugPrint(gmThread *a_thread, const char *message);
 
 #endif

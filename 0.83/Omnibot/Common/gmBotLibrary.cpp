@@ -607,17 +607,27 @@ static int GM_CDECL gmfSetMapGoalProperties(gmThread *a_thread)
 	return GM_OK;
 }
 
-void MapDebugPrint(gmThread *a_thread, const char *message)
+static void MapDebugPrint(gmMachine *a_machine, int threadId, const char *message)
 {
 	gmCall call;
-	if(call.BeginTableFunction(a_thread->GetMachine(), "MapDebugPrint", "Util"))
+	if(call.BeginTableFunction(a_machine, "MapDebugPrint", "Util"))
 	{
 		call.AddParamString(message);
 		call.AddParamInt(2);
-		if(a_thread->GetId() == CommandReciever::m_ConsoleCommandThreadId)
+		if(threadId == CommandReciever::m_ConsoleCommandThreadId && threadId)
 			CommandReciever::m_MapDebugPrintThreadId = call.GetThread()->GetId();
 		call.End();
 	}
+}
+
+void MapDebugPrint(gmThread *a_thread, const char *message)
+{
+	MapDebugPrint(a_thread->GetMachine(), a_thread->GetId(), message);
+}
+
+void MapDebugPrint(const char *message)
+{
+	MapDebugPrint(ScriptManager::GetInstance()->GetMachine(), 0, message);
 }
 
 static int SetAvailableMapGoals(gmThread *a_thread, int _team, bool _available, const char* _expression, int ignoreErrors)

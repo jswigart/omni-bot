@@ -9,6 +9,7 @@
 #include "PrecompCommon.h"
 #include "BotBaseStates.h"
 #include "ScriptManager.h"
+#include "gmBotLibrary.h"
 
 const obReal ROAM_GOAL_PRIORITY = 0.05f;
 const obReal CTF_PRIORITY = 0.55f;
@@ -1307,6 +1308,19 @@ namespace AiState
 		}
 		else
 		{
+			//path not found
+			FINDSTATE(hl, HighLevel, GetRootState());
+			if(hl) {
+				State *state = hl->GetActiveState();
+				if(state) {
+					MapGoal *g = state->GetMapGoalPtr();
+					if(g) {
+						const Vector3f &pos = GetClient()->GetPosition();
+						MapDebugPrint(va("Path not found from (%.0f,%.0f,%.0f) to %s", pos.x, pos.y, pos.z, g->GetName().c_str()));
+					}
+				}
+			}
+
 			m_PathStatus = PathNotFound;
 			NotifyUserFailed(FollowPathUser::NoPath);
 			if(!m_PassThroughState) m_Query.m_User = 0;
