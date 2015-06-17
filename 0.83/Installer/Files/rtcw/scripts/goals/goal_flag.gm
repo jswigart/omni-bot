@@ -1,0 +1,96 @@
+this.Name = "FLAG";
+this.Parent = "HighLevel";
+this.SkipGetPriorityWhenActive = true;
+
+this.GETTING_FLAG = 1;
+this.CARRYING_TO_CAP = 2;
+
+this.Initialize = function()
+{
+	// check for flag status so we can finish if another player grabs it or if dropped flag is returned
+	this.LimitTo( this.CheckFlagState, 1, true );
+};
+
+this.CheckFlagState = function()
+{
+	switch(this.GoalState)
+	{
+		case this.GETTING_FLAG:
+		{
+			return this.Bot.CanGrabItem(this.MapGoal.GetEntity());
+		}
+		case this.CARRYING_TO_CAP:
+		{
+			return this.Bot.IsCarryingFlag();
+		}
+	}
+	return true;
+};
+
+this.GetPriority = function()
+{
+	while(1)
+	{
+		this.Priority = 0;
+		if (this.Bot.IsCarryingFlag())
+		{
+			query = 0xc9326a43 /* CAPPOINT */;
+			state = this.CARRYING_TO_CAP;
+		}
+		else
+		{
+			query = 0xbdeaa8d7 /* FLAG */;
+			state = this.GETTING_FLAG;
+		}
+
+		if ( this.QueryGoals(this.Bot.QueryGoalsTable, query) )
+		{
+			foreach ( goal in this.Bot.QueryGoalsTable )
+			{
+				if (state == this.GETTING_FLAG) {
+					ent = goal.GetEntity();
+					if (!ent || !this.Bot.CanGrabItem(ent)) {
+						continue;
+					}
+				}
+				this.GoalState = state;
+				this.MapGoal = goal;
+				this.Priority = goal.GetGoalPriority(this.Bot);
+				break;
+			}
+		}
+
+		sleep(2);
+	}
+};
+
+this.Enter = function()
+{
+	if(!this.MarkInProgress()) { this.Finished(); }
+};
+
+this.Exit = function()
+{
+	 this.GoalState = null;
+};
+
+this.Update = function()
+{
+	Util.RouteTo(this);
+
+	pos = this.MapGoal.GetPosition();
+	this.AddAimRequest(Priority.High, "position", pos);
+
+	for(timeout = 100; this.CheckFlagState(); timeout -= 1)
+	{
+		this.Bot.MoveTowards(pos);
+		yield();
+		if ( timeout < 0 ) {
+			this.BlackboardDelay(10);
+			Util.ScriptDebugPrint(this.MapGoal.GetName(), "timedout");
+			break;
+		}
+	}
+
+	this.Finished();
+};

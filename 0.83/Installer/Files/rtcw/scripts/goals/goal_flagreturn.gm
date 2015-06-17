@@ -1,0 +1,60 @@
+this.Name = "FLAGRETURN";
+this.Parent = "HighLevel";
+this.SkipGetPriorityWhenActive = true;
+
+this.GetPriority = function()
+{
+	while(1)
+	{
+		this.Priority = 0;
+		if ( this.QueryGoals(this.Bot.QueryGoalsTable,0xa06840e5 /* FLAGRETURN */) )
+		{
+			foreach ( goal in this.Bot.QueryGoalsTable )
+			{
+				ent = goal.GetEntity();
+				if (ent && this.Bot.CanGrabItem(ent))
+				{
+					this.MapGoal = goal;
+					this.Priority = goal.GetGoalPriority(this.Bot);
+					break;
+				}
+			}
+		}
+		sleep(2);
+	}
+};
+
+this.Enter = function()
+{
+	if(!this.MarkInProgress() || !this.MarkInUse()) { this.Finished(); }
+
+	this.TargetPosition = this.MapGoal.GetPosition();
+	this.DynamicGotoThread = this.ForkThread(this.DynamicGoto);
+};
+
+this.Exit = function()
+{
+	if(this.DynamicGotoThread) { this.KillThread(this.DynamicGotoThread); }
+};
+
+this.DynamicGoto = function()
+{
+	if(this.Goto(this.TargetPosition,0) == EVENT.PATH_FAILED)
+	{
+		this.BlackboardDelay(10);
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
+	}
+	this.Finished();
+};
+
+
+this.Update = function()
+{
+	pos = this.MapGoal.GetPosition();
+	if( DistanceBetween(pos,this.TargetPosition) > 100)
+	{
+		this.TargetPosition = pos;
+		this.KillThread(this.DynamicGotoThread);
+		this.DynamicGotoThread = this.ForkThread(this.DynamicGoto);
+	}
+};

@@ -11,7 +11,7 @@ if(!BB.PICKUPHEALTH) {
 }
 
 // These parameters are optional
-this.LimitToClass( CLASS.LIEUTENANT, CLASS.ENGINEER, CLASS.SOLDIER );
+this.LimitToNoClass(CLASS.MEDIC); //Medics shouldn't call for health
 
 this.Initialize = function()
 {
@@ -87,7 +87,8 @@ this.Update = function()
 
 		timeout = 0;
 		if (this.Debug) { this.Bot.Say("going to pack"); }
-		while ( this.Pack && timeout < this.Timeout ) {
+		while ( this.Pack && timeout < this.Timeout )
+		{
 			pos = GetEntPosition(this.Pack);
 
 			if ( pos ) {
@@ -102,7 +103,6 @@ this.Update = function()
 			timeout += 50;
 			yield();
 		}
-		this.Finished();
 	}
 
 	this.Finished();

@@ -3,12 +3,14 @@ this.Version = 1;
 this.DefaultPriority = 0.8;
 this.MinRadius = 30;
 this.RolePriorityBonus = 0.1;
+this.MaxUsers_InUse(1);
+this.MaxUsers_InProgress(1);
 
 //////////////////////////////////////////////////////////////////////////
 
 this.Schema = Schema();
 this.Schema.AimVectors = Validate.TableOf("vector3").Default({});
-this.Schema.Stance = Validate.Enum("stand","crouch","prone").Default("stand");
+this.Schema.Stance = Validate.Enum("stand","crouch").Default("stand");
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -116,7 +118,7 @@ this.SaveToTable = function(SaveTable)
 {
 	// save the goal specific properties
 	SaveTable.AimVectors = this.AimVectors;
-	SaveTable.Stance = this.Stance;
+	if (this.Stance!="stand"){ SaveTable.Stance = this.Stance; }
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -166,7 +168,10 @@ this.SetProperty = function(property, value)
 		}
 		case "stance": // crouch, stand, default stand
 		{
-			this.Stance = value;
+			if(this.Schema.Stance.CheckPrintErrors(this,value))
+			{
+				this.Stance = value;
+			}
 		}
 		default:
 		{

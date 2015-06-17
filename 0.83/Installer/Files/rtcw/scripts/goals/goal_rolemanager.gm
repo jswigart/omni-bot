@@ -21,14 +21,6 @@ this.FindFreeRoleSlot = function()
 	teamRoles = Map.Roles[ Util.TeamName(team) ];
 	if (!teamRoles){ return; }
 
-	if (this.justStarted) {
-		// let server tables be populated
-		while(Server.Team[ team ].NumBots < 1) {
-			sleep(1);
-		}
-		this.justStarted = null;
-	}
-
 	botCount = 0;
 	evalNum = 0;
 	newClass = null;
@@ -146,7 +138,7 @@ this.Events[EVENT.CHANGETEAM] = function(team)
 		return;
 	}
 	if (this.justStarted) {
-		//this.justStarted = null;
+		this.justStarted = null;
 	} else {
 		// clear role in old team
 		if (team==TEAM.AXIS){ team=TEAM.ALLIES; } else { team=TEAM.AXIS; }

@@ -4,9 +4,9 @@ this.Name = "PickupItems";
 this.Parent = "HighLevel";
 this.AlwaysRecieveEvents = true;
 this.AutoAdd = true;
-this.PickupPriority = 0.98;
+this.PickupPriority = 0.9;
 this.Range = 200;
-this.Frequency = 10; // 1 to 10, 0 to disable
+this.Frequency = 7; // 1 to 10, 0 to disable
 
 this.LimitToNoEntityFlag(ENTFLAG.INWATER, ENTFLAG.UNDERWATER);
 
@@ -15,6 +15,10 @@ this.Initialize = function()
 	watchParams = {
 		Radius = this.Range,
 		Category = CAT.PICKUP,
+		
+		// cs: lets pretend bots hear the pack being dropped behind them ...
+		// it's reasonable since this is limited to a 200 radius. this should
+		// improve the deliver supplies goal success rate.
 		//RequireLOS = TRACE.VISIBLE,
 	};
 	this.WatchForEntityCategory(watchParams);
@@ -48,45 +52,29 @@ this.Exit = function()
 
 this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
 {
-	if ( this.Frequency == 0 || this.IsActive() || RandInt(1, 10) >= this.Frequency ) {
+	if ( !this.Bot || this.IsActive() || RandInt(1, 10) >= this.Frequency ) {
 		return;
 	}
 
-	if ( ent )
+	entCat = this.GetPickupCategory(ent);
+
+	switch(entCat)
 	{
-		entCat = this.GetPickupCategory(ent);
-		if ( entCat != -1 ) {
-			pos = GetEntPosition(ent);
-			if ( !pos || this.Bot.DistanceTo(pos) > this.Range ) {
-				return;
-			}
-
-			this.TargetEntity = ent;
-			this.TargetPosition = pos;
-		}
-		else {
-			return;
-		}
-
-		priority = 0;
-		switch(entCat)
+		case CAT.PICKUP_WEAPON:
+		case CAT.PICKUP_AMMO:
 		{
-			case CAT.PICKUP_WEAPON:
-			case CAT.PICKUP_AMMO:
-			{
-				if ( this.NeedsAmmo(ent, entCat) ) {
-					priority = this.PickupPriority;
-				}
-			}
-			case CAT.PICKUP_HEALTH:
-			{
-				if ( this.Bot.Health < this.Bot.MaxHealth ) {
-					priority = this.PickupPriority;
-				}
+			if ( this.NeedsAmmo(ent, entCat) ) {
+				this.TargetEntity = ent;
+				this.Priority = this.PickupPriority;
 			}
 		}
-
-		this.Priority = priority;
+		case CAT.PICKUP_HEALTH:
+		{
+			if ( this.Bot.Health < this.Bot.MaxHealth ) {
+				this.TargetEntity = ent;
+				this.Priority = this.PickupPriority;
+			}
+		}
 	}
 };
 

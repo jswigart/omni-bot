@@ -179,8 +179,8 @@ this.Update = function()
 	{
 		timeout -= 1;
 
-		// keep trying every 3 frames rather than every frame after 3 frames.
-		if ( timeout % 3 == 0 ) { // was timeout > 3
+		// keep trying every 3 frames
+		if ( timeout % 3 == 0 ) {
 			this.Bot.PressButton(BTN.ATTACK1);
 		}
 
@@ -195,7 +195,7 @@ this.Update = function()
 
 	// cs: Log the position if they still have a charge?
 
-	this.Bot.ReleaseButton( BTN.AIM, BTN.ATTACK1 );
+	this.Bot.ReleaseButton( BTN.AIM );
 
 	// Finish the state.
 	this.Finished();

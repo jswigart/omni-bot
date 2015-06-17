@@ -21,15 +21,15 @@ this.GetPriority = function()
 {
 	while(1)
 	{
+		this.Priority = 0;
 		//if(this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0))
 		//{
-			count = this.QueryGoals(this.Bot.QueryGoalsTable,0x17929136 /* REPAIRMG42 */);
-			if ( count > 0 )
+			if ( this.QueryGoals(this.Bot.QueryGoalsTable,0x17929136 /* REPAIRMG42 */) )
 			{
 				foreach ( goal in this.Bot.QueryGoalsTable )
 				{
 					ent = goal.GetEntity();
-					if ( this.Bot.IsMG42Repairable(ent) ) {
+					if ( ent && this.Bot.IsMG42Repairable(ent) ) {
 						this.MapGoal = goal;
 						this.GoalEntity = ent;
 						this.Priority = goal.GetGoalPriority(this.Bot);
@@ -37,8 +37,6 @@ this.GetPriority = function()
 					}
 				}
 			}
-
-			tableClear(this.Bot.QueryGoalsTable);
 		//}
 
 		sleep(2);
@@ -47,47 +45,42 @@ this.GetPriority = function()
 
 this.Enter = function()
 {
-	// cs:	commenting for now. default behavior is to just keep repairing even though it is
-	//	slow with no charge
+	// cs:   commenting for now. default behavior is to just keep repairing even though it is
+	// slow with no charge
 	//this.AddFinishCriteria(this.Bot.GetGameEntity(),"not weaponcharged", WEAPON.DYNAMITE);
 
-	if(!this.MarkInProgress(this.MapGoal)) {
-		this.BlackboardDelay(5, this.MapGoal);
-		this.Finished();
-	}
+	if(!this.MarkInProgress()) { this.Finished(); }
 };
 
 this.Update = function()
 {
-	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
+	Util.RouteTo(this);
+
+	if ( this.MapGoal.Stance == "crouch" ) {
+		this.Bot.HoldButton(BTN.CROUCH, 99);
+	}
+
+	this.AddAimRequest(Priority.High, "position", this.MapGoal.GetPosition());
+
+	this.AddWeaponRequest(Priority.High, WEAPON.PLIERS );
+	this.BlockForWeaponChange( WEAPON.PLIERS );
+
+	timeout=0;
+	while( this.Bot.IsMG42Repairable(this.GoalEntity) )
 	{
-		if(!this.MarkInUse(this.MapGoal)) {
-			this.BlackboardDelay(5, this.MapGoal);
+		if (timeout > 10)
+		{
+			this.BlackboardDelay(45);
+			Util.ScriptDebugPrint(this.MapGoal.GetName(), "timedout");
 			this.Finished();
 		}
 
-		if ( this.MapGoal.Stance == "crouch" ) {
-			this.Bot.HoldButton(BTN.CROUCH, 99);
-		}
-
-		this.AddAimRequest(Priority.High, "position", this.MapGoal.GetPosition());
-
-		this.AddWeaponRequest(Priority.High, WEAPON.PLIERS );
-		this.BlockForWeaponChange( WEAPON.PLIERS );
-
-		// timeout?
-		while( this.Bot.IsMG42Repairable(this.GoalEntity) ) {
-			this.Bot.HoldButton(BTN.ATTACK1, 1);
-			sleep(1);
-		}
-	}
-	else
-	{
-		this.BlackboardDelay(10, this.MapGoal);
-		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
+		this.Bot.HoldButton(BTN.ATTACK1, 1);
+		sleep(1);
+		timeout+=1;
 	}
 
-	this.BlackboardDelay(5, this.MapGoal);
+	this.BlackboardDelay(5);
 	this.Finished();
 };
 

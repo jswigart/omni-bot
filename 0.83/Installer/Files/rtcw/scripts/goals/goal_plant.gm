@@ -1,8 +1,7 @@
 // This script contains functionality to allow bots to dynamite goals
 
-// These parameters are required
-this.Name = "PLANT";		// The name of the goal.
-this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.Name = "PLANT";
+this.Parent = "HighLevel";
 this.SkipGetPriorityWhenActive = true;
 this.LimitToClass(CLASS.ENGINEER);
 
@@ -22,25 +21,26 @@ this.GetPriority = function()
 {
 	while(1)
 	{
+		this.Priority = 0;
 		if ( this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
 		{
-			count = this.QueryGoals(this.Bot.QueryGoalsTable,0xbbcae592 /* PLANT */);
-			if ( count > 0 )
+			if ( this.QueryGoals(this.Bot.QueryGoalsTable,0xbbcae592 /* PLANT */) )
 			{
-				foreach ( id and goal in this.Bot.QueryGoalsTable )
+				foreach ( goal in this.Bot.QueryGoalsTable )
 				{
-					if (goal.ExplosiveType && !(goal.ExplosiveType & goal.ExplosiveTypeDynamite)) {
-						continue;
-					}
-
-					if ( goal.TraceInfo && tableCount(goal.TraceInfo) > 0 ) {
-						if ( !goal.TraceEntity || this.Bot.GetDestroyableState(goal.TraceEntity) < 1 ) {
+					if ( goal.TraceInfo && tableCount(goal.TraceInfo) > 0 )
+					{
+						if ( !goal.TraceEntity || this.Bot.GetDestroyableState(goal.TraceEntity) < 1 )
+						{
 							continue;
 						}
-					} else {
+					}
+					else
+					{
 						goalEnt = goal.GetEntity();
 
-						if ( !goalEnt || this.Bot.GetDestroyableState(goalEnt) < 1 ) {
+						if ( !goalEnt || this.Bot.GetDestroyableState(goalEnt) < 1 )
+						{
 							continue;
 						}
 					}
@@ -50,8 +50,6 @@ this.GetPriority = function()
 					break;
 				}
 			}
-
-			tableClear(this.Bot.QueryGoalsTable);
 		}
 
 		sleep(2);
@@ -60,28 +58,24 @@ this.GetPriority = function()
 
 this.Enter = function()
 {
-	this.GoalState = this.LOOK_FOR_DYNO;
+	if(!this.MarkInProgress()) { this.Finished(); }
+
 	this.ExplosiveEntity = null;
 
-	if ( this.MapGoal.TraceEntity ) {
+	this.Goal_Name = this.MapGoal.GetName();
+
+	if ( this.MapGoal.TraceEntity )
+	{
 		this.GoalEntity = this.MapGoal.TraceEntity;
 	}
-	else {
+	else
+	{
 		this.GoalEntity = this.MapGoal.GetEntity();
 	}
 
-	this.Goal_Name = this.MapGoal.GetName();
-	this.Goal_Position = this.MapGoal.GetPosition();
-
-	if ( !this.GoalEntity ) {
-		Util.MapDebugPrint(this.Goal_Name + " entered with no entity!", true);
-		this.MapGoal.DisableGoal(true);
-		this.Finished();
-	}
-
-	if(!this.MarkInProgress(this.MapGoal)) {
-		this.BlackboardDelay(5, this.MapGoal);
-		this.Finished();
+	if ( !this.GoalEntity )
+	{
+		Util.InvalidGoal(this, "entered with no entity!");
 	}
 
 	this.UpdateDebugString();
@@ -94,18 +88,10 @@ this.Update = function()
 		this.Finished();
 	}
 
-	if ( this.RouteTo(this.MapGoal, 64.0) == EVENT.PATH_SUCCESS ) {
-		if(!this.MarkInUse(this.MapGoal)) {
-			this.BlackboardDelay(5, this.MapGoal);
-			this.Finished();
-		}
+	Util.RouteTo(this, 64);
 
-		this.UpdateDynamite();
-	}
-	else {
-		this.BlackboardDelay(10, this.MapGoal);
-		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
-	}
+	this.GoalState = this.LOOK_FOR_DYNO;
+	this.UpdateDynamite();
 
 	this.Finished();
 };
@@ -121,10 +107,26 @@ this.Exit = function()
 	this.ExplosiveEntity = null;
 
 	// clear the occupied flag
-	if ( this.MapGoal && typeId(this.spotIndex) != 0 ) {
+	if ( this.MapGoal && !IsNull(this.spotIndex) ) {
 		this.MapGoal.CoverSpots[ this.spotIndex ].occupied = null;
 		this.spotIndex = null;
 	}
+
+	this.MapGoal = null;
+
+	// restore combat movement
+	if (this.CombatMovementDisabled) {
+		this.Bot.DisableCombatMovement = false;
+		this.CombatMovementDisabled = false;
+	}
+};
+
+this.CoverDisabled = function(position)
+{
+	vec = this.MapGoal.CoverSplit;
+	if(!vec){ return false; }
+	return ((this.Bot.GetPosition() - this.MapGoal.GetPosition()).DotProduct(vec) > 0) !=
+	       ((position - this.MapGoal.GetPosition()).DotProduct(vec) > 0);
 };
 
 this.UpdateDynamite = function()
@@ -146,9 +148,10 @@ this.UpdateDynamite = function()
 			{
 				this.UpdateDebugString();
 				foundDyno = false;
+				goalPos = this.MapGoal.GetPosition();
 				ent = GetEntityInSphere(this.Bot.GetPosition(), 300, CLASS.DYNAMITE_ENT, this.ExplosiveEntity);
 				dowhile(ent) {
-					if ( ent && DistanceBetween(this.MapGoal.GetEntity(), ent) < 200 && this.Bot.IsAllied(ent)
+					if ( ent && DistanceBetween(goalPos, ent) < 200 && this.Bot.IsAllied(ent)
 							&& this.Bot.GetExplosiveState(ent) == 1 ) {
 						foundDyno = true;
 						break;
@@ -168,7 +171,7 @@ this.UpdateDynamite = function()
 				}
 				else {
 					if (this.ExplosiveEntity) {
-						this.BlackboardDelay(35, this.MapGoal);
+						this.BlackboardDelay(35);
 					}
 					this.Finished();
 				}
@@ -235,7 +238,7 @@ this.UpdateDynamite = function()
 				}
 
 				//don't plant another dynamite after coverTimeout or if all coverspots are occupied
-				this.BlackboardDelay(35, this.MapGoal);
+				this.BlackboardDelay(35);
 
 				// pick a cover spot
 				if (!hasCoverSpot) {
@@ -243,7 +246,7 @@ this.UpdateDynamite = function()
 					// choose spot which is not occupied
 					maxval = -1;
 					foreach ( id and spot in this.MapGoal.CoverSpots ) {
-						if (spot.occupied ) {
+						if (spot.occupied || this.CoverDisabled(spot.position) ) {
 							continue;
 						}
 						val = UnitRandom();
@@ -254,32 +257,39 @@ this.UpdateDynamite = function()
 					}
 
 					// no more cover spots available
-					if (typeId(this.spotIndex) == 0) { this.Finished(); }
+					if (IsNull(this.spotIndex)) { this.Finished(); }
 
 					spot = this.MapGoal.CoverSpots[ this.spotIndex ];
 					spot.occupied = true;
 
 					if ( spot.AimVectors && tableCount(spot.AimVectors) > 0 ) {
 						aimVectors = spot.AimVectors;
+						if ( spot.Timeout ) { coverTimeout = spot.Timeout; }
 						hasCoverSpot = true;
 					}
 					else {
-						Util.MapDebugPrint(this.Goal_Name, ": Cover Spot has no AimVectors!");
+						if (this.Debug) { print(this.Goal_Name + ": Cover Spot has no AimVectors!"); }
 						this.Finished();
 					}
 
 					this.Goto(spot.position, 32.0);
 
-					switch (spot.stance)
+					if (spot.DisableCM > 0 && !this.Bot.DisableCombatMovement)
 					{
-						case "crouch":
-						{
-							this.Bot.HoldButton(BTN.CROUCH, 99);
-						}
-						case "prone":
-						{
-							this.Bot.HoldButton(BTN.PRONE, 99);
-						}
+						this.CombatMovementDisabled = true;
+						this.Bot.DisableCombatMovement = true;
+					}
+				}
+
+				switch (spot.stance)
+				{
+					case "crouch":
+					{
+						this.Bot.HoldButton(BTN.CROUCH, 1.1);
+					}
+					case "prone":
+					{
+						this.Bot.HoldButton(BTN.PRONE, 1.1);
 					}
 				}
 

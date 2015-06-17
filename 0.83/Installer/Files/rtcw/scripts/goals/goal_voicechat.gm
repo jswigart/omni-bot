@@ -51,7 +51,7 @@ this.Initialize = function()
 
 this.Randomize = function(frequency, source, immediate)
 {
-	if ( this.OnlyRespondToHumans == true && !Util.IsHuman(source) ) {
+	if ( this.OnlyRespondToHumans && !Util.IsHuman(source) ) {
 		return false;
 	}
 
@@ -61,7 +61,7 @@ this.Randomize = function(frequency, source, immediate)
 	frequency = frequency - ( tableCount(BotTable) * this.FrequencyReductionPerBot );
 	if ( frequency < 1 && this.Frequency > 0 ) { frequency = 1; }
 
-	if ( frequency > 0 && RandFloat(1, 10) <= frequency  )
+	if ( RandFloat(0, 10) < frequency  )
 	{
 		// death event must not sleep first
 		if (!immediate) {
@@ -247,7 +247,7 @@ this.Events[EVENT.GLOBAL_VOICE] = function(WhoSaidIt,VoiceId)
 
 	if (this.Bot.DelayResponse) {
 		sleep(this.Bot.DelayResponse);
-		this.Bot.DelayResponse = null;
+		if (this.Bot){ this.Bot.DelayResponse = null; }
 		return;
 	}
 

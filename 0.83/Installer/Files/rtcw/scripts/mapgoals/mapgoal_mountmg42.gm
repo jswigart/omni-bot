@@ -69,8 +69,7 @@ this.UpgradeVersion = function(Props)
 	}
 
 	//default these to off
-	this.SetAvailable(1, false);
-	this.SetAvailable(2, false);
+	this.SetAvailable(0, false);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -112,7 +111,7 @@ this.SaveToTable = function(SaveTable)
 	// save the goal specific properties
 	SaveTable.MaxCampTime = this.MaxCampTime;
 	SaveTable.MinCampTime = this.MinCampTime;
-	SaveTable.AimVectors = this.AimVectors;
+	if(tableCount(this.AimVectors) > 0) { SaveTable.AimVectors = this.AimVectors; }
 };
 
 //////////////////////////////////////////////////////////////////////////

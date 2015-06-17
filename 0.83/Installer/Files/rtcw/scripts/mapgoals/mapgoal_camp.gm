@@ -37,6 +37,7 @@ this.Schema.Stance = Validate.Enum("stand","crouch","prone","peek").Default("sta
 this.Schema.MinCampTime = Validate.NumRange(0,9999).Default(10).CheckCallback(CheckMinCamp);
 this.Schema.MaxCampTime = Validate.NumRange(0,9999).Default(20).CheckCallback(CheckMaxCamp);
 
+
 //////////////////////////////////////////////////////////////////////////
 
 this.InitNewGoal = function()
@@ -111,10 +112,14 @@ this.UpgradeVersion = function(Props)
 
 		// convert from indexed table to weapon id keyed table
 		this.Weapons = Props.Weapons;
-		this.LimitToWeapon(this.Weapons);
-
-		if ( this.Weapons && tableCount(this.Weapons) > 0 )
+		if (!this.Weapons)
 		{
+			this.Weapons = {};
+		}
+		else if ( tableCount(this.Weapons) > 0 )
+		{
+			this.LimitToWeapon(this.Weapons);
+
 			this.DefaultPriority += 0.2;
 		}
 
@@ -224,11 +229,15 @@ this.SaveToTable = function(SaveTable)
 {
 	// save the goal specific properties
 	SaveTable.AimVectors = this.AimVectors;
-	SaveTable.Stance = this.Stance;
+	if (this.Stance!="stand"){ SaveTable.Stance = this.Stance; }
 	SaveTable.MaxCampTime = this.MaxCampTime;
 	SaveTable.MinCampTime = this.MinCampTime;
-	SaveTable.Weapons = this.Weapons;
-	SaveTable.DisableCM = this.DisableCM;
+	
+	if (tableCount(this.Weapons) > 0){
+		SaveTable.Weapons = this.Weapons;
+	}
+
+	if (this.DisableCM) { SaveTable.DisableCM = this.DisableCM; }
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -237,13 +246,13 @@ this.Help = function()
 {
 	print(this.GoalType,"goal, version",this.Version);
 	print("Requires:");
-	print("		facing - Direction the bot should face");
+	print("     facing - Direction the bot should face");
 	print("Optional:");
-	print("		stance - stand, crouch, prone, peek");
-	print("		weapon - only this weapon is usable here, supports multiple");
-	print("		mincamptime - minimum time a bot should camp at the goal");
-	print("		maxcamptime - maximum time a bot should camp at the goal");
-	print("		disablecm - disable combat movement at this goal");
+	print("     stance - stand, crouch, prone, peek");
+	print("     weapon - only this weapon is usable here, supports multiple");
+	print("     mincamptime - minimum time a bot should camp at the goal");
+	print("     maxcamptime - maximum time a bot should camp at the goal");
+	print("     disablecm - disable combat movement at this goal");
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -283,7 +292,10 @@ this.SetProperty = function(property, value)
 		}
 		case "stance": // crouch, prone, default stand
 		{
-			this.Stance = value;
+			if(this.Schema.Stance.CheckPrintErrors(this,value))
+			{
+				this.Stance = value;
+			}
 		}
 		case "weapon": // limit to any number of weapons
 		{
@@ -334,8 +346,9 @@ this.SetProperty = function(property, value)
 		}
 		case "disablecm":
 		{
-			i = ToInt(value);
-			if ( typeId(i) == 1)
+			if (value == null){ i = 1; }
+			else { i = ToInt(value); }
+			if ( typeId(i) == 1 )
 			{
 				this.DisableCM = i;
 			}

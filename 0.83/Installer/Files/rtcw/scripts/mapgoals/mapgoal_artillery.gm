@@ -1,9 +1,11 @@
 this.GoalType = "CALLARTILLERY";
 this.Version = 1;
 this.DefaultPriority = 0.8;
-this.DefaultMinCampTime = 1.0;
-this.DefaultMaxCamptime = 2.0;
+this.DefaultMinCampTime = 2.0;
+this.DefaultMaxCampTime = 6.0;
 this.RolePriorityBonus = 0.1;
+this.MaxUsers_InUse(1);
+this.MaxUsers_InProgress(1);
 
 //////////////////////////////////////////////////////////////////////////
 // Couple callbacks to enforce additional constraints on property values.
@@ -28,15 +30,13 @@ CheckMaxCamp = function(var)
 
 this.Schema = Schema();
 this.Schema.Stance = Validate.Enum("stand","crouch","prone").Default("stand");
-this.Schema.Facing = Validate.Type("vector3").Default(Vector3(0,0,0));
-this.Schema.MinCampTime = Validate.NumRange(0,60).Default(2).CheckCallback(CheckMinCamp);
-this.Schema.MaxCampTime = Validate.NumRange(0,60).Default(6).CheckCallback(CheckMaxCamp);
+this.Schema.MinCampTime = Validate.NumRange(0,90).Default(this.DefaultMinCampTime).CheckCallback(CheckMinCamp);
+this.Schema.MaxCampTime = Validate.NumRange(0,90).Default(this.DefaultMaxCampTime).CheckCallback(CheckMaxCamp);
 
 //////////////////////////////////////////////////////////////////////////
 
 this.InitNewGoal = function()
 {
-	this.Facing = GetLocalFacing();
 	this.Schema.Check(this);
 };
 
@@ -50,8 +50,8 @@ this.UpgradeVersion = function(Props)
 		// Version 1 Schema, upgrade from waypoint format
 		this.Schema.Check(Props);
 		Props.Version = 1;
-		Props.mincamptime = this.DefaultMinCampTime;
-		Props.maxcamptime = this.DefaultMaxCampTime;
+		Props.MinCampTime = this.DefaultMinCampTime;
+		Props.MaxCampTime = this.DefaultMaxCampTime;
 
 		this.SetPosition(this.GetPosition() + Util.WaypointGoalOffset);
 		this.SetBounds(Vec3(-5,-5,0),Vec3(5,5,96));
@@ -60,9 +60,8 @@ this.UpgradeVersion = function(Props)
 	{
 		this.Schema.Check(Props);
 		this.Stance = Props.Stance;
-		this.Facing = Props.Facing;
-		this.MinCampTime = ToFloat(Props.MinCampTime,this.DefaultMinCamptime);
-		this.MaxCampTime = ToFloat(Props.MaxCampTime,this.DefaultMaxCamptime);
+		this.MinCampTime = Props.MinCampTime;
+		this.MaxCampTime = Props.MaxCampTime;
 
 		if(!this.Schema.Check(this))
 		{
@@ -86,6 +85,7 @@ this.Render = function(editMode)
 		if(this.ExtraDebugText==null)
 		{
 			this.ExtraDebugText = "";
+			this.ExtraDebugText += format("Stance: %s\n",this.Stance);
 			this.ExtraDebugText += format("CampTime: %g to %g secs.",ToFloat(this.MinCampTime),ToFloat(this.MaxCampTime));
 		}
 
@@ -105,10 +105,6 @@ this.Render = function(editMode)
 			DrawLine(goalPos,goalBasePos,COLOR.GREEN,2);
 		}
 
-		if ( this.Facing )
-		{
-			DrawArrow(goalPos+stanceOffset,goalPos+this.Facing*32,COLOR.BLUE,2);
-		}
 		sleep(2);
 	}
 };
@@ -118,9 +114,8 @@ this.Render = function(editMode)
 this.SaveToTable = function(SaveTable)
 {
 	// save the goal specific properties
-	SaveTable.Facing = this.Facing;
-	SaveTable.maxcamptime = this.maxcamptime;
-	SaveTable.mincamptime = this.mincamptime;
+	if(this.MaxCampTime != this.DefaultMaxCampTime){ SaveTable.MaxCampTime = this.MaxCampTime; }
+	if(this.MinCampTime != this.DefaultMinCampTime){ SaveTable.MinCampTime = this.MinCampTime; }
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -128,8 +123,6 @@ this.SaveToTable = function(SaveTable)
 this.Help = function()
 {
 	print(this.GoalType,"goal, version",this.Version);
-	print("Requires:");
-	print("		facing - Direction the bot should face");
 	print("Optional:");
 	print("		mincamptime - minimum time a bot should camp at the goal");
 	print("		maxcamptime - maximum time a bot should camp at the goal");
@@ -141,26 +134,6 @@ this.SetProperty = function(property, value)
 {
 	switch(property)
 	{
-		case "facing":
-		{
-			if ( value == "clearall" || value == "clear" )
-			{
-				this.Facing = Vector3(0,0,0);
-				print("Facing cleared");
-			}
-			else
-			{
-				i = ToInt(value);
-				if ( typeId(i) == 1 ) {
-					print("Multiple aim positions not supported, index values are ignored");
-					print("/bot goal_setproperty facing is all that is required");
-				}
-				
-				playerFace = GetLocalFacing();
-				this.Facing = playerFace;
-				print("Facing set to",playerFace);
-			}
-		}
 		case "stance": // crouch, stand, default stand
 		{
 			this.Stance = value;
@@ -186,6 +159,8 @@ this.SetProperty = function(property, value)
 			print(this.GoalType, ": Invalid property:", property);
 		}
 	}
+
+	this.ExtraDebugText = null;
 };
 
 //////////////////////////////////////////////////////////////////////////

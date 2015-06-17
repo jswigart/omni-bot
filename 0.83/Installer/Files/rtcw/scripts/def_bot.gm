@@ -1,5 +1,7 @@
 // Default RTCW Bot Profile
 
+if (this.ClassPrimaryWeaponChoice) { return; }
+
 // MemorySpan is how long it takes(in seconds) for a bot to consider his memory of someone or something
 // 'out of date' and not considered for targeting and such
 this.MemorySpan = 2.0;
@@ -9,14 +11,16 @@ this.MemorySpan = 2.0;
 this.AimPersistance = 2.0;
 
 
+// MaxViewDistance is the maximum distance(in game units) the bot is capable of seeing something.
+// This could be tweaked lower for maps with fog or for a closer to human view distance
+// Typically this value is best set in the map script in the OnBotJoin callback.
+this.MaxViewDistance = 4500;
+
 // These 3 values are aim properties. Care must be taken when tweaking aim properties, since
 // improper values can produce aim oscillations and hurt the bots combat abilities.
 this.MaxTurnSpeed = 720.0; // degree's / second
 this.AimStiffness = 75.0;
 this.AimDamping = 10.0;
-
-// default max view distance. map scripts can override this
-this.MaxViewDistance = 4500;
 
 // whether or not this bot will perform strafe jumps when moving towards waypoints with either strafe jump flag
 // set this in the omni-bot.cfg or by using the command /bot strafejump
@@ -34,20 +38,19 @@ this.ProfileStrafeJump = 0;
 // this.ProfileSkill = 3;
 
 // optionally set a moveskill for the bot. this will effect how they react when in combat (i.e. strafing and crouching)
-// setting this will over-ride and value set in goal_combatmovement
+// setting this will over-ride any value set in goal_combatmovement
 // 0 - off, 1 - easy, 2 - medium, 3 - hard, 4 - random
 // this.moveskill = 3;
 
 //////////////////////////////////////////////////////////////////////////
 // Utility Callbacks
 
-this.SelectClass = function()
+this.SelectTeam = function()
 {
-	sleep( 1 );
 	return null;
 };
 
-this.SelectTeam = function()
+this.SelectClass = function()
 {
 	return null;
 };
@@ -81,11 +84,9 @@ this.SelectWeapons = function()
 	Primary = this.ClassPrimaryWeaponChoice();
 	Secondary = this.ClassSecondaryWeaponChoice();
 
-	if ( Primary ) {
-		this.ChangePrimaryWeapon( Primary );
-	}
+	if ( Primary )
+		{ this.ChangePrimaryWeapon( Primary ); }
 
-	if ( Secondary ) {
-		this.ChangeSecondaryWeapon( Secondary );
-	}
+	if ( Secondary )
+		{ this.ChangeSecondaryWeapon( Secondary ); }
 };

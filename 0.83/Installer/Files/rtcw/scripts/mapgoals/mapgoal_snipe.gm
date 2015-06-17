@@ -1,6 +1,7 @@
 this.SetBaseGoalType("mapgoal_camp.gm");
 
 this.GoalType = "Snipe";
+this.MaxUsers_InProgress(1);
 
 //////////////////////////////////////////////////////////////////////////
 this.BaseInitNewGoal = this.InitNewGoal;
@@ -11,40 +12,26 @@ this.InitNewGoal = function()
 	{
 		this.BaseInitNewGoal();
 	}
-
-	// fill in all the known sniper weapons by default
-	foreach(i and wpnId in Util.SniperWeapons)
-	{
-		this.Weapons[wpnId] = 1;
-	}
 };
 
 //////////////////////////////////////////////////////////////////////////
 this.BaseUpgradeVersion = this.UpgradeVersion;
 this.UpgradeVersion = function(Props)
 {
-	initWeaponTable = false;
 	if(Props.Version==0)
 	{
 		this.SetPosition(this.GetPosition() + Util.WaypointGoalOffset);
 		this.SetBounds(Vec3(-5,-5,0),Vec3(5,5,96));
-		initWeaponTable = true;
 	}
 
-	// call base goal upgrade
-	if(this.BaseUpgradeVersion)
-	{
-		this.BaseUpgradeVersion(Props);
-	}
-
-	if(initWeaponTable)
+	if(!Props.Weapons || tableCount(Props.Weapons)==0)
 	{
 		// fill in all the known sniper weapons by default
 		Props.Weapons = {};
 
 		if (Util.SniperWeapons)
 		{
-			foreach(i and wpnId in Util.SniperWeapons)
+			foreach(wpnId in Util.SniperWeapons)
 			{
 				Props.Weapons[wpnId] = 1;
 			}
@@ -53,6 +40,12 @@ this.UpgradeVersion = function(Props)
 		{
 			Util.MapDebugPrint(this.GoalType + ": Error : No Util.SniperWeapons table");
 		}
+	}
+
+	// call base goal upgrade. cs: do this last so LimitToWeapon includes all weapons.
+	if(this.BaseUpgradeVersion)
+	{
+		this.BaseUpgradeVersion(Props);
 	}
 };
 

@@ -4,200 +4,205 @@
 //
 //==========================================================================================
 
-if ( RegionTrigger == null ) {
-	global RegionTrigger = table();
-	
-	RegionTrigger.Create = function(bounds, type, name)
-	{
-		if (RegionTrigger[type]) {
-			trigger = tableDuplicate(RegionTrigger[type]);
-			if(name) {
-				trigger.Name = name;
-			}
-			OnTriggerRegion(bounds,trigger);
+member Create = function(bounds, type, name)
+{
+	if (RegionTrigger[type]) {
+		trigger = tableDuplicate(RegionTrigger[type]);
+		if(name) {
+			trigger.Name = format("%s: %s",type,name);
 		}
-	};
+		OnTriggerRegion(bounds,trigger);
+		return;
+	}
+	Util.MapDebugPrint("RegionTrigger.Create -> Invalid type specified", true);
+};
 
-	/*
-	    Name:		DisableBotPush
-	    Description:	Disables bot pushing and combat movement in the region. Enables on exit
+/*
+    Name:		DisableBotPush
+    Description:	Disables bot pushing and combat movement in the region. Enables on exit
 
-	    Usage:
-	        test = OnTriggerRegion( AABB(x,x,x,x,x,x), RegionTrigger.DisableBotPush );
-	*/
-	RegionTrigger.DisableBotPush =
+    Usage:
+        test = OnTriggerRegion( AABB(x,x,x,x,x,x), RegionTrigger.DisableBotPush );
+*/
+member DisableBotPush =
+{
+	Name = "disablepush",
+	TriggerOnClass = CLASS.ANYPLAYER,
+	OnEnter = function(ent)
 	{
-		Name = "disablepush",
-		TriggerOnClass = CLASS.ANYPLAYER,
-		OnEnter = function( ent )
+		b = Util.IsBot(ent);
+		if (b)
 		{
-			b = Util.GetBotByName( GetEntName( ent ) );
-			if ( b ) {
-				b.DisableBotPush( true );
-				b.DisableCombatMovement = true;
-			}
-			Util.MapDebugPrint( GetEntName( ent ) + " entering.", true );
-		},
-		OnExit = function( ent )
-		{
-			b = Util.GetBotByName( GetEntName( ent ) );
-			if ( b ) {
-				b.DisableBotPush( false );
-				b.DisableCombatMovement = false;
-			}
-			Util.MapDebugPrint( GetEntName( ent ) + " exiting.", true );
-		},
-	};
-
-	/*
-	    Name:		DisableCombatMovement
-	    Description:	Disables bot combat movement in the region. Enables on exit
-
-	    Usage:
-	        test = OnTriggerRegion( AABB(x,x,x,x,x,x), RegionTrigger.DisableCombatMovement );
-	*/
-	RegionTrigger.DisableCombatMovement =
+			b.DisableBotPush(true);
+			b.DisableCombatMovement = true;
+			Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "entering disablepush." );
+		}
+	},
+	OnExit = function(ent)
 	{
-		Name = "disablecm",
-		TriggerOnClass = CLASS.ANYPLAYER,
-		OnEnter = function( ent )
+		b = Util.IsBot(ent);
+		if (b)
 		{
-			b = Util.GetBotByName( GetEntName( ent ) );
-			if ( b ) {
-				b.DisableCombatMovement = true;
-			}
-			Util.MapDebugPrint( GetEntName( ent ) + " entering.", true );
-		},
-		OnExit = function( ent )
-		{
-			b = Util.GetBotByName( GetEntName( ent ) );
-			if ( b ) {
-				b.DisableCombatMovement = false;
-			}
-			Util.MapDebugPrint( GetEntName( ent ) + " exiting.", true );
-		},
-	};
+			b.DisableBotPush(false);
+			b.DisableCombatMovement = false;
+			Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "exiting disablepush." );
+		}
+	},
+};
 
-	/*
-	    Name:		Increase breakable distance
-	    Description:	Increases breakable distance in the region. Reverts to MinBreakableDist on exit
+/*
+    Name:		DisableCombatMovement
+    Description:	Disables bot combat movement in the region. Enables on exit
 
-	    Properties:
-	        MaxBreakableDist - default 160
-	        MinBreakableDist - default 90
-
-	    Usage:
-	        test = OnTriggerRegion( AABB(x,x,x,x,x,x), RegionTrigger.BreakableDistance );
-
-	    Optional Settings:
-	        RegionTrigger.BreakableDistance.MinBreakableDist = x;
-	        RegionTrigger.BreakableDistance.MaxBreakableDist = x;
-
-	    Note: Optional settings should be defined after the region trigger is initialized
-	*/
-	RegionTrigger.BreakableDistance =
+    Usage:
+        test = OnTriggerRegion( AABB(x,x,x,x,x,x), RegionTrigger.DisableCombatMovement );
+*/
+member DisableCombatMovement =
+{
+	Name = "disablecm",
+	TriggerOnClass = CLASS.ANYPLAYER,
+	OnEnter = function(ent)
 	{
-		Name = "breakabledist",
-		TriggerOnClass = CLASS.ANYPLAYER,
-		MaxBreakableDist = 160,
-		MinBreakableDist = 90,
-		OnEnter = function( ent )
+		b = Util.IsBot(ent);
+		if (b)
 		{
-			b = Util.GetBotByName( GetEntName( ent ) );
-			if ( b ) {
-				b.TargetBreakableDist = RegionTrigger.BreakableDistance.MaxBreakableDist;
-			}
-			Util.MapDebugPrint( GetEntName( ent ) + " entering.", true );
-		},
-		OnExit = function( ent )
-		{
-			b = Util.GetBotByName( GetEntName( ent ) );
-			if ( b ) {
-				b.TargetBreakableDist = RegionTrigger.BreakableDistance.MinBreakableDist;
-			}
-			Util.MapDebugPrint( GetEntName( ent ) + " exiting.", true );
-		},
-	};
-
-	/*
-	    Name:		Vehicle Trigger
-	    Description:	Triggers on Heavy Vehicles and Increments Map.VehicleLocation var
-
-	    Usage:
-	        test = OnTriggerRegion( AABB(x,x,x,x,x,x), RegionTrigger.VehicleTrigger );
-	*/
-	RegionTrigger.VehicleTrigger =
+			b.DisableCombatMovement = true;
+			Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "entering disablecm." );
+		}
+	},
+	OnExit = function(ent)
 	{
-		Name = "VehicleTrigger",
-		TriggerOnClass = { CLASS.VEHICLE_HVY, CLASS.VEHICLE_NODAMAGE, CLASS.VEHICLE },
-		OnEnter = function( ent )
+		b = Util.IsBot(ent);
+		if (b)
 		{
-			name = GetEntName( ent );
+			b.DisableCombatMovement = false;
+			Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "exiting disablecm." );
+		}
+	},
+};
 
-			// only track valid mover goals
-			if ( !GetGoal( "MOVER_" + name ) ) {
-				return;
-			}
+/*
+    Name:		Increase breakable distance
+    Description:	Increases breakable distance in the region. Reverts to MinBreakableDist on exit
 
-			if ( !Map.VehicleLocation ) {
-				Map.VehicleLocation = 1;
-			} else {
-				Map.VehicleLocation += 1;
-			}
+    Properties:
+        MaxBreakableDist - default 160
+        MinBreakableDist - default 90
 
-			triggerInfo =
-			{
-				Entity = ent,
-				Activator = null,
-				TagName = name + " at location",
-				Action = "arrived",
-			};
+    Usage:
+        test = OnTriggerRegion( AABB(x,x,x,x,x,x), RegionTrigger.BreakableDistance );
 
-			SendTrigger( triggerInfo );
-		},
-		OnExit = function( ent )
-		{
-			name = GetEntName( ent );
+    Optional Settings:
+        RegionTrigger.BreakableDistance.MinBreakableDist = x;
+        RegionTrigger.BreakableDistance.MaxBreakableDist = x;
 
-			// only track valid mover goals
-			if ( !GetGoal( "MOVER_" + name ) ) {
-				return;
-			}
-
-			triggerInfo =
-			{
-				Entity = ent,
-				Activator = null,
-				TagName = name + " left location",
-				Action = "left",
-			};
-
-			SendTrigger( triggerInfo );
-		},
-	};
-
-	/*
-	    Name:		Kill Trigger
-	    Description:	Has the bot commit suicide. Useful in areas where there is no way for a bot to get out
-
-	    Usage:
-	        test = OnTriggerRegion( AABB(x,x,x,x,x,x), RegionTrigger.KillTrigger );
-	*/
-	RegionTrigger.KillTrigger =
+    Note: Optional settings should be defined after the region trigger is initialized
+*/
+member BreakableDistance =
+{
+	Name = "breakabledist",
+	TriggerOnClass = CLASS.ANYPLAYER,
+	MaxBreakableDist = 160,
+	MinBreakableDist = 90,
+	OnEnter = function(ent)
 	{
-		Name = "KillTrigger",
-		TriggerOnClass = CLASS.ANYPLAYER,
-		OnEnter = function( ent )
+		b = Util.IsBot(ent);
+		if (b)
 		{
-			b = Util.GetBotByName( GetEntName( ent ) );
-			if ( b ) {
-				sleep( 1 );
-				b.ExecCommand( "kill" );
-			}
-		},
-		OnExit = function( ent )
+			b.TargetBreakableDist = RegionTrigger.BreakableDistance.MaxBreakableDist;
+			Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "entering breakabledist." );
+		}
+	},
+	OnExit = function(ent)
+	{
+		b = Util.IsBot(ent);
+		if (b)
 		{
+			b.TargetBreakableDist = RegionTrigger.BreakableDistance.MinBreakableDist;
+			Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "exiting breakabledist." );
+		}
+	},
+};
 
-		},
-	};
+/*
+    Name:		Vehicle Trigger
+    Description:	Triggers on Heavy Vehicles and Increments Map.VehicleLocation var
+
+    Usage:
+        test = OnTriggerRegion( AABB(x,x,x,x,x,x), RegionTrigger.VehicleTrigger );
+*/
+member VehicleTrigger =
+{
+	Name = "VehicleTrigger",
+	TriggerOnClass = { CLASS.VEHICLE_HVY, CLASS.VEHICLE_NODAMAGE, CLASS.VEHICLE },
+	OnEnter = function( ent )
+	{
+		name = GetEntName( ent );
+		Util.ScriptDebugPrint( name, "regiontrigger", "entering VehicleTrigger." );
+
+		// only track valid mover goals
+		if ( !GetGoal( "MOVER_" + name ) ) {
+			return;
+		}
+
+		if ( !Map.VehicleLocation ) {
+			Map.VehicleLocation = 1;
+		} else {
+			Map.VehicleLocation += 1;
+		}
+
+		triggerInfo =
+		{
+			Entity = ent,
+			Activator = null,
+			TagName = name + " at location",
+			Action = "arrived",
+		};
+
+		SendTrigger( triggerInfo );
+	},
+	OnExit = function( ent )
+	{
+		name = GetEntName( ent );
+		Util.ScriptDebugPrint( name, "regiontrigger", "exiting VehicleTrigger." );
+
+
+		// only track valid mover goals
+		if ( !GetGoal( "MOVER_" + name ) ) {
+			return;
+		}
+
+		triggerInfo =
+		{
+			Entity = ent,
+			Activator = null,
+			TagName = name + " left location",
+			Action = "left",
+		};
+
+		SendTrigger( triggerInfo );
+	},
+};
+
+/*
+    Name:		Kill Trigger
+    Description:	Has the bot commit suicide. Useful in areas where there is no way for a bot to get out
+
+    Usage:
+        test = OnTriggerRegion( AABB(x,x,x,x,x,x), RegionTrigger.KillTrigger );
+*/
+member KillTrigger =
+{
+	Name = "KillTrigger",
+	TriggerOnClass = CLASS.ANYPLAYER,
+	OnEnter = function( ent )
+	{
+		b = Util.IsBot(ent);
+		if (b)
+		{
+			Util.ScriptDebugPrint( GetEntName(ent), "regiontrigger", "entering KillTrigger." );
+			sleep(1);
+			b.ExecCommand( "kill" );
+		}
+	},
 };

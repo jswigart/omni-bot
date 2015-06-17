@@ -20,7 +20,7 @@ this.GetBotFromGameEntity = function(ent)
 	entId = GetGameIdFromEntity(ent);
 	if (entId)
 	{
-		foreach (id and bot in BotTable)
+		foreach (bot in BotTable)
 		{
 			if (bot.GetGameId() == entId)
 			{

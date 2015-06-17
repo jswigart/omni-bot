@@ -8,7 +8,7 @@ this.Airstrikes = true;
 
 this.Initialize = function()
 {
-	Util.MapDebugPrint(this.Name + " Initialized", true);
+	Util.ScriptDebugPrint(this.Name, "initialized");
 };
 
 // cs: currently OnSpawn is never called ...

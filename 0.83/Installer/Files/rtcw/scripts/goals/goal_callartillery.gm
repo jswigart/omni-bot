@@ -1,0 +1,158 @@
+this.Name = "CALLARTILLERY";
+this.Parent = "HighLevel";
+this.SkipGetPriorityWhenActive = true;
+this.LimitToWeapon( WEAPON.BINOCULARS );
+
+this.TargetGoalsTable = {};
+this.PlayersTable = {};
+
+this.FindTargetGoal = function(startPos, query)
+{
+	if ( this.QueryGoals(this.TargetGoalsTable, query) )
+	{
+		botEnt = this.Bot.GetGameEntity();
+		foreach ( goal in this.TargetGoalsTable )
+		{
+			pos = goal.GetPosition();
+			tr = TraceLine(startPos, Vec3(pos.x, pos.y, pos.z + 20) , null, TRACE.SHOT|TRACE.SMOKEBOMB, botEnt, true);
+			if ( tr.fraction == 1 ){
+				this.TargetGoal = goal;
+				break;
+			}
+		}
+	}
+};
+
+this.GetPriority = function()
+{
+	while(1)
+	{
+		this.Priority = 0;
+		if ( this.Bot.IsWeaponCharged(WEAPON.BINOCULARS, 0))
+		{
+			if ( this.QueryGoals(this.Bot.QueryGoalsTable,0x312ad48d /* CALLARTILLERY */) )
+			{
+				foreach ( goal in this.Bot.QueryGoalsTable )
+				{
+					vSource = goal.GetPosition() + Vec3(0,0,60);
+
+					this.TargetGoal = null;
+					this.IsDynamic = false;
+					this.FindTargetGoal(vSource, 0xb708821b /* ARTILLERY_S */);
+					if(!this.TargetGoal)
+					{
+						this.IsDynamic = true;
+						this.FindTargetGoal(vSource, 0xac0870ca /* ARTILLERY_D */);
+					}
+					if(this.TargetGoal)
+					{
+						this.MapGoal = goal;
+						this.Priority = this.TargetGoal.GetGoalPriority(this.Bot);
+						break;
+					}
+				}
+			}
+		}
+		sleep(2);
+	}
+};
+
+this.Enter = function()
+{
+	if(!this.MarkInProgress()) { this.Finished(); }
+
+	this.DebugString = this.MapGoal.GetName() + "\n" + this.TargetGoal.GetName();
+
+	this.AddFinishCriteria(this.Bot.GetGameEntity(),"not weaponcharged", WEAPON.BINOCULARS);
+	this.AddFinishCriteria(this.Bot.GetGameEntity(),"not mapgoalavailable", this.TargetGoal);
+};
+
+
+this.CallArty = function()
+{
+	this.BlackboardDelay(10, this.MapGoal);
+	this.BlackboardDelay(15, this.TargetGoal);
+
+	this.AddAimRequest(Priority.High, "position");
+	this.AimVector = this.TargetGoal.GetPosition();
+	this.AddWeaponRequest(Priority.High, WEAPON.BINOCULARS );
+	block(EVENT.AIM_SUCCESS);
+	this.BlockForWeaponChange( WEAPON.BINOCULARS );
+
+	this.CallingArty = true;
+	sleep(0.35); //wait for zoom
+
+	for(i=40; i>0; i-=1)
+	{
+		this.Bot.PressButton(BTN.AIM);
+		this.Bot.FireWeapon();
+		yield();
+	}
+
+	//should not get here
+	this.BlackboardDelay(30, this.MapGoal);
+	Util.ScriptDebugPrint(this.MapGoal.GetName(), "timedout");
+	this.Finished();
+};
+
+this.Update = function()
+{
+	Util.RouteTo(this);
+
+	if (!this.IsDynamic)
+	{
+		this.CallArty();
+	}
+
+	this.AddAimRequest(Priority.Low, "position", this.TargetGoal.GetPosition());
+
+	for (timeout = RandFloat(this.MapGoal.MinCampTime, this.MapGoal.MaxCampTime); timeout > 0;  timeout -= 0.5)
+	{
+		switch (this.MapGoal.Stance)
+		{
+			case "crouch":
+			{
+				this.Bot.HoldButton(BTN.CROUCH, 0.6);
+			}
+			case "prone":
+			{
+				this.Bot.HoldButton(BTN.PRONE, 0.6);
+			}
+		}
+
+		//look for enemy near ARTILLERY_D
+		if (this.Bot.GetAllEnemy(CAT.PLAYER,0,this.PlayersTable))
+		{
+			pos = this.TargetGoal.GetPosition();
+			radius = this.TargetGoal.WatchRadius;
+			if(!radius){ radius = 500; }
+			foreach(ent in this.PlayersTable)
+			{
+				if (DistanceBetween(ent,pos) < radius)
+				{
+					this.CallArty();
+				}
+			}
+		}
+
+		sleep(0.5);
+	}
+
+	this.BlackboardDelay(20, this.MapGoal);
+	this.Finished();
+};
+
+this.Exit = function()
+{
+	this.Bot.ReleaseButton(BTN.CROUCH, BTN.PRONE);
+	this.TargetGoal = null;
+	this.CallingArty = false;
+};
+
+this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
+{
+	if (this.CallingArty)
+	{
+		this.Finished();
+	}
+};

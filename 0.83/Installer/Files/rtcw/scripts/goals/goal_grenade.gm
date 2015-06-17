@@ -1,20 +1,15 @@
-// This script contains functionality to allow bots to toss airstrikes from given waypoints
+// This script contains functionality to allow bots to toss grenades from given waypoints
 
-// These parameters are required
-this.Name = "GRENADE";		// The name of the goal.
-this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.Name = "GRENADE";
+this.Parent = "HighLevel";
 this.SkipGetPriorityWhenActive = true;
 
-// These parameters are optional
 //this.LimitToWeapon( WEAPON.ALLY_GRENADE, WEAPON.AXIS_GRENADE );
-
-this.Initialize = function()
-{
-	this.Bot.QueryGoalsTable = table();
-};
 
 this.Enter = function()
 {
+	if(!this.MarkInProgress()) { this.Finished(); }
+
 	if (this.MapGoal.TraceEntity)
 	{
 		this.TargetEntity = this.MapGoal.TraceEntity;
@@ -46,11 +41,6 @@ this.Enter = function()
 		this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.DEAD);
 	}
 
-	if(!this.MarkInProgress(this.MapGoal)) {
-		this.BlackboardDelay(5, this.MapGoal);
-		this.Finished();
-	}
-
 	if ( this.Bot.GetTeam() == TEAM.ALLIES )
 	{
 		this.weapon = WEAPON.ALLY_GRENADE;
@@ -59,6 +49,7 @@ this.Enter = function()
 	{
 		this.weapon = WEAPON.AXIS_GRENADE;
 	}
+	//this.AddFinishCriteria(this.Bot.GetGameEntity(),"not weaponhasammo", this.weapon, 0);
 };
 
 this.Exit = function()
@@ -68,39 +59,44 @@ this.Exit = function()
 		this.Bot.ReleaseButton(BTN.CROUCH);
 	}
 
-	this.TargetEnity = null;
+	this.TargetEntity = null;
 };
 
 this.GetPriority = function()
 {
 	while(1)
 	{
+		this.Priority = 0;
 		if ( Util.HasAmmoForWeapon(this.Bot, WEAPON.ALLY_GRENADE) || Util.HasAmmoForWeapon(this.Bot, WEAPON.AXIS_GRENADE) )
 		{
-			count = this.QueryGoals(this.Bot.QueryGoalsTable,0xd988d8fd /* GRENADE */);
-			if ( count > 0 )
+			if ( this.QueryGoals(this.Bot.QueryGoalsTable,0xd988d8fd /* GRENADE */) )
 			{
-				foreach ( id and goal in this.Bot.QueryGoalsTable )
+				foreach ( goal in this.Bot.QueryGoalsTable )
 				{
-					if ( !goal.TraceEntity && !goal.TargetGoal )
+					if ( goal.TraceEntity )
 					{
-						goal.DisableGoal(true);
-						continue;
-					}
-					else if( !goal.TraceEntity && goal.TargetGoal )
-					{
-						g = GetGoal(goal.TargetGoal);						
-						if ( !g || (goal.IgnoreDead && g && !EntityIsValid(g.GetEntity()))
-							|| (!goal.IgnoreDead && GetEntFlags(g.GetEntity(), ENTFLAG.DEAD)) )
+						if (!EntityIsValid(goal.TraceEntity) || GetEntFlags(goal.TraceEntity, ENTFLAG.DEAD))
 						{
-							//goal.DisableGoal(true);
-							SetAvailableMapGoals( 0, false, goal.GetName() );
+							goal.SetAvailable(0, false);
 							continue;
 						}
 					}
-					else if (goal.TraceEntity && (!EntityIsValid(goal.TraceEntity) || GetEntFlags(goal.TraceEntity, ENTFLAG.DEAD)))
+					else if( goal.TargetGoal )
 					{
-						SetAvailableMapGoals( 0, false, goal.GetName() );
+						g = GetGoal(goal.TargetGoal);						
+						if (!g) {
+							continue;
+						}
+						ent = g.GetEntity();
+						if ( !ent || (goal.IgnoreDead && !EntityIsValid(ent))
+							|| (!goal.IgnoreDead && GetEntFlags(ent, ENTFLAG.DEAD)) )
+						{
+							goal.SetAvailable(0, false);
+							continue;
+						}
+					}
+					else
+					{
 						continue;
 					}
 
@@ -109,8 +105,6 @@ this.GetPriority = function()
 					break;
 				}
 			}
-
-			 tableClear(this.Bot.QueryGoalsTable);
 		}
 
 		sleep(2);
@@ -119,45 +113,56 @@ this.GetPriority = function()
 
 this.Update = function()
 {
-	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
+	Util.RouteTo(this);
+
+	if ( !Util.HasAmmoForWeapon(this.Bot,this.weapon) )
 	{
-		if(!this.MarkInUse(this.MapGoal)) {
-			this.BlackboardDelay(5, this.MapGoal);
-			this.Finished();
-		}
-
-		if ( this.MapGoal.Stance == "crouch" )
-		{
-			this.Bot.HoldButton(BTN.CROUCH, 999);
-		}
-
-		this.AddAimRequest(Priority.High, "facing", this.MapGoal.Facing);
-		this.AddWeaponRequest(Priority.High, this.weapon);
-		this.BlockForWeaponChange( this.weapon );
-		sleep( .25 );
-		this.Priority = 2.0; // don't let other goals interrupt it
-		while ( EntityIsValid( this.TargetEntity ) && Util.HasAmmoForWeapon(this.Bot,this.weapon) )
-		{
-			if ( this.MapGoal.PrimeGrenade > 1 )
-			{
-				this.Bot.HoldButton( BTN.ATTACK1, this.MapGoal.PrimeGrenade );
-			}
-			else
-			{
-				this.Bot.PressButton( BTN.ATTACK1 );
-			}
-
-			sleep( this.MapGoal.PrimeGrenade + 0.5 );
-		}
-
-		sleep(1);
+		this.Finished();
 	}
-	else
+
+	if ( this.MapGoal.Stance == "crouch" )
 	{
-		this.BlackboardDelay(10, this.MapGoal);
-		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
+		this.Bot.HoldButton(BTN.CROUCH, 999);
+	}
+
+	this.AddAimRequest(Priority.High, "facing", this.MapGoal.Facing);
+	this.AddWeaponRequest(Priority.High, this.weapon);
+	this.BlockForWeaponChange( this.weapon );
+	sleep( .25 );
+	this.Priority = 2.0; // don't let other goals interrupt it
+
+	counter = 0;
+	while ( EntityIsValid( this.TargetEntity ) && (this.MapGoal.IgnoreDead || !GetEntFlags( this.TargetEntity, ENTFLAG.DEAD ) )
+		&& Util.HasAmmoForWeapon(this.Bot,this.weapon) )
+	{
+		if (counter > 0) {
+			sleep(1.5);
+		}
+		if ( MAP_TALK && this.Bot.GetNearestAlly(CAT.PLAYER) && RandInt(0,5) < 1 )
+		{
+			this.Bot.SayVoice( VOICE.FIRE_IN_THE_HOLE );
+		}
+		if ( this.MapGoal.PrimeGrenade > 1 )
+		{
+			this.Bot.HoldButton( BTN.ATTACK1, this.MapGoal.PrimeGrenade );
+			sleep( this.MapGoal.PrimeGrenade );
+		}
+		else
+		{
+			this.Bot.PressButton( BTN.ATTACK1 );
+		}
+		sleep(0.4);
+
+		counter += 1;
+		if (this.MapGoal.Count)
+		{
+			if ( counter >= this.MapGoal.Count)
+			{
+				this.BlackboardDelay(30);
+				this.Finished();
+			}
+		}
 	}
 
 	this.Finished();
 };
-

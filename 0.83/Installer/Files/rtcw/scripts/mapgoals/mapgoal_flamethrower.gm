@@ -35,7 +35,6 @@ this.UpgradeVersion = function(Props)
 
 	if(initWeaponTable)
 	{
-		// fill in all the known sniper weapons by default
 		Props.Weapons = {};
 		Props.Weapons[ WEAPON.FLAMETHROWER ] = 1;
 	}

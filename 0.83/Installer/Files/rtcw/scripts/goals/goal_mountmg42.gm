@@ -1,42 +1,43 @@
-// This script contains functionality to allow bots to toss airstrikes from given waypoints
-
-// These parameters are required
-this.Name = "MOUNTMG42";		// The name of the goal.
-this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+// This script contains functionality to allow bots to mount static mg42
+this.Name = "MOUNTMG42";
+this.Parent = "HighLevel";
 this.SkipGetPriorityWhenActive = true;
 this.Debug = false;
 
-this.Initialize = function()
+this.CheckOwner = function()
 {
-	this.Bot.QueryGoalsTable = table();
-	this.UseFacings = false;
+	owner = this.Bot.GetMountedPlayerOnMG42(this.GoalEnt);
+	return !owner || !this.Bot.IsAllied(owner);
 };
 
 this.GetPriority = function()
 {
 	while(1)
 	{
-		count = this.QueryGoals(this.Bot.QueryGoalsTable,0xe1a2b09c /* MOUNTMG42 */);
-		if ( count > 0 )
+		this.Priority = 0;
+		if ( this.QueryGoals(this.Bot.QueryGoalsTable,0xe1a2b09c /* MOUNTMG42 */) )
 		{
-			foreach ( id and goal in this.Bot.QueryGoalsTable )
+			foreach ( goal in this.Bot.QueryGoalsTable )
 			{
 				ent = goal.GetEntity();
-				if ( !GetEntFlags(ent, ENTFLAG.MOUNTABLE) ) {
-					continue;
-				}
-				
-				if ( GetEntFlags(ent, ENTFLAG.MOUNTED, ENTFLAG.DEAD) ) {
+				if ( !ent || !GetEntFlags(ent, ENTFLAG.MOUNTABLE) || GetEntFlags(ent, ENTFLAG.DEAD) ) {
 					continue;
 				}
 
-				this.MapGoal = goal;
-				this.Priority = goal.GetGoalPriority(this.Bot);
-				break;
+				owner = this.Bot.GetMountedPlayerOnMG42(ent);
+
+				if ( this.Debug && owner) {
+					this.Bot.Say(format("%s is mounted on %s",GetEntName(owner), goal.GetName()));
+				}
+
+				if ( !owner || !this.Bot.IsAllied(owner) ) {
+					this.MapGoal = goal;
+					this.GoalEnt = ent;
+					this.Priority = goal.GetGoalPriority(this.Bot);
+					break;
+				}
 			}
 		}
-
-		tableClear(this.Bot.QueryGoalsTable);
 
 		sleep(2);
 	}
@@ -44,96 +45,93 @@ this.GetPriority = function()
 
 this.Enter = function()
 {
-	if(!this.MarkInProgress(this.MapGoal)) {
-		this.BlackboardDelay(5, this.MapGoal);
-		this.Finished();
-	}
+	if(!this.MarkInProgress()) { this.Finished(); }
 
-	this.CampTime = RandFloat(this.MapGoal.MinCampTime, this.MapGoal.MaxCampTime);
-
-	// doing this here rather than initialize so it wont require a map restart
-	if ( tableCount(this.MapGoal.AimVectors) > 0 ) {
-		this.UseFacings = true;
-	}
-	else {
-		this.MG42Info = table();
-	}
-	
 	// finish criteria
-	this.GoalEnt = this.MapGoal.GetEntity();
 	this.AddFinishCriteria(this.GoalEnt,"hasentflag",ENTFLAG.DEAD);
 	this.AddFinishCriteria(this.GoalEnt,"not hasentflag",ENTFLAG.MOUNTABLE);
+	this.LimitTo(this.CheckOwner, 3, true );
 
 	this.CombatThread = this.ForkThread(this.DisableCombat);
 };
 
 this.Update = function()
 {
-	if ( this.RouteTo(this.MapGoal) == EVENT.PATH_SUCCESS )
+	Util.RouteTo(this);
+
+	this.LimitTo(null);
+
+	// wait while the mg42 is mounted by enemy
+	for(timeout = 0; ;timeout+=1)
 	{
-		if(!this.MarkInUse(this.MapGoal) || GetEntFlags(this.GoalEnt, ENTFLAG.MOUNTED)) {
-			this.BlackboardDelay(5, this.MapGoal);
+		owner = this.Bot.GetMountedPlayerOnMG42(this.GoalEnt);
+		if (!owner){ break; }
+		if (this.Bot.IsAllied(owner)){ this.Finished(); }
+		if (timeout > 10)
+		{
+			this.BlackboardDelay(10);
+			Util.ScriptDebugPrint(this.MapGoal.GetName(), "timedout");
 			this.Finished();
 		}
-
-		// bot can't shoot if he mounts mg42 while reloading,
-		// because RELOADING entity flag is not cleared (probably bug in the interface)
-		while (this.Bot.HasEntityFlag(ENTFLAG.RELOADING)) {
-			sleep(0.2);
-		}
-		
-		timeout = 0;
-		while( timeout < this.CampTime )
-		{
-			if ( !this.Bot.HasAnyEntityFlag(ENTFLAG.MNT_MG42) ) {
-				// can't mount it
-				if ( timeout > 3 ) {
-					this.BlackboardDelay(10, this.MapGoal);
-					this.Finished();
-				}
-				else {
-					// try to mount it
-					this.AddAimRequest(Priority.High, "position", this.MapGoal.GetPosition());
-					this.Bot.PressButton(BTN.USE);
-				}
-			}
-			else { // mounted
-				if ( this.UseFacings ) {
-					r = Util.GetRandomFromTable(this.MapGoal.AimVectors);
-					this.AddAimRequest(Priority.Low, "facing", this.MapGoal.AimVectors[ r ]);
-				}
-				else {
-					// get the mg42 properties if we don't have them yet
-					if ( tableCount(this.MG42Info) < 1 ) {
-						this.Bot.GetMG42Info(this.MG42Info);
-						this.Facings = table();
-						this.Facings[ 0 ] = this.MG42Info.CenterFacing;
-						this.Facings[ 1 ] = this.MG42Info.CenterFacing; // weighted towards middle
-						this.Facings[ 2 ] = Vec3FromSpherical(0, 0, this.MG42Info.MinHorizontal);
-						this.Facings[ 3 ] = Vec3FromSpherical(0, 0, this.MG42Info.MaxHorizontal);
-					}
-
-					r = Util.GetRandomTableValue(vectors);
-					this.AddAimRequest(Priority.Low, "facing", r);
-
-					if ( this.Debug ) {
-						goalPos = this.MapGoal.GetPosition() + Vector3(0,0,12);
-						DrawArrow(goalPos,goalPos+r*64,COLOR.YELLOW,2);
-					}
-				}
-			}
-
-			timeout += 1;
-			sleep(1);
-		}
+		sleep(1);
 	}
-	else
+
+	// bot can't shoot if he mounts mg42 while reloading,
+	// because RELOADING entity flag is not cleared (probably bug in the interface)
+	while (this.Bot.HasEntityFlag(ENTFLAG.RELOADING)) {
+		sleep(0.2);
+	}
+
+	timeout = 0;
+	CampTime = RandFloat(this.MapGoal.MinCampTime, this.MapGoal.MaxCampTime);
+	while( timeout < CampTime )
 	{
-		this.BlackboardDelay(10, this.MapGoal);
-		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
+		if ( !this.Bot.HasAnyEntityFlag(ENTFLAG.MNT_MG42) ) {
+			// can't mount it
+			if ( timeout > 3 ) {
+				this.BlackboardDelay(10);
+				Util.ScriptDebugPrint(this.MapGoal.GetName(), "timedout");
+				this.Finished();
+			}
+			else {
+				// try to mount it
+				this.AddAimRequest(Priority.High, "position", this.MapGoal.GetPosition());
+				this.Bot.HoldButton(BTN.BACKWARD, 0.5); // sometimes if they are too close it's unmountable
+				this.Bot.PressButton(BTN.USE);
+			}
+		}
+		else // mounted
+		{
+			// doing this here rather than in Enter() so it won't require respawn
+			vectors = this.MapGoal.AimVectors;
+			if ( !vectors || tableCount(vectors) == 0 )
+			{
+				// get the mg42 properties if we don't have them yet
+				if ( !this.Facings ) {
+					MG42Info = {};
+					this.Bot.GetMG42Info(MG42Info);
+					this.Facings = {
+						MG42Info.CenterFacing,
+						MG42Info.CenterFacing, // weighted towards middle
+						Vec3FromSpherical(0, 0, MG42Info.MinHorizontal),
+						Vec3FromSpherical(0, 0, MG42Info.MaxHorizontal)
+					};
+				}
+				vectors = this.Facings;
+			}
+			r = Util.GetRandomTableValue(vectors);
+			this.AddAimRequest(Priority.Low, "facing", r);
+			if ( this.Debug ) {
+				goalPos = this.MapGoal.GetPosition() + Vector3(0,0,12);
+				DrawArrow(goalPos,goalPos+r*64,COLOR.YELLOW,2);
+			}
+		}
+
+		timeout += 1;
+		sleep(1);
 	}
 
-	this.BlackboardDelay(10, this.MapGoal);
+	this.BlackboardDelay(10);
 	this.Finished();
 };
 
@@ -158,7 +156,9 @@ this.DisableCombat = function()
 
 this.Exit = function()
 {
-	this.Bot.PressButton(BTN.USE);
+	if (this.Bot.HasEntityFlag(ENTFLAG.MNT_MG42)){
+		this.Bot.PressButton(BTN.USE);
+	}
 
 	if ( this.CombatThread ) {
 		this.KillThread(this.CombatThread);
@@ -167,8 +167,5 @@ this.Exit = function()
 		this.Bot.DisableCombatMovement = false;
 		this.CombatMovementDisabled = false;
 	}
-	if ( this.MG42Info ) {
-		tableClear(this.MG42Info);
-	}
+	this.Facings = null;
 };
-

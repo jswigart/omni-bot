@@ -1,10 +1,10 @@
 // The new weapon instance is passed to this function as the 'this'
-// Properties can be set like this.Property = x, or the this prefix can be left off.
+// Properties can be set like this.Property = x
 
 //////////////////////////////////////////////////////////////////////////
 // Overall weapon properties.
 this.Name = "Shotgun";				// Name is used for debug output and other readable outputs.
-this.WeaponId = -1;		// This Id MUST match the numeric weapon id expected by the interface.
+this.WeaponId = WEAPON.NONE;		// This Id MUST match the numeric weapon id expected by the interface.
 this.MinUseTime = 2.0;				// The min amount of time a weapon is used. Useful for reducing weapon switching oscillations.
 
 //////////////////////////////////////////////////////////////////////////
@@ -22,8 +22,9 @@ this.PrimaryFire.DelayAfterFiring = 0.0;		// Time the bot will ignore this weapo
 this.PrimaryFire.IgnoreReload = false;			// Don't consider this weapon for reloading when looking for weapons that need reloading.
 this.PrimaryFire.FireOnRelease = false;			// Fires when the fire key is released instead of pressed in
 this.PrimaryFire.UseMortarTrajectory = false; 	// Weapon should use the mortar style trajectory when firing.
-this.PrimaryFire.MaxAimError = Vector2(0, 0);	// Aim error to apply to aiming system. x = horizontal, y = vertical, default Vector2(0,0) 
-this.PrimaryFire.AimOffset = Vector3(0, 0, 0);	// 3d Offset the weapon should add to the targets position, default Vector3(0,0,0)
+this.PrimaryFire.MaxAimError = Vector2(0, 0);	// used only if AdjustAim=0, Aim error to apply to aiming system. x = horizontal, y = vertical, default Vector2(0,0)
+this.PrimaryFire.AimOffset = Vector3(0, 0, 0);	// used only if AdjustAim=0, 3d Offset the weapon should add to the targets position, default Vector3(0,0,0)
+this.PrimaryFire.AimOffsetZ = 0;            	// used only if AdjustAim=1, vertical offset that is added to the target position
 this.PrimaryFire.RequiresTargetOutside = false; // Does the weapon require the target to be outdoors?
 this.PrimaryFire.RequiresShooterOutside = false; // Does the weapon require the shooter to be outdoors?
 
@@ -37,10 +38,9 @@ this.PrimaryFire.SetTargetBias(CLASS.BREAKABLE, 0);
 this.PrimaryFire.DefaultDesirability = 0.0;
 
 // Set some distance windows and the desirability they should use.
-// Undefined ranges default to 0.
-// Note: The order of these is important. The first matching range is used by the bot.
+// Undefined ranges default to DefaultDesirability.
+// Note: The order of these is important. The first matching range which has the highest desirability is used by the bot.
 //~ this.PrimaryFire.SetDesirabilityRange(0, 64, 0.8);
-this.PrimaryFire.SetDesirabilityRange(0, 100000, 0.0);
 
 // If this function is defined in the weapon, the bot will make script callbacks to support more complex calculations
 // to determine the desirability of the weapon. Frequent script callbacks can get expensive, so use the above methods

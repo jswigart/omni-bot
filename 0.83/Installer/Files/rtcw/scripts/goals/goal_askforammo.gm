@@ -5,9 +5,8 @@ this.Name = "AskForAmmo";		// The name of the goal.
 this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
 
 // These parameters are optional
-this.LimitToClass( CLASS.MEDIC, CLASS.ENGINEER, CLASS.SOLDIER );
+this.LimitToNoClass( CLASS.LIEUTENANT ); //LIEUTENANTS shouldn't call for ammo
 this.SkipGetPriorityWhenActive = true;
-this.Debug = false;
 
 if(!BB.PICKUPAMMO) {
 	BB.PICKUPAMMO = Blackboard.MakeKey();
@@ -39,6 +38,8 @@ this.OnSpawn = function()
 
 this.GetPriority = function()
 {
+	askForDelay = 30; // num iterations before asking for ammo via voice
+
 	while(1)
 	{
 		this.Counter += 1;
@@ -47,27 +48,24 @@ this.GetPriority = function()
 		// note that goal_pickupitems handles a much shorter range pickup while this goal
 		// activates when the bot is desperate for ammo
 		this.Bot.GetMostDesiredAmmo(this.AmmoInfo);
-		if((this.AmmoInfo.Desire > this.AmmoDesirThreshold) || this.Debug)
+		if((this.AmmoInfo.Desire > this.AmmoDesirThreshold))
 		{
 			this.Pack = this.Bot.GetNearest( CAT.PICKUP, CLASS.AMMO );
 
 			// also look for a weapon
-			if ( !this.Pack && this.Class != CLASS.SOLDIER )
-			{
+			if ( !this.Pack && this.Class != CLASS.SOLDIER ) {
 				weap = this.Bot.GetNearest( CAT.PICKUP_WEAPON );
 
-				if ( weap )
-				{
+				if ( weap ) {
 					weapClass = GetEntClass(weap);
 					if ( weapClass ) {
 						weaponId = GetWeaponIdFromClassId( weapClass );
 					}
 					else {
-						Util.MapDebugPrint("No weapon class for id: ", weap);
+						Util.MapDebugPrint("No weapon class for id: " + weap, 2);
 					}
 
-					if ( weaponId == WEAPON.MP40 || weaponId == WEAPON.THOMPSON || weaponId == WEAPON.STEN )
-					{
+					if ( weaponId == WEAPON.MP40 || weaponId == WEAPON.THOMPSON || weaponId == WEAPON.STEN ) {
 						this.Pack = weap;
 						this.DroppedWeapon = weaponId;
 					}
@@ -80,7 +78,7 @@ this.GetPriority = function()
 				this.Priority = 0.8;
 			}
 			else {
-				if ( (this.Counter % 30 == 0) && (Util.AliveCount(this.Bot.GetTeam(), CLASS.LIEUTENANT) > 0) && GetGameState() == "Playing" ) {
+				if ( (this.Counter % askForDelay == 0) && (Util.AliveCount(this.Bot.GetTeam(), CLASS.LIEUTENANT) > 0) && GetGameState() == "Playing" ) {
 					this.Bot.SayVoice(VOICE.NEED_AMMO);
 				}
 			}
@@ -122,10 +120,8 @@ this.Update = function()
 				this.Finished();
 			}
 
-			if ( this.DroppedWeapon != null ) {
-				if ( !this.Bot.HasWeapon( this.DroppedWeapon ) ) {
-					this.Bot.HoldButton( BTN.DROP, 0.5 );
-				}
+			if ( this.DroppedWeapon && !this.Bot.HasWeapon(this.DroppedWeapon) ) {
+				this.Bot.HoldButton( BTN.DROP, 0.5 );
 			}
 		}
 		else {

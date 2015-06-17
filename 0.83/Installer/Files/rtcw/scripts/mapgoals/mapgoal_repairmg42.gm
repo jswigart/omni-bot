@@ -30,8 +30,7 @@ this.UpgradeVersion = function(Props)
 	}
 	
 	//default these to off
-	this.SetAvailable(1, false);
-	this.SetAvailable(2, false);
+	this.SetAvailable(0, false);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -59,7 +58,7 @@ this.Render = function(editMode)
 
 this.SaveToTable = function(SaveTable)
 {
-	SaveTable.Stance = this.Stance;
+	if(this.Stance != "crouch"){ SaveTable.Stance = this.Stance; }
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -79,7 +78,10 @@ this.SetProperty = function(property, value)
 	{
 		case "stance": // crouch, stand, default crouch
 		{
-			this.Stance = value;
+			if(this.Schema.Stance.CheckPrintErrors(this,value))
+			{
+				this.Stance = value;
+			}
 		}
 		default:
 		{

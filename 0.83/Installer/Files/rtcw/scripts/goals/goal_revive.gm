@@ -21,11 +21,10 @@ this.Initialize = function()
 this.QueryReviveGoals = function(range, skipGoal)
 {
 	bestGoal = null;
-	count = this.QueryGoals(this.Bot.QueryGoalsTable,0x2086cdf0 /* REVIVE */);
-	if ( count > 0 )
+	if ( this.QueryGoals(this.Bot.QueryGoalsTable,0x2086cdf0 /* REVIVE */) )
 	{
 		closest = range + 1;
-		foreach ( id and goal in this.Bot.QueryGoalsTable )
+		foreach ( goal in this.Bot.QueryGoalsTable )
 		{
 			if ( skipGoal && goal == skipGoal ) {
 				continue;
@@ -38,7 +37,6 @@ this.QueryReviveGoals = function(range, skipGoal)
 			}
 		}
 	}
-	tableClear(this.Bot.QueryGoalsTable);
 	return bestGoal;
 };
 
@@ -46,12 +44,11 @@ this.GetPriority = function()
 {
 	while(1)
 	{
+		this.Priority = 0;
 		if ( this.Bot.HasAmmo(WEAPON.SYRINGE) ) {
 			this.MapGoal = this.QueryReviveGoals(this.RangeForRevive);
 			if ( this.MapGoal ) {
 				this.Priority = this.MapGoal.GetGoalPriority(this.Bot);
-			} else {
-				this.Priority = 0;
 			}
 		}
 
@@ -155,7 +152,7 @@ this.UpdateRevive = function()
 					this.Bot.PressButton(BTN.JUMP);
 				}
 				else {
-					this.Bot.HoldButton(BTN.CROUCH, 0.5);
+					this.Bot.HoldButton(BTN.CROUCH, 1.3);
 				}
 
 				this.Bot.MoveTowards(pos);
@@ -170,8 +167,8 @@ this.UpdateRevive = function()
 		this.ReleaseAimRequest();
 		this.ReleaseWeaponRequest();
 
-		if ( timeout > 0 && this.RangeForRevive) {
-			if ( this.EvalDeliverSupplies() ) {
+		if (timeout > 0 && health > 0) { // cs: added paranoid check for health
+			if (health < 100 && this.EvalDeliverSupplies()) { //skilled medic can revive to full health
 				// activate deliver supplies goal.
 				this.Bot.RevivedTargetEnt = this.TargetEntity;
 				signal( this.Bot.Name + "_deliversupplies" );
@@ -179,10 +176,12 @@ this.UpdateRevive = function()
 			}
 		}
 		else {
+			Util.ScriptDebugPrint(this.MapGoal.GetName(), "timedout");
 			this.BBDelayTime = 10;
 		}
 	}
 	else {
+		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed", "position " + GetEntPosition(this.TargetEntity));
 		this.BBDelayTime = 10;
 	}
 	this.Finished();

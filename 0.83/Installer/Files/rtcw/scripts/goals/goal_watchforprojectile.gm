@@ -133,7 +133,7 @@ this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent)
 		// cs: ignore arty for now. the problem is that repeated spam of arty can have an entire team
 		// locked down in avoid mode. especially noticeable on poorly routed maps
 		if ( entClass == CLASS.AIRSTRIKE || /*entClass == CLASS.ARTY ||*/ entClass == CLASS.GRENADE ) {
-			if ( GetEntOwner(ent) != this.Bot.GetGameEntity() ) {
+			if ( this.Bot && GetEntOwner(ent) != this.Bot.GetGameEntity() ) {
 				if ( GetCvar("g_friendlyfire") < 1 && this.Bot.IsAllied(ent) ) {
 					return;
 				}

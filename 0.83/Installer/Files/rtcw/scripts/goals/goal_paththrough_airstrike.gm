@@ -45,14 +45,15 @@ this.OnPathThrough = function( data )
 		this.CurrentAirstrike = data;
 
 		if ( airstrike.Enabled && ( airstrike.Team & myTeamMask )
-			 && this.Bot.IsWeaponCharged( WEAPON.SMOKE_GRENADE, 0 ) ) {
+			&& this.Bot.IsWeaponCharged( WEAPON.SMOKE_GRENADE, 0 ))
+		{
 			return true;
 		}
-	} else {
+	}
+	else {
 		print( "OnPathThrough no airstrike", data );
 	}
 
-	sleep( 1 ); // give time to move off the wp
 	this.CurrentAirstrike = null;
 	return false;
 };
@@ -68,7 +69,8 @@ this.Update = function()
 		if ( !wp.position || this.Goto( wp.position ) == EVENT.PATH_FAILED ) {
 			this.Finished();
 		}
-	} else {
+	}
+	else {
 		facing = airstrike.Facing * 1024;
 		assert( facing );
 

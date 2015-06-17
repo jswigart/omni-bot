@@ -10,8 +10,9 @@ this.MaxUsers_InProgress(2);
 
 this.Schema = Schema();
 //this.Schema.Facing = Validate.Vec3().Default(GetLocalFacing);
-this.Schema.Stance = Validate.Enum("stand","crouch","prone").Default("stand");
+this.Schema.Stance = Validate.Enum("stand","crouch").Default("stand");
 this.Schema.PrimeGrenade = Validate.IntRange(0,3).Default(1);
+this.Schema.Count = Validate.IntRange(0,9).Default(0);
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +22,6 @@ this.InitNewGoal = function()
 	this.TargetGoal = null;
 	this.TraceInfo = {};
 	this.TraceEntity = null;
-	this.IgnoreDead = false;
 
 	this.Schema.Check(this);
 };
@@ -44,10 +44,11 @@ this.UpgradeVersion = function(Props)
 		this.Facing = Props.Facing;
 		this.Stance = Props.Stance;
 		this.PrimeGrenade = Props.PrimeGrenade;
+		this.Count = Props.Count;
 		this.TraceInfo = Props.TraceInfo;
 		this.IgnoreDead = Props.IgnoreDead;
 
-		if(!this.Schema.Check(this) || (!this.TargetGoal && tableCount(this.TraceInfo) < 1))
+		if(!this.Schema.Check(this) || (!this.TargetGoal && (!this.TraceInfo || tableCount(this.TraceInfo) < 1)))
 		{
 			this.DisableGoal(true);
 		}
@@ -84,8 +85,15 @@ this.Render = function(editMode)
 				this.ExtraDebugText += format("TraceEnt: %d\n",this.TraceEntity);
 			}
 			this.ExtraDebugText += format("Stance: %s\n",this.Stance);
-			this.ExtraDebugText += format("PrimeGrenade: %d\n",this.PrimeGrenade);
-			this.ExtraDebugText += format("IgnoreDead: %d\n",this.IgnoreDead);
+			if (this.PrimeGrenade != 1) {
+				this.ExtraDebugText += format("PrimeGrenade: %d\n",this.PrimeGrenade);
+			}
+			if (this.Count) {
+				this.ExtraDebugText += format("Count: %d\n",this.Count);
+			}
+			if (this.IgnoreDead) {
+				this.ExtraDebugText += format("IgnoreDead: %d\n",this.IgnoreDead);
+			}
 		}
 
 		if ( this.Stance == "crouch" )
@@ -137,12 +145,12 @@ this.SaveToTable = function(SaveTable)
 {
 	// save the goal specific properties
 	SaveTable.Facing = this.Facing;
-	SaveTable.Stance = this.Stance;
+	if (this.Stance!="stand"){ SaveTable.Stance = this.Stance; }
 	SaveTable.TargetGoal = this.TargetGoal;
 	SaveTable.TraceInfo = this.TraceInfo;
-	SaveTable.TraceEntity = this.TraceEntity;
 	SaveTable.PrimeGrenade = this.PrimeGrenade;
-	SaveTable.IgnoreDead = this.IgnoreDead;
+	if(this.IgnoreDead) { SaveTable.IgnoreDead = this.IgnoreDead; }
+	if(this.Count) { SaveTable.Count = this.Count; }
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -151,12 +159,13 @@ this.Help = function()
 {
 	print(this.GoalType,"goal, version",this.Version);
 	print("Requires:");
-	print("		targetgoal or traceinfo - the goal that is to be grenaded or traceinfo");
+	print("		targetgoal or trace - the goal that is to be grenaded or traceinfo");
 	print("		facing - Direction the bot should face");
 	print("Optional:");
 	print("		stance - stand, crouch");
 	print("		ignoredead - instruct the goal to ignore the dead flag");
 	print("		prime - time in seconds the bot should prime the grenade. default 1, max 3");
+	print("		count - maximum number of thrown grenades. default 0 (unlimited)");
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -181,7 +190,10 @@ this.SetProperty = function(property, value)
 		}
 		case "stance": // crouch, stand, default stand
 		{
-			this.Stance = value;
+			if(this.Schema.Stance.CheckPrintErrors(this,value))
+			{
+				this.Stance = value;
+			}
 		}
 		case "prime":
 		{
@@ -191,6 +203,10 @@ this.SetProperty = function(property, value)
 			{
 				this.PrimeGrenade = 3;
 			}
+		}
+		case "count":
+		{
+			this.Count = ToInt(value, 0);
 		}
 		case "targetgoal":
 		{
@@ -224,17 +240,12 @@ this.SetProperty = function(property, value)
 		}
 		case "ignoredead":
 		{
-			value = ToInt(value);
-			if ( typeId(value) != 1 ) {
-				print("ignoredead expecting int, got " + typeName(value));
+			i = ToBool(value);
+			if ( IsNull(i) ) {
+				print("ignoredead expecting bool");
 				return;
 			}
-			if ( value > 0 ) {
-				this.IgnoreDead = true;
-			}
-			else {
-				this.IgnoreDead = false;
-			}
+			this.IgnoreDead = i;
 		}
 		default:
 		{
@@ -247,16 +258,20 @@ this.SetProperty = function(property, value)
 
 //////////////////////////////////////////////////////////////////////////
 
-// give it some time to find it since some games spawn ents late
 this.Update = function()
 {
+	if ( !this.TraceInfo || !this.TraceInfo.eyePos || !this.TraceInfo.endPos )
+	{
+		block(0);
+	}
+
 	while(1)
 	{
+		sleep(1);
+
+		// give it some time to find it since some games spawn ents late
 		this.TimeoutForTrace += 20;
-		if (!this.TraceEntity
-				&& this.TraceInfo
-				&& this.TraceInfo.eyePos
-				&& this.TraceInfo.endPos)
+		if (!this.TraceEntity)
 		{
 			this.TraceEntity = Util.TraceForEntityInfo(this.TraceInfo.eyePos, this.TraceInfo.endPos);
 		}
@@ -276,8 +291,6 @@ this.Update = function()
 			this.DisableGoal(true);
 			block(0);
 		}
-
-		sleep(1);
 	}
 };
 

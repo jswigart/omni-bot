@@ -4,6 +4,13 @@ this.DefaultPriority = 0.8;
 
 //////////////////////////////////////////////////////////////////////////
 
+this.InitNewGoal = function()
+{
+	this.SetPosition(this.GetPosition() + Vec3(0,0,1));
+};
+
+//////////////////////////////////////////////////////////////////////////
+
 this.UpgradeVersion = function(Props)
 {
 	// version 0 is string,string key/values from the old waypoint format
