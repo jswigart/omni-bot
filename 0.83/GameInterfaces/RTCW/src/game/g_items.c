@@ -955,6 +955,7 @@ gentity_t *LaunchItem( gitem_t *item, vec3_t origin, vec3_t velocity, int ownerN
 	dropped->s.eFlags |= EF_BOUNCE_HALF;
 
 	if ( item->giType == IT_TEAM ) { // Special case for CTF flags
+		dropped->s.otherEntityNum =	g_entities[ownerNum].client->flagParent;	// store the entitynum of our original flag spawner
 		dropped->think = Team_DroppedFlagThink;
 		dropped->nextthink = level.time + 30000;
 	} else { // auto-remove after 30 seconds

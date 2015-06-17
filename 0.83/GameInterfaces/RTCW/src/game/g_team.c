@@ -407,8 +407,14 @@ int Team_TouchEnemyFlag( gentity_t *ent, gentity_t *other, int team ) {
 		cl->ps.powerups[PW_REDFLAG] = INT_MAX; // flags never expire
 	} else {
 		cl->ps.powerups[PW_BLUEFLAG] = INT_MAX; // flags never expire
-
 	}
+
+	// store the entitynum of our original flag spawner
+	if(ent->flags & FL_DROPPED_ITEM)
+		cl->flagParent = ent->s.otherEntityNum;
+	else
+		cl->flagParent = ent->s.number;
+
 	return -1; // Do not respawn this automatically, but do delete it if it was FL_DROPPED
 }
 
