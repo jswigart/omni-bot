@@ -503,6 +503,29 @@ static int GM_CDECL gmfGetAllSelectedWaypoints(gmThread *a_thread)
 	return GM_OK;
 }
 
+static int GM_CDECL gmfGetClosestWaypoint(gmThread *a_thread)
+{
+	GM_CHECK_NUM_PARAMS(1);
+	GM_CHECK_VECTOR_PARAM(pos, 0);
+	GM_INT_PARAM(team, 1, 0);
+	GM_INT_PARAM(options, 2, 1);
+
+	PathPlannerWaypoint *pWp = GetWpPlanner();
+	if(pWp)
+	{
+		const Waypoint *pWaypoint = pWp->_GetClosestWaypoint(Vector3f(pos), (NavFlags)team, options);
+		if(pWaypoint)
+		{
+			gmTableObject *pWpTable = a_thread->GetMachine()->AllocTableObject();
+			SetWaypointDataInTable(a_thread->GetMachine(), pWpTable, pWaypoint);
+			a_thread->PushTable(pWpTable);
+			return GM_OK;
+		}
+	}
+	a_thread->PushNull();
+	return GM_OK;
+}
+
 static int GM_CDECL gmfWaypointSave(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);	
@@ -547,6 +570,7 @@ void PathPlannerWaypoint::RegisterScriptFunctions(gmMachine *a_machine)
 		.func(gmfWaypointColor, "WaypointColor")
 		.func(gmfGetAllWaypoints, "GetAllWaypoints")
 		.func(gmfGetAllSelectedWaypoints, "GetAllSelectedWaypoints")
+		.func(gmfGetClosestWaypoint, "GetClosestWaypoint")
 		.func(gmfWaypointSave,"Save")
 		.func(gmfWaypointLoad,"Load")
 		.func((bool (PathPlannerWaypoint::*)())&PathPlannerWaypoint::IsViewOn,"IsWaypointViewOn")

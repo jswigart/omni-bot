@@ -98,6 +98,7 @@ public:
 
 	Waypoint *GetWaypointByName(const String &_name) const;
 	Waypoint *GetWaypointByGUID(obuint32 _uid) const;
+	Waypoint *_GetClosestWaypoint(const Vector3f &_pos, const NavFlags _team, const int _options, int *_index = NULL) const;
 
 	void RunPathQuery(const PathQuery &_qry);
 
@@ -355,7 +356,6 @@ protected:
 
 	void _FindAllReachable(Client *_client, const Vector3f &_pos, const NavFlags &_team, WaypointList & reachable);
 
-	Waypoint *_GetClosestWaypoint(const Vector3f &_pos, const NavFlags _team, const int _options, int *_index = NULL) const;
 	ClosestLink _GetClosestLink(const Vector3f &_pos, const NavFlags _team) const;
 	void HeapInsert(WaypointList &_wpl, Waypoint *_wp);
 
