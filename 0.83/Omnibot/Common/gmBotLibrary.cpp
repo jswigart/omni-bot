@@ -620,7 +620,7 @@ void MapDebugPrint(gmThread *a_thread, const char *message)
 	}
 }
 
-static int SetAvailableMapGoals(gmThread *a_thread, int _team, bool _available, const char* _expression)
+static int SetAvailableMapGoals(gmThread *a_thread, int _team, bool _available, const char* _expression, int ignoreErrors)
 {
 	GoalManager::Query qry;
 	qry.Expression(_expression);
@@ -643,7 +643,7 @@ static int SetAvailableMapGoals(gmThread *a_thread, int _team, bool _available, 
 			}
 		}
 	}
-	else
+	else if(!ignoreErrors)
 	{
 		MapDebugPrint(a_thread, va("SetAvailableMapGoals: goal query for %s has no results", _expression));
 	}
@@ -666,15 +666,16 @@ static int GM_CDECL gmfSetAvailableMapGoals(gmThread *a_thread)
 {
 	GM_CHECK_INT_PARAM(team, 0);
 	GM_CHECK_INT_PARAM(enable, 1);
+	GM_INT_PARAM(ignoreErrors, 3, 0);
 
 	int size = 0;
 	if(a_thread->GetNumParams() < 3)
 	{
-		size = SetAvailableMapGoals(a_thread, team, enable != 0, 0);
+		size = SetAvailableMapGoals(a_thread, team, enable != 0, 0, 0);
 	}
 	else if(a_thread->ParamType(2)==GM_STRING)
 	{
-		size = SetAvailableMapGoals(a_thread, team, enable != 0, a_thread->ParamString(2));
+		size = SetAvailableMapGoals(a_thread, team, enable != 0, a_thread->ParamString(2), ignoreErrors);
 	}
 	else if(a_thread->ParamType(2)==GM_TABLE)
 	{
@@ -687,7 +688,7 @@ static int GM_CDECL gmfSetAvailableMapGoals(gmThread *a_thread)
 				GM_EXCEPTION_MSG("expecting param 2 as table of string, got %s", a_thread->GetMachine()->GetTypeName(pNode->m_value.m_type));
 				return GM_EXCEPTION;
 			}
-			size += SetAvailableMapGoals(a_thread, team, enable != 0, pNode->m_value.GetCStringSafe(0));
+			size += SetAvailableMapGoals(a_thread, team, enable != 0, pNode->m_value.GetCStringSafe(0), ignoreErrors);
 		}
 	}
 	else
