@@ -66,6 +66,7 @@ public:
 	virtual void RegisterNavigationFlags(PathPlannerBase *_planner);
 	virtual void RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck) { }
 	virtual void InitMapScript();
+	virtual void GetMapScriptFile(filePath &script) { };
 
 	virtual void ClientJoined(const Event_SystemClientConnected *_msg);
 	virtual void ClientLeft(const Event_SystemClientDisConnected *_msg);

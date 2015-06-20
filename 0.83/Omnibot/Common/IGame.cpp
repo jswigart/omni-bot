@@ -62,7 +62,7 @@ IGame::~IGame()
 
 const char *IGame::GetVersion() const
 {
-	return "0.84.2000";
+	return "0.84.2001";
 }
 
 const char *IGame::GetVersionDateTime() const
@@ -1120,6 +1120,7 @@ void IGame::InitMapScript()
 	DisableGCInScope gcEn(pMachine);
 
 	filePath script( "nav/%s.gm", g_EngineFuncs->GetMapName() );
+	GetMapScriptFile(script);
 
 	// Load the script for the current map.
 	int iThreadId = GM_INVALID_THREAD;

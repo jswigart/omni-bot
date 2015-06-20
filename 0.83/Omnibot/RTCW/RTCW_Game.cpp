@@ -609,64 +609,13 @@ void RTCW_Game::RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathC
 	_pfnPathCheck = RTCW_PathCheck;
 }
 
-void RTCW_Game::StartGame()
+void RTCW_Game::GetMapScriptFile(filePath &script)
 {
-	if(GameStarted())
-		return;
-
-	//EngineFuncs::ConsoleMessage("<StartGame>");
-
-	// Get Goals from the game.
-	GoalManager::GetInstance()->Reset();
-
-	ErrorObj err;
-	const bool goalsLoaded = GoalManager::GetInstance()->Load(String(g_EngineFuncs->GetMapName()),err);
-	err.PrintToConsole();
-
-	if(!goalsLoaded)
-	{
-		// register nav system goals
-		IGameManager::GetInstance()->GetNavSystem()->RegisterGameGoals();
-	}
-	
-	GoalManager::GetInstance()->InitGameGoals();
-
-	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-	DisableGCInScope gcEn(pMachine);
-
-	// Load the script for the current map.
-	int iThreadId = GM_INVALID_THREAD;
-
 	const char * mapName = g_EngineFuncs->GetMapName();
-	filePath script( "nav/%s.gm", mapName );
 	if ( InterfaceFuncs::GetCvar("g_deathmatch") != 0 )
 		script = filePath( "nav/%s_dm.gm", mapName );
 	else if( InterfaceFuncs::GetGameType() == 7 )
 		script = filePath( "nav/%s_cp.gm", mapName );
-
-	if(ScriptManager::GetInstance()->ExecuteFile(script, iThreadId))
-	{
-		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-		{
-			gmCall call;
-			if(call.BeginGlobalFunction(pMachine, "OnMapLoad", gmVariable::s_null, true))
-			{
-				call.End();
-			}
-		}
-	}
-
-	// cs: moved this out so it does not depend on a map script. some autoexec scripts define it.
-	{
-		gmCall call;
-		if(call.BeginGlobalFunction(pMachine, "PostMapLoad", gmVariable::s_null, true))
-		{
-			call.End();
-		}
-	}
-
-	// Other initialization.
-	m_SettingLimiter.reset(new Regulator(2000));
 }
 
 

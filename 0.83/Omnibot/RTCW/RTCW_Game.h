@@ -25,7 +25,7 @@ public:
 	void RegisterNavigationFlags(PathPlannerBase *_planner);
 	void RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck);
 
-	virtual void StartGame();
+	virtual void GetMapScriptFile(filePath &script);
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
