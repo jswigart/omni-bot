@@ -27,18 +27,13 @@ this.UpgradeVersion = function(Props)
 	if(!Props.Weapons || tableCount(Props.Weapons)==0)
 	{
 		// fill in all the known sniper weapons by default
-		Props.Weapons = {};
-
-		if (Util.SniperWeapons)
+		if (Util.IndexedSniperWeapons)
 		{
-			foreach(wpnId in Util.SniperWeapons)
-			{
-				Props.Weapons[wpnId] = 1;
-			}
+			Props.Weapons = tableDuplicate(Util.IndexedSniperWeapons);
 		}
 		else
 		{
-			Util.MapDebugPrint(this.GoalType + ": Error : No Util.SniperWeapons table");
+			Util.MapDebugPrint(this.GoalType + ": Error : No Util.IndexedSniperWeapons table");
 		}
 	}
 

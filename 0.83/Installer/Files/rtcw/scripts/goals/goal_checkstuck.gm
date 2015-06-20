@@ -2,26 +2,21 @@ this.Name = "CheckStuck";
 this.Parent = "LowLevel";
 this.AutoAdd = true;
 this.KillWhenStuck = true;
+this.LogStuckage = false;
 this.Interval = 0.6;
 this.KillTime = 5.0; // time before /killing
+this.TargetTimeout = 10; // time to destroy breakables or kill enemies
+this.SidestepTimeout = 3; // time to strafe left to sidestep another player
+this.JumpLimit = 1;
 this.Debug = false;
-
-this.Initialize = function()
-{
-	if ( GetGameState() != "Playing" ) {
-		this.Disable = true;
-	}
-};
 
 this.GetPriority = function()
 {
-	while ( 1 )
-	{
-		if ( Server.SleepBots == true && Server.NumPlayers == Server.NumBots ) {
-			sleep( 5 );
-			return;
-		}
+	stuckPos = null;
+	stucktime = 0;
 
+	while(1)
+	{
 		if ( this.JustSpawned ) {
 			for (i = 0; i < 3; i += 1) {
 				sleep(1.2);
@@ -32,66 +27,105 @@ this.GetPriority = function()
 			this.JustSpawned = false;
 		}
 
-		if ( this.Bot.IsStuck( this.Interval ) ) {
-			nearestPlayer = this.Bot.GetNearest( CAT.PLAYER );
+		if ( this.Bot.IsStuck(this.Interval) )
+		{
+			if (stucktime == 0) {
+				jumpAttempts = 0;
+				waitTime = 0;
+				stuckPos = this.Bot.GetPosition();
+			}
 
-			if ( this.Debug && nearestPlayer ) {
-				DrawEntityAABB( nearestPlayer, 30.0, COLOR.RED );
-				DrawEntityAABB( this.Bot.GetGameEntity(), 30.0, COLOR.BLUE );
+			// stuck time gets reset for each new path, so lets accumulate our own
+			stucktime += this.Interval;
+
+			if ( this.Debug ) {
+				this.Bot.Say("I've been stuck for " + stucktime + " seconds");
 			}
 
 			// is the bot blocked by a player?
-			if ( nearestPlayer && this.Bot.DistanceTo( nearestPlayer ) < 65 && this.Bot.InFieldOfView( GetEntPosition( nearestPlayer ), 180.0 ) ) {
-				this.Bot.HoldButton( BTN.STRAFE_L, 0.5 );
-
+			nearestPlayer = this.Bot.GetNearest(CAT.PLAYER);
+			if ( nearestPlayer && this.Bot.DistanceTo(nearestPlayer) < 65 && this.Bot.InFieldOfView(GetEntPosition(nearestPlayer), 180.0) && stucktime < this.SidestepTimeout)
+			{
 				if ( this.Debug ) {
-					this.Bot.Say( "side stepping player" );
+					DrawEntityAABB(nearestPlayer, 30.0, COLOR.RED);
+					DrawEntityAABB(this.Bot.GetGameEntity(), 30.0, COLOR.BLUE);
 				}
+					this.Bot.HoldButton(BTN.STRAFE_L, 0.5);
+
+					if ( this.Debug ) {
+						this.Bot.Say("side stepping player");
+					}
 
 				// reset the stuck timer so they don't get a new goal
 				this.Bot.ResetStuckTime();
-
-				sleep( 0.5 );
-				return;
+				waitTime = stucktime;
+				jumpAttempts = 9;
 			}
-			else {
-				// stuck time gets reset for each new path, so lets accumulate our own
-				this.Bot.Stucktime += this.Interval;
-
-				if ( this.Debug ) {
-					this.Bot.Say( "i've been stuck for " + this.Bot.Stucktime + " seconds" );
+			else if ( this.Bot.HasTarget() && stucktime < this.TargetTimeout)
+			{
+				if (jumpAttempts < 9 && GetEntClass(this.Bot.GetTarget())==CLASS.BREAKABLE) {
+					//don't jump at breakables
+					jumpAttempts = 9;
 				}
-				if ( this.Bot.Stucktime >= this.KillTime ) {
-					if ( this.KillWhenStuck ) {
-						this.Bot.ExecCommand( "kill" );
-					}
-				} else
-				{
-					this.Bot.StuckPos = this.Bot.GetPosition();
-					// hack. either they get out of stuckage or they fall off and try again.
-					if ( this.Bot.HasEntityFlag( ENTFLAG.ON_LADDER ) ) {
-						//this.Bot.Say("stuck on ladder");
-						this.Bot.PressButton( BTN.STRAFE_R );
-					}
-					else {
-						this.Bot.PressButton( BTN.JUMP );
-					}
-				}
+				this.Bot.ResetStuckTime();
+				waitTime = stucktime;
 			}
-		} else
+			else if ( stucktime >= this.KillTime + waitTime )
+			{
+				//if (this.Bot.Name=="testbot"){ return; }
+
+				if ( this.LogStuckage ) {
+					// write it to the omni-bot log
+					pos = this.Bot.GetPosition();
+					yield();
+					this.StuckageLog(pos);
+				}
+
+				yield();
+				if ( this.KillWhenStuck ) {
+					this.Bot.ExecCommand("kill");
+				}
+				stucktime = 0;
+			}
+			if ( jumpAttempts < this.JumpLimit)
+			{
+				this.Bot.PressButton(BTN.JUMP);
+				jumpAttempts += 1;
+			}
+		}
+		else
 		{
-			if ( this.Bot.StuckPos && this.Bot.DistanceTo( this.Bot.StuckPos ) > 100 ) {
-				this.Bot.StuckPos = null;
-				this.Bot.Stucktime = 0;
+			if ( stuckPos && this.Bot.DistanceTo(stuckPos) > 100 ) {
+				stuckPos = null;
+				stucktime = 0;
 			}
 		}
 
-		sleep( this.Interval );
+		sleep(this.Interval);
 	}
 };
 
 this.OnSpawn = function()
 {
 	this.JustSpawned = true;
-	this.Bot.Stucktime = 0;
+};
+
+// Note: this will write to ~/omni-bot/et/user. the file will need to be copied to ~/omni-bot/et/scripts
+this.StuckageLog = function(pos)
+{
+	gmfile = File();
+	fileName = GetMapName() + "_stuckages.gm";
+
+	if ( !System.FileExists(fileName) ) {
+		assert( gmfile.Open( fileName, "text", false ) );
+		head = "global Stuckages = {};";
+		assert( gmfile.Write( head, System.NewLine ) );
+	}
+	else {
+		assert( gmfile.Open( fileName, "text", false, true ) );
+	}
+
+	str = "Stuckages[ tableCount(Stuckages) ] = Vector3("+pos.x +","+pos.y+","+pos.z+");";
+	assert( gmfile.Write( str, System.NewLine ) );
+	gmfile.Close();
 };

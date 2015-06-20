@@ -22,7 +22,6 @@ this.Initialize = function()
 	this.AmmoDesirThreshold = 0.5;
 	//this.RangeForPickup = this.Bot.AmmoEntityDist;
 	this.Counter = 0;
-	this.AmmoInfo = {}; // so we re-use the same table
 	this.DroppedWeapon = null;
 	this.Class = null;
 	this.Timeout = 1500; // milliseconds
@@ -47,8 +46,8 @@ this.GetPriority = function()
 		// look for any packs or weapons laying around before calling for ammo
 		// note that goal_pickupitems handles a much shorter range pickup while this goal
 		// activates when the bot is desperate for ammo
-		this.Bot.GetMostDesiredAmmo(this.AmmoInfo);
-		if((this.AmmoInfo.Desire > this.AmmoDesirThreshold))
+		this.Bot.GetMostDesiredAmmo(Util.DesireTable);
+		if((Util.DesireTable.Desire > this.AmmoDesirThreshold))
 		{
 			this.Pack = this.Bot.GetNearest( CAT.PICKUP, CLASS.AMMO );
 

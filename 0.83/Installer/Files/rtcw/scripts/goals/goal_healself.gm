@@ -1,0 +1,53 @@
+// This script contains functionality to allow medics to give themselves packs
+
+this.Name = "HealSelf";
+this.Parent = "LowLevel";
+this.LimitToClass( CLASS.MEDIC );
+this.LimitToNoTarget();
+
+this.AlwaysRecieveEvents = true;
+
+this.HealthThreshold = 50.0;
+this.DelayBetweenCalls = 15.0;
+
+this.Update = function()
+{
+	if ( !this.Bot.IsWeaponCharged(WEAPON.MEDKIT) )
+	{
+		sleep(this.DelayBetweenCalls);
+		this.Finished();
+	}
+
+	this.AddWeaponRequest(Priority.High, WEAPON.MEDKIT);
+	this.BlockForWeaponChange(WEAPON.MEDKIT);
+
+	if ( this.Bot.GetVelocity().IsZero() )
+	{
+		this.AddAimRequest( Priority.High, "position", GroundPoint(this.Bot.GetPosition()) );
+	}
+
+	this.PacksThrown = 0;
+	dowhile( this.PacksThrown < 2 && this.Bot.IsWeaponCharged(WEAPON.MEDKIT) )
+	{
+		this.Bot.HoldButton(BTN.ATTACK1, 0.5);
+		sleep(0.5);
+	}
+
+	this.Finished();
+};
+
+this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth)
+{
+	if(CurrentHealth < this.HealthThreshold && this.Priority == 0)
+	{
+		this.Priority = 1;
+	}
+};
+
+this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
+{
+	if(weaponId == WEAPON.MEDKIT && this.Bot )
+	{
+		this.PacksThrown += 1;
+	}
+};

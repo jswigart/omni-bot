@@ -13,14 +13,9 @@ Util.PlayerClassTable =
 Util.WaypointGoalOffset = Vector3(0,0,-24);
 
 Util.AllTeams = ( 1 << TEAM.AXIS ) | ( 1 << TEAM.ALLIES );
-Util.AllClasses = ( 1 << CLASS.SOLDIER ) | ( 1 << CLASS.MEDIC ) |
-				  ( 1 << CLASS.ENGINEER ) | ( 1 << CLASS.LIEUTENANT );
 
 // debug string color
 Util.DebugColorString = "^5";
-
-// class management stuff
-Util.ManageClasses = false;
 
 Util.SniperClass = CLASS.SOLDIER;
 Util.SniperWeapons =
@@ -124,22 +119,6 @@ member ClearSecondaryGoals = function()
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-//Disable a goal for both teams
-member DisableGoal = function( goal, routes )
-{
-	Util.MapDeprecateMessage( "RTCWUtil.DisableGoal", "Util.DisableGoal" );
-	Util.DisableGoal(goal, routes);
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//Enable a goal for both teams
-member EnableGoal = function( goal )
-{
-	Util.MapDeprecateMessage( "RTCWUtil.EnableGoal", "Util.EnableGoal" );
-	SetAvailableMapGoals( 0, true, goal );
-};
-
-///////////////////////////////////////////////////////////////////////////////
 //
 member CheatsEnabled = function()
 {
@@ -166,44 +145,7 @@ member WarpToPosition = function( pos )
 //
 member WarpTo = function( _params )
 {
-	pos = null;
-
-	if ( IsFloatOrInt( _params[0] )) // try wp guid first
-	{
-		pos = Util.GetWpGUIDPosition(ToInt(_params[0]));
-	}
-	else if ( IsString( _params[0] ) )
-	{
-		goal = GetGoal( _params[0] );
-
-		if ( goal )
-		{
-			pos = goal.GetPosition();
-		}
-		else // try wp name
-		{
-			wp = Util.WpNameInfo(_params[0]);
-			if ( wp )
-			{
-				pos = wp.position;
-			}
-			else // try paththrough
-			{
-				wpTable = {};
-				Wp.GetAllWaypoints(wpTable);
-				foreach ( wp in wpTable )
-				{
-					foreach ( flag && name in wp.property )
-					{
-						if ( flag == "paththrough" && name.Right(_params[0].Length() + 1) == ":" + _params[0] ){
-							pos = wp.position;
-						}
-					}
-				}
-			}
-		}
-	}
-
+	pos = Util.GetPositionFromParam( _params[0] );
 	if ( pos )
 	{
 		this.WarpToPosition(pos + Vector3(0,0,24));
@@ -264,34 +206,6 @@ member WarpTestBot = function( _params )
 	}
 };
 
-///////////////////////////////////////////////////////////////////////////////
-//
-member RollCall = function()
-{
-	foreach ( bot in BotTable )
-	{
-		print(bot.Name);
-
-		goal=bot.GetMapGoalName();
-		if(!goal){ goal=bot.GetHighLevelGoalName(); }
-		print("TEAM:", Util.TeamName(bot.GetTeam()), ", CLASS:",Util.ClassName(bot.GetClass()), ", GOAL:",goal);
-
-		s="";
-		foreach ( id and role in ROLE ) {
-			if(bot.HasRole(role)) { s= s + " " + id; }
-		}
-		if(s!=""){ print("ROLE:",s); }
-
-		print("DIFFICULTY:",bot.aimskill, ", MOVESKILL:", bot.moveskill, ", VIEW DISTANCE:",bot.MaxViewDistance, ", REACTION TIME:",bot.ReactionTime);
-
-		ammo = {};
-		bot.GetCurrentAmmo(ammo);
-		print("WEAPON:", Util.WeaponName(bot.GetCurrentWeapon()), ", AMMO:",ammo.CurrentAmmo, ", HEALTH:",Util.GetEntHealth(bot.GetGameEntity()));
-
-		print("ID:",bot.GetGameId(), ",",bot);
-		print("^7-----------------------");
-	}
-};
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -306,14 +220,6 @@ member CountClass = function( team, class )
 	}
 
 	return count;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//
-member CountTeam = function( team )
-{
-	Util.MapDeprecateMessage( "RTCWUtil.CountTeam", "Server.Team[ teamId ].NumBots" );
-	return Server.Team[team].NumBots;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -450,32 +356,6 @@ member ChangeSpawnNoDefenders = function( team, spawn, numbots )
 			if ( numbots && c >= numbots ) {
 				return;
 			}
-		}
-	}
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//
-member LimitToClass = function( goalname, team, class1, class2, class3 )
-{
-	foreach( class in Util.PlayerClassTable )
-	{
-		if ( class == class1 || class == class2 || class == class3 ) {
-			continue;
-		}
-
-		SetGoalPriority( goalname, 0.0, team, class );
-	}
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//
-member ExcludeClass = function( goalname, team, class1, class2, class3, class4 )
-{
-	foreach( class in Util.PlayerClassTable )
-	{
-		if ( class == class1 || class == class2 || class == class3 || class == class4 ) {
-			SetGoalPriority( goalname, 0.0, team, class );
 		}
 	}
 };
@@ -640,20 +520,6 @@ member IsTeamClassDead = function( team, class )
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-member OneBotSayTeam = function( team, msg )
-{
-	Util.MapDeprecateMessage( "RTCWUtil.OneBotSayTeam", "Util.BotChat" );
-	Util.BotChat(team, "sayteam", msg, 1);
-};
-
-member OneBotVSayTeam = function( team, vchat )
-{
-	Util.MapDeprecateMessage( "RTCWUtil.OneBotVSayTeam", "Util.BotChat" );
-	Util.BotChat(team, "vsay", vchat, 1);
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//
 member TraceArty = function( usePlayer )
 {
 	radius = 200;
@@ -798,31 +664,15 @@ member ToggleFlag = function( goal, time )
 
 ///////////////////////////////////////////////////////////////////////////////
 // randomly global chat some victory message
-member WinningOrLosingChat = function( team, voices )
-{
-	// not if bot chat is disabled
-	if ( !MAP_TALK ) {
-		return;
-	}
-
-	foreach ( bot in BotTable ) {
-		if ( bot.GetTeam() == team && RandInt(1, 10) < 4 ) {
-			bot.SayVoice(Util.GetRandomTableValue(voices));
-			sleep(RandFloat(0.5, 1.5));
-		}
-	}
-};
-
-// randomly global chat some victory message
 member WinningChat = function( team )
 {
-	this.WinningOrLosingChat(team, { VOICE.G_CHEER, VOICE.G_ENEMY_WEAK, VOICE.G_AFFIRMATIVE, VOICE.G_GOODGAME, VOICE.G_GREATSHOT });
+	Util.RandomChat(team, { VOICE.G_CHEER, VOICE.G_ENEMY_WEAK, VOICE.G_AFFIRMATIVE, VOICE.G_GOODGAME, VOICE.G_GREATSHOT });
 };
 
 // randomly global chat some displeasure about losing
 member LosingChat = function( team )
 {
-	this.WinningOrLosingChat(team, { VOICE.G_NEGATIVE, VOICE.G_OOPS, VOICE.G_GOODGAME, VOICE.G_HOLD_FIRE });
+	Util.RandomChat(team, { VOICE.G_NEGATIVE, VOICE.G_OOPS, VOICE.G_GOODGAME, VOICE.G_HOLD_FIRE });
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -858,3 +708,45 @@ member GetClosestAlly = function (bot, class, distLimit)
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+//DEPRECATE
+member DisableGoal = function( goal, routes )
+{
+	Util.MapDeprecateMessage( "RTCWUtil.DisableGoal", "Util.DisableGoal" );
+	Util.DisableGoal(goal, routes);
+};
+
+member EnableGoal = function( goal )
+{
+	Util.MapDeprecateMessage( "RTCWUtil.EnableGoal", "Util.EnableGoal" );
+	SetAvailableMapGoals( 0, true, goal );
+};
+
+member OneBotSayTeam = function( team, msg )
+{
+	Util.MapDeprecateMessage( "RTCWUtil.OneBotSayTeam", "Util.BotChat" );
+	Util.BotChat(team, "sayteam", msg, 1);
+};
+
+member OneBotVSayTeam = function( team, vchat )
+{
+	Util.MapDeprecateMessage( "RTCWUtil.OneBotVSayTeam", "Util.BotChat" );
+	Util.BotChat(team, "vsay", vchat, 1);
+};
+
+member CountTeam = function( team )
+{
+	Util.MapDeprecateMessage( "RTCWUtil.CountTeam", "Server.Team[ teamId ].NumBots" );
+	return Server.Team[team].NumBots;
+};
+
+member LimitToClass = function( goalname, team, class1, class2, class3, class4 )
+{
+	Util.MapDeprecateMessage( "RTCWUtil.LimitToClass", "Util.LimitToClass" );
+	Util.LimitToClass(goalname, team, class1, class2, class3, class4);
+};
+
+member ExcludeClass = function( goalname, team, class1, class2, class3, class4 )
+{
+	Util.MapDeprecateMessage( "RTCWUtil.ExcludeClass", "Util.ExcludeClass" );
+	Util.ExcludeClass(goalname, team, class1, class2, class3, class4);
+};

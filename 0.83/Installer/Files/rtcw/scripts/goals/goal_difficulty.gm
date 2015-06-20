@@ -4,23 +4,17 @@ this.Parent = "LowLevel";
 this.Debug = false;
 this.AutoAdd = true;
 
-// initialize defaults in case the entry isn't in omni-bot.cfg
-this.CurrentDifficulty = 3;
-this.AdjustAim = true;
-this.DefenderSkillBonus = 0;
-this.MinForRandom = 1;
-this.MaxForRandom = 7;
-
-this.CurrentDifficulty = ConfigGet("Difficulty","CurrentDifficulty", this.CurrentDifficulty);
-this.AdjustAim = ConfigGet("Difficulty","AdjustAim", this.AdjustAim);
-this.MinForRandom = ConfigGet("Difficulty","MinForRandom", this.MinForRandom);
-this.MaxForRandom = ConfigGet("Difficulty","MaxForRandom", this.MaxForRandom);
-this.DefenderSkillBonus = ConfigGet("Defender", "SkillBonus", this.DefenderSkillBonus);
+this.AdjustAim = ConfigGet("Difficulty","AdjustAim", true);
 
 this.Initialize = function()
 {
+	this.CurrentDifficulty = ConfigGet("Difficulty","CurrentDifficulty", 3);
+	this.MinForRandom = ConfigGet("Difficulty","MinForRandom", 1);
+	this.MaxForRandom = ConfigGet("Difficulty","MaxForRandom", 7);
+	this.DefenderSkillBonus = ConfigGet("Defender", "SkillBonus", 0);
 	this.Bot.SkillBonus = 0;
 	this.MaxDifficulty = tableCount(this.difficulties) - 1;
+	// run it once at start
 	this.FirstRun = true;
 };
 
@@ -29,7 +23,6 @@ this.GetPriority = function()
 	sleep(2);
 	if ( this.FirstRun ) {
 		this.AddDefenderSkillBonus();
-		this.FirstRun = false;
 		this.Priority = 1.0;
 	}
 	block(0);
@@ -37,8 +30,10 @@ this.GetPriority = function()
 
 this.Update = function()
 {
+	this.FirstRun = false;
+
 	// if a bot profile sets a ProfileSkill, this will run only once per round.
-	if ( !this.Bot.LockSkill && (this.CurrentDifficulty != this.Bot.aimskill
+	if ( !this.Bot.LockSkill && ( IsNull(this.Bot.aimskill) || this.CurrentDifficulty != this.Bot.aimskill
 			|| (this.Bot.teamAimSkill && this.Bot.teamAimSkill != this.Bot.aimskill)
 			&& !this.Bot.ChoseRandomDiff) )
 	{
@@ -62,9 +57,8 @@ this.Update = function()
 
 		if( this.Bot.aimskill < 0 )
 		{
-			n = tableCount(this.difficulties);
 			min = 0;
-			max = n-1;
+			max = tableCount(this.difficulties)-1;
 
 			if (this.difficulties[this.MinForRandom]) {
 				min = this.MinForRandom;
@@ -72,13 +66,12 @@ this.Update = function()
 			if (this.difficulties[this.MaxForRandom]) {
 				max = this.MaxForRandom;
 			}
-			r = RandInt(min, max);
+			useDiff = RandInt(min, max);
 
 			if (this.Debug) {
-				this.Bot.Say("chose " + r + " randomly from " + min + " to " + max);
+				this.Bot.Say("chose " + useDiff + " randomly from " + min + " to " + max);
 			}
 			this.Bot.ChoseRandomDiff = true;
-			useDiff = r;
 		}
 		else
 		{
@@ -92,21 +85,21 @@ this.Update = function()
 			this.Bot.ChoseRandomDiff = false;
 		}
 
-		this.Bot.FieldOfView = this.difficulties[useDiff].FieldOfView;
-		this.Bot.ReactionTime = this.difficulties[useDiff].ReactionTime;
-		this.Bot.MemorySpan = this.difficulties[useDiff].MemorySpan;
-		this.Bot.AimPersistance = this.difficulties[useDiff].AimPersistance;
-		this.Bot.MaxTurnSpeed = this.difficulties[useDiff].MaxTurnSpeed;
-		this.Bot.AimStiffness = this.difficulties[useDiff].AimStiffness;
-		this.Bot.AimDamping = this.difficulties[useDiff].AimDamping;
-		this.Bot.AimTolerance = this.difficulties[useDiff].AimTolerance;
+		difficulty = this.difficulties[useDiff];
+		this.Bot.FieldOfView = difficulty.FieldOfView;
+		this.Bot.ReactionTime = difficulty.ReactionTime;
+		this.Bot.MemorySpan = difficulty.MemorySpan;
+		this.Bot.AimPersistance = difficulty.AimPersistance;
+		this.Bot.MaxTurnSpeed = difficulty.MaxTurnSpeed;
+		this.Bot.AimStiffness = difficulty.AimStiffness;
+		this.Bot.AimDamping = difficulty.AimDamping;
+		this.Bot.AimTolerance = difficulty.AimTolerance;
 
 		// don't accumulate percentages every difficulty change
 		if(!this.Bot.OriginalMaxView) { this.Bot.OriginalMaxView = this.Bot.MaxViewDistance; }
-		this.Bot.MaxViewDistance = this.Bot.OriginalMaxView * (this.difficulties[useDiff].MaxViewPercent * .01);
+		this.Bot.MaxViewDistance = this.Bot.OriginalMaxView * (difficulty.MaxViewPercent * .01);
 
-		if ( this.Debug )
-		{
+		if ( this.Debug ) {
 			print( "--- " +this.Bot.Name + " Aim Properties ---" );
 			print( "Difficulty: " + useDiff );
 			print( "FieldOfView: " + this.Bot.FieldOfView );
@@ -121,9 +114,8 @@ this.Update = function()
 			print( "------------ " );
 		}
 
-		if ( this.AdjustAim )
-		{
-			this.AdjustWeaponProperties(this.Bot, useDiff);
+		if ( this.AdjustAim ) {
+			this.AdjustWeaponProperties(this.Bot, difficulty);
 		}
 	}
 
@@ -278,36 +270,29 @@ this.difficulties =
 	},
 };
 
-this.AdjustWeaponProperties = function(bot, skill)
+this.AdjustWeaponProperties = function(bot, difficulty)
 {
 	Debug_weaps = false;
 
-	AdjustableWeapons =
-	{
-		WEAPON.THOMPSON,
-		WEAPON.MP40,
-		WEAPON.LUGER,
-		WEAPON.COLT,
-		WEAPON.MOUNTABLE_MG42,
-		WEAPON.STEN,
-		WEAPON.MAUSER,
-		WEAPON.SNIPER,
-		WEAPON.SNIPERRIFLE,
-	};
+	aimError = Vec2(difficulty.AimErrorX, difficulty.AimErrorY);
 
-	foreach( id and weap in AdjustableWeapons )
+	foreach( weap in WEAPON )
 	{
 		w = bot.GetWeapon( weap );
-		if ( w ) {
-
+		if ( w )
+		{
 			if ( weap != WEAPON.MAUSER && weap != WEAPON.SNIPER && weap != WEAPON.SNIPERRIFLE ) {
-				offsetZ = this.difficulties[skill].AimOffsetZ;
+				offsetZ = difficulty.AimOffsetZ;
 			} else {
-				offsetZ = this.difficulties[skill].SniperOffset;
+				offsetZ = difficulty.SniperOffset;
 			}
 
-			w.PrimaryFire.MaxAimError = Vector2( this.difficulties[skill].AimErrorX, this.difficulties[skill].AimErrorY );
-			w.PrimaryFire.AimOffset = Vector3( this.difficulties[skill].AimOffsetX, this.difficulties[skill].AimOffsetY, offsetZ );
+			if(Util.IndexedSniperWeapons[weap]){
+				w.PrimaryFire.MaxAimError = aimError/7;
+			}else{
+				w.PrimaryFire.MaxAimError = aimError;
+			}
+			w.PrimaryFire.AimOffset = Vec3( difficulty.AimOffsetX, difficulty.AimOffsetY, offsetZ + w.PrimaryFire.AimOffsetZ );
 
 			if ( Debug_weaps ) {
 				print( w.Name, "weapon properties set" );
@@ -345,9 +330,8 @@ this.Commands["difficulty"] =
 	{
 		if(typeId(_params[0]) != 0)
 		{
-			diff = Clamp( ToInt(_params[0], 4), -1, tableCount(this.difficulties) );
+			diff = Clamp( ToInt(_params[0], 4), -1, tableCount(this.difficulties)-1 );
 
-			ConfigSet("Difficulty","CurrentDifficulty", diff);
 			this.CurrentDifficulty = diff;
 			this.Bot.teamAimSkill = null;
 
@@ -355,20 +339,9 @@ this.Commands["difficulty"] =
 				print("Difficulty Changed", diff, " for ", this.Bot.Name);
 			}
 
-			this.Priority = 1.0;
-			return;
+			this.Priority = 1.0; // run update if the bot is alive
+			this.FirstRun = true; // run update after spawn if the bot is dead or waiting for medic
 		}
-
-		diff = ConfigGet("Difficulty","CurrentDifficulty", 4);
-
-		if ( this.Debug ) {
-			print("Current difficulty is", diff);
-		}
-	},
-
-	Help =
-	{
-		"Sets the bots difficulty (-1...7), -1 is random, default 4",
 	},
 };
 
@@ -389,6 +362,7 @@ this.Commands["teamdifficulty"] =
 				}
 
 				this.Priority = 1.0;
+				this.FirstRun = true;
 			}
 		}
 	},
@@ -417,6 +391,7 @@ this.Commands["skillbonus"] =
 
 			this.AddDefenderSkillBonus();
 			this.Priority = 1.0;
+			this.FirstRun = true;
 			return;
 		}
 
@@ -444,6 +419,7 @@ this.Commands["minforrandom"] =
 
 			this.Bot.ChoseRandomDiff = false; // reset so it calculates a new diff
 			this.Priority = 1.0;
+			this.FirstRun = true;
 			return;
 		}
 	},
@@ -468,6 +444,7 @@ this.Commands["maxforrandom"] =
 
 			this.Bot.ChoseRandomDiff = false; // reset so it calculates a new diff
 			this.Priority = 1.0;
+			this.FirstRun = true;
 			return;
 		}
 	},

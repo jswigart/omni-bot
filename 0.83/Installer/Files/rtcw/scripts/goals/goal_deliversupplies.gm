@@ -1,16 +1,17 @@
-// This script contains functionality to allow medic bots to deliver ammo to people that request it.
+// This script contains functionality to allow lieutenant or medic bots to deliver ammo or health to people that request it.
 
-// These parameters are required
-this.Name = "DeliverSupplies";	// The name of the goal.
-this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
-this.KillAndRevive = true;
-
+this.Name = "DeliverSupplies";
+this.Parent = "HighLevel";
 this.AlwaysRecieveEvents = true;
+this.LimitToClass(CLASS.LIEUTENANT, CLASS.MEDIC);
 
 // possible options
-this.LimitToClass(CLASS.LIEUTENANT, CLASS.MEDIC);
-this.DeliverPriority = 1.1;
-this.RangeLimit = 1500;
+this.KillAndRevive = true;	// Do a quick kill and revive if target health is less than 37
+this.PacksToThrow = 3;
+this.Respond = false;
+this.DeliverPriority = 0.9;
+this.DeliverAfterRevivePriority = 1.1;
+this.RangeLimit = 1500.0;
 
 // states
 this.DELIVER_PACKS = 1;
@@ -18,34 +19,41 @@ this.KILL_TARGET = 2;
 this.SWITCH_TO_SYRINGE = 3;
 this.REVIVE_TARGET = 4;
 
-this.Initialize = function()
-{
-	this.Respond = false;
-	Util.ScriptDebugPrint(this.Name, "initialized");
-};
-
 this.GetPriority = function()
 {
 	block( this.Bot.Name + "_deliversupplies" );
 
 	sleep(0.5);
 	if ( this.Bot.RevivedTargetEnt ) {
-		this.TargetEntity =  this.Bot.RevivedTargetEnt;
+		this.TargetEntity = this.Bot.RevivedTargetEnt;
 		this.Bot.RevivedTargetEnt = null;
 		this.Supply = WEAPON.MEDKIT;
 		//this.Bot.Say("delivering to " + GetEntName(this.TargetEntity));
 
 		// cs: if we've activated from a revive goal, lets give it a higher priority than normal.
-		this.Priority = this.DeliverPriority + 0.2;
+		this.Priority = this.DeliverAfterRevivePriority;
+	}
+};
+
+// Set up some finish criteria
+this.AddCriteria = function()
+{
+	this.AddFinishCriteria(this.TargetEntity,"deleted");
+	this.AddFinishCriteria(this.Bot.GetGameEntity(),"not weaponcharged", this.Supply);
+	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
+
+	if (this.KillTarget) {
+		this.AddFinishCriteria(this.TargetEntity,"health greaterthan",90);
+	}
+	else {
+		this.AddFinishCriteria(this.TargetEntity,"health lessthan",1);
 	}
 };
 
 this.Enter = function()
 {
-	this.FriendlyFire = GetCvar("g_friendlyfire");
 	this.PacksThrown = 0;
 	this.TargetPosition = GetEntPosition(this.TargetEntity);
-	this.StartPosition = this.TargetPosition; // don't chase them across the entire map
 	this.OnTarget = false;
 
 	if ( this.Respond )
@@ -62,23 +70,9 @@ this.Enter = function()
 		}
 	}
 
-	// Set up some finish criteria
-	this.AddFinishCriteria(this.TargetEntity,"deleted");
-	this.AddFinishCriteria(this.Bot.GetGameEntity(),"not weaponcharged", this.Supply);
-	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
+	this.KillTarget = this.Supply == WEAPON.MEDKIT && GetCvar("g_friendlyfire") == 1 && this.KillAndRevive && this.Bot.HasAmmo(WEAPON.SYRINGE);
 
-	this.KillTarget = false;
-	if ( this.Supply == WEAPON.MEDKIT && this.FriendlyFire == 1 && this.KillAndRevive == true
-		&& this.Bot.HasAmmo(WEAPON.SYRINGE) && this.TargetEntity && !GetEntFlags(this.TargetEntity, ENTFLAG.CARRYINGGOAL) )
-	{
-		this.KillTarget = true;
-		this.AddFinishCriteria(this.TargetEntity,"health greaterthan",75);
-	}
-
-	if ( !this.KillTarget )
-	{
-		this.AddFinishCriteria(this.TargetEntity,"health lessthan",1);
-	}
+	this.AddCriteria();
 
 	this.DynamicGotoThread = this.ForkThread(this.DynamicGoto);
 };
@@ -90,6 +84,7 @@ this.Exit = function()
 
 	this.TargetEntity = null;
 	this.TargetPosition = null;
+	this.DelayNextResponse = false;
 	this.OnTarget = false;
 	this.Bot.KillingForRevive = false; // allow appropriate voice chats again
 };
@@ -108,36 +103,29 @@ this.DynamicGoto = function()
 
 this.Update = function()
 {
+	counter = 0;
+
 	while(1)
 	{
 		entPos = GetEntPosition(this.TargetEntity);
-		if ( entPos.IsZero() )
+
+		if ( IsNull(entPos) || entPos.IsZero() )
 			{ this.Finished(); }
 
-		// reset if they chose a closer target
-		if ( this.ChangedTarget ) {
-			this.TargetPosition = entPos;
+		// repath or quit if the target has moved too far from the goto destination
+		d = DistanceBetween(entPos,this.TargetPosition);
+		if( d > 128 && d < 500 || this.ChangedTarget )
+		{
 			this.ChangedTarget = false;
 			if ( this.DynamicGotoThread )
 				{ this.KillThread(this.DynamicGotoThread); }
-			this.DynamicGotoThread = this.ForkThread(this.DynamicGoto);
-		}
-
-		dStart = DistanceBetween(entPos,this.StartPosition);
-		if ( dStart > 1500 )
-		{
-			//stop chasing
-			//this.Bot.SayTeam("stop moving if you want packs " + GetEntName(this.TargetEntity));
-			this.Finished();
-		}
-
-		d = DistanceBetween(entPos,this.TargetPosition);
-		if( d > 128 )
-		{
-			if ( this.DynamicGotoThread )
-				{ this.KillThread(this.DynamicGotoThread); }
 			this.TargetPosition = entPos;
 			this.DynamicGotoThread = this.ForkThread(this.DynamicGoto);
+		}
+		else if ( d > 500 )
+		{
+			//stop chasing
+			this.Finished();
 		}
 
 		if ( this.OnTarget )
@@ -148,12 +136,7 @@ this.Update = function()
 			pos = GetEntEyePosition(this.TargetEntity);
 			this.AddAimRequest(Priority.High, "position",pos);
 
-			if ( !this.KillTarget ) {
-				this.State = this.DELIVER_PACKS;
-				this.AddWeaponRequest(Priority.High, this.Supply);
-				this.BlockForWeaponChange(this.Supply);
-			}
-			else {
+			if (this.KillTarget) {
 				hlth = Util.GetEntHealth(this.TargetEntity);
 
 				// cs: there is no finish criteria set when KillAndRevive is enabled
@@ -163,16 +146,23 @@ this.Update = function()
 				if (hlth < 1) {
 					this.Finished();
 				}
-				else if (hlth < 37) {
-					this.Bot.KillingForRevive = true; // for voice chats
-					this.State = this.KILL_TARGET;
-				}
-				else {
-					this.State = this.DELIVER_PACKS;
+				if (hlth >= 37) {
+					this.KillTarget = false;
 				}
 			}
 
-			while(this.PacksThrown < 2 && this.Bot.IsWeaponCharged(this.Supply))
+			hasNeedle = Util.HasAmmoForWeapon(this.Bot, WEAPON.SYRINGE) > 0;
+
+			if ( !this.KillTarget || !hasNeedle || this.Bot.HasTarget() || GetEntFlags(this.TargetEntity, ENTFLAG.CARRYINGGOAL) ) {
+				this.State = this.DELIVER_PACKS;
+			}
+			else {
+				this.State = this.KILL_TARGET;
+				this.Bot.KillingForRevive = true; // for voice chats
+			}
+
+			this.TimeOnTarget = 0;
+			while(1)
 			{
 				switch(this.State)
 				{
@@ -192,11 +182,36 @@ this.Update = function()
 					{
 						this.UpdateReviveTarget();
 					}
+					default:
+					{
+						this.Finished();
+					}
 				}
 				yield();
+				this.TimeOnTarget += 2; // each update func has a yield too.
 			}
-
-			this.Finished();
+		}
+		else
+		{
+			// workaround for target standing directly on waypoint (path_success never fired)
+			d = DistanceBetween(entPos, this.Bot.GetPosition());
+			if ( d < 70 )
+			{
+				counter += 1;
+				if ( counter > 30 )
+				{
+					if ( this.DynamicGotoThread )
+					{
+						this.KillThread(this.DynamicGotoThread);
+						this.DynamicGotoThread = null;
+					}
+					this.OnTarget = true;
+				}
+			}
+			else
+			{
+				counter = 0;
+			}
 		}
 
 		yield();
@@ -205,18 +220,40 @@ this.Update = function()
 
 this.UpdateDeliverPacks = function()
 {
-	if ( this.Bot.GetCurrentWeapon() != this.Supply ) {
-		this.AddWeaponRequest(Priority.High, this.Supply);
-		this.BlockForWeaponChange(this.Supply);
+	if ( this.PacksThrown >= this.PacksToThrow || !this.Bot.IsWeaponCharged(this.Supply) ) {
+		this.Finished();
 	}
 
 	pos = GetEntEyePosition(this.TargetEntity);
 	if (pos)
 	{
-		//move towards them while giving packs
-		this.AddAimRequest(Priority.High, "position",pos);
-		this.Bot.MoveTowards(pos);
-		this.Bot.HoldButton(BTN.ATTACK1, 0.25);
+		d = this.Bot.DistanceTo(pos);
+		if (d < 60 || d < 90 && this.TimeOnTarget > 20)
+		{
+			this.Bot.MoveTowards(pos);
+			if ( this.Bot.GetCurrentWeapon() != this.Supply )
+			{
+				this.AddWeaponRequest(Priority.High, this.Supply);
+			}
+			else
+			{
+				//move towards them while giving packs
+				this.AddAimRequest(Priority.High, "position",pos);
+				yield();
+				this.Bot.HoldButton(BTN.ATTACK1, 0.25);
+			}
+		}
+		else if (d > 250 || this.TimeOnTarget > 50)
+		{
+			this.Finished();
+		}
+		else
+		{
+			//move towards
+			this.AddAimRequest(Priority.Medium, "position",pos);
+			this.Bot.MoveTowards(pos);
+			this.Bot.HoldButton(BTN.SPRINT, 0.25);
+		}
 	}
 	else
 	{
@@ -229,9 +266,13 @@ this.UpdateKillTarget = function()
 {
 	hlth = Util.GetEntHealth(this.TargetEntity);
 	if ( hlth < 1 ) {
-		this.Bot.KilledForRevive = true; // for voice chats
 		this.State = this.SWITCH_TO_SYRINGE;
 		return;
+	}
+
+	// give them 5 seconds to complete
+	if ( this.TimeOnTarget > 100 ) {
+		this.Finished();
 	}
 
 	pos = GetEntEyePosition(this.TargetEntity);
@@ -264,15 +305,7 @@ this.UpdateReviveTarget = function()
 
 		// move off them
 		pos = GetEntEyePosition(this.TargetEntity) + Vector3(48,48,0);
-		if ( pos )
-		{
-			this.Goto(pos);
-		}
-		else
-		{
-			this.Finished();
-		}
-
+		this.Goto(pos);
 		return;
 	}
 
@@ -293,37 +326,42 @@ this.UpdateReviveTarget = function()
 this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 {
 	packType = null;
-	if(macroId == VOICE.NEED_AMMO && this.Bot.GetClass() == CLASS.LIEUTENANT) {
+	if(macroId == VOICE.NEED_AMMO && this.Bot && this.Bot.GetClass() == CLASS.LIEUTENANT) {
 		packType = WEAPON.AMMO_PACK;
 	}
-	else if(macroId == VOICE.NEED_MEDIC && this.Bot.GetClass() == CLASS.MEDIC) {
+	else if(macroId == VOICE.NEED_MEDIC && this.Bot && this.Bot.GetClass() == CLASS.MEDIC) {
 		packType = WEAPON.MEDKIT;
 	}
 	else
-	{ 
+	{
 		return;
 	}
-	
+
+	if (GetEntFlags(whoSaidIt, ENTFLAG.DEAD )) {
+		return;
+	}
+
 	dist = this.Bot.DistanceTo(whoSaidIt);
-	if ( GetEntFlags(whoSaidIt, ENTFLAG.DEAD) || dist > this.RangeLimit )
-	{
+	if ( dist > this.RangeLimit ) {
 		return;
 	}
 
-	if ( this.TargetEntity && this.TargetEntity == whoSaidIt ) {
-		return;
-	}
-	else if ( this.TargetEntity ) {
-		// store previous ents and collect targets to deliver to?
-		if ( dist < this.Bot.DistanceTo(this.TargetEntity) ) {
+	if ( this.IsActive() )
+	{
+		// choose closer target
+		if ( dist < this.Bot.DistanceTo(this.TargetEntity) && !this.OnTarget) {
 			this.ChangedTarget = true;
+			this.TargetEntity = whoSaidIt;
+			this.ClearFinishCriteria();
+			this.AddCriteria();
 		}
+		return;
 	}
 
-	if (this.Bot.IsWeaponCharged(packType))
-	{
+	if (!this.DelayNextResponse && this.Bot.IsWeaponCharged(packType)) {
 		this.TargetEntity = whoSaidIt;
 		this.Supply = packType;
+
 		this.Priority = this.DeliverPriority;
 		this.DelayNextResponse = true;
 		sleep(10);
@@ -334,13 +372,13 @@ this.Events[EVENT.TEAM_VOICE] = function(whoSaidIt, macroId)
 			if(!this.IsActive()) {
 				this.Priority = 0;
 			}
-		}		
+		}
 	}
 };
 
 this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
 {
-	if(weaponId == this.Supply)
+	if(weaponId == this.Supply && this.Bot)
 	{
 		this.PacksThrown += 1;
 	}

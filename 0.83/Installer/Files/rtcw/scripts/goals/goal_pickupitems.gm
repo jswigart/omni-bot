@@ -22,8 +22,6 @@ this.Initialize = function()
 		//RequireLOS = TRACE.VISIBLE,
 	};
 	this.WatchForEntityCategory(watchParams);
-	this.Bot.AmmoTable = {};
-	this.Bot.AmmoInfo = {};
 
 	Util.ScriptDebugPrint(this.Name, "initialized");
 };
@@ -96,16 +94,14 @@ this.NeedsAmmo = function(ent, entCat)
 	}
 
 	// simple check first
-	tableClear(this.Bot.AmmoInfo);
-	this.Bot.GetMostDesiredAmmo(this.Bot.AmmoInfo);
-	if(this.Bot.AmmoInfo.Desire > 0) {
+	this.Bot.GetMostDesiredAmmo(Util.DesireTable);
+	if(Util.DesireTable.Desire > 0) {
 		return true;
 	}
 
 	// the above check only accounts for current clip
-	tableClear(this.Bot.AmmoTable);
-	if (this.Bot.GetCurrentAmmo(this.Bot.AmmoTable, 0, weaponId)) {
-		if ( this.Bot.AmmoTable.CurrentAmmo < this.Bot.AmmoTable.MaxAmmo ) {
+	if (this.Bot.GetCurrentAmmo(Util.AmmoTable, 0, weaponId)) {
+		if ( Util.AmmoTable.CurrentAmmo < Util.AmmoTable.MaxAmmo ) {
 			return true;
 		}
 	}

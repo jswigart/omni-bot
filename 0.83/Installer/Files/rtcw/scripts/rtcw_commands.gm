@@ -38,7 +38,7 @@ Commands["rollcall"] =
 {
 	Func = function( _params )
 	{
-		RTCWUtil.RollCall();
+		Util.RollCall();
 	},
 
 	Help =
@@ -639,3 +639,24 @@ Commands["goaldef"] =
 	},
 };
 
+////////////////////////////////////////////////////////////////////
+
+Commands["difficulty"] =
+{
+	Func = function( _params )
+	{
+		if(typeId(_params[0]) != 0)
+		{
+			ConfigSet("Difficulty","CurrentDifficulty", Clamp( ToInt(_params[0], 4), -1, 7 ) );
+		}
+
+		print("Difficulty:", ConfigGet("Difficulty","CurrentDifficulty", 4));
+	},
+
+	Help =
+	{
+		"Sets the bots difficulty (-1...7), -1 is random, default 4",
+	},
+};
+
+////////////////////////////////////////////////////////////////////
