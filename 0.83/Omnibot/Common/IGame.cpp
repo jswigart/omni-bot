@@ -841,7 +841,7 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 
 #ifdef _DEBUG
 				const char *pClassName = FindClassName(m->m_EntityClass);
-				Utils::OutputDebug(kNormal, "Entity: %d created: %s\n", index, pClassName?pClassName:"<unknown>");
+				Utils::OutputDebug(kNormal, "Entity: %d created: %s", index, pClassName?pClassName:"<unknown>");
 #endif
 
 				// increase the upper limit if necessary.
@@ -862,7 +862,7 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 				{
 #ifdef _DEBUG
 					const char *pClassName = FindClassName(m_GameEntities[index].m_EntityClass);
-					Utils::OutputDebug(kNormal, "Entity: %d deleted: %s\n", index, pClassName?pClassName:"<unknown>");
+					Utils::OutputDebug(kNormal, "Entity: %d deleted: %s", index, pClassName?pClassName:"<unknown>");
 #endif
 
 					m_GameEntities[index].m_Entity.Reset();
