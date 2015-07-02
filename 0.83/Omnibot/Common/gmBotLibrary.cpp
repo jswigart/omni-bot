@@ -600,9 +600,17 @@ static int GM_CDECL gmfSetMapGoalProperties(gmThread *a_thread)
 	qry.NoFilters();
 	qry.Expression(expr);
 	GoalManager::GetInstance()->GetGoals(qry);
-	for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+
+	if(!qry.m_List.empty())
 	{
-		qry.m_List[i]->FromScriptTable(a_thread->GetMachine(),props,false);
+		for(MapGoalList::iterator it = qry.m_List.begin(); it != qry.m_List.end(); ++it)
+		{
+			(*it)->FromScriptTable(a_thread->GetMachine(),props,false);
+		}
+	}
+	else
+	{
+		MapDebugPrint(a_thread, va("SetMapGoalProperties: goal query for %s has no results", expr));
 	}
 	return GM_OK;
 }
@@ -637,19 +645,18 @@ static int SetAvailableMapGoals(gmThread *a_thread, int _team, bool _available, 
 	qry.NoFilters();
 	GoalManager::GetInstance()->GetGoals(qry);
 
-	int size = (int) qry.m_List.size();
-	if (size>0)
+	if(!qry.m_List.empty())
 	{
-		for(int i = 0; i < size; ++i)
+		for(MapGoalList::iterator it = qry.m_List.begin(); it != qry.m_List.end(); ++it)
 		{
 			if(_team == 0)
 			{
 				for(int t = 1; t <= 4; ++t)
-					qry.m_List[i]->SetAvailable(t, _available);
+					(*it)->SetAvailable(t, _available);
 			}
 			else
 			{
-				qry.m_List[i]->SetAvailable(_team, _available);
+				(*it)->SetAvailable(_team, _available);
 			}
 		}
 	}
@@ -658,7 +665,7 @@ static int SetAvailableMapGoals(gmThread *a_thread, int _team, bool _available, 
 		MapDebugPrint(a_thread, va("SetAvailableMapGoals: goal query for %s has no results", _expression));
 	}
 
-	return size;
+	return (int)qry.m_List.size();
 }
 
 // function: SetAvailableMapGoals
@@ -737,9 +744,17 @@ static int GM_CDECL gmfSetGoalPriorityForTeamClass(gmThread *a_thread)
 	qry.Expression(exp);
 	qry.NoFilters();
 	GoalManager::GetInstance()->GetGoals(qry);
-	for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+
+	if(!qry.m_List.empty())
 	{
-		qry.m_List[i]->SetPriorityForClass(teamId,classId,priority);
+		for(MapGoalList::iterator it = qry.m_List.begin(); it != qry.m_List.end(); ++it)
+		{
+			(*it)->SetPriorityForClass(teamId, classId, priority);
+		}
+	}
+	else
+	{
+		MapDebugPrint(a_thread, va("SetGoalPriority: goal query for %s has no results", exp));
 	}
 
 	if(persis)
@@ -785,10 +800,18 @@ static int GM_CDECL SetOrClearGoalRole(gmThread *a_thread, bool enable)
 	qry.Expression(exp);
 	qry.NoFilters();
 	GoalManager::GetInstance()->GetGoals(qry);
-	for(MapGoalList::iterator it = qry.m_List.begin(); it != qry.m_List.end(); ++it)
+
+	if(!qry.m_List.empty())
 	{
-		BitFlag32 oldRole = (*it)->GetRoleMask();
-		(*it)->SetRoleMask(enable ? (oldRole | role) : (oldRole & ~role));
+		for(MapGoalList::iterator it = qry.m_List.begin(); it != qry.m_List.end(); ++it)
+		{
+			BitFlag32 oldRole = (*it)->GetRoleMask();
+			(*it)->SetRoleMask(enable ? (oldRole | role) : (oldRole & ~role));
+		}
+	}
+	else
+	{
+		MapDebugPrint(a_thread, va("%s: goal query for %s has no results", enable ? "SetGoalRole" : "ClearGoalRole", exp));
 	}
 
 	if(enable){
