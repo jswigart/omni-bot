@@ -1276,6 +1276,7 @@ void GoalManager::Update()
 			OnGoalDelete((*it));
 
 			(*it)->SetAvailabilityTeams(0);
+			(*it)->SetRenderGoal(false);
 #ifdef _DEBUG
 			LOG("Goal Deleted: " << (*it)->GetGoalType() << ", " << (*it)->GetName().c_str());
 #endif
