@@ -752,7 +752,7 @@ static int GM_CDECL gmfSetGoalPriorityForTeamClass(gmThread *a_thread)
 			(*it)->SetPriorityForClass(teamId, classId, priority);
 		}
 	}
-	else
+	else if(!persis)
 	{
 		MapDebugPrint(a_thread, va("SetGoalPriority: goal query for %s has no results", exp));
 	}
