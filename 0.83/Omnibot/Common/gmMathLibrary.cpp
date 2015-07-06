@@ -586,7 +586,7 @@ static int GM_CDECL gmfUnitCircleNormalize(gmThread * a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_FLOAT_OR_INT_PARAM(num,0);
 	a_thread->PushFloat(Mathf::UnitCircleNormalize(num));
-	return GM_EXCEPTION;
+	return GM_OK;
 }
 
 //////////////////////////////////////////////////////////////////////////
