@@ -2,7 +2,6 @@ this.GoalType = "REVIVE";
 this.Version = 1;
 this.DefaultPriority = 1.0;
 this.DontSave = true;
-this.UnderWaterRevive = null;
 this.Radius = 64;
 this.DynamicPosition = true;
 this.DynamicOrientation = true;
@@ -30,24 +29,11 @@ this.UpgradeVersion = function(Props)
 
 //////////////////////////////////////////////////////////////////////////
 
-this.CanReviveUnderWater = function()
-{
-	if ( this.UnderWaterRevive == null )
-	{
-		w = GetWeapon(WEAPON.SYRINGE);
-		this.UnderWaterRevive = w.PrimaryFire.WaterProof;
-	}
-
-	return this.UnderWaterRevive;
-};
-
-//////////////////////////////////////////////////////////////////////////
-
 this.Update = function()
 {
 	sleep(1); // give it some time to update internally
 	goalEnt = this.GetEntity();
-	if ( (this.CanReviveUnderWater() == false && (GetPointContents(this.GetPosition()) & CONTENT.WATER))
+	if ( (GetPointContents(this.GetPosition()) & CONTENT.WATER)
 			|| !GetEntFlags(goalEnt, ENTFLAG.INJURED, ENTFLAG.DEAD) || GetEntFlags(goalEnt, ENTFLAG.LIMBO) )
 	{
 		this.SetAvailable(0, false);
@@ -57,7 +43,7 @@ this.Update = function()
 	{
 		if(this.IsDisabled())
 		{
-			entPos = GetEntPosition(this.GetEntity());
+			entPos = GetEntPosition(goalEnt);
 			if(this.EntPosition == entPos)
 			{
 				this.DisableGoal(false);
@@ -70,7 +56,4 @@ this.Update = function()
 			}
 		}
 	}
-	yield();
 };
-
-

@@ -11,6 +11,8 @@ this.LAY_EXPLOSIVE = 0;
 this.ARM_EXPLOSIVE = 1;
 this.COVER_DYNAMITE = 2;
 this.LOOK_FOR_DYNO = 3;
+this.GOTO = 4;
+this.GoalStateNames = { "LAY_EXPLOSIVE", "ARM_EXPLOSIVE", "COVER_DYNAMITE", "LOOK_FOR_DYNO", "GOTO" };
 
 this.Initialize = function()
 {
@@ -78,16 +80,12 @@ this.Enter = function()
 		Util.InvalidGoal(this, "entered with no entity!");
 	}
 
+	this.GoalState = this.GOTO;
 	this.UpdateDebugString();
 };
 
 this.Update = function()
 {
-	if ( !this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) ) {
-		Util.MapDebugPrint( this.MapGoal.GetName() + " aborting, no charge", true );
-		this.Finished();
-	}
-
 	Util.RouteTo(this, 64);
 
 	this.GoalState = this.LOOK_FOR_DYNO;
@@ -99,10 +97,7 @@ this.Update = function()
 this.Exit = function()
 {
 	this.Bot.ReleaseButton(BTN.CROUCH);
-	this.ReleaseAimRequest();
-	this.ReleaseWeaponRequest();
 
-	this.GoalState = this.LAY_EXPLOSIVE;
 	this.GoalEntity = null;
 	this.ExplosiveEntity = null;
 
@@ -146,31 +141,33 @@ this.UpdateDynamite = function()
 		{
 			case this.LOOK_FOR_DYNO:
 			{
-				this.UpdateDebugString();
-				foundDyno = false;
+				ent = null;
+				activeDyno = 0;
 				goalPos = this.MapGoal.GetPosition();
-				ent = GetEntityInSphere(this.Bot.GetPosition(), 300, CLASS.DYNAMITE_ENT, this.ExplosiveEntity);
-				dowhile(ent) {
-					if ( ent && DistanceBetween(goalPos, ent) < 200 && this.Bot.IsAllied(ent)
-							&& this.Bot.GetExplosiveState(ent) == 1 ) {
-						foundDyno = true;
-						break;
-					}
+				for(;;) {
 					ent = GetEntityInSphere(this.Bot.GetPosition(), 300, CLASS.DYNAMITE_ENT, ent);
+					if (!ent) { break; }
+					if ( DistanceBetween(goalPos, ent) < 200 && this.Bot.IsAllied(ent) )
+					{
+						state = this.Bot.GetExplosiveState(ent);
+						if (state == 1) { break; }
+						if (state == 0) { activeDyno += 1; }
+					}
 				}
 
-				if ( foundDyno ) {
+				if ( ent ) {
 					this.ExplosiveEntity = ent;
 					this.GoalState = this.ARM_EXPLOSIVE;
 				}
-				else if ( this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) ) {
+				else if ( this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) && activeDyno < this.MapGoal.MaxUsers_InUse() ) {
 					this.GoalState = this.LAY_EXPLOSIVE;
 				}
 				else if ( this.MapGoal.CoverSpots && tableCount(this.MapGoal.CoverSpots) > 0 ) {
 					this.GoalState = this.COVER_DYNAMITE;
+					this.UpdateDebugString();
 				}
 				else {
-					if (this.ExplosiveEntity) {
+					if (this.ExplosiveEntity || activeDyno > 0) {
 						this.BlackboardDelay(35);
 					}
 					this.Finished();
@@ -182,6 +179,7 @@ this.UpdateDynamite = function()
 				{
 					this.Finished();
 				}
+				this.UpdateDebugString();
 
 				this.Bot.HoldButton(BTN.CROUCH, 99);
 				this.Priority = 2.0;
@@ -193,7 +191,9 @@ this.UpdateDynamite = function()
 				this.AddAimRequest(Priority.High, "position", Vector3(goalPos.x, goalPos.y, this.Bot.GetPosition().z - 30));
 				this.AddWeaponRequest(Priority.High, WEAPON.DYNAMITE );
 				this.BlockForWeaponChange( WEAPON.DYNAMITE );
+				sleep(0.2);
 				this.Bot.PressButton(BTN.ATTACK1);
+				sleep(0.3);
 			}
 			case this.ARM_EXPLOSIVE:
 			{
@@ -230,8 +230,6 @@ this.UpdateDynamite = function()
 			}
 			case this.COVER_DYNAMITE:
 			{
-				this.UpdateDebugString();
-
 				if ( !this.ExplosiveEntity || !EntityIsValid(this.ExplosiveEntity) || this.Bot.GetExplosiveState(this.ExplosiveEntity) != 0 )
 				{
 					this.Finished();
@@ -295,7 +293,7 @@ this.UpdateDynamite = function()
 
 				this.AddAimRequest(Priority.Low, "facing", Util.GetRandomTableValue(aimVectors));
 
-				sleep(0.75);
+				sleep(1);
 
 				coverTimeout -= 1;
 				if ( coverTimeout <= 0 ) {
@@ -307,39 +305,14 @@ this.UpdateDynamite = function()
 				this.Finished();
 			}
 		}
-
-		sleep(0.25);
 	}
 };
 
 this.UpdateDebugString = function()
 {
-	switch(this.GoalState)
-	{
-		case this.LOOK_FOR_DYNO:
-		{
-			stateString = "LOOK_FOR_DYNO";
-		}
-		case this.LAY_EXPLOSIVE:
-		{
-			stateString = "LAY_EXPLOSIVE";
-		}
-		case this.ARM_EXPLOSIVE:
-		{
-			stateString = "ARM_EXPLOSIVE";
-		}
-		case this.COVER_DYNAMITE:
-		{
-			stateString = "COVER_DYNAMITE";
-		}
-		default:
-		{
-			stateString = "";
-		}
-	}
 
 	// for /bot debugbot <bot or all> fpinfo prints
-	this.DebugString = this.Goal_Name + " : " + stateString;
+	this.DebugString = this.Goal_Name + " : " + this.GoalStateNames[this.GoalState];
 };
 
 this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
@@ -351,9 +324,6 @@ this.Events[EVENT.WEAPON_FIRE] = function(weaponId, projectileEntity)
 			this.ExplosiveEntity = projectileEntity;
 			this.GoalState = this.ARM_EXPLOSIVE;
 		}
-		default:
-		{
 		}
-	}
 };
 

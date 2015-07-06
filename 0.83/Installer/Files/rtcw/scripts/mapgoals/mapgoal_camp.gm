@@ -346,16 +346,8 @@ this.SetProperty = function(property, value)
 		}
 		case "disablecm":
 		{
-			if (value == null){ i = 1; }
-			else { i = ToInt(value); }
-			if ( typeId(i) == 1 )
-			{
-				this.DisableCM = i;
-			}
-			else
-			{
-				print("disablecm requires integer");
-			}
+			if (value == ""){ this.DisableCM = !this.DisableCM; }
+			else { this.DisableCM = ToBool(value); }
 		}
 		default:
 		{

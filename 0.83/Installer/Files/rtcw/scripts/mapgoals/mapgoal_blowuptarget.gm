@@ -314,9 +314,9 @@ this.SetProperty = function(property, value)
 			spot = this.GetNearestCoverSpot();
 			if (spot)
 			{
-				if (value == null){ i = 1; }
-				else { i = ToInt(value); }
-				if (i == 0){ i = null; }
+				if (value == ""){ i = !spot.DisableCM; }
+				else { i = ToBool(value); }
+				if (!i){ i = null; }
 				spot.DisableCM = i;
 			}
 		}
