@@ -658,13 +658,23 @@ void Cmd_Kill_f( gentity_t *ent )
 
 void Cmd_Injure_f( gentity_t *ent )
 {
+	int newHealth;
+	char buf[32];
+
 	if(ent->client->sess.sessionTeam == TEAM_SPECTATOR ||
 	  (ent->client->ps.pm_flags & PMF_LIMBO) ||
 	  ent->health <= 0 || level.match_pause != PAUSE_NONE) {
 		return;
 	}
 
-	G_Damage(ent,NULL,NULL,NULL,NULL,ent->health + 1,0, MOD_CRUSH);
+	if(trap_Argc() < 2) {
+		newHealth = -1;
+	} else {
+		trap_Argv(1, buf, sizeof(buf));
+		newHealth = atoi(buf);
+	}
+
+	G_Damage(ent, NULL, NULL, NULL, NULL, ent->health - newHealth, 0, MOD_CRUSH);
 }
 
 void BotRecordTeamChange( int client );
