@@ -12,6 +12,39 @@
 
 #include "RenderBuffer.h"
 
+//////////////////////////////////////////////////////////////////////////
+
+OffMeshConnection::OffMeshConnection()
+	: mRadius( 0.0f )
+	, mAreaType( NAVAREA_GROUND )
+	, mFlags( NAVFLAGS_NONE )
+	, mBiDirectional( false )
+	, mPolyId( 0 )
+{
+}
+
+void OffMeshConnection::Render()
+{
+	std::string areaStr, flagStr;
+	NavAreaEnum::NameForValue( mAreaType, areaStr );
+	NavAreaFlagsEnum::NameForValue( mFlags, flagStr );
+
+	Vector3f lastPt = mEntry;
+	for ( size_t i = 0; i < mVertices.size(); ++i )
+	{
+		RenderBuffer::AddLine( lastPt, mVertices[ i ], COLOR::GREEN );
+		lastPt = mVertices[ i ];
+	}
+
+	RenderBuffer::AddCircle( mEntry, mRadius, COLOR::GREEN );
+	RenderBuffer::AddCircle( mExit, mRadius, COLOR::GREEN );
+	RenderBuffer::AddLine( lastPt, mExit, COLOR::GREEN );
+	RenderBuffer::AddString3d( mEntry + Vector3f( 0.f, 0.f, 40.f ), COLOR::BLUE, va( "%s (%s)", areaStr.c_str(), flagStr.c_str() ) );
+	RenderBuffer::AddString3d( mExit + Vector3f( 0.f, 0.f, 40.f ), COLOR::BLUE, va( "%s (%s)", areaStr.c_str(), flagStr.c_str() ) );
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 PathPlannerBase::PathPlannerBase()
 {
 	mNavigationBounds.Min = Vector3f( -1000.0f, -1000.0f, -1000.0f );
@@ -24,117 +57,40 @@ PathPlannerBase::~PathPlannerBase()
 
 void PathPlannerBase::InitCommands()
 {
-	SetEx( "nav_logfailedpath", "Saves info about failed path attempts for debugging.",
-		this, &PathPlannerBase::cmdLogFailedPaths );
-	SetEx( "nav_showfailedpath", "Render a failed path by its index.",
-		this, &PathPlannerBase::cmdShowFailedPaths );
-	SetEx( "nav_benchmarkpathfinder", "Render a failed path by its index.",
-		this, &PathPlannerBase::cmdBenchmarkPathFind );
-	SetEx( "nav_benchmarkgetnavpoint", "Render a failed path by its index.",
-		this, &PathPlannerBase::cmdBenchmarkGetNavPoint );
-	SetEx( "nav_resaveall", "Re-save all nav files to the newest file format.",
-		this, &PathPlannerBase::cmdResaveNav );
+	SetEx( "nav_benchmarkpathfinder", "Render a failed path by its index.", this, &PathPlannerBase::cmdBenchmarkPathFind );
+	SetEx( "nav_benchmarkgetnavpoint", "Render a failed path by its index.", this, &PathPlannerBase::cmdBenchmarkGetNavPoint );
+	SetEx( "nav_resaveall", "Re-save all nav files to the newest file format.", this, &PathPlannerBase::cmdResaveNav );
 }
 
-void PathPlannerBase::cmdLogFailedPaths( const StringVector &_args )
-{
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
-		return;
-
-	const char *strUsage [] =
-	{
-		"nav_logfailedpath enable[bool]"
-		"> enable: Enable failed path logging. true/false/on/off/1/0",
-	};
-
-	CHECK_NUM_PARAMS( _args, 2, strUsage );
-	CHECK_BOOL_PARAM( bEnable, 1, strUsage );
-
-	mPlannerFlags.SetFlag( NAV_SAVEFAILEDPATHS, bEnable );
-
-	EngineFuncs::ConsoleMessage( va( "nav_logfailedpath %s", bEnable ? "enabled" : "disabled" ) );
-}
-
-void PathPlannerBase::cmdShowFailedPaths( const StringVector &_args )
-{
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
-		return;
-
-	const char *strUsage [] =
-	{
-		"nav_showfailedpath #"
-		"> #: Index of path to toggle rendering.",
-		"> enable: Enable nav rendering. true/false/on/off/1/0",
-		"",
-	};
-
-	if ( _args.size() != 3 )
-	{
-		PRINT_USAGE( strUsage );
-
-		EngineFuncs::ConsoleMessage( "Failed Paths" );
-		EngineFuncs::ConsoleMessage( "------------" );
-		int iIndex = 0;
-		FailedPathList::iterator it = mFailedPathList.begin(), itEnd = mFailedPathList.end();
-		for ( ; it != itEnd; ++it )
-		{
-			FailedPath &fp = ( *it );
-			EngineFuncs::ConsoleMessage(
-				va( "%d: (%.2f,%.2f,%.2f) to (%.2f,%.2f,%.2f) %s",
-				iIndex,
-				fp.mStart.X(), fp.mStart.Y(), fp.mStart.Z(),
-				fp.mEnd.X(), fp.mEnd.Y(), fp.mEnd.Z(),
-				fp.mRender ? "rendering" : "not rendering" ) );
-			++iIndex;
-		}
-		return;
-	}
-
-	CHECK_INT_PARAM( index, 1, strUsage );
-	CHECK_INT_PARAM( enable, 1, strUsage );
-	if ( index >= ( int )mFailedPathList.size() || index < 0 )
-	{
-		if ( !mFailedPathList.empty() )
-			EngineFuncs::ConsoleMessage( va( "Invalid Index, must be 0-%d", mFailedPathList.size() ) );
-		else
-			EngineFuncs::ConsoleMessage( "No failed paths to render." );
-		return;
-	}
-
-	FailedPathList::iterator it = mFailedPathList.begin();
-	std::advance( it, index );
-	( *it ).mRender = enable != 0;
-}
-
-void PathPlannerBase::_BenchmarkPathFinder( const StringVector &_args )
+void PathPlannerBase::_BenchmarkPathFinder( const StringVector & args )
 {
 	EngineFuncs::ConsoleMessage( "Benchmark Not Implemented!" );
 }
-void PathPlannerBase::_BenchmarkGetNavPoint( const StringVector &_args )
+void PathPlannerBase::_BenchmarkGetNavPoint( const StringVector & args )
 {
 	EngineFuncs::ConsoleMessage( "Benchmark Not Implemented!" );
 }
 
-void PathPlannerBase::cmdBenchmarkPathFind( const StringVector &_args )
+void PathPlannerBase::cmdBenchmarkPathFind( const StringVector & args )
 {
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
-		return;
+	/*if ( mFlags.mViewMode != 0 )
+		return;*/
 
-	_BenchmarkPathFinder( _args );
+	_BenchmarkPathFinder( args );
 }
 
-void PathPlannerBase::cmdBenchmarkGetNavPoint( const StringVector &_args )
+void PathPlannerBase::cmdBenchmarkGetNavPoint( const StringVector & args )
 {
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
-		return;
+	/*if ( mFlags.mViewMode != 0 )
+		return;*/
 
-	_BenchmarkGetNavPoint( _args );
+	_BenchmarkGetNavPoint( args );
 }
 
-void PathPlannerBase::cmdResaveNav( const StringVector &_args )
+void PathPlannerBase::cmdResaveNav( const StringVector & args )
 {
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
-		return;
+	/*if ( mFlags.mViewMode != 0 )
+		return;*/
 
 	DirectoryList wpFiles;
 	FileSystem::FindAllFiles( "nav/", wpFiles, va( ".*%s", _GetNavFileExtension().c_str() ).c_str() );
@@ -156,44 +112,25 @@ void PathPlannerBase::cmdResaveNav( const StringVector &_args )
 	Load( std::string( gEngineFuncs->GetMapName() ) );
 }
 
-void PathPlannerBase::AddFailedPath( const Vector3f &_start, const Vector3f &_end )
-{
-	FailedPath fp;
-	fp.mStart = _start;
-	fp.mEnd = _end;
-	fp.mRender = false;
-	mFailedPathList.push_back( fp );
-	EngineFuncs::ConsoleMessage( va( "Added failed path to log, view with nav_showfailedpath %d",
-		mFailedPathList.size() ) );
-}
-
 bool PathPlannerBase::Load( bool _dl )
 {
 	return Load( gEngineFuncs->GetMapName(), _dl );
 }
 
-void PathPlannerBase::RenderFailedPaths()
+void PathPlannerBase::EntityCreated( const EntityInstance &ei )
 {
-	Prof( RenderFailedPaths );
+}
 
-	if ( !mPlannerFlags.CheckFlag( NAV_SAVEFAILEDPATHS ) )
-		return;
+void PathPlannerBase::EntityDeleted( const EntityInstance &ei )
+{
+}
 
-	for ( FailedPathList::iterator it = mFailedPathList.begin();
-		it != mFailedPathList.end();
-		++it )
-	{
-		FailedPath &fp = ( *it );
-		if ( fp.mRender )
-		{
-			AABB local;
-			Vector3f pos;
-			GameEntity ge = Utils::GetLocalEntity();
-			if ( ge.IsValid() && EngineFuncs::EntityPosition( ge, pos ) && EngineFuncs::EntityLocalAABB( ge, local ) )
-			{
-				RenderBuffer::AddAABB( local.TranslateCopy( fp.mStart ), COLOR::GREEN );
-				RenderBuffer::AddAABB( local.TranslateCopy( fp.mEnd ), COLOR::RED );
-			}
-		}
-	}
+PathInterface * PathPlannerBase::AllocPathInterface( Client * client )
+{
+	return NULL;
+}
+
+const AxisAlignedBox3f & PathPlannerBase::GetNavigationBounds() const
+{
+	return mNavigationBounds;
 }

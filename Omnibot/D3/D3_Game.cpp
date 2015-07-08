@@ -85,16 +85,14 @@ NavigatorID D3_Game::GetDefaultNavigator() const
 
 bool D3_Game::Init( System & system )
 {
+	rmt_ScopedCPUSample( D3GameInit );
+
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback( D3_Game::D3_GetEntityClassTraceOffset );
 	AiState::SensoryMemory::SetEntityAimOffsetCallback( D3_Game::D3_GetEntityClassAimOffset );
 
 	if ( !IGame::Init( system ) )
 		return false;
-
-	// Run the games autoexec.
-	int threadId;
-	system.mScript->ExecuteFile( "scripts/d3_autoexec.gm", threadId );
 
 	return true;
 }
@@ -115,7 +113,7 @@ void D3_Game::StartGame()
 	}
 }
 
-static IntEnum D3_TeamEnum [] =
+static const IntEnum D3_TeamEnum [] =
 {
 	IntEnum( "SPECTATOR", OB_TEAM_SPECTATOR ),
 	IntEnum( "RED", D3_TEAM_RED ),
@@ -128,7 +126,7 @@ void D3_Game::GetTeamEnumeration( const IntEnum *&_ptr, int &num )
 	_ptr = D3_TeamEnum;
 }
 
-static IntEnum D3_WeaponEnum [] =
+static const IntEnum D3_WeaponEnum [] =
 {
 	IntEnum( "NONE", D3_WP_NONE ),
 	IntEnum( "FLASHLIGHT", D3_WP_FLASHLIGHT ),

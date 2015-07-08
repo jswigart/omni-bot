@@ -35,7 +35,7 @@ public:
 	NavigatorID GetDefaultNavigator() const;
 	bool ReadyForDebugWindow() const;
 
-	virtual bool GetAnalyticsKeys( GameAnalyticsKeys & keys );
+	virtual bool GetAnalyticsKeys( GameAnalytics::Keys & keys );
 
 	void AddBot( Msg_Addbot &_addbot, bool _createnow = true );
 

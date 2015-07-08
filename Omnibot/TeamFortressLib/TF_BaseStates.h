@@ -388,7 +388,7 @@ namespace AiState
 
 		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 
-		void UpdateDetpackStatus( GameEntity _ent );
+		void UpdateDetpackStatus( const Event_DetpackStatus_TF& stats );
 
 		Detpack();
 	private:

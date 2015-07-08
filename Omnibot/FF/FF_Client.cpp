@@ -26,15 +26,15 @@ FF_Client::~FF_Client()
 {
 }
 
-void FF_Client::Init(int _gameid)
+void FF_Client::Init( int _gameid )
 {
 	//NOTENOTE: PURPOSELY BYPASSING TF_Client::Init
-	Client::Init(_gameid);
+	Client::Init( _gameid );
 
 	// We want to use a custom targeting filter.
-	FilterPtr filter(new FilterClosestTF(this, AiState::SensoryMemory::EntEnemy));
-	filter->AddCategory(ENT_CAT_SHOOTABLE);
-	GetTargetingSystem()->SetDefaultTargetingFilter(filter);
+	FilterPtr filter( new FilterClosestTF( this, AiState::SensoryMemory::EntEnemy ) );
+	filter->AddCategory( ENT_CAT_SHOOTABLE );
+	GetTargetingSystem()->SetDefaultTargetingFilter( filter );
 
 	/*using namespace AiState;
 	FINDSTATE(ws,WeaponSystem,GetStateRoot());
@@ -45,40 +45,44 @@ void FF_Client::Init(int _gameid)
 	}*/
 }
 
-NavFlags FF_Client::GetTeamFlag(int _team) const
+NavFlags FF_Client::GetTeamFlag( int _team ) const
 {
 	static const NavFlags defaultTeam = 0;
-	switch(_team)
+	switch ( _team )
 	{
-	case TF_TEAM_BLUE:
-		return NAVFLAGS_TEAM1_ONLY;
-	case TF_TEAM_RED:
-		return NAVFLAGS_TEAM2_ONLY;
-	case TF_TEAM_YELLOW:
-		return NAVFLAGS_TEAM3_ONLY;
-	case TF_TEAM_GREEN:
-		return NAVFLAGS_TEAM4_ONLY;
-	default:
-		return defaultTeam;
+		case TF_TEAM_BLUE:
+			return NAVFLAGS_TEAM1_ONLY;
+		case TF_TEAM_RED:
+			return NAVFLAGS_TEAM2_ONLY;
+		case TF_TEAM_YELLOW:
+			return NAVFLAGS_TEAM3_ONLY;
+		case TF_TEAM_GREEN:
+			return NAVFLAGS_TEAM4_ONLY;
+		default:
+			return defaultTeam;
 	}
 }
 
 void FF_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 {
-	includeFlags = NAVFLAGS_WALK;
+	includeFlags = NAVFLAGS_WALK | NAVFLAGS_CROUCH;
 
 	switch ( GetTeam() )
 	{
 		case TF_TEAM_BLUE:
+			includeFlags |= NAVFLAGS_TEAM1_ONLY;
 			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
 			break;
 		case TF_TEAM_RED:
+			includeFlags |= NAVFLAGS_TEAM2_ONLY;
 			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
 			break;
 		case TF_TEAM_YELLOW:
+			includeFlags |= NAVFLAGS_TEAM3_ONLY;
 			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM3_ONLY & sTeamMask );
 			break;
 		case TF_TEAM_GREEN:
+			includeFlags |= NAVFLAGS_TEAM4_ONLY;
 			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM4_ONLY & sTeamMask );
 			break;
 	}

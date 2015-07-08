@@ -15,10 +15,6 @@
 
 MapGoalDatabase gMapGoalDatabase;
 
-#ifdef Prof_ENABLED
-CustomProfilerZone gDynamicZones;
-#endif
-
 MapGoalDatabase::MapGoalDatabase()
 {
 }
@@ -59,7 +55,6 @@ void MapGoalDatabase::RegisterMapGoal( const std::string &_type, const MapGoalPt
 	MapGoalMap::const_iterator it = mMapGoalMap.find( typeHash );
 	if ( it == mMapGoalMap.end() )
 	{
-		_mg->SetProfilerZone( _type.c_str() );
 		mMapGoalMap.insert( std::make_pair( typeHash, _mg ) );
 	}
 	else

@@ -102,10 +102,6 @@ bool ETQW_Game::Init( System & system )
 	if ( !IGame::Init( system ) )
 		return false;
 
-	// Run the games autoexec.
-	int threadId;
-	system.mScript->ExecuteFile( "scripts/etqw_autoexec.gm", threadId );
-
 	return true;
 }
 
@@ -114,7 +110,7 @@ void ETQW_Game::GetGameVars( GameVars &_gamevars )
 	_gamevars.mPlayerHeight = 64.f;
 }
 
-static IntEnum ETQW_TeamEnum [] =
+static const IntEnum ETQW_TeamEnum [] =
 {
 	IntEnum( "SPECTATOR", OB_TEAM_SPECTATOR ),
 	IntEnum( "STROGG", ETQW_TEAM_STROGG ),
@@ -127,7 +123,7 @@ void ETQW_Game::GetTeamEnumeration( const IntEnum *&_ptr, int &num )
 	_ptr = ETQW_TeamEnum;
 }
 
-static IntEnum ETQW_WeaponEnum [] =
+static const IntEnum ETQW_WeaponEnum [] =
 {
 	IntEnum( "NONE", ETQW_WP_NONE ),
 	IntEnum( "KNIFE", ETQW_WP_KNIFE ),

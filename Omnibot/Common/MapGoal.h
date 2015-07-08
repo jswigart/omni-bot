@@ -398,9 +398,7 @@ public:
 
 	void CopyFrom(MapGoal *_other);
 	bool LoadFromFile( const filePath & _file );
-
-	void SetProfilerZone(const std::string &_name);
-
+	
 	void CreateGuiFromBluePrint(gmMachine *a_machine, gmTableObject *a_schema);
 	void HudDisplay();
 
@@ -410,10 +408,6 @@ public:
 	void SetRange(int _range) { mRange = _range; };
 
 	void CreateGuiFromSchema(gmMachine *a_machine, gmTableObject *a_schema);
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-	void Sync( RemoteLib::DebugConnection * connection );
-#endif
 
 	MapGoal(const char *_goaltype);
 	~MapGoal();
@@ -488,11 +482,7 @@ private:
 
 	int			mRandomUsePoint; // randomly select a usepoint to use?
 	int			mRange;  // distance limited
-
-#ifdef Prof_ENABLED
-	Prof_Zone					*mProfZone;
-#endif
-
+	
 	//////////////////////////////////////////////////////////////////////////
 	// don't allow default ctr
 	MapGoal();

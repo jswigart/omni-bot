@@ -552,6 +552,8 @@ enum EntityFlag
 	ENT_FLAG_TAUNTING,
 	ENT_FLAG_AIMING,
 	ENT_FLAG_COLLIDABLE,
+	ENT_FLAG_HELDBYPLAYER,
+	ENT_FLAG_USEBOUNDS,
 
 	// THIS MUST BE LAST
 	ENT_FLAG_FIRST_USER = 32
@@ -573,12 +575,8 @@ enum EntityCategory
 	ENT_CAT_PLAYER,
 	ENT_CAT_VEHICLE,
 	ENT_CAT_PROJECTILE,
-	ENT_CAT_SHOOTABLE,
-	ENT_CAT_PICKUP_AMMO,
-	ENT_CAT_PICKUP_WEAPON,
-	ENT_CAT_PICKUP_HEALTH,
-	ENT_CAT_PICKUP_ENERGY,
-	ENT_CAT_PICKUP_ARMOR,
+	ENT_CAT_SHOOTABLE,	
+	ENT_CAT_PICKUP_PHYS,
 	ENT_CAT_TRIGGER,
 	ENT_CAT_MOVER,
 	ENT_CAT_MOUNTEDWEAPON,
@@ -588,6 +586,7 @@ enum EntityCategory
 	ENT_CAT_PROP_PUSHABLE,
 	ENT_CAT_AUTODEFENSE,
 	ENT_CAT_OBSTACLE,
+	ENT_CAT_DYNAMIC_NAV,
 	ENT_CAT_INTERNAL,
 
 	// THIS MUST BE LAST
@@ -617,6 +616,7 @@ enum EntityGroup
 	ENT_GRP_JUMPPAD_TARGET,
 	ENT_GRP_GOAL,
 	ENT_GRP_WEAPON,
+	ENT_GRP_MAP,
 	ENT_GRP_PROP,
 	ENT_GRP_PROP_EXPLODE,
 	ENT_GRP_PROP_BREAKABLE,
@@ -626,6 +626,7 @@ enum EntityGroup
 	ENT_GRP_POWERUP,
 	ENT_GRP_DISPENSER,
 	ENT_GRP_BUILDABLE,
+	ENT_GRP_MOUNTABLE,
 };
 
 enum EntityClass
@@ -636,62 +637,51 @@ enum EntityClass
 // struct: EntityInfo
 struct EntityInfo
 {
+	struct Range
+	{
+		uint16_t		mNum;
+		uint16_t		mMax;
+
+		void Set( uint16_t v )
+		{
+			mNum = mMax = v;
+		}
+		void Set( uint16_t v, uint16_t vm )
+		{
+			mNum = v;
+			mMax = vm;
+		}
+		float Percent( float def = 0.0f ) const
+		{
+			return mMax > 0 ? (float)mNum / (float)mMax : def;
+		}
+		Range( uint16_t v = 0)
+		{
+			Set( v );
+		}
+
+		Range( uint16_t v, uint16_t vm )
+		{
+			Set( v, vm );
+		}
+	};
+	
 	EntityGroup 	mGroup;
 	uint16_t		mClassId;
-	uint16_t		mQuantity, mQuantityMax;
-	uint16_t		mHealth, mHealthMax;
-	uint16_t		mArmor, mArmorMax;
+	Range			mQuantity;
+	Range			mHealth;
+	Range			mArmor;
+	Range			mAmmo1;
+	Range			mAmmo2;
+	Range			mAmmo3;
+	Range			mAmmo4;
 	BitFlag32		mCategory;
 	BitFlag64		mFlags;
 	BitFlag32		mPowerUps;
-
-	void SetQuantity( uint16_t v )
-	{
-		mQuantity = mQuantityMax = v;
-	}
-	void SetQuantity( uint16_t v, uint16_t vm )
-	{
-		mQuantity = v;
-		mQuantityMax = vm;
-	}
-
-	void SetHealth( uint16_t v )
-	{
-		mHealth = mHealthMax = v;
-	}
-	void SetHealth( uint16_t v, uint16_t vm )
-	{
-		mHealth = v;
-		mHealthMax = vm;
-	}
-	float HealthPercent() const
-	{
-		return mHealthMax > 0 ? (float)mHealth / (float)mHealthMax : 0.0f;
-	}
-
-	void SetArmor( uint16_t v )
-	{
-		mArmor = mArmorMax = v;
-	}
-	void SetArmor( uint16_t v, uint16_t vm )
-	{
-		mArmor = v;
-		mArmorMax = vm;
-	}
-	float ArmorPercent() const
-	{
-		return mArmorMax > 0 ? (float)mArmor / (float)mArmorMax : 0.0f;
-	}
-
+		
 	EntityInfo()
 		: mGroup( ENT_GRP_UNKNOWN )
 		, mClassId( ENT_CLASS_NONE )
-		, mQuantity( 1 )
-		, mQuantityMax( 1 )
-		, mHealth( 0 )
-		, mHealthMax( 0 )
-		, mArmor( 0 )
-		, mArmorMax( 0 )
 	{
 	}
 };
@@ -730,11 +720,10 @@ enum ContentFlags
 	CONT_LAVA = ( 1 << 6 ),
 	CONT_LADDER = ( 1 << 7 ),
 	CONT_TELEPORTER = ( 1 << 8 ),
-	CONT_MOVABLE = ( 1 << 9 ),
-	CONT_PLYRCLIP = ( 1 << 10 ),
-	CONT_NONSOLID = ( 1 << 11 ),
-	CONT_JUMPPAD = ( 1 << 12 ),
-	CONT_HITBOX = ( 1 << 13 ),
+	CONT_PLYRCLIP = ( 1 << 9 ),
+	CONT_NONSOLID = ( 1 << 10 ),
+	CONT_JUMPPAD = ( 1 << 11 ),
+	CONT_HITBOX = ( 1 << 12 ),
 
 	// THIS MUST BE LAST
 	CONT_START_USER = ( 1 << 24 )
@@ -753,6 +742,7 @@ enum SurfaceFlags
 	SURFACE_NOFOOTSTEP = ( 1 << 6 ),
 	SURFACE_NODRAW = ( 1 << 7 ),
 	SURFACE_HITBOX = ( 1 << 8 ),
+	SURFACE_MINE = ( 1 << 9 ),
 
 	// THIS MUST BE LAST
 	SURFACE_START_USER = ( 1 << 24 )
@@ -1200,7 +1190,7 @@ struct MapGoalDef
 // struct: AutoNavFeature
 struct AutoNavFeature
 {
-	EntityInfo	mEntityInfo;
+	EntityInfo		mEntityInfo;
 	int				mTeam;
 	float			mPosition[ 3 ];
 	float			mFacing[ 3 ];

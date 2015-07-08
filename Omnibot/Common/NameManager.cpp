@@ -7,6 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "NameManager.h"
+#include "System.h"
+#include "IGame.h"
 
 //////////////////////////////////////////////////////////////////////////
 class BotIdentity
@@ -130,6 +132,6 @@ void NameManager::SetProfileForClass( const int classId, const std::string & nam
 	entInfo.mClassId = (uint16_t)classId;
 
 	std::string groupName, className;
-	Utils::FindClassName( groupName, className, entInfo );
+	System::mInstance->mGame->FindClassName( groupName, className, entInfo.mGroup, entInfo.mClassId );
 	LOG( "Class " << groupName.c_str() << ":" << className.c_str() << " : using profile " << name.c_str() );
 }

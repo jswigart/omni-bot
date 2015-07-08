@@ -50,27 +50,30 @@ struct Event_EntityConnection;
 
 enum NavArea
 {
-	NAVAREA_GROUND = 0,
+	NAVAREA_GROUND,
 	NAVAREA_WATER,
-	NAVAREA_MOVER,
-	NAVAREA_REGION,
+	NAVAREA_MOVER,	
 	NAVAREA_JUMP,
 	NAVAREA_LADDER,
 	NAVAREA_TELEPORT,
 	NAVAREA_DOOR,
 	NAVAREA_ROCKETJUMP,
 	NAVAREA_PUSHABLE,
-	NAVAREA_ANY = 255,
+	NAVAREA_REGION,
+	NAVAREA_CROUCH,
+	NAVAREA_PRONE,
 };
 
 enum NavAreaFlags
 {
 	NAVFLAGS_NONE = 0,
 	NAVFLAGS_WALK = ( 1 << 0 ),
-	NAVFLAGS_TEAM1_ONLY = ( 1 << 1 ),		// Team Specific
-	NAVFLAGS_TEAM2_ONLY = ( 1 << 2 ),		// Team Specific
-	NAVFLAGS_TEAM3_ONLY = ( 1 << 3 ),		// Team Specific
-	NAVFLAGS_TEAM4_ONLY = ( 1 << 4 ),		// Team Specific
+	NAVFLAGS_CROUCH = ( 1 << 1 ),
+	NAVFLAGS_PRONE = ( 1 << 2 ),
+	NAVFLAGS_TEAM1_ONLY = ( 1 << 3 ),		// Team Specific
+	NAVFLAGS_TEAM2_ONLY = ( 1 << 4 ),		// Team Specific
+	NAVFLAGS_TEAM3_ONLY = ( 1 << 5 ),		// Team Specific
+	NAVFLAGS_TEAM4_ONLY = ( 1 << 6 ),		// Team Specific
 	NAVFLAGS_SWIM = ( 1 << 5 ),		// Ability to swim (water).
 
 	//NAVFLAGS_DOOR = ( 1 << 2 ),		// Ability to move through doors.
@@ -86,21 +89,47 @@ enum NavAreaFlags
 	NAVFLAGS_PATH_LINK = ( 1 << 31 ),
 };
 
+typedef EnumerationValues<NavArea> NavAreaEnum;
+typedef EnumerationValues<NavAreaFlags> NavAreaFlagsEnum;
+
 static const NavFlags sTeamMask = ( NAVFLAGS_TEAM1_ONLY | NAVFLAGS_TEAM2_ONLY | NAVFLAGS_TEAM3_ONLY | NAVFLAGS_TEAM4_ONLY );
 
 namespace NavigationAssertions
 {
-	BOOST_STATIC_ASSERT(sizeof(NavFlags) == 8); // 8 bytes = 64 bits
+	BOOST_STATIC_ASSERT( sizeof( NavFlags ) == 8 ); // 8 bytes = 64 bits
 	//BOOST_STATIC_ASSERT(sizeof(obUserData) == 16); // cs: FIXME 64 bit struct size is different. do we really need this?
 }
 
 struct EntityInstance;
 
+struct OffMeshConnection
+{
+	Vector3f				mEntry;
+	Vector3f				mExit;
+
+	std::vector<Vector3f>	mVertices;
+	float					mRadius;
+	NavArea					mAreaType;
+	NavAreaFlags			mFlags;
+	bool					mBiDirectional : 1;
+
+	// runtime use
+	uint64_t				mPolyId;
+
+	void Render();
+
+	OffMeshConnection();
+};
+
 class PathInterface
 {
 public:
-	PathInterface() {}
-	virtual ~PathInterface() {}
+	PathInterface()
+	{
+	}
+	virtual ~PathInterface()
+	{
+	}
 
 	enum PathStatus
 	{
@@ -116,10 +145,13 @@ public:
 
 		NavArea			mArea;
 		NavAreaFlags	mFlags;
-		
-		PathCorner() 
+
+		uint64_t		mPolyId;
+
+		PathCorner()
 			: mArea( NAVAREA_GROUND )
 			, mFlags( NAVFLAGS_NONE )
+			, mPolyId( 0 )
 		{
 		}
 	};
@@ -135,9 +167,12 @@ public:
 
 	virtual void Cancel() = 0;
 
+	virtual NavArea GetCurrentArea() const = 0;
+	virtual NavAreaFlags GetCurrentAreaFlags() const = 0;
 	virtual size_t GetPathCorners( PathCorner * corners, size_t maxEdges ) = 0;
-	virtual bool GetPointAlongPath( float lookAheadDist, Vector3f & ptOut ) = 0;
 
+	virtual bool GetNavLink( uint64_t id, OffMeshConnection& conn ) const = 0;
+	virtual bool CompleteNavLink( uint64_t id ) = 0;
 	virtual void Render() = 0;
 };
 
@@ -145,14 +180,24 @@ template< typename T >
 class EditTool
 {
 public:
-	EditTool( const char * toolname ) : mToolName( toolname ) {}
-	virtual ~EditTool() {}
+	EditTool( const char * toolname ) : mToolName( toolname )
+	{
+	}
+	virtual ~EditTool()
+	{
+	}
 
 	virtual bool Enter( T * system ) = 0;
-	virtual bool ReEnter( T * system ) { return true; }
+	virtual bool ReEnter( T * system )
+	{
+		return true;
+	}
 	virtual bool Update( T * system ) = 0;
 	virtual void Commit( T * system ) = 0;
-	virtual void Undo( T * system ) { EngineFuncs::ConsoleError( va( "No Undo functionality for tool %s",mToolName ) ); }
+	virtual void Undo( T * system )
+	{
+		EngineFuncs::ConsoleError( va( "No Undo functionality for tool %s", mToolName ) );
+	}
 protected:
 	std::string		mToolError;
 	const char *	mToolName;
@@ -165,107 +210,47 @@ protected:
 class PathPlannerBase : public CommandReciever
 {
 public:
-
-	enum BasePlannerFlags
-	{
-		NAV_VIEW,
-		NAV_VIEWCONNECTIONS,
-		NAV_FOUNDGOAL,
-		NAV_SAVEFAILEDPATHS,
-		NAV_AUTODETECTFLAGS,
-		NAV_VIEWFLAGS,
-
-		NUM_BASE_NAVFLAGS
-	};
-
 	virtual bool Init( System & system ) = 0;
 	virtual void Update( System & system ) = 0;
 	virtual void Shutdown() = 0;
 	virtual bool IsReady() const = 0;
-
-	virtual bool GetRandomDestination( Vector3f & dstOut, Client *_client ) { return false; }
-
-	virtual void RunPathQuery(const PathQuery &_qry) {};
-	
-	virtual bool GetNavFlagByName(const std::string &_flagname, NavFlags &_flag) const = 0;
-
-	virtual Vector3f GetDisplayPosition(const Vector3f &_pos) = 0; // deprecated
-
-	bool IsViewOn() const { return mPlannerFlags.CheckFlag(NAV_VIEW); }
-	bool IsViewConnectionOn() const { return mPlannerFlags.CheckFlag(NAV_VIEWCONNECTIONS); }
-	bool IsAutoDetectFlagsOn() const { return mPlannerFlags.CheckFlag(NAV_AUTODETECTFLAGS); }
-
-	virtual bool Load(bool _dl = true);
-	virtual bool Load(const std::string &_mapname,bool _dl = true) = 0;
-	virtual bool Save(const std::string &_mapname) = 0;
+			
+	virtual bool Load( bool _dl = true );
+	virtual bool Load( const std::string &_mapname, bool _dl = true ) = 0;
+	virtual bool Save( const std::string &_mapname ) = 0;
 	virtual void Unload() = 0;
-
-	virtual int GetLatestFileVersion() const = 0;
-
-	virtual void RegisterGameGoals() = 0;
-
+	
 	virtual const char *GetPlannerName() const = 0;
 	virtual int GetPlannerType() const = 0;
 
-	virtual void RegisterScriptFunctions(gmMachine *a_machine) = 0;
+	virtual void RegisterScriptFunctions( gmMachine *a_machine ) = 0;
+		
+	virtual bool GetNavInfo( const Vector3f &pos, int32_t &_id, std::string &_name ) = 0;
 
-	struct AvoidData
-	{
-		int	 mTeam;
-		float mRadius;
-		float mAvoidWeight;
-	};
+	virtual void AddEntityConnection( const Event_EntityConnection &_conn ) = 0;
+	virtual void RemoveEntityConnection( GameEntity _ent ) = 0;
+	virtual void EntityCreated( const EntityInstance &ei );
+	virtual void EntityDeleted( const EntityInstance &ei );
 
-	virtual void MarkAvoid(const Vector3f &_pos, const AvoidData&_data) {}
+	virtual PathInterface * AllocPathInterface( Client * client );
 
-	virtual bool GetNavInfo(const Vector3f &pos,int32_t &_id,std::string &_name) = 0;
-
-	virtual void AddEntityConnection(const Event_EntityConnection &_conn) = 0;
-	virtual void RemoveEntityConnection(GameEntity _ent) = 0;
-	virtual void EntityCreated(const EntityInstance &ei) {}
-	virtual void EntityDeleted(const EntityInstance &ei) {}
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-	virtual void Sync( RemoteLib::DataBuffer & db, bool fullSync ) { }
-#endif
-
-	virtual PathInterface * AllocPathInterface( Client * client ) { return NULL; }
-
-	const AxisAlignedBox3f & GetNavigationBounds() const { return mNavigationBounds; }
+	const AxisAlignedBox3f & GetNavigationBounds() const;
 
 	PathPlannerBase();
 	virtual ~PathPlannerBase();
 protected:
-	struct FailedPath
-	{
-		Vector3f mStart;
-		Vector3f mEnd;
-		bool	 mRender;
-	};
-	typedef std::list<FailedPath> FailedPathList;
-
-	FailedPathList mFailedPathList;
-
-	void AddFailedPath(const Vector3f &_start, const Vector3f &_end);
-
-	void RenderFailedPaths();
-
 	void InitCommands();
-	void cmdLogFailedPaths(const StringVector &_args);
-	void cmdShowFailedPaths(const StringVector &_args);
-	void cmdBenchmarkPathFind(const StringVector &_args);
-	void cmdBenchmarkGetNavPoint(const StringVector &_args);
-	void cmdResaveNav(const StringVector &_args);
-
-	BitFlag32		 mPlannerFlags;
-
+	void cmdBenchmarkPathFind( const StringVector & args );
+	void cmdBenchmarkGetNavPoint( const StringVector & args );
+	void cmdResaveNav( const StringVector & args );
+	
 	AxisAlignedBox3f	mNavigationBounds;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Required subclass functions
 	virtual std::string _GetNavFileExtension() = 0;
-	virtual void _BenchmarkPathFinder(const StringVector &_args);
-	virtual void _BenchmarkGetNavPoint(const StringVector &_args);
+	virtual void _BenchmarkPathFinder( const StringVector & args );
+	virtual void _BenchmarkGetNavPoint( const StringVector & args );
 };
 
 #endif

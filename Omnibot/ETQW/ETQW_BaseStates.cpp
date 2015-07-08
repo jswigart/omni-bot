@@ -1356,7 +1356,7 @@ namespace AiState
 						return State_Finished;
 
 					EntityInfo entInfo;					
-					if ( IGame::GetEntityInfo( reviveEnt, entInfo ) && entInfo.HealthPercent() >= 1.0f )
+					if ( IGame::GetEntityInfo( reviveEnt, entInfo ) && entInfo.mHealth.Percent() >= 1.0f )
 						return State_Finished;
 
 					GetClient()->GetSteeringSystem()->SetNoAvoidTime( IGame::GetTime() + 1000 );

@@ -15,27 +15,27 @@
 
 // class: obColor
 //		Helper class for defining color values.
-class obColor
+union obColor
 {
 public:
 	obColor()
 	{
 		// initialize to white
-		cdata.mRGBA[0] = 255;
-		cdata.mRGBA[1] = 255;
-		cdata.mRGBA[2] = 255;
-		cdata.mRGBA[3] = 255; // 255 is opaque, 0 is transparent
+		mElements.mR = 255;
+		mElements.mG = 255;
+		mElements.mB = 255;
+		mElements.mA = 255; // 255 is opaque, 0 is transparent
 	}
-	explicit obColor(int32_t _color)
+	explicit obColor(uint32_t _color)
 	{
-		cdata.mRGBAi = _color;
+		mRGBA = _color;
 	}
 	obColor(uint8_t _r, uint8_t _g, uint8_t _b, uint8_t _a = 255)
 	{
-		cdata.mRGBA[0] = _r;
-		cdata.mRGBA[1] = _g;
-		cdata.mRGBA[2] = _b;
-		cdata.mRGBA[3] = _a; // 255 is opaque, 0 is transparent
+		mElements.mR = _r;
+		mElements.mG = _g;
+		mElements.mB = _b;
+		mElements.mA = _a; // 255 is opaque, 0 is transparent
 	}
 	obColor( const float * flt )
 	{
@@ -44,28 +44,28 @@ public:
 
 	operator int() const
 	{
-		return cdata.mRGBAi;
+		return mRGBA;
 	}
 
-	inline uint8_t r() const	{ return cdata.mRGBA[0]; }
-	inline uint8_t g() const	{ return cdata.mRGBA[1]; }
-	inline uint8_t b() const	{ return cdata.mRGBA[2]; }
-	inline uint8_t a() const	{ return cdata.mRGBA[3]; }
+	inline uint8_t r() const	{ return mElements.mR; }
+	inline uint8_t g() const	{ return mElements.mG; }
+	inline uint8_t b() const	{ return mElements.mB; }
+	inline uint8_t a() const	{ return mElements.mA; }
 
-	inline float rF() const	{ return (float)cdata.mRGBA[0] / 255.0f; }
-	inline float gF() const	{ return (float)cdata.mRGBA[1] / 255.0f; }
-	inline float bF() const	{ return (float)cdata.mRGBA[2] / 255.0f; }
-	inline float aF() const	{ return (float)cdata.mRGBA[3] / 255.0f; }
+	inline float rF() const	{ return (float)mElements.mR / 255.0f; }
+	inline float gF() const	{ return (float)mElements.mG / 255.0f; }
+	inline float bF() const	{ return (float)mElements.mB / 255.0f; }
+	inline float aF() const	{ return (float)mElements.mA / 255.0f; }
 
-	inline obColor fade(uint8_t _a) const { obColor c(cdata.mRGBAi); c.cdata.mRGBA[3]=_a; return c; }
+	inline obColor fade(uint8_t _a) const { obColor c(mRGBA); c.mElements.mA=_a; return c; }
 
 	static obColor FromFloat(float _r, float _g, float _b, float _a = 1)
 	{
 		obColor c;
-		c.cdata.mRGBA[0] = (uint8_t)(_r * 255.f);
-		c.cdata.mRGBA[1] = (uint8_t)(_g * 255.f);
-		c.cdata.mRGBA[2] = (uint8_t)(_b * 255.f);
-		c.cdata.mRGBA[3] = (uint8_t)(_a * 255.f);// 255 is opaque, 0 is transparent
+		c.mElements.mR = (uint8_t)( _r * 255.f );
+		c.mElements.mG = (uint8_t)( _g * 255.f );
+		c.mElements.mB = (uint8_t)( _b * 255.f );
+		c.mElements.mA = (uint8_t)( _a * 255.f );// 255 is opaque, 0 is transparent
 		return c;
 	}
 
@@ -78,14 +78,18 @@ public:
 			from.aF() + (to.aF() - from.aF()) * t );
 	}
 
-	inline int32_t rgba() const { return cdata.mRGBAi; }
-	inline int32_t argb() const { return obColor( a(), r(), g(), b() ); }
+	inline uint32_t rgba() const { return mRGBA; }
+	inline uint32_t argb() const { return obColor( a(), r(), g(), b() ); }
 private:
-	union cdatatype
+	struct
 	{
-		uint8_t	 mRGBA[4];
-		int32_t	 mRGBAi;
-	} cdata;
+		uint8_t		mR;
+		uint8_t		mG;
+		uint8_t		mB;
+		uint8_t		mA;
+	}				mElements;
+
+	uint32_t		mRGBA;
 };
 
 namespace COLOR

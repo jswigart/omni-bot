@@ -66,10 +66,8 @@ namespace AiState
 
 	State::StateStatus TargetingSystem::Update( float fDt )
 	{
-		Prof( TargetingSystem );
+		rmt_ScopedCPUSample( TargetingSystemUpdate );
 		{
-			Prof( UpdateTargeting );
-
 			GameEntity newtarget;
 
 			if ( mForceTarget.IsValid() )

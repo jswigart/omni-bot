@@ -23,6 +23,7 @@
 #include <google/protobuf/message.h>
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
+#include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 
@@ -38,9 +39,31 @@ class AxisAlignedBounds;
 class NavMeshParams;
 class Tile;
 class OffMeshConnection;
-class SubModel;
+class Material;
+class Model;
+class Model_TriParms;
+class NodeState;
 class NavigationMesh;
 
+enum ShapeMode {
+  SHAPE_TRIANGLES = 0,
+  SHAPE_OBB = 1
+};
+bool ShapeMode_IsValid(int value);
+const ShapeMode ShapeMode_MIN = SHAPE_TRIANGLES;
+const ShapeMode ShapeMode_MAX = SHAPE_OBB;
+const int ShapeMode_ARRAYSIZE = ShapeMode_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* ShapeMode_descriptor();
+inline const ::std::string& ShapeMode_Name(ShapeMode value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    ShapeMode_descriptor(), value);
+}
+inline bool ShapeMode_Parse(
+    const ::std::string& name, ShapeMode* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ShapeMode>(
+    ShapeMode_descriptor(), name, value);
+}
 // ===================================================================
 
 class Vec3 : public ::google::protobuf::Message {
@@ -589,17 +612,17 @@ class OffMeshConnection : public ::google::protobuf::Message {
   inline ::RecastIO::Vec3* release_exitpos();
   inline void set_allocated_exitpos(::RecastIO::Vec3* exitpos);
 
-  // repeated .RecastIO.Vec3 intermediatePos = 3;
-  inline int intermediatepos_size() const;
-  inline void clear_intermediatepos();
-  static const int kIntermediatePosFieldNumber = 3;
-  inline const ::RecastIO::Vec3& intermediatepos(int index) const;
-  inline ::RecastIO::Vec3* mutable_intermediatepos(int index);
-  inline ::RecastIO::Vec3* add_intermediatepos();
+  // repeated .RecastIO.Vec3 vertices = 3;
+  inline int vertices_size() const;
+  inline void clear_vertices();
+  static const int kVerticesFieldNumber = 3;
+  inline const ::RecastIO::Vec3& vertices(int index) const;
+  inline ::RecastIO::Vec3* mutable_vertices(int index);
+  inline ::RecastIO::Vec3* add_vertices();
   inline const ::google::protobuf::RepeatedPtrField< ::RecastIO::Vec3 >&
-      intermediatepos() const;
+      vertices() const;
   inline ::google::protobuf::RepeatedPtrField< ::RecastIO::Vec3 >*
-      mutable_intermediatepos();
+      mutable_vertices();
 
   // required float radius = 4;
   inline bool has_radius() const;
@@ -650,7 +673,7 @@ class OffMeshConnection : public ::google::protobuf::Message {
   mutable int _cached_size_;
   ::RecastIO::Vec3* entrypos_;
   ::RecastIO::Vec3* exitpos_;
-  ::google::protobuf::RepeatedPtrField< ::RecastIO::Vec3 > intermediatepos_;
+  ::google::protobuf::RepeatedPtrField< ::RecastIO::Vec3 > vertices_;
   float radius_;
   ::google::protobuf::uint32 areatype_;
   ::google::protobuf::uint32 flags_;
@@ -664,14 +687,14 @@ class OffMeshConnection : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class SubModel : public ::google::protobuf::Message {
+class Material : public ::google::protobuf::Message {
  public:
-  SubModel();
-  virtual ~SubModel();
+  Material();
+  virtual ~Material();
 
-  SubModel(const SubModel& from);
+  Material(const Material& from);
 
-  inline SubModel& operator=(const SubModel& from) {
+  inline Material& operator=(const Material& from) {
     CopyFrom(from);
     return *this;
   }
@@ -685,17 +708,17 @@ class SubModel : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const SubModel& default_instance();
+  static const Material& default_instance();
 
-  void Swap(SubModel* other);
+  void Swap(Material* other);
 
   // implements Message ----------------------------------------------
 
-  SubModel* New() const;
+  Material* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const SubModel& from);
-  void MergeFrom(const SubModel& from);
+  void CopyFrom(const Material& from);
+  void MergeFrom(const Material& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -717,59 +740,419 @@ class SubModel : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required int32 submodelId = 1;
-  inline bool has_submodelid() const;
-  inline void clear_submodelid();
-  static const int kSubmodelIdFieldNumber = 1;
-  inline ::google::protobuf::int32 submodelid() const;
-  inline void set_submodelid(::google::protobuf::int32 value);
+  // required string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
 
-  // optional bool disabled = 2;
-  inline bool has_disabled() const;
-  inline void clear_disabled();
-  static const int kDisabledFieldNumber = 2;
-  inline bool disabled() const;
-  inline void set_disabled(bool value);
+  // optional uint32 contents = 2;
+  inline bool has_contents() const;
+  inline void clear_contents();
+  static const int kContentsFieldNumber = 2;
+  inline ::google::protobuf::uint32 contents() const;
+  inline void set_contents(::google::protobuf::uint32 value);
 
-  // optional bool mover = 3;
-  inline bool has_mover() const;
-  inline void clear_mover();
-  static const int kMoverFieldNumber = 3;
-  inline bool mover() const;
-  inline void set_mover(bool value);
+  // optional uint32 surfaceflags = 3;
+  inline bool has_surfaceflags() const;
+  inline void clear_surfaceflags();
+  static const int kSurfaceflagsFieldNumber = 3;
+  inline ::google::protobuf::uint32 surfaceflags() const;
+  inline void set_surfaceflags(::google::protobuf::uint32 value);
 
-  // optional bool nonsolid = 4;
-  inline bool has_nonsolid() const;
-  inline void clear_nonsolid();
-  static const int kNonsolidFieldNumber = 4;
-  inline bool nonsolid() const;
-  inline void set_nonsolid(bool value);
-
-  // @@protoc_insertion_point(class_scope:RecastIO.SubModel)
+  // @@protoc_insertion_point(class_scope:RecastIO.Material)
  private:
-  inline void set_has_submodelid();
-  inline void clear_has_submodelid();
-  inline void set_has_disabled();
-  inline void clear_has_disabled();
-  inline void set_has_mover();
-  inline void clear_has_mover();
-  inline void set_has_nonsolid();
-  inline void clear_has_nonsolid();
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_contents();
+  inline void clear_has_contents();
+  inline void set_has_surfaceflags();
+  inline void clear_has_surfaceflags();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
-  ::google::protobuf::int32 submodelid_;
-  bool disabled_;
-  bool mover_;
-  bool nonsolid_;
+  ::std::string* name_;
+  ::google::protobuf::uint32 contents_;
+  ::google::protobuf::uint32 surfaceflags_;
   friend void  protobuf_AddDesc_recast_2eproto();
   friend void protobuf_AssignDesc_recast_2eproto();
   friend void protobuf_ShutdownFile_recast_2eproto();
 
   void InitAsDefaultInstance();
-  static SubModel* default_instance_;
+  static Material* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Model_TriParms : public ::google::protobuf::Message {
+ public:
+  Model_TriParms();
+  virtual ~Model_TriParms();
+
+  Model_TriParms(const Model_TriParms& from);
+
+  inline Model_TriParms& operator=(const Model_TriParms& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Model_TriParms& default_instance();
+
+  void Swap(Model_TriParms* other);
+
+  // implements Message ----------------------------------------------
+
+  Model_TriParms* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Model_TriParms& from);
+  void MergeFrom(const Model_TriParms& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required uint32 tri = 1;
+  inline bool has_tri() const;
+  inline void clear_tri();
+  static const int kTriFieldNumber = 1;
+  inline ::google::protobuf::uint32 tri() const;
+  inline void set_tri(::google::protobuf::uint32 value);
+
+  // optional uint32 surfaceOverride = 2;
+  inline bool has_surfaceoverride() const;
+  inline void clear_surfaceoverride();
+  static const int kSurfaceOverrideFieldNumber = 2;
+  inline ::google::protobuf::uint32 surfaceoverride() const;
+  inline void set_surfaceoverride(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:RecastIO.Model.TriParms)
+ private:
+  inline void set_has_tri();
+  inline void clear_has_tri();
+  inline void set_has_surfaceoverride();
+  inline void clear_has_surfaceoverride();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 tri_;
+  ::google::protobuf::uint32 surfaceoverride_;
+  friend void  protobuf_AddDesc_recast_2eproto();
+  friend void protobuf_AssignDesc_recast_2eproto();
+  friend void protobuf_ShutdownFile_recast_2eproto();
+
+  void InitAsDefaultInstance();
+  static Model_TriParms* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Model : public ::google::protobuf::Message {
+ public:
+  Model();
+  virtual ~Model();
+
+  Model(const Model& from);
+
+  inline Model& operator=(const Model& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Model& default_instance();
+
+  void Swap(Model* other);
+
+  // implements Message ----------------------------------------------
+
+  Model* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Model& from);
+  void MergeFrom(const Model& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef Model_TriParms TriParms;
+
+  // accessors -------------------------------------------------------
+
+  // required string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // required uint32 modelcrc = 2;
+  inline bool has_modelcrc() const;
+  inline void clear_modelcrc();
+  static const int kModelcrcFieldNumber = 2;
+  inline ::google::protobuf::uint32 modelcrc() const;
+  inline void set_modelcrc(::google::protobuf::uint32 value);
+
+  // required uint32 numMeshTris = 3;
+  inline bool has_nummeshtris() const;
+  inline void clear_nummeshtris();
+  static const int kNumMeshTrisFieldNumber = 3;
+  inline ::google::protobuf::uint32 nummeshtris() const;
+  inline void set_nummeshtris(::google::protobuf::uint32 value);
+
+  // repeated .RecastIO.Model.TriParms triangles = 4;
+  inline int triangles_size() const;
+  inline void clear_triangles();
+  static const int kTrianglesFieldNumber = 4;
+  inline const ::RecastIO::Model_TriParms& triangles(int index) const;
+  inline ::RecastIO::Model_TriParms* mutable_triangles(int index);
+  inline ::RecastIO::Model_TriParms* add_triangles();
+  inline const ::google::protobuf::RepeatedPtrField< ::RecastIO::Model_TriParms >&
+      triangles() const;
+  inline ::google::protobuf::RepeatedPtrField< ::RecastIO::Model_TriParms >*
+      mutable_triangles();
+
+  // @@protoc_insertion_point(class_scope:RecastIO.Model)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_modelcrc();
+  inline void clear_has_modelcrc();
+  inline void set_has_nummeshtris();
+  inline void clear_has_nummeshtris();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  ::std::string* name_;
+  ::google::protobuf::uint32 modelcrc_;
+  ::google::protobuf::uint32 nummeshtris_;
+  ::google::protobuf::RepeatedPtrField< ::RecastIO::Model_TriParms > triangles_;
+  friend void  protobuf_AddDesc_recast_2eproto();
+  friend void protobuf_AssignDesc_recast_2eproto();
+  friend void protobuf_ShutdownFile_recast_2eproto();
+
+  void InitAsDefaultInstance();
+  static Model* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class NodeState : public ::google::protobuf::Message {
+ public:
+  NodeState();
+  virtual ~NodeState();
+
+  NodeState(const NodeState& from);
+
+  inline NodeState& operator=(const NodeState& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const NodeState& default_instance();
+
+  enum TypeCase {
+    kSubModelId = 1,
+    kStaticModelId = 2,
+    TYPE_NOT_SET = 0,
+  };
+
+  void Swap(NodeState* other);
+
+  // implements Message ----------------------------------------------
+
+  NodeState* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const NodeState& from);
+  void MergeFrom(const NodeState& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 subModelId = 1;
+  inline bool has_submodelid() const;
+  inline void clear_submodelid();
+  static const int kSubModelIdFieldNumber = 1;
+  inline ::google::protobuf::int32 submodelid() const;
+  inline void set_submodelid(::google::protobuf::int32 value);
+
+  // optional int32 staticModelId = 2;
+  inline bool has_staticmodelid() const;
+  inline void clear_staticmodelid();
+  static const int kStaticModelIdFieldNumber = 2;
+  inline ::google::protobuf::int32 staticmodelid() const;
+  inline void set_staticmodelid(::google::protobuf::int32 value);
+
+  // optional bool enabled = 5 [default = true];
+  inline bool has_enabled() const;
+  inline void clear_enabled();
+  static const int kEnabledFieldNumber = 5;
+  inline bool enabled() const;
+  inline void set_enabled(bool value);
+
+  // optional .RecastIO.ShapeMode shapemode = 6 [default = SHAPE_TRIANGLES];
+  inline bool has_shapemode() const;
+  inline void clear_shapemode();
+  static const int kShapemodeFieldNumber = 6;
+  inline ::RecastIO::ShapeMode shapemode() const;
+  inline void set_shapemode(::RecastIO::ShapeMode value);
+
+  // optional bool solid = 7 [default = true];
+  inline bool has_solid() const;
+  inline void clear_solid();
+  static const int kSolidFieldNumber = 7;
+  inline bool solid() const;
+  inline void set_solid(bool value);
+
+  // optional bool dynamic = 8 [default = false];
+  inline bool has_dynamic() const;
+  inline void clear_dynamic();
+  static const int kDynamicFieldNumber = 8;
+  inline bool dynamic() const;
+  inline void set_dynamic(bool value);
+
+  // optional string modelname = 10;
+  inline bool has_modelname() const;
+  inline void clear_modelname();
+  static const int kModelnameFieldNumber = 10;
+  inline const ::std::string& modelname() const;
+  inline void set_modelname(const ::std::string& value);
+  inline void set_modelname(const char* value);
+  inline void set_modelname(const char* value, size_t size);
+  inline ::std::string* mutable_modelname();
+  inline ::std::string* release_modelname();
+  inline void set_allocated_modelname(::std::string* modelname);
+
+  inline TypeCase type_case() const;
+  // @@protoc_insertion_point(class_scope:RecastIO.NodeState)
+ private:
+  inline void set_has_submodelid();
+  inline void set_has_staticmodelid();
+  inline void set_has_enabled();
+  inline void clear_has_enabled();
+  inline void set_has_shapemode();
+  inline void clear_has_shapemode();
+  inline void set_has_solid();
+  inline void clear_has_solid();
+  inline void set_has_dynamic();
+  inline void clear_has_dynamic();
+  inline void set_has_modelname();
+  inline void clear_has_modelname();
+
+  inline bool has_type();
+  void clear_type();
+  inline void clear_has_type();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 _has_bits_[1];
+  mutable int _cached_size_;
+  int shapemode_;
+  bool enabled_;
+  bool solid_;
+  bool dynamic_;
+  ::std::string* modelname_;
+  union TypeUnion {
+    ::google::protobuf::int32 submodelid_;
+    ::google::protobuf::int32 staticmodelid_;
+  } type_;
+  ::google::protobuf::uint32 _oneof_case_[1];
+
+  friend void  protobuf_AddDesc_recast_2eproto();
+  friend void protobuf_AssignDesc_recast_2eproto();
+  friend void protobuf_ShutdownFile_recast_2eproto();
+
+  void InitAsDefaultInstance();
+  static NodeState* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -842,22 +1225,10 @@ class NavigationMesh : public ::google::protobuf::Message {
   inline ::RecastIO::NavMeshParams* release_navmeshparams();
   inline void set_allocated_navmeshparams(::RecastIO::NavMeshParams* navmeshparams);
 
-  // repeated .RecastIO.Tile tiles = 3;
-  inline int tiles_size() const;
-  inline void clear_tiles();
-  static const int kTilesFieldNumber = 3;
-  inline const ::RecastIO::Tile& tiles(int index) const;
-  inline ::RecastIO::Tile* mutable_tiles(int index);
-  inline ::RecastIO::Tile* add_tiles();
-  inline const ::google::protobuf::RepeatedPtrField< ::RecastIO::Tile >&
-      tiles() const;
-  inline ::google::protobuf::RepeatedPtrField< ::RecastIO::Tile >*
-      mutable_tiles();
-
-  // repeated .RecastIO.AxisAlignedBounds exclusionZone = 4;
+  // repeated .RecastIO.AxisAlignedBounds exclusionZone = 3;
   inline int exclusionzone_size() const;
   inline void clear_exclusionzone();
-  static const int kExclusionZoneFieldNumber = 4;
+  static const int kExclusionZoneFieldNumber = 3;
   inline const ::RecastIO::AxisAlignedBounds& exclusionzone(int index) const;
   inline ::RecastIO::AxisAlignedBounds* mutable_exclusionzone(int index);
   inline ::RecastIO::AxisAlignedBounds* add_exclusionzone();
@@ -866,10 +1237,10 @@ class NavigationMesh : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::RecastIO::AxisAlignedBounds >*
       mutable_exclusionzone();
 
-  // repeated .RecastIO.OffMeshConnection offMeshConnection = 5;
+  // repeated .RecastIO.OffMeshConnection offMeshConnection = 4;
   inline int offmeshconnection_size() const;
   inline void clear_offmeshconnection();
-  static const int kOffMeshConnectionFieldNumber = 5;
+  static const int kOffMeshConnectionFieldNumber = 4;
   inline const ::RecastIO::OffMeshConnection& offmeshconnection(int index) const;
   inline ::RecastIO::OffMeshConnection* mutable_offmeshconnection(int index);
   inline ::RecastIO::OffMeshConnection* add_offmeshconnection();
@@ -878,17 +1249,41 @@ class NavigationMesh : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::RecastIO::OffMeshConnection >*
       mutable_offmeshconnection();
 
-  // repeated .RecastIO.SubModel subModelInfo = 6;
-  inline int submodelinfo_size() const;
-  inline void clear_submodelinfo();
-  static const int kSubModelInfoFieldNumber = 6;
-  inline const ::RecastIO::SubModel& submodelinfo(int index) const;
-  inline ::RecastIO::SubModel* mutable_submodelinfo(int index);
-  inline ::RecastIO::SubModel* add_submodelinfo();
-  inline const ::google::protobuf::RepeatedPtrField< ::RecastIO::SubModel >&
-      submodelinfo() const;
-  inline ::google::protobuf::RepeatedPtrField< ::RecastIO::SubModel >*
-      mutable_submodelinfo();
+  // repeated .RecastIO.NodeState nodeState = 5;
+  inline int nodestate_size() const;
+  inline void clear_nodestate();
+  static const int kNodeStateFieldNumber = 5;
+  inline const ::RecastIO::NodeState& nodestate(int index) const;
+  inline ::RecastIO::NodeState* mutable_nodestate(int index);
+  inline ::RecastIO::NodeState* add_nodestate();
+  inline const ::google::protobuf::RepeatedPtrField< ::RecastIO::NodeState >&
+      nodestate() const;
+  inline ::google::protobuf::RepeatedPtrField< ::RecastIO::NodeState >*
+      mutable_nodestate();
+
+  // repeated .RecastIO.Model models = 6;
+  inline int models_size() const;
+  inline void clear_models();
+  static const int kModelsFieldNumber = 6;
+  inline const ::RecastIO::Model& models(int index) const;
+  inline ::RecastIO::Model* mutable_models(int index);
+  inline ::RecastIO::Model* add_models();
+  inline const ::google::protobuf::RepeatedPtrField< ::RecastIO::Model >&
+      models() const;
+  inline ::google::protobuf::RepeatedPtrField< ::RecastIO::Model >*
+      mutable_models();
+
+  // repeated .RecastIO.Tile tiles = 100;
+  inline int tiles_size() const;
+  inline void clear_tiles();
+  static const int kTilesFieldNumber = 100;
+  inline const ::RecastIO::Tile& tiles(int index) const;
+  inline ::RecastIO::Tile* mutable_tiles(int index);
+  inline ::RecastIO::Tile* add_tiles();
+  inline const ::google::protobuf::RepeatedPtrField< ::RecastIO::Tile >&
+      tiles() const;
+  inline ::google::protobuf::RepeatedPtrField< ::RecastIO::Tile >*
+      mutable_tiles();
 
   // @@protoc_insertion_point(class_scope:RecastIO.NavigationMesh)
  private:
@@ -902,10 +1297,11 @@ class NavigationMesh : public ::google::protobuf::Message {
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::RecastIO::NavMeshParams* navmeshparams_;
-  ::google::protobuf::RepeatedPtrField< ::RecastIO::Tile > tiles_;
   ::google::protobuf::RepeatedPtrField< ::RecastIO::AxisAlignedBounds > exclusionzone_;
   ::google::protobuf::RepeatedPtrField< ::RecastIO::OffMeshConnection > offmeshconnection_;
-  ::google::protobuf::RepeatedPtrField< ::RecastIO::SubModel > submodelinfo_;
+  ::google::protobuf::RepeatedPtrField< ::RecastIO::NodeState > nodestate_;
+  ::google::protobuf::RepeatedPtrField< ::RecastIO::Model > models_;
+  ::google::protobuf::RepeatedPtrField< ::RecastIO::Tile > tiles_;
   ::google::protobuf::int32 version_;
   friend void  protobuf_AddDesc_recast_2eproto();
   friend void protobuf_AssignDesc_recast_2eproto();
@@ -1561,34 +1957,34 @@ inline void OffMeshConnection::set_allocated_exitpos(::RecastIO::Vec3* exitpos) 
   // @@protoc_insertion_point(field_set_allocated:RecastIO.OffMeshConnection.exitPos)
 }
 
-// repeated .RecastIO.Vec3 intermediatePos = 3;
-inline int OffMeshConnection::intermediatepos_size() const {
-  return intermediatepos_.size();
+// repeated .RecastIO.Vec3 vertices = 3;
+inline int OffMeshConnection::vertices_size() const {
+  return vertices_.size();
 }
-inline void OffMeshConnection::clear_intermediatepos() {
-  intermediatepos_.Clear();
+inline void OffMeshConnection::clear_vertices() {
+  vertices_.Clear();
 }
-inline const ::RecastIO::Vec3& OffMeshConnection::intermediatepos(int index) const {
-  // @@protoc_insertion_point(field_get:RecastIO.OffMeshConnection.intermediatePos)
-  return intermediatepos_.Get(index);
+inline const ::RecastIO::Vec3& OffMeshConnection::vertices(int index) const {
+  // @@protoc_insertion_point(field_get:RecastIO.OffMeshConnection.vertices)
+  return vertices_.Get(index);
 }
-inline ::RecastIO::Vec3* OffMeshConnection::mutable_intermediatepos(int index) {
-  // @@protoc_insertion_point(field_mutable:RecastIO.OffMeshConnection.intermediatePos)
-  return intermediatepos_.Mutable(index);
+inline ::RecastIO::Vec3* OffMeshConnection::mutable_vertices(int index) {
+  // @@protoc_insertion_point(field_mutable:RecastIO.OffMeshConnection.vertices)
+  return vertices_.Mutable(index);
 }
-inline ::RecastIO::Vec3* OffMeshConnection::add_intermediatepos() {
-  // @@protoc_insertion_point(field_add:RecastIO.OffMeshConnection.intermediatePos)
-  return intermediatepos_.Add();
+inline ::RecastIO::Vec3* OffMeshConnection::add_vertices() {
+  // @@protoc_insertion_point(field_add:RecastIO.OffMeshConnection.vertices)
+  return vertices_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::RecastIO::Vec3 >&
-OffMeshConnection::intermediatepos() const {
-  // @@protoc_insertion_point(field_list:RecastIO.OffMeshConnection.intermediatePos)
-  return intermediatepos_;
+OffMeshConnection::vertices() const {
+  // @@protoc_insertion_point(field_list:RecastIO.OffMeshConnection.vertices)
+  return vertices_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::RecastIO::Vec3 >*
-OffMeshConnection::mutable_intermediatepos() {
-  // @@protoc_insertion_point(field_mutable_list:RecastIO.OffMeshConnection.intermediatePos)
-  return &intermediatepos_;
+OffMeshConnection::mutable_vertices() {
+  // @@protoc_insertion_point(field_mutable_list:RecastIO.OffMeshConnection.vertices)
+  return &vertices_;
 }
 
 // required float radius = 4;
@@ -1689,104 +2085,582 @@ inline void OffMeshConnection::set_bidirectional(bool value) {
 
 // -------------------------------------------------------------------
 
-// SubModel
+// Material
 
-// required int32 submodelId = 1;
-inline bool SubModel::has_submodelid() const {
+// required string name = 1;
+inline bool Material::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SubModel::set_has_submodelid() {
+inline void Material::set_has_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void SubModel::clear_has_submodelid() {
+inline void Material::clear_has_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void SubModel::clear_submodelid() {
-  submodelid_ = 0;
-  clear_has_submodelid();
+inline void Material::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
 }
-inline ::google::protobuf::int32 SubModel::submodelid() const {
-  // @@protoc_insertion_point(field_get:RecastIO.SubModel.submodelId)
-  return submodelid_;
+inline const ::std::string& Material::name() const {
+  // @@protoc_insertion_point(field_get:RecastIO.Material.name)
+  return *name_;
 }
-inline void SubModel::set_submodelid(::google::protobuf::int32 value) {
-  set_has_submodelid();
-  submodelid_ = value;
-  // @@protoc_insertion_point(field_set:RecastIO.SubModel.submodelId)
+inline void Material::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:RecastIO.Material.name)
+}
+inline void Material::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:RecastIO.Material.name)
+}
+inline void Material::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:RecastIO.Material.name)
+}
+inline ::std::string* Material::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:RecastIO.Material.name)
+  return name_;
+}
+inline ::std::string* Material::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Material::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:RecastIO.Material.name)
 }
 
-// optional bool disabled = 2;
-inline bool SubModel::has_disabled() const {
+// optional uint32 contents = 2;
+inline bool Material::has_contents() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SubModel::set_has_disabled() {
+inline void Material::set_has_contents() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SubModel::clear_has_disabled() {
+inline void Material::clear_has_contents() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void SubModel::clear_disabled() {
-  disabled_ = false;
-  clear_has_disabled();
+inline void Material::clear_contents() {
+  contents_ = 0u;
+  clear_has_contents();
 }
-inline bool SubModel::disabled() const {
-  // @@protoc_insertion_point(field_get:RecastIO.SubModel.disabled)
-  return disabled_;
+inline ::google::protobuf::uint32 Material::contents() const {
+  // @@protoc_insertion_point(field_get:RecastIO.Material.contents)
+  return contents_;
 }
-inline void SubModel::set_disabled(bool value) {
-  set_has_disabled();
-  disabled_ = value;
-  // @@protoc_insertion_point(field_set:RecastIO.SubModel.disabled)
+inline void Material::set_contents(::google::protobuf::uint32 value) {
+  set_has_contents();
+  contents_ = value;
+  // @@protoc_insertion_point(field_set:RecastIO.Material.contents)
 }
 
-// optional bool mover = 3;
-inline bool SubModel::has_mover() const {
+// optional uint32 surfaceflags = 3;
+inline bool Material::has_surfaceflags() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void SubModel::set_has_mover() {
+inline void Material::set_has_surfaceflags() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void SubModel::clear_has_mover() {
+inline void Material::clear_has_surfaceflags() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void SubModel::clear_mover() {
-  mover_ = false;
-  clear_has_mover();
+inline void Material::clear_surfaceflags() {
+  surfaceflags_ = 0u;
+  clear_has_surfaceflags();
 }
-inline bool SubModel::mover() const {
-  // @@protoc_insertion_point(field_get:RecastIO.SubModel.mover)
-  return mover_;
+inline ::google::protobuf::uint32 Material::surfaceflags() const {
+  // @@protoc_insertion_point(field_get:RecastIO.Material.surfaceflags)
+  return surfaceflags_;
 }
-inline void SubModel::set_mover(bool value) {
-  set_has_mover();
-  mover_ = value;
-  // @@protoc_insertion_point(field_set:RecastIO.SubModel.mover)
+inline void Material::set_surfaceflags(::google::protobuf::uint32 value) {
+  set_has_surfaceflags();
+  surfaceflags_ = value;
+  // @@protoc_insertion_point(field_set:RecastIO.Material.surfaceflags)
 }
 
-// optional bool nonsolid = 4;
-inline bool SubModel::has_nonsolid() const {
+// -------------------------------------------------------------------
+
+// Model_TriParms
+
+// required uint32 tri = 1;
+inline bool Model_TriParms::has_tri() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Model_TriParms::set_has_tri() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Model_TriParms::clear_has_tri() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Model_TriParms::clear_tri() {
+  tri_ = 0u;
+  clear_has_tri();
+}
+inline ::google::protobuf::uint32 Model_TriParms::tri() const {
+  // @@protoc_insertion_point(field_get:RecastIO.Model.TriParms.tri)
+  return tri_;
+}
+inline void Model_TriParms::set_tri(::google::protobuf::uint32 value) {
+  set_has_tri();
+  tri_ = value;
+  // @@protoc_insertion_point(field_set:RecastIO.Model.TriParms.tri)
+}
+
+// optional uint32 surfaceOverride = 2;
+inline bool Model_TriParms::has_surfaceoverride() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Model_TriParms::set_has_surfaceoverride() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Model_TriParms::clear_has_surfaceoverride() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Model_TriParms::clear_surfaceoverride() {
+  surfaceoverride_ = 0u;
+  clear_has_surfaceoverride();
+}
+inline ::google::protobuf::uint32 Model_TriParms::surfaceoverride() const {
+  // @@protoc_insertion_point(field_get:RecastIO.Model.TriParms.surfaceOverride)
+  return surfaceoverride_;
+}
+inline void Model_TriParms::set_surfaceoverride(::google::protobuf::uint32 value) {
+  set_has_surfaceoverride();
+  surfaceoverride_ = value;
+  // @@protoc_insertion_point(field_set:RecastIO.Model.TriParms.surfaceOverride)
+}
+
+// -------------------------------------------------------------------
+
+// Model
+
+// required string name = 1;
+inline bool Model::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Model::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Model::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Model::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& Model::name() const {
+  // @@protoc_insertion_point(field_get:RecastIO.Model.name)
+  return *name_;
+}
+inline void Model::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:RecastIO.Model.name)
+}
+inline void Model::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:RecastIO.Model.name)
+}
+inline void Model::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:RecastIO.Model.name)
+}
+inline ::std::string* Model::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:RecastIO.Model.name)
+  return name_;
+}
+inline ::std::string* Model::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void Model::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:RecastIO.Model.name)
+}
+
+// required uint32 modelcrc = 2;
+inline bool Model::has_modelcrc() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Model::set_has_modelcrc() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Model::clear_has_modelcrc() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Model::clear_modelcrc() {
+  modelcrc_ = 0u;
+  clear_has_modelcrc();
+}
+inline ::google::protobuf::uint32 Model::modelcrc() const {
+  // @@protoc_insertion_point(field_get:RecastIO.Model.modelcrc)
+  return modelcrc_;
+}
+inline void Model::set_modelcrc(::google::protobuf::uint32 value) {
+  set_has_modelcrc();
+  modelcrc_ = value;
+  // @@protoc_insertion_point(field_set:RecastIO.Model.modelcrc)
+}
+
+// required uint32 numMeshTris = 3;
+inline bool Model::has_nummeshtris() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Model::set_has_nummeshtris() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Model::clear_has_nummeshtris() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Model::clear_nummeshtris() {
+  nummeshtris_ = 0u;
+  clear_has_nummeshtris();
+}
+inline ::google::protobuf::uint32 Model::nummeshtris() const {
+  // @@protoc_insertion_point(field_get:RecastIO.Model.numMeshTris)
+  return nummeshtris_;
+}
+inline void Model::set_nummeshtris(::google::protobuf::uint32 value) {
+  set_has_nummeshtris();
+  nummeshtris_ = value;
+  // @@protoc_insertion_point(field_set:RecastIO.Model.numMeshTris)
+}
+
+// repeated .RecastIO.Model.TriParms triangles = 4;
+inline int Model::triangles_size() const {
+  return triangles_.size();
+}
+inline void Model::clear_triangles() {
+  triangles_.Clear();
+}
+inline const ::RecastIO::Model_TriParms& Model::triangles(int index) const {
+  // @@protoc_insertion_point(field_get:RecastIO.Model.triangles)
+  return triangles_.Get(index);
+}
+inline ::RecastIO::Model_TriParms* Model::mutable_triangles(int index) {
+  // @@protoc_insertion_point(field_mutable:RecastIO.Model.triangles)
+  return triangles_.Mutable(index);
+}
+inline ::RecastIO::Model_TriParms* Model::add_triangles() {
+  // @@protoc_insertion_point(field_add:RecastIO.Model.triangles)
+  return triangles_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::RecastIO::Model_TriParms >&
+Model::triangles() const {
+  // @@protoc_insertion_point(field_list:RecastIO.Model.triangles)
+  return triangles_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::RecastIO::Model_TriParms >*
+Model::mutable_triangles() {
+  // @@protoc_insertion_point(field_mutable_list:RecastIO.Model.triangles)
+  return &triangles_;
+}
+
+// -------------------------------------------------------------------
+
+// NodeState
+
+// optional int32 subModelId = 1;
+inline bool NodeState::has_submodelid() const {
+  return type_case() == kSubModelId;
+}
+inline void NodeState::set_has_submodelid() {
+  _oneof_case_[0] = kSubModelId;
+}
+inline void NodeState::clear_submodelid() {
+  if (has_submodelid()) {
+    type_.submodelid_ = 0;
+    clear_has_type();
+  }
+}
+inline ::google::protobuf::int32 NodeState::submodelid() const {
+  if (has_submodelid()) {
+    return type_.submodelid_;
+  }
+  return 0;
+}
+inline void NodeState::set_submodelid(::google::protobuf::int32 value) {
+  if (!has_submodelid()) {
+    clear_type();
+    set_has_submodelid();
+  }
+  type_.submodelid_ = value;
+}
+
+// optional int32 staticModelId = 2;
+inline bool NodeState::has_staticmodelid() const {
+  return type_case() == kStaticModelId;
+}
+inline void NodeState::set_has_staticmodelid() {
+  _oneof_case_[0] = kStaticModelId;
+}
+inline void NodeState::clear_staticmodelid() {
+  if (has_staticmodelid()) {
+    type_.staticmodelid_ = 0;
+    clear_has_type();
+  }
+}
+inline ::google::protobuf::int32 NodeState::staticmodelid() const {
+  if (has_staticmodelid()) {
+    return type_.staticmodelid_;
+  }
+  return 0;
+}
+inline void NodeState::set_staticmodelid(::google::protobuf::int32 value) {
+  if (!has_staticmodelid()) {
+    clear_type();
+    set_has_staticmodelid();
+  }
+  type_.staticmodelid_ = value;
+}
+
+// optional bool enabled = 5 [default = true];
+inline bool NodeState::has_enabled() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void NodeState::set_has_enabled() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void NodeState::clear_has_enabled() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void NodeState::clear_enabled() {
+  enabled_ = true;
+  clear_has_enabled();
+}
+inline bool NodeState::enabled() const {
+  // @@protoc_insertion_point(field_get:RecastIO.NodeState.enabled)
+  return enabled_;
+}
+inline void NodeState::set_enabled(bool value) {
+  set_has_enabled();
+  enabled_ = value;
+  // @@protoc_insertion_point(field_set:RecastIO.NodeState.enabled)
+}
+
+// optional .RecastIO.ShapeMode shapemode = 6 [default = SHAPE_TRIANGLES];
+inline bool NodeState::has_shapemode() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void SubModel::set_has_nonsolid() {
+inline void NodeState::set_has_shapemode() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void SubModel::clear_has_nonsolid() {
+inline void NodeState::clear_has_shapemode() {
   _has_bits_[0] &= ~0x00000008u;
 }
-inline void SubModel::clear_nonsolid() {
-  nonsolid_ = false;
-  clear_has_nonsolid();
+inline void NodeState::clear_shapemode() {
+  shapemode_ = 0;
+  clear_has_shapemode();
 }
-inline bool SubModel::nonsolid() const {
-  // @@protoc_insertion_point(field_get:RecastIO.SubModel.nonsolid)
-  return nonsolid_;
+inline ::RecastIO::ShapeMode NodeState::shapemode() const {
+  // @@protoc_insertion_point(field_get:RecastIO.NodeState.shapemode)
+  return static_cast< ::RecastIO::ShapeMode >(shapemode_);
 }
-inline void SubModel::set_nonsolid(bool value) {
-  set_has_nonsolid();
-  nonsolid_ = value;
-  // @@protoc_insertion_point(field_set:RecastIO.SubModel.nonsolid)
+inline void NodeState::set_shapemode(::RecastIO::ShapeMode value) {
+  assert(::RecastIO::ShapeMode_IsValid(value));
+  set_has_shapemode();
+  shapemode_ = value;
+  // @@protoc_insertion_point(field_set:RecastIO.NodeState.shapemode)
 }
 
+// optional bool solid = 7 [default = true];
+inline bool NodeState::has_solid() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void NodeState::set_has_solid() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void NodeState::clear_has_solid() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void NodeState::clear_solid() {
+  solid_ = true;
+  clear_has_solid();
+}
+inline bool NodeState::solid() const {
+  // @@protoc_insertion_point(field_get:RecastIO.NodeState.solid)
+  return solid_;
+}
+inline void NodeState::set_solid(bool value) {
+  set_has_solid();
+  solid_ = value;
+  // @@protoc_insertion_point(field_set:RecastIO.NodeState.solid)
+}
+
+// optional bool dynamic = 8 [default = false];
+inline bool NodeState::has_dynamic() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void NodeState::set_has_dynamic() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void NodeState::clear_has_dynamic() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void NodeState::clear_dynamic() {
+  dynamic_ = false;
+  clear_has_dynamic();
+}
+inline bool NodeState::dynamic() const {
+  // @@protoc_insertion_point(field_get:RecastIO.NodeState.dynamic)
+  return dynamic_;
+}
+inline void NodeState::set_dynamic(bool value) {
+  set_has_dynamic();
+  dynamic_ = value;
+  // @@protoc_insertion_point(field_set:RecastIO.NodeState.dynamic)
+}
+
+// optional string modelname = 10;
+inline bool NodeState::has_modelname() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void NodeState::set_has_modelname() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void NodeState::clear_has_modelname() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void NodeState::clear_modelname() {
+  if (modelname_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    modelname_->clear();
+  }
+  clear_has_modelname();
+}
+inline const ::std::string& NodeState::modelname() const {
+  // @@protoc_insertion_point(field_get:RecastIO.NodeState.modelname)
+  return *modelname_;
+}
+inline void NodeState::set_modelname(const ::std::string& value) {
+  set_has_modelname();
+  if (modelname_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    modelname_ = new ::std::string;
+  }
+  modelname_->assign(value);
+  // @@protoc_insertion_point(field_set:RecastIO.NodeState.modelname)
+}
+inline void NodeState::set_modelname(const char* value) {
+  set_has_modelname();
+  if (modelname_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    modelname_ = new ::std::string;
+  }
+  modelname_->assign(value);
+  // @@protoc_insertion_point(field_set_char:RecastIO.NodeState.modelname)
+}
+inline void NodeState::set_modelname(const char* value, size_t size) {
+  set_has_modelname();
+  if (modelname_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    modelname_ = new ::std::string;
+  }
+  modelname_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:RecastIO.NodeState.modelname)
+}
+inline ::std::string* NodeState::mutable_modelname() {
+  set_has_modelname();
+  if (modelname_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    modelname_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:RecastIO.NodeState.modelname)
+  return modelname_;
+}
+inline ::std::string* NodeState::release_modelname() {
+  clear_has_modelname();
+  if (modelname_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = modelname_;
+    modelname_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void NodeState::set_allocated_modelname(::std::string* modelname) {
+  if (modelname_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete modelname_;
+  }
+  if (modelname) {
+    set_has_modelname();
+    modelname_ = modelname;
+  } else {
+    clear_has_modelname();
+    modelname_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:RecastIO.NodeState.modelname)
+}
+
+inline bool NodeState::has_type() {
+  return type_case() != TYPE_NOT_SET;
+}
+inline void NodeState::clear_has_type() {
+  _oneof_case_[0] = TYPE_NOT_SET;
+}
+inline NodeState::TypeCase NodeState::type_case() const {
+  return NodeState::TypeCase(_oneof_case_[0]);
+}
 // -------------------------------------------------------------------
 
 // NavigationMesh
@@ -1856,37 +2730,7 @@ inline void NavigationMesh::set_allocated_navmeshparams(::RecastIO::NavMeshParam
   // @@protoc_insertion_point(field_set_allocated:RecastIO.NavigationMesh.navMeshParams)
 }
 
-// repeated .RecastIO.Tile tiles = 3;
-inline int NavigationMesh::tiles_size() const {
-  return tiles_.size();
-}
-inline void NavigationMesh::clear_tiles() {
-  tiles_.Clear();
-}
-inline const ::RecastIO::Tile& NavigationMesh::tiles(int index) const {
-  // @@protoc_insertion_point(field_get:RecastIO.NavigationMesh.tiles)
-  return tiles_.Get(index);
-}
-inline ::RecastIO::Tile* NavigationMesh::mutable_tiles(int index) {
-  // @@protoc_insertion_point(field_mutable:RecastIO.NavigationMesh.tiles)
-  return tiles_.Mutable(index);
-}
-inline ::RecastIO::Tile* NavigationMesh::add_tiles() {
-  // @@protoc_insertion_point(field_add:RecastIO.NavigationMesh.tiles)
-  return tiles_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::RecastIO::Tile >&
-NavigationMesh::tiles() const {
-  // @@protoc_insertion_point(field_list:RecastIO.NavigationMesh.tiles)
-  return tiles_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::RecastIO::Tile >*
-NavigationMesh::mutable_tiles() {
-  // @@protoc_insertion_point(field_mutable_list:RecastIO.NavigationMesh.tiles)
-  return &tiles_;
-}
-
-// repeated .RecastIO.AxisAlignedBounds exclusionZone = 4;
+// repeated .RecastIO.AxisAlignedBounds exclusionZone = 3;
 inline int NavigationMesh::exclusionzone_size() const {
   return exclusionzone_.size();
 }
@@ -1916,7 +2760,7 @@ NavigationMesh::mutable_exclusionzone() {
   return &exclusionzone_;
 }
 
-// repeated .RecastIO.OffMeshConnection offMeshConnection = 5;
+// repeated .RecastIO.OffMeshConnection offMeshConnection = 4;
 inline int NavigationMesh::offmeshconnection_size() const {
   return offmeshconnection_.size();
 }
@@ -1946,34 +2790,94 @@ NavigationMesh::mutable_offmeshconnection() {
   return &offmeshconnection_;
 }
 
-// repeated .RecastIO.SubModel subModelInfo = 6;
-inline int NavigationMesh::submodelinfo_size() const {
-  return submodelinfo_.size();
+// repeated .RecastIO.NodeState nodeState = 5;
+inline int NavigationMesh::nodestate_size() const {
+  return nodestate_.size();
 }
-inline void NavigationMesh::clear_submodelinfo() {
-  submodelinfo_.Clear();
+inline void NavigationMesh::clear_nodestate() {
+  nodestate_.Clear();
 }
-inline const ::RecastIO::SubModel& NavigationMesh::submodelinfo(int index) const {
-  // @@protoc_insertion_point(field_get:RecastIO.NavigationMesh.subModelInfo)
-  return submodelinfo_.Get(index);
+inline const ::RecastIO::NodeState& NavigationMesh::nodestate(int index) const {
+  // @@protoc_insertion_point(field_get:RecastIO.NavigationMesh.nodeState)
+  return nodestate_.Get(index);
 }
-inline ::RecastIO::SubModel* NavigationMesh::mutable_submodelinfo(int index) {
-  // @@protoc_insertion_point(field_mutable:RecastIO.NavigationMesh.subModelInfo)
-  return submodelinfo_.Mutable(index);
+inline ::RecastIO::NodeState* NavigationMesh::mutable_nodestate(int index) {
+  // @@protoc_insertion_point(field_mutable:RecastIO.NavigationMesh.nodeState)
+  return nodestate_.Mutable(index);
 }
-inline ::RecastIO::SubModel* NavigationMesh::add_submodelinfo() {
-  // @@protoc_insertion_point(field_add:RecastIO.NavigationMesh.subModelInfo)
-  return submodelinfo_.Add();
+inline ::RecastIO::NodeState* NavigationMesh::add_nodestate() {
+  // @@protoc_insertion_point(field_add:RecastIO.NavigationMesh.nodeState)
+  return nodestate_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::RecastIO::SubModel >&
-NavigationMesh::submodelinfo() const {
-  // @@protoc_insertion_point(field_list:RecastIO.NavigationMesh.subModelInfo)
-  return submodelinfo_;
+inline const ::google::protobuf::RepeatedPtrField< ::RecastIO::NodeState >&
+NavigationMesh::nodestate() const {
+  // @@protoc_insertion_point(field_list:RecastIO.NavigationMesh.nodeState)
+  return nodestate_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::RecastIO::SubModel >*
-NavigationMesh::mutable_submodelinfo() {
-  // @@protoc_insertion_point(field_mutable_list:RecastIO.NavigationMesh.subModelInfo)
-  return &submodelinfo_;
+inline ::google::protobuf::RepeatedPtrField< ::RecastIO::NodeState >*
+NavigationMesh::mutable_nodestate() {
+  // @@protoc_insertion_point(field_mutable_list:RecastIO.NavigationMesh.nodeState)
+  return &nodestate_;
+}
+
+// repeated .RecastIO.Model models = 6;
+inline int NavigationMesh::models_size() const {
+  return models_.size();
+}
+inline void NavigationMesh::clear_models() {
+  models_.Clear();
+}
+inline const ::RecastIO::Model& NavigationMesh::models(int index) const {
+  // @@protoc_insertion_point(field_get:RecastIO.NavigationMesh.models)
+  return models_.Get(index);
+}
+inline ::RecastIO::Model* NavigationMesh::mutable_models(int index) {
+  // @@protoc_insertion_point(field_mutable:RecastIO.NavigationMesh.models)
+  return models_.Mutable(index);
+}
+inline ::RecastIO::Model* NavigationMesh::add_models() {
+  // @@protoc_insertion_point(field_add:RecastIO.NavigationMesh.models)
+  return models_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::RecastIO::Model >&
+NavigationMesh::models() const {
+  // @@protoc_insertion_point(field_list:RecastIO.NavigationMesh.models)
+  return models_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::RecastIO::Model >*
+NavigationMesh::mutable_models() {
+  // @@protoc_insertion_point(field_mutable_list:RecastIO.NavigationMesh.models)
+  return &models_;
+}
+
+// repeated .RecastIO.Tile tiles = 100;
+inline int NavigationMesh::tiles_size() const {
+  return tiles_.size();
+}
+inline void NavigationMesh::clear_tiles() {
+  tiles_.Clear();
+}
+inline const ::RecastIO::Tile& NavigationMesh::tiles(int index) const {
+  // @@protoc_insertion_point(field_get:RecastIO.NavigationMesh.tiles)
+  return tiles_.Get(index);
+}
+inline ::RecastIO::Tile* NavigationMesh::mutable_tiles(int index) {
+  // @@protoc_insertion_point(field_mutable:RecastIO.NavigationMesh.tiles)
+  return tiles_.Mutable(index);
+}
+inline ::RecastIO::Tile* NavigationMesh::add_tiles() {
+  // @@protoc_insertion_point(field_add:RecastIO.NavigationMesh.tiles)
+  return tiles_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::RecastIO::Tile >&
+NavigationMesh::tiles() const {
+  // @@protoc_insertion_point(field_list:RecastIO.NavigationMesh.tiles)
+  return tiles_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::RecastIO::Tile >*
+NavigationMesh::mutable_tiles() {
+  // @@protoc_insertion_point(field_mutable_list:RecastIO.NavigationMesh.tiles)
+  return &tiles_;
 }
 
 
@@ -1985,6 +2889,11 @@ NavigationMesh::mutable_submodelinfo() {
 namespace google {
 namespace protobuf {
 
+template <> struct is_proto_enum< ::RecastIO::ShapeMode> : ::google::protobuf::internal::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::RecastIO::ShapeMode>() {
+  return ::RecastIO::ShapeMode_descriptor();
+}
 
 }  // namespace google
 }  // namespace protobuf

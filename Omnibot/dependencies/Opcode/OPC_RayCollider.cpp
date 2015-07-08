@@ -397,7 +397,7 @@ BOOL RayCollider::InitQuery(const IceMaths::Ray& world_ray, const IceMaths::Matr
 		//	 (it seems to introduce errors, because it cuts number precision by a half when
 		//	  stripping the matrix scale off)
 		//  - the code is shorter and easier to maintain;  :P
-		#pragma message(" >> Using new code for ray collision")		
+		//#pragma message(" >> Using new code for ray collision")		
 
 		// first, invert the world matrix and transform the ray's origin
 		Matrix4x4 World;

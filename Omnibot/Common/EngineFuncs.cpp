@@ -20,169 +20,106 @@ boost::mutex		gMessageMutex;
 
 namespace EngineFuncs
 {
-	Prof_Define(EngineFuncs);
-
-	bool TraceLine(obTraceResult &_tr, const Vector3f &_start, const Vector3f &_end,
-		const AABB *_aabb, int _mask, int _user, obBool _usepvs)
+	bool TraceLine( obTraceResult &_tr, const Vector3f &_start, const Vector3f &_end,
+		const AABB *_aabb, int _mask, int _user, obBool _usepvs )
 	{
-		//Prof_Scope(EngineFuncs);
-		Prof(TraceLine);
-
 		static bool bDraw = false;
 		{
-			if(bDraw)
+			if ( bDraw )
 			{
-				RenderBuffer::AddLine(_start, _end, COLOR::BLUE, 0.02f);
+				RenderBuffer::AddLine( _start, _end, COLOR::BLUE, 0.02f );
 			}
 		}
 
-		_tr.mEndpos[0] = _end.X();
-		_tr.mEndpos[1] = _end.Y();
-		_tr.mEndpos[2] = _end.Z();
-		return SUCCESS(gEngineFuncs->TraceLine(_tr, _start, _end, _aabb, _mask, _user, _usepvs));
+		_tr.mEndpos[ 0 ] = _end.X();
+		_tr.mEndpos[ 1 ] = _end.Y();
+		_tr.mEndpos[ 2 ] = _end.Z();
+		return SUCCESS( gEngineFuncs->TraceLine( _tr, _start, _end, _aabb, _mask, _user, _usepvs ) );
 	}
-	std::string EntityName(const GameEntity _ent, const char *_default)
+	std::string EntityName( const GameEntity _ent, const char *_default )
 	{
-		//Prof_Scope(EngineFuncs);
-		{
-			Prof(EntityName);
-
-			const char *pName = gEngineFuncs->GetEntityName(_ent);
-			if(!_default) _default = "";
-			return pName ? pName : _default;
-		}
+		const char *pName = gEngineFuncs->GetEntityName( _ent );
+		if ( !_default ) _default = "";
+		return pName ? pName : _default;
 	}
-	GameEntity EntityOwner(const GameEntity _ent)
+	GameEntity EntityOwner( const GameEntity _ent )
 	{
-		//Prof_Scope(EngineFuncs);
-		{
-			Prof(EntityOwner);
-
-			return gEngineFuncs->GetEntityOwner(_ent);
-		}
+		return gEngineFuncs->GetEntityOwner( _ent );
 	}
-	bool EntityPosition(const GameEntity _ent, Vector3f &_pos)
+	bool EntityPosition( const GameEntity _ent, Vector3f &_pos )
 	{
-		//Prof_Scope(EngineFuncs);
-		{
-			Prof(EntityPosition);
-
-			return SUCCESS(gEngineFuncs->GetEntityPosition(_ent, _pos));
-		}
+		return SUCCESS( gEngineFuncs->GetEntityPosition( _ent, _pos ) );
 	}
-	bool EntityEyePosition(const GameEntity _ent, Vector3f &_pos)
+	bool EntityEyePosition( const GameEntity _ent, Vector3f &_pos )
 	{
-		//Prof_Scope(EngineFuncs);
-		{
-			Prof(EntityEyePosition);
-
-			return SUCCESS(gEngineFuncs->GetEntityEyePosition(_ent, _pos));
-		}
+		return SUCCESS( gEngineFuncs->GetEntityEyePosition( _ent, _pos ) );
 	}
-	bool EntityBonePosition(const GameEntity _ent, int _boneid, Vector3f &_pos)
+	bool EntityBonePosition( const GameEntity _ent, int _boneid, Vector3f &_pos )
 	{
-		//Prof_Scope(EngineFuncs);
-		{
-			Prof(EntityBonePosition);
-
-			return SUCCESS(gEngineFuncs->GetEntityBonePosition(_ent, _boneid, _pos));
-		}
+		return SUCCESS( gEngineFuncs->GetEntityBonePosition( _ent, _boneid, _pos ) );
 	}
-	bool EntityOrientation(const GameEntity _ent, float _fwd[3], float _right[3], float _up[3])
+	bool EntityOrientation( const GameEntity _ent, float _fwd[ 3 ], float _right[ 3 ], float _up[ 3 ] )
 	{
-		//Prof_Scope(EngineFuncs);
-		{
-			Prof(EntityOrientation);
-
-			return SUCCESS(gEngineFuncs->GetEntityOrientation(_ent, _fwd, _right, _up));
-		}
+		return SUCCESS( gEngineFuncs->GetEntityOrientation( _ent, _fwd, _right, _up ) );
 	}
-	bool EntityOrientation(const GameEntity _ent, Matrix3f & mat)
+	bool EntityOrientation( const GameEntity _ent, Matrix3f & mat )
 	{
 		Vector3f fwd, right, up;
-		if (SUCCESS(gEngineFuncs->GetEntityOrientation(_ent, fwd, right, up)))
+		if ( SUCCESS( gEngineFuncs->GetEntityOrientation( _ent, fwd, right, up ) ) )
 		{
-			mat = Matrix3f(fwd, right, up, true);
+			mat = Matrix3f( fwd, right, up, true );
 			return true;
 		}
 		return false;
 	}
-	bool EntityVelocity(const GameEntity _ent, Vector3f &_vel)
+	bool EntityVelocity( const GameEntity _ent, Vector3f &_vel )
 	{
-		//Prof_Scope(EngineFuncs);
-		{
-			Prof(EntityVelocity);
-
-			return SUCCESS(gEngineFuncs->GetEntityVelocity(_ent, _vel));
-		}
+		return SUCCESS( gEngineFuncs->GetEntityVelocity( _ent, _vel ) );
 	}
-	bool EntityLocalAABB(const GameEntity _ent, AABB &_bounds)
+	bool EntityLocalAABB( const GameEntity _ent, AABB &_bounds )
 	{
-		//Prof_Scope(EngineFuncs);
-		{
-			Prof( EntityLocalAABB );
-
-			return SUCCESS(gEngineFuncs->GetEntityLocalAABB(_ent, _bounds));
-		}
+		return SUCCESS( gEngineFuncs->GetEntityLocalAABB( _ent, _bounds ) );
 	}
-	bool EntityWorldOBB(const GameEntity _ent, Box3f &_bounds)
+	bool EntityWorldOBB( const GameEntity _ent, Box3f &_bounds )
 	{
-		//Prof_Scope(EngineFuncs);
+		if ( SUCCESS( gEngineFuncs->GetEntityWorldOBB( _ent,
+			_bounds.Center,
+			_bounds.Axis[ 0 ],
+			_bounds.Axis[ 1 ],
+			_bounds.Axis[ 2 ],
+			_bounds.Extent ) ) )
 		{
-			Prof(EntityWorldOBB);
-			if(SUCCESS(gEngineFuncs->GetEntityWorldOBB(_ent,
-				_bounds.Center,
-				_bounds.Axis[0],
-				_bounds.Axis[1],
-				_bounds.Axis[2],
-				_bounds.Extent))) {
-					return true;
-			}
-			return false;
+			return true;
 		}
+		return false;
 	}
-	bool EntityGroundEntity(const GameEntity _ent, GameEntity &moveent)
+	bool EntityGroundEntity( const GameEntity _ent, GameEntity &moveent )
 	{
-		//Prof_Scope(EngineFuncs);
-		{
-			Prof(EntityGroundEntity);
-
-			return SUCCESS(gEngineFuncs->GetEntityGroundEntity(_ent, moveent));
-		}
+		return SUCCESS( gEngineFuncs->GetEntityGroundEntity( _ent, moveent ) );
 	}
-	bool IsInPvs(const Vector3f &_source,const Vector3f &_target)
+	bool IsInPvs( const Vector3f &_source, const Vector3f &_target )
 	{
-		//Prof_Scope(EngineFuncs);
-		{
-			Prof(IsInPvs);
-
-			return gEngineFuncs->IsInPVS(_source, _target)==True;
-		}
+		return gEngineFuncs->IsInPVS( _source, _target ) == True;
 	}
-	bool GroundPosition(const Vector3f &_pos, Vector3f &_outPosition, Vector3f &_outNormal, float _offset)
+	bool GroundPosition( const Vector3f &_pos, Vector3f &_outPosition, Vector3f &_outNormal, float _offset )
 	{
-		//Prof_Scope(EngineFuncs);
+		obTraceResult tr;
+		EngineFuncs::TraceLine( tr,
+			_pos + Vector3f( 0.f, 0.f, _offset ),
+			_pos - Vector3f::UNIT_Z * 2048.f,
+			NULL,
+			TR_MASK_FLOODFILL, -1, False );
+		if ( tr.mFraction < 1.f )
 		{
-			Prof(GroundPosition);
-
-			obTraceResult tr;
-			EngineFuncs::TraceLine(tr,
-				_pos + Vector3f(0.f, 0.f, _offset),
-				_pos - Vector3f::UNIT_Z * 2048.f,
-				NULL,
-				TR_MASK_FLOODFILL, -1, False);
-			if(tr.mFraction < 1.f)
-			{
-				_outPosition = Vector3f(tr.mEndpos[0],tr.mEndpos[1],tr.mEndpos[2]);
-				_outNormal = Vector3f(tr.mNormal[0],tr.mNormal[1],tr.mNormal[2]);
-				return true;
-			}
-			return false;
+			_outPosition = Vector3f( tr.mEndpos[ 0 ], tr.mEndpos[ 1 ], tr.mEndpos[ 2 ] );
+			_outNormal = Vector3f( tr.mNormal[ 0 ], tr.mNormal[ 1 ], tr.mNormal[ 2 ] );
+			return true;
 		}
+		return false;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	
+
 	void FlushAsyncMessages()
 	{
 		if ( gMessageMutex.try_lock() )
@@ -201,11 +138,13 @@ namespace EngineFuncs
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	
-	void ConsoleMessage(const char* _msg)
+
+	void ConsoleMessage( const char* _msg )
 	{
+		rmt_LogText( va( "Message: %s", _msg ) );
+
 		if ( IGameManager::sMainThread == boost::this_thread::get_id() )
-			gEngineFuncs->PrintMessage(_msg);
+			gEngineFuncs->PrintMessage( _msg );
 		else
 		{
 			boost::lock_guard<boost::mutex> lk( gMessageMutex );
@@ -213,8 +152,10 @@ namespace EngineFuncs
 		}
 	}
 
-	void ConsoleError(const char* _msg)
-	{		
+	void ConsoleError( const char* _msg )
+	{
+		rmt_LogText( va( "Error: %s", _msg ) );
+
 		if ( IGameManager::sMainThread == boost::this_thread::get_id() )
 			gEngineFuncs->PrintError( _msg );
 		else

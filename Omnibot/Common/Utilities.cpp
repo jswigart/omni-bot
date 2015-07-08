@@ -492,11 +492,6 @@ namespace Utils
 		}
 	}
 
-	void FindClassName( std::string& groupName, std::string& className, const EntityInfo& entInfo )
-	{
-		System::mInstance->mGame->FindClassName( groupName, className, entInfo );
-	}
-
 	int32_t GetRoleMask( const std::string &_name )
 	{
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
@@ -2220,4 +2215,33 @@ AxisAlignedBox3f ComputeAABB( const Box3f & obb )
 	for ( int i = 1; i < 8; ++i )
 		aabb.ExpandPt( verts[ i ] );
 	return aabb;
+}
+
+Vector3f Convert( const IceMaths::Point & pt )
+{
+	return Vector3f( pt.x, pt.y, pt.z );
+}
+
+Vector3f Convert( const modeldata::Vec3 & vec )
+{
+	return Vector3f( vec.x(), vec.y(), vec.z() );
+}
+
+IceMaths::Matrix4x4 Convert( const modeldata::Node & node )
+{
+	IceMaths::Matrix4x4 xform;
+	xform.Identity();
+
+	if ( node.has_eulerrotation() )
+	{
+		xform.RotX( node.eulerrotation().x() );
+		xform.RotY( node.eulerrotation().y() );
+		xform.RotZ( node.eulerrotation().z() );
+	}
+
+	if ( node.has_translation() )
+	{
+		xform.SetTrans( IceMaths::Point( node.translation().x(), node.translation().y(), node.translation().z() ) );
+	}
+	return xform;
 }

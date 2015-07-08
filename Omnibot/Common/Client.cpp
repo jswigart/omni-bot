@@ -84,8 +84,6 @@ Client::~Client()
 
 void Client::Update()
 {
-	Prof( ClientUpdate );
-
 	using namespace AiState;
 
 	// Set dirty flags to invalidate caches.
@@ -113,7 +111,7 @@ void Client::Update()
 	CheckClassEvent();
 
 	// Update my internal state
-	gEngineFuncs->GetEntityInfo( GetGameEntity(), mEntInfo );
+	IGame::GetEntityInfo( GetGameEntity(), mEntInfo );
 	
 	if ( CheckUserFlag( Client::FL_DISABLED ) )
 	{
@@ -179,7 +177,7 @@ void Client::Update()
 	mClientInput.mButtonFlags = mButtonFlags;
 	mClientInput.mCurrentWeapon = GetWeaponSystem()->GetDesiredWeaponID();
 	{
-		Prof( UpdateBotInput );
+		//rmt_ScopedCPUSample( UpdateBotInput );
 		UpdateBotInput();
 	}
 
@@ -702,7 +700,7 @@ bool Client::HasLineOfSightTo( const Vector3f &_pos, GameEntity _entity, int cus
 bool Client::HasLineOfSightTo( const Vector3f &_pos1, const Vector3f &_pos2,
 	GameEntity _ent, int _ignoreent, int customTraceMask )
 {
-	Prof( HasLineOfSightTo );
+	//rmt_ScopedCPUSample( HasLineOfSightTo );
 	obTraceResult tr;
 	EngineFuncs::TraceLine( tr, _pos1, _pos2,
 		NULL, customTraceMask ? customTraceMask : TR_MASK_SHOT | TR_MASK_SMOKEBOMB, _ignoreent, True );
@@ -826,7 +824,7 @@ void Client::ClearProfile()
 
 void Client::ProcessEventImpl( const MessageHelper &_message, uint32_t _targetState )
 {
-	Prof( Client_ProcessEvent );
+	//rmt_ScopedCPUSample( ClientProcessEvent );
 
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 
@@ -849,9 +847,9 @@ void Client::PropogateDeletedThreads( const int *_threadIds, int _numThreads )
 	mStateRoot->PropogateDeletedThreads( _threadIds, _numThreads );
 }
 
-bool Client::DistributeUnhandledCommand( const StringVector &_args )
+bool Client::DistributeUnhandledCommand( const StringVector & args )
 {
-	return mStateRoot->StateCommand( _args );
+	return mStateRoot->StateCommand( args );
 }
 
 void Client::ChangeTeam( int _team )
@@ -912,7 +910,7 @@ void Client::CheckTeamEvent()
 void Client::CheckClassEvent()
 {
 	EntityInfo currentInfo;
-	gEngineFuncs->GetEntityInfo( GetGameEntity(), currentInfo );
+	IGame::GetEntityInfo( GetGameEntity(), currentInfo );
 	if ( currentInfo.mClassId != mEntInfo.mClassId )
 	{
 		// Send a change class event.

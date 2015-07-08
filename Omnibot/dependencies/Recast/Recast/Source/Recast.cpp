@@ -328,8 +328,7 @@ int rcGetHeightFieldSpanCount(rcContext* ctx, rcHeightfield& hf)
 /// See the #rcConfig documentation for more information on the configuration parameters.
 ///
 /// @see rcAllocCompactHeightfield, rcHeightfield, rcCompactHeightfield, rcConfig
-bool rcBuildCompactHeightfield(rcContext* ctx, const int walkableHeight, const int walkableClimb,
-							   rcHeightfield& hf, rcCompactHeightfield& chf)
+bool rcBuildCompactHeightfield( rcContext* ctx, int walkableHeight, int walkableClimb, rcHeightfield& hf, rcCompactHeightfield& chf )
 {
 	rcAssert(ctx);
 	
@@ -348,7 +347,7 @@ bool rcBuildCompactHeightfield(rcContext* ctx, const int walkableHeight, const i
 	chf.maxRegions = 0;
 	rcVcopy(chf.bmin, hf.bmin);
 	rcVcopy(chf.bmax, hf.bmax);
-	chf.bmax[1] += walkableHeight*hf.ch;
+	chf.bmax[ 1 ] += walkableHeight*hf.ch;
 	chf.cs = hf.cs;
 	chf.ch = hf.ch;
 	chf.cells = (rcCompactCell*)rcAlloc(sizeof(rcCompactCell)*w*h, RC_ALLOC_PERM);
@@ -436,7 +435,7 @@ bool rcBuildCompactHeightfield(rcContext* ctx, const int walkableHeight, const i
 
 						// Check that the gap between the spans is walkable,
 						// and that the climb height between the gaps is not too high.
-						if ((top - bot) >= walkableHeight && rcAbs((int)ns.y - (int)s.y) <= walkableClimb)
+						if ( ( top - bot ) >= walkableHeight && rcAbs( (int)ns.y - (int)s.y ) <= walkableClimb )
 						{
 							// Mark direction as walkable.
 							const int lidx = k - (int)nc.index;

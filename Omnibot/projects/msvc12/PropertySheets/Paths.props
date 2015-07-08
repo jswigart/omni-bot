@@ -22,6 +22,10 @@
     <SHA1>$(DEPENDENCIES)\smallsha1</SHA1>
     <SQLITE>$(DEPENDENCIES)\sqlite</SQLITE>
     <RECAST>$(DEPENDENCIES)\Recast</RECAST>
+    <REMOTERY>$(DEPENDENCIES)\Remotery</REMOTERY>
+    <TINYOBJLOADER>$(DEPENDENCIES)\tinyobjloader</TINYOBJLOADER>
+    <LIBSODIUM>D:\Sourcecode\zmq\libsodium</LIBSODIUM>
+    <ZEROMQ>D:\Sourcecode\zmq\zeromq-4.1.2</ZEROMQ>
     <ETDIR>D:\Games\WET</ETDIR>
     <JADIR>D:\Games\JediAcademy\GameData\</JADIR>
     <ModularCombat>D:\Steam\steamapps\sourcemods\modularcombat_beta</ModularCombat>
@@ -39,7 +43,7 @@
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <EnablePREfast>false</EnablePREfast>
-      <AdditionalIncludeDirectories>$(ASSIMP)/include;$(BULLET)/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ASSIMP)/include;$(BULLET)/src;$(REMOTERY)/lib;$(TINYOBJLOADER);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -117,6 +121,22 @@
     </BuildMacro>
     <BuildMacro Include="RECAST">
       <Value>$(RECAST)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="REMOTERY">
+      <Value>$(REMOTERY)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="TINYOBJLOADER">
+      <Value>$(TINYOBJLOADER)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="LIBSODIUM">
+      <Value>$(LIBSODIUM)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="ZEROMQ">
+      <Value>$(ZEROMQ)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
     <BuildMacro Include="ETDIR">

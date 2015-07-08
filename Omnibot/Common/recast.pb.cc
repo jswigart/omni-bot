@@ -35,12 +35,26 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* OffMeshConnection_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   OffMeshConnection_reflection_ = NULL;
-const ::google::protobuf::Descriptor* SubModel_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* Material_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  SubModel_reflection_ = NULL;
+  Material_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Model_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Model_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Model_TriParms_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Model_TriParms_reflection_ = NULL;
+const ::google::protobuf::Descriptor* NodeState_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  NodeState_reflection_ = NULL;
+struct NodeStateOneofInstance {
+  ::google::protobuf::int32 submodelid_;
+  ::google::protobuf::int32 staticmodelid_;
+}* NodeState_default_oneof_instance_ = NULL;
 const ::google::protobuf::Descriptor* NavigationMesh_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   NavigationMesh_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* ShapeMode_descriptor_ = NULL;
 
 }  // namespace
 
@@ -130,7 +144,7 @@ void protobuf_AssignDesc_recast_2eproto() {
   static const int OffMeshConnection_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OffMeshConnection, entrypos_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OffMeshConnection, exitpos_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OffMeshConnection, intermediatepos_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OffMeshConnection, vertices_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OffMeshConnection, radius_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OffMeshConnection, areatype_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OffMeshConnection, flags_),
@@ -147,32 +161,90 @@ void protobuf_AssignDesc_recast_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(OffMeshConnection));
-  SubModel_descriptor_ = file->message_type(5);
-  static const int SubModel_offsets_[4] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SubModel, submodelid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SubModel, disabled_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SubModel, mover_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SubModel, nonsolid_),
+  Material_descriptor_ = file->message_type(5);
+  static const int Material_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Material, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Material, contents_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Material, surfaceflags_),
   };
-  SubModel_reflection_ =
+  Material_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      SubModel_descriptor_,
-      SubModel::default_instance_,
-      SubModel_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SubModel, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SubModel, _unknown_fields_),
+      Material_descriptor_,
+      Material::default_instance_,
+      Material_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Material, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Material, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(SubModel));
-  NavigationMesh_descriptor_ = file->message_type(6);
-  static const int NavigationMesh_offsets_[6] = {
+      sizeof(Material));
+  Model_descriptor_ = file->message_type(6);
+  static const int Model_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Model, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Model, modelcrc_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Model, nummeshtris_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Model, triangles_),
+  };
+  Model_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Model_descriptor_,
+      Model::default_instance_,
+      Model_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Model, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Model, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Model));
+  Model_TriParms_descriptor_ = Model_descriptor_->nested_type(0);
+  static const int Model_TriParms_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Model_TriParms, tri_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Model_TriParms, surfaceoverride_),
+  };
+  Model_TriParms_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      Model_TriParms_descriptor_,
+      Model_TriParms::default_instance_,
+      Model_TriParms_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Model_TriParms, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Model_TriParms, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(Model_TriParms));
+  NodeState_descriptor_ = file->message_type(7);
+  static const int NodeState_offsets_[8] = {
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(NodeState_default_oneof_instance_, submodelid_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(NodeState_default_oneof_instance_, staticmodelid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, enabled_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, shapemode_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, solid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, dynamic_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, modelname_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, type_),
+  };
+  NodeState_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      NodeState_descriptor_,
+      NodeState::default_instance_,
+      NodeState_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, _unknown_fields_),
+      -1,
+      NodeState_default_oneof_instance_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, _oneof_case_[0]),
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(NodeState));
+  NavigationMesh_descriptor_ = file->message_type(8);
+  static const int NavigationMesh_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NavigationMesh, version_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NavigationMesh, navmeshparams_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NavigationMesh, tiles_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NavigationMesh, exclusionzone_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NavigationMesh, offmeshconnection_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NavigationMesh, submodelinfo_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NavigationMesh, nodestate_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NavigationMesh, models_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NavigationMesh, tiles_),
   };
   NavigationMesh_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -185,6 +257,7 @@ void protobuf_AssignDesc_recast_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(NavigationMesh));
+  ShapeMode_descriptor_ = file->enum_type(0);
 }
 
 namespace {
@@ -208,7 +281,13 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     OffMeshConnection_descriptor_, &OffMeshConnection::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    SubModel_descriptor_, &SubModel::default_instance());
+    Material_descriptor_, &Material::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Model_descriptor_, &Model::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    Model_TriParms_descriptor_, &Model_TriParms::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    NodeState_descriptor_, &NodeState::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     NavigationMesh_descriptor_, &NavigationMesh::default_instance());
 }
@@ -226,8 +305,15 @@ void protobuf_ShutdownFile_recast_2eproto() {
   delete Tile_reflection_;
   delete OffMeshConnection::default_instance_;
   delete OffMeshConnection_reflection_;
-  delete SubModel::default_instance_;
-  delete SubModel_reflection_;
+  delete Material::default_instance_;
+  delete Material_reflection_;
+  delete Model::default_instance_;
+  delete Model_reflection_;
+  delete Model_TriParms::default_instance_;
+  delete Model_TriParms_reflection_;
+  delete NodeState::default_instance_;
+  delete NodeState_default_oneof_instance_;
+  delete NodeState_reflection_;
   delete NavigationMesh::default_instance_;
   delete NavigationMesh_reflection_;
 }
@@ -251,21 +337,31 @@ void protobuf_AddDesc_recast_2eproto() {
     "\t \002(\002\022\020\n\010tileSize\030\n \002(\005\022\030\n\020detailSampleD"
     "ist\030\013 \002(\002\022\032\n\022detailSampleMaxErr\030\014 \002(\002\"8\n"
     "\004Tile\022\030\n\020unCompressedSize\030\001 \002(\005\022\026\n\016compr"
-    "essedData\030\002 \002(\014\"\316\001\n\021OffMeshConnection\022 \n"
+    "essedData\030\002 \002(\014\"\307\001\n\021OffMeshConnection\022 \n"
     "\010entryPos\030\001 \002(\0132\016.RecastIO.Vec3\022\037\n\007exitP"
-    "os\030\002 \002(\0132\016.RecastIO.Vec3\022\'\n\017intermediate"
-    "Pos\030\003 \003(\0132\016.RecastIO.Vec3\022\016\n\006radius\030\004 \002("
-    "\002\022\020\n\010areaType\030\005 \002(\r\022\r\n\005flags\030\006 \002(\r\022\034\n\rbi"
-    "Directional\030\007 \001(\010:\005false\"Q\n\010SubModel\022\022\n\n"
-    "submodelId\030\001 \002(\005\022\020\n\010disabled\030\002 \001(\010\022\r\n\005mo"
-    "ver\030\003 \001(\010\022\020\n\010nonsolid\030\004 \001(\010\"\206\002\n\016Navigati"
-    "onMesh\022\017\n\007version\030\001 \002(\005\022.\n\rnavMeshParams"
-    "\030\002 \002(\0132\027.RecastIO.NavMeshParams\022\035\n\005tiles"
-    "\030\003 \003(\0132\016.RecastIO.Tile\0222\n\rexclusionZone\030"
-    "\004 \003(\0132\033.RecastIO.AxisAlignedBounds\0226\n\021of"
-    "fMeshConnection\030\005 \003(\0132\033.RecastIO.OffMesh"
-    "Connection\022(\n\014subModelInfo\030\006 \003(\0132\022.Recas"
-    "tIO.SubModel", 1052);
+    "os\030\002 \002(\0132\016.RecastIO.Vec3\022 \n\010vertices\030\003 \003"
+    "(\0132\016.RecastIO.Vec3\022\016\n\006radius\030\004 \002(\002\022\020\n\010ar"
+    "eaType\030\005 \002(\r\022\r\n\005flags\030\006 \002(\r\022\034\n\rbiDirecti"
+    "onal\030\007 \001(\010:\005false\"@\n\010Material\022\014\n\004name\030\001 "
+    "\002(\t\022\020\n\010contents\030\002 \001(\r\022\024\n\014surfaceflags\030\003 "
+    "\001(\r\"\233\001\n\005Model\022\014\n\004name\030\001 \002(\t\022\020\n\010modelcrc\030"
+    "\002 \002(\r\022\023\n\013numMeshTris\030\003 \002(\r\022+\n\ttriangles\030"
+    "\004 \003(\0132\030.RecastIO.Model.TriParms\0320\n\010TriPa"
+    "rms\022\013\n\003tri\030\001 \002(\r\022\027\n\017surfaceOverride\030\002 \001("
+    "\r\"\322\001\n\tNodeState\022\024\n\nsubModelId\030\001 \001(\005H\000\022\027\n"
+    "\rstaticModelId\030\002 \001(\005H\000\022\025\n\007enabled\030\005 \001(\010:"
+    "\004true\0227\n\tshapemode\030\006 \001(\0162\023.RecastIO.Shap"
+    "eMode:\017SHAPE_TRIANGLES\022\023\n\005solid\030\007 \001(\010:\004t"
+    "rue\022\026\n\007dynamic\030\010 \001(\010:\005false\022\021\n\tmodelname"
+    "\030\n \001(\tB\006\n\004type\"\245\002\n\016NavigationMesh\022\017\n\007ver"
+    "sion\030\001 \002(\005\022.\n\rnavMeshParams\030\002 \002(\0132\027.Reca"
+    "stIO.NavMeshParams\0222\n\rexclusionZone\030\003 \003("
+    "\0132\033.RecastIO.AxisAlignedBounds\0226\n\021offMes"
+    "hConnection\030\004 \003(\0132\033.RecastIO.OffMeshConn"
+    "ection\022&\n\tnodeState\030\005 \003(\0132\023.RecastIO.Nod"
+    "eState\022\037\n\006models\030\006 \003(\0132\017.RecastIO.Model\022"
+    "\035\n\005tiles\030d \003(\0132\016.RecastIO.Tile*/\n\tShapeM"
+    "ode\022\023\n\017SHAPE_TRIANGLES\020\000\022\r\n\tSHAPE_OBB\020\001", 1479);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "recast.proto", &protobuf_RegisterTypes);
   Vec3::default_instance_ = new Vec3();
@@ -273,14 +369,21 @@ void protobuf_AddDesc_recast_2eproto() {
   NavMeshParams::default_instance_ = new NavMeshParams();
   Tile::default_instance_ = new Tile();
   OffMeshConnection::default_instance_ = new OffMeshConnection();
-  SubModel::default_instance_ = new SubModel();
+  Material::default_instance_ = new Material();
+  Model::default_instance_ = new Model();
+  Model_TriParms::default_instance_ = new Model_TriParms();
+  NodeState::default_instance_ = new NodeState();
+  NodeState_default_oneof_instance_ = new NodeStateOneofInstance;
   NavigationMesh::default_instance_ = new NavigationMesh();
   Vec3::default_instance_->InitAsDefaultInstance();
   AxisAlignedBounds::default_instance_->InitAsDefaultInstance();
   NavMeshParams::default_instance_->InitAsDefaultInstance();
   Tile::default_instance_->InitAsDefaultInstance();
   OffMeshConnection::default_instance_->InitAsDefaultInstance();
-  SubModel::default_instance_->InitAsDefaultInstance();
+  Material::default_instance_->InitAsDefaultInstance();
+  Model::default_instance_->InitAsDefaultInstance();
+  Model_TriParms::default_instance_->InitAsDefaultInstance();
+  NodeState::default_instance_->InitAsDefaultInstance();
   NavigationMesh::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_recast_2eproto);
 }
@@ -291,6 +394,20 @@ struct StaticDescriptorInitializer_recast_2eproto {
     protobuf_AddDesc_recast_2eproto();
   }
 } static_descriptor_initializer_recast_2eproto_;
+const ::google::protobuf::EnumDescriptor* ShapeMode_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ShapeMode_descriptor_;
+}
+bool ShapeMode_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+      return true;
+    default:
+      return false;
+  }
+}
+
 
 // ===================================================================
 
@@ -1790,7 +1907,7 @@ void Tile::Swap(Tile* other) {
 #ifndef _MSC_VER
 const int OffMeshConnection::kEntryPosFieldNumber;
 const int OffMeshConnection::kExitPosFieldNumber;
-const int OffMeshConnection::kIntermediatePosFieldNumber;
+const int OffMeshConnection::kVerticesFieldNumber;
 const int OffMeshConnection::kRadiusFieldNumber;
 const int OffMeshConnection::kAreaTypeFieldNumber;
 const int OffMeshConnection::kFlagsFieldNumber;
@@ -1883,7 +2000,7 @@ void OffMeshConnection::Clear() {
 #undef OFFSET_OF_FIELD_
 #undef ZR_
 
-  intermediatepos_.Clear();
+  vertices_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -1919,20 +2036,20 @@ bool OffMeshConnection::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(26)) goto parse_intermediatePos;
+        if (input->ExpectTag(26)) goto parse_vertices;
         break;
       }
 
-      // repeated .RecastIO.Vec3 intermediatePos = 3;
+      // repeated .RecastIO.Vec3 vertices = 3;
       case 3: {
         if (tag == 26) {
-         parse_intermediatePos:
+         parse_vertices:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_intermediatepos()));
+                input, add_vertices()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(26)) goto parse_intermediatePos;
+        if (input->ExpectTag(26)) goto parse_vertices;
         if (input->ExpectTag(37)) goto parse_radius;
         break;
       }
@@ -2034,10 +2151,10 @@ void OffMeshConnection::SerializeWithCachedSizes(
       2, this->exitpos(), output);
   }
 
-  // repeated .RecastIO.Vec3 intermediatePos = 3;
-  for (int i = 0; i < this->intermediatepos_size(); i++) {
+  // repeated .RecastIO.Vec3 vertices = 3;
+  for (int i = 0; i < this->vertices_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->intermediatepos(i), output);
+      3, this->vertices(i), output);
   }
 
   // required float radius = 4;
@@ -2084,11 +2201,11 @@ void OffMeshConnection::SerializeWithCachedSizes(
         2, this->exitpos(), target);
   }
 
-  // repeated .RecastIO.Vec3 intermediatePos = 3;
-  for (int i = 0; i < this->intermediatepos_size(); i++) {
+  // repeated .RecastIO.Vec3 vertices = 3;
+  for (int i = 0; i < this->vertices_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        3, this->intermediatepos(i), target);
+        3, this->vertices(i), target);
   }
 
   // required float radius = 4;
@@ -2162,12 +2279,12 @@ int OffMeshConnection::ByteSize() const {
     }
 
   }
-  // repeated .RecastIO.Vec3 intermediatePos = 3;
-  total_size += 1 * this->intermediatepos_size();
-  for (int i = 0; i < this->intermediatepos_size(); i++) {
+  // repeated .RecastIO.Vec3 vertices = 3;
+  total_size += 1 * this->vertices_size();
+  for (int i = 0; i < this->vertices_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->intermediatepos(i));
+        this->vertices(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -2195,7 +2312,7 @@ void OffMeshConnection::MergeFrom(const ::google::protobuf::Message& from) {
 
 void OffMeshConnection::MergeFrom(const OffMeshConnection& from) {
   GOOGLE_CHECK_NE(&from, this);
-  intermediatepos_.MergeFrom(from.intermediatepos_);
+  vertices_.MergeFrom(from.vertices_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_entrypos()) {
       mutable_entrypos()->::RecastIO::Vec3::MergeFrom(from.entrypos());
@@ -2241,7 +2358,7 @@ void OffMeshConnection::Swap(OffMeshConnection* other) {
   if (other != this) {
     std::swap(entrypos_, other->entrypos_);
     std::swap(exitpos_, other->exitpos_);
-    intermediatepos_.Swap(&other->intermediatepos_);
+    vertices_.Swap(&other->vertices_);
     std::swap(radius_, other->radius_);
     std::swap(areatype_, other->areatype_);
     std::swap(flags_, other->flags_);
@@ -2264,71 +2381,73 @@ void OffMeshConnection::Swap(OffMeshConnection* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int SubModel::kSubmodelIdFieldNumber;
-const int SubModel::kDisabledFieldNumber;
-const int SubModel::kMoverFieldNumber;
-const int SubModel::kNonsolidFieldNumber;
+const int Material::kNameFieldNumber;
+const int Material::kContentsFieldNumber;
+const int Material::kSurfaceflagsFieldNumber;
 #endif  // !_MSC_VER
 
-SubModel::SubModel()
+Material::Material()
   : ::google::protobuf::Message() {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:RecastIO.SubModel)
+  // @@protoc_insertion_point(constructor:RecastIO.Material)
 }
 
-void SubModel::InitAsDefaultInstance() {
+void Material::InitAsDefaultInstance() {
 }
 
-SubModel::SubModel(const SubModel& from)
+Material::Material(const Material& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:RecastIO.SubModel)
+  // @@protoc_insertion_point(copy_constructor:RecastIO.Material)
 }
 
-void SubModel::SharedCtor() {
+void Material::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  submodelid_ = 0;
-  disabled_ = false;
-  mover_ = false;
-  nonsolid_ = false;
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  contents_ = 0u;
+  surfaceflags_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-SubModel::~SubModel() {
-  // @@protoc_insertion_point(destructor:RecastIO.SubModel)
+Material::~Material() {
+  // @@protoc_insertion_point(destructor:RecastIO.Material)
   SharedDtor();
 }
 
-void SubModel::SharedDtor() {
+void Material::SharedDtor() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
   if (this != default_instance_) {
   }
 }
 
-void SubModel::SetCachedSize(int size) const {
+void Material::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* SubModel::descriptor() {
+const ::google::protobuf::Descriptor* Material::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return SubModel_descriptor_;
+  return Material_descriptor_;
 }
 
-const SubModel& SubModel::default_instance() {
+const Material& Material::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_recast_2eproto();
   return *default_instance_;
 }
 
-SubModel* SubModel::default_instance_ = NULL;
+Material* Material::default_instance_ = NULL;
 
-SubModel* SubModel::New() const {
-  return new SubModel;
+Material* Material::New() const {
+  return new Material;
 }
 
-void SubModel::Clear() {
+void Material::Clear() {
 #define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
-  &reinterpret_cast<SubModel*>(16)->f) - \
+  &reinterpret_cast<Material*>(16)->f) - \
    reinterpret_cast<char*>(16))
 
 #define ZR_(first, last) do {                              \
@@ -2337,7 +2456,14 @@ void SubModel::Clear() {
     ::memset(&first, 0, n);                                \
   } while (0)
 
-  ZR_(submodelid_, nonsolid_);
+  if (_has_bits_[0 / 32] & 7) {
+    ZR_(contents_, surfaceflags_);
+    if (has_name()) {
+      if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        name_->clear();
+      }
+    }
+  }
 
 #undef OFFSET_OF_FIELD_
 #undef ZR_
@@ -2346,68 +2472,55 @@ void SubModel::Clear() {
   mutable_unknown_fields()->Clear();
 }
 
-bool SubModel::MergePartialFromCodedStream(
+bool Material::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:RecastIO.SubModel)
+  // @@protoc_insertion_point(parse_start:RecastIO.Material)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required int32 submodelId = 1;
+      // required string name = 1;
       case 1: {
-        if (tag == 8) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &submodelid_)));
-          set_has_submodelid();
+        if (tag == 10) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->name().data(), this->name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "name");
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(16)) goto parse_disabled;
+        if (input->ExpectTag(16)) goto parse_contents;
         break;
       }
 
-      // optional bool disabled = 2;
+      // optional uint32 contents = 2;
       case 2: {
         if (tag == 16) {
-         parse_disabled:
+         parse_contents:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &disabled_)));
-          set_has_disabled();
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &contents_)));
+          set_has_contents();
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(24)) goto parse_mover;
+        if (input->ExpectTag(24)) goto parse_surfaceflags;
         break;
       }
 
-      // optional bool mover = 3;
+      // optional uint32 surfaceflags = 3;
       case 3: {
         if (tag == 24) {
-         parse_mover:
+         parse_surfaceflags:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &mover_)));
-          set_has_mover();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(32)) goto parse_nonsolid;
-        break;
-      }
-
-      // optional bool nonsolid = 4;
-      case 4: {
-        if (tag == 32) {
-         parse_nonsolid:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &nonsolid_)));
-          set_has_nonsolid();
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &surfaceflags_)));
+          set_has_surfaceflags();
         } else {
           goto handle_unusual;
         }
@@ -2429,99 +2542,99 @@ bool SubModel::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:RecastIO.SubModel)
+  // @@protoc_insertion_point(parse_success:RecastIO.Material)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:RecastIO.SubModel)
+  // @@protoc_insertion_point(parse_failure:RecastIO.Material)
   return false;
 #undef DO_
 }
 
-void SubModel::SerializeWithCachedSizes(
+void Material::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:RecastIO.SubModel)
-  // required int32 submodelId = 1;
-  if (has_submodelid()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->submodelid(), output);
+  // @@protoc_insertion_point(serialize_start:RecastIO.Material)
+  // required string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->name(), output);
   }
 
-  // optional bool disabled = 2;
-  if (has_disabled()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->disabled(), output);
+  // optional uint32 contents = 2;
+  if (has_contents()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->contents(), output);
   }
 
-  // optional bool mover = 3;
-  if (has_mover()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->mover(), output);
-  }
-
-  // optional bool nonsolid = 4;
-  if (has_nonsolid()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->nonsolid(), output);
+  // optional uint32 surfaceflags = 3;
+  if (has_surfaceflags()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->surfaceflags(), output);
   }
 
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
-  // @@protoc_insertion_point(serialize_end:RecastIO.SubModel)
+  // @@protoc_insertion_point(serialize_end:RecastIO.Material)
 }
 
-::google::protobuf::uint8* SubModel::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Material::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:RecastIO.SubModel)
-  // required int32 submodelId = 1;
-  if (has_submodelid()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->submodelid(), target);
+  // @@protoc_insertion_point(serialize_to_array_start:RecastIO.Material)
+  // required string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->name(), target);
   }
 
-  // optional bool disabled = 2;
-  if (has_disabled()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->disabled(), target);
+  // optional uint32 contents = 2;
+  if (has_contents()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->contents(), target);
   }
 
-  // optional bool mover = 3;
-  if (has_mover()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->mover(), target);
-  }
-
-  // optional bool nonsolid = 4;
-  if (has_nonsolid()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->nonsolid(), target);
+  // optional uint32 surfaceflags = 3;
+  if (has_surfaceflags()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->surfaceflags(), target);
   }
 
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:RecastIO.SubModel)
+  // @@protoc_insertion_point(serialize_to_array_end:RecastIO.Material)
   return target;
 }
 
-int SubModel::ByteSize() const {
+int Material::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required int32 submodelId = 1;
-    if (has_submodelid()) {
+    // required string name = 1;
+    if (has_name()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->submodelid());
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->name());
     }
 
-    // optional bool disabled = 2;
-    if (has_disabled()) {
-      total_size += 1 + 1;
+    // optional uint32 contents = 2;
+    if (has_contents()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->contents());
     }
 
-    // optional bool mover = 3;
-    if (has_mover()) {
-      total_size += 1 + 1;
-    }
-
-    // optional bool nonsolid = 4;
-    if (has_nonsolid()) {
-      total_size += 1 + 1;
+    // optional uint32 surfaceflags = 3;
+    if (has_surfaceflags()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->surfaceflags());
     }
 
   }
@@ -2536,10 +2649,10 @@ int SubModel::ByteSize() const {
   return total_size;
 }
 
-void SubModel::MergeFrom(const ::google::protobuf::Message& from) {
+void Material::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const SubModel* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const SubModel*>(
+  const Material* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Material*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -2548,60 +2661,1222 @@ void SubModel::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void SubModel::MergeFrom(const SubModel& from) {
+void Material::MergeFrom(const Material& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_submodelid()) {
-      set_submodelid(from.submodelid());
+    if (from.has_name()) {
+      set_name(from.name());
     }
-    if (from.has_disabled()) {
-      set_disabled(from.disabled());
+    if (from.has_contents()) {
+      set_contents(from.contents());
     }
-    if (from.has_mover()) {
-      set_mover(from.mover());
-    }
-    if (from.has_nonsolid()) {
-      set_nonsolid(from.nonsolid());
+    if (from.has_surfaceflags()) {
+      set_surfaceflags(from.surfaceflags());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void SubModel::CopyFrom(const ::google::protobuf::Message& from) {
+void Material::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void SubModel::CopyFrom(const SubModel& from) {
+void Material::CopyFrom(const Material& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool SubModel::IsInitialized() const {
+bool Material::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   return true;
 }
 
-void SubModel::Swap(SubModel* other) {
+void Material::Swap(Material* other) {
   if (other != this) {
-    std::swap(submodelid_, other->submodelid_);
-    std::swap(disabled_, other->disabled_);
-    std::swap(mover_, other->mover_);
-    std::swap(nonsolid_, other->nonsolid_);
+    std::swap(name_, other->name_);
+    std::swap(contents_, other->contents_);
+    std::swap(surfaceflags_, other->surfaceflags_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
   }
 }
 
-::google::protobuf::Metadata SubModel::GetMetadata() const {
+::google::protobuf::Metadata Material::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = SubModel_descriptor_;
-  metadata.reflection = SubModel_reflection_;
+  metadata.descriptor = Material_descriptor_;
+  metadata.reflection = Material_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int Model_TriParms::kTriFieldNumber;
+const int Model_TriParms::kSurfaceOverrideFieldNumber;
+#endif  // !_MSC_VER
+
+Model_TriParms::Model_TriParms()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:RecastIO.Model.TriParms)
+}
+
+void Model_TriParms::InitAsDefaultInstance() {
+}
+
+Model_TriParms::Model_TriParms(const Model_TriParms& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:RecastIO.Model.TriParms)
+}
+
+void Model_TriParms::SharedCtor() {
+  _cached_size_ = 0;
+  tri_ = 0u;
+  surfaceoverride_ = 0u;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Model_TriParms::~Model_TriParms() {
+  // @@protoc_insertion_point(destructor:RecastIO.Model.TriParms)
+  SharedDtor();
+}
+
+void Model_TriParms::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void Model_TriParms::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Model_TriParms::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Model_TriParms_descriptor_;
+}
+
+const Model_TriParms& Model_TriParms::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_recast_2eproto();
+  return *default_instance_;
+}
+
+Model_TriParms* Model_TriParms::default_instance_ = NULL;
+
+Model_TriParms* Model_TriParms::New() const {
+  return new Model_TriParms;
+}
+
+void Model_TriParms::Clear() {
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<Model_TriParms*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  ZR_(tri_, surfaceoverride_);
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Model_TriParms::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:RecastIO.Model.TriParms)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required uint32 tri = 1;
+      case 1: {
+        if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &tri_)));
+          set_has_tri();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_surfaceOverride;
+        break;
+      }
+
+      // optional uint32 surfaceOverride = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_surfaceOverride:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &surfaceoverride_)));
+          set_has_surfaceoverride();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:RecastIO.Model.TriParms)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:RecastIO.Model.TriParms)
+  return false;
+#undef DO_
+}
+
+void Model_TriParms::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:RecastIO.Model.TriParms)
+  // required uint32 tri = 1;
+  if (has_tri()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->tri(), output);
+  }
+
+  // optional uint32 surfaceOverride = 2;
+  if (has_surfaceoverride()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->surfaceoverride(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:RecastIO.Model.TriParms)
+}
+
+::google::protobuf::uint8* Model_TriParms::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:RecastIO.Model.TriParms)
+  // required uint32 tri = 1;
+  if (has_tri()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->tri(), target);
+  }
+
+  // optional uint32 surfaceOverride = 2;
+  if (has_surfaceoverride()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->surfaceoverride(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:RecastIO.Model.TriParms)
+  return target;
+}
+
+int Model_TriParms::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required uint32 tri = 1;
+    if (has_tri()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->tri());
+    }
+
+    // optional uint32 surfaceOverride = 2;
+    if (has_surfaceoverride()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->surfaceoverride());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Model_TriParms::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Model_TriParms* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Model_TriParms*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Model_TriParms::MergeFrom(const Model_TriParms& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_tri()) {
+      set_tri(from.tri());
+    }
+    if (from.has_surfaceoverride()) {
+      set_surfaceoverride(from.surfaceoverride());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Model_TriParms::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Model_TriParms::CopyFrom(const Model_TriParms& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Model_TriParms::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+
+  return true;
+}
+
+void Model_TriParms::Swap(Model_TriParms* other) {
+  if (other != this) {
+    std::swap(tri_, other->tri_);
+    std::swap(surfaceoverride_, other->surfaceoverride_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Model_TriParms::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Model_TriParms_descriptor_;
+  metadata.reflection = Model_TriParms_reflection_;
+  return metadata;
+}
+
+
+// -------------------------------------------------------------------
+
+#ifndef _MSC_VER
+const int Model::kNameFieldNumber;
+const int Model::kModelcrcFieldNumber;
+const int Model::kNumMeshTrisFieldNumber;
+const int Model::kTrianglesFieldNumber;
+#endif  // !_MSC_VER
+
+Model::Model()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:RecastIO.Model)
+}
+
+void Model::InitAsDefaultInstance() {
+}
+
+Model::Model(const Model& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:RecastIO.Model)
+}
+
+void Model::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  modelcrc_ = 0u;
+  nummeshtris_ = 0u;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+Model::~Model() {
+  // @@protoc_insertion_point(destructor:RecastIO.Model)
+  SharedDtor();
+}
+
+void Model::SharedDtor() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void Model::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Model::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Model_descriptor_;
+}
+
+const Model& Model::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_recast_2eproto();
+  return *default_instance_;
+}
+
+Model* Model::default_instance_ = NULL;
+
+Model* Model::New() const {
+  return new Model;
+}
+
+void Model::Clear() {
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<Model*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  if (_has_bits_[0 / 32] & 7) {
+    ZR_(modelcrc_, nummeshtris_);
+    if (has_name()) {
+      if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        name_->clear();
+      }
+    }
+  }
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
+  triangles_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool Model::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:RecastIO.Model)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required string name = 1;
+      case 1: {
+        if (tag == 10) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->name().data(), this->name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "name");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_modelcrc;
+        break;
+      }
+
+      // required uint32 modelcrc = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_modelcrc:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &modelcrc_)));
+          set_has_modelcrc();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_numMeshTris;
+        break;
+      }
+
+      // required uint32 numMeshTris = 3;
+      case 3: {
+        if (tag == 24) {
+         parse_numMeshTris:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &nummeshtris_)));
+          set_has_nummeshtris();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(34)) goto parse_triangles;
+        break;
+      }
+
+      // repeated .RecastIO.Model.TriParms triangles = 4;
+      case 4: {
+        if (tag == 34) {
+         parse_triangles:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_triangles()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(34)) goto parse_triangles;
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:RecastIO.Model)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:RecastIO.Model)
+  return false;
+#undef DO_
+}
+
+void Model::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:RecastIO.Model)
+  // required string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->name(), output);
+  }
+
+  // required uint32 modelcrc = 2;
+  if (has_modelcrc()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->modelcrc(), output);
+  }
+
+  // required uint32 numMeshTris = 3;
+  if (has_nummeshtris()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->nummeshtris(), output);
+  }
+
+  // repeated .RecastIO.Model.TriParms triangles = 4;
+  for (int i = 0; i < this->triangles_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      4, this->triangles(i), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:RecastIO.Model)
+}
+
+::google::protobuf::uint8* Model::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:RecastIO.Model)
+  // required string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->name(), target);
+  }
+
+  // required uint32 modelcrc = 2;
+  if (has_modelcrc()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->modelcrc(), target);
+  }
+
+  // required uint32 numMeshTris = 3;
+  if (has_nummeshtris()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->nummeshtris(), target);
+  }
+
+  // repeated .RecastIO.Model.TriParms triangles = 4;
+  for (int i = 0; i < this->triangles_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        4, this->triangles(i), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:RecastIO.Model)
+  return target;
+}
+
+int Model::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required string name = 1;
+    if (has_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->name());
+    }
+
+    // required uint32 modelcrc = 2;
+    if (has_modelcrc()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->modelcrc());
+    }
+
+    // required uint32 numMeshTris = 3;
+    if (has_nummeshtris()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->nummeshtris());
+    }
+
+  }
+  // repeated .RecastIO.Model.TriParms triangles = 4;
+  total_size += 1 * this->triangles_size();
+  for (int i = 0; i < this->triangles_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->triangles(i));
+  }
+
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Model::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const Model* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const Model*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void Model::MergeFrom(const Model& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  triangles_.MergeFrom(from.triangles_);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_name()) {
+      set_name(from.name());
+    }
+    if (from.has_modelcrc()) {
+      set_modelcrc(from.modelcrc());
+    }
+    if (from.has_nummeshtris()) {
+      set_nummeshtris(from.nummeshtris());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void Model::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Model::CopyFrom(const Model& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Model::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
+
+  if (!::google::protobuf::internal::AllAreInitialized(this->triangles())) return false;
+  return true;
+}
+
+void Model::Swap(Model* other) {
+  if (other != this) {
+    std::swap(name_, other->name_);
+    std::swap(modelcrc_, other->modelcrc_);
+    std::swap(nummeshtris_, other->nummeshtris_);
+    triangles_.Swap(&other->triangles_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata Model::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Model_descriptor_;
+  metadata.reflection = Model_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int NodeState::kSubModelIdFieldNumber;
+const int NodeState::kStaticModelIdFieldNumber;
+const int NodeState::kEnabledFieldNumber;
+const int NodeState::kShapemodeFieldNumber;
+const int NodeState::kSolidFieldNumber;
+const int NodeState::kDynamicFieldNumber;
+const int NodeState::kModelnameFieldNumber;
+#endif  // !_MSC_VER
+
+NodeState::NodeState()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:RecastIO.NodeState)
+}
+
+void NodeState::InitAsDefaultInstance() {
+  NodeState_default_oneof_instance_->submodelid_ = 0;
+  NodeState_default_oneof_instance_->staticmodelid_ = 0;
+}
+
+NodeState::NodeState(const NodeState& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:RecastIO.NodeState)
+}
+
+void NodeState::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  enabled_ = true;
+  shapemode_ = 0;
+  solid_ = true;
+  dynamic_ = false;
+  modelname_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  clear_has_type();
+}
+
+NodeState::~NodeState() {
+  // @@protoc_insertion_point(destructor:RecastIO.NodeState)
+  SharedDtor();
+}
+
+void NodeState::SharedDtor() {
+  if (modelname_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete modelname_;
+  }
+  if (has_type()) {
+    clear_type();
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void NodeState::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* NodeState::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return NodeState_descriptor_;
+}
+
+const NodeState& NodeState::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_recast_2eproto();
+  return *default_instance_;
+}
+
+NodeState* NodeState::default_instance_ = NULL;
+
+NodeState* NodeState::New() const {
+  return new NodeState;
+}
+
+void NodeState::clear_type() {
+  switch(type_case()) {
+    case kSubModelId: {
+      // No need to clear
+      break;
+    }
+    case kStaticModelId: {
+      // No need to clear
+      break;
+    }
+    case TYPE_NOT_SET: {
+      break;
+    }
+  }
+  _oneof_case_[0] = TYPE_NOT_SET;
+}
+
+
+void NodeState::Clear() {
+  if (_has_bits_[0 / 32] & 124) {
+    enabled_ = true;
+    shapemode_ = 0;
+    solid_ = true;
+    dynamic_ = false;
+    if (has_modelname()) {
+      if (modelname_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        modelname_->clear();
+      }
+    }
+  }
+  clear_type();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool NodeState::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:RecastIO.NodeState)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional int32 subModelId = 1;
+      case 1: {
+        if (tag == 8) {
+          clear_type();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &type_.submodelid_)));
+          set_has_submodelid();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_staticModelId;
+        break;
+      }
+
+      // optional int32 staticModelId = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_staticModelId:
+          clear_type();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &type_.staticmodelid_)));
+          set_has_staticmodelid();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(40)) goto parse_enabled;
+        break;
+      }
+
+      // optional bool enabled = 5 [default = true];
+      case 5: {
+        if (tag == 40) {
+         parse_enabled:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &enabled_)));
+          set_has_enabled();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(48)) goto parse_shapemode;
+        break;
+      }
+
+      // optional .RecastIO.ShapeMode shapemode = 6 [default = SHAPE_TRIANGLES];
+      case 6: {
+        if (tag == 48) {
+         parse_shapemode:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::RecastIO::ShapeMode_IsValid(value)) {
+            set_shapemode(static_cast< ::RecastIO::ShapeMode >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(6, value);
+          }
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(56)) goto parse_solid;
+        break;
+      }
+
+      // optional bool solid = 7 [default = true];
+      case 7: {
+        if (tag == 56) {
+         parse_solid:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &solid_)));
+          set_has_solid();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(64)) goto parse_dynamic;
+        break;
+      }
+
+      // optional bool dynamic = 8 [default = false];
+      case 8: {
+        if (tag == 64) {
+         parse_dynamic:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &dynamic_)));
+          set_has_dynamic();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(82)) goto parse_modelname;
+        break;
+      }
+
+      // optional string modelname = 10;
+      case 10: {
+        if (tag == 82) {
+         parse_modelname:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_modelname()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->modelname().data(), this->modelname().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "modelname");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:RecastIO.NodeState)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:RecastIO.NodeState)
+  return false;
+#undef DO_
+}
+
+void NodeState::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:RecastIO.NodeState)
+  // optional int32 subModelId = 1;
+  if (has_submodelid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->submodelid(), output);
+  }
+
+  // optional int32 staticModelId = 2;
+  if (has_staticmodelid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->staticmodelid(), output);
+  }
+
+  // optional bool enabled = 5 [default = true];
+  if (has_enabled()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(5, this->enabled(), output);
+  }
+
+  // optional .RecastIO.ShapeMode shapemode = 6 [default = SHAPE_TRIANGLES];
+  if (has_shapemode()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      6, this->shapemode(), output);
+  }
+
+  // optional bool solid = 7 [default = true];
+  if (has_solid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(7, this->solid(), output);
+  }
+
+  // optional bool dynamic = 8 [default = false];
+  if (has_dynamic()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(8, this->dynamic(), output);
+  }
+
+  // optional string modelname = 10;
+  if (has_modelname()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->modelname().data(), this->modelname().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "modelname");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      10, this->modelname(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:RecastIO.NodeState)
+}
+
+::google::protobuf::uint8* NodeState::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:RecastIO.NodeState)
+  // optional int32 subModelId = 1;
+  if (has_submodelid()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->submodelid(), target);
+  }
+
+  // optional int32 staticModelId = 2;
+  if (has_staticmodelid()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->staticmodelid(), target);
+  }
+
+  // optional bool enabled = 5 [default = true];
+  if (has_enabled()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(5, this->enabled(), target);
+  }
+
+  // optional .RecastIO.ShapeMode shapemode = 6 [default = SHAPE_TRIANGLES];
+  if (has_shapemode()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      6, this->shapemode(), target);
+  }
+
+  // optional bool solid = 7 [default = true];
+  if (has_solid()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(7, this->solid(), target);
+  }
+
+  // optional bool dynamic = 8 [default = false];
+  if (has_dynamic()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(8, this->dynamic(), target);
+  }
+
+  // optional string modelname = 10;
+  if (has_modelname()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->modelname().data(), this->modelname().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "modelname");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        10, this->modelname(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:RecastIO.NodeState)
+  return target;
+}
+
+int NodeState::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[2 / 32] & (0xffu << (2 % 32))) {
+    // optional bool enabled = 5 [default = true];
+    if (has_enabled()) {
+      total_size += 1 + 1;
+    }
+
+    // optional .RecastIO.ShapeMode shapemode = 6 [default = SHAPE_TRIANGLES];
+    if (has_shapemode()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->shapemode());
+    }
+
+    // optional bool solid = 7 [default = true];
+    if (has_solid()) {
+      total_size += 1 + 1;
+    }
+
+    // optional bool dynamic = 8 [default = false];
+    if (has_dynamic()) {
+      total_size += 1 + 1;
+    }
+
+    // optional string modelname = 10;
+    if (has_modelname()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->modelname());
+    }
+
+  }
+  switch (type_case()) {
+    // optional int32 subModelId = 1;
+    case kSubModelId: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->submodelid());
+      break;
+    }
+    // optional int32 staticModelId = 2;
+    case kStaticModelId: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->staticmodelid());
+      break;
+    }
+    case TYPE_NOT_SET: {
+      break;
+    }
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void NodeState::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const NodeState* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const NodeState*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void NodeState::MergeFrom(const NodeState& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  switch (from.type_case()) {
+    case kSubModelId: {
+      set_submodelid(from.submodelid());
+      break;
+    }
+    case kStaticModelId: {
+      set_staticmodelid(from.staticmodelid());
+      break;
+    }
+    case TYPE_NOT_SET: {
+      break;
+    }
+  }
+  if (from._has_bits_[2 / 32] & (0xffu << (2 % 32))) {
+    if (from.has_enabled()) {
+      set_enabled(from.enabled());
+    }
+    if (from.has_shapemode()) {
+      set_shapemode(from.shapemode());
+    }
+    if (from.has_solid()) {
+      set_solid(from.solid());
+    }
+    if (from.has_dynamic()) {
+      set_dynamic(from.dynamic());
+    }
+    if (from.has_modelname()) {
+      set_modelname(from.modelname());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void NodeState::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void NodeState::CopyFrom(const NodeState& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool NodeState::IsInitialized() const {
+
+  return true;
+}
+
+void NodeState::Swap(NodeState* other) {
+  if (other != this) {
+    std::swap(enabled_, other->enabled_);
+    std::swap(shapemode_, other->shapemode_);
+    std::swap(solid_, other->solid_);
+    std::swap(dynamic_, other->dynamic_);
+    std::swap(modelname_, other->modelname_);
+    std::swap(type_, other->type_);
+    std::swap(_oneof_case_[0], other->_oneof_case_[0]);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata NodeState::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = NodeState_descriptor_;
+  metadata.reflection = NodeState_reflection_;
   return metadata;
 }
 
@@ -2611,10 +3886,11 @@ void SubModel::Swap(SubModel* other) {
 #ifndef _MSC_VER
 const int NavigationMesh::kVersionFieldNumber;
 const int NavigationMesh::kNavMeshParamsFieldNumber;
-const int NavigationMesh::kTilesFieldNumber;
 const int NavigationMesh::kExclusionZoneFieldNumber;
 const int NavigationMesh::kOffMeshConnectionFieldNumber;
-const int NavigationMesh::kSubModelInfoFieldNumber;
+const int NavigationMesh::kNodeStateFieldNumber;
+const int NavigationMesh::kModelsFieldNumber;
+const int NavigationMesh::kTilesFieldNumber;
 #endif  // !_MSC_VER
 
 NavigationMesh::NavigationMesh()
@@ -2680,10 +3956,11 @@ void NavigationMesh::Clear() {
       if (navmeshparams_ != NULL) navmeshparams_->::RecastIO::NavMeshParams::Clear();
     }
   }
-  tiles_.Clear();
   exclusionzone_.Clear();
   offmeshconnection_.Clear();
-  submodelinfo_.Clear();
+  nodestate_.Clear();
+  models_.Clear();
+  tiles_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -2694,7 +3971,7 @@ bool NavigationMesh::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:RecastIO.NavigationMesh)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(16383);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -2721,62 +3998,76 @@ bool NavigationMesh::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(26)) goto parse_tiles;
+        if (input->ExpectTag(26)) goto parse_exclusionZone;
         break;
       }
 
-      // repeated .RecastIO.Tile tiles = 3;
+      // repeated .RecastIO.AxisAlignedBounds exclusionZone = 3;
       case 3: {
         if (tag == 26) {
-         parse_tiles:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_tiles()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_tiles;
-        if (input->ExpectTag(34)) goto parse_exclusionZone;
-        break;
-      }
-
-      // repeated .RecastIO.AxisAlignedBounds exclusionZone = 4;
-      case 4: {
-        if (tag == 34) {
          parse_exclusionZone:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_exclusionzone()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(34)) goto parse_exclusionZone;
-        if (input->ExpectTag(42)) goto parse_offMeshConnection;
+        if (input->ExpectTag(26)) goto parse_exclusionZone;
+        if (input->ExpectTag(34)) goto parse_offMeshConnection;
         break;
       }
 
-      // repeated .RecastIO.OffMeshConnection offMeshConnection = 5;
-      case 5: {
-        if (tag == 42) {
+      // repeated .RecastIO.OffMeshConnection offMeshConnection = 4;
+      case 4: {
+        if (tag == 34) {
          parse_offMeshConnection:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_offmeshconnection()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(42)) goto parse_offMeshConnection;
-        if (input->ExpectTag(50)) goto parse_subModelInfo;
+        if (input->ExpectTag(34)) goto parse_offMeshConnection;
+        if (input->ExpectTag(42)) goto parse_nodeState;
         break;
       }
 
-      // repeated .RecastIO.SubModel subModelInfo = 6;
-      case 6: {
-        if (tag == 50) {
-         parse_subModelInfo:
+      // repeated .RecastIO.NodeState nodeState = 5;
+      case 5: {
+        if (tag == 42) {
+         parse_nodeState:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_submodelinfo()));
+                input, add_nodestate()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(50)) goto parse_subModelInfo;
+        if (input->ExpectTag(42)) goto parse_nodeState;
+        if (input->ExpectTag(50)) goto parse_models;
+        break;
+      }
+
+      // repeated .RecastIO.Model models = 6;
+      case 6: {
+        if (tag == 50) {
+         parse_models:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_models()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(50)) goto parse_models;
+        if (input->ExpectTag(802)) goto parse_tiles;
+        break;
+      }
+
+      // repeated .RecastIO.Tile tiles = 100;
+      case 100: {
+        if (tag == 802) {
+         parse_tiles:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_tiles()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(802)) goto parse_tiles;
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -2817,28 +4108,34 @@ void NavigationMesh::SerializeWithCachedSizes(
       2, this->navmeshparams(), output);
   }
 
-  // repeated .RecastIO.Tile tiles = 3;
-  for (int i = 0; i < this->tiles_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->tiles(i), output);
-  }
-
-  // repeated .RecastIO.AxisAlignedBounds exclusionZone = 4;
+  // repeated .RecastIO.AxisAlignedBounds exclusionZone = 3;
   for (int i = 0; i < this->exclusionzone_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, this->exclusionzone(i), output);
+      3, this->exclusionzone(i), output);
   }
 
-  // repeated .RecastIO.OffMeshConnection offMeshConnection = 5;
+  // repeated .RecastIO.OffMeshConnection offMeshConnection = 4;
   for (int i = 0; i < this->offmeshconnection_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      5, this->offmeshconnection(i), output);
+      4, this->offmeshconnection(i), output);
   }
 
-  // repeated .RecastIO.SubModel subModelInfo = 6;
-  for (int i = 0; i < this->submodelinfo_size(); i++) {
+  // repeated .RecastIO.NodeState nodeState = 5;
+  for (int i = 0; i < this->nodestate_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      6, this->submodelinfo(i), output);
+      5, this->nodestate(i), output);
+  }
+
+  // repeated .RecastIO.Model models = 6;
+  for (int i = 0; i < this->models_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      6, this->models(i), output);
+  }
+
+  // repeated .RecastIO.Tile tiles = 100;
+  for (int i = 0; i < this->tiles_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      100, this->tiles(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -2863,32 +4160,39 @@ void NavigationMesh::SerializeWithCachedSizes(
         2, this->navmeshparams(), target);
   }
 
-  // repeated .RecastIO.Tile tiles = 3;
-  for (int i = 0; i < this->tiles_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->tiles(i), target);
-  }
-
-  // repeated .RecastIO.AxisAlignedBounds exclusionZone = 4;
+  // repeated .RecastIO.AxisAlignedBounds exclusionZone = 3;
   for (int i = 0; i < this->exclusionzone_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        4, this->exclusionzone(i), target);
+        3, this->exclusionzone(i), target);
   }
 
-  // repeated .RecastIO.OffMeshConnection offMeshConnection = 5;
+  // repeated .RecastIO.OffMeshConnection offMeshConnection = 4;
   for (int i = 0; i < this->offmeshconnection_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        5, this->offmeshconnection(i), target);
+        4, this->offmeshconnection(i), target);
   }
 
-  // repeated .RecastIO.SubModel subModelInfo = 6;
-  for (int i = 0; i < this->submodelinfo_size(); i++) {
+  // repeated .RecastIO.NodeState nodeState = 5;
+  for (int i = 0; i < this->nodestate_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        6, this->submodelinfo(i), target);
+        5, this->nodestate(i), target);
+  }
+
+  // repeated .RecastIO.Model models = 6;
+  for (int i = 0; i < this->models_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        6, this->models(i), target);
+  }
+
+  // repeated .RecastIO.Tile tiles = 100;
+  for (int i = 0; i < this->tiles_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        100, this->tiles(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2918,15 +4222,7 @@ int NavigationMesh::ByteSize() const {
     }
 
   }
-  // repeated .RecastIO.Tile tiles = 3;
-  total_size += 1 * this->tiles_size();
-  for (int i = 0; i < this->tiles_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->tiles(i));
-  }
-
-  // repeated .RecastIO.AxisAlignedBounds exclusionZone = 4;
+  // repeated .RecastIO.AxisAlignedBounds exclusionZone = 3;
   total_size += 1 * this->exclusionzone_size();
   for (int i = 0; i < this->exclusionzone_size(); i++) {
     total_size +=
@@ -2934,7 +4230,7 @@ int NavigationMesh::ByteSize() const {
         this->exclusionzone(i));
   }
 
-  // repeated .RecastIO.OffMeshConnection offMeshConnection = 5;
+  // repeated .RecastIO.OffMeshConnection offMeshConnection = 4;
   total_size += 1 * this->offmeshconnection_size();
   for (int i = 0; i < this->offmeshconnection_size(); i++) {
     total_size +=
@@ -2942,12 +4238,28 @@ int NavigationMesh::ByteSize() const {
         this->offmeshconnection(i));
   }
 
-  // repeated .RecastIO.SubModel subModelInfo = 6;
-  total_size += 1 * this->submodelinfo_size();
-  for (int i = 0; i < this->submodelinfo_size(); i++) {
+  // repeated .RecastIO.NodeState nodeState = 5;
+  total_size += 1 * this->nodestate_size();
+  for (int i = 0; i < this->nodestate_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->submodelinfo(i));
+        this->nodestate(i));
+  }
+
+  // repeated .RecastIO.Model models = 6;
+  total_size += 1 * this->models_size();
+  for (int i = 0; i < this->models_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->models(i));
+  }
+
+  // repeated .RecastIO.Tile tiles = 100;
+  total_size += 2 * this->tiles_size();
+  for (int i = 0; i < this->tiles_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->tiles(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -2975,10 +4287,11 @@ void NavigationMesh::MergeFrom(const ::google::protobuf::Message& from) {
 
 void NavigationMesh::MergeFrom(const NavigationMesh& from) {
   GOOGLE_CHECK_NE(&from, this);
-  tiles_.MergeFrom(from.tiles_);
   exclusionzone_.MergeFrom(from.exclusionzone_);
   offmeshconnection_.MergeFrom(from.offmeshconnection_);
-  submodelinfo_.MergeFrom(from.submodelinfo_);
+  nodestate_.MergeFrom(from.nodestate_);
+  models_.MergeFrom(from.models_);
+  tiles_.MergeFrom(from.tiles_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_version()) {
       set_version(from.version());
@@ -3008,10 +4321,10 @@ bool NavigationMesh::IsInitialized() const {
   if (has_navmeshparams()) {
     if (!this->navmeshparams().IsInitialized()) return false;
   }
-  if (!::google::protobuf::internal::AllAreInitialized(this->tiles())) return false;
   if (!::google::protobuf::internal::AllAreInitialized(this->exclusionzone())) return false;
   if (!::google::protobuf::internal::AllAreInitialized(this->offmeshconnection())) return false;
-  if (!::google::protobuf::internal::AllAreInitialized(this->submodelinfo())) return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->models())) return false;
+  if (!::google::protobuf::internal::AllAreInitialized(this->tiles())) return false;
   return true;
 }
 
@@ -3019,10 +4332,11 @@ void NavigationMesh::Swap(NavigationMesh* other) {
   if (other != this) {
     std::swap(version_, other->version_);
     std::swap(navmeshparams_, other->navmeshparams_);
-    tiles_.Swap(&other->tiles_);
     exclusionzone_.Swap(&other->exclusionzone_);
     offmeshconnection_.Swap(&other->offmeshconnection_);
-    submodelinfo_.Swap(&other->submodelinfo_);
+    nodestate_.Swap(&other->nodestate_);
+    models_.Swap(&other->models_);
+    tiles_.Swap(&other->tiles_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

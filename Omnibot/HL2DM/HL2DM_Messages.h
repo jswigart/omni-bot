@@ -35,12 +35,6 @@ struct HL2DM_PhysGunInfo
 	float		mLaunchSpeed;
 };
 
-struct HL2DM_ChargerStatus
-{
-	float		mCurrentCharge;
-	float		mMaxCharge;
-};
-
 #pragma pack(pop)
 
 #endif

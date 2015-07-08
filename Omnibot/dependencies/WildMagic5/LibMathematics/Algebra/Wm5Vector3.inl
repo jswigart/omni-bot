@@ -98,6 +98,20 @@ inline Real& Vector3<Real>::Z ()
 {
 	return mTuple[2];
 }
+
+template <typename Real>
+inline Real* Vector3<Real>::Ptr()
+{
+	return mTuple;
+}
+
+//----------------------------------------------------------------------------
+template <typename Real>
+inline const Real* Vector3<Real>::Ptr() const
+{
+	return mTuple;
+}
+
 //----------------------------------------------------------------------------
 template <typename Real>
 inline Vector3<Real> Vector3<Real>::operator+ (const Vector3& vec) const

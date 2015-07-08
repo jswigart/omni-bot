@@ -105,6 +105,9 @@
     <ClCompile Include="..\..\..\Common\CollisionModel.cpp" />
     <ClCompile Include="..\..\..\Common\FiberManager.cpp" />
     <ClCompile Include="..\..\..\Common\FiberState.cpp" />
+    <ClCompile Include="..\..\..\Common\pow2assert.cpp" />
+    <ClCompile Include="..\..\..\Common\VBSPFileData.cpp" />
+    <ClCompile Include="..\..\..\Common\VBSPFileImporter.cpp" />
     <ClCompile Include="..\..\..\Common\IGame.cpp" />
     <ClCompile Include="..\..\..\Common\IGameManager.cpp" />
     <ClCompile Include="..\..\..\Common\BlackBoard.cpp" />
@@ -417,30 +420,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\iprof\prof_draw.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\iprof\prof_gather.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\iprof\prof_process.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\iprof\prof_win32.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\BotLoadLibrary.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -518,8 +497,10 @@
     <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastMeshDetail.cpp" />
     <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastRasterization.cpp" />
     <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastRegion.cpp" />
+    <ClCompile Include="..\..\..\dependencies\Remotery\lib\Remotery.c" />
     <ClCompile Include="..\..\..\dependencies\sqlite\shell.c" />
     <ClCompile Include="..\..\..\dependencies\sqlite\sqlite3.c" />
+    <ClCompile Include="..\..\..\dependencies\tinyobjloader\tiny_obj_loader.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Common\BotPathing.h" />
@@ -529,6 +510,9 @@
     <ClInclude Include="..\..\..\Common\FiberManager.h" />
     <ClInclude Include="..\..\..\Common\FiberState.h" />
     <ClInclude Include="..\..\..\Common\Functor.h" />
+    <ClInclude Include="..\..\..\Common\pow2assert.h" />
+    <ClInclude Include="..\..\..\Common\VBSPFileData.h" />
+    <ClInclude Include="..\..\..\Common\VBSPFileImporter.h" />
     <ClInclude Include="..\..\..\Common\IGame.h" />
     <ClInclude Include="..\..\..\Common\IGameManager.h" />
     <ClInclude Include="..\..\..\Common\Omni-Bot.h" />
@@ -625,10 +609,6 @@
     <ClInclude Include="..\..\..\dependencies\physfs\zlib123\zconf.h" />
     <ClInclude Include="..\..\..\dependencies\physfs\zlib123\zlib.h" />
     <ClInclude Include="..\..\..\dependencies\physfs\zlib123\zutil.h" />
-    <ClInclude Include="..\..\..\dependencies\iprof\prof.h" />
-    <ClInclude Include="..\..\..\dependencies\iprof\prof_gather.h" />
-    <ClInclude Include="..\..\..\dependencies\iprof\prof_internal.h" />
-    <ClInclude Include="..\..\..\dependencies\iprof\prof_win32.h" />
     <ClInclude Include="..\..\..\Common\CallbackParameters.h" />
     <ClInclude Include="..\..\..\Common\CommandFunctor.h" />
     <ClInclude Include="..\..\..\Common\CommandReciever.h" />
@@ -681,8 +661,10 @@
     <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\Recast.h" />
     <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastAlloc.h" />
     <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastAssert.h" />
+    <ClInclude Include="..\..\..\dependencies\Remotery\lib\Remotery.h" />
     <ClInclude Include="..\..\..\dependencies\sqlite\sqlite3.h" />
     <ClInclude Include="..\..\..\dependencies\sqlite\sqlite3ext.h" />
+    <ClInclude Include="..\..\..\dependencies\tinyobjloader\tiny_obj_loader.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -692,9 +674,6 @@
     <ResourceCompile Include="Common.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\..\..\git\assimp-jswigart\code\assimp.vcxproj">
-      <Project>{50dd28ed-fb13-4460-afdf-36162143032d}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\..\..\game-analytics\GameAnalytics.vcxproj">
       <Project>{2104fd7c-f7aa-4f69-bcd4-b842a61d87b5}</Project>
     </ProjectReference>

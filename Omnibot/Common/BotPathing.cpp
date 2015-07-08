@@ -20,6 +20,14 @@ namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////
 
+	FollowPath::Query::Query()
+		: mUser( 0 )
+		, mMoveMode( Run )
+		, mSkipLastPt( false )
+		, mFinal( false )
+	{
+	}
+
 	FollowPath::FollowPath()
 		: StateChild( "FollowPath" )
 		, mPathStatus( PathFinished )
@@ -29,6 +37,7 @@ namespace AiState
 		, mJumpTime( 0 )
 		, mPathInterface( NULL )
 		, mNumCachedCorners( 0 )
+		, mActiveLinkIndex( 0 )
 	{
 	}
 
@@ -63,9 +72,19 @@ namespace AiState
 		RenderBuffer::AddCircle( pt.mPt, pt.mRadius, COLOR::GREEN );*/
 	}
 
-	bool FollowPath::IsOnCustomLink( NavArea linkType ) const
+	bool FollowPath::IsOnCustomLink() const
 	{
-		// todo
+		if ( mCachedCorners[ 0 ].mFlags & NAVFLAGS_PATH_LINK )
+			return true;
+		return false;
+	}
+
+	bool FollowPath::IsOnCustomLink( NavArea type ) const
+	{
+		if ( mCachedCorners[ 0 ].mFlags & NAVFLAGS_PATH_LINK )
+		{
+			return mCachedCorners[ 0 ].mArea == type;
+		}
 		return false;
 	}
 
@@ -486,10 +505,8 @@ namespace AiState
 
 	State::StateStatus FollowPath::Update( float fDt )
 	{
-		Prof( FollowPath );
+		rmt_ScopedCPUSample( FollowPathUpdate );
 		{
-			Prof( Update );
-
 			const Vector3f bottomBounds = GetClient()->GetWorldBounds().GetCenterBottom();
 
 			if ( mPathStatus == PathNotFound )
@@ -511,46 +528,76 @@ namespace AiState
 			{
 				const bool inWater = ( mCachedCorners[ 0 ].mFlags & NAVFLAGS_SWIM ) != 0;
 
+				b3dMovement = inWater;
+
+				// go to the next corner
+				vGotoTarget = mCachedCorners[ 0 ].mPos;
+
+				Vector3f toTarget = vGotoTarget - bottomBounds;
+				const float distToCorner = toTarget.Normalize();
+				
+				if ( IsOnCustomLink() )
+				{
+					OffMeshConnection conn;
+					mPathInterface->GetNavLink( mCachedCorners[ 0 ].mPolyId, conn );
+					
+					if ( mActiveLink.mPolyId != mCachedCorners[ 0 ].mPolyId )
+					{
+						mActiveLinkIndex = 0;
+						mActiveLink = conn;
+					}
+
+					if ( mActiveLink.mPolyId )
+					{
+						if ( distToCorner < conn.mRadius )
+						{
+							if ( mActiveLinkIndex < mActiveLink.mVertices.size() )
+							{
+								++mActiveLinkIndex;
+							}
+							else
+							{
+								mPathInterface->CompleteNavLink( mCachedCorners[ 0 ].mPolyId );
+							}
+						}
+					}
+				}
+				else
+				{
+					mActiveLink.mPolyId = 0;
+					mActiveLinkIndex = 0;
+				}
+				
 				// todo: remove this in favor of locomotion control behaviors running to handle edges?
 				GetClient()->ProcessGotoNode( mCachedCorners, mNumCachedCorners );
 
-				b3dMovement = inWater;
+				// look ahead in the path
+				float lookAheadDistance = 128.0;
 
+				// start with the current position
+				Vector3f lastPos = bottomBounds;
+
+				for ( size_t i = 0; i < mNumCachedCorners && lookAheadDistance > 0.0f; ++i )
 				{
-					// go to the next corner
-					vGotoTarget = mCachedCorners[ 0 ].mPos;
+					const PathInterface::PathCorner & c0 = mCachedCorners[ i ];
 
-					Vector3f toTarget = vGotoTarget - bottomBounds;
-					/*const float distToCorner =*/ toTarget.Normalize();
+					Vector3f edgeDir = c0.mPos - lastPos;
+					const float edgeLen = edgeDir.Normalize();
 
-					// look ahead in the path
-					float lookAheadDistance = 128.0;
-
-					// start with the current position
-					Vector3f lastPos = bottomBounds;
-
-					for ( size_t i = 0; i < mNumCachedCorners && lookAheadDistance > 0.0f; ++i )
+					if ( edgeLen > lookAheadDistance )
 					{
-						const PathInterface::PathCorner & c0 = mCachedCorners[ i ];
-
-						Vector3f edgeDir = c0.mPos - lastPos;
-						const float edgeLen = edgeDir.Normalize();
-
-						if ( edgeLen > lookAheadDistance )
-						{
-							mLookAheadPt = lastPos + edgeDir * lookAheadDistance;
-							break;
-						}
-						else
-						{
-							mLookAheadPt = c0.mPos;
-						}
-						lookAheadDistance -= edgeLen;
-						lastPos = c0.mPos;
+						mLookAheadPt = lastPos + edgeDir * lookAheadDistance;
+						break;
 					}
-
-					mLookAheadPt += GetClient()->GetEyeGroundOffset();
+					else
+					{
+						mLookAheadPt = c0.mPos;
+					}
+					lookAheadDistance -= edgeLen;
+					lastPos = c0.mPos;
 				}
+
+				mLookAheadPt += GetClient()->GetEyeGroundOffset();
 
 				//if ( inWater )
 				//{
@@ -575,7 +622,17 @@ namespace AiState
 					GetClient()->ReleaseButton( BOT_BUTTON_CROUCH );
 					GetClient()->PressButton( BOT_BUTTON_JUMP );
 				}
-
+				
+				if ( mPathInterface->GetCurrentAreaFlags() & NAVFLAGS_CROUCH )
+					GetClient()->PressButton( BOT_BUTTON_CROUCH );
+				else
+				{
+					if ( ( mCachedCorners[ 0 ].mFlags & NAVFLAGS_CROUCH ) && distToCorner < 128.0f )
+						GetClient()->PressButton( BOT_BUTTON_CROUCH );
+					else
+						GetClient()->ReleaseButton( BOT_BUTTON_CROUCH );
+				}
+				
 				if ( mCachedCorners[ 0 ].mArea == NAVAREA_DOOR && IGame::GetFrameNumber() & 3 )
 					GetClient()->PressButton( BOT_BUTTON_USE );
 				/*if ( mCachedCorners[ 0 ].mFlags & F_NAV_JUMPLOW )
@@ -624,7 +681,7 @@ namespace AiState
 
 	void FollowPath::CheckForLowJumps( const Vector3f &_destination )
 	{
-		Prof( CheckForLowJumps );
+		rmt_ScopedCPUSample( CheckForLowJumps );
 
 		// bot MUST NOT press jump button every frame, otherwise he jumps only once
 		int32_t time = IGame::GetTime();
@@ -677,7 +734,7 @@ namespace AiState
 
 	void FollowPath::CheckForGapJumps( const Vector3f &_destination )
 	{
-		Prof( CheckForGapJumps );
+		rmt_ScopedCPUSample( CheckForGapJumps );
 
 		// Get this entities bounding box to use for traces.
 		Box3f worldObb;

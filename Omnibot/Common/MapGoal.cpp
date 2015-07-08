@@ -23,10 +23,6 @@
 static int32_t sNextSerialNum = 0;
 
 //////////////////////////////////////////////////////////////////////////
-
-Prof_Define( MapGoal );
-
-//////////////////////////////////////////////////////////////////////////
 #define GETMACHINE() ScriptManager::GetInstance()->GetMachine()
 //////////////////////////////////////////////////////////////////////////
 
@@ -146,10 +142,6 @@ void MapGoal::_Init()
 
 	mNeedsSynced = false;
 
-#ifdef Prof_ENABLED
-	mProfZone = 0;
-#endif
-
 	//////////////////////////////////////////////////////////////////////////
 	// init flags
 	PROPERTY_INIT( DefaultDrawFlags, DrawAll );
@@ -182,14 +174,6 @@ gmGCRoot<gmUserObject> MapGoal::GetScriptObject( gmMachine *_machine ) const
 	if ( !mScriptObject )
 		mScriptObject = gmBind2::Class<MapGoal>::WrapObject( _machine, const_cast<MapGoal*>( this ), true );
 	return mScriptObject;
-}
-
-void MapGoal::SetProfilerZone( const std::string &_name )
-{
-#ifdef Prof_ENABLED
-	mProfZone = gDynamicZones.FindZone(_name.c_str());
-	OBASSERT(mProfZone,"No Profiler Zone Available!");
-#endif
 }
 
 MapGoalPtr MapGoal::GetSmartPtr()
@@ -301,19 +285,13 @@ void MapGoal::SetAvailableInitial( int _team, bool _available )
 
 void MapGoal::Update()
 {
-	Prof_Scope( MapGoal );
-
-#ifdef Prof_ENABLED
-	Prof_Scope_Var Scope(*mProfZone, Prof_cache);
-#endif
-
 	{
-		Prof( Update );
+		rmt_ScopedCPUSample( MapGoalUpdate );
 
 		//////////////////////////////////////////////////////////////////////////
 		if ( GetEntity().IsValid() )
 		{
-			gEngineFuncs->GetEntityInfo( GetEntity(), mEntInfo );
+			IGame::GetEntityInfo( GetEntity(), mEntInfo );
 
 			if ( GetRemoveWithEntity() )
 			{
@@ -901,15 +879,9 @@ void MapGoal::SetProperty( const std::string &_propname, const obUserData &_val 
 
 void MapGoal::RenderDebug( bool _editing, bool _highlighted )
 {
-	Prof_Scope( MapGoal );
-
-#ifdef Prof_ENABLED
-	Prof_Scope_Var Scope(*mProfZone, Prof_cache);
-#endif
+	rmt_ScopedCPUSample( MapGoalRenderDebug );
 
 	{
-		Prof( Render );
-
 		if ( GetRenderGoal() )
 		{
 			if ( mRenderFunc )
@@ -1302,6 +1274,9 @@ void MapGoal::ClassPriority::GetPriorityText( std::string &_txtout ) const
 	{
 		if ( Summary[ i ].mClassId && Summary[ i ].mTeamId )
 		{
+			std::string groupname, classname;
+			System::mInstance->mGame->FindClassName( groupname, classname, ENT_GRP_PLAYER, Summary[ i ].mClassId );
+
 			_txtout = "    "; // indent
 			_txtout += Utils::GetTeamString( Summary[ i ].mTeamId );
 			_txtout += " ";

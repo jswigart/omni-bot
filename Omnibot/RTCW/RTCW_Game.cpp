@@ -108,10 +108,6 @@ bool RTCW_Game::Init( System & system )
 	if ( !IGame::Init( system ) )
 		return false;
 
-	// Run the games autoexec.
-	int threadId;
-	system.mScript->ExecuteFile( "scripts/rtcw_autoexec.gm", threadId );
-
 	return true;
 }
 
@@ -120,7 +116,7 @@ void RTCW_Game::GetGameVars( GameVars &_gamevars )
 	_gamevars.mPlayerHeight = 64.f;
 }
 
-static IntEnum RTCW_TeamEnum [] =
+static const IntEnum RTCW_TeamEnum [] =
 {
 	IntEnum( "SPECTATOR", OB_TEAM_SPECTATOR ),
 	IntEnum( "AXIS", RTCW_TEAM_AXIS ),
@@ -133,7 +129,7 @@ void RTCW_Game::GetTeamEnumeration( const IntEnum *&_ptr, int &num )
 	_ptr = RTCW_TeamEnum;
 }
 
-static IntEnum RTCW_WeaponEnum [] =
+static const IntEnum RTCW_WeaponEnum [] =
 {
 	IntEnum( "NONE", RTCW_WP_NONE ),
 	IntEnum( "KNIFE", RTCW_WP_KNIFE ),
@@ -172,7 +168,7 @@ void RTCW_Game::GetWeaponEnumeration( const IntEnum *&_ptr, int &num )
 	_ptr = RTCW_WeaponEnum;
 }
 
-static IntEnum g_RTCWClassMappings [] =
+static const IntEnum g_RTCWClassMappings [] =
 {
 	IntEnum( "SOLDIER", RTCW_CLASS_SOLDIER ),
 	IntEnum( "MEDIC", RTCW_CLASS_MEDIC ),
@@ -454,15 +450,9 @@ void RTCW_Game::StartGame()
 	GoalManager::GetInstance()->Reset();
 
 	ErrorObj err;
-	const bool goalsLoaded = GoalManager::GetInstance()->Load( std::string( gEngineFuncs->GetMapName() ), err );
+	GoalManager::GetInstance()->Load( std::string( gEngineFuncs->GetMapName() ), err );
 	err.PrintToConsole();
-
-	if ( !goalsLoaded )
-	{
-		// register nav system goals
-		System::mInstance->mNavigation->RegisterGameGoals();
-	}
-
+	
 	GoalManager::GetInstance()->InitGameGoals();
 
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();

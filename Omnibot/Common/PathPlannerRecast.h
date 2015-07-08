@@ -32,47 +32,22 @@ namespace modeldata
 	class Node;
 };
 
-struct EnumDef
+//////////////////////////////////////////////////////////////////////////
+
+struct TileRebuild
 {
-	size_t			mValue;
-	const char *	mName;
+	int mX, mY;
+
+	TileRebuild( int x = 0, int y = 0 );
 };
-
-extern const EnumDef sPolyAreas [];
-extern const size_t sNumPolyAreas;
-
-extern const EnumDef sPolyFlags [];
-extern const size_t sNumPolyFlags;
-
-bool PolyAreaToString( size_t area, std::string & strOut );
-bool StringToPolyArea( const std::string & name, size_t & areaOut );
-bool PolyFlagsToString( size_t flags, std::string & strOut );
-bool StringToPolyFlags( const std::string & name, size_t & flagsOut );
-
-struct OffMeshConnection
+struct TileAddData
 {
-	static const size_t MaxPoints = 4;
+	int					mX, mY;
 
-	Vector3f		mEntry;
-	Vector3f		mIntermediates[ MaxPoints ];
-	Vector3f		mExit;
+	unsigned char *		mNavData = NULL;
+	int					mNavDataSize = 0;
 
-	size_t			mNumPts;
-	float			mRadius;
-	NavArea			mAreaType;
-	NavAreaFlags	mFlags;
-	bool			mBiDir;
-
-	void Render();
-
-	OffMeshConnection()
-		: mNumPts( 0 )
-		, mRadius( 0.0f )
-		, mAreaType( NAVAREA_GROUND )
-		, mFlags( NAVFLAGS_NONE )
-		, mBiDir( false )
-	{
-	}
+	TileAddData( int x = 0, int y = 0 );
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -83,41 +58,18 @@ class PathPlannerRecast : public PathPlannerBase
 {
 public:
 	friend class RecastPathInterface;
-
-	/*enum NavMeshFlags
-	{
-	NAV_SHOW_COLLISION_MODELS = NUM_BASE_NAVFLAGS,
-	};*/
-
+	
 	static const int VERSION_MODELCACHE = 1;
-
-	enum ModelState
-	{
-		StateUnknown,
-		StateNonCollidable,
-		StateCollidable,
-		StateMoved,
-		StateMarkedForDelete,
-	};
-
+	
 	bool Init( System & system );
 	void Update( System & system );
 	void Shutdown();
 	bool IsReady() const;
-
-	int GetLatestFileVersion() const;
-
-	bool GetNavFlagByName( const std::string &_flagname, NavFlags &_flag ) const;
-
-	Vector3f GetDisplayPosition( const Vector3f &_pos );
-
+		
 	bool Load( const std::string &_mapname, bool _dl = true );
 	bool Save( const std::string &_mapname );
 	void Unload();
-	bool SetFileComments( const std::string &_text );
-
-	void RegisterGameGoals();
-
+	
 	virtual void RegisterScriptFunctions( gmMachine *a_machine );
 
 	bool GetNavInfo( const Vector3f &pos, int32_t &_id, std::string &_name );
@@ -128,41 +80,14 @@ public:
 	void EntityDeleted( const EntityInstance &ei );
 
 	void BuildConfig( rcConfig & config );
-	void BuildNav();
+	void BuildNav( bool saveToFile );
 	void BuildNavTile();
 
 	PathInterface * AllocPathInterface( Client * client );
 
-	const char *GetPlannerName() const
-	{
-		return "Recast Path Planner";
-	};
-	int GetPlannerType() const
-	{
-		return NAVID_RECAST;
-	};
-	
-	struct TileRebuild
-	{
-		int mX, mY;
-
-		TileRebuild( int x = 0, int y = 0 ) : mX( x ), mY( y ) { }
-	};
-	struct TileAddData
-	{
-		int					mX, mY;
-
-		unsigned char *		mNavData = NULL;
-		int					mNavDataSize = 0;
-
-		TileAddData( int x = 0, int y = 0 )
-			: mX( x )
-			, mY( y )
-			, mNavData( NULL )
-			, mNavDataSize( 0 )
-		{
-		}
-	};
+	const char *GetPlannerName() const;
+	int GetPlannerType() const;
+		
 	typedef std::vector<TileRebuild> TileRebuildList;
 	typedef std::vector<TileAddData> AddTileList;
 
@@ -170,6 +95,8 @@ public:
 
 	void MarkTileForBuilding( const dtMeshTile * tile );
 	void MarkTileForBuilding( const Vector3f & pos );
+	void MarkTileForBuilding( const Vector3f & mins, const Vector3f & maxs );
+	void MarkTileForBuilding( const AxisAlignedBox3f & oldBounds, const AxisAlignedBox3f & newBounds );
 	void MarkTileForBuilding( const int tx, const int ty );
 
 	void RasterizeTileLayers( int tax, int ty );
@@ -183,23 +110,26 @@ protected:
 	void OpenCachedDatabase();
 
 	void InitCommands();
-	void cmdNavSave( const StringVector &_args );
-	void cmdNavLoad( const StringVector &_args );
-	void cmdNavView( const StringVector &_args );
-	void cmdNavViewConnections( const StringVector &_args );
+	void cmdNavSave( const StringVector & args );
+	void cmdNavLoad( const StringVector & args );
+	void cmdNavView( const StringVector & args );
+	void cmdNavViewModels( const StringVector & args );
+	void cmdNavViewConnections( const StringVector & args );
 
-	void cmdBuildNav( const StringVector &_args );
-	void cmdBuildNavTile( const StringVector &_args );
+	void cmdBuildNav( const StringVector & args );
+	void cmdBuildNavTile( const StringVector & args );
 
-	void cmdUndo( const StringVector &_args );
-	void cmdNavAddExclusionZone( const StringVector &_args );
-	void cmdNavAddOffMeshConnection( const StringVector &_args );
-	void cmdCommitPoly( const StringVector &_args );
-	void cmdAutoBuildFeatures( const StringVector &_args );
-	void cmdSaveToObjFile( const StringVector &_args );
-	void cmdModelEnable( const StringVector &_args );
-	void cmdModelMover( const StringVector &_args );
-	void cmdModelNonSolid( const StringVector &_args );
+	void cmdUndo( const StringVector & args );
+	void cmdNavAddExclusionZone( const StringVector & args );
+	void cmdNavAddLink( const StringVector & args );
+	void cmdCommitPoly( const StringVector & args );
+	void cmdAutoBuildFeatures( const StringVector & args );
+	void cmdSaveToObjFile( const StringVector & args );
+	void cmdModelEnable( const StringVector & args );
+	void cmdModelShape( const StringVector & args );
+	void cmdModelSetSolid( const StringVector & args );
+	void cmdModelDynamic( const StringVector & args );
+	void cmdModelSetTriangleSurface( const StringVector & args );
 
 	void LoadWorldModel();
 
@@ -251,79 +181,33 @@ private:
 	} mSettings;
 
 	typedef std::vector<OffMeshConnection> OffMeshConnections;
-	OffMeshConnections			mOffMeshConnections;
+	OffMeshConnections				mOffMeshConnections;
 
-	RecastBuildContext			mContext;
-	dtNavMesh	*				mNavMesh;
+	RecastBuildContext				mContext;
+	dtNavMesh	*					mNavMesh;
 	
-	struct ModelCache
-	{
-		GameEntity			mEntity;
-		EntityInfo		mEntInfo;
-		int					mSubModel;
-
-		ModelTransform		mTransform;
-		ModelPtr			mModel;
-
-		ModelState			mActiveState;
-		
-		bool				mBaseStaticMesh;
-		
-		bool				mDisabled;
-		bool				mMover;
-		bool				mNonSolid;
-
-		ModelCache()
-			: mModel( NULL )
-			, mSubModel( -1 )
-			, mActiveState( StateUnknown )
-			, mBaseStaticMesh( false )
-			, mDisabled( false )
-			, mMover( false )
-			, mNonSolid( false )
-		{
-		}
-		ModelCache( const ModelCache & other )
-		{
-			mEntity = other.mEntity;
-			mModel = other.mModel;
-			mSubModel = other.mSubModel;
-			mActiveState = other.mActiveState;
-			mBaseStaticMesh = other.mBaseStaticMesh;
-			mDisabled = other.mDisabled;
-			mMover = other.mMover;
-			mNonSolid = other.mNonSolid;
-		}
-		// move ctr
-		ModelCache( ModelCache && other )
-		{
-			mEntity = other.mEntity;
-			mModel = other.mModel;
-			mSubModel = other.mSubModel;
-			mActiveState = other.mActiveState;
-			mBaseStaticMesh = other.mBaseStaticMesh;
-			mDisabled = other.mDisabled;
-			mMover = other.mMover;
-			mNonSolid = other.mNonSolid;
-		}
-
-		void Free()
-		{
-			mEntity = GameEntity();
-			mModel.reset();
-			mActiveState = StateUnknown;
-		}
-	};
-
-	typedef std::vector<ModelCache> CachedModels;
-	CachedModels					mModels;
-
-	btCollisionWorld*				mCollisionWorld;
-
+	CollisionWorld					mCollision;
+	
+	std::vector<GameEntity>			mDeferredModel;
+	
 	TileRebuildList					mTileBuildQueue;
 	AddTileList						mAddTileQueue;
 
 	std::vector<AxisAlignedBox3f>	mExclusionZones;
+
+	struct Flags
+	{
+		uint32_t					mViewMode : 2;
+		uint32_t					mViewConnections : 1;
+		uint32_t					mViewModels : 2;
+
+		Flags()
+			: mViewMode( 0 )
+			, mViewConnections( 0 )
+			, mViewModels( 0 )
+		{
+		}
+	}								mFlags;
 
 	void InitNavmesh();
 
@@ -350,17 +234,17 @@ private:
 	boost::recursive_mutex		mGuardAddTile;
 
 	boost::thread_group			mThreadGroup;
-	bool						mBuildBaseNav;
+	bool						mDeferredSaveNav;
 
-	void CreateModels( GameEntity entity, const AABB & localaabb, bool baseStaticMesh );
-	void CreateModels( GameEntity entity, const IceMaths::Matrix4x4 & baseXform, const modeldata::Scene & ioScene, const modeldata::Node & ioNode, bool baseStaticMesh );
+	void UpdateDeferredModels();
+	void UpdateModelState( bool forcePositionUpdate );
+	
+	bool GetAimedAtModel( RayResult& result, SurfaceFlags ignoreSurfaces );
 
-	void UpdateModelState();
+	bool CreateEntityModel( const GameEntity& entity, const EntityInfo & entInfo );
 
-	void CountStats( const modeldata::Scene & ioScene, const modeldata::Node & ioNode, size_t & numTris, size_t & numMeshes );
-	void GatherModel( ModelCache & cache, const modeldata::Scene & ioScene, const modeldata::Node & ioNode, const IceMaths::Matrix4x4 & nodeXform );
-
-	bool GetAimedAtModel( size_t & modelIndex, size_t & triangleIndex, Vector3f & hitPos, Vector3f & hitNormal );
+	void SendWorldModel();
+	void SendTileModel( int tx, int ty );
 };
 
 #endif

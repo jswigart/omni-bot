@@ -33,7 +33,8 @@ namespace AiState
 			PathNotFound,
 		};
 
-		bool IsOnCustomLink( NavArea linkType ) const;
+		bool IsOnCustomLink() const;
+		bool IsOnCustomLink( NavArea type ) const;
 
 		bool GotoRandomPt( FollowPathUser *_owner, MoveMode _movemode = Run );
 		bool Goto( FollowPathUser *_owner, MoveMode _movemode = Run, bool _skiplastpt = false );
@@ -88,42 +89,36 @@ namespace AiState
 			bool				mSkipLastPt;
 			bool				mFinal;
 
-			Query()
-				: mUser( 0 )
-				, mMoveMode( Run )
-				, mSkipLastPt( false )
-				, mFinal( false )
-			{
-			}
+			Query();
 		};
 
-		Query			 mQuery;
-		Query			 mSavedQuery;
+		Query						mQuery;
+		Query						mSavedQuery;
 
 		// Internal Data
-		PathStatus mPathStatus;
-		Vector3f mLookAheadPt;
-		int		 mLadderDirection;
-		int32_t	 mJumpTime;
+		PathStatus					mPathStatus;
+		Vector3f					mLookAheadPt;
+		int							mLadderDirection;
+		int32_t						mJumpTime;
 
-		enum
-		{
-			CachedEdges = 8
-		};
-		PathInterface::PathCorner		mCachedCorners[ CachedEdges ];
-		size_t							mNumCachedCorners;
+		OffMeshConnection			mActiveLink;
+		size_t						mActiveLinkIndex;
 
-		uint32_t mPassThroughState;
-		int		 mPathThroughPtIndex;
+		static const size_t CachedEdges = 8;
+		PathInterface::PathCorner	mCachedCorners[ CachedEdges ];
+		size_t						mNumCachedCorners;
+		
+		uint32_t					mPassThroughState;
+		int							mPathThroughPtIndex;
 
 		// For jump behaviors.
-		float	 mRayDistance;
+		float						mRayDistance;
 
 		bool CheckForMover( const Vector3f &_pos );
 		void CheckForLowJumps( const Vector3f &_destination );
 		void CheckForGapJumps( const Vector3f &_destination );
 
-		PathInterface * mPathInterface;
+		PathInterface *				mPathInterface;
 	};
 };
 

@@ -34,14 +34,27 @@ class gmFunctionObject;
 typedef boost::shared_ptr<Client> ClientPtr;
 typedef boost::weak_ptr<Client> ClientWPtr;
 
-//typedef MessageDepot<Event_Sound,1024> SoundDepot;
-//extern SoundDepot g_SoundDepot;
+struct NavParms
+{
+	float	AgentHeightStand;
+	float	AgentHeightCrouch;
+	float	AgentRadius;
+	float	AgentMaxClimb;
+	float	WalkableSlopeAngle;
+	
+	NavParms();
+};
 
 struct EntityInstance
 {
-	GameEntity					 mEntity;	
-	EntityInfo				 mEntInfo;
-	int							 mTimeStamp;
+	GameEntity				mEntity;	
+	EntityInfo				mEntInfo;
+	int						mTimeStamp;
+
+	EntityInstance()
+		: mTimeStamp( -1 )
+	{
+	}
 };
 
 // class: IGame
@@ -127,6 +140,8 @@ public:
 	{
 		return NAVID_RECAST;
 	}
+			
+	virtual void GetNavParms( NavParms & navParms ) const;
 
 	virtual bool RendersToGame() const
 	{
@@ -141,7 +156,8 @@ public:
 	ClientPtr GetClientByGameId( int _gameId );
 	ClientPtr GetClientByIndex( int _index );
 
-	void FindClassName( std::string& groupName, std::string& className, const EntityInfo& classInfo );
+	bool FindTeamName( std::string& teamName, int teamId );
+	bool FindClassName( std::string& groupName, std::string& className, const EntityGroup group, int classId );
 
 	// Mod specific subclasses.
 	virtual GoalManager * AllocGoalManager();
@@ -186,28 +202,19 @@ public:
 		friend class IGame;
 		operator bool() const;
 		void Clear();
-		EntityInstance &GetEnt()
-		{
-			return mCurrent;
-		}
-		const EntityInstance &GetEnt() const
-		{
-			return mCurrent;
-		}
-		const int GetIndex() const
-		{
-			return mIndex;
-		}
-		EntityIterator()
-		{
-		}
+
+		EntityInstance &GetEnt();
+		const EntityInstance &GetEnt() const;
+		const int GetIndex() const;
+		EntityIterator();
+		EntityIterator( GameEntity initialEntity );
 	private:
 		EntityInstance	mCurrent;
 		int				mIndex;
 	};
 
-	static bool IsEntityValid( const GameEntity &_hnl );
-	static bool GetEntityInfo( const GameEntity &_hnl, EntityInfo& entInfo );
+	static bool IsEntityValid( const GameEntity & hndl );
+	static bool GetEntityInfo( const GameEntity & hndl, EntityInfo& entInfo );
 	static bool IterateEntity( IGame::EntityIterator &_it );
 	static void UpdateEntity( EntityInstance &_ent );
 
@@ -232,16 +239,10 @@ public:
 		return "Omnibot";
 	}
 
-#ifdef ENABLE_REMOTE_DEBUGGING
-	void UpdateSync( RemoteLib::DebugConnection * connection, Remote::Game & cached, Remote::Game & update );
-	void SyncEntity( const EntityInstance & ent, RemoteLib::DebugConnection * connection, Remote::Entity & cachedEntity, Remote::Entity & entityUpdate );
-	virtual void InternalSyncEntity( const EntityInstance & ent, RemoteLib::DebugConnection * connection );
-#endif
-
 	bool AddUpdateFunction( const std::string &_name, FunctorPtr _func );
 	bool RemoveUpdateFunction( const std::string &_name );
 
-	virtual bool GetAnalyticsKeys( GameAnalyticsKeys & keys )
+	virtual bool GetAnalyticsKeys( GameAnalytics::Keys & keys )
 	{
 		return false;
 	}
@@ -317,20 +318,20 @@ protected:
 
 	// Commands
 	virtual void InitCommands();
-	bool UnhandledCommand( const StringVector &_args );
-	void cmdRevision( const StringVector &_args );
-	void cmdAddbot( const StringVector &_args );
-	void cmdKickbot( const StringVector &_args );
-	void cmdDebugBot( const StringVector &_args );
-	void cmdKickAll( const StringVector &_args );
-	void cmdBotDontShoot( const StringVector &_args );
-	void cmdDumpBlackboard( const StringVector &_args );
-	void cmdReloadWeaponDatabase( const StringVector &_args );
-	void cmdDrawBlockableTests( const StringVector &_args );
-	void cmdPrintFileSystem( const StringVector &_args );
-	void cmdTraceBenchmark( const StringVector &_args );
-	void cmdShowProcesses( const StringVector &_args );
-	void cmdStopProcess( const StringVector &_args );
+	bool UnhandledCommand( const StringVector & args );
+	void cmdRevision( const StringVector & args );
+	void cmdAddbot( const StringVector & args );
+	void cmdKickbot( const StringVector & args );
+	void cmdDebugBot( const StringVector & args );
+	void cmdKickAll( const StringVector & args );
+	void cmdBotDontShoot( const StringVector & args );
+	void cmdDumpBlackboard( const StringVector & args );
+	void cmdReloadWeaponDatabase( const StringVector & args );
+	void cmdDrawBlockableTests( const StringVector & args );
+	void cmdPrintFileSystem( const StringVector & args );
+	void cmdTraceBenchmark( const StringVector & args );
+	void cmdShowProcesses( const StringVector & args );
+	void cmdStopProcess( const StringVector & args );
 
 	// Server settings
 	RegulatorPtr mSettingLimiter;

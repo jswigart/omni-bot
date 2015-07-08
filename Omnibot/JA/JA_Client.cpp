@@ -74,7 +74,7 @@ NavFlags JA_Client::GetTeamFlag( int _team ) const
 
 void JA_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 {
-	includeFlags = NAVFLAGS_WALK;
+	includeFlags = NAVFLAGS_WALK | NAVFLAGS_CROUCH;
 
 	switch ( GetTeam() )
 	{

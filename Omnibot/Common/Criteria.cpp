@@ -68,7 +68,7 @@ bool Base_CheckCriteria( CheckCriteria &crit, Client * bot )
 			if ( gotSubjectInfo )
 			{
 				bool bResult = false;
-				HANDLE_OPERATORS( bResult, subInfo.mHealth, crit.mOperand[ 0 ].GetNumAsInt() );
+				HANDLE_OPERATORS( bResult, subInfo.mHealth.mNum, crit.mOperand[ 0 ].GetNumAsInt() );
 				if ( crit.mNegated )
 					bResult = !bResult;
 				return bResult;

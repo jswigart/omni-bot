@@ -35,7 +35,7 @@ NavFlags Skeleton_Client::GetTeamFlag(int _team) const
 
 void Skeleton_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 {
-	includeFlags = NAVFLAGS_WALK;
+	includeFlags = NAVFLAGS_WALK | NAVFLAGS_CROUCH;
 
 	switch ( GetTeam() )
 	{

@@ -316,18 +316,6 @@
     <ClCompile Include="..\..\..\dependencies\physfs\physfs_unicode.c">
       <Filter>3rdParty\PhysFS</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\iprof\prof_draw.c">
-      <Filter>3rdParty\iprof</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\iprof\prof_gather.c">
-      <Filter>3rdParty\iprof</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\iprof\prof_process.c">
-      <Filter>3rdParty\iprof</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\dependencies\iprof\prof_win32.c">
-      <Filter>3rdParty\iprof</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\PropertyBinding.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -468,6 +456,21 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Common\PathQuery.cpp">
       <Filter>Navigation\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\Remotery\lib\Remotery.c">
+      <Filter>3rdParty\Remotery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\VBSPFileData.cpp">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\VBSPFileImporter.cpp">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\pow2assert.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\tinyobjloader\tiny_obj_loader.cc">
+      <Filter>3rdParty\tinyobjloader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -822,18 +825,6 @@
     <ClInclude Include="..\..\..\Common\Omni-Bot.h">
       <Filter>Interface</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\iprof\prof.h">
-      <Filter>3rdParty\iprof</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\iprof\prof_gather.h">
-      <Filter>3rdParty\iprof</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\iprof\prof_internal.h">
-      <Filter>3rdParty\iprof</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\dependencies\iprof\prof_win32.h">
-      <Filter>3rdParty\iprof</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Common\PropertyBinding.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -954,6 +945,21 @@
     <ClInclude Include="..\..\..\Common\PathQuery.h">
       <Filter>Navigation\Base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\Remotery\lib\Remotery.h">
+      <Filter>3rdParty\Remotery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\VBSPFileData.h">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\VBSPFileImporter.h">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\pow2assert.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\tinyobjloader\tiny_obj_loader.h">
+      <Filter>3rdParty\tinyobjloader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Blackboard">
@@ -1001,9 +1007,6 @@
     <Filter Include="Platform">
       <UniqueIdentifier>{a2ef2db5-d0db-44c9-a033-4a949087ffeb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="3rdParty\iprof">
-      <UniqueIdentifier>{6fc5778a-c8c2-4b2b-b78b-dcd67802ee9e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="3rdParty\sqlite">
       <UniqueIdentifier>{70ba4175-0ddd-41f2-9936-261f5f305ee2}</UniqueIdentifier>
     </Filter>
@@ -1018,6 +1021,15 @@
     </Filter>
     <Filter Include="Navigation\FloodFill%28experimental%29">
       <UniqueIdentifier>{6945888d-d3c3-4c19-b953-a7bd24a4065d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\Remotery">
+      <UniqueIdentifier>{4e00e2e0-b744-4461-837a-0b5fc6602cc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Navigation\MapParsing">
+      <UniqueIdentifier>{24f58b51-42b7-406e-a4b5-4fcb2ba3b2d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\tinyobjloader">
+      <UniqueIdentifier>{b7ea6e85-b5ff-4cd8-aec9-e9e1626b07cb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

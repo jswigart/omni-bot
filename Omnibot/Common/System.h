@@ -9,7 +9,7 @@ class PathPlannerBase;
 class GoalManager;
 class TriggerManager;
 class NameManager;
-class GameAnalyticsLogger;
+class GameAnalytics;
 
 class System
 {
@@ -20,7 +20,7 @@ public:
 	GoalManager	*			mGoalManager;
 	TriggerManager *		mTriggerManager;
 	NameManager *			mNameManager;
-	GameAnalyticsLogger *	mAnalytics;
+	GameAnalytics *			mAnalytics;
 
 	static System * mInstance;
 

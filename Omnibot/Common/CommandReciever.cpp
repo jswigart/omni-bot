@@ -19,14 +19,14 @@ ScriptCommandExecutor::ScriptCommandExecutor( gmMachine * a_machine, gmTableObje
 {
 }
 
-bool ScriptCommandExecutor::Exec( const StringVector &_args, const gmVariable &_this )
+bool ScriptCommandExecutor::Exec( const StringVector & args, const gmVariable &_this )
 {
-	const bool bPrintUsage = _args.size() > 1 && _args[ 1 ] == "?";
+	const bool bPrintUsage = args.size() > 1 && args[ 1 ] == "?";
 	if ( mCommandTable )
 	{
 		DisableGCInScope gcEn( mMachine );
 
-		gmVariable vEntry = mCommandTable->Get( mMachine, _args[ 0 ].c_str() );
+		gmVariable vEntry = mCommandTable->Get( mMachine, args[ 0 ].c_str() );
 
 		gmFunctionObject *pFn = vEntry.GetFunctionObjectSafe();
 		if ( !pFn )
@@ -71,7 +71,7 @@ bool ScriptCommandExecutor::Exec( const StringVector &_args, const gmVariable &_
 		}
 		if ( bPrintUsage )
 		{
-			EngineFuncs::ConsoleError( va( "No Usage Info For Command: %s", _args[ 0 ].c_str() ) );
+			EngineFuncs::ConsoleError( va( "No Usage Info For Command: %s", args[ 0 ].c_str() ) );
 			return true;
 		}
 
@@ -82,25 +82,25 @@ bool ScriptCommandExecutor::Exec( const StringVector &_args, const gmVariable &_
 			{
 				// Add all the params
 				gmTableObject *pParamTable = mMachine->AllocTableObject();
-				if ( _args.size() > 1 )
+				if ( args.size() > 1 )
 				{
-					for ( uint32_t i = 1; i < _args.size(); ++i )
+					for ( uint32_t i = 1; i < args.size(); ++i )
 					{
 						char *endPtr;
-						const char *startPtr = _args[ i ].c_str();
+						const char *startPtr = args[ i ].c_str();
 						long iNum = strtol( startPtr, &endPtr, 10 );
 						double dNum;
 						if ( endPtr != startPtr && !*endPtr )
 						{
 							pParamTable->Set( mMachine, i - 1, gmVariable( (int)iNum ) );
 						}
-						else if ( Utils::ConvertString( _args[ i ], dNum ) )
+						else if ( Utils::ConvertString( args[ i ], dNum ) )
 						{
 							pParamTable->Set( mMachine, i - 1, gmVariable( (float)dNum ) );
 						}
 						else
 						{
-							pParamTable->Set( mMachine, i - 1, gmVariable( mMachine->AllocStringObject( _args[ i ].c_str() ) ) );
+							pParamTable->Set( mMachine, i - 1, gmVariable( mMachine->AllocStringObject( args[ i ].c_str() ) ) );
 						}
 					}
 				}
@@ -125,8 +125,7 @@ CommandReciever::CommandReciever()
 	static bool bDoOnce = false;
 	if ( !bDoOnce )
 	{
-		SetEx( "help", "Displays a list of commands",
-			this, &CommandReciever::cmdHelp );
+		SetEx( "help", "Displays a list of commands", this, &CommandReciever::cmdHelp );
 		bDoOnce = true;
 	}
 }
@@ -144,13 +143,13 @@ CommandReciever::~CommandReciever()
 	}
 }
 
-bool CommandReciever::DispatchCommand( const StringVector &_args )
+bool CommandReciever::DispatchCommand( const StringVector & args )
 {
 	// Look for default commands first.
-	CommandMap::iterator cit = mCommandMap.find( _args[ 0 ] );
+	CommandMap::iterator cit = mCommandMap.find( args[ 0 ] );
 	if ( cit != mCommandMap.end() )
 	{
-		( *cit->second.second )( _args );
+		( *cit->second.second )( args );
 		return true;
 	}
 
@@ -160,7 +159,7 @@ bool CommandReciever::DispatchCommand( const StringVector &_args )
 	if ( pCommandsTable )
 	{
 		ScriptCommandExecutor cmdExec( mMachine, pCommandsTable );
-		if ( cmdExec.Exec( _args ) )
+		if ( cmdExec.Exec( args ) )
 			return true;
 	}
 
@@ -169,7 +168,7 @@ bool CommandReciever::DispatchCommand( const StringVector &_args )
 		it != mRecieverList.end();
 		++it )
 	{
-		if ( ( *it )->UnhandledCommand( _args ) )
+		if ( ( *it )->UnhandledCommand( args ) )
 			return true;
 	}
 	EngineFuncs::ConsoleError( "Unrecognized command. Use /bot help for a list of commands." );
@@ -194,7 +193,7 @@ void CommandReciever::Remove( const std::string _name )
 	}
 }
 
-void CommandReciever::cmdHelp( const StringVector &_args )
+void CommandReciever::cmdHelp( const StringVector & args )
 {
 	EngineFuncs::ConsoleMessage( "---- Omni-bot Command Help ----" );
 	CommandMap::const_iterator it = mCommandMap.begin();

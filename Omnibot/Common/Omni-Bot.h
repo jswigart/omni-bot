@@ -26,7 +26,7 @@ class OmnibotFunctions : public OmnibotFunctionInterface
 
 	virtual void Update();
 	virtual void Shutdown();
-	virtual void ConsoleCommand( const Arguments &_args );
+	virtual void ConsoleCommand( const Arguments &args );
 
 	virtual void SendTrigger( const TriggerInfo &_triggerInfo );
 	virtual void AddBlackboardRecord( BlackBoard_Key _type, int _posterID, int _targetID, obUserData *_data );

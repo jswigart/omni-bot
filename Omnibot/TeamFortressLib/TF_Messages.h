@@ -298,12 +298,10 @@ struct Event_BuildableSabotaged_TF
 
 struct TF_BuildInfo
 {
-	GameEntity				 mDetpack;
-
-	Event_SentryStatus_TF	 mSentryStats;
-	Event_DispenserStatus_TF mDispenserStats;
-	Event_TeleporterStatus_TF mTeleporterStats;
-	Event_DetpackStatus_TF	 mDetpackStats;
+	Event_SentryStatus_TF		mSentryStats;
+	Event_DispenserStatus_TF	mDispenserStats;
+	Event_TeleporterStatus_TF	mTeleporterStats;
+	Event_DetpackStatus_TF		mDetpackStats;
 };
 
 struct TF_HealTarget

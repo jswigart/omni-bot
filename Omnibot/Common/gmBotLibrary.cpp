@@ -1519,52 +1519,6 @@ static int gmfGetEntityPowerups( gmThread *a_thread )
 
 //////////////////////////////////////////////////////////////////////////
 
-// function: GetEntHealthAndArmor
-//		This function gets the health and armor status of this entity. The structure
-//
-// Parameters:
-//
-//		<GameEntity> - The entity to use
-//		- OR -
-//		<int> - The gameId for the entity to use
-//
-// Returns:
-//		<table> - Health, MaxHealth, Armor, MaxArmor fields.
-//		- OR -
-//		null - if there was an error or the parameter was invalid
-static int gmfGetEntityHealthAndArmor( gmThread *a_thread )
-{
-	GM_CHECK_NUM_PARAMS( 2 );
-
-	GameEntity gameEnt;
-	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
-	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
-
-	GM_CHECK_TABLE_PARAM( tbl, 1 );
-
-	DisableGCInScope gcEn( a_thread->GetMachine() );
-
-	if ( !tbl )
-		tbl = a_thread->GetMachine()->AllocTableObject();
-
-	EntityInfo entInfo;
-	if ( tbl != NULL && IGame::GetEntityInfo( gameEnt, entInfo ) )
-	{
-		tbl->Set( a_thread->GetMachine(), "Health", gmVariable( entInfo.mHealth ) );
-		tbl->Set( a_thread->GetMachine(), "MaxHealth", gmVariable( entInfo.mHealthMax ) );
-		tbl->Set( a_thread->GetMachine(), "Armor", gmVariable( entInfo.mArmor ) );
-		tbl->Set( a_thread->GetMachine(), "MaxArmor", gmVariable( entInfo.mArmorMax ) );
-		a_thread->PushInt( 1 );
-	}
-	else
-	{
-		a_thread->PushNull();
-	}
-	return GM_OK;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
 // function: GetEntWorldAABB
 //		This function gets the world AABB for this entity.
 //
@@ -1709,9 +1663,13 @@ static int gmfGetEntityInfo( gmThread *a_thread )
 
 		infoTbl->Set( pMachine, "Group", gmVariable( entInfo.mGroup ) );
 		infoTbl->Set( pMachine, "ClassId", gmVariable( entInfo.mClassId ) );
-		infoTbl->Set( pMachine, "Quantity", gmVariable( entInfo.mQuantity ) );
-		infoTbl->Set( pMachine, "QuantityMax", gmVariable( entInfo.mQuantityMax ) );
-
+		infoTbl->Set( pMachine, "Quantity", gmVariable( entInfo.mQuantity.mNum ) );
+		infoTbl->Set( pMachine, "QuantityMax", gmVariable( entInfo.mQuantity.mMax ) );
+		infoTbl->Set( pMachine, "Health", gmVariable( entInfo.mHealth.mNum ) );
+		infoTbl->Set( pMachine, "MaxHealth", gmVariable( entInfo.mHealth.mMax ) );
+		infoTbl->Set( pMachine, "Armor", gmVariable( entInfo.mArmor.mNum ) );
+		infoTbl->Set( pMachine, "MaxArmor", gmVariable( entInfo.mArmor.mMax ) );
+		
 		a_thread->PushTable( infoTbl );
 	}
 	else
@@ -1847,14 +1805,34 @@ static int gmfGetEntityInSphere( gmThread *a_thread )
 	GM_CHECK_INT_PARAM( groupId, 2 );
 	GM_CHECK_INT_PARAM( classId, 3 );
 
-	GameEntity gameEnt;
-	GM_GAMEENTITY_FROM_PARAM( gameEnt, 3, GameEntity() );
+	GameEntity lastEntity;
+	GM_GAMEENTITY_FROM_PARAM( lastEntity, 3, GameEntity() );
 
-	GameEntity ent;// = gEngineFuncs->FindEntityInSphere( Vector3f( v.x, v.y, v.z ), radius, gameEnt, classId );
-	if ( ent.IsValid() )
+	const Vector3f searchPos( v.x, v.y, v.z );
+
+	GameEntity foundEntity;
+
+	IGame::EntityIterator it( lastEntity );
+	while ( IGame::IterateEntity( it ) )
+	{
+		if ( it.GetEnt().mEntInfo.mGroup == groupId && it.GetEnt().mEntInfo.mClassId == classId )
+		{
+			Vector3f entPos;
+			if ( EngineFuncs::EntityPosition( it.GetEnt().mEntity, entPos ) )
+			{
+				if ( SquaredLength( searchPos, entPos ) < Mathf::Sqr( radius ) )
+				{
+					foundEntity = it.GetEnt().mEntity;
+					break;
+				}
+			}
+		}
+	}
+
+	if ( foundEntity.IsValid() )
 	{
 		gmVariable out;
-		out.SetEntity( ent.AsInt() );
+		out.SetEntity( foundEntity.AsInt() );
 		a_thread->Push( out );
 	}
 	else
@@ -2916,7 +2894,6 @@ static gmFunctionEntry s_botLib [] =
 	{ "GetEntRotationMatrix", gmfGetEntRotationMatrix },
 	{ "GetEntFlags", gmfGetEntityFlags },
 	{ "GetEntPowerups", gmfGetEntityPowerups },
-	{ "GetEntHealthAndArmor", gmfGetEntityHealthAndArmor },
 	{ "GetEntLocalAABB", gmfGetEntityLocalAABB },
 	{ "GetEntOwner", gmfGetEntityOwner },
 	{ "GetEntTeam", gmfGetEntityTeam },

@@ -34,6 +34,9 @@ namespace Wm5
 			const Vector3<Real>& axis1, const Vector3<Real>& axis2,
 			const Real extent0, const Real extent1, const Real extent2);
 
+		// axis aligned
+		Box3( const Vector3<Real>& mins, const Vector3<Real>& maxs );
+
 		bool operator==( const Box3<Real> & other )
 		{
 			return Center == other.Center &&

@@ -211,7 +211,7 @@ void ET_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters 
 
 void ET_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 {
-	includeFlags = NAVFLAGS_WALK;
+	includeFlags = NAVFLAGS_WALK | NAVFLAGS_CROUCH;
 
 	switch ( GetTeam() )
 	{

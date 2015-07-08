@@ -58,10 +58,7 @@ namespace AiState
 		}
 		StateStatus Update( float fDt )
 		{
-			Prof( ReloadOther );
 			{
-				Prof( Update );
-
 				FINDSTATE( wsys, WeaponSystem, GetParent() );
 				if ( wsys != NULL && wsys->GetCurrentRequestOwner() == GetNameHash() )
 				{
@@ -141,10 +138,7 @@ namespace AiState
 	}
 	State::StateStatus AttackTarget::Update( float fDt )
 	{
-		Prof( AttackTarget );
 		{
-			Prof( Update );
-
 			const MemoryRecord *pRecord = GetClient()->GetTargetingSystem()->GetCurrentTargetRecord();
 			if ( !pRecord )
 				return State_Finished;
@@ -349,7 +343,7 @@ namespace AiState
 		{
 			if ( ( *it )->GetWeaponID() == _weaponId )
 			{
-				mWeaponList.erase( it++ );
+				it = mWeaponList.erase( it );
 				mWeaponMask.SetFlag( _weaponId, false );
 			}
 			else
@@ -456,8 +450,6 @@ namespace AiState
 
 	bool WeaponSystem::CanShoot( const MemoryRecord &_record )
 	{
-		Prof( CanShoot );
-
 		// Target filters use this, so if we're mounted only check current weapon(which should be the mounted weapon)
 		if ( mCurrentWeapon && GetClient()->CheckUserFlag( Client::FL_USINGMOUNTEDWEAPON ) )
 			return mCurrentWeapon->CanShoot( Primary, _record.mTargetInfo );
@@ -656,10 +648,8 @@ namespace AiState
 
 	State::StateStatus WeaponSystem::Update( float fDt )
 	{
-		Prof( WeaponSystem );
+		rmt_ScopedCPUSample( WeaponSystemUpdate );
 		{
-			Prof( Update );
-
 			//////////////////////////////////////////////////////////////////////////
 			mDefaultWeapon = SelectBestWeapon();
 			UpdateWeaponRequest( GetNameHash(), mDefaultWeapon );
@@ -756,7 +746,7 @@ namespace AiState
 
 	int WeaponSystem::SelectBestWeapon( GameEntity _targetent /*= NULL*/ )
 	{
-		Prof( SelectBestWeaponNew );
+		rmt_ScopedCPUSample( SelectBestWeapon );
 
 		UpdateWeapons();
 		UpdateAllWeaponAmmo();

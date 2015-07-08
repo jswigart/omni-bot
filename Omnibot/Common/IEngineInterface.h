@@ -11,6 +11,8 @@
 #ifndef __ENGINE_INTERFACE_H__
 #define __ENGINE_INTERFACE_H__
 
+#include <malloc.h>
+
 #include "Omni-Bot_Types.h"
 #include "Omni-Bot_BitFlags.h"
 #include "Omni-Bot_Color.h"
@@ -84,7 +86,7 @@ public:
 	};
 	struct PInfo
 	{
-		EntityInfo		mEntInfo;
+		EntityInfo			mEntInfo;
 		int					mTeam;
 		Controller			mController;
 
@@ -138,15 +140,29 @@ public:
 	virtual void FreeMemory( void * ptr ) = 0;
 };
 
+class DefaultMemoryAllocator : public MemoryAllocator
+{
+public:
+	virtual char * AllocateMemory( unsigned int numBytes )
+	{
+		return (char *)malloc( numBytes );
+	}
+	virtual void FreeMemory( void * ptr )
+	{
+		free( ptr );
+	}
+};
+
 struct GameModelInfo
 {
 	enum
 	{
-		BufferSize = 128
+		TypeBuferSize = 16,
+		NameBufferSize = 128,
 	};
-	char 			mModelName[ BufferSize ];
-	char 			mModelType[ BufferSize ];
-	char *			mDataBuffer;
+	char 			mModelType[ TypeBuferSize ];
+	char 			mModelName[ NameBufferSize ];
+	char*			mDataBuffer;
 	int				mDataBufferSize;
 	float			mScale[ 3 ];
 
@@ -447,7 +463,7 @@ public:
 
 	virtual void Update() = 0;
 	virtual void Shutdown() = 0;
-	virtual void ConsoleCommand( const Arguments &_args ) = 0;
+	virtual void ConsoleCommand( const Arguments &args ) = 0;
 
 	virtual void SendTrigger( const TriggerInfo &_triggerInfo ) = 0;
 	virtual void AddBlackboardRecord( BlackBoard_Key _type, int _posterID, int _targetID, obUserData *_data ) = 0;

@@ -81,7 +81,7 @@ namespace AiState
 					RenderBuffer::AddOBB( worldObb, col );
 
 					std::string groupName, className;
-					Utils::FindClassName( groupName, className, mRecords[ i ].mTargetInfo.mEntInfo );
+					System::mInstance->mGame->FindClassName( groupName, className, r.mTargetInfo.mEntInfo.mGroup, r.mTargetInfo.mEntInfo.mClassId );
 					RenderBuffer::AddString3d(
 						worldObb.Center,
 						COLOR::WHITE,
@@ -118,7 +118,7 @@ namespace AiState
 
 	void SensoryMemory::UpdateEntities()
 	{
-		Prof( UpdateEntities );
+		rmt_ScopedCPUSample( UpdateEntities );
 
 		bool bFoundEntity = false;
 
@@ -174,7 +174,7 @@ namespace AiState
 
 	void SensoryMemory::UpdateSight()
 	{
-		Prof( UpdateSight );
+		rmt_ScopedCPUSample( UpdateSight );
 
 		int iUpdated = 0;
 		for ( int i = 0; i < MaxRecords; ++i )
@@ -194,12 +194,12 @@ namespace AiState
 
 	void SensoryMemory::UpdateSound()
 	{
-		Prof( UpdateSound );
+		rmt_ScopedCPUSample(UpdateSound );
 	}
 
 	void SensoryMemory::UpdateSmell()
 	{
-		Prof( UpdateSmell );
+		rmt_ScopedCPUSample( UpdateSmell );
 	}
 
 	void SensoryMemory::UpdateWithSoundSource( const Event_Sound *_sound )
@@ -219,7 +219,7 @@ namespace AiState
 			if ( pRecord )
 			{
 				EntityInfo classInfo;
-				if ( !gEngineFuncs->GetEntityInfo( _sourceent, pRecord->mTargetInfo.mEntInfo ) )
+				if ( !IGame::GetEntityInfo( _sourceent, pRecord->mTargetInfo.mEntInfo ) )
 					return;
 				
 				// Get the entity position.
@@ -245,7 +245,7 @@ namespace AiState
 
 	bool SensoryMemory::UpdateRecord( MemoryRecord &_record )
 	{
-		Prof( UpdateRecord );
+		rmt_ScopedCPUSample( SensoryUpdateRecord );
 
 		if ( _record.GetAge() <= 0 )
 			return true;
@@ -277,7 +277,7 @@ namespace AiState
 		}
 
 		// Update data that changes.
-		if ( !gEngineFuncs->GetEntityInfo( ent, ti.mEntInfo ) )
+		if ( !IGame::GetEntityInfo( ent, ti.mEntInfo ) )
 			return false;
 
 		Vector3f vNewPosition;
@@ -391,7 +391,7 @@ namespace AiState
 
 	void SensoryMemory::QueryMemory( FilterSensory &_filter )
 	{
-		Prof( QueryMemory );
+		rmt_ScopedCPUSample( SensoryQueryMemory );
 		for ( int i = 0; i < MaxRecords; ++i )
 		{
 			if ( mRecords[ i ].GetEntity().IsValid() )
@@ -557,7 +557,7 @@ namespace AiState
 
 	State::StateStatus SensoryMemory::Update( float fDt )
 	{
-		Prof( SensoryMemory_Update );
+		rmt_ScopedCPUSample( SensoryMemory );
 
 		UpdateEntities();
 		UpdateSight();

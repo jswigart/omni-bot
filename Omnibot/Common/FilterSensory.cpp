@@ -20,6 +20,7 @@ FilterSensory::FilterSensory( Client *_client, AiState::SensoryMemory::Type _typ
 	, mAnyPlayerClass( false )
 {
 	ClearPositions();
+	ResetGroups();
 	ResetClasses();
 	ResetCategory();
 }

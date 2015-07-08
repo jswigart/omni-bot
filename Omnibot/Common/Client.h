@@ -154,7 +154,7 @@ public:
 
 	inline void SetMovementVector( const Vector3f &_vec )
 	{
-	 mMoveVector = _vec;
+		mMoveVector = _vec;
 	}
 
 	inline bool InFieldOfView( const Vector3f &_pos );
@@ -189,7 +189,7 @@ public:
 	}
 	inline void SetRoleMask( BitFlag32 &_bf )
 	{
-	 mRoleMask = _bf;
+		mRoleMask = _bf;
 	}
 
 	inline bool HasEntityFlag( int32_t _flag ) const
@@ -231,7 +231,7 @@ public:
 	}
 	inline void SetFieldOfView( float _fov )
 	{
-	 mFieldOfView = _fov;
+		mFieldOfView = _fov;
 	}
 	inline float GetMaxViewDistance() const
 	{
@@ -239,7 +239,7 @@ public:
 	}
 	inline void SetMaxViewDistance( float _dist )
 	{
-	 mMaxViewDistance = _dist;
+		mMaxViewDistance = _dist;
 	}
 	inline bool IsWithinViewDistance( const Vector3f &_pos );
 	inline float GetMaxTurnSpeed() const
@@ -248,7 +248,7 @@ public:
 	}
 	inline void SetMaxTurnSpeed( float _speed )
 	{
-	 mMaxTurnSpeed = _speed;
+		mMaxTurnSpeed = _speed;
 	}
 	inline float GetAimStiffness() const
 	{
@@ -256,7 +256,7 @@ public:
 	}
 	inline void SetAimStiffness( float _stiffness )
 	{
-	 mAimStiffness = _stiffness;
+		mAimStiffness = _stiffness;
 	}
 	inline float GetAimDamping() const
 	{
@@ -264,7 +264,7 @@ public:
 	}
 	inline void SetAimDamping( float _damping )
 	{
-	 mAimDamping = _damping;
+		mAimDamping = _damping;
 	}
 	inline float GetAimTolerance() const
 	{
@@ -272,7 +272,7 @@ public:
 	}
 	inline void SetAimTolerance( float _tolerance )
 	{
-	 mAimTolerance = _tolerance;
+		mAimTolerance = _tolerance;
 	}
 
 	AiState::SensoryMemory		*GetSensoryMemory();
@@ -282,20 +282,20 @@ public:
 
 	inline int GetCurrentHealth() const
 	{
-		return mEntInfo.mHealth;
+		return mEntInfo.mHealth.mNum;
 	}
 	inline int GetMaxHealth() const
 	{
-		return mEntInfo.mHealthMax;
+		return mEntInfo.mHealth.mMax;
 	}
 	inline float GetHealthPercent() const;
 	inline int GetCurrentArmor() const
 	{
-		return mEntInfo.mArmor;
+		return mEntInfo.mArmor.mNum;
 	}
 	inline int GetMaxArmor() const
 	{
-		return mEntInfo.mArmorMax;
+		return mEntInfo.mArmor.mMax;
 	}
 	inline float GetArmorPercent() const;
 	inline float GetStepHeight() const
@@ -349,7 +349,7 @@ public:
 	}
 	inline void ResetStuckTime()
 	{
-	 mStuckTime = 0;
+		mStuckTime = 0;
 	}
 
 	virtual void GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags ) = 0;
@@ -433,7 +433,7 @@ public:
 
 	void PropogateDeletedThreads( const int *_threadIds, int _numThreads );
 
-	bool DistributeUnhandledCommand( const StringVector &_args );
+	bool DistributeUnhandledCommand( const StringVector & args );
 
 	Client();
 	virtual ~Client();
@@ -475,7 +475,7 @@ private:
 	BitFlag32		mMovementCaps;
 	BitFlag32		mRoleMask;
 	BitFlag64		mInternalFlags;
-	
+
 	int			 mTeam;
 	GameId		 mGameID;
 	GameEntity	 mGameEntity;
@@ -505,14 +505,12 @@ private:
 
 inline float Client::GetHealthPercent() const
 {
-	return( mEntInfo.mHealthMax > 0 ) ?
-		(float)mEntInfo.mHealth / (float)mEntInfo.mHealthMax : ( float )1.0;
+	return mEntInfo.mHealth.Percent();
 }
 
 inline float Client::GetArmorPercent() const
 {
-	return ( mEntInfo.mArmorMax > 0 ) ?
-		(float)mEntInfo.mArmor / (float)mEntInfo.mArmorMax : ( float )1.0;
+	return mEntInfo.mArmor.Percent();
 }
 
 inline bool Client::InFieldOfView( const Vector3f &_pos )
@@ -530,9 +528,9 @@ inline bool Client::IsWithinViewDistance( const Vector3f &_pos )
 inline void Client::SetUserFlag( int _flag, bool _enable )
 {
 	if ( _enable )
-	 mInternalFlags.SetFlag( _flag );
+		mInternalFlags.SetFlag( _flag );
 	else
-	 mInternalFlags.ClearFlag( _flag );
+		mInternalFlags.ClearFlag( _flag );
 }
 
 inline bool Client::CheckUserFlag( int _flag ) const

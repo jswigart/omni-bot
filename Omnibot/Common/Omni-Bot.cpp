@@ -71,7 +71,7 @@ omnibot_error OmnibotFunctions::Initialize( IEngineInterface *_pEngineFuncs, int
 		( std::string )va( "%s/omnibot_%s.log",
 		_pEngineFuncs->GetLogPath(),
 		_pEngineFuncs->GetMapName() ), true );
-
+	
 	// Create the Game Manager
 	g_GameManager = new IGameManager();
 	return g_GameManager->CreateGame( _pEngineFuncs, _version );
@@ -79,6 +79,8 @@ omnibot_error OmnibotFunctions::Initialize( IEngineInterface *_pEngineFuncs, int
 
 void OmnibotFunctions::Update()
 {
+	rmt_ScopedCPUSample( Omnibot );
+
 	g_GameManager->UpdateGame();
 
 #ifndef __linux__
@@ -95,12 +97,12 @@ void OmnibotFunctions::Shutdown()
 	//_ASSERTE( _CrtCheckMemory( ) );
 #endif
 }
-void OmnibotFunctions::ConsoleCommand( const Arguments &_args )
+void OmnibotFunctions::ConsoleCommand( const Arguments &args )
 {
 	StringVector tokList;
-	for ( int i = 0; i < _args.mNumArgs; ++i )
+	for ( int i = 0; i < args.mNumArgs; ++i )
 	{
-		std::string str = _args.mArgs[ i ];
+		std::string str = args.mArgs[ i ];
 
 		if ( i == 0 )
 		{

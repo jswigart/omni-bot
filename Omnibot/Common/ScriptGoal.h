@@ -295,7 +295,6 @@ namespace AiState
 		bool MarkInUse( MapGoalPtr _p );
 
 		//////////////////////////////////////////////////////////////////////////
-		void SetProfilerZone( const std::string &_name );
 
 		ScriptGoal *Clone();
 		ScriptGoal( const char *_name );
@@ -391,10 +390,6 @@ namespace AiState
 		MapGoalPtr				 mMapGoal;
 		MapGoalPtr				 mMapGoalRoute;
 		Trackers				 mTracker;
-
-#ifdef Prof_ENABLED
-		Prof_Zone					*.mProfZone;
-#endif
 
 		ScriptGoal();
 	};

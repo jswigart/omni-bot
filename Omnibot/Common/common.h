@@ -93,6 +93,8 @@
 #pragma warning( pop )
 #endif // _WIN32
 
+#include "Remotery.h"
+
 // Wild Magic Math Libraries
 #include "Wm5Mathematics.h"
 using namespace Wm5;
@@ -110,25 +112,13 @@ using namespace Wm5;
 #include "EngineFuncs.h"
 #include "IEngineInterface.h"
 
-#include "prof.h"
-
 #ifdef WIN32
 //#define ENABLE_REMOTE_DEBUGGER
-#endif
-
-// remote debug
-#ifdef ENABLE_REMOTE_DEBUGGING
-#include "DebugConnection.h"
 #endif
 
 // global: g_EngineFuncs is a bot-wide global so that game functionality
 //		can be used from anywhere
 extern IEngineInterface *gEngineFuncs;
-
-#ifdef Prof_ENABLED
-typedef ProfileZones<> CustomProfilerZone;
-extern CustomProfilerZone gDynamicZones;
-#endif
 
 #define REGEX_OPTIONS boost::regex::basic|boost::regex::icase|boost::regex::grep
 

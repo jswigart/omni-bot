@@ -355,8 +355,8 @@ static int rasterizeTileLayers(BuildContext* ctx, InputGeom* geom,
 	// remove unwanted overhangs caused by the conservative rasterization
 	// as well as filter spans where the character cannot possibly stand.
 	rcFilterLowHangingWalkableObstacles(ctx, tcfg.walkableClimb, *rc.solid);
-	rcFilterLedgeSpans(ctx, tcfg.walkableHeight, tcfg.walkableClimb, *rc.solid);
-	rcFilterWalkableLowHeightSpans(ctx, tcfg.walkableHeight, *rc.solid);
+	rcFilterLedgeSpans(ctx, tcfg.walkableHeightStand, tcfg.walkableClimb, *rc.solid);
+	rcFilterWalkableLowHeightSpans( ctx, tcfg.walkableHeightStand, *rc.solid );
 	
 	
 	rc.chf = rcAllocCompactHeightfield();
@@ -365,7 +365,7 @@ static int rasterizeTileLayers(BuildContext* ctx, InputGeom* geom,
 		ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'chf'.");
 		return 0;
 	}
-	if (!rcBuildCompactHeightfield(ctx, tcfg.walkableHeight, tcfg.walkableClimb, *rc.solid, *rc.chf))
+	if ( !rcBuildCompactHeightfield( ctx, tcfg.walkableHeightStand, tcfg.walkableClimb, *rc.solid, *rc.chf ) )
 	{
 		ctx->log(RC_LOG_ERROR, "buildNavigation: Could not build compact data.");
 		return 0;
@@ -393,7 +393,7 @@ static int rasterizeTileLayers(BuildContext* ctx, InputGeom* geom,
 		ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'lset'.");
 		return 0;
 	}
-	if (!rcBuildHeightfieldLayers(ctx, *rc.chf, tcfg.borderSize, tcfg.walkableHeight, *rc.lset))
+	if ( !rcBuildHeightfieldLayers( ctx, *rc.chf, tcfg.borderSize, tcfg.walkableHeightStand, *rc.lset ) )
 	{
 		ctx->log(RC_LOG_ERROR, "buildNavigation: Could not build heighfield layers.");
 		return 0;
@@ -1197,7 +1197,7 @@ bool Sample_TempObstacles::handleBuild()
 	cfg.cs = m_cellSize;
 	cfg.ch = m_cellHeight;
 	cfg.walkableSlopeAngle = m_agentMaxSlope;
-	cfg.walkableHeight = (int)ceilf(m_agentHeight / cfg.ch);
+	cfg.walkableHeightStand = (int)ceilf( m_agentHeight / cfg.ch );
 	cfg.walkableClimb = (int)floorf(m_agentMaxClimb / cfg.ch);
 	cfg.walkableRadius = (int)ceilf(m_agentRadius / cfg.cs);
 	cfg.maxEdgeLen = (int)(m_edgeMaxLen / m_cellSize);

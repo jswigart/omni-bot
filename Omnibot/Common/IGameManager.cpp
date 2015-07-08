@@ -9,6 +9,7 @@
 #include "IGameManager.h"
 #include "IGame.h"
 #include "mdump.h"
+#include "Remotery.h"
 
 #include "GoalManager.h"
 #include "TriggerManager.h"
@@ -23,10 +24,6 @@
 
 #include "PathPlannerFloodFill.h"
 #include "PathPlannerRecast.h"
-
-#if ( ENABLE_FILE_DOWNLOADER )
-#include "FileDownloader.h"
-#endif
 
 IEngineInterface *gEngineFuncs = 0;
 
@@ -51,17 +48,47 @@ void ProtobufLogHandler( google::protobuf::LogLevel level, const char* filename,
 
 //////////////////////////////////////////////////////////////////////////
 
+static void RemoteyInputHandler( const char* text, void* context )
+{
+	StringVector tokens;
+	Utils::Tokenize( text, " ", tokens );
+	if ( tokens.size() > 0 )
+	{
+		if ( tokens.front() == "bot" || tokens.front() == "ombot" )
+			tokens.erase( tokens.begin() );
+	}
+	CommandReciever::DispatchCommand( tokens );
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 IGame *CreateGameInstance();
 
 boost::thread::id IGameManager::sMainThread;
 
 IGameManager::IGameManager()
+	: mRemotery( NULL )
 {
 	memset( &gEngineFuncs, 0, sizeof( gEngineFuncs ) );
+
+	rmtSettings* settings = rmt_Settings();
+	if ( settings != NULL )
+	{
+		settings->input_handler = RemoteyInputHandler;
+	}
+	rmt_CreateGlobalInstance( &mRemotery );
+	rmt_SetCurrentThreadName( "Main" );
+}
+
+IGameManager::~IGameManager()
+{
+	rmt_DestroyGlobalInstance( mRemotery );
 }
 
 omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _version )
 {
+	rmt_ScopedCPUSample( CreateGame );
+
 	sMainThread = boost::this_thread::get_id();
 
 	google::protobuf::SetLogHandler( ProtobufLogHandler );
@@ -139,12 +166,7 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 	Options::SetValue( "Log", "LogWarnings", "true", false );
 	Options::SetValue( "Log", "LogErrors", "true", false );
 	Options::SetValue( "Log", "LogCriticalErrors", "true", false );
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-	Options::SetValue("RemoteWindow","Enabled",0,false);
-	Options::SetValue("RemoteWindow","Port",.mRemote.getPort(),false);
-#endif
-
+	
 	//////////////////////////////////////////////////////////////////////////
 	// logging options
 	g_Logger.LogMask() = 0;
@@ -203,37 +225,43 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 	}
 
 	// Create the goal manager.
-	mBotSystem.mGoalManager = mBotSystem.mGame->AllocGoalManager();
-	mBotSystem.mGoalManager->Init( mBotSystem );
+	{
+		rmt_ScopedCPUSample( GoalManagerInit );
+		mBotSystem.mGoalManager = mBotSystem.mGame->AllocGoalManager();
+		mBotSystem.mGoalManager->Init( mBotSystem );
+	}
 
 	mBotSystem.mTriggerManager = TriggerManager::GetInstance();
 
 	// Initialize the game.
-	if ( mBotSystem.mGame->Init( mBotSystem ) )
 	{
-		LOG( "Created Game Interface : " << mBotSystem.mGame->GetGameName() );
-		LOG( "Game Interface : " << gEngineFuncs->GetGameName() );
-		LOG( "Mod Interface : " << gEngineFuncs->GetModName() );
-	}
-	else
-	{
-		LOGERR( "Unable to CreateGame() : " << mBotSystem.mGame->GetGameName() );
-		return BOT_ERROR_CANTINITBOT;
+		rmt_ScopedCPUSample( GameInit );
+		if ( mBotSystem.mGame->Init( mBotSystem ) )
+		{
+			LOG( "Created Game Interface : " << mBotSystem.mGame->GetGameName() );
+			LOG( "Game Interface : " << gEngineFuncs->GetGameName() );
+			LOG( "Mod Interface : " << gEngineFuncs->GetModName() );
+		}
+		else
+		{
+			LOGERR( "Unable to CreateGame() : " << mBotSystem.mGame->GetGameName() );
+			return BOT_ERROR_CANTINITBOT;
+		}
 	}
 
-#if ( ENABLE_FILE_DOWNLOADER )
-	FileDownloader::Init();
-#endif
+	// Run the games autoexec.
+	int threadId = GM_INVALID_THREAD;
+	if ( !mBotSystem.mScript->ExecuteFile( filePath( "scripts/%s_autoexec.gm", mBotSystem.mGame->GetGameDatabaseAbbrev() ), threadId ) )
+		EngineFuncs::ConsoleError( va( "Unable to execute 'scripts/%s_autoexec.gm'", mBotSystem.mGame->GetGameDatabaseAbbrev() ) );
 
-	GameAnalyticsKeys analyticsKeys;
+	GameAnalytics::Keys analyticsKeys;
 	//if ( mBotSystem.mGame->GetAnalyticsKeys( analyticsKeys ) )
 	{
 #ifdef _DEBUG
 		analyticsKeys.mVersionKey += ":DBG";
 #endif
-		mBotSystem.mAnalytics = new GameAnalyticsLogger( analyticsKeys );
-		mBotSystem.mAnalytics->InitNetwork();
-
+		mBotSystem.mAnalytics = new GameAnalytics( analyticsKeys );
+		
 		bool dbEnabled = false, remoteEnabled = false;;
 		if ( Options::GetValue( "Analytics", "SendToDatabase", dbEnabled ) )
 			mBotSystem.mAnalytics->CreateDatabase( "analytics.db" );
@@ -245,7 +273,7 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 				Options::GetValue( "Analytics", "ServerIp", serverIp ) &&
 				Options::GetValue( "Analytics", "ServerPort", serverPort ) )
 			{
-				mBotSystem.mAnalytics->StartHost( serverIp.c_str(), (unsigned short)serverPort );
+				mBotSystem.mAnalytics->SetPublisher( new zmqPublisher( serverIp.c_str(), (unsigned short)serverPort ) );
 			}
 		}
 	}
@@ -272,9 +300,7 @@ void IGameManager::UpdateGame()
 		// if any threads want to run outside of the update scope of the 
 		// bot, they can attempt to grab this guard
 		//boost::lock_guard<boost::recursive_mutex> lock( gGlobalUpdate );
-
-		Prof( Omnibot );
-
+		
 		RenderBuffer::BeginFrame();
 
 		mBotSystem.mGame->UpdateTime();
@@ -283,106 +309,88 @@ void IGameManager::UpdateGame()
 		mBotSystem.mGame->UpdateGame( mBotSystem );
 		mBotSystem.mGoalManager->Update( mBotSystem );
 		mBotSystem.mTriggerManager->Update( mBotSystem );
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-		{
-			Prof(RemoteSync);
-			.mRemote.updateConnections( this );
-			for( int i = 0; i < .mRemote.getNumConnections(); ++i ) {
-				RemoteLib::DebugConnection * conn = static_cast<RemoteLib::DebugConnection*>( .mRemote.getConnection( i ) );
-				if ( conn->isConnected() ) {
-					/*RemoteLib::DataBuffer & sendBuffer = conn->getSendBuffer();
-					// keep alive
-					if ( IGame::GetTime() > conn->getUserData() ) {
-					sendBuffer.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-					sendBuffer.startSizeHeader();
-					sendBuffer.writeInt32( RemoteLib::ID_ack );
-					sendBuffer.endSizeHeader();
-					sendBuffer.endWrite();
-					conn->setUserData( IGame::GetTime() + 5000 );
-					}*/
-
-					conn->updateState.Clear();
-
-					mBotSystem.mGame->UpdateSync( conn, conn->cachedState, conn->updateState );
-					//.mPathPlanner->Sync( conn );
-					.mGoalManager->Sync( conn );
-				}
-			}
-		}
-#endif
 	}
 
 	if ( mBotSystem.mAnalytics != NULL )
 	{
-		if ( mBotSystem.mAnalytics->IsNetworkActive() /*&& mBotSystem.mAnalytics->NumClientsConnected() > 0*/ )
+		rmt_ScopedCPUSample( GameAnalytics );
+
+		std::string err;
+		while ( mBotSystem.mAnalytics->GetError( err ) )
 		{
-			std::vector<Analytics::MessageUnion*> recievedMessages;
-			mBotSystem.mAnalytics->ServiceNetwork( recievedMessages );
-
-			for ( size_t i = 0; i < recievedMessages.size(); ++i )
-			{
-				EngineFuncs::ConsoleMessage( va( "Analytics Message %s", typeid( *recievedMessages[ i ] ).name() ) );
-
-				delete recievedMessages[ i ];
-				recievedMessages[ i ] = NULL;
-			}
-			
-			Analytics::MessageUnion msgUnion;
-			msgUnion.set_timestamp( 0 );
-
-			IGame::EntityIterator it;
-			while ( IGame::IterateEntity( it ) )
-			{
-				Vector3f entPos( Vector3f::ZERO ), entFace( Vector3f::ZERO );
-				EngineFuncs::EntityPosition( it.GetEnt().mEntity, entPos );
-				EngineFuncs::EntityOrientation( it.GetEnt().mEntity, entFace, NULL, NULL );
-								
-				float hdg, pitch, roll;
-				entFace.ToSpherical( hdg, pitch, roll );
-
-				Analytics::GameEntityList * lst = msgUnion.mutable_gameentitylist();
-				Analytics::GameEntityInfo * ent = lst->add_entities();
-				ent->set_entityid( it.GetEnt().mEntity.AsInt() );
-				ent->set_groupid( it.GetEnt().mEntInfo.mGroup );
-				ent->set_classid( it.GetEnt().mEntInfo.mClassId );
-				ent->set_quantity( it.GetEnt().mEntInfo.mQuantity );
-				ent->set_quantitymax( it.GetEnt().mEntInfo.mQuantityMax );
-				ent->mutable_position()->set_x( entPos.X() );
-				ent->mutable_position()->set_y( entPos.Y() );
-				ent->mutable_position()->set_z( entPos.Z() );
-				ent->mutable_orient()->set_heading( hdg );
-				ent->mutable_orient()->set_pitch( pitch );
-				ent->mutable_orient()->set_roll( roll );				
-			}
-
-			if ( msgUnion.IsInitialized() )
-				mBotSystem.mAnalytics->AddEvent( msgUnion );
+			EngineFuncs::ConsoleError( err.c_str() );
 		}
+
+		if ( mBotSystem.mAnalytics->GetPublisher() )
+		{
+			rmt_ScopedCPUSample( Poll );
+
+			Analytics::MessageUnion msg;
+			while ( mBotSystem.mAnalytics->Poll( msg ) )
+			{
+				
+			}
+		}
+
+		rmt_ScopedCPUSample( CreateFrameEvent );
+
+		Analytics::MessageUnion msgUnion;
+		msgUnion.set_timestamp( 0 );
+
+		IGame::EntityIterator it;
+		while ( IGame::IterateEntity( it ) )
+		{
+			Vector3f entPos( Vector3f::ZERO ), entFace( Vector3f::ZERO );
+			EngineFuncs::EntityPosition( it.GetEnt().mEntity, entPos );
+			EngineFuncs::EntityOrientation( it.GetEnt().mEntity, entFace, NULL, NULL );
+
+			float hdg, pitch, roll;
+			entFace.ToSpherical( hdg, pitch, roll );
+
+			Analytics::GameEntityList * lst = msgUnion.mutable_gameentitylist();
+			Analytics::GameEntityInfo * ent = lst->add_entities();
+			SMART_FIELD_SET( ent, entityid, it.GetEnt().mEntity.AsInt() );
+			SMART_FIELD_SET( ent, groupid, it.GetEnt().mEntInfo.mGroup );
+			SMART_FIELD_SET( ent, classid, it.GetEnt().mEntInfo.mClassId );
+			SMART_FIELD_SET( ent, quantity, it.GetEnt().mEntInfo.mQuantity.mNum );
+			SMART_FIELD_SET( ent, quantitymax, it.GetEnt().mEntInfo.mQuantity.mMax );
+			SMART_FIELD_SET( ent, health, it.GetEnt().mEntInfo.mHealth.mNum );
+			SMART_FIELD_SET( ent, healthmax, it.GetEnt().mEntInfo.mHealth.mMax );
+			SMART_FIELD_SET( ent, armor, it.GetEnt().mEntInfo.mArmor.mNum );
+			SMART_FIELD_SET( ent, armormax, it.GetEnt().mEntInfo.mArmor.mMax );
+			SMART_FIELD_SET( ent, ammo1, it.GetEnt().mEntInfo.mAmmo1.mNum );
+			SMART_FIELD_SET( ent, ammo1max, it.GetEnt().mEntInfo.mAmmo1.mMax );
+			SMART_FIELD_SET( ent, ammo2, it.GetEnt().mEntInfo.mAmmo2.mNum );
+			SMART_FIELD_SET( ent, ammo2max, it.GetEnt().mEntInfo.mAmmo2.mMax );
+			SMART_FIELD_SET( ent, ammo3, it.GetEnt().mEntInfo.mAmmo3.mNum );
+			SMART_FIELD_SET( ent, ammo3max, it.GetEnt().mEntInfo.mAmmo3.mMax );
+			SMART_FIELD_SET( ent, ammo4, it.GetEnt().mEntInfo.mAmmo4.mNum );
+			SMART_FIELD_SET( ent, ammo4max, it.GetEnt().mEntInfo.mAmmo4.mMax );
+			SMART_FIELD_SET( ent, positionx, entPos.X() );
+			SMART_FIELD_SET( ent, positiony, entPos.Y() );
+			SMART_FIELD_SET( ent, positionz, entPos.Z() );
+			SMART_FIELD_SET( ent, heading, hdg );
+			SMART_FIELD_SET( ent, pitch, pitch );
+			SMART_FIELD_SET( ent, roll, roll );
+		}
+
+		if ( msgUnion.IsInitialized() )
+			mBotSystem.mAnalytics->AddEvent( msgUnion );
 	}
 
 	Options::SaveConfigFileIfChanged( "user/omni-bot.cfg" );
 
-#if ( ENABLE_FILE_DOWNLOADER )
-	FileDownloader::Poll();
-#endif
-
 	if ( mBotSystem.mGame->RendersToGame() )
+	{
+		rmt_ScopedCPUSample( RenderToGame );
 		RenderBuffer::RenderToGame();
+	}
 
 	EngineFuncs::FlushAsyncMessages();
 }
 
 void IGameManager::Shutdown()
 {
-#if ( ENABLE_FILE_DOWNLOADER )
-	FileDownloader::Shutdown();
-#endif
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-	.mRemote.shutdown();
-#endif
-
 	if ( mBotSystem.mAnalytics != NULL )
 	{
 		Timer submitTimer;
@@ -454,7 +462,7 @@ void IGameManager::InitCommands()
 		this, &IGameManager::cmdSaveAllHeatMapScript );
 }
 
-void IGameManager::cmdVersion( const StringVector &_args )
+void IGameManager::cmdVersion( const StringVector & args )
 {
 	if ( mBotSystem.mGame )
 	{
@@ -468,7 +476,7 @@ void IGameManager::cmdVersion( const StringVector &_args )
 	}
 }
 
-void IGameManager::cmdNavSystem( const StringVector &_args )
+void IGameManager::cmdNavSystem( const StringVector & args )
 {
 	const char *strUsage [] =
 	{
@@ -476,15 +484,15 @@ void IGameManager::cmdNavSystem( const StringVector &_args )
 		"> type: the type of navigation system to use",
 	};
 
-	CHECK_NUM_PARAMS( _args, 2, strUsage );
+	CHECK_NUM_PARAMS( args, 2, strUsage );
 
 	NavigatorID navId = NAVID_RECAST;
-	/*if(_args[1] == "waypoint")
+	/*if(args[1] == "waypoint")
 		navId = NAVID_WAYPOINT;
 		else*/
-		if ( _args[ 1 ] == "flood" )
+		if ( args[ 1 ] == "flood" )
 			navId = NAVID_FLOODFILL;
-		else if ( _args[ 1 ] == "recast" )
+		else if ( args[ 1 ] == "recast" )
 			navId = NAVID_RECAST;
 		else
 		{
@@ -523,12 +531,12 @@ void IGameManager::cmdNavSystem( const StringVector &_args )
 		}
 }
 
-void IGameManager::cmdPrintAllFiles( const StringVector &_args )
+void IGameManager::cmdPrintAllFiles( const StringVector & args )
 {
 	FileSystem::EnumerateFiles( "" );
 }
 
-void IGameManager::cmdUpdateNavFile( const StringVector &_args )
+void IGameManager::cmdUpdateNavFile( const StringVector & args )
 {
 #if ( ENABLE_FILE_DOWNLOADER )
 	const char *strUsage [] =
@@ -537,7 +545,7 @@ void IGameManager::cmdUpdateNavFile( const StringVector &_args )
 		"> mapname: the name of the map to update",
 	};
 
-	CHECK_NUM_PARAMS( _args, 1, strUsage );
+	CHECK_NUM_PARAMS( args, 1, strUsage );
 	OPTIONAL_STRING_PARAM( mapname, 1, gEngineFuncs->GetMapName() );
 
 	FileDownloader::UpdateWaypoints( mapname );
@@ -546,7 +554,7 @@ void IGameManager::cmdUpdateNavFile( const StringVector &_args )
 #endif
 }
 
-void IGameManager::cmdUpdateAllNavFiles( const StringVector &_args )
+void IGameManager::cmdUpdateAllNavFiles( const StringVector & args )
 {
 #if ( ENABLE_FILE_DOWNLOADER )
 	OPTIONAL_BOOL_PARAM( newstufftoo, 1, false );
@@ -556,7 +564,7 @@ void IGameManager::cmdUpdateAllNavFiles( const StringVector &_args )
 #endif
 }
 
-void IGameManager::cmdSaveAllHeatMapScript( const StringVector &_args )
+void IGameManager::cmdSaveAllHeatMapScript( const StringVector & args )
 {
 	if ( System::mInstance->mAnalytics )
 	{
@@ -567,7 +575,7 @@ void IGameManager::cmdSaveAllHeatMapScript( const StringVector &_args )
 			"> imageSize[optional]: The largest size dimension of image",
 		};
 
-		CHECK_NUM_PARAMS( _args, 2, strUsage );
+		CHECK_NUM_PARAMS( args, 2, strUsage );
 		CHECK_FLOAT_PARAM( eventRadius, 1, strUsage );
 		OPTIONAL_INT_PARAM( imageSize, 2, 5000 );
 
@@ -586,7 +594,7 @@ void IGameManager::cmdSaveAllHeatMapScript( const StringVector &_args )
 	}
 }
 
-void IGameManager::cmdSaveHeatMapScript( const StringVector &_args )
+void IGameManager::cmdSaveHeatMapScript( const StringVector & args )
 {
 	if ( System::mInstance->mAnalytics )
 	{
@@ -598,14 +606,14 @@ void IGameManager::cmdSaveHeatMapScript( const StringVector &_args )
 			"> imageSize[optional]: The largest size dimension of image",
 		};
 
-		CHECK_NUM_PARAMS( _args, 3, strUsage );
+		CHECK_NUM_PARAMS( args, 3, strUsage );
 		CHECK_STRING_PARAM( eventName, 1, strUsage );
 		CHECK_FLOAT_PARAM( eventRadius, 2, strUsage );
 		OPTIONAL_INT_PARAM( imageSize, 3, 5000 );
 
 		const AxisAlignedBox3f & bnds = System::mInstance->mNavigation->GetNavigationBounds();
 
-		GameAnalyticsLogger::HeatmapDef def;
+		GameAnalytics::HeatmapDef def;
 		def.mAreaId = gEngineFuncs->GetMapName();
 		def.mEventId = eventName.c_str();
 		def.mEventRadius = eventRadius;
@@ -630,29 +638,3 @@ void IGameManager::cmdSaveHeatMapScript( const StringVector &_args )
 		}
 	}
 }
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-void IGameManager::SyncRemoteDelete( int entityHandle )
-{
-	/*if ( .mRemote.getNumConnections() > 0 ) {
-	RemoteLib::DataBufferStatic<128> db;
-
-	db.beginWrite( RemoteLib::DataBuffer::WriteModeAllOrNone );
-	db.startSizeHeader();
-	db.writeInt32( RemoteLib::ID_delete );
-	db.writeInt32( entityHandle );
-	db.endSizeHeader();
-	db.endWrite();
-	.mRemote.sendToAll( db );
-	}*/
-}
-
-void IGameManager::SyncRemoteMessage( const RemoteLib::DataBuffer & db ) {
-	.mRemote.sendToAll( db );
-}
-
-RemoteLib::Connection * IGameManager::CreateNewConnection( RemoteLib::TcpSocket & socket ) {
-	return new RemoteLib::DebugConnection( socket );
-}
-
-#endif

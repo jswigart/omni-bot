@@ -1,4 +1,5 @@
 #pragma once
+
 #ifndef _PROTOBUFUTILITY_H_
 #define _PROTOBUFUTILITY_H_
 
@@ -15,6 +16,6 @@ namespace google
 #include <vector>
 
 std::string GetFieldString( const google::protobuf::Message & msg, const google::protobuf::FieldDescriptor * fieldDesc );
-void ClearDefaultedValues( google::protobuf::Message & msg );
+void ClearDefaultedValues( google::protobuf::Message & msg, size_t & optionalFieldsSet );
 
 #endif

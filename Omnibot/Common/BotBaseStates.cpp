@@ -894,10 +894,9 @@ namespace AiState
 
 	State::StateStatus Aimer::Update( float fDt )
 	{
-		Prof( Aimer );
-		{
-			Prof( Update );
+		rmt_ScopedCPUSample( AimerUpdate );
 
+		{
 			AimRequest *curAim = GetHighestAimRequest( true );
 			mBestAimOwner = curAim->mOwner;
 			switch ( curAim->mAimType )
@@ -932,7 +931,7 @@ namespace AiState
 				}
 				case UserCallback:
 				{
-					Prof( UserCallback );
+					rmt_ScopedCPUSample( AimerCallback );
 					OBASSERT( curAim->mAimerUser, "No Aim User" );
 					if ( curAim->mAimerUser &&
 						curAim->mAimerUser->GetAimPosition( curAim->mAimVector ) &&
@@ -974,7 +973,7 @@ namespace AiState
 			{
 				Path::PathPoint pp;
 
-				if ( fp->IsMoving() && fp->IsOnCustomLink( NAVAREA_ANY ) )
+				if ( fp->IsMoving() && !fp->IsOnCustomLink() )
 				{
 					mNextLookTime = GetNextLookTime();
 					return 0.f;

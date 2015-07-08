@@ -114,12 +114,12 @@ protected:
 	static ScriptManager* mInstance;
 
 	virtual void InitCommands();
-	void cmdScriptStats(const StringVector &_args);
-	void cmdScriptCollect(const StringVector &_args);
-	void cmdScriptRunFile(const StringVector &_args);
-	void cmdScriptExecute(const StringVector &_args);
-	void cmdDebugScriptSystem(const StringVector &_args);
-	void cmdScriptWriteDocs(const StringVector &_args);
+	void cmdScriptStats(const StringVector & args);
+	void cmdScriptCollect(const StringVector & args);
+	void cmdScriptRunFile(const StringVector & args);
+	void cmdScriptExecute(const StringVector & args);
+	void cmdDebugScriptSystem(const StringVector & args);
+	void cmdScriptWriteDocs(const StringVector & args);
 
 	void _DumpTableInfo(gmMachine *_machine, const int _flags, gmTableObject *_table, char *_buffer, int _buflen, int _lvl, std::fstream &_file);
 

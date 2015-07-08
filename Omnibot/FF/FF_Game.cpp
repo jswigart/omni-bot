@@ -90,10 +90,6 @@ bool FF_Game::Init( System & system )
 	//AiState::SensoryMemory::SetEntityTraceOffsetCallback(FF_Game::FF_GetEntityClassTraceOffset);
 	//AiState::SensoryMemory::SetEntityAimOffsetCallback(FF_Game::FF_GetEntityClassAimOffset);
 
-	// Run the games autoexec.
-	int threadId;
-	system.mScript->ExecuteFile( "scripts/ff_autoexec.gm", threadId );
-
 	TF_Options::DisguiseTeamFlags[ TF_TEAM_BLUE ] = TF_PWR_DISGUISE_BLUE;
 	TF_Options::DisguiseTeamFlags[ TF_TEAM_RED ] = TF_PWR_DISGUISE_RED;
 	TF_Options::DisguiseTeamFlags[ TF_TEAM_GREEN ] = TF_PWR_DISGUISE_GREEN;
@@ -102,7 +98,7 @@ bool FF_Game::Init( System & system )
 	return true;
 }
 
-static IntEnum FF_TeamEnum [] =
+static const IntEnum FF_TeamEnum [] =
 {
 	IntEnum( "SPECTATOR", OB_TEAM_SPECTATOR ),
 	IntEnum( "NONE", TF_TEAM_NONE ),
@@ -169,3 +165,14 @@ ClientPtr &FF_Game::GetClientFromCorrectedGameId( int _gameid )
 //		gEngineFuncs->ChangeClass(iGameID, .mClientList[iGameID-1]->mDesiredClass, NULL);
 //	}
 //}
+
+//////////////////////////////////////////////////////////////////////////
+
+void FF_Game::GetNavParms( NavParms & navParms ) const
+{
+	navParms = NavParms();
+
+	navParms.AgentHeightStand = 64.f;
+	navParms.AgentHeightCrouch = 20.f;
+	navParms.AgentRadius = 20.f;
+}

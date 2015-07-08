@@ -778,7 +778,7 @@ namespace AiState
 						return GetLastPriority();
 					}
 					
-					if ( pRec->mTargetInfo.mEntInfo.HealthPercent() && iAmmo >= TF_Options::SENTRY_REPAIR_AMMO )
+					if ( pRec->mTargetInfo.mEntInfo.mHealth.Percent() && iAmmo >= TF_Options::SENTRY_REPAIR_AMMO )
 					{
 						mState = REPAIRING;
 						mAllySentry = rcs[ i ];
@@ -834,7 +834,7 @@ namespace AiState
 				if ( iAmmo < TF_Options::SENTRY_REPAIR_AMMO )
 					return State_Finished;
 
-				if ( rec->mTargetInfo.mEntInfo.HealthPercent() >= 1.0 )
+				if ( rec->mTargetInfo.mEntInfo.mHealth.Percent() >= 1.0 )
 				{
 					return State_Finished;
 				}
@@ -1498,9 +1498,9 @@ namespace AiState
 		SetAlwaysRecieveEvents( true );
 	}
 
-	void Detpack::UpdateDetpackStatus( GameEntity _ent )
+	void Detpack::UpdateDetpackStatus( const Event_DetpackStatus_TF& stats )
 	{
-		mDetpackStatus.mEntity = _ent;
+		mDetpackStatus.mEntity = stats.mEntity;
 		if ( mDetpackStatus.mEntity.IsValid() )
 		{
 			mDetpackStatus.mStatus = BUILDABLE_BUILT;

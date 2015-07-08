@@ -113,13 +113,13 @@ bool gmTargetInfo::getClass( TargetInfo *a_native, gmThread *a_thread, gmVariabl
 
 bool gmTargetInfo::getQuantity( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
-	a_operands[ 0 ].SetInt( a_native->mEntInfo.mQuantity );
+	a_operands[ 0 ].SetInt( a_native->mEntInfo.mQuantity.mNum );
 	return true;
 }
 
 bool gmTargetInfo::getQuantityMax( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
-	a_operands[ 0 ].SetInt( a_native->mEntInfo.mQuantityMax );
+	a_operands[ 0 ].SetInt( a_native->mEntInfo.mQuantity.mMax );
 	return true;
 }
 

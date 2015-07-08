@@ -79,10 +79,6 @@ bool Skeleton_Game::Init( System & system )
 	if ( !IGame::Init( system ) )
 		return false;
 
-	// Run the games autoexec.
-	int threadId;
-	system.mScript->ExecuteFile( "scripts/skeleton_autoexec.gm", threadId );
-
 	return true;
 }
 
@@ -91,7 +87,7 @@ void Skeleton_Game::GetGameVars( GameVars &_gamevars )
 	_gamevars.mPlayerHeight = 72.f;
 }
 
-static IntEnum Skel_TeamEnum [] =
+static const IntEnum Skel_TeamEnum [] =
 {
 	IntEnum( "SPECTATOR", OB_TEAM_SPECTATOR ),
 	IntEnum( "TEAM1", SKELETON_TEAM_1 ),

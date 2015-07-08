@@ -21,6 +21,16 @@
 #include "IGameManager.h"
 #include "gmCall.h"
 
+NavParms::NavParms()
+{
+	AgentHeightStand = 64.f;
+	AgentHeightCrouch = 32.f;
+	AgentRadius = 14.f;
+	AgentMaxClimb = 18.f;
+
+	WalkableSlopeAngle = 45.0f;
+}
+
 int32_t IGame::mGameMsec = 0;
 int32_t IGame::mDeltaMsec = 0;
 int32_t IGame::mStartTimeMsec = 0;
@@ -255,6 +265,24 @@ void IGame::InitScriptSupport()
 	LOG( "done." );
 }
 
+bool IGame::FindTeamName( std::string& teamName, int teamId )
+{
+	int NumElements = 0;
+	const IntEnum *Enum = 0;
+	GetTeamEnumeration( Enum, NumElements );
+
+	for ( int i = 0; i < NumElements; ++i )
+	{
+		if ( Enum[ i ].mValue == teamId )
+		{
+			teamName = Enum[ i ].mKey;
+			return true;
+		}
+	}
+	return false;
+}
+
+
 void IGame::InitScriptTeams( gmMachine *_machine, gmTableObject *_table )
 {
 	int NumElements = 0;
@@ -373,12 +401,7 @@ void IGame::InitScriptCategories( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "VEHICLE", gmVariable( ENT_CAT_VEHICLE ) );
 	_table->Set( _machine, "PROJECTILE", gmVariable( ENT_CAT_PROJECTILE ) );
 	_table->Set( _machine, "SHOOTABLE", gmVariable( ENT_CAT_SHOOTABLE ) );
-	_table->Set( _machine, "PICKUP_AMMO", gmVariable( ENT_CAT_PICKUP_AMMO ) );
-	_table->Set( _machine, "PICKUP_WEAPON", gmVariable( ENT_CAT_PICKUP_WEAPON ) );
-	_table->Set( _machine, "PICKUP_HEALTH", gmVariable( ENT_CAT_PICKUP_HEALTH ) );
-	_table->Set( _machine, "PICKUP_ENERGY", gmVariable( ENT_CAT_PICKUP_ENERGY ) );
-	_table->Set( _machine, "PICKUP_ARMOR", gmVariable( ENT_CAT_PICKUP_ARMOR ) );
-
+	
 	_table->Set( _machine, "TRIGGER", gmVariable( ENT_CAT_TRIGGER ) );
 	_table->Set( _machine, "MOVER", gmVariable( ENT_CAT_MOVER ) );
 	_table->Set( _machine, "MOUNTED_WPN", gmVariable( ENT_CAT_MOUNTEDWEAPON ) );
@@ -425,32 +448,33 @@ static const IntEnum gClassMapping [] =
 	IntEnum( "INVALID", ENT_CLASS_NONE ),
 };
 
-void IGame::FindClassName( std::string& groupName, std::string& className, const EntityInfo& classInfo )
+bool IGame::FindClassName( std::string& groupName, std::string& className, const EntityGroup group, int classId )
 {
 	const size_t iNumMappings = sizeof( gGroupMapping ) / sizeof( gGroupMapping[ 0 ] );
 	for ( int i = 0; i < iNumMappings; ++i )
 	{
-		if ( gGroupMapping[ i ].mValue == classInfo.mGroup )
+		if ( gGroupMapping[ i ].mValue == group )
 		{
 			groupName = gGroupMapping[ i ].mKey;
 			break;
 		}
 	}
 
-	if ( classInfo.mGroup == ENT_GRP_WEAPON )
+	if ( group == ENT_GRP_WEAPON )
 	{
 		int numWpns = 0;
 		const IntEnum *wpnEnum = 0;
 		GetWeaponEnumeration( wpnEnum, numWpns );
 		for ( int i = 0; i < numWpns; ++i )
 		{
-			if ( classInfo.mClassId == wpnEnum[ i ].mValue )
+			if ( classId == wpnEnum[ i ].mValue )
 			{
 				className = wpnEnum[ i ].mKey;
-				break;
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 void IGame::InitScriptGroups( gmMachine *_machine, gmTableObject *_table )
@@ -613,7 +637,7 @@ void IGame::InitBoneIds( gmMachine *_machine, gmTableObject *_table )
 
 void IGame::UpdateGame( System & system )
 {
-	Prof( GameUpdate );
+	rmt_ScopedCPUSample( GameUpdate );
 
 	CheckGameState();
 
@@ -633,11 +657,15 @@ void IGame::UpdateGame( System & system )
 	}
 
 	// This is called often to update the state of the bots and perform their "thinking"
-	for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
 	{
-		if ( mClientList[ i ] )
+		rmt_ScopedCPUSample( UpdateClients );
+
+		for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
 		{
-			mClientList[ i ]->Update();
+			if ( mClientList[ i ] )
+			{
+				mClientList[ i ]->Update();
+			}
 		}
 	}
 
@@ -653,7 +681,7 @@ void IGame::UpdateGame( System & system )
 
 void IGame::UpdateProcesses()
 {
-	Prof( Processes );
+	rmt_ScopedCPUSample( IGameUpdateProcesses );
 
 	FunctorMap::iterator it = mUpdateMap.begin();
 	for ( ; it != mUpdateMap.end(); )
@@ -858,7 +886,7 @@ void IGame::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb
 
 #ifdef _DEBUG
 				std::string groupName, className;
-				FindClassName( groupName, className, m->mEntityInfo );
+				FindClassName( groupName, className, m->mEntityInfo.mGroup, m->mEntityInfo.mClassId );
 				Utils::OutputDebug( kNormal, "Entity: %d created: (%s:%s)\n", index, groupName.c_str(), className.c_str() );
 #endif
 
@@ -880,7 +908,7 @@ void IGame::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb
 				{
 #ifdef _DEBUG
 					std::string groupName, className;
-					FindClassName( groupName, className, mGameEntities[ index ].mEntInfo );
+					FindClassName( groupName, className, mGameEntities[ index ].mEntInfo.mGroup, mGameEntities[ index ].mEntInfo.mClassId );
 					Utils::OutputDebug( kNormal, "Entity: %d deleted: (%s:%s)\n", index, groupName.c_str(), className.c_str() );
 #endif
 					System::mInstance->mGoalManager->EntityDeleted( mGameEntities[ index ] );
@@ -1138,14 +1166,8 @@ void IGame::InitMapScript()
 	GoalManager::GetInstance()->Reset();
 
 	ErrorObj err;
-	const bool goalsLoaded = GoalManager::GetInstance()->Load( std::string( gEngineFuncs->GetMapName() ), err );
+	GoalManager::GetInstance()->Load( std::string( gEngineFuncs->GetMapName() ), err );
 	err.PrintToConsole();
-
-	if ( !goalsLoaded )
-	{
-		// register nav system goals
-		System::mInstance->mNavigation->RegisterGameGoals();
-	}
 
 	GoalManager::GetInstance()->InitGameGoals();
 
@@ -1197,7 +1219,7 @@ void IGame::UpdateTime()
 
 void IGame::CheckServerSettings( bool managePlayers )
 {
-	Prof( CheckServerSettings );
+	rmt_ScopedCPUSample( IGameCheckServerSettings );
 
 	if ( !System::mInstance->mNavigation->IsReady() )
 		return;
@@ -1286,35 +1308,35 @@ void IGame::InitCommands()
 		this, &IGame::cmdShowProcesses );
 }
 
-bool IGame::UnhandledCommand( const StringVector &_args )
+bool IGame::UnhandledCommand( const StringVector & args )
 {
-	Prof( UnhandledCommand );
+	rmt_ScopedCPUSample( IGameUnhandledCommand );
 	bool handled = false;
 	for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
 	{
 		if ( mClientList[ i ] )
 		{
-			handled |= mClientList[ i ]->DistributeUnhandledCommand( _args );
+			handled |= mClientList[ i ]->DistributeUnhandledCommand( args );
 		}
 	}
 	return handled;
 }
 
-void IGame::cmdRevision( const StringVector &_args )
+void IGame::cmdRevision( const StringVector & args )
 {
 	EngineFuncs::ConsoleMessage( va( "Omni-bot: Revision %s : %s",
 		Revision::Number().c_str(),
 		Revision::Date().c_str() ) );
 }
 
-void IGame::cmdBotDontShoot( const StringVector &_args )
+void IGame::cmdBotDontShoot( const StringVector & args )
 {
-	if ( _args.size() == 2 )
+	if ( args.size() == 2 )
 	{
 		obBool bDontShoot = Invalid;
-		if ( Utils::StringToFalse( _args[ 1 ] ) )
+		if ( Utils::StringToFalse( args[ 1 ] ) )
 			bDontShoot = False;
-		else if ( Utils::StringToTrue( _args[ 1 ] ) )
+		else if ( Utils::StringToTrue( args[ 1 ] ) )
 			bDontShoot = True;
 
 		if ( bDontShoot != Invalid )
@@ -1337,20 +1359,20 @@ void IGame::cmdBotDontShoot( const StringVector &_args )
 	EngineFuncs::ConsoleError( "Usage: bot dontshoot true/false/1/0/yes/no" );
 }
 
-void IGame::cmdDumpBlackboard( const StringVector &_args )
+void IGame::cmdDumpBlackboard( const StringVector & args )
 {
 	int iType = bbk_All;
-	if ( _args.size() > 1 )
+	if ( args.size() > 1 )
 	{
-		if ( !Utils::ConvertString( _args[ 1 ], iType ) )
+		if ( !Utils::ConvertString( args[ 1 ], iType ) )
 			return;
 	}
 	g_Blackboard.DumpBlackBoardContentsToGame( iType );
 }
 
-void IGame::cmdDebugBot( const StringVector &_args )
+void IGame::cmdDebugBot( const StringVector & args )
 {
-	if ( _args.size() < 3 )
+	if ( args.size() < 3 )
 	{
 		EngineFuncs::ConsoleError( "debugbot syntax: bot debugbot botname debugtype" );
 		EngineFuncs::ConsoleError( "types: log, move, aim, sensory, events, weapon, script, events, fpinfo" );
@@ -1359,7 +1381,7 @@ void IGame::cmdDebugBot( const StringVector &_args )
 
 	// What bot is this for?
 	bool bAll = false;
-	std::string botname = _args[ 1 ];
+	std::string botname = args[ 1 ];
 	if ( botname == "all" )
 		bAll = true;
 
@@ -1370,11 +1392,11 @@ void IGame::cmdDebugBot( const StringVector &_args )
 			ClientPtr bot = mClientList[ p ];
 			if ( botname == bot->GetName() || bAll )
 			{
-				for ( uint32_t i = 2; i < _args.size(); ++i )
+				for ( uint32_t i = 2; i < args.size(); ++i )
 				{
 					using namespace AiState;
 
-					std::string strDebugType = _args[ i ];
+					std::string strDebugType = args[ i ];
 					if ( strDebugType == "log" )
 						bot->EnableDebug( BOT_DEBUG_LOG, !bot->IsDebugEnabled( BOT_DEBUG_LOG ) );
 					else if ( strDebugType == "move" )
@@ -1419,7 +1441,7 @@ void IGame::cmdDebugBot( const StringVector &_args )
 	}
 }
 
-void IGame::cmdKickAll( const StringVector &_args )
+void IGame::cmdKickAll( const StringVector & args )
 {
 	// Kick all bots from the game.
 	for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
@@ -1434,7 +1456,7 @@ void IGame::cmdKickAll( const StringVector &_args )
 	}
 }
 
-void IGame::cmdAddbot( const StringVector &_args )
+void IGame::cmdAddbot( const StringVector & args )
 {
 	if ( !System::mInstance->mNavigation->IsReady() )
 	{
@@ -1449,16 +1471,16 @@ void IGame::cmdAddbot( const StringVector &_args )
 	std::string nextName;
 
 	// Parse the command arguments
-	switch ( _args.size() )
+	switch ( args.size() )
 	{
 		case 5:
-			profile = _args[ 4 ];
+			profile = args[ 4 ];
 		case 4:
-			nextName = _args[ 3 ];
+			nextName = args[ 3 ];
 		case 3:
-			iClass = atoi( _args[ 2 ].c_str() );
+			iClass = atoi( args[ 2 ].c_str() );
 		case 2:
-			iTeam = atoi( _args[ 1 ].c_str() );
+			iTeam = atoi( args[ 1 ].c_str() );
 		case 1:
 			break;
 		default:
@@ -1480,15 +1502,15 @@ void IGame::cmdAddbot( const StringVector &_args )
 	AddBot( b, true );
 }
 
-void IGame::cmdKickbot( const StringVector &_args )
+void IGame::cmdKickbot( const StringVector & args )
 {
 	// Parse the command arguments
 	bool bDidSomething = false;
-	for ( int i = 1; i < (int)_args.size(); ++i )
+	for ( int i = 1; i < (int)args.size(); ++i )
 	{
 		Msg_Kickbot b;
-		if ( !Utils::ConvertString( _args[ i ], b.mGameId ) )
-			Utils::StringCopy( b.mName, _args[ i ].c_str(), Msg_Kickbot::BufferSize );
+		if ( !Utils::ConvertString( args[ i ], b.mGameId ) )
+			Utils::StringCopy( b.mName, args[ i ].c_str(), Msg_Kickbot::BufferSize );
 		InterfaceFuncs::Kickbot( b );
 		bDidSomething = true;
 	}
@@ -1499,16 +1521,16 @@ void IGame::cmdKickbot( const StringVector &_args )
 	}
 }
 
-void IGame::cmdDrawBlockableTests( const StringVector &_args )
+void IGame::cmdDrawBlockableTests( const StringVector & args )
 {
-	if ( _args.size() >= 2 )
+	if ( args.size() >= 2 )
 	{
-		if ( !mbDrawBlockableTests && Utils::StringToTrue( _args[ 1 ] ) )
+		if ( !mbDrawBlockableTests && Utils::StringToTrue( args[ 1 ] ) )
 		{
 			EngineFuncs::ConsoleMessage( "Draw Blockable Tests on." );
 			mbDrawBlockableTests = true;
 		}
-		else if ( mbDrawBlockableTests && Utils::StringToFalse( _args[ 1 ] ) )
+		else if ( mbDrawBlockableTests && Utils::StringToFalse( args[ 1 ] ) )
 		{
 			EngineFuncs::ConsoleMessage( "Draw Blockable Tests off." );
 			mbDrawBlockableTests = false;
@@ -1520,7 +1542,7 @@ void IGame::cmdDrawBlockableTests( const StringVector &_args )
 	}
 }
 
-void IGame::cmdPrintFileSystem( const StringVector &_args )
+void IGame::cmdPrintFileSystem( const StringVector & args )
 {
 	std::string pth = "";
 	std::string ex = ".*";
@@ -1537,13 +1559,13 @@ void IGame::cmdPrintFileSystem( const StringVector &_args )
 	EngineFuncs::ConsoleMessage( "------------------------------------" );
 }
 
-void IGame::cmdReloadWeaponDatabase( const StringVector &_args )
+void IGame::cmdReloadWeaponDatabase( const StringVector & args )
 {
 	gWeaponDatabase.LoadWeaponDefinitions( true );
 	DispatchGlobalEvent( MessageHelper( MESSAGE_REFRESHALLWEAPONS ) );
 }
 
-void IGame::cmdShowProcesses( const StringVector &_args )
+void IGame::cmdShowProcesses( const StringVector & args )
 {
 	EngineFuncs::ConsoleMessage( va( "# Processes: %d!", mUpdateMap.size() ) );
 	FunctorMap::iterator it = mUpdateMap.begin(), itEnd = mUpdateMap.end();
@@ -1553,11 +1575,11 @@ void IGame::cmdShowProcesses( const StringVector &_args )
 	}
 }
 
-void IGame::cmdStopProcess( const StringVector &_args )
+void IGame::cmdStopProcess( const StringVector & args )
 {
-	if ( !_args.empty() )
+	if ( !args.empty() )
 	{
-		RemoveUpdateFunction( _args[ 1 ] );
+		RemoveUpdateFunction( args[ 1 ] );
 	}
 }
 
@@ -1885,6 +1907,8 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 
 void IGame::LoadGoalScripts( bool _clearold )
 {
+	rmt_ScopedCPUSample( LoadGoalScripts );
+
 	LOG( "Loading Script Goals" );
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 
@@ -1964,11 +1988,35 @@ void IGame::EntityIterator::Clear()
 	mCurrent.mEntInfo = EntityInfo();
 }
 
-bool IGame::IsEntityValid( const GameEntity &_hnl )
+EntityInstance &IGame::EntityIterator::GetEnt()
 {
-	if ( _hnl.IsValid() )
+	return mCurrent;
+}
+const EntityInstance &IGame::EntityIterator::GetEnt() const
+{
+	return mCurrent;
+}
+const int IGame::EntityIterator::GetIndex() const
+{
+	return mIndex;
+}
+IGame::EntityIterator::EntityIterator()
+{
+}
+IGame::EntityIterator::EntityIterator( GameEntity initialEntity )
+{
+	if ( IGame::IsEntityValid( initialEntity ) )
 	{
-		const int index = _hnl.GetIndex();
+		mIndex = initialEntity.GetIndex();
+		mCurrent = mGameEntities[ mIndex ];
+	}
+}
+
+bool IGame::IsEntityValid( const GameEntity & hndl )
+{
+	if ( hndl.IsValid() )
+	{
+		const int index = hndl.GetIndex();
 		if ( index >= 0 && index < Constants::MAX_ENTITIES )
 		{
 			EntityInstance &ei = mGameEntities[ index ];
@@ -1983,17 +2031,20 @@ bool IGame::IsEntityValid( const GameEntity &_hnl )
 	return false;
 }
 
-bool IGame::GetEntityInfo( const GameEntity &_hnl, EntityInfo& entInfo )
+bool IGame::GetEntityInfo( const GameEntity & hndl, EntityInfo& entInfo )
 {
-	if ( _hnl.IsValid() )
+	if ( hndl.IsValid() )
 	{
-		const int index = _hnl.GetIndex();
+		const int index = hndl.GetIndex();
 		if ( index >= 0 && index < Constants::MAX_ENTITIES )
 		{
 			EntityInstance &ei = mGameEntities[ index ];
+
+			ei.mEntity = hndl;
 			if ( !ei.mEntity.IsValid() )
 				return false;
 
+			UpdateEntity( ei );
 			if ( ei.mEntInfo.mGroup != ENT_GRP_UNKNOWN && ei.mEntity.IsValid() )
 			{
 				entInfo = ei.mEntInfo;
@@ -2025,8 +2076,11 @@ bool IGame::IterateEntity( IGame::EntityIterator &_it )
 
 void IGame::UpdateEntity( EntityInstance& ent )
 {
-	ent.mTimeStamp = IGame::GetTime();
-	gEngineFuncs->GetEntityInfo( ent.mEntity, ent.mEntInfo );
+	if ( ent.mTimeStamp != IGame::GetTime() )
+	{
+		ent.mTimeStamp = IGame::GetTime();
+		gEngineFuncs->GetEntityInfo( ent.mEntity, ent.mEntInfo );
+	}
 }
 
 void IGame::AddDeletedThread( int threadId )
@@ -2059,7 +2113,7 @@ static bool _ThreadIdSort( int id1, int id2 )
 
 void IGame::PropogateDeletedThreads()
 {
-	Prof( PropogateDeletedThreads );
+	rmt_ScopedCPUSample( IGamePropogateDeletedThreads );
 	if ( mNumDeletedThreads > 0 )
 	{
 		std::sort( mDeletedThreads, mDeletedThreads + mNumDeletedThreads, _ThreadIdSort );
@@ -2075,3 +2129,8 @@ void IGame::PropogateDeletedThreads()
 }
 
 //////////////////////////////////////////////////////////////////////////
+
+void IGame::GetNavParms( NavParms & navParms ) const
+{
+	navParms = NavParms();
+}

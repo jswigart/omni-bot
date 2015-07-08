@@ -58,13 +58,13 @@ std::string GetFieldString( const protobuf::Message & msg, const protobuf::Field
 		ex;
 		/*EngineFuncs::ConsoleError(
 		va( "Can't convert '%s' to appropriate type %s",
-		_args.at( 2 ).c_str(),
+		args.at( 2 ).c_str(),
 		protobuf::FieldDescriptor::kTypeToName[ fieldDesc->type() ] ) );*/
 	}
 	return "";
 }
 
-void ClearDefaultedValues( protobuf::Message & msg )
+void ClearDefaultedValues( protobuf::Message & msg, size_t & optionalFieldsSet )
 {
 	using namespace google;
 	const protobuf::Reflection * refl = msg.GetReflection();
@@ -75,17 +75,19 @@ void ClearDefaultedValues( protobuf::Message & msg )
 	if ( fields.size() == 0 )
 		return;
 
+	optionalFieldsSet = 0;
+
 	std::auto_ptr<protobuf::Message> defaultMsg( msg.New() );
 
 	const protobuf::Reflection * reflDefault = defaultMsg->GetReflection();
-
+	
 	for ( size_t i = 0; i < fields.size(); ++i )
 	{
 		const protobuf::FieldDescriptor * fieldDesc = fields[ i ];
 
 		if ( fieldDesc->is_repeated() || fieldDesc->is_required() )
 			continue;
-
+		
 		switch( fieldDesc->type() )
 		{
 		case protobuf::FieldDescriptorProto_Type_TYPE_DOUBLE:
@@ -145,7 +147,9 @@ void ClearDefaultedValues( protobuf::Message & msg )
 		case protobuf::FieldDescriptorProto_Type_TYPE_MESSAGE:
 			{
 				protobuf::Message * subMsg = refl->MutableMessage( &msg, fieldDesc );
-				ClearDefaultedValues( *subMsg );
+
+				size_t subMsgOptionalFieldCount = 0;
+				ClearDefaultedValues( *subMsg, subMsgOptionalFieldCount );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_ENUM:
@@ -155,5 +159,8 @@ void ClearDefaultedValues( protobuf::Message & msg )
 				break;
 			}
 		}
+
+		if ( refl->HasField( msg, fieldDesc ) )
+			++optionalFieldsSet;
 	}
 }

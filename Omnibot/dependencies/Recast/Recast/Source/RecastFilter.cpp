@@ -205,3 +205,40 @@ void rcFilterWalkableLowHeightSpans(rcContext* ctx, int walkableHeight, rcHeight
 	
 	ctx->stopTimer(RC_TIMER_FILTER_WALKABLE);
 }
+
+void rcFilterHeightThresholds( rcContext* ctx, const rcHeightThreshold *heights, int numHeights, rcHeightfield& solid )
+{
+	rcAssert( ctx );
+
+	ctx->startTimer( RC_TIMER_FILTER_WALKABLE );
+
+	const int w = solid.width;
+	const int h = solid.height;
+	const int MAX_HEIGHT = 0xffff;
+
+	// Remove walkable flag from spans which do not have enough
+	// space above them for the agent to stand there.
+	for ( int y = 0; y < h; ++y )
+	{
+		for ( int x = 0; x < w; ++x )
+		{
+			for ( rcSpan* s = solid.spans[ x + y*w ]; s; s = s->next )
+			{
+				const int bot = (int)( s->smax );
+				const int top = s->next ? (int)( s->next->smin ) : MAX_HEIGHT;
+				const int height = top - bot;
+				
+				if ( s->area != RC_NULL_AREA )
+				{
+					for ( int i = 0; i < numHeights; ++i )
+					{
+						if ( height <= heights[ i ].height )
+							s->area = heights[ i ].flag;
+					}
+				}
+			}
+		}
+	}
+
+	ctx->stopTimer( RC_TIMER_FILTER_WALKABLE );
+}

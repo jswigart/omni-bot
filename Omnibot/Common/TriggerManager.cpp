@@ -545,13 +545,13 @@ void TriggerManager::InitCommands()
 	//////////////////////////////////////////////////////////////////////////
 }
 
-void TriggerManager::cmdDrawTriggers( const StringVector &_args )
+void TriggerManager::cmdDrawTriggers( const StringVector & args )
 {
-	if ( _args.size() >= 2 )
+	if ( args.size() >= 2 )
 	{
-		if ( !mDrawTriggers && Utils::StringToTrue( _args[ 1 ] ) )
+		if ( !mDrawTriggers && Utils::StringToTrue( args[ 1 ] ) )
 			mDrawTriggers = true;
-		else if ( mDrawTriggers && Utils::StringToFalse( _args[ 1 ] ) )
+		else if ( mDrawTriggers && Utils::StringToFalse( args[ 1 ] ) )
 			mDrawTriggers = false;
 	}
 	else
@@ -563,20 +563,20 @@ void TriggerManager::cmdDrawTriggers( const StringVector &_args )
 		EngineFuncs::ConsoleMessage( "Trigger Drawing off." );
 }
 
-void TriggerManager::cmdDebugTriggers( const StringVector &_args )
+void TriggerManager::cmdDebugTriggers( const StringVector & args )
 {
-	int numArgs = (int)_args.size();
+	int numArgs = (int)args.size();
 	mDebugTriggersExpr = ".*";
 
 	if ( numArgs >= 2 )
 	{
-		if ( !mDebugTriggers && Utils::StringToTrue( _args[ 1 ] ) )
+		if ( !mDebugTriggers && Utils::StringToTrue( args[ 1 ] ) )
 			mDebugTriggers = true;
-		else if ( mDebugTriggers && Utils::StringToFalse( _args[ 1 ] ) )
+		else if ( mDebugTriggers && Utils::StringToFalse( args[ 1 ] ) )
 			mDebugTriggers = false;
 
 		if ( numArgs >= 3 )
-			mDebugTriggersExpr = va( "%s", _args[ 2 ].c_str() );
+			mDebugTriggersExpr = va( "%s", args[ 2 ].c_str() );
 	}
 	else
 		mDebugTriggers = !mDebugTriggers;
@@ -642,7 +642,7 @@ bool operator<( const GameEntity& _v1, const GameEntity& _v2 )
 
 void TriggerManager::Update( System & system )
 {
-	Prof( TriggerManager_Update );
+	rmt_ScopedCPUSample( TriggerManagerUpdate );
 
 	ShapeList::iterator it = mTriggerShapes.begin();
 

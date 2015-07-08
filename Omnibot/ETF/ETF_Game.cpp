@@ -85,7 +85,7 @@ const char *ETF_Game::GetScriptSubfolder() const
 #endif
 }
 
-bool ETF_Game::GetAnalyticsKeys( GameAnalyticsKeys & keys )
+bool ETF_Game::GetAnalyticsKeys( GameAnalytics::Keys & keys )
 {
 	keys.mGameKey = "68aa5fcc90a58d3de2ba80e8dc6f6a88";
 	keys.mSecretKey = "283e40eb98703bedef2a5fa3e6a996b4c3233545";
@@ -102,11 +102,6 @@ bool ETF_Game::Init( System & system )
 	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback( ETF_Game::ETF_GetEntityClassTraceOffset );
 	AiState::SensoryMemory::SetEntityAimOffsetCallback( ETF_Game::ETF_GetEntityClassAimOffset );
-
-	// Run the games autoexec.
-	int threadId;
-
-	system.mScript->ExecuteFile( "scripts/etf_autoexec.gm", threadId );
 
 	// Set up ETF specific data.
 	using namespace AiState;
@@ -126,7 +121,7 @@ void ETF_Game::GetGameVars( GameVars &_gamevars )
 	_gamevars.mPlayerHeight = 64.f;
 }
 
-static IntEnum ETF_TeamEnum [] =
+static const IntEnum ETF_TeamEnum [] =
 {
 	IntEnum( "SPECTATOR", OB_TEAM_SPECTATOR ),
 	IntEnum( "NONE", ETF_TEAM_NONE ),

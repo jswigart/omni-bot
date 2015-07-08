@@ -20,13 +20,10 @@
 //		this in order to create their own instance of IGame from within the CreateGameFromGameID
 //		function
 class IGameManager : public CommandReciever
-#ifdef ENABLE_REMOTE_DEBUGGING
-	, public RemoteLib::ConnectionCallbacks
-#endif
 {
 public:
 	IGameManager();
-	virtual ~IGameManager() {};
+	virtual ~IGameManager();
 	
 	/*
 	Function: CreateGame
@@ -55,28 +52,19 @@ public:
 	void UpdateGame();
 
 	static boost::thread::id sMainThread;
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-	void SyncRemoteDelete( int entityHandle );
-	void SyncRemoteMessage( const RemoteLib::DataBuffer & db );
-#endif
 protected:
 	System				mBotSystem;
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-	RemoteLib::ConnectionManagerServer	.mRemote;
-
-	RemoteLib::Connection *			CreateNewConnection( class RemoteLib::TcpSocket & socket );
-#endif
-
+	
 	virtual void InitCommands();
-	void cmdVersion(const StringVector &_args);
-	void cmdNavSystem(const StringVector &_args);
-	void cmdPrintAllFiles(const StringVector &_args);
-	void cmdUpdateNavFile(const StringVector &_args);
-	void cmdUpdateAllNavFiles(const StringVector &_args);
-	void cmdSaveHeatMapScript(const StringVector &_args);
-	void cmdSaveAllHeatMapScript(const StringVector &_args);
+	void cmdVersion(const StringVector & args);
+	void cmdNavSystem(const StringVector & args);
+	void cmdPrintAllFiles(const StringVector & args);
+	void cmdUpdateNavFile(const StringVector & args);
+	void cmdUpdateAllNavFiles(const StringVector & args);
+	void cmdSaveHeatMapScript(const StringVector & args);
+	void cmdSaveAllHeatMapScript(const StringVector & args);
+private:
+	Remotery*			mRemotery;
 
 	IGameManager &operator=(const IGameManager&);
 };

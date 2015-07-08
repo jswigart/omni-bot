@@ -33,8 +33,13 @@ public:
 	virtual bool UpdateGoalPositionRandom();
 	virtual void UpdatePath();
 	virtual void Cancel();	
+
+	virtual NavArea GetCurrentArea() const;
+	virtual NavAreaFlags GetCurrentAreaFlags() const;
 	virtual size_t GetPathCorners( PathCorner * corners, size_t maxEdges );
-	virtual bool GetPointAlongPath( float lookAheadDist, Vector3f & ptOut );
+
+	virtual bool GetNavLink( uint64_t id, OffMeshConnection& conn ) const;
+	virtual bool CompleteNavLink( uint64_t id );
 	virtual void Render();
 
 	void ReInit();
@@ -49,6 +54,9 @@ private:
 	class dtNavMeshQuery *	mQuery;
 	dtPathCorridor			mCorridor;
 	
+	NavArea					mCurrentPolyArea;
+	NavAreaFlags			mCurrentPolyFlags;
+
 	Vector3f				mSrc;
 	DestinationVector		mGoals;
 	

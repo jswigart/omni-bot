@@ -65,7 +65,7 @@ namespace AiState
 
 	void SteeringSystem::UpdateSteering()
 	{
-		Prof( UpdateSteering );
+		rmt_ScopedCPUSample( UpdateSteering );
 
 		if ( !mbMoveEnabled )
 		{
@@ -125,7 +125,8 @@ namespace AiState
 
 	State::StateStatus SteeringSystem::Update( float fDt )
 	{
-		Prof( SteeringSystem );
+		rmt_ScopedCPUSample( SteeringSystem );
+
 		UpdateSteering();
 		GetClient()->SetMovementVector( GetMoveVector() );
 		switch ( mMoveMode )

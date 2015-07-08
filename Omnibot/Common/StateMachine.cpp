@@ -314,7 +314,7 @@ State *State::FindState( uint32_t _namehash )
 
 void State::RootUpdate()
 {
-	Prof( RootUpdate );
+	rmt_ScopedCPUSample( RootUpdate );
 	if ( !IsActive() )
 		InternalEnter();
 	InternalUpdateState();
@@ -402,7 +402,7 @@ void State::SignalThreads( const gmVariable &_signal )
 	if ( !IsRoot() && !IsActive() && !mStateFlags.CheckFlag( State_AlwaysRecieveSignals ) )
 		return;
 
-	Prof( SignalThreads );
+	rmt_ScopedCPUSample( SignalThreads );
 
 	InternalSignal( _signal );
 	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
@@ -537,11 +537,11 @@ void State::PropogateDeletedThreads( const int *_threadIds, int _numThreads )
 	RemoveThreadReference( _threadIds, _numThreads );
 }
 
-bool State::StateCommand( const StringVector &_args )
+bool State::StateCommand( const StringVector & args )
 {
 	bool handled = false;
 	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
-		handled |= pState->StateCommand( _args );
+		handled |= pState->StateCommand( args );
 
 	if ( mCommandTable )
 	{
@@ -552,7 +552,7 @@ bool State::StateCommand( const StringVector &_args )
 			varThis.SetUser( pScriptObject );
 
 		ScriptCommandExecutor cmdExec( pMachine, mCommandTable );
-		if ( cmdExec.Exec( _args, varThis ) )
+		if ( cmdExec.Exec( args, varThis ) )
 			handled |= true;
 	}
 	return handled;

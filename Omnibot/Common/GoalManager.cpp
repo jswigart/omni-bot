@@ -504,6 +504,8 @@ void GoalManager::Init( System & system )
 
 void GoalManager::InitGameGoals()
 {
+	rmt_ScopedCPUSample( GoalManagerInitGameGoals );
+
 	gEngineFuncs->GetGoals();
 
 	// re-register goals from entities if we can
@@ -559,21 +561,21 @@ bool _GoalNameLT( const MapGoalPtr _pt1, const MapGoalPtr _pt2 )
 	return _pt1->GetName() < _pt2->GetName();
 }
 
-void GoalManager::cmdGoalShow( const StringVector &_args )
+void GoalManager::cmdGoalShow( const StringVector & args )
 {
 	File f;
 
 	std::string strFile, strExpression = ".*";
 	bool bShowSubPriorities = false;
-	if ( _args.size() > 3 )
+	if ( args.size() > 3 )
 	{
-		strFile = _args[ 3 ];
+		strFile = args[ 3 ];
 	}
-	if ( _args.size() > 1 )
+	if ( args.size() > 1 )
 	{
-		strExpression = _args[ 1 ];
+		strExpression = args[ 1 ];
 	}
-	if ( _args.size() > 2 && _args[ 2 ] == "p" )
+	if ( args.size() > 2 && args[ 2 ] == "p" )
 	{
 		bShowSubPriorities = true;
 	}
@@ -643,18 +645,18 @@ void GoalManager::cmdGoalShow( const StringVector &_args )
 	EngineFuncs::ConsoleMessage( "- End Goal List -" );
 }
 
-void GoalManager::cmdGoalShowRoutes( const StringVector &_args )
+void GoalManager::cmdGoalShowRoutes( const StringVector & args )
 {
 	File f;
 
 	std::string strFile, strExpression = ".*";
-	if ( _args.size() > 2 )
+	if ( args.size() > 2 )
 	{
-		strFile = _args[ 2 ];
+		strFile = args[ 2 ];
 	}
-	if ( _args.size() > 1 )
+	if ( args.size() > 1 )
 	{
-		strExpression = _args[ 1 ];
+		strExpression = args[ 1 ];
 	}
 
 	// Open the file if a filename was provided.
@@ -707,21 +709,21 @@ void GoalManager::cmdGoalShowRoutes( const StringVector &_args )
 	EngineFuncs::ConsoleMessage( "- End Route List -" );
 }
 
-void GoalManager::cmdGoalDraw( const StringVector &_args )
+void GoalManager::cmdGoalDraw( const StringVector & args )
 {
 	const char *pExpression = 0;
 	bool DrawGoals = false;
-	switch ( _args.size() )
+	switch ( args.size() )
 	{
 		case 3:
-			pExpression = _args[ 2 ].c_str();
+			pExpression = args[ 2 ].c_str();
 		case 2:
-			if ( Utils::StringToTrue( _args[ 1 ] ) )
+			if ( Utils::StringToTrue( args[ 1 ] ) )
 			{
 				DrawGoals = true;
 				break;
 			}
-			else if ( Utils::StringToFalse( _args[ 1 ] ) )
+			else if ( Utils::StringToFalse( args[ 1 ] ) )
 			{
 				DrawGoals = false;
 				break;
@@ -753,21 +755,21 @@ void GoalManager::cmdGoalDraw( const StringVector &_args )
 	EngineFuncs::ConsoleMessage( va( "Goals Rendering, %d %s", NumSet, DrawGoals ? "Enabled" : "Disabled" ) );
 }
 
-void GoalManager::cmdGoalDrawRoutes( const StringVector &_args )
+void GoalManager::cmdGoalDrawRoutes( const StringVector & args )
 {
 	const char *pExpression = 0;
 	bool DrawRoutes = false;
-	switch ( _args.size() )
+	switch ( args.size() )
 	{
 		case 3:
-			pExpression = _args[ 2 ].c_str();
+			pExpression = args[ 2 ].c_str();
 		case 2:
-			if ( Utils::StringToTrue( _args[ 1 ] ) )
+			if ( Utils::StringToTrue( args[ 1 ] ) )
 			{
 				DrawRoutes = true;
 				break;
 			}
-			else if ( Utils::StringToFalse( _args[ 1 ] ) )
+			else if ( Utils::StringToFalse( args[ 1 ] ) )
 			{
 				DrawRoutes = false;
 				break;
@@ -969,14 +971,14 @@ bool GoalManager::Load( const std::string &_map, ErrorObj &_err )
 	return LoadedOk;
 }
 
-void GoalManager::cmdGoalSave( const StringVector &_args )
+void GoalManager::cmdGoalSave( const StringVector & args )
 {
 	ErrorObj err;
 	Save( gEngineFuncs->GetMapName(), err );
 	err.PrintToConsole();
 }
 
-void GoalManager::cmdGoalLoad( const StringVector &_args )
+void GoalManager::cmdGoalLoad( const StringVector & args )
 {
 	ErrorObj err;
 	Load( gEngineFuncs->GetMapName(), err );
@@ -1030,7 +1032,7 @@ void GoalManager::_UpdateEditModes()
 	}
 }
 
-void GoalManager::cmdGoalEdit( const StringVector &_args )
+void GoalManager::cmdGoalEdit( const StringVector & args )
 {
 	MapGoalPtr nearest;
 
@@ -1047,7 +1049,7 @@ void GoalManager::cmdGoalEdit( const StringVector &_args )
 	}
 }
 
-void GoalManager::cmdGoalEditx( const StringVector &_args )
+void GoalManager::cmdGoalEditx( const StringVector & args )
 {
 	_SetActiveGoal( mHighlightedGoal );
 	if ( !mActiveGoal )
@@ -1056,16 +1058,16 @@ void GoalManager::cmdGoalEditx( const StringVector &_args )
 	}
 }
 
-void GoalManager::cmdGoalHelp( const StringVector &_args )
+void GoalManager::cmdGoalHelp( const StringVector & args )
 {
 	if ( mActiveGoal )
 		mActiveGoal->ShowHelp();
 }
-void GoalManager::cmdGoalFinish( const StringVector &_args )
+void GoalManager::cmdGoalFinish( const StringVector & args )
 {
 	_SetActiveGoal( MapGoalPtr() );
 }
-void GoalManager::cmdGoalCreate( const StringVector &_args )
+void GoalManager::cmdGoalCreate( const StringVector & args )
 {
 	const char *strUsage [] =
 	{
@@ -1073,7 +1075,7 @@ void GoalManager::cmdGoalCreate( const StringVector &_args )
 		"> goaltype: type name of goal to create",
 	};
 
-	CHECK_NUM_PARAMS( _args, 2, strUsage );
+	CHECK_NUM_PARAMS( args, 2, strUsage );
 	OPTIONAL_STRING_PARAM( goalname, 2, "" );
 
 	Box3f obb;
@@ -1085,7 +1087,7 @@ void GoalManager::cmdGoalCreate( const StringVector &_args )
 	}
 
 	MapGoalDef def;
-	def.Props.SetString( "Type", _args[ 1 ].c_str() );
+	def.Props.SetString( "Type", args[ 1 ].c_str() );
 	def.Props.SetVector( "Position", obb.GetCenterBottom() );
 	def.Props.SetVector( "Facing", facing );
 	def.Props.SetFloat( "MinRadius", 32.f );
@@ -1098,10 +1100,10 @@ void GoalManager::cmdGoalCreate( const StringVector &_args )
 		mg->ShowHelp();
 	if ( !mActiveGoal )
 	{
-		EngineFuncs::ConsoleError( va( "Unknown goal type: %s", _args[ 0 ].c_str() ) );
+		EngineFuncs::ConsoleError( va( "Unknown goal type: %s", args[ 0 ].c_str() ) );
 	}
 }
-void GoalManager::cmdGoalDelete( const StringVector &_args )
+void GoalManager::cmdGoalDelete( const StringVector & args )
 {
 	if ( !mActiveGoal )
 	{
@@ -1111,7 +1113,7 @@ void GoalManager::cmdGoalDelete( const StringVector &_args )
 	mActiveGoal->SetDeleteMe( true );
 	_SetActiveGoal( MapGoalPtr() );
 }
-void GoalManager::cmdGoalSetProperty( const StringVector &_args )
+void GoalManager::cmdGoalSetProperty( const StringVector & args )
 {
 	if ( !mActiveGoal )
 	{
@@ -1126,9 +1128,9 @@ void GoalManager::cmdGoalSetProperty( const StringVector &_args )
 		"        <facing>, <position>, <aimpoint>, <aimnormal>",
 	};
 
-	CHECK_NUM_PARAMS( _args, 2, strUsage );
-	const std::string &propname = _args[ 1 ];
-	std::string propval = _args.size() > 2 ? _args[ 2 ] : "";
+	CHECK_NUM_PARAMS( args, 2, strUsage );
+	const std::string &propname = args[ 1 ];
+	std::string propval = args.size() > 2 ? args[ 2 ] : "";
 
 	obUserData val( propval.c_str() );
 
@@ -1164,7 +1166,7 @@ void GoalManager::cmdGoalSetProperty( const StringVector &_args )
 	}
 }
 
-void GoalManager::cmdGoalRemoveAll( const StringVector &_args )
+void GoalManager::cmdGoalRemoveAll( const StringVector & args )
 {
 	int Removed = 0;
 	MapGoalList::iterator it = mMapGoalList.begin();
@@ -1182,7 +1184,7 @@ void GoalManager::cmdGoalRemoveAll( const StringVector &_args )
 	EngineFuncs::ConsoleMessage( va( "Removed %d goals.", Removed ) );
 }
 
-void GoalManager::cmdGoalMove( const StringVector &_args )
+void GoalManager::cmdGoalMove( const StringVector & args )
 {
 	OPTIONAL_STRING_PARAM( toPlayer, 1, "" );
 	OPTIONAL_BOOL_PARAM( ground, 2, true );
@@ -1230,7 +1232,7 @@ void GoalManager::Shutdown()
 
 void GoalManager::Update( System & system )
 {
-	Prof( GoalManagerUpdate );
+	rmt_ScopedCPUSample( GoalManagerUpdate );
 
 	//////////////////////////////////////////////////////////////////////////
 	// see which goal we should highlight, if any
@@ -1623,7 +1625,7 @@ void GoalManager::UpdateGoalEntity( GameEntity oldent, GameEntity newent )
 
 void GoalManager::GetGoals( Query &_qry )
 {
-	//Prof(GetGoals);
+	rmt_ScopedCPUSample( GetGoals );
 
 	//////////////////////////////////////////////////////////////////////////
 

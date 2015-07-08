@@ -8,8 +8,8 @@
 #include "g_local.h"
 
 // omnibot
-void Bot_Queue_EntityCreated(gentity_t *pEnt);
-void Bot_Event_EntityDeleted(gentity_t *pEnt);
+void Bot_EntityQueued( gentity_t * ent );
+void Bot_EntityDeleted( gentity_t * ent );
 // end omnibot
 
 typedef struct {
@@ -496,7 +496,7 @@ void G_InitGentity( gentity_t *e ) {
 	e->spawnTime = level.time;
 
 	// omnibot
-	Bot_Queue_EntityCreated(e);
+	Bot_EntityQueued( e );
 	// end omnibot
 }
 
@@ -593,7 +593,7 @@ void G_FreeEntity( gentity_t *ed ) {
 	int spawnCount;
 
 	// omnibot
-	Bot_Event_EntityDeleted(ed);
+	Bot_EntityDeleted( ed );
 	// end omnibot
 
 	if(ed->free) {

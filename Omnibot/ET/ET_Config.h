@@ -39,11 +39,6 @@ enum ET_Version
 	ET_VERSION_LATEST = ET_VERSION_LAST - 1
 } ;
 
-enum ET_SurfaceFlags
-{
-	ET_SURFACE_LANDMINE	=	SURFACE_START_USER
-};
-
 enum ET_Event
 {
 	ET_EVENT_BEGIN = EVENT_NUM_EVENTS,

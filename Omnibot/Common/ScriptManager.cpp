@@ -181,7 +181,7 @@ mScriptEngine( 0 ),
 #ifdef _DEBUG
 mDebugScripts( true )
 #else
-mDebugScripts		(false)
+mDebugScripts( false )
 #endif
 {
 }
@@ -287,7 +287,7 @@ void ScriptManager::Init()
 	LOG( "+ Weapon Library Bound." );
 
 #if defined(ENABLE_REMOTE_DEBUGGER) && defined(GMDEBUG_SUPPORT)
-	gmBindDebugLib(.mScriptEngine);
+	gmBindDebugLib( .mScriptEngine );
 #endif
 
 	// Create default global tables.
@@ -340,7 +340,7 @@ void ScriptManager::Init()
 void ScriptManager::Shutdown()
 {
 #if defined(ENABLE_REMOTE_DEBUGGER) && defined(GMDEBUG_SUPPORT)
-	if(g_RemoteDebuggerInitialized)
+	if ( g_RemoteDebuggerInitialized )
 	{
 		CloseDebugSession();
 		g_DebugListener.Close();
@@ -367,33 +367,33 @@ struct ThreadStatus
 
 void ScriptManager::Update()
 {
-	Prof( ScriptManager_Update );
+	rmt_ScopedCPUSample( ScriptManagerUpdate );
 
 	{
-		Prof( gmMachine_Execute );
+		rmt_ScopedCPUSample( gmMachineExecute );
 		mScriptEngine->Execute( (gmuint32)IGame::GetDeltaTime() );
 	}
 
 	//////////////////////////////////////////////////////////////////////////
 #if defined(ENABLE_REMOTE_DEBUGGER) && defined(GMDEBUG_SUPPORT)
-	if(g_RemoteDebuggerInitialized)
+	if ( g_RemoteDebuggerInitialized )
 	{
-		if(!g_DebugClient.IsValid())
+		if ( !g_DebugClient.IsValid() )
 		{
 			sf::IPAddress addr;
-			sf::Socket::Status s = g_DebugListener.Accept(g_DebugClient,&addr); s;
+			sf::Socket::Status s = g_DebugListener.Accept( g_DebugClient, &addr ); s;
 
-			if(addr.IsValid())
+			if ( addr.IsValid() )
 			{
-				Utils::OutputDebug(kScript, "Remote Debugger Connected: %s", addr.ToString().c_str());
-				OpenDebugSession(.mScriptEngine);
-				g_DebugClient.SetBlocking(false);
+				Utils::OutputDebug( kScript, "Remote Debugger Connected: %s", addr.ToString().c_str() );
+				OpenDebugSession( .mScriptEngine );
+				g_DebugClient.SetBlocking( false );
 			}
 		}
 
-		if(g_DebugClient.IsValid())
+		if ( g_DebugClient.IsValid() )
 		{
-			Prof(RemoteDebugClient);
+			rmt_ScopedCPUSample( RemoteDebugClient );
 			UpdateDebugSession();
 		}
 	}
@@ -540,22 +540,23 @@ bool ScriptManager::ExecuteFile( const filePath &_file, int &_threadId, gmVariab
 			pBuffer[ fileSize ] = 0;
 			InFile.Close();
 
-			LOG( "Running script: " << _file )
-				if ( fileSize > 0 )
+			LOG( "Running script: " << _file );
+
+			if ( fileSize > 0 )
+			{
+				int errors = mScriptEngine->ExecuteString( pBuffer.get(), &_threadId, true, _file, _this );
+				if ( errors )
 				{
-					int errors = mScriptEngine->ExecuteString( pBuffer.get(), &_threadId, true, _file, _this );
-					if ( errors )
-					{
-						bool b = IsScriptDebugEnabled();
-						SetScriptDebugEnabled( true );
-						LogAnyMachineErrorMessages( mScriptEngine );
-						SetScriptDebugEnabled( b );
-					}
-					else
-					{
-						return true;
-					}
+					bool b = IsScriptDebugEnabled();
+					SetScriptDebugEnabled( true );
+					LogAnyMachineErrorMessages( mScriptEngine );
+					SetScriptDebugEnabled( b );
 				}
+				else
+				{
+					return true;
+				}
+			}
 		}
 	}
 	return false;
@@ -620,7 +621,7 @@ void ScriptManager::LogAnyMachineErrorMessages( gmMachine *_machine )
 
 #ifdef ENABLE_DEBUG_WINDOW
 		std::string s = pMessage;
-		DW.Console.AddLine(s);
+		DW.Console.AddLine( s );
 #endif
 		if ( _machine->GetDebugMode() )
 		{
@@ -635,7 +636,7 @@ void GM_CDECL ScriptManager::ScriptSysCallback_Print( gmMachine* a_machine, cons
 	if ( a_string )
 	{
 #ifdef ENABLE_DEBUG_WINDOW
-		DW.Console.AddLine(a_string);
+		DW.Console.AddLine( a_string );
 #endif
 		EngineFuncs::ConsoleMessage( a_string );
 	}
@@ -853,21 +854,21 @@ void ScriptManager::InitCommands()
 		this, &ScriptManager::cmdScriptWriteDocs );
 }
 
-void ScriptManager::cmdScriptStats( const StringVector &_args )
+void ScriptManager::cmdScriptStats( const StringVector & args )
 {
 	ShowGMStats();
 }
 
-void ScriptManager::cmdDebugScriptSystem( const StringVector &_args )
+void ScriptManager::cmdDebugScriptSystem( const StringVector & args )
 {
-	if ( _args.size() >= 2 )
+	if ( args.size() >= 2 )
 	{
-		if ( !mDebugScripts && Utils::StringToTrue( _args[ 1 ] ) )
+		if ( !mDebugScripts && Utils::StringToTrue( args[ 1 ] ) )
 		{
 			EngineFuncs::ConsoleMessage( "Script Debug Messages On." );
 			mDebugScripts = true;
 		}
-		else if ( mDebugScripts && Utils::StringToFalse( _args[ 1 ] ) )
+		else if ( mDebugScripts && Utils::StringToFalse( args[ 1 ] ) )
 		{
 			EngineFuncs::ConsoleMessage( "Script Debug Messages Off." );
 			mDebugScripts = false;
@@ -875,15 +876,15 @@ void ScriptManager::cmdDebugScriptSystem( const StringVector &_args )
 	}
 }
 
-void ScriptManager::cmdScriptCollect( const StringVector &_args )
+void ScriptManager::cmdScriptCollect( const StringVector & args )
 {
 	if ( mScriptEngine )
 	{
 		EngineFuncs::ConsoleMessage( "Before Collection" );
-		cmdScriptStats( _args );
+		cmdScriptStats( args );
 		mScriptEngine->CollectGarbage( true );
 		EngineFuncs::ConsoleMessage( "After Collection" );
-		cmdScriptStats( _args );
+		cmdScriptStats( args );
 	}
 	else
 	{
@@ -891,14 +892,14 @@ void ScriptManager::cmdScriptCollect( const StringVector &_args )
 	}
 }
 
-void ScriptManager::cmdScriptRunFile( const StringVector &_args )
+void ScriptManager::cmdScriptRunFile( const StringVector & args )
 {
-	if ( _args.size() >= 2 )
+	if ( args.size() >= 2 )
 	{
 		try
 		{
 			int threadId;
-			if ( ExecuteFile( _args[ 1 ].c_str(), threadId ) )
+			if ( ExecuteFile( args[ 1 ].c_str(), threadId ) )
 				return;
 		}
 		catch ( const std::exception & ex )
@@ -911,17 +912,17 @@ void ScriptManager::cmdScriptRunFile( const StringVector &_args )
 	EngineFuncs::ConsoleError( "Error Running Script." );
 }
 
-void ScriptManager::cmdScriptExecute( const StringVector &_args )
+void ScriptManager::cmdScriptExecute( const StringVector & args )
 {
-	if ( _args.size() >= 2 )
+	if ( args.size() >= 2 )
 	{
 		try
 		{
 			std::string str;
-			for ( uint32_t i = 1; i < _args.size(); ++i )
+			for ( uint32_t i = 1; i < args.size(); ++i )
 			{
 				str += " ";
-				str += _args[ i ];
+				str += args[ i ];
 			}
 
 			std::string::iterator sIt = str.begin();
@@ -947,7 +948,7 @@ void ScriptManager::cmdScriptExecute( const StringVector &_args )
 	EngineFuncs::ConsoleError( "Error Running Script." );
 }
 
-void ScriptManager::cmdScriptWriteDocs( const StringVector &_args )
+void ScriptManager::cmdScriptWriteDocs( const StringVector & args )
 {
 #if(GMBIND2_DOCUMENT_SUPPORT)
 	DisableGCInScope gcEn( mScriptEngine );
@@ -1033,64 +1034,76 @@ void ScriptManager::CheckLiveUpdates()
 
 #if defined(ENABLE_REMOTE_DEBUGGER) && defined(GMDEBUG_SUPPORT)
 
-struct PacketHeader {
+struct PacketHeader
+{
 	static const unsigned int MAGIC_NUM = 0xDEADB33F;
 
 	const unsigned int magicNum;
 	const unsigned int dataSize;
-	PacketHeader( unsigned int sz ) : magicNum(MAGIC_NUM), dataSize( sz ) {}
+	PacketHeader( unsigned int sz ) : magicNum( MAGIC_NUM ), dataSize( sz )
+	{
+	}
 };
 
 std::string			g_RecieveBuffer;
 std::string			g_LastCommand;
 
-void ScriptManager::SendDebuggerMessage(const void * a_command, int a_len) {
-	if(g_DebugClient.IsValid())
+void ScriptManager::SendDebuggerMessage( const void * a_command, int a_len )
+{
+	if ( g_DebugClient.IsValid() )
 	{
 		PacketHeader hdr( a_len );
 
 		sf::Packet packet;
-		packet.Append((const char *)&hdr, sizeof(hdr));
-		packet.Append((const char *)a_command, a_len);
-		if(g_DebugClient.Send(packet,false)==sf::Socket::Disconnected)
+		packet.Append( (const char *)&hdr, sizeof( hdr ) );
+		packet.Append( (const char *)a_command, a_len );
+		if ( g_DebugClient.Send( packet, false ) == sf::Socket::Disconnected )
 		{
 			g_DebugClient.Close();
 			return;
 		}
-		Utils::OutputDebug(kScript, "%d sent", packet.GetDataSize());
+		Utils::OutputDebug( kScript, "%d sent", packet.GetDataSize() );
 	}
 }
 
-const void * ScriptManager::PumpDebuggerMessage(int &a_len) {
+const void * ScriptManager::PumpDebuggerMessage( int &a_len )
+{
 	// grab all the data from the network we can
-	enum { BufferSize = 4096 };
-	char inBuffer[BufferSize];
+	enum
+	{
+		BufferSize = 4096
+	};
+	char inBuffer[ BufferSize ];
 	std::size_t inSize = 0;
 	do
 	{
-		if(g_DebugClient.Receive(inBuffer,BufferSize,inSize)==sf::Socket::Done)
+		if ( g_DebugClient.Receive( inBuffer, BufferSize, inSize ) == sf::Socket::Done )
 		{
-			Utils::OutputDebug(kScript, va("%d recieved", inSize));
-			if(inSize>0)
-				g_RecieveBuffer.append(inBuffer, inSize);
+			Utils::OutputDebug( kScript, va( "%d recieved", inSize ) );
+			if ( inSize > 0 )
+				g_RecieveBuffer.append( inBuffer, inSize );
 		}
-	} while ( inSize > 0 );
+	}
+	while ( inSize > 0 );
 
-	if ( g_RecieveBuffer.size() > 0 ) {
+	if ( g_RecieveBuffer.size() > 0 )
+	{
 		// see if we have an entire packets worth of data waiting
 		const char * dataPtr = g_RecieveBuffer.c_str();
-		const PacketHeader * hdr = reinterpret_cast<const PacketHeader *>(dataPtr);
-		dataPtr += sizeof(PacketHeader);
-		if ( hdr->magicNum != PacketHeader::MAGIC_NUM ) {
+		const PacketHeader * hdr = reinterpret_cast<const PacketHeader *>( dataPtr );
+		dataPtr += sizeof( PacketHeader );
+		if ( hdr->magicNum != PacketHeader::MAGIC_NUM )
+		{
 			// ERROR! Malformed Packet!
 			return NULL;
 		}
 
-		if ( g_RecieveBuffer.size() >= hdr->dataSize+sizeof(PacketHeader) ) {
+		if ( g_RecieveBuffer.size() >= hdr->dataSize + sizeof( PacketHeader ) )
+		{
 			a_len = hdr->dataSize;
-			g_LastCommand.resize(0);
+			g_LastCommand.resize( 0 );
 			g_LastCommand.append( dataPtr, hdr->dataSize );
-			g_RecieveBuffer.erase( 0, hdr->dataSize + sizeof(PacketHeader) );
+			g_RecieveBuffer.erase( 0, hdr->dataSize + sizeof( PacketHeader ) );
 			return g_LastCommand.c_str();
 		}
 	}
@@ -1104,11 +1117,11 @@ const void * ScriptManager::PumpDebuggerMessage(int &a_len) {
 void ScriptManager::EnableRemoteDebugger( bool _enable )
 {
 #if defined(ENABLE_REMOTE_DEBUGGER) && defined(GMDEBUG_SUPPORT)
-	if(_enable && !g_RemoteDebuggerInitialized)
+	if ( _enable && !g_RemoteDebuggerInitialized )
 	{
-		if(g_DebugListener.Listen(GM_DEBUGGER_PORT))
+		if ( g_DebugListener.Listen( GM_DEBUGGER_PORT ) )
 		{
-			g_DebugListener.SetBlocking(false);
+			g_DebugListener.SetBlocking( false );
 			g_RemoteDebuggerInitialized = true;
 		}
 		else
@@ -1119,7 +1132,7 @@ void ScriptManager::EnableRemoteDebugger( bool _enable )
 			g_RemoteDebuggerInitialized = false;
 		}
 	}
-	else if(g_RemoteDebuggerInitialized)
+	else if ( g_RemoteDebuggerInitialized )
 	{
 		// Shut it down!
 		g_DebugListener.Close();

@@ -206,7 +206,8 @@ struct rcConfig
 
 	/// Minimum floor to 'ceiling' height that will still allow the floor area to 
 	/// be considered walkable. [Limit: >= 3] [Units: vx] 
-	int walkableHeight;
+	int walkableHeightStand;
+	int walkableHeightCrouch;
 	
 	/// Maximum ledge height that is considered to still be traversable. [Limit: >=0] [Units: vx] 
 	int walkableClimb;
@@ -877,6 +878,13 @@ void rcFilterLedgeSpans(rcContext* ctx, const int walkableHeight,
 ///  @param[in,out]	solid			A fully built heightfield.  (All spans have been added.)
 void rcFilterWalkableLowHeightSpans(rcContext* ctx, int walkableHeight, rcHeightfield& solid);
 
+struct rcHeightThreshold
+{
+	int				height;
+	unsigned int	flag;
+};
+void rcFilterHeightThresholds( rcContext* ctx, const rcHeightThreshold *heights, int numHeights, rcHeightfield& solid );
+
 /// Returns the number of spans contained in the specified heightfield.
 ///  @ingroup recast
 ///  @param[in,out]	ctx		The build context to use during the operation.
@@ -899,8 +907,7 @@ int rcGetHeightFieldSpanCount(rcContext* ctx, rcHeightfield& hf);
 ///  @param[in]		hf				The heightfield to be compacted.
 ///  @param[out]	chf				The resulting compact heightfield. (Must be pre-allocated.)
 ///  @returns True if the operation completed successfully.
-bool rcBuildCompactHeightfield(rcContext* ctx, const int walkableHeight, const int walkableClimb,
-							   rcHeightfield& hf, rcCompactHeightfield& chf);
+bool rcBuildCompactHeightfield( rcContext* ctx, int walkableHeight, int walkableClimb, rcHeightfield& hf, rcCompactHeightfield& chf );
 
 /// Erodes the walkable area within the heightfield by the specified radius. 
 ///  @ingroup recast

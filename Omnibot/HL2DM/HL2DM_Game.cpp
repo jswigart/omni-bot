@@ -8,10 +8,8 @@
 
 #include "HL2DM_Game.h"
 #include "HL2DM_Client.h"
-
 #include "System.h"
 #include "ScriptManager.h"
-
 #include "PathPlannerBase.h"
 #include "BotSensoryMemory.h"
 #include "FilterSensory.h"
@@ -76,10 +74,6 @@ bool HL2DM_Game::Init( System & system )
 	if ( !IGame::Init( system ) )
 		return false;
 
-	// Run the games autoexec.
-	int threadId;
-	system.mScript->ExecuteFile( "scripts/hl2d.mautoexec.gm", threadId );
-
 	return true;
 }
 
@@ -88,7 +82,7 @@ void HL2DM_Game::GetGameVars( GameVars &_gamevars )
 	_gamevars.mPlayerHeight = 72.f;
 }
 
-static IntEnum HL2DM_TeamEnum [] =
+static const IntEnum HL2DM_TeamEnum [] =
 {
 	IntEnum( "SPECTATOR", OB_TEAM_SPECTATOR ),
 	IntEnum( "TEAM1", HL2DM_TEAM_REBELS ),
@@ -101,7 +95,7 @@ void HL2DM_Game::GetTeamEnumeration( const IntEnum *&_ptr, int &num )
 	_ptr = HL2DM_TeamEnum;
 }
 
-static IntEnum HL2DM_WeaponEnum [] =
+static const IntEnum HL2DM_WeaponEnum [] =
 {
 	IntEnum( "CROWBAR", HL2DM_WP_CROWBAR ),
 	IntEnum( "GRAVGUN", HL2DM_WP_GRAVGUN ),
@@ -130,7 +124,7 @@ void HL2DM_Game::GetWeaponEnumeration( const IntEnum *&_ptr, int &num )
 	_ptr = HL2DM_WeaponEnum;
 }
 
-static IntEnum gClassMapping[] =
+static const IntEnum gClassMapping[] =
 {
 	IntEnum( "PLAYER", HL2DM_CLASS_PLAYER ),
 	IntEnum( "ANYPLAYER", HL2DM_CLASS_ANY ),

@@ -205,16 +205,16 @@ GMBIND_AUTOPROPERTY( "AimTolerance", GM_FLOAT, mAimTolerance, 0 )
 GMBIND_AUTOPROPERTY( "MaxViewDistance", GM_FLOAT, mMaxViewDistance, 0 )
 // var: Health
 //		float - The bots current <Health> READ ONLY
-GMBIND_AUTOPROPERTY( "Health", GM_INT, mEntInfo.mHealth, gmBot::AUTO_PROP_READONLY )
+GMBIND_AUTOPROPERTY( "Health", GM_INT, mEntInfo.mHealth.mNum, gmBot::AUTO_PROP_READONLY )
 // var: MaxHealth
 //		float - The bots current <MaxHealth> READ ONLY
-GMBIND_AUTOPROPERTY( "MaxHealth", GM_INT, mEntInfo.mHealthMax, gmBot::AUTO_PROP_READONLY )
+GMBIND_AUTOPROPERTY( "MaxHealth", GM_INT, mEntInfo.mHealth.mMax, gmBot::AUTO_PROP_READONLY )
 // var: Armor
 //		float - The bots current <Armor> READ ONLY
-GMBIND_AUTOPROPERTY( "Armor", GM_INT, mEntInfo.mArmor, gmBot::AUTO_PROP_READONLY )
+GMBIND_AUTOPROPERTY( "Armor", GM_INT, mEntInfo.mArmor.mNum, gmBot::AUTO_PROP_READONLY )
 // var: MaxArmor
 //		float - The bots current <MaxArmor> READ ONLY
-GMBIND_AUTOPROPERTY( "MaxArmor", GM_INT, mEntInfo.mArmorMax, gmBot::AUTO_PROP_READONLY )
+GMBIND_AUTOPROPERTY( "MaxArmor", GM_INT, mEntInfo.mArmor.mMax, gmBot::AUTO_PROP_READONLY )
 GMBIND_PROPERTY_MAP_END();
 
 // ctr/dtr

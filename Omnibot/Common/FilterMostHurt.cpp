@@ -26,23 +26,22 @@ void FilterMostHurt::Reset()
 	mMostHurtHealthPc = 1.0f;
 }
 
-void FilterMostHurt::Check( int _index, const MemoryRecord &_record )
+void FilterMostHurt::Check( int _index, const MemoryRecord & record )
 {
 	if ( mMemorySpan == 0 )
 		mMemorySpan = mClient->GetSensoryMemory()->GetMemorySpan();
 
-	const bool noLOS = _record.mTargetInfo.mEntInfo.mCategory.CheckFlag( ENT_CAT_NOLOS );
-	if ( noLOS ||
-		( IGame::GetTime() - _record.GetTimeLastSensed() ) <= mMemorySpan )
+	const bool noLOS = record.mTargetInfo.mEntInfo.mCategory.CheckFlag( ENT_CAT_NOLOS );
+	if ( noLOS || ( IGame::GetTime() - record.GetTimeLastSensed() ) <= mMemorySpan )
 	{
 		switch ( mType )
 		{
 			case AiState::SensoryMemory::EntAlly:
-				if ( !_record.IsAllied() )
+				if ( !record.IsAllied() )
 					return;
 				break;
 			case AiState::SensoryMemory::EntEnemy:
-				if ( _record.IsAllied() )
+				if ( record.IsAllied() )
 					return;
 				break;
 			case AiState::SensoryMemory::EntAny:
@@ -52,33 +51,40 @@ void FilterMostHurt::Check( int _index, const MemoryRecord &_record )
 		// Make sure the class matches.
 		if ( mAnyPlayerClass )
 		{
-			if ( _record.mTargetInfo.mEntInfo.mClassId >= ANYPLAYERCLASS )
+			if ( record.mTargetInfo.mEntInfo.mClassId >= ANYPLAYERCLASS )
 				return;
 		}
-		else if ( !PassesFilter( _record.mTargetInfo.mEntInfo ) )
+		else if ( !PassesFilter( record.mTargetInfo.mEntInfo ) )
 			return;
 
 		// Make sure the category matches.
-		if ( mCategory.AnyFlagSet() && !( mCategory & _record.mTargetInfo.mEntInfo.mCategory ).AnyFlagSet() )
+		if ( mCategory.AnyFlagSet() && !( mCategory & record.mTargetInfo.mEntInfo.mCategory ).AnyFlagSet() )
 			return;
 
 		// Only alive targets count for shootable
-		if ( mCategory.CheckFlag( ENT_CAT_SHOOTABLE ) && _record.mTargetInfo.mEntInfo.mFlags.CheckFlag( ENT_FLAG_DEAD ) )
+		if ( mCategory.CheckFlag( ENT_CAT_SHOOTABLE ) && record.mTargetInfo.mEntInfo.mFlags.CheckFlag( ENT_FLAG_DEAD ) )
 			return;
 
 		// Make sure it isn't disabled.
-		if ( _record.mTargetInfo.mEntInfo.mFlags.CheckFlag( ENT_FLAG_DISABLED ) )
+		if ( record.mTargetInfo.mEntInfo.mFlags.CheckFlag( ENT_FLAG_DISABLED ) )
 			return;
 
 		// Check the health
-		if ( _record.mTargetInfo.mEntInfo.mHealthMax > 0 )
+		if ( record.mTargetInfo.mEntInfo.mHealth.Percent() > 0 )
 		{
-			float mHealthPercent = (float)_record.mTargetInfo.mEntInfo.mHealth / (float)_record.mTargetInfo.mEntInfo.mHealthMax;
-			if ( mHealthPercent < mMostHurtHealthPc )
+			const float healthPercent = record.mTargetInfo.mEntInfo.mHealth.Percent();
+			if ( healthPercent < mMostHurtHealthPc )
 			{
-				mMostHurtHealthPc = mHealthPercent;
-				mBestEntity = _record.GetEntity();
+				mMostHurtHealthPc = healthPercent;
+				mBestEntity = record.GetEntity();
 			}
+		}
+
+		const float healthPc = record.mTargetInfo.mEntInfo.mHealth.Percent();
+		if ( healthPc < mMostHurtHealthPc )
+		{
+			mMostHurtHealthPc = healthPc;
+			mBestEntity = record.GetEntity();
 		}
 	}
 }

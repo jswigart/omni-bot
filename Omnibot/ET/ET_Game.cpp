@@ -89,7 +89,7 @@ const char *ET_Game::GetGameDatabaseAbbrev() const
 {
 	return "et";
 }
-bool ET_Game::GetAnalyticsKeys( GameAnalyticsKeys & keys )
+bool ET_Game::GetAnalyticsKeys( GameAnalytics::Keys & keys )
 {
 	keys.mGameKey = "508391d546e97c34dca527038b9df10c";
 	keys.mSecretKey = "c6eecafbb67e602b45f32ca2948ae520276c291e";
@@ -122,10 +122,6 @@ bool ET_Game::Init( System & system )
 	if ( !IGame::Init( system ) )
 		return false;
 
-	// Run the games autoexec.
-	int threadId;
-	system.mScript->ExecuteFile( "scripts/et_autoexec.gm", threadId );
-
 	return true;
 }
 
@@ -134,7 +130,7 @@ void ET_Game::GetGameVars( GameVars &_gamevars )
 	_gamevars.mPlayerHeight = 64.f;
 }
 
-static IntEnum ET_TeamEnum [] =
+static const IntEnum ET_TeamEnum [] =
 {
 	IntEnum( "SPECTATOR", OB_TEAM_SPECTATOR ),
 	IntEnum( "AXIS", ET_TEAM_AXIS ),
@@ -153,7 +149,7 @@ void ET_Game::InitScriptCategories( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "MINE", gmVariable( ET_ENT_CAT_MINE ) );
 }
 
-static IntEnum ET_WeaponEnum[ 128 ] =
+static const IntEnum ET_WeaponEnum[ 128 ] =
 {
 	IntEnum( "NONE", ET_WP_NONE ),
 	IntEnum( "KNIFE", ET_WP_KNIFE ),
@@ -220,7 +216,7 @@ bool ET_Game::AddWeaponId( const char * weaponName, int weaponId )
 {
 	const char * wpnName = mExtraWeaponNames.AddUniqueString( weaponName );
 
-	const int arraySize = sizeof( ET_WeaponEnum ) / sizeof( ET_WeaponEnum[ 0 ] );
+	/*const int arraySize = sizeof( ET_WeaponEnum ) / sizeof( ET_WeaponEnum[ 0 ] );
 	for ( int i = 0; i < arraySize; ++i )
 	{
 		if ( !ET_WeaponEnum[ i ].mKey )
@@ -229,7 +225,7 @@ bool ET_Game::AddWeaponId( const char * weaponName, int weaponId )
 			ET_WeaponEnum[ i ].mValue = weaponId;
 			return true;
 		}
-	}
+	}*/
 	return false;
 }
 

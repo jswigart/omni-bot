@@ -38,7 +38,7 @@ void TF_Game::Shutdown()
 	IGame::Shutdown();
 }
 
-static IntEnum TF_WeaponEnum [] =
+static const IntEnum TF_WeaponEnum [] =
 {
 	IntEnum( "NONE", TF_WP_NONE ),
 	IntEnum( "AXE", TF_WP_AXE ),
@@ -376,55 +376,55 @@ void TF_Game::ProcessEvent( const MessageHelper &_message, CallbackParameters &_
 {
 	IGame::ProcessEvent( _message, _cb );
 
-	if ( System::mInstance->mNavigation->IsViewOn() && System::mInstance->mNavigation->IsAutoDetectFlagsOn() )
-	{
-		switch ( _message.GetMessageId() )
-		{
-			case GAME_ENTITYCREATED:
-			{
-				const Event_EntityCreated *m = _message.Get<Event_EntityCreated>();
-				if ( m )
-				{
-					//if ( m->mEntityClass == TF_CLASSEX_SENTRY ||
-					//	m->mEntityClass == TF_CLASSEX_DISPENSER ||
-					//	m->mEntityClass == TF_CLASSEX_DETPACK )
-					//{
-					//	Vector3f vEntPosition, vEntFacing, vWpPosition, vWpFacing;
-					//	EngineFuncs::EntityPosition( m->mEntity, vEntPosition );
-					//	EngineFuncs::EntityOrientation( m->mEntity, vEntFacing, NULL, NULL );
+	//if ( System::mInstance->mNavigation->IsViewOn() && System::mInstance->mNavigation->IsAutoDetectFlagsOn() )
+	//{
+	//	switch ( _message.GetMessageId() )
+	//	{
+	//		case GAME_ENTITYCREATED:
+	//		{
+	//			const Event_EntityCreated *m = _message.Get<Event_EntityCreated>();
+	//			if ( m )
+	//			{
+	//				//if ( m->mEntityClass == TF_CLASSEX_SENTRY ||
+	//				//	m->mEntityClass == TF_CLASSEX_DISPENSER ||
+	//				//	m->mEntityClass == TF_CLASSEX_DETPACK )
+	//				//{
+	//				//	Vector3f vEntPosition, vEntFacing, vWpPosition, vWpFacing;
+	//				//	EngineFuncs::EntityPosition( m->mEntity, vEntPosition );
+	//				//	EngineFuncs::EntityOrientation( m->mEntity, vEntFacing, NULL, NULL );
 
-					//	EngineFuncs::EntityPosition( Utils::GetLocalEntity(), vWpPosition );
-					//	EngineFuncs::EntityOrientation( Utils::GetLocalEntity(), vWpFacing, NULL, NULL );
+	//				//	EngineFuncs::EntityPosition( Utils::GetLocalEntity(), vWpPosition );
+	//				//	EngineFuncs::EntityOrientation( Utils::GetLocalEntity(), vWpFacing, NULL, NULL );
 
-					//	//Utils::GetLocalEntity();
-					//	//RenderBuffer::AddLine(GetClient()->GetEyePosition(), _aimpos, COLOR::GREEN, 20.f);
-					//}
-				}
-				break;
-			}
-			case GAME_ENTITYDELETED:
-			{
-				const Event_EntityDeleted *m = _message.Get<Event_EntityDeleted>();
-				if ( m )
-				{
-					/*int index = m->mEntity.GetIndex();
-					if(.mGameEntities[index]..mEntity.IsValid())
-					{
-					#ifdef _DEBUG
-					const char *pClassName = FindClassName(.mGameEntities[index]..mEntityClass);
-					Utils::OutputDebug(kNormal, "Entity: %d deleted: %s\n", index, pClassName?pClassName:"<unknown>");
-					#endif
-					.mGameEntities[index]..mEntity.Reset();
-					.mGameEntities[index]..mEntityClass = 0;
-					.mGameEntities[index]..mEntityCategory.ClearAll();
-					}
+	//				//	//Utils::GetLocalEntity();
+	//				//	//RenderBuffer::AddLine(GetClient()->GetEyePosition(), _aimpos, COLOR::GREEN, 20.f);
+	//				//}
+	//			}
+	//			break;
+	//		}
+	//		case GAME_ENTITYDELETED:
+	//		{
+	//			const Event_EntityDeleted *m = _message.Get<Event_EntityDeleted>();
+	//			if ( m )
+	//			{
+	//				/*int index = m->mEntity.GetIndex();
+	//				if(.mGameEntities[index]..mEntity.IsValid())
+	//				{
+	//				#ifdef _DEBUG
+	//				const char *pClassName = FindClassName(.mGameEntities[index]..mEntityClass);
+	//				Utils::OutputDebug(kNormal, "Entity: %d deleted: %s\n", index, pClassName?pClassName:"<unknown>");
+	//				#endif
+	//				.mGameEntities[index]..mEntity.Reset();
+	//				.mGameEntities[index]..mEntityClass = 0;
+	//				.mGameEntities[index]..mEntityCategory.ClearAll();
+	//				}
 
-					GoalManager::GetInstance()->RemoveGoalByEntity(m->mEntity);*/
-				}
-				break;
-			}
-		}
-	}
+	//				GoalManager::GetInstance()->RemoveGoalByEntity(m->mEntity);*/
+	//			}
+	//			break;
+	//		}
+	//	}
+	//}
 
 	//////////////////////////////////////////////////////////////////////////
 }

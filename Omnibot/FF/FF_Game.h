@@ -24,8 +24,6 @@ class FF_Game : public TF_Game
 public:
 	bool Init( System & system );
 
-	//void AddBot(const std::string &_name, int _team, int _class, const std::string _profile, bool _createnow);
-
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
@@ -39,6 +37,8 @@ public:
 	{
 		return NAVID_RECAST;
 	}
+
+	void GetNavParms( NavParms & navParms ) const;
 
 	virtual bool RendersToGame() const
 	{

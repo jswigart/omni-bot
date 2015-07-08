@@ -1028,7 +1028,7 @@ int gmScriptGoal::gmfQueryMapGoals( gmThread *a_thread )
 	GM_CHECK_TABLE_PARAM( table, 0 );
 	GM_TABLE_PARAM( params, 2, 0 );
 
-	Prof( QueryMapGoals );
+	//rmt_ScopedCPUSample( gmQueryMapGoals );
 
 	GoalManager::Query qry;
 
@@ -1118,7 +1118,7 @@ int gmScriptGoal::gmfWatchForMapGoalsInRadius( gmThread *a_thread )
 	GM_STRING_PARAM( pExpr, 2, 0 );
 	GM_TABLE_PARAM( params, 3, 0 );
 
-	Prof( WatchForMapGoalsInRadius );
+	//rmt_ScopedCPUSample( WatchForMapGoalsInRadius );
 
 	GoalManager::Query qry;
 	qry.Bot( native->GetClient() );
@@ -1214,7 +1214,6 @@ bool gmScriptGoal::setName( ScriptGoal *a_native, gmThread *a_thread, gmVariable
 	{
 		a_native->SetName( pStr->GetString() );
 		a_native->SetFollowUserName( pStr->GetString() );
-		a_native->SetProfilerZone( pStr->GetString() );
 	}
 	return true;
 }

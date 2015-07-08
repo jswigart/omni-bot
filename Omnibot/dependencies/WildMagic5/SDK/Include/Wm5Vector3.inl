@@ -98,6 +98,20 @@ inline Real& Vector3<Real>::Z ()
 {
 	return mTuple[2];
 }
+
+template <typename Real>
+inline Real* Vector3<Real>::Ptr()
+{
+	return mTuple;
+}
+
+//----------------------------------------------------------------------------
+template <typename Real>
+inline const Real* Vector3<Real>::Ptr() const
+{
+	return mTuple;
+}
+
 //----------------------------------------------------------------------------
 template <typename Real>
 inline Vector3<Real> Vector3<Real>::operator+ (const Vector3& vec) const
@@ -694,7 +708,7 @@ bool Vector3<Real>::IsZero () const
 template <class Real>
 Vector3<Real> Vector3<Real>::Flatten(Real _z) const
 {
-	return Vector3<Real>(X(),Y(),_z);
+	return Vector3<Real>(X(),Y(),Z());
 }
 //----------------------------------------------------------------------------
 template <typename Real>

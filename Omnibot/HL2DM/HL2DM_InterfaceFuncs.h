@@ -18,7 +18,6 @@ namespace InterfaceFuncs
 {
 	bool CanPhysPickup( GameEntity _ent, GameEntity _pickup );
 	bool GetPhysGunInfo( GameEntity _ent, HL2DM_PhysGunInfo &info );
-	bool GetChargerStatus( GameEntity _ent, HL2DM_ChargerStatus &status );
 };
 
 #endif

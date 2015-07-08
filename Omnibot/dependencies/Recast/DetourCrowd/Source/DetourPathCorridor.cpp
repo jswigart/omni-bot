@@ -250,7 +250,8 @@ If the target is within range, it will be the last corner and have a polygon ref
 */
 int dtPathCorridor::findCorners(float* cornerVerts, unsigned char* cornerFlags,
 							  dtPolyRef* cornerPolys, const int maxCorners,
-							  dtNavMeshQuery* navquery, const dtQueryFilter* /*filter*/)
+							  dtNavMeshQuery* navquery, const dtQueryFilter* filter,
+							  int options )
 {
 	dtAssert(m_path);
 	dtAssert(m_npath);
@@ -259,7 +260,7 @@ int dtPathCorridor::findCorners(float* cornerVerts, unsigned char* cornerFlags,
 	
 	int ncorners = 0;
 	navquery->findStraightPath(m_pos, m_target, m_path, m_npath,
-							   cornerVerts, cornerFlags, cornerPolys, &ncorners, maxCorners);
+		cornerVerts, cornerFlags, cornerPolys, &ncorners, maxCorners, options );
 	
 	// Prune points in the beginning of the path which are too close.
 	while (ncorners)

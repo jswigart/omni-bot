@@ -47,6 +47,19 @@ Center(center)
 }
 //----------------------------------------------------------------------------
 template <typename Real>
+Box3<Real>::Box3( const Vector3<Real>& mins, const Vector3<Real>& maxs )
+	:
+	Center( ( mins + maxs ) * 0.5 )
+{
+	Axis[ 0 ] = Vector3f::UNIT_X;
+	Axis[ 1 ] = Vector3f::UNIT_Y;
+	Axis[ 2 ] = Vector3f::UNIT_Z;
+	Extent[ 0 ] = maxs[ 0 ] - mins[ 0 ];
+	Extent[ 1 ] = maxs[ 1 ] - mins[ 1 ];
+	Extent[ 2 ] = maxs[ 2 ] - mins[ 2 ];
+}
+//----------------------------------------------------------------------------
+template <typename Real>
 void Box3<Real>::ComputeVertices (Vector3<Real> vertex[8]) const
 {
 	Vector3<Real> extAxis0 = Extent[0]*Axis[0];

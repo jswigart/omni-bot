@@ -54,10 +54,12 @@ public:
 	///  @param[in]		maxCorners		The maximum number of corners the buffers can hold.
 	///  @param[in]		navquery		The query object used to build the corridor.
 	///  @param[in]		filter			The filter to apply to the operation.
+	///  @param[in]		options			See dtStraightPathOptions	
 	/// @return The number of corners returned in the corner buffers. [0 <= value <= @p maxCorners]
 	int findCorners(float* cornerVerts, unsigned char* cornerFlags,
 					dtPolyRef* cornerPolys, const int maxCorners,
-					dtNavMeshQuery* navquery, const dtQueryFilter* filter);
+					dtNavMeshQuery* navquery, const dtQueryFilter* filter,
+					int options = 0 );
 	
 	/// Attempts to optimize the path if the specified point is visible from the current position.
 	///  @param[in]		next					The point to search toward. [(x, y, z])

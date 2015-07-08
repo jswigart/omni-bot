@@ -22,7 +22,7 @@ public:
 	{
 		return false;
 	}
-	virtual void operator()( const StringVector &_args ) = 0;
+	virtual void operator()( const StringVector & args ) = 0;
 };
 
 typedef boost::shared_ptr<ICommandFunctor> CommandFunctorPtr;
@@ -41,9 +41,9 @@ public:
 	{
 		return mObject;
 	}
-	void operator()( const StringVector &_args )
+	void operator()( const StringVector & args )
 	{
-		( mObject->*mFunction )( _args );
+		( mObject->*mFunction )( args );
 	}
 	Delegate( T *obj, Fn fnc )
 		: mObject( obj )
@@ -61,7 +61,7 @@ template <typename T, typename Fn>
 class Delegate0 : public ICommandFunctor
 {
 public:
-	void operator()( const StringVector &_args )
+	void operator()( const StringVector & args )
 	{
 		( mObject->*mFunction )( );
 	}

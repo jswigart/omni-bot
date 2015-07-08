@@ -589,7 +589,7 @@ void TF_Client::Update()
 		TF_BuildInfo bi = InterfaceFuncs::GetBuildInfo( this );
 		FINDSTATEIF_OPT( Sentry, GetStateRoot(), UpdateSentryStatus( bi.mSentryStats ) );
 		FINDSTATEIF_OPT( Dispenser, GetStateRoot(), UpdateDispenserStatus( bi.mDispenserStats ) );
-		FINDSTATEIF_OPT( Detpack, GetStateRoot(), UpdateDetpackStatus( bi.mDetpack ) );
+		FINDSTATEIF_OPT( Detpack, GetStateRoot(), UpdateDetpackStatus( bi.mDetpackStats ) );
 		FINDSTATEIF_OPT( Teleporter, GetStateRoot(), UpdateTeleporterStatus( bi.mTeleporterStats ) );
 	}
 	Client::Update();

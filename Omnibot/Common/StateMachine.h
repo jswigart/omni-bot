@@ -228,7 +228,7 @@ public:
 
 	void PropogateDeletedThreads(const int *_threadIds, int _numThreads);
 
-	bool StateCommand(const StringVector &_args);
+	bool StateCommand(const StringVector & args);
 
 	virtual gmUserObject *GetScriptObject(gmMachine *_machine) { return NULL; }
 
@@ -239,10 +239,6 @@ public:
 	virtual void RenderDebug() {}
 	virtual void GetDebugString(std::stringstream &out) {}
 	virtual MapGoal *GetMapGoalPtr() { return NULL; }
-
-#ifdef ENABLE_REMOTE_DEBUGGING
-	virtual void Sync( RemoteLib::DebugConnection * connection, Remote::Behavior & cached, Remote::Behavior & update );
-#endif
 
 	//////////////////////////////////////////////////////////////////////////
 	struct LimitToCallback

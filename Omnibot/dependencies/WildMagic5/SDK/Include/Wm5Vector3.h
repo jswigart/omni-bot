@@ -38,6 +38,9 @@ namespace Wm5
 		inline Real Z () const;
 		inline Real& Z ();
 
+		inline Real* Ptr();
+		inline const Real* Ptr() const;
+
 		// Arithmetic operations.
 		inline Vector3 operator+ (const Vector3& vec) const;
 		inline Vector3 operator- (const Vector3& vec) const;
@@ -172,7 +175,7 @@ namespace Wm5
 
 		Vector3<Real> Flatten(Real _z = 0.f) const;
 
-		bool IsValid() const { return !_isnan( X() ) && !_isnan( Y() ) && !_isnan( Z() ); }
+		bool IsValid() const { return !isnan( X() ) && !isnan( Y() ) && !isnan( Z() ); }
 		///////////////////////////////////////////////////////////////////////////
 	protected:
 		using Tuple<3,Real>::mTuple;

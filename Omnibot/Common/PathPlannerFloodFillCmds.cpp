@@ -81,9 +81,9 @@ void PathPlannerFloodFill::InitCommands()
 	SetNextState(NoOp);*/
 }
 
-void PathPlannerFloodFill::cmdNavSave( const StringVector &_args )
+void PathPlannerFloodFill::cmdNavSave( const StringVector & args )
 {
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( mFlags.mViewMode == 0 )
 		return;
 
 	if ( Save( gEngineFuncs->GetMapName() ) )
@@ -94,9 +94,9 @@ void PathPlannerFloodFill::cmdNavSave( const StringVector &_args )
 		EngineFuncs::ConsoleError( "ERROR Saving Nav." );
 }
 
-void PathPlannerFloodFill::cmdNavLoad( const StringVector &_args )
+void PathPlannerFloodFill::cmdNavLoad( const StringVector & args )
 {
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( mFlags.mViewMode == 0 )
 		return;
 
 	if ( Load( gEngineFuncs->GetMapName() ) )
@@ -107,7 +107,7 @@ void PathPlannerFloodFill::cmdNavLoad( const StringVector &_args )
 		EngineFuncs::ConsoleError( "ERROR Loading Nav." );
 }
 
-void PathPlannerFloodFill::cmdNavView( const StringVector &_args )
+void PathPlannerFloodFill::cmdNavView( const StringVector & args )
 {
 	const char *strUsage [] =
 	{
@@ -115,14 +115,14 @@ void PathPlannerFloodFill::cmdNavView( const StringVector &_args )
 		"> enable: Enable nav rendering. true/false/on/off/1/0",
 	};
 
-	CHECK_NUM_PARAMS( _args, 2, strUsage );
+	CHECK_NUM_PARAMS( args, 2, strUsage );
 	CHECK_BOOL_PARAM( bEnable, 1, strUsage );
 	ScriptManager::GetInstance()->ExecuteStringLogged(
 		( std::string )va( "Nav.EnableView( %s );",
 		bEnable ? "true" : "false" ) );
 }
 
-void PathPlannerFloodFill::cmdNavViewConnections( const StringVector &_args )
+void PathPlannerFloodFill::cmdNavViewConnections( const StringVector & args )
 {
 	const char *strUsage [] =
 	{
@@ -130,16 +130,16 @@ void PathPlannerFloodFill::cmdNavViewConnections( const StringVector &_args )
 		"> enable: Enable nav connection rendering. true/false/on/off/1/0",
 	};
 
-	CHECK_NUM_PARAMS( _args, 2, strUsage );
+	CHECK_NUM_PARAMS( args, 2, strUsage );
 	CHECK_BOOL_PARAM( bEnable, 1, strUsage );
 	ScriptManager::GetInstance()->ExecuteStringLogged(
 		( std::string )va( "Nav.EnableViewConnection( %s );",
 		bEnable ? "true" : "false" ) );
 }
 
-void PathPlannerFloodFill::cmdNavEnableStep( const StringVector &_args )
+void PathPlannerFloodFill::cmdNavEnableStep( const StringVector & args )
 {
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( mFlags.mViewMode == 0 )
 		return;
 
 	const char *strUsage [] =
@@ -148,23 +148,23 @@ void PathPlannerFloodFill::cmdNavEnableStep( const StringVector &_args )
 		"> enable: Enable step by step nav generation. true/false/on/off/1/0",
 	};
 
-	CHECK_NUM_PARAMS( _args, 2, strUsage );
+	CHECK_NUM_PARAMS( args, 2, strUsage );
 	CHECK_BOOL_PARAM( bEnable, 1, strUsage );
 	ScriptManager::GetInstance()->ExecuteStringLogged(
 		( std::string )va( "Nav.EnableStep( %s );",
 		bEnable ? "true" : "false" ) );
 }
 
-void PathPlannerFloodFill::cmdNavStep( const StringVector &_args )
+void PathPlannerFloodFill::cmdNavStep( const StringVector & args )
 {
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( mFlags.mViewMode == 0 )
 		return;
 	ScriptManager::GetInstance()->ExecuteStringLogged( "Nav.Step();" );
 }
 
-void PathPlannerFloodFill::cmdAddFloodStart( const StringVector &_args )
+void PathPlannerFloodFill::cmdAddFloodStart( const StringVector & args )
 {
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( mFlags.mViewMode == 0 )
 		return;
 
 
@@ -175,26 +175,26 @@ void PathPlannerFloodFill::cmdAddFloodStart( const StringVector &_args )
 	}
 }
 
-void PathPlannerFloodFill::cmdClearFloodStarts( const StringVector &_args )
+void PathPlannerFloodFill::cmdClearFloodStarts( const StringVector & args )
 {
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( mFlags.mViewMode == 0 )
 		return;
 
 
 	ClearFloodStarts();
 }
 
-void PathPlannerFloodFill::cmdSaveFloodStarts( const StringVector &_args )
+void PathPlannerFloodFill::cmdSaveFloodStarts( const StringVector & args )
 {
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( mFlags.mViewMode == 0 )
 		return;
 
 	SaveFloodStarts();
 }
 
-void PathPlannerFloodFill::cmdLoadFloodStarts( const StringVector &_args )
+void PathPlannerFloodFill::cmdLoadFloodStarts( const StringVector & args )
 {
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( mFlags.mViewMode == 0 )
 		return;
 
 	LoadFloodStarts();
@@ -209,9 +209,9 @@ PathPlannerFloodFill::FloodFillOptions::FloodFillOptions()
 	mGridRadius = 16.0f;
 }
 
-void PathPlannerFloodFill::cmdNavMeshFloodFill( const StringVector &_args )
+void PathPlannerFloodFill::cmdNavMeshFloodFill( const StringVector & args )
 {
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( mFlags.mViewMode == 0 )
 		return;
 
 	const char *strUsage [] =
@@ -239,9 +239,9 @@ void PathPlannerFloodFill::cmdNavMeshFloodFill( const StringVector &_args )
 
 //////////////////////////////////////////////////////////////////////////
 
-void PathPlannerFloodFill::cmdAutoBuildFeatures( const StringVector &_args )
+void PathPlannerFloodFill::cmdAutoBuildFeatures( const StringVector & args )
 {
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( mFlags.mViewMode == 0 )
 		return;
 
 	const int iMaxFeatures = 128;
@@ -283,7 +283,7 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures( const StringVector &_args )
 	EngineFuncs::ConsoleMessage( va( "Found %d nav features.", iNumFeatures ) );
 }
 
-void PathPlannerFloodFill::_BenchmarkPathFinder( const StringVector &_args )
+void PathPlannerFloodFill::_BenchmarkPathFinder( const StringVector & args )
 {
 	EngineFuncs::ConsoleMessage( "-= FloodFill PathFind Benchmark =-" );
 
@@ -312,12 +312,12 @@ void PathPlannerFloodFill::_BenchmarkPathFinder( const StringVector &_args )
 		iNumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)iNumPaths / dTimeTaken : 0.0f ) );
 }
 
-void PathPlannerFloodFill::_BenchmarkGetNavPoint( const StringVector &_args )
+void PathPlannerFloodFill::_BenchmarkGetNavPoint( const StringVector & args )
 {
 	uint32_t iNumIterations = 1;
-	if ( _args.size() > 1 )
+	if ( args.size() > 1 )
 	{
-		iNumIterations = atoi( _args[ 1 ].c_str() );
+		iNumIterations = atoi( args[ 1 ].c_str() );
 		if ( iNumIterations <= 0 )
 			iNumIterations = 1;
 	}
@@ -353,16 +353,16 @@ void PathPlannerFloodFill::_BenchmarkGetNavPoint( const StringVector &_args )
 	dTimeTaken != 0.0f ? ((float)(iNumWaypoints * iNumIterations) / dTimeTaken) : 0.0f);	*/
 }
 
-void PathPlannerFloodFill::cmdNext( const StringVector &_args )
+void PathPlannerFloodFill::cmdNext( const StringVector & args )
 {
-	if ( !mPlannerFlags.CheckFlag( NAV_VIEW ) )
+	if ( mFlags.mViewMode == 0 )
 		return;
 }
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-void PathPlannerFloodFill::cmdInfluenceMapCreate( const StringVector &_args )
+void PathPlannerFloodFill::cmdInfluenceMapCreate( const StringVector & args )
 {
 	AABB mapbounds;
 	mapbounds.Set( Vector3f( -4400, -2000, -800 ), Vector3f( 4400, 2000, 230 ) );
@@ -382,7 +382,7 @@ void PathPlannerFloodFill::cmdInfluenceMapCreate( const StringVector &_args )
 		mSpanMap.GetNumCellsX(), mSpanMap.GetNumCellsY() ) );
 }
 
-void PathPlannerFloodFill::cmdInfluenceMapSeed( const StringVector &_args )
+void PathPlannerFloodFill::cmdInfluenceMapSeed( const StringVector & args )
 {
 	/*Vector3f eyePos;
 	if ( Utils::GetLocalEyePosition(eyePos) )
@@ -401,7 +401,7 @@ void PathPlannerFloodFill::cmdInfluenceMapSeed( const StringVector &_args )
 	}
 }
 
-void PathPlannerFloodFill::cmdInfluenceMapMem( const StringVector &_args )
+void PathPlannerFloodFill::cmdInfluenceMapMem( const StringVector & args )
 {
 	EngineFuncs::ConsoleMessage( va( "Influence Map %d x %d ( %s )",
 		mSpanMap.GetNumCellsX(),
@@ -409,7 +409,7 @@ void PathPlannerFloodFill::cmdInfluenceMapMem( const StringVector &_args )
 		Utils::FormatByteString( mSpanMap.CalculateMemUsage() ).c_str() ) );
 }
 
-void PathPlannerFloodFill::cmdInfluenceMapSave( const StringVector &_args )
+void PathPlannerFloodFill::cmdInfluenceMapSave( const StringVector & args )
 {
 	const std::string filePath = std::string( "nav/" ) + std::string( gEngineFuncs->GetMapName() ) + ".influence";
 
@@ -424,7 +424,7 @@ void PathPlannerFloodFill::cmdInfluenceMapSave( const StringVector &_args )
 	}
 }
 
-void PathPlannerFloodFill::cmdInfluenceMapLoad( const StringVector &_args )
+void PathPlannerFloodFill::cmdInfluenceMapLoad( const StringVector & args )
 {
 	const std::string filePath = std::string( "nav/" ) + std::string( gEngineFuncs->GetMapName() ) + ".influence";
 
@@ -451,7 +451,7 @@ void PathPlannerFloodFill::cmdInfluenceMapLoad( const StringVector &_args )
 	}
 }
 
-void PathPlannerFloodFill::cmdInfluenceMapFlood( const StringVector &_args )
+void PathPlannerFloodFill::cmdInfluenceMapFlood( const StringVector & args )
 {
 	Vector3f vAimPt;
 	if ( !Utils::GetLocalAimPoint( vAimPt ) )

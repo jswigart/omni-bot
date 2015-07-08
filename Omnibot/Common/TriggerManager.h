@@ -59,8 +59,8 @@ protected:
 
 	// Commands
 	virtual void InitCommands();
-	void cmdDebugTriggers( const StringVector &_args );
-	void cmdDrawTriggers( const StringVector &_args );
+	void cmdDebugTriggers( const StringVector & args );
+	void cmdDrawTriggers( const StringVector & args );
 
 	std::string  mDebugTriggersExpr;
 

@@ -25,6 +25,17 @@ PathInterface::PathStatus FloodFillPathInterface::GetPathStatus() const
 	return mStatus;
 }
 
+NavArea FloodFillPathInterface::GetCurrentArea() const
+{
+	return NAVAREA_GROUND;
+
+}
+
+NavAreaFlags FloodFillPathInterface::GetCurrentAreaFlags() const
+{
+	return NAVFLAGS_NONE;
+}
+
 void FloodFillPathInterface::UpdateSourcePosition( const Vector3f & srcPos )
 {
 	mSrc = srcPos;
@@ -197,11 +208,13 @@ size_t FloodFillPathInterface::GetPathCorners( PathCorner * corners, size_t maxE
 	return num;
 }
 
-bool FloodFillPathInterface::GetPointAlongPath( float lookAheadDist, Vector3f & ptOut )	
+bool FloodFillPathInterface::GetNavLink( uint64_t id, OffMeshConnection& conn ) const
 {
-	if ( mStatus != PATH_VALID )
-		return false;
+	return false;
+}
 
+bool FloodFillPathInterface::CompleteNavLink( uint64_t id )
+{
 	return true;
 }
 

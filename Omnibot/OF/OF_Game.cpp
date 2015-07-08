@@ -92,10 +92,6 @@ bool OF_Game::Init( System & system )
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(OF_Game::OF_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(OF_Game::OF_GetEntityClassAimOffset);
 
-	// Run the games autoexec.
-	int threadId;
-	system.mScript->ExecuteFile("scripts/of_autoexec.gm", threadId);
-
 	// Set up OF specific data.
 	using namespace AiState;
 	TF_Options::GRENADE_VELOCITY = 650.f;
@@ -114,7 +110,7 @@ void OF_Game::GetGameVars(GameVars &_gamevars)
 	_gamevars.mPlayerHeight = 64.f;
 }
 
-static IntEnum OF_TeamEnum[] =
+static const IntEnum OF_TeamEnum[] =
 {
 	IntEnum("SPECTATOR",OB_TEAM_SPECTATOR),
 	IntEnum("NONE",OF_TEAM_NONE),

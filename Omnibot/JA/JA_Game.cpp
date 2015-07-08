@@ -102,10 +102,6 @@ bool JA_Game::Init( System & system )
 	if ( !IGame::Init( system ) )
 		return false;
 
-	// Run the games autoexec.
-	int threadId;
-	system.mScript->ExecuteFile( "scripts/ja_autoexec.gm", threadId );
-
 	return true;
 }
 
@@ -114,7 +110,7 @@ void JA_Game::GetGameVars( GameVars &_gamevars )
 	_gamevars.mPlayerHeight = 64.f;
 }
 
-static IntEnum ET_TeamEnum [] =
+static const IntEnum ET_TeamEnum [] =
 {
 	IntEnum( "SPECTATOR", OB_TEAM_SPECTATOR ),
 	IntEnum( "FREE", JA_TEAM_FREE ),
@@ -128,7 +124,7 @@ void JA_Game::GetTeamEnumeration( const IntEnum *&_ptr, int &num )
 	_ptr = ET_TeamEnum;
 }
 
-static IntEnum JA_WeaponEnum [] =
+static const IntEnum JA_WeaponEnum [] =
 {
 	IntEnum( "NONE", JA_WP_NONE ),
 	IntEnum( "STUN", JA_WP_STUN_BATON ),
@@ -155,7 +151,7 @@ void JA_Game::GetWeaponEnumeration( const IntEnum *&_ptr, int &num )
 	_ptr = JA_WeaponEnum;
 }
 
-static IntEnum JKJA_ClassEnum [] =
+static const IntEnum JKJA_ClassEnum [] =
 {
 	IntEnum( "PLAYER", JA_CLASS_PLAYER ),
 	IntEnum( "ASSAULT", JA_CLASS_ASSAULT ),

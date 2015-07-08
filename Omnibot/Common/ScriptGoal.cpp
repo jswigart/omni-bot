@@ -18,8 +18,6 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-Prof_Define( ScriptGoal );
-
 namespace AiState
 {
 	MoveOptions::MoveOptions()
@@ -79,21 +77,10 @@ namespace AiState
 		, mAutoFinishOnNoUseSlots( true )
 		, mSkipGetPriorityWhenActive( false )
 		, mSkipLastWp( false )
-#ifdef Prof_ENABLED
-		, mProfZone(0)
-#endif
 	{
 		SetScriptGoal( true );
 	}
-
-	void ScriptGoal::SetProfilerZone( const std::string &_name )
-	{
-#ifdef Prof_ENABLED
-		mProfZone = gDynamicZones.FindZone(_name.c_str());
-		OBASSERT(.mProfZone,"No Profiler Zone Available!");
-#endif
-	}
-
+	
 	ScriptGoal::~ScriptGoal()
 	{
 		if ( mScriptObject )
@@ -242,9 +229,7 @@ namespace AiState
 		FINDSTATE( fp, FollowPath, GetRootState() );
 		if ( fp )
 		{
-			Vector3f vDestination;
-			if ( System::mInstance->mNavigation->GetRandomDestination( vDestination, GetClient() ) )
-				return fp->Goto( this, vDestination, options.Radius, options.Mode );
+			return fp->GotoRandomPt( this );
 		}
 		return false;
 	}
@@ -357,74 +342,58 @@ namespace AiState
 
 	bool ScriptGoal::OnInit( gmMachine *_machine )
 	{
-		Prof_Scope( ScriptGoal );
+		//rmt_ScopedCPUSample( ScriptGoalOnInit );
 
-#ifdef Prof_ENABLED
-		Prof_Scope_Var Scope(*.mProfZone, Prof_cache);
-#endif
-
+		if ( mCallbacks[ ScriptGoal::ON_INIT ] )
 		{
-			Prof( OnInit );
+			gmVariable varThis = gmVariable( GetScriptObject( _machine ) );
 
-			if ( mCallbacks[ ScriptGoal::ON_INIT ] )
+			gmCall call;
+			if ( call.BeginFunction( _machine, mCallbacks[ ScriptGoal::ON_INIT ], varThis ) )
 			{
-				gmVariable varThis = gmVariable( GetScriptObject( _machine ) );
+				call.End();
 
-				gmCall call;
-				if ( call.BeginFunction( _machine, mCallbacks[ ScriptGoal::ON_INIT ], varThis ) )
-				{
-					call.End();
-
-					int iReturnVal = 0;
-					if ( call.GetReturnedInt( iReturnVal ) && iReturnVal == 0 )
-						return false;
-				}
+				int iReturnVal = 0;
+				if ( call.GetReturnedInt( iReturnVal ) && iReturnVal == 0 )
+					return false;
 			}
-			return true;
 		}
+		return true;
 	}
 
 	void ScriptGoal::OnSpawn()
 	{
-		Prof_Scope( ScriptGoal );
+		//rmt_ScopedCPUSample( ScriptGoalOnSpawn );
 
-#ifdef Prof_ENABLED
-		Prof_Scope_Var Scope(*.mProfZone, Prof_cache);
-#endif
+		mNextGetPriorityUpdate = 0;
+		SetScriptPriority( 0.0f );
+		SetLastPriority( 0.0f );
 
+		KillAllGoalThreads();
+
+		if ( mCallbacks[ ON_SPAWN ] )
 		{
-			Prof( OnSpawn );
+			if ( mActiveThread[ ON_SPAWN ] )
+				mActiveThread[ ON_SPAWN ].Kill();
 
-			mNextGetPriorityUpdate = 0;
-			SetScriptPriority( 0.0f );
-			SetLastPriority( 0.0f );
+			// don't call it unless we can
+			if ( CanBeSelected() != NoSelectReasonNone )
+				return;
 
-			KillAllGoalThreads();
-
-			if ( mCallbacks[ ON_SPAWN ] )
+			gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
+			gmCall call;
+			if ( call.BeginFunction( pMachine, mCallbacks[ ON_SPAWN ], gmVariable( GetScriptObject( pMachine ) ) ) )
 			{
-				if ( mActiveThread[ ON_SPAWN ] )
-					mActiveThread[ ON_SPAWN ].Kill();
-
-				// don't call it unless we can
-				if ( CanBeSelected() != NoSelectReasonNone )
-					return;
-
-				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-				gmCall call;
-				if ( call.BeginFunction( pMachine, mCallbacks[ ON_SPAWN ], gmVariable( GetScriptObject( pMachine ) ) ) )
+				if ( call.End() == gmThread::EXCEPTION )
 				{
-					if ( call.End() == gmThread::EXCEPTION )
-					{
-						SetEnable( false, va( "Error in OnSpawn Callback in Goal: %s", GetName().c_str() ) );
-						return;
-					}
+					SetEnable( false, va( "Error in OnSpawn Callback in Goal: %s", GetName().c_str() ) );
+					return;
+				}
 
-					mActiveThread[ ON_SPAWN ] = call.GetThreadId();
-					if ( call.DidReturnVariable() )
-					{
-						mActiveThread[ ON_SPAWN ].Reset();
-					}
+				mActiveThread[ ON_SPAWN ] = call.GetThreadId();
+				if ( call.DidReturnVariable() )
+				{
+					mActiveThread[ ON_SPAWN ].Reset();
 				}
 			}
 		}
@@ -442,42 +411,34 @@ namespace AiState
 
 	bool ScriptGoal::OnPathThrough( const std::string &_s )
 	{
-		Prof_Scope( ScriptGoal );
+		//rmt_ScopedCPUSample( ScriptGoalOnPathThru );
 
-#ifdef Prof_ENABLED
-		Prof_Scope_Var Scope(*.mProfZone, Prof_cache);
-#endif
-
+		if ( mCallbacks[ ON_PATH_THROUGH ] )
 		{
-			Prof( OnPathThrough );
-
-			if ( mCallbacks[ ON_PATH_THROUGH ] )
+			//if(!mActiveThread[ON_PATH_THROUGH].IsActive())
 			{
-				//if(!mActiveThread[ON_PATH_THROUGH].IsActive())
+				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
+				gmCall call;
+				if ( call.BeginFunction( pMachine, mCallbacks[ ON_PATH_THROUGH ], gmVariable( GetScriptObject( pMachine ) ) ) )
 				{
-					gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-					gmCall call;
-					if ( call.BeginFunction( pMachine, mCallbacks[ ON_PATH_THROUGH ], gmVariable( GetScriptObject( pMachine ) ) ) )
+					call.AddParamString( _s.c_str() );
+					if ( call.End() == gmThread::EXCEPTION )
 					{
-						call.AddParamString( _s.c_str() );
-						if ( call.End() == gmThread::EXCEPTION )
-						{
-							SetEnable( false, va( "Error in OnPathThrough Callback in Goal: %s", GetName().c_str() ) );
-							return false;
-						}
+						SetEnable( false, va( "Error in OnPathThrough Callback in Goal: %s", GetName().c_str() ) );
+						return false;
+					}
 
-						int iRetVal = 0;
-						if ( call.DidReturnVariable() && call.GetReturnedInt( iRetVal ) && iRetVal )
-						{
-							SetScriptPriority( 1.f );
-							SetLastPriority( 1.f );
-							return true;
-						}
+					int iRetVal = 0;
+					if ( call.DidReturnVariable() && call.GetReturnedInt( iRetVal ) && iRetVal )
+					{
+						SetScriptPriority( 1.f );
+						SetLastPriority( 1.f );
+						return true;
 					}
 				}
 			}
-			return false;
 		}
+		return false;
 	}
 
 	void ScriptGoal::EndPathThrough()
@@ -488,209 +449,179 @@ namespace AiState
 
 	float ScriptGoal::GetPriority()
 	{
-		Prof_Scope( ScriptGoal );
+		//rmt_ScopedCPUSample( ScriptGoalGetPriority );
 
-#ifdef Prof_ENABLED
-		Prof_Scope_Var Scope(*.mProfZone, Prof_cache);
-#endif
-
+		if ( mSkipGetPriorityWhenActive && IsActive() )
 		{
-			Prof( GetPriority );
+			// don't call getpriority while active
+		}
+		else
+		{
+			if ( mNextGetPriorityUpdate <= IGame::GetTime() )
+			{
+				DelayGetPriority( mNextGetPriorityDelay );
 
-			if ( mSkipGetPriorityWhenActive && IsActive() )
-			{
-				// don't call getpriority while active
-			}
-			else
-			{
-				if ( mNextGetPriorityUpdate <= IGame::GetTime() )
+				if ( mCallbacks[ ON_GETPRIORITY ] )
 				{
-					DelayGetPriority( mNextGetPriorityDelay );
-
-					if ( mCallbacks[ ON_GETPRIORITY ] )
+					if ( !mActiveThread[ ON_GETPRIORITY ].IsActive() )
 					{
-						if ( !mActiveThread[ ON_GETPRIORITY ].IsActive() )
+						gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
+						gmCall call;
+						if ( call.BeginFunction( pMachine, mCallbacks[ ON_GETPRIORITY ], gmVariable( GetScriptObject( pMachine ) ) ) )
 						{
-							gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-							gmCall call;
-							if ( call.BeginFunction( pMachine, mCallbacks[ ON_GETPRIORITY ], gmVariable( GetScriptObject( pMachine ) ) ) )
+							if ( call.End() == gmThread::EXCEPTION )
 							{
-								if ( call.End() == gmThread::EXCEPTION )
-								{
-									SetEnable( false, va( "Error in GetPriority Callback in Goal: %s", GetName().c_str() ) );
-									return 0.f;
-								}
-
-								mActiveThread[ ON_GETPRIORITY ] = call.GetThreadId();
-								if ( call.DidReturnVariable() )
-									mActiveThread[ ON_GETPRIORITY ].Reset();
+								SetEnable( false, va( "Error in GetPriority Callback in Goal: %s", GetName().c_str() ) );
+								return 0.f;
 							}
+
+							mActiveThread[ ON_GETPRIORITY ] = call.GetThreadId();
+							if ( call.DidReturnVariable() )
+								mActiveThread[ ON_GETPRIORITY ].Reset();
 						}
 					}
 				}
 			}
-			UpdateEntityInRadius();
 		}
+		UpdateEntityInRadius();
 		return mScriptPriority;
 	}
 
 	void ScriptGoal::Enter()
 	{
-		Prof_Scope( ScriptGoal );
-
-#ifdef Prof_ENABLED
-		Prof_Scope_Var Scope(*.mProfZone, Prof_cache);
-#endif
 		//Fiber * fiber = new Fiber<ScriptGoal, ScriptGoal::Enter>( this, &ScriptGoal::Enter );
 
+		//rmt_ScopedCPUSample( ScriptGoalGetEnter );
+
+		mActiveThread[ ON_GETPRIORITY ].Kill();
+
+		if ( mCallbacks[ ON_ENTER ] )
 		{
-			Prof( Enter );
-
-			mActiveThread[ ON_GETPRIORITY ].Kill();
-
-			if ( mCallbacks[ ON_ENTER ] )
+			gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
+			gmCall call;
+			if ( call.BeginFunction( pMachine, mCallbacks[ ON_ENTER ], gmVariable( GetScriptObject( pMachine ) ) ) )
 			{
-				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-				gmCall call;
-				if ( call.BeginFunction( pMachine, mCallbacks[ ON_ENTER ], gmVariable( GetScriptObject( pMachine ) ) ) )
+				if ( call.End() == gmThread::EXCEPTION )
 				{
-					if ( call.End() == gmThread::EXCEPTION )
-					{
-						SetEnable( false, va( "Error in Enter Callback in Goal: %s", GetName().c_str() ) );
-						return;
-					}
-					//KillAllGoalThreads();
+					SetEnable( false, va( "Error in Enter Callback in Goal: %s", GetName().c_str() ) );
+					return;
 				}
+				//KillAllGoalThreads();
 			}
-			mFinished = false;
 		}
+		mFinished = false;
 	}
 
 	void ScriptGoal::Exit()
 	{
-		Prof_Scope( ScriptGoal );
+		//rmt_ScopedCPUSample( ScriptGoalGetExit );
 
-#ifdef Prof_ENABLED
-		Prof_Scope_Var Scope(*.mProfZone, Prof_cache);
-#endif
+		SetScriptPriority( 0.0f );
 
+		if ( mCallbacks[ ON_EXIT ] )
 		{
-			Prof( Exit );
-
-			SetScriptPriority( 0.0f );
-
-			if ( mCallbacks[ ON_EXIT ] )
+			gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
+			gmCall call;
+			if ( call.BeginFunction( pMachine, mCallbacks[ ON_EXIT ], gmVariable( GetScriptObject( pMachine ) ) ) )
 			{
-				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-				gmCall call;
-				if ( call.BeginFunction( pMachine, mCallbacks[ ON_EXIT ], gmVariable( GetScriptObject( pMachine ) ) ) )
+				if ( call.End() == gmThread::EXCEPTION )
 				{
-					if ( call.End() == gmThread::EXCEPTION )
-					{
-						SetEnable( false, va( "Error in Exit Callback in Goal: %s", GetName().c_str() ) );
-						return;
-					}
+					SetEnable( false, va( "Error in Exit Callback in Goal: %s", GetName().c_str() ) );
+					return;
 				}
 			}
+		}
 
-			//////////////////////////////////////////////////////////////////////////
-			// Automatically release requests on exit.
-			if ( AutoReleaseAim() )
-			{
-				using namespace AiState;
-				FINDSTATE( aim, Aimer, GetClient()->GetStateRoot() );
-				if ( aim )
-					aim->ReleaseAimRequest( GetNameHash() );
-			}
-			if ( AutoReleaseWeapon() )
-			{
-				using namespace AiState;
-				FINDSTATE( weapsys, WeaponSystem, GetClient()->GetStateRoot() );
-				if ( weapsys )
-					weapsys->ReleaseWeaponRequest( GetNameHash() );
-			}
-			if ( AutoReleaseTracker() )
-			{
-				mTracker.Reset();
-			}
-			//////////////////////////////////////////////////////////////////////////
-			ClearFinishCriteria();
-			KillAllGoalThreads();
+		//////////////////////////////////////////////////////////////////////////
+		// Automatically release requests on exit.
+		if ( AutoReleaseAim() )
+		{
+			using namespace AiState;
+			FINDSTATE( aim, Aimer, GetClient()->GetStateRoot() );
+			if ( aim )
+				aim->ReleaseAimRequest( GetNameHash() );
+		}
+		if ( AutoReleaseWeapon() )
+		{
+			using namespace AiState;
+			FINDSTATE( weapsys, WeaponSystem, GetClient()->GetStateRoot() );
+			if ( weapsys )
+				weapsys->ReleaseWeaponRequest( GetNameHash() );
+		}
+		if ( AutoReleaseTracker() )
+		{
+			mTracker.Reset();
+		}
+		//////////////////////////////////////////////////////////////////////////
+		ClearFinishCriteria();
+		KillAllGoalThreads();
 
-			if ( GetParent() && GetParent()->GetNameHash() == 0xd9c27485 /* HighLevel */ )
-			{
-				FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
-			}
+		if ( GetParent() && GetParent()->GetNameHash() == 0xd9c27485 /* HighLevel */ )
+		{
+			FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
 		}
 	}
 
 	State::StateStatus ScriptGoal::Update( float fDt )
 	{
-		Prof_Scope( ScriptGoal );
+		//rmt_ScopedCPUSample( ScriptGoalUpdate );
 
-#ifdef Prof_ENABLED
-		Prof_Scope_Var Scope(*.mProfZone, Prof_cache);
-#endif
+		if ( !mFinished )
 		{
-			Prof( Update );
-
-			if ( !mFinished )
+			// check the finish criteria before running the update
+			for ( int i = 0; i < MaxCriteria; ++i )
 			{
-				// check the finish criteria before running the update
-				for ( int i = 0; i < MaxCriteria; ++i )
+				if ( mFinishCriteria[ i ].mCriteria != Criteria::NONE )
 				{
-					if ( mFinishCriteria[ i ].mCriteria != Criteria::NONE )
-					{
-						if ( mFinishCriteria[ i ].Check( GetClient() ) )
-							mFinished = true;
-					}
+					if ( mFinishCriteria[ i ].Check( GetClient() ) )
+						mFinished = true;
+				}
+			}
+
+			// and mapgoal too
+			if ( mMapGoal )
+			{
+				if ( mAutoFinishOnUnavailable )
+				{
+					if ( !mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
+						return State_Finished;
 				}
 
-				// and mapgoal too
-				if ( mMapGoal )
+				if ( mAutoFinishOnNoProgressSlots )
 				{
-					if ( mAutoFinishOnUnavailable )
-					{
-						if ( !mMapGoal->IsAvailable( GetClient()->GetTeam() ) )
+					if ( !mTracker.InProgress || mTracker.InProgress != mMapGoal )
+						if ( mMapGoal->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) == 0 )
 							return State_Finished;
-					}
-
-					if ( mAutoFinishOnNoProgressSlots )
-					{
-						if ( !mTracker.InProgress || mTracker.InProgress != mMapGoal )
-							if ( mMapGoal->GetSlotsOpen( MapGoal::TRACK_INPROGRESS ) == 0 )
-								return State_Finished;
-					}
-
-					if ( mAutoFinishOnNoUseSlots )
-					{
-						if ( !mTracker.InUse || mTracker.InUse != mMapGoal )
-							if ( mMapGoal->GetSlotsOpen( MapGoal::TRACK_INUSE ) == 0 )
-								return State_Finished;
-					}
 				}
 
-				UpdateMapGoalsInRadius();
-
-				if ( !mFinished && mCallbacks[ ON_UPDATE ] )
+				if ( mAutoFinishOnNoUseSlots )
 				{
-					if ( !mActiveThread[ ON_UPDATE ].IsActive() )
-					{
-						gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-						gmCall call;
-						if ( call.BeginFunction( pMachine, mCallbacks[ ON_UPDATE ], gmVariable( GetScriptObject( pMachine ) ) ) )
-						{
-							//GetClient()->AddSignalThreadId(call.GetThreadId());
-							if ( call.End() == gmThread::EXCEPTION )
-							{
-								SetEnable( false, va( "Error in Update Callback in Goal: %s", GetName().c_str() ) );
-								return State_Finished;
-							}
+					if ( !mTracker.InUse || mTracker.InUse != mMapGoal )
+						if ( mMapGoal->GetSlotsOpen( MapGoal::TRACK_INUSE ) == 0 )
+							return State_Finished;
+				}
+			}
 
-							mActiveThread[ ON_UPDATE ] = call.GetThreadId();
-							if ( call.DidReturnVariable() )
-								mActiveThread[ ON_UPDATE ] = 0;
+			UpdateMapGoalsInRadius();
+
+			if ( !mFinished && mCallbacks[ ON_UPDATE ] )
+			{
+				if ( !mActiveThread[ ON_UPDATE ].IsActive() )
+				{
+					gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
+					gmCall call;
+					if ( call.BeginFunction( pMachine, mCallbacks[ ON_UPDATE ], gmVariable( GetScriptObject( pMachine ) ) ) )
+					{
+						//GetClient()->AddSignalThreadId(call.GetThreadId());
+						if ( call.End() == gmThread::EXCEPTION )
+						{
+							SetEnable( false, va( "Error in Update Callback in Goal: %s", GetName().c_str() ) );
+							return State_Finished;
 						}
+
+						mActiveThread[ ON_UPDATE ] = call.GetThreadId();
+						if ( call.DidReturnVariable() )
+							mActiveThread[ ON_UPDATE ] = 0;
 					}
 				}
 			}

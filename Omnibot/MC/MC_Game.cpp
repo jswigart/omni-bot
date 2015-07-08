@@ -88,10 +88,6 @@ bool MC_Game::Init( System & system )
 	if ( !IGame::Init( system ) )
 		return false;
 
-	// Run the games autoexec.
-	int threadId;
-	system.mScript->ExecuteFile( "scripts/mc_autoexec.gm", threadId );
-
 	return true;
 }
 
@@ -105,7 +101,7 @@ ClientPtr &MC_Game::GetClientFromCorrectedGameId( int _gameid )
 	return mClientList[ _gameid - 1 ];
 }
 
-static IntEnum MC_TeamEnum [] =
+static const IntEnum MC_TeamEnum [] =
 {
 	IntEnum( "SPECTATOR", OB_TEAM_SPECTATOR ),
 	IntEnum( "COMBINE", MC_TEAM_COMBINE ),
@@ -119,7 +115,7 @@ void MC_Game::GetTeamEnumeration( const IntEnum *&_ptr, int &num )
 	_ptr = MC_TeamEnum;
 }
 
-static IntEnum MC_WeaponEnum [] =
+static const IntEnum MC_WeaponEnum [] =
 {
 	IntEnum( "GRAVGUN", MC_WP_GRAVGUN ),
 	IntEnum( "PISTOL", MC_WP_PISTOL ),

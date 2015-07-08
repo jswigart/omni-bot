@@ -21,6 +21,79 @@
 #include <stdlib.h> //#include <malloc.h>
 #define StackAlloc alloca
 
+#include "Opcode.h"
+#include "OPC_IceHook.h"
+#include "modeldata.pb.h"
+
+//////////////////////////////////////////////////////////////////////////
+
+template < typename EnumType >
+struct EnumerationValues
+{
+	const char *	mName;
+	EnumType		mValue;
+
+	static bool ValueForName( const char * name, EnumType& val )
+	{
+		for ( size_t i = 0; i < sKeyValCount; ++i )
+		{
+			if ( !stricmp( sKeyVal[ i ].mName, name ) )
+			{
+				val = sKeyVal[ i ].mValue;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	static bool NameForValue( EnumType val, std::string& name )
+	{
+		for ( size_t i = 0; i < sKeyValCount; ++i )
+		{
+			if ( sKeyVal[ i ].mValue == val )
+			{
+				name = sKeyVal[ i ].mName;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	static bool NameForValueBitfield( EnumType val, std::string& name )
+	{
+		std::string str;
+		for ( size_t i = 0; i < sKeyValCount; ++i )
+		{
+			if ( sKeyVal[ i ].mValue & val )
+			{
+				if ( !str.empty() )
+					str += ", ";
+				str += sKeyVal[ i ].mName;
+			}
+		}
+		name += str;
+		return !str.empty();
+	}
+
+	static std::string ValidNames()
+	{
+		std::string str;
+		for ( size_t i = 0; i < sKeyValCount; ++i )
+		{
+			if ( !str.empty() )
+				str += ", ";
+
+			str += sKeyVal[ i ].mName;
+		}
+		return str;
+	}
+
+	static const EnumerationValues<EnumType>	sKeyVal[];
+	static const size_t							sKeyValCount;
+};
+
+//////////////////////////////////////////////////////////////////////////
+
 class File;
 class Client;
 class TargetInfo;
@@ -69,8 +142,6 @@ namespace Utils
 	std::string StringToLower( const std::string &_s1 );
 
 	bool IsWhiteSpace( const char _ch );
-
-	void FindClassName( std::string& groupName, std::string& className, const EntityInfo& entInfo );
 
 	std::string BuildRoleName( int32_t _mask );
 
@@ -521,5 +592,9 @@ struct sqlite3;
 int CheckSqliteError( sqlite3 * db, int errcode );
 
 AxisAlignedBox3f ComputeAABB( const Box3f & obb );
+
+Vector3f Convert( const IceMaths::Point & pt );
+Vector3f Convert( const modeldata::Vec3 & vec );
+IceMaths::Matrix4x4 Convert( const modeldata::Node & node );
 
 #endif

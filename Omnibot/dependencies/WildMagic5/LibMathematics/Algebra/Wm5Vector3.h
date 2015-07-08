@@ -38,6 +38,9 @@ namespace Wm5
 		inline Real Z () const;
 		inline Real& Z ();
 
+		inline Real* Ptr();
+		inline const Real* Ptr() const;
+
 		// Arithmetic operations.
 		inline Vector3 operator+ (const Vector3& vec) const;
 		inline Vector3 operator- (const Vector3& vec) const;

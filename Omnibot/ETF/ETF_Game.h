@@ -48,7 +48,7 @@ public:
 		return true;
 	}
 
-	virtual bool GetAnalyticsKeys( GameAnalyticsKeys & keys );
+	virtual bool GetAnalyticsKeys( GameAnalytics::Keys & keys );
 
 	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
 

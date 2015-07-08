@@ -49,8 +49,8 @@ PathPlannerFloodFill::Obstacle::~Obstacle()
 PathPlannerFloodFill::PathPlannerFloodFill()
 {
 	// TEMP
-	mPlannerFlags.SetFlag( NAV_VIEW );
-	mPlannerFlags.SetFlag( NAVMESH_STEPPROCESS );
+	mFlags.mViewMode = 1;
+	mFlags.mStepProcess = 1;
 
 	mCursorColor = COLOR::BLUE;
 
@@ -84,11 +84,11 @@ struct compare
 
 void PathPlannerFloodFill::Update( System & system )
 {
-	Prof( PathPlannerFloodFill );
+	rmt_ScopedCPUSample( FloodFillUpdate );
 
 	UpdateObstacles();
-
-	if ( mPlannerFlags.CheckFlag( NAV_VIEW ) )
+	
+	if ( mFlags.mViewMode > 0 )
 	{
 		bool influenceDone = true;
 		if ( mInfluence )
@@ -311,19 +311,9 @@ bool PathPlannerFloodFill::IsReady() const
 	return true;//!mRuntimeSectors.empty();
 }
 
-bool PathPlannerFloodFill::GetNavFlagByName( const std::string &_flagname, NavFlags &_flag ) const
-{
-	_flag = 0;
-	return false;
-}
-
 void PathPlannerFloodFill::Unload()
 {
 	OB_DELETE( mInfluence );
-}
-
-void PathPlannerFloodFill::RegisterGameGoals()
-{
 }
 
 static bool GetGroundPos( const Vector3f & pos, Vector3f & groundPosOut )
@@ -397,7 +387,7 @@ static bool TestForValidNode( Vector3f & spanPos, float & spanHeight )
 
 int PathPlannerFloodFill::Process_FloodFill()
 {
-	Prof( Process_FloodFill );
+	rmt_ScopedCPUSample( FloodFillProcess );
 
 	const Vector3f step [] =
 	{
@@ -474,7 +464,7 @@ void PathPlannerFloodFill::SaveFloodStarts()
 	f.OpenForWrite( strBuffer, File::Text );
 	if ( f.IsOpen() )
 	{
-		f.WriteInt32( ( uint32_t )mStartPositions.size() );
+		f.WriteInt32( (uint32_t)mStartPositions.size() );
 		Vector3List::const_iterator cIt = mStartPositions.begin();
 		for ( ; cIt != mStartPositions.end(); ++cIt )
 		{
@@ -559,11 +549,6 @@ void PathPlannerFloodFill::AddEntityConnection( const Event_EntityConnection &_c
 
 void PathPlannerFloodFill::RemoveEntityConnection( GameEntity _ent )
 {
-}
-
-Vector3f PathPlannerFloodFill::GetDisplayPosition( const Vector3f &_pos )
-{
-	return _pos;
 }
 
 PathPlannerFloodFill::SpanMap::InfluenceMap * PathPlannerFloodFill::AllocInfluenceMap()

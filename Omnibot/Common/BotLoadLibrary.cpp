@@ -380,7 +380,7 @@ omnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *path
 			if(r == BOT_ERROR_NONE)
 			{
 				Omnibot_Load_PrintMsg("Omni-bot Loaded Successfully");
-				r = gBotFunctions.pfnInitialize(gGameFunctions, version);
+				r = gBotFunctions->pfnInitialize(gGameFunctions, version);
 				g_IsOmnibotLoaded = (r == BOT_ERROR_NONE);
 			}
 		}
