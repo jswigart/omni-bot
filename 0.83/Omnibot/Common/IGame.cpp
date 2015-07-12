@@ -594,16 +594,10 @@ void IGame::InitDebugFlags(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "LOG",		gmVariable(BOT_DEBUG_LOG));
 	_table->Set(_machine, "MOVEMENT",	gmVariable(BOT_DEBUG_MOVEVEC));
 	_table->Set(_machine, "SCRIPT",		gmVariable(BOT_DEBUG_SCRIPT));
-	_table->Set(_machine, "PLANNER",	gmVariable(BOT_DEBUG_PLANNER));
-	_table->Set(_machine, "FAILED_PATHS",gmVariable(BOT_DEBUG_LOG_FAILED_PATHS));
-	
-	/*BOT_DEBUG_LOG = 0,
-		BOT_DEBUG_MOVEVEC,
-		BOT_DEBUG_SCRIPT,
-		BOT_DEBUG_FPINFO,
-		BOT_DEBUG_PLANNER,
-		BOT_DEBUG_EVENTS,
-		BOT_DEBUG_LOG_FAILED_PATHS,*/
+	_table->Set(_machine, "FPINFO", gmVariable(BOT_DEBUG_FPINFO));
+	_table->Set(_machine, "PLANNER", gmVariable(BOT_DEBUG_PLANNER));
+	_table->Set(_machine, "EVENTS", gmVariable(BOT_DEBUG_EVENTS));
+	_table->Set(_machine, "FAILED_PATHS", gmVariable(BOT_DEBUG_LOG_FAILED_PATHS));
 }
 
 void IGame::InitBoneIds(gmMachine *_machine, gmTableObject *_table)
@@ -1305,7 +1299,7 @@ void IGame::cmdDebugBot(const StringVector &_args)
 	if(_args.size() < 3)
 	{
 		EngineFuncs::ConsoleError("debugbot syntax: bot debugbot botname debugtype");
-		EngineFuncs::ConsoleError("types: log, move, aim, sensory, events, weapon, script, events, fpinfo");
+		EngineFuncs::ConsoleError("types: log, move, script, fpinfo, planner, events, failedpaths, aim, sensory, steer, target");
 		return;
 	}
 
@@ -1314,6 +1308,7 @@ void IGame::cmdDebugBot(const StringVector &_args)
 	std::string botname = _args[1];
 	if(botname == "all")
 		bAll = true;
+	bool bnotFound = false;
 
 	for(int p = 0; p < Constants::MAX_PLAYERS; ++p)
 	{
@@ -1327,35 +1322,32 @@ void IGame::cmdDebugBot(const StringVector &_args)
 					using namespace AiState;
 
 					std::string strDebugType = _args[i];
-					if(strDebugType == "log")
-						bot->EnableDebug(BOT_DEBUG_LOG, !bot->IsDebugEnabled(BOT_DEBUG_LOG));
-					else if(strDebugType == "move")
-						bot->EnableDebug(BOT_DEBUG_MOVEVEC, !bot->IsDebugEnabled(BOT_DEBUG_MOVEVEC));
-					else if(strDebugType == "events")
-						bot->EnableDebug(BOT_DEBUG_EVENTS, !bot->IsDebugEnabled(BOT_DEBUG_EVENTS));
-					else if(strDebugType == "aim")
-					{
-						FINDSTATEIF(Aimer, bot->GetStateRoot(), ToggleDebugDraw());
+					int flag = -1;
+					if(strDebugType == "log") flag = BOT_DEBUG_LOG;
+					else if(strDebugType == "move") flag = BOT_DEBUG_MOVEVEC;
+					else if(strDebugType == "script") flag = BOT_DEBUG_SCRIPT;
+					else if(strDebugType == "fpinfo") flag = BOT_DEBUG_FPINFO;
+					else if(strDebugType == "planner") flag = BOT_DEBUG_PLANNER;
+					else if(strDebugType == "events") flag = BOT_DEBUG_EVENTS;
+					else if(strDebugType == "failedpaths") flag = BOT_DEBUG_LOG_FAILED_PATHS;
+					else if(strDebugType == "aim") strDebugType = "Aimer";
+					else if(strDebugType == "sensory") strDebugType = "SensoryMemory";
+					else if(strDebugType == "steer") strDebugType = "SteeringSystem";
+					else if(strDebugType == "target") strDebugType = "TargetingSystem";
+					if(flag >= 0) {
+						bot->EnableDebug(flag, !bot->IsDebugEnabled(flag));
 					}
-					else if(strDebugType == "sensory")
+					else if(bot->GetStateRoot())
 					{
-						FINDSTATEIF(SensoryMemory, bot->GetStateRoot(), ToggleDebugDraw());
-					}
-					else if(strDebugType == "script")
-						bot->EnableDebug(BOT_DEBUG_SCRIPT, !bot->IsDebugEnabled(BOT_DEBUG_SCRIPT));
-					else if(strDebugType == "fpinfo")
-						bot->EnableDebug(BOT_DEBUG_FPINFO, !bot->IsDebugEnabled(BOT_DEBUG_FPINFO));
-					else if(strDebugType == "failedpaths")
-						bot->EnableDebug(BOT_DEBUG_LOG_FAILED_PATHS, !bot->IsDebugEnabled(BOT_DEBUG_LOG_FAILED_PATHS));					
-					else
-					{
-						if(bot->GetStateRoot())
+						State *pState = bot->GetStateRoot()->FindState(strDebugType.c_str());
+						if(pState)
 						{
-							State *pState = bot->GetStateRoot()->FindState(strDebugType.c_str());
-							if(pState)
-							{
-								pState->DebugDraw(!pState->DebugDrawingEnabled());
-							}
+							pState->ToggleDebugDraw();
+						}
+						else if(!bnotFound)
+						{
+							bnotFound = true;
+							EngineFuncs::ConsoleError(va("state or script goal %s not found", strDebugType.c_str()));
 						}
 					}
 				}
