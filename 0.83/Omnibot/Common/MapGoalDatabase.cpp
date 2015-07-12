@@ -79,7 +79,7 @@ void MapGoalDatabase::LoadMapGoalDefinitions(bool _clearall)
 		MapGoalPtr mg(new MapGoal(""));
 
 		filePath script( (*cIt).string().c_str() );
-		LOG("Loading MapGoal Definition: " << script);
+		//LOG("Loading MapGoal Definition: " << script);
 		if(mg->LoadFromFile(script) && !mg->GetGoalType().empty())
 		{
 			RegisterMapGoal(mg->GetGoalType(),mg);

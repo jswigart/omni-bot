@@ -1819,7 +1819,7 @@ void IGame::LoadGoalScripts(bool _clearold)
 		gmVariable varThis(pUserObj);
 
 		filePath script( (*cIt).string().c_str() );
-		LOG("Loading Goal Definition: " << script);
+		//LOG("Loading Goal Definition: " << script);
 		if(ScriptManager::GetInstance()->ExecuteFile(script, iThreadId, &varThis) && ptr->GetName()[0])
 		{
 			g_ScriptGoalList.push_back(ptr);

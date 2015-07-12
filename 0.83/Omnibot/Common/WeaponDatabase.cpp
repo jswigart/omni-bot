@@ -109,7 +109,7 @@ void WeaponDatabase::LoadWeaponDefinitions(bool _clearall)
 
 		WeaponPtr wpn(new Weapon(0, m_DefaultWeapon.get()));
 
-		LOG("Loading Weapon Definition: " << (*cIt).string());
+		//LOG("Loading Weapon Definition: " << (*cIt).string());
 
 		filePath script( (*cIt).string().c_str() );
 		if(wpn->InitScriptSource(script))
