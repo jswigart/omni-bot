@@ -45,7 +45,7 @@ this.OnPathThrough = function( data )
 		this.CurrentAirstrike = data;
 
 		if ( airstrike.Enabled && ( airstrike.Team & myTeamMask )
-			&& this.Bot.IsWeaponCharged( WEAPON.SMOKE_GRENADE, 0 ))
+			&& this.Bot.IsWeaponCharged( WEAPON.SMOKE_GRENADE ))
 		{
 			return true;
 		}

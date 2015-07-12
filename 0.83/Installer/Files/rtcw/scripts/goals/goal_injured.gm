@@ -5,7 +5,6 @@ this.Debug = false;
 
 this.Initialize = function()
 {
-	this.Bot.QueryGoalsTable = table();
 	this.LimitedLives = GetCvar("g_maxlives") > 0;
 };
 
@@ -55,20 +54,17 @@ this.CheckForTapout = function()
 	}
 
 	//tap out if the bot is lying on top of the dyno and an engineer is comming to defuse it
-	count = this.QueryGoals(this.Bot.QueryGoalsTable,"DEFUSE_.*");
-	if ( count > 0 ){
+	if ( this.QueryGoals(Util.QueryTable,"DEFUSE_.*") ){
 		dynoDist = null;
-		foreach ( id and goal in this.Bot.QueryGoalsTable )	{
+		foreach ( goal in Util.QueryTable )	{
 			dynoDist = this.Bot.DistanceTo(goal.GetEntity());
 			if(dynoDist < 37){
 				eng = RTCWUtil.GetClosestAlly(this.Bot, CLASS.ENGINEER, 150);
 				if (eng && !GetEntFlags(eng.ent, ENTFLAG.INJURED)) {
-					tableClear(this.Bot.QueryGoalsTable);
 					return true;
 				}
 			}
 		}
-		tableClear(this.Bot.QueryGoalsTable);
 	}
 
 	if ( this.Bot.GetReinforceTime() < 1.5  && !this.Bot.IsMedicNear() ) {

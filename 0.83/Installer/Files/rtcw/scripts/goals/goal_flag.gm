@@ -43,9 +43,9 @@ this.GetPriority = function()
 			state = this.GETTING_FLAG;
 		}
 
-		if ( this.QueryGoals(this.Bot.QueryGoalsTable, query) )
+		if ( this.QueryGoals(Util.QueryTable, query) )
 		{
-			foreach ( goal in this.Bot.QueryGoalsTable )
+			foreach ( goal in Util.QueryTable )
 			{
 				if (state == this.GETTING_FLAG) {
 					ent = goal.GetEntity();

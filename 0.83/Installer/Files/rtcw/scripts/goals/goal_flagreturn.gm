@@ -4,24 +4,11 @@ this.SkipGetPriorityWhenActive = true;
 
 this.GetPriority = function()
 {
-	while(1)
+	Util.GetPriority(this,0xa06840e5 /* FLAGRETURN */,0,0, function(goal, bot)
 	{
-		this.Priority = 0;
-		if ( this.QueryGoals(this.Bot.QueryGoalsTable,0xa06840e5 /* FLAGRETURN */) )
-		{
-			foreach ( goal in this.Bot.QueryGoalsTable )
-			{
-				ent = goal.GetEntity();
-				if (ent && this.Bot.CanGrabItem(ent))
-				{
-					this.MapGoal = goal;
-					this.Priority = goal.GetGoalPriority(this.Bot);
-					break;
-				}
-			}
-		}
-		sleep(2);
-	}
+		ent = goal.GetEntity();
+		return ent && bot.CanGrabItem(ent);
+	});
 };
 
 this.Enter = function()
@@ -41,8 +28,7 @@ this.DynamicGoto = function()
 {
 	if(this.Goto(this.TargetPosition,0) == EVENT.PATH_FAILED)
 	{
-		this.BlackboardDelay(10);
-		Util.ScriptDebugPrint(this.MapGoal.GetName(), "pathfailed");
+		Util.PathFailed(this);
 	}
 	this.Finished();
 };

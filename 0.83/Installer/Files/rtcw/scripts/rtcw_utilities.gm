@@ -125,7 +125,7 @@ member CheatsEnabled = function()
 	if ( CheatsEnabled() ) {
 		return true;
 	}
-	print("^1cheats must be enabled to use this command");
+	Error("cheats must be enabled to use this command");
 	print("type /devmap", GetMapName(), "in console");
 	return false;
 };
@@ -167,7 +167,7 @@ member WarpTestBot = function( _params )
 
 	if ( !b )
 	{
-		print("^1no testbot found");
+		Error("no testbot found");
 		return;
 	}
 
@@ -190,7 +190,7 @@ member WarpTestBot = function( _params )
 		}
 		else
 		{
-			print( "^1RTCWUtil.WarpTestBot: Unable to get local position^2");
+			Error( "RTCWUtil.WarpTestBot: Unable to get local position^2");
 		}
 	}
 

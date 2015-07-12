@@ -87,6 +87,12 @@ this.Exit = function()
 	this.DelayNextResponse = false;
 	this.OnTarget = false;
 	this.Bot.KillingForRevive = false; // allow appropriate voice chats again
+	wpn = this.DisableReloadWeapon;
+	if (wpn) {
+		this.DisableReloadWeapon = null;
+		//command /bot reload_weapons causes error "getdot failed on null user type"
+		wpn.PrimaryFire.IgnoreReload = false;
+	}
 };
 
 this.DynamicGoto = function()
@@ -272,7 +278,19 @@ this.UpdateKillTarget = function()
 
 	// give them 5 seconds to complete
 	if ( this.TimeOnTarget > 100 ) {
-		this.Finished();
+		this.TimeOnTarget = 0;
+		this.State = this.DELIVER_PACKS;
+		return;
+	}
+
+	// disable reload so that bot will not reload after every bullet
+	if (!this.DisableReloadWeapon) {
+		wpnId = this.Bot.GetCurrentWeapon();
+		wpn = this.Bot.GetWeapon(wpnId);
+		if (wpn && !wpn.PrimaryFire.IgnoreReload) {
+			wpn.PrimaryFire.IgnoreReload = true;
+			this.DisableReloadWeapon = wpn;
+		}
 	}
 
 	pos = GetEntEyePosition(this.TargetEntity);
@@ -281,7 +299,7 @@ this.UpdateKillTarget = function()
 		// shoot at their head
 		this.AddAimRequest(Priority.High, "position",pos);
 		this.Bot.MoveTowards(pos);
-		this.Bot.HoldButton(BTN.ATTACK1, 0.25);
+		this.Bot.FireWeapon();
 	}
 	else
 	{

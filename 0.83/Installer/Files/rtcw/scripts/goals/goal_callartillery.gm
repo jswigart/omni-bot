@@ -28,11 +28,11 @@ this.GetPriority = function()
 	while(1)
 	{
 		this.Priority = 0;
-		if ( this.Bot.IsWeaponCharged(WEAPON.BINOCULARS, 0))
+		if ( this.Bot.IsWeaponCharged(WEAPON.BINOCULARS))
 		{
-			if ( this.QueryGoals(this.Bot.QueryGoalsTable,0x312ad48d /* CALLARTILLERY */) )
+			if ( this.QueryGoals(Util.QueryTable,0x312ad48d /* CALLARTILLERY */) )
 			{
-				foreach ( goal in this.Bot.QueryGoalsTable )
+				foreach ( goal in Util.QueryTable )
 				{
 					vSource = goal.GetPosition() + Vec3(0,0,60);
 

@@ -69,9 +69,9 @@ this.GetPriority = function()
 		this.Priority = 0;
 		if ( Util.HasAmmoForWeapon(this.Bot, WEAPON.ALLY_GRENADE) || Util.HasAmmoForWeapon(this.Bot, WEAPON.AXIS_GRENADE) )
 		{
-			if ( this.QueryGoals(this.Bot.QueryGoalsTable,0xd988d8fd /* GRENADE */) )
+			if ( this.QueryGoals(Util.QueryTable,0xd988d8fd /* GRENADE */) )
 			{
-				foreach ( goal in this.Bot.QueryGoalsTable )
+				foreach ( goal in Util.QueryTable )
 				{
 					if ( goal.TraceEntity )
 					{

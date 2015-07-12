@@ -230,7 +230,7 @@ Commands["fgs"] =
 
 		goalTable = Util.GoalTable("CAMP.*\nDEFEND.*\nATTACK.*\nSNIPE.*\nPANZER.*\nVENOM.*\nFLAME.*");
 
-		foreach ( id and goal in goalTable )
+		foreach ( goal in goalTable )
 		{
 			oldtag = goal.GetTagName();
 			type = goal.GetGoalType();
@@ -330,7 +330,7 @@ Commands["fgp"] =
 
 		goalTable = Util.GoalTable("CAMP.*\nDEFEND.*\nATTACK.*\nSNIPE.*\nROUTE.*\nCAPPOINT.*\n.*ART.*");
 
-		foreach ( id and goal in goalTable )
+		foreach ( goal in goalTable )
 		{
 			tag = goal.GetTagName();
 			type = goal.GetGoalType();
@@ -566,7 +566,7 @@ Commands["goaldef"] =
 		fileName = format("%s_%s_converted.gm", GetMapName(), type);
 		assert( gmfile.Open( fileName, "text", false ) );
 
-		foreach( id and goal in goals ) {
+		foreach( goal in goals ) {
 			str = format("\t%s =", goal.Name);
 			assert( gmfile.Write( str, System.NewLine ) );
 			assert( gmfile.Write( "\t{", System.NewLine ) );

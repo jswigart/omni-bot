@@ -14,48 +14,28 @@ this.LOOK_FOR_DYNO = 3;
 this.GOTO = 4;
 this.GoalStateNames = { "LAY_EXPLOSIVE", "ARM_EXPLOSIVE", "COVER_DYNAMITE", "LOOK_FOR_DYNO", "GOTO" };
 
-this.Initialize = function()
-{
-	this.Bot.QueryGoalsTable = table();
-};
-
 this.GetPriority = function()
 {
-	while(1)
+	Util.GetPriority(this,0xbbcae592 /* PLANT */, WEAPON.DYNAMITE, 0, function(goal, bot)
 	{
-		this.Priority = 0;
-		if ( this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
+		if ( goal.TraceInfo && tableCount(goal.TraceInfo) > 0 )
 		{
-			if ( this.QueryGoals(this.Bot.QueryGoalsTable,0xbbcae592 /* PLANT */) )
+			if ( !goal.TraceEntity || bot.GetDestroyableState(goal.TraceEntity) < 1 )
 			{
-				foreach ( goal in this.Bot.QueryGoalsTable )
-				{
-					if ( goal.TraceInfo && tableCount(goal.TraceInfo) > 0 )
-					{
-						if ( !goal.TraceEntity || this.Bot.GetDestroyableState(goal.TraceEntity) < 1 )
-						{
-							continue;
-						}
-					}
-					else
-					{
-						goalEnt = goal.GetEntity();
-
-						if ( !goalEnt || this.Bot.GetDestroyableState(goalEnt) < 1 )
-						{
-							continue;
-						}
-					}
-
-					this.MapGoal = goal;
-					this.Priority = goal.GetGoalPriority(this.Bot);
-					break;
-				}
+				return;
 			}
 		}
+		else
+		{
+			goalEnt = goal.GetEntity();
 
-		sleep(2);
-	}
+			if ( !goalEnt || bot.GetDestroyableState(goalEnt) < 1 )
+			{
+				return;
+			}
+		}
+		return true;
+	});
 };
 
 this.Enter = function()
@@ -159,7 +139,7 @@ this.UpdateDynamite = function()
 					this.ExplosiveEntity = ent;
 					this.GoalState = this.ARM_EXPLOSIVE;
 				}
-				else if ( this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) && activeDyno < this.MapGoal.MaxUsers_InUse() ) {
+				else if ( this.Bot.IsWeaponCharged(WEAPON.DYNAMITE) && activeDyno < this.MapGoal.MaxUsers_InUse() ) {
 					this.GoalState = this.LAY_EXPLOSIVE;
 				}
 				else if ( this.MapGoal.CoverSpots && tableCount(this.MapGoal.CoverSpots) > 0 ) {
@@ -175,7 +155,7 @@ this.UpdateDynamite = function()
 			}
 			case this.LAY_EXPLOSIVE:
 			{
-				if ( !this.Bot.IsWeaponCharged(WEAPON.DYNAMITE, 0) )
+				if ( !this.Bot.IsWeaponCharged(WEAPON.DYNAMITE) )
 				{
 					this.Finished();
 				}

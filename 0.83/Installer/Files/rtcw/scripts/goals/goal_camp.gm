@@ -6,12 +6,7 @@ this.query = { 0xa9ef3654 /* CAMP */, 0x4fed19c1 /* DEFEND */, 0x4595b8fd /* ATT
 
 this.GetPriority = function()
 {
-	while(1)
-	{
-		this.Priority = 0;
-		Util.QueryGoal(this, this.query);
-		sleep(2);
-	}
+	Util.GetPriority(this, this.query);
 };
 
 this.Enter = function()

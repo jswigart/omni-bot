@@ -6,8 +6,6 @@ this.LimitToWeapon(WEAPON.PLIERS);
 
 this.Initialize = function()
 {
-	this.Bot.QueryGoalsTable = table();
-	this.TargetEntity = null;
 	this.NoGibbing = GetCvar("g_botgib") == 0;
 };
 
@@ -20,7 +18,7 @@ this.GetPriority = function()
 
 	while(1)
 	{
-		if ( this.QueryGoals(this.Bot.QueryGoalsTable, 0x1899efc7 /* DEFUSE */) )
+		if ( this.QueryGoals(Util.QueryTable, 0x1899efc7 /* DEFUSE */) )
 		{
 			// always go for the closest one of the highest priority
 			dist = null;
@@ -28,7 +26,7 @@ this.GetPriority = function()
 			closestGoal = null;
 			priority = 0;
 
-			foreach ( goal in this.Bot.QueryGoalsTable )
+			foreach ( goal in Util.QueryTable )
 			{
 				evalDist = this.Bot.DistanceTo(goal.GetEntity());
 				evalPriority = goal.GetGoalPriority(this.Bot);

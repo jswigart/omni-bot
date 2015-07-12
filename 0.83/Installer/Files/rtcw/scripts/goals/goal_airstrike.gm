@@ -15,16 +15,7 @@ this.Enter = function()
 
 this.GetPriority = function()
 {
-	while(1)
-	{
-		this.Priority = 0;
-		if(this.Bot.IsWeaponCharged(WEAPON.SMOKE_GRENADE, 0))
-		{
-			Util.QueryGoal(this,0xc8998d3d /* AIRSTRIKE */);
-		}
-
-		sleep(2);
-	}
+	Util.GetPriority(this,0xc8998d3d /* AIRSTRIKE */, WEAPON.SMOKE_GRENADE);
 };
 
 this.Update = function()

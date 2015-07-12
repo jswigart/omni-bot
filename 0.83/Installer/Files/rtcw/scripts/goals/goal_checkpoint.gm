@@ -4,24 +4,11 @@ this.SkipGetPriorityWhenActive = true;
 
 this.GetPriority = function()
 {
-	while(1)
+	Util.GetPriority(this,0xf7e4a57f /* CHECKPOINT */,0,0, function(goal)
 	{
-		this.Priority = 0;
-		if ( this.QueryGoals(this.Bot.QueryGoalsTable,0xf7e4a57f /* CHECKPOINT */) )
-		{
-			foreach ( goal in this.Bot.QueryGoalsTable )
-			{
-				// cs: if a flag is locked, it will be entflag.disabled
-				if ( !GetEntFlags(goal.GetEntity(), ENTFLAG.DISABLED) ) {
-					this.MapGoal = goal;
-					this.Priority = goal.GetGoalPriority(this.Bot);
-					break;
-				}
-			}
-		}
-
-		sleep(2);
-	}
+		// cs: if a flag is locked, it will be entflag.disabled
+		return !GetEntFlags(goal.GetEntity(), ENTFLAG.DISABLED);
+	});
 };
 
 this.Enter = function()

@@ -1,5 +1,3 @@
-global Map = {};
-
 // New module format
 global Util = import("utilities");
 global RTCWUtil = import("rtcw_utilities");

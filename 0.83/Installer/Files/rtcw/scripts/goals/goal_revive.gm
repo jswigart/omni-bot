@@ -13,7 +13,6 @@ this.RangeForNearby = 750;
 
 this.Initialize = function()
 {
-	this.Bot.QueryGoalsTable = table();
 	this.CheckReviveTimer = 2; // look for closer goals every x seconds
 	this.BBDelayTime = 1.25; // path failed will increase this
 };
@@ -21,10 +20,10 @@ this.Initialize = function()
 this.QueryReviveGoals = function(range, skipGoal)
 {
 	bestGoal = null;
-	if ( this.QueryGoals(this.Bot.QueryGoalsTable,0x2086cdf0 /* REVIVE */) )
+	if ( this.QueryGoals(Util.QueryTable,0x2086cdf0 /* REVIVE */) )
 	{
 		closest = range + 1;
-		foreach ( goal in this.Bot.QueryGoalsTable )
+		foreach ( goal in Util.QueryTable )
 		{
 			if ( skipGoal && goal == skipGoal ) {
 				continue;

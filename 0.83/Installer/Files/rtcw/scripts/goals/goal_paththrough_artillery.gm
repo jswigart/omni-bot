@@ -15,10 +15,6 @@ this.OnPathThrough = function( data )
 		return false;
 	}
 
-	if ( !Map ) {
-		global Map = {};
-	}
-
 	if ( this.Bot.GetClass() != CLASS.LIEUTENANT ) {
 		sleep( 1 ); // give time to move off the wp
 		return false;
@@ -71,9 +67,6 @@ this.FindTarget = function()
 	team = this.Bot.GetTeam();
 
 	// cache the goal list
-	if ( !Map ) {
-		global Map = {};
-	}
 	if ( !Map.ArtyGoals ) {
 		Map.ArtyGoals = {};
 		GetGoals( Map.ArtyGoals, 0, "Artillery_S.*" );

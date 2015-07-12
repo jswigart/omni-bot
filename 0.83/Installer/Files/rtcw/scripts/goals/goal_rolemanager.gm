@@ -13,7 +13,7 @@ this.FindFreeRoleSlot = function()
 {
 	// return if map doesn't have Roles table
 	// skip bots that already have a role
-	if ( !Map || !Map.Roles || Util.BotHasAnyRole(this.Bot) ) {
+	if ( !Map.Roles || Util.BotHasAnyRole(this.Bot) ) {
 		return;
 	}
 
@@ -134,7 +134,7 @@ this.Events[EVENT.DISCONNECTED] = function()
 
 this.Events[EVENT.CHANGETEAM] = function(team)
 {
-	if ( !Map || !Map.Roles ) {
+	if ( !Map.Roles ) {
 		return;
 	}
 	if (this.justStarted) {
