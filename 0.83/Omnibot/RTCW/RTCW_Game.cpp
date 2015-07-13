@@ -169,9 +169,9 @@ static IntEnum RTCW_WeaponEnum[] =
 	IntEnum("SMOKE_GRENADE",RTCW_WP_SMOKE_GRENADE),
 	IntEnum("BINOCULARS",RTCW_WP_BINOCULARS),
 	IntEnum("MOUNTABLE_MG42",RTCW_WP_MOUNTABLE_MG42),
-	IntEnum("FG42",RTCW_WP_FG42),
-	IntEnum("FG42_SCOPE",RTCW_WP_FG42SCOPE),
-	IntEnum("SHOTGUN",RTCW_WP_SHOTGUN),
+	//IntEnum("FG42",RTCW_WP_FG42),
+	//IntEnum("FG42_SCOPE",RTCW_WP_FG42SCOPE),
+	//IntEnum("SHOTGUN",RTCW_WP_SHOTGUN),
 };
 
 void RTCW_Game::GetWeaponEnumeration(const IntEnum *&_ptr, int &num)

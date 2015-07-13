@@ -1,3 +1,4 @@
+//used by lieutenant, goal AIRSTRIKE
 this.Name = "Smoke Grenade";
 this.WeaponId = WEAPON.SMOKE_GRENADE;
 

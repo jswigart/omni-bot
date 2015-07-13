@@ -1,0 +1,4 @@
+this.Name = "Arty";
+this.WeaponId = WEAPON.ARTY;
+
+this.PrimaryFire.WeaponType = "item";
