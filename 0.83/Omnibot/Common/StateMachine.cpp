@@ -744,7 +744,7 @@ void State::LimitTo(const gmVariable &varThis, gmGCRoot<gmFunctionObject> &_fn, 
 	m_LimitCallback.m_LimitTo = _fn;
 	m_LimitCallback.m_Delay = _delay;
 	m_LimitCallback.m_OnlyWhenActive = _onlywhenactive;
-	m_LimitCallback.m_NextCallback = IGame::GetTime() + m_LimitCallback.m_Delay;
+	m_LimitCallback.m_NextCallback = 0;
 }
 
 void State::ClearLimitTo()
