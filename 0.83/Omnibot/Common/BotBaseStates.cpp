@@ -1274,6 +1274,27 @@ namespace AiState
 		m_Query.m_User->ResetPathUser();
 		m_PathThroughPtIndex = -1;
 
+
+		if(GetClient()->IsDebugEnabled(BOT_DEBUG_PLANNER))
+		{
+			String mgn;
+			FINDSTATE(hl,HighLevel,GetRootState());
+			if(hl != NULL)
+			{
+				State *state = hl->GetActiveState();
+				if(!state) mgn="not active";
+				else {
+					MapGoal *g = state->GetMapGoalPtr();
+					if(g) mgn = g->GetName();
+					else mgn = state->GetName();
+				}
+			}
+			const Vector3f &pos = GetClient()->GetPosition();
+			EngineFuncs::ConsoleMessage(va("Path planner: time %.2f, position (%.0f,%.0f,%.0f), %s, %s %s", 
+				IGame::GetTimeSecs(), pos.x, pos.y, pos.z, this->GetClient()->GetName(), mgn.c_str(),
+				m_PassThroughState ? "- paththrough" : ""));
+		}
+
 		PathPlannerBase *pPathPlanner = IGameManager::GetInstance()->GetNavSystem();
 		m_Query.m_User->m_DestinationIndex = pPathPlanner->PlanPathToNearest(GetClient(), GetClient()->GetPosition(), m_Query.m_Destination, GetClient()->GetTeamFlag());
 		if(pPathPlanner->FoundGoal())
