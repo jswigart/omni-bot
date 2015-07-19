@@ -270,69 +270,69 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	class CaptureTheFlag : public StateChild, public FollowPathUser
-	{
-	public:
-		enum GoalState
-		{
-			Idle,
-			GettingFlag,
-			CarryingToCap,
-			CarryingToHold,
-			HoldingFlag,
-		};
+	//class CaptureTheFlag : public StateChild, public FollowPathUser
+	//{
+	//public:
+	//	enum GoalState
+	//	{
+	//		Idle,
+	//		GettingFlag,
+	//		CarryingToCap,
+	//		CarryingToHold,
+	//		HoldingFlag,
+	//	};
 
-		obReal GetPriority();
-		void Enter();
-		void Exit();
-		StateStatus Update(float fDt);
+	//	obReal GetPriority();
+	//	void Enter();
+	//	void Exit();
+	//	StateStatus Update(float fDt);
 
-		GoalState GetGoalState() const { return m_GoalState; }
+	//	GoalState GetGoalState() const { return m_GoalState; }
 
-		void GetDebugString(StringStr &out);
-		MapGoal *GetMapGoalPtr();
-		void RenderDebug();
+	//	void GetDebugString(StringStr &out);
+	//	MapGoal *GetMapGoalPtr();
+	//	void RenderDebug();
 
-		// FollowPathUser
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+	//	// FollowPathUser
+	//	bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
 
-		CaptureTheFlag();
-	private:
-		GoalState					m_GoalState;
-		int							m_LastFlagState;
-		obint32						m_NextMoveTime;
-		MapGoalPtr					m_MapGoalFlag;
-		MapGoalPtr					m_MapGoalCap;
+	//	CaptureTheFlag();
+	//private:
+	//	GoalState					m_GoalState;
+	//	int							m_LastFlagState;
+	//	obint32						m_NextMoveTime;
+	//	MapGoalPtr					m_MapGoalFlag;
+	//	MapGoalPtr					m_MapGoalCap;
 
-		Trackers					Tracker;
+	//	Trackers					Tracker;
 
-		bool LookForCapGoal(MapGoalPtr &ptr, GoalState &st);
-	};
+	//	bool LookForCapGoal(MapGoalPtr &ptr, GoalState &st);
+	//};
 
 	//////////////////////////////////////////////////////////////////////////
 
-	class ReturnTheFlag : public StateChild, public FollowPathUser
-	{
-	public:
+	//class ReturnTheFlag : public StateChild, public FollowPathUser
+	//{
+	//public:
 
-		obReal GetPriority();
-		void Enter();
-		void Exit();
-		StateStatus Update(float fDt);
+	//	obReal GetPriority();
+	//	void Enter();
+	//	void Exit();
+	//	StateStatus Update(float fDt);
 
-		//void GetDebugString(StringStr &out);
-		MapGoal *GetMapGoalPtr();
-		void RenderDebug();
+	//	//void GetDebugString(StringStr &out);
+	//	MapGoal *GetMapGoalPtr();
+	//	void RenderDebug();
 
-		// FollowPathUser
+	//	// FollowPathUser
 
-		ReturnTheFlag();
-	private:
-		Vector3f			m_LastGoalPosition;
-		MapGoalPtr			m_MapGoal;
+	//	ReturnTheFlag();
+	//private:
+	//	Vector3f			m_LastGoalPosition;
+	//	MapGoalPtr			m_MapGoal;
 
-		TrackInUse			m_MapGoalProg;
-	};
+	//	TrackInUse			m_MapGoalProg;
+	//};
 
 	//////////////////////////////////////////////////////////////////////////
 

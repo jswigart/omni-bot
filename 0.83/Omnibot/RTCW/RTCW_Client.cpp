@@ -390,7 +390,4 @@ void RTCW_Client::SetupBehaviorTree()
 	using namespace AiState;
 	delete GetStateRoot()->ReplaceState("Dead", new Limbo);
 	GetStateRoot()->InsertAfter("Limbo", new Incapacitated);
-
-	GetStateRoot()->RemoveState("CaptureTheFlag");
-	GetStateRoot()->RemoveState("ReturnTheFlag");
 }

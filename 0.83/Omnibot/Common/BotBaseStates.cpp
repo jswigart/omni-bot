@@ -26,322 +26,322 @@ extern float g_fBottomWaypointOffset;
 namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////
-	CaptureTheFlag::CaptureTheFlag() 
-		: StateChild("CaptureTheFlag")
-		, FollowPathUser("CaptureTheFlag")
-		, m_GoalState(Idle)
-		, m_LastFlagState(0)
-		, m_NextMoveTime(0)
-	{
-	}
+	//CaptureTheFlag::CaptureTheFlag() 
+	//	: StateChild("CaptureTheFlag")
+	//	, FollowPathUser("CaptureTheFlag")
+	//	, m_GoalState(Idle)
+	//	, m_LastFlagState(0)
+	//	, m_NextMoveTime(0)
+	//{
+	//}
 
-	void CaptureTheFlag::GetDebugString(StringStr &out)
-	{
-		if(!IsActive())
-			return;
-		
-		switch(m_GoalState)
-		{
-		case Idle:
-			out << "Idle";
-			break;
-		case GettingFlag:
-			out << "Getting Flag";
-			break;
-		case CarryingToCap:
-			out << "Carrying To Cap";
-			break;
-		case CarryingToHold:
-			out << "Carrying To Hold";
-			break;
-		case HoldingFlag:
-			out << "Holding Flag";
-			break;
-		default:
-			break;
-		}
+	//void CaptureTheFlag::GetDebugString(StringStr &out)
+	//{
+	//	if(!IsActive())
+	//		return;
+	//	
+	//	switch(m_GoalState)
+	//	{
+	//	case Idle:
+	//		out << "Idle";
+	//		break;
+	//	case GettingFlag:
+	//		out << "Getting Flag";
+	//		break;
+	//	case CarryingToCap:
+	//		out << "Carrying To Cap";
+	//		break;
+	//	case CarryingToHold:
+	//		out << "Carrying To Hold";
+	//		break;
+	//	case HoldingFlag:
+	//		out << "Holding Flag";
+	//		break;
+	//	default:
+	//		break;
+	//	}
 
-		if(m_MapGoalFlag)
-			out << std::endl << m_MapGoalFlag->GetName();
-		if(m_MapGoalCap)
-			out << std::endl << m_MapGoalCap->GetName();
-	}
+	//	if(m_MapGoalFlag)
+	//		out << std::endl << m_MapGoalFlag->GetName();
+	//	if(m_MapGoalCap)
+	//		out << std::endl << m_MapGoalCap->GetName();
+	//}
 
-	MapGoal *CaptureTheFlag::GetMapGoalPtr()
-	{
-		return m_MapGoalCap ? m_MapGoalCap.get() : m_MapGoalFlag.get();
-	}
+	//MapGoal *CaptureTheFlag::GetMapGoalPtr()
+	//{
+	//	return m_MapGoalCap ? m_MapGoalCap.get() : m_MapGoalFlag.get();
+	//}
 
-	void CaptureTheFlag::RenderDebug()
-	{
-		if(m_MapGoalFlag)
-		{
-			Utils::OutlineOBB(m_MapGoalFlag->GetWorldBounds(), COLOR::GREEN, MIN_RENDER_TIME);
-		}
-		if(m_MapGoalCap)
-		{
-			Utils::OutlineOBB(m_MapGoalCap->GetWorldBounds(), COLOR::GREEN, MIN_RENDER_TIME);
-		}
-	}
+	//void CaptureTheFlag::RenderDebug()
+	//{
+	//	if(m_MapGoalFlag)
+	//	{
+	//		Utils::OutlineOBB(m_MapGoalFlag->GetWorldBounds(), COLOR::GREEN, MIN_RENDER_TIME);
+	//	}
+	//	if(m_MapGoalCap)
+	//	{
+	//		Utils::OutlineOBB(m_MapGoalCap->GetWorldBounds(), COLOR::GREEN, MIN_RENDER_TIME);
+	//	}
+	//}
 
-	bool CaptureTheFlag::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
-	{
-		switch(GetGoalState())
-		{
-		case GettingFlag:
-			{
-				if(!m_MapGoalFlag)
-					return false;
+	//bool CaptureTheFlag::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	//{
+	//	switch(GetGoalState())
+	//	{
+	//	case GettingFlag:
+	//		{
+	//			if(!m_MapGoalFlag)
+	//				return false;
 
-				_final = !m_MapGoalFlag->RouteTo(GetClient(), _desination);
-				return true;
-			}
-		case CarryingToCap:
-		case CarryingToHold:
-		case HoldingFlag:
-			{
-				_final = !m_MapGoalCap->RouteTo(GetClient(), _desination);
-				return true;
-			}
-		case Idle:
-			break;
-		}
-		return false;
-	}
+	//			_final = !m_MapGoalFlag->RouteTo(GetClient(), _desination);
+	//			return true;
+	//		}
+	//	case CarryingToCap:
+	//	case CarryingToHold:
+	//	case HoldingFlag:
+	//		{
+	//			_final = !m_MapGoalCap->RouteTo(GetClient(), _desination);
+	//			return true;
+	//		}
+	//	case Idle:
+	//		break;
+	//	}
+	//	return false;
+	//}
 
-	obReal CaptureTheFlag::GetPriority()
-	{
-		if(!IsActive())
-		{
-			if(!m_MapGoalFlag)
-			{
-				MapGoalPtr available, carrying;
-				GoalManager::Query qry(0xbdeaa8d7 /* flag */, GetClient());
-				GoalManager::GetInstance()->GetGoals(qry);
-				for(obuint32 i = 0; i < qry.m_List.size(); ++i)
-				{
-					if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
-						continue;
+	//obReal CaptureTheFlag::GetPriority()
+	//{
+	//	if(!IsActive())
+	//	{
+	//		if(!m_MapGoalFlag)
+	//		{
+	//			MapGoalPtr available, carrying;
+	//			GoalManager::Query qry(0xbdeaa8d7 /* flag */, GetClient());
+	//			GoalManager::GetInstance()->GetGoals(qry);
+	//			for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//			{
+	//				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+	//					continue;
 
-					if(qry.m_List[i]->GetOwner() == GetClient()->GetGameEntity())
-					{
-						carrying = qry.m_List[i];
-						continue;
-					}
+	//				if(qry.m_List[i]->GetOwner() == GetClient()->GetGameEntity())
+	//				{
+	//					carrying = qry.m_List[i];
+	//					continue;
+	//				}
 
-					if(!GetClient()->IsFlagGrabbable(qry.m_List[i]))
-						continue;
+	//				if(!GetClient()->IsFlagGrabbable(qry.m_List[i]))
+	//					continue;
 
-					if(!available)
-					{
-						if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
-							continue;
+	//				if(!available)
+	//				{
+	//					if(qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 1)
+	//						continue;
 
-						if(qry.m_List[i]->GetGoalState() != S_FLAG_CARRIED)
-						{
-							available = qry.m_List[i];
-							continue;
-						}
-					}
-				}
+	//					if(qry.m_List[i]->GetGoalState() != S_FLAG_CARRIED)
+	//					{
+	//						available = qry.m_List[i];
+	//						continue;
+	//					}
+	//				}
+	//			}
 
-				if(carrying)
-				{
-					m_MapGoalFlag = carrying;
-				}
-				else if(available)
-				{
-					m_GoalState = GettingFlag;
-					m_MapGoalFlag = available;
-				}		
-			}
+	//			if(carrying)
+	//			{
+	//				m_MapGoalFlag = carrying;
+	//			}
+	//			else if(available)
+	//			{
+	//				m_GoalState = GettingFlag;
+	//				m_MapGoalFlag = available;
+	//			}		
+	//		}
 
-			if(GetClient()->DoesBotHaveFlag(m_MapGoalFlag) && !m_MapGoalCap)
-			{
-				// if we got a flag but not cap lets not activate
-				// TODO: consider an evade substate?
-				if(!LookForCapGoal(m_MapGoalCap,m_GoalState))
-					m_MapGoalFlag.reset();
-			}
-		}
+	//		if(GetClient()->DoesBotHaveFlag(m_MapGoalFlag) && !m_MapGoalCap)
+	//		{
+	//			// if we got a flag but not cap lets not activate
+	//			// TODO: consider an evade substate?
+	//			if(!LookForCapGoal(m_MapGoalCap,m_GoalState))
+	//				m_MapGoalFlag.reset();
+	//		}
+	//	}
 
-		// cs: check m_MapGoalCap first in case the bot randomly walks over a dropped flag
-		// otherwise it will return zero priority since m_MapGoalFlag is set to 'carrying' above
-		if(m_MapGoalCap)
-			return m_MapGoalCap->GetPriorityForClient(GetClient());
-		if(m_MapGoalFlag)
-			return m_MapGoalFlag->GetPriorityForClient(GetClient());
+	//	// cs: check m_MapGoalCap first in case the bot randomly walks over a dropped flag
+	//	// otherwise it will return zero priority since m_MapGoalFlag is set to 'carrying' above
+	//	if(m_MapGoalCap)
+	//		return m_MapGoalCap->GetPriorityForClient(GetClient());
+	//	if(m_MapGoalFlag)
+	//		return m_MapGoalFlag->GetPriorityForClient(GetClient());
 
-		return 0.f;
-	}
+	//	return 0.f;
+	//}
 
-	void CaptureTheFlag::Enter()
-	{
-		m_LastFlagState = m_MapGoalFlag ? m_MapGoalFlag->GetGoalState() : 0;
+	//void CaptureTheFlag::Enter()
+	//{
+	//	m_LastFlagState = m_MapGoalFlag ? m_MapGoalFlag->GetGoalState() : 0;
 
-		Tracker.InProgress.Set(m_MapGoalFlag, GetClient()->GetTeam());
-		FINDSTATEIF(FollowPath,GetRootState(),Goto(this));
-	}
+	//	Tracker.InProgress.Set(m_MapGoalFlag, GetClient()->GetTeam());
+	//	FINDSTATEIF(FollowPath,GetRootState(),Goto(this));
+	//}
 
-	void CaptureTheFlag::Exit()
-	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+	//void CaptureTheFlag::Exit()
+	//{
+	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-		m_GoalState = Idle;
-		m_NextMoveTime = 0;
-		
-		m_MapGoalFlag.reset();
-		m_MapGoalCap.reset();
+	//	m_GoalState = Idle;
+	//	m_NextMoveTime = 0;
+	//	
+	//	m_MapGoalFlag.reset();
+	//	m_MapGoalCap.reset();
 
-		Tracker.Reset();
-	}
+	//	Tracker.Reset();
+	//}
 
-	State::StateStatus CaptureTheFlag::Update(float fDt)
-	{
-		switch(GetGoalState())
-		{
-		case GettingFlag:
-			{
-				// cs: this is a hack. if too many are in progress, bail.
-				if (m_MapGoalFlag && m_MapGoalFlag->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 0) {
-					BlackboardDelay(10.f, m_MapGoalFlag->GetSerialNum());
-					return State_Finished;
-				}
+	//State::StateStatus CaptureTheFlag::Update(float fDt)
+	//{
+	//	switch(GetGoalState())
+	//	{
+	//	case GettingFlag:
+	//		{
+	//			// cs: this is a hack. if too many are in progress, bail.
+	//			if (m_MapGoalFlag && m_MapGoalFlag->GetSlotsOpen(MapGoal::TRACK_INPROGRESS, GetClient()->GetTeam()) < 0) {
+	//				BlackboardDelay(10.f, m_MapGoalFlag->GetSerialNum());
+	//				return State_Finished;
+	//			}
 
-				if(m_MapGoalFlag && !GetClient()->IsFlagGrabbable(m_MapGoalFlag))
-					return State_Finished;
+	//			if(m_MapGoalFlag && !GetClient()->IsFlagGrabbable(m_MapGoalFlag))
+	//				return State_Finished;
 
-				if(GetClient()->DoesBotHaveFlag(m_MapGoalFlag))
-				{
-					m_MapGoalCap.reset();
-					if(!LookForCapGoal(m_MapGoalCap,m_GoalState))
-					{
-						return State_Finished;
-					}
-					Tracker.InUse.Set(m_MapGoalFlag, GetClient()->GetTeam());
-					FINDSTATEIF(FollowPath, GetRootState(), Goto(this));
-				}
-				else
-				{	
-					/*if(m_MapGoalFlag)
-					{
-						const int flagState = m_MapGoalFlag->GetGoalState();
-						if(flagState != m_LastFlagState)
-						{
-							FINDSTATEIF(FollowPath,GetRootState(),Stop());
-							return State_Finished;
-						}
-					}*/
-					
-					// Someone else grab it?
-					if(m_MapGoalFlag->GetGoalState() == S_FLAG_CARRIED)
-					{
-						FINDSTATEIF(FollowPath,GetRootState(),Stop());
-						return State_Finished;
-					}
+	//			if(GetClient()->DoesBotHaveFlag(m_MapGoalFlag))
+	//			{
+	//				m_MapGoalCap.reset();
+	//				if(!LookForCapGoal(m_MapGoalCap,m_GoalState))
+	//				{
+	//					return State_Finished;
+	//				}
+	//				Tracker.InUse.Set(m_MapGoalFlag, GetClient()->GetTeam());
+	//				FINDSTATEIF(FollowPath, GetRootState(), Goto(this));
+	//			}
+	//			else
+	//			{	
+	//				/*if(m_MapGoalFlag)
+	//				{
+	//					const int flagState = m_MapGoalFlag->GetGoalState();
+	//					if(flagState != m_LastFlagState)
+	//					{
+	//						FINDSTATEIF(FollowPath,GetRootState(),Stop());
+	//						return State_Finished;
+	//					}
+	//				}*/
+	//				
+	//				// Someone else grab it?
+	//				if(m_MapGoalFlag->GetGoalState() == S_FLAG_CARRIED)
+	//				{
+	//					FINDSTATEIF(FollowPath,GetRootState(),Stop());
+	//					return State_Finished;
+	//				}
 
-					const int iMyTeam = GetClient()->GetTeam();
-					if(m_MapGoalFlag->GetControllingTeam(iMyTeam))
-						return State_Finished;
+	//				const int iMyTeam = GetClient()->GetTeam();
+	//				if(m_MapGoalFlag->GetControllingTeam(iMyTeam))
+	//					return State_Finished;
 
-					if(DidPathSucceed())
-						GetClient()->GetSteeringSystem()->SetTarget(m_MapGoalFlag->GetPosition(), m_MapGoalFlag->GetRadius());
-				}
+	//				if(DidPathSucceed())
+	//					GetClient()->GetSteeringSystem()->SetTarget(m_MapGoalFlag->GetPosition(), m_MapGoalFlag->GetRadius());
+	//			}
 
-				// Doing this last so we can change state before finishing
-				// flag may be disabled as part of pickup process, and we 
-				// want to be able to go into the cap state before that.
-				if(m_MapGoalFlag && !m_MapGoalFlag->IsAvailable(GetClient()->GetTeam()))
-					return State_Finished;
-				break;
-			}
-		case CarryingToCap:
-			{
-				if(!m_MapGoalCap->IsAvailable(GetClient()->GetTeam()))
-					return State_Finished;
+	//			// Doing this last so we can change state before finishing
+	//			// flag may be disabled as part of pickup process, and we 
+	//			// want to be able to go into the cap state before that.
+	//			if(m_MapGoalFlag && !m_MapGoalFlag->IsAvailable(GetClient()->GetTeam()))
+	//				return State_Finished;
+	//			break;
+	//		}
+	//	case CarryingToCap:
+	//		{
+	//			if(!m_MapGoalCap->IsAvailable(GetClient()->GetTeam()))
+	//				return State_Finished;
 
-				if(!GetClient()->DoesBotHaveFlag(m_MapGoalFlag))
-					return State_Finished;
+	//			if(!GetClient()->DoesBotHaveFlag(m_MapGoalFlag))
+	//				return State_Finished;
 
-				if(DidPathSucceed())
-					GetClient()->GetSteeringSystem()->SetTarget(m_MapGoalCap->GetPosition(), m_MapGoalCap->GetRadius());
+	//			if(DidPathSucceed())
+	//				GetClient()->GetSteeringSystem()->SetTarget(m_MapGoalCap->GetPosition(), m_MapGoalCap->GetRadius());
 
-				if(m_MapGoalCap && !m_MapGoalCap->IsAvailable(GetClient()->GetTeam()))
-					return State_Finished;
-				break;
-			}
-		case CarryingToHold:
-			{
-				if(DidPathSucceed())
-				{
-					// shift positions?
-					m_GoalState = HoldingFlag;
-					m_NextMoveTime = IGame::GetTime() + Utils::SecondsToMilliseconds(Mathf::UnitRandom() * 10.f);
-				}
+	//			if(m_MapGoalCap && !m_MapGoalCap->IsAvailable(GetClient()->GetTeam()))
+	//				return State_Finished;
+	//			break;
+	//		}
+	//	case CarryingToHold:
+	//		{
+	//			if(DidPathSucceed())
+	//			{
+	//				// shift positions?
+	//				m_GoalState = HoldingFlag;
+	//				m_NextMoveTime = IGame::GetTime() + Utils::SecondsToMilliseconds(Mathf::UnitRandom() * 10.f);
+	//			}
 
-				if(m_MapGoalCap && !m_MapGoalCap->IsAvailable(GetClient()->GetTeam()))
-					return State_Finished;
-				break;
-			}
-		case HoldingFlag:
-			{
-				// We don't care about path failure in here, so we return instead of letting it
-				// check m_PathFailed below.
-				if(IGame::GetTime() >= m_NextMoveTime)
-				{
-					m_GoalState = CarryingToHold;
-					FINDSTATEIF(FollowPath, GetRootState(), Goto(this));
-				}
+	//			if(m_MapGoalCap && !m_MapGoalCap->IsAvailable(GetClient()->GetTeam()))
+	//				return State_Finished;
+	//			break;
+	//		}
+	//	case HoldingFlag:
+	//		{
+	//			// We don't care about path failure in here, so we return instead of letting it
+	//			// check m_PathFailed below.
+	//			if(IGame::GetTime() >= m_NextMoveTime)
+	//			{
+	//				m_GoalState = CarryingToHold;
+	//				FINDSTATEIF(FollowPath, GetRootState(), Goto(this));
+	//			}
 
-				if(m_MapGoalCap && !m_MapGoalCap->IsAvailable(GetClient()->GetTeam()))
-					return State_Finished;
+	//			if(m_MapGoalCap && !m_MapGoalCap->IsAvailable(GetClient()->GetTeam()))
+	//				return State_Finished;
 
-				return State_Busy;
-			}
-		case Idle:
-			{
-				OBASSERT(0, "Invalid Flag State!");
-				return State_Finished;
-			}
-		}
+	//			return State_Busy;
+	//		}
+	//	case Idle:
+	//		{
+	//			OBASSERT(0, "Invalid Flag State!");
+	//			return State_Finished;
+	//		}
+	//	}
 
-		//////////////////////////////////////////////////////////////////////////
-		if(DidPathFail())
-		{
-			// Delay it from being used for a while.
-			if(m_MapGoalFlag)
-				BlackboardDelay(10.f, m_MapGoalFlag->GetSerialNum());
-			return State_Finished;
-		}
-		//////////////////////////////////////////////////////////////////////////
+	//	//////////////////////////////////////////////////////////////////////////
+	//	if(DidPathFail())
+	//	{
+	//		// Delay it from being used for a while.
+	//		if(m_MapGoalFlag)
+	//			BlackboardDelay(10.f, m_MapGoalFlag->GetSerialNum());
+	//		return State_Finished;
+	//	}
+	//	//////////////////////////////////////////////////////////////////////////
 
-		return State_Busy;
-	}
+	//	return State_Busy;
+	//}
 
-	bool CaptureTheFlag::LookForCapGoal(MapGoalPtr &ptr, GoalState &st)
-	{
-		//////////////////////////////////////////////////////////////////////////
-		{
-			GoalManager::Query qry(0xc9326a43 /* cappoint */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			if(qry.GetBest(ptr))
-			{
-				m_GoalState = CarryingToCap;
-				return true;
-			}
-		}
-		//////////////////////////////////////////////////////////////////////////
-		{
-			GoalManager::Query qry(0xc7ab68ba /* caphold */, GetClient());
-			GoalManager::GetInstance()->GetGoals(qry);
-			if(qry.GetBest(ptr))
-			{
-				m_GoalState = CarryingToHold;
-				return true;
-			}
-		}
-		return false;
-	}
+	//bool CaptureTheFlag::LookForCapGoal(MapGoalPtr &ptr, GoalState &st)
+	//{
+	//	//////////////////////////////////////////////////////////////////////////
+	//	{
+	//		GoalManager::Query qry(0xc9326a43 /* cappoint */, GetClient());
+	//		GoalManager::GetInstance()->GetGoals(qry);
+	//		if(qry.GetBest(ptr))
+	//		{
+	//			m_GoalState = CarryingToCap;
+	//			return true;
+	//		}
+	//	}
+	//	//////////////////////////////////////////////////////////////////////////
+	//	{
+	//		GoalManager::Query qry(0xc7ab68ba /* caphold */, GetClient());
+	//		GoalManager::GetInstance()->GetGoals(qry);
+	//		if(qry.GetBest(ptr))
+	//		{
+	//			m_GoalState = CarryingToHold;
+	//			return true;
+	//		}
+	//	}
+	//	return false;
+	//}
 
 	//////////////////////////////////////////////////////////////////////////
 
@@ -502,120 +502,120 @@ namespace AiState
 	//}
 	//////////////////////////////////////////////////////////////////////////
 
-	ReturnTheFlag::ReturnTheFlag() 
-		: StateChild("ReturnTheFlag")
-		, FollowPathUser("ReturnTheFlag")
-	{
-		m_LastGoalPosition = Vector3f::ZERO;
-	}
+	//ReturnTheFlag::ReturnTheFlag() 
+	//	: StateChild("ReturnTheFlag")
+	//	, FollowPathUser("ReturnTheFlag")
+	//{
+	//	m_LastGoalPosition = Vector3f::ZERO;
+	//}
 
-	/*void ReturnTheFlag::GetDebugString(StringStr &out)
-	{
-		return "";
-	}*/
+	///*void ReturnTheFlag::GetDebugString(StringStr &out)
+	//{
+	//	return "";
+	//}*/
 
-	MapGoal *ReturnTheFlag::GetMapGoalPtr()
-	{
-		return m_MapGoal.get();
-	}
+	//MapGoal *ReturnTheFlag::GetMapGoalPtr()
+	//{
+	//	return m_MapGoal.get();
+	//}
 
-	void ReturnTheFlag::RenderDebug()
-	{
-		if(m_MapGoal)
-		{
-			Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::GREEN, MIN_RENDER_TIME);
-			Utils::DrawLine(GetClient()->GetEyePosition(), m_MapGoal->GetWorldUsePoint(), COLOR::MAGENTA, MIN_RENDER_TIME);
-		}
-	}
+	//void ReturnTheFlag::RenderDebug()
+	//{
+	//	if(m_MapGoal)
+	//	{
+	//		Utils::OutlineOBB(m_MapGoal->GetWorldBounds(), COLOR::GREEN, MIN_RENDER_TIME);
+	//		Utils::DrawLine(GetClient()->GetEyePosition(), m_MapGoal->GetWorldUsePoint(), COLOR::MAGENTA, MIN_RENDER_TIME);
+	//	}
+	//}
 
-	obReal ReturnTheFlag::GetPriority()
-	{
-		if(!m_MapGoal)
-		{
-			if(!m_MapGoal)
-			{
-				GoalManager::Query qry(0xa06840e5 /* flagreturn */, GetClient());
-				GoalManager::GetInstance()->GetGoals(qry);
-				for(obuint32 i = 0; i < qry.m_List.size(); ++i)
-				{
-					if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
-						continue;
+	//obReal ReturnTheFlag::GetPriority()
+	//{
+	//	if(!m_MapGoal)
+	//	{
+	//		if(!m_MapGoal)
+	//		{
+	//			GoalManager::Query qry(0xa06840e5 /* flagreturn */, GetClient());
+	//			GoalManager::GetInstance()->GetGoals(qry);
+	//			for(obuint32 i = 0; i < qry.m_List.size(); ++i)
+	//			{
+	//				if(BlackboardIsDelayed(qry.m_List[i]->GetSerialNum()))
+	//					continue;
 
-					if (qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INUSE, GetClient()->GetTeam()) < 1)
-						continue;
+	//				if (qry.m_List[i]->GetSlotsOpen(MapGoal::TRACK_INUSE, GetClient()->GetTeam()) < 1)
+	//					continue;
 
-					const int iGoalState = qry.m_List[i]->GetGoalState();
+	//				const int iGoalState = qry.m_List[i]->GetGoalState();
 
-					if(iGoalState == S_FLAG_DROPPED || iGoalState == S_FLAG_CARRIED)
-					{
-						m_MapGoal = qry.m_List[i];
-						break;
-					}
-					else if(iGoalState == S_FLAG_AT_BASE)
-					{
-						continue;
-					}
-					else if(GetClient()->IsFlagGrabbable(qry.m_List[i]))
-					{
-						m_MapGoal = qry.m_List[i];
-						break;
-					}
-				}
-			}
-		}
+	//				if(iGoalState == S_FLAG_DROPPED || iGoalState == S_FLAG_CARRIED)
+	//				{
+	//					m_MapGoal = qry.m_List[i];
+	//					break;
+	//				}
+	//				else if(iGoalState == S_FLAG_AT_BASE)
+	//				{
+	//					continue;
+	//				}
+	//				else if(GetClient()->IsFlagGrabbable(qry.m_List[i]))
+	//				{
+	//					m_MapGoal = qry.m_List[i];
+	//					break;
+	//				}
+	//			}
+	//		}
+	//	}
 
-		return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
-	}
+	//	return m_MapGoal ? m_MapGoal->GetPriorityForClient(GetClient()) : 0.f;
+	//}
 
-	void ReturnTheFlag::Enter()
-	{
-		m_MapGoalProg.Set(m_MapGoal, GetClient()->GetTeam());
-		m_LastGoalPosition = m_MapGoal->GetWorldUsePoint();
-		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, m_LastGoalPosition, m_MapGoal->GetRadius()));
-	}
+	//void ReturnTheFlag::Enter()
+	//{
+	//	m_MapGoalProg.Set(m_MapGoal, GetClient()->GetTeam());
+	//	m_LastGoalPosition = m_MapGoal->GetWorldUsePoint();
+	//	FINDSTATEIF(FollowPath, GetRootState(), Goto(this, m_LastGoalPosition, m_MapGoal->GetRadius()));
+	//}
 
-	void ReturnTheFlag::Exit()
-	{
-		FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
+	//void ReturnTheFlag::Exit()
+	//{
+	//	FINDSTATEIF(FollowPath, GetRootState(), Stop(true));
 
-		m_MapGoalProg.Reset();
-		m_MapGoal.reset();
-		m_LastGoalPosition = Vector3f::ZERO;
-	}
+	//	m_MapGoalProg.Reset();
+	//	m_MapGoal.reset();
+	//	m_LastGoalPosition = Vector3f::ZERO;
+	//}
 
-	State::StateStatus ReturnTheFlag::Update(float fDt)
-	{
-		OBASSERT(m_MapGoal, "No Map Goal!");
-		//////////////////////////////////////////////////////////////////////////
-		if(DidPathFail())
-		{
-			// Delay it from being used for a while.
-			BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
-			return State_Finished;
-		}
+	//State::StateStatus ReturnTheFlag::Update(float fDt)
+	//{
+	//	OBASSERT(m_MapGoal, "No Map Goal!");
+	//	//////////////////////////////////////////////////////////////////////////
+	//	if(DidPathFail())
+	//	{
+	//		// Delay it from being used for a while.
+	//		BlackboardDelay(10.f, m_MapGoal->GetSerialNum());
+	//		return State_Finished;
+	//	}
 
-		if(m_MapGoal->GetDeleteMe())
-			return State_Finished;
+	//	if(m_MapGoal->GetDeleteMe())
+	//		return State_Finished;
 
-		//////////////////////////////////////////////////////////////////////////
-		// Re-plan if it has moved a bit from last position
-		// Predict path?
-		Vector3f vUpdatedPosition = m_MapGoal->GetWorldUsePoint();
-		if(SquaredLength(m_LastGoalPosition, vUpdatedPosition) > Mathf::Sqr(100.f))
-		{
-			m_LastGoalPosition = vUpdatedPosition;
-			FINDSTATEIF(FollowPath, GetRootState(), Goto(this, m_LastGoalPosition, m_MapGoal->GetRadius()));
-		}
+	//	//////////////////////////////////////////////////////////////////////////
+	//	// Re-plan if it has moved a bit from last position
+	//	// Predict path?
+	//	Vector3f vUpdatedPosition = m_MapGoal->GetWorldUsePoint();
+	//	if(SquaredLength(m_LastGoalPosition, vUpdatedPosition) > Mathf::Sqr(100.f))
+	//	{
+	//		m_LastGoalPosition = vUpdatedPosition;
+	//		FINDSTATEIF(FollowPath, GetRootState(), Goto(this, m_LastGoalPosition, m_MapGoal->GetRadius()));
+	//	}
 
-		if(m_MapGoal->GetGoalState() == S_FLAG_AT_BASE || !GetClient()->IsFlagGrabbable(m_MapGoal))
-			return State_Finished;
+	//	if(m_MapGoal->GetGoalState() == S_FLAG_AT_BASE || !GetClient()->IsFlagGrabbable(m_MapGoal))
+	//		return State_Finished;
 
-		FINDSTATE(follow, FollowPath, GetRootState());
-		if(follow != NULL && !follow->IsActive())
-			follow->Goto(this, m_LastGoalPosition, m_MapGoal->GetRadius());
+	//	FINDSTATE(follow, FollowPath, GetRootState());
+	//	if(follow != NULL && !follow->IsActive())
+	//		follow->Goto(this, m_LastGoalPosition, m_MapGoal->GetRadius());
 
-		return State_Busy;
-	}
+	//	return State_Busy;
+	//}
 
 	//////////////////////////////////////////////////////////////////////////
 
@@ -977,8 +977,8 @@ namespace AiState
 	HighLevel::HighLevel() 
 		: StatePrioritized("HighLevel")
 	{
-		AppendState(new CaptureTheFlag);
-		AppendState(new ReturnTheFlag);
+		//AppendState(new CaptureTheFlag);
+		//AppendState(new ReturnTheFlag);
 
 		AppendState(new Roam);
 	}

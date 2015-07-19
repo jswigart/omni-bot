@@ -554,9 +554,6 @@ void ET_Client::SetupBehaviorTree()
 	//GetStateRoot()->AppendTo("HighLevel", new Flamethrower);
 	//GetStateRoot()->AppendTo("HighLevel", new Panzer);
 
-	GetStateRoot()->RemoveState("CaptureTheFlag");
-	GetStateRoot()->RemoveState("ReturnTheFlag");
-
 	//FINDSTATEIF(Flamethrower,GetStateRoot(),LimitToClass().SetFlag(ET_CLASS_SOLDIER));
 	//FINDSTATEIF(Panzer,GetStateRoot(),LimitToClass().SetFlag(ET_CLASS_SOLDIER));
 }
