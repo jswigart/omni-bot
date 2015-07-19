@@ -86,34 +86,38 @@ void Client::Update()
 	// Set dirty flags to invalidate caches.
 	m_InternalFlags.SetFlag(FL_DIRTYEYEPOS);
 
-	// for remote syncing
-	const Vector3f oldPosition = m_Position;
-	const Vector3f oldFacing = m_FacingVector;
-	const Msg_HealthArmor oldHealthArmor = m_HealthArmor;
-
-	// update my locally properties with the one the game has for me.	
-	EngineFuncs::EntityPosition(m_GameEntity, m_Position);
-	EngineFuncs::EntityWorldOBB(m_GameEntity, m_WorldBounds);
-	EngineFuncs::EntityGroundEntity(m_GameEntity, m_MoveEntity);
-
-	// Update the bots orientation if we haven't turned this frame(script might be controlling)
-	EngineFuncs::EntityOrientation(m_GameEntity, m_FacingVector, m_RightVector, m_UpVector);
-	m_Orientation = Matrix3f(m_RightVector,m_FacingVector,m_UpVector, true);
-
-	EngineFuncs::EntityVelocity(m_GameEntity, m_Velocity);
-
-	Msg_PlayerMaxSpeed maxSpeed;
-	if(InterfaceFuncs::GetMaxSpeed(m_GameEntity, maxSpeed))
 	{
-		m_MaxSpeed = maxSpeed.m_MaxSpeed;
-	}
+		Prof(Interface_Functions);
 
-	// Update my health/armor
-	InterfaceFuncs::GetHealthAndArmor(GetGameEntity(), m_HealthArmor);
-	m_EntityFlags.ClearAll();
-	m_EntityPowerUps.ClearAll();
-	g_EngineFuncs->GetEntityFlags(m_GameEntity, m_EntityFlags);
-	g_EngineFuncs->GetEntityPowerups(m_GameEntity, m_EntityPowerUps);
+		// for remote syncing
+		const Vector3f oldPosition = m_Position;
+		const Vector3f oldFacing = m_FacingVector;
+		const Msg_HealthArmor oldHealthArmor = m_HealthArmor;
+
+		// update my locally properties with the one the game has for me.	
+		EngineFuncs::EntityPosition(m_GameEntity, m_Position);
+		EngineFuncs::EntityWorldOBB(m_GameEntity, m_WorldBounds);
+		EngineFuncs::EntityGroundEntity(m_GameEntity, m_MoveEntity);
+
+		// Update the bots orientation if we haven't turned this frame(script might be controlling)
+		EngineFuncs::EntityOrientation(m_GameEntity, m_FacingVector, m_RightVector, m_UpVector);
+		m_Orientation = Matrix3f(m_RightVector, m_FacingVector, m_UpVector, true);
+
+		EngineFuncs::EntityVelocity(m_GameEntity, m_Velocity);
+
+		Msg_PlayerMaxSpeed maxSpeed;
+		if(InterfaceFuncs::GetMaxSpeed(m_GameEntity, maxSpeed))
+		{
+			m_MaxSpeed = maxSpeed.m_MaxSpeed;
+		}
+
+		// Update my health/armor
+		InterfaceFuncs::GetHealthAndArmor(GetGameEntity(), m_HealthArmor);
+		m_EntityFlags.ClearAll();
+		m_EntityPowerUps.ClearAll();
+		g_EngineFuncs->GetEntityFlags(m_GameEntity, m_EntityFlags);
+		g_EngineFuncs->GetEntityPowerups(m_GameEntity, m_EntityPowerUps);
+	}
 
 	if(CheckUserFlag(Client::FL_DISABLED))
 	{

@@ -601,6 +601,8 @@ namespace AiState
 
 	void WeaponSystem::Enter()
 	{
+		Prof(WeaponSystem);
+
 		m_DefaultWeapon = SelectBestWeapon();
 		AddWeaponRequest(Priority::Idle, GetNameHash(), m_DefaultWeapon);
 	}

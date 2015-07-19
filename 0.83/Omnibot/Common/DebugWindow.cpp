@@ -2176,6 +2176,7 @@ namespace DebugWindow
 	void Update()
 	{
 #ifdef ENABLE_DEBUG_WINDOW
+		Prof(Debug_Window);
 		Prof_update(gOverlay ? 1 : 0);
 		if(gOverlay)
 			gOverlay->Update();
@@ -2183,7 +2184,7 @@ namespace DebugWindow
 		
 		if(DW.Core.mGui)
 		{
-			Prof(debug_window);
+			Prof(input);
 
 			sf::Event Event;
 			while(DW.Core.mMainWindow->GetEvent(Event))

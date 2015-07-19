@@ -59,6 +59,7 @@ void ObstacleManager::RemoveObstacle( int index ) {
 }
 
 void ObstacleManager::Update() {
+	Prof(ObstacleManager_Update);
 	for( int i = 0; i < numObstacles;  ) {
 		if ( IGame::IsEntityValid( obstacles[i].entity ) ) {
 			obstacles[i].UpdateObstacle();

@@ -650,7 +650,7 @@ void IGame::RegisterNavigationFlags(PathPlannerBase *_planner)
 
 void IGame::UpdateGame()
 {
-	Prof(GameUpdate);
+	//Prof(GameUpdate);
 
 	CheckGameState();
 

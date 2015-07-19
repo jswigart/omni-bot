@@ -581,7 +581,7 @@ namespace AiState
 
 	State::StateStatus SensoryMemory::Update(float fDt)
 	{
-		Prof(SensoryMemory_Update);
+		Prof(SensoryMemory);
 		
 		UpdateEntities();
 		UpdateSight();

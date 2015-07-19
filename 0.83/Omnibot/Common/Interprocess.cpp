@@ -156,17 +156,17 @@ namespace InterProcess
 
 	void Update()
 	{
+#ifdef INTERPROCESS
 		Prof_Scope(InterProcess);
 		{
 			Prof(Update);
-#ifdef INTERPROCESS
 			if(g_MessageQueue)
 			{
 				// todo: process incoming messages?
 			}
-#endif
 		}
-	}
+#endif
+}
 
 	void Enable(bool _en)
 	{
