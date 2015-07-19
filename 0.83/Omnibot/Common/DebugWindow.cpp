@@ -30,7 +30,8 @@ void SetRenderOverlayType(RenderOverlayType _t)
 
 #include "detours.h"
 
-#include <SFML/Graphics.hpp>
+#undef DELETE
+
 //#pragma comment(lib,"sfml-main.lib")
 #pragma comment(lib,"sfml-window.lib")
 #pragma comment(lib,"sfml-graphics.lib")
@@ -637,7 +638,7 @@ namespace gcn
 			graphics->setFont(getFont());
 
 			int sx = getX(), sy = getY();
-			int full_width = getWidth(), height = getHeight()/2;
+			int full_width = getWidth()-5, height = getHeight()/2;
 			int line_spacing = getFont()->getHeight();
 			int precision = 2;
 
@@ -2099,7 +2100,7 @@ void DebugWindow_s::Console_s::AddLine(const char* _msg, ...)
 namespace DebugWindow
 {
 	//////////////////////////////////////////////////////////////////////////
-	void Create(int _width /*= 800*/, int _height /*= 600*/, int _bpp /*= 32*/)
+	void Create(int _width, int _height, int _bpp)
 	{
 #ifdef ENABLE_DEBUG_WINDOW
 		if (gOverlay) 
@@ -2118,7 +2119,7 @@ namespace DebugWindow
 			break;
 		};
 
-		if(gOverlay != NULL && gOverlay->Initialize())
+		if(gOverlay != NULL && gOverlay->Initialize(_width, _height))
 		{
 			DW.mTop = new gcn::Container();
 			DW.mTop->setDimension(gcn::Rectangle(0, 0, _width, _height));

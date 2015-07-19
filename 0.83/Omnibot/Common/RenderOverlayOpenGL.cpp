@@ -21,7 +21,7 @@ class RenderOverlayOpenGL : public RenderOverlay
 public:
 	void StartFrame();
 
-	bool Initialize();
+	bool Initialize(int Width, int Height);
 	void PostInitialize();
 	void Update();
 	void Render();
@@ -246,7 +246,7 @@ void RenderOverlayOpenGL::StartFrame()
 {
 }
 
-bool RenderOverlayOpenGL::Initialize()
+bool RenderOverlayOpenGL::Initialize(int Width, int Height)
 {
 	DetourRestoreAfterWith();
 
@@ -265,9 +265,6 @@ bool RenderOverlayOpenGL::Initialize()
 	OBASSERT(error == NO_ERROR,"DetourTransactionCommit: %d",error);
 
 	//////////////////////////////////////////////////////////////////////////
-	const int Width = 800;
-	const int Height = 600;
-
 	HWND wnd = GetForegroundWindow();
 	DW.Core.mMainWindow = new sf::RenderWindow(wnd, sf::WindowSettings(), true);
 

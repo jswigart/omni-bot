@@ -11,7 +11,7 @@ class RenderOverlay
 {
 public:
 
-	virtual bool Initialize() = 0;
+	virtual bool Initialize(int Width, int Height) = 0;
 	virtual void PostInitialize() = 0;
 	virtual void Update() = 0;
 	//virtual void Render() = 0;

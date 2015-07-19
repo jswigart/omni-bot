@@ -19,7 +19,7 @@ namespace GameContext
 	HDC mGuiDC = 0;
 
 	void SaveGame()
-	{
+	{	
 		mContext = wglGetCurrentContext();
 		mDC = wglGetCurrentDC();
 	}
@@ -313,7 +313,7 @@ duDebugDrawGame	gGameRenderInterface;
 class RenderOverlayGame : public RenderOverlay
 {
 public:
-	bool Initialize();
+	bool Initialize(int Width, int Height);
 	void PostInitialize();
 	void Update();
 	void Render();
@@ -335,13 +335,10 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
-bool RenderOverlayGame::Initialize()
+bool RenderOverlayGame::Initialize(int Width, int Height)
 {
 	GameContext::SaveGame();
 
-	const int Width = 800;
-	const int Height = 600;
-	
 	DW.Core.mMainWindow = new sf::RenderWindow(
 		sf::VideoMode(Width,Height),
 		"Omni-bot",
