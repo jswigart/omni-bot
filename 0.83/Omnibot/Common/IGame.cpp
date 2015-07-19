@@ -1794,6 +1794,7 @@ void IGame::LoadGoalScripts(bool _clearold)
 	{
 		pScriptGoalTable = pMachine->AllocTableObject();
 		pMachine->GetGlobals()->Set(pMachine, "ScriptGoals", gmVariable(pScriptGoalTable));
+		g_ScriptGoalList.clear();
 	}
 
 	DirectoryList goalFiles;
@@ -1823,6 +1824,24 @@ void IGame::LoadGoalScripts(bool _clearold)
 		{
 			LOG("Error Running Goal Script: " << (*cIt).string());
 			OBASSERT(0, "Error Running Goal Script: %s", (*cIt).string().c_str());
+		}
+	}
+}
+
+void IGame::ReloadGoalScripts()
+{
+	for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
+	{
+		if(m_ClientList[i])
+			m_ClientList[i]->GetStateRoot()->DeleteGoalScripts();
+	}
+
+	LoadGoalScripts(true);
+
+	for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
+	{
+		if(m_ClientList[i]){
+			m_ClientList[i]->InitScriptGoals();
 		}
 	}
 }

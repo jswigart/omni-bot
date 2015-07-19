@@ -95,6 +95,7 @@ public:
 	bool InsertBefore(const char * _name, State *_insertstate);
 	bool InsertBefore(obuint32 _name, State *_insertstate);
 	State *RemoveState(const char * _name);
+	void DeleteGoalScripts();
 
 	void SetClient(Client *_client);
 	void SetName(const char *_name);

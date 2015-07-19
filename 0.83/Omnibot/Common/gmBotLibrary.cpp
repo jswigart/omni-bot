@@ -2691,7 +2691,7 @@ static int GM_CDECL gmfGetLocalCommand(gmThread *a_thread)
 static int GM_CDECL gmfReloadGoalScripts(gmThread *a_thread)
 {	
 	GM_CHECK_NUM_PARAMS(0);
-	IGameManager::GetInstance()->GetGame()->LoadGoalScripts(true);
+	IGameManager::GetInstance()->GetGame()->ReloadGoalScripts();
 	return GM_OK;
 }
 

@@ -121,6 +121,7 @@ public:
 	inline bool DrawBlockableTests()				{ return m_bDrawBlockableTests; }
 
 	void LoadGoalScripts(bool _clearold);
+	void ReloadGoalScripts();
 
 	virtual ClientPtr &GetClientFromCorrectedGameId(int _gameid);
 

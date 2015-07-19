@@ -533,6 +533,30 @@ void State::PropogateDeletedThreads(const int *_threadIds, int _numThreads)
 	RemoveThreadReference(_threadIds, _numThreads);
 }
 
+void State::DeleteGoalScripts()
+{
+	State *pNext, *pLastState = NULL;
+
+	for(State *pState = m_FirstChild; pState; pState = pNext)
+	{
+		pState->DeleteGoalScripts();
+		pNext = pState->m_Sibling;
+
+		if(pState->m_ScriptObject)
+		{
+			InternalParentExit();
+			pState->InternalExit();
+
+			if(pLastState) pLastState->m_Sibling = pNext;
+			else m_FirstChild = pNext;
+
+			delete pState;
+		}
+		else
+			pLastState = pState;
+	}
+}
+
 bool State::StateCommand(const StringVector &_args)
 {
 	bool handled = false;
