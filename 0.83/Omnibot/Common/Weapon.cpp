@@ -397,9 +397,6 @@ Vector3f Weapon::WeaponFireMode::GetAimPoint(Client *_bot, const GameEntity &_ta
 	case Melee:
 		vAimPoint = _GetAimPoint_Melee(_bot, _target, _targetinfo);
 		break;
-	case InstantHit:
-		vAimPoint = _GetAimPoint_InstantHit(_bot, _target, _targetinfo);
-		break;
 	case Projectile:
 		vAimPoint = _GetAimPoint_Projectile(_bot, _target, _targetinfo);
 		break;
@@ -408,6 +405,8 @@ Vector3f Weapon::WeaponFireMode::GetAimPoint(Client *_bot, const GameEntity &_ta
 		break;
 	default:
 		Utils::OutputDebug(kError, "Invalid Weapon Type!");
+	case Item:
+	case InstantHit:
 		vAimPoint = _GetAimPoint_InstantHit(_bot, _target, _targetinfo);
 		break;
 	}
