@@ -71,19 +71,19 @@ void FF_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 	{
 		case TF_TEAM_BLUE:
 			includeFlags |= NAVFLAGS_TEAM1_ONLY;
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 		case TF_TEAM_RED:
 			includeFlags |= NAVFLAGS_TEAM2_ONLY;
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 		case TF_TEAM_YELLOW:
 			includeFlags |= NAVFLAGS_TEAM3_ONLY;
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM3_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM3_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 		case TF_TEAM_GREEN:
 			includeFlags |= NAVFLAGS_TEAM4_ONLY;
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM4_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM4_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 	}
 }

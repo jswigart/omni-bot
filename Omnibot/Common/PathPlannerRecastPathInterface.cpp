@@ -40,8 +40,8 @@ RecastPathInterface::RecastPathInterface( Client * client, PathPlannerRecast * n
 
 	sInterfaces.push_back( this );
 
-	mFilter.setAreaCost( NAVAREA_CROUCH, 2.0 );
-	mFilter.setAreaCost( NAVAREA_PRONE, 4.0 );
+	mFilter.setAreaCost( NAVFLAGS_CROUCH, 2.0 );
+	mFilter.setAreaCost( NAVFLAGS_PRONE, 4.0 );
 }
 
 RecastPathInterface::~RecastPathInterface()
@@ -62,15 +62,9 @@ PathInterface::PathStatus RecastPathInterface::GetPathStatus() const
 	return mStatus;
 }
 
-NavArea RecastPathInterface::GetCurrentArea() const
-{
-	return mCurrentPolyArea;
-	
-}
-
 NavAreaFlags RecastPathInterface::GetCurrentAreaFlags() const
 {
-	return mCurrentPolyFlags;
+	return mCurrentAreaFlags;
 }
 
 void RecastPathInterface::UpdateNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
@@ -113,18 +107,14 @@ void RecastPathInterface::UpdateSourcePosition( const Vector3f & srcPos )
 			currentPoly = startPoly;
 	}
 
-	mCurrentPolyArea = NAVAREA_GROUND;
-	mCurrentPolyFlags = NAVFLAGS_NONE;
+	mCurrentAreaFlags = NAVFLAGS_NONE;
 
 	if ( currentPoly != 0 )
 	{
-		unsigned char area = 0;
-		unsigned short flags = 0;
-		if ( dtStatusSucceed( mNav->mNavMesh->getPolyArea( currentPoly, &area ) ) &&
-			dtStatusSucceed( mNav->mNavMesh->getPolyFlags( currentPoly, &flags ) ) )
+		navAreaMask areaMask = 0;
+		if ( dtStatusSucceed( mNav->mNavMesh->getPolyFlags( currentPoly, &areaMask ) ) )
 		{
-			mCurrentPolyArea = (NavArea)area;
-			mCurrentPolyFlags = (NavAreaFlags)flags;
+			mCurrentAreaFlags = ( NavAreaFlags )areaMask;
 		}
 	}
 }
@@ -184,10 +174,19 @@ void RecastPathInterface::UpdatePath()
 			int	polyCount = 0;
 			dtPolyRef * polys = (dtPolyRef*)StackAlloc( sizeof( dtPolyRef ) * mCorridor.getMaxPathCount() );
 
-			if ( dtStatusSucceed( mQuery->findPath( startPoly, endPoly, startPos, endPos, &mFilter, polys, &polyCount, mCorridor.getMaxPathCount() ) ) )
+			dtStatus status = mQuery->findPath( startPoly, endPoly, startPos, endPos, &mFilter, polys, &polyCount, mCorridor.getMaxPathCount() );
+			if ( dtStatusSucceed( status ) )
 			{
-				mStatus = PATH_VALID;
-				mCorridor.setCorridor( endPos, polys, polyCount );
+				if ( dtStatusDetail( status, DT_PARTIAL_RESULT ) )
+				{
+					mStatus = PATH_NOPATHTOGOAL;
+				}
+				else
+				{
+					mStatus = PATH_VALID;
+					mCorridor.setCorridor( endPos, polys, polyCount );
+				}
+				
 			}
 		}
 	}
@@ -213,29 +212,18 @@ size_t RecastPathInterface::GetPathCorners( PathCorner * corners, size_t maxEdge
 	const size_t num = mCorridor.findCorners( (float*)cornerVerts, cornerFlags, cornerPoly, MaxCorners, mQuery, &mFilter, DT_STRAIGHTPATH_AREA_CROSSINGS );
 	for ( size_t i = 0; i < num && numCorners < maxEdges; ++i, ++numCorners )
 	{
-		NavArea polyArea = NAVAREA_GROUND;
-		NavAreaFlags polyFlags = NAVFLAGS_WALK;
+		NavAreaFlags areaFlags = NAVFLAGS_WALK;
 
-		if ( cornerFlags[ i ] & DT_STRAIGHTPATH_OFFMESH_CONNECTION )
-			polyFlags = NAVFLAGS_PATH_LINK;
-		if ( cornerFlags[ i ] & DT_STRAIGHTPATH_START )
-			polyFlags = (NavAreaFlags)(polyFlags | NAVFLAGS_PATH_START);
-		if ( cornerFlags[ i ] & DT_STRAIGHTPATH_END )
-			polyFlags = (NavAreaFlags)(polyFlags | NAVFLAGS_PATH_GOAL);
-
-		unsigned char area = 0;
-		unsigned short flags = 0;
-		if ( dtStatusSucceed( mNav->mNavMesh->getPolyArea( cornerPoly[ i ], &area ) ) &&
-			dtStatusSucceed( mNav->mNavMesh->getPolyFlags( cornerPoly[ i ], &flags ) ) )
+		navAreaMask af = NAVFLAGS_NONE;
+		if ( dtStatusSucceed( mNav->mNavMesh->getPolyFlags( cornerPoly[ i ], &af ) ) )
 		{
-			polyArea = (NavArea)area;
-			polyFlags = (NavAreaFlags)( polyFlags | flags );
+			areaFlags = (NavAreaFlags)( af | areaFlags );
 		}
 
 		corners[ numCorners ].mPos = rcToLocal( cornerVerts[ i ] );
-		corners[ numCorners ].mArea = polyArea;
-		corners[ numCorners ].mFlags = polyFlags;
+		corners[ numCorners ].mAreaMask = areaFlags;
 		corners[ numCorners ].mPolyId = cornerPoly[ i ];
+		corners[ numCorners ].mIsLink = ( cornerFlags[ i ] & DT_STRAIGHTPATH_OFFMESH_CONNECTION ) != 0;
 	}
 	return numCorners;
 }

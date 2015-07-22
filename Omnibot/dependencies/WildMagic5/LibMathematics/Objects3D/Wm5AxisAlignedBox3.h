@@ -50,7 +50,7 @@ namespace Wm5
 		Vector3<Real> Min;
 		Vector3<Real> Max;
 
-		bool Contains( const Vector3<Real> & pos )
+		bool Contains( const Vector3<Real> & pos ) const
 		{
 			return
 				pos.X() >= Min.X() &&

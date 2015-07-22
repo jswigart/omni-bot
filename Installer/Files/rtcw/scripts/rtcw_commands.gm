@@ -361,7 +361,7 @@ Commands["fgp"] =
 						// so it's a match. now check z coord for the fubar ones
 						if ( wpTable.position.z - pos.z > 54 )
 						{
-							goal.SetPosition(wpTable.position + Util.WaypointGoalOffset);
+							goal.SetPosition(wpTable.position);
 							goal.RenderGoal = true;
 							print ( goal.GetName(), "needs checked. it was detected as being too low and moved" );
 						}

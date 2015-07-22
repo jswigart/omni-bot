@@ -34,7 +34,6 @@ public:
 	virtual void UpdatePath();
 	virtual void Cancel();	
 
-	virtual NavArea GetCurrentArea() const;
 	virtual NavAreaFlags GetCurrentAreaFlags() const;
 	virtual size_t GetPathCorners( PathCorner * corners, size_t maxEdges );
 
@@ -54,8 +53,7 @@ private:
 	class dtNavMeshQuery *	mQuery;
 	dtPathCorridor			mCorridor;
 	
-	NavArea					mCurrentPolyArea;
-	NavAreaFlags			mCurrentPolyFlags;
+	NavAreaFlags			mCurrentAreaFlags;
 
 	Vector3f				mSrc;
 	DestinationVector		mGoals;

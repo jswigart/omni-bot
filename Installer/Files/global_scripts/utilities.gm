@@ -2,10 +2,6 @@
 
 member PlayerClassTable = {};
 
-// This is used as an alternative to grounding goals created by waypoint flags. Each game using waypoints
-// should define this in <game>_utilities.gm
-member WaypointGoalOffset = Vector3(0,0,0);
-
 // color string for debug messages
 member DebugColorString = "";
 

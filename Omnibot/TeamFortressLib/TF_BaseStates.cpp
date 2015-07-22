@@ -2082,7 +2082,7 @@ namespace AiState
 		FINDSTATE( fp, FollowPath, GetParent() );
 		if ( fp )
 		{
-			if ( fp->IsMoving() && fp->IsOnCustomLink( NAVAREA_ROCKETJUMP ) )
+			if ( fp->IsMoving() && fp->IsOnCustomLink( NAVFLAGS_ROCKETJUMP ) )
 			{
 				return 1.f;
 			}

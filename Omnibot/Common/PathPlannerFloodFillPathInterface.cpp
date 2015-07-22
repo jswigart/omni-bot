@@ -25,12 +25,6 @@ PathInterface::PathStatus FloodFillPathInterface::GetPathStatus() const
 	return mStatus;
 }
 
-NavArea FloodFillPathInterface::GetCurrentArea() const
-{
-	return NAVAREA_GROUND;
-
-}
-
 NavAreaFlags FloodFillPathInterface::GetCurrentAreaFlags() const
 {
 	return NAVFLAGS_NONE;

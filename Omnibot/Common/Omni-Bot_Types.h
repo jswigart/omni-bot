@@ -634,6 +634,37 @@ enum EntityClass
 	ENT_CLASS_NONE,
 };
 
+// Flags that denote the navigation area types for the navmesh
+enum NavAreaFlags
+{
+	NAVFLAGS_NONE			= 0,
+	NAVFLAGS_WALK			= ( 1 << 0 ),
+	NAVFLAGS_CROUCH			= ( 1 << 1 ),
+	NAVFLAGS_PRONE			= ( 1 << 2 ),
+	NAVFLAGS_TEAM1_ONLY		= ( 1 << 3 ),
+	NAVFLAGS_TEAM2_ONLY		= ( 1 << 4 ),
+	NAVFLAGS_TEAM3_ONLY		= ( 1 << 5 ),
+	NAVFLAGS_TEAM4_ONLY		= ( 1 << 6 ),
+	NAVFLAGS_WATER			= ( 1 << 7 ),
+	NAVFLAGS_JUMP			= ( 1 << 8 ),
+	NAVFLAGS_LADDER			= ( 1 << 9 ),
+	NAVFLAGS_TELEPORT		= ( 1 << 10 ),
+	NAVFLAGS_DOOR			= ( 1 << 11 ),
+	NAVFLAGS_ROCKETJUMP		= ( 1 << 12 ),
+	NAVFLAGS_PUSHABLE		= ( 1 << 13 ),
+	NAVFLAGS_MOVER			= ( 1 << 14 ),
+	NAVFLAGS_THREAT_LVL1	= ( 1 << 15 ),
+	NAVFLAGS_THREAT_LVL2	= ( 1 << 16 ),
+	NAVFLAGS_THREAT_LVL3	= ( 1 << 17 ),
+	NAVFLAGS_JUMPPAD		= ( 1 << 18 ),
+
+	NAVFLAGS_DISABLED		= ( 1 << 31 ),
+
+	// compound flags
+	NAVFLAGS_ALLTEAMS		= NAVFLAGS_TEAM1_ONLY | NAVFLAGS_TEAM2_ONLY | NAVFLAGS_TEAM3_ONLY | NAVFLAGS_TEAM4_ONLY,
+	NAVFLAGS_THREATS		= NAVFLAGS_THREAT_LVL1 | NAVFLAGS_THREAT_LVL2 | NAVFLAGS_THREAT_LVL3,
+};
+
 // struct: EntityInfo
 struct EntityInfo
 {
@@ -678,10 +709,14 @@ struct EntityInfo
 	BitFlag32		mCategory;
 	BitFlag64		mFlags;
 	BitFlag32		mPowerUps;
+	NavAreaFlags	mNavFlags;
+	uint8_t			mTeamMask;
 		
 	EntityInfo()
 		: mGroup( ENT_GRP_UNKNOWN )
 		, mClassId( ENT_CLASS_NONE )
+		, mNavFlags( NAVFLAGS_NONE )
+		, mTeamMask( 0xFF )
 	{
 	}
 };

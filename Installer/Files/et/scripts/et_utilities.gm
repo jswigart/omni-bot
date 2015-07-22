@@ -20,9 +20,6 @@ Util.AllTeamPlayers = 32;
 
 Util.TeamBotChangeClassExecuted = 0;
 
-// offset for converted waypoint goals
-Util.WaypointGoalOffset = Vector3(0,0,-24);
-
 Util.AllTeams = (1 << TEAM.AXIS) | (1 << TEAM.ALLIES);
 
 Util.AllClasses = 0;

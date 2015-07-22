@@ -141,13 +141,12 @@ void protobuf_AssignDesc_recast_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Tile));
   OffMeshConnection_descriptor_ = file->message_type(4);
-  static const int OffMeshConnection_offsets_[7] = {
+  static const int OffMeshConnection_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OffMeshConnection, entrypos_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OffMeshConnection, exitpos_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OffMeshConnection, vertices_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OffMeshConnection, radius_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OffMeshConnection, areatype_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OffMeshConnection, flags_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OffMeshConnection, areaflags_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(OffMeshConnection, bidirectional_),
   };
   OffMeshConnection_reflection_ =
@@ -213,13 +212,14 @@ void protobuf_AssignDesc_recast_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Model_TriParms));
   NodeState_descriptor_ = file->message_type(7);
-  static const int NodeState_offsets_[8] = {
+  static const int NodeState_offsets_[9] = {
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(NodeState_default_oneof_instance_, submodelid_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(NodeState_default_oneof_instance_, staticmodelid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, enabled_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, shapemode_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, solid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, dynamic_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, navflagoverride_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, modelname_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, type_),
   };
@@ -337,31 +337,32 @@ void protobuf_AddDesc_recast_2eproto() {
     "\t \002(\002\022\020\n\010tileSize\030\n \002(\005\022\030\n\020detailSampleD"
     "ist\030\013 \002(\002\022\032\n\022detailSampleMaxErr\030\014 \002(\002\"8\n"
     "\004Tile\022\030\n\020unCompressedSize\030\001 \002(\005\022\026\n\016compr"
-    "essedData\030\002 \002(\014\"\307\001\n\021OffMeshConnection\022 \n"
+    "essedData\030\002 \002(\014\"\271\001\n\021OffMeshConnection\022 \n"
     "\010entryPos\030\001 \002(\0132\016.RecastIO.Vec3\022\037\n\007exitP"
     "os\030\002 \002(\0132\016.RecastIO.Vec3\022 \n\010vertices\030\003 \003"
-    "(\0132\016.RecastIO.Vec3\022\016\n\006radius\030\004 \002(\002\022\020\n\010ar"
-    "eaType\030\005 \002(\r\022\r\n\005flags\030\006 \002(\r\022\034\n\rbiDirecti"
-    "onal\030\007 \001(\010:\005false\"@\n\010Material\022\014\n\004name\030\001 "
-    "\002(\t\022\020\n\010contents\030\002 \001(\r\022\024\n\014surfaceflags\030\003 "
-    "\001(\r\"\233\001\n\005Model\022\014\n\004name\030\001 \002(\t\022\020\n\010modelcrc\030"
-    "\002 \002(\r\022\023\n\013numMeshTris\030\003 \002(\r\022+\n\ttriangles\030"
-    "\004 \003(\0132\030.RecastIO.Model.TriParms\0320\n\010TriPa"
-    "rms\022\013\n\003tri\030\001 \002(\r\022\027\n\017surfaceOverride\030\002 \001("
-    "\r\"\322\001\n\tNodeState\022\024\n\nsubModelId\030\001 \001(\005H\000\022\027\n"
-    "\rstaticModelId\030\002 \001(\005H\000\022\025\n\007enabled\030\005 \001(\010:"
-    "\004true\0227\n\tshapemode\030\006 \001(\0162\023.RecastIO.Shap"
-    "eMode:\017SHAPE_TRIANGLES\022\023\n\005solid\030\007 \001(\010:\004t"
-    "rue\022\026\n\007dynamic\030\010 \001(\010:\005false\022\021\n\tmodelname"
-    "\030\n \001(\tB\006\n\004type\"\245\002\n\016NavigationMesh\022\017\n\007ver"
-    "sion\030\001 \002(\005\022.\n\rnavMeshParams\030\002 \002(\0132\027.Reca"
-    "stIO.NavMeshParams\0222\n\rexclusionZone\030\003 \003("
-    "\0132\033.RecastIO.AxisAlignedBounds\0226\n\021offMes"
-    "hConnection\030\004 \003(\0132\033.RecastIO.OffMeshConn"
-    "ection\022&\n\tnodeState\030\005 \003(\0132\023.RecastIO.Nod"
-    "eState\022\037\n\006models\030\006 \003(\0132\017.RecastIO.Model\022"
-    "\035\n\005tiles\030d \003(\0132\016.RecastIO.Tile*/\n\tShapeM"
-    "ode\022\023\n\017SHAPE_TRIANGLES\020\000\022\r\n\tSHAPE_OBB\020\001", 1479);
+    "(\0132\016.RecastIO.Vec3\022\016\n\006radius\030\004 \002(\002\022\021\n\tar"
+    "eaflags\030\005 \002(\r\022\034\n\rbiDirectional\030\006 \001(\010:\005fa"
+    "lse\"@\n\010Material\022\014\n\004name\030\001 \002(\t\022\020\n\010content"
+    "s\030\002 \001(\r\022\024\n\014surfaceflags\030\003 \001(\r\"\233\001\n\005Model\022"
+    "\014\n\004name\030\001 \002(\t\022\020\n\010modelcrc\030\002 \002(\r\022\023\n\013numMe"
+    "shTris\030\003 \002(\r\022+\n\ttriangles\030\004 \003(\0132\030.Recast"
+    "IO.Model.TriParms\0320\n\010TriParms\022\013\n\003tri\030\001 \002"
+    "(\r\022\027\n\017surfaceOverride\030\002 \001(\r\"\356\001\n\tNodeStat"
+    "e\022\024\n\nsubModelId\030\001 \001(\005H\000\022\027\n\rstaticModelId"
+    "\030\002 \001(\005H\000\022\025\n\007enabled\030\005 \001(\010:\004true\0227\n\tshape"
+    "mode\030\006 \001(\0162\023.RecastIO.ShapeMode:\017SHAPE_T"
+    "RIANGLES\022\023\n\005solid\030\007 \001(\010:\004true\022\026\n\007dynamic"
+    "\030\010 \001(\010:\005false\022\032\n\017navFlagOverride\030\t \001(\r:\001"
+    "0\022\021\n\tmodelname\030\n \001(\tB\006\n\004type\"\245\002\n\016Navigat"
+    "ionMesh\022\017\n\007version\030\001 \002(\005\022.\n\rnavMeshParam"
+    "s\030\002 \002(\0132\027.RecastIO.NavMeshParams\0222\n\rexcl"
+    "usionZone\030\003 \003(\0132\033.RecastIO.AxisAlignedBo"
+    "unds\0226\n\021offMeshConnection\030\004 \003(\0132\033.Recast"
+    "IO.OffMeshConnection\022&\n\tnodeState\030\005 \003(\0132"
+    "\023.RecastIO.NodeState\022\037\n\006models\030\006 \003(\0132\017.R"
+    "ecastIO.Model\022\035\n\005tiles\030d \003(\0132\016.RecastIO."
+    "Tile*/\n\tShapeMode\022\023\n\017SHAPE_TRIANGLES\020\000\022\r"
+    "\n\tSHAPE_OBB\020\001", 1493);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "recast.proto", &protobuf_RegisterTypes);
   Vec3::default_instance_ = new Vec3();
@@ -1909,8 +1910,7 @@ const int OffMeshConnection::kEntryPosFieldNumber;
 const int OffMeshConnection::kExitPosFieldNumber;
 const int OffMeshConnection::kVerticesFieldNumber;
 const int OffMeshConnection::kRadiusFieldNumber;
-const int OffMeshConnection::kAreaTypeFieldNumber;
-const int OffMeshConnection::kFlagsFieldNumber;
+const int OffMeshConnection::kAreaflagsFieldNumber;
 const int OffMeshConnection::kBiDirectionalFieldNumber;
 #endif  // !_MSC_VER
 
@@ -1937,8 +1937,7 @@ void OffMeshConnection::SharedCtor() {
   entrypos_ = NULL;
   exitpos_ = NULL;
   radius_ = 0;
-  areatype_ = 0u;
-  flags_ = 0u;
+  areaflags_ = 0u;
   bidirectional_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -1987,7 +1986,7 @@ void OffMeshConnection::Clear() {
     ::memset(&first, 0, n);                                \
   } while (0)
 
-  if (_has_bits_[0 / 32] & 123) {
+  if (_has_bits_[0 / 32] & 59) {
     ZR_(radius_, bidirectional_);
     if (has_entrypos()) {
       if (entrypos_ != NULL) entrypos_->::RecastIO::Vec3::Clear();
@@ -2065,43 +2064,28 @@ bool OffMeshConnection::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(40)) goto parse_areaType;
+        if (input->ExpectTag(40)) goto parse_areaflags;
         break;
       }
 
-      // required uint32 areaType = 5;
+      // required uint32 areaflags = 5;
       case 5: {
         if (tag == 40) {
-         parse_areaType:
+         parse_areaflags:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &areatype_)));
-          set_has_areatype();
+                 input, &areaflags_)));
+          set_has_areaflags();
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(48)) goto parse_flags;
+        if (input->ExpectTag(48)) goto parse_biDirectional;
         break;
       }
 
-      // required uint32 flags = 6;
+      // optional bool biDirectional = 6 [default = false];
       case 6: {
         if (tag == 48) {
-         parse_flags:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &flags_)));
-          set_has_flags();
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(56)) goto parse_biDirectional;
-        break;
-      }
-
-      // optional bool biDirectional = 7 [default = false];
-      case 7: {
-        if (tag == 56) {
          parse_biDirectional:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
@@ -2162,19 +2146,14 @@ void OffMeshConnection::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(4, this->radius(), output);
   }
 
-  // required uint32 areaType = 5;
-  if (has_areatype()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(5, this->areatype(), output);
+  // required uint32 areaflags = 5;
+  if (has_areaflags()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(5, this->areaflags(), output);
   }
 
-  // required uint32 flags = 6;
-  if (has_flags()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(6, this->flags(), output);
-  }
-
-  // optional bool biDirectional = 7 [default = false];
+  // optional bool biDirectional = 6 [default = false];
   if (has_bidirectional()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(7, this->bidirectional(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(6, this->bidirectional(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -2213,19 +2192,14 @@ void OffMeshConnection::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(4, this->radius(), target);
   }
 
-  // required uint32 areaType = 5;
-  if (has_areatype()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(5, this->areatype(), target);
+  // required uint32 areaflags = 5;
+  if (has_areaflags()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(5, this->areaflags(), target);
   }
 
-  // required uint32 flags = 6;
-  if (has_flags()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(6, this->flags(), target);
-  }
-
-  // optional bool biDirectional = 7 [default = false];
+  // optional bool biDirectional = 6 [default = false];
   if (has_bidirectional()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(7, this->bidirectional(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(6, this->bidirectional(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2259,21 +2233,14 @@ int OffMeshConnection::ByteSize() const {
       total_size += 1 + 4;
     }
 
-    // required uint32 areaType = 5;
-    if (has_areatype()) {
+    // required uint32 areaflags = 5;
+    if (has_areaflags()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->areatype());
+          this->areaflags());
     }
 
-    // required uint32 flags = 6;
-    if (has_flags()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->flags());
-    }
-
-    // optional bool biDirectional = 7 [default = false];
+    // optional bool biDirectional = 6 [default = false];
     if (has_bidirectional()) {
       total_size += 1 + 1;
     }
@@ -2323,11 +2290,8 @@ void OffMeshConnection::MergeFrom(const OffMeshConnection& from) {
     if (from.has_radius()) {
       set_radius(from.radius());
     }
-    if (from.has_areatype()) {
-      set_areatype(from.areatype());
-    }
-    if (from.has_flags()) {
-      set_flags(from.flags());
+    if (from.has_areaflags()) {
+      set_areaflags(from.areaflags());
     }
     if (from.has_bidirectional()) {
       set_bidirectional(from.bidirectional());
@@ -2349,7 +2313,7 @@ void OffMeshConnection::CopyFrom(const OffMeshConnection& from) {
 }
 
 bool OffMeshConnection::IsInitialized() const {
-  if ((_has_bits_[0] & 0x0000003b) != 0x0000003b) return false;
+  if ((_has_bits_[0] & 0x0000001b) != 0x0000001b) return false;
 
   return true;
 }
@@ -2360,8 +2324,7 @@ void OffMeshConnection::Swap(OffMeshConnection* other) {
     std::swap(exitpos_, other->exitpos_);
     vertices_.Swap(&other->vertices_);
     std::swap(radius_, other->radius_);
-    std::swap(areatype_, other->areatype_);
-    std::swap(flags_, other->flags_);
+    std::swap(areaflags_, other->areaflags_);
     std::swap(bidirectional_, other->bidirectional_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
@@ -3376,6 +3339,7 @@ const int NodeState::kEnabledFieldNumber;
 const int NodeState::kShapemodeFieldNumber;
 const int NodeState::kSolidFieldNumber;
 const int NodeState::kDynamicFieldNumber;
+const int NodeState::kNavFlagOverrideFieldNumber;
 const int NodeState::kModelnameFieldNumber;
 #endif  // !_MSC_VER
 
@@ -3404,6 +3368,7 @@ void NodeState::SharedCtor() {
   shapemode_ = 0;
   solid_ = true;
   dynamic_ = false;
+  navflagoverride_ = 0u;
   modelname_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   clear_has_type();
@@ -3465,11 +3430,12 @@ void NodeState::clear_type() {
 
 
 void NodeState::Clear() {
-  if (_has_bits_[0 / 32] & 124) {
+  if (_has_bits_[0 / 32] & 252) {
     enabled_ = true;
     shapemode_ = 0;
     solid_ = true;
     dynamic_ = false;
+    navflagoverride_ = 0u;
     if (has_modelname()) {
       if (modelname_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         modelname_->clear();
@@ -3583,6 +3549,21 @@ bool NodeState::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(72)) goto parse_navFlagOverride;
+        break;
+      }
+
+      // optional uint32 navFlagOverride = 9 [default = 0];
+      case 9: {
+        if (tag == 72) {
+         parse_navFlagOverride:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &navflagoverride_)));
+          set_has_navflagoverride();
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectTag(82)) goto parse_modelname;
         break;
       }
@@ -3660,6 +3641,11 @@ void NodeState::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(8, this->dynamic(), output);
   }
 
+  // optional uint32 navFlagOverride = 9 [default = 0];
+  if (has_navflagoverride()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(9, this->navflagoverride(), output);
+  }
+
   // optional string modelname = 10;
   if (has_modelname()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
@@ -3711,6 +3697,11 @@ void NodeState::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(8, this->dynamic(), target);
   }
 
+  // optional uint32 navFlagOverride = 9 [default = 0];
+  if (has_navflagoverride()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(9, this->navflagoverride(), target);
+  }
+
   // optional string modelname = 10;
   if (has_modelname()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
@@ -3753,6 +3744,13 @@ int NodeState::ByteSize() const {
     // optional bool dynamic = 8 [default = false];
     if (has_dynamic()) {
       total_size += 1 + 1;
+    }
+
+    // optional uint32 navFlagOverride = 9 [default = 0];
+    if (has_navflagoverride()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->navflagoverride());
     }
 
     // optional string modelname = 10;
@@ -3833,6 +3831,9 @@ void NodeState::MergeFrom(const NodeState& from) {
     if (from.has_dynamic()) {
       set_dynamic(from.dynamic());
     }
+    if (from.has_navflagoverride()) {
+      set_navflagoverride(from.navflagoverride());
+    }
     if (from.has_modelname()) {
       set_modelname(from.modelname());
     }
@@ -3863,6 +3864,7 @@ void NodeState::Swap(NodeState* other) {
     std::swap(shapemode_, other->shapemode_);
     std::swap(solid_, other->solid_);
     std::swap(dynamic_, other->dynamic_);
+    std::swap(navflagoverride_, other->navflagoverride_);
     std::swap(modelname_, other->modelname_);
     std::swap(type_, other->type_);
     std::swap(_oneof_case_[0], other->_oneof_case_[0]);

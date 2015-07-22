@@ -106,6 +106,7 @@
     <ClCompile Include="..\..\..\Common\FiberManager.cpp" />
     <ClCompile Include="..\..\..\Common\FiberState.cpp" />
     <ClCompile Include="..\..\..\Common\pow2assert.cpp" />
+    <ClCompile Include="..\..\..\Common\RecastInterfaces.cpp" />
     <ClCompile Include="..\..\..\Common\VBSPFileData.cpp" />
     <ClCompile Include="..\..\..\Common\VBSPFileImporter.cpp" />
     <ClCompile Include="..\..\..\Common\IGame.cpp" />
@@ -114,10 +115,6 @@
     <ClCompile Include="..\..\..\Common\BlackBoardItems.cpp" />
     <ClCompile Include="..\..\..\Common\PathPlannerFloodFillPathInterface.cpp" />
     <ClCompile Include="..\..\..\Common\PathPlannerRecastPathInterface.cpp" />
-    <ClCompile Include="..\..\..\Common\RecastInterfaces.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\RenderBuffer.cpp" />
     <ClCompile Include="..\..\..\Common\EventReciever.cpp" />
     <ClCompile Include="..\..\..\Common\GoalManager.cpp" />
@@ -468,35 +465,33 @@
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\..\..\Common\Omni-Bot.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\DebugUtils\Source\DebugDraw.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\DebugUtils\Source\DetourDebugDraw.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\DebugUtils\Source\RecastDebugDraw.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\DebugUtils\Source\RecastDump.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\DetourCrowd\Source\DetourCrowd.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\DetourCrowd\Source\DetourLocalBoundary.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\DetourCrowd\Source\DetourObstacleAvoidance.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\DetourCrowd\Source\DetourPathCorridor.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\DetourCrowd\Source\DetourPathQueue.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\DetourCrowd\Source\DetourProximityGrid.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\DetourTileCache\Source\DetourTileCache.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\DetourTileCache\Source\DetourTileCacheBuilder.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourAlloc.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourCommon.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNavMesh.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNavMeshBuilder.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNavMeshQuery.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Detour\Source\DetourNode.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\RecastDemo\Contrib\fastlz\fastlz.c" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\Recast.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastAlloc.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastArea.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastContour.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastFilter.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastLayers.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastMesh.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastMeshDetail.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastRasterization.cpp" />
-    <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastRegion.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DebugUtils\Source\DebugDraw.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DebugUtils\Source\DetourDebugDraw.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DebugUtils\Source\RecastDebugDraw.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DebugUtils\Source\RecastDump.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Source\DetourCrowd.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Source\DetourLocalBoundary.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Source\DetourObstacleAvoidance.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Source\DetourPathCorridor.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Source\DetourPathQueue.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Source\DetourProximityGrid.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Detour\Source\DetourAlloc.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Detour\Source\DetourCommon.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Detour\Source\DetourNavMesh.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Detour\Source\DetourNavMeshBuilder.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Detour\Source\DetourNavMeshQuery.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Detour\Source\DetourNode.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\RecastDemo\Contrib\fastlz\fastlz.c" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\Recast.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastAlloc.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastArea.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastContour.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastFilter.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastLayers.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastMesh.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastMeshDetail.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastRasterization.cpp" />
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastRegion.cpp" />
     <ClCompile Include="..\..\..\dependencies\Remotery\lib\Remotery.c" />
     <ClCompile Include="..\..\..\dependencies\sqlite\shell.c" />
     <ClCompile Include="..\..\..\dependencies\sqlite\sqlite3.c" />
@@ -511,6 +506,7 @@
     <ClInclude Include="..\..\..\Common\FiberState.h" />
     <ClInclude Include="..\..\..\Common\Functor.h" />
     <ClInclude Include="..\..\..\Common\pow2assert.h" />
+    <ClInclude Include="..\..\..\Common\RecastInterfaces.h" />
     <ClInclude Include="..\..\..\Common\VBSPFileData.h" />
     <ClInclude Include="..\..\..\Common\VBSPFileImporter.h" />
     <ClInclude Include="..\..\..\Common\IGame.h" />
@@ -525,7 +521,6 @@
     <ClInclude Include="..\..\..\Common\PathPlannerFloodFillPathInterface.h" />
     <ClInclude Include="..\..\..\Common\PathPlannerRecastPathInterface.h" />
     <ClInclude Include="..\..\..\Common\platformspecifics.h" />
-    <ClInclude Include="..\..\..\Common\RecastInterfaces.h" />
     <ClInclude Include="..\..\..\Common\RenderBuffer.h" />
     <ClInclude Include="..\..\..\Common\EventReciever.h" />
     <ClInclude Include="..\..\..\Common\GoalManager.h" />
@@ -636,31 +631,30 @@
     <ClInclude Include="..\..\..\Common\TriggerManager.h" />
     <ClInclude Include="..\..\..\Common\Utilities.h" />
     <ClInclude Include="..\..\..\Common\BotExports.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DebugUtils\Include\DebugDraw.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DebugUtils\Include\DetourDebugDraw.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DebugUtils\Include\RecastDebugDraw.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DebugUtils\Include\RecastDump.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DetourCrowd\Include\DetourCrowd.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DetourCrowd\Include\DetourLocalBoundary.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DetourCrowd\Include\DetourObstacleAvoidance.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DetourCrowd\Include\DetourPathCorridor.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DetourCrowd\Include\DetourPathQueue.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DetourCrowd\Include\DetourProximityGrid.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DetourTileCache\Include\DetourTileCache.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\DetourTileCache\Include\DetourTileCacheBuilder.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourAlloc.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourAssert.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourCommon.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourMath.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNavMesh.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNavMeshBuilder.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNavMeshQuery.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourNode.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Detour\Include\DetourStatus.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\RecastDemo\Contrib\fastlz\fastlz.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\Recast.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastAlloc.h" />
-    <ClInclude Include="..\..\..\dependencies\Recast\Recast\Include\RecastAssert.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Common\include\SharedConfig.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DebugUtils\Include\DebugDraw.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DebugUtils\Include\DetourDebugDraw.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DebugUtils\Include\RecastDebugDraw.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DebugUtils\Include\RecastDump.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Include\DetourCrowd.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Include\DetourLocalBoundary.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Include\DetourObstacleAvoidance.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Include\DetourPathCorridor.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Include\DetourPathQueue.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Include\DetourProximityGrid.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourAlloc.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourAssert.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourCommon.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourMath.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourNavMesh.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourNavMeshBuilder.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourNavMeshQuery.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourNode.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourStatus.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\RecastDemo\Contrib\fastlz\fastlz.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Recast\Include\Recast.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Recast\Include\RecastAlloc.h" />
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Recast\Include\RecastAssert.h" />
     <ClInclude Include="..\..\..\dependencies\Remotery\lib\Remotery.h" />
     <ClInclude Include="..\..\..\dependencies\sqlite\sqlite3.h" />
     <ClInclude Include="..\..\..\dependencies\sqlite\sqlite3ext.h" />
@@ -682,9 +676,6 @@
     </ProjectReference>
     <ProjectReference Include="..\..\..\dependencies\Opcode\Opcode_vc2012.vcxproj">
       <Project>{6b19233c-49a3-467d-bfa0-2b5ce77745d9}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\dependencies\Recast\Recast.vcxproj">
-      <Project>{78e66c5b-c80b-452f-9621-878678fe937e}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\..\dependencies\WildMagic5\LibCore\LibCore_VC110.vcxproj">
       <Project>{2da95cd7-8454-497e-b25d-6840527b73f3}</Project>

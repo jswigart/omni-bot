@@ -1,0 +1,205 @@
+// This script contains useful utility scripts for performing common actions for Fortress Forever
+
+Util.FlagCarrier = "CLASS.SCOUT";
+Util.Sniper = "CLASS.SNIPER";
+
+Util.HaveTeam = { false, true, true, false, false };
+
+Util.TeamNames =
+{
+	{ "", "", "", },
+	{ "BLUE", "Blue", "blue",},
+	{ "RED", "Red", "red", },
+	{ "YELLOW", "Yellow", "yellow", },
+	{ "GREEN", "Green", "green", },
+};
+
+Util.BotNames =
+{ 
+	{ 
+		"", "", "", "", 
+		"", "", "",
+		"","","","",
+	},
+	{ 
+		"", "blue_scout", "blue_sniper", "blue_soldier", 
+		"blue_demoman", "blue_medic", "blue_hwguy",
+		"blue_pyro","blue_spy","blue_engineer","blue_civilian",
+	},
+	{ 
+		"", "red_scout", "red_sniper", "red_soldier", 
+		"red_demoman", "red_medic", "red_hwguy",
+		"red_pyro","red_spy","red_engineer","red_civilian",
+	},
+	{ 
+		"", "yellow_scout", "yellow_sniper", "yellow_soldier", 
+		"yellow_demoman", "yellow_medic", "yellow_hwguy",
+		"yellow_pyro","yellow_spy","yellow_engineer","yellow_civilian",
+	},
+	{ 
+		"", "green_scout", "green_sniper", "green_soldier", 
+		"green_demoman", "green_medic", "green_hwguy",
+		"green_pyro","green_spy","green_engineer","green_civilian",
+	},
+};
+
+Util.NoTimeLimit = "timelimit 0";
+Util.TimeLimit1 = "timelimit 1";
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member NumRedFlagCaptures = 0;
+member RedFlagState = "returned";
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member RedFlagHandler = function( _params )
+{
+	if ( _params.Action == "returned" )
+	{
+		if ( this.RedFlagState == "pickedup" )
+			{ this.NumRedFlagCaptures = this.NumRedFlagCaptures + 1; }
+		
+		this.RedFlagState = "returned";
+		return;
+	}
+	
+	if ( _params.Action == "dropped" )
+	{
+		this.RedFlagState = "dropped";
+		return;
+	}
+	
+	if ( _params.Action == "pickedup" )
+	{
+		this.RedFlagState = "pickedup";
+		return;
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//	
+member NumBlueFlagCaptures = 0;
+member BlueFlagState = "item_returned";
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member BlueFlagHandler = function( _params )
+{
+	if ( _params.Action == "returned" )
+	{
+		if ( this.BlueFlagState == "pickedup" )
+			{ this.NumBlueFlagCaptures = this.NumBlueFlagCaptures + 1; }
+		
+		this.BlueFlagState = "returned";
+		return;
+	}
+	
+	if ( _params.Action == "dropped" )
+	{
+		this.BlueFlagState = "dropped";
+		return;
+	}
+	
+	if ( _params.Action == "pickedup" )
+	{
+		this.BlueFlagState = "pickedup";
+		return;
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member HudTextMsgStatus = false;
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member HudTextMsgOutput = function( text )
+{
+	while ( this.HudTextMsgStatus )
+	{
+		HudTextMsg( Util.GetPlayerEntity(), text );
+		sleep( 1 );
+	}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member HudTextMsgOutput2 = function( text, time )
+{
+	this.HudTextMsgOn( text );
+	
+	for ( i = 0 ; i < time ; i = i + 1 )
+	{
+		if ( Util.Skip )
+			{ break; }
+
+		sleep( 1 );
+	}
+	
+	this.HudTextMsgOff();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member HudTextMsgTimeout = function( text, time )
+{
+	thread( this.HudTextMsgOutput2, text, time );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member HudTextMsgOn = function( text )
+{
+	this.HudTextMsgStatus = true;
+	thread( this.HudTextMsgOutput, text );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member HudTextMsgOff = function()
+{
+	this.HudTextMsgStatus = false;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member SetOffense = function()
+{
+	SetGoalPriority( "DEFENSE_.*", 0.0, TEAM.BLUE, CLASS.SCOUT );
+	SetGoalPriority( "DEFENSE_.*", 0.0, TEAM.BLUE, CLASS.SOLDIER );
+	SetGoalPriority( "DEFENSE_.*", 0.0, TEAM.BLUE, CLASS.PYRO );
+	
+	SetGoalPriority( "DEFENSE_.*", 0.0, TEAM.RED, CLASS.SCOUT );
+	SetGoalPriority( "DEFENSE_.*", 0.0, TEAM.RED, CLASS.SOLDIER );
+	SetGoalPriority( "DEFENSE_.*", 0.0, TEAM.RED, CLASS.PYRO );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+member SetDefense = function()
+{
+	SetGoalPriority( "FLAG_.*", 0.0, TEAM.BLUE, CLASS.SNIPER );
+	SetGoalPriority( "FLAG_.*", 0.0, TEAM.BLUE, CLASS.DEMOMAN );
+	SetGoalPriority( "FLAG_.*", 0.0, TEAM.BLUE, CLASS.MEDIC );
+	SetGoalPriority( "FLAG_.*", 0.0, TEAM.BLUE, CLASS.HWGUY );
+	SetGoalPriority( "FLAG_.*", 0.0, TEAM.BLUE, CLASS.ENGINEER );
+	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.BLUE, CLASS.SNIPER );
+	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.BLUE, CLASS.DEMOMAN );
+	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.BLUE, CLASS.MEDIC );
+	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.BLUE, CLASS.HWGUY );
+	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.BLUE, CLASS.SPY );
+	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.BLUE, CLASS.ENGINEER );
+	
+	SetGoalPriority( "FLAG_.*", 0.0, TEAM.RED, CLASS.SNIPER );
+	SetGoalPriority( "FLAG_.*", 0.0, TEAM.RED, CLASS.DEMOMAN );
+	SetGoalPriority( "FLAG_.*", 0.0, TEAM.RED, CLASS.MEDIC );
+	SetGoalPriority( "FLAG_.*", 0.0, TEAM.RED, CLASS.HWGUY );
+	SetGoalPriority( "FLAG_.*", 0.0, TEAM.RED, CLASS.ENGINEER );
+	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.RED, CLASS.SNIPER );
+	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.RED, CLASS.DEMOMAN );
+	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.RED, CLASS.MEDIC );
+	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.RED, CLASS.HWGUY );
+	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.RED, CLASS.SPY );
+	SetGoalPriority( "CAPPOINT_.*", 0.0, TEAM.RED, CLASS.ENGINEER );
+};

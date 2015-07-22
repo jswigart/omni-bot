@@ -57,6 +57,11 @@ public:
 	inline float bF() const	{ return (float)mElements.mB / 255.0f; }
 	inline float aF() const	{ return (float)mElements.mA / 255.0f; }
 
+	inline void set_r( uint8_t v )	{ mElements.mR = v; }
+	inline void set_g( uint8_t v )	{ mElements.mG = v; }
+	inline void set_b( uint8_t v )	{ mElements.mB = v; }
+	inline void set_a( uint8_t v )	{ mElements.mA = v; }
+	
 	inline obColor fade(uint8_t _a) const { obColor c(mRGBA); c.mElements.mA=_a; return c; }
 
 	static obColor FromFloat(float _r, float _g, float _b, float _a = 1)
@@ -80,6 +85,14 @@ public:
 
 	inline uint32_t rgba() const { return mRGBA; }
 	inline uint32_t argb() const { return obColor( a(), r(), g(), b() ); }
+	inline uint32_t abgr() const { return obColor( a(), b(), g(), r() ); }
+
+	void MultRGB( float s )
+	{
+		mElements.mR = (uint8_t)( (float)mElements.mR * s );
+		mElements.mG = (uint8_t)( (float)mElements.mG * s );
+		mElements.mB = (uint8_t)( (float)mElements.mB * s );
+	}
 private:
 	struct
 	{

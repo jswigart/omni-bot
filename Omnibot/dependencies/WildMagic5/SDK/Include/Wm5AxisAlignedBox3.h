@@ -9,7 +9,6 @@
 #ifndef WM5AXISALIGNEDBOX3_H
 #define WM5AXISALIGNEDBOX3_H
 
-#include <limits>
 #include "Wm5MathematicsLIB.h"
 #include "Wm5Vector3.h"
 
@@ -31,7 +30,7 @@ namespace Wm5
 
 		// Compute the center of the box and the extents (half-lengths)
 		// of the box edges.
-		void GetCenterExtents (Vector3<Real>& center, Real extent[3]) const;
+		void GetCenterExtents( Vector3<Real>& center, Real extent[ 3 ] ) const;
 
 		// Overlap testing is in the strict sense.  If the two boxes are just
 		// touching along a common edge or a common face, the boxes are reported
@@ -51,7 +50,7 @@ namespace Wm5
 		Vector3<Real> Min;
 		Vector3<Real> Max;
 
-		bool Contains( const Vector3<Real> & pos )
+		bool Contains( const Vector3<Real> & pos ) const
 		{
 			return
 				pos.X() >= Min.X() &&

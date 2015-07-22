@@ -74,18 +74,12 @@ namespace AiState
 
 	bool FollowPath::IsOnCustomLink() const
 	{
-		if ( mCachedCorners[ 0 ].mFlags & NAVFLAGS_PATH_LINK )
-			return true;
-		return false;
+		return mCachedCorners[ 0 ].mIsLink;
 	}
 
-	bool FollowPath::IsOnCustomLink( NavArea type ) const
+	bool FollowPath::IsOnCustomLink( NavAreaFlags type ) const
 	{
-		if ( mCachedCorners[ 0 ].mFlags & NAVFLAGS_PATH_LINK )
-		{
-			return mCachedCorners[ 0 ].mArea == type;
-		}
-		return false;
+		return mCachedCorners[ 0 ].mIsLink;
 	}
 
 	bool FollowPath::GetAimPosition( Vector3f &_aimpos )
@@ -526,7 +520,7 @@ namespace AiState
 			mNumCachedCorners = mPathInterface->GetPathCorners( mCachedCorners, CachedEdges );
 			if ( mNumCachedCorners > 0 )
 			{
-				const bool inWater = ( mCachedCorners[ 0 ].mFlags & NAVFLAGS_SWIM ) != 0;
+				const bool inWater = ( mCachedCorners[ 0 ].mAreaMask & NAVFLAGS_WATER ) != 0;
 
 				b3dMovement = inWater;
 
@@ -617,7 +611,7 @@ namespace AiState
 				//		GetClient()->PressButton( BOT_BUTTON_JUMP );
 				//}
 
-				if ( mCachedCorners[ 0 ].mArea == NAVAREA_LADDER )
+				if ( mCachedCorners[ 0 ].mAreaMask & NAVFLAGS_LADDER )
 				{
 					GetClient()->ReleaseButton( BOT_BUTTON_CROUCH );
 					GetClient()->PressButton( BOT_BUTTON_JUMP );
@@ -627,13 +621,13 @@ namespace AiState
 					GetClient()->PressButton( BOT_BUTTON_CROUCH );
 				else
 				{
-					if ( ( mCachedCorners[ 0 ].mFlags & NAVFLAGS_CROUCH ) && distToCorner < 128.0f )
+					if ( ( mCachedCorners[ 0 ].mAreaMask & NAVFLAGS_CROUCH ) && distToCorner < 128.0f )
 						GetClient()->PressButton( BOT_BUTTON_CROUCH );
 					else
 						GetClient()->ReleaseButton( BOT_BUTTON_CROUCH );
 				}
 				
-				if ( mCachedCorners[ 0 ].mArea == NAVAREA_DOOR && IGame::GetFrameNumber() & 3 )
+				if ( mCachedCorners[ 0 ].mAreaMask == NAVFLAGS_DOOR && IGame::GetFrameNumber() & 3 )
 					GetClient()->PressButton( BOT_BUTTON_USE );
 				/*if ( mCachedCorners[ 0 ].mFlags & F_NAV_JUMPLOW )
 					CheckForLowJumps( vGotoTarget );

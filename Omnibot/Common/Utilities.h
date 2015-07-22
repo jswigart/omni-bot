@@ -46,6 +46,26 @@ struct EnumerationValues
 		return false;
 	}
 
+	static bool ParseDelimitedValue( const char * name, const char * delimiters, EnumType& val )
+	{
+		StringVector tokens;
+		Tokenize( name, delimiters, tokens );
+
+		size_t matchedTokens = 0;
+		for ( size_t i = 0; i < tokens.size(); ++i )
+		{
+			for ( size_t i = 0; i < sKeyValCount; ++i )
+			{
+				if ( !stricmp( sKeyVal[ i ].mName, name ) )
+				{
+					val = (EnumType)( val | sKeyVal[ i ].mValue );
+					++matchedTokens;
+				}
+			}
+		}
+		return matchedTokens == tokens.size();
+	}
+
 	static bool NameForValue( EnumType val, std::string& name )
 	{
 		for ( size_t i = 0; i < sKeyValCount; ++i )
@@ -64,7 +84,7 @@ struct EnumerationValues
 		std::string str;
 		for ( size_t i = 0; i < sKeyValCount; ++i )
 		{
-			if ( sKeyVal[ i ].mValue & val )
+			if ( ( sKeyVal[ i ].mValue & val ) == sKeyVal[ i ].mValue )
 			{
 				if ( !str.empty() )
 					str += ", ";

@@ -1,0 +1,3 @@
+[submodule "Omnibot/dependencies/recastnavigation"]
+	path = Omnibot/dependencies/recastnavigation
+	url = https://github.com/jswigart/recastnavigation

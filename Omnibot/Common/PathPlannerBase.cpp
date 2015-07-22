@@ -14,10 +14,40 @@
 
 //////////////////////////////////////////////////////////////////////////
 
+const NavAreaFlagsEnum NavAreaFlagsEnum::sKeyVal [] =
+{
+	{ "none", NAVFLAGS_NONE },
+	{ "walk", NAVFLAGS_WALK },
+	{ "crouch", NAVFLAGS_CROUCH },
+	{ "prone", NAVFLAGS_PRONE },
+	{ "team1", NAVFLAGS_TEAM1_ONLY },
+	{ "team2", NAVFLAGS_TEAM2_ONLY },
+	{ "team3", NAVFLAGS_TEAM3_ONLY },
+	{ "team4", NAVFLAGS_TEAM4_ONLY },
+	{ "water", NAVFLAGS_WATER },
+	{ "jump", NAVFLAGS_JUMP },
+	{ "ladder", NAVFLAGS_LADDER },
+	{ "teleport", NAVFLAGS_TELEPORT },
+	{ "door", NAVFLAGS_DOOR },
+	{ "rocketjump", NAVFLAGS_ROCKETJUMP },
+	{ "pushable", NAVFLAGS_PUSHABLE },
+	{ "mover", NAVFLAGS_MOVER },
+	{ "threat1", NAVFLAGS_THREAT_LVL1 },
+	{ "threat2", NAVFLAGS_THREAT_LVL2 },
+	{ "threat3", NAVFLAGS_THREAT_LVL3 },
+	{ "jumppad", NAVFLAGS_JUMPPAD },
+	{ "disabled", NAVFLAGS_DISABLED },
+	{ "allteams", NAVFLAGS_ALLTEAMS },
+	{ "threats", NAVFLAGS_THREATS },
+};
+
+const size_t NavAreaFlagsEnum::sKeyValCount = sizeof( NavAreaFlagsEnum::sKeyVal ) / sizeof( NavAreaFlagsEnum::sKeyVal[ 0 ] );
+
+//////////////////////////////////////////////////////////////////////////
+
 OffMeshConnection::OffMeshConnection()
 	: mRadius( 0.0f )
-	, mAreaType( NAVAREA_GROUND )
-	, mFlags( NAVFLAGS_NONE )
+	, mAreaFlags( NAVFLAGS_WALK )
 	, mBiDirectional( false )
 	, mPolyId( 0 )
 {
@@ -26,8 +56,7 @@ OffMeshConnection::OffMeshConnection()
 void OffMeshConnection::Render()
 {
 	std::string areaStr, flagStr;
-	NavAreaEnum::NameForValue( mAreaType, areaStr );
-	NavAreaFlagsEnum::NameForValue( mFlags, flagStr );
+	NavAreaFlagsEnum::NameForValue( mAreaFlags, flagStr );
 
 	Vector3f lastPt = mEntry;
 	for ( size_t i = 0; i < mVertices.size(); ++i )

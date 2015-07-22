@@ -173,6 +173,7 @@ void FF_Game::GetNavParms( NavParms & navParms ) const
 	navParms = NavParms();
 
 	navParms.AgentHeightStand = 64.f;
-	navParms.AgentHeightCrouch = 20.f;
+	navParms.AgentHeightCrouch = 24.f;
 	navParms.AgentRadius = 20.f;
 }
+

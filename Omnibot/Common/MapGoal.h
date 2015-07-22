@@ -505,6 +505,8 @@ private:
 	void SetRange_Script(const int &_range);
 	int GetRange_Script();
 
+	void DrawPathsToGoals();
+
 	MapGoalWPtr	mWeakPtr;
 
 	static bool pfnSetDotEx(gmThread * a_thread, MapGoal * a_goal, const char *a_key, gmVariable * a_operands);

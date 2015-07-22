@@ -24,7 +24,7 @@ this.UpgradeVersion = function(Props)
 	if(Props.Version==0)
 	{
 		this.Schema.Check(Props);
-		this.SetPosition(this.GetPosition() + Util.WaypointGoalOffset);
+		this.SetPosition(this.GetPosition());
 
 		Props.MortarAim = {};
 

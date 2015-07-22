@@ -6,6 +6,7 @@ ExecScript("server_manager.gm");
 
 // New module format
 global Util = import("utilities");
+global FFUtil = import("ff_utilities");
 
 // global debug flags
 global DEBUG_MAP_SCRIPTS = true;

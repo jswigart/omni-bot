@@ -78,7 +78,7 @@ this.UpgradeVersion = function(Props)
 		//this.SetPosition( GroundPoint(this.GetPosition()) );
 
 		// offset instead
-		this.SetPosition(this.GetPosition() + Util.WaypointGoalOffset);
+		this.SetPosition(this.GetPosition());
 
 		this.SetBounds(Vec3(-5,-5,0),Vec3(5,5,96));
 

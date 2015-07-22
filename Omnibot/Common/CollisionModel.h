@@ -92,7 +92,7 @@ struct CollisionTriangle
 	Triangle3f		mTri;
 	ContentFlags	mContents;
 	SurfaceFlags	mSurface;	
-	NavArea			mNavArea;
+	NavAreaFlags	mNavFlags;
 };
 
 struct RayResult
@@ -225,6 +225,8 @@ struct Node : public boost::enable_shared_from_this<Node>
 	int								mSubModel;
 	int								mStaticModel;
 	ModelState						mActiveState;
+	NavAreaFlags					mNavFlagsActive;
+	NavAreaFlags					mNavFlagsOverride;
 	boost::crc_32_type::value_type	mActiveModelCrc;
 
 	ModelTransform					mTransform;
@@ -236,6 +238,7 @@ struct Node : public boost::enable_shared_from_this<Node>
 	bool							mSolid : 1;
 	bool							mDynamic : 1;
 	bool							mForceRebuild : 1;
+	bool							mRuntimeEntity : 1; // don't save to file
 
 	void Init( PathPlannerRecast * planner );
 	void UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpdate );

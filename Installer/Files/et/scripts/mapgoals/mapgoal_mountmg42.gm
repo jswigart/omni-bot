@@ -51,7 +51,7 @@ this.UpgradeVersion = function(Props)
 	{
 		// Version 1 Schema, upgrade from waypoint format
 		this.Schema.Check(Props);
-		this.SetPosition(this.GetPosition() + Util.WaypointGoalOffset);
+		this.SetPosition(this.GetPosition());
 		Props.Version = 1;
 		Props.MinCampTime = this.DefaultMinCampTime;
 		Props.MaxCampTime = this.DefaultMaxCampTime;

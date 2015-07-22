@@ -1,8 +1,5 @@
 // This script contains useful utility scripts for performing common actions.
 
-// offset for converted waypoint goals
-Util.WaypointGoalOffset = Vector3(0,0,-24);
-
 Util.AllTeamPlayers = 32;
 Util.AllTeams = ( 1 << TEAM.AXIS ) | ( 1 << TEAM.ALLIES );
 Util.AllClasses = ( 1 << CLASS.SOLDIER ) | ( 1 << CLASS.MEDIC ) |

@@ -26,7 +26,7 @@ this.UpgradeVersion = function(Props)
 	initWeaponTable = false;
 	if(Props.Version==0)
 	{
-		this.SetPosition(this.GetPosition() + Util.WaypointGoalOffset);
+		this.SetPosition(this.GetPosition());
 		this.SetBounds(Vec3(-5,-5,0),Vec3(5,5,96));
 		initWeaponTable = true;
 	}

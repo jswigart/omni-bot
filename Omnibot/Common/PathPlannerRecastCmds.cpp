@@ -44,6 +44,7 @@ void PathPlannerRecast::InitCommands()
 	SetEx( "nav_modelsolid", "Enables solid flag on look-at model.", this, &PathPlannerRecast::cmdModelSetSolid );
 	SetEx( "nav_modeldynamic", "Enables mover flag on look-at model.", this, &PathPlannerRecast::cmdModelDynamic );
 	SetEx( "nav_modelsettrisurface", "Enables mover flag on look-at model.", this, &PathPlannerRecast::cmdModelSetTriangleSurface );
+	SetEx( "nav_modelsetarea", "Sets an area override for the region baked in by this model.", this, &PathPlannerRecast::cmdModelSetAreaFlag );
 }
 
 void PathPlannerRecast::cmdNavSave( const StringVector & args )
@@ -198,7 +199,7 @@ public:
 		Vector3f vAimPt, vAimNormal;
 		Utils::GetLocalAimPoint( vAimPt, &vAimNormal, TR_MASK_FLOODFILLENT, &contents, &surface );
 
-		if ( mConn.mAreaType == NAVAREA_LADDER && ( surface & SURFACE_LADDER ) != 0 )
+		if ( mConn.mAreaFlags == NAVFLAGS_LADDER && ( surface & SURFACE_LADDER ) != 0 )
 		{
 			if ( mConn.mVertices.size() == 0 )
 			{
@@ -251,9 +252,7 @@ void PathPlannerRecast::cmdNavAddLink( const StringVector & args )
 
 	if ( !Utils::ConvertString( args[ 1 ], conn.mRadius ) )
 		goto showUsage;
-	if ( !NavAreaEnum::ValueForName( args[ 2 ].c_str(), conn.mAreaType ) )
-		goto showUsage;
-	if ( !NavAreaFlagsEnum::ValueForName( args[ 3 ].c_str(), conn.mFlags ) )
+	if ( !NavAreaFlagsEnum::ValueForName( args[ 2 ].c_str(), conn.mAreaFlags ) )
 		goto showUsage;
 	
 	SetCurrentTool<ToolCreateOffMeshConnection>( conn );
@@ -261,15 +260,12 @@ void PathPlannerRecast::cmdNavAddLink( const StringVector & args )
 
 showUsage:
 	
-	std::string areasStr, flagsStr;
-	for ( size_t i = 0; i < NavAreaEnum::sKeyValCount; ++i )
-		areasStr += va( "%s%s", areasStr.empty() ? "" : ", ", NavAreaEnum::sKeyVal[ i ].mName );
+	std::string flagsStr;
 	for ( size_t i = 0; i < NavAreaFlagsEnum::sKeyValCount; ++i )
 		flagsStr += va( "%s%s", flagsStr.empty() ? "" : ", ", NavAreaFlagsEnum::sKeyVal[ i ].mName );
 
 	EngineFuncs::ConsoleError( "nav_addconnection radius[#] type[string] flag(s)[string].." );
 	EngineFuncs::ConsoleError( va( "	radius - radius of connection" ) );
-	EngineFuncs::ConsoleError( va( "	type - one of (%s)", areasStr.c_str() ) );
 	EngineFuncs::ConsoleError( va( "	flags - combination of (%s)", flagsStr.c_str() ) );
 }
 
@@ -290,8 +286,7 @@ void PathPlannerRecast::cmdAutoBuildFeatures( const StringVector & args )
 			OffMeshConnection conn;
 			conn.mEntry = Vector3f( features[ i ].mPosition );
 			conn.mExit = Vector3f( features[ i ].mTargetPosition );
-			conn.mAreaType = NAVAREA_TELEPORT;
-			conn.mFlags = NAVFLAGS_NONE;
+			conn.mAreaFlags = NAVFLAGS_TELEPORT;
 			conn.mRadius = 16.0f;
 			conn.mBiDirectional = false;
 			mOffMeshConnections.push_back( conn );
@@ -317,6 +312,9 @@ void PathPlannerRecast::cmdCommitPoly( const StringVector & args )
 
 void PathPlannerRecast::cmdSaveToObjFile( const StringVector & args )
 {
+	if ( mFlags.mViewMode == 0 )
+		return;
+
 	if ( args.size() < 2 )
 	{
 		EngineFuncs::ConsoleError( "nav_saveobj filename" );
@@ -417,6 +415,9 @@ void PathPlannerRecast::cmdSaveToObjFile( const StringVector & args )
 
 void PathPlannerRecast::cmdModelEnable( const StringVector & args )
 {
+	if ( mFlags.mViewMode == 0 )
+		return;
+
 	const char *strUsage [] =
 	{
 		"nav_modelenable enable[bool] all[bool]<optional>",
@@ -443,6 +444,9 @@ void PathPlannerRecast::cmdModelEnable( const StringVector & args )
 
 void PathPlannerRecast::cmdModelShape( const StringVector & args )
 {
+	if ( mFlags.mViewMode == 0 )
+		return;
+
 	const char *strUsage [] =
 	{
 		"nav_modelshape mode[string] all[bool]<optional>",
@@ -484,6 +488,9 @@ void PathPlannerRecast::cmdModelShape( const StringVector & args )
 
 void PathPlannerRecast::cmdModelSetSolid( const StringVector & args )
 {
+	if ( mFlags.mViewMode == 0 )
+		return;
+
 	const char *strUsage [] =
 	{
 		"nav_modelsolid enable[bool] all[bool]<optional>",
@@ -511,6 +518,9 @@ void PathPlannerRecast::cmdModelSetSolid( const StringVector & args )
 
 void PathPlannerRecast::cmdModelDynamic( const StringVector & args )
 {
+	if ( mFlags.mViewMode == 0 )
+		return;
+
 	const char *strUsage [] =
 	{
 		"nav_modelmover enable[bool] all[bool]<optional>",
@@ -537,6 +547,9 @@ void PathPlannerRecast::cmdModelDynamic( const StringVector & args )
 
 void PathPlannerRecast::cmdModelSetTriangleSurface( const StringVector & args )
 {
+	if ( mFlags.mViewMode == 0 )
+		return;
+
 	const char *strUsage [] =
 	{
 		"nav_modelsettrisurface surfaceflag[string]...",
@@ -566,4 +579,40 @@ void PathPlannerRecast::cmdModelSetTriangleSurface( const StringVector & args )
 		result.mHitNode->mModel->SetSurfaceOverride( result.mHitTriangle, overrideFlags );
 		result.mHitNode->mModel->UpdateModelCrc();
 	}
+}
+
+void PathPlannerRecast::cmdModelSetAreaFlag( const StringVector & args )
+{
+	if ( mFlags.mViewMode == 0 )
+		return;
+
+	NavAreaFlags navFlags = NAVFLAGS_NONE;
+	RayResult result;
+
+	if ( args.size() < 2 )
+		goto showUsage;
+
+	for ( size_t i = 1; i < args.size(); ++i )
+	{
+		if ( !NavAreaFlagsEnum::ValueForName( args[ i ].c_str(), navFlags ) )
+		{
+			EngineFuncs::ConsoleError( va( "Unknown flag '%s'", args[ i ].c_str() ) );
+			goto showUsage;
+		}
+	}
+		
+	if ( GetAimedAtModel( result, SURFACE_NONE ) )
+	{
+		result.mHitNode->mNavFlagsOverride = navFlags;
+	}
+	return;
+
+showUsage:
+
+	std::string flagsStr;
+	for ( size_t i = 0; i < NavAreaFlagsEnum::sKeyValCount; ++i )
+		flagsStr += va( "%s%s", flagsStr.empty() ? "" : ", ", NavAreaFlagsEnum::sKeyVal[ i ].mName );
+
+	EngineFuncs::ConsoleError( "nav_modelsetarea flag(s)[string].." );
+	EngineFuncs::ConsoleError( va( "	flags - combination of (%s)", flagsStr.c_str() ) );
 }

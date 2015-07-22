@@ -786,8 +786,10 @@ void Node::Clear()
 	mEntInfo = EntityInfo();
 	mSubModel = -1;
 	mStaticModel = -1;
-	mActiveState = StateUnknown;
+	mActiveState = StateCollidable;
 	mActiveModelCrc = 0;
+	mNavFlagsActive = NAVFLAGS_NONE;
+	mNavFlagsOverride = NAVFLAGS_NONE;
 	mTransform = ModelTransform();
 	mChildren.clear();
 	mModel.reset();
@@ -796,6 +798,7 @@ void Node::Clear()
 	mSolid = true;
 	mDynamic = false;
 	mForceRebuild = false;
+	mRuntimeEntity = false;
 }
 
 void Node::Init( PathPlannerRecast * planner )
@@ -848,6 +851,12 @@ void Node::UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpda
 	{
 		bool rebuildForced = false;
 		bool rebuildModelChanged = false;
+		bool rebuildNavFlagChanged = false;
+
+		NavAreaFlags currentNavFlags = mEntInfo.mNavFlags;
+		
+		if ( mNavFlagsOverride != NAVFLAGS_NONE )
+			currentNavFlags = mNavFlagsOverride;
 
 		// by default, models with no entity are collidable
 		ModelState currentState = StateNonCollidable;
@@ -864,6 +873,10 @@ void Node::UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpda
 		else if ( mActiveModelCrc != mModel->GetModelCrc() )
 		{
 			rebuildModelChanged = true;
+		}
+		else if ( currentNavFlags != mNavFlagsActive )
+		{
+			rebuildNavFlagChanged = true;
 		}
 		else if ( mEntity.IsValid() )
 		{
@@ -910,7 +923,7 @@ void Node::UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpda
 				currentState = StateMoved;
 		}
 		
-		if ( rebuildForced || rebuildModelChanged || mActiveState != currentState || currentState == StateMarkedForDelete )
+		if ( rebuildForced || rebuildModelChanged || rebuildNavFlagChanged || mActiveState != currentState || currentState == StateMarkedForDelete )
 		{
 			if ( currentState == StateMarkedForDelete )
 			{
@@ -919,16 +932,17 @@ void Node::UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpda
 			else if ( rebuildForced )
 			{
 				std::string entName = EngineFuncs::EntityName( mEntity, "" );
-				EngineFuncs::ConsoleMessage( va( "Entity '%s', rebuild forced",
-					entName.c_str(),
-					mSubModel ) );
+				EngineFuncs::ConsoleMessage( va( "Entity '%s', rebuild forced", entName.c_str(), mSubModel ) );
 			}
 			else if ( rebuildModelChanged )
 			{
 				std::string entName = EngineFuncs::EntityName( mEntity, "" );
-				EngineFuncs::ConsoleMessage( va( "Entity '%s', model %d crc changed",
-					entName.c_str(),
-					mSubModel ) );
+				EngineFuncs::ConsoleMessage( va( "Entity '%s', model %d crc changed", entName.c_str(), mSubModel ) );
+			}
+			else if ( rebuildNavFlagChanged )
+			{
+				std::string entName = EngineFuncs::EntityName( mEntity, "" );
+				EngineFuncs::ConsoleMessage( va( "Entity '%s', nav flag changed", entName.c_str() ) );
 			}
 			else if ( mEntity.IsValid() )
 			{
@@ -946,6 +960,7 @@ void Node::UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpda
 
 			mActiveState = currentState;
 			mActiveModelCrc = mModel->GetModelCrc();
+			mNavFlagsActive = currentNavFlags;
 
 			// which tiles does this model touch? we need to queue them for rebuilding
 			const AxisAlignedBox3f bounds = ComputeAABB( mModel->GetWorldOBB( mTransform ) );
@@ -1008,19 +1023,19 @@ void Node::GatherTriangles( const GatherParms & parms, const Box3f & gatherObb, 
 	if ( mModel != NULL && mEnabled && mActiveState == StateCollidable )
 	{
 		CollisionTriangle baseTri;
-		baseTri.mNavArea = NAVAREA_GROUND;
-
-		if ( !mSolid )
-			baseTri.mNavArea = NAVAREA_REGION;
+		if ( mNavFlagsOverride != NAVFLAGS_NONE )
+			baseTri.mNavFlags = mNavFlagsOverride;
+		else if ( mEntInfo.mNavFlags != NAVFLAGS_NONE )
+			baseTri.mNavFlags = mEntInfo.mNavFlags;
 		else
-		{
-			if ( mEntInfo.mCategory.CheckFlag( ENT_CAT_TRIGGER ) )
-				baseTri.mNavArea = NAVAREA_REGION; // mark off triggers
-			if ( mEntInfo.mCategory.CheckFlag( ENT_CAT_MOVER ) )
-				baseTri.mNavArea = NAVAREA_MOVER; // mark off movers
-			if ( mEntInfo.mCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
-				baseTri.mNavArea = NAVAREA_PUSHABLE;
-		}
+			baseTri.mNavFlags = mSolid ? NAVFLAGS_WALK : NAVFLAGS_NONE;
+		
+		//if ( mEntInfo.mCategory.CheckFlag( ENT_CAT_TRIGGER ) )
+		//	baseTri.mNavFlags = (NavAreaFlags)( baseTri.mNavFlags | NAVFLAGS_REGION ); // mark off triggers
+		if ( mEntInfo.mCategory.CheckFlag( ENT_CAT_MOVER ) )
+			baseTri.mNavFlags = (NavAreaFlags)( baseTri.mNavFlags | NAVFLAGS_MOVER ); // mark off movers
+		if ( mEntInfo.mCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
+			baseTri.mNavFlags = (NavAreaFlags)( baseTri.mNavFlags | NAVFLAGS_PUSHABLE );
 
 		GatherParms nodeParms = parms;
 		nodeParms.mMode = mShapeMode;
@@ -1039,14 +1054,19 @@ void Node::GatherTriangles( const GatherParms & parms, const Sphere3f & gatherSp
 	if( mModel != NULL && mEnabled && mActiveState == StateCollidable )
 	{
 		CollisionTriangle baseTri;
-		baseTri.mNavArea = mSolid ? NAVAREA_GROUND : NAVAREA_REGION;
+		if ( mNavFlagsOverride != NAVFLAGS_NONE )
+			baseTri.mNavFlags = mNavFlagsOverride;
+		else if ( mEntInfo.mNavFlags != NAVFLAGS_NONE )
+			baseTri.mNavFlags = mEntInfo.mNavFlags;
+		else
+			baseTri.mNavFlags = mSolid ? NAVFLAGS_WALK : NAVFLAGS_NONE;
 
-		if( mEntInfo.mCategory.CheckFlag( ENT_CAT_TRIGGER ) )
-			baseTri.mNavArea = NAVAREA_REGION; // mark off triggers
-		if( mEntInfo.mCategory.CheckFlag( ENT_CAT_MOVER ) )
-			baseTri.mNavArea = NAVAREA_MOVER; // mark off movers
-		if( mEntInfo.mCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
-			baseTri.mNavArea = NAVAREA_PUSHABLE;
+		//if ( mEntInfo.mCategory.CheckFlag( ENT_CAT_TRIGGER ) )
+		//	baseTri.mNavFlags = (NavAreaFlags)( baseTri.mNavFlags | NAVFLAGS_REGION ); // mark off triggers
+		if ( mEntInfo.mCategory.CheckFlag( ENT_CAT_MOVER ) )
+			baseTri.mNavFlags = (NavAreaFlags)( baseTri.mNavFlags | NAVFLAGS_MOVER ); // mark off movers
+		if ( mEntInfo.mCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
+			baseTri.mNavFlags = (NavAreaFlags)( baseTri.mNavFlags | NAVFLAGS_PUSHABLE );
 
 		GatherParms nodeParms = parms;
 		nodeParms.mMode = mShapeMode;
@@ -1269,6 +1289,11 @@ void Node::SaveState( RecastIO::NavigationMesh & ioNavmesh )
 			nodeState->set_shapemode( mShapeMode );
 			dataSet = true;
 		}
+		if ( nodeState->navflagoverride() != mNavFlagsOverride )
+		{
+			nodeState->set_navflagoverride( mNavFlagsOverride );
+			dataSet = true;
+		}
 		
 		// if all the fields are defaulted don't save it out
 		if ( !dataSet )
@@ -1284,6 +1309,7 @@ void Node::LoadState( const RecastIO::NodeState & nodeState )
 	mDynamic = nodeState.dynamic();
 	mShapeMode = nodeState.shapemode();
 	mActiveModelCrc = mModel ? mModel->GetModelCrc() : 0;
+	mNavFlagsOverride = (NavAreaFlags)nodeState.navflagoverride();
 }
 
 void Node::BuildScene( modeldata::Scene & scene, modeldata::Node & node )

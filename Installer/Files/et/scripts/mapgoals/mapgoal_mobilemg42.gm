@@ -56,7 +56,7 @@ this.UpgradeVersion = function(Props)
 
 		this.Schema.Check(Props);
 
-		this.SetPosition(this.GetPosition() + Util.WaypointGoalOffset);
+		this.SetPosition(this.GetPosition());
 		this.SetBounds(Vec3(-5,-5,0),Vec3(5,5,96));
 	}
 	else if(Props.Version == this.Version)

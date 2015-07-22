@@ -1326,28 +1326,49 @@ void MapGoal::CheckForPersistentPriority()
 
 void MapGoal::DrawRoute( const obColor _color, float _duration )
 {
-	Routes::const_iterator cIt = mRoutes.begin(), cItEnd = mRoutes.end();
-	for ( ; cIt != cItEnd; ++cIt )
-	{
-		const Route &r = ( *cIt );
+	PathInterface * path = System::mInstance->mNavigation->AllocPathInterface( NULL );
 
-		PathInterface * path = System::mInstance->mNavigation->AllocPathInterface( NULL );
-		if ( path != NULL )
+	if ( path != NULL )
+	{
+		for ( size_t i = 0; i < mRoutes.size(); ++i )
 		{
+			const Route &r = mRoutes[ i ];
+
 			path->UpdateSourcePosition( r.mStart->GetPosition() );
 			path->UpdateGoalPosition( r.mEnd->GetPosition(), 0.0f );
 			path->UpdatePath();
 
-			enum
-			{
-				MaxCorners = 256
-			};
+			static const int MaxCorners = 256;
 			PathInterface::PathCorner corners[ MaxCorners ];
 			const size_t numCorners = path->GetPathCorners( corners, MaxCorners );
 			for ( size_t i = 1; i < numCorners; ++i )
 			{
 				RenderBuffer::AddLine( corners[ i - 1 ].mPos, corners[ i ].mPos, _color );
 			}
+		}
+	}
+
+	delete path;
+}
+
+void MapGoal::DrawPathsToGoals()
+{
+	std::vector<GameEntity> validStarts;
+	validStarts.reserve( 32 );
+
+	IGame::EntityIterator it;
+	while ( IGame::IterateEntity( it ) )
+	{
+		if ( it.GetEnt().mEntInfo.mGroup == ENT_GRP_PLAYERSTART )
+			validStarts.push_back( it.GetEnt().mEntity );
+	}
+
+	for ( size_t i = 0; i < validStarts.size(); ++i )
+	{
+		Vector3f startPos;
+		if ( EngineFuncs::EntityPosition( validStarts[ i ], startPos ) )
+		{
+
 		}
 	}
 }

@@ -34,7 +34,7 @@ namespace AiState
 		};
 
 		bool IsOnCustomLink() const;
-		bool IsOnCustomLink( NavArea type ) const;
+		bool IsOnCustomLink( NavAreaFlags type ) const;
 
 		bool GotoRandomPt( FollowPathUser *_owner, MoveMode _movemode = Run );
 		bool Goto( FollowPathUser *_owner, MoveMode _movemode = Run, bool _skiplastpt = false );

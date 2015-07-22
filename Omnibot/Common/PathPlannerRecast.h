@@ -17,14 +17,9 @@
 #include "DetourTileCache.h"
 #include "DetourTileCacheBuilder.h"
 #include "DetourNavMesh.h"
+#include "DetourNavMeshQuery.h"
 
 #include "CollisionModel.h"
-
-#include "btBulletCollisionCommon.h"
-
-struct aiScene;
-struct aiNode;
-struct sqlite3;
 
 namespace modeldata
 {
@@ -130,7 +125,8 @@ protected:
 	void cmdModelSetSolid( const StringVector & args );
 	void cmdModelDynamic( const StringVector & args );
 	void cmdModelSetTriangleSurface( const StringVector & args );
-
+	void cmdModelSetAreaFlag( const StringVector & args );
+	
 	void LoadWorldModel();
 
 	void LoadModel( const GameModelInfo & modelInfo, GameEntity entity, const IceMaths::Matrix4x4 & xform, bool baseStaticMesh );
@@ -184,7 +180,10 @@ private:
 	OffMeshConnections				mOffMeshConnections;
 
 	RecastBuildContext				mContext;
-	dtNavMesh	*					mNavMesh;
+	dtNavMesh*						mNavMesh;
+
+	static const int MaxQueryNodes = 4096;
+	dtNavMeshQuery*					mNavMeshQuery;
 	
 	CollisionWorld					mCollision;
 	
@@ -227,21 +226,21 @@ private:
 				OB_DELETE( mCurrentTool );
 		}
 	}
-
-	sqlite3 * mCacheDb;
-
+	
 	boost::recursive_mutex		mGuardBuildQueue;
 	boost::recursive_mutex		mGuardAddTile;
 
 	boost::thread_group			mThreadGroup;
 	bool						mDeferredSaveNav;
 
+	void DrawPathsToGoals( int team );
+
 	void UpdateDeferredModels();
 	void UpdateModelState( bool forcePositionUpdate );
 	
 	bool GetAimedAtModel( RayResult& result, SurfaceFlags ignoreSurfaces );
 
-	bool CreateEntityModel( const GameEntity& entity, const EntityInfo & entInfo );
+	NodePtr CreateEntityModel( const GameEntity& entity, const EntityInfo & entInfo );
 
 	void SendWorldModel();
 	void SendTileModel( int tx, int ty );

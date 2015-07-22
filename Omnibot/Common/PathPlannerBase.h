@@ -23,82 +23,7 @@ struct Event_EntityConnection;
 #include "CommandReciever.h"
 #include "PathQuery.h"
 
-//enum NavigationAreas
-//{
-//	NAV_AREA_GROUND,
-//	NAV_AREA_WATER,
-//	NAV_AREA_CROUCH,
-//	NAV_AREA_HARMFUL,
-//	NAV_AREA_AVOID,
-//	NAV_AREA_LADDER,
-//};
-//
-//enum NavigationFlags
-//{
-//	NAV_FLAG_TEAM1 = ( 1 << 0 ),
-//	NAV_FLAG_TEAM2 = ( 1 << 1 ),
-//	NAV_FLAG_TEAM3 = ( 1 << 2 ),
-//	NAV_FLAG_TEAM4 = ( 1 << 3 ),
-//	NAV_FLAG_WALK = ( 1 << 4 ),
-//	NAV_FLAG_JUMP = ( 1 << 5 ),
-//	NAV_FLAG_LADDER = ( 1 << 6 ),
-//
-//	NAV_FLAG_MOD = ( 1 << 10 ),
-//	//NAV_FLAG_TELEPORT	= (1<<2),
-//	//NAV_FLAG_ALLTEAMS	= NAV_FLAG_TEAM1|NAV_FLAG_TEAM2|NAV_FLAG_TEAM3|NAV_FLAG_TEAM4
-//};
-
-enum NavArea
-{
-	NAVAREA_GROUND,
-	NAVAREA_WATER,
-	NAVAREA_MOVER,	
-	NAVAREA_JUMP,
-	NAVAREA_LADDER,
-	NAVAREA_TELEPORT,
-	NAVAREA_DOOR,
-	NAVAREA_ROCKETJUMP,
-	NAVAREA_PUSHABLE,
-	NAVAREA_REGION,
-	NAVAREA_CROUCH,
-	NAVAREA_PRONE,
-};
-
-enum NavAreaFlags
-{
-	NAVFLAGS_NONE = 0,
-	NAVFLAGS_WALK = ( 1 << 0 ),
-	NAVFLAGS_CROUCH = ( 1 << 1 ),
-	NAVFLAGS_PRONE = ( 1 << 2 ),
-	NAVFLAGS_TEAM1_ONLY = ( 1 << 3 ),		// Team Specific
-	NAVFLAGS_TEAM2_ONLY = ( 1 << 4 ),		// Team Specific
-	NAVFLAGS_TEAM3_ONLY = ( 1 << 5 ),		// Team Specific
-	NAVFLAGS_TEAM4_ONLY = ( 1 << 6 ),		// Team Specific
-	NAVFLAGS_SWIM = ( 1 << 5 ),		// Ability to swim (water).
-
-	//NAVFLAGS_DOOR = ( 1 << 2 ),		// Ability to move through doors.
-	//NAVFLAGS_JUMP = ( 1 << 3 ),		// Ability to jump.
-
-	//NAVFLAGS_LADDER = ( 1 << 5 ),		// Ladder
-	//NAVFLAGS_TELEPORT = ( 1 << 6 ),		// Teleport	
-
-	NAVFLAGS_DISABLED = ( 1 << 15 ),		// Disabled polygon
-
-	NAVFLAGS_PATH_START = ( 1 << 29 ),
-	NAVFLAGS_PATH_GOAL = ( 1 << 30 ),
-	NAVFLAGS_PATH_LINK = ( 1 << 31 ),
-};
-
-typedef EnumerationValues<NavArea> NavAreaEnum;
 typedef EnumerationValues<NavAreaFlags> NavAreaFlagsEnum;
-
-static const NavFlags sTeamMask = ( NAVFLAGS_TEAM1_ONLY | NAVFLAGS_TEAM2_ONLY | NAVFLAGS_TEAM3_ONLY | NAVFLAGS_TEAM4_ONLY );
-
-namespace NavigationAssertions
-{
-	BOOST_STATIC_ASSERT( sizeof( NavFlags ) == 8 ); // 8 bytes = 64 bits
-	//BOOST_STATIC_ASSERT(sizeof(obUserData) == 16); // cs: FIXME 64 bit struct size is different. do we really need this?
-}
 
 struct EntityInstance;
 
@@ -109,8 +34,7 @@ struct OffMeshConnection
 
 	std::vector<Vector3f>	mVertices;
 	float					mRadius;
-	NavArea					mAreaType;
-	NavAreaFlags			mFlags;
+	NavAreaFlags			mAreaFlags;
 	bool					mBiDirectional : 1;
 
 	// runtime use
@@ -142,16 +66,14 @@ public:
 	struct PathCorner
 	{
 		Vector3f		mPos;
-
-		NavArea			mArea;
-		NavAreaFlags	mFlags;
-
+		NavAreaFlags	mAreaMask;
 		uint64_t		mPolyId;
+		bool			mIsLink;
 
 		PathCorner()
-			: mArea( NAVAREA_GROUND )
-			, mFlags( NAVFLAGS_NONE )
+			: mAreaMask( NAVFLAGS_NONE )
 			, mPolyId( 0 )
+			, mIsLink( false )
 		{
 		}
 	};
@@ -167,7 +89,6 @@ public:
 
 	virtual void Cancel() = 0;
 
-	virtual NavArea GetCurrentArea() const = 0;
 	virtual NavAreaFlags GetCurrentAreaFlags() const = 0;
 	virtual size_t GetPathCorners( PathCorner * corners, size_t maxEdges ) = 0;
 

@@ -631,24 +631,17 @@ class OffMeshConnection : public ::google::protobuf::Message {
   inline float radius() const;
   inline void set_radius(float value);
 
-  // required uint32 areaType = 5;
-  inline bool has_areatype() const;
-  inline void clear_areatype();
-  static const int kAreaTypeFieldNumber = 5;
-  inline ::google::protobuf::uint32 areatype() const;
-  inline void set_areatype(::google::protobuf::uint32 value);
+  // required uint32 areaflags = 5;
+  inline bool has_areaflags() const;
+  inline void clear_areaflags();
+  static const int kAreaflagsFieldNumber = 5;
+  inline ::google::protobuf::uint32 areaflags() const;
+  inline void set_areaflags(::google::protobuf::uint32 value);
 
-  // required uint32 flags = 6;
-  inline bool has_flags() const;
-  inline void clear_flags();
-  static const int kFlagsFieldNumber = 6;
-  inline ::google::protobuf::uint32 flags() const;
-  inline void set_flags(::google::protobuf::uint32 value);
-
-  // optional bool biDirectional = 7 [default = false];
+  // optional bool biDirectional = 6 [default = false];
   inline bool has_bidirectional() const;
   inline void clear_bidirectional();
-  static const int kBiDirectionalFieldNumber = 7;
+  static const int kBiDirectionalFieldNumber = 6;
   inline bool bidirectional() const;
   inline void set_bidirectional(bool value);
 
@@ -660,10 +653,8 @@ class OffMeshConnection : public ::google::protobuf::Message {
   inline void clear_has_exitpos();
   inline void set_has_radius();
   inline void clear_has_radius();
-  inline void set_has_areatype();
-  inline void clear_has_areatype();
-  inline void set_has_flags();
-  inline void clear_has_flags();
+  inline void set_has_areaflags();
+  inline void clear_has_areaflags();
   inline void set_has_bidirectional();
   inline void clear_has_bidirectional();
 
@@ -675,8 +666,7 @@ class OffMeshConnection : public ::google::protobuf::Message {
   ::RecastIO::Vec3* exitpos_;
   ::google::protobuf::RepeatedPtrField< ::RecastIO::Vec3 > vertices_;
   float radius_;
-  ::google::protobuf::uint32 areatype_;
-  ::google::protobuf::uint32 flags_;
+  ::google::protobuf::uint32 areaflags_;
   bool bidirectional_;
   friend void  protobuf_AddDesc_recast_2eproto();
   friend void protobuf_AssignDesc_recast_2eproto();
@@ -1100,6 +1090,13 @@ class NodeState : public ::google::protobuf::Message {
   inline bool dynamic() const;
   inline void set_dynamic(bool value);
 
+  // optional uint32 navFlagOverride = 9 [default = 0];
+  inline bool has_navflagoverride() const;
+  inline void clear_navflagoverride();
+  static const int kNavFlagOverrideFieldNumber = 9;
+  inline ::google::protobuf::uint32 navflagoverride() const;
+  inline void set_navflagoverride(::google::protobuf::uint32 value);
+
   // optional string modelname = 10;
   inline bool has_modelname() const;
   inline void clear_modelname();
@@ -1125,6 +1122,8 @@ class NodeState : public ::google::protobuf::Message {
   inline void clear_has_solid();
   inline void set_has_dynamic();
   inline void clear_has_dynamic();
+  inline void set_has_navflagoverride();
+  inline void clear_has_navflagoverride();
   inline void set_has_modelname();
   inline void clear_has_modelname();
 
@@ -1141,6 +1140,7 @@ class NodeState : public ::google::protobuf::Message {
   bool solid_;
   bool dynamic_;
   ::std::string* modelname_;
+  ::google::protobuf::uint32 navflagoverride_;
   union TypeUnion {
     ::google::protobuf::int32 submodelid_;
     ::google::protobuf::int32 staticmodelid_;
@@ -2011,63 +2011,39 @@ inline void OffMeshConnection::set_radius(float value) {
   // @@protoc_insertion_point(field_set:RecastIO.OffMeshConnection.radius)
 }
 
-// required uint32 areaType = 5;
-inline bool OffMeshConnection::has_areatype() const {
+// required uint32 areaflags = 5;
+inline bool OffMeshConnection::has_areaflags() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void OffMeshConnection::set_has_areatype() {
+inline void OffMeshConnection::set_has_areaflags() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void OffMeshConnection::clear_has_areatype() {
+inline void OffMeshConnection::clear_has_areaflags() {
   _has_bits_[0] &= ~0x00000010u;
 }
-inline void OffMeshConnection::clear_areatype() {
-  areatype_ = 0u;
-  clear_has_areatype();
+inline void OffMeshConnection::clear_areaflags() {
+  areaflags_ = 0u;
+  clear_has_areaflags();
 }
-inline ::google::protobuf::uint32 OffMeshConnection::areatype() const {
-  // @@protoc_insertion_point(field_get:RecastIO.OffMeshConnection.areaType)
-  return areatype_;
+inline ::google::protobuf::uint32 OffMeshConnection::areaflags() const {
+  // @@protoc_insertion_point(field_get:RecastIO.OffMeshConnection.areaflags)
+  return areaflags_;
 }
-inline void OffMeshConnection::set_areatype(::google::protobuf::uint32 value) {
-  set_has_areatype();
-  areatype_ = value;
-  // @@protoc_insertion_point(field_set:RecastIO.OffMeshConnection.areaType)
+inline void OffMeshConnection::set_areaflags(::google::protobuf::uint32 value) {
+  set_has_areaflags();
+  areaflags_ = value;
+  // @@protoc_insertion_point(field_set:RecastIO.OffMeshConnection.areaflags)
 }
 
-// required uint32 flags = 6;
-inline bool OffMeshConnection::has_flags() const {
+// optional bool biDirectional = 6 [default = false];
+inline bool OffMeshConnection::has_bidirectional() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
-inline void OffMeshConnection::set_has_flags() {
+inline void OffMeshConnection::set_has_bidirectional() {
   _has_bits_[0] |= 0x00000020u;
 }
-inline void OffMeshConnection::clear_has_flags() {
-  _has_bits_[0] &= ~0x00000020u;
-}
-inline void OffMeshConnection::clear_flags() {
-  flags_ = 0u;
-  clear_has_flags();
-}
-inline ::google::protobuf::uint32 OffMeshConnection::flags() const {
-  // @@protoc_insertion_point(field_get:RecastIO.OffMeshConnection.flags)
-  return flags_;
-}
-inline void OffMeshConnection::set_flags(::google::protobuf::uint32 value) {
-  set_has_flags();
-  flags_ = value;
-  // @@protoc_insertion_point(field_set:RecastIO.OffMeshConnection.flags)
-}
-
-// optional bool biDirectional = 7 [default = false];
-inline bool OffMeshConnection::has_bidirectional() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
-}
-inline void OffMeshConnection::set_has_bidirectional() {
-  _has_bits_[0] |= 0x00000040u;
-}
 inline void OffMeshConnection::clear_has_bidirectional() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void OffMeshConnection::clear_bidirectional() {
   bidirectional_ = false;
@@ -2576,15 +2552,39 @@ inline void NodeState::set_dynamic(bool value) {
   // @@protoc_insertion_point(field_set:RecastIO.NodeState.dynamic)
 }
 
-// optional string modelname = 10;
-inline bool NodeState::has_modelname() const {
+// optional uint32 navFlagOverride = 9 [default = 0];
+inline bool NodeState::has_navflagoverride() const {
   return (_has_bits_[0] & 0x00000040u) != 0;
 }
-inline void NodeState::set_has_modelname() {
+inline void NodeState::set_has_navflagoverride() {
   _has_bits_[0] |= 0x00000040u;
 }
-inline void NodeState::clear_has_modelname() {
+inline void NodeState::clear_has_navflagoverride() {
   _has_bits_[0] &= ~0x00000040u;
+}
+inline void NodeState::clear_navflagoverride() {
+  navflagoverride_ = 0u;
+  clear_has_navflagoverride();
+}
+inline ::google::protobuf::uint32 NodeState::navflagoverride() const {
+  // @@protoc_insertion_point(field_get:RecastIO.NodeState.navFlagOverride)
+  return navflagoverride_;
+}
+inline void NodeState::set_navflagoverride(::google::protobuf::uint32 value) {
+  set_has_navflagoverride();
+  navflagoverride_ = value;
+  // @@protoc_insertion_point(field_set:RecastIO.NodeState.navFlagOverride)
+}
+
+// optional string modelname = 10;
+inline bool NodeState::has_modelname() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void NodeState::set_has_modelname() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void NodeState::clear_has_modelname() {
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void NodeState::clear_modelname() {
   if (modelname_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
