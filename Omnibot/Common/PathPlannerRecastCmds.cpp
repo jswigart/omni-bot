@@ -19,6 +19,23 @@ Vector3f rcToLocal( const float * vec );
 
 //////////////////////////////////////////////////////////////////////////
 
+bool NavNodeSort( const NodePtr& n0, const NodePtr& n1 )
+{
+	if ( n0->mSubModel < n1->mSubModel )
+		return true;
+	else if ( n0->mSubModel > n1->mSubModel )
+		return false;
+
+	if ( n0->mStaticModel < n1->mStaticModel )
+		return true;
+	else if ( n0->mStaticModel > n1->mStaticModel )
+		return false;
+
+	return n0->mEntityName < n1->mEntityName;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 void PathPlannerRecast::InitCommands()
 {
 	PathPlannerBase::InitCommands();
@@ -26,6 +43,7 @@ void PathPlannerRecast::InitCommands()
 	SetEx( "nav_save", "Save current navigation to disk", this, &PathPlannerRecast::cmdNavSave );
 	SetEx( "nav_load", "Load last saved navigation from disk", this, &PathPlannerRecast::cmdNavLoad );
 	SetEx( "nav_view", "Turn on/off navmesh visibility.",  this, &PathPlannerRecast::cmdNavView );
+	SetEx( "nav_list", "Show all nodes.", this, &PathPlannerRecast::cmdNavList );
 	SetEx( "nav_viewmodels", "Turn on/off model info visibility.", this, &PathPlannerRecast::cmdNavViewModels );
 	SetEx( "nav_viewconnections", "Turn on/off navmesh connection visibility.",  this, &PathPlannerRecast::cmdNavViewConnections );
 	SetEx( "nav_addexclusionzone", "Adds a bounding area to include in navigation.", this, &PathPlannerRecast::cmdNavAddExclusionZone );
@@ -81,6 +99,52 @@ void PathPlannerRecast::cmdNavView( const StringVector & args )
 	CHECK_INT_PARAM( viewmode, 1, strUsage );
 
 	mFlags.mViewMode = viewmode;
+}
+
+void PathPlannerRecast::cmdNavList( const StringVector & args )
+{
+	const char *strUsage [] =
+	{
+		"nav_list name[str]",
+		"> name: name to search for",
+	};
+
+	std::vector<NodePtr> nodes;
+	std::vector<NodePtr> open;
+
+	open.push_back( mCollision.mRootNode );
+	while ( !open.empty() )
+	{
+		NodePtr n = open.back();
+		open.pop_back();
+
+		nodes.push_back( n );
+
+		for ( size_t i = 0; i < n->mChildren.size(); ++i )
+		{
+			open.push_back( n->mChildren[ i ] );
+		}
+	}
+
+	std::sort( nodes.begin(), nodes.end(), NavNodeSort );
+
+	EngineFuncs::ConsoleMessage( va( "Nodes(%d)", nodes.size() ) );
+	for ( size_t i = 0; i < nodes.size(); ++i )
+	{
+		const std::string& mdlName = nodes[ i ]->mModel ? nodes[ i ]->mModel->GetName() : "";
+
+		std::string info;
+		if ( nodes[ i ]->mSubModel >= 0 )
+			info += va( "submdl(%d) ", nodes[ i ]->mSubModel );
+		if ( nodes[ i ]->mStaticModel >= 0 )
+			info += va( "staticmdl(%d) ", nodes[ i ]->mStaticModel );
+		if ( !nodes[ i ]->mEntityName.empty() )
+			info += va( "name(%s) ", nodes[ i ]->mEntityName.c_str() );
+		if ( !mdlName.empty() )
+			info += va( "model(%s) ", mdlName.c_str() );
+
+		EngineFuncs::ConsoleMessage( va( "%d: %s", i, info.c_str() ) );
+	}
 }
 
 void PathPlannerRecast::cmdNavViewModels( const StringVector & args )
@@ -242,7 +306,7 @@ void PathPlannerRecast::cmdNavAddExclusionZone( const StringVector & args )
 
 void PathPlannerRecast::cmdNavAddLink( const StringVector & args )
 {
-	if ( mFlags.mViewConnections == 0 )
+	if ( mFlags.mViewMode == 0 )
 		return;
 
 	OffMeshConnection conn;
@@ -264,7 +328,7 @@ showUsage:
 	for ( size_t i = 0; i < NavAreaFlagsEnum::sKeyValCount; ++i )
 		flagsStr += va( "%s%s", flagsStr.empty() ? "" : ", ", NavAreaFlagsEnum::sKeyVal[ i ].mName );
 
-	EngineFuncs::ConsoleError( "nav_addconnection radius[#] type[string] flag(s)[string].." );
+	EngineFuncs::ConsoleError( "nav_addlink radius[#] type[string] flag(s)[string].." );
 	EngineFuncs::ConsoleError( va( "	radius - radius of connection" ) );
 	EngineFuncs::ConsoleError( va( "	flags - combination of (%s)", flagsStr.c_str() ) );
 }
@@ -429,7 +493,7 @@ void PathPlannerRecast::cmdModelEnable( const StringVector & args )
 	OPTIONAL_BOOL_PARAM( all, 2, false );
 
 	RayResult result;
-	if ( GetAimedAtModel( result, SURFACE_NONE ) )
+	if ( GetAimedAtModel( result, SURFACE_IGNORE ) )
 	{
 		if ( all )
 			mCollision.mRootNode->SetModelEnable( result.mHitNode->mModel, enable );
@@ -472,7 +536,7 @@ void PathPlannerRecast::cmdModelShape( const StringVector & args )
 	}
 
 	RayResult result;
-	if ( GetAimedAtModel( result, SURFACE_NONE ) )
+	if ( GetAimedAtModel( result, SURFACE_IGNORE ) )
 	{
 		if ( all )
 			mCollision.mRootNode->SetModelShapeMode( result.mHitNode->mModel, shapemode );
@@ -502,7 +566,7 @@ void PathPlannerRecast::cmdModelSetSolid( const StringVector & args )
 	OPTIONAL_BOOL_PARAM( all, 2, false );
 
 	RayResult result;
-	if ( GetAimedAtModel( result, SURFACE_NONE ) )
+	if ( GetAimedAtModel( result, SURFACE_IGNORE ) )
 	{
 		if ( all )
 			mCollision.mRootNode->SetModelSolid( result.mHitNode->mModel, enable );
@@ -532,7 +596,7 @@ void PathPlannerRecast::cmdModelDynamic( const StringVector & args )
 	OPTIONAL_BOOL_PARAM( all, 2, false );
 
 	RayResult result;
-	if ( GetAimedAtModel( result, SURFACE_NONE ) )
+	if ( GetAimedAtModel( result, SURFACE_IGNORE ) )
 	{
 		if ( all )
 			mCollision.mRootNode->SetModelDynamic( result.mHitNode->mModel, enable );
@@ -574,7 +638,7 @@ void PathPlannerRecast::cmdModelSetTriangleSurface( const StringVector & args )
 	}
 
 	RayResult result;
-	if ( GetAimedAtModel( result, SURFACE_NONE ) )
+	if ( GetAimedAtModel( result, SURFACE_IGNORE ) )
 	{
 		result.mHitNode->mModel->SetSurfaceOverride( result.mHitTriangle, overrideFlags );
 		result.mHitNode->mModel->UpdateModelCrc();
@@ -601,7 +665,7 @@ void PathPlannerRecast::cmdModelSetAreaFlag( const StringVector & args )
 		}
 	}
 		
-	if ( GetAimedAtModel( result, SURFACE_NONE ) )
+	if ( GetAimedAtModel( result, SURFACE_IGNORE ) )
 	{
 		result.mHitNode->mNavFlagsOverride = navFlags;
 	}

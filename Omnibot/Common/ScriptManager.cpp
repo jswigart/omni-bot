@@ -685,7 +685,7 @@ bool GM_CDECL ScriptManager::ScriptSysCallback_Machine( gmMachine* a_machine, gm
 				}
 
 				std::string errMsg = va( "Thread Created <%s>: %s : %s Id: %d time: %d",
-					( pClient ? pClient->GetName() : "" ),
+					( pClient ? pClient->GetName().c_str() : "" ),
 					( pFileName ? pFileName : "<unknown file>" ),
 					( pFuncName ? pFuncName : "<noname>" ),
 					pThread->GetId(),

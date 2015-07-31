@@ -195,9 +195,12 @@ void Client::UpdateBotInput()
 	gEngineFuncs->UpdateBotInput( mGameID, mClientInput );
 }
 
-const char *Client::GetName( bool _clean ) const
+const std::string& Client::GetName( bool _clean ) const
 {
-	return gEngineFuncs->GetEntityName( GetGameEntity() );
+	obStringBuffer nameBuffer;
+	gEngineFuncs->GetEntityName( GetGameEntity(), nameBuffer );
+	mName = nameBuffer.mBuffer;
+	return mName;
 }
 
 Vector3f Client::GetEyePosition()
@@ -561,8 +564,7 @@ void Client::Init( int _gameid )
 	//.mSoundSubscriber = g_SoundDepot.Subscribe("Client");
 
 	// mark name as taken
-	if ( const char *pName = gEngineFuncs->GetEntityName( GetGameEntity() ) )
-		mNameReference = NameManager::GetInstance()->GetName( pName );
+	mNameReference = NameManager::GetInstance()->GetName( GetName() );
 
 	// Only create these if they aren't already defined,
 	// the mod may override them with derived classes.
@@ -776,11 +778,8 @@ void Client::LoadProfile( ProfileType _type )
 	{
 		case PROFILE_CUSTOM:
 		{
-			const char *pName = GetName();
-			if ( pName )
-			{
-				strProfileName = NameManager::GetInstance()->GetProfileForName( pName );
-			}
+			const std::string& name = GetName();
+			strProfileName = NameManager::GetInstance()->GetProfileForName( name );
 		}
 		break;
 		case PROFILE_CLASS:

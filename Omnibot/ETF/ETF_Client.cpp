@@ -71,16 +71,16 @@ void ETF_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 	switch ( GetTeam() )
 	{
 		case ETF_TEAM_RED:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 		case ETF_TEAM_BLUE:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 		case ETF_TEAM_YELLOW:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM3_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM3_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 		case ETF_TEAM_GREEN:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM4_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM4_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 	}
 }

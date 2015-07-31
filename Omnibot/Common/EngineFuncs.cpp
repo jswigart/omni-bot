@@ -36,11 +36,11 @@ namespace EngineFuncs
 		_tr.mEndpos[ 2 ] = _end.Z();
 		return SUCCESS( gEngineFuncs->TraceLine( _tr, _start, _end, _aabb, _mask, _user, _usepvs ) );
 	}
-	std::string EntityName( const GameEntity _ent, const char *_default )
+	std::string EntityName( const GameEntity _ent, const char* defaultName )
 	{
-		const char *pName = gEngineFuncs->GetEntityName( _ent );
-		if ( !_default ) _default = "";
-		return pName ? pName : _default;
+		obStringBuffer nameBuffer;
+		gEngineFuncs->GetEntityName( _ent, nameBuffer );
+		return nameBuffer.mBuffer[ 0 ] ? nameBuffer.mBuffer : defaultName;
 	}
 	GameEntity EntityOwner( const GameEntity _ent )
 	{

@@ -1090,12 +1090,12 @@ class NodeState : public ::google::protobuf::Message {
   inline bool dynamic() const;
   inline void set_dynamic(bool value);
 
-  // optional uint32 navFlagOverride = 9 [default = 0];
+  // optional int32 navFlagOverride = 9 [default = 0];
   inline bool has_navflagoverride() const;
   inline void clear_navflagoverride();
   static const int kNavFlagOverrideFieldNumber = 9;
-  inline ::google::protobuf::uint32 navflagoverride() const;
-  inline void set_navflagoverride(::google::protobuf::uint32 value);
+  inline ::google::protobuf::int32 navflagoverride() const;
+  inline void set_navflagoverride(::google::protobuf::int32 value);
 
   // optional string modelname = 10;
   inline bool has_modelname() const;
@@ -1108,6 +1108,18 @@ class NodeState : public ::google::protobuf::Message {
   inline ::std::string* mutable_modelname();
   inline ::std::string* release_modelname();
   inline void set_allocated_modelname(::std::string* modelname);
+
+  // optional string name = 11;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 11;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
 
   inline TypeCase type_case() const;
   // @@protoc_insertion_point(class_scope:RecastIO.NodeState)
@@ -1126,6 +1138,8 @@ class NodeState : public ::google::protobuf::Message {
   inline void clear_has_navflagoverride();
   inline void set_has_modelname();
   inline void clear_has_modelname();
+  inline void set_has_name();
+  inline void clear_has_name();
 
   inline bool has_type();
   void clear_type();
@@ -1140,7 +1154,8 @@ class NodeState : public ::google::protobuf::Message {
   bool solid_;
   bool dynamic_;
   ::std::string* modelname_;
-  ::google::protobuf::uint32 navflagoverride_;
+  ::std::string* name_;
+  ::google::protobuf::int32 navflagoverride_;
   union TypeUnion {
     ::google::protobuf::int32 submodelid_;
     ::google::protobuf::int32 staticmodelid_;
@@ -2552,7 +2567,7 @@ inline void NodeState::set_dynamic(bool value) {
   // @@protoc_insertion_point(field_set:RecastIO.NodeState.dynamic)
 }
 
-// optional uint32 navFlagOverride = 9 [default = 0];
+// optional int32 navFlagOverride = 9 [default = 0];
 inline bool NodeState::has_navflagoverride() const {
   return (_has_bits_[0] & 0x00000040u) != 0;
 }
@@ -2563,14 +2578,14 @@ inline void NodeState::clear_has_navflagoverride() {
   _has_bits_[0] &= ~0x00000040u;
 }
 inline void NodeState::clear_navflagoverride() {
-  navflagoverride_ = 0u;
+  navflagoverride_ = 0;
   clear_has_navflagoverride();
 }
-inline ::google::protobuf::uint32 NodeState::navflagoverride() const {
+inline ::google::protobuf::int32 NodeState::navflagoverride() const {
   // @@protoc_insertion_point(field_get:RecastIO.NodeState.navFlagOverride)
   return navflagoverride_;
 }
-inline void NodeState::set_navflagoverride(::google::protobuf::uint32 value) {
+inline void NodeState::set_navflagoverride(::google::protobuf::int32 value) {
   set_has_navflagoverride();
   navflagoverride_ = value;
   // @@protoc_insertion_point(field_set:RecastIO.NodeState.navFlagOverride)
@@ -2650,6 +2665,82 @@ inline void NodeState::set_allocated_modelname(::std::string* modelname) {
     modelname_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   }
   // @@protoc_insertion_point(field_set_allocated:RecastIO.NodeState.modelname)
+}
+
+// optional string name = 11;
+inline bool NodeState::has_name() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void NodeState::set_has_name() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void NodeState::clear_has_name() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void NodeState::clear_name() {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& NodeState::name() const {
+  // @@protoc_insertion_point(field_get:RecastIO.NodeState.name)
+  return *name_;
+}
+inline void NodeState::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set:RecastIO.NodeState.name)
+}
+inline void NodeState::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+  // @@protoc_insertion_point(field_set_char:RecastIO.NodeState.name)
+}
+inline void NodeState::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:RecastIO.NodeState.name)
+}
+inline ::std::string* NodeState::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    name_ = new ::std::string;
+  }
+  // @@protoc_insertion_point(field_mutable:RecastIO.NodeState.name)
+  return name_;
+}
+inline ::std::string* NodeState::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    return temp;
+  }
+}
+inline void NodeState::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  }
+  // @@protoc_insertion_point(field_set_allocated:RecastIO.NodeState.name)
 }
 
 inline bool NodeState::has_type() {

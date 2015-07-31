@@ -61,8 +61,8 @@ namespace AiState
 		//	stdext::hash_map of entities to their memory record.
 #ifdef WIN32
 		typedef boost::fast_pool_allocator< std::pair< GameEntity, MemoryRecord >, boost::default_user_allocator_new_delete, boost::details::pool::default_mutex, 769 > MemoryMapAllocator;
-		typedef stdext::hash_compare<GameEntity> HashMapCompare;
-		typedef stdext::hash_map<GameEntity, MemoryRecord, HashMapCompare, MemoryMapAllocator > MemoryMap;
+		typedef std::hash_compare<GameEntity> HashMapCompare;
+		typedef std::unordered_map<GameEntity, MemoryRecord, HashMapCompare, MemoryMapAllocator > MemoryMap;
 #else
 		typedef stdext::hash_map<GameEntity, MemoryRecord> MemoryMap;
 #endif

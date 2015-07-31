@@ -77,7 +77,7 @@ public:
 	void BuildConfig( rcConfig & config );
 	void BuildNav( bool saveToFile );
 	void BuildNavTile();
-
+	
 	PathInterface * AllocPathInterface( Client * client );
 
 	const char *GetPlannerName() const;
@@ -96,6 +96,8 @@ public:
 
 	void RasterizeTileLayers( int tax, int ty );
 
+	static const Vector3f sExtents;
+
 	PathPlannerRecast();
 	virtual ~PathPlannerRecast();
 protected:
@@ -108,6 +110,7 @@ protected:
 	void cmdNavSave( const StringVector & args );
 	void cmdNavLoad( const StringVector & args );
 	void cmdNavView( const StringVector & args );
+	void cmdNavList( const StringVector & args );
 	void cmdNavViewModels( const StringVector & args );
 	void cmdNavViewConnections( const StringVector & args );
 
@@ -243,7 +246,7 @@ private:
 	NodePtr CreateEntityModel( const GameEntity& entity, const EntityInfo & entInfo );
 
 	void SendWorldModel();
-	void SendTileModel( int tx, int ty );
+	void SendTileModel( int tx, int ty );	
 };
 
 #endif

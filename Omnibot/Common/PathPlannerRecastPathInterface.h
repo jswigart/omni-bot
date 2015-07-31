@@ -32,8 +32,8 @@ public:
 	virtual void UpdateGoalPositions( const DestinationVector & goals );
 	virtual bool UpdateGoalPositionRandom();
 	virtual void UpdatePath();
-	virtual void Cancel();	
-
+	virtual void Cancel();
+	
 	virtual NavAreaFlags GetCurrentAreaFlags() const;
 	virtual size_t GetPathCorners( PathCorner * corners, size_t maxEdges );
 

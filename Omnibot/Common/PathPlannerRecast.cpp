@@ -28,6 +28,7 @@
 #include <DetourTileCache.h>
 #include <DetourTileCacheBuilder.h>
 #include <DetourNavMesh.h>
+#include <DetourNavMeshQuery.h>
 #include <DetourNavMeshBuilder.h>
 #include <DetourDebugDraw.h>
 
@@ -110,6 +111,8 @@ Vector3f localToRc( const float * vec )
 {
 	return Vector3f( vec[ 0 ], vec[ 2 ], vec[ 1 ] );
 }
+
+const Vector3f PathPlannerRecast::sExtents = localToRc( Vector3f( 16.f, 16.f, 64.f ) );
 
 struct DebugDraw : public duDebugDraw
 {
@@ -534,7 +537,11 @@ void PathPlannerRecast::Update( System & system )
 
 			RenderBuffer::AddTri( v[0], v[1], v[2], ( aimHit.mHitNode->mEnabled ? COLOR::GREEN.fade( 100 ) : COLOR::RED.fade( 64 ) ) );
 			
-			std::string modelState, contentStr = "cnt: ", surfaceStr = "srf: ";
+			std::string nodeInfo, modelState, contentStr = "cnt: ", surfaceStr = "srf: ";
+			if ( aimHit.mHitNode->mSubModel >= 0 )
+				nodeInfo = va( "submdl %d", aimHit.mHitNode->mSubModel );
+			else if ( aimHit.mHitNode->mStaticModel >= 0 )
+				nodeInfo = va( "staticmdl %d", aimHit.mHitNode->mStaticModel );
 			ModelStateEnum::NameForValue( aimHit.mHitNode->mActiveState, modelState );
 			ContentFlagsEnum::NameForValueBitfield( activeContentFlags, contentStr );
 			SurfaceFlagsEnum::NameForValueBitfield( activeSurfaceFlags, surfaceStr );
@@ -543,9 +550,9 @@ void PathPlannerRecast::Update( System & system )
 
 			const Vector3f normalOffset = aimHit.mHitPos + aimHit.mHitNormal * 24.0f;
 			RenderBuffer::AddLine( aimHit.mHitPos, aimHit.mHitPos + vAimNormal * 16.0f, COLOR::BLUE );
-			RenderBuffer::AddString3d( normalOffset, COLOR::CYAN, va( "%s\n%s\n%s\n%s\n%s",
-				aimInfo.c_str(), mtl.mName.c_str(), modelState.c_str(), contentStr.c_str(), surfaceStr.c_str() ) );
-			
+			RenderBuffer::AddString3d( normalOffset, COLOR::CYAN, va( "name:%s %s\n%s\n%s\n%s\n%s\n%s", 
+				aimHit.mHitNode->mEntityName.c_str(),nodeInfo.c_str(), aimInfo.c_str(), mtl.mName.c_str(), modelState.c_str(), contentStr.c_str(), surfaceStr.c_str() ) );
+
 			aimHit.mHitNode->RenderWorldBounds();
 		}
 
@@ -740,8 +747,6 @@ void PathPlannerRecast::UpdateDeferredModels()
 			NodePtr entNode = CreateEntityModel( mDeferredModel[ i ], entInfo );
 			if ( entNode )
 			{
-				entNode->mRuntimeEntity = true;
-
 				mDeferredModel.erase( mDeferredModel.begin() + i );
 				--i;
 			}
@@ -852,11 +857,16 @@ bool PathPlannerRecast::Load( const std::string &_mapname, bool _dl )
 				mCollision.mRootNode->FindNodeWithSubModel( nodeState.submodelid(), node );
 			else if ( nodeState.has_staticmodelid() )
 				mCollision.mRootNode->FindNodeWithStaticModel( nodeState.staticmodelid(), node );
-			
-			if ( node != NULL )
+			else if ( nodeState.has_name() )
 			{
-				node->LoadState( nodeState );
+				node.reset( new Node() );
+				mCollision.mRootNode->mChildren.push_back( node );
 			}
+			else
+				EngineFuncs::ConsoleError( "Orphaned Node(no unique identifer), skipping load" );
+
+			if ( node != NULL )
+				node->LoadState( nodeState );
 		}
 
 		for ( int i = 0; i < ioNavmesh.models_size(); ++i )
@@ -915,7 +925,7 @@ bool PathPlannerRecast::Load( const std::string &_mapname, bool _dl )
 	BuildNav( false );
 
 	SendWorldModel();
-
+	
 	return success;
 }
 
@@ -1012,7 +1022,7 @@ bool PathPlannerRecast::Save( const std::string &_mapname )
 			NodePtr n = treeNodes.front();
 			treeNodes.pop();
 
-			if ( !n->mRuntimeEntity )
+			if ( n->mSaveable )
 			{
 				n->SaveState( ioNavmesh );
 
@@ -1113,7 +1123,7 @@ void PathPlannerRecast::InitNavmesh()
 	parms.tileHeight = mSettings.TileSize * mSettings.CellSize;
 	parms.maxTiles = (int)( parms.tileWidth * parms.tileHeight * 2.0 );
 	parms.maxPolys = 16384;
-
+	
 	mNavMesh->init( &parms );
 
 	dtFreeNavMeshQuery( mNavMeshQuery );
@@ -1728,9 +1738,7 @@ void PathPlannerRecast::EntityCreated( const EntityInstance &ei )
 			return;
 		
 		NodePtr entNode = CreateEntityModel( ei.mEntity, ei.mEntInfo );
-		if ( entNode )
-			entNode->mRuntimeEntity = true;
-		else
+		if ( !entNode )
 		{
 			mDeferredModel.push_back( ei.mEntity );
 		}

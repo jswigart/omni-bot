@@ -233,7 +233,7 @@ void gmBot::DebugInfo( gmUserObject *a_object, gmMachine *a_machine, gmChildInfo
 	Client *pNative = gmBot::GetNative( a_object );
 	if ( pNative )
 	{
-		a_infoCallback( "Name", pNative->GetName(), a_machine->GetTypeName( GM_STRING ), 0 );
+		a_infoCallback( "Name", pNative->GetName().c_str(), a_machine->GetTypeName( GM_STRING ), 0 );
 	}
 }
 
@@ -2049,7 +2049,7 @@ int gmBot::gmfHasRole( gmThread *a_thread )
 bool gmBot::getName( Client *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
 	if ( a_native )
-		a_operands[ 0 ] = gmVariable( a_thread->GetMachine()->AllocStringObject( a_native->GetName() ) );
+		a_operands[ 0 ] = gmVariable( a_thread->GetMachine()->AllocStringObject( a_native->GetName().c_str() ) );
 	else
 		a_operands[ 0 ].Nullify();
 	return true;

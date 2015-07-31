@@ -6,9 +6,11 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <unordered_set>
+
 #include "PathPlannerRecastPathInterface.h"
 #include "RenderBuffer.h"
-
+#include "DetourCommon.h"
 #include "DetourNavMeshQuery.h"
 
 #include "Client.h"
@@ -17,10 +19,6 @@ extern float dtRandom();
 
 Vector3f rcToLocal( const float * vec );
 Vector3f localToRc( const float * vec );
-
-//////////////////////////////////////////////////////////////////////////
-
-const Vector3f sExtents = localToRc( Vector3f( 16.f, 16.f, 64.f ) );
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -69,8 +67,8 @@ NavAreaFlags RecastPathInterface::GetCurrentAreaFlags() const
 
 void RecastPathInterface::UpdateNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 {
-	mFilter.setIncludeFlags( (unsigned short)includeFlags );
-	mFilter.setExcludeFlags( (unsigned short)excludeFlags );
+	mFilter.setIncludeFlags( includeFlags );
+	mFilter.setExcludeFlags( excludeFlags );
 }
 
 void RecastPathInterface::UpdateSourcePosition( const Vector3f & srcPos )
@@ -103,7 +101,7 @@ void RecastPathInterface::UpdateSourcePosition( const Vector3f & srcPos )
 	{
 		dtPolyRef startPoly;
 		Vector3f startPos = localToRc( mSrc );
-		if ( dtStatusSucceed( mQuery->findNearestPoly( startPos, sExtents, &mFilter, &startPoly, startPos ) ) )
+		if ( dtStatusSucceed( mQuery->findNearestPoly( startPos, PathPlannerRecast::sExtents, &mFilter, &startPoly, startPos ) ) )
 			currentPoly = startPoly;
 	}
 
@@ -137,15 +135,96 @@ bool RecastPathInterface::UpdateGoalPositionRandom()
 	dest.mPosition = mSrc;
 	dest.mRadius = 4.0f;
 	
-	Vector3f randomPos;
-	dtPolyRef randomPoly;
-	if ( dtStatusSucceed( mQuery->findRandomPoint( &mFilter, dtRandom, &randomPoly, randomPos ) ) )
+	std::vector<dtPolyRef> openlist;
+	typedef std::unordered_set<dtPolyRef> ClosedList;
+	ClosedList closedlist;
+
+	dtPolyRef startPoly;
+	Vector3f startPos = localToRc( mSrc );
+	if ( dtStatusSucceed( mQuery->findNearestPoly( startPos, PathPlannerRecast::sExtents, &mFilter, &startPoly, startPos ) ) )
 	{
-		dest.mPosition = rcToLocal( randomPos );
-		mGoals.resize( 0 );
-		mGoals.push_back( dest );
-		return true;
+		openlist.push_back( startPoly );
 	}
+	else
+	{
+		return false;
+	}
+
+	while ( !openlist.empty() )
+	{
+		dtPolyRef polyRef = openlist.back();
+		openlist.pop_back();
+
+		closedlist.insert( polyRef );
+
+		unsigned int salt, it, ip;
+		mNav->mNavMesh->decodePolyId( polyRef, salt, it, ip );
+		
+		const dtMeshTile* tile = 0;
+		const dtPoly* poly = 0;
+		mNav->mNavMesh->getTileAndPolyByRefUnsafe( polyRef, &tile, &poly );
+
+		// Visit linked polygons.
+		for ( unsigned int i = poly->firstLink; i != DT_NULL_LINK; i = tile->links[ i ].next )
+		{
+			const dtPolyRef neiRef = tile->links[ i ].ref;
+
+			// Skip invalid and already visited.
+			if ( !neiRef )
+				continue;
+
+			// if the teams have already touched this poly, don't explore it again
+			ClosedList::iterator it = closedlist.find( neiRef );
+			if ( it != closedlist.end() )
+				continue;
+
+			openlist.push_back( neiRef );
+		}
+	}
+
+	if ( closedlist.size() > 0 )
+	{
+		float areaSum = 0.0f;
+		const dtPoly* randPoly = 0;
+		dtPolyRef randPolyRef = 0;
+
+		for ( ClosedList::iterator it = closedlist.begin(); it != closedlist.end(); ++it )
+		{
+			const dtMeshTile* tile = 0;
+			const dtPoly* poly = 0;
+			mNav->mNavMesh->getTileAndPolyByRefUnsafe( *it, &tile, &poly );
+
+			// Calc area of the polygon.
+			float polyArea = 0.0f;
+			const dtPoly* p = tile->polys;
+			for ( int j = 2; j < p->vertCount; ++j )
+			{
+				const float* va = &tile->verts[ p->verts[ 0 ] * 3 ];
+				const float* vb = &tile->verts[ p->verts[ j - 1 ] * 3 ];
+				const float* vc = &tile->verts[ p->verts[ j ] * 3 ];
+				polyArea += dtTriArea2D( va, vb, vc );
+			}
+
+			// Choose random polygon weighted by area, using reservoi sampling.
+			areaSum += polyArea;
+			const float u = dtRandom();
+			if ( u*areaSum <= polyArea )
+			{
+				randPoly = p;
+				randPolyRef = *it;
+			}
+		}
+		
+		Vector3f randomPos;
+		if ( dtStatusSucceed( mQuery->findRandomPointInPoly( randPolyRef, dtRandom, randomPos ) ) )
+		{
+			dest.mPosition = rcToLocal( randomPos );
+			mGoals.resize( 0 );
+			mGoals.push_back( dest );
+			return true;
+		}
+	}
+
 	return false;
 }
 
@@ -165,11 +244,11 @@ void RecastPathInterface::UpdatePath()
 	dtPolyRef startPoly, endPoly;
 	Vector3f startPos = localToRc( mSrc );
 	Vector3f endPos = localToRc( mGoals[ 0 ].mPosition );
-	if ( dtStatusSucceed( mQuery->findNearestPoly( startPos, sExtents, &mFilter, &startPoly, startPos ) ) )
+	if ( dtStatusSucceed( mQuery->findNearestPoly( startPos, PathPlannerRecast::sExtents, &mFilter, &startPoly, startPos ) ) )
 	{
 		mCorridor.reset( startPoly, startPos );
 
-		if ( dtStatusSucceed( mQuery->findNearestPoly( endPos, sExtents, &mFilter, &endPoly, endPos ) ) )
+		if ( dtStatusSucceed( mQuery->findNearestPoly( endPos, PathPlannerRecast::sExtents, &mFilter, &endPoly, endPos ) ) )
 		{
 			int	polyCount = 0;
 			dtPolyRef * polys = (dtPolyRef*)StackAlloc( sizeof( dtPolyRef ) * mCorridor.getMaxPathCount() );
@@ -186,7 +265,6 @@ void RecastPathInterface::UpdatePath()
 					mStatus = PATH_VALID;
 					mCorridor.setCorridor( endPos, polys, polyCount );
 				}
-				
 			}
 		}
 	}

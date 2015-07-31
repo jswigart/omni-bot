@@ -84,8 +84,9 @@ message NodeState
 	optional ShapeMode	shapemode				= 6 [default=SHAPE_TRIANGLES];
 	optional bool		solid					= 7 [default=true];
 	optional bool		dynamic					= 8 [default=false];
-	optional uint32		navFlagOverride			= 9 [default=0];
+	optional int32		navFlagOverride			= 9 [default=0];
 	optional string		modelname				= 10;
+	optional string		name					= 11;
 }
 
 message NavigationMesh 

@@ -798,46 +798,52 @@ void Node::Clear()
 	mSolid = true;
 	mDynamic = false;
 	mForceRebuild = false;
-	mRuntimeEntity = false;
+	mSaveable = true;
+	mRuntime = false;
 }
 
 void Node::Init( PathPlannerRecast * planner )
 {
+	// Look up by submodel first
 	if ( mSubModel != -1 )
 	{
-		if ( !SUCCESS( gEngineFuncs->GetEntityForMapModel( mSubModel, mEntity ) ) )
-			mEnabled = false;
-
-		if ( mEntity.IsValid() )
-		{
-			const std::string entname = EngineFuncs::EntityName( mEntity, "<unknown>" );
-
-			if ( !IGame::GetEntityInfo( mEntity, mEntInfo ) )
-			{
-				EngineFuncs::ConsoleMessage( va( "Entity '%s' unknown type, ignoring", entname.c_str() ) );
-				mEnabled = false;
-			}
-
-			if ( mEntInfo.mCategory.CheckFlag( ENT_CAT_DYNAMIC_NAV ) )
-				mDynamic = true;
-
-			if ( !mEntInfo.mCategory.CheckFlag( ENT_CAT_OBSTACLE ) )
-			{
-				EngineFuncs::ConsoleMessage( va( "Entity '%s' not an obstacle", entname.c_str() ) );
-				mEnabled = false;
-			}
-			
-			if ( mEntInfo.mCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
-			{
-				mShapeMode = RecastIO::SHAPE_OBB;
-				mSolid = false;
-			}
-			
-			if ( mEnabled )
-				EngineFuncs::ConsoleMessage( va( "Entity '%s' is an obstacle (mdl %s)", entname.c_str(), mModel->GetName().c_str() ) );
-		}
+		gEngineFuncs->GetEntityForMapModel( mSubModel, mEntity );
 	}
-	
+
+	if ( mEntity.IsValid() )
+	{
+		// Cache the name
+		mEntityName = EngineFuncs::EntityName( mEntity, "<unknown>" );
+
+		if ( !IGame::GetEntityInfo( mEntity, mEntInfo ) )
+		{
+			EngineFuncs::ConsoleMessage( va( "Entity '%s' unknown type, ignoring", mEntityName.c_str() ) );
+			mEnabled = false;
+		}
+
+		if ( mEntInfo.mCategory.CheckFlag( ENT_CAT_DYNAMIC_NAV ) )
+			mDynamic = true;
+
+		if ( !mEntInfo.mCategory.CheckFlag( ENT_CAT_OBSTACLE ) )
+		{
+			EngineFuncs::ConsoleMessage( va( "Entity '%s' not an obstacle", mEntityName.c_str() ) );
+			mEnabled = false;
+		}
+
+		if ( mEntInfo.mCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
+		{
+			mShapeMode = RecastIO::SHAPE_OBB;
+			mSolid = false;
+		}
+
+		if ( mEnabled )
+			EngineFuncs::ConsoleMessage( va( "Entity '%s' is an obstacle (mdl %s)", mEntityName.c_str(), mModel->GetName().c_str() ) );
+	}
+	else if ( mStaticModel < 0 )
+	{
+		mEnabled = false;
+	}
+
 	// Update the children
 	for ( size_t i = 0; i < mChildren.size(); ++i )
 	{
@@ -860,7 +866,8 @@ void Node::UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpda
 
 		// by default, models with no entity are collidable
 		ModelState currentState = StateNonCollidable;
-
+		if ( mRuntime && !mEntity.IsValid() )
+			currentState = StateNonCollidable;
 		if ( mActiveState == StateMarkedForDelete )
 			currentState = StateMarkedForDelete;
 		else if ( !mEnabled )
@@ -931,18 +938,15 @@ void Node::UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpda
 			}
 			else if ( rebuildForced )
 			{
-				std::string entName = EngineFuncs::EntityName( mEntity, "" );
-				EngineFuncs::ConsoleMessage( va( "Entity '%s', rebuild forced", entName.c_str(), mSubModel ) );
+				EngineFuncs::ConsoleMessage( va( "Entity '%s', rebuild forced", mEntityName.c_str(), mSubModel ) );
 			}
 			else if ( rebuildModelChanged )
 			{
-				std::string entName = EngineFuncs::EntityName( mEntity, "" );
-				EngineFuncs::ConsoleMessage( va( "Entity '%s', model %d crc changed", entName.c_str(), mSubModel ) );
+				EngineFuncs::ConsoleMessage( va( "Entity '%s', model %d crc changed", mEntityName.c_str(), mSubModel ) );
 			}
 			else if ( rebuildNavFlagChanged )
 			{
-				std::string entName = EngineFuncs::EntityName( mEntity, "" );
-				EngineFuncs::ConsoleMessage( va( "Entity '%s', nav flag changed", entName.c_str() ) );
+				EngineFuncs::ConsoleMessage( va( "Entity '%s', nav flag changed", mEntityName.c_str() ) );
 			}
 			else if ( mEntity.IsValid() )
 			{
@@ -950,9 +954,8 @@ void Node::UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpda
 				ModelStateEnum::NameForValue( mActiveState, oldState );
 				ModelStateEnum::NameForValue( currentState, newState );
 
-				std::string entName = EngineFuncs::EntityName( mEntity, "" );
 				EngineFuncs::ConsoleMessage( va( "Entity '%s', model %d change state %s->%s",
-					entName.c_str(),
+					mEntityName.c_str(),
 					mSubModel,
 					oldState.c_str(),
 					newState.c_str() ) );
@@ -1207,6 +1210,22 @@ void Node::FindNodeWithEntity( GameEntity entity, NodePtr & node )
 	}
 }
 
+void Node::FindNodeWithName( const std::string& entName, NodePtr & node )
+{
+	if ( mEntityName == entName )
+	{
+		node = shared_from_this();
+		return;
+	}
+
+	for ( size_t i = 0; i < mChildren.size(); ++i )
+	{
+		mChildren[ i ]->FindNodeWithName( entName, node );
+		if ( node )
+			return;
+	}
+}
+
 void Node::RenderAxis()
 {
 	if ( mModel != NULL )
@@ -1254,51 +1273,64 @@ void Node::RenderWorldBounds()
 }
 void Node::SaveState( RecastIO::NavigationMesh & ioNavmesh )
 {
-	RecastIO::NodeState * nodeState = 0;
+	RecastIO::NodeState nodeState;
+
+	if ( !mEntityName.empty() )
+		nodeState.set_name( mEntityName );
+
 	if ( mSubModel >= 0 )
-	{
-		nodeState = ioNavmesh.add_nodestate();
-		nodeState->set_submodelid( mSubModel );
-	}
+		nodeState.set_submodelid( mSubModel );
 	else if ( mStaticModel >= 0 )
+		nodeState.set_staticmodelid( mStaticModel );
+
+	bool dataSet = false;
+	if ( nodeState.enabled() != mEnabled )
 	{
-		nodeState = ioNavmesh.add_nodestate();
-		nodeState->set_staticmodelid( mStaticModel );
+		nodeState.set_enabled( mEnabled );
+		dataSet = true;
+	}
+	if ( nodeState.solid() != mSolid )
+	{
+		nodeState.set_solid( mSolid );
+		dataSet = true;
+	}
+	if ( nodeState.dynamic() != mDynamic )
+	{
+		nodeState.set_dynamic( mDynamic );
+		dataSet = true;
+	}
+	if ( nodeState.shapemode() != mShapeMode )
+	{
+		nodeState.set_shapemode( mShapeMode );
+		dataSet = true;
+	}
+	if ( nodeState.navflagoverride() != mNavFlagsOverride )
+	{
+		nodeState.set_navflagoverride( mNavFlagsOverride );
+		dataSet = true;
 	}
 
-	if ( nodeState != NULL )
+	// if all the fields are defaulted don't save it out
+	if ( dataSet )
 	{
-		bool dataSet = false;
-		if ( nodeState->enabled() != mEnabled )
+		if ( nodeState.has_name() || nodeState.has_submodelid() || nodeState.has_staticmodelid() )
 		{
-			nodeState->set_enabled( mEnabled );
-			dataSet = true;
+			ioNavmesh.add_nodestate()->CopyFrom( nodeState );
 		}
-		if ( nodeState->solid() != mSolid )
+		else
 		{
-			nodeState->set_solid( mSolid );
-			dataSet = true;
-		}
-		if ( nodeState->dynamic() != mDynamic )
-		{
-			nodeState->set_dynamic( mDynamic );
-			dataSet = true;
-		}
-		if ( nodeState->shapemode() != mShapeMode )
-		{
-			nodeState->set_shapemode( mShapeMode );
-			dataSet = true;
-		}
-		if ( nodeState->navflagoverride() != mNavFlagsOverride )
-		{
-			nodeState->set_navflagoverride( mNavFlagsOverride );
-			dataSet = true;
-		}
-		
-		// if all the fields are defaulted don't save it out
-		if ( !dataSet )
-		{
-			ioNavmesh.mutable_nodestate()->RemoveLast();
+			std::vector<const google::protobuf::FieldDescriptor*> fields;
+			nodeState.GetReflection()->ListFields( nodeState, &fields );
+
+			std::string fieldStr;
+			for ( size_t i = 0; i < fields.size(); ++i )
+			{ 
+				if ( !fieldStr.empty() )
+					fieldStr += ", ";
+				fieldStr += fields[i]->camelcase_name();
+			}
+			
+			EngineFuncs::ConsoleError( va( "Unable to save model node state(no unique identifer), fields set %s", fieldStr.c_str() ) );
 		}
 	}
 }
@@ -1310,6 +1342,7 @@ void Node::LoadState( const RecastIO::NodeState & nodeState )
 	mShapeMode = nodeState.shapemode();
 	mActiveModelCrc = mModel ? mModel->GetModelCrc() : 0;
 	mNavFlagsOverride = (NavAreaFlags)nodeState.navflagoverride();
+	mEntityName = nodeState.name();
 }
 
 void Node::BuildScene( modeldata::Scene & scene, modeldata::Node & node )
@@ -1398,20 +1431,20 @@ NodePtr CollisionWorld::LoadModelIntoWorld( const GameEntity entity, const GameM
 	}
 	else if ( entInfo.mFlags.CheckFlag( ENT_FLAG_USEBOUNDS ) && !modelInfo.mAABB.IsZero() )
 	{
-		return CreateNodeForEntityBounds( entity, modelInfo );
+		return CreateNodeForEntityBounds( entity, modelInfo, entInfo.mFlags.CheckFlag( ENT_FLAG_SAVENAV ) );
 	}
 	else if ( modelInfo.mDataBuffer != NULL )
 	{
-		return CreateNodeForEntityModel( entity, modelInfo );
+		return CreateNodeForEntityModel( entity, modelInfo, entInfo.mFlags.CheckFlag( ENT_FLAG_SAVENAV ) );
 	}
 	else if ( !modelInfo.mAABB.IsZero() )
 	{		
-		return CreateNodeForEntityBounds( entity, modelInfo );
+		return CreateNodeForEntityBounds( entity, modelInfo, entInfo.mFlags.CheckFlag( ENT_FLAG_SAVENAV ) );
 	}
 	return NodePtr();
 }
 
-NodePtr CollisionWorld::CreateNodeForEntityModel( const GameEntity entity, const GameModelInfo & modelInfo )
+NodePtr CollisionWorld::CreateNodeForEntityModel( const GameEntity entity, const GameModelInfo & modelInfo, bool saveable )
 {
 	Vector3f origin = Vector3f::ZERO;
 	if ( !EngineFuncs::EntityPosition( entity, origin ) )
@@ -1421,26 +1454,37 @@ NodePtr CollisionWorld::CreateNodeForEntityModel( const GameEntity entity, const
 	if ( !EngineFuncs::EntityOrientation( entity, vFwd, vRight, vUp ) )
 		return NodePtr();
 	
-	Material defaultMaterial;
-	defaultMaterial.mName = modelInfo.mModelName;
-	defaultMaterial.mSurface = SURFACE_NONE;
-	defaultMaterial.mContents = CONT_PLYRCLIP;
+	const std::string entName = EngineFuncs::EntityName( entity, "" );
 
-	NodePtr node( new Node );
+	NodePtr node;
+	mRootNode->FindNodeWithName( entName, node );
+	if ( !node )
+	{
+		node.reset( new Node );
+
+		Material mtrl;
+		mtrl.mName = modelInfo.mModelName;
+		mtrl.mSurface = SURFACE_NONE;
+		mtrl.mContents = CONT_PLYRCLIP;
+		node->mModel = ParseModelData( modelInfo, mtrl );
+		if ( node->mModel == NULL )
+			return NodePtr();
+
+		node->mModel->SetName( modelInfo.mModelName );
+		mRootNode->mChildren.emplace_back( node );
+	}
+		
 	node->mEntity = entity;
-	node->mModel = ParseModelData( modelInfo, defaultMaterial );
-	node->mModel->SetName( modelInfo.mModelName );
+	node->mEntityName = entName;	
 	node->mTransform.SetPosition( origin, false );
 	node->mTransform.SetOrientation( Matrix3f( vFwd, -vRight, vUp, true ), false );
+	node->mSaveable = saveable;
+	node->mRuntime = true;
 
-	if ( node->mModel == NULL )
-		return NodePtr();
-
-	mRootNode->mChildren.emplace_back( node );
 	return node;
 }
 
-NodePtr CollisionWorld::CreateNodeForEntityBounds( const GameEntity entity, const GameModelInfo & modelInfo )
+NodePtr CollisionWorld::CreateNodeForEntityBounds( const GameEntity entity, const GameModelInfo & modelInfo, bool saveable )
 {
 	Vector3f origin = Vector3f::ZERO;
 	if ( !EngineFuncs::EntityPosition( entity, origin ) )
@@ -1450,22 +1494,33 @@ NodePtr CollisionWorld::CreateNodeForEntityBounds( const GameEntity entity, cons
 	if ( !EngineFuncs::EntityOrientation( entity, vFwd, vRight, vUp ) )
 		return NodePtr();
 
-	Material defaultMaterial;
-	defaultMaterial.mName = modelInfo.mModelName;
-	defaultMaterial.mSurface = SURFACE_NONE;
-	defaultMaterial.mContents = CONT_PLYRCLIP;
+	const std::string entName = EngineFuncs::EntityName( entity, "" );
 
-	NodePtr node( new Node );
+	NodePtr node;
+	mRootNode->FindNodeWithName( entName, node );
+	if ( !node )
+	{
+		node.reset( new Node );
+
+		Material mtrl;
+		mtrl.mName = modelInfo.mModelName;
+		mtrl.mSurface = SURFACE_NONE;
+		mtrl.mContents = CONT_PLYRCLIP;
+		node->mModel = CreateModelData( modelInfo.mAABB, mtrl );
+		if ( node->mModel == NULL )
+			return NodePtr();
+
+		node->mModel->SetName( modelInfo.mModelName );
+		mRootNode->mChildren.emplace_back( node );
+	}
+
 	node->mEntity = entity;
-	node->mModel = CreateModelData( modelInfo.mAABB, defaultMaterial );
-	node->mModel->SetName( modelInfo.mModelName );
+	node->mEntityName = entName;
 	node->mTransform.SetPosition( origin, false );
 	node->mTransform.SetOrientation( Matrix3f( vFwd, -vRight, vUp, true ), false );
-
-	if ( node->mModel == NULL )
-		return NodePtr();
-
-	mRootNode->mChildren.emplace_back( node );
+	node->mSaveable = saveable;
+	node->mRuntime = true;
+	
 	return node;
 }
 

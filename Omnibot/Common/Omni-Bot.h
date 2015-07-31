@@ -12,8 +12,8 @@
 
 #pragma once
 
-#ifndef __OMNIBOT_H__
-#define __OMNIBOT_H__
+#ifndef _OMNIBOT_H__
+#define _OMNIBOT_H__
 
 #include "Omni-Bot_Types.h"
 #include "Omni-Bot_Events.h"
@@ -22,25 +22,25 @@
 
 class OmnibotFunctions : public OmnibotFunctionInterface
 {
-	virtual omnibot_error Initialize( IEngineInterface *_pEngineFuncs, int _version );
+	virtual omnibot_error Initialize( IEngineInterface * engineFuncs, int version );
 
 	virtual void Update();
 	virtual void Shutdown();
 	virtual void ConsoleCommand( const Arguments &args );
 
-	virtual void SendTrigger( const TriggerInfo &_triggerInfo );
-	virtual void AddBlackboardRecord( BlackBoard_Key _type, int _posterID, int _targetID, obUserData *_data );
+	virtual void SendTrigger( const TriggerInfo & triggerInfo );
+	virtual void AddBlackboardRecord( BlackBoard_Key  type, int posterID, int targetID, obUserData * data );
 
 	// events
-	virtual void SendEvent( int _dest, const MessageHelper &_message );
-	virtual void SendGlobalEvent( const MessageHelper &_message );
+	virtual void SendEvent( int dest, const MessageHelper & message );
+	virtual void SendGlobalEvent( const MessageHelper & message );
 	
-	virtual void EntityAdded( GameEntity ent, const EntityInfo& entInfo );
+	virtual void EntityAdded( GameEntity ent, const EntityInfo & entInfo );
 	virtual void EntityDestroyed( GameEntity ent );
 
 	// goals
-	virtual void AddGoal( const MapGoalDef &goaldef );
-	virtual void DeleteGoal( const char *goalname );
+	virtual void AddGoal( const MapGoalDef & goaldef );
+	virtual void DeleteGoal( const char * goalname );
 	virtual void UpdateEntity( GameEntity oldent, GameEntity newent );
 };
 

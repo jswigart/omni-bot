@@ -133,10 +133,10 @@ void RTCW_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags 
 	switch ( GetTeam() )
 	{
 		case RTCW_TEAM_AXIS:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 		case RTCW_TEAM_ALLIES:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 	}
 }

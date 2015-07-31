@@ -40,10 +40,10 @@ void Skeleton_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFl
 	switch ( GetTeam() )
 	{
 		case SKELETON_TEAM_1:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 		case SKELETON_TEAM_2:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 	}
 }

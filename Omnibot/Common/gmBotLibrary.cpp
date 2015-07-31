@@ -1236,9 +1236,9 @@ static int gmfGetEntityName( gmThread *a_thread )
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
 
-	const char *pName = gEngineFuncs->GetEntityName( gameEnt );
-	if ( pName )
-		a_thread->PushNewString( pName );
+	obStringBuffer nameBuffer;
+	if ( SUCCESS( gEngineFuncs->GetEntityName( gameEnt, nameBuffer ) ) )
+		a_thread->PushNewString( nameBuffer.mBuffer );
 	else
 		a_thread->PushNull();
 	return GM_OK;

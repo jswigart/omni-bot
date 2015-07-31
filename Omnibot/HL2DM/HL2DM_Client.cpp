@@ -40,10 +40,10 @@ void HL2DM_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags
 	switch ( GetTeam() )
 	{
 		case HL2DM_TEAM_COMBINE:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 		case HL2DM_TEAM_REBELS:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 	}
 }

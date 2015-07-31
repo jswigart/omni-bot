@@ -44,10 +44,10 @@ void Q4_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 	switch ( GetTeam() )
 	{
 		case Q4_TEAM_MARINE:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 		case Q4_TEAM_STROGG:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 	}
 }

@@ -1097,7 +1097,7 @@ State::StateStatus StatePrioritized::UpdateState( float fDt )
 	State *STATES_P[ N ] = {}; int NumPriorities = 0;
 	State *STATES_X[ N ] = {}; int NumExited = 0;
 	State *OLD_BEST = mCurrentState; OLD_BEST;
-	const char *BOT_NAME = GetClient() ? GetClient()->GetName() : 0; BOT_NAME;
+	const std::string& BOT_NAME = GetClient() ? GetClient()->GetName() : ""; BOT_NAME;
 #endif
 
 	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )

@@ -81,7 +81,7 @@ public:
 
 	// Function: GetName
 	//		Get the current name of this bot
-	const char *GetName( bool _clean = false ) const;
+	const std::string& GetName( bool _clean = false ) const;
 
 	// Function: GetTeam
 	//		Get the current team this bot is on
@@ -452,23 +452,23 @@ protected:
 	void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 	void ProcessEventImpl( const MessageHelper &_message, uint32_t _targetState );
 private:
-	Vector3f	 mPosition;
-	Vector3f	 mEyePosition;
-	Vector3f	 mMoveVector;
-	Vector3f	 mVelocity;
-	Vector3f	 mFacingVector;
-	Vector3f	 mUpVector;
-	Vector3f	 mRightVector;
-	AABB		 mLocalBounds;
-	Box3f		 mWorldBounds;
-	Matrix3f	 mOrientation;
+	Vector3f		mPosition;
+	Vector3f		mEyePosition;
+	Vector3f		mMoveVector;
+	Vector3f		mVelocity;
+	Vector3f		mFacingVector;
+	Vector3f		mUpVector;
+	Vector3f		mRightVector;
+	AABB			mLocalBounds;
+	Box3f			mWorldBounds;
+	Matrix3f		mOrientation;
 
-	GameEntity	 mMoveEntity;
+	GameEntity		mMoveEntity;
 
-	BitFlag64	 mButtonFlags;
+	BitFlag64		mButtonFlags;
 
-	float		 mFieldOfView;
-	float		 mMaxViewDistance;
+	float			mFieldOfView;
+	float			mMaxViewDistance;
 
 	// Bot Properties
 	EntityInfo		mEntInfo;
@@ -476,31 +476,30 @@ private:
 	BitFlag32		mRoleMask;
 	BitFlag64		mInternalFlags;
 
-	int			 mTeam;
-	GameId		 mGameID;
-	GameEntity	 mGameEntity;
+	int				mTeam;
+	GameId			mGameID;
+	GameEntity		mGameEntity;
 
-	gmUserObject	* mScriptObject;
+	gmUserObject *	mScriptObject;
 
 	// Aiming properties
-	float		 mCurrentTurnSpeed;
-	float		 mMaxTurnSpeed;
-	float		 mAimStiffness;
-	float		 mAimDamping;
-	float		 mAimTolerance;
+	float			mCurrentTurnSpeed;
+	float			mMaxTurnSpeed;
+	float			mAimStiffness;
+	float			mAimDamping;
+	float			mAimTolerance;
 
-	HoldButtons	 mHoldButtons;
+	HoldButtons		mHoldButtons;
 
-	ProfileType	 mProfileType;
+	ProfileType		mProfileType;
 
-	BlackBoard	 mBlackboard;
+	BlackBoard		mBlackboard;
 
-	File		 mDebugLog;
-	BitFlag32	 mDebugFlags;
+	File			mDebugLog;
+	BitFlag32		mDebugFlags;
 
-	NamePtr		 mNameReference;
-
-	//int			 mSoundSubscriber;
+	mutable std::string		mName;
+	NamePtr					mNameReference;
 };
 
 inline float Client::GetHealthPercent() const

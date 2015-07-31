@@ -144,10 +144,10 @@ void ETQW_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags 
 	switch ( GetTeam() )
 	{
 		case ETQW_TEAM_STROGG:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 		case ETQW_TEAM_GDF:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 	}
 }

@@ -4,7 +4,7 @@
 #define _PLATFORMSPECIFICS_H_
 
 #ifdef WIN32
-#include <hash_map>
+#include <unordered_map>
 #else
 #if defined (__GNUC__) && (__GNUC__ <= 2)
 #include <hash_map.h>

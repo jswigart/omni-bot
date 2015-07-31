@@ -60,7 +60,7 @@ void SetThreadName( DWORD dwThreadID, char* threadName )
 
 //////////////////////////////////////////////////////////////////////////
 
-omnibot_error OmnibotFunctions::Initialize( IEngineInterface *_pEngineFuncs, int _version )
+omnibot_error OmnibotFunctions::Initialize( IEngineInterface * engineFuncs, int version )
 {
 #ifdef WIN32
 	SetThreadName( (DWORD)-1, "MainThread" );
@@ -69,12 +69,12 @@ omnibot_error OmnibotFunctions::Initialize( IEngineInterface *_pEngineFuncs, int
 
 	g_Logger.Start(
 		( std::string )va( "%s/omnibot_%s.log",
-		_pEngineFuncs->GetLogPath(),
-		_pEngineFuncs->GetMapName() ), true );
+		engineFuncs->GetLogPath(),
+		engineFuncs->GetMapName() ), true );
 	
 	// Create the Game Manager
 	g_GameManager = new IGameManager();
-	return g_GameManager->CreateGame( _pEngineFuncs, _version );
+	return g_GameManager->CreateGame( engineFuncs, version );
 }
 
 void OmnibotFunctions::Update()
@@ -97,7 +97,7 @@ void OmnibotFunctions::Shutdown()
 	//_ASSERTE( _CrtCheckMemory( ) );
 #endif
 }
-void OmnibotFunctions::ConsoleCommand( const Arguments &args )
+void OmnibotFunctions::ConsoleCommand( const Arguments & args )
 {
 	StringVector tokList;
 	for ( int i = 0; i < args.mNumArgs; ++i )
@@ -119,23 +119,23 @@ void OmnibotFunctions::ConsoleCommand( const Arguments &args )
 	CommandReciever::DispatchCommand( tokList );
 }
 
-void OmnibotFunctions::SendTrigger( const TriggerInfo &_triggerInfo )
+void OmnibotFunctions::SendTrigger( const TriggerInfo & triggerInfo )
 {
-	TriggerManager::GetInstance()->HandleTrigger( _triggerInfo );
+	TriggerManager::GetInstance()->HandleTrigger( triggerInfo );
 }
 
-void OmnibotFunctions::AddBlackboardRecord( BlackBoard_Key _type, int _posterID, int _targetID, obUserData *_data )
+void OmnibotFunctions::AddBlackboardRecord( BlackBoard_Key type, int posterID, int targetID, obUserData * data )
 {
 }
 
-void OmnibotFunctions::SendEvent( int _dest, const MessageHelper &_message )
+void OmnibotFunctions::SendEvent( int dest, const MessageHelper & message )
 {
-	System::mInstance->mGame->DispatchEvent( _dest, _message );
+	System::mInstance->mGame->DispatchEvent( dest, message );
 }
 
-void OmnibotFunctions::SendGlobalEvent( const MessageHelper &_message )
+void OmnibotFunctions::SendGlobalEvent( const MessageHelper & message )
 {
-	System::mInstance->mGame->DispatchGlobalEvent( _message );
+	System::mInstance->mGame->DispatchGlobalEvent( message );
 }
 
 void OmnibotFunctions::EntityAdded( GameEntity ent, const EntityInfo& entInfo )
@@ -153,7 +153,7 @@ void OmnibotFunctions::EntityDestroyed( GameEntity ent )
 	SendGlobalEvent( MessageHelper( GAME_ENTITYDELETED, &d, sizeof( d ) ) );
 }
 
-void OmnibotFunctions::AddGoal( const MapGoalDef &goaldef )
+void OmnibotFunctions::AddGoal( const MapGoalDef & goaldef )
 {
 	GameEntity Entity;
 	if ( goaldef.Props.GetEntity( "Entity", Entity ) && Entity.IsValid() )
@@ -168,7 +168,7 @@ void OmnibotFunctions::AddGoal( const MapGoalDef &goaldef )
 	GoalManager::GetInstance()->AddGoal( goaldef );
 }
 
-void OmnibotFunctions::DeleteGoal( const char *goalname )
+void OmnibotFunctions::DeleteGoal( const char * goalname )
 {
 	GoalManager::GetInstance()->RemoveGoalByName( goalname );
 }

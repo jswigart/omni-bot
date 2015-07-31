@@ -224,6 +224,7 @@ struct Node : public boost::enable_shared_from_this<Node>
 	EntityInfo						mEntInfo;
 	int								mSubModel;
 	int								mStaticModel;
+	std::string						mEntityName;
 	ModelState						mActiveState;
 	NavAreaFlags					mNavFlagsActive;
 	NavAreaFlags					mNavFlagsOverride;
@@ -238,7 +239,8 @@ struct Node : public boost::enable_shared_from_this<Node>
 	bool							mSolid : 1;
 	bool							mDynamic : 1;
 	bool							mForceRebuild : 1;
-	bool							mRuntimeEntity : 1; // don't save to file
+	bool							mSaveable : 1; // save to file
+	bool							mRuntime : 1; // save to file
 
 	void Init( PathPlannerRecast * planner );
 	void UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpdate );
@@ -269,6 +271,7 @@ struct Node : public boost::enable_shared_from_this<Node>
 	void FindNodeWithSubModel( int subModel, NodePtr & node );
 	void FindNodeWithStaticModel( int staticModelId, NodePtr & node );
 	void FindNodeWithEntity( GameEntity entity, NodePtr & node );
+	void FindNodeWithName( const std::string& entName, NodePtr & node );
 	
 	void BuildScene( modeldata::Scene & scene, modeldata::Node & node );
 
@@ -301,9 +304,9 @@ struct CollisionWorld
 	CollisionWorld();
 	virtual ~CollisionWorld();
 private:
-	NodePtr CreateNodeForEntityModel( const GameEntity entity, const GameModelInfo & modelInfo );
-	NodePtr CreateNodeForEntityBounds( const GameEntity entity, const GameModelInfo & modelInfo );
-
+	NodePtr CreateNodeForEntityModel( const GameEntity entity, const GameModelInfo & modelInfo, bool saveable );
+	NodePtr CreateNodeForEntityBounds( const GameEntity entity, const GameModelInfo & modelInfo, bool saveable );
+	
 	void DeleteNodeForEntity_r( GameEntity entity, NodePtr & node );
 };
 

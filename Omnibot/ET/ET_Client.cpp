@@ -216,10 +216,10 @@ void ET_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 	switch ( GetTeam() )
 	{
 		case ET_TEAM_AXIS:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 		case ET_TEAM_ALLIES:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & sTeamMask );
+			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 	}
 }

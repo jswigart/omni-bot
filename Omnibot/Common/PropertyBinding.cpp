@@ -114,30 +114,30 @@ public:
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
-	void action(const gcn::ActionEvent& actionEvent)
+	void action( const gcn::ActionEvent& actionEvent )
 	{
-		if(actionEvent.getSource()==mCheckBox)
+		if ( actionEvent.getSource() == mCheckBox )
 		{
 			mValue = mCheckBox->isSelected();
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
+	void AddToGui( gcn::contrib::PropertySheet *_propsheet )
 	{
 		mCheckBox = new gcn::CheckBox;
-		if(Check(Prop::PF_READONLY))
-			mCheckBox->setEnabled(false);
-		_propsheet->addProperty(GetName(),mCheckBox);
+		if ( Check( Prop::PF_READONLY ) )
+			mCheckBox->setEnabled( false );
+		_propsheet->addProperty( GetName(), mCheckBox );
 	}
 	void DeAllocGui()
 	{
-		OB_DELETE(mCheckBox);
+		OB_DELETE( mCheckBox );
 	}
 	void UpdateToGui()
 	{
-		if(mCheckBox)
+		if ( mCheckBox )
 		{
-			mCheckBox->setCaption(mValue?"true":"false");
-			mCheckBox->setSelected(mValue);
+			mCheckBox->setCaption( mValue ? "true" : "false" );
+			mCheckBox->setSelected( mValue );
 			mCheckBox->adjustSize();
 		}
 	}
@@ -146,7 +146,7 @@ public:
 		: Property( _name, _flags )
 		, mValue( v )
 #ifdef ENABLE_DEBUG_WINDOW
-		, mCheckBox(0)
+		, mCheckBox( 0 )
 #endif
 	{
 	}
@@ -182,25 +182,25 @@ public:
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
-	void action(const gcn::ActionEvent& actionEvent)
+	void action( const gcn::ActionEvent& actionEvent )
 	{
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
+	void AddToGui( gcn::contrib::PropertySheet *_propsheet )
 	{
 		mTextField = new gcn::TextField;
-		mTextField->setEnabled(false);
-		mTextField->setReadOnly(true);
-		_propsheet->addProperty(GetName(),mTextField);
+		mTextField->setEnabled( false );
+		mTextField->setReadOnly( true );
+		_propsheet->addProperty( GetName(), mTextField );
 	}
 	void DeAllocGui()
 	{
-		OB_DELETE(mTextField);
+		OB_DELETE( mTextField );
 	}
 	void UpdateToGui()
 	{
-		if(mTextField)
+		if ( mTextField )
 		{
-			mTextField->setText(mValue?mValue:"");
+			mTextField->setText( mValue ? mValue : "" );
 			mTextField->adjustSize();
 		}
 	}
@@ -209,7 +209,7 @@ public:
 		: Property( _name, _flags )
 		, mValue( v )
 #ifdef ENABLE_DEBUG_WINDOW
-		, mTextField(0)
+		, mTextField( 0 )
 #endif
 	{
 	}
@@ -252,29 +252,29 @@ public:
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
-	void action(const gcn::ActionEvent& actionEvent)
+	void action( const gcn::ActionEvent& actionEvent )
 	{
-		if(actionEvent.getSource()==mTextField)
+		if ( actionEvent.getSource() == mTextField )
 		{
 			mValue = mTextField->getText();
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
+	void AddToGui( gcn::contrib::PropertySheet *_propsheet )
 	{
 		mTextField = new gcn::TextField;
-		if(Check(Prop::PF_READONLY))
-			mTextField->setEnabled(false);
-		_propsheet->addProperty(GetName(),mTextField);
+		if ( Check( Prop::PF_READONLY ) )
+			mTextField->setEnabled( false );
+		_propsheet->addProperty( GetName(), mTextField );
 	}
 	void DeAllocGui()
 	{
-		OB_DELETE(mTextField);
+		OB_DELETE( mTextField );
 	}
 	void UpdateToGui()
 	{
-		if(mTextField)
+		if ( mTextField )
 		{
-			mTextField->setText(mValue);
+			mTextField->setText( mValue );
 			mTextField->adjustSize();
 		}
 	}
@@ -283,7 +283,7 @@ public:
 		: Property( _name, _flags )
 		, mValue( v )
 #ifdef ENABLE_DEBUG_WINDOW
-		, mTextField(0)
+		, mTextField( 0 )
 #endif
 	{
 	}
@@ -328,49 +328,49 @@ public:
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
-	void action(const gcn::ActionEvent &evt)
+	void action( const gcn::ActionEvent &evt )
 	{
-		if(evt.getSource()==mBtnSetPos)
+		if ( evt.getSource() == mBtnSetPos )
 		{
-			Utils::GetLocalFacing(mValue);
+			Utils::GetLocalFacing( mValue );
 		}
-		else if(evt.getSource()==mBtnSetFacing)
+		else if ( evt.getSource() == mBtnSetFacing )
 		{
-			Utils::GetLocalPosition(mValue);
+			Utils::GetLocalPosition( mValue );
 		}
-		else if(evt.getSource()==mBtnSetAimPos)
+		else if ( evt.getSource() == mBtnSetAimPos )
 		{
-			Utils::GetLocalAimPoint(mValue);
+			Utils::GetLocalAimPoint( mValue );
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
+	void AddToGui( gcn::contrib::PropertySheet *_propsheet )
 	{
 		mContainer = new gcn::contrib::AdjustingContainer;
 
 		mTextField = new gcn::TextField;
-		if(Check(Prop::PF_READONLY))
-			mTextField->setEnabled(false);
-		mContainer->add(mTextField);
+		if ( Check( Prop::PF_READONLY ) )
+			mTextField->setEnabled( false );
+		mContainer->add( mTextField );
 
-		mBtnSetPos = new gcn::Button("Set Position");
-		mBtnSetPos->addActionListener(this);
-		mContainer->add(mBtnSetPos);
+		mBtnSetPos = new gcn::Button( "Set Position" );
+		mBtnSetPos->addActionListener( this );
+		mContainer->add( mBtnSetPos );
 
-		mBtnSetFacing = new gcn::Button("Set Facing");
-		mBtnSetFacing->addActionListener(this);
-		mContainer->add(mBtnSetFacing);
+		mBtnSetFacing = new gcn::Button( "Set Facing" );
+		mBtnSetFacing->addActionListener( this );
+		mContainer->add( mBtnSetFacing );
 
-		mBtnSetAimPos = new gcn::Button("Set Aim Position");
-		mBtnSetAimPos->addActionListener(this);
-		mContainer->add(mBtnSetAimPos);
+		mBtnSetAimPos = new gcn::Button( "Set Aim Position" );
+		mBtnSetAimPos->addActionListener( this );
+		mContainer->add( mBtnSetAimPos );
 
-		_propsheet->addProperty(GetName(),mContainer);
+		_propsheet->addProperty( GetName(), mContainer );
 	}
 	void UpdateToGui()
 	{
-		if(mTextField)
+		if ( mTextField )
 		{
-			mTextField->setText(Utils::FormatVectorString(mValue));
+			mTextField->setText( Utils::FormatVectorString( mValue ) );
 			mTextField->adjustSize();
 		}
 	}
@@ -379,11 +379,11 @@ public:
 		: Property( _name, _flags )
 		, mValue( v )
 #ifdef ENABLE_DEBUG_WINDOW
-		, mContainer(0)
-		, mTextField(0)
-		, mBtnSetPos(0)
-		, mBtnSetFacing(0)
-		, mBtnSetAimPos(0)
+		, mContainer( 0 )
+		, mTextField( 0 )
+		, mBtnSetPos( 0 )
+		, mBtnSetFacing( 0 )
+		, mBtnSetAimPos( 0 )
 #endif
 	{
 	}
@@ -432,28 +432,28 @@ public:
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
-	void action(const gcn::ActionEvent& actionEvent)
+	void action( const gcn::ActionEvent& actionEvent )
 	{
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
+	void AddToGui( gcn::contrib::PropertySheet *_propsheet )
 	{
 		mTextField = new gcn::TextField;
-		if(Check(Prop::PF_READONLY))
-			mTextField->setEnabled(false);
-		_propsheet->addProperty(GetName(),mTextField);
+		if ( Check( Prop::PF_READONLY ) )
+			mTextField->setEnabled( false );
+		_propsheet->addProperty( GetName(), mTextField );
 	}
 	void DeAllocGui()
 	{
-		OB_DELETE(mButton1);
-		OB_DELETE(mButton2);
-		OB_DELETE(mButton3);
-		OB_DELETE(mTextField);
+		OB_DELETE( mButton1 );
+		OB_DELETE( mButton2 );
+		OB_DELETE( mButton3 );
+		OB_DELETE( mTextField );
 	}
 	void UpdateToGui()
 	{
-		if(mTextField)
+		if ( mTextField )
 		{
-			mTextField->setText(Utils::FormatMatrixString(mValue));
+			mTextField->setText( Utils::FormatMatrixString( mValue ) );
 			mTextField->adjustSize();
 		}
 	}
@@ -462,10 +462,10 @@ public:
 		: Property( _name, _flags )
 		, mValue( v )
 #ifdef ENABLE_DEBUG_WINDOW
-		, mTextField(0)
-		, mButton1(0)
-		, mButton2(0)
-		, mButton3(0)
+		, mTextField( 0 )
+		, mButton1( 0 )
+		, mButton2( 0 )
+		, mButton3( 0 )
 #endif
 	{
 	}
@@ -551,66 +551,66 @@ public:
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
-	void action(const gcn::ActionEvent& actionEvent)
+	void action( const gcn::ActionEvent& actionEvent )
 	{
-		if(actionEvent.getSource()==mDropDown)
+		if ( actionEvent.getSource() == mDropDown )
 		{
 			mValue = mDropDown->getSelected();
 		}
-		if(actionEvent.getSource()==mTextField)
+		if ( actionEvent.getSource() == mTextField )
 		{
-			float val = (float)atof(mTextField->getText().c_str());
-			if(Check(Prop::PF_MS_TO_SECONDS))
+			float val = (float)atof( mTextField->getText().c_str() );
+			if ( Check( Prop::PF_MS_TO_SECONDS ) )
 				val *= 1000.f;
 
 			mValue = (int)val;
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
+	void AddToGui( gcn::contrib::PropertySheet *_propsheet )
 	{
-		if(!mTextField)
+		if ( !mTextField )
 		{
-			if(mEnum)
+			if ( mEnum )
 			{
-				mDropDown = new gcn::DropDown(this);
-				mDropDown->setSelected(mValue);
+				mDropDown = new gcn::DropDown( this );
+				mDropDown->setSelected( mValue );
 				mDropDown->adjustHeight();
-				if(Check(Prop::PF_READONLY))
-					mDropDown->setEnabled(false);
+				if ( Check( Prop::PF_READONLY ) )
+					mDropDown->setEnabled( false );
 
 				// resize to fit the biggest value.
 				int width = mDropDown->getWidth();
-				for(int i = 0; i < mEnumNum; ++i)
+				for ( int i = 0; i < mEnumNum; ++i )
 				{
-					int w = mDropDown->getFont()->getWidth(mEnum[i].mKey);
-					if(w > width)
+					int w = mDropDown->getFont()->getWidth( mEnum[ i ].mKey );
+					if ( w > width )
 						width = w;
 				}
-				mDropDown->setWidth(width);
-				mDropDown->setSelected(mValue);
-				_propsheet->addProperty(GetName(),mDropDown);
+				mDropDown->setWidth( width );
+				mDropDown->setSelected( mValue );
+				_propsheet->addProperty( GetName(), mDropDown );
 			}
 			else
 			{
 				mTextField = new gcn::TextField();
-				if(Check(Prop::PF_READONLY))
-					mTextField->setEnabled(false);
-				_propsheet->addProperty(GetName(),mTextField);
+				if ( Check( Prop::PF_READONLY ) )
+					mTextField->setEnabled( false );
+				_propsheet->addProperty( GetName(), mTextField );
 			}
 		}
 	}
 	void UpdateToGui()
 	{
-		if(mEnum)
+		if ( mEnum )
 		{
 			mValue = mDropDown->getSelected();
 		}
-		else if(mTextField)
+		else if ( mTextField )
 		{
-			if(Check(Prop::PF_MS_TO_SECONDS))
-				mTextField->setText((std::string)va("%g",(float)mValue / 1000.f));
+			if ( Check( Prop::PF_MS_TO_SECONDS ) )
+				mTextField->setText( ( std::string )va( "%g", (float)mValue / 1000.f ) );
 			else
-				mTextField->setText((std::string)va("%d",mValue));
+				mTextField->setText( ( std::string )va( "%d", mValue ) );
 			//mTextField->adjustSize();
 		}
 	}
@@ -629,8 +629,8 @@ public:
 		, mEnum( _enum )
 		, mEnumNum( _numenum )
 #ifdef ENABLE_DEBUG_WINDOW
-		, mTextField(0)
-		, mDropDown(0)
+		, mTextField( 0 )
+		, mDropDown( 0 )
 #endif
 	{
 	}
@@ -744,23 +744,23 @@ public:
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
-	void action(const gcn::ActionEvent& actionEvent)
+	void action( const gcn::ActionEvent& actionEvent )
 	{
-		gcn::CheckBox *cb = static_cast<gcn::CheckBox*>(.mContainer->findWidgetById(actionEvent.getId()));
-		const int bit = atoi(actionEvent.getId().c_str());
-		mValue.SetFlag(bit, cb->isSelected());
+		gcn::CheckBox *cb = static_cast<gcn::CheckBox*>( .mContainer->findWidgetById( actionEvent.getId() ) );
+		const int bit = atoi( actionEvent.getId().c_str() );
+		mValue.SetFlag( bit, cb->isSelected() );
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
+	void AddToGui( gcn::contrib::PropertySheet *_propsheet )
 	{
 		mContainer = new gcn::contrib::AdjustingContainer;
-		mContainer->setNumberOfColumns(2);
-		for(int i = 0; i < mEnumNum; ++i)
+		mContainer->setNumberOfColumns( 2 );
+		for ( int i = 0; i < mEnumNum; ++i )
 		{
-			gcn::CheckBox *cb = new gcn::CheckBox(.mEnum[i].mKey,.mValue.CheckFlag(i));
-			cb->setId((std::string)va("%d",i));
-			mContainer->add(cb);
+			gcn::CheckBox *cb = new gcn::CheckBox( .mEnum[ i ].mKey, .mValue.CheckFlag( i ) );
+			cb->setId( ( std::string )va( "%d", i ) );
+			mContainer->add( cb );
 		}
-		_propsheet->addProperty(GetName(),.mContainer);
+		_propsheet->addProperty( GetName(), .mContainer );
 	}
 	void UpdateToGui()
 	{
@@ -780,7 +780,7 @@ public:
 		, mEnum( _enum )
 		, mEnumNum( _numenum )
 #ifdef ENABLE_DEBUG_WINDOW
-		, mContainer(0)
+		, mContainer( 0 )
 #endif
 	{
 	}
@@ -827,29 +827,29 @@ public:
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
-	void action(const gcn::ActionEvent& actionEvent)
+	void action( const gcn::ActionEvent& actionEvent )
 	{
-		if(actionEvent.getSource() == mTextField)
+		if ( actionEvent.getSource() == mTextField )
 		{
-			mValue = (float)atof(.mTextField->getText().c_str());
+			mValue = (float)atof( .mTextField->getText().c_str() );
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
+	void AddToGui( gcn::contrib::PropertySheet *_propsheet )
 	{
 		mTextField = new gcn::TextField;
-		if(Check(Prop::PF_READONLY))
-			mTextField->setEnabled(false);
-		_propsheet->addProperty(GetName(),.mTextField);
+		if ( Check( Prop::PF_READONLY ) )
+			mTextField->setEnabled( false );
+		_propsheet->addProperty( GetName(), .mTextField );
 	}
 	void DeAllocGui()
 	{
-		OB_DELETE(.mTextField);
+		OB_DELETE( .mTextField );
 	}
 	void UpdateToGui()
 	{
-		if(.mTextField)
+		if ( .mTextField )
 		{
-			mTextField->setText((std::string)va("%g",.mValue));
+			mTextField->setText( ( std::string )va( "%g", .mValue ) );
 		}
 	}
 #endif
@@ -857,7 +857,7 @@ public:
 		: Property( _name, _flags )
 		, mValue( v )
 #ifdef ENABLE_DEBUG_WINDOW
-		, mTextField(0)
+		, mTextField( 0 )
 #endif
 	{
 	}
@@ -902,28 +902,28 @@ public:
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
-	void action(const gcn::ActionEvent& actionEvent)
+	void action( const gcn::ActionEvent& actionEvent )
 	{
-		if(actionEvent.getSource() == mTextField)
+		if ( actionEvent.getSource() == mTextField )
 		{
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
+	void AddToGui( gcn::contrib::PropertySheet *_propsheet )
 	{
 		mTextField = new gcn::TextField;
-		if(Check(Prop::PF_READONLY))
-			mTextField->setEnabled(false);
-		_propsheet->addProperty(GetName(),.mTextField);
+		if ( Check( Prop::PF_READONLY ) )
+			mTextField->setEnabled( false );
+		_propsheet->addProperty( GetName(), .mTextField );
 	}
 	void DeAllocGui()
 	{
-		OB_DELETE(.mTextField);
+		OB_DELETE( .mTextField );
 	}
 	void UpdateToGui()
 	{
-		if(.mTextField)
+		if ( .mTextField )
 		{
-			mTextField->setText(Utils::FormatEntityString(.mValue));
+			mTextField->setText( Utils::FormatEntityString( .mValue ) );
 			mTextField->adjustSize();
 		}
 	}
@@ -932,7 +932,7 @@ public:
 		: Property( _name, _flags )
 		, mValue( v )
 #ifdef ENABLE_DEBUG_WINDOW
-		, mTextField(0)
+		, mTextField( 0 )
 #endif
 	{
 	}
@@ -977,16 +977,16 @@ public:
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
-	void action(const gcn::ActionEvent& actionEvent)
+	void action( const gcn::ActionEvent& actionEvent )
 	{
-		if(actionEvent.getSource() == mTextField_Mins)
+		if ( actionEvent.getSource() == mTextField_Mins )
 		{
 		}
-		if(actionEvent.getSource() == mTextField_Maxs)
+		if ( actionEvent.getSource() == mTextField_Maxs )
 		{
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
+	void AddToGui( gcn::contrib::PropertySheet *_propsheet )
 	{
 		/*.mTextField = new gcn::TextField;
 		if(Check(Prop::PF_READONLY))
@@ -995,19 +995,19 @@ public:
 	}
 	void DeAllocGui()
 	{
-		OB_DELETE(.mTextField_Mins);
-		OB_DELETE(.mTextField_Maxs);
+		OB_DELETE( .mTextField_Mins );
+		OB_DELETE( .mTextField_Maxs );
 	}
 	void UpdateToGui()
 	{
-		if(.mTextField_Mins)
+		if ( .mTextField_Mins )
 		{
-			mTextField_Mins->setText(Utils::FormatVectorString(.mValue.mMins));
+			mTextField_Mins->setText( Utils::FormatVectorString( .mValue.mMins ) );
 			mTextField_Mins->adjustSize();
 		}
-		if(.mTextField_Maxs)
+		if ( .mTextField_Maxs )
 		{
-			mTextField_Maxs->setText(Utils::FormatVectorString(.mValue.mMaxs));
+			mTextField_Maxs->setText( Utils::FormatVectorString( .mValue.mMaxs ) );
 			mTextField_Maxs->adjustSize();
 		}
 	}
@@ -1016,8 +1016,8 @@ public:
 		: Property( _name, _flags )
 		, mValue( v )
 #ifdef ENABLE_DEBUG_WINDOW
-		, mTextField_Mins(0)
-		, mTextField_Maxs(0)
+		, mTextField_Mins( 0 )
+		, mTextField_Maxs( 0 )
 #endif
 	{
 	}
@@ -1048,25 +1048,25 @@ public:
 		return false;
 	}
 #ifdef ENABLE_DEBUG_WINDOW
-	void action(const gcn::ActionEvent &evt)
+	void action( const gcn::ActionEvent &evt )
 	{
-		if(evt.getSource()==.mButton)
+		if ( evt.getSource() == .mButton )
 		{
 			StringVector params;
-			(*.mFunction)(params);
+			( *.mFunction )( params );
 		}
 	}
-	void AddToGui(gcn::contrib::PropertySheet *_propsheet)
+	void AddToGui( gcn::contrib::PropertySheet *_propsheet )
 	{
 		mButton = new gcn::Button;
-		if(Check(Prop::PF_READONLY))
-			mButton->setEnabled(false);
-		mButton->addActionListener(this);
-		_propsheet->addProperty(GetName(),.mButton);
+		if ( Check( Prop::PF_READONLY ) )
+			mButton->setEnabled( false );
+		mButton->addActionListener( this );
+		_propsheet->addProperty( GetName(), .mButton );
 	}
 	void DeAllocGui()
 	{
-		OB_DELETE(.mButton);
+		OB_DELETE( .mButton );
 	}
 	void UpdateToGui()
 	{
@@ -1076,7 +1076,7 @@ public:
 		: Property( _name, _flags )
 		, mFunction( _ptr )
 #ifdef ENABLE_DEBUG_WINDOW
-		, mButton(0)
+		, mButton( 0 )
 #endif
 	{
 	}
@@ -1335,31 +1335,29 @@ bool PropertyBinding::GetProperty( const std::string &_name, AABB &_val )
 	}
 	return false;
 }
+
 //////////////////////////////////////////////////////////////////////////
 #ifdef ENABLE_DEBUG_WINDOW
-void PropertyBinding::GatherProperties(gcn::contrib::PropertySheet *_container)
-{
-	PropertyList::iterator it = mPropertyList.begin();
-	for(; it != mPropertyList.end(); ++it)
+void PropertyBinding::GatherProperties( gcn::contrib::PropertySheet *_container )
+{	
+	for ( PropertyList::iterator it = mPropertyList.begin(); it != mPropertyList.end(); ++it )
 	{
-		(*it)->AddToGui(_container);
-		(*it)->UpdateToGui();
+		( *it )->AddToGui( _container );
+		( *it )->UpdateToGui();
 	}
 }
 void PropertyBinding::DeAllocGui()
-{
-	PropertyList::iterator it = mPropertyList.begin();
-	for(; it != mPropertyList.end(); ++it)
+{	
+	for ( PropertyList::iterator it = mPropertyList.begin(); it != mPropertyList.end(); ++it )
 	{
-		(*it)->DeAllocGui();
+		( *it )->DeAllocGui();
 	}
 }
 void PropertyBinding::UpdatePropertiesToGui()
-{
-	PropertyList::iterator it = mPropertyList.begin();
-	for(; it != mPropertyList.end(); ++it)
+{	
+	for ( PropertyList::iterator it = mPropertyList.begin(); it != mPropertyList.end(); ++it )
 	{
-		(*it)->UpdateToGui();
+		( *it )->UpdateToGui();
 	}
 }
 #endif
