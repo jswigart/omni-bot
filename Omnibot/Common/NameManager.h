@@ -34,7 +34,7 @@ private:
 	std::string	 mProfileName;
 };
 
-typedef boost::shared_ptr<NameReference> NamePtr;
+typedef std::shared_ptr<NameReference> NamePtr;
 
 // class: NameManager
 class NameManager

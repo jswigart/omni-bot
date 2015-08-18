@@ -24,17 +24,7 @@ public:
 	bool Init( System & system );
 
 	virtual Client *CreateGameClient();
-
-	int GetVersionNum() const;
-	const char *GetDLLName() const;
-	const char *GetGameName() const;
-	const char *GetModSubFolder() const;
-	const char *GetNavSubfolder() const;
-	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const;
-	NavigatorID GetDefaultNavigator() const;
-	bool ReadyForDebugWindow() const;
-
+	
 	virtual bool GetAnalyticsKeys( GameAnalytics::Keys & keys );
 
 	void AddBot( Msg_Addbot &_addbot, bool _createnow = true );
@@ -52,10 +42,6 @@ public:
 	ET_Game();
 	virtual ~ET_Game();
 protected:
-
-	void GetGameVars( GameVars &_gamevars );
-
-	// Script support.
 	void InitScriptBinds( gmMachine *_machine );
 	void InitScriptCategories( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );

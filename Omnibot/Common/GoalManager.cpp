@@ -16,13 +16,11 @@
 #include "Timer.h"
 #include "RenderBuffer.h"
 #include "InterfaceFuncs.h"
+#include "System.h"
 
 //////////////////////////////////////////////////////////////////////////
 
-enum
-{
-	MapGoalVersion = 1
-};
+const int GoalManager::MapGoalVersion = 1;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -113,7 +111,7 @@ GoalManager::Query::Query( uint32_t _type, Client *_client )
 	, mSkipDelayed( true )
 	, mSkipInUse( true )
 	, mCheckInRadius( false )
-	, mCheckRangeProperty( false )
+	, mCheckRangeProperty( false )	
 {
 	if ( _type )
 	{
@@ -467,12 +465,9 @@ const char *GoalManager::Query::QueryErrorString()
 }
 //////////////////////////////////////////////////////////////////////////
 
-GoalManager *GoalManager::mInstance = 0;
-
 GoalManager::GoalManager()
 	: mEditMode( EditNone )
 {
-	mInstance = this;
 }
 
 GoalManager::~GoalManager()
@@ -480,26 +475,10 @@ GoalManager::~GoalManager()
 	Shutdown();
 }
 
-GoalManager *GoalManager::GetInstance()
-{
-	if ( !mInstance )
-		mInstance = new GoalManager;
-	return mInstance;
-}
-
-void GoalManager::DeleteInstance()
-{
-	OB_DELETE( mInstance );
-}
-
 void GoalManager::Init( System & system )
 {
+	rmt_ScopedCPUSample( GoalManagerInit );
 	InitCommands();
-
-	//////////////////////////////////////////////////////////////////////////
-	//Options::GetValue("Debug Render","DrawGoals",.mDrawGoals);
-	//Options::GetValue("Debug Render","DrawRoutes",.mDrawRoutes);
-	//////////////////////////////////////////////////////////////////////////
 }
 
 void GoalManager::InitGameGoals()
@@ -523,37 +502,21 @@ void GoalManager::Reset()
 
 void GoalManager::InitCommands()
 {
-	SetEx( "show_goals", "prints out the names of each goal",
-		this, &GoalManager::cmdGoalShow );
-	SetEx( "show_goalroutes", "prints route info for matching map goals",
-		this, &GoalManager::cmdGoalShowRoutes );
-	SetEx( "draw_goals", "draws debug information for all mapgoals",
-		this, &GoalManager::cmdGoalDraw );
-	SetEx( "draw_goalroutes", "draws debug routes",
-		this, &GoalManager::cmdGoalDrawRoutes );
-
-	SetEx( "goal_edit", "Begins to edit a goal.",
-		this, &GoalManager::cmdGoalEdit );
-	SetEx( "goal_editx", "Begins to edit a goal.",
-		this, &GoalManager::cmdGoalEditx );
-	SetEx( "goal_help", "Lists all help text to the console.",
-		this, &GoalManager::cmdGoalHelp );
-	SetEx( "goal_save", "Saves the goals to their own file.",
-		this, &GoalManager::cmdGoalSave );
-	SetEx( "goal_load", "Loads the goals from their own file.",
-		this, &GoalManager::cmdGoalLoad );
-	SetEx( "goal_create", "Creates a map goal of a provided type.",
-		this, &GoalManager::cmdGoalCreate );
-	SetEx( "goal_delete", "Deletes the currently selected goal.",
-		this, &GoalManager::cmdGoalDelete );
-	SetEx( "goal_finish", "Completes edits on the selected goal.",
-		this, &GoalManager::cmdGoalFinish );
-	SetEx( "goal_setproperty", "Sets the property of the goal.",
-		this, &GoalManager::cmdGoalSetProperty );
-	SetEx( "goal_removeall", "Removes all bot defined goals.",
-		this, &GoalManager::cmdGoalRemoveAll );
-	SetEx( "goal_move", "Toggle. Begins or ends moving a goal based on aim position.",
-		this, &GoalManager::cmdGoalMove );
+	SetEx( "show_goals", "prints out the names of each goal", this, &GoalManager::cmdGoalShow );
+	SetEx( "show_goalroutes", "prints route info for matching map goals", this, &GoalManager::cmdGoalShowRoutes );
+	SetEx( "draw_goals", "draws debug information for all mapgoals",  this, &GoalManager::cmdGoalDraw );
+	SetEx( "draw_goalroutes", "draws debug routes", this, &GoalManager::cmdGoalDrawRoutes );
+	SetEx( "goal_edit", "Begins to edit a goal.", this, &GoalManager::cmdGoalEdit );
+	SetEx( "goal_editx", "Begins to edit a goal.", this, &GoalManager::cmdGoalEditx );
+	SetEx( "goal_help", "Lists all help text to the console.", this, &GoalManager::cmdGoalHelp );
+	SetEx( "goal_save", "Saves the goals to their own file.", this, &GoalManager::cmdGoalSave );
+	SetEx( "goal_load", "Loads the goals from their own file.", this, &GoalManager::cmdGoalLoad );
+	SetEx( "goal_create", "Creates a map goal of a provided type.", this, &GoalManager::cmdGoalCreate );
+	SetEx( "goal_delete", "Deletes the currently selected goal.", this, &GoalManager::cmdGoalDelete );
+	SetEx( "goal_finish", "Completes edits on the selected goal.", this, &GoalManager::cmdGoalFinish );
+	SetEx( "goal_setproperty", "Sets the property of the goal.", this, &GoalManager::cmdGoalSetProperty );
+	SetEx( "goal_removeall", "Removes all bot defined goals.", this, &GoalManager::cmdGoalRemoveAll );
+	SetEx( "goal_move", "Toggle. Begins or ends moving a goal based on aim position.", this, &GoalManager::cmdGoalMove );
 }
 
 bool _GoalNameLT( const MapGoalPtr _pt1, const MapGoalPtr _pt2 )
@@ -1022,6 +985,7 @@ void GoalManager::_SetActiveGoal( MapGoalPtr _mg )
 	else
 		EngineFuncs::ConsoleMessage( "No Goal Selected" );
 }
+
 void GoalManager::_UpdateEditModes()
 {
 	if ( mEditMode == EditMove && mActiveGoal )
@@ -1063,10 +1027,12 @@ void GoalManager::cmdGoalHelp( const StringVector & args )
 	if ( mActiveGoal )
 		mActiveGoal->ShowHelp();
 }
+
 void GoalManager::cmdGoalFinish( const StringVector & args )
 {
 	_SetActiveGoal( MapGoalPtr() );
 }
+
 void GoalManager::cmdGoalCreate( const StringVector & args )
 {
 	const char *strUsage [] =
@@ -1103,6 +1069,7 @@ void GoalManager::cmdGoalCreate( const StringVector & args )
 		EngineFuncs::ConsoleError( va( "Unknown goal type: %s", args[ 0 ].c_str() ) );
 	}
 }
+
 void GoalManager::cmdGoalDelete( const StringVector & args )
 {
 	if ( !mActiveGoal )
@@ -1113,6 +1080,7 @@ void GoalManager::cmdGoalDelete( const StringVector & args )
 	mActiveGoal->SetDeleteMe( true );
 	_SetActiveGoal( MapGoalPtr() );
 }
+
 void GoalManager::cmdGoalSetProperty( const StringVector & args )
 {
 	if ( !mActiveGoal )
@@ -1284,8 +1252,7 @@ void GoalManager::Update( System & system )
 			++it;
 		}
 	}
-	//////////////////////////////////////////////////////////////////////////
-
+	
 	_UpdateEditModes();
 }
 
@@ -1643,6 +1610,84 @@ void GoalManager::GetGoals( Query &_qry )
 	_qry.OnQueryFinish();
 }
 
+void GoalManager::CheckEntityForGoal( const EntityInstance &ei )
+{
+	const std::string entName = EngineFuncs::EntityName( ei.mEntity );
+
+	MapGoalDef goalDef;
+
+	// Parse common properties
+	int allowedTeams = 0;
+	if ( ei.mEntInfo.mFlags.CheckFlag( ENT_FLAG_TEAM1 ) )
+		allowedTeams |= ( 1 << OB_TEAM_1 );
+	if ( ei.mEntInfo.mFlags.CheckFlag( ENT_FLAG_TEAM2 ) )
+		allowedTeams |= ( 1 << OB_TEAM_2 );
+	if ( ei.mEntInfo.mFlags.CheckFlag( ENT_FLAG_TEAM3 ) )
+		allowedTeams |= ( 1 << OB_TEAM_3 );
+	if ( ei.mEntInfo.mFlags.CheckFlag( ENT_FLAG_TEAM4 ) )
+		allowedTeams |= ( 1 << OB_TEAM_4 );
+
+	goalDef.Props.SetEntity( "Entity", ei.mEntity );
+	goalDef.Props.SetString( "TagName", entName.c_str() );
+	goalDef.Props.SetInt( "Team", allowedTeams );
+
+	switch ( ei.mEntInfo.mGroup )
+	{
+		case ENT_GRP_BUTTON:
+			goalDef.Props.SetString( "Type", "Button" );
+			break;
+		/*case ENT_GRP_HEALTH:
+			goalDef.Props.SetString( "Type", "Health" );
+			goalDef.Props.SetInt( "Quantity", ei.mEntInfo.mQuantity.mNum );
+			break;
+		case ENT_GRP_AMMO1:
+		case ENT_GRP_AMMO2:
+			goalDef.Props.SetString( "Type", "Ammo" );
+			goalDef.Props.SetInt( "WeaponClass", ei.mEntInfo.mClassId );
+			goalDef.Props.SetInt( "Quantity", ei.mEntInfo.mQuantity.mNum );
+			break;
+		case ENT_GRP_ARMOR:
+			goalDef.Props.SetString( "Type", "Armor" );
+			goalDef.Props.SetInt( "Quantity", ei.mEntInfo.mQuantity.mNum );
+			break;
+		case ENT_GRP_ENERGY:
+			goalDef.Props.SetString( "Type", "Energy" );
+			goalDef.Props.SetInt( "Quantity", ei.mEntInfo.mQuantity.mNum );
+			break;*/
+		case ENT_GRP_FLAG:
+			goalDef.Props.SetString( "Type", "Flag" );
+			break;
+		case ENT_GRP_FLAGCAPPOINT:
+			goalDef.Props.SetString( "Type", "CapPoint" );
+			break;
+		case ENT_GRP_WEAPON:
+			goalDef.Props.SetString( "Type", "Weapon" );
+			goalDef.Props.SetInt( "WeaponClass", ei.mEntInfo.mClassId );
+			break;
+		case ENT_GRP_MONSTER:
+			goalDef.Props.SetString( "Type", "Monster" );
+			goalDef.Props.SetInt( "MonsterClass", ei.mEntInfo.mClassId );
+			break;
+		case ENT_GRP_POWERUP:
+			goalDef.Props.SetString( "Type", "Powerup" );
+			goalDef.Props.SetInt( "PowerupClass", ei.mEntInfo.mClassId );
+			break;
+			/*case ENT_GRP_DISPENSER:
+			goalDef.Props.SetString( "Type", "Dispenser" );
+			break;
+			case ENT_GRP_BUILDABLE:
+			goalDef.Props.SetString( "Type", "Buildable" );
+			break;
+			case ENT_GRP_MOUNTABLE:
+			goalDef.Props.SetString( "Type", "Mountable" );
+			break;*/
+		default:
+			return;
+	}
+
+	AddGoal( goalDef );
+}
+
 void GoalManager::EntityCreated( const EntityInstance &ei )
 {
 	CheckEntityForGoal( ei );
@@ -1652,36 +1697,3 @@ void GoalManager::EntityDeleted( const EntityInstance &ei )
 {
 	RemoveGoalByEntity( ei.mEntity );
 }
-
-void GoalManager::CheckEntityForGoal( const EntityInstance &ei )
-{
-	if ( ei.mEntInfo.mGroup == ENT_GRP_FLAG || ei.mEntInfo.mGroup == ENT_GRP_FLAGCAPPOINT )
-	{
-		const std::string entName = EngineFuncs::EntityName( ei.mEntity );
-		
-		MapGoalDef goalDef;
-		goalDef.Props.SetEntity( "Entity", ei.mEntity );
-		goalDef.Props.SetString( "TagName", entName.c_str() );
-		if ( ei.mEntInfo.mGroup == ENT_GRP_FLAG )
-			goalDef.Props.SetString( "Type", "Flag" );
-		else if ( ei.mEntInfo.mGroup == ENT_GRP_FLAGCAPPOINT )
-			goalDef.Props.SetString( "Type", "CapPoint" );
-		else
-			return;
-
-		int allowedTeams = 0;
-		if ( ei.mEntInfo.mFlags.CheckFlag( ENT_FLAG_TEAM1 ) )
-			allowedTeams |= ( 1 << OB_TEAM_1 );
-		if ( ei.mEntInfo.mFlags.CheckFlag( ENT_FLAG_TEAM2 ) )
-			allowedTeams |= ( 1 << OB_TEAM_2 );
-		if ( ei.mEntInfo.mFlags.CheckFlag( ENT_FLAG_TEAM3 ) )
-			allowedTeams |= ( 1 << OB_TEAM_3 );
-		if ( ei.mEntInfo.mFlags.CheckFlag( ENT_FLAG_TEAM4 ) )
-			allowedTeams |= ( 1 << OB_TEAM_4 );
-
-		goalDef.Props.SetInt( "Team", allowedTeams );
-
-		AddGoal( goalDef );
-	}
-}
-

@@ -22,11 +22,11 @@ typedef std::vector<RecastPathInterface*> RecastPathInterfaces;
 class RecastPathInterface : public PathInterface
 {
 public:
-	RecastPathInterface( Client * client, PathPlannerRecast * nav );
+	RecastPathInterface( PathPlannerRecast * nav );
 	~RecastPathInterface();
-
+	
 	virtual PathStatus GetPathStatus() const;
-	virtual void UpdateNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags );
+	virtual void UpdateNavFlags( NavFlags includeFlags, NavFlags excludeFlags );
 	virtual void UpdateSourcePosition( const Vector3f & srcPos );
 	virtual void UpdateGoalPosition( const Vector3f & goal, float radius );
 	virtual void UpdateGoalPositions( const DestinationVector & goals );
@@ -45,7 +45,6 @@ public:
 
 	static RecastPathInterfaces sInterfaces;
 private:
-	Client *				mClient;
 	PathPlannerRecast *		mNav;
 	PathStatus				mStatus;
 

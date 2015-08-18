@@ -147,7 +147,7 @@ namespace AiState
 			{
 				MapGoalPtr available, carrying;
 				GoalManager::Query qry( 0xbdeaa8d7 /* flag */, GetClient() );
-				GoalManager::GetInstance()->GetGoals( qry );
+				System::mInstance->mGoalManager->GetGoals( qry );
 				for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 				{
 					if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
@@ -331,7 +331,6 @@ namespace AiState
 			}
 			case Idle:
 			{
-				OBASSERT( 0, "Invalid Flag State!" );
 				return State_Finished;
 			}
 		}
@@ -354,7 +353,7 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		{
 			GoalManager::Query qry( 0xc9326a43 /* cappoint */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			if ( qry.GetBest( ptr ) )
 			{
 				mGoalState = CarryingToCap;
@@ -364,7 +363,7 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		{
 			GoalManager::Query qry( 0xc7ab68ba /* caphold */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			if ( qry.GetBest( ptr ) )
 			{
 				mGoalState = CarryingToHold;
@@ -440,7 +439,7 @@ namespace AiState
 	//	mMapGoal.reset();
 
 	//	GoalManager::Query qry(0xe8fbadc0 /* snipe */, GetClient());
-	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	System::mInstance->mGoalManager->GetGoals(qry);
 	//	qry.GetBest(mMapGoal);
 
 	//	return mMapGoal ? mMapGoal->GetPriorityForClient(GetClient()) : 0.f;
@@ -566,7 +565,7 @@ namespace AiState
 			if ( !mMapGoal )
 			{
 				GoalManager::Query qry( 0xa06840e5 /* flagreturn */, GetClient() );
-				GoalManager::GetInstance()->GetGoals( qry );
+				System::mInstance->mGoalManager->GetGoals( qry );
 				for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 				{
 					if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
@@ -616,7 +615,6 @@ namespace AiState
 
 	State::StateStatus ReturnTheFlag::Update( float fDt )
 	{
-		OBASSERT( mMapGoal, "No Map Goal!" );
 		//////////////////////////////////////////////////////////////////////////
 		if ( DidPathFail() )
 		{
@@ -684,14 +682,6 @@ namespace AiState
 
 		AppendState( new Roam );
 	}
-
-	/*float HighLevel::GetPriority()
-	{
-	if(IGame::GetGameState() != IGame::GetLastGameState())
-	return 0.f;
-
-	return StatePrioritized::GetPriority();
-	}*/
 
 	//////////////////////////////////////////////////////////////////////////
 
@@ -932,10 +922,7 @@ namespace AiState
 				case UserCallback:
 				{
 					rmt_ScopedCPUSample( AimerCallback );
-					OBASSERT( curAim->mAimerUser, "No Aim User" );
-					if ( curAim->mAimerUser &&
-						curAim->mAimerUser->GetAimPosition( curAim->mAimVector ) &&
-						GetClient()->TurnTowardPosition( curAim->mAimVector ) )
+					if ( curAim->mAimerUser && curAim->mAimerUser->GetAimPosition( curAim->mAimVector ) && GetClient()->TurnTowardPosition( curAim->mAimVector ) )
 					{
 						curAim->mAimerUser->OnTarget();
 					}
@@ -1003,8 +990,6 @@ namespace AiState
 	{
 		return ( GetStateTime() > 1.f ) ? State_Finished : State_Busy;
 	}
-
-	//////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////
 

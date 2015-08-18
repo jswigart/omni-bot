@@ -346,8 +346,10 @@ static int GM_CDECL gmfGetExplosiveState( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
-	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
-	a_thread->PushInt( InterfaceFuncs::GetExplosiveState( native, gameEnt ) );
+	if ( gameEnt.IsValid() )
+		a_thread->PushInt( InterfaceFuncs::GetExplosiveState( native, gameEnt ) );
+	else
+		a_thread->PushNull();
 	return GM_OK;
 }
 
@@ -367,8 +369,11 @@ static int GM_CDECL gmfGetDestroyableState( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
-	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
-	a_thread->PushInt( InterfaceFuncs::IsDestroyable( native, gameEnt ) );
+	
+	if ( gameEnt.IsValid() )
+		a_thread->PushInt( InterfaceFuncs::IsDestroyable( native, gameEnt ) );
+	else
+		a_thread->PushNull();
 	return GM_OK;
 }
 
@@ -432,10 +437,8 @@ static int gmfIsMG42Repairable( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
-	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
-
-	int repairable = InterfaceFuncs::IsMountableGunRepairable( native, gameEnt ) ? 1 : 0;
-	a_thread->PushInt( repairable );
+	
+	a_thread->PushInt( InterfaceFuncs::IsMountableGunRepairable( native, gameEnt ) ? 1 : 0 );
 	return GM_OK;
 }
 

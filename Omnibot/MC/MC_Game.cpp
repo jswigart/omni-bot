@@ -22,66 +22,24 @@ IGame *CreateGameInstance()
 
 MC_Game::MC_Game()
 {
+	mGameVars.mClientBase = -1;
+	mGameVars.mGameVersion = MC_VERSION_LATEST;
+	mGameVars.mGameAbbrev = "mc";
+	mGameVars.mGameName = "Modular Combat";
+	mGameVars.mPlayerHeight = 72.f;
 }
 
 MC_Game::~MC_Game()
 {
 }
 
-int MC_Game::GetVersionNum() const
+Client * MC_Game::CreateGameClient()
 {
-	return MC_VERSION_LATEST;
+	return new MC_Client();
 }
 
-Client *MC_Game::CreateGameClient()
-{
-	return new MC_Client;
-}
-
-NavigatorID MC_Game::GetDefaultNavigator() const
-{
-	return NAVID_RECAST;
-}
-
-const char *MC_Game::GetDLLName() const
-{
-#ifdef WIN32
-	return "omni-bot\\omnibot_mc.dll";
-#else
-	return "omni-bot/omnibot_mc.so";
-#endif
-}
-
-const char *MC_Game::GetGameName() const
-{
-	return "Modular Combat";
-}
-
-const char *MC_Game::GetModSubFolder() const
-{
-#ifdef WIN32
-	return "mc\\";
-#else
-	return "mc";
-#endif
-}
-
-const char *MC_Game::GetNavSubfolder() const
-{
-	return "mc\\nav\\";
-}
-
-const char *MC_Game::GetScriptSubfolder() const
-{
-	return "mc\\scripts\\";
-}
-const char *MC_Game::GetGameDatabaseAbbrev() const
-{
-	return "mc";
-}
 bool MC_Game::Init( System & system )
 {
-	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback( MC_Game::MC_GetEntityClassTraceOffset );
 	AiState::SensoryMemory::SetEntityAimOffsetCallback( MC_Game::MC_GetEntityClassAimOffset );
 
@@ -89,16 +47,6 @@ bool MC_Game::Init( System & system )
 		return false;
 
 	return true;
-}
-
-void MC_Game::GetGameVars( GameVars &_gamevars )
-{
-	_gamevars.mPlayerHeight = 72.f;
-}
-
-ClientPtr &MC_Game::GetClientFromCorrectedGameId( int _gameid )
-{
-	return mClientList[ _gameid - 1 ];
 }
 
 static const IntEnum MC_TeamEnum [] =

@@ -12,6 +12,7 @@
 #include "BotPathing.h"
 #include "WeaponDatabase.h"
 #include "RenderBuffer.h"
+#include "System.h"
 
 namespace AiState
 {
@@ -40,7 +41,7 @@ namespace AiState
 			if ( mMapGoal )
 			{
 				RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
-				RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
+				RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN );
 			}
 		}
 	}
@@ -118,7 +119,7 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		{
 			GoalManager::Query qry( 0x312ad48d /* CALLARTILLERY */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 			{
 				if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
@@ -141,7 +142,7 @@ namespace AiState
 		if ( !mMapGoalTarget )
 		{
 			GoalManager::Query qry( 0xb708821b /* ARTILLERY_S */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 			{
 				if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
@@ -165,7 +166,7 @@ namespace AiState
 		if ( !mMapGoalTarget )
 		{
 			GoalManager::Query qry( 0xac0870ca /* ARTILLERY_D */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 			{
 				if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )

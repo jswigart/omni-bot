@@ -19,9 +19,9 @@ class TrackablePtr
 {
 public:
 	typedef TrackablePtr<Type, TrackType> TrackPtr;
-	typedef boost::shared_ptr<Type> ShPtr;
-	typedef boost::weak_ptr<Type> WPtr;
-
+	typedef std::shared_ptr<Type> ShPtr;
+	typedef std::weak_ptr<Type> WPtr;
+	
 	TrackablePtr() :
 		mTrackType( TrackType )
 	{

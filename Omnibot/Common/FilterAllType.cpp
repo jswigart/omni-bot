@@ -109,8 +109,6 @@ void FilterAllType::Check( int _index, const MemoryRecord &_record )
 		}
 		else
 		{
-			OBASSERT( 0, "Not Implemented yet!" );
-
 			// Get the distance to this person.
 			/*float fCurDistanceToSq = (vSensoryPos - _record.mTargetInfo.mLastPosition).SquaredLength();
 			fCurDistanceToSq;

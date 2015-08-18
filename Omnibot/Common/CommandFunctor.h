@@ -12,6 +12,7 @@
 #define __COMMAND_FUNCTOR_H__
 
 #include "common.h"
+#include "Utilities.h"
 #include "gmbinder2/gmbinder2_functraits.h"
 
 // class: ICommandFunctor
@@ -25,7 +26,7 @@ public:
 	virtual void operator()( const StringVector & args ) = 0;
 };
 
-typedef boost::shared_ptr<ICommandFunctor> CommandFunctorPtr;
+typedef std::shared_ptr<ICommandFunctor> CommandFunctorPtr;
 
 //////////////////////////////////////////////////////////////////////////
 

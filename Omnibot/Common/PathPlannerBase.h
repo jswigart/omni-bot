@@ -77,9 +77,10 @@ public:
 		{
 		}
 	};
-
+	
 	virtual PathStatus GetPathStatus() const = 0;
-
+	
+	virtual void UpdateNavFlags( NavFlags includeFlags, NavFlags excludeFlags ) = 0;
 	virtual void UpdateSourcePosition( const Vector3f & srcPos ) = 0;
 	virtual void UpdateGoalPosition( const Vector3f & goal, float radius ) = 0;
 	virtual void UpdateGoalPositions( const DestinationVector & goals ) = 0;
@@ -153,10 +154,12 @@ public:
 	virtual void EntityCreated( const EntityInstance &ei );
 	virtual void EntityDeleted( const EntityInstance &ei );
 
-	virtual PathInterface * AllocPathInterface( Client * client );
+	virtual void QueueBatchQuery( QueryRef& qry, NavFlags inc, NavFlags exc, const Vector3f& src, const std::vector<Vector3f>& goals ) = 0;
+
+	virtual PathInterface * AllocPathInterface();
 
 	const AxisAlignedBox3f & GetNavigationBounds() const;
-
+	
 	PathPlannerBase();
 	virtual ~PathPlannerBase();
 protected:

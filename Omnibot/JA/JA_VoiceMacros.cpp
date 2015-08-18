@@ -9,7 +9,7 @@
 #include "JA_VoiceMacros.h"
 #include "JA_Client.h"
 
-#include "common.h"
+#include <type_traits>
 
 const char *strVoiceMacros[] =
 {
@@ -58,7 +58,7 @@ const char *strVoiceMacros[] =
 namespace JA_VoiceChatAssertions
 {
 	// Make sure our enum size at least matches the size of our array.
-	BOOST_STATIC_ASSERT((sizeof(strVoiceMacros) / sizeof(strVoiceMacros[0])) == NUM_JA_VCHATS);
+	static_assert( ( sizeof( strVoiceMacros ) / sizeof( strVoiceMacros[ 0 ] ) ) == NUM_JA_VCHATS, "Mismatched Voice Enumerations" );
 }
 
 int JA_VoiceMacros::GetVChatId(const char *_string)

@@ -59,7 +59,6 @@ typedef enum
 
 	PATH_SUCCESS,
 	PATH_FAILED,
-	AIM_ONTARGET,
 	GOAL_ID_LAST,
 
 	// Messages that are passed around between any objects

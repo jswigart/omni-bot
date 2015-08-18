@@ -24,16 +24,7 @@ public:
 	bool Init( System & system );
 
 	virtual Client *CreateGameClient();
-
-	int GetVersionNum() const;
-	const char *GetDLLName() const;
-	const char *GetGameName() const;
-	const char *GetModSubFolder() const;
-	const char *GetNavSubfolder() const;
-	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const;
-	bool ReadyForDebugWindow() const;
-
+	
 	void AddBot( Msg_Addbot &_addbot, bool _createnow = true );
 
 	void ClientJoined( const Event_SystemClientConnected *_msg );
@@ -44,9 +35,6 @@ public:
 	JA_Game();
 	virtual ~JA_Game();
 protected:
-
-	void GetGameVars( GameVars &_gamevars );
-
 	// Script support.
 	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptEvents( gmMachine *_machine, gmTableObject *_table );

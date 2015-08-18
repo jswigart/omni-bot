@@ -48,7 +48,12 @@ namespace AiState
 
 	void FollowPath::Initialize()
 	{
-		mPathInterface = System::mInstance->mNavigation->AllocPathInterface( GetClient() );
+		mPathInterface = System::mInstance->mNavigation->AllocPathInterface();
+
+		NavFlags includeFlags = NAVFLAGS_WALK;
+		NavFlags excludeFlags = NAVFLAGS_NONE;
+		GetClient()->GetNavFlags( includeFlags, excludeFlags );
+		mPathInterface->UpdateNavFlags( includeFlags, excludeFlags );
 	}
 
 	void FollowPath::GetDebugString( std::stringstream &out )
@@ -79,7 +84,25 @@ namespace AiState
 
 	bool FollowPath::IsOnCustomLink( NavAreaFlags type ) const
 	{
-		return mCachedCorners[ 0 ].mIsLink;
+		return mCachedCorners[ 0 ].mIsLink && ( mCachedCorners[ 0 ].mAreaMask & type );
+	}
+	
+	bool FollowPath::HasUpcomingArea( NavAreaFlags type, float lookahead ) const
+	{
+		const Vector3f bottomBounds = GetClient()->GetWorldBounds().GetCenterBottom();
+		Vector3f lastPos = bottomBounds;
+
+		for ( size_t i = 0; i < mNumCachedCorners && lookahead > 0.0f; ++i )
+		{
+			if ( ( mCachedCorners[ 0 ].mAreaMask & type ) != 0 )
+				return true;
+
+			Vector3f seg = mCachedCorners[ i ].mPos - lastPos;
+			const float d = seg.Normalize();
+			lookahead -= d;
+		}
+
+		return false;
 	}
 
 	bool FollowPath::GetAimPosition( Vector3f &_aimpos )
@@ -187,31 +210,13 @@ namespace AiState
 		};*/
 	}
 
-	void FollowPath::DynamicPathUpdated( const Event_DynamicPathsChanged *_m )
-	{
-		/*Path::PathPoint p;
-		for(int i = mCurrentPath.GetCurrentPtIndex(); i < mCurrentPath.GetNumPts(); ++i)
-		{
-		mCurrentPath.GetPt(i,p);
-
-		if(_m->mNavId)
-		{
-		if(p.mNavId==_m->mNavId)
-		{
-		Repath();
-		break;
-		}
-		}
-		else if(p.mNavFlags&F_NAV_DYNAMIC)
-		{
-		Repath();
-		break;
-		}
-		}*/
-	}
-
 	bool FollowPath::GotoRandomPt( FollowPathUser *_owner, MoveMode _movemode /*= Run*/ )
 	{
+		NavFlags includeFlags = NAVFLAGS_WALK;
+		NavFlags excludeFlags = NAVFLAGS_NONE;
+		GetClient()->GetNavFlags( includeFlags, excludeFlags );
+		mPathInterface->UpdateNavFlags( includeFlags, excludeFlags );
+
 		mPathInterface->UpdateSourcePosition( GetClient()->GetPosition() );
 		mPathInterface->UpdateGoalPositionRandom();
 		mPathInterface->UpdatePath();
@@ -293,7 +298,6 @@ namespace AiState
 			{
 				// paththrough called Goto,
 				// save HighLevel goal's query
-				OBASSERT( !mSavedQuery.mUser, "mSavedQuery overwritten" );
 				SaveQuery();
 			}
 			else if ( mQuery.mUser && mQuery.mUser->GetFollowUserName() == mPassThroughState )
@@ -326,6 +330,10 @@ namespace AiState
 		mQuery.mUser->ResetPathUser();
 		mPathThroughPtIndex = -1;
 
+		NavFlags includeFlags = NAVFLAGS_WALK;
+		NavFlags excludeFlags = NAVFLAGS_NONE;
+		GetClient()->GetNavFlags( includeFlags, excludeFlags );
+		mPathInterface->UpdateNavFlags( includeFlags, excludeFlags );
 		mPathInterface->UpdateSourcePosition( GetClient()->GetPosition() );
 		mPathInterface->UpdateGoalPositions( mQuery.mDestination );
 		mPathInterface->UpdatePath();
@@ -516,6 +524,10 @@ namespace AiState
 			float ptRadius = 8.0f; // deprecate this?
 			bool b3dMovement = false; // todo: trash this, handle in here rather than steering
 
+			NavFlags includeFlags = NAVFLAGS_WALK;
+			NavFlags excludeFlags = NAVFLAGS_NONE;
+			GetClient()->GetNavFlags( includeFlags, excludeFlags );
+			mPathInterface->UpdateNavFlags( includeFlags, excludeFlags );
 			mPathInterface->UpdateSourcePosition( bottomBounds );
 			mNumCachedCorners = mPathInterface->GetPathCorners( mCachedCorners, CachedEdges );
 			if ( mNumCachedCorners > 0 )

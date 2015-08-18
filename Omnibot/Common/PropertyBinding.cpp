@@ -8,6 +8,8 @@
 
 #include "PropertyBinding.h"
 
+#include <type_traits>
+
 //////////////////////////////////////////////////////////////////////////
 
 enum PropType
@@ -40,7 +42,7 @@ static const char *dbgNames [] =
 	"matrix",
 	"func",
 };
-BOOST_STATIC_ASSERT( sizeof( dbgNames ) / sizeof( dbgNames[ 0 ] ) == PropNum );
+static_assert( sizeof( dbgNames ) / sizeof( dbgNames[ 0 ] ) == PropNum, "Mismatched Property Names" );
 //////////////////////////////////////////////////////////////////////////
 class Property
 {
@@ -1102,7 +1104,6 @@ bool PropertyBinding::FromPropertyMap( const PropertyMap &_propmap, std::strings
 	for ( ; it != mPropertyList.end(); ++it )
 	{
 		std::string n = ( *it )->GetName();
-		OBASSERT( !n.empty(), "Unknown std::string Hash" );
 
 		PropertyMap::ValueMap::const_iterator pIt = _propmap.GetProperties().begin();
 		for ( ; pIt != _propmap.GetProperties().end(); ++pIt )

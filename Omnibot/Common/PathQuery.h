@@ -11,37 +11,41 @@
 #ifndef __PATHQUERY_H__
 #define __PATHQUERY_H__
 
-#include "MapGoal.h"
+#include "common.h"
 
-// class: PathQuery
-//		Represents a simple or complex path query for the path planner to search for any number of
-//		up to <MaxGoals> target goals.
-class PathQuery
+struct Destination
 {
-public:
-	PathQuery &Starts( const DestinationVector *_starts );
-	PathQuery &Goals( const DestinationVector *_goals );
+	Vector3f	mPosition;
+	float		mRadius;
 
-	PathQuery &AddTeam( int _team );
-	PathQuery &AddClass( int _class );
-
-	PathQuery &SetMovementCaps( const BitFlag32 &_caps );
-
-	PathQuery &MaxPathDistance( float _dist );
-
-	PathQuery( Client *_client = 0 );
-private:
-	Client				*  mClient;
-
-	// specific goal destinations
-	const DestinationVector		*  mStarts;
-	const DestinationVector		*  mGoals;
-	BitFlag32				 mTeam;
-	BitFlag32				 mClass;
-	BitFlag32				 mMovementCaps;
-	float					 mMaxPathDistance;
-
-	bool					 mReturnPartial;
+	Destination();
+	Destination( const Vector3f &_pos, float _radius );
 };
+
+typedef std::vector<Destination> DestinationVector;
+
+
+struct DeferredQuery
+{
+	struct Goal
+	{
+		Vector3f		mDest;
+		float			mNavCost;
+		float			mThreatCost;
+
+		Goal();
+	};
+
+	NavFlags				mInclude;
+	NavFlags				mExclude;
+	Vector3f				mSrc;
+	std::vector<Goal>		mGoals;
+	bool					mExecuting;
+	bool					mFinished;
+
+	DeferredQuery();
+	virtual ~DeferredQuery();
+};
+typedef std::shared_ptr<DeferredQuery> QueryRef;
 
 #endif

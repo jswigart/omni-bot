@@ -466,6 +466,12 @@
     <ClCompile Include="..\..\..\dependencies\recastnavigation\RecastDemo\Contrib\fastlz\fastlz.c">
       <Filter>3rdParty\RecastDetour\fastlz</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Common\GOAP.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\TacticalManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zAlloc.h">
@@ -950,6 +956,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\dependencies\recastnavigation\RecastDemo\Contrib\fastlz\fastlz.h">
       <Filter>3rdParty\RecastDetour\fastlz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\GOAP.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\TacticalManager.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

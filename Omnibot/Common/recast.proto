@@ -78,6 +78,7 @@ message NodeState
 	oneof type {
 		int32			subModelId				= 1;
 		int32			staticModelId			= 2;
+		int32			displacementId			= 3;
 	}
 	
 	optional bool		enabled					= 5 [default=true];

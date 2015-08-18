@@ -14,62 +14,62 @@
 #include "common.h"
 #include "Base_Messages.h"
 
-obResult InterfaceMsg(const MessageHelper &_data, const GameEntity _ent = GameEntity());
+obResult InterfaceMsg( const MessageHelper &_data, const GameEntity _ent = GameEntity() );
 
 namespace InterfaceFuncs
 {
-	int Addbot(Msg_Addbot &_addbot);
-	void Kickbot(Msg_Kickbot &_kickbot);
+	int Addbot( Msg_Addbot &_addbot );
+	void Kickbot( Msg_Kickbot &_kickbot );
 
-	bool IsAlive(const GameEntity _ent);
-	bool IsAllied(const GameEntity _ent1, const GameEntity _ent2);
-	bool GetMaxSpeed(const GameEntity _ent, Msg_PlayerMaxSpeed &_out);
-	int GetEntityTeam(const GameEntity _ent);
-	WeaponStatus GetEquippedWeapon(const GameEntity _ent);
-	WeaponStatus GetMountedWeapon(Client *_bot);
-	bool GetWeaponLimits(Client *_bot, int _weapon, WeaponLimits &_limits);
-	bool IsReadyToFire(const GameEntity _ent);
-	bool IsReloading(const GameEntity _ent);
-	bool GetFlagState(const GameEntity _ent, FlagState &_outFlagState, GameEntity &_outEntity);
-	int GetControllingTeam(const GameEntity _ent);
+	bool IsAlive( const GameEntity _ent );
+	bool IsAllied( const GameEntity _ent1, const GameEntity _ent2 );
+	bool GetMaxSpeed( const GameEntity _ent, Msg_PlayerMaxSpeed &_out );
+	int GetEntityTeam( const GameEntity _ent );
+	WeaponStatus GetEquippedWeapon( const GameEntity _ent );
+	WeaponStatus GetMountedWeapon( Client *_bot );
+	bool GetWeaponLimits( Client *_bot, int _weapon, WeaponLimits &_limits );
+	bool IsReadyToFire( const GameEntity _ent );
+	bool IsReloading( const GameEntity _ent );
+	bool GetFlagState( const GameEntity _ent, FlagState &_outFlagState, GameEntity &_outEntity );
+	int GetControllingTeam( const GameEntity _ent );
 	GameState GetGameState();
 	float GetGameTimeLeft();
-	const char *GetGameState(GameState _state);
+	const char *GetGameState( GameState _state );
 
-	obUserData GetEntityStat(const GameEntity _ent, const char *_statname);
-	obUserData GetTeamStat(int _team, const char *_statname);
+	obUserData GetEntityStat( const GameEntity _ent, const char *_statname );
+	obUserData GetTeamStat( int _team, const char *_statname );
 
-	bool IsWeaponCharged(Client *_bot, int _weapon, FireMode _mode = Primary);
-	bool IsEntWeaponCharged(GameEntity _ent, int _weapon);
-	float WeaponHeat(Client *_bot, FireMode _mode, float &_current, float &_max);
-	bool IsOutSide(const Vector3f &_pos);
-	void ChangeName(Client *_bot, const char *_newname);
+	bool IsWeaponCharged( Client *_bot, int _weapon, FireMode _mode = Primary );
+	bool IsEntWeaponCharged( GameEntity _ent, int _weapon );
+	float WeaponHeat( Client *_bot, FireMode _mode, float &_current, float &_max );
+	bool IsOutSide( const Vector3f &_pos );
+	void ChangeName( Client *_bot, const char *_newname );
 
-	bool EntityKill(GameEntity _ent);
-	bool ServerCommand(const char *_cmd);
+	bool EntityKill( GameEntity _ent );
+	bool ServerCommand( const char *_cmd );
 
-	bool PlaySound(Client *_bot, const char *_sound);
-	bool StopSound(Client *_bot, const char *_sound);
-	bool ScriptEvent(const char *_func, const char *_entname, const char *_p1, const char *_p2, const char *_p3);
+	bool PlaySound( Client *_bot, const char *_sound );
+	bool StopSound( Client *_bot, const char *_sound );
+	bool ScriptEvent( const char *_func, const char *_entname, const char *_p1, const char *_p2, const char *_p3 );
 
-	bool GotoWaypoint(const char *_param, const Vector3f &_pos);
+	bool GotoWaypoint( const char *_param, const Vector3f &_pos );
 
-	bool GetVehicleInfo(Client *_bot, VehicleInfo &_vi);
+	bool GetVehicleInfo( Client *_bot, VehicleInfo &_vi );
 
-	bool IsMoverAt(const Vector3f &_pos1, const Vector3f &_pos2);
+	bool IsMoverAt( const Vector3f &_pos1, const Vector3f &_pos2 );
 	GameEntity GetMoverAt( const Vector3f &_pos );
 
 	template <typename T>
-	bool SetLoadOut(GameEntity _ent, T &_info)
+	bool SetLoadOut( GameEntity _ent, T &_info )
 	{
-		MessageHelper msg(GEN_MSG_SETLOADOUT, &_info, sizeof(T));
-		return SUCCESS(InterfaceMsg(msg,_ent));
+		MessageHelper msg( GEN_MSG_SETLOADOUT, &_info, sizeof( T ) );
+		return SUCCESS( InterfaceMsg( msg, _ent ) );
 	}
 
 	int GetGameType();
 
-	bool SetCvar(const char *_cvar, const char *_value);
-	int GetCvar(const char *_cvar);
+	bool SetCvar( const char *_cvar, const char *_value );
+	int GetCvar( const char *_cvar );
 };
 
 #endif

@@ -50,6 +50,7 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 struct NodeStateOneofInstance {
   ::google::protobuf::int32 submodelid_;
   ::google::protobuf::int32 staticmodelid_;
+  ::google::protobuf::int32 displacementid_;
 }* NodeState_default_oneof_instance_ = NULL;
 const ::google::protobuf::Descriptor* NavigationMesh_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
@@ -212,9 +213,10 @@ void protobuf_AssignDesc_recast_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Model_TriParms));
   NodeState_descriptor_ = file->message_type(7);
-  static const int NodeState_offsets_[10] = {
+  static const int NodeState_offsets_[11] = {
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(NodeState_default_oneof_instance_, submodelid_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(NodeState_default_oneof_instance_, staticmodelid_),
+    PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(NodeState_default_oneof_instance_, displacementid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, enabled_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, shapemode_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, solid_),
@@ -348,22 +350,23 @@ void protobuf_AddDesc_recast_2eproto() {
     "\014\n\004name\030\001 \002(\t\022\020\n\010modelcrc\030\002 \002(\r\022\023\n\013numMe"
     "shTris\030\003 \002(\r\022+\n\ttriangles\030\004 \003(\0132\030.Recast"
     "IO.Model.TriParms\0320\n\010TriParms\022\013\n\003tri\030\001 \002"
-    "(\r\022\027\n\017surfaceOverride\030\002 \001(\r\"\374\001\n\tNodeStat"
+    "(\r\022\027\n\017surfaceOverride\030\002 \001(\r\"\226\002\n\tNodeStat"
     "e\022\024\n\nsubModelId\030\001 \001(\005H\000\022\027\n\rstaticModelId"
-    "\030\002 \001(\005H\000\022\025\n\007enabled\030\005 \001(\010:\004true\0227\n\tshape"
-    "mode\030\006 \001(\0162\023.RecastIO.ShapeMode:\017SHAPE_T"
-    "RIANGLES\022\023\n\005solid\030\007 \001(\010:\004true\022\026\n\007dynamic"
-    "\030\010 \001(\010:\005false\022\032\n\017navFlagOverride\030\t \001(\005:\001"
-    "0\022\021\n\tmodelname\030\n \001(\t\022\014\n\004name\030\013 \001(\tB\006\n\004ty"
-    "pe\"\245\002\n\016NavigationMesh\022\017\n\007version\030\001 \002(\005\022."
-    "\n\rnavMeshParams\030\002 \002(\0132\027.RecastIO.NavMesh"
-    "Params\0222\n\rexclusionZone\030\003 \003(\0132\033.RecastIO"
-    ".AxisAlignedBounds\0226\n\021offMeshConnection\030"
-    "\004 \003(\0132\033.RecastIO.OffMeshConnection\022&\n\tno"
-    "deState\030\005 \003(\0132\023.RecastIO.NodeState\022\037\n\006mo"
-    "dels\030\006 \003(\0132\017.RecastIO.Model\022\035\n\005tiles\030d \003"
-    "(\0132\016.RecastIO.Tile*/\n\tShapeMode\022\023\n\017SHAPE"
-    "_TRIANGLES\020\000\022\r\n\tSHAPE_OBB\020\001", 1507);
+    "\030\002 \001(\005H\000\022\030\n\016displacementId\030\003 \001(\005H\000\022\025\n\007en"
+    "abled\030\005 \001(\010:\004true\0227\n\tshapemode\030\006 \001(\0162\023.R"
+    "ecastIO.ShapeMode:\017SHAPE_TRIANGLES\022\023\n\005so"
+    "lid\030\007 \001(\010:\004true\022\026\n\007dynamic\030\010 \001(\010:\005false\022"
+    "\032\n\017navFlagOverride\030\t \001(\005:\0010\022\021\n\tmodelname"
+    "\030\n \001(\t\022\014\n\004name\030\013 \001(\tB\006\n\004type\"\245\002\n\016Navigat"
+    "ionMesh\022\017\n\007version\030\001 \002(\005\022.\n\rnavMeshParam"
+    "s\030\002 \002(\0132\027.RecastIO.NavMeshParams\0222\n\rexcl"
+    "usionZone\030\003 \003(\0132\033.RecastIO.AxisAlignedBo"
+    "unds\0226\n\021offMeshConnection\030\004 \003(\0132\033.Recast"
+    "IO.OffMeshConnection\022&\n\tnodeState\030\005 \003(\0132"
+    "\023.RecastIO.NodeState\022\037\n\006models\030\006 \003(\0132\017.R"
+    "ecastIO.Model\022\035\n\005tiles\030d \003(\0132\016.RecastIO."
+    "Tile*/\n\tShapeMode\022\023\n\017SHAPE_TRIANGLES\020\000\022\r"
+    "\n\tSHAPE_OBB\020\001", 1533);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "recast.proto", &protobuf_RegisterTypes);
   Vec3::default_instance_ = new Vec3();
@@ -3336,6 +3339,7 @@ void Model::Swap(Model* other) {
 #ifndef _MSC_VER
 const int NodeState::kSubModelIdFieldNumber;
 const int NodeState::kStaticModelIdFieldNumber;
+const int NodeState::kDisplacementIdFieldNumber;
 const int NodeState::kEnabledFieldNumber;
 const int NodeState::kShapemodeFieldNumber;
 const int NodeState::kSolidFieldNumber;
@@ -3354,6 +3358,7 @@ NodeState::NodeState()
 void NodeState::InitAsDefaultInstance() {
   NodeState_default_oneof_instance_->submodelid_ = 0;
   NodeState_default_oneof_instance_->staticmodelid_ = 0;
+  NodeState_default_oneof_instance_->displacementid_ = 0;
 }
 
 NodeState::NodeState(const NodeState& from)
@@ -3427,6 +3432,10 @@ void NodeState::clear_type() {
       // No need to clear
       break;
     }
+    case kDisplacementId: {
+      // No need to clear
+      break;
+    }
     case TYPE_NOT_SET: {
       break;
     }
@@ -3436,21 +3445,23 @@ void NodeState::clear_type() {
 
 
 void NodeState::Clear() {
-  if (_has_bits_[0 / 32] & 252) {
+  if (_has_bits_[0 / 32] & 248) {
     enabled_ = true;
     shapemode_ = 0;
     solid_ = true;
     dynamic_ = false;
     navflagoverride_ = 0;
+  }
+  if (_has_bits_[8 / 32] & 768) {
     if (has_modelname()) {
       if (modelname_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         modelname_->clear();
       }
     }
-  }
-  if (has_name()) {
-    if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
-      name_->clear();
+    if (has_name()) {
+      if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
+        name_->clear();
+      }
     }
   }
   clear_type();
@@ -3492,6 +3503,22 @@ bool NodeState::MergePartialFromCodedStream(
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &type_.staticmodelid_)));
           set_has_staticmodelid();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_displacementId;
+        break;
+      }
+
+      // optional int32 displacementId = 3;
+      case 3: {
+        if (tag == 24) {
+         parse_displacementId:
+          clear_type();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &type_.displacementid_)));
+          set_has_displacementid();
         } else {
           goto handle_unusual;
         }
@@ -3648,6 +3675,11 @@ void NodeState::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->staticmodelid(), output);
   }
 
+  // optional int32 displacementId = 3;
+  if (has_displacementid()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->displacementid(), output);
+  }
+
   // optional bool enabled = 5 [default = true];
   if (has_enabled()) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(5, this->enabled(), output);
@@ -3714,6 +3746,11 @@ void NodeState::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->staticmodelid(), target);
   }
 
+  // optional int32 displacementId = 3;
+  if (has_displacementid()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->displacementid(), target);
+  }
+
   // optional bool enabled = 5 [default = true];
   if (has_enabled()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(5, this->enabled(), target);
@@ -3773,7 +3810,7 @@ void NodeState::SerializeWithCachedSizes(
 int NodeState::ByteSize() const {
   int total_size = 0;
 
-  if (_has_bits_[2 / 32] & (0xffu << (2 % 32))) {
+  if (_has_bits_[3 / 32] & (0xffu << (3 % 32))) {
     // optional bool enabled = 5 [default = true];
     if (has_enabled()) {
       total_size += 1 + 1;
@@ -3802,6 +3839,8 @@ int NodeState::ByteSize() const {
           this->navflagoverride());
     }
 
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     // optional string modelname = 10;
     if (has_modelname()) {
       total_size += 1 +
@@ -3809,8 +3848,6 @@ int NodeState::ByteSize() const {
           this->modelname());
     }
 
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     // optional string name = 11;
     if (has_name()) {
       total_size += 1 +
@@ -3832,6 +3869,13 @@ int NodeState::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->staticmodelid());
+      break;
+    }
+    // optional int32 displacementId = 3;
+    case kDisplacementId: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->displacementid());
       break;
     }
     case TYPE_NOT_SET: {
@@ -3872,11 +3916,15 @@ void NodeState::MergeFrom(const NodeState& from) {
       set_staticmodelid(from.staticmodelid());
       break;
     }
+    case kDisplacementId: {
+      set_displacementid(from.displacementid());
+      break;
+    }
     case TYPE_NOT_SET: {
       break;
     }
   }
-  if (from._has_bits_[2 / 32] & (0xffu << (2 % 32))) {
+  if (from._has_bits_[3 / 32] & (0xffu << (3 % 32))) {
     if (from.has_enabled()) {
       set_enabled(from.enabled());
     }
@@ -3892,11 +3940,11 @@ void NodeState::MergeFrom(const NodeState& from) {
     if (from.has_navflagoverride()) {
       set_navflagoverride(from.navflagoverride());
     }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_modelname()) {
       set_modelname(from.modelname());
     }
-  }
-  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_name()) {
       set_name(from.name());
     }

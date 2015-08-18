@@ -20,7 +20,7 @@ public:
 	virtual void operator()(const MessageHelper &_helper) = 0;
 };
 
-typedef boost::shared_ptr<IMessageFunctor> MessageFunctorPtr;
+typedef std::shared_ptr<IMessageFunctor> MessageFunctorPtr;
 
 // class: MessageFunctor
 class MessageFunctor : public IMessageFunctor

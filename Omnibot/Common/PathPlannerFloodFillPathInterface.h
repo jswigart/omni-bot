@@ -17,8 +17,10 @@
 class FloodFillPathInterface : public PathInterface
 {
 public:
-	FloodFillPathInterface( Client * client, PathPlannerFloodFill * nav );
+	FloodFillPathInterface( PathPlannerFloodFill * nav );
+
 	virtual PathStatus GetPathStatus() const;
+	virtual void UpdateNavFlags( NavFlags includeFlags, NavFlags excludeFlags );
 	virtual void UpdateSourcePosition( const Vector3f & srcPos );
 	virtual void UpdateGoalPosition( const Vector3f & goal, float radius );
 	virtual void UpdateGoalPositions( const DestinationVector & goals );
@@ -33,7 +35,6 @@ public:
 	virtual bool CompleteNavLink( uint64_t id );
 	virtual void Render();
 private:
-	Client *				mClient;
 	PathPlannerFloodFill *	mNav;
 	PathStatus				mStatus;
 

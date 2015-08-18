@@ -21,6 +21,8 @@
 
 #include "CollisionModel.h"
 
+#include <boost/thread.hpp>
+
 namespace modeldata
 {
 	class Scene;
@@ -47,12 +49,25 @@ struct TileAddData
 
 //////////////////////////////////////////////////////////////////////////
 
+struct AsyncTileBuild
+{
+	static void Run( PathPlannerRecast * nav, int num );
+};
+
+struct AsyncBatchQuery
+{
+	static void Run( PathPlannerRecast * nav, int num );
+};
+
+//////////////////////////////////////////////////////////////////////////
+
 // class: PathPlannerRecast
 //		Path planner interface for the navmesh system for hl2
 class PathPlannerRecast : public PathPlannerBase
 {
 public:
 	friend class RecastPathInterface;
+	friend struct AsyncBatchQuery;
 	
 	static const int VERSION_MODELCACHE = 1;
 	
@@ -78,7 +93,9 @@ public:
 	void BuildNav( bool saveToFile );
 	void BuildNavTile();
 	
-	PathInterface * AllocPathInterface( Client * client );
+	PathInterface * AllocPathInterface();
+
+	virtual void QueueBatchQuery( QueryRef& qry, NavFlags inc, NavFlags exc, const Vector3f& src, const std::vector<Vector3f>& goals );
 
 	const char *GetPlannerName() const;
 	int GetPlannerType() const;
@@ -87,6 +104,7 @@ public:
 	typedef std::vector<TileAddData> AddTileList;
 
 	bool AsyncGetTileRebuild( TileRebuild & buildTile );
+	bool AsyncGetBatchQuery( QueryRef & ref );
 
 	void MarkTileForBuilding( const dtMeshTile * tile );
 	void MarkTileForBuilding( const Vector3f & pos );
@@ -129,6 +147,7 @@ protected:
 	void cmdModelDynamic( const StringVector & args );
 	void cmdModelSetTriangleSurface( const StringVector & args );
 	void cmdModelSetAreaFlag( const StringVector & args );
+	void cmdNavAddBuildThread( const StringVector & args );
 	
 	void LoadWorldModel();
 
@@ -233,7 +252,8 @@ private:
 	boost::recursive_mutex		mGuardBuildQueue;
 	boost::recursive_mutex		mGuardAddTile;
 
-	boost::thread_group			mThreadGroup;
+	boost::thread_group			mThreadGroupBuild;
+	boost::thread_group			mThreadGroupQuery;
 	bool						mDeferredSaveNav;
 
 	void DrawPathsToGoals( int team );
@@ -246,7 +266,10 @@ private:
 	NodePtr CreateEntityModel( const GameEntity& entity, const EntityInfo & entInfo );
 
 	void SendWorldModel();
-	void SendTileModel( int tx, int ty );	
+	void SendTileModel( int tx, int ty );
+	
+	std::set<QueryRef>			mDeferredQueries;
+	boost::recursive_mutex		mGuardDeferredQueries;
 };
 
 #endif

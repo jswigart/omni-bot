@@ -18,7 +18,7 @@ class System;
 class TriggerShape;
 class gmFunctionObject;
 
-typedef boost::shared_ptr<TriggerShape> ShapePtr;
+typedef std::shared_ptr<TriggerShape> ShapePtr;
 typedef std::vector<ShapePtr> ShapeList;
 
 bool operator<( const GameEntity& _1, const GameEntity& _2 );

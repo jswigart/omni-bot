@@ -21,15 +21,15 @@ IGame *CreateGameInstance()
 
 OF_Game::OF_Game()
 {
+	mGameVars.mClientBase = 0;
+	mGameVars.mGameVersion = OF_VERSION_LATEST;
+	mGameVars.mGameAbbrev = "of";
+	mGameVars.mGameName = "Open Fortress";
+	mGameVars.mPlayerHeight = 64.f;
 }
 
 OF_Game::~OF_Game()
 {
-}
-
-int OF_Game::GetVersionNum() const
-{
-	return OF_VERSION_LATEST;
 }
 
 Client *OF_Game::CreateGameClient()
@@ -37,58 +37,11 @@ Client *OF_Game::CreateGameClient()
 	return new OF_Client;
 }
 
-const char *OF_Game::GetModSubFolder() const
-{
-#ifdef WIN32
-	return "of\\";
-#else
-	return "of";
-#endif
-}
-
-const char *OF_Game::GetDLLName() const
-{
-#ifdef WIN32
-	return "omnibot_of.dll";
-#else
-	return "omnibot_of.so";
-#endif
-}
-
-const char *OF_Game::GetGameName() const
-{
-	return "OF";
-}
-
-const char *OF_Game::GetNavSubfolder() const
-{
-#ifdef WIN32
-	return "of\\nav\\";
-#else
-	return "of/nav";
-#endif
-}
-
-const char *OF_Game::GetScriptSubfolder() const
-{
-#ifdef WIN32
-	return "of\\scripts\\";
-#else
-	return "of/scripts";
-#endif
-}
-
-const char *OF_Game::GetGameDatabaseAbbrev() const
-{
-	return "of";
-}
-
 bool OF_Game::Init( System & system )
 {
 	if ( !TF_Game::Init( system ) )
 		return false;
 
-	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback(OF_Game::OF_GetEntityClassTraceOffset);
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(OF_Game::OF_GetEntityClassAimOffset);
 
@@ -103,11 +56,6 @@ bool OF_Game::Init( System & system )
 	TF_Options::DisguiseTeamFlags[ OF_TEAM_YELLOW ] = TF_PWR_DISGUISE_YELLOW;
 
 	return true;
-}
-
-void OF_Game::GetGameVars(GameVars &_gamevars)
-{
-	_gamevars.mPlayerHeight = 64.f;
 }
 
 static const IntEnum OF_TeamEnum[] =

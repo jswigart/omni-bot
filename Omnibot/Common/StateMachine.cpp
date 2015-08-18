@@ -64,7 +64,6 @@ std::string State::GetName() const
 
 void State::AppendState( State *_state )
 {
-	OBASSERT( _state, "AppendState: No State Given" );
 	_state->mParent = this;
 	if ( mFirstChild )
 	{
@@ -275,7 +274,6 @@ void State::FixRoot()
 	mRoot = GetParent();
 	while ( mRoot != NULL && mRoot->mParent )
 		mRoot = mRoot->mParent;
-	OBASSERT( !mParent || mRoot, "No Root State" );
 
 	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
 		pState->FixRoot();
@@ -283,8 +281,6 @@ void State::FixRoot()
 
 void State::SetClient( Client *_client )
 {
-	OBASSERT( _client, "No Client!" );
-
 	mClient = _client;
 
 	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
@@ -339,7 +335,6 @@ float State::InternalGetPriority()
 
 void State::InternalEnter()
 {
-	OBASSERT( !IsActive(), "Entering Active State!" );
 	//Utils::OutputDebug(kInfo,"%s: State: %s Enter (%d)\n", GetClient()->GetName(), GetName().c_str(),IGame::GetTime());
 
 	if ( mLimitCallback.mOnlyWhenActive ) mLimitCallback.mResult = true;
@@ -444,7 +439,6 @@ void State::InternalProcessEvent( const MessageHelper &_message, CallbackParamet
 		gmVariable callback = mEventTable->Get( _cb.GetMessageId() );
 		if ( gmFunctionObject *pFunc = callback.GetFunctionObjectSafe() )
 		{
-			OBASSERT( GetScriptObject( _cb.GetMachine() ), "No Script Object!" );
 			gmVariable varThis = gmVariable( GetScriptObject( _cb.GetMachine() ) );
 			int ThreadId = _cb.CallFunction( pFunc, varThis, !_cb.CallImmediate() );
 
@@ -475,7 +469,6 @@ void State::AddForkThreadId( int _threadId )
 	{
 		freeIndex = mNumThreads++;
 	}
-	OBASSERT( freeIndex != -1, "No Free Slots in mThreadList, max %d", MaxThreads );
 	if ( freeIndex != -1 )
 	{
 		mThreadList[ freeIndex ] = _threadId;
@@ -576,7 +569,6 @@ void State::SetEnable( bool _enable, const char *_error )
 {
 	if ( _error )
 	{
-		OBASSERT( 0, _error );
 		LOGERR( _error );
 	}
 	mStateFlags.SetFlag( State_UserDisabled, !_enable );
@@ -926,8 +918,6 @@ float StateSimultaneous::GetPriority()
 
 State::StateStatus StateSimultaneous::UpdateState( float fDt )
 {
-	OBASSERT( !IsDisabled(), "State Disabled, UpdateState called!" );
-
 	State *pLastState = NULL;
 	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
 	{
@@ -1025,14 +1015,12 @@ State::StateStatus StateFirstAvailable::UpdateState( float fDt )
 
 	if ( pBestState && mCurrentState != pBestState )
 	{
-		OBASSERT( !pBestState->IsActive(), "State not active!" );
 		mCurrentState = pBestState;
 		mCurrentState->InternalEnter();
 	}
 
 	if ( mCurrentState )
 	{
-		OBASSERT( mCurrentState->IsActive() || mCurrentState->IsRoot(), "State not active!" );
 		if ( mCurrentState->InternalUpdateState() == State_Finished )
 		{
 			mCurrentState->InternalExit();
@@ -1159,14 +1147,12 @@ State::StateStatus StatePrioritized::UpdateState( float fDt )
 
 	if ( pBestState && mCurrentState != pBestState )
 	{
-		OBASSERT( !pBestState->IsActive(), "State not active!" );
 		mCurrentState = pBestState;
 		mCurrentState->InternalEnter();
 	}
 
 	if ( mCurrentState )
 	{
-		OBASSERT( mCurrentState->IsActive() || mCurrentState->IsRoot(), "State not active!" );
 		if ( mCurrentState->InternalUpdateState() == State_Finished )
 		{
 			mCurrentState->InternalExit();

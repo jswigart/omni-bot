@@ -45,6 +45,8 @@
 #include "sqlite3.h"
 #pragma warning( pop )
 
+#include <boost/shared_array.hpp>
+
 //////////////////////////////////////////////////////////////////////////
 
 unsigned int dtAreaMaskColor( navAreaMask mask )
@@ -68,7 +70,7 @@ unsigned int dtAreaMaskColor( navAreaMask mask )
 		clr.MultRGB( 0.5 );
 		clr.set_b( 255 );
 	}
-	if ( mask & NAVFLAGS_THREATS )
+	if ( mask & NAVFLAGS_DESTRUCTIBLE )
 	{
 		clr.MultRGB( 0.5 );
 		clr.set_r( 255 );
@@ -154,7 +156,7 @@ struct DebugDraw : public duDebugDraw
 					int r, g, b, a;
 					duRGBASplit( color, r, g, b, a );
 
-					RenderBuffer::AddPoint( mVertCache[ 0 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ), mSizeHint );
+					RenderBuffer::AddPoint( mVertCache[ 0 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ) );
 					mVertCount = 0;
 				}
 				break;
@@ -164,7 +166,7 @@ struct DebugDraw : public duDebugDraw
 					int r, g, b, a;
 					duRGBASplit( color, r, g, b, a );
 
-					RenderBuffer::AddLine( mVertCache[ 0 ], mVertCache[ 1 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ), mSizeHint );
+					RenderBuffer::AddLine( mVertCache[ 0 ], mVertCache[ 1 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ) );
 					mVertCount = 0;
 				}
 				break;
@@ -276,13 +278,13 @@ struct RasterizationContext
 	rcPolyMeshDetail		* meshdetail;
 };
 
-static bool gAsyncBuildRunning = true;
-
-void AsyncTileBuild( PathPlannerRecast * nav, int num )
+void AsyncTileBuild::Run( PathPlannerRecast * nav, int num )
 {
 	rmt_SetCurrentThreadName( va( "AsyncTileBuild(%d)", num ) );
-	while ( gAsyncBuildRunning )
+	while ( !boost::this_thread::interruption_requested() )
 	{
+		rmt_ScopedCPUSample( AsyncGetTileRebuild );
+
 		TileRebuild buildTile;
 		if ( nav->AsyncGetTileRebuild( buildTile ) )
 		{
@@ -292,6 +294,55 @@ void AsyncTileBuild( PathPlannerRecast * nav, int num )
 			nav->RasterizeTileLayers( tx, ty );
 		}
 	}
+}
+
+void AsyncBatchQuery::Run( PathPlannerRecast * nav, int num )
+{
+	dtNavMeshQuery* nm = dtAllocNavMeshQuery();
+
+	// reusable scratch arrays
+	std::vector<dtMultiPathGoal> goals;
+
+	rmt_SetCurrentThreadName( va( "AsyncBatchQuery(%d)", num ) );
+	while ( !boost::this_thread::interruption_requested() )
+	{
+		rmt_ScopedCPUSample( AsyncGetBatchQuery );
+
+		QueryRef qry;
+		if ( nav->mNavMesh && nav->AsyncGetBatchQuery( qry ) )
+		{
+			rmt_ScopedCPUSample( ResolveBatchQuery );
+
+			if ( nav->mNavMesh != nm->getAttachedNavMesh() )
+				nm->init( nav->mNavMesh, 8192 );
+
+			goals.resize( qry->mGoals.size() );
+
+			dtQueryFilter filter;
+			filter.setIncludeFlags( qry->mInclude );
+			filter.setExcludeFlags( qry->mExclude );
+
+			dtPolyRef srcPoly;
+			Vector3f srcPos = localToRc( qry->mSrc );
+			if ( dtStatusSucceed( nm->findNearestPoly( srcPos, PathPlannerRecast::sExtents, &filter, &srcPoly, srcPos ) ) )
+			{
+				for ( size_t i = 0; i < goals.size(); ++i )
+				{
+					dtVcopy( goals[ i ].mDest, localToRc( qry->mGoals[ i ].mDest ) );
+
+					if ( dtStatusFailed( nm->findNearestPoly( goals[ i ].mDest, PathPlannerRecast::sExtents, &filter, &goals[ i ].mDestPoly, goals[ i ].mDest ) ) )
+						goals[ i ].mDestPoly = 0;
+				}
+
+				nm->findMultiPath( srcPoly, srcPos, &filter, &goals[ 0 ], goals.size() );
+			}
+
+			qry->mFinished = true;
+			qry->mExecuting = false;
+		}
+	}
+
+	dtFreeNavMeshQuery( nm );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -333,16 +384,22 @@ bool PathPlannerRecast::Init( System & system )
 
 	InitCommands();
 	
-	// subtract a thread to try and leave the current core free
-	int numBuildThreads = boost::thread::hardware_concurrency() - 1;
-	Options::GetValue( "Navigation", "TileBuildThreads", numBuildThreads );
-	if ( numBuildThreads < 1 )
-		numBuildThreads = 1;
+	int numTileBuildThreads = 1;
+	int numQueryThreads = 1;
 
-	for ( int i = 0; i < numBuildThreads; ++i )
-		mThreadGroup.add_thread( new boost::thread( AsyncTileBuild, this, i ) );
+	// subtract a thread to try and leave the current core free	
+	Options::GetValue( "Navigation", "TileBuildThreads", numTileBuildThreads );
+	if ( numTileBuildThreads < 1 )
+		numTileBuildThreads = 1;
 
-	EngineFuncs::ConsoleMessage( va( "Created %d threads to rebuild navigation tiles", mThreadGroup.size() ) );
+	for ( int i = 0; i < numTileBuildThreads; ++i )
+		mThreadGroupBuild.add_thread( new boost::thread( AsyncTileBuild::Run, this, i ) );
+	
+	for ( int i = 0; i < numQueryThreads; ++i )
+		mThreadGroupQuery.add_thread( new boost::thread( AsyncBatchQuery::Run, this, i ) );
+
+	EngineFuncs::ConsoleMessage( va( "Created %d threads to rebuild navigation tiles", mThreadGroupBuild.size() ) );
+	EngineFuncs::ConsoleMessage( va( "Created %d threads for async queries", mThreadGroupQuery.size() ) );
 
 	return true;
 }
@@ -542,6 +599,9 @@ void PathPlannerRecast::Update( System & system )
 				nodeInfo = va( "submdl %d", aimHit.mHitNode->mSubModel );
 			else if ( aimHit.mHitNode->mStaticModel >= 0 )
 				nodeInfo = va( "staticmdl %d", aimHit.mHitNode->mStaticModel );
+			else if ( aimHit.mHitNode->mDisplacement >= 0 )
+				nodeInfo = va( "displacement %d", aimHit.mHitNode->mDisplacement );
+			
 			ModelStateEnum::NameForValue( aimHit.mHitNode->mActiveState, modelState );
 			ContentFlagsEnum::NameForValueBitfield( activeContentFlags, contentStr );
 			SurfaceFlagsEnum::NameForValueBitfield( activeSurfaceFlags, surfaceStr );
@@ -665,7 +725,7 @@ void PathPlannerRecast::SendTileModel( int tx, int ty )
 				for ( int i = 0; i < tile->header->polyCount; ++i )
 				{
 					const dtPoly* p = &tile->polys[ i ];
-					if ( p->getType() == DT_POLYTYPE_OFFMESH_CONNECTION )	// Skip off-mesh links.
+					if ( p->getPolyType() == DT_POLYTYPE_OFFMESH_CONNECTION )	// Skip off-mesh links.
 						continue;
 
 					const dtPolyDetail* pd = &tile->detailMeshes[ i ];
@@ -763,9 +823,11 @@ void PathPlannerRecast::UpdateModelState( bool forcePositionUpdate )
 
 void PathPlannerRecast::Shutdown()
 {
-	gAsyncBuildRunning = false;
-	//mThreadGroup.interrupt_all();
-	mThreadGroup.join_all();
+	mThreadGroupBuild.interrupt_all();
+	mThreadGroupQuery.interrupt_all();
+
+	mThreadGroupBuild.join_all();
+	mThreadGroupQuery.join_all();
 
 	Unload();
 }
@@ -857,6 +919,8 @@ bool PathPlannerRecast::Load( const std::string &_mapname, bool _dl )
 				mCollision.mRootNode->FindNodeWithSubModel( nodeState.submodelid(), node );
 			else if ( nodeState.has_staticmodelid() )
 				mCollision.mRootNode->FindNodeWithStaticModel( nodeState.staticmodelid(), node );
+			else if ( nodeState.has_displacementid() )
+				mCollision.mRootNode->FindNodeWithDisplacement( nodeState.displacementid(), node );
 			else if ( nodeState.has_name() )
 			{
 				node.reset( new Node() );
@@ -1015,7 +1079,10 @@ bool PathPlannerRecast::Save( const std::string &_mapname )
 
 		typedef std::queue<NodePtr> NodeQueue;
 		NodeQueue treeNodes;
-		treeNodes.push( mCollision.mRootNode );
+
+		// push all the root children onto the list
+		for ( size_t i = 0; i < mCollision.mRootNode->mChildren.size(); ++i )
+			treeNodes.push( mCollision.mRootNode->mChildren[i] );
 
 		while ( !treeNodes.empty() )
 		{
@@ -1690,10 +1757,11 @@ void PathPlannerRecast::RemoveEntityConnection( GameEntity _ent )
 {
 }
 
-PathInterface * PathPlannerRecast::AllocPathInterface( Client * client )
+PathInterface * PathPlannerRecast::AllocPathInterface()
 {
-	return new RecastPathInterface( client, this );
+	return new RecastPathInterface( this );
 }
+
 const char *PathPlannerRecast::GetPlannerName() const
 {
 	return "Recast Path Planner";
@@ -1776,6 +1844,44 @@ bool PathPlannerRecast::GetAimedAtModel( RayResult& result, SurfaceFlags ignoreS
 		{
 			return true;
 		}
+	}
+	return false;
+}
+
+void PathPlannerRecast::QueueBatchQuery( QueryRef& qry, NavFlags inc, NavFlags exc, const Vector3f& src, const std::vector<Vector3f>& goals )
+{
+	boost::lock_guard<boost::recursive_mutex> lock( mGuardDeferredQueries );
+
+	if ( !qry || qry->mExecuting )
+		qry.reset( new DeferredQuery() );
+	
+	qry->mInclude = inc;
+	qry->mExclude = exc;
+	qry->mSrc = src;
+	qry->mGoals.resize( goals.size() );
+	qry->mExecuting = false;
+	qry->mFinished = false;
+
+	for ( size_t i = 0; i < goals.size(); ++i )
+	{
+		qry->mGoals[ i ] = DeferredQuery::Goal();
+		qry->mGoals[ i ].mDest = goals[ i ];
+	}	
+
+	mDeferredQueries.insert( qry );
+}
+
+bool PathPlannerRecast::AsyncGetBatchQuery( QueryRef & ref )
+{
+	boost::lock_guard<boost::recursive_mutex> lock( mGuardDeferredQueries );
+	if ( mDeferredQueries.size() > 0 )
+	{
+		ref = *mDeferredQueries.begin();
+
+		mDeferredQueries.erase( mDeferredQueries.begin() );
+
+		ref->mExecuting = true;
+		return true;
 	}
 	return false;
 }

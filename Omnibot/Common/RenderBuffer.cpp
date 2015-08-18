@@ -13,7 +13,6 @@
 
 //////////////////////////////////////////////////////////////////
 static const float VIEW_DISTANCE = 1024.0f;
-static const float DEFAULT_TIME = 0.0f;
 static const float TEXT_SCALE = 10.0f;
 static const float TEXT_DIST = 2048.0f;
 //////////////////////////////////////////////////////////////////
@@ -83,22 +82,6 @@ GLYPHMETRICSFLOAT			glyphMetrics[ 256 ];
 #endif
 
 // helpers to minimize state changes
-static void CheckPointSize( float & current, const float expected )
-{
-	if ( current != expected )
-	{
-		glPointSize( expected );
-		current = expected;
-	}
-}
-static void CheckLineWidth( float & current, const float expected )
-{
-	if ( current != expected )
-	{
-		glLineWidth( expected );
-		current = expected;
-	}
-}
 static void CheckColor( obColor & current, const obColor expected )
 {
 	if ( current != expected )
@@ -171,7 +154,7 @@ namespace RenderBuffer
 #endif
 	}
 
-	void BeginFrame()
+	void EndFrame()
 	{
 		mPointList.resize( 0 );
 		mLineList.resize( 0 );
@@ -182,29 +165,26 @@ namespace RenderBuffer
 		mVBOList.resize( 0 );
 	}
 
-	void AddPoint( const Vector3f & v, const obColor & col, float size )
+	void AddPoint( const Vector3f & v, const obColor & col, float duration )
 	{
 		Point prim;
 		prim.v[ 0 ] = v;
 		prim.c = col;
-		prim.pointSize = size;
+		prim.duration = duration;
 		mPointList.push_back( prim );
 	}
-	void AddPoints( const Vector3List & verts, obColor col, float size )
+	void AddPoints( const Vector3List & verts, obColor col, float duration )
 	{
 		for ( size_t i = 0; i < verts.size(); ++i )
-			AddPoint( verts[ i ], col, size );
+			AddPoint( verts[ i ], col, duration );
 	}
-	void AddArrow( const Vector3f & v0, const Vector3f & v1, const obColor & col, float width )
+	void AddArrow( const Vector3f & v0, const Vector3f & v1, const obColor & col, float duration )
 	{
-		OBASSERT( v0.IsValid(), "Invalid Vector" );
-		OBASSERT( v1.IsValid(), "Invalid Vector" );
-
 		Line prim;
 		prim.v[ 0 ] = v0;
 		prim.v[ 1 ] = v1;
 		prim.c = col;
-		prim.lineWidth = width;
+		prim.duration = duration;
 		mLineList.push_back( prim );
 
 		Vector3f dir = v1 - v0;
@@ -219,24 +199,20 @@ namespace RenderBuffer
 
 		// arrowheads todo
 	}
-	void AddLine( const Vector3f & v0, const Vector3f & v1, const obColor & col, float width )
+	void AddLine( const Vector3f & v0, const Vector3f & v1, const obColor & col, float duration )
 	{
-		OBASSERT( v0.IsValid(), "Invalid Vector" );
-		OBASSERT( v1.IsValid(), "Invalid Vector" );
-
 		Line prim;
 		prim.v[ 0 ] = v0;
 		prim.v[ 1 ] = v1;
 		prim.c = col;
-		prim.lineWidth = width;
+		prim.duration = duration;
 		mLineList.push_back( prim );
 	}
-	void AddLine( const Vector3List & v, const obColor & col, float width )
+	void AddLine( const Vector3List & v, const obColor & col, float duration )
 	{
 		Line prim;
 		prim.c = col;
-		prim.lineWidth = width;
-
+		prim.duration = duration;
 		for ( size_t i = 1; i < v.size(); ++i )
 		{
 			prim.v[ 0 ] = v[ i - 1 ];
@@ -244,23 +220,26 @@ namespace RenderBuffer
 			mLineList.push_back( prim );
 		}
 	}
-	void AddTri( const Triangle & tri )
+	void AddTri( const Triangle & tri, float duration )
 	{
 		mTriList.push_back( tri );
+		mTriList.back().duration = duration;
 	}
-	void AddTri( const Vector3f & v0, const Vector3f & v1, const Vector3f & v2, const obColor & col )
+	void AddTri( const Vector3f & v0, const Vector3f & v1, const Vector3f & v2, const obColor & col, float duration )
 	{
 		Triangle prim;
 		prim.v[ 0 ] = v0;
 		prim.v[ 1 ] = v1;
 		prim.v[ 2 ] = v2;
 		prim.c = col;
+		prim.duration = duration;
 		mTriList.push_back( prim );
 	}
-	void AddQuad( const Quad & primitive )
+	void AddQuad( const Quad & primitive, float duration )
 	{
 		Triangle prim;
 		prim.c = primitive.c;
+		prim.duration = duration;
 
 		prim.v[ 0 ] = primitive.v[ 0 ];
 		prim.v[ 1 ] = primitive.v[ 1 ];
@@ -272,10 +251,11 @@ namespace RenderBuffer
 		prim.v[ 2 ] = primitive.v[ 3 ];
 		mTriList.push_back( prim );
 	}
-	void AddQuad( const Vector3f & v0, const Vector3f & v1, const Vector3f & v2, const Vector3f & v3, const obColor & col )
+	void AddQuad( const Vector3f & v0, const Vector3f & v1, const Vector3f & v2, const Vector3f & v3, const obColor & col, float duration )
 	{
 		Triangle prim;
 		prim.c = col;
+		prim.duration = duration;
 
 		prim.v[ 0 ] = v0;
 		prim.v[ 1 ] = v1;
@@ -288,12 +268,13 @@ namespace RenderBuffer
 		mTriList.push_back( prim );
 	}
 
-	void AddPolygonFilled( const Vector3List & verts, obColor col )
+	void AddPolygonFilled( const Vector3List & verts, obColor col, float duration )
 	{
 		if ( verts.size() > 1 )
 		{
 			Triangle prim;
 			prim.c = col;
+			prim.duration = duration;
 
 			// use the center of the poly as a pivot for the polygon
 			// to avoid degenerates
@@ -312,14 +293,16 @@ namespace RenderBuffer
 		}
 	}
 
-	void AddPolygonSilouette( const Vector3List & verts, obColor col )
+	void AddPolygonSilouette( const Vector3List & verts, obColor col, float duration )
 	{
 		if ( verts.size() > 1 )
 		{
 			Line prim;
 			prim.c = col;
+			prim.duration = duration;
 			prim.v[ 0 ] = verts[ verts.size() - 1 ];
 			prim.v[ 1 ] = verts[ 0 ];
+			
 			mLineList.push_back( prim );
 			for ( size_t i = 1; i < verts.size(); ++i )
 			{
@@ -330,51 +313,55 @@ namespace RenderBuffer
 		}
 	}
 
-	void AddCircle( const Vector3f & v, float radius, const obColor & col, const Vector3f & up )
+	void AddCircle( const Vector3f & v, float radius, const obColor & col, const Vector3f & up, float duration )
 	{
 		Circle prim;
 		prim.v = v;
 		prim.c = col;
 		prim.radius = radius;
 		prim.up = up;
+		prim.duration = duration;
 		mCircleList.push_back( prim );
 	}
 
-	void AddString3d( const Vector3f & v, const obColor & col, const char * str )
+	void AddString3d( const Vector3f & v, const obColor & col, const char * str, float duration )
 	{
 		Str3d prim;
 		prim.v = v;
 		prim.c = col;
 		prim.str = str;
 		prim.radius = TEXT_DIST;
+		prim.duration = duration;
 		mStringList3d.push_back( prim );
 	}
 
-	void AddString3dRadius( const Vector3f & v, const obColor & col, float radius, const char * str )
+	void AddString3dRadius( const Vector3f & v, const obColor & col, float radius, const char * str, float duration )
 	{
 		Str3d prim;
 		prim.v = v;
 		prim.c = col;
 		prim.str = str;
 		prim.radius = radius;
+		prim.duration = duration;
 		mStringList3d.push_back( prim );
 	}
 
-	void AddString2d( const Vector2f & v, const obColor & col, const char * str )
+	void AddString2d( const Vector2f & v, const obColor & col, const char * str, float duration )
 	{
 		Str2d prim;
 		prim.v = v;
 		prim.c = col;
 		prim.str = str;
+		prim.duration = duration;
 		mStringList2d.push_back( prim );
 	}
-	void AddAABB( const AxisAlignedBox3f &_aabb, const obColor &_color, AABB::Direction _dir/* = AABB::DIR_ALL*/ )
+	void AddAABB( const AxisAlignedBox3f &_aabb, const obColor &_color, AABB::Direction _dir/* = AABB::DIR_ALL*/, float duration )
 	{
 		AABB aabb;
 		aabb.Set( _aabb.Min, _aabb.Max );
-		AddAABB( aabb, _color, _dir );
+		AddAABB( aabb, _color, _dir, duration );
 	}
-	void AddAABB( const AABB &_aabb, const obColor &_color, AABB::Direction _dir/* = AABB::DIR_ALL*/ )
+	void AddAABB( const AABB &_aabb, const obColor &_color, AABB::Direction _dir/* = AABB::DIR_ALL*/, float duration )
 	{
 		//if(gEngineFuncs->DebugBox(Vector3f::ZERO,Vector3f::ZERO,COLOR::WHITE,0.f))
 		//{
@@ -399,32 +386,32 @@ namespace RenderBuffer
 		// Top
 		if ( _dir == AABB::DIR_TOP || _dir == AABB::DIR_ALL )
 		{
-			AddLine( vVertex[ 4 ], vVertex[ 5 ], _color, DEFAULT_TIME );
-			AddLine( vVertex[ 5 ], vVertex[ 6 ], _color, DEFAULT_TIME );
-			AddLine( vVertex[ 6 ], vVertex[ 7 ], _color, DEFAULT_TIME );
-			AddLine( vVertex[ 7 ], vVertex[ 4 ], _color, DEFAULT_TIME );
+			AddLine( vVertex[ 4 ], vVertex[ 5 ], _color, duration );
+			AddLine( vVertex[ 5 ], vVertex[ 6 ], _color, duration );
+			AddLine( vVertex[ 6 ], vVertex[ 7 ], _color, duration );
+			AddLine( vVertex[ 7 ], vVertex[ 4 ], _color, duration );
 		}
 
 		// Bottom
 		if ( _dir == AABB::DIR_BOTTOM || _dir == AABB::DIR_ALL )
 		{
-			AddLine( vVertex[ 0 ], vVertex[ 1 ], _color, DEFAULT_TIME );
-			AddLine( vVertex[ 1 ], vVertex[ 2 ], _color, DEFAULT_TIME );
-			AddLine( vVertex[ 2 ], vVertex[ 3 ], _color, DEFAULT_TIME );
-			AddLine( vVertex[ 3 ], vVertex[ 0 ], _color, DEFAULT_TIME );
+			AddLine( vVertex[ 0 ], vVertex[ 1 ], _color, duration );
+			AddLine( vVertex[ 1 ], vVertex[ 2 ], _color, duration );
+			AddLine( vVertex[ 2 ], vVertex[ 3 ], _color, duration );
+			AddLine( vVertex[ 3 ], vVertex[ 0 ], _color, duration );
 		}
 
 		// Sides
 		if ( _dir == AABB::DIR_ALL )
 		{
-			AddLine( vVertex[ 4 ], vVertex[ 0 ], _color, DEFAULT_TIME );
-			AddLine( vVertex[ 5 ], vVertex[ 1 ], _color, DEFAULT_TIME );
-			AddLine( vVertex[ 6 ], vVertex[ 2 ], _color, DEFAULT_TIME );
-			AddLine( vVertex[ 7 ], vVertex[ 3 ], _color, DEFAULT_TIME );
+			AddLine( vVertex[ 4 ], vVertex[ 0 ], _color, duration );
+			AddLine( vVertex[ 5 ], vVertex[ 1 ], _color, duration );
+			AddLine( vVertex[ 6 ], vVertex[ 2 ], _color, duration );
+			AddLine( vVertex[ 7 ], vVertex[ 3 ], _color, duration );
 		}
 	}
 
-	void AddOBB( const Box3f &_obb, const obColor &_color, AABB::Direction _dir )
+	void AddOBB( const Box3f &_obb, const obColor &_color, AABB::Direction _dir, float duration )
 	{
 		Vector3f vertices[ 8 ];
 		_obb.ComputeVertices( vertices );
@@ -432,28 +419,28 @@ namespace RenderBuffer
 		// bottom
 		if ( _dir == AABB::DIR_BOTTOM || _dir == AABB::DIR_ALL )
 		{
-			AddLine( vertices[ 0 ], vertices[ 1 ], _color );
-			AddLine( vertices[ 1 ], vertices[ 2 ], _color );
-			AddLine( vertices[ 2 ], vertices[ 3 ], _color );
-			AddLine( vertices[ 3 ], vertices[ 0 ], _color );
+			AddLine( vertices[ 0 ], vertices[ 1 ], _color, duration );
+			AddLine( vertices[ 1 ], vertices[ 2 ], _color, duration );
+			AddLine( vertices[ 2 ], vertices[ 3 ], _color, duration );
+			AddLine( vertices[ 3 ], vertices[ 0 ], _color, duration );
 		}
 
 		// top
 		if ( _dir == AABB::DIR_TOP || _dir == AABB::DIR_ALL )
 		{
-			AddLine( vertices[ 4 ], vertices[ 5 ], _color );
-			AddLine( vertices[ 5 ], vertices[ 6 ], _color );
-			AddLine( vertices[ 6 ], vertices[ 7 ], _color );
-			AddLine( vertices[ 7 ], vertices[ 4 ], _color );
+			AddLine( vertices[ 4 ], vertices[ 5 ], _color, duration );
+			AddLine( vertices[ 5 ], vertices[ 6 ], _color, duration );
+			AddLine( vertices[ 6 ], vertices[ 7 ], _color, duration );
+			AddLine( vertices[ 7 ], vertices[ 4 ], _color, duration );
 		}
 
 		//verts
 		if ( _dir == AABB::DIR_ALL )
 		{
-			AddLine( vertices[ 0 ], vertices[ 4 ], _color );
-			AddLine( vertices[ 1 ], vertices[ 5 ], _color );
-			AddLine( vertices[ 2 ], vertices[ 6 ], _color );
-			AddLine( vertices[ 3 ], vertices[ 7 ], _color );
+			AddLine( vertices[ 0 ], vertices[ 4 ], _color, duration );
+			AddLine( vertices[ 1 ], vertices[ 5 ], _color, duration );
+			AddLine( vertices[ 2 ], vertices[ 6 ], _color, duration );
+			AddLine( vertices[ 3 ], vertices[ 7 ], _color, duration );
 		}
 	}
 
@@ -749,23 +736,15 @@ namespace RenderBuffer
 		for ( size_t i = 0; i < mPointList.size(); ++i )
 		{
 			const Point & prim = mPointList[ i ];
-			AddLine(
-				prim.v[ 0 ],
-				prim.v[ 0 ] + Vector3f( 0.0f, 0.0f, prim.pointSize ),
-				prim.c,
-				prim.pointSize );
+			AddLine( prim.v[ 0 ], prim.v[ 0 ] + Vector3f( 0.0f, 0.0f, 4.0f ),  prim.c );
 		}
 
 		if ( mLineList.size() > 0 )
 		{
-			float sz = 0.0;
-			CheckLineWidth( sz, 1.0 );
-
 			glBegin( GL_LINES );
 			for ( size_t i = 0; i < mLineList.size(); ++i )
 			{
 				const Line & prim = mLineList[ i ];
-				CheckLineWidth( sz, prim.lineWidth );
 				CheckColor( col, prim.c );
 				glVertex3fv( prim.v[ 0 ] );
 				glVertex3fv( prim.v[ 1 ] );
@@ -999,60 +978,13 @@ namespace RenderBuffer
 		if ( !Utils::GetLocalEyePosition( vEyePos ) )
 			return;
 
+		const Vector3f offs( 0.0f, 0.0f, 4.0f );
+
 		AxisAlignedBox3f viewBox;
 		viewBox.Clear();
 		viewBox.ExpandPt( vEyePos );
 		viewBox.Extend( VIEW_DISTANCE*0.5f, VIEW_DISTANCE*0.5f, VIEW_DISTANCE*0.5f );
-
-		// vbos first bc this populates the other primitive lists
-		/*for ( size_t i = 0; i < mVBOList.size(); ++i )
-		{
-		VBOMap::const_iterator it = vbos.find( mVBOList[ i ] );
-		if ( it == vbos.end() )
-		continue;
-
-		const VBO & vbo = it->second;
-
-		for ( size_t c = 0; c < vbo.mChunks.size(); ++c )
-		{
-		const Chunk & ch = vbo.mChunks[ c ];
-		if ( ch.mAABB.TestIntersection( viewBox ) )
-		{
-		AABB b( ch.mAABB.Min, ch.mAABB.Max );
-		b.mMins[ 2 ] = b.mMaxs[ 2 ] = vEyePos.Z();
-
-		AddAABB( b, COLOR::CYAN, AABB::DIR_BOTTOM );
-
-		for ( size_t x = 0; x < ch.mIndices.size(); ++x )
-		{
-		switch ( vbo.mType )
-		{
-		case GL_POINTS:
-		AddPoint(
-		vbo.mVerts[ ch.mIndices[ x ] + 0 ].p,
-		vbo.mVerts[ ch.mIndices[ x ] + 0 ].c );
-		break;
-		case GL_LINES:
-		AddLine(
-		vbo.mVerts[ ch.mIndices[ x ] + 0 ].p,
-		vbo.mVerts[ ch.mIndices[ x ] + 1 ].p,
-		vbo.mVerts[ ch.mIndices[ x ] + 0 ].c );
-		break;
-		case GL_TRIANGLES:
-		AddTri(
-		vbo.mVerts[ ch.mIndices[ x ] + 0 ].p,
-		vbo.mVerts[ ch.mIndices[ x ] + 1 ].p,
-		vbo.mVerts[ ch.mIndices[ x ] + 2 ].p,
-		vbo.mVerts[ ch.mIndices[ x ] + 0 ].c );
-		break;
-		default:
-		assert( 0 && "Unhandled Primitive" );
-		}
-		}
-		}
-		}
-		}*/
-
+		
 		const float cullDistSq = VIEW_DISTANCE*VIEW_DISTANCE;
 
 		for ( size_t i = 0; i < mPointList.size(); ++i )
@@ -1062,11 +994,7 @@ namespace RenderBuffer
 			if ( ( prim.v[ 0 ] - vEyePos ).SquaredLength() > cullDistSq )
 				continue;
 
-			gEngineFuncs->DebugLine(
-				prim.v[ 0 ],
-				prim.v[ 0 ] + Vector3f( 0.0f, 0.0f, prim.pointSize ),
-				prim.c,
-				DEFAULT_TIME );
+			gEngineFuncs->DebugLine( prim.v[ 0 ], prim.v[ 0 ] + offs, prim.c, prim.duration );
 		}
 
 		for ( size_t i = 0; i < mLineList.size(); ++i )
@@ -1077,11 +1005,7 @@ namespace RenderBuffer
 			if ( dist.GetSquared() > cullDistSq )
 				continue;
 
-			gEngineFuncs->DebugLine(
-				prim.v[ 0 ],
-				prim.v[ 1 ],
-				prim.c,
-				DEFAULT_TIME );
+			gEngineFuncs->DebugLine( prim.v[ 0 ], prim.v[ 1 ], prim.c, prim.duration );
 		}
 
 		int renderedTris = 0;
@@ -1095,14 +1019,14 @@ namespace RenderBuffer
 			static bool noDepth = false;
 			const int renderFlags = noDepth ? IEngineInterface::DR_NODEPTHTEST : 0;
 
-			gEngineFuncs->DebugPolygon( (const obVec3 *)prim.v, 3, prim.c, DEFAULT_TIME, renderFlags );
+			gEngineFuncs->DebugPolygon( (const obVec3 *)prim.v, 3, prim.c, prim.duration, renderFlags );
 			++renderedTris;
 		}
 
 		for ( size_t i = 0; i < mCircleList.size(); ++i )
 		{
 			const Circle & prim = mCircleList[ i ];
-			gEngineFuncs->DebugRadius( prim.v, prim.radius, prim.c, DEFAULT_TIME );
+			gEngineFuncs->DebugRadius( prim.v, prim.radius, prim.c, prim.duration );
 		}
 
 		for ( size_t i = 0; i < mStringList3d.size(); ++i )
@@ -1112,7 +1036,7 @@ namespace RenderBuffer
 			if ( ( vEyePos - prim.v ).Length() > TEXT_DIST )
 				continue;
 
-			gEngineFuncs->PrintScreenText( prim.v, DEFAULT_TIME, prim.c, prim.str.c_str() );
+			gEngineFuncs->PrintScreenText( prim.v, prim.duration, prim.c, prim.str.c_str() );
 		}
 	}
 };

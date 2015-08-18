@@ -34,16 +34,16 @@ template <typename T, int MaxStates = 8>
 class InternalFSM
 {
 public:
-	typedef void (T::*Func)();
+	typedef void ( T::*Func )( );
 
-	void RegState(int state, Func Enter, Func Update, Func Exit)
+	void RegState( int state, Func Enter, Func Update, Func Exit )
 	{
-		OBASSERT(state>=0 && state<MaxStates,"State index out of bounds");
-		if ( state>=0 && state<MaxStates ) {
-			AvailableStates[state].Reset();
-			AvailableStates[state].Enter = Enter;
-			AvailableStates[state].Update = Update;
-			AvailableStates[state].Exit = Exit;
+		if ( state >= 0 && state < MaxStates )
+		{
+			AvailableStates[ state ].Reset();
+			AvailableStates[ state ].Enter = Enter;
+			AvailableStates[ state ].Update = Update;
+			AvailableStates[ state ].Exit = Exit;
 		}
 	}
 
@@ -68,10 +68,10 @@ public:
 		}
 
 		StateBlock()
-			: Enter(0)
-			, Update(0)
-			, Exit(0)
-			, StateId(-1)
+			: Enter( 0 )
+			, Update( 0 )
+			, Exit( 0 )
+			, StateId( -1 )
 		{
 		}
 	};
@@ -81,14 +81,13 @@ public:
 		StateTime = 0.f;
 	}
 
-	void SetNextState(int state)
+	void SetNextState( int state )
 	{
-		OBASSERT(state>=0 && state<MaxStates,"State index out of bounds");
-		if ( state>=0 && state<MaxStates ) {
-			NextState = AvailableStates[state];
+		if ( state >= 0 && state < MaxStates )
+		{
+			NextState = AvailableStates[ state ];
 			NextState.StateId = state;
 		}
-		OBASSERT(NextState.IsValid(),"Not a valid state!");
 	}
 
 	int GetCurrentStateId()
@@ -96,47 +95,49 @@ public:
 		return CurrentState.StateId;
 	}
 
-	void UpdateFsm(float dt)
+	void UpdateFsm( float dt )
 	{
 		StateTime += dt;
 
-		T * ptr = static_cast<T*>(this);
+		T * ptr = static_cast<T*>( this );
 
 		// update current state
-		if(CurrentState.Update)
-			(ptr->*CurrentState.Update)();
+		if ( CurrentState.Update )
+			( ptr->*CurrentState.Update )( );
 
 		// transition into next state
-		if(NextState.IsValid())
+		if ( NextState.IsValid() )
 		{
-			if(CurrentState.Exit)
-				(ptr->*CurrentState.Exit)();
+			if ( CurrentState.Exit )
+				( ptr->*CurrentState.Exit )( );
 
 			CurrentState = NextState;
 			NextState.Reset();
 
 			ResetForNewState();
 
-			if(CurrentState.Enter)
-				(ptr->*CurrentState.Enter)();
+			if ( CurrentState.Enter )
+				( ptr->*CurrentState.Enter )( );
 		}
 	}
 
 	InternalFSM()
 	{
-		for(int i = 0; i < MaxStates; ++i)
+		for ( int i = 0; i < MaxStates; ++i )
 		{
-			AvailableStates[i].Reset();
+			AvailableStates[ i ].Reset();
 		}
 	}
-	virtual ~InternalFSM() {}
+	virtual ~InternalFSM()
+	{
+	}
 private:
 	StateBlock	CurrentState;
 	StateBlock	NextState;
 
 	float		StateTime;
 
-	StateBlock	AvailableStates[MaxStates];
+	StateBlock	AvailableStates[ MaxStates ];
 };
 
 #endif

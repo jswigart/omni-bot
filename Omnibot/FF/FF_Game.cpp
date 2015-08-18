@@ -21,15 +21,16 @@ IGame *CreateGameInstance()
 
 FF_Game::FF_Game()
 {
+	mGameVars.mClientBase = -1;
+	mGameVars.mGameVersion = FF_VERSION_LATEST;
+	mGameVars.mGameAbbrev = "ff";
+	mGameVars.mGameName = "Fortress Forever";
+	mGameVars.mPlayerHeight = 72.f;
+	mGameVars.mRendersToGame = true;
 }
 
 FF_Game::~FF_Game()
 {
-}
-
-int FF_Game::GetVersionNum() const
-{
-	return FF_VERSION_LATEST;
 }
 
 Client *FF_Game::CreateGameClient()
@@ -37,56 +38,11 @@ Client *FF_Game::CreateGameClient()
 	return new FF_Client;
 }
 
-const char *FF_Game::GetModSubFolder() const
-{
-#ifdef WIN32
-	return "ff\\";
-#else
-	return "ff";
-#endif
-}
-
-const char *FF_Game::GetDLLName() const
-{
-#ifdef WIN32
-	return "omnibot_ff.dll";
-#else
-	return "omnibot_ff.so";
-#endif
-}
-
-const char *FF_Game::GetGameName() const
-{
-	return "FF";
-}
-
-const char *FF_Game::GetNavSubfolder() const
-{
-#ifdef WIN32
-	return "ff\\nav\\";
-#else
-	return "ff/nav";
-#endif
-}
-
-const char *FF_Game::GetScriptSubfolder() const
-{
-#ifdef WIN32
-	return "ff\\scripts\\";
-#else
-	return "ff/scripts";
-#endif
-}
-const char *FF_Game::GetGameDatabaseAbbrev() const
-{
-	return "ff";
-}
 bool FF_Game::Init( System & system )
 {
 	if ( !TF_Game::Init( system ) )
 		return false;
 
-	// Set the sensory systems callback for getting aim offsets for entity types.
 	//AiState::SensoryMemory::SetEntityTraceOffsetCallback(FF_Game::FF_GetEntityClassTraceOffset);
 	//AiState::SensoryMemory::SetEntityAimOffsetCallback(FF_Game::FF_GetEntityClassAimOffset);
 
@@ -113,60 +69,6 @@ void FF_Game::GetTeamEnumeration( const IntEnum *&_ptr, int &num )
 	num = sizeof( FF_TeamEnum ) / sizeof( FF_TeamEnum[ 0 ] );
 	_ptr = FF_TeamEnum;
 }
-
-void FF_Game::GetGameVars( GameVars &_gamevars )
-{
-	_gamevars.mPlayerHeight = 72.f;
-}
-
-ClientPtr &FF_Game::GetClientFromCorrectedGameId( int _gameid )
-{
-	return mClientList[ _gameid - 1 ];
-}
-
-//void FF_Game::AddBot(const std::string &_name, int _team, int _class, const std::string _profile, bool _createnow)
-//{
-//	// Attempt to spawn a bot into the game.
-//	if(_createnow)
-//		.mBotJoining = true;
-//	int iGameID = InterfaceFuncs::Addbot(_name, _team, _class);
-//	if(_createnow)
-//		.mBotJoining = false;
-//	if(iGameID != -1 && _createnow)
-//	{
-//		if(!.mClientList[iGameID-1])
-//		{
-//			// Initialize the appropriate slot in the list.
-//			.mClientList[iGameID-1].reset(CreateGameClient());
-//			.mClientList[iGameID-1]->Init(iGameID);
-//		}
-//
-//		.mClientList[iGameID-1]->mDesiredTeam = _team;
-//		.mClientList[iGameID-1]->mDesiredClass = _class;
-//
-//		//////////////////////////////////////////////////////////////////////////
-//		// Script callbacks
-//		if(.mClientList[iGameID-1]->mDesiredTeam == -1)
-//		{
-//			gmVariable vteam = ScriptManager::GetInstance()->ExecBotCallback(
-//				.mClientList[iGameID-1].get(),
-//				"SelectTeam");
-//			.mClientList[iGameID-1]->mDesiredTeam = vteam.IsInt() ? vteam.GetInt() : -1;
-//		}
-//		if(.mClientList[iGameID-1]->mDesiredClass == -1)
-//		{
-//			gmVariable vclass = ScriptManager::GetInstance()->ExecBotCallback(
-//				.mClientList[iGameID-1].get(),
-//				"SelectClass");
-//			.mClientList[iGameID-1]->mDesiredClass = vclass.IsInt() ? vclass.GetInt() : -1;
-//		}
-//		//////////////////////////////////////////////////////////////////////////
-//		gEngineFuncs->ChangeTeam(iGameID, .mClientList[iGameID-1]->mDesiredTeam, NULL);
-//		gEngineFuncs->ChangeClass(iGameID, .mClientList[iGameID-1]->mDesiredClass, NULL);
-//	}
-//}
-
-//////////////////////////////////////////////////////////////////////////
 
 void FF_Game::GetNavParms( NavParms & navParms ) const
 {

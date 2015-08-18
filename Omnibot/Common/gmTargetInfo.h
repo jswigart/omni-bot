@@ -29,8 +29,8 @@ public:
 	static bool getVelocity( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands );
 	static bool getGroup( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands );
 	static bool getClass( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands );
-	static bool getQuantity( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands );
-	static bool getQuantityMax( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands );
+	static bool getEnergy( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands );
+	static bool getEnergyMax( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands );
 
 	static TargetInfo *Constructor(gmThread *a_thread);
 	static void Destructor(TargetInfo *_native);

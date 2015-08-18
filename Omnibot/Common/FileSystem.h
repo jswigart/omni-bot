@@ -11,9 +11,24 @@
 #ifndef __FILESYSTEM_H__
 #define __FILESYSTEM_H__
 
+#ifdef _WIN32
+#pragma warning( push )
+// stfu boost
+#pragma warning( disable: 4244 )
+#pragma warning( disable: 4265 )
+#pragma warning( disable: 6334 )
+#pragma warning( disable: 6011 )
+#pragma warning( disable: 4913 )
+#endif //_WIN32
+
 #include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+
+#ifdef _WIN32
+#pragma warning( pop )
+#endif // _WIN32
+
 
 #include "Utilities.h"
 

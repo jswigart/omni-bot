@@ -68,7 +68,7 @@ namespace AiState
 		, mNextGetPriorityUpdate( 0 )
 		, mNextGetPriorityDelay( 0 )
 		, mFinished( false )
-		, mAimSignalled( false )
+		, mOnTargetTime( 0 )
 		, mAutoReleaseAim( true )
 		, mAutoReleaseWpn( true )
 		, mAutoReleaseTracker( true )
@@ -331,13 +331,7 @@ namespace AiState
 
 	void ScriptGoal::OnTarget()
 	{
-		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-		if ( !mAimSignalled && mActiveThread[ ON_UPDATE ].IsActive() )
-		{
-			pMachine->Signal( gmVariable( AIM_ONTARGET ), mActiveThread[ ON_UPDATE ].ThreadId(), GM_INVALID_THREAD );
-			Signal( gmVariable( AIM_ONTARGET ) );
-			mAimSignalled = true;
-		}
+		mOnTargetTime = IGame::GetTime();
 	}
 
 	bool ScriptGoal::OnInit( gmMachine *_machine )
@@ -677,6 +671,8 @@ namespace AiState
 		FINDSTATE( aim, Aimer, GetRootState() );
 		if ( aim )
 		{
+			mOnTargetTime = 0;
+
 			if ( _type == Aimer::MoveDirection )
 				return aim->AddAimMoveDirRequest( _prio, GetNameHash() );
 			else
@@ -712,6 +708,7 @@ namespace AiState
 		mWatchEntities.mRadius = radius;
 		mWatchEntities.mCategory = category;
 		mWatchEntities.mCustomTrace = customTrace;
+
 		for ( int i = 0; i < WatchEntity::MaxEntities; ++i )
 		{
 			mWatchEntities.mEntry[ i ].Reset();
@@ -794,6 +791,21 @@ namespace AiState
 		}
 	}
 
+	GameEntity ScriptGoal::IterateWatchEntity( GameEntity lastEntity )
+	{
+		for ( int i = 0; i < WatchEntity::MaxEntities; ++i )
+		{
+			if ( mWatchEntities.mEntry[ i ].mEnt.IsValid() )
+			{
+				if ( !lastEntity.IsValid() )
+					return mWatchEntities.mEntry[ i ].mEnt;
+				else if ( mWatchEntities.mEntry[ i ].mEnt == lastEntity )
+					lastEntity.Reset(); // so next iteration will return result
+			}
+		}
+		return GameEntity();
+	}
+
 	void ScriptGoal::WatchForMapGoalsInRadius( const GoalManager::Query &qry, const GameEntity & ent, float radius )
 	{
 		mMapGoalInRadius.mQuery = qry;
@@ -824,7 +836,7 @@ namespace AiState
 			gmMachine * pMachine = ScriptManager::GetInstance()->GetMachine();
 
 			mMapGoalInRadius.mQuery.CheckInRadius( entPos, mMapGoalInRadius.mRadius );
-			GoalManager::GetInstance()->GetGoals( mMapGoalInRadius.mQuery );
+			System::mInstance->mGoalManager->GetGoals( mMapGoalInRadius.mQuery );
 
 			MgSet newInRadius;
 			MapGoalList::iterator it = mMapGoalInRadius.mQuery.mList.begin(),
@@ -865,7 +877,6 @@ namespace AiState
 				newIt != newInRadius.end();
 				++newIt )
 			{
-				OBASSERT( mMapGoalInRadius.mInRadius.find( *newIt ) == mMapGoalInRadius.mInRadius.end(), "Err" );
 				mMapGoalInRadius.mInRadius.insert( *newIt );
 
 				MessageHelper hlpr( MESSAGE_MG_ENTER_RADIUS );

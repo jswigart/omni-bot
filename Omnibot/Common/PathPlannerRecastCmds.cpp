@@ -30,7 +30,9 @@ bool NavNodeSort( const NodePtr& n0, const NodePtr& n1 )
 		return true;
 	else if ( n0->mStaticModel > n1->mStaticModel )
 		return false;
-
+	else if ( n0->mDisplacement > n1->mDisplacement )
+		return false;
+	
 	return n0->mEntityName < n1->mEntityName;
 }
 
@@ -63,6 +65,7 @@ void PathPlannerRecast::InitCommands()
 	SetEx( "nav_modeldynamic", "Enables mover flag on look-at model.", this, &PathPlannerRecast::cmdModelDynamic );
 	SetEx( "nav_modelsettrisurface", "Enables mover flag on look-at model.", this, &PathPlannerRecast::cmdModelSetTriangleSurface );
 	SetEx( "nav_modelsetarea", "Sets an area override for the region baked in by this model.", this, &PathPlannerRecast::cmdModelSetAreaFlag );
+	SetEx( "nav_addbuildthread", "Sets an area override for the region baked in by this model.", this, &PathPlannerRecast::cmdNavAddBuildThread );	
 }
 
 void PathPlannerRecast::cmdNavSave( const StringVector & args )
@@ -103,12 +106,6 @@ void PathPlannerRecast::cmdNavView( const StringVector & args )
 
 void PathPlannerRecast::cmdNavList( const StringVector & args )
 {
-	const char *strUsage [] =
-	{
-		"nav_list name[str]",
-		"> name: name to search for",
-	};
-
 	std::vector<NodePtr> nodes;
 	std::vector<NodePtr> open;
 
@@ -138,6 +135,9 @@ void PathPlannerRecast::cmdNavList( const StringVector & args )
 			info += va( "submdl(%d) ", nodes[ i ]->mSubModel );
 		if ( nodes[ i ]->mStaticModel >= 0 )
 			info += va( "staticmdl(%d) ", nodes[ i ]->mStaticModel );
+		if ( nodes[ i ]->mDisplacement >= 0 )
+			info += va( "displ(%d) ", nodes[ i ]->mDisplacement );
+		
 		if ( !nodes[ i ]->mEntityName.empty() )
 			info += va( "name(%s) ", nodes[ i ]->mEntityName.c_str() );
 		if ( !mdlName.empty() )
@@ -645,6 +645,8 @@ void PathPlannerRecast::cmdModelSetTriangleSurface( const StringVector & args )
 	}
 }
 
+//////////////////////////////////////////////////////////////////////////
+
 void PathPlannerRecast::cmdModelSetAreaFlag( const StringVector & args )
 {
 	if ( mFlags.mViewMode == 0 )
@@ -679,4 +681,24 @@ showUsage:
 
 	EngineFuncs::ConsoleError( "nav_modelsetarea flag(s)[string].." );
 	EngineFuncs::ConsoleError( va( "	flags - combination of (%s)", flagsStr.c_str() ) );
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+void PathPlannerRecast::cmdNavAddBuildThread( const StringVector & args )
+{
+	if ( mFlags.mViewMode == 0 )
+		return;
+
+	const char *strUsage [] =
+	{
+		"nav_addbuildthread #",
+		"> numthreads: number of threads to add to help build navigation",
+	};
+
+	CHECK_NUM_PARAMS( args, 2, strUsage );
+	OPTIONAL_INT_PARAM( numTileBuildThreads, 1, 1 );
+	
+	for ( int i = 0; i < numTileBuildThreads; ++i )
+		mThreadGroupBuild.add_thread( new boost::thread( AsyncTileBuild::Run, this, i ) );
 }

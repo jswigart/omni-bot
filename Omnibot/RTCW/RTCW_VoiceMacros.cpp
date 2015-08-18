@@ -94,7 +94,7 @@ const char *strVoiceMacros[] =
 namespace RTCW_VoiceChatAssertions
 {
 	// Make sure our enum size at least matches the size of our array.
-	BOOST_STATIC_ASSERT((sizeof(strVoiceMacros) / sizeof(strVoiceMacros[0])) == NUM_RTCW_VCHATS);
+	static_assert( ( sizeof( strVoiceMacros ) / sizeof( strVoiceMacros[ 0 ] ) ) == NUM_RTCW_VCHATS, "Mismatched Voice Enumerations" );
 }
 
 int RTCW_VoiceMacros::GetVChatId(const char *_string)

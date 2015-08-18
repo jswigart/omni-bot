@@ -36,7 +36,7 @@ namespace AiState
 			Interrupted,
 		};
 
-		virtual bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt) { OBASSERT(0, "Not Implemented"); return false; }
+		virtual bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt) { return false; }
 
 		virtual void OnPathSucceeded() { mPathSuccess = true; };
 		virtual void OnPathFailed(FailType _how) { mPathFailed = _how; };
@@ -333,8 +333,6 @@ namespace AiState
 	class HighLevel : public StatePrioritized
 	{
 	public:
-		//float GetPriority();
-
 		HighLevel();
 	private:
 	};

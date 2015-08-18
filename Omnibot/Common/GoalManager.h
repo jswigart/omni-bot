@@ -14,6 +14,7 @@
 #include <set>
 
 #include "CommandReciever.h"
+#include "PathQuery.h"
 
 class System;
 class Client;
@@ -24,8 +25,8 @@ struct EntityInstance;
 
 // typedef: MapGoalPtr
 class MapGoal;
-typedef boost::shared_ptr<MapGoal> MapGoalPtr;
-typedef boost::weak_ptr<MapGoal> MapGoalWPtr;
+typedef std::shared_ptr<MapGoal> MapGoalPtr;
+typedef std::weak_ptr<MapGoal> MapGoalWPtr;
 
 // typedef: MapGoalList
 //		A list of goal entities.
@@ -40,6 +41,7 @@ typedef std::set<MapGoalPtr> MapGoalSet;
 class GoalManager : public CommandReciever
 {
 public:
+	static const int MapGoalVersion;
 	//////////////////////////////////////////////////////////////////////////
 	class Query
 	{
@@ -108,30 +110,30 @@ public:
 			MaxGoalTypes = 8
 		};
 	private:
-		int			 mNumTypes;
-		uint32_t	 mGoalTypeList[ MaxGoalTypes ];
-		int			 mTeam;
-		BitFlag32 	 mRoleMask;
-		Client *	 mClient;
-		const char * mTagName;
-		SortType	 mSortType;
-		GameEntity	 mEntity;
+		int				mNumTypes;
+		uint32_t		mGoalTypeList[ MaxGoalTypes ];
+		int				mTeam;
+		BitFlag32 		mRoleMask;
+		Client *		mClient;
+		const char *	mTagName;
+		SortType		mSortType;
+		GameEntity		mEntity;
 
-		Vector3f	 mPosition;
-		float		 mRadius;
+		Vector3f		mPosition;
+		float			mRadius;
 
-		std::string		 mNameExp;
-		std::string		 mGroupExp;
+		std::string		mNameExp;
+		std::string		mGroupExp;
 
-		QueryError	 mError;
+		QueryError		mError;
 
 		// filters
-		bool		 mSkipNoInProgressSlots;
-		bool		 mSkipNoInUseSlots;
-		bool		 mSkipDelayed;
-		bool		 mSkipInUse;
-		bool		 mCheckInRadius;
-		bool		 mCheckRangeProperty;
+		bool			mSkipNoInProgressSlots;
+		bool			mSkipNoInUseSlots;
+		bool			mSkipDelayed;
+		bool			mSkipInUse;
+		bool			mCheckInRadius;
+		bool			mCheckRangeProperty;
 	};
 	//////////////////////////////////////////////////////////////////////////
 	void InitGameGoals();
@@ -159,8 +161,6 @@ public:
 		return mMapGoalList;
 	}
 
-	static GoalManager *GetInstance();
-	static void DeleteInstance();
 	void UpdateGoalEntity( GameEntity oldent, GameEntity newent );
 	void RemoveGoalByName( const char *_goalname );
 
@@ -170,8 +170,6 @@ public:
 	GoalManager();
 	virtual ~GoalManager();
 protected:
-
-	// Commands
 	void InitCommands();
 	void cmdGoalShow( const StringVector & args );
 	void cmdGoalShowRoutes( const StringVector & args );
@@ -200,19 +198,13 @@ protected:
 	MapGoalPtr _GetGoalInRange( const Vector3f &_pos, float _radius, bool _onlydrawenabled );
 	void _SetActiveGoal( MapGoalPtr _mg );
 	void _UpdateEditModes();
-
-	static GoalManager	* mInstance;
 private:
-	MapGoalList	 mMapGoalList;
-
-	MapGoalPtr	 mActiveGoal;
-
-	EditMode	 mEditMode;
-
-	MapGoalPtr	 mHighlightedGoal;
-
-	gmGCRoot<gmTableObject> mLoadedMapGoals;
-
+	MapGoalList					mMapGoalList;
+	MapGoalPtr					mActiveGoal;
+	EditMode					mEditMode;
+	MapGoalPtr					mHighlightedGoal;
+	gmGCRoot<gmTableObject>		mLoadedMapGoals;
+	
 	void OnGoalDelete( const MapGoalPtr &_goal );
 
 	void CheckEntityForGoal( const EntityInstance &ei );

@@ -23,6 +23,11 @@ IGame *CreateGameInstance()
 
 Q4_Game::Q4_Game()
 {
+	mGameVars.mClientBase = 0;
+	mGameVars.mGameVersion = Q4_VERSION_LATEST;
+	mGameVars.mGameAbbrev = "q4";
+	mGameVars.mGameName = "Quake 4";
+	mGameVars.mPlayerHeight = 64.f;
 }
 
 Q4_Game::~Q4_Game()
@@ -34,65 +39,8 @@ Client *Q4_Game::CreateGameClient()
 	return new Q4_Client;
 }
 
-int Q4_Game::GetVersionNum() const
-{
-	return Q4_VERSION_LATEST;
-}
-
-const char *Q4_Game::GetDLLName() const
-{
-#ifdef WIN32
-	return "omni-bot\\omnibot_q4.dll";
-#else
-	return "omni-bot/omnibot_q4.so";
-#endif
-}
-
-const char *Q4_Game::GetGameName() const
-{
-	return "Quake4";
-}
-
-const char *Q4_Game::GetModSubFolder() const
-{
-#ifdef WIN32
-	return "q4\\";
-#else
-	return "q4";
-#endif
-}
-
-const char *Q4_Game::GetNavSubfolder() const
-{
-#ifdef WIN32
-	return "q4\\nav\\";
-#else
-	return "q4/nav";
-#endif
-}
-
-const char *Q4_Game::GetScriptSubfolder() const
-{
-#ifdef WIN32
-	return "q4\\scripts\\";
-#else
-	return "q4/scripts";
-#endif
-}
-
-const char *Q4_Game::GetGameDatabaseAbbrev() const
-{
-	return "quake4";
-}
-
-NavigatorID Q4_Game::GetDefaultNavigator() const
-{
-	return NAVID_RECAST;
-}
-
 bool Q4_Game::Init( System & system )
 {
-	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback( Q4_Game::Q4_GetEntityClassTraceOffset );
 	AiState::SensoryMemory::SetEntityAimOffsetCallback( Q4_Game::Q4_GetEntityClassAimOffset );
 
@@ -100,11 +48,6 @@ bool Q4_Game::Init( System & system )
 		return false;
 
 	return true;
-}
-
-void Q4_Game::GetGameVars( GameVars &_gamevars )
-{
-	_gamevars.mPlayerHeight = 64.f;
 }
 
 void Q4_Game::StartGame()

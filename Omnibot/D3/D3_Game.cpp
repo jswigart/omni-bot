@@ -24,6 +24,11 @@ IGame *CreateGameInstance()
 
 D3_Game::D3_Game()
 {
+	mGameVars.mClientBase = 0;
+	mGameVars.mGameVersion = D3_VERSION_LATEST;
+	mGameVars.mGameAbbrev = "doom3";
+	mGameVars.mGameName = "Doom 3";
+	mGameVars.mPlayerHeight = 64.f;
 }
 
 D3_Game::~D3_Game()
@@ -35,59 +40,10 @@ Client *D3_Game::CreateGameClient()
 	return new D3_Client;
 }
 
-int D3_Game::GetVersionNum() const
-{
-	return D3_VERSION_LATEST;
-}
-
-const char *D3_Game::GetDLLName() const
-{
-#ifdef WIN32
-	return "omni-bot\\omnibot_d3.dll";
-#else
-	return "omni-bot/omnibot_d3.so";
-#endif
-}
-
-const char *D3_Game::GetGameName() const
-{
-	return "Doom3";
-}
-
-const char *D3_Game::GetModSubFolder() const
-{
-#ifdef WIN32
-	return "d3\\";
-#else
-	return "d3";
-#endif
-}
-
-const char *D3_Game::GetNavSubfolder() const
-{
-	return "d3\\nav\\";
-}
-
-const char *D3_Game::GetScriptSubfolder() const
-{
-	return "d3\\scripts\\";
-}
-
-const char *D3_Game::GetGameDatabaseAbbrev() const
-{
-	return "doom3";
-}
-
-NavigatorID D3_Game::GetDefaultNavigator() const
-{
-	return NAVID_RECAST;
-}
-
 bool D3_Game::Init( System & system )
 {
 	rmt_ScopedCPUSample( D3GameInit );
 
-	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback( D3_Game::D3_GetEntityClassTraceOffset );
 	AiState::SensoryMemory::SetEntityAimOffsetCallback( D3_Game::D3_GetEntityClassAimOffset );
 
@@ -95,11 +51,6 @@ bool D3_Game::Init( System & system )
 		return false;
 
 	return true;
-}
-
-void D3_Game::GetGameVars( GameVars &_gamevars )
-{
-	_gamevars.mPlayerHeight = 64.f;
 }
 
 void D3_Game::StartGame()

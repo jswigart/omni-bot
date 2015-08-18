@@ -26,33 +26,13 @@ public:
 
 	virtual Client *CreateGameClient();
 
-	int GetVersionNum() const;
-	const char *GetDLLName() const;
-	const char *GetModSubFolder() const;
-	const char *GetGameName() const;
-	const char *GetNavSubfolder() const;
-	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const;
-	virtual NavigatorID GetDefaultNavigator() const
-	{
-		return NAVID_RECAST;
-	}
-
 	void GetNavParms( NavParms & navParms ) const;
-
-	virtual bool RendersToGame() const
-	{
-		return true;
-	}
-
-	ClientPtr &GetClientFromCorrectedGameId( int _gameid );
 
 	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
 
 	FF_Game();
 	~FF_Game();
 protected:
-	void GetGameVars( GameVars &_gamevars );
 };
 
 #endif

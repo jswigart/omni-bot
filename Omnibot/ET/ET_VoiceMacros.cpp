@@ -6,10 +6,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "common.h"
-
 #include "ET_VoiceMacros.h"
 #include "ET_Client.h"
+
+#include <type_traits>
 
 const char *strVoiceMacros[] =
 {
@@ -119,7 +119,7 @@ const char *strVoiceMacros[] =
 namespace ET_VoiceChatAssertions
 {
 	// Make sure our enum size at least matches the size of our array.
-	BOOST_STATIC_ASSERT((sizeof(strVoiceMacros) / sizeof(strVoiceMacros[0])) == NUM_ET_VCHATS);
+	static_assert( ( sizeof( strVoiceMacros ) / sizeof( strVoiceMacros[ 0 ] ) ) == NUM_ET_VCHATS, "Mismatched Voice Enumerations" );
 }
 
 int ET_VoiceMacros::GetVChatId(const char *_string)

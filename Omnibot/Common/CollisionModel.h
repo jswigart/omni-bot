@@ -25,7 +25,7 @@ typedef EnumerationValues<ContentFlags> ContentFlagsEnum;
 typedef EnumerationValues<SurfaceFlags> SurfaceFlagsEnum;
 
 struct Node;
-typedef boost::shared_ptr<Node> NodePtr;
+typedef std::shared_ptr<Node> NodePtr;
 
 class PathPlannerRecast;
 
@@ -205,7 +205,7 @@ private:
 	boost::crc_32_type::value_type	mModelCrc;
 };
 
-typedef boost::shared_ptr<CollisionModel> ModelPtr;
+typedef std::shared_ptr<CollisionModel> ModelPtr;
 
 enum ModelState
 {
@@ -218,12 +218,13 @@ enum ModelState
 
 typedef EnumerationValues<ModelState> ModelStateEnum;
 
-struct Node : public boost::enable_shared_from_this<Node>
+struct Node : public std::enable_shared_from_this<Node>
 {
 	GameEntity						mEntity;
 	EntityInfo						mEntInfo;
 	int								mSubModel;
 	int								mStaticModel;
+	int								mDisplacement;
 	std::string						mEntityName;
 	ModelState						mActiveState;
 	NavAreaFlags					mNavFlagsActive;
@@ -235,6 +236,7 @@ struct Node : public boost::enable_shared_from_this<Node>
 	ModelPtr						mModel;
 
 	RecastIO::ShapeMode				mShapeMode;
+	bool							mEnabledDefault : 1;
 	bool							mEnabled : 1;
 	bool							mSolid : 1;
 	bool							mDynamic : 1;
@@ -270,6 +272,7 @@ struct Node : public boost::enable_shared_from_this<Node>
 
 	void FindNodeWithSubModel( int subModel, NodePtr & node );
 	void FindNodeWithStaticModel( int staticModelId, NodePtr & node );
+	void FindNodeWithDisplacement( int displacementId, NodePtr & node );
 	void FindNodeWithEntity( GameEntity entity, NodePtr & node );
 	void FindNodeWithName( const std::string& entName, NodePtr & node );
 	
@@ -304,8 +307,8 @@ struct CollisionWorld
 	CollisionWorld();
 	virtual ~CollisionWorld();
 private:
-	NodePtr CreateNodeForEntityModel( const GameEntity entity, const GameModelInfo & modelInfo, bool saveable );
-	NodePtr CreateNodeForEntityBounds( const GameEntity entity, const GameModelInfo & modelInfo, bool saveable );
+	NodePtr CreateNodeForEntityModel( const GameEntity entity, const GameModelInfo & modelInfo, const EntityInfo & entInfo );
+	NodePtr CreateNodeForEntityBounds( const GameEntity entity, const GameModelInfo & modelInfo, const EntityInfo & entInfo );
 	
 	void DeleteNodeForEntity_r( GameEntity entity, NodePtr & node );
 };

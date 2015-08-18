@@ -13,7 +13,7 @@
 
 static int g_NextScriptItem = bbk_FirstScript;
 
-BlackBoard	g_Blackboard;
+BlackBoard	gBlackboard;
 
 BlackBoard::BlackBoard()
 {
@@ -230,8 +230,6 @@ BBRecordPtr BlackBoard::AllocRecord(int _type)
 	default:
 		if(_type >= bbk_FirstScript && _type < g_NextScriptItem)
 			ptr.reset(new bbScriptItem(_type));
-		else
-			OBASSERT(0, "Invalid Blackboard Item Type: %d", _type);
 	}
 	return ptr;
 }
@@ -247,7 +245,7 @@ static int GM_CDECL gmfPostRecord(gmThread *a_thread)
 	if(bbr)
 	{
 		bbr->FromScriptTable(a_thread->GetMachine(), props);
-		g_Blackboard.PostBBRecord(bbr);
+		gBlackboard.PostBBRecord(bbr);
 	}
 	else
 	{
@@ -266,7 +264,7 @@ static int GM_CDECL gmfGetRecords(gmThread *a_thread)
 
 	enum { MaxRecords = 64 };
 	BBRecordPtr records[MaxRecords];
-	int c = g_Blackboard.GetBBRecords(type,records,MaxRecords);
+	int c = gBlackboard.GetBBRecords(type,records,MaxRecords);
 	if(c > 0)
 	{
 		DisableGCInScope gcEn(a_thread->GetMachine());
@@ -289,7 +287,7 @@ static int GM_CDECL gmfGetNumRecords(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_INT_PARAM(type, 0);
 	GM_INT_PARAM(target, 1, bbk_All);
-	a_thread->PushInt(g_Blackboard.GetNumBBRecords(type, target));
+	a_thread->PushInt(gBlackboard.GetNumBBRecords(type, target));
 	return GM_OK;
 }
 static int GM_CDECL gmfRemoveByPoster(gmThread *a_thread)
@@ -297,7 +295,7 @@ static int GM_CDECL gmfRemoveByPoster(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(0);
 	GM_CHECK_INT_PARAM(poster, 0);
 	GM_INT_PARAM(type, 1, bbk_All);
-	a_thread->PushInt(g_Blackboard.RemoveBBRecordByPoster(poster, type));
+	a_thread->PushInt(gBlackboard.RemoveBBRecordByPoster(poster, type));
 	return GM_OK;
 }
 
@@ -306,7 +304,7 @@ static int GM_CDECL gmfRemoveByTarget(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(0);
 	GM_CHECK_INT_PARAM(target, 0);
 	GM_INT_PARAM(type, 1, bbk_All);
-	a_thread->PushInt(g_Blackboard.RemoveBBRecordByTarget(target, type));
+	a_thread->PushInt(gBlackboard.RemoveBBRecordByTarget(target, type));
 	return GM_OK;
 }
 static int GM_CDECL gmfRecordExistsOwner(gmThread *a_thread)
@@ -314,7 +312,7 @@ static int GM_CDECL gmfRecordExistsOwner(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(2);
 	GM_CHECK_INT_PARAM(type, 0);
 	GM_CHECK_INT_PARAM(owner, 1);
-	g_Blackboard.RecordExistsOwner(type, owner);
+	gBlackboard.RecordExistsOwner(type, owner);
 	return GM_OK;
 }
 
@@ -323,7 +321,7 @@ static int GM_CDECL gmfRecordExistsTarget(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(2);
 	GM_CHECK_INT_PARAM(type, 0);
 	GM_CHECK_INT_PARAM(target, 1);
-	g_Blackboard.RecordExistsTarget(type, target);
+	gBlackboard.RecordExistsTarget(type, target);
 	return GM_OK;
 }
 
@@ -331,7 +329,7 @@ static int GM_CDECL gmfPrint(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);
 	GM_INT_PARAM(type, 0, bbk_All);
-	g_Blackboard.DumpBlackBoardContentsToGame(type);
+	gBlackboard.DumpBlackBoardContentsToGame(type);
 	return GM_OK;
 }
 

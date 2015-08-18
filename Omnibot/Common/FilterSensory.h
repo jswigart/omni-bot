@@ -138,6 +138,6 @@ private:
 	bool PassesClassFilter( const EntityInfo& entInfo ) const;
 };
 
-typedef boost::shared_ptr<FilterSensory> FilterPtr;
+typedef std::shared_ptr<FilterSensory> FilterPtr;
 
 #endif

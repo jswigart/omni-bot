@@ -21,40 +21,82 @@
 #include "IGameManager.h"
 #include "gmCall.h"
 
-NavParms::NavParms()
-{
-	AgentHeightStand = 64.f;
-	AgentHeightCrouch = 32.f;
-	AgentRadius = 14.f;
-	AgentMaxClimb = 18.f;
+#include <type_traits>
 
-	WalkableSlopeAngle = 45.0f;
+GameVars::GameVars()
+	: mPlayerHeight( 100 )
+	, mClientBase( 0 )
+	, mGameAbbrev( "game" )
+	, mGameName( "Unknown Game" )
+	, mRendersToGame( false )
+	, mVersionString( "0.9" )
+{	
+}
+
+const std::string GameVars::GetDLLName() const
+{
+#ifdef WIN32
+	return va( "omni-bot\\omnibot_%s.dll", mGameAbbrev.c_str() ).c_str();
+#else
+	return va( "omni-bot/omnibot_%s.so", mGameAbbrev.c_str() ).c_str();
+#endif
+}
+
+const std::string GameVars::GetModSubFolder() const
+{
+#ifdef WIN32
+	return va( "%s\\", mGameAbbrev.c_str() ).c_str();
+#else
+	return va( "%s", mGameAbbrev.c_str() ).c_str();
+#endif
+}
+
+const std::string GameVars::GetNavSubfolder() const
+{
+#ifdef WIN32
+	return va( "%s\\nav\\", mGameAbbrev.c_str() ).c_str();
+#else
+	return va( "%s/nav", mGameAbbrev.c_str() ).c_str();
+#endif
+}
+
+const std::string GameVars::GetScriptSubfolder() const
+{
+#ifdef WIN32
+	return va( "%s\\scripts\\", mGameAbbrev.c_str() ).c_str();
+#else
+	return va( "%s/scripts", mGameAbbrev.c_str() ).c_str();
+#endif
+}
+
+NavParms::NavParms()
+	: AgentHeightStand( 64.f )
+	, AgentHeightCrouch( 32.f )
+	, AgentRadius( 14.f )
+	, AgentMaxClimb( 18.f )
+	, WalkableSlopeAngle( 45.0f )
+{
 }
 
 int32_t IGame::mGameMsec = 0;
 int32_t IGame::mDeltaMsec = 0;
 int32_t IGame::mStartTimeMsec = 0;
 int32_t IGame::mGameFrame = 0;
+
 float IGame::mGravity = 0;
 bool IGame::mCheatsEnabled = false;
 bool IGame::mBotJoining = false;
 
-IGame::GameVars IGame::mGameVars;
-
 GameState IGame::mGameState = GAME_STATE_INVALID;
 GameState IGame::mLastGameState = GAME_STATE_INVALID;
-
-IGame::GameVars::GameVars()
-	: mPlayerHeight( 100 )
-{
-}
 
 EntityInstance IGame::mGameEntities[ Constants::MAX_ENTITIES ];
 int IGame::mMaxEntity = 0;
 
-typedef boost::shared_ptr<AiState::ScriptGoal> ScriptGoalPtr;
+typedef std::shared_ptr<AiState::ScriptGoal> ScriptGoalPtr;
 typedef std::list<ScriptGoalPtr> ScriptGoalList;
-ScriptGoalList g_ScriptGoalList;
+
+ScriptGoalList gScriptGoalList;
 
 #include "google/protobuf/text_format.h"
 #include "google/protobuf/io/zero_copy_stream_impl.h"
@@ -70,14 +112,14 @@ IGame::~IGame()
 {
 }
 
-const char *IGame::GetVersion() const
+const GameVars &IGame::GetGameVars() const
 {
-	return "0.83";
+	return mGameVars;
 }
 
 bool IGame::CheckVersion( int _version )
 {
-	return _version == GetVersionNum();
+	return _version == GetGameVars().mGameVersion;
 }
 
 GoalManager *IGame::AllocGoalManager()
@@ -87,8 +129,6 @@ GoalManager *IGame::AllocGoalManager()
 
 bool IGame::Init( System & system )
 {
-	GetGameVars( mGameVars );
-
 	mStartTimeMsec = gEngineFuncs->GetGameTime();
 
 	for ( int i = 0; i < MaxDeletedThreads; ++i )
@@ -110,16 +150,8 @@ bool IGame::Init( System & system )
 	gMapGoalDatabase.LoadMapGoalDefinitions( true );
 
 	// Reset the global blackboard.
-	g_Blackboard.RemoveAllBBRecords( bbk_All );
-
-	//////////////////////////////////////////////////////////////////////////
-	/*.mStateRoot = new AiState::GlobalRoot;
- mStateRoot->FixRoot();
- InitGlobalStates();
- mStateRoot->FixRoot();
- mStateRoot->InitializeStates();*/
-	//////////////////////////////////////////////////////////////////////////
-
+	gBlackboard.RemoveAllBBRecords( bbk_All );
+	
 	return true;
 }
 
@@ -143,7 +175,7 @@ void IGame::Shutdown()
 	}
 
 	gMapGoalDatabase.Unload();
-	g_ScriptGoalList.clear();
+	gScriptGoalList.clear();
 
 	OB_DELETE( mStateRoot );
 }
@@ -351,7 +383,6 @@ void IGame::GetRoleEnumeration( const IntEnum *&_ptr, int &num )
 void IGame::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
 {
 	_table->Set( _machine, "DISCONNECTED", gmVariable( GAME_CLIENTDISCONNECTED ) );
-
 	_table->Set( _machine, "START_GAME", gmVariable( GAME_STARTGAME ) );
 	_table->Set( _machine, "END_GAME", gmVariable( GAME_ENDGAME ) );
 	_table->Set( _machine, "NEW_ROUND", gmVariable( GAME_NEWROUND ) );
@@ -361,7 +392,6 @@ void IGame::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "GOAL_ABORTED", gmVariable( GOAL_ABORTED ) );
 	_table->Set( _machine, "PATH_SUCCESS", gmVariable( PATH_SUCCESS ) );
 	_table->Set( _machine, "PATH_FAILED", gmVariable( PATH_FAILED ) );
-	_table->Set( _machine, "AIM_SUCCESS", gmVariable( AIM_ONTARGET ) );
 	_table->Set( _machine, "SCRIPTMSG", gmVariable( MESSAGE_SCRIPTMSG ) );
 	_table->Set( _machine, "SPAWNED", gmVariable( MESSAGE_SPAWN ) );
 	_table->Set( _machine, "CHANGETEAM", gmVariable( MESSAGE_CHANGETEAM ) );
@@ -419,11 +449,7 @@ static const IntEnum gGroupMapping [] =
 	IntEnum( "PLAYER", ENT_GRP_PLAYER ),
 	IntEnum( "PLAYERSTART", ENT_GRP_PLAYERSTART ),
 	IntEnum( "BUTTON", ENT_GRP_BUTTON ),
-	IntEnum( "HEALTH", ENT_GRP_HEALTH ),
-	IntEnum( "AMMO1", ENT_GRP_AMMO1 ),
-	IntEnum( "AMMO2", ENT_GRP_AMMO2 ),
-	IntEnum( "ARMOR", ENT_GRP_ARMOR ),
-	IntEnum( "ENERGY", ENT_GRP_ENERGY ),
+	IntEnum( "RESUPPLY", ENT_GRP_RESUPPLY ),
 	IntEnum( "LADDER", ENT_GRP_LADDER ),
 	IntEnum( "TELEPORTER", ENT_GRP_TELEPORTER ),
 	IntEnum( "LIFT", ENT_GRP_LIFT ),
@@ -434,6 +460,7 @@ static const IntEnum gGroupMapping [] =
 	IntEnum( "WEAPON", ENT_GRP_WEAPON ),
 	IntEnum( "FLAG", ENT_GRP_FLAG ),
 	IntEnum( "CAPPOINT", ENT_GRP_FLAGCAPPOINT ),
+	IntEnum( "CONTROLPOINT", ENT_GRP_CONTROLPOINT ),
 	IntEnum( "PROP", ENT_GRP_PROP ),
 	IntEnum( "PROP_STATIC", ENT_GRP_PROP_STATIC ),
 	IntEnum( "PROP_EXPLODE", ENT_GRP_PROP_EXPLODE ),
@@ -503,7 +530,6 @@ void IGame::InitScriptWeaponClasses( gmMachine *_machine, gmTableObject *_table 
 	GetWeaponEnumeration( wpnEnum, numWpns );
 	for ( int i = 0; i < numWpns; ++i )
 	{
-		OBASSERT( _table->Get( _machine, wpnEnum[ i ].mKey ).IsNull(), "Weapon class overwrite!" );
 		_table->Set( _machine, wpnEnum[ i ].mKey, gmVariable( wpnEnum[ i ].mValue ) );
 	}
 }
@@ -671,7 +697,7 @@ void IGame::UpdateGame( System & system )
 
 	PropogateDeletedThreads();
 
-	g_Blackboard.PurgeExpiredRecords();
+	gBlackboard.PurgeExpiredRecords();
 
 	UpdateProcesses();
 
@@ -734,8 +760,6 @@ void IGame::UpdateSync( RemoteLib::DebugConnection * connection, Remote::Game & 
 
 		if ( fieldList.size() > 0 ) {
 			entityUpdate->set_uid( ent.GetEnt().mEntity.AsInt() );
-
-			OBASSERT( entityUpdate->IsInitialized(), "Error Building Entity Message:" );
 
 			const int bufferSize = 32;
 			char buffer[ bufferSize ];
@@ -882,6 +906,7 @@ void IGame::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb
 				mGameEntities[ index ].mTimeStamp = IGame::GetTime();
 
 				System::mInstance->mGoalManager->EntityCreated( mGameEntities[ index ] );
+				System::mInstance->mTacticalManager->EntityCreated( mGameEntities[ index ] );
 				System::mInstance->mNavigation->EntityCreated( mGameEntities[ index ] );
 
 #ifdef _DEBUG
@@ -912,6 +937,7 @@ void IGame::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb
 					Utils::OutputDebug( kNormal, "Entity: %d deleted: (%s:%s)\n", index, groupName.c_str(), className.c_str() );
 #endif
 					System::mInstance->mGoalManager->EntityDeleted( mGameEntities[ index ] );
+					System::mInstance->mTacticalManager->EntityDeleted( mGameEntities[ index ] );
 					System::mInstance->mNavigation->EntityDeleted( mGameEntities[ index ] );
 
 					mGameEntities[ index ].mEntity.Reset();
@@ -929,7 +955,7 @@ void IGame::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb
 					}
 				}
 
-				GoalManager::GetInstance()->RemoveGoalByEntity( m->mEntity );
+				System::mInstance->mGoalManager->RemoveGoalByEntity( m->mEntity );
 				//////////////////////////////////////////////////////////////////////////
 				if ( System::mInstance->mNavigation )
 				{
@@ -1048,10 +1074,6 @@ void IGame::DispatchEvent( int _dest, const MessageHelper &_message )
 			cp->SendEvent( _message );
 			return;
 		}
-		else
-		{
-			//OBASSERT(0, "Invalid Event Target");
-		}
 	}
 	Utils::OutputDebug( kError, "BAD DESTINATION ID: %d FOR EVENT %d", _dest, _message.GetMessageId() );
 }
@@ -1062,8 +1084,7 @@ void IGame::ClientJoined( const Event_SystemClientConnected *_msg )
 	if ( _msg->mIsBot && !mBotJoining )
 	{
 		CheckGameState();
-		OBASSERT( GameStarted(), "Game Not Started Yet" );
-		OBASSERT( _msg->mGameId < Constants::MAX_PLAYERS && _msg->mGameId >= 0, "Invalid Client Index!" );
+
 		// If a bot isn't created by now, it has probably been a map change,
 		// and the game has re-added the clients itself.
 
@@ -1089,7 +1110,6 @@ void IGame::ClientJoined( const Event_SystemClientConnected *_msg )
 void IGame::ClientLeft( const Event_SystemClientDisConnected *_msg )
 {
 	Utils::OutputDebug( kInfo, "Client Left Game, ClientNum: %d", _msg->mGameId );
-	OBASSERT( _msg->mGameId < Constants::MAX_PLAYERS && _msg->mGameId >= 0, "Invalid Client Index!" );
 
 	ClientPtr &cp = GetClientFromCorrectedGameId( _msg->mGameId );
 	if ( cp )
@@ -1163,13 +1183,13 @@ void IGame::StartTraining()
 void IGame::InitMapScript()
 {
 	// Get Goals from the game.
-	GoalManager::GetInstance()->Reset();
+	System::mInstance->mGoalManager->Reset();
 
 	ErrorObj err;
-	GoalManager::GetInstance()->Load( std::string( gEngineFuncs->GetMapName() ), err );
+	System::mInstance->mGoalManager->Load( std::string( gEngineFuncs->GetMapName() ), err );
 	err.PrintToConsole();
 
-	GoalManager::GetInstance()->InitGameGoals();
+	System::mInstance->mGoalManager->InitGameGoals();
 
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 	DisableGCInScope gcEn( pMachine );
@@ -1367,7 +1387,7 @@ void IGame::cmdDumpBlackboard( const StringVector & args )
 		if ( !Utils::ConvertString( args[ 1 ], iType ) )
 			return;
 	}
-	g_Blackboard.DumpBlackBoardContentsToGame( iType );
+	gBlackboard.DumpBlackBoardContentsToGame( iType );
 }
 
 void IGame::cmdDebugBot( const StringVector & args )
@@ -1607,35 +1627,33 @@ bool IGame::RemoveUpdateFunction( const std::string &_name )
 	return false;
 }
 
-void IGame::AddBot( Msg_Addbot &_addbot, bool _createnow )
+void IGame::AddBot( Msg_Addbot & addbot, bool createnow )
 {
 	//////////////////////////////////////////////////////////////////////////
-	if ( !_addbot.mName[ 0 ] )
+	if ( !addbot.mName[ 0 ] )
 	{
 		NamePtr nr = NameManager::GetInstance()->GetName();
 		std::string name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
-		Utils::StringCopy( _addbot.mName, name.c_str(), sizeof( _addbot.mName ) );
+		Utils::StringCopy( addbot.mName, name.c_str(), sizeof( addbot.mName ) );
 	}
 	//////////////////////////////////////////////////////////////////////////
-	OBASSERT( GameStarted(), "Game Not Started Yet" );
-	if ( _createnow )
+	if ( createnow )
 		mBotJoining = true;
-	int iGameID = InterfaceFuncs::Addbot( _addbot );
-	if ( _createnow )
+	int gameId = InterfaceFuncs::Addbot( addbot );
+	if ( createnow )
 		mBotJoining = false;
-	if ( iGameID != -1 && _createnow )
+	if ( gameId != -1 && createnow )
 	{
-		ClientPtr &cp = GetClientFromCorrectedGameId( iGameID );
-
+		ClientPtr &cp = GetClientFromCorrectedGameId( gameId );
 		if ( !cp )
 		{
 			// Initialize the appropriate slot in the list.
 			cp.reset( CreateGameClient() );
-			cp->Init( iGameID );
+			cp->Init( gameId );
 		}
 
-		cp->mDesiredTeam = _addbot.mTeam;
-		cp->mDesiredClass = _addbot.mClass;
+		cp->mDesiredTeam = addbot.mTeam;
+		cp->mDesiredClass = addbot.mClass;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Script callbacks
@@ -1654,20 +1672,12 @@ void IGame::AddBot( Msg_Addbot &_addbot, bool _createnow )
 			cp->mDesiredClass = vclass.IsInt() ? vclass.GetInt() : -1;
 		}
 		//////////////////////////////////////////////////////////////////////////
-		gEngineFuncs->ChangeTeam( iGameID, cp->mDesiredTeam, NULL );
-		gEngineFuncs->ChangeClass( iGameID, cp->mDesiredClass, NULL );
+		gEngineFuncs->ChangeTeam( gameId, cp->mDesiredTeam, NULL );
+		gEngineFuncs->ChangeClass( gameId, cp->mDesiredClass, NULL );
 
 		cp->CheckTeamEvent();
 		cp->CheckClassEvent();
 	}
-}
-
-ClientPtr IGame::GetClientByGameId( int _gameId )
-{
-	for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
-		if ( mClientList[ i ] && mClientList[ i ]->GetGameID() == _gameId )
-			return ClientPtr( mClientList[ i ] );
-	return ClientPtr();
 }
 
 ClientPtr IGame::GetClientByIndex( int _index )
@@ -1677,9 +1687,9 @@ ClientPtr IGame::GetClientByIndex( int _index )
 	return ClientPtr();
 }
 
-ClientPtr &IGame::GetClientFromCorrectedGameId( int _gameid )
+ClientPtr &IGame::GetClientFromCorrectedGameId( int gameid )
 {
-	return mClientList[ _gameid ];
+	return mClientList[ GetGameVars().mClientBase + gameid ];
 }
 
 bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::stringstream &err )
@@ -1710,7 +1720,7 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 		"entity",
 		"mapgoal",
 	};
-	BOOST_STATIC_ASSERT( sizeof( ArgTypeNames ) / sizeof( ArgTypeNames[ 0 ] ) == kNumArgTypes );
+	static_assert( sizeof( ArgTypeNames ) / sizeof( ArgTypeNames[ 0 ] ) == kNumArgTypes, "Mismatched Arg Types" );
 
 	//////////////////////////////////////////////////////////////////////////
 	// Subject
@@ -1813,7 +1823,6 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 		{
 			gmVariable o = _thread->Param( 2 + i );
 
-			OBASSERT( ExpectedArgTypes[ i ] != kTypeNone, "Invalid arg expectation" );
 			switch ( ExpectedArgTypes[ i ] )
 			{
 				case kTypeInt:
@@ -1865,7 +1874,7 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 					if ( o.IsString() )
 					{
 						const char * goalName = o.GetCStringSafe( 0 );
-						MapGoalPtr mg = GoalManager::GetInstance()->GetGoal( goalName );
+						MapGoalPtr mg = System::mInstance->mGoalManager->GetGoal( goalName );
 						if ( mg )
 						{
 							_criteria.mOperand[ i ] = obUserData( mg->GetSerialNum() );
@@ -1890,7 +1899,6 @@ bool IGame::CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::st
 					break;
 				}
 				default:
-					OBASSERT( false, "bad" );
 					break;
 			}
 			continue;
@@ -1937,7 +1945,7 @@ void IGame::LoadGoalScripts( bool _clearold )
 		LOG( "Loading Goal Definition: " << script );
 		if ( ScriptManager::GetInstance()->ExecuteFile( script, iThreadId, &varThis ) && ptr->GetName()[ 0 ] )
 		{
-			g_ScriptGoalList.push_back( ptr );
+			gScriptGoalList.push_back( ptr );
 
 			// add to global table.
 			pScriptGoalTable->Set( pMachine, ptr->GetName().c_str(), gmVariable( pUserObj ) );
@@ -1945,34 +1953,8 @@ void IGame::LoadGoalScripts( bool _clearold )
 		else
 		{
 			LOG( "Error Running Goal Script: " << ( *cIt ).string() );
-			OBASSERT( 0, "Error Running Goal Script: %s", ( *cIt ).string().c_str() );
 		}
 	}
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-int IGame::GetDebugWindowNumClients() const
-{
-	int num = 0;
-	for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
-		if ( mClientList[ i ] )
-			++num;
-	return num;
-}
-
-ClientPtr IGame::GetDebugWindowClient( int index ) const
-{
-	for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
-	{
-		if ( mClientList[ i ] )
-		{
-			if ( index == 0 )
-				return mClientList[ i ];
-			--index;
-		}
-	}
-	return ClientPtr();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -2029,6 +2011,15 @@ bool IGame::IsEntityValid( const GameEntity & hndl )
 		}
 	}
 	return false;
+}
+
+GameEntity IGame::GetEntityByIndex( size_t index )
+{
+	if ( index >= 0 && index < Constants::MAX_ENTITIES )
+	{
+		return mGameEntities[ index ].mEntity;
+	}
+	return GameEntity();
 }
 
 bool IGame::GetEntityInfo( const GameEntity & hndl, EntityInfo& entInfo )
@@ -2096,10 +2087,6 @@ void IGame::AddDeletedThread( int threadId )
 	{
 		mDeletedThreads[ mNumDeletedThreads++ ] = threadId;
 	}
-	else
-	{
-		OBASSERT( mNumDeletedThreads < MaxDeletedThreads, "out of slots" );
-	}
 }
 
 static bool _ThreadIdSort( int id1, int id2 )
@@ -2114,6 +2101,7 @@ static bool _ThreadIdSort( int id1, int id2 )
 void IGame::PropogateDeletedThreads()
 {
 	rmt_ScopedCPUSample( IGamePropogateDeletedThreads );
+
 	if ( mNumDeletedThreads > 0 )
 	{
 		std::sort( mDeletedThreads, mDeletedThreads + mNumDeletedThreads, _ThreadIdSort );

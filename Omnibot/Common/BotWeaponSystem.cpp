@@ -112,9 +112,9 @@ namespace AiState
 			Vector3f vRght = qr.Rotate( vGunCenter );
 
 			Vector3f vEye = GetClient()->GetEyePosition();
-			RenderBuffer::AddLine( vEye, vEye + vGunCenter*64.f, COLOR::ORANGE, 0.1f );
-			RenderBuffer::AddLine( vEye, vEye + vLeft*64.f, COLOR::RED, 0.1f );
-			RenderBuffer::AddLine( vEye, vEye + vRght*64.f, COLOR::RED, 0.1f );
+			RenderBuffer::AddLine( vEye, vEye + vGunCenter*64.f, COLOR::ORANGE );
+			RenderBuffer::AddLine( vEye, vEye + vLeft*64.f, COLOR::RED );
+			RenderBuffer::AddLine( vEye, vEye + vRght*64.f, COLOR::RED );
 		}
 	}
 	void AttackTarget::GetDebugString( std::stringstream &out )
@@ -282,9 +282,7 @@ namespace AiState
 		{
 			if ( ( *it )->GetWeaponID() == _weaponId )
 			{
-				WeaponPtr wpn = gWeaponDatabase.CopyWeapon( GetClient(), _weaponId );
-				OBASSERT( wpn, "Unknown Weapon!" );
-				( *it ) = wpn;
+				( *it ) = gWeaponDatabase.CopyWeapon( GetClient(), _weaponId );
 			}
 		}
 
@@ -324,7 +322,6 @@ namespace AiState
 
 	void WeaponSystem::AddWeapon( WeaponPtr _weapon )
 	{
-		OBASSERT( !HasWeapon( _weapon->GetWeaponID() ), "Already Have Weapon %s!", _weapon->GetWeaponName().c_str() );
 		if ( !HasWeapon( _weapon->GetWeaponID() ) )
 		{
 			mWeaponList.push_back( _weapon );
@@ -476,7 +473,6 @@ namespace AiState
 		{
 			GetClient()->SetUserFlag( Client::FL_USINGMOUNTEDWEAPON, true );
 			mCurrentWeapon = GetWeapon( mounted.mWeaponId, false );
-			OBASSERT( mCurrentWeapon, "Unknown Mountable Weapon: %d", mounted.mWeaponId );
 			mDesiredWeaponID = mounted.mWeaponId;
 			mCurrentRequestOwner = GetNameHash();
 		}
@@ -504,7 +500,6 @@ namespace AiState
 						break;
 					}
 				}
-				//OBASSERT(bFound, va("Unknown Weapon: %d", currentWeapon.mWeaponId));
 			}
 		}
 

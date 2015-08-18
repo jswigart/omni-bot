@@ -23,14 +23,6 @@ namespace EngineFuncs
 	bool TraceLine( obTraceResult &_tr, const Vector3f &_start, const Vector3f &_end,
 		const AABB *_aabb, int _mask, int _user, obBool _usepvs )
 	{
-		static bool bDraw = false;
-		{
-			if ( bDraw )
-			{
-				RenderBuffer::AddLine( _start, _end, COLOR::BLUE, 0.02f );
-			}
-		}
-
 		_tr.mEndpos[ 0 ] = _end.X();
 		_tr.mEndpos[ 1 ] = _end.Y();
 		_tr.mEndpos[ 2 ] = _end.Z();

@@ -9,7 +9,7 @@
 #include "ETQW_VoiceMacros.h"
 #include "ETQW_Client.h"
 
-#include "common.h"
+#include <type_traits>
 
 const char *strVoiceMacros[] =
 {
@@ -94,7 +94,7 @@ const char *strVoiceMacros[] =
 namespace ETQW_VoiceChatAssertions
 {
 	// Make sure our enum size at least matches the size of our array.
-	BOOST_STATIC_ASSERT((sizeof(strVoiceMacros) / sizeof(strVoiceMacros[0])) == NUM_ETQW_VCHATS);
+	static_assert( ( sizeof( strVoiceMacros ) / sizeof( strVoiceMacros[ 0 ] ) ) == NUM_ETQW_VCHATS, "Mismatched Voice Enumerations" );
 }
 
 int ETQW_VoiceMacros::GetVChatId(const char *_string)

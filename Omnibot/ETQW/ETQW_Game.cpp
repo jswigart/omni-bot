@@ -26,15 +26,15 @@ IGame *CreateGameInstance()
 
 ETQW_Game::ETQW_Game()
 {
+	mGameVars.mClientBase = 0;
+	mGameVars.mGameVersion = ETQW_VERSION_LATEST;
+	mGameVars.mGameAbbrev = "etqw";
+	mGameVars.mGameName = "Enemy Territory - Quake Wars";
+	mGameVars.mPlayerHeight = 64.f;
 }
 
 ETQW_Game::~ETQW_Game()
 {
-}
-
-int ETQW_Game::GetVersionNum() const
-{
-	return ETQW_VERSION_LATEST;
 }
 
 Client *ETQW_Game::CreateGameClient()
@@ -42,60 +42,8 @@ Client *ETQW_Game::CreateGameClient()
 	return new ETQW_Client;
 }
 
-const char *ETQW_Game::GetDLLName() const
-{
-#ifdef WIN32
-	return "omni-bot\\omnibot_etqw.dll";
-#else
-	return "omni-bot/omnibot_etqw.so";
-#endif
-}
-
-const char *ETQW_Game::GetGameName() const
-{
-	return "Enemy Territory - Quake Wars";
-}
-
-const char *ETQW_Game::GetModSubFolder() const
-{
-#ifdef WIN32
-	return "etqw\\";
-#else
-	return "etqw";
-#endif
-}
-
-const char *ETQW_Game::GetNavSubfolder() const
-{
-#ifdef WIN32
-	return "etqw\\nav\\";
-#else
-	return "etqw/nav";
-#endif
-}
-
-const char *ETQW_Game::GetScriptSubfolder() const
-{
-#ifdef WIN32
-	return "etqw\\scripts\\";
-#else
-	return "etqw/scripts";
-#endif
-}
-
-const char *ETQW_Game::GetGameDatabaseAbbrev() const
-{
-	return "etqw";
-}
-
-bool ETQW_Game::ReadyForDebugWindow() const
-{
-	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING;
-}
-
 bool ETQW_Game::Init( System & system )
 {
-	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback( ETQW_Game::ETQW_GetEntityClassTraceOffset );
 	AiState::SensoryMemory::SetEntityAimOffsetCallback( ETQW_Game::ETQW_GetEntityClassAimOffset );
 
@@ -103,11 +51,6 @@ bool ETQW_Game::Init( System & system )
 		return false;
 
 	return true;
-}
-
-void ETQW_Game::GetGameVars( GameVars &_gamevars )
-{
-	_gamevars.mPlayerHeight = 64.f;
 }
 
 static const IntEnum ETQW_TeamEnum [] =
@@ -304,7 +247,6 @@ void ETQW_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
 		Utils::StringCopy( _addbot.mName, name.c_str(), sizeof( _addbot.mName ) );
 	}
 	//////////////////////////////////////////////////////////////////////////
-	OBASSERT( GameStarted(), "Game Not Started Yet" );
 	if ( _createnow )
 		mBotJoining = true;
 	int iGameID = InterfaceFuncs::Addbot( _addbot );
@@ -456,8 +398,10 @@ void ETQW_Game::ClientJoined( const Event_SystemClientConnected *_msg )
 	if ( _msg->mIsBot && !mBotJoining )
 	{
 		CheckGameState();
-		OBASSERT( GameStarted(), "Game Not Started Yet" );
-		OBASSERT( _msg->mGameId < Constants::MAX_PLAYERS && _msg->mGameId >= 0, "Invalid Client Index!" );
+
+		assert( GameStarted() );
+		assert( _msg->mGameId < Constants::MAX_PLAYERS && _msg->mGameId >= 0 );
+
 		// If a bot isn't created by now, it has probably been a map change,
 		// and the game has re-added the clients itself.
 		ClientPtr &cp = GetClientFromCorrectedGameId( _msg->mGameId );

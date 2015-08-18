@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdint.h>
+#include <sstream>
 
 #include "Trajectory.h"
 #include "gmGCRoot.h"
@@ -24,6 +25,7 @@
 #include "Opcode.h"
 #include "OPC_IceHook.h"
 #include "modeldata.pb.h"
+
 
 //////////////////////////////////////////////////////////////////////////
 

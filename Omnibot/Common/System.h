@@ -7,6 +7,7 @@ class IGame;
 class ScriptManager;
 class PathPlannerBase;
 class GoalManager;
+class TacticalManager;
 class TriggerManager;
 class NameManager;
 class GameAnalytics;
@@ -18,6 +19,7 @@ public:
 	ScriptManager *			mScript;
 	PathPlannerBase *       mNavigation;
 	GoalManager	*			mGoalManager;
+	TacticalManager*		mTacticalManager;
 	TriggerManager *		mTriggerManager;
 	NameManager *			mNameManager;
 	GameAnalytics *			mAnalytics;

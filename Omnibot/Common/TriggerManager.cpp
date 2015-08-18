@@ -167,10 +167,6 @@ public:
 			it->mTimeStamp = IGame::GetTime();
 			FireEnterEvent( _ent.mEntity );
 		}
-		else
-		{
-			OBASSERT( 0, "Out of InTrigger slots!" );
-		}
 	}
 
 	void Update()

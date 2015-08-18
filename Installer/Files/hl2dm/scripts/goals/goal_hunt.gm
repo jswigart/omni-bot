@@ -31,15 +31,15 @@ this.GetPriority = function()
 {
 	this.TargetEntity = this.Bot.GetTarget();
         
-        if ( this.TargetEntity )
-        {
-                this.TargetPosition = GetEntPosition(this.TargetEntity);
-                
-                if ( this.TargetPosition && this.Bot.DistanceTo(this.TargetPosition) > this.DistanceTolerance )
-                {
-                        this.Priority = this.HuntPriority;
-                }
-        }
+	if ( this.TargetEntity )
+	{
+		this.TargetPosition = GetEntPosition(this.TargetEntity);
+		
+		if ( this.TargetPosition && this.Bot.DistanceTo(this.TargetPosition) > this.DistanceTolerance )
+		{
+			this.Priority = this.HuntPriority;
+		}
+	}
 	
 	sleep(1);
 };

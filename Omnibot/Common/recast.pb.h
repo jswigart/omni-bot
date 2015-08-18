@@ -1015,6 +1015,7 @@ class NodeState : public ::google::protobuf::Message {
   enum TypeCase {
     kSubModelId = 1,
     kStaticModelId = 2,
+    kDisplacementId = 3,
     TYPE_NOT_SET = 0,
   };
 
@@ -1061,6 +1062,13 @@ class NodeState : public ::google::protobuf::Message {
   static const int kStaticModelIdFieldNumber = 2;
   inline ::google::protobuf::int32 staticmodelid() const;
   inline void set_staticmodelid(::google::protobuf::int32 value);
+
+  // optional int32 displacementId = 3;
+  inline bool has_displacementid() const;
+  inline void clear_displacementid();
+  static const int kDisplacementIdFieldNumber = 3;
+  inline ::google::protobuf::int32 displacementid() const;
+  inline void set_displacementid(::google::protobuf::int32 value);
 
   // optional bool enabled = 5 [default = true];
   inline bool has_enabled() const;
@@ -1126,6 +1134,7 @@ class NodeState : public ::google::protobuf::Message {
  private:
   inline void set_has_submodelid();
   inline void set_has_staticmodelid();
+  inline void set_has_displacementid();
   inline void set_has_enabled();
   inline void clear_has_enabled();
   inline void set_has_shapemode();
@@ -1159,6 +1168,7 @@ class NodeState : public ::google::protobuf::Message {
   union TypeUnion {
     ::google::protobuf::int32 submodelid_;
     ::google::protobuf::int32 staticmodelid_;
+    ::google::protobuf::int32 displacementid_;
   } type_;
   ::google::protobuf::uint32 _oneof_case_[1];
 
@@ -2470,15 +2480,42 @@ inline void NodeState::set_staticmodelid(::google::protobuf::int32 value) {
   type_.staticmodelid_ = value;
 }
 
+// optional int32 displacementId = 3;
+inline bool NodeState::has_displacementid() const {
+  return type_case() == kDisplacementId;
+}
+inline void NodeState::set_has_displacementid() {
+  _oneof_case_[0] = kDisplacementId;
+}
+inline void NodeState::clear_displacementid() {
+  if (has_displacementid()) {
+    type_.displacementid_ = 0;
+    clear_has_type();
+  }
+}
+inline ::google::protobuf::int32 NodeState::displacementid() const {
+  if (has_displacementid()) {
+    return type_.displacementid_;
+  }
+  return 0;
+}
+inline void NodeState::set_displacementid(::google::protobuf::int32 value) {
+  if (!has_displacementid()) {
+    clear_type();
+    set_has_displacementid();
+  }
+  type_.displacementid_ = value;
+}
+
 // optional bool enabled = 5 [default = true];
 inline bool NodeState::has_enabled() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void NodeState::set_has_enabled() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void NodeState::clear_has_enabled() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void NodeState::clear_enabled() {
   enabled_ = true;
@@ -2496,13 +2533,13 @@ inline void NodeState::set_enabled(bool value) {
 
 // optional .RecastIO.ShapeMode shapemode = 6 [default = SHAPE_TRIANGLES];
 inline bool NodeState::has_shapemode() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void NodeState::set_has_shapemode() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void NodeState::clear_has_shapemode() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void NodeState::clear_shapemode() {
   shapemode_ = 0;
@@ -2521,13 +2558,13 @@ inline void NodeState::set_shapemode(::RecastIO::ShapeMode value) {
 
 // optional bool solid = 7 [default = true];
 inline bool NodeState::has_solid() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void NodeState::set_has_solid() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void NodeState::clear_has_solid() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void NodeState::clear_solid() {
   solid_ = true;
@@ -2545,13 +2582,13 @@ inline void NodeState::set_solid(bool value) {
 
 // optional bool dynamic = 8 [default = false];
 inline bool NodeState::has_dynamic() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 inline void NodeState::set_has_dynamic() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000040u;
 }
 inline void NodeState::clear_has_dynamic() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void NodeState::clear_dynamic() {
   dynamic_ = false;
@@ -2569,13 +2606,13 @@ inline void NodeState::set_dynamic(bool value) {
 
 // optional int32 navFlagOverride = 9 [default = 0];
 inline bool NodeState::has_navflagoverride() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void NodeState::set_has_navflagoverride() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void NodeState::clear_has_navflagoverride() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void NodeState::clear_navflagoverride() {
   navflagoverride_ = 0;
@@ -2593,13 +2630,13 @@ inline void NodeState::set_navflagoverride(::google::protobuf::int32 value) {
 
 // optional string modelname = 10;
 inline bool NodeState::has_modelname() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void NodeState::set_has_modelname() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void NodeState::clear_has_modelname() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void NodeState::clear_modelname() {
   if (modelname_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
@@ -2669,13 +2706,13 @@ inline void NodeState::set_allocated_modelname(::std::string* modelname) {
 
 // optional string name = 11;
 inline bool NodeState::has_name() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void NodeState::set_has_name() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void NodeState::clear_has_name() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void NodeState::clear_name() {
   if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {

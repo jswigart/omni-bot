@@ -43,6 +43,7 @@ GMBIND_FUNCTION( "ChangeTeam", gmfChangeTeam );
 GMBIND_FUNCTION( "ChangeClass", gmfChangeClass );
 GMBIND_FUNCTION( "ExecCommand", gmfExecCommand )
 GMBIND_FUNCTION( "FireWeapon", gmfFireWeapon )
+GMBIND_FUNCTION( "IsAimingAtEntity", gmdIsAimingAtEntity )
 GMBIND_FUNCTION( "GetCurrentAmmo", gmfGetAmmo )
 GMBIND_FUNCTION( "GetClass", gmfGetClassId )
 GMBIND_FUNCTION( "GetCurrentWeapon", gmfGetCurrentWeapon )
@@ -64,7 +65,7 @@ GMBIND_FUNCTION( "ForceTarget", gmfForceTarget )
 GMBIND_FUNCTION( "GetLastTarget", gmfGetLastTarget )
 GMBIND_FUNCTION( "GetTargetInfo", gmfGetTargetInfo )
 GMBIND_FUNCTION( "IgnoreTargetForTime", gmfIgnoreTargetForTime )
-GMBIND_FUNCTION( "IgnoreTarget", gmfIgnoreTargetForTime /*gmfIgnoreTarget*/ )
+GMBIND_FUNCTION( "IgnoreTarget", gmfIgnoreTargetForTime )
 GMBIND_FUNCTION( "GetWeapon", gmfGetWeapon )
 GMBIND_FUNCTION( "GetHighLevelGoalName", gmfGetHighLevelGoalName )
 GMBIND_FUNCTION( "GetMapGoalName", gmfGetMapGoalName )
@@ -77,6 +78,9 @@ GMBIND_FUNCTION( "GoGetArmor", gmfSetGoal_GetArmor )
 GMBIND_FUNCTION( "GoGetHealth", gmfSetGoal_GetHealth )
 
 GMBIND_FUNCTION( "IsStuck", gmfIsStuck )
+GMBIND_FUNCTION( "IsOnCustomLink", gmfIsOnCustomLink )
+GMBIND_FUNCTION( "HasUpcomingArea", gmfHasUpcomingArea )
+
 GMBIND_FUNCTION( "ResetStuckTime", gmfResetStuckTime )
 
 GMBIND_FUNCTION( "GetMostDesiredAmmo", gmfGetMostDesiredAmmo )
@@ -378,6 +382,77 @@ int gmBot::gmfIsStuck( gmThread *a_thread )
 		Stuck = native->GetStuckTime() > iStuckTime ? true : false;
 	}
 	a_thread->PushInt( Stuck ? 1 : 0 );
+	return GM_OK;
+}
+
+// function: IsOnCustomLink
+//		This function checks if the bot is on a particular link type.
+//
+// Parameters:
+//
+//		string - link type
+//
+// Returns:
+//		<int> - true if on a custom link of specified type
+int gmBot::gmfIsOnCustomLink( gmThread *a_thread )
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS( 1 );
+	GM_CHECK_STRING_PARAM( linktype, 0 );
+	
+	NavAreaFlags flags = NAVFLAGS_NONE;
+	if ( !NavAreaFlagsEnum::ValueForName( linktype, flags ) )
+	{
+		GM_EXCEPTION_MSG( "Invalid link type %s", linktype );
+		return GM_EXCEPTION;
+	}
+
+	using namespace AiState;
+	FINDSTATE( fp, FollowPath, native->GetStateRoot() );
+	if ( fp != NULL && fp->IsActive() )
+	{
+		a_thread->PushInt( fp->IsOnCustomLink( flags ) );
+	}
+	else
+	{
+		a_thread->PushInt( 0 );
+	}
+	return GM_OK;
+}
+
+// function: HasUpcomingArea
+//		This function checks if the bot is on a particular area type
+//
+// Parameters:
+//
+//		string - link type
+//
+// Returns:
+//		<int> - true if on a custom link of specified type
+int gmBot::gmfHasUpcomingArea( gmThread *a_thread )
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS( 2 );
+	GM_CHECK_STRING_PARAM( linktype, 0 );
+	GM_CHECK_FLOAT_OR_INT_PARAM( lookahead, 1 );
+
+	NavAreaFlags flags = NAVFLAGS_NONE;
+	if ( !NavAreaFlagsEnum::ValueForName( linktype, flags ) )
+	{
+		GM_EXCEPTION_MSG( "Invalid link type %s", linktype );
+		return GM_EXCEPTION;
+	}
+
+	using namespace AiState;
+	FINDSTATE( fp, FollowPath, native->GetStateRoot() );
+	if ( fp != NULL && fp->IsActive() )
+	{
+		a_thread->PushInt( fp->HasUpcomingArea( flags, lookahead ) );
+	}
+	else
+	{
+		a_thread->PushInt( 0 );
+	}
 	return GM_OK;
 }
 
@@ -843,7 +918,6 @@ int gmBot::gmfForceTarget( gmThread *a_thread )
 
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
-	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
 
 	if ( gameEnt.IsValid() )
 		native->GetTargetingSystem()->ForceTarget( gameEnt );
@@ -869,7 +943,6 @@ int gmBot::gmfGetTargetInfo( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
-	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
 
 	const TargetInfo *pTargetInfo = native->GetSensoryMemory()->GetTargetInfo( gameEnt );
 	if ( pTargetInfo )
@@ -897,7 +970,6 @@ int gmBot::gmfIgnoreTargetForTime( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 2 );
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
-	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
 	GM_CHECK_FLOAT_OR_INT_PARAM( ignoreTime, 1 );
 
 	MemoryRecord *pRecord = native->GetSensoryMemory()->GetMemoryRecord( gameEnt, true );
@@ -924,7 +996,6 @@ int gmBot::gmfIgnoreTarget( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
-	OBASSERT( gameEnt.IsValid(), "Bad Entity" );
 	GM_INT_PARAM( ignore, 1, 1 );
 
 	MemoryRecord *pRecord = native->GetSensoryMemory()->GetMemoryRecord( gameEnt, true );
@@ -955,7 +1026,6 @@ int gmBot::gmfGetWeapon( gmThread *a_thread )
 		a_thread->PushUser( wp->GetScriptObject( a_thread->GetMachine() ) );
 	else
 	{
-		OBASSERT( 0, va( "No Weapon of Type: %d", weaponId ) );
 		a_thread->PushNull();
 	}
 	return GM_OK;
@@ -1299,6 +1369,24 @@ int gmBot::gmfFireWeapon( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 0 );
 
 	native->GetWeaponSystem()->FireWeapon( Primary );
+	return GM_OK;
+}
+
+int gmBot::gmdIsAimingAtEntity( gmThread *a_thread )
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS( 1 );
+
+	GameEntity ent;
+	GM_CHECK_GAMEENTITY_FROM_PARAM( ent, 0 );
+	GM_CHECK_FLOAT_OR_INT_PARAM( dist, 1 );
+	
+	const Vector3f eyePos = native->GetEyePosition();
+	const Vector3f aimDir = native->GetFacingVector();
+
+	obTraceResult tr;
+	EngineFuncs::TraceLine( tr, eyePos, eyePos + aimDir*dist, NULL, TR_MASK_SHOT, -1, False );
+	a_thread->PushInt( tr.mFraction < 1.0f && tr.mHitEntity == ent );
 	return GM_OK;
 }
 

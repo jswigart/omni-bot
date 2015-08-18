@@ -27,40 +27,18 @@ public:
 	void InitScriptBinds( gmMachine *_machine );
 
 	virtual Client *CreateGameClient();
-
-	NavigatorID GetDefaultNavigator() const;
-
-	int GetVersionNum() const;
-	const char *GetDLLName() const;
-	const char *GetGameName() const;
-	const char *GetModSubFolder() const;
-	const char *GetNavSubfolder() const;
-	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const;
-
-	virtual bool RendersToGame() const
-	{
-		return true;
-	}
-
-	ClientPtr &GetClientFromCorrectedGameId( int _gameid );
-	
+		
 	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
 	void GetWeaponEnumeration( const IntEnum *&_ptr, int &num );
 
 	MC_Game();
 	virtual ~MC_Game();
 protected:
-
-	void GetGameVars( GameVars &_gamevars );
-
-	// Script support.
 	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptEvents( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptCategories( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptBotButtons( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptTraceMasks( gmMachine *_machine, gmTableObject *_table );
-
 	void InitScriptModules( gmMachine *_machine, gmTableObject *_table );
 
 	// Commands

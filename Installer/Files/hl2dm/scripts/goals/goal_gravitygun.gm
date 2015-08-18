@@ -2,7 +2,7 @@
 this.Name = "GravityGun";
 this.Parent = "HighLevel";
 this.AutoAdd = true;
-this.AlwaysRecieveEvents = true;
+//this.SkipGetPriorityWhenActive = true;
 this.Debug = true;
 
 this.Initialize = function()
@@ -14,36 +14,88 @@ this.Initialize = function()
 	};
 	this.WatchForEntityCategory(watchParams);
 	
+	this.Action = null;	
+	this.Bot.LastEntInfo = {};
 	this.Bot.GravGunInfo = {};
+};
+
+this.GetPriority = function()
+{
+	entIt = this.IterateWatchEntities( null );
+	while( entIt != null )
+	{
+		this.Bot.LastEntInfo = GetEntInfo(entIt, this.Bot.LastEntInfo);
+		if ( this.Bot.LastEntInfo != null )
+		{
+			if ( this.Bot.LastEntInfo.Group == GROUP.HEALTH )
+			{
+				if ( this.Bot.GetHealthPercent() < 1.0 )
+				{
+					this.Action = this.PickupEntity;
+					this.ActiveEnt = ent;
+					this.Priority = 1.0;
+					return;
+				}
+			}
+			
+			if ( GetEntCategory( ent, CAT.PROP_PUSHABLE ) )
+			{
+				if ( this.Bot.HasUpcomingArea( "pushable", 128.0 ) )
+				{
+					this.Action = this.BlastEntity;
+					this.ActiveEnt = ent;
+					this.Priority = 1.0;
+					return;
+				}
+			}
+		}
+		
+		sleep( 0.1 );
+		
+		entIt = this.IterateWatchEntities( entIt );
+	}
 };
 
 this.Enter = function()
 {
-	this.AddFinishCriteria(this.PickupEnt, "deleted");
-	this.AddFinishCriteria(this.PickupEnt, "hasentflag", ENTFLAG.DISABLED);
-	this.EntPos = GetEntPosition(this.PickupEnt);
+	this.AddFinishCriteria(this.ActiveEnt, "deleted");
+	this.AddFinishCriteria(this.ActiveEnt, "hasentflag", ENTFLAG.DISABLED);
 };
 
 this.Exit = function()
 {
+	this.Bot.ReleaseButton(BTN.ATTACK1);
 	this.Bot.ReleaseButton(BTN.ATTACK2);
+	
 	this.ReleaseWeaponRequest();
-	this.PickupEnt = null;
+	this.ActiveEnt = null;
 };
 
 this.Update = function()
 {
+	if ( this.Action != null )
+	{
+		this.Action();
+	}
+	else
+	{
+		this.Finished();
+	}
+};
+
+this.PickupEntity = function()
+{
 	if ( this.Debug ) {
-		print( this.Bot.Name, " picking up ", GetEntName(this.PickupEnt), " with grav gun" );
-		DrawEntityOBB( this.PickupEnt, 20, COLOR.GREEN );
-		DrawLine( this.Bot.GetEyePosition(), this.EntPos, COLOR.RED, 20 );
+		print( this.Bot.Name, " picking up ", GetEntName(this.ActiveEnt), " with grav gun" );
+		DrawEntityOBB( this.ActiveEnt, 20, COLOR.GREEN );
+		DrawLine( this.Bot.GetEyePosition(), this.EntPos, COLOR.RED, 2000 );
 	}
 	
 	tableClear(this.Bot.GravGunInfo);
 	this.AddAimRequest(Priority.High, "position", this.EntPos);
 	this.AddWeaponRequest(Priority.High, WEAPON.GRAVGUN );
 	this.BlockForWeaponChange( WEAPON.GRAVGUN );
-	this.Bot.HoldButton(BTN.ATTACK2, 99);
+	this.Bot.HoldButton( BTN.ATTACK2, 99 );
 	
 	timeOut = 0;
 	
@@ -53,6 +105,7 @@ this.Update = function()
 			this.Bot.PressButton(BTN.ATTACK1);
 		}
 		
+		this.EntPos = GetEntPosition(this.ActiveEnt);
 		this.Bot.MoveTowards(this.EntPos);
 		sleep(1);
 		timeOut += 1;
@@ -61,31 +114,32 @@ this.Update = function()
 	//this.Finished();
 };
 
-this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent) 
-{	
-	if ( this.PickupEnt == null ) {
+this.BlastEntity = function()
+{
+	if ( this.Debug ) {
+		print( this.Bot.Name, " blasting ", GetEntName(this.ActiveEnt), " with grav gun" );
+		DrawEntityOBB( this.ActiveEnt, 20, COLOR.GREEN );
+		DrawLine( this.Bot.GetEyePosition(), this.EntPos, COLOR.RED, 2000 );
+	}
 	
-		if ( GetEntFlags(ent,ENTFLAG.DISABLED) )
+	this.AddAimRequest(Priority.High, "position", this.EntPos);
+	this.AddWeaponRequest(Priority.High, WEAPON.GRAVGUN );
+	this.BlockForWeaponChange( WEAPON.GRAVGUN );
+	
+	timeOut = 0;
+	
+	while( true ) {
+		this.EntPos = GetEntPosition(this.ActiveEnt);
+		this.Bot.MoveTowards(this.EntPos);
+		
+		if ( this.Bot.IsAimingAtEntity( this.ActiveEnt ) )
 		{
-			return;
+			this.Bot.HoldButton(BTN.ATTACK1, 99);
 		}
 		
-		// only grab health if we need it
-		entityClass = GetEntClass(ent);
-		if ( entityClass == CLASS.HEALTHKIT || entityClass == CLASS.HEALTHVIAL )
-		{
-			if ( this.Bot.GetHealthPercent() >= 1.0 )
-			{
-				return;
-			}
-		}
-	
-		this.PickupEnt = ent;
-		this.Priority = 1.0;
+		sleep(1);
+		timeOut += 1;
 	}
-};
-
-this.Events[EVENT.ENT_LEAVE_RADIUS] = function(ent) 
-{
-	//this.Finished();
+	
+	this.Finished();
 };

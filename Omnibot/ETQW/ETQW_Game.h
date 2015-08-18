@@ -26,13 +26,8 @@ public:
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
-	const char *GetDLLName() const;
+	const char *GetGameAbbrev() const;
 	const char *GetGameName() const;
-	const char *GetModSubFolder() const;
-	const char *GetNavSubfolder() const;
-	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const;
-	bool ReadyForDebugWindow() const;
 
 	void AddBot( Msg_Addbot &_addbot, bool _createnow = true );
 
@@ -44,10 +39,6 @@ public:
 	ETQW_Game();
 	virtual ~ETQW_Game();
 protected:
-
-	void GetGameVars( GameVars &_gamevars );
-
-	// Script support.
 	void InitScriptBinds( gmMachine *_machine );
 	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptSkills( gmMachine *_machine, gmTableObject *_table );

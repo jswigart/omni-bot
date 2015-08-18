@@ -32,13 +32,10 @@ const NavAreaFlagsEnum NavAreaFlagsEnum::sKeyVal [] =
 	{ "rocketjump", NAVFLAGS_ROCKETJUMP },
 	{ "pushable", NAVFLAGS_PUSHABLE },
 	{ "mover", NAVFLAGS_MOVER },
-	{ "threat1", NAVFLAGS_THREAT_LVL1 },
-	{ "threat2", NAVFLAGS_THREAT_LVL2 },
-	{ "threat3", NAVFLAGS_THREAT_LVL3 },
+	{ "destructible", NAVFLAGS_DESTRUCTIBLE },
 	{ "jumppad", NAVFLAGS_JUMPPAD },
 	{ "disabled", NAVFLAGS_DISABLED },
 	{ "allteams", NAVFLAGS_ALLTEAMS },
-	{ "threats", NAVFLAGS_THREATS },
 };
 
 const size_t NavAreaFlagsEnum::sKeyValCount = sizeof( NavAreaFlagsEnum::sKeyVal ) / sizeof( NavAreaFlagsEnum::sKeyVal[ 0 ] );
@@ -154,7 +151,7 @@ void PathPlannerBase::EntityDeleted( const EntityInstance &ei )
 {
 }
 
-PathInterface * PathPlannerBase::AllocPathInterface( Client * client )
+PathInterface * PathPlannerBase::AllocPathInterface()
 {
 	return NULL;
 }

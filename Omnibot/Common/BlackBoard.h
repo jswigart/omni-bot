@@ -15,7 +15,7 @@
 #include "Omni-Bot_Events.h"
 
 class bbItem;
-typedef boost::shared_ptr<bbItem> BBRecordPtr;
+typedef std::shared_ptr<bbItem> BBRecordPtr;
 
 // class: Blackboard
 //		The blackboard acts as an area where various information can be
@@ -59,6 +59,6 @@ protected:
 	BlackBoardDatabase mDB;
 };
 
-extern BlackBoard g_Blackboard;
+extern BlackBoard gBlackboard;
 
 #endif

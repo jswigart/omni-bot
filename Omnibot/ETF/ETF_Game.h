@@ -30,24 +30,9 @@ public:
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
-	const char *GetDLLName() const;
-	const char *GetModSubFolder() const;
+	const char *GetGameAbbrev() const;
 	const char *GetGameName() const;
-	const char *GetNavSubfolder() const;
-	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const
-	{
-		return "etf";
-	}
-	virtual NavigatorID GetDefaultNavigator() const
-	{
-		return NAVID_RECAST;
-	}
-	bool ReadyForDebugWindow() const
-	{
-		return true;
-	}
-
+	
 	virtual bool GetAnalyticsKeys( GameAnalytics::Keys & keys );
 
 	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
@@ -55,10 +40,6 @@ public:
 	ETF_Game();
 	~ETF_Game();
 protected:
-
-	void GetGameVars( GameVars &_gamevars );
-
-	// Script support.
 	void InitScriptEntityFlags( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptPowerups( gmMachine *_machine, gmTableObject *_table );
 

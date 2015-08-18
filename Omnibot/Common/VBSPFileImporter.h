@@ -29,13 +29,8 @@ namespace MapFormat
 	class VBSPFileImporter
 	{
 	public:
-
-		///	@brief	Default constructor.
 		VBSPFileImporter();
-
-		///	@brief	Destructor.
 		~VBSPFileImporter();
-
 	public:
 		bool ParseFile( CollisionWorld & scene, const char * memoryBuffer, size_t memoryBufferSize );
 	private:

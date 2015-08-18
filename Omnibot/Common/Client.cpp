@@ -85,12 +85,10 @@ Client::~Client()
 void Client::Update()
 {
 	using namespace AiState;
-
-	// Set dirty flags to invalidate caches.
-	mInternalFlags.SetFlag( FL_DIRTYEYEPOS );
 	
-	// update my locally properties with the one the game has for me.
+	// update my locally properties with the one the game has for me.	
 	EngineFuncs::EntityPosition( mGameEntity, mPosition );
+	EngineFuncs::EntityEyePosition( mGameEntity, mEyePosition );
 	EngineFuncs::EntityLocalAABB( mGameEntity, mLocalBounds );
 	EngineFuncs::EntityWorldOBB( mGameEntity, mWorldBounds );
 	EngineFuncs::EntityGroundEntity( mGameEntity, mMoveEntity );
@@ -102,6 +100,7 @@ void Client::Update()
 	EngineFuncs::EntityVelocity( mGameEntity, mVelocity );
 
 	Msg_PlayerMaxSpeed maxSpeed;
+
 	if ( InterfaceFuncs::GetMaxSpeed( mGameEntity, maxSpeed ) )
 	{
 		mMaxSpeed = maxSpeed.mMaxSpeed;
@@ -112,7 +111,7 @@ void Client::Update()
 
 	// Update my internal state
 	IGame::GetEntityInfo( GetGameEntity(), mEntInfo );
-	
+
 	if ( CheckUserFlag( Client::FL_DISABLED ) )
 	{
 		// stop when disabled.
@@ -129,7 +128,6 @@ void Client::Update()
 		//{
 		//	Event_Sound *snds = (Event_Sound*)StackAlloc(sizeof(Event_Sound)*numMsgs);
 		//	int n = g_SoundDepot.Collect(snds,numMsgs,.mSoundSubscriber);
-		//	OBASSERT(n==numMsgs,"Problem getting events.");
 		//	for(int i = 0; i < numMsgs; ++i)
 		//	{
 		//		//snds[i]
@@ -180,11 +178,7 @@ void Client::Update()
 		//rmt_ScopedCPUSample( UpdateBotInput );
 		UpdateBotInput();
 	}
-
-#ifdef _DEBUG
-	OBASSERT( mFacingVector != Vector3f::ZERO, "Zero Facing Vector" );
-#endif
-
+	
 	// Zero the button flags here, if we do it before the UpdateBotInput, any script
 	// controlling the bot will get overridden.
 	mButtonFlags.ClearAll();
@@ -203,13 +197,8 @@ const std::string& Client::GetName( bool _clean ) const
 	return mName;
 }
 
-Vector3f Client::GetEyePosition()
+const Vector3f& Client::GetEyePosition()
 {
-	if ( mInternalFlags.CheckFlag( FL_DIRTYEYEPOS ) )
-	{
-		EngineFuncs::EntityEyePosition( mGameEntity, mEyePosition );
-		mInternalFlags.ClearFlag( FL_DIRTYEYEPOS );
-	}
 	return mEyePosition;
 }
 
@@ -584,7 +573,6 @@ void Client::Init( int _gameid )
 	gmCall call;
 	if ( call.BeginGlobalFunction( pMachine, "OnBotJoin", gmVariable::s_null, true ) )
 	{
-		OBASSERT( mScriptObject, "No Script object." );
 		call.AddParamUser( mScriptObject );
 		call.End();
 	}
@@ -599,7 +587,6 @@ void Client::Shutdown()
 	gmCall call;
 	if ( call.BeginGlobalFunction( pMachine, "OnBotLeave", gmVariable::s_null, true ) )
 	{
-		OBASSERT( mScriptObject, "No Script object." );
 		call.AddParamUser( mScriptObject );
 		call.End();
 	}
@@ -650,7 +637,6 @@ bool Client::TurnTowardPosition( const Vector3f &_pos )
 
 	if ( newFacing == Vector3f::ZERO )
 		return false;
-	OBASSERT( mFacingVector != Vector3f::ZERO, "Zero Facing Vector" );
 
 	// See how close we are to
 	float fDot = mFacingVector.Dot( newFacing );
@@ -672,8 +658,6 @@ bool Client::TurnTowardPosition( const Vector3f &_pos )
 	const float fTurnSpeedRadians = Mathf::DegToRad( GetMaxTurnSpeed() );
 	mCurrentTurnSpeed += ( fFrameTime * ( ( mAimStiffness * fAngle ) - ( mAimDamping * mCurrentTurnSpeed ) ) );
 	mCurrentTurnSpeed = ClampT<float>( mCurrentTurnSpeed, -fTurnSpeedRadians, fTurnSpeedRadians );
-
-	OBASSERT( mFacingVector != Vector3f::ZERO, "Zero Facing Vector" );
 
 	Quaternionf qQuat, qPartial;
 	qQuat.Align( mFacingVector, newFacing );
@@ -1157,5 +1141,196 @@ void Client::InitScriptGoals()
 			}
 			pNode = pScriptGoals->GetNext( tIt );
 		}
+	}
+}
+
+void Client::ProcessStimulusBehavior( Behaviors& behaviors, const StimulusPtr& stim )
+{
+	switch ( GetTeam() )
+	{
+		case OB_TEAM_1:
+			if ( !stim->mEntInfo.mFlags.CheckFlag( ENT_FLAG_TEAM1 ) )
+				return;
+			break;
+		case OB_TEAM_2:
+			if ( !stim->mEntInfo.mFlags.CheckFlag( ENT_FLAG_TEAM2 ) )
+				return;
+			break;
+		case OB_TEAM_3:
+			if ( !stim->mEntInfo.mFlags.CheckFlag( ENT_FLAG_TEAM3 ) )
+				return;
+			break;
+		case OB_TEAM_4:
+			if ( !stim->mEntInfo.mFlags.CheckFlag( ENT_FLAG_TEAM4 ) )
+				return;
+			break;
+	}
+	
+	StimulusBehavior beh;
+	beh.mUser = GetGameEntity();
+	beh.mStimulus = stim;
+
+	const EntityInfo& stimInfo = stim->mEntInfo;
+	switch ( stimInfo.mGroup )
+	{
+		case ENT_GRP_PLAYER:
+		case ENT_GRP_MONSTER:
+		{
+			if ( InterfaceFuncs::IsAllied( GetGameEntity(), stim->mEntity ) )
+			{
+				// escort?
+			}
+			else
+			{
+				beh.mAction = BEHAVIOR_KILL;
+				beh.mDesirability = 0.11f;
+			}
+			break;
+		}
+		case ENT_GRP_BUTTON:
+		{
+			beh.mAction = BEHAVIOR_PRESSBUTTON;
+			beh.mDesirability = 0.1f;
+			break;
+		}
+		case ENT_GRP_RESUPPLY:
+		{
+			// there are a lot of different elements to a potential resupply, 
+			// so take into account all of them to generate our combined desirability
+			beh.mAction = BEHAVIOR_RESUPPLY;
+
+			float desirabilityBest = 0.0f;
+
+			// bonus for multiple different types of needed resupply, 
+			// so sources that serve multiple will be preferred
+			float desirabilityBonus = 0.0f; 
+
+			if ( stimInfo.mHealth.mNum > 0 )
+			{				
+				if ( GetCurrentHealth() < GetMaxHealth() )
+				{
+					desirabilityBest = ( 1.0f - ( (float)GetCurrentHealth() / (float)GetMaxHealth() ) ) * 0.5f;
+					desirabilityBonus += 0.05f;
+				}
+			}
+
+			// we need any ammo?
+			for ( int i = 0; i < EntityInfo::NUM_AMMO_TYPES; ++i )
+			{
+				if ( stimInfo.mAmmo[ i ].mNum > 0 )
+				{
+					int ammoCurrent = 0, ammoMax = 0;
+					gEngineFuncs->GetCurrentAmmo( GetGameEntity(), stimInfo.mAmmo[ i ].mWeaponId, Primary, ammoCurrent, ammoMax );
+					if ( ammoCurrent < ammoMax )
+					{
+						beh.mDesirability = ( 1.0f - ( (float)ammoCurrent / (float)ammoMax ) ) * 0.3f;
+						desirabilityBonus += 0.05f;
+					}
+				}
+			}
+			
+			if ( stimInfo.mArmor.mNum > 0 )
+			{
+				if ( GetCurrentArmor() < GetMaxArmor() )
+				{
+					beh.mDesirability = 1.0f - ( (float)GetCurrentArmor() / (float)GetMaxArmor() ) * 0.5f;
+					desirabilityBonus += 0.05f;
+				}
+			}
+
+			/*if ( stimInfo.mEnergy.mNum > 0 )
+			{
+			if ( GetCurrentArmor() < GetMaxArmor() )
+			{
+			beh.mDesirability = 1.0f - ( (float)GetCurrentArmor() / (float)GetMaxArmor() ) * 0.5f;
+			desirabilityBonus += 0.05;
+			}
+			}*/
+
+			if ( desirabilityBest > 0.0 )
+			{
+				beh.mDesirability = desirabilityBest + desirabilityBonus;
+				behaviors.push_back( beh );
+			}
+			break;
+		}
+		case ENT_GRP_FLAG:
+		{
+			FlagState flagState;
+			GameEntity owner;
+			if ( InterfaceFuncs::GetFlagState( beh.mStimulus->mEntity, flagState, owner ) )
+			{
+				if ( owner == GetGameEntity() )
+				{
+					beh.mAction = BEHAVIOR_CAP_FLAG;
+					beh.mDesirability = 1.5f;
+				}
+				else
+				{
+					if ( InterfaceFuncs::IsAllied( GetGameEntity(), owner ) )
+					{
+						beh.mAction = BEHAVIOR_DEFEND;
+						beh.mDesirability = 1.5f;
+					}
+				}
+			}
+
+			beh.mAction = BEHAVIOR_GET_FLAG;
+			beh.mDesirability = 0.5f;
+			behaviors.push_back( beh );
+			break;
+		}
+		/*case ENT_GRP_FLAGCAPPOINT:
+		{
+		break;
+		}*/
+		case ENT_GRP_CONTROLPOINT:
+		{
+			beh.mAction = BEHAVIOR_CAP_CONTROL_POINT;
+			beh.mDesirability = 0.5f;
+			behaviors.push_back( beh );
+			break;
+		}
+		case ENT_GRP_WEAPON:
+		{
+			if ( GetWeaponSystem()->HasWeapon( stimInfo.mClassId ) )
+			{
+				int ammoCurrent = 0, ammoMax = 0;
+				gEngineFuncs->GetCurrentAmmo( GetGameEntity(), stimInfo.mClassId, Primary, ammoCurrent, ammoMax );
+				if ( ammoCurrent < ammoMax )
+				{
+					beh.mAction = BEHAVIOR_GET_WEAPON;
+					beh.mDesirability = 0.1f;
+				}
+			}
+			else
+			{
+				beh.mAction = BEHAVIOR_GET_WEAPON;
+				beh.mDesirability = 0.2f; // todo: use per weapon desirability
+			}
+			behaviors.push_back( beh );
+			break;
+		}
+		case ENT_GRP_POWERUP:
+		{
+			if ( CanGetPowerUp( stimInfo.mClassId ) )
+			{
+				beh.mAction = BEHAVIOR_GET_POWERUP;
+				beh.mDesirability = 0.5f;
+				behaviors.push_back( beh );
+			}
+			break;
+		}
+		/*case ENT_GRP_DISPENSER:
+		goalDef.Props.SetString( "Type", "Dispenser" );
+		break;
+		case ENT_GRP_BUILDABLE:
+		goalDef.Props.SetString( "Type", "Buildable" );
+		break;
+		case ENT_GRP_MOUNTABLE:
+		goalDef.Props.SetString( "Type", "Mountable" );
+		break;*/
+		default:
+			return;
 	}
 }

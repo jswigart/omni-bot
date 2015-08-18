@@ -126,7 +126,7 @@ namespace AiState
 		void SetAimVector( const Vector3f &_v )
 		{
 			mAimVector = _v;
-			mAimSignalled = false;
+			mOnTargetTime = 0;
 		}
 		int32_t GetAimWeaponId() const
 		{
@@ -218,6 +218,7 @@ namespace AiState
 
 		void WatchForEntityCategory( float radius, const BitFlag32 &category, int customTrace );
 		void UpdateEntityInRadius();
+		GameEntity IterateWatchEntity( GameEntity lastEntity );
 
 		void WatchForMapGoalsInRadius( const GoalManager::Query &qry, const GameEntity & ent, float radius );
 		void ClearWatchForMapGoalsInRadius();
@@ -266,6 +267,8 @@ namespace AiState
 		}
 
 		gmUserObject *GetScriptObject( gmMachine *_machine );
+
+		int GetOnTargetTime() const { return mOnTargetTime; }
 
 		//////////////////////////////////////////////////////////////////////////
 		int gmfFinished( gmThread *a_thread );
@@ -325,13 +328,12 @@ namespace AiState
 
 		struct WatchEntity
 		{
-			enum
-			{
-				MaxEntities = 64
-			};
-			float	 mRadius;
-			BitFlag32 mCategory;
-			int		 mCustomTrace;
+			static const int MaxEntities = 64;
+
+			float		mRadius;
+			BitFlag32	mCategory;
+			int			mCustomTrace;
+
 			struct KnownEnt
 			{
 				GameEntity	 mEnt;
@@ -346,17 +348,18 @@ namespace AiState
 					mEnt.Reset();
 					mTimeStamp = 0;
 				}
-			} mEntry[ MaxEntities ];
+			};
+			
+			KnownEnt mEntry[ MaxEntities ];
 
 			WatchEntity() : mRadius( 0.f ), mCustomTrace( 0 )
 			{
 			}
-		} mWatchEntities;
-
-		enum
-		{
-			MaxCriteria = 8
 		};
+		
+		WatchEntity mWatchEntities;
+
+		static const int MaxCriteria = 8;
 		CheckCriteria			 mFinishCriteria[ MaxCriteria ];
 
 		typedef std::set<MapGoalPtr> MgSet;
@@ -372,24 +375,22 @@ namespace AiState
 				: mRadius( 0.f )
 			{
 			}
-		}						 mMapGoalInRadius;
+		}						mMapGoalInRadius;
 
-		bool					 mFinished : 1;
-		bool					 mAimSignalled : 1;
+		int						mOnTargetTime;
+		bool					mFinished : 1;
+		bool					mAutoReleaseAim : 1;
+		bool					mAutoReleaseWpn : 1;
+		bool					mAutoReleaseTracker : 1;
+		bool					mAutoFinishOnUnavailable : 1;
+		bool					mAutoFinishOnNoProgressSlots : 1;
+		bool					mAutoFinishOnNoUseSlots : 1;
+		bool					mSkipGetPriorityWhenActive : 1;
+		bool					mSkipLastWp : 1;
 
-		bool					 mAutoReleaseAim : 1;
-		bool					 mAutoReleaseWpn : 1;
-		bool					 mAutoReleaseTracker : 1;
-		bool					 mAutoFinishOnUnavailable : 1;
-		bool					 mAutoFinishOnNoProgressSlots : 1;
-		bool					 mAutoFinishOnNoUseSlots : 1;
-		bool					 mSkipGetPriorityWhenActive : 1;
-
-		bool					 mSkipLastWp : 1;
-
-		MapGoalPtr				 mMapGoal;
-		MapGoalPtr				 mMapGoalRoute;
-		Trackers				 mTracker;
+		MapGoalPtr				mMapGoal;
+		MapGoalPtr				mMapGoalRoute;
+		Trackers				mTracker;
 
 		ScriptGoal();
 	};

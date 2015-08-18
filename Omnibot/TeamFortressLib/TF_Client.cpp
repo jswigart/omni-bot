@@ -188,7 +188,6 @@ void TF_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters 
 		{
 			_cb.CallScript();
 			const Event_SentryBuilding_TF *m = _message.Get<Event_SentryBuilding_TF>();
-			OBASSERT( m->mSentry.IsValid(), "Entity Expected" );
 			//.mSentryStatus.mEntity = m->mSentry;
 			//.mSentryStatus.mStatus = BUILDABLE_BUILDING;
 			//DBG_MSG(0, .mClient, kNormal, "Sentry Building");
@@ -199,7 +198,6 @@ void TF_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters 
 		{
 			_cb.CallScript();
 			const Event_SentryBuilt_TF *m = _message.Get<Event_SentryBuilt_TF>();
-			OBASSERT( m->mSentry.IsValid(), "Entity Expected" );
 			//.mSentryStatus.mEntity = m->mSentry;
 
 			//EngineFuncs::EntityPosition(.mSentryStatus.mEntity, .mSentryStatus.mPosition);
@@ -220,7 +218,6 @@ void TF_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters 
 		{
 			_cb.CallScript();
 			const Event_SentrySpotEnemy_TF *m = _message.Get<Event_SentrySpotEnemy_TF>();
-			OBASSERT( m->mSpottedEnemy.IsValid(), "Entity Expected" );
 			//DBG_MSG(0, .mClient, kNormal, "Sentry Spot Enemy");
 			_cb.AddEntity( "enemy", m->mSpottedEnemy );
 			break;
@@ -229,7 +226,6 @@ void TF_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters 
 		{
 			_cb.CallScript();
 			const Event_SentryTakeDamage_TF *m = _message.Get<Event_SentryTakeDamage_TF>();
-			OBASSERT( m->mInflictor.IsValid(), "Entity Expected" );
 			//DBG_MSG(0, .mClient, kNormal, "Sentry Damaged");
 			_cb.AddEntity( "inflictor", m->mInflictor );
 			break;
@@ -294,7 +290,6 @@ void TF_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters 
 		{
 			_cb.CallScript();
 			const Event_DispenserBuilding_TF *m = _message.Get<Event_DispenserBuilding_TF>();
-			OBASSERT( m->mDispenser.IsValid(), "Entity Expected" );
 			//.mDispenserStatus.mEntity = m->mDispenser;
 			//.mDispenserStatus.mStatus = BUILDABLE_BUILDING;
 			//DBG_MSG(0, .mClient, kNormal, "Dispenser Building");
@@ -305,7 +300,6 @@ void TF_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters 
 		{
 			_cb.CallScript();
 			const Event_DispenserBuilt_TF *m = _message.Get<Event_DispenserBuilt_TF>();
-			OBASSERT( m->mDispenser.IsValid(), "Entity Expected" );
 			//.mDispenserStatus.mEntity = m->mDispenser;
 			//EngineFuncs::EntityPosition(.mDispenserStatus.mEntity, .mDispenserStatus.mPosition);
 			//EngineFuncs::EntityOrientation(.mDispenserStatus.mEntity, .mDispenserStatus.mFacing, NULL, NULL);
@@ -331,7 +325,6 @@ void TF_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters 
 		{
 			_cb.CallScript();
 			const Event_DispenserEnemyUsed_TF *m = _message.Get<Event_DispenserEnemyUsed_TF>();
-			OBASSERT( m->mEnemy.IsValid(), "Entity Expected" );
 			//DBG_MSG(0, .mClient, kNormal, "Dispenser Enemy Used");
 			_cb.AddEntity( "usedby", m->mEnemy );
 			break;
@@ -340,7 +333,6 @@ void TF_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters 
 		{
 			_cb.CallScript();
 			const Event_DispenserTakeDamage_TF *m = _message.Get<Event_DispenserTakeDamage_TF>();
-			OBASSERT( m->mInflictor.IsValid(), "Entity Expected" );
 			//DBG_MSG(0, .mClient, kNormal, "Dispenser Damaged");
 			_cb.AddEntity( "inflictor", m->mInflictor );
 			break;
@@ -387,7 +379,6 @@ void TF_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters 
 		{
 			_cb.CallScript();
 			const Event_MedicCall *m = _message.Get<Event_MedicCall>();
-			OBASSERT( m && m->mByWho.IsValid(), "Invalid Message Params" );
 			_cb.AddEntity( "who", m->mByWho );
 			break;
 		}

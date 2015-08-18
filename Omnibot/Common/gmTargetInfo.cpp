@@ -31,8 +31,8 @@ GMBIND_PROPERTY_MAP_BEGIN( gmTargetInfo )
 	GMBIND_PROPERTY( "Velocity", getVelocity, NULL )
 	GMBIND_PROPERTY( "Group", getGroup, NULL )
 	GMBIND_PROPERTY( "Class", getClass, NULL )
-	GMBIND_PROPERTY( "Quantity", getQuantity, NULL )
-	GMBIND_PROPERTY( "QuantityMax", getQuantityMax, NULL )
+	GMBIND_PROPERTY( "Energy", getEnergy, NULL )
+	GMBIND_PROPERTY( "EnergyMax", getEnergyMax, NULL )
 GMBIND_PROPERTY_MAP_END();
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,8 +55,9 @@ int gmTargetInfo::gmIsA(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_INT_PARAM(checkclass, 0);
 	TargetInfo *pNative = gmTargetInfo::GetThisObject( a_thread );
-	OBASSERT(pNative, "Invalid Object");
-	if ( pNative == NULL ) {
+
+	if ( pNative == NULL ) 
+	{
 		return GM_EXCEPTION;
 	}
 	a_thread->PushInt( pNative->mEntInfo.mClassId == checkclass ? 1 : 0 );
@@ -111,15 +112,15 @@ bool gmTargetInfo::getClass( TargetInfo *a_native, gmThread *a_thread, gmVariabl
 	return true;
 }
 
-bool gmTargetInfo::getQuantity( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
+bool gmTargetInfo::getEnergy( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
-	a_operands[ 0 ].SetInt( a_native->mEntInfo.mQuantity.mNum );
+	a_operands[ 0 ].SetInt( a_native->mEntInfo.mEnergy.mNum );
 	return true;
 }
 
-bool gmTargetInfo::getQuantityMax( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
+bool gmTargetInfo::getEnergyMax( TargetInfo *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
-	a_operands[ 0 ].SetInt( a_native->mEntInfo.mQuantity.mMax );
+	a_operands[ 0 ].SetInt( a_native->mEntInfo.mEnergy.mMax );
 	return true;
 }
 

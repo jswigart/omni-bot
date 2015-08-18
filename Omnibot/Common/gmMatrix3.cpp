@@ -142,8 +142,8 @@ void gmMatrix3::Destructor(gmMat3Type *_native)
 void gmMatrix3::AsString(gmUserObject *a_object, char *a_buffer, int a_bufferLen)
 {
 	gmMat3Type *pNative = gmMatrix3::GetNative(a_object);
-	OBASSERT(pNative, "Invalid Object");
-	if ( pNative == NULL ) {
+	if ( pNative == NULL ) 
+	{
 		_gmsnprintf( a_buffer, a_bufferLen, "not a matrix3" );
 		return;
 	}

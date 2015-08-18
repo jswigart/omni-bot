@@ -15,6 +15,8 @@
 #include "CommandReciever.h"
 #include "ObjFunctor.h"
 
+#include <boost/thread.hpp>
+
 // interface: IGameManager
 //		Handles most of the common functionality of the game manager. Mods should subclass
 //		this in order to create their own instance of IGame from within the CreateGameFromGameID

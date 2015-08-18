@@ -29,15 +29,15 @@ IGame *CreateGameInstance()
 
 ET_Game::ET_Game()
 {
+	mGameVars.mClientBase = 0;
+	mGameVars.mGameVersion = ET_VERSION_LATEST;
+	mGameVars.mGameAbbrev = "et";
+	mGameVars.mGameName = "Enemy Territory";
+	mGameVars.mPlayerHeight = 64.f;
 }
 
 ET_Game::~ET_Game()
 {
-}
-
-int ET_Game::GetVersionNum() const
-{
-	return ET_VERSION_LATEST;
 }
 
 Client *ET_Game::CreateGameClient()
@@ -45,67 +45,13 @@ Client *ET_Game::CreateGameClient()
 	return new ET_Client;
 }
 
-const char *ET_Game::GetDLLName() const
-{
-#ifdef WIN32
-	return "omni-bot\\omnibot_et.dll";
-#else
-	return "omni-bot/omnibot_et.so";
-#endif
-}
-
-const char *ET_Game::GetGameName() const
-{
-	return "Enemy Territory";
-}
-
-const char *ET_Game::GetModSubFolder() const
-{
-#ifdef WIN32
-	return "et\\";
-#else
-	return "et";
-#endif
-}
-
-const char *ET_Game::GetNavSubfolder() const
-{
-#ifdef WIN32
-	return "et\\nav\\";
-#else
-	return "et/nav";
-#endif
-}
-
-const char *ET_Game::GetScriptSubfolder() const
-{
-#ifdef WIN32
-	return "et\\scripts\\";
-#else
-	return "et/scripts";
-#endif
-}
-const char *ET_Game::GetGameDatabaseAbbrev() const
-{
-	return "et";
-}
 bool ET_Game::GetAnalyticsKeys( GameAnalytics::Keys & keys )
 {
 	keys.mGameKey = "508391d546e97c34dca527038b9df10c";
 	keys.mSecretKey = "c6eecafbb67e602b45f32ca2948ae520276c291e";
 	keys.mDataApiKey = "19ea5d05b850d0b9379f1b9c381e2dfd7e636d13";
-	keys.mVersionKey = va( "%s:v%s", GetGameName(), GetVersion() );
+	keys.mVersionKey = va( "%s:v%s", GetGameVars().mGameName.c_str(), GetGameVars().mVersionString.c_str() );	
 	return true;
-}
-
-NavigatorID ET_Game::GetDefaultNavigator() const
-{
-	return NAVID_RECAST;
-}
-
-bool ET_Game::ReadyForDebugWindow() const
-{
-	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING;
 }
 
 bool ET_Game::Init( System & system )
@@ -115,7 +61,6 @@ bool ET_Game::Init( System & system )
 	IsBastardmod = !strcmp( modName, "bastardmod" );
 	CLASSEXoffset = IsETBlight ? 2 : 0;
 
-	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback( ET_Game::ET_GetEntityClassTraceOffset );
 	AiState::SensoryMemory::SetEntityAimOffsetCallback( ET_Game::ET_GetEntityClassAimOffset );
 
@@ -123,11 +68,6 @@ bool ET_Game::Init( System & system )
 		return false;
 
 	return true;
-}
-
-void ET_Game::GetGameVars( GameVars &_gamevars )
-{
-	_gamevars.mPlayerHeight = 64.f;
 }
 
 static const IntEnum ET_TeamEnum [] =
@@ -214,9 +154,9 @@ void ET_Game::GetWeaponEnumeration( const IntEnum *&_ptr, int &num )
 
 bool ET_Game::AddWeaponId( const char * weaponName, int weaponId )
 {
-	const char * wpnName = mExtraWeaponNames.AddUniqueString( weaponName );
+	/*const char * wpnName = mExtraWeaponNames.AddUniqueString( weaponName );
 
-	/*const int arraySize = sizeof( ET_WeaponEnum ) / sizeof( ET_WeaponEnum[ 0 ] );
+	const int arraySize = sizeof( ET_WeaponEnum ) / sizeof( ET_WeaponEnum[ 0 ] );
 	for ( int i = 0; i < arraySize; ++i )
 	{
 		if ( !ET_WeaponEnum[ i ].mKey )
@@ -401,7 +341,8 @@ void ET_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
 		Utils::StringCopy( _addbot.mName, name.c_str(), sizeof( _addbot.mName ) );
 	}
 	//////////////////////////////////////////////////////////////////////////
-	OBASSERT( GameStarted(), "Game Not Started Yet" );
+	assert( GameStarted() );
+
 	if ( _createnow )
 		mBotJoining = true;
 	int iGameID = InterfaceFuncs::Addbot( _addbot );
@@ -559,8 +500,9 @@ void ET_Game::ClientJoined( const Event_SystemClientConnected *_msg )
 	if ( _msg->mIsBot && !mBotJoining )
 	{
 		CheckGameState();
-		OBASSERT( GameStarted(), "Game Not Started Yet" );
-		OBASSERT( _msg->mGameId < Constants::MAX_PLAYERS && _msg->mGameId >= 0, "Invalid Client Index!" );
+		assert( GameStarted() );
+		assert( _msg->mGameId < Constants::MAX_PLAYERS && _msg->mGameId >= 0 );
+
 		// If a bot isn't created by now, it has probably been a map change,
 		// and the game has re-added the clients itself.
 		ClientPtr &cp = GetClientFromCorrectedGameId( _msg->mGameId );

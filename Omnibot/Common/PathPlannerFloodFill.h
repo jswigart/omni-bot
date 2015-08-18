@@ -80,7 +80,7 @@ public:
 	typedef SpanHeightMap<uint8_t> SpanMap;
 
 	SpanMap::InfluenceMap * AllocInfluenceMap();
-	PathInterface * AllocPathInterface( Client * client );
+	PathInterface * AllocPathInterface();
 
 	void EntityCreated( const EntityInstance &ei );
 	void EntityDeleted( const EntityInstance &ei );

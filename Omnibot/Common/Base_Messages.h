@@ -498,18 +498,6 @@ struct Event_EntitySensed
 	GameEntity	mEntity;
 };
 
-struct Event_DynamicPathsChanged
-{
-	int			mTeamMask;
-	int			mNavId;
-
-	Event_DynamicPathsChanged(int _team, int _navid = 0)
-		: mTeamMask(_team)
-		, mNavId(_navid)
-	{
-	}
-};
-
 struct Event_ScriptMessage
 {
 	char		mMessageName[64];

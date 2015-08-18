@@ -139,7 +139,7 @@ void PathPlannerFloodFill::Update( System & system )
 			float						mRadiusSq;
 		};
 
-		if ( System::mInstance->mGame->RendersToGame() )
+		if ( System::mInstance->mGame->GetGameVars().mRendersToGame )
 		{
 			static float radius = 1024.0f;
 
@@ -191,14 +191,8 @@ void PathPlannerFloodFill::Update( System & system )
 		Utils::GetLocalFacing( vLocalAim );
 		if ( Utils::GetLocalAimPoint( vAimPos, &vAimNormal ) )
 		{
-			RenderBuffer::AddLine( vAimPos,
-				vAimPos + vAimNormal * 16.f,
-				mCursorColor,
-				IGame::GetDeltaTimeSecs()*2.f );
-
-			RenderBuffer::AddLine( vAimPos,
-				vAimPos + vAimNormal.Perpendicular() * 16.f, mCursorColor,
-				IGame::GetDeltaTimeSecs()*2.f );
+			RenderBuffer::AddLine( vAimPos, vAimPos + vAimNormal * 16.f, mCursorColor );
+			RenderBuffer::AddLine( vAimPos, vAimPos + vAimNormal.Perpendicular() * 16.f, mCursorColor );
 		}
 		mCursorColor = COLOR::BLUE; // back to default
 
@@ -582,7 +576,7 @@ void PathPlannerFloodFill::EntityDeleted( const EntityInstance &ei )
 	}
 }
 
-PathInterface * PathPlannerFloodFill::AllocPathInterface( Client * client )
+PathInterface * PathPlannerFloodFill::AllocPathInterface()
 {
-	return new FloodFillPathInterface( client, this );
+	return new FloodFillPathInterface( this );
 }

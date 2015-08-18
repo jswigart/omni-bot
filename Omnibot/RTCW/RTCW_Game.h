@@ -26,16 +26,6 @@ public:
 	virtual void StartGame();
 	virtual Client *CreateGameClient();
 
-	int GetVersionNum() const;
-	const char *GetDLLName() const;
-	const char *GetGameName() const;
-	const char *GetModSubFolder() const;
-	const char *GetNavSubfolder() const;
-	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const;
-	NavigatorID GetDefaultNavigator() const;
-	bool ReadyForDebugWindow() const;
-
 	void AddBot( Msg_Addbot &_addbot, bool _createnow = true );
 	void ClientJoined( const Event_SystemClientConnected *_msg );
 	
@@ -45,10 +35,6 @@ public:
 	RTCW_Game();
 	~RTCW_Game();
 protected:
-
-	void GetGameVars( GameVars &_gamevars );
-
-	// Script support.
 	void InitScriptBinds( gmMachine *_machine );
 	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptEntityFlags( gmMachine *_machine, gmTableObject *_table );

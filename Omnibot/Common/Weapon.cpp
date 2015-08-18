@@ -198,7 +198,6 @@ float Weapon::WeaponFireMode::CalculateDefaultDesirability( Client *_bot )
 		gmCall call;
 		if ( call.BeginFunction( pMachine, mscrCalcDefDesir, gmVariable( GetScriptObject( pMachine ) ) ) )
 		{
-			OBASSERT( _bot->GetScriptObject(), "Invalid Script Object For Bot!" );
 			call.AddParamUser( GetScriptObject( pMachine ) );
 			call.AddParamUser( _bot->GetScriptObject() );
 			call.End();
@@ -229,7 +228,6 @@ float Weapon::WeaponFireMode::CalculateDesirability( Client *_bot, const TargetI
 		gmCall call;
 		if ( call.BeginFunction( pMachine, mscrCalcDesir, gmVariable( GetScriptObject( pMachine ) ) ) )
 		{
-			OBASSERT( _bot->GetScriptObject(), "Invalid Script Object For Bot!" );
 			//call.AddParamUser(GetScriptObject(pMachine));
 			call.AddParamUser( _bot->GetScriptObject() );
 			call.AddParamUser( _targetinfo.GetScriptObject( pMachine ) );
@@ -366,7 +364,6 @@ Vector3f Weapon::WeaponFireMode::GetAimPoint( Client *_bot, const GameEntity &_t
 		gmCall call;
 		if ( call.BeginFunction( pMachine, mscrCalcAimPoint, gmVariable( GetScriptObject( pMachine ) ) ) )
 		{
-			OBASSERT( _bot->GetScriptObject(), "Invalid Script Object For Bot!" );
 			call.AddParamUser( GetScriptObject( pMachine ) );
 			call.AddParamUser( _bot->GetScriptObject() );
 			call.AddParamUser( _targetinfo.GetScriptObject( pMachine ) );
@@ -554,7 +551,6 @@ bool Weapon::WeaponFireMode::IsDefined() const
 
 bool Weapon::WeaponFireMode::CheckDefined() const
 {
-	OBASSERT( IsDefined(), "Weapon Fire Mode Not Defined!" );
 	return IsDefined();
 }
 

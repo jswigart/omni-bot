@@ -47,6 +47,6 @@ protected:
 
 // typedef: RegulatorPtr
 //		Smart pointer to a regulator
-typedef boost::shared_ptr<Regulator> RegulatorPtr;
+typedef std::shared_ptr<Regulator> RegulatorPtr;
 
 #endif

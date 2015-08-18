@@ -28,15 +28,15 @@ IGame *CreateGameInstance()
 
 JA_Game::JA_Game()
 {
+	mGameVars.mClientBase = 0;
+	mGameVars.mGameVersion = JA_VERSION_LATEST;
+	mGameVars.mGameAbbrev = "ja";
+	mGameVars.mGameName = "Star Wars Jedi Knight: Jedi Academy";
+	mGameVars.mPlayerHeight = 64.f;
 }
 
 JA_Game::~JA_Game()
 {
-}
-
-int JA_Game::GetVersionNum() const
-{
-	return JA_VERSION_LATEST;
 }
 
 Client *JA_Game::CreateGameClient()
@@ -44,58 +44,8 @@ Client *JA_Game::CreateGameClient()
 	return new JA_Client;
 }
 
-const char *JA_Game::GetDLLName() const
-{
-#ifdef WIN32
-	return "omni-bot\\omnibot_ja.dll";
-#else
-	return "omni-bot/omnibot_ja.so";
-#endif
-}
-
-const char *JA_Game::GetGameName() const
-{
-	return "Star Wars Jedi Knight: Jedi Academy";
-}
-
-const char *JA_Game::GetModSubFolder() const
-{
-#ifdef WIN32
-	return "ja\\";
-#else
-	return "ja";
-#endif
-}
-
-const char *JA_Game::GetNavSubfolder() const
-{
-#ifdef WIN32
-	return "ja\\nav\\";
-#else
-	return "ja/nav";
-#endif
-}
-
-const char *JA_Game::GetScriptSubfolder() const
-{
-#ifdef WIN32
-	return "ja\\scripts\\";
-#else
-	return "ja/scripts";
-#endif
-}
-const char *JA_Game::GetGameDatabaseAbbrev() const
-{
-	return "jajk";
-}
-bool JA_Game::ReadyForDebugWindow() const
-{
-	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING;
-}
-
 bool JA_Game::Init( System & system )
 {
-	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback( JA_Game::JA_GetEntityClassTraceOffset );
 	AiState::SensoryMemory::SetEntityAimOffsetCallback( JA_Game::JA_GetEntityClassAimOffset );
 
@@ -103,11 +53,6 @@ bool JA_Game::Init( System & system )
 		return false;
 
 	return true;
-}
-
-void JA_Game::GetGameVars( GameVars &_gamevars )
-{
-	_gamevars.mPlayerHeight = 64.f;
 }
 
 static const IntEnum ET_TeamEnum [] =
@@ -254,7 +199,8 @@ void JA_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
 		Utils::StringCopy( _addbot.mName, name.c_str(), sizeof( _addbot.mName ) );
 	}
 	//////////////////////////////////////////////////////////////////////////
-	OBASSERT( GameStarted(), "Game Not Started Yet" );
+	assert( GameStarted() );
+
 	if ( _createnow )
 		mBotJoining = true;
 	int iGameID = InterfaceFuncs::Addbot( _addbot );
@@ -403,8 +349,9 @@ void JA_Game::ClientJoined( const Event_SystemClientConnected *_msg )
 	if ( _msg->mIsBot && !mBotJoining )
 	{
 		CheckGameState();
-		OBASSERT( GameStarted(), "Game Not Started Yet" );
-		OBASSERT( _msg->mGameId < Constants::MAX_PLAYERS && _msg->mGameId >= 0, "Invalid Client Index!" );
+		assert( GameStarted() );
+		assert( _msg->mGameId < Constants::MAX_PLAYERS && _msg->mGameId >= 0 );
+
 		// If a bot isn't created by now, it has probably been a map change,
 		// and the game has re-added the clients itself.
 		ClientPtr &cp = GetClientFromCorrectedGameId( _msg->mGameId );

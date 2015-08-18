@@ -165,17 +165,17 @@ void OmnibotFunctions::AddGoal( const MapGoalDef & goaldef )
 		SendGlobalEvent( MessageHelper( GAME_ENTITYCREATED, &d, sizeof( d ) ) );
 	}
 
-	GoalManager::GetInstance()->AddGoal( goaldef );
+	System::mInstance->mGoalManager->AddGoal( goaldef );
 }
 
 void OmnibotFunctions::DeleteGoal( const char * goalname )
 {
-	GoalManager::GetInstance()->RemoveGoalByName( goalname );
+	System::mInstance->mGoalManager->RemoveGoalByName( goalname );
 }
 
 void OmnibotFunctions::UpdateEntity( GameEntity oldent, GameEntity newent )
 {
-	GoalManager::GetInstance()->UpdateGoalEntity( oldent, newent );
+	System::mInstance->mGoalManager->UpdateGoalEntity( oldent, newent );
 }
 
 void Omnibot_Load_PrintErr( char const * )

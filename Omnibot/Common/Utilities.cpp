@@ -6,6 +6,8 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <boost/regex.hpp>
+
 #include "IGame.h"
 #include "IGameManager.h"
 #include "KeyValueIni.h"
@@ -44,7 +46,7 @@ namespace Priority
 			"VeryHigh",
 			"Override",
 		};
-		BOOST_STATIC_ASSERT( sizeof( str ) / sizeof( str[ 0 ] ) == Priority::NumPriority );
+		static_assert( sizeof( str ) / sizeof( str[ 0 ] ) == Priority::NumPriority, "Invalid Priority Count" );
 		if ( n >= 0 && n < Priority::NumPriority )
 			return str[ n ];
 		return "";
@@ -65,7 +67,6 @@ namespace Utils
 		catch ( const std::exception & ex )
 		{
 			ex;
-			OBASSERT( 0, ex.what() );
 		}
 		return false;
 	}
@@ -445,8 +446,6 @@ namespace Utils
 			if ( _bytes / pow( 1024.0, i ) >= 1 )
 				iUnit = i;
 		}
-
-		OBASSERT( iUnit >= 0 && iUnit < iNumUnits, "Out of Bounds!" );
 
 		std::stringstream str;
 		str << ( iUnit > 0 ? ( _bytes / pow( 1024.0, iUnit ) ) : _bytes ) << byteUnits[ iUnit ];
@@ -848,8 +847,6 @@ namespace Utils
 		{
 			vMax = _seg2.P0;
 		}
-		else
-			OBASSERT( 0, "Unexpected" );
 
 		fT = ClosestPtOnLine_Unclamped( _seg1.P0, _seg1.P1, _seg2.P1, cp );
 		if ( fT < 0.f )
@@ -860,8 +857,6 @@ namespace Utils
 		{
 			vMin = _seg2.P1;
 		}
-		else
-			OBASSERT( 0, "Unexpected" );
 		//////////////////////////////////////////////////////////////////////////
 		/*fT = ClosestPtOnLine_Unclamped(_seg2.P1,_seg2.P0,_seg1.P1,cp);
 		if(fT > 1.f)
@@ -872,8 +867,6 @@ namespace Utils
 		{
 		vMax = _seg2.P0;
 		}
-		else
-		OBASSERT(0,"Unexpected");
 
 		fT = ClosestPtOnLine_Unclamped(_seg2.P1,_seg2.P0,_seg1.P1,cp);
 		if(fT < 0.f)
@@ -884,8 +877,6 @@ namespace Utils
 		{
 		vMin = _seg1.P1;
 		}
-		else
-		OBASSERT(0,"Unexpected");*/
 		//////////////////////////////////////////////////////////////////////////
 
 		out = Segment3f( vMin, vMax );
@@ -1719,7 +1710,7 @@ std::string Utils::GetTeamString( int32_t _team )
 std::string Utils::GetClassString( int32_t _class )
 {
 	std::string sOut = "IMPLEMENTME";
-	bool bAllClasses = true;
+	//bool bAllClasses = true;
 
 	// append all effecting classes
 	/*for ( int c = 1; c < FilterSensory::ANYPLAYERCLASS; ++c )

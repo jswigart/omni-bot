@@ -106,7 +106,6 @@ void WeaponDatabase::LoadWeaponDefinitions( bool _clearall )
 		else
 		{
 			LOGERR( "Error Running Weapon Script: " << ( *cIt ).string() );
-			OBASSERT( 0, "Error Running Weapon Script" );
 		}
 	}
 }

@@ -19,8 +19,6 @@
 #include "NameManager.h"
 #include "ScriptManager.h"
 
-BOOST_STATIC_ASSERT( ETF_TEAM_MAX == TF_TEAM_MAX );
-
 IGame *CreateGameInstance()
 {
 	return new ETF_Game;
@@ -28,15 +26,15 @@ IGame *CreateGameInstance()
 
 ETF_Game::ETF_Game()
 {
+	mGameVars.mClientBase = 0;
+	mGameVars.mGameVersion = ETF_VERSION_LATEST;
+	mGameVars.mGameAbbrev = "etf";
+	mGameVars.mGameName = "Enemy Territory Fortress";
+	mGameVars.mPlayerHeight = 64.f;
 }
 
 ETF_Game::~ETF_Game()
 {
-}
-
-int ETF_Game::GetVersionNum() const
-{
-	return ETF_VERSION_LATEST;
 }
 
 Client *ETF_Game::CreateGameClient()
@@ -44,53 +42,12 @@ Client *ETF_Game::CreateGameClient()
 	return new ETF_Client;
 }
 
-const char *ETF_Game::GetModSubFolder() const
-{
-#ifdef WIN32
-	return "etf\\";
-#else
-	return "etf";
-#endif
-}
-
-const char *ETF_Game::GetDLLName() const
-{
-#ifdef WIN32
-	return "omnibot_etf.dll";
-#else
-	return "omnibot_etf.so";
-#endif
-}
-
-const char *ETF_Game::GetGameName() const
-{
-	return "ETF";
-}
-
-const char *ETF_Game::GetNavSubfolder() const
-{
-#ifdef WIN32
-	return "etf\\nav\\";
-#else
-	return "etf/nav";
-#endif
-}
-
-const char *ETF_Game::GetScriptSubfolder() const
-{
-#ifdef WIN32
-	return "etf\\scripts\\";
-#else
-	return "etf/scripts";
-#endif
-}
-
 bool ETF_Game::GetAnalyticsKeys( GameAnalytics::Keys & keys )
 {
 	keys.mGameKey = "68aa5fcc90a58d3de2ba80e8dc6f6a88";
 	keys.mSecretKey = "283e40eb98703bedef2a5fa3e6a996b4c3233545";
 	keys.mDataApiKey = "73a8f10945d4ac7bb1bde2fddb7905ddcbc7dbe1";
-	keys.mVersionKey = va( "%s:v%s", GetGameName(), GetVersion() );
+	keys.mVersionKey = va( "%s:v%s", GetGameVars().mGameName.c_str(), GetGameVars().mVersionString.c_str() );
 	return true;
 }
 
@@ -99,7 +56,6 @@ bool ETF_Game::Init( System & system )
 	if ( !TF_Game::Init( system ) )
 		return false;
 
-	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback( ETF_Game::ETF_GetEntityClassTraceOffset );
 	AiState::SensoryMemory::SetEntityAimOffsetCallback( ETF_Game::ETF_GetEntityClassAimOffset );
 
@@ -114,11 +70,6 @@ bool ETF_Game::Init( System & system )
 	TF_Options::DisguiseTeamFlags[ ETF_TEAM_YELLOW ] = TF_PWR_DISGUISE_YELLOW;
 
 	return true;
-}
-
-void ETF_Game::GetGameVars( GameVars &_gamevars )
-{
-	_gamevars.mPlayerHeight = 64.f;
 }
 
 static const IntEnum ETF_TeamEnum [] =

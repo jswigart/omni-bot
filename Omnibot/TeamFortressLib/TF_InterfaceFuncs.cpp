@@ -148,7 +148,6 @@ namespace InterfaceFuncs
 	//		gEngineFuncs->InterfaceSendMessage(msg, NULL);
 	//		return &.mTeamPipeInfo[_team];
 	//	}
-	//	OBASSERT("Invalid Team!");
 	//	return &s_NullInfo;
 	//}
 };

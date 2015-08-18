@@ -26,7 +26,7 @@ public:
 	virtual float CheckBias(const AiState::SensoryMemory::MemoryMap::const_iterator &_it) = 0;
 };
 
-typedef boost::shared_ptr<FilterBias> FilterBiasPtr;
+typedef std::shared_ptr<FilterBias> FilterBiasPtr;
 
 //////////////////////////////////////////////////////////////////////////
 

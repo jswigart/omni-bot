@@ -26,7 +26,6 @@ void Trackable::DelReference(uint32_t _type)
 {
 	_CheckIndex(_type);
 	--mTrackList[_type];
-	OBASSERT(mTrackList[_type] >= 0, "Counter got below 0!");
 }
 
 uint32_t Trackable::GetRefCount(uint32_t _type)

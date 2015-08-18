@@ -161,7 +161,7 @@ namespace AiState
 
 			if ( !bFoundEntity )
 			{
-				OBASSERT( iFreeRecord != -1, "No Free Record Slot!" );
+				assert( iFreeRecord != -1 );
 				if ( iFreeRecord != -1 )
 				{
 					mRecords[ iFreeRecord ].mEntity = ent.GetEnt().mEntity;
@@ -245,8 +245,6 @@ namespace AiState
 
 	bool SensoryMemory::UpdateRecord( MemoryRecord &_record )
 	{
-		rmt_ScopedCPUSample( SensoryUpdateRecord );
-
 		if ( _record.GetAge() <= 0 )
 			return true;
 
@@ -300,7 +298,7 @@ namespace AiState
 
 			if ( DebugDrawingEnabled() && mDebugFlags.CheckFlag( Dbg_ShowPerception ) )
 			{
-				RenderBuffer::AddLine( GetClient()->GetEyePosition(), vTracePosition, COLOR::YELLOW, 0.2f );
+				RenderBuffer::AddLine( GetClient()->GetEyePosition(), vTracePosition, COLOR::YELLOW );
 			}
 
 			if ( bNoLos ||
@@ -350,7 +348,7 @@ namespace AiState
 
 				if ( DebugDrawingEnabled() && mDebugFlags.CheckFlag( Dbg_ShowPerception ) )
 				{
-					RenderBuffer::AddLine( GetClient()->GetEyePosition(), ti.mLastPosition, COLOR::YELLOW, 0.2f );
+					RenderBuffer::AddLine( GetClient()->GetEyePosition(), ti.mLastPosition, COLOR::YELLOW );
 				}
 
 				_record.mTargetInfo.mDistanceTo = Length( ti.mLastPosition, GetClient()->GetEyePosition() );

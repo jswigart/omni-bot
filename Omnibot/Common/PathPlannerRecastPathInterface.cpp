@@ -26,9 +26,8 @@ RecastPathInterfaces RecastPathInterface::sInterfaces;
 
 //////////////////////////////////////////////////////////////////////////
 
-RecastPathInterface::RecastPathInterface( Client * client, PathPlannerRecast * nav ) 
-	: mClient( client )
-	, mNav( nav )
+RecastPathInterface::RecastPathInterface( PathPlannerRecast * nav ) 
+	: mNav( nav )
 	, mStatus( PATH_NONE )
 	, mMoveDirection( Vector3f::ZERO )
 {
@@ -65,7 +64,7 @@ NavAreaFlags RecastPathInterface::GetCurrentAreaFlags() const
 	return mCurrentAreaFlags;
 }
 
-void RecastPathInterface::UpdateNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
+void RecastPathInterface::UpdateNavFlags( NavFlags includeFlags, NavFlags excludeFlags )
 {
 	mFilter.setIncludeFlags( includeFlags );
 	mFilter.setExcludeFlags( excludeFlags );
@@ -73,11 +72,6 @@ void RecastPathInterface::UpdateNavFlags( NavFlags & includeFlags, NavFlags & ex
 
 void RecastPathInterface::UpdateSourcePosition( const Vector3f & srcPos )
 {
-	NavFlags includeFlags = NAVFLAGS_WALK;
-	NavFlags excludeFlags = NAVFLAGS_NONE;
-	mClient->GetNavFlags( includeFlags, excludeFlags );
-	UpdateNavFlags( includeFlags, excludeFlags );
-
 	if ( !mCorridor.isValid( 32, mQuery, &mFilter ) )
 		UpdatePath();
 
@@ -230,11 +224,6 @@ bool RecastPathInterface::UpdateGoalPositionRandom()
 
 void RecastPathInterface::UpdatePath()
 {
-	NavFlags includeFlags = NAVFLAGS_WALK;
-	NavFlags excludeFlags = NAVFLAGS_NONE;
-	mClient->GetNavFlags( includeFlags, excludeFlags );
-	UpdateNavFlags( includeFlags, excludeFlags );
-
 	mFoundGoalIndex = -1;
 	mStatus = PathInterface::PATH_NONE;
 

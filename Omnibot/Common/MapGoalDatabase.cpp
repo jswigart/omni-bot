@@ -8,10 +8,49 @@
 
 #include "ScriptManager.h"
 #include "gmWeapon.h"
-
+#include "FileSystem.h"
 #include "MapGoal.h"
 #include "MapGoalDatabase.h"
 #include "FileSystem.h"
+
+#include <google\protobuf\io\zero_copy_stream_impl_lite.h>
+
+class OmnibotSourceTree : public google::protobuf::compiler::SourceTree
+{
+public:
+	typedef std::map<std::string, std::string> FileDataMap;
+
+	virtual google::protobuf::io::ZeroCopyInputStream* Open( const std::string& filename )
+	{
+		FileDataMap::iterator it = mFileDataMap.find( filename );
+		if ( it != mFileDataMap.end() )
+		{
+			google::protobuf::io::ArrayInputStream* s = new google::protobuf::io::ArrayInputStream( it->second.c_str(), it->second.length() );
+			return s;
+		}
+
+		File file;
+		if ( !file.OpenForRead( filename.c_str(), File::Text ) )
+		{
+			mErrorMsg = "File Not Found";
+			return NULL;
+		}
+
+		std::string& str = mFileDataMap[ filename ];
+		file.ReadWholeFile( str );
+
+		return new google::protobuf::io::ArrayInputStream( str.c_str(), str.length() );
+	}
+
+	virtual std::string GetLastErrorMessage()
+	{
+		return mErrorMsg;
+	}
+private:
+	std::string		mErrorMsg;
+
+	FileDataMap		mFileDataMap;
+};
 
 MapGoalDatabase gMapGoalDatabase;
 
@@ -63,10 +102,57 @@ void MapGoalDatabase::RegisterMapGoal( const std::string &_type, const MapGoalPt
 	}
 }
 
+void MapGoalDatabase::LoadMapGoalProtos()
+{
+	DirectoryList mapgoalprotos;
+	FileSystem::FindAllFiles( "scripts/mapgoals", mapgoalprotos, ".*.proto" );
+
+	if ( mapgoalprotos.empty() )
+		return;
+
+	// Set up the source tree.
+	OmnibotSourceTree source_tree;
+	
+	// Allocate the Importer.
+	google::protobuf::compiler::Importer importer( &source_tree, this );
+
+	std::vector<const google::protobuf::FileDescriptor*> dynamicDescriptors;
+
+	for ( size_t i = 0; i < mapgoalprotos.size(); ++i )
+	{
+		importer.AddUnusedImportTrackFile( mapgoalprotos[ i ].string() );
+		const google::protobuf::FileDescriptor* parsed_file = importer.Import( mapgoalprotos[ i ].string() );
+		importer.ClearUnusedImportTrackFiles();
+
+		if ( parsed_file )
+			dynamicDescriptors.push_back( parsed_file );
+	}
+
+	const google::protobuf::Message* msg;
+	for ( size_t i = 0; i < dynamicDescriptors.size(); ++i )
+	{
+		const google::protobuf::Descriptor* desc = dynamicDescriptors[ i ]->FindMessageTypeByName( "Attack" );
+		if ( desc != NULL )
+		{
+			msg = mMessageFactory.GetPrototype( desc );
+
+			EngineFuncs::ConsoleMessage( va( "Registered Goal Type '%s'", desc->name().c_str() ) );
+		}
+	}
+	
+}
+
+void MapGoalDatabase::AddError( const std::string& filename, int line, int column, const std::string& message )
+{
+	EngineFuncs::ConsoleError( va("%s( %d, %d ): %s", filename.c_str(), line, column, message.c_str() ) );
+}
+
 void MapGoalDatabase::LoadMapGoalDefinitions( bool _clearall )
 {
 	if ( _clearall )
 		Unload();
+	
+	//LoadMapGoalProtos();
 
 	DirectoryList mapgoalFiles;
 	FileSystem::FindAllFiles( "scripts/mapgoals", mapgoalFiles, "mapgoal_.*.gm" );

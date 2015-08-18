@@ -13,6 +13,8 @@
 #include "Logger.h"
 #include "physfs.h"
 
+#include <boost/shared_array.hpp>
+
 extern "C"
 {
 #include "lzma\C\7zCrc.h"
@@ -24,12 +26,7 @@ extern "C"
 #define PATHDELIMITER ":"
 #endif
 
-bool g_FileSystemInitialized = false;
-
-namespace IOAssertions
-{
-	BOOST_STATIC_ASSERT( sizeof( float ) == sizeof( uint32_t ) );
-}
+static bool sFileSystemInitialized = false;
 
 struct FindInfo
 {
@@ -95,7 +92,6 @@ bool FileSystem::InitFileSystem()
 	LOG( "Your base directory is: " << basePath.string().c_str() );
 	if ( !PHYSFS_init( basePath.string().c_str() ) )
 	{
-		OBASSERT( 0, "PhysFS: Error Initializing: %s", PHYSFS_getLastError() );
 		return false;
 	}
 
@@ -111,7 +107,6 @@ bool FileSystem::InitFileSystem()
 	if ( !PHYSFS_mount( modPath.string().c_str(), NULL, 1 ) )
 	{
 		LOGERR( "Can't mount folder: " << modPath.string().c_str() );
-		OBASSERT( 0, "PhysFS: Error Mounting Directory: %s", PHYSFS_getLastError() );
 		PHYSFS_deinit();
 		return false;
 	}
@@ -128,7 +123,7 @@ bool FileSystem::InitFileSystem()
 	LogAvailableArchives();
 
 	CrcGenerateTable();
-	g_FileSystemInitialized = true;
+	sFileSystemInitialized = true;
 	return true;
 }
 
@@ -148,7 +143,6 @@ bool FileSystem::InitRawFileSystem( const std::string &folder )
 	LOG( "Your base directory is: " << folder.c_str() );
 	if ( !PHYSFS_init( basePath.string().c_str() ) )
 	{
-		OBASSERT( 0, "PhysFS: Error Initializing: %s", PHYSFS_getLastError() );
 		return false;
 	}
 
@@ -159,7 +153,7 @@ bool FileSystem::InitRawFileSystem( const std::string &folder )
 	LogAvailableArchives();
 
 	CrcGenerateTable();
-	g_FileSystemInitialized = true;
+	sFileSystemInitialized = true;
 	return true;
 }
 
@@ -193,7 +187,6 @@ void FileSystem::ShutdownFileSystem()
 	}
 	else
 	{
-		OBASSERT( 0, "Error Shutting Down PhysFS: %s", PHYSFS_getLastError() );
 		LOG( "Error Shutting Down PhysFS: " << PHYSFS_getLastError() );
 	}
 }
@@ -202,7 +195,7 @@ void FileSystem::ShutdownFileSystem()
 
 bool FileSystem::IsInitialized()
 {
-	return g_FileSystemInitialized;
+	return sFileSystemInitialized;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -288,7 +281,7 @@ fs::path FileSystem::GetRealDir( const std::string &_file )
 	}
 	catch ( const std::exception & ex )
 	{
-		SOFTASSERTALWAYS( 0, "Filesystem: %s", ex.what() );
+		EngineFuncs::ConsoleError( va( "Filesystem: %s", ex.what() ) );
 	}
 	return fs::path( "", fs::native );
 }
@@ -304,7 +297,7 @@ fs::path FileSystem::GetRealPath( const std::string &_file )
 	}
 	catch ( const std::exception & ex )
 	{
-		SOFTASSERTALWAYS( 0, "Filesystem: %s", ex.what() );
+		EngineFuncs::ConsoleError( va( "Filesystem: %s", ex.what() ) );
 	}
 	return fs::path( "", fs::native );
 }
@@ -397,8 +390,7 @@ void _MountAllCallback( void *data, const char *origdir, const char *str )
 	}
 	catch ( const std::exception & ex )
 	{
-		//ex;
-		SOFTASSERTALWAYS( 0, "Filesystem: %s", ex.what() );
+		EngineFuncs::ConsoleError( va( "Filesystem: %s", ex.what() ) );
 	}
 }
 
@@ -425,14 +417,13 @@ void FileSystem::MountArchives( const char *_folder, const char *_mountpoint )
 			else
 			{
 				const char *pError = PHYSFS_getLastError();
-				SOFTASSERTALWAYS( 0, "PhysFS: %s", pError ? pError : "Unknown Error" );
+				EngineFuncs::ConsoleError( va( "PhysFS: %s", pError ? pError : "Unknown Error" ) );
 			}
 		}
 	}
 	catch ( const std::exception & ex )
 	{
-		//ex;
-		SOFTASSERTALWAYS( 0, "Filesystem: %s", ex.what() );
+		EngineFuncs::ConsoleError( va( "Filesystem: %s", ex.what() ) );
 	}
 }
 
@@ -548,7 +539,7 @@ fs::path FileSystem::GetModFolder()
 	if ( System::mInstance->mGame )
 	{
 		// Append the script subfolder
-		navFolder /= fs::path( System::mInstance->mGame->GetModSubFolder() );
+		navFolder /= fs::path( System::mInstance->mGame->GetGameVars().GetModSubFolder() );
 		return navFolder;
 	}
 
@@ -562,7 +553,7 @@ fs::path FileSystem::GetNavFolder()
 	if ( System::mInstance->mGame )
 	{
 		// Append the script subfolder
-		navFolder /= fs::path( System::mInstance->mGame->GetNavSubfolder() );
+		navFolder /= fs::path( System::mInstance->mGame->GetGameVars().GetNavSubfolder() );
 		return navFolder;
 	}
 
@@ -576,7 +567,7 @@ fs::path FileSystem::GetScriptFolder()
 	if ( System::mInstance->mGame )
 	{
 		// Append the script subfolder
-		scriptFolder /= fs::path( System::mInstance->mGame->GetScriptSubfolder() );
+		scriptFolder /= fs::path( System::mInstance->mGame->GetGameVars().GetScriptSubfolder() );
 		return scriptFolder;
 	}
 
@@ -587,7 +578,7 @@ fs::path FileSystem::GetScriptFolder()
 class File_Private
 {
 public:
-	File_Private() 
+	File_Private()
 		: mpPrivate( 0 )
 	{
 	}
@@ -595,7 +586,7 @@ public:
 };
 //////////////////////////////////////////////////////////////////////////
 
-File::File() 
+File::File()
 	: mpFile( new File_Private )
 {
 	mTextMode = false;
@@ -948,7 +939,6 @@ bool File::ReadLine( std::string &_str )
 	_str.resize( 0 );
 	if ( mpFile->mpPrivate )
 	{
-		OBASSERT( mTextMode, "Function Only for Text Mode" );
 		if ( mTextMode )
 		{
 			const uint8_t cr = 0x0D;

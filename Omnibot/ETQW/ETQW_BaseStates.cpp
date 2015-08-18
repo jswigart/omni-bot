@@ -13,7 +13,7 @@
 #include "BotWeaponSystem.h"
 #include "BotSteeringSystem.h"
 #include "BotTargetingSystem.h"
-
+#include "System.h"
 #include "RenderBuffer.h"
 
 namespace AiState
@@ -69,7 +69,7 @@ namespace AiState
 		mMapGoal.reset();
 
 		GoalManager::Query qry( 0xc39bf2a3 /* BUILD */, GetClient() );
-		GoalManager::GetInstance()->GetGoals( qry );
+		System::mInstance->mGoalManager->GetGoals( qry );
 		for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 		{
 			if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
@@ -197,7 +197,7 @@ namespace AiState
 		if ( IsActive() )
 		{
 			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN );
 		}
 	}
 
@@ -225,7 +225,6 @@ namespace AiState
 			case RUNAWAY:
 			case DETONATE_EXPLOSIVE:
 			default:
-				OBASSERT( 0, "Invalid Aim State" );
 				return false;
 		}
 		return true;
@@ -276,7 +275,6 @@ namespace AiState
 			break;
 			}*/
 			default:
-				OBASSERT( 0, "Wrong Class with Evaluator_PlantExplosive" );
 				return 0.0;
 		}
 
@@ -286,7 +284,7 @@ namespace AiState
 		{
 			{
 				GoalManager::Query qry( 0xbbcae592 /* PLANT */, GetClient() );
-				GoalManager::GetInstance()->GetGoals( qry );
+				System::mInstance->mGoalManager->GetGoals( qry );
 				for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 				{
 					if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
@@ -307,7 +305,7 @@ namespace AiState
 			if ( !mMapGoal )
 			{
 				GoalManager::Query qry( 0xa411a092 /* MOVER */, GetClient() );
-				GoalManager::GetInstance()->GetGoals( qry );
+				System::mInstance->mGoalManager->GetGoals( qry );
 				for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 				{
 					if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
@@ -376,7 +374,7 @@ namespace AiState
 				case ETQW_CLASS_COVERTOPS:
 					return _UpdateSatchel();
 				default:
-					OBASSERT( 0, "Wrong Class in PlantExplosive" );
+					break;
 			}
 		}
 		return State_Busy;
@@ -541,8 +539,6 @@ namespace AiState
 		//case ARM_EXPLOSIVE:
 		//case RUNAWAY:
 		//	{
-		//		OBASSERT(.mExplosiveEntity.IsValid(), "No Explosive Entity!");
-
 		//		// Generate a random goal.
 		//		FINDSTATEIF(FollowPath,GetRootState(),GotoRandomPt(this));
 		//	 mGoalState = DETONATE_EXPLOSIVE;
@@ -642,7 +638,7 @@ namespace AiState
 		if ( IsActive() )
 		{
 			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN );
 			mTargetZone.RenderDebug();
 		}
 	}
@@ -678,7 +674,7 @@ namespace AiState
 		BitFlag64 entFlags;
 
 		GoalManager::Query qry( 0xe1a2b09c /* MOUNTMG42 */, GetClient() );
-		GoalManager::GetInstance()->GetGoals( qry );
+		System::mInstance->mGoalManager->GetGoals( qry );
 		for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 		{
 			if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
@@ -877,7 +873,7 @@ namespace AiState
 		if ( IsActive() )
 		{
 			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN );
 		}
 	}
 
@@ -899,7 +895,7 @@ namespace AiState
 		mMapGoal.reset();
 
 		GoalManager::Query qry( 0xf7e4a57f /* CHECKPOINT */, GetClient() );
-		GoalManager::GetInstance()->GetGoals( qry );
+		System::mInstance->mGoalManager->GetGoals( qry );
 		qry.GetBest( mMapGoal );
 
 		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
@@ -959,7 +955,7 @@ namespace AiState
 		if ( IsActive() )
 		{
 			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN );
 		}
 	}
 
@@ -1005,7 +1001,7 @@ namespace AiState
 		if ( InterfaceFuncs::IsWeaponCharged( GetClient(), ETQW_WP_LANDMINE, Primary ) )
 		{
 			GoalManager::Query qry( 0xf2dffa59 /* PLANTMINE */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			qry.GetBest( mMapGoal );
 		}
 		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
@@ -1128,7 +1124,7 @@ namespace AiState
 		if ( IsActive() )
 		{
 			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN );
 		}
 	}
 
@@ -1164,7 +1160,7 @@ namespace AiState
 		if ( InterfaceFuncs::IsWeaponCharged( GetClient(), ETQW_WP_LANDMINE, Primary ) )
 		{
 			GoalManager::Query qry( 0xbe8488ed /* MOBILEMG42 */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			qry.GetBest( mMapGoal );
 		}
 		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
@@ -1239,8 +1235,8 @@ namespace AiState
 		if ( IsActive() )
 		{
 			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
-			RenderBuffer::AddLine( GetClient()->GetPosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::MAGENTA, 5.f );
+			RenderBuffer::AddLine( GetClient()->GetPosition(), mMapGoal->GetPosition(), COLOR::GREEN );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::MAGENTA );
 		}
 	}
 
@@ -1287,7 +1283,7 @@ namespace AiState
 		mMapGoal.reset();
 
 		GoalManager::Query qry( 0x2086cdf0 /* REVIVE */, GetClient() );
-		GoalManager::GetInstance()->GetGoals( qry );
+		System::mInstance->mGoalManager->GetGoals( qry );
 		qry.GetBest( mMapGoal );
 
 		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
@@ -1382,7 +1378,7 @@ namespace AiState
 		if ( IsActive() )
 		{
 			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN );
 		}
 	}
 
@@ -1418,7 +1414,7 @@ namespace AiState
 		mMapGoal.reset();
 
 		GoalManager::Query qry( 0x1899efc7 /* DEFUSE */, GetClient() );
-		GoalManager::GetInstance()->GetGoals( qry );
+		System::mInstance->mGoalManager->GetGoals( qry );
 		for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 		{
 			if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )

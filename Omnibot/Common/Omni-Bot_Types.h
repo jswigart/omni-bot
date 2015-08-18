@@ -599,17 +599,14 @@ enum EntityGroup
 {
 	ENT_GRP_UNKNOWN,
 	ENT_GRP_PLAYER,
-	ENT_GRP_SPECTATOR,	
+	ENT_GRP_SPECTATOR,
 	ENT_GRP_PLAYERSTART,
 	ENT_GRP_BUTTON,
-	ENT_GRP_HEALTH,
-	ENT_GRP_AMMO1,
-	ENT_GRP_AMMO2,
-	ENT_GRP_ARMOR,
-	ENT_GRP_ENERGY,
+	ENT_GRP_RESUPPLY,
 	ENT_GRP_LADDER,
 	ENT_GRP_FLAG,
 	ENT_GRP_FLAGCAPPOINT,
+	ENT_GRP_CONTROLPOINT,
 	ENT_GRP_TELEPORTER,
 	ENT_GRP_LIFT,
 	ENT_GRP_MOVER,
@@ -653,17 +650,14 @@ enum NavAreaFlags
 	NAVFLAGS_DOOR			= ( 1 << 11 ),
 	NAVFLAGS_ROCKETJUMP		= ( 1 << 12 ),
 	NAVFLAGS_PUSHABLE		= ( 1 << 13 ),
-	NAVFLAGS_MOVER			= ( 1 << 14 ),
-	NAVFLAGS_THREAT_LVL1	= ( 1 << 15 ),
-	NAVFLAGS_THREAT_LVL2	= ( 1 << 16 ),
-	NAVFLAGS_THREAT_LVL3	= ( 1 << 17 ),
-	NAVFLAGS_JUMPPAD		= ( 1 << 18 ),
+	NAVFLAGS_MOVER			= ( 1 << 14 ),	
+	NAVFLAGS_JUMPPAD		= ( 1 << 15 ),
 
+	NAVFLAGS_DESTRUCTIBLE	= ( 1 << 30 ),
 	NAVFLAGS_DISABLED		= ( 1 << 31 ),
 
 	// compound flags
 	NAVFLAGS_ALLTEAMS		= NAVFLAGS_TEAM1_ONLY | NAVFLAGS_TEAM2_ONLY | NAVFLAGS_TEAM3_ONLY | NAVFLAGS_TEAM4_ONLY,
-	NAVFLAGS_THREATS		= NAVFLAGS_THREAT_LVL1 | NAVFLAGS_THREAT_LVL2 | NAVFLAGS_THREAT_LVL3,
 };
 
 // struct: EntityInfo
@@ -698,27 +692,45 @@ struct EntityInfo
 		}
 	};
 	
+	struct Ammo
+	{
+		uint16_t		mNum;
+		uint16_t		mWeaponId;
+
+		void Set( uint16_t num, uint16_t wpn )
+		{
+			mNum = num;
+			mWeaponId = wpn;
+		}
+
+		Ammo() : mNum( 0 ), mWeaponId( 0 )
+		{
+		}
+	};
+
+	static const int NUM_AMMO_TYPES = 5;
+
 	EntityGroup 	mGroup;
 	uint16_t		mClassId;
-	Range			mQuantity;
+	uint16_t		mLevel;
 	Range			mHealth;
 	Range			mArmor;
-	Range			mAmmo1;
-	Range			mAmmo2;
-	Range			mAmmo3;
-	Range			mAmmo4;
+	Range			mEnergy;
+	Ammo			mAmmo[ NUM_AMMO_TYPES ];
 	BitFlag32		mCategory;
 	BitFlag64		mFlags;
 	BitFlag32		mPowerUps;
 	NavAreaFlags	mNavFlags;
-	uint8_t			mTeamMask;
-		
+	float			mNavTeamCost[ 4 ];
+	
 	EntityInfo()
 		: mGroup( ENT_GRP_UNKNOWN )
 		, mClassId( ENT_CLASS_NONE )
+		, mLevel( 0 )
 		, mNavFlags( NAVFLAGS_NONE )
-		, mTeamMask( 0xFF )
 	{
+		for ( int i = 0; i < 4; ++i )
+			mNavTeamCost[ i ] = 0.0f;
 	}
 };
 

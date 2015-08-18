@@ -11,6 +11,7 @@
 #include "IGame.h"
 #include "BotWeaponSystem.h"
 #include "InterfaceFuncs.h"
+#include "System.h"
 
 bool CheckCriteria::ParseOperator( uint32_t sHash )
 {
@@ -145,7 +146,7 @@ bool Base_CheckCriteria( CheckCriteria &crit, Client * bot )
 		case ON_MAPGOAL_AVAILABLE:
 		{
 			bool bResult = false;
-			MapGoalPtr mg = GoalManager::GetInstance()->GetGoal( crit.mOperand[ 0 ].GetInt() );
+			MapGoalPtr mg = System::mInstance->mGoalManager->GetGoal( crit.mOperand[ 0 ].GetInt() );
 			if ( mg && mg->IsAvailable( bot->GetTeam() ) )
 				bResult = true;
 			if ( crit.mNegated )

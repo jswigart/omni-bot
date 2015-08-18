@@ -84,6 +84,7 @@ GMBIND_FUNCTION( "QueryGoals", gmfQueryMapGoals )
 GMBIND_FUNCTION( "WatchForMapGoalsInRadius", gmfWatchForMapGoalsInRadius )
 GMBIND_FUNCTION( "ClearWatchForMapGoalsInRadius", gmfClearWatchForMapGoalsInRadius )
 GMBIND_FUNCTION( "WatchForEntityCategory", gmfWatchForEntityCategory )
+GMBIND_FUNCTION( "IterateWatchEntities", gmfIterateWatchEntities )
 
 GMBIND_FUNCTION( "DelayGetPriority", gmfDelayGetPriority )
 
@@ -130,6 +131,7 @@ GMBIND_PROPERTY( "Commands", getCommands, setCommands )
 GMBIND_PROPERTY( "DebugString", getDebugString, setDebugString )
 GMBIND_PROPERTY( "Debug", getDebug, setDebug )
 
+GMBIND_PROPERTY( "OnTarget", getOnTarget, NULL )
 GMBIND_PROPERTY( "Bot", getBot, NULL )
 GMBIND_PROPERTY( "MapGoal", getMapGoal, setMapGoal )
 
@@ -152,7 +154,7 @@ ScriptGoal *gmScriptGoal::Constructor( gmThread *a_thread )
 
 void gmScriptGoal::Destructor( ScriptGoal *_native )
 {
-	OBASSERT( 0, "Invalid Call" );
+	assert( 0 );
 }
 
 void gmScriptGoal::AsStringCallback( AiState::ScriptGoal * a_object, char * a_buffer, int a_bufferLen )
@@ -619,7 +621,7 @@ int gmScriptGoal::gmfRouteTo( gmThread *a_thread )
 		opn.FromTable( a_thread->GetMachine(), Options );
 	}
 
-	MapGoalPtr mgp = GoalManager::GetInstance()->GetGoal( Mg->GetName() );
+	MapGoalPtr mgp = System::mInstance->mGoalManager->GetGoal( Mg->GetName() );
 	if ( mgp && native->RouteTo( mgp, opn ) )
 	{
 		gmVariable blocks[ 2 ] = { gmVariable( PATH_SUCCESS ), gmVariable( PATH_FAILED ) };
@@ -1083,7 +1085,7 @@ int gmScriptGoal::gmfQueryMapGoals( gmThread *a_thread )
 		return GM_EXCEPTION;
 	}
 
-	GoalManager::GetInstance()->GetGoals( qry );
+	System::mInstance->mGoalManager->GetGoals( qry );
 	if ( qry.GetError() != GoalManager::Query::QueryOk )
 	{
 		GM_EXCEPTION_MSG( qry.QueryErrorString() );
@@ -1099,7 +1101,6 @@ int gmScriptGoal::gmfQueryMapGoals( gmThread *a_thread )
 		for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 		{
 			gmUserObject *pUser = qry.mList[ i ]->GetScriptObject( a_thread->GetMachine() );
-			OBASSERT( pUser, "Invalid Object" );
 
 			table->Set( pMachine, i, gmVariable( pUser ) );
 		}
@@ -1195,6 +1196,25 @@ int gmScriptGoal::gmfWatchForEntityCategory( gmThread *a_thread )
 
 	const int CustomTraceMask = tbl->Get( a_thread->GetMachine(), "RequireLOS" ).GetIntSafe( 0 );
 	native->WatchForEntityCategory( varRadius.GetFloatSafe(), entCategory, CustomTraceMask );
+	return GM_OK;
+}
+
+int gmScriptGoal::gmfIterateWatchEntities( gmThread *a_thread )
+{
+	CHECK_THIS_SGOAL();
+	GM_CHECK_NUM_PARAMS( 1 );
+
+	GameEntity ent;
+	// may be null as well
+	if ( a_thread->ParamType( 0 ) != GM_NULL )
+		GM_CHECK_GAMEENTITY_FROM_PARAM( ent, 0 );
+	
+	ent = native->IterateWatchEntity( ent );
+
+	if ( ent.IsValid() )
+		a_thread->PushEntity( ent.AsInt() );
+	else
+		a_thread->PushNull();
 	return GM_OK;
 }
 
@@ -1646,6 +1666,12 @@ bool gmScriptGoal::getDebug( AiState::ScriptGoal *a_native, gmThread *a_thread, 
 bool gmScriptGoal::setDebug( AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands )
 {
 	a_native->DebugDraw( a_operands[ 1 ].GetInt( 0 ) != 0 );
+	return true;
+}
+
+bool gmScriptGoal::getOnTarget( AiState::ScriptGoal *a_native, gmThread *a_thread, gmVariable *a_operands )
+{
+	a_operands[ 0 ].SetInt( a_native->GetOnTargetTime() );
 	return true;
 }
 

@@ -1,5 +1,6 @@
-#include "common.h"
+
 #include "mdump.h"
+#include "Utilities.h"
 
 std::string		g_AppName;
 
@@ -35,11 +36,11 @@ std::string		g_AppName;
 #endif
 
 // based on dbghelp.h
-typedef BOOL (WINAPI *MINIDUMPWRITEDUMP)(HANDLE hProcess, DWORD dwPid, HANDLE hFile, MINIDUMP_TYPE DumpType,
-										 CONST PMINIDUMP_EXCEPTION_INFORMATION ExceptionParam,
-										 CONST PMINIDUMP_USER_STREAM_INFORMATION UserStreamParam,
-										 CONST PMINIDUMP_CALLBACK_INFORMATION CallbackParam
-										 );
+typedef BOOL( WINAPI *MINIDUMPWRITEDUMP )( HANDLE hProcess, DWORD dwPid, HANDLE hFile, MINIDUMP_TYPE DumpType,
+	CONST PMINIDUMP_EXCEPTION_INFORMATION ExceptionParam,
+	CONST PMINIDUMP_USER_STREAM_INFORMATION UserStreamParam,
+	CONST PMINIDUMP_CALLBACK_INFORMATION CallbackParam
+	);
 
 static LONG WINAPI TopLevelFilter( struct _EXCEPTION_POINTERS *pExceptionInfo )
 {
@@ -48,29 +49,29 @@ static LONG WINAPI TopLevelFilter( struct _EXCEPTION_POINTERS *pExceptionInfo )
 
 	std::string DumpPath;
 	bool EnableDump = false, EnableDumpDialog = false;
-	Options::GetValue("Debug","DumpFileEnable",EnableDump);
-	Options::GetValue("Debug","DumpFileDialog",EnableDumpDialog);
+	Options::GetValue( "Debug", "DumpFileEnable", EnableDump );
+	Options::GetValue( "Debug", "DumpFileDialog", EnableDumpDialog );
 
-	if(!EnableDump)
+	if ( !EnableDump )
 		return retval;
 
 	// firstly see if dbghelp.dll is around and has the function we need
 	// look next to the EXE first, as the one in System32 might be old
 	// (e.g. Windows 2000)
 	HMODULE hDll = NULL;
-	char szDbgHelpPath[_MAX_PATH];
+	char szDbgHelpPath[ _MAX_PATH ];
 
-	if (GetModuleFileName( NULL, szDbgHelpPath, _MAX_PATH ))
+	if ( GetModuleFileName( NULL, szDbgHelpPath, _MAX_PATH ) )
 	{
 		char *pSlash = _tcsrchr( szDbgHelpPath, '\\' );
-		if (pSlash)
+		if ( pSlash )
 		{
-			_tcscpy( pSlash+1, "DBGHELP.DLL" );
+			_tcscpy( pSlash + 1, "DBGHELP.DLL" );
 			hDll = ::LoadLibrary( szDbgHelpPath );
 		}
 	}
 
-	if (hDll==NULL)
+	if ( hDll == NULL )
 	{
 		// load any version we can
 		hDll = ::LoadLibrary( "DBGHELP.DLL" );
@@ -78,13 +79,13 @@ static LONG WINAPI TopLevelFilter( struct _EXCEPTION_POINTERS *pExceptionInfo )
 
 	LPCTSTR szResult = NULL;
 
-	if (hDll)
+	if ( hDll )
 	{
-		MINIDUMPWRITEDUMP pDump = (MINIDUMPWRITEDUMP)::GetProcAddress( hDll, "MiniDumpWriteDump" );
-		if (pDump)
+		MINIDUMPWRITEDUMP pDump = ( MINIDUMPWRITEDUMP )::GetProcAddress( hDll, "MiniDumpWriteDump" );
+		if ( pDump )
 		{
-			char szScratch[_MAX_PATH] = {0};
-			char szDumpPath[_MAX_PATH] = {0};
+			char szScratch[ _MAX_PATH ] = { 0 };
+			char szDumpPath[ _MAX_PATH ] = { 0 };
 
 			// Get System Time for filename
 			SYSTEMTIME pTime;
@@ -98,17 +99,17 @@ static LONG WINAPI TopLevelFilter( struct _EXCEPTION_POINTERS *pExceptionInfo )
 				pTime.wHour,
 				pTime.wMinute,
 				pTime.wSecond,
-				Revision::Number().c_str());
+				Revision::Number().c_str() );
 
 			// ask the user if they want to save a dump file
-			if (!EnableDumpDialog || ::MessageBox( NULL,
-				"Crash detected, would you like to save a dump file?", g_AppName.c_str(), MB_YESNO )==IDYES)
+			if ( !EnableDumpDialog || ::MessageBox( NULL,
+				"Crash detected, would you like to save a dump file?", g_AppName.c_str(), MB_YESNO ) == IDYES )
 			{
 				// create the file
 				HANDLE hFile = ::CreateFile( szDumpPath, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS,
 					FILE_ATTRIBUTE_NORMAL, NULL );
 
-				if (hFile!=INVALID_HANDLE_VALUE)
+				if ( hFile != INVALID_HANDLE_VALUE )
 				{
 					_MINIDUMP_EXCEPTION_INFORMATION ExInfo;
 
@@ -118,7 +119,7 @@ static LONG WINAPI TopLevelFilter( struct _EXCEPTION_POINTERS *pExceptionInfo )
 
 					// write the dump
 					BOOL bOK = pDump( GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpNormal, &ExInfo, NULL, NULL );
-					if (bOK)
+					if ( bOK )
 					{
 						sprintf( szScratch, "Saved dump file to '%s'", szDumpPath );
 						szResult = szScratch;
@@ -129,7 +130,7 @@ static LONG WINAPI TopLevelFilter( struct _EXCEPTION_POINTERS *pExceptionInfo )
 						sprintf( szScratch, "Error saving dump file to '%s' (error %d)", szDumpPath, GetLastError() );
 						szResult = szScratch;
 					}
-					::CloseHandle(hFile);
+					::CloseHandle( hFile );
 				}
 				else
 				{
@@ -148,7 +149,7 @@ static LONG WINAPI TopLevelFilter( struct _EXCEPTION_POINTERS *pExceptionInfo )
 		szResult = "DBGHELP.DLL not found";
 	}
 
-	if (EnableDumpDialog && szResult)
+	if ( EnableDumpDialog && szResult )
 		::MessageBox( NULL, szResult, g_AppName.c_str(), MB_OK );
 
 	return retval;
@@ -156,7 +157,7 @@ static LONG WINAPI TopLevelFilter( struct _EXCEPTION_POINTERS *pExceptionInfo )
 
 namespace MiniDumper
 {
-	void Init(const char *_appname)
+	void Init( const char *_appname )
 	{
 		assert( g_AppName.empty() );
 		g_AppName = _appname ? _appname : "Application";

@@ -162,7 +162,6 @@ namespace AiState
 			DISP_BUILDING,
 			DISP_REPAIRING,
 			DISP_DONE,
-			DISP_NUMBUILDSTATES,
 		};
 
 		void GetDebugString( std::stringstream &out );

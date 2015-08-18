@@ -10,7 +10,7 @@
 #include "ET_FilterClosest.h"
 #include "ET_InterfaceFuncs.h"
 #include "BotPathing.h"
-
+#include "System.h"
 #include "RenderBuffer.h"
 
 namespace AiState
@@ -40,7 +40,7 @@ namespace AiState
 		if ( IsActive() )
 		{
 			RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN );
 		}
 	}
 
@@ -91,7 +91,7 @@ namespace AiState
 		if ( InterfaceFuncs::IsWeaponCharged( GetClient(), ET_WP_LANDMINE, Primary ) )
 		{
 			GoalManager::Query qry( 0xf2dffa59 /* PLANTMINE */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			qry.GetBest( mMapGoal );
 		}
 		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
@@ -251,7 +251,7 @@ namespace AiState
 	{
 		if ( IsActive() )
 		{
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::CYAN, 5.f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::CYAN );
 		}
 	}
 
@@ -314,7 +314,7 @@ namespace AiState
 		mMapGoal.reset();
 
 		GoalManager::Query qry( 0x74708d7a /* MOBILEMORTAR */, GetClient() );
-		GoalManager::GetInstance()->GetGoals( qry );
+		System::mInstance->mGoalManager->GetGoals( qry );
 		if ( !qry.GetBest( mMapGoal ) || !CacheGoalInfo( mMapGoal ) )
 			mMapGoal.reset();
 
@@ -447,7 +447,7 @@ namespace AiState
 			if ( mMapGoal )
 			{
 				RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
-				RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
+				RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN );
 			}
 		}
 	}
@@ -525,7 +525,7 @@ namespace AiState
 			{
 				GoalManager::Query q( 0xa411a092 /* MOVER */ );
 				q.Ent( filter.GetBestEntity() );
-				GoalManager::GetInstance()->GetGoals( q );
+				System::mInstance->mGoalManager->GetGoals( q );
 
 				if ( !q.mList.empty() )
 				{
@@ -537,7 +537,7 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		{
 			GoalManager::Query qry( 0x312ad48d /* CALLARTILLERY */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 			{
 				if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
@@ -560,7 +560,7 @@ namespace AiState
 		if ( mMapGoalTarget )
 		{
 			GoalManager::Query qry( 0xb708821b /* ARTILLERY_S */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 			{
 				if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
@@ -580,7 +580,7 @@ namespace AiState
 		if ( mMapGoalTarget )
 		{
 			GoalManager::Query qry( 0xac0870ca /* ARTILLERY_D */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			for ( uint32_t i = 0; i < qry.mList.size(); ++i )
 			{
 				if ( BlackboardIsDelayed( qry.mList[ i ]->GetSerialNum() ) )
@@ -741,7 +741,7 @@ namespace AiState
 			if ( mMapGoal )
 			{
 				RenderBuffer::AddOBB( mMapGoal->GetWorldBounds(), COLOR::ORANGE );
-				RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN, 5.f );
+				RenderBuffer::AddLine( GetClient()->GetEyePosition(), mMapGoal->GetPosition(), COLOR::GREEN );
 			}
 		}
 	}
@@ -816,7 +816,7 @@ namespace AiState
 		if ( fHealthPriority > 0.7f )
 		{
 			GoalManager::Query qryHealth( 0x63217fa7 /* HEALTHCAB */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qryHealth );
+			System::mInstance->mGoalManager->GetGoals( qryHealth );
 			float fDistToHealthCabinet;
 
 			MapGoalList::iterator mIt = qryHealth.mList.begin();
@@ -853,7 +853,7 @@ namespace AiState
 		if ( fAmmoPriority > fHealthPriority && fAmmoPriority > 0.7f && mAmmoType != -1 )
 		{
 			GoalManager::Query qryAmmo( 0x52ad0a47 /* AMMOCAB */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qryAmmo );
+			System::mInstance->mGoalManager->GetGoals( qryAmmo );
 			float fDistToAmmoCabinet;
 
 			MapGoalList::iterator mIt = qryAmmo.mList.begin();
@@ -921,8 +921,7 @@ namespace AiState
 				BlackboardDelay( 10.f, mQuery.mList[ i ]->GetSerialNum() );
 			return State_Finished;
 		}
-		OBASSERT( mMapGoal, "No Map Goal!" );
-
+		
 		ET_CabinetData cData;
 		if ( InterfaceFuncs::GetCabinetData( mMapGoal->GetEntity(), cData ) &&
 			cData.mCurrentAmount == 0 )
@@ -1039,7 +1038,7 @@ namespace AiState
 	//mMapGoal.reset();
 
 	//	GoalManager::Query qry(0xc39bf2a3 /* BUILD */, GetClient());
-	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	System::mInstance->mGoalManager->GetGoals(qry);
 	//	for(uint32_t i = 0; i < qry.mList.size(); ++i)
 	//	{
 	//		if(BlackboardIsDelayed(qry.mList[i]->GetSerialNum()))
@@ -1228,7 +1227,6 @@ namespace AiState
 	//	case RUNAWAY:
 	//	case DETONATE_EXPLOSIVE:
 	//	default:
-	//		OBASSERT(0, "Invalid Aim State");
 	//		return false;
 	//	}
 	//	return true;
@@ -1274,7 +1272,6 @@ namespace AiState
 	//			break;
 	//		}
 	//	default:
-	//		OBASSERT(0, "Wrong Class with Evaluator_PlantExplosive");
 	//		return 0.0;
 	//	}
 
@@ -1284,7 +1281,7 @@ namespace AiState
 	//	{
 	//		{
 	//			GoalManager::Query qry(0xbbcae592 /* PLANT */, GetClient());
-	//			GoalManager::GetInstance()->GetGoals(qry);
+	//			System::mInstance->mGoalManager->GetGoals(qry);
 	//			for(uint32_t i = 0; i < qry.mList.size(); ++i)
 	//			{
 	//				if(BlackboardIsDelayed(qry.mList[i]->GetSerialNum()))
@@ -1311,7 +1308,7 @@ namespace AiState
 	//		if(!mMapGoal)
 	//		{
 	//			GoalManager::Query qry(0xa411a092 /* MOVER */, GetClient());
-	//			GoalManager::GetInstance()->GetGoals(qry);
+	//			System::mInstance->mGoalManager->GetGoals(qry);
 	//			for(uint32_t i = 0; i < qry.mList.size(); ++i)
 	//			{
 	//				if(BlackboardIsDelayed(qry.mList[i]->GetSerialNum()))
@@ -1380,7 +1377,6 @@ namespace AiState
 	//		case ET_CLASS_COVERTOPS:
 	//			return _UpdateSatchel();
 	//		default:
-	//			OBASSERT(0, "Wrong Class in PlantExplosive");
 	//		}
 	//	}
 
@@ -1557,8 +1553,6 @@ namespace AiState
 	//	case ARM_EXPLOSIVE:
 	//	case RUNAWAY:
 	//		{
-	//			OBASSERT(.mExplosiveEntity.IsValid(), "No Explosive Entity!");
-
 	//			// Generate a random goal.
 	//			FINDSTATEIF(FollowPath,GetRootState(),GotoRandomPt(this));
 	//		mGoalState = DETONATE_EXPLOSIVE;
@@ -1730,7 +1724,7 @@ namespace AiState
 	//mMapGoal.reset();
 
 	//	GoalManager::Query qry(0x86584d00 /* FLAME */, GetClient());
-	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	System::mInstance->mGoalManager->GetGoals(qry);
 	//	qry.GetBest(.mMapGoal);
 
 	//	return mMapGoal ? mMapGoal->GetPriorityForClient(GetClient()) : 0.f;
@@ -1881,7 +1875,7 @@ namespace AiState
 	//mMapGoal.reset();
 
 	//	GoalManager::Query qry(0x731f6315 /* PANZER */, GetClient());
-	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	System::mInstance->mGoalManager->GetGoals(qry);
 	//	qry.GetBest(.mMapGoal);
 
 	//	return mMapGoal ? mMapGoal->GetPriorityForClient(GetClient()) : 0.f;
@@ -2051,7 +2045,7 @@ namespace AiState
 	//	BitFlag64 entFlags;
 
 	//	GoalManager::Query qry(0xe1a2b09c /* MOUNTMG42 */, GetClient());
-	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	System::mInstance->mGoalManager->GetGoals(qry);
 	//	for(uint32_t i = 0; i < qry.mList.size(); ++i)
 	//	{
 	//		if(BlackboardIsDelayed(qry.mList[i]->GetSerialNum()))
@@ -2334,7 +2328,7 @@ namespace AiState
 	//mMapGoal.reset();
 
 	//	GoalManager::Query qry(0xbe8488ed /* MOBILEMG42 */, GetClient());
-	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	System::mInstance->mGoalManager->GetGoals(qry);
 	//	qry.GetBest(.mMapGoal);
 	//	return mMapGoal ? mMapGoal->GetPriorityForClient(GetClient()) : 0.f;
 	//}
@@ -2473,7 +2467,7 @@ namespace AiState
 	//	BitFlag64 entFlags;
 
 	//	GoalManager::Query qry(0x17929136 /* REPAIRMG42 */, GetClient());
-	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	System::mInstance->mGoalManager->GetGoals(qry);
 	//	for(uint32_t i = 0; i < qry.mList.size(); ++i)
 	//	{
 	//		if(BlackboardIsDelayed(qry.mList[i]->GetSerialNum()))
@@ -2573,7 +2567,7 @@ namespace AiState
 	//mMapGoal.reset();
 
 	//	GoalManager::Query qry(0xf7e4a57f /* CHECKPOINT */, GetClient());
-	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	System::mInstance->mGoalManager->GetGoals(qry);
 	//	qry.GetBest(.mMapGoal);
 
 	//	return mMapGoal ? mMapGoal->GetPriorityForClient(GetClient()) : 0.f;
@@ -2699,7 +2693,7 @@ namespace AiState
 	//mMapGoal.reset();
 
 	//	GoalManager::Query qry(0x2086cdf0 /* REVIVE */, GetClient());
-	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	System::mInstance->mGoalManager->GetGoals(qry);
 	//	//qry.GetBest(.mMapGoal);
 
 	//	float fDistToRevive;
@@ -2877,7 +2871,7 @@ namespace AiState
 	//bool ReviveTeammate::AreThereNewReviveGoals()
 	//{
 	//	GoalManager::Query qry(0x2086cdf0 /* REVIVE */, GetClient());
-	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	System::mInstance->mGoalManager->GetGoals(qry);
 
 	//	for(uint32_t i = 0; i < qry.mList.size(); ++i)
 	//	{
@@ -2943,7 +2937,7 @@ namespace AiState
 	//mMapGoal.reset();
 
 	//	GoalManager::Query qry(0x1899efc7 /* DEFUSE */, GetClient());
-	//	GoalManager::GetInstance()->GetGoals(qry);
+	//	System::mInstance->mGoalManager->GetGoals(qry);
 	//	for(uint32_t i = 0; i < qry.mList.size(); ++i)
 	//	{
 	//		if(BlackboardIsDelayed(qry.mList[i]->GetSerialNum()))

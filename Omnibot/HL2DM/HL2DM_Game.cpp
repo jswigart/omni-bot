@@ -19,55 +19,26 @@ IGame *CreateGameInstance()
 	return new HL2DM_Game;
 }
 
-int HL2DM_Game::GetVersionNum() const
+HL2DM_Game::HL2DM_Game()
 {
-	return HL2DM_VERSION_LATEST;
+	mGameVars.mClientBase = -1;
+	mGameVars.mGameVersion = HL2DM_VERSION_LATEST;
+	mGameVars.mGameAbbrev = "hl2dm";
+	mGameVars.mGameName = "Half-life 2 Deathmatch";
+	mGameVars.mPlayerHeight = 72.f;
 }
 
-Client *HL2DM_Game::CreateGameClient()
+HL2DM_Game::~HL2DM_Game()
 {
-	return new HL2DM_Client;
 }
 
-const char *HL2DM_Game::GetDLLName() const
+Client * HL2DM_Game::CreateGameClient()
 {
-#ifdef WIN32
-	return "omni-bot\\omnibot_hl2dm.dll";
-#else
-	return "omni-bot/omnibot_hl2dm.so";
-#endif
+	return new HL2DM_Client();
 }
 
-const char *HL2DM_Game::GetGameName() const
-{
-	return "HL2DM";
-}
-
-const char *HL2DM_Game::GetModSubFolder() const
-{
-#ifdef WIN32
-	return "hl2dm\\";
-#else
-	return "hl2dm";
-#endif
-}
-
-const char *HL2DM_Game::GetNavSubfolder() const
-{
-	return "hl2dm\\nav\\";
-}
-
-const char *HL2DM_Game::GetScriptSubfolder() const
-{
-	return "hl2dm\\scripts\\";
-}
-const char *HL2DM_Game::GetGameDatabaseAbbrev() const
-{
-	return "hl2dm";
-}
 bool HL2DM_Game::Init( System & system )
 {
-	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback( HL2DM_Game::HL2DM_GetEntityClassTraceOffset );
 	AiState::SensoryMemory::SetEntityAimOffsetCallback( HL2DM_Game::HL2DM_GetEntityClassAimOffset );
 
@@ -75,11 +46,6 @@ bool HL2DM_Game::Init( System & system )
 		return false;
 
 	return true;
-}
-
-void HL2DM_Game::GetGameVars( GameVars &_gamevars )
-{
-	_gamevars.mPlayerHeight = 72.f;
 }
 
 static const IntEnum HL2DM_TeamEnum [] =

@@ -11,6 +11,7 @@
 #include "pow2assert.h"
 
 #include <boost/lexical_cast.hpp>
+#include <boost/filesystem/path.hpp>
 
 namespace MapFormat
 {
@@ -29,13 +30,11 @@ namespace MapFormat
 	}
 	
 	// ------------------------------------------------------------------------------------------------
-	//	Constructor.
 	VBSPFileImporter::VBSPFileImporter()
 	{
 	}
 
 	// ------------------------------------------------------------------------------------------------
-	//	Destructor.
 	VBSPFileImporter::~VBSPFileImporter()
 	{
 	}
@@ -269,6 +268,9 @@ namespace MapFormat
 				surfaceMat.mContents = (ContentFlags)gEngineFuncs->ConvertValue( brush.mContents, IEngineInterface::ConvertContentsFlags, IEngineInterface::ConvertGameToBot );
 				surfaceMat.mSurface = (SurfaceFlags)gEngineFuncs->ConvertValue( faceTexInfo.mFlags, IEngineInterface::ConvertSurfaceFlags, IEngineInterface::ConvertGameToBot );
 				
+				if ( surfaceMat.mSurface & SURFACE_IGNORE )
+					continue;
+
 				for ( size_t x = 1; x < sideVerts.size(); ++x )
 				{
 					const Vector3f vpos[ 3 ] = {
@@ -414,6 +416,9 @@ namespace MapFormat
 			surfaceMat.mContents = (ContentFlags)gEngineFuncs->ConvertValue( dispInfo.mContents, IEngineInterface::ConvertContentsFlags, IEngineInterface::ConvertGameToBot );
 			surfaceMat.mSurface = (SurfaceFlags)gEngineFuncs->ConvertValue( faceTexInfo.mFlags, IEngineInterface::ConvertSurfaceFlags, IEngineInterface::ConvertGameToBot );
 			
+			if ( surfaceMat.mSurface & SURFACE_IGNORE )
+				continue;
+
 			const int edge0Index = bspmodel.mSurfEdges[ displacementFace.mFirstEdge + 0 ];
 			const int edge1Index = bspmodel.mSurfEdges[ displacementFace.mFirstEdge + 1 ];
 			const int edge2Index = bspmodel.mSurfEdges[ displacementFace.mFirstEdge + 2 ];
@@ -485,6 +490,7 @@ namespace MapFormat
 
 			// generate a new model/node for the displacement
 			NodePtr node( new Node() );
+			node->mDisplacement = i;
 			node->mModel.reset( new CollisionModel() );
 			node->mModel->SetName( modelName );
 

@@ -27,13 +27,13 @@ namespace AiState
 		{
 			Vector3f vPos;
 			EngineFuncs::EntityPosition( mCurrentTarget, vPos );
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), vPos, COLOR::RED, IGame::GetDeltaTimeSecs() );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), vPos, COLOR::RED );
 		}
 		if ( mLastTarget.IsValid() )
 		{
 			Vector3f vPos;
 			EngineFuncs::EntityPosition( mLastTarget, vPos );
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), vPos, COLOR::ORANGE, IGame::GetDeltaTimeSecs() );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), vPos, COLOR::ORANGE );
 		}
 	}
 

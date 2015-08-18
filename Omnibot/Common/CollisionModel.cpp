@@ -9,6 +9,9 @@
 #include "tiny_obj_loader.h"
 #include "fastlz/fastlz.h"
 
+#include <boost/shared_array.hpp>
+#include <boost/lexical_cast.hpp>
+
 //////////////////////////////////////////////////////////////////////////
 
 const ContentFlagsEnum ContentFlagsEnum::sKeyVal [] =
@@ -786,6 +789,7 @@ void Node::Clear()
 	mEntInfo = EntityInfo();
 	mSubModel = -1;
 	mStaticModel = -1;
+	mDisplacement = -1;
 	mActiveState = StateCollidable;
 	mActiveModelCrc = 0;
 	mNavFlagsActive = NAVFLAGS_NONE;
@@ -794,7 +798,7 @@ void Node::Clear()
 	mChildren.clear();
 	mModel.reset();
 	mShapeMode = RecastIO::SHAPE_TRIANGLES;
-	mEnabled = true;
+	mEnabledDefault = mEnabled = true;
 	mSolid = true;
 	mDynamic = false;
 	mForceRebuild = false;
@@ -841,7 +845,13 @@ void Node::Init( PathPlannerRecast * planner )
 	}
 	else if ( mStaticModel < 0 )
 	{
-		mEnabled = false;
+		mEnabledDefault = mEnabled = false;
+	}
+	else if ( mDisplacement >= 0 )
+	{
+		// default all displacements to false
+		// since they tend to be very high poly
+		mEnabledDefault = mEnabled = false;
 	}
 
 	// Update the children
@@ -1194,6 +1204,21 @@ void Node::FindNodeWithStaticModel( int staticModelId, NodePtr & node )
 			return;
 	}
 }
+void Node::FindNodeWithDisplacement( int displacementId, NodePtr & node )
+{
+	if ( mDisplacement == displacementId )
+	{
+		node = shared_from_this();
+		return;
+	}
+
+	for ( size_t i = 0; i < mChildren.size(); ++i )
+	{
+		mChildren[ i ]->FindNodeWithDisplacement( displacementId, node );
+		if ( node )
+			return;
+	}
+}
 void Node::FindNodeWithEntity( GameEntity entity, NodePtr & node )
 {
 	if ( mEntity == entity )
@@ -1282,9 +1307,11 @@ void Node::SaveState( RecastIO::NavigationMesh & ioNavmesh )
 		nodeState.set_submodelid( mSubModel );
 	else if ( mStaticModel >= 0 )
 		nodeState.set_staticmodelid( mStaticModel );
-
+	else if ( mDisplacement >= 0 )
+		nodeState.set_displacementid( mDisplacement );	
+	
 	bool dataSet = false;
-	if ( nodeState.enabled() != mEnabled )
+	if ( mEnabledDefault != mEnabled )
 	{
 		nodeState.set_enabled( mEnabled );
 		dataSet = true;
@@ -1313,7 +1340,7 @@ void Node::SaveState( RecastIO::NavigationMesh & ioNavmesh )
 	// if all the fields are defaulted don't save it out
 	if ( dataSet )
 	{
-		if ( nodeState.has_name() || nodeState.has_submodelid() || nodeState.has_staticmodelid() )
+		if ( nodeState.has_name() || nodeState.has_submodelid() || nodeState.has_staticmodelid() || nodeState.has_displacementid() )
 		{
 			ioNavmesh.add_nodestate()->CopyFrom( nodeState );
 		}
@@ -1431,20 +1458,20 @@ NodePtr CollisionWorld::LoadModelIntoWorld( const GameEntity entity, const GameM
 	}
 	else if ( entInfo.mFlags.CheckFlag( ENT_FLAG_USEBOUNDS ) && !modelInfo.mAABB.IsZero() )
 	{
-		return CreateNodeForEntityBounds( entity, modelInfo, entInfo.mFlags.CheckFlag( ENT_FLAG_SAVENAV ) );
+		return CreateNodeForEntityBounds( entity, modelInfo, entInfo );
 	}
 	else if ( modelInfo.mDataBuffer != NULL )
 	{
-		return CreateNodeForEntityModel( entity, modelInfo, entInfo.mFlags.CheckFlag( ENT_FLAG_SAVENAV ) );
+		return CreateNodeForEntityModel( entity, modelInfo, entInfo );
 	}
 	else if ( !modelInfo.mAABB.IsZero() )
 	{		
-		return CreateNodeForEntityBounds( entity, modelInfo, entInfo.mFlags.CheckFlag( ENT_FLAG_SAVENAV ) );
+		return CreateNodeForEntityBounds( entity, modelInfo, entInfo );
 	}
 	return NodePtr();
 }
 
-NodePtr CollisionWorld::CreateNodeForEntityModel( const GameEntity entity, const GameModelInfo & modelInfo, bool saveable )
+NodePtr CollisionWorld::CreateNodeForEntityModel( const GameEntity entity, const GameModelInfo & modelInfo, const EntityInfo & entInfo )
 {
 	Vector3f origin = Vector3f::ZERO;
 	if ( !EngineFuncs::EntityPosition( entity, origin ) )
@@ -1478,13 +1505,22 @@ NodePtr CollisionWorld::CreateNodeForEntityModel( const GameEntity entity, const
 	node->mEntityName = entName;	
 	node->mTransform.SetPosition( origin, false );
 	node->mTransform.SetOrientation( Matrix3f( vFwd, -vRight, vUp, true ), false );
-	node->mSaveable = saveable;
+	node->mSaveable = entInfo.mFlags.CheckFlag( ENT_FLAG_SAVENAV );
 	node->mRuntime = true;
+
+	if ( entInfo.mCategory.CheckFlag( ENT_CAT_DYNAMIC_NAV ) )
+		node->mDynamic = true;
+
+	if ( entInfo.mCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
+	{
+		node->mShapeMode = RecastIO::SHAPE_OBB;
+		node->mSolid = false;
+	}
 
 	return node;
 }
 
-NodePtr CollisionWorld::CreateNodeForEntityBounds( const GameEntity entity, const GameModelInfo & modelInfo, bool saveable )
+NodePtr CollisionWorld::CreateNodeForEntityBounds( const GameEntity entity, const GameModelInfo & modelInfo, const EntityInfo & entInfo )
 {
 	Vector3f origin = Vector3f::ZERO;
 	if ( !EngineFuncs::EntityPosition( entity, origin ) )
@@ -1518,9 +1554,18 @@ NodePtr CollisionWorld::CreateNodeForEntityBounds( const GameEntity entity, cons
 	node->mEntityName = entName;
 	node->mTransform.SetPosition( origin, false );
 	node->mTransform.SetOrientation( Matrix3f( vFwd, -vRight, vUp, true ), false );
-	node->mSaveable = saveable;
+	node->mSaveable = entInfo.mFlags.CheckFlag( ENT_FLAG_SAVENAV );
 	node->mRuntime = true;
 	
+	if ( entInfo.mCategory.CheckFlag( ENT_CAT_DYNAMIC_NAV ) )
+		node->mDynamic = true;
+
+	if ( entInfo.mCategory.CheckFlag( ENT_CAT_PROP_PUSHABLE ) )
+	{
+		node->mShapeMode = RecastIO::SHAPE_OBB;
+		node->mSolid = false;
+	}
+
 	return node;
 }
 

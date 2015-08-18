@@ -96,8 +96,6 @@ void CallbackParameters::PrintDebug()
 
 void CallbackParameters::CheckParameters()
 {
-	OBASSERT( mMachine, "No Machine Specified!" );
-	OBASSERT( mNumParameters < MaxVariables - 1, "Out of Parameters!" );
 }
 
 void CallbackParameters::AddNull( const char *_name )

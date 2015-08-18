@@ -501,4 +501,16 @@ private:
 
 //////////////////////////////////////////////////////////////////////////
 
+#define FINDSTATE(var, statename, parent) \
+	statename *var = static_cast<statename*>(parent->FindState(#statename));
+
+#define FINDSTATEIF(statename, parent, exp) { \
+	statename *st = static_cast<statename*>(parent->FindState(#statename));	if(st) st->exp; }
+
+#define FINDSTATE_OPT(var, statename, parent) \
+	statename *var = static_cast<statename*>(parent->FindState(#statename));
+
+#define FINDSTATEIF_OPT(statename, parent, exp) { \
+	statename *st = static_cast<statename*>(parent->FindState(#statename));	if(st) st->exp; }
+
 #endif

@@ -29,12 +29,8 @@ public:
 	virtual Client *CreateGameClient();
 
 	int GetVersionNum() const;
-	const char *GetDLLName() const;
+	const char *GetGameAbbrev() const;
 	const char *GetGameName() const;
-	const char *GetModSubFolder() const;
-	const char *GetNavSubfolder() const;
-	const char *GetScriptSubfolder() const;
-	const char *GetGameDatabaseAbbrev() const;
 
 	virtual bool RendersToGame() const
 	{
@@ -44,17 +40,9 @@ public:
 	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
 	void GetWeaponEnumeration( const IntEnum *&_ptr, int &num );
 
-	HL2DM_Game()
-	{
-	};
-	virtual ~HL2DM_Game()
-	{
-	};
+	HL2DM_Game();
+	virtual ~HL2DM_Game();
 protected:
-
-	void GetGameVars( GameVars &_gamevars );
-
-	// Script support.
 	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptEvents( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptTraceMasks( gmMachine *_machine, gmTableObject *_table );

@@ -6,59 +6,32 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "PathPlannerBase.h"
 #include "PathQuery.h"
 
-PathQuery::PathQuery( Client *_client ) :
-mClient( _client ),
-mStarts( 0 ),
-mGoals( 0 ),
-mMaxPathDistance( Utils::FloatMax ),
-mReturnPartial( false )
+Destination::Destination() 
+	: mPosition( 0.f, 0.f, 0.f )
+	, mRadius( 0.f )
 {
-	/*for(int i = 0; i < MaxDesirabilities; ++i)
- mDesirabilities[i] = 0.f;*/
 }
 
-PathQuery &PathQuery::Starts( const DestinationVector *_starts )
+Destination::Destination( const Vector3f &_pos, float _radius )
+	: mPosition( _pos )
+	, mRadius( _radius )
 {
-	mStarts = _starts;
-	return *this;
 }
 
-PathQuery &PathQuery::Goals( const DestinationVector *_goals )
+DeferredQuery::Goal::Goal()
+	: mNavCost( -1.0f )
+	, mThreatCost( 0.0f )
 {
-	mGoals = _goals;
-	return *this;
 }
 
-PathQuery &PathQuery::AddTeam( int _team )
+DeferredQuery::DeferredQuery()
 {
-	mTeam.SetFlag( _team, true );
-	return *this;
+
 }
 
-PathQuery &PathQuery::AddClass( int _class )
+DeferredQuery::~DeferredQuery()
 {
-	mClass.SetFlag( _class, true );
-	return *this;
-}
 
-PathQuery &PathQuery::SetMovementCaps( const BitFlag32 &_caps )
-{
-	mMovementCaps = _caps;
-	return *this;
 }
-
-//PathQuery &PathQuery::AddDesirabiliry(int _type, float _desir)
-//{
-//	if(InRangeT<int>(_type, 0, MaxDesirabilities))
-//	{
-//	 mDesirabilities[_type] = _desir;
-//	}
-//	else
-//	{
-//		OBASSERT(0, "Desirability Out of Range!");
-//	}
-//	return *this;
-//}

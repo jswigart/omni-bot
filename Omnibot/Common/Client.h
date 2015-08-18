@@ -18,6 +18,7 @@
 #include "BlackBoard.h"
 #include "FileSystem.h"
 #include "GoalManager.h"
+#include "TacticalManager.h"
 #include "PathPlannerBase.h"
 
 class BotItemSystem;
@@ -59,7 +60,6 @@ public:
 		FL_SHOOTINGDISABLED,
 		FL_SELECTBESTWEAPON_OFF,
 		FL_USINGMOUNTEDWEAPON,
-		FL_DIRTYEYEPOS,
 
 		// THIS MUST BE LAST
 		NUM_INTERNAL_FLAGS
@@ -165,7 +165,7 @@ public:
 
 	bool IsAllied( const GameEntity _ent ) const;
 
-	Vector3f GetEyePosition();
+	const Vector3f& GetEyePosition();
 	Vector3f GetEyeGroundOffset();
 
 	virtual bool CanGetPowerUp( int32_t _powerup ) const;
@@ -374,6 +374,8 @@ public:
 	virtual void ProcessGotoNode( const Path &_path )
 	{
 	}
+	
+	virtual void ProcessStimulusBehavior( Behaviors& behaviors, const StimulusPtr& stim );
 
 	// Game specific variables.
 	typedef enum

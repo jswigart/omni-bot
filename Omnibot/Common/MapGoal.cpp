@@ -20,6 +20,8 @@
 #include "gmBot.h"
 #include "gmSchemaLib.h"
 
+#include <boost/algorithm/string.hpp>
+
 static int32_t sNextSerialNum = 0;
 
 //////////////////////////////////////////////////////////////////////////
@@ -72,25 +74,21 @@ void MapGoal::CopyFrom( MapGoal *_other )
 			mClassPriority.Priorities[ t ][ c ] = _other->mClassPriority.Priorities[ t ][ c ];
 		}
 	}
-
-	mGoalStateFunction = _other->mGoalStateFunction;
-
+	
 	mVersion = _other->mVersion;
-	mUpgradeFunc = _other->mUpgradeFunc;
-	mRenderFunc = _other->mRenderFunc;
-	mSerializeFunc = _other->mSerializeFunc;
-	mInitNewFunc = _other->mInitNewFunc;
-	mSetPropertyFunc = _other->mSetPropertyFunc;
-	mHelpFunc = _other->mHelpFunc;
-	mUpdateFunc = _other->mUpdateFunc;
-	mHudDisplay = _other->mHudDisplay;
+	
+	mCallback_OnInit = _other->mCallback_OnInit;
+	mCallback_OnUpgrade = _other->mCallback_OnUpgrade;
+	mCallback_OnRender = _other->mCallback_OnRender;
+	mCallback_OnSerialize = _other->mCallback_OnSerialize;
+	mCallback_OnSetProperty = _other->mCallback_OnSetProperty;
+	mCallback_OnHelp = _other->mCallback_OnHelp;
+	mCallback_OnUpdate = _other->mCallback_OnUpdate;
+	mCallback_OnHudDisplay = _other->mCallback_OnHudDisplay;
+	mCallback_OnCalcPriority = _other->mCallback_OnCalcPriority;
 
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 	gmBind2::Class<MapGoal>::CloneTable( pMachine, _other->GetScriptObject( pMachine ), GetScriptObject( pMachine ) );
-
-#ifdef Prof_ENABLED
-	mProfZone = _other->mProfZone;
-#endif
 
 	// copy select flags.
 	PROPERTY_PROPOGATE( DefaultDrawFlags );
@@ -133,7 +131,6 @@ void MapGoal::_Init()
 
 	mRoleMask = BitFlag32( 0 );
 
-	mGoalStateFunction = GoalStateNone;
 	mGoalState = 0;
 
 	mVersion = 0;
@@ -146,7 +143,6 @@ void MapGoal::_Init()
 	// init flags
 	PROPERTY_INIT( DefaultDrawFlags, DrawAll );
 	PROPERTY_INIT( DefaultRenderRadius, 2048.f );
-	PROPERTY_INIT( RenderHeight, IGame::GetGameVars().mPlayerHeight*0.5f );
 	PROPERTY_INIT( DeleteMe, false );
 	PROPERTY_INIT( DynamicPosition, false );
 	PROPERTY_INIT( DynamicOrientation, false );
@@ -197,10 +193,6 @@ bool MapGoal::LoadFromFile( const filePath & _file )
 	{
 		return true;
 	}
-	else
-	{
-		OBASSERT( 0, "Error Running MapGoal Script" );
-	}
 
 	return false;
 }
@@ -234,7 +226,7 @@ void MapGoal::GenerateName( int _instance, bool _skipdupecheck )
 	// see if it already exists
 	if ( !_skipdupecheck )
 	{
-		MapGoalPtr exists = GoalManager::GetInstance()->GetGoal( mName );
+		MapGoalPtr exists = System::mInstance->mGoalManager->GetGoal( mName );
 		if ( exists && exists.get() != this )
 		{
 			GenerateName( _instance + 1 );
@@ -286,8 +278,6 @@ void MapGoal::SetAvailableInitial( int _team, bool _available )
 void MapGoal::Update()
 {
 	{
-		rmt_ScopedCPUSample( MapGoalUpdate );
-
 		//////////////////////////////////////////////////////////////////////////
 		if ( GetEntity().IsValid() )
 		{
@@ -324,27 +314,19 @@ void MapGoal::Update()
 		//////////////////////////////////////////////////////////////////////////
 		_CheckControllingTeam();
 		//////////////////////////////////////////////////////////////////////////
-		switch ( mGoalStateFunction )
-		{
-			case GoalStateFlagState:
-				_UpdateFlagState();
-				break;
-				/*case GoalStateFlagHoldState:
-				_UpdateFlagHoldState();
-				break;*/
-			case GoalStateNone:
-			default:
-				break;
-		}
+
+		if ( mEntInfo.mGroup == ENT_GRP_FLAG )
+			_UpdateFlagState();
+				
 		//////////////////////////////////////////////////////////////////////////
-		if ( mUpdateFunc )
+		if ( mCallback_OnUpdate )
 		{
 			if ( !mActiveThread[ ON_UPDATE ].IsActive() )
 			{
 				gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 				gmCall call;
 				gmGCRoot<gmUserObject> mgref = GetScriptObject( pMachine );
-				if ( call.BeginFunction( pMachine, mUpdateFunc, gmVariable( mgref ) ) )
+				if ( call.BeginFunction( pMachine, mCallback_OnUpdate, gmVariable( mgref ) ) )
 				{
 					if ( call.End() == gmThread::EXCEPTION )
 					{
@@ -401,10 +383,7 @@ void MapGoal::_UpdateFlagState()
 				Utils::StringCopy( ti.mAction, pFlagState, TriggerBufferSize );
 				TriggerManager::GetInstance()->HandleTrigger( ti );
 			}
-			else
-			{
-				OBASSERT( 0, "Invalid Flag State" );
-			}
+
 			mGoalState = newFlagState;
 		}
 	}
@@ -463,6 +442,8 @@ void MapGoal::InternalInitEntityState()
 	{
 		bool b1 = EngineFuncs::EntityLocalAABB( GetEntity(), mLocalBounds );
 		bool b2 = EngineFuncs::EntityPosition( GetEntity(), mPosition );
+		
+		b1; b2;
 
 		// cache the auto detected position
 		if ( b2 ) mInterfacePosition = mPosition;
@@ -471,7 +452,6 @@ void MapGoal::InternalInitEntityState()
 		bool b3 = EngineFuncs::EntityOrientation( GetEntity(), vFwd, vRight, vUp );
 		if ( b3 ) mOrientation = Matrix3f( vRight, vFwd, vUp, true );
 
-		OBASSERT( b1&&b2&&b3, "Lost Entity!" );
 	}
 
 	if ( mLocalBounds.IsZero() )
@@ -490,12 +470,12 @@ bool MapGoal::InternalInit( gmGCRoot<gmTableObject> &_propmap, bool _newgoal )
 	//////////////////////////////////////////////////////////////////////////
 	if ( _newgoal )
 	{
-		if ( mInitNewFunc )
+		if ( mCallback_OnInit )
 		{
 			gmCall call;
 
 			gmGCRoot<gmUserObject> mgref = GetScriptObject( pMachine );
-			if ( call.BeginFunction( pMachine, mInitNewFunc, gmVariable( mgref ) ) )
+			if ( call.BeginFunction( pMachine, mCallback_OnInit, gmVariable( mgref ) ) )
 			{
 				call.AddParamTable( _propmap );
 				call.End();
@@ -504,14 +484,14 @@ bool MapGoal::InternalInit( gmGCRoot<gmTableObject> &_propmap, bool _newgoal )
 	}
 	else
 	{
-		if ( mUpgradeFunc )
+		if ( mCallback_OnUpgrade )
 		{
 			while ( true )
 			{
 				gmCall call;
 
 				gmGCRoot<gmUserObject> mgref = GetScriptObject( pMachine );
-				if ( call.BeginFunction( pMachine, mUpgradeFunc, gmVariable( mgref ) ) )
+				if ( call.BeginFunction( pMachine, mCallback_OnUpgrade, gmVariable( mgref ) ) )
 				{
 					gmVariable gmVersionBefore = _propmap->Get( pMachine, "Version" );
 					call.AddParamTable( _propmap );
@@ -564,8 +544,7 @@ const Vector3f &MapGoal::GetPosition()
 {
 	if ( GetDynamicPosition() )
 	{
-		bool b = EngineFuncs::EntityPosition( GetEntity(), mPosition );
-		SOFTASSERTALWAYS( b, "Lost Entity for MapGoal %s!", GetName().c_str() );
+		EngineFuncs::EntityPosition( GetEntity(), mPosition );
 	}
 	return mPosition;
 }
@@ -625,7 +604,6 @@ Matrix3f MapGoal::GetMatrix()
 	{
 		Vector3f vFwd, vRight, vUp;
 		bool b = EngineFuncs::EntityOrientation( GetEntity(), vFwd, vRight, vUp );
-		OBASSERT( b, "Lost Entity!" );
 		if ( b ) mOrientation = Matrix3f( vRight, vFwd, vUp, false );
 	}
 	return mOrientation;
@@ -714,8 +692,8 @@ void MapGoal::GetAllUsePoints( Vector3List &_pv )
 
 bool MapGoal::AddRoute_Script( const std::string &_start, const std::string &_end, float _weight )
 {
-	MapGoalPtr mgStart = GoalManager::GetInstance()->GetGoal( _start );
-	MapGoalPtr mgEnd = GoalManager::GetInstance()->GetGoal( _end );
+	MapGoalPtr mgStart = System::mInstance->mGoalManager->GetGoal( _start );
+	MapGoalPtr mgEnd = System::mInstance->mGoalManager->GetGoal( _end );
 	return AddRoute( mgStart, mgEnd, _weight );
 }
 
@@ -856,12 +834,12 @@ void MapGoal::SetProperty( const std::string &_propname, const obUserData &_val 
 
 	if ( !Processed )
 	{
-		if ( mSetPropertyFunc )
+		if ( mCallback_OnSetProperty )
 		{
 			gmGCRoot<gmUserObject> mgref = GetScriptObject( pMachine );
 
 			gmCall call;
-			if ( call.BeginFunction( pMachine, mSetPropertyFunc, gmVariable( mgref ) ) )
+			if ( call.BeginFunction( pMachine, mCallback_OnSetProperty, gmVariable( mgref ) ) )
 			{
 				call.AddParamString( _propname.c_str() );
 				call.AddParam( var );
@@ -879,12 +857,10 @@ void MapGoal::SetProperty( const std::string &_propname, const obUserData &_val 
 
 void MapGoal::RenderDebug( bool _editing, bool _highlighted )
 {
-	rmt_ScopedCPUSample( MapGoalRenderDebug );
-
 	{
 		if ( GetRenderGoal() )
 		{
-			if ( mRenderFunc )
+			if ( mCallback_OnRender )
 			{
 				if ( !mActiveThread[ ON_RENDER ].IsActive() )
 				{
@@ -893,7 +869,7 @@ void MapGoal::RenderDebug( bool _editing, bool _highlighted )
 					gmGCRoot<gmUserObject> mgref = GetScriptObject( pMachine );
 
 					gmCall call;
-					if ( call.BeginFunction( pMachine, mRenderFunc, gmVariable( mgref ) ) )
+					if ( call.BeginFunction( pMachine, mCallback_OnRender, gmVariable( mgref ) ) )
 					{
 						call.AddParamInt( _editing ? 1 : 0 );
 						call.AddParamInt( _highlighted ? 1 : 0 );
@@ -1174,6 +1150,27 @@ void MapGoal::SetPriorityForClass( int _teamid, int _classId, float _priority )
 
 float MapGoal::GetPriorityForClient( Client *_client )
 {
+	if ( mCallback_OnCalcPriority )
+	{
+		if ( !mActiveThread[ ON_CALC_PRIORITY ].IsActive() )
+		{
+			gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
+			gmCall call;
+			gmGCRoot<gmUserObject> mgref = GetScriptObject( pMachine );
+			if ( call.BeginFunction( pMachine, mCallback_OnCalcPriority, gmVariable( mgref ) ) )
+			{
+				if ( call.End() == gmThread::EXCEPTION )
+				{
+				}
+
+				mActiveThread[ ON_CALC_PRIORITY ] = call.GetThreadId();
+				if ( call.DidReturnVariable() )
+					mActiveThread[ ON_CALC_PRIORITY ] = 0;
+			}
+		}
+	}
+		
+
 	float prio = GetPriorityForClass( _client->GetTeam(), _client->GetClass() );
 	if ( prio > 0.f && GetRoleMask().AnyFlagSet() )
 	{
@@ -1326,7 +1323,7 @@ void MapGoal::CheckForPersistentPriority()
 
 void MapGoal::DrawRoute( const obColor _color, float _duration )
 {
-	PathInterface * path = System::mInstance->mNavigation->AllocPathInterface( NULL );
+	PathInterface * path = System::mInstance->mNavigation->AllocPathInterface();
 
 	if ( path != NULL )
 	{
@@ -1460,11 +1457,11 @@ bool MapGoal::SaveToTable( gmMachine *_machine, gmGCRoot<gmTableObject> &_saveta
 {
 	gmGCRoot<gmTableObject> GoalTable( _machine->AllocTableObject(), _machine );
 
-	if ( mSerializeFunc )
+	if ( mCallback_OnSerialize )
 	{
 		gmCall call;
 		gmGCRoot<gmUserObject> mgref = GetScriptObject( _machine );
-		if ( call.BeginFunction( _machine, mSerializeFunc, gmVariable( mgref ) ) )
+		if ( call.BeginFunction( _machine, mCallback_OnSerialize, gmVariable( mgref ) ) )
 		{
 			call.AddParamTable( GoalTable );
 			const int ThreadState = call.End();
@@ -1676,14 +1673,14 @@ bool MapGoal::LoadFromTable( gmMachine *_machine, gmGCRoot<gmTableObject> &_load
 
 void MapGoal::ShowHelp()
 {
-	if ( mHelpFunc )
+	if ( mCallback_OnHelp )
 	{
 		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 
 		gmGCRoot<gmUserObject> mgref = GetScriptObject( pMachine );
 
 		gmCall call;
-		if ( call.BeginFunction( pMachine, mHelpFunc, gmVariable( mgref ) ) )
+		if ( call.BeginFunction( pMachine, mCallback_OnHelp, gmVariable( mgref ) ) )
 		{
 			call.End();
 		}
@@ -2150,9 +2147,6 @@ void MapGoal_AsString( MapGoal *a_var, char * a_buffer, int a_bufferSize )
 
 void MapGoal::Bind( gmMachine* _m )
 {
-	gmBind2::Global( _m, "InternalGoalState" )
-		.var( (int)GoalStateFlagState, "FlagState" );
-
 	gmBind2::Class<MapGoal>( "MapGoal", _m )
 		//.constructor()
 		.asString( MapGoal_AsString )
@@ -2252,16 +2246,16 @@ void MapGoal::Bind( gmMachine* _m )
 		.var( &MapGoal::mVersion, "Version", "int", "Gets the goal version." )
 
 		.var( &MapGoal::mGoalState, "GoalState", "int", "Gets the goal state" )
-		.var( &MapGoal::mGoalStateFunction, "GoalStateFunction", "enum InternalGoalState" )
-
-		.var( &MapGoal::mInitNewFunc, "InitNewGoal", "Callback", "Called on goal creation to initialize any internal variables." )
-		.var( &MapGoal::mUpgradeFunc, "UpgradeVersion", "Callback", "Called to upgrade the goal to the latest used version." )
-		.var( &MapGoal::mRenderFunc, "Render", "Callback", "Called when draw_goals is enabled for this goal. Used to render itself." )
-		.var( &MapGoal::mUpdateFunc, "Update", "Callback", "Called every frame to update the state of the goal if needed." )
-		.var( &MapGoal::mSerializeFunc, "SaveToTable", "Callback", "Called when the goals are saved to a file. Allows the goal to serialize persistent information." )
-		.var( &MapGoal::mSetPropertyFunc, "SetProperty", "Callback", "Called on bot goal_setproperty x y, where x is a property name and y is a value or keyword." )
-		.var( &MapGoal::mHelpFunc, "Help", "Callback", "Called on bot goal_help to print requirements and available properties for the goal." )
-		.var( &MapGoal::mHudDisplay, "HudDisplay", "Callback", "Called when goal is highlighted to create gui elements for debug visualization." )
+		
+		.var( &MapGoal::mCallback_OnInit, "InitNewGoal", "Callback", "Called on goal creation to initialize any internal variables." )
+		.var( &MapGoal::mCallback_OnUpgrade, "UpgradeVersion", "Callback", "Called to upgrade the goal to the latest used version." )
+		.var( &MapGoal::mCallback_OnRender, "Render", "Callback", "Called when draw_goals is enabled for this goal. Used to render itself." )
+		.var( &MapGoal::mCallback_OnUpdate, "Update", "Callback", "Called every frame to update the state of the goal if needed." )
+		.var( &MapGoal::mCallback_OnSerialize, "SaveToTable", "Callback", "Called when the goals are saved to a file. Allows the goal to serialize persistent information." )
+		.var( &MapGoal::mCallback_OnSetProperty, "SetProperty", "Callback", "Called on bot goal_setproperty x y, where x is a property name and y is a value or keyword." )
+		.var( &MapGoal::mCallback_OnHelp, "Help", "Callback", "Called on bot goal_help to print requirements and available properties for the goal." )
+		.var( &MapGoal::mCallback_OnHudDisplay, "HudDisplay", "Callback", "Called when goal is highlighted to create gui elements for debug visualization." )
+		.var( &MapGoal::mCallback_OnCalcPriority, "GetPriority", "Callback", "Called when goal is highlighted to create gui elements for debug visualization." )
 
 		.var( &MapGoal::mExtraDebugText, "ExtraDebugText", "std::string", "Additional debug text to render in RenderDefault function." )
 
@@ -2287,8 +2281,5 @@ void MapGoal::Bind( gmMachine* _m )
 		.var( &MapGoal::mRenderGoal, "RenderGoal", "bool", "Enable rendering for this goal." )
 		.var( &MapGoal::mRenderRoutes, "RenderRoutes", "bool", "Enable rendering of the routes for this goal." )
 		.var( &MapGoal::mCreateOnLoad, "CreateOnLoad", "bool", "False to not create the goal at load time, but keep the data around for when created by the interface." )
-
-		/*.setDotEx(pfnSetDotEx)
-		.getDotEx(pfnGetDotEx)*/
 		;
 }

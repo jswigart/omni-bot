@@ -34,7 +34,7 @@ namespace AiState
 	{
 		if ( IsActive() )
 		{
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mNextPt.mPt, COLOR::GREEN, IGame::GetDeltaTimeSecs()*2.f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mNextPt.mPt, COLOR::GREEN );
 		}
 	}
 

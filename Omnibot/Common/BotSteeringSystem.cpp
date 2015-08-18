@@ -35,7 +35,7 @@ namespace AiState
 
 	void SteeringSystem::RenderDebug()
 	{
-		RenderBuffer::AddLine( GetClient()->GetEyePosition(), GetTarget(), COLOR::GREEN, IGame::GetDeltaTimeSecs()*2.f );
+		RenderBuffer::AddLine( GetClient()->GetEyePosition(), GetTarget(), COLOR::GREEN );
 	}
 
 	bool SteeringSystem::InTargetRadius() const
@@ -105,7 +105,7 @@ namespace AiState
 		if ( GetClient()->IsDebugEnabled( BOT_DEBUG_MOVEVEC ) )
 		{
 			Vector3f vPos = GetClient()->GetWorldBounds().Center;
-			RenderBuffer::AddLine( vPos, vPos + mMoveVec * 64.f, COLOR::GREEN, 0.1f );
+			RenderBuffer::AddLine( vPos, vPos + mMoveVec * 64.f, COLOR::GREEN );
 		}
 
 		if ( GetClient()->HasEntityFlag( ENT_FLAG_ON_ICE ) )

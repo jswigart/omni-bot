@@ -199,21 +199,7 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 
 	RenderBuffer::Init();
 
-	// Create the navigation system
-	switch ( mBotSystem.mGame->GetDefaultNavigator() )
-	{
-		case NAVID_FLOODFILL:
-			mBotSystem.mNavigation = new PathPlannerFloodFill;
-			break;
-		case NAVID_RECAST:
-			mBotSystem.mNavigation = new PathPlannerRecast;
-			break;
-		default:
-			LOGERR( "Unknown Path Planner!" );
-			return BOT_ERROR_CANTINITBOT;
-	};
-
-	OBASSERT( mBotSystem.mNavigation, "No Path Planner!" );
+	mBotSystem.mNavigation = new PathPlannerRecast;
 	if ( mBotSystem.mNavigation->Init( mBotSystem ) )
 	{
 		// Allow the game to set up its navigation flags.
@@ -224,35 +210,36 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 		return BOT_ERROR_CANTINITBOT;
 	}
 
-	// Create the goal manager.
-	{
-		rmt_ScopedCPUSample( GoalManagerInit );
-		mBotSystem.mGoalManager = mBotSystem.mGame->AllocGoalManager();
-		mBotSystem.mGoalManager->Init( mBotSystem );
-	}
+	mBotSystem.mGoalManager = mBotSystem.mGame->AllocGoalManager();
+	mBotSystem.mGoalManager->Init( mBotSystem );
+
+	mBotSystem.mTacticalManager = new TacticalManager();
+	mBotSystem.mTacticalManager->Init( mBotSystem );
 
 	mBotSystem.mTriggerManager = TriggerManager::GetInstance();
+
+	const GameVars& vars = mBotSystem.mGame->GetGameVars();
 
 	// Initialize the game.
 	{
 		rmt_ScopedCPUSample( GameInit );
 		if ( mBotSystem.mGame->Init( mBotSystem ) )
 		{
-			LOG( "Created Game Interface : " << mBotSystem.mGame->GetGameName() );
+			LOG( "Created Game Interface : " << vars.mGameName.c_str() );
 			LOG( "Game Interface : " << gEngineFuncs->GetGameName() );
 			LOG( "Mod Interface : " << gEngineFuncs->GetModName() );
 		}
 		else
 		{
-			LOGERR( "Unable to CreateGame() : " << mBotSystem.mGame->GetGameName() );
+			LOGERR( "Unable to CreateGame() : " << mBotSystem.mGame->GetGameVars().mGameName );
 			return BOT_ERROR_CANTINITBOT;
 		}
 	}
 
 	// Run the games autoexec.
 	int threadId = GM_INVALID_THREAD;
-	if ( !mBotSystem.mScript->ExecuteFile( filePath( "scripts/%s_autoexec.gm", mBotSystem.mGame->GetGameDatabaseAbbrev() ), threadId ) )
-		EngineFuncs::ConsoleError( va( "Unable to execute 'scripts/%s_autoexec.gm'", mBotSystem.mGame->GetGameDatabaseAbbrev() ) );
+	if ( !mBotSystem.mScript->ExecuteFile( filePath( "scripts/%s_autoexec.gm", vars.mGameAbbrev.c_str() ), threadId ) )
+		EngineFuncs::ConsoleError( va( "Unable to execute 'scripts/%s_autoexec.gm'", vars.mGameAbbrev.c_str() ) );
 
 	GameAnalytics::Keys analyticsKeys;
 	//if ( mBotSystem.mGame->GetAnalyticsKeys( analyticsKeys ) )
@@ -301,13 +288,12 @@ void IGameManager::UpdateGame()
 		// bot, they can attempt to grab this guard
 		//boost::lock_guard<boost::recursive_mutex> lock( gGlobalUpdate );
 		
-		RenderBuffer::BeginFrame();
-
 		mBotSystem.mGame->UpdateTime();
 		mBotSystem.mScript->Update();
 		mBotSystem.mNavigation->Update( mBotSystem );
 		mBotSystem.mGame->UpdateGame( mBotSystem );
 		mBotSystem.mGoalManager->Update( mBotSystem );
+		mBotSystem.mTacticalManager->Update( mBotSystem );
 		mBotSystem.mTriggerManager->Update( mBotSystem );
 	}
 
@@ -352,20 +338,19 @@ void IGameManager::UpdateGame()
 			SMART_FIELD_SET( ent, entityid, it.GetEnt().mEntity.AsInt() );
 			SMART_FIELD_SET( ent, groupid, it.GetEnt().mEntInfo.mGroup );
 			SMART_FIELD_SET( ent, classid, it.GetEnt().mEntInfo.mClassId );
-			SMART_FIELD_SET( ent, quantity, it.GetEnt().mEntInfo.mQuantity.mNum );
-			SMART_FIELD_SET( ent, quantitymax, it.GetEnt().mEntInfo.mQuantity.mMax );
 			SMART_FIELD_SET( ent, health, it.GetEnt().mEntInfo.mHealth.mNum );
 			SMART_FIELD_SET( ent, healthmax, it.GetEnt().mEntInfo.mHealth.mMax );
 			SMART_FIELD_SET( ent, armor, it.GetEnt().mEntInfo.mArmor.mNum );
 			SMART_FIELD_SET( ent, armormax, it.GetEnt().mEntInfo.mArmor.mMax );
-			SMART_FIELD_SET( ent, ammo1, it.GetEnt().mEntInfo.mAmmo1.mNum );
-			SMART_FIELD_SET( ent, ammo1max, it.GetEnt().mEntInfo.mAmmo1.mMax );
-			SMART_FIELD_SET( ent, ammo2, it.GetEnt().mEntInfo.mAmmo2.mNum );
-			SMART_FIELD_SET( ent, ammo2max, it.GetEnt().mEntInfo.mAmmo2.mMax );
-			SMART_FIELD_SET( ent, ammo3, it.GetEnt().mEntInfo.mAmmo3.mNum );
-			SMART_FIELD_SET( ent, ammo3max, it.GetEnt().mEntInfo.mAmmo3.mMax );
-			SMART_FIELD_SET( ent, ammo4, it.GetEnt().mEntInfo.mAmmo4.mNum );
-			SMART_FIELD_SET( ent, ammo4max, it.GetEnt().mEntInfo.mAmmo4.mMax );
+			for ( int i = 0; i < EntityInfo::NUM_AMMO_TYPES; ++i )
+			{
+				if ( it.GetEnt().mEntInfo.mAmmo[ i ].mWeaponId != 0 )
+				{
+					Analytics::GameEntityInfo_Ammo* ammo = ent->add_ammo();
+					ammo->set_ammotype( it.GetEnt().mEntInfo.mAmmo[ i ].mWeaponId );
+					SMART_FIELD_SET( ammo, ammocount, it.GetEnt().mEntInfo.mAmmo[ i ].mNum );
+				}
+			}
 			SMART_FIELD_SET( ent, positionx, entPos.X() );
 			SMART_FIELD_SET( ent, positiony, entPos.Y() );
 			SMART_FIELD_SET( ent, positionz, entPos.Z() );
@@ -380,11 +365,13 @@ void IGameManager::UpdateGame()
 
 	Options::SaveConfigFileIfChanged( "user/omni-bot.cfg" );
 
-	if ( mBotSystem.mGame->RendersToGame() )
+	if ( mBotSystem.mGame->GetGameVars().mRendersToGame )
 	{
 		rmt_ScopedCPUSample( RenderToGame );
 		RenderBuffer::RenderToGame();
 	}
+
+	RenderBuffer::EndFrame();
 
 	EngineFuncs::FlushAsyncMessages();
 }
@@ -404,19 +391,19 @@ void IGameManager::Shutdown()
 
 	mBotSystem.mGame->Shutdown();
 
-	g_Blackboard.RemoveAllBBRecords();
+	gBlackboard.RemoveAllBBRecords();
 
 	LOGFUNCBLOCK;
 
-	// Get rid of the path planner.
 	mBotSystem.mNavigation->Shutdown();
 	mBotSystem.mNavigation = NULL;
 
-	// Shutdown and clean up the goal manager.
 	mBotSystem.mGoalManager->Shutdown();
-	mBotSystem.mGoalManager = NULL;
-	GoalManager::DeleteInstance();
+	OB_DELETE( mBotSystem.mGoalManager );
 
+	mBotSystem.mTacticalManager->Shutdown();
+	OB_DELETE( mBotSystem.mTacticalManager );
+	
 	mBotSystem.mTriggerManager = NULL;
 	TriggerManager::DeleteInstance();
 
@@ -471,8 +458,8 @@ void IGameManager::cmdVersion( const StringVector & args )
 #else
 		EngineFuncs::ConsoleMessage(va("Omni-Bot : %s %s", __DATE__, __TIME__));
 #endif
-		EngineFuncs::ConsoleMessage( va( "Version : %s", mBotSystem.mGame->GetVersion() ) );
-		EngineFuncs::ConsoleMessage( va( "Interface # : %d", mBotSystem.mGame->GetVersionNum() ) );
+		EngineFuncs::ConsoleMessage( va( "Version : %s", mBotSystem.mGame->GetGameVars().mVersionString.c_str() ) );
+		EngineFuncs::ConsoleMessage( va( "Interface # : %d", mBotSystem.mGame->GetGameVars().mGameVersion ) );
 	}
 }
 
@@ -511,7 +498,7 @@ void IGameManager::cmdNavSystem( const StringVector & args )
 				mBotSystem.mNavigation = new PathPlannerWaypoint;
 				break;*/
 				case NAVID_FLOODFILL:
-					mBotSystem.mNavigation = new PathPlannerFloodFill;
+					//mBotSystem.mNavigation = new PathPlannerFloodFill;
 					break;
 				case NAVID_RECAST:
 					mBotSystem.mNavigation = new PathPlannerRecast;

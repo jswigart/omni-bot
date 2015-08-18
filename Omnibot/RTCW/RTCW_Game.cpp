@@ -27,81 +27,24 @@ IGame *CreateGameInstance()
 
 RTCW_Game::RTCW_Game()
 {
+	mGameVars.mClientBase = 0;
+	mGameVars.mGameVersion = RTCW_VERSION_LATEST;
+	mGameVars.mGameAbbrev = "rtcw";
+	mGameVars.mGameName = "Return to Castle Wolfenstein";
+	mGameVars.mPlayerHeight = 64.f;
 }
 
 RTCW_Game::~RTCW_Game()
 {
 }
 
-int RTCW_Game::GetVersionNum() const
+Client * RTCW_Game::CreateGameClient()
 {
-	return RTCW_VERSION_LATEST;
-}
-
-Client *RTCW_Game::CreateGameClient()
-{
-	return new RTCW_Client;
-}
-
-const char *RTCW_Game::GetDLLName() const
-{
-#ifdef WIN32
-	return "omni-bot\\omnibot_rtcw.dll";
-#else
-	return "omni-bot/omnibot_rtcw.so";
-#endif
-}
-
-const char *RTCW_Game::GetGameName() const
-{
-	return "RTCW";
-}
-
-const char *RTCW_Game::GetModSubFolder() const
-{
-#ifdef WIN32
-	return "rtcw\\";
-#else
-	return "rtcw";
-#endif
-}
-
-const char *RTCW_Game::GetNavSubfolder() const
-{
-#ifdef WIN32
-	return "rtcw\\nav\\";
-#else
-	return "rtcw/nav";
-#endif
-}
-
-const char *RTCW_Game::GetScriptSubfolder() const
-{
-#ifdef WIN32
-	return "rtcw\\scripts\\";
-#else
-	return "rtcw/scripts";
-#endif
-}
-
-const char *RTCW_Game::GetGameDatabaseAbbrev() const
-{
-	return "rtcw";
-}
-
-NavigatorID RTCW_Game::GetDefaultNavigator() const
-{
-	return NAVID_RECAST;
-}
-
-bool RTCW_Game::ReadyForDebugWindow() const
-{
-	return InterfaceFuncs::GetGameState() == GAME_STATE_PLAYING;
+	return new RTCW_Client();
 }
 
 bool RTCW_Game::Init( System & system )
 {
-	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback( RTCW_Game::RTCW_GetEntityClassTraceOffset );
 	AiState::SensoryMemory::SetEntityAimOffsetCallback( RTCW_Game::RTCW_GetEntityClassAimOffset );
 
@@ -109,11 +52,6 @@ bool RTCW_Game::Init( System & system )
 		return false;
 
 	return true;
-}
-
-void RTCW_Game::GetGameVars( GameVars &_gamevars )
-{
-	_gamevars.mPlayerHeight = 64.f;
 }
 
 static const IntEnum RTCW_TeamEnum [] =
@@ -287,7 +225,8 @@ void RTCW_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
 		Utils::StringCopy( _addbot.mName, name.c_str(), sizeof( _addbot.mName ) );
 	}
 	//////////////////////////////////////////////////////////////////////////
-	OBASSERT( GameStarted(), "Game Not Started Yet" );
+	assert( GameStarted() );
+
 	if ( _createnow )
 		mBotJoining = true;
 	int iGameID = InterfaceFuncs::Addbot( _addbot );
@@ -416,8 +355,9 @@ void RTCW_Game::ClientJoined( const Event_SystemClientConnected *_msg )
 	if ( _msg->mIsBot && !mBotJoining )
 	{
 		CheckGameState();
-		OBASSERT( GameStarted(), "Game Not Started Yet" );
-		OBASSERT( _msg->mGameId < Constants::MAX_PLAYERS && _msg->mGameId >= 0, "Invalid Client Index!" );
+		assert( GameStarted() );
+		assert( _msg->mGameId < Constants::MAX_PLAYERS && _msg->mGameId >= 0 );
+
 		// If a bot isn't created by now, it has probably been a map change,
 		// and the game has re-added the clients itself.
 		ClientPtr &cp = GetClientFromCorrectedGameId( _msg->mGameId );
@@ -447,13 +387,13 @@ void RTCW_Game::StartGame()
 	//EngineFuncs::ConsoleMessage("<StartGame>");
 
 	// Get Goals from the game.
-	GoalManager::GetInstance()->Reset();
+	System::mInstance->mGoalManager->Reset();
 
 	ErrorObj err;
-	GoalManager::GetInstance()->Load( std::string( gEngineFuncs->GetMapName() ), err );
+	System::mInstance->mGoalManager->Load( std::string( gEngineFuncs->GetMapName() ), err );
 	err.PrintToConsole();
 	
-	GoalManager::GetInstance()->InitGameGoals();
+	System::mInstance->mGoalManager->InitGameGoals();
 
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 	DisableGCInScope gcEn( pMachine );

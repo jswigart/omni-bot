@@ -210,6 +210,10 @@ enum TF_Weapon
 
 	TF_WP_DETPACK,
 
+	// special values unspecific weapon values
+	TF_WP_PRIMARY,
+	TF_WP_SECONDARY,
+
 	// THIS MUST STAY LAST
 	TF_WP_MAX
 };

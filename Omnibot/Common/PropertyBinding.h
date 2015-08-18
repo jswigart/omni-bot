@@ -64,7 +64,7 @@ struct IntEnum
 class PropertyBinding
 {
 public:
-	typedef boost::shared_ptr<Property> PropertyPtr;
+	typedef std::shared_ptr<Property> PropertyPtr;
 	typedef std::vector<PropertyPtr> PropertyList;
 
 	void BindProperty( const std::string &_name, bool &_val, uint32_t _flags = 0 );

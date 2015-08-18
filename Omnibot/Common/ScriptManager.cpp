@@ -41,6 +41,9 @@
 #include "gmBind.h"
 #include "gmbinder2/gmbinder2.h"
 
+#include <boost/shared_array.hpp>
+#include <boost/algorithm/string.hpp>
+
 //////////////////////////////////////////////////////////////////////////
 
 bool ScriptLiveUpdate = false;
@@ -586,7 +589,6 @@ bool ScriptManager::ExecuteStringLogged( const std::string &_string )
 	if ( f.IsOpen() )
 	{
 		b = f.WriteString( _string ) && f.WriteNewLine();
-		OBASSERT( b, "Problem logging script std::string!" );
 	}
 	EngineFuncs::ConsoleMessage( va( "ExecString: %s", _string.c_str() ) );
 
@@ -834,7 +836,6 @@ void ScriptManager::GetAutoCompleteList( const std::string &_string, StringVecto
 	//catch(const std::exception&e)
 	//{
 	//	e;
-	//	OBASSERT(0, e.what());
 	//}
 }
 

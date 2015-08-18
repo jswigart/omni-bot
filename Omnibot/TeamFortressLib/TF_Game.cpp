@@ -27,7 +27,6 @@ TF_Game::~TF_Game()
 
 bool TF_Game::Init( System & system )
 {
-	// Set the sensory systems callback for getting aim offsets for entity types.
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback( TF_Game::TF_GetEntityClassTraceOffset );
 	AiState::SensoryMemory::SetEntityAimOffsetCallback( TF_Game::TF_GetEntityClassAimOffset );
 	return IGame::Init( system );
@@ -419,7 +418,7 @@ void TF_Game::ProcessEvent( const MessageHelper &_message, CallbackParameters &_
 	//				.mGameEntities[index]..mEntityCategory.ClearAll();
 	//				}
 
-	//				GoalManager::GetInstance()->RemoveGoalByEntity(m->mEntity);*/
+	//				System::mInstance->mGoalManager->RemoveGoalByEntity(m->mEntity);*/
 	//			}
 	//			break;
 	//		}

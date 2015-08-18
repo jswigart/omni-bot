@@ -31,8 +31,8 @@ class gmMachine;
 class gmTableObject;
 class gmFunctionObject;
 
-typedef boost::shared_ptr<Client> ClientPtr;
-typedef boost::weak_ptr<Client> ClientWPtr;
+typedef std::shared_ptr<Client> ClientPtr;
+typedef std::weak_ptr<Client> ClientWPtr;
 
 struct NavParms
 {
@@ -57,6 +57,26 @@ struct EntityInstance
 	}
 };
 
+struct GameVars
+{
+	int						mClientBase;
+	float					mPlayerHeight;
+
+	int						mGameVersion;
+	std::string				mGameAbbrev;
+	std::string				mGameName;
+	std::string				mVersionString;
+
+	bool					mRendersToGame;
+
+	const std::string GetDLLName() const;
+	const std::string GetModSubFolder() const;
+	const std::string GetNavSubfolder() const;
+	const std::string GetScriptSubfolder() const;
+
+	GameVars();
+};
+
 // class: IGame
 //		This class provides common functionality for various game types.
 //		Specific games will derive from this class to expand and implement
@@ -64,16 +84,6 @@ struct EntityInstance
 class IGame : public CommandReciever, public EventReciever
 {
 public:
-	struct GameVars
-	{
-		float	mPlayerHeight;
-		GameVars();
-	};
-	static const GameVars &GetGameVars()
-	{
-		return mGameVars;
-	}
-
 	virtual bool Init( System & system );
 	virtual void Shutdown();
 	virtual void UpdateGame( System & system );
@@ -87,26 +97,27 @@ public:
 	virtual void ClientLeft( const Event_SystemClientDisConnected *_msg );
 
 	void UpdateTime();
+
 	static inline int32_t GetTime()
 	{
 		return mGameMsec;
-	};
+	}
 	static inline float GetTimeSecs()
 	{
 		return ( float )mGameMsec / 1000.f;
-	};
+	}
 	static inline int32_t GetDeltaTime()
 	{
 		return mDeltaMsec;
-	};
+	}
 	static inline float GetDeltaTimeSecs()
 	{
 		return ( float )mDeltaMsec * 0.001f;
-	};
+	}
 	static inline int32_t GetTimeSinceStart()
 	{
 		return mGameMsec - mStartTimeMsec;
-	};
+	}
 	static inline int32_t GetFrameNumber()
 	{
 		return mGameFrame;
@@ -126,34 +137,13 @@ public:
 
 	void DispatchEvent( int _dest, const MessageHelper &_message );
 	void DispatchGlobalEvent( const MessageHelper &_message );
+	
+	const GameVars &GetGameVars() const;
 
-	virtual const char *GetVersion() const;
-	virtual int GetVersionNum() const = 0;
 	virtual bool CheckVersion( int _version );
-	virtual const char *GetGameName() const = 0;
-	virtual const char *GetDLLName() const = 0;
-	virtual const char *GetModSubFolder() const = 0;
-	virtual const char *GetNavSubfolder() const = 0;
-	virtual const char *GetScriptSubfolder() const = 0;
-	virtual const char *GetGameDatabaseAbbrev() const = 0;
-	virtual NavigatorID GetDefaultNavigator() const
-	{
-		return NAVID_RECAST;
-	}
 			
 	virtual void GetNavParms( NavParms & navParms ) const;
-
-	virtual bool RendersToGame() const
-	{
-		return false;
-	}
-
-	virtual bool ReadyForDebugWindow() const
-	{
-		return true;
-	}
-
-	ClientPtr GetClientByGameId( int _gameId );
+	
 	ClientPtr GetClientByIndex( int _index );
 
 	bool FindTeamName( std::string& teamName, int teamId );
@@ -178,7 +168,7 @@ public:
 
 	void LoadGoalScripts( bool _clearold );
 
-	virtual ClientPtr &GetClientFromCorrectedGameId( int _gameid );
+	virtual ClientPtr &GetClientFromCorrectedGameId( int gameid );
 
 	virtual bool CreateCriteria( gmThread *_thread, CheckCriteria &_criteria, std::stringstream &err );
 
@@ -214,16 +204,13 @@ public:
 	};
 
 	static bool IsEntityValid( const GameEntity & hndl );
+	static GameEntity GetEntityByIndex( size_t index );
 	static bool GetEntityInfo( const GameEntity & hndl, EntityInfo& entInfo );
 	static bool IterateEntity( IGame::EntityIterator &_it );
 	static void UpdateEntity( EntityInstance &_ent );
 
 	void AddDeletedThread( int threadId );
 	void PropogateDeletedThreads();
-
-	// Debug Window
-	int GetDebugWindowNumClients() const;
-	ClientPtr GetDebugWindowClient( int index ) const;
 
 	virtual void InitGlobalStates()
 	{
@@ -233,12 +220,7 @@ public:
 	{
 		return false;
 	}
-
-	virtual const char * RemoteConfigName() const
-	{
-		return "Omnibot";
-	}
-
+	
 	bool AddUpdateFunction( const std::string &_name, FunctorPtr _func );
 	bool RemoveUpdateFunction( const std::string &_name );
 
@@ -250,37 +232,31 @@ public:
 	IGame();
 	virtual ~IGame();
 protected:
-	ClientPtr		 mClientList[ Constants::MAX_PLAYERS ];
+	ClientPtr					mClientList[ Constants::MAX_PLAYERS ];
 
-	State				* mStateRoot;
+	State *						mStateRoot;
 
-	static int				 mMaxEntity;
-	static EntityInstance	 mGameEntities[ Constants::MAX_ENTITIES ];
+	static int					mMaxEntity;
+	static EntityInstance		mGameEntities[ Constants::MAX_ENTITIES ];
 
-	static GameState mGameState;
-	static GameState mLastGameState;
+	static GameState			mGameState;
+	static GameState			mLastGameState;
 
-	static int32_t	 mGameMsec;
-	static int32_t	 mDeltaMsec;
-	static int32_t	 mStartTimeMsec;
-	static int32_t	 mGameFrame;
-	static float	 mGravity;
-	static bool		 mCheatsEnabled;
-	static bool		 mBotJoining;
+	static int32_t				mGameMsec;
+	static int32_t				mDeltaMsec;
+	static int32_t				mStartTimeMsec;
+	static int32_t				mGameFrame;
+	static float				mGravity;
+	static bool					mCheatsEnabled;
+	static bool					mBotJoining;
+	GameVars					mGameVars;
 
-	static GameVars	 mGameVars;
+	FunctorMap					mUpdateMap;
 
-	FunctorMap		 mUpdateMap;
-
-	enum
-	{
-		MaxDeletedThreads = 1024
-	};
-	int		 mDeletedThreads[ MaxDeletedThreads ];
-	int		 mNumDeletedThreads;
-
-	virtual void GetGameVars( GameVars &_gamevars ) = 0;
-
+	static const int MaxDeletedThreads = 1024;
+	int							mDeletedThreads[ MaxDeletedThreads ];
+	int							mNumDeletedThreads;
+	
 	void CheckGameState();
 
 	// Script support.

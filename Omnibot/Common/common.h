@@ -50,48 +50,11 @@
 
 // Disable if these get annoying.
 #pragma warning( default: 4711 )	// function '...' selected for automatic inline expansion
+#endif 
 
 #ifdef _OPENMP
 #include <omp.h>
 #endif
-
-// Boost
-#if _MSC_VER == 1600 // cs: ffs
-#include <boost/version.hpp>
-#if BOOST_VERSION <= 104400
-#define BOOST_NO_RVALUE_REFERENCES 1
-#endif // boost lib <= 1_44_0
-#endif // vs2010
-
-#ifdef _WIN32
-#pragma warning( push )
-// stfu boost
-#pragma warning( disable: 4244 )
-#pragma warning( disable: 4265 )
-#pragma warning( disable: 6334 )
-#pragma warning( disable: 6011 )
-#pragma warning( disable: 4913 )
-#endif //_WIN32
-
-#include <boost/filesystem/convenience.hpp>
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/shared_array.hpp>
-#include <boost/weak_ptr.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/regex.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/array.hpp>
-#include <boost/multi_array.hpp>
-#include <boost/thread.hpp>
-#include <boost/atomic.hpp>
-
-#ifdef _WIN32
-#pragma warning( pop )
-#endif // _WIN32
 
 #include "Remotery.h"
 
@@ -111,10 +74,6 @@ using namespace Wm5;
 
 #include "EngineFuncs.h"
 #include "IEngineInterface.h"
-
-#ifdef WIN32
-//#define ENABLE_REMOTE_DEBUGGER
-#endif
 
 // global: g_EngineFuncs is a bot-wide global so that game functionality
 //		can be used from anywhere
@@ -136,57 +95,3 @@ enum MoveMode
 
 #define DBG_MSG(debugflag, bot, type, msg) \
 	if((debugflag)==0 || (bot)->IsDebugEnabled((debugflag))) { (bot)->OutputDebug((type), (msg)); }
-
-// macro: DEBUG_ONLY
-//		A macro that can be used to only allow the contained functionality
-//		in debug builds of the library.
-#ifdef _DEBUG
-#define DEBUG_ONLY(m) m
-#else
-#define DEBUG_ONLY(m) 0
-#endif
-
-#include "Utilities.h"
-
-// cs: FIXME: debug version of OBASSERT doesnt build in linux. doesn't like __VA_ARGS__
-#ifdef __linux__
-#define OBASSERT(f, sz, ...) {}	// cs: for gcc warnings, was (f)
-#else // !__linux__
-#ifdef	_DEBUG
-#define OBASSERT(f, msg, ...) { static bool bShowAssert = true; \
-	if(bShowAssert) { \
-	bShowAssert = Utils::AssertFunction((bool)((f)!=0), #f, __FILE__, __LINE__, msg, __VA_ARGS__); \
-	} }
-#else	// !DEBUG
-#define OBASSERT(f, sz, ...) (f)
-#endif	// !DEBUG
-
-#endif // cs: FIXME
-
-#ifdef	_DEBUG
-#define SOFTASSERTONCE(f, sz, ...) { static bool bShowAssert = true; \
-	if(bShowAssert) { \
-	bShowAssert = Utils::SoftAssertFunction(Utils::FireOnce, (bool)((f)!=0), #f, __FILE__, __LINE__, msg, __VA_ARGS__); \
-	} }
-#else	// !DEBUG
-#define SOFTASSERTONCE(f, sz, ...)
-#endif	// !DEBUG
-
-#define SOFTASSERTALWAYS(f, msg, ...) { static bool bShowAssert = true; \
-	if(bShowAssert) { \
-	bShowAssert = Utils::SoftAssertFunction(Utils::FireAlways, (bool)((f)!=0), #f, __FILE__, __LINE__, msg, __VA_ARGS__); \
-	} }
-
-#define FINDSTATE(var, statename, parent) \
-	statename *var = static_cast<statename*>(parent->FindState(#statename)); OBASSERT(var, #statename " Not Found" );
-
-#define FINDSTATEIF(statename, parent, exp) { \
-	statename *st = static_cast<statename*>(parent->FindState(#statename));	if(st) st->exp; else OBASSERT(0, #statename " Not Found" ); }
-
-#define FINDSTATE_OPT(var, statename, parent) \
-	statename *var = static_cast<statename*>(parent->FindState(#statename));
-
-#define FINDSTATEIF_OPT(statename, parent, exp) { \
-	statename *st = static_cast<statename*>(parent->FindState(#statename));	if(st) st->exp; }
-
-#endif

@@ -11,9 +11,8 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-FloodFillPathInterface::FloodFillPathInterface( Client * client, PathPlannerFloodFill * nav ) 
-	: mClient( client )
-	, mNav( nav )
+FloodFillPathInterface::FloodFillPathInterface( PathPlannerFloodFill * nav ) 
+	: mNav( nav )
 	, mStatus( PATH_NONE )
 	, mMoveDirection( Vector3f::ZERO )
 {
@@ -28,6 +27,10 @@ PathInterface::PathStatus FloodFillPathInterface::GetPathStatus() const
 NavAreaFlags FloodFillPathInterface::GetCurrentAreaFlags() const
 {
 	return NAVFLAGS_NONE;
+}
+
+void FloodFillPathInterface::UpdateNavFlags( NavFlags includeFlags, NavFlags excludeFlags )
+{
 }
 
 void FloodFillPathInterface::UpdateSourcePosition( const Vector3f & srcPos )

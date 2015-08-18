@@ -10,7 +10,7 @@
 #include "TF_Game.h"
 #include "TF_InterfaceFuncs.h"
 #include "FilterClosestTF.h"
-
+#include "System.h"
 #include "BotPathing.h"
 #include "BotSteeringSystem.h"
 #include "BotWeaponSystem.h"
@@ -21,6 +21,8 @@
 #include "gmScriptGoal.h"
 
 #include "RenderBuffer.h"
+
+#include <iomanip>
 
 const float SENTRY_UPGRADE_PRIORITY = 0.5f;
 
@@ -144,7 +146,7 @@ namespace AiState
 
 		FilterAllType filter( GetClient(), AiState::SensoryMemory::EntAny, records );
 		filter.MemorySpan( Utils::SecondsToMilliseconds( 7.f ) );
-		filter.AddGroup( ENT_GRP_AMMO1 );
+		filter.AddGroup( ENT_GRP_RESUPPLY );
 		sensory->QueryMemory( filter );
 
 		sensory->GetRecordInfo( records, &recordpos, NULL );
@@ -514,8 +516,6 @@ namespace AiState
 					return true;
 				}
 			}
-			default:
-				OBASSERT( 0, "Invalid State" );
 		}
 		return true;
 	}
@@ -551,8 +551,6 @@ namespace AiState
 					ws->FireWeapon();
 				break;
 			}
-			default:
-				OBASSERT( 0, "Invalid State" );
 		}
 	}
 	float SentryBuild::GetPriority()
@@ -593,9 +591,9 @@ namespace AiState
 				}
 				return 0.f;
 			}
-
+			
 			GoalManager::Query qry( 0xca96590a /* sentry */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			qry.GetBest( mMapGoalSentry );
 		}
 		mSentryPriority = mMapGoalSentry ? mMapGoalSentry->GetPriorityForClient( GetClient() ) : 0.f;
@@ -603,8 +601,6 @@ namespace AiState
 	}
 	void SentryBuild::Enter()
 	{
-		OBASSERT( mMapGoalSentry || mBuiltSentry, "No Map Goal!" );
-
 		mNextBuildTry = 0;
 		mCantBuild = false;
 
@@ -623,8 +619,6 @@ namespace AiState
 	}
 	State::StateStatus SentryBuild::Update( float fDt )
 	{
-		OBASSERT( mMapGoalSentry || mBuiltSentry, "No Map Goal!" );
-
 		UpdateFsm( fDt );
 
 		if ( GetCurrentStateId() == SG_DONE )
@@ -900,7 +894,7 @@ namespace AiState
 				_aimpos = GetClient()->GetEyePosition() + mMapGoalDisp->GetFacing() * 1024.f;
 				break;
 			default:
-				OBASSERT( 0, "Invalid State" );
+				return false;
 		}
 		return true;
 	}
@@ -922,7 +916,7 @@ namespace AiState
 				break;
 			}
 			default:
-				OBASSERT( 0, "Invalid State" );
+				break;
 		}
 	}
 	float DispenserBuild::GetPriority()
@@ -943,7 +937,7 @@ namespace AiState
 				return 0.f;
 
 			GoalManager::Query qry( 0x4961e1a8 /* dispenser */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			qry.GetBest( mMapGoalDisp );
 		}
 		return mMapGoalDisp ? mMapGoalDisp->GetPriorityForClient( GetClient() ) : 0.f;
@@ -967,7 +961,6 @@ namespace AiState
 	}
 	State::StateStatus DispenserBuild::Update( float fDt )
 	{
-		OBASSERT( mMapGoalDisp, "No Map Goal!" );
 		//////////////////////////////////////////////////////////////////////////
 		if ( DidPathFail() )
 		{
@@ -1004,7 +997,7 @@ namespace AiState
 
 				FilterAllType filter( GetClient(), AiState::SensoryMemory::EntAny, records );
 				filter.MemorySpan( Utils::SecondsToMilliseconds( 7.f ) );
-				filter.AddGroup( ENT_GRP_AMMO2 );
+				filter.AddGroup( ENT_GRP_RESUPPLY );
 				sensory->QueryMemory( filter );
 
 				sensory->GetRecordInfo( records, &recordpos, NULL );
@@ -1148,7 +1141,6 @@ namespace AiState
 			HANDLER( TF_MSG_SENTRY_BUILDING )
 			{
 				const Event_SentryBuilding_TF *m = _message.Get<Event_SentryBuilding_TF>();
-				OBASSERT( m->mSentry.IsValid(), "Entity Expected" );
 				mSentryStatus.Reset();
 				mSentryStatus.mStatus = BUILDABLE_BUILDING;
 				mSentryStatus.mEntity = m->mSentry;
@@ -1158,7 +1150,6 @@ namespace AiState
 			HANDLER( TF_MSG_SENTRY_BUILT )
 			{
 				const Event_SentryBuilt_TF *m = _message.Get<Event_SentryBuilt_TF>();
-				OBASSERT( m->mSentry.IsValid(), "Entity Expected" );
 				mSentryStatus.mEntity = m->mSentry;
 				mSentryStatus.mLevel = 1;
 
@@ -1269,7 +1260,6 @@ namespace AiState
 			HANDLER( TF_MSG_DISPENSER_BUILDING )
 			{
 				const Event_DispenserBuilding_TF *m = _message.Get<Event_DispenserBuilding_TF>();
-				OBASSERT( m->mDispenser.IsValid(), "Entity Expected" );
 				mDispenserStatus.Reset();
 				mDispenserStatus.mStatus = BUILDABLE_BUILDING;
 				mDispenserStatus.mEntity = m->mDispenser;
@@ -1279,7 +1269,6 @@ namespace AiState
 			HANDLER( TF_MSG_DISPENSER_BUILT )
 			{
 				const Event_DispenserBuilt_TF *m = _message.Get<Event_DispenserBuilt_TF>();
-				OBASSERT( m->mDispenser.IsValid(), "Entity Expected" );
 				mDispenserStatus.mEntity = m->mDispenser;
 				EngineFuncs::EntityPosition( m->mDispenser, mDispenserStatus.mPosition );
 				EngineFuncs::EntityOrientation( m->mDispenser, mDispenserStatus.mFacing, NULL, NULL );
@@ -1370,7 +1359,7 @@ namespace AiState
 				_aimpos = GetClient()->GetEyePosition() + mMapGoal->GetFacing() * 1024.f;
 				break;
 			default:
-				OBASSERT( 0, "Invalid State" );
+				return false;
 		}
 		return true;
 	}
@@ -1392,7 +1381,7 @@ namespace AiState
 				break;
 			}
 			default:
-				OBASSERT( 0, "Invalid State" );
+				break;
 		}
 	}
 	float DetpackBuild::GetPriority()
@@ -1409,7 +1398,7 @@ namespace AiState
 				return 0.f;
 
 			GoalManager::Query qry( 0x3b15b60b /* detpack */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			qry.GetBest( mMapGoal );
 		}
 		return mMapGoal ? mMapGoal->GetPriorityForClient( GetClient() ) : 0.f;
@@ -1445,7 +1434,6 @@ namespace AiState
 	}
 	State::StateStatus DetpackBuild::Update( float fDt )
 	{
-		OBASSERT( mMapGoal, "No Map Goal!" );
 		//////////////////////////////////////////////////////////////////////////
 		if ( DidPathFail() )
 		{
@@ -1523,7 +1511,6 @@ namespace AiState
 			HANDLER( TF_MSG_DETPACK_BUILDING )
 			{
 				const Event_DetpackBuilding_TF *m = _message.Get<Event_DetpackBuilding_TF>();
-				OBASSERT( m->mDetpack.IsValid(), "Entity Expected" );
 				mDetpackStatus.mEntity = m->mDetpack;
 				mDetpackStatus.mStatus = BUILDABLE_BUILDING;
 				DBG_MSG( 0, GetClient(), kNormal, "Detpack Building" );
@@ -1532,7 +1519,6 @@ namespace AiState
 			HANDLER( TF_MSG_DETPACK_BUILT )
 			{
 				const Event_DetpackBuilt_TF *m = _message.Get<Event_DetpackBuilt_TF>();
-				OBASSERT( m->mDetpack.IsValid(), "Entity Expected" );
 				mDetpackStatus.mEntity = m->mDetpack;
 				mDetpackStatus.mStatus = BUILDABLE_BUILDING;
 				DBG_MSG( 0, GetClient(), kNormal, "Detpack Building" );
@@ -1732,7 +1718,7 @@ namespace AiState
 		if ( !mMapGoal )
 		{
 			GoalManager::Query qry( 0x7e67445e /* pipetrap */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 
 			if ( !qry.GetBest( mMapGoal ) || !CacheGoalInfo( mMapGoal ) )
 				mMapGoal.reset();
@@ -1762,8 +1748,6 @@ namespace AiState
 	}
 	State::StateStatus PipeTrap::Update( float fDt )
 	{
-		OBASSERT( mMapGoal, "No Map Goal!" );
-
 		// Update Pipe Positions
 		mPipes.mPipeCount = 0;
 
@@ -1841,7 +1825,7 @@ namespace AiState
 
 			FilterAllType filter( GetClient(), AiState::SensoryMemory::EntAny, records );
 			filter.MemorySpan( Utils::SecondsToMilliseconds( 7.f ) );
-			filter.AddGroup( ENT_GRP_AMMO2 );
+			filter.AddGroup( ENT_GRP_RESUPPLY );
 			sensory->QueryMemory( filter );
 
 			sensory->GetRecordInfo( records, &recordpos, NULL );
@@ -2073,7 +2057,7 @@ namespace AiState
 	{
 		if ( IsActive() )
 		{
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mNextPt.mPt, COLOR::GREEN, IGame::GetDeltaTimeSecs()*2.f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mNextPt.mPt, COLOR::GREEN );
 		}
 	}
 
@@ -2124,7 +2108,7 @@ namespace AiState
 	{
 		if ( IsActive() )
 		{
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mNextPt.mPt, COLOR::GREEN, IGame::GetDeltaTimeSecs()*2.f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mNextPt.mPt, COLOR::GREEN );
 		}
 	}
 	bool ConcussionJump::GetAimPosition( Vector3f &_aimpos )
@@ -2216,7 +2200,7 @@ namespace AiState
 	void ThrowGrenade::RenderDebug()
 	{
 		if ( IsActive() )
-			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mAimPos, mOnTarget ? COLOR::GREEN : COLOR::RED, 0.1f );
+			RenderBuffer::AddLine( GetClient()->GetEyePosition(), mAimPos, mOnTarget ? COLOR::GREEN : COLOR::RED );
 	}
 	bool ThrowGrenade::GetAimPosition( Vector3f &_aimpos )
 	{
@@ -2469,7 +2453,6 @@ namespace AiState
 			HANDLER( TF_MSG_TELE_ENTRANCE_BUILDING )
 			{
 				const Event_TeleporterBuilding_TF *m = _message.Get<Event_TeleporterBuilding_TF>();
-				OBASSERT( m->mTeleporter.IsValid(), "Entity Expected" );
 				mTeleporterStatus.mStatusEntrance = BUILDABLE_BUILDING;
 				mTeleporterStatus.mEntityEntrance = m->mTeleporter;
 				DBG_MSG( 0, GetClient(), kNormal, "Tele Entrance Building" );
@@ -2478,7 +2461,6 @@ namespace AiState
 			HANDLER( TF_MSG_TELE_EXIT_BUILDING )
 			{
 				const Event_TeleporterBuilding_TF *m = _message.Get<Event_TeleporterBuilding_TF>();
-				OBASSERT( m->mTeleporter.IsValid(), "Entity Expected" );
 				mTeleporterStatus.mStatusExit = BUILDABLE_BUILDING;
 				mTeleporterStatus.mEntityExit = m->mTeleporter;
 				DBG_MSG( 0, GetClient(), kNormal, "Tele Exit Building" );
@@ -2487,7 +2469,6 @@ namespace AiState
 			HANDLER( TF_MSG_TELE_ENTRANCE_BUILT )
 			{
 				const Event_TeleporterBuilt_TF *m = _message.Get<Event_TeleporterBuilt_TF>();
-				OBASSERT( m->mTeleporter.IsValid(), "Entity Expected" );
 				mTeleporterStatus.mEntityEntrance = m->mTeleporter;
 				EngineFuncs::EntityPosition( m->mTeleporter, mTeleporterStatus.mEntrancePos );
 				mTeleporterStatus.mStatusEntrance = BUILDABLE_BUILT;
@@ -2497,7 +2478,6 @@ namespace AiState
 			HANDLER( TF_MSG_TELE_EXIT_BUILT )
 			{
 				const Event_TeleporterBuilt_TF *m = _message.Get<Event_TeleporterBuilt_TF>();
-				OBASSERT( m->mTeleporter.IsValid(), "Entity Expected" );
 				mTeleporterStatus.mEntityExit = m->mTeleporter;
 				EngineFuncs::EntityPosition( m->mTeleporter, mTeleporterStatus.mExitPos );
 				mTeleporterStatus.mStatusExit = BUILDABLE_BUILT;
@@ -2596,7 +2576,7 @@ namespace AiState
 				_aimpos = GetClient()->GetEyePosition() + mMapGoalTeleExit->GetFacing() * 1024.f;
 				break;
 			default:
-				OBASSERT( 0, "Invalid State" );
+				return false;
 		}
 		return true;
 	}
@@ -2627,7 +2607,7 @@ namespace AiState
 				break;
 			}
 			default:
-				OBASSERT( 0, "Invalid State" );
+				break;
 		}
 	}
 	float TeleporterBuild::GetPriority()
@@ -2662,7 +2642,7 @@ namespace AiState
 		if ( !tp->HasTeleporterEntrance() )
 		{
 			GoalManager::Query qry( 0xed2f457b /* TeleEntrance */, GetClient() );
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			qry.GetBest( mMapGoalTeleEntrance );
 			mState = TELE_BUILDING_ENTRANCE;
 
@@ -2679,7 +2659,7 @@ namespace AiState
 					qry.Group( groupName.c_str() );
 			}
 
-			GoalManager::GetInstance()->GetGoals( qry );
+			System::mInstance->mGoalManager->GetGoals( qry );
 			qry.GetBest( mMapGoalTeleExit );
 			mState = TELE_BUILDING_EXIT;
 
@@ -2773,7 +2753,7 @@ namespace AiState
 
 				FilterAllType filter( GetClient(), AiState::SensoryMemory::EntAny, records );
 				filter.MemorySpan( Utils::SecondsToMilliseconds( 7.f ) );
-				filter.AddGroup( ENT_GRP_AMMO2 );
+				filter.AddGroup( ENT_GRP_RESUPPLY );
 				sensory->QueryMemory( filter );
 
 				sensory->GetRecordInfo( records, &recordpos, NULL );

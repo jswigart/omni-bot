@@ -8,6 +8,7 @@
 
 #include "Path.h"
 #include "RenderBuffer.h"
+#include "Utilities.h"
 
 Path::Path() :
 mCurrentPt( 0 ),
@@ -195,7 +196,6 @@ Vector3f Path::FindNearestPtOnPath( const Vector3f &_position, Vector3f *_outLoo
 					float fDistanceLeft = fDesiredDistanceOnPath - mLinks[ i ].mDistance;
 
 					const float fT = fDistanceLeft / ( mLinks[ i + 1 ].mDistance - mLinks[ i ].mDistance );
-					OBASSERT( fT >= 0.f && fT <= 1.f, "Bad Ratio" );
 					*_outLookAhead = Interpolate(
 						mPts[ i ].mPt,
 						mPts[ i + 1 ].mPt,
