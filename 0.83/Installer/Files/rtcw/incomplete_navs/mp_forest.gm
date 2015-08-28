@@ -3,7 +3,7 @@ global Map =
 	Quiet=true,
 	Mount_mg42_1 = "MOUNTMG42_mg42_1",
 	Repair_mg42_1 = "REPAIRMG42_mg42_1",
-	
+
 	Airstrike =
 	{
 		bbase_1 =
@@ -13,7 +13,7 @@ global Map =
 			Facing = Vector3(-0.641,-0.130,0.756), // use this if no goto waypoint. /bot mypos shows facing
 		},
 	},
-	
+
 	//scripted defend spots for dual objective support
 	Defend =
 	{
@@ -25,108 +25,72 @@ global Map =
 		MaxAxisDefenders = 5, // maximum defenders for this team
 		AlliesDefenders = 0,
 		MaxAlliesDefenders = 5,
-		
+
 		// initialize some tables for adding waypoints for them to use
-		Axis = {}, 
-		Allies = {},		
+		Axis = {},
+		Allies = {},
 	},
-	
+
 	base_conservative = { "dual_base_1", "dual_base_2", "dual_base_3", "dual_base_4", "dual_base_5", },
 	house_conservative = { "dual_house_1", "dual_house_2", "dual_house_3", "dual_house_4", "dual_house_5", },
 
 	checkpoint01_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "checkpoint01_Axis_Captured" );
 	},
 
 	checkpoint01_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "checkpoint01_Allies_Captured" );
 	},
 
 	checkpoint02_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "checkpoint02_Axis_Captured" );
 	},
 
 	checkpoint02_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "checkpoint02_Allies_Captured" );
 	},
 
 	checkpoint03_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "checkpoint03_Axis_Captured" );
 	},
 
 	checkpoint03_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "checkpoint03_Allies_Captured" );
 	},
 
 	checkpoint04_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "checkpoint04_Axis_Captured" );
 	},
 
 	checkpoint04_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "checkpoint04_Allies_Captured" );
 	},
 
 	checkpoint05_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "checkpoint05_Axis_Captured" );
 	},
 
 	checkpoint05_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "checkpoint05_Allies_Captured" );
 	},
 
 	checkpoint06_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "checkpoint06_Axis_Captured" );
 	},
 
 	checkpoint06_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "checkpoint06_Allies_Captured" );
 	},
 
@@ -134,9 +98,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-
 	OnTrigger( "MISSING_STRING", Map.checkpoint01_Axis_Captured );
 	OnTrigger( "MISSING_STRING", Map.checkpoint01_Allies_Captured );
 	OnTrigger( "MISSING_STRING", Map.checkpoint02_Axis_Captured );
@@ -149,41 +110,40 @@ global OnMapLoad = function()
 	OnTrigger( "MISSING_STRING", Map.checkpoint05_Allies_Captured );
 	OnTrigger( "MISSING_STRING", Map.checkpoint06_Axis_Captured );
 	OnTrigger( "MISSING_STRING", Map.checkpoint06_Allies_Captured );
-	
+
 	RTCWUtil.DisableGoal(".*", true); //all but the routes
 //	RTCWUtil.EnableGoal("CHECKPOINT.*", true); //all but the routes
-	
+
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime=60, maxcamptime=90});
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=1, maxcamptime=1}); //used as 'roams'
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime=15, maxcamptime=30});
 	SetMapGoalProperties( "DEFEND_eng.*", {mincamptime=30, maxcamptime=60});
-	SetMapGoalProperties( "PANZER_.*", {mincamptime=60, maxcamptime=90});	
+	SetMapGoalProperties( "PANZER_.*", {mincamptime=60, maxcamptime=90});
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=60, maxcamptime=90});
-	
+
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_testaxisgoal" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_testalliedgoal" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBaseart.*" );
-	
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"DEFEND_testalliedgoal",
+		"ARTILLERY_S_bBaseart.*",
+	});
+
 	Map.Defend.Axis = Map.base_conservative;
 	Map.Defend.Allies = Map.house_conservative;
-	
+
 	Map.Airstrike.bbase_1.Enabled = true;
 
-	//~SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-	//~SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
 
 	print( "OnMapLoad" );
 };
 
-// Uncomment for shootable breakables
 
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 100.0;
-	
+
 		RTCWUtil.SelectWeapon(bot, WEAPON.VENOM);
-	
+
 	//select spawn point and change class if necessary
 	RTCWUtil.SetDualObjective(bot);
 };

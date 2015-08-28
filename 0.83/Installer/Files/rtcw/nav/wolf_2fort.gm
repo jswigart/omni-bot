@@ -1,10 +1,9 @@
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
-	ShowMovers = false,
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = true,
-	
+
 	Airstrike =
 	{
 		rbridge =
@@ -20,7 +19,7 @@ global Map =
 			Waypoint = "bbridge",
 		},
 	},
-	
+
 	Roles =
 	{
 		AXIS =
@@ -70,56 +69,38 @@ global Map =
 
 	Allied_Entrance_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Allied_Entrance_Destroyed" );
 	},
 
 	Axis_Entrance_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Axis_Entrance_Destroyed" );
 	},
 
 	Allied_Teams_Gold__Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Allied_Teams_Gold__Taken" );
 	},
 
 	Axis_Teams_Documents_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Axis_Teams_Documents_Taken" );
 	},
 
 	bg_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "bg_flag_Axis_Captured" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag.*" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
 	},
 
 	bg_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "bg_flag_Allies_Captured" );
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag.*" );
 	},
 	DisableCombatMove =
@@ -148,8 +129,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
 	// // bridge disableCM, push
 	ras = OnTriggerRegion( AABB( -335.000,-1179.000,86.000,228.000,-929.000,171.000 ), Map.DisableCombatMove );
 
@@ -162,7 +141,7 @@ global OnMapLoad = function()
 	OnTrigger( "MISSING_STRING", Map.Axis_Teams_Documents_Taken );
 	OnTrigger( "axis_reclaims_bg_flag", Map.bg_flag_Axis_Captured );
 	OnTrigger( "allies_reclaims_bg_flag", Map.bg_flag_Allies_Captured );
-	
+
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 45, maxcamptime = 60} );
@@ -175,26 +154,30 @@ global OnMapLoad = function()
 
 	Util.DisableGoal( ".*", true ); // all but routes
 	Util.EnableGoal( "CHECKPOINT.*" );
-	
+
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-	
+
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Entrance" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_Allied_Teams_Gold_" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWatchtower.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rPlant.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rPlant.*" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Entrance" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Axis_Teams_Documents" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bPlant.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bPlant.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"PLANT_Allied_Entrance",
+		"FLAG_Allied_Teams_Gold_",
+		"ARTILLERY_S_rFlag.*",
+		"ARTILLERY_S_rWatchtower.*",
+		"CAMP_rPlant.*",
+		"ATTACK_rPlant.*",
+	});
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT_Axis_Entrance",
+		"FLAG_Axis_Teams_Documents",
+		"ARTILLERY_S_bFlag.*",
+		"ARTILLERY_S_bSpawnkill.*",
+		"CAMP_bPlant.*",
+		"ATTACK_bPlant.*",
+	});
 
 	MapRoutes =
 	{
@@ -204,20 +187,20 @@ global OnMapLoad = function()
 			{
 				ROUTE_rmineramp =
 				{
-					ROUTE_rmineladder = 
+					ROUTE_rmineladder =
 					{
 						ROUTE_bmineramp = {},
 					},
-					ROUTE_bmineladder = 
+					ROUTE_bmineladder =
 					{
 						ROUTE_bmineramp = {},
 					},
 				},
 				ROUTE_rfort = {},
 			},
-			ROUTE_rflagspawn = 
+			ROUTE_rflagspawn =
 			{
-			
+
 			},
 		},
 		PLANT_Axis_Entrance =
@@ -226,13 +209,13 @@ global OnMapLoad = function()
 			{
 				ROUTE_bentrance =
 				{
-					ROUTE_bmineramp = 
+					ROUTE_bmineramp =
 					{
-						ROUTE_rmineladder = 
+						ROUTE_rmineladder =
 						{
 							ROUTE_rmineramp = {},
 						},
-						ROUTE_bmineladder = 
+						ROUTE_bmineladder =
 						{
 							ROUTE_rmineramp = {},
 						},
@@ -240,13 +223,13 @@ global OnMapLoad = function()
 					ROUTE_bfort = {},
 				},
 			},
-			ROUTE_bflagspawn = 
+			ROUTE_bflagspawn =
 			{
-			
+
 			},
 		},
 	};
-	
+
 	MapRoutes.PLANT_Axis_Entrance.ROUTE_bjump = MapRoutes.PLANT_Axis_Entrance.ROUTE_bentrance;
 	MapRoutes.FLAG_Axis_Teams_Documents = MapRoutes.PLANT_Axis_Entrance;
 	MapRoutes.FLAG_Allied_Teams_Gold_ = MapRoutes.PLANT_Allied_Entrance;

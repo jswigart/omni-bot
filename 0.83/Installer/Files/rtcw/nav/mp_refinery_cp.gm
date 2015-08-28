@@ -1,7 +1,6 @@
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
-	ShowMovers = false,
 	DontDispenseAmmo = true,
 
 	Roles =
@@ -24,136 +23,85 @@ global Map =
 			},
 		},
 	},
-	
+
 	barracks_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "barracks_Axis_Captured" );
 	},
 
 	barracks_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "barracks_Allies_Captured" );
 	},
 
 	fuel_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "fuel_Axis_Captured" );
 	},
 
 	fuel_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "fuel_Allies_Captured" );
 	},
 
 	loading_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "loading_Axis_Captured" );
 	},
 
 	loading_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "loading_Allies_Captured" );
 	},
 
 	power_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "power_Axis_Captured" );
 	},
 
 	power_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "power_Allies_Captured" );
 	},
 
 	refineries_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "refineries_Axis_Captured" );
 	},
 
 	refineries_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "refineries_Allies_Captured" );
 	},
 
 	warehouse_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "warehouse_Axis_Captured" );
 	},
 
 	warehouse_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "warehouse_Allies_Captured" );
 	},
-	
+
 	KillWarehouse = function ()
 	{
-		if ( TestMap )
-		{ return; }
-		
 		RTCWUtil.KillEntities({73,96,472});
 	},
 	KillNESpawn = function ()
 	{
-		if ( TestMap )
-		{ return; }
-		
 		RTCWUtil.KillEntities({89,90});
 	},
 	KillSWSpawn = function ()
 	{
-		if ( TestMap )
-		{ return; }
-		
 		RTCWUtil.KillEntities({452,453});
 	},
 	KillSESpawn = function ()
 	{
-		if ( TestMap )
-		{ return; }
-		
 		RTCWUtil.KillEntities({558,559});
 	},
 	KillAxisSpawn = function ()
 	{
-		if ( TestMap )
-		{ return; }
-		
 		RTCWUtil.KillEntities({450,464,465});
 	},
 
@@ -161,9 +109,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-
 	// Register callback functions
 	OnTrigger( "MISSING_STRING", Map.barracks_Axis_Captured );
 	OnTrigger( "MISSING_STRING", Map.barracks_Allies_Captured );
@@ -194,13 +139,13 @@ global OnMapLoad = function()
 	Util.EnableGoal( "CHECKPOINT.*" );
 	Util.DisableGoal( "CHECKPOINT_power", true );
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	
+
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
 	SetMapGoalProperties( "CAMP_.*", {mincamptime = 15, maxcamptime = 25} );
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
-	
+
 	//priority should be based on closest available checkpoint
 	SetGoalPriority( "CHECKPOINT_loading", 1.0, TEAM.AXIS );
 	SetGoalPriority( "CHECKPOINT_fuel", 0.95, TEAM.AXIS );
@@ -208,7 +153,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "CHECKPOINT_barracks", 1.0, TEAM.ALLIES );
 	SetGoalPriority( "CHECKPOINT_warehouse", 0.95, TEAM.ALLIES );
 	SetGoalPriority( "CHECKPOINT_refineries", 0.92, TEAM.ALLIES );
-	
+
 	SetGoalPriority( "AIRSTRIKE_rSpawnkill.*", 0.93 );
 	SetGoalPriority( "DEFEND_rLT.*", 0.91 );
 	SetGoalPriority( "DEFEND_bLT.*", 0.91 );
@@ -217,28 +162,32 @@ global OnMapLoad = function()
 	SetGoalPriority( "SNIPE_bSnipe.*", 0.93 );
 	SetGoalPriority( "AIRSTRIKE_rSpawnkill.*", 0.93 );
 	SetGoalPriority( "SNIPE_rSnipe.*", 0.93 );
-	
+
 	RTCWUtil.LimitToClass( "DEFEND_rLT.*", TEAM.AXIS, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "DEFEND_bLT.*", TEAM.ALLIES, CLASS.LIEUTENANT );
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLT.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rFuel.*" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bLT.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bWH.*" );
-	
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"AIRSTRIKE_rSpawnkill.*",
+		"DEFEND_rLT.*",
+		"SNIPE_rSnipe.*",
+		"CAMP_rFuel.*",
+	});
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ARTILLERY_S_bSpawnkill.*",
+		"AIRSTRIKE_bSpawnkill.*",
+		"DEFEND_bLT.*",
+		"SNIPE_bSnipe.*",
+		"CAMP_bWH.*",
+	});
+
 	MapRoutes =
 	{
 		CHECKPOINT_warehouse =
 		{
 			ROUTE_rspawn =
 			{
-				ROUTE_fuelnw = 
+				ROUTE_fuelnw =
 				{
 					ROUTE_whn = {},
 				},
@@ -258,15 +207,15 @@ global OnMapLoad = function()
 		{
 			ROUTE_rspawn =
 			{
-				ROUTE_fuelnw = 
+				ROUTE_fuelnw =
 				{
-					ROUTE_whn = 
+					ROUTE_whn =
 					{
 						ROUTE_whs = {},
 						ROUTE_whe = {},
 					},
 				},
-				ROUTE_sewer = 
+				ROUTE_sewer =
 				{
 					ROUTE_whs = {},
 					ROUTE_roadcrane = {},
@@ -282,7 +231,7 @@ global OnMapLoad = function()
 		{
 			ROUTE_rspawn =
 			{
-				ROUTE_fuelnw = 
+				ROUTE_fuelnw =
 				{
 					ROIUTE_roadfuelse = {},
 				},
@@ -307,15 +256,15 @@ global OnMapLoad = function()
 			},
 			ROUTE_bspawn =
 			{
-				ROUTE_roadcrane = 
+				ROUTE_roadcrane =
 				{
 					ROUTE_roadfuelse = {},
 					ROUTE_railway = {},
 				},
-				ROUTE_whs = 
+				ROUTE_whs =
 				{
 					ROUTE_whn = {},
-					ROUTE_whe = 
+					ROUTE_whe =
 					{
 						ROUTE_roadfuelse = {},
 					},
@@ -326,22 +275,22 @@ global OnMapLoad = function()
 		{
 			ROUTE_bspawn =
 			{
-				ROUTE_roadcrane = 
+				ROUTE_roadcrane =
 				{
 					ROUTE_roadfuelse = {},
 					ROUTE_railway = {},
 					ROUTE_sewer = {},
 				},
-				ROUTE_whs = 
+				ROUTE_whs =
 				{
-					ROUTE_whn = 
+					ROUTE_whn =
 					{
 						ROUTE_fueltrain1 =
 						{
 							ROUTE_fueltrain2 = {},
 						},
 					},
-					ROUTE_whe = 
+					ROUTE_whe =
 					{
 						ROUTE_roadfuelse = {},
 					},
@@ -361,7 +310,7 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rLT4 = MapRoutes.CHECKPOINT_warehouse;
 	MapRoutes.AIRSTRIKE_rSpawnkill1 = MapRoutes.CHECKPOINT_warehouse;
 	MapRoutes.AIRSTRIKE_rSpawnkill2 = MapRoutes.CHECKPOINT_warehouse;
-	
+
 	Util.Routes(MapRoutes);
 
 	yield();yield();
@@ -374,8 +323,4 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	//RTCWUtil.NoSnipe( bot );
-	// Uncomment for shootable breakables
-	//~bot.TargetBreakableDist = 90.0;
-	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
-	//~bot.MaxViewDistance = 2400;
 };

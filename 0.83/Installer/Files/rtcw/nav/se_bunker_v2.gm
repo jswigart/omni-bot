@@ -47,10 +47,6 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
 				if ( !Map.AlliesInLower[ent] ) {
 					Map.AlliesInLower[ent] = table();
@@ -68,10 +64,6 @@ global Map =
 		},
 		OnExit = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			//clear the ent from the table
 			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
 				if ( Map.AlliesInLower[ent] && Map.AlliesInLower[ent].toggle ) {
@@ -292,38 +284,27 @@ global Map =
 
 	Vault_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.VaultStatus = true;
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Enigma_Machine" );
 		Util.SetMaxUsersInProgress( 15, Map.Flag_Enigma_Machine );
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_al1stfl_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_al2ndfl_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK_al1stfl_.*",
+			"ATTACK_al2ndfl_.*",
+		});
 	},
 
 	Vault_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	Vault_Door_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	bunker_entrance_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Map.BunkerStatus = true;
 		Util.EnableGoal( "ROUTE_mainent" );
 		Util.EnableGoal( "ROUTE_mainent2" );
@@ -340,10 +321,6 @@ global Map =
 
 	bunker_entrance_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( !Map.FlagStatus ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFUSE_bunker.*" );
 			Util.SetMaxUsersInProgress( 1, "DEFUSE_bunker.*" );
@@ -352,60 +329,59 @@ global Map =
 
 	bunker_entrance_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	Enigma_Machine_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.EnigmaStatus = true;
 
 		Util.EnableGoal( "DEFEND_enidef.*" );
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_al1stfl_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_al2ndfl_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK_al1stfl_.*",
+			"ATTACK_al2ndfl_.*",
+		});
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_forward_spawn" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_ax1stfl_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axeng2_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_osdef_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axmain_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_axsn_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_osart1_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_axpanz1_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "FLAME_axflame1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"CHECKPOINT_forward_spawn",
+			"DEFEND_ax1stfl_.*",
+			"DEFEND_axeng2_.*",
+			"DEFEND_osdef_.*",
+			"DEFEND_axmain_.*",
+			"MOUNTMG42_.*",
+			"SNIPE_axsn_.*",
+			"CALLARTILLERY_osart1_.*",
+			"PANZER_axpanz1_.*",
+			"FLAME_axflame1_.*",
+		});
 
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng1_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_osart2_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_main" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_axeng1_.*",
+			"CALLARTILLERY_osart2_.*",
+			"ARTILLERY_S_main",
+		});
 	},
 
 	Enigma_Machine_Returned = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.EnigmaStatus = false;
 
 		if ( Map.FlagStatus ) {
-			SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_forward_spawn" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_ax1stfl_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng2_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"CHECKPOINT_forward_spawn",
+				"DEFEND_ax1stfl_.*",
+				"DEFEND_axeng2_.*",
+			});
 		} else if ( !Map.FlagStatus )   {
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng2_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_osdef_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_outsidenest" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axsn_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_osart1_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_axpanz1_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_axflame1_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_axeng2_.*",
+				"DEFEND_osdef_.*",
+				"MOUNTMG42_outsidenest",
+				"SNIPE_axsn_.*",
+				"CALLARTILLERY_osart1_.*",
+				"PANZER_axpanz1_.*",
+				"FLAME_axflame1_.*",
+			});
 		}
 
 		if ( Map.BunkerStatus && !Map.FlagStatus ) {
@@ -414,17 +390,15 @@ global Map =
 
 		Util.DisableGoal( "DEFEND_enidef.*" );
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axeng1_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_osart2_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_main" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_axeng1_.*",
+			"CALLARTILLERY_osart2_.*",
+			"ARTILLERY_S_main",
+		});
 	},
 
 	forward_spawn_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = false;
 
 		SetAvailableMapGoals( TEAM.ALLIES, !Map.BarrierStatus, "GRENADE_barrier" );
@@ -447,50 +421,58 @@ global Map =
 		}
 
 		if ( !Map.EnigmaStatus  ) {
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_osdef_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_outsidenest" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axsn_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_osart1_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_axpanz1_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_axflame1_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_osdef_.*",
+				"MOUNTMG42_outsidenest",
+				"SNIPE_axsn_.*",
+				"CALLARTILLERY_osart1_.*",
+				"PANZER_axpanz1_.*",
+				"FLAME_axflame1_.*",
+			});
 		} else if ( Map.EnigmaStatus )   {
 			Util.EnableGoal( "DEFEND_enidef.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng1_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_osart2_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_main" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_axeng1_.*",
+				"CALLARTILLERY_osart2_.*",
+				"ARTILLERY_S_main",
+			});
 		}
 
 		Util.SetMaxUsersInProgress( 15, Map.Checkpoint_forward_spawn );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_al1stfl_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_al2ndfl_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK_al1stfl_.*",
+			"ATTACK_al2ndfl_.*",
+		});
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_ax1stfl_.*" );
 	},
 
 	forward_spawn_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = true;
 
 		Util.DisableGoal( "GRENADE_barrier" );
 
 		if ( !Map.VaultStatus ) {
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_al1stfl_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_al2ndfl_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"ATTACK_al1stfl_.*",
+				"ATTACK_al2ndfl_.*",
+			});
 		}
 
 		if ( !Map.EnigmaStatus ) {
-			SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_forward_spawn" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_ax1stfl_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng2_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"CHECKPOINT_forward_spawn",
+				"DEFEND_ax1stfl_.*",
+				"DEFEND_axeng2_.*",
+			});
 		} else if ( Map.EnigmaStatus )   {
 			Util.EnableGoal( "DEFEND_enidef.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng1_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_osart2_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_main" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_axeng1_.*",
+				"CALLARTILLERY_osart2_.*",
+				"ARTILLERY_S_main",
+			});
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_lever2" );
@@ -499,15 +481,17 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_osatt_.*" );
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_bunker.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_osdef_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axeng1_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axmain_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_axsn_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_axpanz1_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "FLAME_axflame1_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_osart1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFUSE_bunker.*",
+			"DEFEND_osdef_.*",
+			"DEFEND_axeng1_.*",
+			"DEFEND_axmain_.*",
+			"MOUNTMG42_.*",
+			"SNIPE_axsn_.*",
+			"PANZER_axpanz1_.*",
+			"FLAME_axflame1_.*",
+			"CALLARTILLERY_osart1_.*",
+		});
 	},
 
 	// called from the switch triggers
@@ -529,10 +513,6 @@ global Map =
 
 	FrontGates = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		vel = ToVector( trigger.Action );
 		if ( vel.y < 0 ) {
 			Map.DoorStatus = true;
@@ -548,10 +528,6 @@ global Map =
 
 	barrier_gone = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.BarrierStatus = true;
 		Util.DisableGoal( "GRENADE_barrier" );
 		Util.EnableGoal( "ROUTE_acctunn" );
@@ -559,10 +535,6 @@ global Map =
 
 	elevator_buttons = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		//disable all the ele switches while it's moving
 		Map.Switches.lever3.Enabled = false;
 		Map.Switches.lever6.Enabled = false;
@@ -576,10 +548,6 @@ global Map =
 
 	elevator_trigger = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		vel = ToVector( trigger.Action );
 		if ( vel.z > 0 ) {
 			sleep( 6 );
@@ -601,10 +569,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	thread( Map.WatchLower );
 	OnTrigger( "The vault door has been destroyed!", Map.Vault_Door_Destroyed );
 	OnTrigger( "Planted at the Vault Door!.", Map.Vault_Door_Planted );
@@ -651,22 +615,28 @@ global OnMapLoad = function()
 	SetGoalPriority( "SWITCH_lever2", 0.65 );
 	SetGoalPriority( "GRENADE_barrier", 1.1 );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_forward_spawn" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_bunker_entrance" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_osatt_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_barrier" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"CHECKPOINT_forward_spawn",
+		"PLANT_bunker_entrance",
+		"ATTACK_osatt_.*",
+		"GRENADE_barrier",
+	});
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_osdef_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axeng1_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_tunnelnest" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_outsidenest" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_axpanz1_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_axflame1_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_osdef_.*",
+		"DEFEND_axeng1_.*",
+		"MOUNTMG42_tunnelnest",
+		"MOUNTMG42_outsidenest",
+		"PANZER_axpanz1_.*",
+		"FLAME_axflame1_.*",
+	});
 
 	// Artillery
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_osart1_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_gate" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_tunnel" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"CALLARTILLERY_osart1_.*",
+		"ARTILLERY_S_gate",
+		"ARTILLERY_S_tunnel",
+	});
 
 	Util.SetMaxUsersInProgress( 1, Map.Mount_tunnelnest );
 	Util.SetMaxUsersInProgress( 1, Map.Mount_outsidenest );
@@ -920,4 +890,3 @@ global OnBotJoin = function( bot )
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
 };
-

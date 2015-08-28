@@ -1,11 +1,10 @@
 global Map =
 {
 	Debug = 0,
-	ShowMovers = false,
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = true,
 	ViewDistance = 1000,
-	
+
 	Roles =
 	{
 		AXIS =
@@ -32,36 +31,24 @@ global Map =
 
 	allied_bridge_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "allied_bridge_Planted" );
 	},
-	
+
 	allied_bridge_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		Wp.SetWaypointFlag( "bbridge1", "closed", true );
 		Wp.SetWaypointFlag( "bbridge2", "closed", true );
 
 		Util.MapDebugPrint( "allied_bridge_Destroyed" );
 	},
-	
+
 	axis_bridge_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "axis_bridge_Planted" );
 	},
 
 	axis_bridge_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Wp.SetWaypointFlag( "rbridge1", "closed", true );
 		Wp.SetWaypointFlag( "rbridge2", "closed", true );
 
@@ -70,33 +57,21 @@ global Map =
 
 	Radio_Codes_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Radio_Codes_Taken" );
 	},
-	
+
 	Radio_Codes_Returned = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Radio_Codes_Returned" );
 	},
 
 	Weld_Tanks_Returned = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Weld_Tanks_Taken" );
 	},
-	
+
 	Weld_Tanks_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Weld_Tanks_Taken" );
 	},
 
@@ -104,9 +79,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-
 	// Register callback functions
 	OnTrigger( "Planted at the allied bridge.", Map.allied_bridge_Planted );
 	OnTrigger( "the allied bridge Destroyed.", Map.allied_bridge_Destroyed );
@@ -116,35 +88,39 @@ global OnMapLoad = function()
 	OnTrigger( "Flag returned Radio Codes!", Map.Radio_Codes_Returned );
 	OnTrigger( "Axis have stolen the Weld Tanks!", Map.Weld_Tanks_Taken );
 	OnTrigger( "Flag returned Weld Tanks!", Map.Weld_Tanks_Returned );
-	
+
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 90, maxcamptime = 120} );
 
 	Util.DisableGoal( ".*", true ); // all but routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	
+
 	SetGoalPriority( "MOUNTMG42.*", 0.91 );
 	SetGoalPriority( "CAMP.*", 0.89 );
 	SetGoalPriority( "AIRSTRIKE_rUpper.*", 0.90 );
 	SetGoalPriority( "AIRSTRIKE_bUpper.*", 0.90 );
-	
+
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_Weld_Tanks" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_allied_bridge" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_r.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_r.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rDocs.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_rtransmit" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rUpper.*" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Radio_Codes" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_axis_bridge" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_b.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_b.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bDocs.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_btransmit" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bUpper.*" );
-	
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"FLAG_Weld_Tanks",
+		"PLANT_allied_bridge",
+		"ARTILLERY_S_r.*",
+		"MOUNTMG42_r.*",
+		"CAMP_rDocs.*",
+		"CAPPOINT_rtransmit",
+		"AIRSTRIKE_rUpper.*",
+	});
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"FLAG_Radio_Codes",
+		"PLANT_axis_bridge",
+		"ARTILLERY_S_b.*",
+		"MOUNTMG42_b.*",
+		"CAMP_bDocs.*",
+		"CAPPOINT_btransmit",
+		"AIRSTRIKE_bUpper.*",
+	});
+
 	Wp.SetWaypointFlag( "bbridge1", "closed", false );
 	Wp.SetWaypointFlag( "bbridge2", "closed", false );
 	Wp.SetWaypointFlag( "rbridge1", "closed", false );
@@ -186,7 +162,7 @@ global OnMapLoad = function()
 					ROUTE_bhilltopwest =
 					{
 						Weight = 2,
-						ROUTE_bsidewest = 
+						ROUTE_bsidewest =
 						{
 							Weight = 2,
 							ROUTE_rsidewest =
@@ -208,7 +184,7 @@ global OnMapLoad = function()
 					ROUTE_rhilltopwest =
 					{
 						Weight = 2,
-						ROUTE_rsidewest = 
+						ROUTE_rsidewest =
 						{
 							ROUTE_bsidewest =
 							{
@@ -248,9 +224,9 @@ global OnMapLoad = function()
 	};
 	MapRoutes.FLAG_Radio_Codes.ROUTE_bspawn.ROUTE_broofwest.ROUTE_bhilltopmid = MapRoutes.FLAG_Radio_Codes.ROUTE_bspawn.ROUTE_broofeast.ROUTE_bhilltopmid;
 	MapRoutes.FLAG_Weld_Tanks.ROUTE_rspawn.ROUTE_rroofeast.ROUTE_rhilltopmid = MapRoutes.FLAG_Weld_Tanks.ROUTE_rspawn.ROUTE_rroofwest.ROUTE_rhilltopmid;
-	
+
 	Util.Routes(MapRoutes);
-	
+
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
@@ -258,5 +234,5 @@ global OnBotJoin = function( bot )
 {
 	bot.MaxViewDistance = Map.ViewDistance;
 	bot.ChangeSpawnPoint( 0 );
-	
+
 };

@@ -73,73 +73,41 @@ global Map =
 
 	checkpoint01_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint01_Axis_Captured" );
 	},
 
 	checkpoint01_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint01_Allies_Captured" );
 	},
 
 	checkpoint03_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint03_Axis_Captured" );
 	},
 
 	checkpoint03_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint03_Allies_Captured" );
 	},
 
 	checkpoint04_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint04_Axis_Captured" );
 	},
 
 	checkpoint04_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint04_Allies_Captured" );
 	},
 
 	checkpoint05_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint05_Axis_Captured" );
 	},
 
 	checkpoint05_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint05_Allies_Captured" );
 	},
 
@@ -147,10 +115,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	OnTrigger( "Axis captures the Rooftop!", Map.checkpoint01_Axis_Captured );
 	OnTrigger( "Allies capture the Rooftop!", Map.checkpoint01_Allies_Captured );
 	OnTrigger( "Axis captures the Tunnel!", Map.checkpoint03_Axis_Captured );
@@ -168,5 +132,4 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	//~ bot.TargetBreakableDist = 80.0;
 };

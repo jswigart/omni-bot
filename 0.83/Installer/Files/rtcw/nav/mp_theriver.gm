@@ -22,19 +22,11 @@ global Map =
 
 	Bridge_Controls_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Bridge_Controls.*" );   // Easier for spawning axis to get to cappoint if this is blown
 	},
 
 	Bridge_Controls_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.BridgeStatus = true;
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_Bridge_Controls" );
@@ -42,23 +34,25 @@ global Map =
 
 	Front_Wall_breach_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.WallStatus = true;
 
 		Map.DontDispenseAmmo = false;
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_mg42_2" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bWall.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rSpawnkill.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"MOUNTMG42_mg42_2",
+			"ATTACK_bWall.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"CALLARTILLERY_rSpawnkill.*",
+			"ARTILLERY_S_rSpawnkill.*",
+		});
 		if ( Map.BridgeStatus == false ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Bridge_Controls" );
 		}
 		if ( Map.DocStatus == false && Map.FlagStatus != 2 ) {
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWall" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWall" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"ARTILLERY_S_rWall",
+				"ARTILLERY_S_rWall",
+			});
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBridge.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
 		}
@@ -69,20 +63,20 @@ global Map =
 
 	War_Documents_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( !Map.DocStatus ) {
 			Map.DocStatus = true;
 
-			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rSpawnkill.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, {
+				"CALLARTILLERY_rSpawnkill.*",
+				"ARTILLERY.*",
+				"AIRSTRIKE_.*",
+			});
 
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDocs.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg42_2_1" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDeliver.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"MOUNTMG42_mg42_2_1",
+				"ATTACK_bDeliver.*",
+			});
 
 			timeout = 0;
 			while ( timeout <= 5 && Map.DocStatus == true )
@@ -99,38 +93,38 @@ global Map =
 	},
 	War_Documents_Returned = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DocStatus = false;
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 
 		if ( Map.WallStatus == true || Map.FlagStatus == 2 ) {
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rDocs.*",
+				"DEFEND_rCourtyard.*",
+			});
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDocs.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
 		} else
 		{
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEastern.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rEastern.*",
+				"DEFEND_rCourtyard.*",
+			});
 		}
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_mg42_2_1" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDeliver.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"MOUNTMG42_mg42_2_1",
+			"ATTACK_bDeliver.*",
+		});
 	},
 
 	beach_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 1;
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"ARTILLERY_S_rFlag.*",
+			"AIRSTRIKE_.*",
+		});
 		if ( Map.WallStatus == true && Map.DocStatus == false ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWall" );
 		}
@@ -138,22 +132,26 @@ global Map =
 
 	beach_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 2;
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rSpawnkill.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rSpawnkill.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rPanzer_1" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rWall" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"CALLARTILLERY_rSpawnkill.*",
+			"ARTILLERY_S_rSpawnkill.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"PANZER_rPanzer_1",
+			"ARTILLERY_S_rFlag.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"ARTILLERY_S_rWall",
+			"AIRSTRIKE_.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlagAS_.*" );
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bFlag_1" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"CALLARTILLERY_bFlag_1",
+			"ARTILLERY_S_bFlag_1",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPanzer.*" );
 
 		if ( Map.BridgeStatus == false ) {
@@ -161,8 +159,10 @@ global Map =
 		}
 		if ( Map.DocStatus == false ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rDocs.*",
+				"DEFEND_rCourtyard.*",
+			});
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDocs.*" );
 		}
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );    // Only one allied player goes for spawnflag.
@@ -245,10 +245,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	OnTrigger( "Planted at the Bridge Controls.", Map.Bridge_Controls_Planted );
 	OnTrigger( "Bridge is Down", Map.Bridge_Controls_Destroyed );
 	OnTrigger( "The Front Wall has been breached!", Map.Front_Wall_breach_Destroyed );
@@ -281,20 +277,24 @@ global OnMapLoad = function()
 	Util.AddUseWp( "PLANT_Front_Wall_breach", "outside" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg42_2" );  // Covers eng plant
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Front_Wall_breach" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_War_Documents" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_beach_flag" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bFlag.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bWall_eng.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT_Front_Wall_breach",
+		"FLAG_War_Documents",
+		"CHECKPOINT_beach_flag",
+		"CALLARTILLERY_bFlag.*",
+		"ARTILLERY_S_bFlag.*",
+		"ATTACK_bWall_eng.*",
+	});
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_War_Documents" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_beach_flag" );   // test once
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBridge.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEastern.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rSpot.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rBridge.*",
+		"DEFEND_rEastern.*",
+		"CALLARTILLERY_rSpot.*",
+		"CALLARTILLERY_rSpawnkill.*",
+		"ARTILLERY_S_rSpawnkill.*",
+	});
 
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );

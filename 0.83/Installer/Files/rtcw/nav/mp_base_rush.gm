@@ -129,18 +129,10 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-		},
 	},
 
 	North_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
-
 		Map.NorthStatus = true;
 
 
@@ -153,10 +145,14 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSouth.*" );
 		}
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_D_target_net_jail" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_D_target_bridge" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_spot_bridge" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_r2_arch" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ARTILLERY_D_target_net_jail",
+			"ARTILLERY_D_target_bridge",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"CALLARTILLERY_spot_bridge",
+			"ARTILLERY_S_target_r2_arch",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_nwc" );     // gate side of tunnel
 
 		SetGoalPriority( "CALL.*", 0.5, TEAM_AXIS );    // Make sure axis dont get too excited to call arty on their own position
@@ -173,10 +169,6 @@ global Map =
 
 	north_planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rNorth_c.*" );
 
@@ -187,10 +179,6 @@ global Map =
 
 	north_defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.NorthDyno -= 1;
 
 		if ( Map.NorthDyno < 1 ) {
@@ -203,10 +191,6 @@ global Map =
 
 	net_planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( Map.DocsAtHome ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_as_docs_1" );
@@ -220,17 +204,15 @@ global Map =
 
 	net_destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.NETStatus = true;
 		Map.DispenseAmmoTime = 1;
 		Util.EnableGoal( "ROUTE_netdoor" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Bunker_Wall" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bSouth.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_engSouth.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK_bSouth.*",
+			"DEFEND_engSouth.*",
+		});
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_r2_arch" ); //Martin - save for airstrikes at bunker
@@ -240,45 +222,45 @@ global Map =
 
 	docs_stolen = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DocsAtHome = false;
 
 		SetGoalPriority( "SWITCH_officegate", 0.4 ); // low
 
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_as_transmit" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTransmit" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"AIRSTRIKE_as_transmit",
+			"DEFEND_rTransmit.*",
+			"ARTILLERY_S_rTransmit",
+		});
 
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_t5" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTransmit.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTransmit" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bTransmit" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK.*",
+			"PANZER.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"MOUNTMG42_t5",
+			"ATTACK_bTransmit.*",
+			"ARTILLERY_S_bTransmit",
+			"CALLARTILLERY_bTransmit",
+		});
 
 		Util.MapDebugPrint( "docs_stolen" );
 	},
 
 	docs_secured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetGoalPriority( "SWITCH_officegate", 0.86 );
 
 		Map.DocsAtHome = true;
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bNorth.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_t5" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bTransmit" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bTransmit" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK.*",
+			"MOUNTMG42_t5",
+			"ARTILLERY_S_bTransmit",
+			"CALLARTILLERY_bTransmit",
+		});
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTransmit" );
 
@@ -286,10 +268,12 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_as_docs_2" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rTransmit.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rNorth.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rDocs.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rDocs.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rDocs.*",
+				"PANZER_rNorth.*",
+				"ARTILLERY_S_rDocs.*",
+				"CALLARTILLERY_rDocs.*",
+			});
 		}
 
 		Util.MapDebugPrint( "docs_secured" );
@@ -297,29 +281,35 @@ global Map =
 
 	docs_transmitted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DocsTransmitted = true;
 		Map.DocsAtHome = false;
 
 		Util.DisableGoal( "FLAG_Axis_Coordinates", true ); // all but routes
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_t5" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK.*",
+			"MOUNTMG42_t5",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Radar_Station" ); // Don't try to defuse
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bNorth.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bNorth.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bTransmit" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bTransmit" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"ATTACK_bNorth.*",
+			"PANZER_bNorth.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ARTILLERY_S_bTransmit",
+			"CALLARTILLERY_bTransmit",
+		});
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rTransmit.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTransmit" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rNorth_a.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rNorth.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_target_nwc" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"AIRSTRIKE_.*",
+			"DEFEND_rTransmit.*",
+			"ARTILLERY_S_rTransmit",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rNorth_a.*",
+			"PANZER_rNorth.*",
+			"ARTILLERY_S_target_nwc",
+		});
 
 		// Transmitted, regroup and avoid longspawn
 		foreach( id and bot in BotTable )
@@ -339,10 +329,6 @@ global Map =
 
 	wall_planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Bunker_Wall.*" ); // Don't try to defuse
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_engBunker.*" );
@@ -356,19 +342,17 @@ global Map =
 
 	wall_destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		DeleteTriggerRegion( "Wall" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_engBunker.*" );
 
 		if ( Map.DocsAtHome ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_as_docs_2" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rDocs.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rDocs.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"AIRSTRIKE_as_docs_2",
+				"ARTILLERY_S_rDocs.*",
+				"CALLARTILLERY_rDocs.*",
+			});
 		}
 
 		Util.MapDebugPrint( "wall_destroyed" );
@@ -382,9 +366,6 @@ global Map =
 
 	door_closed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Map.DoorStatus = 1;
 		Util.LimitToTeam( TEAM.ALLIES, "SWITCH_officegate" );
 		Util.DisableGoal( "ROUTE_bunkerwall" );
@@ -393,10 +374,6 @@ global Map =
 
 	door_open = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DoorStatus = 2;
 
 		SetAvailableMapGoals( 0, false, "SWITCH_officegate" );
@@ -412,20 +389,12 @@ global Map =
 
 	gate_lever = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.Switches.gate1.Enabled = false;
 		Map.Switches.gate2.Enabled = false;
 	},
 
 	gate_trigger = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		vel = ToVector( trigger.Action );
 
 		if ( vel.y < 0 ) {
@@ -442,10 +411,6 @@ global Map =
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
@@ -459,12 +424,6 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
-			}
-		},
 	},
 	North =
 	{
@@ -472,10 +431,6 @@ global Map =
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
@@ -489,21 +444,11 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
-			}
-		},
 	},
 };
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	tOne = OnTriggerRegion( AABB( -333.000,555.000,-32.000,-217.000,847.000,49.000 ), Map.Wall );
 	tTwo = OnTriggerRegion( AABB( 63.000,2271.000,335.000,192.000,2480.000,409.000 ), Map.North );
 	r1push = OnTriggerRegion( AABB( 498.000,1791.000,327.000,720.000,2178.000,417.000 ), RegionTrigger.DisableBotPush );
@@ -572,12 +517,16 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rNorth.*" );
 
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bNorth.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bNorth.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_NET_Door" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PANZER_bNorth.*",
+		"PLANT_NET_Door",
+	});
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_engSouth.*" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSouth[24]" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Axis_Coordinates" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_officegate" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"FLAG_Axis_Coordinates",
+		"SWITCH_officegate",
+	});
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_target_r2_arch" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_target_nwc" );      // gate side of tunnel

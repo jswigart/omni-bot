@@ -1,9 +1,8 @@
 global Map =
 {
 	Debug = 0,
-	ShowMovers = false,
 	DontDispenseAmmo = true,
-	
+
 	Airstrike =
 	{
 		stableas =
@@ -18,84 +17,54 @@ global Map =
 
 	checkpoint01_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "checkpoint01_Axis_Captured" );
 	},
 
 	checkpoint01_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "checkpoint01_Allies_Captured" );
 	},
 
 	checkpoint02_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "checkpoint02_Axis_Captured" );
 	},
 
 	checkpoint02_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "checkpoint02_Allies_Captured" );
 	},
 
 	checkpoint03_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "checkpoint03_Axis_Captured" );
 	},
 
 	checkpoint03_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "checkpoint03_Allies_Captured" );
 	},
 
 	checkpoint04_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "checkpoint04_Axis_Captured" );
 	},
 
 	checkpoint04_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "checkpoint04_Allies_Captured" );
 	},
 
 	checkpoint05_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "checkpoint05_Axis_Captured" );
 	},
 
 	checkpoint05_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "checkpoint05_Allies_Captured" );
 	},
-	
+
 	DisableCombatMove =
 	{
 		Name = "DisableCombatMove",
@@ -122,9 +91,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-		
 	stablejump = OnTriggerRegion( AABB( 5796.000,63.000,241.000,5919.000,332.000,439.000 ), Map.DisableCombatMove );
 	// Register callback functions
 	OnTrigger( "Bandits take the Sherrif's Office!", Map.checkpoint01_Axis_Captured );
@@ -141,32 +107,34 @@ global OnMapLoad = function()
 	Util.DisableGoal( ".*", true ); // all but routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	Util.EnableGoal( "CHECKPOINT.*" );
-	
+
 	SetGoalPriority( "CHECKPOINT_checkpoint01", 1.0, TEAM.AXIS );
 	SetGoalPriority( "CHECKPOINT_checkpoint04", 0.95, TEAM.AXIS );
 	SetGoalPriority( "CHECKPOINT_checkpoint02", 0.94, TEAM.AXIS );
 	SetGoalPriority( "MOUNTMG42.*", 0.91, TEAM.AXIS );
-	
+
 	SetGoalPriority( "CHECKPOINT_checkpoint05", 1.0, TEAM.ALLIES );
 	SetGoalPriority( "CHECKPOINT_checkpoint03", 0.95, TEAM.ALLIES );
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_saloonmg.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rSpawnkill.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"ARTILLERY_S_rSpawnkill.*",
+		"AIRSTRIKE_rSpawnkill.*",
+		"MOUNTMG42_saloonmg.*",
+		"ATTACK_rSpawnkill.*",
+	});
 	Map.Airstrike.stableas.Enabled = true;
-	
+
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSaloon.*" );
-	
+
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER );
-	
+
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
 
 	//yield();yield();
 	RTCWUtil.KillEntities({271,270,178,77,177,157,148,219,220,246,191,253,245,247,248,190,212,257,159,261,194,258,200,161,139,140,143,141,142,133,156,129,130,254,198,269});
-	
+
 	MapRoutes =
 	{
 		CHECKPOINT_checkpoint03 =
@@ -177,14 +145,14 @@ global OnMapLoad = function()
 				{
 					Weight = 4,
 					ROUTE_longstreet1 = {},
-					ROUTE_weststreet = 
+					ROUTE_weststreet =
 					{
 						ROUTE_stables = {},
 					},
 				},
 				ROUTE_eaststreet = {},
 				ROUTE_longstreet1 = {},
-				ROUTE_weststreet = 
+				ROUTE_weststreet =
 				{
 					ROUTE_stables = {},
 				},
@@ -235,14 +203,14 @@ global OnMapLoad = function()
 				{
 					Weight = 4,
 					ROUTE_longstreet1 = {},
-					ROUTE_weststreet = 
+					ROUTE_weststreet =
 					{
 						ROUTE_stables = {},
 					},
 				},
 				ROUTE_eaststreet = {},
 				ROUTE_longstreet1 = {},
-				ROUTE_weststreet = 
+				ROUTE_weststreet =
 				{
 					ROUTE_stables = {},
 				},
@@ -254,16 +222,16 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_rSpawnkill3 = MapRoutes.CHECKPOINT_checkpoint05;
 	MapRoutes.ATTACK_rSpawnkill4 = MapRoutes.CHECKPOINT_checkpoint05;
 	MapRoutes.ATTACK_rSpawnkill5 = MapRoutes.CHECKPOINT_checkpoint05;
-	
+
 	Util.Routes(MapRoutes);
-	
+
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 100.0;
-	RTCWUtil.NoSnipe( bot ); 
+	RTCWUtil.NoSnipe( bot );
 	RTCWUtil.SelectSoldierWeapons( 0, bot, WEAPON.PANZERFAUST, WEAPON.VENOM );
 	bot.ChangeSpawnPoint( 0 );
 };

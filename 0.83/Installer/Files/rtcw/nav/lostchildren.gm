@@ -14,7 +14,7 @@ global Map =
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = true,
 	PanzbBarrierBots = 0,
-	PanzbBarrierFired = false, 
+	PanzbBarrierFired = false,
 	ViewDistance = 10000,
 	BoatPlayers = 0,
 
@@ -42,7 +42,7 @@ global Map =
 			sleep(2.5);
 		}},
 		grate = { //second boat access breakable
-			EvalFunc = function(t){ 
+			EvalFunc = function(t){
 				return !Map.sideGrateDestroyed;
 			},
 			navigate = function(_this) {
@@ -70,7 +70,7 @@ global Map =
 			{
 				// this is just using the barrier as they eval since its simple
 				// others will need to eval other map vars
-				if ( !Map.PanzbBarrierFired && Map.PanzbBarrierBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) ) 
+				if ( !Map.PanzbBarrierFired && Map.PanzbBarrierBots == 0 && _this.Bot.HasWeapon( WEAPON.PANZERFAUST ) )
 				{
 					Util.MapDebugPrint("Panzering Barrier");
 					wpTable = Util.WpNameInfo( "bbarrierpanz" );
@@ -113,8 +113,10 @@ global Map =
 		r = !Map.barrier1Destroyed && !Map.wallDestroyed;
 
 		if (!Map.wallDestroyed){ SetAvailableMapGoals( TEAM.AXIS, b, "PLANT_Old_city_wall" ); }
-		SetAvailableMapGoals( TEAM.AXIS, b, "PLANT_Allied_command_post" );
-		SetAvailableMapGoals( TEAM.AXIS, b, "PLANT_Second_barrier" );
+		SetAvailableMapGoals( TEAM.AXIS, b, {
+			"PLANT_Allied_command_post",
+			"PLANT_Second_barrier",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, b && (Map.wallDestroyed || Map.barrier2Destroyed), "PLANT_Second_boat_access" );
 		SetAvailableMapGoals( TEAM.AXIS, b && !Map.wallDestroyed, "ATTACK_wall.*" );
 		SetAvailableMapGoals( TEAM.AXIS, b && !t, "ATTACK_book.*" );
@@ -123,22 +125,30 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, b && w, "PLANT_Dock_Mg" );
 		SetAvailableMapGoals( TEAM.AXIS, Map.bookTaken || Map.barrier2Destroyed && b, "FLAG_book1" );
 		SetAvailableMapGoals( TEAM.AXIS, w || Map.bookAtBoat, "CAPPOINT_radio" );
-		SetAvailableMapGoals( TEAM.AXIS, r, "AIRSTRIKE_barrier1_axis" );
-		SetAvailableMapGoals( TEAM.AXIS, r, "ATTACK_east.*" );
+		SetAvailableMapGoals( TEAM.AXIS, r, {
+			"AIRSTRIKE_barrier1_axis",
+			"ATTACK_east.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, !t && Map.wallDestroyed, "MOUNTMG42_south" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, !t && !r && (Map.wallDestroyed || Map.barrier2Destroyed), "DEFEND_book.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, t, "DEFEND_boat_radio.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, t, "MOUNTMG42_Dock_Mg" );
+		SetAvailableMapGoals( TEAM.ALLIES, t, {
+			"DEFEND_boat_radio.*",
+			"MOUNTMG42_Dock_Mg",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, !t && !r, "MOUNTMG42_south" );
 		SetAvailableMapGoals( TEAM.ALLIES, t, "MOBILEMG42_boat.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, t && Map.wallDestroyed, "SNIPE_boat_wall.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, t && Map.wallDestroyed, "DEFEND_boat_wall.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, t && Map.wallDestroyed, {
+			"SNIPE_boat_wall.*",
+			"DEFEND_boat_wall.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, !t && Map.barrier1Destroyed && !Map.wallDestroyed, "DEFEND_wall.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, r, "AIRSTRIKE_barrier1_allied" );
 		SetAvailableMapGoals( TEAM.ALLIES, !t && !Map.wallDestroyed, "DEFEND_east.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, r, "DEFEND_east5" );
-		SetAvailableMapGoals( TEAM.ALLIES, r, "DEFEND_east6" );
+		SetAvailableMapGoals( TEAM.ALLIES, r, {
+			"DEFEND_east5",
+			"DEFEND_east6",
+		});
 
 		/*if(!Map.wallDestroyed)
 		{
@@ -165,7 +175,7 @@ global Map =
 	Barrier1_Planted  = function( trigger )
 	{
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_barrier_1.*" );
-		
+
 		Util.MapDebugPrint( "Barrier1_Planted " );
 	},
 
@@ -175,9 +185,9 @@ global Map =
 		Util.EnableGoal( "ROUTE_barrier1" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_axis_stairs" );
 		Map.SetAvail();
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_barrier1_axis.*" );
-			
+
 		Util.MapDebugPrint( "Barrier1_Destroyed " );
 	},
 
@@ -190,10 +200,12 @@ global Map =
 	{
 		Map.barrier2Destroyed = true;
 		//Map.SetAvail();
-		
-		SetAvailableMapGoals( TEAM.AXIS, true, "FLAG.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_door" );
-		
+
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"FLAG.*",
+			"PLANT_door",
+		});
+
 		Util.EnableGoal( "CAPPOINT_radio" );
 		Util.MapDebugPrint( "Second_barrier_Destroyed" );
 	},
@@ -224,19 +236,21 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "ROUTE_axis_stairs" );
 		Map.SetAvail();
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_north" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, ".*_east.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, ".*MG42_barrier1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			".*_east.*",
+			".*MG42_barrier1",
+		});
 
 		if (Map.bookTaken)
 		{
 			Util.MapDebugPrint( "Allies spawning at Dock." );
-			Util.ChangeSpawn( TEAM.ALLIES, 0 ); 
+			Util.ChangeSpawn( TEAM.ALLIES, 0 );
 		}
 		else
 		{
-			Util.ChangeSpawn( TEAM.ALLIES, 1 ); 
+			Util.ChangeSpawn( TEAM.ALLIES, 1 );
 		}
-		
+
 		Util.MapDebugPrint( "Old_city_wall_Destroyed" );
 	},
 
@@ -244,28 +258,34 @@ global Map =
 	{
 		Map.bookTaken = true;
 		Map.SetAvail();
-		
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rBarrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBoat.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_boat.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_sidewall.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rBoat.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_boat.*" );
-		
+
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"CALLARTILLERY_rBarrier.*",
+			"MOUNTMG42.*",
+			"ARTILLERY_S.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"ARTILLERY_S_rBoat.*",
+			"MOUNTMG42_boat.*",
+			"MOUNTMG42_sidewall.*",
+			"AIRSTRIKE_rBoat.*",
+			"ATTACK_boat.*",
+		});
+
 		if(Map.wallDestroyed)
 		{
 			Util.MapDebugPrint( "Allies spawning at Dock." );
-			Util.ChangeSpawn( TEAM.ALLIES, 0 ); 
+			Util.ChangeSpawn( TEAM.ALLIES, 0 );
 			Wp.SetWaypointFlag( "doorblock", "axis", true );
-			
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bBoatWall.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bBoat.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_boat_radio.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_boat_wall.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bboatspawn.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"DEFEND_bBoat.*",
+				"DEFEND_boat_radio.*",
+				"DEFEND_boat_wall.*",
+				"MOUNTMG42_bboatspawn.*",
+			});
 		}
 		Util.SetMaxUsersInProgress(32, "FLAG.*");
 		Util.MapDebugPrint( "book1_Taken" );
@@ -276,15 +296,17 @@ global Map =
 		Map.bookTaken = false;
 		Map.bookAtBoat = false;
 		Map.SetAvail();
-		
-		Util.ChangeSpawn( TEAM.ALLIES, 1 ); 		
+
+		Util.ChangeSpawn( TEAM.ALLIES, 1 );
 		Wp.SetWaypointFlag( "doorblock", "axis", false );
-		
-		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bBoat.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_bBoat.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bBoat.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_bboatspawn.*" );
-		
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"AIRSTRIKE_bBoat.*",
+			"GRENADE_bBoat.*",
+			"DEFEND_bBoat.*",
+			"MOUNTMG42_bboatspawn.*",
+		});
+
 		if (Map.wallDestroyed)
 		{
 			foreach( id and bot in BotTable )
@@ -299,36 +321,37 @@ global Map =
 		Util.SetMaxUsersInProgress(5, "FLAG.*"); // Axis should continue attacking the boat
 		Util.MapDebugPrint( "book1_Returned" );
 	},
-	
+
 	flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_barrier_2" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_wall" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_book.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"PLANT_barrier_2",
+			"PLANT_wall",
+			"ATTACK_book.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_east.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rBarrier.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBarrier.*" );
-		
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"CALLARTILLERY_rBarrier.*",
+			"ARTILLERY_S_rBarrier.*",
+		});
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBarrier.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_barrier1_allied.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_bBarrier.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bFlag.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bFlag.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"AIRSTRIKE_barrier1_allied.*",
+			"GRENADE_bBarrier.*",
+			"DEFEND_bFlag.*",
+			"CALLARTILLERY_bFlag.*",
+			"ARTILLERY_S_bFlag.*",
+		});
 
 		RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER );
 		Util.SetMaxUsersInProgress(1, "CHECKPOINT.*");
-		
+
 		Util.MapDebugPrint( "flag_Axis_Captured" );
 	},
 
 	flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-		
 		Util.SetMaxUsersInProgress(5, "CHECKPOINT.*");
 		Util.MapDebugPrint( "flag_Allies_Captured" );
 	},
@@ -359,21 +382,11 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) ) {
 					Map.bookAtBoat = true;
 					Util.MapDebugPrint( "bookAtBoat" );
 				}
-			}
-		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
 			}
 		},
 	},
@@ -383,27 +396,19 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) ) {
 					RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Docs are at the balcony!" );
-					SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bBoat.*" );
-					SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bBoat.*" );
+					SetAvailableMapGoals( TEAM.ALLIES, true, {
+						"AIRSTRIKE_bBoat.*",
+						"GRENADE_bBoat.*",
+					});
 					b = Util.GetBotByName( GetEntName( ent ) );
 					if ( b ) {
 						b.SayTeam( "I'm going balcony!" );
 					}
 					Util.MapDebugPrint( "DocsSide" );
 				}
-			}
-		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
 			}
 		},
 	},
@@ -413,9 +418,6 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				Map.BoatPlayers += 1;
 				Map.Airstrike.boatas.Enabled = false;
@@ -423,9 +425,6 @@ global Map =
 		},
 		OnExit = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				Map.BoatPlayers -= 1;
 				if ( Map.BoatPlayers == 0 ) {
@@ -447,7 +446,7 @@ global OnMapLoad = function()
 	OnTriggerRegion(AABB(-563.977,-1152.875,-150.875,-68.010,-1038.042,-15.026),RegionTrigger.DisableCombatMovement);//barrier2
 	OnTriggerRegion(AABB(576.594,562.691,274.778,631.592,1002.864,438.998),RegionTrigger.DisableCombatMovement); //MG42_north
 	OnTriggerRegion(AABB(-151.902,88.242,284.077,248.810,164.591,417.687),RegionTrigger.DisableCombatMovement); //cables from street to center
-	
+
 	SpawnBoxes = OnTriggerRegion(AABB(2111.000,-591.000,321.000,2432.000,-447.000,459.000),Map.DisableCombatMove);
 	SpawnBridge = OnTriggerRegion(AABB(1608.000,513.000,319.000,3132.000,1142.000,395.000),Map.DisableCombatMove);
 	Wall = OnTriggerRegion(AABB(-512.000,1167.000,-126.000,-319.000,1209.000,-13.000),Map.BookAtBoat);
@@ -455,11 +454,11 @@ global OnMapLoad = function()
 	SideWall = OnTriggerRegion(AABB(-1280.000,231.000,129.000,-1151.000,272.000,244.000),Map.BookAtBoat);
 	DocsSide = OnTriggerRegion(AABB(-1536.000,639.000,129.000,-904.000,1200.000,203.000),Map.DocsSide);
 	AxisOnBoat = OnTriggerRegion(AABB(-1199.000,1571.000,9.000,-575.000,2072.000,179.000),Map.AxisOnBoat);
-	
+
 	Util.AddUseWp( "PLANT_barrier_1", "barrier1_1" );
 	Util.AddUseWp( "PLANT_barrier_2", "barrier2_1" );
 	Util.AddUseWp( "PLANT_wall", "wall1" );
-	
+
 	OnTrigger( "Planted at the barrier #1.", Map.Barrier1_Planted ); //
 	OnTrigger( "the barrier #1 Destroyed.", Map.Barrier1_Destroyed ); //
 	OnTrigger( "Planted at barrier #2.", Map.Second_barrier_Planted ); //
@@ -473,12 +472,12 @@ global OnMapLoad = function()
 	OnTrigger( "Allies reclaim the center flag!", Map.flag_Allies_Captured );
 	// Planted at the door.
 	// the door Destroyed.
-	// 
-	// 
+	//
+	//
 
 	Util.DisableGoal( ".*", true );
 	Util.DisableGoal( "ROUTE_wall" );
-	
+
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	SetGoalPriority( "CALL.*", 0.99 );
 	SetGoalPriority( "ARTILLERY.*", 0.99 );
@@ -487,11 +486,11 @@ global OnMapLoad = function()
 	SetGoalPriority( "MOUNGMG42_boat", 0.86 );
 	SetGoalPriority( "MOUNGMG42_sidewall", 0.86 );
 	SetGoalPriority( "PLANT_barrier_1", 0.93);
-	
+
 	Util.SetMaxUsersInProgress(1, "ATTACK_east.*");
 	Util.SetMaxUsersInProgress(1, "DEFEND_bFlag.*");
 	Util.EnableGoal( "CHECKPOINT.*" );
-	
+
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
@@ -500,18 +499,22 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bFlag.*" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bFlag.*" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_barrier1_allied.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bBarrier.*" );
-		
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_barrier1_axis" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_east.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Barrier_1" );
-	
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"AIRSTRIKE_barrier1_allied.*",
+		"GRENADE_bBarrier.*",
+	});
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"AIRSTRIKE_barrier1_axis",
+		"ATTACK_east.*",
+		"PLANT_Barrier_1",
+	});
+
 	RTCWUtil.LimitToClass( "ATTACK_east.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "GRENADE_bBarrier1.*", TEAM.ALLIES, CLASS.ENGINEER );
-	
+
 	Wp.SetWaypointFlag( "doorblock", "axis", false );
 
 	MapRoutes =
@@ -531,13 +534,13 @@ global OnMapLoad = function()
 				ROUTE_axis_stairs = { Weight=2 },
 			}
 		},
-		CAPPOINT_radio = 
+		CAPPOINT_radio =
 		{
-			ROUTE_book = 
+			ROUTE_book =
 			{
-				ROUTE_side_gate = 
+				ROUTE_side_gate =
 				{
-					ROUTE_boat_ramp = 
+					ROUTE_boat_ramp =
 					{
 						Weight = 2,
 						ROUTE_boat_south_east = {},
@@ -551,7 +554,7 @@ global OnMapLoad = function()
 					ROUTE_center_north_down =
 					{
 						Weight = 2,
-						ROUTE_wall = 
+						ROUTE_wall =
 						{
 							ROUTE_boat_down = {ROUTE_boat_south_east = {},},
 							ROUTE_boat_south_east = {},
@@ -581,49 +584,49 @@ global OnMapLoad = function()
 				},
 			}
 		},
-		ATTACK_boat1 = 
+		ATTACK_boat1 =
 		{
-			ROUTE_street_spawn = 
+			ROUTE_street_spawn =
 			{
 				ROUTE_center_north_east =
 				{
-					ROUTE_wall = 
+					ROUTE_wall =
 					{
 						ROUTE_boat_south = {},
 						ROUTE_boat_down = {},
 					},
 				},
-				ROUTE_wall = 
+				ROUTE_wall =
 				{
 					ROUTE_boat_south = {},
 					ROUTE_boat_down = {},
 				},
-				ROUTE_allied_cp = 
+				ROUTE_allied_cp =
 				{
 					Weight = 2,
 					ROUTE_boat_south = {},
 					ROUTE_boat_down = {},
 				},
-				ROUTE_side_gate = 
+				ROUTE_side_gate =
 				{
 					Weight = 2,
 					ROUTE_boat_south = {},
 					ROUTE_boat_down = {},
-				
+
 				},
 			}
 		},
-		DEFEND_book1 = 
+		DEFEND_book1 =
 		{
-			ROUTE_dock_spawn = 
+			ROUTE_dock_spawn =
 			{
 				ROUTE_boat_south = {},
 				ROUTE_boat_down = { Weight=2 },
 			}
 		},
-		CHECKPOINT_flag = 
+		CHECKPOINT_flag =
 		{
-			ROUTE_rspawn = 
+			ROUTE_rspawn =
 			{
 				ROUTE_barrier1 = {},
 				ROUTE_bridge = {},
@@ -663,7 +666,7 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_book8 = MapRoutes.DEFEND_book1;
 	MapRoutes.DEFEND_book9 = MapRoutes.DEFEND_book1;
 	Util.Routes(MapRoutes);
-	
+
 	yield();yield();
 	RTCWUtil.KillEntities( {118,119,135,136,137,138,139,143,144,145,146,174,175} );
 
@@ -671,7 +674,7 @@ global OnMapLoad = function()
 };
 global OnBotJoin = function( bot )
 {
-		
+
 	RTCWUtil.SelectSoldierWeapons( TEAM.AXIS, bot, WEAPON.PANZERFAUST, WEAPON.VENOM );
 	RTCWUtil.SelectSoldierWeapons( TEAM.ALLIES, bot, WEAPON.PANZERFAUST, WEAPON.VENOM );
 	RTCWUtil.NoSnipe( bot );

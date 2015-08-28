@@ -1,13 +1,12 @@
 global Map =
 {
 	Debug = 0,
-	ShowMovers = false,
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = true,
 	DocStatus = 0,
 	FlagStatus = 0,
 	FirstSteal = true,
-	
+
 	Airstrike =
 	{
 		rfirstspawn =
@@ -21,68 +20,70 @@ global Map =
 
 	cellar_wall_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "cellar_wall_Destroyed" );
 	},
 
 	keep_gate_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ARTILLERY_S_bFlag.*",
+			"ARTILLERY_S_bFirstspawn.*",
+			"ATTACK_bFlag.*",
+			"AIRSTRIKE_bFlag.*",
+		});
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFirstspawn.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bFlag.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bFlag.*" );
-		
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rFlag.*" );
-		
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_rFlag.*",
+			"CALLARTILLERY_rFlag.*",
+			"ARTILLERY_S_rFlag.*",
+			"AIRSTRIKE_rFlag.*",
+		});
+
 		if (!Map.DocStatus)
 		{
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rDocs.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rDocs.*",
+				"AIRSTRIKE_rDocs.*",
+			});
 		}
-			
+
 		Util.MapDebugPrint( "keep_gate_Destroyed" );
 	},
 
 	secret_plans_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.DocStatus = 2;
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTransmit.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rTransmit.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTransmit.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rTransmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND.*",
+			"ARTILLERY.*",
+			"CALLARTILLERY.*",
+			"AIRSTRIKE.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"ARTILLERY_S_rTransmit.*",
+			"CHECKPOINT.*",
+			"DEFEND_rTransmit.*",
+			"GRENADE_rTransmit.*",
+			"AIRSTRIKE_rTransmit.*",
+			"CALLARTILLERY_rTransmit.*",
+		});
 		Wp.SetWaypointFlag( "gate", "allies", true );	//Axis should stay outside
 		Wp.SetWaypointFlag( "cellar", "allies", true );	//Axis should stay outside
-		
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTransmit.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bTransmit.*" );
-		
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"ATTACK_bTransmit.*",
+			"AIRSTRIKE_bTransmit.*",
+		});
+
 		Map.FirstSteal = false;
 
 		Util.MapDebugPrint( "secret_plans_Taken" );
 	},
-	
+
 	secret_plans_Returned = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.DocStatus = 1;
 
 		Util.MapDebugPrint( "secret_plans_Returned" );
@@ -91,10 +92,8 @@ global Map =
 
 	bailey_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.FlagStatus = 1;
-		
+
 		// Docs taken at least once, axis spawning outside
 		if (Map.DocStatus)
 		{
@@ -106,28 +105,30 @@ global Map =
 
 	bailey_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.FlagStatus = 2;
-		
+
 		Map.Airstrike.rfirstspawn.Enabled = false;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFirstspawn.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFirstspawn.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rFirstspawn.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rSpawnglitch.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rSpawnglitch.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rGatehouse.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rGatehouse.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"ARTILLERY_S_rFirstspawn.*",
+			"CALLARTILLERY_rFirstspawn.*",
+			"AIRSTRIKE_rFirstspawn.*",
+			"DEFEND_rSpawnglitch.*",
+			"AIRSTRIKE_rSpawnglitch.*",
+			"AIRSTRIKE_rGatehouse.*",
+			"DEFEND_rGatehouse.*",
+		});
 		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
-		
+
 		// Docs never taken
 		if (!Map.DocStatus)
 		{
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlag.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rFlag.*",
+				"CALLARTILLERY_rFlag.*",
+				"ARTILLERY_S_rFlag.*",
+				"AIRSTRIKE_rFlag.*",
+			});
 		}
 
 		Util.MapDebugPrint( "bailey_flag_Allies_Captured" );
@@ -158,11 +159,8 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-		
 	tFlag1 = OnTriggerRegion( AABB( -681.000,407.000,193.000,-135.000,1088.000,289.000 ), Map.DisableCombatMovePush );
-	
+
 
 	// Register callback functions
 	//OnTrigger( "Planted at the cellar wall.", Map.cellar_wall_Planted );
@@ -185,32 +183,38 @@ global OnMapLoad = function()
 	SetGoalPriority( "AIRSTRIKE_bTransmit.*", 0.91 );
 	SetGoalPriority( "GRENADE.*", 0.88 );
 	SetGoalPriority( "FLAG.*", 0.92 );		// Higher than CHECKPOINT.*
-	
+
 	Util.DisableGoal( ".*", true ); // all but routes
 	Util.EnableGoal( "CAPPOINT.*");
-	
+
 	Map.Airstrike.rfirstspawn.Enabled = true;
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGatehouse.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rFlag.*",
+		"DEFEND_rGatehouse.*",
+	});
 	//SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFirstspawn.*" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFirstspawn.*" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFirstspawn.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rGatehouse.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSpawnglitch.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnglitch.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rGate.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rWall.*" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFirstspawn.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bFlag.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bFlag.*" );
-	
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"AIRSTRIKE_rGatehouse.*",
+		"DEFEND_rSpawnglitch.*",
+		"AIRSTRIKE_rSpawnglitch.*",
+		"GRENADE_rGate.*",
+		"GRENADE_rWall.*",
+	});
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"FLAG.*",
+		"ARTILLERY_S_bFlag.*",
+		"ARTILLERY_S_bFirstspawn.*",
+		"CHECKPOINT.*",
+		"ATTACK_bFlag.*",
+		"AIRSTRIKE_bFlag.*",
+	});
+
 	Wp.SetWaypointFlag( "gate", "allies", false );
 	Wp.SetWaypointFlag( "cellar", "allies", false );
-	
+
 	Util.SetMaxUsersInProgress( 6, "CHECKPOINT.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND_rGatehouse.*" );
 	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER );
@@ -274,11 +278,11 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bTransmit5 = MapRoutes.CAPPOINT_transmit;
 	MapRoutes.ATTACK_bTransmit6 = MapRoutes.CAPPOINT_transmit;
 	MapRoutes.CHECKPOINT_bailey_flag.ROUTE_castlespawn = MapRoutes.CAPPOINT_transmit;
-	
+
 	Util.Routes(MapRoutes);
-	
+
 	RTCWUtil.KillEntities( {118,117,116} );
-	
+
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 

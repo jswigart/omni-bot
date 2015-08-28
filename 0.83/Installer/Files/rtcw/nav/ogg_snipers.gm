@@ -56,10 +56,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	Util.DisableGoal( ".*", true );
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 45, maxcamptime = 90} );
 

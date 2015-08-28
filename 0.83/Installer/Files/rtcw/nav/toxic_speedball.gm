@@ -12,7 +12,7 @@ global Map =
 	LevelTime = 0,
 	LastAxisPanzTime = 0,
 	LastAlliedPanzTime = 0,
-	
+
 	Navigation =
 	{
 		// LTs need to be killed
@@ -27,7 +27,7 @@ global Map =
 					_this.Bot.HoldButton( BTN.SPRINT, 999 );
 					if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
 						_this.Bot.ReleaseButton( BTN.SPRINT );
-						
+
 						if ( _this.Bot.IsWeaponCharged( WEAPON.PANZERFAUST, 0 ) ) {
 							_this.Bot.HoldButton( BTN.CROUCH, 20 );
 							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
@@ -55,7 +55,7 @@ global Map =
 					_this.Bot.HoldButton( BTN.SPRINT, 999 );
 					if ( _this.Goto( wpTable.position ) == EVENT.PATH_SUCCESS ) {
 						_this.Bot.ReleaseButton( BTN.SPRINT );
-						
+
 						if ( _this.Bot.IsWeaponCharged( WEAPON.PANZERFAUST, 0 ) ) {
 							_this.Bot.HoldButton( BTN.CROUCH, 20 );
 							_this.AddAimRequest( Priority.High, "facing", wpTable.facing );
@@ -107,27 +107,16 @@ global Map =
 	},
 	Allied_Flag_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "Allied_Flag_Taken" );
 	},
 
 	Axis_Flag_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "Axis_Flag_Taken" );
 	},
 
 	forwardspawn_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Map.FlagStatus = 1;
 
 		Util.MapDebugPrint( "forwardspawn_Axis_Captured" );
@@ -135,39 +124,44 @@ global Map =
 		Map.DisableAirstrikes();
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rCapMG" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rDeliver.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLT.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"MOUNTMG42_rCapMG",
+			"AIRSTRIKE_rDeliver.*",
+			"DEFEND_rLT.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rBoxes.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bSpawnMG" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bDeliver.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bLT.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"AIRSTRIKE_bDeliver.*",
+			"DEFEND_bLT.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBoxes.*" );
 	},
 
 	forwardspawn_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Map.FlagStatus = 2;
-		
+
 		Util.MapDebugPrint( "forwardspawn_Allies_Captured" );
 		RTCWUtil.StopSniping();
 		Map.DisableAirstrikes();
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rSpawnMG" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rDeliver.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLT.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"AIRSTRIKE_rDeliver.*",
+			"DEFEND_rLT.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBoxes.*" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bCapMG" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bDeliver.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bLT.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"MOUNTMG42_bCapMG",
+			"AIRSTRIKE_bDeliver.*",
+			"DEFEND_bLT.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bBoxes.*" );
 	},
 	DisableAirstrikes = function()
@@ -216,12 +210,8 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-	
 	thread( Map.panzertimer );
-	
+
 	ras = OnTriggerRegion( AABB( -2224.000,-344.000,401.000,-1794.000,1.000,475.000 ), Map.DisableCombatMove );
 
 	OnTrigger( "MISSING_STRING", Map.Allied_Flag_Taken );
@@ -241,17 +231,21 @@ global OnMapLoad = function()
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	Util.DisableGoal( ".*", true ); //all but routes
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAttack.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_alliescap" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bSpawnMG" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_b.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Axis_Flag" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ATTACK_bAttack.*",
+		"CAPPOINT_alliescap",
+		"MOUNTMG42_bSpawnMG",
+		"REPAIRMG42_b.*",
+		"FLAG_Axis_Flag",
+	});
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rAttack.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_axiscap" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rSpawnMG" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_r.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_Allied_Flag" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"ATTACK_rAttack.*",
+		"CAPPOINT_axiscap",
+		"MOUNTMG42_rSpawnMG",
+		"REPAIRMG42_r.*",
+		"FLAG_Allied_Flag",
+	});
 
 	Util.EnableGoal( "CHECKPOINT.*" );
 
@@ -285,7 +279,7 @@ global OnMapLoad = function()
 					ROUTE_rsewer =
 					{
 						ROUTE_rmidcenter = {},
-						ROUTE_roverlook = 
+						ROUTE_roverlook =
 						{
 							Weight = 2,
 							ROUTE_rnorthcenter ={},
@@ -302,7 +296,7 @@ global OnMapLoad = function()
 					ROUTE_rsewer =
 					{
 						ROUTE_rmidcenter = {},
-						ROUTE_roverlook = 
+						ROUTE_roverlook =
 						{
 							Weight = 2,
 							ROUTE_rnorthcenter ={},
@@ -334,7 +328,7 @@ global OnMapLoad = function()
 					ROUTE_bsewer =
 					{
 						ROUTE_bmidcenter = {},
-						ROUTE_boverlook = 
+						ROUTE_boverlook =
 						{
 							Weight = 2,
 							ROUTE_bnorthcenter ={},
@@ -351,7 +345,7 @@ global OnMapLoad = function()
 					ROUTE_bsewer =
 					{
 						ROUTE_bmidcenter = {},
-						ROUTE_boverlook = 
+						ROUTE_boverlook =
 						{
 							Weight = 2,
 							ROUTE_bnorthcenter ={},
@@ -573,7 +567,7 @@ global OnMapLoad = function()
 			},
 		},
 	};
-	
+
 	MapRoutes.ATTACK_rAttack_1.ROUTE_rspawn = MapRoutes.CHECKPOINT_forwardspawn;
 	MapRoutes.ATTACK_rAttack_2 = MapRoutes.ATTACK_rAttack_1;
 	MapRoutes.ATTACK_rAttack_3 = MapRoutes.ATTACK_rAttack_1;
@@ -583,17 +577,15 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_rAttack_7 = MapRoutes.ATTACK_rAttack_1;
 	MapRoutes.ATTACK_rAttack_8 = MapRoutes.ATTACK_rAttack_1;
 	MapRoutes.FLAG_Allied_Flag = MapRoutes.CHECKPOINT_forwardspawn;
-	
+
 	Util.Routes( MapRoutes );
 
 	print( "OnMapLoad" );
 };
 
-// Uncomment for shootable breakables
 
 global OnBotJoin = function( bot )
 {
-	//~ bot.TargetBreakableDist = 80.0;
 	bot.ChangeSpawnPoint( 0 );
 	bot.TargetBreakableDist = 100.0;
 	RTCWUtil.StopSniping();

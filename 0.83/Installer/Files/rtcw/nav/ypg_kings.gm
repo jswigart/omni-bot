@@ -12,19 +12,11 @@ global Map =
 
 	Ark_of_the_Covenant_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "Ark_of_the_Covenant_Planted" );
 	},
 
 	Ark_of_the_Covenant_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.EnableGoal( "FLAG.*", true ); // all but routes
 
 		Util.MapDebugPrint( "Ark_of_the_Covenant_Destroyed" );
@@ -32,10 +24,6 @@ global Map =
 
 	Idol_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.IdolStatus = true;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
@@ -48,15 +36,13 @@ global Map =
 
 	Idol_Secured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.IdolStatus = false;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCrypt.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rPreCrypt.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rCrypt.*",
+			"DEFEND_rPreCrypt.*",
+		});
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_bPnzTransmit.*" );
 
@@ -65,19 +51,11 @@ global Map =
 
 	the_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "the_flag_Axis_Captured" );
 	},
 
 	the_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bCryptAS_.*" );
 
@@ -94,10 +72,14 @@ global Map =
 
 		// push back out if all the allies are down
 		if ( !Map.IdolStatus ) {
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rCrypt.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rInitial.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCourtyard.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, {
+				"DEFEND_.*",
+				"ARTILLERY_S_rCrypt.*",
+			});
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rInitial.*",
+				"ARTILLERY_S_rCourtyard.*",
+			});
 		}
 	},
 
@@ -107,10 +89,6 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( Map.IdolStatus == false ) {
 				if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
 					if ( Map.CheckAlliesThread ) {
@@ -118,9 +96,11 @@ global Map =
 					}
 
 					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
-					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCrypt.*" );
-					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rPreCrypt.*" );
-					SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCrypt.*" );
+					SetAvailableMapGoals( TEAM.AXIS, true, {
+						"DEFEND_rCrypt.*",
+						"DEFEND_rPreCrypt.*",
+						"ARTILLERY_S_rCrypt.*",
+					});
 					SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
 
 					if ( Map.FlexDefense ) {
@@ -129,22 +109,12 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
-			}
-		},
 	},
 
 };
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	OnTrigger( "Allied forces have destroyed the Ark!", Map.Ark_of_the_Covenant_Destroyed );
 	OnTrigger( "Planted at Ark of the Covenant.", Map.Ark_of_the_Covenant_Planted );
 	OnTrigger( "Allies have stolen the Idol!", Map.Idol_Taken );
@@ -168,14 +138,18 @@ global OnMapLoad = function()
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	Util.DisableGoal( ".*", true ); // all but routes
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rInitial.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCourtyard.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rInitial.*",
+		"ARTILLERY_S_rCourtyard.*",
+	});
 	//SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bCrypt.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCrypt.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"CHECKPOINT.*",
+		"PLANT.*",
+		"ATTACK_bCrypt.*",
+		"ARTILLERY_S_bCrypt.*",
+	});
 
 	Util.EnableGoal( "CAPPOINT.*", true ); // all but routes
 

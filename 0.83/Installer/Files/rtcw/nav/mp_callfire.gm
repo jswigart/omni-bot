@@ -1,7 +1,6 @@
 global Map =
 {
 	Debug = 0,
-	ShowMovers = false,
 	DispenseAmmoTime = 5,
 	DontDispenseAmmo = true,
 	AntennaStatus = 0,
@@ -9,7 +8,7 @@ global Map =
 	FlagStatus = 0,
 	Fallback = false,
 	AntennaDyno = 0,
-	
+
 	Airstrike =
 	{
 		bantenna1 =
@@ -37,11 +36,8 @@ global Map =
 	// Radio Destroyed
 	Communication_station_1_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		Map.RadioStatus = 1;
-		
+
 		Util.MapDebugPrint( "Communication_station_1_Destroyed" );
 	},
 
@@ -59,115 +55,106 @@ global Map =
 			Map.DisableAxisAntennaAccess();
 		}
 		Util.MapDebugPrint( "Communication_station_2_Defused" );
-	},	
+	},
 	// Antenna Destroyed
 	Communication_station_2_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		Map.AntennaStatus = 1;
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
-		
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND.*",
+			"AIRSTRIKE.*",
+			"ARTILLERY_S.*",
+			"CALLARTILLERY.*",
+		});
+
 		Map.Airstrike.bantenna1.Enabled = false;
 		Map.Airstrike.bantenna2.Enabled = false;
 		Map.Airstrike.bantenna3.Enabled = false;
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_antennamg.*" );
-		
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRadio.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rRadio.*" );
-		
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRadio.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRadio.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bRadio.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Communication.*" );		
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK.*",
+			"AIRSTRIKE.*",
+			"ARTILLERY_S.*",
+			"CALLARTILLERY.*",
+			"MOUNTMG42_antennamg.*",
+		});
+
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rRadio.*",
+			"AIRSTRIKE_rRadio.*",
+		});
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"ATTACK_bRadio.*",
+			"ARTILLERY_S_bRadio.*",
+			"AIRSTRIKE_bRadio.*",
+			"PLANT_Communication.*",
+		});
 
 		Util.MapDebugPrint( "Communication_station_2_Destroyed" );
 	},
 
 	Lower_Tunnel_Gate_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		Map.EvalFallback();
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Lower.*" );
 
 		Util.MapDebugPrint( "Lower_Tunnel_Gate_Planted" );
 	},
-	
+
 	Lower_Tunnel_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Lower_Tunnel_Gate_Destroyed" );
 	},
 	sewer_grate_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		Map.EvalFallback();
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_sewer.*" );
 
 		Util.MapDebugPrint( "sewer_grate_Planted" );
 	},
 	sewer_grate_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "sewer_grate_Destroyed" );
 	},
 
 	rivr_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Map.FlagStatus = 1;
-		
+
 		Util.MapDebugPrint( "rivr_flag_Axis_Captured" );
 	},
 
 	rivr_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		Map.FlagStatus = 2;
 		Map.EvalFallback();
 
 		Util.MapDebugPrint( "rivr_flag_Allies_Captured" );
 	},
-	
+
 	EvalFallback = function ()
 	{
 		if (!Map.Fallback)
 		{
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
-			
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY.*" );
-		
+			SetAvailableMapGoals( TEAM.AXIS, false, {
+				"DEFEND.*",
+				"AIRSTRIKE.*",
+				"ARTILLERY_S.*",
+				"CALLARTILLERY.*",
+			});
+
+			SetAvailableMapGoals( TEAM.ALLIES, false, {
+				"ATTACK.*",
+				"AIRSTRIKE.*",
+				"ARTILLERY_S.*",
+				"CALLARTILLERY.*",
+			});
+
 			if (!Map.AntennaStatus)
 			{
-				if ( Map.FriendlyFire == 0 ) 
+				if ( Map.FriendlyFire == 0 )
 				{
 					Map.Airstrike.bantenna1.Enabled = true;
 					Map.Airstrike.bantenna2.Enabled = true;
@@ -175,32 +162,40 @@ global Map =
 				}
 				Map.DisableAxisAntennaAccess();
 				RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Defend Communication Station 2!" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rAntenna.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rAntenna.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rAntenna.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rAntenna.*" );
-				
-				SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAntenna.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_antennamg.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Communication.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, {
+					"ARTILLERY_S_rAntenna.*",
+					"CALLARTILLERY_rAntenna.*",
+					"AIRSTRIKE_rAntenna.*",
+					"DEFEND_rAntenna.*",
+				});
+
+				SetAvailableMapGoals( TEAM.ALLIES, true, {
+					"ATTACK_bAntenna.*",
+					"MOUNTMG42_antennamg.*",
+					"PLANT_Communication.*",
+				});
 			}
 			else
 			{
 				RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Defend Communication Station 1!" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRadio.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rRadio.*" );
-				
-				SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRadio.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRadio.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bRadio.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Communication.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, {
+					"DEFEND_rRadio.*",
+					"AIRSTRIKE_rRadio.*",
+				});
+
+				SetAvailableMapGoals( TEAM.ALLIES, true, {
+					"ATTACK_bRadio.*",
+					"ARTILLERY_S_bRadio.*",
+					"AIRSTRIKE_bRadio.*",
+					"PLANT_Communication.*",
+				});
 			}
 		}
 		Map.Fallback = true;
-		
+
 		Util.MapDebugPrint( "EvalFallback" );
 	},
-	
+
 	DisableCombatMove =
 	{
 		Name = "DisableCombatMove",
@@ -252,13 +247,11 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
 	Bridge = OnTriggerRegion( AABB( -1981.000,-1840.000,465.000,-1359.000,-1162.000,547.000 ), Map.DisableCombatMove );
 	Ladder = OnTriggerRegion( AABB( 499.000,-2660.000,-278.000,716.000,-2559.000,844.000 ), Map.DisableCombatMove );
 	Ladder2 = OnTriggerRegion( AABB( -304.000,-2736.000,73.000,296.000,-2559.000,147.000 ), Map.DisableCombatMove );
 	Antenna = OnTriggerRegion( AABB( -768.000,-4224.000,-62.000,576.000,-2959.000,12.000 ), Map.DisableCombatMove );
-					
+
 	Util.AddUseWp( "PLANT_Communication_station_1", "radio1" );
 	Util.AddUseWp( "PLANT_Communication_station_2", "antennaplant1" );
 
@@ -280,25 +273,29 @@ global OnMapLoad = function()
 
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 10, maxcamptime = 15} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
-	
+
 	Util.DisableGoal( ".*", true );
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	
+
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
-	
+
 	SetGoalPriority( "ARTILLERY_S.*", 1.0 );
 	SetGoalPriority( "CALLARTILLERY.*", 1.0 );
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlag.*" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Lower.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_sewer.*" );
-	
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"ARTILLERY_S_rFlag.*",
+		"DEFEND_rFlag.*",
+		"CALLARTILLERY_rFlag.*",
+		"AIRSTRIKE_rFlag.*",
+	});
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"CHECKPOINT.*",
+		"ARTILLERY_S_bFlag.*",
+		"PLANT_Lower.*",
+		"PLANT_sewer.*",
+	});
+
 	MapRoutes =
 	{
 		PLANT_sewer_grate =
@@ -312,7 +309,7 @@ global OnMapLoad = function()
 		},
 		PLANT_Communication_station_2 =
 		{
-			ROUTE_flagspawn = 
+			ROUTE_flagspawn =
 			{
 				ROUTE_bigflagsteps =
 				{
@@ -325,8 +322,8 @@ global OnMapLoad = function()
 					{
 						Weight = 3,
 						ROUTE_sebuilding = {},
-					},	
-					ROUTE_elevatorbottom = 
+					},
+					ROUTE_elevatorbottom =
 					{
 						Weight = 2,
 						ROUTE_grenaderoom = {},
@@ -345,7 +342,7 @@ global OnMapLoad = function()
 				ROUTE_bspawn_s = {},
 			},
 		},
-		DEFEND_rAntenna1 = 
+		DEFEND_rAntenna1 =
 		{
 			ROUTE_rspawn =
 			{
@@ -354,7 +351,7 @@ global OnMapLoad = function()
 			},
 		},
 	};
-	
+
 	MapRoutes.PLANT_Communication_station_2.ROUTE_bspawn = MapRoutes.PLANT_Communication_station_2.ROUTE_flagspawn;
 	MapRoutes.ATTACK_bAntenna1 = MapRoutes.PLANT_Communication_station_2;
 	MapRoutes.ATTACK_bAntenna2 = MapRoutes.PLANT_Communication_station_2;
@@ -375,9 +372,9 @@ global OnMapLoad = function()
 	MapRoutes.CALLARTILLERY_rAntenna2 = MapRoutes.DEFEND_rAntenna1;
 	MapRoutes.AIRSTRIKE_rAntenna1 = MapRoutes.DEFEND_rAntenna1;
 	MapRoutes.AIRSTRIKE_rAntenna2 = MapRoutes.DEFEND_rAntenna1;
-	
+
 	Util.Routes(MapRoutes);
-	
+
 	RTCWUtil.KillEntities({97,98,99,100,101,102,103,104,258,259,260,261,262,263,264,280,281,375,376,395,492,289,373,374,238,107,239,106,240,241,242,252,234,108,235,109,236,250,237,251,233,105,232,249,247,230,248,231,254,253,255,256,228,229,257,352,353,292,357});
 	Map.EnableAxisAntennaAccess();
 

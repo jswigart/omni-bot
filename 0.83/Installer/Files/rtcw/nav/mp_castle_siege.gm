@@ -1,7 +1,6 @@
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
-	ShowMovers = false,
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = true,
 	MainStatus = false,
@@ -28,114 +27,106 @@ global Map =
 			LimitClass = Util.AllClasses,
 		},
 	},
-	
+
 	Control_Room_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Control_Room_Destroyed" );
 	},
 
 	Main_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.MainStatus = true;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bGate.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bGate.*" );
-		
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ARTILLERY_S_bGate.*",
+			"ATTACK_bGate.*",
+		});
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rGate.*" );
-		
+
 		if ( Map.Suicide ) {
 			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
 		}
 		Util.MapDebugPrint( "Main_Gate_Destroyed" );
-		
+
 	},
-	
+
 	Main_Gate_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Main.*" );
 		Util.MapDebugPrint( "Main_Gate_Planted" );
 	},
 
 	Store_Room_Wall_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		Map.SideStatus = true;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bWall.*" );
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rRoof.*" );
-		
+
 		if ( Map.Suicide ) {
 			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
 		}
 		Util.MapDebugPrint( "Store_Room_Wall_Destroyed" );
 	},
-	
+
 	Store_Room_Wall_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFUSE_Store.*",
+			"DEFEND_rGate.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rRoof.*",
+			"ATTACK_rRoofRoam.*",
+		});
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Store.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rGate.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoof.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rRoofRoam.*" );
-		
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rSide.*" );
-		
+
 		Util.MapDebugPrint( "Store_Room_Wall_Planted" );
 	},
 
 	forward_respawn_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "forward_respawn_Axis_Captured" );
 	},
 
 	forward_respawn_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.DontDispenseAmmo = false;
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Control_Room" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRoof.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnkill.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bCastle.*" );
-		
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rMain.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rSide.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoof.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rRoofRoam.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rRoof.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"PLANT_Control_Room",
+			"ATTACK_bRoof.*",
+			"PANZER_bSpawnkill.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"MOUNTMG42.*",
+			"AIRSTRIKE_bCastle.*",
+		});
+
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"AIRSTRIKE_rMain.*",
+			"AIRSTRIKE_rSide.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rRoof.*",
+			"ATTACK_rRoofRoam.*",
+			"AIRSTRIKE_rRoof.*",
+		});
 		Util.MapDebugPrint( "forward_respawn_Allies_Captured" );
 	},
-	
+
 	drawbridge_lowered = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-		
 		if (!Map.MainStatus)
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rMain.*" );
 		}
-		
+
 		Util.MapDebugPrint( "drawbridge_lowered" );
 	},
-	
+
 	DisableCombatMove =
 	{
 		Name = "DisableCombatMove",
@@ -155,13 +146,9 @@ global Map =
 			}
 		},
 	},
-	
+
 	upperdoor = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		vel = ToVector( trigger.Action );
 
 		if ( vel.x < 0 ) {
@@ -172,13 +159,9 @@ global Map =
 			Map.Switches.upperdoor.Enabled = true;
 		}
 	},
-	
+
 	lowerdoor = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		vel = ToVector( trigger.Action );
 
 		if ( vel.x < 0 ) {
@@ -194,11 +177,8 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-		
 	towertop = OnTriggerRegion( AABB( -1888.000,-96.000,1793.000,-1567.000,224.000,1867.000 ), Map.DisableCombatMove );
-		
+
 	Util.AddUseWp( "PLANT_Store_Room_Wall", "sidewall" );
 
 	// Register callback functions
@@ -212,13 +192,13 @@ global OnMapLoad = function()
 	OnTrigger( "The Drawbridge has been lowered!", Map.drawbridge_lowered );
 	OnTrigger( "secret_door_upper_goto", Map.upperdoor );
 	OnTrigger( "secret_door_lower_goto", Map.lowerdoor );
-	
+
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "ATTACK_rRoofRoam.*", {mincamptime = 1, maxcamptime = 1} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 40, maxcamptime = 60} );
 	SetMapGoalProperties( "MOUNT.*", {mincamptime = 60, maxcamptime = 60} );
-	
+
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "DEFEND_rRoof1", TEAM.AXIS, CLASS.ENGINEER, CLASS.MEDIC, CLASS.LIEUTENANT );
 
@@ -227,24 +207,28 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 4, "CHECKPOINT.*" );
 
 	Util.DisableGoal( ".*", true ); // all but routes
-		
+
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	
+
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bridge" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Store_Room_Wall" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Gate" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bhalftrack" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTower.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bGate.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bGate.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bWall.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bCastle.*" );
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSide.*" );
-	
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"GRENADE_bridge",
+		"PLANT_Store_Room_Wall",
+		"PLANT_Main_Gate",
+		"MOUNTMG42_bhalftrack",
+		"ARTILLERY_S_bTower.*",
+		"ARTILLERY_S_bGate.*",
+		"ATTACK_bGate.*",
+		"ATTACK_bWall.*",
+		"AIRSTRIKE_bCastle.*",
+	});
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rGate.*",
+		"AIRSTRIKE_rSide.*",
+	});
+
 	MapRoutes =
 	{
 		PLANT_Control_Room =
@@ -253,14 +237,14 @@ global OnMapLoad = function()
 			{
 				ROUTE_sidewall =
 				{
-					ROUTE_secretsteps = 
+					ROUTE_secretsteps =
 					{
 						ROUTE_roofladder = {Weight = 2,},
 						ROUTE_roofsteps = {},
 					},
 					ROUTE_tower = {},
 				},
-				ROUTE_statueroom = 
+				ROUTE_statueroom =
 				{
 					ROUTE_spawnsteps =
 					{
@@ -280,7 +264,7 @@ global OnMapLoad = function()
 			},
 		},
 	};
-	
+
 	MapRoutes.ATTACK_bRoof1 = MapRoutes.PLANT_Control_Room;
 	MapRoutes.ATTACK_bRoof2 = MapRoutes.PLANT_Control_Room;
 	MapRoutes.ATTACK_bRoof3 = MapRoutes.PLANT_Control_Room;
@@ -292,7 +276,7 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rRoof5 = MapRoutes.DEFEND_rRoof1;
 	MapRoutes.DEFEND_rRoof6 = MapRoutes.DEFEND_rRoof1;
 	MapRoutes.AIRSTRIKE_rRoof1 = MapRoutes.DEFEND_rRoof1;
-	
+
 	Util.Routes( MapRoutes );
 	Util.UpdateSwitchData();
 	yield(); yield();
@@ -315,7 +299,7 @@ global OnBotJoin = function( bot )
 	if ( bot.GetTeam() == TEAM.ALLIES ) { // Spawn allies at flag
 		bot.ChangeSpawnPoint( 2 );
 	}
-	
+
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
 	bot.RemoveState("WatchForProjectile"); // They love to jump off the roof
 };

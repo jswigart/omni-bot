@@ -24,29 +24,26 @@ global Map =
 
 	Main_Gate_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Main_Gate.*" );
 
 		Util.MapDebugPrint( "Main_Gate_Planted" );
 	},
-	
+
 	Main_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.MainStatus = true;
 	RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rCellar_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_rFlag_.*",
+			"DEFEND_rCellar_.*",
+			"PANZER_rFlag.*",
+		});
 		if ( Map.RelicStatus == false ) {
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCourtyard_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rCourtyard_.*",
+				"PANZER_rCourtyard_.*",
+				"DEFEND_rDocs_.*",
+			});
 			//RTCWUtil.LimitToClass( "CHECKPOINT_flag_obj", TEAM.AXIS, CLASS.SOLDIER );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_main.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
@@ -54,12 +51,9 @@ global Map =
 
 		Util.MapDebugPrint( "Main_Gate!_Destroyed" );
 	},
-	
+
 	Tunnel_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Tunnel_Door.*" );
 
 		Util.MapDebugPrint( "Tunnel_Door_Planted" );
@@ -67,9 +61,6 @@ global Map =
 
 	Tunnel_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
 
 		Map.TunnelStatus = true;
@@ -85,21 +76,21 @@ global Map =
 
 	Unholy_Grail_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
 
 		Map.RelicStatus = true;
 		Map.UnrestrictAxis();
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		//SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_cellar" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
-
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDeliver_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rAltDeliver_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"ARTILLERY_S_.*",
+			"DEFEND_.*",
+			"PANZER_.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rDeliver_.*",
+			"DEFEND_rAltDeliver_.*",
+		});
 		//SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_flag_obj" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT.*" );        // Don't reactivate..lets not go back outside
 
@@ -110,10 +101,6 @@ global Map =
 
 	Unholy_Grail_Returned = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.RelicStatus = false;
 		Map.RestrictAxis();
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
@@ -127,8 +114,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCourtyard.*" );
 		//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rAltDeliver_.*" );
 		if ( Map.TunnelStatus == true || Map.MainStatus == true ) {
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rCourtyard_.*",
+				"DEFEND_rDocs_.*",
+			});
 		}
 		foreach( id and bot in BotTable )
 		{
@@ -145,19 +134,11 @@ global Map =
 
 	deliver_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "deliver_Captured" );
 	},
 
 	flag_obj_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 1;
 		Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
 
@@ -166,41 +147,38 @@ global Map =
 
 	flag_obj_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 2;
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
 
 		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
 		//SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bQuickroute_1" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bQuickroute" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bWineCellar" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Unholy_Grail" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"PANZER_bQuickroute",
+			"PANZER_bWineCellar",
+			"FLAG_Unholy_Grail",
+		});
 
 		//SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_flag_obj" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
 		if ( !Map.RelicStatus && !Map.MainStatus && !Map.TunnelStatus ) {
 			Map.RestrictAxis();
 			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCellar_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rAltDeliver_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rCellar_.*",
+				"DEFEND_rAltDeliver_.*",
+			});
 			//SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rMoat_1" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_cellar" );
 		}
 
-		
+
 
 		Util.MapDebugPrint( "flag_obj_Allies_Captured" );
 	},
 
 	two_minute = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	thirty_second = function( trigger )
@@ -212,7 +190,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs_.*" );
 		}
 	},
-	
+
 	RestrictAxis = function ()
 	{
 		Wp.SetWaypointFlag( "axisblock1", "allies", true );
@@ -244,16 +222,11 @@ global Map =
 			}
 		},
 	},
-	
+
 };
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-	
-	
 	NoCombat = OnTriggerRegion( AABB( -5100.000,599.000,57.000,-4160.000,856.000,195.000 ), Map.DisableCombatMove );
 
 	OnTrigger( "The Main Gate has been destroyed!", Map.Main_Gate_Destroyed );
@@ -278,15 +251,19 @@ global OnMapLoad = function()
 
 	Util.DisableGoal( ".*", true ); //all but routes
 	Util.EnableGoal( "CAPPOINT_deliver" );
-	
+
 	Map.UnrestrictAxis();
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rFlag_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rFlag_.*",
+		"PANZER_rFlag_.*",
+	});
 
 	RTCWUtil.LimitToClass( "CHECKPOINT_flag_obj", TEAM.AXIS, CLASS.SOLDIER );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_flag_obj" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"CHECKPOINT_flag_obj",
+		"ARTILLERY_S_bSpawnkill.*",
+	});
 
 //	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNT.*" );	// Martin - stupid to have on
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
@@ -308,7 +285,7 @@ global OnMapLoad = function()
 				ROUTE_steps =
 				{
 					ROUTE_tunnel_door = {},
-					ROUTE_cellar = 
+					ROUTE_cellar =
 					{
 						Weight = 2,
 						ROUTE_quickroute = {},
@@ -318,7 +295,7 @@ global OnMapLoad = function()
 			ROUTE_forwardspawn =
 			{
 				ROUTE_tunnel_door = {Weight = 2,},
-				ROUTE_cellar = 
+				ROUTE_cellar =
 				{
 					Weight = 2,
 					ROUTE_quickroute = {},
@@ -332,7 +309,7 @@ global OnMapLoad = function()
 				ROUTE_steps =
 				{
 					ROUTE_tunnel_door = {},
-					ROUTE_cellar = 
+					ROUTE_cellar =
 					{
 						Weight = 2,
 						ROUTE_quickroute = {},

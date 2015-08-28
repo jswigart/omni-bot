@@ -10,28 +10,24 @@ global Map =
 
 	Fueldump_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FuelDyno = 0;
 		Util.MapDebugPrint( "Fueldump_Destroyed" );
 	},
 
 	Fueldump_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FuelDyno -= 1;
 
 		if ( Map.FuelDyno == 0 && tableCount(Map.FueldumpEngEnt) < 1 ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBase.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_fueldump.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_main_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_side_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, {
+				"DEFEND_fueldump.*",
+				"AIRSTRIKE_.*",
+			});
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"AIRSTRIKE_r_as_main_.*",
+				"AIRSTRIKE_r_as_side_.*",
+			});
 		}
 
 		Util.MapDebugPrint( "Fueldump_Defused" );
@@ -39,10 +35,6 @@ global Map =
 
 	Fueldump_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FuelDyno += 1;
 
 		Util.MapDebugPrint( "Fueldump_Planted" );
@@ -50,10 +42,6 @@ global Map =
 
 	Main_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.GateStatus = true;
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bGate.*" );
@@ -71,19 +59,11 @@ global Map =
 
 	Main_Gate_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "Main_Gate_Planted" );
 	},
 
 	Side_Wall_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.SideStatus = true;
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bSide.*" );
@@ -101,19 +81,11 @@ global Map =
 
 	Side_Wall_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "Side_Wall_Planted" );
 	},
 
 	hill_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 0;
 
 		Map.EvalAlliesSupportFire();
@@ -124,10 +96,6 @@ global Map =
 
 	hill_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 1;
 
 		if ( Map.GateStatus == false && Map.SideStatus == false ) {
@@ -136,14 +104,18 @@ global Map =
 
 		Map.EvalAlliesSupportFire();
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTunnel.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rTunnel.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"ARTILLERY_S_rTunnel.*",
+			"DEFEND.*",
+			"CALLARTILLERY_rTunnel.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate.*" );
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_main_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_side_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"AIRSTRIKE_r_as_main_.*",
+			"AIRSTRIKE_r_as_side_.*",
+		});
 
 		Util.MapDebugPrint( "hill_flag_Allies_Captured" );
 	},
@@ -161,14 +133,20 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 		} else if ( Map.SideStatus == true )     {
-			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_b_as_gate_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"AIRSTRIKE_b_as_gate_.*",
+				"ARTILLERY_S_bSpawnkill.*",
+			});
 		} else if ( Map.GateStatus == true )     {
-			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_b_as_side_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"AIRSTRIKE_b_as_side_.*",
+				"ARTILLERY_S_bSpawnkill.*",
+			});
 		} else {
-			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_b_as_side_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_b_as_gate_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"AIRSTRIKE_b_as_side_.*",
+				"AIRSTRIKE_b_as_gate_.*",
+			});
 		}
 	},
 
@@ -177,24 +155,34 @@ global Map =
 		if ( Map.GateStatus && Map.SideStatus ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBase.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSide.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rGate.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, {
+				"CHECKPOINT.*",
+				"ARTILLERY_S_.*",
+			});
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"ARTILLERY_S_rSide.*",
+				"ARTILLERY_S_rGate.*",
+			});
 		} else if ( Map.GateStatus && !Map.SideStatus )    { // Gate intact, side blown
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBase_[4567]" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate_[2358]" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rBase_[4567]",
+				"DEFEND_rGate_[2358]",
+				"CHECKPOINT.*",
+			});
 			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSide.*" );
 		} else if ( !Map.GateStatus && Map.SideStatus )    { // Gate blown, side intact
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBase_[123]" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate_[1679]" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rBase_[123]",
+				"DEFEND_rGate_[1679]",
+			});
 			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rGate.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"ARTILLERY_S_rGate.*",
+				"CHECKPOINT.*",
+			});
 		}
 	},
 
@@ -205,10 +193,6 @@ global Map =
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER && GetEntTeam( ent ) != TEAM.ALLIES ) {
 				return;
 			}
@@ -240,19 +224,19 @@ global Map =
 			// no more allied engineers, push out
 			if ( tableCount(Map.FueldumpEngEnt) < 1 ) {
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBase.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_fueldump.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_main_.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_r_as_side_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, {
+					"DEFEND_fueldump.*",
+					"AIRSTRIKE_.*",
+				});
+				SetAvailableMapGoals( TEAM.AXIS, true, {
+					"AIRSTRIKE_r_as_main_.*",
+					"AIRSTRIKE_r_as_side_.*",
+				});
 			}
 		},
 	},
 	two_minute = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		RTCWUtil.StopSniping(); //Push everyone inside
 		Util.MapDebugPrint( "two_minute" );
 	},
@@ -260,11 +244,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
-
 	botpush = OnTriggerRegion( AABB( -10902.000,-6829.000,183.000,-10396.000,-6303.000,673.000 ), RegionTrigger.DisableBotPush );
 	tOne = OnTriggerRegion( AABB( -11232.000,-7680.000,175.000,-10431.000,-6919.000,469.000 ), Map.Fueldump );
 
@@ -292,7 +271,6 @@ global OnMapLoad = function()
 	SetGoalPriority( "AIRSTRIKE_.*", 0.89 );
 	SetGoalPriority( "GRENADE_.*", 0.91 );
 
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.LIEUTENANT );
@@ -306,23 +284,29 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "SNIPE.*", {mincamptime = 45, maxcamptime = 60} );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Gate" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Side_Wall" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"CHECKPOINT.*",
+		"PLANT_Main_Gate",
+		"PLANT_Side_Wall",
+	});
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Fuel_Dump.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSide.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bGate.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBase.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bHill.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bFueldump.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_SideDoor" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ATTACK_bSide.*",
+		"ATTACK_bGate.*",
+		"ARTILLERY_S_bBase.*",
+		"SNIPE_bHill.*",
+		"ATTACK_bFueldump.*",
+		"GRENADE_SideDoor",
+	});
 
 	//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Fuel_Dump.*" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEng_Gate.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTunnel.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rGate.*",
+		"DEFEND_rEng_Gate.*",
+		"SNIPE_rSnipe.*",
+		"ARTILLERY_S_rTunnel.*",
+	});
 	//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rTunnel.*" );
 
 	MapRoutes =

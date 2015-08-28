@@ -170,75 +170,48 @@ global Map =
 
 	Prototype_Tank_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.tankDyno = 0;
 
 	},
 
 	Prototype_Tank_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.tankDyno += 1;
 
 	},
 
 	Prototype_Tank_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.tankDyno -= 1;
 
 	},
 
 	Sub_Garage_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.garageDyno = 0;
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bTank.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Prototype_Tank" );
-
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bEng_Tank.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"DEFEND_bTank.*",
+			"PLANT_Prototype_Tank",
+			"DEFEND_bEng_Tank.*",
+		});
 	},
 
 	Sub_Garage_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.garageDyno += 1;
 
 	},
 
 	Sub_Garage_Door_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.garageDyno -= 1;
 
 	},
 
 	Map_Room_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.DisableGoal( "DEFUSE_Map.*" );
 
 	},
@@ -246,10 +219,6 @@ global Map =
 	//Stage 1 destroyed
 	Bridge_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_bridge_obj" );
 
 	},
@@ -257,10 +226,6 @@ global Map =
 	//Stage 2 destroyed
 	bridge_obj_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_bridge.*" );
 		Wp.SetWaypointFlag( "bluejump", "jump", true );
 		Wp.SetWaypointFlag( "redjump", "closed", false );
@@ -270,10 +235,6 @@ global Map =
 	//Stage 3 destroyed
 	bridge_obj3_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.Bridge3 = true;
 		Wp.SetWaypointFlag( "bjump", "jump", true );
 		Wp.SetWaypointFlag( "bluejump", "closed", true );
@@ -284,20 +245,12 @@ global Map =
 
 	Allies_War_Documents_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_transmit.*" );
 	},
 
 	Allies_War_Documents_Returned = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_docs.*" );
 
@@ -305,9 +258,6 @@ global Map =
 
 	flag_respawn_obj_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Map.FlagStatus = 1;
 
 		if ( Map.RoundStart == false ) {
@@ -318,10 +268,6 @@ global Map =
 
 	flag_respawn_obj_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.RoundStart = false;
 		Map.FlagStatus = 2;
 
@@ -333,12 +279,16 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_tank.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rCP.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_cpmg.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_wb2" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rBridge.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rBridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"ARTILLERY_S_rCP.*",
+			"MOUNTMG42_cpmg.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"ARTILLERY_S_rBridge.*",
+			"MOUNTMG42_wb2",
+			"SNIPE_rBridge.*",
+			"PANZER_rBridge.*",
+		});
 
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
 
@@ -355,22 +305,12 @@ global Map =
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
 			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
 				SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_tank.*" );
-			}
-		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
 			}
 		},
 	},
@@ -390,10 +330,6 @@ global OnMapLoad = function()
 	Wp.SetWaypointFlag( "bluejump", "jump", false );
 	Wp.SetWaypointFlag( "bluejump", "closed", false );
 	Wp.SetWaypointFlag( "redjump", "closed", true );
-
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
 
 	//Martin - Second and Third bridge plants do not have a trigger...
 	OnTrigger( "Bridge Destroyed.", Map.Bridge_Destroyed );             //First
@@ -449,22 +385,25 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
 
 	Util.SetMaxUsers( 1, "MOUNTMG42.*" );
-	Util.SetMaxUsers( 1, "SNIPE.*" );
 	Util.SetMaxUsers( 1, "PANZER.*" );
 	Util.SetMaxUsers( 1, "VENOM.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_flag_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Bridge" );    //Martin - This is the first one to die
-	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCP.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEng_Bridge.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"FLAG.*",
+		"ARTILLERY_S_rCP.*",
+		"DEFEND_rEng_Bridge.*",
+	});
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Sub_Garage_Door" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Prototype_Tank" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bGarage.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_valleymg" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_docs_.*" );
-	
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"DEFEND_bGarage.*",
+		"MOUNTMG42_valleymg",
+		"CAMP_dual_docs_.*",
+	});
+
 	// remove some func_explosives
 	RTCWUtil.KillEntities( {460, 461, 475, 476, 477, 79, 80, 81, 349} );
 

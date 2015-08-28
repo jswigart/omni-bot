@@ -1,7 +1,7 @@
 global Map =
 {
 	Quiet = true,
-	
+
 	Roles =
 	{
 		AXIS =
@@ -23,67 +23,39 @@ global Map =
 
 	Allies_locknar_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	Axis_locknar_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	bCappoint1_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	bCappoint2_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	bCappoint3_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	rCappoint1_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	rCappoint2_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	rCappoint3_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 };
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	OnTrigger( "MISSING_STRING", Map.Allies_locknar_Taken );
 	OnTrigger( "MISSING_STRING", Map.Axis_locknar_Taken );
 	OnTrigger( "MISSING_STRING", Map.bCappoint1_Captured );
@@ -102,7 +74,6 @@ global OnMapLoad = function()
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 
@@ -111,16 +82,20 @@ global OnMapLoad = function()
 
 	Util.EnableGoal( "FLAG_.*", true );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_bCappoint.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bMG.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bProtect.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAttack.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bDefend.*" );
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_rCappoint.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rMG.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rProtect.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rAttack.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"CAPPOINT_bCappoint.*",
+		"MOUNTMG42_bMG.*",
+		"ARTILLERY_S_bProtect.*",
+		"ATTACK_bAttack.*",
+		"CAMP_bDefend.*",
+	});
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"CAPPOINT_rCappoint.*",
+		"MOUNTMG42_rMG.*",
+		"ARTILLERY_S_rProtect.*",
+		"ATTACK_rAttack.*",
+	});
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_rDefend.*" );
 
 	MapRoutes =

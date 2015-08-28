@@ -6,186 +6,82 @@ global _MG =
 		{
 			[0] = Vec3(0.174, -0.726, 0.665),
 		},
-		CreateOnLoad = 1,
 		GoalType = "AIRSTRIKE",
-		GroupName = "",
 		MinRadius = 32,
-		Name = "AIRSTRIKE_bspawnkillbase1",
-		Orientation = Vec3(-2.907, 0.728, -0.000),
 		Position = Vec3(-5616.000, 508.000, 178.000),
 		Radius = 32,
-		Stance = "stand",
-		TagName = "bspawnkillbase1",
-		TeamAvailability = 30,
-		Version = 1,
 	},
 	ARTILLERY_S_bBaseart_1 = 
 	{
-		CreateOnLoad = 1,
 		GoalType = "ARTILLERY_S",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "ARTILLERY_S_bBaseart_1",
-		Orientation = Vec3(1.550, 0.077, -0.000),
 		Position = Vec3(-6076.033, -894.804, 512.735),
 		Radius = 15,
-		TagName = "bBaseart_1",
-		TeamAvailability = 30,
-		Version = 1,
 	},
 	ARTILLERY_S_bgate1 = 
 	{
-		CreateOnLoad = 1,
 		GoalType = "ARTILLERY_S",
-		GroupName = "",
 		MinRadius = 32,
-		Name = "ARTILLERY_S_bgate1",
-		Orientation = Vec3(3.113, -0.217, -0.000),
 		Position = Vec3(-2685.008, 1030.773, 523.078),
-		Radius = 0,
-		TagName = "bgate1",
-		TeamAvailability = 30,
-		Version = 1,
 	},
 	ARTILLERY_S_bspawnkilleast = 
 	{
-		CreateOnLoad = 1,
 		GoalType = "ARTILLERY_S",
-		GroupName = "",
 		MinRadius = 32,
-		Name = "ARTILLERY_S_bspawnkilleast",
-		Orientation = Vec3(-1.538, -0.215, -0.000),
 		Position = Vec3(5010.000, -1185.000, 209.000),
-		Radius = 0,
-		TagName = "bspawnkilleast",
-		TeamAvailability = 30,
-		Version = 1,
 	},
 	ARTILLERY_S_rBarn1 = 
 	{
-		CreateOnLoad = 1,
 		GoalType = "ARTILLERY_S",
-		GroupName = "",
 		MinRadius = 32,
-		Name = "ARTILLERY_S_rBarn1",
-		Orientation = Vec3(2.690, -0.417, -0.000),
 		Position = Vec3(1337.125, -2472.066, 1136.495),
-		Radius = 0,
-		TagName = "rBarn1",
-		TeamAvailability = 30,
-		Version = 1,
 	},
 	ARTILLERY_S_rmg421 = 
 	{
-		CreateOnLoad = 1,
 		GoalType = "ARTILLERY_S",
-		GroupName = "",
 		MinRadius = 32,
-		Name = "ARTILLERY_S_rmg421",
-		Orientation = Vec3(-2.025, -0.030, -0.000),
 		Position = Vec3(-4025.462, 3475.875, 1201.850),
-		Radius = 0,
-		TagName = "rmg421",
-		TeamAvailability = 30,
-		Version = 1,
 	},
 	ARTILLERY_S_rmg422 = 
 	{
-		CreateOnLoad = 1,
 		GoalType = "ARTILLERY_S",
-		GroupName = "",
 		MinRadius = 32,
-		Name = "ARTILLERY_S_rmg422",
-		Orientation = Vec3(0.304, 0.160, -0.000),
 		Position = Vec3(-3836.908, 4559.875, 1108.581),
-		Radius = 0,
-		TagName = "rmg422",
-		TeamAvailability = 30,
-		Version = 1,
 	},
 	CHECKPOINT_checkpoint01 = 
 	{
 		CreateOnLoad = 0,
 		GoalType = "CHECKPOINT",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "CHECKPOINT_checkpoint01",
-		Orientation = Vec3(1.571, 0.000, -0.000),
 		Position = Vec3(-2818.000, 241.000, 178.000),
-		Radius = 0,
-		TagName = "checkpoint01",
-		TeamAvailability = 30,
-		Version = 1,
 	},
 	CHECKPOINT_checkpoint02 = 
 	{
 		CreateOnLoad = 0,
 		GoalType = "CHECKPOINT",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "CHECKPOINT_checkpoint02",
-		Orientation = Vec3(-0.000, 0.000, -0.000),
 		Position = Vec3(-3204.000, 3949.000, 494.000),
-		Radius = 0,
-		TagName = "checkpoint02",
-		TeamAvailability = 30,
-		Version = 1,
 	},
 	CHECKPOINT_checkpoint03 = 
 	{
 		CreateOnLoad = 0,
 		GoalType = "CHECKPOINT",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "CHECKPOINT_checkpoint03",
-		Orientation = Vec3(-0.000, 0.000, -0.000),
 		Position = Vec3(-128.000, 3584.000, 210.000),
-		Radius = 0,
-		TagName = "checkpoint03",
-		TeamAvailability = 30,
-		Version = 1,
 	},
 	CHECKPOINT_checkpoint04 = 
 	{
 		CreateOnLoad = 0,
 		GoalType = "CHECKPOINT",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "CHECKPOINT_checkpoint04",
-		Orientation = Vec3(1.571, 0.000, -0.000),
 		Position = Vec3(2176.000, 1800.000, 212.000),
-		Radius = 0,
-		TagName = "checkpoint04",
-		TeamAvailability = 30,
-		Version = 1,
 	},
 	CHECKPOINT_checkpoint05 = 
 	{
 		CreateOnLoad = 0,
 		GoalType = "CHECKPOINT",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "CHECKPOINT_checkpoint05",
-		Orientation = Vec3(-1.571, 0.000, -0.000),
 		Position = Vec3(3028.000, -1704.000, 340.000),
-		Radius = 0,
-		TagName = "checkpoint05",
-		TeamAvailability = 30,
-		Version = 1,
 	},
 	CHECKPOINT_checkpoint06 = 
 	{
 		CreateOnLoad = 0,
 		GoalType = "CHECKPOINT",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "CHECKPOINT_checkpoint06",
-		Orientation = Vec3(-1.571, 0.000, -0.000),
 		Position = Vec3(1450.000, -4750.000, 356.000),
-		Radius = 0,
-		TagName = "checkpoint06",
-		TeamAvailability = 30,
-		Version = 1,
 	},
 	DEFEND_testalliedgoal = 
 	{
@@ -193,21 +89,11 @@ global _MG =
 		{
 			[0] = Vec3(0.966, 0.014, -0.258),
 		},
-		CreateOnLoad = 1,
-		DisableCM = 0,
 		GoalType = "Defend",
-		GroupName = "",
 		MaxCampTime = 30,
 		MinCampTime = 15,
-		MinRadius = 30,
-		Name = "DEFEND_testalliedgoal",
-		Orientation = Vec3(-1.556, -0.261, -0.000),
 		Position = Vec3(-3861.875, 37.874, 192.182),
 		Radius = 35,
-		Stance = "stand",
-		TagName = "testalliedgoal",
-		TeamAvailability = 30,
-		Version = 1,
 		Weapons = 
 		{
 		},
@@ -218,21 +104,11 @@ global _MG =
 		{
 			[0] = Vec3(0.050, -0.997, -0.062),
 		},
-		CreateOnLoad = 1,
-		DisableCM = 0,
 		GoalType = "Defend",
-		GroupName = "",
 		MaxCampTime = 30,
 		MinCampTime = 15,
-		MinRadius = 30,
-		Name = "DEFEND_testaxisgoal",
-		Orientation = Vec3(-3.091, -0.062, -0.000),
 		Position = Vec3(2987.806, -1918.027, 366.631),
 		Radius = 35,
-		Stance = "stand",
-		TagName = "testaxisgoal",
-		TeamAvailability = 30,
-		Version = 1,
 		Weapons = 
 		{
 		},
@@ -241,29 +117,14 @@ global _MG =
 	{
 		CreateOnLoad = 0,
 		GoalType = "EXPLODE",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "EXPLODE_t95",
-		Orientation = Vec3(-1.571, 0.000, -0.000),
 		Position = Vec3(-4954.500, 159.500, 351.683),
-		Radius = 0,
-		TagName = "t95",
-		TeamAvailability = 30,
-		Version = 1,
 	},
 	EXPLODE_t95_1 = 
 	{
 		CreateOnLoad = 0,
 		GoalType = "EXPLODE",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "EXPLODE_t95_1",
-		Orientation = Vec3(-1.571, 0.000, -0.000),
 		Position = Vec3(-4955.000, 156.000, 351.999),
-		Radius = 0,
 		TagName = "t95",
-		TeamAvailability = 30,
-		Version = 1,
 	},
 	MOUNTMG42_mg42_1 = 
 	{
@@ -275,32 +136,17 @@ global _MG =
 		},
 		CreateOnLoad = 0,
 		GoalType = "MOUNTMG42",
-		GroupName = "",
 		MaxCampTime = 90,
 		MinCampTime = 60,
-		MinRadius = 0,
-		Name = "MOUNTMG42_mg42_1",
-		Orientation = Vec3(-1.571, 0.000, -0.000),
 		Position = Vec3(-3624.000, 4112.000, 560.000),
-		Radius = 0,
-		TagName = "mg42_1",
 		TeamAvailability = 6,
-		Version = 1,
 	},
 	REPAIRMG42_mg42_1 = 
 	{
 		CreateOnLoad = 0,
 		GoalType = "REPAIRMG42",
-		GroupName = "",
-		MinRadius = 0,
-		Name = "REPAIRMG42_mg42_1",
-		Orientation = Vec3(-1.571, 0.000, -0.000),
 		Position = Vec3(-3624.000, 4112.000, 560.000),
-		Radius = 0,
-		Stance = "crouch",
-		TagName = "mg42_1",
 		TeamAvailability = 6,
-		Version = 1,
 	},
 	SNIPE_bHill1 = 
 	{
@@ -308,21 +154,12 @@ global _MG =
 		{
 			[0] = Vec3(-0.108, -0.972, -0.210),
 		},
-		CreateOnLoad = 1,
-		DisableCM = 0,
 		GoalType = "Snipe",
-		GroupName = "",
 		MaxCampTime = 90,
 		MinCampTime = 60,
 		MinRadius = 32,
-		Name = "SNIPE_bHill1",
-		Orientation = Vec3(3.031, -0.211, -0.000),
 		Position = Vec3(-2678.000, 5313.000, 1194.000),
 		Radius = 32,
-		Stance = "stand",
-		TagName = "bHill1",
-		TeamAvailability = 30,
-		Version = 1,
 		Weapons = 
 		{
 			[4] = 1,
@@ -336,21 +173,13 @@ global _MG =
 			[1] = Vec3(0.286, -0.931, -0.225),
 			[2] = Vec3(-0.142, -0.983, -0.119),
 		},
-		CreateOnLoad = 1,
-		DisableCM = 0,
 		GoalType = "Snipe",
-		GroupName = "",
 		MaxCampTime = 90,
 		MinCampTime = 60,
 		MinRadius = 32,
-		Name = "SNIPE_bHill2",
-		Orientation = Vec3(2.947, -0.111, -0.000),
 		Position = Vec3(-1705.153, 5869.924, 759.102),
 		Radius = 10,
 		Stance = "crouch",
-		TagName = "bHill2",
-		TeamAvailability = 30,
-		Version = 1,
 		Weapons = 
 		{
 			[4] = 1,
@@ -362,21 +191,13 @@ global _MG =
 		{
 			[0] = Vec3(0.622, 0.777, -0.095),
 		},
-		CreateOnLoad = 1,
-		DisableCM = 0,
 		GoalType = "Snipe",
-		GroupName = "",
 		MaxCampTime = 90,
 		MinCampTime = 60,
 		MinRadius = 32,
-		Name = "SNIPE_rWatertower1",
-		Orientation = Vec3(-0.675, -0.095, -0.000),
 		Position = Vec3(-4255.000, -382.000, 769.000),
 		Radius = 32,
 		Stance = "crouch",
-		TagName = "rWatertower1",
-		TeamAvailability = 30,
-		Version = 1,
 		Weapons = 
 		{
 			[4] = 1,
@@ -384,7 +205,6 @@ global _MG =
 	},
 		CAMP_dual_base_1 =
 	{
-		Version = 1,
 		TeamAvailability = 0,
 		Stance = "crouch",
 		AimVectors = 
@@ -392,8 +212,6 @@ global _MG =
 			[0] = Vec3(0.261534,0.965194,-0.000000),
 		},
 		Name = "CAMP_dual_base_1",
-		CreateOnLoad = 1,
-		GroupName = "",
 		Weapons = 
 		{
 		},
@@ -406,11 +224,9 @@ global _MG =
 		GoalType = "CAMP",
 		Position = Vec3(-3627.946045,101.874901,192.125000),
 		Radius = 35.000000,
-		Orientation = Vec3(0.000000,0.000000,0.000000),
 	},
 	CAMP_dual_base_2 =
 	{
-		Version = 1,
 		TeamAvailability = 0,
 		Stance = "crouch",
 		AimVectors = 
@@ -418,8 +234,6 @@ global _MG =
 			[0] = Vec3(0.991082,0.133251,-0.000000),
 		},
 		Name = "CAMP_dual_base_2",
-		CreateOnLoad = 1,
-		GroupName = "",
 		Weapons = 
 		{
 		},
@@ -432,11 +246,9 @@ global _MG =
 		GoalType = "CAMP",
 		Position = Vec3(-5156.875000,522.875000,208.125000),
 		Radius = 20.000000,
-		Orientation = Vec3(0.000000,0.000000,0.000000),
 	},
 	CAMP_dual_base_3 =
 	{
-		Version = 1,
 		TeamAvailability = 0,
 		Stance = "crouch",
 		AimVectors = 
@@ -444,8 +256,6 @@ global _MG =
 			[0] = Vec3(0.688568,0.725172,-0.000000),
 		},
 		Name = "CAMP_dual_base_3",
-		CreateOnLoad = 1,
-		GroupName = "",
 		Weapons = 
 		{
 		},
@@ -458,11 +268,9 @@ global _MG =
 		GoalType = "CAMP",
 		Position = Vec3(-3465.553467,-997.844910,184.125000),
 		Radius = 35.000000,
-		Orientation = Vec3(0.000000,0.000000,0.000000),
 	},
 	CAMP_dual_base_4 =
 	{
-		Version = 1,
 		TeamAvailability = 0,
 		Stance = "crouch",
 		AimVectors = 
@@ -470,8 +278,6 @@ global _MG =
 			[0] = Vec3(0.937236,0.348687,0.002493),
 		},
 		Name = "CAMP_dual_base_4",
-		CreateOnLoad = 1,
-		GroupName = "",
 		Weapons = 
 		{
 		},
@@ -484,11 +290,9 @@ global _MG =
 		GoalType = "CAMP",
 		Position = Vec3(-5172.969727,-8.125093,208.125000),
 		Radius = 20.000000,
-		Orientation = Vec3(0.000000,0.000000,0.000000),
 	},
 	CAMP_dual_base_5 =
 	{
-		Version = 1,
 		TeamAvailability = 0,
 		Stance = "crouch",
 		AimVectors = 
@@ -496,8 +300,6 @@ global _MG =
 			[0] = Vec3(0.279717,0.960083,-0.000000),
 		},
 		Name = "CAMP_dual_base_5",
-		CreateOnLoad = 1,
-		GroupName = "",
 		Weapons = 
 		{
 		},
@@ -510,11 +312,9 @@ global _MG =
 		GoalType = "CAMP",
 		Position = Vec3(-2905.750244,-226.125031,272.125000),
 		Radius = 20.000000,
-		Orientation = Vec3(0.000000,0.000000,0.000000),
 	},
 	CAMP_dual_house_1 =
 	{
-		Version = 1,
 		TeamAvailability = 0,
 		Stance = "crouch",
 		AimVectors = 
@@ -522,8 +322,6 @@ global _MG =
 			[0] = Vec3(-0.057827,0.997483,-0.041022),
 		},
 		Name = "CAMP_dual_house_1",
-		CreateOnLoad = 1,
-		GroupName = "",
 		Weapons = 
 		{
 		},
@@ -536,11 +334,9 @@ global _MG =
 		GoalType = "CAMP",
 		Position = Vec3(2623.051025,-1866.155762,428.125000),
 		Radius = 10.000000,
-		Orientation = Vec3(0.000000,0.000000,0.000000),
 	},
 	CAMP_dual_house_2 =
 	{
-		Version = 1,
 		TeamAvailability = 0,
 		Stance = "crouch",
 		AimVectors = 
@@ -548,8 +344,6 @@ global _MG =
 			[0] = Vec3(-0.036814,0.989184,-0.141987),
 		},
 		Name = "CAMP_dual_house_2",
-		CreateOnLoad = 1,
-		GroupName = "",
 		Weapons = 
 		{
 		},
@@ -562,11 +356,9 @@ global _MG =
 		GoalType = "CAMP",
 		Position = Vec3(2143.842529,-849.471558,701.679077),
 		Radius = 35.000000,
-		Orientation = Vec3(0.000000,0.000000,0.000000),
 	},
 	CAMP_dual_house_3 =
 	{
-		Version = 1,
 		TeamAvailability = 0,
 		Stance = "crouch",
 		AimVectors = 
@@ -574,8 +366,6 @@ global _MG =
 			[0] = Vec3(-0.523973,0.823072,-0.219101),
 		},
 		Name = "CAMP_dual_house_3",
-		CreateOnLoad = 1,
-		GroupName = "",
 		Weapons = 
 		{
 		},
@@ -588,11 +378,9 @@ global _MG =
 		GoalType = "CAMP",
 		Position = Vec3(3382.125000,610.125000,856.125000),
 		Radius = 35.000000,
-		Orientation = Vec3(0.000000,0.000000,0.000000),
 	},
 	CAMP_dual_house_4 =
 	{
-		Version = 1,
 		TeamAvailability = 0,
 		Stance = "crouch",
 		AimVectors = 
@@ -600,8 +388,6 @@ global _MG =
 			[0] = Vec3(-0.674512,0.719846,-0.163873),
 		},
 		Name = "CAMP_dual_house_4",
-		CreateOnLoad = 1,
-		GroupName = "",
 		Weapons = 
 		{
 		},
@@ -614,11 +400,9 @@ global _MG =
 		GoalType = "CAMP",
 		Position = Vec3(4092.874512,675.185242,895.734985),
 		Radius = 35.000000,
-		Orientation = Vec3(0.000000,0.000000,0.000000),
 	},
 	CAMP_dual_house_5 =
 	{
-		Version = 1,
 		TeamAvailability = 0,
 		Stance = "crouch",
 		AimVectors = 
@@ -626,8 +410,6 @@ global _MG =
 			[0] = Vec3(-0.325334,0.942443,-0.077197),
 		},
 		Name = "CAMP_dual_house_5",
-		CreateOnLoad = 1,
-		GroupName = "",
 		Weapons = 
 		{
 		},
@@ -640,7 +422,6 @@ global _MG =
 		GoalType = "CAMP",
 		Position = Vec3(3312.645996,-2539.325195,634.542542),
 		Radius = 35.000000,
-		Orientation = Vec3(0.000000,0.000000,0.000000),
 	},
 	Version = 1,
 };

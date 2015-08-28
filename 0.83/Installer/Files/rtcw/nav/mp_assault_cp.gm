@@ -24,73 +24,41 @@ global Map =
 
 	checkpoint1_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint1_Axis_Captured" );
 	},
 
 	checkpoint1_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint1_Allies_Captured" );
 	},
 
 	checkpoint2_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint2_Axis_Captured" );
 	},
 
 	checkpoint2_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint2_Allies_Captured" );
 	},
 
 	checkpoint3_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint3_Axis_Captured" );
 	},
 
 	checkpoint3_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint3_Allies_Captured" );
 	},
 
 	checkpoint4_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint4_Axis_Captured" );
 	},
 
 	checkpoint4_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "checkpoint4_Allies_Captured" );
 	},
 
@@ -98,10 +66,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	Wp.SetWaypointFlag( "tarmacladder", "closed", false );
 	Wp.SetWaypointFlag( "tarmacladder2", "closed", false );
 
@@ -120,7 +84,6 @@ global OnMapLoad = function()
 	print( "OnMapLoad" );
 };
 
-// Uncomment for shootable breakables
 
 global OnBotJoin = function( bot )
 {

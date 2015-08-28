@@ -65,74 +65,66 @@ global Map =
 
 	Side_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DoorStatus = true;
 		Util.EnableGoal( "ROUTE_door" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_rPlant.*" );
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bEngPlant.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnkill.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRelic.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"DEFEND_bEngPlant.*",
+			"PANZER_.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"PANZER_bSpawnkill.*",
+			"DEFEND_bRelic.*",
+		});
 	},
 	Side_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( Map.RelicStatus == true ) {
 			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_.*" );
 		}
 	},
 	Side_Door_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 	},
 
 	Holy_Relic_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.RelicStatus = true;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rDeliver.*" );
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnkill.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bDeliver.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRoamDeliver" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"DEFEND_.*",
+			"DEFUSE_.*",
+			"SNIPE_.*",
+			"PANZER_.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"PANZER_bSpawnkill.*",
+			"DEFEND_bDeliver.*",
+			"DEFEND_bRoamDeliver",
+			"ARTILLERY_S_bSpawnkill",
+		});
 
 		Util.LimitToTeam( TEAM.ALLIES, "SWITCH_Alarm" );
 	},
 	Holy_Relic_Returned = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.RelicStatus = false;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK.*" );
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bSpawnkill" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRelic.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bMain.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"DEFEND.*",
+			"ARTILLERY_S_bSpawnkill",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"DEFEND_bRelic.*",
+			"PANZER_bMain.*",
+		});
 		//SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFUSE_.*" );
 
@@ -164,10 +156,6 @@ global Map =
 	},
 	two_minute = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		RTCWUtil.StopSniping(); // Push inside
 		Map.TwoMinute = true;
 
@@ -179,10 +167,6 @@ global Map =
 
 	thirty_second = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( Map.RelicStatus == true ) {
 			return;
 		}
@@ -203,19 +187,11 @@ global Map =
 	},
 	alarm_on = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.AlarmStatus = true;
 		Util.LimitToTeam( TEAM.AXIS, "SWITCH_Alarm" );
 	},
 	alarm_off = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.AlarmStatus = false;
 		Util.LimitToTeam( TEAM.ALLIES, "SWITCH_Alarm" );
 	},
@@ -246,9 +222,6 @@ global Map =
 				Map.RelicFallback();
 			}
 		},
-		OnExit = function( ent )
-		{
-		},
 	},
 	DoorTrigger =
 	{
@@ -274,9 +247,6 @@ global Map =
 				}
 				Map.RelicFallback();
 			}
-		},
-		OnExit = function( ent )
-		{
 		},
 	},
 	RoofTrigger =
@@ -304,9 +274,6 @@ global Map =
 				Map.RelicFallback();
 			}
 		},
-		OnExit = function( ent )
-		{
-		},
 	},
 	AltarTrigger =
 	{
@@ -332,9 +299,6 @@ global Map =
 					}
 				}
 			}
-		},
-		OnExit = function( ent )
-		{
 		},
 	},
 
@@ -376,10 +340,6 @@ global Map =
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
@@ -393,12 +353,6 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
-			}
-		},
 	},
 	AlliedSpawn =
 	{
@@ -406,20 +360,11 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
 			if ( GetEntTeam( ent ) == TEAM.AXIS )
 			{
 				Map.RelicFallback();
 			}
 
-		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
-			}
 		},
 	},
 	// Axis are close to the relic
@@ -428,8 +373,10 @@ global Map =
 		if (!Map.RelicStatus)
 		{
 			print("fallback");
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bEngPlant.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, {
+				"DEFEND_bEngPlant.*",
+				"PANZER_.*",
+			});
 			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRelic_[235]" );
 			if (Map.DoorStatus)
 			{
@@ -443,10 +390,6 @@ global OnMapLoad = function()
 {
 
 	thread( Map.check_grate );
-
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
 
 	OnTrigger( "the Side Door Destroyed.", Map.Side_Door_Destroyed );
 	OnTrigger( "Planted at the Side Door.", Map.Side_Door_Planted );
@@ -486,13 +429,17 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "SWITCH.*", TEAM.ALLIES, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "SWITCH.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rPlant.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rPlant.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"PLANT.*",
+		"ATTACK_rPlant.*",
+		"PANZER_rPlant.*",
+	});
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bEngPlant.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bMain.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bMain.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"DEFEND_bEngPlant.*",
+		"DEFEND_bMain.*",
+		"PANZER_bMain.*",
+	});
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe.*" );
 
 	Util.EnableGoal( "FLAG_Holy_Relic" );
@@ -601,7 +548,7 @@ global OnMapLoad = function()
 				ROUTE_northentrance =
 				{
 					Weight = 3,
-					ROUTE_northgallery = 
+					ROUTE_northgallery =
 					{
 						Weight = 2,
 						ROUTE_door = {Weight = 3,},
@@ -676,7 +623,7 @@ global OnMapLoad = function()
 	EntityKill( 231 );
 	EntityKill( 341 );
 	EntityKill( 200 );
-	
+
 	// Extra entities for 1.0 fix
 	EntityKill( 503 );
 	EntityKill( 504 );
@@ -716,4 +663,3 @@ global OnBotJoin = function( bot )
 	bot.TargetBreakableDist = 80.0;
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
 };
-

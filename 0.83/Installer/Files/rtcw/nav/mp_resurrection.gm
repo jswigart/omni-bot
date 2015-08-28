@@ -12,7 +12,6 @@
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
-	ShowMovers = false,
 	FogViewDistance = 1400,
 	NormalViewDistance = 5000,
 	DocStatus = false,
@@ -33,17 +32,11 @@ global Map =
 
 	catacomb_door_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "catacomb_door_Destroyed" );
 	},
 
 	main_gate_power_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "main_gate_power_Destroyed" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bMain.*" );
 
@@ -51,17 +44,18 @@ global Map =
 			RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
 		}
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_rMain.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rMain.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rMain.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCourtyard.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"MOUNTMG42_rMain.*",
+			"AIRSTRIKE_rMain.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"ARTILLERY_S_rMain.*",
+			"ARTILLERY_S_rCourtyard.*",
+		});
 	},
 
 	waterway_door_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rMain.*" );
 
 		Util.MapDebugPrint( "waterway_door_Destroyed" );
@@ -69,8 +63,6 @@ global Map =
 
 	Book_of_the_Resurrection_Secured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Wp.SetWaypointFlag( "towerjump", "closed", true );
 		Wp.SetWaypointFlag( "cagejump", "closed", true );
 		Map.DocStatus = false;
@@ -92,8 +84,6 @@ global Map =
 
 	Book_of_the_Resurrection_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Wp.SetWaypointFlag( "towerjump", "closed", false );
 		Wp.SetWaypointFlag( "cagejump", "closed", false );
 		Map.DocStatus = true;
@@ -108,8 +98,6 @@ global Map =
 
 	room_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.FlagStatus = 1;
 
 		Util.SetMaxUsersInProgress( 4, "CHECKPOINT.*" );
@@ -119,15 +107,17 @@ global Map =
 
 	room_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.FlagStatus = 2;
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_catacomb_door" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnkill.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCourtyard.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bMain.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bMain.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"PLANT_catacomb_door",
+			"PANZER_bSpawnkill.*",
+			"ARTILLERY_S_bCourtyard.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"CALLARTILLERY_bMain.*",
+			"ARTILLERY_S_bMain.*",
+		});
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rMain.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
@@ -232,16 +222,11 @@ global Map =
 				Util.MapDebugPrint( "DocsGone" );
 			}
 		},
-		OnExit = function( ent )
-		{},
 	},
 };
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-
 	tower1 = OnTriggerRegion( AABB( -3472.000,-2608.000,-30.000,-3119.000,-1999.000,44.000 ), Map.DisableCombatMove );
 	tower2 = OnTriggerRegion( AABB( -3472.000,-1288.000,-30.000,-3127.000,-743.000,44.000 ), Map.DisableCombatMove );
 	fog = OnTriggerRegion(AABB( 775.000,-2176.000,-1470.000,5696.000,640.000,-1332.000 ), Map.ReduceView );
@@ -287,18 +272,22 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 2, "PLANT_waterway_door" );
 	Util.SetMaxUsersInProgress( 2, "PLANT_main_gate_power" );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_main_gate_power" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_waterway_door" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bMain.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bMain.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bMain.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT_main_gate_power",
+		"PLANT_waterway_door",
+		"AIRSTRIKE_bMain.*",
+		"FLAG.*",
+		"CHECKPOINT.*",
+		"CALLARTILLERY_bMain.*",
+		"ARTILLERY_S_bMain.*",
+	});
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rMain.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rMain.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMain.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rMain.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"MOUNTMG42_rMain.*",
+		"AIRSTRIKE_rMain.*",
+		"DEFEND_rMain.*",
+		"GRENADE_rMain.*",
+	});
 
 	Wp.SetWaypointFlag( "towerjump", "closed", true );
 	Wp.SetWaypointFlag( "cagejump", "closed", true );

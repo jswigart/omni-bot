@@ -94,10 +94,6 @@ global Map =
 		count = -1;
 		while ( 1 )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			count += 1;
 			if ( count % 120 == 0 ) {
 				attackPoint = RandInt( 0,3 );
@@ -121,17 +117,12 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 0, maxcamptime = 0} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	Util.DisableGoal( ".*" );
 
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 

@@ -1,9 +1,8 @@
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
-	ShowMovers = false,
 	DontDispenseAmmo = true,
-	
+
 	Roles =
 	{
 		AXIS = // Team
@@ -16,76 +15,49 @@ global Map =
 			},
 		},
 	},
-	
+
 	Power_Supply_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Power_Supply_Destroyed" );
 	},
 
 	Courtyard_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Courtyard_flag_Axis_Captured" );
 	},
 
 	Courtyard_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Courtyard_flag_Allies_Captured" );
 	},
 
 	Entrance_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Entrance_flag_Axis_Captured" );
 	},
 
 	Entrance_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Entrance_flag_Allies_Captured" );
 	},
 
 	alley_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "alley_flag_Axis_Captured" );
 	},
 
 	alley_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "alley_flag_Allies_Captured" );
 	},
 
 	sewer_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "sewer_flag_Axis_Captured" );
 	},
 
 	sewer_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "sewer_flag_Allies_Captured" );
 	},
 
@@ -93,9 +65,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-
 	// Register callback functions
 	OnTrigger( "MISSING_STRING", Map.Power_Supply_Destroyed );
 	OnTrigger( "MISSING_STRING", Map.Courtyard_flag_Axis_Captured );
@@ -106,7 +75,7 @@ global OnMapLoad = function()
 	OnTrigger( "MISSING_STRING", Map.alley_flag_Allies_Captured );
 	OnTrigger( "MISSING_STRING", Map.sewer_flag_Axis_Captured );
 	OnTrigger( "MISSING_STRING", Map.sewer_flag_Allies_Captured );
-	
+
 	SetMapGoalProperties( "CAMP_.*", {mincamptime = 15, maxcamptime = 20} );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 10, maxcamptime = 15} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 20} );
@@ -117,28 +86,32 @@ global OnMapLoad = function()
 	RTCWUtil.SetPrimaryGoals(1.0);
 	Util.EnableGoal( "CHECKPOINT.*" );
 	Util.DisableGoal( "CHECKPOINT_sewer_flag" );
-	
+
 	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-	
+
 	SetGoalPriority("CAMP_rPower.*", 0.95);
 	SetGoalPriority("AIRSTRIKE.*", 0.91);
 	SetGoalPriority("PANZER_bSpawnkill.*", 0.91);
 	SetGoalPriority("MOUNTMG42_mg42_2", 0.91);
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rPower.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_2" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rPower.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rPower.*.*" );
-	
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ARTILLERY_S_bSpawnkill.*",
+		"AIRSTRIKE_bSpawnkill.*",
+		"PANZER_bSpawnkill.*",
+		"PLANT.*",
+	});
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"ARTILLERY_S_rSpawnkill.*",
+		"CAMP_rPower.*",
+		"MOUNTMG42_mg42_2",
+		"DEFEND_rPower.*",
+		"AIRSTRIKE_rPower.*.*",
+	});
+
 	RTCWUtil.KillEntities({112,115,284,258,82,287,271,203,205,256,257,278,279,290,255,273,272});
-	
+
 	InitializeRoutes();
 
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );

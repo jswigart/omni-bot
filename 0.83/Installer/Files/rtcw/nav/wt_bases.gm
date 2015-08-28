@@ -1,10 +1,9 @@
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
-	ShowMovers = false,
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = true,
-	
+
 	Airstrike =
 	{
 		btunnel =
@@ -58,33 +57,21 @@ global Map =
 
 	Allied_Central_Communication_System_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Allied_Central_Communication_System_Destroyed" );
 	},
 
 	Axis_Central_Communication_System_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Axis_Central_Communication_System_Destroyed" );
 	},
 
 	Allied_Encryption_Documents_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Allied_Encryption_Documents_Taken" );
 	},
 
 	Axis_Encryption_Documents_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Axis_Encryption_Documents_Taken" );
 	},
 
@@ -92,9 +79,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-		
 	OnTriggerRegion(AABB(-1364.000,-2027.000,233.000,-713.000,-1437.000,386.000),RegionTrigger.DisableCombatMovement);
 
 	// Register callback functions
@@ -102,7 +86,7 @@ global OnMapLoad = function()
 	OnTrigger( "MISSING_STRING", Map.Axis_Central_Communication_System_Destroyed );
 	OnTrigger( "MISSING_STRING", Map.Allied_Encryption_Documents_Taken );
 	OnTrigger( "MISSING_STRING", Map.Axis_Encryption_Documents_Taken );
-	
+
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
@@ -117,28 +101,36 @@ global OnMapLoad = function()
 	SetGoalPriority( "MOUNTMG42.*", 0.91);
 	SetGoalPriority( "ATTACK.*", 0.45 );
 	SetGoalPriority( "CAMP.*", 0.95 );
-	
+
 	RTCWUtil.LimitToClass("MOUNT.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT);
 	RTCWUtil.LimitToClass("MOUNT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT);
-	
+
 	// Allied goals
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bDocs.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bArty.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Axis.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"CAMP_bDocs.*",
+		"ARTILLERY_S_bArty.*",
+		"FLAG_Axis.*",
+		"PLANT_Axis.*",
+	});
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bMG.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_bMG.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_bTransmit.*" );
-	
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"REPAIRMG42_bMG.*",
+		"CAPPOINT_bTransmit.*",
+	});
+
 	// Axis goals
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rDocs.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rArty.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_Allied.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"CAMP_rDocs.*",
+		"ARTILLERY_S_rArty.*",
+		"FLAG_Allied.*",
+		"PLANT_Allied.*",
+	});
 	//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rMG.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_rMG.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_rTransmit.*" );
-	
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"REPAIRMG42_rMG.*",
+		"CAPPOINT_rTransmit.*",
+	});
+
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 
 
@@ -159,7 +151,7 @@ global InitializeRoutes = function()
 	{
 		FLAG_Axis_Encryption_Documents =
 		{
-			ROUTE_bspawn1 = 
+			ROUTE_bspawn1 =
 			{
 				ROUTE_bramp =
 				{
@@ -170,7 +162,7 @@ global InitializeRoutes = function()
 						{
 							ROUTE_rtunnel =
 							{
-								ROUTE_rtunnelladder = 
+								ROUTE_rtunnelladder =
 								{
 									ROUTE_rmidladder = {},
 									ROUTE_rramp =
@@ -346,7 +338,7 @@ global InitializeRoutes = function()
 			},
 		},
 	};
-	
+
 	MapRoutes.FLAG_Axis_Encryption_Documents.ROUTE_bspawn2 = MapRoutes.FLAG_Axis_Encryption_Documents.ROUTE_bspawn1;
 	MapRoutes.PLANT_Axis_Central_Communication_System = MapRoutes.FLAG_Axis_Encryption_Documents.ROUTE_bspawn1;
 	MapRoutes.FLAG_Allied_Encryption_Documents.ROUTE_rspawn2 = MapRoutes.FLAG_Allied_Encryption_Documents.ROUTE_rspawn1;

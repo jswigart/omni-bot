@@ -34,28 +34,16 @@ global Map =
 
 	Allied_Command_Center_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "Allied_Command_Center_Destroyed" );
 	},
 
 	Bridge_Detonator_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "Bridge_Detonator_Destroyed" );
 	},
 
 	Water_Tower_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.EnableGoal( "FLAG.*" );  //Enable the flag goal
 
 		Util.MapDebugPrint( "Water_Tower_Door_Destroyed" );
@@ -63,28 +51,16 @@ global Map =
 
 	Water_Tower_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "Water_Tower_Door_Planted" );
 	},
 
 	obj_trigger01_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "obj_trigger01_Taken" );
 	},
 
 	flag_respawn_obj_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 1;
 
 		/*if (Map.FirstSpawn == true)
@@ -101,20 +77,28 @@ global Map =
 		//{
 		RTCWUtil.ChangeSpawnNoDefenders( TEAM.AXIS, 2 );   //Axis bots spawn at flag
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"MOUNTMG42.*",
+			"DEFEND.*",
+			"SNIPE.*",
+			"PANZER.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rOps.*",
+			"SNIPE_rFlag.*",
+			"ARTILLERY_S_rSpawnkill.*",
+		});
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRiver.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bRiver.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bRiver.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"DEFEND_bRiver.*",
+			"PANZER_bRiver.*",
+			"SNIPE_bRiver.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bBridge.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_townsquaremg.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCourtyard.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"MOUNTMG42_townsquaremg.*",
+			"ARTILLERY_S_bCourtyard.*",
+		});
 		if ( Map.FirstSpawn == false ) {
 			SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT.*" );
 			Util.MapDebugPrint( "Disabling CHECKPOINT for ALLIES" );
@@ -126,10 +110,6 @@ global Map =
 
 	flag_respawn_obj_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 2;
 
 		/*if (Map.FirstSpawn == true)
@@ -149,24 +129,30 @@ global Map =
 		RTCWUtil.ChangeSpawnNoDefenders( TEAM.AXIS, 2 );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoad.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rRoad.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rRoad.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBridge.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rCourtyard.*",
+			"DEFEND_rRoad.*",
+			"SNIPE_rRoad.*",
+			"PANZER_rRoad.*",
+			"ARTILLERY_S_rBridge.*",
+		});
 		//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_truckmg" );
 		if ( Map.FirstSpawn == false ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
 			Util.MapDebugPrint( "Disabling CHECKPOINT for AXIS" );
 		}
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bBridge.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bBridge.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bRiver.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_bRiver.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bRiver.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"DEFEND_bBridge.*",
+			"SNIPE_bBridge.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"DEFEND_bRiver.*",
+			"PANZER_bRiver.*",
+			"SNIPE_bRiver.*",
+			"MOUNTMG42.*",
+			"ARTILLERY.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 		//}
 
@@ -179,10 +165,6 @@ global Map =
 		//swap availablilty every 5 minutes
 		while ( 1 )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			count += 1;
 
 			//Util.MapDebugPrint(count);
@@ -215,10 +197,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	OnTrigger( "MISSING_STRING", Map.Allied_Command_Center_Destroyed );
 	OnTrigger( "MISSING_STRING", Map.Bridge_Detonator_Destroyed );
 	OnTrigger( "the Water Tower Door Destroyed.", Map.Water_Tower_Door_Destroyed );
@@ -246,21 +224,24 @@ global OnMapLoad = function()
 
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", CLASS.SOLDIER, CLASS.LIEUTENANT );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Water_Tower_Door" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_flag_respawn_obj" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bBridge.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBridge.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_ops_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT_Water_Tower_Door",
+		"CHECKPOINT_flag_respawn_obj",
+		"DEFEND_bBridge.*",
+		"ATTACK_bBridge.*",
+		"CAMP_dual_ops_.*",
+	});
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Command_Center" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_flag_respawn_obj" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rOps.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_bridge_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"PLANT_Allied_Command_Center",
+		"CHECKPOINT_flag_respawn_obj",
+		"DEFEND_rOps.*",
+		"ATTACK_rOps.*",
+		"CAMP_dual_bridge_.*",
+	});
 
 	Util.SetMaxUsersInProgress( 64, "CHECKPOINT_.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 

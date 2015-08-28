@@ -10,8 +10,8 @@ global Map =
 	Plant_West_Wall = "PLANT_West_Wall",
 
 	// Keep track of some variables for reference
-	cap1status = true, // available 
-	cap2status = true, // available 
+	cap1status = true, // available
+	cap2status = true, // available
 	FlagStatusus = 0, //0 nobody, 1 axis, 2 allies
 	WestStat = 0,
 	EastStat = 0,
@@ -19,7 +19,7 @@ global Map =
 	GoldStatus = false,
 	FriendlyFire,
 	ElevatorStatus = "Bottom",
-      
+
 	Switches =
 	{
 		golddoor =
@@ -38,7 +38,7 @@ global Map =
 			Priority = 0, //cs: always set to 0 when using path through
 			WaypointName = "elevator",
 			AimPosition = Vector3(1591.875,2666.291,-141.341),
-			
+
 			// cs: example for GotoAsync usage
 			//UseAsync = true,
 			//AsyncTimeout = 3000,
@@ -89,7 +89,7 @@ global Map =
 	Westwall = function(trigger)
 	{
 		Map.WestStat = 1;
-		
+
 		Util.EnableGoal("ROUTE_westwall");
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_West_Wall" );
@@ -99,18 +99,20 @@ global Map =
 		if (Map.EastStat == 1)
 		{
 			Util.SetMaxUsers( 64, "CHECKPOINT.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bFlag.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Alliedfirstdynodefense.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, {
+				"ARTILLERY_S_bFlag.*",
+				"CALLARTILLERY_bFlag.*",
+				"ATTACK_Alliedfirstdynodefense.*",
+			});
 		}
-                
+
         Util.MapDebugPrint( "Westwall" );
 	},
 
 	Eastwall = function(trigger)
 	{
 		Map.EastStat = 1;
-		
+
 		Util.EnableGoal("ROUTE_eastwall");
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_East_Wall" );
@@ -120,71 +122,57 @@ global Map =
 		if (Map.WestStat == 1)
 		{
 			Util.SetMaxUsers( 64, "CHECKPOINT.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bFlag.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Alliedfirstdynodefense.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, {
+				"ARTILLERY_S_bFlag.*",
+				"CALLARTILLERY_bFlag.*",
+				"ATTACK_Alliedfirstdynodefense.*",
+			});
 		}
-                
+
         Util.MapDebugPrint( "Eastwall" );
 	},
 
 	East_Wall_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-                        
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_East_Wall" );
-                
+
 		Util.MapDebugPrint( "^1East_Wall_Planted" );
 	},
 
 	East_Wall_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-                        
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_East_Wall" );
-                
+
 		Util.MapDebugPrint( "East_Wall_Defused" );
 	},
 
 	West_Wall_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		SetAvailableMapGoals( TEAM.ALLIES, false, "Plant_West_Wall" );
-                
+
 		Util.MapDebugPrint( "^1West_Wall_Planted" );
 	},
 
 	West_Wall_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-                        
 		SetAvailableMapGoals( TEAM.ALLIES, true, "Plant_West_Wall" );
-                
+
 		Util.MapDebugPrint( "West_Wall_Defused" );
 	},
-	
+
 	Control_Room_Door_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Control_Room_Door_Planted" );
 	},
-	
+
 	Control_Room_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		Map.Switches.golddoor.Enabled = true;
-		
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rFlag.*" );
+
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_rFlag.*",
+			"AIRSTRIKE_rFlag.*",
+		});
 
 		Util.MapDebugPrint( "Control_Room_Door_Destroyed" );
 	},
@@ -194,70 +182,81 @@ global Map =
 	{
 		Map.FlagStatus = 2;
 		Map.Switches.golddoor.Enabled = true;
-		
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_alliesdoorcontrolattack_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_AlliesButtondefense.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Control_Room_Door" );
-		
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_Axis_first.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_AxisFlagdefense_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_Axis_first_2" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_AxisFlagdefense.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE.*" );
-		
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"ATTACK_alliesdoorcontrolattack_.*",
+			"DEFEND_AlliesButtondefense.*",
+			"PLANT_Control_Room_Door",
+		});
+
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"ARTILLERY_S_Axis_first.*",
+			"ATTACK_AxisFlagdefense_.*",
+			"CALLARTILLERY_Axis_first_2",
+			"ATTACK_AxisFlagdefense.*",
+			"CHECKPOINT.*",
+			"DEFUSE.*",
+		});
+
 		// Gold is not taken
 		if (!Map.GoldStatus)
 		{
 			RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSwitch.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
-			Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );			
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rSwitch.*",
+				"CHECKPOINT.*",
+			});
+			Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
 		}
-                
+
 		Util.MapDebugPrint( "delivery_flag_Allies_Captured" );
 	},
 
 	delivery_flag_Axis_Captured = function(trigger)
 	{
 		Map.FlagStatus = 1;
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_alliesdoorcontrolattack_.*" );
-        SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_AlliesButtondefense.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rSwitch.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK_alliesdoorcontrolattack_.*",
+			"DEFEND_AlliesButtondefense.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_rSwitch.*",
+			"CHECKPOINT.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_AxisFlagdefense_.*" );
 		SetGoalPriority( "DEFEND_rSwitch.*", 0.5, TEAM.AXIS );
 		SetGoalPriority( "ATTACK_AxisFlagdefense_.*", 0.2, TEAM.AXIS );
-               
+
 		Util.MapDebugPrint( "delivery_flag_Axis_Captured" );
 	},
-	
+
 	loading_doors_open = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Map.DoorStat = 1;
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rSwitch.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_rSwitch.*",
+			"DEFEND_rFlag.*",
+			"AIRSTRIKE_rFlag.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_Axisgoldcapdef_.*" );
 		if (Map.GoldStatus)
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );
 		}
 		if ( Map.FriendlyFire < 1 ) {
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTransmit.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rTransmit.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"ARTILLERY_S_rTransmit.*",
+				"CALLARTILLERY_rTransmit.*",
+			});
 		}
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_alliesdoorcontrolattack_.*" );
 		//SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_AlliesButtondefense.*" ); // leave these on
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Axisgoldcapdef_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Fake_.*" );
-		
-                
+
+
 		Map.CheckCappoints();
 
 		Map.Switches.golddoor.LimitTeam = (1<<TEAM.AXIS);
@@ -268,22 +267,26 @@ global Map =
 	//  The Loading doors : closed
 	loading_doors_close = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.DoorStat = 0;
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSwitch.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_Axisgoldcapdef_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTransmit.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rTransmit.*" );
-		
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_alliesdoorcontrolattack_.*" );
-        SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_AlliesButtondefense.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"ATTACK_Axisgoldcapdef_.*",
+			"ARTILLERY_S_rTransmit.*",
+			"CALLARTILLERY_rTransmit.*",
+		});
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"ATTACK_alliesdoorcontrolattack_.*",
+			"DEFEND_AlliesButtondefense.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Axisgoldcapdef_.*" );
 
 		//sleep(1.5); // wait a moment while doors are closing
 		Map.Switches.golddoor.LimitTeam = (1<<TEAM.ALLIES);
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Goldcap_2" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Goldcap_1" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"CAPPOINT_Goldcap_2",
+			"CAPPOINT_Goldcap_1",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Fake_.*" );
 
 		Util.MapDebugPrint( "loading_doors_close" );
@@ -293,52 +296,62 @@ global Map =
 	{
 		Map.GoldStatus = true;
 		//SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rFlag.*" );
-	
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"ATTACK.*",
+			"CHECKPOINT.*",
+			"AIRSTRIKE_rFlag.*",
+		});
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Fake_.*" );
 
-		
+
 		if ( Map.DoorStat == 1) // if door is open ...
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_Fake_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rSwitch.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );
-			
-			SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bTransmit.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTransmit.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTransmit.*" );
+
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"CALLARTILLERY_bTransmit.*",
+				"ARTILLERY_S_bTransmit.*",
+				"ATTACK_bTransmit.*",
+			});
 			if ( Map.FriendlyFire < 1 ) {
-				SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTransmit.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rTransmit.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, {
+					"ARTILLERY_S_rTransmit.*",
+					"CALLARTILLERY_rTransmit.*",
+				});
 			}
 		}
 
-                
+
 		Util.MapDebugPrint( "GoldTaken" );
 	},
 
 	GoldSecured = function(trigger)
 	{
 		Map.GoldStatus = false;
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_delivery_flag_Axis_Captureddef_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTransmit.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rTransmit.*" );
-		
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bTransmit.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bTransmit.*" );
-		
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_delivery_flag_Axis_Captureddef_.*",
+			"ARTILLERY_S_rTransmit.*",
+			"CALLARTILLERY_rTransmit.*",
+		});
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"CALLARTILLERY_bTransmit.*",
+			"ARTILLERY_S_bTransmit.*",
+		});
+
 		Util.MapDebugPrint( "GoldSecured" );
 	},
-        
+
 	CheckCappoints = function()
 	{
-		// set availability to the current status. 
+		// set availability to the current status.
 		SetAvailableMapGoals( TEAM.ALLIES, Map.cap1status, "CAPPOINT_GoldCap_1" );
 		SetAvailableMapGoals( TEAM.ALLIES, Map.cap2status, "CAPPOINT_GoldCap_2" );
-	},        
-	
+	},
+
 	GoldCap1_Captured = function(trigger)
 	{
 		Util.DisableGoal( "CAPPOINT_Goldcap_1" );
@@ -347,7 +360,7 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "FLAG_axis_gold1" );
 		Util.MapDebugPrint( "GoldCap1_Captured" );
 	},
-	
+
 	GoldCap2_Captured = function(trigger)
 	{
 		Util.DisableGoal( "CAPPOINT_Goldcap_2" );
@@ -374,13 +387,11 @@ global Map =
 				b.DisableCombatMovement = false;
 			}
 		},
-	},	
+	},
 };
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
 	SpawnBoxes = OnTriggerRegion(AABB(-488.000,71.000,9.000,96.000,530.000,123.000),Map.DisableCombatMove);
 
 	// OnTrigger_section
@@ -398,7 +409,7 @@ global OnMapLoad = function()
 	OnTrigger( "top_l_door_Moving", Map.ElevatorTop );
 	OnTrigger( "bottom_l_door_Moving", Map.ElevatorBottom );
 	OnTrigger( "eldoor_l_goto", Map.ElevatorDoor );
-        
+
 	// cs: new triggers for cappoints
 	OnTrigger( "Allies captured truckbed_trigger1", Map.GoldCap1_Captured );
 	OnTrigger( "Allies captured truckbed_trigger2", Map.GoldCap2_Captured );
@@ -412,30 +423,34 @@ global OnMapLoad = function()
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	Util.DisableGoal( ".*", true ); //all but routes
-	
-	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_East_Wall" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_West_Wall" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_Alliesfirst.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Alliedfirstdynodefense.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_Fake_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bFlag.*" );
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_Axis_first_2" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_Axis_first.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
-	
+	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT_East_Wall",
+		"PLANT_West_Wall",
+		"PANZER_Alliesfirst.*",
+		"ATTACK_Alliedfirstdynodefense.*",
+		"CHECKPOINT.*",
+		"CAPPOINT_Fake_.*",
+		"ARTILLERY_S_bFlag.*",
+		"CALLARTILLERY_bFlag.*",
+	});
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"CALLARTILLERY_Axis_first_2",
+		"ARTILLERY_S_Axis_first.*",
+		"AIRSTRIKE_rFlag.*",
+		"DEFEND_rFlag.*",
+	});
+
 	Util.SetMaxUsersInProgress( 6, "CHECKPOINT.*" );
 	Util.SetMaxUsersInProgress( 3, "FLAG.*" );
-	
+
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "DEFEND_rEng.*", 0.6 );
-	
+
 	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
 
 	// makes sure cappoints are disabled at map start
@@ -465,14 +480,14 @@ global OnMapLoad = function()
 			},
 		},
 
-		CAPPOINT_Goldcap_1 = 
+		CAPPOINT_Goldcap_1 =
 		{
 			ROUTE_GoldGrab =
 			{
 				ROUTE_Lower1 =
 				{
 						ROUTE_Lower4 = { ROUTE_Lower6 = {}, },
-						ROUTE_Lower5 = { ROUTE_Lower6 = {}, },                                        
+						ROUTE_Lower5 = { ROUTE_Lower6 = {}, },
 						ROUTE_Lower2 = { Weight = 2,  ROUTE_Lower7 = { }, },
 				},
 				ROUTE_Top1 =
@@ -499,7 +514,7 @@ global OnMapLoad = function()
 					ROUTE_Lower1 =
 					{
 						ROUTE_Lower4 = { ROUTE_Lower6 = {}, },
-						ROUTE_Lower5 = { ROUTE_Lower6 = {}, },                                        
+						ROUTE_Lower5 = { ROUTE_Lower6 = {}, },
 						ROUTE_Lower2 = { Weight = 2,},
 					},
 				},
@@ -545,13 +560,13 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rFlag7 = MapRoutes.DEFEND_rFlag1;
 	MapRoutes.AIRSTRIKE_rFlag1 = MapRoutes.DEFEND_rFlag1;
 	MapRoutes.CALLARTILLERY_axis_first_2 = MapRoutes.DEFEND_rFlag1;
-	
+
 	Util.Routes(MapRoutes);
 	Util.UpdateSwitchData();
-	
+
 	yield();yield();
 	RTCWUtil.KillEntities( {72, 155, 201, 203} );
-	
+
 	Util.MapDebugPrint( "Omni-bot map script for te_delivery_b1 executed." );
 };
 

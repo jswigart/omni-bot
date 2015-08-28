@@ -45,10 +45,6 @@ global Map =
 
 	Dam_Stairwell_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DamStatus = 1;
 
 		Map.regulator_plant_check();
@@ -57,10 +53,6 @@ global Map =
 
 	Lower_Dam_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.LowerStatus = 1;
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_northsteps_.*" );
@@ -69,14 +61,12 @@ global Map =
 
 	Main_Doors_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.MainStatus = 1;
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Dam_Stairwell_Door" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Lower_Dam_Door" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"PLANT_Dam_Stairwell_Door",
+			"PLANT_Lower_Dam_Door",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_eng.*" );
 		Map.flag_check();
 		Util.EnableGoal( "ROUTE_main" );
@@ -85,10 +75,6 @@ global Map =
 
 	Main_Doors_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_eng.*" );
 
 		if ( Map.DefenseShifted ) {
@@ -98,10 +84,6 @@ global Map =
 
 	Lower_Dam_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( Map.DefenseShifted ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Lower_Dam.*" );
 		}
@@ -109,10 +91,6 @@ global Map =
 
 	Dam_Stairwell_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( Map.DefenseShifted ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Dam_Stairwell.*" );
 		}
@@ -120,57 +98,54 @@ global Map =
 
 	Main_Doors_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	Main_Water_Regulator_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	lower_front_door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
 
 		Map.LowerFront = true;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_dam_flag" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bYard.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_lowerfrontdoor" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK_bYard.*",
+			"ARTILLERY_S_lowerfrontdoor",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bPreflag_.*" );
 
 		if ( Map.UpperFrontDyno > 0 ) {
-			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Doors" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_eng.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"PLANT_Main_Doors",
+				"ATTACK_eng.*",
+			});
 		}
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLT_Door.*" );
-
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_rLT_Door.*",
+			"AIRSTRIKE_.*",
+		});
 	},
 
 	upper_front_door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
 
 		Map.UpperFront = true;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_dam_flag" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bYard.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_lowerfrontdoor" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK_bYard.*",
+			"ARTILLERY_S_lowerfrontdoor",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bPreflag_.*" );
 
 		if ( Map.LowerFrontDyno > 0 ) {
-			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Doors" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_eng.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"PLANT_Main_Doors",
+				"ATTACK_eng.*",
+			});
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
@@ -178,10 +153,6 @@ global Map =
 
 	dam_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 1;
 
 		if ( Map.MainStatus == 0 ) {
@@ -191,10 +162,6 @@ global Map =
 
 	dam_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 2;
 
 		SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 45} );
@@ -202,11 +169,13 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rEastpreflag_.*" ); // Get the flag
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLT_Door.*" );
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRoad_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bRoad_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bRadio_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_SnipeWindow" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_GeneratorDuct" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"ATTACK_bRoad_.*",
+			"SNIPE_bRoad_.*",
+			"SNIPE_bRadio_.*",
+			"GRENADE_SnipeWindow",
+			"GRENADE_GeneratorDuct",
+		});
 		Map.flag_check();
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
@@ -217,14 +186,12 @@ global Map =
 
 	Lower_Front_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.LowerFrontDyno += 1;
 		if ( Map.UpperFront ) {
-			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Doors" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_eng.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"PLANT_Main_Doors",
+				"ATTACK_eng.*",
+			});
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_lower_front_door.*" );
@@ -232,14 +199,12 @@ global Map =
 
 	Upper_Front_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.UpperFrontDyno += 1;
 		if ( Map.LowerFront ) {
-			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Doors" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_eng.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"PLANT_Main_Doors",
+				"ATTACK_eng.*",
+			});
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_upper_front_door.*" );
@@ -247,10 +212,6 @@ global Map =
 
 	Main_Water_Regulator_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.RegulatorDynos += 1;
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_regulator_.*" );
@@ -261,26 +222,15 @@ global Map =
 
 	Main_Water_Regulator_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.RegulatorDynos -= 1;
 	},
 
 	two_minute = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	thirty_second = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( Map.RegulatorDynos >= 1 ) {
 			return;
 		}
@@ -303,39 +253,37 @@ global Map =
 	// axis will fallback to road
 	flag_check = function() // Martin's own function
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( Map.MainStatus == 1 && Map.FlagStatus == 2 ) {
 			SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 45} );
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rWestpreflag_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rEastpreflag_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, {
+				"DEFEND_rWestpreflag_.*",
+				"DEFEND_rEastpreflag_.*",
+			});
 
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoad.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rNorthroad_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rRoad_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rRoad" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_rRoad" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rRoad.*",
+				"ARTILLERY_S_rNorthroad_.*",
+				"SNIPE_rRoad_.*",
+				"MOUNTMG42_rRoad",
+				"REPAIRMG42_rRoad",
+			});
 			RTCWUtil.LimitToClass( "CHECKPOINT_dam_flag", TEAM.AXIS, CLASS.LIEUTENANT );
 			if ( Map.Suicide  && !Map.DefenseShifted ) {
 				RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
 			}
 
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bRoad" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "EXPLODE_ducts_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "EXPLODE_bRadio_2" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRoad.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"MOUNTMG42_bRoad",
+				"EXPLODE_ducts_.*",
+				"EXPLODE_bRadio_2",
+				"ARTILLERY_S_bRoad.*",
+			});
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bPreflag_.*" );
 		}
 	},
 
 	regulator_plant_check = function()
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( Map.Debug ) {
 			print( "checking if ok to plant regulator" );
 		}
@@ -347,14 +295,20 @@ global Map =
 
 			SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_dam_flag" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_northsteps_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, {
+				"MOUNT.*",
+				"SNIPE.*",
+			});
 
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_regulator_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSouthsteps_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bRoad_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"ATTACK_regulator_.*",
+				"ATTACK_bSouthsteps_.*",
+			});
+			SetAvailableMapGoals( TEAM.ALLIES, false, {
+				"ATTACK_bRoad_.*",
+				"MOUNT.*",
+				"SNIPE.*",
+			});
 			SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Main_Water_Regulator" );
 
 			RTCWUtil.StopSniping();
@@ -380,19 +334,20 @@ global Map =
 			// just defend the regulator if a human is going to try and exploit this
 			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
 				RTCWUtil.OneBotVSayTeam( TEAM.AXIS, VOICE.DEFEND_OBJECTIVE );
-				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_dam_flag" );
+				SetAvailableMapGoals( TEAM.AXIS, false, {
+					"DEFEND.*",
+					"CHECKPOINT_dam_flag",
+				});
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_regulator_.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNT.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, {
+					"MOUNT.*",
+					"SNIPE.*",
+				});
 				if ( Map.Suicide ) {
 					RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
 				}
 				Map.DefenseShifted = true;
 			}
-		},
-		OnExit = function( ent )
-		{
 		},
 	},
 
@@ -400,10 +355,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	OnTrigger( "Allies breached the Upper Dam Stairwell!", Map.Dam_Stairwell_Door_Destroyed );
 	OnTrigger( "Allies breached the Lower Dam Tunnels!", Map.Lower_Dam_Door_Destroyed );
 	OnTrigger( "Allies destroyed the Main Dam Road Doors!", Map.Main_Doors_Destroyed );
@@ -463,18 +414,20 @@ global OnMapLoad = function()
 	Util.DisableGoal( "ROUTE_northstairwell" );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
-	Util.SetMaxUsersInProgress( 1, "AIRSTRIKE.*" );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_upper_front_door" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_lower_front_door" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bYard.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_lowerfrontdoor" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT_upper_front_door",
+		"PLANT_lower_front_door",
+		"ATTACK_bYard.*",
+		"ARTILLERY_S_lowerfrontdoor",
+	});
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rWestpreflag_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLT_Door.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rEastpreflag.*" );
-
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_dooras" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rWestpreflag_.*",
+		"DEFEND_rLT_Door.*",
+		"CAMP_rEastpreflag.*",
+		"AIRSTRIKE_dooras",
+	});
 
 	MapRoutes =
 	{
@@ -633,7 +586,7 @@ global OnMapLoad = function()
 	MapRoutes.DEFEND_rRoadrear_3 = MapRoutes.DEFEND_rRoadrear_1;
 
 	Util.Routes( MapRoutes );
-	
+
 	yield();yield();
 	if ( Map.Suicide ) {
 		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 1, 1 );
@@ -677,9 +630,9 @@ global OnMapLoad = function()
 			i += 1;
 		}*/
 	}
-	
+
 	Util.MapDebugPrint( "OnMapLoad" );
-	
+
 };
 
 global OnBotJoin = function( bot )

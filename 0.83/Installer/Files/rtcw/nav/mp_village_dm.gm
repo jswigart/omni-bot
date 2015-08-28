@@ -137,8 +137,10 @@ global Map =
 	axis_tavern = function()
 	{
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTavern.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTavernAS_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rTavern.*",
+			"AIRSTRIKE_rTavernAS_.*",
+		});
 		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Tavern" );
 		Util.MapDebugPrint( "Axis - Tavern" );
 	},
@@ -148,10 +150,6 @@ global Map =
 		count = -1;
 		while ( 1 )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			count += 1;
 			if ( count % 120 == 0 ) {
 				attackPoint = RandInt( 0,2 );
@@ -195,7 +193,6 @@ global OnMapLoad = function()
 
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
 
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 

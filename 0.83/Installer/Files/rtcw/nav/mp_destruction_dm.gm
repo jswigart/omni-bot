@@ -20,10 +20,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 0, maxcamptime = 0} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
 	SetMapGoalProperties( "MOUNTMG42.*", {mincamptime = 60, maxcamptime = 90} );
@@ -32,7 +28,6 @@ global OnMapLoad = function()
 
 	Util.DisableGoal( ".*" );
 
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 
@@ -42,27 +37,35 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bCourtyard_1" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bCourtyard" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bCheckpoint4.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCheckpoint4_2" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bCourtyard" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"AIRSTRIKE_bCourtyard_1",
+		"MOUNTMG42_bCourtyard",
+		"DEFEND_bCheckpoint4.*",
+		"ARTILLERY_S_bCheckpoint4_2",
+		"CALLARTILLERY_bCourtyard",
+	});
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rCourtyard_2" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rCourtyard" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCheckpoint3.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCheckpoint3_2" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCourtyard" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"AIRSTRIKE_rCourtyard_2",
+		"MOUNTMG42_rCourtyard",
+		"DEFEND_rCheckpoint3.*",
+		"ARTILLERY_S_rCheckpoint3_2",
+		"CALLARTILLERY_rCourtyard",
+	});
 
 	// Alternate spawnkill play
 	/*SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bSpawnkill_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bSpawnkill" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ARTILLERY_S_bSpawnkill",
+		"CALLARTILLERY_bSpawnkill",
+		"AIRSTRIKE_bSpawnkill",
+	});
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSpawnkill_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rSpawnkill" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rSpawnkill_.*",
+		"ARTILLERY_S_rSpawnkill",
+		"CALLARTILLERY_rSpawnkill",
+	});
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnkill" );*/
 
 	MapRoutes =

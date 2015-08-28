@@ -109,10 +109,6 @@ global Map =
 
 	Radio_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.GateStatus = true;
 
 		SetGoalPriority( "DEFEND_rDocs1", 0.6 );
@@ -121,11 +117,13 @@ global Map =
 
 		RTCWUtil.SwitchSoldierWeapons( TEAM.ALLIES, WEAPON.PANZERFAUST );
 
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_tunnelflag );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_barrack_mg );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			Map.Checkpoint_tunnelflag,
+			"ARTILLERY_S_rFlag",
+			"CALLARTILLERY_rFlag.*",
+			Map.Mount_barrack_mg,
+			"DEFEND_rFlag.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_bGate.*" );
 
 		DynamicPathsUpdated( TEAM.ALLIES, TEAM.AXIS );
@@ -136,10 +134,6 @@ global Map =
 
 	Radio_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( !Map.DocStatus ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
 		}
@@ -147,18 +141,10 @@ global Map =
 
 	Radio_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 	},
 
 	Docs_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( !Map.DocStatus ) {
 			Map.DocStatus = true;
 
@@ -169,11 +155,15 @@ global Map =
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTransmitAS.*" );
 
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDeliver.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPanzTransmit.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDeliver.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTransmit.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"ATTACK_bDeliver.*",
+				"PANZER_bPanzTransmit.*",
+			});
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rDeliver.*",
+				"ARTILLERY_S_rTransmit.*",
+				"CALLARTILLERY_rFlag.*",
+			});
 
 			// some axis should wait around a bit to try and catch runner
 			timeout = 0;
@@ -186,7 +176,7 @@ global Map =
 			if ( Map.DocStatus ) {
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDocs.*" );
 			}
-			
+
 			foreach( id and bot in BotTable )
 			{
 				if ( bot.GetTeam() == TEAM.AXIS ) {
@@ -200,23 +190,23 @@ global Map =
 
 	Docs_Returned = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DocStatus = false;
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDocs.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_bPanzTransmit.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDeliver.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBackhall.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_rDeliver.*",
+			"DEFEND_rBackhall.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDeliver.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rgate_as.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTransmit.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlag.*" );
-		
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"ARTILLERY_S_rTransmit.*",
+			"CALLARTILLERY_rFlag.*",
+		});
+
 		foreach( id and bot in BotTable )
 		{
 			if ( bot.GetTeam() == TEAM.AXIS ) {
@@ -229,10 +219,6 @@ global Map =
 
 	tunnelflag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 1;
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_bGate.*" );
 		RTCWUtil.SwitchSoldierWeapons( TEAM.ALLIES, WEAPON.PANZERFAUST );
@@ -240,21 +226,21 @@ global Map =
 
 	tunnelflag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 2;
 		Map.DontDispenseAmmo = false;
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_Docs );
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Radio );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDocs.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			Map.Flag_Docs,
+			Map.Plant_Radio,
+			"ATTACK_bDocs.*",
+		});
 
 		if ( !Map.GateStatus && !Map.DocStatus ) {
 			RTCWUtil.SwitchSoldierWeapons( TEAM.ALLIES, WEAPON.MAUSER );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bHouse.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bGate.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"SNIPE_bHouse.*",
+				"CAMP_bGate.*",
+			});
 
 			if ( !Map.AxisShift ) {
 				SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_tunnelflag );
@@ -266,19 +252,17 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bRadio" );
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"ARTILLERY_S_rFlag",
+			"CALLARTILLERY_rFlag.*",
+			"AIRSTRIKE_.*",
+		});
 
 
 	},
 
 	two_minute = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		//time is low, so start focusing on main obj
 		Map.FocusPrimary = true;
 
@@ -291,28 +275,23 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !Map.AxisShift && GetEntTeam( ent ) == TEAM.ALLIES ) {
 				Map.AxisShift = true;
 
 				if ( !Map.GateStatus && !Map.DocStatus ) {
-					SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_tunnelflag );
-					SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag" );
-					SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlag.*" );
-					SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_barrack_mg );
-					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
+					SetAvailableMapGoals( TEAM.AXIS, false, {
+						Map.Checkpoint_tunnelflag,
+						"ARTILLERY_S_rFlag",
+						"CALLARTILLERY_rFlag.*",
+						Map.Mount_barrack_mg,
+						"DEFEND_rFlag.*",
+					});
 					Util.EnableGroup( "gatemgs", TEAM.AXIS );
 					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
 					SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 					SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rgate_as.*" );
 				}
 			}
-		},
-		OnExit = function( ent )
-		{
 		},
 	},
 
@@ -337,9 +316,6 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-		},
 	},
 
 	thirty_second = function( trigger )
@@ -347,7 +323,7 @@ global Map =
 		// better go short with docs now
 		Util.DisableGoal( "ROUTE_sidewall" );
 	},
-	
+
 	ViewDistance = 8000,
 	LadderTrigger =
 	{
@@ -395,10 +371,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-	
 	transladder = OnTriggerRegion( AABB( 2293.000,3291.000,437.000,2366.000,3418.000,800.000 ), Map.LadderTrigger );
 	transplatform = OnTriggerRegion( AABB( 2379.000,3284.000,729.000,2809.000,4017.000,803.000 ), Map.DisableCombatMove );
 
@@ -449,15 +421,19 @@ global OnMapLoad = function()
 
 	RTCWUtil.ExcludeClass( "FLAG_Docs", TEAM.ALLIES, CLASS.SOLDIER );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_tunnelflag );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRadio" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bGate.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		Map.Checkpoint_tunnelflag,
+		"ARTILLERY_S_bRadio",
+		"CAMP_bGate.*",
+	});
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_barrack_mg );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rflag_as.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"ARTILLERY_S_rFlag",
+		"CALLARTILLERY_rFlag.*",
+		Map.Mount_barrack_mg,
+		"DEFEND_rFlag.*",
+		"AIRSTRIKE_rflag_as.*",
+	});
 
 	MapRoutes =
 	{
@@ -534,7 +510,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bDocs3 = MapRoutes.FLAG_Docs;
 
 	Util.Routes( MapRoutes );
-	
+
 	EntityKill( 239);
 	EntityKill( 158);
 

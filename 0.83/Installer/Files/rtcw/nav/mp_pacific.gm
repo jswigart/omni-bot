@@ -38,17 +38,10 @@ global Map =
 
 	Radar_Array_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	Radar_Array_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.RadarDyno -= 1;
 
 		if ( Map.RadarDyno < 1 ) {
@@ -58,18 +51,11 @@ global Map =
 
 	Radar_Array_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.RadarDyno += 1;
 	},
 
 	Security_Wall_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Map.SecurityStatus = true;
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Radar_Array" );
@@ -81,9 +67,6 @@ global Map =
 
 	Security_Wall_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Map.SecurityDyno += 1;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Security_Wall_.*" );
@@ -91,17 +74,10 @@ global Map =
 
 	two_minute = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	thirty_second = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( Map.RadarDyno >= 1 ) {
 			return;
 		}
@@ -127,26 +103,20 @@ global Map =
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
 			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 				sleep( 1 );
-				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rArray.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRadar.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, {
+					"DEFEND_rArray.*",
+					"DEFEND_rRadar.*",
+				});
 			}
 		},
 		OnExit = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
 				if ( Map.RadarDyno < 1 ) {
 					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rArray.*" );
@@ -159,10 +129,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	OnTrigger( "the Radar Array Destroyed.", Map.Radar_Array_Destroyed );
 	OnTrigger( "Planted at the Radar Array.", Map.Radar_Array_Planted );
 	OnTrigger( "Defused at the Radar Array.", Map.Radar_Array_Defused );
@@ -184,16 +150,20 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 
 	//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCall.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBoxes" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rPanzer.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRadar.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rForest_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"ARTILLERY_S_rBoxes",
+		"PANZER_rPanzer.*",
+		"SNIPE_rSnipe.*",
+		"DEFEND_rRadar.*",
+		"AIRSTRIKE_rForest_.*",
+	});
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPanzer.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Security_Wall" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRadar.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PANZER_bPanzer.*",
+		"PLANT_Security_Wall",
+		"ATTACK_bRadar.*",
+		"AIRSTRIKE_bSpawnkill_.*",
+	});
 
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );

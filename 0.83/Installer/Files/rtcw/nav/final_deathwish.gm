@@ -12,10 +12,6 @@ global Map =
 
 	Axis_Barracks_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "Axis_Barracks_Destroyed" );
 
 		thread( Map.toggle_flak );
@@ -43,10 +39,6 @@ global Map =
 
 	Flak_gun_1_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "Flak_gun_1_Destroyed" );
 		Map.Flak1Status = true;
 
@@ -56,28 +48,16 @@ global Map =
 
 	Flak_gun_1_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "Flak_gun_1_Planted" );
 	},
 
 	Flak_gun_1_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "Flak_gun_1_Defused" );
 	},
 
 	Flak_gun_2_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "Flak_gun_2_Destroyed" );
 		Map.Flak2Status = true;
 		Map.Flak1Defense();
@@ -86,28 +66,16 @@ global Map =
 
 	Flak_gun_2_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "Flak_gun_2_Planted" );
 	},
 
 	Flak_gun_2_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "Flak_gun_2_Defused" );
 	},
 
 	Foward_Barricade_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "Foward_Barricade_Destroyed" );
 		Map.BarbwireStatus = true;
 		Util.EnableGoal( "CHECKPOINT.*" );
@@ -119,10 +87,6 @@ global Map =
 
 	West_Barrier_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "West_Barrier_Destroyed" );
 		Map.BarbwireStatus = true;
 		Util.EnableGoal( "CHECKPOINT.*" );
@@ -134,36 +98,34 @@ global Map =
 
 	foward_spawn_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "foward_spawn_Axis_Captured" );
 		Map.FlagStatus = 1;
 	},
 
 	foward_spawn_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		print( "foward_spawn_Allies_Captured" );
 		Map.FlagStatus = 2;
 		RTCWUtil.StopSniping();
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_Barracks" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_east.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_west.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"ATTACK_east.*",
+			"ATTACK_west.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_btower.*" );
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_.*",
+			"MOUNTMG42_.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMid.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rBeach.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"ARTILLERY_S_rBeach.*",
+			"AIRSTRIKE_.*",
+		});
 	},
 
 	BarbwireDefense = function()
@@ -190,8 +152,10 @@ global Map =
 			return;
 		}
 		print( "Flak1 Defense" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"MOUNTMG42_.*",
+			"DEFEND.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_west.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
 		foreach( id and bot in BotTable )
@@ -207,8 +171,10 @@ global Map =
 			return;
 		}
 		print( "Flak2 Defense" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"MOUNTMG42_.*",
+			"DEFEND.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_east.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
 		foreach( id and bot in BotTable )
@@ -222,21 +188,29 @@ global Map =
 	Flak1Attack = function()
 	{
 		Map.LastFlackAttacked = 1;
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_west.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Flak_gun_1" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_btower.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK.*",
+			"ARTILLERY.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"ATTACK_west.*",
+			"PLANT_Flak_gun_1",
+			"ARTILLERY_S_btower.*",
+		});
 	},
 
 	Flak2Attack = function()
 	{
 		Map.LastFlackAttacked = 2;
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_east.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Flak_gun_2" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_btower.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK.*",
+			"ARTILLERY.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"ATTACK_east.*",
+			"PLANT_Flak_gun_2",
+			"ARTILLERY_S_btower.*",
+		});
 	},
 
 
@@ -246,10 +220,6 @@ global Map =
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
@@ -276,12 +246,6 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
-			}
-		},
 	},
 
 	Flak2 =
@@ -290,10 +254,6 @@ global Map =
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
@@ -321,12 +281,6 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
-			}
-		},
 	},
 
 	toggle_flak = function()
@@ -335,9 +289,6 @@ global Map =
 		//swap availablilty every 3 minutes
 		while ( 1 )
 		{
-			if ( TestMap ) {
-				return;
-			}
 			if ( Map.BarracksStatus == false ) {  //Don't start counting until its breached
 				sleep( 1 );
 				return;
@@ -362,10 +313,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	tOne = OnTriggerRegion( AABB( -1272.000,1801.000,847.000,-929.000,2126.000,929.000 ), Map.Flak1 );
 	tTwo = OnTriggerRegion( AABB( 1807.000,1701.000,843.000,2177.000,2023.000,945.000 ), Map.Flak2 );
 
@@ -394,7 +341,6 @@ global OnMapLoad = function()
 	Util.DisableGoal( ".*", true ); //all but the routes
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
@@ -403,16 +349,20 @@ global OnMapLoad = function()
 	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Foward_Barricade" );    // Martin - Map maker needs spelling lessons
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_West_Barrier" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBeach.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBeach.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bBeach.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT_West_Barrier",
+		"ARTILLERY_S_bBeach.*",
+		"ATTACK_bBeach.*",
+		"SNIPE_bBeach.*",
+	});
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rBeachAS_east" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rBeachAS_west" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBeach.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBeach.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rear.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"AIRSTRIKE_rBeachAS_east",
+		"AIRSTRIKE_rBeachAS_west",
+		"ARTILLERY_S_rBeach.*",
+		"DEFEND_rBeach.*",
+		"MOUNTMG42_rear.*",
+	});
 
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
@@ -499,7 +449,6 @@ global OnMapLoad = function()
 	print( "OnMapLoad" );
 };
 
-// Uncomment for shootable breakables
 
 global OnBotJoin = function( bot )
 {

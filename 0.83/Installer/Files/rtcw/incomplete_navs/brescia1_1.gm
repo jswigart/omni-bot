@@ -12,74 +12,61 @@
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
-	ShowMovers = false,
 
 	gate_of_Forest_Brescia_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "gate_of_Forest_Brescia_Destroyed" );
 	},
 
 	lower_bunker_door_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "lower_bunker_door_Destroyed" );
 	},
 
 	Enigma_codes_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Enigma_codes_Taken" );
 	},
 
 	beach_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "beach_flag_Axis_Captured" );
 	},
 
 	beach_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "beach_flag_Allies_Captured" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rGate.*",
+			"MOUNTMG42_mg42_1_.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
-		
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"PLANT.*",
+			"FLAG.*",
+			"CHECKPOINT.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bGate.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bGate.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bGate.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"ARTILLERY_S_bGate.*",
+			"AIRSTRIKE_bGate.*",
+			"ATTACK_bGate.*",
+		});
 	},
 
 };
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-
 	// Register callback functions
 	OnTrigger( "The Bunker has been breached!", Map.gate_of_Forest_Brescia_Destroyed );
 	OnTrigger( "MISSING_STRING", Map.lower_bunker_door_Destroyed );
 	OnTrigger( "MISSING_STRING", Map.Enigma_codes_Taken );
 	OnTrigger( "Axis reclaim the Barrack!", Map.beach_flag_Axis_Captured );
 	OnTrigger( "Allies capture the Barrack!", Map.beach_flag_Allies_Captured );
-	
+
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 20} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 30} );
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
@@ -87,16 +74,20 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNT_.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	
+
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
 	RTCWUtil.DisableGoal( ".*", true ); //all but routes
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rFlag.*",
+		"CHECKPOINT.*",
+	});
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"CHECKPOINT.*",
+		"ARTILLERY_S_bFlag.*",
+	});
 	//~Util.DisableGoal( ".*", true ); // all but routes
 	//~SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_.*" );
 	//~SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );

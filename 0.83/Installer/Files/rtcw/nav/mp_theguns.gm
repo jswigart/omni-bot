@@ -1,9 +1,8 @@
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
-	ShowMovers = false,
 	DontDispenseAmmo = true,
-	
+
 	Airstrike =
 	{
 		bflag1 =
@@ -24,60 +23,49 @@ global Map =
 
 	entrance_of_the_Fortress_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_rCastlewall.*",
+			"ARTILLERY_S_rCastlewall.*",
+			"CALLARTILLERY_rCastlewall.*",
+			"AIRSTRIKE_rCastlewall.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rFlag.*",
+			"ARTILLERY_S_rFlag.*",
+			"CALLARTILLERY_rFlag.*",
+			"AIRSTRIKE_rFlag.*",
+		});
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rCastlewall.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rCastlewall.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rCastlewall.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rCastlewall.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlag.*" );
-		
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_entrance_of_the_Guns_Cave" );
 		Wp.SetWaypointFlag( "flagdoor", "allies", true );
-		
+
 		Util.MapDebugPrint( "entrance_of_the_Fortress_Destroyed" );
 	},
 
 	entrance_of_the_Guns_Cave_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "entrance_of_the_Guns_Cave_Destroyed" );
 	},
 
 	one_of_the_two_guns_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "one_of_the_two_guns_Destroyed" );
 	},
 
 	flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
-			
+
 		Util.MapDebugPrint( "flag_Axis_Captured" );
 	},
 
 	flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
 
 		Util.MapDebugPrint( "flag_Allies_Captured" );
 	},
-	
+
 	DisableCombatMove =
 	{
 		Name = "DisableCombatMove",
@@ -102,11 +90,8 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-		
 	Util.AddUseWp( "PLANT_entrance_of_the_Fortress", "gate1" );
-	
+
 	tFlag1 = OnTriggerRegion( AABB( 2065.000,-968.000,617.000,2389.000,-475.000,707.000 ), Map.DisableCombatMove );
 	tFlag2 = OnTriggerRegion( AABB( 2437.000,-1302.000,385.000,2810.000,-1152.000,459.000 ), Map.DisableCombatMove );
 
@@ -117,37 +102,43 @@ global OnMapLoad = function()
 	OnTrigger( "MISSING_STRING", Map.one_of_the_two_guns_Destroyed );
 	OnTrigger( "MISSING_STRING", Map.flag_Axis_Captured );
 	OnTrigger( "MISSING_STRING", Map.flag_Allies_Captured );
-	
+
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	SetGoalPriority( "CALL.*", 0.89 );
 	SetGoalPriority( "ARTILLERY.*", 0.89 );
 	SetGoalPriority( "AIRSTRIKE.*", 0.88 );
 
 	Util.DisableGoal( ".*", true ); // all but routes
-	
+
 	Util.SetMaxUsersInProgress( 8, "CHECKPOINT.*" );
-	
+
 	/*SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCastlewall.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCastlewall.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCastlewall.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rCastlewall.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"ARTILLERY_S_rCastlewall.*",
+		"CALLARTILLERY_rCastlewall.*",
+		"AIRSTRIKE_rCastlewall.*",
+	});
 	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );*/
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyardEng.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCourtyard.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCourtyard.*" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_entrance_of_the_Fortress" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rCourtyard.*",
+		"DEFEND_rCourtyardEng.*",
+		"ARTILLERY_S_rCourtyard.*",
+		"CALLARTILLERY_rCourtyard.*",
+	});
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ATTACK_.*",
+		"PLANT_entrance_of_the_Fortress",
+		"CHECKPOINT.*",
+	});
 	Map.Airstrike.bflag1.Enabled = true;
 	Map.Airstrike.bflag2.Enabled = true;
-	
+
 	RTCWUtil.LimitToClass( "DEFEND_rCourtyardEng.*", TEAM.AXIS, CLASS.ENGINEER );
 
 	Wp.SetWaypointFlag( "flagdoor", "allies", false );
-	
+
 	MapRoutes =
 	{
 		PLANT_one_of_the_two_guns =
@@ -170,12 +161,12 @@ global OnMapLoad = function()
 						ROUTE_flagdoor = {},
 						ROUTE_flagcastle = {Weight = 2,},
 					},
-					ROUTE_castleeast = 
+					ROUTE_castleeast =
 					{
 						ROUTE_flagdoor = {},
 						ROUTE_flagcastle = {Weight = 2,},
 					},
-					ROUTE_castlewest = 
+					ROUTE_castlewest =
 					{
 						ROUTE_flagdoor = {},
 						ROUTE_flagcastle = {Weight = 2,},
@@ -184,9 +175,9 @@ global OnMapLoad = function()
 			},
 		},
 	};
-	
+
 	MapRoutes.CHECKPOINT_flag.ROUTE_bspawn.ROUTE_bspawnjump = MapRoutes.CHECKPOINT_flag.ROUTE_bspawn.ROUTE_bspawnsteps;
-	
+
 	Util.Routes(MapRoutes);
 
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
@@ -194,14 +185,10 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	// Uncomment for shootable breakables
-	//~bot.TargetBreakableDist = 90.0;
-	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
-	//~bot.MaxViewDistance = 2400;
 };
 
 global InitializeRoutes = function()
 {
-	
-	
+
+
 };

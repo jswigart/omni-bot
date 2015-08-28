@@ -112,9 +112,6 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-		},
 	},
 
 	RadioStairsTrigger =
@@ -160,17 +157,10 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-		},
 	},
 
 	allied_obj1_1_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DoorStatus = true;
 
 		if ( !Map.DocStatus ) {
@@ -183,10 +173,6 @@ global Map =
 
 	allied_obj1_2_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.WallStatus = true;
 
 		if ( !Map.DocStatus ) {
@@ -200,19 +186,23 @@ global Map =
 	eval_beach_shift = function()
 	{
 		if ( Map.WallStatus && Map.DoorStatus ) { //both destroyed
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rUpper.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rAlt.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rUpper.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "VENOM_rUpper.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_rUpper.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rUpper.*",
+				"DEFEND_rAlt.*",
+				"PANZER_rUpper.*",
+				"VENOM_rUpper.*",
+				"FLAME_rUpper.*",
+			});
 
 			SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rBeach.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bBeach.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rWall.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDoor.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_t367 );
-			SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_2 );
-			SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_1 );
+			SetAvailableMapGoals( TEAM.AXIS, false, {
+				"DEFEND_rWall.*",
+				"DEFEND_rDoor.*",
+				Map.Mount_t367,
+				Map.Mount_mg42_2,
+				Map.Mount_mg42_1,
+			});
 
 			//only axis soldiers should try and grab flag
 			RTCWUtil.LimitToClass( Map.Checkpoint_beach_flag, TEAM.AXIS, CLASS.SOLDIER );
@@ -221,26 +211,34 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		} else if ( Map.WallStatus && !Map.DoorStatus )   { //wall destroyed, door intact
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rWall.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_t367 );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rWall.*",
+				Map.Mount_t367,
+			});
 
 			//shift a/s focus
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as3_p1" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as1_p1" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as3_p1" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"AIRSTRIKE_red_as1_p1",
+				"AIRSTRIKE_red_as3_p1",
+			});
 		} else if ( !Map.WallStatus && Map.DoorStatus )   { //door destroyed, wall intact
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDoor.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_2 );
-			SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_1 );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rDoor.*",
+				Map.Mount_mg42_2,
+				Map.Mount_mg42_1,
+			});
 
 			//shift a/s focus`
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as2_p1" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as1_p1" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_blue_as2_p1" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"AIRSTRIKE_blue_as1_p1",
+				"AIRSTRIKE_blue_as2_p1",
+			});
 		}
 
 		//switch from sniper to other soldier weap
@@ -253,9 +251,11 @@ global Map =
 
 		//set these if either has been destroyed
 //		Util.EnableGoal( Map.Checkpoint_beach_flag );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_3 );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_t364 );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBeach.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			Map.Mount_mg42_3,
+			Map.Mount_t364,
+			"DEFEND_rBeach.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bBeach.*" );
 
 		//Wp.SetWaypointFlag( "ladder", "closed", false );	// Open up the ladder
@@ -264,10 +264,6 @@ global Map =
 
 	Allies_Capture_Flag = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 2;
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.FLAG_FF_Christmas_List );
@@ -291,10 +287,6 @@ global Map =
 
 	Axis_Capture_Flag = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 1;
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		Map.EvalArty();
@@ -309,10 +301,6 @@ global Map =
 
 	documents_stolen = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		// cs: this gets called when picked up off ground too, so don't re-shift to war room in that case.
 		if ( !Map.DocStatus ) {
 			Map.DocStatus = true;
@@ -329,17 +317,23 @@ global Map =
 
 			SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rBeach.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bBeach.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNT.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rUpper.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "VENOM_rUpper.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "FLAME_rUpper.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, {
+				"MOUNT.*",
+				"PANZER_rUpper.*",
+				"VENOM_rUpper.*",
+				"FLAME_rUpper.*",
+			});
 
 
 			//SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTransmit.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBeach.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bUpper.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_beach_flag );
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"ATTACK_bBeach.*",
+				"ATTACK_bUpper.*",
+			});
+			SetAvailableMapGoals( TEAM.AXIS, false, {
+				Map.Checkpoint_beach_flag,
+				"DEFEND.*",
+			});
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rWar.*" ); //make sure
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
@@ -372,8 +366,10 @@ global Map =
 	EvalArty = function()
 	{
 		if ( !Map.DocStatus && Map.FlagStatus == 1 ) {
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_ubase_spot_axis_[2]" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rArty.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"CALLARTILLERY_ubase_spot_axis_[2]",
+				"ARTILLERY_S_rArty.*",
+			});
 		}
 
 		if ( ( !Map.WallStatus || !Map.DoorStatus ) && !Map.DocStatus && Map.FlagStatus == 1 ) {
@@ -384,10 +380,14 @@ global Map =
 		if ( !Map.DocStatus && Map.FlagStatus == 2 ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTower.*" );
 			//SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_trenches_spot_allies" );	//Martin - This should be paththrough
-			SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_spot_beach_[12345678]" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bBeach.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_ubase_spot_axis_[2]" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, {
+				"CALLARTILLERY_spot_beach_[12345678]",
+				"ARTILLERY_S_bBeach.*",
+			});
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"CALLARTILLERY_ubase_spot_axis_[2]",
+				"ARTILLERY_S_rFlag.*",
+			});
 			SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rBeach.*" );
 		}
 
@@ -401,21 +401,23 @@ global Map =
 
 	documents_returned = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DocStatus = false;
 
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rUpper.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rAlt.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rUpper.*",
+			"DEFEND_rAlt.*",
+		});
 		//SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bTransmit.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bBeach.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bUpper.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK_bBeach.*",
+			"ATTACK_bUpper.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rTransmit.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rUpper.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "VENOM_rUpper.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_rUpper.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"PANZER_rUpper.*",
+			"VENOM_rUpper.*",
+			"FLAME_rUpper.*",
+		});
 
 		//set these back to default ( changed in the stairs triggers )
 		SetGoalPriority( "DEFEND_rTransmit.*", 0.5 );
@@ -435,10 +437,6 @@ global Map =
 
 	two_minute = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.FLAG_FF_Christmas_List );
 		Util.MapDebugPrint( "two_minute" );
 	},
@@ -449,20 +447,12 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
 				SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bTower.*" );
 			}
 		},
 		OnExit = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( Map.DocStatus == true ) { //Docs are stolen
 				return;
 			}
@@ -480,10 +470,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	//OnTrigger( "Allies capture the Forward Bunker!", Map.Allies_Capture_Flag );
 	//OnTrigger( "Axis reclaims the Forward Bunker!", Map.Axis_Capture_Flag );
 	OnTrigger( "Allies have stolen the =FF= Christmas List!", Map.documents_stolen );
@@ -526,17 +512,23 @@ global OnMapLoad = function()
 	Util.EnableGoal( "CAPPOINT_transmitter" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bBeach.*" );
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bBeach.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"FLAG.*",
+		"GRENADE_.*",
+	});
 
-	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_3 );
-	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_t367 );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		Map.Mount_mg42_3,
+		Map.Mount_t367,
+	});
 	//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBeach.*" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rBeach.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rUpper.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rAlt.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rUpper.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "VENOM_rUpper.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rUpper.*",
+		"DEFEND_rAlt.*",
+		"PANZER_rUpper.*",
+		"VENOM_rUpper.*",
+	});
 	//SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_rUpper.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTrenchAS_.*" );
 	Map.Airstrike.bridge.Enabled = true;
@@ -557,7 +549,6 @@ global OnMapLoad = function()
 	//Wp.SetWaypointFlag( "pt_nav_towerjump", "closed", true );	// close up the towerjump
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "ATTACK_bUpper.*" );
 
 	MapRoutes =

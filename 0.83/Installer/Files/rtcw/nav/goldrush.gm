@@ -1,23 +1,16 @@
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
-	ShowMovers = false,
 	DontDispenseAmmo = true,
 	DispenseAmmoTime = 15,
 
 	Front_Door_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Front_Door_Planted" );
 	},
-	
+
 	Front_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
 
 		Util.MapDebugPrint( "Front_Door_Destroyed" );
@@ -25,17 +18,11 @@ global Map =
 
 	back_wall_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "back_wall_Planted" );
 	},
-	
+
 	back_wall_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
 
 		Util.MapDebugPrint( "back_wall_Destroyed" );
@@ -43,50 +30,32 @@ global Map =
 
 	Gold_Bars_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Gold_Bars_Taken" );
 	},
 
 	Gold_Bars_Secured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Gold_Bars_Secured" );
 	},
-	
+
 	Gold_Dropoff_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Gold_Dropoff_Captured" );
 	},
 
 	Forward_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Forward_flag_Axis_Captured" );
 	},
 
 	Forward_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Forward_flag_Allies_Captured" );
 	},
 };
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-
 	OnTrigger( "Allies capture the Forward Flag!", Map.Forward_flag_Allies_Captured );
 	OnTrigger( "Planted at The back wall.", Map.back_wall_Planted );
 	OnTrigger( "The back wall Destroyed.", Map.back_wall_Destroyed );
@@ -94,7 +63,7 @@ global OnMapLoad = function()
 	OnTrigger( "The Front Door Destroyed.", Map.Front_Door_Destroyed );
 	OnTrigger( "Allies have stolen The Gold Bars!", Map.Gold_Bars_Taken );
 	OnTrigger( "Flag returned Gold Bars!", Map.Gold_Bars_Secured );
-	
+
 
 	// Max users per goal
 	Util.SetMaxUsers( 1, "DEFEND.*" );
@@ -117,25 +86,29 @@ global OnMapLoad = function()
 	SetGoalPriority( "CALL.*", 1.0);
 	SetGoalPriority( "ARTILLERY.*", 1.0);
 	Util.EnableGoal( "CAPPOINT_Gold_Dropoff" );
-	
+
 	RTCWUtil.LimitToClass("MOUNT.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT);
 	RTCWUtil.LimitToClass("MOUNT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT);
 
 	// Allied goals
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Bank_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg42_bridge.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bBank.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBank.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ATTACK_Bank_.*",
+		"PLANT.*",
+		"MOUNTMG42_mg42_bridge.*",
+		"CHECKPOINT.*",
+		"AIRSTRIKE_bBank.*",
+		"ARTILLERY_S_bBank.*",
+	});
 
 	// Axis goals
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_bankmg" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bank_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_bankmg" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rBank.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBank.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rBank.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"MOUNTMG42_bankmg",
+		"DEFEND_Bank_.*",
+		"REPAIRMG42_bankmg",
+		"CALLARTILLERY_rBank.*",
+		"ARTILLERY_S_rBank.*",
+		"AIRSTRIKE_rBank.*",
+	});
 
 	InitializeRoutes();
 	Util.MapDebugPrint( "OnMapLoad" );

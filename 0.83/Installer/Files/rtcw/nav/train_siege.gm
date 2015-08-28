@@ -28,18 +28,16 @@ global Map =
 
 	Loose_Lumber_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Wp.SetWaypointFlag( "woodbridge", "closed", false );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
 
 		if ( Map.SwitchesAvailable == false ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBoxcar.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCoalcar.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rBoxcar.*",
+				"DEFEND_rCoalcar.*",
+			});
 			Map.SwitchesAvailable = true;
 		}
 		if ( Map.Suicide ) {
@@ -51,25 +49,19 @@ global Map =
 
 	Loose_Lumber_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "Loose_Lumber_Planted" );
 	},
 
 	Weak_Train_Roof_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
 
 		if ( Map.SwitchesAvailable == false ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBoxcar.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCoalcar.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rBoxcar.*",
+				"DEFEND_rCoalcar.*",
+			});
 			Map.SwitchesAvailable = true;
 		}
 		if ( Map.Suicide ) {
@@ -81,10 +73,6 @@ global Map =
 
 	Weak_Train_Roof_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "Weak_Train_Roof_Planted" );
 	},
 
@@ -124,10 +112,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	Util.SetGoalPosition( -490, 3247, 268, "PLANT_Weak_Train_Roof" );
 
 	OnTrigger( "The Loose Lumber Destroyed.", Map.Loose_Lumber_Destroyed );
@@ -147,14 +131,18 @@ global OnMapLoad = function()
 
 	Util.DisableGoal( ".*", true ); // all but routes
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bPlant.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT.*",
+		"ATTACK_bPlant.*",
+		"ARTILLERY_S_bSpawnkill.*",
+		"SWITCH_.*",
+	});
 
 	//SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rPlant.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTest.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rPlant.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"ARTILLERY_S_rTest.*",
+		"DEFEND_rPlant.*",
+	});
 
 	SetGoalPriority( "DEFEND_rCoalcar.*", 0.45 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );

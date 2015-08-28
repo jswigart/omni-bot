@@ -1,7 +1,6 @@
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
-	ShowMovers = false,
 	Suicide = MAP_SUICIDE,
 	ShouldKillOut = true,
 	DispenseAmmoTime = 1,
@@ -10,7 +9,7 @@ global Map =
 	WallStatus = false,
 	CraneStatus = false,
 	FlagStatus = 0,
-	
+
 	Switches =
 	{
 		gate1 =
@@ -30,13 +29,9 @@ global Map =
 			LimitBots = 2,
 		},
 	},
-	
+
 	gate_lever = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		vel = ToVector( trigger.Action );
 
 		Map.Switches.gate1.Enabled = false;
@@ -46,10 +41,6 @@ global Map =
 
 	gate_trigger = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		vel = ToVector( trigger.Action );
 
 		if ( vel.y < 0 ) {
@@ -62,16 +53,15 @@ global Map =
 			Util.MapDebugPrint( "gate_trigger - gate ENABLED" );
 		}
 	},
-	
+
 	// Main Door
 	Sea_Wall_door_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rDoor.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_rDoor.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFUSE.*",
+			"AIRSTRIKE_rDoor.*",
+			"GRENADE_rDoor.*",
+		});
 
 		Util.MapDebugPrint( "Sea_Wall_door_Planted" );
 	},
@@ -79,34 +69,32 @@ global Map =
 	// Main Door
 	Sea_Wall_door_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bDoor.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bDoor.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bDoor.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bDoor.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ARTILLERY_S_bDoor.*",
+			"AIRSTRIKE_bDoor.*",
+			"ATTACK_bDoor.*",
+			"CALLARTILLERY_bDoor.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rDoor.*" );
-		
+
 		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
-		
+
 		if (Map.DocStatus && Map.FlagStatus != 2 && !Map.CraneStatus)
 		{
-			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_3_1" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCourtyard.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"MOUNTMG42_mg42_3_1",
+				"ARTILLERY_S_rCourtyard.*",
+				"DEFEND_rCourtyard.*",
+			});
 		}
 
 		Util.MapDebugPrint( "Sea_Wall_door_Destroyed" );
 	},
-	
+
 	Crane_door_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE.*" );
 
 		Util.MapDebugPrint( "Crane_door_Planted" );
@@ -114,15 +102,14 @@ global Map =
 
 	Crane_door_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bCrane.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bCrane.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bCrane.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bCrane.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ARTILLERY_S_bCrane.*",
+			"AIRSTRIKE_bCrane.*",
+			"ATTACK_bCrane.*",
+			"CALLARTILLERY_bCrane.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-		
+
 		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
 
 		Util.MapDebugPrint( "Crane_door_Destroyed" );
@@ -130,11 +117,8 @@ global Map =
 
 	Tresor_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		Map.DocStatus = 0;
-		
+
 		/*if (Map.ShouldKillOut)
 		{
 			foreach( id and bot in BotTable )
@@ -147,43 +131,50 @@ global Map =
 			}
 			Map.ShouldKillOut = false;
 		}*/
-		
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rTransmit.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rGarage.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rRadio.*" );
-		
+
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND.*",
+			"AIRSTRIKE.*",
+			"CALLARTILLERY.*",
+			"ARTILLERY.*",
+			"MOUNTMG42.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rTransmit.*",
+			"AIRSTRIKE_rTransmit.*",
+			"ARTILLERY_S_rGarage.*",
+			"CALLARTILLERY_rRadio.*",
+		});
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"DEFEND.*",
+			"AIRSTRIKE.*",
+			"CALLARTILLERY.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTransmit.*" );
 
 		Util.MapDebugPrint( "Tresor_Taken" );
 	},
-	
+
 	Tresor_Secured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		Map.DocStatus = 1;
 		Map.ShouldKillOut = true;
-		
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rGate.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBasement.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rBasement.*" );
-		
+
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND.*",
+			"AIRSTRIKE.*",
+			"CALLARTILLERY.*",
+			"ARTILLERY.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rDocs.*",
+			"ARTILLERY_S_rGate.*",
+			"ARTILLERY_S_rBasement.*",
+			"CALLARTILLERY_rBasement.*",
+		});
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bTransmit.*" );
 
 		Util.MapDebugPrint( "Tresor_Secured" );
@@ -191,10 +182,8 @@ global Map =
 
 	beach_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.FlagStatus = 1;
-			
+
 		Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
 
 		Util.MapDebugPrint( "beach_flag_Axis_Captured" );
@@ -202,21 +191,20 @@ global Map =
 
 	beach_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		Map.FlagStatus = 2;
-			
+
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
-		
+
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rGate.*" );
 		if (Map.DocStatus)
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
 		}
-		
-		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"FLAG.*",
+			"ARTILLERY_S_bSpawnkill.*",
+		});
 
 		Util.MapDebugPrint( "beach_flag_Allies_Captured" );
 	},
@@ -225,14 +213,11 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-		
 	OnTriggerRegion(AABB(-2346.000,-472.000,1001.000,-2039.000,184.000,1075.000),RegionTrigger.DisableCombatMovement);
 	OnTriggerRegion(AABB(-40.000,-1800.000,917.000,288.000,-1519.000,991.000),RegionTrigger.DisableCombatMovement);
 	OnTriggerRegion(AABB(-1232.000,-3024.000,921.000,-971.000,-2743.000,995.000),RegionTrigger.DisableCombatMovement);
 	OnTriggerRegion(AABB(429.000,-231.000,905.000,556.000,-145.000,1215.000),RegionTrigger.DisableCombatMovement);
-	
+
 
 	// Register callback functions
 	OnTrigger( "Planted at the sea wall door.", Map.Sea_Wall_door_Planted );
@@ -245,7 +230,7 @@ global OnMapLoad = function()
 	OnTrigger( "Allies capture the Stock Area!", Map.beach_flag_Allies_Captured );
 	OnTrigger( "base_lever1_goto", Map.gate_lever );
 	OnTrigger( "base_gate1_goto", Map.gate_trigger );
-	
+
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
 
@@ -254,38 +239,44 @@ global OnMapLoad = function()
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "CHECKPOINT.*", 0.9 );
 	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
-	
+
 	Util.DisableGoal( ".*", true ); // all but routes
 	Map.Switches.gate1.Enabled = true;
 	Map.Switches.gate2.Enabled = true;
-	
+
 	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bDoor.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCrane.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bCrane.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bDoor.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bDoor.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bCrane.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bDoor.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bCrane.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCraneWall.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDoor.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rDoor.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rCrane.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ARTILLERY_S_bDoor.*",
+		"ARTILLERY_S_bCrane.*",
+		"CALLARTILLERY_bCrane.*",
+		"CALLARTILLERY_bDoor.*",
+		"AIRSTRIKE_bDoor.*",
+		"AIRSTRIKE_bCrane.*",
+		"ATTACK_bDoor.*",
+		"ATTACK_bCrane.*",
+		"PLANT.*",
+	});
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rCraneWall.*",
+		"DEFEND_rDoor.*",
+		"AIRSTRIKE_rDoor.*",
+		"AIRSTRIKE_rCrane.*",
+	});
 	//SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rDoor.*" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rDoor.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rDoor.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rCrane.*" );
-	
-	
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"GRENADE_rDoor.*",
+		"GRENADE_rCrane.*",
+	});
+
+
 	InitializeRoutes();
 	Util.UpdateSwitchData();
 	yield();yield();
-	
+
 	if ( Map.Suicide ) {
 		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 1, 1 );
 	}
@@ -328,11 +319,11 @@ global InitializeRoutes = function()
 			ROUTE_flagspawn =
 			{
 				ROUTE_basementdrop = {Weight=2,},
-				ROUTE_uppergarage = 
+				ROUTE_uppergarage =
 				{
 					ROUTE_backsteps = {},
 				},
-				ROUTE_gatesteps = 
+				ROUTE_gatesteps =
 				{
 					ROUTE_garagenorth =
 					{

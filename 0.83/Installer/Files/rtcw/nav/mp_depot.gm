@@ -251,10 +251,6 @@ global Map =
 
 	Ops_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.OpsDyno += 1;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
@@ -265,18 +261,18 @@ global Map =
 
 	Ops_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.OpsDyno -= 1;
 
 		if ( Map.OpsDyno < 1 && Map.FlagStatus == 1 ) {
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_eng_opscover.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, {
+				"DEFEND_eng_opscover.*",
+				"AIRSTRIKE_.*",
+			});
 			if ( Map.FlagStatus == 1 ) {
-				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_ruinsas.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lt_ruins.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, {
+					"AIRSTRIKE_ruinsas.*",
+					"DEFEND_lt_ruins.*",
+				});
 			}
 		}
 	},
@@ -294,10 +290,6 @@ global Map =
 
 	AA_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.AADyno += 1;
 
 		if ( Map.FriendlyFire < 1 ) {
@@ -310,37 +302,29 @@ global Map =
 
 	AA_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.AADyno -= 1;
 
 		if ( Map.AADyno < 1 ) {
-			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_aacover.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, {
+				"AIRSTRIKE_.*",
+				"DEFEND_aacover.*",
+			});
 		}
 	},
 
 	West_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.WestGateStatus = true;
 
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_Field_Ops );
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_flag_respawn_obj );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			Map.Plant_Field_Ops,
+			Map.Checkpoint_flag_respawn_obj,
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_eng_westgate.*" );
 	},
 
 	West_Gate_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.WestDyno += 1;
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_eng_westgate.*" );
@@ -349,10 +333,6 @@ global Map =
 
 	West_Gate_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.WestDyno -= 1;
 
 		if ( Map.WestDyno < 1 ) {
@@ -362,26 +342,20 @@ global Map =
 
 	East_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.EastGateStatus = true;
 
 		//path through gate instead of over boxes
 		Wp.SetWaypointFlag( "spawnboxes", "closed", true );
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_AA_Gun );
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_flag_respawn_obj );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			Map.Plant_AA_Gun,
+			Map.Checkpoint_flag_respawn_obj,
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_eng_eastgate.*" );
 	},
 
 	East_Gate_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.EastDyno += 1;
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_eng_eastgate.*" );
@@ -390,10 +364,6 @@ global Map =
 
 	East_Gate_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.EastDyno -= 1;
 
 		if ( Map.WestDyno < 1 ) {
@@ -403,10 +373,6 @@ global Map =
 
 	CP_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = TEAM.AXIS;
 		Map.DontDispenseAmmo = true;
 
@@ -415,37 +381,45 @@ global Map =
 		//axis
 		Map.Airstrike.ascoal.Enabled = false;
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_ruinsas.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lt_ruins.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"AIRSTRIKE_ruinsas.*",
+			"DEFEND_lt_ruins.*",
+			"DEFEND_rOps.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rcy.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_axiscamper.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_cymg );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Repair_cymg );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			Map.Mount_cymg,
+			Map.Repair_cymg,
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rTrain.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rcysnipe.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rcypanz.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_reastgate.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"SNIPE_rcysnipe.*",
+			"PANZER_rcypanz.*",
+			"GRENADE_reastgate.*",
+		});
 
 		//allies
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_btrain.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_flag_respawn_obj );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bTrain.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bruinsnipe.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_opscamper.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_btrainpanz.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bOps.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bRockpath.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bCommand.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_beastgate.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			Map.Checkpoint_flag_respawn_obj,
+			"SNIPE_bTrain.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"SNIPE_bruinsnipe.*",
+			"PANZER_opscamper.*",
+			"PANZER_btrainpanz.*",
+			"ARTILLERY_S_bOps.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ARTILLERY_S_bRockpath.*",
+			"ARTILLERY_S_bCommand.*",
+			"GRENADE_beastgate.*",
+		});
 	},
 
 	CP_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = TEAM.ALLIES;
 		Map.DontDispenseAmmo = true;
 
@@ -456,16 +430,24 @@ global Map =
 		Map.Airstrike.ascoal.Enabled = true;
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rasspawn.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lt_ruins.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rOps.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rcy.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_axiscamper.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_lt_ruins.*",
+			"DEFEND_rOps.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rcy.*",
+			"FLAME_axiscamper.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_flag_respawn_obj );
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_cymg );
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Repair_cymg );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			Map.Mount_cymg,
+			Map.Repair_cymg,
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rTrain.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rcysnipe.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rcypanz.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"SNIPE_rcysnipe.*",
+			"PANZER_rcypanz.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_reastgate.*" );
 
 		if ( Map.FriendlyFire < 1 ) {
@@ -479,8 +461,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bruinsnipe.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_opscamper.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER_btrainpanz.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bOps.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"PANZER_btrainpanz.*",
+			"ARTILLERY_S_bOps.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bRockpath.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_beastgate.*" );
 
@@ -497,10 +481,6 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				if ( Map.FlagStatus == 2 ) {
 					return;
@@ -520,12 +500,6 @@ global Map =
 				//SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bruinsas.*" );
 			}
 		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
-			}
-		},
 	},
 
 	WarehousePlayers = 0,
@@ -535,10 +509,6 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				Map.WarehousePlayers += 1;
 
@@ -549,10 +519,6 @@ global Map =
 		},
 		OnExit = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				Map.WarehousePlayers -= 1;
 
@@ -563,7 +529,7 @@ global Map =
 
 		},
 	},
-	
+
 	LowerRuinsPlayers = 0,
 	LowerRuinsTrigger =
 	{
@@ -571,10 +537,6 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				Map.LowerRuinsPlayers += 1;
 
@@ -585,10 +547,6 @@ global Map =
 		},
 		OnExit = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				Map.LowerRuinsPlayers -= 1;
 
@@ -599,17 +557,13 @@ global Map =
 
 		},
 	},
-	
+
 	Ops =
 	{
 		Name = "Ops",
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
@@ -623,12 +577,6 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
-			}
-		},
 	},
 	AA =
 	{
@@ -636,10 +584,6 @@ global Map =
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
@@ -653,12 +597,6 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
-			}
-		},
 	},
 };
 
@@ -669,10 +607,6 @@ global OnMapLoad = function()
 	Util.AddUseWp( "PLANT_Allied_Field_Operations", "ops1" );
 	Util.AddUseWp( "PLANT_Allied_Field_Operations", "ops2" );
 	Util.AddUseWp( "PLANT_Allied_Field_Operations", "ops3" );
-
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
 
 	OnTrigger( "Allied team destoyed the Anti-Aircraft gun!", Map.AA_Destroyed );
 	OnTrigger( "Planted at the Anti-Aircraft Gun.", Map.AA_Planted );
@@ -740,23 +674,26 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_bAA.*", 0.48 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aaflex.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rOps.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rTrain.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_reastgate.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aad.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"CAMP_aaflex.*",
+		"DEFEND_rOps.*",
+		"ATTACK_rOps.*",
+		"SNIPE_rTrain.*",
+		"GRENADE_reastgate.*",
+		"CAMP_aad.*",
+	});
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsflex.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bAA.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAA.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_beastgate.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsd.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_opsmg" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_opsmg" );
-
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_East_Gate );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"CAMP_opsflex.*",
+		"DEFEND_bAA.*",
+		"ATTACK_bAA.*",
+		"SNIPE_bTrain.*",
+		"GRENADE_beastgate.*",
+		"CAMP_opsd.*",
+		"MOUNTMG42_opsmg",
+		"REPAIRMG42_opsmg",
+		Map.Plant_East_Gate,
+	});
 	SetAvailableMapGoals( TEAM.AXIS, true, Map.Plant_West_Gate );
 
 	//run a thread to toggle flag availability every 5 minutes
@@ -767,7 +704,6 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 2, Map.Checkpoint_flag_respawn_obj );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "FLAME_axiscamper.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER_opscamper.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER_btrainpanz.*" );

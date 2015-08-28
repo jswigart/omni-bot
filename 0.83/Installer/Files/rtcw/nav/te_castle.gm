@@ -47,10 +47,6 @@ global Map =
 
 	Coffin_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.CoffinStatus = true;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Sacred_Obelisk" );
 		Map.checkCoffinFallback();
@@ -58,10 +54,6 @@ global Map =
 
 	Coffin_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.CoffinDyno += 1;
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rCoffin.*" );    // Let eng defuse!
 		if ( Map.Suicide ) {
@@ -71,10 +63,6 @@ global Map =
 
 	Coffin_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.CoffinDyno -= 1;
 		if ( Map.CoffinDyno == 0 ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCoffin.*" ); // Let it rain again
@@ -86,10 +74,6 @@ global Map =
 
 	Hallway_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.HallwayStatus = true;
 		Map.checkCoffinFallback();
 
@@ -104,65 +88,45 @@ global Map =
 
 	Hallway_Gate_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.HallwayDyno += 1;
 	},
 
 	Hallway_Gate_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.HallwayDyno -= 1;
 	},
 
 	West_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.WestStatus = true;
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Hallway_Gate" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bGate.*" );
 
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rCourtyard.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rGate.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rHallway.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rsealtar.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rHallway.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_rCourtyard.*",
+			"DEFEND_rGate.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rHallway.*",
+			"DEFEND_rsealtar.*",
+			"PANZER_rHallway.*",
+		});
 		Map.checkCoffinFallback();
 	},
 
 	West_Gate_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.WestDyno += 1;
 	},
 
 	West_Gate_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.WestDyno -= 1;
 	},
 
 	Sacred_Obelisk_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rCoffin.*" );    // Focus on obelisk
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );      // Get to transmitter FAST
@@ -182,13 +146,11 @@ global Map =
 
 	Sacred_Obelisk_Returned = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCoffin.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCoffin.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rHallway.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"CALLARTILLERY_rCoffin.*",
+			"DEFEND_rCoffin.*",
+			"DEFEND_rHallway.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rTransmit.*" );
 
 		// /kill spam for axis lt's
@@ -211,42 +173,32 @@ global Map =
 	},
 	two_minute = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	thirty_second = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	checkDefendPoints = function()
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( Map.CoffinStatus == false && Map.HallwayStatus == false && Map.WestStatus == true ) { // West was blown
 
 		}
 	},
 	checkCoffinFallback = function()    // incase they blow hallway first..
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( Map.HallwayStatus == true || Map.CryptDyno > 0 || Map.CryptStatus == true ) { // Fallback since hallway is gone
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rGate.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rCourtyard.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rsealtar.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCoffin.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCoffin.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCoffin.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCoffin.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, {
+				"DEFEND_rGate.*",
+				"DEFEND_rCourtyard.*",
+				"DEFEND_rsealtar.*",
+			});
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_rCoffin.*",
+				"ARTILLERY_S_rCoffin.*",
+				"CALLARTILLERY_rCoffin.*",
+				"PANZER_rCoffin.*",
+			});
 
 			// /kill spam for axis lt's
 			if ( Map.Suicide ) {
@@ -267,10 +219,6 @@ global OnMapLoad = function()
 	Util.AddUseWp( "PLANT_Coffin", "coffin2" );
 	Util.AddUseWp( "PLANT_Coffin", "coffin3" );
 	Util.AddUseWp( "PLANT_Coffin", "coffin4" );
-
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
 
 	OnTrigger( "the Coffin Destroyed.", Map.Coffin_Destroyed );
 	OnTrigger( "Planted at the Coffin.", Map.Coffin_Planted );
@@ -296,15 +244,19 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_West_Gate" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bGate.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bHallway.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bCoffin.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_transmit" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bCoffin.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT_West_Gate",
+		"ATTACK_bGate.*",
+		"ATTACK_bHallway.*",
+		"ATTACK_bCoffin.*",
+		"CAPPOINT_transmit",
+		"PANZER_bCoffin.*",
+	});
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGate.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rCourtyard.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rGate.*",
+		"DEFEND_rCourtyard.*",
+	});
 
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
@@ -437,7 +389,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	//~ bot.TargetBreakableDist = 80.0;
 	bot.MaxViewDistance = 4500;
 
 	RTCWUtil.NoSnipe( bot );      // Not exactly a great sniping map is it...
@@ -445,4 +396,3 @@ global OnBotJoin = function( bot )
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
 };
-

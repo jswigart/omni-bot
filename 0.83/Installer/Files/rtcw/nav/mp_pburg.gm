@@ -24,45 +24,47 @@ global Map =
 
 	Courtyard_Wall_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.CyardStatus = true;
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_alos1_1" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_alos1_2" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bEng.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK_alos1_1",
+			"ATTACK_alos1_2",
+			"ATTACK_bEng.*",
+		});
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_.*" );
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axos1_3" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_axpanz1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_axos1_3",
+			"PANZER_axpanz1_.*",
+		});
 
 		Util.EnableGoal( "ROUTE_cyardwall" );
 	},
 
 	Headquarters_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.HqStatus = true;
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_alos1_3" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_alos1_4" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK_alos1_3",
+			"ATTACK_alos1_4",
+		});
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axos1_3" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axos1_4" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_axpanz1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_axos1_3",
+			"DEFEND_axos1_4",
+			"PANZER_axpanz1_.*",
+		});
 
 		Util.EnableGoal( "ROUTE_hqdoor" );
 
 		if ( !Map.DocStatus ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docdef_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rDocs_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_docdef_.*",
+				"PANZER_rDocs_.*",
+			});
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_hq.*" );
 		}
@@ -70,20 +72,20 @@ global Map =
 
 	Secret_Documents_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DocStatus = true;
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_alos1_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_alos2_.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"ATTACK_alos1_.*",
+			"ATTACK_alos2_.*",
+		});
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "REPAIRMG42_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_hq2" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"CHECKPOINT.*",
+			"DEFEND_.*",
+			"MOUNTMG42_.*",
+			"REPAIRMG42_.*",
+			"CALLARTILLERY_hq2",
+		});
 		if ( Map.Suicide ) {
 			RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 0, 0 );
 		}
@@ -95,33 +97,37 @@ global Map =
 
 	Secret_Documents_Returned = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DocStatus = false;
 
 		if ( Map.CyardStatus ) {
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_alos1_1" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_alos1_2" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, {
+				"ATTACK_alos1_1",
+				"ATTACK_alos1_2",
+			});
 		}
 
 		if ( Map.HqStatus ) {
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_alos1_3" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_alos1_4" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, {
+				"ATTACK_alos1_3",
+				"ATTACK_alos1_4",
+			});
 
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axroam1_.*" );
 
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docdef_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rDocs_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_docdef_.*",
+				"PANZER_rDocs_.*",
+			});
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_hq.*" );
 		}
 
 		if ( Map.FlagStatus ) {
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docdef_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rDocs_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_hq2" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_docdef_.*",
+				"PANZER_rDocs_.*",
+				"CALLARTILLERY_hq2",
+			});
 			if ( Map.Suicide ) {
 				RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
 			}
@@ -137,8 +143,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_capdef_.*" );
 
 		if ( Map.HqStatus or Map.FlagStatus or Map.CyardStatus ) {
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axos1_3" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_axpanz1_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, {
+				"DEFEND_axos1_3",
+				"PANZER_axpanz1_.*",
+			});
 		}
 		foreach( id and bot in BotTable )
 		{
@@ -156,16 +164,14 @@ global Map =
 
 	beach_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = false;
 
 		if ( !Map.HqStatus ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_docdef_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_axart1_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_target1" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"CALLARTILLERY_axart1_.*",
+				"ARTILLERY_S_target1",
+			});
 		}
 		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_hq2" );
 		if ( Map.Suicide ) {
@@ -176,18 +182,18 @@ global Map =
 
 	beach_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = true;
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axos1_3" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_axpanz1_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_axos1_3",
+			"PANZER_axpanz1_.*",
+		});
 
 		if ( !Map.DocStatus ) {
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_docdef_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rDocs_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"DEFEND_docdef_.*",
+				"PANZER_rDocs_.*",
+			});
 			//SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_.*" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_hq2" );
 			if ( Map.Suicide ) {
@@ -195,8 +201,10 @@ global Map =
 			}
 		}
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_axart1_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target1" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"CALLARTILLERY_axart1_.*",
+			"ARTILLERY_S_target1",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_courtyard" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
 
@@ -206,10 +214,6 @@ global Map =
 
 	barrier_gone = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.BarrierStatus = true;
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_.*" );
@@ -218,10 +222,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	OnTrigger( "the Courtyard Wall Destroyed.", Map.Courtyard_Wall_Destroyed );
 	OnTrigger( "the Headquarters Door Destroyed.", Map.Headquarters_Door_Destroyed );
 	OnTrigger( "Allies have stolen the Secret Documents!", Map.Secret_Documents_Taken );
@@ -255,18 +255,22 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "ATTACK_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "GRENADE_Barricade1", TEAM.ALLIES, CLASS.MEDIC, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_alos1_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bEng.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_Barricade1" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ATTACK_alos1_.*",
+		"FLAG_.*",
+		"PLANT_.*",
+		"ATTACK_bEng.*",
+		"CHECKPOINT_.*",
+		"GRENADE_Barricade1",
+	});
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axos1_.*" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axroam1_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_axpanz1_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axsnipe_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mainstnest" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"PANZER_axpanz1_.*",
+		"SNIPE_axsnipe_.*",
+		"MOUNTMG42_mainstnest",
+	});
 	//SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_firstspawnas" );
 
@@ -277,7 +281,6 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, Map.Mount_mainstnest );
 	Util.SetMaxUsersInProgress( 1, Map.Mount_hqnest );
 	Util.SetMaxUsersInProgress( 1, "DEFEND_.*" );
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 4, Map.Flag_Secret_Documents );
 
 	MapRoutes =

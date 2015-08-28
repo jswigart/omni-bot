@@ -1,54 +1,35 @@
 global Map =
 {
 	Debug = 0,
-	ShowMovers = false,
 	DontDispenseAmmo = true,
 
 	balkonflag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "balkonflag_Axis_Captured" );
 	},
 
 	balkonflag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "balkonflag_Allies_Captured" );
 	},
 
 	kellerflag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "kellerflag_Axis_Captured" );
 	},
 
 	kellerflag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "kellerflag_Allies_Captured" );
 	},
 
 	saeulenflag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "saeulenflag_Axis_Captured" );
 	},
 
 	saeulenflag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "saeulenflag_Allies_Captured" );
 	},
 
@@ -56,9 +37,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-
 	// Register callback functions
 	OnTrigger( "MISSING_STRING", Map.balkonflag_Axis_Captured );
 	OnTrigger( "MISSING_STRING", Map.balkonflag_Allies_Captured );
@@ -69,15 +47,19 @@ global OnMapLoad = function()
 
 	Util.DisableGoal( ".*", true ); // all but routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	
+
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
-	
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"CHECKPOINT.*",
+		"ARTILLERY_S_rSpawnkill.*",
+	});
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"CHECKPOINT.*",
+		"ARTILLERY_S_bSpawnkill.*",
+	});
+
 	RTCWUtil.KillEntities({130});
 
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );

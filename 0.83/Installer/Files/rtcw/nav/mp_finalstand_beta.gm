@@ -19,25 +19,20 @@ global Map =
 
 	Alley_Gate_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEng_Gate.*" );
 	},
 
 	Alley_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Map.GateStatus = true;
 
 		print( "Alley_Gate_Destroyed" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Bridge" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rEng_Gate.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rGate.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_rEng_Gate.*",
+			"SNIPE_rGate.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rBridge.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rBridgeAS_.*" );
@@ -49,20 +44,12 @@ global Map =
 
 	Bridge_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.BridgeDyno = 0;
 
 	},
 
 	Bridge_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_Alley.*" );
 
 		Map.BridgeDyno += 1;
@@ -70,27 +57,16 @@ global Map =
 
 	Bridge_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.BridgeDyno -= 1;
 	},
 
 	Sewer_Hatch_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_Sewer.*" );
 	},
 
 	Sewer_Hatch_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Map.SewerStatus = true;
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
@@ -104,9 +80,6 @@ global Map =
 
 	court_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Map.FlagStatus = 1;
 
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
@@ -116,9 +89,6 @@ global Map =
 
 	court_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Map.FlagStatus = 2;
 
 		Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
@@ -130,16 +100,20 @@ global Map =
 
 		if ( Map.GateStatus == true ) {
 			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bPreBridge.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBridge.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bPreBridgeAS_.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"DEFEND_bPreBridge.*",
+				"MOUNTMG42.*",
+				"ARTILLERY_S_bBridge.*",
+				"AIRSTRIKE_bPreBridgeAS_.*",
+			});
 		}
 		else    //Bridge defense
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRear.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBridge.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"DEFEND_bRear.*",
+				"ARTILLERY_S_bBridge.*",
+			});
 			SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT.*" );
 		}
 	},
@@ -147,10 +121,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	OnTrigger( "the Alley Gate Destroyed.", Map.Alley_Gate_Destroyed );
 	OnTrigger( "Planted at the Alley Gate.", Map.Alley_Gate_Planted );
 	OnTrigger( "MISSING_STRING", Map.Bridge_Destroyed );
@@ -191,14 +161,18 @@ global OnMapLoad = function()
 
 	Util.SetMaxUsersInProgress( 4, "CHECKPOINT.*" );
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rBridge.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Sewer_Hatch" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBridge.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_Barricade.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"ATTACK_rBridge.*",
+		"CHECKPOINT.*",
+		"PLANT_Sewer_Hatch",
+		"ARTILLERY_S_rBridge.*",
+		"GRENADE_Barricade.*",
+	});
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bStreet.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_streetAS" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"DEFEND_bStreet.*",
+		"AIRSTRIKE_streetAS",
+	});
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bLTGate.*" );
 
 	MapRoutes =
@@ -247,7 +221,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_rBridge_5 = MapRoutes.PLANT_Bridge;
 	MapRoutes.ATTACK_rBridge_6 = MapRoutes.PLANT_Bridge;
 	Util.Routes( MapRoutes );
-	
+
 	// EntityKill( 146 ); // sewer obj. remove for tweaking pathing
 	Util.MapDebugPrint( "OnMapLoad" );
 };

@@ -216,9 +216,6 @@ global Map =
 
 	Book_Of_The_Dead_Holding_Chamber_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Map.ChurchDoorDestroyed = true;
 		Util.EnableGoal("CAPPOINT_.*");
 		Util.EnableGoal("ROUTE_churchroof2");
@@ -238,34 +235,22 @@ global Map =
 
 	Book_Of_The_Dead_Holding_Chamber_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Book_Of_The_Dead_Holding_Chamber_Planted" );
 	},
 
 	Book_Of_The_Dead_Holding_Chamber_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Book_Of_The_Dead_Holding_Chamber_Defused" );
 	},
 
 	Guardhouse_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		DynamicPathsUpdated(TEAM.ALLIES, TEAM.AXIS);
 		Util.MapDebugPrint( "Guardhouse_Door_Destroyed" );
 	},
 
 	Hells_Spawn_Soul_Portal_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.DisableGroup("b_portal", TEAM.ALLIES);
 		Util.EnableGroup("b_traincontrol_shift", TEAM.ALLIES);
 
@@ -277,9 +262,6 @@ global Map =
 
 	Supply_Train_Control_Board_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.DisableGroup("b_traincontrol", TEAM.ALLIES);
 		Util.EnableGroup("b_portalshift", TEAM.ALLIES);
 
@@ -291,9 +273,6 @@ global Map =
 
 	Book_of_the_Dead_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Map.DocsTaken = true;
 
 		// see docsEscaped region trigger for axis shift logic
@@ -305,9 +284,6 @@ global Map =
 
 	Book_of_the_Dead_Returned = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Map.DocsTaken = false;
 
 		Util.EnableGroup( "r_church1", TEAM.AXIS );
@@ -327,9 +303,6 @@ global Map =
 
 	midflag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.ClearRoleForGoals( "CHECKPOINT_.*", ROLE.ATTACKER2 ); // allies should focus on it
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_alliedroof.*" );
 		Util.MapDebugPrint( "midflag_Axis_Captured" );
@@ -337,9 +310,6 @@ global Map =
 
 	midflag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.SetRoleForGoals( "CHECKPOINT_.*", ROLE.ATTACKER2 ); // limited bots will go for it
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_alliedroof.*" );
 		Util.MapDebugPrint( "midflag_Allies_Captured" );
@@ -347,9 +317,6 @@ global Map =
 
  	guardhouse_door_open = function( trigger )
  	{
-		if ( TestMap )
-			{ return; }
-
 		Map.Switches.lever3.Enabled = false;
 
 		Util.MapDebugPrint("guardhouse door opening");
@@ -357,9 +324,6 @@ global Map =
 
  	guardhouse_door_closed = function( trigger )
  	{
-		if ( TestMap )
-			{ return; }
-
 		Map.Switches.lever3.Enabled = true;
 
 		Util.MapDebugPrint("guardhouse door closing");
@@ -367,9 +331,6 @@ global Map =
 
  	main_door_open = function( trigger )
  	{
-		if ( TestMap )
-			{ return; }
-
 		Map.Switches.lever1.Enabled = false;
 		Map.Switches.lever2.Enabled = false;
 
@@ -378,9 +339,6 @@ global Map =
 
  	main_door_closed = function( trigger )
  	{
-		if ( TestMap )
-			{ return; }
-
 		Map.Switches.lever1.Enabled = true;
 		Map.Switches.lever2.Enabled = true;
 
@@ -389,9 +347,6 @@ global Map =
 
  	lift1_down = function( trigger )
  	{
-		if ( TestMap )
-			{ return; }
-
 		sleep(1.7);
 		Map.Switches.lift1.Enabled = false;
 
@@ -400,9 +355,6 @@ global Map =
 
  	lift1_up = function( trigger )
  	{
-		if ( TestMap )
-			{ return; }
-
 		Map.Switches.lift1.Enabled = true;
 
 		Util.MapDebugPrint("lift1 up");
@@ -410,9 +362,6 @@ global Map =
 
  	lift2_down = function( trigger )
  	{
-		if ( TestMap )
-			{ return; }
-
 		sleep(2);
 		Map.Switches.lift2.Enabled = false;
 
@@ -421,9 +370,6 @@ global Map =
 
  	lift2_up = function( trigger )
  	{
-		if ( TestMap )
-			{ return; }
-
 		Map.Switches.lift2.Enabled = true;
 
 		Util.MapDebugPrint("lift2 up");
@@ -473,9 +419,6 @@ global OnMapLoad = function()
 
 	thread(Map.check_grate);
 
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-
 	OnTrigger( "Allies have breached the Inner Church Door!", Map.Book_Of_The_Dead_Holding_Chamber_Destroyed );
 	OnTrigger( "Planted at The Book Of The Dead Holding Chamber.", Map.Book_Of_The_Dead_Holding_Chamber_Planted );
 	OnTrigger( "Defused at The Book Of The Dead Holding Chamber.", Map.Book_Of_The_Dead_Holding_Chamber_Defused );
@@ -524,25 +467,27 @@ global OnMapLoad = function()
 
 	Util.SetMaxUsers( 1, "PLANT_Guardhouse_Door" );
 	Util.SetMaxUsers( 1, "MOUNTMG42_tr_mg" );
-	Util.SetMaxUsers( 1, "SNIPE_.*" );
-	Util.SetMaxUsers( 1, "CALLARTILLERY_.*" );
 
 	Util.SetRoleForGoals( "CHECKPOINT_.*", ROLE.ATTACKER2 );
 
 	RTCWUtil.EnableGoal("CHECKPOINT.*", true);
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_sewer_grate" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Book_Of_The_Dead_Holding_Chamber" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_alliedroof.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT_sewer_grate",
+		"PLANT_Book_Of_The_Dead_Holding_Chamber",
+		"SNIPE_alliedroof.*",
+	});
 	Util.EnableGroup( "b_portal", TEAM.ALLIES );
 	Util.EnableGroup( "b_traincontrol", TEAM.ALLIES );
 	Util.EnableGroup( "b_church", TEAM.ALLIES );
 	Util.EnableGroup( "b_checkpoint", TEAM.ALLIES ); // dedicated checkpoint team
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Supply_Train_Control_Board" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Hells_Spawn_Soul_Portal" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Guardhouse_Door" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_nemountain.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"PLANT_Supply_Train_Control_Board",
+		"PLANT_Hells_Spawn_Soul_Portal",
+		"PLANT_Guardhouse_Door",
+		"SNIPE_nemountain.*",
+		"ARTILLERY_S_rSpawnkill.*",
+	});
 	Util.EnableGroup( "r_church1", TEAM.AXIS ); // static defense
 	Util.EnableGroup( "r_church2", TEAM.AXIS ); // shifts inside once door is destroyed
 	Util.EnableGroup( "r_traincontrol", TEAM.AXIS );

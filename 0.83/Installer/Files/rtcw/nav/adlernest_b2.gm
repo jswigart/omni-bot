@@ -11,8 +11,6 @@ global Map =
 
 	Allies_Control_Warehouse = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
 		//SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
 		Util.MapDebugPrint( "Allies_Control_Warehouse" );
@@ -20,9 +18,6 @@ global Map =
 
 	doorcontrols_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		if ( Map.BlastDoorStatus == 0 )
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, true, "SWITCH_blastdoor_1" );
@@ -33,17 +28,23 @@ global Map =
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Doc_Defense_.*" );
 		}
-		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Pipe_Door_Controls" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Doc_Attack.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Controls_Attack_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"CHECKPOINT.*",
+			"FLAG.*",
+			"PLANT_Pipe_Door_Controls",
+			"ATTACK_Doc_Attack.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK_Controls_Attack_.*",
+			"MOUNTMG42.*",
+		});
 
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Controls_Defense_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_breach.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_breach.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_Controls_Defense_.*",
+			"ARTILLERY_S_breach.*",
+			"CALLARTILLERY_breach.*",
+		});
 
 
 		foreach( id and bot in BotTable )
@@ -63,18 +64,12 @@ global Map =
 
 	Axis_Control_Warehouse = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
 		Util.MapDebugPrint( "Axis_Control_Warehouse" );
 	},
 
 	Documents_Stolen = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Map.DocStatus = 1;
 
 		//shift the action
@@ -92,10 +87,14 @@ global Map =
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Doc_Attack_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42.*" );
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Doc_Defense_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_blastdoor.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_blastdoor.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_Doc_Defense_.*",
+			"CHECKPOINT.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"ARTILLERY_S_blastdoor.*",
+			"CALLARTILLERY_blastdoor.*",
+		});
 		//Util.ResetGoals();
 
 		Util.MapDebugPrint( "Documents_Stolen" );
@@ -103,9 +102,6 @@ global Map =
 
 	Documents_Returned = function ( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Map.DocStatus = 0;
 
 		//shift back to docs
@@ -116,8 +112,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_blastdoor.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_blastdoor.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"ARTILLERY_S_blastdoor.*",
+			"CALLARTILLERY_blastdoor.*",
+		});
 
 		//forget about the switches
 		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_blastdoor_2" );
@@ -143,17 +141,11 @@ global Map =
 
 	Documents_Transmitted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Documents_Transmitted" );
 	},
 
 	Blast_Doors_Open = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Map.BlastDoorStatus = 1;
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_blastdoor_1" );
 
@@ -168,9 +160,6 @@ global Map =
 
 	Blast_Doors_Closed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Map.BlastDoorStatus = 0;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "SWITCH_blastdoor_2" );
@@ -187,9 +176,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-
 	Util.AddUseWp( "PLANT_Pipe_Door_Controls", "plantpipe" );
 	Util.AddUseWp( "PLANT_Courtyard_Door_Controls", "plantcontrols" );
 
@@ -214,9 +200,11 @@ global OnMapLoad = function()
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Courtyard_Door_Controls" );
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Controls_Defense_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_breach.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_breach.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_Controls_Defense_.*",
+		"ARTILLERY_S_breach.*",
+		"CALLARTILLERY_breach.*",
+	});
 
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=10, maxcamptime=15});
 	SetMapGoalProperties( "MOUNTMG42.*", {mincamptime=45, maxcamptime=60});

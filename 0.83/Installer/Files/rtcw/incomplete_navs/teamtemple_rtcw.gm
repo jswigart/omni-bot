@@ -1,33 +1,28 @@
 global Map =
 {
 	Debug = 1, // please set to zero before distributing your script
-	ShowMovers = false,
 	DontDispenseAmmo = true,
 	DispenseAmmoTime = 1,
 	Suicide = MAP_SUICIDE,
 
 	objective_1_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		if ( Map.Suicide ) {
 			RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 0, 0 );
 			RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.SOLDIER, 0, 0 );
 			RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.ENGINEER, 0, 0 );
 		}
-		
-		SetAvailableMapGoals( TEAM.ALLIES, false, "GRENADE_bWater.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bDoor.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"GRENADE_bWater.*",
+			"AIRSTRIKE_bDoor.*",
+		});
 
 		Util.MapDebugPrint( "objective_1_Destroyed" );
 	},
 
 	objective_2_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "objective_2_Destroyed" );
 	},
 
@@ -35,9 +30,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-		
 	Util.AddUseWp( "PLANT_objective_2", "plantroof" );
 
 	// Register callback functions
@@ -45,7 +37,7 @@ global OnMapLoad = function()
 	OnTrigger( "objective 1 Destroyed.", Map.objective_1_Destroyed );
 	//OnTrigger( "MISSING_STRING", Map.objective_2_Planted );
 	OnTrigger( "MISSING_STRING", Map.objective_2_Destroyed );
-	
+
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 10, maxcamptime = 15} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 30} );
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 45, maxcamptime = 60} );
@@ -53,16 +45,20 @@ global OnMapLoad = function()
 
 	Util.DisableGoal( ".*", true ); //all but routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	
+
 	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.ENGINEER );
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rPlant.*" );
-	
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"PLANT.*",
+		"ATTACK_rPlant.*",
+	});
+
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bBase.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRoof.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bRoof.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bWater.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"DEFEND_bRoof.*",
+		"AIRSTRIKE_bRoof.*",
+		"GRENADE_bWater.*",
+	});
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bDoor.*" );
 
 

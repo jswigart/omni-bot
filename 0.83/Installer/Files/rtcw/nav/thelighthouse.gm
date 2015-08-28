@@ -1,7 +1,6 @@
 global Map =
 {
 	Debug = 0,
-	ShowMovers = false,
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = true,
 	ViewDistance = 2500,
@@ -9,13 +8,12 @@ global Map =
 
 	Front_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bGate.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bLighthouse.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bWall.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bWall.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ARTILLERY_S_bWall.*",
+			"ATTACK_bWall.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_.*" );
 
 		Util.MapDebugPrint( "Front_Gate_Destroyed" );
@@ -23,21 +21,17 @@ global Map =
 
 	Lighthouse_Light_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Lighthouse_Light_Destroyed" );
 	},
 
 	Sea_wall_door_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bDoor.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bLighthouse.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bWall.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bWall.*" );			
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK_bWall.*",
+			"ARTILLERY_S_bWall.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_.*" );
 
 		Util.MapDebugPrint( "Sea_wall_door_Destroyed" );
@@ -45,17 +39,11 @@ global Map =
 
 	beach_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "beach_flag_Axis_Captured" );
 	},
 
 	beach_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "beach_flag_Allies_Captured" );
 	},
 
@@ -63,12 +51,9 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-		
 	Util.AddUseWp( "PLANT_Front_Gate", "gate1" );
-		
-	//Lighthouse = OnTriggerRegion( AABB( 1807.000,-476.000,577.000,2167.000,-123.000,1507.000 ), Map.DisableCombatMove );	
+
+	//Lighthouse = OnTriggerRegion( AABB( 1807.000,-476.000,577.000,2167.000,-123.000,1507.000 ), Map.DisableCombatMove );
 
 	// Register callback functions
 	OnTrigger( "The Front Gate Destroyed.", Map.Front_Gate_Destroyed );
@@ -81,29 +66,35 @@ global OnMapLoad = function()
 
 	Util.DisableGoal( ".*", true );
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	
+
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
-	
+
 	SetGoalPriority( "ARTILLERY_S.*", 1.0 );
 	SetGoalPriority( "CALLARTILLERY.*", 1.0 );
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rYard.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rDoor.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rYard.*",
+		"AIRSTRIKE_rDoor.*",
+	});
 	//SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rGate.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rDoor.*" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Sea_wall_door" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Front_Gate" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bWall.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT_Sea_wall_door",
+		"PLANT_Front_Gate",
+		"ATTACK_bWall.*",
+	});
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bWall.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bDoor.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bGate.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ARTILLERY_S_bSpawnkill.*",
+		"AIRSTRIKE_bDoor.*",
+		"AIRSTRIKE_bGate.*",
+		"CHECKPOINT.*",
+	});
 
 	RTCWUtil.KillEntities({123,145,151,152,153,155,158,159,160,161,176,190,281});
-	
+
 	MapRoutes =
 	{
 		PLANT_Sea_wall_door =
@@ -135,9 +126,9 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bLighthouse4 = MapRoutes.PLANT_Lighthouse_Light;
 	MapRoutes.ATTACK_bLighthouse5 = MapRoutes.PLANT_Lighthouse_Light;
 	MapRoutes.ATTACK_bLighthouse6 = MapRoutes.PLANT_Lighthouse_Light;
-	
+
 	Util.Routes(MapRoutes);
-	
+
 	yield();yield();
 	if ( Map.Suicide ) {
 		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );

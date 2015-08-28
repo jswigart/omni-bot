@@ -289,11 +289,17 @@ member StopSniping = function( team )
 //
 member SetPrimaryGoals = function( priority )
 {
+	oldDebug = Map.Debug;
+	oldScripts = DEBUG_MAP_SCRIPTS;
+	Map.Debug = 0;
+	global DEBUG_MAP_SCRIPTS = false;
 	SetGoalPriority( "CAPPOINT_.*", priority );
 	SetGoalPriority( "PLANT_.*", priority - 0.08f );
 	SetGoalPriority( "CHECKPOINT_.*", priority - 0.1f );
 	SetGoalPriority( "FLAG_.*", priority - 0.15f, 0, 0, true );
 	SetGoalPriority( "FLAGRETURN_.*", 1.0, 0, 0, true  );
+	Map.Debug = oldDebug;
+	global DEBUG_MAP_SCRIPTS = oldScripts;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

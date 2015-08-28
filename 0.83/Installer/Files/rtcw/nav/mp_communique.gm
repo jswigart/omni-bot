@@ -119,17 +119,10 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-		},
 	},
 
 	North_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.NorthStatus = true;
 
 		if ( !Map.SouthStatus ) {
@@ -140,10 +133,14 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSouth.*" );
 		}
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_D_target_net_jail" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_D_target_bridge" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_spot_bridge" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_r2_arch" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ARTILLERY_D_target_net_jail",
+			"ARTILLERY_D_target_bridge",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"CALLARTILLERY_spot_bridge",
+			"ARTILLERY_S_target_r2_arch",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_nwc" );     // gate side of tunnel
 
 		SetGoalPriority( "CALL.*", 0.5, TEAM_AXIS );    // Make sure axis dont get too excited to call arty on their own position
@@ -157,18 +154,16 @@ global Map =
 
 	South_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.SouthStatus = true;
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_North );
 
 		// *** Artillery
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_D_target_net_jail" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_D_target_bridge" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_engNorth.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"ARTILLERY_D_target_net_jail",
+			"ARTILLERY_D_target_bridge",
+			"DEFEND_engNorth.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bSouth.*" );
 
 		//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_2" );
@@ -182,10 +177,6 @@ global Map =
 
 	north_planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rNorth_c.*" );
 
@@ -194,10 +185,6 @@ global Map =
 
 	north_defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.NorthDyno -= 1;
 
 		if ( Map.NorthDyno < 1 ) {
@@ -208,10 +195,6 @@ global Map =
 
 	south_planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.SouthDyno += 1;
 
 		if ( !Map.NorthStatus ) {
@@ -224,19 +207,11 @@ global Map =
 
 	south_defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.SouthDyno -= 1;
 	},
 
 	gate_lever = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		vel = ToVector( trigger.Action );
 
 		Map.Switches.gate1.Enabled = false;
@@ -245,10 +220,6 @@ global Map =
 
 	gate_trigger = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		vel = ToVector( trigger.Action );
 
 		if ( vel.y < 0 ) {
@@ -266,10 +237,6 @@ global Map =
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
@@ -283,22 +250,12 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
-			}
-		},
 	},
 
 };
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	tTwo = OnTriggerRegion( AABB( 63.000,2271.000,335.000,192.000,2480.000,409.000 ), Map.North );
 	r1push = OnTriggerRegion( AABB( 498.000,1791.000,327.000,720.000,2178.000,417.000 ), RegionTrigger.DisableBotPush );
 	spawnCombat = OnTriggerRegion( AABB( 2304.000,1855.000,-1.000,2944.000,2368.000,113.000 ), RegionTrigger.DisableBotPush );
@@ -352,17 +309,21 @@ global OnMapLoad = function()
 	//SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSouth_p1" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rNorth.*" );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bNorth.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bNorth.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_South );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_engSouth.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSouth[24]" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ATTACK_bNorth.*",
+		"PANZER_bNorth.*",
+		Map.Plant_South,
+		"DEFEND_engSouth.*",
+		"ATTACK_bSouth[24]",
+	});
 
 	// *** Artillery
 	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bSpawnkill.*" );        // To call on axis spawn
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_D_target_net_jail" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_D_target_bridge" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ARTILLERY_D_target_net_jail",
+		"ARTILLERY_S_bSpawnkill",
+		"ARTILLERY_D_target_bridge",
+	});
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_target_r2_arch" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_target_nwc" );      // gate side of tunnel

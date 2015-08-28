@@ -66,25 +66,16 @@ global Map =
 
 	Allied_Field_Communications_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Util.MapDebugPrint( "Allied_Field_Communications_Destroyed" );
 
 	},
 	Allied_Field_Communications_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Util.MapDebugPrint( "Allied_Field_Communications_Defused" );
 		Map.OpsDyno -= 1;
 	},
 	Allied_Field_Communications_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Util.MapDebugPrint( "Allied_Field_Communications_Planted" );
 		Map.OpsDyno += 1;
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEng_Ops.*" );
@@ -92,9 +83,6 @@ global Map =
 
 	Back_Alley_Wall_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Map.BackAlley = true;
 
 		Util.MapDebugPrint( "Back_Alley_Wall_Destroyed" );
@@ -104,20 +92,12 @@ global Map =
 	},
 	Back_Alley_Wall_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "Back_Alley_Wall_Planted" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEng_BackWall.*" );
 	},
 	Back_Alley_Wall_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "Back_Alley_Wall_Defused" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rEng_BackWall.*" );
@@ -125,9 +105,6 @@ global Map =
 
 	Church_Alley_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Map.ChurchAlley = true;
 
 		Util.MapDebugPrint( "Church_Alley_Gate_Destroyed" );
@@ -138,10 +115,6 @@ global Map =
 	},
 	Church_Alley_Gate_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "Church_Alley_Gate_Planted" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bEng_ChurchWall.*" );
@@ -149,10 +122,6 @@ global Map =
 
 	Church_Alley_Gate_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "Church_Alley_Gate_Defused" );
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bEng_ChurchWall.*" );
@@ -160,37 +129,23 @@ global Map =
 
 	German_88_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "German_88_Destroyed" );
 	},
 
 	German_88_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "German_88_Defused" );
 		Map.AADyno -= 1;
 	},
 
 	German_88_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Util.MapDebugPrint( "German_88_Planted" );
 		Map.AADyno += 1;
 	},
 
 	obj_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Util.MapDebugPrint( "obj_flag_Axis_Captured" );
 		Map.FlagStatus = 1;
 		Util.SetMaxUsersInProgress( 2, "CHECKPOINT_obj_flag" );
@@ -201,8 +156,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rChurch.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOpsLT.*" );
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_opsmg" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bOutsideOps.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"MOUNTMG42_opsmg",
+			"DEFEND_bOutsideOps.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bAA.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bOps.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bAA_LT.*" );
@@ -213,9 +170,6 @@ global Map =
 
 	obj_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 		Util.MapDebugPrint( "obj_flag_Allies_Captured" );
 		Map.FlagStatus = 2;
 		Util.SetMaxUsersInProgress( 2, "CHECKPOINT_obj_flag" );
@@ -226,8 +180,10 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rChurch.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rOpsLT.*" );
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_opsmg" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bOutsideOps.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"MOUNTMG42_opsmg",
+			"DEFEND_bOutsideOps.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bAA.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bOps.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bAA_LT.*" );
@@ -242,10 +198,6 @@ global Map =
 		//swap availablilty every 5 minutes
 		while ( 1 )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			count += 1;
 
 			if ( count % 300 == 0 ) {
@@ -275,27 +227,37 @@ global Map =
 			if ( Map.FlagStatus == 1 ) {  // Axis own flag
 				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnkillAS_.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rChurch.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rChurch.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, {
+					"ARTILLERY_S_rChurch.*",
+					"CALLARTILLERY_rChurch.*",
+				});
 
 				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bOpsAS_.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, {
+					"ARTILLERY_S_.*",
+					"CALLARTILLERY_.*",
+				});
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bOps.*" );
 			}
 			if ( Map.FlagStatus == 2 ) {  // Allies own flag
 				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rCarAS_.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rChurch.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rChurch.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, {
+					"ARTILLERY_S_.*",
+					"CALLARTILLERY_.*",
+				});
+				SetAvailableMapGoals( TEAM.AXIS, true, {
+					"ARTILLERY_S_rChurch.*",
+					"CALLARTILLERY_rChurch.*",
+				});
 
 				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bHouseAS_.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, {
+					"ARTILLERY_S_.*",
+					"CALLARTILLERY_.*",
+				});
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 			}
 		} else // FF is ON
@@ -304,32 +266,44 @@ global Map =
 			if ( Map.FlagStatus == 1 ) {  // Axis own flag
 				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rSpawnKillAS_.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rChurch.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rChurch.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, {
+					"ARTILLERY_S_rChurch.*",
+					"CALLARTILLERY_rChurch.*",
+				});
 
-				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, {
+					"AIRSTRIKE_.*",
+					"ARTILLERY_S_.*",
+					"CALLARTILLERY_.*",
+				});
 			}
 			if ( Map.FlagStatus == 2 ) {  // Allies own flag
-				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, {
+					"AIRSTRIKE_.*",
+					"ARTILLERY_S_.*",
+					"CALLARTILLERY_.*",
+				});
 
 				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
 				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bHouseAS_.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, false, {
+					"ARTILLERY_S_.*",
+					"CALLARTILLERY_.*",
+				});
 				SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 			}
 			if ( Map.FlagAttacker == 1 && Map.FlagStatus == 1 ) { // Axis own it and Allies NOT going for it
 				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bOpsAS_.*" );
-				SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bOps.*" );
+				SetAvailableMapGoals( TEAM.ALLIES, true, {
+					"AIRSTRIKE_bOpsAS_.*",
+					"ARTILLERY_S_bOps.*",
+				});
 			}
 			if ( Map.FlagAttacker == 2 && Map.FlagStatus == 2 ) { // Allies own it and Axis NOT going for it
-				SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rChurch.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rChurch.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, {
+					"ARTILLERY_S_rChurch.*",
+					"CALLARTILLERY_rChurch.*",
+				});
 				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rCarAS_.*" );
 			}
@@ -338,10 +312,6 @@ global Map =
 
 	gate_lever = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		//disable immediately to prevent repeated lever usage
 		Map.Switches.gate1.Enabled = false;
 		Map.Switches.gate2.Enabled = false;
@@ -349,10 +319,6 @@ global Map =
 
 	gate_trigger = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		vel = ToVector( trigger.Action );
 
 		if ( vel.z < 0 ) {
@@ -383,10 +349,6 @@ global Map =
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
@@ -400,12 +362,6 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
-			}
-		},
 	},
 	AA =
 	{
@@ -413,10 +369,6 @@ global Map =
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
@@ -430,21 +382,11 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
-			}
-		},
 	},
 };
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	Util.AddUseWp( "PLANT_Back_Alley_Wall", "backwall" );
 	Util.AddUseWp( "PLANT_Church_Alley_Gate", "churchgate_1" );
 	Util.AddUseWp( "PLANT_Allied_Field_Communications", "ops1" );
@@ -477,7 +419,7 @@ global OnMapLoad = function()
 	botpush3 = OnTriggerRegion( AABB( 4563.000,3063.000,219.000,4747.000,3488.000,293.000 ), RegionTrigger.DisableBotPush );
 	// Allies AS Spawnkill House
 	botpush3 = OnTriggerRegion( AABB( 3279.000,2471.000,219.000,4196.000,2776.000,336.000 ), RegionTrigger.DisableBotPush );
-	
+
 	// hole into sewer
 	botpush4 = OnTriggerRegion( AABB( 1599.000,1111.000,61.000,1940.000,1341.000,163.000 ), RegionTrigger.DisableBotPush );
 
@@ -516,18 +458,22 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT, CLASS.MEDIC );
 	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT, CLASS.MEDIC );
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Back_Alley_Wall" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT_obj_flag" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rOps.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rOps.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_Door" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_aa_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"PLANT_Back_Alley_Wall",
+		"CHECKPOINT_obj_flag",
+		"DEFEND_rOps.*",
+		"ATTACK_rOps.*",
+		"GRENADE_Door",
+		"CAMP_dual_aa_.*",
+	});
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Church_Alley_Gate" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT_obj_flag" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bAA.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAA.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_ops_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT_Church_Alley_Gate",
+		"CHECKPOINT_obj_flag",
+		"DEFEND_bAA.*",
+		"ATTACK_bAA.*",
+		"CAMP_dual_ops_.*",
+	});
 
 	//open up some airstrike goals if ff is off
 	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
@@ -540,7 +486,6 @@ global OnMapLoad = function()
 
 	Util.SetMaxUsersInProgress( 64, "CHECKPOINT_.*" );  // Martin - Everyone go for it initialy
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFUSE_Back.*" );

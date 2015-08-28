@@ -45,10 +45,6 @@ global Map =
 
 	checkpoint1_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.c1status = 1;
 
 		Map.EvalSpawnkill();
@@ -57,10 +53,6 @@ global Map =
 
 	checkpoint1_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.c1status = 2;
 
 		Map.EvalSpawnkill();
@@ -69,10 +61,6 @@ global Map =
 
 	checkpoint2_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.c2status = 1;
 
 		Map.EvalSpawnkill();
@@ -81,10 +69,6 @@ global Map =
 
 	checkpoint2_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.c2status = 2;
 
 		Map.EvalSpawnkill();
@@ -93,10 +77,6 @@ global Map =
 
 	checkpoint3_Axis_Captured = function( trigger )     // Allied 3rd
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.c3status = 1;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rCheckpoint3.*" );
@@ -115,10 +95,6 @@ global Map =
 
 	checkpoint3_Allies_Captured = function( trigger )   // Allied 3rd
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.c3status = 2;
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCheckpoint3.*" );
@@ -132,10 +108,6 @@ global Map =
 
 	checkpoint4_Axis_Captured = function( trigger )     // Axis 3rd
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.c4status = 1;
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCheckpoint4.*" );
@@ -149,10 +121,6 @@ global Map =
 
 	checkpoint4_Allies_Captured = function( trigger )   // Axis 3rd
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.c4status = 2;
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bCheckpoint4.*" );
@@ -168,10 +136,6 @@ global Map =
 
 	checkpoint5_Axis_Captured = function( trigger )     // Axis 2nd
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.c5status = 1;
 
 		Map.EvalSpawnkill();
@@ -180,10 +144,6 @@ global Map =
 
 	checkpoint5_Allies_Captured = function( trigger )   // Axis 2nd
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.c5status = 2;
 
 		Map.EvalSpawnkill();
@@ -192,10 +152,6 @@ global Map =
 
 	checkpoint6_Axis_Captured = function( trigger )     // Axis 1st
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.c6status = 1;
 
 		Map.EvalSpawnkill();
@@ -204,10 +160,6 @@ global Map =
 
 	checkpoint6_Allies_Captured = function( trigger )   // Axis 1st
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.c6status = 2;
 
 		Map.EvalSpawnkill();
@@ -216,10 +168,6 @@ global Map =
 
 	thirty_second = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.thirtysecond = true;
 
 		//abandon scripted defends at this point
@@ -236,10 +184,6 @@ global Map =
 
 	ToggleDefends = function()
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( Map.c1status == 2 && Map.c2status == 2 && Map.c3status == 2 && Map.c4status == 2 ) {
 			SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bDefend.*" );
@@ -249,15 +193,19 @@ global Map =
 		else
 		{
 			SetAvailableMapGoals( TEAM.ALLIES, false, "CAMP_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_c2d.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bCheckpoint2" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				"CAMP_c2d.*",
+				"MOUNTMG42_bCheckpoint2",
+			});
 			SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_bCourtyard" );
 		}
 
 		if ( Map.c6status == 1 && Map.c5status == 1 && Map.c4status == 1 && Map.c3status == 1 ) {
 			SetAvailableMapGoals( TEAM.AXIS, false, "CAMP_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rDefend.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rCourtyard" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"CAMP_rDefend.*",
+				"MOUNTMG42_rCourtyard",
+			});
 			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_rCheckpoint5" );
 		}
 		else
@@ -271,10 +219,6 @@ global Map =
 
 	EvalSpawnkill = function()
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( !Map.spawnkill ) {
 			return;
 		}
@@ -283,9 +227,11 @@ global Map =
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
 		if ( Map.c1status == 2 && Map.c2status == 2 && Map.c3status == 2 && Map.c4status == 2 ) {
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT_checkpoint6" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, {
+				"DEFEND_.*",
+				"MOUNTMG42_.*",
+				"CHECKPOINT_checkpoint6",
+			});
 			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bSpawnkill_.*" );
 			Wp.SetWaypointFlag( "axisflag", "axis", true );
 			/*SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill" );
@@ -295,17 +241,21 @@ global Map =
 		}
 		else
 		{
-			SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bSpawnkill_.*" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bSpawnkill.*" );
+			SetAvailableMapGoals( TEAM.ALLIES, false, {
+				"DEFEND_bSpawnkill_.*",
+				"AIRSTRIKE_bSpawnkill.*",
+			});
 			Wp.SetWaypointFlag( "axisflag", "axis", false );
 			/*SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bSpawnkill" );
 			SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bSpawnkill" );*/
 		}
 
 		if ( Map.c6status == 1 && Map.c5status == 1 && Map.c4status == 1 && Map.c3status == 1 ) {
-			SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT_checkpoint1" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, {
+				"CHECKPOINT_checkpoint1",
+				"DEFEND_.*",
+				"MOUNTMG42_.*",
+			});
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSpawnkill_.*" );
 			/*SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill" );
 			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rSpawnkill" );*/
@@ -313,8 +263,10 @@ global Map =
 		}
 		else
 		{
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rSpawnkill_.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rSpawnkill.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, {
+				"DEFEND_rSpawnkill_.*",
+				"AIRSTRIKE_rSpawnkill.*",
+			});
 			/*SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rSpawnkill" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rSpawnkill" );*/
 		}
@@ -346,10 +298,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	OnTrigger( "Axis take the Northern Control Point!", Map.checkpoint6_Axis_Captured );
 	OnTrigger( "Allies take the Northern Control Point!", Map.checkpoint6_Allies_Captured );
 	OnTrigger( "Axis take the Eastern Control Point!", Map.checkpoint5_Axis_Captured );
@@ -403,15 +351,19 @@ global OnMapLoad = function()
 	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint3", TEAM.ALLIES, CLASS.SOLDIER );
 
 	Util.EnableGoal( "CHECKPOINT.*" );
-	
+
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rCheckpoint5" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFirstspawn.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_c5d.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bCheckpoint2" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bFirstspawn.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_c2d.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"MOUNTMG42_rCheckpoint5",
+		"AIRSTRIKE_rFirstspawn.*",
+		"CAMP_c5d.*",
+	});
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"MOUNTMG42_bCheckpoint2",
+		"AIRSTRIKE_bFirstspawn.*",
+		"CAMP_c2d.*",
+	});
 
 	RTCWUtil.KillEntities( {87,88,89,90} ); // the useless barriers
 
@@ -435,7 +387,7 @@ global OnMapLoad = function()
 			{
 				ROUTE_eRoad =
 				{
-					ROUTE_srCourtyard = 
+					ROUTE_srCourtyard =
 					{
 						Weight = 2,
 						ROUTE_sCourtyard ={},

@@ -15,22 +15,16 @@ global Map =
 
 	Axis_Submarine_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.SubDyno = 0;
 	},
 
 	Submarine_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rSubSnipe.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "FLAME_rSubFlame.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND.*",
+			"SNIPE_rSubSnipe.*",
+			"FLAME_rSubFlame.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSub[345678]" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_flag_respawn );
 
@@ -39,30 +33,28 @@ global Map =
 
 	Submarine_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.SubDyno -= 1;
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSub.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSubSnipe.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_rSubFlame.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rSub.*",
+			"SNIPE_rSubSnipe.*",
+			"FLAME_rSubFlame.*",
+		});
 	},
 
 	Filtration_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FiltStatus = true;
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "GRENADE_flag" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSub.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSubSnipe.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_rSubFlame.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_rFlag.*",
+			"GRENADE_flag",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rSub.*",
+			"SNIPE_rSubSnipe.*",
+			"FLAME_rSubFlame.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_flag_respawn );
 		SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rSub" );
 
@@ -77,10 +69,6 @@ global Map =
 
 	Filtration_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		//don't bother defusing this
 		Util.DisableGoal( "DEFUSE_Filtration_.*" );
 
@@ -94,15 +82,13 @@ global Map =
 
 	Storage_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.StorageStatus = true;
 
 		if ( Map.FocusPrimary || Map.FiltStatus ) {
-			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Axis_Submarine );
-			SetAvailableMapGoals( TEAM.ALLIES, true, "GRENADE_bSub" );
+			SetAvailableMapGoals( TEAM.ALLIES, true, {
+				Map.Plant_Axis_Submarine,
+				"GRENADE_bSub",
+			});
 		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_eng_filtration" );
@@ -110,10 +96,6 @@ global Map =
 
 	Storage_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		//don't bother defusing this
 		Util.DisableGoal( "DEFUSE_Storage_.*" );
 
@@ -124,17 +106,10 @@ global Map =
 
 	flag_respawn_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	flag_respawn_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( !Map.FiltStatus ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_flag_respawn );
 		}
@@ -142,20 +117,12 @@ global Map =
 
 	two_minute = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		//time is low, so start focusing on main obj
 		Map.FocusPrimary = true;
 	},
 
 	thirty_second = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( Map.SybDyno > 1 ) {
 			return;
 		}
@@ -198,10 +165,6 @@ global Map =
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
@@ -216,9 +179,11 @@ global Map =
 					return;
 				}
 
-				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rSubSnipe.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "FLAME_rSubFlame.*" );
+				SetAvailableMapGoals( TEAM.AXIS, false, {
+					"DEFEND_.*",
+					"SNIPE_rSubSnipe.*",
+					"FLAME_rSubFlame.*",
+				});
 				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSub[345678]" );
 				RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Allies are planting at the Submarine!" );
 			}
@@ -234,9 +199,11 @@ global Map =
 
 			if ( tableCount(Map.SubEngEnt) < 1 ) {
 				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSub.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSubSnipe.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "FLAME_rSubFlame.*" );
+				SetAvailableMapGoals( TEAM.AXIS, true, {
+					"DEFEND_rSub.*",
+					"SNIPE_rSubSnipe.*",
+					"FLAME_rSubFlame.*",
+				});
 			}
 		},
 	},
@@ -271,10 +238,6 @@ global OnMapLoad = function()
 	Wp.SetWaypointFlag( "cpspawn13", "closed", true );
 	Wp.SetWaypointFlag( "cpspawn14", "closed", true );
 	Wp.SetWaypointFlag( "poolhallway", "allies", false ); // Keep axis out of that hallway
-
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
 
 	OnTrigger( "the Axis Submarine Destroyed.", Map.Axis_Submarine_Destroyed );
 	OnTrigger( "Planted at the Axis Submarine.", Map.Submarine_Planted );
@@ -316,14 +279,18 @@ global OnMapLoad = function()
 	SetGoalPriority( "PLANT_Storage_Door", 0.93 );
 	SetGoalPriority( "DEFEND_rSub[12]", 0.51 );
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_flag" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rFlag.*",
+		"GRENADE_flag",
+	});
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_eng.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSub.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_flag_respawn );
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Filtration_Door );
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Storage_Door );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ATTACK_eng.*",
+		"ATTACK_bSub.*",
+		Map.Checkpoint_flag_respawn,
+		Map.Plant_Filtration_Door,
+		Map.Plant_Storage_Door,
+	});
 
 	MapRoutes =
 	{

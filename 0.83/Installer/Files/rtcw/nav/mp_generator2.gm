@@ -1,7 +1,6 @@
 global Map =
 {
 	Debug = 0,
-	ShowMovers = false,
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = true,
 	GenADestroyed = 0,
@@ -10,19 +9,13 @@ global Map =
 
 	north_wall_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_north_wall.*" );
 
 		Util.MapDebugPrint( "north_wall_Planted" );
 	},
-	
+
 	north_wall_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_north_wall" );
 
 		Util.MapDebugPrint( "north_wall_Destroyed" );
@@ -30,17 +23,11 @@ global Map =
 
 	power_generator_A_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "power_generator_A_Planted" );
 	},
-	
+
 	power_generator_A_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		Map.GenADestroyed = true;
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rGeneratorA.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_generatora.*" );
@@ -49,8 +36,6 @@ global Map =
 
 	power_generator_B_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
 		Map.GenBDestroyed = true;
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rGeneratorB.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_generatorb.*" );
@@ -59,25 +44,16 @@ global Map =
 
 	power_generator_B_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "power_generator_B_Planted" );
 	},
-	
+
 	power_generator_C_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "power_generator_C_Planted" );
 	},
-	
+
 	power_generator_C_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Map.GenCDestroyed = true;
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rGeneratorC.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_generatorc.*" );
@@ -86,25 +62,21 @@ global Map =
 
 	tunnel_entrance_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_tunnel_entrance.*" );
 		Util.MapDebugPrint( "tunnel_entrance_Planted" );
 	},
-	
+
 	tunnel_entrance_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Map.DontDispenseAmmo = false;
-		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlag.*" );
-		
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"CHECKPOINT.*",
+			"DEFEND_rFlag.*",
+			"AIRSTRIKE_rFlag.*",
+			"ARTILLERY_S_rFlag.*",
+			"CALLARTILLERY_rFlag.*",
+		});
+
 		if (!Map.GenADestroyed)
 		{
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rGeneratorA.*" );
@@ -123,29 +95,25 @@ global Map =
 				bot.ChangeSpawnPoint( 0 );
 			}
 		}
-			
+
 		Util.EnableGoal( "ROUTE_tunnel_entrance" );
-		
-		SetAvailableMapGoals( TEAM.ALLIES, false, "PLANT_tunnel_entrance" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag.*" );
-		
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"PLANT_tunnel_entrance",
+			"ARTILLERY_S_bFlag.*",
+		});
+
 		Util.MapDebugPrint( "tunnel_entrance_Destroyed" );
 	},
 
 	front_fort_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.SetMaxUsersInProgress( 5, "CHECKPOINT.*" );
 		Util.MapDebugPrint( "front_fort_Axis_Captured" );
 	},
 
 	front_fort_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
 		Util.MapDebugPrint( "front_fort_Allies_Captured" );
 	},
@@ -154,9 +122,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-		
 	Util.AddUseWp( "PLANT_tunnel_entrance", "tunnelplant" );
 	Util.AddUseWp( "PLANT_power_generator_A", "generator_a" );
 	Util.AddUseWp( "PLANT_power_generator_B", "generator_b" );
@@ -183,22 +148,26 @@ global OnMapLoad = function()
 	SetGoalPriority( "ARTILLERY.*", 0.99 );
 	SetGoalPriority( "AIRSTRIKE.*", 0.95 );
 	SetGoalPriority( "PLANT_tunnel_entrance", 0.93 );
-	
+
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 40} );
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "MOUNT_.*", {mincamptime = 60, maxcamptime = 90} );
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_generator.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"CHECKPOINT.*",
+		"DEFEND_rFlag.*",
+		"AIRSTRIKE_rFlag.*",
+		"ARTILLERY_S_rFlag.*",
+		"CALLARTILLERY_rFlag.*",
+	});
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"CHECKPOINT.*",
+		"PLANT_.*",
+		"ATTACK_generator.*",
+		"ARTILLERY_S_bFlag.*",
+	});
 
 	InitializeRoutes();
 	yield();yield();
@@ -277,7 +246,7 @@ global InitializeRoutes = function()
 			{
 				ROUTE_northsteps =
 				{
-					ROUTE_northentrance = 
+					ROUTE_northentrance =
 					{
 						ROUTE_genc_west = {},
 						ROUTE_genc_east = {},
@@ -294,7 +263,7 @@ global InitializeRoutes = function()
 				ROUTE_tunnel_entrance =
 				{
 					Weight = 2,
-					ROUTE_tunnel_mid = 
+					ROUTE_tunnel_mid =
 					{
 						ROUTE_northwall = {},
 						ROUTE_genc_south = {},
@@ -304,7 +273,7 @@ global InitializeRoutes = function()
 		},
 		CHECKPOINT_front_fort =
 		{
-			ROUTE_bspawn = 
+			ROUTE_bspawn =
 			{
 				ROUTE_upperridge = {},
 				ROUTE_northtunnel = {},
@@ -312,13 +281,13 @@ global InitializeRoutes = function()
 			},
 		},
 	};
-	
+
 	MapRoutes.PLANT_power_generator_C.ROUTE_flagspawn.ROUTE_southsteps = MapRoutes.PLANT_power_generator_C.ROUTE_flagspawn.ROUTE_northsteps;
 	MapRoutes.PLANT_power_generator_A.ROUTE_bspawn.ROUTE_northsteps = MapRoutes.PLANT_power_generator_A.ROUTE_flagspawn.ROUTE_northsteps;
 	MapRoutes.PLANT_power_generator_A.ROUTE_bspawn.ROUTE_southentrance = MapRoutes.PLANT_power_generator_A.ROUTE_flagspawn.ROUTE_southentrance;
 	MapRoutes.PLANT_power_generator_B.ROUTE_bspawn.ROUTE_northsteps = MapRoutes.PLANT_power_generator_B.ROUTE_flagspawn.ROUTE_northsteps;
 	MapRoutes.PLANT_power_generator_B.ROUTE_bspawn.ROUTE_southentrance = MapRoutes.PLANT_power_generator_B.ROUTE_flagspawn.ROUTE_southentrance;
-	
+
 	MapRoutes.ATTACK_generatora_1 = MapRoutes.PLANT_power_generator_A;
 	MapRoutes.ATTACK_generatora_2 = MapRoutes.PLANT_power_generator_A;
 	MapRoutes.ATTACK_generatora_3 = MapRoutes.PLANT_power_generator_A;
@@ -331,6 +300,6 @@ global InitializeRoutes = function()
 	MapRoutes.ATTACK_generatorc_2 = MapRoutes.PLANT_power_generator_C;
 	MapRoutes.ATTACK_generatorc_3 = MapRoutes.PLANT_power_generator_C;
 	MapRoutes.ATTACK_generatorc_4 = MapRoutes.PLANT_power_generator_C;
-	
+
 	Util.Routes(MapRoutes);
 };

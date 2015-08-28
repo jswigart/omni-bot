@@ -4,7 +4,7 @@ global Map =
 
 	DontDispenseAmmo = true,
 
-	ElevatorStatus = "Bottom", 
+	ElevatorStatus = "Bottom",
 
 	Switches =
 	{
@@ -23,7 +23,7 @@ global Map =
 				return false;
 			},
 		},
-		
+
 		elebottom =
 		{
 			Enabled = false,
@@ -54,44 +54,31 @@ global Map =
 
 	Axis_data_center_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "Axis_data_center_Destroyed" );
 	},
 
 	Axis_radar_room_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_data.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_transmitter.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"PLANT_Axis_data.*",
+			"PLANT_Axis_transmitter.*",
+		});
 
 		print( "Axis_radar_room_Destroyed" );
 	},
 
 	Axis_transmitter_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "Axis_transmitter_Destroyed" );
 	},
 
 	dock_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "dock_Destroyed" );
 	},
 
 	outer_defense_controls_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Wp.SetWaypointFlag( "ladderhack", "closed", false );
 
 		print( "outer_defense_controls_Destroyed" );
@@ -99,25 +86,16 @@ global Map =
 
 	beach_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "beach_flag_Axis_Captured" );
 	},
 
 	beach_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		print( "beach_flag_Allies_Captured" );
 	},
 
 	elevator_trigger = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-		
 		vel = ToVector(trigger.Action);
 		if ( vel.z > 0 )
 		{
@@ -131,7 +109,7 @@ global Map =
 			Map.ElevatorStatus = "Top";
 			Wp.SetWaypointFlag( "laddertoggle1", "closed", false );
 			Wp.SetWaypointFlag( "laddertoggle2", "closed", true );
-			
+
 			Map.Switches.eletop.Enabled = true;
 
 			print("elevator up");
@@ -140,7 +118,7 @@ global Map =
 		else if ( vel.z < 0 )
 		{
 			//sleep(10.5);
-			Map.ElevatorStatus = "Bottom"; 
+			Map.ElevatorStatus = "Bottom";
 			Wp.SetWaypointFlag( "laddertoggle1", "closed", true );
 			Wp.SetWaypointFlag( "laddertoggle2", "closed", false );
 			Wp.SetWaypointFlag( "bottom1", "closed", true );
@@ -148,7 +126,7 @@ global Map =
 			Wp.SetWaypointFlag( "bottom3", "closed", true );
 			Wp.SetWaypointFlag( "bottom4", "closed", true );
 			Wp.SetWaypointFlag( "bottom5", "closed", true );
-			
+
 			Map.Switches.eletop.Enabled = false;
 
 			print("elevator down");
@@ -158,9 +136,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-		
 	Util.AddUseWp( "PLANT_outer_defense_controls", "controls1" );
 	Util.AddUseWp( "PLANT_Axis_transmitter", "transmit1" );
 	Util.AddUseWp( "PLANT_Axis_radar_room", "radar1" );
@@ -181,7 +156,7 @@ global OnMapLoad = function()
 	//disable all goals at start
 	RTCWUtil.DisableGoal(".*", true); //all but routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	
+
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
 
@@ -195,17 +170,23 @@ global OnMapLoad = function()
 	//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rInitial.*" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRadar.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rTransmit.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlag.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rTransmit.*",
+		"AIRSTRIKE_rFlag.*",
+		"ARTILLERY_S_rFlag.*",
+		"CALLARTILLERY_rFlag.*",
+	});
 	Map.Airstrike.flagas.Enabled = true;
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_outer.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis_radar.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT_outer.*",
+		"PLANT_Axis_radar.*",
+	});
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTransmit.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ARTILLERY_S_bSpawnkill.*",
+		"ATTACK_bTransmit.*",
+	});
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
@@ -217,23 +198,21 @@ global OnMapLoad = function()
 	Wp.SetWaypointFlag( "bottom3", "closed", true );
 	Wp.SetWaypointFlag( "bottom4", "closed", true );
 	Wp.SetWaypointFlag( "bottom5", "closed", true );
-	
+
 	Util.UpdateSwitchData();
-	
+
 	yield();yield();
 	RTCWUtil.KillEntities({588,589,594,593,592,625,301,300});
 
 	print( "OnMapLoad" );
 };
 
-// Uncomment for shootable breakables
 
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 100.0;
 	bot.MaxViewDistance = 2300;
-	RTCWUtil.NoSnipe( bot ); 
+	RTCWUtil.NoSnipe( bot );
 	RTCWUtil.SelectSoldierWeapons( 0, bot, WEAPON.PANZERFAUST, WEAPON.VENOM );
 	bot.ChangeSpawnPoint( 0 );
 };
-

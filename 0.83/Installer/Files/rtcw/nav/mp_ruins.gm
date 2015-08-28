@@ -1,26 +1,19 @@
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
-	ShowMovers = false,
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = true,
 
 	church_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "church_flag_Axis_Captured" );
 	},
 
 	church_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "church_flag_Allies_Captured" );
 	},
-	
+
 	SpawnTrigger =
 	{
 		Name = "SpawnTrigger",
@@ -47,32 +40,32 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-		
 	AxisSpawn = OnTriggerRegion( AABB( 972.000,-400.000,257.000,1424.000,528.000,450.000 ), Map.SpawnTrigger );
 	AlliesSpawn = OnTriggerRegion( AABB( -1296.000,-784.000,257.000,-847.000,144.000,458.000 ), Map.SpawnTrigger );
 
 	// Register callback functions
 	OnTrigger( "Axis control the ruins!", Map.church_flag_Axis_Captured );
 	OnTrigger( "Allies control the ruins!", Map.church_flag_Allies_Captured );
-	
+
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} );
-	
+
 	Util.DisableGoal( ".*", true ); // all but routes
-	
+
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
-	Util.SetMaxUsersInProgress( 1, "CALLARTILLERY.*" );
-	
+
 	Util.EnableGoal( "ATTACK_center" );
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rRuins.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_r.*" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bRuins.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_b.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_barty.*" );
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"AIRSTRIKE_rRuins.*",
+		"ARTILLERY_S_r.*",
+	});
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"AIRSTRIKE_bRuins.*",
+		"ARTILLERY_S_b.*",
+		"CALLARTILLERY_barty.*",
+	});
 
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };

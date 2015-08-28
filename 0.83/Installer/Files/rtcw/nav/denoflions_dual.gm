@@ -98,55 +98,34 @@ global Map =
 
 	Allied_munitions_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Allied_munitions_Destroyed" );
 	},
 
 	Allied_munitions_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Allied_munitions_Planted" );
 	},
 
 	Allied_munitions_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Allied_munitions_Defused" );
 	},
 
 	radar_equip_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "radar_equip_Destroyed" );
 	},
 	radar_equip_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "radar_equip_Planted" );
 	},
 	radar_equip_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "radar_equip_Defused" );
 	},
 
 	sewer_bars_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_munitions" );
 		Util.EnableGoal("ROUTE_CentralSewer");
 
@@ -156,9 +135,6 @@ global Map =
 
 	sewer_bars_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_sewer_bars_.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_sewer_bars_.*" );
 
@@ -167,17 +143,11 @@ global Map =
 
 	sewer_bars_1_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "sewer_bars_1_Destroyed" );
 	},
 
 	building_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Map.FlagStatus = TEAM.AXIS;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
@@ -185,24 +155,36 @@ global Map =
 		//SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rCourtyard.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_rMG.*" );
 		//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rMGCourtyard.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_r_lt_barn.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBarn.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_r_lt_barn.*",
+			"DEFEND_rBarn.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rRadar.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rBarn.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rRadar.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rRadar.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_rRadar.*",
+			"ARTILLERY_S_rRadar.*",
+		});
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bRadarAS_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_bMG.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"AIRSTRIKE_bRadarAS_.*",
+			"MOUNTMG42_bMG.*",
+		});
 		//SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bMGCourtyard.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bMGAmmo.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bPnzFlagSpawnkill.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"MOUNTMG42_bMGAmmo.*",
+			"PANZER_bPnzFlagSpawnkill.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bCourtyard.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bCourtyard.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bRadar.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_b_lt_radar.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bRadar.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"SNIPE_bCourtyard.*",
+			"DEFEND_bCourtyard.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"DEFEND_bRadar.*",
+			"DEFEND_b_lt_radar.*",
+			"ARTILLERY_S_bRadar.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bCourtyard.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "CALLARTILLERY_bRadar.*" );
 
@@ -211,20 +193,21 @@ global Map =
 
 	building_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Map.FlagStatus = TEAM.ALLIES;
 
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rAmmoAS_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rCourtyard.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rBarn.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"AIRSTRIKE_rAmmoAS_.*",
+			"SNIPE_rCourtyard.*",
+			"SNIPE_rBarn.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rRadar.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42_rMG.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rMGRadar_2" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_r_lt_barn.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rBarn.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_r_lt_barn.*",
+			"DEFEND_rBarn.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRadar.*" );
 		if ( Map.FriendlyFire < 1 )
 		{
@@ -233,9 +216,11 @@ global Map =
 
 		// cs: this is supposed to be commented out?
 		//SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bRadarAS_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42_bMG.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "PANZER.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"MOUNTMG42_bMG.*",
+			"SNIPE_.*",
+			"PANZER.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bRadar.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_bCourtyard.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRadar.*" );
@@ -250,9 +235,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-
 	Util.AddUseWp("PLANT_sewer_bars", "sewerbars");
 	Util.AddUseWp("PLANT_Allied_munitions", "ammo1");
 	Util.AddUseWp("PLANT_Allied_munitions", "ammo2");
@@ -299,7 +281,6 @@ global OnMapLoad = function()
 
 	//Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" ); // limited by Attacker1 role now (3 bots)
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 1, "PLANT_sewer_bars" );
@@ -310,15 +291,19 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_dual_radar_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_sewer_bars" ); // clear the tunnel first
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBarn.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rBarn.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_att_rBarn.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rBarn.*",
+		"ATTACK_rBarn.*",
+		"CAMP_att_rBarn.*",
+	});
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_dual_ammo_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_radar_equip" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_bRadar.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRadar.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_att_bRadar.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"CAMP_dual_ammo_.*",
+		"PLANT_radar_equip",
+		"DEFEND_bRadar.*",
+		"ATTACK_bRadar.*",
+		"CAMP_att_bRadar.*",
+	});
 	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_bMGAmmo_1" ); // This is very helpful in defending the barnyard
 
 

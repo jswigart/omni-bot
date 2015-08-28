@@ -1,7 +1,6 @@
 global Map =
 {
 	Debug = 0,
-	ShowMovers = false,
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = false,
 	FlagStatus = -1,
@@ -11,7 +10,7 @@ global Map =
 	DuctsPlayers = 0,
 	ClubPlayers = 0,
 	WarehousePlayers = 0,
-	
+
 	Airstrike =
 	{
 		rcoal1 =
@@ -71,100 +70,87 @@ global Map =
 			},*/
 		},
 	},
-	
+
 	Allied_Field_Ops_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Allied_Field_Ops_Planted" );
 	},
-	
+
 	Allied_Field_Ops_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Allied_Field_Ops_Defused" );
 	},
-	
+
 	Allied_Field_Ops_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Allied_Field_Ops_Destroyed" );
 	},
-	
+
 	Anti_Aircraft_Gun_Planted = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Anti_Aircraft_Gun_Planted" );
 	},
-	
+
 	Anti_Aircraft_Gun_Defused = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Anti_Aircraft_Gun_Defused" );
 	},
-	
+
 	Anti_Aircraft_Gun_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Anti_Aircraft_Gun_Destroyed" );
 	},
 
 	North_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
-		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied_Field_Ops" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"PLANT_Allied_Field_Ops",
+			"CHECKPOINT.*",
+		});
 
 		Util.MapDebugPrint( "North_Gate_Destroyed" );
 	},
 
 	South_Gate_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Anti_Aircraft_Gun" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"PLANT_Anti_Aircraft_Gun",
+			"CHECKPOINT.*",
+		});
 
 		Util.MapDebugPrint( "South_Gate_Destroyed" );
 	},
 
 	flag_respawn_obj_Axis_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		Map.FlagStatus = TEAM.AXIS;
 		Map.DontDispenseAmmo = true;
-		
+
 		Map.Airstrike.rcoal1.Enabled = false;
-		SetAvailableMapGoals( TEAM.AXIS, false, "MOUNTMG42.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_ruinsas.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_lt_ruins.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"MOUNTMG42.*",
+			"AIRSTRIKE_.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"AIRSTRIKE_ruinsas.*",
+			"DEFEND_lt_ruins.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rcysnipe.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rTrain.*" );
-		
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg1" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg2" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "CHECKPOINT.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bTrain.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bruinsnipe.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_opscamper.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_btrainpanz.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"MOUNTMG42_mg1",
+			"MOUNTMG42_mg2",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"CHECKPOINT.*",
+			"SNIPE_bTrain.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"SNIPE_bruinsnipe.*",
+			"PANZER_opscamper.*",
+			"PANZER_btrainpanz.*",
+		});
 		if ( Map.FriendlyFire < 1 ) {
 			//SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bTrainyard.*" );
 		}
@@ -174,29 +160,32 @@ global Map =
 
 	flag_respawn_obj_Allies_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
 		Map.FlagStatus = TEAM.ALLIES;
 		Map.DontDispenseAmmo = true;
-		
+
 		Map.Airstrike.rcoal1.Enabled = true;
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_coalyardmg" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rspawn1" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rspawn2" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"MOUNTMG42_coalyardmg",
+			"MOUNTMG42_rspawn1",
+			"MOUNTMG42_rspawn2",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rFlag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_lt_ruins.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CHECKPOINT.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_lt_ruins.*",
+			"CHECKPOINT.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rcysnipe.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rTrain.*" );
 		if ( Map.FriendlyFire < 1 ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rAA.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkillDepot.*" );
 		}
-		
-		SetAvailableMapGoals( TEAM.ALLIES, false, "MOUNTMG42.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE.*" );
+
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"MOUNTMG42.*",
+			"AIRSTRIKE.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bTrain.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bruinsnipe.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_opscamper.*" );
@@ -204,17 +193,13 @@ global Map =
 
 		Util.MapDebugPrint( "flag_respawn_obj_Allies_Captured" );
 	},
-	
+
 	LowerRuinsTrigger =
 	{
 		Name = "LowerRuinsTrigger",
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				Map.LowerRuinsPlayers += 1;
 
@@ -225,10 +210,6 @@ global Map =
 		},
 		OnExit = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				Map.LowerRuinsPlayers -= 1;
 
@@ -239,17 +220,13 @@ global Map =
 
 		},
 	},
-	
+
 	ClubTrigger =
 	{
 		Name = "ClubTrigger",
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				Map.ClubPlayers += 1;
 
@@ -260,10 +237,6 @@ global Map =
 		},
 		OnExit = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				Map.ClubPlayers -= 1;
 
@@ -274,17 +247,13 @@ global Map =
 
 		},
 	},
-	
+
 	DuctsTrigger =
 	{
 		Name = "DuctsTrigger",
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
 				Map.DuctsPlayers += 1;
 
@@ -295,10 +264,6 @@ global Map =
 		},
 		OnExit = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
 				Map.DuctsPlayers -= 1;
 
@@ -309,17 +274,13 @@ global Map =
 
 		},
 	},
-	
+
 	WarehouseTrigger =
 	{
 		Name = "WarehouseTrigger",
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				Map.WarehousePlayers += 1;
 
@@ -330,10 +291,6 @@ global Map =
 		},
 		OnExit = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				Map.WarehousePlayers -= 1;
 
@@ -350,10 +307,6 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.AXIS ) {
 				if ( Map.FlagStatus == 2 ) {
 					return;
@@ -369,12 +322,6 @@ global Map =
 				}
 				Map.AxisInRuins = false;
 				SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bRuins.*" );
-			}
-		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
 			}
 		},
 	},
@@ -393,9 +340,6 @@ global OnMapLoad = function()
 	Util.AddUseWp( "PLANT_Anti_Aircraft_Gun", "aaplant2" );
 	Util.AddUseWp( "PLANT_Allied_Field_Ops", "opsplant1" );
 	Util.AddUseWp( "PLANT_Allied_Field_Ops", "opsplant2" );
-	
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
 
 	// Register callback functions
 	OnTrigger( "MISSING_STRING", Map.Allied_Field_Ops_Planted );
@@ -414,50 +358,53 @@ global OnMapLoad = function()
 	Util.DisableGoal( ".*", true ); //all but the routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
-	
+
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "PANZER_opscamper.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "PANZER_btrainpanz.*", {mincamptime = 60, maxcamptime = 90} );
-	
+
 	//run a thread to toggle flag availability every 5 minutes
 	thread(RTCWUtil.ToggleFlag, "CHECKPOINT.*", 300);
-	
+
 	SetGoalPriority( "AIRSTRIKE_.*", 0.93 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "CALLARTILLERY.*", 1.0 );
 	SetGoalPriority( "CAMP_.*", 0.95 );
 	SetGoalPriority( "DEFEND_lt_ruins.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
-	
+
 	RTCWUtil.LimitToClass( "DEFEND_lt_ruins.*", TEAM.AXIS, CLASS.LIEUTENANT );
 	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER );
 	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_North_Gate" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rOps.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aad.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_aaflex.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"PLANT_North_Gate",
+		"ATTACK_rOps.*",
+		"CAMP_aad.*",
+		"CAMP_aaflex.*",
+	});
 	if ( Map.FriendlyFire < 1 ) {
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rOps.*" );
 	}
 	//SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkillrear.*" ); // martin - this does not really every kill anyone like an a/s would
 	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rAA.*" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_South_Gate" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkillrear.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bAA.*" );	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsd.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_opsflex.*" );
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT_South_Gate",
+		"ARTILLERY_S_bSpawnkillrear.*",
+		"ATTACK_bAA.*",
+		"CAMP_opsd.*",
+		"CAMP_opsflex.*",
+	});
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bWarehouse.*" );	// This can also kill people in the club
-	
+
 	Util.SetMaxUsersInProgress( 1, "CAMP.*" );
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
-	
+
 	MapRoutes =
 	{
 		PLANT_Anti_Aircraft_Gun =
@@ -477,7 +424,7 @@ global OnMapLoad = function()
 					Weight = 2,
 					ROUTE_coalcart =
 					{
-						ROUTE_weaponfactory = 
+						ROUTE_weaponfactory =
 						{
 							ROUTE_spawnroof = {},
 							ROUTE_axiscc = {},
@@ -508,7 +455,7 @@ global OnMapLoad = function()
 				{
 					ROUTE_coalcart =
 					{
-						ROUTE_weaponfactory = 
+						ROUTE_weaponfactory =
 						{
 							ROUTE_spawnroof = {},
 							ROUTE_axiscc = {},
@@ -525,7 +472,7 @@ global OnMapLoad = function()
 				{
 					ROUTE_coalcart =
 					{
-						ROUTE_weaponfactory = 
+						ROUTE_weaponfactory =
 						{
 							ROUTE_spawnroof = {},
 							ROUTE_axiscc = {},
@@ -547,7 +494,7 @@ global OnMapLoad = function()
 					{
 						ROUTE_coalcart =
 						{
-							ROUTE_weaponfactory = 
+							ROUTE_weaponfactory =
 							{
 								ROUTE_spawnroof = {Weight=2,},
 								ROUTE_axiscc = {},
@@ -564,14 +511,14 @@ global OnMapLoad = function()
 							ROUTE_westramp = {Weight = 2,},
 							ROUTE_cargomid = {},
 						},
-						ROUTE_westramp = {},	
+						ROUTE_westramp = {},
 					},
 				},
 				ROUTE_warehousenorth =
 				{
 					ROUTE_alliedtunnel =
 					{
-						ROUTE_axistunnel = 
+						ROUTE_axistunnel =
 						{
 							ROUTE_westramp = {},
 							ROUTE_elevator = {Weight = 3},
@@ -583,7 +530,7 @@ global OnMapLoad = function()
 		},
 		PLANT_Allied_Field_Ops =
 		{
-			ROUTE_axisrearspawn = 
+			ROUTE_axisrearspawn =
 			{
 				ROUTE_axistunnel =
 				{
@@ -607,12 +554,12 @@ global OnMapLoad = function()
 						},
 						ROUTE_westalliedtrain =
 						{
-							ROUTE_office = 
+							ROUTE_office =
 							{
 								ROUTE_warehousesouth = {},
 							},
 						},
-						ROUTE_ruins = 
+						ROUTE_ruins =
 						{
 							ROUTE_trainyardmg = {},
 						},
@@ -645,12 +592,12 @@ global OnMapLoad = function()
 					},
 					ROUTE_westalliedtrain =
 					{
-						ROUTE_office = 
+						ROUTE_office =
 						{
 							ROUTE_warehousesouth = {},
 						},
 					},
-					ROUTE_ruins = 
+					ROUTE_ruins =
 					{
 						ROUTE_trainyardmg = {},
 					},
@@ -664,7 +611,7 @@ global OnMapLoad = function()
 			{
 				ROUTE_westalliedtrain =
 				{
-					ROUTE_office = 
+					ROUTE_office =
 					{
 						ROUTE_warehousesouth = {},
 					},
@@ -682,7 +629,7 @@ global OnMapLoad = function()
 		},
 	};
 	MapRoutes.PLANT_Anti_Aircraft_Gun.ROUTE_bspawnrear = MapRoutes.PLANT_Anti_Aircraft_Gun.ROUTE_bspawn;
-	
+
 	/*MapRoutes.DEFEND_rOps2 = MapRoutes.PLANT_Allied_Field_Ops;
 	MapRoutes.DEFEND_rOps3 = MapRoutes.PLANT_Allied_Field_Ops;
 	MapRoutes.DEFEND_rOps4 = MapRoutes.PLANT_Allied_Field_Ops;
@@ -700,7 +647,7 @@ global OnMapLoad = function()
 	MapRoutes.ATTACK_bAA4 = MapRoutes.PLANT_Anti_Aircraft_Gun;
 	MapRoutes.ATTACK_bAA5 = MapRoutes.PLANT_Anti_Aircraft_Gun;
 	MapRoutes.ATTACK_bAA6 = MapRoutes.PLANT_Anti_Aircraft_Gun;
-	
+
 	Util.Routes(MapRoutes);
 
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
@@ -708,11 +655,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	// Uncomment for shootable breakables
-	//~bot.TargetBreakableDist = 90.0;
-	// Only set MaxViewDistance on maps with limited sight (e.g. fog)
-	//~bot.MaxViewDistance = 2400;
-	
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
 	RTCWUtil.ChangeSpawnNoDefenders( TEAM.AXIS, 1 );

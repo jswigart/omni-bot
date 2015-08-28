@@ -71,10 +71,6 @@ global Map =
 
 	gate_lever = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		vel = ToVector( trigger.Action );
 
 		Map.Switches.gate1.Enabled = false;
@@ -83,10 +79,6 @@ global Map =
 
 	gate_trigger = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		vel = ToVector( trigger.Action );
 
 		if ( vel.y < 0 ) {
@@ -108,8 +100,10 @@ global Map =
 	{
 		print( "Allies - NWC" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg42_1" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_NWC.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"MOUNTMG42_mg42_1",
+			"DEFEND_dm_NWC.*",
+		});
 		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp NWC" );
 	},
 	allies_loffice = function()
@@ -217,10 +211,6 @@ global Map =
 		count = -1;
 		while ( 1 )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			count += 1;
 			if ( count % 120 == 0 ) {
 				attackPoint = RandInt( 0,8 );
@@ -271,7 +261,6 @@ global OnMapLoad = function()
 
 	Util.DisableGoal( ".*" );
 
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 

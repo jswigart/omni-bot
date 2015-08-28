@@ -1,10 +1,9 @@
 global Map =
 {
 	Debug = 0,
-	ShowMovers = false,
 	DispenseAmmoTime = 10,
 	DontDispenseAmmo = true,
-	
+
 	Roles =
 	{
 		AXIS =
@@ -30,49 +29,31 @@ global Map =
 
 	transmitter_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "transmitter_Destroyed" );
 	},
 
 	transmitter_1_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "transmitter_1_Destroyed" );
 	},
 
 	War_Documents_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "War_Documents_Taken" );
 	},
 
 	War_Documents_1_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "War_Documents_1_Taken" );
 	},
 
 	CAPPOINT_409_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "CAPPOINT_409_Captured" );
 	},
 
 	CAPPOINT_410_Captured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "CAPPOINT_410_Captured" );
 	},
 
@@ -80,9 +61,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-
 	// Register callback functions
 	OnTrigger( "MISSING_STRING", Map.transmitter_Destroyed );
 	OnTrigger( "MISSING_STRING", Map.transmitter_1_Destroyed );
@@ -97,31 +75,35 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 45, maxcamptime = 60} );
 	SetMapGoalProperties( "MOUNT.*", {mincamptime = 60, maxcamptime = 70} );
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	
+
 	Util.DisableGoal( ".*", true ); // all but routes
-	
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_War_Documents_1" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_rtransmit" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rdocs.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rmg.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rSpawnkill.*" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_War_Documents" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_btransmit" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bmg.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_bSpawnkill.*" );
-	
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"ARTILLERY_S_rSpawnkill.*",
+		"FLAG_War_Documents_1",
+		"CAPPOINT_rtransmit",
+		"CAMP_rdocs.*",
+		"MOUNTMG42_rmg.*",
+		"CALLARTILLERY_rSpawnkill.*",
+	});
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ARTILLERY_S_bSpawnkill.*",
+		"FLAG_War_Documents",
+		"CAPPOINT_btransmit",
+		"MOUNTMG42_bmg.*",
+		"CALLARTILLERY_bSpawnkill.*",
+	});
+
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT, CLASS.ENGINEER );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
-	
+
 	SetGoalPriority( "MOUNTMG42.*", 0.87 );
 	SetGoalPriority( "CALLARTILLERY.*", 0.86 );
 	SetGoalPriority( "CAMP_.*", 0.95 );
-	
+
 	RTCWUtil.KillEntities( {77,78,79,80,81,82,83,92,93,126,127,132,133,134,135,136,197,198,199,200} );
 
 	MapRoutes =
@@ -133,7 +115,7 @@ global OnMapLoad = function()
 			{
 				ROUTE_bsteps =
 				{
-					ROUTE_bramp = 
+					ROUTE_bramp =
 					{
 						ROUTE_bgate =
 						{
@@ -141,7 +123,7 @@ global OnMapLoad = function()
 							ROUTE_rwater =
 							{
 								ROUTE_rsteps = {Weight=2,},
-								ROUTE_rramp = 
+								ROUTE_rramp =
 								{
 									ROUTE_rspiral={},
 								},
@@ -159,7 +141,7 @@ global OnMapLoad = function()
 							ROUTE_rbridge =
 							{
 								ROUTE_rsteps = {},
-								ROUTE_rramp = 
+								ROUTE_rramp =
 								{
 									ROUTE_rspiral={},
 								},
@@ -175,7 +157,7 @@ global OnMapLoad = function()
 						ROUTE_rbridge =
 						{
 							ROUTE_rsteps = {},
-							ROUTE_rramp = 
+							ROUTE_rramp =
 							{
 								ROUTE_rspiral={},
 							},
@@ -194,7 +176,7 @@ global OnMapLoad = function()
 						ROUTE_rwater =
 						{
 							ROUTE_rsteps = {Weight=2,},
-							ROUTE_rramp = 
+							ROUTE_rramp =
 							{
 								ROUTE_rspiral={},
 							},
@@ -212,7 +194,7 @@ global OnMapLoad = function()
 						ROUTE_rbridge =
 						{
 							ROUTE_rsteps = {},
-							ROUTE_rramp = 
+							ROUTE_rramp =
 							{
 								ROUTE_rspiral={},
 							},
@@ -232,7 +214,7 @@ global OnMapLoad = function()
 			{
 				ROUTE_rsteps =
 				{
-					ROUTE_rramp = 
+					ROUTE_rramp =
 					{
 						ROUTE_rgate =
 						{
@@ -240,7 +222,7 @@ global OnMapLoad = function()
 							ROUTE_bwater =
 							{
 								ROUTE_bsteps = {Weight=2,},
-								ROUTE_bramp = 
+								ROUTE_bramp =
 								{
 									ROUTE_bspiral={},
 								},
@@ -258,7 +240,7 @@ global OnMapLoad = function()
 							ROUTE_bbridge =
 							{
 								ROUTE_bsteps = {},
-								ROUTE_bramp = 
+								ROUTE_bramp =
 								{
 									ROUTE_bspiral={},
 								},
@@ -274,7 +256,7 @@ global OnMapLoad = function()
 						ROUTE_bbridge =
 						{
 							ROUTE_bsteps = {},
-							ROUTE_bramp = 
+							ROUTE_bramp =
 							{
 								ROUTE_bspiral={},
 							},
@@ -293,7 +275,7 @@ global OnMapLoad = function()
 						ROUTE_bwater =
 						{
 							ROUTE_bsteps = {Weight=2,},
-							ROUTE_bramp = 
+							ROUTE_bramp =
 							{
 								ROUTE_bspiral={},
 							},
@@ -311,7 +293,7 @@ global OnMapLoad = function()
 						ROUTE_bbridge =
 						{
 							ROUTE_bsteps = {},
-							ROUTE_bramp = 
+							ROUTE_bramp =
 							{
 								ROUTE_bspiral={},
 							},
@@ -325,16 +307,16 @@ global OnMapLoad = function()
 			},
 		},
 	};
-	
+
 	MapRoutes.FLAG_War_Documents_1.ROUTE_rspawn.ROUTE_rspiral = MapRoutes.FLAG_War_Documents_1.ROUTE_rspawn.ROUTE_rsteps;
 	MapRoutes.FLAG_War_Documents_1.ROUTE_rspawn2 = MapRoutes.FLAG_War_Documents_1.ROUTE_rspawn.ROUTE_rupper.ROUTE_rgate;
 	MapRoutes.CALLARTILLERY_rSpawnkill = MapRoutes.FLAG_War_Documents_1;
 	MapRoutes.FLAG_War_Documents.ROUTE_bspawn.ROUTE_bspiral = MapRoutes.FLAG_War_Documents.ROUTE_bspawn.ROUTE_bsteps;
 	MapRoutes.FLAG_War_Documents.ROUTE_bspawn2 = MapRoutes.FLAG_War_Documents.ROUTE_bspawn.ROUTE_bupper.ROUTE_bgate;
 	MapRoutes.CALLARTILLERY_bSpawnkill = MapRoutes.FLAG_War_Documents;
-	
+
 	Util.Routes(MapRoutes);
-	
+
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
@@ -343,5 +325,5 @@ global OnBotJoin = function( bot )
 	//default spawn
 	bot.ChangeSpawnPoint( 0 );
 	RTCWUtil.NoSnipe( bot );
-	
+
 };

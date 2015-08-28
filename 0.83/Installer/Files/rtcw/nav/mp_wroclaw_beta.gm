@@ -23,10 +23,6 @@ global Map =
 				b.ExecCommand( "kill" );
 			}
 		},
-		OnExit = function( ent )
-		{
-
-		},
 	},
 
 	Switches =
@@ -49,7 +45,7 @@ global Map =
 			LimitTeam = ( 1 << TEAM.AXIS ),
 			LimitClass = Util.AllClasses,
 		},
-	},	
+	},
 
 	Navigation =
 	{
@@ -97,43 +93,25 @@ global Map =
 
 	allied_communication_ops_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	axis_communication_ops_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	central_access_door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.EnableGoal( "ROUTE_axcenter" );
 		Util.EnableGoal( "ROUTE_alcenter2" );
 	},
 
 	central_access_door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.SetMaxUsersInProgress( 1, "DEFUSE_central.*" );
 	},
 
 	lower_access_door_1_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.DisableGoal( "ROUTE_rearladder" );
 		Util.EnableGoal( "ROUTE_lower1" );
 
@@ -142,19 +120,11 @@ global Map =
 
 	lower_access_door_1_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.SetMaxUsersInProgress( 1, "DEFUSE_lower.*" );
 	},
 
 	lower_access_door_2_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.DisableGoal( "ROUTE_rearladder" );
 		Util.EnableGoal( "ROUTE_lower2" );
 
@@ -163,37 +133,21 @@ global Map =
 
 	lower_access_door_2_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.SetMaxUsersInProgress( 1, "DEFUSE_lower.*" );
 	},
 
 	rear_access_door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.EnableGoal( "ROUTE_alrear3" );
 	},
 
 	rear_access_door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.SetMaxUsersInProgress( 1, "DEFUSE_rear.*" );
 	},
 
 	spawn_gate = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		vel = ToVector( trigger.Action );
 		// Gate Opening
 		if ( vel.z > 0 ) {
@@ -213,10 +167,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-	
 	Util.SetGoalPosition( 121, -1618, 184, Map.Plant_allied_communication_ops ) ;
 
 	OnTrigger( "Axis have destroyed the allied communication ops!", Map.allied_communication_ops_Destroyed );
@@ -253,24 +203,28 @@ global OnMapLoad = function()
 	SetGoalPriority( "SWITCH_lever1", 0.4 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_central_access_door" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_rear_access_door" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_axis_communication_ops" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_alatt.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_allies_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_alPanz.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_ald.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT_central_access_door",
+		"PLANT_rear_access_door",
+		"PLANT_axis_communication_ops",
+		"ATTACK_alatt.*",
+		"SNIPE_allies_.*",
+		"PANZER_alPanz.*",
+		"CAMP_ald.*",
+	});
 	SetAvailableMapGoals( TEAM.ALLIES, false, "SWITCH_lever1" ); // unused.
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_lower_access_door_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_allied_communication_ops" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axatt.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_axis_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_axPanz.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_axmg" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_axd.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSK.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"PLANT_lower_access_door_.*",
+		"PLANT_allied_communication_ops",
+		"ATTACK_axatt.*",
+		"SNIPE_axis_.*",
+		"PANZER_axPanz.*",
+		"REPAIRMG42_axmg",
+		"AIRSTRIKE_red_as.*",
+		"CAMP_axd.*",
+		"ARTILLERY_S_rSK.*",
+	});
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 	Util.SetMaxUsersInProgress( 1, "REPAIRMG42.*" );

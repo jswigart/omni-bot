@@ -25,10 +25,6 @@ global Map =
 
 	East_Vent_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFUSE_East_Vent_1" );
 		Util.SetMaxUsersInProgress( 1, Map.Defuse_East_Vent_1 );
 
@@ -37,10 +33,6 @@ global Map =
 
 	North_Vent_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_.*" );
 
 		Util.MapDebugPrint( "North_Vent_Planted" );
@@ -48,10 +40,6 @@ global Map =
 
 	South_Vent_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFUSE_.*" );
 
 		Util.MapDebugPrint( "South_Vent_Planted" );
@@ -59,37 +47,21 @@ global Map =
 
 	East_Vent_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "East_Vent_Defused" );
 	},
 
 	North_Vent_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "North_Vent_Defused" );
 	},
 
 	South_Vent_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.MapDebugPrint( "South_Vent_Defused" );
 	},
 
 	East_Vent_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.EnableGoal( "ROUTE_eastvent" );
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_South_Vent" );
@@ -99,10 +71,6 @@ global Map =
 
 	North_Vent_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_East_Vent" );
 
 		Util.MapDebugPrint( "North_Vent_Destroyed" );
@@ -110,10 +78,6 @@ global Map =
 
 	South_Vent_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.EnableGoal( "ROUTE_southvent" );
 
 		Util.MapDebugPrint( "South_Vent_Destroyed" );
@@ -121,16 +85,14 @@ global Map =
 
 	hose_head_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DocStatus = true;
 
 		Util.ChangeSpawn( TEAM.AXIS, 2, 3 );
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axhall.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axroom.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"ATTACK_axhall.*",
+			"ATTACK_axroom.*",
+		});
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axpcroom.*" );
 
@@ -145,10 +107,6 @@ global Map =
 
 	hose_head_Returned = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DocStatus = false;
 
 		Util.ChangeSpawn( TEAM.AXIS, 1 );
@@ -156,26 +114,28 @@ global Map =
 		//enable the wheel again
 		SetAvailableMapGoals( TEAM.AXIS, tree, "SWITCH_wheel" );
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "FLAG_hose.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ATTACK_axpcroom.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"FLAG_hose.*",
+			"ATTACK_axpcroom.*",
+		});
 
-		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axhall.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axroom.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"ATTACK_axhall.*",
+			"ATTACK_axroom.*",
+		});
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_alpcroom.*" );
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_alroom.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"CHECKPOINT.*",
+			"DEFEND_alroom.*",
+		});
 
 		Util.MapDebugPrint( "hose_head_Returned" );
 	},
 
 	toy_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( !Map.DocStatus ) {
 			SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
 		}
@@ -187,10 +147,6 @@ global Map =
 
 	toy_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Util.SetGoalPosition( 3436, -118, -429, "PLANT_East_Vent" );
 
 		Util.MapDebugPrint( "toy_flag_Allies_Captured" );
@@ -223,10 +179,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	OnTrigger( "Planted at the East Vent.", Map.East_Vent_Planted );
 	OnTrigger( "Planted at the North Vent.", Map.North_Vent_Planted );
 	OnTrigger( "Planted at the South Vent.", Map.South_Vent_Planted );
@@ -255,15 +207,19 @@ global OnMapLoad = function()
 
 	SetGoalPriority( "SWITCH.*", 0.7 );
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_North_Vent" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axhall.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_axroom.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_wheel" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "SWITCH_nerf" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"PLANT_North_Vent",
+		"CHECKPOINT.*",
+		"ATTACK_axhall.*",
+		"ATTACK_axroom.*",
+		"SWITCH_wheel",
+		"SWITCH_nerf",
+	});
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_alroom.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_alsnipe.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"DEFEND_alroom.*",
+		"SNIPE_alsnipe.*",
+	});
 
 	Util.SetMaxUsersInProgress( 2, Map.Flag_hose_head );
 
@@ -341,8 +297,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	//~ bot.TargetBreakableDist = 80.0;
-
 	class = bot.GetClass();
 
 	if ( bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER ) {

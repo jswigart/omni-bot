@@ -14,19 +14,11 @@ global Map =
 
 	Axis_Submarine_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.SubDyno = 0;
 	},
 
 	Submarine_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSub.*" );
 		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_flag_respawn );
@@ -36,19 +28,11 @@ global Map =
 
 	Submarine_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.SubDyno -= 1;
 	},
 
 	Filtration_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FiltStatus = true;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
@@ -64,10 +48,6 @@ global Map =
 
 	Filtration_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		//don't bother defusing this
 		Util.DisableGoal( "DEFUSE_Filtration_.*" );
 
@@ -81,10 +61,6 @@ global Map =
 
 	Storage_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.StorageStatus = true;
 
 		if ( Map.FocusPrimary || Map.FiltStatus ) {
@@ -96,10 +72,6 @@ global Map =
 
 	Storage_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		//don't bother defusing this
 		Util.DisableGoal( "DEFUSE_Storage_.*" );
 
@@ -110,17 +82,10 @@ global Map =
 
 	flag_respawn_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
 	},
 
 	flag_respawn_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( !Map.FiltStatus ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint_flag_respawn );
 		}
@@ -128,20 +93,12 @@ global Map =
 
 	two_minute = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		//time is low, so start focusing on main obj
 		Map.FocusPrimary = true;
 	},
 
 	thirty_second = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		if ( Map.SybDyno > 1 ) {
 			return;
 		}
@@ -180,10 +137,6 @@ global OnMapLoad = function()
 	Wp.SetWaypointFlag( "cpspawn12", "closed", true );
 	Wp.SetWaypointFlag( "cpspawn13", "closed", true );
 	Wp.SetWaypointFlag( "cpspawn14", "closed", true );
-
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
 
 	OnTrigger( "the Axis Submarine Destroyed.", Map.Axis_Submarine_Destroyed );
 	OnTrigger( "Planted at the Axis Submarine.", Map.Submarine_Planted );
@@ -224,10 +177,12 @@ global OnMapLoad = function()
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSub.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_flag_respawn );
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Filtration_Door );
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Storage_Door );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ATTACK_bSub.*",
+		Map.Checkpoint_flag_respawn,
+		Map.Plant_Filtration_Door,
+		Map.Plant_Storage_Door,
+	});
 
 	MapRoutes =
 	{

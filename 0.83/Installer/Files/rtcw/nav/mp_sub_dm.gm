@@ -16,8 +16,10 @@ global Map =
 	{
 		print( "Allies - Flag" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg42_1" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_flag.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"MOUNTMG42_mg42_1",
+			"DEFEND_dm_flag.*",
+		});
 		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Flag" );
 	},
 	allies_wh = function()
@@ -39,8 +41,10 @@ global Map =
 	{
 		print( "Axis - Flag" );
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_flag.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"MOUNTMG42_mg42_1",
+			"DEFEND_dm_flag.*",
+		});
 		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Flag" );
 	},
 	axis_wh = function()
@@ -56,10 +60,6 @@ global Map =
 		count = -1;
 		while ( 1 )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			count += 1;
 			if ( count % 120 == 0 ) {
 				attackPoint = RandInt( 0,3 );
@@ -106,7 +106,6 @@ global OnMapLoad = function()
 
 	Util.DisableGoal( ".*" );
 
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 

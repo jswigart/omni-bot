@@ -150,34 +150,31 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-		},
 	},
 
 	North_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.NorthStatus = true;
 
 		if ( !Map.SouthStatus ) {
-			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
-			SetAvailableMapGoals( TEAM.AXIS, false, "PANZER.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, {
+				"DEFEND.*",
+				"PANZER.*",
+			});
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK.*" );
 
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSouth.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSouth.*" );
-			
+
 			Wp.SetWaypointFlag( "r2block1", "allies", false );
 			Wp.SetWaypointFlag( "r2block2", "allies", false );
 		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bNorth.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_spot_bridge" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_target_r2_arch" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"CALLARTILLERY_spot_bridge",
+			"ARTILLERY_S_target_r2_arch",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rTunnel.*" );      // gate side of tunnel
 
 		SetGoalPriority( "CALL.*", 0.5, TEAM_AXIS );    // Make sure axis dont get too excited to call arty on their own position
@@ -189,16 +186,14 @@ global Map =
 
 	South_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.SouthStatus = true;
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_North );
 
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bSouth.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bSouthArty.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK_bSouth.*",
+			"ARTILLERY_S_bSouthArty.*",
+		});
 
 		//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_2" );
 		//SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_mg42_2" );
@@ -211,10 +206,6 @@ global Map =
 
 	north_planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_.*" );
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rNorth_c.*" );
 
@@ -223,10 +214,6 @@ global Map =
 
 	north_defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.NorthDyno -= 1;
 
 		if ( Map.NorthDyno < 1 ) {
@@ -237,10 +224,6 @@ global Map =
 
 	south_planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.SouthDyno += 1;
 
 		if ( !Map.NorthStatus ) {
@@ -252,19 +235,11 @@ global Map =
 
 	south_defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.SouthDyno -= 1;
 	},
 
 	gate_lever = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		vel = ToVector( trigger.Action );
 
 		Map.Switches.gate1.Enabled = false;
@@ -273,10 +248,6 @@ global Map =
 
 	gate_trigger = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		vel = ToVector( trigger.Action );
 
 		if ( vel.y < 0 ) {
@@ -294,10 +265,6 @@ global Map =
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
@@ -311,12 +278,6 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
-			}
-		},
 	},
 	NET =
 	{
@@ -324,9 +285,6 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
 			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
 				Map.NETAllies += 1;
 			}
@@ -350,9 +308,6 @@ global Map =
 		},
 		OnExit = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
 			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
 				Map.NETAllies -= 1;
 			}
@@ -369,10 +324,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-	
 	Util.AddUseWp( "PLANT_South_Radar_02", "plantsouth" );
 	Util.AddUseWp( "PLANT_North_Radar_01", "plantnorth" );
 
@@ -412,7 +363,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "ATTACK_bSouth.*" );
-	
+
 	//Close off south for bots
 	Wp.SetWaypointFlag( "r2block1", "allies", true );
 	Wp.SetWaypointFlag( "r2block2", "allies", true );
@@ -431,11 +382,13 @@ global OnMapLoad = function()
 	//SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rSouth_p1" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rNorth.*" );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bNorth.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bNorth.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_South );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSouth[245]" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSouthArty.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ATTACK_bNorth.*",
+		"PANZER_bNorth.*",
+		Map.Plant_South,
+		"ATTACK_bSouth[245]",
+		"ARTILLERY_S_bSouthArty.*",
+	});
 
 	// *** Artillery
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
@@ -584,5 +537,3 @@ global OnBotJoin = function( bot )
 	// ignore the window by ladder to tin roof for targeting
 	bot.IgnoreTarget( 125, 9999 );
 };
-
-

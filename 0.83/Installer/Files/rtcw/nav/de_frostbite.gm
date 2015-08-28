@@ -143,10 +143,6 @@ global Map =
 
 	allies_capture = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 2;
 		Map.DontDispenseAmmo = false;
 
@@ -168,16 +164,14 @@ global Map =
 
 	axis_capture = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 1;
 
 		if ( Map.DocStatus == 0 ) {
 			//SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_spot_flag" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_allied_spawn_1" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_allied_spawn_2" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"ARTILLERY_S_allied_spawn_1",
+				"ARTILLERY_S_allied_spawn_2",
+			});
 		}
 
 		Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
@@ -185,10 +179,6 @@ global Map =
 
 	main_door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.MainDoorStatus = 1;
 		Util.EnableGoal( "ROUTE_lowercp" );
 		Wp.SetWaypointFlag( "lowerhack", "closed", false );
@@ -201,10 +191,6 @@ global Map =
 
 	Dyno_Plant_Main = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		//bots shouldnt attempt defuse
 		Util.DisableGoal( "DEFUSE_main.*" );
 
@@ -213,27 +199,21 @@ global Map =
 
 	Dyno_Defuse_Main = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.MainDoorDyno -= 1;
 	},
 
 	wall_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.WallStatus = 1;
 		Util.EnableGoal( "ROUTE_wallroute" );
 		Wp.SetWaypointFlag( "wallhack", "closed", false );
 		DynamicPathsUpdated( TEAM.ALLIES, TEAM.AXIS );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_wallroute" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Cp_Defense.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_Cp_Defense.*",
+			Map.Checkpoint,
+		});
 		Wp.SetWaypointFlag( "WallJump","closed",true );
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
@@ -241,10 +221,6 @@ global Map =
 
 	Dyno_Plant_Wall = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		//bots shouldnt attempt defuse
 		Util.DisableGoal( "DEFUSE_storage.*" );
 
@@ -253,19 +229,11 @@ global Map =
 
 	Dyno_Defuse_Wall = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.WallDyno -= 1;
 	},
 
 	service_door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.ServiceDoorStatus = 1;
 
 		//move on to storage wall
@@ -278,10 +246,6 @@ global Map =
 
 	Dyno_Plant_Service = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		//bots shouldnt attempt defuse if they don't own flag
 		if ( Map.FlagStatus != 1 ) {
 			Util.DisableGoal( "DEFUSE_service.*" );
@@ -292,31 +256,24 @@ global Map =
 
 	Dyno_Defuse_Service = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.ServiceDoorDyno -= 1;
 	},
 
 	Documents_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DocStatus = 1;
 
 		//focus on transmitter
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Deliver_Defense.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Deliver_Support.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_Doc_Attack.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Doc_Defense.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_rCourtyard" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rCourtyard.*" );
-
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_CP_Defense.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_Doc_Defense.*",
+			"PANZER_rCourtyard",
+			"ARTILLERY_S_rCourtyard.*",
+			"DEFEND_CP_Defense.*",
+			Map.Checkpoint,
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, "PANZER_bGarage" );
@@ -336,16 +293,14 @@ global Map =
 
 	Documents_Returned = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DocStatus = 0;
 
 		//back to doc area
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Doc_Attack.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Doc_Defense.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCourtyard" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_Doc_Defense.*",
+			"PANZER_rCourtyard",
+		});
 		//SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rCourtyard.*" );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Deliver_Defense.*" );
@@ -371,13 +326,11 @@ global Map =
 
 	two_minute = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.FLAG_War_Documents );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Destroy_service_door );
-		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Destroy_wall );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			Map.Destroy_service_door,
+			Map.Destroy_wall,
+		});
 
 		Map.FocusPrimary = true;
 	},
@@ -390,8 +343,10 @@ global Map =
 			if ( Map.DocStatus == 0 && !Map.AxisPushedForward && RTCWUtil.IsTeamDead( TEAM.ALLIES ) ) {
 				// guess there should be a spawn time check too ...
 				RTCWUtil.OneBotSayTeam( TEAM.AXIS, "push forward!" );
-				SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Cp_Defense.*" );
-				SetAvailableMapGoals( TEAM.AXIS, true, Map.Checkpoint );
+				SetAvailableMapGoals( TEAM.AXIS, true, {
+					"DEFEND_Cp_Defense.*",
+					Map.Checkpoint,
+				});
 				Map.AxisPushedForward = true;
 				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 				SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_door_as_[23]" );
@@ -406,34 +361,28 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.ALLIES && Map.fallback == false ) {
 				Util.MapDebugPrint( "Falling back!" );
 				Map.fallback = true;
 				Map.AxisPushedForward = false;
 
 				if ( Map.DocStatus == 0 ) {
-					SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Doc_Defense.*" );
-					SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_rCourtyard" );
+					SetAvailableMapGoals( TEAM.AXIS, true, {
+						"DEFEND_Doc_Defense.*",
+						"PANZER_rCourtyard",
+					});
 				}
 
-				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_Cp_Defense.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_CP_Lower.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_allied_spawn_1" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_allied_spawn_2" );
-				SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-				SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint );
+				SetAvailableMapGoals( TEAM.AXIS, false, {
+					"DEFEND_Cp_Defense.*",
+					"DEFEND_CP_Lower.*",
+					"ARTILLERY_S_allied_spawn_1",
+					"ARTILLERY_S_allied_spawn_2",
+					"AIRSTRIKE_.*",
+					Map.Checkpoint,
+				});
 
 
-			}
-		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
 			}
 		},
 	},
@@ -464,10 +413,6 @@ global Map =
 global OnMapLoad = function()
 {
 	Util.AddUseWp( "PLANT_storage_wall", "wallplant" );
-
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
 
 	OnTrigger( "Allies capture the Upper Complex!", Map.allies_capture );
 	OnTrigger( "Axis reclaims the Upper Complex!", Map.axis_capture );
@@ -514,8 +459,10 @@ global OnMapLoad = function()
 	Util.EnableGoal( Map.Checkpoint );
 	Util.EnableGoal( "CAPPOINT_.*" );
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Destroy_main_door );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_CP_attack.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		Map.Destroy_main_door,
+		"ATTACK_CP_attack.*",
+	});
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_CP_defense.*" );
 	SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_bGarage" );

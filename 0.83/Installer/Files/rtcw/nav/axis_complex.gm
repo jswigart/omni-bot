@@ -33,26 +33,30 @@ global Map =
 
 	East_Tower_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.TowerDoorStatus = true;
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_main_defend_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_main_attack_1" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_main_attack_3" );
-		SetAvailableMapGoals( TEAM.AXIS, false, Map.Mount_mg42_3 );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_lowmg42" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK_main_attack_1",
+			"ATTACK_main_attack_3",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			Map.Mount_mg42_3,
+			"CALLARTILLERY_lowmg42",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_bASMain.*" );
 
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_main_defend_1" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_doc_defend_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_doc_panzer_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_3_3 );
-		SetAvailableMapGoals( TEAM.AXIS, true, Map.Repair_mg42_3_3 );
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_beach_flag );
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Flag_Decoder_Manual );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_main_defend_1",
+			"DEFEND_doc_defend_.*",
+			"PANZER_doc_panzer_.*",
+			Map.Mount_mg42_3_3,
+			Map.Repair_mg42_3_3,
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			Map.Checkpoint_beach_flag,
+			Map.Flag_Decoder_Manual,
+		});
 
 		//allies should plant tower first
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Main_Entrance );
@@ -67,10 +71,6 @@ global Map =
 
 	East_Tower_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		//don't bother trying to defuse this
 		Util.DisableGoal( "DEFUSE_East_Tower.*" );
 
@@ -79,32 +79,28 @@ global Map =
 
 	Main_Entrance_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.MainDoorStatus = true;
 
 		if ( !Map.DocStatus ) {
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_main_attack_2" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_main_attack_4" );
-			SetAvailableMapGoals( TEAM.ALLIES, false, Map.Mount_lowernest );
+			SetAvailableMapGoals( TEAM.ALLIES, false, {
+				"ATTACK_main_attack_2",
+				"ATTACK_main_attack_4",
+				Map.Mount_lowernest,
+			});
 		}
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_main_defend_1" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_main_entrance" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_docdel2" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ROUTE_docdel3" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"ROUTE_main_entrance",
+			"ROUTE_docdel2",
+			"ROUTE_docdel3",
+		});
 
 		Util.MapDebugPrint( "Main_Entrance_Destroyed " );
 	},
 
 	Main_Entrance_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Wp.SetWaypointFlag( "roofjump1", "allies", false );
 		Wp.SetWaypointFlag( "roofjump2", "allies", false );
 		Wp.SetWaypointFlag( "roofjump2", "allies", false );
@@ -117,24 +113,26 @@ global Map =
 
 	Decoder_Manual_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DocStatus = 1;
 
 		Wp.SetWaypointFlag( "roofjump1", "allies", false );
 		Wp.SetWaypointFlag( "roofjump2", "allies", false );
 		Wp.SetWaypointFlag( "roofjump3", "allies", false );
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_doc_defend_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_doc_panzer_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_main_defend_1" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_main_defend_3" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_main_defend_4" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_axis_doc_del_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_main_attack_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_allies_doc_del_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_doc_defend_.*",
+			"PANZER_doc_panzer_.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_main_defend_1",
+			"DEFEND_main_defend_3",
+			"DEFEND_main_defend_4",
+			"DEFEND_axis_doc_del_.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"ATTACK_main_attack_.*",
+			"ATTACK_allies_doc_del_.*",
+		});
 
 		// some axis should stay at meeting room until doc carrier is out
 		if ( !Map.DocsGone ) {
@@ -146,24 +144,26 @@ global Map =
 
 	Decoder_Manual_Returned = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.DocStatus = 0;
 
 		Wp.SetWaypointFlag( "roofjump1", "allies", true );
 		Wp.SetWaypointFlag( "roofjump2", "allies", true );
 		Wp.SetWaypointFlag( "roofjump3", "allies", true );
 
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_doc_defend_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "PANZER_doc_panzer_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_main_defend_1" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_main_defend_3" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_main_defend_4" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_axis_doc_del_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_main_attack_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_allies_doc_del_.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_doc_defend_.*",
+			"PANZER_doc_panzer_.*",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_main_defend_1",
+			"DEFEND_main_defend_3",
+			"DEFEND_main_defend_4",
+			"DEFEND_axis_doc_del_.*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"ATTACK_main_attack_.*",
+			"ATTACK_allies_doc_del_.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rMeeting.*" );
 
 		Util.MapDebugPrint( "Decoder_Manual_Returned" );
@@ -171,10 +171,6 @@ global Map =
 
 	beach_flag_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Checkpoint_beach_flag );
 
 		Util.MapDebugPrint( "beach_flag_Axis_Captured " );
@@ -182,10 +178,6 @@ global Map =
 
 	beach_flag_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		SetAvailableMapGoals( TEAM.ALLIES, false, Map.Checkpoint_beach_flag );
 
 		Util.MapDebugPrint( "beach_flag_Allies_Captured" );
@@ -197,22 +189,12 @@ global Map =
 		TriggerOnClass = CLASS.ANYPLAYER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( GetEntTeam( ent ) == TEAM.ALLIES ) {
 				if ( GetEntFlags( ent, ENTFLAG.CARRYINGGOAL ) ) {
 					//docs are gone
 					Map.DocsGone = true;
 					SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rMeeting.*" );
 				}
-			}
-		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
 			}
 		},
 	},
@@ -240,10 +222,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	OnTrigger( "East Tower Door Destroyed.", Map.East_Tower_Door_Destroyed );
 	OnTrigger( "Planted at East Tower Door.", Map.East_Tower_Door_Planted );
 	OnTrigger( "The Main Entrance Destroyed.", Map.Main_Entrance_Destroyed );
@@ -272,24 +250,31 @@ global OnMapLoad = function()
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.ENGINEER );
 	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.ENGINEER);
 
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_main_defend_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_main_entrance_.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_lowmg42" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_main_defend_.*",
+		"SNIPE_main_entrance_.*",
+		"CALLARTILLERY_lowmg42",
+		Map.Mount_mg42_3,
+	});
 
-	SetAvailableMapGoals( TEAM.AXIS, true, Map.Mount_mg42_3 );
-
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_main_attack_.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Mount_lowernest );
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_East_Tower_Door );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_main_entrance" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_docdel2" );
-	SetAvailableMapGoals( TEAM.ALLIES, false, "ROUTE_docdel3" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"ATTACK_main_attack_.*",
+		Map.Mount_lowernest,
+		Map.Plant_East_Tower_Door,
+	});
+	SetAvailableMapGoals( TEAM.ALLIES, false, {
+		"ROUTE_main_entrance",
+		"ROUTE_docdel2",
+		"ROUTE_docdel3",
+	});
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bASMain.*" );
 
 	// Arty
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CALLARTILLERY_spot_allied" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_axis_tower" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_axis_bunker" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"CALLARTILLERY_spot_allied",
+		"ARTILLERY_S_axis_tower",
+		"ARTILLERY_S_axis_bunker",
+	});
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_forest_[1234]" );
 
@@ -375,7 +360,6 @@ global OnBotJoin = function( bot )
 {
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
 
-	//~ bot.TargetBreakableDist = 80.0;
 	bot.MaxViewDistance = 2300.0;
 
 	//default spawn

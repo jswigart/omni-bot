@@ -1,49 +1,40 @@
 global Map =
 {
 	Debug = 0, // please set to zero before distributing your script
-	ShowMovers = false,
 
 	Allied_Helicopter_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Allied_Helicopter_Destroyed" );
 	},
 
 	Cathedrale_door_Destroyed = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
 		Util.MapDebugPrint( "Cathedrale_door_Destroyed" );
 	},
 
 	Top_Secret_Documents_Taken = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-			
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_transmit.*" );	
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rChurch.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rChurch.*" );
-		
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_transmit.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_rChurch.*",
+			"AIRSTRIKE_rChurch.*",
+		});
+
 		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_transmit.*" );
 
 		Util.MapDebugPrint( "Top_Secret_Documents_Taken" );
 	},
-	
+
 	Top_Secret_Documents_Secured = function( trigger )
 	{
-		if ( TestMap )
-			{ return; }
-
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rChurch.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rChurch.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rChurch.*",
+			"AIRSTRIKE_rChurch.*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_transmit.*" );
-		
+
 		SetAvailableMapGoals( TEAM.ALLIES, false, "DEFEND_transmit.*" );
-		
+
 		Util.MapDebugPrint( "Top_Secret_Documents_Secured" );
 	},
 
@@ -51,9 +42,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn )
-		{ Util.AutoTestMap(); }
-
 	// Register callback functions
 	OnTrigger( "MISSING_STRING", Map.Cathedrale_door_Destroyed );
 	OnTrigger( "Allies have stolen the Top Secret Documents!!", Map.Top_Secret_Documents_Taken );
@@ -62,13 +50,17 @@ global OnMapLoad = function()
 	Util.DisableGoal( ".*", true );
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	Util.EnableGoal( "CAPPOINT_transmit" );
-	
-	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Cathedrale_Door" );
-		
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rChurch.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rChurch.*" );
-	
+
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"FLAG.*",
+		"PLANT_Cathedrale_Door",
+	});
+
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rChurch.*",
+		"AIRSTRIKE_rChurch.*",
+	});
+
 	InitializeRoutes();
 	yield();yield();
 	RTCWUtil.KillEntities( {171, 164, 165} );
@@ -78,10 +70,9 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	// Uncomment for shootable breakables
 	bot.TargetBreakableDist = 90.0;
 	RTCWUtil.NoSnipe( bot );
-	
+
 };
 
 global InitializeRoutes = function()
@@ -102,7 +93,7 @@ global InitializeRoutes = function()
 				ROUTE_waterladder = {},
 			},
 		},
-		CAPPOINT_transmit = 
+		CAPPOINT_transmit =
 		{
 			ROUTE_docsteal =
 			{

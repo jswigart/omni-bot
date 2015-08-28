@@ -3,7 +3,6 @@ global Map =
 	Quiet = true,
 	Debug = false,
 
-	ShowMovers = false,
 	Movers =
 	{
 		"MOVER_tramcar_1",
@@ -130,9 +129,6 @@ global Map =
 
 			}
 		},
-		OnExit = function( ent )
-		{
-		},
 	},
 
 	SquareStairs =
@@ -159,17 +155,10 @@ global Map =
 
 			}
 		},
-		OnExit = function( ent )
-		{
-		},
 	},
 
 	Castle_Basement_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.BasementStatus = true;
 		Map.BasementDyno = 0;
 
@@ -179,35 +168,25 @@ global Map =
 
 	Castle_Basement_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.BasementDyno += 1;
 	},
 
 	Castle_Basement_Door_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.BasementDyno -= 1;
 	},
 
 	Lower_Access_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.LowerStatus = true;
 		Map.LowerDyno = 0;
 
 		Util.EnableGoal( "ROUTE_engineroom1" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bLower.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLower_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rEng.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_rLower_.*",
+			"DEFEND_rEng.*",
+		});
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Supply_Room_Door );
 
@@ -218,28 +197,16 @@ global Map =
 
 	Lower_Access_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.LowerDyno += 1;
 	},
 
 	Lower_Access_Door_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.LowerDyno -= 1;
 	},
 
 	Supply_Room_Door_Destroyed = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.SupplyStatus = true;
 		Map.SupplyDyno = 0;
 		Map.DontDispenseAmmo = true;
@@ -257,21 +224,24 @@ global Map =
 			RTCWUtil.ExcludeClass( "FLAG.*", TEAM.ALLIES, CLASS.SOLDIER );
 		}
 
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Radio_Codes );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Castle_Basement_Door );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRadio.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRoam_Radio.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_snowhut" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe_Castle.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			Map.Radio_Codes,
+			"CAPPOINT.*",
+			Map.Plant_Castle_Basement_Door,
+			"ATTACK_bRadio.*",
+			"ATTACK_bRoam_Radio.*",
+			"MOUNTMG42_snowhut",
+			"SNIPE_bSnipe_Castle.*",
+		});
 
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rMid.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rBasement.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRadio.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoam_Radio.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe_Mid.*" );
-
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSecondHalf.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"DEFEND_rMid.*",
+			"DEFEND_rBasement.*",
+			"DEFEND_rRadio.*",
+			"DEFEND_rRoam_Radio.*",
+			"SNIPE_rSnipe_Mid.*",
+			"ARTILLERY_S_rSecondHalf.*",
+		});
 		//Martin - These allied support fires are worthless...no kills, ever
 		//SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_D_bSecondHalf.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSecondHalf.*" );
@@ -281,10 +251,6 @@ global Map =
 
 	Supply_Room_Door_Planted = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.SupplyDyno += 1;
 
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDynoSupply.*" );
@@ -292,10 +258,6 @@ global Map =
 
 	Supply_Room_Door_Defused = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.SupplyDyno -= 1;
 
 		if ( Map.SupplyDyno < 1 ) {
@@ -305,21 +267,15 @@ global Map =
 
 	Radio_Codes_Booklet_Taken = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.BookStatus = true;
 	},
 
 	Radio_Codes_Booklet_Returned = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
-		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rSecondHalf.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rCastleSpot.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"ARTILLERY_S_rSecondHalf.*",
+			"CALLARTILLERY_rCastleSpot.*",
+		});
 
 		Map.BookStatus = false;
 		Map.DocsInCastle = false;
@@ -327,48 +283,50 @@ global Map =
 
 	flag_respawn_obj_Axis_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 1;
 
 		if ( !Map.SupplyStatus ) {
 			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
 			SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe_Flag.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe_Flag.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rAlliesRear" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlagCall.*" );
-			
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"SNIPE_rSnipe_Flag.*",
+				"ARTILLERY_S_rAlliesRear",
+				"CALLARTILLERY_rFlagCall.*",
+			});
+
 			SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
-			
+
 			Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 		}
 
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLower_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rLowerInside.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rSupply.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"DEFEND_rLower_.*",
+			"DEFEND_rLowerInside.*",
+			"DEFEND_rSupply.*",
+		});
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bSnipe_Supply.*" );
 		//SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rSnipe_Supply.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_artyflag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_supplycall.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"ARTILLERY_S_artyflag.*",
+			"CALLARTILLERY_supplycall.*",
+		});
 	},
 
 	flag_respawn_obj_Allies_Captured = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.FlagStatus = 2;
 
 		if ( !Map.SupplyStatus ) {
-			SetAvailableMapGoals( TEAM.AXIS, true, "CHECKPOINT.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSupply.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"CHECKPOINT.*",
+				"DEFEND_rSupply.*",
+			});
 			SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe_Supply.*" );
 			//SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe_Supply.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_artyflag.*" );
-			SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_supplycall.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, {
+				"ARTILLERY_S_artyflag.*",
+				"CALLARTILLERY_supplycall.*",
+			});
 			SetAvailableMapGoals( TEAM.ALLIES, false, "ARTILLERY_S_bFlag.*" );
 			Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
 
@@ -381,17 +339,15 @@ global Map =
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rFlag.*" );
 		SetAvailableMapGoals( TEAM.ALLIES, false, "SNIPE_bSnipe_Flag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "SNIPE_rSnipe_Flag.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "ARTILLERY_S_rAlliesRear" );
-		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rFlagCall.*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"SNIPE_rSnipe_Flag.*",
+			"ARTILLERY_S_rAlliesRear",
+			"CALLARTILLERY_rFlagCall.*",
+		});
 	},
 
 	two_minute = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.twominute = true;
 
 		if ( Map.SupplyStatus ) {
@@ -405,10 +361,6 @@ global Map =
 
 	thirty_second = function( trigger )
 	{
-		if ( TestMap ) {
-			return;
-		}
-
 		Map.thirtysecond = true;
 	},
 
@@ -534,9 +486,6 @@ global Map =
 					}
 				}
 			}
-		},
-		OnExit = function( ent )
-		{
 		},
 	},
 
@@ -744,10 +693,6 @@ global Map =
 		TriggerOnClass = CLASS.ENGINEER,
 		OnEnter = function( ent )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			if ( !ent || GetEntClass( ent ) != CLASS.ENGINEER ) {
 				return;
 			}
@@ -759,12 +704,6 @@ global Map =
 						break;
 					}
 				}
-			}
-		},
-		OnExit = function( ent )
-		{
-			if ( TestMap ) {
-				return;
 			}
 		},
 	},
@@ -796,9 +735,6 @@ global Map =
 				}
 			}
 		},
-		OnExit = function( ent )
-		{
-		},
 	},
 };
 
@@ -828,15 +764,11 @@ global OnMapLoad = function()
 
 	docsbasement = OnTriggerRegion( AABB( 4063.000,374.000,1711.000,4195.000,417.000,1785.000 ), Map.DocsInCastle );
 	docsupper = OnTriggerRegion( AABB( 4594.000,-288.000,1967.000,4640.000,96.000,2041.000 ), Map.DocsInCastle );
-	
+
 	nopush = OnTriggerRegion(AABB(-7026.000,21.000,-574.000,-6769.000,244.000,-500.000), RegionTrigger.DisableBotPush);
 	nopush1 = OnTriggerRegion(AABB(-1248.000,-673.000,577.000,-831.000,-270.000,787.000), RegionTrigger.DisableBotPush);
 	//nopush2 = OnTriggerRegion(AABB(-926.000,-752.000,885.000,-766.000,-563.000,983.000), RegionTrigger.DisableBotPush);
 	//nopush3 = OnTriggerRegion(AABB(-1046.000,-1447.000,1009.000,-805.000,-1120.000,1147.000), RegionTrigger.DisableBotPush);
-
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
 
 	OnTrigger( "the Castle Basement Door Destroyed.", Map.Castle_Basement_Door_Destroyed );
 	OnTrigger( "Planted at the Castle Basement Door.", Map.Castle_Basement_Door_Planted );
@@ -862,12 +794,10 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 45} );
 	SetMapGoalProperties( "DEFEND_rRoam.*", {mincamptime = 0, maxcamptime = 1} );
 	SetMapGoalProperties( "ATTACK_bRoam.*", {mincamptime = 0, maxcamptime = 1} );
-	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "MOUNT.*", {mincamptime = 60, maxcamptime = 90} );
 
 	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );	// More than 1 bot should go for it...it is critical to hold to get the supply plant down
 	Util.SetMaxUsersInProgress( 3, "FLAG.*" );
@@ -876,7 +806,6 @@ global OnMapLoad = function()
 	RTCWUtil.SetPrimaryGoals( 1 );
 
 	SetGoalPriority( "DEFEND_rRoam.*", 0.48 );
-	SetGoalPriority( "DEFEND_bRoam.*", 0.48 );
 	SetGoalPriority( "DEFEND_rLower_.*", 0.54 );
 	SetGoalPriority( "DEFEND_rLowerInside.*", 0.49 );
 	SetGoalPriority( "DEFEND_rDynoSupply.*", 0.6 );
@@ -899,20 +828,26 @@ global OnMapLoad = function()
 	RTCWUtil.ExcludeClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER );
 
 	Util.DisableGoal( "ROUTE_engineroom1" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rFlag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rRoam_supply.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rEng.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "SNIPE_rSnipe_Flag.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rFlagCall.*" );
-	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rAlliesRear" );
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		"DEFEND_rFlag.*",
+		"DEFEND_rRoam_supply.*",
+		"DEFEND_rEng.*",
+		"SNIPE_rSnipe_Flag.*",
+		"CALLARTILLERY_rFlagCall.*",
+		"ARTILLERY_S_rAlliesRear",
+	});
 
-	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSupply.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bFlag.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bRoam_Supply.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"CHECKPOINT.*",
+		"ATTACK_bSupply.*",
+		"ARTILLERY_S_bFlag.*",
+		"ATTACK_bRoam_Supply.*",
+	});
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "SNIPE_bSnipe_Flag.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_lowerouthouse.*" );
-	SetAvailableMapGoals( TEAM.ALLIES, true, Map.Plant_Lower_Access_Door );
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"MOUNTMG42_lowerouthouse.*",
+		Map.Plant_Lower_Access_Door,
+	});
 
 	MapRoutes =
 	{

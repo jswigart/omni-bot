@@ -84,11 +84,15 @@ global Map =
 
 	axis_wh = function()
 	{
-		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
-		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
+		SetAvailableMapGoals( TEAM.AXIS, false, {
+			"AIRSTRIKE_.*",
+			".*",
+		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_dm_wh.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_aTower" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"ARTILLERY_S_bTruck",
+			"ARTILLERY_S_aTower",
+		});
 		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Warehouse" );
 	},
 
@@ -96,18 +100,24 @@ global Map =
 	{
 		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_red_as1_gate" );
 		SetAvailableMapGoals( TEAM.AXIS, false, ".*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "ATTACK_rGate.*" );
-		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_tarmac_nest_2" );
+		SetAvailableMapGoals( TEAM.AXIS, true, {
+			"ATTACK_rGate.*",
+			"MOUNTMG42_tarmac_nest_2",
+		});
 		RTCWUtil.OneBotSayTeam( TEAM.AXIS, "Camp Flag" );
 	},
 
 	allies_wh = function()
 	{
-		SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, false, ".*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_dm_wh.*" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bTruck" );
-		SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_aTower" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, {
+			"AIRSTRIKE_.*",
+			".*",
+		});
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"DEFEND_dm_wh.*",
+			"ARTILLERY_S_bTruck",
+			"ARTILLERY_S_aTower",
+		});
 		RTCWUtil.OneBotSayTeam( TEAM.ALLIES, "Camp Warehouse" );
 	},
 
@@ -125,10 +135,6 @@ global Map =
 		count = -1;
 		while ( 1 )
 		{
-			if ( TestMap ) {
-				return;
-			}
-
 			count += 1;
 			if ( count % 120 == 0 ) {
 				attackPoint = RandInt( 0,2 );
@@ -150,10 +156,6 @@ global Map =
 
 global OnMapLoad = function()
 {
-	if ( TestMapOn ) {
-		Util.AutoTestMap();
-	}
-
 	Wp.SetWaypointFlag( "tarmacladder", "closed", true );
 	Wp.SetWaypointFlag( "tarmacladder2", "closed", true );
 
@@ -177,7 +179,6 @@ global OnMapLoad = function()
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 
-	Util.SetMaxUsersInProgress( 1, "SNIPE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 
