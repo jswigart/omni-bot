@@ -1598,6 +1598,8 @@ void PathPlannerWaypoint::cmdWaypointClearConnections(const StringVector &_args)
 				m_SelectedWaypoints[i]->GetUID()));
 		}
 	}
+
+	BuildBlockableList();
 }
 
 void PathPlannerWaypoint::cmdWaypointClearAllFlags(const StringVector &_args)
@@ -2095,6 +2097,9 @@ void PathPlannerWaypoint::cmdWaypointSplit(const StringVector &_args)
 		wp1->ConnectTo(wp);
 		wp->ConnectTo(wp0);
 	}
+
+ 	if(wp0->IsAnyFlagOn(m_BlockableMask) && wp1->IsAnyFlagOn(m_BlockableMask)) 
+		BuildBlockableList();
 }
 
 void PathPlannerWaypoint::cmdWaypointGround(const StringVector &_args)
