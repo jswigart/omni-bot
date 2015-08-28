@@ -1,0 +1,355 @@
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+	DispenseAmmoTime = 1,
+	DontDispenseAmmo = true,
+	
+	Airstrike =
+	{
+		btunnel =
+		{
+			Enabled = true,
+			Team = ( 1 << TEAM.ALLIES ),
+			Facing = Vector3( -0.176, 0.414, 0.893 ),
+			NoPause = true,
+		},
+		rtunnel =
+		{
+			Enabled = true,
+			Team = ( 1 << TEAM.AXIS ),
+			Facing = Vector3( 0.171, -0.378, 0.910 ),
+			NoPause = true,
+		},
+	},
+
+	Roles =
+	{
+		AXIS =
+		{
+			AllBots = true,
+			DEFENDER =
+			{
+				numbots = 6,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER =
+			{
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+
+		ALLIES =
+		{
+			AllBots = true,
+			DEFENDER =
+			{
+				numbots = 6,
+				crucialClass = CLASS.ENGINEER,
+			},
+			ATTACKER =
+			{
+				numbots = 4,
+				crucialClass = CLASS.ENGINEER,
+			},
+		},
+	},
+
+	Allied_Central_Communication_System_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Central_Communication_System_Destroyed" );
+	},
+
+	Axis_Central_Communication_System_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Central_Communication_System_Destroyed" );
+	},
+
+	Allied_Encryption_Documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Allied_Encryption_Documents_Taken" );
+	},
+
+	Axis_Encryption_Documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Axis_Encryption_Documents_Taken" );
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+		
+	OnTriggerRegion(AABB(-1364.000,-2027.000,233.000,-713.000,-1437.000,386.000),RegionTrigger.DisableCombatMovement);
+
+	// Register callback functions
+	OnTrigger( "MISSING_STRING", Map.Allied_Central_Communication_System_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Axis_Central_Communication_System_Destroyed );
+	OnTrigger( "MISSING_STRING", Map.Allied_Encryption_Documents_Taken );
+	OnTrigger( "MISSING_STRING", Map.Axis_Encryption_Documents_Taken );
+	
+	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 1, maxcamptime = 1} ); //used as 'roams'
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
+	SetMapGoalProperties( "DEFEND_eng.*", {mincamptime = 30, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 999, maxcamptime = 999} );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	SetGoalPriority( "AIRSTRIKE.*", 0.94);
+	SetGoalPriority( "CALL.*", 0.94);
+	SetGoalPriority( "ARTILLERY.*", 1.0);
+	SetGoalPriority( "MOUNTMG42.*", 0.91);
+	SetGoalPriority( "ATTACK.*", 0.45 );
+	SetGoalPriority( "CAMP.*", 0.95 );
+	
+	RTCWUtil.LimitToClass("MOUNT.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT);
+	RTCWUtil.LimitToClass("MOUNT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT);
+	
+	// Allied goals
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAMP_bDocs.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bArty.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG_Axis.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT_Axis.*" );
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_bMG.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "REPAIRMG42_bMG.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_bTransmit.*" );
+	
+	// Axis goals
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAMP_rDocs.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rArty.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "FLAG_Allied.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_Allied.*" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_rMG.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_rMG.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CAPPOINT_rTransmit.*" );
+	
+	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
+
+
+	InitializeRoutes();
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.TargetBreakableDist = 80.0;
+	RTCWUtil.NoSnipe( bot );
+	bot.ChangeSpawnPoint( 0 );
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		FLAG_Axis_Encryption_Documents =
+		{
+			ROUTE_bspawn1 = 
+			{
+				ROUTE_bramp =
+				{
+					Weight = 4,
+					ROUTE_btunnelladder =
+					{
+						ROUTE_waternorth =
+						{
+							ROUTE_rtunnel =
+							{
+								ROUTE_rtunnelladder = 
+								{
+									ROUTE_rmidladder = {},
+									ROUTE_rramp =
+									{
+										ROUTE_rdocseast = {},
+										ROUTE_rdocswest = {},
+									},
+								},
+								ROUTE_rtunnelrear = {Weight=2,},
+							},
+						},
+					},
+				},
+				ROUTE_buppereast =
+				{
+					ROUTE_ruppereast =
+					{
+						ROUTE_rdocseast = {},
+						ROUTE_rdocswest = {},
+					},
+					ROUTE_east =
+					{
+						ROUTE_rmidladder = {},
+						ROUTE_rramp =
+						{
+							ROUTE_rdocseast = {},
+							ROUTE_rdocswest = {},
+						},
+					},
+					ROUTE_mid =
+					{
+						ROUTE_rmidladder = {},
+						ROUTE_rramp =
+						{
+							ROUTE_rdocseast = {},
+							ROUTE_rdocswest = {},
+						},
+					},
+				},
+				ROUTE_bupperwest =
+				{
+					ROUTE_rupperwest =
+					{
+						ROUTE_rdocseast = {},
+						ROUTE_rdocswest = {},
+					},
+					ROUTE_west =
+					{
+						ROUTE_rmidladder = {},
+						ROUTE_rramp =
+						{
+							ROUTE_rdocseast = {},
+							ROUTE_rdocswest = {},
+						},
+					},
+					ROUTE_mid =
+					{
+						ROUTE_rmidladder = {},
+						ROUTE_rramp =
+						{
+							ROUTE_rdocseast = {},
+							ROUTE_rdocswest = {},
+						},
+					},
+				},
+				ROUTE_mid =
+				{
+					ROUTE_rmidladder = {},
+					ROUTE_rramp =
+					{
+						ROUTE_rdocseast = {},
+						ROUTE_rdocswest = {},
+					},
+				},
+				ROUTE_west =
+				{
+					ROUTE_rmidladder = {},
+					ROUTE_rramp =
+					{
+						ROUTE_rdocseast = {},
+						ROUTE_rdocswest = {},
+					},
+				},
+				ROUTE_east =
+				{
+					ROUTE_rmidladder = {},
+					ROUTE_rramp =
+					{
+						ROUTE_rdocseast = {},
+						ROUTE_rdocswest = {},
+					},
+				},
+			},
+		},
+		FLAG_Allied_Encryption_Documents =
+		{
+			ROUTE_rspawn1 =
+			{
+				ROUTE_rramp =
+				{
+					Weight = 4,
+					ROUTE_rtunnelladder =
+					{
+						ROUTE_watersouth =
+						{
+							ROUTE_btunnel =
+							{
+								ROUTE_btunnelladder =
+								{
+									ROUTE_bmidladder = {},
+									ROUTE_bramp =
+									{
+										ROUTE_bdocseast = {},
+										ROUTE_bdocswest = {},
+									},
+								},
+								ROUTE_btunnelrear = {Weight=2,},
+							},
+						},
+					},
+				},
+				ROUTE_ruppereast =
+				{
+					ROUTE_buppereast =
+					{
+						ROUTE_bdocseast = {},
+						ROUTE_bdocswest = {},
+					},
+					ROUTE_east =
+					{
+						ROUTE_bdocseast = {},
+						ROUTE_bdocswest = {},
+					},
+					ROUTE_mid =
+					{
+						ROUTE_bdocseast = {},
+						ROUTE_bdocswest = {},
+					},
+				},
+				ROUTE_rupperwest =
+				{
+					ROUTE_bupperwest =
+					{
+						ROUTE_bdocseast = {},
+						ROUTE_bdocswest = {},
+					},
+					ROUTE_west =
+					{
+						ROUTE_bdocseast = {},
+						ROUTE_bdocswest = {},
+					},
+					ROUTE_mid =
+					{
+						ROUTE_bdocseast = {},
+						ROUTE_bdocswest = {},
+					},
+				},
+				ROUTE_west =
+				{
+					ROUTE_bdocseast = {},
+					ROUTE_bdocswest = {},
+				},
+				ROUTE_mid =
+				{
+					ROUTE_bdocseast = {},
+					ROUTE_bdocswest = {},
+				},
+				ROUTE_east =
+				{
+					ROUTE_bdocseast = {},
+					ROUTE_bdocswest = {},
+				},
+			},
+		},
+	};
+	
+	MapRoutes.FLAG_Axis_Encryption_Documents.ROUTE_bspawn2 = MapRoutes.FLAG_Axis_Encryption_Documents.ROUTE_bspawn1;
+	MapRoutes.PLANT_Axis_Central_Communication_System = MapRoutes.FLAG_Axis_Encryption_Documents.ROUTE_bspawn1;
+	MapRoutes.FLAG_Allied_Encryption_Documents.ROUTE_rspawn2 = MapRoutes.FLAG_Allied_Encryption_Documents.ROUTE_rspawn1;
+	MapRoutes.PLANT_Allied_Central_Communication_System = MapRoutes.FLAG_Allied_Encryption_Documents.ROUTE_rspawn1;
+	Util.Routes(MapRoutes);
+};

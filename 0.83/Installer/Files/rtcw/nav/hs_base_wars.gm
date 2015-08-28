@@ -1,6 +1,6 @@
 global Map =
 {
-	Debug = 1,
+	Debug = 0,
 	ShowMovers = false,
 	DispenseAmmoTime = 1,
 	DontDispenseAmmo = true,

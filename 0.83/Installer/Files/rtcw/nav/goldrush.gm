@@ -1,0 +1,205 @@
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+	DontDispenseAmmo = true,
+	DispenseAmmoTime = 15,
+
+	Front_Door_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Front_Door_Planted" );
+	},
+	
+	Front_Door_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
+
+		Util.MapDebugPrint( "Front_Door_Destroyed" );
+	},
+
+	back_wall_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "back_wall_Planted" );
+	},
+	
+	back_wall_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
+
+		Util.MapDebugPrint( "back_wall_Destroyed" );
+	},
+
+	Gold_Bars_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Gold_Bars_Taken" );
+	},
+
+	Gold_Bars_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Gold_Bars_Secured" );
+	},
+	
+	Gold_Dropoff_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Gold_Dropoff_Captured" );
+	},
+
+	Forward_flag_Axis_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Forward_flag_Axis_Captured" );
+	},
+
+	Forward_flag_Allies_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Forward_flag_Allies_Captured" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+
+	OnTrigger( "Allies capture the Forward Flag!", Map.Forward_flag_Allies_Captured );
+	OnTrigger( "Planted at The back wall.", Map.back_wall_Planted );
+	OnTrigger( "The back wall Destroyed.", Map.back_wall_Destroyed );
+	OnTrigger( "Planted at The Front Door.", Map.Front_Door_Planted );
+	OnTrigger( "The Front Door Destroyed.", Map.Front_Door_Destroyed );
+	OnTrigger( "Allies have stolen The Gold Bars!", Map.Gold_Bars_Taken );
+	OnTrigger( "Flag returned Gold Bars!", Map.Gold_Bars_Secured );
+	
+
+	// Max users per goal
+	Util.SetMaxUsers( 1, "DEFEND.*" );
+	Util.SetMaxUsers( 3, "CHECKPOINT.*" );
+	Util.SetMaxUsersInProgress( 2, "DEFEND_Bank_Roam.*" );
+	Util.SetMaxUsersInProgress( 2, "DEFEND_Tank_Barrier2_Roam.*" );
+	Util.SetMaxUsers( 1, "CAMP_.*" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_.*" );
+
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=10, MaxCampTime=30});
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=15, MaxCampTime=20});
+	SetMapGoalProperties( "DEFEND_Bank_Roam.*", {MinCampTime=1, MaxCampTime=2});
+	SetMapGoalProperties( "DEFEND_Tank_Barrier2_Roam.*", {MinCampTime=1, MaxCampTime=2});
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=45, MaxCampTime=90});
+	SetMapGoalProperties( "MOBILEMG42_.*", {MinCampTime=120, MaxCampTime=120});
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	SetGoalPriority( "AIRSTRIKE.*", 0.95);
+	SetGoalPriority( "CALL.*", 1.0);
+	SetGoalPriority( "ARTILLERY.*", 1.0);
+	Util.EnableGoal( "CAPPOINT_Gold_Dropoff" );
+	
+	RTCWUtil.LimitToClass("MOUNT.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT);
+	RTCWUtil.LimitToClass("MOUNT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT);
+
+	// Allied goals
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_Bank_.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "MOUNTMG42_mg42_bridge.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CHECKPOINT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bBank.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bBank.*" );
+
+	// Axis goals
+	SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_bankmg" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_Bank_.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "REPAIRMG42_bankmg" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rBank.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rBank.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rBank.*" );
+
+	InitializeRoutes();
+	Util.MapDebugPrint( "OnMapLoad" );
+};
+
+global OnBotJoin = function( bot )
+{
+	bot.MaxViewDistance = Map.ViewDistance;
+	bot.TargetBreakableDist = 80.0;
+	RTCWUtil.NoSnipe( bot );
+	bot.ChangeSpawnPoint( 0 );
+};
+global InitializeRoutes = function()
+{
+	// force routing for the tank build
+
+	//set up some routing
+	MapRoutes =
+	{
+		ATTACK_Bank_1 =
+		{
+			ROUTE_TankYardSpawn =
+			{
+				ROUTE_trb1_stairs = {},
+				ROUTE_cp_stairs = { ROUTE_cp_stairs2 = {}, },
+				//ROUTE_southstairs = {},
+			},
+			ROUTE_TankYardSpawn2 =
+			{
+				ROUTE_trb1_stairs = {},
+				ROUTE_cp_stairs = {},
+				//ROUTE_southstairs = {},
+			},
+		},
+		DEFEND_Bank_6 =
+		{
+			ROUTE_AxisSpawn =
+			{
+				ROUTE_axisspawn_r = {},
+				ROUTE_axisspawn_l = {},
+				ROUTE_bankback3 =
+				{
+					ROUTE_bankback2 = { ROUTE_bankback = {}, },
+				},
+			},
+		},
+	};
+
+	//copy some routes
+	MapRoutes.ATTACK_Bank_2 = MapRoutes.ATTACK_Bank_1;
+	MapRoutes.ATTACK_Bank_3 = MapRoutes.ATTACK_Bank_1;
+	MapRoutes.ATTACK_Bank_4 = MapRoutes.ATTACK_Bank_1;
+	MapRoutes.ATTACK_Bank_5 = MapRoutes.ATTACK_Bank_1;
+
+	MapRoutes.AIRSTRIKE_rBank1 = MapRoutes.DEFEND_Bank_6;
+	MapRoutes.CALLARTILLERY_rBank1 = MapRoutes.DEFEND_Bank_6;
+	MapRoutes.DEFEND_Bank_7 = MapRoutes.DEFEND_Bank_6;
+	MapRoutes.DEFEND_Bank_8 = MapRoutes.DEFEND_Bank_6;
+	MapRoutes.DEFEND_Bank_9 = MapRoutes.DEFEND_Bank_6;
+	MapRoutes.DEFEND_Bank_10 = MapRoutes.DEFEND_Bank_6;
+	MapRoutes.DEFEND_Bank_11 = MapRoutes.DEFEND_Bank_6;
+	MapRoutes.DEFEND_Bank_12 = MapRoutes.DEFEND_Bank_6;
+	MapRoutes.DEFEND_Bank_13 = MapRoutes.DEFEND_Bank_6;
+	MapRoutes.DEFEND_Bank_14 = MapRoutes.DEFEND_Bank_6;
+
+	Util.Routes(MapRoutes);
+};

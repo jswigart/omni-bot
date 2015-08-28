@@ -1,0 +1,284 @@
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+	ShowMovers = false,
+	DontDispenseAmmo = true,
+	DispenseAmmoTime = 15,
+	LowerDestroyed = false,
+	
+	Grate_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+				
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Grate.*" );
+
+		Util.MapDebugPrint( "Grate_Planted" );
+	},
+
+	Grate_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "Grate_Destroyed" );
+	},
+
+	Lower_Valley_Entrance_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Map.LowerDestroyed = true;
+			
+		SetAvailableMapGoals( TEAM.ALLIES, false, "CAPPOINT_temp" );
+		SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_transmit" );
+
+		Util.MapDebugPrint( "Lower_Valley_Entrance_Destroyed" );
+	},
+	
+	Main_Entrance_Cave_in_Planted = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFUSE_Main.*" );
+
+		Util.MapDebugPrint( "Main_Entrance_Cave_in_Planted" );
+	},
+
+	Main_Entrance_Cave_in_Destroyed = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Util.SetMaxUsers( 64, "FLAG.*" );
+		
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND_rSpawn.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+		
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bSpawn.*" );
+		SetAvailableMapGoals( TEAM.ALLIES, false, "ATTACK_bTower.*" );
+
+		Util.MapDebugPrint( "Main_Entrance_Cave_in_Destroyed" );
+	},
+
+	Secret_Documents_Taken = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		Util.SetMaxUsers( 64, "FLAG.*" );
+		if (Map.LowerDestroyed)
+		{
+			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_rMain.*" );
+			SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+			SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_transmit.*" );
+			
+			SetAvailableMapGoals( TEAM.ALLIES, true, "DEFEND_transmit.*" );
+		}
+
+		Util.MapDebugPrint( "Secret_Documents_Taken" );
+	},
+	
+	Secret_Documents_Secured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+			
+		SetAvailableMapGoals( TEAM.AXIS, false, "DEFEND.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rDocs.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rMain.*" );
+		SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLT.*" );
+			
+
+		Util.MapDebugPrint( "Secret_Documents_Secured" );
+	},
+
+	transmit_Captured = function( trigger )
+	{
+		if ( TestMap )
+			{ return; }
+
+		Util.MapDebugPrint( "transmit_Captured" );
+	},
+	
+	DisableCombatMove =
+	{
+		Name = "DisableCombatMove",
+		TriggerOnClass = CLASS.ANYPLAYER,
+		OnEnter = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = true;
+				b.DisableBotPush( true );
+			}
+		},
+		OnExit = function( ent )
+		{
+			b = Util.GetBotByName( GetEntName( ent ) );
+			if ( b ) {
+				b.DisableCombatMovement = false;
+				b.DisableBotPush( false );
+			}
+		},
+	},
+
+};
+
+global OnMapLoad = function()
+{
+	if ( TestMapOn )
+		{ Util.AutoTestMap(); }
+		
+	truckpush = OnTriggerRegion(AABB(-293.000,814.000,316.000,49.000,937.000,447.000),Map.DisableCombatMove);
+	spawnpush = OnTriggerRegion(AABB(-1364.000,-2027.000,233.000,-713.000,-1437.000,386.000),Map.DisableCombatMove);
+	
+		
+	Util.AddUseWp( "PLANT_Main_Entrance_Cave_in", "mainentrance" );
+	Util.AddUseWp( "PLANT_Lower_Valley_Entrance", "valley" );
+
+	// Register callback functions
+	OnTrigger( "Planted at The Grate.", Map.Grate_Planted );
+	OnTrigger( "The grate has been blown!", Map.Grate_Destroyed );
+	OnTrigger( "Lower Valley Entrance Destroyed.", Map.Lower_Valley_Entrance_Destroyed );
+	OnTrigger( "Planted at Main Entrance Cave-in.", Map.Main_Entrance_Cave_in_Planted );
+	OnTrigger( "Main Entrance Cave-in Destroyed.", Map.Main_Entrance_Cave_in_Destroyed );
+	OnTrigger( "Allies have stolen Secret Documents!", Map.Secret_Documents_Taken );
+	OnTrigger( "MISSING_STRING", Map.Secret_Documents_Secured );
+	OnTrigger( "MISSING_STRING", Map.transmit_Captured );
+
+	Util.DisableGoal( ".*", true ); // all but routes
+	RTCWUtil.SetPrimaryGoals( 1.0 );
+	SetGoalPriority( "PLANT_Main_Entrance_Cave_in", 0.94, TEAM.ALLIES, CLASS.ENGINEER );
+	//SetGoalPriority( "PLANT_Lower_Valley_Entrance", 0.93, TEAM.ALLIES, CLASS.ENGINEER );
+	SetGoalPriority( "AIRSTRIKE.*", 0.95);
+	SetGoalPriority( "ATTACK_bLt.*", 0.86);
+	SetGoalPriority( "ATTACK_bSpawn.*", 0.90);
+	SetGoalPriority( "ARTILLERY.*", 1.0);
+	
+	SetMapGoalProperties( "DEFEND_rLT.*", {mincamptime=999, maxcamptime=999});
+	SetMapGoalProperties( "DEFEND_.*", {mincamptime=20, maxcamptime=30});
+	SetMapGoalProperties( "ATTACK_bLt.*", {mincamptime=999, maxcamptime=999});
+	SetMapGoalProperties( "ATTACK_bTower.*", {mincamptime=45, maxcamptime=60});
+
+	Util.SetMaxUsers( 4, "FLAG.*" );
+	Util.SetMaxUsers( 1, "ATTACK_bSpawn.*" );
+	Util.SetMaxUsers( 1, "DEFEND_rSpawn.*" );
+	Util.SetMaxUsers( 2, "ATTACK_bTower.*" );
+	RTCWUtil.LimitToClass( "DEFEND_rLT.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "DEFEND_rSpawn.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER );
+	RTCWUtil.LimitToClass( "ATTACK_bLt.*", TEAM.ALLIES, CLASS.LIEUTENANT );
+	RTCWUtil.LimitToClass( "ATTACK_bTower.*", TEAM.ALLIES, CLASS.SOLDIER );
+	RTCWUtil.LimitToClass( "ATTACK_bSpawn.*", TEAM.ALLIES, CLASS.SOLDIER,CLASS.LIEUTENANT );
+	
+	//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_nwmg.*" );
+	//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_northmg.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rMain.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rLT.*" );
+	SetAvailableMapGoals( TEAM.AXIS, true, "DEFEND_rSpawn.*" );
+	
+	SetAvailableMapGoals( TEAM.ALLIES, true, "PLANT.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "FLAG.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "CAPPOINT_temp" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bTower.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bSpawn.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_bLt.*" );
+	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bMountain.*" );
+	
+	RTCWUtil.KillEntities( {143,144,295,296,297,331,328,330,327,329,326,294,264} );
+
+	InitializeRoutes();
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	RTCWUtil.NoSnipe( bot );
+	bot.TargetBreakableDist = 80.0;
+	bot.ChangeSpawnPoint( 0 );
+	RTCWUtil.SelectSoldierWeapons( TEAM.AXIS, bot, WEAPON.PANZERFAUST, WEAPON.VENOM );
+	RTCWUtil.SelectSoldierWeapons( TEAM.ALLIES, bot, WEAPON.PANZERFAUST, WEAPON.VENOM );
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		ATTACK_bLt1 = 
+		{
+			ROUTE_bspawn = 
+			{
+				ROUTE_truck = {},
+			},
+		},
+		DEFEND_rDocs1 = 
+		{
+			ROUTE_rspawn =
+			{
+				ROUTE_main = {Weight = 2,},
+				ROUTE_southeast =
+				{
+					ROUTE_easttunnel = {},
+				},
+			},
+		},
+		DEFEND_transmit1 = 
+		{
+			ROUTE_rspawn =
+			{
+				ROUTE_main = {},
+				ROUTE_midmountain = {},
+				ROUTE_southeast =
+				{
+					ROUTE_easttunnel = {},
+				},
+			},
+		},
+		CAPPOINT_transmit =
+		{
+			ROUTE_docgrab = {},
+		},
+		PLANT_Grate =
+		{
+		},
+		PLANT_Lower_Valley_Entrance =
+		{
+		},
+		FLAG_Secret_Documents =
+		{
+			ROUTE_bspawn = 
+			{
+				ROUTE_dojo = 
+				{
+					ROUTE_southeast = {},
+				},
+				ROUTE_truck = 
+				{
+					Weight = 2,
+					ROUTE_easttunnel = {},
+				},
+				ROUTE_main = {},
+				ROUTE_midmountain = 
+				{
+					ROUTE_easttunnel = {},
+				},
+				ROUTE_basement = {},
+			},
+		},
+	};
+	
+	MapRoutes.ATTACK_bDocs1 = MapRoutes.FLAG_Secret_Documents;
+	MapRoutes.ATTACK_bDocs2 = MapRoutes.FLAG_Secret_Documents;
+	MapRoutes.ATTACK_bDocs3 = MapRoutes.FLAG_Secret_Documents;
+	MapRoutes.ATTACK_bDocs4 = MapRoutes.FLAG_Secret_Documents;
+	MapRoutes.DEFEND_rDocs2 = MapRoutes.DEFEND_rDocs1;
+	MapRoutes.DEFEND_rDocs3 = MapRoutes.DEFEND_rDocs1;
+	MapRoutes.DEFEND_rDocs4 = MapRoutes.DEFEND_rDocs1;
+	MapRoutes.DEFEND_rDocs5 = MapRoutes.DEFEND_rDocs1;
+	MapRoutes.DEFEND_rDocs6 = MapRoutes.DEFEND_rDocs1;
+	
+	Util.Routes(MapRoutes);
+};

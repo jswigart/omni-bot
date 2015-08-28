@@ -1179,6 +1179,240 @@ global _MG =
 		{
 		},
 	},
+	DEFEND_dm_bridge1 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.905, 0.378, -0.193),
+			[1] = Vec3(0.695, -0.704, -0.145),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_dm_bridge1",
+		Orientation = Vec3(-1.175, -0.194, -0.000),
+		Position = Vec3(1618.000, 5119.000, 385.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "dm_bridge1",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_dm_bridge2 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.882, -0.432, -0.187),
+			[1] = Vec3(0.723, 0.673, -0.157),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_dm_bridge2",
+		Orientation = Vec3(-2.026, -0.188, -0.000),
+		Position = Vec3(1618.000, 3579.000, 385.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "dm_bridge2",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_dm_bridge3 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.598, -0.802, 0.017),
+			[1] = Vec3(-0.174, 0.984, 0.025),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_dm_bridge3",
+		Orientation = Vec3(2.501, 0.017, -0.000),
+		Position = Vec3(3485.000, 4117.000, 65.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "dm_bridge3",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_dm_bridge4 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.172, -0.985, 0.013),
+			[1] = Vec3(0.867, 0.499, 0.021),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_dm_bridge4",
+		Orientation = Vec3(-2.969, 0.013, -0.000),
+		Position = Vec3(2852.000, 4308.000, 65.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "dm_bridge4",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_dm_bridge5 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.958, 0.284, 0.038),
+			[1] = Vec3(0.325, 0.945, 0.024),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_dm_bridge5",
+		Orientation = Vec3(-1.282, 0.038, -0.000),
+		Position = Vec3(2802.000, 3538.000, 65.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "dm_bridge5",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_dm_bridge6 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.143, -0.990, 0.009),
+			[1] = Vec3(-0.994, 0.096, 0.055),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_dm_bridge6",
+		Orientation = Vec3(2.998, 0.009, -0.000),
+		Position = Vec3(3277.000, 4781.000, 65.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "dm_bridge6",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_dm_bridge7 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.652, 0.758, 0.033),
+			[1] = Vec3(-0.304, -0.952, 0.017),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_dm_bridge7",
+		Orientation = Vec3(0.710, 0.033, 0.000),
+		Position = Vec3(3537.000, 3862.000, 65.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "dm_bridge7",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_dm_bridge8 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(0.337, -0.941, 0.016),
+			[1] = Vec3(0.993, 0.111, 0.040),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_dm_bridge8",
+		Orientation = Vec3(-2.798, 0.016, -0.000),
+		Position = Vec3(2802.000, 5101.000, 65.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "dm_bridge8",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
+	DEFEND_dm_bridge9 = 
+	{
+		AimVectors = 
+		{
+			[0] = Vec3(-0.594, 0.804, 0.027),
+			[1] = Vec3(-0.360, -0.933, 0.025),
+		},
+		CreateOnLoad = 1,
+		DisableCM = 0,
+		GoalType = "Defend",
+		GroupName = "",
+		MaxCampTime = 20,
+		MinCampTime = 10,
+		MinRadius = 32,
+		Name = "DEFEND_dm_bridge9",
+		Orientation = Vec3(0.636, 0.027, 0.000),
+		Position = Vec3(3815.000, 4462.000, 65.000),
+		Radius = 32,
+		Stance = "crouch",
+		TagName = "dm_bridge9",
+		TeamAvailability = 30,
+		Version = 1,
+		Weapons = 
+		{
+		},
+	},
 	DEFEND_gold5 = 
 	{
 		AimVectors = 
