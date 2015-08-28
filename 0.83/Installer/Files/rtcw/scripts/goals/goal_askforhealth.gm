@@ -1,8 +1,7 @@
 // This script contains functionality to allow bots to call for health when they need it
 
-// These parameters are required
-this.Name = "AskForHealth";		// The name of the goal.
-this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.Name = "AskForHealth";
+this.Parent = "HighLevel";
 this.SkipGetPriorityWhenActive = true;
 this.Debug = false;
 

@@ -1,8 +1,7 @@
 // This script is for testing events
 
-// These parameters are required
-this.Name = "TestEvents";		// The name of the goal.
-this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.Name = "TestEvents";
+this.Parent = "LowLevel";
 
 this.AutoAdd = false;
 this.AlwaysRecieveEvents = this.AutoAdd;	// Recieve events even when not active. Normally events are only called when goal is active.

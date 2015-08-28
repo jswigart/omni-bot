@@ -1,3 +1,4 @@
+// This script contains functionality to take checkpoints (capture forward spawns)
 this.Name = "CHECKPOINT";
 this.Parent = "HighLevel";
 this.SkipGetPriorityWhenActive = true;

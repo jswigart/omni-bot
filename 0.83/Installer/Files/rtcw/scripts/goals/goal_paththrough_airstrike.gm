@@ -26,8 +26,7 @@ this is the command to use of the waypoint for the given example
 /bot waypoint_setproperty paththrough Airstrike_PT:as1
 */
 
-// These parameters are required
-this.Name = "Airstrike_PT";     // The name of the goal.
+this.Name = "Airstrike_PT";
 this.Parent = "LowLevel";       // PathThrough states must be low level or they will not be used.
 
 this.LimitToWeapon( WEAPON.SMOKE_GRENADE );

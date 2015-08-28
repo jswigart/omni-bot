@@ -1,4 +1,4 @@
-// This script contains functionality to allow bots to toss grenades from given waypoints
+// This script contains functionality to allow bots to toss grenades from given position
 
 this.Name = "GRENADE";
 this.Parent = "HighLevel";

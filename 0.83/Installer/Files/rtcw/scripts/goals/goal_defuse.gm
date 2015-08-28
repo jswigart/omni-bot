@@ -1,3 +1,4 @@
+// This script contains functionality to allow engineers to defuse dynamites
 this.Name = "DEFUSE";
 this.Parent = "HighLevel";
 this.SkipGetPriorityWhenActive = false; // cs: let them abort for higher priority defuses

@@ -1,3 +1,4 @@
+// This script contains functionality to allow bots to camp on a position. It can be restricted to specific weapons (panzer, flamethrower, sniper).
 this.Name = "CAMP";
 this.Parent = "HighLevel";
 this.SkipGetPriorityWhenActive = true;

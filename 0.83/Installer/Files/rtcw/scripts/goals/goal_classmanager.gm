@@ -1,6 +1,5 @@
 // This script determines if a bot needs to change classes
 
-// These parameters are required
 this.Name = "ClassManager";
 this.Parent = "LowLevel";
 this.AutoAdd = true;

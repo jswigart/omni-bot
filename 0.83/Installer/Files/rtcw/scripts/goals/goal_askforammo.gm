@@ -1,8 +1,7 @@
 // This script contains functionality to allow bots to look for packs or ask for ammo
 
-// These parameters are required
-this.Name = "AskForAmmo";		// The name of the goal.
-this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.Name = "AskForAmmo";
+this.Parent = "HighLevel";
 
 // These parameters are optional
 this.LimitToNoClass( CLASS.LIEUTENANT ); //LIEUTENANTS shouldn't call for ammo

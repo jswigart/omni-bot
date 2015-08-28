@@ -1,3 +1,4 @@
+// This script contains functionality to capture flag (or radar parts, documents etc.) and carry them to CAPPOINT goal
 this.Name = "FLAG";
 this.Parent = "HighLevel";
 this.SkipGetPriorityWhenActive = true;

@@ -1,7 +1,6 @@
-// This script contains functionality to trigger any available movers as set up in the global map table.
+// This script is the paththrough version of goal_callartillery
 
-// These parameters are required
-this.Name = "Artillery_PT";     // The name of the goal.
+this.Name = "Artillery_PT";
 this.Parent = "LowLevel";       // PathThrough states must be low level or they will not be used.
 this.Debug = false;
 this.DebugLos = false;

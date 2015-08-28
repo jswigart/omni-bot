@@ -1,8 +1,7 @@
 // This script contains functionality to provide dodging while in combat
 
-// These parameters are required
-this.Name = "CombatMovement";       // The name of the goal.
-this.Parent = "LowLevel";       // The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.Name = "CombatMovement";
+this.Parent = "LowLevel";
 
 // These parameters are optional
 this.LimitToTargetClass( CLASS.ANYPLAYER ); //only valid if targeting a client (player)

@@ -1,3 +1,4 @@
+// This script contains functionality to allow medics to revive teammates
 this.Name = "REVIVE";
 this.Parent = "HighLevel";
 this.SkipGetPriorityWhenActive = true;

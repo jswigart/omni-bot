@@ -1,8 +1,7 @@
 // This script contains functionality to allow bots respond to miscelaneous events
 
-// These parameters are required
-this.Name = "VoiceChat";		// The name of the goal.
-this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.Name = "VoiceChat";
+this.Parent = "LowLevel";
 this.AutoAdd = true;
 this.AlwaysRecieveEvents = true;
 

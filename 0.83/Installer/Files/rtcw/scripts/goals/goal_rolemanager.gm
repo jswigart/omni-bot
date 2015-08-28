@@ -1,4 +1,4 @@
-// this script assigns bot roles as defined in the map table
+// this script assigns bot roles as defined in the Map table
 this.Name = "RoleManager";
 this.Parent = "LowLevel";
 this.Debug = false;
