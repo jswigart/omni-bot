@@ -113,12 +113,12 @@ global OnMapLoad = function()
 	Util.DisableGoal( ".*", true ); // all but routes
 
 	//soldiers will use mg's && rear flags
-	RTCWUtil.ExcludeClass( "CHECKPOINT_Checkpoint1", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.ExcludeClass( "CHECKPOINT_Checkpoint2", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.ExcludeClass( "CHECKPOINT_Checkpoint3", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.ExcludeClass( "CHECKPOINT_Checkpoint3", TEAM.ALLIES, CLASS.SOLDIER );
-	RTCWUtil.ExcludeClass( "CHECKPOINT_Checkpoint4", TEAM.ALLIES, CLASS.SOLDIER );
-	RTCWUtil.ExcludeClass( "CHECKPOINT_Checkpoint5", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT_Checkpoint1", TEAM.AXIS, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT_Checkpoint2", TEAM.AXIS, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT_Checkpoint3", TEAM.AXIS, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT_Checkpoint3", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT_Checkpoint4", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT_Checkpoint5", TEAM.ALLIES, CLASS.SOLDIER );
 
 	//priority should be based on closest available checkpoint
 	SetGoalPriority( "CHECKPOINT_Checkpoint5", 1.0, TEAM.AXIS );
@@ -149,8 +149,8 @@ global OnMapLoad = function()
 		"ARTILLERY_S_bMid.*",
 	});
 
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER );
 
 	MapRoutes =
 	{

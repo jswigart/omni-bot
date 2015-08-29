@@ -44,7 +44,7 @@ global Map =
 				"PANZER_rCourtyard_.*",
 				"DEFEND_rDocs_.*",
 			});
-			//RTCWUtil.LimitToClass( "CHECKPOINT_flag_obj", TEAM.AXIS, CLASS.SOLDIER );
+			//Util.LimitToClass( "CHECKPOINT_flag_obj", TEAM.AXIS, CLASS.SOLDIER );
 			SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_main.*" );
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 		}
@@ -246,7 +246,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "MOUNT_.*", {mincamptime = 30, maxcamptime = 60} );
 
-	//RTCWUtil.LimitToClass("MOUNT.*", 0, CLASS.LIEUTENANT, CLASS.SOLDIER);
+	//Util.LimitToClass("MOUNT.*", 0, CLASS.LIEUTENANT, CLASS.SOLDIER);
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	Util.DisableGoal( ".*", true ); //all but routes
@@ -259,7 +259,7 @@ global OnMapLoad = function()
 		"PANZER_rFlag_.*",
 	});
 
-	RTCWUtil.LimitToClass( "CHECKPOINT_flag_obj", TEAM.AXIS, CLASS.SOLDIER );
+	Util.LimitToClass( "CHECKPOINT_flag_obj", TEAM.AXIS, CLASS.SOLDIER );
 	SetAvailableMapGoals( TEAM.ALLIES, true, {
 		"CHECKPOINT_flag_obj",
 		"ARTILLERY_S_bSpawnkill.*",

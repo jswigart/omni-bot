@@ -154,13 +154,13 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=40, maxcamptime=70});
 
 	//disable all goals at start
-	RTCWUtil.DisableGoal(".*", true); //all but routes
+	Util.DisableGoal(".*", true); //all but routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
 
-	RTCWUtil.EnableGoal("CHECKPOINT.*", true);
+	Util.EnableGoal("CHECKPOINT.*", true);
 
 //	SetAvailableMapGoals( TEAM.AXIS, true, "PLANT_dock" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_1_2" );

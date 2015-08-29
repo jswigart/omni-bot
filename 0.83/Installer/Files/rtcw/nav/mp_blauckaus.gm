@@ -244,8 +244,8 @@ global OnMapLoad = function()
 	Map.Switches.gate1.Enabled = true;
 	Map.Switches.gate2.Enabled = true;
 
-	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, {
 		"ARTILLERY_S_bDoor.*",

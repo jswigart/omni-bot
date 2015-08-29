@@ -174,7 +174,7 @@ global OnMapLoad = function()
 	Util.AddUseWp( "PLANT_Radar_Array", "Radar_1" );
 	Util.AddUseWp( "PLANT_Radar_Array", "Radar_2" );
 
-	RTCWUtil.LimitToClass( "ATTACK_bArray_.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "ATTACK_bArray_.*", TEAM.ALLIES, CLASS.ENGINEER );
 
 	MapRoutes =
 	{

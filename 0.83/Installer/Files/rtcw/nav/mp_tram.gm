@@ -221,7 +221,7 @@ global Map =
 		RTCWUtil.SetTeamSuicide( TEAM.AXIS, true, false );
 
 		if ( !Map.twominute ) {
-			RTCWUtil.ExcludeClass( "FLAG.*", TEAM.ALLIES, CLASS.SOLDIER );
+			Util.ExcludeClass( "FLAG.*", TEAM.ALLIES, CLASS.SOLDIER );
 		}
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, {
@@ -818,14 +818,14 @@ global OnMapLoad = function()
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
-	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	SetGoalPriority( "DEFEND_rEng.*", 0.6, TEAM.AXIS, CLASS.ENGINEER );
 
 	// Martin - Why should soldiers not go for it?
 	// Medics are more valuable and should not be sent on flag runs.
-	RTCWUtil.ExcludeClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.MEDIC );
-	RTCWUtil.ExcludeClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.MEDIC );
+	Util.ExcludeClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER );
 
 	Util.DisableGoal( "ROUTE_engineroom1" );
 	SetAvailableMapGoals( TEAM.AXIS, true, {

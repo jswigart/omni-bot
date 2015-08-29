@@ -152,7 +152,7 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 
-	RTCWUtil.LimitToClass( "FLAG.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.MEDIC, CLASS.LIEUTENANT );
+	Util.LimitToClass( "FLAG.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.MEDIC, CLASS.LIEUTENANT );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, {
 		"CHECKPOINT.*",

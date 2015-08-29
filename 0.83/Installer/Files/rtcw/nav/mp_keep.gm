@@ -306,8 +306,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "DEFEND_LadderTruck.*", 0.6 );
-	RTCWUtil.LimitToClass( "ATTACK_bLT.*", TEAM.ALLIES, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "FLAG.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.MEDIC, CLASS.ENGINEER );
+	Util.LimitToClass( "ATTACK_bLT.*", TEAM.ALLIES, CLASS.LIEUTENANT );
+	Util.LimitToClass( "FLAG.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.MEDIC, CLASS.ENGINEER );
 
 	MapRoutes =
 	{

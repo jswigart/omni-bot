@@ -201,7 +201,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_bDocs.*", 0.86 );  // More than docs
 	SetGoalPriority( "GRENADE_barbwireLow", 0.67 );
 
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM_AXIS, CLASS.ENGINEER, CLASS.LIEUTENANT, CLASS.SOLDIER );
+	Util.LimitToClass( "MOUNT.*", TEAM_AXIS, CLASS.ENGINEER, CLASS.LIEUTENANT, CLASS.SOLDIER );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );

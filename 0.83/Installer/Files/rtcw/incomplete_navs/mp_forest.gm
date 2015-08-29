@@ -111,8 +111,8 @@ global OnMapLoad = function()
 	OnTrigger( "MISSING_STRING", Map.checkpoint06_Axis_Captured );
 	OnTrigger( "MISSING_STRING", Map.checkpoint06_Allies_Captured );
 
-	RTCWUtil.DisableGoal(".*", true); //all but the routes
-//	RTCWUtil.EnableGoal("CHECKPOINT.*", true); //all but the routes
+	Util.DisableGoal(".*", true); //all but the routes
+//	Util.EnableGoal("CHECKPOINT.*", true); //all but the routes
 
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime=60, maxcamptime=90});
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=1, maxcamptime=1}); //used as 'roams'

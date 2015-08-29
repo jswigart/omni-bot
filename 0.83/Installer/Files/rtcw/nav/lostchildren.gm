@@ -344,7 +344,7 @@ global Map =
 			"ARTILLERY_S_bFlag.*",
 		});
 
-		RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER );
+		Util.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER );
 		Util.SetMaxUsersInProgress(1, "CHECKPOINT.*");
 
 		Util.MapDebugPrint( "flag_Axis_Captured" );
@@ -510,10 +510,10 @@ global OnMapLoad = function()
 		"PLANT_Barrier_1",
 	});
 
-	RTCWUtil.LimitToClass( "ATTACK_east.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "GRENADE_bBarrier1.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "ATTACK_east.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER );
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	Util.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER );
+	Util.LimitToClass( "GRENADE_bBarrier1.*", TEAM.ALLIES, CLASS.ENGINEER );
 
 	Wp.SetWaypointFlag( "doorblock", "axis", false );
 

@@ -149,8 +149,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_rDocs.*", 0.55 );
 	SetGoalPriority( "PANZER_bSpawnkill.*", 0.86 );
 
-	RTCWUtil.LimitToClass( "DEFEND_rLT.*", TEAM.AXIS, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	Util.LimitToClass( "DEFEND_rLT.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	Util.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
 
 	Util.EnableGoal( "CAPPOINT.*", true ); // all but routes
 

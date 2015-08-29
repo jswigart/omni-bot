@@ -247,8 +247,8 @@ global OnMapLoad = function()
 	Util.DisableGoal( ".*", true ); //all but routes
 
 	Util.EnableGoal( "CAPPOINT_.*" );
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.ENGINEER);
+	Util.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.ENGINEER);
 
 	SetAvailableMapGoals( TEAM.AXIS, true, {
 		"DEFEND_main_defend_.*",

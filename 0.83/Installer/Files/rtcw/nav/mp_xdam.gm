@@ -192,10 +192,10 @@ global OnMapLoad = function()
 		"AIRSTRIKE_rFlag.*",
 	});
 
-	RTCWUtil.LimitToClass("MOUNT.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER);
-	RTCWUtil.LimitToClass("DEFEND_bLT.*", TEAM.ALLIES, CLASS.LIEUTENANT);
-	RTCWUtil.LimitToClass("GRENADE_bSpawnkill.*", TEAM.ALLIES, CLASS.LIEUTENANT);
-	RTCWUtil.LimitToClass("FLAG.*", TEAM.ALLIES, CLASS.MEDIC, CLASS.SOLDIER, CLASS.ENGINEER);
+	Util.LimitToClass("MOUNT.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER);
+	Util.LimitToClass("DEFEND_bLT.*", TEAM.ALLIES, CLASS.LIEUTENANT);
+	Util.LimitToClass("GRENADE_bSpawnkill.*", TEAM.ALLIES, CLASS.LIEUTENANT);
+	Util.LimitToClass("FLAG.*", TEAM.ALLIES, CLASS.MEDIC, CLASS.SOLDIER, CLASS.ENGINEER);
 	Util.SetMaxUsersInProgress( 2, "PLANT_Service_Entrance" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 

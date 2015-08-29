@@ -263,9 +263,9 @@ global OnMapLoad = function()
 	Util.DisableGoal( ".*", true ); //all but routes
 	Util.EnableGoal( "CAPPOINT_transmitter" );
 
-	RTCWUtil.LimitToClass( "GRENADE_rMain.*", TEAM.AXIS, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "MOUNTMG42_rMain.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	Util.LimitToClass( "GRENADE_rMain.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "MOUNTMG42_rMain.*", TEAM.AXIS, CLASS.LIEUTENANT );
 
 	Util.SetMaxUsersInProgress( 1, "GRENADE_rMain" );
 	Util.SetMaxUsersInProgress( 1, "PANZER_bSpawnkill.*" );

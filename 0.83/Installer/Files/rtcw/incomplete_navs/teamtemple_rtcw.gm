@@ -46,7 +46,7 @@ global OnMapLoad = function()
 	Util.DisableGoal( ".*", true ); //all but routes
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 
-	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.ENGINEER );
+	Util.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.ENGINEER );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, {
 		"PLANT.*",

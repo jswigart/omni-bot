@@ -135,7 +135,7 @@ global OnMapLoad = function()
 	Map.Airstrike.bflag1.Enabled = true;
 	Map.Airstrike.bflag2.Enabled = true;
 
-	RTCWUtil.LimitToClass( "DEFEND_rCourtyardEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "DEFEND_rCourtyardEng.*", TEAM.AXIS, CLASS.ENGINEER );
 
 	Wp.SetWaypointFlag( "flagdoor", "allies", false );
 

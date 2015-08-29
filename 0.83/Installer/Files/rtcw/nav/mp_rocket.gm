@@ -315,10 +315,10 @@ global OnMapLoad = function()
 //	SetAvailableMapGoals( TEAM.AXIS, false, Map.Checkpoint_caveone_flag );
 
 	SetMapGoalProperties( "DEFEND_bEng.*", {mincamptime = 30, maxcamptime = 60} );
-	RTCWUtil.LimitToClass( "DEFEND_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "DEFEND_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "DEFEND_bEng.*", 0.9, TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "SWITCH_controls", 0.9 );
-	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	Util.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
 
 	Util.DisableGoal( "ROUTE_keydel[45]" );
 

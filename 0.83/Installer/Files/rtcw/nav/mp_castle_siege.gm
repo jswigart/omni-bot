@@ -199,8 +199,8 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 40, maxcamptime = 60} );
 	SetMapGoalProperties( "MOUNT.*", {mincamptime = 60, maxcamptime = 60} );
 
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "DEFEND_rRoof1", TEAM.AXIS, CLASS.ENGINEER, CLASS.MEDIC, CLASS.LIEUTENANT );
+	Util.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_rRoof1", TEAM.AXIS, CLASS.ENGINEER, CLASS.MEDIC, CLASS.LIEUTENANT );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 1, "PLANT_Store_Room_Wall" );

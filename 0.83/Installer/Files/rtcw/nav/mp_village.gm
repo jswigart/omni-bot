@@ -212,7 +212,7 @@ global Map =
 			if ( !Map.AlliesNearCrypt && GetEntTeam( ent ) == TEAM.ALLIES && !Map.CryptStatus ) {
 				if ( GetEntClass( ent ) == CLASS.ENGINEER ) {
 					Map.AlliesNearCrypt = true;
-					RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+					Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
 					SetAvailableMapGoals( TEAM.AXIS, false, {
 						"DEFEND_.*",
 						"AIRSTRIKE.*",
@@ -584,7 +584,7 @@ global OnMapLoad = function()
 		"AIRSTRIKE_rTavernAS_.*",
 	});
 
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
 	//some triggers to help bots know when to aggressively defend crypt
 	tOne = OnTriggerRegion( Vector3( 67,3056,-110 ), 200, Map.CryptTrigger );

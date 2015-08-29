@@ -145,11 +145,11 @@ global OnMapLoad = function()
 	Util.SetMaxUsers( 1, "ATTACK_bSpawn.*" );
 	Util.SetMaxUsers( 1, "DEFEND_rSpawn.*" );
 	Util.SetMaxUsers( 2, "ATTACK_bTower.*" );
-	RTCWUtil.LimitToClass( "DEFEND_rLT.*", TEAM.AXIS, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "DEFEND_rSpawn.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "ATTACK_bLt.*", TEAM.ALLIES, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "ATTACK_bTower.*", TEAM.ALLIES, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "ATTACK_bSpawn.*", TEAM.ALLIES, CLASS.SOLDIER,CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_rLT.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_rSpawn.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER );
+	Util.LimitToClass( "ATTACK_bLt.*", TEAM.ALLIES, CLASS.LIEUTENANT );
+	Util.LimitToClass( "ATTACK_bTower.*", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.LimitToClass( "ATTACK_bSpawn.*", TEAM.ALLIES, CLASS.SOLDIER,CLASS.LIEUTENANT );
 
 	//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_nwmg.*" );
 	//SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_northmg.*" );

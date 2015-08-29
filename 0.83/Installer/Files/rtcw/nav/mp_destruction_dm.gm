@@ -34,8 +34,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, {
 		"AIRSTRIKE_bCourtyard_1",

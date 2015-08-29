@@ -201,7 +201,7 @@ global Map =
 		// Gold is not taken
 		if (!Map.GoldStatus)
 		{
-			RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+			Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
 			SetAvailableMapGoals( TEAM.AXIS, true, {
 				"DEFEND_rSwitch.*",
 				"CHECKPOINT.*",
@@ -451,7 +451,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "DEFEND_rEng.*", 0.6 );
 
-	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
 
 	// makes sure cappoints are disabled at map start
 	Util.DisableGoal("CAPPOINT_Goldcap.*");

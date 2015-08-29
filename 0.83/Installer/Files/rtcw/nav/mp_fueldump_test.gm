@@ -265,8 +265,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "AIRSTRIKE_.*", 0.89 );
 	SetGoalPriority( "GRENADE_.*", 0.91 );
 
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
 
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 25} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 45} );

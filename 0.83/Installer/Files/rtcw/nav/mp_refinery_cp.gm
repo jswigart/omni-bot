@@ -163,8 +163,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "AIRSTRIKE_rSpawnkill.*", 0.93 );
 	SetGoalPriority( "SNIPE_rSnipe.*", 0.93 );
 
-	RTCWUtil.LimitToClass( "DEFEND_rLT.*", TEAM.AXIS, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "DEFEND_bLT.*", TEAM.ALLIES, CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_rLT.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_bLT.*", TEAM.ALLIES, CLASS.LIEUTENANT );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, {
 		"AIRSTRIKE_rSpawnkill.*",

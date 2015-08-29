@@ -335,9 +335,9 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_rEng.*", 0.90 );
 	SetGoalPriority( "ATTACK_bEng.*", 0.90 );
 
-	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "ATTACK_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	Util.LimitToClass( "ATTACK_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
 
 	MapRoutes =
 	{

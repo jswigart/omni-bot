@@ -78,7 +78,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 
-	RTCWUtil.DisableGoal( ".*", true ); //all but routes
+	Util.DisableGoal( ".*", true ); //all but routes
 	SetAvailableMapGoals( TEAM.AXIS, true, {
 		"DEFEND_rFlag.*",
 		"CHECKPOINT.*",

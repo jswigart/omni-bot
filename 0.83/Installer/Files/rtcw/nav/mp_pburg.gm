@@ -251,9 +251,9 @@ global OnMapLoad = function()
 	SetGoalPriority( "GRENADE_Barricade1.*", 0.86 );
 
 	RTCWUtil.SetPrimaryGoals( 1.0 );
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "ATTACK_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "GRENADE_Barricade1", TEAM.ALLIES, CLASS.MEDIC, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.LimitToClass( "ATTACK_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "GRENADE_Barricade1", TEAM.ALLIES, CLASS.MEDIC, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, {
 		"ATTACK_alos1_.*",

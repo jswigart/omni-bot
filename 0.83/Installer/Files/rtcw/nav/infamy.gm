@@ -157,8 +157,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "GRENADE_rHangar", 0.90 );
 	SetGoalPriority( "ATTACK_rFlag", 0.91 );
 
-	RTCWUtil.LimitToClass( "DEFEND_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.ENGINEER,CLASS.SOLDIER );
+	Util.LimitToClass( "DEFEND_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.ENGINEER,CLASS.SOLDIER );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 1, "ATTACK_rFlag.*" );

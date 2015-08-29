@@ -649,13 +649,13 @@ global OnMapLoad = function()
 	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
 
 	Util.DisableGoal( ".*", true ); //all but the routes
-	RTCWUtil.LimitToClass( "DEFEND_eng_westgate.*", TEAM.AXIS, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "DEFEND_eng_opscover.*", TEAM.AXIS, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "DEFEND_lt_ruins.*", TEAM.AXIS, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "DEFEND_eng_eastgate.*", TEAM.ALLIES, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "DEFEND_eng_aacover.*", TEAM.ALLIES, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "GRENADE_reastgate.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "GRENADE_beastgate.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER );
+	Util.LimitToClass( "DEFEND_eng_westgate.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "DEFEND_eng_opscover.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "DEFEND_lt_ruins.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_eng_eastgate.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "DEFEND_eng_aacover.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "GRENADE_reastgate.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	Util.LimitToClass( "GRENADE_beastgate.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER );
 	SetGoalPriority( "DEFEND_eng_westgate.*", 0.7, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( "DEFEND_eng_opscover.*", 0.7, TEAM.AXIS, CLASS.ENGINEER );
 	SetGoalPriority( "DEFEND_lt_ruins.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );

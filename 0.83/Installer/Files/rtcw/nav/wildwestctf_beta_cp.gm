@@ -127,7 +127,7 @@ global OnMapLoad = function()
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSaloon.*" );
 
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER );
+	Util.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 	Util.SetMaxUsersInProgress( 3, "CHECKPOINT.*" );

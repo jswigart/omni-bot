@@ -280,7 +280,7 @@ global Map =
 		Util.SetMaxUsersInProgress( 1, "CHECKPOINT.*" );
 		Util.EnableGoal( "CHECKPOINT.*" );
 
-		RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.LIEUTENANT );
+		Util.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.LIEUTENANT );
 
 		SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
 
@@ -623,17 +623,17 @@ global OnMapLoad = function()
 	//open up some airstrike goals if ff is off
 	Map.FriendlyFire = GetCvar( "g_friendlyfire" );
 
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.MEDIC, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.MEDIC, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
 	//Util.SetMaxUsersInProgress( 1, "ATTACK.*" );
 	//Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "GRENADE_bTower.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "GRENADE_hatch", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER ); //classes with lots of grenades to spam
-	RTCWUtil.LimitToClass( "CAMP_eng_tower.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.LimitToClass( "GRENADE_bTower.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "GRENADE_hatch", TEAM.ALLIES, CLASS.ENGINEER, CLASS.SOLDIER ); //classes with lots of grenades to spam
+	Util.LimitToClass( "CAMP_eng_tower.*", TEAM.ALLIES, CLASS.ENGINEER );
 
 	Util.DisableGoal( ".*", true ); //all but the routes
 	Util.DisableGoal( "ROUTE_mwh.*" );

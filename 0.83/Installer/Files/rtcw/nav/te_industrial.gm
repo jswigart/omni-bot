@@ -55,7 +55,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "AIRSTRIKE.*", 0.90 );
 
-	RTCWUtil.LimitToClass( "GRENADE_r.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER );
+	Util.LimitToClass( "GRENADE_r.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, {
 		"CAPPOINT.*",

@@ -355,9 +355,9 @@ global OnMapLoad = function()
 	SetGoalPriority( "DEFEND_eng.*", 0.9 );
 	SetGoalPriority( "PANZER_rSouth.*", 0.7 );
 
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "DEFEND_eng.*", TEAM.AXIS, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "DEFEND_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_eng.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "DEFEND_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );

@@ -95,7 +95,7 @@ global Map =
 			"ARTILLERY_S_.*",
 		});
 		SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rWall_Main.*" );    // Concentrate fire
-		RTCWUtil.LimitToClass( "CHECKPOINT_beacheadspawn", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
+		Util.LimitToClass( "CHECKPOINT_beacheadspawn", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	},
 
 	Axis_Capture_Flag = function( trigger )
@@ -273,10 +273,10 @@ global OnMapLoad = function()
 		RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
 	}
 
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "GRENADE_Barricade1", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "GRENADE_Barricade2", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "GRENADE_Barricade3", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.LimitToClass( "GRENADE_Barricade1", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT, CLASS.ENGINEER );
+	Util.LimitToClass( "GRENADE_Barricade2", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
+	Util.LimitToClass( "GRENADE_Barricade3", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 1, "ATTACK.*" );

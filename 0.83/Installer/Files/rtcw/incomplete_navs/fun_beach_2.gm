@@ -84,7 +84,7 @@ global OnMapLoad = function()
 		"MOUNTMG42_sandbagmg",
 	});
 
-	RTCWUtil.LimitToClass("MOUNT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT);
+	Util.LimitToClass("MOUNT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT);
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	RTCWUtil.KillEntities( {94, 143, 96, 461, 460, 459, 90, 636, 637} );

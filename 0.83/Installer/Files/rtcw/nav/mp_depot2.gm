@@ -375,9 +375,9 @@ global OnMapLoad = function()
 	SetGoalPriority( "CAMP_.*", 0.95 );
 	SetGoalPriority( "DEFEND_lt_ruins.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
 
-	RTCWUtil.LimitToClass( "DEFEND_lt_ruins.*", TEAM.AXIS, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
+	Util.LimitToClass( "DEFEND_lt_ruins.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	Util.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER );
+	Util.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, {
 		"PLANT_North_Gate",

@@ -449,10 +449,10 @@ global OnMapLoad = function()
 	SetGoalPriority( "GRENADE_Barricade.*", 0.9 );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.MEDIC, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "GRENADE_Barricade1", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.MEDIC, CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "GRENADE_Barricade1", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, {
 		"PLANT_East_Station_Door",

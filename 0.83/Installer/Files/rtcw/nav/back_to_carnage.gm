@@ -355,11 +355,11 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_bEngGate.*", 0.8 );
 	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 
-	RTCWUtil.LimitToClass( "DEFEND_rGeneratorEng.*", TEAM.AXIS, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "DEFEND_RadioEng.*", TEAM.AXIS, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "ATTACK_RadioEng.*", TEAM.ALLIES, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "ATTACK_bEngGate.*", TEAM.ALLIES, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_rGeneratorEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "DEFEND_RadioEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "ATTACK_RadioEng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "ATTACK_bEngGate.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
@@ -378,7 +378,7 @@ global OnMapLoad = function()
 		"PLANT_Sea_Wall",
 		"ATTACK_bBeach.*",
 	});
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 	SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bSeawall_.*" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "AIRSTRIKE_rWallAS_.*" );
 

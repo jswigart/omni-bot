@@ -364,8 +364,8 @@ global OnMapLoad = function()
 		"MOUNTMG42_rear.*",
 	});
 
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
 
 	MapRoutes =
 	{

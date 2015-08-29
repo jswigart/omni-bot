@@ -279,7 +279,7 @@ global Map =
 			SetAvailableMapGoals( TEAM.ALLIES, true, Map.Destroy_service_door );
 		}
 
-		RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER );
+		Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER );
 
 		SetAvailableMapGoals( TEAM.ALLIES, true, Map.FLAG_War_Documents );
 		SetAvailableMapGoals( TEAM.ALLIES, false, {
@@ -757,9 +757,9 @@ global OnMapLoad = function()
 	SetAvailableMapGoals( TEAM.AXIS, false, "PANZER_bGarage" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "GRENADE_rflag.*" );
 
-	RTCWUtil.LimitToClass( "GRENADE_rflag.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "ATTACK_CP.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "DEFEND_Doc_Defense_2", TEAM.AXIS, CLASS.ENGINEER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "GRENADE_rflag.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	Util.LimitToClass( "ATTACK_CP.*", TEAM.ALLIES, CLASS.ENGINEER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_Doc_Defense_2", TEAM.AXIS, CLASS.ENGINEER, CLASS.LIEUTENANT );
 
 	// Artillery
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rFlagArty.*" );

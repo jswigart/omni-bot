@@ -296,8 +296,8 @@ global OnMapLoad = function()
 
 	Util.EnableGoal( "CAPPOINT_transmitter" );
 
-	RTCWUtil.LimitToClass( "GRENADE_rGrate.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "GRENADE_rGrate.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
 	Util.SetMaxUsers( 2, "CHECKPOINT.*" );
 	Util.SetMaxUsers( 1, "GRENADE.*" );

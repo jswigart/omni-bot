@@ -377,12 +377,12 @@ global OnMapLoad = function()
 	Util.DisableGoal( ".*", true ); //all but routes
 	Util.EnableGoal( "CHECKPOINT.*" );
 	Util.EnableGoal( "CAPPOINT.*" );
-	RTCWUtil.LimitToClass( "FLAG.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.MEDIC, CLASS.LIEUTENANT );  //Martin - Engies should NOT try to get docs, just protect the base
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "DEFEND_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "FLAG.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.MEDIC, CLASS.LIEUTENANT );  //Martin - Engies should NOT try to get docs, just protect the base
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.LimitToClass( "DEFEND_bEng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
 
 	Util.SetMaxUsers( 1, "MOUNTMG42.*" );
 	Util.SetMaxUsers( 1, "PANZER.*" );

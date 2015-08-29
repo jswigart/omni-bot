@@ -425,9 +425,9 @@ global OnMapLoad = function()
 	SetGoalPriority( "SWITCH_Alarm", 0.87 );
 	SetGoalPriority( "DEFEND_bRelic.*", 0.55 );
 
-	RTCWUtil.LimitToClass( "DEFEND_bEngPlant.*", TEAM.ALLIES, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "SWITCH.*", TEAM.ALLIES, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "SWITCH.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_bEngPlant.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "SWITCH.*", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.LimitToClass( "SWITCH.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, {
 		"PLANT.*",

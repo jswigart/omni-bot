@@ -214,7 +214,7 @@ global Map =
 			});
 
 			//only axis soldiers should try and grab flag
-			RTCWUtil.LimitToClass( Map.Checkpoint_beach_flag, TEAM.AXIS, CLASS.SOLDIER );
+			Util.LimitToClass( Map.Checkpoint_beach_flag, TEAM.AXIS, CLASS.SOLDIER );
 
 			//no more a/s here
 			SetAvailableMapGoals( TEAM.AXIS, false, "AIRSTRIKE_.*" );
@@ -569,8 +569,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "GRENADE_Barricade.*", 0.81 );
 
 	//SetGoalPriority( "DEFUSE_.*", 0.0, 0, CLASS.ENGINEER, true );	//Martin - Turned off via available goals when its planted
-	RTCWUtil.LimitToClass( "MOUNT.*", 0, CLASS.ENGINEER, CLASS.MEDIC );
-	RTCWUtil.LimitToClass( "GRENADE_Barricade.*", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
+	Util.LimitToClass( "MOUNT.*", 0, CLASS.ENGINEER, CLASS.MEDIC );
+	Util.LimitToClass( "GRENADE_Barricade.*", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
 
 	Util.DisableGoal( ".*", true ); //all but routes
 	Util.EnableGoal( "CAPPOINT_transmitter" );

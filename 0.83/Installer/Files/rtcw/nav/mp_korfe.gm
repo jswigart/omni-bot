@@ -217,8 +217,8 @@ global OnMapLoad = function()
 
 	Util.SetMaxUsersInProgress( 6, "CHECKPOINT.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND_rGatehouse.*" );
-	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "DEFEND_rGatehouse.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER, CLASS.MEDIC );
+	Util.LimitToClass( "GRENADE.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER );
+	Util.LimitToClass( "DEFEND_rGatehouse.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.ENGINEER, CLASS.MEDIC );
 
 	MapRoutes =
 	{

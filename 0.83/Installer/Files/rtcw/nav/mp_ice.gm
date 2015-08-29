@@ -367,7 +367,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "CAMP_hill.*", 0.95 );
 	SetGoalPriority( "PANZER_rSpawnkill.*", 0.86 );
 
-	RTCWUtil.LimitToClass( "ATTACK_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "ATTACK_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
 
 	Util.DisableGoal( ".*", true ); //all but routes
 	Util.DisableGoal( "ROUTE_sidewall" );
@@ -402,7 +402,7 @@ global OnMapLoad = function()
 	//Util.SetMaxUsersInProgress( 15, "FLAG_.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER );
 
 	MapRoutes =
 	{

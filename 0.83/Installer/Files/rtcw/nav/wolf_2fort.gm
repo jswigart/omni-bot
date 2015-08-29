@@ -158,8 +158,8 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 2, "CHECKPOINT.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, {
 		"PLANT_Allied_Entrance",

@@ -489,11 +489,11 @@ global OnMapLoad = function()
 	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 	SetGoalPriority( "SWITCH_officegate", 0.86 );
 
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "FLAG.*", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "DEFEND_eng.*", TEAM.AXIS, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "DEFEND_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "FLAG.*", TEAM.ALLIES, CLASS.MEDIC, CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_eng.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "DEFEND_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
 
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );

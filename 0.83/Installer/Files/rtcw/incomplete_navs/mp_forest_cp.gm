@@ -107,8 +107,8 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 15, maxcamptime = 30} );
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime = 60, maxcamptime = 90} );
 
-	RTCWUtil.DisableGoal(".*", true); //all but the routes
-	RTCWUtil.EnableGoal("CHECKPOINT.*", true); //all but the routes
+	Util.DisableGoal(".*", true); //all but the routes
+	Util.EnableGoal("CHECKPOINT.*", true); //all but the routes
 
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime=60, maxcamptime=90});
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime=1, maxcamptime=1}); //used as 'roams'

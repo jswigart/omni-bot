@@ -164,9 +164,9 @@ global OnMapLoad = function()
 	Util.SetMaxUsersInProgress( 1, "GRENADE.*" );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "ATTACK_bLTtransmit.*", TEAM.ALLIES, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.LimitToClass( "ATTACK_bLTtransmit.*", TEAM.ALLIES, CLASS.LIEUTENANT );
+	Util.LimitToClass( "GRENADE.*", TEAM.ALLIES, CLASS.SOLDIER );
 
 	MapRoutes =
 	{

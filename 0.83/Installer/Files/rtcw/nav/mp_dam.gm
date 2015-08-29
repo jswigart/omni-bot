@@ -267,7 +267,7 @@ global Map =
 				"MOUNTMG42_rRoad",
 				"REPAIRMG42_rRoad",
 			});
-			RTCWUtil.LimitToClass( "CHECKPOINT_dam_flag", TEAM.AXIS, CLASS.LIEUTENANT );
+			Util.LimitToClass( "CHECKPOINT_dam_flag", TEAM.AXIS, CLASS.LIEUTENANT );
 			if ( Map.Suicide  && !Map.DefenseShifted ) {
 				RTCWUtil.SetSuicide( TEAM.AXIS, CLASS.LIEUTENANT, 1, 1 );
 			}
@@ -399,15 +399,15 @@ global OnMapLoad = function()
 	SetGoalPriority( "GRENADE_AccessDuct", 0.67 );
 	SetGoalPriority( "GRENADE_SnipeWindow", 0.71 );
 
-	RTCWUtil.LimitToClass( "MOUNTMG42_rRoad.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "MOUNTMG42_bRoad.*", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "DEFEND_rLT.*", TEAM.AXIS, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "ATTACK_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "GRENADE_YardDuct", TEAM.ALLIES, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "GRENADE_HallDuct", TEAM.ALLIES, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "GRENADE_GeneratorDuct", TEAM.ALLIES, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "GRENADE_AccessDuct", TEAM.ALLIES, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "GRENADE_SnipeWindow", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.LimitToClass( "MOUNTMG42_rRoad.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER );
+	Util.LimitToClass( "MOUNTMG42_bRoad.*", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
+	Util.LimitToClass( "DEFEND_rLT.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	Util.LimitToClass( "ATTACK_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "GRENADE_YardDuct", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.LimitToClass( "GRENADE_HallDuct", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.LimitToClass( "GRENADE_GeneratorDuct", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.LimitToClass( "GRENADE_AccessDuct", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.LimitToClass( "GRENADE_SnipeWindow", TEAM.ALLIES, CLASS.SOLDIER );
 
 	Util.DisableGoal( ".*", true ); //all but routes
 	Util.DisableGoal( "ROUTE_main" );

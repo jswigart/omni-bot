@@ -449,7 +449,7 @@ global OnMapLoad = function()
 	Util.DisableGoal(".*", true); //all but routes
 	Util.DisableGoal("ROUTE_churchroof2");
 
-	RTCWUtil.LimitToClass("DEFEND_eng_book.*", TEAM.ALLIES, CLASS.ENGINEER);
+	Util.LimitToClass("DEFEND_eng_book.*", TEAM.ALLIES, CLASS.ENGINEER);
 
 	RTCWUtil.SetPrimaryGoals(1.0);
 	SetGoalPriority("CAMP_.*", 0.95);
@@ -470,7 +470,7 @@ global OnMapLoad = function()
 
 	Util.SetRoleForGoals( "CHECKPOINT_.*", ROLE.ATTACKER2 );
 
-	RTCWUtil.EnableGoal("CHECKPOINT.*", true);
+	Util.EnableGoal("CHECKPOINT.*", true);
 	SetAvailableMapGoals( TEAM.ALLIES, true, {
 		"PLANT_sewer_grate",
 		"PLANT_Book_Of_The_Dead_Holding_Chamber",

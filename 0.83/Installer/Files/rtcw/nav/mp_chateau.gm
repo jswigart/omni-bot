@@ -60,7 +60,7 @@ global Map =
 					"AIRSTRIKE_.*",
 					"CALLARTILLERY_spot_cellar_door",
 				});
-				RTCWUtil.LimitToClass( Map.Checkpoint, TEAM.AXIS, CLASS.SOLDIER );
+				Util.LimitToClass( Map.Checkpoint, TEAM.AXIS, CLASS.SOLDIER );
 				SetAvailableMapGoals( TEAM.AXIS, false, {
 					"DEFEND.*",
 					"PANZER.*",
@@ -102,7 +102,7 @@ global Map =
 				"AIRSTRIKE_.*",
 				"CALLARTILLERY_spot_cellar_door",
 			});
-			RTCWUtil.LimitToClass( Map.Checkpoint, TEAM.AXIS, CLASS.SOLDIER );
+			Util.LimitToClass( Map.Checkpoint, TEAM.AXIS, CLASS.SOLDIER );
 			SetAvailableMapGoals( TEAM.AXIS, false, {
 				"DEFEND.*",
 				"PANZER.*",
@@ -371,7 +371,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "DEFEND_rLT_side.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT );
 
-	RTCWUtil.LimitToClass( "DEFEND_rLT_side.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_rLT_side.*", TEAM.AXIS, CLASS.LIEUTENANT );
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, {

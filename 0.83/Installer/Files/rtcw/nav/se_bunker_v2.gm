@@ -594,14 +594,14 @@ global OnMapLoad = function()
 	Util.DisableGoal( "ROUTE_acctunn" );
 	Util.EnableGoal( "CAPPOINT_.*" );
 	RTCWUtil.SetPrimaryGoals( 1.1 );
-	RTCWUtil.LimitToClass( "DEFEND_axeng1_.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "DEFEND_axeng2_.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "DEFEND_osdef_.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER, CLASS.MEDIC );
-	RTCWUtil.LimitToClass( "DEFEND_ax1stfl_.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER, CLASS.MEDIC );
-	RTCWUtil.LimitToClass( "DEFEND_enidef_.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER, CLASS.MEDIC );
-	RTCWUtil.LimitToClass( "MOUNTMG42_.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.MEDIC );
-	RTCWUtil.LimitToClass( "ROUTE_elevator", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER, CLASS.MEDIC );
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	Util.LimitToClass( "DEFEND_axeng1_.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	Util.LimitToClass( "DEFEND_axeng2_.*", TEAM.AXIS, CLASS.ENGINEER, CLASS.SOLDIER );
+	Util.LimitToClass( "DEFEND_osdef_.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER, CLASS.MEDIC );
+	Util.LimitToClass( "DEFEND_ax1stfl_.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER, CLASS.MEDIC );
+	Util.LimitToClass( "DEFEND_enidef_.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER, CLASS.MEDIC );
+	Util.LimitToClass( "MOUNTMG42_.*", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.MEDIC );
+	Util.LimitToClass( "ROUTE_elevator", TEAM.AXIS, CLASS.LIEUTENANT, CLASS.SOLDIER, CLASS.MEDIC );
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.LIEUTENANT );
 
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 30, maxcamptime = 60} );

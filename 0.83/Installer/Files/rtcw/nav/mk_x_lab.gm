@@ -171,7 +171,7 @@ global OnMapLoad = function()
 		"CALLARTILLERY_rCastle.*",
 	});
 
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
 
 	Util.SetMaxUsersInProgress( 1, "PLANT_Burnt_House_Broken_Door" );
 	Util.SetMaxUsersInProgress( 1, "PLANT_Castle_Gate" );

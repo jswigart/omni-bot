@@ -191,7 +191,7 @@ global OnMapLoad = function()
 
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER );
 
 	Util.SetMaxUsersInProgress( 1, "PANZER.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNT.*" );

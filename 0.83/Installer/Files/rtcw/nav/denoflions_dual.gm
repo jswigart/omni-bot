@@ -264,10 +264,10 @@ global OnMapLoad = function()
 	Util.DisableGoal(".*", true); //all but the routes
 	RTCWUtil.SetPrimaryGoals(1.0);
 
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass("DEFEND_r_lt_barn.*", TEAM.AXIS, CLASS.LIEUTENANT);
-	RTCWUtil.LimitToClass("DEFEND_b_lt_radar.*", TEAM.ALLIES, CLASS.LIEUTENANT);
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass("DEFEND_r_lt_barn.*", TEAM.AXIS, CLASS.LIEUTENANT);
+	Util.LimitToClass("DEFEND_b_lt_radar.*", TEAM.ALLIES, CLASS.LIEUTENANT);
 
 	SetGoalPriority("DEFEND_r_lt_barn.*", 0.7, TEAM.AXIS, CLASS.LIEUTENANT);
 	SetGoalPriority("DEFEND_b_lt_radar.*", 0.7, TEAM.ALLIES, CLASS.LIEUTENANT);

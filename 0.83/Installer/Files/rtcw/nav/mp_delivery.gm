@@ -409,7 +409,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "MOUNTMG42_.*", {mincamptime=60, maxcamptime=90});
 	RTCWUtil.SetPrimaryGoals(1.0);
 
-	RTCWUtil.DisableGoal(".*", true); //all but the routes
+	Util.DisableGoal(".*", true); //all but the routes
 
 	SetAvailableMapGoals( TEAM.AXIS, true, {
 		"ATTACK_rAttack.*",

@@ -170,7 +170,7 @@ global OnMapLoad = function()
 
 	//eng camp spots to wait for recharge
 	SetGoalPriority( "ATTACK_eng.*", 0.91, TEAM.ALLIES, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "ATTACK_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "ATTACK_eng.*", TEAM.ALLIES, CLASS.ENGINEER );
 	SetGoalPriority( "PLANT_Storage_Door", 0.93 );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, "ATTACK_eng.*" );

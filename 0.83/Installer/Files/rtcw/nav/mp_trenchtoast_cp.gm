@@ -354,10 +354,10 @@ global OnMapLoad = function()
 	});
 
 	//concentrate on sniping until 30 seconds left
-	RTCWUtil.ExcludeClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.ExcludeClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.LimitToClass( "MOUNT.*", TEAM.AXIS, CLASS.SOLDIER );
 
 	MapRoutes =
 	{

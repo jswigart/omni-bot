@@ -341,14 +341,14 @@ global OnMapLoad = function()
 	Util.DisableGoal( ".*", true );
 
 	//soldiers will use mg's && rear flags
-	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint4", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint3", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint2", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint1", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint6", TEAM.ALLIES, CLASS.SOLDIER );
-	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint5", TEAM.ALLIES, CLASS.SOLDIER );
-	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint4", TEAM.ALLIES, CLASS.SOLDIER );
-	RTCWUtil.ExcludeClass( "CHECKPOINT_checkpoint3", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT_checkpoint4", TEAM.AXIS, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT_checkpoint3", TEAM.AXIS, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT_checkpoint2", TEAM.AXIS, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT_checkpoint1", TEAM.AXIS, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT_checkpoint6", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT_checkpoint5", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT_checkpoint4", TEAM.ALLIES, CLASS.SOLDIER );
+	Util.ExcludeClass( "CHECKPOINT_checkpoint3", TEAM.ALLIES, CLASS.SOLDIER );
 
 	Util.EnableGoal( "CHECKPOINT.*" );
 

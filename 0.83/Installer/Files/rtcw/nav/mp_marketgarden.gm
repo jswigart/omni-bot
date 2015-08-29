@@ -222,7 +222,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK.*", 0.45 );
 	SetGoalPriority( "CAMP_.*", 0.95 );
 
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "MOUNTMG42.*", CLASS.SOLDIER, CLASS.LIEUTENANT );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, {
 		"PLANT_Water_Tower_Door",

@@ -205,7 +205,7 @@ global Map =
 			});
 
 			//only axis soldiers should try and grab flag
-			RTCWUtil.LimitToClass( Map.Checkpoint_beach_flag, TEAM.AXIS, CLASS.SOLDIER );
+			Util.LimitToClass( Map.Checkpoint_beach_flag, TEAM.AXIS, CLASS.SOLDIER );
 
 			//no more a/s here
 			SetAvailableMapGoals( TEAM.ALLIES, false, "AIRSTRIKE_.*" );
@@ -505,8 +505,8 @@ global OnMapLoad = function()
 	SetGoalPriority( "AIRSTRIKE_.*", 0.95 );
 	SetGoalPriority( "GRENADE_.*", 0.91 );
 
-	RTCWUtil.LimitToClass( "MOUNT.*", 0, CLASS.SOLDIER, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "GRENADE.*", 0, CLASS.MEDIC, CLASS.LIEUTENANT );
+	Util.LimitToClass( "MOUNT.*", 0, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "GRENADE.*", 0, CLASS.MEDIC, CLASS.LIEUTENANT );
 
 	Util.DisableGoal( ".*", true ); //all but routes
 	Util.EnableGoal( "CAPPOINT_transmitter" );

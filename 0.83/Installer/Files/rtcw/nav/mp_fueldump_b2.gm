@@ -273,10 +273,10 @@ global OnMapLoad = function()
 
 	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.LIEUTENANT );
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.MEDIC, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
-	RTCWUtil.LimitToClass( "GRENADE_SideDoor", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.LIEUTENANT );
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.MEDIC, CLASS.ENGINEER );
+	Util.LimitToClass( "DEFEND_rEng.*", TEAM.AXIS, CLASS.ENGINEER );
+	Util.LimitToClass( "GRENADE_SideDoor", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
 
 	SetMapGoalProperties( "ATTACK_.*", {mincamptime = 15, maxcamptime = 25} );
 	SetMapGoalProperties( "DEFEND_.*", {mincamptime = 20, maxcamptime = 45} );

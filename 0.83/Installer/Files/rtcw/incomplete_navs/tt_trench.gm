@@ -36,12 +36,12 @@ global OnMapLoad = function()
 	SetGoalPriority( "ARTILLLERY.*", 1.0 );
 	SetGoalPriority( "MOUNT.*", 0.71 );
 
-	RTCWUtil.DisableGoal(".*", true); //all but the routes
+	Util.DisableGoal(".*", true); //all but the routes
 
 //	Util.SetMaxUsersInProgress( 1, "DEFEND.*" );
 	Util.SetMaxUsersInProgress( 1, "MOUNTMG42.*" );
 
-	RTCWUtil.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
+	Util.LimitToClass( "MOUNTMG42.*", TEAM.AXIS, CLASS.SOLDIER, CLASS.LIEUTENANT );
 
 	SetAvailableMapGoals( TEAM.ALLIES, true, {
 		"ATTACK_bGas.*",

@@ -296,9 +296,9 @@ global OnMapLoad = function()
 		"ARTILLERY_S_rSpawnkill.*",
 	});
 
-	RTCWUtil.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
-	RTCWUtil.LimitToClass( "ATTACK_bWall_eng_.*", TEAM.ALLIES, CLASS.ENGINEER );
+	Util.LimitToClass( "MOUNT.*", TEAM.ALLIES, CLASS.LIEUTENANT, CLASS.SOLDIER );
+	Util.LimitToClass( "CHECKPOINT.*", TEAM.AXIS, CLASS.SOLDIER );
+	Util.LimitToClass( "ATTACK_bWall_eng_.*", TEAM.ALLIES, CLASS.ENGINEER );
 
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
