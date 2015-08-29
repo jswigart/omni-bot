@@ -1271,7 +1271,7 @@ extern round_awards_t roundAwards;
 extern gentity_t g_entities[];          //DAJ was explicit set to MAX_ENTITIES
 extern gentity_t       *g_camEnt;
 
-#define FOFS( x ) ( (int)&( ( (gentity_t *)0 )->x ) )
+#define FOFS( x ) ( (size_t)&( ( (gentity_t *)0 )->x ) )
 
 extern vmCvar_t g_OmniBotPath;
 extern vmCvar_t g_OmniBotEnable;

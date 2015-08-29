@@ -243,7 +243,7 @@ qboolean _UI_IsFullscreen( void );
 #if defined( __MACOS__ )
 #pragma export on
 #endif
-int vmMain( int command, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7, int arg8, int arg9, int arg10, int arg11  ) {
+intptr_t vmMain(int command, intptr_t arg0, intptr_t arg1, intptr_t arg2, intptr_t arg3, intptr_t arg4, intptr_t arg5, intptr_t arg6, intptr_t arg7, intptr_t arg8, intptr_t arg9, intptr_t arg10, intptr_t arg11) {
 #if defined( __MACOS__ )
 #pragma export off
 #endif
@@ -1057,8 +1057,8 @@ void _UI_Shutdown( void ) {
 
 
 	//S4NDM4NN - remove the detour so the exe dosent crash :)
-#ifdef _WIN32
-	if ( !Q_stricmp( httpdown.version, "Wolf 1.4-MP win-x86 Oct 28 2002" ) ||
+#if defined(_WIN32) && !defined(_WIN64)
+	if(!Q_stricmp(httpdown.version, "Wolf 1.4-MP win-x86 Oct 28 2002") ||
 		 !Q_stricmp( httpdown.version, "Wolf 1.41-MP win-x86 Dec 4 2002" ) ||
 		 !Q_stricmp( httpdown.version, "Wolf 1.41b-MP win-x86 May 8 2006" ) ) {
 		DetourRemove( (PBYTE)orig_BeginDownload,(PBYTE)hook_BeginDownload );
@@ -6285,7 +6285,7 @@ void _UI_Init( qboolean inGameLoad ) {
 	Q_strncpyz( translated_no, DC->translateString( "NO" ), sizeof( translated_no ) );
 
 	//S4NDM4NN - setup our detour to get access of when downloads are starting.
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WIN64)
 	trap_Cvar_VariableStringBuffer( "version", httpdown.version, sizeof( httpdown.version ) );
 	if ( !Q_stricmp( httpdown.version, "Wolf 1.4-MP win-x86 Oct 28 2002" ) || !Q_stricmp( httpdown.version, "Wolf 1.41-MP win-x86 Dec 4 2002" ) ) {
 		orig_BeginDownload = ( void (__cdecl *)( const char *,const char * ) )DetourFunction( (LPBYTE)0x0040C670, (LPBYTE) hook_BeginDownload );
