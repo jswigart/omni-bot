@@ -2287,7 +2287,7 @@ GameEntity GetEntityOwner( const GameEntity _ent ) {
 				int iFlagEntNum = pEnt - g_entities;
 				for ( int i = 0; i < MAX_CLIENTS; ++i )
 				{
-					if ( g_entities[i].client && g_entities[i].client->flagParent == iFlagEntNum ) {
+					if( g_entities[i].inuse && g_entities[i].client && g_entities[i].client->flagParent == iFlagEntNum) {
 						owner = HandleFromEntity( &g_entities[i] );
 					}
 				}
