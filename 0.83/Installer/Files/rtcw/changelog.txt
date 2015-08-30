@@ -1,0 +1,286 @@
+==RTCW Change Log==
+
+=== BOT ===
+Added cvar omnibot_logsize (maximal file size in KB), -1 will disable logs, 0 will overwrite file every match
+Added script goal property LimitToNoClass
+Added you can pass 0 for all teams to MapGoal.SetAvailable and MapGoal.SetAvailableInitial
+Added WeaponFireMode.AimOffsetZ
+Changed log files are written to omni-bot/rtcw/logs (if the folder exists)
+Changed initialization is logged only if LogInfo is true in omni-bot.cfg
+Changed waypoint property is cleared if value is empty string
+Improved Server table is immediately updated when players connect or disconnect
+Improved help command is sorted
+Fixed memory leak caused by GameMonkey threads
+Fixed crash in AddBot if bot is kicked in ClientUserinfoChanged
+Fixed jumplow waypoint flag did not work at tank barrier or pile of box crates
+Fixed weapon mask was 64-bit and could not be used for mod specific weapons, now it's 128-bit
+Fixed InFieldOfView returned correct result only if bot had same Z coordinate as enemy
+Fixed DrawTrajectory was not accurate
+Fixed CalcTrajectory always returned null
+Fixed CheckCharged parameter of HasAnyWeapon
+Fixed Utils::ConvertString returned true even if string could not be converted
+Fixed some console commands expected integer parameters, but got float
+Fixed waypoint connection remained closed after blockable flag was removed
+Fixed new connection between blockable waypoints was not blockable
+Fixed crash if there was error in waypoints file
+Fixed bot killed himself after command bot.Enable(false)
+Fixed stuckage if paththrough navigation called Goto to unreachable destination
+Fixed bot sometimes could not reload if two weapons needed to be reloaded
+Fixed GetRandomWeapon
+Fixed indentation in log files
+Added trigger Flag dropped
+Added new functions IsCarryingFlag, CanGrabItem, GetNearestDestination, GetAllEnemy, GetAllAlly, GetMountedPlayerOnMG42
+Added TraceLine returns contents and surface
+Added DistanceBetween and DistanceTo parameters can be MapGoals
+Added GetGoals and QueryGoals have parameter Sort (values are none,priority,name,random)
+Added GetWaypointByGUID and GetAllWaypoints return waypoint name in result table
+Added Goto parameter can be a table of vectors
+Added HasAmmo can have 2 parameters (ammotype, amount)
+Added GetNearest,GetNearestEnemy,GetNearestAlly can search for multiple classes
+Added constants SURFACE.SLICK and SURFACE.LADDER
+Added file names in gm script error messages
+Added rtcw_autoexec_user.gm is executed after rtcw_autoexec.gm
+Added InitializeRoutes script function for Map scripts
+Added SetAvailableMapGoals 3rd parameter can be a table of goal expressions
+Changed MaxUsers trackers are separate for each team
+Changed QueryGoals and GetGoals delete all items from table before writing result
+Changed GetGoals does not sort goals by priority
+Changed console commands are sent to goals even if they are handled by global Commands table
+Changed BlackboardDelay,MarkInProgress,MarkInUse do not require mapgoal parameter
+Changed blocked waypoint connections are visible, color is dark grey
+Changed errors from SetAvailableMapGoals are printed by Util.MapDebugPrint
+Fixed crash if dlclose fails
+Fixed crash in ClientJoined event
+Fixed Finished did not work inside Enter callback
+Fixed condition if(vector) failed if vector.x was zero
+Fixed GetUsePoint
+Fixed ConfigGet with 2 parameters saved null to config file
+Optimized region triggers
+Optimized initialization of file system and weapons
+Removed options [Script]/Debug, [Script]/EnableRemoteDebugger, [Debug Render]/EnableInterProcess, [Downloader]
+Removed empty lines in error messages
+Added functions IsNull, SetGoalRole, ClearGoalRole, GetLocalCommand, Wp.GetClosestWaypoint
+Added waypoint navigation flag INFILTRATOR
+Added function Log has optional parameter: 0=info, 1=warning, 2=error, 3=critical
+Added path not found message if goal is unreachable
+Added parameter to SetAvailableMapGoals to ignore error if goal does not exist
+Added constants DEBUG.FPINFO, DEBUG.EVENTS
+Improved ReloadGoalScripts replaces scripts for all bots, it's not necessary to kick them
+Improved navigation at beginning and end of path
+Changed current goal is not aborted if bot is stuck and finds new path to the goal
+Changed ScriptGoal is delayed or disabled after script exception
+Changed global Server table is initialized even if map has no waypoints
+Changed IsStuck returns true if StuckTime is equal to parameter
+Changed functions SetGoalPriority, SetMapGoalProperties, SetGoalRole, ClearGoalRole print error message if goal does not exist
+Fixed crash in Omnibot_LoadLibrary if omnibot_rtcw.dll was not a valid Win32 application
+Fixed function UnitCircleNormalize
+Fixed IsStuck returned false if bot was stuck and jumped
+Fixed IsEntityValid called GetEntityClass if entity handle was invalid
+Fixed gm table indexes of type Vector3
+Fixed current goal was instantly aborted if LimitTo was used inside Enter
+Fixed deleted ROUTE goal remained visible
+Optimized updating blocked or dynamic paths
+Optimized Goto if bot is already at destination
+Removed goal loading and weapon loading messages from log file
+Optimized path planner
+Optimized sensory memory
+Updated ladder navigation
+Fixed ENT_ENTER_RADIUS to fire if bot is already within radius
+Fixed QueryGoals to randomly shuffle all returned goals
+Fixed ScriptGoal.LimitTo issues
+Fixed SetAvailableMapGoals was enabling all goals if parameter 3 was not a string
+Disable LookAroundState at doors
+Fixed Route nodes to work on slopes
+Fixed SetMapGoalProperties to work inside trigger functions
+Fixed MapGoal.RemoveWithEntity
+Fixed logger error masks
+Fixed some events were not always fired
+Fixed paththrough goals were able to be interrupted
+Added paththrough property set on waypoint does not require reload
+Fixed b.HasRole, b.HasPowerUp, b.HasAnyEntityFlag, and b.HasEntityFlag to check all parameters
+
+=== MOD ===
+Added cvar omnibot_render_distance to limit waypoint drawing distance from the player
+Changed drawing does not use boost interprocess library
+Changed message "Omni-bot Loaded Successfully" is printed only after successful initialization
+Fixed GetEntityOwner sometimes returned invalid entity
+Fixed crash if print parameter was too long
+Optimized drawing of waypoint radius
+Added version info to DLL files
+Fixed Axis engineer got XP for defusing his own dynamite
+
+=== GOALS ===
+Added coversplit property to PLANT goal
+Changed ATTACK goals are limited to 3 bots in progress
+Changed AIRSTRIKE,ARTILLERY,SNIPE goals are limited to 1 bot in progress
+Fixed stance property could be set to wrong values
+Removed many useless properties from goals gm file in nav folder
+Changed high level goals were moved from library to gm scripts
+Changed DEFUSE goal prefers dynamite which has been planted sooner if there are 2 dynamites at the same objective
+Changed FLAGRETURN goal has limited range
+Improved MOUNTMG42 can be used concurrently by both teams
+Added timedout message in CHECKPOINT, REVIVE, MOUNTMG42, REPAIRMG42, SWITCH
+Fixed priority was not reset to zero after map goal became unavailable
+Fixed new ARTILLERY_S or ARTILLERY_D goals were sometimes created in ground
+Fixed error if test bot was kicked during Goto
+Changed medics don't kill teammate who is carrying a flag
+Changed disablecm property of CAMP goal is toggled if goal_setproperty command has only 1 parameter
+Improved Util.SetMaxUsersInUse can be used to limit number of planted dynamites
+Improved medic does not reload after every bullet when killing teammate for revive and he gives medkits if he fails to kill
+Fixed bots often killed themselves in combat
+Fixed bots were stuck forever if they met in a narrow corridor
+Fixed engineer waited 0.25 seconds before planting dynamite
+Added support for interrupting Defuse goals for higher priority Defuse goals
+Fixed high cpu utilization in goal_paththrough_navigation
+Improved goal selection to be random for equal priority goals rather than sequential
+Fixed goal_paththrough_useswitch behavior while bots are riding in movers
+Fixed bots could not shoot fixed mg42 if reloading while mounted
+Fixed goal_checkstuck to allow enough time for revived bots to be able to move
+Optimized goal_deliversupplies
+Fixed issues in goal_watchforprojectile
+Fixed evaluation used by bots to determine when to reload
+Fixed FlagReturn goal to not query for "Flag.*"
+
+=== SCRIPTS ===
+Added ability to give unique names for re-usable region triggers
+Changed Util.ListTableMembers prints both keys and values
+Fixed Server.MinBots
+Fixed script errors when bot is kicked from server
+Improved server manager to balance number of humans and bots
+Added Util.ChangeCrucialClassForRole
+Added Util.QueryGoal, Util.InvalidGoal, Util.RouteTo
+Added region type in debug messages when entering/exiting re-usable region trigger
+Changed debug messages in disablepush,disablecm,breakabledist regions are printed only for bots
+Changed Util.UpdateSwitchData is called automatically by paththrough switch
+Added Util.GetGoal, Util.GetGoals, Util.RandomChat, Util.GetPriority
+Added Util.MapDebugPrint writes warning to log file if last parameter is 2
+Added Util.OnTriggerPosition parameter can be Vector3 instead of waypoint name
+Added all pathfailed messages contain waypoint UID and blackboard delay is randomized
+Changed Util.GetTableValue is case insensitive
+Changed LimitToClass, ExcludeClass, RollCall moved from RTCWUtil to Util
+Changed Util.RandomSpawn does not run in new thread
+Changed Util.ChangeSpawnForRole changes spawnpt in Map.Roles table
+Fixed some functions (Util.SetMaxUsers, Util.OnTriggerPosition, ...) did not print any error message if goal did not exist
+Fixed error in Util.UpdateSwitchData if WaypointName was undefined
+Removed Util.AddBotKickWhenDead, Util.WaitForPlayerSpawn, Util.FollowWaypoints, Util.SetPropertyTeamClassGoal, Util.BotsWithGoal, Util.TeamClassCounter, Util.TestGoalPriorities, Util.AllTeamPlayers, Util.QueryGoal
+Removed global table bot.QueryGoalsTable
+Added Util.ScriptDebugPrint with filtering capability
+
+=== WEAPONS ===
+Changed VENOM aim offset
+Changed weapon desirabilities
+Improved melee weapon is used to attack only if distance is within range
+Optimized some weapons cannot be reloaded and some weapons don't require ammo
+Removed unused weapon properties
+Added WeaponType "item"
+Changed SetDesirabilityRange can be less than DefaultDesirability
+Changed sniper weapons have smaller AimError
+
+=== COMMANDS ===
+Added trigger_bounds command supports writing the RegionTrigger.Create function call to file
+Added optional TRACE parameter to showentityinfo command
+Changed command botgoal prints MapGoal name, not ScriptGoal name
+Fixed difficulty command could not change difficulty of newly added bots, dead bots or bots waiting for a medic
+Fixed difficulty could not be set to -1 which means random difficulty
+Fixed difficulty could be set to 8, but maximal difficulty is 7
+Improved command ab is much faster, it can add 20 bots per second
+Improved sag command (ShowActiveGoals) prints priorities and roles
+Improved sei command (ShowEntityInfo) prints entity categories
+Improved rollcall command prints roles, goal, weapon, ammo, health, difficulty, view distance, reaction time
+Improved tracearty command renders pink line to point of collision if trace fails
+Fixed difficulty command is listed in help and don't need connected bots
+Removed TestMap conditions and ShowMovers from makemapgm command
+Added help with parameter prints usage info for that command
+Added debugbot parameters planner, steer, target
+Removed debug command
+Removed assignment to variable in trigger_bounds
+Improved waypoint_stats prints number of connections
+Fixed crash in waypoint_mirror of selected waypoints
+Added bot goto and bot wait commands for testbot
+Added waypoint_split command
+Added warpto command can be used for paththrough points
+Added waypoint_startover command which removes all waypoints without flags or properties
+
+=== TOOLS ===
+Route Maker does not require windows-1252 code page, output script is copied to clipboard
+Updated Notepad++ for omnibot (thx d00d)
+
+---------------------------------------------------------------
+==0.82 RTCW Change Log==
+
+=== Mod ===
+* Added betting system
+* Added dropped weapons include ammo from clips
+* Added g_mutespecs cvar
+* Added Round End trigger passes along winning team
+* Added /injure command for self kills without limbo
+* Added g_kickItems for kickable airstrikes and grenades
+* Added lua binding for etpub style fling command
+* Added g_binocs to unlock binoculars for different classes
+* Added auto cancellation of complaints if team killer revives the player
+* Added g_unlockWeapons for allowing all classes to use heavy weapons
+* Added g_flagLock to disable recapturing of checkpoints
+* Added lua binding for SetTeam which ignores restrictions
+* Added lua binding for setting map while preserving nextmap ( so rotations continue to run )
+* Added g_poisonDmg
+* Fixed hitbox for injured players
+* Fixed several issues related to extraClips and weapon / ammo pickups
+* Fixed dyno chaining to not explode enemy dynamite
+* Fixed max lives temp bans to not be enforced for bots
+* Fixed remove weapon event to not be called for bots entering limbo
+* Fixed unnecessary /killing for bots in some instances
+* Fixed defuse event to always be fired for bots
+* Fixed GetEntityTeam for dynamite
+* Fixed buffer overrun in the say_team command
+* Fixed bots avoiding team grenades / airstrikes when friendly fire is disabled
+* Fixed revived client sometimes being warped to wrong client
+* Fixed an aim spread issue for smg's
+* Fixed and re-enabled g_antilag
+* Fixed bug with multikill
+* Fixed goombas to ignore dmflags
+* Improved the /follow command to accept a partial name
+* Increased range for dragCorpse
+* Removed buggy g_smoothclients cvar
+* Replaced death spree award with knife kill award
+* Several code cleanups based on valgrind output, gcc warnings, and static analysis tools
+
+=== Bot ===
+* Fixed mg.SetRoles and mg.ClearRoles to preserve existing roles
+* Fixed b.SetRoles and b.ClearRoles to preserve existing roles
+* Fixed duplicate GetPriority calls when a bot spawned
+* Fixed crash in waypoint_mirror command
+* Fixed script goal OnSpawn callback
+* Fixed option table parameter in GotoRandomAsync and GotoRandom script functions
+* Fixed potential buffer overrun in CheckWaypointForGoal
+* Changed PostMapLoad to not require a map script
+* Updated PHYSFS from 1.1.1 to 2.0.2
+
+=== Goals ===
+* Added optional UseAsync property to goal_paththrough_useswitch
+* Added traceline property to grenade goal
+* Added count property to grenade goal to limit number of grenades thrown 
+* Added bots will search for unarmed dynamite at plant goals
+* Added disablecm property to camp type goals to disable combat movement
+* Added Range property to script goals
+* Added RandomUsePoint property for randomizing position for bot to use a goal
+* Added "peek" stance to camp type goals for duck and cover emulation
+* Fixed dispenseammo to not activate when a bot is revived
+* Fixed issues with goal_paththrough_artillery
+* Fixed issues with delivering supplies
+* Fixed bots sometimes not delivering objectives
+* Moved checkpoint goal to script
+* Moved defuse goal to script
+* Moved repairmg42 goal to script
+* Moved revive goal to script
+
+=== Scripts ===
+* Added regular expression support for route tables
+* Added support for passing a table of roles to util functions that set and clear roles
+* Added Util.FindClosestGoal() (thx d00d)
+* Added automated end of round bot chat
+* Fixed script errors on bot disconnect in goal_voicechat
+* Fixed issues in server_manager.gm
+* Fixed issues with the role manager
+* Moved ClassPrimaryWeaponChoice from global to bot
+* Removed death event from class manager
+* Seperated class manager logic into rtcw_classmanager.gm for global accessibility
