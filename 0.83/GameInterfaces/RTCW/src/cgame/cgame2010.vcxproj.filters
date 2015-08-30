@@ -159,4 +159,7 @@
     <None Include="cgame.def" />
     <None Include="Jamfile" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="cgame.rc" />
+  </ItemGroup>
 </Project>

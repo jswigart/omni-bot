@@ -563,6 +563,9 @@ copy "$(OMNIBOT_INST)\rtcw\game\omnibot_rtcw.pk3" "$(RTCWDIR)\omnibot"
     <None Include="cgame.def" />
     <None Include="Jamfile" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="cgame.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

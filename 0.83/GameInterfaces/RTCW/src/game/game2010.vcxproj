@@ -1095,6 +1095,9 @@ copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
     <None Include="game.def" />
     <None Include="Jamfile" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="game.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -224,4 +224,9 @@
       <Filter>sqlite</Filter>
     </CustomBuildStep>
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="game.rc">
+      <Filter>Source Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
 </Project>
