@@ -33,6 +33,7 @@ namespace InterfaceFuncs
 	int GetGunHealth(Client *_client, const GameEntity _gun);
 	void GetCurrentCursorHint(Client *_bot, int &_type, int &_val);
 	bool CanSnipe(Client *_bot);
+	void ChangeSpawnPoint(GameEntity _ent, int _spawnpoint);
 	void ChangeSpawnPoint(Client *_bot, int _spawnpoint);
 	bool GetMg42Properties(Client *_bot, RTCW_MG42Info &data);
 	int GetGameType();

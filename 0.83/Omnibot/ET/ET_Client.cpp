@@ -91,6 +91,8 @@ ET_Client::~ET_Client()
 
 void ET_Client::Init(int _gameid)
 {
+	InterfaceFuncs::ChangeSpawnPoint(g_EngineFuncs->EntityFromID(_gameid), 0); //default spawn
+
 	Client::Init(_gameid);
 
 	FilterPtr filter(new ET_FilterClosest(this, AiState::SensoryMemory::EntEnemy));

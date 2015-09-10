@@ -84,6 +84,8 @@ RTCW_Client::~RTCW_Client()
 
 void RTCW_Client::Init(int _gameid)
 {
+	InterfaceFuncs::ChangeSpawnPoint(g_EngineFuncs->EntityFromID(_gameid), 0); //default spawn
+
 	Client::Init(_gameid);
 
 	FilterPtr filter(new RTCW_FilterClosest(this, AiState::SensoryMemory::EntEnemy));

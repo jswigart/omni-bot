@@ -175,11 +175,16 @@ namespace InterfaceFuncs
 		_val = data.m_Value;
 	}
 
-	void ChangeSpawnPoint(Client *_bot, int _spawnpoint)
+	void ChangeSpawnPoint(GameEntity _ent, int _spawnpoint)
 	{
 		RTCW_SpawnPoint data = { _spawnpoint };
 		MessageHelper msg(RTCW_MSG_CHANGESPAWNPOINT, &data, sizeof(data));
-		InterfaceMsg(msg, _bot->GetGameEntity());
+		InterfaceMsg(msg, _ent);
+	}
+
+	void ChangeSpawnPoint(Client *_bot, int _spawnpoint)
+	{
+		ChangeSpawnPoint(_bot->GetGameEntity(), _spawnpoint);
 	}
 
 	bool GetMg42Properties(Client *_bot, RTCW_MG42Info &_data)

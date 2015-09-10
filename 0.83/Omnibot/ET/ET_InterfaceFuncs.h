@@ -31,6 +31,7 @@ namespace InterfaceFuncs
 	bool IsMountableGunRepairable(Client *_bot, GameEntity _gun);
 	int GetGunHealth(Client *_client, const GameEntity _gun);
 	void GetCurrentCursorHint(Client *_bot, int &_type, int &_val);
+	void ChangeSpawnPoint(GameEntity _ent, int _spawnpoint);
 	void ChangeSpawnPoint(Client *_bot, int _spawnpoint);
 	bool GetMg42Properties(Client *_bot, ET_MG42Info &data);
 	bool GetCabinetData(GameEntity _ent, ET_CabinetData &data);
