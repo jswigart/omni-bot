@@ -95,6 +95,13 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	FileSystem::MountArchives("global_scripts");
 	FileSystem::MountArchives("user");
 
+	//mount incomplete_navs to nav
+	fs::path path = Utils::GetModFolder() / "incomplete_navs";
+	FileSystem::Mount(path, "nav", FileSystem::MountLast);
+	FileSystem::Mount(path/"priority_maps", "nav", FileSystem::MountLast);
+	FileSystem::Mount(path/"with_script", "nav", FileSystem::MountLast);
+	FileSystem::Mount(path/"no_script", "nav", FileSystem::MountLast);
+
 	if(FileSystem::FileDelete("user/logged.gm"))
 		EngineFuncs::ConsoleMessage("deleted user/logged.gm");
 
