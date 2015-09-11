@@ -256,6 +256,7 @@ namespace AiState
 		int			m_LadderDirection;
 		obint32		m_JumpTime;
 		obint32		m_LastStuckTime;
+		bool		m_IgnorePathNotFound;
 		
 		obuint32	m_PassThroughState;
 		int			m_PathThroughPtIndex;

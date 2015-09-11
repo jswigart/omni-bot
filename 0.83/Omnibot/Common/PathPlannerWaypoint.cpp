@@ -1346,7 +1346,7 @@ bool PathPlannerWaypoint::Save(const String &_mapname)
 		} 
 		else
 		{
-			LOGERR(va("Unable to Load Waypoint: %s",waypointName.c_str()));
+			LOGERR(va("Unable to Save Waypoint: %s",waypointName.c_str()));
 		}
 	} 
 	else

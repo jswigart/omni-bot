@@ -1189,6 +1189,7 @@ namespace AiState
 
 	bool FollowPath::Goto(FollowPathUser *_owner, MoveMode _movemode /*= Run*/, bool _skiplastpt /*= false*/)
 	{
+		m_IgnorePathNotFound = false;
 		bool bFinalDest = true;
 		if (!_owner) return false;
 
@@ -1213,6 +1214,7 @@ namespace AiState
 
 	bool FollowPath::Goto(FollowPathUser *_owner, const Vector3f &_pos, float _radius /*= 32.f*/, MoveMode _movemode /*= Run*/, bool _skiplastpt /*= false*/)
 	{
+		m_IgnorePathNotFound = true;
 		DestinationVector destlist;
 		destlist.push_back(Destination(_pos,_radius));
 		return Goto(_owner, destlist, _movemode, _skiplastpt);
@@ -1220,6 +1222,7 @@ namespace AiState
 
 	bool FollowPath::Goto(FollowPathUser *_owner, const Vector3List &_goals, float _radius /*= 32.f*/, MoveMode _movemode /*= Run*/, bool _skiplastpt /*= false*/)
 	{
+		m_IgnorePathNotFound = true;
 		DestinationVector destlist;
 		for(obuint32 i = 0; i < _goals.size(); ++i)
 		    destlist.push_back(Destination(_goals[i],_radius));
@@ -1330,14 +1333,16 @@ namespace AiState
 		else
 		{
 			//path not found
-			FINDSTATE(hl, HighLevel, GetRootState());
-			if(hl) {
-				State *state = hl->GetActiveState();
-				if(state) {
-					MapGoal *g = state->GetMapGoalPtr();
-					if(g) {
-						const Vector3f &pos = GetClient()->GetPosition();
-						MapDebugPrint(va("Path not found from (%.0f,%.0f,%.0f) to %s", pos.x, pos.y, pos.z, g->GetName().c_str()));
+			if(!m_IgnorePathNotFound) {
+				FINDSTATE(hl, HighLevel, GetRootState());
+				if(hl) {
+					State *state = hl->GetActiveState();
+					if(state) {
+						MapGoal *g = state->GetMapGoalPtr();
+						if(g) {
+							const Vector3f &pos = GetClient()->GetPosition();
+							MapDebugPrint(va("Path not found from (%.0f,%.0f,%.0f) to %s", pos.x, pos.y, pos.z, g->GetName().c_str()));
+						}
 					}
 				}
 			}
