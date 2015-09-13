@@ -1270,7 +1270,7 @@ bool PathPlannerWaypoint::LoadFromFile(const String &_file)
 			{
 				if(m_WaypointList[i]->IsFlagOn(F_NAV_DONTSAVE))
 				{
-					DeleteWaypoint(m_WaypointList[i]->GetPosition());
+					DeleteWaypoint(m_WaypointList[i]);
 					i = 0;
 				}
 			}
@@ -1801,60 +1801,63 @@ Waypoint *PathPlannerWaypoint::AddWaypoint(const Vector3f &_pos, const Vector3f 
 bool PathPlannerWaypoint::DeleteWaypoint(const Vector3f &_pos)
 {
 	// Delete a waypoint close to this location.
-	int index = -1;
-	WaypointList::iterator it = m_WaypointList.begin();
-	Waypoint *pDeleteMe = _GetClosestWaypoint(_pos, 0, NOFILTER, &index);
+	Waypoint *pDeleteMe = _GetClosestWaypoint(_pos, 0, NOFILTER);
 
-	if ( pDeleteMe == NULL ) {
-		return false;
+	if(pDeleteMe && (pDeleteMe->GetPosition() - _pos).Length() < 100.0f)
+	{
+		DeleteWaypoint(pDeleteMe);
+		return true;
+	}
+	return false;
+}
+
+void PathPlannerWaypoint::DeleteWaypoint(Waypoint *pDeleteMe)
+{
+	// Clear the connect point if we're going to delete it.
+	if(m_ConnectWp == pDeleteMe)
+		m_ConnectWp = 0;
+
+	// Remove it from the selected waypoint list.
+	WaypointList::iterator newEnd = std::remove(m_SelectedWaypoints.begin(), m_SelectedWaypoints.end(), pDeleteMe);
+	if(newEnd != m_SelectedWaypoints.end())
+		m_SelectedWaypoints.erase(newEnd, m_SelectedWaypoints.end());
+
+	// Remove from the blockable list.
+	ConnectionList::iterator bIt = m_BlockableList.begin();
+	while(bIt != m_BlockableList.end())
+	{
+		if((bIt->first == pDeleteMe) || (bIt->second->m_Connection == pDeleteMe))
+			bIt = m_BlockableList.erase(bIt);
+		else
+			++bIt;
+	}
+
+	// Delete it from the list.
+	int index = 0;
+	WaypointList::iterator it = m_WaypointList.begin();
+	for(; it != m_WaypointList.end(); ++it, ++index)
+	{
+		if((*it) == pDeleteMe)
+		{
+			delete (*it);
+			m_WaypointList.erase(it);
+			break;
+		}
 	}
 
 	// Clear the moving waypoint if we delete.
 	if(m_MovingWaypointIndex == index)
 		m_MovingWaypointIndex = -1;
+	else if(m_MovingWaypointIndex > index)
+		m_MovingWaypointIndex--;
 
-	// Clear the connect point if we're going to delete it.
-	if(m_ConnectWp == pDeleteMe)
-		m_ConnectWp = 0;
-
-	if(pDeleteMe && (pDeleteMe->GetPosition() - _pos).Length() < 100.0f)
+	// Eliminate all connections to this waypoint.
+	it = m_WaypointList.begin();
+	while(it != m_WaypointList.end())
 	{
-		// Remove it from the selected waypoint list.
-		WaypointList::iterator newEnd = std::remove(m_SelectedWaypoints.begin(), m_SelectedWaypoints.end(), pDeleteMe);
-		if(newEnd != m_SelectedWaypoints.end()) 
-			m_SelectedWaypoints.erase(newEnd, m_SelectedWaypoints.end());
-
-		// Remove from the blockable list.
-		ConnectionList::iterator bIt = m_BlockableList.begin();
-		while(bIt != m_BlockableList.end())
-		{
-			if((bIt->first == pDeleteMe) || (bIt->second->m_Connection == pDeleteMe))
-				bIt = m_BlockableList.erase(bIt);
-			else
-				++bIt;
-		}
-
-		// Delete it from the list.
-		for( ; it != m_WaypointList.end(); ++it)
-		{
-			if((*it) == pDeleteMe)
-			{
-				delete (*it);
-				m_WaypointList.erase(it);
-				break;
-			}
-		}
-
-		// Eliminate all connections to this waypoint.
-		it = m_WaypointList.begin();
-		while(it != m_WaypointList.end())
-		{
-			(*it)->DisconnectFrom(pDeleteMe);
-			++it;
-		}
-		return true;
+		(*it)->DisconnectFrom(pDeleteMe);
+		++it;
 	}
-	return false;
 }
 
 void PathPlannerWaypoint::RegisterNavFlag(const String &_name, const NavFlags &_bits)
@@ -2129,7 +2132,7 @@ void PathPlannerWaypoint::RemoveEntityConnection(GameEntity _ent)
 
 			if(EntityConnections[i].Wp)
 			{
-				DeleteWaypoint(EntityConnections[i].Wp->GetPosition());
+				DeleteWaypoint(EntityConnections[i].Wp);
 				EntityConnections[i].Wp = 0;
 			}
 		}

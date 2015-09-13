@@ -119,6 +119,7 @@ public:
 	// waypoint creation methods
 	Waypoint *AddWaypoint(const Vector3f &_pos, const Vector3f &_facing = Vector3f::ZERO, bool _blockdupe = false);
 	bool DeleteWaypoint(const Vector3f &_pos);
+	void DeleteWaypoint(Waypoint *pDeleteMe);
 
 	void RegisterNavFlag(const String &_name, const NavFlags &_func);
 	//void RegisterLinkFlag(const String &_name, const NavFlags &_func);
@@ -304,6 +305,7 @@ protected:
 	void cmdBoxSelectRoom(const StringVector &_args);
 	void cmdWaypointSlice(const StringVector &_args);
 	void cmdWaypointSplit(const StringVector &_args);
+	void cmdWaypointUnSplit(const StringVector &_args);
 	void cmdWaypointGround(const StringVector &_args);
 
 	Waypoint_Header		m_WaypointHeader;

@@ -195,15 +195,8 @@ bool Waypoint::IsConnectedTo(const Waypoint *_wp) const
 
 bool Waypoint::ConnectTo(Waypoint *_wp, obuint32 _flags)
 {
-	if(_wp)
+	if(_wp && !IsConnectedTo(_wp))
 	{
-		Waypoint::ConnectionList::iterator it = m_Connections.begin();
-		for( ; it != m_Connections.end(); ++it)
-		{
-			if(it->m_Connection == _wp)
-				return false;
-		}
-
 		Waypoint::ConnectionInfo info;
 		info.m_Connection = _wp;
 		info.m_ConnectionFlags = _flags;

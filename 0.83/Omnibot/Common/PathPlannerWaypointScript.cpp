@@ -79,8 +79,10 @@ static int GM_CDECL gmfDeleteWaypoint(gmThread *a_thread)
 		{
 			GM_CHECK_INT_PARAM(wpid,0);
 			Waypoint *w = pWp->GetWaypointByGUID(wpid);
-			if(w)
-				bSuccess = pWp->DeleteWaypoint(w->GetPosition());
+			if(w){
+				pWp->DeleteWaypoint(w);
+				bSuccess = true;
+			}
 		}
 		else if(a_thread->ParamType(GM_VEC3))
 		{

@@ -119,7 +119,9 @@ void PathPlannerWaypoint::InitCommands()
 		this, &PathPlannerWaypoint::cmdWaypointSlice);
 	SetEx("waypoint_split", "Splits a connection to 2 parts at player position.", 
 		this, &PathPlannerWaypoint::cmdWaypointSplit);
-	SetEx("waypoint_ground", "Grounds all waypoints based on the navigation rendering offsets.", 
+	SetEx("waypoint_unsplit", "Deletes a waypoint which has 2 connections and makes 1 connection.",
+		this, &PathPlannerWaypoint::cmdWaypointUnSplit);
+	SetEx("waypoint_ground", "Grounds all waypoints based on the navigation rendering offsets.",
 		this, &PathPlannerWaypoint::cmdWaypointGround);
 	
 }
@@ -179,7 +181,7 @@ void PathPlannerWaypoint::cmdWaypointDelete(const StringVector &_args)
 	else
 	{
 		while(!m_SelectedWaypoints.empty())
-			DeleteWaypoint(m_SelectedWaypoints.back()->GetPosition());
+			DeleteWaypoint(m_SelectedWaypoints.back());
 	}	
 }
 
@@ -2099,6 +2101,32 @@ void PathPlannerWaypoint::cmdWaypointSplit(const StringVector &_args)
 	}
 
  	if(wp0->IsAnyFlagOn(m_BlockableMask) && wp1->IsAnyFlagOn(m_BlockableMask)) 
+		BuildBlockableList();
+}
+
+void PathPlannerWaypoint::cmdWaypointUnSplit(const StringVector &_args)
+{
+	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
+		return;
+
+	Vector3f vLocalPos;
+	if(!Utils::GetLocalPosition(vLocalPos))
+		return;
+	Waypoint *wP = _GetClosestWaypoint(vLocalPos, 0, NOFILTER);
+	if(!wP || wP->m_Connections.size() != 2)
+	{
+		EngineFuncs::ConsoleError("The closest waypoint does not have 2 connections.");
+		return;
+	}
+
+	Waypoint::ConnectionList::iterator it = wP->m_Connections.begin();
+	Waypoint *wp0 = it->m_Connection;
+	Waypoint *wp1 = (++it)->m_Connection;
+	DeleteWaypoint(wP);
+	wp0->ConnectTo(wp1);
+	wp1->ConnectTo(wp0);
+
+	if(wp0->IsAnyFlagOn(m_BlockableMask) && wp1->IsAnyFlagOn(m_BlockableMask))
 		BuildBlockableList();
 }
 
