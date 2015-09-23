@@ -84,7 +84,8 @@ RTCW_Client::~RTCW_Client()
 
 void RTCW_Client::Init(int _gameid)
 {
-	InterfaceFuncs::ChangeSpawnPoint(g_EngineFuncs->EntityFromID(_gameid), 0); //default spawn
+	if(IGame::GetGameState() != GAME_STATE_PLAYING) //warmup
+		InterfaceFuncs::ChangeSpawnPoint(g_EngineFuncs->EntityFromID(_gameid), 0); //default spawn
 
 	Client::Init(_gameid);
 
