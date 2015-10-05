@@ -1,4 +1,6 @@
-==RTCW Change Log==
+==0.85 RTCW Change Log==
+
+64-bit iortcw is supported
 
 === BOT ===
 Added cvar omnibot_logsize (maximal file size in KB), -1 will disable logs, 0 will overwrite file every match
@@ -98,6 +100,8 @@ Fixed some events were not always fired
 Fixed paththrough goals were able to be interrupted
 Added paththrough property set on waypoint does not require reload
 Fixed b.HasRole, b.HasPowerUp, b.HasAnyEntityFlag, and b.HasEntityFlag to check all parameters
+Added bot has default spawn point at start
+Added waypoints are loaded from nav and incomplete_navs folders
 
 === MOD ===
 Added cvar omnibot_render_distance to limit waypoint drawing distance from the player
@@ -197,7 +201,7 @@ Removed assignment to variable in trigger_bounds
 Improved waypoint_stats prints number of connections
 Fixed crash in waypoint_mirror of selected waypoints
 Added bot goto and bot wait commands for testbot
-Added waypoint_split command
+Added waypoint_split and waypoint_unsplit commands
 Added warpto command can be used for paththrough points
 Added waypoint_startover command which removes all waypoints without flags or properties
 
