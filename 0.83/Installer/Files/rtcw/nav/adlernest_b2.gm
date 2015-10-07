@@ -394,8 +394,6 @@ global OnBotJoin = function( bot )
 
 	RTCWUtil.NoSnipe( bot );      // Not exactly a great sniping map is it...
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
-	//default spawn
-	bot.ChangeSpawnPoint( 0 );
 };
 
 /*

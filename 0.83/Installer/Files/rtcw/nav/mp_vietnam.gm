@@ -180,7 +180,6 @@ global OnBotJoin = function( bot )
 {
 	RTCWUtil.NoSnipe( bot );
 	bot.TargetBreakableDist = 80.0;
-	bot.ChangeSpawnPoint( 0 );
 	RTCWUtil.SelectSoldierWeapons( TEAM.AXIS, bot, WEAPON.PANZERFAUST, WEAPON.VENOM );
 	RTCWUtil.SelectSoldierWeapons( TEAM.ALLIES, bot, WEAPON.PANZERFAUST, WEAPON.VENOM );
 };

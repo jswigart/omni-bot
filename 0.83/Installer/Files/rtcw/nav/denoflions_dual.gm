@@ -338,8 +338,6 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 80.0;
-	//default spawn
-	bot.ChangeSpawnPoint( 0 );
 };
 
 global InitializeRoutes = function()

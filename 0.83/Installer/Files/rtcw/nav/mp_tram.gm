@@ -998,7 +998,4 @@ global OnBotJoin = function( bot )
 
 	//only use mausers and panzers
 	//RTCWUtil.SelectSoldierWeapons( 0, bot, WEAPON.MAUSER, WEAPON.PANZERFAUST );
-
-	//default spawn
-	bot.ChangeSpawnPoint( 0 );
 };

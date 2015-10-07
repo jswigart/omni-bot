@@ -294,7 +294,6 @@ global OnBotJoin = function( bot )
 	RTCWUtil.NoSnipe( bot );
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
 	bot.MaxViewDistance = Map.ViewDistance;
-	bot.ChangeSpawnPoint( 0 );
 	if ( bot.GetTeam() == TEAM.AXIS ) {
 		bot.ChangeSpawnPoint( 101 );
 	}

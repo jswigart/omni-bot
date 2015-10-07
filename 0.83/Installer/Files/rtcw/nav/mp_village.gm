@@ -775,7 +775,4 @@ global OnBotJoin = function( bot )
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
 	RTCWUtil.SelectWeapon( bot, WEAPON.MP40 );
 	RTCWUtil.NoSnipe( bot );
-
-	//default spawn
-	bot.ChangeSpawnPoint( 0 );
 };

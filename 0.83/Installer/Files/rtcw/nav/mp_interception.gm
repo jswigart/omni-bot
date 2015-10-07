@@ -214,5 +214,4 @@ global OnBotJoin = function( bot )
 	bot.MaxViewDistance = 2300;
 	RTCWUtil.NoSnipe( bot );
 	RTCWUtil.SelectSoldierWeapons( 0, bot, WEAPON.PANZERFAUST, WEAPON.VENOM );
-	bot.ChangeSpawnPoint( 0 );
 };

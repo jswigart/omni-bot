@@ -500,7 +500,5 @@ global OnBotJoin = function( bot )
 
 	RTCWUtil.NoSnipe( bot );      // Not exactly a great sniping map is it...
 
-	//default spawn
-	bot.ChangeSpawnPoint( 0 );
 	bot.RemoveState("WatchForProjectile");
 };

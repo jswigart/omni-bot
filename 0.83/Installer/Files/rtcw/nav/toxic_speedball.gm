@@ -586,7 +586,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	bot.ChangeSpawnPoint( 0 );
 	bot.TargetBreakableDist = 100.0;
 	RTCWUtil.StopSniping();
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );

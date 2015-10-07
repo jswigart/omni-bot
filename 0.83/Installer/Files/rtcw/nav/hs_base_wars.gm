@@ -233,6 +233,5 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.MaxViewDistance = Map.ViewDistance;
-	bot.ChangeSpawnPoint( 0 );
 
 };

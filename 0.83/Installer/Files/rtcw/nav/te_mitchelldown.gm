@@ -252,8 +252,4 @@ global OnBotJoin = function( bot )
 	if ( bot.GetTeam() == TEAM.AXIS ) {
 		bot.ChangeSpawnPoint( 2 );
 	}
-	else
-	{
-		bot.ChangeSpawnPoint( 0 );
-	}
 };

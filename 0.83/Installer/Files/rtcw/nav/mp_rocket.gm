@@ -410,7 +410,6 @@ global OnBotJoin = function( bot )
 	RTCWUtil.NoSnipe( bot );
 
 	//default spawn
-	bot.ChangeSpawnPoint( 0 );
 	if ( bot.GetTeam() == TEAM.ALLIES ) { // Spawn allies at flag
 		bot.ChangeSpawnPoint( 3 );
 	}

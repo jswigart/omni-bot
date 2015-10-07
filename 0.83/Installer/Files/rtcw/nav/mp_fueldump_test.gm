@@ -408,8 +408,6 @@ global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 80.0;
 
-	bot.ChangeSpawnPoint( 0 );
-
 	// Randomly spawn at the side or regular spawn
 	//Util.RandomSpawn( TEAM.AXIS, 2 );
 	RTCWUtil.RandomBotSpawn( bot, TEAM.AXIS, 2 );

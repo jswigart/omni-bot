@@ -120,7 +120,4 @@ global OnBotJoin = function( bot )
 	RTCWUtil.NoSnipe( bot );
 	bot.TargetBreakableDist = 80.0;
 	bot.MaxViewDistance = 3500;
-
-	//default spawn
-	bot.ChangeSpawnPoint( 0 );
 };

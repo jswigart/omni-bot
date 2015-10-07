@@ -119,7 +119,6 @@ global OnBotJoin = function( bot )
 	bot.MaxViewDistance = Map.ViewDistance;
 	bot.TargetBreakableDist = 80.0;
 	RTCWUtil.NoSnipe( bot );
-	bot.ChangeSpawnPoint( 0 );
 };
 global InitializeRoutes = function()
 {

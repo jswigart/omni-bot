@@ -1051,7 +1051,4 @@ global OnBotJoin = function( bot )
 			RTCWUtil.SelectWeapon( bot, WEAPON.MAUSER );
 		}
 	}
-
-	//default spawn
-	bot.ChangeSpawnPoint( 0 );
 };

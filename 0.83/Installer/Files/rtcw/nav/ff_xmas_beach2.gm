@@ -671,7 +671,4 @@ global OnBotJoin = function( bot )
 
 	//RTCWUtil.SelectWeapon(bot, WEAPON.MAUSER);
 	RTCWUtil.StopSniping();
-
-	//default spawn
-	bot.ChangeSpawnPoint( 0 );
 };

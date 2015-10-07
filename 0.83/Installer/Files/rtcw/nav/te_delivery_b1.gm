@@ -575,7 +575,4 @@ global OnBotJoin = function( bot )
 	RTCWUtil.SelectSoldierWeapons( TEAM.AXIS, bot, WEAPON.PANZERFAUST, WEAPON.VENOM );
 	RTCWUtil.SelectSoldierWeapons( TEAM.ALLIES, bot, WEAPON.PANZERFAUST, WEAPON.VENOM );
 	RTCWUtil.NoSnipe( bot );
-
-	//default spawn
-	bot.ChangeSpawnPoint( 0 );
 };

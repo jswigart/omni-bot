@@ -579,13 +579,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	//team = bot.GetTeam();
-
 	RTCWUtil.NoSnipe( bot );
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
-
-	//default spawn for axis
-	if ( bot.GetTeam() == TEAM.AXIS ) {
-		bot.ChangeSpawnPoint( 0 );
-	}
 };

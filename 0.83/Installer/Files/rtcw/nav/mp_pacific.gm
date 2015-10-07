@@ -277,7 +277,4 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
-
-	//default spawn
-	bot.ChangeSpawnPoint( 0 );
 };

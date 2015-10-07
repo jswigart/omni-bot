@@ -655,7 +655,5 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	//default spawn
-	bot.ChangeSpawnPoint( 0 );
 	RTCWUtil.ChangeSpawnNoDefenders( TEAM.AXIS, 1 );
 };

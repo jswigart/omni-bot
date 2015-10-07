@@ -967,7 +967,4 @@ global OnBotJoin = function( bot )
 	bot.TargetBreakableDist = 80.0;
 	RTCWUtil.NoSnipe( bot );
 	RTCWUtil.SelectWeapon( bot, WEAPON.PANZERFAUST );
-
-	//default spawn
-	bot.ChangeSpawnPoint( 0 );
 };

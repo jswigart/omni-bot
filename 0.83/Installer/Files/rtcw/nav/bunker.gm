@@ -369,5 +369,4 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	RTCWUtil.NoSnipe( bot );
-	bot.ChangeSpawnPoint( 0 );
 };

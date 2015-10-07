@@ -245,9 +245,3 @@ global OnMapLoad = function()
 	Util.Routes( MapRoutes );
 	Util.MapDebugPrint( "OnMapLoad" );
 };
-
-global OnBotJoin = function( bot )
-{
-	//default spawn
-	bot.ChangeSpawnPoint( 0 );
-};

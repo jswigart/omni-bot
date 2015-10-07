@@ -178,7 +178,6 @@ global OnMapLoad = function()
 
 global OnBotJoin = function( bot )
 {
-	bot.ChangeSpawnPoint( 0 );
 	if ( bot.GetTeam() == TEAM.AXIS ) {
 		bot.ChangeSpawnPoint( 1 );
 	}

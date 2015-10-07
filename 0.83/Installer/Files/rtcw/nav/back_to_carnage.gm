@@ -518,5 +518,4 @@ global OnBotJoin = function( bot )
 			}
 		}
 	}
-	bot.ChangeSpawnPoint( 0 );
 };

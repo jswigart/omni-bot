@@ -561,7 +561,6 @@ global OnMapLoad = function()
 global OnBotJoin = function( bot )
 {
 	bot.TargetBreakableDist = 80.0;
-	bot.ChangeSpawnPoint( 0 );
 	class = bot.GetClass();
 
 	if ( bot.GetTeam() == TEAM.ALLIES && class == CLASS.SOLDIER ) {
