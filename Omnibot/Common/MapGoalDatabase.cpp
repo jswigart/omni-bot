@@ -83,7 +83,7 @@ MapGoalPtr MapGoalDatabase::GetNewMapGoal( const std::string &_type )
 	}
 	else
 	{
-		Utils::OutputDebug( kError, va( "Unknown Goal Type: %s", _type.c_str() ) );
+		Utils::OutputDebug( kError, va( "Unknown Goal Type: %s", _type.c_str() ).c_str() );
 	}
 	return ptr;
 }
@@ -98,7 +98,7 @@ void MapGoalDatabase::RegisterMapGoal( const std::string &_type, const MapGoalPt
 	}
 	else
 	{
-		Utils::OutputDebug( kError, va( "Duplicate MapGoal Id: %s", _type.c_str() ) );
+		Utils::OutputDebug( kError, va( "Duplicate MapGoal Id: %s", _type.c_str() ).c_str() );
 	}
 }
 
@@ -112,7 +112,7 @@ void MapGoalDatabase::LoadMapGoalProtos()
 
 	// Set up the source tree.
 	OmnibotSourceTree source_tree;
-	
+
 	// Allocate the Importer.
 	google::protobuf::compiler::Importer importer( &source_tree, this );
 
@@ -128,30 +128,28 @@ void MapGoalDatabase::LoadMapGoalProtos()
 			dynamicDescriptors.push_back( parsed_file );
 	}
 
-	const google::protobuf::Message* msg;
 	for ( size_t i = 0; i < dynamicDescriptors.size(); ++i )
 	{
 		const google::protobuf::Descriptor* desc = dynamicDescriptors[ i ]->FindMessageTypeByName( "Attack" );
 		if ( desc != NULL )
 		{
-			msg = mMessageFactory.GetPrototype( desc );
+			const google::protobuf::Message* msg = mMessageFactory.GetPrototype( desc );
 
-			EngineFuncs::ConsoleMessage( va( "Registered Goal Type '%s'", desc->name().c_str() ) );
+			EngineFuncs::ConsoleMessage( va( "Registered Goal Type '%s'", desc->name().c_str() ).c_str() );
 		}
 	}
-	
 }
 
 void MapGoalDatabase::AddError( const std::string& filename, int line, int column, const std::string& message )
 {
-	EngineFuncs::ConsoleError( va("%s( %d, %d ): %s", filename.c_str(), line, column, message.c_str() ) );
+	EngineFuncs::ConsoleError( va( "%s( %d, %d ): %s", filename.c_str(), line, column, message.c_str() ).c_str() );
 }
 
 void MapGoalDatabase::LoadMapGoalDefinitions( bool _clearall )
 {
 	if ( _clearall )
 		Unload();
-	
+
 	//LoadMapGoalProtos();
 
 	DirectoryList mapgoalFiles;

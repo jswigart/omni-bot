@@ -39,6 +39,7 @@ RecastPathInterface::RecastPathInterface( PathPlannerRecast * nav )
 
 	mFilter.setAreaCost( NAVFLAGS_CROUCH, 2.0 );
 	mFilter.setAreaCost( NAVFLAGS_PRONE, 4.0 );
+	mFilter.setAreaCost( NAVFLAGS_PUSHABLE, 10.0 );
 }
 
 RecastPathInterface::~RecastPathInterface()
@@ -135,7 +136,7 @@ bool RecastPathInterface::UpdateGoalPositionRandom()
 
 	dtPolyRef startPoly;
 	Vector3f startPos = localToRc( mSrc );
-	if ( dtStatusSucceed( mQuery->findNearestPoly( startPos, PathPlannerRecast::sExtents, &mFilter, &startPoly, startPos ) ) )
+	if ( dtStatusSucceed( mQuery->findNearestPoly( startPos, PathPlannerRecast::sExtents, &mFilter, &startPoly, startPos ) ) && startPoly )
 	{
 		openlist.push_back( startPoly );
 	}

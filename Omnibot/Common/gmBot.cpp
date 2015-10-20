@@ -13,6 +13,7 @@
 #include "gmTargetInfo.h"
 #include "gmUtilityLib.h"
 #include "BotBaseStates.h"
+#include "Behaviors.h"
 #include "BotPathing.h"
 #include "FilterClosest.h"
 #include "FilterAllType.h"
@@ -584,7 +585,7 @@ int gmBot::gmfSay( gmThread *a_thread )
 			}
 		}
 
-		gEngineFuncs->BotCommand( native->GetGameID(), va( "say \"%s\"", chatMsg ) );
+		gEngineFuncs->BotCommand( native->GetGameID(), va( "say \"%s\"", chatMsg ).c_str() );
 		return GM_OK;
 	}
 
@@ -628,7 +629,7 @@ int gmBot::gmfSayTeam( gmThread *a_thread )
 			}
 		}
 
-		gEngineFuncs->BotCommand( native->GetGameID(), va( "say_team \"%s\"", chatMsg ) );
+		gEngineFuncs->BotCommand( native->GetGameID(), va( "say_team \"%s\"", chatMsg ).c_str() );
 		return GM_OK;
 	}
 

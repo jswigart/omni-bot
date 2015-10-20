@@ -47,6 +47,10 @@
 
 #include <boost/shared_array.hpp>
 
+#include <unordered_set>
+
+static const int BINARY_VERSION = 2;
+
 //////////////////////////////////////////////////////////////////////////
 
 unsigned int dtAreaMaskColor( navAreaMask mask )
@@ -54,7 +58,7 @@ unsigned int dtAreaMaskColor( navAreaMask mask )
 	obColor clr = COLOR::WHITE;
 
 	if ( mask & NAVFLAGS_WALK )
-		clr = obColor( 255, 255, 255, 150 );
+		clr = obColor( 0, 255, 255, 150 );
 	if ( mask & NAVFLAGS_CROUCH )
 		clr = obColor( 195, 195, 195, 150 );
 	if ( mask & NAVFLAGS_PRONE )
@@ -280,7 +284,7 @@ struct RasterizationContext
 
 void AsyncTileBuild::Run( PathPlannerRecast * nav, int num )
 {
-	rmt_SetCurrentThreadName( va( "AsyncTileBuild(%d)", num ) );
+	rmt_SetCurrentThreadName( va( "AsyncTileBuild(%d)", num ).c_str() );
 	while ( !boost::this_thread::interruption_requested() )
 	{
 		rmt_ScopedCPUSample( AsyncGetTileRebuild );
@@ -303,7 +307,7 @@ void AsyncBatchQuery::Run( PathPlannerRecast * nav, int num )
 	// reusable scratch arrays
 	std::vector<dtMultiPathGoal> goals;
 
-	rmt_SetCurrentThreadName( va( "AsyncBatchQuery(%d)", num ) );
+	rmt_SetCurrentThreadName( va( "AsyncBatchQuery(%d)", num ).c_str() );
 	while ( !boost::this_thread::interruption_requested() )
 	{
 		rmt_ScopedCPUSample( AsyncGetBatchQuery );
@@ -324,7 +328,7 @@ void AsyncBatchQuery::Run( PathPlannerRecast * nav, int num )
 
 			dtPolyRef srcPoly;
 			Vector3f srcPos = localToRc( qry->mSrc );
-			if ( dtStatusSucceed( nm->findNearestPoly( srcPos, PathPlannerRecast::sExtents, &filter, &srcPoly, srcPos ) ) )
+			if ( dtStatusSucceed( nm->findNearestPoly( srcPos, PathPlannerRecast::sExtents, &filter, &srcPoly, srcPos ) ) && srcPoly )
 			{
 				for ( size_t i = 0; i < goals.size(); ++i )
 				{
@@ -335,6 +339,13 @@ void AsyncBatchQuery::Run( PathPlannerRecast * nav, int num )
 				}
 
 				nm->findMultiPath( srcPoly, srcPos, &filter, &goals[ 0 ], goals.size() );
+
+				// copy the results back
+				for ( size_t i = 0; i < goals.size(); ++i )
+				{
+					qry->mGoals[ i ].mNavCost = goals[ i ].mNavDist;
+					qry->mGoals[ i ].mThreatCost = goals[ i ].mThreat;
+				}
 			}
 
 			qry->mFinished = true;
@@ -398,8 +409,8 @@ bool PathPlannerRecast::Init( System & system )
 	for ( int i = 0; i < numQueryThreads; ++i )
 		mThreadGroupQuery.add_thread( new boost::thread( AsyncBatchQuery::Run, this, i ) );
 
-	EngineFuncs::ConsoleMessage( va( "Created %d threads to rebuild navigation tiles", mThreadGroupBuild.size() ) );
-	EngineFuncs::ConsoleMessage( va( "Created %d threads for async queries", mThreadGroupQuery.size() ) );
+	EngineFuncs::ConsoleMessage( va( "Created %d threads to rebuild navigation tiles", mThreadGroupBuild.size() ).c_str() );
+	EngineFuncs::ConsoleMessage( va( "Created %d threads for async queries", mThreadGroupQuery.size() ).c_str() );
 
 	return true;
 }
@@ -460,7 +471,7 @@ bool PathPlannerRecast::AsyncGetTileRebuild( TileRebuild & buildTile )
 		buildTile = mTileBuildQueue.front();
 		mTileBuildQueue.erase( mTileBuildQueue.begin() );
 
-		EngineFuncs::ConsoleMessage( va( "AsyncTileBuild(%d,%d): %d tiles remaining", buildTile.mX, buildTile.mY, mTileBuildQueue.size() ) );
+		EngineFuncs::ConsoleMessage( va( "AsyncTileBuild(%d,%d): %d tiles remaining", buildTile.mX, buildTile.mY, mTileBuildQueue.size() ).c_str() );
 		return true;
 	}
 	return false;
@@ -596,11 +607,11 @@ void PathPlannerRecast::Update( System & system )
 			
 			std::string nodeInfo, modelState, contentStr = "cnt: ", surfaceStr = "srf: ";
 			if ( aimHit.mHitNode->mSubModel >= 0 )
-				nodeInfo = va( "submdl %d", aimHit.mHitNode->mSubModel );
+				nodeInfo = va( "submdl %d", aimHit.mHitNode->mSubModel ).c_str();
 			else if ( aimHit.mHitNode->mStaticModel >= 0 )
-				nodeInfo = va( "staticmdl %d", aimHit.mHitNode->mStaticModel );
+				nodeInfo = va( "staticmdl %d", aimHit.mHitNode->mStaticModel ).c_str();
 			else if ( aimHit.mHitNode->mDisplacement >= 0 )
-				nodeInfo = va( "displacement %d", aimHit.mHitNode->mDisplacement );
+				nodeInfo = va( "displacement %d", aimHit.mHitNode->mDisplacement ).c_str();
 			
 			ModelStateEnum::NameForValue( aimHit.mHitNode->mActiveState, modelState );
 			ContentFlagsEnum::NameForValueBitfield( activeContentFlags, contentStr );
@@ -611,7 +622,7 @@ void PathPlannerRecast::Update( System & system )
 			const Vector3f normalOffset = aimHit.mHitPos + aimHit.mHitNormal * 24.0f;
 			RenderBuffer::AddLine( aimHit.mHitPos, aimHit.mHitPos + vAimNormal * 16.0f, COLOR::BLUE );
 			RenderBuffer::AddString3d( normalOffset, COLOR::CYAN, va( "name:%s %s\n%s\n%s\n%s\n%s\n%s", 
-				aimHit.mHitNode->mEntityName.c_str(),nodeInfo.c_str(), aimInfo.c_str(), mtl.mName.c_str(), modelState.c_str(), contentStr.c_str(), surfaceStr.c_str() ) );
+				aimHit.mHitNode->mEntityName.c_str(), nodeInfo.c_str(), aimInfo.c_str(), mtl.mName.c_str(), modelState.c_str(), contentStr.c_str(), surfaceStr.c_str() ).c_str() );
 
 			aimHit.mHitNode->RenderWorldBounds();
 		}
@@ -671,13 +682,15 @@ void PathPlannerRecast::SendWorldModel()
 		if ( System::mInstance->mAnalytics != NULL )
 		{
 			modeldata::Scene ioScene;
+			ioScene.set_name( "world" );
+
 			mCollision.BuildScene( ioScene );
 
 			std::string cachedFileData;
 			if ( ioScene.SerializeToString( &cachedFileData ) )
 			{
 				Analytics::MessageUnion msgUnion;
-				msgUnion.set_timestamp( 0 );
+				msgUnion.set_timestamp( System::mInstance->mAnalytics->GetTimeStamp() );
 
 				Analytics::SystemModelData* mdlData = msgUnion.mutable_systemmodeldata();
 				mdlData->set_compressiontype( Analytics::Compression_None );
@@ -697,7 +710,7 @@ void PathPlannerRecast::SendWorldModel()
 	}
 	catch ( const std::exception& ex )
 	{
-		EngineFuncs::ConsoleError( va( "%s: %s", __FUNCTION__, ex.what() ) );
+		EngineFuncs::ConsoleError( va( "%s: %s", __FUNCTION__, ex.what() ).c_str() );
 	}
 }
 
@@ -711,10 +724,10 @@ void PathPlannerRecast::SendTileModel( int tx, int ty )
 		if ( System::mInstance->mAnalytics != NULL )
 		{
 			std::vector<Vector3f> vertices;
-			std::vector<IceMaths::IndexedTriangle> faces;
+			std::vector<unsigned int> vertexColors;
 
 			vertices.reserve( 1024 );
-			faces.reserve( 1024 );
+			vertexColors.reserve( 1024 );
 
 			static const int MaxTiles = 32;
 			const dtMeshTile * tiles[ MaxTiles ];
@@ -732,30 +745,43 @@ void PathPlannerRecast::SendTileModel( int tx, int ty )
 
 					for ( int j = 0; j < pd->triCount; ++j )
 					{
-						IceMaths::IndexedTriangle tri;
+						/*IceMaths::IndexedTriangle tri;
 						tri.mVRef[ 0 ] = vertices.size() + 0;
 						tri.mVRef[ 1 ] = vertices.size() + 1;
 						tri.mVRef[ 2 ] = vertices.size() + 2;
-						faces.push_back( tri );
+						faces.push_back( tri );*/
+						
+						Vector3f tri[ 3 ];
 
 						const unsigned char* t = &tile->detailTris[ ( pd->triBase + j ) * 4 ];
 						for ( int k = 0; k < 3; ++k )
 						{
 							if ( t[ k ] < p->vertCount )
-								vertices.push_back( Vector3f( &tile->verts[ p->verts[ t[ k ] ] * 3 ] ) );
+								tri[k] = rcToLocal( Vector3f( &tile->verts[ p->verts[ t[ k ] ] * 3 ] ) );
 							else
-								vertices.push_back( Vector3f( &tile->detailVerts[ ( pd->vertBase + t[ k ] - p->vertCount ) * 3 ] ) );
+								tri[ k ] = rcToLocal( Vector3f( &tile->detailVerts[ ( pd->vertBase + t[ k ] - p->vertCount ) * 3 ] ) );
+
+							vertexColors.push_back( dtAreaMaskColor( p->areaMask ) );
 						}
+
+						// winding
+						vertices.push_back( tri[ 0 ] );
+						vertices.push_back( tri[ 2 ] );
+						vertices.push_back( tri[ 1 ] );
 					}
 				}
 			}
 
-			if ( faces.empty() )
+			if ( vertices.empty() )
 				return;
 
+			const char* name = va( "tile_%dx%d", tx, ty ).c_str();
+
 			modeldata::Scene ioScene;
+			ioScene.set_name( name );
+
 			modeldata::Mesh * mesh = ioScene.add_meshes();
-			mesh->set_name( va( "tile_%dx%d", tx, ty ) );
+			mesh->set_name( name );
 
 			modeldata::Node * node = ioScene.mutable_rootnode();
 			node->set_meshname( mesh->name() );
@@ -765,13 +791,16 @@ void PathPlannerRecast::SendTileModel( int tx, int ty )
 			mtrl->set_name( "nav" );
 
 			mesh->mutable_vertices()->insert( 0, (const char*)&vertices[ 0 ], sizeof( Vector3f ) * vertices.size() );
-			mesh->mutable_faces()->insert( 0, (const char*)&faces[ 0 ], sizeof( IceMaths::IndexedTriangle ) * faces.size() );
+			//mesh->mutable_faces()->insert( 0, (const char*)&faces[ 0 ], sizeof( IceMaths::IndexedTriangle ) * faces.size() );
+
+			if ( !vertexColors.empty() )
+				mesh->mutable_vertexcolors()->insert( 0, (const char*)&vertexColors[ 0 ], sizeof( unsigned int ) * vertexColors.size() );
 
 			std::string cachedFileData;
 			if ( ioScene.SerializeToString( &cachedFileData ) )
 			{
 				Analytics::MessageUnion msgUnion;
-				msgUnion.set_timestamp( 0 );
+				msgUnion.set_timestamp( System::mInstance->mAnalytics->GetTimeStamp() );
 
 				Analytics::SystemModelData* mdlData = msgUnion.mutable_systemmodeldata();
 				mdlData->set_compressiontype( Analytics::Compression_None );
@@ -782,7 +811,7 @@ void PathPlannerRecast::SendTileModel( int tx, int ty )
 				const int sizeCompressed = fastlz_compress_level( 2, cachedFileData.c_str(), cachedFileData.size(), compressBuffer.get() );
 				*/
 
-				mdlData->set_modelname( va( "tile_%dx%d", tx, ty ) );
+				mdlData->set_modelname( va( "tile_%dx%d", tx, ty ).c_str() );
 				mdlData->set_modelbytes( cachedFileData );
 				if ( msgUnion.IsInitialized() )
 					System::mInstance->mAnalytics->AddEvent( msgUnion );
@@ -791,7 +820,7 @@ void PathPlannerRecast::SendTileModel( int tx, int ty )
 	}
 	catch (const std::exception& ex)
 	{
-		EngineFuncs::ConsoleError( va( "%s: %s", __FUNCTION__, ex.what() ) );
+		EngineFuncs::ConsoleError( va( "%s: %s", __FUNCTION__, ex.what() ).c_str() );
 	}
 }
 
@@ -862,16 +891,13 @@ bool PathPlannerRecast::Load( const std::string &_mapname, bool _dl )
 				 !fileTxt.ReadWholeFile( dataIn ) ||
 				 !google::protobuf::TextFormat::ParseFromString( dataIn, &ioNavmesh ) )
 			{
-				throw std::exception( va( "PathPlannerRecast:: Load failed %s", navPathBinary.c_str() ) );
+				throw std::exception( va( "PathPlannerRecast:: Load failed %s", navPathBinary.c_str() ).c_str() );
 			}
 		}
 
 		LoadWorldModel();
 		InitNavmesh();
-		
-		const int fileVersion = ioNavmesh.version();
-		fileVersion; // todo: check this?
-
+				
 		mSettings.AgentHeightStand = ioNavmesh.navmeshparams().agentheightstand();
 		mSettings.AgentHeightCrouch = ioNavmesh.navmeshparams().agentheightcrouch();
 		mSettings.AgentRadius = ioNavmesh.navmeshparams().agentradius();
@@ -948,34 +974,41 @@ bool PathPlannerRecast::Load( const std::string &_mapname, bool _dl )
 			it->second->LoadState( iomdl );
 		}
 
-		for ( int i = 0; i < ioNavmesh.tiles_size(); ++i )
+		if ( ioNavmesh.version() == BINARY_VERSION )
 		{
-			const RecastIO::Tile & tile = ioNavmesh.tiles( i );
-			const std::string & tileCompressedData = tile.compresseddata();
-
-			unsigned char * decompressedBuffer = new unsigned char[ tile.uncompressedsize() ];
-			const int sizeD = fastlz_decompress( tileCompressedData.c_str(), tileCompressedData.size(), decompressedBuffer, tile.uncompressedsize() );
-			if ( sizeD == tile.uncompressedsize() )
+			for ( int i = 0; i < ioNavmesh.tiles_size(); ++i )
 			{
-				dtTileRef tref;
-				if ( dtStatusSucceed( mNavMesh->addTile( decompressedBuffer, sizeD, DT_TILE_FREE_DATA, 0, &tref ) ) )
+				const RecastIO::Tile & tile = ioNavmesh.tiles( i );
+				const std::string & tileCompressedData = tile.compresseddata();
+
+				unsigned char * decompressedBuffer = new unsigned char[ tile.uncompressedsize() ];
+				const int sizeD = fastlz_decompress( tileCompressedData.c_str(), tileCompressedData.size(), decompressedBuffer, tile.uncompressedsize() );
+				if ( sizeD == tile.uncompressedsize() )
 				{
-					const dtMeshTile * tile = const_cast<const dtNavMesh *>( mNavMesh )->getTileByRef( tref );
-					if ( tile != NULL )
+					dtTileRef tref;
+					if ( dtStatusSucceed( mNavMesh->addTile( decompressedBuffer, sizeD, DT_TILE_FREE_DATA, 0, &tref ) ) )
 					{
-						SendTileModel( tile->header->x, tile->header->y );
+						const dtMeshTile * tile = const_cast<const dtNavMesh *>( mNavMesh )->getTileByRef( tref );
+						if ( tile != NULL )
+						{
+							SendTileModel( tile->header->x, tile->header->y );
+						}
 					}
 				}
+				else
+				{
+					EngineFuncs::ConsoleError( "Invalid Tile Data(compressed size mismatch)" );
+				}
 			}
-			else
-			{
-				EngineFuncs::ConsoleError( "Invalid Tile Data(compressed size mismatch)" );
-			}
+		}
+		else
+		{
+			EngineFuncs::ConsoleMessage( "Unable to load navmesh binary tile data(version mismatch). Though other information was loaded" );
 		}
 	}
 	catch ( const std::exception & ex )
 	{
-		EngineFuncs::ConsoleError( va( "PathPlannerRecast:: Load failed %s", ex.what() ) );
+		EngineFuncs::ConsoleError( va( "PathPlannerRecast:: Load failed %s", ex.what() ).c_str() );
 		success = false;
 
 		LoadWorldModel();
@@ -1004,7 +1037,7 @@ bool PathPlannerRecast::Save( const std::string &_mapname )
 		const std::string navPathText = std::string( "nav/" ) + navName + "_txt";
 
 		RecastIO::NavigationMesh ioNavmesh;
-		ioNavmesh.set_version( 1 );
+		ioNavmesh.set_version( BINARY_VERSION );
 
 		ioNavmesh.mutable_navmeshparams()->set_agentheightstand( mSettings.AgentHeightStand );
 		ioNavmesh.mutable_navmeshparams()->set_agentheightcrouch( mSettings.AgentHeightCrouch );
@@ -1146,7 +1179,7 @@ bool PathPlannerRecast::Save( const std::string &_mapname )
 		}
 		catch ( const std::exception & ex )
 		{
-			EngineFuncs::ConsoleError( va( "PathPlannerRecast:: Save failed %s", ex.what() ) );
+			EngineFuncs::ConsoleError( va( "PathPlannerRecast:: Save failed %s", ex.what() ).c_str() );
 			return false;
 		}
 		return true;
@@ -1340,28 +1373,36 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 		}
 	}
 
-	std::vector<CollisionTriangle> tileGeometry;
+	GatherData gatherData;
 	std::vector<AxisAlignedBox3f> tileExclusions;
 	OffMeshConnections tileLinks;
 
 	boost::crc_32_type tileCrc;
 	tileCrc.process_byte( TILE_DATA_VERSION );
-
 	tileCrc.process_bytes( &tcfg, sizeof( tcfg ) );
 
 	{
 		rmt_ScopedCPUSample( GatherTileData );
-		tileGeometry.reserve( 512 );
-
+		gatherData.mTriangles.reserve( 2048 );
+		gatherData.mTriangles.reserve( 2048 );
+		gatherData.mConvexShapes.reserve( 2048 );
+		
 		GatherParms filter;
 		filter.mIgnoreSurfaces = SURFACE_NONSOLID | SURFACE_IGNORE | SURFACE_SKY;
 
-		mCollision.mRootNode->GatherTriangles( filter, Box3f( tileAABB.Min, tileAABB.Max ), tileGeometry );
+		mCollision.mRootNode->GatherTriangles( filter, Box3f( tileAABB.Min, tileAABB.Max ), gatherData );
 
-		if ( tileGeometry.empty() )
+		if ( gatherData.mTriangles.empty() && gatherData.mConvexShapes.empty() )
 			return;
 
-		tileCrc.process_bytes( &tileGeometry[ 0 ], tileGeometry.size() * sizeof( tileGeometry[0] ) );
+		if ( !gatherData.mTriangles.empty() )
+			tileCrc.process_bytes( &gatherData.mTriangles[ 0 ], gatherData.mTriangles.size() * sizeof( gatherData.mTriangles[ 0 ] ) );
+
+		if ( !gatherData.mConvexShapes.empty() )
+		{
+			tileCrc.process_bytes( &gatherData.mConvexVertices[ 0 ], gatherData.mConvexVertices.size() * sizeof( gatherData.mConvexVertices[ 0 ] ) );
+			tileCrc.process_bytes( &gatherData.mConvexShapes[ 0 ], gatherData.mConvexShapes.size() * sizeof( gatherData.mConvexShapes[ 0 ] ) );
+		}
 
 		for ( size_t i = 0; i < mOffMeshConnections.size(); ++i )
 		{
@@ -1399,9 +1440,9 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 	{
 		rmt_ScopedCPUSample( RasterizeSolids );
 
-		for ( size_t i = 0; i < tileGeometry.size(); ++i )
+		for ( size_t i = 0; i < gatherData.mTriangles.size(); ++i )
 		{
-			const CollisionTriangle& tri = tileGeometry[ i ];
+			const CollisionTriangle& tri = gatherData.mTriangles[ i ];
 			
 			// water is region-ified in the 2nd pass
 			if ( tri.mContents & CONT_WATER )
@@ -1488,34 +1529,58 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 	{
 		rmt_ScopedCPUSample( MarkSpecialRegions );
 
-		for ( size_t i = 0; i < tileGeometry.size(); ++i )
+		//for ( size_t i = 0; i < gatherData.mTriangles.size(); ++i )
+		//{
+		//	const CollisionTriangle& tri = gatherData.mTriangles[ i ];
+		//	
+		//	// only proceed with special areas
+		//	if ( tri.mNavFlags & NAVFLAGS_WALK )
+		//		continue;
+
+		//	Vector3f verts[ 3 ];
+		//	verts[ 0 ] = localToRc( tri.mTri.V[ 0 ] );
+		//	verts[ 1 ] = localToRc( tri.mTri.V[ 1 ] );
+		//	verts[ 2 ] = localToRc( tri.mTri.V[ 2 ] );
+
+		//	float hmin = FLT_MAX;
+		//	float hmax = -FLT_MAX;
+
+		//	for ( int v = 0; v < 3; ++v )
+		//	{
+		//		hmin = rcMin( hmin, verts[ v ].Y() );
+		//		hmax = rcMax( hmax, verts[ v ].Y() );
+		//	}
+
+		//	static float maxAdj = 4.0f;
+
+		//	hmin -= mSettings.AgentHeightStand;
+		//	hmax += maxAdj;
+		//	
+		//	rcMarkConvexPolyArea( &mContext, (float*)verts, 3, hmin, hmax, tri.mNavFlags, *rc.chf );
+		//}
+		std::vector<Vector3f> rcVectors( 32 );
+
+		for ( size_t i = 0; i < gatherData.mConvexShapes.size(); ++i )
 		{
-			const CollisionTriangle& tri = tileGeometry[ i ];
-			
+			const CollisionConvex& convex = gatherData.mConvexShapes[ i ];
+
 			// only proceed with special areas
-			if ( tri.mNavFlags & NAVFLAGS_WALK )
+			if ( convex.mNavFlags & NAVFLAGS_WALK )
 				continue;
-
-			Vector3f verts[ 3 ];
-			verts[ 0 ] = localToRc( tri.mTri.V[ 0 ] );
-			verts[ 1 ] = localToRc( tri.mTri.V[ 1 ] );
-			verts[ 2 ] = localToRc( tri.mTri.V[ 2 ] );
-
-			float hmin = FLT_MAX;
-			float hmax = -FLT_MAX;
-
-			for ( int v = 0; v < 3; ++v )
-			{
-				hmin = rcMin( hmin, verts[ v ].Y() );
-				hmax = rcMax( hmax, verts[ v ].Y() );
-			}
+			
+			// convert to recast vectors
+			rcVectors.resize( 0 );			
+			for ( size_t i = convex.mVertStart; i < convex.mVertEnd; ++i )
+				rcVectors.push_back( localToRc( gatherData.mConvexVertices[ i ] ) );
 
 			static float maxAdj = 4.0f;
-
-			hmin -= mSettings.AgentHeightStand;
-			hmax += maxAdj;
-
-			rcMarkConvexPolyArea( &mContext, (float*)verts, 3, hmin, hmax, tri.mNavFlags, *rc.chf );
+			const float hmin = convex.mHeightMin - mSettings.AgentHeightStand;
+			const float hmax = convex.mHeightMax + maxAdj;
+			
+			static const int MaxVerts = 32;
+			Vector3f convexVerts[ MaxVerts ];
+			const int nv = rcOffsetPoly( (float*)&rcVectors[ 0 ], rcVectors.size(), mSettings.AgentRadius, (float*)convexVerts, MaxVerts );
+			rcMarkConvexPolyArea( &mContext, (float*)convexVerts, nv, hmin, hmax, convex.mNavFlags, *rc.chf );
 		}
 	}
 	
@@ -1884,4 +1949,150 @@ bool PathPlannerRecast::AsyncGetBatchQuery( QueryRef & ref )
 		return true;
 	}
 	return false;
+}
+
+size_t PathPlannerRecast::FindBorderEdges( NavFlags inc, NavFlags exc, NavFlags border, float minlen, const Vector3f& src, MeshEdge* edges, size_t maxEdges )
+{
+	dtQueryFilter filter;
+	filter.setIncludeFlags( inc );
+	filter.setExcludeFlags( exc );
+
+	std::vector<dtPolyRef> openlist;
+	typedef std::unordered_set<dtPolyRef> ClosedList;
+	ClosedList closedlist;
+
+	dtNavMeshQuery* nm = dtAllocNavMeshQuery();
+	nm->init( mNavMesh, MaxQueryNodes );
+
+	dtPolyRef startPoly;
+	Vector3f startPos = localToRc( src );
+	if ( dtStatusSucceed( nm->findNearestPoly( startPos, PathPlannerRecast::sExtents, &filter, &startPoly, startPos ) ) && startPoly )
+	{
+		openlist.push_back( startPoly );
+	}
+
+	static float radius = 1024.0f;
+	static const int MAX_RESULTS = 1024;
+	float resultCost[ MAX_RESULTS ];
+	dtPolyRef results[ MAX_RESULTS ];
+	dtPolyRef resultParent[ MAX_RESULTS ];
+	int resultCount = 0;
+
+	const float minLenSq = Mathf::Sqr( minlen );
+
+	size_t cnt = 0;
+
+	if ( dtStatusSucceed( nm->findPolysAroundCircle( startPoly, startPos, radius, &filter, results, resultParent, resultCost, &resultCount, MAX_RESULTS ) ) )
+	{
+		for ( int i = 0; i < resultCount; ++i )
+		{
+			const dtMeshTile* tile = 0;
+			const dtPoly* poly = 0;
+			mNavMesh->getTileAndPolyByRefUnsafe( results[ i ], &tile, &poly );
+
+			// skip polygons that are border masked, only neighboring polys are valid for border types
+			if ( ( poly->areaMask & border ) != 0 )
+				continue;
+
+			if ( poly->getPolyType() != DT_POLYTYPE_OFFMESH_CONNECTION )
+			{
+				//const size_t polyIndex = poly - tile->polys;
+				//const dtPolyDetail* pd = &tile->detailMeshes[ polyIndex ];
+
+				const int nv = (int)poly->vertCount;
+				for ( int i = 0; i < nv; ++i )
+				{
+					if ( poly->neis[ i ] & DT_EXT_LINK )
+						continue;
+
+					if ( poly->neis[ i ] != 0 )
+					{
+						const unsigned int idx = (unsigned int)( poly->neis[ i ] - 1 );
+						const dtPolyRef neighborPolyRef = mNavMesh->getPolyRefBase( tile ) | idx;
+
+						const dtMeshTile* neighborTile = 0;
+						const dtPoly* neighborPoly = 0;
+						mNavMesh->getTileAndPolyByRefUnsafe( neighborPolyRef, &neighborTile, &neighborPoly );
+						if ( ( neighborPoly->areaMask & border ) == 0 )
+							continue;
+					}
+					
+					const Vector3f v0 = localToRc( Vector3f( &tile->verts[ poly->verts[ i ] * 3 ] ) );
+					const Vector3f v1 = localToRc( Vector3f( &tile->verts[ poly->verts[ ( i + 1 ) % nv ] * 3 ] ) );
+
+					if ( ( v0 - v1 ).SquaredLength2d() >= minLenSq )
+					{
+						MeshEdge& edge = edges[ cnt++ ];
+						edge.mEdge[ 0 ] = v0;
+						edge.mEdge[ 1 ] = v1;
+						edge.mNormal = Vector3f::UNIT_Z.UnitCross( edge.mEdge[ 1 ] - edge.mEdge[ 0 ] );
+						if ( cnt >= maxEdges )
+							goto finished;
+					}
+				}
+			}
+		}
+	}
+	
+	//while ( !openlist.empty() )
+	//{
+	//	dtPolyRef polyRef = openlist.back();
+	//	openlist.pop_back();
+
+	//	closedlist.insert( polyRef );
+	
+	//	const dtMeshTile* tile = 0;
+	//	const dtPoly* poly = 0;
+	//	mNavMesh->getTileAndPolyByRefUnsafe( polyRef, &tile, &poly );
+
+	//	if ( poly->getPolyType() != DT_POLYTYPE_OFFMESH_CONNECTION )
+	//	{
+	//		//const size_t polyIndex = poly - tile->polys;
+	//		//const dtPolyDetail* pd = &tile->detailMeshes[ polyIndex ];
+	//		
+	//		const int nv = (int)poly->vertCount;
+	//		for ( int i = 0; i < nv; ++i )
+	//		{
+	//			if ( poly->neis[ i ] != 0 ) 
+	//				continue;
+	//			if ( poly->neis[ i ] & DT_EXT_LINK )
+	//				continue;
+
+	//			const float* v0 = &tile->verts[ poly->verts[ i ] * 3 ];
+	//			const float* v1 = &tile->verts[ poly->verts[ ( i + 1 ) % nv ] * 3 ];
+
+	//			MeshEdge& edge = edges[ cnt++ ];
+	//			edge.mEdge[ 0 ] = localToRc( Vector3f( v0 ) );
+	//			edge.mEdge[ 1 ] = localToRc( Vector3f( v1 ) );
+	//			edge.mNormal = Vector3f::UNIT_Z.UnitCross( edge.mEdge[ 1 ] - edge.mEdge[ 1 ] );
+	//			edge.mDistanceSq = DistPoint3Segment3f( src, Segment3f( edge.mEdge[ 0 ], edge.mEdge[ 1 ] ) ).GetSquared();
+	//			if ( cnt >= maxEdges )
+	//			{
+	//				// look for worse
+	//			}
+	//		}
+	//	}
+
+	//	// Visit linked polygons.
+	//	for ( unsigned int i = poly->firstLink; i != DT_NULL_LINK; i = tile->links[ i ].next )
+	//	{
+	//		const dtPolyRef neiRef = tile->links[ i ].ref;
+
+	//		// Skip invalid and already visited.
+	//		if ( !neiRef )
+	//			continue;
+
+	//		// if the teams have already touched this poly, don't explore it again
+	//		ClosedList::iterator it = closedlist.find( neiRef );
+	//		if ( it != closedlist.end() )
+	//			continue;
+	//		
+	//		openlist.push_back( neiRef );
+	//	}
+	//}
+
+finished:
+	dtFreeNavMeshQuery( nm );
+
+	return cnt;
 }

@@ -1105,10 +1105,17 @@ class NodeState : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 navflagoverride() const;
   inline void set_navflagoverride(::google::protobuf::int32 value);
 
-  // optional string modelname = 10;
+  // optional uint32 activeModelCrc = 10 [default = 0];
+  inline bool has_activemodelcrc() const;
+  inline void clear_activemodelcrc();
+  static const int kActiveModelCrcFieldNumber = 10;
+  inline ::google::protobuf::uint32 activemodelcrc() const;
+  inline void set_activemodelcrc(::google::protobuf::uint32 value);
+
+  // optional string modelname = 11;
   inline bool has_modelname() const;
   inline void clear_modelname();
-  static const int kModelnameFieldNumber = 10;
+  static const int kModelnameFieldNumber = 11;
   inline const ::std::string& modelname() const;
   inline void set_modelname(const ::std::string& value);
   inline void set_modelname(const char* value);
@@ -1117,10 +1124,10 @@ class NodeState : public ::google::protobuf::Message {
   inline ::std::string* release_modelname();
   inline void set_allocated_modelname(::std::string* modelname);
 
-  // optional string name = 11;
+  // optional string name = 12;
   inline bool has_name() const;
   inline void clear_name();
-  static const int kNameFieldNumber = 11;
+  static const int kNameFieldNumber = 12;
   inline const ::std::string& name() const;
   inline void set_name(const ::std::string& value);
   inline void set_name(const char* value);
@@ -1145,6 +1152,8 @@ class NodeState : public ::google::protobuf::Message {
   inline void clear_has_dynamic();
   inline void set_has_navflagoverride();
   inline void clear_has_navflagoverride();
+  inline void set_has_activemodelcrc();
+  inline void clear_has_activemodelcrc();
   inline void set_has_modelname();
   inline void clear_has_modelname();
   inline void set_has_name();
@@ -1162,9 +1171,10 @@ class NodeState : public ::google::protobuf::Message {
   bool enabled_;
   bool solid_;
   bool dynamic_;
+  ::google::protobuf::int32 navflagoverride_;
+  ::google::protobuf::uint32 activemodelcrc_;
   ::std::string* modelname_;
   ::std::string* name_;
-  ::google::protobuf::int32 navflagoverride_;
   union TypeUnion {
     ::google::protobuf::int32 submodelid_;
     ::google::protobuf::int32 staticmodelid_;
@@ -2628,15 +2638,39 @@ inline void NodeState::set_navflagoverride(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:RecastIO.NodeState.navFlagOverride)
 }
 
-// optional string modelname = 10;
-inline bool NodeState::has_modelname() const {
+// optional uint32 activeModelCrc = 10 [default = 0];
+inline bool NodeState::has_activemodelcrc() const {
   return (_has_bits_[0] & 0x00000100u) != 0;
 }
-inline void NodeState::set_has_modelname() {
+inline void NodeState::set_has_activemodelcrc() {
   _has_bits_[0] |= 0x00000100u;
 }
-inline void NodeState::clear_has_modelname() {
+inline void NodeState::clear_has_activemodelcrc() {
   _has_bits_[0] &= ~0x00000100u;
+}
+inline void NodeState::clear_activemodelcrc() {
+  activemodelcrc_ = 0u;
+  clear_has_activemodelcrc();
+}
+inline ::google::protobuf::uint32 NodeState::activemodelcrc() const {
+  // @@protoc_insertion_point(field_get:RecastIO.NodeState.activeModelCrc)
+  return activemodelcrc_;
+}
+inline void NodeState::set_activemodelcrc(::google::protobuf::uint32 value) {
+  set_has_activemodelcrc();
+  activemodelcrc_ = value;
+  // @@protoc_insertion_point(field_set:RecastIO.NodeState.activeModelCrc)
+}
+
+// optional string modelname = 11;
+inline bool NodeState::has_modelname() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void NodeState::set_has_modelname() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void NodeState::clear_has_modelname() {
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void NodeState::clear_modelname() {
   if (modelname_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
@@ -2704,15 +2738,15 @@ inline void NodeState::set_allocated_modelname(::std::string* modelname) {
   // @@protoc_insertion_point(field_set_allocated:RecastIO.NodeState.modelname)
 }
 
-// optional string name = 11;
+// optional string name = 12;
 inline bool NodeState::has_name() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00000400u) != 0;
 }
 inline void NodeState::set_has_name() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00000400u;
 }
 inline void NodeState::clear_has_name() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void NodeState::clear_name() {
   if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {

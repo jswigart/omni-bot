@@ -14,6 +14,7 @@
 #include "BotPathing.h"
 #include "BotTargetingSystem.h"
 #include "BotSteeringSystem.h"
+#include "Behaviors.h"
 #include "MovementCaps.h"
 #include "InterfaceFuncs.h"
 #include "ScriptGoal.h"
@@ -377,14 +378,14 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 						if ( Enum[ i ].mValue == m->mWeaponId )
 						{
 							foundName = true;
-							EngineFuncs::ConsoleError( va( "AddWeaponToInventory: Unknown Weapon( %s )", Enum[ i ].mKey ) );
+							EngineFuncs::ConsoleError( va( "AddWeaponToInventory: Unknown Weapon( %s )", Enum[ i ].mKey ).c_str() );
 							break;
 						}
 					}
 
 					if ( !foundName )
 					{
-						EngineFuncs::ConsoleError( va( "AddWeaponToInventory: Unknown Weapon Id( %d )", m->mWeaponId ) );
+						EngineFuncs::ConsoleError( va( "AddWeaponToInventory: Unknown Weapon Id( %d )", m->mWeaponId ).c_str() );
 					}
 				}
 			}
@@ -714,7 +715,7 @@ void Client::EnableDebug( const int _flag, bool _enable )
 	{
 		if ( IsDebugEnabled( BOT_DEBUG_LOG ) )
 		{
-			mDebugLog.OpenForWrite( va( "user/log_%s.rtf", GetName() ), File::Text );
+			mDebugLog.OpenForWrite( va( "user/log_%s.rtf", GetName() ).c_str(), File::Text );
 
 			if ( mDebugLog.IsOpen() )
 			{
@@ -730,8 +731,8 @@ void Client::EnableDebug( const int _flag, bool _enable )
 	}
 
 	EngineFuncs::ConsoleMessage( va( "debugging for %s: %s.",
-		GetName(),
-		IsDebugEnabled( _flag ) ? "enabled" : "disabled" ) );
+		GetName().c_str(),
+		IsDebugEnabled( _flag ) ? "enabled" : "disabled" ).c_str() );
 }
 
 void Client::OutputDebug( MessageType _type, const char * _str )
@@ -741,7 +742,7 @@ void Client::OutputDebug( MessageType _type, const char * _str )
 		return;
 #endif
 
-	EngineFuncs::ConsoleMessage( va( "%s: %s", GetName( true ), _str ) );
+	EngineFuncs::ConsoleMessage( va( "%s: %s", GetName( true ), _str ).c_str() );
 
 	if ( IsDebugEnabled( BOT_DEBUG_LOG ) )
 	{
@@ -785,11 +786,11 @@ void Client::LoadProfile( ProfileType _type )
 			if ( ScriptManager::GetInstance()->ExecuteFile( filePath( "scripts/%s", strProfileName.c_str() ), threadId, &thisVar ) ||
 				ScriptManager::GetInstance()->ExecuteFile( filePath( "global_scripts/%s", strProfileName.c_str() ), threadId, &thisVar ) )
 			{
-				DBG_MSG( BOT_DEBUG_SCRIPT, this, kNormal, va( "Profile Loaded: %s", strProfileName.c_str() ) );
+				DBG_MSG( BOT_DEBUG_SCRIPT, this, kNormal, va( "Profile Loaded: %s", strProfileName.c_str() ).c_str() );
 			}
 			else
 			{
-				DBG_MSG( BOT_DEBUG_SCRIPT, this, kError, va( "Unable to load profile: %s", strProfileName.c_str() ) );
+				DBG_MSG( BOT_DEBUG_SCRIPT, this, kError, va( "Unable to load profile: %s", strProfileName.c_str() ).c_str() );
 			}
 
 			mProfileType = _type;
@@ -1209,7 +1210,7 @@ void Client::ProcessStimulusBehavior( Behaviors& behaviors, const StimulusPtr& s
 			{				
 				if ( GetCurrentHealth() < GetMaxHealth() )
 				{
-					desirabilityBest = ( 1.0f - ( (float)GetCurrentHealth() / (float)GetMaxHealth() ) ) * 0.5f;
+					desirabilityBest = std::max( desirabilityBest, ( 1.0f - ( (float)GetCurrentHealth() / (float)GetMaxHealth() ) ) * 0.5f );
 					desirabilityBonus += 0.05f;
 				}
 			}
@@ -1223,7 +1224,7 @@ void Client::ProcessStimulusBehavior( Behaviors& behaviors, const StimulusPtr& s
 					gEngineFuncs->GetCurrentAmmo( GetGameEntity(), stimInfo.mAmmo[ i ].mWeaponId, Primary, ammoCurrent, ammoMax );
 					if ( ammoCurrent < ammoMax )
 					{
-						beh.mDesirability = ( 1.0f - ( (float)ammoCurrent / (float)ammoMax ) ) * 0.3f;
+						desirabilityBest = std::max( desirabilityBest, ( 1.0f - ( (float)ammoCurrent / (float)ammoMax ) ) * 0.3f );
 						desirabilityBonus += 0.05f;
 					}
 				}
@@ -1233,7 +1234,7 @@ void Client::ProcessStimulusBehavior( Behaviors& behaviors, const StimulusPtr& s
 			{
 				if ( GetCurrentArmor() < GetMaxArmor() )
 				{
-					beh.mDesirability = 1.0f - ( (float)GetCurrentArmor() / (float)GetMaxArmor() ) * 0.5f;
+					desirabilityBest = std::max( desirabilityBest, 1.0f - ( (float)GetCurrentArmor() / (float)GetMaxArmor() ) * 0.5f );
 					desirabilityBonus += 0.05f;
 				}
 			}
@@ -1301,14 +1302,15 @@ void Client::ProcessStimulusBehavior( Behaviors& behaviors, const StimulusPtr& s
 				{
 					beh.mAction = BEHAVIOR_GET_WEAPON;
 					beh.mDesirability = 0.1f;
+					behaviors.push_back( beh );
 				}
 			}
 			else
 			{
 				beh.mAction = BEHAVIOR_GET_WEAPON;
 				beh.mDesirability = 0.2f; // todo: use per weapon desirability
-			}
-			behaviors.push_back( beh );
+				behaviors.push_back( beh );
+			}			
 			break;
 		}
 		case ENT_GRP_POWERUP:

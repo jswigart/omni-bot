@@ -67,10 +67,7 @@ omnibot_error OmnibotFunctions::Initialize( IEngineInterface * engineFuncs, int 
 	//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF|_CRTDBG_CHECK_ALWAYS_DF|_CRTDBG_CHECK_CRT_DF|_CRTDBG_LEAK_CHECK_DF);
 #endif
 
-	g_Logger.Start(
-		( std::string )va( "%s/omnibot_%s.log",
-		engineFuncs->GetLogPath(),
-		engineFuncs->GetMapName() ), true );
+	g_Logger.Start( va( "%s/omnibot_%s.log", engineFuncs->GetLogPath(), engineFuncs->GetMapName() ).c_str(), true );
 	
 	// Create the Game Manager
 	g_GameManager = new IGameManager();

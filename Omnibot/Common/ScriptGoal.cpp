@@ -380,7 +380,7 @@ namespace AiState
 			{
 				if ( call.End() == gmThread::EXCEPTION )
 				{
-					SetEnable( false, va( "Error in OnSpawn Callback in Goal: %s", GetName().c_str() ) );
+					SetEnable( false, va( "Error in OnSpawn Callback in Goal: %s", GetName().c_str() ).c_str() );
 					return;
 				}
 
@@ -418,7 +418,7 @@ namespace AiState
 					call.AddParamString( _s.c_str() );
 					if ( call.End() == gmThread::EXCEPTION )
 					{
-						SetEnable( false, va( "Error in OnPathThrough Callback in Goal: %s", GetName().c_str() ) );
+						SetEnable( false, va( "Error in OnPathThrough Callback in Goal: %s", GetName().c_str() ).c_str() );
 						return false;
 					}
 
@@ -465,7 +465,7 @@ namespace AiState
 						{
 							if ( call.End() == gmThread::EXCEPTION )
 							{
-								SetEnable( false, va( "Error in GetPriority Callback in Goal: %s", GetName().c_str() ) );
+								SetEnable( false, va( "Error in GetPriority Callback in Goal: %s", GetName().c_str() ).c_str() );
 								return 0.f;
 							}
 
@@ -497,7 +497,7 @@ namespace AiState
 			{
 				if ( call.End() == gmThread::EXCEPTION )
 				{
-					SetEnable( false, va( "Error in Enter Callback in Goal: %s", GetName().c_str() ) );
+					SetEnable( false, va( "Error in Enter Callback in Goal: %s", GetName().c_str() ).c_str() );
 					return;
 				}
 				//KillAllGoalThreads();
@@ -520,7 +520,7 @@ namespace AiState
 			{
 				if ( call.End() == gmThread::EXCEPTION )
 				{
-					SetEnable( false, va( "Error in Exit Callback in Goal: %s", GetName().c_str() ) );
+					SetEnable( false, va( "Error in Exit Callback in Goal: %s", GetName().c_str() ).c_str() );
 					return;
 				}
 			}
@@ -609,7 +609,7 @@ namespace AiState
 						//GetClient()->AddSignalThreadId(call.GetThreadId());
 						if ( call.End() == gmThread::EXCEPTION )
 						{
-							SetEnable( false, va( "Error in Update Callback in Goal: %s", GetName().c_str() ) );
+							SetEnable( false, va( "Error in Update Callback in Goal: %s", GetName().c_str() ).c_str() );
 							return State_Finished;
 						}
 

@@ -91,8 +91,26 @@ struct CollisionTriangle
 {
 	Triangle3f		mTri;
 	ContentFlags	mContents;
-	SurfaceFlags	mSurface;	
+	SurfaceFlags	mSurface;
 	NavAreaFlags	mNavFlags;
+};
+
+struct CollisionConvex
+{
+	size_t			mVertStart;
+	size_t			mVertEnd;
+	ContentFlags	mContents;
+	SurfaceFlags	mSurface;
+	NavAreaFlags	mNavFlags;
+	float			mHeightMin;
+	float			mHeightMax;
+};
+
+struct GatherData
+{
+	std::vector<CollisionTriangle>	mTriangles;
+	std::vector<Vector3f>			mConvexVertices;
+	std::vector<CollisionConvex>	mConvexShapes;
 };
 
 struct RayResult
@@ -157,10 +175,10 @@ public:
 	bool CollideOBB( const ModelTransform & mdlXform, const Box3f & obb, Indices & hitTriangles );
 	
 	void GatherTriangles( const GatherParms & parms, const ModelTransform & mdlXform, const Box3f & gatherObb, 
-		const CollisionTriangle& baseTriangle, std::vector<CollisionTriangle>& triangles );
+		const CollisionTriangle& baseTriangle, GatherData& dataOut );
 
 	void GatherTriangles( const GatherParms & parms, const ModelTransform & mdlXform, const Sphere3f & gatherSphere,
-		const CollisionTriangle& baseTriangle, std::vector<CollisionTriangle>& triangles );
+		const CollisionTriangle& baseTriangle, GatherData& dataOut );
 
 	void Free();
 
@@ -254,8 +272,8 @@ struct Node : public std::enable_shared_from_this<Node>
 	
 	bool CollideSegmentNearest( RayResult & result, const Segment3f & segment, SurfaceFlags ignoreSurfaces, bool onlyCollidable );
 		
-	void GatherTriangles( const GatherParms & parms, const Box3f & gatherObb, std::vector<CollisionTriangle>& geom );
-	void GatherTriangles( const GatherParms & parms, const Sphere3f & gatherSphere, std::vector<CollisionTriangle>& geom );
+	void GatherTriangles( const GatherParms & parms, const Box3f & gatherObb, GatherData& dataOut );
+	void GatherTriangles( const GatherParms & parms, const Sphere3f & gatherSphere, GatherData& dataOut );
 
 	void RenderModel( const obColor & polyColor );
 	void RenderInRadius( const Vector3f & eye, float distance, const obColor & polyColor );

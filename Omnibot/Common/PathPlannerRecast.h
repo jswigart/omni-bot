@@ -97,6 +97,8 @@ public:
 
 	virtual void QueueBatchQuery( QueryRef& qry, NavFlags inc, NavFlags exc, const Vector3f& src, const std::vector<Vector3f>& goals );
 
+	virtual size_t FindBorderEdges( NavFlags inc, NavFlags exc, NavFlags border, float minlen, const Vector3f& src, MeshEdge* edges, size_t maxEdges );
+
 	const char *GetPlannerName() const;
 	int GetPlannerType() const;
 		

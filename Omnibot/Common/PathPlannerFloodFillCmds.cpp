@@ -117,9 +117,7 @@ void PathPlannerFloodFill::cmdNavView( const StringVector & args )
 
 	CHECK_NUM_PARAMS( args, 2, strUsage );
 	CHECK_BOOL_PARAM( bEnable, 1, strUsage );
-	ScriptManager::GetInstance()->ExecuteStringLogged(
-		( std::string )va( "Nav.EnableView( %s );",
-		bEnable ? "true" : "false" ) );
+	ScriptManager::GetInstance()->ExecuteStringLogged( va( "Nav.EnableView( %s );", bEnable ? "true" : "false" ).c_str() );
 }
 
 void PathPlannerFloodFill::cmdNavViewConnections( const StringVector & args )
@@ -132,9 +130,7 @@ void PathPlannerFloodFill::cmdNavViewConnections( const StringVector & args )
 
 	CHECK_NUM_PARAMS( args, 2, strUsage );
 	CHECK_BOOL_PARAM( bEnable, 1, strUsage );
-	ScriptManager::GetInstance()->ExecuteStringLogged(
-		( std::string )va( "Nav.EnableViewConnection( %s );",
-		bEnable ? "true" : "false" ) );
+	ScriptManager::GetInstance()->ExecuteStringLogged( va( "Nav.EnableViewConnection( %s );", bEnable ? "true" : "false" ).c_str() );
 }
 
 void PathPlannerFloodFill::cmdNavEnableStep( const StringVector & args )
@@ -150,9 +146,7 @@ void PathPlannerFloodFill::cmdNavEnableStep( const StringVector & args )
 
 	CHECK_NUM_PARAMS( args, 2, strUsage );
 	CHECK_BOOL_PARAM( bEnable, 1, strUsage );
-	ScriptManager::GetInstance()->ExecuteStringLogged(
-		( std::string )va( "Nav.EnableStep( %s );",
-		bEnable ? "true" : "false" ) );
+	ScriptManager::GetInstance()->ExecuteStringLogged( va( "Nav.EnableStep( %s );",	bEnable ? "true" : "false" ).c_str() );
 }
 
 void PathPlannerFloodFill::cmdNavStep( const StringVector & args )
@@ -280,7 +274,7 @@ void PathPlannerFloodFill::cmdAutoBuildFeatures( const StringVector & args )
 		RenderBuffer::AddAABB( features[ i ].mBounds, COLOR::GREEN );
 		//////////////////////////////////////////////////////////////////////////
 	}
-	EngineFuncs::ConsoleMessage( va( "Found %d nav features.", iNumFeatures ) );
+	EngineFuncs::ConsoleMessage( va( "Found %d nav features.", iNumFeatures ).c_str() );
 }
 
 void PathPlannerFloodFill::_BenchmarkPathFinder( const StringVector & args )
@@ -309,7 +303,7 @@ void PathPlannerFloodFill::_BenchmarkPathFinder( const StringVector & args )
 	dTimeTaken = tme.GetElapsedSeconds();
 
 	EngineFuncs::ConsoleMessage( va( "generated %d paths in %f seconds: %f paths/sec",
-		iNumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)iNumPaths / dTimeTaken : 0.0f ) );
+		iNumPaths, dTimeTaken, dTimeTaken != 0.0f ? (float)iNumPaths / dTimeTaken : 0.0f ).c_str() );
 }
 
 void PathPlannerFloodFill::_BenchmarkGetNavPoint( const StringVector & args )
@@ -379,7 +373,7 @@ void PathPlannerFloodFill::cmdInfluenceMapCreate( const StringVector & args )
 	mSpanMap.Init( Vector3f( mapbounds.mMins ), Vector3f( mapbounds.mMaxs ), 16.0f );
 
 	EngineFuncs::ConsoleMessage( va( "Created %d x %d span map",
-		mSpanMap.GetNumCellsX(), mSpanMap.GetNumCellsY() ) );
+		mSpanMap.GetNumCellsX(), mSpanMap.GetNumCellsY() ).c_str() );
 }
 
 void PathPlannerFloodFill::cmdInfluenceMapSeed( const StringVector & args )
@@ -406,7 +400,7 @@ void PathPlannerFloodFill::cmdInfluenceMapMem( const StringVector & args )
 	EngineFuncs::ConsoleMessage( va( "Influence Map %d x %d ( %s )",
 		mSpanMap.GetNumCellsX(),
 		mSpanMap.GetNumCellsY(),
-		Utils::FormatByteString( mSpanMap.CalculateMemUsage() ).c_str() ) );
+		Utils::FormatByteString( mSpanMap.CalculateMemUsage() ).c_str() ).c_str() );
 }
 
 void PathPlannerFloodFill::cmdInfluenceMapSave( const StringVector & args )
@@ -433,20 +427,20 @@ void PathPlannerFloodFill::cmdInfluenceMapLoad( const StringVector & args )
 	File f;
 	if ( !f.OpenForRead( filePath.c_str(), File::Binary ) )
 	{
-		EngineFuncs::ConsoleError( va( "Influence Map %s not found", filePath.c_str() ) );
+		EngineFuncs::ConsoleError( va( "Influence Map %s not found", filePath.c_str() ).c_str() );
 		return;
 	}
 
 	std::string data;
 	if ( !f.ReadWholeFile( data ) )
 	{
-		EngineFuncs::ConsoleError( va( "Influence Map Read Error %s", filePath.c_str() ) );
+		EngineFuncs::ConsoleError( va( "Influence Map Read Error %s", filePath.c_str() ).c_str() );
 		return;
 	}
 
 	if ( !mSpanMap.DeSerialize( data ) )
 	{
-		EngineFuncs::ConsoleError( va( "Influence Map Parse Error %s", filePath.c_str() ) );
+		EngineFuncs::ConsoleError( va( "Influence Map Parse Error %s", filePath.c_str() ).c_str() );
 		return;
 	}
 }
@@ -474,5 +468,5 @@ void PathPlannerFloodFill::cmdInfluenceMapFlood( const StringVector & args )
 
 	EngineFuncs::ConsoleError( va( "Influence Flooded in %.3f sec ( %s )",
 		t.GetElapsedSeconds(),
-		Utils::FormatByteString( mInfluence->CalculateMemUsage() ).c_str() ) );
+		Utils::FormatByteString( mInfluence->CalculateMemUsage() ).c_str() ).c_str() );
 }

@@ -27,6 +27,7 @@ MC_Game::MC_Game()
 	mGameVars.mGameAbbrev = "mc";
 	mGameVars.mGameName = "Modular Combat";
 	mGameVars.mPlayerHeight = 72.f;
+	mGameVars.mRendersToGame = true;
 }
 
 MC_Game::~MC_Game()
@@ -65,19 +66,23 @@ void MC_Game::GetTeamEnumeration( const IntEnum *&_ptr, int &num )
 
 static const IntEnum MC_WeaponEnum [] =
 {
-	IntEnum( "GRAVGUN", MC_WP_GRAVGUN ),
-	IntEnum( "PISTOL", MC_WP_PISTOL ),
 	IntEnum( "CROWBAR", MC_WP_CROWBAR ),
+	IntEnum( "GRAVGUN", MC_WP_GRAVGUN ),
 	IntEnum( "STUNSTICK", MC_WP_STUNSTICK ),
+	IntEnum( "PISTOL", MC_WP_PISTOL ),
+	IntEnum( "REVOLVER", MC_WP_REVOLVER ),
 	IntEnum( "SMG", MC_WP_SMG ),
 	IntEnum( "SHOTGUN", MC_WP_SHOTGUN ),
-	IntEnum( "SLAM", MC_WP_SLAM ),
-	IntEnum( "RPG", MC_WP_RPG ),
-	IntEnum( "FRAG_GREN", MC_WP_FRAG_GREN ),
-	IntEnum( "MAGNUM", MC_WP_MAGNUM357 ),
 	IntEnum( "CROSSBOW", MC_WP_CROSSBOW ),
+	IntEnum( "FRAG_GREN", MC_WP_GRENADE ),
+	IntEnum( "RPG", MC_WP_RPG ),
+	IntEnum( "SLAM", MC_WP_SLAM ),
 	IntEnum( "AR2", MC_WP_AR2 ),
-	IntEnum( "CAMERA", MC_WP_CAMERA ),
+	IntEnum( "COMBINEGUARD", MC_WP_COMBINEGUARD ),
+	IntEnum( "FLAREGUN", MC_WP_FLAREGUN ),
+	IntEnum( "ANNABELLE", MC_WP_ANNABELLE ),
+	IntEnum( "BUGBAIT", MC_WP_BUGBAIT ),
+	IntEnum( "SNIPER", MC_WP_SNIPER ),
 };
 
 void MC_Game::GetWeaponEnumeration( const IntEnum *&_ptr, int &num )
@@ -96,10 +101,10 @@ void MC_Game::InitScriptCategories( gmMachine *_machine, gmTableObject *_table )
 
 static const IntEnum gClassMapping [] =
 {
-	IntEnum( "PLAYER", MC_CLASS_DEFAULT ),
+	IntEnum( "PLAYER", MC_CLASS_PLAYER ),
 	IntEnum( "ANYPLAYER", MC_CLASS_ANY ),
 
-	IntEnum( "NPC_ZOMBIE", MC_CLASSEX_ZOMBIE ),
+	/*IntEnum( "NPC_ZOMBIE", MC_CLASSEX_ZOMBIE ),
 	IntEnum( "NPC_ZOMBIE_FAST", MC_CLASSEX_ZOMBIE_FAST ),
 	IntEnum( "NPC_ANTLION", MC_CLASSEX_ANTLION ),
 	IntEnum( "NPC_ANTLION_WORKER", MC_CLASSEX_ANTLION_WORKER ),
@@ -140,7 +145,7 @@ static const IntEnum gClassMapping [] =
 	IntEnum( "AMMO_SNIPER", MC_CLASSEX_SNIPER_AMMO ),
 	IntEnum( "AMMO_SHOTGUN", MC_CLASSEX_SHOTGUN_AMMO ),
 	IntEnum( "AMMO_AR2_ALTFIRE", MC_CLASSEX_AR2_ALTFIRE_AMMO ),
-	IntEnum( "AMMO_CRATE", MC_CLASSEX_AMMO_CRATE ),
+	IntEnum( "AMMO_CRATE", MC_CLASSEX_AMMO_CRATE ),*/
 
 	IntEnum( "TRIPMINE", MC_CLASSEX_TRIPMINE ),
 	IntEnum( "MAGMINE", MC_CLASSEX_MAGMINE ),

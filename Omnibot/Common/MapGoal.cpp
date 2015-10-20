@@ -209,10 +209,10 @@ void MapGoal::GenerateName( int _instance, bool _skipdupecheck )
 	std::transform( gtype.begin(), gtype.end(), gtype.begin(), toUpper() );
 
 	if ( !mTagName.empty() )
-		mName = va( "%s_%s", gtype.c_str(), mTagName.c_str() );
+		mName = va( "%s_%s", gtype.c_str(), mTagName.c_str() ).c_str();
 	else
 	{
-		mName = va( "%s_%d", gtype.c_str(), iNavId );
+		mName = va( "%s_%d", gtype.c_str(), iNavId ).c_str();
 	}
 	boost::replace_all( mName, " ", "_" );
 
@@ -220,7 +220,7 @@ void MapGoal::GenerateName( int _instance, bool _skipdupecheck )
 	// Dupe name handling, append an instance number
 	if ( _instance > 0 )
 	{
-		mName += va( "_%d", _instance );
+		mName += va( "_%d", _instance ).c_str();
 	}
 
 	// see if it already exists
@@ -506,7 +506,7 @@ bool MapGoal::InternalInit( gmGCRoot<gmTableObject> &_propmap, bool _newgoal )
 						ThreadState == gmThread::EXCEPTION )
 					{
 						EngineFuncs::ConsoleMessage( va( "%s goal could not upgrade properly, disabling",
-							GetName().c_str() ) );
+							GetName().c_str() ).c_str() );
 						SetDisabled( true );
 						return false;
 					}
@@ -524,7 +524,7 @@ bool MapGoal::InternalInit( gmGCRoot<gmTableObject> &_propmap, bool _newgoal )
 					else
 					{
 						EngineFuncs::ConsoleMessage( va( "%s goal could not upgrade properly, disabling",
-							GetName().c_str() ) );
+							GetName().c_str() ).c_str() );
 						SetDisabled( true );
 						return false;
 					}
@@ -852,7 +852,7 @@ void MapGoal::SetProperty( const std::string &_propname, const obUserData &_val 
 	GenerateName( 0 );
 
 	if ( !Processed && !err.str().empty() )
-		EngineFuncs::ConsoleError( va( "%s", err.str().c_str() ) );
+		EngineFuncs::ConsoleError( va( "%s", err.str().c_str() ).c_str() );
 }
 
 void MapGoal::RenderDebug( bool _editing, bool _highlighted )
@@ -979,7 +979,7 @@ void MapGoal::RenderDefault()
 		if ( rup > 0 )
 		{
 			txtOut += "RandomUsePoint: ";
-			txtOut += std::string( va( "%i", rup ) );
+			txtOut += std::string( va( "%i", rup ).c_str() );
 			txtOut += "\n";
 		}
 	}
@@ -989,7 +989,7 @@ void MapGoal::RenderDefault()
 		if ( range > 0 )
 		{
 			txtOut += "Range: ";
-			txtOut += std::string( va( "%i", range ) );
+			txtOut += std::string( va( "%i", range ).c_str() );
 			txtOut += "\n";
 		}
 	}
@@ -1279,7 +1279,7 @@ void MapGoal::ClassPriority::GetPriorityText( std::string &_txtout ) const
 			_txtout += " ";
 			_txtout += Utils::GetClassString( Summary[ i ].mClassId );
 			_txtout += " ";
-			_txtout += va( " %.2f", Summary[ i ].mPriority );
+			_txtout += va( " %.2f", Summary[ i ].mPriority ).c_str();
 			EngineFuncs::ConsoleMessage( _txtout.c_str() );
 		}
 	}

@@ -410,10 +410,6 @@ public:
 	{
 		return buffer;
 	}
-	operator const char *( ) const
-	{
-		return buffer;
-	}
 
 	va( CHECK_PRINTF_ARGS const char* msg, ... );
 protected:
@@ -618,5 +614,7 @@ AxisAlignedBox3f ComputeAABB( const Box3f & obb );
 Vector3f Convert( const IceMaths::Point & pt );
 Vector3f Convert( const modeldata::Vec3 & vec );
 IceMaths::Matrix4x4 Convert( const modeldata::Node & node );
+
+int ConvexhullXY( const Vector3f* pts, int npts, int* out, int maxOut, float& minheight, float& maxheight );
 
 #endif

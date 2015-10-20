@@ -652,6 +652,8 @@ enum NavAreaFlags
 	NAVFLAGS_PUSHABLE		= ( 1 << 13 ),
 	NAVFLAGS_MOVER			= ( 1 << 14 ),	
 	NAVFLAGS_JUMPPAD		= ( 1 << 15 ),
+	NAVFLAGS_JETPACK		= ( 1 << 16 ),
+	NAVFLAGS_LONGJUMP		= ( 1 << 17 ),
 
 	NAVFLAGS_DESTRUCTIBLE	= ( 1 << 30 ),
 	NAVFLAGS_DISABLED		= ( 1 << 31 ),

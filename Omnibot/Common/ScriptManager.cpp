@@ -590,7 +590,7 @@ bool ScriptManager::ExecuteStringLogged( const std::string &_string )
 	{
 		b = f.WriteString( _string ) && f.WriteNewLine();
 	}
-	EngineFuncs::ConsoleMessage( va( "ExecString: %s", _string.c_str() ) );
+	EngineFuncs::ConsoleMessage( va( "ExecString: %s", _string.c_str() ).c_str() );
 
 	return ( b && ExecuteString( _string ) );
 }

@@ -133,7 +133,7 @@ namespace EngineFuncs
 
 	void ConsoleMessage( const char* _msg )
 	{
-		rmt_LogText( va( "Message: %s", _msg ) );
+		rmt_LogText( va( "Message: %s", _msg ).c_str() );
 
 		if ( IGameManager::sMainThread == boost::this_thread::get_id() )
 			gEngineFuncs->PrintMessage( _msg );
@@ -146,7 +146,7 @@ namespace EngineFuncs
 
 	void ConsoleError( const char* _msg )
 	{
-		rmt_LogText( va( "Error: %s", _msg ) );
+		rmt_LogText( va( "Error: %s", _msg ).c_str() );
 
 		if ( IGameManager::sMainThread == boost::this_thread::get_id() )
 			gEngineFuncs->PrintError( _msg );

@@ -472,6 +472,9 @@
     <ClCompile Include="..\..\..\Common\TacticalManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Common\Behaviors.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zAlloc.h">
@@ -962,6 +965,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Common\TacticalManager.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Behaviors.h">
+      <Filter>Behaviors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

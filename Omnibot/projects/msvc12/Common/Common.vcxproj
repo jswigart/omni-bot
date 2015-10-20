@@ -100,6 +100,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Common\Behaviors.cpp" />
     <ClCompile Include="..\..\..\Common\BotPathing.cpp" />
     <ClCompile Include="..\..\..\Common\Client.cpp" />
     <ClCompile Include="..\..\..\Common\CollisionModel.cpp" />
@@ -500,6 +501,7 @@
     <ClCompile Include="..\..\..\dependencies\tinyobjloader\tiny_obj_loader.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Common\Behaviors.h" />
     <ClInclude Include="..\..\..\Common\BotPathing.h" />
     <ClInclude Include="..\..\..\Common\Client.h" />
     <ClInclude Include="..\..\..\Common\CodeAnalysis.h" />

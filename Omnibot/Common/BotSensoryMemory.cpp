@@ -85,7 +85,7 @@ namespace AiState
 					RenderBuffer::AddString3d(
 						worldObb.Center,
 						COLOR::WHITE,
-						va( "%s:%s", groupName.c_str(), className.c_str() ) );
+						va( "%s:%s", groupName.c_str(), className.c_str() ).c_str() );
 				}
 			}
 		}

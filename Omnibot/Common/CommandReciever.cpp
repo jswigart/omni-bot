@@ -71,7 +71,7 @@ bool ScriptCommandExecutor::Exec( const StringVector & args, const gmVariable &_
 		}
 		if ( bPrintUsage )
 		{
-			EngineFuncs::ConsoleError( va( "No Usage Info For Command: %s", args[ 0 ].c_str() ) );
+			EngineFuncs::ConsoleError( va( "No Usage Info For Command: %s", args[ 0 ].c_str() ).c_str() );
 			return true;
 		}
 
@@ -201,7 +201,7 @@ void CommandReciever::cmdHelp( const StringVector & args )
 	{
 		if ( it->first == "help" )
 			continue;
-		EngineFuncs::ConsoleMessage( va( "%s : %s", it->first.c_str(), it->second.first.c_str() ) );
+		EngineFuncs::ConsoleMessage( va( "%s : %s", it->first.c_str(), it->second.first.c_str() ).c_str() );
 	}
 
 	gmMachine * mMachine = ScriptManager::GetInstance()->GetMachine();
@@ -223,7 +223,7 @@ void CommandReciever::cmdHelp( const StringVector & args )
 					const char *pHelpString = vHelp.GetCStringSafe( 0 );
 					if ( pHelpString )
 					{
-						EngineFuncs::ConsoleMessage( va( "%s : %s", pCommandName, pHelpString ) );
+						EngineFuncs::ConsoleMessage( va( "%s : %s", pCommandName, pHelpString ).c_str() );
 					}
 					else
 					{
@@ -233,7 +233,7 @@ void CommandReciever::cmdHelp( const StringVector & args )
 							pHelpString = pUsageTbl->Get( 0 ).GetCStringSafe( 0 );
 							if ( pHelpString )
 							{
-								EngineFuncs::ConsoleMessage( va( "%s : %s", pCommandName, pHelpString ) );
+								EngineFuncs::ConsoleMessage( va( "%s : %s", pCommandName, pHelpString ).c_str() );
 							}
 						}
 					}

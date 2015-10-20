@@ -45,6 +45,13 @@ struct OffMeshConnection
 	OffMeshConnection();
 };
 
+struct MeshEdge
+{
+	Vector3f				mEdge[ 2 ];
+	Vector3f				mNormal;
+	uint64_t				mPolyRef;
+};
+
 class PathInterface
 {
 public:
@@ -118,7 +125,7 @@ public:
 	virtual void Commit( T * system ) = 0;
 	virtual void Undo( T * system )
 	{
-		EngineFuncs::ConsoleError( va( "No Undo functionality for tool %s", mToolName ) );
+		EngineFuncs::ConsoleError( va( "No Undo functionality for tool %s", mToolName ).c_str() );
 	}
 protected:
 	std::string		mToolError;
@@ -155,6 +162,8 @@ public:
 	virtual void EntityDeleted( const EntityInstance &ei );
 
 	virtual void QueueBatchQuery( QueryRef& qry, NavFlags inc, NavFlags exc, const Vector3f& src, const std::vector<Vector3f>& goals ) = 0;
+	
+	virtual size_t FindBorderEdges( NavFlags inc, NavFlags exc, NavFlags border, float minlen, const Vector3f& src, MeshEdge* edges, size_t maxEdges ) = 0;
 
 	virtual PathInterface * AllocPathInterface();
 

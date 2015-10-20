@@ -405,7 +405,7 @@ namespace AiState
 
 		for ( int i = 0; i < MaxMortarAims; ++i )
 		{
-			if ( mMapGoal->GetProperty( va( "MortarAim[%d]", i ), mMortarAim[ mNumMortarAims ] ) )
+			if ( mMapGoal->GetProperty( va( "MortarAim[%d]", i ).c_str(), mMortarAim[ mNumMortarAims ] ) )
 			{
 				if ( mMortarAim[ mNumMortarAims ].IsZero() )
 				{

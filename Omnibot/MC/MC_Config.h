@@ -16,23 +16,23 @@
 #include "Omni-Bot_Types.h"
 #include "Omni-Bot_Events.h"
 
-typedef enum eMC_Version
+enum MC_Version
 {
 	MC_VERSION_CURRENT = 1,
 	MC_VERSION_ALPHA1 = 5,
 	MC_VERSION_207,
 	MC_VERSION_LATEST,
-} MC_Version;
+};
 
 // enumerations: TraceMasks_MC
-typedef enum eTraceMasks_MC
+enum TraceMasks_MC
 {
 	// combo masks can be defined separately
 	MC_TR_MASK_PHYSGUN		= TR_MASK_SHOT|TR_MASK_GRATE, // physgun cant pull through grates
-} TraceMasks_MC;
+} ;
 
 // enumerations: TF_ButtonFlags
-typedef enum eMC_ButtonFlags
+enum MC_ButtonFlags
 {
 	MC_BOT_BUTTON_MODULE_FIRST = BOT_BUTTON_FIRSTUSER,
 
@@ -63,22 +63,22 @@ typedef enum eMC_ButtonFlags
 
 	// must be last active module
 	MC_BOT_BUTTON_MODULE_LAST,
-} MC_ButtonFlags;
+};
 
 // enumerations: MC_EntityCategory
-typedef enum eTF_EntityCategory
+enum MC_EntityCategory
 {
 	MC_ENT_CAT_PHYSPICKUP = ENT_CAT_MAX,
 	MC_ENT_CAT_WALLUNIT,
 
 	// THIS MUST BE LAST
 	MC_ENT_CAT_MAX,
-} MC_EntityCategory;
+} ;
 
 // typedef: MC_Events
 //		Defines the events specific to the ETF game, numbered starting at the end of
 //		the global events.
-typedef enum eMC_Events
+enum MC_Events
 {
 	MC_EVENT_BEGIN = EVENT_NUM_EVENTS,
 	MC_EVENT_PLAYER_SPREE,
@@ -87,11 +87,11 @@ typedef enum eMC_Events
 	MC_EVENT_SPREEWAR_END,
 	MC_EVENT_LEVEL_UP,
 	MC_EVENT_END
-} MC_Events;
+} ;
 
 // typedef: TF_GameEvents
 //		Events that allow the bot to query for information from the game.
-typedef enum
+enum MC_GameMessage
 {
 	MC_MSG_START = GEN_MSG_END,
 	MC_MSG_GET_PLAYER_STATS,
@@ -103,40 +103,41 @@ typedef enum
 	MC_MSG_PHYSGUNINFO,
 	MC_MSG_CHARGER_STATUS,
 	MC_MSG_END
-} MC_GameMessage;
+};
 
 // typedef: MC_Weapon
 //		The available weapons for this gametype
-typedef enum
+enum MC_Weapon
 {
 	MC_WP_NONE = INVALID_WEAPON,
-	MC_WP_GRAVGUN,
 	MC_WP_CROWBAR,
+	MC_WP_GRAVGUN,
 	MC_WP_STUNSTICK,
 	MC_WP_PISTOL,
+	MC_WP_REVOLVER,
 	MC_WP_SMG,
 	MC_WP_SHOTGUN,
-	MC_WP_SLAM,
-	MC_WP_RPG,
-	MC_WP_FRAG_GREN,
-	MC_WP_MAGNUM357,
 	MC_WP_CROSSBOW,
+	MC_WP_GRENADE,
+	MC_WP_RPG,
+	MC_WP_SLAM,
 	MC_WP_AR2,
-	MC_WP_CAMERA,
+	MC_WP_COMBINEGUARD,
+	MC_WP_FLAREGUN,
+	MC_WP_ANNABELLE,
+	MC_WP_BUGBAIT,
+	MC_WP_SNIPER,
 	MC_WP_MAX
-} MC_Weapon;
+};
 
 // typedef: MC_PlayerClass
 //		The available classes for this gametype
-typedef enum
+enum MC_PlayerClass
 {
-	MC_CLASS_NULL = 0,
-	MC_CLASS_DEFAULT,
+	MC_CLASS_NULL = ENT_CLASS_NONE,
+	MC_CLASS_PLAYER,
 	MC_CLASS_MAX,
 	MC_CLASS_ANY = MC_CLASS_MAX,
-
-	MC_CLASSEX_WEAPON,
-	MC_CLASSEX_WEAPON_LAST = MC_CLASSEX_WEAPON+MC_WP_MAX,
 
 	MC_CLASSEX_ZOMBIE,
 	MC_CLASSEX_ZOMBIE_FAST,
@@ -151,55 +152,31 @@ typedef enum
 	MC_CLASSEX_CROW,
 	MC_CLASSEX_ROLLERMINE,
 
-	MC_CLASSEX_PROPBREAKABLE,
-	MC_CLASSEX_PROPEXPLOSIVE,
-
-	MC_CLASSEX_HEALTHKIT,
-	MC_CLASSEX_HEALTHVIAL,
 	MC_CLASSEX_HEALTH_WALLUNIT,
 	MC_CLASSEX_ENERGY_WALLUNIT,
-	MC_CLASSEX_BATTERY,
-	MC_CLASSEX_POWERCUBE,
-	MC_CLASSEX_ITEMCRATE,
-	MC_CLASSEX_PISTOL_AMMO,
-	MC_CLASSEX_LARGE_PISTOL_AMMO,
-	MC_CLASSEX_SMG_AMMO,
-	MC_CLASSEX_LARGE_SMG_AMMO,
-	MC_CLASSEX_AR2_AMMO,
-	MC_CLASSEX_LARGE_AR2_AMMO,
-	MC_CLASSEX_357_AMMO,
-	MC_CLASSEX_LARGE_357_AMMO,
-	MC_CLASSEX_CROSSBOW_AMMO,
-	MC_CLASSEX_FLARE_AMMO,
-	MC_CLASSEX_LARGE_FLARE_AMMO,
-	MC_CLASSEX_RPG_AMMO,
-	MC_CLASSEX_AR2GREN_AMMO,
-	MC_CLASSEX_SNIPER_AMMO,
-	MC_CLASSEX_SHOTGUN_AMMO,
-	MC_CLASSEX_AR2_ALTFIRE_AMMO,
-	MC_CLASSEX_AMMO_CRATE,
 
 	MC_CLASSEX_TRIPMINE,
 	MC_CLASSEX_MAGMINE,
 	MC_CLASSEX_TURRET,
+	MC_CLASSEX_SATCHEL,
 
-	MC_NUM_CLASSES
-} MC_PlayerClass;
+	MC_NUM_CLASSES,
+};
 
 // typedef: MC_Team
 //		The available teams for this gametype
-typedef enum
+enum MC_Team
 {
 	MC_TEAM_NONE = OB_TEAM_NONE,
 	MC_TEAM_COMBINE,
 	MC_TEAM_SCIENCE,
 	MC_TEAM_REBELS,
 	MC_TEAM_MAX
-} MC_Team;
+};
 
-// typedef: MC_Modules
+// typedef: MC_Module
 //		The available modules
-typedef enum
+enum MC_Module
 {
 	// core
 	MC_MODULE_RECHARGE,
@@ -252,7 +229,7 @@ typedef enum
 	MC_MODULE_MINION_MANHACK,
 
 	MC_MODULE_MAX
-} MC_Modules;
+};
 
 // typedef: MC_WeaponUpgrades
 //		The available weapon upgrades

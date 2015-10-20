@@ -1644,8 +1644,8 @@ namespace AiState
 		for ( int i = 0; i < MaxPlacementPts; ++i )
 		{
 			mTraps[ mNumTraps ].Reset();
-			if ( mg->GetProperty( va( "Place[%d].Position", i ), mTraps[ mNumTraps ].mSource ) &&
-				mg->GetProperty( va( "Place[%d].Facing", i ), mTraps[ mNumTraps ].mFacing ) )
+			if ( mg->GetProperty( va( "Place[%d].Position", i ).c_str(), mTraps[ mNumTraps ].mSource ) &&
+				mg->GetProperty( va( "Place[%d].Facing", i ).c_str(), mTraps[ mNumTraps ].mFacing ) )
 			{
 				if ( !mTraps[ mNumTraps ].mFacing.IsZero() )
 				{
@@ -1658,8 +1658,8 @@ namespace AiState
 		{
 			mWait[ mNumWaits ].Reset();
 
-			mg->GetProperty( va( "Wait[%d].Position", i ), mWait[ mNumWaits ].mPosition );
-			mg->GetProperty( va( "Wait[%d].Facing", i ), mWait[ mNumWaits ].mFacing );
+			mg->GetProperty( va( "Wait[%d].Position", i ).c_str(), mWait[ mNumWaits ].mPosition );
+			mg->GetProperty( va( "Wait[%d].Facing", i ).c_str(), mWait[ mNumWaits ].mFacing );
 			/*mg->GetProperty("MinWaitTime",.mMinWaitTime);
 			mg->GetProperty("MaxWaitTime",.mMaxWaitTime);*/
 

@@ -47,7 +47,7 @@ bool ETF_Game::GetAnalyticsKeys( GameAnalytics::Keys & keys )
 	keys.mGameKey = "68aa5fcc90a58d3de2ba80e8dc6f6a88";
 	keys.mSecretKey = "283e40eb98703bedef2a5fa3e6a996b4c3233545";
 	keys.mDataApiKey = "73a8f10945d4ac7bb1bde2fddb7905ddcbc7dbe1";
-	keys.mVersionKey = va( "%s:v%s", GetGameVars().mGameName.c_str(), GetGameVars().mVersionString.c_str() );
+	keys.mVersionKey = va( "%s:v%s", GetGameVars().mGameName.c_str(), GetGameVars().mVersionString.c_str() ).c_str();
 	return true;
 }
 

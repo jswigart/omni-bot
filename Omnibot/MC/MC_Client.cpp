@@ -14,8 +14,6 @@
 #include "IGameManager.h"
 
 MC_Client::MC_Client()
-	: mModuleTimeStamp( 0 )
-	, mPlayerTimeStamp( 0 )
 {
 }
 
@@ -39,6 +37,12 @@ NavFlags MC_Client::GetTeamFlag( int _team ) const
 	}
 }
 
+bool MC_Client::CanUseModule( MC_Module mod ) const
+{
+	return mModuleStats.mModule[ mod ].mLvl > 0 && 
+		mPlayerStats.mAuxPower > mModuleStats.mModule[ mod ].mAuxDrain;
+}
+
 void MC_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 {
 	includeFlags = NAVFLAGS_WALK | NAVFLAGS_CROUCH;
@@ -55,6 +59,21 @@ void MC_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM3_ONLY & NAVFLAGS_ALLTEAMS );
 			break;
 	}
+	
+	if ( CanUseModule( MC_MODULE_JETPACK ) )
+		includeFlags = (NavFlags)( includeFlags | NAVFLAGS_JETPACK );
+	else
+		excludeFlags = (NavFlags)( excludeFlags | NAVFLAGS_JETPACK );
+
+	if ( CanUseModule( MC_MODULE_TELEPORT ) )
+		includeFlags = (NavFlags)( includeFlags | NAVFLAGS_TELEPORT );
+	else
+		excludeFlags = (NavFlags)( excludeFlags | NAVFLAGS_JETPACK );
+
+	if ( CanUseModule( MC_MODULE_LONG_JUMP ) )
+		includeFlags = (NavFlags)( includeFlags | NAVFLAGS_LONGJUMP );
+	else
+		excludeFlags = (NavFlags)( excludeFlags | NAVFLAGS_LONGJUMP );
 }
 
 float MC_Client::GetGameVar( GameVar _var ) const
@@ -70,6 +89,14 @@ float MC_Client::GetGameVar( GameVar _var ) const
 bool MC_Client::DoesBotHaveFlag( MapGoalPtr _mapgoal )
 {
 	return false;
+}
+
+void MC_Client::Update()
+{
+	InterfaceFuncs::GetPlayerStats( GetGameEntity(), mPlayerStats );
+	InterfaceFuncs::GetModuleStats( GetGameEntity(), mModuleStats );
+
+	Client::Update();
 }
 
 void MC_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
@@ -118,22 +145,16 @@ void MC_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters 
 	Client::ProcessEvent( _message, _cb );
 }
 
+void MC_Client::SendVoiceMacro( int _macroId )
+{
+}
+
 const MC_PlayerStats &MC_Client::GetPlayerStats()
 {
-	if ( mPlayerTimeStamp != IGame::GetTime() )
-	{
-		mPlayerTimeStamp = IGame::GetTime();
-		InterfaceFuncs::GetPlayerStats( GetGameEntity(), mPlayerStats );
-	}
 	return mPlayerStats;
 }
 
 const MC_ModuleStats &MC_Client::GetModuleStats()
 {
-	if ( mModuleTimeStamp != IGame::GetTime() )
-	{
-		mModuleTimeStamp = IGame::GetTime();
-		InterfaceFuncs::GetModuleStats( GetGameEntity(), mModuleStats );
-	}
 	return mModuleStats;
 }

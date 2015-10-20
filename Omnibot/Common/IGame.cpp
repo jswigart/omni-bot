@@ -714,7 +714,7 @@ void IGame::UpdateProcesses()
 	{
 		if ( ( *( *it ).second )( ) == Function_Finished )
 		{
-			EngineFuncs::ConsoleMessage( va( "Finished Process: %s", ( *it ).first.c_str() ) );
+			EngineFuncs::ConsoleMessage( va( "Finished Process: %s", ( *it ).first.c_str() ).c_str() );
 			mUpdateMap.erase( it++ );
 		}
 		else
@@ -1175,7 +1175,7 @@ void IGame::StartTraining()
 		int iThreadId;
 		if ( !ScriptManager::GetInstance()->ExecuteFile( script, iThreadId ) )
 		{
-			EngineFuncs::ConsoleError( va( "Error Running Training Script: %s", script.c_str() ) );
+			EngineFuncs::ConsoleError( va( "Error Running Training Script: %s", script.c_str() ).c_str() );
 		}
 	}
 }
@@ -1346,7 +1346,7 @@ void IGame::cmdRevision( const StringVector & args )
 {
 	EngineFuncs::ConsoleMessage( va( "Omni-bot: Revision %s : %s",
 		Revision::Number().c_str(),
-		Revision::Date().c_str() ) );
+		Revision::Date().c_str() ).c_str() );
 }
 
 void IGame::cmdBotDontShoot( const StringVector & args )
@@ -1369,7 +1369,7 @@ void IGame::cmdBotDontShoot( const StringVector & args )
 
 					EngineFuncs::ConsoleMessage( va( "%s: shooting %s",
 						mClientList[ i ]->GetName(),
-						bDontShoot ? "disabled" : "enabled" ) );
+						bDontShoot ? "disabled" : "enabled" ).c_str() );
 				}
 			}
 		}
@@ -1457,7 +1457,7 @@ void IGame::cmdDebugBot( const StringVector & args )
 
 	if ( !bAll )
 	{
-		EngineFuncs::ConsoleError( va( "no bot found named %s", botname.c_str() ) );
+		EngineFuncs::ConsoleError( va( "no bot found named %s", botname.c_str() ).c_str() );
 	}
 }
 
@@ -1470,7 +1470,7 @@ void IGame::cmdKickAll( const StringVector & args )
 		{
 			StringVector tl;
 			tl.push_back( "kickbot" );
-			tl.push_back( ( std::string )va( "%i", mClientList[ i ]->GetGameID() ) );
+			tl.push_back( va( "%i", mClientList[ i ]->GetGameID() ).c_str() );
 			CommandReciever::DispatchCommand( tl );
 		}
 	}
@@ -1480,7 +1480,7 @@ void IGame::cmdAddbot( const StringVector & args )
 {
 	if ( !System::mInstance->mNavigation->IsReady() )
 	{
-		EngineFuncs::ConsoleError( va( "No navigation file loaded, unable to add bots." ) );
+		EngineFuncs::ConsoleError( va( "No navigation file loaded, unable to add bots." ).c_str() );
 		return;
 	}
 
@@ -1571,7 +1571,7 @@ void IGame::cmdPrintFileSystem( const StringVector & args )
 	FileSystem::FindAllFiles( pth, dlist, ex );
 
 	EngineFuncs::ConsoleMessage( "------------------------------------" );
-	EngineFuncs::ConsoleMessage( va( "%d Files %s, in %s", dlist.size(), ex.c_str(), pth.c_str() ) );
+	EngineFuncs::ConsoleMessage( va( "%d Files %s, in %s", dlist.size(), ex.c_str(), pth.c_str() ).c_str() );
 	for ( uint32_t i = 0; i < dlist.size(); ++i )
 	{
 		EngineFuncs::ConsoleMessage( dlist[ i ].string().c_str() );
@@ -1587,11 +1587,11 @@ void IGame::cmdReloadWeaponDatabase( const StringVector & args )
 
 void IGame::cmdShowProcesses( const StringVector & args )
 {
-	EngineFuncs::ConsoleMessage( va( "# Processes: %d!", mUpdateMap.size() ) );
+	EngineFuncs::ConsoleMessage( va( "# Processes: %d!", mUpdateMap.size() ).c_str() );
 	FunctorMap::iterator it = mUpdateMap.begin(), itEnd = mUpdateMap.end();
 	for ( ; it != itEnd; ++it )
 	{
-		EngineFuncs::ConsoleMessage( va( "Process: %s!", ( *it ).first.c_str() ) );
+		EngineFuncs::ConsoleMessage( va( "Process: %s!", ( *it ).first.c_str() ).c_str() );
 	}
 }
 
@@ -1610,7 +1610,7 @@ bool IGame::AddUpdateFunction( const std::string &_name, FunctorPtr _func )
 		EngineFuncs::ConsoleError( "That process is already running!" );
 		return false;
 	}
-	EngineFuncs::ConsoleMessage( va( "Process %s has been started! ", _name.c_str() ) );
+	EngineFuncs::ConsoleMessage( va( "Process %s has been started! ", _name.c_str() ).c_str() );
 	mUpdateMap.insert( std::make_pair( _name, _func ) );
 	return true;
 }
@@ -1620,7 +1620,7 @@ bool IGame::RemoveUpdateFunction( const std::string &_name )
 	FunctorMap::iterator it = mUpdateMap.find( _name );
 	if ( it != mUpdateMap.end() )
 	{
-		EngineFuncs::ConsoleMessage( va( "Process %s has been stopped! ", _name.c_str() ) );
+		EngineFuncs::ConsoleMessage( va( "Process %s has been stopped! ", _name.c_str() ).c_str() );
 		mUpdateMap.erase( _name.c_str() );
 		return true;
 	}

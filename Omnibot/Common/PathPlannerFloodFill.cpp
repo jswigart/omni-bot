@@ -276,7 +276,7 @@ bool PathPlannerFloodFill::Load( const std::string &_mapname, bool _dl )
 	mSpanMap.Init( Vector3f( mapbounds.mMins ), Vector3f( mapbounds.mMaxs ), 16.0f );
 
 	EngineFuncs::ConsoleMessage( va( "Created %d x %d span map",
-		mSpanMap.GetNumCellsX(), mSpanMap.GetNumCellsY() ) );
+		mSpanMap.GetNumCellsX(), mSpanMap.GetNumCellsY() ).c_str() );
 
 	// Automatically seed the flood fill with known features
 	std::vector< AutoNavFeature > features;
@@ -442,7 +442,7 @@ void PathPlannerFloodFill::AddFloodStart( const Vector3f &_vec )
 
 void PathPlannerFloodFill::ClearFloodStarts()
 {
-	EngineFuncs::ConsoleMessage( va( "Clearing %d flood start nodes.", mStartPositions.size() ) );
+	EngineFuncs::ConsoleMessage( va( "Clearing %d flood start nodes.", mStartPositions.size() ).c_str() );
 	mStartPositions.clear();
 }
 
@@ -470,7 +470,7 @@ void PathPlannerFloodFill::SaveFloodStarts()
 		f.Close();
 	}
 	EngineFuncs::ConsoleMessage( va( "Saved %d nav starts from %s",
-		mStartPositions.size(), strMap.c_str() ) );
+		mStartPositions.size(), strMap.c_str() ).c_str() );
 }
 
 void PathPlannerFloodFill::LoadFloodStarts()
@@ -502,7 +502,7 @@ void PathPlannerFloodFill::LoadFloodStarts()
 		f.Close();
 	}
 	EngineFuncs::ConsoleMessage( va( "Loaded %d nav starts from %s",
-		mStartPositions.size(), strMap.c_str() ) );
+		mStartPositions.size(), strMap.c_str() ).c_str() );
 }
 
 void PathPlannerFloodFill::FloodFill( const FloodFillOptions &_options )

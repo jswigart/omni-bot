@@ -36,12 +36,12 @@ void ProtobufLogHandler( google::protobuf::LogLevel level, const char* filename,
 	switch ( level )
 	{
 		case google::protobuf::LOGLEVEL_INFO:
-			EngineFuncs::ConsoleMessage( va( "%s( %d ) : %s", filename, line, message.c_str() ) );
+			EngineFuncs::ConsoleMessage( va( "%s( %d ) : %s", filename, line, message.c_str() ).c_str() );
 			break;
 		case google::protobuf::LOGLEVEL_WARNING:
 		case google::protobuf::LOGLEVEL_ERROR:
 		case google::protobuf::LOGLEVEL_FATAL:
-			EngineFuncs::ConsoleError( va( "%s( %d ) : %s", filename, line, message.c_str() ) );
+			EngineFuncs::ConsoleError( va( "%s( %d ) : %s", filename, line, message.c_str() ).c_str() );
 			break;
 	}
 }
@@ -239,7 +239,7 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 	// Run the games autoexec.
 	int threadId = GM_INVALID_THREAD;
 	if ( !mBotSystem.mScript->ExecuteFile( filePath( "scripts/%s_autoexec.gm", vars.mGameAbbrev.c_str() ), threadId ) )
-		EngineFuncs::ConsoleError( va( "Unable to execute 'scripts/%s_autoexec.gm'", vars.mGameAbbrev.c_str() ) );
+		EngineFuncs::ConsoleError( va( "Unable to execute 'scripts/%s_autoexec.gm'", vars.mGameAbbrev.c_str() ).c_str() );
 
 	GameAnalytics::Keys analyticsKeys;
 	//if ( mBotSystem.mGame->GetAnalyticsKeys( analyticsKeys ) )
@@ -247,7 +247,7 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 #ifdef _DEBUG
 		analyticsKeys.mVersionKey += ":DBG";
 #endif
-		mBotSystem.mAnalytics = new GameAnalytics( analyticsKeys );
+		mBotSystem.mAnalytics = new GameAnalytics( analyticsKeys, this );
 		
 		bool dbEnabled = false, remoteEnabled = false;;
 		if ( Options::GetValue( "Analytics", "SendToDatabase", dbEnabled ) )
@@ -275,7 +275,7 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 
 	mBotSystem.mGame->LoadGoalScripts( true );
 
-	EngineFuncs::ConsoleMessage( va( "Bot Initialized in %.2f seconds.", loadTime.GetElapsedSeconds() ) );
+	EngineFuncs::ConsoleMessage( va( "Bot Initialized in %.2f seconds.", loadTime.GetElapsedSeconds() ).c_str() );
 	LOG( "Bot Initialized in " << loadTime.GetElapsedSeconds() << " seconds." );
 
 	return BOT_ERROR_NONE;
@@ -300,13 +300,7 @@ void IGameManager::UpdateGame()
 	if ( mBotSystem.mAnalytics != NULL )
 	{
 		rmt_ScopedCPUSample( GameAnalytics );
-
-		std::string err;
-		while ( mBotSystem.mAnalytics->GetError( err ) )
-		{
-			EngineFuncs::ConsoleError( err.c_str() );
-		}
-
+		
 		if ( mBotSystem.mAnalytics->GetPublisher() )
 		{
 			rmt_ScopedCPUSample( Poll );
@@ -320,47 +314,56 @@ void IGameManager::UpdateGame()
 
 		rmt_ScopedCPUSample( CreateFrameEvent );
 
-		Analytics::MessageUnion msgUnion;
-		msgUnion.set_timestamp( 0 );
-
-		IGame::EntityIterator it;
-		while ( IGame::IterateEntity( it ) )
+		static int nextSendTime = 0;
+		if ( nextSendTime < IGame::GetTime() )
 		{
-			Vector3f entPos( Vector3f::ZERO ), entFace( Vector3f::ZERO );
-			EngineFuncs::EntityPosition( it.GetEnt().mEntity, entPos );
-			EngineFuncs::EntityOrientation( it.GetEnt().mEntity, entFace, NULL, NULL );
+			nextSendTime = IGame::GetTime() + 5000;
 
-			float hdg, pitch, roll;
-			entFace.ToSpherical( hdg, pitch, roll );
+			Analytics::MessageUnion msgUnion;
+			msgUnion.set_timestamp( mBotSystem.mAnalytics->GetTimeStamp() );
 
-			Analytics::GameEntityList * lst = msgUnion.mutable_gameentitylist();
-			Analytics::GameEntityInfo * ent = lst->add_entities();
-			SMART_FIELD_SET( ent, entityid, it.GetEnt().mEntity.AsInt() );
-			SMART_FIELD_SET( ent, groupid, it.GetEnt().mEntInfo.mGroup );
-			SMART_FIELD_SET( ent, classid, it.GetEnt().mEntInfo.mClassId );
-			SMART_FIELD_SET( ent, health, it.GetEnt().mEntInfo.mHealth.mNum );
-			SMART_FIELD_SET( ent, healthmax, it.GetEnt().mEntInfo.mHealth.mMax );
-			SMART_FIELD_SET( ent, armor, it.GetEnt().mEntInfo.mArmor.mNum );
-			SMART_FIELD_SET( ent, armormax, it.GetEnt().mEntInfo.mArmor.mMax );
-			for ( int i = 0; i < EntityInfo::NUM_AMMO_TYPES; ++i )
+			IGame::EntityIterator it;
+			while ( IGame::IterateEntity( it ) )
 			{
-				if ( it.GetEnt().mEntInfo.mAmmo[ i ].mWeaponId != 0 )
-				{
-					Analytics::GameEntityInfo_Ammo* ammo = ent->add_ammo();
-					ammo->set_ammotype( it.GetEnt().mEntInfo.mAmmo[ i ].mWeaponId );
-					SMART_FIELD_SET( ammo, ammocount, it.GetEnt().mEntInfo.mAmmo[ i ].mNum );
-				}
-			}
-			SMART_FIELD_SET( ent, positionx, entPos.X() );
-			SMART_FIELD_SET( ent, positiony, entPos.Y() );
-			SMART_FIELD_SET( ent, positionz, entPos.Z() );
-			SMART_FIELD_SET( ent, heading, hdg );
-			SMART_FIELD_SET( ent, pitch, pitch );
-			SMART_FIELD_SET( ent, roll, roll );
-		}
+				Vector3f entPos( Vector3f::ZERO ), entFace( Vector3f::ZERO );
+				EngineFuncs::EntityPosition( it.GetEnt().mEntity, entPos );
+				EngineFuncs::EntityOrientation( it.GetEnt().mEntity, entFace, NULL, NULL );
 
-		if ( msgUnion.IsInitialized() )
-			mBotSystem.mAnalytics->AddEvent( msgUnion );
+				float hdg, pitch, roll;
+				entFace.ToSpherical( hdg, pitch, roll );
+
+				Analytics::GameEntityList * lst = msgUnion.mutable_gameentitylist();
+				Analytics::GameEntityInfo * ent = lst->add_entities();
+				SMART_FIELD_SET( ent, entityid, it.GetEnt().mEntity.AsInt() );
+				SMART_FIELD_SET( ent, groupid, it.GetEnt().mEntInfo.mGroup );
+				SMART_FIELD_SET( ent, classid, it.GetEnt().mEntInfo.mClassId );
+				SMART_FIELD_SET( ent, health, it.GetEnt().mEntInfo.mHealth.mNum );
+				SMART_FIELD_SET( ent, healthmax, it.GetEnt().mEntInfo.mHealth.mMax );
+				SMART_FIELD_SET( ent, armor, it.GetEnt().mEntInfo.mArmor.mNum );
+				SMART_FIELD_SET( ent, armormax, it.GetEnt().mEntInfo.mArmor.mMax );
+				for ( int i = 0; i < EntityInfo::NUM_AMMO_TYPES; ++i )
+				{
+					if ( it.GetEnt().mEntInfo.mAmmo[ i ].mWeaponId != 0 )
+					{
+						Analytics::GameEntityInfo_Ammo* ammo = ent->add_ammo();
+						ammo->set_ammotype( it.GetEnt().mEntInfo.mAmmo[ i ].mWeaponId );
+						SMART_FIELD_SET( ammo, ammocount, it.GetEnt().mEntInfo.mAmmo[ i ].mNum );
+					}
+				}
+				SMART_FIELD_SET( ent, positionx, entPos.X() );
+				SMART_FIELD_SET( ent, positiony, entPos.Y() );
+				SMART_FIELD_SET( ent, positionz, entPos.Z() );
+				SMART_FIELD_SET( ent, heading, hdg );
+				SMART_FIELD_SET( ent, pitch, pitch );
+				SMART_FIELD_SET( ent, roll, roll );
+
+				if ( lst->entities_size() > 10 )
+					break;
+			}
+
+			if ( msgUnion.IsInitialized() )
+				mBotSystem.mAnalytics->AddEvent( msgUnion );
+		}
 	}
 
 	Options::SaveConfigFileIfChanged( "user/omni-bot.cfg" );
@@ -454,12 +457,12 @@ void IGameManager::cmdVersion( const StringVector & args )
 	if ( mBotSystem.mGame )
 	{
 #ifdef _DEBUG
-		EngineFuncs::ConsoleMessage( va( "Omni-Bot DEBUG Build : %s %s", __DATE__, __TIME__ ) );
+		EngineFuncs::ConsoleMessage( va( "Omni-Bot DEBUG Build : %s %s", __DATE__, __TIME__ ).c_str() );
 #else
 		EngineFuncs::ConsoleMessage(va("Omni-Bot : %s %s", __DATE__, __TIME__));
 #endif
-		EngineFuncs::ConsoleMessage( va( "Version : %s", mBotSystem.mGame->GetGameVars().mVersionString.c_str() ) );
-		EngineFuncs::ConsoleMessage( va( "Interface # : %d", mBotSystem.mGame->GetGameVars().mGameVersion ) );
+		EngineFuncs::ConsoleMessage( va( "Version : %s", mBotSystem.mGame->GetGameVars().mVersionString.c_str() ).c_str() );
+		EngineFuncs::ConsoleMessage( va( "Interface # : %d", mBotSystem.mGame->GetGameVars().mGameVersion ).c_str() );
 	}
 }
 
@@ -613,15 +616,20 @@ void IGameManager::cmdSaveHeatMapScript( const StringVector & args )
 		std::string script;
 		System::mInstance->mAnalytics->WriteHeatmapScript( def, script );
 
-		const std::string filename = va( "heatmap_%s_%s.mgk", def.mAreaId, def.mEventId );
+		const std::string filename = va( "heatmap_%s_%s.mgk", def.mAreaId, def.mEventId ).c_str();
 
 		File fileOut;
 		if ( fileOut.OpenForWrite( filename.c_str(), File::Text, false ) )
 		{
-			EngineFuncs::ConsoleMessage( va( "Writing %s", filename.c_str() ) );
+			EngineFuncs::ConsoleMessage( va( "Writing %s", filename.c_str() ).c_str() );
 
 			fileOut.WriteString( script );
 			fileOut.Close();
 		}
 	}
+}
+
+void IGameManager::Error( const char * str )
+{
+	EngineFuncs::ConsoleError( str );
 }

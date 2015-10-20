@@ -213,7 +213,7 @@ void protobuf_AssignDesc_recast_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Model_TriParms));
   NodeState_descriptor_ = file->message_type(7);
-  static const int NodeState_offsets_[11] = {
+  static const int NodeState_offsets_[12] = {
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(NodeState_default_oneof_instance_, submodelid_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(NodeState_default_oneof_instance_, staticmodelid_),
     PROTO2_GENERATED_DEFAULT_ONEOF_FIELD_OFFSET(NodeState_default_oneof_instance_, displacementid_),
@@ -222,6 +222,7 @@ void protobuf_AssignDesc_recast_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, solid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, dynamic_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, navflagoverride_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, activemodelcrc_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, modelname_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeState, type_),
@@ -350,23 +351,23 @@ void protobuf_AddDesc_recast_2eproto() {
     "\014\n\004name\030\001 \002(\t\022\020\n\010modelcrc\030\002 \002(\r\022\023\n\013numMe"
     "shTris\030\003 \002(\r\022+\n\ttriangles\030\004 \003(\0132\030.Recast"
     "IO.Model.TriParms\0320\n\010TriParms\022\013\n\003tri\030\001 \002"
-    "(\r\022\027\n\017surfaceOverride\030\002 \001(\r\"\226\002\n\tNodeStat"
+    "(\r\022\027\n\017surfaceOverride\030\002 \001(\r\"\261\002\n\tNodeStat"
     "e\022\024\n\nsubModelId\030\001 \001(\005H\000\022\027\n\rstaticModelId"
     "\030\002 \001(\005H\000\022\030\n\016displacementId\030\003 \001(\005H\000\022\025\n\007en"
     "abled\030\005 \001(\010:\004true\0227\n\tshapemode\030\006 \001(\0162\023.R"
     "ecastIO.ShapeMode:\017SHAPE_TRIANGLES\022\023\n\005so"
     "lid\030\007 \001(\010:\004true\022\026\n\007dynamic\030\010 \001(\010:\005false\022"
-    "\032\n\017navFlagOverride\030\t \001(\005:\0010\022\021\n\tmodelname"
-    "\030\n \001(\t\022\014\n\004name\030\013 \001(\tB\006\n\004type\"\245\002\n\016Navigat"
-    "ionMesh\022\017\n\007version\030\001 \002(\005\022.\n\rnavMeshParam"
-    "s\030\002 \002(\0132\027.RecastIO.NavMeshParams\0222\n\rexcl"
-    "usionZone\030\003 \003(\0132\033.RecastIO.AxisAlignedBo"
-    "unds\0226\n\021offMeshConnection\030\004 \003(\0132\033.Recast"
-    "IO.OffMeshConnection\022&\n\tnodeState\030\005 \003(\0132"
-    "\023.RecastIO.NodeState\022\037\n\006models\030\006 \003(\0132\017.R"
-    "ecastIO.Model\022\035\n\005tiles\030d \003(\0132\016.RecastIO."
-    "Tile*/\n\tShapeMode\022\023\n\017SHAPE_TRIANGLES\020\000\022\r"
-    "\n\tSHAPE_OBB\020\001", 1533);
+    "\032\n\017navFlagOverride\030\t \001(\005:\0010\022\031\n\016activeMod"
+    "elCrc\030\n \001(\r:\0010\022\021\n\tmodelname\030\013 \001(\t\022\014\n\004nam"
+    "e\030\014 \001(\tB\006\n\004type\"\245\002\n\016NavigationMesh\022\017\n\007ve"
+    "rsion\030\001 \002(\005\022.\n\rnavMeshParams\030\002 \002(\0132\027.Rec"
+    "astIO.NavMeshParams\0222\n\rexclusionZone\030\003 \003"
+    "(\0132\033.RecastIO.AxisAlignedBounds\0226\n\021offMe"
+    "shConnection\030\004 \003(\0132\033.RecastIO.OffMeshCon"
+    "nection\022&\n\tnodeState\030\005 \003(\0132\023.RecastIO.No"
+    "deState\022\037\n\006models\030\006 \003(\0132\017.RecastIO.Model"
+    "\022\035\n\005tiles\030d \003(\0132\016.RecastIO.Tile*/\n\tShape"
+    "Mode\022\023\n\017SHAPE_TRIANGLES\020\000\022\r\n\tSHAPE_OBB\020\001", 1560);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "recast.proto", &protobuf_RegisterTypes);
   Vec3::default_instance_ = new Vec3();
@@ -3345,6 +3346,7 @@ const int NodeState::kShapemodeFieldNumber;
 const int NodeState::kSolidFieldNumber;
 const int NodeState::kDynamicFieldNumber;
 const int NodeState::kNavFlagOverrideFieldNumber;
+const int NodeState::kActiveModelCrcFieldNumber;
 const int NodeState::kModelnameFieldNumber;
 const int NodeState::kNameFieldNumber;
 #endif  // !_MSC_VER
@@ -3376,6 +3378,7 @@ void NodeState::SharedCtor() {
   solid_ = true;
   dynamic_ = false;
   navflagoverride_ = 0;
+  activemodelcrc_ = 0u;
   modelname_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -3445,14 +3448,24 @@ void NodeState::clear_type() {
 
 
 void NodeState::Clear() {
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<NodeState*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
   if (_has_bits_[0 / 32] & 248) {
+    ZR_(dynamic_, navflagoverride_);
     enabled_ = true;
     shapemode_ = 0;
     solid_ = true;
-    dynamic_ = false;
-    navflagoverride_ = 0;
   }
-  if (_has_bits_[8 / 32] & 768) {
+  if (_has_bits_[8 / 32] & 1792) {
+    activemodelcrc_ = 0u;
     if (has_modelname()) {
       if (modelname_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         modelname_->clear();
@@ -3464,6 +3477,10 @@ void NodeState::Clear() {
       }
     }
   }
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
   clear_type();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -3602,13 +3619,28 @@ bool NodeState::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(82)) goto parse_modelname;
+        if (input->ExpectTag(80)) goto parse_activeModelCrc;
         break;
       }
 
-      // optional string modelname = 10;
+      // optional uint32 activeModelCrc = 10 [default = 0];
       case 10: {
-        if (tag == 82) {
+        if (tag == 80) {
+         parse_activeModelCrc:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &activemodelcrc_)));
+          set_has_activemodelcrc();
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(90)) goto parse_modelname;
+        break;
+      }
+
+      // optional string modelname = 11;
+      case 11: {
+        if (tag == 90) {
          parse_modelname:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_modelname()));
@@ -3619,13 +3651,13 @@ bool NodeState::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(90)) goto parse_name;
+        if (input->ExpectTag(98)) goto parse_name;
         break;
       }
 
-      // optional string name = 11;
-      case 11: {
-        if (tag == 90) {
+      // optional string name = 12;
+      case 12: {
+        if (tag == 98) {
          parse_name:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_name()));
@@ -3706,24 +3738,29 @@ void NodeState::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(9, this->navflagoverride(), output);
   }
 
-  // optional string modelname = 10;
+  // optional uint32 activeModelCrc = 10 [default = 0];
+  if (has_activemodelcrc()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(10, this->activemodelcrc(), output);
+  }
+
+  // optional string modelname = 11;
   if (has_modelname()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->modelname().data(), this->modelname().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
       "modelname");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      10, this->modelname(), output);
+      11, this->modelname(), output);
   }
 
-  // optional string name = 11;
+  // optional string name = 12;
   if (has_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->name().data(), this->name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE,
       "name");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      11, this->name(), output);
+      12, this->name(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -3777,7 +3814,12 @@ void NodeState::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(9, this->navflagoverride(), target);
   }
 
-  // optional string modelname = 10;
+  // optional uint32 activeModelCrc = 10 [default = 0];
+  if (has_activemodelcrc()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(10, this->activemodelcrc(), target);
+  }
+
+  // optional string modelname = 11;
   if (has_modelname()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->modelname().data(), this->modelname().length(),
@@ -3785,10 +3827,10 @@ void NodeState::SerializeWithCachedSizes(
       "modelname");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        10, this->modelname(), target);
+        11, this->modelname(), target);
   }
 
-  // optional string name = 11;
+  // optional string name = 12;
   if (has_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->name().data(), this->name().length(),
@@ -3796,7 +3838,7 @@ void NodeState::SerializeWithCachedSizes(
       "name");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        11, this->name(), target);
+        12, this->name(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3841,14 +3883,21 @@ int NodeState::ByteSize() const {
 
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    // optional string modelname = 10;
+    // optional uint32 activeModelCrc = 10 [default = 0];
+    if (has_activemodelcrc()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->activemodelcrc());
+    }
+
+    // optional string modelname = 11;
     if (has_modelname()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->modelname());
     }
 
-    // optional string name = 11;
+    // optional string name = 12;
     if (has_name()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -3942,6 +3991,9 @@ void NodeState::MergeFrom(const NodeState& from) {
     }
   }
   if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (from.has_activemodelcrc()) {
+      set_activemodelcrc(from.activemodelcrc());
+    }
     if (from.has_modelname()) {
       set_modelname(from.modelname());
     }
@@ -3976,6 +4028,7 @@ void NodeState::Swap(NodeState* other) {
     std::swap(solid_, other->solid_);
     std::swap(dynamic_, other->dynamic_);
     std::swap(navflagoverride_, other->navflagoverride_);
+    std::swap(activemodelcrc_, other->activemodelcrc_);
     std::swap(modelname_, other->modelname_);
     std::swap(name_, other->name_);
     std::swap(type_, other->type_);

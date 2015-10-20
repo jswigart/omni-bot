@@ -572,7 +572,7 @@ void TriggerManager::cmdDebugTriggers( const StringVector & args )
 			mDebugTriggers = false;
 
 		if ( numArgs >= 3 )
-			mDebugTriggersExpr = va( "%s", args[ 2 ].c_str() );
+			mDebugTriggersExpr = va( "%s", args[ 2 ].c_str() ).c_str();
 	}
 	else
 		mDebugTriggers = !mDebugTriggers;
@@ -617,7 +617,7 @@ void TriggerManager::HandleTrigger( const TriggerInfo &_triggerInfo )
 
 	if ( mDebugTriggers )
 	{
-		if ( _triggerInfo.mTagName[ 0 ] && Utils::RegexMatch( mDebugTriggersExpr.c_str(), va( "%s", _triggerInfo.mTagName ) ) )
+		if ( _triggerInfo.mTagName[ 0 ] && Utils::RegexMatch( mDebugTriggersExpr.c_str(), va( "%s", _triggerInfo.mTagName ).c_str() ) )
 		{
 			std::stringstream msg;
 			msg << "<" << ( bScriptCallback ? "+++" : "---" ) << ">" << ( _triggerInfo );

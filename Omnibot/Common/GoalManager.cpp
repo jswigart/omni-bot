@@ -564,7 +564,7 @@ void GoalManager::cmdGoalShow( const StringVector & args )
 	MapGoalList::iterator it = qry.mList.begin();
 	for ( ; it != qry.mList.end(); ++it )
 	{
-		txt = va( "%d: ", iCount++ );
+		txt = va( "%d: ", iCount++ ).c_str();
 		txt += ( *it )->GetName();
 
 		txt += " ->";
@@ -589,9 +589,9 @@ void GoalManager::cmdGoalShow( const StringVector & args )
 			txt += ( *it )->IsAvailable( team ) ? "1" : "0";
 		}
 		txt += " serial ";
-		txt += va( "%d", ( *it )->GetSerialNum() );
+		txt += va( "%d", ( *it )->GetSerialNum() ).c_str();
 		txt += " priority ";
-		txt += va( "%.2f", ( *it )->GetDefaultPriority() );
+		txt += va( "%.2f", ( *it )->GetDefaultPriority() ).c_str();
 
 		EngineFuncs::ConsoleMessage( txt.c_str() );
 		if ( bShowSubPriorities )
@@ -645,7 +645,7 @@ void GoalManager::cmdGoalShowRoutes( const StringVector & args )
 		if ( ( *it )->GetRoutes().empty() )
 			continue;
 
-		const char *pMsg = va( "%d: %s", iCount++, ( *it )->GetName().c_str() );
+		const char *pMsg = va( "%d: %s", iCount++, ( *it )->GetName().c_str() ).c_str();
 		EngineFuncs::ConsoleMessage( pMsg );
 		if ( f.IsOpen() )
 		{
@@ -657,8 +657,7 @@ void GoalManager::cmdGoalShowRoutes( const StringVector & args )
 		MapGoal::Routes::const_iterator rIt = ( *it )->GetRoutes().begin(), rItEnd = ( *it )->GetRoutes().end();
 		for ( ; rIt != rItEnd; ++rIt )
 		{
-			const char *pRoute = va( "    %d: %s -> %s", iNumRoutes++,
-				rIt->mStart->GetName().c_str(), rIt->mEnd->GetName().c_str() );
+			const char *pRoute = va( "    %d: %s -> %s", iNumRoutes++, rIt->mStart->GetName().c_str(), rIt->mEnd->GetName().c_str() ).c_str();
 
 			EngineFuncs::ConsoleMessage( pRoute );
 
@@ -715,7 +714,7 @@ void GoalManager::cmdGoalDraw( const StringVector & args )
 		++NumSet;
 	}
 	//////////////////////////////////////////////////////////////////////////
-	EngineFuncs::ConsoleMessage( va( "Goals Rendering, %d %s", NumSet, DrawGoals ? "Enabled" : "Disabled" ) );
+	EngineFuncs::ConsoleMessage( va( "Goals Rendering, %d %s", NumSet, DrawGoals ? "Enabled" : "Disabled" ).c_str() );
 }
 
 void GoalManager::cmdGoalDrawRoutes( const StringVector & args )
@@ -755,7 +754,7 @@ void GoalManager::cmdGoalDrawRoutes( const StringVector & args )
 		++NumSet;
 	}
 	//////////////////////////////////////////////////////////////////////////
-	EngineFuncs::ConsoleMessage( va( "Goal Routes Rendering, %d %s", NumSet, DrawRoutes ? "Enabled" : "Disabled" ) );
+	EngineFuncs::ConsoleMessage( va( "Goal Routes Rendering, %d %s", NumSet, DrawRoutes ? "Enabled" : "Disabled" ).c_str() );
 }
 
 const char *MapGoalTable = "_MG";
@@ -910,9 +909,9 @@ bool GoalManager::Load( const std::string &_map, ErrorObj &_err )
 			{
 				// TODO: attempt to run versioning scripts?
 				if ( !gmVersion.IsInt() )
-					EngineFuncs::ConsoleError( va( "Map Goals Script couldn't find Version field, expecting: Version = %d", MapGoalVersion ) );
+					EngineFuncs::ConsoleError( va( "Map Goals Script couldn't find Version field, expecting: Version = %d", MapGoalVersion ).c_str() );
 				else
-					EngineFuncs::ConsoleError( va( "Map Goals Script got version %d, expecting: Version = %d", Version, MapGoalVersion ) );
+					EngineFuncs::ConsoleError( va( "Map Goals Script got version %d, expecting: Version = %d", Version, MapGoalVersion ).c_str() );
 				LoadedOk = false;
 
 				// release the reference to the table
@@ -976,12 +975,12 @@ void GoalManager::_SetActiveGoal( MapGoalPtr _mg )
 	mEditMode = EditNone;
 
 	if ( mActiveGoal )
-		EngineFuncs::ConsoleMessage( va( "Unselected Goal :%s", mActiveGoal->GetName().c_str() ) );
+		EngineFuncs::ConsoleMessage( va( "Unselected Goal :%s", mActiveGoal->GetName().c_str() ).c_str() );
 
 	mActiveGoal = _mg;
 
 	if ( mActiveGoal )
-		EngineFuncs::ConsoleMessage( va( "Selected Goal :%s", mActiveGoal->GetName().c_str() ) );
+		EngineFuncs::ConsoleMessage( va( "Selected Goal :%s", mActiveGoal->GetName().c_str() ).c_str() );
 	else
 		EngineFuncs::ConsoleMessage( "No Goal Selected" );
 }
@@ -1066,7 +1065,7 @@ void GoalManager::cmdGoalCreate( const StringVector & args )
 		mg->ShowHelp();
 	if ( !mActiveGoal )
 	{
-		EngineFuncs::ConsoleError( va( "Unknown goal type: %s", args[ 0 ].c_str() ) );
+		EngineFuncs::ConsoleError( va( "Unknown goal type: %s", args[ 0 ].c_str() ).c_str() );
 	}
 }
 
@@ -1085,7 +1084,7 @@ void GoalManager::cmdGoalSetProperty( const StringVector & args )
 {
 	if ( !mActiveGoal )
 	{
-		EngineFuncs::ConsoleError( va( "Select a goal for edit by adding a new one or using goal_edit" ) );
+		EngineFuncs::ConsoleError( "Select a goal for edit by adding a new one or using goal_edit" );
 		return;
 	}
 	const char *strUsage [] =
@@ -1149,7 +1148,7 @@ void GoalManager::cmdGoalRemoveAll( const StringVector & args )
 			++it;
 	}
 
-	EngineFuncs::ConsoleMessage( va( "Removed %d goals.", Removed ) );
+	EngineFuncs::ConsoleMessage( va( "Removed %d goals.", Removed ).c_str() );
 }
 
 void GoalManager::cmdGoalMove( const StringVector & args )
@@ -1177,18 +1176,18 @@ void GoalManager::cmdGoalMove( const StringVector & args )
 			else
 			{
 				mEditMode = EditMove;
-				EngineFuncs::ConsoleMessage( va( "Moving %s.", mActiveGoal->GetName().c_str() ) );
+				EngineFuncs::ConsoleMessage( va( "Moving %s.", mActiveGoal->GetName().c_str() ).c_str() );
 			}
 		}
 		else
 		{
-			EngineFuncs::ConsoleMessage( va( "Select a goal for edit first! (goal_edit/goal_editx)" ) );
+			EngineFuncs::ConsoleMessage( va( "Select a goal for edit first! (goal_edit/goal_editx)" ).c_str() );
 		}
 	}
 	else
 	{
 		mEditMode = EditNone;
-		EngineFuncs::ConsoleMessage( va( "Moving %s stopped.", mActiveGoal->GetName().c_str() ) );
+		EngineFuncs::ConsoleMessage( va( "Moving %s stopped.", mActiveGoal->GetName().c_str() ).c_str() );
 	}
 }
 

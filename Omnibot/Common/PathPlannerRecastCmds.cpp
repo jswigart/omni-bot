@@ -125,25 +125,25 @@ void PathPlannerRecast::cmdNavList( const StringVector & args )
 
 	std::sort( nodes.begin(), nodes.end(), NavNodeSort );
 
-	EngineFuncs::ConsoleMessage( va( "Nodes(%d)", nodes.size() ) );
+	EngineFuncs::ConsoleMessage( va( "Nodes(%d)", nodes.size() ).c_str() );
 	for ( size_t i = 0; i < nodes.size(); ++i )
 	{
 		const std::string& mdlName = nodes[ i ]->mModel ? nodes[ i ]->mModel->GetName() : "";
 
 		std::string info;
 		if ( nodes[ i ]->mSubModel >= 0 )
-			info += va( "submdl(%d) ", nodes[ i ]->mSubModel );
+			info += va( "submdl(%d) ", nodes[ i ]->mSubModel ).c_str();
 		if ( nodes[ i ]->mStaticModel >= 0 )
-			info += va( "staticmdl(%d) ", nodes[ i ]->mStaticModel );
+			info += va( "staticmdl(%d) ", nodes[ i ]->mStaticModel ).c_str();
 		if ( nodes[ i ]->mDisplacement >= 0 )
-			info += va( "displ(%d) ", nodes[ i ]->mDisplacement );
+			info += va( "displ(%d) ", nodes[ i ]->mDisplacement ).c_str();
 		
 		if ( !nodes[ i ]->mEntityName.empty() )
-			info += va( "name(%s) ", nodes[ i ]->mEntityName.c_str() );
+			info += va( "name(%s) ", nodes[ i ]->mEntityName.c_str() ).c_str();
 		if ( !mdlName.empty() )
-			info += va( "model(%s) ", mdlName.c_str() );
+			info += va( "model(%s) ", mdlName.c_str() ).c_str();
 
-		EngineFuncs::ConsoleMessage( va( "%d: %s", i, info.c_str() ) );
+		EngineFuncs::ConsoleMessage( va( "%d: %s", i, info.c_str() ).c_str() );
 	}
 }
 
@@ -326,11 +326,11 @@ showUsage:
 	
 	std::string flagsStr;
 	for ( size_t i = 0; i < NavAreaFlagsEnum::sKeyValCount; ++i )
-		flagsStr += va( "%s%s", flagsStr.empty() ? "" : ", ", NavAreaFlagsEnum::sKeyVal[ i ].mName );
+		flagsStr += va( "%s%s", flagsStr.empty() ? "" : ", ", NavAreaFlagsEnum::sKeyVal[ i ].mName ).c_str();
 
 	EngineFuncs::ConsoleError( "nav_addlink radius[#] type[string] flag(s)[string].." );
-	EngineFuncs::ConsoleError( va( "	radius - radius of connection" ) );
-	EngineFuncs::ConsoleError( va( "	flags - combination of (%s)", flagsStr.c_str() ) );
+	EngineFuncs::ConsoleError( va( "	radius - radius of connection" ).c_str() );
+	EngineFuncs::ConsoleError( va( "	flags - combination of (%s)", flagsStr.c_str() ).c_str() );
 }
 
 void PathPlannerRecast::cmdAutoBuildFeatures( const StringVector & args )
@@ -531,7 +531,7 @@ void PathPlannerRecast::cmdModelShape( const StringVector & args )
 				validValues += ", ";
 			validValues += RecastIO::ShapeMode_descriptor()->value( i )->name();
 		}
-		EngineFuncs::ConsoleError( va( "Invalid mode, valid values are: %s", validValues.c_str() ) );
+		EngineFuncs::ConsoleError( va( "Invalid mode, valid values are: %s", validValues.c_str() ).c_str() );
 		return;
 	}
 
@@ -630,7 +630,7 @@ void PathPlannerRecast::cmdModelSetTriangleSurface( const StringVector & args )
 		SurfaceFlags parsed = SURFACE_NONE;
 		if ( !SurfaceFlagsEnum::ValueForName( surfacename.c_str(), parsed ) )
 		{
-			EngineFuncs::ConsoleError( va( "Unknown surface type '%s', options are %s", surfacename.c_str(), SurfaceFlagsEnum::ValidNames().c_str() ) );
+			EngineFuncs::ConsoleError( va( "Unknown surface type '%s', options are %s", surfacename.c_str(), SurfaceFlagsEnum::ValidNames().c_str() ).c_str() );
 			return;
 		}
 
@@ -662,7 +662,7 @@ void PathPlannerRecast::cmdModelSetAreaFlag( const StringVector & args )
 	{
 		if ( !NavAreaFlagsEnum::ValueForName( args[ i ].c_str(), navFlags ) )
 		{
-			EngineFuncs::ConsoleError( va( "Unknown flag '%s'", args[ i ].c_str() ) );
+			EngineFuncs::ConsoleError( va( "Unknown flag '%s'", args[ i ].c_str() ).c_str() );
 			goto showUsage;
 		}
 	}
@@ -677,10 +677,10 @@ showUsage:
 
 	std::string flagsStr;
 	for ( size_t i = 0; i < NavAreaFlagsEnum::sKeyValCount; ++i )
-		flagsStr += va( "%s%s", flagsStr.empty() ? "" : ", ", NavAreaFlagsEnum::sKeyVal[ i ].mName );
+		flagsStr += va( "%s%s", flagsStr.empty() ? "" : ", ", NavAreaFlagsEnum::sKeyVal[ i ].mName ).c_str();
 
 	EngineFuncs::ConsoleError( "nav_modelsetarea flag(s)[string].." );
-	EngineFuncs::ConsoleError( va( "	flags - combination of (%s)", flagsStr.c_str() ) );
+	EngineFuncs::ConsoleError( va( "	flags - combination of (%s)", flagsStr.c_str() ).c_str() );
 }
 
 //////////////////////////////////////////////////////////////////////////

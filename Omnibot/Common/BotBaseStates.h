@@ -36,31 +36,69 @@ namespace AiState
 			Interrupted,
 		};
 
-		virtual bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt) { return false; }
+		virtual bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
+		{
+			return false;
+		}
 
-		virtual void OnPathSucceeded() { mPathSuccess = true; };
-		virtual void OnPathFailed(FailType _how) { mPathFailed = _how; };
+		virtual void OnPathSucceeded()
+		{
+			mPathSuccess = true;
+		};
+		virtual void OnPathFailed( FailType _how )
+		{
+			mPathFailed = _how;
+		};
 
-		bool DidPathSucceed() const { return mPathSuccess; }
-		bool DidPathFail() const { return mPathFailed!=0; }
-		FailType GetFailType() const { return mPathFailed; }
+		bool DidPathSucceed() const
+		{
+			return mPathSuccess;
+		}
+		bool DidPathFail() const
+		{
+			return mPathFailed != 0;
+		}
+		FailType GetFailType() const
+		{
+			return mPathFailed;
+		}
 
-		int GetDestinationIndex() const { return mDestinationIndex; }
+		int GetDestinationIndex() const
+		{
+			return mDestinationIndex;
+		}
 
-		void ResetPathUser() { mPathFailed = None; mPathSuccess = false; }
-		bool InProgress() const { return mPathFailed==None&&!mPathSuccess; }
+		void ResetPathUser()
+		{
+			mPathFailed = None; mPathSuccess = false;
+		}
+		bool InProgress() const
+		{
+			return mPathFailed == None&&!mPathSuccess;
+		}
 
-		void SetSourceThread(int _threadId) { mCallingThread = _threadId; }
-		int GetSourceThread() const { return mCallingThread; }
+		void SetSourceThread( int _threadId )
+		{
+			mCallingThread = _threadId;
+		}
+		int GetSourceThread() const
+		{
+			return mCallingThread;
+		}
 
-		uint32_t GetFollowUserName() const { return mUserName; }
+		uint32_t GetFollowUserName() const
+		{
+			return mUserName;
+		}
 
-		void SetFollowUserName(uint32_t _name);
-		void SetFollowUserName(const std::string &_name);
+		void SetFollowUserName( uint32_t name );
+		void SetFollowUserName( const std::string &name );
 
-		FollowPathUser(const std::string &_user);
-		FollowPathUser(uint32_t _name);
-		virtual ~FollowPathUser() {}
+		FollowPathUser( const std::string &user );
+		FollowPathUser( uint32_t name );
+		virtual ~FollowPathUser()
+		{
+		}
 	private:
 		uint32_t				 mUserName;
 
@@ -78,7 +116,10 @@ namespace AiState
 	class TrackTargetZone
 	{
 	public:
-		enum { MaxTargetZones = 8 };
+		enum
+		{
+			MaxTargetZones = 8
+		};
 		struct TargetZone
 		{
 			Vector3f mPosition;
@@ -86,34 +127,42 @@ namespace AiState
 			bool	 mInUse : 1;
 		};
 
-		void Restart(float _radius);
+		void Restart( float _radius );
 
 		void UpdateAimPosition();
 
-		bool HasAim() const { return mValidAim; }
+		bool HasAim() const
+		{
+			return mValidAim;
+		}
 
-		const Vector3f &GetAimPosition() { return mAimPosition; }
+		const Vector3f &GetAimPosition()
+		{
+			return mAimPosition;
+		}
 
 		void RenderDebug();
 
-		void Update(Client *_client);
+		void Update( Client *_client );
 
 		TrackTargetZone();
 	private:
 		float		 mRadius;
 		Vector3f	 mAimPosition;
 		GameEntity	 mLastTarget;
-		TargetZone	 mTargetZones[MaxTargetZones];
+		TargetZone	 mTargetZones[ MaxTargetZones ];
 		bool		 mValidAim;
 	};
 	//////////////////////////////////////////////////////////////////////////
 	class AimerUser
 	{
 	public:
-		virtual bool GetAimPosition(Vector3f &_aimpos) = 0;
+		virtual bool GetAimPosition( Vector3f &_aimpos ) = 0;
 		virtual void OnTarget() = 0;
 
-		virtual ~AimerUser() {}
+		virtual ~AimerUser()
+		{
+		}
 	private:
 	};
 
@@ -142,37 +191,40 @@ namespace AiState
 			AimRequest();
 		};
 
-		enum { MaxAimRequests = 8 };
+		enum
+		{
+			MaxAimRequests = 8
+		};
 
-		bool AddAimRequest(Priority::ePriority _prio, AimerUser *_owner, uint32_t _ownername);
-		bool AddAimFacingRequest(Priority::ePriority _prio, uint32_t _owner, const Vector3f &_v);
-		bool AddAimPositionRequest(Priority::ePriority _prio, uint32_t _owner, const Vector3f &_v);
-		bool AddAimMoveDirRequest(Priority::ePriority _prio, uint32_t _owner);
+		bool AddAimRequest( Priority::ePriority _prio, AimerUser *_owner, uint32_t _ownername );
+		bool AddAimFacingRequest( Priority::ePriority _prio, uint32_t _owner, const Vector3f &_v );
+		bool AddAimPositionRequest( Priority::ePriority _prio, uint32_t _owner, const Vector3f &_v );
+		bool AddAimMoveDirRequest( Priority::ePriority _prio, uint32_t _owner );
 
-		void ReleaseAimRequest(uint32_t _owner);
-		void UpdateAimRequest(uint32_t _owner, const Vector3f &_pos);
+		void ReleaseAimRequest( uint32_t _owner );
+		void UpdateAimRequest( uint32_t _owner, const Vector3f &_pos );
 
-		AimRequest *GetHighestAimRequest(bool _clearontarget);
+		AimRequest *GetHighestAimRequest( bool _clearontarget );
 
 		void OnSpawn();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 
-		int GetAllRequests(AimRequest *_records, int _max);
+		int GetAllRequests( AimRequest *_records, int _max );
 
 		void RenderDebug();
 
 		Aimer();
 	private:
-		AimRequest mAimRequests[MaxAimRequests];
+		AimRequest mAimRequests[ MaxAimRequests ];
 		uint32_t  mBestAimOwner;
 
-		AimRequest *FindAimRequest(uint32_t _owner);
+		AimRequest *FindAimRequest( uint32_t _owner );
 	};
-	
+
 	//////////////////////////////////////////////////////////////////////////
 
 	class CaptureTheFlag : public StateChild, public FollowPathUser
@@ -190,16 +242,19 @@ namespace AiState
 		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		GoalState GetGoalState() const { return mGoalState; }
+		GoalState GetGoalState() const
+		{
+			return mGoalState;
+		}
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 		MapGoal *GetMapGoalPtr();
 		void RenderDebug();
 
 		// FollowPathUser
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
 
 		CaptureTheFlag();
 	private:
@@ -211,7 +266,7 @@ namespace AiState
 
 		Trackers					Tracker;
 
-		bool LookForCapGoal(MapGoalPtr &ptr, GoalState &st);
+		bool LookForCapGoal( MapGoalPtr &ptr, GoalState &st );
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -223,7 +278,7 @@ namespace AiState
 		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
 		//void GetDebugString(std::stringstream &out);
 		MapGoal *GetMapGoalPtr();
@@ -318,11 +373,10 @@ namespace AiState
 	class Roam : public StateChild, public FollowPathUser
 	{
 	public:
-
 		float GetPriority();
 
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
 		Roam();
 	private:
@@ -330,12 +384,12 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	class HighLevel : public StatePrioritized
+	/*class HighLevel : public StatePrioritized
 	{
 	public:
 		HighLevel();
 	private:
-	};
+	};*/
 
 	//////////////////////////////////////////////////////////////////////////
 
@@ -350,13 +404,13 @@ namespace AiState
 		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
 		LookAround();
 	private:
 		int	 mNextLookTime;
 
-		float mAwareness[8]; // 8 cardinal directions
+		float mAwareness[ 8 ]; // 8 cardinal directions
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -396,7 +450,7 @@ namespace AiState
 	{
 	public:
 		float GetPriority();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 		Dead();
 	private:
 		bool bForceActivate;
@@ -408,7 +462,7 @@ namespace AiState
 	{
 	public:
 		float GetPriority();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 		Warmup();
 	private:
 	};
@@ -435,7 +489,10 @@ namespace AiState
 	{
 	public:
 
-		enum { MaxTriggers = 8 };
+		enum
+		{
+			MaxTriggers = 8
+		};
 		struct Trigger
 		{
 			uint32_t mOwnerState;
@@ -443,17 +500,17 @@ namespace AiState
 			bool	 mDeleteOnFire : 1;
 		};
 
-		void AddWatch(uint32_t _owner, FilterPtr _filter, bool _fireonce = true);
-		void RemoveWatch(uint32_t _owner);
+		void AddWatch( uint32_t _owner, FilterPtr _filter, bool _fireonce = true );
+		void RemoveWatch( uint32_t _owner );
 
 		void RenderDebug();
 
 		float GetPriority();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
 		ProximityWatcher();
 	private:
-		Trigger	 mTriggers[MaxTriggers];
+		Trigger	 mTriggers[ MaxTriggers ];
 	};
 
 	//////////////////////////////////////////////////////////////////////////
@@ -502,53 +559,6 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	class DeferredCaster : public StateChild
-	{
-	public:
-		struct CastInput
-		{
-			Vector3f	CastStart;
-			Vector3f	CastEnd;
-			AABB		Bounds;
-			int			Mask;
-		};
-
-		struct CastOutput
-		{
-			obTraceResult	Result;
-			bool			Done;
-
-			void Reset() { Done=true; }
-		};
-
-		enum Status { Pending = 0, Done };
-
-		int AddDeferredCasts(const CastInput *_CastIn, int _NumCasts, const char *_UserName);
-		Status GetDeferredCasts(int GroupId, CastOutput *_CastOut, int _NumCasts);
-
-		void GetDebugString(std::stringstream &out);
-		void RenderDebug();
-
-		float GetPriority();
-		void Enter();
-		void Exit();
-		StateStatus Update(float fDt);
-
-		DeferredCaster();
-	private:
-		enum { MaxCasts = 64, InvalidGroup = 0 };
-		CastInput	CastInputs[MaxCasts];
-		CastOutput	CastOutputs[MaxCasts];
-		int			GroupId[MaxCasts];
-		const char *UserName[MaxCasts];;
-
-		int			CastReadPosition;
-		int			CastWritePosition;
-		int			GroupNext;
-	};
-
-	//////////////////////////////////////////////////////////////////////////
-
 	class FloodFiller : public StateChild
 	{
 	public:
@@ -572,21 +582,24 @@ namespace AiState
 			DIR_NUM
 		};
 
-		FillState GetFillState() const { return State; }
+		FillState GetFillState() const
+		{
+			return State;
+		}
 		void NextFillState();
-		void StartFloodFill(const Vector3f &_Start, float _Radius = 16.f);
+		void StartFloodFill( const Vector3f &_Start, float _Radius = 16.f );
 
 		void Reset();
 
 		//////////////////////////////////////////////////////////////////////////
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 		void RenderDebug();
 
 		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
 		FloodFiller();
 	private:
@@ -619,7 +632,7 @@ namespace AiState
 			IntOffset2d		MaxOffset;
 			float			Height;
 
-			Connection		Connections[DIR_NUM];
+			Connection		Connections[ DIR_NUM ];
 
 			uint16_t		SectorId;
 
@@ -630,22 +643,21 @@ namespace AiState
 			uint8_t			NearEdge : 1;
 			uint8_t			Sectorized : 1;
 
-			void Init(int16_t _X = 0, int16_t _Y = 0, float _Height = 0.f, bool _Open = false);
+			void Init( int16_t _X = 0, int16_t _Y = 0, float _Height = 0.f, bool _Open = false );
 		};
 
-		Vector3f				_GetNodePosition(const Node &_Node);
+		Vector3f				_GetNodePosition( const Node &_Node );
 		FloodFiller::Node *		_NextOpenNode();
-		Node *					_NodeExists(int16_t _X, int16_t _Y, float _Height);
-		bool					_TestNode(const Node *_Node);
-		bool					_DropToGround(Node *_Node);
-		void					_MakeConnection(Node *_NodeA, Node *_NodeB, Direction _Dir);
-		void					_FillOpenNess(bool _ResetAll);
+		Node *					_NodeExists( int16_t _X, int16_t _Y, float _Height );
+		bool					_TestNode( const Node *_Node );
+		bool					_DropToGround( Node *_Node );
+		void					_MakeConnection( Node *_NodeA, Node *_NodeB, Direction _Dir );
+		void					_FillOpenNess( bool _ResetAll );
 		void					_MergeSectors();
-		bool					_CanMergeWith(Node *_Node, Node *_WithNode);
+		bool					_CanMergeWith( Node *_Node, Node *_WithNode );
 
-		enum		{ NumSectors = 8192, NumConnections = 16384 };
-
-		Node		Nodes[NumSectors];
+		static const int NumSectors = 8192;
+		Node		Nodes[ NumSectors ];
 		int			FreeNode;
 	};
 

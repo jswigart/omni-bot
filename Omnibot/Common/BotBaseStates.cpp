@@ -15,6 +15,7 @@
 #include "IGameManager.h"
 #include "InterfaceFuncs.h"
 #include "PathPlannerBase.h"
+#include "Behaviors.h"
 #include "RenderBuffer.h"
 
 const float ROAM_GOAL_PRIORITY = 0.05f;
@@ -28,31 +29,31 @@ namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////
 
-	FollowPathUser::FollowPathUser( const std::string &_user )
+	FollowPathUser::FollowPathUser( const std::string &user )
 		: mUserName( 0 )
 		, mCallingThread( GM_INVALID_THREAD )
 		, mDestinationIndex( 0 )
 		, mPathFailed( None )
 		, mPathSuccess( false )
 	{
-		mUserName = Utils::MakeHash32( _user );
+		mUserName = Utils::MakeHash32( user );
 	}
-	FollowPathUser::FollowPathUser( uint32_t _name )
-		: mUserName( _name )
+	FollowPathUser::FollowPathUser( uint32_t name )
+		: mUserName( name )
 		, mCallingThread( GM_INVALID_THREAD )
 		, mPathFailed( None )
 		, mPathSuccess( false )
 	{
 	}
 
-	void FollowPathUser::SetFollowUserName( uint32_t _name )
+	void FollowPathUser::SetFollowUserName( uint32_t name )
 	{
-		mUserName = _name;
+		mUserName = name;
 	}
 
-	void FollowPathUser::SetFollowUserName( const std::string &_name )
+	void FollowPathUser::SetFollowUserName( const std::string &name )
 	{
-		SetFollowUserName( Utils::MakeHash32( _name ) );
+		SetFollowUserName( Utils::MakeHash32( name ) );
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -674,14 +675,14 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	HighLevel::HighLevel()
+	/*HighLevel::HighLevel()
 		: StatePrioritized( "HighLevel" )
 	{
 		AppendState( new CaptureTheFlag );
 		AppendState( new ReturnTheFlag );
 
 		AppendState( new Roam );
-	}
+	}*/
 
 	//////////////////////////////////////////////////////////////////////////
 
@@ -1269,7 +1270,7 @@ namespace AiState
 				RenderBuffer::AddString3d(
 					mTargetZones[ i ].mPosition,
 					COLOR::WHITE,
-					va( "%d", mTargetZones[ i ].mTargetCount ) );
+					va( "%d", mTargetZones[ i ].mTargetCount ).c_str() );
 			}
 		}
 	}
@@ -1316,79 +1317,6 @@ namespace AiState
 
 		if ( mLastTarget.IsValid() && !InterfaceFuncs::IsAlive( mLastTarget ) )
 			mLastTarget.Reset();
-	}
-
-	//////////////////////////////////////////////////////////////////////////
-
-	DeferredCaster::DeferredCaster()
-		: StateChild( "DeferredCaster" )
-		, CastReadPosition( 0 )
-		, CastWritePosition( 0 )
-		, GroupNext( 0 )
-	{
-		for ( int i = 0; i < MaxCasts; ++i )
-		{
-			GroupId[ i ] = 0;
-			CastOutputs[ i ].Reset();
-		}
-	}
-
-	int DeferredCaster::AddDeferredCasts( const CastInput *_CastIn, int _NumCasts, const char *_UserName )
-	{
-		int InputIndices[ MaxCasts ] = { 0 };
-
-		// verify we have room to add them
-		for ( int i = 0; i < _NumCasts; ++i )
-		{
-			const int ix = ( CastWritePosition + i ) % MaxCasts;
-
-			if ( GroupId[ ix ] != InvalidGroup ) // not enough room
-				return InvalidGroup;
-
-			InputIndices[ i ] = ix;
-		}
-
-		// copy them over to the internal buffer
-		while ( GroupNext == 0 ) ++GroupNext;
-
-		for ( int i = 0; i < _NumCasts; ++i )
-		{
-			const int ix = InputIndices[ i ];
-			CastInputs[ ix ] = _CastIn[ i ];
-			UserName[ ix ] = _UserName;
-			CastOutputs[ ix ].Done = false;
-			GroupId[ ix ] = GroupNext;
-		}
-		CastWritePosition = ( CastWritePosition + _NumCasts ) % MaxCasts;
-		return GroupNext++;
-	}
-
-	DeferredCaster::Status DeferredCaster::GetDeferredCasts( int GroupId, CastOutput *_CastOut, int _NumCasts )
-	{
-		return Pending;
-	}
-
-	void DeferredCaster::GetDebugString( std::stringstream &out )
-	{
-	}
-
-	void DeferredCaster::RenderDebug()
-	{
-	}
-
-	float DeferredCaster::GetPriority()
-	{
-		return CastReadPosition != CastWritePosition ? 1.f : 0.f;
-	}
-	void DeferredCaster::Enter()
-	{
-	}
-	void DeferredCaster::Exit()
-	{
-	}
-	State::StateStatus DeferredCaster::Update( float fDt )
-	{
-		return State_Busy;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -1969,7 +1897,7 @@ namespace AiState
 			RenderBuffer::AddString3d(
 				vNodePos + Vector3f( 0, 0, 32 ),
 				COLOR::WHITE,
-				va( "%d, sid %d", pNearestSector - Nodes, pNearestSector->Sectorized ? pNearestSector->SectorId : -1 ) );
+				va( "%d, sid %d", pNearestSector - Nodes, pNearestSector->Sectorized ? pNearestSector->SectorId : -1 ).c_str() );
 			RenderBuffer::AddLine( vNodePos, vNodePos + Vector3f( 0, 0, 32.f ), COLOR::CYAN );
 		}
 	}

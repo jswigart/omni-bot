@@ -230,7 +230,6 @@ namespace AiState
 		void OnSpawn();
 
 		//ThreadList &GetThreadList() { return .mThreadList; }
-
 		MapGoalPtr &GetMapGoal()
 		{
 			return mMapGoal;

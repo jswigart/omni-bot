@@ -281,7 +281,7 @@ fs::path FileSystem::GetRealDir( const std::string &_file )
 	}
 	catch ( const std::exception & ex )
 	{
-		EngineFuncs::ConsoleError( va( "Filesystem: %s", ex.what() ) );
+		EngineFuncs::ConsoleError( va( "Filesystem: %s", ex.what() ).c_str() );
 	}
 	return fs::path( "", fs::native );
 }
@@ -297,7 +297,7 @@ fs::path FileSystem::GetRealPath( const std::string &_file )
 	}
 	catch ( const std::exception & ex )
 	{
-		EngineFuncs::ConsoleError( va( "Filesystem: %s", ex.what() ) );
+		EngineFuncs::ConsoleError( va( "Filesystem: %s", ex.what() ).c_str() );
 	}
 	return fs::path( "", fs::native );
 }
@@ -390,7 +390,7 @@ void _MountAllCallback( void *data, const char *origdir, const char *str )
 	}
 	catch ( const std::exception & ex )
 	{
-		EngineFuncs::ConsoleError( va( "Filesystem: %s", ex.what() ) );
+		EngineFuncs::ConsoleError( va( "Filesystem: %s", ex.what() ).c_str() );
 	}
 }
 
@@ -417,13 +417,13 @@ void FileSystem::MountArchives( const char *_folder, const char *_mountpoint )
 			else
 			{
 				const char *pError = PHYSFS_getLastError();
-				EngineFuncs::ConsoleError( va( "PhysFS: %s", pError ? pError : "Unknown Error" ) );
+				EngineFuncs::ConsoleError( va( "PhysFS: %s", pError ? pError : "Unknown Error" ).c_str() );
 			}
 		}
 	}
 	catch ( const std::exception & ex )
 	{
-		EngineFuncs::ConsoleError( va( "Filesystem: %s", ex.what() ) );
+		EngineFuncs::ConsoleError( va( "Filesystem: %s", ex.what() ).c_str() );
 	}
 }
 
@@ -439,7 +439,7 @@ void EchoFileCallback( void *data, const char *origdir, const char *filename )
 		sprintf( fullname, "%s/%s", origdir, filename );
 		const char *pDir = PHYSFS_getRealDir( fullname );
 
-		EngineFuncs::ConsoleMessage( va( "%s/%s : %s", origdir, filename, pDir ? pDir : "<->" ) );
+		EngineFuncs::ConsoleMessage( va( "%s/%s : %s", origdir, filename, pDir ? pDir : "<->" ).c_str() );
 		Utils::OutputDebug( kInfo, "%s/%s : %s", origdir, filename, pDir ? pDir : "<->" );
 	}
 }

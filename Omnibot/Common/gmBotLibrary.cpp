@@ -643,8 +643,7 @@ static int GM_CDECL gmfSetAvailableMapGoals( gmThread *a_thread )
 		a_thread->PushInt( 1 );
 	else
 	{
-		EngineFuncs::ConsoleMessage( va( "SetAvailableMapGoals: goal query for %s has no results!",
-			pExpression ) );
+		EngineFuncs::ConsoleMessage( va( "SetAvailableMapGoals: goal query for %s has no results!", pExpression ).c_str() );
 		LOGWARN( "SetAvailableMapGoals: goal query for " << pExpression << " has no results!" );
 		a_thread->PushInt( 0 );
 	}
@@ -2278,11 +2277,11 @@ static int GM_CDECL gmfShowPaths( gmThread *a_thread )
 		EngineFuncs::ConsoleMessage( va( "Omni-bot %s, Revision %s, %s",
 			System::mInstance->mGame->GetGameVars().mVersionString.c_str(),
 			Revision::Number().c_str(),
-			Revision::Date().c_str() ) );
-		EngineFuncs::ConsoleMessage( va( "Game: %s", System::mInstance->mGame->GetGameVars().mVersionString.c_str() ) );
-		EngineFuncs::ConsoleMessage( va( "Mod Folder: %s", FileSystem::GetModFolder().string().c_str() ) );
-		EngineFuncs::ConsoleMessage( va( "Nav Folder: %s", FileSystem::GetNavFolder().string().c_str() ) );
-		EngineFuncs::ConsoleMessage( va( "Script Folder: %s", FileSystem::GetScriptFolder().string().c_str() ) );
+			Revision::Date().c_str() ).c_str() );
+		EngineFuncs::ConsoleMessage( va( "Game: %s", System::mInstance->mGame->GetGameVars().mVersionString.c_str() ).c_str() );
+		EngineFuncs::ConsoleMessage( va( "Mod Folder: %s", FileSystem::GetModFolder().string().c_str() ).c_str() );
+		EngineFuncs::ConsoleMessage( va( "Nav Folder: %s", FileSystem::GetNavFolder().string().c_str() ).c_str() );
+		EngineFuncs::ConsoleMessage( va( "Script Folder: %s", FileSystem::GetScriptFolder().string().c_str() ).c_str() );
 	}
 	return GM_OK;
 }

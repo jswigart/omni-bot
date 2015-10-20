@@ -218,15 +218,14 @@ void CollisionModel::LoadState( const RecastIO::Model& ioModel )
 {
 	if ( ioModel.modelcrc() != GetModelCrc() )
 	{
-		EngineFuncs::ConsoleError( va( "Navmesh Model %s crc mismatch, ignoring triangle flag overrides", 
-			GetName().c_str() ) );
+		EngineFuncs::ConsoleError( va( "Navmesh Model %s crc mismatch, ignoring triangle flag overrides", GetName().c_str() ).c_str() );
 		return;
 	}
 
 	if ( ioModel.nummeshtris() != mMeshInterface->GetNbTriangles() )
 	{
 		EngineFuncs::ConsoleError( va( "Navmesh Model %s number of triangles changed expected %d, got %d", 
-			GetName().c_str(), ioModel.nummeshtris(), mMeshInterface->GetNbTriangles() ) );
+			GetName().c_str(), ioModel.nummeshtris(), mMeshInterface->GetNbTriangles() ).c_str() );
 		return;
 	}
 	
@@ -449,7 +448,7 @@ bool CollisionModel::CollideOBB( const ModelTransform & mdlXform, const Box3f & 
 	return hit;
 }
 void CollisionModel::GatherTriangles( const GatherParms & parms, const ModelTransform & mdlXform, const Sphere3f & gatherSphere,
-										const CollisionTriangle& baseTriangle, std::vector<CollisionTriangle>& triangles )
+										const CollisionTriangle& baseTriangle, GatherData& dataOut )
 {
 	if( parms.mMode == RecastIO::SHAPE_TRIANGLES )
 	{
@@ -472,7 +471,7 @@ void CollisionModel::GatherTriangles( const GatherParms & parms, const ModelTran
 			collider.Collide( cache, icesphere, *mCollisionTree, NULL, &xformMdl );
 
 			// reserve space for as much as all of the touched primitives
-			triangles.reserve( triangles.size() + collider.GetNbTouchedPrimitives() );
+			dataOut.mTriangles.reserve( dataOut.mTriangles.size() + collider.GetNbTouchedPrimitives() );
 
 			for( udword i = 0; i < collider.GetNbTouchedPrimitives(); ++i )
 			{
@@ -485,7 +484,7 @@ void CollisionModel::GatherTriangles( const GatherParms & parms, const ModelTran
 				if ( ( tri.mSurface & parms.mIgnoreSurfaces ) != 0 )
 					continue;
 				
-				triangles.push_back( tri );
+				dataOut.mTriangles.push_back( tri );
 			}
 		}
 	}
@@ -543,15 +542,17 @@ void CollisionModel::GatherTriangles( const GatherParms & parms, const ModelTran
 				tri.mTri.V[ 2 ] = vertex[ indices[ i + 2 ] ];
 				tri.mContents = mBoundsContents;
 				tri.mSurface = mBoundsSurface;
-				triangles.push_back( tri );
+				dataOut.mTriangles.push_back( tri );
 			}
 		}
 	}
 }
 
 void CollisionModel::GatherTriangles( const GatherParms & parms, const ModelTransform & mdlXform, const Box3f & gatherObb,
-										const CollisionTriangle& baseTriangle, std::vector<CollisionTriangle>& triangles )
+										const CollisionTriangle& baseTriangle, GatherData& dataOut )
 {
+	assert( this != NULL );
+
 	if( parms.mMode == RecastIO::SHAPE_TRIANGLES )
 	{
 		IceMaths::Matrix4x4 xformMdl;
@@ -587,7 +588,7 @@ void CollisionModel::GatherTriangles( const GatherParms & parms, const ModelTran
 			if ( ( tri.mSurface & parms.mIgnoreSurfaces ) != 0 )
 				continue;
 			
-			triangles.push_back( tri );
+			dataOut.mTriangles.push_back( tri );
 		}
 	}
 	else if( parms.mMode == RecastIO::SHAPE_OBB )
@@ -612,6 +613,29 @@ void CollisionModel::GatherTriangles( const GatherParms & parms, const ModelTran
 			vertex[ 5 ] = worldObb.Center + extAxis0 - extAxis1 + extAxis2;
 			vertex[ 6 ] = worldObb.Center + extAxis0 + extAxis1 + extAxis2;
 			vertex[ 7 ] = worldObb.Center - extAxis0 + extAxis1 + extAxis2;
+
+			//////////////////////////////////////////////////////////////////////////
+			CollisionConvex convex;
+			convex.mNavFlags = baseTriangle.mNavFlags;
+			convex.mContents = mBoundsContents;
+			convex.mSurface = mBoundsSurface;
+			convex.mVertStart = dataOut.mConvexVertices.size();
+
+			static const int MaxIndices = 32;
+			int convexIndices[ MaxIndices ] = {};
+			const int nv = ConvexhullXY( vertex, 8, convexIndices, MaxIndices, convex.mHeightMin, convex.mHeightMax );
+			if ( nv > 0 )
+			{
+				for ( int i = 0; i < nv; ++i )
+				{
+					dataOut.mConvexVertices.push_back( vertex[ convexIndices[ i ] ] );
+				}
+				convex.mVertEnd = dataOut.mConvexVertices.size();
+
+				dataOut.mConvexShapes.push_back( convex );
+			}
+			return;
+			//////////////////////////////////////////////////////////////////////////
 
 			static const int indices[ 36 ] =
 			{
@@ -644,7 +668,7 @@ void CollisionModel::GatherTriangles( const GatherParms & parms, const ModelTran
 				tri.mTri.V[ 2 ] = vertex[ indices[ i + 2 ] ];
 				tri.mContents = mBoundsContents;
 				tri.mSurface = mBoundsSurface;
-				triangles.push_back( tri );
+				dataOut.mTriangles.push_back( tri );
 			}
 		}
 	}
@@ -714,14 +738,14 @@ void CollisionModel::RenderInRadius( const Vector3f & eye, float radius, const M
 {
 	CollisionTriangle baseTri;
 
-	std::vector<CollisionTriangle> triangles;
+	GatherData gatherData;
 
 	GatherParms parms;
-	GatherTriangles( parms, mdlXform, Sphere3f( eye, radius ), baseTri, triangles );
+	GatherTriangles( parms, mdlXform, Sphere3f( eye, radius ), baseTri, gatherData );
 
-	for ( size_t i = 0; i < triangles.size(); ++i )
+	for ( size_t i = 0; i < gatherData.mTriangles.size(); ++i )
 	{
-		const CollisionTriangle& tri = triangles[ i ];		
+		const CollisionTriangle& tri = gatherData.mTriangles[ i ];
 		RenderBuffer::AddTri( tri.mTri.V[ 0 ], tri.mTri.V[ 1 ], tri.mTri.V[ 2 ], polyColor );
 		RenderBuffer::AddLine( tri.mTri.V[ 0 ], tri.mTri.V[ 1 ], COLOR::BLUE );
 		RenderBuffer::AddLine( tri.mTri.V[ 1 ], tri.mTri.V[ 2 ], COLOR::BLUE );
@@ -821,7 +845,7 @@ void Node::Init( PathPlannerRecast * planner )
 
 		if ( !IGame::GetEntityInfo( mEntity, mEntInfo ) )
 		{
-			EngineFuncs::ConsoleMessage( va( "Entity '%s' unknown type, ignoring", mEntityName.c_str() ) );
+			EngineFuncs::ConsoleMessage( va( "Entity '%s' unknown type, ignoring", mEntityName.c_str() ).c_str() );
 			mEnabled = false;
 		}
 
@@ -830,7 +854,7 @@ void Node::Init( PathPlannerRecast * planner )
 
 		if ( !mEntInfo.mCategory.CheckFlag( ENT_CAT_OBSTACLE ) )
 		{
-			EngineFuncs::ConsoleMessage( va( "Entity '%s' not an obstacle", mEntityName.c_str() ) );
+			EngineFuncs::ConsoleMessage( va( "Entity '%s' not an obstacle", mEntityName.c_str() ).c_str() );
 			mEnabled = false;
 		}
 
@@ -841,7 +865,7 @@ void Node::Init( PathPlannerRecast * planner )
 		}
 
 		if ( mEnabled )
-			EngineFuncs::ConsoleMessage( va( "Entity '%s' is an obstacle (mdl %s)", mEntityName.c_str(), mModel->GetName().c_str() ) );
+			EngineFuncs::ConsoleMessage( va( "Entity '%s' is an obstacle (mdl %s)", mEntityName.c_str(), mModel->GetName().c_str() ).c_str() );
 	}
 	else if ( mStaticModel < 0 )
 	{
@@ -944,19 +968,19 @@ void Node::UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpda
 		{
 			if ( currentState == StateMarkedForDelete )
 			{
-				EngineFuncs::ConsoleMessage( va( "Deleting node model %s", mModel->GetName().c_str() ) );
+				EngineFuncs::ConsoleMessage( va( "Deleting node model %s", mModel->GetName().c_str() ).c_str() );
 			}
 			else if ( rebuildForced )
 			{
-				EngineFuncs::ConsoleMessage( va( "Entity '%s', rebuild forced", mEntityName.c_str(), mSubModel ) );
+				EngineFuncs::ConsoleMessage( va( "Entity '%s', rebuild forced", mEntityName.c_str(), mSubModel ).c_str() );
 			}
 			else if ( rebuildModelChanged )
 			{
-				EngineFuncs::ConsoleMessage( va( "Entity '%s', model %d crc changed", mEntityName.c_str(), mSubModel ) );
+				EngineFuncs::ConsoleMessage( va( "Entity '%s', model %d crc changed", mEntityName.c_str(), mSubModel ).c_str() );
 			}
 			else if ( rebuildNavFlagChanged )
 			{
-				EngineFuncs::ConsoleMessage( va( "Entity '%s', nav flag changed", mEntityName.c_str() ) );
+				EngineFuncs::ConsoleMessage( va( "Entity '%s', nav flag changed", mEntityName.c_str() ).c_str() );
 			}
 			else if ( mEntity.IsValid() )
 			{
@@ -968,7 +992,7 @@ void Node::UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpda
 					mEntityName.c_str(),
 					mSubModel,
 					oldState.c_str(),
-					newState.c_str() ) );
+					newState.c_str() ).c_str() );
 			}
 
 			mActiveState = currentState;
@@ -1031,7 +1055,7 @@ bool Node::CollideSegmentNearest( RayResult & result, const Segment3f & segment,
 	return result.mHitDistance < Mathf::MAX_REAL;
 }
 
-void Node::GatherTriangles( const GatherParms & parms, const Box3f & gatherObb, std::vector<CollisionTriangle>& geom )
+void Node::GatherTriangles( const GatherParms & parms, const Box3f & gatherObb, GatherData& dataOut )
 {
 	if ( mModel != NULL && mEnabled && mActiveState == StateCollidable )
 	{
@@ -1052,17 +1076,17 @@ void Node::GatherTriangles( const GatherParms & parms, const Box3f & gatherObb, 
 
 		GatherParms nodeParms = parms;
 		nodeParms.mMode = mShapeMode;
-		mModel->GatherTriangles( nodeParms, mTransform, gatherObb, baseTri, geom );
+		mModel->GatherTriangles( nodeParms, mTransform, gatherObb, baseTri, dataOut );
 	}
 
 	// gather from the children
 	for ( size_t i = 0; i < mChildren.size(); ++i )
 	{
-		mChildren[ i ]->GatherTriangles( parms, gatherObb, geom );
+		mChildren[ i ]->GatherTriangles( parms, gatherObb, dataOut );
 	}
 }
 
-void Node::GatherTriangles( const GatherParms & parms, const Sphere3f & gatherSphere, std::vector<CollisionTriangle>& geom )
+void Node::GatherTriangles( const GatherParms & parms, const Sphere3f & gatherSphere, GatherData& dataOut )
 {
 	if( mModel != NULL && mEnabled && mActiveState == StateCollidable )
 	{
@@ -1083,13 +1107,13 @@ void Node::GatherTriangles( const GatherParms & parms, const Sphere3f & gatherSp
 
 		GatherParms nodeParms = parms;
 		nodeParms.mMode = mShapeMode;
-		mModel->GatherTriangles( nodeParms, mTransform, gatherSphere, baseTri, geom );
+		mModel->GatherTriangles( nodeParms, mTransform, gatherSphere, baseTri, dataOut );
 	}
 
 	// gather from the children
 	for( size_t i = 0; i < mChildren.size(); ++i )
 	{
-		mChildren[ i ]->GatherTriangles( parms, gatherSphere, geom );
+		mChildren[ i ]->GatherTriangles( parms, gatherSphere, dataOut );
 	}
 }
 
@@ -1331,6 +1355,11 @@ void Node::SaveState( RecastIO::NavigationMesh & ioNavmesh )
 		nodeState.set_shapemode( mShapeMode );
 		dataSet = true;
 	}
+	if ( nodeState.activemodelcrc() != mActiveModelCrc )
+	{
+		nodeState.set_activemodelcrc( mActiveModelCrc );
+		dataSet = true;
+	}
 	if ( nodeState.navflagoverride() != mNavFlagsOverride )
 	{
 		nodeState.set_navflagoverride( mNavFlagsOverride );
@@ -1357,7 +1386,7 @@ void Node::SaveState( RecastIO::NavigationMesh & ioNavmesh )
 				fieldStr += fields[i]->camelcase_name();
 			}
 			
-			EngineFuncs::ConsoleError( va( "Unable to save model node state(no unique identifer), fields set %s", fieldStr.c_str() ) );
+			EngineFuncs::ConsoleError( va( "Unable to save model node state(no unique identifer), fields set %s", fieldStr.c_str() ).c_str() );
 		}
 	}
 }
@@ -1435,7 +1464,7 @@ NodePtr CollisionWorld::LoadModelIntoWorld( const GameEntity entity, const GameM
 	
 	if ( !stricmp( modelInfo.mModelType, "submodel" ) )
 	{
-		const std::string entityName = EngineFuncs::EntityName( entity, va( "noname(%d.%d)", entity.GetIndex(), entity.GetSerial() ) );
+		const std::string entityName = EngineFuncs::EntityName( entity, va( "noname(%d.%d)", entity.GetIndex(), entity.GetSerial() ).c_str() );
 
 		try
 		{
@@ -1449,7 +1478,7 @@ NodePtr CollisionWorld::LoadModelIntoWorld( const GameEntity entity, const GameM
 				return subModelNode;
 			}
 
-			EngineFuncs::ConsoleError( va( "Entity '%s' references submodel '%d' is invalid.", entityName.c_str(), subModelIndex ) );
+			EngineFuncs::ConsoleError( va( "Entity '%s' references submodel '%d' is invalid.", entityName.c_str(), subModelIndex ).c_str() );
 		}
 		catch ( const boost::bad_lexical_cast & ex )
 		{

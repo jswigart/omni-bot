@@ -95,7 +95,7 @@ static void CheckGLError( const char * msg )
 {
 	GLenum err = GL_NO_ERROR;
 	while ( ( err = glGetError() ) != GL_NO_ERROR )
-		OutputDebugString( va( "OpenGL Error(%s) - %d\n", msg, err ) );
+		OutputDebugString( va( "OpenGL Error(%s) - %d\n", msg, err ).c_str() );
 }
 
 namespace RenderBuffer

@@ -30,7 +30,7 @@ void WeaponDatabase::RegisterWeapon( int _weaponId, const WeaponPtr &_wpn )
 	}
 	else
 	{
-		Utils::OutputDebug( kError, va( "Duplicate Weapon Id: %d", _weaponId ) );
+		Utils::OutputDebug( kError, va( "Duplicate Weapon Id: %d", _weaponId ).c_str() );
 	}
 }
 
@@ -123,7 +123,7 @@ void WeaponDatabase::ReloadScript( LiveUpdateKey _key )
 		WeaponPtr wpn = ( *it ).second;
 		if ( wpn->GetLiveUpdateKey() == _key )
 		{
-			EngineFuncs::ConsoleMessage( va( "File changed, reloading %s", wpn->GetScriptPath().c_str() ) );
+			EngineFuncs::ConsoleMessage( va( "File changed, reloading %s", wpn->GetScriptPath().c_str() ).c_str() );
 			LOG( "Re-Loading Weapon Definition: " << wpn->GetScriptPath().c_str() );
 
 			WeaponPtr newwpn( new Weapon );

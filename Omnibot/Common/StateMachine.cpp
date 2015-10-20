@@ -49,6 +49,26 @@ State::~State()
 	}
 }
 
+State* State::GetSibling()
+{
+	return mSibling;
+}
+
+State* State::GetParent()
+{
+	return mParent;
+}
+
+State* State::GetFirstChild()
+{
+	return mFirstChild;
+}
+
+State* State::GetRootState()
+{
+	return mRoot;
+}
+
 void State::SetName( const char *_name )
 {
 	mNameHash = Utils::MakeHash32( _name );
@@ -62,7 +82,7 @@ std::string State::GetName() const
 	return Utils::HashToString( GetNameHash() );
 }
 
-void State::AppendState( State *_state )
+State * State::AppendState( State *_state )
 {
 	_state->mParent = this;
 	if ( mFirstChild )
@@ -79,6 +99,7 @@ void State::AppendState( State *_state )
 	}
 
 	_state->mSibling = NULL;
+	return _state;
 }
 
 bool State::AppendTo( const char * _name, State *_insertstate )
@@ -369,6 +390,10 @@ void State::InternalExit()
 	}
 }
 
+void State::InternalParentExit()
+{
+}
+
 State::StateStatus State::InternalUpdateState()
 {
 	if ( DebugDrawingEnabled() )
@@ -411,6 +436,10 @@ void State::CheckForCallbacks( const MessageHelper &_message, CallbackParameters
 
 	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
 		pState->CheckForCallbacks( _message, _cb );
+}
+
+void State::InternalSignal( const gmVariable &_signal )
+{
 }
 
 void State::InternalProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
@@ -901,7 +930,7 @@ float StateSimultaneous::GetPriority()
 {
 	//State *pBestState = NULL;
 	float fBestPriority = 0.f;
-	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
+	for ( State *pState = GetFirstChild(); pState; pState = pState->GetSibling() )
 	{
 		if ( pState->IsUserDisabled() )
 			continue;
@@ -919,7 +948,7 @@ float StateSimultaneous::GetPriority()
 State::StateStatus StateSimultaneous::UpdateState( float fDt )
 {
 	State *pLastState = NULL;
-	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
+	for ( State *pState = GetFirstChild(); pState; pState = pState->GetSibling() )
 	{
 		bool bWantsActive = !pState->IsDisabled() ? pState->InternalGetPriority() > 0.0 : false;
 
@@ -930,7 +959,7 @@ State::StateStatus StateSimultaneous::UpdateState( float fDt )
 			if ( !bWantsActive && pState->CheckFlag( State_DeleteOnFinished ) )
 			{
 				if ( pLastState )
-					pLastState = pState->mSibling;
+					pLastState = pState->GetSibling();
 				delete pState;
 			}
 			continue;
@@ -966,7 +995,7 @@ void StateFirstAvailable::GetDebugString( std::stringstream &out )
 
 float StateFirstAvailable::GetPriority()
 {
-	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
+	for ( State *pState = GetFirstChild(); pState; pState = pState->GetSibling() )
 	{
 		if ( pState->IsUserDisabled() )
 			continue;
@@ -988,7 +1017,7 @@ void StateFirstAvailable::InternalParentExit()
 State::StateStatus StateFirstAvailable::UpdateState( float fDt )
 {
 	State *pBestState = NULL;
-	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
+	for ( State *pState = GetFirstChild(); pState; pState = pState->GetSibling() )
 	{
 		if ( pState->IsUserDisabled() )
 			continue;
@@ -1002,7 +1031,7 @@ State::StateStatus StateFirstAvailable::UpdateState( float fDt )
 	}
 
 	// Exit active states that are not our best
-	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
+	for ( State *pState = GetFirstChild(); pState; pState = pState->GetSibling() )
 	{
 		if ( pBestState != pState && pState->IsActive() )
 		{
@@ -1051,7 +1080,7 @@ float StatePrioritized::GetPriority()
 {
 	//State *pBestState = NULL;
 	float fBestPriority = 0.f;
-	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
+	for ( State *pState = GetFirstChild(); pState; pState = pState->GetSibling() )
 	{
 		if ( pState->IsUserDisabled() )
 			continue;
@@ -1088,7 +1117,7 @@ State::StateStatus StatePrioritized::UpdateState( float fDt )
 	const std::string& BOT_NAME = GetClient() ? GetClient()->GetName() : ""; BOT_NAME;
 #endif
 
-	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
+	for ( State *pState = GetFirstChild(); pState; pState = pState->GetSibling() )
 	{
 		if ( pState->IsUserDisabled() )
 			continue;
@@ -1134,7 +1163,7 @@ State::StateStatus StatePrioritized::UpdateState( float fDt )
 	}
 
 	// Exit active states that are not our best
-	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
+	for ( State *pState = GetFirstChild(); pState; pState = pState->GetSibling() )
 	{
 		if ( pBestState != pState && pState->IsActive() )
 		{

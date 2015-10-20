@@ -141,11 +141,11 @@ namespace Utils
 
 	std::string FormatEntityString( GameEntity _e )
 	{
-		return std::string( va( "%d:%d", _e.GetIndex(), _e.GetSerial() ) );
+		return std::string( va( "%d:%d", _e.GetIndex(), _e.GetSerial() ).c_str() );
 	}
 	std::string FormatVectorString( const Vector3f &v )
 	{
-		return std::string( va( "(%.3f, %.3f, %.3f)", v.X(), v.Y(), v.Z() ) );
+		return std::string( va( "(%.3f, %.3f, %.3f)", v.X(), v.Y(), v.Z() ).c_str() );
 	}
 
 	std::string FormatMatrixString( const Matrix3f &m )
@@ -153,7 +153,7 @@ namespace Utils
 		return std::string( va( "(%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f) (%.3f, %.3f, %.3f)",
 			m.GetColumn( 0 )[ 0 ], m.GetColumn( 0 )[ 1 ], m.GetColumn( 0 )[ 2 ],
 			m.GetColumn( 1 )[ 0 ], m.GetColumn( 1 )[ 1 ], m.GetColumn( 1 )[ 2 ],
-			m.GetColumn( 2 )[ 0 ], m.GetColumn( 2 )[ 1 ], m.GetColumn( 2 )[ 2 ] ) );
+			m.GetColumn( 2 )[ 0 ], m.GetColumn( 2 )[ 1 ], m.GetColumn( 2 )[ 2 ] ).c_str() );
 	}
 
 	/*
@@ -215,7 +215,7 @@ namespace Utils
 				return &g_StringRepository[ it->second ];
 			}
 		}
-		return std::string( va( "%x", _hash ) );
+		return std::string( va( "%x", _hash ).c_str() );
 	}
 
 	bool IsWhiteSpace( const char _ch )
@@ -770,7 +770,7 @@ namespace Utils
 	{
 		// FIX THIS! CHECK WITH ENGINE
 		static int nextIndex = 0;
-		return std::string( va( "OmniBot[%i]", nextIndex++ ) );
+		return std::string( va( "OmniBot[%i]", nextIndex++ ).c_str() );
 	}
 
 	std::string IndentString( const int indentlevel )
@@ -2189,7 +2189,7 @@ int CheckSqliteError( sqlite3 * db, int errcode )
 			std::string str = va( "sqlite3 error: %s%s%s",
 				exerr ? exerr : "",
 				exerr ? "\n" : "",
-				sqlite3_errmsg( db ) );
+				sqlite3_errmsg( db ) ).c_str();
 
 			LOGERR( str );
 		}
@@ -2235,4 +2235,55 @@ IceMaths::Matrix4x4 Convert( const modeldata::Node & node )
 		xform.SetTrans( IceMaths::Point( node.translation().x(), node.translation().y(), node.translation().z() ) );
 	}
 	return xform;
+}
+
+inline bool leftXY( const Vector3f& a, const Vector3f& b, const Vector3f& c )
+{
+	const float u1 = b[ 0 ] - a[ 0 ];
+	const float v1 = b[ 1 ] - a[ 1 ];
+	const float u2 = c[ 0 ] - a[ 0 ];
+	const float v2 = c[ 1 ] - a[ 1 ];
+	return u1 * v2 - v1 * u2 < 0;
+}
+
+inline bool cmpptXY( const Vector3f& a, const Vector3f& b )
+{
+	if ( a[ 0 ] < b[ 0 ] ) return true;
+	if ( a[ 0 ] > b[ 0 ] ) return false;
+	if ( a[ 1 ] < b[ 1 ] ) return true;
+	if ( a[ 1 ] > b[ 1 ] ) return false;
+	return false;
+}
+
+int ConvexhullXY( const Vector3f* pts, int npts, int* out, int maxOut, float& minheight, float& maxheight )
+{
+	minheight = pts[ 0 ].Z();
+	maxheight = pts[ 0 ].Z();
+
+	// Find lower-leftmost point.
+	int hull = 0;
+	for ( int i = 1; i < npts; ++i )
+	{
+		minheight = std::min( minheight, pts[ i ].Z() );
+		maxheight = std::max( maxheight, pts[ i ].Z() );
+
+		if ( cmpptXY( pts[ i ], pts[ hull ] ) )
+			hull = i;
+	}
+
+	// Gift wrap hull.
+	int endpt = 0;
+	int i = 0;
+	do
+	{
+		out[ i++ ] = hull;
+		endpt = 0;
+		for ( int j = 1; j < npts; ++j )
+			if ( hull == endpt || leftXY( pts[ hull ], pts[ endpt ], pts[ j ] ) )
+				endpt = j;
+		hull = endpt;
+	}
+	while ( endpt != out[ 0 ] && i < maxOut );
+	
+	return i;
 }

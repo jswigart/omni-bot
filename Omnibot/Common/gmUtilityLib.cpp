@@ -415,7 +415,7 @@ namespace gmUtility
 				EngineFuncs::ConsoleMessage(
 					va( "%s = %s",
 					pNode->m_key.AsString( pMachine, buffer, BUF_SIZE ),
-					pNode->m_value.AsString( pMachine, buffer2, BUF_SIZE ) ) );
+					pNode->m_value.AsString( pMachine, buffer2, BUF_SIZE ) ).c_str() );
 				pNode = pTable->GetNext( tIt );
 			}
 		}

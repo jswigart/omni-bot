@@ -50,7 +50,7 @@ bool ET_Game::GetAnalyticsKeys( GameAnalytics::Keys & keys )
 	keys.mGameKey = "508391d546e97c34dca527038b9df10c";
 	keys.mSecretKey = "c6eecafbb67e602b45f32ca2948ae520276c291e";
 	keys.mDataApiKey = "19ea5d05b850d0b9379f1b9c381e2dfd7e636d13";
-	keys.mVersionKey = va( "%s:v%s", GetGameVars().mGameName.c_str(), GetGameVars().mVersionString.c_str() );	
+	keys.mVersionKey = va( "%s:v%s", GetGameVars().mGameName.c_str(), GetGameVars().mVersionString.c_str() ).c_str();
 	return true;
 }
 

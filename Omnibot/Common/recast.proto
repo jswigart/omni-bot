@@ -86,8 +86,9 @@ message NodeState
 	optional bool		solid					= 7 [default=true];
 	optional bool		dynamic					= 8 [default=false];
 	optional int32		navFlagOverride			= 9 [default=0];
-	optional string		modelname				= 10;
-	optional string		name					= 11;
+	optional uint32		activeModelCrc			= 10 [default=0];
+	optional string		modelname				= 11;
+	optional string		name					= 12;
 }
 
 message NavigationMesh 

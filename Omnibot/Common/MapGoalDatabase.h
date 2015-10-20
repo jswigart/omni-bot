@@ -20,14 +20,14 @@ typedef std::map<uint32_t, MapGoalPtr> MapGoalMap;
 class MapGoalDatabase : public google::protobuf::compiler::MultiFileErrorCollector
 {
 public:
-	void RegisterMapGoal(const std::string &_type, const MapGoalPtr &_wpn);
-	gmGCRoot<gmUserObject> CreateMapGoalType(const std::string &_typename);
+	void RegisterMapGoal( const std::string &_type, const MapGoalPtr &_wpn );
+	gmGCRoot<gmUserObject> CreateMapGoalType( const std::string &_typename );
 
-	std::string GetWeaponName(int _weaponId);
+	std::string GetWeaponName( int _weaponId );
 
-	MapGoalPtr GetNewMapGoal(const std::string &_type);
+	MapGoalPtr GetNewMapGoal( const std::string &_type );
 
-	void LoadMapGoalDefinitions(bool _clearall);
+	void LoadMapGoalDefinitions( bool _clearall );
 	void Unload();
 
 	virtual void AddError( const std::string& filename, int line, int column, const std::string& message );

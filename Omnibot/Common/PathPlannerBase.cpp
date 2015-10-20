@@ -32,6 +32,9 @@ const NavAreaFlagsEnum NavAreaFlagsEnum::sKeyVal [] =
 	{ "rocketjump", NAVFLAGS_ROCKETJUMP },
 	{ "pushable", NAVFLAGS_PUSHABLE },
 	{ "mover", NAVFLAGS_MOVER },
+	{ "jumppad", NAVFLAGS_JUMPPAD },
+	{ "jetpack", NAVFLAGS_JETPACK },
+	{ "longjump", NAVFLAGS_LONGJUMP },
 	{ "destructible", NAVFLAGS_DESTRUCTIBLE },
 	{ "jumppad", NAVFLAGS_JUMPPAD },
 	{ "disabled", NAVFLAGS_DISABLED },
@@ -65,8 +68,8 @@ void OffMeshConnection::Render()
 	RenderBuffer::AddCircle( mEntry, mRadius, COLOR::GREEN );
 	RenderBuffer::AddCircle( mExit, mRadius, COLOR::GREEN );
 	RenderBuffer::AddLine( lastPt, mExit, COLOR::GREEN );
-	RenderBuffer::AddString3d( mEntry + Vector3f( 0.f, 0.f, 40.f ), COLOR::BLUE, va( "%s (%s)", areaStr.c_str(), flagStr.c_str() ) );
-	RenderBuffer::AddString3d( mExit + Vector3f( 0.f, 0.f, 40.f ), COLOR::BLUE, va( "%s (%s)", areaStr.c_str(), flagStr.c_str() ) );
+	RenderBuffer::AddString3d( mEntry + Vector3f( 0.f, 0.f, 40.f ), COLOR::BLUE, va( "%s (%s)", areaStr.c_str(), flagStr.c_str() ).c_str() );
+	RenderBuffer::AddString3d( mExit + Vector3f( 0.f, 0.f, 40.f ), COLOR::BLUE, va( "%s (%s)", areaStr.c_str(), flagStr.c_str() ).c_str() );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -131,7 +134,7 @@ void PathPlannerBase::cmdResaveNav( const StringVector & args )
 			Save( mapname );
 		}
 
-		EngineFuncs::ConsoleMessage( va( "Resaving %s, %s", mapname.c_str(), bGood ? "success" : "failed" ) );
+		EngineFuncs::ConsoleMessage( va( "Resaving %s, %s", mapname.c_str(), bGood ? "success" : "failed" ).c_str() );
 	}
 
 	// reload current map wps

@@ -14,6 +14,7 @@
 #include "System.h"
 #include "CommandReciever.h"
 #include "ObjFunctor.h"
+#include "GameAnalytics.h"
 
 #include <boost/thread.hpp>
 
@@ -21,7 +22,7 @@
 //		Handles most of the common functionality of the game manager. Mods should subclass
 //		this in order to create their own instance of IGame from within the CreateGameFromGameID
 //		function
-class IGameManager : public CommandReciever
+class IGameManager : public CommandReciever, public ErrorCallbacks
 {
 public:
 	IGameManager();
@@ -54,6 +55,9 @@ public:
 	void UpdateGame();
 
 	static boost::thread::id sMainThread;
+
+	// Callback Implementations
+	void Error( const char * str );
 protected:
 	System				mBotSystem;
 	
