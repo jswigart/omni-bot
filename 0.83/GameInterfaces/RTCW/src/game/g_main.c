@@ -1299,7 +1299,8 @@ void G_InitGame( int levelTime, int randomSeed, int restart ) {
 	if ( g_gametype.integer >= GT_WOLF ) {
 		trap_GetConfigstring( CS_MULTI_INFO, cs, sizeof( cs ) );
 		Info_SetValueForKey( cs, "numspawntargets", "0" );
-		trap_SetConfigstring( CS_MULTI_INFO, cs );
+		reset_numobjectives();
+		trap_SetConfigstring(CS_MULTI_INFO, cs);
 
 		for ( i = CS_MULTI_SPAWNTARGETS; i < CS_MULTI_SPAWNTARGETS + MAX_MULTI_SPAWNTARGETS; i++ ) {
 			trap_SetConfigstring( i, "" );

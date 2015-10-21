@@ -929,7 +929,12 @@ will appear in objective selection in limbo UI.
 */
 static int numobjectives = 0; // TTimo
 
-void objective_Register( gentity_t *self ) {
+void reset_numobjectives(void)
+{
+	numobjectives = 0;
+}
+
+void objective_Register(gentity_t *self) {
 
 	char numspawntargets[128];
 	int cs_obj = CS_MULTI_SPAWNTARGETS;

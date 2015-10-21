@@ -1219,7 +1219,7 @@ void ReadAwards();
 // g_team.c
 //
 qboolean OnSameTeam( gentity_t *ent1, gentity_t *ent2 );
-
+void reset_numobjectives(void);
 
 //
 // g_mem.c
