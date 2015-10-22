@@ -2747,7 +2747,7 @@ static int GM_CDECL gmfOnTriggerRegion(gmThread *a_thread)
 			a_thread->PushNull();
 		return GM_OK;
 	}
-	GM_EXCEPTION_MSG("Expected (AABB,Func,Func) or (Vector3,#,Func,Func)");
+	GM_EXCEPTION_MSG("Expected (AABB,Func) or (Vector3,#,Func)");
 	return GM_EXCEPTION;
 }
 
