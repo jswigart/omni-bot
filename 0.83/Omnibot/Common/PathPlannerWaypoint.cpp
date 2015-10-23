@@ -1759,7 +1759,8 @@ void PathPlannerWaypoint::BuildFlagMap()
 
 void PathPlannerWaypoint::BuildSpatialDatabase()
 {
-	LOG("Generating Spacial Database.");
+#ifndef __arm__
+	//LOG("Generating Spacial Database.");
 	Vector3f center;
 	m_WaypointHeader.m_WorldAABB.CenterPoint(center);
 	LOG("World Extents: Center: " << center << " Size: " << 
@@ -1768,6 +1769,7 @@ void PathPlannerWaypoint::BuildSpatialDatabase()
 		m_WaypointHeader.m_WorldAABB.GetAxisLength(2) << "z");
 
 	// TODO: generate spacial db
+#endif
 }
 
 // Creation methods
