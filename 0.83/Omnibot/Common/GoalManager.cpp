@@ -14,7 +14,7 @@
 #include "ScriptManager.h"
 #include "NavigationManager.h"
 #include "MapGoalDatabase.h"
-
+#include "physfs.h"
 #include "gmUtilityLib.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -775,7 +775,7 @@ const char *MapGoalTable = "_MG";
 
 bool GoalManager::Save(const String &_map, ErrorObj &_err)
 {
-	const String filePath	= String("nav/") + String(g_EngineFuncs->GetMapName()) + "_goals.gm";
+	const String filePath	= (m_NavDir.empty() ? String("nav/") : m_NavDir + "/") + String(g_EngineFuncs->GetMapName()) + "_goals.gm";
 
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
 	
@@ -828,6 +828,7 @@ bool GoalManager::Load(const String &_map, ErrorObj &_err)
 	int GoalsLoadedFailed = 0;
 
 	bool LoadedOk = true;
+	m_NavDir = "";
 
 	filePath script( "nav/%s_goals.gm", _map.c_str() );
 
@@ -835,6 +836,13 @@ bool GoalManager::Load(const String &_map, ErrorObj &_err)
 	pMachine->GetGlobals()->Set(pMachine,MapGoalTable,gmVariable::s_null);
 	if(ScriptManager::GetInstance()->ExecuteFile(script, ThreadId))
 	{
+		
+		const char* dir = PHYSFS_getRealDir(script.c_str());
+		if(dir) {
+			const char* nav = strstr(dir, "incomplete_navs");
+			if(nav) m_NavDir = nav;
+		}
+
 		//////////////////////////////////////////////////////////////////////////
 		// remove old goals.
 		MapGoalList::iterator it = m_MapGoalList.begin();

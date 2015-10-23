@@ -202,6 +202,8 @@ private:
 
 	gmGCRoot<gmTableObject>	m_LoadedMapGoals;
 
+	String	m_NavDir;
+
 	void OnGoalDelete(const MapGoalPtr &_goal);
 };
 

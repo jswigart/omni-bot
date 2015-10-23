@@ -310,6 +310,7 @@ protected:
 
 	Waypoint_Header		m_WaypointHeader;
 	VisFile_Header		m_VisFileHeader;
+	String	m_NavDir;
 
 	typedef enum
 	{

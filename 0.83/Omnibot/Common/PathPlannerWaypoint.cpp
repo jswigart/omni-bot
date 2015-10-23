@@ -16,6 +16,7 @@
 #include "GoalManager.h"
 #include "Path.h"
 #include "FileDownloader.h"
+#include "physfs.h"
 
 #include "NavigationFlags.h"
 
@@ -1237,8 +1238,16 @@ bool PathPlannerWaypoint::LoadFromFile(const String &_file)
 	File InFile;
 	InFile.OpenForRead(_file.c_str(), File::Binary);
 
+	m_NavDir = "";
+
 	if(!InFile.IsOpen())
 		return false;
+
+	const char* dir = PHYSFS_getRealDir(_file.c_str());
+	if (dir) {
+		const char* nav = strstr(dir, "incomplete_navs");
+		if (nav) m_NavDir = nav;
+	}
 
 	// Read the waypoint header.
 	memset(&m_WaypointHeader, 0, sizeof(m_WaypointHeader));
@@ -1298,7 +1307,7 @@ bool PathPlannerWaypoint::Save(const String &_mapname)
 
 	String waypointName		= _mapname + ".way";
 
-	String navPath	= String("nav/") + waypointName;
+	String navPath	= (m_NavDir.empty() ? String("nav/") : m_NavDir + "/") + waypointName;
 
 	// Create any directories if required.
 	/*if(fs::create_directories(navPath))
