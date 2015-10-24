@@ -145,6 +145,7 @@ Optimized goal_deliversupplies
 Fixed issues in goal_watchforprojectile
 Fixed evaluation used by bots to determine when to reload
 Fixed FlagReturn goal to not query for "Flag.*"
+Improved priority to pick up medkits depends on current health
 
 === SCRIPTS ===
 Added ability to give unique names for re-usable region triggers
