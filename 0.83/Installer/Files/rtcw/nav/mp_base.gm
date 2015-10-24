@@ -391,7 +391,7 @@ global OnMapLoad = function()
 	});
 
 	// *** Artillery
-	SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
+	//SetAvailableMapGoals( TEAM.ALLIES, true, "ARTILLERY_S_bSpawnkill.*" );
 
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_target_r2_arch" );
 	SetAvailableMapGoals( TEAM.AXIS, true, "ARTILLERY_S_rTunnel.*" );       // gate side of tunnel

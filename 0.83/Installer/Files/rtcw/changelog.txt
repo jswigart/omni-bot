@@ -112,6 +112,7 @@ Fixed crash if print parameter was too long
 Optimized drawing of waypoint radius
 Added version info to DLL files
 Fixed Axis engineer got XP for defusing his own dynamite
+Fixed error SP_team_WOLF_objective: exceeded MAX_MULTI_SPAWNTARGET
 
 === GOALS ===
 Added coversplit property to PLANT goal

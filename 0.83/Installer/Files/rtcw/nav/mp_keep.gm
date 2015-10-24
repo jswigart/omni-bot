@@ -305,7 +305,7 @@ global OnMapLoad = function()
 	SetGoalPriority( "ATTACK_bLTMain[14]", 0.56 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );
 	SetGoalPriority( "CALL.*", 1.0 );
-	SetGoalPriority( "DEFEND_LadderTruck.*", 0.6 );
+	SetGoalPriority( "DEFEND_rLadderTruck.*", 0.6 );
 	Util.LimitToClass( "ATTACK_bLT.*", TEAM.ALLIES, CLASS.LIEUTENANT );
 	Util.LimitToClass( "FLAG.*", TEAM.ALLIES, CLASS.SOLDIER, CLASS.MEDIC, CLASS.ENGINEER );
 

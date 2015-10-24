@@ -326,7 +326,7 @@ global OnMapLoad = function()
 	SetGoalPriority( Map.checkpoint2, 0.95, TEAM.ALLIES );
 	SetGoalPriority( Map.checkpoint3, 0.90, TEAM.ALLIES );
 
-	SetMapGoalProperties( "MOUNT_.*", {mincamptime = 45, maxcamptime = 60} );
+	SetMapGoalProperties( "MOUNT.*", {mincamptime = 45, maxcamptime = 60} );
 
 	SetGoalPriority( "CALL.*", 1.0 );
 	SetGoalPriority( "ARTILLERY.*", 1.0 );

@@ -709,7 +709,12 @@ global OnMapLoad = function()
 		},
 		AIRSTRIKE_rSpawnkill_1 =
 		{
-			ROUTE_rSpawn =
+			ROUTE_rSpawn1 =
+			{
+				ROUTE_ccyd = {},
+				ROUTE_block2 = {},
+			},
+			ROUTE_rSpawn2 =
 			{
 				ROUTE_ccyd = {},
 				ROUTE_block2 = {},

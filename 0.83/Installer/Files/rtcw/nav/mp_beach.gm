@@ -603,7 +603,7 @@ global OnMapLoad = function()
 	SetMapGoalProperties( "DEFEND_rTransmit.*", {mincamptime = 5, maxcamptime = 10} );
 	SetMapGoalProperties( "PANZER_.*", {mincamptime = 30, maxcamptime = 60} );
 	SetMapGoalProperties( "VENOM_.*", {mincamptime = 30, maxcamptime = 60} );
-	SetMapGoalProperties( "MOUNT_.*", {mincamptime = 60, maxcamptime = 90} );
+	SetMapGoalProperties( "MOUNT.*", {mincamptime = 60, maxcamptime = 90} );
 	SetMapGoalProperties( "SNIPE_.*", {mincamptime = 60, maxcamptime = 90} );
 	RTCWUtil.SetPrimaryGoals( 1.0 );
 	//SetGoalPriority( "DEFUSE_.*", 0.0, 0, CLASS.ENGINEER, true );	//Martin - Turned off via available goals when its planted
