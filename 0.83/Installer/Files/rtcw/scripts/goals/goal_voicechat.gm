@@ -66,9 +66,8 @@ this.Randomize = function(frequency, source, immediate)
 		if (!immediate) {
 			sleep(RandFloat(0.5, 1.0));
 		}
-		if (this.Bot) {
-			return true;
-		}
+		if (!this.Bot) { exit(); }
+		return true;
 	}
 
 	return false;
@@ -221,22 +220,20 @@ this.Events[EVENT.FEEL_PAIN] = function(Inflictor, PreviousHealth, CurrentHealth
 	if ( !this.Bot || GetGameIdFromEntity(Inflictor) > 63 )
 		{ return;}
 
-	if ( isBot && isBot.KillingForRevive == true ) {
-		return;
-	}
-
-	if ( !this.responded_to_teamdamage && this.Bot.IsAllied(Inflictor)
+	if ( !this.responding_to_teamdamage && this.Bot.IsAllied(Inflictor)
 		&& Inflictor != this.Bot.GetGameEntity()  )
 	{
+		isBot = Util.IsBot(Inflictor);
+		if ( isBot && isBot.KillingForRevive == true ) {
+			return;
+		}
+
+		this.responding_to_teamdamage = true;
 		if ( this.Randomize(this.TEAMPAIN_HOLDFIRE, Inflictor) == true )
 		{
 			this.Bot.SayVoice( VOICE.HOLD_FIRE );
-			this.responded_to_teamdamage = true;
 		}
-		else
-		{
-			this.responded_to_teamdamage = false;
-		}
+		this.responding_to_teamdamage = false;
 	}
 };
 
