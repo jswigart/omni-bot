@@ -1145,11 +1145,12 @@ static int gmfDrawDebugAABB(gmThread *a_thread)
 //////////////////////////////////////////////////////////////////////////
 
 // function: DrawDebugRadius
-//		This function will draw a colored AABB in the game world. Useful for debugging.
+//		This function will draw a colored radius in the game world. Useful for debugging.
 //
 // Parameters:
 //
-//		AABB - AABB to draw.
+//		Vector3 - center
+//		float - radius
 //		int - Color of the AABB.
 //		float - duration of the line
 //
