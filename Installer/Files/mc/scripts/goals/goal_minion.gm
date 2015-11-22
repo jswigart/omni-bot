@@ -1,0 +1,85 @@
+// This script provides functionality for the bots to spawn minions
+
+// These parameters are required
+this.Name = "Minion";			// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+// List of minion modules, in order of usefulness
+this.MinionModules =
+{
+	MODULE.MINION_VORTIGAUNT,
+	MODULE.MINION_ANTLION_WORKER,
+	MODULE.MINION_ANTLION,
+	MODULE.MINION_FASTZOMBIE,
+	MODULE.MINION_ZOMBIE,
+	MODULE.MINION_FASTHEADCRAB,
+};
+
+// number of slots each minion takes
+this.MinionSlots = 
+{
+	2,
+	1,
+	1,
+	1,
+	1,
+	1,
+};
+
+// the buttons that activate each minion
+this.MinionButton = 
+{
+	BTN.MINION_VORTIGAUNT,
+	BTN.MINION_ANTLION_WORKER,
+	BTN.MINION_ANTLION,
+	BTN.MINION_FASTZOMBIE,
+	BTN.MINION_ZOMBIE,
+	BTN.MINION_FASTHEADCRAB,
+};
+
+this.LimitToTargetClass(CLASS.ANYPLAYER);
+
+this.Initialize = function()
+{
+	this.ModuleStats = {};
+	this.Debug = true;
+};
+
+this.GetPriority = function()
+{	
+	this.Priority = 1.0;
+	sleep(10);
+};
+
+this.Update = function()
+{
+	while(true)
+	{		
+		minionSlotsFree = this.Bot.MinionsMax - this.Bot.Minions;
+		if(minionSlotsFree > 0)
+		{
+			foreach(x and id in this.MinionModules)
+			{
+				if (minionSlotsFree >= this.MinionSlots[id])
+				{
+					this.Bot.GetModuleStats(id, this.ModuleStats);
+					
+					// if we have the skill, we can spawn the minions
+					if (this.ModuleStats.Lvl > 0)
+					{
+						this.Bot.PressButton(this.MinionButton[x]);
+						
+						if(this.Debug)
+						{
+							print(this.Bot.Name,
+								"Spawning",
+								Util.GetTableKey(MODULE,id));
+						}
+						break;
+					}
+				}
+			}
+		}
+		sleep(1);
+	}
+};

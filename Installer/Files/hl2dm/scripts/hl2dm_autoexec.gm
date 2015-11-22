@@ -37,6 +37,7 @@ Names["[BOT]Noammo"] = "def_bot.gm";
 Names["[BOT]Bullseye"] = "def_bot.gm";
 Names["[BOT]Aimless"] = "def_bot.gm";
 Names["[BOT]Blackadder"] = "def_bot.gm";
+Names["testbot"] = "testbot.gm";
 
 // Register a bot with a script. Uncomment this line to try the sample bot.
 //Names["samplebot"] = "sample.gm";

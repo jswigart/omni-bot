@@ -1,0 +1,238 @@
+// this script provides the functionality of picking up weapons / ammo
+this.Name = "UseWallCharger";
+this.Parent = "HighLevel";
+this.AutoAdd = false;
+this.AlwaysRecieveEvents = true;
+this.SkipGetPriorityWhenActive = true;
+this.Debug = true;
+
+this.Initialize = function()
+{
+	watchParams = {
+		Radius = 1000,
+		Category = CAT.WALLUNIT,
+	};
+	this.WatchForEntityCategory(watchParams);
+	
+	// store the chargers
+	this.HealthChargers = {};
+	this.EnergyChargers = {};
+	
+	if(this.DrawChargerThread == null)
+	{
+		this.DrawChargerThread = this:thread(this.DrawChargers);		
+	}
+};
+
+this.GetPriority = function()
+{
+	assert( !this.IsActive() );
+	
+	healthChargeThreshold = this.Bot.MaxHealth * 0.6;
+	energyChargeThreshold = this.Bot.AuxPowerMax * 0.5;
+	
+	chargerStats = {};
+		
+	// do we need health currently?
+	if ( this.Bot.Health < healthChargeThreshold )
+	{
+		foreach( charger and name in this.HealthChargers )
+		{
+			if ( GetEntFlags( charger, ENTFLAG.DISABLED ) )
+			{
+				continue;
+			}
+		
+			if ( !GetChargerStatus( charger, chargerStats ) )
+			{
+				continue;
+			}
+			
+			// don't bother for a tiny amount
+			if ( charger.Charge < 5 )
+			{
+				continue;
+			}
+			
+			// todo: try and find nearest?
+			this.UseCharger = charger;
+			this.Priority = 0.9;
+			return;
+		}
+	}
+	
+	// do we need energy currently?
+	if ( this.Bot.AuxPower < energyChargeThreshold )
+	{
+		foreach( charger and name in this.EnergyChargers )
+		{
+			if ( GetEntFlags( charger, ENTFLAG.DISABLED ) )
+			{
+				continue;
+			}
+		
+			if ( !GetChargerStatus( charger, chargerStats ) )
+			{
+				continue;
+			}
+			
+			// don't bother for a tiny amount
+			if ( charger.Charge < 5 )
+			{
+				continue;
+			}
+			
+			// todo: try and find nearest?
+			this.UseCharger = charger;
+			this.Priority = 0.9;
+			return;
+		}
+	}
+	
+	sleep(2.0);
+};
+
+this.Enter = function()
+{
+	this.AddFinishCriteria(this.UseCharger, "hasentflag", ENTFLAG.DISABLED);
+};
+
+this.Exit = function()
+{
+	this.UseCharger = null;
+	this.Bot.ReleaseButton(BTN.USE);
+	
+	if(this.DrawChargerThread)
+	{
+		threadKill(this.DrawChargerThread);
+		this.DrawChargerThread = null;
+	}
+};
+
+this.Update = function()
+{
+	if ( this.UseCharger )
+	{
+		chargerPos = GetEntPosition( this.UseCharger );
+		chargerFace = GetEntFacing( this.UseCharger );
+		
+		usePos = chargerPos + chargerFace * 32;
+		if( this.Debug )
+		{
+			DrawLine( this.Bot.GetPosition(), usePos, COLOR.GREEN, 2 );
+			DrawLine( chargerPos, chargerPos + chargerFace * 32, COLOR.GREEN, 2 );
+		}
+		if ( this.Goto(usePos) == EVENT.PATH_SUCCESS )
+		{
+			this.AddAimRequest(Priority.High, "position", chargerPos);
+			this.Bot.HoldButton(BTN.USE, 99);
+			
+			cls = GetEntClass( this.UseCharger );
+			while(1)
+			{
+				this.UseChargerStats = GetChargerStatus( this.UseCharger, this.UseChargerStats );
+			
+				// bail if it's drained
+				if ( this.UseChargerStats.Charge <= 0 )
+				{
+					this.Finished();
+				}
+			
+				if( cls == CLASS.HEALTH_WALLUNIT )
+				{
+					if ( this.Bot.Health >= this.Bot.MaxHealth )
+					{
+						this.Finished();
+					}
+				}
+				if( cls == CLASS.ENERGY_WALLUNIT )
+				{
+					if ( this.Bot.AuxPower >= this.Bot.AuxPowerMax )
+					{
+						this.Finished();
+					}
+				}
+				sleep(2);
+			}
+		}
+		else
+		{
+			if( this.Debug )
+			{
+				print( "goto charger position failed" );
+			}
+		}
+	}
+	this.Finished();
+};
+
+// add the item to the charger list
+this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent) 
+{	
+	if ( ent ) {
+		cls = GetEntClass( ent );
+		if( cls == CLASS.HEALTH_WALLUNIT )
+		{
+			this.HealthChargers[ ent ] = GetEntName(ent);
+		}
+		if( cls == CLASS.ENERGY_WALLUNIT )
+		{
+			this.EnergyChargers[ ent ] = GetEntName(ent);
+		}		
+	}
+};
+
+// remove the item from the charger list
+this.Events[EVENT.ENT_LEAVE_RADIUS] = function(ent) 
+{
+	if ( ent ) {
+		this.HealthChargers[ ent ] = null;
+		this.EnergyChargers[ ent ] = null;
+	}
+};
+
+///////////////////////////////////////////////////////////
+// debug stuff
+
+this.DrawChargers = function()
+{
+	drawTime = 5;
+	info = {};
+		
+	while(true)
+	{
+		// draw health chargers
+		foreach( charger and name in this.HealthChargers )
+		{
+			color = COLOR.GREEN;
+			if(GetEntFlags( charger, ENTFLAG.DISABLED )) {
+				color = COLOR.RED;
+			}
+			
+			assert( GetChargerStatus( charger, info ) );
+			
+			chargerPos = GetEntPosition( charger );
+			msg = format( "%n / %n", info.Charge, info.MaxCharge );
+			DrawText3d( chargerPos, msg, color, drawTime );
+			DrawEntityOBB( charger, drawTime, color );
+		}
+
+		// draw energy chargers
+		foreach( charger and name in this.EnergyChargers )
+		{
+			color = COLOR.BLUE;
+			if(GetEntFlags( charger, ENTFLAG.DISABLED )) {
+				color = COLOR.RED;
+			}
+			
+			assert( GetChargerStatus( charger, info ) );
+			
+			chargerPos = GetEntPosition( charger );
+			msg = format( "%n / %n", info.Charge, info.MaxCharge );
+			DrawText3d( chargerPos, msg, color, drawTime );
+			DrawEntityOBB( charger, drawTime, color );
+		}
+		
+		sleep(drawTime);
+	}
+};

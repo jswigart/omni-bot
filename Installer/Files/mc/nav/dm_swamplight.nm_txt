@@ -1,0 +1,2258 @@
+version: 2
+navMeshParams {
+  agentHeightStand: 64
+  agentHeightCrouch: 32
+  agentRadius: 14
+  agentClimb: 18
+  walkSlopeAngle: 45
+  cellSize: 4
+  cellHeight: 4
+  edgeMaxLength: 1000
+  edgeMaxError: 1
+  tileSize: 128
+  detailSampleDist: 6
+  detailSampleMaxErr: 1
+}
+nodeState {
+  subModelId: 0
+  activeModelCrc: 2360777433
+  name: "worldspawn_0"
+}
+nodeState {
+  subModelId: 1
+  enabled: false
+  activeModelCrc: 4155901044
+  name: "func_illusionary_212"
+}
+nodeState {
+  subModelId: 2
+  enabled: false
+  activeModelCrc: 3288731133
+  name: "func_dustmotes_244"
+}
+nodeState {
+  subModelId: 3
+  enabled: false
+  activeModelCrc: 193336300
+  name: "func_illusionary_286"
+}
+nodeState {
+  subModelId: 4
+  enabled: false
+  activeModelCrc: 510043243
+  name: "func_dustcloud_292"
+}
+nodeState {
+  subModelId: 5
+  enabled: false
+  activeModelCrc: 1260674721
+  name: "func_illusionary_312"
+}
+nodeState {
+  subModelId: 6
+  enabled: false
+  activeModelCrc: 3680341805
+  name: "func_illusionary_313"
+}
+nodeState {
+  subModelId: 7
+  enabled: false
+  activeModelCrc: 1685431836
+  name: "func_illusionary_314"
+}
+nodeState {
+  subModelId: 8
+  enabled: false
+  activeModelCrc: 3085152208
+  name: "func_illusionary_334"
+}
+nodeState {
+  subModelId: 9
+  enabled: false
+  activeModelCrc: 1974987246
+  name: "func_monitor_424"
+}
+nodeState {
+  subModelId: 10
+  enabled: false
+  activeModelCrc: 1159056081
+  name: "trap_button_547"
+}
+nodeState {
+  subModelId: 11
+  enabled: false
+  activeModelCrc: 3523470461
+  name: "doorlocksound2_553"
+}
+nodeState {
+  subModelId: 12
+  activeModelCrc: 2240880698
+  name: "func_clip_vphysics_554"
+}
+nodeState {
+  subModelId: 13
+  activeModelCrc: 65018944
+  name: "func_clip_vphysics_555"
+}
+nodeState {
+  subModelId: 14
+  enabled: false
+  activeModelCrc: 3019395482
+  name: "doorlocksound1_558"
+}
+nodeState {
+  subModelId: 15
+  activeModelCrc: 337003977
+  name: "func_clip_vphysics_560"
+}
+nodeState {
+  subModelId: 16
+  activeModelCrc: 1851851294
+  name: "func_clip_vphysics_561"
+}
+nodeState {
+  subModelId: 17
+  enabled: false
+  activeModelCrc: 3036705074
+  name: "doorlocksound10_563"
+}
+nodeState {
+  subModelId: 18
+  enabled: false
+  activeModelCrc: 3019395482
+  name: "doorlocksound1_564"
+}
+nodeState {
+  subModelId: 19
+  enabled: false
+  activeModelCrc: 3163131302
+  name: "func_dustcloud_565"
+}
+nodeState {
+  subModelId: 20
+  enabled: false
+  activeModelCrc: 3734971114
+  name: "func_button_583"
+}
+nodeState {
+  subModelId: 21
+  activeModelCrc: 4258444740
+  name: "func_clip_vphysics_622"
+}
+nodeState {
+  subModelId: 22
+  activeModelCrc: 1934391346
+  name: "func_clip_vphysics_623"
+}
+nodeState {
+  subModelId: 23
+  activeModelCrc: 827561885
+  name: "func_clip_vphysics_643"
+}
+nodeState {
+  displacementId: 0
+  enabled: true
+  activeModelCrc: 709860240
+}
+nodeState {
+  displacementId: 1
+  enabled: true
+  activeModelCrc: 2746998343
+}
+nodeState {
+  displacementId: 2
+  enabled: true
+  activeModelCrc: 2698626018
+}
+nodeState {
+  displacementId: 3
+  enabled: true
+  activeModelCrc: 51486461
+}
+nodeState {
+  displacementId: 4
+  enabled: true
+  activeModelCrc: 1360769889
+}
+nodeState {
+  displacementId: 5
+  enabled: true
+  activeModelCrc: 1085348160
+}
+nodeState {
+  displacementId: 6
+  enabled: true
+  activeModelCrc: 25818841
+}
+nodeState {
+  displacementId: 7
+  enabled: true
+  activeModelCrc: 2014237138
+}
+nodeState {
+  displacementId: 8
+  enabled: true
+  activeModelCrc: 3297339697
+}
+nodeState {
+  displacementId: 9
+  enabled: true
+  activeModelCrc: 410946337
+}
+nodeState {
+  displacementId: 10
+  enabled: true
+  activeModelCrc: 2057805275
+}
+nodeState {
+  displacementId: 11
+  enabled: true
+  activeModelCrc: 825180694
+}
+nodeState {
+  displacementId: 12
+  enabled: true
+  activeModelCrc: 333248849
+}
+nodeState {
+  displacementId: 13
+  enabled: true
+  activeModelCrc: 3400860321
+}
+nodeState {
+  displacementId: 14
+  enabled: true
+  activeModelCrc: 593506021
+}
+nodeState {
+  displacementId: 15
+  enabled: true
+  activeModelCrc: 1633929682
+}
+nodeState {
+  displacementId: 16
+  enabled: true
+  activeModelCrc: 2560088442
+}
+nodeState {
+  displacementId: 17
+  enabled: true
+  activeModelCrc: 1210391620
+}
+nodeState {
+  displacementId: 18
+  enabled: true
+  activeModelCrc: 4275771680
+}
+nodeState {
+  displacementId: 19
+  enabled: true
+  activeModelCrc: 1874758491
+}
+nodeState {
+  displacementId: 20
+  enabled: true
+  activeModelCrc: 1277810879
+}
+nodeState {
+  displacementId: 21
+  enabled: true
+  activeModelCrc: 3069446000
+}
+nodeState {
+  displacementId: 22
+  enabled: true
+  activeModelCrc: 2381189381
+}
+nodeState {
+  displacementId: 23
+  enabled: true
+  activeModelCrc: 415076606
+}
+nodeState {
+  displacementId: 24
+  enabled: true
+  activeModelCrc: 2333998335
+}
+nodeState {
+  displacementId: 25
+  enabled: true
+  activeModelCrc: 3158274715
+}
+nodeState {
+  displacementId: 26
+  enabled: true
+  activeModelCrc: 3185791342
+}
+nodeState {
+  displacementId: 27
+  enabled: true
+  activeModelCrc: 3548747538
+}
+nodeState {
+  displacementId: 28
+  enabled: true
+  activeModelCrc: 854983279
+}
+nodeState {
+  displacementId: 29
+  enabled: true
+  activeModelCrc: 3185409016
+}
+nodeState {
+  displacementId: 30
+  enabled: true
+  activeModelCrc: 2929590460
+}
+nodeState {
+  displacementId: 31
+  enabled: true
+  activeModelCrc: 3828084910
+}
+nodeState {
+  displacementId: 32
+  enabled: true
+  activeModelCrc: 3051370614
+}
+nodeState {
+  displacementId: 33
+  enabled: true
+  activeModelCrc: 1797512498
+}
+nodeState {
+  displacementId: 34
+  enabled: true
+  activeModelCrc: 3244526296
+}
+nodeState {
+  displacementId: 35
+  enabled: true
+  activeModelCrc: 633670440
+}
+nodeState {
+  displacementId: 36
+  enabled: true
+  activeModelCrc: 1010771029
+}
+nodeState {
+  displacementId: 37
+  enabled: true
+  activeModelCrc: 504697175
+}
+nodeState {
+  displacementId: 38
+  enabled: true
+  activeModelCrc: 1201185975
+}
+nodeState {
+  displacementId: 39
+  enabled: true
+  activeModelCrc: 3296997971
+}
+nodeState {
+  displacementId: 40
+  enabled: true
+  activeModelCrc: 384272132
+}
+nodeState {
+  displacementId: 41
+  enabled: true
+  activeModelCrc: 2270508649
+}
+nodeState {
+  displacementId: 42
+  enabled: true
+  activeModelCrc: 336262795
+}
+nodeState {
+  displacementId: 43
+  enabled: true
+  activeModelCrc: 3509269284
+}
+nodeState {
+  displacementId: 44
+  enabled: true
+  activeModelCrc: 84940481
+}
+nodeState {
+  displacementId: 45
+  enabled: true
+  activeModelCrc: 3071419099
+}
+nodeState {
+  displacementId: 46
+  enabled: true
+  activeModelCrc: 3252276183
+}
+nodeState {
+  displacementId: 47
+  enabled: true
+  activeModelCrc: 1541486390
+}
+nodeState {
+  displacementId: 48
+  enabled: true
+  activeModelCrc: 717658690
+}
+nodeState {
+  displacementId: 49
+  enabled: true
+  activeModelCrc: 149409612
+}
+nodeState {
+  displacementId: 50
+  enabled: true
+  activeModelCrc: 1136184173
+}
+nodeState {
+  displacementId: 51
+  enabled: true
+  activeModelCrc: 3643276443
+}
+nodeState {
+  displacementId: 52
+  enabled: true
+  activeModelCrc: 2918384260
+}
+nodeState {
+  displacementId: 53
+  enabled: true
+  activeModelCrc: 1011238442
+}
+nodeState {
+  displacementId: 54
+  enabled: true
+  activeModelCrc: 619352048
+}
+nodeState {
+  displacementId: 55
+  enabled: true
+  activeModelCrc: 3253959331
+}
+nodeState {
+  displacementId: 56
+  enabled: true
+  activeModelCrc: 2396752798
+}
+nodeState {
+  displacementId: 57
+  enabled: true
+  activeModelCrc: 1116573539
+}
+nodeState {
+  staticModelId: 0
+  activeModelCrc: 1041515649
+}
+nodeState {
+  staticModelId: 1
+  activeModelCrc: 3585476380
+}
+nodeState {
+  staticModelId: 2
+  activeModelCrc: 3585476380
+}
+nodeState {
+  staticModelId: 3
+  activeModelCrc: 3585476380
+}
+nodeState {
+  staticModelId: 4
+  activeModelCrc: 3585476380
+}
+nodeState {
+  staticModelId: 5
+  activeModelCrc: 3585476380
+}
+nodeState {
+  staticModelId: 6
+  activeModelCrc: 3585476380
+}
+nodeState {
+  staticModelId: 7
+  activeModelCrc: 3585476380
+}
+nodeState {
+  staticModelId: 8
+  activeModelCrc: 3585476380
+}
+nodeState {
+  staticModelId: 9
+  activeModelCrc: 3585476380
+}
+nodeState {
+  staticModelId: 10
+  activeModelCrc: 3585476380
+}
+nodeState {
+  staticModelId: 11
+  activeModelCrc: 3585476380
+}
+nodeState {
+  staticModelId: 12
+  activeModelCrc: 2418628063
+}
+nodeState {
+  staticModelId: 13
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 14
+  activeModelCrc: 2418628063
+}
+nodeState {
+  staticModelId: 15
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 16
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 17
+  activeModelCrc: 1698246146
+}
+nodeState {
+  staticModelId: 18
+  activeModelCrc: 1698246146
+}
+nodeState {
+  staticModelId: 19
+  activeModelCrc: 651486572
+}
+nodeState {
+  staticModelId: 20
+  activeModelCrc: 1698246146
+}
+nodeState {
+  staticModelId: 21
+  activeModelCrc: 651486572
+}
+nodeState {
+  staticModelId: 22
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 23
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 24
+  activeModelCrc: 2418628063
+}
+nodeState {
+  staticModelId: 25
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 26
+  activeModelCrc: 2418628063
+}
+nodeState {
+  staticModelId: 27
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 28
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 29
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 30
+  activeModelCrc: 2418628063
+}
+nodeState {
+  staticModelId: 31
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 32
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 33
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 34
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 35
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 36
+  activeModelCrc: 3193651250
+}
+nodeState {
+  staticModelId: 37
+  activeModelCrc: 3193651250
+}
+nodeState {
+  staticModelId: 38
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 39
+  activeModelCrc: 2418628063
+}
+nodeState {
+  staticModelId: 40
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 41
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 42
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 43
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 44
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 45
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 46
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 47
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 48
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 49
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 50
+  activeModelCrc: 852643337
+}
+nodeState {
+  staticModelId: 51
+  activeModelCrc: 760712884
+}
+nodeState {
+  staticModelId: 52
+  activeModelCrc: 182349699
+}
+nodeState {
+  staticModelId: 53
+  activeModelCrc: 760712884
+}
+nodeState {
+  staticModelId: 54
+  activeModelCrc: 1273550691
+}
+nodeState {
+  staticModelId: 55
+  activeModelCrc: 1595339181
+}
+nodeState {
+  staticModelId: 56
+  activeModelCrc: 2268013625
+}
+nodeState {
+  staticModelId: 57
+  activeModelCrc: 257963335
+}
+nodeState {
+  staticModelId: 58
+  activeModelCrc: 3475778220
+}
+nodeState {
+  staticModelId: 59
+  activeModelCrc: 3475778220
+}
+nodeState {
+  staticModelId: 60
+  activeModelCrc: 4014315108
+}
+nodeState {
+  staticModelId: 61
+  activeModelCrc: 3921121206
+}
+nodeState {
+  staticModelId: 62
+  activeModelCrc: 467855
+}
+nodeState {
+  staticModelId: 63
+  activeModelCrc: 3653335332
+}
+nodeState {
+  staticModelId: 64
+  activeModelCrc: 467855
+}
+nodeState {
+  staticModelId: 65
+  activeModelCrc: 257963335
+}
+nodeState {
+  staticModelId: 66
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 67
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 68
+  activeModelCrc: 2724548424
+}
+nodeState {
+  staticModelId: 69
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 71
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 72
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 73
+  activeModelCrc: 467855
+}
+nodeState {
+  staticModelId: 74
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 75
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 76
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 77
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 78
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 79
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 80
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 81
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 82
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 83
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 84
+  activeModelCrc: 2678015474
+}
+nodeState {
+  staticModelId: 85
+  activeModelCrc: 2678015474
+}
+nodeState {
+  staticModelId: 86
+  activeModelCrc: 3922139528
+}
+nodeState {
+  staticModelId: 87
+  activeModelCrc: 491451458
+}
+nodeState {
+  staticModelId: 88
+  activeModelCrc: 2634660006
+}
+nodeState {
+  staticModelId: 89
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 90
+  activeModelCrc: 3428826138
+}
+nodeState {
+  staticModelId: 91
+  activeModelCrc: 3428826138
+}
+nodeState {
+  staticModelId: 92
+  activeModelCrc: 3025003878
+}
+nodeState {
+  staticModelId: 93
+  activeModelCrc: 4040420244
+}
+nodeState {
+  staticModelId: 94
+  activeModelCrc: 2564269248
+}
+nodeState {
+  staticModelId: 95
+  activeModelCrc: 3071986262
+}
+nodeState {
+  staticModelId: 96
+  activeModelCrc: 3071986262
+}
+nodeState {
+  staticModelId: 97
+  activeModelCrc: 1177919229
+}
+nodeState {
+  staticModelId: 98
+  activeModelCrc: 1177919229
+}
+nodeState {
+  staticModelId: 99
+  activeModelCrc: 279938713
+}
+nodeState {
+  staticModelId: 100
+  activeModelCrc: 4002849444
+}
+nodeState {
+  staticModelId: 101
+  activeModelCrc: 2933958223
+}
+nodeState {
+  staticModelId: 102
+  activeModelCrc: 1698246146
+}
+nodeState {
+  staticModelId: 103
+  activeModelCrc: 3193651250
+}
+nodeState {
+  staticModelId: 104
+  activeModelCrc: 1041515649
+}
+nodeState {
+  staticModelId: 105
+  activeModelCrc: 3193651250
+}
+nodeState {
+  staticModelId: 106
+  activeModelCrc: 83819819
+}
+nodeState {
+  staticModelId: 107
+  activeModelCrc: 83819819
+}
+nodeState {
+  staticModelId: 108
+  activeModelCrc: 83819819
+}
+nodeState {
+  staticModelId: 109
+  activeModelCrc: 812129695
+}
+nodeState {
+  staticModelId: 110
+  activeModelCrc: 83819819
+}
+nodeState {
+  staticModelId: 111
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 112
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 113
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 114
+  activeModelCrc: 3193651250
+}
+nodeState {
+  staticModelId: 115
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 116
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 117
+  activeModelCrc: 3428826138
+}
+nodeState {
+  staticModelId: 118
+  activeModelCrc: 3428826138
+}
+nodeState {
+  staticModelId: 119
+  activeModelCrc: 1924119064
+}
+nodeState {
+  staticModelId: 120
+  activeModelCrc: 355284750
+}
+nodeState {
+  staticModelId: 121
+  activeModelCrc: 491451458
+}
+nodeState {
+  staticModelId: 122
+  activeModelCrc: 2829040009
+}
+nodeState {
+  staticModelId: 123
+  activeModelCrc: 2829040009
+}
+nodeState {
+  staticModelId: 124
+  activeModelCrc: 2655598152
+}
+nodeState {
+  staticModelId: 125
+  activeModelCrc: 1347688104
+}
+nodeState {
+  staticModelId: 126
+  activeModelCrc: 1347688104
+}
+nodeState {
+  staticModelId: 127
+  activeModelCrc: 1698246146
+}
+nodeState {
+  staticModelId: 128
+  activeModelCrc: 1698246146
+}
+nodeState {
+  staticModelId: 129
+  activeModelCrc: 1698246146
+}
+nodeState {
+  staticModelId: 130
+  activeModelCrc: 1698246146
+}
+nodeState {
+  staticModelId: 131
+  activeModelCrc: 1881330597
+}
+nodeState {
+  staticModelId: 132
+  activeModelCrc: 3025003878
+}
+nodeState {
+  staticModelId: 133
+  activeModelCrc: 3475778220
+}
+nodeState {
+  staticModelId: 134
+  activeModelCrc: 1698246146
+}
+nodeState {
+  staticModelId: 135
+  activeModelCrc: 1698246146
+}
+nodeState {
+  staticModelId: 136
+  activeModelCrc: 511147734
+}
+nodeState {
+  staticModelId: 137
+  activeModelCrc: 511147734
+}
+nodeState {
+  staticModelId: 138
+  activeModelCrc: 3771516829
+}
+nodeState {
+  staticModelId: 139
+  activeModelCrc: 2655598152
+}
+nodeState {
+  staticModelId: 140
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 141
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 142
+  activeModelCrc: 2581607238
+}
+nodeState {
+  staticModelId: 143
+  activeModelCrc: 2581607238
+}
+nodeState {
+  staticModelId: 144
+  activeModelCrc: 83819819
+}
+nodeState {
+  staticModelId: 145
+  activeModelCrc: 83819819
+}
+nodeState {
+  staticModelId: 146
+  activeModelCrc: 83819819
+}
+nodeState {
+  staticModelId: 147
+  activeModelCrc: 83819819
+}
+nodeState {
+  staticModelId: 148
+  activeModelCrc: 2250596319
+}
+nodeState {
+  staticModelId: 149
+  activeModelCrc: 2250596319
+}
+nodeState {
+  staticModelId: 150
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 151
+  activeModelCrc: 2250596319
+}
+nodeState {
+  staticModelId: 152
+  activeModelCrc: 782059670
+}
+nodeState {
+  staticModelId: 153
+  activeModelCrc: 2581607238
+}
+nodeState {
+  staticModelId: 154
+  activeModelCrc: 850360999
+}
+nodeState {
+  staticModelId: 155
+  activeModelCrc: 3616660303
+}
+nodeState {
+  staticModelId: 156
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 157
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 158
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 159
+  activeModelCrc: 2484636907
+}
+nodeState {
+  staticModelId: 160
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 161
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 162
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 163
+  activeModelCrc: 1835620395
+}
+nodeState {
+  staticModelId: 164
+  activeModelCrc: 3896945497
+}
+nodeState {
+  staticModelId: 165
+  activeModelCrc: 68824856
+}
+nodeState {
+  staticModelId: 166
+  activeModelCrc: 4062244919
+}
+nodeState {
+  staticModelId: 167
+  activeModelCrc: 4269027274
+}
+nodeState {
+  staticModelId: 168
+  activeModelCrc: 491451458
+}
+nodeState {
+  staticModelId: 169
+  activeModelCrc: 4062244919
+}
+nodeState {
+  staticModelId: 170
+  activeModelCrc: 3449748651
+}
+nodeState {
+  staticModelId: 171
+  activeModelCrc: 2991106869
+}
+nodeState {
+  staticModelId: 172
+  activeModelCrc: 2732548692
+}
+nodeState {
+  staticModelId: 173
+  activeModelCrc: 2991106869
+}
+nodeState {
+  staticModelId: 174
+  activeModelCrc: 2634660006
+}
+nodeState {
+  staticModelId: 175
+  activeModelCrc: 2262363592
+}
+nodeState {
+  staticModelId: 176
+  activeModelCrc: 3480838524
+}
+nodeState {
+  staticModelId: 177
+  activeModelCrc: 4062244919
+}
+nodeState {
+  staticModelId: 178
+  activeModelCrc: 2521783745
+}
+nodeState {
+  staticModelId: 179
+  activeModelCrc: 2521783745
+}
+nodeState {
+  staticModelId: 180
+  activeModelCrc: 2213663243
+}
+nodeState {
+  staticModelId: 181
+  activeModelCrc: 3428826138
+}
+nodeState {
+  staticModelId: 182
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 183
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 184
+  activeModelCrc: 3921121206
+}
+nodeState {
+  staticModelId: 185
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 186
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 187
+  activeModelCrc: 3915479979
+}
+nodeState {
+  staticModelId: 188
+  activeModelCrc: 3915479979
+}
+nodeState {
+  staticModelId: 189
+  activeModelCrc: 3915479979
+}
+nodeState {
+  staticModelId: 190
+  activeModelCrc: 3915479979
+}
+nodeState {
+  staticModelId: 191
+  activeModelCrc: 2528001834
+}
+nodeState {
+  staticModelId: 192
+  activeModelCrc: 2220571794
+}
+nodeState {
+  staticModelId: 193
+  activeModelCrc: 2220571794
+}
+nodeState {
+  staticModelId: 194
+  activeModelCrc: 2837027568
+}
+nodeState {
+  staticModelId: 195
+  activeModelCrc: 2220571794
+}
+nodeState {
+  staticModelId: 196
+  activeModelCrc: 83442004
+}
+nodeState {
+  staticModelId: 197
+  activeModelCrc: 1041515649
+}
+nodeState {
+  staticModelId: 198
+  activeModelCrc: 782059670
+}
+nodeState {
+  staticModelId: 199
+  activeModelCrc: 511147734
+}
+nodeState {
+  staticModelId: 200
+  activeModelCrc: 234001719
+}
+nodeState {
+  staticModelId: 201
+  activeModelCrc: 777170254
+}
+nodeState {
+  staticModelId: 202
+  activeModelCrc: 782059670
+}
+nodeState {
+  staticModelId: 203
+  activeModelCrc: 3326451491
+}
+nodeState {
+  staticModelId: 204
+  activeModelCrc: 3326451491
+}
+nodeState {
+  staticModelId: 205
+  activeModelCrc: 1212018652
+}
+nodeState {
+  staticModelId: 206
+  activeModelCrc: 3602467419
+}
+nodeState {
+  staticModelId: 207
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 208
+  activeModelCrc: 3687187105
+}
+nodeState {
+  staticModelId: 209
+  activeModelCrc: 933586029
+}
+nodeState {
+  staticModelId: 210
+  activeModelCrc: 658954718
+}
+nodeState {
+  staticModelId: 211
+  activeModelCrc: 850360999
+}
+nodeState {
+  staticModelId: 212
+  activeModelCrc: 2581607238
+}
+nodeState {
+  staticModelId: 213
+  activeModelCrc: 3193651250
+}
+nodeState {
+  staticModelId: 214
+  activeModelCrc: 3061246371
+}
+nodeState {
+  staticModelId: 215
+  activeModelCrc: 511147734
+}
+nodeState {
+  staticModelId: 216
+  activeModelCrc: 511147734
+}
+nodeState {
+  staticModelId: 217
+  activeModelCrc: 355284750
+}
+nodeState {
+  staticModelId: 218
+  activeModelCrc: 3616660303
+}
+nodeState {
+  staticModelId: 219
+  activeModelCrc: 4062244919
+}
+nodeState {
+  staticModelId: 220
+  activeModelCrc: 2655598152
+}
+nodeState {
+  staticModelId: 221
+  activeModelCrc: 3475778220
+}
+nodeState {
+  staticModelId: 222
+  activeModelCrc: 3475778220
+}
+nodeState {
+  staticModelId: 223
+  activeModelCrc: 850360999
+}
+models {
+  name: "./models/props_c17/FurnitureRadiator001a.mdl"
+  modelcrc: 3334328271
+  numMeshTris: 80
+}
+models {
+  name: "./models/props_c17/GasPipes001a.mdl"
+  modelcrc: 3480838524
+  numMeshTris: 278
+}
+models {
+  name: "./models/props_c17/light_cagelight01_off.mdl"
+  modelcrc: 1212018652
+  numMeshTris: 24
+}
+models {
+  name: "./models/props_c17/substation_stripebox01a.mdl"
+  modelcrc: 2528001834
+  numMeshTris: 80
+}
+models {
+  name: "./models/props_c17/utilityconnecter002.mdl"
+  modelcrc: 2220571794
+  numMeshTris: 60
+}
+models {
+  name: "./models/props_junk/PropaneCanister001a.mdl"
+  modelcrc: 681585269
+  numMeshTris: 56
+}
+models {
+  name: "./models/props_junk/PushCart01a.mdl"
+  modelcrc: 2915728344
+  numMeshTris: 148
+}
+models {
+  name: "./models/props_junk/propane_tank001a.mdl"
+  modelcrc: 60055528
+  numMeshTris: 120
+}
+models {
+  name: "./models/props_lab/freightelevatorbutton.mdl"
+  modelcrc: 3602467419
+  numMeshTris: 74
+}
+models {
+  name: "./models/props_lab/lab_flourescentlight002b.mdl"
+  modelcrc: 3187776391
+  numMeshTris: 36
+}
+models {
+  name: "./models/props_lab/powerbox01a.mdl"
+  modelcrc: 2837027568
+  numMeshTris: 12
+}
+models {
+  name: "./models/props_pipes/PipeCluster08d_001a.mdl"
+  modelcrc: 4062244919
+  numMeshTris: 252
+}
+models {
+  name: "./models/props_pipes/PipeSet02d_128_001b.mdl"
+  modelcrc: 2521783745
+  numMeshTris: 52
+}
+models {
+  name: "./models/props_pipes/PipeSet02d_64_001a.mdl"
+  modelcrc: 2213663243
+  numMeshTris: 44
+}
+models {
+  name: "./models/props_pipes/PipeSet02d_Corner128L_001a.mdl"
+  modelcrc: 2262363592
+  numMeshTris: 24
+}
+models {
+  name: "./models/props_pipes/PipeSet08d_128_001a.mdl"
+  modelcrc: 511147734
+  numMeshTris: 28
+}
+models {
+  name: "./models/props_pipes/PipeSet08d_256_001a.mdl"
+  modelcrc: 2634660006
+  numMeshTris: 28
+}
+models {
+  name: "./models/props_pipes/PipeSet08d_512_001a.mdl"
+  modelcrc: 3428826138
+  numMeshTris: 28
+}
+models {
+  name: "./models/props_pipes/PipeSet08d_Corner128R_001a.mdl"
+  modelcrc: 3915479979
+  numMeshTris: 36
+}
+models {
+  name: "./models/props_pipes/PipeSet32d_256_001a.mdl"
+  modelcrc: 355284750
+  numMeshTris: 146
+}
+models {
+  name: "./models/props_wasteland/interior_fence002d.mdl"
+  modelcrc: 234001719
+  numMeshTris: 12
+}
+models {
+  name: "./models/props_wasteland/interior_fence002e.mdl"
+  modelcrc: 777170254
+  numMeshTris: 72
+}
+models {
+  name: "./models/props_wasteland/kitchen_shelf001a.mdl"
+  modelcrc: 2293718231
+  numMeshTris: 96
+}
+models {
+  name: "./models/props_wasteland/laundry_dryer001.mdl"
+  modelcrc: 3061246371
+  numMeshTris: 36
+}
+models {
+  name: "./models/props_wasteland/prison_conduit001a.mdl"
+  modelcrc: 83442004
+  numMeshTris: 48
+}
+models {
+  name: "./models/props_wasteland/prison_heavydoor001a.mdl"
+  modelcrc: 3326451491
+  numMeshTris: 68
+}
+models {
+  name: "Displacement:0"
+  modelcrc: 709860240
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:1"
+  modelcrc: 2746998343
+  numMeshTris: 512
+}
+models {
+  name: "Displacement:10"
+  modelcrc: 2057805275
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:11"
+  modelcrc: 825180694
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:12"
+  modelcrc: 333248849
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:13"
+  modelcrc: 3400860321
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:14"
+  modelcrc: 593506021
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:15"
+  modelcrc: 1633929682
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:16"
+  modelcrc: 2560088442
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:17"
+  modelcrc: 1210391620
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:18"
+  modelcrc: 4275771680
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:19"
+  modelcrc: 1874758491
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:2"
+  modelcrc: 2698626018
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:20"
+  modelcrc: 1277810879
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:21"
+  modelcrc: 3069446000
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:22"
+  modelcrc: 2381189381
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:23"
+  modelcrc: 415076606
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:24"
+  modelcrc: 2333998335
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:25"
+  modelcrc: 3158274715
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:26"
+  modelcrc: 3185791342
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:27"
+  modelcrc: 3548747538
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:28"
+  modelcrc: 854983279
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:29"
+  modelcrc: 3185409016
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:3"
+  modelcrc: 51486461
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:30"
+  modelcrc: 2929590460
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:31"
+  modelcrc: 3828084910
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:32"
+  modelcrc: 3051370614
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:33"
+  modelcrc: 1797512498
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:34"
+  modelcrc: 3244526296
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:35"
+  modelcrc: 633670440
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:36"
+  modelcrc: 1010771029
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:37"
+  modelcrc: 504697175
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:38"
+  modelcrc: 1201185975
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:39"
+  modelcrc: 3296997971
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:4"
+  modelcrc: 1360769889
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:40"
+  modelcrc: 384272132
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:41"
+  modelcrc: 2270508649
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:42"
+  modelcrc: 336262795
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:43"
+  modelcrc: 3509269284
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:44"
+  modelcrc: 84940481
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:45"
+  modelcrc: 3071419099
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:46"
+  modelcrc: 3252276183
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:47"
+  modelcrc: 1541486390
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:48"
+  modelcrc: 717658690
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:49"
+  modelcrc: 149409612
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:5"
+  modelcrc: 1085348160
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:50"
+  modelcrc: 1136184173
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:51"
+  modelcrc: 3643276443
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:52"
+  modelcrc: 2918384260
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:53"
+  modelcrc: 1011238442
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:54"
+  modelcrc: 619352048
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:55"
+  modelcrc: 3253959331
+  numMeshTris: 512
+}
+models {
+  name: "Displacement:56"
+  modelcrc: 2396752798
+  numMeshTris: 512
+}
+models {
+  name: "Displacement:57"
+  modelcrc: 1116573539
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:6"
+  modelcrc: 25818841
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:7"
+  modelcrc: 2014237138
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:8"
+  modelcrc: 3297339697
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:9"
+  modelcrc: 410946337
+  numMeshTris: 128
+}
+models {
+  name: "SubModel:0"
+  modelcrc: 2360777433
+  numMeshTris: 71494
+}
+models {
+  name: "SubModel:1"
+  modelcrc: 4155901044
+  numMeshTris: 231
+}
+models {
+  name: "SubModel:10"
+  modelcrc: 1159056081
+  numMeshTris: 18
+}
+models {
+  name: "SubModel:11"
+  modelcrc: 3523470461
+  numMeshTris: 18
+}
+models {
+  name: "SubModel:12"
+  modelcrc: 2240880698
+  numMeshTris: 18
+}
+models {
+  name: "SubModel:13"
+  modelcrc: 65018944
+  numMeshTris: 18
+}
+models {
+  name: "SubModel:14"
+  modelcrc: 3019395482
+  numMeshTris: 18
+}
+models {
+  name: "SubModel:15"
+  modelcrc: 337003977
+  numMeshTris: 18
+}
+models {
+  name: "SubModel:16"
+  modelcrc: 1851851294
+  numMeshTris: 18
+}
+models {
+  name: "SubModel:17"
+  modelcrc: 3036705074
+  numMeshTris: 18
+}
+models {
+  name: "SubModel:18"
+  modelcrc: 3019395482
+  numMeshTris: 18
+}
+models {
+  name: "SubModel:19"
+  modelcrc: 3163131302
+  numMeshTris: 18
+}
+models {
+  name: "SubModel:2"
+  modelcrc: 3288731133
+  numMeshTris: 22
+}
+models {
+  name: "SubModel:20"
+  modelcrc: 3734971114
+  numMeshTris: 23
+}
+models {
+  name: "SubModel:21"
+  modelcrc: 4258444740
+  numMeshTris: 28
+}
+models {
+  name: "SubModel:22"
+  modelcrc: 1934391346
+  numMeshTris: 24
+}
+models {
+  name: "SubModel:23"
+  modelcrc: 827561885
+  numMeshTris: 36
+}
+models {
+  name: "SubModel:3"
+  modelcrc: 193336300
+  numMeshTris: 150
+}
+models {
+  name: "SubModel:4"
+  modelcrc: 510043243
+  numMeshTris: 18
+}
+models {
+  name: "SubModel:5"
+  modelcrc: 1260674721
+  numMeshTris: 74
+}
+models {
+  name: "SubModel:6"
+  modelcrc: 3680341805
+  numMeshTris: 36
+}
+models {
+  name: "SubModel:7"
+  modelcrc: 1685431836
+  numMeshTris: 36
+}
+models {
+  name: "SubModel:8"
+  modelcrc: 3085152208
+  numMeshTris: 72
+}
+models {
+  name: "SubModel:9"
+  modelcrc: 1974987246
+  numMeshTris: 59
+}
+models {
+  name: "models/props_c17/GasPipes003a.mdl"
+  modelcrc: 658954718
+  numMeshTris: 106
+}
+models {
+  name: "models/props_c17/Handrail04_Medium.mdl"
+  modelcrc: 4150268552
+  numMeshTris: 60
+}
+models {
+  name: "models/props_c17/Handrail04_brokenLong.mdl"
+  modelcrc: 812129695
+  numMeshTris: 224
+}
+models {
+  name: "models/props_c17/Handrail04_long.mdl"
+  modelcrc: 83819819
+  numMeshTris: 72
+}
+models {
+  name: "models/props_c17/Handrail04_short.mdl"
+  modelcrc: 2250596319
+  numMeshTris: 48
+}
+models {
+  name: "models/props_c17/canister01a.mdl"
+  modelcrc: 520626890
+  numMeshTris: 98
+}
+models {
+  name: "models/props_c17/light_cagelight01_on.mdl"
+  modelcrc: 4292607672
+  numMeshTris: 24
+}
+models {
+  name: "models/props_c17/light_cagelight02_on.mdl"
+  modelcrc: 4292607672
+  numMeshTris: 24
+}
+models {
+  name: "models/props_c17/light_decklight01_on.mdl"
+  modelcrc: 1041515649
+  numMeshTris: 20
+}
+models {
+  name: "models/props_c17/light_domelight02_off.mdl"
+  modelcrc: 3193651250
+  numMeshTris: 58
+}
+models {
+  name: "models/props_c17/light_domelight02_on.mdl"
+  modelcrc: 3193651250
+  numMeshTris: 58
+}
+models {
+  name: "models/props_c17/light_floodlight02_off.mdl"
+  modelcrc: 782059670
+  numMeshTris: 166
+}
+models {
+  name: "models/props_c17/metalladder002.mdl"
+  modelcrc: 2581607238
+  numMeshTris: 134
+}
+models {
+  name: "models/props_c17/metalladder002b.mdl"
+  modelcrc: 850360999
+  numMeshTris: 356
+}
+models {
+  name: "models/props_c17/oildrum001.mdl"
+  modelcrc: 1996329860
+  numMeshTris: 60
+}
+models {
+  name: "models/props_c17/oildrum001_explosive.mdl"
+  modelcrc: 3503822089
+  numMeshTris: 44
+}
+models {
+  name: "models/props_c17/tv_monitor01.mdl"
+  modelcrc: 3013598334
+  numMeshTris: 20
+}
+models {
+  name: "models/props_c17/utilitypole01b.mdl"
+  modelcrc: 3025003878
+  numMeshTris: 80
+}
+models {
+  name: "models/props_canal/generator02.mdl"
+  modelcrc: 852643337
+  numMeshTris: 120
+}
+models {
+  name: "models/props_citizen_tech/Firetrap_button01a.mdl"
+  modelcrc: 933586029
+  numMeshTris: 12
+}
+models {
+  name: "models/props_citizen_tech/Firetrap_buttonpad.mdl"
+  modelcrc: 3687187105
+  numMeshTris: 24
+}
+models {
+  name: "models/props_citizen_tech/Firetrap_gashose01a.mdl"
+  modelcrc: 4269027274
+  numMeshTris: 60
+}
+models {
+  name: "models/props_combine/combine_smallmonitor001.mdl"
+  modelcrc: 3616660303
+  numMeshTris: 98
+}
+models {
+  name: "models/props_combine/combinecamera001.mdl"
+  modelcrc: 2724548424
+  numMeshTris: 12
+}
+models {
+  name: "models/props_combine/suit_charger001.mdl"
+  modelcrc: 269430366
+  numMeshTris: 48
+}
+models {
+  name: "models/props_debris/beam01d.mdl"
+  modelcrc: 3475778220
+  numMeshTris: 36
+}
+models {
+  name: "models/props_debris/concrete_debris256Pile001a.mdl"
+  modelcrc: 4014315108
+  numMeshTris: 420
+}
+models {
+  name: "models/props_debris/metal_panel01a.mdl"
+  modelcrc: 1087253831
+  numMeshTris: 24
+}
+models {
+  name: "models/props_debris/plaster_wall001a.mdl"
+  modelcrc: 1835620395
+  numMeshTris: 96
+}
+models {
+  name: "models/props_debris/plaster_wall002a.mdl"
+  modelcrc: 3896945497
+  numMeshTris: 132
+}
+models {
+  name: "models/props_debris/rebar004c_64.mdl"
+  modelcrc: 2268013625
+  numMeshTris: 88
+}
+models {
+  name: "models/props_debris/rebar_cluster002a.mdl"
+  modelcrc: 257963335
+  numMeshTris: 180
+}
+models {
+  name: "models/props_docks/dock01_polecluster01b_256.mdl"
+  modelcrc: 1881330597
+  numMeshTris: 240
+}
+models {
+  name: "models/props_docks/dock02_pole02a_256.mdl"
+  modelcrc: 1595339181
+  numMeshTris: 28
+}
+models {
+  name: "models/props_docks/dock_bumper01b_256.mdl"
+  modelcrc: 182349699
+  numMeshTris: 242
+}
+models {
+  name: "models/props_docks/dockpole02a.mdl"
+  modelcrc: 1273550691
+  numMeshTris: 16
+}
+models {
+  name: "models/props_docks/piling_cluster01a.mdl"
+  modelcrc: 760712884
+  numMeshTris: 174
+}
+models {
+  name: "models/props_interiors/LightBulb01a.mdl"
+  modelcrc: 3585476380
+  numMeshTris: 80
+}
+models {
+  name: "models/props_interiors/LightBulb03a.mdl"
+  modelcrc: 2829040009
+  numMeshTris: 24
+}
+models {
+  name: "models/props_junk/sawblade001a.mdl"
+  modelcrc: 2128586060
+  numMeshTris: 44
+}
+models {
+  name: "models/props_lab/cornerunit2.mdl"
+  modelcrc: 279938713
+  numMeshTris: 220
+}
+models {
+  name: "models/props_lab/lab_flourescentlight001a.mdl"
+  modelcrc: 1698246146
+  numMeshTris: 60
+}
+models {
+  name: "models/props_lab/securitybank.mdl"
+  modelcrc: 2933958223
+  numMeshTris: 228
+}
+models {
+  name: "models/props_lab/servers.mdl"
+  modelcrc: 4002849444
+  numMeshTris: 48
+}
+models {
+  name: "models/props_pipes/PipeCluster08d_001a.mdl"
+  modelcrc: 4062244919
+  numMeshTris: 252
+}
+models {
+  name: "models/props_pipes/PipeCluster16d_002a.mdl"
+  modelcrc: 1347688104
+  numMeshTris: 452
+}
+models {
+  name: "models/props_pipes/PipeCluster32d_001a.mdl"
+  modelcrc: 3449748651
+  numMeshTris: 144
+}
+models {
+  name: "models/props_pipes/PipeSet08d_128_001a.mdl"
+  modelcrc: 511147734
+  numMeshTris: 28
+}
+models {
+  name: "models/props_pipes/PipeSet08d_256_001a.mdl"
+  modelcrc: 2634660006
+  numMeshTris: 28
+}
+models {
+  name: "models/props_pipes/PipeSet08d_512_001a.mdl"
+  modelcrc: 3428826138
+  numMeshTris: 28
+}
+models {
+  name: "models/props_pipes/PipeSet08d_Corner128L_001a.mdl"
+  modelcrc: 2678015474
+  numMeshTris: 36
+}
+models {
+  name: "models/props_pipes/PipeSet32d_128_001a.mdl"
+  modelcrc: 491451458
+  numMeshTris: 20
+}
+models {
+  name: "models/props_pipes/PipeSet32d_256_001a.mdl"
+  modelcrc: 355284750
+  numMeshTris: 146
+}
+models {
+  name: "models/props_pipes/PipeSet32d_512_001a.mdl"
+  modelcrc: 1924119064
+  numMeshTris: 28
+}
+models {
+  name: "models/props_pipes/PipeSet32d_Corner128R_001a.mdl"
+  modelcrc: 3922139528
+  numMeshTris: 24
+}
+models {
+  name: "models/props_pipes/destroyedpipes01a.mdl"
+  modelcrc: 2655598152
+  numMeshTris: 48
+}
+models {
+  name: "models/props_pipes/destroyedpipes01b.mdl"
+  modelcrc: 3771516829
+  numMeshTris: 678
+}
+models {
+  name: "models/props_pipes/pipe03_connector01.mdl"
+  modelcrc: 3247379785
+  numMeshTris: 44
+}
+models {
+  name: "models/props_pipes/pipe03_lcurve02_long.mdl"
+  modelcrc: 467855
+  numMeshTris: 54
+}
+models {
+  name: "models/props_pipes/pipe03_straight01_long.mdl"
+  modelcrc: 885242368
+  numMeshTris: 26
+}
+models {
+  name: "models/props_pipes/valve002.mdl"
+  modelcrc: 3921121206
+  numMeshTris: 228
+}
+models {
+  name: "models/props_wasteland/controlroom_desk001b.mdl"
+  modelcrc: 2295384000
+  numMeshTris: 56
+}
+models {
+  name: "models/props_wasteland/coolingtank01.mdl"
+  modelcrc: 4040420244
+  numMeshTris: 182
+}
+models {
+  name: "models/props_wasteland/coolingtank02.mdl"
+  modelcrc: 1177919229
+  numMeshTris: 200
+}
+models {
+  name: "models/props_wasteland/exterior_fence002d.mdl"
+  modelcrc: 3071986262
+  numMeshTris: 100
+}
+models {
+  name: "models/props_wasteland/exterior_fence002e.mdl"
+  modelcrc: 2564269248
+  numMeshTris: 140
+}
+models {
+  name: "models/props_wasteland/interior_fence002b.mdl"
+  modelcrc: 2991106869
+  numMeshTris: 12
+}
+models {
+  name: "models/props_wasteland/interior_fence003b.mdl"
+  modelcrc: 2732548692
+  numMeshTris: 12
+}
+models {
+  name: "models/props_wasteland/laundry_cart002.mdl"
+  modelcrc: 3462485530
+  numMeshTris: 82
+}
+models {
+  name: "models/props_wasteland/light_spotlight01_lamp.mdl"
+  modelcrc: 651486572
+  numMeshTris: 110
+}
+models {
+  name: "models/props_wasteland/light_spotlight02_base.mdl"
+  modelcrc: 2418628063
+  numMeshTris: 128
+}
+models {
+  name: "models/props_wasteland/light_spotlight02_lamp.mdl"
+  modelcrc: 2094281296
+  numMeshTris: 58
+}
+models {
+  name: "models/props_wasteland/prison_cagedlight001a.mdl"
+  modelcrc: 2484636907
+  numMeshTris: 40
+}
+models {
+  name: "models/props_wasteland/prison_flourescentlight002b.mdl"
+  modelcrc: 3187776391
+  numMeshTris: 36
+}
+models {
+  name: "models/props_wasteland/prison_gate001b.mdl"
+  modelcrc: 3653335332
+  numMeshTris: 240
+}
+models {
+  name: "models/props_wasteland/prison_lamp001b.mdl"
+  modelcrc: 3289418931
+  numMeshTris: 40
+}
+models {
+  name: "models/props_wasteland/prison_sprinkler001a.mdl"
+  modelcrc: 68824856
+  numMeshTris: 44
+}

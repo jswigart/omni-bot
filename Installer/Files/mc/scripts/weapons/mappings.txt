@@ -1,0 +1,24 @@
+Game					Weapon Script				ID				Debug Name
+=================================================================================================================================
+weapon_357				weapon_357.gm				WEAPON.MAGNUM			Magnum
+weapon_annabelle			weapon_annabelle.gm			WEAPON.ANNABELLE		Annabelle
+weapon_ar2				weapon_ar2.gm				WEAPON.AR2			Pulse Rifle
+weapon_bugbait				weapon_bugbait.gm			WEAPON.BUG_BAIT			Bug Bate
+weapon_camera				weapon_camera.gm			WEAPON.CAMERA			Camera
+weapon_citizenpackage			weapon_package.gm			WEAPON.PACKAGE			Citizen Package
+weapon_citizensuitcase			weapon_suitcase.gm			WEAPON.SUITCASE			Citizen Suitcase
+weapon_crossbow				weapon_crossbow.gm			WEAPON.CROSSBOW			Crossbow
+weapon_crowbar				weapon_crowbar.gm			WEAPON.CROWBAR			Crowbar
+weapon_cubemap				weapon_cubemap.gm			WEAPON.CUBEMAP			Cube Map
+weapon_frag				weapon_frag.gm				WEAPON.FRAG			Frag Grenade
+weapon_physcannon			weapon_physcannon.gm			WEAPON.GRAVGUN			Phys Cannon
+weapon_pistol				weapon_pistol.gm			WEAPON.PISTOL			Pistol
+weapon_rpg				weapon_rpg.gm				WEAPON.RPG			Rpg
+weapon_shotgun				weapon_shotgun.gm			WEAPON.SHOTGUN			Shotgun
+weapon_slam				weapon_slam.gm				WEAPON.SLAM			Slam
+weapon_smg1				weapon_smg1.gm				WEAPON.SMG			SMG
+weapon_stunsticks			weapon_stunstick.gm			WEAPON.STUNSTICK		Stun Sticks
+
+
+
+

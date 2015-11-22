@@ -1,0 +1,118 @@
+// This script provides functionality for the bots to 'hunt' their targets
+
+// These parameters are required
+this.Name = "UpgradeModule";			// The name of the goal.
+this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+
+this.Initialize = function()
+{
+	this.Debug = true;
+	this.ModuleStats = {};
+	this.RandomUpgrades = {};	
+};
+
+this.GetPriority = function()
+{
+	this.Priority = 1.0;
+	block(0);
+};
+
+this.Update = function()
+{
+	while(true)
+	{
+		pickRandom = true;
+		upgradedModule = false;
+		
+		if( this.Bot.ModulePoints > 0 )
+		{
+			// what's the next upgrade we want?
+			if (this.Bot.ModuleUpgradeQueue)
+			{
+				foreach(desired in this.Bot.ModuleUpgradeQueue)
+				{
+					this.Bot.GetModuleStats( desired.Module, this.ModuleStats );
+					
+					// if we haven't achieved the desired upgrade yet, we need to
+					if ( this.ModuleStats.Lvl < desired.Lvl && this.ModuleStats.Lvl < this.ModuleStats.MaxLvl )
+					{
+						pickRandom = false;
+					
+						if( this.Bot.ModulePoints >= this.ModuleStats.UpgradeCost )
+						{
+							upgradedModule = true;
+							this.Bot.UpgradeModule(desired.Module);
+							
+							if(this.Debug)
+							{
+								this.Bot.Say( "Upgrading module", Util.GetTableKey(MODULE,desired.Module), "to lvl", this.ModuleStats.Lvl+1);
+							}
+						}
+						else
+						{
+							if(this.Debug)
+							{
+								this.Bot.Say( this.Bot.ModulePoints, "out of", this.ModuleStats.UpgradeCost, " needed for module upgrade", Util.GetTableKey(MODULE, desired.Module));
+							}
+						}
+					}
+					else
+					{
+						if(this.Debug)
+						{
+							this.Bot.Say( "Already Have Module ", Util.GetTableKey(MODULE, desired.Module), " level ", desired.Lvl);
+						}
+					}
+				}
+			}
+			
+			// try to pick a random upgrade!
+			if ( pickRandom )
+			{
+				this.PickRandomUpgrade();
+			}
+		}
+		
+		if (upgradedModule)
+		{
+			sleep(1);
+		}
+		else
+		{
+			block(EVENT.LEVEL_UP);
+		}
+	}
+};
+
+this.PickRandomUpgrade = function()
+{
+	tableClear(this.RandomUpgrades);
+	
+	// compile a list of all upgrades that we can afford
+	numUpgrades = 0;
+	
+	foreach ( modName and id in MODULE )
+	{
+		this.Bot.GetModuleStats( id, this.ModuleStats );
+		if(this.ModuleStats.Lvl < this.ModuleStats.MaxLvl && this.ModuleStats.UpgradeCost <= this.Bot.ModulePoints)
+		{
+			this.RandomUpgrades[ numUpgrades ] = id;
+			numUpgrades += 1;
+		}
+	}
+	
+	// pick a random one.
+	if(numUpgrades > 0)
+	{
+		randUpgrade = RandInt(0,numUpgrades);
+		
+		pickedModuleId = this.RandomUpgrades[randUpgrade];
+		
+		this.Bot.UpgradeModule( pickedModuleId );
+		
+		if(this.Debug)
+		{
+			this.Bot.Say( numUpgrades, "modules available, picking random...", Util.GetTableKey(MODULE, pickedModuleId) );
+		}
+	}
+};

@@ -1,0 +1,108 @@
+// Load any other scripts that we will need.
+ExecScript("mc_navconfig.gm");
+ExecScript("commands.gm");
+ExecScript("mc_commands.gm");
+ExecScript("server_manager.gm");
+ExecScript("autowaypoint.gm");
+
+// New module format
+global Util = import("utilities");
+//global MCUtil = import("mc_utilities");
+
+// global debug flags
+global DEBUG_MAP_SCRIPTS = true;
+global DEBUG_GOAL_AVAILABILITY = true;
+
+// TestMap Flag
+// global TestMapOn = true;
+
+/////////////////////////////////////////////////////////////////////
+// Register default profiles for the game classes.
+RegisterDefaultProfile(CLASS.ANYPLAYER, "def_bot_tank.gm"); 
+
+/////////////////////////////////////////////////////////////////////
+
+// Set up a list of Names, optionally associated with a script.
+
+Names["[BOT] Walter"] = "def_bot_tank.gm";
+Names["[BOT] Fred"] = "def_bot_tank.gm";
+Names["[BOT] Morgan"] = "def_bot_tank.gm";
+Names["[BOT] Lawrence"] = "def_bot_tank.gm";
+Names["[BOT] Richard"] = "def_bot_tank.gm";
+Names["[BOT] Michael"] = "def_bot_tank.gm";
+Names["[BOT] Brad"] = "def_bot_tank.gm";
+Names["[BOT] George"] = "def_bot_tank.gm";
+Names["[BOT] Anton"] = "def_bot_tank.gm";
+Names["[BOT] Monty"] = "def_bot_tank.gm";
+Names["[BOT] Bean"] = "def_bot_tank.gm";
+Names["[BOT] Sean"] = "def_bot_tank.gm";
+Names["[BOT] Backfire"] = "def_bot_tank.gm";
+Names["[BOT] Halfwit"] = "def_bot_tank.gm";
+Names["[BOT] Halfbaked"] = "def_bot_tank.gm";
+Names["[BOT] Fullmonty"] = "def_bot_tank.gm";
+Names["[BOT] Nohope"] = "def_bot_tank.gm";
+Names["[BOT] Hitnrun"] = "def_bot_tank.gm";
+Names["[BOT] Missnrun"] = "def_bot_tank.gm";
+Names["[BOT] Oysterhead"] = "def_bot_tank.gm";
+Names["[BOT] Fullthrottle"] = "def_bot_tank.gm";
+Names["[BOT] Noammo"] = "def_bot_tank.gm";
+Names["[BOT] Bullseye"] = "def_bot_tank.gm";
+Names["[BOT] Aimless"] = "def_bot_tank.gm";
+Names["[BOT] Blackadder"] = "def_bot_tank.gm";
+Names["[BOT] Cledus"] = "def_bot_tank.gm";
+Names["[BOT] Newbie"] = "def_bot_tank.gm";
+Names["[BOT] Chimichanga"] = "def_bot_tank.gm";
+Names["[BOT] Razor"] = "def_bot_tank.gm";
+Names["[BOT] Tanz"] = "def_bot_tank.gm";
+Names["[BOT] Vic"] = "def_bot_tank.gm";
+Names["[BOT] Malin"] = "def_bot_tank.gm";
+Names["[BOT] Thor"] = "def_bot_tank.gm";
+Names["[BOT] Grog"] = "def_bot_tank.gm";
+Names["[BOT] Drago"] = "def_bot_tank.gm";
+Names["[BOT] Stinger"] = "def_bot_tank.gm";
+Names["[BOT] Tarnok"] = "def_bot_tank.gm";
+Names["[BOT] Wens"] = "def_bot_tank.gm";
+Names["[BOT] Brohn"] = "def_bot_tank.gm";
+Names["[BOT] Ivor"] = "def_bot_tank.gm";
+Names["[BOT] Gordac"] = "def_bot_tank.gm";
+Names["[BOT] Bortack"] = "def_bot_tank.gm";
+Names["[BOT] Morgriff"] = "def_bot_tank.gm";
+Names["[BOT] Kole"] = "def_bot_tank.gm";
+Names["[BOT] Garbok"] = "def_bot_tank.gm";
+Names["[BOT] Korv"] = "def_bot_tank.gm";
+Names["[BOT] Vokur"] = "def_bot_tank.gm";
+Names["[BOT] Gali"] = "def_bot_tank.gm";
+Names["[BOT] Beelz"] = "def_bot_tank.gm";
+Names["[BOT] CraigChrist"] = "def_bot_tank.gm";
+Names["[BOT] WhittlinMan"] = "def_bot_tank.gm";
+Names["[BOT] SpecialEd"] = "def_bot_tank.gm";
+Names["[BOT] Flint"] = "def_bot_tank.gm";
+Names["[BOT] Argo"] = "def_bot_tank.gm";
+Names["[BOT] Milius"] = "def_bot_tank.gm";
+Names["[BOT] Vera"] = "def_bot_tank.gm";
+Names["[BOT] Merki"] = "def_bot_tank.gm";
+Names["[BOT] Tarnen"] = "def_bot_tank.gm";
+Names["[BOT] Royen"] = "def_bot_tank.gm";
+Names["[BOT] Kaolin"] = "def_bot_tank.gm";
+Names["[BOT] Nandet"] = "def_bot_tank.gm";
+Names["[BOT] Nundak"] = "def_bot_tank.gm";
+Names["[BOT] Ryver"] = "def_bot_tank.gm";
+Names["[BOT] Mungri"] = "def_bot_tank.gm";
+Names["[BOT] Chan"] = "def_bot_tank.gm";
+Names["[BOT] Phi"] = "def_bot_tank.gm";
+Names["[BOT] Amadi"] = "def_bot_tank.gm";
+Names["[BOT] Zarna"] = "def_bot_tank.gm";
+Names["[BOT] PillowPants"] = "def_bot_tank.gm";
+Names["[BOT] ListerFiend"] = "def_bot_tank.gm";
+Names["[BOT] Ilikechocmilk"] = "def_bot_tank.gm";
+Names["testbot"] = "testbot.gm";
+
+// Register a bot with a script. Uncomment this line to try the sample bot.
+// Names["samplebot"] = "sample.gm";
+
+global PostMapLoad = function()
+{
+
+};
+
+print("Modular Combat autoexec executed");

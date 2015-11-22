@@ -1,0 +1,153 @@
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["aim_debug"] = 
+{
+	Func = function( _params )
+	{
+		print( "Executing aim debugging script." );	
+		ETUtil.DebugBotAim( _params[0] );
+	},
+
+	Help = 
+	{
+		"Aim Debug, an aim debugging tool",
+		"Usage: /bot aim_debug",
+		"Note: adds two bots to the game and positions them on both",
+		"       sides of the player at the given range",
+		"       shooting is disabled and the AIM debug flag is set",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["aim_debug_reload"] = 
+{
+	Func = function( _params )
+	{
+		foreach ( gameId and bot in BotTable )
+			{ bot.ReloadProfile(); }
+	},
+
+	Help = 
+	{
+		"Aim Debug Reload, reloads each bots profile",
+		"Usage: /bot aim_debug_reload",
+	},	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["moveskill"] =
+{
+	Func = function(_params)
+	{
+		if ( !_params[0] )
+		{
+			ms = ConfigGet("CombatMovement","moveskill", ms);
+			print( "Combat Movement Difficulty is", ms );
+			return;
+		}
+		
+		if ( _params[0] < 0 || _params[0] > 4 )
+		{
+			print( "^1ERROR: Invalid moveskill. Valid values are from 0 to 4 " );
+			return;
+		}
+		
+		ConfigSet("CombatMovement","moveskill", _params[0] );
+		
+		foreach ( id and bot in BotTable )
+		{
+			if ( _params[0] == 4 )
+			{
+				r = RandInt(0, 3);
+				bot.moveskill = r;
+				continue;
+			}	
+			
+			bot.moveskill = _params[0]; 
+		}
+			
+		print( "Combat Movement difficulty set to ", _params[0] );
+	},
+	
+	Help =
+	{
+		"Combat Difficulty, sets persistent combat movement difficulty",
+		"0 = off, 1 = easy, 2 = medium, 3 = hard, 4 = random",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["echo_stats"] =
+{
+	Func = function(_params)
+	{
+		stats = {};
+		foreach ( id and bot in BotTable )
+		{
+			print(bot.Name);
+			bot.GetPlayerStats(stats);
+			foreach ( stat and value in stats )
+			{
+				print(stat,value);
+			}
+		}
+	},
+	
+	Help =
+	{
+		"Print module stats",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["echo_module"] =
+{
+	Func = function(_params)
+	{
+		stats = {};
+		foreach ( id and bot in BotTable )
+		{
+			print(bot.Name);
+			print( tableCount( MODULE ), "Modules" );
+			foreach ( modName and id in MODULE )
+			{
+				bot.GetModuleStats(id, stats);
+				print( "Module", modName, "lvl", stats.Lvl, "/", stats.MaxLvl, "Upgrade Cost", stats.UpgradeCost );
+			}
+		}
+	},
+	
+	Help =
+	{
+		"Print module stats",
+	},
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+Commands["echo_upgrade"] =
+{
+	Func = function(_params)
+	{
+		stats = {};
+		foreach ( id and bot in BotTable )
+		{
+			print(bot.Name);
+			print( tableCount( UPGRADE ), "Upgrades" );
+			foreach ( upgradeName and id in UPGRADE )
+			{
+				bot.GetUpgradeInfo(id, stats);
+				print( "Upgrade", upgradeName, "lvl", stats.Lvl, "/", stats.MaxLvl, "Upgrade Cost", stats.UpgradeCost );
+			}
+		}
+	},
+	
+	Help =
+	{
+		"Print upgrade stats",
+	},
+};

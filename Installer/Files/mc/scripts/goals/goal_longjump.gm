@@ -1,0 +1,61 @@
+// a script for the bots to use the grav gun to pickup breakables, standard pickup items, etc
+this.Name = "LongJump";
+this.Parent = "HighLevel";
+this.AutoAdd = true;
+//this.SkipGetPriorityWhenActive = true;
+this.Debug = true;
+
+this.Initialize = function()
+{
+	this.Bot.TraceResult = {};
+};
+
+this.GetPriority = function()
+{
+	while( 1 )
+	{
+		if ( this.Bot.IsOnCustomLink( "longjump" ) )
+		{
+			
+		}
+		else
+		{
+			// can we take some free form short cuts
+			if ( this.Bot.TraceToNextCorner( this.Bot.TraceResult ) )
+			{
+				diff = this.Bot.TraceResult.endPos - this.Bot.GetNavPosition();
+				if ( diff.Length() > 512 )
+				{
+					this.AddAimRequest( Priority.Low, "position", this.Bot.TraceResult.endPos );
+					yield();
+					
+					if ( this.OnTarget )
+					{
+						this.Bot.HoldButton(BTN.CROUCH, 0.1);
+						yield();
+						this.Bot.HoldButton(BTN.JUMP, 0.25);
+					}
+					
+					this.ReleaseAimRequest();
+				}
+			}
+		}
+		yield();
+	}
+	
+};
+
+this.Enter = function()
+{
+};
+
+this.Exit = function()
+{
+	this.ReleaseAimRequest();
+};
+
+this.Update = function()
+{
+
+	this.Finished();
+};

@@ -1,0 +1,239 @@
+// this script provides the functionality of picking up weapons / ammo
+this.Name = "Pickup";
+this.Parent = "HighLevel";
+this.AutoAdd = false;
+this.AlwaysRecieveEvents = true;
+this.SkipGetPriorityWhenActive = true;
+
+this.Debug = false;
+this.DebugNoType = false;
+
+this.AmmoToWeapon = {};
+
+this.Initialize = function()
+{
+	watchParams = {
+		Radius = 1000,
+		Category = CAT.PICKUP,
+		RequireLOS = TRACE.VISIBLE,
+	};
+	this.WatchForEntityCategory(watchParams);
+	
+	// store the pickups
+	this.Bot.PickupList = {};
+	
+	// for evaluating ammo
+	this.Bot.AmmoTable = {};
+	
+	// for evaluating energy levels
+	this.Bot.StatTable = {};
+	
+	// bots with less health than this will go get health packs
+	this.MinHealth = 100.0;
+	
+	// initialize once, since we can't initialize indexed arrays
+	if ( tableCount( this.AmmoToWeapon ) == 0 )
+	{
+		this.AmmoToWeapon[CLASS.AMMO_PISTOL] = WEAPON.PISTOL;
+		this.AmmoToWeapon[CLASS.AMMO_PISTOL_L] = WEAPON.PISTOL;
+		this.AmmoToWeapon[CLASS.AMMO_SMG] = WEAPON.SMG;
+		this.AmmoToWeapon[CLASS.AMMO_SMG_L] = WEAPON.SMG;
+		this.AmmoToWeapon[CLASS.AMMO_CRATE] = WEAPON.SMG;
+		this.AmmoToWeapon[CLASS.AMMO_AR2] = WEAPON.AR2;
+		this.AmmoToWeapon[CLASS.AMMO_AR2_L] = WEAPON.AR2;
+		this.AmmoToWeapon[CLASS.AMMO_357] = WEAPON.MAGNUM;
+		this.AmmoToWeapon[CLASS.AMMO_357_L] = WEAPON.MAGNUM;
+		this.AmmoToWeapon[CLASS.AMMO_CROSSBOW] = WEAPON.CROSSBOW;
+		this.AmmoToWeapon[CLASS.AMMO_RPG] = WEAPON.RPG;
+		this.AmmoToWeapon[CLASS.AMMO_SNIPER] = WEAPON.AR2;
+		this.AmmoToWeapon[CLASS.AMMO_SHOTGUN] = WEAPON.SHOTGUN;
+		//	this.AmmoToWeapon[CLASS.AMMO_AR2GREN] = WEAPON.AR2;
+		//	this.AmmoToWeapon[CLASS.AMMO_FLARE] = WEAPON.FLARE;
+		//	this.AmmoToWeapon[CLASS.AMMO_FLARE_L] = WEAPON.FLARE;
+		//	this.AmmoToWeapon[CLASS.AMMO_AR2_ALTFIRE] = WEAPON.AR2;	
+	}
+};
+
+this.GetPriority = function()
+{
+	botHealth = this.Bot.Health;
+	botEnergy = this.Bot.AuxPower;
+	botEnergyMax = this.Bot.AuxPowerMax;
+	
+	foreach ( pickup and pickupName in this.Bot.PickupList )
+	{
+		if ( GetEntFlags( pickup, ENTFLAG.DISABLED ) )
+		{
+			if ( this.Debug ) {
+				print( this.Bot.Name, "pickup disabled", pickupName );
+			}
+			// clear it
+			this.Bot.PickupList[pickup] = null;
+			continue;				
+		}
+	
+		canUseItem = false;
+		res = GetEntCategory(pickup, CAT.PICKUP_AMMO,CAT.PICKUP_WEAPON,CAT.PICKUP_HEALTH,CAT.PICKUP_ENERGY);
+		
+		// can the bot use it?
+		if ( res != 0 )
+		{
+			switch ( res )
+			{
+				case CAT.PICKUP_AMMO:
+				{
+					ammoClass = GetEntClass(pickup);						
+					weaponId = this.AmmoToWeapon[ammoClass];
+					if ( weaponId )
+					{
+						tableClear(this.Bot.AmmoTable);
+						if (this.Bot.GetCurrentAmmo(this.Bot.AmmoTable, 0, weaponId)) {																		
+							if ( this.Bot.AmmoTable.CurrentAmmo < this.Bot.AmmoTable.MaxAmmo ) {
+								canUseItem = true;
+							}
+						}
+					}										
+				}
+				case CAT.PICKUP_HEALTH:
+				{
+					if ( botHealth < this.MinHealth ) {
+						canUseItem = true;
+					}
+				}
+				case CAT.PICKUP_ENERGY:
+				{	
+					if( botEnergy < botEnergyMax ) {
+						canUseItem = true;
+					}
+				}
+				case CAT.PICKUP_WEAPON:
+				{
+					weaponClassId = GetEntClass(pickup);
+					if ( weaponClassId )
+					{
+						weaponId = GetWeaponIdFromClassId( weaponClassId );
+						if(weaponId)
+						{
+							if ( !this.Bot.HasWeapon(weaponId) ) {
+								canUseItem = true;
+							}
+							else {
+								tableClear(this.Bot.AmmoTable);
+								if (this.Bot.GetCurrentAmmo(this.Bot.AmmoTable, 0, weaponId)) {							
+									if ( this.Bot.AmmoTable.CurrentAmmo < this.Bot.AmmoTable.MaxAmmo ) {
+										canUseItem = true;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		else 
+		{
+			if ( this.Debug ) {
+				print( this.Bot.Name, "no pickup type for", pickupName, "class: ", GetEntClass(pickup), 
+					"Disabled: ", GetEntFlags( pickup, ENTFLAG.DISABLED ) );
+				
+				if ( this.DebugNoType ) {
+					this.DebugEnt = pickup;
+					this.Priority = 1.1;
+				}
+			}
+			else {				
+				this.Bot.PickupList[pickup] = null;
+			}
+		}
+		
+		if ( canUseItem ) {
+			this.Bot.PickupItem = pickup;
+			
+			if ( this.Debug ) {
+				print( this.Bot.Name, "is picking up", pickupName );
+				DrawEntityOBB( pickup, 20, COLOR.GREEN );
+				DrawLine( this.Bot.GetEyePosition(), GetEntPosition(pickup), COLOR.RED, 20 );
+			}
+			
+			this.Priority = 0.9;
+			
+			// clear it here since we want it cleared whether successful or not
+			this.Bot.PickupList[pickup] = null;
+			break;
+		} 
+		else {
+			if ( this.Debug ) {
+				print( this.Bot.Name, "dont need", pickupName );
+			}
+		}
+	}
+	
+	sleep(2.0);
+};
+
+this.Enter = function()
+{
+	this.AddFinishCriteria(this.Bot.PickupItem, "hasentflag", ENTFLAG.DISABLED);
+};
+
+this.Exit = function()
+{
+	this.DebugEnt = null;
+};
+
+this.Update = function()
+{
+	if ( this.DebugEnt ) {
+		this.UpdateDebugEnt();
+	}
+	
+	if ( this.Bot.PickupItem )
+	{
+		pos = GetEntPosition(this.Bot.PickupItem);
+		
+		if ( pos ) {
+			this.Goto(pos);
+		}
+	}
+	
+	this.Finished();
+};
+
+// add the item to the pickup list
+this.Events[EVENT.ENT_ENTER_RADIUS] = function(ent) 
+{	
+	if ( ent ) {		
+		this.Bot.PickupList[ ent ] = GetEntName(ent);
+	}
+};
+
+// remove the item from the pickup list
+this.Events[EVENT.ENT_LEAVE_RADIUS] = function(ent) 
+{
+	if ( ent ) {
+		this.Bot.PickupList[ ent ] = null;
+	}
+};
+
+///////////////////////////////////////////////////////////
+// debug stuff
+
+this.UpdateDebugEnt = function()
+{
+	entName = GetEntName(this.DebugEnt);
+	
+	s = "keepbot " + this.Bot.Name;
+	ExecCommand(s); // not working?
+	
+	while( 1 ) {
+		
+		if ( GetEntFlags( this.DebugEnt, ENTFLAG.DISABLED ) ) {
+			print( entName, "disabled - exiting debug loop" );
+			break;
+		}
+		
+		this.Bot.Say("uhh, wtf is this thingy?");
+		DrawEntityOBB( this.DebugEnt, 5, COLOR.BLUE );
+		sleep(5);
+	}
+};

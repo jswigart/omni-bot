@@ -1,0 +1,3230 @@
+version: 2
+navMeshParams {
+  agentHeightStand: 64
+  agentHeightCrouch: 32
+  agentRadius: 14
+  agentClimb: 18
+  walkSlopeAngle: 45
+  cellSize: 4
+  cellHeight: 4
+  edgeMaxLength: 1000
+  edgeMaxError: 1
+  tileSize: 128
+  detailSampleDist: 6
+  detailSampleMaxErr: 1
+}
+nodeState {
+  subModelId: 0
+  activeModelCrc: 1660346004
+  name: "worldspawn_0"
+}
+nodeState {
+  displacementId: 0
+  enabled: true
+  activeModelCrc: 1983723266
+}
+nodeState {
+  displacementId: 1
+  enabled: true
+  activeModelCrc: 2474777980
+}
+nodeState {
+  displacementId: 2
+  enabled: true
+  activeModelCrc: 1082524778
+}
+nodeState {
+  displacementId: 3
+  enabled: true
+  activeModelCrc: 3022434604
+}
+nodeState {
+  displacementId: 4
+  enabled: true
+  activeModelCrc: 4135040161
+}
+nodeState {
+  displacementId: 5
+  enabled: true
+  activeModelCrc: 3878883220
+}
+nodeState {
+  displacementId: 6
+  enabled: true
+  activeModelCrc: 3108026226
+}
+nodeState {
+  displacementId: 7
+  enabled: true
+  activeModelCrc: 2617781743
+}
+nodeState {
+  displacementId: 8
+  enabled: true
+  activeModelCrc: 734563805
+}
+nodeState {
+  displacementId: 9
+  enabled: true
+  activeModelCrc: 4058031174
+}
+nodeState {
+  displacementId: 10
+  enabled: true
+  activeModelCrc: 426913956
+}
+nodeState {
+  displacementId: 11
+  enabled: true
+  activeModelCrc: 3074029581
+}
+nodeState {
+  displacementId: 12
+  enabled: true
+  activeModelCrc: 2536372744
+}
+nodeState {
+  displacementId: 13
+  enabled: true
+  activeModelCrc: 1863692826
+}
+nodeState {
+  displacementId: 14
+  enabled: true
+  activeModelCrc: 3787524802
+}
+nodeState {
+  displacementId: 15
+  enabled: true
+  activeModelCrc: 2288992223
+}
+nodeState {
+  displacementId: 16
+  enabled: true
+  activeModelCrc: 2881027501
+}
+nodeState {
+  displacementId: 17
+  enabled: true
+  activeModelCrc: 1907794870
+}
+nodeState {
+  displacementId: 18
+  enabled: true
+  activeModelCrc: 276033940
+}
+nodeState {
+  displacementId: 19
+  enabled: true
+  activeModelCrc: 226815027
+}
+nodeState {
+  displacementId: 20
+  enabled: true
+  activeModelCrc: 4088155920
+}
+nodeState {
+  displacementId: 21
+  enabled: true
+  activeModelCrc: 467015158
+}
+nodeState {
+  displacementId: 22
+  enabled: true
+  activeModelCrc: 2893461186
+}
+nodeState {
+  displacementId: 23
+  enabled: true
+  activeModelCrc: 4031736538
+}
+nodeState {
+  displacementId: 24
+  enabled: true
+  activeModelCrc: 2072591467
+}
+nodeState {
+  displacementId: 25
+  enabled: true
+  activeModelCrc: 1491398147
+}
+nodeState {
+  displacementId: 26
+  enabled: true
+  activeModelCrc: 1434889237
+}
+nodeState {
+  displacementId: 27
+  enabled: true
+  activeModelCrc: 483157962
+}
+nodeState {
+  displacementId: 28
+  enabled: true
+  activeModelCrc: 2887963350
+}
+nodeState {
+  displacementId: 29
+  enabled: true
+  activeModelCrc: 299930008
+}
+nodeState {
+  displacementId: 30
+  enabled: true
+  activeModelCrc: 1508347181
+}
+nodeState {
+  displacementId: 31
+  enabled: true
+  activeModelCrc: 61443370
+}
+nodeState {
+  displacementId: 32
+  enabled: true
+  activeModelCrc: 3655719666
+}
+nodeState {
+  displacementId: 33
+  enabled: true
+  activeModelCrc: 4255368364
+}
+nodeState {
+  displacementId: 34
+  enabled: true
+  activeModelCrc: 2938979752
+}
+nodeState {
+  displacementId: 35
+  enabled: true
+  activeModelCrc: 2227616260
+}
+nodeState {
+  displacementId: 36
+  enabled: true
+  activeModelCrc: 3880734375
+}
+nodeState {
+  displacementId: 37
+  enabled: true
+  activeModelCrc: 137212003
+}
+nodeState {
+  displacementId: 38
+  enabled: true
+  activeModelCrc: 2347482488
+}
+nodeState {
+  displacementId: 39
+  enabled: true
+  activeModelCrc: 495523934
+}
+nodeState {
+  displacementId: 40
+  enabled: true
+  activeModelCrc: 3064196222
+}
+nodeState {
+  displacementId: 41
+  enabled: true
+  activeModelCrc: 2585912322
+}
+nodeState {
+  displacementId: 42
+  enabled: true
+  activeModelCrc: 2356499506
+}
+nodeState {
+  displacementId: 43
+  enabled: true
+  activeModelCrc: 2707153785
+}
+nodeState {
+  displacementId: 44
+  enabled: true
+  activeModelCrc: 446819556
+}
+nodeState {
+  displacementId: 45
+  enabled: true
+  activeModelCrc: 2780218867
+}
+nodeState {
+  displacementId: 46
+  enabled: true
+  activeModelCrc: 2493687505
+}
+nodeState {
+  displacementId: 47
+  enabled: true
+  activeModelCrc: 3920918170
+}
+nodeState {
+  displacementId: 48
+  enabled: true
+  activeModelCrc: 785967306
+}
+nodeState {
+  displacementId: 49
+  enabled: true
+  activeModelCrc: 3302304011
+}
+nodeState {
+  displacementId: 50
+  enabled: true
+  activeModelCrc: 1863453633
+}
+nodeState {
+  displacementId: 51
+  enabled: true
+  activeModelCrc: 3581643975
+}
+nodeState {
+  displacementId: 52
+  enabled: true
+  activeModelCrc: 1815597011
+}
+nodeState {
+  displacementId: 53
+  enabled: true
+  activeModelCrc: 514672389
+}
+nodeState {
+  displacementId: 54
+  enabled: true
+  activeModelCrc: 1374979685
+}
+nodeState {
+  displacementId: 55
+  enabled: true
+  activeModelCrc: 2337548345
+}
+nodeState {
+  displacementId: 56
+  enabled: true
+  activeModelCrc: 1752466327
+}
+nodeState {
+  displacementId: 57
+  enabled: true
+  activeModelCrc: 1883515110
+}
+nodeState {
+  displacementId: 58
+  enabled: true
+  activeModelCrc: 514003504
+}
+nodeState {
+  displacementId: 59
+  enabled: true
+  activeModelCrc: 2867050864
+}
+nodeState {
+  displacementId: 60
+  enabled: true
+  activeModelCrc: 3727482908
+}
+nodeState {
+  displacementId: 61
+  enabled: true
+  activeModelCrc: 509749849
+}
+nodeState {
+  displacementId: 62
+  enabled: true
+  activeModelCrc: 1296542047
+}
+nodeState {
+  displacementId: 63
+  enabled: true
+  activeModelCrc: 2091227523
+}
+nodeState {
+  displacementId: 64
+  enabled: true
+  activeModelCrc: 3861480117
+}
+nodeState {
+  displacementId: 65
+  enabled: true
+  activeModelCrc: 1037899915
+}
+nodeState {
+  displacementId: 66
+  enabled: true
+  activeModelCrc: 2367613329
+}
+nodeState {
+  staticModelId: 0
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 1
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 2
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 3
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 4
+  activeModelCrc: 3577411192
+}
+nodeState {
+  staticModelId: 5
+  activeModelCrc: 3577411192
+}
+nodeState {
+  staticModelId: 6
+  activeModelCrc: 3577411192
+}
+nodeState {
+  staticModelId: 7
+  activeModelCrc: 355284750
+}
+nodeState {
+  staticModelId: 8
+  activeModelCrc: 355284750
+}
+nodeState {
+  staticModelId: 9
+  activeModelCrc: 355284750
+}
+nodeState {
+  staticModelId: 10
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 11
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 12
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 13
+  activeModelCrc: 2250596319
+}
+nodeState {
+  staticModelId: 14
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 15
+  activeModelCrc: 1721225035
+}
+nodeState {
+  staticModelId: 16
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 17
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 18
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 19
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 20
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 21
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 22
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 23
+  activeModelCrc: 1721225035
+}
+nodeState {
+  staticModelId: 24
+  activeModelCrc: 1721225035
+}
+nodeState {
+  staticModelId: 25
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 26
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 27
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 28
+  activeModelCrc: 1721225035
+}
+nodeState {
+  staticModelId: 29
+  activeModelCrc: 1721225035
+}
+nodeState {
+  staticModelId: 30
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 31
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 32
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 33
+  activeModelCrc: 1721225035
+}
+nodeState {
+  staticModelId: 34
+  activeModelCrc: 1721225035
+}
+nodeState {
+  staticModelId: 35
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 36
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 37
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 38
+  activeModelCrc: 1721225035
+}
+nodeState {
+  staticModelId: 39
+  activeModelCrc: 1721225035
+}
+nodeState {
+  staticModelId: 40
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 41
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 42
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 43
+  activeModelCrc: 1721225035
+}
+nodeState {
+  staticModelId: 44
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 45
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 46
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 47
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 48
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 49
+  activeModelCrc: 181354043
+}
+nodeState {
+  staticModelId: 50
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 51
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 52
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 53
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 54
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 55
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 56
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 57
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 58
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 59
+  activeModelCrc: 181354043
+}
+nodeState {
+  staticModelId: 60
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 61
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 62
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 63
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 64
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 65
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 72
+  activeModelCrc: 2851279739
+}
+nodeState {
+  staticModelId: 73
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 74
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 75
+  activeModelCrc: 1721225035
+}
+nodeState {
+  staticModelId: 76
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 77
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 78
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 79
+  activeModelCrc: 1721225035
+}
+nodeState {
+  staticModelId: 80
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 81
+  activeModelCrc: 237106331
+}
+nodeState {
+  staticModelId: 82
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 83
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 84
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 85
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 86
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 87
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 88
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 89
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 90
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 91
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 92
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 93
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 94
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 95
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 96
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 97
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 98
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 99
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 100
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 101
+  activeModelCrc: 2250596319
+}
+nodeState {
+  staticModelId: 102
+  activeModelCrc: 2851279739
+}
+nodeState {
+  staticModelId: 103
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 104
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 105
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 106
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 107
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 108
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 109
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 110
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 111
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 112
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 113
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 114
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 115
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 116
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 117
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 118
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 119
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 120
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 121
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 122
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 128
+  activeModelCrc: 3226956819
+}
+nodeState {
+  staticModelId: 129
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 130
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 131
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 132
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 133
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 134
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 135
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 136
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 137
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 138
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 139
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 140
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 141
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 142
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 144
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 145
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 146
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 147
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 148
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 149
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 150
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 151
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 152
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 153
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 154
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 155
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 156
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 157
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 158
+  activeModelCrc: 3577411192
+}
+nodeState {
+  staticModelId: 159
+  activeModelCrc: 355284750
+}
+nodeState {
+  staticModelId: 160
+  activeModelCrc: 355284750
+}
+nodeState {
+  staticModelId: 161
+  activeModelCrc: 3577411192
+}
+nodeState {
+  staticModelId: 162
+  activeModelCrc: 355284750
+}
+nodeState {
+  staticModelId: 163
+  activeModelCrc: 3577411192
+}
+nodeState {
+  staticModelId: 164
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 165
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 166
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 167
+  activeModelCrc: 2620866625
+}
+nodeState {
+  staticModelId: 168
+  activeModelCrc: 3226956819
+}
+nodeState {
+  staticModelId: 169
+  activeModelCrc: 2951910111
+}
+nodeState {
+  staticModelId: 170
+  activeModelCrc: 3226956819
+}
+nodeState {
+  staticModelId: 171
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 172
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 173
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 174
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 175
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 176
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 177
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 178
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 183
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 184
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 185
+  activeModelCrc: 3563212651
+}
+nodeState {
+  staticModelId: 186
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 187
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 188
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 189
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 190
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 191
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 192
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 193
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 194
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 195
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 196
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 197
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 198
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 199
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 200
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 201
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 202
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 203
+  activeModelCrc: 4150268552
+}
+nodeState {
+  staticModelId: 204
+  activeModelCrc: 3922139528
+}
+nodeState {
+  staticModelId: 205
+  activeModelCrc: 83819819
+}
+nodeState {
+  staticModelId: 206
+  activeModelCrc: 83819819
+}
+nodeState {
+  staticModelId: 207
+  activeModelCrc: 3577411192
+}
+nodeState {
+  staticModelId: 208
+  activeModelCrc: 3577411192
+}
+nodeState {
+  staticModelId: 210
+  activeModelCrc: 594257588
+}
+nodeState {
+  staticModelId: 211
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 212
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 213
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 214
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 215
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 216
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 217
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 218
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 219
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 223
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 224
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 225
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 226
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 227
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 228
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 229
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 230
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 232
+  activeModelCrc: 3922139528
+}
+nodeState {
+  staticModelId: 233
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 234
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 235
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 236
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 237
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 238
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 239
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 240
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 241
+  activeModelCrc: 3913750449
+}
+nodeState {
+  staticModelId: 242
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 243
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 244
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 245
+  activeModelCrc: 3913750449
+}
+nodeState {
+  staticModelId: 246
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 247
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 248
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 249
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 250
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 251
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 252
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 253
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 254
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 255
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 256
+  activeModelCrc: 3913750449
+}
+nodeState {
+  staticModelId: 257
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 258
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 259
+  activeModelCrc: 3913750449
+}
+nodeState {
+  staticModelId: 260
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 261
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 262
+  activeModelCrc: 3913750449
+}
+nodeState {
+  staticModelId: 263
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 264
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 265
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 266
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 267
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 268
+  activeModelCrc: 3913750449
+}
+nodeState {
+  staticModelId: 269
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 270
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 271
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 272
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 273
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 274
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 275
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 276
+  activeModelCrc: 181354043
+}
+nodeState {
+  staticModelId: 277
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 278
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 279
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 280
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 281
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 282
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 284
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 285
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 286
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 287
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 288
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 289
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 290
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 291
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 292
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 293
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 294
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 295
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 296
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 297
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 298
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 299
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 300
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 301
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 302
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 303
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 304
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 305
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 306
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 307
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 308
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 309
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 310
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 311
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 312
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 313
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 314
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 315
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 316
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 317
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 318
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 319
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 320
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 321
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 322
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 323
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 324
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 325
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 326
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 327
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 328
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 329
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 330
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 331
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 332
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 333
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 334
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 335
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 336
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 337
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 338
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 339
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 340
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 341
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 342
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 343
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 344
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 345
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 346
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 347
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 348
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 349
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 350
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 351
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 352
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 353
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 354
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 355
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 356
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 357
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 358
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 359
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 360
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 361
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 362
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 363
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 364
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 365
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 366
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 367
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 368
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 369
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 370
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 371
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 372
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 373
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 374
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 375
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 376
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 377
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 378
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 379
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 380
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 381
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 382
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 383
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 384
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 385
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 386
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 387
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 388
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 389
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 390
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 391
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 392
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 393
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 394
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 395
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 396
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 397
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 398
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 399
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 400
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 401
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 402
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 403
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 404
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 405
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 406
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 407
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 408
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 409
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 410
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 411
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 412
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 413
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 414
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 415
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 416
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 417
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 418
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 419
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 420
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 421
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 422
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 423
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 424
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 425
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 426
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 427
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 428
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 429
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 430
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 431
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 432
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 433
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 434
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 435
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 436
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 437
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 438
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 439
+  activeModelCrc: 1128598974
+}
+nodeState {
+  staticModelId: 440
+  activeModelCrc: 1128598974
+}
+nodeState {
+  staticModelId: 441
+  activeModelCrc: 3922139528
+}
+nodeState {
+  staticModelId: 442
+  activeModelCrc: 491451458
+}
+nodeState {
+  staticModelId: 443
+  activeModelCrc: 3922139528
+}
+nodeState {
+  staticModelId: 444
+  activeModelCrc: 491451458
+}
+nodeState {
+  staticModelId: 445
+  activeModelCrc: 3922139528
+}
+nodeState {
+  staticModelId: 446
+  activeModelCrc: 3922139528
+}
+nodeState {
+  staticModelId: 447
+  activeModelCrc: 491451458
+}
+nodeState {
+  staticModelId: 448
+  activeModelCrc: 3922139528
+}
+nodeState {
+  staticModelId: 449
+  activeModelCrc: 3922139528
+}
+nodeState {
+  staticModelId: 450
+  activeModelCrc: 3922139528
+}
+nodeState {
+  staticModelId: 451
+  activeModelCrc: 491451458
+}
+nodeState {
+  staticModelId: 452
+  activeModelCrc: 3922139528
+}
+nodeState {
+  staticModelId: 453
+  activeModelCrc: 491451458
+}
+nodeState {
+  staticModelId: 454
+  activeModelCrc: 491451458
+}
+nodeState {
+  staticModelId: 456
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 457
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 458
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 459
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 460
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 461
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 462
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 463
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 464
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 465
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 466
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 467
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 468
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 469
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 470
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 471
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 472
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 473
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 474
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 475
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 476
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 477
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 478
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 479
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 480
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 481
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 482
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 483
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 484
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 485
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 486
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 487
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 488
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 489
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 490
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 491
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 492
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 493
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 494
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 495
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 496
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 497
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 498
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 499
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 500
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 501
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 502
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 503
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 504
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 505
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 506
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 507
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 508
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 509
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 510
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 511
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 512
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 513
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 514
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 515
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 516
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 517
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 518
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 519
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 520
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 521
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 522
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 523
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 524
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 525
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 526
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 527
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 528
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 529
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 530
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 531
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 532
+  activeModelCrc: 3913750449
+}
+nodeState {
+  staticModelId: 533
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 534
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 535
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 536
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 537
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 538
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 539
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 540
+  activeModelCrc: 3913750449
+}
+nodeState {
+  staticModelId: 541
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 542
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 543
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 544
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 545
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 546
+  activeModelCrc: 3913750449
+}
+nodeState {
+  staticModelId: 547
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 548
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 549
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 550
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 551
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 552
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 553
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 554
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 555
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 556
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 557
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 558
+  activeModelCrc: 3913750449
+}
+nodeState {
+  staticModelId: 559
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 560
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 561
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 562
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 563
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 564
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 565
+  activeModelCrc: 3913750449
+}
+nodeState {
+  staticModelId: 566
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 567
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 568
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 569
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 570
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 571
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 572
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 573
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 574
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 575
+  activeModelCrc: 3913750449
+}
+nodeState {
+  staticModelId: 576
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 577
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 578
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 579
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 580
+  activeModelCrc: 1128598974
+}
+nodeState {
+  staticModelId: 581
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 582
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 583
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 584
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 585
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 586
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 587
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 588
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 589
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 590
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 591
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 592
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 593
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 594
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 595
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 596
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 597
+  activeModelCrc: 885242368
+}
+nodeState {
+  staticModelId: 598
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 599
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 600
+  activeModelCrc: 1909827004
+}
+nodeState {
+  staticModelId: 601
+  activeModelCrc: 32838134
+}
+nodeState {
+  staticModelId: 602
+  activeModelCrc: 3247379785
+}
+nodeState {
+  staticModelId: 603
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 604
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 605
+  activeModelCrc: 2094281296
+}
+nodeState {
+  staticModelId: 606
+  activeModelCrc: 3942133243
+}
+nodeState {
+  staticModelId: 607
+  activeModelCrc: 2396815422
+}
+nodeState {
+  staticModelId: 608
+  activeModelCrc: 2396815422
+}
+nodeState {
+  staticModelId: 609
+  activeModelCrc: 2739693937
+}
+nodeState {
+  staticModelId: 610
+  activeModelCrc: 4292607672
+}
+nodeState {
+  staticModelId: 612
+  activeModelCrc: 3187776391
+}
+nodeState {
+  staticModelId: 613
+  activeModelCrc: 2851279739
+}
+models {
+  name: "Displacement:0"
+  modelcrc: 1983723266
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:1"
+  modelcrc: 2474777980
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:10"
+  modelcrc: 426913956
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:11"
+  modelcrc: 3074029581
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:12"
+  modelcrc: 2536372744
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:13"
+  modelcrc: 1863692826
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:14"
+  modelcrc: 3787524802
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:15"
+  modelcrc: 2288992223
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:16"
+  modelcrc: 2881027501
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:17"
+  modelcrc: 1907794870
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:18"
+  modelcrc: 276033940
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:19"
+  modelcrc: 226815027
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:2"
+  modelcrc: 1082524778
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:20"
+  modelcrc: 4088155920
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:21"
+  modelcrc: 467015158
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:22"
+  modelcrc: 2893461186
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:23"
+  modelcrc: 4031736538
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:24"
+  modelcrc: 2072591467
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:25"
+  modelcrc: 1491398147
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:26"
+  modelcrc: 1434889237
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:27"
+  modelcrc: 483157962
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:28"
+  modelcrc: 2887963350
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:29"
+  modelcrc: 299930008
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:3"
+  modelcrc: 3022434604
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:30"
+  modelcrc: 1508347181
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:31"
+  modelcrc: 61443370
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:32"
+  modelcrc: 3655719666
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:33"
+  modelcrc: 4255368364
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:34"
+  modelcrc: 2938979752
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:35"
+  modelcrc: 2227616260
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:36"
+  modelcrc: 3880734375
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:37"
+  modelcrc: 137212003
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:38"
+  modelcrc: 2347482488
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:39"
+  modelcrc: 495523934
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:4"
+  modelcrc: 4135040161
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:40"
+  modelcrc: 3064196222
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:41"
+  modelcrc: 2585912322
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:42"
+  modelcrc: 2356499506
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:43"
+  modelcrc: 2707153785
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:44"
+  modelcrc: 446819556
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:45"
+  modelcrc: 2780218867
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:46"
+  modelcrc: 2493687505
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:47"
+  modelcrc: 3920918170
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:48"
+  modelcrc: 785967306
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:49"
+  modelcrc: 3302304011
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:5"
+  modelcrc: 3878883220
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:50"
+  modelcrc: 1863453633
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:51"
+  modelcrc: 3581643975
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:52"
+  modelcrc: 1815597011
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:53"
+  modelcrc: 514672389
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:54"
+  modelcrc: 1374979685
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:55"
+  modelcrc: 2337548345
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:56"
+  modelcrc: 1752466327
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:57"
+  modelcrc: 1883515110
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:58"
+  modelcrc: 514003504
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:59"
+  modelcrc: 2867050864
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:6"
+  modelcrc: 3108026226
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:60"
+  modelcrc: 3727482908
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:61"
+  modelcrc: 509749849
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:62"
+  modelcrc: 1296542047
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:63"
+  modelcrc: 2091227523
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:64"
+  modelcrc: 3861480117
+  numMeshTris: 512
+}
+models {
+  name: "Displacement:65"
+  modelcrc: 1037899915
+  numMeshTris: 512
+}
+models {
+  name: "Displacement:66"
+  modelcrc: 2367613329
+  numMeshTris: 128
+}
+models {
+  name: "Displacement:7"
+  modelcrc: 2617781743
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:8"
+  modelcrc: 734563805
+  numMeshTris: 32
+}
+models {
+  name: "Displacement:9"
+  modelcrc: 4058031174
+  numMeshTris: 32
+}
+models {
+  name: "SubModel:0"
+  modelcrc: 1660346004
+  numMeshTris: 189002
+}
+models {
+  name: "models/props_c17/Handrail04_Medium.mdl"
+  modelcrc: 4150268552
+  numMeshTris: 60
+}
+models {
+  name: "models/props_c17/Handrail04_long.mdl"
+  modelcrc: 83819819
+  numMeshTris: 72
+}
+models {
+  name: "models/props_c17/Handrail04_short.mdl"
+  modelcrc: 2250596319
+  numMeshTris: 48
+}
+models {
+  name: "models/props_c17/light_cagelight01_on.mdl"
+  modelcrc: 4292607672
+  numMeshTris: 24
+}
+models {
+  name: "models/props_c17/light_cagelight02_on.mdl"
+  modelcrc: 4292607672
+  numMeshTris: 24
+}
+models {
+  name: "models/props_c17/oildrum001.mdl"
+  modelcrc: 1996329860
+  numMeshTris: 60
+}
+models {
+  name: "models/props_c17/oildrum001_explosive.mdl"
+  modelcrc: 3503822089
+  numMeshTris: 44
+}
+models {
+  name: "models/props_combine/suit_charger001.mdl"
+  modelcrc: 269430366
+  numMeshTris: 48
+}
+models {
+  name: "models/props_foliage/tree_cliff_01a.mdl"
+  modelcrc: 3942133243
+  numMeshTris: 128
+}
+models {
+  name: "models/props_foliage/tree_cliff_02a.mdl"
+  modelcrc: 2851279739
+  numMeshTris: 144
+}
+models {
+  name: "models/props_foliage/tree_deciduous_01a-lod.mdl"
+  modelcrc: 2739693937
+  numMeshTris: 108
+}
+models {
+  name: "models/props_foliage/tree_deciduous_01a.mdl"
+  modelcrc: 2396815422
+  numMeshTris: 458
+}
+models {
+  name: "models/props_junk/CinderBlock01a.mdl"
+  modelcrc: 957706849
+  numMeshTris: 12
+}
+models {
+  name: "models/props_junk/wood_crate001a.mdl"
+  modelcrc: 2280383007
+  numMeshTris: 12
+}
+models {
+  name: "models/props_junk/wood_crate002a.mdl"
+  modelcrc: 2450742224
+  numMeshTris: 12
+}
+models {
+  name: "models/props_pipes/PipeSet08d_Corner128U_001a.mdl"
+  modelcrc: 594257588
+  numMeshTris: 28
+}
+models {
+  name: "models/props_pipes/PipeSet32d_128_001a.mdl"
+  modelcrc: 491451458
+  numMeshTris: 20
+}
+models {
+  name: "models/props_pipes/PipeSet32d_256_001a.mdl"
+  modelcrc: 355284750
+  numMeshTris: 146
+}
+models {
+  name: "models/props_pipes/PipeSet32d_Bend256U_001a.mdl"
+  modelcrc: 3577411192
+  numMeshTris: 36
+}
+models {
+  name: "models/props_pipes/PipeSet32d_Corner128R_001a.mdl"
+  modelcrc: 3922139528
+  numMeshTris: 24
+}
+models {
+  name: "models/props_pipes/pipe02_90degree01.mdl"
+  modelcrc: 1721225035
+  numMeshTris: 106
+}
+models {
+  name: "models/props_pipes/pipe02_straight01_long.mdl"
+  modelcrc: 237106331
+  numMeshTris: 36
+}
+models {
+  name: "models/props_pipes/pipe03_45degree01.mdl"
+  modelcrc: 3913750449
+  numMeshTris: 104
+}
+models {
+  name: "models/props_pipes/pipe03_90degree01.mdl"
+  modelcrc: 1909827004
+  numMeshTris: 106
+}
+models {
+  name: "models/props_pipes/pipe03_connector01.mdl"
+  modelcrc: 3247379785
+  numMeshTris: 44
+}
+models {
+  name: "models/props_pipes/pipe03_straight01_long.mdl"
+  modelcrc: 885242368
+  numMeshTris: 26
+}
+models {
+  name: "models/props_pipes/pipe03_straight01_short.mdl"
+  modelcrc: 32838134
+  numMeshTris: 26
+}
+models {
+  name: "models/props_pipes/pipe03_tjoint01.mdl"
+  modelcrc: 181354043
+  numMeshTris: 112
+}
+models {
+  name: "models/props_wasteland/light_spotlight02_lamp.mdl"
+  modelcrc: 2094281296
+  numMeshTris: 58
+}
+models {
+  name: "models/props_wasteland/prison_flourescentlight002b.mdl"
+  modelcrc: 3187776391
+  numMeshTris: 36
+}
+models {
+  name: "models/props_wasteland/prison_lamp001c.mdl"
+  modelcrc: 1128598974
+  numMeshTris: 28
+}
+models {
+  name: "models/props_wasteland/rockcliff_cluster01b.mdl"
+  modelcrc: 3563212651
+  numMeshTris: 552
+}
+models {
+  name: "models/props_wasteland/rockcliff_cluster02b.mdl"
+  modelcrc: 2951910111
+  numMeshTris: 324
+}
+models {
+  name: "models/props_wasteland/rockcliff_cluster03a.mdl"
+  modelcrc: 3226956819
+  numMeshTris: 296
+}
+models {
+  name: "models/props_wasteland/rockcliff_cluster03c.mdl"
+  modelcrc: 2620866625
+  numMeshTris: 266
+}

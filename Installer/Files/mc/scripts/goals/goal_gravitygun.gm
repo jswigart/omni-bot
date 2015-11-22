@@ -1,0 +1,108 @@
+// a script for the bots to use the grav gun to pickup breakables, standard pickup items, etc
+this.Name = "GravityGun";
+this.Parent = "LowLevel";
+this.AutoAdd = true;
+//this.SkipGetPriorityWhenActive = true;
+this.Debug = true;
+
+this.Initialize = function()
+{
+	this.Bot.GravGunInfo = {};
+	this.Bot.AreaEntities = {};
+};
+
+this.GetPriority = function()
+{
+	while( true )
+	{
+		this.Bot.AreaEntities = this.Bot.GetAreaEntitiesAlongPath( 128, this.Bot.AreaEntities );
+		if ( this.Bot.ApproachingArea( "pushable", 128.0 ) && tableCount( this.Bot.AreaEntities ) > 0 )
+		{
+			this.Priority = 1.0;
+		}
+		else if ( this.Bot.IsStuck() )
+		{
+			pos = this.Bot.GetPosition();
+			if ( this.Bot.GetAreaEntitiesInRadius( pos, 64.0, this.Bot.AreaEntities ) && tableCount( this.Bot.AreaEntities ) > 0 )
+			{
+				this.Priority = 1.0;
+			}
+		}
+		else
+		{
+			this.Priority = 0.0;
+		}
+		sleep( 0.1 );
+	}
+};
+
+this.Enter = function()
+{
+};
+
+this.Exit = function()
+{
+	this.Bot.ReleaseButton(BTN.ATTACK1);
+	this.Bot.ReleaseButton(BTN.ATTACK2);
+	
+	this.ReleaseWeaponRequest();
+	this.ReleaseAimRequest();
+};
+
+this.Update = function()
+{	
+	eyePos = this.Bot.GetEyePosition();
+	
+	// find the nearest entity that we have line of sight to
+	bestEnt = null;
+	bestEntPos = null;
+	bestDistance = 0.0;
+	foreach ( x and ent in this.Bot.AreaEntities )
+	{
+		entPos = GetEntPosition( ent );
+		entVel = GetEntVelocity( ent ); // ignore moving entities
+		if ( entVel.IsZero() && this.Bot.HasLineOfSightTo( entPos, ent ) )
+		{
+			d = eyePos.Distance( entPos );
+			if ( bestEnt == null || d < bestDistance )
+			{
+				bestEnt = ent;
+				bestEntPos = entPos;
+				bestDistance = d;
+			}
+		}
+	}		
+	
+	if ( bestEnt == null )
+	{
+		this.Finished();
+		return;
+	}
+	
+	this.AddAimRequest( Priority.High, "position", bestEntPos );
+	this.AddWeaponRequest( Priority.High, WEAPON.GRAVGUN );
+	this.BlockForWeaponChange( WEAPON.GRAVGUN );
+	
+	endTime = GetTime() + 3.0;
+	while( GetTime() < endTime ) 
+	{
+		if ( this.Debug ) 
+		{
+			DrawEntityOBB( bestEnt, 0.0, COLOR.GREEN );
+			DrawLine( eyePos, bestEntPos, COLOR.RED, 0.0 );
+		}
+		
+		aimEnt = this.Bot.IsAimingAtEntity( this.Bot.AreaEntities, 64.0 );
+		if ( aimEnt )
+		{
+			this.Bot.HoldButton( BTN.ATTACK1, 99 );
+		}
+		
+		entVel = GetEntVelocity( ent );
+		if ( !entVel.IsZero() ) {
+			return;
+		}
+		
+		sleep(0.5);
+	}
+};

@@ -1,0 +1,79 @@
+// This script provides functionality for bot behavior once a spree war has begun
+
+// These parameters are required
+this.Name = "SpreeWar";	// The name of the goal.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.AlwaysRecieveEvents = true;
+this.SkipGetPriorityWhenActive = true;
+
+this.Enter = function()
+{
+	// Set up some finish criteria
+	this.AddFinishCriteria(this.TargetEntity,"deleted");	
+	this.AddFinishCriteria(this.TargetEntity,"health lessthan",1);
+	this.AddFinishCriteria(this.TargetEntity,"hasentflag",ENTFLAG.LIMBO);
+};
+
+this.GetPriority = function()
+{
+	if ( this.IsSpreeWarActive == true && this.Bot.IsSpreeStarter == false )
+	{
+		this.Priority = 1.0;
+	}
+	else
+	{
+		this.Priority = 0.0;
+	}
+        
+        sleep(1);
+};
+
+this.Update = function()
+{
+	// no hiding from ze bots!
+	while(this.IsSpreeWarActive)
+	{
+		position = GetEntPosition(this.TargetEntity);
+		if ( this.Bot.DistanceTo(position) > 200 )
+		{
+			this.GotoAsync(position, 200);
+		}
+		else
+		{
+			this.GotoRandomAsync(100);
+		}
+		
+		sleep(1);
+	}
+	
+	this.Finished();
+};
+
+this.Exit = function()
+{
+	// catch players that leave while they are the target 
+	if ( !EntityIsValid(this.TargetEntity) )
+	{
+		this.IsSpreeWarActive = false;
+	}
+        
+        this.Bot.IsSpreeStarter = false;
+};
+
+this.Events[EVENT.SPREEWAR_START] = function(target) 
+{
+        if ( target != this.Bot.GetEntity() )
+        {
+                this.IsSpreeWarActive = true;
+                this.TargetEntity = target;
+        }
+        else
+        {
+                this.Bot.IsSpreeStarter = true;
+        }
+};
+
+this.Events[EVENT.SPREEWAR_END] = function()
+{
+	this.IsSpreeWarActive = false;
+};
