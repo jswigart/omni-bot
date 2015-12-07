@@ -1,39 +1,78 @@
 // a script for the bots to use the grav gun to pickup breakables, standard pickup items, etc
 this.Name = "LongJump";
-this.Parent = "HighLevel";
+this.Parent = "LowLevel";
 this.AutoAdd = true;
 //this.SkipGetPriorityWhenActive = true;
 this.Debug = true;
 
 this.Initialize = function()
 {
-	this.Bot.TraceResult = {};
+	this.TraceResult = {};
+	this.Trajectory = {};
+	this.ModuleStats = {};
+	this.JumpSpeed = 600.0;
 };
 
 this.GetPriority = function()
 {
 	while( 1 )
 	{
+		this.Bot.GetModuleStats( MODULE.LONG_JUMP, this.ModuleStats );
+		
+		if ( this.ModuleStats.Level < 1 )
+		{
+			if ( this.Debug )
+			{
+				this.Bot.Say( "No Longjump module, waiting" );
+			}
+			
+			block(EVENT.LEVEL_UP);
+			sleep( 2.0 );
+			continue;
+		}
+	
+		if ( this.Bot.AuxPower < this.ModuleStats.AuxDrain ) {
+			sleep( 2.0 );
+			continue;
+		}
+	
 		if ( this.Bot.IsOnCustomLink( "longjump" ) )
 		{
 			
 		}
 		else
 		{
+			navPos = this.Bot.GetNavPosition();
+		
 			// can we take some free form short cuts
-			if ( this.Bot.TraceToNextCorner( this.Bot.TraceResult ) )
-			{
-				diff = this.Bot.TraceResult.endPos - this.Bot.GetNavPosition();
-				if ( diff.Length() > 512 )
+			if ( this.Bot.TraceToNextCorner( this.TraceResult ) )
+			{			
+				distToCorner = navPos.Distance( this.TraceResult.endPos );
+				if ( distToCorner > 512 )				
 				{
-					this.AddAimRequest( Priority.Low, "position", this.Bot.TraceResult.endPos );
+					this.Trajectory = CalcTrajectory( navPos, this.TraceResult.endPos, this.JumpSpeed, 1.0f, this.Trajectory );
+					
+					if ( this.Trajectory == null || tableCount( this.Trajectory ) == 0 ) {
+						yield();
+						continue;
+					}
+				
+					this.AddAimRequest( Priority.Low, "facing", this.Trajectory[0] );
 					yield();
 					
 					if ( this.OnTarget )
 					{
+						if ( this.Debug )
+						{
+							DrawLine( navPos, this.TraceResult.endPos, COLOR.GREEN, 1.0 );
+							this.Bot.Say( "Long jump Trajectory", this.Trajectory[0] );
+						}
+					
 						this.Bot.HoldButton(BTN.CROUCH, 0.1);
 						yield();
 						this.Bot.HoldButton(BTN.JUMP, 0.25);
+						yield();
+						this.Bot.ReleaseButton( BTN.CROUCH, BTN.JUMP );
 					}
 					
 					this.ReleaseAimRequest();

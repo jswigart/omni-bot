@@ -655,12 +655,15 @@ enum NavAreaFlags
 	NAVFLAGS_JETPACK		= ( 1 << 16 ),
 	NAVFLAGS_LONGJUMP		= ( 1 << 17 ),
 
-	NAVFLAGS_DESTRUCTIBLE	= ( 1 << 30 ),
-	NAVFLAGS_DISABLED		= ( 1 << 31 ),
-
+	NAVFLAGS_DESTRUCTIBLE	= ( 1 << 29 ),
+	NAVFLAGS_DISABLED		= ( 1 << 30 ),
+	
 	// compound flags
 	NAVFLAGS_ALLTEAMS		= NAVFLAGS_TEAM1_ONLY | NAVFLAGS_TEAM2_ONLY | NAVFLAGS_TEAM3_ONLY | NAVFLAGS_TEAM4_ONLY,
 };
+
+static const int64_t NAVFLAGS_ENTITYREF = ( (int64_t)1 << 32 );
+static const int64_t NAVFLAGS_ENTITYREF_MASK = ( (int64_t)-1 << 32 );
 
 // struct: EntityInfo
 struct EntityInfo
@@ -723,6 +726,7 @@ struct EntityInfo
 	BitFlag64		mFlags;
 	BitFlag32		mPowerUps;
 	NavAreaFlags	mNavFlags;
+	GameEntity		mOwner;
 	float			mNavTeamCost[ 4 ];
 	
 	EntityInfo()

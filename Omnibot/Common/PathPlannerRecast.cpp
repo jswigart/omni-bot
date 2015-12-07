@@ -120,104 +120,99 @@ Vector3f localToRc( const float * vec )
 
 const Vector3f PathPlannerRecast::sExtents = localToRc( Vector3f( 16.f, 16.f, 64.f ) );
 
-struct DebugDraw : public duDebugDraw
+DebugDraw::DebugDraw( float durationSecs )
+	: mVertCount( 0 )
+	, mSizeHint( 1.0f )
+	, mDurationSecs( durationSecs )
 {
-	DebugDraw() : mVertCount( 0 ), mSizeHint( 1.0f )
+}
+
+void DebugDraw::depthMask( bool state )
+{
+	// not supported
+}
+
+void DebugDraw::texture( bool state )
+{
+	// not supported
+}
+
+void DebugDraw::begin( duDebugDrawPrimitives prim, float size )
+{
+	mActivePrim = prim;
+	mSizeHint = size;
+	mVertCount = 0;
+}
+
+void DebugDraw::vertex( const float* pos, unsigned int color )
+{
+	vertex( pos[ 0 ], pos[ 1 ], pos[ 2 ], color );
+}
+
+void DebugDraw::vertex( const float x, const float y, const float z, unsigned int color )
+{
+	mVertCache[ mVertCount++ ] = Vector3f( x, z, y );
+
+	switch ( mActivePrim )
 	{
+		case DU_DRAW_POINTS:
+			if ( mVertCount == 1 )
+			{
+				int r, g, b, a;
+				duRGBASplit( color, r, g, b, a );
+
+				RenderBuffer::AddPoint( mVertCache[ 0 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ), mDurationSecs );
+				mVertCount = 0;
+			}
+			break;
+		case DU_DRAW_LINES:
+			if ( mVertCount == 2 )
+			{
+				int r, g, b, a;
+				duRGBASplit( color, r, g, b, a );
+
+				RenderBuffer::AddLine( mVertCache[ 0 ], mVertCache[ 1 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ), mDurationSecs );
+				mVertCount = 0;
+			}
+			break;
+		case DU_DRAW_TRIS:
+			if ( mVertCount == 3 )
+			{
+				int r, g, b, a;
+				duRGBASplit( color, r, g, b, a );
+
+				RenderBuffer::AddTri( mVertCache[ 0 ], mVertCache[ 1 ], mVertCache[ 2 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ), mDurationSecs );
+				mVertCount = 0;
+			}
+			break;
+		case DU_DRAW_QUADS:
+			if ( mVertCount == 4 )
+			{
+				int r, g, b, a;
+				duRGBASplit( color, r, g, b, a );
+
+				RenderBuffer::AddQuad( mVertCache[ 0 ], mVertCache[ 1 ], mVertCache[ 2 ], mVertCache[ 3 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ), mDurationSecs );
+				mVertCount = 0;
+			}
+			break;
 	}
+}
 
-	virtual void depthMask( bool state )
-	{
-		// not supported
-	}
+void DebugDraw::vertex( const float* pos, unsigned int color, const float* uv )
+{
+	vertex( pos[ 0 ], pos[ 1 ], pos[ 2 ], color );
+}
 
-	virtual void texture( bool state )
-	{
-		// not supported
-	}
+void DebugDraw::vertex( const float x, const float y, const float z, unsigned int color, const float u, const float v )
+{
+	// uvs not supported
+	vertex( x, y, z, color );
+}
 
-	virtual void begin( duDebugDrawPrimitives prim, float size = 1.0f )
-	{
-		mActivePrim = prim;
-		mSizeHint = size;
-		mVertCount = 0;
-	}
-
-	virtual void vertex( const float* pos, unsigned int color )
-	{
-		vertex( pos[ 0 ], pos[ 1 ], pos[ 2 ], color );
-	}
-
-	virtual void vertex( const float x, const float y, const float z, unsigned int color )
-	{
-		mVertCache[ mVertCount++ ] = Vector3f( x, z, y );
-
-		switch ( mActivePrim )
-		{
-			case DU_DRAW_POINTS:
-				if ( mVertCount == 1 )
-				{
-					int r, g, b, a;
-					duRGBASplit( color, r, g, b, a );
-
-					RenderBuffer::AddPoint( mVertCache[ 0 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ) );
-					mVertCount = 0;
-				}
-				break;
-			case DU_DRAW_LINES:
-				if ( mVertCount == 2 )
-				{
-					int r, g, b, a;
-					duRGBASplit( color, r, g, b, a );
-
-					RenderBuffer::AddLine( mVertCache[ 0 ], mVertCache[ 1 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ) );
-					mVertCount = 0;
-				}
-				break;
-			case DU_DRAW_TRIS:
-				if ( mVertCount == 3 )
-				{
-					int r, g, b, a;
-					duRGBASplit( color, r, g, b, a );
-
-					RenderBuffer::AddTri( mVertCache[ 0 ], mVertCache[ 1 ], mVertCache[ 2 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ) );
-					mVertCount = 0;
-				}
-				break;
-			case DU_DRAW_QUADS:
-				if ( mVertCount == 4 )
-				{
-					int r, g, b, a;
-					duRGBASplit( color, r, g, b, a );
-
-					RenderBuffer::AddQuad( mVertCache[ 0 ], mVertCache[ 1 ], mVertCache[ 2 ], mVertCache[ 3 ], obColor( (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a ) );
-					mVertCount = 0;
-				}
-				break;
-		}
-	}
-
-	virtual void vertex( const float* pos, unsigned int color, const float* uv )
-	{
-		vertex( pos[ 0 ], pos[ 1 ], pos[ 2 ], color );
-	}
-
-	virtual void vertex( const float x, const float y, const float z, unsigned int color, const float u, const float v )
-	{
-		// uvs not supported
-		vertex( x, y, z, color );
-	}
-
-	virtual void end()
-	{
-		mVertCount = 0;
-	}
-private:
-	duDebugDrawPrimitives	mActivePrim;
-	float					mSizeHint;
-	Vector3f				mVertCache[ 4 ];
-	int						mVertCount;
-} ddraw;
+void DebugDraw::end()
+{
+	mVertCount = 0;
+}
 
 float dtRandom()
 {
@@ -300,56 +295,63 @@ void AsyncTileBuild::Run( PathPlannerRecast * nav, int num )
 	}
 }
 
+void PathPlannerRecast::CalculateBatchQuery( QueryRef& qry, dtNavMeshQuery*& nm )
+{
+	rmt_ScopedCPUSample( ResolveBatchQuery );
+
+	boost::lock_guard<boost::recursive_mutex> lock( mGuardAddTile );
+
+	if ( mNavMesh != nm->getAttachedNavMesh() )
+		nm->init( mNavMesh, 8192 );
+	
+	if ( !qry->mGoals.empty() )
+	{
+		std::vector<dtMultiPathGoal> goals( qry->mGoals.size() );
+
+		dtQueryFilter filter;
+		filter.setIncludeFlags( qry->mInclude );
+		filter.setExcludeFlags( qry->mExclude );
+
+		dtPolyRef srcPoly;
+		Vector3f srcPos = localToRc( qry->mSrc );
+		if ( dtStatusSucceed( nm->findNearestPoly( srcPos, PathPlannerRecast::sExtents, &filter, &srcPoly, srcPos ) ) && srcPoly )
+		{
+			for ( size_t i = 0; i < goals.size(); ++i )
+			{
+				dtVcopy( goals[ i ].mDest, localToRc( qry->mGoals[ i ].mDest ) );
+
+				if ( dtStatusFailed( nm->findNearestPoly( goals[ i ].mDest, PathPlannerRecast::sExtents, &filter, &goals[ i ].mDestPoly, goals[ i ].mDest ) ) )
+					goals[ i ].mDestPoly = 0;
+			}
+
+			nm->findMultiPath( srcPoly, srcPos, &filter, &goals[ 0 ], goals.size() );
+
+			// copy the results back
+			for ( size_t i = 0; i < goals.size(); ++i )
+			{
+				qry->mGoals[ i ].mNavCost = goals[ i ].mNavDist;
+				qry->mGoals[ i ].mThreatCost = goals[ i ].mThreat;
+			}
+		}
+	}
+
+	qry->mFinished = true;
+	qry->mExecuting = false;
+}
+
 void AsyncBatchQuery::Run( PathPlannerRecast * nav, int num )
 {
 	dtNavMeshQuery* nm = dtAllocNavMeshQuery();
-
-	// reusable scratch arrays
-	std::vector<dtMultiPathGoal> goals;
-
+	
 	rmt_SetCurrentThreadName( va( "AsyncBatchQuery(%d)", num ).c_str() );
 	while ( !boost::this_thread::interruption_requested() )
 	{
 		rmt_ScopedCPUSample( AsyncGetBatchQuery );
 
 		QueryRef qry;
-		if ( nav->mNavMesh && nav->AsyncGetBatchQuery( qry ) )
+		if ( nav->AsyncGetBatchQuery( qry ) )
 		{
-			rmt_ScopedCPUSample( ResolveBatchQuery );
-
-			if ( nav->mNavMesh != nm->getAttachedNavMesh() )
-				nm->init( nav->mNavMesh, 8192 );
-
-			goals.resize( qry->mGoals.size() );
-
-			dtQueryFilter filter;
-			filter.setIncludeFlags( qry->mInclude );
-			filter.setExcludeFlags( qry->mExclude );
-
-			dtPolyRef srcPoly;
-			Vector3f srcPos = localToRc( qry->mSrc );
-			if ( dtStatusSucceed( nm->findNearestPoly( srcPos, PathPlannerRecast::sExtents, &filter, &srcPoly, srcPos ) ) && srcPoly )
-			{
-				for ( size_t i = 0; i < goals.size(); ++i )
-				{
-					dtVcopy( goals[ i ].mDest, localToRc( qry->mGoals[ i ].mDest ) );
-
-					if ( dtStatusFailed( nm->findNearestPoly( goals[ i ].mDest, PathPlannerRecast::sExtents, &filter, &goals[ i ].mDestPoly, goals[ i ].mDest ) ) )
-						goals[ i ].mDestPoly = 0;
-				}
-
-				nm->findMultiPath( srcPoly, srcPos, &filter, &goals[ 0 ], goals.size() );
-
-				// copy the results back
-				for ( size_t i = 0; i < goals.size(); ++i )
-				{
-					qry->mGoals[ i ].mNavCost = goals[ i ].mNavDist;
-					qry->mGoals[ i ].mThreatCost = goals[ i ].mThreat;
-				}
-			}
-
-			qry->mFinished = true;
-			qry->mExecuting = false;
+			nav->CalculateBatchQuery( qry, nm );
 		}
 	}
 
@@ -508,6 +510,8 @@ void PathPlannerRecast::Update( System & system )
 	{
 		rmt_ScopedCPUSample( NavView );
 		
+		DebugDraw ddraw;
+
 		std::string aimInfo = "nav: ";
 
 		for ( int i = 0; i < mContext.getLogCount(); ++i )
@@ -553,6 +557,25 @@ void PathPlannerRecast::Update( System & system )
 						std::string str;
 						NavAreaFlagsEnum::NameForValueBitfield( (NavAreaFlags)aimAreaMask, str );
 						aimInfo += str;
+
+						if ( aimAreaMask & NAVFLAGS_ENTITYREF_MASK )
+						{
+							aimInfo += va( ", userref(" ).c_str();
+
+							navAreaMask ref = ( aimAreaMask & NAVFLAGS_ENTITYREF_MASK ) >> 32;
+
+							int refIndex = 0;
+							while ( ref != 0 )
+							{
+								if ( ref & 1 )
+									aimInfo += va( "%d, ", refIndex ).c_str();
+
+								++refIndex;
+								ref = ref >> 1;
+							}
+							
+							aimInfo += ")";
+						}
 					}
 				}
 			}
@@ -592,7 +615,7 @@ void PathPlannerRecast::Update( System & system )
 
 			static const float renderRadius = 1.0f;
 
-			static bool renderMdl = true;
+			static bool renderMdl = false;
 			if ( renderMdl )
 				aimHit.mHitNode->RenderInRadius( aimHit.mHitPos, renderRadius, COLOR::LIGHT_GREY.fade( 100 ) );
 			aimHit.mHitNode->RenderAxis();
@@ -603,7 +626,7 @@ void PathPlannerRecast::Update( System & system )
 			size_t materialIndex = 0;
 			aimHit.mHitNode->mModel->GetTriangle( aimHit.mHitTriangle, aimHit.mHitNode->mTransform, v, activeContentFlags, activeSurfaceFlags, materialIndex );
 
-			RenderBuffer::AddTri( v[0], v[1], v[2], ( aimHit.mHitNode->mEnabled ? COLOR::GREEN.fade( 100 ) : COLOR::RED.fade( 64 ) ) );
+			//RenderBuffer::AddTri( v[0], v[1], v[2], ( aimHit.mHitNode->mEnabled ? COLOR::GREEN.fade( 100 ) : COLOR::RED.fade( 64 ) ) );
 			
 			std::string nodeInfo, modelState, contentStr = "cnt: ", surfaceStr = "srf: ";
 			if ( aimHit.mHitNode->mSubModel >= 0 )
@@ -693,16 +716,26 @@ void PathPlannerRecast::SendWorldModel()
 				msgUnion.set_timestamp( System::mInstance->mAnalytics->GetTimeStamp() );
 
 				Analytics::SystemModelData* mdlData = msgUnion.mutable_systemmodeldata();
-				mdlData->set_compressiontype( Analytics::Compression_None );
-
-				// compress the tile data
-				/*const size_t bufferSize = cachedFileData.size() + (size_t)( cachedFileData.size() * 0.1 );
-				boost::shared_array<char> compressBuffer( new char[ bufferSize ] );
-				const int sizeCompressed = fastlz_compress_level( 2, cachedFileData.c_str(), cachedFileData.size(), compressBuffer.get() );
-				*/
-
 				mdlData->set_modelname( "world" );
-				mdlData->set_modelbytes( cachedFileData );
+				mdlData->set_compressiontype( Analytics::Compression_FastLZ );
+				switch ( mdlData->compressiontype() )
+				{
+					case Analytics::Compression_FastLZ:
+					{
+						// compress the tile data
+						const size_t bufferSize = cachedFileData.size() + (size_t)( cachedFileData.size() * 0.1 );
+						boost::shared_array<char> compressBuffer( new char[ bufferSize ] );
+						const int sizeCompressed = fastlz_compress_level( 2, cachedFileData.c_str(), cachedFileData.size(), compressBuffer.get() );
+						mdlData->mutable_modelbytes()->assign( compressBuffer.get(), sizeCompressed );
+						mdlData->set_modelbytesuncompressed( (uint32_t)cachedFileData.size() );
+						break;
+					}
+					default:
+						// no special processing
+						mdlData->set_modelbytes( cachedFileData );
+						break;
+				}
+				
 				if ( msgUnion.IsInitialized() )
 					System::mInstance->mAnalytics->AddEvent( msgUnion );
 			}
@@ -771,18 +804,18 @@ void PathPlannerRecast::SendTileModel( int tx, int ty )
 					}
 				}
 			}
-
+			
 			if ( vertices.empty() )
 				return;
 
-			const char* name = va( "tile_%dx%d", tx, ty ).c_str();
-
+			const char* name = va( "navmesh/tile_%dx%d", tx, ty ).c_str();
+			
 			modeldata::Scene ioScene;
 			ioScene.set_name( name );
 
 			modeldata::Mesh * mesh = ioScene.add_meshes();
 			mesh->set_name( name );
-
+			
 			modeldata::Node * node = ioScene.mutable_rootnode();
 			node->set_meshname( mesh->name() );
 
@@ -803,16 +836,26 @@ void PathPlannerRecast::SendTileModel( int tx, int ty )
 				msgUnion.set_timestamp( System::mInstance->mAnalytics->GetTimeStamp() );
 
 				Analytics::SystemModelData* mdlData = msgUnion.mutable_systemmodeldata();
-				mdlData->set_compressiontype( Analytics::Compression_None );
+				mdlData->set_modelname( name );
+				mdlData->set_compressiontype( Analytics::Compression_FastLZ );
+				switch ( mdlData->compressiontype() )
+				{
+					case Analytics::Compression_FastLZ:
+					{
+						// compress the tile data
+						const size_t bufferSize = cachedFileData.size() + (size_t)( cachedFileData.size() * 0.1 );
+						boost::shared_array<char> compressBuffer( new char[ bufferSize ] );
+						const int sizeCompressed = fastlz_compress_level( 2, cachedFileData.c_str(), cachedFileData.size(), compressBuffer.get() );
+						mdlData->mutable_modelbytes()->assign( compressBuffer.get(), sizeCompressed );
+						mdlData->set_modelbytesuncompressed( (uint32_t)cachedFileData.size() );
+						break;
+					}
+					default:
+						// no special processing
+						mdlData->set_modelbytes( cachedFileData );
+						break;
+				}
 
-				// compress the tile data
-				/*const size_t bufferSize = cachedFileData.size() + (size_t)( cachedFileData.size() * 0.1 );
-				boost::shared_array<char> compressBuffer( new char[ bufferSize ] );
-				const int sizeCompressed = fastlz_compress_level( 2, cachedFileData.c_str(), cachedFileData.size(), compressBuffer.get() );
-				*/
-
-				mdlData->set_modelname( va( "tile_%dx%d", tx, ty ).c_str() );
-				mdlData->set_modelbytes( cachedFileData );
 				if ( msgUnion.IsInitialized() )
 					System::mInstance->mAnalytics->AddEvent( msgUnion );
 			}
@@ -1525,39 +1568,13 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 		}
 	}
 
+	std::vector<dtUserRef> userRefs;
+	userRefs.reserve( gatherData.mConvexShapes.size() );
+
 	// use any non solid geometry for marking additional regions
 	{
 		rmt_ScopedCPUSample( MarkSpecialRegions );
 
-		//for ( size_t i = 0; i < gatherData.mTriangles.size(); ++i )
-		//{
-		//	const CollisionTriangle& tri = gatherData.mTriangles[ i ];
-		//	
-		//	// only proceed with special areas
-		//	if ( tri.mNavFlags & NAVFLAGS_WALK )
-		//		continue;
-
-		//	Vector3f verts[ 3 ];
-		//	verts[ 0 ] = localToRc( tri.mTri.V[ 0 ] );
-		//	verts[ 1 ] = localToRc( tri.mTri.V[ 1 ] );
-		//	verts[ 2 ] = localToRc( tri.mTri.V[ 2 ] );
-
-		//	float hmin = FLT_MAX;
-		//	float hmax = -FLT_MAX;
-
-		//	for ( int v = 0; v < 3; ++v )
-		//	{
-		//		hmin = rcMin( hmin, verts[ v ].Y() );
-		//		hmax = rcMax( hmax, verts[ v ].Y() );
-		//	}
-
-		//	static float maxAdj = 4.0f;
-
-		//	hmin -= mSettings.AgentHeightStand;
-		//	hmax += maxAdj;
-		//	
-		//	rcMarkConvexPolyArea( &mContext, (float*)verts, 3, hmin, hmax, tri.mNavFlags, *rc.chf );
-		//}
 		std::vector<Vector3f> rcVectors( 32 );
 
 		for ( size_t i = 0; i < gatherData.mConvexShapes.size(); ++i )
@@ -1568,6 +1585,17 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 			if ( convex.mNavFlags & NAVFLAGS_WALK )
 				continue;
 			
+			navAreaMask refBit = NAVFLAGS_NONE;
+
+			if ( convex.mEntity.IsValid() )
+			{
+				refBit = NAVFLAGS_ENTITYREF << userRefs.size();
+
+				dtUserRef ur;
+				ur.id = convex.mEntity.AsInt();
+				userRefs.push_back( ur );
+			}
+
 			// convert to recast vectors
 			rcVectors.resize( 0 );			
 			for ( size_t i = convex.mVertStart; i < convex.mVertEnd; ++i )
@@ -1579,8 +1607,8 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 			
 			static const int MaxVerts = 32;
 			Vector3f convexVerts[ MaxVerts ];
-			const int nv = rcOffsetPoly( (float*)&rcVectors[ 0 ], rcVectors.size(), mSettings.AgentRadius, (float*)convexVerts, MaxVerts );
-			rcMarkConvexPolyArea( &mContext, (float*)convexVerts, nv, hmin, hmax, convex.mNavFlags, *rc.chf );
+			const int nv = rcOffsetPoly( (float*)&rcVectors[ 0 ], rcVectors.size(), mSettings.AgentRadius * 1.5f, (float*)convexVerts, MaxVerts );
+			rcMarkConvexPolyArea( &mContext, (float*)convexVerts, nv, hmin, hmax, convex.mNavFlags | refBit, *rc.chf );
 		}
 	}
 	
@@ -1769,6 +1797,11 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 			params.offMeshConAreaFlags = &offMeshConFlags[ 0 ];
 			params.offMeshConUserID = &offMeshUserIds[ 0 ];
 			params.offMeshConCount = tileLinks.size();
+		}
+		if ( userRefs.size() > 0 )
+		{
+			params.userRefs = &userRefs[ 0 ];
+			params.userRefNum = (int)userRefs.size();
 		}
 		params.walkableHeight = mSettings.AgentHeightStand;
 		params.walkableRadius = mSettings.AgentRadius;
@@ -1988,7 +2021,8 @@ size_t PathPlannerRecast::FindBorderEdges( NavFlags inc, NavFlags exc, NavFlags 
 		{
 			const dtMeshTile* tile = 0;
 			const dtPoly* poly = 0;
-			mNavMesh->getTileAndPolyByRefUnsafe( results[ i ], &tile, &poly );
+			if ( dtStatusFailed( mNavMesh->getTileAndPolyByRef( results[ i ], &tile, &poly ) ) )
+				continue;
 
 			// skip polygons that are border masked, only neighboring polys are valid for border types
 			if ( ( poly->areaMask & border ) != 0 )

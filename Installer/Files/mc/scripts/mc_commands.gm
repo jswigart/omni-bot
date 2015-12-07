@@ -116,7 +116,7 @@ Commands["echo_module"] =
 			foreach ( modName and id in MODULE )
 			{
 				bot.GetModuleStats(id, stats);
-				print( "Module", modName, "lvl", stats.Lvl, "/", stats.MaxLvl, "Upgrade Cost", stats.UpgradeCost );
+				print( "Module", modName, "lvl", stats.Lvl, "/", stats.MaxLevel, "Upgrade Cost", stats.UpgradeCost );
 			}
 		}
 	},
@@ -141,7 +141,7 @@ Commands["echo_upgrade"] =
 			foreach ( upgradeName and id in UPGRADE )
 			{
 				bot.GetUpgradeInfo(id, stats);
-				print( "Upgrade", upgradeName, "lvl", stats.Lvl, "/", stats.MaxLvl, "Upgrade Cost", stats.UpgradeCost );
+				print( "Upgrade", upgradeName, "lvl", stats.Lvl, "/", stats.MaxLevel, "Upgrade Cost", stats.UpgradeCost );
 			}
 		}
 	},

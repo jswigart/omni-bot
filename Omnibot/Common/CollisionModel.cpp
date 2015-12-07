@@ -588,6 +588,7 @@ void CollisionModel::GatherTriangles( const GatherParms & parms, const ModelTran
 			if ( ( tri.mSurface & parms.mIgnoreSurfaces ) != 0 )
 				continue;
 			
+			tri.mEntity = parms.mEntity;
 			dataOut.mTriangles.push_back( tri );
 		}
 	}
@@ -620,6 +621,7 @@ void CollisionModel::GatherTriangles( const GatherParms & parms, const ModelTran
 			convex.mContents = mBoundsContents;
 			convex.mSurface = mBoundsSurface;
 			convex.mVertStart = dataOut.mConvexVertices.size();
+			convex.mEntity = parms.mEntity;
 
 			static const int MaxIndices = 32;
 			int convexIndices[ MaxIndices ] = {};
@@ -631,7 +633,6 @@ void CollisionModel::GatherTriangles( const GatherParms & parms, const ModelTran
 					dataOut.mConvexVertices.push_back( vertex[ convexIndices[ i ] ] );
 				}
 				convex.mVertEnd = dataOut.mConvexVertices.size();
-
 				dataOut.mConvexShapes.push_back( convex );
 			}
 			return;
@@ -668,6 +669,7 @@ void CollisionModel::GatherTriangles( const GatherParms & parms, const ModelTran
 				tri.mTri.V[ 2 ] = vertex[ indices[ i + 2 ] ];
 				tri.mContents = mBoundsContents;
 				tri.mSurface = mBoundsSurface;
+				tri.mEntity = parms.mEntity;
 				dataOut.mTriangles.push_back( tri );
 			}
 		}
@@ -1076,6 +1078,7 @@ void Node::GatherTriangles( const GatherParms & parms, const Box3f & gatherObb, 
 
 		GatherParms nodeParms = parms;
 		nodeParms.mMode = mShapeMode;
+		nodeParms.mEntity = mEntity;
 		mModel->GatherTriangles( nodeParms, mTransform, gatherObb, baseTri, dataOut );
 	}
 
@@ -1107,6 +1110,7 @@ void Node::GatherTriangles( const GatherParms & parms, const Sphere3f & gatherSp
 
 		GatherParms nodeParms = parms;
 		nodeParms.mMode = mShapeMode;
+		nodeParms.mEntity = mEntity;
 		mModel->GatherTriangles( nodeParms, mTransform, gatherSphere, baseTri, dataOut );
 	}
 

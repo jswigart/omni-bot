@@ -2,17 +2,20 @@
 
 // These parameters are required
 this.Name = "Minion";			// The name of the goal.
-this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.Parent = "HighLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.SkipGetPriorityWhenActive = true;
+this.AutoAdd = true;
+this.Debug = true;
 
 // List of minion modules, in order of usefulness
 this.MinionModules =
 {
-	MODULE.MINION_VORTIGAUNT,
-	MODULE.MINION_ANTLION_WORKER,
-	MODULE.MINION_ANTLION,
-	MODULE.MINION_FASTZOMBIE,
-	MODULE.MINION_ZOMBIE,
-	MODULE.MINION_FASTHEADCRAB,
+	MODULE.VORTIGAUNT,
+	MODULE.ANTLION_WORKER,
+	MODULE.ANTLION,
+	MODULE.FASTZOMBIE,
+	MODULE.ZOMBIE,
+	MODULE.FASTHEADCRAB,
 };
 
 // number of slots each minion takes
@@ -37,7 +40,104 @@ this.MinionButton =
 	BTN.MINION_FASTHEADCRAB,
 };
 
-this.LimitToTargetClass(CLASS.ANYPLAYER);
+this.SpawnMinion = function()
+{
+	slotsFree = this.Bot.MinionsMax - this.Bot.Minions;
+	if(slotsFree > 0)
+	{
+		foreach(x and id in this.MinionModules)
+		{
+			if (slotsFree >= this.MinionSlots[id])
+			{
+				this.Bot.GetModuleStats(id, this.ModuleStats);
+				
+				// if we have the skill, we can spawn the minions
+				if (this.ModuleStats.Level > 0)
+				{
+					this.Bot.PressButton(this.MinionButton[x]);
+					
+					if(this.Debug)
+					{
+						print(this.Bot.Name, "Spawning Minion ", Util.GetTableKey(MODULE,id));
+					}
+					break;
+				}
+			}
+		}
+	}
+};
+
+this.SpawnManhack = function()
+{
+	slotsFree = this.Bot.ManhackMax - this.Bot.Manhack;
+	if(slotsFree > 0)
+	{
+		this.Bot.PressButton( BTN.MANHACK );
+		
+		if(this.Debug)
+		{
+			print(this.Bot.Name, "Spawning Manhack");
+		}
+	}
+};
+
+this.SpawnCrow = function()
+{
+	slotsFree = this.Bot.CrowsMax - this.Bot.Crows;
+	if(slotsFree > 0)
+	{
+		this.Bot.PressButton( BTN.CROW );
+		
+		if(this.Debug)
+		{
+			print(this.Bot.Name, "Spawning Crow");
+		}
+	}
+};
+
+this.SpawnMagmine = function()
+{
+	slotsFree = this.Bot.MagmineMax - this.Bot.Magmine;
+	if(slotsFree > 0)
+	{
+		this.Bot.PressButton( BTN.MAGMINE );
+		
+		if(this.Debug)
+		{
+			print(this.Bot.Name, "Spawning Magmine");
+		}
+	}
+};
+
+this.SpawnLasers = function()
+{
+	slotsFree = this.Bot.LasersMax - this.Bot.Lasers;
+	if(slotsFree > 0)
+	{
+		// todo: placement logic
+		//this.Bot.PressButton( BTN.LASER );
+		
+		//if(this.Debug)
+		//{
+		//	print(this.Bot.Name, "Spawning Lasers");
+		//}
+	}
+};
+
+this.SpawnTurret = function()
+{
+	slotsFree = this.Bot.TurretsMax - this.Bot.Turrets;
+	if(slotsFree > 0)
+	{
+		// todo: placement logic
+		//this.Bot.PressButton( BTN.TURRET );
+		
+		//if(this.Debug)
+		//{
+		//	print(this.Bot.Name, "Spawning Turret");
+		//}
+	}
+};
 
 this.Initialize = function()
 {
@@ -46,40 +146,34 @@ this.Initialize = function()
 };
 
 this.GetPriority = function()
-{	
-	this.Priority = 1.0;
-	sleep(10);
+{
+	while( true )
+	{
+		this.SpawnMinion();
+		sleep(1);
+		this.SpawnManhack();
+		sleep(1);
+		this.SpawnCrow();
+		sleep(1);
+		this.SpawnMagmine();
+		sleep(1);
+		this.SpawnLasers();
+		sleep(1);
+		this.SpawnTurret();
+		sleep(5);
+	}
+};
+
+this.Enter = function()
+{
+};
+
+this.Exit = function()
+{
+	this.ReleaseAimRequest();
 };
 
 this.Update = function()
 {
-	while(true)
-	{		
-		minionSlotsFree = this.Bot.MinionsMax - this.Bot.Minions;
-		if(minionSlotsFree > 0)
-		{
-			foreach(x and id in this.MinionModules)
-			{
-				if (minionSlotsFree >= this.MinionSlots[id])
-				{
-					this.Bot.GetModuleStats(id, this.ModuleStats);
-					
-					// if we have the skill, we can spawn the minions
-					if (this.ModuleStats.Lvl > 0)
-					{
-						this.Bot.PressButton(this.MinionButton[x]);
-						
-						if(this.Debug)
-						{
-							print(this.Bot.Name,
-								"Spawning",
-								Util.GetTableKey(MODULE,id));
-						}
-						break;
-					}
-				}
-			}
-		}
-		sleep(1);
-	}
+	
 };

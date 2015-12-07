@@ -166,7 +166,7 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 	Options::SetValue( "Log", "LogWarnings", "true", false );
 	Options::SetValue( "Log", "LogErrors", "true", false );
 	Options::SetValue( "Log", "LogCriticalErrors", "true", false );
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	// logging options
 	g_Logger.LogMask() = 0;
@@ -248,7 +248,7 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 		analyticsKeys.mVersionKey += ":DBG";
 #endif
 		mBotSystem.mAnalytics = new GameAnalytics( analyticsKeys, this );
-		
+
 		bool dbEnabled = false, remoteEnabled = false;;
 		if ( Options::GetValue( "Analytics", "SendToDatabase", dbEnabled ) )
 			mBotSystem.mAnalytics->CreateDatabase( "analytics.db" );
@@ -287,7 +287,7 @@ void IGameManager::UpdateGame()
 		// if any threads want to run outside of the update scope of the 
 		// bot, they can attempt to grab this guard
 		//boost::lock_guard<boost::recursive_mutex> lock( gGlobalUpdate );
-		
+
 		mBotSystem.mGame->UpdateTime();
 		mBotSystem.mScript->Update();
 		mBotSystem.mNavigation->Update( mBotSystem );
@@ -300,7 +300,7 @@ void IGameManager::UpdateGame()
 	if ( mBotSystem.mAnalytics != NULL )
 	{
 		rmt_ScopedCPUSample( GameAnalytics );
-		
+
 		if ( mBotSystem.mAnalytics->GetPublisher() )
 		{
 			rmt_ScopedCPUSample( Poll );
@@ -308,7 +308,7 @@ void IGameManager::UpdateGame()
 			Analytics::MessageUnion msg;
 			while ( mBotSystem.mAnalytics->Poll( msg ) )
 			{
-				
+
 			}
 		}
 
@@ -317,7 +317,8 @@ void IGameManager::UpdateGame()
 		static int nextSendTime = 0;
 		if ( nextSendTime < IGame::GetTime() )
 		{
-			nextSendTime = IGame::GetTime() + 5000;
+			static int delay = 5000;
+			nextSendTime = IGame::GetTime() + delay;
 
 			Analytics::MessageUnion msgUnion;
 			msgUnion.set_timestamp( mBotSystem.mAnalytics->GetTimeStamp() );
@@ -334,6 +335,8 @@ void IGameManager::UpdateGame()
 
 				Analytics::GameEntityList * lst = msgUnion.mutable_gameentitylist();
 				Analytics::GameEntityInfo * ent = lst->add_entities();
+				ent->set_name( EngineFuncs::EntityName( it.GetEnt().mEntity ) );
+
 				SMART_FIELD_SET( ent, entityid, it.GetEnt().mEntity.AsInt() );
 				SMART_FIELD_SET( ent, groupid, it.GetEnt().mEntInfo.mGroup );
 				SMART_FIELD_SET( ent, classid, it.GetEnt().mEntInfo.mClassId );
@@ -341,15 +344,15 @@ void IGameManager::UpdateGame()
 				SMART_FIELD_SET( ent, healthmax, it.GetEnt().mEntInfo.mHealth.mMax );
 				SMART_FIELD_SET( ent, armor, it.GetEnt().mEntInfo.mArmor.mNum );
 				SMART_FIELD_SET( ent, armormax, it.GetEnt().mEntInfo.mArmor.mMax );
-				for ( int i = 0; i < EntityInfo::NUM_AMMO_TYPES; ++i )
+				/*for ( int i = 0; i < EntityInfo::NUM_AMMO_TYPES; ++i )
 				{
-					if ( it.GetEnt().mEntInfo.mAmmo[ i ].mWeaponId != 0 )
-					{
-						Analytics::GameEntityInfo_Ammo* ammo = ent->add_ammo();
-						ammo->set_ammotype( it.GetEnt().mEntInfo.mAmmo[ i ].mWeaponId );
-						SMART_FIELD_SET( ammo, ammocount, it.GetEnt().mEntInfo.mAmmo[ i ].mNum );
-					}
+				if ( it.GetEnt().mEntInfo.mAmmo[ i ].mWeaponId != 0 )
+				{
+				Analytics::GameEntityInfo_Ammo* ammo = ent->add_ammo();
+				ammo->set_ammotype( it.GetEnt().mEntInfo.mAmmo[ i ].mWeaponId );
+				SMART_FIELD_SET( ammo, ammocount, it.GetEnt().mEntInfo.mAmmo[ i ].mNum );
 				}
+				}*/
 				SMART_FIELD_SET( ent, positionx, entPos.X() );
 				SMART_FIELD_SET( ent, positiony, entPos.Y() );
 				SMART_FIELD_SET( ent, positionz, entPos.Z() );
@@ -357,8 +360,8 @@ void IGameManager::UpdateGame()
 				SMART_FIELD_SET( ent, pitch, pitch );
 				SMART_FIELD_SET( ent, roll, roll );
 
-				if ( lst->entities_size() > 10 )
-					break;
+				/*if ( lst->entities_size() > 10 )
+					break;*/
 			}
 
 			if ( msgUnion.IsInitialized() )
@@ -406,7 +409,7 @@ void IGameManager::Shutdown()
 
 	mBotSystem.mTacticalManager->Shutdown();
 	OB_DELETE( mBotSystem.mTacticalManager );
-	
+
 	mBotSystem.mTriggerManager = NULL;
 	TriggerManager::DeleteInstance();
 
@@ -459,7 +462,7 @@ void IGameManager::cmdVersion( const StringVector & args )
 #ifdef _DEBUG
 		EngineFuncs::ConsoleMessage( va( "Omni-Bot DEBUG Build : %s %s", __DATE__, __TIME__ ).c_str() );
 #else
-		EngineFuncs::ConsoleMessage(va("Omni-Bot : %s %s", __DATE__, __TIME__));
+		EngineFuncs::ConsoleMessage( va( "Omni-Bot : %s %s", __DATE__, __TIME__ ).c_str() );
 #endif
 		EngineFuncs::ConsoleMessage( va( "Version : %s", mBotSystem.mGame->GetGameVars().mVersionString.c_str() ).c_str() );
 		EngineFuncs::ConsoleMessage( va( "Interface # : %d", mBotSystem.mGame->GetGameVars().mGameVersion ).c_str() );
@@ -480,45 +483,45 @@ void IGameManager::cmdNavSystem( const StringVector & args )
 	/*if(args[1] == "waypoint")
 		navId = NAVID_WAYPOINT;
 		else*/
-		if ( args[ 1 ] == "flood" )
-			navId = NAVID_FLOODFILL;
-		else if ( args[ 1 ] == "recast" )
-			navId = NAVID_RECAST;
-		else
+	if ( args[ 1 ] == "flood" )
+		navId = NAVID_FLOODFILL;
+	else if ( args[ 1 ] == "recast" )
+		navId = NAVID_RECAST;
+	else
+	{
+		PRINT_USAGE( strUsage );
+		return;
+	}
+
+	if ( !mBotSystem.mNavigation || mBotSystem.mNavigation->GetPlannerType() != navId )
+	{
+		mBotSystem.mNavigation->Shutdown();
+		OB_DELETE( mBotSystem.mNavigation );
+
+		switch ( navId )
 		{
-			PRINT_USAGE( strUsage );
-			return;
+			/*case NAVID_WAYPOINT:
+			mBotSystem.mNavigation = new PathPlannerWaypoint;
+			break;*/
+			case NAVID_FLOODFILL:
+				//mBotSystem.mNavigation = new PathPlannerFloodFill;
+				break;
+			case NAVID_RECAST:
+				mBotSystem.mNavigation = new PathPlannerRecast;
+				break;
+			default:
+				break;
+		};
+
+		if ( mBotSystem.mNavigation->Init( mBotSystem ) )
+		{
+			// Allow the game to set up its navigation flags.
+			mBotSystem.mNavigation->RegisterScriptFunctions( mBotSystem.mScript->GetMachine() );
+			mBotSystem.mNavigation->Load();
 		}
 
-		if ( !mBotSystem.mNavigation || mBotSystem.mNavigation->GetPlannerType() != navId )
-		{
-			mBotSystem.mNavigation->Shutdown();
-			OB_DELETE( mBotSystem.mNavigation );
-
-			switch ( navId )
-			{
-				/*case NAVID_WAYPOINT:
-				mBotSystem.mNavigation = new PathPlannerWaypoint;
-				break;*/
-				case NAVID_FLOODFILL:
-					//mBotSystem.mNavigation = new PathPlannerFloodFill;
-					break;
-				case NAVID_RECAST:
-					mBotSystem.mNavigation = new PathPlannerRecast;
-					break;
-				default:
-					break;
-			};
-
-			if ( mBotSystem.mNavigation->Init( mBotSystem ) )
-			{
-				// Allow the game to set up its navigation flags.
-				mBotSystem.mNavigation->RegisterScriptFunctions( mBotSystem.mScript->GetMachine() );
-				mBotSystem.mNavigation->Load();
-			}
-
-			EngineFuncs::ConsoleMessage( "Navigation System created." );
-		}
+		EngineFuncs::ConsoleMessage( "Navigation System created." );
+	}
 }
 
 void IGameManager::cmdPrintAllFiles( const StringVector & args )

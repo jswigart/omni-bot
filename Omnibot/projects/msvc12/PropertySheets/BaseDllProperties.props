@@ -9,7 +9,7 @@
       <AdditionalIncludeDirectories>$(BOOST);$(ZEROMQ)\include;..\..\..\common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Common.lib;comctl32.lib;winmm.lib;ws2_32.lib;glu32.lib;Wldap32.lib;libzmq.lib;libsodium.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;winmm.lib;ws2_32.lib;glu32.lib;Wldap32.lib;libzmq.lib;libsodium.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(BOOST)\lib32-msvc-12.0;$(ZEROMQ)\bin\$(PlatformName)\$(ConfigurationName)\v120\static;$(LIBSODIUM)\bin\$(PlatformName)\$(ConfigurationName)\v120\static;..\build\Common\$(Configuration);..\..\..\dependencies\VisualLeakDetector\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>

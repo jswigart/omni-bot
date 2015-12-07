@@ -199,15 +199,15 @@ void MC_Game::InitScriptBotButtons( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "LASER", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_LASER ) );
 	_table->Set( _machine, "MAGMINE", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_MAGNETIC_MINE ) );
 	_table->Set( _machine, "TURRET", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_TURRET ) );
-
+	_table->Set( _machine, "MANHACK", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_MANHACK ) );
 	_table->Set( _machine, "CROW", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_CROW ) );
-	_table->Set( _machine, "MINION_FASTHEADCRAB", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_FAST_HEADCRAB ) );
-	_table->Set( _machine, "MINION_ZOMBIE", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_ZOMBIE ) );
-	_table->Set( _machine, "MINION_FASTZOMBIE", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_FAST_ZOMBIE ) );
-	_table->Set( _machine, "MINION_ANTLION", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_ANTLION ) );
-	_table->Set( _machine, "MINION_ANTLION_WORKER", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_ANTLION_WORKER ) );
-	_table->Set( _machine, "MINION_VORTIGAUNT", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_VORTIGAUNT ) );
-	_table->Set( _machine, "MINION_MANHACK", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_MANHACK ) );
+
+	_table->Set( _machine, "FASTHEADCRAB", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_FAST_HEADCRAB ) );
+	_table->Set( _machine, "ZOMBIE", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_ZOMBIE ) );
+	_table->Set( _machine, "FASTZOMBIE", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_FAST_ZOMBIE ) );
+	_table->Set( _machine, "ANTLION", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_ANTLION ) );
+	_table->Set( _machine, "ANTLION_WORKER", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_ANTLION_WORKER ) );
+	_table->Set( _machine, "VORTIGAUNT", gmVariable( MC_BOT_BUTTON_MODULE_SPAWN_VORTIGAUNT ) );
 }
 
 void MC_Game::InitScriptTraceMasks( gmMachine *_machine, gmTableObject *_table )

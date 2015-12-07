@@ -1927,28 +1927,30 @@ void IGame::LoadGoalScripts( bool _clearold )
 		pMachine->GetGlobals()->Set( pMachine, "ScriptGoals", gmVariable( pScriptGoalTable ) );
 	}
 
-	DirectoryList goalFiles;
-	FileSystem::FindAllFiles( "global_scripts/goals", goalFiles, "goal_.*.gm" );
-	FileSystem::FindAllFiles( "scripts/goals", goalFiles, "goal_.*.gm" );
+	DirectoryList goalScripts;
+	FileSystem::FindAllFiles( "global_scripts/goals", goalScripts, "goal_.*.gm" );
+	FileSystem::FindAllFiles( "scripts/goals", goalScripts, "goal_.*.gm" );
 
-	LOG( "Loading " << goalFiles.size() << " goal scripts from: scripts/goals" );
-	DirectoryList::const_iterator cIt = goalFiles.begin(), cItEnd = goalFiles.end();
+	LOG( "Loading " << goalScripts.size() << " goal scripts from: scripts/goals" );
+	DirectoryList::const_iterator cIt = goalScripts.begin(), cItEnd = goalScripts.end();
 	for ( ; cIt != cItEnd; ++cIt )
 	{
 		ScriptGoalPtr ptr( new AiState::ScriptGoal( "" ) );
 
 		int iThreadId;
-		gmUserObject *pUserObj = ptr->GetScriptObject( pMachine );
-		gmVariable varThis( pUserObj );
+		gmUserObject *userObj = ptr->GetScriptObject( pMachine );
+		gmVariable varThis( userObj );
 
 		filePath script( ( *cIt ).string().c_str() );
 		LOG( "Loading Goal Definition: " << script );
 		if ( ScriptManager::GetInstance()->ExecuteFile( script, iThreadId, &varThis ) && ptr->GetName()[ 0 ] )
 		{
+			ptr->SetSourceFile( script.c_str() );
+
 			gScriptGoalList.push_back( ptr );
 
 			// add to global table.
-			pScriptGoalTable->Set( pMachine, ptr->GetName().c_str(), gmVariable( pUserObj ) );
+			pScriptGoalTable->Set( pMachine, ptr->GetName().c_str(), gmVariable( userObj ) );
 		}
 		else
 		{

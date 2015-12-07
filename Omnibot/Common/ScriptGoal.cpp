@@ -80,7 +80,7 @@ namespace AiState
 	{
 		SetScriptGoal( true );
 	}
-	
+
 	ScriptGoal::~ScriptGoal()
 	{
 		if ( mScriptObject )
@@ -104,6 +104,21 @@ namespace AiState
 		{
 		RenderBuffer::AddLine(GetClient()->GetEyePosition(),.mMapGoal->GetPosition(),COLOR::CYAN,5.f);
 		}*/
+	}
+
+	const std::string& ScriptGoal::GetSourceFile() const
+	{
+		return mSourceFile;
+	}
+
+	void ScriptGoal::SetSourceFile( const std::string& filePath )
+	{
+		mSourceFile = filePath.c_str();
+	}
+
+	void ScriptGoal::HotReloadScript()
+	{
+		
 	}
 
 	ScriptGoal *ScriptGoal::Clone()
@@ -214,9 +229,9 @@ namespace AiState
 		mMinRadius = options.Radius;
 
 		SetSourceThread( options.ThreadId );
-		FINDSTATE( fp, FollowPath, GetRootState() );
-		if ( fp )
-			return fp->Goto( this, _pos, options.Radius, options.Mode );
+		FINDSTATE( nav, Navigator, GetRootState() );
+		if ( nav )
+			return nav->Goto( this, _pos, options.Radius, options.Mode );
 		return false;
 	}
 
@@ -226,17 +241,17 @@ namespace AiState
 		mMinRadius = options.Radius;
 
 		SetSourceThread( options.ThreadId );
-		FINDSTATE( fp, FollowPath, GetRootState() );
-		if ( fp )
+		FINDSTATE( nav, Navigator, GetRootState() );
+		if ( nav )
 		{
-			return fp->GotoRandomPt( this );
+			return nav->GotoRandomPt( this );
 		}
 		return false;
 	}
 
 	void ScriptGoal::Stop()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Stop() );
+		FINDSTATEIF( Navigator, GetRootState(), Stop() );
 	}
 
 	bool ScriptGoal::RouteTo( MapGoalPtr mg, const MoveOptions &options )
@@ -247,9 +262,9 @@ namespace AiState
 			mMinRadius = options.Radius;
 
 			SetSourceThread( options.ThreadId );
-			FINDSTATE( fp, FollowPath, GetRootState() );
-			if ( fp )
-				return fp->Goto( this, options.Mode, mSkipLastWp );
+			FINDSTATE( nav, Navigator, GetRootState() );
+			if ( nav )
+				return nav->Goto( this, options.Mode );
 		}
 		return false;
 	}
@@ -552,7 +567,7 @@ namespace AiState
 
 		if ( GetParent() && GetParent()->GetNameHash() == 0xd9c27485 /* HighLevel */ )
 		{
-			FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
+			FINDSTATEIF( Navigator, GetRootState(), Stop( true ) );
 		}
 	}
 

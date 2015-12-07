@@ -345,7 +345,7 @@ void protobuf_AddDesc_recast_2eproto() {
     "\010entryPos\030\001 \002(\0132\016.RecastIO.Vec3\022\037\n\007exitP"
     "os\030\002 \002(\0132\016.RecastIO.Vec3\022 \n\010vertices\030\003 \003"
     "(\0132\016.RecastIO.Vec3\022\016\n\006radius\030\004 \002(\002\022\021\n\tar"
-    "eaflags\030\005 \002(\r\022\034\n\rbiDirectional\030\006 \001(\010:\005fa"
+    "eaflags\030\005 \002(\004\022\034\n\rbiDirectional\030\006 \001(\010:\005fa"
     "lse\"@\n\010Material\022\014\n\004name\030\001 \002(\t\022\020\n\010content"
     "s\030\002 \001(\r\022\024\n\014surfaceflags\030\003 \001(\r\"\233\001\n\005Model\022"
     "\014\n\004name\030\001 \002(\t\022\020\n\010modelcrc\030\002 \002(\r\022\023\n\013numMe"
@@ -357,7 +357,7 @@ void protobuf_AddDesc_recast_2eproto() {
     "abled\030\005 \001(\010:\004true\0227\n\tshapemode\030\006 \001(\0162\023.R"
     "ecastIO.ShapeMode:\017SHAPE_TRIANGLES\022\023\n\005so"
     "lid\030\007 \001(\010:\004true\022\026\n\007dynamic\030\010 \001(\010:\005false\022"
-    "\032\n\017navFlagOverride\030\t \001(\005:\0010\022\031\n\016activeMod"
+    "\032\n\017navFlagOverride\030\t \001(\004:\0010\022\031\n\016activeMod"
     "elCrc\030\n \001(\r:\0010\022\021\n\tmodelname\030\013 \001(\t\022\014\n\004nam"
     "e\030\014 \001(\tB\006\n\004type\"\245\002\n\016NavigationMesh\022\017\n\007ve"
     "rsion\030\001 \002(\005\022.\n\rnavMeshParams\030\002 \002(\0132\027.Rec"
@@ -1942,7 +1942,7 @@ void OffMeshConnection::SharedCtor() {
   entrypos_ = NULL;
   exitpos_ = NULL;
   radius_ = 0;
-  areaflags_ = 0u;
+  areaflags_ = GOOGLE_ULONGLONG(0);
   bidirectional_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -1992,7 +1992,7 @@ void OffMeshConnection::Clear() {
   } while (0)
 
   if (_has_bits_[0 / 32] & 59) {
-    ZR_(radius_, bidirectional_);
+    ZR_(areaflags_, bidirectional_);
     if (has_entrypos()) {
       if (entrypos_ != NULL) entrypos_->::RecastIO::Vec3::Clear();
     }
@@ -2073,12 +2073,12 @@ bool OffMeshConnection::MergePartialFromCodedStream(
         break;
       }
 
-      // required uint32 areaflags = 5;
+      // required uint64 areaflags = 5;
       case 5: {
         if (tag == 40) {
          parse_areaflags:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
                  input, &areaflags_)));
           set_has_areaflags();
         } else {
@@ -2151,9 +2151,9 @@ void OffMeshConnection::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(4, this->radius(), output);
   }
 
-  // required uint32 areaflags = 5;
+  // required uint64 areaflags = 5;
   if (has_areaflags()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(5, this->areaflags(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(5, this->areaflags(), output);
   }
 
   // optional bool biDirectional = 6 [default = false];
@@ -2197,9 +2197,9 @@ void OffMeshConnection::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(4, this->radius(), target);
   }
 
-  // required uint32 areaflags = 5;
+  // required uint64 areaflags = 5;
   if (has_areaflags()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(5, this->areaflags(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(5, this->areaflags(), target);
   }
 
   // optional bool biDirectional = 6 [default = false];
@@ -2238,10 +2238,10 @@ int OffMeshConnection::ByteSize() const {
       total_size += 1 + 4;
     }
 
-    // required uint32 areaflags = 5;
+    // required uint64 areaflags = 5;
     if (has_areaflags()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
           this->areaflags());
     }
 
@@ -3377,7 +3377,7 @@ void NodeState::SharedCtor() {
   shapemode_ = 0;
   solid_ = true;
   dynamic_ = false;
-  navflagoverride_ = 0;
+  navflagoverride_ = GOOGLE_ULONGLONG(0);
   activemodelcrc_ = 0u;
   modelname_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
@@ -3608,12 +3608,12 @@ bool NodeState::MergePartialFromCodedStream(
         break;
       }
 
-      // optional int32 navFlagOverride = 9 [default = 0];
+      // optional uint64 navFlagOverride = 9 [default = 0];
       case 9: {
         if (tag == 72) {
          parse_navFlagOverride:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                   ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
                  input, &navflagoverride_)));
           set_has_navflagoverride();
         } else {
@@ -3733,9 +3733,9 @@ void NodeState::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(8, this->dynamic(), output);
   }
 
-  // optional int32 navFlagOverride = 9 [default = 0];
+  // optional uint64 navFlagOverride = 9 [default = 0];
   if (has_navflagoverride()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(9, this->navflagoverride(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(9, this->navflagoverride(), output);
   }
 
   // optional uint32 activeModelCrc = 10 [default = 0];
@@ -3809,9 +3809,9 @@ void NodeState::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(8, this->dynamic(), target);
   }
 
-  // optional int32 navFlagOverride = 9 [default = 0];
+  // optional uint64 navFlagOverride = 9 [default = 0];
   if (has_navflagoverride()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(9, this->navflagoverride(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(9, this->navflagoverride(), target);
   }
 
   // optional uint32 activeModelCrc = 10 [default = 0];
@@ -3874,10 +3874,10 @@ int NodeState::ByteSize() const {
       total_size += 1 + 1;
     }
 
-    // optional int32 navFlagOverride = 9 [default = 0];
+    // optional uint64 navFlagOverride = 9 [default = 0];
     if (has_navflagoverride()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
+        ::google::protobuf::internal::WireFormatLite::UInt64Size(
           this->navflagoverride());
     }
 

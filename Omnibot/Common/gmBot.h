@@ -25,12 +25,17 @@ public:
 	static int gmfGetGameEntity( gmThread *a_thread );
 	static int gmfGetGameId( gmThread *a_thread );
 	static int gmfGetPosition( gmThread *a_thread );
+	static int gmfGetNavPosition( gmThread *a_thread );
 	static int gmfGetEyePosition( gmThread *a_thread );
 	static int gmfGetFacing( gmThread *a_thread );
 	static int gmfGetVelocity( gmThread *a_thread );
 	static int gmfIsStuck( gmThread *a_thread );
 	static int gmfIsOnCustomLink( gmThread *a_thread );
-	static int gmfHasUpcomingArea( gmThread *a_thread );
+	static int gmfApproachingArea( gmThread *a_thread );
+	static int gmfGetAreaEntitiesAlongPath( gmThread *a_thread );
+	static int gmfGetAreaEntitiesInRadius( gmThread *a_thread );
+	static int gmfNavTrace( gmThread *a_thread );
+	static int gmfTraceToNextCorner( gmThread *a_thread );
 	static int gmfResetStuckTime( gmThread *a_thread );
 	static int gmfGetTeam( gmThread *a_thread );
 	static int gmfGetClassId( gmThread *a_thread );
@@ -69,7 +74,6 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	// Modifiers
-	static int gmfSetMoveTo( gmThread *a_thread );
 	static int gmfSetDebugFlag( gmThread *a_thread );
 
 	static int gmfPressButton( gmThread *a_thread );

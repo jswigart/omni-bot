@@ -1333,7 +1333,7 @@ void MapGoal::DrawRoute( const obColor _color, float _duration )
 
 			path->UpdateSourcePosition( r.mStart->GetPosition() );
 			path->UpdateGoalPosition( r.mEnd->GetPosition(), 0.0f );
-			path->UpdatePath();
+			path->UpdatePath( false );
 
 			static const int MaxCorners = 256;
 			PathInterface::PathCorner corners[ MaxCorners ];

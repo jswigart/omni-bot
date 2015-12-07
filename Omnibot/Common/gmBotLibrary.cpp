@@ -1195,7 +1195,7 @@ static int GM_CDECL gmfGetPointContents( gmThread *a_thread )
 //		None
 //
 // Returns:
-//		int - The current time, in milliseconds (1000ms = 1 second)
+//		int - The current time, in seconds
 static int GM_CDECL gmfGetTime( gmThread *a_thread )
 {
 	GM_CHECK_NUM_PARAMS( 0 );
@@ -1292,6 +1292,36 @@ static int gmfGetEntityPosition( gmThread *a_thread )
 		a_thread->PushVector( v.X(), v.Y(), v.Z() );
 	else
 		a_thread->PushNull();
+	return GM_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+// function: GetEntCenterBounds
+//		This function gets the center of an entity world bounding box
+//
+// Parameters:
+//
+//		<GameEntity> - The entity to use
+//		- OR -
+//		<int> - The gameId for the entity to use
+//
+// Returns:
+//		Vector3 - 3d position of this entity
+//		- OR -
+//		null - If there was an error or the parameter was invalid
+static int gmfGetEntCenterBounds( gmThread *a_thread )
+{
+	GM_CHECK_NUM_PARAMS( 1 );
+
+	GameEntity gameEnt;
+	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
+
+	Box3f obb;
+	if ( EngineFuncs::EntityWorldOBB( gameEnt, obb ) )
+	{
+		a_thread->PushVector( obb.Center.X(), obb.Center.Y(), obb.Center.Z() );
+	}
 	return GM_OK;
 }
 
@@ -2019,6 +2049,7 @@ static int gmfDistanceBetween( gmThread *a_thread )
 //		<Vector3> - Target Position
 //		<int> OR <float> - Projectile Speed
 //		<int> OR <float> - Projectile Gravity
+//		<table> optional - to fill in
 //
 // Returns:
 //		<table> - 1 or 2 aim vectors for valid trajectories
@@ -2031,7 +2062,8 @@ static int gmfCalculateTrajectory( gmThread *a_thread )
 	GM_CHECK_VECTOR_PARAM( v2, 1 );
 	GM_CHECK_FLOAT_OR_INT_PARAM( fProjectileSpeed, 2 );
 	GM_CHECK_FLOAT_OR_INT_PARAM( fProjectileGravity, 3 );
-
+	GM_TABLE_PARAM( tblOut, 4, NULL );
+	
 	Trajectory::AimTrajectory traj[ 2 ];
 	int t = Trajectory::Calculate(
 		Vector3f( v1.x, v1.y, v1.z ),
@@ -2045,7 +2077,9 @@ static int gmfCalculateTrajectory( gmThread *a_thread )
 		gmMachine *pMachine = a_thread->GetMachine();
 		DisableGCInScope gcEn( pMachine );
 
-		gmTableObject *pTbl = pMachine->AllocTableObject();
+		if ( tblOut == NULL )
+			tblOut = a_thread->GetMachine()->AllocTableObject();
+
 		for ( int i = 0; i < t; ++i )
 		{
 			gmVariable var;
@@ -2057,8 +2091,10 @@ static int gmfCalculateTrajectory( gmThread *a_thread )
 			vAimDir.Normalize();
 
 			var.SetVector( vAimDir.X(), vAimDir.Y(), vAimDir.Z() );
-			pTbl->Set( pMachine, i, var );
+			tblOut->Set( pMachine, i, var );
 		}
+
+		a_thread->PushTable( tblOut );
 	}
 	else
 		a_thread->PushNull();
@@ -2867,6 +2903,7 @@ static gmFunctionEntry s_botLib [] =
 	{ "GetEntName", gmfGetEntityName },
 	{ "GetEntFacing", gmfGetEntityFacing },
 	{ "GetEntPosition", gmfGetEntityPosition },
+	{ "GetEntCenterBounds", gmfGetEntCenterBounds },
 	{ "GetEntBonePosition", gmfGetEntityBonePosition },
 	{ "GetEntEyePosition", gmfGetEntEyePosition },
 	{ "GetEntVelocity", gmfGetEntityVelocity },

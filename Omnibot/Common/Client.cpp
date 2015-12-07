@@ -141,8 +141,7 @@ void Client::Update()
 		{
 			mStateRoot->RootUpdate();
 
-			FINDSTATE( path, FollowPath, GetStateRoot() );
-			path->RenderDebug();
+			//FINDSTATEIF( Navigator, GetStateRoot(), RenderDebug() );
 		}
 
 		// Purge expired blackboard records.
@@ -601,6 +600,15 @@ void Client::Shutdown()
 	ScriptManager::GetInstance()->RemoveFromGlobalTable( this );
 }
 
+int Client::GetStuckTime() const
+{
+	return mStuckTime;
+}
+void Client::ResetStuckTime()
+{
+	mStuckTime = 0;
+}
+
 void Client::CheckStuck()
 {
 	if ( mStuckBounds.Contains( GetPosition() ) )
@@ -680,8 +688,7 @@ bool Client::TurnTowardPosition( const Vector3f &_pos )
 
 bool Client::HasLineOfSightTo( const Vector3f &_pos, GameEntity _entity, int customTraceMask )
 {
-	Vector3f vStart = GetEyePosition();
-	return HasLineOfSightTo( vStart, _pos, _entity, mGameID, customTraceMask );
+	return HasLineOfSightTo( GetEyePosition(), _pos, _entity, mGameID, customTraceMask );
 }
 
 bool Client::HasLineOfSightTo( const Vector3f &_pos1, const Vector3f &_pos2,
@@ -692,12 +699,6 @@ bool Client::HasLineOfSightTo( const Vector3f &_pos1, const Vector3f &_pos2,
 	EngineFuncs::TraceLine( tr, _pos1, _pos2,
 		NULL, customTraceMask ? customTraceMask : TR_MASK_SHOT | TR_MASK_SMOKEBOMB, _ignoreent, True );
 	return ( tr.mFraction == 1.0f ) || ( ( _ent.IsValid() ) && ( tr.mHitEntity == _ent ) );
-}
-
-bool Client::MoveTo( const Vector3f &_pos, float _tolerance, MoveMode _m )
-{
-	GetSteeringSystem()->SetTarget( _pos, _tolerance, _m );
-	return ( ( _pos - GetPosition() ).SquaredLength() <= ( _tolerance * _tolerance ) );
 }
 
 void Client::EnableDebug( const int _flag, bool _enable )
@@ -908,38 +909,38 @@ bool Client::IsAllied( const GameEntity _ent ) const
 	return InterfaceFuncs::IsAllied( GetGameEntity(), _ent );
 }
 
-void Client::PressButton( int _button )
+void Client::PressButton( int button )
 {
-	mButtonFlags.SetFlag( _button );
+	mButtonFlags.SetFlag( button );
 }
 
-void Client::ReleaseButton( int _button )
+void Client::ReleaseButton( int button )
 {
-	mButtonFlags.ClearFlag( _button );
+	mButtonFlags.ClearFlag( button );
 }
 
-bool Client::IsButtonDown( int _button ) const
+bool Client::IsButtonDown( int button ) const
 {
-	return mButtonFlags.CheckFlag( _button );
+	return mButtonFlags.CheckFlag( button );
 }
 
-void Client::HoldButton( const BitFlag64 &_buttons, int _mstime )
+void Client::HoldButton( const BitFlag64 &buttons, uint32_t timems )
 {
 	for ( int i = 0; i < HoldButtons::NumButtons; ++i )
 	{
-		if ( _buttons.CheckFlag( i ) )
+		if ( buttons.CheckFlag( i ) )
 		{
 			mHoldButtons.mStopHoldTime[ i ] =
-				( _mstime > 0 ) ? IGame::GetTime() + _mstime : std::numeric_limits<int>::max();
+				( timems > 0 ) ? IGame::GetTime() + timems : std::numeric_limits<int>::max();
 		}
 	}
 }
 
-void Client::ReleaseHeldButton( const BitFlag64 &_buttons )
+void Client::ReleaseHeldButton( const BitFlag64 &buttons )
 {
 	for ( int i = 0; i < HoldButtons::NumButtons; ++i )
 	{
-		if ( _buttons.CheckFlag( i ) )
+		if ( buttons.CheckFlag( i ) )
 		{
 			mHoldButtons.mStopHoldTime[ i ] = 0;
 		}

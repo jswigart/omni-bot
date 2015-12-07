@@ -52,6 +52,7 @@ GMBIND_FUNCTION( "GetTeam", gmfGetTeam )
 GMBIND_FUNCTION( "GetGameEntity", gmfGetGameEntity )
 GMBIND_FUNCTION( "GetGameId", gmfGetGameId )
 GMBIND_FUNCTION( "GetPosition", gmfGetPosition )
+GMBIND_FUNCTION( "GetNavPosition", gmfGetNavPosition )
 GMBIND_FUNCTION( "GetEyePosition", gmfGetEyePosition )
 GMBIND_FUNCTION( "GetFacing", gmfGetFacing )
 GMBIND_FUNCTION( "GetSkills", gmfGetSkills )
@@ -80,7 +81,12 @@ GMBIND_FUNCTION( "GoGetHealth", gmfSetGoal_GetHealth )
 
 GMBIND_FUNCTION( "IsStuck", gmfIsStuck )
 GMBIND_FUNCTION( "IsOnCustomLink", gmfIsOnCustomLink )
-GMBIND_FUNCTION( "HasUpcomingArea", gmfHasUpcomingArea )
+GMBIND_FUNCTION( "ApproachingArea", gmfApproachingArea )
+GMBIND_FUNCTION( "GetAreaEntitiesAlongPath", gmfGetAreaEntitiesAlongPath )
+GMBIND_FUNCTION( "GetAreaEntitiesInRadius", gmfGetAreaEntitiesInRadius )
+
+GMBIND_FUNCTION( "NavTrace", gmfNavTrace )
+GMBIND_FUNCTION( "TraceToNextCorner", gmfTraceToNextCorner )
 
 GMBIND_FUNCTION( "ResetStuckTime", gmfResetStuckTime )
 
@@ -103,7 +109,6 @@ GMBIND_FUNCTION( "HasTarget", gmfHasTarget )
 GMBIND_FUNCTION( "InFieldOfView", gmfInFieldOfView )
 GMBIND_FUNCTION( "IsAllied", gmfGetIsAllied )
 
-GMBIND_FUNCTION( "MoveTowards", gmfSetMoveTo )
 GMBIND_FUNCTION( "PressButton", gmfPressButton )
 
 GMBIND_FUNCTION( "HoldButton", gmfHoldButton )
@@ -301,6 +306,25 @@ int gmBot::gmfGetPosition( gmThread *a_thread )
 	return GM_OK;
 }
 
+// function: GetNavPosition
+//		This function gets <Vector3> position of this bot at the feet
+//
+// Parameters:
+//
+//		None
+//
+// Returns:
+//		<Vector3> - Current Position
+int gmBot::gmfGetNavPosition( gmThread *a_thread )
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS( 0 );
+
+	const Vector3f &v = native->GetWorldBounds().GetCenterBottom();
+	a_thread->PushVector( v.X(), v.Y(), v.Z() );
+	return GM_OK;
+}
+
 // function: GetEyePosition
 //		This function gets <Vector3> eye position of this bot.
 //
@@ -376,8 +400,8 @@ int gmBot::gmfIsStuck( gmThread *a_thread )
 	bool Stuck = false;
 
 	using namespace AiState;
-	FINDSTATE( fp, FollowPath, native->GetStateRoot() );
-	if ( fp != NULL && fp->IsActive() )
+	FINDSTATE( nav, Navigator, native->GetStateRoot() );
+	if ( nav != NULL && nav->IsActive() )
 	{
 		int iStuckTime = Utils::SecondsToMilliseconds( stuckTime );
 		Stuck = native->GetStuckTime() > iStuckTime ? true : false;
@@ -409,10 +433,10 @@ int gmBot::gmfIsOnCustomLink( gmThread *a_thread )
 	}
 
 	using namespace AiState;
-	FINDSTATE( fp, FollowPath, native->GetStateRoot() );
-	if ( fp != NULL && fp->IsActive() )
+	FINDSTATE( nav, Navigator, native->GetStateRoot() );
+	if ( nav != NULL && nav->IsActive() )
 	{
-		a_thread->PushInt( fp->IsOnCustomLink( flags ) );
+		a_thread->PushInt( nav->IsOnCustomLink( flags ) );
 	}
 	else
 	{
@@ -421,7 +445,7 @@ int gmBot::gmfIsOnCustomLink( gmThread *a_thread )
 	return GM_OK;
 }
 
-// function: HasUpcomingArea
+// function: ApproachingArea
 //		This function checks if the bot is on a particular area type
 //
 // Parameters:
@@ -430,7 +454,7 @@ int gmBot::gmfIsOnCustomLink( gmThread *a_thread )
 //
 // Returns:
 //		<int> - true if on a custom link of specified type
-int gmBot::gmfHasUpcomingArea( gmThread *a_thread )
+int gmBot::gmfApproachingArea( gmThread *a_thread )
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 2 );
@@ -445,15 +469,181 @@ int gmBot::gmfHasUpcomingArea( gmThread *a_thread )
 	}
 
 	using namespace AiState;
-	FINDSTATE( fp, FollowPath, native->GetStateRoot() );
-	if ( fp != NULL && fp->IsActive() )
+	FINDSTATE( nav, Navigator, native->GetStateRoot() );
+	if ( nav != NULL && nav->IsActive() )
 	{
-		a_thread->PushInt( fp->HasUpcomingArea( flags, lookahead ) );
+		a_thread->PushInt( nav->ApproachingArea( flags, lookahead ) );
 	}
 	else
 	{
 		a_thread->PushInt( 0 );
 	}
+	return GM_OK;
+}
+
+// function: GetAreaEntitiesAlongPath
+//		This function checks upcoming navigational areas for entity references
+//
+// Parameters:
+//
+//		string - link type
+//
+// Returns:
+//		table with all referenced entities within the specified distance
+int gmBot::gmfGetAreaEntitiesAlongPath( gmThread *a_thread )
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS( 1 );
+	GM_CHECK_FLOAT_OR_INT_PARAM( lookahead, 0 );
+	GM_TABLE_PARAM( tblOut, 1, NULL );
+
+	if ( tblOut == NULL )
+		tblOut = a_thread->GetMachine()->AllocTableObject();
+
+	tblOut->RemoveAndDeleteAll( a_thread->GetMachine() );
+
+	using namespace AiState;
+	FINDSTATE( nav, Navigator, native->GetStateRoot() );
+	if ( nav != NULL && nav->IsActive() )
+	{
+		GameEntity entities[ 32 ];
+		const int cnt = nav->GetAreaEntitiesAlongPath( lookahead, entities, 32 );
+		for ( int i = 0; i < cnt; ++i )
+		{
+			tblOut->Set( a_thread->GetMachine(), i, gmVariable::EntityVar( entities[ i ].AsInt() ) );
+		}
+	}
+
+	a_thread->PushTable( tblOut );
+	return GM_OK;
+}
+
+// function: GetAreaEntitiesInRadius
+//		This function checks for navigational entities in an area
+//
+// Parameters:
+//
+//		string - link type
+//
+// Returns:
+//		table with all referenced entities within the specified distance
+int gmBot::gmfGetAreaEntitiesInRadius( gmThread *a_thread )
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS( 1 );
+	GM_CHECK_VECTOR_PARAM( pos, 0 );
+	GM_CHECK_FLOAT_OR_INT_PARAM( radius, 1 );
+	GM_TABLE_PARAM( tblOut, 2, NULL );
+
+	if ( tblOut == NULL )
+		tblOut = a_thread->GetMachine()->AllocTableObject();
+
+	tblOut->RemoveAndDeleteAll( a_thread->GetMachine() );
+
+	using namespace AiState;
+	FINDSTATE( nav, Navigator, native->GetStateRoot() );
+	if ( nav != NULL )
+	{
+		static const int MAX_ENTITIES = 64;
+		GameEntity entities[ MAX_ENTITIES ];
+		const int cnt = nav->GetAreaEntitiesInRadius( Vector3f( pos.x, pos.y, pos.z ), radius, entities, MAX_ENTITIES );
+		for ( int i = 0; i < cnt; ++i )
+		{
+			tblOut->Set( a_thread->GetMachine(), i, gmVariable::EntityVar( entities[ i ].AsInt() ) );
+		}
+	}
+
+	a_thread->PushTable( tblOut );
+	return GM_OK;
+}
+
+
+
+// function: NavTrace
+//		This function performs a navigation trace
+//
+// Parameters:
+//
+//		src - start position of the trace
+//		dst - end position of the trace
+//
+// Returns:
+//		table with all referenced entities within the specified distance
+int gmBot::gmfNavTrace( gmThread *a_thread )
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS( 3 );
+	GM_CHECK_VECTOR_PARAM( src, 0 );
+	GM_CHECK_VECTOR_PARAM( dst, 1 );
+	GM_CHECK_TABLE_PARAM( tblOut, 2 );
+
+	if ( tblOut == NULL )
+		tblOut = a_thread->GetMachine()->AllocTableObject();
+
+	tblOut->RemoveAndDeleteAll( a_thread->GetMachine() );
+
+	PathInterface::NavTraceResult result;
+
+	bool hit = false;
+
+	using namespace AiState;
+	FINDSTATE( nav, Navigator, native->GetStateRoot() );
+	if ( nav != NULL )
+	{
+		hit = nav->NavTrace( result, Vector3f( src.x, src.y, src.z ), Vector3f( dst.x, dst.y, dst.z ) );
+
+		tblOut->Set( a_thread->GetMachine(), "endPos", gmVariable( result.pos ) );
+		tblOut->Set( a_thread->GetMachine(), "normal", gmVariable( result.normal ) );
+		tblOut->Set( a_thread->GetMachine(), "t", gmVariable( result.t ) );
+		tblOut->Set( a_thread->GetMachine(), "hit", gmVariable( hit ) );		
+	}
+	a_thread->PushInt( hit ? 1 : 0 );
+	return GM_OK;
+}
+
+// function: TraceToNextCorner
+//		This function performs a navigation trace to the next corner of the path
+//
+// Parameters:
+//
+//		src - start position of the trace
+//		dst - end position of the trace
+//
+// Returns:
+//		table with all referenced entities within the specified distance
+int gmBot::gmfTraceToNextCorner( gmThread *a_thread )
+{
+	CHECK_THIS_BOT();
+	GM_CHECK_NUM_PARAMS( 1 );
+	GM_CHECK_TABLE_PARAM( tblOut, 0 );
+
+	if ( tblOut == NULL )
+		tblOut = a_thread->GetMachine()->AllocTableObject();
+
+	tblOut->RemoveAndDeleteAll( a_thread->GetMachine() );
+
+	PathInterface::NavTraceResult result;
+
+	bool hit = false;
+
+	using namespace AiState;
+	FINDSTATE( nav, Navigator, native->GetStateRoot() );
+	if ( nav != NULL && nav->GetNumCorners() > 0 )
+	{
+		const PathInterface::PathCorner& corner = nav->GetCorner( 0 );
+		
+		const Vector3f src = native->GetWorldBounds().GetCenterBottom();
+		const Vector3f dst = corner.mPos;
+
+		hit = nav->NavTrace( result, src, dst );
+
+		tblOut->Set( a_thread->GetMachine(), "t", gmVariable( result.t ) );
+		tblOut->Set( a_thread->GetMachine(), "hit", gmVariable( hit ) );
+		tblOut->Set( a_thread->GetMachine(), "endPos", gmVariable( result.pos ) );
+		tblOut->Set( a_thread->GetMachine(), "normal", gmVariable( result.normal ) );
+		tblOut->Set( a_thread->GetMachine(), "pathCost", gmVariable( result.pathCost ) );
+	}
+	a_thread->PushInt( hit ? 1 : 0 );
 	return GM_OK;
 }
 
@@ -1226,30 +1416,6 @@ int gmBot::gmfReleaseButton( gmThread *a_thread )
 	return GM_OK;
 }
 
-// function: MoveTowards
-//		This function sets the bots current movement goal to a specific location. Returns true if
-//
-// Parameters:
-//
-//		<Vector3> - The 3d location to move towards. Unlike <GoTo>, this function doesn't
-//				plan a path to the destination. This function simply makes the bot run toward
-//				the location.
-//		<float> - OPTIONAL - Distance tolerance to check, defaults to 32
-//
-// Returns:
-//		None
-int gmBot::gmfSetMoveTo( gmThread *a_thread )
-{
-	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS( 1 );
-	GM_CHECK_VECTOR_PARAM( v, 0 );
-	GM_FLOAT_OR_INT_PARAM( tolerance, 1, 32.f );
-	GM_INT_PARAM( m, 2, Run );
-	MoveMode mm = m == Walk ? Walk : Run;
-	GM_THREAD_ARG->PushInt( native->MoveTo( Vector3f( v.x, v.y, v.z ), tolerance, mm ) ? 1 : 0 );
-	return GM_OK;
-}
-
 // function: ToLocalSpace
 //		This function converts a world position to this bots local space.
 //
@@ -1373,21 +1539,67 @@ int gmBot::gmfFireWeapon( gmThread *a_thread )
 	return GM_OK;
 }
 
+// function: IsAimingAtEntity
+//		This function checks if a bot is looking at an entity or one of a number of entities
+//
+// Parameters:
+//
+//		entity - entity to check for aiming at
+//		- OR -
+//		table - list of entities to check for aiming at
+//
+// Returns:
+//		true if the bot is aiming at one of the provided entities
 int gmBot::gmdIsAimingAtEntity( gmThread *a_thread )
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS( 1 );
+	GM_CHECK_NUM_PARAMS( 2 );
 
-	GameEntity ent;
-	GM_CHECK_GAMEENTITY_FROM_PARAM( ent, 0 );
+	const int maxEntities = a_thread->ParamType( 0 ) == GM_TABLE ? a_thread->ParamTable( 0 )->Count() :  1;
+	GameEntity *entities = (GameEntity*)StackAlloc( sizeof( GameEntity )*maxEntities );
+	int entityCount = 0;
+	
+	if ( a_thread->ParamType( 0 ) == GM_TABLE )
+	{
+		GM_CHECK_TABLE_PARAM( entList, 0 );
+
+		gmTableIterator it;
+		gmTableNode* node = entList->GetFirst( it );
+		while ( node )
+		{
+			if ( node->m_value.IsEntity() )
+			{
+				entities[ entityCount++ ].FromInt( node->m_value.GetEntity() );
+			}
+			node = entList->GetNext( it );
+		}
+	}
+	else
+	{
+		GM_CHECK_GAMEENTITY_FROM_PARAM( entities[ 0 ], 0 );
+	}
+
 	GM_CHECK_FLOAT_OR_INT_PARAM( dist, 1 );
 	
 	const Vector3f eyePos = native->GetEyePosition();
 	const Vector3f aimDir = native->GetFacingVector();
 
 	obTraceResult tr;
-	EngineFuncs::TraceLine( tr, eyePos, eyePos + aimDir*dist, NULL, TR_MASK_SHOT, -1, False );
-	a_thread->PushInt( tr.mFraction < 1.0f && tr.mHitEntity == ent );
+	EngineFuncs::TraceLine( tr, eyePos, eyePos + aimDir*dist, NULL, TR_MASK_SHOT, native->GetGameID(), False );
+
+	if ( tr.mFraction < 1.0f )
+	{
+		for ( int i = 0; i < entityCount; ++i )
+		{
+			if ( tr.mHitEntity == entities[ i ] )
+			{
+				a_thread->PushInt( 1 );
+				return GM_OK;
+			}
+		}
+		
+	}
+	a_thread->PushInt( 0 );
 	return GM_OK;
 }
 
@@ -1599,12 +1811,12 @@ int gmBot::gmfGetMostDesiredAmmo( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_TABLE_PARAM( ret, 0 );
 
-	int iWeaponType = 0;
-	int iGetAmmo = 1;
-	float fDesir = native->GetWeaponSystem()->GetMostDesiredAmmo( iWeaponType, iGetAmmo );
-	ret->Set( a_thread->GetMachine(), "Desire", gmVariable( fDesir ) );
-	ret->Set( a_thread->GetMachine(), "AmmoType", gmVariable( iWeaponType ) );
-	ret->Set( a_thread->GetMachine(), "GetAmmo", gmVariable( iGetAmmo ) );
+	int weaponId = 0;
+	int ammo = 1;
+	float desir = native->GetWeaponSystem()->GetMostDesiredAmmo( weaponId, ammo );
+	ret->Set( a_thread->GetMachine(), "Desire", gmVariable( desir ) );
+	ret->Set( a_thread->GetMachine(), "AmmoType", gmVariable( weaponId ) );
+	ret->Set( a_thread->GetMachine(), "GetAmmo", gmVariable( ammo ) );
 	return GM_OK;
 }
 

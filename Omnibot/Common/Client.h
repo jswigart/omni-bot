@@ -212,11 +212,6 @@ public:
 	//		Makes the bot turn toward a facing.
 	bool TurnTowardPosition( const Vector3f &_pos );
 
-	// function: MoveTo
-	//		Moves the bot towards the position if the aren't within the _tolerance distance.
-	//		returns true if within tolerance, false if not.
-	bool MoveTo( const Vector3f &_pos, float _tolerance, MoveMode _m = Run );
-
 	Vector3f ToLocalSpace( const Vector3f &_worldpos );
 	Vector3f ToWorldSpace( const Vector3f &_localpos );
 
@@ -326,12 +321,12 @@ public:
 	void LoadProfile( ProfileType _type );
 	void ClearProfile();
 
-	void PressButton( int _button );
-	void ReleaseButton( int _button );
-	bool IsButtonDown( int _button ) const;
+	void PressButton( int button );
+	void ReleaseButton( int button );
+	bool IsButtonDown( int button ) const;
 
-	void HoldButton( const BitFlag64 &_buttons, int _mstime );
-	void ReleaseHeldButton( const BitFlag64 &_buttons );
+	void HoldButton( const BitFlag64 &buttons, uint32_t mstime );
+	void ReleaseHeldButton( const BitFlag64 &buttons );
 	void ReleaseAllHeldButtons();
 
 	//AimRequestPtr GetAimRequest(const char *_owner);
@@ -343,14 +338,8 @@ public:
 	}
 
 	void CheckStuck();
-	inline int GetStuckTime() const
-	{
-		return mStuckTime;
-	}
-	inline void ResetStuckTime()
-	{
-		mStuckTime = 0;
-	}
+	int GetStuckTime() const;
+	void ResetStuckTime();
 
 	virtual void GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags ) = 0;
 	virtual NavFlags GetTeamFlag() const
@@ -441,15 +430,15 @@ public:
 	virtual ~Client();
 protected:
 
-	float		 mStepHeight;
-	float		 mMaxSpeed;
+	float			mStepHeight;
+	float			mMaxSpeed;
 
-	AABB		 mStuckBounds;
-	int			 mStuckTime;
+	AABB			mStuckBounds;
+	int				mStuckTime;
 
-	State			* mStateRoot;
+	State*			mStateRoot;
 
-	ClientInput	 mClientInput;
+	ClientInput		mClientInput;
 
 	void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
 	void ProcessEventImpl( const MessageHelper &_message, uint32_t _targetState );

@@ -31,9 +31,15 @@ public:
 	virtual void UpdateGoalPosition( const Vector3f & goal, float radius );
 	virtual void UpdateGoalPositions( const DestinationVector & goals );
 	virtual bool UpdateGoalPositionRandom();
-	virtual void UpdatePath();
+	virtual void UpdatePath( bool forceRecalculate );
 	virtual void Cancel();
 	
+	virtual bool GetNearestWall( Vector3f& wallPos, Vector3f& wallNormal, float& wallDist );
+
+	virtual bool NavTrace( NavTraceResult& result, const Vector3f& start, const Vector3f& end );
+
+	virtual size_t FindAreaEntitiesInRadius( const Vector3f& pos, float radius, GameEntity entities [], size_t maxEntities );
+
 	virtual NavAreaFlags GetCurrentAreaFlags() const;
 	virtual size_t GetPathCorners( PathCorner * corners, size_t maxEdges );
 
@@ -60,6 +66,12 @@ private:
 	Vector3f				mMoveDirection;
 
 	int						mFoundGoalIndex;
+
+	Vector3f				mHitPos;
+	Vector3f				mHitNormal;
+	float					mHitDist;
+
+	size_t GatherPolyEntities( dtPolyRef ref, GameEntity entities [], size_t maxEntities );
 };
 
 #endif

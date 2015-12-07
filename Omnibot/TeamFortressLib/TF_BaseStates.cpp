@@ -156,7 +156,7 @@ namespace AiState
 		if ( !recordpos.empty() )
 		{
 			FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
-			FINDSTATEIF( FollowPath, GetRootState(), Goto( this, recordpos ) );
+			FINDSTATEIF( Navigator, GetRootState(), Goto( this, recordpos ) );
 
 			const int x = GetDestinationIndex();
 			mAmmoPack = records[ x ];
@@ -205,7 +205,7 @@ namespace AiState
 
 	STATE_ENTER( SentryBuild, SG_BUILDING )
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this ) );
 	}
 	STATE_EXIT( SentryBuild, SG_BUILDING )
 	{
@@ -283,7 +283,7 @@ namespace AiState
 
 	STATE_ENTER( SentryBuild, SG_UPGRADING )
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this ) );
 	}
 	STATE_EXIT( SentryBuild, SG_UPGRADING )
 	{
@@ -321,7 +321,7 @@ namespace AiState
 
 	STATE_ENTER( SentryBuild, SG_REPAIRING )
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this ) );
 	}
 	STATE_EXIT( SentryBuild, SG_REPAIRING )
 	{
@@ -359,7 +359,7 @@ namespace AiState
 
 	STATE_ENTER( SentryBuild, SG_RESUPPLY )
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this ) );
 	}
 	STATE_EXIT( SentryBuild, SG_RESUPPLY )
 	{
@@ -608,7 +608,7 @@ namespace AiState
 	}
 	void SentryBuild::Exit()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Stop( true ) );
 
 		SetNextState( SG_NONE );
 		UpdateFsm( 0.f );
@@ -785,11 +785,11 @@ namespace AiState
 	}
 	void SentryAlly::Enter()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this ) );
 	}
 	void SentryAlly::Exit()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Stop( true ) );
 		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
 		FINDSTATEIF( WeaponSystem, GetRootState(), ReleaseWeaponRequest( GetNameHash() ) );
 	}
@@ -948,11 +948,11 @@ namespace AiState
 		mNextBuildTry = 0;
 		mState = DISP_BUILDING;
 		mCantBuild = false;
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this ) );
 	}
 	void DispenserBuild::Exit()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Stop( true ) );
 		mState = DISP_NONE;
 		mMapGoalDisp.reset();
 		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
@@ -1006,7 +1006,7 @@ namespace AiState
 				{
 					mState = DISP_GETTING_AMMO;
 					FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
-					FINDSTATEIF( FollowPath, GetRootState(), Goto( this, recordpos ) );
+					FINDSTATEIF( Navigator, GetRootState(), Goto( this, recordpos ) );
 				}
 				else
 				{
@@ -1422,11 +1422,11 @@ namespace AiState
 				mDetpackFuse = TF_BOT_BUTTON_BUILDDETPACK_5;
 		}
 
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this ) );
 	}
 	void DetpackBuild::Exit()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Stop( true ) );
 		mState = NONE;
 		mMapGoal.reset();
 		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
@@ -1730,13 +1730,13 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		// Cache pipe trap goal information
 		//////////////////////////////////////////////////////////////////////////
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this ) );
 
 		mExpireTime = 0;
 	}
 	void PipeTrap::Exit()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Stop( true ) );
 
 		mSubstate = IDLE;
 
@@ -1834,7 +1834,7 @@ namespace AiState
 			{
 				mSubstate = GETTING_AMMO;
 				FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
-				FINDSTATEIF( FollowPath, GetRootState(), Goto( this, recordpos ) );
+				FINDSTATEIF( Navigator, GetRootState(), Goto( this, recordpos ) );
 			}
 			else
 			{
@@ -2063,10 +2063,10 @@ namespace AiState
 
 	float RocketJump::GetPriority()
 	{
-		FINDSTATE( fp, FollowPath, GetParent() );
-		if ( fp )
+		FINDSTATE( nav, Navigator, GetParent() );
+		if ( nav )
 		{
-			if ( fp->IsMoving() && fp->IsOnCustomLink( NAVFLAGS_ROCKETJUMP ) )
+			if ( nav->IsMoving() && nav->IsOnCustomLink( NAVFLAGS_ROCKETJUMP ) )
 			{
 				return 1.f;
 			}
@@ -2673,11 +2673,11 @@ namespace AiState
 		mNextAmmoCheck = 0;
 		mNextBuildTry = 0;
 		mCantBuild = false;
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this ) );
 	}
 	void TeleporterBuild::Exit()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Stop( true ) );
 
 		mState = NONE;
 
@@ -2762,7 +2762,7 @@ namespace AiState
 				{
 					mState = GETTING_AMMO;
 					FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
-					FINDSTATEIF( FollowPath, GetRootState(), Goto( this, recordpos ) );
+					FINDSTATEIF( Navigator, GetRootState(), Goto( this, recordpos ) );
 				}
 				else
 				{

@@ -21,6 +21,7 @@
 
 #include "CollisionModel.h"
 
+#include <array>
 #include <boost/thread.hpp>
 
 namespace modeldata
@@ -28,6 +29,32 @@ namespace modeldata
 	class Scene;
 	class Node;
 };
+
+//////////////////////////////////////////////////////////////////////////
+
+
+struct DebugDraw : public duDebugDraw
+{
+	DebugDraw( float durationSecs = 0.0f );
+
+	virtual void depthMask( bool state );
+	virtual void texture( bool state );
+
+	virtual void begin( duDebugDrawPrimitives prim, float size = 1.0f );
+	virtual void vertex( const float* pos, unsigned int color );
+	virtual void vertex( const float x, const float y, const float z, unsigned int color );
+	virtual void vertex( const float* pos, unsigned int color, const float* uv );
+	virtual void vertex( const float x, const float y, const float z, unsigned int color, const float u, const float v );
+
+	virtual void end();
+private:
+	duDebugDrawPrimitives		mActivePrim;
+	float						mSizeHint;
+	std::array<Vector3f, 4>		mVertCache;
+	int							mVertCount;
+	float						mDurationSecs;
+};
+
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -115,6 +142,7 @@ public:
 	void MarkTileForBuilding( const int tx, const int ty );
 
 	void RasterizeTileLayers( int tax, int ty );
+	void CalculateBatchQuery( QueryRef& qry, dtNavMeshQuery*& nm );
 
 	static const Vector3f sExtents;
 

@@ -2,11 +2,12 @@
 
 // These parameters are required
 this.Name = "UpgradeModule";			// The name of the goal.
-this.Parent = "LowLevel";		// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.Parent = "LowLevel";				// The name of the parent. This setting determines where in the state tree the goal will reside in.
+this.AutoAdd = true;
+this.Debug = true;
 
 this.Initialize = function()
 {
-	this.Debug = true;
 	this.ModuleStats = {};
 	this.RandomUpgrades = {};	
 };
@@ -33,8 +34,8 @@ this.Update = function()
 				{
 					this.Bot.GetModuleStats( desired.Module, this.ModuleStats );
 					
-					// if we haven't achieved the desired upgrade yet, we need to
-					if ( this.ModuleStats.Lvl < desired.Lvl && this.ModuleStats.Lvl < this.ModuleStats.MaxLvl )
+					// if we haven't achieved the desired upgrade yet, we need to save our points for it
+					if ( this.ModuleStats.Level < desired.Level && this.ModuleStats.Level < this.ModuleStats.MaxLevel )
 					{
 						pickRandom = false;
 					
@@ -45,7 +46,7 @@ this.Update = function()
 							
 							if(this.Debug)
 							{
-								this.Bot.Say( "Upgrading module", Util.GetTableKey(MODULE,desired.Module), "to lvl", this.ModuleStats.Lvl+1);
+								this.Bot.Say( "Upgrading module", Util.GetTableKey(MODULE,desired.Module), "to lvl", this.ModuleStats.Level+1);
 							}
 						}
 						else
@@ -60,7 +61,7 @@ this.Update = function()
 					{
 						if(this.Debug)
 						{
-							this.Bot.Say( "Already Have Module ", Util.GetTableKey(MODULE, desired.Module), " level ", desired.Lvl);
+							this.Bot.Say( "Already Have Module ", Util.GetTableKey(MODULE, desired.Module), " level ", desired.Level);
 						}
 					}
 				}
@@ -75,10 +76,14 @@ this.Update = function()
 		
 		if (upgradedModule)
 		{
-			sleep(1);
+			yield();
 		}
 		else
 		{
+			if(this.Debug)
+			{
+				this.Bot.Say( "Waiting for level up to upgrade modules" );
+			}
 			block(EVENT.LEVEL_UP);
 		}
 	}
@@ -94,7 +99,7 @@ this.PickRandomUpgrade = function()
 	foreach ( modName and id in MODULE )
 	{
 		this.Bot.GetModuleStats( id, this.ModuleStats );
-		if(this.ModuleStats.Lvl < this.ModuleStats.MaxLvl && this.ModuleStats.UpgradeCost <= this.Bot.ModulePoints)
+		if(this.ModuleStats.Level < this.ModuleStats.MaxLevel && this.ModuleStats.UpgradeCost <= this.Bot.ModulePoints)
 		{
 			this.RandomUpgrades[ numUpgrades ] = id;
 			numUpgrades += 1;
@@ -112,7 +117,7 @@ this.PickRandomUpgrade = function()
 		
 		if(this.Debug)
 		{
-			this.Bot.Say( numUpgrades, "modules available, picking random...", Util.GetTableKey(MODULE, pickedModuleId) );
+			this.Bot.Say( numUpgrades, "modules available, picking random... ", Util.GetTableKey(MODULE, pickedModuleId) );
 		}
 	}
 };

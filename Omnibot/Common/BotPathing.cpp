@@ -20,7 +20,7 @@ namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////
 
-	FollowPath::Query::Query()
+	Navigator::Query::Query()
 		: mUser( 0 )
 		, mMoveMode( Run )
 		, mSkipLastPt( false )
@@ -28,8 +28,8 @@ namespace AiState
 	{
 	}
 
-	FollowPath::FollowPath()
-		: StateChild( "FollowPath" )
+	Navigator::Navigator()
+		: StateChild( "Navigator" )
 		, mPathStatus( PathFinished )
 		, mLookAheadPt( Vector3f::ZERO )
 		, mPassThroughState( 0 )
@@ -41,12 +41,12 @@ namespace AiState
 	{
 	}
 
-	FollowPath::~FollowPath()
+	Navigator::~Navigator()
 	{
 		delete mPathInterface;
 	}
 
-	void FollowPath::Initialize()
+	void Navigator::Initialize()
 	{
 		mPathInterface = System::mInstance->mNavigation->AllocPathInterface();
 
@@ -56,7 +56,7 @@ namespace AiState
 		mPathInterface->UpdateNavFlags( includeFlags, excludeFlags );
 	}
 
-	void FollowPath::GetDebugString( std::stringstream &out )
+	void Navigator::GetDebugString( std::stringstream &out )
 	{
 		if ( mQuery.mUser && IsActive() )
 			out << Utils::HashToString( mQuery.mUser->GetFollowUserName() );
@@ -64,7 +64,7 @@ namespace AiState
 			out << "<none>";
 	}
 
-	void FollowPath::RenderDebug()
+	void Navigator::RenderDebug()
 	{
 		if ( mPathInterface )
 			mPathInterface->Render();
@@ -77,27 +77,38 @@ namespace AiState
 		RenderBuffer::AddCircle( pt.mPt, pt.mRadius, COLOR::GREEN );*/
 	}
 
-	bool FollowPath::IsOnCustomLink() const
+	size_t Navigator::GetNumCorners() const
+	{
+		return mNumCachedCorners;
+	}
+
+	const PathInterface::PathCorner& Navigator::GetCorner( size_t index ) const
+	{
+		return mCachedCorners[ index ];
+	}
+
+	bool Navigator::IsOnCustomLink() const
 	{
 		return mCachedCorners[ 0 ].mIsLink;
 	}
 
-	bool FollowPath::IsOnCustomLink( NavAreaFlags type ) const
+	bool Navigator::IsOnCustomLink( NavAreaFlags type ) const
 	{
 		return mCachedCorners[ 0 ].mIsLink && ( mCachedCorners[ 0 ].mAreaMask & type );
 	}
-	
-	bool FollowPath::HasUpcomingArea( NavAreaFlags type, float lookahead ) const
+
+	bool Navigator::ApproachingArea( NavAreaFlags type, float lookahead ) const
 	{
 		const Vector3f bottomBounds = GetClient()->GetWorldBounds().GetCenterBottom();
 		Vector3f lastPos = bottomBounds;
 
 		for ( size_t i = 0; i < mNumCachedCorners && lookahead > 0.0f; ++i )
 		{
-			if ( ( mCachedCorners[ 0 ].mAreaMask & type ) != 0 )
+			if ( ( mCachedCorners[ i ].mAreaMask & type ) != 0 )
 				return true;
 
 			Vector3f seg = mCachedCorners[ i ].mPos - lastPos;
+			lastPos = mCachedCorners[ i ].mPos;
 			const float d = seg.Normalize();
 			lookahead -= d;
 		}
@@ -105,23 +116,67 @@ namespace AiState
 		return false;
 	}
 
-	bool FollowPath::GetAimPosition( Vector3f &_aimpos )
+	int Navigator::GetAreaEntitiesAlongPath( float lookahead, GameEntity entities [], size_t maxEntities ) const
+	{
+		size_t numEntitiesOut = 0;
+
+		const Vector3f bottomBounds = GetClient()->GetWorldBounds().GetCenterBottom();
+		Vector3f lastPos = bottomBounds;
+
+		for ( size_t i = 0; i < mNumCachedCorners && lookahead > 0.0f; ++i )
+		{
+			Vector3f seg = mCachedCorners[ i ].mPos - lastPos;
+			const float d = seg.Normalize();
+			lookahead -= d;
+
+			if ( lookahead < 0.0 )
+				break;
+
+			for ( int e = 0; e < PathInterface::PathCorner::MAX_ENTITIES; ++e )
+			{
+				if ( !mCachedCorners[ i ].mEntities[ e ].IsValid() )
+					break;
+
+				entities[ numEntitiesOut++ ] = mCachedCorners[ i ].mEntities[ e ];
+
+				if ( numEntitiesOut >= maxEntities )
+					return numEntitiesOut;
+			}
+
+			lastPos = mCachedCorners[ i ].mPos;
+		}
+
+		return numEntitiesOut;
+	}
+
+	size_t Navigator::GetAreaEntitiesInRadius( const Vector3f& pos, float radius, GameEntity entities [], size_t maxEntities )
+	{
+		return mPathInterface->FindAreaEntitiesInRadius( pos, radius, entities, maxEntities );
+	}
+
+	bool Navigator::NavTrace( PathInterface::NavTraceResult& result, const Vector3f& start, const Vector3f& end )
+	{
+		return mPathInterface->NavTrace( result, start, end );
+	}
+
+	bool Navigator::GetAimPosition( Vector3f &_aimpos )
 	{
 		_aimpos = mLookAheadPt;
 		return true;
 	}
 
-	void FollowPath::OnTarget()
+	void Navigator::OnTarget()
 	{
 	}
 
-	void FollowPath::Enter()
+	void Navigator::Enter()
 	{
 		mLookAheadPt = GetClient()->GetEyePosition() + GetClient()->GetFacingVector() * 512.f;
 		FINDSTATEIF( Aimer, GetParent(), AddAimRequest( Priority::Idle, this, GetNameHash() ) );
+		GetClient()->ResetStuckTime();
 	}
 
-	void FollowPath::Exit()
+	void Navigator::Exit()
 	{
 		Stop();
 
@@ -129,7 +184,7 @@ namespace AiState
 		FINDSTATEIF( Aimer, GetParent(), ReleaseAimRequest( GetNameHash() ) );
 	}
 
-	void FollowPath::Stop( bool _clearuser )
+	void Navigator::Stop( bool _clearuser )
 	{
 		// _clearuser is true if HighLevel goal was aborted
 		if ( mPassThroughState && _clearuser )
@@ -160,12 +215,12 @@ namespace AiState
 			ClearUser();
 	}
 
-	void FollowPath::ClearUser()
+	void Navigator::ClearUser()
 	{
 		mQuery.mUser = 0;
 	}
 
-	void FollowPath::CancelPathThrough()
+	void Navigator::CancelPathThrough()
 	{
 		// always want to do this, if state active or not
 		if ( mPassThroughState )
@@ -183,17 +238,17 @@ namespace AiState
 		}
 	}
 
-	void FollowPath::SaveQuery()
+	void Navigator::SaveQuery()
 	{
 		mSavedQuery = mQuery;
 	}
 
-	void FollowPath::RestoreQuery()
+	void Navigator::RestoreQuery()
 	{
 		mQuery = mSavedQuery;
 	}
 
-	void FollowPath::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void Navigator::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
 	{
 		/*switch(_message.GetMessageId())
 		{
@@ -210,16 +265,15 @@ namespace AiState
 		};*/
 	}
 
-	bool FollowPath::GotoRandomPt( FollowPathUser *_owner, MoveMode _movemode /*= Run*/ )
+	bool Navigator::GotoRandomPt( FollowPathUser* owner, MoveMode movemode /*= Run*/ )
 	{
 		NavFlags includeFlags = NAVFLAGS_WALK;
 		NavFlags excludeFlags = NAVFLAGS_NONE;
 		GetClient()->GetNavFlags( includeFlags, excludeFlags );
 		mPathInterface->UpdateNavFlags( includeFlags, excludeFlags );
-
 		mPathInterface->UpdateSourcePosition( GetClient()->GetPosition() );
 		mPathInterface->UpdateGoalPositionRandom();
-		mPathInterface->UpdatePath();
+		mPathInterface->UpdatePath( false );
 
 		const PathInterface::PathStatus ps = mPathInterface->GetPathStatus();
 		switch ( ps )
@@ -227,7 +281,6 @@ namespace AiState
 			case PathInterface::PATH_VALID:
 			case PathInterface::PATH_SEARCHING:
 			{
-				GetClient()->ResetStuckTime();
 				mPathStatus = PathInProgress;
 				return true;
 			}
@@ -243,18 +296,18 @@ namespace AiState
 		return false;
 	}
 
-	bool FollowPath::Goto( FollowPathUser *_owner, MoveMode _movemode /*= Run*/, bool _skiplastpt /*= false*/ )
+	bool Navigator::Goto( FollowPathUser *owner, MoveMode movemode /*= Run*/, bool skiplastpt /*= false*/ )
 	{
-		bool bFinalDest = true;
-		if ( !_owner ) return false;
+		bool finalDest = true;
+		if ( !owner ) return false;
 
 		DestinationVector destlist;
-		if ( _owner->GetNextDestination( destlist, bFinalDest, _skiplastpt ) )
+		if ( owner->GetNextDestination( destlist, finalDest, skiplastpt ) )
 		{
-			return Goto( _owner, destlist, _movemode, _skiplastpt, bFinalDest );
+			return Goto( owner, destlist, movemode, skiplastpt, finalDest );
 		}
 
-		if ( _owner == mQuery.mUser )
+		if ( owner == mQuery.mUser )
 		{
 			mPathStatus = PathNotFound;
 			NotifyUserFailed( FollowPathUser::NoPath );
@@ -262,39 +315,39 @@ namespace AiState
 		}
 		else
 		{
-			_owner->OnPathFailed( FollowPathUser::NoPath );
+			owner->OnPathFailed( FollowPathUser::NoPath );
 		}
 		return false;
 	}
 
-	bool FollowPath::Goto( FollowPathUser *_owner, const Vector3f &_pos, float _radius /*= 32.f*/, MoveMode _movemode /*= Run*/, bool _skiplastpt /*= false*/ )
+	bool Navigator::Goto( FollowPathUser *owner, const Vector3f &_pos, float _radius /*= 32.f*/, MoveMode movemode /*= Run*/, bool skiplastpt /*= false*/ )
 	{
 		DestinationVector destlist;
 		destlist.push_back( Destination( _pos, _radius ) );
-		return Goto( _owner, destlist, _movemode, _skiplastpt );
+		return Goto( owner, destlist, movemode, skiplastpt );
 	}
 
-	bool FollowPath::Goto( FollowPathUser *_owner, const Vector3List &_goals, float _radius /*= 32.f*/, MoveMode _movemode /*= Run*/, bool _skiplastpt /*= false*/ )
+	bool Navigator::Goto( FollowPathUser *owner, const Vector3List &goals, float _radius /*= 32.f*/, MoveMode movemode /*= Run*/, bool skiplastpt /*= false*/ )
 	{
 		DestinationVector destlist;
-		for ( uint32_t i = 0; i < _goals.size(); ++i )
-			destlist.push_back( Destination( _goals[ i ], _radius ) );
-		return Goto( _owner, destlist, _movemode, _skiplastpt );
+		for ( uint32_t i = 0; i < goals.size(); ++i )
+			destlist.push_back( Destination( goals[ i ], _radius ) );
+		return Goto( owner, destlist, movemode, skiplastpt );
 	}
 
-	bool FollowPath::Goto( FollowPathUser *_owner, const MapGoalList &_goals, MoveMode _movemode /*= Run*/, bool _skiplastpt /*= false*/ )
+	bool Navigator::Goto( FollowPathUser *owner, const MapGoalList &goals, MoveMode movemode /*= Run*/, bool skiplastpt /*= false*/ )
 	{
 		DestinationVector destlist;
-		for ( uint32_t i = 0; i < _goals.size(); ++i )
-			destlist.push_back( Destination( _goals[ i ]->GetPosition(), _goals[ i ]->GetRadius() ) );
-		return Goto( _owner, destlist, _movemode, _skiplastpt );
+		for ( uint32_t i = 0; i < goals.size(); ++i )
+			destlist.push_back( Destination( goals[ i ]->GetPosition(), goals[ i ]->GetRadius() ) );
+		return Goto( owner, destlist, movemode, skiplastpt );
 	}
 
-	bool FollowPath::Goto( FollowPathUser *_owner, const DestinationVector &_goals, MoveMode _movemode /*= Run*/, bool _skiplastpt /*= false*/, bool _final /*= true*/ )
+	bool Navigator::Goto( FollowPathUser *owner, const DestinationVector &goals, MoveMode movemode /*= Run*/, bool skiplastpt /*= false*/, bool final /*= true*/ )
 	{
-		if ( mPassThroughState && _owner != mQuery.mUser )
+		if ( mPassThroughState && owner != mQuery.mUser )
 		{
-			if ( _owner->GetFollowUserName() == mPassThroughState )
+			if ( owner->GetFollowUserName() == mPassThroughState )
 			{
 				// paththrough called Goto,
 				// save HighLevel goal's query
@@ -302,31 +355,32 @@ namespace AiState
 			}
 			else if ( mQuery.mUser && mQuery.mUser->GetFollowUserName() == mPassThroughState )
 			{
-				if ( mSavedQuery.mUser && _owner != mSavedQuery.mUser )
+				if ( mSavedQuery.mUser && owner != mSavedQuery.mUser )
 					mSavedQuery.mUser->OnPathFailed( FollowPathUser::Interrupted );
 
 				// remember current query and don't interrupt active paththrough
-				mSavedQuery.mUser = _owner;
-				mSavedQuery.mDestination = _goals;
-				mSavedQuery.mMoveMode = _movemode;
-				mSavedQuery.mSkipLastPt = _skiplastpt;
-				mSavedQuery.mFinal = _final;
+				mSavedQuery.mUser = owner;
+				mSavedQuery.mDestination = goals;
+				mSavedQuery.mMoveMode = movemode;
+				mSavedQuery.mSkipLastPt = skiplastpt;
+				mSavedQuery.mFinal = final;
 				return true;
 			}
 		}
 
-		mQuery.mUser = _owner;
-		mQuery.mDestination = _goals;
-		mQuery.mMoveMode = _movemode;
-		mQuery.mSkipLastPt = _skiplastpt;
-		mQuery.mFinal = _final;
+		mQuery.mUser = owner;
+		mQuery.mDestination = goals;
+		mQuery.mMoveMode = movemode;
+		mQuery.mSkipLastPt = skiplastpt;
+		mQuery.mFinal = final;
 		return Repath();
 	}
 
-	bool FollowPath::Repath()
+	bool Navigator::Repath()
 	{
 		if ( !mQuery.mUser )
 			return false;
+
 		mQuery.mUser->ResetPathUser();
 		mPathThroughPtIndex = -1;
 
@@ -336,11 +390,10 @@ namespace AiState
 		mPathInterface->UpdateNavFlags( includeFlags, excludeFlags );
 		mPathInterface->UpdateSourcePosition( GetClient()->GetPosition() );
 		mPathInterface->UpdateGoalPositions( mQuery.mDestination );
-		mPathInterface->UpdatePath();
-
+		mPathInterface->UpdatePath( false );
+		
 		if ( mPathInterface->GetPathStatus() == PathInterface::PATH_VALID )
 		{
-			GetClient()->ResetStuckTime();
 			mPathStatus = PathInProgress;
 		}
 		else
@@ -350,54 +403,29 @@ namespace AiState
 			if ( !mPassThroughState )
 				mQuery.mUser = 0;
 		}
-		/*.mQuery.mUser->mDestinationIndex =
-			System::mInstance->mNavigation->PlanPathToNearest(
-			GetClient(),
-			GetClient()->GetPosition(),
-			mQuery.mDestination,
-			GetClient()->GetTeamFlag() );
-
-			if( System::mInstance->mNavigation->FoundGoal() )
-			{
-			mCurrentPath.Clear();
-			System::mInstance->mNavigation->GetPath(.mCurrentPath);
-			if(!mQuery.mSkipLastPt)
-			{
-			Destination dest = mQuery.mDestination[.mQuery.mUser->mDestinationIndex];
-			mCurrentPath.AddPt(dest.mPosition, dest.mRadius);
-			}
-			GetClient()->ResetStuckTime();
-			mPathStatus = PathInProgress;
-			}
-			else
-			{
-			mPathStatus = PathNotFound;
-			NotifyUserFailed(FollowPathUser::NoPath);
-			if(!mPassThroughState) mQuery.mUser = 0;
-			}*/
 		return mPathStatus < PathFinished;
 	}
 
-	bool FollowPath::IsMoving() const
+	bool Navigator::IsMoving() const
 	{
 		return mPathInterface->GetPathStatus() == PathInterface::PATH_VALID;
 	}
 
-	void FollowPath::NotifyUserSuccess()
+	void Navigator::NotifyUserSuccess()
 	{
 		if ( mQuery.mUser )
 			mQuery.mUser->OnPathSucceeded();
 	}
 
-	void FollowPath::NotifyUserFailed( FollowPathUser::FailType _how )
+	void Navigator::NotifyUserFailed( FollowPathUser::FailType how )
 	{
 		if ( mQuery.mUser )
-			mQuery.mUser->OnPathFailed( _how );
+			mQuery.mUser->OnPathFailed( how );
 
 		if ( GetClient()->IsDebugEnabled( BOT_DEBUG_LOG_FAILED_PATHS ) )
 		{
 			const char *FailType = 0;
-			switch ( _how )
+			switch ( how )
 			{
 				case FollowPathUser::Blocked:
 					FailType = "Blocked";
@@ -412,100 +440,58 @@ namespace AiState
 			}
 
 			/*if(FailType)
-			{
-			File f;
-			f.OpenForWrite(va("user/failedpaths.txt"), File::Text, true);
-			if(f.IsOpen())
-			{
-			Vector3f Position = GetClient()->GetPosition();
-			Vector3f Dest = Vector3f::ZERO;
+		{
+		File f;
+		f.OpenForWrite(va("user/failedpaths.txt"), File::Text, true);
+		if(f.IsOpen())
+		{
+		Vector3f Position = GetClient()->GetPosition();
+		Vector3f Dest = Vector3f::ZERO;
 
-			Path::PathPoint pt;
-			if(.mCurrentPath.GetCurrentPt(pt))
-			Dest = pt.mPt;
+		Path::PathPoint pt;
+		if(.mCurrentPath.GetCurrentPt(pt))
+		Dest = pt.mPt;
 
-			f.WriteString("{");
-			f.WriteNewLine();
+		f.WriteString("{");
+		f.WriteNewLine();
 
-			f.Printf("\tType = \"%s\",",FailType); f.WriteNewLine();
-			f.Printf("\tP = Vector3(%f,%f,%f),",Position.X(),Position.Y(),Position.Z());
-			f.WriteNewLine();
+		f.Printf("\tType = \"%s\",",FailType); f.WriteNewLine();
+		f.Printf("\tP = Vector3(%f,%f,%f),",Position.X(),Position.Y(),Position.Z());
+		f.WriteNewLine();
 
-			if(_how == FollowPathUser::NoPath)
-			{
-			f.WriteString("\tDest = {"); f.WriteNewLine();
-			for(uint32_t i = 0; i < mQuery.mDestination.size(); ++i)
-			{
-			f.Printf("\t\tVector3(%f,%f,%f),",
-			mQuery.mDestination[i].mPosition.X(),
-			mQuery.mDestination[i].mPosition.Y(),
-			mQuery.mDestination[i].mPosition.Z());
-			f.WriteNewLine();
-			}
-			f.WriteString("\t},"); f.WriteNewLine();
-			}
-			else
-			{
-			f.Printf("\tDest = Vector3(%f,%f,%f),",
-			pt.mPt.X(),pt.mPt.Y(),pt.mPt.Z());
-			f.WriteNewLine();
-			}
+		if(how == FollowPathUser::NoPath)
+		{
+		f.WriteString("\tDest = {"); f.WriteNewLine();
+		for(uint32_t i = 0; i < mQuery.mDestination.size(); ++i)
+		{
+		f.Printf("\t\tVector3(%f,%f,%f),",
+		mQuery.mDestination[i].mPosition.X(),
+		mQuery.mDestination[i].mPosition.Y(),
+		mQuery.mDestination[i].mPosition.Z());
+		f.WriteNewLine();
+		}
+		f.WriteString("\t},"); f.WriteNewLine();
+		}
+		else
+		{
+		f.Printf("\tDest = Vector3(%f,%f,%f),",
+		pt.mPt.X(),pt.mPt.Y(),pt.mPt.Z());
+		f.WriteNewLine();
+		}
 
-			f.WriteString("},"); f.WriteNewLine();
-			f.Close();
-			}
-			}*/
+		f.WriteString("},"); f.WriteNewLine();
+		f.Close();
+		}
+		}*/
 		}
 	}
 
-	float FollowPath::GetPriority()
+	float Navigator::GetPriority()
 	{
-		// always want to do this, if state active or not
-		//if(.mPassThroughState)
-		//{
-		//	FINDSTATE(ll,LowLevel,GetRootState());
-		//	if ( ll ) {
-		//		State *pPathThrough = ll->FindState(.mPassThroughState);
-		//		if(!pPathThrough || (!pPathThrough->IsActive() && pPathThrough->GetLastPriority()<Mathf::EPSILON))
-		//		{
-		//			// paththrough state finished
-		//			if(.mQuery.mUser && mQuery.mUser->GetFollowUserName() == mPassThroughState)
-		//			{
-		//			 mPassThroughState = 0;
-
-		//				if(.mSavedQuery.mUser)
-		//				{
-		//					// find new path to the current HighLevel goal
-		//					RestoreQuery();
-		//					Repath();
-		//				}
-		//				else
-		//				{
-		//					Stop(false);
-		//				 mQuery.mUser = 0;
-		//				}
-		//			}
-		//			else
-		//			{
-		//			 mPassThroughState = 0;
-
-		//				if(.mCurrentPath.GetCurrentPtIndex() != mPathThroughPtIndex + 1)
-		//				{
-		//					// repath if the previous waypoint has paththrough which has been skipped
-		//					Path::PathPoint ptPrev;
-		//					if(.mCurrentPath.GetPreviousPt(ptPrev) && ptPrev.mOnPathThrough && ptPrev.mOnPathThroughParam)
-		//					{
-		//						Repath();
-		//					}
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
-		return mPathStatus < PathFinished ? ( float )1.0 : ( float )0.0;
+		return 1.0;
 	}
 
-	State::StateStatus FollowPath::Update( float fDt )
+	State::StateStatus Navigator::Update( float fDt )
 	{
 		rmt_ScopedCPUSample( FollowPathUpdate );
 		{
@@ -519,9 +505,10 @@ namespace AiState
 				return State_Finished;
 			}
 
-			Vector3f vGotoTarget = bottomBounds;
+			Vector3f dstPos = bottomBounds;
 
-			float ptRadius = 8.0f; // deprecate this?
+			float dstRadius = 8.0f; // deprecate this?
+			float pathDistance = 0.0f;
 			bool b3dMovement = false; // todo: trash this, handle in here rather than steering
 
 			NavFlags includeFlags = NAVFLAGS_WALK;
@@ -537,16 +524,16 @@ namespace AiState
 				b3dMovement = inWater;
 
 				// go to the next corner
-				vGotoTarget = mCachedCorners[ 0 ].mPos;
+				dstPos = mCachedCorners[ 0 ].mPos;
 
-				Vector3f toTarget = vGotoTarget - bottomBounds;
+				Vector3f toTarget = dstPos - bottomBounds;
 				const float distToCorner = toTarget.Normalize();
-				
+
 				if ( IsOnCustomLink() )
 				{
 					OffMeshConnection conn;
 					mPathInterface->GetNavLink( mCachedCorners[ 0 ].mPolyId, conn );
-					
+
 					if ( mActiveLink.mPolyId != mCachedCorners[ 0 ].mPolyId )
 					{
 						mActiveLinkIndex = 0;
@@ -573,8 +560,8 @@ namespace AiState
 					mActiveLink.mPolyId = 0;
 					mActiveLinkIndex = 0;
 				}
-				
-				// todo: remove this in favor of locomotion control behaviors running to handle edges?
+
+				// todo: remove this in favor of locomotion control behaviors running to handle edge types?
 				GetClient()->ProcessGotoNode( mCachedCorners, mNumCachedCorners );
 
 				// look ahead in the path
@@ -583,23 +570,29 @@ namespace AiState
 				// start with the current position
 				Vector3f lastPos = bottomBounds;
 
-				for ( size_t i = 0; i < mNumCachedCorners && lookAheadDistance > 0.0f; ++i )
+				for ( size_t i = 0; i < mNumCachedCorners; ++i )
 				{
 					const PathInterface::PathCorner & c0 = mCachedCorners[ i ];
 
 					Vector3f edgeDir = c0.mPos - lastPos;
 					const float edgeLen = edgeDir.Normalize();
 
-					if ( edgeLen > lookAheadDistance )
+					pathDistance += edgeLen;
+
+					if ( lookAheadDistance > 0.0f )
 					{
-						mLookAheadPt = lastPos + edgeDir * lookAheadDistance;
-						break;
+						if ( edgeLen > lookAheadDistance )
+						{
+							mLookAheadPt = lastPos + edgeDir * lookAheadDistance;
+							break;
+						}
+						else
+						{
+							mLookAheadPt = c0.mPos;
+						}
+						lookAheadDistance -= edgeLen;
 					}
-					else
-					{
-						mLookAheadPt = c0.mPos;
-					}
-					lookAheadDistance -= edgeLen;
+
 					lastPos = c0.mPos;
 				}
 
@@ -628,7 +621,7 @@ namespace AiState
 					GetClient()->ReleaseButton( BOT_BUTTON_CROUCH );
 					GetClient()->PressButton( BOT_BUTTON_JUMP );
 				}
-				
+
 				if ( mPathInterface->GetCurrentAreaFlags() & NAVFLAGS_CROUCH )
 					GetClient()->PressButton( BOT_BUTTON_CROUCH );
 				else
@@ -638,7 +631,7 @@ namespace AiState
 					else
 						GetClient()->ReleaseButton( BOT_BUTTON_CROUCH );
 				}
-				
+
 				if ( mCachedCorners[ 0 ].mAreaMask == NAVFLAGS_DOOR && IGame::GetFrameNumber() & 3 )
 					GetClient()->PressButton( BOT_BUTTON_USE );
 				/*if ( mCachedCorners[ 0 ].mFlags & F_NAV_JUMPLOW )
@@ -647,21 +640,31 @@ namespace AiState
 					GetClient()->PressButton( BOT_BUTTON_WALK );*/
 			}
 
-			if ( GetClient()->GetStuckTime() > 2000 )
+			if ( GetClient()->GetStuckTime() > 1000 )
 			{
 				FINDSTATEIF( SteeringSystem, GetRootState(), SetTarget( bottomBounds ) );
 				NotifyUserFailed( FollowPathUser::Blocked );
 				mPathStatus = PathFinished;
 				return State_Finished;
 			}
+			else if ( GetClient()->GetStuckTime() > 250 )
+			{
+				float wallDist;
+				Vector3f wallPos, wallNormal;
+				if ( mPathInterface->GetNearestWall( wallPos, wallNormal, wallDist ) )
+				{
+					Vector3f moveDir = dstPos - bottomBounds;
+					moveDir.Flatten();
+					moveDir.Normalize();
+					moveDir += wallNormal;
+					moveDir.Normalize();
+					dstPos = bottomBounds + moveDir * 8.0f;
+				}
+			}
 
-			FINDSTATEIF( SteeringSystem, GetRootState(),
-				SetTarget( vGotoTarget,
-				ptRadius,
-				mQuery.mMoveMode,
-				b3dMovement ) );
+			FINDSTATEIF( SteeringSystem, GetRootState(), SetTarget( dstPos, dstRadius, pathDistance, mQuery.mMoveMode, b3dMovement ) );
 
-			if ( mNumCachedCorners <= 1 && ( b3dMovement ? Length( bottomBounds, vGotoTarget ) : Length2d( bottomBounds, vGotoTarget ) ) < ptRadius )
+			if ( mNumCachedCorners <= 1 && ( b3dMovement ? Length( bottomBounds, dstPos ) : Length2d( bottomBounds, dstPos ) ) < dstRadius )
 			{
 				NotifyUserSuccess();
 				mPathStatus = PathFinished;
@@ -671,7 +674,7 @@ namespace AiState
 		return State_Busy;
 	}
 
-	bool FollowPath::CheckForMover( const Vector3f &_pos )
+	bool Navigator::CheckForMover( const Vector3f &_pos )
 	{
 		const float dropHeight = GetClient()->GetWorldBounds().Extent[ 2 ];
 		const Vector3f boundsCenter = GetClient()->GetWorldBounds().Center;
@@ -685,7 +688,7 @@ namespace AiState
 		return bMover;
 	}
 
-	void FollowPath::CheckForLowJumps( const Vector3f &_destination )
+	void Navigator::CheckForLowJumps( const Vector3f &_destination )
 	{
 		rmt_ScopedCPUSample( CheckForLowJumps );
 
@@ -738,7 +741,7 @@ namespace AiState
 		}
 	}
 
-	void FollowPath::CheckForGapJumps( const Vector3f &_destination )
+	void Navigator::CheckForGapJumps( const Vector3f &_destination )
 	{
 		rmt_ScopedCPUSample( CheckForGapJumps );
 

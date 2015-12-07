@@ -55,13 +55,9 @@ struct MeshEdge
 class PathInterface
 {
 public:
-	PathInterface()
-	{
-	}
-	virtual ~PathInterface()
-	{
-	}
-
+	PathInterface();
+	virtual ~PathInterface();
+	
 	enum PathStatus
 	{
 		PATH_NONE,
@@ -72,11 +68,14 @@ public:
 
 	struct PathCorner
 	{
+		static const int MAX_ENTITIES = 8;
+
 		Vector3f		mPos;
 		NavAreaFlags	mAreaMask;
 		uint64_t		mPolyId;
+		GameEntity		mEntities[ MAX_ENTITIES ];
 		bool			mIsLink;
-
+		
 		PathCorner()
 			: mAreaMask( NAVFLAGS_NONE )
 			, mPolyId( 0 )
@@ -86,16 +85,36 @@ public:
 	};
 	
 	virtual PathStatus GetPathStatus() const = 0;
+
+	struct NavTraceResult
+	{
+		float		t;
+		Vector3f	pos;
+		Vector3f	normal;
+		float		pathCost;
+
+		NavTraceResult()
+			: t( FLT_MAX )
+			, pos( Vector3f::ZERO )
+			, normal( Vector3f::ZERO )
+			, pathCost( -1.0f )
+		{
+		}
+	};
 	
 	virtual void UpdateNavFlags( NavFlags includeFlags, NavFlags excludeFlags ) = 0;
 	virtual void UpdateSourcePosition( const Vector3f & srcPos ) = 0;
 	virtual void UpdateGoalPosition( const Vector3f & goal, float radius ) = 0;
 	virtual void UpdateGoalPositions( const DestinationVector & goals ) = 0;
 	virtual bool UpdateGoalPositionRandom() = 0;
-
-	virtual void UpdatePath() = 0;
-
+	virtual void UpdatePath( bool forceRecalculate ) = 0;
 	virtual void Cancel() = 0;
+
+	virtual bool GetNearestWall( Vector3f& wallPos, Vector3f& wallNormal, float& wallDist ) = 0;
+
+	virtual bool NavTrace( NavTraceResult& result, const Vector3f& start, const Vector3f& end ) { return false; }
+
+	virtual size_t FindAreaEntitiesInRadius( const Vector3f& pos, float radius, GameEntity entities[], size_t maxEntities ) { return 0; }
 
 	virtual NavAreaFlags GetCurrentAreaFlags() const = 0;
 	virtual size_t GetPathCorners( PathCorner * corners, size_t maxEdges ) = 0;

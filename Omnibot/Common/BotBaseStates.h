@@ -26,7 +26,7 @@ namespace AiState
 	class FollowPathUser
 	{
 	public:
-		friend class FollowPath;
+		friend class Navigator;
 
 		enum FailType
 		{
@@ -36,7 +36,7 @@ namespace AiState
 			Interrupted,
 		};
 
-		virtual bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt )
+		virtual bool GetNextDestination( DestinationVector& desination, bool& final, bool& skiplastpt )
 		{
 			return false;
 		}
@@ -91,8 +91,8 @@ namespace AiState
 			return mUserName;
 		}
 
-		void SetFollowUserName( uint32_t name );
-		void SetFollowUserName( const std::string &name );
+		void SetUserName( uint32_t name );
+		void SetUserName( const std::string &name );
 
 		FollowPathUser( const std::string &user );
 		FollowPathUser( uint32_t name );
@@ -102,9 +102,9 @@ namespace AiState
 	private:
 		uint32_t				 mUserName;
 
-		int						 mCallingThread;
+		int							mCallingThread;
 
-		int						 mDestinationIndex;
+		int							mDestinationIndex;
 
 		FailType				 mPathFailed : 3;
 		uint8_t					 mPathSuccess : 1;
@@ -254,7 +254,7 @@ namespace AiState
 		void RenderDebug();
 
 		// FollowPathUser
-		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
+		bool GetNextDestination( DestinationVector& desination, bool& final, bool& skiplastpt );
 
 		CaptureTheFlag();
 	private:
@@ -309,7 +309,7 @@ namespace AiState
 	//	StateStatus Update(float fDt);
 
 	//	// FollowPathUser functions.
-	//	bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+	//	bool GetNextDestination( DestinationVector& desination, bool& final, bool& skiplastpt);
 
 	//	// AimerUser functions.
 	//	bool GetAimPosition(Vector3f &_aimpos);
@@ -346,7 +346,7 @@ namespace AiState
 	//	StateStatus Update(float fDt);
 
 	//	// FollowPathUser functions.
-	//	bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+	//	bool GetNextDestination( DestinationVector& desination, bool& final, bool &skiplastpt );
 
 	//	// AimerUser functions.
 	//	bool GetAimPosition(Vector3f &_aimpos);
@@ -528,7 +528,7 @@ namespace AiState
 	//	StateStatus Update(float fDt);
 
 	//	// FollowPathUser functions.
-	//	bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+	//	bool GetNextDestination( DestinationVector& desination, bool& final, bool &skiplastpt );
 
 	//	// AimerUser functions.
 	//	bool GetAimPosition(Vector3f &_aimpos);

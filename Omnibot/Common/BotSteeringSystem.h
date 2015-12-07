@@ -25,12 +25,13 @@ namespace AiState
 	class SteeringSystem : public StateChild
 	{
 	public:
-
-		typedef enum
+		enum MoveType
 		{
 			Normal,
 			Arrive,
-		} MoveType;
+		};
+
+		static const float sDefaultRadius;
 
 		// function: Update
 		//		Allows the steering system to process steering effectors
@@ -40,7 +41,7 @@ namespace AiState
 		// function: SetTarget
 		//		Sets <.mTargetVector>, which is the goal point the bot
 		//		should be heading for.
-		bool SetTarget( const Vector3f &_pos, float _radius = 32.f, MoveMode _movemode = Run, bool _in3d = false );
+		bool SetTarget( const Vector3f & pos, float radius = sDefaultRadius, float pathDist = 0.0f, MoveMode movemode = Run, bool in3d = false );
 
 		const Vector3f &GetTarget() const
 		{
@@ -79,38 +80,31 @@ namespace AiState
 		SteeringSystem();
 		virtual ~SteeringSystem();
 	protected:
-		// var: .mTargetVector
+		// var: mTargetVector
 		//		The current position we are suppose to be going for
-		Vector3f mTargetVector;
-		float	 mTargetRadius;
-		MoveMode mMoveMode;
-
-		float	 mDistanceToTarget;
-
-		// var: .mvMoveVec
+		Vector3f		mTargetVector;
+		float			mTargetPathDist;
+		float			mTargetRadius;
+		MoveMode		mMoveMode;
+		
+		// var: mvMoveVec
 		//		The latest calculated movement vector
-		Vector3f mMoveVec;
-		// var: .mObstacles
+		Vector3f		mMoveVec;
+		// var: mObstacles
 		//		A list of entities we should try to avoid.
-		MemoryRecords mObstacles;
-		EntityList	 mNearbyPlayers;
-		// var: .mNoAvoidTime
+		MemoryRecords	mObstacles;
+		EntityList		mNearbyPlayers;
+		// var: mNoAvoidTime
 		//		A time to not calculate avoidance. If > IGame::GetTime() avoidance is not processed.
-		int		 mNoAvoidTime;
+		int				mNoAvoidTime;
 
 		MoveType mMoveType;
 
-		// var: .mNoAvoidTime
+		// var: mNoAvoidTime
 		//		A time to not calculate avoidance. If > IGame::GetTime() avoidance is not processed.
 		bool	 mbMoveEnabled;
 
 		bool	 mTargetVector3d;
-
-		enum Deceleration
-		{
-			slow = 3, normal = 2, fast = 1
-		};
-		float _Arrive( const Vector3f &_targetPos, Deceleration _deceleration );
 	};
 };
 #endif

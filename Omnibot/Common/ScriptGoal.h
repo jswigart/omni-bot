@@ -91,7 +91,7 @@ namespace AiState
 		{
 			mFinished = true;
 		}
-
+		
 		bool OnPathThrough( const std::string &_s );
 		void EndPathThrough();
 
@@ -298,6 +298,13 @@ namespace AiState
 
 		//////////////////////////////////////////////////////////////////////////
 
+		const std::string& GetSourceFile() const;
+
+		void SetSourceFile( const std::string& filePath );
+
+		void HotReloadScript();
+
+
 		ScriptGoal *Clone();
 		ScriptGoal( const char *_name );
 		~ScriptGoal();
@@ -390,6 +397,8 @@ namespace AiState
 		MapGoalPtr				mMapGoal;
 		MapGoalPtr				mMapGoalRoute;
 		Trackers				mTracker;
+
+		std::string				mSourceFile;
 
 		ScriptGoal();
 	};

@@ -49,6 +49,7 @@ this.SelectClass = function()
 // Upgrade definitions for Modular combat
 this.ModuleUpgradeQueue = 
 {
+	{ Module = MODULE.LONG_JUMP, Level = 1 },
 	{ Module = MODULE.ARMOR_REGEN, Level = 1 },
 	{ Module = MODULE.ARMOR_CAPACITY, Level = 1 },
 	{ Module = MODULE.ARMOR_REGEN, Level = 2 },

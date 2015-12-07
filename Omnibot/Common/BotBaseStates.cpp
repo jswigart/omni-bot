@@ -46,14 +46,14 @@ namespace AiState
 	{
 	}
 
-	void FollowPathUser::SetFollowUserName( uint32_t name )
+	void FollowPathUser::SetUserName( uint32_t name )
 	{
 		mUserName = name;
 	}
 
-	void FollowPathUser::SetFollowUserName( const std::string &name )
+	void FollowPathUser::SetUserName( const std::string &name )
 	{
-		SetFollowUserName( Utils::MakeHash32( name ) );
+		SetUserName( Utils::MakeHash32( name ) );
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -211,12 +211,12 @@ namespace AiState
 		mLastFlagState = mMapGoalFlag ? mMapGoalFlag->GetGoalState() : 0;
 
 		Tracker.InProgress = mMapGoalFlag;
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this ) );
 	}
 
 	void CaptureTheFlag::Exit()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Stop( true ) );
 
 		mGoalState = Idle;
 		mNextMoveTime = 0;
@@ -251,7 +251,7 @@ namespace AiState
 						return State_Finished;
 					}
 					Tracker.InUse = mMapGoalFlag;
-					FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
+					FINDSTATEIF( Navigator, GetRootState(), Goto( this ) );
 				}
 				else
 				{
@@ -268,7 +268,7 @@ namespace AiState
 					// Someone else grab it?
 					if ( mMapGoalFlag->GetGoalState() == S_FLAG_CARRIED )
 					{
-						FINDSTATEIF( FollowPath, GetRootState(), Stop() );
+						FINDSTATEIF( Navigator, GetRootState(), Stop() );
 						return State_Finished;
 					}
 
@@ -322,7 +322,7 @@ namespace AiState
 				if ( IGame::GetTime() >= mNextMoveTime )
 				{
 					mGoalState = CarryingToHold;
-					FINDSTATEIF( FollowPath, GetRootState(), Goto( this ) );
+					FINDSTATEIF( Navigator, GetRootState(), Goto( this ) );
 				}
 
 				if ( mMapGoalCap && !mMapGoalCap->IsAvailable( GetClient()->GetTeam() ) )
@@ -403,7 +403,7 @@ namespace AiState
 	//}
 
 	//// FollowPathUser functions.
-	//bool Snipe::GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt)
+	//bool Snipe::GetNextDestination( DestinationVector& desination, bool& final, bool& skiplastpt)
 	//{
 	//	if(mMapGoal && mMapGoal->RouteTo(GetClient(), _desination, 64.f))
 	//		_final = false;
@@ -602,12 +602,12 @@ namespace AiState
 	{
 		mMapGoalProg = mMapGoal;
 		mLastGoalPosition = mMapGoal->GetWorldUsePoint();
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, mLastGoalPosition, mMapGoal->GetRadius() ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this, mLastGoalPosition, mMapGoal->GetRadius() ) );
 	}
 
 	void ReturnTheFlag::Exit()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Stop( true ) );
 
 		mMapGoalProg.Reset();
 		mMapGoal.reset();
@@ -634,13 +634,13 @@ namespace AiState
 		if ( SquaredLength( mLastGoalPosition, vUpdatedPosition ) > Mathf::Sqr( 100.f ) )
 		{
 			mLastGoalPosition = vUpdatedPosition;
-			FINDSTATEIF( FollowPath, GetRootState(), Goto( this, mLastGoalPosition, mMapGoal->GetRadius() ) );
+			FINDSTATEIF( Navigator, GetRootState(), Goto( this, mLastGoalPosition, mMapGoal->GetRadius() ) );
 		}
 
 		if ( mMapGoal->GetGoalState() == S_FLAG_AT_BASE || !GetClient()->IsFlagGrabbable( mMapGoal ) )
 			return State_Finished;
 
-		FINDSTATE( follow, FollowPath, GetRootState() );
+		FINDSTATE( follow, Navigator, GetRootState() );
 		if ( follow != NULL && !follow->IsActive() )
 			follow->Goto( this, mLastGoalPosition, mMapGoal->GetRadius() );
 
@@ -662,12 +662,12 @@ namespace AiState
 
 	void Roam::Exit()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Stop( true ) );
 	}
 
 	State::StateStatus Roam::Update( float fDt )
 	{
-		FINDSTATE( follow, FollowPath, GetRootState() );
+		FINDSTATE( follow, Navigator, GetRootState() );
 		if ( follow != NULL && !follow->IsActive() )
 			follow->GotoRandomPt( this );
 		return State_Busy;
@@ -904,10 +904,10 @@ namespace AiState
 				}
 				case MoveDirection:
 				{
-					FINDSTATE( fp, FollowPath, GetRootState() );
-					if ( fp != NULL && fp->IsActive() )
+					FINDSTATE( nav, Navigator, GetRootState() );
+					if ( nav != NULL && nav->IsActive() )
 					{
-						curAim->mAimVector = fp->GetLookAheadPt();
+						curAim->mAimVector = nav->GetLookAheadPt();
 						GetClient()->TurnTowardPosition( curAim->mAimVector );
 						break;
 					}
@@ -956,12 +956,12 @@ namespace AiState
 	{
 		if ( IGame::GetTime() > mNextLookTime )
 		{
-			FINDSTATE( fp, FollowPath, GetParent() );
-			if ( fp )
+			FINDSTATE( nav, Navigator, GetParent() );
+			if ( nav )
 			{
 				Path::PathPoint pp;
 
-				if ( fp->IsMoving() && !fp->IsOnCustomLink() )
+				if ( nav->IsMoving() && !nav->IsOnCustomLink() )
 				{
 					mNextLookTime = GetNextLookTime();
 					return 0.f;
@@ -997,7 +997,7 @@ namespace AiState
 	MotorControl::MotorControl()
 		: StateSimultaneous( "MotorControl" )
 	{
-		AppendState( new FollowPath );
+		AppendState( new Navigator );
 		AppendState( new SteeringSystem );
 		AppendState( new Aimer );
 		AppendState( new LookAround );

@@ -21,19 +21,18 @@
     <RECAST>$(DEPENDENCIES)\recastnavigation</RECAST>
     <REMOTERY>$(DEPENDENCIES)\Remotery</REMOTERY>
     <TINYOBJLOADER>$(DEPENDENCIES)\tinyobjloader</TINYOBJLOADER>
-    <LIBSODIUM>D:\Sourcecode\zmq\libsodium</LIBSODIUM>
-    <ZEROMQ>D:\Sourcecode\zmq\zeromq-4.1.2</ZEROMQ>
+    <LIBSODIUM>$(GAMEANALYTICS)\dependencies\libsodium</LIBSODIUM>
+    <ZEROMQ>$(GAMEANALYTICS)\dependencies\zeromq-4.1.3</ZEROMQ>
     <ETDIR>D:\Games\WET</ETDIR>
     <JADIR>D:\Games\JediAcademy\GameData\</JADIR>
     <ModularCombat>D:\Steam\steamapps\common\Modular Combat\2007\modularcombat</ModularCombat>
     <FortressForever2007>D:\Steam\steamapps\sourcemods\ff_2006_basemod</FortressForever2007>
     <FortressForever2013>D:\Steam\steamapps\sourcemods\ff_2013_basemod</FortressForever2013>
     <SourceSDK2007>D:\Steam\steamapps\common\Source SDK Base 2007\</SourceSDK2007>
+    <ModCom2007>D:\Steam\steamapps\common\Modular Combat\2007</ModCom2007>
   </PropertyGroup>
   <PropertyGroup>
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <OutDir>$(SolutionDir)build\$(ProjectName)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)build\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile />
@@ -146,6 +145,10 @@
     </BuildMacro>
     <BuildMacro Include="SourceSDK2007">
       <Value>$(SourceSDK2007)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="ModCom2007">
+      <Value>$(ModCom2007)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
   </ItemGroup>

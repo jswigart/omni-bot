@@ -43,8 +43,8 @@ namespace AiState
 		if ( IsActive() )
 			return 1.f;
 
-		FINDSTATE( fp, FollowPath, GetParent() );
-		if ( fp )
+		FINDSTATE( nav, Navigator, GetParent() );
+		if ( nav )
 		{
 			/*if(fp->IsMoving() && fp->IsOnCustomLink(F_JA_NAV_FORCEJUMP))
 			{

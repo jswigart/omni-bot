@@ -77,6 +77,7 @@ struct Material
 
 struct GatherParms
 {
+	GameEntity				mEntity;
 	RecastIO::ShapeMode		mMode;
 	int						mIgnoreSurfaces;
 
@@ -93,6 +94,7 @@ struct CollisionTriangle
 	ContentFlags	mContents;
 	SurfaceFlags	mSurface;
 	NavAreaFlags	mNavFlags;
+	GameEntity		mEntity;
 };
 
 struct CollisionConvex
@@ -104,6 +106,7 @@ struct CollisionConvex
 	NavAreaFlags	mNavFlags;
 	float			mHeightMin;
 	float			mHeightMax;
+	GameEntity		mEntity;
 };
 
 struct GatherData

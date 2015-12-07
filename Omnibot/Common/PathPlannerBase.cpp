@@ -45,6 +45,16 @@ const size_t NavAreaFlagsEnum::sKeyValCount = sizeof( NavAreaFlagsEnum::sKeyVal 
 
 //////////////////////////////////////////////////////////////////////////
 
+PathInterface::PathInterface()
+{
+}
+
+PathInterface::~PathInterface()
+{
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 OffMeshConnection::OffMeshConnection()
 	: mRadius( 0.0f )
 	, mAreaFlags( NAVFLAGS_WALK )

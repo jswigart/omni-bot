@@ -41,7 +41,7 @@ message OffMeshConnection
 	required Vec3			exitPos				= 2;
 	repeated Vec3			vertices			= 3;
 	required float			radius				= 4;
-	required uint32			areaflags			= 5;
+	required uint64			areaflags			= 5;
 	optional bool			biDirectional		= 6 [default=false];
 }
 
@@ -85,7 +85,7 @@ message NodeState
 	optional ShapeMode	shapemode				= 6 [default=SHAPE_TRIANGLES];
 	optional bool		solid					= 7 [default=true];
 	optional bool		dynamic					= 8 [default=false];
-	optional int32		navFlagOverride			= 9 [default=0];
+	optional uint64		navFlagOverride			= 9 [default=0];
 	optional uint32		activeModelCrc			= 10 [default=0];
 	optional string		modelname				= 11;
 	optional string		name					= 12;

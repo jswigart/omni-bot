@@ -34,7 +34,7 @@ namespace AiState
 	{
 	}
 	
-	bool StimTouch::GetNextDestination( DestinationVector& desination )
+	bool StimTouch::GetNextDestination( DestinationVector& desination, bool& final, bool& skiplastpt )
 	{
 		Destination d;
 		d.mPosition = mStim.mStimulus->mPosition;
@@ -46,7 +46,6 @@ namespace AiState
 	State::StateStatus StimTouch::UpdateState( float fDt )
 	{
 		FINDSTATEIF( Navigator, GetRootState(), Goto( this ) );
-
 		return State_Busy;
 	}
 

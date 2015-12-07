@@ -1233,7 +1233,7 @@ bool gmScriptGoal::setName( ScriptGoal *a_native, gmThread *a_thread, gmVariable
 	if ( pStr )
 	{
 		a_native->SetName( pStr->GetString() );
-		a_native->SetFollowUserName( pStr->GetString() );
+		a_native->SetUserName( pStr->GetString() );
 	}
 	return true;
 }

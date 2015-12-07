@@ -25,8 +25,10 @@ public:
 	virtual void UpdateGoalPosition( const Vector3f & goal, float radius );
 	virtual void UpdateGoalPositions( const DestinationVector & goals );
 	virtual bool UpdateGoalPositionRandom();
-	virtual void UpdatePath();
+	virtual void UpdatePath( bool forceRecalculate );
 	virtual void Cancel();	
+
+	virtual bool GetNearestWall( Wm5::Vector3f &, Wm5::Vector3f &, float & );
 
 	virtual NavAreaFlags GetCurrentAreaFlags() const;
 	virtual size_t GetPathCorners( PathCorner * corners, size_t maxEdges );

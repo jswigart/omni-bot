@@ -64,17 +64,35 @@ struct Event_LevelUp
 // struct: MC_PlayerStats
 struct MC_PlayerStats
 {
-	int		 mExperienceTotal;
-	int		 mExperienceGame;
-	int		 mModulePoints;
-	int		 mWeaponPoints;
-	int		 mCredits;
-	int		 mLevel;
-	int		 mMinions;
-	int		 mMinionsMax;
-	float	 mAuxPower;
-	float	 mAuxPowerMax;
-	float	 mAuxRegenRate;
+	enum QuantityType
+	{
+		Q_MINION,
+		Q_LASERS,
+		Q_CROWS,
+		Q_MAGMINE,
+		Q_TURRET,
+		Q_MANHACK,
+
+		Q_MAXTYPES = 10 // reserve some space for others
+	};
+
+	int			mExperienceTotal;
+	int			mExperienceGame;
+	int			mModulePoints;
+	int			mWeaponPoints;
+	int			mCredits;
+	int			mLevel;		
+	float		mAuxPower;
+	float		mAuxPowerMax;
+	float		mAuxRegenRate;
+	short		mCount[ Q_MAXTYPES ];
+	short		mCountMax[ Q_MAXTYPES ];
+
+	MC_PlayerStats()
+	{
+		for ( int i = 0; i < Q_MAXTYPES; ++i )
+			mCount[ i ] = mCountMax[ i ] = 0;
+	}
 };
 
 // struct: MC_ModuleStats
@@ -82,12 +100,18 @@ struct MC_ModuleStats
 {
 	struct ModuleInfo
 	{
-		int	 mLvl;
-		int	 mMaxLvl;
-		int	 mUpgradeCost;
-		float mAuxDrain;
-		float mCooldown;
-		ModuleInfo() : mLvl( 0 ), mMaxLvl( 0 ), mUpgradeCost( 0 ), mAuxDrain( 0.f ), mCooldown( 0.f )
+		int		mLvl;
+		int		mMaxLvl;
+		int		mUpgradeCost;
+		float	mAuxDrain;
+		float	mCooldown;
+
+		ModuleInfo()
+			: mLvl( 0 )
+			, mMaxLvl( 0 )
+			, mUpgradeCost( 0 )
+			, mAuxDrain( 0.f )
+			, mCooldown( 0.f )
 		{
 		}
 	};
@@ -97,27 +121,27 @@ struct MC_ModuleStats
 // struct: MC_UpgradeModule
 struct MC_UpgradeModule
 {
-	int		 mModuleId;
+	int			mModuleId;
 };
 
 // struct: MC_CanPhysPickup
 struct MC_CanPhysPickup
 {
-	GameEntity mEntity;
-	obBool	 mCanPickUp;
+	GameEntity	mEntity;
+	obBool		mCanPickUp;
 };
 
 // struct: MC_PhysGunInfo
 struct MC_PhysGunInfo
 {
-	GameEntity mHeldEntity;
-	float	 mLaunchSpeed;
+	GameEntity	mHeldEntity;
+	float		mLaunchSpeed;
 };
 
 struct MC_ChargerStatus
 {
-	float mCurrentCharge;
-	float mMaxCharge;
+	float		mCurrentCharge;
+	float		mMaxCharge;
 };
 
 #pragma pack(pop)

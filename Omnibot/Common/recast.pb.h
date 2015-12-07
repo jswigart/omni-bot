@@ -631,12 +631,12 @@ class OffMeshConnection : public ::google::protobuf::Message {
   inline float radius() const;
   inline void set_radius(float value);
 
-  // required uint32 areaflags = 5;
+  // required uint64 areaflags = 5;
   inline bool has_areaflags() const;
   inline void clear_areaflags();
   static const int kAreaflagsFieldNumber = 5;
-  inline ::google::protobuf::uint32 areaflags() const;
-  inline void set_areaflags(::google::protobuf::uint32 value);
+  inline ::google::protobuf::uint64 areaflags() const;
+  inline void set_areaflags(::google::protobuf::uint64 value);
 
   // optional bool biDirectional = 6 [default = false];
   inline bool has_bidirectional() const;
@@ -665,8 +665,8 @@ class OffMeshConnection : public ::google::protobuf::Message {
   ::RecastIO::Vec3* entrypos_;
   ::RecastIO::Vec3* exitpos_;
   ::google::protobuf::RepeatedPtrField< ::RecastIO::Vec3 > vertices_;
+  ::google::protobuf::uint64 areaflags_;
   float radius_;
-  ::google::protobuf::uint32 areaflags_;
   bool bidirectional_;
   friend void  protobuf_AddDesc_recast_2eproto();
   friend void protobuf_AssignDesc_recast_2eproto();
@@ -1098,12 +1098,12 @@ class NodeState : public ::google::protobuf::Message {
   inline bool dynamic() const;
   inline void set_dynamic(bool value);
 
-  // optional int32 navFlagOverride = 9 [default = 0];
+  // optional uint64 navFlagOverride = 9 [default = 0];
   inline bool has_navflagoverride() const;
   inline void clear_navflagoverride();
   static const int kNavFlagOverrideFieldNumber = 9;
-  inline ::google::protobuf::int32 navflagoverride() const;
-  inline void set_navflagoverride(::google::protobuf::int32 value);
+  inline ::google::protobuf::uint64 navflagoverride() const;
+  inline void set_navflagoverride(::google::protobuf::uint64 value);
 
   // optional uint32 activeModelCrc = 10 [default = 0];
   inline bool has_activemodelcrc() const;
@@ -1171,10 +1171,10 @@ class NodeState : public ::google::protobuf::Message {
   bool enabled_;
   bool solid_;
   bool dynamic_;
-  ::google::protobuf::int32 navflagoverride_;
-  ::google::protobuf::uint32 activemodelcrc_;
+  ::google::protobuf::uint64 navflagoverride_;
   ::std::string* modelname_;
   ::std::string* name_;
+  ::google::protobuf::uint32 activemodelcrc_;
   union TypeUnion {
     ::google::protobuf::int32 submodelid_;
     ::google::protobuf::int32 staticmodelid_;
@@ -2046,7 +2046,7 @@ inline void OffMeshConnection::set_radius(float value) {
   // @@protoc_insertion_point(field_set:RecastIO.OffMeshConnection.radius)
 }
 
-// required uint32 areaflags = 5;
+// required uint64 areaflags = 5;
 inline bool OffMeshConnection::has_areaflags() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
@@ -2057,14 +2057,14 @@ inline void OffMeshConnection::clear_has_areaflags() {
   _has_bits_[0] &= ~0x00000010u;
 }
 inline void OffMeshConnection::clear_areaflags() {
-  areaflags_ = 0u;
+  areaflags_ = GOOGLE_ULONGLONG(0);
   clear_has_areaflags();
 }
-inline ::google::protobuf::uint32 OffMeshConnection::areaflags() const {
+inline ::google::protobuf::uint64 OffMeshConnection::areaflags() const {
   // @@protoc_insertion_point(field_get:RecastIO.OffMeshConnection.areaflags)
   return areaflags_;
 }
-inline void OffMeshConnection::set_areaflags(::google::protobuf::uint32 value) {
+inline void OffMeshConnection::set_areaflags(::google::protobuf::uint64 value) {
   set_has_areaflags();
   areaflags_ = value;
   // @@protoc_insertion_point(field_set:RecastIO.OffMeshConnection.areaflags)
@@ -2614,7 +2614,7 @@ inline void NodeState::set_dynamic(bool value) {
   // @@protoc_insertion_point(field_set:RecastIO.NodeState.dynamic)
 }
 
-// optional int32 navFlagOverride = 9 [default = 0];
+// optional uint64 navFlagOverride = 9 [default = 0];
 inline bool NodeState::has_navflagoverride() const {
   return (_has_bits_[0] & 0x00000080u) != 0;
 }
@@ -2625,14 +2625,14 @@ inline void NodeState::clear_has_navflagoverride() {
   _has_bits_[0] &= ~0x00000080u;
 }
 inline void NodeState::clear_navflagoverride() {
-  navflagoverride_ = 0;
+  navflagoverride_ = GOOGLE_ULONGLONG(0);
   clear_has_navflagoverride();
 }
-inline ::google::protobuf::int32 NodeState::navflagoverride() const {
+inline ::google::protobuf::uint64 NodeState::navflagoverride() const {
   // @@protoc_insertion_point(field_get:RecastIO.NodeState.navFlagOverride)
   return navflagoverride_;
 }
-inline void NodeState::set_navflagoverride(::google::protobuf::int32 value) {
+inline void NodeState::set_navflagoverride(::google::protobuf::uint64 value) {
   set_has_navflagoverride();
   navflagoverride_ = value;
   // @@protoc_insertion_point(field_set:RecastIO.NodeState.navFlagOverride)

@@ -15,12 +15,14 @@
 
 namespace AiState
 {
+	const float SteeringSystem::sDefaultRadius = 32.0f;
+
 	SteeringSystem::SteeringSystem()
 		: StateChild( "SteeringSystem" )
 		, mTargetVector( Vector3f::ZERO )
+		, mTargetPathDist( 0.0f )
 		, mTargetRadius( 32.f )
 		, mMoveMode( Run )
-		, mDistanceToTarget( 0.f )
 		, mMoveVec( Vector3f::ZERO )
 		, mNoAvoidTime( 0 )
 		, mMoveType( Normal )
@@ -40,7 +42,7 @@ namespace AiState
 
 	bool SteeringSystem::InTargetRadius() const
 	{
-		return mDistanceToTarget <= mTargetRadius;
+		return mTargetPathDist <= mTargetRadius;
 	}
 
 	Vector3f SteeringSystem::GetMoveVector( MoveType _movetype )
@@ -48,12 +50,13 @@ namespace AiState
 		return mbMoveEnabled ? mMoveVec : Vector3f::ZERO;
 	}
 
-	bool SteeringSystem::SetTarget( const Vector3f &_pos, float _radius, MoveMode _movemode, bool _in3d )
+	bool SteeringSystem::SetTarget( const Vector3f & pos, float radius, float pathDist, MoveMode movemode, bool in3d )
 	{
-		mTargetVector = _pos;
-		mTargetRadius = _radius;
-		mTargetVector3d = _in3d;
-		mMoveMode = _movemode;
+		mTargetVector = pos;
+		mTargetPathDist = pathDist;
+		mTargetRadius = radius;
+		mTargetVector3d = in3d;
+		mMoveMode = movemode;
 		mMoveType = Arrive;
 		return true;
 	}
@@ -74,27 +77,22 @@ namespace AiState
 		}
 
 		const Vector3f bottomBounds = GetClient()->GetWorldBounds().GetCenterBottom();
-
-		mDistanceToTarget = 0.f;
 		switch ( mMoveType )
 		{
 			case Normal:
 				mMoveVec = mTargetVector - bottomBounds;
 				if ( !mTargetVector3d )
 					mMoveVec = mMoveVec.Flatten();
-				mDistanceToTarget = mMoveVec.Normalize();
 				break;
 			case Arrive:
 				mMoveVec = mTargetVector - bottomBounds;
 				if ( !mTargetVector3d )
 					mMoveVec = mMoveVec.Flatten();
-				mDistanceToTarget = mMoveVec.Normalize();
-				//.mvMoveVec *= _Arrive(.mvTargetVector, normal);
 				break;
 		}
 
 		//////////////////////////////////////////////////////////////////////////
-		if ( mDistanceToTarget <= mTargetRadius )
+		if ( mTargetPathDist <= mTargetRadius )
 		{
 			mMoveVec = Vector3f::ZERO;
 			return;
@@ -104,8 +102,7 @@ namespace AiState
 
 		if ( GetClient()->IsDebugEnabled( BOT_DEBUG_MOVEVEC ) )
 		{
-			Vector3f vPos = GetClient()->GetWorldBounds().Center;
-			RenderBuffer::AddLine( vPos, vPos + mMoveVec * 64.f, COLOR::GREEN );
+			RenderBuffer::AddLine( bottomBounds, bottomBounds + mMoveVec * 64.f, COLOR::GREEN );
 		}
 
 		if ( GetClient()->HasEntityFlag( ENT_FLAG_ON_ICE ) )
@@ -120,7 +117,7 @@ namespace AiState
 	{
 		mTargetVector = GetClient()->GetWorldBounds().GetCenterBottom();
 		GetClient()->SetMovementVector( Vector3f::ZERO );
-		FINDSTATEIF( FollowPath, GetRootState(), Stop() );
+		FINDSTATEIF( Navigator, GetRootState(), Stop() );
 	}
 
 	State::StateStatus SteeringSystem::Update( float fDt )

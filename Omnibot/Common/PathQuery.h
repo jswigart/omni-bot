@@ -18,12 +18,13 @@ struct Destination
 	Vector3f	mPosition;
 	float		mRadius;
 
+	bool operator==( const Destination& other ) const;
+
 	Destination();
 	Destination( const Vector3f &_pos, float _radius );
 };
 
 typedef std::vector<Destination> DestinationVector;
-
 
 struct DeferredQuery
 {

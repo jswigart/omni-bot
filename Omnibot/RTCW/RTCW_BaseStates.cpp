@@ -219,12 +219,12 @@ namespace AiState
 			FINDSTATEIF( ProximityWatcher, GetRootState(), AddWatch( GetNameHash(), mWatchFilter, false ) );
 		}
 		Tracker.InProgress = mMapGoal;
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this, Run ) );
 	}
 
 	void CallArtillery::Exit()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Stop( true ) );
 
 		mMapGoal.reset();
 

@@ -39,7 +39,7 @@ namespace AiState
 	public:
 		StimTouch( const char* name, BehaviorGoal type, StimulusBehavior& stim );
 
-		virtual bool GetNextDestination( DestinationVector& desination );
+		virtual bool GetNextDestination( DestinationVector& desination, bool& final, bool& skiplastpt );
 		
 		StateStatus UpdateState( float fDt );
 	private:

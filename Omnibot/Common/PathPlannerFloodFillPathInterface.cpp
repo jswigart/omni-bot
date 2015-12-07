@@ -68,7 +68,7 @@ bool FloodFillPathInterface::UpdateGoalPositionRandom()
 	return true;
 }
 
-void FloodFillPathInterface::UpdatePath()
+void FloodFillPathInterface::UpdatePath( bool forceRecalculate )
 {
 	mFoundGoalIndex = -1;
 
@@ -229,4 +229,9 @@ void FloodFillPathInterface::Render()
 	{
 		RenderBuffer::AddArrow( edges[ i-1 ].mPos, edges[ i ].mPos, COLOR::ORANGE );
 	}
+}
+
+bool FloodFillPathInterface::GetNearestWall( Wm5::Vector3f &, Wm5::Vector3f &, float & )
+{
+	return false;
 }

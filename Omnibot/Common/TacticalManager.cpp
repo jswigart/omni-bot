@@ -76,7 +76,7 @@ void StimulusUser::Clear()
 //////////////////////////////////////////////////////////////////////////
 
 TacticalManager::TacticalManager()
-	: mShowTokenClient( 1 )
+	: mShowTokenClient( -1 )
 	, mDrawCoverSegments( 0.0f )
 {
 }

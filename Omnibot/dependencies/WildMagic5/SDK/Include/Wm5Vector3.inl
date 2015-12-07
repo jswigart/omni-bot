@@ -708,7 +708,7 @@ bool Vector3<Real>::IsZero () const
 template <class Real>
 Vector3<Real> Vector3<Real>::Flatten(Real _z) const
 {
-	return Vector3<Real>(X(),Y(),Z());
+	return Vector3<Real>(X(),Y(),_z);
 }
 //----------------------------------------------------------------------------
 template <typename Real>

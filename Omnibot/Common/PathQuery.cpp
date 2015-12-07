@@ -20,6 +20,13 @@ Destination::Destination( const Vector3f &_pos, float _radius )
 {
 }
 
+bool Destination::operator==( const Destination& other ) const
+{
+	return 
+		mPosition == other.mPosition &&
+		mRadius == other.mRadius;
+}
+
 DeferredQuery::Goal::Goal()
 	: mNavCost( -1.0f )
 	, mThreatCost( 0.0f )

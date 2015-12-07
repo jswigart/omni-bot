@@ -100,12 +100,12 @@ namespace AiState
 	void PlantMine::Enter()
 	{
 		Tracker.InProgress = mMapGoal;
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run, true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this, Run, true ) );
 	}
 
 	void PlantMine::Exit()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Stop( true ) );
 
 		mLandMineEntity.Reset();
 		mMapGoal.reset();
@@ -325,12 +325,12 @@ namespace AiState
 	{
 		Tracker.InProgress = mMapGoal;
 		mFireDelay = 0;
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this, Run ) );
 	}
 
 	void MobileMortar::Exit()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Stop( true ) );
 
 		mMapGoal.reset();
 		FINDSTATEIF( Aimer, GetRootState(), ReleaseAimRequest( GetNameHash() ) );
@@ -629,12 +629,12 @@ namespace AiState
 			FINDSTATEIF( ProximityWatcher, GetRootState(), AddWatch( GetNameHash(), mWatchFilter, false ) );
 		}
 		Tracker.InProgress = mMapGoal;
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, Run ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this, Run ) );
 	}
 
 	void CallArtillery::Exit()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Stop( true ) );
 
 		mMapGoal.reset();
 
@@ -892,7 +892,7 @@ namespace AiState
 	void UseCabinet::Enter()
 	{
 		mUseTime = 0;
-		FINDSTATEIF( FollowPath, GetRootState(), Goto( this, mQuery.mList, Run, true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Goto( this, mQuery.mList, Run, true ) );
 		if ( !DidPathFail() )
 		{
 			mMapGoal = mQuery.mList[ GetDestinationIndex() ];
@@ -902,7 +902,7 @@ namespace AiState
 
 	void UseCabinet::Exit()
 	{
-		FINDSTATEIF( FollowPath, GetRootState(), Stop( true ) );
+		FINDSTATEIF( Navigator, GetRootState(), Stop( true ) );
 
 		mMapGoal.reset();
 

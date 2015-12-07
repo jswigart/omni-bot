@@ -28,10 +28,6 @@ this.GetPriority = function()
 				this.Priority = 1.0;
 			}
 		}
-		else
-		{
-			this.Priority = 0.0;
-		}
 		sleep( 0.1 );
 	}
 };
@@ -53,56 +49,64 @@ this.Update = function()
 {	
 	eyePos = this.Bot.GetEyePosition();
 	
-	// find the nearest entity that we have line of sight to
-	bestEnt = null;
-	bestEntPos = null;
-	bestDistance = 0.0;
-	foreach ( x and ent in this.Bot.AreaEntities )
+	this.AddWeaponRequest( Priority.Low, WEAPON.GRAVGUN );
+		
+	endTime = GetTime() + 2.0;
+	while( endTime > GetTime() && this.Bot.GetCurrentWeapon() == WEAPON.GRAVGUN ) 
 	{
-		entPos = GetEntPosition( ent );
-		entVel = GetEntVelocity( ent ); // ignore moving entities
-		if ( entVel.IsZero() && this.Bot.HasLineOfSightTo( entPos, ent ) )
+		// find the nearest entity that we have line of sight to
+		bestEnt = null;
+		bestEntPos = null;
+		bestDistance = 0.0;
+		
+		foreach ( x and ent in this.Bot.AreaEntities )
 		{
-			d = eyePos.Distance( entPos );
-			if ( bestEnt == null || d < bestDistance )
+			if ( !EntityIsValid( ent ) ) {
+				continue;
+			}
+			
+			entPos = GetEntCenterBounds( ent );
+			entVel = GetEntVelocity( ent ); // ignore moving entities
+			if ( entVel.IsZero() && this.Bot.HasLineOfSightTo( entPos, ent ) )
 			{
-				bestEnt = ent;
-				bestEntPos = entPos;
-				bestDistance = d;
+				d = eyePos.Distance( entPos );
+				if ( bestEnt == null || d < bestDistance )
+				{
+					bestEnt = ent;
+					bestEntPos = entPos;
+					bestDistance = d;
+				}
 			}
 		}
-	}		
-	
-	if ( bestEnt == null )
-	{
-		this.Finished();
-		return;
-	}
-	
-	this.AddAimRequest( Priority.High, "position", bestEntPos );
-	this.AddWeaponRequest( Priority.High, WEAPON.GRAVGUN );
-	this.BlockForWeaponChange( WEAPON.GRAVGUN );
-	
-	endTime = GetTime() + 3.0;
-	while( GetTime() < endTime ) 
-	{
-		if ( this.Debug ) 
+		
+		if ( bestEnt != null )
 		{
-			DrawEntityOBB( bestEnt, 0.0, COLOR.GREEN );
-			DrawLine( eyePos, bestEntPos, COLOR.RED, 0.0 );
-		}
+			this.AddAimRequest( Priority.Low, "position", bestEntPos );
 		
-		aimEnt = this.Bot.IsAimingAtEntity( this.Bot.AreaEntities, 64.0 );
-		if ( aimEnt )
+			if ( this.Debug ) 
+			{
+				DrawEntityOBB( bestEnt, 0.5, COLOR.GREEN );
+				DrawLine( eyePos, bestEntPos, COLOR.RED, 0.5 );
+			}
+			
+			aimEnt = this.Bot.IsAimingAtEntity( this.Bot.AreaEntities, 128.0 );
+			if ( aimEnt )
+			{
+				this.Bot.HoldButton( BTN.ATTACK1, 50 );
+			}
+			
+			entVel = GetEntVelocity( ent );
+			if ( !entVel.IsZero() ) {
+				break;
+			}
+		}
+		else
 		{
-			this.Bot.HoldButton( BTN.ATTACK1, 99 );
+			
 		}
-		
-		entVel = GetEntVelocity( ent );
-		if ( !entVel.IsZero() ) {
-			return;
-		}
-		
 		sleep(0.5);
 	}
+	
+	this.Priority = 0.0;
+	this.Finished();
 };

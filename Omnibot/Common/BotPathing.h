@@ -22,7 +22,7 @@ class gmScriptGoal;
 namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////
-	class FollowPath : public StateChild, public AimerUser
+	class Navigator : public StateChild, public AimerUser
 	{
 	public:
 		enum PathStatus
@@ -33,17 +33,24 @@ namespace AiState
 			PathNotFound,
 		};
 
+		size_t GetNumCorners() const;
+		const PathInterface::PathCorner& GetCorner( size_t index ) const;
+
 		bool IsOnCustomLink() const;
 		bool IsOnCustomLink( NavAreaFlags type ) const;
-		bool HasUpcomingArea( NavAreaFlags type, float lookahead ) const;
+		bool ApproachingArea( NavAreaFlags type, float lookahead ) const;
+		int GetAreaEntitiesAlongPath( float lookahead, GameEntity entities [], size_t maxEntities ) const;
+		size_t GetAreaEntitiesInRadius( const Vector3f& pos, float radius, GameEntity entities [], size_t maxEntities );
+
+		bool NavTrace( PathInterface::NavTraceResult& result, const Vector3f& start, const Vector3f& end );
 
 		bool GotoRandomPt( FollowPathUser *_owner, MoveMode _movemode = Run );
-		bool Goto( FollowPathUser *_owner, MoveMode _movemode = Run, bool _skiplastpt = false );
-		bool Goto( FollowPathUser *_owner, const Vector3f &_pos, float _radius = 32.f, MoveMode _movemode = Run, bool _skiplastpt = false );
-		bool Goto( FollowPathUser *_owner, const Vector3List &_goals, float _radius = 32.f, MoveMode _movemode = Run, bool _skiplastpt = false );
-		bool Goto( FollowPathUser *_owner, const MapGoalList &_goals, MoveMode _movemode = Run, bool _skiplastpt = false );
-		bool Goto( FollowPathUser *_owner, const DestinationVector &_goals, MoveMode _movemode = Run, bool _skiplastpt = false, bool _final = true );
-		void Stop( bool _clearuser = false );
+		bool Goto( FollowPathUser *owner, MoveMode _movemode = Run, bool _skiplastpt = false );
+		bool Goto( FollowPathUser *owner, const Vector3f &_pos, float _radius = 32.f, MoveMode _movemode = Run, bool _skiplastpt = false );
+		bool Goto( FollowPathUser *owner, const Vector3List &_goals, float _radius = 32.f, MoveMode _movemode = Run, bool _skiplastpt = false );
+		bool Goto( FollowPathUser *owner, const MapGoalList &_goals, MoveMode _movemode = Run, bool _skiplastpt = false );
+		bool Goto( FollowPathUser *owner, const DestinationVector &_goals, MoveMode _movemode = Run, bool _skiplastpt = false, bool _final = true );
+		void Stop( bool clearuser = false );
 		void ClearUser();
 		bool Repath();
 		void CancelPathThrough();
@@ -52,7 +59,7 @@ namespace AiState
 		void RestoreQuery();
 
 		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
-		
+
 		const Vector3f &GetLookAheadPt() const
 		{
 			return mLookAheadPt;
@@ -77,8 +84,8 @@ namespace AiState
 
 		void Initialize();
 
-		FollowPath();
-		~FollowPath();
+		Navigator();
+		~Navigator();
 	private:
 		struct Query
 		{
@@ -106,7 +113,7 @@ namespace AiState
 		static const size_t CachedEdges = 8;
 		PathInterface::PathCorner	mCachedCorners[ CachedEdges ];
 		size_t						mNumCachedCorners;
-		
+
 		uint32_t					mPassThroughState;
 		int							mPathThroughPtIndex;
 

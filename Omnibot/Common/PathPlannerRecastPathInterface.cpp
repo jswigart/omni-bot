@@ -12,8 +12,11 @@
 #include "RenderBuffer.h"
 #include "DetourCommon.h"
 #include "DetourNavMeshQuery.h"
+#include "DetourDebugDraw.h"
 
 #include "Client.h"
+
+static float WALL_RADIUS = 16.0f;
 
 extern float dtRandom();
 
@@ -40,6 +43,10 @@ RecastPathInterface::RecastPathInterface( PathPlannerRecast * nav )
 	mFilter.setAreaCost( NAVFLAGS_CROUCH, 2.0 );
 	mFilter.setAreaCost( NAVFLAGS_PRONE, 4.0 );
 	mFilter.setAreaCost( NAVFLAGS_PUSHABLE, 10.0 );
+
+	mHitPos = Vector3f::ZERO;
+	mHitNormal = Vector3f::ZERO;
+	mHitDist = WALL_RADIUS;
 }
 
 RecastPathInterface::~RecastPathInterface()
@@ -52,7 +59,7 @@ RecastPathInterface::~RecastPathInterface()
 void RecastPathInterface::ReInit()
 {
 	mQuery->init( mNav->mNavMesh, 2048 );
-	mStatus = PathInterface::PATH_NONE;
+	mStatus = PATH_NONE;
 }
 
 PathInterface::PathStatus RecastPathInterface::GetPathStatus() const
@@ -74,15 +81,16 @@ void RecastPathInterface::UpdateNavFlags( NavFlags includeFlags, NavFlags exclud
 void RecastPathInterface::UpdateSourcePosition( const Vector3f & srcPos )
 {
 	if ( !mCorridor.isValid( 32, mQuery, &mFilter ) )
-		UpdatePath();
+		UpdatePath( true );
 
 	mSrc = srcPos;
 
+	Vector3f rcSrc = localToRc( mSrc );
+
 	dtPolyRef currentPoly = 0;
 	if ( mCorridor.getPathCount() > 0 )
-	{
-		Vector3f startPos = localToRc( mSrc );
-		if ( !mCorridor.movePosition( startPos, mQuery, &mFilter ) )
+	{	
+		if ( !mCorridor.movePosition( rcSrc, mQuery, &mFilter ) )
 		{
 			//UpdatePath();
 		}
@@ -95,8 +103,7 @@ void RecastPathInterface::UpdateSourcePosition( const Vector3f & srcPos )
 	if ( currentPoly == 0 )
 	{
 		dtPolyRef startPoly;
-		Vector3f startPos = localToRc( mSrc );
-		if ( dtStatusSucceed( mQuery->findNearestPoly( startPos, PathPlannerRecast::sExtents, &mFilter, &startPoly, startPos ) ) )
+		if ( dtStatusSucceed( mQuery->findNearestPoly( rcSrc, PathPlannerRecast::sExtents, &mFilter, &startPoly, rcSrc ) ) )
 			currentPoly = startPoly;
 	}
 
@@ -104,6 +111,17 @@ void RecastPathInterface::UpdateSourcePosition( const Vector3f & srcPos )
 
 	if ( currentPoly != 0 )
 	{
+		// cache the wall distance
+		if ( dtStatusSucceed( mQuery->findDistanceToWall( currentPoly, rcSrc, WALL_RADIUS, &mFilter, &mHitDist, mHitPos, mHitNormal ) ) )
+		{
+			mHitPos = rcToLocal( mHitPos );
+			mHitNormal = rcToLocal( mHitNormal );
+		}
+		else
+		{
+			mHitDist = WALL_RADIUS;
+		}
+
 		navAreaMask areaMask = 0;
 		if ( dtStatusSucceed( mNav->mNavMesh->getPolyFlags( currentPoly, &areaMask ) ) )
 		{
@@ -223,7 +241,7 @@ bool RecastPathInterface::UpdateGoalPositionRandom()
 	return false;
 }
 
-void RecastPathInterface::UpdatePath()
+void RecastPathInterface::UpdatePath( bool forceRecalculate )
 {
 	mFoundGoalIndex = -1;
 	mStatus = PathInterface::PATH_NONE;
@@ -235,26 +253,94 @@ void RecastPathInterface::UpdatePath()
 	Vector3f startPos = localToRc( mSrc );
 	Vector3f endPos = localToRc( mGoals[ 0 ].mPosition );
 	if ( dtStatusSucceed( mQuery->findNearestPoly( startPos, PathPlannerRecast::sExtents, &mFilter, &startPoly, startPos ) ) )
-	{
-		mCorridor.reset( startPoly, startPos );
-
-		if ( dtStatusSucceed( mQuery->findNearestPoly( endPos, PathPlannerRecast::sExtents, &mFilter, &endPoly, endPos ) ) )
+	{		
+		// go to the nearest if multiple goals are provided
+		if ( mGoals.size() > 1 )
 		{
-			int	polyCount = 0;
-			dtPolyRef * polys = (dtPolyRef*)StackAlloc( sizeof( dtPolyRef ) * mCorridor.getMaxPathCount() );
+			std::vector<dtMultiPathGoal> goals( mGoals.size() );
 
-			dtStatus status = mQuery->findPath( startPoly, endPoly, startPos, endPos, &mFilter, polys, &polyCount, mCorridor.getMaxPathCount() );
-			if ( dtStatusSucceed( status ) )
+			for ( size_t i = 0; i < mGoals.size(); ++i )
 			{
-				if ( dtStatusDetail( status, DT_PARTIAL_RESULT ) )
-				{
-					mStatus = PATH_NOPATHTOGOAL;
-				}
-				else
-				{
-					mStatus = PATH_VALID;
-					mCorridor.setCorridor( endPos, polys, polyCount );
-				}
+				dtMultiPathGoal& goal = goals[ i ];
+
+				dtVcopy( goal.mDest, localToRc( mGoals[ i ].mPosition ) );
+				if ( dtStatusFailed( mQuery->findNearestPoly( goal.mDest, PathPlannerRecast::sExtents, &mFilter, &goal.mDestPoly, goal.mDest ) ) )
+					goal.mDestPoly = 0;
+			}
+
+			if ( dtStatusFailed( mQuery->findMultiPath( startPoly, startPos, &mFilter, &goals[ 0 ], goals.size() ) ) )
+				return;
+
+			// use the best one as the goal
+			mFoundGoalIndex = 0;
+			for ( size_t i = 1; i < goals.size(); ++i )
+			{
+				if ( goals[ i ].mNavDist < goals[ mFoundGoalIndex ].mNavDist )
+					mFoundGoalIndex = i;
+			}
+
+			endPoly = goals[ mFoundGoalIndex ].mDestPoly;
+			dtVcopy( endPos, goals[ mFoundGoalIndex ].mDest );
+		}
+		else if ( !dtStatusSucceed( mQuery->findNearestPoly( endPos, PathPlannerRecast::sExtents, &mFilter, &endPoly, endPos ) ) )
+		{
+			return;
+		}
+		else
+		{
+			mFoundGoalIndex = 0;
+		}
+		
+		// try to re-use current path state
+		//if ( forceRecalculate || mCorridor.getPathCount() == 0 )
+			mCorridor.reset( startPoly, startPos );
+		//else
+		//{
+		//	// do we need to recalculate the path?
+		//	if ( mCorridor.moveTargetPosition( endPos, mQuery, &mFilter ) )
+		//	{
+		//		mStatus = PATH_VALID;
+		//		return;
+		//	}
+		//}
+
+		int	polyCount = 0;
+		dtPolyRef * polys = (dtPolyRef*)StackAlloc( sizeof( dtPolyRef ) * mCorridor.getMaxPathCount() );
+#if(0)
+		dtStatus status = mQuery->findPath( startPoly, endPoly, startPos, endPos, &mFilter, polys, &polyCount, mCorridor.getMaxPathCount() );
+#else
+		dtStatus status = mQuery->initSlicedFindPath( startPoly, endPoly, startPos, endPos, &mFilter, DT_FINDPATH_ANY_ANGLE );
+		if ( status & DT_IN_PROGRESS )
+		{
+			do 
+			{
+				status = mQuery->updateSlicedFindPath( 10000000, NULL );
+			}
+			while ( status & DT_IN_PROGRESS );
+		}
+
+		status = mQuery->finalizeSlicedFindPath( polys, &polyCount, mCorridor.getMaxPathCount() );
+#endif
+
+		static bool showCorridor = false;
+		if ( showCorridor )
+		{
+			static float duration = 2.0f;
+
+			DebugDraw ddraw( duration );
+			duDebugDrawCorridor( &ddraw, *mQuery->getAttachedNavMesh(), &mCorridor, duRGBA( 0, 255, 0, 128 ) );
+		}
+
+		if ( dtStatusSucceed( status ) )
+		{
+			if ( dtStatusDetail( status, DT_PARTIAL_RESULT ) )
+			{
+				mStatus = PATH_NOPATHTOGOAL;
+			}
+			else
+			{
+				mStatus = PATH_VALID;
+				mCorridor.setCorridor( endPos, polys, polyCount );
 			}
 		}
 	}
@@ -264,6 +350,52 @@ void RecastPathInterface::Cancel()
 {
 	mStatus = PATH_NONE;
 	mMoveDirection = Vector3f::ZERO;
+}
+
+size_t RecastPathInterface::GatherPolyEntities( dtPolyRef poly, GameEntity entities[], size_t maxEntities )
+{
+	navAreaMask af = NAVFLAGS_NONE;
+	if ( !dtStatusSucceed( mNav->mNavMesh->getPolyFlags( poly, &af ) ) )
+		return 0;
+
+	int entIndex = 0;
+
+	// if the area references entities, we can provide them as well
+	if ( ( af & NAVFLAGS_ENTITYREF_MASK ) != 0 )
+	{
+		const dtMeshTile* tile = static_cast<const dtNavMesh*>( mNav->mNavMesh )->getTileByRef( poly );
+		if ( tile != NULL )
+		{
+			navAreaMask ref = ( af & NAVFLAGS_ENTITYREF_MASK ) >> 32;
+
+			// area may reference multiple user refs, so grab them all
+			int refIndex = 0;
+			while ( ref != 0 && entIndex < PathCorner::MAX_ENTITIES )
+			{
+				if ( ref & 1 )
+				{
+					const dtUserRef& uref = tile->userRefs[ refIndex++ ];
+
+					// dont include it more than once
+					bool exists = false;
+					for ( int i = 0; i < entIndex && !exists; ++i )
+					{ 
+						if ( entities[ i ].AsInt() == uref.id )
+							exists = true;
+					}
+
+					if ( !exists )
+					{
+						entities[ entIndex++ ].FromInt( uref.id );
+					}
+				}
+
+				++refIndex;
+				ref = ref >> 1;
+			}
+		}
+	}
+	return entIndex;
 }
 
 size_t RecastPathInterface::GetPathCorners( PathCorner * corners, size_t maxEdges )
@@ -288,12 +420,39 @@ size_t RecastPathInterface::GetPathCorners( PathCorner * corners, size_t maxEdge
 			areaFlags = (NavAreaFlags)( af | areaFlags );
 		}
 
+		GatherPolyEntities( cornerPoly[ i ], corners[ numCorners ].mEntities, PathCorner::MAX_ENTITIES );
+
 		corners[ numCorners ].mPos = rcToLocal( cornerVerts[ i ] );
 		corners[ numCorners ].mAreaMask = areaFlags;
 		corners[ numCorners ].mPolyId = cornerPoly[ i ];
 		corners[ numCorners ].mIsLink = ( cornerFlags[ i ] & DT_STRAIGHTPATH_OFFMESH_CONNECTION ) != 0;
 	}
 	return numCorners;
+}
+
+size_t RecastPathInterface::FindAreaEntitiesInRadius( const Vector3f& pos, float radius, GameEntity entities [], size_t maxEntities )
+{
+	dtPolyRef startPoly;
+	Vector3f startPos = localToRc( pos );
+
+	size_t cnt = 0;
+	if ( dtStatusSucceed( mQuery->findNearestPoly( startPos, PathPlannerRecast::sExtents, &mFilter, &startPoly, startPos ) ) )
+	{
+		static const int MAX_RESULTS = 512;
+		dtPolyRef resultRefs[ MAX_RESULTS ];
+		dtPolyRef resultParents[ MAX_RESULTS ];
+		float resultCosts[ MAX_RESULTS ];
+
+		int resultCount = 0;
+		if ( dtStatusSucceed( mQuery->findPolysAroundCircle( startPoly, startPos, radius, &mFilter, resultRefs, resultParents, resultCosts, &resultCount, MAX_RESULTS ) ) )
+		{
+			for ( int i = 0; i < resultCount; ++i )
+			{
+				cnt += GatherPolyEntities( resultRefs[ i ], &entities[ cnt ], maxEntities - cnt );
+			}
+		}
+	}
+	return cnt;
 }
 
 bool RecastPathInterface::GetNavLink( uint64_t id, OffMeshConnection& conn ) const
@@ -333,4 +492,35 @@ void RecastPathInterface::Render()
 		RenderBuffer::AddArrow( lastPt, edges[ i ].mPos, COLOR::ORANGE );
 		lastPt = edges[ i ].mPos;
 	}
+}
+
+bool RecastPathInterface::GetNearestWall( Vector3f& wallPos, Vector3f& wallNormal, float& wallDist )
+{
+	if ( mHitDist < WALL_RADIUS )
+	{
+		wallPos = mHitPos;
+		wallNormal = mHitNormal;
+		wallDist = mHitDist;
+		return true;
+	}
+	return false;
+}
+
+bool RecastPathInterface::NavTrace( NavTraceResult& result, const Vector3f& start, const Vector3f& end )
+{
+	dtPolyRef startPoly;
+	Vector3f startPos = localToRc( start );
+	Vector3f endPos = localToRc( end );
+	if ( dtStatusSucceed( mQuery->findNearestPoly( startPos, PathPlannerRecast::sExtents, &mFilter, &startPoly, startPos ) ) )
+	{
+		dtRaycastHit hit;
+		if ( dtStatusSucceed( mQuery->raycast( startPoly, startPos, endPos, &mFilter, DT_RAYCAST_USE_COSTS, &hit, NULL ) ) )
+		{
+			result.t = hit.t;
+			result.pos = rcToLocal( hit.endPos );
+			result.normal = rcToLocal( hit.hitNormal );
+			return true;
+		}
+	}
+	return true;
 }
