@@ -1,3 +1,6 @@
 [submodule "Omnibot/dependencies/recastnavigation"]
 	path = Omnibot/dependencies/recastnavigation
 	url = https://github.com/jswigart/recastnavigation
+[submodule "Omnibot/dependencies/gmscriptex"]
+	path = Omnibot/dependencies/gmscriptex
+	url = https://github.com/jswigart/gmscriptex.git
