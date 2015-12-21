@@ -21,9 +21,6 @@
     <ClCompile Include="..\..\..\MC\MC_Game.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\MC\MC_InterfaceFuncs.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\MC\gmMCBinds.cpp">
       <Filter>Core\Scripting</Filter>
     </ClCompile>
@@ -44,9 +41,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\MC\MC_Game.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\MC\MC_InterfaceFuncs.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\MC\MC_Messages.h">

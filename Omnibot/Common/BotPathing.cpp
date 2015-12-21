@@ -12,7 +12,6 @@
 #include "BotWeaponSystem.h"
 #include "BotTargetingSystem.h"
 #include "IGameManager.h"
-#include "InterfaceFuncs.h"
 #include "PathPlannerBase.h"
 #include "RenderBuffer.h"
 
@@ -248,7 +247,7 @@ namespace AiState
 		mQuery = mSavedQuery;
 	}
 
-	void Navigator::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void Navigator::ProcessEvent( const Message &_message, CallbackParameters &_cb )
 	{
 		/*switch(_message.GetMessageId())
 		{
@@ -679,8 +678,9 @@ namespace AiState
 		const float dropHeight = GetClient()->GetWorldBounds().Extent[ 2 ];
 		const Vector3f boundsCenter = GetClient()->GetWorldBounds().Center;
 		const Vector3f dropPos = boundsCenter - Vector3f( 0.f, 0.f, dropHeight );
-
-		const bool bMover = InterfaceFuncs::IsMoverAt( boundsCenter, dropPos );
+		
+		GameEntity entityMover;
+		const bool bMover = gEngineFuncs->IsMoverAt( boundsCenter, dropPos, entityMover );
 		if ( DebugDrawingEnabled() )
 		{
 			RenderBuffer::AddLine( boundsCenter, dropPos, bMover ? COLOR::GREEN : COLOR::RED );
@@ -724,7 +724,7 @@ namespace AiState
 		// Trace a line start to end to see if it hits anything.
 		obTraceResult tr;
 		EngineFuncs::TraceLine( tr, stepTop, stepBtm,
-			&traceBnds, TR_MASK_SOLID | TR_MASK_PLAYERCLIP, GetClient()->GetGameID(), False );
+			&traceBnds, TR_MASK_SOLID | TR_MASK_PLAYERCLIP, GetClient()->GetGameID(), false );
 
 		bool bHit = false;
 		if ( tr.mFraction != 1.0f )
@@ -763,7 +763,7 @@ namespace AiState
 
 		// Trace a line directly underneath us to try and detect rapid drops in elevation.
 		obTraceResult tr;
-		EngineFuncs::TraceLine( tr, boundsBtm, endPos, NULL, TR_MASK_SOLID | TR_MASK_PLAYERCLIP, GetClient()->GetGameID(), False );
+		EngineFuncs::TraceLine( tr, boundsBtm, endPos, NULL, TR_MASK_SOLID | TR_MASK_PLAYERCLIP, GetClient()->GetGameID(), false );
 
 		Vector3f trEnd( tr.mEndpos );
 		if ( mRayDistance == -1.0f && tr.mFraction != 1.0f )

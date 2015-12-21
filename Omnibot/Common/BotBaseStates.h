@@ -478,11 +478,13 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	struct Event_ProximityTrigger
+	struct EvProximityTrigger
 	{
-		uint32_t mOwnerState;
-		GameEntity mEntity;
-		Vector3f mPosition;
+		typedef MessageT<EvProximityTrigger, MSG_PROXIMITY_TRIGGER> Msg;
+		
+		uint32_t		mOwnerState;
+		GameEntity		mEntity;
+		Vector3f		mPosition;
 	};
 
 	class ProximityWatcher : public StateChild

@@ -104,14 +104,6 @@ typedef int GameId;
 // typedef: NavFlags
 typedef uint64_t NavFlags;
 
-// enum: obBool
-enum obBool
-{
-	Invalid = -1,
-	False,
-	True
-};
-
 // enum: obFunctionStatus
 //		Represents the status of some function.
 enum obFunctionStatus
@@ -537,6 +529,7 @@ enum EntityFlag
 	ENT_FLAG_PRONED,
 	ENT_FLAG_CROUCHED,
 	ENT_FLAG_CARRYABLE,
+	ENT_FLAG_ALIVE,
 	ENT_FLAG_DEAD,
 	ENT_FLAG_INWATER,
 	ENT_FLAG_UNDERWATER,

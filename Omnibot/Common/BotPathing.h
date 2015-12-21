@@ -58,7 +58,7 @@ namespace AiState
 		void SaveQuery();
 		void RestoreQuery();
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message &_message, CallbackParameters &_cb );
 
 		const Vector3f &GetLookAheadPt() const
 		{

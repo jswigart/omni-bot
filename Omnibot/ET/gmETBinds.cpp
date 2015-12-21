@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "ET_Game.h"
-#include "ET_InterfaceFuncs.h"
 #include "ET_Client.h"
 
 #include "gmBotLibrary.h"
@@ -43,7 +42,7 @@ static int GM_CDECL gmfBotPickPrimaryWeapon( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_INT_PARAM( weaponId, 0 );
 
-	bool bSucess = InterfaceFuncs::SelectPrimaryWeapon( native, (ET_Weapon)weaponId );
+	bool bSucess = gEnemyTerritoryFuncs->SelectWeapon( LoadOutPrimary, native->GetGameEntity(), (ET_Weapon)weaponId );
 	a_thread->PushInt( bSucess ? 1 : 0 );
 	return GM_OK;
 }
@@ -65,7 +64,7 @@ static int GM_CDECL gmfBotPickSecondaryWeapon( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_INT_PARAM( weaponId, 0 );
 
-	bool bSucess = InterfaceFuncs::SelectSecondaryWeapon( native, (ET_Weapon)weaponId );
+	bool bSucess = gEnemyTerritoryFuncs->SelectWeapon( LoadOutSecondary, native->GetGameEntity(), (ET_Weapon)weaponId );
 	a_thread->PushInt( bSucess ? 1 : 0 );
 	return GM_OK;
 }
@@ -86,7 +85,7 @@ static int GM_CDECL gmfGetReinforceTime( gmThread *a_thread )
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 0 );
 
-	a_thread->PushFloat( InterfaceFuncs::GetReinforceTime( native ) );
+	a_thread->PushFloat( gEnemyTerritoryFuncs->GetReinforceTime( native->GetGameEntity() ) / 1000.0f );
 	return GM_OK;
 }
 
@@ -107,11 +106,11 @@ static int GM_CDECL gmfGetCurrentCursorHint( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_TABLE_PARAM( hint, 0 );
 
-	int iHintType = 0, iHintValue = 0;
-	InterfaceFuncs::GetCurrentCursorHint( native, iHintType, iHintValue );
+	int hintType = 0, hintValue = 0;
+	gEnemyTerritoryFuncs->GetCurrentCursorHint( native->GetGameEntity(), hintType, hintValue );
 
-	hint->Set( a_thread->GetMachine(), "type", gmVariable( iHintType ) );
-	hint->Set( a_thread->GetMachine(), "value", gmVariable( iHintValue ) );
+	hint->Set( a_thread->GetMachine(), "type", gmVariable( hintType ) );
+	hint->Set( a_thread->GetMachine(), "value", gmVariable( hintValue ) );
 
 	return GM_OK;
 }
@@ -133,7 +132,7 @@ static int GM_CDECL gmfChangeSpawnPoint( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_INT_PARAM( spawnpoint, 0 );
 
-	InterfaceFuncs::ChangeSpawnPoint( native, spawnpoint );
+	gEnemyTerritoryFuncs->ChangeSpawnPoint( native->GetGameEntity(), spawnpoint );
 	return GM_OK;
 }
 
@@ -143,7 +142,7 @@ static int GM_CDECL gmfFireteamCreate( gmThread *a_thread )
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 0 );
-	InterfaceFuncs::FireTeamCreate( native );
+	gEnemyTerritoryFuncs->FireTeamCreate( native->GetGameEntity() );
 	return GM_OK;
 }
 
@@ -151,7 +150,7 @@ static int GM_CDECL gmfFireteamDisband( gmThread *a_thread )
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 0 );
-	InterfaceFuncs::FireTeamDisband( native );
+	gEnemyTerritoryFuncs->FireTeamDisband( native->GetGameEntity() );
 	return GM_OK;
 }
 
@@ -159,7 +158,7 @@ static int GM_CDECL gmfFireTeamLeave( gmThread *a_thread )
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 0 );
-	InterfaceFuncs::FireTeamLeave( native );
+	gEnemyTerritoryFuncs->FireTeamLeave( native->GetGameEntity() );
 	return GM_OK;
 }
 
@@ -168,7 +167,7 @@ static int GM_CDECL gmfFireTeamApply( gmThread *a_thread )
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_INT_PARAM( fireteamnum, 0 );
-	InterfaceFuncs::FireTeamApply( native, fireteamnum );
+	gEnemyTerritoryFuncs->FireTeamApply( native->GetGameEntity(), fireteamnum );
 	return GM_OK;
 }
 
@@ -178,7 +177,7 @@ static int GM_CDECL gmfFireTeamInvite( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GameEntity ent;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( ent, 0 );
-	InterfaceFuncs::FireTeamInvite( native, ent );
+	gEnemyTerritoryFuncs->FireTeamInvite( native->GetGameEntity(), ent );
 	return GM_OK;
 }
 
@@ -188,7 +187,7 @@ static int GM_CDECL gmfFireTeamWarn( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GameEntity ent;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( ent, 0 );
-	InterfaceFuncs::FireTeamWarn( native, ent );
+	gEnemyTerritoryFuncs->FireTeamWarn( native->GetGameEntity(), ent );
 	return GM_OK;
 }
 
@@ -198,7 +197,7 @@ static int GM_CDECL gmfFireTeamKick( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GameEntity ent;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( ent, 0 );
-	InterfaceFuncs::FireTeamKick( native, ent );
+	gEnemyTerritoryFuncs->FireTeamKick( native->GetGameEntity(), ent );
 	return GM_OK;
 }
 
@@ -208,7 +207,7 @@ static int GM_CDECL gmfFireTeamPropose( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GameEntity ent;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( ent, 0 );
-	InterfaceFuncs::FireTeamPropose( native, ent );
+	gEnemyTerritoryFuncs->FireTeamPropose( native->GetGameEntity(), ent );
 	return GM_OK;
 }
 
@@ -217,8 +216,12 @@ static int GM_CDECL gmfFireTeamGetInfo( gmThread *a_thread )
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 0 );
 
-	ET_FireTeamInfo ft;
-	if ( InterfaceFuncs::FireTeamGetInfo( native, ft ) && ft.mInFireTeam )
+	int teamId = 0;
+	GameEntity leader;
+	GameEntity members[ 64 ];
+	
+	const int cnt = gEnemyTerritoryFuncs->FireTeamGetInfo( native->GetGameEntity(), teamId, leader, members );
+	if ( cnt > 0 )
 	{
 		DisableGCInScope gcEn( a_thread->GetMachine() );
 
@@ -227,15 +230,15 @@ static int GM_CDECL gmfFireTeamGetInfo( gmThread *a_thread )
 		gmTableObject *mbrtbl = pM->AllocTableObject();
 		tbl->Set( pM, "Members", gmVariable( mbrtbl ) );
 
-		tbl->Set( pM, "FireTeamNum", gmVariable( ft.mFireTeamNum ) );
-		tbl->Set( pM, "Leader", gmVariable::EntityVar( ft.mLeader.AsInt() ) );
+		tbl->Set( pM, "FireTeamNum", gmVariable( teamId ) );
+		tbl->Set( pM, "Leader", gmVariable::EntityVar( leader.AsInt() ) );
 
 		int m = 0;
-		for ( int i = 0; i < ET_FireTeamInfo::MaxMembers; ++i )
+		for ( int i = 0; i < cnt; ++i )
 		{
-			if ( ft.mMembers[ i ].IsValid() )
+			if ( members[ i ].IsValid() )
 			{
-				mbrtbl->Set( pM, m++, gmVariable::EntityVar( ft.mMembers[ i ].AsInt() ) );
+				mbrtbl->Set( pM, m++, gmVariable::EntityVar( members[ i ].AsInt() ) );
 			}
 		}
 		a_thread->PushTable( tbl );
@@ -251,11 +254,12 @@ static int GM_CDECL gmfIsInFireTeam( gmThread *a_thread )
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 0 );
 
-	ET_FireTeamInfo ft;
-	if ( InterfaceFuncs::FireTeamGetInfo( native, ft ) && ft.mInFireTeam )
-		a_thread->PushInt( ft.mInFireTeam ? 1 : 0 );
-	else
-		a_thread->PushInt( 0 );
+	int teamId = 0;
+	GameEntity leader;
+	GameEntity members[ 64 ];
+
+	const int cnt = gEnemyTerritoryFuncs->FireTeamGetInfo( native->GetGameEntity(), teamId, leader, members );
+	a_thread->PushInt( cnt > 0 ? 1 : 0 );
 
 	return GM_OK;
 }
@@ -329,7 +333,7 @@ static int GM_CDECL gmfDisableBotPush( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_INT_PARAM( botPush, 0 );
 
-	InterfaceFuncs::DisableBotPush( native, botPush );
+	gEnemyTerritoryFuncs->DisableBotPush( native->GetGameEntity(), botPush!=0 );
 	return GM_OK;
 }
 
@@ -353,7 +357,7 @@ static int GM_CDECL gmfGetExplosiveState( gmThread *a_thread )
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	
 	if ( gameEnt.IsValid() )
-		a_thread->PushInt( InterfaceFuncs::GetExplosiveState( native, gameEnt ) );
+		a_thread->PushInt( gEnemyTerritoryFuncs->GetExplosiveState( gameEnt ) );
 	else
 		a_thread->PushNull();
 	return GM_OK;
@@ -379,7 +383,7 @@ static int GM_CDECL gmfGetConstructableState( gmThread *a_thread )
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	
 	if ( gameEnt.IsValid() )
-		a_thread->PushInt( InterfaceFuncs::GetConstructableState( native, gameEnt ) );
+		a_thread->PushInt( gEnemyTerritoryFuncs->GetConstructableState( native->GetGameEntity(), gameEnt ) );
 	else
 		a_thread->PushNull();
 	return GM_OK;
@@ -405,7 +409,7 @@ static int GM_CDECL gmfGetDestroyableState( gmThread *a_thread )
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	
 	if ( gameEnt.IsValid() )
-		a_thread->PushInt( InterfaceFuncs::IsDestroyable( native, gameEnt ) );
+		a_thread->PushInt( gEnemyTerritoryFuncs->IsDestroyable( native->GetGameEntity(), gameEnt ) );
 	else
 		a_thread->PushNull();
 	return GM_OK;
@@ -429,11 +433,7 @@ static int GM_CDECL gmfIsWaitingForMedic( gmThread *a_thread )
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	
-	if ( InterfaceFuncs::IsWaitingForMedic( gameEnt ) )
-		a_thread->PushInt( 1 );
-	else
-		a_thread->PushInt( 0 );
-
+	a_thread->PushInt( gEnemyTerritoryFuncs->IsWaitingForMedic( gameEnt ) ? 1 : 0 );
 	return GM_OK;
 }
 
@@ -441,7 +441,6 @@ static int GM_CDECL gmfIsWaitingForMedic( gmThread *a_thread )
 
 // function: GetMG42Info
 //		Returns currently mounted mg42 info for the bot
-//
 //
 // Parameters:
 //
@@ -462,8 +461,8 @@ static int gmfGetMG42Info( gmThread *a_thread )
 	if ( !tbl )
 		tbl = a_thread->GetMachine()->AllocTableObject();
 
-	ET_MG42Info mg42Info;
-	if ( tbl != NULL && InterfaceFuncs::GetMg42Properties( native, mg42Info ) )
+	ParamsMG42Info mg42Info;
+	if ( tbl != NULL && gEnemyTerritoryFuncs->GetMg42Properties( native->GetGameEntity(), mg42Info ) )
 	{
 		tbl->Set( a_thread->GetMachine(), "CenterFacing", gmVariable( mg42Info.mCenterFacing ) );
 		tbl->Set( a_thread->GetMachine(), "MinHorizontal", gmVariable( mg42Info.mMinHorizontalArc ) );
@@ -498,7 +497,7 @@ static int gmfGetMountedPlayerOnMG42( gmThread *a_thread )
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	
-	GameEntity owner = InterfaceFuncs::GetMountedPlayerOnMG42( native, gameEnt );
+	GameEntity owner = gEnemyTerritoryFuncs->GetMountedPlayerOnMG42( gameEnt );
 	if ( owner.IsValid() )
 	{
 		gmVariable v;
@@ -531,7 +530,7 @@ static int gmfIsMG42Repairable( gmThread *a_thread )
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	
-	a_thread->PushInt( InterfaceFuncs::IsMountableGunRepairable( native, gameEnt ) ? 1 : 0 );
+	a_thread->PushInt( gEnemyTerritoryFuncs->IsMountableGunRepairable( native->GetGameEntity(), gameEnt ) ? 1 : 0 );
 	return GM_OK;
 }
 
@@ -551,7 +550,7 @@ static int gmfTeamLandminesAvailable( gmThread *a_thread )
 {
 	CHECK_THIS_BOT();
 	int currentMines, maxMines;
-	InterfaceFuncs::NumTeamMines( native, currentMines, maxMines );
+	gEnemyTerritoryFuncs->TeamMineCount( native->GetGameEntity(), currentMines, maxMines );
 	a_thread->PushInt( maxMines - currentMines );
 	return GM_OK;
 }
@@ -581,12 +580,12 @@ static int gmfGetCabinetData( gmThread *a_thread )
 	if ( !tbl )
 		tbl = a_thread->GetMachine()->AllocTableObject();
 
-	ET_CabinetData cabinetData;
-	if ( tbl != NULL && InterfaceFuncs::GetCabinetData( gameEnt, cabinetData ) )
+	ParamsCabinetData data;
+	if ( tbl != NULL && gEnemyTerritoryFuncs->GetCabinetData( gameEnt, data ) )
 	{
-		tbl->Set( a_thread->GetMachine(), "CurrentAmount", gmVariable( cabinetData.mCurrentAmount ) );
-		tbl->Set( a_thread->GetMachine(), "MaxAmount", gmVariable( cabinetData.mMaxAmount ) );
-		tbl->Set( a_thread->GetMachine(), "Rate", gmVariable( cabinetData.mRate ) );
+		tbl->Set( a_thread->GetMachine(), "CurrentAmount", gmVariable( data.mCurrentAmount ) );
+		tbl->Set( a_thread->GetMachine(), "MaxAmount", gmVariable( data.mMaxAmount ) );
+		tbl->Set( a_thread->GetMachine(), "Rate", gmVariable( data.mRate ) );
 		a_thread->PushInt( 1 );
 	}
 	else

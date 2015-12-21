@@ -159,11 +159,11 @@ public:
 
 	inline bool InFieldOfView( const Vector3f &_pos );
 
-	bool HasLineOfSightTo( const Vector3f &_pos, GameEntity _entity = GameEntity(), int customTraceMask = 0 );
+	bool HasLineOfSightTo( const Vector3f &_pos, GameEntity entity = GameEntity(), int customTraceMask = 0 );
 	static bool HasLineOfSightTo( const Vector3f &_pos1, const Vector3f &_pos2,
-		GameEntity _ent = GameEntity(), int _ignoreent = -1, int customTraceMask = 0 );
+		GameEntity ent = GameEntity(), int _ignoreent = -1, int customTraceMask = 0 );
 
-	bool IsAllied( const GameEntity _ent ) const;
+	bool IsAllied( const GameEntity ent ) const;
 
 	const Vector3f& GetEyePosition();
 	Vector3f GetEyeGroundOffset();
@@ -375,7 +375,7 @@ public:
 	virtual float GetGameVar( GameVar _var ) const = 0;
 
 	virtual void SendVoiceMacro( int _macroId ) = 0;
-	virtual int HandleVoiceMacroEvent( const MessageHelper &_message )
+	virtual int HandleVoiceMacroEvent( const EvVoiceMacro* msg )
 	{
 		return 0;
 	}
@@ -440,8 +440,8 @@ protected:
 
 	ClientInput		mClientInput;
 
-	void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
-	void ProcessEventImpl( const MessageHelper &_message, uint32_t _targetState );
+	void ProcessEvent( const Message & message, CallbackParameters & cb );
+	void ProcessEventImpl( const Message & message, uint32_t targetState );
 private:
 	Vector3f		mPosition;
 	Vector3f		mEyePosition;

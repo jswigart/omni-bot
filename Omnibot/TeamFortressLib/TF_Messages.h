@@ -49,8 +49,8 @@ struct TF_TeamPipeInfo
 struct TF_DisguiseOptions
 {
 	int		 mCheckTeam;
-	obBool	 mTeam[TF_TEAM_MAX];
-	obBool	 mClass[TF_CLASS_MAX];
+	bool	 mTeam[TF_TEAM_MAX];
+	bool	 mClass[TF_CLASS_MAX];
 };
 
 // struct: TF_Disguise
@@ -66,7 +66,7 @@ struct TF_Disguise
 //	 mSilentFeign - Silent feign or not.
 struct TF_FeignDeath
 {
-	obBool	 mSilent;
+	bool	 mSilent;
 };
 
 // struct: TF_HudHint
@@ -133,8 +133,8 @@ struct TF_HudText
 struct TF_LockPosition
 {
 	GameEntity mTargetPlayer;
-	obBool	 mLock;
-	obBool	 mSucceeded;
+	bool	 mLock;
+	bool	 mSucceeded;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -206,7 +206,7 @@ struct Event_SentryStatus_TF
 	int			 mMaxHealth;
 	int			 mShells[2];
 	int			 mRockets[2];
-	obBool		 mSabotaged;
+	bool		 mSabotaged;
 };
 
 struct Event_DispenserStatus_TF
@@ -221,7 +221,7 @@ struct Event_DispenserStatus_TF
 	int			 mRockets;
 	int			 mShells;
 	int			 mArmor;
-	obBool		 mSabotaged;
+	bool		 mSabotaged;
 };
 
 struct Event_TeleporterStatus_TF
@@ -230,8 +230,8 @@ struct Event_TeleporterStatus_TF
 	GameEntity	 mEntityExit;
 	int			 mNumTeleports;
 	int			 mTimeToActivation;
-	obBool		 mSabotagedEntry;
-	obBool		 mSabotagedExit;
+	bool		 mSabotagedEntry;
+	bool		 mSabotagedExit;
 };
 
 struct Event_DetpackStatus_TF

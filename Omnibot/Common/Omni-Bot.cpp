@@ -121,33 +121,28 @@ void OmnibotFunctions::SendTrigger( const TriggerInfo & triggerInfo )
 	TriggerManager::GetInstance()->HandleTrigger( triggerInfo );
 }
 
-void OmnibotFunctions::AddBlackboardRecord( BlackBoard_Key type, int posterID, int targetID, obUserData * data )
+void OmnibotFunctions::AddBlackboardRecord( BlackBoardKey type, int posterID, int targetID, obUserData * data )
 {
 }
 
-void OmnibotFunctions::SendEvent( int dest, const MessageHelper & message )
+void OmnibotFunctions::SendEvent( const Message & message, GameEntity dest )
 {
-	System::mInstance->mGame->DispatchEvent( dest, message );
-}
-
-void OmnibotFunctions::SendGlobalEvent( const MessageHelper & message )
-{
-	System::mInstance->mGame->DispatchGlobalEvent( message );
+	System::mInstance->mGame->DispatchEvent( message, dest );
 }
 
 void OmnibotFunctions::EntityAdded( GameEntity ent, const EntityInfo& entInfo )
 {
-	Event_EntityCreated d;
-	d.mEntity = ent;
-	d.mEntityInfo = entInfo;
-	SendGlobalEvent( MessageHelper( GAME_ENTITYCREATED, &d, sizeof( d ) ) );
+	EvEntityCreated::Msg event;
+	event.mData.mEntity = ent;
+	event.mData.mEntityInfo = entInfo;
+	SendEvent( event );
 }
 
 void OmnibotFunctions::EntityDestroyed( GameEntity ent )
 {
-	Event_EntityDeleted d;
-	d.mEntity = ent;
-	SendGlobalEvent( MessageHelper( GAME_ENTITYDELETED, &d, sizeof( d ) ) );
+	EvEntityDeleted::Msg event;
+	event.mData.mEntity = ent;
+	SendEvent( event );
 }
 
 void OmnibotFunctions::AddGoal( const MapGoalDef & goaldef )
@@ -155,11 +150,11 @@ void OmnibotFunctions::AddGoal( const MapGoalDef & goaldef )
 	GameEntity Entity;
 	if ( goaldef.Props.GetEntity( "Entity", Entity ) && Entity.IsValid() )
 	{
-		Event_EntityCreated d;
-		d.mEntity = Entity;
-		d.mEntityInfo.mGroup = ENT_GRP_GOAL;
-		d.mEntityInfo.mCategory.SetFlag( ENT_CAT_INTERNAL );
-		SendGlobalEvent( MessageHelper( GAME_ENTITYCREATED, &d, sizeof( d ) ) );
+		EvEntityCreated::Msg event;
+		event.mData.mEntity = Entity;
+		event.mData.mEntityInfo.mGroup = ENT_GRP_GOAL;
+		event.mData.mEntityInfo.mCategory.SetFlag( ENT_CAT_INTERNAL );
+		SendEvent( event );
 	}
 
 	System::mInstance->mGoalManager->AddGoal( goaldef );

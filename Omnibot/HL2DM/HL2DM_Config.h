@@ -15,6 +15,7 @@
 
 #include "Omni-Bot_Types.h"
 #include "Omni-Bot_Events.h"
+#include "IEngineInterface.h"
 
 enum HL2DM_Version
 {
@@ -26,26 +27,6 @@ enum TraceMasks_HL2DM
 {
 	// combo masks can be defined separately
 	HL2DM_TR_MASK_PHYSGUN = TR_MASK_SHOT | TR_MASK_GRATE, // physgun cant pull through grates
-};
-
-// typedef: HL2DM_Events
-//		Defines the events specific to the ETF game, numbered starting at the end of
-//		the global events.
-enum HL2DM_Events
-{
-	HL2DM_MESSAGE_BEGIN = EVENT_NUM_EVENTS,
-
-	HL2DM_MESSAGE_END
-};
-
-// typedef: HL2DM_GameEvents
-//		Events that allow the bot to query for information from the game.
-enum MC_GameMessage
-{
-	HL2DM_MSG_START = GEN_MSG_END,
-	HL2DM_MSG_CAN_PHYSPICKUP,
-	HL2DM_MSG_PHYSGUNINFO,
-	HL2DM_MSG_END
 };
 
 // typedef: HL2DM_Weapon
@@ -125,5 +106,15 @@ enum HL2DM_EntityCategory
 	// THIS MUST BE LAST
 	HL2DM_ENT_CAT_MAX,
 };
+
+class HL2DM_Interface : public IEngineInterface
+{
+public:
+	// HL2
+	virtual bool GetPhysGunInfo( const GameEntity ent, GameEntity& heldEntity, float& launchSpeed ) = 0;
+	virtual bool CanPhysPickup( const GameEntity ent, const GameEntity pickup ) = 0;
+};
+
+extern HL2DM_Interface* gHL2DMFuncs;
 
 #endif

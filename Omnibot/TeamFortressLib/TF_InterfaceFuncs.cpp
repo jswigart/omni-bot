@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "InterfaceFuncs.h"
 #include "TF_Messages.h"
 #include "TF_InterfaceFuncs.h"
 #include "TF_BaseStates.h"
@@ -104,7 +103,7 @@ namespace InterfaceFuncs
 		InterfaceMsg( msg, _bot->GetGameEntity() );
 	}
 
-	bool LockPlayerPosition( GameEntity _ent, obBool _lock )
+	bool LockPlayerPosition( GameEntity _ent, bool _lock )
 	{
 		TF_LockPosition data = { _ent, _lock, False };
 		MessageHelper msg( TF_MSG_LOCKPOSITION, &data, sizeof( data ) );

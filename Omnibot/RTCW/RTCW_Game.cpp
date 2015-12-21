@@ -229,7 +229,7 @@ void RTCW_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
 
 	if ( _createnow )
 		mBotJoining = true;
-	int iGameID = InterfaceFuncs::Addbot( _addbot );
+	int iGameID = gEngineFuncs->Addbot( _addbot );
 	if ( _createnow )
 		mBotJoining = false;
 	if ( iGameID != -1 && _createnow )
@@ -403,9 +403,9 @@ void RTCW_Game::StartGame()
 
 	const char * mapName = gEngineFuncs->GetMapName();
 	filePath script( "nav/%s.gm", mapName );
-	if ( InterfaceFuncs::GetCvar( "g_deathmatch" ) != 0 )
+	if ( gEngineFuncs->GetCvar( "g_deathmatch" ) != 0 )
 		script = filePath( "nav/%s_dm.gm", mapName );
-	else if ( InterfaceFuncs::GetGameType() == 7 )
+	else if ( gEngineFuncs->GetGameType() == 7 )
 		script = filePath( "nav/%s_cp.gm", mapName );
 
 	if ( ScriptManager::GetInstance()->ExecuteFile( script, iThreadId ) )

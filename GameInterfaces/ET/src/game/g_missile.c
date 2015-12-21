@@ -249,7 +249,7 @@ void G_MissileImpact( gentity_t *ent, trace_t *trace, int impactDamage ) {
 	G_FreeEntity( ent );
 
 	if( ent->s.weapon == WP_MORTAR_SET ) {
-		Bot_Event_MortarImpact(ent, trace->endpos);
+		Bot_Event_MortarImpact( ent, trace->endpos, ent->splashRadius );
 	}
 }
 

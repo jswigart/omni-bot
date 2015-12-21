@@ -16,7 +16,6 @@
 #include "BotSteeringSystem.h"
 #include "Behaviors.h"
 #include "MovementCaps.h"
-#include "InterfaceFuncs.h"
 #include "ScriptGoal.h"
 
 #include "RenderBuffer.h"
@@ -100,12 +99,7 @@ void Client::Update()
 
 	EngineFuncs::EntityVelocity( mGameEntity, mVelocity );
 
-	Msg_PlayerMaxSpeed maxSpeed;
-
-	if ( InterfaceFuncs::GetMaxSpeed( mGameEntity, maxSpeed ) )
-	{
-		mMaxSpeed = maxSpeed.mMaxSpeed;
-	}
+	gEngineFuncs->GetMaxSpeed( mGameEntity, mMaxSpeed );
 
 	CheckTeamEvent();
 	CheckClassEvent();
@@ -217,78 +211,69 @@ gmVariable Client::GetScriptVariable()
 	return mScriptObject ? gmVariable( mScriptObject ) : gmVariable::s_null;
 }
 
-void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+void Client::ProcessEvent( const Message &message, CallbackParameters & cb )
 {
-	switch ( _message.GetMessageId() )
+	switch ( message.Id() )
 	{
-		HANDLER( GAME_CLIENTDISCONNECTED )
+		CASE_MSG( EvClientDisconnected )
 		{
-			_cb.CallScript( true );
-			const Event_SystemClientDisConnected *m = _message.Get<Event_SystemClientDisConnected>();
-			GetBB().RemoveBBRecordByPoster( m->mGameId, bbk_All );
-			GetBB().RemoveBBRecordByTarget( m->mGameId, bbk_All );
+			cb.CallScript( true );
+			GetBB().RemoveBBRecordByPoster( msg->mGameId, bbk_All );
+			GetBB().RemoveBBRecordByTarget( msg->mGameId, bbk_All );
 			break;
 		}
-		HANDLER( MESSAGE_SPAWN )
+		CASE_MSG( EvSpawn )
 		{
 			// Clear the goal list so the bot can re-evaluate the goals
-			_cb.CallScript();
+			cb.CallScript();
 			ResetStuckTime();
 			ReleaseAllHeldButtons();
 			break;
 		}
-		HANDLER( MESSAGE_DEATH )
+		CASE_MSG( EvDeath )
 		{
-			const Event_Death *m = _message.Get<Event_Death>();
-			_cb.CallScript();
-			_cb.AddEntity( "inflictor", m->mWhoKilledMe );
-			_cb.AddString( "meansofdeath", m->mMeansOfDeath );
+			cb.CallScript();
+			cb.AddEntity( "inflictor", msg->mWhoKilledMe );
+			cb.AddString( "meansofdeath", msg->mMeansOfDeath );
 			break;
 		}
-		HANDLER( MESSAGE_HEALED )
+		CASE_MSG( EvHealed )
 		{
-			const Event_Healed *m = _message.Get<Event_Healed>();
-			_cb.CallScript();
-			_cb.AddEntity( "who", m->mWhoHealedMe );
+			cb.CallScript();
+			cb.AddEntity( "who", msg->mWhoHealedMe );
 			break;
 		}
-		HANDLER( MESSAGE_REVIVED )
+		CASE_MSG( EvRevived )
 		{
-			const Event_Revived *m = _message.Get<Event_Revived>();
-			_cb.CallScript();
-			_cb.AddEntity( "who", m->mWhoRevivedMe );
+			cb.CallScript();
+			cb.AddEntity( "who", msg->mWhoRevivedMe );
 			break;
 		}
-		HANDLER( MESSAGE_KILLEDSOMEONE )
+		CASE_MSG( EvKilledSomeone )
 		{
-			const Event_KilledSomeone *m = _message.Get<Event_KilledSomeone>();
-			_cb.CallScript();
-			_cb.AddEntity( "victim", m->mWhoIKilled );
-			_cb.AddString( "meansofdeath", m->mMeansOfDeath );
+			cb.CallScript();
+			cb.AddEntity( "victim", msg->mWhoIKilled );
+			cb.AddString( "meansofdeath", msg->mMeansOfDeath );
 			break;
 		}
-		HANDLER( MESSAGE_CHANGETEAM )
+		CASE_MSG( EvChangeTeam )
 		{
-			const Event_ChangeTeam *m = _message.Get<Event_ChangeTeam>();
-			_cb.CallScript();
-			_cb.AddInt( "newteam", m->mNewTeam );
-			mTeam = m->mNewTeam;
+			cb.CallScript();
+			cb.AddInt( "newteam", msg->mNewTeam );
+			mTeam = msg->mNewTeam;
 			break;
 		}
-		HANDLER( MESSAGE_CHANGECLASS )
+		CASE_MSG( EvChangeClass )
 		{
-			const Event_ChangeClass *m = _message.Get<Event_ChangeClass>();
-			_cb.CallScript();
-			_cb.AddInt( "classId", m->mNewClass );
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mNewClass );
 
 			if ( GetProfileType() != Client::PROFILE_CUSTOM )
 				LoadProfile( Client::PROFILE_CLASS );
 			break;
 		}
-		HANDLER( MESSAGE_SPECTATED )
+		CASE_MSG( EvSpectated )
 		{
-			const Event_Spectated *m = _message.Get<Event_Spectated>();
-			m;
 			if ( IsDebugEnabled( BOT_DEBUG_FPINFO ) )
 			{
 				std::stringstream strOutString;
@@ -335,35 +320,32 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 			}
 			break;
 		}
-		HANDLER( MESSAGE_SCRIPTMSG )
+		CASE_MSG( EvScriptMessage )
 		{
-			const Event_ScriptMessage *m = _message.Get<Event_ScriptMessage>();
-			_cb.CallScript();
-			_cb.AddString( "msg", m->mMessageName );
-			_cb.AddString( "data1", m->mMessageData1 );
-			_cb.AddString( "data2", m->mMessageData2 );
-			_cb.AddString( "data3", m->mMessageData3 );
+			cb.CallScript();
+			cb.AddString( "msg", msg->mMessageName );
+			cb.AddString( "data1", msg->mMessageData1 );
+			cb.AddString( "data2", msg->mMessageData2 );
+			cb.AddString( "data3", msg->mMessageData3 );
 			break;
 		}
-		HANDLER( MESSAGE_PROXIMITY_TRIGGER )
+		CASE_MSG( AiState::EvProximityTrigger )
 		{
-			const AiState::Event_ProximityTrigger *m = _message.Get<AiState::Event_ProximityTrigger>();
-			_cb.CallScript();
-			_cb.AddString( "owner", Utils::HashToString( m->mOwnerState ).c_str() );
-			_cb.AddEntity( "ent", m->mEntity );
-			_cb.AddVector( "position", m->mPosition );
+			cb.CallScript();
+			cb.AddString( "owner", Utils::HashToString( msg->mOwnerState ).c_str() );
+			cb.AddEntity( "ent", msg->mEntity );
+			cb.AddVector( "position", msg->mPosition );
 			break;
 		}
-		HANDLER( MESSAGE_ADDWEAPON )
+		CASE_MSG( EvAddWeapon )
 		{
-			const Event_AddWeapon *m = _message.Get<Event_AddWeapon>();
-			if ( !GetWeaponSystem()->HasWeapon( m->mWeaponId ) )
+			if ( !GetWeaponSystem()->HasWeapon( msg->mWeaponId ) )
 			{
 				// Add weapons according to the event.
-				if ( GetWeaponSystem()->AddWeaponToInventory( m->mWeaponId ) )
+				if ( GetWeaponSystem()->AddWeaponToInventory( msg->mWeaponId ) )
 				{
-					_cb.CallScript();
-					_cb.AddInt( "weapon", m->mWeaponId );
+					cb.CallScript();
+					cb.AddInt( "weapon", msg->mWeaponId );
 				}
 				else
 				{
@@ -374,7 +356,7 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 					bool foundName = false;
 					for ( int i = 0; i < NumElements; ++i )
 					{
-						if ( Enum[ i ].mValue == m->mWeaponId )
+						if ( Enum[ i ].mValue == msg->mWeaponId )
 						{
 							foundName = true;
 							EngineFuncs::ConsoleError( va( "AddWeaponToInventory: Unknown Weapon( %s )", Enum[ i ].mKey ).c_str() );
@@ -384,163 +366,177 @@ void Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_c
 
 					if ( !foundName )
 					{
-						EngineFuncs::ConsoleError( va( "AddWeaponToInventory: Unknown Weapon Id( %d )", m->mWeaponId ).c_str() );
+						EngineFuncs::ConsoleError( va( "AddWeaponToInventory: Unknown Weapon Id( %d )", msg->mWeaponId ).c_str() );
 					}
 				}
 			}
 			break;
 		}
-		HANDLER( MESSAGE_REMOVEWEAPON )
+		CASE_MSG( EvRemoveWeapon )
 		{
-			const Event_RemoveWeapon *m = _message.Get<Event_RemoveWeapon>();
-			if ( GetWeaponSystem()->HasWeapon( m->mWeaponId ) )
+			if ( GetWeaponSystem()->HasWeapon( msg->mWeaponId ) )
 			{
-				_cb.CallScript();
-				_cb.AddInt( "weapon", m->mWeaponId );
-				GetWeaponSystem()->RemoveWeapon( m->mWeaponId );
+				cb.CallScript();
+				cb.AddInt( "weapon", msg->mWeaponId );
+				GetWeaponSystem()->RemoveWeapon( msg->mWeaponId );
 			}
 			break;
 		}
-		HANDLER( MESSAGE_REFRESHALLWEAPONS )
+		CASE_MSG( EvRefreshAllWeapons )
 		{
 			GetWeaponSystem()->RefreshAllWeapons();
 			break;
 		}
-		HANDLER( MESSAGE_REFRESHWEAPON )
+		CASE_MSG( EvRefreshWeapon )
 		{
-			const Event_RefreshWeapon *m = _message.Get<Event_RefreshWeapon>();
-			GetWeaponSystem()->RefreshWeapon( m->mWeaponId );
+			GetWeaponSystem()->RefreshWeapon( msg->mWeaponId );
 
-			_cb.CallScript();
-			_cb.AddInt( "weapon", m->mWeaponId );
+			cb.CallScript();
+			cb.AddInt( "weapon", msg->mWeaponId );
 			break;
 		}
-		HANDLER( MESSAGE_ENT_ENTER_RADIUS )
+		CASE_MSG( EvEntEnterRadius )
 		{
-			const Event_EntEnterRadius *m = _message.Get<Event_EntEnterRadius>();
 			//_cb.CallScript();
-			_cb.AddEntity( "ent", m->mEntity );
+			cb.AddEntity( "ent", msg->mEntity );
 			break;
 		}
-		HANDLER( MESSAGE_ENT_LEAVE_RADIUS )
+		CASE_MSG( EvEntLeaveRadius )
 		{
-			const Event_EntLeaveRadius *m = _message.Get<Event_EntLeaveRadius>();
 			//_cb.CallScript();
-			_cb.AddEntity( "ent", m->mEntity );
+			cb.AddEntity( "ent", msg->mEntity );
 			break;
 		}
-		HANDLER( ACTION_WEAPON_CHANGE )
+		CASE_MSG( EvWeaponChanged )
 		{
-			const Event_WeaponChanged *m = _message.Get<Event_WeaponChanged>();
-			if ( GetWeaponSystem()->HasWeapon( m->mWeaponId ) )
+			if ( GetWeaponSystem()->HasWeapon( msg->mWeaponId ) )
 			{
-				_cb.CallScript();
-				_cb.AddInt( "weapon", m->mWeaponId );
+				cb.CallScript();
+				cb.AddInt( "weapon", msg->mWeaponId );
 
 				// Special case signal.
-				GetStateRoot()->SignalThreads( gmVariable( Utils::MakeId32( (int16_t)ACTION_WEAPON_CHANGE, (int16_t)m->mWeaponId ) ) );
+				GetStateRoot()->SignalThreads( gmVariable( Utils::MakeId32( (int16_t)MSG_WEAPON_CHANGE, (int16_t)msg->mWeaponId ) ) );
 			}
 			break;
 		}
-		HANDLER( ACTION_WEAPON_FIRE )
+		CASE_MSG( EvWeaponFire )
 		{
-			const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-			_cb.CallScript();
-			_cb.AddInt( "weapon", m->mWeaponId );
-			_cb.AddEntity( "projectile", m->mProjectile );
+			cb.CallScript();
+			cb.AddInt( "weapon", msg->mWeaponId );
+			cb.AddEntity( "projectile", msg->mProjectile );
 
 			// Shot fired callback.
 			WeaponPtr curWpn = GetWeaponSystem()->GetCurrentWeapon();
-			if ( curWpn && curWpn->GetWeaponID() == m->mWeaponId )
-				curWpn->ShotFired( m->mFireMode, m->mProjectile );
+			if ( curWpn && curWpn->GetWeaponID() == msg->mWeaponId )
+				curWpn->ShotFired( msg->mFireMode, msg->mProjectile );
 
 			// Special case signal.
-			GetStateRoot()->SignalThreads( gmVariable( Utils::MakeId32( (int16_t)ACTION_WEAPON_FIRE, (int16_t)m->mWeaponId ) ) );
+			GetStateRoot()->SignalThreads( gmVariable( Utils::MakeId32( (int16_t)MSG_WEAPON_FIRE, (int16_t)msg->mWeaponId ) ) );
 			break;
 		}
-		HANDLER( PERCEPT_FEEL_PLAYER_USE )
+		CASE_MSG( EvPlayerUsed )
 		{
-			const Event_PlayerUsed *m = _message.Get<Event_PlayerUsed>();
-			_cb.CallScript();
-			_cb.AddEntity( "toucher", m->mWhoDidIt );
+			cb.CallScript();
+			cb.AddEntity( "toucher", msg->mWhoDidIt );
 			break;
 		}
-		HANDLER( PERCEPT_FEEL_PAIN )
+		CASE_MSG( EvTakeDamage )
 		{
-			const Event_TakeDamage *m = _message.Get<Event_TakeDamage>();
-			_cb.CallScript();
-			_cb.AddEntity( "inflictor", m->mInflictor );
-			_cb.AddInt( "previoushealth", GetCurrentHealth() );
+			cb.CallScript();
+			cb.AddEntity( "inflictor", msg->mInflictor );
+			cb.AddInt( "previoushealth", GetCurrentHealth() );
 			gEngineFuncs->GetEntityInfo( GetGameEntity(), mEntInfo );
-			_cb.AddInt( "currenthealth", GetCurrentHealth() );
-			_cb.AddString( "damageType", m->mDamageType );
+			cb.AddInt( "currenthealth", GetCurrentHealth() );
+			cb.AddString( "damageType", msg->mDamageType );
 
-			if ( m->mInflictor.IsValid() && IGame::IsEntityValid( m->mInflictor ) )
+			if ( msg->mInflictor.IsValid() && IGame::IsEntityValid( msg->mInflictor ) )
 			{
-				GetSensoryMemory()->UpdateWithTouchSource( m->mInflictor );
+				GetSensoryMemory()->UpdateWithTouchSource( msg->mInflictor );
 			}
 			break;
 		}
-		HANDLER( PERCEPT_HEAR_GLOBALVOICEMACRO )
-			HANDLER( PERCEPT_HEAR_TEAMVOICEMACRO )
-			HANDLER( PERCEPT_HEAR_PRIVATEVOICEMACRO )
+		CASE_MSG( EvSound )
 		{
-			const Event_VoiceMacro *m = _message.Get<Event_VoiceMacro>();
-			if ( m->mWhoSaidIt != GetGameEntity() ) // Ignore messages from myself.
+			if ( msg->mSource != GetGameEntity() )
 			{
-				_cb.CallScript();
-
-				int macroId = HandleVoiceMacroEvent( _message );
-
-				_cb.AddEntity( "who", m->mWhoSaidIt );
-				_cb.AddInt( "macro", macroId );
-
-				// signal any pending threads
-				gmVariable s( Utils::MakeId32( (int16_t)PERCEPT_HEAR_VOICEMACRO, (int16_t)macroId ) );
-				GetStateRoot()->SignalThreads( s );
-			}
-			else
-				_cb.DontPropogateEvent();
-			break;
-		}
-		HANDLER( PERCEPT_HEAR_GLOBALCHATMSG )
-			HANDLER( PERCEPT_HEAR_TEAMCHATMSG )
-			HANDLER( PERCEPT_HEAR_PRIVCHATMSG )
-			HANDLER( PERCEPT_HEAR_GROUPCHATMSG )
-		{
-			const Event_ChatMessage *m = _message.Get<Event_ChatMessage>();
-			if ( m->mWhoSaidIt != GetGameEntity() ) // Ignore messages from myself.
-			{
-				_cb.CallScript();
-				_cb.AddEntity( "who", m->mWhoSaidIt );
-				_cb.AddString( "msg", m->mMessage );
-			}
-			else
-				_cb.DontPropogateEvent();
-			break;
-		}
-		HANDLER( PERCEPT_HEAR_SOUND )
-		{
-			const Event_Sound *m = _message.Get<Event_Sound>();
-			if ( m->mSource != GetGameEntity() )
-			{
-				_cb.CallScript();
-				_cb.AddEntity( "source", m->mSource );
-				_cb.AddVector( "origin", m->mOrigin[ 0 ], m->mOrigin[ 1 ], m->mOrigin[ 2 ] );
-				_cb.AddInt( "soundId", m->mSoundType );
-				_cb.AddString( "soundName", m->mSoundName );
-				GetSensoryMemory()->UpdateWithSoundSource( m );
+				cb.CallScript();
+				cb.AddEntity( "source", msg->mSource );
+				cb.AddVector( "origin", msg->mOrigin[ 0 ], msg->mOrigin[ 1 ], msg->mOrigin[ 2 ] );
+				cb.AddInt( "soundId", msg->mSoundType );
+				cb.AddString( "soundName", msg->mSoundName );
+				GetSensoryMemory()->UpdateWithSoundSource( msg );
 			}
 			break;
 		}
-		HANDLER( PERCEPT_SENSE_ENTITY )
+		CASE_MSG( EvEntitySensed )
 		{
-			const Event_EntitySensed *m = _message.Get<Event_EntitySensed>();
-			_cb.CallScript();
-			_cb.AddInt( "sensedclass", m->mEntityClass );
-			_cb.AddEntity( "sensedentity", m->mEntity );
+			cb.CallScript();
+			cb.AddInt( "sensedclass", msg->mEntityClass );
+			cb.AddEntity( "sensedentity", msg->mEntity );
 			break;
 		}
+		CASE_MSG( EvMineArmed )
+		{
+			cb.CallScript();
+			cb.AddEntity( "mine", msg->mMine );
+			break;
+		}
+		CASE_MSG( EvMineDetonate )
+		{
+			cb.CallScript();
+			cb.AddEntity( "mine", msg->mMine );
+			break;
+		}
+		CASE_MSG( EvMortarImpact )
+		{
+			cb.CallScript();
+			cb.AddEntity( "owner", msg->mOwner );
+			cb.AddVector( "position", msg->mPosition );
+			cb.AddFloat( "radius", msg->mRadius );
+			break;
+		}
+		CASE_MSG( EvRecievedAmmo )
+		{
+			cb.CallScript();
+			cb.AddEntity( "who", msg->mFromWho );
+			break;
+		}
+	}
+
+	if ( message.Id() == EvChatMessageGlobal::Msg::MessageId ||
+		message.Id() == EvChatMessageTeam::Msg::MessageId ||
+		message.Id() == EvChatMessagePrivate::Msg::MessageId ||
+		message.Id() == EvChatMessageGroup::Msg::MessageId )
+	{
+		const EvVoiceMacro* msg = EvVoiceMacro::Msg::Cast( message, message.Id() );
+		if ( msg->mWhoSaidIt != GetGameEntity() ) // Ignore messages from myself.
+		{
+			cb.CallScript();
+			cb.AddEntity( "who", msg->mWhoSaidIt );
+			cb.AddString( "msg", msg->mMessage );
+		}
+		else
+			cb.DontPropogateEvent();
+	}
+
+	if ( message.Id() == EvVoiceMacroGlobal::Msg::MessageId ||
+		message.Id() == EvVoiceMacroTeam::Msg::MessageId ||
+		message.Id() == EvVoiceMacroPrivate::Msg::MessageId ||
+		message.Id() == EvVoiceMacroGroup::Msg::MessageId )
+	{
+		const EvVoiceMacro* msg = EvVoiceMacro::Msg::Cast( message, message.Id() );
+		if ( msg->mWhoSaidIt != GetGameEntity() ) // Ignore messages from myself.
+		{
+			const int macroId = HandleVoiceMacroEvent( msg );
+			cb.CallScript();
+			cb.AddEntity( "who", msg->mWhoSaidIt );
+			cb.AddInt( "macro", macroId );
+
+			gmVariable s( Utils::MakeId32( (int16_t)message.Id(), (int16_t)macroId ) );
+			GetStateRoot()->SignalThreads( s );
+		}
+		else
+			cb.DontPropogateEvent();
 	}
 }
 
@@ -686,19 +682,19 @@ bool Client::TurnTowardPosition( const Vector3f &_pos )
 	return bInTolerance;
 }
 
-bool Client::HasLineOfSightTo( const Vector3f &_pos, GameEntity _entity, int customTraceMask )
+bool Client::HasLineOfSightTo( const Vector3f &_pos, GameEntity entity, int customTraceMask )
 {
-	return HasLineOfSightTo( GetEyePosition(), _pos, _entity, mGameID, customTraceMask );
+	return HasLineOfSightTo( GetEyePosition(), _pos, entity, mGameID, customTraceMask );
 }
 
 bool Client::HasLineOfSightTo( const Vector3f &_pos1, const Vector3f &_pos2,
-	GameEntity _ent, int _ignoreent, int customTraceMask )
+	GameEntity ent, int _ignoreent, int customTraceMask )
 {
 	//rmt_ScopedCPUSample( HasLineOfSightTo );
 	obTraceResult tr;
 	EngineFuncs::TraceLine( tr, _pos1, _pos2,
-		NULL, customTraceMask ? customTraceMask : TR_MASK_SHOT | TR_MASK_SMOKEBOMB, _ignoreent, True );
-	return ( tr.mFraction == 1.0f ) || ( ( _ent.IsValid() ) && ( tr.mHitEntity == _ent ) );
+		NULL, customTraceMask ? customTraceMask : TR_MASK_SHOT | TR_MASK_SMOKEBOMB, _ignoreent, true );
+	return ( tr.mFraction == 1.0f ) || ( ( ent.IsValid() ) && ( tr.mHitEntity == ent ) );
 }
 
 void Client::EnableDebug( const int _flag, bool _enable )
@@ -807,7 +803,7 @@ void Client::ClearProfile()
 	mProfileType = PROFILE_NONE;
 }
 
-void Client::ProcessEventImpl( const MessageHelper &_message, uint32_t _targetState )
+void Client::ProcessEventImpl( const Message &_message, uint32_t _targetState )
 {
 	//rmt_ScopedCPUSample( ClientProcessEvent );
 
@@ -815,7 +811,7 @@ void Client::ProcessEventImpl( const MessageHelper &_message, uint32_t _targetSt
 
 	DisableGCInScope gcEn( pMachine );
 
-	CallbackParameters cb( _message.GetMessageId(), pMachine );
+	CallbackParameters cb( _message.Id(), pMachine );
 	cb.SetTargetState( _targetState );
 	ProcessEvent( _message, cb );
 
@@ -887,8 +883,9 @@ void Client::CheckTeamEvent()
 		mTeam = iCurrentTeam;
 
 		// Send a change team event.
-		Event_ChangeTeam d = { iCurrentTeam };
-		SendEvent( MessageHelper( MESSAGE_CHANGETEAM, &d, sizeof( d ) ) );
+		EvChangeTeam::Msg event;
+		event.mData.mNewTeam = iCurrentTeam;
+		SendEvent( event );
 	}
 }
 
@@ -899,14 +896,15 @@ void Client::CheckClassEvent()
 	if ( currentInfo.mClassId != mEntInfo.mClassId )
 	{
 		// Send a change class event.
-		Event_ChangeClass d = { currentInfo.mClassId };
-		SendEvent( MessageHelper( MESSAGE_CHANGECLASS, &d, sizeof( d ) ) );
+		EvChangeClass::Msg event;
+		event.mData.mNewClass = currentInfo.mClassId;
+		SendEvent( event );
 	}
 }
 
-bool Client::IsAllied( const GameEntity _ent ) const
+bool Client::IsAllied( const GameEntity ent ) const
 {
-	return InterfaceFuncs::IsAllied( GetGameEntity(), _ent );
+	return gEngineFuncs->IsAllied( GetGameEntity(), ent );
 }
 
 void Client::PressButton( int button )
@@ -1178,7 +1176,7 @@ void Client::ProcessStimulusBehavior( Behaviors& behaviors, const StimulusPtr& s
 		case ENT_GRP_PLAYER:
 		case ENT_GRP_MONSTER:
 		{
-			if ( InterfaceFuncs::IsAllied( GetGameEntity(), stim->mEntity ) )
+			if ( gEngineFuncs->IsAllied( GetGameEntity(), stim->mEntity ) )
 			{
 				// escort?
 			}
@@ -1260,7 +1258,7 @@ void Client::ProcessStimulusBehavior( Behaviors& behaviors, const StimulusPtr& s
 		{
 			FlagState flagState;
 			GameEntity owner;
-			if ( InterfaceFuncs::GetFlagState( beh.mStimulus->mEntity, flagState, owner ) )
+			if ( gEngineFuncs->GetFlagState( beh.mStimulus->mEntity, flagState, owner ) )
 			{
 				if ( owner == GetGameEntity() )
 				{
@@ -1269,7 +1267,7 @@ void Client::ProcessStimulusBehavior( Behaviors& behaviors, const StimulusPtr& s
 				}
 				else
 				{
-					if ( InterfaceFuncs::IsAllied( GetGameEntity(), owner ) )
+					if ( gEngineFuncs->IsAllied( GetGameEntity(), owner ) )
 					{
 						beh.mAction = BEHAVIOR_DEFEND;
 						beh.mDesirability = 1.5f;

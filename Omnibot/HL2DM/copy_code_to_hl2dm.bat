@@ -3,7 +3,6 @@ copy /Y "..\Common\Base_Messages.h" "D:\git\source-sdk-2013_bot\mp\src\game\serv
 copy /Y ..\Common\BotExports.h D:\git\source-sdk-2013_bot\mp\src\game\server\omnibot\
 copy /Y ..\Common\BotLoadLibrary.cpp D:\git\source-sdk-2013_bot\mp\src\game\server\omnibot\
 copy /Y ..\Common\IEngineInterface.h D:\git\source-sdk-2013_bot\mp\src\game\server\omnibot\
-copy /Y ..\Common\MessageHelper.h D:\git\source-sdk-2013_bot\mp\src\game\server\omnibot\
 copy /Y ..\Common\Omni-Bot.h D:\git\source-sdk-2013_bot\mp\src\game\server\omnibot\
 copy /Y ..\Common\Omni-Bot_BitFlags.h D:\git\source-sdk-2013_bot\mp\src\game\server\omnibot\
 copy /Y ..\Common\Omni-Bot_Color.h D:\git\source-sdk-2013_bot\mp\src\game\server\omnibot\

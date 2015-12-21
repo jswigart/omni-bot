@@ -203,7 +203,7 @@ void JA_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
 
 	if ( _createnow )
 		mBotJoining = true;
-	int iGameID = InterfaceFuncs::Addbot( _addbot );
+	int iGameID = gEngineFuncs->Addbot( _addbot );
 	if ( _createnow )
 		mBotJoining = false;
 	if ( iGameID != -1 && _createnow )

@@ -12,7 +12,6 @@
 #include "WeaponDatabase.h"
 #include "ScriptManager.h"
 #include "BotBaseStates.h"
-#include "InterfaceFuncs.h"
 #include "RenderBuffer.h"
 #include "System.h"
 
@@ -87,7 +86,7 @@ namespace AiState
 	}
 	void AttackTarget::RenderDebug()
 	{
-		if ( mWeaponLimits.mLimited == True )
+		if ( mWeaponLimits.mLimited )
 		{
 			Vector3f vGunCenter( mWeaponLimits.mCenterFacing );
 			Vector3f vAimVector( Normalize( mAimPosition - GetClient()->GetEyePosition() ) );
@@ -182,11 +181,11 @@ namespace AiState
 				mAimPosition = wpn->GetAimPoint( Primary, vTargetEnt, targetInfo );
 				wpn->AddAimError( Primary, mAimPosition, targetInfo );
 				_aimpos = mAimPosition;
-
+				
 				// Check limits
 				mTargetExceedsWeaponLimits = false;
-				if ( InterfaceFuncs::GetWeaponLimits( GetClient(), wpn->GetWeaponID(), mWeaponLimits )
-					&& mWeaponLimits.mLimited == True )
+
+				if ( gEngineFuncs->GetWeaponLimits( GetClient()->GetGameEntity(), wpn->GetWeaponID(), mWeaponLimits ) && mWeaponLimits.mLimited )
 				{
 					Vector3f vGunCenter( mWeaponLimits.mCenterFacing );
 					Vector3f vAimVector( Normalize( _aimpos - GetClient()->GetEyePosition() ) );
@@ -459,44 +458,43 @@ namespace AiState
 		}
 		return false;
 	}
-
-	WeaponStatus WeaponSystem::_UpdateWeaponFromGame()
-	{
-		return InterfaceFuncs::GetEquippedWeapon( GetClient()->GetGameEntity() );
-	}
-
+	
 	void WeaponSystem::_UpdateCurrentWeapon( FireMode _mode )
 	{
 		// Get the weapon from the game.
-		WeaponStatus mounted = InterfaceFuncs::GetMountedWeapon( GetClient() );
-		if ( mounted.mWeaponId != 0 )
+		int weaponId = 0;
+		FireMode weaponMode = Primary;
+
+		gEngineFuncs->GetMountedWeapon( GetClient()->GetGameEntity(), weaponId, weaponMode );
+		if ( weaponId != 0 )
 		{
 			GetClient()->SetUserFlag( Client::FL_USINGMOUNTEDWEAPON, true );
-			mCurrentWeapon = GetWeapon( mounted.mWeaponId, false );
-			mDesiredWeaponID = mounted.mWeaponId;
+			mCurrentWeapon = GetWeapon( weaponId, false );
+			mDesiredWeaponID = weaponId;
 			mCurrentRequestOwner = GetNameHash();
 		}
 		else
 		{
 			GetClient()->SetUserFlag( Client::FL_USINGMOUNTEDWEAPON, false );
-			WeaponStatus currentWeapon = _UpdateWeaponFromGame();
+			
+			gEngineFuncs->GetEquippedWeapon( GetClient()->GetGameEntity(), weaponId, weaponMode );
 
 			// If it has changed, set our new weapon.
-			if ( !mCurrentWeapon || !mCurrentWeapon->IsWeapon( currentWeapon.mWeaponId ) )
+			if ( !mCurrentWeapon || !mCurrentWeapon->IsWeapon( weaponId ) )
 			{
 				//bool bFound = false;
 				WeaponList::const_iterator it = mWeaponList.begin(), itEnd = mWeaponList.end();
 				for ( ; it != itEnd; ++it )
 				{
-					if ( ( *it )->IsWeapon( currentWeapon.mWeaponId ) )
+					if ( ( *it )->IsWeapon( weaponId ) )
 					{
 						mCurrentWeapon = ( *it );
 						mCurrentWeapon->Select();
 						//bFound = true;
 
-						Event_WeaponChanged weapChanged = { currentWeapon.mWeaponId };
-						MessageHelper hlpr( ACTION_WEAPON_CHANGE, &weapChanged, sizeof( weapChanged ) );
-						GetClient()->SendEvent( hlpr );
+						EvWeaponChanged::Msg event;
+						event.mData.mWeaponId = weaponId;
+						GetClient()->SendEvent( event );
 						break;
 					}
 				}
@@ -533,8 +531,9 @@ namespace AiState
 
 			if ( !hasWeapon )
 			{
-				Event_RemoveWeapon d = { weaponId };
-				System::mInstance->mGame->DispatchEvent( GetClient()->GetGameID(), MessageHelper( MESSAGE_REMOVEWEAPON, &d, sizeof( d ) ) );
+				EvRemoveWeapon::Msg event;
+				event.mData.mWeaponId = weaponId;
+				System::mInstance->mGame->DispatchEvent( event, GetClient()->GetGameEntity() );
 			}
 		}
 
@@ -543,9 +542,9 @@ namespace AiState
 		{
 			if ( currentWeapons[ w ] != -1 )
 			{
-				Event_AddWeapon msg = { currentWeapons[ w ] };
-				System::mInstance->mGame->DispatchEvent( GetClient()->GetGameID(), MessageHelper( MESSAGE_ADDWEAPON, &msg, sizeof( msg ) ) );
-				currentWeapons[ w ] = -1;
+				EvAddWeapon::Msg event;
+				event.mData.mWeaponId = currentWeapons[ w ];
+				System::mInstance->mGame->DispatchEvent( event, GetClient()->GetGameEntity() );
 			}
 		}
 	}
@@ -563,12 +562,12 @@ namespace AiState
 
 	bool WeaponSystem::ReadyToFire()
 	{
-		return InterfaceFuncs::IsReadyToFire( GetClient()->GetGameEntity() );
+		return gEngineFuncs->IsReadyToFire( GetClient()->GetGameEntity() );
 	}
 
 	bool WeaponSystem::IsReloading()
 	{
-		return InterfaceFuncs::IsReloading( GetClient()->GetGameEntity() );
+		return gEngineFuncs->IsReloading( GetClient()->GetGameEntity() );
 	}
 
 	float WeaponSystem::GetMostDesiredAmmo( int &_weapon, int &_getammo )

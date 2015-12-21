@@ -138,7 +138,7 @@ static int GM_CDECL gmfGetPipeCount( gmThread *a_thread )
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 0 );
 
-	a_thread->PushInt( InterfaceFuncs::GetPlayerPipeCount( native ) );
+	a_thread->PushInt( gEngineFuncs->GetPlayerPipeCount( native ) );
 	return GM_OK;
 }
 
@@ -183,7 +183,7 @@ static int GM_CDECL gmfDisguiseOptions( gmThread *a_thread )
 
 	TF_DisguiseOptions disguiseOptions = {};
 	disguiseOptions.mCheckTeam = native->GetTeam();
-	InterfaceFuncs::DisguiseOptions( native, disguiseOptions );
+	gEngineFuncs->DisguiseOptions( native, disguiseOptions );
 
 	gmTableObject *pTbl = pMachine->AllocTableObject();
 	gmTableObject *pTeamTbl = pMachine->AllocTableObject();
@@ -220,7 +220,7 @@ static int GM_CDECL gmfDisguise( gmThread *a_thread )
 	GM_CHECK_INT_PARAM( iTeam, 0 );
 	GM_CHECK_INT_PARAM( iClass, 1 );
 
-	InterfaceFuncs::Disguise( native, iTeam, iClass );
+	gEngineFuncs->Disguise( native, iTeam, iClass );
 	return GM_OK;
 }
 
@@ -238,7 +238,7 @@ static int GM_CDECL gmfCloak( gmThread *a_thread )
 	CHECK_THIS_BOT();
 	GM_INT_PARAM( silent, 0, 0 );
 
-	InterfaceFuncs::Cloak( native, silent != 0 ? True : False );
+	gEngineFuncs->Cloak( native, silent != 0 ? True : False );
 	return GM_OK;
 }
 
@@ -266,7 +266,7 @@ static int GM_CDECL gmfLockPlayerPosition( gmThread *a_thread )
 	bool bSucceed = false;
 	if ( gameEnt.IsValid() )
 	{
-		bSucceed = InterfaceFuncs::LockPlayerPosition( gameEnt, lock != 0 ? True : False );
+		bSucceed = gEngineFuncs->LockPlayerPosition( gameEnt, lock != 0 ? True : False );
 	}
 	a_thread->PushInt( bSucceed ? 1 : 0 );
 	return GM_OK;
@@ -294,7 +294,7 @@ static int GM_CDECL gmfHudHint( gmThread *a_thread )
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 
-	InterfaceFuncs::ShowHudHint( gameEnt, id, message );
+	gEngineFuncs->ShowHudHint( gameEnt, id, message );
 	return GM_OK;
 }
 
@@ -324,7 +324,7 @@ static int GM_CDECL gmfHudTextMsg( gmThread *a_thread )
 	hudtxt.mTargetPlayer = gameEnt;
 	Utils::StringCopy( hudtxt.mMessage, message, sizeof( hudtxt.mMessage ) );
 
-	InterfaceFuncs::ShowHudText( hudtxt );
+	gEngineFuncs->ShowHudText( hudtxt );
 	return GM_OK;
 }
 
@@ -365,7 +365,7 @@ static int GM_CDECL gmfHudAlert( gmThread *a_thread )
 	menuData.mTimeOut = timeout;
 	menuData.mColor = obColor( color );
 
-	InterfaceFuncs::ShowHudMenu( menuData );
+	gEngineFuncs->ShowHudMenu( menuData );
 	return GM_OK;
 }
 
@@ -408,7 +408,7 @@ static int GM_CDECL gmfHudTextBox( gmThread *a_thread )
 	menuData.mTimeOut = timeout;
 	menuData.mColor = obColor( color );
 
-	InterfaceFuncs::ShowHudMenu( menuData );
+	gEngineFuncs->ShowHudMenu( menuData );
 	return GM_OK;
 }
 // Function: HudMenu
@@ -480,7 +480,7 @@ static int GM_CDECL gmfHudMenu( gmThread *a_thread )
 		}
 	}
 
-	InterfaceFuncs::ShowHudMenu( menuData );
+	gEngineFuncs->ShowHudMenu( menuData );
 	return GM_OK;
 }
 

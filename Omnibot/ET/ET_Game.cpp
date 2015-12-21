@@ -8,9 +8,8 @@
 
 #include "ET_Game.h"
 #include "ET_VoiceMacros.h"
-#include "ET_InterfaceFuncs.h"
 #include "ET_Client.h"
-
+#include "ET_Messages.h"
 #include "System.h"
 #include "RenderBuffer.h"
 
@@ -18,6 +17,8 @@
 #include "BotPathing.h"
 #include "NameManager.h"
 #include "ScriptManager.h"
+
+EnemyTerritory_Interface* gEnemyTerritoryFuncs = 0;
 
 int ET_Game::CLASSEXoffset;
 bool ET_Game::IsETBlight, ET_Game::IsBastardmod;
@@ -66,6 +67,8 @@ bool ET_Game::Init( System & system )
 
 	if ( !IGame::Init( system ) )
 		return false;
+
+	gEnemyTerritoryFuncs = dynamic_cast<EnemyTerritory_Interface*>( gEngineFuncs );
 
 	return true;
 }
@@ -331,21 +334,21 @@ void ET_Game::InitVoiceMacros( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "P_FALLBACK", gmVariable( VCHAT_PRIVATE_FALLBACK ) );
 }
 
-void ET_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
+void ET_Game::AddBot( ParamsAddbot & parms, bool _createnow )
 {
 	//////////////////////////////////////////////////////////////////////////
-	if ( !_addbot.mName[ 0 ] )
+	if ( !parms.mName[ 0 ] )
 	{
 		NamePtr nr = NameManager::GetInstance()->GetName();
 		std::string name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
-		Utils::StringCopy( _addbot.mName, name.c_str(), sizeof( _addbot.mName ) );
+		Utils::StringCopy( parms.mName, name.c_str(), sizeof( parms.mName ) );
 	}
 	//////////////////////////////////////////////////////////////////////////
 	assert( GameStarted() );
 
 	if ( _createnow )
 		mBotJoining = true;
-	int iGameID = InterfaceFuncs::Addbot( _addbot );
+	int iGameID = gEngineFuncs->AddBot( parms );
 	if ( _createnow )
 		mBotJoining = false;
 	if ( iGameID != -1 && _createnow )
@@ -359,8 +362,8 @@ void ET_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
 			cp->Init( iGameID );
 		}
 
-		cp->mDesiredTeam = _addbot.mTeam;
-		cp->mDesiredClass = _addbot.mClass;
+		cp->mDesiredTeam = parms.mTeam;
+		cp->mDesiredClass = parms.mClass;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Script callbacks
@@ -396,22 +399,18 @@ void ET_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
 //		Custom Events for Enemy Territory. Also see <Common Script Events>
 void ET_Game::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
 {
-	_table->Set( _machine, "FIRETEAM_CHAT_MSG", gmVariable( PERCEPT_HEAR_PRIVCHATMSG ) );
-
-	_table->Set( _machine, "PRETRIGGERED_MINE", gmVariable( ET_EVENT_PRETRIGGER_MINE ) );
-	_table->Set( _machine, "POSTTRIGGERED_MINE", gmVariable( ET_EVENT_POSTTRIGGER_MINE ) );
-	_table->Set( _machine, "MORTAR_IMPACT", gmVariable( ET_EVENT_MORTAR_IMPACT ) );
-
-	_table->Set( _machine, "FIRETEAM_CREATED", gmVariable( ET_EVENT_FIRETEAM_CREATED ) );
-	_table->Set( _machine, "FIRETEAM_DISBANDED", gmVariable( ET_EVENT_FIRETEAM_DISBANDED ) );
-	_table->Set( _machine, "FIRETEAM_JOINED", gmVariable( ET_EVENT_FIRETEAM_JOINED ) );
-	_table->Set( _machine, "FIRETEAM_LEFT", gmVariable( ET_EVENT_FIRETEAM_LEFT ) );
-	_table->Set( _machine, "FIRETEAM_INVITED", gmVariable( ET_EVENT_FIRETEAM_INVITED ) );
-	_table->Set( _machine, "FIRETEAM_PROPOSAL", gmVariable( ET_EVENT_FIRETEAM_PROPOSAL ) );
-	_table->Set( _machine, "FIRETEAM_WARNED", gmVariable( ET_EVENT_FIRETEAM_WARNED ) );
-	_table->Set( _machine, "AMMO_RECIEVED", gmVariable( ET_EVENT_RECIEVEDAMMO ) );
-
 	IGame::InitScriptEvents( _machine, _table );
+
+	_table->Set( _machine, "FIRETEAM_CHAT_MSG", gmVariable( MSG_HEAR_CHATMSG_GROUP ) );
+
+	_table->Set( _machine, "FIRETEAM_CREATED", gmVariable( ET_MSG_FIRETEAM_CREATED ) );
+	_table->Set( _machine, "FIRETEAM_DISBANDED", gmVariable( ET_MSG_FIRETEAM_DISBANDED ) );
+	_table->Set( _machine, "FIRETEAM_JOINED", gmVariable( ET_MSG_FIRETEAM_JOINED ) );
+	_table->Set( _machine, "FIRETEAM_LEFT", gmVariable( ET_MSG_FIRETEAM_LEFT ) );
+	_table->Set( _machine, "FIRETEAM_INVITED", gmVariable( ET_MSG_FIRETEAM_INVITED ) );
+	_table->Set( _machine, "FIRETEAM_PROPOSAL", gmVariable( ET_MSG_FIRETEAM_PROPOSAL ) );
+	_table->Set( _machine, "FIRETEAM_WARNED", gmVariable( ET_MSG_FIRETEAM_WARNED ) );
+	_table->Set( _machine, "AMMO_RECIEVED", gmVariable( ET_MSG_RECIEVEDAMMO ) );
 }
 
 void ET_Game::InitScriptEntityFlags( gmMachine *_machine, gmTableObject *_table )
@@ -494,29 +493,29 @@ const float ET_Game::ET_GetEntityClassAimOffset( const TargetInfo &_target )
 	return 0.0f;
 }
 
-void ET_Game::ClientJoined( const Event_SystemClientConnected *_msg )
+void ET_Game::ClientJoined( const EvClientConnected * msg )
 {
-	Utils::OutputDebug( kInfo, "Client Joined Game, IsBot: %d, ClientNum: %d", _msg->mIsBot, _msg->mGameId );
-	if ( _msg->mIsBot && !mBotJoining )
+	Utils::OutputDebug( kInfo, "Client Joined Game, IsBot: %d, ClientNum: %d", msg->mIsBot, msg->mGameId );
+	if ( msg->mIsBot && !mBotJoining )
 	{
 		CheckGameState();
 		assert( GameStarted() );
-		assert( _msg->mGameId < Constants::MAX_PLAYERS && _msg->mGameId >= 0 );
+		assert( msg->mGameId < Constants::MAX_PLAYERS && msg->mGameId >= 0 );
 
 		// If a bot isn't created by now, it has probably been a map change,
 		// and the game has re-added the clients itself.
-		ClientPtr &cp = GetClientFromCorrectedGameId( _msg->mGameId );
+		ClientPtr &cp = GetClientFromCorrectedGameId( msg->mGameId );
 		if ( !cp )
 		{
 			// Initialize the appropriate slot in the list.
 			cp.reset( CreateGameClient() );
-			cp->Init( _msg->mGameId );
+			cp->Init( msg->mGameId );
 
-			cp->mDesiredTeam = _msg->mDesiredTeam;
-			cp->mDesiredClass = _msg->mDesiredClass;
+			cp->mDesiredTeam = msg->mDesiredTeam;
+			cp->mDesiredClass = msg->mDesiredClass;
 
-			gEngineFuncs->ChangeClass( _msg->mGameId, cp->mDesiredClass, NULL );
-			gEngineFuncs->ChangeTeam( _msg->mGameId, cp->mDesiredTeam, NULL );
+			gEngineFuncs->ChangeClass( msg->mGameId, cp->mDesiredClass, NULL );
+			gEngineFuncs->ChangeTeam( msg->mGameId, cp->mDesiredTeam, NULL );
 
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();

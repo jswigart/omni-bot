@@ -32,7 +32,6 @@ class gmTableObject;
 class gmFunctionObject;
 
 typedef std::shared_ptr<Client> ClientPtr;
-typedef std::weak_ptr<Client> ClientWPtr;
 
 struct NavParms
 {
@@ -93,10 +92,11 @@ public:
 	virtual void StartTraining();
 	virtual void InitMapScript();
 
-	virtual void ClientJoined( const Event_SystemClientConnected *_msg );
-	virtual void ClientLeft( const Event_SystemClientDisConnected *_msg );
+	virtual void ClientJoined( const EvClientConnected *_msg );
+	virtual void ClientLeft( const EvClientDisconnected *_msg );
 
-	void UpdateTime();
+	static void InitTime();
+	static void UpdateTime();
 
 	static inline int32_t GetTime()
 	{
@@ -135,16 +135,16 @@ public:
 		return mCheatsEnabled;
 	}
 
-	void DispatchEvent( int _dest, const MessageHelper &_message );
-	void DispatchGlobalEvent( const MessageHelper &_message );
+	void DispatchEvent( const Message &message, GameEntity dest = GameEntity() );
 	
 	const GameVars &GetGameVars() const;
 
-	virtual bool CheckVersion( int _version );
+	virtual bool CheckVersion( int version );
 			
 	virtual void GetNavParms( NavParms & navParms ) const;
 	
-	ClientPtr GetClientByIndex( int _index );
+	ClientPtr GetClientByEntity( GameEntity ent );
+	ClientPtr GetClientByIndex( int index );
 
 	bool FindTeamName( std::string& teamName, int teamId );
 	bool FindClassName( std::string& groupName, std::string& className, const EntityGroup group, int classId );
@@ -153,11 +153,11 @@ public:
 	virtual GoalManager * AllocGoalManager();
 	virtual Client *CreateGameClient() = 0;
 
-	virtual void GetWeaponEnumeration( const IntEnum *&_ptr, int &num ) = 0;
-	virtual void GetTeamEnumeration( const IntEnum *&_ptr, int &num ) = 0;
-	virtual void GetRoleEnumeration( const IntEnum *&_ptr, int &num );
+	virtual void GetWeaponEnumeration( const IntEnum *&ptr, int &num ) = 0;
+	virtual void GetTeamEnumeration( const IntEnum *&ptr, int &num ) = 0;
+	virtual void GetRoleEnumeration( const IntEnum *&ptr, int &num );
 
-	virtual void AddBot( Msg_Addbot &_addbot, bool _createnow = true );
+	virtual void AddBot( ParamsAddbot & parms, bool createnow = true );
 
 	virtual void CheckServerSettings( bool managePlayers = true );
 
@@ -166,7 +166,7 @@ public:
 		return mbDrawBlockableTests;
 	}
 
-	void LoadGoalScripts( bool _clearold );
+	void LoadGoalScripts( bool clearold );
 
 	virtual ClientPtr &GetClientFromCorrectedGameId( int gameid );
 
@@ -316,7 +316,7 @@ protected:
 	// Misc
 	bool		 mbDrawBlockableTests;
 
-	void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+	void ProcessEvent( const Message &message, CallbackParameters &_cb );
 
 	void UpdateProcesses();
 };

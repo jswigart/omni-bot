@@ -30,7 +30,7 @@ bool FilterClosestTF::CheckEx( const GameEntity _ent, const MemoryRecord &_recor
 		return false;
 
 	int iTeam = 0, iClass = 0;
-	InterfaceFuncs::GetDisguiseInfo( _record.mTargetInfo.mEntInfo, iTeam, iClass );
+	gEngineFuncs->GetDisguiseInfo( _record.mTargetInfo.mEntInfo, iTeam, iClass );
 	if ( iTeam != TF_TEAM_NONE && iTeam < TF_NUM_CLASSES )
 		return false;
 

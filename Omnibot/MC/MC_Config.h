@@ -15,6 +15,8 @@
 
 #include "Omni-Bot_Types.h"
 #include "Omni-Bot_Events.h"
+#include "IEngineInterface.h"
+#include "MC_Messages.h"
 
 enum MC_Version
 {
@@ -65,8 +67,8 @@ enum MC_ButtonFlags
 	MC_BOT_BUTTON_MODULE_LAST,
 };
 
-// enumerations: MC_EntityCategory
-enum MC_EntityCategory
+// enumerations: MCentityCategory
+enum MCentityCategory
 {
 	MC_ENT_CAT_PHYSPICKUP = ENT_CAT_MAX,
 	MC_ENT_CAT_WALLUNIT,
@@ -74,36 +76,6 @@ enum MC_EntityCategory
 	// THIS MUST BE LAST
 	MC_ENT_CAT_MAX,
 } ;
-
-// typedef: MC_Events
-//		Defines the events specific to the ETF game, numbered starting at the end of
-//		the global events.
-enum MC_Events
-{
-	MC_EVENT_BEGIN = EVENT_NUM_EVENTS,
-	MC_EVENT_PLAYER_SPREE,
-	MC_EVENT_PLAYER_SPREE_END,
-	MC_EVENT_SPREEWAR_START,
-	MC_EVENT_SPREEWAR_END,
-	MC_EVENT_LEVEL_UP,
-	MC_EVENT_END
-} ;
-
-// typedef: TF_GameEvents
-//		Events that allow the bot to query for information from the game.
-enum MC_GameMessage
-{
-	MC_MSG_START = GEN_MSG_END,
-	MC_MSG_GET_PLAYER_STATS,
-	MC_MSG_GET_MODULE_STATS,
-	MC_MSG_UPGRADE_MODULE,
-	MC_MSG_GET_WEAPON_UPGRADE_STATS,
-	MC_MSG_UPGRADE_WEAPON,
-	MC_MSG_CAN_PHYSPICKUP,
-	MC_MSG_PHYSGUNINFO,
-	MC_MSG_CHARGER_STATUS,
-	MC_MSG_END
-};
 
 // typedef: MC_Weapon
 //		The available weapons for this gametype
@@ -232,73 +204,29 @@ enum MC_Module
 	MC_MODULE_MAX
 };
 
-// typedef: MC_WeaponUpgrades
-//		The available weapon upgrades
-//typedef enum
-//{
-//	MC_UPGRADE_MELEE_DAMAGE,
-//	MC_UPGRADE_MELEE_SWING,
-//	MC_UPGRADE_MELEE_RANGE,
-//	MC_UPGRADE_MELEE_BLEED,
-//	MC_UPGRADE_MELEE_SILENCER,
-//
-//	MC_UPGRADE_GRAVGUN_PUNTING,
-//	MC_UPGRADE_GRAVGUN_SUCTION,
-//	MC_UPGRADE_GRAVGUN_PICKUPMASS,
-//	MC_UPGRADE_GRAVGUN_SILENCER,
-//
-//	MC_UPGRADE_PISTOL_DAMAGE,
-//	MC_UPGRADE_PISTOL_RECOIL,
-//	MC_UPGRADE_PISTOL_STUN,
-//	MC_UPGRADE_PISTOL_SILENCER,
-//
-//	MC_UPGRADE_357_POWER,
-//	MC_UPGRADE_357_DOUBLE,
-//	MC_UPGRADE_357_KNOCKBACK,
-//	MC_UPGRADE_357_PENETRATION,
-//	MC_UPGRADE_357_SILENCER,
-//
-//	MC_UPGRADE_SMG_DAMAGE,
-//	MC_UPGRADE_SMG_ACCURACY,
-//	MC_UPGRADE_SMG_CLIP_SIZE,
-//	MC_UPGRADE_SMG_RADIUS,
-//	MC_UPGRADE_SMG_RANGE,
-//
-//	MC_UPGRADE_AR2_EM_TUNING,
-//	MC_UPGRADE_AR2_SLOWING_ROUNDS,
-//	MC_UPGRADE_AR2_PENETRATION,
-//	MC_UPGRADE_AR2_GAUSS_GUN,
-//	MC_UPGRADE_AR2_ALT_AMMO,
-//	MC_UPGRADE_AR2_BOUNCES,
-//
-//	MC_UPGRADE_SHOTGUN_SPREAD,
-//	MC_UPGRADE_SHOTGUN_PELLETS,
-//	MC_UPGRADE_SHOTGUN_KNOCKBACK,
-//	MC_UPGRADE_SHOTGUN_BLAST_CAPS,
-//	MC_UPGRADE_SHOTGUN_SLUGS,
-//
-//	MC_UPGRADE_CROSSBOW_TENSION,
-//	MC_UPGRADE_CROSSBOW_BOUNCES,
-//	MC_UPGRADE_CROSSBOW_POISON,
-//	MC_UPGRADE_CROSSBOW_PIERCING,
-//	MC_UPGRADE_CROSSBOW_SILENCER,
-//
-//	MC_UPGRADE_RPG_PLATING,
-//	MC_UPGRADE_RPG_RADIUS,
-//	MC_UPGRADE_RPG_SPEED,
-//	MC_UPGRADE_RPG_TOGGLE,
-//	MC_UPGRADE_RPG_TRAIL,
-//
-//	MC_UPGRADE_GRENADE_DAMAGE,
-//	MC_UPGRADE_GRENADE_RADIUS,
-//	MC_UPGRADE_GRENADE_REFIRE,
-//	MC_UPGRADE_GRENADE_RANGE,
-//
-//	MC_UPGRADE_SLAM_DAMAGE,
-//	MC_UPGRADE_SLAM_RADIUS,
-//	MC_UPGRADE_SLAM_TRANSPARENCY,
-//
-//	MC_UPGRADE_MAX
-//} MC_WeaponUpgrades;
+class ModularCombat_Interface : public IEngineInterface
+{
+public:
+	// HL2
+	virtual bool GetPhysGunInfo( const GameEntity ent, GameEntity& heldEntity, float& launchSpeed ) = 0;
+	virtual bool CanPhysPickup( const GameEntity ent, const GameEntity pickup ) = 0;
+
+	// Modular Combat Specific
+	virtual bool GetPlayerExperience( const GameEntity ent, int& experienceTotal, int& experianceGame ) = 0;
+	virtual bool GetPlayerModulePoints( const GameEntity ent, int& modulePoints ) = 0;
+	virtual bool GetPlayerLevel( const GameEntity ent, int& level ) = 0;
+	virtual bool GetPlayerAux( const GameEntity ent, float& auxCurrent, float& auxMax, float& auxRegenRate ) = 0;
+	virtual bool GetPlayerMinionCount( const GameEntity ent, int& current, int& max ) = 0;
+	virtual bool GetPlayerLaserCount( const GameEntity ent, int& current, int& max ) = 0;
+	virtual bool GetPlayerCrowCount( const GameEntity ent, int& current, int& max ) = 0;
+	virtual bool GetPlayerMagmineCount( const GameEntity ent, int& current, int& max ) = 0;
+	virtual bool GetPlayerTurretCount( const GameEntity ent, int& current, int& max ) = 0;
+	virtual bool GetPlayerManhackCount( const GameEntity ent, int& current, int& max ) = 0;
+
+	virtual bool ModuleStats( const GameEntity ent, MC_Module module, int& lvl, int& lvlMax, int& upgCost, float& auxDrain, float& cooldown ) = 0;
+	virtual bool ModuleUpgrade( const GameEntity ent, MC_Module moduleId ) = 0;
+};
+
+extern ModularCombat_Interface* gModularCombatFuncs;
 
 #endif

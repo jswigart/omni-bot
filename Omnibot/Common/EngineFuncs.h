@@ -17,7 +17,7 @@
 namespace EngineFuncs
 {
 	bool TraceLine( obTraceResult &_tr, const Vector3f &_start, const Vector3f &_end,
-		const AABB *_aabb, int _mask, int _user, obBool _usepvs );
+		const AABB *_aabb, int _mask, int _user, bool _usepvs );
 
 	std::string EntityName( const GameEntity _ent, const char* defaultName = "" );
 	GameEntity EntityOwner( const GameEntity _ent );

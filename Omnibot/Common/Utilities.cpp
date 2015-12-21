@@ -321,7 +321,7 @@ namespace Utils
 		if ( GetLocalEyePosition( vPos ) )
 		{
 			EngineFuncs::TraceLine( tr, vPos, vPos - Vector3f::UNIT_Z * 4096.f,
-				NULL, _tracemask, GetLocalGameId(), False );
+				NULL, _tracemask, GetLocalGameId(), false );
 
 			if ( tr.mFraction < 1.f )
 			{
@@ -339,7 +339,7 @@ namespace Utils
 		if ( GetLocalEyePosition( vPos ) )
 		{
 			EngineFuncs::TraceLine( tr, vPos, vPos - Vector3f::UNIT_Z * 4096.f,
-				NULL, _tracemask, GetLocalGameId(), False );
+				NULL, _tracemask, GetLocalGameId(), false );
 
 			if ( tr.mFraction < 1.f )
 			{
@@ -385,7 +385,7 @@ namespace Utils
 			GetNearestNonSolid( vNewStart, vPos, vPos + vFace * 4096.f, _tracemask ) )
 		{
 			EngineFuncs::TraceLine( tr, vNewStart, vNewStart + vFace * 4096.f,
-				NULL, _tracemask, GetLocalGameId(), False );
+				NULL, _tracemask, GetLocalGameId(), false );
 
 			if ( tr.mFraction < 1.f )
 			{
@@ -414,7 +414,7 @@ namespace Utils
 		while ( fLength > 0.f )
 		{
 			EngineFuncs::TraceLine( tr, vStart, vEnd,
-				NULL, _tracemask, GetLocalGameId(), False );
+				NULL, _tracemask, GetLocalGameId(), false );
 
 			if ( !tr.mStartSolid )
 			{
@@ -686,6 +686,21 @@ namespace Utils
 		}
 	}
 
+	bool StringToBool( const std::string &_str, bool& bOut )
+	{ 
+		if ( StringToTrue( _str ) )
+		{
+			bOut = true;
+			return true;
+		}
+		if ( StringToFalse( _str ) )
+		{
+			bOut = false;
+			return true;
+		}
+		return false;
+	}
+
 	bool StringToTrue( const std::string &_str )
 	{
 		return ( _str == "1" || _str == "on" || _str == "true" );
@@ -786,7 +801,7 @@ namespace Utils
 		AABB b( Vector3f( -32, -32, 0 ), Vector3f( 32, 32, 64 ) );
 
 		obTraceResult tr;
-		EngineFuncs::TraceLine( tr, seg.Center, seg.Center, &b, TR_MASK_FLOODFILL, -1, False );
+		EngineFuncs::TraceLine( tr, seg.Center, seg.Center, &b, TR_MASK_FLOODFILL, -1, false );
 		if ( tr.mFraction < 0.f )
 			return true;
 

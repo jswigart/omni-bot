@@ -8,7 +8,7 @@
 
 #include "ET_BaseStates.h"
 #include "ET_FilterClosest.h"
-#include "ET_InterfaceFuncs.h"
+#include "ET_Messages.h"
 #include "BotPathing.h"
 #include "System.h"
 #include "RenderBuffer.h"
@@ -79,16 +79,17 @@ namespace AiState
 
 	float PlantMine::GetPriority()
 	{
-		int currentMines, maxMines;
-		InterfaceFuncs::NumTeamMines( GetClient(), currentMines, maxMines );
-		if ( currentMines >= maxMines ) return 0.f;
+		int currentMines, maxMines;		
+		gEnemyTerritoryFuncs->TeamMineCount( GetClient()->GetGameEntity(), currentMines, maxMines );
+		if ( currentMines >= maxMines ) 
+			return 0.f;
 
 		if ( IsActive() )
 			return GetLastPriority();
 
 		mMapGoal.reset();
 
-		if ( InterfaceFuncs::IsWeaponCharged( GetClient(), ET_WP_LANDMINE, Primary ) )
+		if ( gEngineFuncs->IsWeaponCharged( GetClient()->GetGameEntity(), ET_WP_LANDMINE, Primary ) )
 		{
 			GoalManager::Query qry( 0xf2dffa59 /* PLANTMINE */, GetClient() );
 			System::mInstance->mGoalManager->GetGoals( qry );
@@ -127,7 +128,7 @@ namespace AiState
 			return State_Finished;
 
 		// If it's not destroyable, consider it a success.
-		if ( !InterfaceFuncs::IsDestroyable( GetClient(), mMapGoal->GetEntity() ) )
+		if ( gEnemyTerritoryFuncs->IsDestroyable( GetClient()->GetGameEntity(), mMapGoal->GetEntity() ) != CONST_DESTROYABLE )
 		{
 			return State_Finished;
 		}
@@ -150,7 +151,7 @@ namespace AiState
 			if ( mLandMineEntity.IsValid() )
 			{
 				// Is it armed yet?
-				if ( InterfaceFuncs::GetExplosiveState( GetClient(), mLandMineEntity ) == XPLO_ARMED )
+				if ( gEnemyTerritoryFuncs->GetExplosiveState( mLandMineEntity ) == XPLO_ARMED )
 				{
 					BlackboardDelay( 10.f, mMapGoal->GetSerialNum() );
 					return State_Finished;
@@ -212,16 +213,15 @@ namespace AiState
 		return State_Busy;
 	}
 
-	void PlantMine::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void PlantMine::ProcessEvent( const Message & message, CallbackParameters & cb )
 	{
-		switch ( _message.GetMessageId() )
+		switch ( message.Id() )
 		{
-			HANDLER( ACTION_WEAPON_FIRE )
+			CASE_MSG( EvWeaponFire )
 			{
-				const Event_WeaponFire* m = _message.Get<Event_WeaponFire>();
-				if ( m->mWeaponId == ET_WP_LANDMINE && m->mProjectile.IsValid() )
+				if ( msg->mWeaponId == ET_WP_LANDMINE && msg->mProjectile.IsValid() )
 				{
-					mLandMineEntity = m->mProjectile;
+					mLandMineEntity = msg->mProjectile;
 				}
 				break;
 			}
@@ -308,7 +308,7 @@ namespace AiState
 		if ( IsActive() )
 			return GetLastPriority();
 
-		/*if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_MORTAR_SET))
+		/*if(!gEngineFuncs->IsWeaponCharged(GetClient(), ET_WP_MORTAR_SET))
 		return 0.f;*/
 
 		mMapGoal.reset();
@@ -374,17 +374,16 @@ namespace AiState
 		return State_Busy;
 	}
 
-	void MobileMortar::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void MobileMortar::ProcessEvent( const Message & message, CallbackParameters & cb )
 	{
-		switch ( _message.GetMessageId() )
+		switch ( message.Id() )
 		{
-			HANDLER( ACTION_WEAPON_FIRE )
+			CASE_MSG( EvWeaponFire )
 			{
-				const Event_WeaponFire* m = _message.Get<Event_WeaponFire>();
-				if ( m != NULL && m->mProjectile.IsValid() )
+				if ( msg->mProjectile.IsValid() )
 				{
 					EntityInfo entInfo;
-					if ( IGame::GetEntityInfo( m->mProjectile, entInfo ) )
+					if ( IGame::GetEntityInfo( msg->mProjectile, entInfo ) )
 					{
 						if ( entInfo.mGroup == ENT_GRP_PROJECTILE && entInfo.mClassId == ET_CLASSEX_MORTAR )
 						{
@@ -502,7 +501,7 @@ namespace AiState
 
 	float CallArtillery::GetPriority()
 	{
-		if ( !InterfaceFuncs::IsWeaponCharged( GetClient(), ET_WP_BINOCULARS, Primary ) )
+		if ( !gEnemyTerritoryFuncs->IsWeaponCharged( GetClient()->GetGameEntity(), ET_WP_BINOCULARS, Primary ) )
 			return 0.f;
 
 		if ( IsActive() )
@@ -688,23 +687,21 @@ namespace AiState
 		return State_Busy;
 	}
 
-	void CallArtillery::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void CallArtillery::ProcessEvent( const Message & message, CallbackParameters & cb )
 	{
-		switch ( _message.GetMessageId() )
+		switch ( message.Id() )
 		{
-			HANDLER( MESSAGE_PROXIMITY_TRIGGER )
+			CASE_MSG( EvProximityTrigger )
 			{
-				const AiState::Event_ProximityTrigger* m = _message.Get<AiState::Event_ProximityTrigger>();
-				if ( m->mOwnerState == GetNameHash() )
+				if ( msg->mOwnerState == GetNameHash() )
 				{
 					mFireTime = IGame::GetTime();// + 1000;
 				}
 				break;
 			}
-			HANDLER( ACTION_WEAPON_FIRE )
+			CASE_MSG( EvWeaponFire )
 			{
-				const Event_WeaponFire* m = _message.Get<Event_WeaponFire>();
-				if ( m != NULL && m->mWeaponId == ET_WP_BINOCULARS )
+				if ( msg->mWeaponId == ET_WP_BINOCULARS )
 				{
 					mFired = true;
 				}
@@ -921,10 +918,10 @@ namespace AiState
 				BlackboardDelay( 10.f, mQuery.mList[ i ]->GetSerialNum() );
 			return State_Finished;
 		}
-		
-		ET_CabinetData cData;
-		if ( InterfaceFuncs::GetCabinetData( mMapGoal->GetEntity(), cData ) &&
-			cData.mCurrentAmount == 0 )
+
+		ParamsCabinetData data;
+		if ( gEnemyTerritoryFuncs->GetCabinetData( mMapGoal->GetEntity(), data ) &&
+			data.mCurrentAmount == 0 )
 		{
 			BlackboardDelay( 20.f, mMapGoal->GetSerialNum() );
 			return State_Finished;
@@ -1027,7 +1024,7 @@ namespace AiState
 	//	if(ws && ws->CurrentWeaponIs(ET_WP_PLIERS))
 	//		ws->FireWeapon();
 
-	//	//InterfaceFuncs::GetCurrentCursorHint
+	//	//gEngineFuncs->GetCurrentCursorHint
 	//}
 
 	//float BuildConstruction::GetPriority()
@@ -1047,7 +1044,7 @@ namespace AiState
 	//		if(qry.mList[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
 	//			continue;
 
-	//		ConstructableState cState = InterfaceFuncs::GetConstructableState(GetClient(),qry.mList[i]->GetEntity());
+	//		ConstructableState cState = gEngineFuncs->GetConstructableState(GetClient(),qry.mList[i]->GetEntity());
 	//		if(cState == CONST_UNBUILT)
 	//		{
 	//		mMapGoal = qry.mList[i];
@@ -1094,7 +1091,7 @@ namespace AiState
 
 	//	//////////////////////////////////////////////////////////////////////////
 	//	// Check the construction status
-	//	ConstructableState cState = InterfaceFuncs::GetConstructableState(GetClient(),.mMapGoal->GetEntity());
+	//	ConstructableState cState = gEngineFuncs->GetConstructableState(GetClient(),.mMapGoal->GetEntity());
 	//	switch(cState)
 	//	{
 	//	case CONST_INVALID: // Invalid constructable, fail
@@ -1277,7 +1274,7 @@ namespace AiState
 
 	//mMapGoal.reset();
 
-	//	if(InterfaceFuncs::IsWeaponCharged(GetClient(), weaponType, Primary))
+	//	if(gEngineFuncs->IsWeaponCharged(GetClient(), weaponType, Primary))
 	//	{
 	//		{
 	//			GoalManager::Query qry(0xbbcae592 /* PLANT */, GetClient());
@@ -1296,7 +1293,7 @@ namespace AiState
 	//				if(!_IsGoalAchievable(qry.mList[i], weaponType))
 	//					continue;
 
-	//				ConstructableState cState = InterfaceFuncs::IsDestroyable(GetClient(), qry.mList[i]->GetEntity());
+	//				ConstructableState cState = gEngineFuncs->IsDestroyable(GetClient(), qry.mList[i]->GetEntity());
 	//				if(cState == CONST_DESTROYABLE)
 	//				{
 	//				mMapGoal = qry.mList[i];
@@ -1362,7 +1359,7 @@ namespace AiState
 	//		return State_Finished;
 
 	//	// If it's not destroyable, consider it a success.
-	//	if(!InterfaceFuncs::IsDestroyable(GetClient(), mMapGoal->GetEntity()))
+	//	if(!gEngineFuncs->IsDestroyable(GetClient(), mMapGoal->GetEntity()))
 	//		return State_Finished;
 
 	//	if(.mExplosiveEntity.IsValid() && !IGame::IsEntityValid(.mExplosiveEntity))
@@ -1396,7 +1393,7 @@ namespace AiState
 	//	{
 	//	case LAY_EXPLOSIVE:
 	//		{
-	//			if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_DYNAMITE, Primary))
+	//			if(!gEngineFuncs->IsWeaponCharged(GetClient(), ET_WP_DYNAMITE, Primary))
 	//				return State_Finished;
 
 	//			/*if(mClient->IsDebugEnabled(BOT_DEBUG_GOALS))
@@ -1458,7 +1455,7 @@ namespace AiState
 	//		{
 	//			GetClient()->PressButton(BOT_BUTTON_CROUCH);
 
-	//			if(InterfaceFuncs::GetExplosiveState(GetClient(), mExplosiveEntity) == XPLO_ARMED)
+	//			if(gEngineFuncs->GetExplosiveState(GetClient(), mExplosiveEntity) == XPLO_ARMED)
 	//			{
 	//				BlackboardDelay(30.f, mMapGoal->GetSerialNum());
 	//				return State_Finished;
@@ -1498,7 +1495,7 @@ namespace AiState
 	//	{
 	//	case LAY_EXPLOSIVE:
 	//		{
-	//			if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_SATCHEL, Primary))
+	//			if(!gEngineFuncs->IsWeaponCharged(GetClient(), ET_WP_SATCHEL, Primary))
 	//				return State_Finished;
 
 	//			const float fDistanceToTarget = SquaredLength2d(.mTargetPosition, GetClient()->GetPosition());
@@ -1586,7 +1583,7 @@ namespace AiState
 	//								ws->FireWeapon();
 	//						}
 
-	//						ExplosiveState eState = InterfaceFuncs::GetExplosiveState(GetClient(), mExplosiveEntity);
+	//						ExplosiveState eState = gEngineFuncs->GetExplosiveState(GetClient(), mExplosiveEntity);
 	//						if(eState == XPLO_INVALID)
 	//							return State_Finished;
 	//					}
@@ -1598,7 +1595,7 @@ namespace AiState
 	//	return State_Busy;
 	//}
 
-	//void PlantExplosive::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+	//void PlantExplosive::ProcessEvent(const Message & message, CallbackParameters & cb)
 	//{
 	//	if(IsActive())
 	//	{
@@ -1866,7 +1863,7 @@ namespace AiState
 	//	if(curAmmo <= 0)
 	//		return 0.f;
 
-	//	if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_PANZERFAUST, Primary))
+	//	if(!gEngineFuncs->IsWeaponCharged(GetClient(), ET_WP_PANZERFAUST, Primary))
 	//		return 0.f;
 
 	//	if(IsActive())
@@ -2054,14 +2051,14 @@ namespace AiState
 	//		if(qry.mList[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
 	//			continue;
 
-	//		GameEntity gunOwner = InterfaceFuncs::GetMountedPlayerOnMG42(GetClient(), qry.mList[i]->GetEntity());
-	//		int gunHealth = InterfaceFuncs::GetGunHealth(GetClient(), qry.mList[i]->GetEntity());
-	//		bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), qry.mList[i]->GetEntity());
+	//		GameEntity gunOwner = gEngineFuncs->GetMountedPlayerOnMG42(GetClient(), qry.mList[i]->GetEntity());
+	//		int gunHealth = gEngineFuncs->GetGunHealth(GetClient(), qry.mList[i]->GetEntity());
+	//		bool bBroken = gEngineFuncs->IsMountableGunRepairable(GetClient(), qry.mList[i]->GetEntity());
 
 	//		if(bBroken)
 	//			continue;
 
-	//		if(!InterfaceFuncs::GetEntityFlags(qry.mList[i]->GetEntity(), entFlags) ||
+	//		if(!gEngineFuncs->GetEntityFlags(qry.mList[i]->GetEntity(), entFlags) ||
 	//			!entFlags.CheckFlag(ET_ENT_FLAG_ISMOUNTABLE))
 	//			continue;
 
@@ -2121,9 +2118,9 @@ namespace AiState
 
 	//	//////////////////////////////////////////////////////////////////////////
 	//	// Only fail if a friendly player is on this gun or gun has been destroyed in the meantime
-	//	//int gunHealth = InterfaceFuncs::GetGunHealth(.mClient, mMG42Goal->GetEntity());
-	//	GameEntity mounter = InterfaceFuncs::GetMountedPlayerOnMG42(GetClient(), mMapGoal->GetEntity());
-	//	if(InterfaceFuncs::IsMountableGunRepairable(GetClient(), mMapGoal->GetEntity()) ||
+	//	//int gunHealth = gEngineFuncs->GetGunHealth(.mClient, mMG42Goal->GetEntity());
+	//	GameEntity mounter = gEngineFuncs->GetMountedPlayerOnMG42(GetClient(), mMapGoal->GetEntity());
+	//	if(gEngineFuncs->IsMountableGunRepairable(GetClient(), mMapGoal->GetEntity()) ||
 	//	mounter.IsValid() && mounter != GetClient()->GetGameEntity()) && GetClient()->IsAllied(mounter)))
 	//	{
 	//		return State_Finished;
@@ -2218,7 +2215,7 @@ namespace AiState
 	//bool MountMg42::_GetMG42Properties()
 	//{
 	//	ET_MG42Info data;
-	//	if(!InterfaceFuncs::GetMg42Properties(GetClient(), data))
+	//	if(!gEngineFuncs->GetMg42Properties(GetClient(), data))
 	//		return false;
 
 	//mGunCenterArc = Vector3f(data.mCenterFacing);
@@ -2473,7 +2470,7 @@ namespace AiState
 	//		if(BlackboardIsDelayed(qry.mList[i]->GetSerialNum()))
 	//			continue;
 
-	//		bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), qry.mList[i]->GetEntity());
+	//		bool bBroken = gEngineFuncs->IsMountableGunRepairable(GetClient(), qry.mList[i]->GetEntity());
 	//		if(!bBroken)
 	//			continue;
 
@@ -2511,7 +2508,7 @@ namespace AiState
 	//		return State_Finished;
 	//	}
 
-	//	bool bBroken = InterfaceFuncs::IsMountableGunRepairable(GetClient(), mMapGoal->GetEntity());
+	//	bool bBroken = gEngineFuncs->IsMountableGunRepairable(GetClient(), mMapGoal->GetEntity());
 	//	if(!bBroken || mMapGoal->IsAvailable(GetClient()->GetTeam()))
 	//		return State_Finished;
 
@@ -2672,7 +2669,7 @@ namespace AiState
 	//	FINDSTATE(ws, WeaponSystem, GetRootState());
 	//	if(ws)
 	//	{
-	//		if(InterfaceFuncs::IsAlive(.mMapGoal->GetEntity()))
+	//		if(gEngineFuncs->IsAlive(.mMapGoal->GetEntity()))
 	//		{
 	//			if(ws->CurrentWeaponIs(ET_WP_MEDKIT))
 	//				ws->FireWeapon();
@@ -2788,11 +2785,11 @@ namespace AiState
 
 	//	//////////////////////////////////////////////////////////////////////////
 	//	Msg_HealthArmor ha;
-	//	if(InterfaceFuncs::GetHealthAndArmor(reviveEnt, ha) && ha.mCurrentHealth >= ha.mMaxHealth)
+	//	if(gEngineFuncs->GetHealthAndArmor(reviveEnt, ha) && ha.mCurrentHealth >= ha.mMaxHealth)
 	//		return State_Finished;
 
 	//	BitFlag64 ef;
-	//	if(InterfaceFuncs::GetEntityFlags(reviveEnt,ef))
+	//	if(gEngineFuncs->GetEntityFlags(reviveEnt,ef))
 	//	{
 	//		if(ef.CheckFlag(ET_ENT_FLAG_INLIMBO))
 	//			return State_Finished;
@@ -2814,7 +2811,7 @@ namespace AiState
 	//		{
 	//		case REVIVING:
 	//			{
-	//				if(InterfaceFuncs::IsAlive(reviveEnt))
+	//				if(gEngineFuncs->IsAlive(reviveEnt))
 	//				{
 	//				mGoalState = HEALING;
 	//				}
@@ -2853,7 +2850,7 @@ namespace AiState
 	//					return State_Finished;
 	//				}
 
-	//				if(!InterfaceFuncs::IsWeaponCharged(GetClient(), ET_WP_MEDKIT, Primary))
+	//				if(!gEngineFuncs->IsWeaponCharged(GetClient(), ET_WP_MEDKIT, Primary))
 	//				{
 	//					BlackboardDelay(5.f, mMapGoal->GetSerialNum());
 	//					return State_Finished;
@@ -2946,7 +2943,7 @@ namespace AiState
 	//		if(qry.mList[i]->GetSlotsOpen(MapGoal::TRACK_INPROGRESS) < 1)
 	//			continue;
 
-	//		if(InterfaceFuncs::GetExplosiveState(GetClient(), qry.mList[i]->GetEntity()) == XPLO_ARMED)
+	//		if(gEngineFuncs->GetExplosiveState(GetClient(), qry.mList[i]->GetEntity()) == XPLO_ARMED)
 	//		{
 	//		mMapGoal = qry.mList[i];
 	//			break;
@@ -2991,7 +2988,7 @@ namespace AiState
 
 	//	if(DidPathSucceed())
 	//	{
-	//		ExplosiveState eState = InterfaceFuncs::GetExplosiveState(GetClient(), mMapGoal->GetEntity());
+	//		ExplosiveState eState = gEngineFuncs->GetExplosiveState(GetClient(), mMapGoal->GetEntity());
 	//		switch(eState)
 	//		{
 	//		case XPLO_INVALID:

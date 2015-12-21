@@ -17,7 +17,8 @@
 #include "Omni-Bot_Types.h"
 #include "Omni-Bot_BitFlags.h"
 #include "Omni-Bot_Color.h"
-#include "MessageHelper.h"
+
+class Message;
 
 // Title: Engine Interface
 
@@ -200,6 +201,86 @@ struct obStringBuffer
 	}
 };
 
+struct ParamsAddbot
+{
+	int			mTeam;
+	int			mClass;
+	char		mName[ 64 ];
+	char		mModel[ 64 ];
+	char		mSkin[ 64 ];
+	char		mSpawnPointName[ 64 ];
+	char		mProfile[ 64 ];
+
+	ParamsAddbot()
+		: mTeam( RANDOM_TEAM_IF_NO_TEAM )
+		, mClass( RANDOM_CLASS_IF_NO_CLASS )
+	{
+		mName[ 0 ] = mModel[ 0 ] = mSkin[ 0 ] = mSpawnPointName[ 0 ] = mProfile[ 0 ] = 0;
+	}
+};
+
+struct ParamsKickbot
+{
+	enum
+	{
+		BufferSize = 64, InvalidGameId = -1
+	};
+	char		mName[ BufferSize ];
+	int			mGameId;
+
+	ParamsKickbot()
+		: mGameId( InvalidGameId )
+	{
+		mName[ 0 ] = 0;
+	}
+};
+
+struct ParamsWeaponLimits
+{
+	float		mCenterFacing[ 3 ];
+	float		mMinYaw;
+	float		mMaxYaw;
+	float		mMinPitch;
+	float		mMaxPitch;
+	int			mWeaponId;
+	bool		mLimited;
+
+	ParamsWeaponLimits()
+		: mMinYaw( -45.f )
+		, mMaxYaw( 45.f )
+		, mMinPitch( -20.f )
+		, mMaxPitch( 20.f )
+		, mWeaponId( 0 )
+		, mLimited( false )
+	{
+		mCenterFacing[ 0 ] = 0.f;
+		mCenterFacing[ 1 ] = 0.f;
+		mCenterFacing[ 2 ] = 0.f;
+	}
+};
+
+struct ParamsVehicleInfo
+{
+	int			mType;
+	GameEntity	mEntity;
+	GameEntity	mWeapon;
+	GameEntity	mDriver;
+	int			mVehicleHealth;
+	int			mVehicleMaxHealth;
+	float		mArmor;
+
+	ParamsVehicleInfo()
+	{
+		mType = 0;
+		mEntity = GameEntity();
+		mWeapon = GameEntity();
+		mDriver = GameEntity();
+		mVehicleHealth = 0;
+		mVehicleMaxHealth = 0;
+		mArmor = 0.f;
+	}
+};
+
 // typedef: IEngineInterface
 //		This struct defines all the function that the game will implement
 //		and give to the bot so that the bot may perform generic
@@ -223,31 +304,31 @@ public:
 	};
 
 	// Function: AddBot
-	virtual int AddBot( const MessageHelper &_data ) = 0;
+	virtual int AddBot( const ParamsAddbot & data ) = 0;
 
 	// Function: RemoveBot
-	virtual void RemoveBot( const MessageHelper &_data ) = 0;
+	virtual void RemoveBot( const ParamsKickbot & data ) = 0;
 
 	// Function: ChangeTeam
-	virtual obResult ChangeTeam( int _client, int _newteam, const MessageHelper *_data ) = 0;
+	virtual obResult ChangeTeam( int client, int newteam, const Message * data ) = 0;
 
 	// Function: ChangeClass
-	virtual obResult ChangeClass( int _client, int _newclass, const MessageHelper *_data ) = 0;
+	virtual obResult ChangeClass( int client, int newclass, const Message * data ) = 0;
 
 	// Function: UpdateBotInput
-	virtual void UpdateBotInput( int _client, const ClientInput &_input ) = 0;
+	virtual void UpdateBotInput( int client, const ClientInput &_input ) = 0;
 
 	// Function: BotCommand
-	virtual void BotCommand( int _client, const char *_cmd ) = 0;
+	virtual void BotCommand( int client, const char *cmd ) = 0;
 
 	// Function: IsInPVS
-	virtual obBool IsInPVS( const float _pos[ 3 ], const float _target[ 3 ] ) = 0;
+	virtual bool IsInPVS( const float pos[ 3 ], const float _target[ 3 ] ) = 0;
 
 	// Function: TraceLine
-	virtual obResult TraceLine( obTraceResult &_result, const float _start[ 3 ], const float _end[ 3 ], const AABB *_pBBox, int _mask, int _user, obBool _bUsePVS ) = 0;
+	virtual obResult TraceLine( obTraceResult &_result, const float _start[ 3 ], const float _end[ 3 ], const AABB *_pBBox, int _mask, int _user, bool _bUsePVS ) = 0;
 
 	// Function: GetPointContents
-	virtual int GetPointContents( const float _pos[ 3 ] ) = 0;
+	virtual int GetPointContents( const float pos[ 3 ] ) = 0;
 
 	// Function: GetSurfaceFromGame
 	virtual int ConvertValue( int value, ConvertType ctype, ConvertDirection cdir ) = 0;
@@ -256,40 +337,40 @@ public:
 	virtual GameEntity GetLocalGameEntity() = 0;
 
 	// Function: GetEntityInfo
-	virtual obResult GetEntityInfo( const GameEntity _ent, EntityInfo& classInfo ) = 0;
+	virtual obResult GetEntityInfo( const GameEntity ent, EntityInfo& classInfo ) = 0;
 
 	// Function: GetEntityEyePosition
-	virtual obResult GetEntityEyePosition( const GameEntity _ent, float _pos[ 3 ] ) = 0;
+	virtual obResult GetEntityEyePosition( const GameEntity ent, float pos[ 3 ] ) = 0;
 
 	// Function: GetEntityEyePosition
-	virtual obResult GetEntityBonePosition( const GameEntity _ent, int _boneid, float _pos[ 3 ] ) = 0;
+	virtual obResult GetEntityBonePosition( const GameEntity ent, int _boneid, float pos[ 3 ] ) = 0;
 
 	// Function: GetEntityOrientation
-	virtual obResult GetEntityOrientation( const GameEntity _ent, float _fwd[ 3 ], float _right[ 3 ], float _up[ 3 ] ) = 0;
+	virtual obResult GetEntityOrientation( const GameEntity ent, float _fwd[ 3 ], float _right[ 3 ], float _up[ 3 ] ) = 0;
 
 	// Function: GetEntityVelocity
-	virtual obResult GetEntityVelocity( const GameEntity _ent, float _velocity[ 3 ] ) = 0;
+	virtual obResult GetEntityVelocity( const GameEntity ent, float _velocity[ 3 ] ) = 0;
 
 	// Function: GetEntityPosition
-	virtual obResult GetEntityPosition( const GameEntity _ent, float _pos[ 3 ] ) = 0;
+	virtual obResult GetEntityPosition( const GameEntity ent, float pos[ 3 ] ) = 0;
 
 	// Function: GetEntityLocalAABB
-	virtual obResult GetEntityLocalAABB( const GameEntity _ent, AABB &_aabb ) = 0;
+	virtual obResult GetEntityLocalAABB( const GameEntity ent, AABB &_aabb ) = 0;
 
 	// Function: GetEntityWorldOBB
-	virtual obResult GetEntityWorldOBB( const GameEntity _ent, float *_center, float *_axis0, float *_axis1, float *_axis2, float *_extents ) = 0;
+	virtual obResult GetEntityWorldOBB( const GameEntity ent, float *_center, float *_axis0, float *_axis1, float *_axis2, float *_extents ) = 0;
 
 	// Function: GetEntityGroundEntity
-	virtual obResult GetEntityGroundEntity( const GameEntity _ent, GameEntity &moveent ) = 0;
+	virtual obResult GetEntityGroundEntity( const GameEntity ent, GameEntity &moveent ) = 0;
 
 	// Function: GetEntityOwner
-	virtual GameEntity GetEntityOwner( const GameEntity _ent ) = 0;
+	virtual GameEntity GetEntityOwner( const GameEntity ent ) = 0;
 
 	// Function: GetEntityTeam
-	virtual int GetEntityTeam( const GameEntity _ent ) = 0;
+	virtual int GetEntityTeam( const GameEntity ent ) = 0;
 	
 	// Function: GetEntityName
-	virtual obResult GetEntityName( const GameEntity _ent, obStringBuffer& nameOut ) = 0;
+	virtual obResult GetEntityName( const GameEntity ent, obStringBuffer& nameOut ) = 0;
 
 	// Function: GetEntityForName
 	virtual obResult GetEntityForName( const char* entName, GameEntity& entityOut ) = 0;
@@ -298,7 +379,7 @@ public:
 	virtual obResult GetEntityForMapModel( int mapModelId, GameEntity& entityOut ) = 0;
 
 	// Function: GetEntityModel
-	virtual obResult GetEntityModel( const GameEntity _ent, GameModelInfo & modelOut, MemoryAllocator & alloc ) = 0;
+	virtual obResult GetEntityModel( const GameEntity ent, GameModelInfo & modelOut, MemoryAllocator & alloc ) = 0;
 
 	// Function: GetWorldModel
 	virtual obResult GetWorldModel( GameModelInfo & modelOut, MemoryAllocator & alloc ) = 0;
@@ -310,10 +391,10 @@ public:
 	virtual int GetCurrentWeapons( const GameEntity ent, int weaponIds [], int maxWeapons ) = 0;
 
 	// Function: GetCurrentWeaponClip
-	virtual obResult GetCurrentWeaponClip( const GameEntity _ent, FireMode _mode, int &_curclip, int &_maxclip ) = 0;
+	virtual obResult GetCurrentWeaponClip( const GameEntity ent, FireMode _mode, int &_curclip, int &_maxclip ) = 0;
 
 	// Function: BotGetCurrentAmmo
-	virtual obResult GetCurrentAmmo( const GameEntity _ent, int _weaponId, FireMode _mode, int &_cur, int &_max ) = 0;
+	virtual obResult GetCurrentAmmo( const GameEntity ent, int _weaponId, FireMode _mode, int &_cur, int &_max ) = 0;
 
 	// Function: GetGameTime
 	virtual int GetGameTime() = 0;
@@ -323,10 +404,7 @@ public:
 
 	// Function: GetPlayerInfo
 	virtual void GetPlayerInfo( obPlayerInfo &info ) = 0;
-
-	// Function: InterfaceSendMessage
-	virtual obResult InterfaceSendMessage( const MessageHelper &_data, const GameEntity _ent ) = 0;
-
+	
 	// Function: DebugLine
 	virtual bool DebugLine( const float _start[ 3 ], const float _end[ 3 ], const obColor &_color, float _time )
 	{
@@ -346,9 +424,9 @@ public:
 	}
 
 	// Function: DebugRadius
-	virtual bool DebugRadius( const float _pos[ 3 ], const float _radius, const obColor &_color, float _time )
+	virtual bool DebugRadius( const float pos[ 3 ], const float _radius, const obColor &_color, float _time )
 	{
-		_pos; _radius; _color; _time; return false;
+		pos; _radius; _color; _time; return false;
 	}
 
 	// Function: DebugPolygon
@@ -358,9 +436,9 @@ public:
 	}
 
 	// Function: PrintScreenMessage
-	virtual bool PrintScreenText( const float _pos[ 3 ], float _duration, const obColor &_color, const char *_msg )
+	virtual bool PrintScreenText( const float pos[ 3 ], float _duration, const obColor &_color, const char *_msg )
 	{
-		_pos; _duration; _color; _msg; return false;
+		pos; _duration; _color; _msg; return false;
 	}
 
 	// Function: PrintError
@@ -382,11 +460,8 @@ public:
 	virtual GameEntity EntityByName( const char *_name ) = 0;
 
 	// Function: IDFromEntity
-	virtual int IDFromEntity( const GameEntity _ent ) = 0;
-
-	// Function: DoesEntityStillExist
-	virtual bool DoesEntityStillExist( const GameEntity &_hndl ) = 0;
-
+	virtual int IDFromEntity( const GameEntity ent ) = 0;
+	
 	// Function: GetAutoNavFeatures
 	virtual int GetAutoNavFeatures( AutoNavFeature *_feature, int _max ) = 0;
 
@@ -405,12 +480,62 @@ public:
 	// Function: GetLogPath
 	virtual const char *GetLogPath() = 0;
 
-	IEngineInterface()
-	{
-	}
-	virtual ~IEngineInterface()
-	{
-	}
+	virtual bool AreCheatsEnabled() = 0;
+
+	virtual bool GetGravity( float& outGravity ) = 0;
+
+	virtual bool IsAlive( const GameEntity ent ) = 0;
+
+	virtual bool IsAllied( const GameEntity ent1, const GameEntity ent2 ) = 0;
+
+	virtual bool IsOutSide( const float pos[3] ) = 0;
+
+	virtual bool IsReadyToFire( const GameEntity ent ) = 0;
+
+	virtual bool IsReloading( const GameEntity ent ) = 0;
+
+	virtual bool IsWeaponCharged( const GameEntity ent, int weaponId, FireMode _mode ) = 0;
+
+	virtual bool GetMaxSpeed( const GameEntity ent, float & outSpeed ) = 0;
+
+	virtual bool GetEquippedWeapon( const GameEntity ent, int& outWeaponId, FireMode& outFireMode ) = 0;
+
+	virtual bool GetMountedWeapon( const GameEntity ent, int& outWeaponId, FireMode& outFireMode ) = 0;
+	
+	virtual bool GetWeaponLimits( const GameEntity ent, int weaponId, ParamsWeaponLimits& outLimits ) = 0;
+
+	virtual bool GetWeaponHeat( const GameEntity ent, int weaponId, FireMode firemode, float& curheat, float& maxheat ) = 0;
+
+	virtual bool GetFlagState( const GameEntity ent, FlagState& outState, GameEntity& outCarrier ) = 0;
+
+	virtual int GetControllingTeam( const GameEntity ent ) = 0;
+	
+	virtual int GetGameType() const = 0;
+	virtual int GetGameTimeLeft() const = 0;
+	virtual GameState GetGameState() const = 0;
+
+	virtual bool ChangeName( const GameEntity ent, const char* newName ) = 0;
+
+	virtual bool Suicide( const GameEntity ent ) = 0;
+
+	virtual bool PlaySound( const GameEntity ent, const char* name ) = 0;
+
+	virtual bool StopSound( const GameEntity ent, const char* name ) = 0;
+
+	virtual bool GetVehicleInfo( const GameEntity ent, ParamsVehicleInfo& outVehicleInfo ) = 0;
+	
+	virtual bool IsMoverAt( const float pos1[ 3 ], const float pos2[ 3 ], GameEntity& outMover ) = 0;
+
+	virtual bool ServerScriptEvent( const char* func, const char* entName, const obUserData params [], size_t numParams ) = 0;
+
+	virtual bool ServerCommand( const char* cmd ) = 0;
+
+	virtual bool ServerSetVariable( const char* name, const char* value ) = 0;
+
+	virtual bool ServerGetVariable( const char* name, char* value, size_t valueMaxLen ) = 0;
+
+	IEngineInterface() { }
+	virtual ~IEngineInterface() { }
 };
 
 class OmnibotFunctionInterface
@@ -430,11 +555,10 @@ public:
 	virtual void ConsoleCommand( const Arguments &args ) = 0;
 
 	virtual void SendTrigger( const TriggerInfo &_triggerInfo ) = 0;
-	virtual void AddBlackboardRecord( BlackBoard_Key _type, int _posterID, int _targetID, obUserData *_data ) = 0;
+	virtual void AddBlackboardRecord( BlackBoardKey _type, int posterID, int _targetID, obUserData *data ) = 0;
 
 	// events
-	virtual void SendEvent( int _dest, const MessageHelper &_message ) = 0;
-	virtual void SendGlobalEvent( const MessageHelper &_message ) = 0;
+	virtual void SendEvent( const Message & message, GameEntity dest ) = 0;
 
 	virtual void EntityAdded( GameEntity ent, const EntityInfo& entInfo ) = 0;
 	virtual void EntityDestroyed( GameEntity ent ) = 0;

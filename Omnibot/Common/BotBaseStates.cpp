@@ -13,7 +13,6 @@
 #include "BotWeaponSystem.h"
 #include "BotTargetingSystem.h"
 #include "IGameManager.h"
-#include "InterfaceFuncs.h"
 #include "PathPlannerBase.h"
 #include "Behaviors.h"
 #include "RenderBuffer.h"
@@ -1042,7 +1041,8 @@ namespace AiState
 		if ( !mOnSpawnCalled )
 			GetRootState()->OnSpawn();
 		mOnSpawnCalled = false;
-		GetClient()->SendEvent( MessageHelper( MESSAGE_SPAWN ) );
+		
+		GetClient()->SendEvent( EvSpawn::Msg() );
 	}
 
 	void Main::OnSpawn()
@@ -1066,7 +1066,7 @@ namespace AiState
 			bForceActivate = false;
 			return 1.f;
 		}
-		return !InterfaceFuncs::IsAlive( GetClient()->GetGameEntity() ) ? 1.f : 0.f;
+		return !gEngineFuncs->IsAlive( GetClient()->GetGameEntity() ) ? 1.f : 0.f;
 	}
 
 	State::StateStatus Dead::Update( float fDt )
@@ -1088,8 +1088,8 @@ namespace AiState
 
 	float Warmup::GetPriority()
 	{
-		GameState gs = InterfaceFuncs::GetGameState();
-		return ( gs != GAME_STATE_PLAYING && gs != GAME_STATE_SUDDENDEATH ) ? 1.f : 0.f;
+		const GameState gameState = gEngineFuncs->GetGameState();
+		return ( gameState != GAME_STATE_PLAYING && gameState != GAME_STATE_SUDDENDEATH ) ? 1.f : 0.f;
 	}
 
 	State::StateStatus Warmup::Update( float fDt )
@@ -1187,11 +1187,11 @@ namespace AiState
 
 				if ( mTriggers[ i ].mSensoryFilter->DetectedSomething() )
 				{
-					Event_ProximityTrigger trig;
-					trig.mOwnerState = mTriggers[ i ].mOwnerState;
-					trig.mEntity = mTriggers[ i ].mSensoryFilter->GetBestEntity();
-					trig.mPosition = mTriggers[ i ].mSensoryFilter->GetTriggerPosition();
-					GetClient()->SendEvent( MessageHelper( MESSAGE_PROXIMITY_TRIGGER, &trig, sizeof( trig ) ) );
+					EvProximityTrigger::Msg event;
+					event.mData.mOwnerState = mTriggers[ i ].mOwnerState;
+					event.mData.mEntity = mTriggers[ i ].mSensoryFilter->GetBestEntity();
+					event.mData.mPosition = mTriggers[ i ].mSensoryFilter->GetTriggerPosition();
+					GetClient()->SendEvent( event );
 
 					if ( mTriggers[ i ].mDeleteOnFire )
 					{
@@ -1315,7 +1315,7 @@ namespace AiState
 			mLastTarget = pTargetRec->GetEntity();
 		}
 
-		if ( mLastTarget.IsValid() && !InterfaceFuncs::IsAlive( mLastTarget ) )
+		if ( mLastTarget.IsValid() && !gEngineFuncs->IsAlive( mLastTarget ) )
 			mLastTarget.Reset();
 	}
 
@@ -1412,7 +1412,7 @@ namespace AiState
 			&FloodBlock,
 			TR_MASK_FLOODFILL,
 			-1,
-			False );
+			false );
 
 		return ( tr.mFraction == 1.0f );
 	}
@@ -1436,7 +1436,7 @@ namespace AiState
 			&bounds,
 			TR_MASK_FLOODFILL,
 			-1,
-			False );
+			false );
 
 		bool bGood = true;
 

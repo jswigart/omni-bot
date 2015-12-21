@@ -92,15 +92,13 @@ void JA_Client::SendVoiceMacro( int _macroId )
 	JA_VoiceMacros::SendVoiceMacro( this, _macroId );
 }
 
-int JA_Client::HandleVoiceMacroEvent( const MessageHelper &_message )
+int JA_Client::HandleVoiceMacroEvent( const EvVoiceMacro* msg )
 {
-	const Event_VoiceMacro *m = _message.Get<Event_VoiceMacro>();
-
-	int iVoiceId = JA_VoiceMacros::GetVChatId( m->mMacroString );
+	int voiceId = JA_VoiceMacros::GetVChatId( msg->mMessage );
 	/*switch(iVoiceId)
 	{
 	}*/
-	return iVoiceId;
+	return voiceId;
 }
 
 void JA_Client::ProcessGotoNode( const Path &_path )
@@ -126,7 +124,7 @@ float JA_Client::GetGameVar( GameVar _var ) const
 
 bool JA_Client::DoesBotHaveFlag( MapGoalPtr _mapgoal )
 {
-	return InterfaceFuncs::HasFlag( this );
+	return gEngineFuncs->HasFlag( this );
 }
 
 bool JA_Client::CanBotSnipe()
@@ -157,7 +155,7 @@ bool JA_Client::GetSniperWeapon( int &nonscoped, int &scoped )
 //
 //	if(_flag & F_JA_NAV_FORCEJUMP)
 //	{
-//		int iForceJumpLevel = InterfaceFuncs::GetForceLevel(this, JA_FP_LEVITATION);
+//		int iForceJumpLevel = gEngineFuncs->GetForceLevel(this, JA_FP_LEVITATION);
 //		float fMaxForceJumpheight = 0;
 //		int fMinForceNeeded = 0;
 //		if(iForceJumpLevel == 3)
@@ -178,7 +176,7 @@ bool JA_Client::GetSniperWeapon( int &nonscoped, int &scoped )
 //		else
 //			return 0.f;
 //
-//		int iForce = InterfaceFuncs::GetForce(this);
+//		int iForce = gEngineFuncs->GetForce(this);
 //		if(iForce < fMinForceNeeded)
 //			return false;
 //

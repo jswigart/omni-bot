@@ -23,13 +23,13 @@
 
 struct JA_HasFlag
 {
-	obBool	 mHasFlag;
+	bool	 mHasFlag;
 };
 
 struct JA_CanBeGrabbed
 {
 	GameEntity mEntity;
-	obBool	 mCanBeGrabbed;
+	bool	 mCanBeGrabbed;
 };
 
 struct JA_TeamMines
@@ -47,7 +47,7 @@ struct JA_TeamDetpacks
 struct JA_SelectWeapon
 {
 	JA_Weapon mSelection;
-	obBool	 mGood;
+	bool	 mGood;
 };
 
 /*struct JA_ReinforceTime
@@ -66,7 +66,7 @@ typedef struct
 struct JA_Mindtricked
 {
 	GameEntity mEntity;
-	obBool	 mIsMindtricked;
+	bool	 mIsMindtricked;
 };
 
 //////////////////////////////////////////////////////////////////////////

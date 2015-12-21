@@ -14,7 +14,7 @@
 #include "IGame.h"
 
 class Client;
-class MessageHelper;
+class Message;
 class CallbackParameters;
 class MapGoal;
 
@@ -150,7 +150,7 @@ public:
 	{
 		return State_Busy;
 	};
-	virtual void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	virtual void ProcessEvent( const Message &_message, CallbackParameters &_cb )
 	{
 	}
 
@@ -383,7 +383,7 @@ public:
 	void BlackboardDelay( float _delayseconds, int _targetId );
 	bool BlackboardIsDelayed( int _targetId );
 
-	void CheckForCallbacks( const MessageHelper &_message, CallbackParameters &_cb );
+	void CheckForCallbacks( const Message &_message, CallbackParameters &_cb );
 	void SignalThreads( const gmVariable &_signal );
 
 	void AddForkThreadId( int _threadId );
@@ -458,7 +458,7 @@ protected:
 
 	virtual void InternalParentExit();
 	
-	void InternalProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+	void InternalProcessEvent( const Message &_message, CallbackParameters &_cb );
 	virtual void InternalSignal( const gmVariable &_signal );
 
 	State *FindStateRecurse( uint32_t _namehash );

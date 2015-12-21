@@ -79,7 +79,7 @@ static int GM_CDECL gmfSendPrivateMessage( gmThread *a_thread )
 			}
 		}
 
-		bool bSucess = InterfaceFuncs::SendPrivateMessage( native, targName, chatMsg );
+		bool bSucess = gEngineFuncs->SendPrivateMessage( native, targName, chatMsg );
 		a_thread->PushInt( bSucess ? 1 : 0 );
 		return GM_OK;
 	}
@@ -105,7 +105,7 @@ static int GM_CDECL gmfBotPickPrimaryWeapon( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_INT_PARAM( weaponId, 0 );
 
-	bool bSucess = InterfaceFuncs::SelectPrimaryWeapon( native, (RTCW_Weapon)weaponId );
+	bool bSucess = gEngineFuncs->SelectPrimaryWeapon( native, (RTCW_Weapon)weaponId );
 	a_thread->PushInt( bSucess ? 1 : 0 );
 	return GM_OK;
 }
@@ -127,7 +127,7 @@ static int GM_CDECL gmfBotPickSecondaryWeapon( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_INT_PARAM( weaponId, 0 );
 
-	bool bSucess = InterfaceFuncs::SelectSecondaryWeapon( native, (RTCW_Weapon)weaponId );
+	bool bSucess = gEngineFuncs->SelectSecondaryWeapon( native, (RTCW_Weapon)weaponId );
 	a_thread->PushInt( bSucess ? 1 : 0 );
 	return GM_OK;
 }
@@ -148,7 +148,7 @@ static int GM_CDECL gmfGetReinforceTime( gmThread *a_thread )
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 0 );
 
-	a_thread->PushFloat( InterfaceFuncs::GetReinforceTime( native ) );
+	a_thread->PushFloat( gEngineFuncs->GetReinforceTime( native ) );
 	return GM_OK;
 }
 
@@ -170,7 +170,7 @@ static int GM_CDECL gmfGetCurrentCursorHint( gmThread *a_thread )
 	GM_CHECK_TABLE_PARAM( hint, 0 );
 
 	int iHintType = 0, iHintValue = 0;
-	InterfaceFuncs::GetCurrentCursorHint( native, iHintType, iHintValue );
+	gEngineFuncs->GetCurrentCursorHint( native, iHintType, iHintValue );
 
 	hint->Set( a_thread->GetMachine(), "type", gmVariable( iHintType ) );
 	hint->Set( a_thread->GetMachine(), "value", gmVariable( iHintValue ) );
@@ -195,7 +195,7 @@ static int GM_CDECL gmfChangeSpawnPoint( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_INT_PARAM( spawnpoint, 0 );
 
-	InterfaceFuncs::ChangeSpawnPoint( native, spawnpoint );
+	gEngineFuncs->ChangeSpawnPoint( native, spawnpoint );
 	return GM_OK;
 }
 
@@ -215,7 +215,7 @@ static int GM_CDECL gmfCanSnipe( gmThread *a_thread )
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 0 );
 
-	a_thread->PushInt( InterfaceFuncs::CanSnipe( native ) ? 1 : 0 );
+	a_thread->PushInt( gEngineFuncs->CanSnipe( native ) ? 1 : 0 );
 	return GM_OK;
 }
 
@@ -278,7 +278,7 @@ static int GM_CDECL gmfGetSpawnPoint( gmThread *a_thread )
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 0 );
 
-	a_thread->PushInt( InterfaceFuncs::GetSpawnPoint( native ) );
+	a_thread->PushInt( gEngineFuncs->GetSpawnPoint( native ) );
 	return GM_OK;
 }
 
@@ -302,7 +302,7 @@ static int GM_CDECL gmfSetSuicide( gmThread *a_thread )
 	GM_CHECK_INT_PARAM( suicide, 0 );
 	GM_CHECK_INT_PARAM( persist, 1 );
 
-	InterfaceFuncs::SetSuicide( native, suicide, persist );
+	gEngineFuncs->SetSuicide( native, suicide, persist );
 	return GM_OK;
 }
 
@@ -324,7 +324,7 @@ static int GM_CDECL gmfDisableBotPush( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_INT_PARAM( botPush, 0 );
 
-	InterfaceFuncs::DisableBotPush( native, botPush );
+	gEngineFuncs->DisableBotPush( native, botPush );
 	return GM_OK;
 }
 
@@ -347,7 +347,7 @@ static int GM_CDECL gmfGetExplosiveState( gmThread *a_thread )
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	if ( gameEnt.IsValid() )
-		a_thread->PushInt( InterfaceFuncs::GetExplosiveState( native, gameEnt ) );
+		a_thread->PushInt( gEngineFuncs->GetExplosiveState( native, gameEnt ) );
 	else
 		a_thread->PushNull();
 	return GM_OK;
@@ -371,7 +371,7 @@ static int GM_CDECL gmfGetDestroyableState( gmThread *a_thread )
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	
 	if ( gameEnt.IsValid() )
-		a_thread->PushInt( InterfaceFuncs::IsDestroyable( native, gameEnt ) );
+		a_thread->PushInt( gEngineFuncs->IsDestroyable( native, gameEnt ) );
 	else
 		a_thread->PushNull();
 	return GM_OK;
@@ -403,7 +403,7 @@ static int gmfGetMG42Info( gmThread *a_thread )
 		tbl = a_thread->GetMachine()->AllocTableObject();
 
 	RTCW_MG42Info mg42Info;
-	if ( tbl != NULL && InterfaceFuncs::GetMg42Properties( native, mg42Info ) )
+	if ( tbl != NULL && gEngineFuncs->GetMg42Properties( native, mg42Info ) )
 	{
 		tbl->Set( a_thread->GetMachine(), "CenterFacing", gmVariable( mg42Info.mCenterFacing ) );
 		tbl->Set( a_thread->GetMachine(), "MinHorizontal", gmVariable( mg42Info.mMinHorizontalArc ) );
@@ -438,7 +438,7 @@ static int gmfIsMG42Repairable( gmThread *a_thread )
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	
-	a_thread->PushInt( InterfaceFuncs::IsMountableGunRepairable( native, gameEnt ) ? 1 : 0 );
+	a_thread->PushInt( gEngineFuncs->IsMountableGunRepairable( native, gameEnt ) ? 1 : 0 );
 	return GM_OK;
 }
 
@@ -458,7 +458,7 @@ static int gmfIsMedicNear( gmThread *a_thread )
 {
 	CHECK_THIS_BOT();
 
-	int medicNear = InterfaceFuncs::IsMedicNear( native ) ? 1 : 0;
+	int medicNear = gEngineFuncs->IsMedicNear( native ) ? 1 : 0;
 	a_thread->PushInt( medicNear );
 	return GM_OK;
 }
@@ -479,7 +479,7 @@ static int gmfGoToLimbo( gmThread *a_thread )
 {
 	CHECK_THIS_BOT();
 
-	int goLimbo = InterfaceFuncs::GoToLimbo( native ) ? 1 : 0;
+	int goLimbo = gEngineFuncs->GoToLimbo( native ) ? 1 : 0;
 	a_thread->PushInt( goLimbo );
 	return GM_OK;
 }

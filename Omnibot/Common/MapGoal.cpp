@@ -10,7 +10,6 @@
 #include "gmbinder2/gmbinder2_class.h"
 #include "ScriptManager.h"
 #include "PathPlannerBase.h"
-#include "InterfaceFuncs.h"
 #include "TriggerManager.h"
 #include "IGameManager.h"
 #include "Path.h"
@@ -345,7 +344,7 @@ void MapGoal::_UpdateFlagState()
 {
 	GameEntity owner;
 	FlagState newFlagState;
-	if ( InterfaceFuncs::GetFlagState( GetEntity(), newFlagState, owner ) )
+	if ( gEngineFuncs->GetFlagState( GetEntity(), newFlagState, owner ) )
 	{
 		SetOwner( owner );
 
@@ -393,7 +392,7 @@ void MapGoal::_UpdateFlagState()
 //{
 //	if(GetEntity().IsValid())
 //	{
-//		const int newControllingTeam = InterfaceFuncs::GetControllingTeam(GetEntity());
+//		const int newControllingTeam = gEngineFuncs->GetControllingTeam(GetEntity());
 //		if(newControllingTeam != mGoalState)
 //		{
 //			TriggerInfo ti;
@@ -416,7 +415,7 @@ void MapGoal::_CheckControllingTeam()
 {
 	if ( GetEntity().IsValid() )
 	{
-		const int newControllingTeam = InterfaceFuncs::GetControllingTeam( GetEntity() );
+		const int newControllingTeam = gEngineFuncs->GetControllingTeam( GetEntity() );
 		if ( newControllingTeam != mControllingTeam )
 		{
 			mControllingTeam = newControllingTeam;
@@ -1058,7 +1057,7 @@ Vector3f MapGoal::CalculateFarthestFacing()
 	{
 		Quaternionf quat( Vector3f::UNIT_Z, Mathf::DEG_TO_RAD * fAng );
 		Vector3f vVec = quat.Rotate( Vector3f::UNIT_Y*fRayLength );
-		EngineFuncs::TraceLine( tr, GetPosition(), GetPosition() + vVec, NULL, TR_MASK_SHOT, -1, False );
+		EngineFuncs::TraceLine( tr, GetPosition(), GetPosition() + vVec, NULL, TR_MASK_SHOT, -1, false );
 		float fSightLength = tr.mFraction * fRayLength;
 		if ( fSightLength > fBestVectorLength )
 		{

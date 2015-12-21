@@ -761,36 +761,36 @@ public:
 protected:
 	// var: mClient
 	//		The client that owns this weapon evaluator.
-	Client			* mClient;
+	Client			*	mClient;
 
 	// var: mWeaponID
 	//		The weapon type Id that this weapon uses. See global WEAPON table.
-	int			 mWeaponID;
-	int			 mWeaponAliasID;
+	int					mWeaponID;
+	int					mWeaponAliasID;
 
-	int			 mWeaponLockTime;
+	int					mWeaponLockTime;
 
 	//////////////////////////////////////////////////////////////////////////
 
-	WeaponLimits mWeaponLimits;
+	ParamsWeaponLimits	mWeaponLimits;
 
 	// var: mWeaponName
 	//		The name for this weapon.
-	uint32_t	 mWeaponNameHash;
+	uint32_t			mWeaponNameHash;
 
-	WeaponFireMode mFireModes[ NumFireModes ];
+	WeaponFireMode		mFireModes[ NumFireModes ];
 
 	// var: mMinUseTime
 	//		The minimum time to use a weapon when equipped.
-	float		 mMinUseTime;
+	float				mMinUseTime;
 
-	int			 mLastAmmoUpdate;
+	int					mLastAmmoUpdate;
 
 	// For scripting
 	mutable gmGCRoot<gmUserObject> mScriptObject;
 private:
-	bool _MeetsRequirements( FireMode _mode );
-	bool _MeetsRequirements( FireMode _mode, const TargetInfo &_targetinfo );
+	bool _MeetsRequirements( FireMode mode );
+	bool _MeetsRequirements( FireMode mode, const TargetInfo &_targetinfo );
 
 	// script binding helpers
 	static bool getName( Weapon *a_native, gmThread *a_thread, gmVariable *a_operands );

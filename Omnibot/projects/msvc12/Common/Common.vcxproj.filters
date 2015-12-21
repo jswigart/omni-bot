@@ -223,9 +223,6 @@
     <ClCompile Include="..\..\..\Common\GoalManager.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\InterfaceFuncs.cpp">
-      <Filter>Interface</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\Logger.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -475,6 +472,15 @@
     <ClCompile Include="..\..\..\Common\Behaviors.cpp">
       <Filter>Behaviors</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Common\Q3BSPFileData.cpp">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Q3BSPFileImporter.cpp">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Q3BSPPatch.cpp">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zAlloc.h">
@@ -684,9 +690,6 @@
     <ClInclude Include="..\..\..\Common\IEngineInterface.h">
       <Filter>Interface</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Common\InterfaceFuncs.h">
-      <Filter>Interface</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Common\Functor.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -703,9 +706,6 @@
       <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\Omni-Bot_Types.h">
-      <Filter>Interface</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\Omni-bot_GameEvents.h">
       <Filter>Interface</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Compress\Lzma\LzmaTypes.h">
@@ -736,12 +736,6 @@
       <Filter>Behaviors</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\NameManager.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\MessageFunctor.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Common\MessageHelper.h">
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\ObjFunctor.h">
@@ -968,6 +962,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Common\Behaviors.h">
       <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Q3BSPFileData.h">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Q3BSPFileImporter.h">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Q3BSPPatch.h">
+      <Filter>Navigation\MapParsing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

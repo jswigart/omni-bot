@@ -10,17 +10,13 @@
 #include "IGame.h"
 #include "mdump.h"
 #include "Remotery.h"
-
 #include "GoalManager.h"
 #include "TriggerManager.h"
 #include "ScriptManager.h"
 #include "Timer.h"
-
 #include "RenderBuffer.h"
-
 #include "WeaponDatabase.h"
 #include "FileSystem.h"
-#include "InterfaceFuncs.h"
 
 #include "PathPlannerFloodFill.h"
 #include "PathPlannerRecast.h"
@@ -69,8 +65,6 @@ boost::thread::id IGameManager::sMainThread;
 IGameManager::IGameManager()
 	: mRemotery( NULL )
 {
-	memset( &gEngineFuncs, 0, sizeof( gEngineFuncs ) );
-
 	rmtSettings* settings = rmt_Settings();
 	if ( settings != NULL )
 	{
@@ -85,7 +79,7 @@ IGameManager::~IGameManager()
 	rmt_DestroyGlobalInstance( mRemotery );
 }
 
-omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _version )
+omnibot_error IGameManager::CreateGame( IEngineInterface *engineFuncs, int version )
 {
 	rmt_ScopedCPUSample( CreateGame );
 
@@ -103,12 +97,14 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 
 	srand( (unsigned int)time( NULL ) );
 
-	gEngineFuncs = _pEngineFuncs;
+	gEngineFuncs = engineFuncs;
+
+	IGame::InitTime();
 
 	mBotSystem.mGame = CreateGameInstance();
 
 	// Verify the version is correct.
-	if ( !mBotSystem.mGame->CheckVersion( _version ) )
+	if ( !mBotSystem.mGame->CheckVersion( version ) )
 	{
 		OB_DELETE( mBotSystem.mGame );
 		return BOT_ERROR_WRONGVERSION;
@@ -264,6 +260,14 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *_pEngineFuncs, int _ve
 			}
 		}
 	}
+	
+	if ( mBotSystem.mAnalytics != NULL )
+	{
+		Analytics::MessageUnion msg;
+		msg.set_timestamp( IGame::GetTime() );
+		msg.mutable_gameinfo()->set_mapname( gEngineFuncs->GetMapName() );
+		mBotSystem.mAnalytics->AddEvent( msg );
+	}
 
 	// Load the waypoints for this map.
 	if ( mBotSystem.mNavigation->Load() )
@@ -321,7 +325,7 @@ void IGameManager::UpdateGame()
 			nextSendTime = IGame::GetTime() + delay;
 
 			Analytics::MessageUnion msgUnion;
-			msgUnion.set_timestamp( mBotSystem.mAnalytics->GetTimeStamp() );
+			msgUnion.set_timestamp( IGame::GetTime() );
 
 			IGame::EntityIterator it;
 			while ( IGame::IterateEntity( it ) )

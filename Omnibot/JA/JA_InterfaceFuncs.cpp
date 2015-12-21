@@ -155,7 +155,7 @@ namespace InterfaceFuncs
 	_max = data.mMax;
 	}
 
-	obBool IsWaitingForMedic(Client *_bot, const GameEntity _ent)
+	bool IsWaitingForMedic(Client *_bot, const GameEntity _ent)
 	{
 	ET_WaitingForMedic data = { False };
 	MessageHelper msg(ET_MSG_ISWAITINGFORMEDIC, &data, sizeof(data));

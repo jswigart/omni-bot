@@ -21,20 +21,6 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-// struct: HL2DM_CanPhysPickup
-struct HL2DM_CanPhysPickup
-{
-	GameEntity	mEntity;
-	obBool		mCanPickUp;
-};
-
-// struct: HL2DM_PhysGunInfo
-struct HL2DM_PhysGunInfo
-{
-	GameEntity	mHeldEntity;
-	float		mLaunchSpeed;
-};
-
 #pragma pack(pop)
 
 #endif

@@ -10,7 +10,6 @@
 #include "Client.h"
 #include "IGame.h"
 #include "BotWeaponSystem.h"
-#include "InterfaceFuncs.h"
 #include "System.h"
 
 bool CheckCriteria::ParseOperator( uint32_t sHash )
@@ -78,8 +77,10 @@ bool Base_CheckCriteria( CheckCriteria &crit, Client * bot )
 		}
 		case ON_ENTITY_WEAPON:
 		{
-			WeaponStatus ws = InterfaceFuncs::GetEquippedWeapon( crit.mSubject.GetEntity() );
-			bool bResult = ws.mWeaponId == crit.mOperand[ 0 ].GetInt();
+			int weaponId = 0;
+			FireMode weaponMode = Primary;
+			gEngineFuncs->GetEquippedWeapon( crit.mSubject.GetEntity(), weaponId, weaponMode );
+			bool bResult = weaponId == crit.mOperand[ 0 ].GetInt();
 			if ( crit.mNegated )
 				bResult = !bResult;
 			return bResult;
@@ -128,7 +129,7 @@ bool Base_CheckCriteria( CheckCriteria &crit, Client * bot )
 		}
 		case ON_ENTITY_WEAPONCHARGED:
 		{
-			bool bResult = InterfaceFuncs::IsEntWeaponCharged( crit.mSubject.GetEntity(), crit.mOperand[ 0 ].GetInt() );
+			bool bResult = gEngineFuncs->IsWeaponCharged( crit.mSubject.GetEntity(), crit.mOperand[ 0 ].GetInt(), Primary );
 			if ( crit.mNegated )
 				bResult = !bResult;
 			return bResult;

@@ -11,7 +11,6 @@
 #ifndef __JA_INTERFACEFUNCS_H__
 #define __JA_INTERFACEFUNCS_H__
 
-#include "InterfaceFuncs.h"
 #include "JA_Messages.h"
 
 namespace InterfaceFuncs
@@ -33,7 +32,7 @@ namespace InterfaceFuncs
 	bool HasFlag(Client *_bot);
 	bool ItemCanBeGrabbed(Client *_bot, const GameEntity _ent);
 	void NumTeamMines(Client *_bot, int &_current, int &_max);
-	obBool IsWaitingForMedic(Client *_bot, const GameEntity _ent);
+	bool IsWaitingForMedic(Client *_bot, const GameEntity _ent);
 	bool SelectPrimaryWeapon(Client *_bot, ET_Weapon _weapon);
 	bool SelectSecondaryWeapon(Client *_bot, ET_Weapon _weapon);
 	float GetReinforceTime(Client *_bot);

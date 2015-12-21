@@ -21,7 +21,7 @@ boost::mutex		gMessageMutex;
 namespace EngineFuncs
 {
 	bool TraceLine( obTraceResult &_tr, const Vector3f &_start, const Vector3f &_end,
-		const AABB *_aabb, int _mask, int _user, obBool _usepvs )
+		const AABB *_aabb, int _mask, int _user, bool _usepvs )
 	{
 		_tr.mEndpos[ 0 ] = _end.X();
 		_tr.mEndpos[ 1 ] = _end.Y();
@@ -91,7 +91,7 @@ namespace EngineFuncs
 	}
 	bool IsInPvs( const Vector3f &_source, const Vector3f &_target )
 	{
-		return gEngineFuncs->IsInPVS( _source, _target ) == True;
+		return gEngineFuncs->IsInPVS( _source, _target );
 	}
 	bool GroundPosition( const Vector3f &_pos, Vector3f &_outPosition, Vector3f &_outNormal, float _offset )
 	{
@@ -100,7 +100,7 @@ namespace EngineFuncs
 			_pos + Vector3f( 0.f, 0.f, _offset ),
 			_pos - Vector3f::UNIT_Z * 2048.f,
 			NULL,
-			TR_MASK_FLOODFILL, -1, False );
+			TR_MASK_FLOODFILL, -1, false );
 		if ( tr.mFraction < 1.f )
 		{
 			_outPosition = Vector3f( tr.mEndpos[ 0 ], tr.mEndpos[ 1 ], tr.mEndpos[ 2 ] );

@@ -88,7 +88,7 @@ namespace AiState
 
 		State::StateStatus Update( float fDt )
 		{
-			if ( !mShootBarrel.IsValid() || !InterfaceFuncs::IsAlive( mShootBarrel ) )
+			if ( !mShootBarrel.IsValid() || !gEngineFuncs->IsAlive( mShootBarrel ) )
 				return State_Finished;
 			return State_Busy;
 		}

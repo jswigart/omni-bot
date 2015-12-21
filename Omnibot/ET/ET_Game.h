@@ -27,9 +27,9 @@ public:
 	
 	virtual bool GetAnalyticsKeys( GameAnalytics::Keys & keys );
 
-	void AddBot( Msg_Addbot &_addbot, bool _createnow = true );
+	void AddBot( ParamsAddbot & parms, bool _createnow = true );
 
-	void ClientJoined( const Event_SystemClientConnected *_msg );
+	void ClientJoined( const EvClientConnected *msg );
 	
 	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
 	void GetWeaponEnumeration( const IntEnum *&_ptr, int &num );

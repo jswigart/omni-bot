@@ -293,6 +293,7 @@ namespace Utils
 
 	Vector3f ChangePitch( const Vector3f &fwd, float _pitchangle );
 
+	bool StringToBool( const std::string &_str, bool& bOut );
 	bool StringToTrue( const std::string &_str );
 	bool StringToFalse( const std::string &_str );
 	void StringTrimCharacters( std::string &_out, const std::string &_trim );

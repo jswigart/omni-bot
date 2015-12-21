@@ -41,7 +41,7 @@ typedef enum eD3_Events
 //		Events that allow the bot to query for information from the game.
 typedef enum eD3_GameMessage
 {
-	D3_MSG_START = GEN_MSG_END,
+	D3_MSG_START = MSG_END,
 	D3_MSG_GETLOCATION,
 	D3_MSG_END
 } D3_GameMessage;

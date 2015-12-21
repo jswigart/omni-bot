@@ -21,127 +21,53 @@
 
 //////////////////////////////////////////////////////////////////////////
 
-// struct: Event_PlayerSpree
-struct Event_PlayerSpree
+enum MC_Events
 {
-	static const int EventId = MC_EVENT_PLAYER_SPREE;
-
-	GameEntity mPlayer;
-	int		 mKills;
-};
-
-// struct: Event_PlayerSpreeEnd
-struct Event_PlayerSpreeEnd
-{
-	static const int EventId = MC_EVENT_PLAYER_SPREE_END;
-
-	GameEntity mPlayer;
-	GameEntity mByWho;
-	int		 mKills;
-};
-
-// struct: Event_SpreeWarStart
-struct Event_SpreeWarStart
-{
-	static const int EventId = MC_EVENT_SPREEWAR_START;
-
-	GameEntity mVictim;
-};
-
-struct Event_SpreeWarEnd
-{
-	static const int EventId = MC_EVENT_SPREEWAR_END;
-};
-
-struct Event_LevelUp
-{
-	static const int EventId = MC_EVENT_LEVEL_UP;
-	int mLevel;
+	MC_MSG_BEGIN = MSG_BASE_LAST,
+	MC_MSG_PLAYER_SPREE,
+	MC_MSG_PLAYER_SPREE_END,
+	MC_MSG_SPREEWAR_START,
+	MC_MSG_SPREEWAR_END,
+	MC_MSG_LEVEL_UP
 };
 
 //////////////////////////////////////////////////////////////////////////
 
-// struct: MC_PlayerStats
-struct MC_PlayerStats
+struct EvPlayerSpree
 {
-	enum QuantityType
-	{
-		Q_MINION,
-		Q_LASERS,
-		Q_CROWS,
-		Q_MAGMINE,
-		Q_TURRET,
-		Q_MANHACK,
+	typedef MessageT<EvPlayerSpree, MC_MSG_PLAYER_SPREE> Msg;
 
-		Q_MAXTYPES = 10 // reserve some space for others
-	};
-
-	int			mExperienceTotal;
-	int			mExperienceGame;
-	int			mModulePoints;
-	int			mWeaponPoints;
-	int			mCredits;
-	int			mLevel;		
-	float		mAuxPower;
-	float		mAuxPowerMax;
-	float		mAuxRegenRate;
-	short		mCount[ Q_MAXTYPES ];
-	short		mCountMax[ Q_MAXTYPES ];
-
-	MC_PlayerStats()
-	{
-		for ( int i = 0; i < Q_MAXTYPES; ++i )
-			mCount[ i ] = mCountMax[ i ] = 0;
-	}
+	GameEntity		mPlayer;
+	int				mKills;
 };
 
-// struct: MC_ModuleStats
-struct MC_ModuleStats
+struct EvPlayerSpreeEnd
 {
-	struct ModuleInfo
-	{
-		int		mLvl;
-		int		mMaxLvl;
-		int		mUpgradeCost;
-		float	mAuxDrain;
-		float	mCooldown;
+	typedef MessageT<EvPlayerSpreeEnd, MC_MSG_PLAYER_SPREE_END> Msg;
 
-		ModuleInfo()
-			: mLvl( 0 )
-			, mMaxLvl( 0 )
-			, mUpgradeCost( 0 )
-			, mAuxDrain( 0.f )
-			, mCooldown( 0.f )
-		{
-		}
-	};
-	ModuleInfo mModule[ MC_MODULE_MAX ];
+	GameEntity		mPlayer;
+	GameEntity		mByWho;
+	int				mKills;
 };
 
-// struct: MC_UpgradeModule
-struct MC_UpgradeModule
+struct EvSpreeWarStart
 {
-	int			mModuleId;
+	typedef MessageT<EvSpreeWarStart, MC_MSG_SPREEWAR_START> Msg;
+
+	GameEntity		mVictim;
 };
 
-// struct: MC_CanPhysPickup
-struct MC_CanPhysPickup
+struct EvSpreeWarEnd
 {
-	GameEntity	mEntity;
-	obBool		mCanPickUp;
+	typedef MessageT<EvSpreeWarEnd, MC_MSG_SPREEWAR_END> Msg;
+
 };
 
-// struct: MC_PhysGunInfo
-struct MC_PhysGunInfo
+struct EvLevelUp
 {
-	GameEntity	mHeldEntity;
-	float		mLaunchSpeed;
-};
+	typedef MessageT<EvLevelUp, MC_MSG_LEVEL_UP> Msg;
 
-struct MC_ChargerStatus
-{
-	float		mCurrentCharge;
-	float		mMaxCharge;
+	int				mLevel;
 };
 
 #pragma pack(pop)

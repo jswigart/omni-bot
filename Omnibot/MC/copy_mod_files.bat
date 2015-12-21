@@ -10,3 +10,4 @@ copy /y ..\Common\Omni-Bot_Events.h D:\git\mc_sdk2007\SourceCode\src\game\server
 copy /y ..\Common\Omni-Bot_Types.h D:\git\mc_sdk2007\SourceCode\src\game\server\omnibot\
 copy /y MC_Config.h D:\git\mc_sdk2007\SourceCode\src\game\server\omnibot\
 copy /y MC_Messages.h D:\git\mc_sdk2007\SourceCode\src\game\server\omnibot\
+pause

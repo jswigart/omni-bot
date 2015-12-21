@@ -11,7 +11,6 @@
 #ifndef __RTCW_INTERFACEFUNCS_H__
 #define __RTCW_INTERFACEFUNCS_H__
 
-#include "InterfaceFuncs.h"
 #include "RTCW_Messages.h"
 
 namespace InterfaceFuncs

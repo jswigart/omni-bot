@@ -11,6 +11,7 @@
 #include "IGame.h"
 #include "IGameManager.h"
 #include "BotPathing.h"
+#include "Base_Messages.h"
 #include "RenderBuffer.h"
 
 namespace AiState

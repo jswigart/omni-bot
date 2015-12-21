@@ -9,510 +9,506 @@
 #ifndef __BASE_MESSAGES_H__
 #define __BASE_MESSAGES_H__
 
+#include "Omni-Bot_Events.h"
 #include "Omni-Bot_Types.h"
 #include "Omni-Bot_BitFlags.h"
+
+// typedef: EventId
+//		Readable identifier for various events that can be sent to the bot
+//		and considered for state changes or behavioral modifications.
+enum MessageId
+{
+	MSG_NONE = 0,
+
+	MSG_GETCONTROLLINGTEAM,
+	MSG_GAMESTATE,
+
+	MSG_ENTITYSTAT,
+	MSG_TEAMSTAT,
+
+	MSG_WEAPON_CHARGED,
+	MSG_WEAPON_HEATLEVEL,
+
+	MSG_SERVERCOMMAND,
+	MSG_PLAYSOUND,
+	MSG_STOPSOUND,
+	MSG_SCRIPTEVENT,
+
+	MSG_GOTOWAYPOINT,
+	MSG_MOVERAT,
+
+	MSG_SETLOADOUT,
+
+	MSG_SCRIPT_CHANGED,
+
+	MSG_STARTGAME,
+	MSG_ENDGAME,
+	MSG_NEWROUND,
+	MSG_ENDROUND,
+	MSG_CLIENTCONNECTED,
+	MSG_CLIENTDISCONNECTED,
+	MSG_ENTITYCREATED,
+	MSG_ENTITYDELETED,
+	MSG_START_TRAINING,
+	MSG_SCRIPTSIGNAL,
+	MSG_SOUND,
+	MSG_ADD_ENTITY_CONNECTION,
+	MSG_ANALYTIC_EVENT,
+
+	MSG_WEAPON_FIRE,
+	MSG_WEAPON_CHANGE,
+
+	MSG_GOAL_SUCCESS,
+	MSG_GOAL_FAILED,
+	MSG_GOAL_ABORTED,
+
+	MSG_PATH_SUCCESS,
+	MSG_PATH_FAILED,
+
+	MSG_ID_FIRST,
+	MSG_SPAWN,
+	MSG_CHANGETEAM,
+	MSG_INVALIDTEAM,
+	MSG_INVALIDCLASS,
+	MSG_CHANGECLASS,
+	MSG_DEATH,
+	MSG_HEALED,
+	MSG_REVIVED,
+	MSG_RECIEVED_AMMO,
+	MSG_KILLEDSOMEONE,
+	MSG_ADDWEAPON,
+	MSG_REMOVEWEAPON,
+	MSG_REFRESHWEAPON,
+	MSG_REFRESHALLWEAPONS,
+	MSG_SPECTATED,
+	MSG_AIMCOMPLETED,
+	MSG_SCRIPTMSG,
+	MSG_PROXIMITY_TRIGGER,
+	MSG_DYNAMIC_PATHS_CHANGED,
+	MSG_MINE_ARMED,
+	MSG_MINE_DETONATE,
+	MSG_MORTAR_IMPACT,
+	MSG_ENT_ENTER_RADIUS,
+	MSG_ENT_LEAVE_RADIUS,
+	MSG_MG_ENTER_RADIUS,
+	MSG_MG_LEAVE_RADIUS,
+
+	MSG_FEEL_PLAYER_USE,
+	MSG_TOOK_DAMAGE,
+
+	MSG_HEAR_CHATMSG_BASE,
+	MSG_HEAR_CHATMSG_GLOBAL,
+	MSG_HEAR_CHATMSG_TEAM,
+	MSG_HEAR_CHATMSG_PRIVATE,
+	MSG_HEAR_CHATMSG_GROUP,
+	MSG_HEAR_VOICEMACRO_BASE,
+	MSG_HEAR_VOICEMACRO_GLOBAL,
+	MSG_HEAR_VOICEMACRO_TEAM,
+	MSG_HEAR_VOICEMACRO_PRIVATE,
+	MSG_HEAR_VOICEMACRO_GROUP,
+
+	MSG_HEAR_SOUND,
+	MSG_SENSE_ENTITY,
+
+	// Must be last
+	MSG_BASE_LAST = 1000
+};
 
 #pragma pack(push)
 #pragma pack(4)
 
+class Message
+{
+public:
+	int Id() const
+	{
+		return mMessageId;
+	}
+	size_t Size() const
+	{
+		return mMessageSize;
+	}
+protected:
+	const int	mMessageId;
+	void*		mMessagePtr;
+	size_t		mMessageSize;
+
+	Message( int id, void * ptr = 0, uint32_t size = 0 )
+		: mMessageId( id )
+		, mMessagePtr( ptr )
+		, mMessageSize( size )
+	{
+	}
+	~Message()
+	{
+	}
+	Message&operator=( const Message& other );
+};
+
+template<typename T, int MsgId>
+class MessageT : public Message
+{
+public:
+	enum
+	{
+		MessageId = MsgId
+	};
+	T	mData;
+
+	static const T* Cast( const Message& msg, int allowId = -1 )
+	{
+		typedef MessageT<T, T::Msg::MessageId> TypedMsg;
+		if ( ( msg.Id() == T::Msg::MessageId || msg.Id() == allowId ) && sizeof( T ) == msg.Size() )
+		{
+			const TypedMsg* typedPtr = static_cast<const TypedMsg*>( &msg );
+			return &typedPtr->mData;
+		}
+		return 0;
+	}
+
+	static T* Cast( Message& msg, int allowId = 0 )
+	{
+		typedef MessageT<T, T::Msg::MessageId> TypedMsg;
+		if ( ( msg.Id() == T::Msg::MessageId || msg.Id() == allowId ) && sizeof( T ) == msg.mMessageSize )
+		{
+			TypedMsg* typedPtr = static_cast<TypedMsg*>( &msg );
+			return &typedPtr->mData;
+		}
+		return 0;
+	}
+
+	MessageT() : Message( MsgId, &mData, sizeof( T ) )
+	{
+	}
+	~MessageT()
+	{
+	}
+};
+
 //////////////////////////////////////////////////////////////////////////
 
-struct Msg_Addbot
-{
-	int			mTeam;
-	int			mClass;
-	char		mName[64];
-	char		mModel[64];
-	char		mSkin[64];
-	char		mSpawnPointName[64];
-	char		mProfile[64];
-
-	Msg_Addbot()
-		: mTeam(RANDOM_TEAM_IF_NO_TEAM)
-		, mClass(RANDOM_CLASS_IF_NO_CLASS)
-	{
-		mName[0] = mModel[0] = mSkin[0] = mSpawnPointName[0] = mProfile[0] = 0;
-	}
-};
-
-struct Msg_Kickbot
-{
-	enum { BufferSize = 64, InvalidGameId = -1 };
-	char		mName[BufferSize];
-	int			mGameId;
-
-	Msg_Kickbot()
-		: mGameId(InvalidGameId)
-	{
-		mName[0] =  0;
-	}
-};
-
-struct Msg_ChangeName
-{
-	char	mNewName[64];
-};
-
-struct Msg_PlayerChooseEquipment
-{
-	enum { NumItems = 16 };
-	int			mWeaponChoice[NumItems];
-	int			mItemChoice[NumItems];
-
-	Msg_PlayerChooseEquipment()
-	{
-		for(int i = 0; i < NumItems; ++i)
-		{
-			mWeaponChoice[i] = 0;
-			mItemChoice[i] = 0;
-		}
-	}
-};
-
-struct Msg_PlayerMaxSpeed
-{
-	float		mMaxSpeed;
-
-	Msg_PlayerMaxSpeed() : mMaxSpeed(0.f) {}
-};
-
-struct Msg_IsAlive
-{
-	obBool		mIsAlive;
-
-	Msg_IsAlive() : mIsAlive(False) {}
-};
-
-struct Msg_IsAllied
-{
-	GameEntity	mTargetEntity;
-	obBool		mIsAllied;
-
-	Msg_IsAllied(GameEntity e) : mTargetEntity(e), mIsAllied(True) {}
-};
-
-struct Msg_IsOutside
-{
-	float		mPosition[3];
-	obBool		mIsOutside;
-
-	Msg_IsOutside()
-		: mIsOutside(False)
-	{
-		mPosition[0] = mPosition[1] = mPosition[2] = 0.f;
-	}
-};
-
-struct Msg_PointContents
-{
-	int			mContents;
-	float		x,y,z;
-
-	Msg_PointContents()
-		: mContents(0)
-		, x(0.f)
-		, y(0.f)
-		, z(0.f)
-	{
-	}
-};
-
-struct Msg_ReadyToFire
-{
-	obBool		mReady;
-
-	Msg_ReadyToFire() : mReady(False) {}
-};
-
-struct Msg_Reloading
-{
-	obBool		mReloading;
-
-	Msg_Reloading() : mReloading(False) {}
-};
-
-struct Msg_FlagState
-{
-	FlagState	mFlagState;
-	GameEntity	mOwner;
-
-	Msg_FlagState()
-		: mFlagState(S_FLAG_NOT_A_FLAG)
-	{
-	}
-};
-
-struct Msg_GameState
-{
-	GameState	mGameState;
-	float		mTimeLeft;
-
-	Msg_GameState()
-		: mGameState(GAME_STATE_INVALID)
-		, mTimeLeft(0.f)
-	{
-	}
-};
-
-struct Msg_EntityStat
-{
-	char		mStatName[64];
-	obUserData	mResult;
-
-	Msg_EntityStat()
-	{
-		mStatName[0] = 0;
-	}
-};
-
-struct Msg_TeamStat
-{
-	int			mTeam;
-	char		mStatName[64];
-	obUserData	mResult;
-
-	Msg_TeamStat()
-		: mTeam(0)
-	{
-		mStatName[0] = 0;
-	}
-};
-
-struct Msg_ServerCommand
-{
-	char		mCommand[256];
-
-	Msg_ServerCommand()
-	{
-		mCommand[0] = 0;
-	}
-};
-
-struct WeaponCharged
-{
-	int			mWeapon;
-	FireMode	mFireMode;
-	obBool		mIsCharged;
-	obBool		mIsCharging;
-
-	WeaponCharged(int w = 0, FireMode m = Primary)
-		: mWeapon(w)
-		, mFireMode(m)
-		, mIsCharged(False)
-		, mIsCharging(False)
-	{
-	}
-};
-
-struct WeaponHeatLevel
-{
-	FireMode	mFireMode;
-	float		mCurrentHeat;
-	float		mMaxHeat;
-
-	WeaponHeatLevel(FireMode m = Primary)
-		: mFireMode(m)
-		, mCurrentHeat(0.f)
-		, mMaxHeat(0.f)
-	{
-	}
-};
-
-struct VehicleInfo
-{
-	int			mType;
-	GameEntity	mEntity;
-	GameEntity	mWeapon;
-	GameEntity	mDriver;
-	int			mVehicleHealth;
-	int			mVehicleMaxHealth;
-	float		mArmor;
-
-	VehicleInfo()
-	{
-		mType = 0;
-		mEntity = GameEntity();
-		mWeapon = GameEntity();
-		mDriver = GameEntity();
-		mVehicleHealth = 0;
-		mVehicleMaxHealth = 0;
-		mArmor = 0.f;
-	}
-};
-
-struct ControllingTeam
-{
-	int		mControllingTeam;
-
-	ControllingTeam() : mControllingTeam(0) {}
-};
-
-struct WeaponStatus
-{
-	int			mWeaponId;
-	//FireMode	mFireMode;
-
-	WeaponStatus() : mWeaponId(0) {}
-
-	bool operator==(const WeaponStatus &_w2)
-	{
-		return mWeaponId == _w2.mWeaponId;
-	}
-	bool operator!=(const WeaponStatus &_w2)
-	{
-		return !(*this == _w2);
-	}
-};
-
-struct WeaponLimits
-{
-	float		mCenterFacing[3];
-	float		mMinYaw;
-	float		mMaxYaw;
-	float		mMinPitch;
-	float		mMaxPitch;
-	int			mWeaponId;
-	obBool		mLimited;
-
-	WeaponLimits()
-		: mMinYaw(-45.f)
-		, mMaxYaw( 45.f)
-		, mMinPitch(-20.f)
-		, mMaxPitch( 20.f)
-		, mWeaponId(0)
-		, mLimited(False)
-	{
-		mCenterFacing[0] = 0.f;
-		mCenterFacing[1] = 0.f;
-		mCenterFacing[2] = 0.f;
-	}
-};
-
-struct Msg_KillEntity
-{
-	GameEntity	mWhoToKill;
-};
-
-struct Event_PlaySound
-{
-	char		mSoundName[128];
-};
-
-struct Event_StopSound
-{
-	char		mSoundName[128];
-};
-
-struct Event_ScriptEvent
-{
-	char		mFunctionName[64];
-	char		mEntityName[64];
-	char		mParam1[64];
-	char		mParam2[64];
-	char		mParam3[64];
-};
-
-struct Msg_GotoWaypoint
-{
-	char		mWaypointName[64];
-	float		mOrigin[3];
-
-	Msg_GotoWaypoint()
-	{
-		mOrigin[0] = 0.f;
-		mOrigin[1] = 0.f;
-		mOrigin[2] = 0.f;
-		mWaypointName[0] = 0;
-	}
-};
-
-struct Msg_MoverAt
-{
-	float		mPosition[3];
-	float		mUnder[3];
-
-	GameEntity mEntity;
-
-	Msg_MoverAt()
-	{
-		mPosition[0]=mPosition[1]=mPosition[2]=0.f;
-		mUnder[0]=mUnder[1]=mUnder[2]=0.f;
-	}
-};
+#define CASE_MSG(MSGCLASS) \
+	case MSGCLASS::Msg::MessageId:\
+		if ( const MSGCLASS* msg = MSGCLASS::Msg::Cast( message ) ) \
 
 //////////////////////////////////////////////////////////////////////////
 // Events
 
-struct Event_SystemScriptUpdated
+struct EvGameStart
 {
+	typedef MessageT<EvGameStart, MSG_STARTGAME> Msg;
+};
+
+struct EvGameEnd
+{
+	typedef MessageT<EvGameEnd, MSG_ENDGAME> Msg;
+};
+
+struct EvScriptChanged
+{
+	typedef MessageT<EvScriptChanged, MSG_SCRIPT_CHANGED> Msg;
+
 	int32_t		mScriptKey;
 };
 
-struct Event_SystemClientConnected
+struct EvClientConnected
 {
+	typedef MessageT<EvClientConnected, MSG_CLIENTCONNECTED> Msg;
+
 	int			mGameId;
-	obBool		mIsBot;
+	bool		mIsBot;
 	int			mDesiredClass;
 	int			mDesiredTeam;
 
-	Event_SystemClientConnected()
+	EvClientConnected()
 		: mGameId(-1)
-		, mIsBot(False)
+		, mIsBot(false)
 		, mDesiredClass(RANDOM_CLASS_IF_NO_CLASS)
 		, mDesiredTeam(RANDOM_TEAM_IF_NO_TEAM)
 	{
 	}
 };
 
-struct Event_SystemClientDisConnected
+struct EvClientDisconnected
 {
+	typedef MessageT<EvClientDisconnected, MSG_CLIENTDISCONNECTED> Msg;
+
 	int			mGameId;
 };
 
-struct Event_SystemGravity
+struct EvSpawn
 {
-	float		mGravity;
+	typedef MessageT<EvSpawn, MSG_SPAWN> Msg;	
 };
 
-struct Event_SystemCheats
+struct EvEntityCreated
 {
-	obBool	 mEnabled;
+	typedef MessageT<EvEntityCreated, MSG_ENTITYCREATED> Msg;
+	
+	GameEntity		mEntity;
+	EntityInfo 		mEntityInfo;
 };
 
-struct Event_EntityCreated
+struct EvEntityDeleted
 {
-	GameEntity			mEntity;
-	EntityInfo 	mEntityInfo;
-};
+	typedef MessageT<EvEntityDeleted, MSG_ENTITYDELETED> Msg;
 
-struct Event_EntityDeleted
-{
 	GameEntity		mEntity;
 };
 
-//////////////////////////////////////////////////////////////////////////
-
-struct Event_Death
+struct EvDeath
 {
+	typedef MessageT<EvDeath, MSG_DEATH> Msg;
+
 	GameEntity	mWhoKilledMe;
 	char		mMeansOfDeath[32];
 };
 
-struct Event_KilledSomeone
+struct EvKilledSomeone
 {
+	typedef MessageT<EvKilledSomeone, MSG_KILLEDSOMEONE> Msg;
+
 	GameEntity	mWhoIKilled;
 	char		mMeansOfDeath[32];
 };
 
-struct Event_TakeDamage
+struct EvTakeDamage
 {
+	typedef MessageT<EvTakeDamage, MSG_TOOK_DAMAGE> Msg;
+
 	GameEntity	mInflictor;
 	char		mDamageType[32];
 };
 
-struct Event_Healed
+struct EvHealed
 {
+	typedef MessageT<EvHealed, MSG_HEALED> Msg;
+
 	GameEntity	mWhoHealedMe;
 };
 
-struct Event_Revived
+struct EvRevived
 {
+	typedef MessageT<EvRevived, MSG_REVIVED> Msg;
+
 	GameEntity	mWhoRevivedMe;
 };
 
-struct Event_ChangeTeam
+struct EvRecievedAmmo
 {
+	typedef MessageT<EvRecievedAmmo, MSG_RECIEVED_AMMO> Msg;
+
+	GameEntity	mFromWho;
+};
+
+struct EvMineArmed
+{
+	typedef MessageT<EvMineArmed, MSG_MINE_ARMED> Msg;
+
+	GameEntity	mMine;
+};
+
+struct EvMineDetonate
+{
+	typedef MessageT<EvMineDetonate, MSG_MINE_DETONATE> Msg;
+
+	GameEntity	mMine;
+};
+
+struct EvMortarImpact
+{
+	typedef MessageT<EvMortarImpact, MSG_MORTAR_IMPACT> Msg;
+
+	GameEntity	mOwner;
+	float		mPosition[ 3 ];
+	float		mRadius;
+};
+
+struct EvChangeTeam
+{
+	typedef MessageT<EvChangeTeam, MSG_CHANGETEAM> Msg;
+
 	int			mNewTeam;
 };
 
-struct Event_WeaponChanged
+struct EvWeaponChanged
 {
+	typedef MessageT<EvWeaponChanged, MSG_WEAPON_CHANGE> Msg;
+
 	int			mWeaponId;
 };
 
-struct Event_ChangeClass
+struct EvChangeClass
 {
+	typedef MessageT<EvChangeClass, MSG_CHANGECLASS> Msg;
+
 	int			mNewClass;
 };
 
-struct Event_Spectated
+struct EvSpectated
 {
+	typedef MessageT<EvSpectated, MSG_SPECTATED> Msg;
+
 	int			mWhoSpectatingMe;
 };
 
-struct Event_AddWeapon
+struct EvAddWeapon
 {
+	typedef MessageT<EvAddWeapon, MSG_ADDWEAPON> Msg;
+
 	int			mWeaponId;
 };
 
-struct Event_RemoveWeapon
+struct EvRemoveWeapon
 {
+	typedef MessageT<EvRemoveWeapon, MSG_REMOVEWEAPON> Msg;
+
 	int			mWeaponId;
 };
 
-struct Event_RefreshWeapon
+struct EvRefreshWeapon
 {
+	typedef MessageT<EvRefreshWeapon, MSG_REFRESHWEAPON> Msg;
+	
 	int32_t		mWeaponId;
 };
 
-struct Event_WeaponFire
+struct EvRefreshAllWeapons
 {
-	int			mWeaponId;
-	FireMode	mFireMode;
-	GameEntity	mProjectile;
+	typedef MessageT<EvRefreshAllWeapons, MSG_REFRESHALLWEAPONS> Msg;
+	
+	int32_t		mPad;
 };
 
-struct Event_WeaponChange
+struct EvWeaponFire
 {
+	typedef MessageT<EvWeaponFire, MSG_WEAPON_FIRE> Msg;
+
+	int				mWeaponId;
+	int				mTeamNum;
+	FireMode		mFireMode;
+	GameEntity		mProjectile;
+};
+
+struct EvWeaponChange
+{
+	typedef MessageT<EvWeaponChange, MSG_WEAPON_CHANGE> Msg;
+
 	int			mWeaponId;
 };
 
-struct Event_ChatMessage
+struct EvChatMessage
 {
+	typedef MessageT<EvChatMessage, MSG_HEAR_CHATMSG_BASE> Msg;
+
 	GameEntity	mWhoSaidIt;
 	char		mMessage[512];
+
+	EvChatMessage()
+	{
+		mMessage[ 0 ] = 0;
+	}
 };
 
-struct Event_VoiceMacro
+struct EvChatMessageGlobal : public EvChatMessage
 {
+	typedef MessageT<EvChatMessageGlobal, MSG_HEAR_CHATMSG_GLOBAL> Msg;
+};
+
+struct EvChatMessageTeam : public EvChatMessage
+{
+	typedef MessageT<EvChatMessageTeam, MSG_HEAR_CHATMSG_TEAM> Msg;
+};
+
+struct EvChatMessagePrivate : public EvChatMessage
+{
+	typedef MessageT<EvChatMessageTeam, MSG_HEAR_CHATMSG_PRIVATE> Msg;
+};
+
+struct EvChatMessageGroup : public EvChatMessage
+{
+	typedef MessageT<EvChatMessageTeam, MSG_HEAR_CHATMSG_GROUP> Msg;
+};
+
+struct EvVoiceMacro
+{
+	typedef MessageT<EvVoiceMacro, MSG_HEAR_VOICEMACRO_BASE> Msg;
+
 	GameEntity	mWhoSaidIt;
-	char		mMacroString[64];
+	char		mMessage[512];
+
+	EvVoiceMacro()
+	{
+		mMessage[ 0 ] = 0;
+	}
 };
 
-struct Event_PlayerUsed
+struct EvVoiceMacroGlobal : public EvVoiceMacro
 {
+	typedef MessageT<EvVoiceMacroGlobal, MSG_HEAR_VOICEMACRO_GLOBAL> Msg;
+};
+
+struct EvVoiceMacroTeam : public EvVoiceMacro
+{
+	typedef MessageT<EvVoiceMacroTeam, MSG_HEAR_VOICEMACRO_TEAM> Msg;
+};
+
+struct EvVoiceMacroPrivate : public EvVoiceMacro
+{
+	typedef MessageT<EvVoiceMacroTeam, MSG_HEAR_VOICEMACRO_PRIVATE> Msg;
+};
+
+struct EvVoiceMacroGroup : public EvVoiceMacro
+{
+	typedef MessageT<EvVoiceMacroTeam, MSG_HEAR_VOICEMACRO_GROUP> Msg;
+};
+
+struct EvPlayerUsed
+{
+	typedef MessageT<EvPlayerUsed, MSG_FEEL_PLAYER_USE> Msg;
+
 	GameEntity	mWhoDidIt;
 };
 
-struct Event_Sound
+struct EvSound
 {
+	typedef MessageT<EvSound, MSG_HEAR_SOUND> Msg;
+
 	char		mSoundName[64];
 	float		mOrigin[3];
 	GameEntity	mSource;
 	int			mSoundType;
 };
 
-struct Event_EntitySensed
+struct EvEntitySensed
 {
+	typedef MessageT<EvEntitySensed, MSG_SENSE_ENTITY> Msg;
+
 	int			mEntityClass;
 	GameEntity	mEntity;
 };
 
-struct Event_ScriptMessage
+struct EvScriptMessage
 {
+	typedef MessageT<EvScriptMessage, MSG_SCRIPTMSG> Msg;
+
 	char		mMessageName[64];
 	char		mMessageData1[64];
 	char		mMessageData2[64];
 	char		mMessageData3[64];
 };
 
-struct Event_ScriptSignal
+struct EvScriptSignal
 {
+	typedef MessageT<EvScriptSignal, MSG_SCRIPTSIGNAL> Msg;
+
 	char		mSignalName[64];
 };
 
-struct Event_EntityConnection
+struct EvEntityConnection
 {
+	typedef MessageT<EvEntityConnection, MSG_ADD_ENTITY_CONNECTION> Msg;
+
 	GameEntity	mEntitySrc;
 	GameEntity	mEntityDst;
 
@@ -523,7 +519,7 @@ struct Event_EntityConnection
 	float		mRadius;
 	float		mCost;
 
-	Event_EntityConnection()
+	EvEntityConnection()
 		: mRadius(0.f)
 		, mCost(0.f)
 	{
@@ -532,35 +528,24 @@ struct Event_EntityConnection
 	}
 };
 
-struct Event_EntEnterRadius
+struct EvEntEnterRadius
 {
+	typedef MessageT<EvEntEnterRadius, MSG_ENT_ENTER_RADIUS> Msg;
+
 	GameEntity	mEntity;
 };
 
-struct Event_EntLeaveRadius
+struct EvEntLeaveRadius
 {
+	typedef MessageT<EvEntLeaveRadius, MSG_ENT_LEAVE_RADIUS> Msg;
+
 	GameEntity	mEntity;
 };
 
-struct Event_GameType
+struct EvAnalyticEvent
 {
-	int			mGameType;
-};
+	typedef MessageT<EvAnalyticEvent, MSG_ANALYTIC_EVENT> Msg;
 
-struct Event_CvarSet
-{
-	const char *		mCvar;
-	const char *		mValue;
-};
-
-struct Event_CvarGet
-{
-	const char *		mCvar;
-	int					mValue;
-};
-
-struct Event_Analytics
-{
 	const char *		mName;
 	const char *		mArea;
 	float				mValue;

@@ -11,7 +11,6 @@
 #ifndef __TF_INTERFACEFUNCS_H__
 #define __TF_INTERFACEFUNCS_H__
 
-#include "InterfaceFuncs.h"
 #include "TF_Messages.h"
 
 namespace InterfaceFuncs
@@ -26,7 +25,7 @@ namespace InterfaceFuncs
 	TF_BuildInfo GetBuildInfo( Client *_bot );
 	TF_HealTarget GetHealTargetInfo( Client *_bot );
 
-	bool LockPlayerPosition( GameEntity _ent, obBool _lock );
+	bool LockPlayerPosition( GameEntity _ent, bool _lock );
 
 	void ShowHudHint( GameEntity _player, int32_t _id, const char *_msg );
 	void ShowHudMenu( TF_HudMenu &_data );

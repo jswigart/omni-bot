@@ -44,7 +44,7 @@ static int GM_CDECL gmfGetLocation(gmThread *a_thread)
 		return GM_EXCEPTION;
 	}
 
-	a_thread->PushNewString(InterfaceFuncs::GetLocation(vPosition));
+	a_thread->PushNewString(gEngineFuncs->GetLocation(vPosition));
 	return GM_OK;
 }
 

@@ -111,7 +111,7 @@ public:
 
 	bool GetNavInfo( const Vector3f &pos, int32_t &_id, std::string &_name );
 
-	void AddEntityConnection( const Event_EntityConnection &_conn );
+	void AddEntityConnection( const EvEntityConnection &_conn );
 	void RemoveEntityConnection( GameEntity _ent );
 	void EntityCreated( const EntityInstance &ei );
 	void EntityDeleted( const EntityInstance &ei );

@@ -15,7 +15,6 @@
 #include "gmCall.h"
 #include "Timer.h"
 #include "RenderBuffer.h"
-#include "InterfaceFuncs.h"
 #include "System.h"
 
 //////////////////////////////////////////////////////////////////////////

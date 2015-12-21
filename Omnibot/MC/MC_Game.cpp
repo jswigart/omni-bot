@@ -15,6 +15,8 @@
 #include "BotSensoryMemory.h"
 #include "ScriptManager.h"
 
+ModularCombat_Interface* gModularCombatFuncs = 0;
+
 IGame *CreateGameInstance()
 {
 	return new MC_Game;
@@ -46,6 +48,8 @@ bool MC_Game::Init( System & system )
 
 	if ( !IGame::Init( system ) )
 		return false;
+
+	gModularCombatFuncs = dynamic_cast<ModularCombat_Interface*>( gEngineFuncs );
 
 	return true;
 }
@@ -169,13 +173,11 @@ void MC_Game::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
 {
 	IGame::InitScriptEvents( _machine, _table );
 
-	_table->Set( _machine, "PLAYER_SPREE", gmVariable( MC_EVENT_PLAYER_SPREE ) );
-	_table->Set( _machine, "PLAYER_SPREE_END", gmVariable( MC_EVENT_PLAYER_SPREE_END ) );
-
-	_table->Set( _machine, "SPREEWAR_START", gmVariable( MC_EVENT_SPREEWAR_START ) );
-	_table->Set( _machine, "SPREEWAR_END", gmVariable( MC_EVENT_SPREEWAR_END ) );
-
-	_table->Set( _machine, "LEVEL_UP", gmVariable( MC_EVENT_LEVEL_UP ) );
+	_table->Set( _machine, "PLAYER_SPREE", gmVariable( MC_MSG_PLAYER_SPREE ) );
+	_table->Set( _machine, "PLAYER_SPREE_END", gmVariable( MC_MSG_PLAYER_SPREE_END ) );
+	_table->Set( _machine, "SPREEWAR_START", gmVariable( MC_MSG_SPREEWAR_START ) );
+	_table->Set( _machine, "SPREEWAR_END", gmVariable( MC_MSG_SPREEWAR_END ) );
+	_table->Set( _machine, "LEVEL_UP", gmVariable( MC_MSG_LEVEL_UP ) );
 }
 
 void MC_Game::InitScriptBotButtons( gmMachine *_machine, gmTableObject *_table )

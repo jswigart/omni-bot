@@ -2166,7 +2166,7 @@ namespace AiState
 		const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
 		if(m && m->mProjectile.IsValid())
 		{
-		if(InterfaceFuncs::GetEntityClass(m->mProjectile) == TF_CLASSEX_CONC_GRENADE)
+		if(gEngineFuncs->GetEntityClass(m->mProjectile) == TF_CLASSEX_CONC_GRENADE)
 		{
 		mIsDone = true;
 		}

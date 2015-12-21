@@ -14,6 +14,7 @@
 #define __ET_CONFIG_H__
 
 #include "Omni-Bot_Events.h"
+#include "Base_Messages.h"
 
 enum ET_Version
 {
@@ -38,78 +39,6 @@ enum ET_Version
 	ET_VERSION_LAST,
 	ET_VERSION_LATEST = ET_VERSION_LAST - 1
 } ;
-
-enum ET_Event
-{
-	ET_EVENT_BEGIN = EVENT_NUM_EVENTS,
-	ET_EVENT_PRETRIGGER_MINE,
-	ET_EVENT_POSTTRIGGER_MINE,
-	ET_EVENT_MORTAR_IMPACT,
-
-	ET_EVENT_FIRETEAM_CREATED,
-	ET_EVENT_FIRETEAM_DISBANDED,
-	ET_EVENT_FIRETEAM_JOINED,
-	ET_EVENT_FIRETEAM_LEFT,
-	ET_EVENT_FIRETEAM_INVITED,
-	ET_EVENT_FIRETEAM_PROPOSAL,
-	ET_EVENT_FIRETEAM_WARNED,
-	ET_EVENT_RECIEVEDAMMO,
-
-	ET_EVENT_END
-};
-
-enum ET_Msg
-{
-	ET_MSG_BEGIN = GEN_MSG_END,
-
-	// actions
-	//ET_MSG_PLANTDYNAMITE,
-	//ET_MSG_PLANTMINE,
-	ET_MSG_GOTOLIMBO,
-
-	// misc query sutff
-	ET_MSG_ISMEDICNEAR,
-	ET_MSG_ISWAITINGFORMEDIC,
-	ET_MSG_REINFORCETIME,
-
-	ET_MSG_GETGUNHEALTH,
-	ET_MSG_GETGUNHEAT,
-	ET_MSG_ISGUNMOUNTED,
-	ET_MSG_ISGUNREPAIRABLE,
-	ET_MSG_MOUNTEDMG42INFO,
-
-	// weapon query stuff
-	ET_MSG_WPOVERHEATED,
-	//ET_MSG_WPGRENSPEED,
-	ET_MSG_PICKWEAPON,
-	ET_MSG_PICKWEAPON2,
-	ET_MSG_GETHINT,
-	ET_MSG_CHANGESPAWNPOINT,
-
-	ET_MSG_GHASFLAG,
-	ET_MSG_GCONSTRUCTABLE,		// check if goal is constructible at the moment
-	ET_MSG_GDYNDESTROYABLE,		// check if goal can be destroyed by dynamite
-	ET_MSG_GSATDESTROYABLE,		// check if goal can be destroyed by satchel charge
-	ET_MSG_GEXPLOSIVESTATE,		// check if state of an explosive
-	ET_MSG_GCANBEGRABBED,		// check if an entity can be grabbed
-	ET_MSG_GNUMTEAMMINES,		// check the number of team mines
-	ET_MSG_CABINETDATA,			// stats from a health/ammo cabinet
-	ET_MSG_SKILLLEVEL,			// skill level for all the skills of the bot.
-
-	ET_MSG_FIRETEAM_CREATE,
-	ET_MSG_FIRETEAM_DISBAND,
-	ET_MSG_FIRETEAM_LEAVE,
-	ET_MSG_FIRETEAM_APPLY,
-	ET_MSG_FIRETEAM_INVITE,
-	ET_MSG_FIRETEAM_WARN,
-	ET_MSG_FIRETEAM_KICK,
-	ET_MSG_FIRETEAM_PROPOSE,
-	ET_MSG_FIRETEAM_INFO,
-
-	ET_MSG_DISABLEBOTPUSH,
-
-	ET_MSG_END
-};
 
 enum ET_Weapon
 {
@@ -370,5 +299,68 @@ enum ConstructableState
 
 	CONST_BROKEN			= 2,
 };
+
+enum LoadOut
+{
+	LoadOutPrimary,
+	LoadOutSecondary,
+};
+
+struct ParamsMG42Info
+{
+	float	 mCenterFacing[ 3 ];
+	float	 mMinHorizontalArc, mMaxHorizontalArc;
+	float	 mMinVerticalArc, mMaxVerticalArc;
+};
+
+struct ParamsCabinetData
+{
+	int		 mCurrentAmount;
+	int		 mMaxAmount;
+	int		 mRate;
+};
+
+struct ParamsSkills
+{
+	int		mSkill[ ET_SKILLS_NUM_SKILLS ];
+};
+
+class EnemyTerritory_Interface : public IEngineInterface
+{
+public:
+	virtual ExplosiveState GetExplosiveState( const GameEntity ent ) = 0;
+	virtual ConstructableState GetConstructableState( const GameEntity ent, const GameEntity constructable ) = 0;
+	virtual ConstructableState IsDestroyable( const GameEntity ent, const GameEntity destroyable ) = 0;
+	virtual bool IsCarryingFlag( const GameEntity ent ) = 0;
+	virtual bool ItemCanBeGrabbed( const GameEntity ent, const GameEntity item ) = 0;
+	virtual bool TeamMineCount( const GameEntity ent, int & current, int & max ) = 0;
+	virtual bool IsWaitingForMedic( const GameEntity ent ) = 0;
+	virtual bool SelectWeapon( LoadOut load, const GameEntity ent, ET_Weapon weapon ) = 0;
+	virtual int GetReinforceTime( const GameEntity ent ) = 0;
+	virtual bool IsMedicNear( const GameEntity ent ) = 0;
+	virtual bool GoToLimbo( const GameEntity ent ) = 0;
+	virtual GameEntity GetMountedPlayerOnMG42( const GameEntity gun ) = 0;
+	virtual bool IsMountableGunRepairable( const GameEntity ent, const GameEntity gun ) = 0;
+	virtual int GetGunHealth( const GameEntity gun ) = 0;
+	virtual bool GetCurrentCursorHint( const GameEntity ent, int & type, int & val ) = 0;
+	virtual bool ChangeSpawnPoint( const GameEntity ent, int spawnpoint ) = 0;
+	virtual bool GetMg42Properties( const GameEntity ent, ParamsMG42Info &data ) = 0;
+	virtual bool GetCabinetData( GameEntity ent, ParamsCabinetData& data ) = 0;
+	virtual void DisableBotPush( const GameEntity ent, bool push ) = 0;
+	virtual bool GetSkills( const GameEntity ent, ParamsSkills& skills ) = 0;
+	
+	// Enemy Territory Specifics
+	virtual bool FireTeamCreate( const GameEntity ent ) = 0;
+	virtual bool FireTeamDisband( const GameEntity ent ) = 0;
+	virtual bool FireTeamLeave( const GameEntity ent ) = 0;
+	virtual bool FireTeamApply( const GameEntity ent, int fireteamnum ) = 0;
+	virtual bool FireTeamInvite( const GameEntity ent, GameEntity target ) = 0;
+	virtual bool FireTeamWarn( const GameEntity ent, GameEntity target ) = 0;
+	virtual bool FireTeamKick( const GameEntity ent, GameEntity target ) = 0;
+	virtual bool FireTeamPropose( const GameEntity ent, GameEntity target ) = 0;
+	virtual int FireTeamGetInfo( const GameEntity ent, int& fireTeamNum, GameEntity& leader, GameEntity members[ 64 ] ) = 0;
+};
+
+extern EnemyTerritory_Interface* gEnemyTerritoryFuncs;
 
 #endif

@@ -44,14 +44,14 @@ static int GM_CDECL gmfGetLocation(gmThread *a_thread)
 		return GM_EXCEPTION;
 	}
 
-	a_thread->PushNewString(InterfaceFuncs::GetLocation(vPosition));
+	a_thread->PushNewString(gEngineFuncs->GetLocation(vPosition));
 	return GM_OK;
 }
 
 static int GM_CDECL gmfIsBuyingAllowed(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);
-	a_thread->PushInt(InterfaceFuncs::IsBuyingAllowed() ? 1 : 0);
+	a_thread->PushInt(gEngineFuncs->IsBuyingAllowed() ? 1 : 0);
 	return GM_OK;
 }
 
@@ -68,7 +68,7 @@ static int GM_CDECL gmfGetCash(gmThread *a_thread)
 		return GM_EXCEPTION;
 	}
 
-	a_thread->PushFloat(InterfaceFuncs::GetPlayerCash(native->GetGameEntity()));
+	a_thread->PushFloat(gEngineFuncs->GetPlayerCash(native->GetGameEntity()));
 	return GM_OK;
 }
 
@@ -83,7 +83,7 @@ static int GM_CDECL gmfBuy(gmThread *a_thread)
 		return GM_EXCEPTION;
 	}
 
-	a_thread->PushInt(InterfaceFuncs::BuySomething(native->GetGameEntity(), itm) ? 1 : 0);
+	a_thread->PushInt(gEngineFuncs->BuySomething(native->GetGameEntity(), itm) ? 1 : 0);
 	return GM_OK;
 }
 

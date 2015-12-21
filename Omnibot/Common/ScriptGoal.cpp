@@ -8,6 +8,7 @@
 
 #include "BotBaseStates.h"
 #include "BotPathing.h"
+#include "Base_Messages.h"
 #include "ScriptManager.h"
 #include "IGameManager.h"
 #include "BotWeaponSystem.h"
@@ -290,12 +291,12 @@ namespace AiState
 		if ( GetSourceThread() == GM_INVALID_THREAD )
 		{
 			if ( mActiveThread[ ON_UPDATE ].IsActive() )
-				pMachine->Signal( gmVariable( PATH_SUCCESS ), mActiveThread[ ON_UPDATE ].ThreadId(), GM_INVALID_THREAD );
+				pMachine->Signal( gmVariable( MSG_PATH_SUCCESS ), mActiveThread[ ON_UPDATE ].ThreadId(), GM_INVALID_THREAD );
 			// TODO: send it to forked threads also?
 		}
 		else
 		{
-			pMachine->Signal( gmVariable( PATH_SUCCESS ), GetSourceThread(), GM_INVALID_THREAD );
+			pMachine->Signal( gmVariable( MSG_PATH_SUCCESS ), GetSourceThread(), GM_INVALID_THREAD );
 		}
 	}
 
@@ -305,12 +306,12 @@ namespace AiState
 		if ( GetSourceThread() == GM_INVALID_THREAD )
 		{
 			if ( mActiveThread[ ON_UPDATE ].IsActive() )
-				pMachine->Signal( gmVariable( PATH_FAILED ), mActiveThread[ ON_UPDATE ].ThreadId(), GM_INVALID_THREAD );
+				pMachine->Signal( gmVariable( MSG_PATH_FAILED ), mActiveThread[ ON_UPDATE ].ThreadId(), GM_INVALID_THREAD );
 			// TODO: send it to forked threads also?
 		}
 		else
 		{
-			pMachine->Signal( gmVariable( PATH_FAILED ), GetSourceThread(), GM_INVALID_THREAD );
+			pMachine->Signal( gmVariable( MSG_PATH_FAILED ), GetSourceThread(), GM_INVALID_THREAD );
 		}
 	}
 
@@ -408,9 +409,9 @@ namespace AiState
 		}
 	}
 
-	void ScriptGoal::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void ScriptGoal::ProcessEvent( const Message & message, CallbackParameters &_cb )
 	{
-		Signal( gmVariable( _message.GetMessageId() ) );
+		Signal( gmVariable( message.Id() ) );
 	}
 
 	void ScriptGoal::Signal( const gmVariable &_var )
@@ -782,10 +783,9 @@ namespace AiState
 					mWatchEntities.mEntry[ emptySlot ].mEnt = mr->GetEntity();
 					mWatchEntities.mEntry[ emptySlot ].mTimeStamp = IGame::GetTime();
 
-					Event_EntEnterRadius data = { mr->GetEntity() };
-					GetClient()->SendEvent(
-						MessageHelper( MESSAGE_ENT_ENTER_RADIUS, &data, sizeof( data ) ),
-						GetNameHash() );
+					EvEntEnterRadius::Msg event;
+					event.mData.mEntity = mr->GetEntity();
+					GetClient()->SendEvent( event );
 				}
 			}
 
@@ -795,10 +795,9 @@ namespace AiState
 				if ( mWatchEntities.mEntry[ i ].mEnt.IsValid() &&
 					mWatchEntities.mEntry[ i ].mTimeStamp != IGame::GetTime() )
 				{
-					Event_EntLeaveRadius data = { mWatchEntities.mEntry[ i ].mEnt };
-					GetClient()->SendEvent(
-						MessageHelper( MESSAGE_ENT_LEAVE_RADIUS, &data, sizeof( data ) ),
-						GetNameHash() );
+					EvEntLeaveRadius::Msg event;
+					event.mData.mEntity = mWatchEntities.mEntry[ i ].mEnt;
+					GetClient()->SendEvent( event );
 
 					mWatchEntities.mEntry[ i ].Reset();
 				}
@@ -868,10 +867,10 @@ namespace AiState
 			{
 				if ( newInRadius.find( *setIt ) == newInRadius.end() )
 				{
-					MessageHelper hlpr( MESSAGE_MG_LEAVE_RADIUS );
-					CallbackParameters cb( hlpr.GetMessageId(), pMachine );
+					EvEntLeaveRadius::Msg event;
+					CallbackParameters cb( event.Id(), pMachine );
 					cb.AddUserObj( "MapGoal", ( *setIt )->GetScriptObject( pMachine ) );
-					InternalProcessEvent( hlpr, cb );
+					InternalProcessEvent( event, cb );
 
 					MapGoalPtr mg = *setIt;
 					++setIt;
@@ -893,11 +892,11 @@ namespace AiState
 				++newIt )
 			{
 				mMapGoalInRadius.mInRadius.insert( *newIt );
-
-				MessageHelper hlpr( MESSAGE_MG_ENTER_RADIUS );
-				CallbackParameters cb( hlpr.GetMessageId(), pMachine );
+				
+				EvEntEnterRadius::Msg event;
+				CallbackParameters cb( event.Id(), pMachine );
 				cb.AddUserObj( "MapGoal", ( *newIt )->GetScriptObject( pMachine ) );
-				InternalProcessEvent( hlpr, cb );
+				InternalProcessEvent( event, cb );
 			}
 		}
 	}

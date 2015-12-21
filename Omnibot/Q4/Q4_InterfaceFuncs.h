@@ -11,7 +11,6 @@
 #ifndef __Q4_INTERFACEFUNCS_H__
 #define __Q4_INTERFACEFUNCS_H__
 
-#include "InterfaceFuncs.h"
 #include "Q4_Messages.h"
 #include "common.h"
 

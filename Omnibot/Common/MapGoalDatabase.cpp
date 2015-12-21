@@ -134,7 +134,7 @@ void MapGoalDatabase::LoadMapGoalProtos()
 		if ( desc != NULL )
 		{
 			const google::protobuf::Message* msg = mMessageFactory.GetPrototype( desc );
-
+			msg;
 			EngineFuncs::ConsoleMessage( va( "Registered Goal Type '%s'", desc->name().c_str() ).c_str() );
 		}
 	}

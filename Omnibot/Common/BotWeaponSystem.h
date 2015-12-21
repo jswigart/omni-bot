@@ -48,11 +48,11 @@ namespace AiState
 
 		AttackTarget();
 	private:
-		WeaponLimits mWeaponLimits;
-		Vector3f	 mAimPosition;
-		uint32_t	 mCurrentWeaponHash;
-		bool		 mShootTheBastard : 1;
-		bool		 mTargetExceedsWeaponLimits : 1;
+		ParamsWeaponLimits	mWeaponLimits;
+		Vector3f			mAimPosition;
+		uint32_t			mCurrentWeaponHash;
+		bool				mShootTheBastard : 1;
+		bool				mTargetExceedsWeaponLimits : 1;
 	};
 
 	// class: WeaponSystem
@@ -305,20 +305,13 @@ namespace AiState
 		{
 			MaxWeaponRequests = 8
 		};
-		WeaponRequest mWeaponRequests[ MaxWeaponRequests ];
-		int			 mCurrentRequestOwner;
+		WeaponRequest	mWeaponRequests[ MaxWeaponRequests ];
+		int				mCurrentRequestOwner;
 
 		// var: .mCurrentWeapon
 		//		The actual current weapon
-		WeaponPtr	 mCurrentWeapon;
-
-		// function: _UpdateWeaponFromGame
-		//		Asks the game what weapon the bot currently has
-		//		We do this because the game ultimately has authority
-		//		and for various reasons the server may not always allow the
-		//		bot to have the weapon it asks for from the game.
-		WeaponStatus _UpdateWeaponFromGame();
-
+		WeaponPtr		mCurrentWeapon;
+		
 		// function: _UpdateCurrentWeapon
 		//		Chooses the current weapon based on the result of <_UpdateWeaponFromGame>
 		void _UpdateCurrentWeapon( FireMode _mode );

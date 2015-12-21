@@ -13,7 +13,6 @@
 #include "ET_FilterClosest.h"
 #include "ET_Messages.h"
 #include "ET_BaseStates.h"
-#include "ET_InterfaceFuncs.h"
 #include "ET_Game.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -46,16 +45,16 @@ class Incapacitated : public StateChild
 public:
 	float GetPriority()
 	{
-		return !InterfaceFuncs::IsAlive( GetClient()->GetGameEntity() ) ? 1.f : 0.f;
+		return !GetClient()->HasEntityFlag( ENT_FLAG_ALIVE ) ? 1.f : 0.f;
 	}
 
 	State::StateStatus Update( float fDt )
 	{
-		if ( InterfaceFuncs::GetReinforceTime( GetClient() ) < 1.0f )
+		if ( gEnemyTerritoryFuncs->GetReinforceTime( GetClient()->GetGameEntity() ) < 1000 )
 		{
-			if ( !InterfaceFuncs::IsMedicNear( GetClient() ) )
+			if ( !gEnemyTerritoryFuncs->IsMedicNear( GetClient()->GetGameEntity() ) )
 			{
-				InterfaceFuncs::GoToLimbo( GetClient() );
+				gEnemyTerritoryFuncs->GoToLimbo( GetClient()->GetGameEntity() );
 			}
 		}
 		GetClient()->SetMovementVector( Vector3f::ZERO );
@@ -118,95 +117,69 @@ void ET_Client::UpdateBotInput()
 	Client::UpdateBotInput();
 }
 
-void ET_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+void ET_Client::ProcessEvent( const Message & message, CallbackParameters & cb )
 {
-	switch ( _message.GetMessageId() )
+	switch ( message.Id() )
 	{
-		HANDLER( ET_EVENT_PRETRIGGER_MINE )
-			HANDLER( ET_EVENT_POSTTRIGGER_MINE )
+		CASE_MSG( EvMineArmed )
 		{
-			_cb.CallScript();
-			const Event_TriggerMine_ET *m = _message.Get<Event_TriggerMine_ET>();
-			_cb.AddEntity( "mine_entity", m->mMineEntity );
-
-			/*EntityInfoPair pr;
-			pr.first = m->mMineEntity;
-			GetSensoryMemory()->UpdateWithTouchSource(pr);*/
-
 			BitFlag64 b;
 			b.SetFlag( BOT_BUTTON_SPRINT, true );
 			HoldButton( b, 3000 );
 			break;
 		}
-		HANDLER( ET_EVENT_MORTAR_IMPACT )
+		CASE_MSG( EvFireTeamCreated )
 		{
-			_cb.CallScript();
-			const Event_MortarImpact_ET *m = _message.Get<Event_MortarImpact_ET>();
-			_cb.AddVector( "position", m->mPosition[ 0 ], m->mPosition[ 1 ], m->mPosition[ 2 ] );
+			cb.CallScript();
+			cb.AddEntity( "teamleader", msg->mTeamLeader );
+			cb.AddInt( "fireteamnum", msg->mFireTeamNum );
 			break;
 		}
-		HANDLER( ET_EVENT_FIRETEAM_CREATED )
+		CASE_MSG( EvFireTeamDisbanded )
 		{
-			_cb.CallScript();
-			const Event_FireTeamCreated *m = _message.Get<Event_FireTeamCreated>();
-			_cb.AddInt( "fireteamnum", m->mFireTeamNum );
+			cb.CallScript();
+			cb.AddEntity( "teamleader", msg->mTeamLeader );
+			cb.AddInt( "fireteamnum", msg->mFireTeamNum );
 			break;
 		}
-		HANDLER( ET_EVENT_FIRETEAM_DISBANDED )
+		CASE_MSG( EvFireTeamJoined )
 		{
-			_cb.CallScript();
-			const Event_FireTeamDisbanded *m = _message.Get<Event_FireTeamDisbanded>();
-			_cb.AddInt( "fireteamnum", m->mFireTeamNum );
+			cb.CallScript();
+			cb.AddEntity( "teamleader", msg->mTeamLeader );
+			cb.AddInt( "fireteamnum", msg->mFireTeamNum );
 			break;
 		}
-		HANDLER( ET_EVENT_FIRETEAM_JOINED )
+		CASE_MSG( EvFireTeamLeft )
 		{
-			_cb.CallScript();
-			const Event_FireTeamJoined *m = _message.Get<Event_FireTeamJoined>();
-			_cb.AddEntity( "teamleader", m->mTeamLeader );
-			_cb.AddInt( "fireteamnum", m->mFireTeamNum );
+			cb.CallScript();
+			cb.AddEntity( "teamleader", msg->mTeamLeader );
+			cb.AddInt( "fireteamnum", msg->mFireTeamNum );
 			break;
 		}
-		HANDLER( ET_EVENT_FIRETEAM_LEFT )
+		CASE_MSG( EvFireTeamInvited )
 		{
-			_cb.CallScript();
-			const Event_FireTeamLeft *m = _message.Get<Event_FireTeamLeft>();
-			_cb.AddInt( "fireteamnum", m->mFireTeamNum );
+			cb.CallScript();
+			cb.AddEntity( "invitor", msg->mInviter );
+			cb.AddInt( "fireteamnum", msg->mFireTeamNum );
 			break;
 		}
-		HANDLER( ET_EVENT_FIRETEAM_INVITED )
+		CASE_MSG( EvFireTeamProposal )
 		{
-			_cb.CallScript();
-			const Event_FireTeamInvited *m = _message.Get<Event_FireTeamInvited>();
-			_cb.AddEntity( "teamleader", m->mTeamLeader );
-			_cb.AddInt( "fireteamnum", m->mFireTeamNum );
+			cb.CallScript();
+			cb.AddEntity( "teamleader", msg->mTeamLeader );
+			cb.AddEntity( "invitee", msg->mInvitee );
+			cb.AddInt( "fireteamnum", msg->mFireTeamNum );
 			break;
 		}
-		HANDLER( ET_EVENT_FIRETEAM_PROPOSAL )
+		CASE_MSG( EvFireTeamWarning )
 		{
-			_cb.CallScript();
-			const Event_FireTeamProposal *m = _message.Get<Event_FireTeamProposal>();
-			_cb.AddEntity( "invitee", m->mInvitee );
-			_cb.AddInt( "fireteamnum", m->mFireTeamNum );
-			break;
-		}
-		HANDLER( ET_EVENT_FIRETEAM_WARNED )
-		{
-			_cb.CallScript();
-			const Event_FireTeamWarning *m = _message.Get<Event_FireTeamWarning>();
-			_cb.AddEntity( "warnedby", m->mWarnedBy );
-			_cb.AddInt( "fireteamnum", m->mFireTeamNum );
-			break;
-		}
-		HANDLER( ET_EVENT_RECIEVEDAMMO )
-		{
-			const Event_Ammo *m = _message.Get<Event_Ammo>();
-			_cb.CallScript();
-			_cb.AddEntity( "who", m->mWhoDoneIt );
+			cb.CallScript();
+			cb.AddEntity( "warnedby", msg->mWarnedBy );
+			cb.AddInt( "fireteamnum", msg->mFireTeamNum );
 			break;
 		}
 	}
-	Client::ProcessEvent( _message, _cb );
+	Client::ProcessEvent( message, cb );
 }
 
 void ET_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
@@ -243,12 +216,10 @@ void ET_Client::SendVoiceMacro( int _macroId )
 	ET_VoiceMacros::SendVoiceMacro( this, _macroId );
 }
 
-int ET_Client::HandleVoiceMacroEvent( const MessageHelper &_message )
-{
-	const Event_VoiceMacro *m = _message.Get<Event_VoiceMacro>();
-
-	int iVoiceId = ET_VoiceMacros::GetVChatId( m->mMacroString );
-	switch ( iVoiceId )
+int ET_Client::HandleVoiceMacroEvent( const EvVoiceMacro* msg )
+{	
+	int voiceId = ET_VoiceMacros::GetVChatId( msg->mMessage );
+	switch ( voiceId )
 	{
 		/*case VCHAT_TEAM_PATHCLEARED:
 		case VCHAT_TEAM_ENEMYWEAK:
@@ -265,7 +236,7 @@ int ET_Client::HandleVoiceMacroEvent( const MessageHelper &_message )
 		case VCHAT_TEAM_ENEMYDISGUISED:*/
 		case VCHAT_TEAM_MEDIC:
 		{
-			if ( m->mWhoSaidIt.IsValid() && ( GetClass() == ET_CLASS_MEDIC ) )
+			if ( msg->mWhoSaidIt.IsValid() && ( GetClass() == ET_CLASS_MEDIC ) )
 			{
 				// FIXME
 				/*BotBrain::EvaluatorPtr eval(new ET_Evaluator_RequestGiveHealth(this, m->mWhoSaidIt));
@@ -276,7 +247,7 @@ int ET_Client::HandleVoiceMacroEvent( const MessageHelper &_message )
 		}
 		case VCHAT_TEAM_NEEDAMMO:
 		{
-			if ( m->mWhoSaidIt.IsValid() && ( GetClass() == ET_CLASS_FIELDOPS ) )
+			if ( msg->mWhoSaidIt.IsValid() && ( GetClass() == ET_CLASS_FIELDOPS ) )
 			{
 				// FIXME
 				/*BotBrain::EvaluatorPtr eval(new ET_Evaluator_RequestGiveAmmo(this, m->mWhoSaidIt));
@@ -334,7 +305,7 @@ int ET_Client::HandleVoiceMacroEvent( const MessageHelper &_message )
 		case VCHAT_GLOBAL_HOLDFIRE:
 		case VCHAT_GLOBAL_GOODGAME:*/
 	}
-	return iVoiceId;
+	return voiceId;
 }
 
 void ET_Client::ProcessGotoNode( const PathInterface::PathCorner corners[ 2 ], const size_t numEdges )
@@ -401,12 +372,12 @@ float ET_Client::GetGameVar( GameVar _var ) const
 
 bool ET_Client::DoesBotHaveFlag( MapGoalPtr _mapgoal )
 {
-	return InterfaceFuncs::HasFlag( this );
+	return gEnemyTerritoryFuncs->IsCarryingFlag( GetGameEntity() );
 }
 
 bool ET_Client::IsFlagGrabbable( MapGoalPtr _mapgoal )
 {
-	return InterfaceFuncs::ItemCanBeGrabbed( this, _mapgoal->GetEntity() );
+	return gEnemyTerritoryFuncs->ItemCanBeGrabbed( GetGameEntity(), _mapgoal->GetEntity() );
 }
 
 bool ET_Client::CanBotSnipe()
@@ -458,12 +429,11 @@ bool ET_Client::GetSniperWeapon( int &nonscoped, int &scoped )
 
 bool ET_Client::GetSkills( gmMachine *machine, gmTableObject *tbl )
 {
-	ET_PlayerSkills data = {};
-	MessageHelper msg( ET_MSG_SKILLLEVEL, &data, sizeof( data ) );
-	if ( SUCCESS( InterfaceMsg( msg, GetGameEntity() ) ) )
+	ParamsSkills skills;
+	if ( gEnemyTerritoryFuncs->GetSkills( GetGameEntity(), skills ) )
 	{
 		for ( int i = 0; i < ET_SKILLS_NUM_SKILLS; ++i )
-			tbl->Set( machine, i, gmVariable( data.mSkill[ i ] ) );
+			tbl->Set( machine, i, gmVariable( skills.mSkill[ i ] ) );
 		return true;
 	}
 	return false;

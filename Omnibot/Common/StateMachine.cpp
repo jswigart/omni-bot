@@ -10,7 +10,6 @@
 #include "StateMachine.h"
 #include "BotTargetingSystem.h"
 #include "BotWeaponSystem.h"
-#include "InterfaceFuncs.h"
 #include "BlackBoardItems.h"
 #include "gmCall.h"
 
@@ -429,33 +428,33 @@ void State::SignalThreads( const gmVariable &_signal )
 		pState->SignalThreads( _signal );
 }
 
-void State::CheckForCallbacks( const MessageHelper &_message, CallbackParameters &_cb )
+void State::CheckForCallbacks( const Message & message, CallbackParameters &_cb )
 {
 	if ( IsRoot() || IsActive() || AlwaysRecieveEvents() )
-		InternalProcessEvent( _message, _cb );
+		InternalProcessEvent( message, _cb );
 
 	for ( State *pState = mFirstChild; pState; pState = pState->mSibling )
-		pState->CheckForCallbacks( _message, _cb );
+		pState->CheckForCallbacks( message, _cb );
 }
 
 void State::InternalSignal( const gmVariable &_signal )
 {
 }
 
-void State::InternalProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+void State::InternalProcessEvent( const Message & message, CallbackParameters &_cb )
 {
-	SignalThreads( gmVariable( _message.GetMessageId() ) );
+	SignalThreads( gmVariable( message.Id() ) );
 
-	/*switch(_message.GetMessageId())
+	/*switch(message.GetMessageId())
 	{
 	HANDLER(SYSTEM_THREAD_CREATED)
 	{
-	const Event_SystemThreadCreated *m = _message.Get<Event_SystemThreadCreated>();
+	const Event_SystemThreadCreated *m = message.Get<Event_SystemThreadCreated>();
 	break;
 	}
 	HANDLER(SYSTEM_THREAD_DESTROYED)
 	{
-	const Event_SystemThreadDestroyed *m = _message.Get<Event_SystemThreadDestroyed>();
+	const Event_SystemThreadDestroyed *m = message.Get<Event_SystemThreadDestroyed>();
 	RemoveThreadReference(m->mThreadId);
 	break;
 	}
@@ -477,7 +476,7 @@ void State::InternalProcessEvent( const MessageHelper &_message, CallbackParamet
 				AddForkThreadId( ThreadId );
 		}
 	}
-	ProcessEvent( _message, _cb );
+	ProcessEvent( message, _cb );
 }
 
 void State::AddForkThreadId( int _threadId )
@@ -685,7 +684,7 @@ State::noSelectReason_t State::CanBeSelected()
 
 				if ( mOnlyTargetTeam.AnyFlagSet() )
 				{
-					if ( !mOnlyTargetTeam.CheckFlag( InterfaceFuncs::GetEntityTeam( target->GetEntity() ) ) )
+					if ( !mOnlyTargetTeam.CheckFlag( gEngineFuncs->GetEntityTeam( target->GetEntity() ) ) )
 						return NoSelectReason_OnlyTargetTeam;
 				}
 

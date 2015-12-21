@@ -15,7 +15,6 @@
 
 #include "HL2DM_Game.h"
 #include "HL2DM_Client.h"
-#include "HL2DM_InterfaceFuncs.h"
 
 #define CHECK_THIS_BOT() \
 	HL2DM_Client *native = static_cast<HL2DM_Client*>(gmBot::GetThisObject( a_thread )); \
@@ -45,7 +44,7 @@ static int GM_CDECL gmfCanPhysPickup( gmThread *a_thread )
 	GameEntity pickup;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( pickup, 0 );
 
-	a_thread->PushInt( InterfaceFuncs::CanPhysPickup( native->GetGameEntity(), pickup ) ? 1 : 0 );
+	a_thread->PushInt( gHL2DMFuncs->CanPhysPickup( native->GetGameEntity(), pickup ) ? 1 : 0 );
 	return GM_OK;
 }
 
@@ -58,15 +57,16 @@ static int GM_CDECL gmfPhysGunInfo( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_TABLE_PARAM( statTable, 0, 0 );
 
-	HL2DM_PhysGunInfo info = {};
-	if ( InterfaceFuncs::GetPhysGunInfo( native->GetGameEntity(), info ) )
+	GameEntity heldEntity;
+	float launchSpeed;
+	if ( gHL2DMFuncs->GetPhysGunInfo( native->GetGameEntity(), heldEntity, launchSpeed ) )
 	{
 		if ( !statTable )
 			a_thread->GetMachine()->AllocTableObject();
 
-		statTable->Set( a_thread->GetMachine(), "HeldObject", gmVariable::EntityVar( info.mHeldEntity.AsInt() ) );
+		statTable->Set( a_thread->GetMachine(), "HeldObject", gmVariable::EntityVar( heldEntity.AsInt() ) );
 		//statTable->Set(a_thread->GetMachine(),"PullObject",gmVariable::EntityVar(info.mPullingEntity.AsInt()));
-		statTable->Set( a_thread->GetMachine(), "LaunchSpeed", gmVariable( info.mLaunchSpeed ) );
+		statTable->Set( a_thread->GetMachine(), "LaunchSpeed", gmVariable( launchSpeed ) );
 		a_thread->PushTable( statTable );
 	}
 	return GM_OK;

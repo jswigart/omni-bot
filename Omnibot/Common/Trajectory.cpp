@@ -155,7 +155,7 @@ namespace Trajectory
 		{
 			bool Hit = false;
 			if ( mTraceBounce &&
-				EngineFuncs::TraceLine( tr, vlast, pos, 0, TR_MASK_SOLID, Utils::GetLocalGameId(), False ) &&
+				EngineFuncs::TraceLine( tr, vlast, pos, 0, TR_MASK_SOLID, Utils::GetLocalGameId(), false ) &&
 				tr.mFraction < 1.f )
 			{
 				Hit = true;

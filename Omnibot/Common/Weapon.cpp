@@ -11,7 +11,6 @@
 #include "ScriptManager.h"
 #include "MemoryRecord.h"
 #include "TargetInfo.h"
-#include "InterfaceFuncs.h"
 #include "BotTargetingSystem.h"
 
 #include "gmbinder2/gmbinder2.h"
@@ -903,9 +902,10 @@ void Weapon::Shoot( FireMode _mode, const TargetInfo *_target )
 		bool bFire = true;
 		if ( GetFireMode( _mode ).CheckFlag( ManageHeat ) )
 		{
-			float fCurrentHeat = 0.f, fMaxHeat = 0.f;
-			float fRatio = InterfaceFuncs::WeaponHeat( mClient, _mode, fCurrentHeat, fMaxHeat );
-			GetFireMode( _mode ).mHeatController.Update( 0.7f, fRatio, IGame::GetDeltaTimeSecs() );
+			float heatCur = 0.f, heatMax = 0.f;
+			gEngineFuncs->GetWeaponHeat( mClient->GetGameEntity(), GetWeaponID(), _mode, heatCur, heatMax );
+			const float heatRatio = heatCur / ( heatMax > 0.0f ? heatMax : 1.0f );
+			GetFireMode( _mode ).mHeatController.Update( 0.7f, heatRatio, IGame::GetDeltaTimeSecs() );
 			bFire = Mathf::Sign( GetFireMode( _mode ).mHeatController.GetControlValue() ) < 0.f ? false : true;
 		}
 
@@ -1111,31 +1111,31 @@ float Weapon::CalculateDesirability( const TargetInfo &_targetinfo )
 
 //////////////////////////////////////////////////////////////////////////
 
-bool Weapon::_MeetsRequirements( FireMode _mode )
+bool Weapon::_MeetsRequirements( FireMode mode )
 {
-	if ( !GetFireMode( _mode ).CheckFlag( Waterproof ) && mClient->HasEntityFlag( ENT_FLAG_UNDERWATER ) )
+	if ( !GetFireMode( mode ).CheckFlag( Waterproof ) && mClient->HasEntityFlag( ENT_FLAG_UNDERWATER ) )
 		return false;
 
-	UpdateAmmo( _mode );
-	if ( GetFireMode( _mode ).CheckFlag( RequiresAmmo ) && !GetFireMode( _mode ).HasAmmo() )
+	UpdateAmmo( mode );
+	if ( GetFireMode( mode ).CheckFlag( RequiresAmmo ) && !GetFireMode( mode ).HasAmmo() )
 		return false;
 
-	if ( GetFireMode( _mode ).mDelayChooseTime > IGame::GetTime() )
+	if ( GetFireMode( mode ).mDelayChooseTime > IGame::GetTime() )
 		return false;
 
-	if ( !InterfaceFuncs::IsWeaponCharged( mClient, GetWeaponID(), _mode ) )
+	if ( !gEngineFuncs->IsWeaponCharged( mClient->GetGameEntity(), GetWeaponID(), mode ) )
 		return false;
 
 	return true;
 }
 
-bool Weapon::_MeetsRequirements( FireMode _mode, const TargetInfo &_targetinfo )
+bool Weapon::_MeetsRequirements( FireMode mode, const TargetInfo &_targetinfo )
 {
-	if ( !_MeetsRequirements( _mode ) )
+	if ( !_MeetsRequirements( mode ) )
 		return false;
-	if ( GetFireMode( _mode ).CheckFlag( RequireShooterOutside ) && !InterfaceFuncs::IsOutSide( mClient->GetPosition() ) )
+	if ( GetFireMode( mode ).CheckFlag( RequireShooterOutside ) && !gEngineFuncs->IsOutSide( mClient->GetPosition() ) )
 		return false;
-	if ( GetFireMode( _mode ).CheckFlag( RequireTargetOutside ) && !InterfaceFuncs::IsOutSide( _targetinfo.mLastPosition ) )
+	if ( GetFireMode( mode ).CheckFlag( RequireTargetOutside ) && !gEngineFuncs->IsOutSide( _targetinfo.mLastPosition ) )
 		return false;
 	return true;
 }

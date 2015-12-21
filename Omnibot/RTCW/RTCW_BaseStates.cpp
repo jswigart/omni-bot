@@ -96,7 +96,7 @@ namespace AiState
 
 	float CallArtillery::GetPriority()
 	{
-		if ( !InterfaceFuncs::IsWeaponCharged( GetClient(), RTCW_WP_BINOCULARS, Primary ) )
+		if ( !gEngineFuncs->IsWeaponCharged( GetClient(), RTCW_WP_BINOCULARS, Primary ) )
 			return 0.f;
 
 		if ( IsActive() )

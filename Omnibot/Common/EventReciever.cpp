@@ -18,20 +18,20 @@ EventReciever::~EventReciever()
 {
 }
 
-void EventReciever::SendEvent(const MessageHelper &_message, uint32_t _targetState)
+void EventReciever::SendEvent( const Message & message, uint32_t  targetState )
 {
-	ProcessEventImpl(_message,_targetState);
+	ProcessEventImpl( message, targetState );
 }
 
-void EventReciever::ProcessEventImpl(const MessageHelper &_message, uint32_t _targetState)
+void EventReciever::ProcessEventImpl( const Message & message, uint32_t  targetState )
 {
 	// Subclasses can override this function to perform additional stuff
 	gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-	CallbackParameters cb(_message.GetMessageId(), pMachine);
-	ProcessEvent(_message, cb);
+	CallbackParameters cb( message.Id(), pMachine );
+	ProcessEvent( message, cb );
 }
 
-void EventReciever::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
+void EventReciever::ProcessEvent( const Message & message, CallbackParameters & cb )
 {
-	_message; _cb;
+	message; cb;
 }

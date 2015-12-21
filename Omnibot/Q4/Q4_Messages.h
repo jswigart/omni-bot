@@ -34,19 +34,19 @@ struct Q4_PlayerCash
 
 struct Q4_IsBuyingAllowed
 {
-	obBool mBuyingAllowed;
+	bool mBuyingAllowed;
 };
 
 struct Q4_ItemBuy
 {
 	int	 mItem;
-	obBool mSuccess;
+	bool mSuccess;
 };
 
 struct Q4_CanPickUp
 {
 	GameEntity mEntity;
-	obBool	 mCanPickUp;
+	bool	 mCanPickUp;
 };
 //////////////////////////////////////////////////////////////////////////
 

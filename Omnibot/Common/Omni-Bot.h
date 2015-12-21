@@ -17,7 +17,6 @@
 
 #include "Omni-Bot_Types.h"
 #include "Omni-Bot_Events.h"
-#include "MessageHelper.h"
 #include "IEngineInterface.h"
 
 class OmnibotFunctions : public OmnibotFunctionInterface
@@ -29,11 +28,10 @@ class OmnibotFunctions : public OmnibotFunctionInterface
 	virtual void ConsoleCommand( const Arguments &args );
 
 	virtual void SendTrigger( const TriggerInfo & triggerInfo );
-	virtual void AddBlackboardRecord( BlackBoard_Key  type, int posterID, int targetID, obUserData * data );
+	virtual void AddBlackboardRecord( BlackBoardKey  type, int posterID, int targetID, obUserData * data );
 
 	// events
-	virtual void SendEvent( int dest, const MessageHelper & message );
-	virtual void SendGlobalEvent( const MessageHelper & message );
+	virtual void SendEvent( const Message & message, GameEntity dest = GameEntity() );
 	
 	virtual void EntityAdded( GameEntity ent, const EntityInfo & entInfo );
 	virtual void EntityDestroyed( GameEntity ent );

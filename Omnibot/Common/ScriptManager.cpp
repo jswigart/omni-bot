@@ -1021,9 +1021,9 @@ void ScriptManager::CheckLiveUpdates()
 			if ( modTime > entry.FileModTime )
 			{
 				// send an event and update the local time.
-				Event_SystemScriptUpdated d = { i };
-				MessageHelper evt( SYSTEM_SCRIPT_CHANGED, &d, sizeof( d ) );
-				System::mInstance->mGame->DispatchGlobalEvent( evt );
+				EvScriptChanged::Msg event;
+				event.mData.mScriptKey = i;
+				System::mInstance->mGame->DispatchEvent( event );
 
 				entry.FileModTime = modTime;
 			}

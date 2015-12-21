@@ -17,7 +17,6 @@
 #include "BotSteeringSystem.h"
 #include "ScriptGoal.h"
 #include "PathPlannerBase.h"
-#include "InterfaceFuncs.h"
 #include "IGameManager.h"
 #include "gmCall.h"
 
@@ -117,9 +116,9 @@ const GameVars &IGame::GetGameVars() const
 	return mGameVars;
 }
 
-bool IGame::CheckVersion( int _version )
+bool IGame::CheckVersion( int version )
 {
-	return _version == GetGameVars().mGameVersion;
+	return version == GetGameVars().mGameVersion;
 }
 
 GoalManager *IGame::AllocGoalManager()
@@ -372,57 +371,61 @@ static const IntEnum Generic_RoleEnum [] =
 	IntEnum( "ESCORT", 16 ),
 };
 
-void IGame::GetRoleEnumeration( const IntEnum *&_ptr, int &num )
+void IGame::GetRoleEnumeration( const IntEnum *&ptr, int &num )
 {
 	num = sizeof( Generic_RoleEnum ) / sizeof( Generic_RoleEnum[ 0 ] );
-	_ptr = Generic_RoleEnum;
+	ptr = Generic_RoleEnum;
 }
 
 // package: Common Script Events
 //		Common Events for Every Game.
 void IGame::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
 {
-	_table->Set( _machine, "DISCONNECTED", gmVariable( GAME_CLIENTDISCONNECTED ) );
-	_table->Set( _machine, "START_GAME", gmVariable( GAME_STARTGAME ) );
-	_table->Set( _machine, "END_GAME", gmVariable( GAME_ENDGAME ) );
-	_table->Set( _machine, "NEW_ROUND", gmVariable( GAME_NEWROUND ) );
-	_table->Set( _machine, "END_ROUND", gmVariable( GAME_ENDROUND ) );
-	_table->Set( _machine, "GOAL_SUCCESS", gmVariable( GOAL_SUCCESS ) );
-	_table->Set( _machine, "GOAL_FAILED", gmVariable( GOAL_FAILED ) );
-	_table->Set( _machine, "GOAL_ABORTED", gmVariable( GOAL_ABORTED ) );
-	_table->Set( _machine, "PATH_SUCCESS", gmVariable( PATH_SUCCESS ) );
-	_table->Set( _machine, "PATH_FAILED", gmVariable( PATH_FAILED ) );
-	_table->Set( _machine, "SCRIPTMSG", gmVariable( MESSAGE_SCRIPTMSG ) );
-	_table->Set( _machine, "SPAWNED", gmVariable( MESSAGE_SPAWN ) );
-	_table->Set( _machine, "CHANGETEAM", gmVariable( MESSAGE_CHANGETEAM ) );
-	_table->Set( _machine, "CHANGECLASS", gmVariable( MESSAGE_CHANGECLASS ) );
-	_table->Set( _machine, "INVALID_TEAM", gmVariable( MESSAGE_INVALIDTEAM ) );
-	_table->Set( _machine, "INVALID_CLASS", gmVariable( MESSAGE_INVALIDCLASS ) );
-	_table->Set( _machine, "DEATH", gmVariable( MESSAGE_DEATH ) );
-	_table->Set( _machine, "HEALED", gmVariable( MESSAGE_HEALED ) );
-	_table->Set( _machine, "REVIVED", gmVariable( MESSAGE_REVIVED ) );
-	_table->Set( _machine, "ADDWEAPON", gmVariable( MESSAGE_ADDWEAPON ) );
-	_table->Set( _machine, "REMOVEWEAPON", gmVariable( MESSAGE_REMOVEWEAPON ) );
-	_table->Set( _machine, "REFRESH_WEAPON", gmVariable( MESSAGE_REFRESHWEAPON ) );
-	_table->Set( _machine, "KILLEDSOMEONE", gmVariable( MESSAGE_KILLEDSOMEONE ) );
-	_table->Set( _machine, "PROXIMITY_TRIGGER", gmVariable( MESSAGE_PROXIMITY_TRIGGER ) );
-	_table->Set( _machine, "ENT_ENTER_RADIUS", gmVariable( MESSAGE_ENT_ENTER_RADIUS ) );
-	_table->Set( _machine, "ENT_LEAVE_RADIUS", gmVariable( MESSAGE_ENT_LEAVE_RADIUS ) );
-	_table->Set( _machine, "MG_ENTER_RADIUS", gmVariable( MESSAGE_MG_ENTER_RADIUS ) );
-	_table->Set( _machine, "MG_LEAVE_RADIUS", gmVariable( MESSAGE_MG_LEAVE_RADIUS ) );
-	_table->Set( _machine, "PLAYER_USE", gmVariable( PERCEPT_FEEL_PLAYER_USE ) );
-	_table->Set( _machine, "FEEL_PAIN", gmVariable( PERCEPT_FEEL_PAIN ) );
-	_table->Set( _machine, "SENSE_ENTITY", gmVariable( PERCEPT_SENSE_ENTITY ) );
-	_table->Set( _machine, "WEAPON_FIRE", gmVariable( ACTION_WEAPON_FIRE ) );
-	_table->Set( _machine, "WEAPON_CHANGE", gmVariable( ACTION_WEAPON_CHANGE ) );
-	_table->Set( _machine, "GLOBAL_VOICE", gmVariable( PERCEPT_HEAR_GLOBALVOICEMACRO ) );
-	_table->Set( _machine, "TEAM_VOICE", gmVariable( PERCEPT_HEAR_TEAMVOICEMACRO ) );
-	_table->Set( _machine, "PRIVATE_VOICE", gmVariable( PERCEPT_HEAR_PRIVATEVOICEMACRO ) );
-	_table->Set( _machine, "GLOBAL_CHAT_MSG", gmVariable( PERCEPT_HEAR_GLOBALCHATMSG ) );
-	_table->Set( _machine, "TEAM_CHAT_MSG", gmVariable( PERCEPT_HEAR_TEAMCHATMSG ) );
-	_table->Set( _machine, "PRIV_CHAT_MSG", gmVariable( PERCEPT_HEAR_PRIVCHATMSG ) );
-	_table->Set( _machine, "GROUP_CHAT_MSG", gmVariable( PERCEPT_HEAR_GROUPCHATMSG ) );
-	_table->Set( _machine, "HEAR_SOUND", gmVariable( PERCEPT_HEAR_SOUND ) );
+	_table->Set( _machine, "DISCONNECTED", gmVariable( MSG_CLIENTDISCONNECTED ) );
+	_table->Set( _machine, "START_GAME", gmVariable( MSG_STARTGAME ) );
+	_table->Set( _machine, "END_GAME", gmVariable( MSG_ENDGAME ) );
+	_table->Set( _machine, "NEW_ROUND", gmVariable( MSG_NEWROUND ) );
+	_table->Set( _machine, "END_ROUND", gmVariable( MSG_ENDROUND ) );
+	_table->Set( _machine, "GOAL_SUCCESS", gmVariable( MSG_GOAL_SUCCESS ) );
+	_table->Set( _machine, "GOAL_FAILED", gmVariable( MSG_GOAL_FAILED ) );
+	_table->Set( _machine, "GOAL_ABORTED", gmVariable( MSG_GOAL_ABORTED ) );
+	_table->Set( _machine, "PATH_SUCCESS", gmVariable( MSG_PATH_SUCCESS ) );
+	_table->Set( _machine, "PATH_FAILED", gmVariable( MSG_PATH_FAILED ) );
+	_table->Set( _machine, "SCRIPTMSG", gmVariable( MSG_SCRIPTMSG ) );
+	_table->Set( _machine, "SPAWNED", gmVariable( MSG_SPAWN ) );
+	_table->Set( _machine, "CHANGETEAM", gmVariable( MSG_CHANGETEAM ) );
+	_table->Set( _machine, "CHANGECLASS", gmVariable( MSG_CHANGECLASS ) );
+	_table->Set( _machine, "INVALID_TEAM", gmVariable( MSG_INVALIDTEAM ) );
+	_table->Set( _machine, "INVALID_CLASS", gmVariable( MSG_INVALIDCLASS ) );
+	_table->Set( _machine, "DEATH", gmVariable( MSG_DEATH ) );
+	_table->Set( _machine, "HEALED", gmVariable( MSG_HEALED ) );
+	_table->Set( _machine, "REVIVED", gmVariable( MSG_REVIVED ) );
+	_table->Set( _machine, "ADDWEAPON", gmVariable( MSG_ADDWEAPON ) );
+	_table->Set( _machine, "REMOVEWEAPON", gmVariable( MSG_REMOVEWEAPON ) );
+	_table->Set( _machine, "REFRESH_WEAPON", gmVariable( MSG_REFRESHWEAPON ) );
+	_table->Set( _machine, "KILLEDSOMEONE", gmVariable( MSG_KILLEDSOMEONE ) );
+	_table->Set( _machine, "PROXIMITY_TRIGGER", gmVariable( MSG_PROXIMITY_TRIGGER ) );
+	_table->Set( _machine, "ENT_ENTER_RADIUS", gmVariable( MSG_ENT_ENTER_RADIUS ) );
+	_table->Set( _machine, "ENT_LEAVE_RADIUS", gmVariable( MSG_ENT_LEAVE_RADIUS ) );
+	_table->Set( _machine, "MG_ENTER_RADIUS", gmVariable( MSG_MG_ENTER_RADIUS ) );
+	_table->Set( _machine, "MG_LEAVE_RADIUS", gmVariable( MSG_MG_LEAVE_RADIUS ) );
+	_table->Set( _machine, "PLAYER_USE", gmVariable( MSG_FEEL_PLAYER_USE ) );
+	_table->Set( _machine, "TOOK_DAMAGE", gmVariable( MSG_TOOK_DAMAGE ) );
+	_table->Set( _machine, "SENSE_ENTITY", gmVariable( MSG_SENSE_ENTITY ) );
+	_table->Set( _machine, "WEAPON_FIRE", gmVariable( MSG_WEAPON_FIRE ) );
+	_table->Set( _machine, "WEAPON_CHANGE", gmVariable( MSG_WEAPON_CHANGE ) );
+	_table->Set( _machine, "VOICE_GLOBAL", gmVariable( MSG_HEAR_VOICEMACRO_GLOBAL ) );
+	_table->Set( _machine, "VOICE_TEAM", gmVariable( MSG_HEAR_VOICEMACRO_TEAM ) );
+	_table->Set( _machine, "VOICE_PRIVATE", gmVariable( MSG_HEAR_VOICEMACRO_PRIVATE ) );
+	_table->Set( _machine, "VOICE_GROUP", gmVariable( MSG_HEAR_VOICEMACRO_GROUP ) );
+	_table->Set( _machine, "CHATMSG_GLOBAL", gmVariable( MSG_HEAR_CHATMSG_GLOBAL ) );
+	_table->Set( _machine, "CHATMSG_TEAM", gmVariable( MSG_HEAR_CHATMSG_TEAM ) );
+	_table->Set( _machine, "CHATMSG_PRIVATE", gmVariable( MSG_HEAR_CHATMSG_PRIVATE ) );
+	_table->Set( _machine, "CHATMSG_GROUP", gmVariable( MSG_HEAR_CHATMSG_GROUP ) );
+	_table->Set( _machine, "HEAR_SOUND", gmVariable( MSG_HEAR_SOUND ) );
+	_table->Set( _machine, "MINE_ARMED", gmVariable( MSG_MINE_ARMED ) );
+	_table->Set( _machine, "MINE_DETONATE", gmVariable( MSG_MINE_DETONATE ) );
+	_table->Set( _machine, "MORTAR_IMPACT", gmVariable( MSG_MORTAR_IMPACT ) );
 }
 
 void IGame::InitScriptCategories( gmMachine *_machine, gmTableObject *_table )
@@ -667,6 +670,9 @@ void IGame::UpdateGame( System & system )
 
 	CheckGameState();
 
+	gEngineFuncs->GetGravity( mGravity );
+	mCheatsEnabled = gEngineFuncs->AreCheatsEnabled();
+
 	if ( mGameFrame > 0 )
 	{
 		if ( mSettingLimiter && mSettingLimiter->IsReady() )
@@ -808,8 +814,8 @@ void IGame::SyncEntity( const EntityInstance & ent, RemoteLib::DebugConnection *
 
 		Msg_HealthArmor hlth;
 		EngineFuncs::EntityPosition( ent.mEntity, entPosition );
-		const int entClass = InterfaceFuncs::GetEntityClass( ent.mEntity );
-		const int entTeam = InterfaceFuncs::GetEntityTeam( ent.mEntity );
+		const int entClass = gEngineFuncs->GetEntityClass( ent.mEntity );
+		const int entTeam = gEngineFuncs->GetEntityTeam( ent.mEntity );
 		const std::string entName = EngineFuncs::EntityName( ent.mEntity );
 
 		EngineFuncs::EntityOrientation( ent.mEntity, facingVector, rightVector, upVector );
@@ -824,7 +830,7 @@ void IGame::SyncEntity( const EntityInstance & ent, RemoteLib::DebugConnection *
 		SET_IF_DIFF( cachedEntity, entityUpdate, entClass, classid );
 		SET_IF_DIFF( cachedEntity, entityUpdate, entTeam, teamid );
 
-		if ( InterfaceFuncs::GetHealthAndArmor( ent.mEntity, hlth ) ) {
+		if ( gEngineFuncs->GetHealthAndArmor( ent.mEntity, hlth ) ) {
 			SET_IF_DIFF( cachedEntity, entityUpdate, hlth.mCurrentHealth, health );
 			SET_IF_DIFF( cachedEntity, entityUpdate, hlth.mMaxHealth, healthmax );
 			SET_IF_DIFF( cachedEntity, entityUpdate, hlth.mCurrentArmor, armor );
@@ -849,42 +855,36 @@ void IGame::InternalSyncEntity( const EntityInstance & ent, RemoteLib::DebugConn
 }
 #endif
 
-void IGame::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+void IGame::ProcessEvent( const Message &message, CallbackParameters &cb )
 {
-	switch ( _message.GetMessageId() )
+	switch ( message.Id() )
 	{
-		case GAME_STARTGAME:
+		CASE_MSG( EvGameStart )
 		{
 			StartGame();
 			mLastGameState = mGameState = GAME_STATE_WAITINGFORPLAYERS;
 			break;
 		}
-		case GAME_ENDGAME:
+		CASE_MSG( EvGameEnd )
 		{
 			EndGame();
 			break;
 		}
-		case GAME_CLEARGOALS:
+		CASE_MSG( EvClientConnected )
 		{
-			break;
-		}
-		case GAME_CLIENTCONNECTED:
-		{
-			const Event_SystemClientConnected *m = _message.Get<Event_SystemClientConnected>();
-			ClientJoined( m );
+			ClientJoined( msg );
 			mPlayersChanged = true;
 			break;
 		}
-		case GAME_CLIENTDISCONNECTED:
+		CASE_MSG( EvClientDisconnected )
 		{
-			const Event_SystemClientDisConnected *m = _message.Get<Event_SystemClientDisConnected>();
-			ClientLeft( m );
+			ClientLeft( msg );
 			mPlayersChanged = true;
 			break;
 		}
-		case GAME_ENTITYCREATED:
+		CASE_MSG( EvEntityCreated )
 		{
-			const Event_EntityCreated *m = _message.Get<Event_EntityCreated>();
+			const EvEntityCreated* m = EvEntityCreated::Msg::Cast( message );
 			if ( m )
 			{
 				const int index = m->mEntity.GetIndex();
@@ -921,185 +921,173 @@ void IGame::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb
 			}
 			break;
 		}
-		case GAME_ENTITYDELETED:
+		CASE_MSG( EvEntityDeleted )
 		{
-			const Event_EntityDeleted *m = _message.Get<Event_EntityDeleted>();
-			if ( m )
+			int index = msg->mEntity.GetIndex();
+			if ( mGameEntities[ index ].mEntity.IsValid() )
 			{
-				//obstacleManager.RemoveObstacle(m->mEntity);
-
-				int index = m->mEntity.GetIndex();
-				if ( mGameEntities[ index ].mEntity.IsValid() )
-				{
 #ifdef _DEBUG
-					std::string groupName, className;
-					FindClassName( groupName, className, mGameEntities[ index ].mEntInfo.mGroup, mGameEntities[ index ].mEntInfo.mClassId );
-					Utils::OutputDebug( kNormal, "Entity: %d deleted: (%s:%s)\n", index, groupName.c_str(), className.c_str() );
+				std::string groupName, className;
+				FindClassName( groupName, className, mGameEntities[ index ].mEntInfo.mGroup, mGameEntities[ index ].mEntInfo.mClassId );
+				Utils::OutputDebug( kNormal, "Entity: %d deleted: (%s:%s)\n", index, groupName.c_str(), className.c_str() );
 #endif
-					System::mInstance->mGoalManager->EntityDeleted( mGameEntities[ index ] );
-					System::mInstance->mTacticalManager->EntityDeleted( mGameEntities[ index ] );
-					System::mInstance->mNavigation->EntityDeleted( mGameEntities[ index ] );
+				System::mInstance->mGoalManager->EntityDeleted( mGameEntities[ index ] );
+				System::mInstance->mTacticalManager->EntityDeleted( mGameEntities[ index ] );
+				System::mInstance->mNavigation->EntityDeleted( mGameEntities[ index ] );
 
-					mGameEntities[ index ].mEntity.Reset();
-					mGameEntities[ index ].mEntInfo = EntityInfo();
-					mGameEntities[ index ].mTimeStamp = 0;
+				mGameEntities[ index ].mEntity.Reset();
+				mGameEntities[ index ].mEntInfo = EntityInfo();
+				mGameEntities[ index ].mTimeStamp = 0;
 
-					// decrease the upper limit if necessary.
-					if ( mMaxEntity == index + 1 )
-					{
-						do
-						{
-							mMaxEntity--;
-						}
-						while ( mMaxEntity > 0 && !mGameEntities[ mMaxEntity - 1 ].mEntity.IsValid() );
-					}
-				}
-
-				System::mInstance->mGoalManager->RemoveGoalByEntity( m->mEntity );
-				//////////////////////////////////////////////////////////////////////////
-				if ( System::mInstance->mNavigation )
+				// decrease the upper limit if necessary.
+				if ( mMaxEntity == index + 1 )
 				{
-					System::mInstance->mNavigation->RemoveEntityConnection( m->mEntity );
+					do
+					{
+						mMaxEntity--;
+					}
+					while ( mMaxEntity > 0 && !mGameEntities[ mMaxEntity - 1 ].mEntity.IsValid() );
 				}
+			}
+
+			System::mInstance->mGoalManager->RemoveGoalByEntity( msg->mEntity );
+			//////////////////////////////////////////////////////////////////////////
+			if ( System::mInstance->mNavigation )
+			{
+				System::mInstance->mNavigation->RemoveEntityConnection( msg->mEntity );
 			}
 			break;
 		}
-		case GAME_NEWROUND:
+		case MSG_NEWROUND:
 		{
 			NewRound();
 			break;
 		}
-		case GAME_START_TRAINING:
+		case MSG_START_TRAINING:
 		{
 			StartTraining();
 			break;
 		}
-		case GAME_GRAVITY:
+		CASE_MSG( EvScriptSignal )
 		{
-			const Event_SystemGravity *m = _message.Get<Event_SystemGravity>();
-			mGravity = m->mGravity;
-			break;
-		}
-		case GAME_CHEATS:
-		{
-			const Event_SystemCheats *m = _message.Get<Event_SystemCheats>();
-			mCheatsEnabled = m->mEnabled == True;
-			break;
-		}
-		case GAME_SCRIPTSIGNAL:
-		{
-			const Event_ScriptSignal *m = _message.Get<Event_ScriptSignal>();
 			gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
-
-			if ( m->mSignalName[ 0 ] )
-				pMachine->Signal( gmVariable( pMachine->AllocStringObject( m->mSignalName ) ), GM_INVALID_THREAD, GM_INVALID_THREAD );
+			if ( msg->mSignalName[ 0 ] )
+				pMachine->Signal( gmVariable( pMachine->AllocStringObject( msg->mSignalName ) ), GM_INVALID_THREAD, GM_INVALID_THREAD );
 		}
-		case GAME_SOUND:
+		case MSG_SOUND:
 		{
-			/*const Event_Sound *m = _message.Get<Event_Sound>();
+			/*const Event_Sound *m = message.Get<Event_Sound>();
 			if(m)
 			g_SoundDepot.Post(*m);*/
 			break;
 		}
-		case GAME_ADD_ENTITY_CONNECTION:
+		CASE_MSG( EvEntityConnection )
 		{
-			const Event_EntityConnection *m = _message.Get<Event_EntityConnection>();
-			if ( m )
+			if ( System::mInstance->mNavigation )
 			{
-				if ( System::mInstance->mNavigation )
-				{
-					System::mInstance->mNavigation->AddEntityConnection( *m );
-				}
+				System::mInstance->mNavigation->AddEntityConnection( *msg );
 			}
 			break;
 		}
-		case GAME_ANALYTIC_EVENT:
+		CASE_MSG( EvAnalyticEvent )
 		{
-			const Event_Analytics *m = _message.Get<Event_Analytics>();
-			if ( m )
+			/*if ( System::mInstance->mAnalytics )
 			{
-				if ( System::mInstance->mAnalytics )
-				{
-					if ( m->mHasPosition )
-						System::mInstance->mAnalytics->AddGameEvent( m->mArea, m->mName, m->mPosition );
-					else
-						System::mInstance->mAnalytics->AddGameEvent( m->mArea, m->mName );
-				}
-			}
+			if ( m->mHasPosition )
+			System::mInstance->mAnalytics->AddGameEvent( m->mArea, m->mName, m->mPosition );
+			else
+			System::mInstance->mAnalytics->AddGameEvent( m->mArea, m->mName );
+			}*/
+			break;
 		}
 	}
 }
 
-void IGame::DispatchGlobalEvent( const MessageHelper &_message )
+void IGame::DispatchEvent( const Message &message, GameEntity dest )
 {
 	// some messages we don't want to forward to clients
-	switch ( _message.GetMessageId() )
+	switch ( message.Id() )
 	{
-		case SYSTEM_SCRIPT_CHANGED:
+		CASE_MSG( EvScriptChanged )
 		{
-			const Event_SystemScriptUpdated *m = _message.Get<Event_SystemScriptUpdated>();
-			gWeaponDatabase.ReloadScript( (LiveUpdateKey)m->mScriptKey );
+			gWeaponDatabase.ReloadScript( (LiveUpdateKey)msg->mScriptKey );
 			return;
 		}
-		case GAME_ENTITYCREATED:
-		case GAME_ENTITYDELETED:
+		CASE_MSG( EvEntityCreated )
+		{
 			break;
+		}
+		CASE_MSG( EvEntityDeleted )
+		{
+			break;
+		}
+		CASE_MSG( EvWeaponFire )
+		{	
+			if ( System::mInstance->mAnalytics )
+			{
+				Vector3f pos;
+				if ( EngineFuncs::EntityPosition( dest, pos ) )
+				{
+					Analytics::MessageUnion m;
+					m.set_timestamp( IGame::GetTime() );
+
+					Analytics::GameWeaponFired* event = m.mutable_gameweaponfired();
+					FIELD_SET( event, weaponid, msg->mWeaponId );
+					SMART_FIELD_SET( event, team, msg->mTeamNum );
+					SMART_FIELD_SET( event, positionx, pos.X() );
+					SMART_FIELD_SET( event, positiony, pos.Y() );
+					SMART_FIELD_SET( event, positionz, pos.Z() );
+
+					System::mInstance->mAnalytics->AddEvent( m );
+				}
+			}
+			break;
+		}
 		default:
 		{
 			// Send this event to everyone.
 			for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
 			{
 				if ( mClientList[ i ] )
-					mClientList[ i ]->SendEvent( _message );
+					mClientList[ i ]->SendEvent( message );
 			}
 			break;
 		}
 	}
 
-	// Is it a game event?
-	if ( _message.GetMessageId() < GAME_ID_LAST && _message.GetMessageId() > GAME_ID_FIRST )
+	// Allow the game to process it
+	SendEvent( message );
+
+	ClientPtr cp = GetClientByEntity( dest );
+	if ( cp )
 	{
-		SendEvent( _message );
+		cp->SendEvent( message );
+		return;
 	}
 }
 
-void IGame::DispatchEvent( int _dest, const MessageHelper &_message )
+void IGame::ClientJoined( const EvClientConnected *msg )
 {
-	if ( _dest >= 0 && _dest < Constants::MAX_PLAYERS )
-	{
-		// Send to someone in particular
-		ClientPtr cp = GetClientFromCorrectedGameId( _dest );
-		if ( cp )
-		{
-			cp->SendEvent( _message );
-			return;
-		}
-	}
-	Utils::OutputDebug( kError, "BAD DESTINATION ID: %d FOR EVENT %d", _dest, _message.GetMessageId() );
-}
-
-void IGame::ClientJoined( const Event_SystemClientConnected *_msg )
-{
-	Utils::OutputDebug( kInfo, "Client Joined Game, IsBot: %d, ClientNum: %d", _msg->mIsBot, _msg->mGameId );
-	if ( _msg->mIsBot && !mBotJoining )
+	Utils::OutputDebug( kInfo, "Client Joined Game, IsBot: %d, ClientNum: %d", msg->mIsBot, msg->mGameId );
+	if ( msg->mIsBot && !mBotJoining )
 	{
 		CheckGameState();
 
 		// If a bot isn't created by now, it has probably been a map change,
 		// and the game has re-added the clients itself.
 
-		ClientPtr &cp = GetClientFromCorrectedGameId( _msg->mGameId );
+		ClientPtr &cp = GetClientFromCorrectedGameId( msg->mGameId );
 		if ( !cp )
 		{
 			// Initialize the appropriate slot in the list.
 			cp.reset( CreateGameClient() );
-			cp->Init( _msg->mGameId );
+			cp->Init( msg->mGameId );
 
-			cp->mDesiredTeam = _msg->mDesiredTeam;
-			cp->mDesiredClass = _msg->mDesiredClass;
+			cp->mDesiredTeam = msg->mDesiredTeam;
+			cp->mDesiredClass = msg->mDesiredClass;
 
-			gEngineFuncs->ChangeTeam( _msg->mGameId, cp->mDesiredTeam, NULL );
-			gEngineFuncs->ChangeClass( _msg->mGameId, cp->mDesiredClass, NULL );
+			gEngineFuncs->ChangeTeam( msg->mGameId, cp->mDesiredTeam, NULL );
+			gEngineFuncs->ChangeClass( msg->mGameId, cp->mDesiredClass, NULL );
 
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();
@@ -1107,11 +1095,11 @@ void IGame::ClientJoined( const Event_SystemClientConnected *_msg )
 	}
 }
 
-void IGame::ClientLeft( const Event_SystemClientDisConnected *_msg )
+void IGame::ClientLeft( const EvClientDisconnected *msg )
 {
-	Utils::OutputDebug( kInfo, "Client Left Game, ClientNum: %d", _msg->mGameId );
+	Utils::OutputDebug( kInfo, "Client Left Game, ClientNum: %d", msg->mGameId );
 
-	ClientPtr &cp = GetClientFromCorrectedGameId( _msg->mGameId );
+	ClientPtr &cp = GetClientFromCorrectedGameId( msg->mGameId );
 	if ( cp )
 	{
 		cp->Shutdown();
@@ -1121,8 +1109,8 @@ void IGame::ClientLeft( const Event_SystemClientDisConnected *_msg )
 
 void IGame::CheckGameState()
 {
-	GameState gs = InterfaceFuncs::GetGameState();
-	switch ( gs )
+	const GameState state = gEngineFuncs->GetGameState();
+	switch ( state )
 	{
 		case GAME_STATE_WAITINGFORPLAYERS:
 		case GAME_STATE_WARMUP:
@@ -1140,7 +1128,7 @@ void IGame::CheckGameState()
 			return;
 	}
 	mLastGameState = mGameState;
-	mGameState = gs;
+	mGameState = state;
 }
 
 void IGame::StartGame()
@@ -1228,6 +1216,12 @@ void IGame::InitMapScript()
 
 	// Other initialization.
 	mSettingLimiter.reset( new Regulator( 2000 ) );
+}
+
+void IGame::InitTime()
+{
+	mGameMsec = gEngineFuncs->GetGameTime();
+	mDeltaMsec = 0;
 }
 
 void IGame::UpdateTime()
@@ -1353,23 +1347,18 @@ void IGame::cmdBotDontShoot( const StringVector & args )
 {
 	if ( args.size() == 2 )
 	{
-		obBool bDontShoot = Invalid;
-		if ( Utils::StringToFalse( args[ 1 ] ) )
-			bDontShoot = False;
-		else if ( Utils::StringToTrue( args[ 1 ] ) )
-			bDontShoot = True;
-
-		if ( bDontShoot != Invalid )
+		bool dontShoot;
+		if ( Utils::StringToBool( args[ 1 ], dontShoot ) )
 		{
 			for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
 			{
 				if ( mClientList[ i ] )
 				{
-					mClientList[ i ]->SetUserFlag( Client::FL_SHOOTINGDISABLED, bDontShoot == True );
+					mClientList[ i ]->SetUserFlag( Client::FL_SHOOTINGDISABLED, dontShoot );
 
 					EngineFuncs::ConsoleMessage( va( "%s: shooting %s",
 						mClientList[ i ]->GetName(),
-						bDontShoot ? "disabled" : "enabled" ).c_str() );
+						dontShoot ? "disabled" : "enabled" ).c_str() );
 				}
 			}
 		}
@@ -1514,7 +1503,7 @@ void IGame::cmdAddbot( const StringVector & args )
 		nextName = nr ? nr->GetName() : Utils::FindOpenPlayerName();
 	}
 
-	Msg_Addbot b;
+	ParamsAddbot b;
 	Utils::StringCopy( b.mName, nextName.c_str(), sizeof( b.mName ) );
 	Utils::StringCopy( b.mProfile, profile.c_str(), sizeof( b.mProfile ) );
 	b.mTeam = iTeam;
@@ -1528,10 +1517,10 @@ void IGame::cmdKickbot( const StringVector & args )
 	bool bDidSomething = false;
 	for ( int i = 1; i < (int)args.size(); ++i )
 	{
-		Msg_Kickbot b;
+		ParamsKickbot b;
 		if ( !Utils::ConvertString( args[ i ], b.mGameId ) )
-			Utils::StringCopy( b.mName, args[ i ].c_str(), Msg_Kickbot::BufferSize );
-		InterfaceFuncs::Kickbot( b );
+			Utils::StringCopy( b.mName, args[ i ].c_str(), ParamsKickbot::BufferSize );
+		gEngineFuncs->RemoveBot( b );
 		bDidSomething = true;
 	}
 
@@ -1582,7 +1571,7 @@ void IGame::cmdPrintFileSystem( const StringVector & args )
 void IGame::cmdReloadWeaponDatabase( const StringVector & args )
 {
 	gWeaponDatabase.LoadWeaponDefinitions( true );
-	DispatchGlobalEvent( MessageHelper( MESSAGE_REFRESHALLWEAPONS ) );
+	DispatchEvent( EvRefreshAllWeapons::Msg() );
 }
 
 void IGame::cmdShowProcesses( const StringVector & args )
@@ -1627,19 +1616,19 @@ bool IGame::RemoveUpdateFunction( const std::string &_name )
 	return false;
 }
 
-void IGame::AddBot( Msg_Addbot & addbot, bool createnow )
+void IGame::AddBot( ParamsAddbot & parms, bool createnow )
 {
 	//////////////////////////////////////////////////////////////////////////
-	if ( !addbot.mName[ 0 ] )
+	if ( !parms.mName[ 0 ] )
 	{
 		NamePtr nr = NameManager::GetInstance()->GetName();
 		std::string name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
-		Utils::StringCopy( addbot.mName, name.c_str(), sizeof( addbot.mName ) );
+		Utils::StringCopy( parms.mName, name.c_str(), sizeof( parms.mName ) );
 	}
 	//////////////////////////////////////////////////////////////////////////
 	if ( createnow )
 		mBotJoining = true;
-	int gameId = InterfaceFuncs::Addbot( addbot );
+	int gameId = gEngineFuncs->AddBot( parms );
 	if ( createnow )
 		mBotJoining = false;
 	if ( gameId != -1 && createnow )
@@ -1652,8 +1641,8 @@ void IGame::AddBot( Msg_Addbot & addbot, bool createnow )
 			cp->Init( gameId );
 		}
 
-		cp->mDesiredTeam = addbot.mTeam;
-		cp->mDesiredClass = addbot.mClass;
+		cp->mDesiredTeam = parms.mTeam;
+		cp->mDesiredClass = parms.mClass;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Script callbacks
@@ -1680,10 +1669,20 @@ void IGame::AddBot( Msg_Addbot & addbot, bool createnow )
 	}
 }
 
-ClientPtr IGame::GetClientByIndex( int _index )
+ClientPtr IGame::GetClientByEntity( GameEntity ent )
 {
-	if ( InRangeT<int>( _index, 0, Constants::MAX_PLAYERS ) )
-		return mClientList[ _index ];
+	for ( int i = 0; i < Constants::MAX_PLAYERS; ++i )
+	{
+		if ( mClientList[ i ] && mClientList[ i ]->GetGameEntity() == ent )
+			return mClientList[ i ];
+	}
+	return ClientPtr();
+}
+
+ClientPtr IGame::GetClientByIndex( int index )
+{
+	if ( InRangeT<int>( index, 0, Constants::MAX_PLAYERS ) )
+		return mClientList[ index ];
 	return ClientPtr();
 }
 

@@ -33,7 +33,7 @@ typedef enum eJA_Events
 
 typedef enum eJA_Msgs
 {
-	JA_MSG_START = GEN_MSG_END,
+	JA_MSG_START = MSG_END,
 
 	// misc query stuff
 	//JA_MSG_REINFORCETIME,

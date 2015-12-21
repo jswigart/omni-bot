@@ -36,7 +36,7 @@ typedef enum eRTCW_Events
 
 typedef enum eRTCW_Msgs
 {
-	RTCW_MSG_BEGIN = GEN_MSG_END,
+	RTCW_MSG_BEGIN = MSG_END,
 
 	// actions
 	RTCW_MSG_GOTOLIMBO,

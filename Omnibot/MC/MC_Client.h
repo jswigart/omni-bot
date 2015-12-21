@@ -22,26 +22,20 @@ class MC_Client : public Client
 public:
 	NavFlags GetTeamFlag( int _team ) const;
 	void GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags );
-
-	const MC_PlayerStats &GetPlayerStats();
-	const MC_ModuleStats &GetModuleStats();
-
+	
 	void SendVoiceMacro( int _macroId );
 
 	float GetGameVar( GameVar _var ) const;
 
 	bool DoesBotHaveFlag( MapGoalPtr _mapgoal );
 
-	void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+	void ProcessEvent( const Message & message, CallbackParameters & cb );
 
 	void Update();
 
 	MC_Client();
 	virtual ~MC_Client();
 protected:
-	MC_PlayerStats		 mPlayerStats;
-	MC_ModuleStats		 mModuleStats;
-
 	bool CanUseModule( MC_Module mod ) const;
 };
 

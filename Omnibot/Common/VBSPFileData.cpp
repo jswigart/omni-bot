@@ -179,10 +179,6 @@ namespace VBSP
 		
 		if ( !vbspHeader->IsValidID() )
 		{
-			//std::stringstream ss;
-			//ss << "VBSPFileParser unexpected bsp header identifier. Expected VBSP, got " <<
-			//	vbspHeader->mIdent[ 0 ] << vbspHeader->mIdent[ 1 ] << vbspHeader->mIdent[ 2 ] << vbspHeader->mIdent[ 3 ] << std::endl;
-			//EngineFuncs::ConsoleError( ss.str().c_str() );
 			return false;
 		}
 		

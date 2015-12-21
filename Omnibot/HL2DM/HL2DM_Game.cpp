@@ -14,6 +14,8 @@
 #include "BotSensoryMemory.h"
 #include "FilterSensory.h"
 
+HL2DM_Interface* gHL2DMFuncs = 0;
+
 IGame *CreateGameInstance()
 {
 	return new HL2DM_Game;
@@ -44,6 +46,8 @@ bool HL2DM_Game::Init( System & system )
 
 	if ( !IGame::Init( system ) )
 		return false;
+
+	gHL2DMFuncs = dynamic_cast<HL2DM_Interface*>( gEngineFuncs );
 
 	return true;
 }

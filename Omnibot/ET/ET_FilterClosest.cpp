@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "ET_FilterClosest.h"
-#include "ET_InterfaceFuncs.h"
 #include "ET_Client.h"
 #include "ET_Game.h"
 
@@ -27,7 +26,7 @@ bool ET_FilterClosest::CheckEx( const MemoryRecord &_record )
 		}
 		case ET_CLASSEX_MG42MOUNT:
 		{
-			GameEntity mounted = InterfaceFuncs::GetMountedPlayerOnMG42( mClient, _record.GetEntity() );
+			GameEntity mounted = gEngineFuncs->GetMountedPlayerOnMG42( mClient, _record.GetEntity() );
 			if ( !mounted.IsValid() || mClient->IsAllied( mounted ) )
 				return false;
 			MemoryRecord *record2 = mClient->GetSensoryMemory()->GetMemoryRecord( mounted );

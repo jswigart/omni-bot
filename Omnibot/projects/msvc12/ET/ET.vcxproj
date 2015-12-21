@@ -127,7 +127,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
     </ClCompile>
     <ClCompile Include="..\..\..\ET\ET_Client.cpp" />
     <ClCompile Include="..\..\..\ET\ET_Game.cpp" />
-    <ClCompile Include="..\..\..\ET\ET_InterfaceFuncs.cpp" />
     <ClCompile Include="..\..\..\ET\ET_VoiceMacros.cpp" />
     <ClCompile Include="..\..\..\ET\gmETBinds.cpp" />
     <ClCompile Include="..\..\..\ET\ET_BaseStates.cpp" />
@@ -144,7 +143,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
     <ClInclude Include="..\..\..\ET\ET_Client.h" />
     <ClInclude Include="..\..\..\ET\ET_Config.h" />
     <ClInclude Include="..\..\..\ET\ET_Game.h" />
-    <ClInclude Include="..\..\..\ET\ET_InterfaceFuncs.h" />
     <ClInclude Include="..\..\..\ET\ET_Messages.h" />
     <ClInclude Include="..\..\..\ET\ET_VoiceMacros.h" />
     <ClInclude Include="..\Common\resource.h" />

@@ -79,6 +79,7 @@ public:
 	void AddInt( const char *_name, int _param );
 	void AddFloat( const char *_name, float _param );
 	void AddVector( const char *_name, const Vector3f &_vec );
+	void AddVector( const char *_name, const float pos[3] );
 	void AddVector( const char *_name, float _x, float _y, float _z );
 	void AddEntity( const char *_name, GameEntity _param );
 	void AddUserObj( const char *_name, gmUserObject *_param );

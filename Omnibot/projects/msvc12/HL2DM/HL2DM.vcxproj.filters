@@ -18,9 +18,6 @@
     <ClCompile Include="..\..\..\HL2DM\HL2DM_Game.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\HL2DM\HL2DM_InterfaceFuncs.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\HL2DM\gmHL2DMBinds.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -41,9 +38,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\HL2DM\HL2DM_Messages.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\HL2DM\HL2DM_InterfaceFuncs.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

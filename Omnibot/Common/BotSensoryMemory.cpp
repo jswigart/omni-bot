@@ -10,7 +10,6 @@
 #include "IGameManager.h"
 #include "ScriptManager.h"
 #include "FilterSensory.h"
-#include "InterfaceFuncs.h"
 #include "RenderBuffer.h"
 
 namespace AiState
@@ -202,7 +201,7 @@ namespace AiState
 		rmt_ScopedCPUSample( UpdateSmell );
 	}
 
-	void SensoryMemory::UpdateWithSoundSource( const Event_Sound *_sound )
+	void SensoryMemory::UpdateWithSoundSource( const EvSound *_sound )
 	{
 		// TODO: don't bother storing sound memory from myself.
 		if ( _sound->mSource.IsValid() && ( GetClient()->GetGameEntity() != _sound->mSource ) )
@@ -330,8 +329,9 @@ namespace AiState
 				_record.mTimeLastSensed = IGame::GetTime();
 				_record.mTimeLastVisible = IGame::GetTime();
 				_record.mIsAllied = GetClient()->IsAllied( ent );
-
-				_record.mTargetInfo.mCurrentWeapon = InterfaceFuncs::GetEquippedWeapon( ent ).mWeaponId;
+				
+				FireMode currentWeaponMode;
+				gEngineFuncs->GetEquippedWeapon( ent, _record.mTargetInfo.mCurrentWeapon, currentWeaponMode );
 
 				if ( !_record.IsShootable() && !bNoLos )
 				{

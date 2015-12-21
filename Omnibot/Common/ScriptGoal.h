@@ -225,7 +225,7 @@ namespace AiState
 		void UpdateMapGoalsInRadius();
 
 		// Special case callbacks.
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message &_message, CallbackParameters &_cb );
 		bool OnInit( gmMachine *_machine );
 		void OnSpawn();
 

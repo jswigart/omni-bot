@@ -408,7 +408,7 @@ enum TF_SoundType
 //		Events that allow the bot to query for information from the game.
 enum TF_GameMessage
 {
-	TF_MSG_START = GEN_MSG_END,
+	TF_MSG_START = MSG_END,
 
 	// Info.
 	TF_MSG_GETBUILDABLES,

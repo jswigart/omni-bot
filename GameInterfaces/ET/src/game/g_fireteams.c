@@ -250,8 +250,8 @@ void G_RegisterFireteam(/*const char* name,*/ int entityNum) {
 	}
 
 	// omnibot
-	Bot_Event_FireTeamCreated(leader,ft->ident);
-	Bot_Event_JoinedFireTeam(leader,leader,ft->ident);
+	Bot_Event_FireTeamCreated( leader, leader, ft->ident );
+	Bot_Event_JoinedFireTeam( leader, leader, ft->ident );
 	// end omnibot
 
 //	Q_strncpyz(ft->name, name, 32);
@@ -338,15 +338,9 @@ void G_RemoveClientFromFireteams( int entityNum, qboolean update, qboolean print
 	}
 
 	// omnibot
-	Bot_Event_LeftFireTeam(&g_entities[entityNum],ft->ident);
-
-	/*if( ft->joinOrder[0] != -1 ) {
-		if( g_entities[(int)ft->joinOrder[0]].r.svFlags & SVF_BOT ) {
-			G_RemoveClientFromFireteams( ft->joinOrder[0], qfalse, qfalse );
-		}
-	}*/
-	// end omnibot
-
+	gentity_t* leader = &g_entities[ (int)ft->joinOrder[ 0 ] ];
+	Bot_Event_LeftFireTeam( &g_entities[ entityNum ], leader, ft->ident );
+	
 	if( print ) {
 		for( i = 0; i < MAX_CLIENTS; i++ ) {
 			if( ft->joinOrder[i] == -1 ) {
@@ -397,7 +391,7 @@ void G_InviteToFireTeam( int entityNum, int otherEntityNum ) {
 	}
 
 	// omnibot
-	Bot_Event_InviteFireTeam(&g_entities[entityNum], &g_entities[otherEntityNum],ft->ident);
+	Bot_Event_InviteFireTeam( &g_entities[entityNum], &g_entities[otherEntityNum], ft->ident );
 	// end omnibot
 }
 
@@ -415,7 +409,8 @@ void G_DestroyFireteam( int entityNum ) {
 	while( ft->joinOrder[0] != -1 ) {
 		if( ft->joinOrder[0] != entityNum ) {
 			// omnibot
-			Bot_Event_FireTeamDestroyed(&g_entities[ft->joinOrder[0]],ft->ident);
+			gentity_t* leader = &g_entities[ (int)ft->joinOrder[ 0 ] ];
+			Bot_Event_FireTeamDestroyed( &g_entities[ ft->joinOrder[ 0 ] ], leader, ft->ident );
 			// end omnibot
 			trap_SendServerCommand( ft->joinOrder[0], "cpm \"The Fireteam you are on has been disbanded\"\n" );
 		}
@@ -480,7 +475,8 @@ void G_KickFireTeamPlayer( int entityNum, int otherEntityNum ) {
 	}
 
 	// omnibot
-	Bot_Event_LeftFireTeam( &g_entities[otherEntityNum], ft->ident );
+	gentity_t* leader = &g_entities[ (int)ft->joinOrder[ 0 ] ];
+	Bot_Event_LeftFireTeam( &g_entities[ otherEntityNum ], leader, ft->ident );
 	// end omnibot
 	G_RemoveClientFromFireteams( otherEntityNum, qtrue, qfalse );
 

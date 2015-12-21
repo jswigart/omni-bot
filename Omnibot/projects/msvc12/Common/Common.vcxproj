@@ -104,6 +104,9 @@
     <ClCompile Include="..\..\..\Common\FiberState.cpp" />
     <ClCompile Include="..\..\..\Common\GOAP.cpp" />
     <ClCompile Include="..\..\..\Common\pow2assert.cpp" />
+    <ClCompile Include="..\..\..\Common\Q3BSPFileData.cpp" />
+    <ClCompile Include="..\..\..\Common\Q3BSPFileImporter.cpp" />
+    <ClCompile Include="..\..\..\Common\Q3BSPPatch.cpp" />
     <ClCompile Include="..\..\..\Common\RecastInterfaces.cpp" />
     <ClCompile Include="..\..\..\Common\TacticalManager.cpp" />
     <ClCompile Include="..\..\..\Common\VBSPFileData.cpp" />
@@ -427,7 +430,6 @@
     <ClCompile Include="..\..\..\Common\Criteria.cpp" />
     <ClCompile Include="..\..\..\Common\EngineFuncs.cpp" />
     <ClCompile Include="..\..\..\Common\FileSystem.cpp" />
-    <ClCompile Include="..\..\..\Common\InterfaceFuncs.cpp" />
     <ClCompile Include="..\..\..\Common\KeyValueIni.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -507,6 +509,9 @@
     <ClInclude Include="..\..\..\Common\Functor.h" />
     <ClInclude Include="..\..\..\Common\GOAP.h" />
     <ClInclude Include="..\..\..\Common\pow2assert.h" />
+    <ClInclude Include="..\..\..\Common\Q3BSPFileData.h" />
+    <ClInclude Include="..\..\..\Common\Q3BSPFileImporter.h" />
+    <ClInclude Include="..\..\..\Common\Q3BSPPatch.h" />
     <ClInclude Include="..\..\..\Common\RecastInterfaces.h" />
     <ClInclude Include="..\..\..\Common\TacticalManager.h" />
     <ClInclude Include="..\..\..\Common\VBSPFileData.h" />
@@ -516,7 +521,6 @@
     <ClInclude Include="..\..\..\Common\Omni-Bot.h" />
     <ClInclude Include="..\..\..\Common\Omni-Bot_BitFlags.h" />
     <ClInclude Include="..\..\..\Common\Omni-Bot_Events.h" />
-    <ClInclude Include="..\..\..\Common\Omni-bot_GameEvents.h" />
     <ClInclude Include="..\..\..\Common\Omni-Bot_Types.h" />
     <ClInclude Include="..\..\..\Common\BlackBoard.h" />
     <ClInclude Include="..\..\..\Common\BlackBoardItems.h" />
@@ -529,7 +533,6 @@
     <ClInclude Include="..\..\..\Common\MapGoal.h" />
     <ClInclude Include="..\..\..\Common\MapGoalDatabase.h" />
     <ClInclude Include="..\..\..\Common\Base_Messages.h" />
-    <ClInclude Include="..\..\..\Common\MessageHelper.h" />
     <ClInclude Include="..\..\..\Common\Path.h" />
     <ClInclude Include="..\..\..\Common\PathPlannerBase.h" />
     <ClInclude Include="..\..\..\Common\PathQuery.h" />
@@ -614,11 +617,9 @@
     <ClInclude Include="..\..\..\Common\EngineFuncs.h" />
     <ClInclude Include="..\..\..\Common\FileSystem.h" />
     <ClInclude Include="..\..\..\Common\IEngineInterface.h" />
-    <ClInclude Include="..\..\..\Common\InterfaceFuncs.h" />
     <ClInclude Include="..\..\..\Common\KeyValueIni.h" />
     <ClInclude Include="..\..\..\Common\Logger.h" />
     <ClInclude Include="..\..\..\Common\mdump.h" />
-    <ClInclude Include="..\..\..\Common\MessageFunctor.h" />
     <ClInclude Include="..\..\..\Common\NameManager.h" />
     <ClInclude Include="..\..\..\Common\ObjFunctor.h" />
     <ClInclude Include="..\..\..\Common\Omni-Bot_Color.h" />

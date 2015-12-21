@@ -16,7 +16,6 @@
 #include "gmUtilityLib.h"
 #include "PathPlannerFloodFillPathInterface.h"
 #include "RenderBuffer.h"
-#include "InterfaceFuncs.h"
 
 using namespace std;
 
@@ -319,7 +318,7 @@ static bool GetGroundPos( const Vector3f & pos, Vector3f & groundPosOut )
 		NULL/*&bounds*/,
 		TR_MASK_FLOODFILL,
 		-1,
-		False );
+		false );
 	if ( tr.mFraction > 0.0f && tr.mFraction < 1.0f )
 	{
 		groundPosOut = tr.mEndpos;
@@ -337,7 +336,7 @@ static bool GetHeightAtPos( const Vector3f & pos, float & height )
 		NULL/*&bounds*/,
 		TR_MASK_FLOODFILL,
 		-1,
-		False );
+		false );
 	if ( tr.mFraction > 0.0f && tr.mFraction < 1.0f )
 	{
 		height = tr.mEndpos[ 2 ] - pos.Z();
@@ -358,14 +357,14 @@ static bool TestForValidNode( Vector3f & spanPos, float & spanHeight )
 	const Vector3f up1( 0.f, 0.f, 1024.f );
 
 	obTraceResult tr;
-	EngineFuncs::TraceLine( tr, spanPos + dn0, spanPos + dn1, NULL, TR_MASK_FLOODFILL, -1, False );
+	EngineFuncs::TraceLine( tr, spanPos + dn0, spanPos + dn1, NULL, TR_MASK_FLOODFILL, -1, false );
 	if ( tr.mFraction < 1.0f )
 	{
 		if ( tr.mNormal[ 2 ] < 0.707f )
 			return false;
 
 		spanPos = tr.mEndpos;
-		EngineFuncs::TraceLine( tr, spanPos + up0, spanPos + up1, NULL, TR_MASK_FLOODFILL, -1, False );
+		EngineFuncs::TraceLine( tr, spanPos + up0, spanPos + up1, NULL, TR_MASK_FLOODFILL, -1, false );
 
 		spanHeight = ( spanPos + up1 ).Z() - spanPos.Z();
 		if ( tr.mFraction < 1.0f )
@@ -415,7 +414,7 @@ int PathPlannerFloodFill::Process_FloodFill()
 					NULL,
 					TR_MASK_FLOODFILL,
 					-1,
-					False );
+					false );
 
 				if ( tr.mFraction == 1.0f )
 					mSpanFrontier.push( expandPos );
@@ -537,7 +536,7 @@ bool PathPlannerFloodFill::GetNavInfo( const Vector3f &pos, int32_t &_id, std::s
 	return false;
 }
 
-void PathPlannerFloodFill::AddEntityConnection( const Event_EntityConnection &_conn )
+void PathPlannerFloodFill::AddEntityConnection( const EvEntityConnection &_conn )
 {
 }
 

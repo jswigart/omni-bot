@@ -72,7 +72,7 @@ void Bot_Event_RecievedAmmo( gentity_t * _player, gentity_t * _whodoneit );
 void Bot_Event_FireWeapon( gentity_t * _player, int _weaponId, gentity_t *_projectile );
 void Bot_Event_PreTriggerMine( gentity_t * _player, gentity_t *_mine );
 void Bot_Event_PostTriggerMine( gentity_t * _player, gentity_t *_mine );
-void Bot_Event_MortarImpact( gentity_t * _player, vec3_t _pos );
+void Bot_Event_MortarImpact( gentity_t * _player, vec3_t _pos, float radius );
 
 void Bot_Event_Spectated( gentity_t * _player, int _who );
 
@@ -84,10 +84,10 @@ void Bot_Event_Sound( gentity_t *_source, int _sndtype, const char *_name );
 void Analytic_Event( const char * eventName, const float * optionalPos );
 void Analytic_EventWithValue( const char * eventName, float value, const float * optionalPos );
 
-void Bot_Event_FireTeamCreated( gentity_t * _player, int _fireteamnum );
-void Bot_Event_FireTeamDestroyed( gentity_t * _player, int _fireteamnum );
+void Bot_Event_FireTeamCreated( gentity_t * _player, gentity_t *leader, int _fireteamnum );
+void Bot_Event_FireTeamDestroyed( gentity_t * _player, gentity_t *leader, int _fireteamnum );
 void Bot_Event_JoinedFireTeam( gentity_t * _player, gentity_t *leader, int _fireteamnum );
-void Bot_Event_LeftFireTeam( gentity_t * _player, int _fireteamnum );
+void Bot_Event_LeftFireTeam( gentity_t * _player, gentity_t *leader, int _fireteamnum );
 void Bot_Event_InviteFireTeam( gentity_t * _player, gentity_t * _invitee, int _fireteamnum );
 void Bot_Event_FireTeam_Proposal( gentity_t * _player, gentity_t * _proposed, int _fireteamnum );
 void Bot_Event_FireTeam_Warn( gentity_t * _player, gentity_t * _warned, int _fireteamnum );

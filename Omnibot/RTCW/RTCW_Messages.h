@@ -30,7 +30,7 @@ struct RTCW_GetPlayerClass
 struct RTCW_WeaponOverheated
 {
 	RTCW_Weapon mWeapon;
-	obBool	 mIsOverheated;
+	bool	 mIsOverheated;
 };
 
 struct RTCW_WeaponHeatLevel
@@ -54,24 +54,24 @@ struct RTCW_Destroyable
 
 struct RTCW_HasFlag
 {
-	obBool	 mHasFlag;
+	bool	 mHasFlag;
 };
 
 struct RTCW_CanBeGrabbed
 {
 	GameEntity mEntity;
-	obBool	 mCanBeGrabbed;
+	bool	 mCanBeGrabbed;
 };
 
 struct RTCW_WaitingForMedic
 {
-	obBool	 mWaitingForMedic;
+	bool	 mWaitingForMedic;
 };
 
 struct RTCW_SelectWeapon
 {
 	RTCW_Weapon mSelection;
-	obBool	 mGood;
+	bool	 mGood;
 };
 
 struct RTCW_ReinforceTime
@@ -81,12 +81,12 @@ struct RTCW_ReinforceTime
 
 struct RTCW_MedicNear
 {
-	obBool	 mMedicNear;
+	bool	 mMedicNear;
 };
 
 struct RTCW_GoLimbo
 {
-	obBool	 mGoLimbo;
+	bool	 mGoLimbo;
 };
 
 struct RTCW_MG42MountedPlayer
@@ -98,7 +98,7 @@ struct RTCW_MG42MountedPlayer
 struct RTCW_MG42MountedRepairable
 {
 	GameEntity mMG42Entity;
-	obBool	 mRepairable;
+	bool	 mRepairable;
 };
 
 struct RTCW_MG42Health

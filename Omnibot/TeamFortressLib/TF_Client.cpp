@@ -577,7 +577,7 @@ void TF_Client::Update()
 	using namespace AiState;
 	if ( TF_Options::POLL_SENTRY_STATUS )
 	{
-		TF_BuildInfo bi = InterfaceFuncs::GetBuildInfo( this );
+		TF_BuildInfo bi = gEngineFuncs->GetBuildInfo( this );
 		FINDSTATEIF_OPT( Sentry, GetStateRoot(), UpdateSentryStatus( bi.mSentryStats ) );
 		FINDSTATEIF_OPT( Dispenser, GetStateRoot(), UpdateDispenserStatus( bi.mDispenserStats ) );
 		FINDSTATEIF_OPT( Detpack, GetStateRoot(), UpdateDetpackStatus( bi.mDetpackStats ) );

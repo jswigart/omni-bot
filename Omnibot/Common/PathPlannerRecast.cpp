@@ -13,7 +13,6 @@
 #include "Path.h"
 #include "gmUtilityLib.h"
 #include "Client.h"
-#include "InterfaceFuncs.h"
 #include "ProtoBufUtility.h"
 #include "RenderBuffer.h"
 
@@ -713,9 +712,9 @@ void PathPlannerRecast::SendWorldModel()
 			if ( ioScene.SerializeToString( &cachedFileData ) )
 			{
 				Analytics::MessageUnion msgUnion;
-				msgUnion.set_timestamp( System::mInstance->mAnalytics->GetTimeStamp() );
+				msgUnion.set_timestamp( IGame::GetTime() );
 
-				Analytics::SystemModelData* mdlData = msgUnion.mutable_systemmodeldata();
+				Analytics::GameModelData* mdlData = msgUnion.mutable_gamemodeldata();
 				mdlData->set_modelname( "world" );
 				mdlData->set_compressiontype( Analytics::Compression_FastLZ );
 				switch ( mdlData->compressiontype() )
@@ -833,9 +832,9 @@ void PathPlannerRecast::SendTileModel( int tx, int ty )
 			if ( ioScene.SerializeToString( &cachedFileData ) )
 			{
 				Analytics::MessageUnion msgUnion;
-				msgUnion.set_timestamp( System::mInstance->mAnalytics->GetTimeStamp() );
+				msgUnion.set_timestamp( IGame::GetTime() );
 
-				Analytics::SystemModelData* mdlData = msgUnion.mutable_systemmodeldata();
+				Analytics::GameModelData* mdlData = msgUnion.mutable_gamemodeldata();
 				mdlData->set_modelname( name );
 				mdlData->set_compressiontype( Analytics::Compression_FastLZ );
 				switch ( mdlData->compressiontype() )
@@ -1847,7 +1846,7 @@ bool PathPlannerRecast::GetNavInfo( const Vector3f &pos, int32_t &_id, std::stri
 	return false;
 }
 
-void PathPlannerRecast::AddEntityConnection( const Event_EntityConnection &_conn )
+void PathPlannerRecast::AddEntityConnection( const EvEntityConnection &_conn )
 {
 }
 

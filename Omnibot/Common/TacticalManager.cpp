@@ -10,7 +10,6 @@
 #include "Client.h"
 #include "ScriptManager.h"
 #include "RenderBuffer.h"
-#include "InterfaceFuncs.h"
 #include "System.h"
 
 //////////////////////////////////////////////////////////////////////////

@@ -51,7 +51,7 @@ class Incapacitated : public StateSimultaneous
 public:
 	float GetPriority()
 	{
-		return !InterfaceFuncs::IsAlive( GetClient()->GetGameEntity() ) ? 1.f : 0.f;
+		return !gEngineFuncs->IsAlive( GetClient()->GetGameEntity() ) ? 1.f : 0.f;
 	}
 
 	State::StateStatus Update( float fDt )
@@ -146,11 +146,9 @@ void RTCW_Client::SendVoiceMacro( int _macroId )
 	RTCW_VoiceMacros::SendVoiceMacro( this, _macroId );
 }
 
-int RTCW_Client::HandleVoiceMacroEvent( const MessageHelper &_message )
+int RTCW_Client::HandleVoiceMacroEvent( const EvVoiceMacro* msg )
 {
-	const Event_VoiceMacro *m = _message.Get<Event_VoiceMacro>();
-
-	int iVoiceId = RTCW_VoiceMacros::GetVChatId( m->mMacroString );
+	int voiceId = RTCW_VoiceMacros::GetVChatId( msg->mMessage );
 	/*switch(iVoiceId)
 	{
 	case VCHAT_TEAM_PATHCLEARED:
@@ -214,7 +212,7 @@ int RTCW_Client::HandleVoiceMacroEvent( const MessageHelper &_message )
 	case VCHAT_GLOBAL_HOLDFIRE:
 	case VCHAT_GLOBAL_GOODGAME:
 	}*/
-	return iVoiceId;
+	return voiceId;
 }
 
 void RTCW_Client::ProcessGotoNode( const PathInterface::PathCorner corners[ 2 ], const size_t numEdges )
@@ -361,12 +359,12 @@ float RTCW_Client::GetGameVar( GameVar _var ) const
 
 bool RTCW_Client::DoesBotHaveFlag( MapGoalPtr _mapgoal )
 {
-	return InterfaceFuncs::HasFlag( this );
+	return gEngineFuncs->HasFlag( this );
 }
 
 bool RTCW_Client::IsFlagGrabbable( MapGoalPtr _mapgoal )
 {
-	return InterfaceFuncs::ItemCanBeGrabbed( this, _mapgoal->GetEntity() );
+	return gEngineFuncs->ItemCanBeGrabbed( this, _mapgoal->GetEntity() );
 }
 
 bool RTCW_Client::CanBotSnipe()

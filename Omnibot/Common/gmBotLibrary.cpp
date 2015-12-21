@@ -14,7 +14,6 @@
 #include "ScriptManager.h"
 #include "IGame.h"
 #include "MapGoalDatabase.h"
-#include "InterfaceFuncs.h"
 #include "Revision.h"
 #include "RenderBuffer.h"
 
@@ -221,7 +220,7 @@ static int GM_CDECL gmfRunScript( gmThread *a_thread )
 //		None
 static int GM_CDECL gmfAddBot( gmThread *a_thread )
 {
-	Msg_Addbot b;
+	ParamsAddbot b;
 	memset( &b, 0, sizeof( b ) );
 
 	if ( a_thread->ParamType( 0 ) == GM_TABLE )
@@ -441,7 +440,7 @@ static int GM_CDECL gmfEntityKill( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
-	a_thread->PushInt( InterfaceFuncs::EntityKill( gameEnt ) ? 1 : 0 );
+	a_thread->PushInt( gEngineFuncs->Suicide( gameEnt ) ? 1 : 0 );
 	return GM_OK;
 }
 
@@ -830,14 +829,14 @@ static int gmfTraceLine( gmThread *a_thread )
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 4 );
 	//GM_INT_PARAM(iUser, 4, -1);
-
+	
 	GM_INT_PARAM( iUsePVS, 5, false );
 
 	const int iUser = gameEnt.IsValid() ? gEngineFuncs->IDFromEntity( gameEnt ) : -1;
 
 	obTraceResult tr;
 	EngineFuncs::TraceLine( tr, Vector3f( sv.x, sv.y, sv.z ), Vector3f( ev.x, ev.y, ev.z ), bbox,
-		iMask, iUser, iUsePVS == False ? False : True );
+		iMask, iUser, iUsePVS != 0 );
 
 	gmMachine *pMachine = a_thread->GetMachine();
 	DisableGCInScope gcEn( pMachine );
@@ -884,7 +883,7 @@ static int gmfGroundPoint( gmThread *a_thread )
 	Vector3f vPt( pt.x, pt.y, pt.z );
 
 	obTraceResult tr;
-	EngineFuncs::TraceLine( tr, vPt, vPt + Vector3f( 0, 0, -1024.f ), NULL, iMask, -1, False );
+	EngineFuncs::TraceLine( tr, vPt, vPt + Vector3f( 0, 0, -1024.f ), NULL, iMask, -1, false );
 	if ( tr.mFraction < 1.f )
 		vPt = tr.mEndpos;
 
@@ -1629,7 +1628,7 @@ static int gmfGetEntityTeam( gmThread *a_thread )
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 
-	int iTeam = gameEnt.IsValid() ? InterfaceFuncs::GetEntityTeam( gameEnt ) : 0;
+	int iTeam = gameEnt.IsValid() ? gEngineFuncs->GetEntityTeam( gameEnt ) : 0;
 	if ( iTeam != 0 )
 		a_thread->PushInt( iTeam );
 	else
@@ -1897,32 +1896,6 @@ static int gmfGetEntityByName( gmThread *a_thread )
 
 //////////////////////////////////////////////////////////////////////////
 
-// function: GetEntityStat
-//		This function gets a named stat from an entity.
-//
-// Parameters:
-//
-//		<GameEntity> - The entity to use
-//		- OR -
-//		<int> - The gameId for the entity to use
-//		<std::string> - The name of the stat to retrieve
-//
-// Returns:
-//		<variable> - Resulting data
-static int gmfGetEntityStat( gmThread *a_thread )
-{
-	GM_CHECK_NUM_PARAMS( 2 );
-	GameEntity gameEnt;
-	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
-	GM_CHECK_STRING_PARAM( statname, 1 );
-
-	obUserData d = InterfaceFuncs::GetEntityStat( gameEnt, statname );
-	a_thread->Push( Utils::UserDataToGmVar( a_thread->GetMachine(), d ) );
-	return GM_OK;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
 // function: EntityIsValid
 //		Checks if a given entity is valid
 //
@@ -1947,31 +1920,6 @@ static int gmfEntityIsValid( gmThread *a_thread )
 		valid = false;
 
 	a_thread->PushInt( valid ? 1 : 0 );
-	return GM_OK;
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-// function: GetTeamStat
-//		This function gets a named stat from a team.
-//
-// Parameters:
-//
-//		<GameEntity> - The entity to use
-//		- OR -
-//		<int> - The gameId for the entity to use
-//		<std::string> - The name of the stat to retrieve
-//
-// Returns:
-//		<variable> - Resulting data
-static int gmfGetTeamStat( gmThread *a_thread )
-{
-	GM_CHECK_NUM_PARAMS( 2 );
-	GM_CHECK_INT_PARAM( team, 0 );
-	GM_CHECK_STRING_PARAM( statname, 1 );
-
-	obUserData d = InterfaceFuncs::GetTeamStat( team, statname );
-	a_thread->Push( Utils::UserDataToGmVar( a_thread->GetMachine(), d ) );
 	return GM_OK;
 }
 
@@ -2203,7 +2151,37 @@ static int gmfCheckEntityBoundsIntersect( gmThread *a_thread )
 static int GM_CDECL gmfGetGameState( gmThread *a_thread )
 {
 	GM_CHECK_NUM_PARAMS( 0 );
-	a_thread->PushNewString( InterfaceFuncs::GetGameState( InterfaceFuncs::GetGameState() ) );
+	
+	switch ( gEngineFuncs->GetGameState() )
+	{
+		case GAME_STATE_WAITINGFORPLAYERS:
+			a_thread->PushNewString( "WaitingForPlayers" );
+			break;
+		case GAME_STATE_WARMUP:
+			a_thread->PushNewString( "Warmup" );
+			break;
+		case GAME_STATE_WARMUP_COUNTDOWN:
+			a_thread->PushNewString( "WarmupCountdown" );
+			break;
+		case GAME_STATE_PLAYING:
+			a_thread->PushNewString( "Playing" );
+			break;
+		case GAME_STATE_SUDDENDEATH:
+			a_thread->PushNewString( "SuddenDeath" );
+			break;
+		case GAME_STATE_INVALID:
+			a_thread->PushNewString( "Invalid" );
+			break;
+		case GAME_STATE_INTERMISSION:
+			a_thread->PushNewString( "Intermission" );
+			break;
+		case GAME_STATE_SCOREBOARD:
+			a_thread->PushNewString( "Scoreboard" );
+			break;
+		case GAME_STATE_PAUSED:
+			a_thread->PushNewString( "Paused" );
+			break;
+	}
 	return GM_OK;
 }
 
@@ -2219,7 +2197,11 @@ static int GM_CDECL gmfGetGameState( gmThread *a_thread )
 static int GM_CDECL gmfGetGameTimeLeft( gmThread *a_thread )
 {
 	GM_CHECK_NUM_PARAMS( 0 );
-	a_thread->PushFloat( InterfaceFuncs::GetGameTimeLeft() );
+	const int timeleft = gEngineFuncs->GetGameTimeLeft();
+	if ( timeleft >= 0 )
+		a_thread->PushFloat( (float)timeleft / 1000.0f );
+	else
+		a_thread->PushNull();
 	return GM_OK;
 }
 
@@ -2364,7 +2346,7 @@ static int GM_CDECL gmfServerCommand( gmThread *a_thread )
 {
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_STRING_PARAM( cmd, 0 );
-	InterfaceFuncs::ServerCommand( cmd );
+	gEngineFuncs->ServerCommand( cmd );
 	return GM_OK;
 }
 
@@ -2373,10 +2355,15 @@ static int GM_CDECL gmfServerScriptFunction( gmThread *a_thread )
 	GM_CHECK_STRING_PARAM( entname, 0 );
 	GM_CHECK_STRING_PARAM( funcname, 1 );
 
-	GM_STRING_PARAM( p1, 2, "" );
-	GM_STRING_PARAM( p2, 3, "" );
-	GM_STRING_PARAM( p3, 4, "" );
-	InterfaceFuncs::ScriptEvent( funcname, entname, p1, p2, p3 );
+	int numParms = 0;
+	static const int MAX_PARMS = 8;
+	obUserData params[ MAX_PARMS ];
+	for ( int i = 2; i < a_thread->GetNumParams() && numParms < MAX_PARMS; ++i )
+	{
+		GM_STRING_PARAM( p1, i, "" );
+		params[ i ] = obUserData( p1 );
+	}	
+	gEngineFuncs->ServerScriptEvent( funcname, entname, params, numParms );
 	return GM_OK;
 }
 
@@ -2667,7 +2654,7 @@ static int GM_CDECL gmfEntityIsOutside( gmThread *a_thread )
 	Vector3f v = Vector3f::ZERO;
 	if ( gameEnt.IsValid() && EngineFuncs::EntityPosition( gameEnt, v ) )
 	{
-		a_thread->PushInt( InterfaceFuncs::IsOutSide( v ) );
+		a_thread->PushInt( gEngineFuncs->IsOutSide( v ) );
 	}
 	return GM_OK;
 }
@@ -2715,8 +2702,7 @@ static int GM_CDECL gmfGetWeapon( gmThread *a_thread )
 static int GM_CDECL gmfGetGameType( gmThread *a_thread )
 {
 	GM_CHECK_NUM_PARAMS( 0 );
-
-	a_thread->PushInt( InterfaceFuncs::GetGameType() );
+	a_thread->PushInt( gEngineFuncs->GetGameType() );
 	return GM_OK;
 }
 
@@ -2772,9 +2758,8 @@ static int GM_CDECL gmfSetCvar( gmThread *a_thread )
 				}
 			}
 		}
-
-		bool bSucess = InterfaceFuncs::SetCvar( cvar, value );
-		a_thread->PushInt( bSucess ? 1 : 0 );
+		
+		a_thread->PushInt( gEngineFuncs->ServerSetVariable( cvar, value ) );
 		return GM_OK;
 	}
 
@@ -2815,8 +2800,10 @@ static int GM_CDECL gmfGetCvar( gmThread *a_thread )
 				iPos += len;
 			}
 		}
-
-		a_thread->PushInt( InterfaceFuncs::GetCvar( cvar ) );
+		
+		char varValue[ bufferSize ] = {};
+		gEngineFuncs->ServerGetVariable( cvar, varValue, bufferSize );
+		a_thread->PushNewString( buffer );
 		return GM_OK;
 	}
 
@@ -2929,10 +2916,7 @@ static gmFunctionEntry s_botLib [] =
 	{ "GetEntityByName", gmfGetEntityByName },
 
 	{ "ExecCommandOnClient", gmfExecCommandOnClient },
-
-	{ "GetEntityStat", gmfGetEntityStat },
-	{ "GetTeamStat", gmfGetTeamStat },
-
+	
 	{ "GetGravity", gmfGetGravity },
 	{ "CheatsEnabled", gmfGetCheats },
 	{ "ServerCommand", gmfServerCommand },

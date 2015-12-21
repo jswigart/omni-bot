@@ -134,9 +134,9 @@ void WeaponDatabase::ReloadScript( LiveUpdateKey _key )
 				{
 					( *it ).second = newwpn;
 
-					Event_RefreshWeapon d = { wpn->GetWeaponID() };
-					MessageHelper evt( MESSAGE_REFRESHWEAPON, &d, sizeof( d ) );
-					System::mInstance->mGame->DispatchGlobalEvent( evt );
+					EvRefreshWeapon::Msg event;
+					event.mData.mWeaponId = wpn->GetWeaponID();
+					System::mInstance->mGame->DispatchEvent( event );
 				}
 			}
 		}

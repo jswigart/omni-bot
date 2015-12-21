@@ -24,7 +24,7 @@ bool RTCW_FilterClosest::CheckEx( const MemoryRecord &_record )
 	{
 		case RTCW_CLASSEX_MG42MOUNT:
 		{
-			GameEntity mounted = InterfaceFuncs::GetMountedPlayerOnMG42( mClient, _record.GetEntity() );
+			GameEntity mounted = gEngineFuncs->GetMountedPlayerOnMG42( mClient, _record.GetEntity() );
 			if ( !mounted.IsValid() || mClient->IsAllied( mounted ) )
 				return false;
 			break;

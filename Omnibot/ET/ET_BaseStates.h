@@ -34,7 +34,7 @@ namespace AiState
 		void Exit();
 		StateStatus Update( float fDt );
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message & message, CallbackParameters & cb );
 
 		// FollowPathUser functions.
 		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
@@ -68,7 +68,7 @@ namespace AiState
 		void Exit();
 		StateStatus Update( float fDt );
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message & message, CallbackParameters & cb );
 
 		// FollowPathUser functions.
 		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
@@ -83,13 +83,12 @@ namespace AiState
 		{
 			MaxMortarAims = 8
 		};
-		Vector3f		 mMortarAim[ MaxMortarAims ];
-		int				 mCurrentAim;
-		int				 mNumMortarAims;
-		int				 mFireDelay;
+		Vector3f			mMortarAim[ MaxMortarAims ];
+		int					mCurrentAim;
+		int					mNumMortarAims;
+		int					mFireDelay;
 
-		WeaponLimits	 mLimits;
-		MapGoalPtr		 mMapGoal;
+		MapGoalPtr			mMapGoal;
 		Trackers			Tracker;
 
 		bool CacheGoalInfo( MapGoalPtr mg );
@@ -110,7 +109,7 @@ namespace AiState
 		void Exit();
 		StateStatus Update( float fDt );
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message & message, CallbackParameters & cb );
 
 		// FollowPathUser functions.
 		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
@@ -298,7 +297,7 @@ namespace AiState
 	//	void Exit();
 	//	StateStatus Update(float fDt);
 
-	//	void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+	//	void ProcessEvent(const Message & message, CallbackParameters & cb);
 
 	//	// FollowPathUser functions.
 	//	bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);

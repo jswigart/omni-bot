@@ -515,14 +515,14 @@ int gmScriptGoal::gmfGoto( gmThread *a_thread )
 
 	if ( native->Goto( Vector3f( v.x, v.y, v.z ), opn ) )
 	{
-		gmVariable blocks[ 2 ] = { gmVariable( PATH_SUCCESS ), gmVariable( PATH_FAILED ) };
+		gmVariable blocks[ 2 ] = { gmVariable( MSG_PATH_SUCCESS ), gmVariable( MSG_PATH_FAILED ) };
 		int res = a_thread->GetMachine()->Sys_Block( a_thread, 2, blocks );
 		if ( res == -1 )
 			return GM_SYS_BLOCK;
 		else if ( res == -2 )
 			return GM_SYS_YIELD;
 	}
-	a_thread->Push( gmVariable( PATH_FAILED ) );
+	a_thread->Push( gmVariable( MSG_PATH_FAILED ) );
 	return GM_SYS_YIELD;
 }
 
@@ -566,14 +566,14 @@ int gmScriptGoal::gmfGotoRandom( gmThread *a_thread )
 
 	if ( native->GotoRandom( opn ) )
 	{
-		gmVariable blocks[ 2 ] = { gmVariable( PATH_SUCCESS ), gmVariable( PATH_FAILED ) };
+		gmVariable blocks[ 2 ] = { gmVariable( MSG_PATH_SUCCESS ), gmVariable( MSG_PATH_FAILED ) };
 		int res = a_thread->GetMachine()->Sys_Block( a_thread, 2, blocks );
 		if ( res == -1 )
 			return GM_SYS_BLOCK;
 		else if ( res == -2 )
 			return GM_SYS_YIELD;
 	}
-	a_thread->Push( gmVariable( PATH_FAILED ) );
+	a_thread->Push( gmVariable( MSG_PATH_FAILED ) );
 	return GM_SYS_YIELD;
 }
 
@@ -624,14 +624,14 @@ int gmScriptGoal::gmfRouteTo( gmThread *a_thread )
 	MapGoalPtr mgp = System::mInstance->mGoalManager->GetGoal( Mg->GetName() );
 	if ( mgp && native->RouteTo( mgp, opn ) )
 	{
-		gmVariable blocks[ 2 ] = { gmVariable( PATH_SUCCESS ), gmVariable( PATH_FAILED ) };
+		gmVariable blocks[ 2 ] = { gmVariable( MSG_PATH_SUCCESS ), gmVariable( MSG_PATH_FAILED ) };
 		int res = a_thread->GetMachine()->Sys_Block( a_thread, 2, blocks );
 		if ( res == -1 )
 			return GM_SYS_BLOCK;
 		else if ( res == -2 )
 			return GM_SYS_YIELD;
 	}
-	a_thread->Push( gmVariable( PATH_FAILED ) );
+	a_thread->Push( gmVariable( MSG_PATH_FAILED ) );
 	return GM_OK;
 }
 
@@ -746,7 +746,7 @@ int gmScriptGoal::gmfBlockForWeaponChange( gmThread *a_thread )
 	CHECK_THIS_SGOAL();
 	GM_CHECK_INT_PARAM( weaponId, 0 );
 
-	gmVariable varSig( Utils::MakeId32( (int16_t)ACTION_WEAPON_CHANGE, (int16_t)weaponId ) );
+	gmVariable varSig( Utils::MakeId32( (int16_t)MSG_WEAPON_CHANGE, (int16_t)weaponId ) );
 
 	AiState::WeaponSystem *ws = native->GetClient()->GetWeaponSystem();
 	if ( ws != NULL && ws->CurrentWeaponIs( weaponId ) )
@@ -768,7 +768,7 @@ int gmScriptGoal::gmfBlockForWeaponFire( gmThread *a_thread )
 {
 	CHECK_THIS_SGOAL();
 	GM_CHECK_INT_PARAM( weaponId, 0 );
-	gmVariable varSig( Utils::MakeId32( (int16_t)ACTION_WEAPON_FIRE, (int16_t)weaponId ) );
+	gmVariable varSig( Utils::MakeId32( (int16_t)MSG_WEAPON_FIRE, (int16_t)weaponId ) );
 	int res = a_thread->GetMachine()->Sys_Block( a_thread, 1, &varSig );
 	if ( res == -1 )
 		return GM_SYS_BLOCK;
@@ -787,7 +787,7 @@ int gmScriptGoal::gmfBlockForVoiceMacro( gmThread *a_thread )
 	for ( int i = 0; i < a_thread->GetNumParams(); ++i )
 	{
 		GM_CHECK_INT_PARAM( macroId, i );
-		signals[ iNumMacros++ ] = gmVariable( Utils::MakeId32( (int16_t)PERCEPT_HEAR_VOICEMACRO, (int16_t)macroId ) );
+		signals[ iNumMacros++ ] = gmVariable( Utils::MakeId32( (int16_t)MSG_HEAR_VOICEMACRO_GLOBAL, (int16_t)macroId ) );
 	}
 
 	int res = a_thread->GetMachine()->Sys_Block( a_thread, iNumMacros, signals );

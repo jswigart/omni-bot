@@ -124,7 +124,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\MC\MC_InterfaceFuncs.cpp" />
     <ClCompile Include="..\..\..\MC\gmMCBinds.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -137,7 +136,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"
     <ClInclude Include="..\..\..\MC\MC_Client.h" />
     <ClInclude Include="..\..\..\MC\MC_Config.h" />
     <ClInclude Include="..\..\..\MC\MC_Game.h" />
-    <ClInclude Include="..\..\..\MC\MC_InterfaceFuncs.h" />
     <ClInclude Include="..\..\..\MC\MC_Messages.h" />
   </ItemGroup>
   <ItemGroup>

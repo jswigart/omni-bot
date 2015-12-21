@@ -128,6 +128,11 @@ void CallbackParameters::AddFloat( const char *_name, float _param )
 	mNumParameters++;
 }
 
+void CallbackParameters::AddVector( const char *_name, const float pos[ 3 ] )
+{
+	AddVector( _name, pos[ 0 ], pos[ 1 ], pos[2] );
+}
+
 void CallbackParameters::AddVector( const char *_name, const Vector3f &_vec )
 {
 	AddVector( _name, _vec.X(), _vec.Y(), _vec.Z() );

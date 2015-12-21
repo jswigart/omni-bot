@@ -42,7 +42,7 @@ typedef enum eQ4_Events
 //		Events that allow the bot to query for information from the game.
 typedef enum eQ4_GameMessage
 {
-	Q4_MSG_START = GEN_MSG_END,
+	Q4_MSG_START = MSG_END,
 	Q4_MSG_GETLOCATION,
 	Q4_MSG_GETPLAYERCASH,
 	Q4_MSG_ISBUYINGALLOWED,

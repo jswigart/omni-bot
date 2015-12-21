@@ -53,8 +53,8 @@ public:
 	ET_Client();
 	virtual ~ET_Client();
 protected:
-	void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
-	int HandleVoiceMacroEvent( const MessageHelper &_message );
+	void ProcessEvent( const Message & message, CallbackParameters & cb );
+	int HandleVoiceMacroEvent( const EvVoiceMacro* msg );
 
 	float	 mBreakableTargetDistance;
 };

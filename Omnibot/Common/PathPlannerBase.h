@@ -17,7 +17,7 @@ class GoalQueue;
 class Client;
 class Path;
 class gmMachine;
-struct Event_EntityConnection;
+struct EvEntityConnection;
 
 #include "EventReciever.h"
 #include "CommandReciever.h"
@@ -175,7 +175,7 @@ public:
 		
 	virtual bool GetNavInfo( const Vector3f &pos, int32_t &_id, std::string &_name ) = 0;
 
-	virtual void AddEntityConnection( const Event_EntityConnection &_conn ) = 0;
+	virtual void AddEntityConnection( const EvEntityConnection &_conn ) = 0;
 	virtual void RemoveEntityConnection( GameEntity _ent ) = 0;
 	virtual void EntityCreated( const EntityInstance &ei );
 	virtual void EntityDeleted( const EntityInstance &ei );

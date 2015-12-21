@@ -8,7 +8,6 @@
 
 #include "MC_Client.h"
 #include "MC_Messages.h"
-#include "MC_InterfaceFuncs.h"
 
 #include "IGame.h"
 #include "IGameManager.h"
@@ -39,8 +38,15 @@ NavFlags MC_Client::GetTeamFlag( int _team ) const
 
 bool MC_Client::CanUseModule( MC_Module mod ) const
 {
-	return mModuleStats.mModule[ mod ].mLvl > 0 && 
-		mPlayerStats.mAuxPower > mModuleStats.mModule[ mod ].mAuxDrain;
+	float auxCur, auxMax, auxRegen;
+	if ( !gModularCombatFuncs->GetPlayerAux( GetGameEntity(), auxCur, auxMax, auxRegen ) )
+		return false;
+
+	int lvl, lvlMax, upgCost;
+	float auxDrain, cooldown;
+	if ( !gModularCombatFuncs->ModuleStats( GetGameEntity(), mod, lvl, lvlMax, upgCost, auxDrain, cooldown ) )
+		return false;
+	return lvl > 0 && auxCur > auxDrain;
 }
 
 void MC_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
@@ -93,68 +99,51 @@ bool MC_Client::DoesBotHaveFlag( MapGoalPtr _mapgoal )
 
 void MC_Client::Update()
 {
-	InterfaceFuncs::GetPlayerStats( GetGameEntity(), mPlayerStats );
-	InterfaceFuncs::GetModuleStats( GetGameEntity(), mModuleStats );
-
 	Client::Update();
 }
 
-void MC_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+void MC_Client::ProcessEvent( const Message & message, CallbackParameters & cb )
 {
-	switch ( _message.GetMessageId() )
+	switch ( message.Id() )
 	{
-		HANDLER( Event_PlayerSpree::EventId )
+		CASE_MSG( EvPlayerSpree )
 		{
-			_cb.CallScript();
-			const Event_PlayerSpree *m = _message.Get<Event_PlayerSpree>();
-			_cb.AddEntity( "who", m->mPlayer );
-			_cb.AddInt( "kills", m->mKills );
+			cb.CallScript();
+			cb.AddEntity( "who", msg->mPlayer );
+			cb.AddInt( "kills", msg->mKills );
 			break;
 		}
-		HANDLER( Event_PlayerSpreeEnd::EventId )
+		CASE_MSG( EvPlayerSpreeEnd )
 		{
-			_cb.CallScript();
-			const Event_PlayerSpreeEnd *m = _message.Get<Event_PlayerSpreeEnd>();
-			_cb.AddEntity( "who", m->mPlayer );
-			_cb.AddEntity( "bywho", m->mByWho );
-			_cb.AddInt( "kills", m->mKills );
+			cb.CallScript();
+			cb.AddEntity( "who", msg->mPlayer );
+			cb.AddEntity( "bywho", msg->mByWho );
+			cb.AddInt( "kills", msg->mKills );
 			break;
 		}
-		HANDLER( Event_SpreeWarStart::EventId )
+		CASE_MSG( EvSpreeWarStart )
 		{
-			_cb.CallScript();
-			const Event_SpreeWarStart *m = _message.Get<Event_SpreeWarStart>();
-			_cb.AddEntity( "victim", m->mVictim );
+			cb.CallScript();
+			cb.AddEntity( "victim", msg->mVictim );
 			break;
 		}
-		HANDLER( Event_SpreeWarEnd::EventId )
+		CASE_MSG( EvSpreeWarEnd )
 		{
-			_cb.CallScript();
+			cb.CallScript();
 			/*const MC_SpreeWarEnd *m = _message.Get<MC_SpreeWarEnd>();
 			_cb.AddEntity("victim", m->mVictim);*/
 			break;
 		}
-		HANDLER( Event_LevelUp::EventId )
+		CASE_MSG( EvLevelUp )
 		{
-			const Event_LevelUp *m = _message.Get<Event_LevelUp>();
-			_cb.CallScript();
-			_cb.AddInt( "level", m->mLevel );
+			cb.CallScript();
+			cb.AddInt( "level", msg->mLevel );
 			break;
 		}
 	}
-	Client::ProcessEvent( _message, _cb );
+	Client::ProcessEvent( message, cb );
 }
 
 void MC_Client::SendVoiceMacro( int _macroId )
 {
-}
-
-const MC_PlayerStats &MC_Client::GetPlayerStats()
-{
-	return mPlayerStats;
-}
-
-const MC_ModuleStats &MC_Client::GetModuleStats()
-{
-	return mModuleStats;
 }

@@ -69,7 +69,7 @@ namespace AiState
 
 		// function: UpdateWithSoundSource
 		//		Updates memory record from sound input.
-		void UpdateWithSoundSource( const Event_Sound *_sound );
+		void UpdateWithSoundSource( const EvSound *_sound );
 
 		// function: UpdateWithTouchSource
 		//		Updates memory record from touch input.

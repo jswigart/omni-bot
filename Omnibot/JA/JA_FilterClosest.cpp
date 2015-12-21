@@ -24,7 +24,7 @@ bool JA_FilterClosest::CheckEx( const GameEntity _ent, const MemoryRecord &_reco
 	if ( _record.mTargetInfo.mEntInfo.mFlags.CheckFlag( JA_ENT_FLAG_CLOAKED ) && !_record.mTargetInfo.mEntInfo.mFlags.CheckFlag( JA_ENT_FLAG_MUTANT ) )
 		return false;
 
-	if ( InterfaceFuncs::HasMeMindTricked( mClient, mClient->GetTargetingSystem()->GetLastTarget() ) )
+	if ( gEngineFuncs->HasMeMindTricked( mClient, mClient->GetTargetingSystem()->GetLastTarget() ) )
 		return false;
 
 	return true;
