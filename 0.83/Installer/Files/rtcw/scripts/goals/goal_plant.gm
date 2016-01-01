@@ -16,24 +16,33 @@ this.GoalStateNames = { "LAY_EXPLOSIVE", "ARM_EXPLOSIVE", "COVER_DYNAMITE", "LOO
 
 this.GetPriority = function()
 {
-	Util.GetPriority(this,0xbbcae592 /* PLANT */, WEAPON.DYNAMITE, 0, function(goal, bot)
+	Util.GetPriority(this,0xbbcae592 /* PLANT */, WEAPON.DYNAMITE, 0, function(goal, bot, _this)
 	{
 		if ( goal.TraceInfo && tableCount(goal.TraceInfo) > 0 )
 		{
-			if ( !goal.TraceEntity || bot.GetDestroyableState(goal.TraceEntity) < 1 )
-			{
-				return;
-			}
+			goalEnt = goal.TraceEntity;
 		}
 		else
 		{
 			goalEnt = goal.GetEntity();
+		}
+		if ( !goalEnt || bot.GetDestroyableState(goalEnt) < 1 )
+		{
+			return;
+		}
 
-			if ( !goalEnt || bot.GetDestroyableState(goalEnt) < 1 )
-			{
+		if (_this.ExplosiveEntity)
+		{
+			if (!EntityIsValid(_this.ExplosiveEntity)) {
+				// dynamite was defused or exploded
+				_this.ExplosiveEntity = null;
+			}
+			else if (DistanceBetween(goal, _this.ExplosiveEntity) < 400) {
+				// there is ticking dynamite at goal
 				return;
 			}
 		}
+
 		return true;
 	});
 };
@@ -79,7 +88,6 @@ this.Exit = function()
 	this.Bot.ReleaseButton(BTN.CROUCH);
 
 	this.GoalEntity = null;
-	this.ExplosiveEntity = null;
 
 	// clear the occupied flag
 	if ( this.MapGoal && !IsNull(this.spotIndex) ) {
@@ -131,7 +139,12 @@ this.UpdateDynamite = function()
 					{
 						state = this.Bot.GetExplosiveState(ent);
 						if (state == 1) { break; }
-						if (state == 0) { activeDyno += 1; }
+						if (state == 0) {
+							activeDyno += 1;
+							if (!this.ExplosiveEntity) {
+								this.ExplosiveEntity = ent;
+							}
+						}
 					}
 				}
 
@@ -147,9 +160,6 @@ this.UpdateDynamite = function()
 					this.UpdateDebugString();
 				}
 				else {
-					if (this.ExplosiveEntity || activeDyno > 0) {
-						this.BlackboardDelay(35);
-					}
 					this.Finished();
 				}
 			}
@@ -215,9 +225,6 @@ this.UpdateDynamite = function()
 					this.Finished();
 				}
 
-				//don't plant another dynamite after coverTimeout or if all coverspots are occupied
-				this.BlackboardDelay(35);
-
 				// pick a cover spot
 				if (!hasCoverSpot) {
 
@@ -243,6 +250,7 @@ this.UpdateDynamite = function()
 					if ( spot.AimVectors && tableCount(spot.AimVectors) > 0 ) {
 						aimVectors = spot.AimVectors;
 						if ( spot.Timeout ) { coverTimeout = spot.Timeout; }
+						delay = 31 - coverTimeout;
 						hasCoverSpot = true;
 					}
 					else {
@@ -277,6 +285,9 @@ this.UpdateDynamite = function()
 
 				coverTimeout -= 1;
 				if ( coverTimeout <= 0 ) {
+					if ( delay > 0) {
+						this.BlackboardDelay(delay);
+					}
 					this.Finished();
 				}
 			}

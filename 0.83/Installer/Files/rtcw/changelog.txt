@@ -1,3 +1,13 @@
+RTCW Change Log
+
+=== GOALS ===
+Fixed PLANT goal was always delayed 35 seconds even if defused
+
+=== SCRIPTS ===
+Optimized Util.ProcessMovers
+
+---------------------------------------------------------------
+
 ==0.85 RTCW Change Log==
 
 64-bit iortcw is supported
@@ -213,6 +223,7 @@ Route Maker does not require windows-1252 code page, output script is copied to 
 Updated Notepad++ for omnibot (thx d00d)
 
 ---------------------------------------------------------------
+
 ==0.82 RTCW Change Log==
 
 === Mod ===
