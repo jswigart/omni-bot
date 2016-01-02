@@ -807,14 +807,18 @@ bool GoalManager::Save(const String &_map, ErrorObj &_err)
 
 	//////////////////////////////////////////////////////////////////////////
 
+	File outFile;
+	if(!outFile.OpenForWrite(filePath.c_str(), File::Text)){
+		_err.AddError("ERROR saving goals. Could not write to file %s", filePath.c_str());
+		return false;
+	}
+
 	_err.AddInfo("%d Goals Saved Successfully, %d Goals could not save, %d skipped.",
 		GoalsSaved,
 		GoalsSavedFailed,
 		GoalsSavedSkipped);
 
-	File outFile;
-	outFile.OpenForWrite(filePath.c_str(), File::Text);
-	return gmUtility::DumpTable(pMachine,outFile,MapGoalTable,m_LoadedMapGoals,gmUtility::DUMP_ALL);
+	return gmUtility::DumpTable(pMachine, outFile, MapGoalTable, m_LoadedMapGoals, gmUtility::DUMP_ALL);
 }
 
 bool GoalManager::Load(const String &_map, ErrorObj &_err)
