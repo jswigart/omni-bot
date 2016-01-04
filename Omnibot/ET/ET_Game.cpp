@@ -86,12 +86,6 @@ void ET_Game::GetTeamEnumeration( const IntEnum *&_ptr, int &num )
 	_ptr = ET_TeamEnum;
 }
 
-void ET_Game::InitScriptCategories( gmMachine *_machine, gmTableObject *_table )
-{
-	IGame::InitScriptCategories( _machine, _table );
-	_table->Set( _machine, "MINE", gmVariable( ET_ENT_CAT_MINE ) );
-}
-
 static const IntEnum ET_WeaponEnum[ 128 ] =
 {
 	IntEnum( "NONE", ET_WP_NONE ),
@@ -334,7 +328,7 @@ void ET_Game::InitVoiceMacros( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "P_FALLBACK", gmVariable( VCHAT_PRIVATE_FALLBACK ) );
 }
 
-void ET_Game::AddBot( ParamsAddbot & parms, bool _createnow )
+void ET_Game::AddBot( ParamsAddbot & parms, bool createnow )
 {
 	//////////////////////////////////////////////////////////////////////////
 	if ( !parms.mName[ 0 ] )
@@ -346,12 +340,12 @@ void ET_Game::AddBot( ParamsAddbot & parms, bool _createnow )
 	//////////////////////////////////////////////////////////////////////////
 	assert( GameStarted() );
 
-	if ( _createnow )
+	if ( createnow )
 		mBotJoining = true;
 	int iGameID = gEngineFuncs->AddBot( parms );
-	if ( _createnow )
+	if ( createnow )
 		mBotJoining = false;
-	if ( iGameID != -1 && _createnow )
+	if ( iGameID != -1 && createnow )
 	{
 		ClientPtr &cp = GetClientFromCorrectedGameId( iGameID );
 

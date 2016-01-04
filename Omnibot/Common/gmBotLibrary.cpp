@@ -446,6 +446,49 @@ static int GM_CDECL gmfEntityKill( gmThread *a_thread )
 
 //////////////////////////////////////////////////////////////////////////
 
+// function: GetLocationName
+//		Get the name of a location by its position
+//
+// Parameters:
+//
+//		<Vec3> - position to get name for
+//
+// Returns:
+//		string if successful, null if not
+static int GM_CDECL gmfGetLocationName( gmThread *a_thread )
+{
+	GM_CHECK_NUM_PARAMS( 1 );
+	
+	Vector3f pos;
+	if ( a_thread->GetNumParams() == 1 )
+	{
+		GM_CHECK_VECTOR_PARAM( v, 1 );
+		pos = Vector3f( v );
+	}
+	else if ( a_thread->GetNumParams() == 3 )
+	{
+		GM_CHECK_FLOAT_OR_INT_PARAM( x, 0 );
+		GM_CHECK_FLOAT_OR_INT_PARAM( y, 1 );
+		GM_CHECK_FLOAT_OR_INT_PARAM( z, 2 );
+		pos.X() = x;
+		pos.Y() = y;
+		pos.Z() = z;
+	}
+
+	obStringBuffer str;
+	if ( gEngineFuncs->GetLocationName( pos, str.mBuffer, obStringBuffer::BUFFER_LENGTH ) )
+	{
+		a_thread->PushNewString( str.mBuffer );
+	}
+	else
+	{
+		a_thread->PushNull();
+	}
+	return GM_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 // function: RegisterDefaultProfile
 //		This function assign a default script to use for a specific classId.
 //
@@ -2874,6 +2917,7 @@ static gmFunctionEntry s_botLib [] =
 	{ "ExecCommand", gmfExecCommand },
 
 	{ "EntityKill", gmfEntityKill },
+	{ "GetLocationName", gmfGetLocationName },
 
 	{ "OnTriggerRegion", gmfOnTriggerRegion },
 	{ "DeleteTriggerRegion", gmfDeleteTriggerRegion },

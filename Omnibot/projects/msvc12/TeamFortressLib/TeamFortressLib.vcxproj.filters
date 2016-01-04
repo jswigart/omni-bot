@@ -21,9 +21,6 @@
     <ClCompile Include="..\..\..\TeamFortressLib\TF_Game.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\TeamFortressLib\TF_InterfaceFuncs.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\TeamFortressLib\gmTFBinds.cpp">
       <Filter>Core\Scripting</Filter>
     </ClCompile>
@@ -42,9 +39,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\TeamFortressLib\TF_Game.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\TeamFortressLib\TF_InterfaceFuncs.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\TeamFortressLib\TF_Messages.h">

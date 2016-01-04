@@ -66,7 +66,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibCore", "..\..\dependenci
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameAnalytics", "..\..\..\..\game-analytics\GameAnalytics.vcxproj", "{2104FD7C-F7AA-4F69-BCD4-B842A61D87B5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gm_ex", "..\..\gmscriptex\gmsrc_ex\src\gm\gm2013.vcxproj", "{8C9CC332-D582-453A-AF10-20B100857587}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gm_ex", "..\..\dependencies\gmscriptex\gmsrc_ex\src\gm\gm2013.vcxproj", "{8C9CC332-D582-453A-AF10-20B100857587}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libprotobuf", "..\..\..\..\protobuf\vsprojects\libprotobuf.vcxproj", "{3E283F37-A4ED-41B7-A3E6-A2D89D131A30}"
 EndProject

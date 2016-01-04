@@ -22,21 +22,21 @@ namespace AiState
 	{
 	public:
 
-		void GetDebugString(std::stringstream &out);
+		void GetDebugString( std::stringstream &out );
 		void RenderDebug();
 
 		float GetPriority();
 		void Enter();
 		void Exit();
-		StateStatus Update(float fDt);
+		StateStatus Update( float fDt );
 
-		void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+		void ProcessEvent( const Message & message, CallbackParameters & cb );
 
 		// FollowPathUser functions.
-		bool GetNextDestination(DestinationVector &_desination, bool &_final, bool &_skiplastpt);
+		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
 
 		// AimerUser functions.
-		bool GetAimPosition(Vector3f &_aimpos);
+		bool GetAimPosition( Vector3f &_aimpos );
 		void OnTarget();
 
 		CallArtillery();

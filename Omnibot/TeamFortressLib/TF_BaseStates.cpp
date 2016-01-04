@@ -8,7 +8,6 @@
 
 #include "TF_BaseStates.h"
 #include "TF_Game.h"
-#include "TF_InterfaceFuncs.h"
 #include "FilterClosestTF.h"
 #include "System.h"
 #include "BotPathing.h"
@@ -116,15 +115,15 @@ namespace AiState
 				}
 
 				const Sentry::SentryStatus &ss = sg->GetSentryStatus();
-				if ( ( ss.mSabotaged && TF_Options::REPAIR_ON_SABOTAGED ) ||
-					( ss.mHealth < ss.mMaxHealth ) )
+				if ( (ss.mSabotaged && TF_Options::REPAIR_ON_SABOTAGED) ||
+					 (ss.mHealth < ss.mMaxHealth) )
 				{
 					SetNextState( SG_REPAIRING );
 					return;
 				}
 
 				if ( ss.mRockets[ 0 ] < ss.mRockets[ 1 ] / 2 ||
-					ss.mShells[ 0 ] < ss.mShells[ 1 ] / 2 )
+					 ss.mShells[ 0 ] < ss.mShells[ 1 ] / 2 )
 				{
 					SetNextState( SG_RESUPPLY );
 					return;
@@ -385,7 +384,7 @@ namespace AiState
 		if ( sg )
 		{
 			if ( sg->GetSentryStatus().mShells[ 0 ] == sg->GetSentryStatus().mShells[ 1 ] &&
-				sg->GetSentryStatus().mRockets[ 0 ] == sg->GetSentryStatus().mRockets[ 1 ] )
+				 sg->GetSentryStatus().mRockets[ 0 ] == sg->GetSentryStatus().mRockets[ 1 ] )
 			{
 				SetNextState( SG_DONE );
 				return;
@@ -419,32 +418,32 @@ namespace AiState
 		{
 			switch ( GetCurrentStateId() )
 			{
-				case SG_NONE:
-					break;
-				case SG_GETTING_AMMO:
-					out << "Getting Ammo ";
-					break;
-				case SG_BUILDING:
-					out << ( mCantBuild ? "Cant Build " : "Building " );
-					break;
-				case SG_AIMING:
-					out << "Aiming ";
-					break;
-				case SG_AIMED:
-					out << "Aimed ";
-					break;
-				case SG_UPGRADING:
-					out << "Upgrading ";
-					break;
-				case SG_REPAIRING:
-					out << "Repairing ";
-					break;
-				case SG_RESUPPLY:
-					out << "Resupply ";
-					break;
-				case SG_DONE:
-					out << "Done ";
-					break;
+			case SG_NONE:
+				break;
+			case SG_GETTING_AMMO:
+				out << "Getting Ammo ";
+				break;
+			case SG_BUILDING:
+				out << (mCantBuild ? "Cant Build " : "Building ");
+				break;
+			case SG_AIMING:
+				out << "Aiming ";
+				break;
+			case SG_AIMED:
+				out << "Aimed ";
+				break;
+			case SG_UPGRADING:
+				out << "Upgrading ";
+				break;
+			case SG_REPAIRING:
+				out << "Repairing ";
+				break;
+			case SG_RESUPPLY:
+				out << "Resupply ";
+				break;
+			case SG_DONE:
+				out << "Done ";
+				break;
 			}
 
 			if ( mBuiltSentry )
@@ -456,7 +455,7 @@ namespace AiState
 			if ( sg && sg->HasSentry() && sg->SentryFullyBuilt() )
 			{
 				const Sentry::SentryStatus &ss = sg->GetSentryStatus();
-				const float hlthpc = 100.f * ( (float)ss.mHealth / (float)ss.mMaxHealth );
+				const float hlthpc = 100.f * ((float)ss.mHealth / (float)ss.mMaxHealth);
 
 				out << std::setprecision( 3 );
 				out << "H(" << hlthpc << ") ";
@@ -486,36 +485,36 @@ namespace AiState
 	{
 		switch ( GetCurrentStateId() )
 		{
-			case SG_BUILDING:
-			{
-				_aimpos = GetClient()->GetEyePosition() + mMapGoalSentry->GetFacing() * 1024.f;
-				break;
-			}
-			case SG_AIMING:
-			{
-				_aimpos = GetClient()->GetEyePosition() - mMapGoalSentry->GetFacing() * 1024.f;
+		case SG_BUILDING:
+		{
+			_aimpos = GetClient()->GetEyePosition() + mMapGoalSentry->GetFacing() * 1024.f;
+			break;
+		}
+		case SG_AIMING:
+		{
+			_aimpos = GetClient()->GetEyePosition() - mMapGoalSentry->GetFacing() * 1024.f;
 
-				Vector3f vAimPos;
-				if ( mMapGoalSentry->GetProperty( "AimPosition", vAimPos ) )
-				{
-					if ( !vAimPos.IsZero() )
-						_aimpos = vAimPos;
-					else
-						SetNextState( SG_AIMED );
-				}
-				break;
-			}
-			case SG_UPGRADING:
-			case SG_REPAIRING:
-			case SG_RESUPPLY:
+			Vector3f vAimPos;
+			if ( mMapGoalSentry->GetProperty( "AimPosition", vAimPos ) )
 			{
-				FINDSTATE( sg, Sentry, GetParent() );
-				if ( sg )
-				{
-					_aimpos = sg->GetSentryStatus().mPosition;
-					return true;
-				}
+				if ( !vAimPos.IsZero() )
+					_aimpos = vAimPos;
+				else
+					SetNextState( SG_AIMED );
 			}
+			break;
+		}
+		case SG_UPGRADING:
+		case SG_REPAIRING:
+		case SG_RESUPPLY:
+		{
+			FINDSTATE( sg, Sentry, GetParent() );
+			if ( sg )
+			{
+				_aimpos = sg->GetSentryStatus().mPosition;
+				return true;
+			}
+		}
 		}
 		return true;
 	}
@@ -527,30 +526,30 @@ namespace AiState
 
 		switch ( GetCurrentStateId() )
 		{
-			case SG_BUILDING:
+		case SG_BUILDING:
+		{
+			if ( !sg->HasSentry() && IGame::GetTime() >= mNextBuildTry )
 			{
-				if ( !sg->HasSentry() && IGame::GetTime() >= mNextBuildTry )
-				{
-					GetClient()->PressButton( TF_BOT_BUTTON_BUILDSENTRY );
-					mNextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
-				}
-				break;
+				GetClient()->PressButton( TF_BOT_BUTTON_BUILDSENTRY );
+				mNextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
 			}
-			case SG_AIMING:
-			{
-				GetClient()->PressButton( TF_BOT_BUTTON_AIMSENTRY );
-				SetNextState( SG_AIMED );
-				break;
-			}
-			case SG_UPGRADING:
-			case SG_REPAIRING:
-			case SG_RESUPPLY:
-			{
-				FINDSTATE( ws, WeaponSystem, GetRootState() );
-				if ( ws && ws->CurrentWeaponIs( TF_Options::SENTRY_UPGRADE_WPN ) )
-					ws->FireWeapon();
-				break;
-			}
+			break;
+		}
+		case SG_AIMING:
+		{
+			GetClient()->PressButton( TF_BOT_BUTTON_AIMSENTRY );
+			SetNextState( SG_AIMED );
+			break;
+		}
+		case SG_UPGRADING:
+		case SG_REPAIRING:
+		case SG_RESUPPLY:
+		{
+			FINDSTATE( ws, WeaponSystem, GetRootState() );
+			if ( ws && ws->CurrentWeaponIs( TF_Options::SENTRY_UPGRADE_WPN ) )
+				ws->FireWeapon();
+			break;
+		}
 		}
 	}
 	float SentryBuild::GetPriority()
@@ -585,13 +584,13 @@ namespace AiState
 
 				const Sentry::SentryStatus &status = sg->GetSentryStatus();
 				if ( status.mRockets[ 0 ] < status.mRockets[ 1 ] / 2 ||
-					status.mShells[ 0 ] < status.mShells[ 1 ] / 2 )
+					 status.mShells[ 0 ] < status.mShells[ 1 ] / 2 )
 				{
 					return mSentryPriority;
 				}
 				return 0.f;
 			}
-			
+
 			GoalManager::Query qry( 0xca96590a /* sentry */, GetClient() );
 			System::mInstance->mGoalManager->GetGoals( qry );
 			qry.GetBest( mMapGoalSentry );
@@ -634,45 +633,66 @@ namespace AiState
 
 		return State_Busy;
 	}
-	void SentryBuild::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void SentryBuild::ProcessEvent( const Message & message, CallbackParameters & cb )
 	{
-		switch ( _message.GetMessageId() )
+		switch ( message.Id() )
 		{
-			HANDLER( TF_MSG_SENTRY_BUILDING )
+			CASE_MSG( EvEntityBuilding )
 			{
-				if ( mMapGoalSentry )
-					mBuiltSentry = mMapGoalSentry;
+				if ( msg->mClassId == TF_CLASSEX_SENTRY )
+				{
+					if ( mMapGoalSentry )
+						mBuiltSentry = mMapGoalSentry;
+				}
 				break;
 			}
-			HANDLER( TF_MSG_SENTRY_BUILT )
+			CASE_MSG( EvEntityBuilt )
 			{
-				if ( mMapGoalSentry )
-					mBuiltSentry = mMapGoalSentry;
+				if ( msg->mClassId == TF_CLASSEX_SENTRY )
+				{
+					if ( mMapGoalSentry )
+						mBuiltSentry = mMapGoalSentry;
+				}
 				break;
 			}
-			HANDLER( TF_MSG_SENTRY_BUILDCANCEL )
+			CASE_MSG( EvEntityBuildCancel )
 			{
-				mBuiltSentry.reset();
+				if ( msg->mClassId == TF_CLASSEX_SENTRY )
+				{
+					mBuiltSentry.reset();
+				}
 				break;
 			}
-			HANDLER( TF_MSG_SENTRY_DESTROYED )
+			CASE_MSG( EvEntityBuildDestroyed )
 			{
-				mBuiltSentry.reset();
+				if ( msg->mClassId == TF_CLASSEX_SENTRY )
+				{
+					mBuiltSentry.reset();
+				}
 				break;
 			}
-			HANDLER( TF_MSG_SENTRY_DETONATED )
+			CASE_MSG( EvEntityBuildDetonated )
 			{
-				mBuiltSentry.reset();
+				if ( msg->mClassId == TF_CLASSEX_SENTRY )
+				{
+					mBuiltSentry.reset();
+				}
 				break;
 			}
-			HANDLER( TF_MSG_SENTRY_DISMANTLED )
+			CASE_MSG( EvEntityBuildDismantled )
 			{
-				mBuiltSentry.reset();
+				if ( msg->mClassId == TF_CLASSEX_SENTRY )
+				{
+					mBuiltSentry.reset();
+				}
 				break;
 			}
-			HANDLER( TF_MSG_SENTRY_CANTBUILD )
+			CASE_MSG( EvEntityCantBuild )
 			{
-				mCantBuild = true;
+				if ( msg->mClassId == TF_CLASSEX_SENTRY )
+				{
+					mCantBuild = true;
+				}
 				break;
 			}
 		}
@@ -690,15 +710,15 @@ namespace AiState
 		{
 			switch ( mState )
 			{
-				case UPGRADING:
-					out << "Upgrading Sentry ";
-					break;
-				case REPAIRING:
-					out << "Repairing Sentry ";
-					break;
-				case RESUPPLY:
-					out << "Resupply Sentry ";
-					break;
+			case UPGRADING:
+				out << "Upgrading Sentry ";
+				break;
+			case REPAIRING:
+				out << "Repairing Sentry ";
+				break;
+			case RESUPPLY:
+				out << "Resupply Sentry ";
+				break;
 			}
 
 			const MemoryRecord *rec = GetClient()->GetSensoryMemory()->GetMemoryRecord( mAllySentry );
@@ -763,7 +783,7 @@ namespace AiState
 				{
 					if ( sg && sg->HasSentry() && sg->GetSentryStatus().mEntity == pRec->GetEntity() )
 						continue;
-					
+
 					const BitFlag64 entflags = pRec->mTargetInfo.mEntInfo.mFlags;
 					if ( !entflags.CheckFlag( TF_ENT_FLAG_BUILDINPROGRESS ) && iAmmo >= TF_Options::SENTRY_UPGRADE_AMMO )
 					{
@@ -771,7 +791,7 @@ namespace AiState
 						mAllySentry = rcs[ i ];
 						return GetLastPriority();
 					}
-					
+
 					if ( pRec->mTargetInfo.mEntInfo.mHealth.Percent() && iAmmo >= TF_Options::SENTRY_REPAIR_AMMO )
 					{
 						mState = REPAIRING;
@@ -814,30 +834,30 @@ namespace AiState
 
 		switch ( mState )
 		{
-			case UPGRADING:
-			{
-				if ( iAmmo < TF_Options::SENTRY_UPGRADE_AMMO )
-					return State_Finished;
+		case UPGRADING:
+		{
+			if ( iAmmo < TF_Options::SENTRY_UPGRADE_AMMO )
+				return State_Finished;
 
-				if ( rec->mTargetInfo.mEntInfo.mClassId == TF_CLASSEX_SENTRY )
-					return State_Finished;
-				break;
-			}
-			case REPAIRING:
-			{
-				if ( iAmmo < TF_Options::SENTRY_REPAIR_AMMO )
-					return State_Finished;
+			if ( rec->mTargetInfo.mEntInfo.mClassId == TF_CLASSEX_SENTRY )
+				return State_Finished;
+			break;
+		}
+		case REPAIRING:
+		{
+			if ( iAmmo < TF_Options::SENTRY_REPAIR_AMMO )
+				return State_Finished;
 
-				if ( rec->mTargetInfo.mEntInfo.mHealth.Percent() >= 1.0 )
-				{
-					return State_Finished;
-				}
-				break;
-			}
-			case RESUPPLY:
+			if ( rec->mTargetInfo.mEntInfo.mHealth.Percent() >= 1.0 )
 			{
-				break;
+				return State_Finished;
 			}
+			break;
+		}
+		case RESUPPLY:
+		{
+			break;
+		}
 		}
 
 		if ( DidPathSucceed() )
@@ -864,17 +884,17 @@ namespace AiState
 		{
 			switch ( mState )
 			{
-				default:
-				case DISP_NONE:
-					break;
-				case DISP_GETTING_AMMO:
-					out << "Getting Ammo";
-					break;
-				case DISP_BUILDING:
-					out << ( mCantBuild ? "Cant Build " : "Building " );
-					if ( mMapGoalDisp )
-						out << mMapGoalDisp->GetName();
-					break;
+			default:
+			case DISP_NONE:
+				break;
+			case DISP_GETTING_AMMO:
+				out << "Getting Ammo";
+				break;
+			case DISP_BUILDING:
+				out << (mCantBuild ? "Cant Build " : "Building ");
+				if ( mMapGoalDisp )
+					out << mMapGoalDisp->GetName();
+				break;
 			}
 		}
 	}
@@ -890,11 +910,11 @@ namespace AiState
 	{
 		switch ( mState )
 		{
-			case DISP_BUILDING:
-				_aimpos = GetClient()->GetEyePosition() + mMapGoalDisp->GetFacing() * 1024.f;
-				break;
-			default:
-				return false;
+		case DISP_BUILDING:
+			_aimpos = GetClient()->GetEyePosition() + mMapGoalDisp->GetFacing() * 1024.f;
+			break;
+		default:
+			return false;
 		}
 		return true;
 	}
@@ -906,17 +926,17 @@ namespace AiState
 
 		switch ( mState )
 		{
-			case DISP_BUILDING:
+		case DISP_BUILDING:
+		{
+			if ( !disp->HasDispenser() && IGame::GetTime() >= mNextBuildTry )
 			{
-				if ( !disp->HasDispenser() && IGame::GetTime() >= mNextBuildTry )
-				{
-					GetClient()->PressButton( TF_BOT_BUTTON_BUILDDISPENSER );
-					mNextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
-				}
-				break;
+				GetClient()->PressButton( TF_BOT_BUTTON_BUILDDISPENSER );
+				mNextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
 			}
-			default:
-				break;
+			break;
+		}
+		default:
+			break;
 		}
 	}
 	float DispenserBuild::GetPriority()
@@ -1039,45 +1059,66 @@ namespace AiState
 		}
 		return State_Busy;
 	}
-	void DispenserBuild::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void DispenserBuild::ProcessEvent( const Message & message, CallbackParameters & cb )
 	{
-		switch ( _message.GetMessageId() )
+		switch ( message.Id() )
 		{
-			HANDLER( TF_MSG_DISPENSER_BUILDING )
+			CASE_MSG( EvEntityBuilding )
 			{
-				if ( mMapGoalDisp )
-					mBuiltDisp = mMapGoalDisp;
+				if ( msg->mClassId == TF_CLASSEX_DISPENSER )
+				{
+					if ( mMapGoalDisp )
+						mBuiltDisp = mMapGoalDisp;
+				}
 				break;
 			}
-			HANDLER( TF_MSG_DISPENSER_BUILT )
+			CASE_MSG( EvEntityBuilt )
 			{
-				if ( mMapGoalDisp )
-					mBuiltDisp = mMapGoalDisp;
+				if ( msg->mClassId == TF_CLASSEX_DISPENSER )
+				{
+					if ( mMapGoalDisp )
+						mBuiltDisp = mMapGoalDisp;
+				}
 				break;
 			}
-			HANDLER( TF_MSG_DISPENSER_BUILDCANCEL )
+			CASE_MSG( EvEntityBuildCancel )
 			{
-				mBuiltDisp.reset();
+				if ( msg->mClassId == TF_CLASSEX_DISPENSER )
+				{
+					mBuiltDisp.reset();
+				}
 				break;
 			}
-			HANDLER( TF_MSG_DISPENSER_DESTROYED )
+			CASE_MSG( EvEntityBuildDestroyed )
 			{
-				mBuiltDisp.reset();
+				if ( msg->mClassId == TF_CLASSEX_DISPENSER )
+				{
+					mBuiltDisp.reset();
+				}
 				break;
 			}
-			HANDLER( TF_MSG_DISPENSER_DETONATED )
+			CASE_MSG( EvEntityBuildDetonated )
 			{
-				mBuiltDisp.reset();
+				if ( msg->mClassId == TF_CLASSEX_DISPENSER )
+				{
+					mBuiltDisp.reset();
+				}
 				break;
 			}
-			HANDLER( TF_MSG_DISPENSER_DISMANTLED )
+			CASE_MSG( EvEntityBuildDismantled )
 			{
-				mBuiltDisp.reset();
+				if ( msg->mClassId == TF_CLASSEX_DISPENSER )
+				{
+					mBuiltDisp.reset();
+				}
 				break;
 			}
-			HANDLER( TF_MSG_DISPENSER_CANTBUILD )
+			CASE_MSG( EvEntityCantBuild )
 			{
-				mCantBuild = true;
+				if ( msg->mClassId == TF_CLASSEX_DISPENSER )
+				{
+					mCantBuild = true;
+				}
 				break;
 			}
 		}
@@ -1095,38 +1136,55 @@ namespace AiState
 	{
 		switch ( mSentryStatus.mStatus )
 		{
-			case BUILDABLE_BUILDING:
-			case BUILDABLE_BUILT:
-				out << mSentryStatus.mHealth << "/" << mSentryStatus.mMaxHealth;
-				break;
-			case BUILDABLE_INVALID:
-			default:
-				out << "<none>";
-				break;
+		case BUILDABLE_BUILDING:
+		case BUILDABLE_BUILT:
+			out << mSentryStatus.mHealth << "/" << mSentryStatus.mMaxHealth;
+			break;
+		case BUILDABLE_INVALID:
+		default:
+			out << "<none>";
+			break;
 		}
 	}
-	void Sentry::UpdateSentryStatus( const Event_SentryStatus_TF &_stats )
+	void Sentry::UpdateSentryStatus( const ParamsSentryStatus_TF & stats )
 	{
-		if ( _stats.mEntity.IsValid() )
+		if ( stats.mEntity.IsValid() )
 		{
-			if ( mSentryStatus.mEntity != _stats.mEntity )
+			if ( mSentryStatus.mEntity != stats.mEntity )
 			{
-				Event_SentryBuilding_TF d1 = { _stats.mEntity };
-				GetClient()->SendEvent( MessageHelper( TF_MSG_SENTRY_BUILDING, &d1, sizeof( d1 ) ) );
+				EvEntityBuilding::Msg msgBuild;
+				msgBuild.mData.mClassId = TF_CLASSEX_SENTRY;
+				msgBuild.mData.mEntity = stats.mEntity;
+				GetClient()->SendEvent( msgBuild );
 
-				Event_SentryBuilt_TF d2 = { _stats.mEntity };
-				GetClient()->SendEvent( MessageHelper( TF_MSG_SENTRY_BUILT, &d2, sizeof( d2 ) ) );
+				EvEntityBuilt::Msg msgBuilt;
+				msgBuilt.mData.mClassId = TF_CLASSEX_SENTRY;
+				msgBuilt.mData.mEntity = stats.mEntity;
+				GetClient()->SendEvent( msgBuilt );
 			}
 
-			Event_SentryStatus_TF d3 = _stats;
-			GetClient()->SendEvent( MessageHelper( TF_MSG_SENTRY_STATS, &d3, sizeof( d3 ) ) );
+			mSentryStatus.mHealth = stats.mHealth;
+			mSentryStatus.mMaxHealth = stats.mMaxHealth;
+			mSentryStatus.mShells[ 0 ] = stats.mShells[ 0 ];
+			mSentryStatus.mShells[ 1 ] = stats.mShells[ 1 ];
+			mSentryStatus.mRockets[ 0 ] = stats.mRockets[ 0 ];
+			mSentryStatus.mRockets[ 1 ] = stats.mRockets[ 1 ];
+			mSentryStatus.mLevel = stats.mLevel;
+
+			/*DBG_MSG(0, GetClient(), kNormal, "Sentry Stats");
+			DBG_MSG(0, GetClient(), kNormal, va("Level: %d", mSentryStatus.mLevel));
+			DBG_MSG(0, GetClient(), kNormal, va("Health: %d/%d", mSentryStatus.mHealth, mSentryStatus.mMaxHealth));
+			DBG_MSG(0, GetClient(), kNormal, va("Shells: %d/%d", mSentryStatus.mShells[0], mSentryStatus.mShells[1]));
+			DBG_MSG(0, GetClient(), kNormal, va("Rockets: %d/%d", mSentryStatus.mRockets[0], mSentryStatus.mRockets[1]));*/
 		}
 		else
 		{
-			if ( mSentryStatus.mEntity != _stats.mEntity )
+			if ( mSentryStatus.mEntity != stats.mEntity )
 			{
-				Event_BuildableDestroyed_TF d = { GameEntity() };
-				GetClient()->SendEvent( MessageHelper( TF_MSG_SENTRY_DESTROYED, &d, sizeof( d ) ) );
+				EvEntityBuildDestroyed::Msg msg;
+				msg.mData.mClassId = TF_CLASSEX_SENTRY;
+				msg.mData.mEntity = mSentryStatus.mEntity;
+				GetClient()->SendEvent( msg );
 			}
 		}
 	}
@@ -1134,70 +1192,68 @@ namespace AiState
 	{
 		return State_Busy;
 	}
-	void Sentry::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void Sentry::ProcessEvent( const Message & message, CallbackParameters & cb )
 	{
-		switch ( _message.GetMessageId() )
+		switch ( message.Id() )
 		{
-			HANDLER( TF_MSG_SENTRY_BUILDING )
+			CASE_MSG( EvEntityBuilding )
 			{
-				const Event_SentryBuilding_TF *m = _message.Get<Event_SentryBuilding_TF>();
-				mSentryStatus.Reset();
-				mSentryStatus.mStatus = BUILDABLE_BUILDING;
-				mSentryStatus.mEntity = m->mSentry;
-				DBG_MSG( 0, GetClient(), kNormal, "Sentry Building" );
+				if ( msg->mClassId == TF_CLASSEX_SENTRY )
+				{
+					mSentryStatus.Reset();
+					mSentryStatus.mStatus = BUILDABLE_BUILDING;
+					mSentryStatus.mEntity = msg->mEntity;
+					DBG_MSG( 0, GetClient(), kNormal, "Sentry Building" );
+				}
 				break;
 			}
-			HANDLER( TF_MSG_SENTRY_BUILT )
+			CASE_MSG( EvEntityBuilt )
 			{
-				const Event_SentryBuilt_TF *m = _message.Get<Event_SentryBuilt_TF>();
-				mSentryStatus.mEntity = m->mSentry;
-				mSentryStatus.mLevel = 1;
+				if ( msg->mClassId == TF_CLASSEX_SENTRY )
+				{
+					mSentryStatus.mEntity = msg->mEntity;
+					mSentryStatus.mLevel = 1;
 
-				EngineFuncs::EntityPosition( m->mSentry, mSentryStatus.mPosition );
-				EngineFuncs::EntityOrientation( m->mSentry, mSentryStatus.mFacing, NULL, NULL );
-				mSentryStatus.mStatus = BUILDABLE_BUILT;
-				DBG_MSG( 0, GetClient(), kNormal, "Sentry Built" );
+					EngineFuncs::EntityPosition( msg->mEntity, mSentryStatus.mPosition );
+					EngineFuncs::EntityOrientation( msg->mEntity, mSentryStatus.mFacing, NULL, NULL );
+					mSentryStatus.mStatus = BUILDABLE_BUILT;
+					DBG_MSG( 0, GetClient(), kNormal, "Sentry Built" );
+				}
 				break;
 			}
-			HANDLER( TF_MSG_SENTRY_BUILDCANCEL )
+			CASE_MSG( EvEntityBuildCancel )
 			{
-				mSentryStatus.Reset();
+				if ( msg->mClassId == TF_CLASSEX_SENTRY )
+				{
+					mSentryStatus.Reset();
+				}
 				break;
 			}
-			HANDLER( TF_MSG_SENTRY_DESTROYED )
+			CASE_MSG( EvEntityBuildDestroyed )
 			{
-				mSentryStatus.Reset();
-				DBG_MSG( 0, GetClient(), kNormal, "Sentry Destroyed" );
+				if ( msg->mClassId == TF_CLASSEX_SENTRY )
+				{
+					mSentryStatus.Reset();
+					DBG_MSG( 0, GetClient(), kNormal, "Sentry Destroyed" );
+				}
 				break;
 			}
-			HANDLER( TF_MSG_SENTRY_DETONATED )
+			CASE_MSG( EvEntityBuildDetonated )
 			{
-				mSentryStatus.Reset();
-				DBG_MSG( 0, GetClient(), kNormal, "Sentry Detonated" );
+				if ( msg->mClassId == TF_CLASSEX_SENTRY )
+				{
+					mSentryStatus.Reset();
+					DBG_MSG( 0, GetClient(), kNormal, "Sentry Detonated" );
+				}
 				break;
 			}
-			HANDLER( TF_MSG_SENTRY_DISMANTLED )
+			CASE_MSG( EvEntityBuildDismantled )
 			{
-				mSentryStatus.Reset();
-				DBG_MSG( 0, GetClient(), kNormal, "Sentry Dismantled" );
-				break;
-			}
-			HANDLER( TF_MSG_SENTRY_STATS )
-			{
-				const Event_SentryStatus_TF		*m = _message.Get<Event_SentryStatus_TF>();
-				mSentryStatus.mHealth = m->mHealth;
-				mSentryStatus.mMaxHealth = m->mMaxHealth;
-				mSentryStatus.mShells[ 0 ] = m->mShells[ 0 ];
-				mSentryStatus.mShells[ 1 ] = m->mShells[ 1 ];
-				mSentryStatus.mRockets[ 0 ] = m->mRockets[ 0 ];
-				mSentryStatus.mRockets[ 1 ] = m->mRockets[ 1 ];
-				mSentryStatus.mLevel = m->mLevel;
-
-				/*DBG_MSG(0, GetClient(), kNormal, "Sentry Stats");
-				DBG_MSG(0, GetClient(), kNormal, va("Level: %d", mSentryStatus.mLevel));
-				DBG_MSG(0, GetClient(), kNormal, va("Health: %d/%d", mSentryStatus.mHealth, mSentryStatus.mMaxHealth));
-				DBG_MSG(0, GetClient(), kNormal, va("Shells: %d/%d", mSentryStatus.mShells[0], mSentryStatus.mShells[1]));
-				DBG_MSG(0, GetClient(), kNormal, va("Rockets: %d/%d", mSentryStatus.mRockets[0], mSentryStatus.mRockets[1]));*/
+				if ( msg->mClassId == TF_CLASSEX_SENTRY )
+				{
+					mSentryStatus.Reset();
+					DBG_MSG( 0, GetClient(), kNormal, "Sentry Dismantled" );
+				}
 				break;
 			}
 		}
@@ -1214,38 +1270,56 @@ namespace AiState
 	{
 		switch ( mDispenserStatus.mStatus )
 		{
-			case BUILDABLE_BUILDING:
-			case BUILDABLE_BUILT:
-				out << mDispenserStatus.mHealth;
-				return;
-			case BUILDABLE_INVALID:
-			default:
-				out << "<none>";
-				break;
+		case BUILDABLE_BUILDING:
+		case BUILDABLE_BUILT:
+			out << mDispenserStatus.mHealth;
+			return;
+		case BUILDABLE_INVALID:
+		default:
+			out << "<none>";
+			break;
 		}
 	}
-	void Dispenser::UpdateDispenserStatus( const Event_DispenserStatus_TF &_stats )
+	void Dispenser::UpdateDispenserStatus( const ParamsDispenserStatus_TF & stats )
 	{
-		if ( _stats.mEntity.IsValid() )
+		if ( stats.mEntity.IsValid() )
 		{
-			if ( mDispenserStatus.mEntity != _stats.mEntity )
+			if ( mDispenserStatus.mEntity != stats.mEntity )
 			{
-				Event_DispenserBuilding_TF d1 = { _stats.mEntity };
-				GetClient()->SendEvent( MessageHelper( TF_MSG_DISPENSER_BUILDING, &d1, sizeof( d1 ) ) );
+				EvEntityBuilding::Msg msgBuild;
+				msgBuild.mData.mClassId = TF_CLASSEX_DISPENSER;
+				msgBuild.mData.mEntity = stats.mEntity;
+				GetClient()->SendEvent( msgBuild );
 
-				Event_DispenserBuilt_TF d2 = { _stats.mEntity };
-				GetClient()->SendEvent( MessageHelper( TF_MSG_DISPENSER_BUILT, &d2, sizeof( d2 ) ) );
+				EvEntityBuilt::Msg msgBuilt;
+				msgBuilt.mData.mClassId = TF_CLASSEX_DISPENSER;
+				msgBuilt.mData.mEntity = stats.mEntity;
+				GetClient()->SendEvent( msgBuilt );
 			}
+			
+			mDispenserStatus.mHealth = stats.mHealth;
+			mDispenserStatus.mShells = stats.mShells;
+			mDispenserStatus.mNails = stats.mNails;
+			mDispenserStatus.mRockets = stats.mRockets;
+			mDispenserStatus.mCells = stats.mCells;
+			mDispenserStatus.mArmor = stats.mArmor;
 
-			Event_DispenserStatus_TF d3 = _stats;
-			GetClient()->SendEvent( MessageHelper( TF_MSG_DISPENSER_STATS, &d3, sizeof( d3 ) ) );
+			/*DBG_MSG(0, GetClient(), kNormal, "Dispenser Stats");
+			DBG_MSG(0, GetClient(), kNormal, va("Health: %d", mDispenserStatus.mHealth));
+			DBG_MSG(0, GetClient(), kNormal, va("Shells: %d", mDispenserStatus.mShells));
+			DBG_MSG(0, GetClient(), kNormal, va("Nails: %d", mDispenserStatus.mNails));
+			DBG_MSG(0, GetClient(), kNormal, va("Rockets: %d", mDispenserStatus.mRockets));
+			DBG_MSG(0, GetClient(), kNormal, va("Cells: %d", mDispenserStatus.mCells));
+			DBG_MSG(0, GetClient(), kNormal, va("Armor: %d", mDispenserStatus.mArmor));*/
 		}
 		else
 		{
-			if ( mDispenserStatus.mEntity != _stats.mEntity )
+			if ( mDispenserStatus.mEntity != stats.mEntity )
 			{
-				Event_BuildableDestroyed_TF d = { GameEntity() };
-				GetClient()->SendEvent( MessageHelper( TF_MSG_DISPENSER_DESTROYED, &d, sizeof( d ) ) );
+				EvEntityBuildDestroyed::Msg msg;
+				msg.mData.mClassId = TF_CLASSEX_DISPENSER;
+				msg.mData.mEntity = mDispenserStatus.mEntity;
+				GetClient()->SendEvent( msg );
 			}
 		}
 	}
@@ -1253,69 +1327,66 @@ namespace AiState
 	{
 		return State_Busy;
 	}
-	void Dispenser::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void Dispenser::ProcessEvent( const Message & message, CallbackParameters & cb )
 	{
-		switch ( _message.GetMessageId() )
+		switch ( message.Id() )
 		{
-			HANDLER( TF_MSG_DISPENSER_BUILDING )
+			CASE_MSG( EvEntityBuilding )
 			{
-				const Event_DispenserBuilding_TF *m = _message.Get<Event_DispenserBuilding_TF>();
-				mDispenserStatus.Reset();
-				mDispenserStatus.mStatus = BUILDABLE_BUILDING;
-				mDispenserStatus.mEntity = m->mDispenser;
-				DBG_MSG( 0, GetClient(), kNormal, "Dispenser Building" );
+				if ( msg->mClassId == TF_CLASSEX_DISPENSER )
+				{
+					mDispenserStatus.Reset();
+					mDispenserStatus.mStatus = BUILDABLE_BUILDING;
+					mDispenserStatus.mEntity = msg->mEntity;
+					DBG_MSG( 0, GetClient(), kNormal, "Dispenser Building" );
+				}
 				break;
 			}
-			HANDLER( TF_MSG_DISPENSER_BUILT )
+			CASE_MSG( EvEntityBuilt )
 			{
-				const Event_DispenserBuilt_TF *m = _message.Get<Event_DispenserBuilt_TF>();
-				mDispenserStatus.mEntity = m->mDispenser;
-				EngineFuncs::EntityPosition( m->mDispenser, mDispenserStatus.mPosition );
-				EngineFuncs::EntityOrientation( m->mDispenser, mDispenserStatus.mFacing, NULL, NULL );
-				mDispenserStatus.mStatus = BUILDABLE_BUILT;
-				DBG_MSG( 0, GetClient(), kNormal, "Dispenser Built" );
+				if ( msg->mClassId == TF_CLASSEX_DISPENSER )
+				{
+					mDispenserStatus.mEntity = msg->mEntity;
+					EngineFuncs::EntityPosition( msg->mEntity, mDispenserStatus.mPosition );
+					EngineFuncs::EntityOrientation( msg->mEntity, mDispenserStatus.mFacing, NULL, NULL );
+					mDispenserStatus.mStatus = BUILDABLE_BUILT;
+					DBG_MSG( 0, GetClient(), kNormal, "Dispenser Built" );
+				}
 				break;
 			}
-			HANDLER( TF_MSG_DISPENSER_BUILDCANCEL )
+			CASE_MSG( EvEntityBuildCancel )
 			{
-				mDispenserStatus.Reset();
+				if ( msg->mClassId == TF_CLASSEX_DISPENSER )
+				{
+					mDispenserStatus.Reset();
+				}
 				break;
 			}
-			HANDLER( TF_MSG_DISPENSER_DESTROYED )
+			CASE_MSG( EvEntityBuildDestroyed )
 			{
-				mDispenserStatus.Reset();
-				DBG_MSG( 0, GetClient(), kNormal, "Dispenser Destroyed" );
+				if ( msg->mClassId == TF_CLASSEX_DISPENSER )
+				{
+					mDispenserStatus.Reset();
+					DBG_MSG( 0, GetClient(), kNormal, "Dispenser Destroyed" );
+				}
 				break;
 			}
-			HANDLER( TF_MSG_DISPENSER_DETONATED )
+			CASE_MSG( EvEntityBuildDetonated )
 			{
-				mDispenserStatus.Reset();
-				DBG_MSG( 0, GetClient(), kNormal, "Dispenser Detonated" );
+				if ( msg->mClassId == TF_CLASSEX_DISPENSER )
+				{
+					mDispenserStatus.Reset();
+					DBG_MSG( 0, GetClient(), kNormal, "Dispenser Detonated" );
+				}
 				break;
 			}
-			HANDLER( TF_MSG_DISPENSER_DISMANTLED )
+			CASE_MSG( EvEntityBuildDismantled )
 			{
-				mDispenserStatus.Reset();
-				DBG_MSG( 0, GetClient(), kNormal, "Dispenser Dismantled" );
-				break;
-			}
-			HANDLER( TF_MSG_DISPENSER_STATS )
-			{
-				const Event_DispenserStatus_TF	*m = _message.Get<Event_DispenserStatus_TF>();
-				mDispenserStatus.mHealth = m->mHealth;
-				mDispenserStatus.mShells = m->mShells;
-				mDispenserStatus.mNails = m->mNails;
-				mDispenserStatus.mRockets = m->mRockets;
-				mDispenserStatus.mCells = m->mCells;
-				mDispenserStatus.mArmor = m->mArmor;
-
-				/*DBG_MSG(0, GetClient(), kNormal, "Dispenser Stats");
-				DBG_MSG(0, GetClient(), kNormal, va("Health: %d", mDispenserStatus.mHealth));
-				DBG_MSG(0, GetClient(), kNormal, va("Shells: %d", mDispenserStatus.mShells));
-				DBG_MSG(0, GetClient(), kNormal, va("Nails: %d", mDispenserStatus.mNails));
-				DBG_MSG(0, GetClient(), kNormal, va("Rockets: %d", mDispenserStatus.mRockets));
-				DBG_MSG(0, GetClient(), kNormal, va("Cells: %d", mDispenserStatus.mCells));
-				DBG_MSG(0, GetClient(), kNormal, va("Armor: %d", mDispenserStatus.mArmor));*/
+				if ( msg->mClassId == TF_CLASSEX_DISPENSER )
+				{
+					mDispenserStatus.Reset();
+					DBG_MSG( 0, GetClient(), kNormal, "Dispenser Dismantled" );
+				}
 				break;
 			}
 		}
@@ -1334,12 +1405,12 @@ namespace AiState
 		{
 			switch ( mState )
 			{
-				case NONE:
-					break;
-				case DETPACK_BUILDING:
-					out << ( mCantBuild ? "Cant Build " : "Building " );
-					if ( mMapGoal )
-						out << mMapGoal->GetName();
+			case NONE:
+				break;
+			case DETPACK_BUILDING:
+				out << (mCantBuild ? "Cant Build " : "Building ");
+				if ( mMapGoal )
+					out << mMapGoal->GetName();
 			}
 		}
 	}
@@ -1355,11 +1426,11 @@ namespace AiState
 	{
 		switch ( mState )
 		{
-			case DETPACK_BUILDING:
-				_aimpos = GetClient()->GetEyePosition() + mMapGoal->GetFacing() * 1024.f;
-				break;
-			default:
-				return false;
+		case DETPACK_BUILDING:
+			_aimpos = GetClient()->GetEyePosition() + mMapGoal->GetFacing() * 1024.f;
+			break;
+		default:
+			return false;
 		}
 		return true;
 	}
@@ -1371,17 +1442,17 @@ namespace AiState
 
 		switch ( mState )
 		{
-			case DETPACK_BUILDING:
+		case DETPACK_BUILDING:
+		{
+			if ( !detp->HasDetpack() && IGame::GetTime() >= mNextBuildTry )
 			{
-				if ( !detp->HasDetpack() && IGame::GetTime() >= mNextBuildTry )
-				{
-					GetClient()->PressButton( TF_BOT_BUTTON_BUILDDETPACK_5 );
-					mNextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
-				}
-				break;
+				GetClient()->PressButton( TF_BOT_BUTTON_BUILDDETPACK_5 );
+				mNextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
 			}
-			default:
-				break;
+			break;
+		}
+		default:
+			break;
 		}
 	}
 	float DetpackBuild::GetPriority()
@@ -1465,13 +1536,16 @@ namespace AiState
 		}
 		return State_Busy;
 	}
-	void DetpackBuild::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void DetpackBuild::ProcessEvent( const Message & message, CallbackParameters & cb )
 	{
-		switch ( _message.GetMessageId() )
+		switch ( message.Id() )
 		{
-			HANDLER( TF_MSG_DETPACK_CANTBUILD )
+			CASE_MSG( EvEntityCantBuild )
 			{
-				mCantBuild = true;
+				if ( msg->mClassId == TF_CLASSEX_DETPACK )
+				{
+					mCantBuild = true;
+				}
 				break;
 			}
 		}
@@ -1504,39 +1578,58 @@ namespace AiState
 		return State_Busy;
 	}
 
-	void Detpack::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void Detpack::ProcessEvent( const Message & message, CallbackParameters & cb )
 	{
-		switch ( _message.GetMessageId() )
+		switch ( message.Id() )
 		{
-			HANDLER( TF_MSG_DETPACK_BUILDING )
+			CASE_MSG( EvEntityBuilding )
 			{
-				const Event_DetpackBuilding_TF *m = _message.Get<Event_DetpackBuilding_TF>();
-				mDetpackStatus.mEntity = m->mDetpack;
-				mDetpackStatus.mStatus = BUILDABLE_BUILDING;
-				DBG_MSG( 0, GetClient(), kNormal, "Detpack Building" );
+				if ( msg->mClassId == TF_CLASSEX_DETPACK )
+				{
+					mDetpackStatus.mEntity = msg->mEntity;
+					mDetpackStatus.mStatus = BUILDABLE_BUILDING;
+					DBG_MSG( 0, GetClient(), kNormal, "Detpack Building" );
+				}
 				break;
 			}
-			HANDLER( TF_MSG_DETPACK_BUILT )
+			CASE_MSG( EvEntityBuilt )
 			{
-				const Event_DetpackBuilt_TF *m = _message.Get<Event_DetpackBuilt_TF>();
-				mDetpackStatus.mEntity = m->mDetpack;
-				mDetpackStatus.mStatus = BUILDABLE_BUILDING;
-				DBG_MSG( 0, GetClient(), kNormal, "Detpack Building" );
-				EngineFuncs::EntityPosition( m->mDetpack, mDetpackStatus.mPosition );
-				mDetpackStatus.mStatus = BUILDABLE_BUILT;
-				DBG_MSG( 0, GetClient(), kNormal, "Detpack Built" );
+				if ( msg->mClassId == TF_CLASSEX_DETPACK )
+				{
+					mDetpackStatus.mEntity = msg->mEntity;
+					mDetpackStatus.mStatus = BUILDABLE_BUILDING;
+					DBG_MSG( 0, GetClient(), kNormal, "Detpack Building" );
+					EngineFuncs::EntityPosition( msg->mEntity, mDetpackStatus.mPosition );
+					mDetpackStatus.mStatus = BUILDABLE_BUILT;
+					DBG_MSG( 0, GetClient(), kNormal, "Detpack Built" );
+				}
 				break;
 			}
-			HANDLER( TF_MSG_DETPACK_BUILDCANCEL )
+			CASE_MSG( EvEntityBuildCancel )
 			{
-				memset( &mDetpackStatus, 0, sizeof( mDetpackStatus ) );
-				mDetpackStatus.mEntity.Reset();
+				if ( msg->mClassId == TF_CLASSEX_DETPACK )
+				{
+					memset( &mDetpackStatus, 0, sizeof( mDetpackStatus ) );
+					mDetpackStatus.mEntity.Reset();
+				}
 				break;
 			}
-			HANDLER( TF_MSG_DETPACK_DETONATED )
+			CASE_MSG( EvEntityBuildDetonated )
 			{
-				memset( &mDetpackStatus, 0, sizeof( mDetpackStatus ) );
-				mDetpackStatus.mEntity.Reset();
+				if ( msg->mClassId == TF_CLASSEX_DETPACK )
+				{
+					memset( &mDetpackStatus, 0, sizeof( mDetpackStatus ) );
+					mDetpackStatus.mEntity.Reset();
+				}
+				break;
+			}
+			CASE_MSG( EvEntityBuildDismantled )
+			{
+				if ( msg->mClassId == TF_CLASSEX_DETPACK )
+				{
+					memset( &mDetpackStatus, 0, sizeof( mDetpackStatus ) );
+					mDetpackStatus.mEntity.Reset();
+				}
 				break;
 			}
 		}
@@ -1604,15 +1697,15 @@ namespace AiState
 	{
 		switch ( mSubstate )
 		{
-			case LAY_PIPES:
-				_aimpos = GetClient()->GetEyePosition() + mTraps[ mCurrentTrap ].mFacing * 256.f;
-				break;
-			case WATCH_PIPES:
-				_aimpos = GetClient()->GetEyePosition() + mWait[ mCurrentWait ].mFacing * 256.f;
-				break;
-			case IDLE:
-			case GETTING_AMMO:
-				break;
+		case LAY_PIPES:
+			_aimpos = GetClient()->GetEyePosition() + mTraps[ mCurrentTrap ].mFacing * 256.f;
+			break;
+		case WATCH_PIPES:
+			_aimpos = GetClient()->GetEyePosition() + mWait[ mCurrentWait ].mFacing * 256.f;
+			break;
+		case IDLE:
+		case GETTING_AMMO:
+			break;
 		}
 		return true;
 	}
@@ -1624,7 +1717,7 @@ namespace AiState
 			if ( GetClient()->GetSteeringSystem()->InTargetRadius() )
 			{
 				FINDSTATE( ws, WeaponSystem, GetRootState() );
-				if ( ws && ws->CurrentWeaponIs( TF_Options::PIPE_WEAPON ) && ( IGame::GetFrameNumber() & 2 ) )
+				if ( ws && ws->CurrentWeaponIs( TF_Options::PIPE_WEAPON ) && (IGame::GetFrameNumber() & 2) )
 					ws->FireWeapon();
 			}
 		}
@@ -1645,7 +1738,7 @@ namespace AiState
 		{
 			mTraps[ mNumTraps ].Reset();
 			if ( mg->GetProperty( va( "Place[%d].Position", i ).c_str(), mTraps[ mNumTraps ].mSource ) &&
-				mg->GetProperty( va( "Place[%d].Facing", i ).c_str(), mTraps[ mNumTraps ].mFacing ) )
+				 mg->GetProperty( va( "Place[%d].Facing", i ).c_str(), mTraps[ mNumTraps ].mFacing ) )
 			{
 				if ( !mTraps[ mNumTraps ].mFacing.IsZero() )
 				{
@@ -1678,28 +1771,28 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 		switch ( mPlaceOrder )
 		{
-			case OrderRandomAll:
-				std::random_shuffle( mTraps, mTraps + mNumTraps );
-				break;
-			case OrderRandomPick1:
-				std::random_shuffle( mTraps, mTraps + mNumTraps );
-				mNumTraps = ClampT<int>( mNumTraps, 0, 1 );
-				break;
-			case OrderSequentialAll:
-				break;
+		case OrderRandomAll:
+			std::random_shuffle( mTraps, mTraps + mNumTraps );
+			break;
+		case OrderRandomPick1:
+			std::random_shuffle( mTraps, mTraps + mNumTraps );
+			mNumTraps = ClampT<int>( mNumTraps, 0, 1 );
+			break;
+		case OrderSequentialAll:
+			break;
 		}
 		//////////////////////////////////////////////////////////////////////////
 		switch ( mWaitOrder )
 		{
-			case OrderRandomAll:
-				std::random_shuffle( mWait, mWait + mNumWaits );
-				break;
-			case OrderRandomPick1:
-				std::random_shuffle( mWait, mWait + mNumWaits );
-				mNumWaits = ClampT<int>( mNumWaits, 0, 1 );
-				break;
-			case OrderSequentialAll:
-				break;
+		case OrderRandomAll:
+			std::random_shuffle( mWait, mWait + mNumWaits );
+			break;
+		case OrderRandomPick1:
+			std::random_shuffle( mWait, mWait + mNumWaits );
+			mNumWaits = ClampT<int>( mNumWaits, 0, 1 );
+			break;
+		case OrderSequentialAll:
+			break;
 		}
 		//////////////////////////////////////////////////////////////////////////
 		return mNumTraps > 0;
@@ -1771,7 +1864,7 @@ namespace AiState
 				if ( mPipes.mPipes[ i ].mMoving )
 				{
 					if ( !EngineFuncs::EntityVelocity( mPipes.mPipes[ i ].mEntity, vVelocity ) ||
-						!EngineFuncs::EntityPosition( mPipes.mPipes[ i ].mEntity, mPipes.mPipes[ i ].mPosition ) )
+						 !EngineFuncs::EntityPosition( mPipes.mPipes[ i ].mEntity, mPipes.mPipes[ i ].mPosition ) )
 					{
 						mPipes.mPipes[ i ].mEntity.Reset();
 						continue;
@@ -1862,45 +1955,45 @@ namespace AiState
 		int32_t wpn = TF_Options::PIPE_WEAPON;
 		switch ( mSubstate )
 		{
-			case LAY_PIPES:
-			{
-				mExpireTime = 0; // reset expire
+		case LAY_PIPES:
+		{
+			mExpireTime = 0; // reset expire
 
-				wpn = TF_Options::PIPE_WEAPON;
-				if ( GetPipeCount() >= TF_Options::PIPE_MAX_DEPLOYED )
-				{
-					mSubstate = WATCH_PIPES;
-					mCurrentWait = rand() % mNumWaits;
-				}
+			wpn = TF_Options::PIPE_WEAPON;
+			if ( GetPipeCount() >= TF_Options::PIPE_MAX_DEPLOYED )
+			{
+				mSubstate = WATCH_PIPES;
+				mCurrentWait = rand() % mNumWaits;
+			}
+			break;
+		}
+		case WATCH_PIPES:
+		{
+			if ( GetPipeCount() < TF_Options::PIPE_MAX_DEPLOYED )
+			{
+				mSubstate = LAY_PIPES;
 				break;
 			}
-			case WATCH_PIPES:
+
+			WeaponPriority = Priority::VeryLow;
+
+			wpn = TF_Options::PIPE_WEAPON_WATCH;
+
+			// reload pipe launcher before switching to GL
+			/*WeaponPtr curWpn = ws->GetCurrentWeapon();
+			if(curWpn->GetWeaponID()==TF_Options::PIPE_WEAPON)
 			{
-				if ( GetPipeCount() < TF_Options::PIPE_MAX_DEPLOYED )
-				{
-					mSubstate = LAY_PIPES;
-					break;
-				}
-
-				WeaponPriority = Priority::VeryLow;
-
-				wpn = TF_Options::PIPE_WEAPON_WATCH;
-
-				// reload pipe launcher before switching to GL
-				/*WeaponPtr curWpn = ws->GetCurrentWeapon();
-				if(curWpn->GetWeaponID()==TF_Options::PIPE_WEAPON)
-				{
-				if(curWpn->CanReload()!=InvalidFireMode)
-				{
-				wpn = TF_Options::PIPE_WEAPON;
-				curWpn->ReloadWeapon();
-				}
-				}*/
-				break;
+			if(curWpn->CanReload()!=InvalidFireMode)
+			{
+			wpn = TF_Options::PIPE_WEAPON;
+			curWpn->ReloadWeapon();
 			}
-			case IDLE:
-			case GETTING_AMMO:
-				break;
+			}*/
+			break;
+		}
+		case IDLE:
+		case GETTING_AMMO:
+			break;
 		}
 
 		if ( DidPathSucceed() )
@@ -1911,71 +2004,69 @@ namespace AiState
 			SteeringSystem *steer = GetClient()->GetSteeringSystem();
 			switch ( mSubstate )
 			{
-				case LAY_PIPES:
+			case LAY_PIPES:
+			{
+				steer->SetTarget( mTraps[ mCurrentTrap ].mSource );
+				break;
+			}
+			case WATCH_PIPES:
+			{
+				steer->SetTarget( mWait[ mCurrentWait ].mPosition );
+				//////////////////////////////////////////////////////////////////////////
+				// Cycle?
+				if ( mNumWaits > 1 && mWaitOrder != OrderRandomPick1 )
 				{
-					steer->SetTarget( mTraps[ mCurrentTrap ].mSource );
-					break;
-				}
-				case WATCH_PIPES:
-				{
-					steer->SetTarget( mWait[ mCurrentWait ].mPosition );
-					//////////////////////////////////////////////////////////////////////////
-					// Cycle?
-					if ( mNumWaits > 1 && mWaitOrder != OrderRandomPick1 )
+					if ( mExpireTime == 0 && steer->InTargetRadius() )
 					{
-						if ( mExpireTime == 0 && steer->InTargetRadius() )
-						{
-							mExpireTime = IGame::GetTime() +
-								Mathf::IntervalRandomInt( mWait[ mCurrentWait ].mMinWaitTime, mWait[ mCurrentWait ].mMaxWaitTime );
-						}
-						else if ( IGame::GetTime() > mExpireTime )
-						{
-							mExpireTime = 0;
+						mExpireTime = IGame::GetTime() +
+							Mathf::IntervalRandomInt( mWait[ mCurrentWait ].mMinWaitTime, mWait[ mCurrentWait ].mMaxWaitTime );
+					}
+					else if ( IGame::GetTime() > mExpireTime )
+					{
+						mExpireTime = 0;
 
-							switch ( mWaitOrder )
-							{
-								case OrderRandomAll:
-									mCurrentWait = rand() % mNumWaits;
-									break;
-								case OrderSequentialAll:
-									mCurrentWait = ( mCurrentWait + 1 ) % mNumWaits;
-									break;
-							}
+						switch ( mWaitOrder )
+						{
+						case OrderRandomAll:
+							mCurrentWait = rand() % mNumWaits;
+							break;
+						case OrderSequentialAll:
+							mCurrentWait = (mCurrentWait + 1) % mNumWaits;
+							break;
 						}
 					}
-					break;
 				}
-				case IDLE:
-					break;
-				case GETTING_AMMO:
-					return State_Finished;
+				break;
+			}
+			case IDLE:
+				break;
+			case GETTING_AMMO:
+				return State_Finished;
 			}
 		}
 		return State_Busy;
 	}
 
-	void PipeTrap::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void PipeTrap::ProcessEvent( const Message & message, CallbackParameters & cb )
 	{
-		switch ( _message.GetMessageId() )
+		switch ( message.Id() )
 		{
-			HANDLER( MESSAGE_PROXIMITY_TRIGGER )
+			CASE_MSG( EvProximityTrigger )
 			{
-				const AiState::Event_ProximityTrigger *m = _message.Get<AiState::Event_ProximityTrigger>();
-				if ( m->mOwnerState == GetNameHash() )
+				if ( msg->mOwnerState == GetNameHash() )
 				{
 					if ( IGame::GetFrameNumber() & 1 )
 						GetClient()->PressButton( TF_BOT_BUTTON_DETPIPES );
-					//GetClient()->SendEvent(MessageHelper(TF_MSG_DETPIPES))
+					//GetClient()->SendEvent(Message(TF_MSG_DETPIPES))
 				}
 				break;
 			}
-			HANDLER( ACTION_WEAPON_FIRE )
+			CASE_MSG( EvWeaponFire )
 			{
-				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-				if ( m && m->mProjectile.IsValid() )
+				if ( msg->mProjectile.IsValid() )
 				{
-					EntityInfo entInfo;					
-					if ( IGame::GetEntityInfo( m->mProjectile, entInfo ) )
+					EntityInfo entInfo;
+					if ( IGame::GetEntityInfo( msg->mProjectile, entInfo ) )
 					{
 						if ( entInfo.mGroup == ENT_GRP_PROJECTILE && entInfo.mClassId == TF_CLASSEX_PIPE )
 						{
@@ -1984,11 +2075,11 @@ namespace AiState
 								if ( !mPipes.mPipes[ i ].mEntity.IsValid() )
 								{
 									//Utils::OutputDebug(kInfo, "--Adding Pipe To Pipe List--");
-									if ( EngineFuncs::EntityPosition( m->mProjectile, mPipes.mPipes[ i ].mPosition ) )
+									if ( EngineFuncs::EntityPosition( msg->mProjectile, mPipes.mPipes[ i ].mPosition ) )
 									{
-										mCurrentTrap = ( mCurrentTrap + 1 ) % mNumTraps;
+										mCurrentTrap = (mCurrentTrap + 1) % mNumTraps;
 
-										mPipes.mPipes[ i ].mEntity = m->mProjectile;
+										mPipes.mPipes[ i ].mEntity = msg->mProjectile;
 										mPipes.mPipes[ i ].mMoving = true;
 										mPipes.mPipeCount++;
 									}
@@ -2078,18 +2169,17 @@ namespace AiState
 	{
 		return mIsDone ? State_Finished : State_Busy;
 	}
-	void RocketJump::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void RocketJump::ProcessEvent( const Message & message, CallbackParameters & cb )
 	{
-		switch ( _message.GetMessageId() )
+		switch ( message.Id() )
 		{
-			HANDLER( ACTION_WEAPON_FIRE )
+			CASE_MSG( EvWeaponFire )
 			{
-				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-				if ( m && m->mProjectile.IsValid() )
+				if ( msg->mProjectile.IsValid() )
 				{
 					EntityInfo entInfo;
-					
-					if ( IGame::GetEntityInfo( m->mProjectile, entInfo ) && entInfo.mClassId == TF_CLASSEX_ROCKET )
+
+					if ( IGame::GetEntityInfo( msg->mProjectile, entInfo ) && entInfo.mClassId == TF_CLASSEX_ROCKET )
 					{
 						mIsDone = true;
 					}
@@ -2157,13 +2247,13 @@ namespace AiState
 	{
 		return State_Busy;
 	}
-	void ConcussionJump::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void ConcussionJump::ProcessEvent( const Message & message, CallbackParameters & cb )
 	{
-		/*switch(_message.GetMessageId())
+		/*switch(message.Id())
 		{
-		HANDLER(ACTION_WEAPON_FIRE)
+		CASE_MSG(ACTION_WEAPON_FIRE)
 		{
-		const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
+		const Event_WeaponFire *m = message.Get<Event_WeaponFire>();
 		if(m && m->mProjectile.IsValid())
 		{
 		if(gEngineFuncs->GetEntityClass(m->mProjectile) == TF_CLASSEX_CONC_GRENADE)
@@ -2192,9 +2282,9 @@ namespace AiState
 	{
 		if ( IsActive() )
 		{
-			out << ( mGrenType == TF_BOT_BUTTON_GREN1 ?
-				"Throwing Primary Grenade" :
-				"Throwing Secondary Grenade" );
+			out << (mGrenType == TF_BOT_BUTTON_GREN1 ?
+					 "Throwing Primary Grenade" :
+					 "Throwing Secondary Grenade");
 		}
 	}
 	void ThrowGrenade::RenderDebug()
@@ -2299,7 +2389,7 @@ namespace AiState
 		{
 			const TargetInfo &targetInfo = pRecord->mTargetInfo;
 			mAimPos = Utils::PredictFuturePositionOfTarget( GetClient()->GetPosition(),
-				fProjectileSpeed, targetInfo, Vector3f::ZERO );
+															fProjectileSpeed, targetInfo, Vector3f::ZERO );
 
 			// Add a vertical aim offset
 			mAimPos.Z() += targetInfo.mDistanceTo * 0.25f;
@@ -2307,12 +2397,12 @@ namespace AiState
 			bool bThrow = fTimeToDet < 1.0;
 
 			// Calculate the timer for the grenade based on the distance to the aim point.
-			float fExplodeDistToTarget = ( mAimPos - GetClient()->GetPosition() ).Length();
+			float fExplodeDistToTarget = (mAimPos - GetClient()->GetPosition()).Length();
 
 			if ( !bThrow )
 			{
 				// How far will the grenade go with the time left?
-				const float fFakeGrenadeRange = ( fTimeToDet - 0.15f ) * fProjectileSpeed;
+				const float fFakeGrenadeRange = (fTimeToDet - 0.15f) * fProjectileSpeed;
 				const float fGrenadeRange = fTimeToDet * fProjectileSpeed;
 
 				if ( fExplodeDistToTarget >= fFakeGrenadeRange )
@@ -2347,7 +2437,7 @@ namespace AiState
 		GetClient()->PressButton( mGrenType );
 		return State_Busy;
 	}
-	void ThrowGrenade::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void ThrowGrenade::ProcessEvent( const Message & message, CallbackParameters & cb )
 	{
 	}
 	void ThrowGrenade::_UpdateAmmo()
@@ -2359,47 +2449,47 @@ namespace AiState
 	{
 		switch ( GetClient()->GetClass() )
 		{
-			case TF_CLASS_SCOUT:
-				mPrimaryGrenade = TF_WP_GRENADE_CALTROPS;
-				mSecondaryGrenade = TF_WP_GRENADE_CONC;
-				break;
-			case TF_CLASS_SNIPER:
-				mPrimaryGrenade = TF_WP_GRENADE;
-				mSecondaryGrenade = TF_WP_NONE;
-				break;
-			case TF_CLASS_SOLDIER:
-				mPrimaryGrenade = TF_WP_GRENADE;
-				mSecondaryGrenade = TF_WP_GRENADE_NAIL;
-				break;
-			case TF_CLASS_DEMOMAN:
-				mPrimaryGrenade = TF_WP_GRENADE;
-				mSecondaryGrenade = TF_WP_GRENADE_MIRV;
-				break;
-			case TF_CLASS_MEDIC:
-				mPrimaryGrenade = TF_WP_GRENADE;
-				mSecondaryGrenade = TF_WP_GRENADE_CONC;
-				break;
-			case TF_CLASS_HWGUY:
-				mPrimaryGrenade = TF_WP_GRENADE;
-				mSecondaryGrenade = TF_WP_GRENADE_MIRV;
-				break;
-			case TF_CLASS_PYRO:
-				mPrimaryGrenade = TF_WP_GRENADE;
-				mSecondaryGrenade = TF_WP_GRENADE_NAPALM;
-				break;
-			case TF_CLASS_SPY:
-				mPrimaryGrenade = TF_WP_GRENADE;
-				mSecondaryGrenade = TF_WP_GRENADE_GAS;
-				break;
-			case TF_CLASS_ENGINEER:
-				mPrimaryGrenade = TF_WP_GRENADE;
-				mSecondaryGrenade = TF_WP_GRENADE_EMP;
-				break;
-			case TF_CLASS_CIVILIAN:
-			default:
-				mPrimaryGrenade = 0;
-				mSecondaryGrenade = 0;
-				break;
+		case TF_CLASS_SCOUT:
+			mPrimaryGrenade = TF_WP_GRENADE_CALTROPS;
+			mSecondaryGrenade = TF_WP_GRENADE_CONC;
+			break;
+		case TF_CLASS_SNIPER:
+			mPrimaryGrenade = TF_WP_GRENADE;
+			mSecondaryGrenade = TF_WP_NONE;
+			break;
+		case TF_CLASS_SOLDIER:
+			mPrimaryGrenade = TF_WP_GRENADE;
+			mSecondaryGrenade = TF_WP_GRENADE_NAIL;
+			break;
+		case TF_CLASS_DEMOMAN:
+			mPrimaryGrenade = TF_WP_GRENADE;
+			mSecondaryGrenade = TF_WP_GRENADE_MIRV;
+			break;
+		case TF_CLASS_MEDIC:
+			mPrimaryGrenade = TF_WP_GRENADE;
+			mSecondaryGrenade = TF_WP_GRENADE_CONC;
+			break;
+		case TF_CLASS_HWGUY:
+			mPrimaryGrenade = TF_WP_GRENADE;
+			mSecondaryGrenade = TF_WP_GRENADE_MIRV;
+			break;
+		case TF_CLASS_PYRO:
+			mPrimaryGrenade = TF_WP_GRENADE;
+			mSecondaryGrenade = TF_WP_GRENADE_NAPALM;
+			break;
+		case TF_CLASS_SPY:
+			mPrimaryGrenade = TF_WP_GRENADE;
+			mSecondaryGrenade = TF_WP_GRENADE_GAS;
+			break;
+		case TF_CLASS_ENGINEER:
+			mPrimaryGrenade = TF_WP_GRENADE;
+			mSecondaryGrenade = TF_WP_GRENADE_EMP;
+			break;
+		case TF_CLASS_CIVILIAN:
+		default:
+			mPrimaryGrenade = 0;
+			mSecondaryGrenade = 0;
+			break;
 		}
 	}
 	float ThrowGrenade::_GetProjectileSpeed( int _type ) const
@@ -2419,7 +2509,7 @@ namespace AiState
 		LimitToClass().SetFlag( TF_CLASS_ENGINEER );
 		SetAlwaysRecieveEvents( true );
 	}
-	void Teleporter::UpdateTeleporterStatus( const Event_TeleporterStatus_TF &_stats )
+	void Teleporter::UpdateTeleporterStatus( const ParamsTeleporterStatus_TF &_stats )
 	{
 		if ( mTeleporterStatus.mEntityEntrance.IsValid() )
 		{
@@ -2446,65 +2536,54 @@ namespace AiState
 	{
 		return State_Busy;
 	}
-	void Teleporter::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void Teleporter::ProcessEvent( const Message & message, CallbackParameters & cb )
 	{
-		switch ( _message.GetMessageId() )
+		switch ( message.Id() )
 		{
-			HANDLER( TF_MSG_TELE_ENTRANCE_BUILDING )
+			CASE_MSG( EvEntityBuilding )
 			{
-				const Event_TeleporterBuilding_TF *m = _message.Get<Event_TeleporterBuilding_TF>();
-				mTeleporterStatus.mStatusEntrance = BUILDABLE_BUILDING;
-				mTeleporterStatus.mEntityEntrance = m->mTeleporter;
-				DBG_MSG( 0, GetClient(), kNormal, "Tele Entrance Building" );
+				if ( msg->mClassId == TF_CLASSEX_TELEPORTER_ENTRANCE )
+				{
+					mTeleporterStatus.mStatusEntrance = BUILDABLE_BUILDING;
+					mTeleporterStatus.mEntityEntrance = msg->mEntity;
+					DBG_MSG( 0, GetClient(), kNormal, "Tele Entrance Building" );
+				}
+				else if ( msg->mClassId == TF_CLASSEX_TELEPORTER_EXIT )
+				{
+					mTeleporterStatus.mStatusExit = BUILDABLE_BUILDING;
+					mTeleporterStatus.mEntityExit = msg->mEntity;
+					DBG_MSG( 0, GetClient(), kNormal, "Tele Exit Building" );
+				}
 				break;
 			}
-			HANDLER( TF_MSG_TELE_EXIT_BUILDING )
+			CASE_MSG( EvEntityBuilt )
 			{
-				const Event_TeleporterBuilding_TF *m = _message.Get<Event_TeleporterBuilding_TF>();
-				mTeleporterStatus.mStatusExit = BUILDABLE_BUILDING;
-				mTeleporterStatus.mEntityExit = m->mTeleporter;
-				DBG_MSG( 0, GetClient(), kNormal, "Tele Exit Building" );
+				if ( msg->mClassId == TF_CLASSEX_TELEPORTER_ENTRANCE )
+				{
+					mTeleporterStatus.mEntityEntrance = msg->mEntity;
+					EngineFuncs::EntityPosition( msg->mEntity, mTeleporterStatus.mEntrancePos );
+					mTeleporterStatus.mStatusEntrance = BUILDABLE_BUILT;
+					DBG_MSG( 0, GetClient(), kNormal, "Tele Entrance Built" );
+				}
+				else if ( msg->mClassId == TF_CLASSEX_TELEPORTER_EXIT )
+				{
+					mTeleporterStatus.mEntityExit = msg->mEntity;
+					EngineFuncs::EntityPosition( msg->mEntity, mTeleporterStatus.mExitPos );
+					mTeleporterStatus.mStatusExit = BUILDABLE_BUILT;
+					DBG_MSG( 0, GetClient(), kNormal, "Tele Exit Built" );
+				}
 				break;
 			}
-			HANDLER( TF_MSG_TELE_ENTRANCE_BUILT )
+			CASE_MSG( EvEntityBuildDestroyed )
 			{
-				const Event_TeleporterBuilt_TF *m = _message.Get<Event_TeleporterBuilt_TF>();
-				mTeleporterStatus.mEntityEntrance = m->mTeleporter;
-				EngineFuncs::EntityPosition( m->mTeleporter, mTeleporterStatus.mEntrancePos );
-				mTeleporterStatus.mStatusEntrance = BUILDABLE_BUILT;
-				DBG_MSG( 0, GetClient(), kNormal, "Tele Entrance Built" );
-				break;
-			}
-			HANDLER( TF_MSG_TELE_EXIT_BUILT )
-			{
-				const Event_TeleporterBuilt_TF *m = _message.Get<Event_TeleporterBuilt_TF>();
-				mTeleporterStatus.mEntityExit = m->mTeleporter;
-				EngineFuncs::EntityPosition( m->mTeleporter, mTeleporterStatus.mExitPos );
-				mTeleporterStatus.mStatusExit = BUILDABLE_BUILT;
-				DBG_MSG( 0, GetClient(), kNormal, "Tele Exit Built" );
-				break;
-			}
-			HANDLER( TF_MSG_TELE_ENTRANCE_DESTROYED )
-			{
-				mTeleporterStatus.mEntityEntrance.Reset();
-				break;
-			}
-			HANDLER( TF_MSG_TELE_EXIT_DESTROYED )
-			{
-				mTeleporterStatus.mEntityExit.Reset();
-				break;
-			}
-			HANDLER( TF_MSG_TELE_STATS )
-			{
-				const Event_TeleporterStatus_TF	*m = _message.Get<Event_TeleporterStatus_TF>();
-				m;
-				/*DBG_MSG(0, GetClient(), kNormal, "Dispenser Stats");
-				DBG_MSG(0, GetClient(), kNormal, va("Health: %d", mDispenserStatus.mHealth));
-				DBG_MSG(0, GetClient(), kNormal, va("Shells: %d", mDispenserStatus.mShells));
-				DBG_MSG(0, GetClient(), kNormal, va("Nails: %d", mDispenserStatus.mNails));
-				DBG_MSG(0, GetClient(), kNormal, va("Rockets: %d", mDispenserStatus.mRockets));
-				DBG_MSG(0, GetClient(), kNormal, va("Cells: %d", mDispenserStatus.mCells));
-				DBG_MSG(0, GetClient(), kNormal, va("Armor: %d", mDispenserStatus.mArmor));*/
+				if ( msg->mClassId == TF_CLASSEX_TELEPORTER_ENTRANCE )
+				{
+					mTeleporterStatus.mEntityEntrance.Reset();
+				}
+				else if ( msg->mClassId == TF_CLASSEX_TELEPORTER_EXIT )
+				{
+					mTeleporterStatus.mEntityExit.Reset();
+				}
 				break;
 			}
 		}
@@ -2524,21 +2603,21 @@ namespace AiState
 		{
 			switch ( mState )
 			{
-				case NONE:
-					break;
-				case GETTING_AMMO:
-					out << "Getting Ammo";
-					break;
-				case TELE_BUILDING_ENTRANCE:
-					out << ( mCantBuild ? "Cant Build " : "Building " );
-					if ( mMapGoalTeleEntrance )
-						out << mMapGoalTeleEntrance->GetName();
-					break;
-				case TELE_BUILDING_EXIT:
-					out << ( mCantBuild ? "Cant Build " : "Building " );
-					if ( mMapGoalTeleExit )
-						out << mMapGoalTeleExit->GetName();
-					break;
+			case NONE:
+				break;
+			case GETTING_AMMO:
+				out << "Getting Ammo";
+				break;
+			case TELE_BUILDING_ENTRANCE:
+				out << (mCantBuild ? "Cant Build " : "Building ");
+				if ( mMapGoalTeleEntrance )
+					out << mMapGoalTeleEntrance->GetName();
+				break;
+			case TELE_BUILDING_EXIT:
+				out << (mCantBuild ? "Cant Build " : "Building ");
+				if ( mMapGoalTeleExit )
+					out << mMapGoalTeleExit->GetName();
+				break;
 			}
 		}
 	}
@@ -2546,22 +2625,22 @@ namespace AiState
 	{
 		switch ( mState )
 		{
-			case TELE_BUILDING_ENTRANCE:
-				if ( mMapGoalTeleEntrance->RouteTo( GetClient(), _desination ) )
-					_final = false;
-				else
-					_final = true;
-				break;
-			case TELE_BUILDING_EXIT:
-				if ( mMapGoalTeleExit->RouteTo( GetClient(), _desination ) )
-					_final = false;
-				else
-					_final = true;
-				break;
+		case TELE_BUILDING_ENTRANCE:
+			if ( mMapGoalTeleEntrance->RouteTo( GetClient(), _desination ) )
+				_final = false;
+			else
+				_final = true;
+			break;
+		case TELE_BUILDING_EXIT:
+			if ( mMapGoalTeleExit->RouteTo( GetClient(), _desination ) )
+				_final = false;
+			else
+				_final = true;
+			break;
 
-			case GETTING_AMMO:
-			default:
-				return false;
+		case GETTING_AMMO:
+		default:
+			return false;
 		}
 		return true;
 	}
@@ -2569,14 +2648,14 @@ namespace AiState
 	{
 		switch ( mState )
 		{
-			case TELE_BUILDING_ENTRANCE:
-				_aimpos = GetClient()->GetEyePosition() + mMapGoalTeleEntrance->GetFacing() * 1024.f;
-				break;
-			case TELE_BUILDING_EXIT:
-				_aimpos = GetClient()->GetEyePosition() + mMapGoalTeleExit->GetFacing() * 1024.f;
-				break;
-			default:
-				return false;
+		case TELE_BUILDING_ENTRANCE:
+			_aimpos = GetClient()->GetEyePosition() + mMapGoalTeleEntrance->GetFacing() * 1024.f;
+			break;
+		case TELE_BUILDING_EXIT:
+			_aimpos = GetClient()->GetEyePosition() + mMapGoalTeleExit->GetFacing() * 1024.f;
+			break;
+		default:
+			return false;
 		}
 		return true;
 	}
@@ -2588,26 +2667,26 @@ namespace AiState
 
 		switch ( mState )
 		{
-			case TELE_BUILDING_ENTRANCE:
+		case TELE_BUILDING_ENTRANCE:
+		{
+			if ( !tele->HasTeleporterEntrance() && IGame::GetTime() >= mNextBuildTry )
 			{
-				if ( !tele->HasTeleporterEntrance() && IGame::GetTime() >= mNextBuildTry )
-				{
-					GetClient()->PressButton( TF_BOT_BUTTON_BUILD_TELE_ENTRANCE );
-					mNextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
-				}
-				break;
+				GetClient()->PressButton( TF_BOT_BUTTON_BUILD_TELE_ENTRANCE );
+				mNextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
 			}
-			case TELE_BUILDING_EXIT:
+			break;
+		}
+		case TELE_BUILDING_EXIT:
+		{
+			if ( !tele->HasTeleporterExit() && IGame::GetTime() >= mNextBuildTry )
 			{
-				if ( !tele->HasTeleporterExit() && IGame::GetTime() >= mNextBuildTry )
-				{
-					GetClient()->PressButton( TF_BOT_BUTTON_BUILD_TELE_EXIT );
-					mNextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
-				}
-				break;
+				GetClient()->PressButton( TF_BOT_BUTTON_BUILD_TELE_EXIT );
+				mNextBuildTry = IGame::GetTime() + TF_Options::BUILD_ATTEMPT_DELAY;
 			}
-			default:
-				break;
+			break;
+		}
+		default:
+			break;
 		}
 	}
 	float TeleporterBuild::GetPriority()
@@ -2616,7 +2695,7 @@ namespace AiState
 		{
 			if ( !mMapGoalTeleEntrance->IsAvailable( GetClient()->GetTeam() ) )
 			{
-				GetClient()->PressButton( TF_BOT_BUTTON_DETTELE_ENTRANCE );
+				GetClient()->PressButton( TF_BOT_BUTTON_DET_TELE_ENTRANCE );
 				mMapGoalTeleEntrance.reset();
 			}
 		}
@@ -2624,7 +2703,7 @@ namespace AiState
 		{
 			if ( !mMapGoalTeleExit->IsAvailable( GetClient()->GetTeam() ) )
 			{
-				GetClient()->PressButton( TF_BOT_BUTTON_DETTELE_EXIT );
+				GetClient()->PressButton( TF_BOT_BUTTON_DET_TELE_EXIT );
 				mMapGoalTeleExit.reset();
 			}
 		}
@@ -2696,27 +2775,27 @@ namespace AiState
 
 		switch ( mState )
 		{
-			case TELE_BUILDING_ENTRANCE:
-			{
-				if ( !mMapGoalTeleEntrance )
-					return State_Finished;
+		case TELE_BUILDING_ENTRANCE:
+		{
+			if ( !mMapGoalTeleEntrance )
+				return State_Finished;
 
-				if ( tp->HasTeleporterEntrance() )
-					return State_Finished;
-				break;
-			}
-			case TELE_BUILDING_EXIT:
-			{
-				if ( !mMapGoalTeleExit )
-					return State_Finished;
+			if ( tp->HasTeleporterEntrance() )
+				return State_Finished;
+			break;
+		}
+		case TELE_BUILDING_EXIT:
+		{
+			if ( !mMapGoalTeleExit )
+				return State_Finished;
 
-				if ( tp->HasTeleporterExit() )
-					return State_Finished;
-				break;
-			}
-			case GETTING_AMMO:
-			default:
-				break;
+			if ( tp->HasTeleporterExit() )
+				return State_Finished;
+			break;
+		}
+		case GETTING_AMMO:
+		default:
+			break;
 		}
 
 		//////////////////////////////////////////////////////////////////////////
@@ -2796,48 +2875,56 @@ namespace AiState
 		}
 		return State_Busy;
 	}
-	void TeleporterBuild::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void TeleporterBuild::ProcessEvent( const Message & message, CallbackParameters & cb )
 	{
-		switch ( _message.GetMessageId() )
+		switch ( message.Id() )
 		{
-			HANDLER( TF_MSG_TELE_ENTRANCE_BUILDING )
+			CASE_MSG( EvEntityBuilding )
 			{
-				mBuiltTeleEntrance = mMapGoalTeleEntrance;
+				if ( msg->mClassId == TF_CLASSEX_TELEPORTER_ENTRANCE )
+				{
+					mBuiltTeleEntrance = mMapGoalTeleEntrance;
+				}
+				else if ( msg->mClassId == TF_CLASSEX_TELEPORTER_EXIT )
+				{
+					mBuiltTeleExit = mMapGoalTeleExit;
+				}
+				break;
+			}			
+			CASE_MSG( EvEntityBuildCancel )
+			{
+				if ( msg->mClassId == TF_CLASSEX_TELEPORTER_ENTRANCE )
+				{
+					mBuiltTeleEntrance.reset();
+				}
+				else if ( msg->mClassId == TF_CLASSEX_TELEPORTER_EXIT )
+				{
+					mBuiltTeleExit.reset();
+				}
 				break;
 			}
-			HANDLER( TF_MSG_TELE_EXIT_BUILDING )
+			CASE_MSG( EvEntityBuildDestroyed )
 			{
-				mBuiltTeleExit = mMapGoalTeleExit;
+				if ( msg->mClassId == TF_CLASSEX_TELEPORTER_ENTRANCE )
+				{
+					mBuiltTeleEntrance.reset();
+				}
+				else if ( msg->mClassId == TF_CLASSEX_TELEPORTER_EXIT )
+				{
+					mBuiltTeleExit.reset();
+				}
 				break;
 			}
-			HANDLER( TF_MSG_TELE_ENTRANCE_CANCEL )
+			CASE_MSG( EvEntityCantBuild )
 			{
-				mBuiltTeleEntrance.reset();
-				break;
-			}
-			HANDLER( TF_MSG_TELE_EXIT_CANCEL )
-			{
-				mBuiltTeleExit.reset();
-				break;
-			}
-			HANDLER( TF_MSG_TELE_ENTRANCE_DESTROYED )
-			{
-				mBuiltTeleEntrance.reset();
-				break;
-			}
-			HANDLER( TF_MSG_TELE_EXIT_DESTROYED )
-			{
-				mBuiltTeleExit.reset();
-				break;
-			}
-			HANDLER( TF_MSG_TELE_ENTRANCE_CANTBUILD )
-			{
-				mCantBuild = true;
-				break;
-			}
-			HANDLER( TF_MSG_TELE_EXIT_CANTBUILD )
-			{
-				mCantBuild = true;
+				if ( msg->mClassId == TF_CLASSEX_TELEPORTER_ENTRANCE )
+				{
+					mCantBuild = true;
+				}
+				else if ( msg->mClassId == TF_CLASSEX_TELEPORTER_EXIT )
+				{
+					mCantBuild = true;
+				}
 				break;
 			}
 		}

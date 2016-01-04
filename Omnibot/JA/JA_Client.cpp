@@ -8,11 +8,11 @@
 
 #include "ScriptManager.h"
 
+#include "JA_Messages.h"
 #include "JA_Client.h"
 #include "JA_VoiceMacros.h"
 #include "JA_FilterClosest.h"
 #include "JA_BaseStates.h"
-#include "JA_InterfaceFuncs.h"
 
 #include "BotTargetingSystem.h"
 #include "BotWeaponSystem.h"
@@ -37,25 +37,24 @@ void JA_Client::Init( int _gameid )
 	GetTargetingSystem()->SetDefaultTargetingFilter( filter );
 }
 
-void JA_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+void JA_Client::ProcessEvent( const Message &message, CallbackParameters & cb )
 {
-	switch ( _message.GetMessageId() )
+	switch ( message.Id() )
 	{
-		HANDLER( JA_PERCEPT_FEEL_FORCE )
+		CASE_MSG(EvFeelForce)
 		{
-			const Event_ForceInflicted *m = _message.Get<Event_ForceInflicted>();
-			_cb.CallScript();
-			_cb.AddEntity( "inflictor", m->mInflictor );
-			_cb.AddInt( "type", m->mType );
+			cb.CallScript();
+			cb.AddEntity( "inflictor", msg->mInflictor );
+			cb.AddInt( "power", msg->mPower );
 
-			if ( m->mInflictor.IsValid() )
+			if ( msg->mInflictor.IsValid() )
 			{
-				GetSensoryMemory()->UpdateWithTouchSource( m->mInflictor );
+				GetSensoryMemory()->UpdateWithTouchSource( msg->mInflictor );
 			}
 			break;
 		}
 	}
-	Client::ProcessEvent( _message, _cb );
+	Client::ProcessEvent( message, cb );
 }
 
 NavFlags JA_Client::GetTeamFlag( int _team ) const
@@ -63,12 +62,12 @@ NavFlags JA_Client::GetTeamFlag( int _team ) const
 	static const NavFlags defaultTeam = 0;
 	switch ( _team )
 	{
-		case JA_TEAM_RED:
-			return NAVFLAGS_TEAM1_ONLY;
-		case JA_TEAM_BLUE:
-			return NAVFLAGS_TEAM2_ONLY;
-		default:
-			return defaultTeam;
+	case JA_TEAM_RED:
+		return NAVFLAGS_TEAM1_ONLY;
+	case JA_TEAM_BLUE:
+		return NAVFLAGS_TEAM2_ONLY;
+	default:
+		return defaultTeam;
 	}
 }
 
@@ -78,12 +77,12 @@ void JA_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 
 	switch ( GetTeam() )
 	{
-		case JA_TEAM_RED:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM1_ONLY & NAVFLAGS_ALLTEAMS );
-			break;
-		case JA_TEAM_BLUE:
-			excludeFlags = (NavFlags)( ~NAVFLAGS_TEAM2_ONLY & NAVFLAGS_ALLTEAMS );
-			break;
+	case JA_TEAM_RED:
+		excludeFlags = (NavFlags)(~NAVFLAGS_TEAM1_ONLY & NAVFLAGS_ALLTEAMS);
+		break;
+	case JA_TEAM_BLUE:
+		excludeFlags = (NavFlags)(~NAVFLAGS_TEAM2_ONLY & NAVFLAGS_ALLTEAMS);
+		break;
 	}
 }
 
@@ -116,15 +115,15 @@ float JA_Client::GetGameVar( GameVar _var ) const
 {
 	switch ( _var )
 	{
-		case JumpGapOffset:
-			return 0.32f;
+	case JumpGapOffset:
+		return 0.32f;
 	}
 	return 0.0f;
 }
 
 bool JA_Client::DoesBotHaveFlag( MapGoalPtr _mapgoal )
 {
-	return gEngineFuncs->HasFlag( this );
+	return gJediAcademyFuncs->HasFlag( GetGameEntity() );
 }
 
 bool JA_Client::CanBotSnipe()

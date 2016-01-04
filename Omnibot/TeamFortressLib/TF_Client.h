@@ -51,7 +51,7 @@ public:
 	virtual ~TF_Client();
 protected:
 
-	void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb);
+	void ProcessEvent(const Message &_message, CallbackParameters &_cb);
 
 	bool	mDoubleJumping;
 	float	mDoubleJumpHeight;

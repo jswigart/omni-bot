@@ -9,7 +9,6 @@
 #include "RTCW_Game.h"
 #include "RTCW_Client.h"
 #include "RTCW_VoiceMacros.h"
-#include "RTCW_InterfaceFuncs.h"
 
 #include "gmCall.h"
 
@@ -19,6 +18,8 @@
 #include "ScriptManager.h"
 #include "IGameManager.h"
 #include "RenderBuffer.h"
+
+RTCW_Interface* gRTCWFuncs = 0;
 
 IGame *CreateGameInstance()
 {
@@ -215,24 +216,24 @@ void RTCW_Game::InitVoiceMacros( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "G_GOODGAME", gmVariable( VCHAT_GLOBAL_GOODGAME ) );
 }
 
-void RTCW_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
+void RTCW_Game::AddBot( ParamsAddbot& addbot, bool createnow )
 {
 	//////////////////////////////////////////////////////////////////////////
-	if ( !_addbot.mName[ 0 ] )
+	if ( !addbot.mName[ 0 ] )
 	{
 		NamePtr nr = NameManager::GetInstance()->GetName();
 		std::string name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
-		Utils::StringCopy( _addbot.mName, name.c_str(), sizeof( _addbot.mName ) );
+		Utils::StringCopy( addbot.mName, name.c_str(), sizeof( addbot.mName ) );
 	}
 	//////////////////////////////////////////////////////////////////////////
 	assert( GameStarted() );
 
-	if ( _createnow )
+	if ( createnow )
 		mBotJoining = true;
-	int iGameID = gEngineFuncs->Addbot( _addbot );
-	if ( _createnow )
+	int iGameID = gEngineFuncs->AddBot( addbot );
+	if ( createnow )
 		mBotJoining = false;
-	if ( iGameID != -1 && _createnow )
+	if ( iGameID != -1 && createnow )
 	{
 		ClientPtr &cp = GetClientFromCorrectedGameId( iGameID );
 
@@ -243,8 +244,8 @@ void RTCW_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
 			cp->Init( iGameID );
 		}
 
-		cp->mDesiredTeam = _addbot.mTeam;
-		cp->mDesiredClass = _addbot.mClass;
+		cp->mDesiredTeam = addbot.mTeam;
+		cp->mDesiredClass = addbot.mClass;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Script callbacks
@@ -280,8 +281,6 @@ void RTCW_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
 //		Custom Events for Return to Castle Wolfenstein. Also see <Common Script Events>
 void RTCW_Game::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
 {
-	_table->Set( _machine, "DROWNING", gmVariable( RTCW_EVENT_DROWNING ) );
-	_table->Set( _machine, "AMMO_RECIEVED", gmVariable( RTCW_EVENT_RECIEVEDAMMO ) );
 	IGame::InitScriptEvents( _machine, _table );
 }
 
@@ -349,29 +348,29 @@ const float RTCW_Game::RTCW_GetEntityClassAimOffset( const TargetInfo &_target )
 	return 0.0f;
 }
 
-void RTCW_Game::ClientJoined( const Event_SystemClientConnected *_msg )
+void RTCW_Game::ClientJoined( const EvClientConnected *msg )
 {
-	Utils::OutputDebug( kInfo, "Client Joined Game, IsBot: %d, ClientNum: %d", _msg->mIsBot, _msg->mGameId );
-	if ( _msg->mIsBot && !mBotJoining )
+	Utils::OutputDebug( kInfo, "Client Joined Game, IsBot: %d, ClientNum: %d", msg->mIsBot, msg->mGameId );
+	if ( msg->mIsBot && !mBotJoining )
 	{
 		CheckGameState();
 		assert( GameStarted() );
-		assert( _msg->mGameId < Constants::MAX_PLAYERS && _msg->mGameId >= 0 );
+		assert( msg->mGameId < Constants::MAX_PLAYERS && msg->mGameId >= 0 );
 
 		// If a bot isn't created by now, it has probably been a map change,
 		// and the game has re-added the clients itself.
-		ClientPtr &cp = GetClientFromCorrectedGameId( _msg->mGameId );
+		ClientPtr &cp = GetClientFromCorrectedGameId( msg->mGameId );
 		if ( !cp )
 		{
 			// Initialize the appropriate slot in the list.
 			cp.reset( CreateGameClient() );
-			cp->Init( _msg->mGameId );
+			cp->Init( msg->mGameId );
 
-			cp->mDesiredTeam = _msg->mDesiredTeam;
-			cp->mDesiredClass = _msg->mDesiredClass;
+			cp->mDesiredTeam = msg->mDesiredTeam;
+			cp->mDesiredClass = msg->mDesiredClass;
 
-			gEngineFuncs->ChangeClass( _msg->mGameId, cp->mDesiredClass, NULL );
-			gEngineFuncs->ChangeTeam( _msg->mGameId, cp->mDesiredTeam, NULL );
+			gEngineFuncs->ChangeClass( msg->mGameId, cp->mDesiredClass, NULL );
+			gEngineFuncs->ChangeTeam( msg->mGameId, cp->mDesiredTeam, NULL );
 
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();
@@ -403,7 +402,11 @@ void RTCW_Game::StartGame()
 
 	const char * mapName = gEngineFuncs->GetMapName();
 	filePath script( "nav/%s.gm", mapName );
-	if ( gEngineFuncs->GetCvar( "g_deathmatch" ) != 0 )
+
+	obStringBuffer str;
+	gEngineFuncs->ServerGetVariable( "g_deathmatch", str.mBuffer, obStringBuffer::BUFFER_LENGTH );
+
+	if ( std::string( "1" ) == str.mBuffer )
 		script = filePath( "nav/%s_dm.gm", mapName );
 	else if ( gEngineFuncs->GetGameType() == 7 )
 		script = filePath( "nav/%s_cp.gm", mapName );

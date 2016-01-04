@@ -369,7 +369,12 @@ copy "$(TargetPath)" "$(ETDIR)\omnibot"
     <ClCompile Include="q_math.c" />
     <ClCompile Include="q_shared.c" />
     <ClCompile Include="$(REPO_ROOT)\Omnibot\Common\BotLoadLibrary.cpp" />
-    <ClCompile Include="g_etbot_interface.cpp" />
+    <ClCompile Include="g_etbot_interface.cpp">
+      <RuntimeTypeInfo Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</RuntimeTypeInfo>
+      <RuntimeTypeInfo Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</RuntimeTypeInfo>
+      <RuntimeTypeInfo Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</RuntimeTypeInfo>
+      <RuntimeTypeInfo Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</RuntimeTypeInfo>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\botai\ai_cmd.h" />

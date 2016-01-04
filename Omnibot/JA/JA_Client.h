@@ -48,7 +48,7 @@ public:
 	JA_Client();
 	virtual ~JA_Client();
 protected:
-	void ProcessEvent( const Message & message, CallbackParameters & cb );
+	void ProcessEvent( const Message &message, CallbackParameters & cb );
 	int HandleVoiceMacroEvent( const EvVoiceMacro* msg );
 
 	float	 mBreakableTargetDistance;

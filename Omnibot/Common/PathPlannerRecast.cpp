@@ -232,7 +232,7 @@ PathPlannerRecast::RecastSettings::RecastSettings()
 	WalkableSlopeAngle = 45.0f;
 
 	CellSize = 4.0f;
-	CellHeight = 4.0f;
+	CellHeight = 0.5f;
 
 	EdgeMaxLen = 1000.0f;
 	MaxSimplificationError = 1.f;

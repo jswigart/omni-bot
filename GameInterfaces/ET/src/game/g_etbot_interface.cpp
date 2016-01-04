@@ -1603,7 +1603,7 @@ qboolean InFieldOfVision( vec3_t viewangles, float fov, vec3_t angles )
 	return qtrue;
 }
 
-class ETInterface : public IEngineInterface
+class ETInterface : public EnemyTerritory_Interface
 {
 public:
 	int AddBot( const ParamsAddbot & data )
@@ -4048,7 +4048,7 @@ public:
 	}
 
 	// Enemy Territory Specifics
-	ExplosiveState GetExplosiveState( const GameEntity ent, ExplosiveState& state )
+	ExplosiveState GetExplosiveState( const GameEntity ent )
 	{
 		gentity_t * xplo = EntityFromHandle( ent );
 		if ( xplo && xplo->inuse )
@@ -4669,6 +4669,10 @@ public:
 			}
 		}
 		return true;
+	}
+	bool GetLocationName( const float pos[ 3 ], char buffer[], size_t bufferSize )
+	{
+		return false;
 	}
 };
 
@@ -5527,6 +5531,15 @@ bool GetOmnibotEntityType( gentity_t * ent, EntityInfo & classInfo )
 	}
 	else
 	{
+		// is it the world entity
+		if ( ent == &g_entities[ ENTITYNUM_WORLD ] )
+		{
+			classInfo.mGroup = ENT_GRP_MAP;
+			classInfo.mCategory.SetFlag( ENT_CAT_OBSTACLE );
+			classInfo.mFlags.SetFlag( ENT_FLAG_COLLIDABLE );
+			return true;
+		}
+
 		classInfo.mHealth.Set( ent->takedamage ? ent->health : 0, 0 );
 
 		switch ( ent->s.eType )
@@ -5534,6 +5547,8 @@ bool GetOmnibotEntityType( gentity_t * ent, EntityInfo & classInfo )
 			case ET_MOVER:
 			{
 				classInfo.mGroup = ENT_GRP_MOVER;
+				classInfo.mCategory.SetFlag( ENT_CAT_OBSTACLE );
+				classInfo.mFlags.SetFlag( ENT_FLAG_COLLIDABLE );
 
 				classInfo.mHealth.Set( ent->takedamage ? ent->health > 0 ? ent->health : 0 : 0, ent->count );
 
@@ -5566,7 +5581,13 @@ bool GetOmnibotEntityType( gentity_t * ent, EntityInfo & classInfo )
 				break;
 			}
 			case ET_CONSTRUCTIBLE:
+				classInfo.mGroup = ENT_GRP_PROP;
+				classInfo.mClassId = ET_CLASSEX_CONSTRUCTIBLE;
 				classInfo.mHealth.Set( ent->takedamage ? ent->health > 0 ? ent->health : 0 : 0, ent->count );
+				classInfo.mCategory.SetFlag( ENT_CAT_OBSTACLE );
+
+				if ( G_ConstructionIsFullyBuilt( ent ) )
+					classInfo.mFlags.SetFlag( ENT_FLAG_COLLIDABLE );
 
 				//if (G_ConstructionIsPartlyBuilt(pCurrent) &&
 				//	!(pCurrent->spawnflags & CONSTRUCTIBLE_INVULNERABLE) &&
@@ -5579,6 +5600,13 @@ bool GetOmnibotEntityType( gentity_t * ent, EntityInfo & classInfo )
 				//{
 				//continue;
 				//}
+				break;
+			case ET_CONSTRUCTIBLE_MARKER:
+				classInfo.mGroup = ENT_GRP_PROP;
+				classInfo.mClassId = ET_CLASSEX_CONSTRUCTIBLE;
+				classInfo.mCategory.SetFlag( ENT_CAT_OBSTACLE );
+				if ( ent->r.linked )
+					classInfo.mFlags.SetFlag( ENT_FLAG_COLLIDABLE );
 				break;
 			case ET_GENERAL:
 			{
@@ -5599,21 +5627,28 @@ bool GetOmnibotEntityType( gentity_t * ent, EntityInfo & classInfo )
 				{
 					classInfo.mGroup = ENT_GRP_PROP;
 					classInfo.mClassId = ET_CLASSEX_MG42BASE;
+					classInfo.mCategory.SetFlag( ENT_CAT_OBSTACLE );
+					classInfo.mFlags.SetFlag( ENT_FLAG_COLLIDABLE );
 				}
 				else if ( !Q_stricmp( ent->classname, "props_chair_hiback" ) )
 				{
 					classInfo.mGroup = ENT_GRP_PROP;
 					classInfo.mClassId = ET_CLASSEX_BROKENCHAIR;
+					classInfo.mCategory.SetFlag( ENT_CAT_OBSTACLE );
+					classInfo.mFlags.SetFlag( ENT_FLAG_COLLIDABLE );
 				}
 				else if ( !Q_stricmp( ent->classname, "props_chair" ) )
 				{
 					classInfo.mGroup = ENT_GRP_PROP;
 					classInfo.mClassId = ET_CLASSEX_BROKENCHAIR;
+					classInfo.mFlags.SetFlag( ENT_FLAG_COLLIDABLE );
 				}
 				else if ( !Q_stricmp( ent->classname, "props_chair_side" ) )
 				{
 					classInfo.mGroup = ENT_GRP_PROP;
 					classInfo.mClassId = ET_CLASSEX_BROKENCHAIR;
+					classInfo.mCategory.SetFlag( ENT_CAT_OBSTACLE );
+					classInfo.mFlags.SetFlag( ENT_FLAG_COLLIDABLE );
 				}
 				// cs: waypoint tool, don't merge the spawns
 				else if ( !Q_stricmp( ent->classname, "info_player_deathmatch" ) ||
@@ -5623,6 +5658,14 @@ bool GetOmnibotEntityType( gentity_t * ent, EntityInfo & classInfo )
 				{
 					classInfo.mGroup = ENT_GRP_PLAYERSTART;
 				}
+				else if ( !Q_stricmp( ent->classname, "func_constructible" ) )
+				{
+					classInfo.mGroup = ENT_GRP_PROP;
+					classInfo.mClassId = ET_CLASSEX_CONSTRUCTIBLE;
+					classInfo.mCategory.SetFlag( ENT_CAT_OBSTACLE );
+					classInfo.mFlags.SetFlag( ENT_FLAG_COLLIDABLE );
+				}
+				break;
 			}
 			case ET_MG42_BARREL:
 			{
@@ -5661,10 +5704,9 @@ bool GetOmnibotEntityType( gentity_t * ent, EntityInfo & classInfo )
 			case ET_GAMEMODEL:
 			{
 				classInfo.mGroup = ENT_GRP_PROP;
-			}
-			case ET_CONSTRUCTIBLE_MARKER:
-			{
-				classInfo.mGroup = ENT_GRP_RESUPPLY;
+				classInfo.mCategory.SetFlag( ENT_CAT_OBSTACLE );
+				classInfo.mFlags.SetFlag( ENT_FLAG_COLLIDABLE );
+				break;
 			}
 			case ET_INVISIBLE:
 			{
@@ -5789,17 +5831,23 @@ bool GetOmnibotEntityType( gentity_t * ent, EntityInfo & classInfo )
 			{
 				classInfo.mGroup = ENT_GRP_DISPENSER;
 				classInfo.mClassId = ET_CLASSEX_HEALTHCABINET;
+				classInfo.mCategory.SetFlag( ENT_CAT_OBSTACLE );
+				classInfo.mFlags.SetFlag( ENT_FLAG_COLLIDABLE );
 				break;
 			}
 			case ET_SUPPLIER:
 			{
 				classInfo.mGroup = ENT_GRP_DISPENSER;
 				classInfo.mClassId = ET_CLASSEX_AMMOCABINET;
+				classInfo.mCategory.SetFlag( ENT_CAT_OBSTACLE );
+				classInfo.mFlags.SetFlag( ENT_FLAG_COLLIDABLE );
 				break;
 			}
 			case ET_OID_TRIGGER:
 			{
 				classInfo.mGroup = ENT_GRP_GOAL;
+				/*classInfo.mCategory.SetFlag( ENT_CAT_OBSTACLE );
+				classInfo.mFlags.SetFlag( ENT_FLAG_COLLIDABLE );*/
 				break;
 			}
 			}

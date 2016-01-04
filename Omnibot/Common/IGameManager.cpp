@@ -260,7 +260,7 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *engineFuncs, int versi
 			}
 		}
 	}
-	
+
 	if ( mBotSystem.mAnalytics != NULL )
 	{
 		Analytics::MessageUnion msg;
@@ -287,6 +287,8 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *engineFuncs, int versi
 
 void IGameManager::UpdateGame()
 {
+	RenderBuffer::StartFrame();
+
 	{
 		// if any threads want to run outside of the update scope of the 
 		// bot, they can attempt to grab this guard
@@ -380,9 +382,7 @@ void IGameManager::UpdateGame()
 		rmt_ScopedCPUSample( RenderToGame );
 		RenderBuffer::RenderToGame();
 	}
-
-	RenderBuffer::EndFrame();
-
+	
 	EngineFuncs::FlushAsyncMessages();
 }
 

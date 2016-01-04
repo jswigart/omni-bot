@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "OF_Client.h"
-#include "TF_InterfaceFuncs.h"
 #include "TF_BaseStates.h"
 
 #include "IGame.h"

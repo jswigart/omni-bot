@@ -6,6 +6,7 @@
 #include "Wm5DistPoint3Triangle3.h"
 
 #include "VBSPFileImporter.h"
+#include "Q3BSPFileImporter.h"
 #include "tiny_obj_loader.h"
 #include "fastlz/fastlz.h"
 
@@ -1464,6 +1465,10 @@ NodePtr CollisionWorld::LoadModelIntoWorld( const GameEntity entity, const GameM
 {
 	MapFormat::VBSPFileImporter vbsp;
 	if ( vbsp.ParseFile( *this, modelInfo.mDataBuffer, modelInfo.mDataBufferSize ) )
+		return NodePtr();
+
+	MapFormat::Q3BSP::FileImporter bsp;
+	if ( bsp.ParseFile( *this, modelInfo.mDataBuffer, modelInfo.mDataBufferSize ) )
 		return NodePtr();
 	
 	if ( !stricmp( modelInfo.mModelType, "submodel" ) )

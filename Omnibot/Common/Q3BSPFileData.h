@@ -232,7 +232,7 @@ namespace MapFormat
 			int					mTextureId;
 		};
 
-		struct Node
+		struct BspNode
 		{
 			int					mPlaneNum;			// Plane index.
 			int					mChildren[ 2 ];		// Children indices. Negative numbers are leaf indices: -(leaf+1).
@@ -240,7 +240,7 @@ namespace MapFormat
 			int					mMaxs[ 3 ];			// Integer bounding box max coord.
 		};
 
-		struct Leaf
+		struct BspLeaf
 		{
 			int					mCluster;			// Visdata cluster index.
 			int					mArea;				// Areaportal area.
@@ -280,8 +280,8 @@ namespace MapFormat
 			LumpData<SubModel>			mSubModels;
 			LumpData<Brushes>			mBrushes;
 			LumpData<BrushSide>			mBrushSides;
-			LumpData<Node>				mBspNodes;
-			LumpData<Leaf>				mBspLeafs;
+			LumpData<BspNode>			mBspNodes;
+			LumpData<BspLeaf>			mBspLeafs;
 			LumpData<LeafFace>			mBspLeafFaces;
 			LumpData<LeafBrush>			mBspLeafBrushes;
 			std::string					mEntityData;

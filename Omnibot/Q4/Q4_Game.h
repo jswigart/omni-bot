@@ -25,7 +25,7 @@ public:
 	bool Init( System & system );
 	void StartGame();
 
-	void AddBot( Msg_Addbot &_addbot, bool _createnow = true );
+	void AddBot( ParamsAddbot& addbot, bool _createnow = true );
 
 	virtual Client *CreateGameClient();
 

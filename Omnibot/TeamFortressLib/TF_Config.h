@@ -15,6 +15,7 @@
 
 #include "Omni-Bot_Types.h"
 #include "Omni-Bot_Events.h"
+#include "IEngineInterface.h"
 
 // enumerations: TF_ButtonFlags
 enum TF_ButtonFlags
@@ -34,8 +35,8 @@ enum TF_ButtonFlags
 	TF_BOT_BUTTON_AIMSENTRY,
 	TF_BOT_BUTTON_DETSENTRY,
 	TF_BOT_BUTTON_DETDISPENSER,
-	TF_BOT_BUTTON_DETTELE_ENTRANCE,
-	TF_BOT_BUTTON_DETTELE_EXIT,
+	TF_BOT_BUTTON_DET_TELE_ENTRANCE,
+	TF_BOT_BUTTON_DET_TELE_EXIT,
 	TF_BOT_BUTTON_DETPIPES,
 	TF_BOT_BUTTON_CALLFORMEDIC,
 	TF_BOT_BUTTON_CALLFORENGY,
@@ -48,17 +49,6 @@ enum TF_ButtonFlags
 
 	// THIS MUST BE LAST
 	TF_BOT_BUTTON_FIRSTUSER
-};
-
-// enumerations: TF_EntityCategory
-//		TF_ENT_CAT_BUILDABLE - Buildable entities
-enum TF_EntityCategory
-{
-	TF_ENT_CAT_BUILDABLE = ENT_CAT_MAX,
-	TF_ENT_CAT_PHYSPICKUP,
-
-	// THIS MUST BE LAST
-	TF_ENT_CAT_MAX,
 };
 
 // enumerations: TF_EntityClass
@@ -233,202 +223,12 @@ enum TF_Team
 	TF_TEAM_MAX = 5
 };
 
-// enum:  TF_Events
-//		Defines the events specific to the TF game, numbered starting at the end of
-//		the global events.
-enum TF_Events
-{
-	TF_MSG_BEGIN = EVENT_NUM_EVENTS,
-
-	// General Events
-	TF_MSG_CLASS_DISABLED, // todo: implement this
-	TF_MSG_CLASS_NOTAVAILABLE, // todo: implement this
-	TF_MSG_CLASS_CHANGELATER, // todo: implement this
-	TF_MSG_BUILD_MUSTBEONGROUND,
-	TF_MSG_INFECTED,
-	TF_MSG_CURED,
-	TF_MSG_BURNLEVEL,
-
-	TF_MSG_GOT_ENGY_ARMOR,
-	TF_MSG_GAVE_ENGY_ARMOR,
-	TF_MSG_GOT_MEDIC_HEALTH,
-	TF_MSG_GAVE_MEDIC_HEALTH,
-
-	TF_MSG_GOT_DISPENSER_AMMO,
-
-	// Scout
-	TF_MSG_SCOUT_START,
-	// Game Events
-	TF_MSG_RADAR_DETECT_ENEMY,
-	// Internal Events.
-	TF_MSG_SCOUT_END,
-
-	// Sniper
-	TF_MSG_SNIPER_START,
-	// Game Events
-	TF_MSG_RADIOTAG_UPDATE,
-	// Internal Events
-	TF_MSG_SNIPER_END,
-
-	// Soldier
-	TF_MSG_SOLDIER_START,
-	// Game Events
-	// Internal Events
-	TF_MSG_SOLDIER_END,
-
-	// Demo-man
-	TF_MSG_DEMOMAN_START,
-	// Game Events
-	TF_MSG_DETPACK_BUILDING,
-	TF_MSG_DETPACK_BUILT,
-	TF_MSG_DETPACK_BUILDCANCEL,
-	TF_MSG_DETPACK_NOTENOUGHAMMO,
-	TF_MSG_DETPACK_CANTBUILD,
-	TF_MSG_DETPACK_ALREADYBUILT,
-	TF_MSG_DETPACK_DETONATED,
-	TF_MSG_PIPE_DETONATED,
-	// Internal Events
-	TF_MSG_PIPE_PROXIMITY,
-	TF_MSG_DETPIPES,		// The bot has detected the desire to det pipes.
-	TF_MSG_DETPIPESNOW,		// Configurable delayed message for the actual detting.
-	TF_MSG_DEMOMAN_END,
-
-	// Medic
-	TF_MSG_MEDIC_START,
-	// Game Events
-	TF_MSG_CALLFORMEDIC,
-	TF_MSG_UBERCHARGED,
-	TF_MSG_UBERCHARGE_DEPLOYED,
-	// Internal Events
-	TF_MSG_MEDIC_END,
-
-	// HW-Guy
-	TF_MSG_HWGUY_START,
-	// Game Events
-	// Internal Events
-	TF_MSG_HWGUY_END,
-
-	// Pyro
-	TF_MSG_PYRO_START,
-	// Game Events
-	// Internal Events
-	TF_MSG_PYRO_END,
-
-	// Spy
-	TF_MSG_SPY_START,
-	// Game Events
-	TF_MSG_DISGUISING,
-	TF_MSG_DISGUISED,
-	TF_MSG_DISGUISE_LOST,
-	TF_MSG_CANT_CLOAK,
-	TF_MSG_CLOAKED,
-	TF_MSG_UNCLOAKED,
-	TF_MSG_SABOTAGED_SENTRY,
-	TF_MSG_SABOTAGED_DISPENSER,
-	TF_MSG_CANTDISGUISE_AS_TEAM,
-	TF_MSG_CANTDISGUISE_AS_CLASS,
-	// Internal Events
-	TF_MSG_SPY_END,
-
-	// Engineer
-	TF_MSG_ENGINEER_START,
-	TF_MSG_SENTRY_START,
-	// Game Events
-	TF_MSG_CALLFORENGINEER,
-	TF_MSG_SENTRY_NOTENOUGHAMMO,
-	TF_MSG_SENTRY_ALREADYBUILT,
-	TF_MSG_SENTRY_CANTBUILD,
-	TF_MSG_SENTRY_BUILDING,
-	TF_MSG_SENTRY_BUILT,
-	TF_MSG_SENTRY_BUILDCANCEL,
-	TF_MSG_SENTRY_DESTROYED,
-	TF_MSG_SENTRY_SPOTENEMY,
-	TF_MSG_SENTRY_AIMED,
-	TF_MSG_SENTRY_DAMAGED,
-	TF_MSG_SENTRY_STATS,
-	TF_MSG_SENTRY_UPGRADED,
-	TF_MSG_SENTRY_DETONATED,
-	TF_MSG_SENTRY_DISMANTLED,
-	// Internal Events
-	TF_MSG_SENTRY_END,
-
-	TF_MSG_DISPENSER_START,
-	// Game Events
-	TF_MSG_DISPENSER_NOTENOUGHAMMO,
-	TF_MSG_DISPENSER_ALREADYBUILT,
-	TF_MSG_DISPENSER_CANTBUILD,
-	TF_MSG_DISPENSER_BUILDING,
-	TF_MSG_DISPENSER_BUILT,
-	TF_MSG_DISPENSER_BUILDCANCEL,
-	TF_MSG_DISPENSER_DESTROYED,
-	TF_MSG_DISPENSER_ENEMYUSED,
-	TF_MSG_DISPENSER_DAMAGED,
-	TF_MSG_DISPENSER_STATS,
-	TF_MSG_DISPENSER_DETONATED,
-	TF_MSG_DISPENSER_DISMANTLED,
-
-	TF_MSG_TELE_ENTRANCE_BUILDING,
-	TF_MSG_TELE_ENTRANCE_BUILT,
-	TF_MSG_TELE_ENTRANCE_DESTROYED,
-	TF_MSG_TELE_ENTRANCE_CANCEL,
-	TF_MSG_TELE_ENTRANCE_CANTBUILD,
-
-	TF_MSG_TELE_EXIT_BUILDING,
-	TF_MSG_TELE_EXIT_BUILT,
-	TF_MSG_TELE_EXIT_DESTROYED,
-	TF_MSG_TELE_EXIT_CANCEL,
-	TF_MSG_TELE_EXIT_CANTBUILD,
-
-	TF_MSG_TELE_STATS,
-
-	// Internal Events
-	TF_MSG_DISPENSER_BLOWITUP,
-	TF_MSG_DISPENSER_END,
-	TF_MSG_ENGINEER_END,
-
-	// Civilian
-	TF_MSG_CIVILIAN_START,
-	// Game Events
-	// Internal Events
-	TF_MSG_CIVILIAN_END,
-
-	// THIS MUST STAY LAST
-	TF_MSG_END_EVENTS
-};
-
 enum TF_SoundType
 {
 	TF_SND_RADAR = SND_MAX_SOUNDS,
 
 	// THIS MUST BE LAST
 	TF_SND_MAX_SOUNDS
-};
-
-// enum:  TF_GameMessage
-//		Events that allow the bot to query for information from the game.
-enum TF_GameMessage
-{
-	TF_MSG_START = MSG_END,
-
-	// Info.
-	TF_MSG_GETBUILDABLES,
-	TF_MSG_GETHEALTARGET,
-
-	// Get Info
-	TF_MSG_PLAYERPIPECOUNT,
-	TF_MSG_TEAMPIPEINFO,
-
-	// Commands
-	TF_MSG_CANDISGUISE,
-	TF_MSG_DISGUISE,
-	TF_MSG_CLOAK,
-	TF_MSG_LOCKPOSITION,
-	TF_MSG_HUDHINT,
-	TF_MSG_HUDMENU,
-	TF_MSG_HUDTEXT,
-
-	// THIS MUST STAY LAST
-	TF_MSG_END
 };
 
 // enum:  TF_BuildableStatus
@@ -439,5 +239,128 @@ enum TF_BuildableStatus
 	BUILDABLE_BUILDING,
 	BUILDABLE_BUILT,
 };
+
+struct ParamsSentryStatus_TF
+{
+	GameEntity	 mEntity;
+	float		 mPosition[ 3 ];
+	float		 mFacing[ 3 ];
+	int			 mLevel;
+	int			 mHealth;
+	int			 mMaxHealth;
+	int			 mShells[ 2 ];
+	int			 mRockets[ 2 ];
+	bool		 mSabotaged;
+};
+
+struct ParamsDispenserStatus_TF
+{
+	GameEntity	 mEntity;
+	float		 mPosition[ 3 ];
+	float		 mFacing[ 3 ];
+	int			 mHealth;
+	int			 mMaxHealth;
+	int			 mCells;
+	int			 mNails;
+	int			 mRockets;
+	int			 mShells;
+	int			 mArmor;
+	bool		 mSabotaged;
+};
+
+struct ParamsTeleporterStatus_TF
+{
+	GameEntity	 mEntityEntrance;
+	GameEntity	 mEntityExit;
+	int			 mNumTeleports;
+	int			 mTimeToActivation;
+	bool		 mSabotagedEntry;
+	bool		 mSabotagedExit;
+};
+
+struct Event_DetpackStatus_TF
+{
+	GameEntity	 mEntity;
+	float		 mTimeLeft;
+};
+
+struct ParamsHealTarget
+{
+	GameEntity				 mTarget;
+	float					 mUberLevel;
+	bool					 mHealing;
+};
+
+struct ParamsDisguiseOptions_TF
+{
+	int		 mCheckTeam;
+	bool	 mTeam[ TF_TEAM_MAX ];
+	bool	 mClass[ TF_CLASS_MAX ];
+};
+
+struct ParamsHudHint
+{
+	GameEntity mTargetPlayer;
+	int32_t	 mId;
+	char	 mMessage[ 1024 ];
+};
+
+struct ParamsHudMenu
+{
+	enum GuiType
+	{
+		GuiAlert,
+		GuiMenu,
+		GuiTextBox,
+	};
+	GameEntity mTargetPlayer;
+	GuiType	 mMenuType;
+	char	 mTitle[ 32 ];
+	char	 mCaption[ 32 ];
+	char	 mMessage[ 512 ];
+	char	 mOption[ 10 ][ 64 ];
+	char	 mCommand[ 10 ][ 64 ];
+	int		 mLevel;
+	float	 mTimeOut;
+	obColor	 mColor;
+};
+
+struct ParamsHudText
+{
+	enum MsgType
+	{
+		MsgConsole,
+		MsgHudCenter,
+	};
+	GameEntity mTargetPlayer;
+	MsgType	 mMessageType;
+	char	 mMessage[ 512 ];
+};
+
+class TeamFortress_Interface : public IEngineInterface
+{
+public:
+	virtual bool GetBuildStatus( GameEntity ent, ParamsSentryStatus_TF& params ) = 0;
+	virtual bool GetBuildStatus( GameEntity ent, ParamsDispenserStatus_TF& params ) = 0;
+	virtual bool GetBuildStatus( GameEntity ent, ParamsTeleporterStatus_TF& params ) = 0;
+	virtual bool GetBuildStatus( GameEntity ent, Event_DetpackStatus_TF& params ) = 0;
+
+	virtual int GetPlayerPipeCount( GameEntity ent );
+	virtual bool DisguiseOptions( GameEntity ent, ParamsDisguiseOptions_TF &_disguiseoptions );
+	virtual bool Disguise( GameEntity ent, int32_t _team, int32_t _class );
+	virtual bool GetDisguiseInfo( GameEntity ent, int &_team, int &_class );
+	virtual bool GetDisguiseInfo( const EntityInfo & entInfo, int &_team, int &_class );
+	virtual bool Cloak( GameEntity ent, bool silent );
+
+	virtual bool GetHealTargetInfo( GameEntity ent, ParamsHealTarget& params );
+
+	virtual bool LockPlayerPosition( GameEntity ent, bool _lock );
+
+	virtual void ShowHudHint( GameEntity _player, int32_t _id, const char * msg );
+	virtual void ShowHudMenu( const ParamsHudMenu & data );
+	virtual void ShowHudText( const ParamsHudText & data );
+};
+
+extern TeamFortress_Interface* gTeamFortressFuncs;
 
 #endif

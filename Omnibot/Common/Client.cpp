@@ -501,6 +501,24 @@ void Client::ProcessEvent( const Message &message, CallbackParameters & cb )
 			cb.AddEntity( "who", msg->mFromWho );
 			break;
 		}
+		CASE_MSG( EvEntityDrowning )
+		{
+			cb.CallScript();
+			break;
+		}
+		CASE_MSG( EvPickedUpItem )
+		{
+			cb.CallScript();
+			cb.AddInt( "Group", msg->mInfo.mGroup );
+			cb.AddInt( "ClassId", msg->mInfo.mClassId );
+			cb.AddInt( "Energy", msg->mInfo.mEnergy.mNum );
+			cb.AddInt( "EnergyMax", msg->mInfo.mEnergy.mMax );
+			cb.AddInt( "Health", msg->mInfo.mHealth.mNum );
+			cb.AddInt( "MaxHealth", msg->mInfo.mHealth.mMax );
+			cb.AddInt( "Armor", msg->mInfo.mArmor.mNum );
+			cb.AddInt( "MaxArmor", msg->mInfo.mArmor.mMax );
+			break;
+		}
 	}
 
 	if ( message.Id() == EvChatMessageGlobal::Msg::MessageId ||

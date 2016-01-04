@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "RTCW_FilterClosest.h"
-#include "RTCW_InterfaceFuncs.h"
 #include "RTCW_Client.h"
 
 #include "ScriptManager.h"
@@ -24,7 +23,7 @@ bool RTCW_FilterClosest::CheckEx( const MemoryRecord &_record )
 	{
 		case RTCW_CLASSEX_MG42MOUNT:
 		{
-			GameEntity mounted = gEngineFuncs->GetMountedPlayerOnMG42( mClient, _record.GetEntity() );
+			GameEntity mounted = gRTCWFuncs->GetMountedPlayerOnMG42( mClient->GetGameEntity(), _record.GetEntity() );
 			if ( !mounted.IsValid() || mClient->IsAllied( mounted ) )
 				return false;
 			break;

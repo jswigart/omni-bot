@@ -534,6 +534,8 @@ public:
 
 	virtual bool ServerGetVariable( const char* name, char* value, size_t valueMaxLen ) = 0;
 
+	virtual bool GetLocationName( const float pos[ 3 ], char buffer[], size_t bufferSize ) = 0;
+
 	IEngineInterface() { }
 	virtual ~IEngineInterface() { }
 };

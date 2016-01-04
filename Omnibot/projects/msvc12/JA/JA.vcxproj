@@ -117,7 +117,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     </ClCompile>
     <ClCompile Include="..\..\..\JA\JA_Client.cpp" />
     <ClCompile Include="..\..\..\JA\JA_Game.cpp" />
-    <ClCompile Include="..\..\..\JA\JA_InterfaceFuncs.cpp" />
     <ClCompile Include="..\..\..\JA\JA_VoiceMacros.cpp" />
     <ClCompile Include="..\..\..\JA\JA_BaseStates.cpp" />
     <ClCompile Include="..\..\..\JA\JA_FilterClosest.cpp" />
@@ -129,7 +128,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ClInclude Include="..\..\..\JA\JA_Client.h" />
     <ClInclude Include="..\..\..\JA\JA_Config.h" />
     <ClInclude Include="..\..\..\JA\JA_Game.h" />
-    <ClInclude Include="..\..\..\JA\JA_InterfaceFuncs.h" />
     <ClInclude Include="..\..\..\JA\JA_Messages.h" />
     <ClInclude Include="..\..\..\JA\JA_VoiceMacros.h" />
     <ClInclude Include="..\..\..\JA\JA_BaseStates.h" />

@@ -11,7 +11,6 @@
 #include "RTCW_FilterClosest.h"
 #include "RTCW_Messages.h"
 #include "RTCW_BaseStates.h"
-#include "RTCW_InterfaceFuncs.h"
 
 #include "System.h"
 #include "BotTargetingSystem.h"
@@ -92,24 +91,9 @@ void RTCW_Client::Init( int _gameid )
 	GetTargetingSystem()->SetDefaultTargetingFilter( filter );
 }
 
-void RTCW_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+void RTCW_Client::ProcessEvent( const Message &message, CallbackParameters &cb )
 {
-	switch ( _message.GetMessageId() )
-	{
-		HANDLER( RTCW_EVENT_DROWNING )
-		{
-			_cb.CallScript();
-			break;
-		}
-		HANDLER( RTCW_EVENT_RECIEVEDAMMO )
-		{
-			const Event_Ammo *m = _message.Get<Event_Ammo>();
-			_cb.CallScript();
-			_cb.AddEntity( "who", m->mWhoDoneIt );
-			break;
-		}
-	}
-	Client::ProcessEvent( _message, _cb );
+	Client::ProcessEvent( message, cb );
 }
 
 NavFlags RTCW_Client::GetTeamFlag( int _team ) const
@@ -359,12 +343,12 @@ float RTCW_Client::GetGameVar( GameVar _var ) const
 
 bool RTCW_Client::DoesBotHaveFlag( MapGoalPtr _mapgoal )
 {
-	return gEngineFuncs->HasFlag( this );
+	return gRTCWFuncs->HasFlag( GetGameEntity() );
 }
 
 bool RTCW_Client::IsFlagGrabbable( MapGoalPtr _mapgoal )
 {
-	return gEngineFuncs->ItemCanBeGrabbed( this, _mapgoal->GetEntity() );
+	return gRTCWFuncs->ItemCanBeGrabbed( GetGameEntity(), _mapgoal->GetEntity() );
 }
 
 bool RTCW_Client::CanBotSnipe()

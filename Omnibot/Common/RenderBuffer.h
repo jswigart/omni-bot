@@ -65,7 +65,7 @@ namespace RenderBuffer
 	typedef std::vector<uint32_t>	VBOList;
 
 	void Init();
-	void EndFrame();
+	void StartFrame();
 
 	void RenderToOpenGL();
 	void RenderToGame();

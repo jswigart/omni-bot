@@ -24,25 +24,25 @@ public:
 	bool Init( System & system );
 
 	virtual Client *CreateGameClient();
-	
-	void AddBot( Msg_Addbot &_addbot, bool _createnow = true );
 
-	void ClientJoined( const Event_SystemClientConnected *_msg );
+	void AddBot( ParamsAddbot & parms, bool _createnow = true );
 
-	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
-	void GetWeaponEnumeration( const IntEnum *&_ptr, int &num );
+	void ClientJoined( const EvClientConnected *msg );
+
+	void GetTeamEnumeration( const IntEnum *&ptr, int &num );
+	void GetWeaponEnumeration( const IntEnum *&ptr, int &num );
 
 	JA_Game();
 	virtual ~JA_Game();
 protected:
 	// Script support.
-	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
-	void InitScriptEvents( gmMachine *_machine, gmTableObject *_table );
-	void InitScriptEntityFlags( gmMachine *_machine, gmTableObject *_table );
-	void InitScriptPowerups( gmMachine *_machine, gmTableObject *_table );
-	void InitScriptContentFlags( gmMachine *_machine, gmTableObject *_table );
-	void InitScriptBotButtons( gmMachine *_machine, gmTableObject *_table );
-	void InitVoiceMacros( gmMachine *_machine, gmTableObject *_table );
+	void InitScriptClasses( gmMachine *machine, gmTableObject *table );
+	void InitScriptEvents( gmMachine *machine, gmTableObject *table );
+	void InitScriptEntityFlags( gmMachine *machine, gmTableObject *table );
+	void InitScriptPowerups( gmMachine *machine, gmTableObject *table );
+	void InitScriptContentFlags( gmMachine *machine, gmTableObject *table );
+	void InitScriptBotButtons( gmMachine *machine, gmTableObject *table );
+	void InitVoiceMacros( gmMachine *machine, gmTableObject *table );
 
 	// Commands
 	void InitCommands();

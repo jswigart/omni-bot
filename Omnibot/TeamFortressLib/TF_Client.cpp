@@ -8,9 +8,9 @@
 
 #include "TF_Client.h"
 #include "TF_BaseStates.h"
+#include "TF_Messages.h"
 #include "FilterClosestTF.h"
 
-#include "TF_InterfaceFuncs.h"
 #include "BotTargetingSystem.h"
 #include "BotWeaponSystem.h"
 
@@ -45,81 +45,73 @@ void TF_Client::Init( int _gameid )
 	}*/
 }
 
-void TF_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+void TF_Client::ProcessEvent( const Message& message, CallbackParameters &cb )
 {
-	switch ( _message.GetMessageId() )
+	switch ( message.Id() )
 	{
-		HANDLER( TF_MSG_GOT_ENGY_ARMOR )
+		CASE_MSG( EvEntityGotArmorFromEngineer )
 		{
-			_cb.CallScript();
-			const Event_GotEngyArmor *m = _message.Get<Event_GotEngyArmor>();
-			_cb.AddEntity( "whodoneit", m->mFromWho );
-			_cb.AddInt( "before", m->mBeforeValue );
-			_cb.AddInt( "after", m->mAfterValue );
+			cb.CallScript();
+			cb.AddEntity( "who", msg->mEngineer );
+			cb.AddFloat( "valueBefore", msg->mValueBefore );
+			cb.AddFloat( "valueAfter", msg->mValueAfter );
 			break;
 		}
-		HANDLER( TF_MSG_GAVE_ENGY_ARMOR )
+		CASE_MSG( EvEntityGaveArmorAsEngineer )
 		{
-			_cb.CallScript();
-			const Event_GaveEngyArmor *m = _message.Get<Event_GaveEngyArmor>();
-			_cb.AddEntity( "whoiarmored", m->mToWho );
-			_cb.AddInt( "before", m->mBeforeValue );
-			_cb.AddInt( "after", m->mAfterValue );
+			cb.CallScript();
+			cb.AddEntity( "who", msg->mRecipient );
+			cb.AddFloat( "valueBefore", msg->mValueBefore );
+			cb.AddFloat( "valueAfter", msg->mValueAfter );
 			break;
 		}
-		HANDLER( TF_MSG_GOT_MEDIC_HEALTH )
+		CASE_MSG( EvEntityGotHealthFromMedic )
 		{
-			_cb.CallScript();
-			const Event_GotMedicHealth *m = _message.Get<Event_GotMedicHealth>();
-			_cb.AddEntity( "whodoneit", m->mFromWho );
-			_cb.AddInt( "before", m->mBeforeValue );
-			_cb.AddInt( "after", m->mAfterValue );
+			cb.CallScript();
+			cb.AddEntity( "whodoneit", msg->mMedic );
+			cb.AddFloat( "valueBefore", msg->mValueBefore );
+			cb.AddFloat( "valueAfter", msg->mValueAfter );
 			break;
 		}
-		HANDLER( TF_MSG_GAVE_MEDIC_HEALTH )
+		CASE_MSG( EvEntityGaveHealthAsMedic )
 		{
-			_cb.CallScript();
-			const Event_GaveMedicHealth *m = _message.Get<Event_GaveMedicHealth>();
-			_cb.AddEntity( "whoihealed", m->mToWho );
-			_cb.AddInt( "before", m->mBeforeValue );
-			_cb.AddInt( "after", m->mAfterValue );
+			cb.CallScript();
+			cb.AddEntity( "whoihealed", msg->mRecipient );
+			cb.AddFloat( "valueBefore", msg->mValueBefore );
+			cb.AddFloat( "valueAfter", msg->mValueAfter );
 			break;
 		}
-		HANDLER( TF_MSG_INFECTED )
+		CASE_MSG( EvEntityInfected )
 		{
-			_cb.CallScript();
-			const Event_Infected *m = _message.Get<Event_Infected>();
-			_cb.AddEntity( "infected by", m->mFromWho );
+			cb.CallScript();
+			cb.AddEntity( "infectedBy", msg->mInfectedBy );
 			break;
 		}
-		HANDLER( TF_MSG_CURED )
+		CASE_MSG( EvEntityCured )
 		{
-			_cb.CallScript();
-			const Event_Cured *m = _message.Get<Event_Cured>();
-			_cb.AddEntity( "cured by", m->mByWho );
+			cb.CallScript();
+			cb.AddEntity( "curedBy", msg->mCuredBy );
 			break;
 		}
-		HANDLER( TF_MSG_BURNLEVEL )
+		CASE_MSG( EvEntityBurnLevel )
 		{
-			_cb.CallScript();
-			const Event_Burn *m = _message.Get<Event_Burn>();
-			_cb.AddEntity( "burned by", m->mByWho );
-			_cb.AddInt( "burnlevel", m->mBurnLevel );
+			cb.CallScript();
+			cb.AddEntity( "burnedBy", msg->mBurnedBy );
+			cb.AddInt( "burnLevel", msg->mBurnLevel );
 			break;
 		}
-		HANDLER( TF_MSG_GOT_DISPENSER_AMMO )
-		{
-			_cb.CallScript();
+		CASE_MSG( EvEntityGotAmmoFromDispenser )
+		{	
+			cb.CallScript();
 			break;
 		}
-		HANDLER( TF_MSG_RADIOTAG_UPDATE )
+		CASE_MSG( EvEntityRadioTagUpdate )
 		{
-			_cb.CallScript();
-			const Event_RadioTagUpdate_TF *m = _message.Get<Event_RadioTagUpdate_TF>();
-			if ( m->mDetected.IsValid() )
+			cb.CallScript();
+			if ( msg->mDetected.IsValid() )
 			{
-				GetSensoryMemory()->UpdateWithTouchSource( m->mDetected );
-				_cb.AddEntity( "detected", m->mDetected );
+				GetSensoryMemory()->UpdateWithTouchSource( msg->mDetected );
+				cb.AddEntity( "detected", msg->mDetected );
 			}
 			else
 			{
@@ -127,14 +119,13 @@ void TF_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters 
 			}
 			break;
 		}
-		HANDLER( TF_MSG_RADAR_DETECT_ENEMY )
+		CASE_MSG( EvEntityRadarDetectEntity )
 		{
-			_cb.CallScript();
-			const Event_RadarUpdate_TF *m = _message.Get<Event_RadarUpdate_TF>();
-			if ( m->mDetected.IsValid() )
+			cb.CallScript();
+			if ( msg->mDetected.IsValid() )
 			{
-				GetSensoryMemory()->UpdateWithTouchSource( m->mDetected );
-				_cb.AddEntity( "detected", m->mDetected );
+				GetSensoryMemory()->UpdateWithTouchSource( msg->mDetected );
+				cb.AddEntity( "detected", msg->mDetected );
 			}
 			else
 			{
@@ -142,249 +133,160 @@ void TF_Client::ProcessEvent( const MessageHelper &_message, CallbackParameters 
 			}
 			break;
 		}
-		HANDLER( TF_MSG_CANTDISGUISE_AS_TEAM )
+		CASE_MSG( EvEntityCantDisguiseAsTeam )
 		{
-			_cb.CallScript();
-			const Event_CantDisguiseTeamTF *m = _message.Get<Event_CantDisguiseTeamTF>();
-			_cb.AddInt( "team", m->mTeamId );
+			cb.CallScript();
+			cb.AddInt( "team", msg->mTeamId );
 			break;
 		}
-		HANDLER( TF_MSG_CANTDISGUISE_AS_CLASS )
+		CASE_MSG( EvEntityCantDisguiseAsClass )
 		{
-			_cb.CallScript();
-			const Event_CantDisguiseClass_TF *m = _message.Get<Event_CantDisguiseClass_TF>();
-			_cb.AddInt( "class", m->mClassId );
+			cb.CallScript();
+			cb.AddInt( "class", msg->mClassId );
 			break;
 		}
-		HANDLER( TF_MSG_DISGUISING )
-			HANDLER( TF_MSG_DISGUISED )
+		CASE_MSG( EvEntityDisguising )
 		{
-			_cb.CallScript();
-			const Event_Disguise_TF *m = _message.Get<Event_Disguise_TF>();
-			_cb.AddInt( "asTeam", m->mTeamId );
-			_cb.AddInt( "asClass", m->mClassId );
+			cb.CallScript();
+			cb.AddInt( "asTeam", msg->mTeamId );
+			cb.AddInt( "asClass", msg->mClassId );
+			break;
+		}
+		CASE_MSG( EvEntityDisguised )
+		{
+			cb.CallScript();
+			cb.AddInt( "asTeam", msg->mTeamId );
+			cb.AddInt( "asClass", msg->mClassId );
 			break;
 		}
 		//////////////////////////////////////////////////////////////////////////
-		HANDLER( TF_MSG_SENTRY_NOTENOUGHAMMO )
+		CASE_MSG( EvEntityAlreadyBuilt )
 		{
-			_cb.CallScript();
-			//DBG_MSG(0, .mClient, kNormal, "Sentry NotEnough Ammo");
-			break;
-		}
-		HANDLER( TF_MSG_SENTRY_ALREADYBUILT )
-		{
-			_cb.CallScript();
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
 			//DBG_MSG(0, .mClient, kNormal, "Sentry Already Built");
 			break;
 		}
-		HANDLER( TF_MSG_SENTRY_CANTBUILD )
+		CASE_MSG( EvEntityCantBuild )
 		{
-			_cb.CallScript();
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
 			//DBG_MSG(0, .mClient, kNormal, "Sentry Can't Build");
 			break;
 		}
-		HANDLER( TF_MSG_SENTRY_BUILDING )
+		CASE_MSG( EvEntityBuilding )
 		{
-			_cb.CallScript();
-			const Event_SentryBuilding_TF *m = _message.Get<Event_SentryBuilding_TF>();
-			//.mSentryStatus.mEntity = m->mSentry;
-			//.mSentryStatus.mStatus = BUILDABLE_BUILDING;
-			//DBG_MSG(0, .mClient, kNormal, "Sentry Building");
-			_cb.AddEntity( "sg", m->mSentry );
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
+			cb.AddEntity( "entity", msg->mEntity );
 			break;
 		}
-		HANDLER( TF_MSG_SENTRY_BUILT )
+		CASE_MSG( EvEntityBuildCancel )
 		{
-			_cb.CallScript();
-			const Event_SentryBuilt_TF *m = _message.Get<Event_SentryBuilt_TF>();
-			//.mSentryStatus.mEntity = m->mSentry;
-
-			//EngineFuncs::EntityPosition(.mSentryStatus.mEntity, .mSentryStatus.mPosition);
-			//EngineFuncs::EntityOrientation(.mSentryStatus.mEntity, .mSentryStatus.mFacing, NULL, NULL);
-			//.mSentryStatus.mStatus = BUILDABLE_BUILT;
-			//DBG_MSG(0, .mClient, kNormal, "Sentry Built");
-			_cb.AddEntity( "sg", m->mSentry );
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
+			cb.AddEntity( "entity", msg->mEntity );
 			break;
 		}
-		HANDLER( TF_MSG_SENTRY_DESTROYED )
+		CASE_MSG( EvEntityBuilt )
 		{
-			_cb.CallScript();
-			//memset(&.mSentryStatus, 0, sizeof(.mSentryStatus));
-			//DBG_MSG(0, .mClient, kNormal, "Sentry Destroyed");
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
+			cb.AddEntity( "entity", msg->mEntity );
 			break;
 		}
-		HANDLER( TF_MSG_SENTRY_SPOTENEMY )
+		CASE_MSG( EvEntityBuildDestroyed )
 		{
-			_cb.CallScript();
-			const Event_SentrySpotEnemy_TF *m = _message.Get<Event_SentrySpotEnemy_TF>();
-			//DBG_MSG(0, .mClient, kNormal, "Sentry Spot Enemy");
-			_cb.AddEntity( "enemy", m->mSpottedEnemy );
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
+			cb.AddEntity( "entity", msg->mEntity );
 			break;
 		}
-		HANDLER( TF_MSG_SENTRY_DAMAGED )
+		CASE_MSG( EvEntityBuildSpotEnemy )
 		{
-			_cb.CallScript();
-			const Event_SentryTakeDamage_TF *m = _message.Get<Event_SentryTakeDamage_TF>();
-			//DBG_MSG(0, .mClient, kNormal, "Sentry Damaged");
-			_cb.AddEntity( "inflictor", m->mInflictor );
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
+			cb.AddEntity( "entity", msg->mEntity );
+			cb.AddEntity( "enemy", msg->mEnemy );
 			break;
 		}
-		HANDLER( TF_MSG_SENTRY_STATS )
+		CASE_MSG( EvEntityBuildAimed )
 		{
-			/*const Event_SentryStatus_TF *m = _message.Get<Event_SentryStatus_TF>();
-		 mSentryStatus.mHealth			= m->mHealth;
-		 mSentryStatus.mMaxHealth		= m->mMaxHealth;
-		 mSentryStatus.mShells[0]		= m->mShells[0];
-		 mSentryStatus.mShells[1]		= m->mShells[1];
-		 mSentryStatus.mRockets[0]		= m->mRockets[0];
-		 mSentryStatus.mRockets[1]		= m->mRockets[1];
-		 mSentryStatus.mLevel			= m->mLevel;
-
-		 DBG_MSG(0, .mClient, kNormal, "Sentry Stats");
-		 DBG_MSG(0, .mClient, kNormal, va("Level: %d/%d", .mSentryStatus.mLevel, 3));
-		 DBG_MSG(0, .mClient, kNormal, va("Health: %d/%d", .mSentryStatus.mHealth, .mSentryStatus.mMaxHealth));
-		 DBG_MSG(0, .mClient, kNormal, va("Shells: %d/%d", .mSentryStatus.mShells[0], .mSentryStatus.mShells[1]));
-		 DBG_MSG(0, .mClient, kNormal, va("Rockets: %d/%d", .mSentryStatus.mRockets[0], .mSentryStatus.mRockets[1]));*/
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
+			cb.AddEntity( "entity", msg->mEntity );
+			cb.AddVector( "enemy", msg->mDirection );
 			break;
 		}
-		HANDLER( TF_MSG_SENTRY_UPGRADED )
+		CASE_MSG( EvEntityBuildDamaged )
 		{
-			_cb.CallScript();
-			const Event_SentryUpgraded_TF *m = _message.Get<Event_SentryUpgraded_TF>();
-			//DBG_MSG(0, .mClient, kNormal, "Sentry Upgraded");
-			_cb.AddInt( "level", m->mLevel );
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
+			cb.AddEntity( "entity", msg->mEntity );
+			cb.AddEntity( "inflictor", msg->mInflictor );
+			break;
+		}		
+		CASE_MSG( EvEntityBuildUpgraded )
+		{
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
+			cb.AddEntity( "entity", msg->mEntity );
+			cb.AddInt( "level", msg->mLevel );
 			break;
 		}
-		HANDLER( TF_MSG_SENTRY_DETONATED )
+		CASE_MSG( EvEntityBuildDetonated )
 		{
-			_cb.CallScript();
-			//DBG_MSG(0, .mClient, kNormal, "Sentry Detonated");
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
+			cb.AddEntity( "entity", msg->mEntity );
 			break;
 		}
-		HANDLER( TF_MSG_SENTRY_DISMANTLED )
+		CASE_MSG( EvEntityBuildDismantled )
 		{
-			_cb.CallScript();
-			//DBG_MSG(0, .mClient, kNormal, "Sentry Dismantled");
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
+			cb.AddEntity( "entity", msg->mEntity );
 			break;
 		}
-		HANDLER( TF_MSG_DISPENSER_NOTENOUGHAMMO )
+		CASE_MSG( EvEntityBuildSabotaged )
 		{
-			_cb.CallScript();
-			//DBG_MSG(0, .mClient, kNormal, "Dispenser Not Enough Ammo");
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
+			cb.AddEntity( "entity", msg->mEntity );
+			cb.AddEntity( "byWho", msg->mByWhom );
 			break;
 		}
-		HANDLER( TF_MSG_DISPENSER_ALREADYBUILT )
+		CASE_MSG( EvEntityBuildEnemyUsed )
 		{
-			_cb.CallScript();
-			//DBG_MSG(0, .mClient, kNormal, "Dispenser Already Built");
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
+			cb.AddEntity( "entity", msg->mEntity );
+			cb.AddEntity( "byWho", msg->mByWhom );
 			break;
 		}
-		HANDLER( TF_MSG_DISPENSER_CANTBUILD )
+		CASE_MSG( EvEntityBuildNotEnoughAmmo )
 		{
-			_cb.CallScript();
-			//DBG_MSG(0, .mClient, kNormal, "Dispenser Can't Build");
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
 			break;
 		}
-		HANDLER( TF_MSG_DISPENSER_BUILDING )
+		CASE_MSG( EvEntityBuildDetonateIt )
 		{
-			_cb.CallScript();
-			const Event_DispenserBuilding_TF *m = _message.Get<Event_DispenserBuilding_TF>();
-			//.mDispenserStatus.mEntity = m->mDispenser;
-			//.mDispenserStatus.mStatus = BUILDABLE_BUILDING;
-			//DBG_MSG(0, .mClient, kNormal, "Dispenser Building");
-			_cb.AddEntity( "dispenser", m->mDispenser );
-			break;
-		}
-		HANDLER( TF_MSG_DISPENSER_BUILT )
-		{
-			_cb.CallScript();
-			const Event_DispenserBuilt_TF *m = _message.Get<Event_DispenserBuilt_TF>();
-			//.mDispenserStatus.mEntity = m->mDispenser;
-			//EngineFuncs::EntityPosition(.mDispenserStatus.mEntity, .mDispenserStatus.mPosition);
-			//EngineFuncs::EntityOrientation(.mDispenserStatus.mEntity, .mDispenserStatus.mFacing, NULL, NULL);
-			//.mDispenserStatus.mStatus = BUILDABLE_BUILT;
-			//DBG_MSG(0, .mClient, kNormal, "Dispenser Built");
-			_cb.AddEntity( "dispenser", m->mDispenser );
-			break;
-		}
-		HANDLER( TF_MSG_DISPENSER_BUILDCANCEL )
-		{
-			_cb.CallScript();
-			//.mDispenserStatus.mEntity.Reset();
-			break;
-		}
-		HANDLER( TF_MSG_DISPENSER_DESTROYED )
-		{
-			_cb.CallScript();
-			//memset(&.mDispenserStatus, 0, sizeof(.mDispenserStatus));
-			//DBG_MSG(0, .mClient, kNormal, "Dispenser Destroyed");
-			break;
-		}
-		HANDLER( TF_MSG_DISPENSER_ENEMYUSED )
-		{
-			_cb.CallScript();
-			const Event_DispenserEnemyUsed_TF *m = _message.Get<Event_DispenserEnemyUsed_TF>();
-			//DBG_MSG(0, .mClient, kNormal, "Dispenser Enemy Used");
-			_cb.AddEntity( "usedby", m->mEnemy );
-			break;
-		}
-		HANDLER( TF_MSG_DISPENSER_DAMAGED )
-		{
-			_cb.CallScript();
-			const Event_DispenserTakeDamage_TF *m = _message.Get<Event_DispenserTakeDamage_TF>();
-			//DBG_MSG(0, .mClient, kNormal, "Dispenser Damaged");
-			_cb.AddEntity( "inflictor", m->mInflictor );
-			break;
-		}
-		HANDLER( TF_MSG_DISPENSER_STATS )
-		{
-			/*const Event_DispenserStatus_TF *m = _message.Get<Event_DispenserStatus_TF>();
-		 mDispenserStatus.mHealth	= m->mHealth;
-		 mDispenserStatus.mShells	= m->mShells;
-		 mDispenserStatus.mNails	= m->mNails;
-		 mDispenserStatus.mRockets	= m->mRockets;
-		 mDispenserStatus.mCells	= m->mCells;
-		 mDispenserStatus.mArmor	= m->mArmor;
-
-		 DBG_MSG(0, .mClient, kNormal, "Dispenser Stats");
-		 DBG_MSG(0, .mClient, kNormal, va("Health: %d", .mDispenserStatus.mHealth));
-		 DBG_MSG(0, .mClient, kNormal, va("Shells: %d", .mDispenserStatus.mShells));
-		 DBG_MSG(0, .mClient, kNormal, va("Nails: %d", .mDispenserStatus.mNails));
-		 DBG_MSG(0, .mClient, kNormal, va("Rockets: %d", .mDispenserStatus.mRockets));
-		 DBG_MSG(0, .mClient, kNormal, va("Cells: %d", .mDispenserStatus.mCells));
-		 DBG_MSG(0, .mClient, kNormal, va("Armor: %d", .mDispenserStatus.mArmor));*/
-			break;
-		}
-		HANDLER( TF_MSG_DISPENSER_DETONATED )
-		{
-			_cb.CallScript();
-			//DBG_MSG(0, .mClient, kNormal, "Dispenser Detonated");
-			break;
-		}
-		HANDLER( TF_MSG_DISPENSER_DISMANTLED )
-		{
-			_cb.CallScript();
-			//DBG_MSG(0, .mClient, kNormal, "Dispenser Dismantled");
-			break;
-		}
-		HANDLER( TF_MSG_DISPENSER_BLOWITUP )
-		{
-			_cb.CallScript();
-			//DBG_MSG(0, .mClient, kNormal, "Dispenser Blowitup");
+			cb.CallScript();
+			cb.AddInt( "classId", msg->mClassId );
+			cb.AddEntity( "entity", msg->mEntity );
 			break;
 		}
 		//////////////////////////////////////////////////////////////////////////
-		HANDLER( TF_MSG_CALLFORMEDIC )
+		CASE_MSG( EvEntityCalledForMedic )
 		{
-			_cb.CallScript();
-			const Event_MedicCall *m = _message.Get<Event_MedicCall>();
-			_cb.AddEntity( "who", m->mByWho );
+			cb.CallScript();
+			cb.AddEntity( "who", msg->mEntity );
 			break;
 		}
 		//////////////////////////////////////////////////////////////////////////
 	}
-	Client::ProcessEvent( _message, _cb );
+	Client::ProcessEvent( message, cb );
 }
 
 float TF_Client::GetGameVar( GameVar _var ) const
@@ -577,11 +479,19 @@ void TF_Client::Update()
 	using namespace AiState;
 	if ( TF_Options::POLL_SENTRY_STATUS )
 	{
-		TF_BuildInfo bi = gEngineFuncs->GetBuildInfo( this );
-		FINDSTATEIF_OPT( Sentry, GetStateRoot(), UpdateSentryStatus( bi.mSentryStats ) );
-		FINDSTATEIF_OPT( Dispenser, GetStateRoot(), UpdateDispenserStatus( bi.mDispenserStats ) );
-		FINDSTATEIF_OPT( Detpack, GetStateRoot(), UpdateDetpackStatus( bi.mDetpackStats ) );
-		FINDSTATEIF_OPT( Teleporter, GetStateRoot(), UpdateTeleporterStatus( bi.mTeleporterStats ) );
+		ParamsSentryStatus_TF statusSentry;
+		ParamsDispenserStatus_TF statusDispenser;
+		ParamsTeleporterStatus_TF statusTeleporter;
+		Event_DetpackStatus_TF statusDetpack;
+		gTeamFortressFuncs->GetBuildStatus( GetGameEntity(), statusSentry );
+		gTeamFortressFuncs->GetBuildStatus( GetGameEntity(), statusDispenser );
+		gTeamFortressFuncs->GetBuildStatus( GetGameEntity(), statusTeleporter );
+		gTeamFortressFuncs->GetBuildStatus( GetGameEntity(), statusDetpack );
+
+		FINDSTATEIF_OPT( Sentry, GetStateRoot(), UpdateSentryStatus( statusSentry ) );
+		FINDSTATEIF_OPT( Dispenser, GetStateRoot(), UpdateDispenserStatus( statusDispenser ) );
+		FINDSTATEIF_OPT( Detpack, GetStateRoot(), UpdateDetpackStatus( statusDetpack ) );
+		FINDSTATEIF_OPT( Teleporter, GetStateRoot(), UpdateTeleporterStatus( statusTeleporter ) );
 	}
 	Client::Update();
 }

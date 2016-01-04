@@ -8,7 +8,6 @@
 
 #include "RTCW_Game.h"
 #include "RTCW_Client.h"
-#include "RTCW_InterfaceFuncs.h"
 
 #include "gmConfig.h"
 #include "gmThread.h"
@@ -78,9 +77,8 @@ static int GM_CDECL gmfSendPrivateMessage( gmThread *a_thread )
 				}
 			}
 		}
-
-		bool bSucess = gEngineFuncs->SendPrivateMessage( native, targName, chatMsg );
-		a_thread->PushInt( bSucess ? 1 : 0 );
+		
+		a_thread->PushInt( gRTCWFuncs->SendPrivateMessage( native->GetGameEntity(), targName, chatMsg ) ? 1 : 0 );
 		return GM_OK;
 	}
 
@@ -105,7 +103,7 @@ static int GM_CDECL gmfBotPickPrimaryWeapon( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_INT_PARAM( weaponId, 0 );
 
-	bool bSucess = gEngineFuncs->SelectPrimaryWeapon( native, (RTCW_Weapon)weaponId );
+	bool bSucess = gRTCWFuncs->SelectPrimaryWeapon( native->GetGameEntity(), (RTCW_Weapon)weaponId );
 	a_thread->PushInt( bSucess ? 1 : 0 );
 	return GM_OK;
 }
@@ -127,7 +125,7 @@ static int GM_CDECL gmfBotPickSecondaryWeapon( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_INT_PARAM( weaponId, 0 );
 
-	bool bSucess = gEngineFuncs->SelectSecondaryWeapon( native, (RTCW_Weapon)weaponId );
+	bool bSucess = gRTCWFuncs->SelectSecondaryWeapon( native->GetGameEntity(), (RTCW_Weapon)weaponId );
 	a_thread->PushInt( bSucess ? 1 : 0 );
 	return GM_OK;
 }
@@ -148,7 +146,7 @@ static int GM_CDECL gmfGetReinforceTime( gmThread *a_thread )
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 0 );
 
-	a_thread->PushFloat( gEngineFuncs->GetReinforceTime( native ) );
+	a_thread->PushFloat( gRTCWFuncs->GetReinforceTime( native->GetGameEntity() ) );
 	return GM_OK;
 }
 
@@ -170,7 +168,7 @@ static int GM_CDECL gmfGetCurrentCursorHint( gmThread *a_thread )
 	GM_CHECK_TABLE_PARAM( hint, 0 );
 
 	int iHintType = 0, iHintValue = 0;
-	gEngineFuncs->GetCurrentCursorHint( native, iHintType, iHintValue );
+	gRTCWFuncs->GetCurrentCursorHint( native->GetGameEntity(), iHintType, iHintValue );
 
 	hint->Set( a_thread->GetMachine(), "type", gmVariable( iHintType ) );
 	hint->Set( a_thread->GetMachine(), "value", gmVariable( iHintValue ) );
@@ -195,7 +193,7 @@ static int GM_CDECL gmfChangeSpawnPoint( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_INT_PARAM( spawnpoint, 0 );
 
-	gEngineFuncs->ChangeSpawnPoint( native, spawnpoint );
+	gRTCWFuncs->ChangeSpawnPoint( native->GetGameEntity(), spawnpoint );
 	return GM_OK;
 }
 
@@ -215,7 +213,7 @@ static int GM_CDECL gmfCanSnipe( gmThread *a_thread )
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 0 );
 
-	a_thread->PushInt( gEngineFuncs->CanSnipe( native ) ? 1 : 0 );
+	a_thread->PushInt( gRTCWFuncs->CanSnipe( native->GetGameEntity() ) ? 1 : 0 );
 	return GM_OK;
 }
 
@@ -278,7 +276,7 @@ static int GM_CDECL gmfGetSpawnPoint( gmThread *a_thread )
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 0 );
 
-	a_thread->PushInt( gEngineFuncs->GetSpawnPoint( native ) );
+	a_thread->PushInt( gRTCWFuncs->GetSpawnPoint( native->GetGameEntity() ) );
 	return GM_OK;
 }
 
@@ -302,7 +300,7 @@ static int GM_CDECL gmfSetSuicide( gmThread *a_thread )
 	GM_CHECK_INT_PARAM( suicide, 0 );
 	GM_CHECK_INT_PARAM( persist, 1 );
 
-	gEngineFuncs->SetSuicide( native, suicide, persist );
+	gRTCWFuncs->SetSuicide( native->GetGameEntity(), suicide, persist );
 	return GM_OK;
 }
 
@@ -324,7 +322,7 @@ static int GM_CDECL gmfDisableBotPush( gmThread *a_thread )
 	GM_CHECK_NUM_PARAMS( 1 );
 	GM_CHECK_INT_PARAM( botPush, 0 );
 
-	gEngineFuncs->DisableBotPush( native, botPush );
+	gRTCWFuncs->DisableBotPush( native->GetGameEntity(), botPush );
 	return GM_OK;
 }
 
@@ -347,7 +345,7 @@ static int GM_CDECL gmfGetExplosiveState( gmThread *a_thread )
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	if ( gameEnt.IsValid() )
-		a_thread->PushInt( gEngineFuncs->GetExplosiveState( native, gameEnt ) );
+		a_thread->PushInt( gRTCWFuncs->GetExplosiveState( native->GetGameEntity(), gameEnt ) );
 	else
 		a_thread->PushNull();
 	return GM_OK;
@@ -371,7 +369,7 @@ static int GM_CDECL gmfGetDestroyableState( gmThread *a_thread )
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	
 	if ( gameEnt.IsValid() )
-		a_thread->PushInt( gEngineFuncs->IsDestroyable( native, gameEnt ) );
+		a_thread->PushInt( gRTCWFuncs->IsDestroyable( native->GetGameEntity(), gameEnt ) );
 	else
 		a_thread->PushNull();
 	return GM_OK;
@@ -402,15 +400,15 @@ static int gmfGetMG42Info( gmThread *a_thread )
 	if ( !tbl )
 		tbl = a_thread->GetMachine()->AllocTableObject();
 
-	RTCW_MG42Info mg42Info;
-	if ( tbl != NULL && gEngineFuncs->GetMg42Properties( native, mg42Info ) )
+	ParamsMG42Info mg42Info;
+	if ( tbl != NULL && gRTCWFuncs->GetMg42Properties( native->GetGameEntity(), mg42Info ) )
 	{
 		tbl->Set( a_thread->GetMachine(), "CenterFacing", gmVariable( mg42Info.mCenterFacing ) );
 		tbl->Set( a_thread->GetMachine(), "MinHorizontal", gmVariable( mg42Info.mMinHorizontalArc ) );
 		tbl->Set( a_thread->GetMachine(), "MaxHorizontal", gmVariable( mg42Info.mMaxHorizontalArc ) );
 		tbl->Set( a_thread->GetMachine(), "MinVertical", gmVariable( mg42Info.mMinVerticalArc ) );
 		tbl->Set( a_thread->GetMachine(), "MaxVertical", gmVariable( mg42Info.mMaxVerticalArc ) );
-		a_thread->PushInt( 1 );
+		a_thread->PushTable( tbl );
 	}
 	else
 	{
@@ -438,7 +436,7 @@ static int gmfIsMG42Repairable( gmThread *a_thread )
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	
-	a_thread->PushInt( gEngineFuncs->IsMountableGunRepairable( native, gameEnt ) ? 1 : 0 );
+	a_thread->PushInt( gRTCWFuncs->IsMountableGunRepairable( native->GetGameEntity(), gameEnt ) ? 1 : 0 );
 	return GM_OK;
 }
 
@@ -458,7 +456,7 @@ static int gmfIsMedicNear( gmThread *a_thread )
 {
 	CHECK_THIS_BOT();
 
-	int medicNear = gEngineFuncs->IsMedicNear( native ) ? 1 : 0;
+	int medicNear = gRTCWFuncs->IsMedicNear( native->GetGameEntity() ) ? 1 : 0;
 	a_thread->PushInt( medicNear );
 	return GM_OK;
 }
@@ -479,7 +477,7 @@ static int gmfGoToLimbo( gmThread *a_thread )
 {
 	CHECK_THIS_BOT();
 
-	int goLimbo = gEngineFuncs->GoToLimbo( native ) ? 1 : 0;
+	int goLimbo = gRTCWFuncs->GoToLimbo( native->GetGameEntity() ) ? 1 : 0;
 	a_thread->PushInt( goLimbo );
 	return GM_OK;
 }

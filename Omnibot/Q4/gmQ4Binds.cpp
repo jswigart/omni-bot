@@ -12,78 +12,51 @@
 #include "gmBot.h"
 #include "gmBotLibrary.h"
 
+#include "Q4_Config.h"
 #include "Q4_Game.h"
 #include "Q4_Client.h"
-#include "Q4_InterfaceFuncs.h"
 
 // Title: Q4 Script Bindings
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-static int GM_CDECL gmfGetLocation(gmThread *a_thread)
+static int GM_CDECL gmfIsBuyingAllowed( gmThread *a_thread )
 {
-	Vector3f vPosition;
-	if(a_thread->GetNumParams() == 1)
-	{
-		GM_CHECK_VECTOR_PARAM(v,1);
-		vPosition = Vector3f(v);
-	}
-	else if(a_thread->GetNumParams() == 3)
-	{
-		GM_CHECK_FLOAT_OR_INT_PARAM(x, 0);
-		GM_CHECK_FLOAT_OR_INT_PARAM(y, 1);
-		GM_CHECK_FLOAT_OR_INT_PARAM(z, 2);
-		vPosition.X() = x;
-		vPosition.Y() = y;
-		vPosition.Z() = z;
-	}
-	else
-	{
-		GM_EXCEPTION_MSG("expecting vector3 or x,y,z");
-		return GM_EXCEPTION;
-	}
-
-	a_thread->PushNewString(gEngineFuncs->GetLocation(vPosition));
-	return GM_OK;
-}
-
-static int GM_CDECL gmfIsBuyingAllowed(gmThread *a_thread)
-{
-	GM_CHECK_NUM_PARAMS(0);
-	a_thread->PushInt(gEngineFuncs->IsBuyingAllowed() ? 1 : 0);
+	GM_CHECK_NUM_PARAMS( 0 );
+	a_thread->PushInt( gQuake4Funcs->IsBuyingAllowed() ? 1 : 0 );
 	return GM_OK;
 }
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 
-static int GM_CDECL gmfGetCash(gmThread *a_thread)
+static int GM_CDECL gmfGetCash( gmThread *a_thread )
 {
-	GM_CHECK_NUM_PARAMS(0);
+	GM_CHECK_NUM_PARAMS( 0 );
 	Client *native = gmBot::GetThisObject( a_thread );
-	if(!native)
+	if ( !native )
 	{
-		GM_EXCEPTION_MSG("Script Function on NULL object");
+		GM_EXCEPTION_MSG( "Script Function on NULL object" );
 		return GM_EXCEPTION;
 	}
 
-	a_thread->PushFloat(gEngineFuncs->GetPlayerCash(native->GetGameEntity()));
+	a_thread->PushFloat( gQuake4Funcs->GetPlayerCash( native->GetGameEntity() ) );
 	return GM_OK;
 }
 
-static int GM_CDECL gmfBuy(gmThread *a_thread)
+static int GM_CDECL gmfBuy( gmThread *a_thread )
 {
-	GM_CHECK_NUM_PARAMS(1);
-	GM_CHECK_INT_PARAM(itm, 0);
+	GM_CHECK_NUM_PARAMS( 1 );
+	GM_CHECK_INT_PARAM( itm, 0 );
 	Client *native = gmBot::GetThisObject( a_thread );
-	if(!native)
+	if ( !native )
 	{
-		GM_EXCEPTION_MSG("Script Function on NULL object");
+		GM_EXCEPTION_MSG( "Script Function on NULL object" );
 		return GM_EXCEPTION;
 	}
 
-	a_thread->PushInt(gEngineFuncs->BuySomething(native->GetGameEntity(), itm) ? 1 : 0);
+	a_thread->PushInt( gQuake4Funcs->BuySomething( native->GetGameEntity(), (Q4_BuyOption)itm ) ? 1 : 0 );
 	return GM_OK;
 }
 
@@ -91,30 +64,26 @@ static int GM_CDECL gmfBuy(gmThread *a_thread)
 // package: Q4 Global Functions
 static gmFunctionEntry s_ExtendedBotLib[] =
 {
-	// Function: GetLocation
-	//		Gets the location name for a point.
-	{"GetLocation",			gmfGetLocation},
-
 	// Function: IsBuyingAllowed
 	//		Gets the location name for a point.
-	{"IsBuyingAllowed",		gmfIsBuyingAllowed},
+	{ "IsBuyingAllowed", gmfIsBuyingAllowed },
 };
 
 static gmFunctionEntry s_ExtendedBotTypeLib[] =
 {
 	// Function: GetCredits
 	//		Gets the cash for the bot.
-	{"GetCredits",			gmfGetCash},
+	{ "GetCredits", gmfGetCash },
 
 	// Function: Buy
 	//		Buys an item for the bot.
-	{"Buy",					gmfBuy},
+	{ "Buy", gmfBuy },
 };
 
-void Q4_Game::InitScriptBinds(gmMachine *_machine)
+void Q4_Game::InitScriptBinds( gmMachine *_machine )
 {
 	// Register the bot functions.
-	_machine->RegisterLibrary(s_ExtendedBotLib, sizeof(s_ExtendedBotLib) / sizeof(s_ExtendedBotLib[0]));
+	_machine->RegisterLibrary( s_ExtendedBotLib, sizeof( s_ExtendedBotLib ) / sizeof( s_ExtendedBotLib[ 0 ] ) );
 	//////////////////////////////////////////////////////////////////////////
-	_machine->RegisterTypeLibrary(gmBot::GetType(), s_ExtendedBotTypeLib, sizeof(s_ExtendedBotTypeLib) / sizeof(s_ExtendedBotTypeLib[0]));
+	_machine->RegisterTypeLibrary( gmBot::GetType(), s_ExtendedBotTypeLib, sizeof( s_ExtendedBotTypeLib ) / sizeof( s_ExtendedBotTypeLib[ 0 ] ) );
 }

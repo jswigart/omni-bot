@@ -12,7 +12,7 @@ public:
 	virtual void Enter() {}
 	virtual void Exit() {}
 	virtual StateStatus Update( float dt ) { return State_Busy; };
-	//virtual void ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb) {}
+	//virtual void ProcessEvent(const Message &_message, CallbackParameters &_cb) {}
 };
 
 

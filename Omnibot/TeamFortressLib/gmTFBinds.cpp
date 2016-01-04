@@ -16,7 +16,6 @@
 #include "TF_Game.h"
 #include "TF_Client.h"
 #include "TF_BaseStates.h"
-#include "TF_InterfaceFuncs.h"
 
 #define CHECK_THIS_BOT() \
 	Client *native = gmBot::GetThisObject( a_thread ); \
@@ -137,8 +136,8 @@ static int GM_CDECL gmfGetPipeCount( gmThread *a_thread )
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS( 0 );
-
-	a_thread->PushInt( gEngineFuncs->GetPlayerPipeCount( native ) );
+	
+	a_thread->PushInt( gTeamFortressFuncs->GetPlayerPipeCount( native->GetGameEntity() ) );
 	return GM_OK;
 }
 
@@ -181,19 +180,19 @@ static int GM_CDECL gmfDisguiseOptions( gmThread *a_thread )
 	gmMachine *pMachine = a_thread->GetMachine();
 	DisableGCInScope gcEn( pMachine );
 
-	TF_DisguiseOptions disguiseOptions = {};
+	ParamsDisguiseOptions_TF disguiseOptions = {};
 	disguiseOptions.mCheckTeam = native->GetTeam();
-	gEngineFuncs->DisguiseOptions( native, disguiseOptions );
+	gTeamFortressFuncs->DisguiseOptions( native->GetGameEntity(), disguiseOptions );
 
 	gmTableObject *pTbl = pMachine->AllocTableObject();
 	gmTableObject *pTeamTbl = pMachine->AllocTableObject();
 	gmTableObject *pClassTbl = pMachine->AllocTableObject();
 
 	for ( int t = 0; t <= 4; ++t )
-		pTeamTbl->Set( pMachine, t, gmVariable( disguiseOptions.mTeam[ t ] == True ? 1 : 0 ) );
+		pTeamTbl->Set( pMachine, t, gmVariable( disguiseOptions.mTeam[ t ] ? 1 : 0 ) );
 
 	for ( int c = TF_CLASS_SCOUT; c <= TF_CLASS_CIVILIAN; ++c )
-		pTeamTbl->Set( pMachine, c, gmVariable( disguiseOptions.mClass[ c ] == True ? 1 : 0 ) );
+		pTeamTbl->Set( pMachine, c, gmVariable( disguiseOptions.mClass[ c ] ? 1 : 0 ) );
 
 	pTbl->Set( pMachine, "team", gmVariable( pTeamTbl ) );
 	pTbl->Set( pMachine, "class", gmVariable( pClassTbl ) );
@@ -220,7 +219,7 @@ static int GM_CDECL gmfDisguise( gmThread *a_thread )
 	GM_CHECK_INT_PARAM( iTeam, 0 );
 	GM_CHECK_INT_PARAM( iClass, 1 );
 
-	gEngineFuncs->Disguise( native, iTeam, iClass );
+	gTeamFortressFuncs->Disguise( native->GetGameEntity(), iTeam, iClass );
 	return GM_OK;
 }
 
@@ -238,7 +237,7 @@ static int GM_CDECL gmfCloak( gmThread *a_thread )
 	CHECK_THIS_BOT();
 	GM_INT_PARAM( silent, 0, 0 );
 
-	gEngineFuncs->Cloak( native, silent != 0 ? True : False );
+	gTeamFortressFuncs->Cloak( native->GetGameEntity(), silent != 0 ? 1 : 0 );
 	return GM_OK;
 }
 
@@ -266,7 +265,7 @@ static int GM_CDECL gmfLockPlayerPosition( gmThread *a_thread )
 	bool bSucceed = false;
 	if ( gameEnt.IsValid() )
 	{
-		bSucceed = gEngineFuncs->LockPlayerPosition( gameEnt, lock != 0 ? True : False );
+		bSucceed = gTeamFortressFuncs->LockPlayerPosition( gameEnt, lock != 0 ? 1 : 0 );
 	}
 	a_thread->PushInt( bSucceed ? 1 : 0 );
 	return GM_OK;
@@ -294,7 +293,7 @@ static int GM_CDECL gmfHudHint( gmThread *a_thread )
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 
-	gEngineFuncs->ShowHudHint( gameEnt, id, message );
+	gTeamFortressFuncs->ShowHudHint( gameEnt, id, message );
 	return GM_OK;
 }
 
@@ -318,13 +317,13 @@ static int GM_CDECL gmfHudTextMsg( gmThread *a_thread )
 	GM_CHECK_GAMEENTITY_FROM_PARAM( gameEnt, 0 );
 	GM_CHECK_STRING_PARAM( message, 1 );
 
-	TF_HudText hudtxt;
+	ParamsHudText hudtxt;
 	memset( &hudtxt, 0, sizeof( hudtxt ) );
-	hudtxt.mMessageType = TF_HudText::MsgHudCenter;
+	hudtxt.mMessageType = ParamsHudText::MsgHudCenter;
 	hudtxt.mTargetPlayer = gameEnt;
 	Utils::StringCopy( hudtxt.mMessage, message, sizeof( hudtxt.mMessage ) );
 
-	gEngineFuncs->ShowHudText( hudtxt );
+	gTeamFortressFuncs->ShowHudText( hudtxt );
 	return GM_OK;
 }
 
@@ -355,17 +354,17 @@ static int GM_CDECL gmfHudAlert( gmThread *a_thread )
 	GM_CHECK_FLOAT_OR_INT_PARAM( timeout, 3 );
 	GM_CHECK_INT_PARAM( color, 4 );
 
-	TF_HudMenu menuData;
+	ParamsHudMenu menuData;
 	memset( &menuData, 0, sizeof( menuData ) );
 
-	menuData.mMenuType = TF_HudMenu::GuiAlert;
+	menuData.mMenuType = ParamsHudMenu::GuiAlert;
 	menuData.mTargetPlayer = gameEnt;
 	Utils::StringCopy( menuData.mTitle, title, sizeof( menuData.mTitle ) );
 	menuData.mLevel = level;
 	menuData.mTimeOut = timeout;
 	menuData.mColor = obColor( color );
 
-	gEngineFuncs->ShowHudMenu( menuData );
+	gTeamFortressFuncs->ShowHudMenu( menuData );
 	return GM_OK;
 }
 
@@ -397,10 +396,10 @@ static int GM_CDECL gmfHudTextBox( gmThread *a_thread )
 	GM_CHECK_FLOAT_OR_INT_PARAM( timeout, 4 );
 	GM_CHECK_INT_PARAM( color, 5 );
 
-	TF_HudMenu menuData;
+	ParamsHudMenu menuData;
 	memset( &menuData, 0, sizeof( menuData ) );
 
-	menuData.mMenuType = TF_HudMenu::GuiTextBox;
+	menuData.mMenuType = ParamsHudMenu::GuiTextBox;
 	menuData.mTargetPlayer = gameEnt;
 	Utils::StringCopy( menuData.mTitle, title, sizeof( menuData.mTitle ) );
 	Utils::StringCopy( menuData.mMessage, body, sizeof( menuData.mMessage ) );
@@ -408,7 +407,7 @@ static int GM_CDECL gmfHudTextBox( gmThread *a_thread )
 	menuData.mTimeOut = timeout;
 	menuData.mColor = obColor( color );
 
-	gEngineFuncs->ShowHudMenu( menuData );
+	gTeamFortressFuncs->ShowHudMenu( menuData );
 	return GM_OK;
 }
 // Function: HudMenu
@@ -444,10 +443,10 @@ static int GM_CDECL gmfHudMenu( gmThread *a_thread )
 	GM_CHECK_INT_PARAM( color, 6 );
 	GM_CHECK_TABLE_PARAM( menuOptions, 7 );
 
-	TF_HudMenu menuData;
+	ParamsHudMenu menuData;
 	memset( &menuData, 0, sizeof( menuData ) );
 
-	menuData.mMenuType = TF_HudMenu::GuiMenu;
+	menuData.mMenuType = ParamsHudMenu::GuiMenu;
 	menuData.mTargetPlayer = gameEnt;
 	Utils::StringCopy( menuData.mTitle, title, sizeof( menuData.mTitle ) );
 	Utils::StringCopy( menuData.mCaption, caption, sizeof( menuData.mCaption ) );
@@ -480,7 +479,7 @@ static int GM_CDECL gmfHudMenu( gmThread *a_thread )
 		}
 	}
 
-	gEngineFuncs->ShowHudMenu( menuData );
+	gTeamFortressFuncs->ShowHudMenu( menuData );
 	return GM_OK;
 }
 

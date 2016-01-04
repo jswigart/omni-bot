@@ -154,7 +154,7 @@ namespace RenderBuffer
 #endif
 	}
 
-	void EndFrame()
+	void StartFrame()
 	{
 		mPointList.resize( 0 );
 		mLineList.resize( 0 );

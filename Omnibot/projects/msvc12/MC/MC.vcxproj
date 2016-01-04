@@ -77,8 +77,13 @@
       <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)"
 copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
 copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"
+
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>cd "$(ProjectDir)..\..\..\MC\"
+copy_mod_files.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -98,8 +103,13 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"
       <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)"
 copy "$(TargetDir)$(TargetName)_$(ConfigurationName).pdb" "$(OMNIBOT_INST)"
 copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"
+
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>cd "$(ProjectDir)..\..\..\MC\"
+copy_mod_files.bat</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\common\BotExports.cpp">

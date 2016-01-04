@@ -43,7 +43,6 @@ public:
 	virtual ~ET_Game();
 protected:
 	void InitScriptBinds( gmMachine *_machine );
-	void InitScriptCategories( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptSkills( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptEvents( gmMachine *_machine, gmTableObject *_table );

@@ -29,27 +29,6 @@ typedef enum eQ4_Version
 	Q4_VERSION_LATEST
 } Q4_Version;
 
-// typedef: Q4_Events
-//		Defines the events specific to the game, numbered starting at the end of
-//		the global events.
-typedef enum eQ4_Events
-{
-	Q4_EVENT_BEGIN = EVENT_NUM_EVENTS,
-	Q4_EVENT_END
-} Q4_Events;
-
-// typedef: Q4_GameEvents
-//		Events that allow the bot to query for information from the game.
-typedef enum eQ4_GameMessage
-{
-	Q4_MSG_START = MSG_END,
-	Q4_MSG_GETLOCATION,
-	Q4_MSG_GETPLAYERCASH,
-	Q4_MSG_ISBUYINGALLOWED,
-	Q4_MSG_BUYSOMETHING,
-	Q4_MSG_END
-} Q4_GameMessage;
-
 // enumerations: Q4_Weapon
 //		Q4_WP_BLASTER - Blaster.
 //		Q4_WP_MACHINEGUN - Machine gun.
@@ -62,7 +41,7 @@ typedef enum eQ4_GameMessage
 //		Q4_WP_GAUNTLET - Gauntlet
 //		Q4_WP_DMG - Dark Matter Gun
 //		Q4_WP_RAILGUN - Railgun
-typedef enum eQ4_Weapon
+enum Q4_Weapon
 {
 	Q4_WP_NONE = INVALID_WEAPON,
 	Q4_WP_BLASTER,
@@ -78,11 +57,11 @@ typedef enum eQ4_Weapon
 	Q4_WP_RAILGUN,
 	Q4_WP_NAPALMGUN,
 	Q4_WP_MAX,
-} Q4_Weapon;
+};
 
 // enumerations: Q4_PlayerClass_enum
 //		Q4_CLASS_DEFAULT - Default playerclass
-typedef enum eQ4_PlayerClass_enum
+enum Q4_PlayerClass
 {
 	Q4_CLASS_NULL = 0,
 	Q4_CLASS_PLAYER,
@@ -122,9 +101,9 @@ typedef enum eQ4_PlayerClass_enum
 	Q4_CLASSEX_DEADZONEPOWERUP,
 
 	Q4_NUM_CLASSES
-} Q4_PlayerClass_enum;
+};
 
-typedef enum eQ4_BuyOptions
+enum Q4_BuyOption
 {
 	Q4_BUY_NONE = 0,
 	Q4_BUY_MACHINEGUN,
@@ -144,30 +123,30 @@ typedef enum eQ4_BuyOptions
 	Q4_BUY_AMMO_REGEN,
 	Q4_BUY_HEALTH_REGEN,
 	Q4_BUY_DAMAGE_BOOST,
-} Q4_BuyOptions;
+};
 
 // enumerations: Q4_Team
 //		Q4_TEAM_MARINE - Marine Team.
 //		Q4_TEAM_STROGG - Strogg Team.
-typedef enum eQ4_Team
+enum Q4_Team
 {
 	Q4_TEAM_NONE = OB_TEAM_NONE,
 	Q4_TEAM_MARINE,
 	Q4_TEAM_STROGG,
 	Q4_TEAM_MAX
-} Q4_Team;
+};
 
 // enumerations: Q4_EntityFlags
 //		Q4_ENT_IN_VEHICLE - The entity is in a vehicle.
 //		Q4_ENT_FLASHLIGHT_ON - The entity has their flashlight on.
-typedef enum eQ4_EntityFlags
+enum Q4_EntityFlags
 {
 	Q4_ENT_IN_VEHICLE = ENT_FLAG_FIRST_USER,
 	Q4_ENT_FLASHLIGHT_ON,
 	Q4_ENT_IN_BUY_ZONE,
-} Q4_EntityFlags;
+};
 
-// enumerations: Q4_Powerups
+// enumerations: Q4_Powerup
 //		Q4_PWR_GOTMARINEFLAG - This entity is carrying the marines flag
 //		Q4_PWR_GOTSTROGGFLAG - This entity is carrying the strogg flag
 //		Q4_PWR_GOTONEFLAG - This entity is carrying the one flag
@@ -194,7 +173,7 @@ typedef enum eQ4_EntityFlags
 //		Q4_PWR_TEAM_AMMO_REGEN - Ammo regen for the entire team.
 //		Q4_PWR_TEAM_HEALTH_REGEN - Health regen for the entire team.
 //		Q4_PWR_TEAM_DAMAGE_MOD - Damage multiplier for the entire team.
-typedef enum eQ4_Powerups
+enum Q4_Powerup
 {
 	Q4_PWR_MARINEFLAG = PWR_FIRST_USER,
 	Q4_PWR_STROGGFLAG,
@@ -213,6 +192,16 @@ typedef enum eQ4_Powerups
 	Q4_PWR_TEAM_AMMO_REGEN,
 	Q4_PWR_TEAM_HEALTH_REGEN,
 	Q4_PWR_TEAM_DAMAGE_MOD,
-} Q4_Powerups;
+};
+
+class Quake4_Interface : public IEngineInterface
+{
+public:
+	virtual float GetPlayerCash( GameEntity ent ) = 0;
+	virtual bool IsBuyingAllowed() = 0;
+	virtual bool BuySomething( const GameEntity ent, Q4_BuyOption item ) = 0;
+};
+
+extern Quake4_Interface* gQuake4Funcs;
 
 #endif

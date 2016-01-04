@@ -3,11 +3,11 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <RTCWDIR>C:\games\Return to Castle Wolfenstein</RTCWDIR>
+    <DEPENDENCIES>$(SolutionDir)../../dependencies</DEPENDENCIES>
     <BOOST>D:\Sourcecode\boost_1_57_0</BOOST>
     <GAMEANALYTICS>D:\git\game-analytics</GAMEANALYTICS>
     <PROTO_BUFF>D:\git\protobuf</PROTO_BUFF>
-    <GMEX>D:\git\gmscriptex\gmsrc_ex</GMEX>
-    <DEPENDENCIES>$(SolutionDir)../../dependencies</DEPENDENCIES>
+    <GMEX>$(DEPENDENCIES)\gmscriptex\gmsrc_ex</GMEX>
     <REPO_ROOT>$(SolutionDir)..\..\..\</REPO_ROOT>
     <InterfaceDir>$(REPO_ROOT)\GameInterfaces</InterfaceDir>
     <OMNIBOT_INST>$(REPO_ROOT)\Installer\Files</OMNIBOT_INST>
@@ -25,11 +25,11 @@
     <ZEROMQ>$(GAMEANALYTICS)\dependencies\zeromq-4.1.3</ZEROMQ>
     <ETDIR>D:\Games\WET</ETDIR>
     <JADIR>D:\Games\JediAcademy\GameData\</JADIR>
-    <ModularCombat>D:\Steam\steamapps\common\Modular Combat\2007\modularcombat</ModularCombat>
-    <FortressForever2007>D:\Steam\steamapps\sourcemods\ff_2006_basemod</FortressForever2007>
-    <FortressForever2013>D:\Steam\steamapps\sourcemods\ff_2013_basemod</FortressForever2013>
-    <SourceSDK2007>D:\Steam\steamapps\common\Source SDK Base 2007\</SourceSDK2007>
-    <ModCom2007>D:\Steam\steamapps\common\Modular Combat\2007</ModCom2007>
+    <ModularCombat>D:\Games\Steam\steamapps\common\Modular Combat\2007\modularcombat</ModularCombat>
+    <FortressForever2007>D:\Games\Steam\steamapps\sourcemods\ff_2006_basemod</FortressForever2007>
+    <FortressForever2013>D:\Games\Steam\steamapps\sourcemods\ff_2013_basemod</FortressForever2013>
+    <SourceSDK2007>D:\Games\Steam\steamapps\common\Source SDK Base 2007\</SourceSDK2007>
+    <ModCom2007>D:\Games\Steam\steamapps\common\Modular Combat\2007</ModCom2007>
   </PropertyGroup>
   <PropertyGroup>
     <RunCodeAnalysis>false</RunCodeAnalysis>
@@ -43,6 +43,10 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <BuildMacro Include="DEPENDENCIES">
+      <Value>$(DEPENDENCIES)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
     <BuildMacro Include="BOOST">
       <Value>$(BOOST)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
@@ -57,10 +61,6 @@
     </BuildMacro>
     <BuildMacro Include="GMEX">
       <Value>$(GMEX)</Value>
-      <EnvironmentVariable>true</EnvironmentVariable>
-    </BuildMacro>
-    <BuildMacro Include="DEPENDENCIES">
-      <Value>$(DEPENDENCIES)</Value>
       <EnvironmentVariable>true</EnvironmentVariable>
     </BuildMacro>
     <BuildMacro Include="REPO_ROOT">

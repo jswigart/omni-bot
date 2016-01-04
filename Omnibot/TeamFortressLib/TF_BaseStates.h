@@ -83,7 +83,7 @@ namespace AiState
 		void Exit();
 		StateStatus Update( float fDt );
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message & message, CallbackParameters & cb );
 
 		// FollowPathUser functions.
 		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
@@ -171,7 +171,7 @@ namespace AiState
 		void Exit();
 		StateStatus Update( float fDt );
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message &_message, CallbackParameters &_cb );
 
 		// FollowPathUser functions.
 		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
@@ -245,9 +245,9 @@ namespace AiState
 
 		StateStatus Update( float fDt );
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message &_message, CallbackParameters &_cb );
 
-		void UpdateSentryStatus( const Event_SentryStatus_TF &_stats );
+		void UpdateSentryStatus( const ParamsSentryStatus_TF & stats );
 
 		Sentry();
 	private:
@@ -310,9 +310,9 @@ namespace AiState
 
 		StateStatus Update( float fDt );
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message &_message, CallbackParameters &_cb );
 
-		void UpdateDispenserStatus( const Event_DispenserStatus_TF &_stats );
+		void UpdateDispenserStatus( const ParamsDispenserStatus_TF &_stats );
 
 		Dispenser();
 	private:
@@ -336,7 +336,7 @@ namespace AiState
 		void Exit();
 		StateStatus Update( float fDt );
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message &_message, CallbackParameters &_cb );
 
 		// FollowPathUser functions.
 		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );
@@ -385,7 +385,7 @@ namespace AiState
 
 		StateStatus Update( float fDt );
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message &_message, CallbackParameters &_cb );
 
 		void UpdateDetpackStatus( const Event_DetpackStatus_TF& stats );
 
@@ -467,7 +467,7 @@ namespace AiState
 			return mPipes.mPipeCount;
 		}
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message &_message, CallbackParameters &_cb );
 		void GetDebugString( std::stringstream &out );
 		void RenderDebug();
 
@@ -527,7 +527,7 @@ namespace AiState
 		void Enter();
 		void Exit();
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message &_message, CallbackParameters &_cb );
 
 		// AimerUser functions.
 		bool GetAimPosition( Vector3f &_aimpos );
@@ -553,7 +553,7 @@ namespace AiState
 		void Enter();
 		void Exit();
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message &_message, CallbackParameters &_cb );
 
 		// AimerUser functions.
 		bool GetAimPosition( Vector3f &_aimpos );
@@ -584,7 +584,7 @@ namespace AiState
 		void Enter();
 		void Exit();
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message &_message, CallbackParameters &_cb );
 
 		void OnSpawn();
 
@@ -679,9 +679,9 @@ namespace AiState
 
 		StateStatus Update( float fDt );
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message &_message, CallbackParameters &_cb );
 
-		void UpdateTeleporterStatus( const Event_TeleporterStatus_TF &_stats );
+		void UpdateTeleporterStatus( const ParamsTeleporterStatus_TF &_stats );
 
 		Teleporter();
 	private:
@@ -707,7 +707,7 @@ namespace AiState
 		void Exit();
 		StateStatus Update( float fDt );
 
-		void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+		void ProcessEvent( const Message &_message, CallbackParameters &_cb );
 
 		// FollowPathUser functions.
 		bool GetNextDestination( DestinationVector &_desination, bool &_final, bool &_skiplastpt );

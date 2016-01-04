@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "ETF_Game.h"
-#include "TF_InterfaceFuncs.h"
 #include "ETF_Client.h"
 
 #include "System.h"

@@ -8,7 +8,6 @@
 
 #include "JA_Game.h"
 #include "JA_VoiceMacros.h"
-#include "JA_InterfaceFuncs.h"
 #include "JA_Client.h"
 
 #include "RenderBuffer.h"
@@ -20,6 +19,8 @@
 
 #include "FilterSensory.h"
 #include "BotSensoryMemory.h"
+
+JediAcademy_Interface* gJediAcademyFuncs = 0;
 
 IGame *CreateGameInstance()
 {
@@ -52,10 +53,12 @@ bool JA_Game::Init( System & system )
 	if ( !IGame::Init( system ) )
 		return false;
 
+	gJediAcademyFuncs = dynamic_cast<JediAcademy_Interface*>(gEngineFuncs);
+
 	return true;
 }
 
-static const IntEnum ET_TeamEnum [] =
+static const IntEnum ET_TeamEnum[] =
 {
 	IntEnum( "SPECTATOR", OB_TEAM_SPECTATOR ),
 	IntEnum( "FREE", JA_TEAM_FREE ),
@@ -69,7 +72,7 @@ void JA_Game::GetTeamEnumeration( const IntEnum *&_ptr, int &num )
 	_ptr = ET_TeamEnum;
 }
 
-static const IntEnum JA_WeaponEnum [] =
+static const IntEnum JA_WeaponEnum[] =
 {
 	IntEnum( "NONE", JA_WP_NONE ),
 	IntEnum( "STUN", JA_WP_STUN_BATON ),
@@ -96,7 +99,7 @@ void JA_Game::GetWeaponEnumeration( const IntEnum *&_ptr, int &num )
 	_ptr = JA_WeaponEnum;
 }
 
-static const IntEnum JKJA_ClassEnum [] =
+static const IntEnum JKJA_ClassEnum[] =
 {
 	IntEnum( "PLAYER", JA_CLASS_PLAYER ),
 	IntEnum( "ASSAULT", JA_CLASS_ASSAULT ),
@@ -138,75 +141,75 @@ static const IntEnum JKJA_ClassEnum [] =
 	IntEnum( "HOLOCRON", JA_CLASSEX_HOLOCRON ),
 };
 
-void JA_Game::InitScriptClasses( gmMachine *_machine, gmTableObject *_table )
+void JA_Game::InitScriptClasses( gmMachine *machine, gmTableObject *table )
 {
-	IGame::InitScriptClasses( _machine, _table );
+	IGame::InitScriptClasses( machine, table );
 
 	FilterSensory::ANYPLAYERCLASS = JA_CLASS_ANY;
 
 	int32_t iNumMappings = sizeof( JKJA_ClassEnum ) / sizeof( JKJA_ClassEnum[ 0 ] );
 	for ( int i = 0; i < iNumMappings; ++i )
 	{
-		_table->Set( _machine, JKJA_ClassEnum[ i ].mKey, gmVariable( JKJA_ClassEnum[ i ].mValue ) );
+		table->Set( machine, JKJA_ClassEnum[ i ].mKey, gmVariable( JKJA_ClassEnum[ i ].mValue ) );
 	}
 }
 
-void JA_Game::InitVoiceMacros( gmMachine *_machine, gmTableObject *_table )
+void JA_Game::InitVoiceMacros( gmMachine *machine, gmTableObject *table )
 {
-	_table->Set( _machine, "ATTACK_POSITION", gmVariable( VCHAT_ATTACK_POSITION ) );
-	_table->Set( _machine, "ATTACK_PRIMARY", gmVariable( VCHAT_ATTACK_PRIMARY ) );
-	_table->Set( _machine, "ATTACK_SECONDARY", gmVariable( VCHAT_ATTACK_SECONDARY ) );
+	table->Set( machine, "ATTACK_POSITION", gmVariable( VCHAT_ATTACK_POSITION ) );
+	table->Set( machine, "ATTACK_PRIMARY", gmVariable( VCHAT_ATTACK_PRIMARY ) );
+	table->Set( machine, "ATTACK_SECONDARY", gmVariable( VCHAT_ATTACK_SECONDARY ) );
 
-	_table->Set( _machine, "DEFEND_GUNS", gmVariable( VCHAT_DEFEND_GUNS ) );
-	_table->Set( _machine, "DEFEND_POSITION", gmVariable( VCHAT_DEFEND_POSITION ) );
-	_table->Set( _machine, "DEFEND_PRIMARY", gmVariable( VCHAT_DEFEND_PRIMARY ) );
-	_table->Set( _machine, "DEFEND_SECONDARY", gmVariable( VCHAT_DEFEND_SECONDARY ) );
+	table->Set( machine, "DEFEND_GUNS", gmVariable( VCHAT_DEFEND_GUNS ) );
+	table->Set( machine, "DEFEND_POSITION", gmVariable( VCHAT_DEFEND_POSITION ) );
+	table->Set( machine, "DEFEND_PRIMARY", gmVariable( VCHAT_DEFEND_PRIMARY ) );
+	table->Set( machine, "DEFEND_SECONDARY", gmVariable( VCHAT_DEFEND_SECONDARY ) );
 
-	_table->Set( _machine, "REPLY_COMING", gmVariable( VCHAT_REPLY_COMING ) );
-	_table->Set( _machine, "REPLY_GO", gmVariable( VCHAT_REPLY_GO ) );
-	_table->Set( _machine, "REPLY_NO", gmVariable( VCHAT_REPLY_NO ) );
-	_table->Set( _machine, "REPLY_STAY", gmVariable( VCHAT_REPLY_STAY ) );
-	_table->Set( _machine, "REPLY_YES", gmVariable( VCHAT_REPLY_YES ) );
+	table->Set( machine, "REPLY_COMING", gmVariable( VCHAT_REPLY_COMING ) );
+	table->Set( machine, "REPLY_GO", gmVariable( VCHAT_REPLY_GO ) );
+	table->Set( machine, "REPLY_NO", gmVariable( VCHAT_REPLY_NO ) );
+	table->Set( machine, "REPLY_STAY", gmVariable( VCHAT_REPLY_STAY ) );
+	table->Set( machine, "REPLY_YES", gmVariable( VCHAT_REPLY_YES ) );
 
-	_table->Set( _machine, "REQUEST_ASSISTANCE", gmVariable( VCHAT_REQUEST_ASSISTANCE ) );
-	_table->Set( _machine, "REQUEST_DEMO", gmVariable( VCHAT_REQUEST_DEMO ) );
-	_table->Set( _machine, "REQUEST_HEAVYWEAPS", gmVariable( VCHAT_REQUEST_HEAVYWEAPS ) );
-	_table->Set( _machine, "REQUEST_MEDIC", gmVariable( VCHAT_REQUEST_MEDIC ) );
-	_table->Set( _machine, "REQUEST_SUPPLIES", gmVariable( VCHAT_REQUEST_SUPPLIES ) );
-	_table->Set( _machine, "REQUEST_TECH", gmVariable( VCHAT_REQUEST_TECH ) );
+	table->Set( machine, "REQUEST_ASSISTANCE", gmVariable( VCHAT_REQUEST_ASSISTANCE ) );
+	table->Set( machine, "REQUEST_DEMO", gmVariable( VCHAT_REQUEST_DEMO ) );
+	table->Set( machine, "REQUEST_HEAVYWEAPS", gmVariable( VCHAT_REQUEST_HEAVYWEAPS ) );
+	table->Set( machine, "REQUEST_MEDIC", gmVariable( VCHAT_REQUEST_MEDIC ) );
+	table->Set( machine, "REQUEST_SUPPLIES", gmVariable( VCHAT_REQUEST_SUPPLIES ) );
+	table->Set( machine, "REQUEST_TECH", gmVariable( VCHAT_REQUEST_TECH ) );
 
-	_table->Set( _machine, "SPOT_AIR", gmVariable( VCHAT_SPOT_AIR ) );
-	_table->Set( _machine, "SPOT_DEFENSES", gmVariable( VCHAT_SPOT_DEFENSES ) );
-	_table->Set( _machine, "SPOT_EMPLACED", gmVariable( VCHAT_SPOT_EMPLACED ) );
-	_table->Set( _machine, "SPOT_SNIPER", gmVariable( VCHAT_SPOT_SNIPER ) );
-	_table->Set( _machine, "SPOT_TROOPS", gmVariable( VCHAT_SPOT_TROOPS ) );
+	table->Set( machine, "SPOT_AIR", gmVariable( VCHAT_SPOT_AIR ) );
+	table->Set( machine, "SPOT_DEFENSES", gmVariable( VCHAT_SPOT_DEFENSES ) );
+	table->Set( machine, "SPOT_EMPLACED", gmVariable( VCHAT_SPOT_EMPLACED ) );
+	table->Set( machine, "SPOT_SNIPER", gmVariable( VCHAT_SPOT_SNIPER ) );
+	table->Set( machine, "SPOT_TROOPS", gmVariable( VCHAT_SPOT_TROOPS ) );
 
-	_table->Set( _machine, "TACTICS_COVER", gmVariable( VCHAT_TACTICS_COVER ) );
-	_table->Set( _machine, "TACTICS_FALLBACK", gmVariable( VCHAT_TACTICS_FALLBACK ) );
-	_table->Set( _machine, "TACTICS_FOLLOW", gmVariable( VCHAT_TACTICS_FOLLOW ) );
-	_table->Set( _machine, "TACTICS_HOLD", gmVariable( VCHAT_TACTICS_HOLD ) );
-	_table->Set( _machine, "TACTICS_SPLITUP", gmVariable( VCHAT_TACTICS_SPLITUP ) );
-	_table->Set( _machine, "TACTICS_TOGETHER", gmVariable( VCHAT_TACTICS_TOGETHER ) );
+	table->Set( machine, "TACTICS_COVER", gmVariable( VCHAT_TACTICS_COVER ) );
+	table->Set( machine, "TACTICS_FALLBACK", gmVariable( VCHAT_TACTICS_FALLBACK ) );
+	table->Set( machine, "TACTICS_FOLLOW", gmVariable( VCHAT_TACTICS_FOLLOW ) );
+	table->Set( machine, "TACTICS_HOLD", gmVariable( VCHAT_TACTICS_HOLD ) );
+	table->Set( machine, "TACTICS_SPLITUP", gmVariable( VCHAT_TACTICS_SPLITUP ) );
+	table->Set( machine, "TACTICS_TOGETHER", gmVariable( VCHAT_TACTICS_TOGETHER ) );
 }
 
-void JA_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
+void JA_Game::AddBot( ParamsAddbot & parms, bool createnow )
 {
 	//////////////////////////////////////////////////////////////////////////
-	if ( !_addbot.mName[ 0 ] )
+	if ( !parms.mName[ 0 ] )
 	{
 		NamePtr nr = NameManager::GetInstance()->GetName();
 		std::string name = nr ? nr->GetName() : Utils::FindOpenPlayerName();
-		Utils::StringCopy( _addbot.mName, name.c_str(), sizeof( _addbot.mName ) );
+		Utils::StringCopy( parms.mName, name.c_str(), sizeof( parms.mName ) );
 	}
 	//////////////////////////////////////////////////////////////////////////
 	assert( GameStarted() );
 
-	if ( _createnow )
+	if ( createnow )
 		mBotJoining = true;
-	int iGameID = gEngineFuncs->Addbot( _addbot );
-	if ( _createnow )
+	int iGameID = gEngineFuncs->AddBot( parms );
+	if ( createnow )
 		mBotJoining = false;
-	if ( iGameID != -1 && _createnow )
+	if ( iGameID != -1 && createnow )
 	{
 		ClientPtr &cp = GetClientFromCorrectedGameId( iGameID );
 
@@ -217,8 +220,8 @@ void JA_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
 			cp->Init( iGameID );
 		}
 
-		cp->mDesiredTeam = _addbot.mTeam;
-		cp->mDesiredClass = _addbot.mClass;
+		cp->mDesiredTeam = parms.mTeam;
+		cp->mDesiredClass = parms.mClass;
 
 		//////////////////////////////////////////////////////////////////////////
 		// Script callbacks
@@ -250,50 +253,50 @@ void JA_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
 	}
 }
 
-void JA_Game::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
+void JA_Game::InitScriptEvents( gmMachine *machine, gmTableObject *table )
 {
-	IGame::InitScriptEvents( _machine, _table );
+	IGame::InitScriptEvents( machine, table );
 }
 
-void JA_Game::InitScriptEntityFlags( gmMachine *_machine, gmTableObject *_table )
+void JA_Game::InitScriptEntityFlags( gmMachine *machine, gmTableObject *table )
 {
-	IGame::InitScriptEntityFlags( _machine, _table );
+	IGame::InitScriptEntityFlags( machine, table );
 
-	_table->Set( _machine, "NPC", gmVariable( JA_ENT_FLAG_NPC ) );
-	_table->Set( _machine, "VEH", gmVariable( JA_ENT_FLAG_VEHICLE ) );
-	_table->Set( _machine, "VEH_PILOTED", gmVariable( JA_ENT_FLAG_VEHICLE_PILOTED ) );
-	_table->Set( _machine, "JETPACK", gmVariable( JA_ENT_FLAG_JETPACK ) );
-	_table->Set( _machine, "CLOAKED", gmVariable( JA_ENT_FLAG_CLOAKED ) );
-	_table->Set( _machine, "CARRYINGFLAG", gmVariable( JA_ENT_FLAG_CARRYINGFLAG ) );
-	_table->Set( _machine, "SIEGEDEAD", gmVariable( JA_ENT_FLAG_SIEGEDEAD ) );
-	_table->Set( _machine, "YSALAMIRI", gmVariable( JA_ENT_FLAG_YSALAMIRI ) );
+	table->Set( machine, "NPC", gmVariable( JA_ENT_FLAG_NPC ) );
+	table->Set( machine, "VEH", gmVariable( JA_ENT_FLAG_VEHICLE ) );
+	table->Set( machine, "VEH_PILOTED", gmVariable( JA_ENT_FLAG_VEHICLE_PILOTED ) );
+	table->Set( machine, "JETPACK", gmVariable( JA_ENT_FLAG_JETPACK ) );
+	table->Set( machine, "CLOAKED", gmVariable( JA_ENT_FLAG_CLOAKED ) );
+	table->Set( machine, "CARRYINGFLAG", gmVariable( JA_ENT_FLAG_CARRYINGFLAG ) );
+	table->Set( machine, "SIEGEDEAD", gmVariable( JA_ENT_FLAG_SIEGEDEAD ) );
+	table->Set( machine, "YSALAMIRI", gmVariable( JA_ENT_FLAG_YSALAMIRI ) );
 }
 
-void JA_Game::InitScriptPowerups( gmMachine *_machine, gmTableObject *_table )
+void JA_Game::InitScriptPowerups( gmMachine *machine, gmTableObject *table )
 {
-	_table->Set( _machine, "REDFLAG", gmVariable( JA_PWR_REDFLAG ) );
-	_table->Set( _machine, "BLUEFLAG", gmVariable( JA_PWR_BLUEFLAG ) );
-	_table->Set( _machine, "ONEFLAG", gmVariable( JA_PWR_ONEFLAG ) );
-	_table->Set( _machine, "FORCE_ENLIGHTENMENT", gmVariable( JA_PWR_FORCE_ENLIGHTENED_LIGHT ) );
-	_table->Set( _machine, "FORCE_ENDARKENMENT", gmVariable( JA_PWR_FORCE_ENLIGHTENED_DARK ) );
-	_table->Set( _machine, "FORCE_BOON", gmVariable( JA_PWR_FORCE_BOON ) );
-	_table->Set( _machine, "YSALAMIRI", gmVariable( JA_PWR_YSALAMIRI ) );
+	table->Set( machine, "REDFLAG", gmVariable( JA_PWR_REDFLAG ) );
+	table->Set( machine, "BLUEFLAG", gmVariable( JA_PWR_BLUEFLAG ) );
+	table->Set( machine, "ONEFLAG", gmVariable( JA_PWR_ONEFLAG ) );
+	table->Set( machine, "FORCE_ENLIGHTENMENT", gmVariable( JA_PWR_FORCE_ENLIGHTENED_LIGHT ) );
+	table->Set( machine, "FORCE_ENDARKENMENT", gmVariable( JA_PWR_FORCE_ENLIGHTENED_DARK ) );
+	table->Set( machine, "FORCE_BOON", gmVariable( JA_PWR_FORCE_BOON ) );
+	table->Set( machine, "YSALAMIRI", gmVariable( JA_PWR_YSALAMIRI ) );
 }
 
-void JA_Game::InitScriptContentFlags( gmMachine *_machine, gmTableObject *_table )
+void JA_Game::InitScriptContentFlags( gmMachine *machine, gmTableObject *table )
 {
-	IGame::InitScriptContentFlags( _machine, _table );
-	_table->Set( _machine, "LIGHTSABER", gmVariable( CONT_LIGHTSABER ) );
+	IGame::InitScriptContentFlags( machine, table );
+	table->Set( machine, "LIGHTSABER", gmVariable( CONT_LIGHTSABER ) );
 }
 
-void JA_Game::InitScriptBotButtons( gmMachine *_machine, gmTableObject *_table )
+void JA_Game::InitScriptBotButtons( gmMachine *machine, gmTableObject *table )
 {
-	IGame::InitScriptBotButtons( _machine, _table );
+	IGame::InitScriptBotButtons( machine, table );
 
-	_table->Set( _machine, "FORCEPOWER", gmVariable( BOT_BUTTON_FORCEPOWER ) );
-	_table->Set( _machine, "FORCEGRIP", gmVariable( BOT_BUTTON_FORCEGRIP ) );
-	_table->Set( _machine, "FORCELIGHTNING", gmVariable( BOT_BUTTON_FORCELIGHTNING ) );
-	_table->Set( _machine, "FORCEDRAIN", gmVariable( BOT_BUTTON_FORCEDRAIN ) );
+	table->Set( machine, "FORCEPOWER", gmVariable( BOT_BUTTON_FORCEPOWER ) );
+	table->Set( machine, "FORCEGRIP", gmVariable( BOT_BUTTON_FORCEGRIP ) );
+	table->Set( machine, "FORCELIGHTNING", gmVariable( BOT_BUTTON_FORCELIGHTNING ) );
+	table->Set( machine, "FORCEDRAIN", gmVariable( BOT_BUTTON_FORCEDRAIN ) );
 }
 
 void JA_Game::InitCommands()
@@ -306,15 +309,15 @@ bounding boxes for ja
 standing	(-15, -15, -24) x (15, 15, 40)
 crouched	(-15, -15, -24) x (15, 15, 16)
 */
-const float JA_Game::JA_GetEntityClassTraceOffset( const TargetInfo &_target )
+const float JA_Game::JA_GetEntityClassTraceOffset( const TargetInfo &target )
 {
-	if ( _target.mEntInfo.mGroup == ENT_GRP_PLAYER )
+	if ( target.mEntInfo.mGroup == ENT_GRP_PLAYER )
 	{
-		if ( _target.mEntInfo.mClassId > JA_CLASS_NULL && _target.mEntInfo.mClassId < FilterSensory::ANYPLAYERCLASS )
+		if ( target.mEntInfo.mClassId > JA_CLASS_NULL && target.mEntInfo.mClassId < FilterSensory::ANYPLAYERCLASS )
 		{
-			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_PRONED ) )
+			if ( target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_PRONED ) )
 				return 16.0f;
-			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_CROUCHED ) )
+			if ( target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_CROUCHED ) )
 				return 24.0f;
 			return 48.0f;
 		}
@@ -327,15 +330,15 @@ bounding boxes for ja
 standing	(-15, -15, -24) x (15, 15, 40)
 crouched	(-15, -15, -24) x (15, 15, 16)
 */
-const float JA_Game::JA_GetEntityClassAimOffset( const TargetInfo &_target )
+const float JA_Game::JA_GetEntityClassAimOffset( const TargetInfo &target )
 {
-	if ( _target.mEntInfo.mGroup == ENT_GRP_PLAYER )
+	if ( target.mEntInfo.mGroup == ENT_GRP_PLAYER )
 	{
-		if ( _target.mEntInfo.mClassId > JA_CLASS_NULL && _target.mEntInfo.mClassId < FilterSensory::ANYPLAYERCLASS )
+		if ( target.mEntInfo.mClassId > JA_CLASS_NULL && target.mEntInfo.mClassId < FilterSensory::ANYPLAYERCLASS )
 		{
-			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_PRONED ) )
+			if ( target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_PRONED ) )
 				return 16.0f;
-			if ( _target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_CROUCHED ) )
+			if ( target.mEntInfo.mFlags.CheckFlag( ENT_FLAG_CROUCHED ) )
 				return 24.0f;
 			return 48.0f;
 		}
@@ -343,29 +346,29 @@ const float JA_Game::JA_GetEntityClassAimOffset( const TargetInfo &_target )
 	return 0.0f;
 }
 
-void JA_Game::ClientJoined( const Event_SystemClientConnected *_msg )
+void JA_Game::ClientJoined( const EvClientConnected *msg )
 {
-	Utils::OutputDebug( kInfo, "Client Joined Game, IsBot: %d, ClientNum: %d", _msg->mIsBot, _msg->mGameId );
-	if ( _msg->mIsBot && !mBotJoining )
+	Utils::OutputDebug( kInfo, "Client Joined Game, IsBot: %d, ClientNum: %d", msg->mIsBot, msg->mGameId );
+	if ( msg->mIsBot && !mBotJoining )
 	{
 		CheckGameState();
 		assert( GameStarted() );
-		assert( _msg->mGameId < Constants::MAX_PLAYERS && _msg->mGameId >= 0 );
+		assert( msg->mGameId < Constants::MAX_PLAYERS && msg->mGameId >= 0 );
 
 		// If a bot isn't created by now, it has probably been a map change,
 		// and the game has re-added the clients itself.
-		ClientPtr &cp = GetClientFromCorrectedGameId( _msg->mGameId );
+		ClientPtr &cp = GetClientFromCorrectedGameId( msg->mGameId );
 		if ( !cp )
 		{
 			// Initialize the appropriate slot in the list.
 			cp.reset( CreateGameClient() );
-			cp->Init( _msg->mGameId );
+			cp->Init( msg->mGameId );
 
-			cp->mDesiredTeam = _msg->mDesiredTeam;
-			cp->mDesiredClass = _msg->mDesiredClass;
+			cp->mDesiredTeam = msg->mDesiredTeam;
+			cp->mDesiredClass = msg->mDesiredClass;
 
-			gEngineFuncs->ChangeClass( _msg->mGameId, cp->mDesiredClass, NULL );
-			gEngineFuncs->ChangeTeam( _msg->mGameId, cp->mDesiredTeam, NULL );
+			gEngineFuncs->ChangeClass( msg->mGameId, cp->mDesiredClass, NULL );
+			gEngineFuncs->ChangeTeam( msg->mGameId, cp->mDesiredTeam, NULL );
 
 			cp->CheckTeamEvent();
 			cp->CheckClassEvent();

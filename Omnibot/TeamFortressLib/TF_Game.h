@@ -27,7 +27,7 @@ public:
 	
 	void GetWeaponEnumeration( const IntEnum *&_ptr, int &num );
 
-	void ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb );
+	void ProcessEvent( const Message &_message, CallbackParameters &_cb );
 
 	static float _GetDesirabilityFromTargetClass( int _grentype, int _class );
 
@@ -36,7 +36,6 @@ public:
 protected:
 	// Script support.
 	void InitScriptBinds( gmMachine *_machine );
-	void InitScriptCategories( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptClasses( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptEvents( gmMachine *_machine, gmTableObject *_table );
 	void InitScriptEntityFlags( gmMachine *_machine, gmTableObject *_table );

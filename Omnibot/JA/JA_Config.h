@@ -15,41 +15,23 @@
 
 #include "Omni-Bot_Events.h"
 
-typedef enum eJA_Version
+enum JA_Version
 {
 	JA_VERSION_0_7 = 1,
 	JA_VERSION_0_71,
 	JA_VERSION_0_8,
 	JA_VERSION_LAST,
 	JA_VERSION_LATEST = JA_VERSION_LAST - 1
-} JA_Version;
+};
 
-typedef enum eJA_Events
-{
-	JA_MESSAGE_BEGIN = EVENT_NUM_EVENTS,
-	JA_PERCEPT_FEEL_FORCE,
-	JA_MESSAGE_END
-} JA_Event;
+//enum JA_Event
+//{
+//	JA_MESSAGE_BEGIN = EVENT_NUM_EVENTS,
+//	JA_PERCEPT_FEEL_FORCE,
+//	JA_MESSAGE_END
+//};
 
-typedef enum eJA_Msgs
-{
-	JA_MSG_START = MSG_END,
-
-	// misc query stuff
-	//JA_MSG_REINFORCETIME,
-
-	// goal query stuff
-	JA_MSG_GHASFLAG,
-	JA_MSG_FORCEDATA,
-	JA_MSG_GCANBEGRABBED,
-	JA_MSG_GNUMTEAMMINES,		// check the number of team mines
-	JA_MSG_GNUMTEAMDETPACKS,	// check the number of team detpacks
-	JA_MSG_MINDTRICKED,
-
-	JA_MSG_END
-} JA_Msg;
-
-typedef enum eJA_PlayerClass
+enum JA_PlayerClass
 {
 	JA_CLASS_UNKNOWN = 0,
 	JA_CLASS_NULL = 0,
@@ -96,7 +78,7 @@ typedef enum eJA_PlayerClass
 	JA_CLASSEX_HOLOCRON,
 
 	JA_NUM_CLASSES
-} JA_PlayerClass;
+};
 
 // enumerations: JA_AmmoType
 //		JA_WP_STUN_BATON - Stun Baton.
@@ -115,7 +97,7 @@ typedef enum eJA_PlayerClass
 //		JA_WP_DET_PACK - Detonation Packs.
 //		JA_WP_CONCUSSION - Stouker Concussion Rifle.
 //		JA_WP_BRYAR_OLD - Bryar Blaster Pistol.
-typedef enum eJA_Weapons
+enum JA_Weapon
 {
 	JA_WP_UNKNOWN = INVALID_WEAPON,
 	JA_WP_NONE = INVALID_WEAPON,
@@ -138,7 +120,7 @@ typedef enum eJA_Weapons
 	JA_WP_EMPLACED_GUN,
 	JA_WP_TURRET,
 	JA_WP_MAX
-} JA_Weapon;
+};
 
 // enumerations: JA_ForcePower
 //		JA_FP_HEAL - Self Heal Force Power.
@@ -159,7 +141,7 @@ typedef enum eJA_Weapons
 //		JA_FP_SABER_OFFENSE - Saber Offense Knowledge Level.
 //		JA_FP_SABER_DEFENSE - Saber Defense Knowledge Level.
 //		JA_FP_SABERTHROW - Saber Throw Knowledge Level..
-typedef enum eJA_ForcePowers
+enum JA_ForcePower
 {
 	JA_FP_HEAL = 0,
 	JA_FP_LEVITATION,
@@ -180,20 +162,20 @@ typedef enum eJA_ForcePowers
 	JA_FP_SABER_DEFENSE,
 	JA_FP_SABERTHROW,
 	JA_MAX_FORCE_POWERS
-} JA_ForcePower;
+};
 
 // enumerations: JA_Team
 //		JA_TEAM_RED - Red Team.
 //		JA_TEAM_BLUE - Blue Team.
 //		JA_TEAM_FREE - Free For All.
-typedef enum eJA_Team
+enum JA_Team
 {
 	JA_TEAM_NONE = OB_TEAM_NONE,
 	JA_TEAM_RED,
 	JA_TEAM_BLUE,
 	JA_TEAM_FREE,
 	JA_TEAM_MAX
-} JA_Team;
+};
 
 // enumerations: JA_Powerups
 //		JA_ENT_FLAG_NPC - This entity is a non-vehicle NPC.
@@ -207,7 +189,7 @@ typedef enum eJA_Team
 //		JA_ENT_FLAG_MUTANT - This entity is the mutant.
 //		JA_ENT_FLAG_BOTTOMFEEDER - This entity is the bottom feeder.
 //		JA_ENT_FLAG_SHIELDED - This entity is not affected by small weapons fire and the projectiles bounce off.
-typedef enum eJA_EntityFlags
+enum JA_EntityFlags
 {
 	JA_ENT_FLAG_NPC = ENT_FLAG_FIRST_USER,
 	JA_ENT_FLAG_VEHICLE,
@@ -220,7 +202,7 @@ typedef enum eJA_EntityFlags
 	JA_ENT_FLAG_MUTANT,
 	JA_ENT_FLAG_BOTTOMFEEDER,
 	JA_ENT_FLAG_SHIELDED
-} JA_EntityFlags;
+};
 
 // enumerations: JA_Powerups
 //		JA_PWR_REDFLAG - This entity is carrying the red flag.
@@ -233,7 +215,7 @@ typedef enum eJA_EntityFlags
 //						A small lizard carried on the player, which prevents the possessor from using any Force power.
 //						However, (s)he is unaffected by any Force power.
 //		JA_PWR_SIEGEITEM - This entity has a siege item held
-typedef enum eJA_Powerups
+enum JA_Powerups
 {
 	JA_PWR_REDFLAG = PWR_FIRST_USER,
 	JA_PWR_BLUEFLAG,
@@ -243,29 +225,50 @@ typedef enum eJA_Powerups
 	JA_PWR_FORCE_BOON,
 	JA_PWR_YSALAMIRI,
 	JA_PWR_SIEGEITEM
-} JA_Powerups;
+};
 
 // enumerations: JA_Contents
 //		CONT_LIGHTSABER - Lightsaber blade entity.
-typedef enum eJA_Contents
+enum JA_Contents
 {
 	CONT_LIGHTSABER	= CONT_START_USER
-} JA_Contents;
+};
 
 // enumerations: JA_SurfaceFlags
 //		SURFACE_FORCEFIELD - A forcefield is here.
-typedef enum eJA_SurfaceFlags
+enum JA_SurfaceFlags
 {
 	SURFACE_FORCEFIELD = SURFACE_START_USER
-} JA_SurfaceFlags;
+};
 
 // enumerations: JA_ButtonFlags
-typedef enum eJA_ButtonFlags
+enum JA_ButtonFlags
 {
 	BOT_BUTTON_FORCEPOWER = BOT_BUTTON_FIRSTUSER,
 	BOT_BUTTON_FORCEGRIP,
 	BOT_BUTTON_FORCELIGHTNING,
 	BOT_BUTTON_FORCEDRAIN
-} JA_ButtonFlags;
+};
+
+struct ParamsForceData
+{
+	int		 mForce;
+	int		 mKnownBits;
+	int		 mActiveBits;
+	int		 mLevels[ JA_MAX_FORCE_POWERS ];
+};
+
+class JediAcademy_Interface : public IEngineInterface
+{
+public:
+	virtual bool GetForceData( GameEntity ent, ParamsForceData& dataOut ) = 0;	
+	virtual bool HasMeMindTricked( GameEntity ent, const GameEntity other ) = 0;
+	virtual bool HasFlag( GameEntity ent ) = 0;
+	virtual bool ItemCanBeGrabbed( GameEntity ent, const GameEntity other ) = 0;
+	virtual void NumTeamMines( GameEntity ent, int & current, int & max ) = 0;
+	virtual void NumTeamDetpacks( GameEntity ent, int & current, int &max ) = 0;
+};
+
+extern JediAcademy_Interface* gJediAcademyFuncs;
 
 #endif

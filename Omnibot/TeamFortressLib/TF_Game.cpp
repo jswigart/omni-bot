@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "TF_Game.h"
-
+#include "TF_Messages.h"
 #include "System.h"
 
 #include "NameManager.h"
@@ -16,6 +16,8 @@
 #include "BotSensoryMemory.h"
 #include "BotSteeringSystem.h"
 #include "FilterSensory.h"
+
+TeamFortress_Interface* gTeamFortressFuncs = 0;
 
 TF_Game::TF_Game()
 {
@@ -29,6 +31,9 @@ bool TF_Game::Init( System & system )
 {
 	AiState::SensoryMemory::SetEntityTraceOffsetCallback( TF_Game::TF_GetEntityClassTraceOffset );
 	AiState::SensoryMemory::SetEntityAimOffsetCallback( TF_Game::TF_GetEntityClassAimOffset );
+
+	gTeamFortressFuncs = dynamic_cast<TeamFortress_Interface*>(gEngineFuncs);
+
 	return IGame::Init( system );
 }
 
@@ -37,7 +42,7 @@ void TF_Game::Shutdown()
 	IGame::Shutdown();
 }
 
-static const IntEnum TF_WeaponEnum [] =
+static const IntEnum TF_WeaponEnum[] =
 {
 	IntEnum( "NONE", TF_WP_NONE ),
 	IntEnum( "AXE", TF_WP_AXE ),
@@ -80,13 +85,6 @@ void TF_Game::GetWeaponEnumeration( const IntEnum *&_ptr, int &num )
 {
 	num = sizeof( TF_WeaponEnum ) / sizeof( TF_WeaponEnum[ 0 ] );
 	_ptr = TF_WeaponEnum;
-}
-
-void TF_Game::InitScriptCategories( gmMachine *_machine, gmTableObject *_table )
-{
-	IGame::InitScriptCategories( _machine, _table );
-
-	_table->Set( _machine, "BUILDABLE", gmVariable( TF_ENT_CAT_BUILDABLE ) );
 }
 
 static const IntEnum gClassMapping[] =
@@ -202,6 +200,23 @@ void TF_Game::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "CURED", gmVariable( TF_MSG_CURED ) );
 	_table->Set( _machine, "BURNED", gmVariable( TF_MSG_BURNLEVEL ) );
 
+	_table->Set( _machine, "BUILD_NOTENOUGHAMMO", gmVariable( TF_MSG_BUILD_NOTENOUGHAMMO ) );
+	_table->Set( _machine, "BUILD_ALREADYBUILT", gmVariable( TF_MSG_BUILD_ALREADYBUILT ) );
+	_table->Set( _machine, "BUILD_CANTBUILDHERE", gmVariable( TF_MSG_BUILD_CANTBUILDHERE ) );
+	_table->Set( _machine, "BUILD_BUILDING", gmVariable( TF_MSG_BUILD_BUILDING ) );
+	_table->Set( _machine, "BUILD_BUILT", gmVariable( TF_MSG_BUILD_BUILT ) );
+	_table->Set( _machine, "BUILD_BUILDCANCEL", gmVariable( TF_MSG_BUILD_BUILDCANCEL ) );
+	_table->Set( _machine, "BUILD_DESTROYED", gmVariable( TF_MSG_BUILD_DESTROYED ) );
+	_table->Set( _machine, "BUILD_SPOTENEMY", gmVariable( TF_MSG_BUILD_SPOTENEMY ) );
+	_table->Set( _machine, "BUILD_AIMED", gmVariable( TF_MSG_BUILD_AIMED ) );
+	_table->Set( _machine, "BUILD_DAMAGED", gmVariable( TF_MSG_BUILD_DAMAGED ) );
+	_table->Set( _machine, "BUILD_UPGRADED", gmVariable( TF_MSG_BUILD_UPGRADED ) );
+	_table->Set( _machine, "BUILD_DETONATED", gmVariable( TF_MSG_BUILD_DETONATED ) );
+	_table->Set( _machine, "BUILD_DISMANTLED", gmVariable( TF_MSG_BUILD_DISMANTLED ) );
+	_table->Set( _machine, "BUILD_SABOTAGED", gmVariable( TF_MSG_BUILD_SABOTAGED ) );
+	_table->Set( _machine, "BUILD_ENEMYUSED", gmVariable( TF_MSG_BUILD_ENEMYUSED ) );
+	_table->Set( _machine, "BUILD_DETONATE", gmVariable( TF_MSG_BUILD_DETONATE ) );
+		
 	// General Events
 	_table->Set( _machine, "CLASS_DISABLE", gmVariable( TF_MSG_CLASS_DISABLED ) );
 	_table->Set( _machine, "CLASS_NOTAVAILABLE", gmVariable( TF_MSG_CLASS_NOTAVAILABLE ) );
@@ -224,13 +239,6 @@ void TF_Game::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "RADIOTAG_UPDATE", gmVariable( TF_MSG_RADIOTAG_UPDATE ) );
 
 	// Demo-man
-	_table->Set( _machine, "DETPACK_BUILDING", gmVariable( TF_MSG_DETPACK_BUILDING ) );
-	_table->Set( _machine, "DETPACK_BUILT", gmVariable( TF_MSG_DETPACK_BUILT ) );
-	_table->Set( _machine, "DETPACK_NOAMMO", gmVariable( TF_MSG_DETPACK_NOTENOUGHAMMO ) );
-	_table->Set( _machine, "DETPACK_CANTBUILD", gmVariable( TF_MSG_DETPACK_CANTBUILD ) );
-	_table->Set( _machine, "DETPACK_ALREADYBUILT", gmVariable( TF_MSG_DETPACK_ALREADYBUILT ) );
-	_table->Set( _machine, "DETPACK_DETONATED", gmVariable( TF_MSG_DETPACK_DETONATED ) );
-
 	_table->Set( _machine, "PIPE_PROXIMITY", gmVariable( TF_MSG_PIPE_PROXIMITY ) );
 
 	//TF_MSG_DETPIPES,		// The bot has detected the desire to det pipes.
@@ -238,7 +246,7 @@ void TF_Game::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
 	//TF_MSG_DEMOMAN_END,
 
 	// Medic
-	_table->Set( _machine, "MEDIC_CALLED", gmVariable( TF_MSG_CALLFORMEDIC ) );
+	_table->Set( _machine, "MEDIC_CALLED", gmVariable( TF_MSG_CALLEDFORMEDIC ) );
 
 	// HW-Guy
 
@@ -257,32 +265,8 @@ void TF_Game::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "SABOTAGED_DISPENSER", gmVariable( TF_MSG_SABOTAGED_DISPENSER ) );
 
 	// Engineer
-	_table->Set( _machine, "SENTRY_NOAMMO", gmVariable( TF_MSG_SENTRY_NOTENOUGHAMMO ) );
-	_table->Set( _machine, "SENTRY_ALREADYBUILT", gmVariable( TF_MSG_SENTRY_ALREADYBUILT ) );
-	_table->Set( _machine, "SENTRY_CANTBUILD", gmVariable( TF_MSG_SENTRY_CANTBUILD ) );
-	_table->Set( _machine, "SENTRY_BUILDING", gmVariable( TF_MSG_SENTRY_BUILDING ) );
-	_table->Set( _machine, "SENTRY_BUILT", gmVariable( TF_MSG_SENTRY_BUILT ) );
-	_table->Set( _machine, "SENTRY_DESTROYED", gmVariable( TF_MSG_SENTRY_DESTROYED ) );
-	_table->Set( _machine, "SENTRY_SPOTENEMY", gmVariable( TF_MSG_SENTRY_SPOTENEMY ) );
-	_table->Set( _machine, "SENTRY_AIMED", gmVariable( TF_MSG_SENTRY_AIMED ) );
-	_table->Set( _machine, "SENTRY_DAMAGED", gmVariable( TF_MSG_SENTRY_DAMAGED ) );
-	_table->Set( _machine, "SENTRY_STATS", gmVariable( TF_MSG_SENTRY_STATS ) );
-	_table->Set( _machine, "SENTRY_UPGRADED", gmVariable( TF_MSG_SENTRY_UPGRADED ) );
-	_table->Set( _machine, "SENTRY_DETONATED", gmVariable( TF_MSG_SENTRY_DETONATED ) );
-	_table->Set( _machine, "SENTRY_DISMANTLED", gmVariable( TF_MSG_SENTRY_DISMANTLED ) );
-
-	_table->Set( _machine, "DISPENSER_NOAMMO", gmVariable( TF_MSG_DISPENSER_NOTENOUGHAMMO ) );
-	_table->Set( _machine, "DISPENSER_ALREADYBUILT", gmVariable( TF_MSG_DISPENSER_ALREADYBUILT ) );
-	_table->Set( _machine, "DISPENSER_CANTBUILD", gmVariable( TF_MSG_DISPENSER_CANTBUILD ) );
-	_table->Set( _machine, "DISPENSER_BUILDING", gmVariable( TF_MSG_DISPENSER_BUILDING ) );
-	_table->Set( _machine, "DISPENSER_BUILT", gmVariable( TF_MSG_DISPENSER_BUILT ) );
-	_table->Set( _machine, "DISPENSER_DESTROYED", gmVariable( TF_MSG_DISPENSER_DESTROYED ) );
-	_table->Set( _machine, "DISPENSER_ENEMYUSED", gmVariable( TF_MSG_DISPENSER_ENEMYUSED ) );
-	_table->Set( _machine, "DISPENSER_DAMAGED", gmVariable( TF_MSG_DISPENSER_DAMAGED ) );
-	_table->Set( _machine, "DISPENSER_STATS", gmVariable( TF_MSG_DISPENSER_STATS ) );
-	_table->Set( _machine, "DISPENSER_DETONATED", gmVariable( TF_MSG_DISPENSER_DETONATED ) );
-	_table->Set( _machine, "DISPENSER_DISMANTLED", gmVariable( TF_MSG_DISPENSER_DISMANTLED ) );
-
+	_table->Set( _machine, "ENGINEER_CALLED", gmVariable( TF_MSG_CALLEDFORENGINEER ) );
+	
 	// Civilian
 }
 
@@ -338,9 +322,9 @@ const float TF_Game::TF_GetEntityClassTraceOffset( const TargetInfo &_target )
 	{
 		switch ( _target.mEntInfo.mClassId )
 		{
-			case TF_CLASSEX_SENTRY:
-			case TF_CLASSEX_DISPENSER:
-				return 32.f;
+		case TF_CLASSEX_SENTRY:
+		case TF_CLASSEX_DISPENSER:
+			return 32.f;
 		}
 	}
 	return 0.0f;
@@ -363,15 +347,15 @@ const float TF_Game::TF_GetEntityClassAimOffset( const TargetInfo &_target )
 	{
 		switch ( _target.mEntInfo.mClassId )
 		{
-			case TF_CLASSEX_SENTRY:
-			case TF_CLASSEX_DISPENSER:
-				return 32.f;
+		case TF_CLASSEX_SENTRY:
+		case TF_CLASSEX_DISPENSER:
+			return 32.f;
 		}
 	}
 	return 0.0f;
 }
 
-void TF_Game::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+void TF_Game::ProcessEvent( const Message &_message, CallbackParameters &_cb )
 {
 	IGame::ProcessEvent( _message, _cb );
 
@@ -434,158 +418,158 @@ float TF_Game::_GetDesirabilityFromTargetClass( int _grentype, int _class )
 {
 	switch ( _grentype )
 	{
-		case TF_WP_GRENADE:
+	case TF_WP_GRENADE:
+	{
+		switch ( _class )
 		{
-			switch ( _class )
-			{
-				case TF_CLASS_SCOUT: return 0.4f;
-				case TF_CLASS_SNIPER: return 0.4f;
-				case TF_CLASS_SOLDIER: return 0.55f;
-				case TF_CLASS_DEMOMAN: return 0.5f;
-				case TF_CLASS_MEDIC: return 0.45f;
-				case TF_CLASS_HWGUY: return 0.65f;
-				case TF_CLASS_PYRO: return 0.45f;
-				case TF_CLASS_SPY: return 0.5f;
-				case TF_CLASS_ENGINEER: return 0.4f;
-				case TF_CLASS_CIVILIAN: return 0.3f;
-				case TF_CLASSEX_SENTRY: return 0.5f;
-				case TF_CLASSEX_DISPENSER: return 0.5f;
-				default: return 0.f;
-			}
+		case TF_CLASS_SCOUT: return 0.4f;
+		case TF_CLASS_SNIPER: return 0.4f;
+		case TF_CLASS_SOLDIER: return 0.55f;
+		case TF_CLASS_DEMOMAN: return 0.5f;
+		case TF_CLASS_MEDIC: return 0.45f;
+		case TF_CLASS_HWGUY: return 0.65f;
+		case TF_CLASS_PYRO: return 0.45f;
+		case TF_CLASS_SPY: return 0.5f;
+		case TF_CLASS_ENGINEER: return 0.4f;
+		case TF_CLASS_CIVILIAN: return 0.3f;
+		case TF_CLASSEX_SENTRY: return 0.5f;
+		case TF_CLASSEX_DISPENSER: return 0.5f;
+		default: return 0.f;
 		}
-		case TF_WP_GRENADE_CONC:
+	}
+	case TF_WP_GRENADE_CONC:
+	{
+		switch ( _class )
 		{
-			switch ( _class )
-			{
-				case TF_CLASS_SCOUT: return 0.4f;
-				case TF_CLASS_SNIPER: return 0.55f;
-				case TF_CLASS_SOLDIER: return 0.5f;
-				case TF_CLASS_DEMOMAN: return 0.5f;
-				case TF_CLASS_MEDIC: return 0.45f;
-				case TF_CLASS_HWGUY: return 0.7f;
-				case TF_CLASS_PYRO: return 0.45f;
-				case TF_CLASS_SPY: return 0.5f;
-				case TF_CLASS_ENGINEER: return 0.5f;
-				case TF_CLASS_CIVILIAN: return 0.3f;
-				case TF_CLASSEX_SENTRY: return 0.f;
-				case TF_CLASSEX_DISPENSER: return 0.f;
-				default: return 0.f;
-			}
+		case TF_CLASS_SCOUT: return 0.4f;
+		case TF_CLASS_SNIPER: return 0.55f;
+		case TF_CLASS_SOLDIER: return 0.5f;
+		case TF_CLASS_DEMOMAN: return 0.5f;
+		case TF_CLASS_MEDIC: return 0.45f;
+		case TF_CLASS_HWGUY: return 0.7f;
+		case TF_CLASS_PYRO: return 0.45f;
+		case TF_CLASS_SPY: return 0.5f;
+		case TF_CLASS_ENGINEER: return 0.5f;
+		case TF_CLASS_CIVILIAN: return 0.3f;
+		case TF_CLASSEX_SENTRY: return 0.f;
+		case TF_CLASSEX_DISPENSER: return 0.f;
+		default: return 0.f;
 		}
-		case TF_WP_GRENADE_EMP:
+	}
+	case TF_WP_GRENADE_EMP:
+	{
+		switch ( _class )
 		{
-			switch ( _class )
-			{
-				case TF_CLASS_SCOUT: return 0.4f;
-				case TF_CLASS_SNIPER: return 0.55f;
-				case TF_CLASS_SOLDIER: return 0.5f;
-				case TF_CLASS_DEMOMAN: return 0.5f;
-				case TF_CLASS_MEDIC: return 0.45f;
-				case TF_CLASS_HWGUY: return 0.65f;
-				case TF_CLASS_PYRO: return 0.55f;
-				case TF_CLASS_SPY: return 0.5f;
-				case TF_CLASS_ENGINEER: return 0.4f;
-				case TF_CLASS_CIVILIAN: return 0.3f;
-				case TF_CLASSEX_SENTRY: return 0.6f;
-				case TF_CLASSEX_DISPENSER: return 0.6f;
-				default: return 0.f;
-			}
+		case TF_CLASS_SCOUT: return 0.4f;
+		case TF_CLASS_SNIPER: return 0.55f;
+		case TF_CLASS_SOLDIER: return 0.5f;
+		case TF_CLASS_DEMOMAN: return 0.5f;
+		case TF_CLASS_MEDIC: return 0.45f;
+		case TF_CLASS_HWGUY: return 0.65f;
+		case TF_CLASS_PYRO: return 0.55f;
+		case TF_CLASS_SPY: return 0.5f;
+		case TF_CLASS_ENGINEER: return 0.4f;
+		case TF_CLASS_CIVILIAN: return 0.3f;
+		case TF_CLASSEX_SENTRY: return 0.6f;
+		case TF_CLASSEX_DISPENSER: return 0.6f;
+		default: return 0.f;
 		}
-		case TF_WP_GRENADE_NAIL:
+	}
+	case TF_WP_GRENADE_NAIL:
+	{
+		switch ( _class )
 		{
-			switch ( _class )
-			{
-				case TF_CLASS_SCOUT: return 0.4f;
-				case TF_CLASS_SNIPER: return 0.35f;
-				case TF_CLASS_SOLDIER: return 0.55f;
-				case TF_CLASS_DEMOMAN: return 0.5f;
-				case TF_CLASS_MEDIC: return 0.45f;
-				case TF_CLASS_HWGUY: return 0.65f;
-				case TF_CLASS_PYRO: return 0.45f;
-				case TF_CLASS_SPY: return 0.4f;
-				case TF_CLASS_ENGINEER: return 0.4f;
-				case TF_CLASS_CIVILIAN: return 0.3f;
-				case TF_CLASSEX_SENTRY: return 0.6f;
-				case TF_CLASSEX_DISPENSER: return 0.6f;
-				default: return 0.f;
-			}
+		case TF_CLASS_SCOUT: return 0.4f;
+		case TF_CLASS_SNIPER: return 0.35f;
+		case TF_CLASS_SOLDIER: return 0.55f;
+		case TF_CLASS_DEMOMAN: return 0.5f;
+		case TF_CLASS_MEDIC: return 0.45f;
+		case TF_CLASS_HWGUY: return 0.65f;
+		case TF_CLASS_PYRO: return 0.45f;
+		case TF_CLASS_SPY: return 0.4f;
+		case TF_CLASS_ENGINEER: return 0.4f;
+		case TF_CLASS_CIVILIAN: return 0.3f;
+		case TF_CLASSEX_SENTRY: return 0.6f;
+		case TF_CLASSEX_DISPENSER: return 0.6f;
+		default: return 0.f;
 		}
-		case TF_WP_GRENADE_MIRV:
+	}
+	case TF_WP_GRENADE_MIRV:
+	{
+		switch ( _class )
 		{
-			switch ( _class )
-			{
-				case TF_CLASS_SCOUT: return 0.25f;
-				case TF_CLASS_SNIPER: return 0.35f;
-				case TF_CLASS_SOLDIER: return 0.55f;
-				case TF_CLASS_DEMOMAN: return 0.5f;
-				case TF_CLASS_MEDIC: return 0.45f;
-				case TF_CLASS_HWGUY: return 0.65f;
-				case TF_CLASS_PYRO: return 0.45f;
-				case TF_CLASS_SPY: return 0.4f;
-				case TF_CLASS_ENGINEER: return 0.4f;
-				case TF_CLASS_CIVILIAN: return 0.3f;
-				case TF_CLASSEX_SENTRY: return 0.6f;
-				case TF_CLASSEX_DISPENSER: return 0.6f;
-				default: return 0.f;
-			}
+		case TF_CLASS_SCOUT: return 0.25f;
+		case TF_CLASS_SNIPER: return 0.35f;
+		case TF_CLASS_SOLDIER: return 0.55f;
+		case TF_CLASS_DEMOMAN: return 0.5f;
+		case TF_CLASS_MEDIC: return 0.45f;
+		case TF_CLASS_HWGUY: return 0.65f;
+		case TF_CLASS_PYRO: return 0.45f;
+		case TF_CLASS_SPY: return 0.4f;
+		case TF_CLASS_ENGINEER: return 0.4f;
+		case TF_CLASS_CIVILIAN: return 0.3f;
+		case TF_CLASSEX_SENTRY: return 0.6f;
+		case TF_CLASSEX_DISPENSER: return 0.6f;
+		default: return 0.f;
 		}
-		case TF_WP_GRENADE_GAS:
+	}
+	case TF_WP_GRENADE_GAS:
+	{
+		switch ( _class )
 		{
-			switch ( _class )
-			{
-				case TF_CLASS_SCOUT: return 0.2f;
-				case TF_CLASS_SNIPER: return 0.4f;
-				case TF_CLASS_SOLDIER: return 0.45f;
-				case TF_CLASS_DEMOMAN: return 0.45f;
-				case TF_CLASS_MEDIC: return 0.45f;
-				case TF_CLASS_HWGUY: return 0.55f;
-				case TF_CLASS_PYRO: return 0.45f;
-				case TF_CLASS_SPY: return 0.5f;
-				case TF_CLASS_ENGINEER: return 0.4f;
-				case TF_CLASS_CIVILIAN: return 0.3f;
-				case TF_CLASSEX_SENTRY: return 0.f;
-				case TF_CLASSEX_DISPENSER: return 0.f;
-				default: return 0.f;
-			}
+		case TF_CLASS_SCOUT: return 0.2f;
+		case TF_CLASS_SNIPER: return 0.4f;
+		case TF_CLASS_SOLDIER: return 0.45f;
+		case TF_CLASS_DEMOMAN: return 0.45f;
+		case TF_CLASS_MEDIC: return 0.45f;
+		case TF_CLASS_HWGUY: return 0.55f;
+		case TF_CLASS_PYRO: return 0.45f;
+		case TF_CLASS_SPY: return 0.5f;
+		case TF_CLASS_ENGINEER: return 0.4f;
+		case TF_CLASS_CIVILIAN: return 0.3f;
+		case TF_CLASSEX_SENTRY: return 0.f;
+		case TF_CLASSEX_DISPENSER: return 0.f;
+		default: return 0.f;
 		}
-		case TF_WP_GRENADE_CALTROPS:
+	}
+	case TF_WP_GRENADE_CALTROPS:
+	{
+		switch ( _class )
 		{
-			switch ( _class )
-			{
-				case TF_CLASS_SCOUT: return 0.4f;
-				case TF_CLASS_SNIPER: return 0.4f;
-				case TF_CLASS_SOLDIER: return 0.55f;
-				case TF_CLASS_DEMOMAN: return 0.5f;
-				case TF_CLASS_MEDIC: return 0.45f;
-				case TF_CLASS_HWGUY: return 0.65f;
-				case TF_CLASS_PYRO: return 0.45f;
-				case TF_CLASS_SPY: return 0.5f;
-				case TF_CLASS_ENGINEER: return 0.4f;
-				case TF_CLASS_CIVILIAN: return 0.3f;
-				case TF_CLASSEX_SENTRY: return 0.f;
-				case TF_CLASSEX_DISPENSER: return 0.f;
-				default: return 0.f;
-			}
+		case TF_CLASS_SCOUT: return 0.4f;
+		case TF_CLASS_SNIPER: return 0.4f;
+		case TF_CLASS_SOLDIER: return 0.55f;
+		case TF_CLASS_DEMOMAN: return 0.5f;
+		case TF_CLASS_MEDIC: return 0.45f;
+		case TF_CLASS_HWGUY: return 0.65f;
+		case TF_CLASS_PYRO: return 0.45f;
+		case TF_CLASS_SPY: return 0.5f;
+		case TF_CLASS_ENGINEER: return 0.4f;
+		case TF_CLASS_CIVILIAN: return 0.3f;
+		case TF_CLASSEX_SENTRY: return 0.f;
+		case TF_CLASSEX_DISPENSER: return 0.f;
+		default: return 0.f;
 		}
-		case TF_WP_GRENADE_NAPALM:
+	}
+	case TF_WP_GRENADE_NAPALM:
+	{
+		switch ( _class )
 		{
-			switch ( _class )
-			{
-				case TF_CLASS_SCOUT: return 0.4f;
-				case TF_CLASS_SNIPER: return 0.4f;
-				case TF_CLASS_SOLDIER: return 0.55f;
-				case TF_CLASS_DEMOMAN: return 0.5f;
-				case TF_CLASS_MEDIC: return 0.45f;
-				case TF_CLASS_HWGUY: return 0.65f;
-				case TF_CLASS_PYRO: return 0.45f;
-				case TF_CLASS_SPY: return 0.5f;
-				case TF_CLASS_ENGINEER: return 0.4f;
-				case TF_CLASS_CIVILIAN: return 0.3f;
-				case TF_CLASSEX_SENTRY: return 0.2f;
-				case TF_CLASSEX_DISPENSER: return 0.2f;
-				default: return 0.f;
-			}
+		case TF_CLASS_SCOUT: return 0.4f;
+		case TF_CLASS_SNIPER: return 0.4f;
+		case TF_CLASS_SOLDIER: return 0.55f;
+		case TF_CLASS_DEMOMAN: return 0.5f;
+		case TF_CLASS_MEDIC: return 0.45f;
+		case TF_CLASS_HWGUY: return 0.65f;
+		case TF_CLASS_PYRO: return 0.45f;
+		case TF_CLASS_SPY: return 0.5f;
+		case TF_CLASS_ENGINEER: return 0.4f;
+		case TF_CLASS_CIVILIAN: return 0.3f;
+		case TF_CLASSEX_SENTRY: return 0.2f;
+		case TF_CLASSEX_DISPENSER: return 0.2f;
+		default: return 0.f;
 		}
+	}
 	}
 	return 0.f;
 }

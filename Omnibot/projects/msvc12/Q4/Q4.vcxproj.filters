@@ -24,9 +24,6 @@
     <ClCompile Include="..\..\..\Q4\Q4_Client.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Q4\Q4_InterfaceFuncs.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Q4\Q4_BaseStates.cpp">
       <Filter>Core\Goals</Filter>
     </ClCompile>
@@ -47,9 +44,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Q4\Q4_Game.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Q4\Q4_InterfaceFuncs.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Q4\Q4_Messages.h">

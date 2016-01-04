@@ -668,7 +668,7 @@ bool GM_CDECL ScriptManager::ScriptSysCallback_Machine( gmMachine* a_machine, gm
 				if ( pClient )
 				{
 					/*Event_SystemThreadCreated d = { pThread->GetId() };
-					MessageHelper evt(SYSTEM_THREAD_CREATED, &d, sizeof(d));
+					Message evt(SYSTEM_THREAD_CREATED, &d, sizeof(d));
 					pClient->SendEvent(evt);*/
 				}
 			}
@@ -704,7 +704,7 @@ bool GM_CDECL ScriptManager::ScriptSysCallback_Machine( gmMachine* a_machine, gm
 		case MC_THREAD_DESTROY:
 		{
 			/*Event_SystemThreadDestroyed d = { pThread->GetId() };
-			MessageHelper evt(SYSTEM_THREAD_DESTROYED, &d, sizeof(d));
+			Message evt(SYSTEM_THREAD_DESTROYED, &d, sizeof(d));
 			System::mInstance->mGame->DispatchGlobalEvent(evt);*/
 			System::mInstance->mGame->AddDeletedThread( pThread->GetId() );
 		}

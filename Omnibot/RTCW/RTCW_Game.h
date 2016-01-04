@@ -26,8 +26,8 @@ public:
 	virtual void StartGame();
 	virtual Client *CreateGameClient();
 
-	void AddBot( Msg_Addbot &_addbot, bool _createnow = true );
-	void ClientJoined( const Event_SystemClientConnected *_msg );
+	void AddBot( ParamsAddbot& addbot, bool _createnow = true );
+	void ClientJoined( const EvClientConnected *_msg );
 	
 	void GetTeamEnumeration( const IntEnum *&_ptr, int &num );
 	void GetWeaponEnumeration( const IntEnum *&_ptr, int &num );

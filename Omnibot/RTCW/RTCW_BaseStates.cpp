@@ -8,7 +8,7 @@
 
 #include "RTCW_BaseStates.h"
 #include "RTCW_FilterClosest.h"
-#include "RTCW_InterfaceFuncs.h"
+#include "RTCW_Messages.h"
 #include "BotPathing.h"
 #include "WeaponDatabase.h"
 #include "RenderBuffer.h"
@@ -31,7 +31,7 @@ namespace AiState
 
 	void CallArtillery::GetDebugString( std::stringstream &out )
 	{
-		out << ( mMapGoal ? mMapGoal->GetName() : "" );
+		out << (mMapGoal ? mMapGoal->GetName() : "");
 	}
 
 	void CallArtillery::RenderDebug()
@@ -96,7 +96,7 @@ namespace AiState
 
 	float CallArtillery::GetPriority()
 	{
-		if ( !gEngineFuncs->IsWeaponCharged( GetClient(), RTCW_WP_BINOCULARS, Primary ) )
+		if ( !gEngineFuncs->IsWeaponCharged( GetClient()->GetGameEntity(), RTCW_WP_BINOCULARS, Primary ) )
 			return 0.f;
 
 		if ( IsActive() )
@@ -276,23 +276,21 @@ namespace AiState
 		return State_Busy;
 	}
 
-	void CallArtillery::ProcessEvent( const MessageHelper &_message, CallbackParameters &_cb )
+	void CallArtillery::ProcessEvent( const Message& message, CallbackParameters &cb )
 	{
-		switch ( _message.GetMessageId() )
+		switch ( message.Id() )
 		{
-			HANDLER( MESSAGE_PROXIMITY_TRIGGER )
+			CASE_MSG( EvProximityTrigger )
 			{
-				const AiState::Event_ProximityTrigger *m = _message.Get<AiState::Event_ProximityTrigger>();
-				if ( m->mOwnerState == GetNameHash() )
+				if ( msg->mOwnerState == GetNameHash() )
 				{
 					mFireTime = IGame::GetTime();// + 1000;
 				}
 				break;
 			}
-			HANDLER( ACTION_WEAPON_FIRE )
+			CASE_MSG( EvWeaponFire )
 			{
-				const Event_WeaponFire *m = _message.Get<Event_WeaponFire>();
-				if ( m && m->mWeaponId == RTCW_WP_BINOCULARS )
+				if ( msg->mWeaponId == RTCW_WP_BINOCULARS )
 				{
 					mFired = true;
 				}

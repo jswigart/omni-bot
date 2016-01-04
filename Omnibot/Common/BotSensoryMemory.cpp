@@ -370,7 +370,7 @@ namespace AiState
 				Event_EntitySensed d;
 				d.mEntityClass = ti.mEntityClass;
 				d.mEntity = ent;
-				GetClient()->SendEvent(MessageHelper(PERCEPT_SENSE_ENTITY, &d, sizeof(d)));
+				GetClient()->SendEvent(Message(PERCEPT_SENSE_ENTITY, &d, sizeof(d)));
 				}*/
 			}
 			else

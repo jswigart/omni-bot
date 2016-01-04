@@ -24,9 +24,6 @@
     <ClCompile Include="..\..\..\JA\JA_Game.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\JA\JA_InterfaceFuncs.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\JA\JA_VoiceMacros.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -50,9 +47,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\JA\JA_Game.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\JA\JA_InterfaceFuncs.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\JA\JA_Messages.h">

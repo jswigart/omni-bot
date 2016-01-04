@@ -60,9 +60,6 @@ namespace MapFormat
 		class FileImporter
 		{
 		public:
-			FileImporter();
-			~FileImporter();
-		public:
 			bool ParseFile( CollisionWorld & scene, const char * memoryBuffer, size_t memoryBufferSize );
 		private:
 			void CreateSceneGraph( CollisionWorld & scene, NodePtr & parent, const Q3BSP::Model & bspmodel );

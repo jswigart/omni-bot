@@ -21,9 +21,6 @@
     <ClCompile Include="..\..\..\D3\D3_Game.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\D3\D3_InterfaceFuncs.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\D3\gmD3Binds.cpp">
       <Filter>Core\Scripting</Filter>
     </ClCompile>
@@ -41,9 +38,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\D3\D3_Game.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\D3\D3_InterfaceFuncs.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\D3\D3_Messages.h">

@@ -58,6 +58,8 @@ enum MessageId
 	MSG_WEAPON_FIRE,
 	MSG_WEAPON_CHANGE,
 
+	MSG_PICKEDUP_ITEM,
+
 	MSG_GOAL_SUCCESS,
 	MSG_GOAL_FAILED,
 	MSG_GOAL_ABORTED,
@@ -65,7 +67,6 @@ enum MessageId
 	MSG_PATH_SUCCESS,
 	MSG_PATH_FAILED,
 
-	MSG_ID_FIRST,
 	MSG_SPAWN,
 	MSG_CHANGETEAM,
 	MSG_INVALIDTEAM,
@@ -109,6 +110,7 @@ enum MessageId
 
 	MSG_HEAR_SOUND,
 	MSG_SENSE_ENTITY,
+	MSG_DROWNING,
 
 	// Must be last
 	MSG_BASE_LAST = 1000
@@ -397,6 +399,13 @@ struct EvWeaponChange
 	int			mWeaponId;
 };
 
+struct EvPickedUpItem
+{
+	typedef MessageT<EvPickedUpItem, MSG_PICKEDUP_ITEM> Msg;
+
+	EntityInfo		mInfo;
+};
+
 struct EvChatMessage
 {
 	typedef MessageT<EvChatMessage, MSG_HEAR_CHATMSG_BASE> Msg;
@@ -486,6 +495,11 @@ struct EvEntitySensed
 
 	int			mEntityClass;
 	GameEntity	mEntity;
+};
+
+struct EvEntityDrowning
+{
+	typedef MessageT<EvEntityDrowning, MSG_DROWNING> Msg;
 };
 
 struct EvScriptMessage

@@ -20,67 +20,23 @@
 #pragma pack(4)
 
 //////////////////////////////////////////////////////////////////////////
-
-struct JA_HasFlag
-{
-	bool	 mHasFlag;
-};
-
-struct JA_CanBeGrabbed
-{
-	GameEntity mEntity;
-	bool	 mCanBeGrabbed;
-};
-
-struct JA_TeamMines
-{
-	int		 mCurrent;
-	int		 mMax;
-};
-
-struct JA_TeamDetpacks
-{
-	int		 mCurrent;
-	int		 mMax;
-};
-
-struct JA_SelectWeapon
-{
-	JA_Weapon mSelection;
-	bool	 mGood;
-};
-
-/*struct JA_ReinforceTime
-{
-int		 mReinforceTime;
-};*/
-
-typedef struct
-{
-	int		 mForce;
-	int		 mKnownBits;
-	int		 mActiveBits;
-	int		 mLevels[JA_MAX_FORCE_POWERS];
-} JA_ForceData;
-
-struct JA_Mindtricked
-{
-	GameEntity mEntity;
-	bool	 mIsMindtricked;
-};
-
-//////////////////////////////////////////////////////////////////////////
 // Events
 
-struct Event_SystemGametype
+enum ET_Event
 {
-	int	 mGametype;
+	JA_EVENT_BEGIN = MSG_BASE_LAST,
+
+	JA_MSG_FEELFORCE,
+
+	JA__EVENT_END
 };
 
-struct Event_ForceInflicted
+struct EvFeelForce
 {
-	GameEntity mInflictor;
-	int		 mType;
+	typedef MessageT<EvFeelForce, JA_MSG_FEELFORCE> Msg;
+
+	GameEntity		mInflictor;
+	JA_ForcePower	mPower;
 };
 
 #pragma pack(pop)

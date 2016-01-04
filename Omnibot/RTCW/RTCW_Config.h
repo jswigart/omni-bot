@@ -15,7 +15,7 @@
 
 #include "Omni-Bot_Events.h"
 
-typedef enum eRTCW_Version
+enum RTCW_Version
 {
 	RTCW_VERSION_0_7_beta = 1,
 	RTCW_VERSION_0_7,
@@ -24,55 +24,9 @@ typedef enum eRTCW_Version
 	RTCW_VERSION_0_83,
 	RTCW_VERSION_LAST,
 	RTCW_VERSION_LATEST = RTCW_VERSION_LAST - 1
-} RTCW_Version;
+};
 
-typedef enum eRTCW_Events
-{
-	RTCW_EVENT_BEGIN = EVENT_NUM_EVENTS,
-	RTCW_EVENT_DROWNING,
-	RTCW_EVENT_RECIEVEDAMMO,
-	RTCW_EVENT_END
-} RTCW_Event;
-
-typedef enum eRTCW_Msgs
-{
-	RTCW_MSG_BEGIN = MSG_END,
-
-	// actions
-	RTCW_MSG_GOTOLIMBO,
-
-	// misc query sutff
-	RTCW_MSG_ISMEDICNEAR,
-	RTCW_MSG_REINFORCETIME,
-
-	RTCW_MSG_GETGUNHEALTH,
-	RTCW_MSG_GETGUNHEAT,
-	RTCW_MSG_ISGUNMOUNTED,
-	RTCW_MSG_ISGUNREPAIRABLE,
-	RTCW_MSG_MOUNTEDMG42INFO,
-
-	// weapon query stuff
-	RTCW_MSG_WPOVERHEATED,
-	RTCW_MSG_PICKWEAPON,
-	RTCW_MSG_PICKWEAPON2,
-	RTCW_MSG_GETHINT,
-	RTCW_MSG_CHANGESPAWNPOINT,
-
-	// goal query stuff
-	RTCW_MSG_GHASFLAG,
-	RTCW_MSG_GDYNDESTROYABLE,		// check if goal can be destroyed by dynamite
-	RTCW_MSG_GEXPLOSIVESTATE,		// check if state of an explosive
-	RTCW_MSG_GCANBEGRABBED,		// check if an entity can be grabbed
-	RTCW_MSG_SENDPM,
-	RTCW_MSG_GETSPAWNPOINT,
-	RTCW_MSG_SETSUICIDE,
-	RTCW_MSG_DISABLEBOTPUSH,
-	RTCW_MSG_GETPLAYERCLASS,
-
-	RTCW_MSG_END
-} RTCW_Msg;
-
-typedef enum eRTCW_Weapons
+enum RTCW_Weapon
 {
 	RTCW_WP_UNKNOWN = INVALID_WEAPON,
 	RTCW_WP_NONE = INVALID_WEAPON,
@@ -107,9 +61,9 @@ typedef enum eRTCW_Weapons
 	RTCW_WP_SHOTGUN,			// 28
 
 	RTCW_WP_MAX
-} RTCW_Weapon;
+};
 
-typedef enum eRTCW_PlayerClass
+enum RTCW_PlayerClass
 {
 	RTCW_CLASS_UNKNOWN = 0,
 	RTCW_CLASS_NULL = 0,
@@ -140,19 +94,19 @@ typedef enum eRTCW_PlayerClass
 	RTCW_CLASSEX_WEAPON_LAST = RTCW_CLASSEX_WEAPON+RTCW_WP_MAX,
 
 	RTCW_NUM_CLASSES
-} RTCW_PlayerClass;
+};
 
 // typedef: RTCW_Team
 //		The available teams for this gametype.
-typedef enum eRTCW_Team
+enum RTCW_Team
 {
 	RTCW_TEAM_NONE = OB_TEAM_NONE,
 	RTCW_TEAM_AXIS,
 	RTCW_TEAM_ALLIES,
 	RTCW_TEAM_MAX
-} RTCW_Team;
+};
 
-typedef enum eRTCW_EntityFlags
+enum RTCW_EntityFlags
 {
 	// bit: RTCW_ENT_FLAG_MNT_MG42
 	//		Currently mounted on an MG42
@@ -178,11 +132,11 @@ typedef enum eRTCW_EntityFlags
 	// bit: RTCW_ENT_FLAG_INJURED
 	//		This entity is injured
 	RTCW_ENT_FLAG_INJURED,
-} RTCW_EntityFlags;
+};
 
 //////////////////////////////////////////////////////////////////////////
 
-typedef enum eCursorHintType
+enum CursorHintType
 {
 	CURSOR_HINT_NONE,
 	CURSOR_HINT_PLAYER,
@@ -231,22 +185,22 @@ typedef enum eCursorHintType
 	CURSOR_HINT_TANK,
 	CURSOR_HINT_SATCHELCHARGE,
 	CURSOR_HINT_LOCKPICK
-} CursorHintType;
+};
 
-typedef enum eExplosiveTargetType
+enum ExplosiveTargetType
 {
 	XPLO_TYPE_DYNAMITE	= 1<<0,
 	XPLO_TYPE_SATCHEL	= 1<<1
-} ExplosiveTargetType;
+};
 
-typedef enum eExplosiveState
+enum ExplosiveState
 {
 	XPLO_INVALID			= -1,
 	XPLO_ARMED				= 0,
 	XPLO_UNARMED			= 1,
-} ExplosiveState;
+};
 
-typedef enum eConstructableState
+enum ConstructableState
 {
 	CONST_INVALID			= -1,
 
@@ -257,9 +211,9 @@ typedef enum eConstructableState
 	CONST_DESTROYABLE		= 1,
 
 	CONST_BROKEN			= 2,
-} ConstructableState;
+};
 
-typedef enum eRTCW_Powerups
+enum RTCW_Powerups
 {
 	RTCW_PWR_INVULNERABLE = PWR_FIRST_USER,
 	RTCW_PWR_FIRE,
@@ -269,6 +223,44 @@ typedef enum eRTCW_Powerups
 	RTCW_PWR_REDFLAG,
 	RTCW_PWR_BLUEFLAG,
 	RTCW_PWR_BALL,
-} RTCW_Powerups;
+};
+
+struct ParamsMG42Info
+{
+	float	 mCenterFacing[ 3 ];
+	float	 mMinHorizontalArc, mMaxHorizontalArc;
+	float	 mMinVerticalArc, mMaxVerticalArc;
+};
+
+class RTCW_Interface : public IEngineInterface
+{
+public:
+	virtual bool SendPrivateMessage( GameEntity ent, const char* toName, const char * message ) = 0;
+	virtual bool IsWeaponOverheated( GameEntity ent, RTCW_Weapon weapon ) = 0;
+	virtual void GetMountedGunHeat( GameEntity ent, const GameEntity gun, int &cur, int &max ) = 0;
+	virtual ExplosiveState GetExplosiveState( GameEntity ent, const GameEntity dynamite ) = 0;
+	virtual ConstructableState IsDestroyable( GameEntity ent, const GameEntity other ) = 0;
+	virtual bool HasFlag( GameEntity ent ) = 0;
+	virtual bool ItemCanBeGrabbed( GameEntity ent, const GameEntity item ) = 0;
+	virtual void NumTeamMines( GameEntity ent, int &current, int &max ) = 0;
+	virtual bool SelectPrimaryWeapon( GameEntity ent, RTCW_Weapon weapon ) = 0;
+	virtual bool SelectSecondaryWeapon( GameEntity ent, RTCW_Weapon weapon ) = 0;
+	virtual float GetReinforceTime( GameEntity ent ) = 0;
+	virtual bool IsMedicNear( GameEntity ent ) = 0;
+	virtual bool GoToLimbo( GameEntity ent ) = 0;
+	virtual GameEntity GetMountedPlayerOnMG42( GameEntity ent, const GameEntity gun ) = 0;
+	virtual bool IsMountableGunRepairable( GameEntity ent, GameEntity gun ) = 0;
+	virtual int GetGunHealth( GameEntity ent, const GameEntity gun ) = 0;
+	virtual void GetCurrentCursorHint( GameEntity ent, int &type, int &val ) = 0;
+	virtual bool CanSnipe( GameEntity ent ) = 0;
+	virtual void ChangeSpawnPoint( GameEntity ent, int _spawnpoint ) = 0;
+	virtual bool GetMg42Properties( GameEntity ent, ParamsMG42Info &data ) = 0;
+	virtual int GetSpawnPoint( GameEntity ent ) = 0;
+	virtual void SetSuicide( GameEntity ent, int sui, int pers ) = 0;
+	virtual void DisableBotPush( GameEntity ent, int push ) = 0;
+	virtual int GetPlayerClass( GameEntity ent ) = 0;
+};
+
+extern RTCW_Interface* gRTCWFuncs;
 
 #endif

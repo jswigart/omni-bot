@@ -28,24 +28,6 @@ typedef enum eD3_Version
 	D3_VERSION_LATEST
 } D3_Version;
 
-// typedef: D3_Events
-//		Defines the events specific to the game, numbered starting at the end of
-//		the global events.
-typedef enum eD3_Events
-{
-	D3_EVENT_BEGIN = EVENT_NUM_EVENTS,
-	D3_EVENT_END
-} D3_Events;
-
-// typedef: D3_GameEvents
-//		Events that allow the bot to query for information from the game.
-typedef enum eD3_GameMessage
-{
-	D3_MSG_START = MSG_END,
-	D3_MSG_GETLOCATION,
-	D3_MSG_END
-} D3_GameMessage;
-
 // enumerations: D3_Weapon
 //		D3_WP_FLASHLIGHT - Flashlight
 //		D3_WP_FISTS - Punch.
@@ -94,7 +76,7 @@ typedef enum eD3_PlayerClass_enum
 
 	// weapon pickups
 	D3_CLASSEX_WEAPON,
-	D3_CLASSEX_WEAPON_LAST = D3_CLASSEX_WEAPON+D3_WP_MAX,
+	D3_CLASSEX_WEAPON_LAST = D3_CLASSEX_WEAPON + D3_WP_MAX,
 
 	// projectiles
 	D3_CLASSEX_GRENADE,
@@ -186,5 +168,12 @@ typedef enum eD3_Powerups
 	D3_PWR_REDFLAG,
 	D3_PWR_BLUEFLAG,
 } D3_Powerups;
+
+class Doom3_Interface : public IEngineInterface
+{
+public:
+};
+
+extern Doom3_Interface* gDoom3Funcs;
 
 #endif

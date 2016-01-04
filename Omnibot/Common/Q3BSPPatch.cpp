@@ -20,10 +20,6 @@
 //##  Contact John W. Ratcliff at jratcliff@verant.com                      ##
 //############################################################################
 
-
-#include "AssimpPCH.h"
-#ifndef ASSIMP_BUILD_NO_Q3BSP_IMPORTER
-
 #include "Q3BSPPatch.h"
 
 #define LEVEL_WIDTH(lvl) ((1 << (lvl+1)) + 1)
@@ -94,8 +90,8 @@ Q3BSPPatchSurface::Q3BSPPatchSurface( const Q3BSPPatchVertex *cp,
 
 	if ( 1 )
 	{
-		mIndices = new unsigned short[ mCount ];
-		unsigned short *foo = mIndices;
+		mIndices = new unsigned int[ mCount ];
+		unsigned int *foo = mIndices;
 		for ( int y = 0; y < sizey - 1; ++y )
 		{
 			for ( int x = 0; x < sizex - 1; ++x )
@@ -109,6 +105,7 @@ Q3BSPPatchSurface::Q3BSPPatchSurface( const Q3BSPPatchVertex *cp,
 				*foo++ = ( y + 1 )*sizex + x + 1;
 			}
 		}
+		delete [] mIndices;
 	}
 }
 
@@ -132,13 +129,12 @@ bool Q3BSPPatchSurface::FindSize( int controlx, int controly, const Q3BSPPatchVe
 	{
 		for ( int u = 0; u < controlx; u += 2 )
 		{
-
 			a = &cp[ v * controlx + u ];
 			b = &cp[ v * controlx + u + 2 ];
 
-			if ( a->mPos.x != b->mPos.x ||
-				a->mPos.y != b->mPos.y ||
-				a->mPos.z != b->mPos.z )
+			if ( a->mPos.X() != b->mPos.X() ||
+				a->mPos.Y() != b->mPos.Y() ||
+				a->mPos.Z() != b->mPos.Z() )
 			{
 				found = true;
 				break;
@@ -166,9 +162,9 @@ bool Q3BSPPatchSurface::FindSize( int controlx, int controly, const Q3BSPPatchVe
 			a = &cp[ v * controlx + u ];
 			b = &cp[ ( ( v + 2 ) * controlx ) + u ];
 
-			if ( a->mPos.x != b->mPos.x ||
-				a->mPos.y != b->mPos.y ||
-				a->mPos.z != b->mPos.z )
+			if ( a->mPos.X() != b->mPos.X() ||
+				a->mPos.Y() != b->mPos.Y() ||
+				a->mPos.Z() != b->mPos.Z() )
 			{
 				found = true;
 				break;
@@ -191,16 +187,13 @@ bool Q3BSPPatchSurface::FindSize( int controlx, int controly, const Q3BSPPatchVe
 }
 
 
-int Q3BSPPatchSurface::FindLevel( const aiVector3D &cv0,
-	const aiVector3D &cv1,
-	const aiVector3D &cv2 ) const
+int Q3BSPPatchSurface::FindLevel( const Vector3f &cv0, const Vector3f &cv1, const Vector3f &cv2 ) const
 {
 	int level;
-	aiVector3D a, b, dist;
-
-	aiVector3D v0 = cv0; // init control points.
-	aiVector3D v1 = cv1;
-	aiVector3D v2 = cv2;
+	Vector3f a, b, dist;
+	Vector3f v0 = cv0; // init control points.
+	Vector3f v1 = cv1;
+	Vector3f v2 = cv2;
 
 	/* Subdivide on the left until tolerance is reached */
 	for ( level = 0; level < MAXMESHLEVEL - 1; level++ )
@@ -213,8 +206,9 @@ int Q3BSPPatchSurface::FindLevel( const aiVector3D &cv0,
 		/* Find distance moved */
 		dist = v2 - v1;
 
-		float dist2 = dist.x*dist.x + dist.y*dist.y + dist.z*dist.z;
-		if ( dist2 < MINDIST ) break;
+		float dist2 = dist.X()*dist.X() + dist.Y()*dist.Y() + dist.Z()*dist.Z();
+		if ( dist2 < MINDIST )
+			break;
 
 		/* Insert new middle vertex */
 		v1 = a;
@@ -266,5 +260,3 @@ void Q3BSPPatchSurface::FillCurve( int numcp, int size, int stride, Q3BSPPatchVe
 		step /= 2;
 	}
 }
-
-#endif

@@ -27,9 +27,6 @@
     <ClCompile Include="..\..\..\RTCW\RTCW_Game.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\RTCW\RTCW_InterfaceFuncs.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\RTCW\RTCW_VoiceMacros.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -59,9 +56,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\RTCW\RTCW_Game.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\RTCW\RTCW_InterfaceFuncs.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\RTCW\RTCW_Messages.h">

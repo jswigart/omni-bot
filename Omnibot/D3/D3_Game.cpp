@@ -17,6 +17,8 @@
 #include "BotSensoryMemory.h"
 #include "BotTargetingSystem.h"
 
+Doom3_Interface* gDoom3Funcs = 0;
+
 IGame *CreateGameInstance()
 {
 	return new D3_Game;
@@ -49,6 +51,8 @@ bool D3_Game::Init( System & system )
 
 	if ( !IGame::Init( system ) )
 		return false;
+
+	gDoom3Funcs = dynamic_cast<Doom3_Interface*>(gEngineFuncs);
 
 	return true;
 }

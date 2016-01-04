@@ -8,13 +8,14 @@
 
 #include "Q4_Game.h"
 #include "Q4_Client.h"
-#include "Q4_InterfaceFuncs.h"
 
 #include "System.h"
 
 #include "PathPlannerBase.h"
 #include "FilterSensory.h"
 #include "ScriptManager.h"
+
+Quake4_Interface* gQuake4Funcs = 0;
 
 IGame *CreateGameInstance()
 {
@@ -47,6 +48,8 @@ bool Q4_Game::Init( System & system )
 	if ( !IGame::Init( system ) )
 		return false;
 
+	gQuake4Funcs = dynamic_cast<Quake4_Interface*>(gEngineFuncs);
+
 	return true;
 }
 
@@ -61,12 +64,12 @@ void Q4_Game::StartGame()
 	}
 }
 
-void Q4_Game::AddBot( Msg_Addbot &_addbot, bool _createnow )
+void Q4_Game::AddBot( ParamsAddbot& addbot, bool createnow )
 {
-	IGame::AddBot( _addbot, false );
+	IGame::AddBot( addbot, false );
 }
 
-static const IntEnum Q4_TeamEnum [] =
+static const IntEnum Q4_TeamEnum[] =
 {
 	IntEnum( "SPECTATOR", OB_TEAM_SPECTATOR ),
 	IntEnum( "MARINE", Q4_TEAM_MARINE ),
@@ -79,7 +82,7 @@ void Q4_Game::GetTeamEnumeration( const IntEnum *&_ptr, int &num )
 	_ptr = Q4_TeamEnum;
 }
 
-static const IntEnum Q4_WeaponEnum [] =
+static const IntEnum Q4_WeaponEnum[] =
 {
 	IntEnum( "NONE", Q4_WP_NONE ),
 	IntEnum( "BLASTER", Q4_WP_BLASTER ),
@@ -102,7 +105,7 @@ void Q4_Game::GetWeaponEnumeration( const IntEnum *&_ptr, int &num )
 	_ptr = Q4_WeaponEnum;
 }
 
-static const IntEnum gClassMapping [] =
+static const IntEnum gClassMapping[] =
 {
 	IntEnum( "PLAYER", Q4_CLASS_PLAYER ),
 	IntEnum( "ANYPLAYER", Q4_CLASS_ANY ),

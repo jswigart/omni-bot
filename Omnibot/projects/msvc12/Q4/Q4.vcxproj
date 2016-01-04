@@ -116,7 +116,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     </ClCompile>
     <ClCompile Include="..\..\..\Q4\Q4_Client.cpp" />
     <ClCompile Include="..\..\..\Q4\Q4_Game.cpp" />
-    <ClCompile Include="..\..\..\Q4\Q4_InterfaceFuncs.cpp" />
     <ClCompile Include="..\..\..\Q4\gmQ4Binds.cpp" />
     <ClCompile Include="..\..\..\Q4\Q4_BaseStates.cpp" />
   </ItemGroup>
@@ -127,7 +126,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ClInclude Include="..\..\..\Q4\Q4_Client.h" />
     <ClInclude Include="..\..\..\Q4\Q4_Config.h" />
     <ClInclude Include="..\..\..\Q4\Q4_Game.h" />
-    <ClInclude Include="..\..\..\Q4\Q4_InterfaceFuncs.h" />
     <ClInclude Include="..\..\..\Q4\Q4_Messages.h" />
     <ClInclude Include="..\..\..\Q4\Q4_BaseStates.h" />
   </ItemGroup>

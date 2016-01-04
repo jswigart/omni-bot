@@ -426,6 +426,7 @@ void IGame::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "MINE_ARMED", gmVariable( MSG_MINE_ARMED ) );
 	_table->Set( _machine, "MINE_DETONATE", gmVariable( MSG_MINE_DETONATE ) );
 	_table->Set( _machine, "MORTAR_IMPACT", gmVariable( MSG_MORTAR_IMPACT ) );
+	_table->Set( _machine, "DROWNING", gmVariable( MSG_DROWNING ) );
 }
 
 void IGame::InitScriptCategories( gmMachine *_machine, gmTableObject *_table )
@@ -444,6 +445,7 @@ void IGame::InitScriptCategories( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "AUTODEFENSE", gmVariable( ENT_CAT_AUTODEFENSE ) );
 	_table->Set( _machine, "OBSTACLE", gmVariable( ENT_CAT_OBSTACLE ) );
 	_table->Set( _machine, "PROP_PUSHABLE", gmVariable( ENT_CAT_PROP_PUSHABLE ) );
+	_table->Set( _machine, "BUILDABLE", gmVariable( ENT_CAT_BUILDABLE ) );	
 }
 
 static const IntEnum gGroupMapping [] =

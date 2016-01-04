@@ -122,7 +122,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     </ClCompile>
     <ClCompile Include="..\..\..\RTCW\RTCW_Client.cpp" />
     <ClCompile Include="..\..\..\RTCW\RTCW_Game.cpp" />
-    <ClCompile Include="..\..\..\RTCW\RTCW_InterfaceFuncs.cpp" />
     <ClCompile Include="..\..\..\RTCW\RTCW_VoiceMacros.cpp" />
     <ClCompile Include="..\..\..\RTCW\RTCW_FilterClosest.cpp" />
     <ClCompile Include="..\..\..\RTCW\gmRTCWBinds.cpp" />
@@ -138,7 +137,6 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <ClInclude Include="..\..\..\RTCW\RTCW_Client.h" />
     <ClInclude Include="..\..\..\RTCW\RTCW_Config.h" />
     <ClInclude Include="..\..\..\RTCW\RTCW_Game.h" />
-    <ClInclude Include="..\..\..\RTCW\RTCW_InterfaceFuncs.h" />
     <ClInclude Include="..\..\..\RTCW\RTCW_Messages.h" />
     <ClInclude Include="..\..\..\RTCW\RTCW_VoiceMacros.h" />
     <ClInclude Include="..\Common\resource.h" />

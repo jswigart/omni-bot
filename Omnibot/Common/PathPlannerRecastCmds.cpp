@@ -587,7 +587,7 @@ void PathPlannerRecast::cmdModelDynamic( const StringVector & args )
 
 	const char *strUsage [] =
 	{
-		"nav_modelmover enable[bool] all[bool]<optional>",
+		"nav_modeldynamic enable[bool] all[bool]<optional>",
 		"> enable: Enable/Disable movement detection of current model to rebake navigation",
 	};
 

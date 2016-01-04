@@ -8,7 +8,6 @@
 
 #include "D3_Client.h"
 #include "D3_Messages.h"
-#include "D3_InterfaceFuncs.h"
 
 #include "RenderBuffer.h"
 
