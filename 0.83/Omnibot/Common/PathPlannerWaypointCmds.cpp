@@ -248,7 +248,6 @@ void PathPlannerWaypoint::cmdWaypointSave(const StringVector &_args)
 	{
 		EngineFuncs::ConsoleMessage("Saved Waypoints.");
 		BuildBlockableList();
-		BuildFlagMap();
 		BuildSpatialDatabase();
 	}
 	else
@@ -552,7 +551,6 @@ void PathPlannerWaypoint::cmdWaypointAutoBuild(const StringVector &_args)
 	EngineFuncs::ConsoleMessage(va("Generated %d Paths, %d ray casts", iNumConnected, iNumRayCasts));
 
 	BuildBlockableList();
-	BuildFlagMap();
 }
 
 void PathPlannerWaypoint::cmdWaypointDisconnectAll(const StringVector &_args)
@@ -568,7 +566,6 @@ void PathPlannerWaypoint::cmdWaypointDisconnectAll(const StringVector &_args)
 	}
 
 	BuildBlockableList();
-	BuildFlagMap();
 	BuildSpatialDatabase();
 }
 
@@ -1548,7 +1545,6 @@ void PathPlannerWaypoint::cmdWaypointAddFlag_Helper(const StringVector &_args, W
 					}
 
 					BuildBlockableList();
-					BuildFlagMap();
 					BuildSpatialDatabase();
 				}
 				bPrintFlagList = false;

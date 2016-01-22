@@ -353,7 +353,6 @@ static int GM_CDECL gmfSetWaypointFlag(gmThread *a_thread)
 
 	if(flag & PathPlannerWaypoint::m_BlockableMask)
 		pWp->BuildBlockableList();
-	pWp->BuildFlagMap();
 	return GM_OK;
 }
 

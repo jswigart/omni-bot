@@ -659,34 +659,6 @@ bool PathPlannerWaypoint::GetNavFlagByName(const String &_flagname, NavFlags &_f
 	return false;
 }
 
-int PathPlannerWaypoint::_MarkGoalLocations(const NavFlags &_goal, const NavFlags &_team)
-{
-	++m_WaypointMark;
-
-	WaypointFlagMap::size_type iNumGoalPoints = m_WaypointFlagMap.count(_goal);
-
-	if(iNumGoalPoints > 0)
-	{
-		std::pair<WaypointFlagMap::const_iterator, WaypointFlagMap::const_iterator> pIt;
-		pIt = m_WaypointFlagMap.equal_range(_goal);
-
-		WaypointFlagMap::const_iterator it = pIt.first;
-		for( ; it != pIt.second; ++it)
-		{
-			if(it->second->IsFlagOn(F_NAV_TEAMONLY) && !it->second->IsFlagOn(_team))
-			{
-				--iNumGoalPoints;
-			}
-			else
-			{
-				// Mark it as a goal location.
-				it->second->m_Mark = m_WaypointMark;
-			}
-		}
-	}
-	return (int)iNumGoalPoints;
-}
-
 int PathPlannerWaypoint::PlanPathToNearest(Client *_client, const Vector3f &_start, const Vector3List &_goals, const NavFlags &_team)
 {
 	DestinationVector destlist;
@@ -1218,7 +1190,6 @@ bool PathPlannerWaypoint::Load(const String &_mapname, bool _dl)
 		//}
 
 		BuildBlockableList();
-		BuildFlagMap();
 		BuildSpatialDatabase();
 		return true;
 	}
@@ -1375,7 +1346,6 @@ void PathPlannerWaypoint::Unload()
 	m_SelectedWaypoints.clear();
 	m_WaypointList.clear();
 	m_BlockableList.clear();
-	m_WaypointFlagMap.clear();
 }
 
 int PathPlannerWaypoint::_MarkWaypointsInRadius(const Vector3f &_pos, const NavFlags _team, int _flags)
@@ -1690,22 +1660,6 @@ void PathPlannerWaypoint::BuildBlockableList()
 	}
 
 	LOG("Found " << iNumBlockablePaths << " blockable paths");
-}
-
-void PathPlannerWaypoint::BuildFlagMap()
-{
-	m_WaypointFlagMap.clear();
-	WaypointList::const_iterator it = m_WaypointList.begin();
-	for(; it != m_WaypointList.end(); ++it)
-	{
-		Waypoint *pWaypoint = (*it);
-		FlagMap::const_iterator flagIt = m_WaypointFlags.begin();
-		for(; flagIt != m_WaypointFlags.end(); ++flagIt)
-		{
-			if(pWaypoint->IsFlagOn(flagIt->second))
-				m_WaypointFlagMap.insert(std::make_pair(flagIt->second, pWaypoint));
-		}        
-	}
 }
 
 //void PathPlannerWaypoint::BuildVisTable()

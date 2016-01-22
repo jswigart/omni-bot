@@ -189,7 +189,6 @@ public:
 	static NavFlags			m_CallbackFlags;
 	static NavFlags			m_BlockableMask;
 
-	void BuildFlagMap();
 	//void BuildVisTable();
 	void BuildBlockableList();
 
@@ -204,7 +203,6 @@ public:
 	virtual ~PathPlannerWaypoint();
 protected:
 	WaypointList		m_WaypointList;	
-	WaypointFlagMap		m_WaypointFlagMap;
 	ConnectionList		m_BlockableList;
 	WaypointList		m_SelectedWaypoints;
 
@@ -364,7 +362,6 @@ protected:
 
 	obuint32 m_WaypointMark;
 	obuint32 m_GoalIndex;
-	int _MarkGoalLocations(const NavFlags &_goal, const NavFlags &_team);
 	int _MarkWaypointsInRadius(const Vector3f &_pos, const NavFlags _team, int _flags);
 
 	bool _ConnectWaypoints(Waypoint *_wp1, Waypoint *_wp2);
