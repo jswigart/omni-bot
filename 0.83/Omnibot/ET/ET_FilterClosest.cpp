@@ -24,6 +24,7 @@ bool ET_FilterClosest::CheckEx(const MemoryRecord &_record)
 	{
 	case ET_CLASSEX_VEHICLE_HVY:
 		{
+			if(m_Client->GetWeaponSystem()->GetCurrentWeaponID() == ET_WP_MOBILE_MG42_SET) return false;
 			break;
 		}
 	case ET_CLASSEX_MG42MOUNT:
