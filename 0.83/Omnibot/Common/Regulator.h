@@ -18,8 +18,8 @@ class Regulator
 public:
 
 	bool IsReady();
-	void SetMsInterval(int _msInterval) { m_UpdateInterval = _msInterval; }
-	void SetTickRate(int _hz) { m_UpdateInterval = 1000 / _hz; }
+	void SetMsInterval(int _msInterval) { m_NextUpdateTime += _msInterval - m_UpdateInterval;  m_UpdateInterval = _msInterval; }
+	void SetTickRate(int _hz) { SetMsInterval(1000 / _hz); }
 	int GetInterval() const { return m_UpdateInterval; }
 
 	Regulator(int _msInterval = 0) :

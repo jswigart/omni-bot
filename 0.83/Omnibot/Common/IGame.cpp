@@ -656,11 +656,16 @@ void IGame::UpdateGame()
 
 	if(m_GameFrame > 0)
 	{
-		if(m_SettingLimiter && m_SettingLimiter->IsReady())
+		if(m_SettingLimiter && m_SettingLimiter->IsReady()){
+			m_PlayersChanged = false;
+			m_SettingLimiter->SetMsInterval(2000);
 			CheckServerSettings(true);
-		else if(m_PlayersChanged)
+		}
+		else if(m_PlayersChanged){
+			m_PlayersChanged = false;
+			if(m_SettingLimiter) m_SettingLimiter->SetMsInterval(500);
 			CheckServerSettings(false);
-		m_PlayersChanged = false;
+		}
 	}
 
 
