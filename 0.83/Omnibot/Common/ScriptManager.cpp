@@ -551,7 +551,10 @@ bool ScriptManager::ExecuteFile(const filePath &_file, int &_threadId, gmVariabl
 			LOG("Running script: " << _file)
 			if(fileSize>0)
 			{
-				int errors = m_ScriptEngine->ExecuteString(pBuffer.get(), &_threadId, true, _file, _this);
+				const char *s = pBuffer.get();
+				if(s[0]=='\xEF' && s[1]=='\xBB' && s[2]=='\xBF') s+=3; //UTF-8 BOM
+
+				int errors = m_ScriptEngine->ExecuteString(s, &_threadId, true, _file, _this);
 				if(errors)
 				{
 					bool b = IsScriptDebugEnabled();
