@@ -1752,7 +1752,9 @@ Waypoint *PathPlannerWaypoint::AddWaypoint(const Vector3f &_pos, const Vector3f 
 	BitFlag64 entFlags;
 	if(InterfaceFuncs::GetEntityFlags(g_EngineFuncs->EntityFromID(Utils::GetLocalGameId()), entFlags))
 	{
-		if(entFlags.CheckFlag(ENT_FLAG_CROUCHED))
+		if(entFlags.CheckFlag(ENT_FLAG_PRONED))
+			pNewWaypoint->AddFlag(F_NAV_PRONE);
+		else if(entFlags.CheckFlag(ENT_FLAG_CROUCHED))
 			pNewWaypoint->AddFlag(F_NAV_CROUCH);
 
 		if(entFlags.CheckFlag(ENT_FLAG_INWATER))
