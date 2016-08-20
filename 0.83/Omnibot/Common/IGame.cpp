@@ -53,6 +53,7 @@ IGame::IGame()
 	, m_NumDeletedThreads(0)
 	, m_WeaponClassIdStart(0)
 	, m_bDrawBlockableTests	(false)
+	, m_PlayersChanged(true)
 {
 }
 
@@ -654,21 +655,6 @@ void IGame::UpdateGame()
 
 	CheckGameState();
 
-	if(m_GameFrame > 0)
-	{
-		if(m_SettingLimiter && m_SettingLimiter->IsReady()){
-			m_PlayersChanged = false;
-			m_SettingLimiter->SetMsInterval(2000);
-			CheckServerSettings(true);
-		}
-		else if(m_PlayersChanged){
-			m_PlayersChanged = false;
-			if(m_SettingLimiter) m_SettingLimiter->SetMsInterval(500);
-			CheckServerSettings(false);
-		}
-	}
-
-
 	// Check if we're dead or alive so we know what update function to call.
 	if(m_StateRoot)
 	{
@@ -1160,6 +1146,21 @@ void IGame::UpdateTime()
 	int iCurrentTime = g_EngineFuncs->GetGameTime();
 	m_DeltaMsec = iCurrentTime - m_GameMsec;
 	m_GameMsec = iCurrentTime;
+
+	if(m_GameFrame > 0)
+	{
+		//initialize player info
+		if(m_SettingLimiter && m_SettingLimiter->IsReady()){
+			m_PlayersChanged = false;
+			m_SettingLimiter->SetMsInterval(2000);
+			CheckServerSettings(true); //execute ManagePlayers
+		}
+		else if(m_PlayersChanged){
+			m_PlayersChanged = false;
+			if(m_SettingLimiter) m_SettingLimiter->SetMsInterval(500);
+			CheckServerSettings(false); //update the Server table
+		}
+	}
 }
 
 void IGame::CheckServerSettings(bool managePlayers)
