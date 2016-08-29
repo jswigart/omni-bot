@@ -21,6 +21,7 @@
 
 int ET_Game::CLASSEXoffset;
 bool ET_Game::IsETBlight, ET_Game::IsBastardmod, ET_Game::IsNoQuarter;
+bool ET_Game::m_WatchForMines;
 
 IGame *CreateGameInstance()
 {
@@ -128,6 +129,7 @@ bool ET_Game::Init()
 	IsBastardmod = !strcmp(modName, "bastardmod");
 	IsNoQuarter = !strcmp(modName, "noquarter") && IGameManager::GetInstance()->GetInterfaceVersionNum() <= ET_VERSION_0_71;
 	CLASSEXoffset = IsETBlight ? 2 : 0;
+	m_WatchForMines = false;
 
 	AiState::FollowPath::m_OldLadderStyle = false;
 
@@ -136,6 +138,7 @@ bool ET_Game::Init()
 	AiState::SensoryMemory::SetEntityAimOffsetCallback(ET_Game::ET_GetEntityClassAimOffset);
 	AiState::SensoryMemory::SetEntityVisDistanceCallback(ET_Game::ET_GetEntityVisDistance);
 	AiState::SensoryMemory::SetCanSensoreEntityCallback(ET_Game::ET_CanSensoreEntity);
+	AiState::SensoryMemory::m_pfnAddSensorCategory = ET_Game::ET_AddSensorCategory;
 
 	InitWeaponEnum();
 
@@ -680,15 +683,21 @@ const float ET_Game::ET_GetEntityClassAvoidRadius(const int _class)
 	return 0.0f;
 }
 
+void ET_Game::ET_AddSensorCategory(BitFlag32 category)
+{
+	if(category.CheckFlag(ET_ENT_CAT_MINE)) m_WatchForMines = true;
+}
+
 const bool ET_Game::ET_CanSensoreEntity(const EntityInstance &_ent)
 {
-	if( (((1<<ENT_CAT_PICKUP_HEALTH)|(1<<ENT_CAT_PICKUP_AMMO)|(1<<ENT_CAT_PICKUP_WEAPON)|(1<<ENT_CAT_PROJECTILE)|(1<<ENT_CAT_SHOOTABLE))
+	if((((1<<ENT_CAT_PICKUP_HEALTH)|(1<<ENT_CAT_PICKUP_AMMO)|(1<<ENT_CAT_PICKUP_WEAPON)|(1<<ENT_CAT_PROJECTILE)|(1<<ENT_CAT_SHOOTABLE)|(1<<ET_ENT_CAT_MINE))
 		& _ent.m_EntityCategory.GetRawFlags()) == 0)
 		return false;
 
 	int c =_ent.m_EntityClass - ET_Game::CLASSEXoffset;
 	return c<ET_CLASS_ANY || c!=ET_CLASSEX_GPG40_GRENADE && c!=ET_CLASSEX_M7_GRENADE && 
-		c!=ET_CLASSEX_ARTY && c!=ET_CLASSEX_SMOKEBOMB && c!=ET_CLASSEX_FLAMECHUNK && c!=ET_CLASSEX_ROCKET;
+		c!=ET_CLASSEX_ARTY && c!=ET_CLASSEX_SMOKEBOMB && c!=ET_CLASSEX_FLAMECHUNK && c!=ET_CLASSEX_ROCKET &&
+		(c!=ET_CLASSEX_MINE || m_WatchForMines);
 }
 
 void ET_Game::ClientJoined(const Event_SystemClientConnected *_msg)

@@ -738,6 +738,9 @@ namespace AiState
 		{
 			m_WatchEntities.m_Entry[i].Reset();
 		}
+
+		if(AiState::SensoryMemory::m_pfnAddSensorCategory) 
+			AiState::SensoryMemory::m_pfnAddSensorCategory(category);
 	}
 
 	void ScriptGoal::UpdateEntityInRadius()

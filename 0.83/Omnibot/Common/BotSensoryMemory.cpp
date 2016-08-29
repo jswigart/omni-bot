@@ -17,6 +17,7 @@ namespace AiState
 	SensoryMemory::pfnGetEntityOffset SensoryMemory::m_pfnGetAimOffset = NULL;
 	SensoryMemory::pfnGetEntityVisDistance SensoryMemory::m_pfnGetVisDistance = NULL;
 	SensoryMemory::pfnCanSensoreEntity SensoryMemory::m_pfnCanSensoreEntity = NULL;
+	SensoryMemory::pfnAddSensorCategory SensoryMemory::m_pfnAddSensorCategory = NULL;
 
 	SensoryMemory::SensoryMemory() : StateChild("SensoryMemory", UpdateDelay(Utils::HzToSeconds(10))),
 		m_MemorySpan(5000)

@@ -51,6 +51,9 @@ namespace AiState
 		// typedef: pfnCanSensoreEntity
 		//		Callback function for checking whether an entity can be shot or watched
 		typedef const bool (*pfnCanSensoreEntity)(const EntityInstance &_ent);
+		// typedef: pfnAddSensorCategory
+		//		Callback function which is called from WatchForEntityCategory
+		typedef void(*pfnAddSensorCategory)(BitFlag32 category);
 		//////////////////////////////////////////////////////////////////////////
 
 		enum DebugFlags
@@ -180,6 +183,8 @@ namespace AiState
 		int GetAllRecords(MemoryRecord *_records, int _max);
 
 		BitFlag32		m_DebugFlags;
+
+		static pfnAddSensorCategory	m_pfnAddSensorCategory;
 
 		SensoryMemory();
 		virtual ~SensoryMemory();

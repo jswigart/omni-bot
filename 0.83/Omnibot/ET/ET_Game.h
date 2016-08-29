@@ -58,6 +58,7 @@ public:
 
 	static int CLASSEXoffset;
 	static bool IsETBlight, IsBastardmod, IsNoQuarter;
+	static bool m_WatchForMines;
 
 	ET_Game() {};
 	virtual ~ET_Game() {};
@@ -83,6 +84,7 @@ protected:
 	static const float ET_GetEntityClassAimOffset(const int _class, const BitFlag64 &_entflags);
 	static const void ET_GetEntityVisDistance(float &_distance, const TargetInfo &_target, const Client *_client);
 	static const bool ET_CanSensoreEntity(const EntityInstance &_ent);
+	static void ET_AddSensorCategory(BitFlag32 category);
 	static const float ET_GetEntityClassAvoidRadius(const int _class);
 
 	StringBuffer m_ExtraWeaponNames;
