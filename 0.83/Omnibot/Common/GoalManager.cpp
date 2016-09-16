@@ -751,7 +751,7 @@ void GoalManager::cmdGoalDrawRoutes(const StringVector &_args)
 			break;
 		}
 	case 1:
-		EngineFuncs::ConsoleMessage("syntax: draw_goals on/off <optional goal name expression>");
+		EngineFuncs::ConsoleMessage("syntax: draw_goalroutes on/off <optional goal name expression>");
 		return;
 	}
 	

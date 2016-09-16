@@ -1487,11 +1487,14 @@ void MapGoal::DrawRoute(int _color, float _duration)
 	for(; cIt != cItEnd; ++cIt)
 	{
 		const Route &r = (*cIt);
-		planner->PlanPathToGoal(NULL,r.m_Start->GetPosition(),r.m_End->GetPosition(),0);
+		if(r.m_Start->m_AvailableTeams.AnyFlagSet() && r.m_End->m_AvailableTeams.AnyFlagSet())
+		{
+			planner->PlanPathToGoal(NULL,r.m_Start->GetPosition(),r.m_End->GetPosition(),0);
 
-		Path p;
-		planner->GetPath(p);
-		p.DebugRender(_color,_duration);
+			Path p;
+			planner->GetPath(p);
+			p.DebugRender(_color,_duration);
+		}
 	}
 }
 
