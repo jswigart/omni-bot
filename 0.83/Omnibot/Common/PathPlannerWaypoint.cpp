@@ -636,6 +636,16 @@ Waypoint *PathPlannerWaypoint::GetWaypointByName(const String &_name) const
 	return 0;
 }
 
+void PathPlannerWaypoint::GetWaypointsByExpr(const String &_expr, WaypointList &_list) const
+{
+	WaypointList::const_iterator cIt = m_WaypointList.begin(), cItEnd = m_WaypointList.end();
+	for(; cIt != cItEnd; ++cIt)
+	{
+		if((*cIt)->GetName().size()>0 && Utils::RegexMatch(_expr.c_str(), (*cIt)->GetName().c_str()))
+			_list.push_back(*cIt);
+	}
+}
+
 Waypoint *PathPlannerWaypoint::GetWaypointByGUID(obuint32 _uid) const
 {
 	WaypointList::const_iterator cIt = m_WaypointList.begin(), cItEnd = m_WaypointList.end();

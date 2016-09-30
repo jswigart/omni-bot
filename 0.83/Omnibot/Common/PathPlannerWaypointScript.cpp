@@ -296,28 +296,28 @@ static int GM_CDECL gmfSetWaypointFlag(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(3);
 
-	Waypoint *pWaypoint = 0;
 	PathPlannerWaypoint *pWp = GetWpPlanner();
-	if(pWp)
-	{
-		if(a_thread->ParamType(0) == GM_INT)
-		{
-			GM_CHECK_INT_PARAM(guid, 0);
-			pWaypoint = pWp->GetWaypointByGUID(guid);
-		} 
-		else if(a_thread->ParamType(0) == GM_STRING)
-		{
-			GM_CHECK_STRING_PARAM(name, 0);
-			pWaypoint = pWp->GetWaypointByName(name);
-		}		
-	}
-	else
+	if(!pWp)
 	{
 		GM_EXCEPTION_MSG("Wrong Path Planner");
 		return GM_EXCEPTION;
 	}
 
-	if(!pWaypoint)
+	PathPlannerWaypoint::WaypointList list;
+	if(a_thread->ParamType(0) == GM_INT)
+	{
+		GM_CHECK_INT_PARAM(guid, 0);
+		Waypoint *pWaypoint = pWp->GetWaypointByGUID(guid);
+		if(pWaypoint) list.push_back(pWaypoint);
+	} 
+	else if(a_thread->ParamType(0) == GM_STRING)
+	{
+		GM_CHECK_STRING_PARAM(name, 0);
+		Waypoint *pWaypoint = pWp->GetWaypointByName(name);
+		if(pWaypoint) list.push_back(pWaypoint);
+		else pWp->GetWaypointsByExpr(name, list);
+	}
+	if(list.size()==0)
 	{
 		GM_EXCEPTION_MSG("Invalid Waypoint specified in param 0");
 		return GM_EXCEPTION;
@@ -333,22 +333,23 @@ static int GM_CDECL gmfSetWaypointFlag(gmThread *a_thread)
 		return GM_EXCEPTION;
 	}
 
-	if(enable)
-		pWaypoint->AddFlag(flag);
-	else
-		pWaypoint->RemoveFlag(flag);
-	
-	if(!pWaypoint->IsAnyFlagOn(F_NAV_TEAM_ALL))
+	PathPlannerWaypoint::WaypointList::const_iterator cIt = list.begin(), cItEnd = list.end();
+	for(; cIt != cItEnd; ++cIt)
 	{
-		if(pWaypoint->IsFlagOn(F_NAV_TEAMONLY))
+		if(enable)
+			(*cIt)->AddFlag(flag);
+		else
+			(*cIt)->RemoveFlag(flag);
+
+		if(!(*cIt)->IsAnyFlagOn(F_NAV_TEAM_ALL))
 		{
-			pWaypoint->RemoveFlag(F_NAV_TEAMONLY);
+			(*cIt)->RemoveFlag(F_NAV_TEAMONLY);
 		}
-	} 
-	else
-	{
-		// At least one of them is on, so make sure the teamonly flag is set.
-		pWaypoint->AddFlag(F_NAV_TEAMONLY);
+		else
+		{
+			// At least one of them is on, so make sure the teamonly flag is set.
+			(*cIt)->AddFlag(F_NAV_TEAMONLY);
+		}
 	}
 
 	if(flag & PathPlannerWaypoint::m_BlockableMask)
