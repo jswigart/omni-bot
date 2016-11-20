@@ -769,6 +769,12 @@ static int GM_CDECL SetOrClearGoalRole(gmThread *a_thread, bool enable)
 	GM_CHECK_NUM_PARAMS(2);
 	GM_CHECK_STRING_PARAM(exp, 0);
 
+	int persis = 0;
+	if(enable){
+		GM_INT_PARAM(persis0, 2, 0);
+		persis=persis0;
+	}
+
 	obint32 roleInt = 0;
 	switch(a_thread->ParamType(1))
 	{
@@ -809,15 +815,12 @@ static int GM_CDECL SetOrClearGoalRole(gmThread *a_thread, bool enable)
 			(*it)->SetRoleMask(enable ? (oldRole | role) : (oldRole & ~role));
 		}
 	}
-	else
+	else if(!persis)
 	{
 		MapDebugPrint(a_thread, va("%s: goal query for %s has no results", enable ? "SetGoalRole" : "ClearGoalRole", exp));
 	}
 
-	if(enable){
-		GM_INT_PARAM(persis, 2, 0);
-		if(persis) MapGoal::SetPersistentRole(exp, role);
-	}
+	if(persis) MapGoal::SetPersistentRole(exp, role);
 	return GM_OK;
 }
 
