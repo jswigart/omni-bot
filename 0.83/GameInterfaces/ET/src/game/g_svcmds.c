@@ -554,59 +554,18 @@ void	Svcmd_EntityList_f (void) {
 			continue;
 		}
 		G_Printf("%3i:", e);
-		switch ( check->s.eType ) {
-		case ET_GENERAL:
-			G_Printf("ET_GENERAL          ");
-			break;
-		case ET_PLAYER:
-			G_Printf("ET_PLAYER           ");
-			break;
-		case ET_ITEM:
-			G_Printf("ET_ITEM             ");
-			break;
-		case ET_MISSILE:
-			G_Printf("ET_MISSILE          ");
-			break;
-		case ET_MOVER:
-			G_Printf("ET_MOVER            ");
-			break;
-		case ET_BEAM:
-			G_Printf("ET_BEAM             ");
-			break;
-		case ET_PORTAL:
-			G_Printf("ET_PORTAL           ");
-			break;
-		case ET_SPEAKER:
-			G_Printf("ET_SPEAKER          ");
-			break;
-		case ET_PUSH_TRIGGER:
-			G_Printf("ET_PUSH_TRIGGER     ");
-			break;
-		case ET_CONCUSSIVE_TRIGGER:
-			G_Printf("ET_CONCUSSIVE_TRIGGR");
-			break;
-		case ET_TELEPORT_TRIGGER:
-			G_Printf("ET_TELEPORT_TRIGGER ");
-			break;
-		case ET_INVISIBLE:
-			G_Printf("ET_INVISIBLE        ");
-			break;
-		case ET_EXPLOSIVE:
-			G_Printf("ET_EXPLOSIVE        ");
-			break;
-		case ET_EF_SPOTLIGHT:
-			G_Printf("ET_EF_SPOTLIGHT     ");
-			break;
-		case ET_ALARMBOX:
-			G_Printf("ET_ALARMBOX          ");
-			break;
-		case ET_OID_TRIGGER:
-			G_Printf("ET_OID_TRIGGER          ");
-			break;
-		default:
+
+		static char *typeName[] = {"ET_GENERAL", "ET_PLAYER", "ET_ITEM", "ET_MISSILE", "ET_MOVER", "ET_BEAM", "ET_PORTAL", "ET_SPEAKER", "ET_PUSH_TRIGGER", "ET_TELEPORT_TRIGGER", 
+			"ET_INVISIBLE", "ET_CONCUSSIVE_TRIGGER", "ET_OID_TRIGGER", "ET_EXPLOSIVE_INDICATOR", "ET_EXPLOSIVE", "ET_EF_SPOTLIGHT", "ET_ALARMBOX", "ET_CORONA", "ET_TRAP", "ET_GAMEMODEL", 
+			"ET_FOOTLOCKER", "ET_FLAMEBARREL", "ET_FP_PARTS", "ET_FIRE_COLUMN", "ET_FIRE_COLUMN_SMOKE", "ET_RAMJET", "ET_FLAMETHROWER_CHUNK", "ET_EXPLO_PART", "ET_PROP", "ET_AI_EFFECT", 
+			"ET_CAMERA", "ET_MOVERSCALED", "ET_CONSTRUCTIBLE_INDICATOR", "ET_CONSTRUCTIBLE", "ET_CONSTRUCTIBLE_MARKER", "ET_BOMB", "ET_WAYPOINT", "ET_BEAM_2", "ET_TANK_INDICATOR", "ET_TANK_INDICATOR_DEAD",
+			"ET_BOTGOAL_INDICATOR", "ET_CORPSE", "ET_SMOKER", "ET_TEMPHEAD", "ET_MG42_BARREL", "ET_TEMPLEGS", "ET_TRIGGER_MULTIPLE", "ET_TRIGGER_FLAGONLY", "ET_TRIGGER_FLAGONLY_MULTIPLE", 
+			"ET_GAMEMANAGER", "ET_AAGUN", "ET_CABINET_H", "ET_CABINET_A", "ET_HEALER", "ET_SUPPLIER", "ET_LANDMINE_HINT", "ET_ATTRACTOR_HINT", "ET_SNIPER_HINT", "ET_LANDMINESPOT_HINT", "ET_COMMANDMAP_MARKER", "ET_WOLF_OBJECTIVE", "ET_EVENTS"};
+
+		if(check->s.eType >= ET_GENERAL && check->s.eType <= ET_EVENTS)
+			G_Printf("%-19s ", typeName[check->s.eType]);
+		else
 			G_Printf("%3i                 ", check->s.eType);
-			break;
-		}
 
 		if ( check->classname ) {
 			G_Printf("%s   ", check->classname);
