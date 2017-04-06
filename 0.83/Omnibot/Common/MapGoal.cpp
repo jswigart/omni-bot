@@ -13,6 +13,7 @@
 #include "NavigationManager.h"
 #include "gmSchemaLib.h"
 #include "gmBot.h"
+#include "gmBotLibrary.h"
 
 #ifdef ENABLE_DEBUG_WINDOW
 #include <guichan.hpp>
@@ -2009,6 +2010,24 @@ static int gmfGetEntity(gmThread *a_thread)
 	return GM_OK;
 }
 
+static int gmfSetEntity(gmThread *a_thread)
+{
+	MapGoal *NativePtr = 0;
+	if(!gmBind2::Class<MapGoal>::FromThis(a_thread, NativePtr) || !NativePtr)
+	{
+		GM_EXCEPTION_MSG("Script Function on NULL MapGoal");
+		return GM_EXCEPTION;
+	}
+
+	GM_CHECK_NUM_PARAMS(1);
+	GameEntity gameEnt;
+	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
+	OBASSERT(gameEnt.IsValid(), "Bad Entity");
+
+	NativePtr->SetEntity(gameEnt);
+	return GM_OK;
+}
+
 static int gmfGetOwner(gmThread *a_thread)
 {
 	MapGoal *NativePtr = 0;
@@ -2364,7 +2383,8 @@ void MapGoal::Bind(gmMachine *_m)
 		.func(gmfMaxUsers_InUse,				"MaxUsers_InUse","Set the max number of 'inuse' users that can use the goal")
 
 		.func(gmfGetEntity,						"GetEntity","Get the entity of the goal, if any.")
-		.func(gmfGetOwner,						"GetOwner","Gets the entity owner of the goal, if any.")
+		.func(gmfSetEntity, "SetEntity", "Set the entity of the goal.")
+		.func(gmfGetOwner, "GetOwner", "Gets the entity owner of the goal, if any.")
 
 		.func(gmfCreateGuiFromSchema,						"CreateGuiFromSchema", "Create Gui elements for schema properties.")
 
