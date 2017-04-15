@@ -84,7 +84,7 @@ omnibot_error BotInitialise(IEngineInterface *_pEngineFuncs, int _version)
 	
 	if(result==BOT_ERROR_NONE)
 	{
-		EngineFuncs::ConsoleMessage(va("Bot Initialized in %.2f seconds.", loadTime.GetElapsedSeconds()));
+		EngineFuncs::ConsoleMessage(va("Omni-bot %s initialized in %.2f seconds.", g_GameManager->GetGame()->GetVersion(), loadTime.GetElapsedSeconds()));
 		LOG("Bot Initialized in " << loadTime.GetElapsedSeconds() << " seconds.");
 	}
 	return result;
