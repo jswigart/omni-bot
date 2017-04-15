@@ -54,6 +54,7 @@
 #include "TriggerManager.cpp"
 #include "Utilities.cpp"
 
+#if ENABLE_PATH_PLANNERS
 #include "PathPlannerRecast.cpp"
 #include "PathPlannerRecastCmds.cpp"
 #include "PathPlannerRecastScript.cpp"
@@ -67,6 +68,7 @@
 #include "PathPlannerNavMeshBuilder.cpp"
 #include "PathPlannerNavMeshCmds.cpp"
 #include "PathPlannerNavMeshScript.cpp"
+#endif
 
 #include "PathPlannerWaypoint.cpp"
 #include "PathPlannerWaypointCmds.cpp"

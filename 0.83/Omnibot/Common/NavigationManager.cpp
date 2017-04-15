@@ -35,6 +35,7 @@ bool NavigationManager::CreatePathPlanner(NavigatorID _navid)
 	case NAVID_WP:
 		m_PathPlanner = new PathPlannerWaypoint;		
 		break;
+#if ENABLE_PATH_PLANNERS
 	case NAVID_NAVMESH:
 		m_PathPlanner = new PathPlannerNavMesh;
 		break;
@@ -44,6 +45,7 @@ bool NavigationManager::CreatePathPlanner(NavigatorID _navid)
 	case NAVID_RECAST:
 		m_PathPlanner = new PathPlannerRecast;
 		break;
+#endif
 	default:
 		LOGERR("Unknown Path Planner!");
 	};
