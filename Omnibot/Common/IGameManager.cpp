@@ -245,7 +245,7 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *engineFuncs, int versi
 #endif
 		mBotSystem.mAnalytics = new GameAnalytics( analyticsKeys, this );
 
-		bool dbEnabled = false, remoteEnabled = false;;
+		bool dbEnabled = false, remoteEnabled = false;
 		if ( Options::GetValue( "Analytics", "SendToDatabase", dbEnabled ) )
 			mBotSystem.mAnalytics->CreateDatabase( "analytics.db" );
 		if ( Options::GetValue( "Analytics", "SendToRemote", remoteEnabled ) )

@@ -74,8 +74,12 @@ void FF_Game::GetNavParms( NavParms & navParms ) const
 {
 	navParms = NavParms();
 
+	static float agentRadius = 20.0f;
+	static float agentMaxClimb = 20.0f;
+
 	navParms.AgentHeightStand = 64.f;
 	navParms.AgentHeightCrouch = 24.f;
-	navParms.AgentRadius = 20.f;
+	navParms.AgentRadius = agentRadius;
+	navParms.AgentMaxClimb = agentMaxClimb;
 }
 

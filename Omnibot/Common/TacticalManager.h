@@ -24,7 +24,6 @@ struct EntityInstance;
 enum BehaviorGoal
 {
 	BEHAVIOR_NONE,
-	BEHAVIOR_KILL,
 	BEHAVIOR_PRESSBUTTON,
 	BEHAVIOR_RESUPPLY,
 	BEHAVIOR_GET_WEAPON,
@@ -33,6 +32,7 @@ enum BehaviorGoal
 	BEHAVIOR_CAP_FLAG,
 	BEHAVIOR_CAP_CONTROL_POINT,
 	BEHAVIOR_DEFEND,
+	BEHAVIOR_ATTACK,
 
 	BEHAVIOR_COUNT,
 };
@@ -128,6 +128,8 @@ public:
 	
 	size_t GetBehaviorsForUser( GameEntity ent, StimulusBehavior* behaviors, size_t maxBehaviors );
 
+	StimulusPtr HasStimulus( EntityGroup group, GameEntity entity );
+
 	TacticalManager();
 	virtual ~TacticalManager();
 protected:
@@ -137,8 +139,8 @@ protected:
 	void cmdShowTokens( const StringVector & args );
 	void cmdDrawCoverSegments( const StringVector & args );
 private:
-	StimulusUser				mUsers[ Constants::MAX_PLAYERS ];
-	StimulusPtr					mStimulus[ Constants::MAX_ENTITIES ];
+	std::vector<StimulusUser>	mUsers;
+	std::vector<StimulusPtr>	mStimulus;
 
 	CoverSegments				mCoverSegments;
 

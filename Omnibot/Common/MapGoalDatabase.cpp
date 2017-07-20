@@ -61,23 +61,16 @@ MapGoalDatabase::MapGoalDatabase()
 MapGoalDatabase::~MapGoalDatabase()
 {
 }
-//MapGoalPtr MapGoalDatabase::GetMapGoal(const std::string &_type)
-//{
-//	const uint32_t typeHash = Utils::Hash32(_type.c_str());
-//	MapGoalMap::const_iterator it = mMapGoalMap.find(typeHash);
-//	if(it != mMapGoalMap.end())
-//		return it->second;
-//	return MapGoalPtr();
-//}
+
 MapGoalPtr MapGoalDatabase::GetNewMapGoal( const std::string &_type )
 {
 	MapGoalPtr ptr;
 
-	const uint32_t typeHash = Utils::Hash32( _type.c_str() );
-	MapGoalMap::const_iterator it = mMapGoalMap.find( typeHash );
+	std::string goaltype = Utils::StringToLower( _type );
+	MapGoalMap::const_iterator it = mMapGoalMap.find( goaltype );
 	if ( it != mMapGoalMap.end() )
 	{
-		ptr.reset( new MapGoal( _type.c_str() ) );
+		ptr.reset( new MapGoal( goaltype.c_str() ) );
 		ptr->CopyFrom( it->second.get() );
 		ptr->SetSmartPtr( ptr );
 	}
@@ -90,11 +83,11 @@ MapGoalPtr MapGoalDatabase::GetNewMapGoal( const std::string &_type )
 
 void MapGoalDatabase::RegisterMapGoal( const std::string &_type, const MapGoalPtr &_mg )
 {
-	const uint32_t typeHash = Utils::Hash32( _type.c_str() );
-	MapGoalMap::const_iterator it = mMapGoalMap.find( typeHash );
+	std::string goaltype = Utils::StringToLower( _type );
+	MapGoalMap::const_iterator it = mMapGoalMap.find( goaltype );
 	if ( it == mMapGoalMap.end() )
 	{
-		mMapGoalMap.insert( std::make_pair( typeHash, _mg ) );
+		mMapGoalMap.insert( std::make_pair( goaltype, _mg ) );
 	}
 	else
 	{

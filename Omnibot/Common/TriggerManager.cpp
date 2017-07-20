@@ -254,11 +254,11 @@ public:
 			}
 			else
 			{
-				gmTableObject *tbl = vTriggerOnClass.GetTableObjectSafe();
-				if ( tbl )
+				gmTableObject *triggerTbl = vTriggerOnClass.GetTableObjectSafe();
+				if ( triggerTbl )
 				{
 					gmTableIterator tIt;
-					gmTableNode *pNode = tbl->GetFirst( tIt );
+					gmTableNode *pNode = triggerTbl->GetFirst( tIt );
 					while ( pNode )
 					{
 						if ( pNode->m_value.IsInt() )
@@ -273,7 +273,7 @@ public:
 								}
 							}
 						}
-						pNode = tbl->GetNext( tIt );
+						pNode = triggerTbl->GetNext( tIt );
 					}
 				}
 			}
@@ -287,18 +287,18 @@ public:
 			}
 			else
 			{
-				gmTableObject *tbl = vTriggerOnCategory.GetTableObjectSafe();
-				if ( tbl )
+				gmTableObject *triggerTbl = vTriggerOnCategory.GetTableObjectSafe();
+				if ( triggerTbl )
 				{
 					gmTableIterator tIt;
-					gmTableNode *pNode = tbl->GetFirst( tIt );
+					gmTableNode *pNode = triggerTbl->GetFirst( tIt );
 					while ( pNode )
 					{
 						if ( pNode->m_value.IsInt() )
 						{
 							mTriggerOnCategory.SetFlag( pNode->m_value.GetInt(), true );
 						}
-						pNode = tbl->GetNext( tIt );
+						pNode = triggerTbl->GetNext( tIt );
 					}
 				}
 			}
@@ -312,11 +312,11 @@ public:
 			}
 			else
 			{
-				gmTableObject *tbl = vTriggerOnEntity.GetTableObjectSafe();
-				if ( tbl )
+				gmTableObject *triggerTbl = vTriggerOnEntity.GetTableObjectSafe();
+				if ( triggerTbl )
 				{
 					gmTableIterator tIt;
-					gmTableNode *pNode = tbl->GetFirst( tIt );
+					gmTableNode *pNode = triggerTbl->GetFirst( tIt );
 					while ( pNode )
 					{
 						if ( pNode->m_value.IsEntity() )
@@ -328,7 +328,7 @@ public:
 									mTriggerOnEntity[ i ].FromInt( pNode->m_value.GetEntity() );
 								}
 						}
-						pNode = tbl->GetNext( tIt );
+						pNode = triggerTbl->GetNext( tIt );
 					}
 				}
 			}

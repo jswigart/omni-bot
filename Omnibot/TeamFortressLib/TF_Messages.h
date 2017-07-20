@@ -272,9 +272,6 @@ struct EvEntityDisguised
 struct EvEntityDisguiseLost
 {
 	typedef MessageT<EvEntityDisguiseLost, TF_MSG_DISGUISE_LOST> Msg;
-
-	int		 mTeamId;
-	int		 mClassId;
 };
 
 struct EvEntityCantCloak
@@ -379,6 +376,7 @@ struct EvEntityBuildDestroyed
 
 	int				mClassId;
 	GameEntity		mEntity;
+	GameEntity		mByWhom;
 };
 
 struct EvEntityBuildSpotEnemy

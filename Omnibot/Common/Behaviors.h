@@ -77,7 +77,27 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	class HighLevel : public StateFirstAvailable
+	class StimGetFlag : public StimTouch
+	{
+	public:
+		StimGetFlag( StimulusBehavior& stim );
+
+		StateStatus UpdateState( float fDt );
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+
+	class StimCapFlag : public StimTouch
+	{
+	public:
+		StimCapFlag( StimulusBehavior& stim );
+
+		StateStatus UpdateState( float fDt );
+	};
+
+	//////////////////////////////////////////////////////////////////////////
+
+	class HighLevel : public StatePrioritized
 	{
 	public:
 		HighLevel();

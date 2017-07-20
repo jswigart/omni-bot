@@ -1,0 +1,36 @@
+this.GoalType = "Ammo";
+this.Version = 1;
+this.DynamicPosition = true;
+this.DefaultPriority = 0.0;
+this.RemoveWithEntity = true;
+this.CreateOnLoad = false;
+
+this.GetPriority = function()
+{
+	if ( this.WeaponClass == null )
+	{
+		this.DisableGoal(true);
+		return 0.0;
+	}
+	
+	this.AmmoTable = {};
+	
+	while(1)
+	{
+		if( this.Bot.HasWeapon( this.WeaponClass ) )
+		{
+			this.AmmoTable = this.Bot.GetCurrentAmmo( this.AmmoTable, 0, this.WeaponClass );
+			
+			if ( this.AmmoTable != null )
+			{
+				if ( this.CurrentAmmo < this.MaxAmmo * 0.5 )
+				{
+					this.Priority = 1.0;
+				}
+			}
+		}
+
+		sleep( 3.0 );
+	}
+};
+

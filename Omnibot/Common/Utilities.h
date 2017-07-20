@@ -86,7 +86,7 @@ struct EnumerationValues
 		std::string str;
 		for ( size_t i = 0; i < sKeyValCount; ++i )
 		{
-			if ( ( sKeyVal[ i ].mValue & val ) == sKeyVal[ i ].mValue )
+			if ( sKeyVal[ i ].mValue != 0 && ( sKeyVal[ i ].mValue & val ) == sKeyVal[ i ].mValue )
 			{
 				if ( !str.empty() )
 					str += ", ";
@@ -160,6 +160,8 @@ namespace Utils
 
 	int32_t StringCompare( const std::string &_s1, const std::string &_s2 );
 	int32_t StringCompareNoCase( const std::string &_s1, const std::string &_s2 );
+
+	bool StringFindNoCase( const std::string &str1, const std::string &str2 );
 
 	std::string StringToLower( const std::string &_s1 );
 

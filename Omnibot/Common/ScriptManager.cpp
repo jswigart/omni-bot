@@ -44,6 +44,8 @@
 #include <boost/shared_array.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include <zmq.hpp>
+
 //////////////////////////////////////////////////////////////////////////
 
 bool ScriptLiveUpdate = false;
@@ -101,11 +103,9 @@ bool g_RemoteDebuggerInitialized = false;
 
 #if defined(ENABLE_REMOTE_DEBUGGER) && defined(GMDEBUG_SUPPORT)
 
-#include <sfml/Network.hpp>
-#pragma comment(lib,"sfml-network.lib")
-
-sf::SocketTCP g_DebugListener;
-sf::SocketTCP g_DebugClient;
+zmq::context_t* gZmqContext = null;
+zmq::socket_t* gZmqListener = NULL;
+//zmq::socket_t g_DebugClient = NULL;
 
 const int GM_DEBUGGER_PORT = 49001;
 
@@ -290,7 +290,7 @@ void ScriptManager::Init()
 	LOG( "+ Weapon Library Bound." );
 
 #if defined(ENABLE_REMOTE_DEBUGGER) && defined(GMDEBUG_SUPPORT)
-	gmBindDebugLib( .mScriptEngine );
+	gmBindDebugLib( mScriptEngine );
 #endif
 
 	// Create default global tables.
@@ -346,7 +346,7 @@ void ScriptManager::Shutdown()
 	if ( g_RemoteDebuggerInitialized )
 	{
 		CloseDebugSession();
-		g_DebugListener.Close();
+		gZmqListener->close();
 	}
 #endif
 
@@ -381,7 +381,13 @@ void ScriptManager::Update()
 #if defined(ENABLE_REMOTE_DEBUGGER) && defined(GMDEBUG_SUPPORT)
 	if ( g_RemoteDebuggerInitialized )
 	{
-		if ( !g_DebugClient.IsValid() )
+		zmq::message_t msg;
+		if ( gZmqListener->recv( &msg, ZMQ_NOBLOCK ) )
+		{
+
+		}
+		
+		/*if ( !g_DebugClient.IsValid() )
 		{
 			sf::IPAddress addr;
 			sf::Socket::Status s = g_DebugListener.Accept( g_DebugClient, &addr ); s;
@@ -392,9 +398,9 @@ void ScriptManager::Update()
 				OpenDebugSession( .mScriptEngine );
 				g_DebugClient.SetBlocking( false );
 			}
-		}
+		}*/
 
-		if ( g_DebugClient.IsValid() )
+		//if ( g_DebugClient.IsValid() )
 		{
 			rmt_ScopedCPUSample( RemoteDebugClient );
 			UpdateDebugSession();
@@ -1051,41 +1057,30 @@ std::string			g_LastCommand;
 
 void ScriptManager::SendDebuggerMessage( const void * a_command, int a_len )
 {
-	if ( g_DebugClient.IsValid() )
+	if ( gZmqListener != null )
 	{
 		PacketHeader hdr( a_len );
+		
+		gZmqListener->send( zmq::message_t( &hdr, sizeof( hdr ) ), ZMQ_NOBLOCK );
+		gZmqListener->send( zmq::message_t( a_command, a_len ), ZMQ_NOBLOCK );
 
-		sf::Packet packet;
-		packet.Append( (const char *)&hdr, sizeof( hdr ) );
-		packet.Append( (const char *)a_command, a_len );
-		if ( g_DebugClient.Send( packet, false ) == sf::Socket::Disconnected )
-		{
-			g_DebugClient.Close();
-			return;
-		}
-		Utils::OutputDebug( kScript, "%d sent", packet.GetDataSize() );
+		//Utils::OutputDebug( kScript, "%d sent", sizeof( hdr ) + a_len );
 	}
 }
 
 const void * ScriptManager::PumpDebuggerMessage( int &a_len )
 {
 	// grab all the data from the network we can
-	enum
+	zmq::message_t msg;
+	while ( gZmqListener->recv( &msg, ZMQ_NOBLOCK ) == 0 )
 	{
-		BufferSize = 4096
-	};
-	char inBuffer[ BufferSize ];
-	std::size_t inSize = 0;
-	do
-	{
-		if ( g_DebugClient.Receive( inBuffer, BufferSize, inSize ) == sf::Socket::Done )
-		{
-			Utils::OutputDebug( kScript, va( "%d recieved", inSize ) );
-			if ( inSize > 0 )
-				g_RecieveBuffer.append( inBuffer, inSize );
-		}
+		if ( zmq_errno() == EAGAIN )
+			break;
+
+		Utils::OutputDebug( kScript, va( "%d recieved", msg.size() ).c_str() );
+
+		g_RecieveBuffer.append( (const char*)msg.data(), msg.size() );
 	}
-	while ( inSize > 0 );
 
 	if ( g_RecieveBuffer.size() > 0 )
 	{
@@ -1120,23 +1115,21 @@ void ScriptManager::EnableRemoteDebugger( bool _enable )
 #if defined(ENABLE_REMOTE_DEBUGGER) && defined(GMDEBUG_SUPPORT)
 	if ( _enable && !g_RemoteDebuggerInitialized )
 	{
-		if ( g_DebugListener.Listen( GM_DEBUGGER_PORT ) )
-		{
-			g_DebugListener.SetBlocking( false );
-			g_RemoteDebuggerInitialized = true;
-		}
-		else
-		{
-			//const char *pError = XPSock_TranslateErrorLong(g_ScriptDebuggerSocket.GetLastError());
-			//LOGERR("Error Initializing Remote Debug Socket, disabling");
-			//LOGERR(pError);
-			g_RemoteDebuggerInitialized = false;
-		}
+		gZmqContext = new zmq::context_t(1);
+		gZmqListener = new zmq::socket_t( *gZmqContext, ZMQ_STREAM );
+		gZmqListener->bind( va( "tcp://%s:%d", "*", GM_DEBUGGER_PORT ).c_str() );
+
+		OpenDebugSession( mScriptEngine );
+
+		g_RemoteDebuggerInitialized = true;
 	}
 	else if ( g_RemoteDebuggerInitialized )
 	{
 		// Shut it down!
-		g_DebugListener.Close();
+		gZmqListener->close();
+		delete gZmqListener;
+		gZmqListener = null;
+
 		g_RemoteDebuggerInitialized = false;
 	}
 #endif

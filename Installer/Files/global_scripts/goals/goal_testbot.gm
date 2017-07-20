@@ -43,7 +43,7 @@ this.Update = function()
 };
 
 /////////////////////////
-this.Events[EVENT.FEEL_PAIN] = function(Inflictor)
+this.Events[EVENT.SENSE_ENTITY] = function(Inflictor)
 {
 	if(Inflictor)
 	{
@@ -137,22 +137,17 @@ this.Events[EVENT.GOT_MEDIC_HEALTH] = function(who)
 	}
 };
 
-this.Events[EVENT.DISPENSER_BUILT] = function(disp)
+this.Events[EVENT.BUILDABLE_BUILT] = function(classId, entity)
 {
-	this.Bot.Say(this.Bot.Name + " Dispenser Built");
+	this.Bot.Say(this.Bot.Name + " Built " + Util.ClassName(classId));
 };
 
-this.Events[EVENT.SENTRY_BUILT] = function(sg)
+this.Events[EVENT.BUILDABLE_UPGRADED] = function(classId, entity, level)
 {
-	this.Bot.Say(this.Bot.Name + " Sentry Built");
+	this.Bot.Say(this.Bot.Name + " Buildable Upgraded " + Util.ClassName(classId) + " " + level);
 };
 
-this.Events[EVENT.SENTRY_UPGRADED] = function(level)
-{
-	this.Bot.Say(this.Bot.Name + " Sentry Upgraded Level " + level);
-};
-
-this.Events[EVENT.TEAM_CHAT_MSG] = function(who, msg)
+this.Events[EVENT.CHATMSG_TEAM] = function(who, msg)
 {
 	if(msg && msg.Find("bot") == 0)
 	{
@@ -455,4 +450,4 @@ this.Events[EVENT.TEAM_CHAT_MSG] = function(who, msg)
 	}
 };
 
-this.Events[EVENT.GLOBAL_CHAT_MSG] = this.Events[EVENT.TEAM_CHAT_MSG];
+this.Events[EVENT.CHATMSG_GLOBAL] = this.Events[EVENT.CHATMSG_TEAM];

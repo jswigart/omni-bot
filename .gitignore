@@ -3,3 +3,9 @@
 /Omnibot/projects/msvc12/build
 /Omnibot/projects/msvc12/*.sdf
 /Omnibot/projects/msvc12/*.opensdf
+/Omnibot/projects/msvc14/*.sdf
+/Omnibot/projects/msvc14/*.opendb
+/Omnibot/projects/msvc14/build
+*.tlog
+*.ipch
+*.idb

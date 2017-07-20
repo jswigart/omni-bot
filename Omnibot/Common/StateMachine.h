@@ -124,12 +124,7 @@ public:
 	{
 		mLastPriority = _p;
 	}
-
-	State *GetParent() const;
-	State *GetRootState() const;
-	State *GetFirstChild() const;
-	State *GetSibling() const;
-
+	
 	virtual State *GetActiveState() const
 	{
 		return NULL;
@@ -307,10 +302,11 @@ public:
 		return mClient;
 	}
 
-	State* GetSibling();
 	State* GetParent();
-	State* GetFirstChild();
 	State* GetRootState();
+
+	State *GetParent() const;
+	State *GetRootState() const;
 
 	// Filters
 	BitFlag32 &LimitToClass()
@@ -414,6 +410,8 @@ public:
 		return NULL;
 	}
 
+	void RecursiveRenderDebug();
+
 	//////////////////////////////////////////////////////////////////////////
 	struct LimitToCallback
 	{
@@ -463,6 +461,10 @@ protected:
 
 	State *FindStateRecurse( uint32_t _namehash );
 
+#ifdef _DEBUG
+	std::string		 mDebugName;
+#endif
+
 	BitFlag32	 mStateFlags;
 
 	// limitations
@@ -485,11 +487,12 @@ protected:
 
 	LimitToCallback mLimitCallback;
 
-	State*		 mSibling;
-	State*		 mParent;
-	State*		 mFirstChild;
 	State*		 mRoot;
+	State*		 mParent;
 
+	typedef std::vector<State*> StateList;
+	StateList	 mChildren;
+	
 	static const int MaxThreads = 128;
 	int			 mNumThreads;
 	int			 mThreadList[ MaxThreads ];
@@ -515,10 +518,6 @@ private:
 	DebugIcon	 mDebugIcon;
 
 	uint32_t	 mSyncCrc;
-
-#ifdef _DEBUG
-	std::string		 mDebugName;
-#endif
 
 	State();
 };

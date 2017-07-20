@@ -95,10 +95,52 @@ namespace AiState
 		return StimTouch::UpdateState( fDt );
 	}
 
+	//////////////////////////////////////////////////////////////////////////
+
+	StimGetFlag::StimGetFlag( StimulusBehavior& stim )
+		: StimTouch( "GetFlag", BEHAVIOR_GET_FLAG, stim )
+	{
+	}
+
+	State::StateStatus StimGetFlag::UpdateState( float fDt )
+	{
+		GameEntity flagOwner;
+		FlagState flagState;
+		if ( gEngineFuncs->GetFlagState( mStim.mStimulus->mEntity, flagState, flagOwner ) )
+		{
+			// if a teammate got it, bail out
+			if ( flagOwner.IsValid() && GetClient()->IsAllied( flagOwner ) )
+			{
+				return State_Finished;
+			}
+		}
+		else
+		{
+			return State_Finished;
+		}	
+
+		return StimTouch::UpdateState( fDt );
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+
+	StimCapFlag::StimCapFlag( StimulusBehavior& stim )
+		: StimTouch( "CapFlag", BEHAVIOR_CAP_FLAG, stim )
+	{
+	}
+
+	State::StateStatus StimCapFlag::UpdateState( float fDt )
+	{
+		/*if ( GetClient()->HasEntityFlag( mStim.mStimulus->mEntInfo.mClassId ) )
+			return State_Finished;*/
+
+		return StimTouch::UpdateState( fDt );
+	}
+
 	////////////////////////////////////////////////////////////////////////////
 
 	HighLevel::HighLevel()
-		: StateFirstAvailable( "HighLevel" )
+		: StatePrioritized( "HighLevel" )
 	{
 		//AppendState( new Kill( mActiveBehavior ) );
 		//AppendState( new PressButton( mActiveBehavior ) );
@@ -106,9 +148,9 @@ namespace AiState
 		AppendState( new StimGetWeapon( mActiveBehavior ) );
 		AppendState( new StimGetPowerup( mActiveBehavior ) );
 		AppendState( new Roam );
-		/*AppendState( new StimGetFlag( mActiveBehavior ) );
+		AppendState( new StimGetFlag( mActiveBehavior ) );
 		AppendState( new StimCapFlag( mActiveBehavior ) );
-		AppendState( new StimCapControlPoint( mActiveBehavior ) );
+		/*AppendState( new StimCapControlPoint( mActiveBehavior ) );
 		AppendState( new StimDefend( mActiveBehavior ) );*/
 	}
 	
@@ -125,7 +167,7 @@ namespace AiState
 		{
 			mActiveBehavior = StimulusBehavior();
 		}
-		return StateFirstAvailable::GetPriority();
+		return StatePrioritized::GetPriority();
 	}
 
 	//////////////////////////////////////////////////////////////////////////

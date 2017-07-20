@@ -507,7 +507,7 @@ void Weapon::WeaponFireMode::AddAimError( Client *_bot, Vector3f &_aimpoint, con
 	_aimpoint += mAimErrorCurrent;
 }
 
-void Weapon::WeaponFireMode::SetTargetBias( uint16_t classId, float bias )
+void Weapon::WeaponFireMode::SetTargetBias( int classId, float bias )
 {
 	mTargetBias[ classId ] = bias;
 }

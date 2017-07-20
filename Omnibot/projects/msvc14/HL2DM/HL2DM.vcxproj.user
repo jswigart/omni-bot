@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ShowAllFiles>false</ShowAllFiles>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LocalDebuggerEnvironment>_NO_DEBUG_HEAP=1</LocalDebuggerEnvironment>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommand>D:\Steam\steamapps\common\Source SDK Base 2013 Multiplayer\hl2.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments>-allowdebug -dev -sw -condebug -console -toconsole -game "D:\git\source-sdk-2013_bot\mp\game\mod_hl2mp" +map dm_lockdown</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>D:\Steam\steamapps\common\Source SDK Base 2013 Multiplayer</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LocalDebuggerEnvironment>_NO_DEBUG_HEAP=1</LocalDebuggerEnvironment>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommand>D:\Steam\steamapps\common\Source SDK Base 2013 Multiplayer\hl2.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments>-allowdebug -dev -sw -condebug -console -toconsole -game "D:\git\source-sdk-2013_bot\mp\game\mod_hl2mp"</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>D:\Steam\steamapps\common\Source SDK Base 2013 Multiplayer</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+</Project>

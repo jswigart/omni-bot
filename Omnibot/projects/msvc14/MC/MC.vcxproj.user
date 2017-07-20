@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ShowAllFiles>false</ShowAllFiles>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LocalDebuggerEnvironment>_NO_DEBUG_HEAP=1</LocalDebuggerEnvironment>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommand>$(ModCom2007)\hl2.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments>-steam -sw -game "$(ModularCombat)"</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>$(ModCom2007)</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LocalDebuggerEnvironment>_NO_DEBUG_HEAP=1</LocalDebuggerEnvironment>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommand>$(ModCom2007)\hl2.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments>-steam -sw -game "$(ModularCombat)"</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>$(ModCom2007)</LocalDebuggerWorkingDirectory>
+  </PropertyGroup>
+</Project>

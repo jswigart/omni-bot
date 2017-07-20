@@ -319,7 +319,7 @@ public:
 
 		float GetTargetBias( const EntityInfo& classInfo );
 
-		void SetTargetBias( uint16_t classId, float bias );
+		void SetTargetBias( int classId, float bias );
 
 		BitFlag64 & GetIgnoreEntFlags()
 		{
@@ -414,7 +414,7 @@ public:
 
 		PIDController mHeatController;
 
-		typedef std::map<uint16_t,float> TargetBiasMap;
+		typedef std::map<int,float> TargetBiasMap;
 		TargetBiasMap mTargetBias;
 
 		//////////////////////////////////////////////////////////////////////////

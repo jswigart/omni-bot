@@ -65,7 +65,7 @@ NavFlags FF_Client::GetTeamFlag( int _team ) const
 
 void FF_Client::GetNavFlags( NavFlags & includeFlags, NavFlags & excludeFlags )
 {
-	includeFlags = NAVFLAGS_WALK | NAVFLAGS_CROUCH;
+	includeFlags = NAVFLAGS_WALK | NAVFLAGS_CROUCH | NAVFLAGS_MOVER;
 
 	switch ( GetTeam() )
 	{

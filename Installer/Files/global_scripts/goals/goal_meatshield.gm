@@ -82,13 +82,13 @@ this.Update = function()
 
 /////////////////////////
 
-this.Events[EVENT.TEAM_CHAT_MSG] = function(who, msg)
+this.Events[EVENT.CHATMSG_TEAM] = function(who, msg)
 {
 };
 
-this.Events[EVENT.GLOBAL_CHAT_MSG] = this.Events[EVENT.TEAM_CHAT_MSG];
+this.Events[EVENT.CHATMSG_GLOBAL] = this.Events[EVENT.CHATMSG_TEAM];
 
-this.Events[EVENT.TEAM_VOICE] = function(source, id)
+this.Events[EVENT.VOICE_TEAM] = function(source, id)
 {
 	if ( id == VOICE.COVER_ME && this.EscortInfo == null )
 	{

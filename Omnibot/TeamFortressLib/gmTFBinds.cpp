@@ -181,8 +181,7 @@ static int GM_CDECL gmfDisguiseOptions( gmThread *a_thread )
 	DisableGCInScope gcEn( pMachine );
 
 	ParamsDisguiseOptions_TF disguiseOptions = {};
-	disguiseOptions.mCheckTeam = native->GetTeam();
-	gTeamFortressFuncs->DisguiseOptions( native->GetGameEntity(), disguiseOptions );
+	gTeamFortressFuncs->DisguiseOptions( native->GetGameEntity(), native->GetTeam(), disguiseOptions );
 
 	gmTableObject *pTbl = pMachine->AllocTableObject();
 	gmTableObject *pTeamTbl = pMachine->AllocTableObject();
@@ -320,10 +319,9 @@ static int GM_CDECL gmfHudTextMsg( gmThread *a_thread )
 	ParamsHudText hudtxt;
 	memset( &hudtxt, 0, sizeof( hudtxt ) );
 	hudtxt.mMessageType = ParamsHudText::MsgHudCenter;
-	hudtxt.mTargetPlayer = gameEnt;
 	Utils::StringCopy( hudtxt.mMessage, message, sizeof( hudtxt.mMessage ) );
 
-	gTeamFortressFuncs->ShowHudText( hudtxt );
+	gTeamFortressFuncs->ShowHudText( gameEnt, hudtxt );
 	return GM_OK;
 }
 
@@ -358,13 +356,13 @@ static int GM_CDECL gmfHudAlert( gmThread *a_thread )
 	memset( &menuData, 0, sizeof( menuData ) );
 
 	menuData.mMenuType = ParamsHudMenu::GuiAlert;
-	menuData.mTargetPlayer = gameEnt;
+	
 	Utils::StringCopy( menuData.mTitle, title, sizeof( menuData.mTitle ) );
 	menuData.mLevel = level;
 	menuData.mTimeOut = timeout;
 	menuData.mColor = obColor( color );
 
-	gTeamFortressFuncs->ShowHudMenu( menuData );
+	gTeamFortressFuncs->ShowHudMenu( gameEnt, menuData );
 	return GM_OK;
 }
 
@@ -400,14 +398,13 @@ static int GM_CDECL gmfHudTextBox( gmThread *a_thread )
 	memset( &menuData, 0, sizeof( menuData ) );
 
 	menuData.mMenuType = ParamsHudMenu::GuiTextBox;
-	menuData.mTargetPlayer = gameEnt;
 	Utils::StringCopy( menuData.mTitle, title, sizeof( menuData.mTitle ) );
 	Utils::StringCopy( menuData.mMessage, body, sizeof( menuData.mMessage ) );
 	menuData.mLevel = level;
 	menuData.mTimeOut = timeout;
 	menuData.mColor = obColor( color );
 
-	gTeamFortressFuncs->ShowHudMenu( menuData );
+	gTeamFortressFuncs->ShowHudMenu( gameEnt, menuData );
 	return GM_OK;
 }
 // Function: HudMenu
@@ -447,7 +444,7 @@ static int GM_CDECL gmfHudMenu( gmThread *a_thread )
 	memset( &menuData, 0, sizeof( menuData ) );
 
 	menuData.mMenuType = ParamsHudMenu::GuiMenu;
-	menuData.mTargetPlayer = gameEnt;
+	
 	Utils::StringCopy( menuData.mTitle, title, sizeof( menuData.mTitle ) );
 	Utils::StringCopy( menuData.mCaption, caption, sizeof( menuData.mCaption ) );
 	Utils::StringCopy( menuData.mMessage, body, sizeof( menuData.mMessage ) );
@@ -479,7 +476,7 @@ static int GM_CDECL gmfHudMenu( gmThread *a_thread )
 		}
 	}
 
-	gTeamFortressFuncs->ShowHudMenu( menuData );
+	gTeamFortressFuncs->ShowHudMenu( gameEnt, menuData );
 	return GM_OK;
 }
 

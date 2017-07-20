@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{868f4b74-24a3-4185-a6b4-7686288f4681}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Scripting">
+      <UniqueIdentifier>{814317f0-52d1-4260-84e7-25a00f97a2b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Filters">
+      <UniqueIdentifier>{ca2fb526-d1c8-4d80-91fd-4bf7a2c5ce5d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\TeamFortressLib\TF_BaseStates.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\TeamFortressLib\TF_Client.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\TeamFortressLib\TF_Game.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\TeamFortressLib\gmTFBinds.cpp">
+      <Filter>Core\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\TeamFortressLib\FilterClosestTF.cpp">
+      <Filter>Core\Filters</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\TeamFortressLib\TF_BaseStates.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\TeamFortressLib\TF_Client.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\TeamFortressLib\TF_Config.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\TeamFortressLib\TF_Game.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\TeamFortressLib\TF_Messages.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\TeamFortressLib\FilterClosestTF.h">
+      <Filter>Core\Filters</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\TeamFortressLib\Jamfile" />
+  </ItemGroup>
+</Project>

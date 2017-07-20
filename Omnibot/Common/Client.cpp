@@ -135,7 +135,7 @@ void Client::Update()
 		{
 			mStateRoot->RootUpdate();
 
-			//FINDSTATEIF( Navigator, GetStateRoot(), RenderDebug() );
+			mStateRoot->RecursiveRenderDebug();
 		}
 
 		// Purge expired blackboard records.
@@ -526,7 +526,7 @@ void Client::ProcessEvent( const Message &message, CallbackParameters & cb )
 		message.Id() == EvChatMessagePrivate::Msg::MessageId ||
 		message.Id() == EvChatMessageGroup::Msg::MessageId )
 	{
-		const EvVoiceMacro* msg = EvVoiceMacro::Msg::Cast( message, message.Id() );
+		const EvChatMessage* msg = EvChatMessage::Msg::Cast( message, message.Id() );
 		if ( msg->mWhoSaidIt != GetGameEntity() ) // Ignore messages from myself.
 		{
 			cb.CallScript();
@@ -836,6 +836,8 @@ void Client::ProcessEventImpl( const Message &_message, uint32_t _targetState )
 	if ( IsDebugEnabled( BOT_DEBUG_EVENTS ) )
 		cb.PrintDebug();
 
+	cb.CallScript();
+	
 	// Events to Behavior Tree
 	if ( GetStateRoot() && cb.ShouldPropogateEvent() )
 		GetStateRoot()->CheckForCallbacks( _message, cb );
@@ -1162,7 +1164,7 @@ void Client::InitScriptGoals()
 	}
 }
 
-void Client::ProcessStimulusBehavior( Behaviors& behaviors, const StimulusPtr& stim )
+void Client::ProcessStimulusBehavior( TacticalManager* tactical, Behaviors& behaviors, const StimulusPtr& stim )
 {
 	switch ( GetTeam() )
 	{
@@ -1200,7 +1202,7 @@ void Client::ProcessStimulusBehavior( Behaviors& behaviors, const StimulusPtr& s
 			}
 			else
 			{
-				beh.mAction = BEHAVIOR_KILL;
+				beh.mAction = BEHAVIOR_ATTACK;
 				beh.mDesirability = 0.11f;
 			}
 			break;
@@ -1274,34 +1276,47 @@ void Client::ProcessStimulusBehavior( Behaviors& behaviors, const StimulusPtr& s
 		}
 		case ENT_GRP_FLAG:
 		{
+			beh.mAction = BEHAVIOR_GET_FLAG;
+			beh.mDesirability = 0.5f;
+
 			FlagState flagState;
-			GameEntity owner;
-			if ( gEngineFuncs->GetFlagState( beh.mStimulus->mEntity, flagState, owner ) )
+			GameEntity flagOwner;
+			if ( gEngineFuncs->GetFlagState( beh.mStimulus->mEntity, flagState, flagOwner ) )
 			{
-				if ( owner == GetGameEntity() )
+				if ( flagOwner == GetGameEntity() )
 				{
-					beh.mAction = BEHAVIOR_CAP_FLAG;
-					beh.mDesirability = 1.5f;
+					// bail out, the cap flag stimulus should take it from here
+					return;
 				}
-				else
+				else if( flagOwner.IsValid() )
 				{
-					if ( gEngineFuncs->IsAllied( GetGameEntity(), owner ) )
+					if ( gEngineFuncs->IsAllied( GetGameEntity(), flagOwner ) )
 					{
 						beh.mAction = BEHAVIOR_DEFEND;
-						beh.mDesirability = 1.5f;
+						beh.mDesirability = 0.5f;
+					}
+					else if ( gEngineFuncs->IsAllied( GetGameEntity(), flagOwner ) )
+					{
+						beh.mAction = BEHAVIOR_ATTACK;
+						beh.mDesirability = 0.5f;
 					}
 				}
 			}
 
-			beh.mAction = BEHAVIOR_GET_FLAG;
-			beh.mDesirability = 0.5f;
 			behaviors.push_back( beh );
 			break;
 		}
-		/*case ENT_GRP_FLAGCAPPOINT:
+		case ENT_GRP_FLAGCAPPOINT:
 		{
-		break;
-		}*/
+			StimulusPtr flagStim = tactical->HasStimulus( ENT_GRP_FLAG, GetGameEntity() );
+			if ( flagStim != null )
+			{
+				beh.mAction = BEHAVIOR_CAP_FLAG;
+				beh.mDesirability = 0.5f;
+				behaviors.push_back( beh );
+			}
+			break;
+		}
 		case ENT_GRP_CONTROLPOINT:
 		{
 			beh.mAction = BEHAVIOR_CAP_CONTROL_POINT;

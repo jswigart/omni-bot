@@ -619,6 +619,8 @@ enum EntityGroup
 	ENT_GRP_DISPENSER,
 	ENT_GRP_BUILDABLE,
 	ENT_GRP_MOUNTABLE,
+	ENT_GRP_TRIGGER,
+	ENT_GRP_MISC,
 };
 
 enum EntityClass
@@ -722,12 +724,14 @@ struct EntityInfo
 	NavAreaFlags	mNavFlags;
 	GameEntity		mOwner;
 	float			mNavTeamCost[ 4 ];
+	bool			mIgnoreModel;
 	
 	EntityInfo()
 		: mGroup( ENT_GRP_UNKNOWN )
 		, mClassId( ENT_CLASS_NONE )
 		, mLevel( 0 )
 		, mNavFlags( NAVFLAGS_NONE )
+		, mIgnoreModel( false )
 	{
 		for ( int i = 0; i < 4; ++i )
 			mNavTeamCost[ i ] = 0.0f;
@@ -1038,7 +1042,9 @@ struct obUserData
 	};
 	inline GameEntity GetEntity() const
 	{
-		GameEntity e; e.FromInt( udata.mEntity ); return e;
+		GameEntity e; 
+		e.FromInt( udata.mEntity );
+		return e;
 	};
 	inline void SetEntity( GameEntity e )
 	{

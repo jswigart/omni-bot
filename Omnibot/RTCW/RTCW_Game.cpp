@@ -413,13 +413,10 @@ void RTCW_Game::StartGame()
 
 	if ( ScriptManager::GetInstance()->ExecuteFile( script, iThreadId ) )
 	{
-		gmMachine *pMachine = ScriptManager::GetInstance()->GetMachine();
+		gmCall call;
+		if ( call.BeginGlobalFunction( pMachine, "OnMapLoad", gmVariable::s_null, true ) )
 		{
-			gmCall call;
-			if ( call.BeginGlobalFunction( pMachine, "OnMapLoad", gmVariable::s_null, true ) )
-			{
-				call.End();
-			}
+			call.End();
 		}
 	}
 

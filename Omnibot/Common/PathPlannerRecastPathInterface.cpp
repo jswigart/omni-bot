@@ -187,8 +187,8 @@ bool RecastPathInterface::UpdateGoalPositionRandom()
 				continue;
 
 			// if the teams have already touched this poly, don't explore it again
-			ClosedList::iterator it = closedlist.find( neiRef );
-			if ( it != closedlist.end() )
+			ClosedList::iterator closedit = closedlist.find( neiRef );
+			if ( closedit != closedlist.end() )
 				continue;
 
 			openlist.push_back( neiRef );
@@ -455,17 +455,18 @@ size_t RecastPathInterface::FindAreaEntitiesInRadius( const Vector3f& pos, float
 	return cnt;
 }
 
-bool RecastPathInterface::GetNavLink( uint64_t id, OffMeshConnection& conn ) const
+bool RecastPathInterface::GetNavLink( uint64_t navPolyId, OffMeshConnection& conn ) const
 {
-	const dtOffMeshConnection* link = mNav->mNavMesh->getOffMeshConnectionByRef( (dtPolyRef)id );
+	const dtOffMeshConnection* link = mNav->mNavMesh->getOffMeshConnectionByRef( (dtPolyRef)navPolyId );
 	if ( link )
 	{
-		if ( link->userId < mNav->mOffMeshConnections.size() )
+		
+		PathPlannerRecast::OffMeshConnections::iterator it = mNav->mOffMeshConnections.find( link->userId );
+		if ( it != mNav->mOffMeshConnections.end() )
 		{
-			conn = mNav->mOffMeshConnections[ link->userId ];
-			conn.mPolyId = id;
+			conn = it->second;
 			return true;
-		}
+		}		
 	}
 	return false;
 }

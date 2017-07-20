@@ -525,38 +525,55 @@ namespace AiState
 				// go to the next corner
 				dstPos = mCachedCorners[ 0 ].mPos;
 
-				Vector3f toTarget = dstPos - bottomBounds;
-				const float distToCorner = toTarget.Normalize();
+				const float distToCorner = b3dMovement ? Length( bottomBounds, dstPos ) : Length2d( bottomBounds, dstPos );
 
 				if ( IsOnCustomLink() )
 				{
 					OffMeshConnection conn;
-					mPathInterface->GetNavLink( mCachedCorners[ 0 ].mPolyId, conn );
 
-					if ( mActiveLink.mPolyId != mCachedCorners[ 0 ].mPolyId )
+					uint64_t linkPoly = 0;;
+					if ( mPathInterface->GetNavLink( mCachedCorners[ 0 ].mPolyId, conn ) )
+						linkPoly = mCachedCorners[ 0 ].mPolyId;
+
+					if ( mActiveLinkPoly != linkPoly )
 					{
+						mActiveLinkPoly = linkPoly;
 						mActiveLinkIndex = 0;
 						mActiveLink = conn;
 					}
 
-					if ( mActiveLink.mPolyId )
+					if ( mActiveLinkPoly != 0 )
 					{
-						if ( distToCorner < conn.mRadius )
+						if ( mActiveLink.mVertices.size() > 0 )
 						{
-							if ( mActiveLinkIndex < mActiveLink.mVertices.size() )
+							if ( distToCorner < conn.mRadius )
 							{
-								++mActiveLinkIndex;
+								if ( mActiveLinkIndex < mActiveLink.mVertices.size() )
+								{
+									++mActiveLinkIndex;
+								}
+								else
+								{
+									mPathInterface->CompleteNavLink( mCachedCorners[ 0 ].mPolyId );
+								}
 							}
-							else
+						}
+						else
+						{
+							if ( mActiveLinkIndex == 0 )
 							{
-								mPathInterface->CompleteNavLink( mCachedCorners[ 0 ].mPolyId );
+								if ( distToCorner < conn.mRadius )
+									mActiveLinkIndex = 1;
 							}
+
+							if( mActiveLinkIndex > 0 )
+								dstPos = mActiveLink.mExit;
 						}
 					}
 				}
 				else
 				{
-					mActiveLink.mPolyId = 0;
+					mActiveLinkPoly = 0;
 					mActiveLinkIndex = 0;
 				}
 
@@ -571,9 +588,9 @@ namespace AiState
 
 				for ( size_t i = 0; i < mNumCachedCorners; ++i )
 				{
-					const PathInterface::PathCorner & c0 = mCachedCorners[ i ];
+					const PathInterface::PathCorner & corner = mCachedCorners[ i ];
 
-					Vector3f edgeDir = c0.mPos - lastPos;
+					Vector3f edgeDir = corner.mPos - lastPos;
 					const float edgeLen = edgeDir.Normalize();
 
 					pathDistance += edgeLen;
@@ -587,12 +604,12 @@ namespace AiState
 						}
 						else
 						{
-							mLookAheadPt = c0.mPos;
+							mLookAheadPt = corner.mPos;
 						}
 						lookAheadDistance -= edgeLen;
 					}
 
-					lastPos = c0.mPos;
+					lastPos = corner.mPos;
 				}
 
 				mLookAheadPt += GetClient()->GetEyeGroundOffset();

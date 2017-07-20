@@ -242,30 +242,28 @@ enum TF_BuildableStatus
 
 struct ParamsSentryStatus_TF
 {
-	GameEntity	 mEntity;
-	float		 mPosition[ 3 ];
-	float		 mFacing[ 3 ];
-	int			 mLevel;
-	int			 mHealth;
-	int			 mMaxHealth;
-	int			 mShells[ 2 ];
-	int			 mRockets[ 2 ];
-	bool		 mSabotaged;
+	GameEntity			mEntity;
+	float				mPosition[ 3 ];
+	float				mFacing[ 3 ];
+	int					mLevel;
+	EntityInfo::Range	mHealth;
+	EntityInfo::Range	mShells;
+	EntityInfo::Range	mRockets;
+	bool				mSabotaged;
 };
 
 struct ParamsDispenserStatus_TF
 {
-	GameEntity	 mEntity;
-	float		 mPosition[ 3 ];
-	float		 mFacing[ 3 ];
-	int			 mHealth;
-	int			 mMaxHealth;
-	int			 mCells;
-	int			 mNails;
-	int			 mRockets;
-	int			 mShells;
-	int			 mArmor;
-	bool		 mSabotaged;
+	GameEntity			mEntity;
+	float				mPosition[ 3 ];
+	float				mFacing[ 3 ];
+	EntityInfo::Range	mHealth;
+	EntityInfo::Range	mCells;
+	EntityInfo::Range	mNails;
+	EntityInfo::Range	mRockets;
+	EntityInfo::Range	mShells;
+	EntityInfo::Range	mArmor;	
+	bool				mSabotaged;
 };
 
 struct ParamsTeleporterStatus_TF
@@ -293,7 +291,6 @@ struct ParamsHealTarget
 
 struct ParamsDisguiseOptions_TF
 {
-	int		 mCheckTeam;
 	bool	 mTeam[ TF_TEAM_MAX ];
 	bool	 mClass[ TF_CLASS_MAX ];
 };
@@ -313,7 +310,6 @@ struct ParamsHudMenu
 		GuiMenu,
 		GuiTextBox,
 	};
-	GameEntity mTargetPlayer;
 	GuiType	 mMenuType;
 	char	 mTitle[ 32 ];
 	char	 mCaption[ 32 ];
@@ -332,7 +328,6 @@ struct ParamsHudText
 		MsgConsole,
 		MsgHudCenter,
 	};
-	GameEntity mTargetPlayer;
 	MsgType	 mMessageType;
 	char	 mMessage[ 512 ];
 };
@@ -345,20 +340,19 @@ public:
 	virtual bool GetBuildStatus( GameEntity ent, ParamsTeleporterStatus_TF& params ) = 0;
 	virtual bool GetBuildStatus( GameEntity ent, Event_DetpackStatus_TF& params ) = 0;
 
-	virtual int GetPlayerPipeCount( GameEntity ent );
-	virtual bool DisguiseOptions( GameEntity ent, ParamsDisguiseOptions_TF &_disguiseoptions );
-	virtual bool Disguise( GameEntity ent, int32_t _team, int32_t _class );
-	virtual bool GetDisguiseInfo( GameEntity ent, int &_team, int &_class );
-	virtual bool GetDisguiseInfo( const EntityInfo & entInfo, int &_team, int &_class );
-	virtual bool Cloak( GameEntity ent, bool silent );
+	virtual int GetPlayerPipeCount( GameEntity ent ) = 0;
+	virtual bool DisguiseOptions( GameEntity ent, int32_t _team, ParamsDisguiseOptions_TF &_disguiseoptions ) = 0;
+	virtual bool Disguise( GameEntity ent, int32_t _team, int32_t _class ) = 0;
+	virtual bool GetDisguiseInfo( GameEntity ent, int &_team, int &_class ) = 0;
+	virtual bool Cloak( GameEntity ent, bool silent ) = 0;
 
-	virtual bool GetHealTargetInfo( GameEntity ent, ParamsHealTarget& params );
+	virtual bool GetHealTargetInfo( GameEntity ent, ParamsHealTarget& params ) = 0;
 
-	virtual bool LockPlayerPosition( GameEntity ent, bool _lock );
+	virtual bool LockPlayerPosition( GameEntity ent, bool _lock ) = 0;
 
-	virtual void ShowHudHint( GameEntity _player, int32_t _id, const char * msg );
-	virtual void ShowHudMenu( const ParamsHudMenu & data );
-	virtual void ShowHudText( const ParamsHudText & data );
+	virtual void ShowHudHint( GameEntity _player, int32_t _id, const char * msg ) = 0;
+	virtual void ShowHudMenu( GameEntity _player, const ParamsHudMenu & data ) = 0;
+	virtual void ShowHudText( GameEntity _player, const ParamsHudText & data ) = 0;
 };
 
 extern TeamFortress_Interface* gTeamFortressFuncs;

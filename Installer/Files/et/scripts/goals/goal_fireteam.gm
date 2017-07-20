@@ -413,7 +413,7 @@ this.ProcessChatEvents = function(Who, Msg)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-this.Events[EVENT.PRIV_CHAT_MSG] = function(Who, Msg)
+this.Events[EVENT.CHATMSG_PRIVATE] = function(Who, Msg)
 {
 	this.ProcessChatEvents(Who, Msg);
 	

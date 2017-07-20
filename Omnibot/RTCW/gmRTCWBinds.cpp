@@ -51,7 +51,9 @@ static int GM_CDECL gmfSendPrivateMessage( gmThread *a_thread )
 		char chatMsg[ chatMsgSize ] = { 0 };
 		char targName[ chatMsgSize ] = { 0 };
 
-		const char *pAsString = a_thread->Param( 0 ).AsString( a_thread->GetMachine(), buffer, bufferSize );
+		const char *pAsString = null;
+
+		pAsString = a_thread->Param( 0 ).AsString( a_thread->GetMachine(), buffer, bufferSize );
 		if ( pAsString )
 		{
 			int len = strlen( pAsString );
@@ -66,7 +68,7 @@ static int GM_CDECL gmfSendPrivateMessage( gmThread *a_thread )
 		// and for the message.
 		for ( int i = 1; i < a_thread->GetNumParams(); ++i )
 		{
-			const char *pAsString = a_thread->Param( i ).AsString( a_thread->GetMachine(), buffer, bufferSize );
+			pAsString = a_thread->Param( i ).AsString( a_thread->GetMachine(), buffer, bufferSize );
 			if ( pAsString )
 			{
 				int len = strlen( pAsString );

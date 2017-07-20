@@ -3,7 +3,6 @@ copy /Y "..\Common\Base_Messages.h" "D:\git\fortressforever-jswigart\omnibot\"
 copy /Y ..\Common\BotExports.h D:\git\fortressforever-jswigart\omnibot\
 copy /Y ..\Common\BotLoadLibrary.cpp D:\git\fortressforever-jswigart\omnibot\
 copy /Y ..\Common\IEngineInterface.h D:\git\fortressforever-jswigart\omnibot\
-copy /Y ..\Common\MessageHelper.h D:\git\fortressforever-jswigart\omnibot\
 copy /Y ..\Common\Omni-Bot.h D:\git\fortressforever-jswigart\omnibot\
 copy /Y ..\Common\Omni-Bot_BitFlags.h D:\git\fortressforever-jswigart\omnibot\
 copy /Y ..\Common\Omni-Bot_Color.h D:\git\fortressforever-jswigart\omnibot\

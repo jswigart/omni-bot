@@ -43,7 +43,7 @@ public:
 	virtual NavAreaFlags GetCurrentAreaFlags() const;
 	virtual size_t GetPathCorners( PathCorner * corners, size_t maxEdges );
 
-	virtual bool GetNavLink( uint64_t id, OffMeshConnection& conn ) const;
+	virtual bool GetNavLink( uint64_t navPolyId, OffMeshConnection& conn ) const;
 	virtual bool CompleteNavLink( uint64_t id );
 	virtual void Render();
 

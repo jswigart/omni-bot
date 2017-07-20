@@ -14,7 +14,7 @@
 #include <google\protobuf\dynamic_message.h>
 #include <google\protobuf\compiler\importer.h>
 
-typedef std::map<uint32_t, MapGoalPtr> MapGoalMap;
+typedef std::map<std::string, MapGoalPtr> MapGoalMap;
 
 // class: MapGoalDatabase
 class MapGoalDatabase : public google::protobuf::compiler::MultiFileErrorCollector

@@ -1,0 +1,1075 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zAlloc.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zBuffer.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\7zCrc.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\7zCrcT8.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zDecode.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zExtract.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zHeader.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zIn.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zItem.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zMain.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zMethodID.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\zlib123\adler32.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Alloc.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Compress\Lzma\LzmaTest.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\archivers\lzma.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Compress\Lzma\LzmaDecode.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Compress\Lzma\LzmaDecodeSize.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Compress\Lzma\LzmaStateDecode.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Compress\Lzma\LzmaStateTest.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\zlib123\inftrees.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\zlib123\inflate.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\zlib123\inffast.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\zlib123\infback.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\archivers\dir.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\zlib123\deflate.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Compress\Branch\BranchX86_2.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Compress\Branch\BranchX86.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\zlib123\crc32.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\zlib123\compress.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\BlackBoard.cpp">
+      <Filter>Blackboard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\BlackBoardItems.cpp">
+      <Filter>Blackboard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\BotBaseStates.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\BotBaseStates_GM.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\BotGlobalStates.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\BotPathing.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\BotSensoryMemory.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\BotSteeringSystem.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\BotTargetingSystem.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\BotWeaponSystem.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\CallbackParameters.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\CollisionModel.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\BotExports.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\BotLoadLibrary.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\CommandReciever.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Client.cpp">
+      <Filter>Bot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Criteria.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\EventReciever.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\FileSystem.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\FilterAllType.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\FilterBias.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\FilterClosest.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\FilterMostHurt.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\FilterSensory.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\FiberManager.cpp">
+      <Filter>Fibers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\FiberState.cpp">
+      <Filter>Fibers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\gmAABB.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\gmBot.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\gmBotLibrary.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\gmGameEntity.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\gmMathLibrary.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\gmMatrix3.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\gmNamesList.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\gmScriptGoal.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\gmSystemLibApp.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\gmTargetInfo.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\gmTimer.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\gmTriggerInfo.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\gmUtilityLib.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\gmWeapon.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\IGame.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\IGameManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\EngineFuncs.cpp">
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\zlib123\gzio.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\GoalManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Logger.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\KeyValueIni.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\md5\md5.cpp">
+      <Filter>3rdParty\md5</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\MapGoal.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\MapGoalDatabase.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Path.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\mdump.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\MemoryRecord.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\NameManager.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Omni-Bot.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\physfs.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\physfs_byteorder.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\physfs_unicode.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\PropertyBinding.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Regulator.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ScriptGoal.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ScriptManager.cpp">
+      <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\sqlite\shell.c">
+      <Filter>3rdParty\sqlite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Sort.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\sqlite\sqlite3.c">
+      <Filter>3rdParty\sqlite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\lzma\C\Threads.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Revision.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\StateMachine.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\platform\windows.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\archivers\zip.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\zlib123\zutil.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\zlib123\uncompr.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\physfs\zlib123\trees.c">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\TriggerManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\WeaponDatabase.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\RenderBuffer.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\System.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Trajectory.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\TargetInfo.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Trackable.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Weapon.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Timer.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Utilities.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\PathPlannerBase.cpp">
+      <Filter>Navigation\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\PathPlannerRecast.cpp">
+      <Filter>Navigation\RecastDetour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\PathPlannerRecastCmds.cpp">
+      <Filter>Navigation\RecastDetour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\PathPlannerRecastPathInterface.cpp">
+      <Filter>Navigation\RecastDetour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\PathPlannerFloodFill.cpp">
+      <Filter>Navigation\FloodFill%28experimental%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\PathPlannerFloodFillBuilder.cpp">
+      <Filter>Navigation\FloodFill%28experimental%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\PathPlannerFloodFillCmds.cpp">
+      <Filter>Navigation\FloodFill%28experimental%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\PathPlannerFloodFillPathInterface.cpp">
+      <Filter>Navigation\FloodFill%28experimental%29</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\PathQuery.cpp">
+      <Filter>Navigation\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\Remotery\lib\Remotery.c">
+      <Filter>3rdParty\Remotery</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\VBSPFileData.cpp">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\VBSPFileImporter.cpp">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\pow2assert.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\tinyobjloader\tiny_obj_loader.cc">
+      <Filter>3rdParty\tinyobjloader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\RecastInterfaces.cpp">
+      <Filter>3rdParty\RecastDetour\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DebugUtils\Source\DebugDraw.cpp">
+      <Filter>3rdParty\RecastDetour\DebugUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DebugUtils\Source\DetourDebugDraw.cpp">
+      <Filter>3rdParty\RecastDetour\DebugUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DebugUtils\Source\RecastDebugDraw.cpp">
+      <Filter>3rdParty\RecastDetour\DebugUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DebugUtils\Source\RecastDump.cpp">
+      <Filter>3rdParty\RecastDetour\DebugUtils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Detour\Source\DetourAlloc.cpp">
+      <Filter>3rdParty\RecastDetour\Detour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Detour\Source\DetourCommon.cpp">
+      <Filter>3rdParty\RecastDetour\Detour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Detour\Source\DetourNavMesh.cpp">
+      <Filter>3rdParty\RecastDetour\Detour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Detour\Source\DetourNavMeshBuilder.cpp">
+      <Filter>3rdParty\RecastDetour\Detour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Detour\Source\DetourNavMeshQuery.cpp">
+      <Filter>3rdParty\RecastDetour\Detour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Detour\Source\DetourNode.cpp">
+      <Filter>3rdParty\RecastDetour\Detour</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Source\DetourCrowd.cpp">
+      <Filter>3rdParty\RecastDetour\DetourCrowd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Source\DetourLocalBoundary.cpp">
+      <Filter>3rdParty\RecastDetour\DetourCrowd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Source\DetourObstacleAvoidance.cpp">
+      <Filter>3rdParty\RecastDetour\DetourCrowd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Source\DetourPathCorridor.cpp">
+      <Filter>3rdParty\RecastDetour\DetourCrowd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Source\DetourPathQueue.cpp">
+      <Filter>3rdParty\RecastDetour\DetourCrowd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Source\DetourProximityGrid.cpp">
+      <Filter>3rdParty\RecastDetour\DetourCrowd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\Recast.cpp">
+      <Filter>3rdParty\RecastDetour\Recast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastAlloc.cpp">
+      <Filter>3rdParty\RecastDetour\Recast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastArea.cpp">
+      <Filter>3rdParty\RecastDetour\Recast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastContour.cpp">
+      <Filter>3rdParty\RecastDetour\Recast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastFilter.cpp">
+      <Filter>3rdParty\RecastDetour\Recast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastLayers.cpp">
+      <Filter>3rdParty\RecastDetour\Recast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastMesh.cpp">
+      <Filter>3rdParty\RecastDetour\Recast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastMeshDetail.cpp">
+      <Filter>3rdParty\RecastDetour\Recast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastRasterization.cpp">
+      <Filter>3rdParty\RecastDetour\Recast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\Recast\Source\RecastRegion.cpp">
+      <Filter>3rdParty\RecastDetour\Recast</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dependencies\recastnavigation\RecastDemo\Contrib\fastlz\fastlz.c">
+      <Filter>3rdParty\RecastDetour\fastlz</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\GOAP.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\TacticalManager.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Behaviors.cpp">
+      <Filter>Behaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Q3BSPFileData.cpp">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Q3BSPFileImporter.cpp">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Q3BSPPatch.cpp">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zAlloc.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zBuffer.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\7zCrc.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zDecode.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zExtract.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zHeader.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zIn.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zItem.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Archive\7z\7zMethodID.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Alloc.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Compress\Lzma\LzmaDecode.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Compress\Lzma\LzmaStateDecode.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\zlib123\inftrees.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\zlib123\inflate.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\zlib123\inffixed.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\zlib123\inffast.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\zlib123\deflate.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\CpuArch.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Compress\Branch\BranchX86_2.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Compress\Branch\BranchX86.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\zlib123\crc32.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\BlackBoard.h">
+      <Filter>Blackboard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\BlackBoardItems.h">
+      <Filter>Blackboard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\BotBaseStates.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\BotGlobalStates.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\BotPathing.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\BotSensoryMemory.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\BotSteeringSystem.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\BotTargetingSystem.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\BotWeaponSystem.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\CallbackParameters.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\CollisionModel.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\CommandFunctor.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Base_Messages.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\BotExports.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\CodeAnalysis.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\CommandReciever.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Client.h">
+      <Filter>Bot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Criteria.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\EventReciever.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\FileSystem.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\FilterAllType.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\FilterBias.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\FilterClosest.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\FilterMostHurt.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\FilterSensory.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\FiberManager.h">
+      <Filter>Fibers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\FiberState.h">
+      <Filter>Fibers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\gmAABB.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\gmBind.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\gmBot.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\gmBotLibrary.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\gmGameEntity.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\gmMathLibrary.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\gmMatrix3.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\gmNamesList.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\gmScriptGoal.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\gmSystemLibApp.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\gmTargetInfo.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\gmTimer.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\gmTriggerInfo.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\gmUtilityLib.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\gmWeapon.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\IGame.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\IGameManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\IStream.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\GoalManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\EngineFuncs.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\IEngineInterface.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Functor.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Logger.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Omni-Bot_BitFlags.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Omni-Bot_Color.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Omni-Bot_Events.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Omni-Bot_Types.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Compress\Lzma\LzmaTypes.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\md5\md5.h">
+      <Filter>3rdParty\md5</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\MapGoal.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\MapGoalDatabase.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Path.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\mdump.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\KeyValueIni.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\common.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\MemoryRecord.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\NameManager.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\ObjFunctor.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\physfs.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\physfs_casefolding.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\physfs_internal.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\physfs_platforms.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\PIDController.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\platformspecifics.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Omni-Bot.h">
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\PropertyBinding.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Regulator.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\ScriptGoal.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\ScriptManager.h">
+      <Filter>Script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Sort.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\sqlite\sqlite3ext.h">
+      <Filter>3rdParty\sqlite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\sqlite\sqlite3.h">
+      <Filter>3rdParty\sqlite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Threads.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Revision.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\StateMachine.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\SpanHeightMap.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\zlib123\zconf.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\zlib123\zlib.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\zlib123\zutil.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\zlib123\trees.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\physfs\lzma\C\Types.h">
+      <Filter>3rdParty\PhysFS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\TriggerManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\WeaponDatabase.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\RenderBuffer.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\System.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Trajectory.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\TargetInfo.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Trackable.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\TrackablePtr.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Weapon.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Timer.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Utilities.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\PathPlannerBase.h">
+      <Filter>Navigation\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\PathPlannerRecast.h">
+      <Filter>Navigation\RecastDetour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\PathPlannerRecastPathInterface.h">
+      <Filter>Navigation\RecastDetour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\PathPlannerFloodFill.h">
+      <Filter>Navigation\FloodFill%28experimental%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\PathPlannerFloodFillPathInterface.h">
+      <Filter>Navigation\FloodFill%28experimental%29</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\PathQuery.h">
+      <Filter>Navigation\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\Remotery\lib\Remotery.h">
+      <Filter>3rdParty\Remotery</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\VBSPFileData.h">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\VBSPFileImporter.h">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\pow2assert.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\tinyobjloader\tiny_obj_loader.h">
+      <Filter>3rdParty\tinyobjloader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\RecastInterfaces.h">
+      <Filter>3rdParty\RecastDetour\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Common\include\SharedConfig.h">
+      <Filter>3rdParty\RecastDetour\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DebugUtils\Include\DebugDraw.h">
+      <Filter>3rdParty\RecastDetour\DebugUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DebugUtils\Include\DetourDebugDraw.h">
+      <Filter>3rdParty\RecastDetour\DebugUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DebugUtils\Include\RecastDebugDraw.h">
+      <Filter>3rdParty\RecastDetour\DebugUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DebugUtils\Include\RecastDump.h">
+      <Filter>3rdParty\RecastDetour\DebugUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourAlloc.h">
+      <Filter>3rdParty\RecastDetour\Detour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourAssert.h">
+      <Filter>3rdParty\RecastDetour\Detour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourCommon.h">
+      <Filter>3rdParty\RecastDetour\Detour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourMath.h">
+      <Filter>3rdParty\RecastDetour\Detour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourNavMesh.h">
+      <Filter>3rdParty\RecastDetour\Detour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourNavMeshBuilder.h">
+      <Filter>3rdParty\RecastDetour\Detour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourNavMeshQuery.h">
+      <Filter>3rdParty\RecastDetour\Detour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourNode.h">
+      <Filter>3rdParty\RecastDetour\Detour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Detour\Include\DetourStatus.h">
+      <Filter>3rdParty\RecastDetour\Detour</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Include\DetourCrowd.h">
+      <Filter>3rdParty\RecastDetour\DetourCrowd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Include\DetourLocalBoundary.h">
+      <Filter>3rdParty\RecastDetour\DetourCrowd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Include\DetourObstacleAvoidance.h">
+      <Filter>3rdParty\RecastDetour\DetourCrowd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Include\DetourPathCorridor.h">
+      <Filter>3rdParty\RecastDetour\DetourCrowd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Include\DetourPathQueue.h">
+      <Filter>3rdParty\RecastDetour\DetourCrowd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\DetourCrowd\Include\DetourProximityGrid.h">
+      <Filter>3rdParty\RecastDetour\DetourCrowd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Recast\Include\Recast.h">
+      <Filter>3rdParty\RecastDetour\Recast</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Recast\Include\RecastAlloc.h">
+      <Filter>3rdParty\RecastDetour\Recast</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\Recast\Include\RecastAssert.h">
+      <Filter>3rdParty\RecastDetour\Recast</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dependencies\recastnavigation\RecastDemo\Contrib\fastlz\fastlz.h">
+      <Filter>3rdParty\RecastDetour\fastlz</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\GOAP.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\TacticalManager.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Behaviors.h">
+      <Filter>Behaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Q3BSPFileData.h">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Q3BSPFileImporter.h">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Q3BSPPatch.h">
+      <Filter>Navigation\MapParsing</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Blackboard">
+      <UniqueIdentifier>{a6389143-42e3-423b-a5ca-cd0ea141c9da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{38467169-b0f4-4789-ac81-b9cd6652f373}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{773791ef-885a-4eed-8b93-192fcefa7aea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bot">
+      <UniqueIdentifier>{6dc6a52a-7118-4cb1-9be8-de7b340f9964}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{fdde2d9a-9a53-4755-b3b7-71040f03e15c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fibers">
+      <UniqueIdentifier>{8fbfca4d-7ac7-42a9-a5cc-e03ae664ee85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script">
+      <UniqueIdentifier>{bd7d0c8b-4612-443c-91a8-7b8afb4e6044}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty">
+      <UniqueIdentifier>{e90cb960-3262-43b0-942a-11f3078c4027}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\PhysFS">
+      <UniqueIdentifier>{6b99a640-668b-475d-962d-1595cf6f90e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\md5">
+      <UniqueIdentifier>{99e22a73-2cfd-40ce-b745-5eebb192abe8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Navigation">
+      <UniqueIdentifier>{1e521501-9e0b-4022-b7ab-f59f2511b7b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{7a0d6eec-b9c3-475d-b3e1-64d62f8468fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{a2ef2db5-d0db-44c9-a033-4a949087ffeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\sqlite">
+      <UniqueIdentifier>{70ba4175-0ddd-41f2-9936-261f5f305ee2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviors">
+      <UniqueIdentifier>{9ffa82b7-344a-4fdb-9cd8-73c89b41a405}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Navigation\Base">
+      <UniqueIdentifier>{4194e740-2a2c-4c54-b14c-9dd9569e1fe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Navigation\RecastDetour">
+      <UniqueIdentifier>{eab9ec9a-4844-4ca9-b79e-d5844f5166ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Navigation\FloodFill%28experimental%29">
+      <UniqueIdentifier>{6945888d-d3c3-4c19-b953-a7bd24a4065d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\Remotery">
+      <UniqueIdentifier>{4e00e2e0-b744-4461-837a-0b5fc6602cc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Navigation\MapParsing">
+      <UniqueIdentifier>{24f58b51-42b7-406e-a4b5-4fcb2ba3b2d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\tinyobjloader">
+      <UniqueIdentifier>{b7ea6e85-b5ff-4cd8-aec9-e9e1626b07cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\RecastDetour">
+      <UniqueIdentifier>{53e4f64d-1af9-4d77-a219-a9558a49f1dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\RecastDetour\Helpers">
+      <UniqueIdentifier>{ff89fbec-05b2-404b-8063-72546adb1248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\RecastDetour\DebugUtils">
+      <UniqueIdentifier>{6de6a393-4c26-4124-a57d-c18c184b64e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\RecastDetour\Shared">
+      <UniqueIdentifier>{028bcbf1-a229-4848-a3dc-8df415b65b39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\RecastDetour\Detour">
+      <UniqueIdentifier>{8ec12599-0107-4494-84bf-d0b5a3cad4bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\RecastDetour\DetourCrowd">
+      <UniqueIdentifier>{a6f5b18c-2b3c-4c34-862f-1680fff03910}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\RecastDetour\Recast">
+      <UniqueIdentifier>{5e6be6f9-1468-4ebb-8e78-218b45901e7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\RecastDetour\fastlz">
+      <UniqueIdentifier>{3bebdd4d-e00f-4e8e-ac38-28b3c90ac051}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Common\Jamfile">
+      <Filter>Core</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Common.rc">
+      <Filter>Core</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

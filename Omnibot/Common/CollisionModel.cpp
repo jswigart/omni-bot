@@ -12,6 +12,7 @@
 
 #include <boost/shared_array.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string/find.hpp>
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -831,6 +832,7 @@ void Node::Clear()
 	mForceRebuild = false;
 	mSaveable = true;
 	mRuntime = false;
+	mIgnored = false;
 }
 
 void Node::Init( PathPlannerRecast * planner )
@@ -849,6 +851,13 @@ void Node::Init( PathPlannerRecast * planner )
 		if ( !IGame::GetEntityInfo( mEntity, mEntInfo ) )
 		{
 			EngineFuncs::ConsoleMessage( va( "Entity '%s' unknown type, ignoring", mEntityName.c_str() ).c_str() );
+			mEnabled = false;
+		}
+
+		mIgnored = mEntInfo.mIgnoreModel;
+		if( mIgnored )
+		{	
+			EngineFuncs::ConsoleMessage( va( "Entity '%s' marked for ignore", mEntityName.c_str() ).c_str() );
 			mEnabled = false;
 		}
 
@@ -975,11 +984,11 @@ void Node::UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpda
 			}
 			else if ( rebuildForced )
 			{
-				EngineFuncs::ConsoleMessage( va( "Entity '%s', rebuild forced", mEntityName.c_str(), mSubModel ).c_str() );
+				EngineFuncs::ConsoleMessage( va( "Entity '%s', rebuild forced (subm %d, sm %d, disp %d)", mEntityName.c_str(), mSubModel, mStaticModel, mDisplacement ).c_str() );
 			}
 			else if ( rebuildModelChanged )
 			{
-				EngineFuncs::ConsoleMessage( va( "Entity '%s', model %d crc changed", mEntityName.c_str(), mSubModel ).c_str() );
+				//EngineFuncs::ConsoleMessage( va( "Entity '%s', (subm %d, sm %d, disp %d) crc changed", mEntityName.c_str(), mSubModel, mStaticModel, mDisplacement ).c_str() );
 			}
 			else if ( rebuildNavFlagChanged )
 			{
@@ -1025,7 +1034,7 @@ void Node::UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpda
 
 bool Node::CollideSegmentNearest( RayResult & result, const Segment3f & segment, SurfaceFlags ignoreSurfaces, bool onlyCollidable )
 {
-	if ( mModel != NULL )
+	if ( mModel != NULL && !mIgnored )
 	{
 		if ( !onlyCollidable || mActiveState == StateCollidable )
 		{
@@ -1060,7 +1069,7 @@ bool Node::CollideSegmentNearest( RayResult & result, const Segment3f & segment,
 
 void Node::GatherTriangles( const GatherParms & parms, const Box3f & gatherObb, GatherData& dataOut )
 {
-	if ( mModel != NULL && mEnabled && mActiveState == StateCollidable )
+	if ( mModel != NULL && mEnabled && mActiveState == StateCollidable && !mIgnored )
 	{
 		CollisionTriangle baseTri;
 		if ( mNavFlagsOverride != NAVFLAGS_NONE )
@@ -1092,7 +1101,7 @@ void Node::GatherTriangles( const GatherParms & parms, const Box3f & gatherObb, 
 
 void Node::GatherTriangles( const GatherParms & parms, const Sphere3f & gatherSphere, GatherData& dataOut )
 {
-	if( mModel != NULL && mEnabled && mActiveState == StateCollidable )
+	if( mModel != NULL && mEnabled && mActiveState == StateCollidable && !mIgnored )
 	{
 		CollisionTriangle baseTri;
 		if ( mNavFlagsOverride != NAVFLAGS_NONE )
@@ -1124,7 +1133,7 @@ void Node::GatherTriangles( const GatherParms & parms, const Sphere3f & gatherSp
 
 void Node::UpdateWorldBounds( AxisAlignedBox3f & worldBounds )
 {
-	if ( mModel != NULL )
+	if ( mModel != NULL && !mIgnored )
 	{
 		worldBounds.ExpandAABB( ComputeAABB( mModel->GetWorldOBB( mTransform ) ) );
 	}
@@ -1147,6 +1156,7 @@ void Node::SetModelShapeMode( const ModelPtr & mdl, RecastIO::ShapeMode mode )
 		mChildren[ i ]->SetModelShapeMode( mdl, mode );
 	}
 }
+
 void Node::SetModelEnable( const ModelPtr & mdl, bool en )
 {
 	if ( mModel == mdl )
@@ -1159,6 +1169,7 @@ void Node::SetModelEnable( const ModelPtr & mdl, bool en )
 		mChildren[ i ]->SetModelEnable( mdl, en );
 	}
 }
+
 void Node::SetModelSolid( const ModelPtr & mdl, bool en )
 {
 	if ( mModel == mdl )
@@ -1171,6 +1182,7 @@ void Node::SetModelSolid( const ModelPtr & mdl, bool en )
 		mChildren[ i ]->SetModelSolid( mdl, en );
 	}
 }
+
 void Node::SetModelDynamic( const ModelPtr & mdl, bool en )
 {
 	if ( mModel == mdl )
@@ -1183,6 +1195,25 @@ void Node::SetModelDynamic( const ModelPtr & mdl, bool en )
 		mChildren[ i ]->SetModelDynamic( mdl, en );
 	}
 }
+
+void Node::SetModelEnableForMaterial( bool enable, const std::string& matchMaterial )
+{
+	if ( mModel )
+	{
+		for ( size_t i = 0; i < mModel->GetNumMaterials(); ++i )
+		{
+			const Material& mtrl = mModel->GetMaterial( i );
+			if ( Utils::StringFindNoCase( mtrl.mName, matchMaterial ) )
+				mEnabled = enable;
+		}
+	}
+
+	for ( size_t i = 0; i < mChildren.size(); ++i )
+	{
+		mChildren[ i ]->SetModelEnableForMaterial( enable, matchMaterial );
+	}
+}
+
 void Node::RenderModel( const obColor & polyColor )
 {
 	if ( mModel != NULL )

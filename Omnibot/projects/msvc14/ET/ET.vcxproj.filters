@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Dlls">
+      <UniqueIdentifier>{0428c558-8b13-43fa-bf3c-5890a0d9b0ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{66fc8ec1-3296-4c60-b07b-c801bd333ffe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Scripting">
+      <UniqueIdentifier>{20b6e5df-9d14-4418-bf32-a9de06683cd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Goals">
+      <UniqueIdentifier>{57a1abe6-7ce3-4525-aa6b-622f141629af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Filters">
+      <UniqueIdentifier>{42e70e84-1186-43b3-b021-e979331d33cd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\common\BotExports.cpp">
+      <Filter>Dlls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ET\ET_Client.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ET\ET_Game.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ET\ET_VoiceMacros.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ET\gmETBinds.cpp">
+      <Filter>Core\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ET\ET_BaseStates.cpp">
+      <Filter>Core\Goals</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ET\ET_FilterClosest.cpp">
+      <Filter>Core\Filters</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\Common\Common.rc">
+      <Filter>Dlls</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\ET\ET_Notes.txt" />
+    <None Include="..\..\..\ET\Jamfile" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\ET\ET_Client.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ET\ET_Config.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ET\ET_Game.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ET\ET_Messages.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ET\ET_VoiceMacros.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\resource.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ET\ET_BaseStates.h">
+      <Filter>Core\Goals</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\ET\ET_FilterClosest.h">
+      <Filter>Core\Filters</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

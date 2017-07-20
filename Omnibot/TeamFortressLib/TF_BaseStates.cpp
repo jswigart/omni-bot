@@ -103,37 +103,33 @@ namespace AiState
 	STATE_UPDATE( SentryBuild, SG_NONE )
 	{
 		FINDSTATE( sg, Sentry, GetParent() );
-		if ( sg )
+		if ( sg && sg->HasSentry() && sg->SentryFullyBuilt() )
 		{
-			FINDSTATE( sg, Sentry, GetParent() );
-			if ( sg && sg->HasSentry() && sg->SentryFullyBuilt() )
+			if ( sg->GetSentryStatus().mLevel < 3 )
 			{
-				if ( sg->GetSentryStatus().mLevel < 3 )
-				{
-					SetNextState( SG_UPGRADING );
-					return;
-				}
-
-				const Sentry::SentryStatus &ss = sg->GetSentryStatus();
-				if ( (ss.mSabotaged && TF_Options::REPAIR_ON_SABOTAGED) ||
-					 (ss.mHealth < ss.mMaxHealth) )
-				{
-					SetNextState( SG_REPAIRING );
-					return;
-				}
-
-				if ( ss.mRockets[ 0 ] < ss.mRockets[ 1 ] / 2 ||
-					 ss.mShells[ 0 ] < ss.mShells[ 1 ] / 2 )
-				{
-					SetNextState( SG_RESUPPLY );
-					return;
-				}
-				SetNextState( SG_DONE );
+				SetNextState( SG_UPGRADING );
+				return;
 			}
-			else
+
+			const Sentry::SentryStatus &ss = sg->GetSentryStatus();
+			if ( ( ss.mSabotaged && TF_Options::REPAIR_ON_SABOTAGED ) ||
+				( ss.mHealth.mNum < ss.mHealth.mMax ) )
 			{
-				SetNextState( SG_BUILDING );
+				SetNextState( SG_REPAIRING );
+				return;
 			}
+
+			if ( ss.mRockets.mNum < ss.mRockets.mMax / 2 ||
+				ss.mShells.mNum < ss.mShells.mMax / 2 )
+			{
+				SetNextState( SG_RESUPPLY );
+				return;
+			}
+			SetNextState( SG_DONE );
+		}
+		else
+		{
+			SetNextState( SG_BUILDING );
 		}
 	}
 
@@ -312,7 +308,6 @@ namespace AiState
 			FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
 			FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), TF_Options::SENTRY_UPGRADE_WPN ) );
 
-			FINDSTATE( sg, Sentry, GetRootState() );
 			if ( sg )
 				GetClient()->GetSteeringSystem()->SetTarget( sg->GetSentryStatus().mPosition );
 		}
@@ -339,7 +334,7 @@ namespace AiState
 		//////////////////////////////////////////////////////////////////////////
 
 		FINDSTATE( sg, Sentry, GetRootState() );
-		if ( sg && sg->GetSentryStatus().mHealth == sg->GetSentryStatus().mMaxHealth )
+		if ( sg && sg->GetSentryStatus().mHealth.mNum == sg->GetSentryStatus().mHealth.mMax )
 		{
 			SetNextState( SG_DONE );
 			return;
@@ -350,7 +345,6 @@ namespace AiState
 			FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
 			FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), TF_Options::SENTRY_UPGRADE_WPN ) );
 
-			FINDSTATE( sg, Sentry, GetRootState() );
 			if ( sg )
 				GetClient()->GetSteeringSystem()->SetTarget( sg->GetSentryStatus().mPosition );
 		}
@@ -383,8 +377,8 @@ namespace AiState
 		FINDSTATE( sg, Sentry, GetRootState() );
 		if ( sg )
 		{
-			if ( sg->GetSentryStatus().mShells[ 0 ] == sg->GetSentryStatus().mShells[ 1 ] &&
-				 sg->GetSentryStatus().mRockets[ 0 ] == sg->GetSentryStatus().mRockets[ 1 ] )
+			if ( sg->GetSentryStatus().mShells.mNum == sg->GetSentryStatus().mShells.mMax &&
+				 sg->GetSentryStatus().mRockets.mNum == sg->GetSentryStatus().mRockets.mMax )
 			{
 				SetNextState( SG_DONE );
 				return;
@@ -396,7 +390,6 @@ namespace AiState
 			FINDSTATEIF( Aimer, GetRootState(), AddAimRequest( Priority::Medium, this, GetNameHash() ) );
 			FINDSTATEIF( WeaponSystem, GetRootState(), AddWeaponRequest( Priority::Medium, GetNameHash(), TF_Options::SENTRY_UPGRADE_WPN ) );
 
-			FINDSTATE( sg, Sentry, GetRootState() );
 			if ( sg )
 				GetClient()->GetSteeringSystem()->SetTarget( sg->GetSentryStatus().mPosition );
 		}
@@ -455,12 +448,12 @@ namespace AiState
 			if ( sg && sg->HasSentry() && sg->SentryFullyBuilt() )
 			{
 				const Sentry::SentryStatus &ss = sg->GetSentryStatus();
-				const float hlthpc = 100.f * ((float)ss.mHealth / (float)ss.mMaxHealth);
+				const float hlthpc = ss.mHealth.Percent();
 
 				out << std::setprecision( 3 );
 				out << "H(" << hlthpc << ") ";
-				out << "S(" << ss.mShells[ 0 ] << "/" << ss.mShells[ 1 ] << ") ";
-				out << "R(" << ss.mRockets[ 0 ] << "/" << ss.mRockets[ 1 ] << ") ";
+				out << "S(" << ss.mShells.mNum << "/" << ss.mShells.mMax << ") ";
+				out << "R(" << ss.mRockets.mNum << "/" << ss.mRockets.mMax << ") ";
 			}
 		}
 	}
@@ -577,14 +570,14 @@ namespace AiState
 					return mSentryPriority;
 				}
 
-				if ( sg->GetSentryStatus().mHealth < sg->GetSentryStatus().mMaxHealth )
+				if ( sg->GetSentryStatus().mHealth.mNum < sg->GetSentryStatus().mHealth.mMax )
 				{
 					return mSentryPriority;
 				}
 
 				const Sentry::SentryStatus &status = sg->GetSentryStatus();
-				if ( status.mRockets[ 0 ] < status.mRockets[ 1 ] / 2 ||
-					 status.mShells[ 0 ] < status.mShells[ 1 ] / 2 )
+				if ( status.mRockets.mNum < status.mRockets.mMax / 2 ||
+					 status.mShells.mNum < status.mShells.mMax / 2 )
 				{
 					return mSentryPriority;
 				}
@@ -1138,7 +1131,7 @@ namespace AiState
 		{
 		case BUILDABLE_BUILDING:
 		case BUILDABLE_BUILT:
-			out << mSentryStatus.mHealth << "/" << mSentryStatus.mMaxHealth;
+			out << mSentryStatus.mHealth.mNum << "/" << mSentryStatus.mHealth.mMax;
 			break;
 		case BUILDABLE_INVALID:
 		default:
@@ -1164,11 +1157,8 @@ namespace AiState
 			}
 
 			mSentryStatus.mHealth = stats.mHealth;
-			mSentryStatus.mMaxHealth = stats.mMaxHealth;
-			mSentryStatus.mShells[ 0 ] = stats.mShells[ 0 ];
-			mSentryStatus.mShells[ 1 ] = stats.mShells[ 1 ];
-			mSentryStatus.mRockets[ 0 ] = stats.mRockets[ 0 ];
-			mSentryStatus.mRockets[ 1 ] = stats.mRockets[ 1 ];
+			mSentryStatus.mShells = stats.mShells;
+			mSentryStatus.mRockets = stats.mRockets;
 			mSentryStatus.mLevel = stats.mLevel;
 
 			/*DBG_MSG(0, GetClient(), kNormal, "Sentry Stats");
@@ -1272,7 +1262,7 @@ namespace AiState
 		{
 		case BUILDABLE_BUILDING:
 		case BUILDABLE_BUILT:
-			out << mDispenserStatus.mHealth;
+			out << mDispenserStatus.mHealth.mNum;
 			return;
 		case BUILDABLE_INVALID:
 		default:

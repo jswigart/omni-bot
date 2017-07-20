@@ -540,8 +540,6 @@ void PathPlannerRecast::Update( System & system )
 
 			if ( mNavMeshQuery )
 			{
-				const Vector3f sExtents = localToRc( Vector3f( 16.f, 16.f, 64.f ) );
-
 				dtQueryFilter filter;
 				filter.setIncludeFlags( ( navAreaMask )- 1 );
 				filter.setExcludeFlags( 0 );
@@ -627,24 +625,35 @@ void PathPlannerRecast::Update( System & system )
 
 			//RenderBuffer::AddTri( v[0], v[1], v[2], ( aimHit.mHitNode->mEnabled ? COLOR::GREEN.fade( 100 ) : COLOR::RED.fade( 64 ) ) );
 			
-			std::string nodeInfo, modelState, contentStr = "cnt: ", surfaceStr = "srf: ";
+			std::string nodeInfo, modelState, contentStr = "cnt: ", surfaceStr = "srf: ", areaFlags = "area: ", nodeFlags = "area: ";
 			if ( aimHit.mHitNode->mSubModel >= 0 )
 				nodeInfo = va( "submdl %d", aimHit.mHitNode->mSubModel ).c_str();
 			else if ( aimHit.mHitNode->mStaticModel >= 0 )
 				nodeInfo = va( "staticmdl %d", aimHit.mHitNode->mStaticModel ).c_str();
 			else if ( aimHit.mHitNode->mDisplacement >= 0 )
-				nodeInfo = va( "displacement %d", aimHit.mHitNode->mDisplacement ).c_str();
+				nodeInfo = va( "disp %d", aimHit.mHitNode->mDisplacement ).c_str();
 			
 			ModelStateEnum::NameForValue( aimHit.mHitNode->mActiveState, modelState );
 			ContentFlagsEnum::NameForValueBitfield( activeContentFlags, contentStr );
 			SurfaceFlagsEnum::NameForValueBitfield( activeSurfaceFlags, surfaceStr );
 			
+			if ( aimHit.mHitNode->mNavFlagsOverride != NAVFLAGS_NONE )
+			{
+				NavAreaFlagsEnum::NameForValueBitfield( aimHit.mHitNode->mNavFlagsOverride, areaFlags );
+			}
+
+			nodeFlags += va("solid: %d ", aimHit.mHitNode->mSolid).c_str();
+			nodeFlags += va( "en: %d ", aimHit.mHitNode->mEnabled ).c_str();
+			nodeFlags += va( "dyn: %d ", aimHit.mHitNode->mDynamic ).c_str();
+			nodeFlags += va( "sv: %d ", aimHit.mHitNode->mSaveable ).c_str();
+			nodeFlags += va( "run: %d ", aimHit.mHitNode->mRuntime ).c_str();
+			
 			const Material & mtl = aimHit.mHitNode->mModel->GetMaterial( materialIndex );
 
 			const Vector3f normalOffset = aimHit.mHitPos + aimHit.mHitNormal * 24.0f;
 			RenderBuffer::AddLine( aimHit.mHitPos, aimHit.mHitPos + vAimNormal * 16.0f, COLOR::BLUE );
-			RenderBuffer::AddString3d( normalOffset, COLOR::CYAN, va( "name:%s %s\n%s\n%s\n%s\n%s\n%s", 
-				aimHit.mHitNode->mEntityName.c_str(), nodeInfo.c_str(), aimInfo.c_str(), mtl.mName.c_str(), modelState.c_str(), contentStr.c_str(), surfaceStr.c_str() ).c_str() );
+			RenderBuffer::AddString3d( normalOffset, COLOR::CYAN, va( "name:%s %s\n%s\n%s\n%s\n%s\n%s\n%s\n%s", 
+				aimHit.mHitNode->mEntityName.c_str(), nodeInfo.c_str(), nodeFlags.c_str(), aimInfo.c_str(), mtl.mName.c_str(), modelState.c_str(), contentStr.c_str(), surfaceStr.c_str(), areaFlags.c_str() ).c_str() );
 
 			aimHit.mHitNode->RenderWorldBounds();
 		}
@@ -764,9 +773,9 @@ void PathPlannerRecast::SendTileModel( int tx, int ty )
 			static const int MaxTiles = 32;
 			const dtMeshTile * tiles[ MaxTiles ];
 			const int ntiles = mNavMesh->getTilesAt( tx, ty, tiles, MaxTiles );
-			for ( int i = 0; i < ntiles; ++i )
+			for ( int t = 0; t < ntiles; ++t )
 			{
-				const dtMeshTile * tile = tiles[ i ];
+				const dtMeshTile * tile = tiles[ t ];
 				for ( int i = 0; i < tile->header->polyCount; ++i )
 				{
 					const dtPoly* p = &tile->polys[ i ];
@@ -785,13 +794,13 @@ void PathPlannerRecast::SendTileModel( int tx, int ty )
 						
 						Vector3f tri[ 3 ];
 
-						const unsigned char* t = &tile->detailTris[ ( pd->triBase + j ) * 4 ];
+						const unsigned char* detail = &tile->detailTris[ ( pd->triBase + j ) * 4 ];
 						for ( int k = 0; k < 3; ++k )
 						{
-							if ( t[ k ] < p->vertCount )
-								tri[k] = rcToLocal( Vector3f( &tile->verts[ p->verts[ t[ k ] ] * 3 ] ) );
+							if ( detail[ k ] < p->vertCount )
+								tri[k] = rcToLocal( Vector3f( &tile->verts[ p->verts[ detail[ k ] ] * 3 ] ) );
 							else
-								tri[ k ] = rcToLocal( Vector3f( &tile->detailVerts[ ( pd->vertBase + t[ k ] - p->vertCount ) * 3 ] ) );
+								tri[ k ] = rcToLocal( Vector3f( &tile->detailVerts[ ( pd->vertBase + detail[ k ] - p->vertCount ) * 3 ] ) );
 
 							vertexColors.push_back( dtAreaMaskColor( p->areaMask ) );
 						}
@@ -975,7 +984,7 @@ bool PathPlannerRecast::Load( const std::string &_mapname, bool _dl )
 			conn.mRadius = ioConn.radius();
 			conn.mAreaFlags = (NavAreaFlags)ioConn.areaflags();
 			conn.mBiDirectional = ioConn.bidirectional();
-			mOffMeshConnections.push_back( conn );
+			mOffMeshConnections.insert( std::make_pair( i, conn ) );
 		}
 
 		for ( int i = 0; i < ioNavmesh.nodestate_size(); ++i )
@@ -1020,12 +1029,12 @@ bool PathPlannerRecast::Load( const std::string &_mapname, bool _dl )
 		{
 			for ( int i = 0; i < ioNavmesh.tiles_size(); ++i )
 			{
-				const RecastIO::Tile & tile = ioNavmesh.tiles( i );
-				const std::string & tileCompressedData = tile.compresseddata();
+				const RecastIO::Tile & ioTile = ioNavmesh.tiles( i );
+				const std::string & tileCompressedData = ioTile.compresseddata();
 
-				unsigned char * decompressedBuffer = new unsigned char[ tile.uncompressedsize() ];
-				const int sizeD = fastlz_decompress( tileCompressedData.c_str(), tileCompressedData.size(), decompressedBuffer, tile.uncompressedsize() );
-				if ( sizeD == tile.uncompressedsize() )
+				unsigned char * decompressedBuffer = new unsigned char[ ioTile.uncompressedsize() ];
+				const int sizeD = fastlz_decompress( tileCompressedData.c_str(), tileCompressedData.size(), decompressedBuffer, ioTile.uncompressedsize() );
+				if ( sizeD == ioTile.uncompressedsize() )
 				{
 					dtTileRef tref;
 					if ( dtStatusSucceed( mNavMesh->addTile( decompressedBuffer, sizeD, DT_TILE_FREE_DATA, 0, &tref ) ) )
@@ -1243,7 +1252,7 @@ void PathPlannerRecast::Unload()
 
 	mExclusionZones.resize( 0 );
 
-	mOffMeshConnections.resize( 0 );
+	mOffMeshConnections.clear();
 
 	mCollision.Clear();
 }
@@ -1417,7 +1426,8 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 
 	GatherData gatherData;
 	std::vector<AxisAlignedBox3f> tileExclusions;
-	OffMeshConnections tileLinks;
+	std::vector<uint32_t> tileLinkIds;
+	std::vector<OffMeshConnection> tileLinkConnections;
 
 	boost::crc_32_type tileCrc;
 	tileCrc.process_byte( TILE_DATA_VERSION );
@@ -1446,10 +1456,15 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 			tileCrc.process_bytes( &gatherData.mConvexShapes[ 0 ], gatherData.mConvexShapes.size() * sizeof( gatherData.mConvexShapes[ 0 ] ) );
 		}
 
-		for ( size_t i = 0; i < mOffMeshConnections.size(); ++i )
+		for ( OffMeshConnections::iterator it = mOffMeshConnections.begin(); it != mOffMeshConnections.end(); ++it )
 		{
-			if ( tileAABB.Contains( mOffMeshConnections[ i ].mEntry ) || tileAABB.Contains( mOffMeshConnections[ i ].mEntry ) )
-				tileLinks.push_back( mOffMeshConnections[ i ] );
+			const OffMeshConnection& conn = it->second;
+
+			if ( tileAABB.Contains( conn.mEntry ) || tileAABB.Contains( conn.mEntry ) )
+			{
+				tileLinkIds.push_back(it->first);
+				tileLinkConnections.push_back(it->second);
+			}
 		}
 
 		for ( size_t i = 0; i < mExclusionZones.size(); ++i )
@@ -1597,8 +1612,8 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 
 			// convert to recast vectors
 			rcVectors.resize( 0 );			
-			for ( size_t i = convex.mVertStart; i < convex.mVertEnd; ++i )
-				rcVectors.push_back( localToRc( gatherData.mConvexVertices[ i ] ) );
+			for ( size_t v = convex.mVertStart; v < convex.mVertEnd; ++v )
+				rcVectors.push_back( localToRc( gatherData.mConvexVertices[ v ] ) );
 
 			static float maxAdj = 4.0f;
 			const float hmin = convex.mHeightMin - mSettings.AgentHeightStand;
@@ -1758,21 +1773,21 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 			Vector3f	mEnd;
 		};
 
-		std::vector<ConnPts>			offMeshPoints( tileLinks.size() );
-		std::vector<float>				offMeshRadius( tileLinks.size() );
-		std::vector<unsigned char>		offMeshConDir( tileLinks.size() );
-		std::vector<navAreaMask>		offMeshConFlags( tileLinks.size() );
-		std::vector<unsigned int>		offMeshUserIds( tileLinks.size() );
+		std::vector<ConnPts>			offMeshPoints( tileLinkConnections.size() );
+		std::vector<float>				offMeshRadius( tileLinkConnections.size() );
+		std::vector<unsigned char>		offMeshConDir( tileLinkConnections.size() );
+		std::vector<navAreaMask>		offMeshConFlags( tileLinkConnections.size() );
+		std::vector<unsigned int>		offMeshUserIds( tileLinkConnections.size() );
 
-		for ( size_t c = 0; c < tileLinks.size(); ++c )
+		for ( size_t c = 0; c < tileLinkConnections.size(); ++c )
 		{
-			const OffMeshConnection & conn = tileLinks[ c ];
+			const OffMeshConnection & conn = tileLinkConnections[ c ];
 			offMeshPoints[ c ].mStart = localToRc( conn.mEntry );
 			offMeshPoints[ c ].mEnd = localToRc( conn.mExit );
 			offMeshRadius[ c ] = conn.mRadius;
 			offMeshConDir[ c ] = conn.mBiDirectional ? DT_OFFMESH_CON_BIDIR : 0;
 			offMeshConFlags[ c ] = conn.mAreaFlags;
-			offMeshUserIds[ c ] = c;
+			offMeshUserIds[ c ] = tileLinkIds[ c ];
 		}
 
 		dtNavMeshCreateParams params;
@@ -1788,14 +1803,14 @@ void PathPlannerRecast::RasterizeTileLayers( int tx, int ty )
 		params.detailVertsCount = rc.meshdetail->nverts;
 		params.detailTris = rc.meshdetail->tris;
 		params.detailTriCount = rc.meshdetail->ntris;
-		if ( tileLinks.size() > 0 )
+		if ( tileLinkConnections.size() > 0 )
 		{
 			params.offMeshConVerts = offMeshPoints[ 0 ].mStart;
 			params.offMeshConRad = &offMeshRadius[ 0 ];
 			params.offMeshConDir = &offMeshConDir[ 0 ];
 			params.offMeshConAreaFlags = &offMeshConFlags[ 0 ];
 			params.offMeshConUserID = &offMeshUserIds[ 0 ];
-			params.offMeshConCount = tileLinks.size();
+			params.offMeshConCount = tileLinkConnections.size();
 		}
 		if ( userRefs.size() > 0 )
 		{
@@ -2016,11 +2031,11 @@ size_t PathPlannerRecast::FindBorderEdges( NavFlags inc, NavFlags exc, NavFlags 
 
 	if ( dtStatusSucceed( nm->findPolysAroundCircle( startPoly, startPos, radius, &filter, results, resultParent, resultCost, &resultCount, MAX_RESULTS ) ) )
 	{
-		for ( int i = 0; i < resultCount; ++i )
+		for ( int r = 0; r < resultCount; ++r )
 		{
 			const dtMeshTile* tile = 0;
 			const dtPoly* poly = 0;
-			if ( dtStatusFailed( mNavMesh->getTileAndPolyByRef( results[ i ], &tile, &poly ) ) )
+			if ( dtStatusFailed( mNavMesh->getTileAndPolyByRef( results[ r ], &tile, &poly ) ) )
 				continue;
 
 			// skip polygons that are border masked, only neighboring polys are valid for border types
@@ -2128,4 +2143,34 @@ finished:
 	dtFreeNavMeshQuery( nm );
 
 	return cnt;
+}
+
+void PathPlannerRecast::AddOffMeshConnection( const OffMeshConnection& conn )
+{
+	if ( mOffMeshConnections.empty() )
+	{
+		mOffMeshConnections.insert( std::make_pair(1,conn) );
+	}
+	else
+	{
+		OffMeshConnections::reverse_iterator last = mOffMeshConnections.rbegin();
+		mOffMeshConnections.insert( std::make_pair( last->first+1, conn ) );
+	}
+
+	MarkTileForBuilding( conn.mEntry );
+	MarkTileForBuilding( conn.mExit );
+}
+
+void PathPlannerRecast::RemoveOffMeshConnection( uint32_t connectionId )
+{
+	OffMeshConnections::iterator it = mOffMeshConnections.find( connectionId );
+	if ( it != mOffMeshConnections.end() )
+	{
+		OffMeshConnection conn = it->second;
+
+		mOffMeshConnections.erase( it->first );
+
+		MarkTileForBuilding( conn.mEntry );
+		MarkTileForBuilding( conn.mExit );
+	}
 }

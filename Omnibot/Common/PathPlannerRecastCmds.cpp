@@ -50,6 +50,8 @@ void PathPlannerRecast::InitCommands()
 	SetEx( "nav_viewconnections", "Turn on/off navmesh connection visibility.",  this, &PathPlannerRecast::cmdNavViewConnections );
 	SetEx( "nav_addexclusionzone", "Adds a bounding area to include in navigation.", this, &PathPlannerRecast::cmdNavAddExclusionZone );
 	SetEx( "nav_addlink", "Adds an off-mesh connection.", this, &PathPlannerRecast::cmdNavAddLink );
+	SetEx( "nav_dellink", "Removes an off-mesh connection.", this, &PathPlannerRecast::cmdNavDeleteLink );
+	SetEx( "nav_changelink", "Changes the radius/flags an off-mesh connection.", this, &PathPlannerRecast::cmdNavChangeLink );
 	
 	SetEx( "nav_commit", "Completes the current tool.", this, &PathPlannerRecast::cmdCommitPoly );
 	//////////////////////////////////////////////////////////////////////////
@@ -288,9 +290,7 @@ public:
 	}
 	virtual void Commit( PathPlannerRecast * system )
 	{
-		system->mOffMeshConnections.push_back( mConn );
-		system->MarkTileForBuilding( mConn.mEntry );
-		system->MarkTileForBuilding( mConn.mExit );
+		system->AddOffMeshConnection(mConn);
 	}
 
 	OffMeshConnection mConn;
@@ -328,7 +328,74 @@ showUsage:
 	for ( size_t i = 0; i < NavAreaFlagsEnum::sKeyValCount; ++i )
 		flagsStr += va( "%s%s", flagsStr.empty() ? "" : ", ", NavAreaFlagsEnum::sKeyVal[ i ].mName ).c_str();
 
-	EngineFuncs::ConsoleError( "nav_addlink radius[#] type[string] flag(s)[string].." );
+	EngineFuncs::ConsoleError( "nav_addlink radius[#] flag(s)[string].." );
+	EngineFuncs::ConsoleError( va( "	radius - radius of connection" ).c_str() );
+	EngineFuncs::ConsoleError( va( "	flags - combination of (%s)", flagsStr.c_str() ).c_str() );
+}
+
+void PathPlannerRecast::cmdNavDeleteLink( const StringVector & args )
+{
+	Vector3f aimPos;
+	Utils::GetLocalAimPoint( aimPos );
+
+	for ( OffMeshConnections::iterator it = mOffMeshConnections.begin(); it != mOffMeshConnections.end(); ++it )
+	{
+		OffMeshConnection oldConn = it->second;
+
+		float distToEntry = ( aimPos - oldConn.mEntry ).Length();
+		float distToExit = ( aimPos - oldConn.mEntry ).Length();
+		if ( distToEntry < oldConn.mRadius || distToExit < oldConn.mRadius )
+		{
+			RemoveOffMeshConnection( it->first );
+			return;
+		}
+	}
+}
+
+void PathPlannerRecast::cmdNavChangeLink( const StringVector & args )
+{
+	if ( mFlags.mViewMode == 0 )
+		return;
+
+	Vector3f aimPos;
+	Utils::GetLocalAimPoint( aimPos );
+
+	if ( args.size() < 3 )
+		goto showUsage;
+
+	float radius = 0.0f;
+	NavAreaFlags areaFlags = NAVFLAGS_NONE;
+
+	if ( !Utils::ConvertString( args[ 1 ], radius ) )
+		goto showUsage;
+	if ( !NavAreaFlagsEnum::ValueForName( args[ 2 ].c_str(), areaFlags ) )
+		goto showUsage;
+
+	for ( size_t i = 0; i < mOffMeshConnections.size(); ++i )
+	{
+		OffMeshConnection& oldConn = mOffMeshConnections[ i ];
+
+		float distToEntry = ( aimPos - oldConn.mEntry ).Length();
+		float distToExit = ( aimPos - oldConn.mEntry ).Length();
+		if ( distToEntry < oldConn.mRadius || distToExit < oldConn.mRadius )
+		{
+			oldConn.mRadius = radius;
+			oldConn.mAreaFlags = areaFlags;
+
+			MarkTileForBuilding( oldConn.mEntry );
+			MarkTileForBuilding( oldConn.mExit );
+			return;
+		}
+	}
+	return;
+
+showUsage:
+
+	std::string flagsStr;
+	for ( size_t i = 0; i < NavAreaFlagsEnum::sKeyValCount; ++i )
+		flagsStr += va( "%s%s", flagsStr.empty() ? "" : ", ", NavAreaFlagsEnum::sKeyVal[ i ].mName ).c_str();
+
+	EngineFuncs::ConsoleError( "nav_addlink radius[#] flag(s)[string].." );
 	EngineFuncs::ConsoleError( va( "	radius - radius of connection" ).c_str() );
 	EngineFuncs::ConsoleError( va( "	flags - combination of (%s)", flagsStr.c_str() ).c_str() );
 }
@@ -353,7 +420,8 @@ void PathPlannerRecast::cmdAutoBuildFeatures( const StringVector & args )
 			conn.mAreaFlags = NAVFLAGS_TELEPORT;
 			conn.mRadius = 16.0f;
 			conn.mBiDirectional = false;
-			mOffMeshConnections.push_back( conn );
+
+			AddOffMeshConnection( conn );
 
 			RenderBuffer::AddLine( conn.mEntry, conn.mExit, COLOR::MAGENTA, fTime );
 		}
@@ -491,15 +559,22 @@ void PathPlannerRecast::cmdModelEnable( const StringVector & args )
 	CHECK_NUM_PARAMS( args, 2, strUsage );
 	CHECK_BOOL_PARAM( enable, 1, strUsage );
 	OPTIONAL_BOOL_PARAM( all, 2, false );
+	OPTIONAL_STRING_PARAM( matchMaterial, 3, "" );
 
-	RayResult result;
-	if ( GetAimedAtModel( result, SURFACE_IGNORE ) )
+	RayResult aimHit;
+	if ( GetAimedAtModel( aimHit, SURFACE_IGNORE ) )
 	{
+		if ( !matchMaterial.empty() )
+		{
+			mCollision.mRootNode->SetModelEnableForMaterial( enable, matchMaterial );
+			return;
+		}
+
 		if ( all )
-			mCollision.mRootNode->SetModelEnable( result.mHitNode->mModel, enable );
+			mCollision.mRootNode->SetModelEnable( aimHit.mHitNode->mModel, enable );
 		else
 		{ 
-			result.mHitNode->mEnabled = enable;
+			aimHit.mHitNode->mEnabled = enable;
 		}
 	}
 }
@@ -623,9 +698,9 @@ void PathPlannerRecast::cmdModelSetTriangleSurface( const StringVector & args )
 	CHECK_NUM_PARAMS( args, 2, strUsage );
 
 	SurfaceFlags overrideFlags = SURFACE_NONE;
-	for ( size_t i = 1; i < args.size(); ++i )
+	for ( size_t a = 1; a < args.size(); ++a )
 	{
-		CHECK_STRING_PARAM( surfacename, i, strUsage );
+		CHECK_STRING_PARAM( surfacename, a, strUsage );
 
 		SurfaceFlags parsed = SURFACE_NONE;
 		if ( !SurfaceFlagsEnum::ValueForName( surfacename.c_str(), parsed ) )
@@ -652,24 +727,28 @@ void PathPlannerRecast::cmdModelSetAreaFlag( const StringVector & args )
 	if ( mFlags.mViewMode == 0 )
 		return;
 
-	NavAreaFlags navFlags = NAVFLAGS_NONE;
+	
 	RayResult result;
 
 	if ( args.size() < 2 )
 		goto showUsage;
 
+	NavAreaFlags newAreaFlags = NAVFLAGS_NONE;
 	for ( size_t i = 1; i < args.size(); ++i )
 	{
+		NavAreaFlags navFlags = NAVFLAGS_NONE;
 		if ( !NavAreaFlagsEnum::ValueForName( args[ i ].c_str(), navFlags ) )
 		{
 			EngineFuncs::ConsoleError( va( "Unknown flag '%s'", args[ i ].c_str() ).c_str() );
 			goto showUsage;
 		}
+
+		newAreaFlags = (NavAreaFlags)(newAreaFlags | navFlags);
 	}
 		
 	if ( GetAimedAtModel( result, SURFACE_IGNORE ) )
 	{
-		result.mHitNode->mNavFlagsOverride = navFlags;
+		result.mHitNode->mNavFlagsOverride = newAreaFlags;
 	}
 	return;
 

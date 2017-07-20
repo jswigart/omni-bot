@@ -168,6 +168,8 @@ protected:
 	void cmdUndo( const StringVector & args );
 	void cmdNavAddExclusionZone( const StringVector & args );
 	void cmdNavAddLink( const StringVector & args );
+	void cmdNavDeleteLink( const StringVector & args );
+	void cmdNavChangeLink( const StringVector & args );
 	void cmdCommitPoly( const StringVector & args );
 	void cmdAutoBuildFeatures( const StringVector & args );
 	void cmdSaveToObjFile( const StringVector & args );
@@ -182,6 +184,9 @@ protected:
 	void LoadWorldModel();
 
 	void LoadModel( const GameModelInfo & modelInfo, GameEntity entity, const IceMaths::Matrix4x4 & xform, bool baseStaticMesh );
+
+	void AddOffMeshConnection( const OffMeshConnection& conn );
+	void RemoveOffMeshConnection( uint32_t connectionId );
 
 	EditTool<PathPlannerRecast> * mCurrentTool;
 
@@ -228,7 +233,7 @@ private:
 		RecastSettings();
 	} mSettings;
 
-	typedef std::vector<OffMeshConnection> OffMeshConnections;
+	typedef std::map<uint32_t, OffMeshConnection> OffMeshConnections;
 	OffMeshConnections				mOffMeshConnections;
 
 	RecastBuildContext				mContext;

@@ -90,10 +90,10 @@ struct GatherParms
 
 struct CollisionTriangle
 {
-	Triangle3f		mTri;
+	NavAreaFlags	mNavFlags;
 	ContentFlags	mContents;
 	SurfaceFlags	mSurface;
-	NavAreaFlags	mNavFlags;
+	Triangle3f		mTri;
 	GameEntity		mEntity;
 };
 
@@ -264,6 +264,7 @@ struct Node : public std::enable_shared_from_this<Node>
 	bool							mForceRebuild : 1;
 	bool							mSaveable : 1; // save to file
 	bool							mRuntime : 1; // save to file
+	bool							mIgnored : 1;
 
 	void Init( PathPlannerRecast * planner );
 	void UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpdate );
@@ -290,6 +291,7 @@ struct Node : public std::enable_shared_from_this<Node>
 	void SetModelEnable( const ModelPtr & mdl, bool en );
 	void SetModelSolid( const ModelPtr & mdl, bool en );
 	void SetModelDynamic( const ModelPtr & mdl, bool en );
+	void SetModelEnableForMaterial( bool enable, const std::string& matchMaterial );
 
 	void FindNodeWithSubModel( int subModel, NodePtr & node );
 	void FindNodeWithStaticModel( int staticModelId, NodePtr & node );

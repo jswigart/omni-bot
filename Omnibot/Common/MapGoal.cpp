@@ -1328,7 +1328,7 @@ void MapGoal::DrawRoute( const obColor _color, float _duration )
 	{
 		for ( size_t i = 0; i < mRoutes.size(); ++i )
 		{
-			const Route &r = mRoutes[ i ];
+			const Route& r = mRoutes[ i ];
 
 			path->UpdateSourcePosition( r.mStart->GetPosition() );
 			path->UpdateGoalPosition( r.mEnd->GetPosition(), 0.0f );
@@ -1337,9 +1337,9 @@ void MapGoal::DrawRoute( const obColor _color, float _duration )
 			static const int MaxCorners = 256;
 			PathInterface::PathCorner corners[ MaxCorners ];
 			const size_t numCorners = path->GetPathCorners( corners, MaxCorners );
-			for ( size_t i = 1; i < numCorners; ++i )
+			for ( size_t c = 1; c < numCorners; ++c )
 			{
-				RenderBuffer::AddLine( corners[ i - 1 ].mPos, corners[ i ].mPos, _color );
+				RenderBuffer::AddLine( corners[ c - 1 ].mPos, corners[ c ].mPos, _color );
 			}
 		}
 	}

@@ -1581,8 +1581,8 @@ namespace AiState
 				pLargestNode->Sectorized = true;
 				pLargestNode->SectorId = NextSectorId;
 
-				Node s;
-				s.Init( pLargestNode->MinOffset.X, pLargestNode->MinOffset.Y, pLargestNode->Height, false );
+				Node n;
+				n.Init( pLargestNode->MinOffset.X, pLargestNode->MinOffset.Y, pLargestNode->Height, false );
 
 				int ExpansionMask = ( 1 << DIR_NORTH ) | ( 1 << DIR_EAST ) | ( 1 << DIR_SOUTH ) | ( 1 << DIR_WEST );
 
@@ -1609,12 +1609,12 @@ namespace AiState
 
 									int16_t y = 0;
 									if ( d == DIR_NORTH )
-										y = s.MaxOffset.Y + 1;
+										y = n.MaxOffset.Y + 1;
 									else
-										y = s.MinOffset.Y - 1;
-									for ( int16_t x = s.MinOffset.X; x <= s.MaxOffset.X; ++x )
+										y = n.MinOffset.Y - 1;
+									for ( int16_t x = n.MinOffset.X; x <= n.MaxOffset.X; ++x )
 									{
-										Node *pNext = _NodeExists( x, y, s.Height );
+										Node *pNext = _NodeExists( x, y, n.Height );
 										if ( !_CanMergeWith( pLargestNode, pNext ) )
 										{
 											/*Node tn;
@@ -1641,12 +1641,12 @@ namespace AiState
 								{
 									int16_t x = 0;
 									if ( d == DIR_EAST )
-										x = s.MaxOffset.X + 1;
+										x = n.MaxOffset.X + 1;
 									else
-										x = s.MinOffset.X - 1;
-									for ( int16_t y = s.MinOffset.Y; y <= s.MaxOffset.Y; ++y )
+										x = n.MinOffset.X - 1;
+									for ( int16_t y = n.MinOffset.Y; y <= n.MaxOffset.Y; ++y )
 									{
-										Node *pNext = _NodeExists( x, y, s.Height );
+										Node *pNext = _NodeExists( x, y, n.Height );
 										if ( !_CanMergeWith( pLargestNode, pNext ) )
 										{
 											/*Node tn;
@@ -1676,16 +1676,16 @@ namespace AiState
 								switch ( d )
 								{
 									case DIR_NORTH:
-										s.MaxOffset.Y++;
+										n.MaxOffset.Y++;
 										break;
 									case DIR_SOUTH:
-										s.MinOffset.Y--;
+										n.MinOffset.Y--;
 										break;
 									case DIR_EAST:
-										s.MaxOffset.X++;
+										n.MaxOffset.X++;
 										break;
 									case DIR_WEST:
-										s.MinOffset.X--;
+										n.MinOffset.X--;
 										break;
 								}
 

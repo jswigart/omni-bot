@@ -36,10 +36,7 @@ struct OffMeshConnection
 	float					mRadius;
 	NavAreaFlags			mAreaFlags;
 	bool					mBiDirectional : 1;
-
-	// runtime use
-	uint64_t				mPolyId;
-
+	
 	void Render();
 
 	OffMeshConnection();

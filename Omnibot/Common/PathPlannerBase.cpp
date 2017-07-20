@@ -59,14 +59,13 @@ OffMeshConnection::OffMeshConnection()
 	: mRadius( 0.0f )
 	, mAreaFlags( NAVFLAGS_WALK )
 	, mBiDirectional( false )
-	, mPolyId( 0 )
 {
 }
 
 void OffMeshConnection::Render()
 {
-	std::string areaStr, flagStr;
-	NavAreaFlagsEnum::NameForValue( mAreaFlags, flagStr );
+	std::string areaFlagsStr;
+	NavAreaFlagsEnum::NameForValue( mAreaFlags, areaFlagsStr );
 
 	Vector3f lastPt = mEntry;
 	for ( size_t i = 0; i < mVertices.size(); ++i )
@@ -77,9 +76,14 @@ void OffMeshConnection::Render()
 
 	RenderBuffer::AddCircle( mEntry, mRadius, COLOR::GREEN );
 	RenderBuffer::AddCircle( mExit, mRadius, COLOR::GREEN );
-	RenderBuffer::AddLine( lastPt, mExit, COLOR::GREEN );
-	RenderBuffer::AddString3d( mEntry + Vector3f( 0.f, 0.f, 40.f ), COLOR::BLUE, va( "%s (%s)", areaStr.c_str(), flagStr.c_str() ).c_str() );
-	RenderBuffer::AddString3d( mExit + Vector3f( 0.f, 0.f, 40.f ), COLOR::BLUE, va( "%s (%s)", areaStr.c_str(), flagStr.c_str() ).c_str() );
+
+	if(mBiDirectional)
+		RenderBuffer::AddLine( lastPt, mExit, COLOR::GREEN );
+	else
+		RenderBuffer::AddArrow( lastPt, mExit, COLOR::GREEN );
+	
+	RenderBuffer::AddString3d( mEntry + Vector3f( 0.f, 0.f, 40.f ), COLOR::BLUE, va( "%s", areaFlagsStr.c_str() ).c_str() );
+	RenderBuffer::AddString3d( mExit + Vector3f( 0.f, 0.f, 40.f ), COLOR::BLUE, va( "%s", areaFlagsStr.c_str() ).c_str() );
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <RTCWDIR>C:\games\Return to Castle Wolfenstein</RTCWDIR>
+    <DEPENDENCIES>$(SolutionDir)../../dependencies</DEPENDENCIES>
+    <BOOST>D:\Sourcecode\boost_1_60_0</BOOST>
+    <GAMEANALYTICS>D:\git\game-analytics</GAMEANALYTICS>
+    <PROTO_BUFF>D:\git\protobuf</PROTO_BUFF>
+    <GMEX>$(DEPENDENCIES)\gmscriptex\gmsrc_ex</GMEX>
+    <REPO_ROOT>$(SolutionDir)..\..\..\</REPO_ROOT>
+    <InterfaceDir>$(REPO_ROOT)\GameInterfaces</InterfaceDir>
+    <OMNIBOT_INST>$(REPO_ROOT)\Installer\Files</OMNIBOT_INST>
+    <REMOTEDEBUGLIB>$(REPO_ROOT)\Tools\RemoteDebugWindow\RemoteDebugLib</REMOTEDEBUGLIB>
+    <WILDMAGIC>$(DEPENDENCIES)\WildMagic5</WILDMAGIC>
+    <MD5>$(DEPENDENCIES)\md5</MD5>
+    <LIBCURL>$(DEPENDENCIES)\libcurl\include</LIBCURL>
+    <JSONCPP>$(DEPENDENCIES)\json-cpp</JSONCPP>
+    <SHA1>$(DEPENDENCIES)\smallsha1</SHA1>
+    <SQLITE>$(DEPENDENCIES)\sqlite</SQLITE>
+    <RECAST>$(DEPENDENCIES)\recastnavigation</RECAST>
+    <REMOTERY>$(DEPENDENCIES)\Remotery</REMOTERY>
+    <TINYOBJLOADER>$(DEPENDENCIES)\tinyobjloader</TINYOBJLOADER>
+    <LIBSODIUM>$(GAMEANALYTICS)\dependencies\libsodium</LIBSODIUM>
+    <ZEROMQ>$(GAMEANALYTICS)\dependencies\zeromq</ZEROMQ>
+    <ETDIR>D:\Games\WET</ETDIR>
+    <JADIR>D:\Games\JediAcademy\GameData\</JADIR>
+    <ModularCombat>D:\Games\Steam\steamapps\common\Modular Combat\2007\modularcombat</ModularCombat>
+    <FortressForever2007>D:\Games\Steam\steamapps\sourcemods\ff_2006_basemod</FortressForever2007>
+    <FortressForever2013>D:\Games\Steam\steamapps\sourcemods\ff_2013_basemod</FortressForever2013>
+    <SourceSDK2007>D:\Games\Steam\steamapps\common\Source SDK Base 2007\</SourceSDK2007>
+    <ModCom2007>D:\Games\Steam\steamapps\common\Modular Combat\2007</ModCom2007>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile />
+    <ClCompile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnablePREfast>false</EnablePREfast>
+      <AdditionalIncludeDirectories>$(BULLET)/src;$(REMOTERY)/lib;$(TINYOBJLOADER);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="DEPENDENCIES">
+      <Value>$(DEPENDENCIES)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="BOOST">
+      <Value>$(BOOST)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="GAMEANALYTICS">
+      <Value>$(GAMEANALYTICS)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="PROTO_BUFF">
+      <Value>$(PROTO_BUFF)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="GMEX">
+      <Value>$(GMEX)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="REPO_ROOT">
+      <Value>$(REPO_ROOT)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="InterfaceDir">
+      <Value>$(InterfaceDir)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="OMNIBOT_INST">
+      <Value>$(OMNIBOT_INST)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="REMOTEDEBUGLIB">
+      <Value>$(REMOTEDEBUGLIB)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="WILDMAGIC">
+      <Value>$(WILDMAGIC)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="MD5">
+      <Value>$(MD5)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="LIBCURL">
+      <Value>$(LIBCURL)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="JSONCPP">
+      <Value>$(JSONCPP)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="SHA1">
+      <Value>$(SHA1)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="SQLITE">
+      <Value>$(SQLITE)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="RECAST">
+      <Value>$(RECAST)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="REMOTERY">
+      <Value>$(REMOTERY)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="TINYOBJLOADER">
+      <Value>$(TINYOBJLOADER)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="LIBSODIUM">
+      <Value>$(LIBSODIUM)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="ZEROMQ">
+      <Value>$(ZEROMQ)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="ETDIR">
+      <Value>$(ETDIR)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="JADIR">
+      <Value>$(JADIR)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="ModularCombat">
+      <Value>$(ModularCombat)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="FortressForever2007">
+      <Value>$(FortressForever2007)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="FortressForever2013">
+      <Value>$(FortressForever2013)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="SourceSDK2007">
+      <Value>$(SourceSDK2007)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="ModCom2007">
+      <Value>$(ModCom2007)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

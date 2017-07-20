@@ -364,7 +364,7 @@ public:
 	{
 	}
 	
-	virtual void ProcessStimulusBehavior( Behaviors& behaviors, const StimulusPtr& stim );
+	virtual void ProcessStimulusBehavior( TacticalManager* tactical, Behaviors& behaviors, const StimulusPtr& stim );
 
 	// Game specific variables.
 	typedef enum
@@ -425,7 +425,7 @@ public:
 	void PropogateDeletedThreads( const int *_threadIds, int _numThreads );
 
 	bool DistributeUnhandledCommand( const StringVector & args );
-
+	
 	Client();
 	virtual ~Client();
 protected:

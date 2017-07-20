@@ -1,0 +1,26 @@
+this.GoalType = "Powerup";
+this.Version = 1;
+this.DynamicPosition = true;
+this.DefaultPriority = 0.0;
+this.RemoveWithEntity = true;
+this.CreateOnLoad = false;
+
+this.GetPriority = function()
+{
+	if ( this.PowerupClass == null )
+	{
+		this.DisableGoal(true);
+		return 0.0;
+	}
+	
+	while(1)
+	{
+		if( !this.Bot.HasPowerUp( this.PowerupClass ) )
+		{
+			this.Priority = 1.0;
+		}
+
+		block( EVENT.ADDWEAPON, EVENT.REMOVEWEAPON );
+	}
+};
+

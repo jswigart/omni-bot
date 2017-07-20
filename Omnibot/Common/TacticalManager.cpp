@@ -16,8 +16,7 @@
 
 const BehaviorActionEnum BehaviorActionEnum::sKeyVal [] =
 {
-	{ "NONE", BEHAVIOR_NONE },
-	{ "KILL", BEHAVIOR_KILL },
+	{ "NONE", BEHAVIOR_NONE },	
 	{ "PRESSBUTTON", BEHAVIOR_PRESSBUTTON },
 	{ "RESUPPLY", BEHAVIOR_RESUPPLY },
 	{ "GET_WEAPON", BEHAVIOR_GET_WEAPON },
@@ -26,12 +25,13 @@ const BehaviorActionEnum BehaviorActionEnum::sKeyVal [] =
 	{ "CAP_FLAG", BEHAVIOR_CAP_FLAG },
 	{ "CAP_CONTROL_POINT", BEHAVIOR_CAP_CONTROL_POINT },
 	{ "DEFEND", BEHAVIOR_DEFEND },
+	{ "ATTACK", BEHAVIOR_ATTACK },
 };
 const size_t BehaviorActionEnum::sKeyValCount = sizeof( BehaviorActionEnum::sKeyVal ) / sizeof( BehaviorActionEnum::sKeyVal[ 0 ] );
 
 //////////////////////////////////////////////////////////////////////////
 
-Stimulus::Stimulus()
+Stimulus::Stimulus()	
 {
 	Clear();
 }
@@ -77,6 +77,8 @@ void StimulusUser::Clear()
 TacticalManager::TacticalManager()
 	: mShowTokenClient( -1 )
 	, mDrawCoverSegments( 0.0f )
+	, mUsers( Constants::MAX_PLAYERS )
+	, mStimulus( Constants::MAX_ENTITIES )
 {
 }
 
@@ -264,7 +266,7 @@ void TacticalManager::UpdateBehaviorTokens( System & system )
 	rmt_ScopedCPUSample( UpdateBehaviorTokens );
 
 	// do an initial pass to update the stimulus state once
-	for ( size_t e = 0; e < Constants::MAX_ENTITIES; ++e )
+	for ( size_t e = 0; e < mStimulus.size(); ++e )
 	{
 		StimulusPtr& stim = mStimulus[ e ];
 		if ( stim )
@@ -280,7 +282,7 @@ void TacticalManager::UpdateBehaviorTokens( System & system )
 	std::vector<Vector3f> dstPositions;
 	dstPositions.reserve( 128 );
 
-	for ( size_t c = 0; c < Constants::MAX_PLAYERS; ++c )
+	for ( size_t c = 0; c < mUsers.size(); ++c )
 	{
 		StimulusUser& user = mUsers[ c ];
 
@@ -339,16 +341,19 @@ void TacticalManager::UpdateBehaviorTokens( System & system )
 		user.mBehaviorsAnalyze.push_back( beh );
 		}*/
 
-		for ( size_t e = 0; e < Constants::MAX_ENTITIES; ++e )
+		for ( size_t e = 0; e < mStimulus.size(); ++e )
 		{
 			StimulusPtr& stim = mStimulus[ e ];
-			if ( !stim || stim->mEntInfo.mFlags.CheckFlag( ENT_FLAG_DISABLED ) )
+			if ( !stim )
+				continue;
+
+			if ( stim->mEntInfo.mFlags.CheckFlag( ENT_FLAG_DISABLED ) )
 				continue;
 
 			StimulusBehavior beh;
 			beh.mUser = user.mEntity;
 			beh.mStimulus = stim;
-			client->ProcessStimulusBehavior( user.mBehaviorsAnalyze, stim );
+			client->ProcessStimulusBehavior( this, user.mBehaviorsAnalyze, stim );
 		}
 
 		dstPositions.resize( 0 );
@@ -368,11 +373,33 @@ void TacticalManager::UpdateBehaviorTokens( System & system )
 	}
 }
 
+StimulusPtr TacticalManager::HasStimulus(EntityGroup group, GameEntity entity)
+{
+	for ( size_t e = 0; e < mStimulus.size(); ++e )
+	{
+		StimulusPtr& stim = mStimulus[ e ];
+		if ( !stim )
+			continue;
+
+		if ( stim->mEntInfo.mFlags.CheckFlag( ENT_FLAG_DISABLED ) )
+			continue;
+		
+		if ( stim->mEntInfo.mGroup == group )
+		{
+			if ( entity == stim->mEntInfo.mOwner )
+			{
+				return stim;
+			}
+		}
+	}
+	return StimulusPtr();
+}
+
 size_t TacticalManager::GetBehaviorsForUser( GameEntity ent, StimulusBehavior* behaviors, size_t maxBehaviors )
 {
 	size_t count = 0;
 
-	for ( size_t c = 0; c < Constants::MAX_PLAYERS; ++c )
+	for ( size_t c = 0; c < mUsers.size(); ++c )
 	{
 		StimulusUser& user = mUsers[ c ];
 		if ( user.mEntity == ent )

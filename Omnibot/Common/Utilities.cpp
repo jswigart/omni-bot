@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <boost/regex.hpp>
+#include <algorithm>
 
 #include "IGame.h"
 #include "IGameManager.h"
@@ -99,6 +100,16 @@ namespace Utils
 	int32_t StringCompareNoCase( const std::string &_s1, const std::string &_s2 )
 	{
 		return StringCompareNoCase( _s1.c_str(), _s2.c_str() );
+	}
+	bool StringFindNoCase( const std::string &str1, const std::string &str2 )
+	{
+		std::string s1 = str1;
+		std::string s2 = str2;
+				
+		std::transform( s1.begin(), s1.end(), s1.begin(), toLower() );
+		std::transform( s2.begin(), s2.end(), s2.begin(), toLower() );
+
+		return s1.find( s2 ) != std::string::npos;
 	}
 
 	std::string StringToLower( const std::string &_s1 )

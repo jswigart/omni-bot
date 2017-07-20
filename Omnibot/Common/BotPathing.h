@@ -107,6 +107,7 @@ namespace AiState
 		int							mLadderDirection;
 		int32_t						mJumpTime;
 
+		uint64_t					mActiveLinkPoly;
 		OffMeshConnection			mActiveLink;
 		size_t						mActiveLinkIndex;
 

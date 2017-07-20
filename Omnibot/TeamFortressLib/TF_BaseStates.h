@@ -198,15 +198,14 @@ namespace AiState
 	public:
 		typedef struct
 		{
-			TF_BuildableStatus mStatus;
-			GameEntity		 mEntity;
-			Vector3f		 mPosition;
-			Vector3f		 mFacing;
-			int				 mLevel;
-			int				 mHealth;
-			int				 mMaxHealth;
-			int				 mShells[ 2 ];
-			int				 mRockets[ 2 ];
+			TF_BuildableStatus	mStatus;
+			GameEntity			mEntity;
+			Vector3f			mPosition;
+			Vector3f			mFacing;
+			int					mLevel;
+			EntityInfo::Range	mHealth;
+			EntityInfo::Range	mShells;
+			EntityInfo::Range	mRockets;
 			bool			 mSabotaged;
 
 			void Reset()
@@ -216,9 +215,9 @@ namespace AiState
 				mPosition = Vector3f::ZERO;
 				mFacing = Vector3f::ZERO;
 				mLevel = 0;
-				mHealth = mMaxHealth = 0;
-				mShells[ 0 ] = mShells[ 1 ] = 0;
-				mShells[ 0 ] = mRockets[ 1 ] = 0;
+				mHealth = EntityInfo::Range();
+				mShells = EntityInfo::Range();
+				mRockets = EntityInfo::Range();
 				mSabotaged = false;
 			}
 		} SentryStatus;
@@ -260,17 +259,17 @@ namespace AiState
 	public:
 		typedef struct
 		{
-			TF_BuildableStatus mStatus;
-			GameEntity		 mEntity;
-			Vector3f		 mPosition;
-			Vector3f		 mFacing;
-			int				 mHealth;
-			int				 mCells;
-			int				 mNails;
-			int				 mRockets;
-			int				 mShells;
-			int				 mArmor;
-			bool			 mSabotaged;
+			TF_BuildableStatus	mStatus;
+			GameEntity			mEntity;
+			Vector3f			mPosition;
+			Vector3f			mFacing;
+			EntityInfo::Range	mHealth;
+			EntityInfo::Range	mCells;
+			EntityInfo::Range	mNails;
+			EntityInfo::Range	mRockets;
+			EntityInfo::Range	mShells;
+			EntityInfo::Range	mArmor;
+			bool				mSabotaged;
 
 			void Reset()
 			{
@@ -278,12 +277,12 @@ namespace AiState
 				mEntity.Reset();
 				mPosition = Vector3f::ZERO;
 				mFacing = Vector3f::ZERO;
-				mHealth = 0;
-				mCells = 0;
-				mNails = 0;
-				mRockets = 0;
-				mShells = 0;
-				mArmor = 0;
+				mHealth = EntityInfo::Range();
+				mCells = EntityInfo::Range();
+				mNails = EntityInfo::Range();
+				mRockets = EntityInfo::Range();
+				mShells = EntityInfo::Range();
+				mArmor = EntityInfo::Range();
 				mSabotaged = false;
 			}
 		} DispenserStatus;

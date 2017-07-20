@@ -200,22 +200,22 @@ void TF_Game::InitScriptEvents( gmMachine *_machine, gmTableObject *_table )
 	_table->Set( _machine, "CURED", gmVariable( TF_MSG_CURED ) );
 	_table->Set( _machine, "BURNED", gmVariable( TF_MSG_BURNLEVEL ) );
 
-	_table->Set( _machine, "BUILD_NOTENOUGHAMMO", gmVariable( TF_MSG_BUILD_NOTENOUGHAMMO ) );
-	_table->Set( _machine, "BUILD_ALREADYBUILT", gmVariable( TF_MSG_BUILD_ALREADYBUILT ) );
-	_table->Set( _machine, "BUILD_CANTBUILDHERE", gmVariable( TF_MSG_BUILD_CANTBUILDHERE ) );
-	_table->Set( _machine, "BUILD_BUILDING", gmVariable( TF_MSG_BUILD_BUILDING ) );
-	_table->Set( _machine, "BUILD_BUILT", gmVariable( TF_MSG_BUILD_BUILT ) );
-	_table->Set( _machine, "BUILD_BUILDCANCEL", gmVariable( TF_MSG_BUILD_BUILDCANCEL ) );
-	_table->Set( _machine, "BUILD_DESTROYED", gmVariable( TF_MSG_BUILD_DESTROYED ) );
-	_table->Set( _machine, "BUILD_SPOTENEMY", gmVariable( TF_MSG_BUILD_SPOTENEMY ) );
-	_table->Set( _machine, "BUILD_AIMED", gmVariable( TF_MSG_BUILD_AIMED ) );
-	_table->Set( _machine, "BUILD_DAMAGED", gmVariable( TF_MSG_BUILD_DAMAGED ) );
-	_table->Set( _machine, "BUILD_UPGRADED", gmVariable( TF_MSG_BUILD_UPGRADED ) );
-	_table->Set( _machine, "BUILD_DETONATED", gmVariable( TF_MSG_BUILD_DETONATED ) );
-	_table->Set( _machine, "BUILD_DISMANTLED", gmVariable( TF_MSG_BUILD_DISMANTLED ) );
-	_table->Set( _machine, "BUILD_SABOTAGED", gmVariable( TF_MSG_BUILD_SABOTAGED ) );
-	_table->Set( _machine, "BUILD_ENEMYUSED", gmVariable( TF_MSG_BUILD_ENEMYUSED ) );
-	_table->Set( _machine, "BUILD_DETONATE", gmVariable( TF_MSG_BUILD_DETONATE ) );
+	_table->Set( _machine, "BUILDABLE_NOTENOUGHAMMO", gmVariable( TF_MSG_BUILD_NOTENOUGHAMMO ) );
+	_table->Set( _machine, "BUILDABLE_ALREADYBUILT", gmVariable( TF_MSG_BUILD_ALREADYBUILT ) );
+	_table->Set( _machine, "BUILDABLE_CANTBUILDHERE", gmVariable( TF_MSG_BUILD_CANTBUILDHERE ) );
+	_table->Set( _machine, "BUILDABLE_BUILDING", gmVariable( TF_MSG_BUILD_BUILDING ) );
+	_table->Set( _machine, "BUILDABLE_BUILT", gmVariable( TF_MSG_BUILD_BUILT ) );
+	_table->Set( _machine, "BUILDABLE_BUILDCANCEL", gmVariable( TF_MSG_BUILD_BUILDCANCEL ) );
+	_table->Set( _machine, "BUILDABLE_DESTROYED", gmVariable( TF_MSG_BUILD_DESTROYED ) );
+	_table->Set( _machine, "BUILDABLE_SPOTENEMY", gmVariable( TF_MSG_BUILD_SPOTENEMY ) );
+	_table->Set( _machine, "BUILDABLE_AIMED", gmVariable( TF_MSG_BUILD_AIMED ) );
+	_table->Set( _machine, "BUILDABLE_DAMAGED", gmVariable( TF_MSG_BUILD_DAMAGED ) );
+	_table->Set( _machine, "BUILDABLE_UPGRADED", gmVariable( TF_MSG_BUILD_UPGRADED ) );
+	_table->Set( _machine, "BUILDABLE_DETONATED", gmVariable( TF_MSG_BUILD_DETONATED ) );
+	_table->Set( _machine, "BUILDABLE_DISMANTLED", gmVariable( TF_MSG_BUILD_DISMANTLED ) );
+	_table->Set( _machine, "BUILDABLE_SABOTAGED", gmVariable( TF_MSG_BUILD_SABOTAGED ) );
+	_table->Set( _machine, "BUILDABLE_ENEMYUSED", gmVariable( TF_MSG_BUILD_ENEMYUSED ) );
+	_table->Set( _machine, "BUILDABLE_DETONATE", gmVariable( TF_MSG_BUILD_DETONATE ) );
 		
 	// General Events
 	_table->Set( _machine, "CLASS_DISABLE", gmVariable( TF_MSG_CLASS_DISABLED ) );

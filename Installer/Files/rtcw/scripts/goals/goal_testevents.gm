@@ -103,7 +103,7 @@ this.Events[EVENT.PRIVATE_VOICE ] = function(whosaidit, id)
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-this.Events[EVENT.GLOBAL_CHAT_MSG] = function(whosaidit, whattheysaid)
+this.Events[EVENT.CHATMSG_GLOBAL] = function(whosaidit, whattheysaid)
 {
 	if ( this.TestAll == true || this.TestGlobalChatMessage == true )
 	{
@@ -115,7 +115,7 @@ this.Events[EVENT.GLOBAL_CHAT_MSG] = function(whosaidit, whattheysaid)
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-this.Events[EVENT.TEAM_CHAT_MSG] = function(whosaidit, whattheysaid)
+this.Events[EVENT.CHATMSG_TEAM] = function(whosaidit, whattheysaid)
 {
 	if ( this.TestAll == true || this.TestTeamChatMessage == true )
 	{
@@ -126,7 +126,7 @@ this.Events[EVENT.TEAM_CHAT_MSG] = function(whosaidit, whattheysaid)
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-this.Events[EVENT.PRIV_CHAT_MSG] = function(whosaidit, whattheysaid)
+this.Events[EVENT.CHATMSG_PRIVATE] = function(whosaidit, whattheysaid)
 {
 	if ( this.TestAll == true || this.TestPrivateChatMessage == true )
 	{

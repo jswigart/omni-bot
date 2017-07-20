@@ -162,7 +162,7 @@ void gmScriptGoal::AsStringCallback( AiState::ScriptGoal * a_object, char * a_bu
 	if ( a_object )
 	{
 		_gmsnprintf( a_buffer, a_bufferLen,
-			"Behavior(%s, %s)", a_object->GetName().c_str(), a_object->GetClient() ? a_object->GetClient()->GetName( true ) : "" );
+			"Behavior(%s, %s)", a_object->GetName().c_str(), a_object->GetClient() ? a_object->GetClient()->GetName( true ).c_str() : "" );
 	}
 }
 

@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Protocol Buffer Files">
+      <UniqueIdentifier>{df0f0d07-20bc-49d1-90d4-b3b1de5ea8d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Protocol Buffer Files\autogen">
+      <UniqueIdentifier>{94bcaa71-5541-4aa9-8c3f-ed8ed5381f89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{8ad993ed-8169-47d1-8147-1431dab9bd6e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Common\floodfill.pb.cc">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\influencemap.pb.cc">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\ProtoBufUtility.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\recast.pb.cc">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Common\floodfill.pb.h">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\influencemap.pb.h">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\ProtoBufUtility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\recast.pb.h">
+      <Filter>Protocol Buffer Files\autogen</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\..\Common\floodfill.proto">
+      <Filter>Protocol Buffer Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\Common\influencemap.proto">
+      <Filter>Protocol Buffer Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\..\Common\recast.proto">
+      <Filter>Protocol Buffer Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>

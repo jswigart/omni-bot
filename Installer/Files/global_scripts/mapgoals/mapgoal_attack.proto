@@ -1,0 +1,24 @@
+package MapGoal;
+
+extend google.protobuf.MessageOptions 
+{
+	optional bool stimulus	= 5000;
+}
+
+extend google.protobuf.FieldOptions 
+{
+	optional bool doc		= 6000;
+}
+
+message Vec3 
+{
+	optional float x							= 1;
+	optional float y							= 2;
+	optional float z							= 3;
+}
+
+message Attack
+{
+	repeated Vec3		position				= 1;
+	repeated Vec3		facing					= 2;
+}
