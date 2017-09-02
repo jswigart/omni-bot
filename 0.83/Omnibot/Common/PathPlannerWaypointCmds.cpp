@@ -277,9 +277,9 @@ void PathPlannerWaypoint::cmdWaypointSetName(const StringVector &_args)
 		return;
 
 	Vector3f vPos;
-	g_EngineFuncs->GetEntityPosition(Utils::GetLocalEntity(), vPos);
+	if(!Utils::GetLocalPosition(vPos)) return;
 
-	Waypoint *pWaypoint = _GetClosestWaypoint(vPos, 0, 0);
+	Waypoint *pWaypoint = _GetClosestWaypoint(vPos, 0, NOFILTER);
 	if(!pWaypoint)
 	{
 		EngineFuncs::ConsoleError("nearby waypoint not found.");
@@ -1428,7 +1428,7 @@ void PathPlannerWaypoint::_BenchmarkGetNavPoint(const StringVector &_args)
 		{
 			Waypoint *pWaypoint = m_WaypointList[w1];
 
-			Waypoint *pClosest = _GetClosestWaypoint(pWaypoint->GetPosition(), (NavFlags)0, true);
+			Waypoint *pClosest = _GetClosestWaypoint(pWaypoint->GetPosition(), (NavFlags)0, NOFILTER);
 			if(pClosest)
 				++iHits;
 			else
