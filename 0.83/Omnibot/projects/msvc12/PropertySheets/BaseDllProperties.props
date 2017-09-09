@@ -10,7 +10,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>comctl32.lib;winmm.lib;ws2_32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(BOOST)\lib;..\..\..\dependencies\VisualLeakDetector\lib;..\..\..\dependencies\sfml\lib\vc2013\static\$(Configuration);..\..\..\dependencies\sfml\extlibs\libs-vc2005;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(BOOST)\stage\lib;$(BOOST)\lib;..\..\..\dependencies\VisualLeakDetector\lib;..\..\..\dependencies\sfml\lib\vc2013\static\$(Configuration);..\..\..\dependencies\sfml\extlibs\libs-vc2005;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />
