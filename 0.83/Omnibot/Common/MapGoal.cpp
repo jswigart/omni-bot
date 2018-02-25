@@ -1582,6 +1582,12 @@ bool MapGoal::GetProperty(const char *_name, Seconds &_var)
 	return false;
 }
 
+void MapGoal::SwapEntities(MapGoal * g1, MapGoal * g2)
+{
+	GameEntity e = g1->m_Entity; g1->m_Entity = g2->m_Entity; g2->m_Entity = e;
+	Vector3f p = g1->m_InterfacePosition; g1->m_InterfacePosition = g2->m_InterfacePosition; g2->m_InterfacePosition = p;
+}
+
 bool MapGoal::SaveToTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_savetable, ErrorObj &_err)
 {
 #if 0

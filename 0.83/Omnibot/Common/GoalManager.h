@@ -205,6 +205,7 @@ private:
 	String	m_NavDir;
 
 	void OnGoalDelete(const MapGoalPtr &_goal);
+	void SwapNames();
 };
 
 #endif

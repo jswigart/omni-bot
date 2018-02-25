@@ -494,9 +494,65 @@ void GoalManager::Init()
 	//////////////////////////////////////////////////////////////////////////
 }
 
+static void TrimSuffix(const char *s, int &len)
+{
+	const char *p=s+len-1;
+	if(len>2 && *p>='0' && *p<='9') {
+		p--;
+		if(*p>='0' && *p<='9') p--;
+		if(*p=='_') len=int(p-s);
+	}
+}
+
+static bool SameNames(MapGoal *goal1, MapGoal *goal2)
+{
+	const String &name1 = goal1->GetName(), &name2 = goal2->GetName();
+	int len1 = (int)name1.length(), len2 = (int)name2.length();
+	int lenDiff = len1-len2;
+	if(lenDiff < -3 || lenDiff > 3) return false;
+	const char *s1 = name1.c_str(), *s2 = name2.c_str();
+	TrimSuffix(s1, len1); TrimSuffix(s2, len2);
+	return len1==len2 && strncmp(s1, s2, len1)==0;
+}
+
+//some maps have multiple goals with same names
+//mods append numbers to goal names, but those suffixes depend on the mod
+//example: goals MOUNTMG42_t382 and MOUNTMG42_t382_1 on map flame-guards in NoQuarter mod are swapped
+void GoalManager::SwapNames()
+{
+	std::vector<MapGoal*> list;
+	for(MapGoalList::iterator it = m_MapGoalList.begin(); it != m_MapGoalList.end(); ++it)
+	{
+		//test if the real position is same as in *_goals.gm file
+		if((*it)->GetInterfaceGoal() && !(*it)->GetDynamicPosition()
+			&& ((*it)->GetPosition() - (*it)->GetInterfacePosition()).SquaredLength() > 20
+			&& !(*it)->GetInterfacePosition().IsZero())
+			list.push_back((*it).get());
+	}
+	if(list.size()>1) {
+		std::vector<MapGoal*>::iterator it1, it1End = list.end();
+		for(it1 = list.begin()+1; it1 != it1End; ++it1)
+		{
+			std::vector<MapGoal*>::iterator it2;
+			for(it2 = list.begin(); it2 != it1; ++it2)
+			{
+				if((*it2)->GetGoalTypeHash()==(*it1)->GetGoalTypeHash()
+					&& SameNames(*it1, *it2)
+					&& ((*it1)->GetPosition() - (*it2)->GetInterfacePosition()).SquaredLength() < 10
+					&& ((*it2)->GetPosition() - (*it1)->GetInterfacePosition()).SquaredLength() < 10)
+				{
+					MapGoal::SwapEntities(*it1, *it2);
+					break;
+				}
+			}
+		}
+	}
+}
+
 void GoalManager::InitGameGoals()
 {
 	g_EngineFuncs->GetGoals();
+	SwapNames();
 }
 
 void GoalManager::Reset()
@@ -821,6 +877,7 @@ bool GoalManager::Save(const String &_map, ErrorObj &_err)
 	return gmUtility::DumpTable(pMachine, outFile, MapGoalTable, m_LoadedMapGoals, gmUtility::DUMP_ALL);
 }
 
+
 bool GoalManager::Load(const String &_map, ErrorObj &_err)
 {
 	Timer loadTime;
@@ -904,6 +961,7 @@ bool GoalManager::Load(const String &_map, ErrorObj &_err)
 							// if the goal exists already
 							gmGCRoot<gmTableObject> goalTbl(mgTbl,pMachine);
 							MapGoalPtr existingGoal = GetGoal(goalName);
+							//existingGoal is always NULL, because interface goals are initialized after *_goals.gm file is loaded
 							if(existingGoal)
 							{
 								if(existingGoal->LoadFromTable(pMachine,goalTbl,_err))

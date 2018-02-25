@@ -197,6 +197,10 @@ public:
 	//		Gets the position of this goal
 	const Vector3f &GetPosition();
 
+	// function: GetPosition
+	//		Gets the position of this goal
+	const Vector3f &GetInterfacePosition() { return m_InterfacePosition; }
+
 	// function: SetFacing
 	//		Sets the facing of this goal
 	void SetFacing(const Vector3f &_facing);
@@ -422,6 +426,8 @@ public:
 	typedef RemoteLib::SyncSnapshot<32> MapGoalSnapshot;
 	MapGoalSnapshot	snapShot;
 #endif
+
+	static void SwapEntities(MapGoal *g1, MapGoal *g2);
 
 	MapGoal(const char *_goaltype);
 	~MapGoal();
