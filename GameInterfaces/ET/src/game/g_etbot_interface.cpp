@@ -5066,6 +5066,7 @@ void Bot_Event_FireWeapon( gentity_t * _player, int _weaponId, gentity_t * _proj
 	if ( IsOmnibotLoaded() )
 	{
 		EvWeaponFire::Msg event;
+		event.mData.mTeamNum = Bot_TeamGameToBot(_player->client->sess.sessionTeam);
 		event.mData.mWeaponId = _weaponId;
 		event.mData.mFireMode = Primary;
 		event.mData.mProjectile = HandleFromEntity( _projectile );
