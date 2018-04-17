@@ -649,7 +649,7 @@ void MapGoal::AddUsePoint( const Vector3f &_pos, bool _relative )
 	mLocalUsePoints[ mLocalUsePoints.size() - 1 ] = _pos;
 
 	mRelativeUsePoints.resize( mLocalUsePoints.size() );
-	mRelativeUsePoints.set( mRelativeUsePoints.size() - 1, _relative );
+	mRelativeUsePoints[ mRelativeUsePoints.size() - 1 ] = _relative;
 }
 
 Vector3f MapGoal::GetWorldUsePoint( int32_t _index )
@@ -662,7 +662,7 @@ Vector3f MapGoal::GetWorldUsePoint( int32_t _index )
 
 			Vector3f vUsePt = mLocalUsePoints[ iRand ];
 
-			if ( mRelativeUsePoints.test( iRand ) )
+			if ( mRelativeUsePoints[ iRand ] )
 			{
 				vUsePt = GetPosition() + GetMatrix() * vUsePt;
 			}
@@ -671,7 +671,7 @@ Vector3f MapGoal::GetWorldUsePoint( int32_t _index )
 
 		Vector3f vUsePt = mLocalUsePoints[ _index ];
 
-		if ( mRelativeUsePoints.test( _index ) )
+		if ( mRelativeUsePoints[ _index ] )
 		{
 			vUsePt = GetPosition() + GetMatrix() * vUsePt;
 		}

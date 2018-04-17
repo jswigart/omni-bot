@@ -10,8 +10,9 @@
 #include "tiny_obj_loader.h"
 #include "fastlz/fastlz.h"
 
+#include "System.h"
+
 #include <boost/shared_array.hpp>
-#include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/find.hpp>
 
 //////////////////////////////////////////////////////////////////////////
@@ -73,6 +74,8 @@ IceMaths::Point Convert( const Vector3f & pt )
 {
 	return IceMaths::Point( pt.X(), pt.Y(), pt.Z() );
 }
+
+const ModelTransform ModelTransform::sIdentity;
 
 const Vector3f ModelTransform::Pos() const
 {
@@ -373,7 +376,7 @@ bool CollisionModel::Build( bool createDefaultIfEmpty )
 	return false;
 }
 
-bool CollisionModel::CollideRay( RayResult & result, const ModelTransform & mdlXform, const Vector3f & from, const Vector3f & dir, float maxDistance, SurfaceFlags ignoreSurfaces )
+bool CollisionModel::CollideRay( RayResult & result, const ModelTransform & mdlXform, const Vector3f & from, const Vector3f & dir, float maxDistance )
 {
 	if ( mCollisionTree != NULL )
 	{
@@ -413,7 +416,7 @@ bool CollisionModel::CollideRay( RayResult & result, const ModelTransform & mdlX
 	return false;
 }
 
-bool CollisionModel::CollideOBB( const ModelTransform & mdlXform, const Box3f & obb, Indices & hitTriangles )
+bool CollisionModel::CollideOBB( const ModelTransform & mdlXform, const Box3f & obb, Indices & hitTriangles ) const
 {
 	bool hit = false;
 	if ( mCollisionTree != NULL )
@@ -789,6 +792,16 @@ void CollisionModel::GetTriangle( size_t triIndex, const ModelTransform & mdlXfo
 	surface = triParms.mSurfaceOverride ? triParms.mSurfaceOverride : mtrl.mSurface;
 }
 
+bool CollisionModel::GetTriangleMaterial( size_t triIndex, Material& mtrl ) const
+{
+	Opcode::VertexPointers vtx;
+	mMeshInterface->GetTriangle( vtx, triIndex );
+
+	const TriParms& triParms = mTriParms[ triIndex ];
+	mtrl = GetMaterial( triParms.mMaterialIndex );
+	return true;
+}
+
 void CollisionModel::SetSurfaceOverride( size_t triIndex, SurfaceFlags surfaceFlags )
 {
 	if ( triIndex < mTriParms.size() )
@@ -1007,6 +1020,13 @@ void Node::UpdateModelState( PathPlannerRecast * planner, bool forcePositionUpda
 					newState.c_str() ).c_str() );
 			}
 
+			/*if (System::mInstance->mAnalytics != NULL)
+			{
+				Analytics::MessageUnion msgUnion;
+				msgUnion.set_timestamp(IGame::GetTime());
+				System::mInstance->mAnalytics->AddEvent();
+			}*/
+
 			mActiveState = currentState;
 			mActiveModelCrc = mModel->GetModelCrc();
 			mNavFlagsActive = currentNavFlags;
@@ -1047,7 +1067,7 @@ bool Node::CollideSegmentNearest( RayResult & result, const Segment3f & segment,
 			if ( intr.Find() )
 			{
 				RayResult hitResult;
-				if ( mModel->CollideRay( hitResult, mTransform, segment.P0, segment.Direction, maxLength, ignoreSurfaces ) )
+				if ( mModel->CollideRay( hitResult, mTransform, segment.P0, segment.Direction, maxLength ) )
 				{
 					if ( hitResult.mHitDistance < result.mHitDistance )
 					{
@@ -1508,7 +1528,7 @@ NodePtr CollisionWorld::LoadModelIntoWorld( const GameEntity entity, const GameM
 
 		try
 		{
-			const int subModelIndex = boost::lexical_cast <int>( modelInfo.mModelName );
+			const int subModelIndex = std::stoi( modelInfo.mModelName );
 
 			NodePtr subModelNode;
 			mRootNode->FindNodeWithSubModel( subModelIndex, subModelNode );
@@ -1520,7 +1540,7 @@ NodePtr CollisionWorld::LoadModelIntoWorld( const GameEntity entity, const GameM
 
 			EngineFuncs::ConsoleError( va( "Entity '%s' references submodel '%d' is invalid.", entityName.c_str(), subModelIndex ).c_str() );
 		}
-		catch ( const boost::bad_lexical_cast & ex )
+		catch ( const std::exception & ex )
 		{
 			EngineFuncs::ConsoleError( ( "Submodel '%s' is invalid (%s).", modelInfo.mModelName, ex.what() ) );
 		}

@@ -41,9 +41,11 @@ struct ModelTransform
 	void UpdateStableTime();
 	float GetStableTime() const { return mStableTime; }
 	
-	ModelTransform()
-		: mPos( Vector3f::ZERO )
-		, mOrient( Matrix3f::IDENTITY )
+	static const ModelTransform sIdentity;
+
+	ModelTransform(Vector3f pos = Vector3f::ZERO, Matrix3f orient = Matrix3f::IDENTITY )
+		: mPos( pos )
+		, mOrient( orient )
 		, mStableTime( std::numeric_limits<float>::max() )
 	{
 	}
@@ -59,12 +61,14 @@ struct Material
 	SurfaceFlags	mSurface;
 	ContentFlags	mContents;
 	unsigned int	mNumReferences;
+	void*			mUser;
 
 	bool operator==( const Material & other ) const
 	{
 		return mName == other.mName &&
 			mSurface == other.mSurface &&
-			mContents == other.mContents;
+			mContents == other.mContents &&
+			mUser == other.mUser;
 	}
 
 	Material() 
@@ -170,18 +174,15 @@ public:
 
 	bool Build( bool createDefaultIfEmpty );
 		
-	bool CollideRay( RayResult & result, const ModelTransform & mdlXform, const Vector3f & from, const Vector3f & dir, float maxDistance, SurfaceFlags ignoreSurfaces );
-		
 	const Material & GetMaterial( size_t materialIndex ) const;
 
-	// all attribs, even duplicates
-	bool CollideOBB( const ModelTransform & mdlXform, const Box3f & obb, Indices & hitTriangles );
-	
-	void GatherTriangles( const GatherParms & parms, const ModelTransform & mdlXform, const Box3f & gatherObb, 
-		const CollisionTriangle& baseTriangle, GatherData& dataOut );
+	bool CollideRay( RayResult & result, const ModelTransform & mdlXform, const Vector3f & from, const Vector3f & dir, float maxDistance );
 
-	void GatherTriangles( const GatherParms & parms, const ModelTransform & mdlXform, const Sphere3f & gatherSphere,
-		const CollisionTriangle& baseTriangle, GatherData& dataOut );
+	// all attribs, even duplicates
+	bool CollideOBB( const ModelTransform & mdlXform, const Box3f & obb, Indices & hitTriangles ) const;
+	
+	void GatherTriangles( const GatherParms & parms, const ModelTransform & mdlXform, const Box3f & gatherObb, const CollisionTriangle& baseTriangle, GatherData& dataOut );
+	void GatherTriangles( const GatherParms & parms, const ModelTransform & mdlXform, const Sphere3f & gatherSphere, const CollisionTriangle& baseTriangle, GatherData& dataOut );
 
 	void Free();
 
@@ -196,6 +197,7 @@ public:
 	size_t GetNumMaterials() const;
 	
 	void GetTriangle( size_t triIndex, const ModelTransform & mdlXform, Vector3f v[3], ContentFlags& contents, SurfaceFlags& surface, size_t& mtrlIndex ) const;
+	bool GetTriangleMaterial( size_t triIndex, Material& mtrl ) const;
 	
 	void SetSurfaceOverride( size_t triIndex, SurfaceFlags surfaceFlags );
 

@@ -1359,7 +1359,7 @@ void IGame::cmdBotDontShoot( const StringVector & args )
 					mClientList[ i ]->SetUserFlag( Client::FL_SHOOTINGDISABLED, dontShoot );
 
 					EngineFuncs::ConsoleMessage( va( "%s: shooting %s",
-						mClientList[ i ]->GetName(),
+						mClientList[ i ]->GetName().c_str(),
 						dontShoot ? "disabled" : "enabled" ).c_str() );
 				}
 			}

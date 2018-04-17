@@ -21,9 +21,11 @@
 #include "PathPlannerFloodFill.h"
 #include "PathPlannerRecast.h"
 
+#include "GameAnalytics_zmq.h"
+
 IEngineInterface *gEngineFuncs = 0;
 
-boost::recursive_mutex gGlobalUpdate;
+std::recursive_mutex gGlobalUpdate;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -60,7 +62,7 @@ static void RemoteyInputHandler( const char* text, void* context )
 
 IGame *CreateGameInstance();
 
-boost::thread::id IGameManager::sMainThread;
+std::thread::id IGameManager::sMainThread;
 
 IGameManager::IGameManager()
 	: mRemotery( NULL )
@@ -83,7 +85,7 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *engineFuncs, int versi
 {
 	rmt_ScopedCPUSample( CreateGame );
 
-	sMainThread = boost::this_thread::get_id();
+	sMainThread = std::this_thread::get_id();
 
 	google::protobuf::SetLogHandler( ProtobufLogHandler );
 
@@ -195,6 +197,7 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *engineFuncs, int versi
 
 	RenderBuffer::Init();
 
+	//mBotSystem.mNavigation = new PathPlannerRecast;
 	mBotSystem.mNavigation = new PathPlannerRecast;
 	if ( mBotSystem.mNavigation->Init( mBotSystem ) )
 	{
@@ -259,6 +262,8 @@ omnibot_error IGameManager::CreateGame( IEngineInterface *engineFuncs, int versi
 				mBotSystem.mAnalytics->SetPublisher( new zmqPublisher( serverIp.c_str(), (unsigned short)serverPort ) );
 			}
 		}
+
+		mBotSystem.mAnalytics->OpenRedisConnection();
 	}
 
 	if ( mBotSystem.mAnalytics != NULL )

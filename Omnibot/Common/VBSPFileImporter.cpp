@@ -10,7 +10,7 @@
 #include "VBSPFileData.h"
 #include "pow2assert.h"
 
-#include <boost/lexical_cast.hpp>
+#include <string>
 #include <boost/filesystem/path.hpp>
 
 namespace MapFormat
@@ -486,7 +486,7 @@ namespace MapFormat
 
 			const Vector3f sZero( 0.f, 0.f, 0.f );
 
-			const std::string modelName = "Displacement:" + boost::lexical_cast<std::string>( i );
+			const std::string modelName = "Displacement:" + std::to_string( i );
 
 			// generate a new model/node for the displacement
 			NodePtr node( new Node() );
@@ -559,7 +559,7 @@ namespace MapFormat
 			const dmodel_t & subModel = bspmodel.mModels[ m ];
 			
 			// store it in the master list
-			const std::string modelName = "SubModel:" + boost::lexical_cast<std::string>( m );
+			const std::string modelName = "SubModel:" + std::to_string( m );
 			
 			NodePtr node( new Node() );
 			node->mSubModel = m;

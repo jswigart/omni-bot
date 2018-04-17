@@ -6,7 +6,7 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <boost/regex.hpp>
+#include <regex>
 #include <algorithm>
 
 #include "IGame.h"
@@ -62,8 +62,8 @@ namespace Utils
 	{
 		try
 		{
-			boost::regex expression( exp, REGEX_OPTIONS );
-			return boost::regex_match( str, expression );
+			std::regex expression( exp, REGEX_OPTIONS );
+			return std::regex_match( str, expression );
 		}
 		catch ( const std::exception & ex )
 		{

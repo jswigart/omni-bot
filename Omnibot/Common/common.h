@@ -79,7 +79,7 @@ using namespace Wm5;
 //		can be used from anywhere
 extern IEngineInterface *gEngineFuncs;
 
-#define REGEX_OPTIONS boost::regex::basic|boost::regex::icase|boost::regex::grep
+#define REGEX_OPTIONS std::regex::basic|std::regex::icase|std::regex::grep
 
 #define OB_DELETE(p)   { if(p) { delete (p); (p)=NULL; } }
 #define OB_ARRAY_DELETE(p)   { if(p) { delete [] (p); (p)=NULL; } }

@@ -1,10 +1,10 @@
 #include "ProtoBufUtility.h"
 
+#include <memory>
+
 #include <google/protobuf/message.h>
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/descriptor.pb.h>
-
-#include <boost/lexical_cast.hpp>
 
 using namespace google;
 
@@ -18,26 +18,26 @@ std::string GetFieldString( const protobuf::Message & msg, const protobuf::Field
 		{
 		case protobuf::FieldDescriptorProto_Type_TYPE_DOUBLE:
 			{
-				return boost::lexical_cast<std::string>( msg.GetReflection()->GetDouble( msg, fieldDesc ) );
+				return std::to_string( msg.GetReflection()->GetDouble( msg, fieldDesc ) );
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_FLOAT:
-			return boost::lexical_cast<std::string>( msg.GetReflection()->GetFloat( msg, fieldDesc ) );
+			return std::to_string( msg.GetReflection()->GetFloat( msg, fieldDesc ) );
 		case protobuf::FieldDescriptorProto_Type_TYPE_INT64:
 		case protobuf::FieldDescriptorProto_Type_TYPE_SFIXED64:
 		case protobuf::FieldDescriptorProto_Type_TYPE_SINT64:
-			return boost::lexical_cast<std::string>( msg.GetReflection()->GetInt64( msg, fieldDesc ) );
+			return std::to_string( msg.GetReflection()->GetInt64( msg, fieldDesc ) );
 		case protobuf::FieldDescriptorProto_Type_TYPE_UINT64:
 		case protobuf::FieldDescriptorProto_Type_TYPE_FIXED64:
-			return boost::lexical_cast<std::string>( msg.GetReflection()->GetUInt64( msg, fieldDesc ) );
+			return std::to_string( msg.GetReflection()->GetUInt64( msg, fieldDesc ) );
 		case protobuf::FieldDescriptorProto_Type_TYPE_INT32:
 		case protobuf::FieldDescriptorProto_Type_TYPE_SFIXED32:
 		case protobuf::FieldDescriptorProto_Type_TYPE_SINT32:
-			return boost::lexical_cast<std::string>( msg.GetReflection()->GetInt32( msg, fieldDesc ) );
+			return std::to_string( msg.GetReflection()->GetInt32( msg, fieldDesc ) );
 		case protobuf::FieldDescriptorProto_Type_TYPE_BOOL:
-			return boost::lexical_cast<std::string>( msg.GetReflection()->GetBool( msg, fieldDesc ) );
+			return std::to_string( msg.GetReflection()->GetBool( msg, fieldDesc ) );
 		case protobuf::FieldDescriptorProto_Type_TYPE_UINT32:
 		case protobuf::FieldDescriptorProto_Type_TYPE_FIXED32:
-			return boost::lexical_cast<std::string>( msg.GetReflection()->GetUInt32( msg, fieldDesc ) );
+			return std::to_string( msg.GetReflection()->GetUInt32( msg, fieldDesc ) );
 		case protobuf::FieldDescriptorProto_Type_TYPE_STRING:
 			return msg.GetReflection()->GetString( msg, fieldDesc );
 		case protobuf::FieldDescriptorProto_Type_TYPE_GROUP:
@@ -53,7 +53,7 @@ std::string GetFieldString( const protobuf::Message & msg, const protobuf::Field
 			}
 		}
 	}
-	catch ( const boost::bad_lexical_cast & ex )
+	catch ( const std::exception & ex )
 	{
 		ex;
 		/*EngineFuncs::ConsoleError(
@@ -64,8 +64,10 @@ std::string GetFieldString( const protobuf::Message & msg, const protobuf::Field
 	return "";
 }
 
-void ClearDefaultedValues( protobuf::Message & msg, size_t & optionalFieldsSet )
+size_t ClearDefaultedValues( protobuf::Message & msg )
 {
+	size_t optionalFieldsSet = 0;
+
 	using namespace google;
 	const protobuf::Reflection * refl = msg.GetReflection();
 
@@ -73,11 +75,11 @@ void ClearDefaultedValues( protobuf::Message & msg, size_t & optionalFieldsSet )
 	refl->ListFields( msg, &fields );
 
 	if ( fields.size() == 0 )
-		return;
+		return 0;
 
 	optionalFieldsSet = 0;
 
-	std::auto_ptr<protobuf::Message> defaultMsg( msg.New() );
+	std::unique_ptr<protobuf::Message> defaultMsg( msg.New() );
 
 	const protobuf::Reflection * reflDefault = defaultMsg->GetReflection();
 	
@@ -148,8 +150,7 @@ void ClearDefaultedValues( protobuf::Message & msg, size_t & optionalFieldsSet )
 			{
 				protobuf::Message * subMsg = refl->MutableMessage( &msg, fieldDesc );
 
-				size_t subMsgOptionalFieldCount = 0;
-				ClearDefaultedValues( *subMsg, subMsgOptionalFieldCount );
+				ClearDefaultedValues( *subMsg );
 				break;
 			}
 		case protobuf::FieldDescriptorProto_Type_TYPE_ENUM:
@@ -163,4 +164,5 @@ void ClearDefaultedValues( protobuf::Message & msg, size_t & optionalFieldsSet )
 		if ( refl->HasField( msg, fieldDesc ) )
 			++optionalFieldsSet;
 	}
+	return optionalFieldsSet;
 }

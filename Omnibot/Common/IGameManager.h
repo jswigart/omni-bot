@@ -16,7 +16,8 @@
 #include "ObjFunctor.h"
 #include "GameAnalytics.h"
 
-#include <boost/thread.hpp>
+#include <thread>
+#include <mutex>
 
 // interface: IGameManager
 //		Handles most of the common functionality of the game manager. Mods should subclass
@@ -34,7 +35,7 @@ public:
 
 	void UpdateGame();
 
-	static boost::thread::id sMainThread;
+	static std::thread::id sMainThread;
 
 	// Callback Implementations
 	void Error( const char * str );

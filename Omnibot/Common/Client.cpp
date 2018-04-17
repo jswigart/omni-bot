@@ -183,7 +183,7 @@ void Client::UpdateBotInput()
 	gEngineFuncs->UpdateBotInput( mGameID, mClientInput );
 }
 
-const std::string& Client::GetName( bool _clean ) const
+std::string Client::GetName( bool _clean ) const
 {
 	obStringBuffer nameBuffer;
 	gEngineFuncs->GetEntityName( GetGameEntity(), nameBuffer );
@@ -730,7 +730,7 @@ void Client::EnableDebug( const int _flag, bool _enable )
 	{
 		if ( IsDebugEnabled( BOT_DEBUG_LOG ) )
 		{
-			mDebugLog.OpenForWrite( va( "user/log_%s.rtf", GetName() ).c_str(), File::Text );
+			mDebugLog.OpenForWrite( va( "user/log_%s.rtf", GetName().c_str() ).c_str(), File::Text );
 
 			if ( mDebugLog.IsOpen() )
 			{
@@ -757,7 +757,7 @@ void Client::OutputDebug( MessageType _type, const char * _str )
 		return;
 #endif
 
-	EngineFuncs::ConsoleMessage( va( "%s: %s", GetName( true ), _str ).c_str() );
+	EngineFuncs::ConsoleMessage( va( "%s: %s", GetName( true ).c_str(), _str ).c_str() );
 
 	if ( IsDebugEnabled( BOT_DEBUG_LOG ) )
 	{

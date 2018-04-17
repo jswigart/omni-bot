@@ -16,7 +16,7 @@
 
 StringVector		gThreadMessages;
 StringVector		gThreadErrors;
-boost::mutex		gMessageMutex;
+std::mutex			gMessageMutex;
 
 namespace EngineFuncs
 {
@@ -135,11 +135,11 @@ namespace EngineFuncs
 	{
 		rmt_LogText( va( "Message: %s", _msg ).c_str() );
 
-		if ( IGameManager::sMainThread == boost::this_thread::get_id() )
+		if ( IGameManager::sMainThread == std::this_thread::get_id() )
 			gEngineFuncs->PrintMessage( _msg );
 		else
 		{
-			boost::lock_guard<boost::mutex> lk( gMessageMutex );
+			std::lock_guard<std::mutex> lk( gMessageMutex );
 			gThreadMessages.push_back( _msg );
 		}
 	}
@@ -148,11 +148,11 @@ namespace EngineFuncs
 	{
 		rmt_LogText( va( "Error: %s", _msg ).c_str() );
 
-		if ( IGameManager::sMainThread == boost::this_thread::get_id() )
+		if ( IGameManager::sMainThread == std::this_thread::get_id() )
 			gEngineFuncs->PrintError( _msg );
 		else
 		{
-			boost::lock_guard<boost::mutex> lk( gMessageMutex );
+			std::lock_guard<std::mutex> lk( gMessageMutex );
 			gThreadErrors.push_back( _msg );
 		}
 	}

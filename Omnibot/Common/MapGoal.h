@@ -21,7 +21,7 @@
 #include "gmGCRoot.h"
 #include "gmbinder2/gmbinder2.h"
 
-typedef boost::dynamic_bitset<uint32_t> DynBitSet32;
+typedef std::vector<bool> DynBitSet32;
 
 class Client;
 class GoalQueue;

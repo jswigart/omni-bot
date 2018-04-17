@@ -16,6 +16,6 @@ namespace google
 #include <vector>
 
 std::string GetFieldString( const google::protobuf::Message & msg, const google::protobuf::FieldDescriptor * fieldDesc );
-void ClearDefaultedValues( google::protobuf::Message & msg, size_t & optionalFieldsSet );
+size_t ClearDefaultedValues( google::protobuf::Message & msg );
 
 #endif

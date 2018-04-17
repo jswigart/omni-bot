@@ -2,9 +2,6 @@
 #include "Q3BSPFileData.h"
 #include "pow2assert.h"
 
-#include <boost/lexical_cast.hpp>
-#include <boost/filesystem/path.hpp>
-
 namespace MapFormat
 {
 	namespace Q3BSP
@@ -155,7 +152,7 @@ namespace MapFormat
 			for ( size_t m = 0; m < bspmodel.mSubModels.size(); ++m )
 			{
 				// store it in the master list
-				const std::string modelName = "SubModel:" + boost::lexical_cast<std::string>( m );
+				const std::string modelName = "SubModel:" + std::to_string( m );
 
 				NodePtr node( new Node() );
 				node->mSubModel = m;

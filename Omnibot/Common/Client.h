@@ -81,7 +81,7 @@ public:
 
 	// Function: GetName
 	//		Get the current name of this bot
-	const std::string& GetName( bool _clean = false ) const;
+	std::string GetName( bool _clean = false ) const;
 
 	// Function: GetTeam
 	//		Get the current team this bot is on
