@@ -1,10 +1,31 @@
-RTCW Change Log
+==0.86 RTCW Change Log==
+
+=== BOT ===
+Added function MapGoal.SetEntity
+Added Wp.SetWaypointFlag parameter can be a regular expression
+Added gm script can have UTF-8 BOM
+Added version number is printed to console when Omni-bot is initialized
+Improved bots join game faster after server starts if maxbots>0
+Improved players info is in the Server table already in OnMapLoad
+Changed draw_goalroutes doesn't draw disabled routes
+Fixed waypoint_setname of closed waypoint
+Fixed command goal_save prints error if file can't be opened
+Fixed SetGoalRole printed error message if role was persistent and goal did not exist
+Removed path planners navmesh, floodfill, recast
 
 === GOALS ===
 Fixed PLANT goal was always delayed 35 seconds even if defused
+Fixed medic sometimes did not give medkits to revived player
+Changed medic don't team-kill player at mg42
+Changed cover spot priority from 2.0 to 0.81
+Changed medic can revive nearby player when going to cappoint
 
 === SCRIPTS ===
+Changed all bots disconnect if maxbots is 0
 Optimized Util.ProcessMovers
+
+=== COMMANDS ===
+Added draw_goalrange
 
 ---------------------------------------------------------------
 

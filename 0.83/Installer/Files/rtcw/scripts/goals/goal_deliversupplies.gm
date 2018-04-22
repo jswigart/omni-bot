@@ -159,7 +159,8 @@ this.Update = function()
 
 			hasNeedle = Util.HasAmmoForWeapon(this.Bot, WEAPON.SYRINGE) > 0;
 
-			if ( !this.KillTarget || !hasNeedle || this.Bot.HasTarget() || GetEntFlags(this.TargetEntity, ENTFLAG.CARRYINGGOAL) ) {
+			if ( !this.KillTarget || !hasNeedle || this.Bot.HasTarget()
+				|| GetEntFlags(this.TargetEntity, ENTFLAG.CARRYINGGOAL, ENTFLAG.MNT_MG42) ) {
 				this.State = this.DELIVER_PACKS;
 			}
 			else {

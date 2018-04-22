@@ -117,6 +117,7 @@ this.UpdateDynamite = function()
 	hasCoverSpot = false;
 	aimVectors = null;
 	coverTimeout = 25; // note: if it takes >= 5 seconds to get to the cover spot, this will not be reached.
+	goalPriority = this.Priority;
 
 	while(1)
 	{
@@ -258,6 +259,7 @@ this.UpdateDynamite = function()
 						this.Finished();
 					}
 
+					this.Priority = goalPriority;
 					this.Goto(spot.position, 32.0);
 
 					if (spot.DisableCM > 0 && !this.Bot.DisableCombatMovement)

@@ -21,3 +21,4 @@ else{
 
 this.PrimaryFire.LowAmmoThreshold = 1;
 this.PrimaryFire.LowAmmoPriority = 0.8;
+this.PrimaryFire.LowAmmoGetAmmoAmount = 3;
