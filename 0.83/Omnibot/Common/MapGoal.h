@@ -331,6 +331,7 @@ public:
 	static void SetPersistentPriorityForClass(const String &_exp, int _team, int _class, float _priority);
 	static void SetPersistentRole(const String &_exp, BitFlag32 _role);
 	void CheckForPersistentProperty();
+	obReal GetRolePriorityBonus() const { return m_RolePriorityBonus; };
 
 	// function: GetSerialNum
 	//		Unique id for this goal. Useful for blackboard target or other identification.
@@ -364,7 +365,7 @@ public:
 		enum { MaxTeams=4,MaxClasses=10 };
 		obReal	Priorities[MaxTeams][MaxClasses];
 		
-		void GetPriorityText(String &_txtout) const;
+		void GetPriorityText(String &_txtout, obReal roleBonus) const;
 	};	
 
 	void DrawRoute(int _color, float _duration);

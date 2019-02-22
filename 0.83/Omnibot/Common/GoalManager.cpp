@@ -659,13 +659,16 @@ void GoalManager::cmdGoalShow(const StringVector &_args)
 		}
 		txt += " serial ";
 		txt += va("%d", (*it)->GetSerialNum());
+		obReal roleBonus = (*it)->GetRoleMask().AnyFlagSet() ? (*it)->GetRolePriorityBonus() : 0;
 		txt += " priority ";
-		txt += va("%.2f", (*it)->GetDefaultPriority());
+		obReal prior = (*it)->GetDefaultPriority();
+		if (prior > 0) prior += roleBonus;
+		txt += va("%.2f", prior);
 		
 		EngineFuncs::ConsoleMessage(txt.c_str());
 		if(bShowSubPriorities)
 		{
-			(*it)->GetClassPriorities().GetPriorityText(txt);
+			(*it)->GetClassPriorities().GetPriorityText(txt, roleBonus);
 		}
 
 		if(f.IsOpen())

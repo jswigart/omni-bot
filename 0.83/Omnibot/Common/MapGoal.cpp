@@ -1323,7 +1323,7 @@ struct PersistentPriority
 typedef std::vector<PersistentPriority> PersPriorityList;
 PersPriorityList gPriorityList;
 
-void MapGoal::ClassPriority::GetPriorityText(std::string &_txtout) const
+void MapGoal::ClassPriority::GetPriorityText(std::string &_txtout, obReal roleBonus) const
 {
 	//////////////////////////////////////////////////////////////////////////
 	int CurrentIndex = 0;
@@ -1387,7 +1387,9 @@ void MapGoal::ClassPriority::GetPriorityText(std::string &_txtout) const
 			_txtout += " ";
 			_txtout += Utils::GetClassString(Summary[i].m_ClassId);
 			_txtout += " ";
-			_txtout += va(" %.2f",Summary[i].m_Priority);
+			obReal prior = Summary[i].m_Priority;
+			if (prior > 0) prior += roleBonus;
+			_txtout += va(" %.2f", prior);
 			EngineFuncs::ConsoleMessage(_txtout.c_str());
 		}
 	}
