@@ -1945,7 +1945,7 @@ static int gmfGetEntCategory(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 
 	GameEntity gameEnt;
-	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);	
+	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
 	OBASSERT(gameEnt.IsValid(), "Bad Entity");
 
 	BitFlag32 category;
@@ -1962,6 +1962,37 @@ static int gmfGetEntCategory(gmThread *a_thread)
 		}
 	}
 	a_thread->PushInt(0);
+	return GM_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+// function: GetEntEquippedWeapon
+//		This function gets the current weapon of this entity. 
+//
+// Parameters:
+//
+//		<GameEntity> - The entity to use
+//		- OR - 
+//		<int> - The gameId for the entity to use
+//
+// Returns:
+//		int - weapon id
+//		- OR -
+//		null - If no owner.
+static int gmfGetEntEquippedWeapon(gmThread *a_thread)
+{
+	GM_CHECK_NUM_PARAMS(1);
+
+	GameEntity gameEnt;
+	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);
+	OBASSERT(gameEnt.IsValid(), "Bad Entity");
+
+	int iWeapon = gameEnt.IsValid() ? InterfaceFuncs::GetEquippedWeapon(gameEnt).m_WeaponId : 0;
+	if (iWeapon != 0)
+		a_thread->PushInt(iWeapon);
+	else
+		a_thread->PushNull();
 	return GM_OK;
 }
 
@@ -3010,6 +3041,7 @@ static gmFunctionEntry s_botLib[] =
 	{"GetEntTeam",				gmfGetEntityTeam},
 	{"GetEntClass",				gmfGetEntityClass},
 	{"GetEntCategory",			gmfGetEntCategory},
+	{"GetEntEquippedWeapon",	gmfGetEntEquippedWeapon},
 	{"EntityIsValid",			gmfEntityIsValid},
 	{"EntityIsOutside",			gmfEntityIsOutside},
 
