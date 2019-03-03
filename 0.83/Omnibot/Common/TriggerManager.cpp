@@ -616,10 +616,11 @@ void TriggerManager::Update()
 
 	//fire Enter events
 	AABB bounds;
+	BitFlag64 flags;
 	IGame::EntityIterator ent;
 	while(IGame::IterateEntity(ent))
 	{
-		bool aabbValid = false;
+		bool aabbValid = false, flagValid = false;
 		for(int x = (int) m_TriggerShapes.size() - 1; x >= 0; --x)
 		{
 			TriggerShape* shape = m_TriggerShapes[x].get();
@@ -629,7 +630,12 @@ void TriggerManager::Update()
 				{
 					if(shape->Test(ent.GetEnt().m_Entity, bounds))
 					{
-						shape->FireTrigger(ent.GetEnt());
+						if (!(ent.GetEnt().m_EntityClass < FilterSensory::ANYPLAYERCLASS
+							&& (flagValid || (flagValid = InterfaceFuncs::GetEntityFlags(ent.GetEnt().m_Entity, flags))!=false)
+							&& flags.CheckFlag(ENT_FLAG_DISABLED))) //LIMBO
+						{
+							shape->FireTrigger(ent.GetEnt());
+						}
 					}
 				}
 			}
