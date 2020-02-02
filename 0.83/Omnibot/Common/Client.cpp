@@ -172,6 +172,14 @@ void Client::Update()
 				}		
 			}
 		}
+
+		if (m_ButtonFlags.CheckFlag(BOT_BUTTON_JUMP) && !m_StuckExpanded)
+		{
+			m_StuckExpanded = true;
+			m_StuckBounds.ExpandAxis(0, 20);
+			m_StuckBounds.ExpandAxis(1, 20);
+			m_StuckBounds.ExpandAxis(2, 40); //must be higher than JUMP height
+		}
 	}	
 
 	// Update my input with the engine
@@ -612,12 +620,6 @@ void Client::CheckStuck()
 	if(m_StuckBounds.Contains(GetPosition()))
 	{
 		m_StuckTime += IGame::GetDeltaTime();
-		if(m_StuckTime > 500 && !m_StuckExpanded){
-			m_StuckExpanded = true;
-			m_StuckBounds.ExpandAxis(0, 20);
-			m_StuckBounds.ExpandAxis(1, 20);
-			m_StuckBounds.ExpandAxis(2, 40); //must be higher than JUMP height
-		}
 	}
 	else
 	{
