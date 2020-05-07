@@ -1672,6 +1672,19 @@ void PathPlannerWaypoint::BuildBlockableList()
 	LOG("Found " << iNumBlockablePaths << " blockable paths");
 }
 
+void PathPlannerWaypoint::ClearBlockable(Waypoint *_waypoint)
+{
+	if (!_waypoint->IsAnyFlagOn(m_BlockableMask))
+	{
+		ConnectionList::iterator bIt = m_BlockableList.begin();
+		for (; bIt != m_BlockableList.end(); ++bIt)
+		{
+			if (bIt->first == _waypoint || bIt->second->m_Connection == _waypoint)
+				bIt->second->ClearFlag(F_LNK_CLOSED);
+		}
+	}
+}
+
 //void PathPlannerWaypoint::BuildVisTable()
 //{
 //	m_VisTable.clear();

@@ -192,6 +192,7 @@ public:
 
 	//void BuildVisTable();
 	void BuildBlockableList();
+	void ClearBlockable(Waypoint* _waypoint);
 
 	const char *GetPlannerName() const { return "Waypoint Path Planner"; } ;
 	int GetPlannerType() const { return NAVID_WP; };

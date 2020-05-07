@@ -1517,21 +1517,12 @@ void PathPlannerWaypoint::cmdWaypointAddFlag_Helper(const StringVector &_args, W
 						EngineFuncs::ConsoleMessage(va("%s Flag removed from waypoint.", _args[iToken].c_str()));
 
 						//open connections if blockable flag is removed
-						if((it->second & m_BlockableMask)!=0 && !_waypoint->IsAnyFlagOn(m_BlockableMask))
-						{
-							ConnectionList::iterator bIt = m_BlockableList.begin();
-							for( ; bIt != m_BlockableList.end(); ++bIt)
-							{
-								if(bIt->first == _waypoint || bIt->second->m_Connection == _waypoint)
-									bIt->second->ClearFlag(F_LNK_CLOSED);
-							}
-						}
+						if ((it->second & m_BlockableMask) != 0) ClearBlockable(_waypoint);
 					}
 
 					// Team flags have a somewhat special case.
 					// If no team flags are enable, make sure the teamonly flag is disable as well.
-					if(!_waypoint->IsFlagOn(F_NAV_TEAM1) && !_waypoint->IsFlagOn(F_NAV_TEAM2) &&
-						!_waypoint->IsFlagOn(F_NAV_TEAM3) && !_waypoint->IsFlagOn(F_NAV_TEAM4))
+					if(!_waypoint->IsAnyFlagOn(F_NAV_TEAM_ALL))
 					{
 						if(_waypoint->IsFlagOn(F_NAV_TEAMONLY))
 						{

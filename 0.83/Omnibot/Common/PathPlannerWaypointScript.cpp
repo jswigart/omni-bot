@@ -339,7 +339,10 @@ static int GM_CDECL gmfSetWaypointFlag(gmThread *a_thread)
 		if(enable)
 			(*cIt)->AddFlag(flag);
 		else
+		{
 			(*cIt)->RemoveFlag(flag);
+			if(flag & PathPlannerWaypoint::m_BlockableMask) pWp->ClearBlockable(*cIt);
+		}
 
 		if(!(*cIt)->IsAnyFlagOn(F_NAV_TEAM_ALL))
 		{
