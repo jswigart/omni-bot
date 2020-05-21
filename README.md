@@ -8,6 +8,8 @@ Given that the activity of the project has substantially died down in recent yea
 
 If you wish to be a contributor to the bot, at either the software level or the documentation level, please let me know. It would be much appreciated.
 
+In particular if you are willing to help us re-build the documentation of Omni-bot on the web here please reach out.
+
 # omni-bot
 Omni-bot is a first person shooter bot frameworkfor AI controlled multiplayer opponents in several popular FPS games and engines
 
