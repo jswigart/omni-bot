@@ -1,3 +1,19 @@
+==0.87 RTCW Change Log==
+
+=== BOT ===
+Added function GetEntEquippedWeapon
+Changed trigger regions ignore players in limbo
+Fixed IsStuck when bot was jumping
+Fixed removing blockable waypoint flag
+
+=== SCRIPTS ===
+Added Util.CappointForFlag
+
+=== COMMANDS ===
+Changed commands sag and show_goals add role bonus to priority
+
+---------------------------------------------------------------
+
 ==0.86 RTCW Change Log==
 
 === BOT ===

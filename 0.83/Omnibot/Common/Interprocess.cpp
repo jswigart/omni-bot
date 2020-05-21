@@ -129,6 +129,10 @@ namespace InterProcess
 				if(pfnGetBotFuncs && pfnGetBotFuncs(&g_ClientFuncs, 1)==BOT_ERROR_NONE){
 					LOG("cgame drawing Initialized");
 				}
+				else {
+					EngineFuncs::ConsoleError(hmod ? "Cannot export drawing functions from cgame module." : "Cannot find cgame module.");
+					LOGERR("cgame drawing failed");
+				}
 #ifndef WIN32
 				dlclose(hmod);
 #endif
@@ -168,14 +172,14 @@ namespace InterProcess
 #endif
 }
 
+#ifdef INTERPROCESS
 	void Enable(bool _en)
 	{
 		Enabled = _en;
 		if(!_en) Shutdown();
-#ifdef INTERPROCESS
 		else Init();
-#endif
 	}
+#endif
 
 	void DrawLine(const Vector3f &_a, const Vector3f &_b, obColor _color, float _time)
 	{
