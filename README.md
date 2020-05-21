@@ -2,6 +2,9 @@
 
 Given that the activity of the project has substantially died down in recent years, it stopped making sense to continue paying for an expensive CMS system to be home to the bot. Instead, this page will be the new landing page for Omni-bot, where users can download the bot for their game of choice and get setup and configuration information from the wiki here. I will be investigating whether there are any options to pull over any content(blog posts, etc), from the old website.
 
+Wiki https://github.com/jswigart/omni-bot/wiki
+Issues https://github.com/jswigart/omni-bot/issues
+
 # Contributors
 
 If you wish to be a contributor to the bot, at either the software level or the documentation level, please let me know. It would be much appreciated.
