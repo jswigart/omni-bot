@@ -354,7 +354,7 @@ this.ProcessChatEvents = function(Who, Msg)
 	if( tokens[1] )
 	{
 		num = ToInt(tokens[1]);
-		if ( typeId(num) == 1 )
+		if ( typeId(num) == 1  && num>0 )
 		{
 			// just make sure it's updated for now
 			this.Bot.ftinfo = this.Bot.FireTeamGetInfo();
