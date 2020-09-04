@@ -17,14 +17,14 @@ project Omnibot
 	 <include>$(BOOST)
 	 <include>dependencies/iprof
 	 <include>dependencies/wildmagic
-	 <include>dependencies/gmsrc_ex/src/3rdParty
-	 <include>dependencies/gmsrc_ex/src/platform/win32gcc
-	 <include>dependencies/gmsrc_ex/src/gm
-	 <include>dependencies/gmsrc_ex/src/binds
-	 <include>dependencies/gmsrc_ex/src/3rdParty/gmbinder2
-	 <toolset>msvc:<include>dependencies/gmsrc_ex/src/platform/win32msvc
-	 <toolset>gcc:<include>dependencies/gmsrc_ex/src/platform/win32gcc
-	 <toolset>darwin:<include>dependencies/gmsrc_ex/src/platform/osx
+	 <include>dependencies/gmscriptex/gmsrc_ex/src/3rdParty
+	 <include>dependencies/gmscriptex/gmsrc_ex/src/platform/win32gcc
+	 <include>dependencies/gmscriptex/gmsrc_ex/src/gm
+	 <include>dependencies/gmscriptex/gmsrc_ex/src/binds
+	 <include>dependencies/gmscriptex/gmsrc_ex/src/3rdParty/gmbinder2
+	 <toolset>msvc:<include>dependencies/gmscriptex/gmsrc_ex/src/platform/win32msvc
+	 <toolset>gcc:<include>dependencies/gmscriptex/gmsrc_ex/src/platform/win32gcc
+	 <toolset>darwin:<include>dependencies/gmscriptex/gmsrc_ex/src/platform/osx
 	 <toolset>msvc:<define>WIN32
 	 <toolset>gcc:<define>__linux__
 	 <toolset>darwin:<define>__osx__

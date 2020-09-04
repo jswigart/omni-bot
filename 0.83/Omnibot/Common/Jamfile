@@ -18,11 +18,11 @@ project Common
 	 <include>../dependencies/physfs/lzma/C/Compress/Branch
 	;
 
-SOURCES = [ glob ../dependencies/gmsrc_ex/src/gm/*.cpp ] 
-		  [ glob ../dependencies/gmsrc_ex/src/platform/win32gcc/*.cpp ]
-		  [ glob ../dependencies/gmsrc_ex/src/binds/*.cpp : ../dependencies/gmsrc_ex/src/binds/gmSqliteLib.cpp ]
-		  [ glob ../dependencies/gmsrc_ex/src/3rdParty/mathlib/*.cpp ]
-		  [ glob ../dependencies/gmsrc_ex/src/3rdParty/gmbinder2/*.cpp ]
+SOURCES = [ glob ../dependencies/gmscriptex/gmsrc_ex/src/gm/*.cpp ] 
+		  [ glob ../dependencies/gmscriptex/gmsrc_ex/src/platform/win32gcc/*.cpp ]
+		  [ glob ../dependencies/gmscriptex/gmsrc_ex/src/binds/*.cpp : ../dependencies/gmscriptex/gmsrc_ex/src/binds/gmSqliteLib.cpp ]
+		  [ glob ../dependencies/gmscriptex/gmsrc_ex/src/3rdParty/mathlib/*.cpp ]
+		  [ glob ../dependencies/gmscriptex/gmsrc_ex/src/3rdParty/gmbinder2/*.cpp ]
 		  [ glob ../dependencies/wildmagic/*.cpp ] 
 		  [ glob ../dependencies/physfs/*.c ] 
 		  [ glob ../dependencies/physfs/archivers/*.c ] 
