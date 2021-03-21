@@ -130,12 +130,17 @@ namespace InterProcess
 					LOG("cgame drawing Initialized");
 				}
 				else {
-					EngineFuncs::ConsoleError(hmod ? "Cannot export drawing functions from cgame module." : "Cannot find cgame module.");
+					EngineFuncs::ConsoleError("Cannot export drawing functions from cgame module.");
 					LOGERR("cgame drawing failed");
 				}
 #ifndef WIN32
 				dlclose(hmod);
 #endif
+			}
+			else {
+				//it happens if warmup is zero and there is DrawDebugLine in OnMapLoad
+				EngineFuncs::ConsoleError("Cannot find cgame module.");
+				LOGERR("cgame module not found");
 			}
 
 #endif // INTERPROCESS
