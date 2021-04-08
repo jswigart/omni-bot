@@ -27,12 +27,12 @@ namespace Priority
 	{
 		Zero,
 		Min,
-		Idle,
-		VeryLow,
-		Low,
-		LowMed,
-		Medium,
-		High,
+		Idle,   //FollowPath
+		VeryLow,//LookAround
+		Low,    //goals CAMP, MOUNT, MOUNTMG42, ESCORT, RIDE
+		LowMed, //AttackTarget
+		Medium, //goals CHECKPOINT, PLANTMINE
+		High,   //goals BUILD, PLANT, DEFUSE, SWITCH, GRENADE
 		VeryHigh,
 		Override,
 		NumPriority

@@ -2215,7 +2215,7 @@ namespace AiState
 		//Vector3f vStartAim = q.Rotate(GetClient()->GetFacingVector());
 		FINDSTATE(aim, Aimer, GetParent());
 		if(aim)
-			aim->AddAimFacingRequest(Priority::Low, GetNameHash(), -GetClient()->GetFacingVector());
+			aim->AddAimFacingRequest(Priority::VeryLow, GetNameHash(), -GetClient()->GetFacingVector());
 	}
 
 	void LookAround::Exit()
