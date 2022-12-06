@@ -708,7 +708,7 @@ Matrix3f MapGoal::GetMatrix()
 		Vector3f vFwd, vRight, vUp;
 		bool b = EngineFuncs::EntityOrientation(GetEntity(), vFwd, vRight, vUp);
 		OBASSERT(b,"Lost Entity!");
-		if(b) SetMatrix(Matrix3f(vRight, vFwd, vUp, false));
+		if(b) SetMatrix(Matrix3f(vRight, vFwd, vUp, true));
 	}
 
 	if(!m_OrientationValid){
