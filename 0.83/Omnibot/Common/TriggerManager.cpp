@@ -128,6 +128,8 @@ public:
 
 	void FireTrigger(const EntityInstance &_ent)
 	{
+		if(Expired()) return;
+
 		InTrigger *it = NULL;
 
 		// If it's already in the trigger, just update the timestamp.
@@ -145,13 +147,10 @@ public:
 
 		if(it)
 		{
-			if(!DeleteMe())
-			{
-				// otherwise add it to the list of entities in trigger, and fire an enter event.
-				it->m_Entity = _ent.m_Entity;
-				it->m_TimeStamp = IGame::GetTime();
-				FireEnterEvent(_ent.m_Entity);
-			}
+			// otherwise add it to the list of entities in trigger, and fire an enter event.
+			it->m_Entity = _ent.m_Entity;
+			it->m_TimeStamp = IGame::GetTime();
+			FireEnterEvent(_ent.m_Entity);
 		}
 		else
 		{
@@ -171,7 +170,6 @@ public:
 
 				m_InTrigger[i].m_Entity.Reset();
 				m_InTrigger[i].m_TimeStamp = 0;
-				return;
 			}
 		}
 	}
