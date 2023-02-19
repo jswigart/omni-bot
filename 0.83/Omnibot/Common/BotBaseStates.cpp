@@ -1172,6 +1172,14 @@ namespace AiState
 					break;
 				}
 			}
+			else if(_m->m_NavFlags)
+			{
+				if(p->m_NavFlags & _m->m_NavFlags)
+				{
+					Repath();
+					break;
+				}
+			}
 			else if(p->m_NavFlags&F_NAV_DYNAMIC)
 			{
 				Repath();

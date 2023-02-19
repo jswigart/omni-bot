@@ -302,7 +302,7 @@ static IntEnum Generic_RoleEnum[] =
 	IntEnum("ATTACKER"			,0),
 	IntEnum("DEFENDER"			,1),
 	IntEnum("ROAMER"			,2),
-	IntEnum("INFILTRATOR"		,3), // the constant must be same as in function Client.IsInfiltrator
+	IntEnum("INFILTRATOR"		,3), // the constant must be same as in functions Client.IsInfiltrator and gmBot::gmfClearRoles
 	IntEnum("SNIPER"			,4),
 	IntEnum("AMBUSHER"			,5),
 	IntEnum("TEAMCAPTAIN"		,6),

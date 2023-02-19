@@ -517,10 +517,12 @@ struct Event_DynamicPathsChanged
 {
 	int			m_TeamMask;
 	int			m_NavId;
+	NavFlags	m_NavFlags;
 
-	Event_DynamicPathsChanged(int _team, int _navid = 0)
+	Event_DynamicPathsChanged(int _team, int _navid = 0, NavFlags _navFlags = 0)
 		: m_TeamMask(_team)
 		, m_NavId(_navid)
+		, m_NavFlags(_navFlags)
 	{
 	}
 };

@@ -2132,12 +2132,20 @@ int gmBot::gmfClearRoles(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(1);
 
 	BitFlag32 rolemask = native->GetRoleMask(); // cs: preserve current mask
+	bool lostDisguise = false;
 	for(int p = 0; p < a_thread->GetNumParams(); ++p)
 	{
 		GM_CHECK_INT_PARAM(r,p);
+		if(r==3 && native->IsInfiltrator() && !native->HasEntityFlag(ENT_FLAG_DEAD)) lostDisguise = true;
 		rolemask.SetFlag(r,false);
 	}
 	native->SetRoleMask(rolemask);
+
+	if(lostDisguise)
+	{
+		Event_DynamicPathsChanged m(0xFFFF /* all teams */, 0, F_NAV_INFILTRATOR | (F_NAV_NEXT<<16) /*F_ET_NAV_DISGUISE*/);
+		native->SendEvent(MessageHelper(MESSAGE_DYNAMIC_PATHS_CHANGED,&m,sizeof(m)), Utils::MakeHash32("FollowPath"));
+	}
 	return GM_OK;
 }
 
