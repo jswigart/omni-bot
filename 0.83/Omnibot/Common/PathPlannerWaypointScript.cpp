@@ -245,6 +245,41 @@ static int GM_CDECL gmfConnectWaypoints(gmThread *a_thread)
 
 //////////////////////////////////////////////////////////////////////////
 
+// function: DisconnectWaypoints
+//		Disconnects two waypoints.
+//
+// Parameters:
+//
+//		<int> - Guid of a waypoint.
+//		<int> - Guid of another waypoint.
+//
+// Returns:
+//		int - true if successful, false if not
+static int GM_CDECL gmfDisconnectWaypoints(gmThread* a_thread)
+{
+	GM_CHECK_NUM_PARAMS(2);
+	GM_CHECK_INT_PARAM(guid1, 0);
+	GM_CHECK_INT_PARAM(guid2, 1);
+
+	bool bSuccess = false;
+	PathPlannerWaypoint* pWp = GetWpPlanner();
+	if (pWp)
+	{
+		Waypoint* pWaypoint1 = pWp->GetWaypointByGUID(guid1);
+		Waypoint* pWaypoint2 = pWp->GetWaypointByGUID(guid2);
+		if (pWaypoint1 != NULL && pWaypoint2 != NULL)
+		{
+			pWaypoint1->DisconnectFrom(pWaypoint2);
+			bSuccess = true;
+		}
+	}
+
+	a_thread->PushInt(bSuccess ? 1 : 0);
+	return GM_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 // function: SetRadius
 //		Sets a wapoint radius by guid.
 //
@@ -569,6 +604,7 @@ void PathPlannerWaypoint::RegisterScriptFunctions(gmMachine *a_machine)
 		.func(gmfGetWaypointByName, "GetWaypointByName")
 		.func(gmfGetWaypointByUID, "GetWaypointByGUID")
 		.func(gmfConnectWaypoints, "Connect")
+		.func(gmfDisconnectWaypoints, "Disconnect")
 		.func(gmfSetRadius, "SetRadius")
 		.func(gmfSetWaypointFlag, "SetWaypointFlag")
 		.func(gmfSetWaypointProperty, "SetWaypointProperty")
