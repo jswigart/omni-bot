@@ -4027,7 +4027,7 @@ void CG_WeaponBank_f(void) {
 
 	bank = atoi( CG_Argv( 1 ) );
 
-	if ( bank <= 0 || bank > MAX_WEAP_BANKS_MP ) {
+	if ( bank <= 0 || bank >= MAX_WEAP_BANKS_MP ) {
 		return;
 	}
 
