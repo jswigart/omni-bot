@@ -450,6 +450,24 @@ void PathPlannerWaypoint::UpdateNavRender()
 	}
 }
 
+int PathPlannerWaypoint::CheckBlockable()
+{
+	int count = 0;
+	if (m_PathCheckCallback) 
+	{
+		ConnectionList::iterator it = m_BlockableList.begin(), itEnd = m_BlockableList.end();
+		for (; it != itEnd; ++it)
+		{
+			if ((*it).second->m_ConnectionFlags & F_LNK_CLOSED)
+				if (m_PathCheckCallback((*it).first, (*it).second->m_Connection, false) == B_PATH_OPEN) {
+					(*it).second->m_ConnectionFlags &= ~F_LNK_CLOSED;
+					count++;
+				}
+		}
+	}
+	return count;
+}
+
 void PathPlannerWaypoint::Update()
 {
 	Prof(PathPlannerWaypoint);

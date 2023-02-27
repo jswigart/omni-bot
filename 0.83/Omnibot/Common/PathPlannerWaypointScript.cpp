@@ -566,6 +566,16 @@ static int GM_CDECL gmfGetClosestWaypoint(gmThread *a_thread)
 	return GM_OK;
 }
 
+static int GM_CDECL gmfCheckBlockable(gmThread* a_thread)
+{
+	GM_CHECK_NUM_PARAMS(0);
+
+	PathPlannerWaypoint* pWp = GetWpPlanner();
+	if (pWp) a_thread->PushInt(pWp->CheckBlockable());
+	else a_thread->PushNull();
+	return GM_OK;
+}
+
 static int GM_CDECL gmfWaypointSave(gmThread *a_thread)
 {
 	GM_CHECK_NUM_PARAMS(0);	
@@ -612,6 +622,7 @@ void PathPlannerWaypoint::RegisterScriptFunctions(gmMachine *a_machine)
 		.func(gmfGetAllWaypoints, "GetAllWaypoints")
 		.func(gmfGetAllSelectedWaypoints, "GetAllSelectedWaypoints")
 		.func(gmfGetClosestWaypoint, "GetClosestWaypoint")
+		.func(gmfCheckBlockable, "CheckBlockable")
 		.func(gmfWaypointSave,"Save")
 		.func(gmfWaypointLoad,"Load")
 		.func((bool (PathPlannerWaypoint::*)())&PathPlannerWaypoint::IsViewOn,"IsWaypointViewOn")
