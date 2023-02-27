@@ -838,7 +838,7 @@ void PathPlannerWaypoint::_RunDijkstra(const NavFlags _team)
 				&& (!pNextWp->IsFlagOn(F_NAV_INFILTRATOR) || !m_Client || !m_Client->IsInfiltrator()))
 				continue;
 
-			// TODO: take flags into account.
+			// take flags into account.
 			if(pNextWp->IsFlagOn(F_NAV_CLOSED) || (it->m_ConnectionFlags & F_LNK_CLOSED))
 				continue;
 
@@ -851,8 +851,14 @@ void PathPlannerWaypoint::_RunDijkstra(const NavFlags _team)
 			// Calculate the successor cost.
 			// Ignore distance to next node if this is flagged as a teleporter.
 			float fSuccesorCost = pCurrentNode->m_FinalCost;
-			if(!(it->m_ConnectionFlags & F_LNK_TELEPORT))
-				fSuccesorCost += (pCurrentNode->GetPosition() - pNextWp->GetPosition()).Length();
+			if (!(it->m_ConnectionFlags & F_LNK_TELEPORT))
+			{
+				float len = (pCurrentNode->GetPosition() - pNextWp->GetPosition()).Length();
+				if (pNextWp->IsFlagOn(F_NAV_PRONE)) len *= 3.8f;
+				else if (pNextWp->IsFlagOn(F_NAV_CROUCH)) len *= 3.2f;
+				else if (pNextWp->IsFlagOn(F_NAV_SNEAK)) len *= 2.0f;
+				fSuccesorCost += len;
+			}
 
 			if(pNextWp->m_PathSerial == serial)
 			{
