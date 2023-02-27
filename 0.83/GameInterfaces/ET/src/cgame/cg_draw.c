@@ -569,7 +569,7 @@ static void CG_DrawUpperRight( void ) {
 //		CG_DrawTeamOverlay( 0 );
 	}
 
-	if( !( cg.snap->ps.pm_flags & PMF_LIMBO ) && ( cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR ) &&
+	if( !( cg.snap->ps.pm_flags & PMF_LIMBO ) &&
 		( cgs.autoMapExpanded || ( !cgs.autoMapExpanded && ( cg.time - cgs.autoMapExpandTime < 250.f ) ) ) )
 		return;
 
@@ -3492,7 +3492,7 @@ static void CG_DrawNewCompass( void ) {
 		snap = cg.snap;
 	}
 
-	if ( snap->ps.pm_flags & PMF_LIMBO || snap->ps.persistant[PERS_TEAM] == TEAM_SPECTATOR || cg.mvTotalClients > 0 )
+	if ( snap->ps.pm_flags & PMF_LIMBO || cg.mvTotalClients > 0 )
 		return;
 
 	// Arnout: bit larger
