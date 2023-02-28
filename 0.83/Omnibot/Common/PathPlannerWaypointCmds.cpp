@@ -1491,58 +1491,57 @@ void PathPlannerWaypoint::cmdWaypointAddFlag_Helper(const StringVector &_args, W
 	if(!_waypoint)
 		return;
 
+	NavFlags deprecatedFlags = IGameManager::GetInstance()->GetGame()->DeprecatedNavigationFlags();
 	bool bPrintFlagList = true;
 
 	// Add the flags to the waypoint.
 	if(_args.size() >= 2)
 	{
 		// to support adding multiple flags in a single line, lets loop through all the tokens
-		for(unsigned int iToken = 1; iToken < _args.size(); ++iToken)
+		StringVector::const_iterator token = _args.begin();
+		for(++token; token != _args.end(); ++token)
 		{
 			// Look for this token in the map.
-			FlagMap::const_iterator it = m_WaypointFlags.find(_args[iToken]);
-			if(it != m_WaypointFlags.end())
+			FlagMap::const_iterator it = m_WaypointFlags.find(*token);
+			if(it != m_WaypointFlags.end() && (!(it->second & deprecatedFlags) || _waypoint->IsFlagOn(it->second)))
 			{
 				// Get the local characters position
-				if(_waypoint)
+				if(!_waypoint->IsFlagOn(it->second))
 				{
-					if(!_waypoint->IsFlagOn(it->second))
-					{
-						_waypoint->AddFlag(it->second);
-						EngineFuncs::ConsoleMessage(va("%s Flag added to waypoint.", _args[iToken].c_str()));
-					} 
-					else
-					{
-						_waypoint->RemoveFlag(it->second);
-						EngineFuncs::ConsoleMessage(va("%s Flag removed from waypoint.", _args[iToken].c_str()));
+					_waypoint->AddFlag(it->second);
+					EngineFuncs::ConsoleMessage(va("%s Flag added to waypoint.", token->c_str()));
+				} 
+				else
+				{
+					_waypoint->RemoveFlag(it->second);
+					EngineFuncs::ConsoleMessage(va("%s Flag removed from waypoint.", token->c_str()));
 
-						//open connections if blockable flag is removed
-						if ((it->second & m_BlockableMask) != 0) ClearBlockable(_waypoint);
-					}
-
-					// Team flags have a somewhat special case.
-					// If no team flags are enable, make sure the teamonly flag is disable as well.
-					if(!_waypoint->IsAnyFlagOn(F_NAV_TEAM_ALL))
-					{
-						if(_waypoint->IsFlagOn(F_NAV_TEAMONLY))
-						{
-							_waypoint->RemoveFlag(F_NAV_TEAMONLY);
-							EngineFuncs::ConsoleMessage("Waypoint no longer team specific.");
-						}
-					} else
-					{
-						// At least one of them is on, so make sure the teamonly flag is set.
-						_waypoint->AddFlag(F_NAV_TEAMONLY);
-					}
-
-					BuildBlockableList();
-					BuildSpatialDatabase();
+					//open connections if blockable flag is removed
+					if ((it->second & m_BlockableMask) != 0) ClearBlockable(_waypoint);
 				}
+
+				// Team flags have a somewhat special case.
+				// If no team flags are enable, make sure the teamonly flag is disable as well.
+				if(!_waypoint->IsAnyFlagOn(F_NAV_TEAM_ALL))
+				{
+					if(_waypoint->IsFlagOn(F_NAV_TEAMONLY))
+					{
+						_waypoint->RemoveFlag(F_NAV_TEAMONLY);
+						EngineFuncs::ConsoleMessage("Waypoint no longer team specific.");
+					}
+				} else
+				{
+					// At least one of them is on, so make sure the teamonly flag is set.
+					_waypoint->AddFlag(F_NAV_TEAMONLY);
+				}
+
+				BuildBlockableList();
+				BuildSpatialDatabase();
 				bPrintFlagList = false;
 			} 
 			else
 			{
-				EngineFuncs::ConsoleError(va("Invalid flag: %s.", _args[iToken].c_str()));
+				EngineFuncs::ConsoleError(va("Invalid flag: %s.", token->c_str()));
 			}
 		}		
 	} else
@@ -1556,7 +1555,8 @@ void PathPlannerWaypoint::cmdWaypointAddFlag_Helper(const StringVector &_args, W
 		EngineFuncs::ConsoleMessage("Waypoint Flag List.");
 		FlagMap::const_iterator it = m_WaypointFlags.begin();
 		for( ; it != m_WaypointFlags.end(); ++it)
-			EngineFuncs::ConsoleMessage(va("%s", it->first.c_str()));
+			if(!(it->second & deprecatedFlags))
+				EngineFuncs::ConsoleMessage(va("%s", it->first.c_str()));
 	}
 }
 

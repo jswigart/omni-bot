@@ -430,6 +430,13 @@ void RTCW_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
 	_planner->RegisterNavFlag("STRAFE_JUMP_R",	F_RTCW_NAV_STRAFE_JUMP_R);
 }
 
+NavFlags RTCW_Game::DeprecatedNavigationFlags() const
+{
+	return IGame::DeprecatedNavigationFlags() | F_NAV_TEAM3 | F_NAV_TEAM4
+		| F_RTCW_NAV_CAPPOINT | F_RTCW_NAV_ARTSPOT | F_RTCW_NAV_ARTYTARGET_S | F_RTCW_NAV_ARTYTARGET_D
+		| F_RTCW_NAV_FLAMETHROWER | F_RTCW_NAV_PANZER | F_RTCW_NAV_VENOM | F_RTCW_NAV_USERGOAL;
+}
+
 void RTCW_Game::InitCommands()
 {
 	IGame::InitCommands();

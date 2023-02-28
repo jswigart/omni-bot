@@ -24,6 +24,7 @@ public:
 	bool Init();
 
 	void RegisterNavigationFlags(PathPlannerBase *_planner);
+	NavFlags DeprecatedNavigationFlags() const;
 	void RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck);
 
 	virtual Client *CreateGameClient();

@@ -592,6 +592,13 @@ void ET_Game::RegisterNavigationFlags(PathPlannerBase *_planner)
 	_planner->RegisterNavFlag("USEPATH",		F_ET_NAV_USEPATH);
 }
 
+NavFlags ET_Game::DeprecatedNavigationFlags() const
+{
+	return IGame::DeprecatedNavigationFlags() | F_NAV_TEAM3 | F_NAV_TEAM4 | F_ET_NAV_MG42SPOT | F_ET_NAV_MORTAR 
+		| F_ET_NAV_MINEAREA | F_ET_NAV_CAPPOINT | F_ET_NAV_ARTSPOT | F_ET_NAV_ARTYTARGET_S | F_ET_NAV_ARTYTARGET_D 
+		| F_ET_NAV_FLAMETHROWER | F_ET_NAV_PANZER | F_ET_NAV_USERGOAL;
+}
+
 void ET_Game::InitCommands()
 {
 	IGame::InitCommands();

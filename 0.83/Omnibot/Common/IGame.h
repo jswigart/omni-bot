@@ -64,6 +64,7 @@ public:
 	virtual void NewRound();
 	virtual void StartTraining();
 	virtual void RegisterNavigationFlags(PathPlannerBase *_planner);
+	virtual NavFlags DeprecatedNavigationFlags() const { return F_NAV_TEAMONLY | F_NAV_SNIPE | F_NAV_HEALTH | F_NAV_ARMOR | F_NAV_AMMO | F_NAV_DEFEND | F_NAV_ATTACK | F_NAV_SCRIPT | F_NAV_ROUTEPT; }
 	virtual void RegisterPathCheck(PathPlannerWaypoint::pfbWpPathCheck &_pfnPathCheck) { }
 	virtual void InitMapScript();
 	virtual void GetMapScriptFile(filePath &script) { };
