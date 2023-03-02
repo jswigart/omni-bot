@@ -81,6 +81,7 @@
 #include "WaypointSerializer_V5.cpp"
 #include "WaypointSerializer_V6.cpp"
 #include "WaypointSerializer_V7.cpp"
+#include "WaypointSerializer_V9.cpp"
 #include "WaypointSerializerImp.cpp"
 
 #include "AStarSolver.cpp"

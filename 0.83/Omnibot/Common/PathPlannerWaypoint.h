@@ -230,7 +230,6 @@ protected:
 
 	int					m_SelectedWaypoint;
 	Waypoint			*m_ConnectWp;
-	int					m_NextUID;
 
 	int					m_GoodPathQueries;
 	int					m_BadPathQueries;

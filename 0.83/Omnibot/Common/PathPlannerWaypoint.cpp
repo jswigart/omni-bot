@@ -28,6 +28,7 @@
 #include "WaypointSerializer_V5.h"
 #include "WaypointSerializer_V6.h"
 #include "WaypointSerializer_V7.h"
+#include "WaypointSerializer_V9.h"
 // TODO: next wp version, remove F_NAV_TEAMONLY 
 
 using namespace std;
@@ -83,7 +84,6 @@ PathPlannerWaypoint::PathPlannerWaypoint()
 	, m_DefaultWaypointRadius	(35.0f)
 	, m_SelectedWaypoint		(-1)
 	, m_ConnectWp				(0)
-	, m_NextUID					(0)
 	, m_GoodPathQueries			(0)
 	, m_BadPathQueries			(0)
 	, m_PathCheckCallback		(0)
@@ -100,6 +100,7 @@ PathPlannerWaypoint::PathPlannerWaypoint()
 	m_WaypointSerializer[6] = WpSerializerPtr(new WaypointSerializer_V6);
 	m_WaypointSerializer[7] = WpSerializerPtr(new WaypointSerializer_V7);
 	m_WaypointSerializer[8] = m_WaypointSerializer[7]; // same format, diff version for 0.7
+	m_WaypointSerializer[9] = WpSerializerPtr(new WaypointSerializer_V9);
 
 	LOG("Waypoint Nav System Initialized (" << m_WaypointSerializer.size() << " Serializers)");
 
@@ -1257,9 +1258,6 @@ bool PathPlannerWaypoint::LoadFromFile(const String &_file)
 	// Read the waypoint header.
 	memset(&m_WaypointHeader, 0, sizeof(m_WaypointHeader));
 	InFile.Read(&m_WaypointHeader, sizeof(m_WaypointHeader));
-
-	// ZERO THE COMMENTS
-	memset(&m_WaypointHeader.m_Comments, 0, sizeof(m_WaypointHeader.m_Comments));
 
 	WaypointSerializers::iterator it = m_WaypointSerializer.find(m_WaypointHeader.m_WaypointVersion);
 	if(it != m_WaypointSerializer.end())

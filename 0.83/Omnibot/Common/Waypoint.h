@@ -30,6 +30,7 @@ public:
 	friend class WaypointSerializer_V5;
 	friend class WaypointSerializer_V6;
 	friend class WaypointSerializer_V7;
+	friend class WaypointSerializer_V9;
 
 	// typedef: ConnectionInfo
 	//	Represents a connection to another waypoint.

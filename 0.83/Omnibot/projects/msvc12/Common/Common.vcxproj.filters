@@ -243,6 +243,9 @@
     <ClCompile Include="..\..\..\Common\WaypointSerializer_V7.cpp">
       <Filter>Core\Navigation\PathPlannerWaypoint</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Common\WaypointSerializer_V9.cpp">
+      <Filter>Core\Navigation\PathPlannerWaypoint</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\Common\WaypointSerializerImp.cpp">
       <Filter>Core\Navigation\PathPlannerWaypoint</Filter>
     </ClCompile>
@@ -1008,6 +1011,9 @@
       <Filter>Core\Navigation\PathPlannerWaypoint</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\WaypointSerializer_V7.h">
+      <Filter>Core\Navigation\PathPlannerWaypoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\WaypointSerializer_V9.h">
       <Filter>Core\Navigation\PathPlannerWaypoint</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Common\WaypointSerializerImp.h">

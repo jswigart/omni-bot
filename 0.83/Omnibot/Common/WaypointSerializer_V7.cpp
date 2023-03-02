@@ -25,7 +25,7 @@ bool WaypointSerializer_V7::Load(File &_file, PathPlannerWaypoint::WaypointList 
 
 	Waypoint *pCurrentWp = NULL;
 
-	// Save the next GUID
+	// Read the next GUID
 	CHECK_READ(_file.ReadInt32(Waypoint::m_NextUID));	
 
 	obuint32 iSize = (obuint32)_wpl.size();
@@ -120,9 +120,11 @@ bool WaypointSerializer_V7::Load(File &_file, PathPlannerWaypoint::WaypointList 
 	return true;
 }
 
-PathPlannerWaypoint *GetWpPlanner();
 bool WaypointSerializer_V7::Save(File &_file, PathPlannerWaypoint::WaypointList &_wpl)
 {
+	OBASSERT(0, "This Shouldn't get called!");
+	return false;
+#if 0
 	// Save the next GUID
 	CHECK_WRITE(_file.WriteInt32(Waypoint::m_NextUID));
 
@@ -206,8 +208,8 @@ bool WaypointSerializer_V7::Save(File &_file, PathPlannerWaypoint::WaypointList 
 					bFound = true;
 					// Write the index
 					CHECK_WRITE(_file.WriteInt32(w));
-					// Write the connection flags.
-					CHECK_WRITE(_file.WriteInt32(it->m_ConnectionFlags));
+					// Write the connection flags - deprecated
+					CHECK_WRITE(_file.WriteInt32(0));
 					break;
 				}
 			}
@@ -227,4 +229,5 @@ bool WaypointSerializer_V7::Save(File &_file, PathPlannerWaypoint::WaypointList 
 	delete pM;*/
 
 	return true;
+#endif
 }

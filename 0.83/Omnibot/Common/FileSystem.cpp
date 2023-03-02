@@ -618,9 +618,13 @@ bool File::WriteFloat(float f)
 	return false;	
 }
 
-obuint64 File::Write(const void *_buffer, obuint32 _size, obuint32 _numitems /*= 1*/)
+obuint32 File::Write(const void *_buffer, obuint32 _size, obuint32 _numitems /*= 1*/)
 {
-	return m_pFile->m_pPrivate && _size != 0 ? PHYSFS_write(m_pFile->m_pPrivate, _buffer, _size, _numitems) : 0;
+	if (m_pFile->m_pPrivate && _size > 0) {
+		PHYSFS_sint64 result = PHYSFS_write(m_pFile->m_pPrivate, _buffer, _size, _numitems);
+		if (result > 0) return (obuint32)result;
+	}
+	return 0;
 }
 
 bool File::WriteString(const String &_str)
@@ -644,6 +648,46 @@ bool File::WriteString(const String &_str)
 		return true;
 	}
 	return false;
+}
+
+bool File::WriteIntPk(obuint32 i)
+{
+	if (!m_pFile->m_pPrivate) return false;
+	obuint8 buf[5];
+	obuint32 len = 0;
+	do {
+		buf[len++] = ((obuint8)i & 0x7f);
+		i >>= 7;
+	} while (i);
+	buf[len - 1] |= 0x80;
+	return PHYSFS_write(m_pFile->m_pPrivate, buf, len, 1) == 1;
+}
+
+bool File::WriteIntPk(obuint64 i)
+{
+	if (!m_pFile->m_pPrivate) return false;
+	obuint8 buf[10];
+	obuint32 len = 0;
+	do {
+		buf[len++] = ((obuint8)i & 0x7f);
+		i >>= 7;
+	} while (i);
+	buf[len - 1] |= 0x80;
+	return PHYSFS_write(m_pFile->m_pPrivate, buf, len, 1) == 1;
+}
+
+bool File::WriteSignIntPk(obint32 i)
+{
+	return WriteIntPk(i>=0 ? (obuint32)i<<1 : ((obuint32)(~i)<<1) | 1);
+}
+
+bool File::WriteStringPk(const String& _str)
+{
+	obuint32 len = (obuint32)_str.length();
+	if (!WriteIntPk(len)) return false;
+	if (len > 0)
+		if (!Write(_str.c_str(), len, 1)) return false;
+	return true;
 }
 
 void File::Printf(const char* _msg, ...)
@@ -755,9 +799,14 @@ bool File::ReadFloat(float &f)
 	return false;
 }
 
-obuint64 File::Read(void *_buffer, obuint32 _size, obuint32 _numitems /*= 1*/)
+obuint32 File::Read(void *_buffer, obuint32 _size, obuint32 _numitems /*= 1*/)
 {
-	return m_pFile->m_pPrivate && _size != 0 ? PHYSFS_read(m_pFile->m_pPrivate, _buffer, _size, _numitems) : 0;
+	if(m_pFile->m_pPrivate && _size > 0)
+	{
+		PHYSFS_sint64 result = PHYSFS_read(m_pFile->m_pPrivate, _buffer, _size, _numitems);
+		if (result > 0) return (obuint32)result;
+	}
+	return 0;
 }
 
 obuint64 File::ReadWholeFile(String &_readto)
@@ -772,6 +821,18 @@ obuint64 File::ReadWholeFile(String &_readto)
 		totalBytes += readBytes;
 	}
 	return totalBytes;
+}
+
+bool File::ReadString(String& _str, obuint32 len)
+{
+	if (len > 0)
+	{
+		boost::shared_array<char> pBuffer(new char[len + 1]);
+		if (!Read(pBuffer.get(), len, 1)) return false;
+		pBuffer.get()[len] = 0;
+		_str = pBuffer.get();
+	}
+	return true;
 }
 
 bool File::ReadString(String &_str)
@@ -789,22 +850,64 @@ bool File::ReadString(String &_str)
 			while(Read(&ch, sizeof(ch), 1) && !EndOfFile() && Utils::IsWhiteSpace(ch)) { }
 			// go back by 1
 			Seek(Tell()-1);
+			return true;
 		}
 		else
 		{
 			obuint32 len;
-			if(!ReadInt32(len)) return false;
-			if(len > 0)
-			{
-				boost::shared_array<char> pBuffer(new char[len+1]);
-				if(!Read(pBuffer.get(), len, 1)) return false;
-				pBuffer.get()[len] = 0;
-				_str = pBuffer.get();
-			}			
+			return ReadInt32(len) && ReadString(_str, len);
 		}
-		return true;
 	}
 	return false;
+}
+
+bool File::ReadIntPk(obuint32& i)
+{
+	if (!m_pFile->m_pPrivate) return false;
+	obuint32 j = 0;
+	int len = 0;
+	for(;;) 
+	{
+		obuint8 c;
+		if (PHYSFS_read(m_pFile->m_pPrivate, &c, 1, 1) <= 0) return false;
+		j |= (obuint32)(c & 0x7f) << len;
+		if (c & 0x80) break;
+		len += 7;
+	}
+	i = j;
+	return true;
+}
+
+bool File::ReadIntPk(obuint64& i)
+{
+	if (!m_pFile->m_pPrivate) return false;
+	obuint64 j = 0;
+	int len = 0;
+	for (;;)
+	{
+		obuint8 c;
+		if (PHYSFS_read(m_pFile->m_pPrivate, &c, 1, 1) <= 0) return false;
+		j |= (obuint64)(c & 0x7f) << len;
+		if (c & 0x80) break;
+		len += 7;
+	}
+	i = j;
+	return true;
+}
+
+bool File::ReadSignIntPk(obint32& i)
+{
+	obuint32 u;
+	if (!ReadIntPk(u)) return false;
+	i = (u & 1) ? ~(u >> 1) : (u >> 1);
+	return true;
+}
+
+bool File::ReadStringPk(String& _str)
+{
+	_str.clear();
+	obuint32 len;
+	return ReadIntPk(len) && ReadString(_str, len);
 }
 
 bool File::ReadLine(String &_str)

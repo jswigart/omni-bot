@@ -999,9 +999,8 @@ void MapGoal::RenderDebug(bool _editing, bool _highlighted)
 						call.AddParamInt(_highlighted?1:0);
 						if(call.End() == gmThread::EXCEPTION)
 						{
-							/*SetEnable(false, va("Error in Update Callback in Goal: %s", GetName().c_str()));
-							return State_Finished;*/
-						}/**/
+							//SetEnable(false, va("Error in Update Callback in Goal: %s", GetName().c_str()));
+						}
 
 						m_ActiveThread[ON_RENDER] = call.GetThreadId();
 						if(call.DidReturnVariable())
