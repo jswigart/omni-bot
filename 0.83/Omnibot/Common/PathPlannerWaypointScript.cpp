@@ -28,7 +28,7 @@ static PathPlannerWaypoint *GetWpPlanner()
 // Parameters:
 //
 //		<Vector3> - The <Vector3> position to add waypoint.
-//		<Vector3> - The <Vector3> facing for the waypoint.
+//		<Vector3> - OPTIONAL - The <Vector3> facing for the waypoint.
 //
 // Returns:
 //		int - Waypoint Id if successful
@@ -36,14 +36,22 @@ static PathPlannerWaypoint *GetWpPlanner()
 //		nul if there was an error adding waypoint.
 static int GM_CDECL gmfAddWaypoint(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(2);
+	GM_CHECK_NUM_PARAMS(1);
 	GM_CHECK_VECTOR_PARAM(v1,0);
-	GM_CHECK_VECTOR_PARAM(v2,1);
 
 	PathPlannerWaypoint *pWp = GetWpPlanner();
 	if(pWp)
 	{
-		Waypoint *pWaypoint = pWp->AddWaypoint(Vector3f(v1.x,v1.y,v1.z), Vector3f(v2.x,v2.y,v2.z));
+		Waypoint* pWaypoint; 
+
+		if(a_thread->GetNumParams() > 1) 
+		{
+			GM_CHECK_VECTOR_PARAM(v2, 1);
+			pWaypoint = pWp->AddWaypoint(Vector3f(v1.x, v1.y, v1.z), Vector3f(v2.x, v2.y, v2.z));
+		}
+		else {
+			pWaypoint = pWp->AddWaypoint(Vector3f(v1.x, v1.y, v1.z));
+		}
 		if(pWaypoint)
 		{
 			a_thread->PushInt(pWaypoint->GetUID());

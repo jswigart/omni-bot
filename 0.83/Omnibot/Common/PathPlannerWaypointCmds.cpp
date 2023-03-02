@@ -132,15 +132,13 @@ void PathPlannerWaypoint::cmdWaypointAdd(const StringVector &_args)
 		return;
 
 	// get the position of the localhost
-	Vector3f vPosition, vFacing;
+	Vector3f vPosition;
 	g_EngineFuncs->GetEntityPosition(Utils::GetLocalEntity(), vPosition);
-	g_EngineFuncs->GetEntityOrientation(Utils::GetLocalEntity(), vFacing, 0, 0);
 
 	// Add this waypoint to the list.
 	ScriptManager::GetInstance()->ExecuteStringLogged(
-		(String)va("Wp.AddWaypoint( Vector3(%f, %f, %f), Vector3(%f, %f, %f) );", 
-		vPosition.x, vPosition.y, vPosition.z,
-		vFacing.x, vFacing.y, vFacing.z));
+		(String)va("Wp.AddWaypoint( Vector3(%f, %f, %f));", 
+		vPosition.x, vPosition.y, vPosition.z));
 }
 
 void PathPlannerWaypoint::cmdWaypointAddX(const StringVector &_args)
@@ -596,38 +594,32 @@ void PathPlannerWaypoint::cmdWaypointView(const StringVector &_args)
 
 void PathPlannerWaypoint::cmdWaypointAutoFlag(const StringVector &_args)
 {
-	if(_args.size() >= 2)
+	if(!m_PlannerFlags.CheckFlag(NAV_AUTODETECTFLAGS) && (_args.size() < 2 || Utils::StringToTrue(_args[1])))
 	{
-		if(!m_PlannerFlags.CheckFlag(NAV_AUTODETECTFLAGS) && Utils::StringToTrue(_args[1]))
-		{
-			m_PlannerFlags.SetFlag(NAV_AUTODETECTFLAGS);
-		}
-		else if(m_PlannerFlags.CheckFlag(NAV_AUTODETECTFLAGS) && Utils::StringToFalse(_args[1]))
-		{
-			m_PlannerFlags.ClearFlag(NAV_AUTODETECTFLAGS);
-		}
-
-		EngineFuncs::ConsoleMessage(va("Waypoint Autoflag %s",
-			m_PlannerFlags.CheckFlag(NAV_AUTODETECTFLAGS) ? "on." : "off."));
+		m_PlannerFlags.SetFlag(NAV_AUTODETECTFLAGS);
 	}
+	else if(m_PlannerFlags.CheckFlag(NAV_AUTODETECTFLAGS) && (_args.size() < 2 || Utils::StringToFalse(_args[1])))
+	{
+		m_PlannerFlags.ClearFlag(NAV_AUTODETECTFLAGS);
+	}
+
+	EngineFuncs::ConsoleMessage(va("Waypoint Autoflag %s",
+		m_PlannerFlags.CheckFlag(NAV_AUTODETECTFLAGS) ? "on." : "off."));
 }
 
 void PathPlannerWaypoint::cmdWaypointViewFacing(const StringVector &_args)
 {
-	if(_args.size() >= 2)
+	if(!m_PlannerFlags.CheckFlag(WAYPOINT_VIEW_FACING) && (_args.size() < 2 || Utils::StringToTrue(_args[1])))
 	{
-		if(!m_PlannerFlags.CheckFlag(WAYPOINT_VIEW_FACING) && Utils::StringToTrue(_args[1]))
-		{
-			m_PlannerFlags.SetFlag(WAYPOINT_VIEW_FACING);
-		}
-		else if(m_PlannerFlags.CheckFlag(WAYPOINT_VIEW_FACING) && Utils::StringToFalse(_args[1]))
-		{
-			m_PlannerFlags.ClearFlag(WAYPOINT_VIEW_FACING);
-		}
-
-		EngineFuncs::ConsoleMessage(va("Waypoint Facing Visible %s",
-			m_PlannerFlags.CheckFlag(WAYPOINT_VIEW_FACING) ? "on." : "off."));
+		m_PlannerFlags.SetFlag(WAYPOINT_VIEW_FACING);
 	}
+	else if(m_PlannerFlags.CheckFlag(WAYPOINT_VIEW_FACING) && (_args.size() < 2 || Utils::StringToFalse(_args[1])))
+	{
+		m_PlannerFlags.ClearFlag(WAYPOINT_VIEW_FACING);
+	}
+
+	EngineFuncs::ConsoleMessage(va("Waypoint Facing Visible %s",
+		m_PlannerFlags.CheckFlag(WAYPOINT_VIEW_FACING) ? "on." : "off."));
 }
 
 void PathPlannerWaypoint::cmdWaypointSetProperty(const StringVector &_args)
