@@ -67,7 +67,8 @@ bool WaypointSerializer_V9::Load(File& _file, PathPlannerWaypoint::WaypointList&
 			if(!_file.ReadSignIntPk(i)) return false;
 			obuint32 u = obuint32(i + index);
 			if(u >= _wpl.size()) return false;
-			pCurrentWp->m_Connections.push_back({ _wpl[u], 0 });
+			Waypoint::ConnectionInfo conn = { _wpl[u], 0 };
+			pCurrentWp->m_Connections.push_back(conn);
 		}
 
 		// Update the next guid
@@ -117,7 +118,7 @@ bool WaypointSerializer_V9::Save(File& _file, PathPlannerWaypoint::WaypointList&
 		// Write properties
 		if(mask & MASK_PROPERTY)
 		{
-			if(!_file.WriteIntPk(properties.size())) break;
+			if(!_file.WriteIntPk((obuint32)properties.size())) break;
 			for(PropertyMap::ValueMap::const_iterator pIt = properties.begin(); pIt != properties.end(); ++pIt)
 			{
 				if(!_file.WriteStringPk(pIt->first)) return false;
