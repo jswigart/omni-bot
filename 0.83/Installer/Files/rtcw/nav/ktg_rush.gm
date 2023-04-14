@@ -1,0 +1,138 @@
+global Map =
+{
+	Debug = 0, // please set to zero before distributing your script
+
+	blow_doors = function( trigger )
+	{
+		sleep(2);
+		SetAvailableMapGoals( TEAM.ALLIES, true, {
+			"FLAG_Gold_Bars",
+			"CAPPOINT_Gold_Dropoff",
+		});
+		SetAvailableMapGoals( TEAM.AXIS, true, "MOUNTMG42_mg42_bridge");
+	},
+
+	Front_Door_Destroyed = function( trigger )
+	{
+		Map.blow_doors();
+		Util.MapDebugPrint( "Front_Door_Destroyed" );
+	},
+
+	back_wall_Destroyed = function( trigger )
+	{
+		Map.blow_doors();
+		Util.MapDebugPrint( "back_wall_Destroyed" );
+	},
+
+	Gold_Bars_Taken = function( trigger )
+	{
+		SetGoalPriority( "MOUNTMG42_mg42_bridge", 0.7, TEAM.AXIS);
+		SetAvailableMapGoals( TEAM.AXIS, true,  "DEFEND_Tank_Barrier2.*");
+		Util.MapDebugPrint( "Gold_Bars_Taken" );
+	},
+
+	Gold_Bars_Returned = function( trigger )
+	{
+		SetGoalPriority( "MOUNTMG42_mg42_bridge", 0.5);
+		SetAvailableMapGoals( TEAM.AXIS, false,  "DEFEND_Tank_Barrier2.*");
+		Util.MapDebugPrint( "Gold_Bars_Returned" );
+	},
+
+	Forward_flag_Axis_Captured = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, true, "CALLARTILLERY_rBank.*");
+		Util.MapDebugPrint( "Forward_flag_Axis_Captured" );
+	},
+
+	Forward_flag_Allies_Captured = function( trigger )
+	{
+		SetAvailableMapGoals( TEAM.AXIS, false, "CALLARTILLERY_rBank.*");
+		Util.MapDebugPrint( "Forward_flag_Allies_Captured" );
+	},
+};
+
+global OnMapLoad = function()
+{
+	OnTrigger( "Axis reclaims the Forward Flag!", Map.Forward_flag_Axis_Captured );
+	OnTrigger( "Allies capture the Forward Flag!", Map.Forward_flag_Allies_Captured );
+	OnTrigger( "The back wall Destroyed.", Map.back_wall_Destroyed );
+	OnTrigger( "The Front Door Destroyed.", Map.Front_Door_Destroyed );
+	OnTrigger( "Allies have stolen The Gold Bars!", Map.Gold_Bars_Taken );
+	OnTrigger( "Flag returned Gold Bars!", Map.Gold_Bars_Returned );
+
+	SetGoalPriority( "AIRSTRIKE.*", 0.5 );
+	SetGoalPriority( "DEFEND_Tank_Barrier2.*", 0.7);
+	SetGoalPriority( "MOUNTMG42_mg42_bridge", 0.5);
+
+	Util.SetMaxUsersInProgress( 3, "CHECKPOINT_Forward_flag" );
+	Util.SetMaxUsers( 1, "MOUNTMG42_mg42_bridge" );
+
+	SetMapGoalProperties( "ATTACK_.*", {MinCampTime=10, MaxCampTime=30});
+	SetMapGoalProperties( "DEFEND_.*", {MinCampTime=15, MaxCampTime=20});
+	SetMapGoalProperties( "DEFEND_Bank_Roam.*", {MinCampTime=1, MaxCampTime=2});
+	SetMapGoalProperties( "MOUNTMG42_.*", {MinCampTime=45, MaxCampTime=90});
+
+	Util.DisableGoal( ".*", true );
+	Util.EnableGoal("CHECKPOINT_Forward_flag");
+
+	// Allied goals
+	SetAvailableMapGoals( TEAM.ALLIES, true, {
+		"PLANT.*",
+		"ATTACK_Bank_.*",
+		"AIRSTRIKE_bBank.*",
+		"MOUNTMG42_mg42_bridge",
+	});
+
+	// Axis goals
+	SetAvailableMapGoals( TEAM.AXIS, true, {
+		".*MG42_bankmg",
+		"DEFEND_Bank_.*",
+		"CALLARTILLERY_rBank.*",
+		"ARTILLERY_S_rBank.*",
+	});
+
+	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
+};
+
+global OnBotJoin = function( bot )
+{
+	RTCWUtil.NoSnipe( bot );
+};
+
+global InitializeRoutes = function()
+{
+	MapRoutes =
+	{
+		ATTACK_Bank_1 =
+		{
+			ROUTE_TankYardSpawn =
+			{
+				ROUTE_trb1_stairs = {},
+				ROUTE_cp_stairs = { ROUTE_cp_stairs2 = {}, },
+			},
+			ROUTE_TankYardSpawn2 =
+			{
+				ROUTE_trb1_stairs = {},
+				ROUTE_cp_stairs = {},
+			},
+		},
+		DEFEND_Bank_6 =
+		{
+			ROUTE_AxisSpawn =
+			{
+				ROUTE_axisspawn_r = {},
+				ROUTE_axisspawn_l = {},
+				ROUTE_bankback3 =
+				{
+					ROUTE_bankback2 = { ROUTE_bankback = {}, },
+				},
+			},
+		},
+	};
+
+	MapRoutes["ATTACK_Bank_.*"] = MapRoutes.ATTACK_Bank_1;
+	MapRoutes.CALLARTILLERY_rBank1 = MapRoutes.DEFEND_Bank_6;
+	MapRoutes["DEFEND_Bank_.*"] = MapRoutes.DEFEND_Bank_6;
+
+	Util.Routes(MapRoutes);
+};
