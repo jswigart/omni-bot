@@ -331,6 +331,8 @@ static int GM_CDECL gmfSetRadius(gmThread *a_thread)
 //		- OR -
 //		<string> - Name of the waypoint.
 //		<string> - The name of the flag to set.
+//		- OR -
+//		<table> - table of flags.
 //		<int> - True to set, false to clear.
 //
 // Returns:
@@ -347,34 +349,65 @@ static int GM_CDECL gmfSetWaypointFlag(gmThread *a_thread)
 	}
 
 	PathPlannerWaypoint::WaypointList list;
-	if(a_thread->ParamType(0) == GM_INT)
+	switch(a_thread->ParamType(0))
 	{
-		GM_CHECK_INT_PARAM(guid, 0);
-		Waypoint *pWaypoint = pWp->GetWaypointByGUID(guid);
-		if(pWaypoint) list.push_back(pWaypoint);
-	} 
-	else if(a_thread->ParamType(0) == GM_STRING)
-	{
-		GM_CHECK_STRING_PARAM(name, 0);
-		Waypoint *pWaypoint = pWp->GetWaypointByName(name);
-		if(pWaypoint) list.push_back(pWaypoint);
-		else pWp->GetWaypointsByExpr(name, list);
+		case GM_INT:
+		{
+			Waypoint *pWaypoint = pWp->GetWaypointByGUID(a_thread->ParamInt(0));
+			if(pWaypoint) list.push_back(pWaypoint);
+			break;
+		}
+		case GM_STRING:
+		{
+			const char *name=a_thread->ParamString(0);
+			Waypoint *pWaypoint = pWp->GetWaypointByName(name);
+			if(pWaypoint) list.push_back(pWaypoint);
+			else pWp->GetWaypointsByExpr(name, list);
+			break;
+		}
 	}
 	if(list.size()==0)
 	{
 		GM_EXCEPTION_MSG("Invalid Waypoint specified in param 0");
 		return GM_EXCEPTION;
 	}
-		
-	GM_CHECK_STRING_PARAM(flagname, 1);
-	GM_CHECK_INT_PARAM(enable, 2);
 
-	NavFlags flag;
-	if(!pWp->GetNavFlagByName(flagname, flag))
+	NavFlags flag=0;
+	switch(a_thread->ParamType(1))
 	{
-		GM_EXCEPTION_MSG("Invalid Navigation Flag specified in param 1");
-		return GM_EXCEPTION;
+		case GM_STRING:
+		{
+			const char *flagname = a_thread->ParamString(1);
+			if(!pWp->GetNavFlagByName(flagname, flag))
+			{
+				GM_EXCEPTION_MSG("Invalid navigation flag %s", flagname);
+				return GM_EXCEPTION;
+			}
+			break;
+		}
+		case GM_TABLE:
+		{
+			gmTableObject* tbl = a_thread->ParamTable(1);
+			gmTableIterator tIt;
+			for(gmTableNode *pNode = tbl->GetFirst(tIt); pNode; pNode = tbl->GetNext(tIt))
+			{
+				const char *flagname = pNode->m_value.GetCStringSafe();
+				NavFlags flag1;
+				if(!pWp->GetNavFlagByName(flagname, flag1))
+				{
+					GM_EXCEPTION_MSG("Invalid navigation flag %s", flagname);
+					return GM_EXCEPTION;
+				}
+				flag|=flag1;
+			}
+			break;
+		}
+		default:
+			GM_EXCEPTION_MSG("expecting param 1 as string or table");
+			return GM_EXCEPTION;
 	}
+
+	GM_CHECK_INT_PARAM(enable, 2);
 
 	PathPlannerWaypoint::WaypointList::const_iterator cIt = list.begin(), cItEnd = list.end();
 	for(; cIt != cItEnd; ++cIt)
