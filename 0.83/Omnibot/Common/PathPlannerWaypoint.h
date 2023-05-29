@@ -97,6 +97,7 @@ public:
 	inline const FlagMap &GetNavFlagMap() const { return m_WaypointFlags; }
 
 	Waypoint *GetWaypointByName(const String &_name) const;
+	void GetWaypointsByName(const String &_name, WaypointList &_list) const;
 	void GetWaypointsByExpr(const String &_expr, WaypointList &_list) const;
 	Waypoint *GetWaypointByGUID(obuint32 _uid) const;
 	Waypoint *_GetClosestWaypoint(const Vector3f &_pos, const NavFlags _team, const int _options, int *_index = NULL) const;
