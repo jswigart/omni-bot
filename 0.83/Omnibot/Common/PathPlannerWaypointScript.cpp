@@ -360,9 +360,8 @@ static int GM_CDECL gmfSetWaypointFlag(gmThread *a_thread)
 		case GM_STRING:
 		{
 			const char *name=a_thread->ParamString(0);
-			Waypoint *pWaypoint = pWp->GetWaypointByName(name);
-			if(pWaypoint) list.push_back(pWaypoint);
-			else pWp->GetWaypointsByExpr(name, list);
+			pWp->GetWaypointsByName(name, list);
+			if(list.empty()) pWp->GetWaypointsByExpr(name, list);
 			break;
 		}
 	}
