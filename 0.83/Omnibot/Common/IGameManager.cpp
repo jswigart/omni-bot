@@ -63,6 +63,9 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 		return BOT_ERROR_WRONGVERSION;
 	}
 
+	if(!FileSystem::InitFileSystem())
+		return BOT_ERROR_FILESYSTEM;
+
 	// Create log file
 	int logSize = m_Game->GetLogSize();
 	if(logSize > 0)
@@ -75,9 +78,6 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 			fs::is_directory(logFolder) ? logFolder.string().c_str() : _pEngineFuncs->GetLogPath(),
 			_pEngineFuncs->GetMapName()), logSize==0);
 	}
-
-	if(!FileSystem::InitFileSystem())
-		return BOT_ERROR_FILESYSTEM;
 
 	FileSystem::SetWriteDirectory(Utils::GetModFolder());
 
@@ -105,13 +105,7 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	if(FileSystem::FileDelete("user/logged.gm"))
 		EngineFuncs::ConsoleMessage("deleted user/logged.gm");
 
-	if(!Options::LoadConfigFile("user/omni-bot.cfg"))
-	{
-		if(!Options::LoadConfigFile("config/omni-bot.cfg"))
-		{
-			// error
-		}
-	}
+	Options::LoadConfigFile();
 
 	//////////////////////////////////////////////////////////////////////////
 	// logging options
@@ -150,7 +144,7 @@ omnibot_error IGameManager::CreateGame(IEngineInterface *_pEngineFuncs, int _ver
 	Options::SetValue("Debug","DumpFileDialog",true,false);
 #endif
 
-	Options::SetValue("Script","LiveUpdate",true,false);
+	Options::SetValue("Script","LiveUpdate",false,false);
 	//Options::SetValue("Script","Debug","true",false);
 
 #ifdef ENABLE_REMOTE_DEBUGGER
@@ -323,7 +317,7 @@ void IGameManager::UpdateGame()
 #endif
 	}
 
-	Options::SaveConfigFileIfChanged("user/omni-bot.cfg");
+	Options::SaveConfigFileIfChanged();
 
 #ifdef ENABLE_FILE_DOWNLOADER
 	FileDownloader::Poll();

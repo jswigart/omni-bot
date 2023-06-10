@@ -449,10 +449,8 @@ class Options
 public:
 	static void Init();
 	static void Shutdown();
-	static bool LoadConfigFile(const String &_file);
-	static bool SaveConfigFile(const String &_file);
-
-	static bool SaveConfigFileIfChanged(const String &_file);
+	static bool LoadConfigFile();
+	static void SaveConfigFileIfChanged();
 
 	static const char *GetRawValue(const char *_section, const char *_key);
 
@@ -466,6 +464,8 @@ public:
 	static bool SetValue(const char *_section, const char *_key, float _val, bool _overwrite = true);
 	static bool SetValue(const char *_section, const char *_key, const char *_val, bool _overwrite = true);
 	static bool SetValue(const char *_section, const char *_key, const String &_val, bool _overwrite = true);
+private:
+	static bool LoadConfigFile(const String &_file);
 };
 
 //////////////////////////////////////////////////////////////////////////

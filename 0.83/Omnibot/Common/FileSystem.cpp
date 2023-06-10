@@ -106,6 +106,9 @@ bool FileSystem::InitFileSystem()
 	fs::path configPath = basePath / "config";
 	PHYSFS_mount(configPath.string().c_str(), "config", 0);
 
+	const char* homePath = g_EngineFuncs->GetLogPath();
+	if(homePath && *homePath)  PHYSFS_mount(homePath, "homepath", 0);
+
 	CrcGenerateTable();
 	g_FileSystemInitialized = true;
 	return true;
@@ -229,11 +232,7 @@ bool FileSystem::UnMount(const fs::path &_path)
 
 bool FileSystem::SetWriteDirectory(const fs::path &_dir)
 {
-#if BOOST_VERSION <= 104400
-	if(!PHYSFS_setWriteDir(_dir.native_file_string().c_str()))
-#else
 	if (!PHYSFS_setWriteDir(_dir.string().c_str()))
-#endif
 	{
 		LOG("PhysFS: Error Setting Write Directory: " << PHYSFS_getLastError());
 		return false;

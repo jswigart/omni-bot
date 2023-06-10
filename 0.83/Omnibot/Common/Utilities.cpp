@@ -1759,8 +1759,9 @@ std::ostream& operator <<(std::ostream& _o, const TriggerInfo_t& _ti)
 
 //////////////////////////////////////////////////////////////////////////
 
-KeyValueIni		*FileOptions = 0;
-bool			OptionsChanged = false;
+static KeyValueIni *FileOptions = 0;
+static bool	OptionsChanged = false;
+static bool OptionsInHomePath;
 
 void Options::Init()
 {
@@ -1799,35 +1800,57 @@ bool Options::LoadConfigFile(const String &_file)
 	return false;
 }
 
-bool Options::SaveConfigFile(const String &_file)
+bool Options::LoadConfigFile()
 {
-	if(FileOptions)
+	if(LoadConfigFile("homepath/omni-bot.cfg"))
 	{
-		File f;
-		if(f.OpenForWrite(_file.c_str(),File::Text))
-		{
-			obuint32 FileLength = 0;
-			void *FileData = saveKeyValueIniMem(FileOptions,FileLength);
-
-			f.Write(FileData,FileLength);
-			f.Close();
-
-			releaseIniMem(FileData);
-			return true;
-		}
+		OptionsInHomePath = true;
+		return true;
 	}
-	return false;
+	OptionsInHomePath = false;
+	return LoadConfigFile("user/omni-bot.cfg") || LoadConfigFile("config/omni-bot.cfg");
 }
 
-bool Options::SaveConfigFileIfChanged(const String &_file) 
+void Options::SaveConfigFileIfChanged() 
 {
-	if(OptionsChanged)
-	{
-		OptionsChanged = false;
-		return SaveConfigFile(_file);
-	}
-	return false;
+	if(!OptionsChanged || !FileOptions) return;
+	OptionsChanged = false;
+	File f;
+	/*
+		GetLogPath() should return "fs_homepath" cvar
+		Windows ETL: C:\Users\username\Documents\ETLegacy
+		Windows ET 2.6: C:\Program Files (x86)\Wolfenstein - Enemy Territory
+		Windows ioRTCW: C:\Users\username\Documents\RTCW
+		Linux ETL: /home/username/.etlegacy
+		Linux ET 2.6: /home/username/.etwolf
+		Linux RTCW: /home/username/.wolf
+	*/
 
+	//If the config has been loaded from fs_homepath, save it to fs_homepath
+	if(OptionsInHomePath && FileSystem::SetWriteDirectory(g_EngineFuncs->GetLogPath())
+		&& !f.OpenForWrite("omni-bot.cfg", File::Text)) 
+		FileSystem::SetWriteDirectory(Utils::GetModFolder());
+	//Otherwise save it to omni-bot installation folder
+	if(!f.IsOpen() && !f.OpenForWrite("user/omni-bot.cfg", File::Text) 
+		//If it failed (access denied), save it to fs_homepath
+		&& !OptionsInHomePath && FileSystem::SetWriteDirectory(g_EngineFuncs->GetLogPath()))
+	{
+		OptionsInHomePath = true;
+		f.OpenForWrite("omni-bot.cfg", File::Text);
+	}
+	if(f.IsOpen()) 
+	{
+		obuint32 fileLength = 0;
+		void *fileData = saveKeyValueIniMem(FileOptions, fileLength);
+		if(fileData)
+		{
+			f.Write(fileData, fileLength);
+			releaseIniMem(fileData);
+		}
+		f.Close();
+	}
+	//restore previous write directory
+	if(OptionsInHomePath) FileSystem::SetWriteDirectory(Utils::GetModFolder());
 }
 
 const char *Options::GetRawValue(const char *_section, const char *_key)
