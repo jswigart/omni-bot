@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION 0, 8, 7, 1
-PRODUCTVERSION 0, 8, 7, 1
+FILEVERSION 0, 9, 0, 0
+PRODUCTVERSION 0, 9, 0, 0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "Omni-bot"
-            VALUE "FileVersion", "0.8.7.1"
+            VALUE "FileVersion", "0.9.0.0"
             VALUE "InternalName", "Omni-bot"
-            VALUE "LegalCopyright", "Copyright (C) 2020"
+            VALUE "LegalCopyright", "Copyright (C) 2023"
             VALUE "OriginalFilename", "omnibot.dll"
             VALUE "ProductName", "Omni-bot"
-            VALUE "ProductVersion", "0.8.7.1"
+            VALUE "ProductVersion", "0.9.0.0"
         END
     END
     BLOCK "VarFileInfo"

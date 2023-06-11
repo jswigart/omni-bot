@@ -1,3 +1,27 @@
+==0.9 RTCW Change Log==
+
+=== BOT ===
+Added functions Wp.CheckBlockable, Wp.Disconnect
+Changed new waypoint format (0.9 waypoints are incompatible with previous omni-bot versions !)
+Changed config file omni-bot.cfg is saved to fs_homepath if omnibot_path is read-only
+Changed logs are disabled if cvar omnibot_logsize is 0
+Changed LookAround priority is VeryLow
+Improved Wp.SetWaypointFlag affects all waypoints having the same name and can set multiple navigation flags 
+Improved the shortest path depends on sneak,crouch,prone waypoint flags
+Fixed DeleteTriggerRegion calls OnExit
+Fixed MapGoal.GetMatrix
+Fixed error message is printed to the console if cgame module was not found
+Removed deprecated navigation flags (panzer, cappoint, ammo etc.)
+
+=== GOALS ===
+Added OnExit function in paththrough navigation
+Fixed bots don't press switch again after ExitConditions in paththrough useswitch
+
+=== COMMANDS ===
+Improved ShowEntityInfo prints coordinates of TraceLine hit point
+
+---------------------------------------------------------------
+
 ==0.87 RTCW Change Log==
 
 === BOT ===
