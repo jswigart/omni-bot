@@ -6,7 +6,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gmCompiler", "gmCompiler\gmCompiler.vcxproj", "{9DF97DCF-84F4-4D9E-BA74-CED386DB6E16}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gm_ex", "..\..\dependencies\gmsrc_ex\src\gm\gm2013.vcxproj", "{8C9CC332-D582-453A-AF10-20B100857587}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gm_ex", "..\..\dependencies\gmscriptex\gmsrc_ex\src\gm\gm2013.vcxproj", "{8C9CC332-D582-453A-AF10-20B100857587}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MOD_ET", "ET\ET.vcxproj", "{0C712472-8447-4088-87EE-E9FAF72E31E7}"
 	ProjectSection(ProjectDependencies) = postProject

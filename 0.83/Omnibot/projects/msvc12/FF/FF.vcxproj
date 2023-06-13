@@ -268,7 +268,7 @@ copy "$(TargetDir)$(TargetName)_$(ConfigurationName).map" "$(OMNIBOT_INST)"</Com
     <None Include="..\..\..\FF\Omni-Bot_FF_TODO.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\dependencies\gmsrc_ex\src\gm\gm2010.vcxproj">
+    <ProjectReference Include="..\..\..\dependencies\gmscriptex\gmsrc_ex\src\gm\gm2010.vcxproj">
       <Project>{8c9cc332-d582-453a-af10-20b100857587}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.vcxproj">
