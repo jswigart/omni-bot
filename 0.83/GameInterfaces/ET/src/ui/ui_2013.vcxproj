@@ -46,6 +46,7 @@
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -53,22 +54,22 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
-    <Import Project="..\..\..\..\Omnibot\projects\msvc10\PropertySheets\Paths.props" />
+    <Import Project="..\..\..\..\Omnibot\projects\msvc12\PropertySheets\Paths.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
-    <Import Project="..\..\..\..\Omnibot\projects\msvc10\PropertySheets\Paths.props" />
+    <Import Project="..\..\..\..\Omnibot\projects\msvc12\PropertySheets\Paths.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
-    <Import Project="..\..\..\..\Omnibot\projects\msvc10\PropertySheets\Paths.props" />
+    <Import Project="..\..\..\..\Omnibot\projects\msvc12\PropertySheets\Paths.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
-    <Import Project="..\..\..\..\Omnibot\projects\msvc10\PropertySheets\Paths.props" />
+    <Import Project="..\..\..\..\Omnibot\projects\msvc12\PropertySheets\Paths.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
@@ -145,6 +146,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>.\Release/ui_mp_x86.lib</ImportLibrary>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <PostBuildEvent>
       <Message>Copy to ET</Message>
@@ -194,6 +196,7 @@ copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>.\Release/ui_mp_x86.lib</ImportLibrary>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <PostBuildEvent>
       <Message>Copy to ET</Message>
@@ -244,6 +247,7 @@ copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
       </DataExecutionPrevention>
       <ImportLibrary>.\Debug/ui_mp_x86.lib</ImportLibrary>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <PostBuildEvent>
       <Message>Copy to ET</Message>
@@ -286,11 +290,13 @@ copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ModuleDefinitionFile>.\ui.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <BaseAddress>0x40000000</BaseAddress>
+      <BaseAddress>
+      </BaseAddress>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>.\Debug/ui_mp_x86.lib</ImportLibrary>
+      <SubSystem>Windows</SubSystem>
     </Link>
     <PostBuildEvent>
       <Message>Copy to ET</Message>
