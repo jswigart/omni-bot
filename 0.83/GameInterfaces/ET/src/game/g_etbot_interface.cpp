@@ -1572,6 +1572,10 @@ static int _GetEntityTeam(gentity_t *_ent)
 		return Bot_TeamGameToBot(_ent->client->sess.sessionTeam);
 	case ET_CORPSE:
 		return Bot_TeamGameToBot(BODY_TEAM(_ent));
+	case ET_GENERAL:
+		if(!Q_stricmp(_ent->classname, "team_CTF_redspawn")) return ET_TEAM_AXIS;
+		if(!Q_stricmp(_ent->classname, "team_CTF_bluespawn")) return ET_TEAM_ALLIES;
+		return Bot_TeamGameToBot(_ent->s.teamNum);
 	case ET_MISSILE:
 		if(_ent->s.weapon == WP_LANDMINE || _ent->s.weapon == WP_DYNAMITE)
 			return Bot_TeamGameToBot(G_LandmineTeam(_ent));
