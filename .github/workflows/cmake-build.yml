@@ -16,7 +16,8 @@ jobs:
 
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        # os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [macos-latest]
         build_type: [Release]
         c_compiler: [gcc, clang, cl]
         include:
@@ -58,10 +59,16 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/0.83/Omnibot/build" >> "$GITHUB_OUTPUT"
 
     - name: Install boost
+      if: matrix.os != 'macos-latest'
       uses: MarkusJx/install-boost@v2.4.4
       id: install-boost
       with:
         boost_version: 1.73.0
+
+    - name: Install boost on macos
+      if: matrix.os == 'macos-latest'
+      run: >
+        brew install boost
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
