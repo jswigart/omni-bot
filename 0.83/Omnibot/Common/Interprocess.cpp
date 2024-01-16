@@ -43,7 +43,6 @@ private:
 	const String	m_Name;
 	message_queue	m_MessageQueue;
 
-	InterProcessMessageQueue();
 };
 
 typedef boost::shared_ptr< InterProcessMessageQueue<IPC_DebugDrawMsg> > MessageQueuePtr;
@@ -96,7 +95,7 @@ namespace InterProcess
 
 		Vector3f v1(Vector3f::ZERO);
 
-		if(!g_EngineFuncs->DebugLine(v1,v1,COLOR::GREEN,0.f) && 
+		if(!g_EngineFuncs->DebugLine(v1,v1,COLOR::GREEN,0.f) &&
 			!g_EngineFuncs->DebugRadius(v1,0.f,COLOR::GREEN, 0.f))
 		{
 #ifdef INTERPROCESS
@@ -152,7 +151,7 @@ namespace InterProcess
 
 		Initialized=true;
 	}
-	
+
 	void Shutdown()
 	{
 #ifdef INTERPROCESS
@@ -234,7 +233,7 @@ namespace InterProcess
 				msg.data.m_Radius.m_Pos.x = _a.x;
 				msg.data.m_Radius.m_Pos.y = _a.y;
 				msg.data.m_Radius.m_Pos.z = _a.z;
-				
+
 				msg.data.m_Radius.m_Radius = _radius;
 				msg.data.m_Radius.m_Color = _color.rgba();
 				g_MessageQueue->TrySend(msg);
@@ -242,7 +241,7 @@ namespace InterProcess
 #else
 			Init();
 
-			if(g_ClientFuncs) 
+			if(g_ClientFuncs)
 				g_ClientFuncs->DrawRadius(_a, _radius, _color.rgba(), Utils::SecondsToMilliseconds(_time));
 
 #endif // INTERPROCESS

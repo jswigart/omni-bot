@@ -1,0 +1,11 @@
+/Omnibot/projects/msvc12/ProtoBuffMessages/Debug/*.idb
+/Omnibot/projects/msvc12/ProtoBuffMessages/Debug/*.lastbuildstate
+/Omnibot/projects/msvc12/build
+/Omnibot/projects/msvc12/*.sdf
+/Omnibot/projects/msvc12/*.opensdf
+
+.DS_Store
+/0.83/Omnibot/*build*/
+/0.83/Omnibot/.idea/
+/0.83/Omnibot/.vscode/
+

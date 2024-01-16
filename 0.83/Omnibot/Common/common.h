@@ -106,12 +106,11 @@ typedef std::list<String> StringList;
 		};
 	#else
 		#include <ext/hash_map> // cs: deprecated message recommends unordered_map, but that relies on experimental -std=c++0x. tr1/unordered_map is an option ...
-		#include <ext/functional>
 		namespace stdext
 		{
 			using __gnu_cxx::hash_map;
-			using __gnu_cxx::hash;
-			using __gnu_cxx::equal_to;
+			using std::hash;
+			using std::equal_to;
 		};
 	#endif
 #endif
@@ -347,9 +346,10 @@ enum MoveMode
 #endif	// _DEBUG
 #else // !__linux__
 #ifdef	_DEBUG
-#define OBASSERT(f, msg, ...) { static bool bShowAssert = true; \
+#define OBASSERT(f, ...) { \
+	static bool bShowAssert = true; \
 	if(bShowAssert) { \
-	bShowAssert = Utils::AssertFunction((bool)((f)!=0), #f, __FILE__, __LINE__, msg, __VA_ARGS__); \
+		bShowAssert = Utils::AssertFunction((bool)((f)!=0), #f, __FILE__, __LINE__, __VA_ARGS__); \
 	} }
 #else	// !DEBUG
 #define OBASSERT(f, sz, ...) (f)
@@ -360,15 +360,15 @@ enum MoveMode
 #ifdef	_DEBUG
 #define SOFTASSERTONCE(f, sz, ...) { static bool bShowAssert = true; \
 	if(bShowAssert) { \
-	bShowAssert = Utils::SoftAssertFunction(Utils::FireOnce, (bool)((f)!=0), #f, __FILE__, __LINE__, msg, __VA_ARGS__); \
+	bShowAssert = Utils::SoftAssertFunction(Utils::FireOnce, (bool)((f)!=0), #f, __FILE__, __LINE__, __VA_ARGS__); \
 	} }
 #else	// !DEBUG
 #define SOFTASSERTONCE(f, sz, ...)
 #endif	// !DEBUG
 
-#define SOFTASSERTALWAYS(f, msg, ...) { static bool bShowAssert = true; \
+#define SOFTASSERTALWAYS(f, ...) { static bool bShowAssert = true; \
 	if(bShowAssert) { \
-	bShowAssert = Utils::SoftAssertFunction(Utils::FireAlways, (bool)((f)!=0), #f, __FILE__, __LINE__, msg, __VA_ARGS__); \
+	bShowAssert = Utils::SoftAssertFunction(Utils::FireAlways, (bool)((f)!=0), #f, __FILE__, __LINE__, __VA_ARGS__); \
 	} }
 
 #define FINDSTATE(var, statename, parent) \
