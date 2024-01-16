@@ -104,7 +104,8 @@ jobs:
       run: ctest --build-config ${{ matrix.build_type }}
 
     - uses: actions/upload-artifact@v4
-      name: "${{ matrix.os }}-omnibot"
-      path: "${{ steps.strings.outputs.build-output-dir }}/ET/omnibot_et*"
-      retention-days: 1
+      with:
+        name: "${{ matrix.os }}-omnibot"
+        path: "${{ steps.strings.outputs.build-output-dir }}/ET/omnibot_et*"
+        retention-days: 1
 
