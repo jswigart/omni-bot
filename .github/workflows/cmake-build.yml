@@ -68,8 +68,16 @@ jobs:
 
     - name: Install boost on macos
       if: matrix.os == 'macos-latest'
-      run: >
-        brew install boost
+      id: install-boost
+      run: |
+        mkdir -p ${{ steps.strings.outputs.build-output-dir }}/libs
+        cd ${{ steps.strings.outputs.build-output-dir }}/libs
+        curl -L -O https://github.com/boostorg/boost/releases/download/boost-1.84.0/boost-1.84.0.tar.gz
+        tar -xf boost-1.84.0.tar.gz
+        cd boost-1.84.0
+        ./bootstrap.sh --with-libraries=system,filesystem,regex,date_time
+        ./b2 architecture=arm+x86 cxxflags="-arch x86_64 -arch arm64 -mmacosx-version-min=10.12" link=static
+        echo "BOOST_ROOT=${{ steps.strings.outputs.build-output-dir }}/libs/boost-1.84.0" >> "$GITHUB_OUTPUT"
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
