@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -116,7 +116,7 @@
 #include "BotSteeringSystem.cpp"
 #include "BotWeaponSystem.cpp"
 #include "FilterAllType.cpp"
-#include "FilterBias.cpp"
+// #include "FilterBias.cpp"
 #include "FilterClosest.cpp"
 #include "FilterMostHurt.cpp"
 #include "FilterSensory.cpp"
