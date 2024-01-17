@@ -23,15 +23,18 @@ jobs:
           - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
-            bits: [32, 64]
+          - os: windows-latest
+            bits: 32
+          - os: windows-latest
+            bits: 64
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
-            bits: [64]
+            bits: 64
           - os: macos-latest
             c_compiler: clang
             cpp_compiler: clang++
-            bits: [64]
+            bits: 64
 
     steps:
     - uses: actions/checkout@v4
