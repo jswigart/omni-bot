@@ -73,7 +73,7 @@ jobs:
         tar -xf boost-1.84.0.tar.gz
         cd boost-1.84.0
         ./bootstrap.sh --with-libraries=system,filesystem,regex,date_time
-        ./b2 address-model=${{ matrix.bits }} link=static
+        ./b2 address-model=${{ matrix.bits }} cxxflags="-fPIC" link=static
         echo "BOOST_ROOT=${{ steps.strings.outputs.build-output-dir }}/libs/boost-1.84.0" >> "$GITHUB_OUTPUT"
 
     - name: Install boost on windows
