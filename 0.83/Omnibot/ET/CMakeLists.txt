@@ -5,5 +5,5 @@ target_link_libraries(omnibot-et omni-shared omnibot-common)
 
 set_target_properties(omnibot-et PROPERTIES
     PREFIX ""
-    OUTPUT_NAME "omnibot_et"
+    OUTPUT_NAME "omnibot_et${MODULE_SUFFIX}"
 )
