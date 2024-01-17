@@ -11,6 +11,8 @@ macro(add_cxx_flag flag)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${flag}")
 endmacro()
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 set(DEPS_PATH "${CMAKE_SOURCE_DIR}/dependencies")
 
 add_library(omni-shared INTERFACE)

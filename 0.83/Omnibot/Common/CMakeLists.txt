@@ -76,7 +76,13 @@ endif()
 target_link_libraries(omnibot-common PUBLIC omni-shared)
 target_compile_definitions(omnibot-common PUBLIC PHYSFS_SUPPORTS_ZIP=1 PHYSFS_SUPPORTS_7Z=1 PHYSFS_NO_CDROM_SUPPORT)
 target_compile_definitions(omnibot-common PUBLIC INTERPROCESS=1)
-set_target_properties(omnibot-common PROPERTIES COMPILE_FLAGS -pthread -ffriend-injection -fno-strict-aliasing)
+
+# TODO: setup the compile flags with proper cmake calls instead of COMPILER_FLAGS directly
+if (UNIX)
+    set_target_properties(omnibot-common PROPERTIES COMPILE_FLAGS -pthread -ffriend-injection -fno-strict-aliasing)
+else ()
+    # FIXME: handle windows case..
+endif ()
 
 if(APPLE)
     find_library(CARBON_FW Carbon)
