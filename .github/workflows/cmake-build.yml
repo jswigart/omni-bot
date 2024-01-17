@@ -86,8 +86,9 @@ jobs:
         curl -L -O https://github.com/boostorg/boost/releases/download/boost-1.84.0/boost-1.84.0.zip
         unzip -qq boost-1.84.0.zip
         cd boost-1.84.0
-        call .\bootstrap.bat --with-libraries=system,filesystem,regex,date_time
-        b2 address-model=${{ matrix.bits }} link=static
+        call .\bootstrap.bat
+        b2 address-model=${{ matrix.bits }} link=static runtime-link=static \
+            --with-system --with-filesystem --with-regex --with-date_time --variant=release
         echo "BOOST_ROOT=${{ steps.strings.outputs.build-output-dir }}/libs/boost-1.84.0" >> "$GITHUB_OUTPUT"
 
     - name: Configure CMake macOS
@@ -122,7 +123,7 @@ jobs:
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -S ${{ github.workspace }}/0.83/Omnibot
+        -S ${{ github.workspace }}\0.83\Omnibot
         -A Win${{ matrix.bits }}
       env:
         BOOST_ROOT: ${{ steps.install-boost-windows.outputs.BOOST_ROOT }}
