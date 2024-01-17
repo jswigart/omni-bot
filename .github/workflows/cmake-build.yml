@@ -27,7 +27,7 @@ jobs:
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
-            bits: [32, 64]
+            bits: [64]
           - os: macos-latest
             c_compiler: clang
             cpp_compiler: clang++
@@ -70,7 +70,7 @@ jobs:
         tar -xf boost-1.84.0.tar.gz
         cd boost-1.84.0
         ./bootstrap.sh --with-libraries=system,filesystem,regex,date_time
-        ./b2 address-model=32,64 link=static
+        ./b2 address-model=${{ matrix.bits }} link=static
         echo "BOOST_ROOT=${{ steps.strings.outputs.build-output-dir }}/libs/boost-1.84.0" >> "$GITHUB_OUTPUT"
 
     - name: Install boost on windows
