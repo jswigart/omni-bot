@@ -1,6 +1,6 @@
 # Omnibot ET build
 
-add_library(omnibot-et SHARED ${CMAKE_CURRENT_SOURCE_DIR}/ET_BatchBuild.cpp)
+add_library(omnibot-et MODULE ${CMAKE_CURRENT_SOURCE_DIR}/ET_BatchBuild.cpp)
 target_link_libraries(omnibot-et omni-shared omnibot-common)
 
 set_target_properties(omnibot-et PROPERTIES
