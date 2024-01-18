@@ -32,11 +32,15 @@ set(DEPS_PATH "${CMAKE_SOURCE_DIR}/dependencies")
 
 add_library(omni-shared INTERFACE)
 
-set(Boost_USE_STATIC_LIBS       OFF)  # only find static libs
+set(Boost_USE_STATIC_LIBS       ON)  # only find static libs
 set(Boost_USE_DEBUG_LIBS        OFF)  # ignore debug libs and
 set(Boost_USE_RELEASE_LIBS       ON)  # only find release libs
 set(Boost_USE_MULTITHREADED      ON)
-set(Boost_USE_STATIC_RUNTIME    OFF)
+if (WIN32)
+    set(Boost_USE_STATIC_RUNTIME    ON)
+else ()
+    set(Boost_USE_STATIC_RUNTIME    OFF)
+endif ()
 find_package(Boost COMPONENTS system filesystem regex date_time REQUIRED)
 target_link_libraries(omni-shared INTERFACE Boost::boost Boost::filesystem Boost::regex Boost::date_time)
 
@@ -45,7 +49,9 @@ target_include_directories(omni-shared INTERFACE "${DEPS_PATH}/WildMagic5/SDK/in
 
 # target_include_directories(omni-shared "dependencies/gmsrc_ex/")
 
-add_compile_options(-Wall -Wno-deprecated -fno-strict-aliasing)
+if (NOT WIN32)
+    add_compile_options(-Wall -Wno-deprecated -fno-strict-aliasing)
+endif ()
 add_compile_options("$<$<CONFIG:DEBUG>:-D_DEBUG>")
 
 add_subdirectory(Common)
