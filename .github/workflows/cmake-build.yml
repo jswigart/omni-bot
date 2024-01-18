@@ -115,12 +115,14 @@ jobs:
 
     - name: Configure CMake Linux
       if: matrix.os == 'ubuntu-latest'
-      run: |
-        export LDFLAGS=-m${{ matrix.bits }}
-        cmake -B ${{ steps.strings.outputs.build-output-dir }} \
-            -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} \
-            -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} \
-            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+      run: >
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+            -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+            -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+            -DCMAKE_C_FLAGS=-m${{ matrix.bits }}
+            -DCMAKE_CXX_FLAGS=-m${{ matrix.bits }}
+            -DCMAKE_SHARED_LINKER_FLAGS=-m${{ matrix.bits }}
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
             -S ${{ github.workspace }}/0.83/Omnibot
       env:
         BOOST_ROOT: ${{ steps.strings.outputs.BOOST_ROOT }}
