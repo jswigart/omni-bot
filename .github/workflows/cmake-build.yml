@@ -29,6 +29,8 @@ jobs:
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
+          - os: ubuntu-latest
+            bits: 32
           - os: macos-latest
             c_compiler: clang
             cpp_compiler: clang++
@@ -48,6 +50,11 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/0.83/Omnibot/build" >> "$GITHUB_OUTPUT"
         echo "build-libs-dir=${{ github.workspace }}/build/libs/download" >> "$GITHUB_OUTPUT"
         echo "BOOST_ROOT=${{ github.workspace }}/build/libs/boost-1.84.0" >> "$GITHUB_OUTPUT"
+
+    - name: Install Linux multilib
+      if: matrix.os == 'ubuntu-latest' && matrix.bits == 32
+      run: >
+        sudo apt install -y gcc-multilib g++-multilib
 
     - name: Install boost on macos
       if: matrix.os == 'macos-latest'
@@ -127,7 +134,7 @@ jobs:
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -S ${{ github.workspace }}\0.83\Omnibot
-        -A ${{ matrix.bits == 32 && 'x86' || 'x64' }}
+        -A ${{ matrix.bits == 32 && 'Win32' || 'x64' }}
       env:
         BOOST_ROOT: ${{ steps.strings.outputs.BOOST_ROOT }}
 
