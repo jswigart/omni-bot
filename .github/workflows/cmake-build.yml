@@ -19,22 +19,19 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         build_type: [Release]
         # c_compiler: [gcc, clang, cl]
+        bits: [64]
         include:
           - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
           - os: windows-latest
             bits: 32
-          - os: windows-latest
-            bits: 64
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
-            bits: 64
           - os: macos-latest
             c_compiler: clang
             cpp_compiler: clang++
-            bits: 64
 
     steps:
     - uses: actions/checkout@v4
@@ -146,7 +143,7 @@ jobs:
 
     - uses: actions/upload-artifact@v4
       with:
-        name: "${{ matrix.os }}-omnibot"
+        name: "${{ matrix.os }}-${{ matrix.bits }}bit-omnibot"
         path: "${{ steps.strings.outputs.build-output-dir }}/ET/omnibot_et*"
         retention-days: 1
 
