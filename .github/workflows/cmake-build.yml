@@ -87,8 +87,7 @@ jobs:
         unzip -qq boost-1.84.0.zip
         cd boost-1.84.0
         call .\bootstrap.bat
-        b2 address-model=${{ matrix.bits }} link=static runtime-link=static \
-            --with-system --with-filesystem --with-regex --with-date_time --variant=release
+        b2 address-model=${{ matrix.bits }} link=static runtime-link=static --with-system --with-filesystem --with-regex --with-date_time --variant=release
         echo "BOOST_ROOT=${{ steps.strings.outputs.build-output-dir }}/libs/boost-1.84.0" >> "$GITHUB_OUTPUT"
 
     - name: Configure CMake macOS
