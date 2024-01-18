@@ -152,6 +152,8 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: "${{ matrix.os }}-${{ matrix.bits }}bit-omnibot"
-        path: "${{ steps.strings.outputs.build-output-dir }}/ET/omnibot_et*"
+        path: |
+          "${{ steps.strings.outputs.build-output-dir }}/ET/omnibot_et*"
+          "${{ steps.strings.outputs.build-output-dir }}/ET/Release/omnibot_et*"
         retention-days: 1
 

@@ -77,13 +77,8 @@ private:
 	}
 
 	typedef boost::fast_pool_allocator< std::pair< const int, NavNode* >, boost::default_user_allocator_new_delete, boost::details::pool::default_mutex, 769 > HashMapAllocator;
-#ifdef WIN32
-	typedef stdext::hash_compare<int> HashMapCompare;
-	typedef stdext::hash_map<int, NavNode*, HashMapCompare, HashMapAllocator > NavHashMap;
-#else
 	typedef stdext::hash<int> HashMapCompare;
 	typedef stdext::unordered_map<int, NavNode*, HashMapCompare, stdext::equal_to<int>, HashMapAllocator > NavHashMap;
-#endif
 
 	typedef std::vector<NavNode> NodeList;
 

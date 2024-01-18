@@ -13,6 +13,9 @@ endmacro()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+# MSVC static runtime linkage
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" SYSTEM_PROCESSOR_LOWER)
 if (SYSTEM_PROCESSOR_LOWER MATCHES "(x86)|(amd64)" AND NOT APPLE)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -56,3 +59,6 @@ add_compile_options("$<$<CONFIG:DEBUG>:-D_DEBUG>")
 
 add_subdirectory(Common)
 add_subdirectory(ET)
+
+# Set ET as the startup project in Visual Studio
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT omnibot-et)
