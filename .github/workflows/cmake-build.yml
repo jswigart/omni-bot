@@ -49,7 +49,7 @@ jobs:
       shell: bash
       run: |
         echo "build-output-dir=${{ github.workspace }}/0.83/Omnibot/build" >> "$GITHUB_OUTPUT"
-        echo "BOOST_ROOT=${{ steps.strings.outputs.build-output-dir }}/libs/boost-1.84.0" >> "$GITHUB_OUTPUT"
+        echo "BOOST_ROOT=${{ github.workspace }}/0.83/Omnibot/build/libs/boost-1.84.0" >> "$GITHUB_OUTPUT"
 
     - name: Install boost on macos
       if: matrix.os == 'macos-latest'
