@@ -70,13 +70,7 @@ namespace AiState
 
 		// typedef: MemoryMap
 		//	stdext::hash_map of entities to their memory record.
-#ifdef WIN32
-		typedef boost::fast_pool_allocator< std::pair< GameEntity, MemoryRecord >, boost::default_user_allocator_new_delete, boost::details::pool::default_mutex, 769 > MemoryMapAllocator;
-		typedef stdext::hash_compare<GameEntity> HashMapCompare;
-		typedef stdext::unordered_map<GameEntity, MemoryRecord, HashMapCompare, MemoryMapAllocator > MemoryMap;
-#else
 		typedef stdext::unordered_map<GameEntity, MemoryRecord> MemoryMap;
-#endif
 
 		// function: UpdateWithSoundSource
 		//		Updates memory record from sound input.

@@ -9,3 +9,12 @@ set_target_properties(omnibot-et PROPERTIES
     # POSITION_INDEPENDENT_CODE ON
     # MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
 )
+
+if (WIN32)
+    set_target_properties(omnibot-et PROPERTIES
+            LIBRARY_OUTPUT_DIRECTORY ""
+            LIBRARY_OUTPUT_DIRECTORY_DEBUG ""
+            LIBRARY_OUTPUT_DIRECTORY_RELEASE ""
+    )
+
+endif ()
