@@ -92,9 +92,9 @@ jobs:
         unzip -qq boost-1.84.0.zip
         cd boost-1.84.0
         call .\bootstrap.bat
-        b2 address-model=${{ matrix.bits }} link=static runtime-link=static \
-              --with-system --with-filesystem --with-regex --with-date_time \
-              --variant=release --prefix=${{ steps.strings.outputs.BOOST_ROOT }} \
+        b2 address-model=${{ matrix.bits }} link=static runtime-link=static ^
+              --with-system --with-filesystem --with-regex --with-date_time ^
+              --variant=release --prefix=${{ steps.strings.outputs.BOOST_ROOT }} ^
               install
 
     - name: Configure CMake macOS
