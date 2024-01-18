@@ -123,7 +123,7 @@ jobs:
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -S ${{ github.workspace }}\0.83\Omnibot
-        -A Win${{ matrix.bits }}
+        -A ${{ matrix.bits == 32 && 'x86' || 'x64' }}
       env:
         BOOST_ROOT: ${{ steps.install-boost-windows.outputs.BOOST_ROOT }}
 
