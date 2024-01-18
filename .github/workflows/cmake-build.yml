@@ -31,7 +31,7 @@ jobs:
             cpp_compiler: clang++
         exclude:
           - os: macos-latest
-            bits: 64
+            bits: 32
 
     steps:
     - uses: actions/checkout@v4
