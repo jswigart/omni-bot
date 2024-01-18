@@ -49,6 +49,7 @@ jobs:
       shell: bash
       run: |
         echo "build-output-dir=${{ github.workspace }}/0.83/Omnibot/build" >> "$GITHUB_OUTPUT"
+        echo "BOOST_ROOT=${{ steps.strings.outputs.build-output-dir }}/libs/boost-1.84.0" >> "$GITHUB_OUTPUT"
 
     - name: Install boost on macos
       if: matrix.os == 'macos-latest'
@@ -61,7 +62,6 @@ jobs:
         cd boost-1.84.0
         ./bootstrap.sh --with-libraries=system,filesystem,regex,date_time
         ./b2 architecture=arm+x86 cxxflags="-arch x86_64 -arch arm64 -mmacosx-version-min=10.12" link=static
-        echo "BOOST_ROOT=${{ steps.strings.outputs.build-output-dir }}/libs/boost-1.84.0" >> "$GITHUB_OUTPUT"
 
     - name: Install boost on linux
       if: matrix.os == 'ubuntu-latest'
@@ -74,7 +74,6 @@ jobs:
         cd boost-1.84.0
         ./bootstrap.sh --with-libraries=system,filesystem,regex,date_time
         ./b2 address-model=${{ matrix.bits }} cxxflags="-fPIC" link=static
-        echo "BOOST_ROOT=${{ steps.strings.outputs.build-output-dir }}/libs/boost-1.84.0" >> "$GITHUB_OUTPUT"
 
     - name: Install boost on windows
       if: matrix.os == 'windows-latest'
@@ -88,7 +87,6 @@ jobs:
         cd boost-1.84.0
         call .\bootstrap.bat
         b2 address-model=${{ matrix.bits }} link=static runtime-link=static --with-system --with-filesystem --with-regex --with-date_time --variant=release
-        echo "BOOST_ROOT=${{ steps.strings.outputs.build-output-dir }}/libs/boost-1.84.0" >> "$GITHUB_OUTPUT"
 
     - name: Configure CMake macOS
       if: matrix.os == 'macos-latest'
@@ -101,7 +99,7 @@ jobs:
         -DCMAKE_OSX_DEPLOYMENT_TARGET=10.12
         -S ${{ github.workspace }}/0.83/Omnibot
       env:
-        BOOST_ROOT: ${{ steps.install-boost-macos.outputs.BOOST_ROOT }}
+        BOOST_ROOT: ${{ steps.strings.outputs.BOOST_ROOT }}
 
     - name: Configure CMake Linux
       if: matrix.os == 'ubuntu-latest'
@@ -113,7 +111,7 @@ jobs:
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
             -S ${{ github.workspace }}/0.83/Omnibot
       env:
-        BOOST_ROOT: ${{ steps.install-boost-linux.outputs.BOOST_ROOT }}
+        BOOST_ROOT: ${{ steps.strings.outputs.BOOST_ROOT }}
 
     - name: Configure CMake Windows
       if: matrix.os == 'windows-latest'
@@ -125,7 +123,7 @@ jobs:
         -S ${{ github.workspace }}\0.83\Omnibot
         -A ${{ matrix.bits == 32 && 'x86' || 'x64' }}
       env:
-        BOOST_ROOT: ${{ steps.install-boost-windows.outputs.BOOST_ROOT }}
+        BOOST_ROOT: ${{ steps.strings.outputs.BOOST_ROOT }}
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
