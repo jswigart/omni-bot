@@ -51,7 +51,8 @@ jobs:
 
     - name: Install Linux multilib
       if: matrix.os == 'ubuntu-latest' && matrix.bits == 32
-      run: >
+      run: |
+        sudo dpkg --add-architecture i386
         sudo apt install -y gcc-multilib g++-multilib
 
     - name: Install boost on macos
