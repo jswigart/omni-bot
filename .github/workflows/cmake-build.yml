@@ -152,13 +152,13 @@ jobs:
     - uses: actions/upload-artifact@v4
       name: Upload ET artifacts
       with:
-        name: "${{ matrix.os }}-${{ matrix.bits }}bit-omnibot"
+        name: "${{ matrix.os }}-${{ matrix.bits }}bit-omnibot-ET"
         path: "${{ steps.strings.outputs.build-output-dir }}/ET/omnibot_et*"
         retention-days: 1
 
     - uses: actions/upload-artifact@v4
       name: Upload RTCW artifacts
       with:
-        name: "${{ matrix.os }}-${{ matrix.bits }}bit-omnibot"
+        name: "${{ matrix.os }}-${{ matrix.bits }}bit-omnibot-RTCW"
         path: "${{ steps.strings.outputs.build-output-dir }}/RTCW/omnibot_rtcw*"
         retention-days: 1
