@@ -162,3 +162,31 @@ jobs:
         name: "${{ matrix.os }}-${{ matrix.bits }}bit-omnibot-RTCW"
         path: "${{ steps.strings.outputs.build-output-dir }}/RTCW/omnibot_rtcw*"
         retention-days: 1
+
+  collect:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - uses: actions/download-artifact@v4
+        name: download all artifacts
+        with:
+          path: packages
+
+      - uses: geekyeggo/delete-artifact@v4
+        with:
+          name: |
+            *bit-omnibot-*
+
+      - uses: actions/upload-artifact@v4
+        name: Upload final ET artifact
+        with:
+          name: "omnibot-ET"
+          path: "${{ github.workspace }}/packages/omnibot_et*"
+          retention-days: 1
+
+      - uses: actions/upload-artifact@v4
+        name: Upload final RTCW artifact
+        with:
+          name: "omnibot-RTCW"
+          path: "${{ github.workspace }}/packages/omnibot_rtcw*"
+          retention-days: 1
