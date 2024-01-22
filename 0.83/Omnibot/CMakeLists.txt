@@ -18,7 +18,7 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 option(OMNIBOT_ET "Build the Enemy Territory bots module" ON)
 option(OMNIBOT_RTCW "Build the Return to Castle Wolfenstein bots module" ON)
-option(OMNIBOT_STATIC_BOOST "Use static linked boost libraries" OFF)
+option(OMNIBOT_STATIC_BOOST "Use static linked boost libraries" ON)
 
 string(TOLOWER "${CMAKE_SYSTEM_PROCESSOR}" SYSTEM_PROCESSOR_LOWER)
 if (SYSTEM_PROCESSOR_LOWER MATCHES "(x86)|(amd64)" AND NOT APPLE)
