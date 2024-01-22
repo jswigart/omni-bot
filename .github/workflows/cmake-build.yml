@@ -171,6 +171,7 @@ jobs:
         name: download all artifacts
         with:
           path: packages
+          merge-multiple: true
 
       - uses: geekyeggo/delete-artifact@v4
         with:
