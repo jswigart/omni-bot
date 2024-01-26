@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -21,7 +21,7 @@ class FilterSensory;
 //#ifdef __linux__
 //namespace __gnu_cxx
 //{
-//	template<> 
+//	template<>
 //	struct stdext::hash<GameEntity>
 //	{
 //		size_t operator()(const GameEntity& x) const
@@ -36,7 +36,7 @@ class FilterSensory;
 namespace AiState
 {
 	// class: SensoryMemory
-	//		Contains information about what a bot 'knows' about any entity it 
+	//		Contains information about what a bot 'knows' about any entity it
 	//		has sensed
 	class SensoryMemory : public StateChild
 	{
@@ -70,13 +70,7 @@ namespace AiState
 
 		// typedef: MemoryMap
 		//	stdext::hash_map of entities to their memory record.
-#ifdef WIN32
-		typedef boost::fast_pool_allocator< std::pair< GameEntity, MemoryRecord >, boost::default_user_allocator_new_delete, boost::details::pool::default_mutex, 769 > MemoryMapAllocator;
-		typedef stdext::hash_compare<GameEntity> HashMapCompare;
-		typedef stdext::hash_map<GameEntity, MemoryRecord, HashMapCompare, MemoryMapAllocator > MemoryMap;
-#else
-		typedef stdext::hash_map<GameEntity, MemoryRecord> MemoryMap;
-#endif
+		typedef stdext::unordered_map<GameEntity, MemoryRecord> MemoryMap;
 
 		// function: UpdateWithSoundSource
 		//		Updates memory record from sound input.
@@ -167,7 +161,7 @@ namespace AiState
 		//
 		// Returns:
 		//		Vector3 - A point along the targets current velocity to aim towards.
-		int CheckTargetsInRadius(const Vector3f &_pos, float _radius, 
+		int CheckTargetsInRadius(const Vector3f &_pos, float _radius,
 			SensoryMemory::Type _type, const BitFlag64 &_category);
 
 		void GetDebugString(StringStr &out);

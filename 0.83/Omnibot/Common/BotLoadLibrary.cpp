@@ -249,10 +249,14 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 		g_BotLibrary = Omnibot_LL(OB_VA("%s" SUFFIX ".dll", lib));
 
 #else
+#ifdef __APPLE__
+#define SUFFIX "_mac"
+#else
 #ifdef __x86_64__
 #define SUFFIX ".x86_64"
 #else
 #define SUFFIX
+#endif
 #endif
 	g_BotLibrary = Omnibot_LL(OB_VA("%s/%s" SUFFIX ".so", path ? path : ".", lib));
 	if(!g_BotLibrary)

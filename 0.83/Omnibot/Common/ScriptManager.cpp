@@ -1029,7 +1029,7 @@ void ScriptManager::CheckLiveUpdates()
 			if(modTime > entry.FileModTime)
 			{
 				// send an event and update the local time.
-				Event_SystemScriptUpdated d = { i };
+				Event_SystemScriptUpdated d = { static_cast<obint32>(i) };
 				MessageHelper evt(SYSTEM_SCRIPT_CHANGED, &d, sizeof(d));
 				IGameManager::GetInstance()->GetGame()->DispatchGlobalEvent(evt);
 

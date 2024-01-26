@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// 
+//
 // $LastChangedBy$
 // $LastChangedDate$
 // $LastChangedRevision$
@@ -39,7 +39,7 @@
 //#pragma warning( disable: 4512 )	// 'class' : assignment operator could not be generated
 //#pragma warning( disable: 6384 )	// Dividing sizeof a pointer by another value
 
-// Enable some useful ones that are disabled by default 
+// Enable some useful ones that are disabled by default
 // http://msdn2.microsoft.com/en-us/library/23k5d385(VS.80).aspx
 #pragma warning( default: 4062)		// enumerator 'identifier' in switch of enum 'enumeration' is not handled
 #pragma warning( default: 4265)		// class has virtual functions, but destructor is not virtual
@@ -60,6 +60,7 @@
 #include <string>
 #include <list>
 #include <map>
+#include <unordered_map>
 #include <set>
 #include <memory>
 #include <fstream>
@@ -90,31 +91,12 @@ typedef std::list<String> StringList;
 #include <omp.h>
 #endif
 
-#ifdef WIN32
-	// TODO: rename hash_map to unordered_map
-	#define _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS
-	#include <hash_map>
-#else
-	#if defined (__GNUC__) && (__GNUC__ <= 2)
-		#include <hash_map.h>
-		#include <function.h>
-		namespace stdext
-		{
-			using ::hash_map;
-			using ::hash
-			using ::equal_to;
-		};
-	#else
-		#include <ext/hash_map> // cs: deprecated message recommends unordered_map, but that relies on experimental -std=c++0x. tr1/unordered_map is an option ...
-		#include <ext/functional>
-		namespace stdext
-		{
-			using __gnu_cxx::hash_map;
-			using __gnu_cxx::hash;
-			using __gnu_cxx::equal_to;
-		};
-	#endif
-#endif
+namespace stdext
+{
+    using std::unordered_map;
+    using std::hash;
+    using std::equal_to;
+};
 
 #ifdef WIN32
 	//#define ENABLE_REMOTE_DEBUGGER
@@ -322,7 +304,7 @@ enum MoveMode
 };
 
 #define DBG_MSG(debugflag, bot, type, msg) \
-	if((debugflag)==0 || (bot)->IsDebugEnabled((debugflag))) { (bot)->OutputDebug((type), (msg)); } 
+	if((debugflag)==0 || (bot)->IsDebugEnabled((debugflag))) { (bot)->OutputDebug((type), (msg)); }
 
 // macro: DEBUG_ONLY
 //		A macro that can be used to only allow the contained functionality
@@ -336,7 +318,7 @@ enum MoveMode
 #include "Utilities.h"
 
 // cs: FIXME: debug version of OBASSERT doesnt build in linux. doesn't like __VA_ARGS__
-#ifdef __linux__ 
+#ifdef __linux__
 #ifdef	_DEBUG
 #define OBASSERT(f, msg, ...) { static bool bShowAssert = true; \
 	if(bShowAssert) { \
@@ -347,9 +329,10 @@ enum MoveMode
 #endif	// _DEBUG
 #else // !__linux__
 #ifdef	_DEBUG
-#define OBASSERT(f, msg, ...) { static bool bShowAssert = true; \
+#define OBASSERT(f, ...) { \
+	static bool bShowAssert = true; \
 	if(bShowAssert) { \
-	bShowAssert = Utils::AssertFunction((bool)((f)!=0), #f, __FILE__, __LINE__, msg, __VA_ARGS__); \
+		bShowAssert = Utils::AssertFunction((bool)((f)!=0), #f, __FILE__, __LINE__, __VA_ARGS__); \
 	} }
 #else	// !DEBUG
 #define OBASSERT(f, sz, ...) (f)
@@ -360,15 +343,15 @@ enum MoveMode
 #ifdef	_DEBUG
 #define SOFTASSERTONCE(f, sz, ...) { static bool bShowAssert = true; \
 	if(bShowAssert) { \
-	bShowAssert = Utils::SoftAssertFunction(Utils::FireOnce, (bool)((f)!=0), #f, __FILE__, __LINE__, msg, __VA_ARGS__); \
+	bShowAssert = Utils::SoftAssertFunction(Utils::FireOnce, (bool)((f)!=0), #f, __FILE__, __LINE__, __VA_ARGS__); \
 	} }
 #else	// !DEBUG
 #define SOFTASSERTONCE(f, sz, ...)
 #endif	// !DEBUG
 
-#define SOFTASSERTALWAYS(f, msg, ...) { static bool bShowAssert = true; \
+#define SOFTASSERTALWAYS(f, ...) { static bool bShowAssert = true; \
 	if(bShowAssert) { \
-	bShowAssert = Utils::SoftAssertFunction(Utils::FireAlways, (bool)((f)!=0), #f, __FILE__, __LINE__, msg, __VA_ARGS__); \
+	bShowAssert = Utils::SoftAssertFunction(Utils::FireAlways, (bool)((f)!=0), #f, __FILE__, __LINE__, __VA_ARGS__); \
 	} }
 
 #define FINDSTATE(var, statename, parent) \
