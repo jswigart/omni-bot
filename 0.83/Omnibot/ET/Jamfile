@@ -16,4 +16,4 @@ alias common_lib : ..//Common : <link>static ;
 
 SOURCES = [ glob ET_BatchBuild.cpp ] ..//boost_fs ..//boost_regx ..//boost_dt ..//boost_sys common_lib ;
 
-lib omnibot_et : $(SOURCES) : <tag>@tag <toolset>gcc:<cflags>-w <cflags>-fno-strict-aliasing <linkflags>-lrt ;
+lib omnibot_et : $(SOURCES) : <tag>@tag <toolset>gcc:<cflags>-w <cflags>-fno-strict-aliasing <linkflags>-lrt <cflags>-std=c++11 ;

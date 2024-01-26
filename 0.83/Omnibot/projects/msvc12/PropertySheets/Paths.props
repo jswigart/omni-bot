@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
 	<REPO_ROOT>$(SolutionDir)..\..\..\</REPO_ROOT>
-	<BOOST>$(REPO_ROOT)\libs\boost\boost_1_44</BOOST>
+	<BOOST>$(REPO_ROOT)\libs\boost\boost_1_81_0</BOOST>
 	<InterfaceDir>$(REPO_ROOT)\GameInterfaces</InterfaceDir>
 	<OMNIBOT_INST>$(REPO_ROOT)\Installer\Files</OMNIBOT_INST>
 	<REMOTEDEBUGLIB>$(REPO_ROOT)\Tools\RemoteDebugWindow\RemoteDebugLib</REMOTEDEBUGLIB>

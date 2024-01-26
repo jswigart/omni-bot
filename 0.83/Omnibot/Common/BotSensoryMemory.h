@@ -13,8 +13,6 @@
 #include "IGame.h"
 #include "MemoryRecord.h"
 
-#include <boost/pool/pool_alloc.hpp>
-
 class FilterSensory;
 
 //////////////////////////////////////////////////////////////////////////
