@@ -622,7 +622,7 @@ namespace AiState
 		enum Status { Pending = 0, Done };
 
 		int AddDeferredCasts(const CastInput *_CastIn, int _NumCasts, const char *_UserName);
-		Status GetDeferredCasts(int GroupId, CastOutput *_CastOut, int _NumCasts);
+		Status GetDeferredCasts(int _GroupId, CastOutput *_CastOut, int _NumCasts);
 
 		void GetDebugString(StringStr &out);
 		void RenderDebug();

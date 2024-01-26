@@ -408,11 +408,11 @@ void PathPlannerWaypoint::cmdWaypointAutoRadius(const StringVector &_args)
 			Vector3f start = vStartPosition;
 			Vector3f end = (*it)->GetPosition() + Quaternionf(Vector3f::UNIT_Z, fAng).Rotate(ray);
 
-			obTraceResult tr;
-			EngineFuncs::TraceLine(tr, start, end, NULL, TR_MASK_SOLID, 0, False);
-			if(tr.m_Fraction < 1.0f)
+			obTraceResult tr2;
+			EngineFuncs::TraceLine(tr2, start, end, NULL, TR_MASK_SOLID, 0, False);
+			if(tr2.m_Fraction < 1.0f)
 			{
-				float fDistance = (start - end).Length() * tr.m_Fraction;
+				float fDistance = (start - end).Length() * tr2.m_Fraction;
 				if(fDistance < fClosestHit)
 				{
 					fClosestHit = fDistance;					
@@ -1135,7 +1135,7 @@ void PathPlannerWaypoint::cmdWaypointMirror(const StringVector &_args)
 
 	// Update the connection pointers.
 	{
-		WaypointList::iterator it = mirroredWaypoints.begin(), itEnd = mirroredWaypoints.end();
+		it = mirroredWaypoints.begin(), itEnd = mirroredWaypoints.end();
 		for( ; it != itEnd; ++it)
 		{
 			Waypoint::ConnectionList::iterator conIt = (*it)->m_Connections.begin(), 

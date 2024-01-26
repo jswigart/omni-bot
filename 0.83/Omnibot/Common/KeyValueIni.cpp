@@ -144,10 +144,10 @@ namespace KEYVALUEINI
 				int newLen = mLen+DEFAULT_GROW_SIZE;
 				if ( size > newLen ) newLen = size+DEFAULT_GROW_SIZE;
 
-				char *data = (char *)malloc(newLen);
-				memcpy(data,mData,mLoc);
+				char *d = (char *)malloc(newLen);
+				memcpy(d,mData,mLoc);
 				free(mData);
-				mData = data;
+				mData = d;
 				mLen  = newLen;
 			}
 
@@ -780,7 +780,7 @@ namespace KEYVALUEINI
 							foo++;
 						}
 						*foo = 0;
-						char *scan = foo-1;
+						scan = foo-1;
 						while ( IsWhiteSpace(*scan) )
 						{
 							*scan = 0;
@@ -1118,7 +1118,6 @@ public:
 			}
 			else
 			{
-				const char *key = argv[0];
 				const char *value = argc >= 2 ? argv[1] : "";
 				mSections[mCurrentSection]->addKeyValue(key,value,lineno);
 			}

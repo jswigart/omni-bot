@@ -128,19 +128,19 @@ bool WaypointSerializer_V9::Save(File& _file, PathPlannerWaypoint::WaypointList&
 
 		// Write the number of connections
 		obuint32 iNumConnections = 0;
-		for(Waypoint::ConnectionList::iterator it = pCurrentWp->m_Connections.begin(); it != pCurrentWp->m_Connections.end(); ++it)
+		for(Waypoint::ConnectionList::iterator it2 = pCurrentWp->m_Connections.begin(); it2 != pCurrentWp->m_Connections.end(); ++it2)
 		{
-			if(!(it->m_ConnectionFlags & F_LNK_DONTSAVE)) iNumConnections++;
+			if(!(it2->m_ConnectionFlags & F_LNK_DONTSAVE)) iNumConnections++;
 		}
 		if(!_file.WriteIntPk(iNumConnections)) break;
 
 		// Write connections
-		for(Waypoint::ConnectionList::iterator it = pCurrentWp->m_Connections.begin(); it != pCurrentWp->m_Connections.end(); ++it)
+		for(Waypoint::ConnectionList::iterator it2 = pCurrentWp->m_Connections.begin(); it2 != pCurrentWp->m_Connections.end(); ++it2)
 		{
-			if(it->m_ConnectionFlags & F_LNK_DONTSAVE) continue;
+			if(it2->m_ConnectionFlags & F_LNK_DONTSAVE) continue;
 
 			// Look for this waypoint in the vector so we can get the index into the vector.
-			PathPlannerWaypoint::WaypointList::iterator c = std::find(_wpl.begin(), _wpl.end(), it->m_Connection);
+			PathPlannerWaypoint::WaypointList::iterator c = std::find(_wpl.begin(), _wpl.end(), it2->m_Connection);
 			// write relative index
 			if(c == _wpl.end() || !_file.WriteSignIntPk(obint32(c - _wpl.begin()) - index)) return false;
 		}

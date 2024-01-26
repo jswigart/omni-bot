@@ -195,9 +195,6 @@ void PathPlannerWaypoint::UpdateNavRender()
 
 	float fWaypointDuration = 2.f;
 
-	static int iNextStart = 0;
-	static int i = 0;
-
 	if(!m_CreatingSector.m_SectorBounds.IsZero())
 	{
 		Vector3f vAimPos;
@@ -305,14 +302,16 @@ void PathPlannerWaypoint::UpdateNavRender()
 	g_EngineFuncs->GetEntityOrientation(ge, vFacing, 0, 0);
 
 	Timer tme;
+	static int iNextStart = 0;
+	static int index = 0;
 
 	int iNumWps = (int)m_WaypointList.size();
 	//for(int i = 0; i < iNumWps; ++i)
 	while(iNumWps)
 	{
-		i %= iNumWps;
+		index %= iNumWps;
 
-		if(i==0)
+		if(index==0)
 		{
 			if(iNextStart > IGame::GetTime())
 				break;
@@ -320,7 +319,7 @@ void PathPlannerWaypoint::UpdateNavRender()
 			//UpdateSelectedWpRender();
 		}
 
-		Waypoint *pWp = m_WaypointList[i];
+		Waypoint *pWp = m_WaypointList[index];
 
 		obColor wpColor = g_WaypointColor;
 		if(pWp->IsFlagOn(F_NAV_TEAM1))
@@ -388,7 +387,7 @@ void PathPlannerWaypoint::UpdateNavRender()
 			++it;
 		}
 
-		++i;
+		++index;
 		if(tme.GetElapsedSeconds() > 0.02)
 			break;
 	}

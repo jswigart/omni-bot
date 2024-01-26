@@ -919,11 +919,11 @@ int gmBot::gmfIgnoreTarget(gmThread *a_thread)
 	GameEntity gameEnt;
 	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);	
 	OBASSERT(gameEnt.IsValid(), "Bad Entity");
-	GM_INT_PARAM(ignore, 1, 1);
+	GM_INT_PARAM(ignoreTarget, 1, 1);
 
 	MemoryRecord *pRecord = native->GetSensoryMemory()->GetMemoryRecord(gameEnt, true);
 	if(pRecord)	
-		pRecord->IgnoreAsTarget(ignore != 0);
+		pRecord->IgnoreAsTarget(ignoreTarget != 0);
 	return GM_OK;
 }
 

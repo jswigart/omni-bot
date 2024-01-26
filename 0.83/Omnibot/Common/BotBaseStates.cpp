@@ -2616,7 +2616,7 @@ namespace AiState
 		return GroupNext++;
 	}
 
-	DeferredCaster::Status DeferredCaster::GetDeferredCasts(int GroupId, CastOutput *_CastOut, int _NumCasts)
+	DeferredCaster::Status DeferredCaster::GetDeferredCasts(int _GroupId, CastOutput *_CastOut, int _NumCasts)
 	{
 
 		return Pending;
@@ -3038,21 +3038,21 @@ namespace AiState
 				Node *EdgeNodes[DIR_NUM][2048] = {};
 				int NumEdges[DIR_NUM] = {};
 
-				for(int s = 0; s < NumMergeNodes; ++s)
+				for(int m = 0; m < NumMergeNodes; ++m)
 				{
 					for(int d = DIR_NORTH; d < DIR_NUM; ++d)
 					{
 						bool bHasDirectionConnection = false;
-						if(MergeNodes[s]->Connections[d].Destination)
+						if(MergeNodes[m]->Connections[d].Destination)
 						{
 							bHasDirectionConnection = true;
-							if(MergeNodes[s]->SectorId != MergeNodes[s]->Connections[d].Destination->SectorId)
+							if(MergeNodes[m]->SectorId != MergeNodes[m]->Connections[d].Destination->SectorId)
 							{								
-								EdgeNodes[d][NumEdges[d]++] = MergeNodes[s];
+								EdgeNodes[d][NumEdges[d]++] = MergeNodes[m];
 							}
 						}
 						if(!bHasDirectionConnection)
-							EdgeNodes[d][NumEdges[d]++] = MergeNodes[s];
+							EdgeNodes[d][NumEdges[d]++] = MergeNodes[m];
 					}
 				}
 
