@@ -287,6 +287,7 @@ vmCvar_t cg_spawnTimer_set;   //quad
 vmCvar_t cg_spawnTimer_period;   //quad
 vmCvar_t cg_improvedSmoke;		//Martin
 vmCvar_t cg_omnibot_render_distance;
+vmCvar_t cg_generictext; // cs: waypoint tool only. not for mods
 
 typedef struct {
 	vmCvar_t    *vmCvar;
@@ -478,6 +479,7 @@ cvarTable_t cvarTable[] = {
 	{ &cg_spawnTimer_period,            "cg_spawnTimer_period",         "0",                    CVAR_TEMP },
 	{ &cg_improvedSmoke,				"cg_improvedSmoke",				"0",					CVAR_ARCHIVE | CVAR_LATCH },	// Martin
 	{ &cg_omnibot_render_distance, "omnibot_render_distance", "2048", CVAR_ARCHIVE},
+	{ &cg_generictext, "cg_genericText", "", CVAR_TEMP }, // cs: waypoint tool only. not for mods
 };
 int cvarTableSize = sizeof( cvarTable ) / sizeof( cvarTable[0] );
 

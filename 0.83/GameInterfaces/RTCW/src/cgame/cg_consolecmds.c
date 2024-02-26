@@ -416,6 +416,139 @@ void CG_ResetTimer_f( void ) {
 	trap_Cvar_Set( "cg_spawnTimer_set", va( "%d", msec / 1000 ) );
 }
 
+// cs: waypoint tool only, not for mods
+static void CG_SetGoalName_f(void)
+{
+	char	genericText[256];
+
+	// get values
+	trap_Cvar_VariableStringBuffer("cg_genericText", genericText, 256);
+
+	// reset values
+	trap_Cvar_Set("cg_genericText", "");
+
+	trap_SendConsoleCommand(va("bot goal_setproperty tagname\"%s\"\n", genericText));
+	trap_SendConsoleCommand("bot goal_finish");
+}
+
+// cs: waypoint tool only, not for mods.. version that doesnt goal_finish
+static void CG_SetGoalNameNF_f(void)
+{
+	char	genericText[256];
+
+	// get values
+	trap_Cvar_VariableStringBuffer("cg_genericText", genericText, 256);
+
+	// reset values
+	trap_Cvar_Set("cg_genericText", "");
+
+	trap_SendConsoleCommand(va("bot goal_setproperty tagname\"%s\"\n", genericText));
+}
+
+// cs: waypoint tool only, not for mods
+static void CG_SetWaypointName_f(void)
+{
+	char	genericText[256];
+
+	// get values
+	trap_Cvar_VariableStringBuffer("cg_genericText", genericText, 256);
+
+	// reset values
+	trap_Cvar_Set("cg_genericText", "");
+
+	trap_SendConsoleCommand(va("bot waypoint_setname\"%s\"\n", genericText));
+}
+
+// cs: waypoint tool only, not for mods
+static void CG_SetGroupName_f(void)
+{
+	char	genericText[256];
+
+	// get values
+	trap_Cvar_VariableStringBuffer("cg_genericText", genericText, 256);
+
+	// reset values
+	trap_Cvar_Set("cg_genericText", "");
+
+	trap_SendConsoleCommand(va("bot goal_setproperty group\"%s\"\n", genericText));
+	trap_SendConsoleCommand("bot goal_finish");
+}
+
+// cs: waypoint tool only, not for mods
+static void CG_SetMinCampTime_f(void)
+{
+	char	genericText[256];
+
+	// get values
+	trap_Cvar_VariableStringBuffer("cg_genericText", genericText, 256);
+
+	// reset values
+	trap_Cvar_Set("cg_genericText", "");
+
+	trap_SendConsoleCommand(va("bot goal_setproperty mincamptime\"%s\"\n", genericText));
+	trap_SendConsoleCommand("bot goal_finish");
+}
+
+// cs: waypoint tool only, not for mods
+static void CG_SetMaxCampTime_f(void)
+{
+	char	genericText[256];
+
+	// get values
+	trap_Cvar_VariableStringBuffer("cg_genericText", genericText, 256);
+
+	// reset values
+	trap_Cvar_Set("cg_genericText", "");
+
+	trap_SendConsoleCommand(va("bot goal_setproperty maxcamptime\"%s\"\n", genericText));
+	trap_SendConsoleCommand("bot goal_finish");
+}
+
+// cs: waypoint tool only, not for mods
+static void CG_SetTargetGoal_f(void)
+{
+	char	genericText[256];
+
+	// get values
+	trap_Cvar_VariableStringBuffer("cg_genericText", genericText, 256);
+
+	// reset values
+	trap_Cvar_Set("cg_genericText", "");
+
+	trap_SendConsoleCommand(va("bot goal_setproperty targetgoal\"%s\"\n", genericText));
+	trap_SendConsoleCommand("bot goal_finish");
+}
+
+// cs: waypoint tool only, not for mods
+static void CG_SetGoalStance_f(void)
+{
+	char	genericText[256];
+
+	// get values
+	trap_Cvar_VariableStringBuffer("cg_genericText", genericText, 256);
+
+	// reset values
+	trap_Cvar_Set("cg_genericText", "");
+
+	trap_SendConsoleCommand(va("bot goal_setproperty stance\"%s\"\n", genericText));
+	trap_SendConsoleCommand("bot goal_finish");
+}
+
+// cs: waypoint tool only, not for mods
+static void CG_SetPrimeGrenade_f(void)
+{
+	char	genericText[256];
+
+	// get values
+	trap_Cvar_VariableStringBuffer("cg_genericText", genericText, 256);
+
+	// reset values
+	trap_Cvar_Set("cg_genericText", "");
+
+	trap_SendConsoleCommand(va("bot goal_setproperty prime\"%s\"\n", genericText));
+	trap_SendConsoleCommand("bot goal_finish");
+}
+
 
 typedef struct {
 	char    *cmd;
@@ -474,6 +607,17 @@ static consoleCommand_t commands[] =
 	//quad: spawntimer
 	{ "timerSet", CG_TimerSet_f },
 	{ "resetTimer", CG_ResetTimer_f },
+
+	//cs: waypoint tools only. not for mods
+	{ "setGoalName", CG_SetGoalName_f },
+	{ "setGoalNameNF", CG_SetGoalNameNF_f },
+	{ "setWaypointName", CG_SetWaypointName_f },
+	{ "setGroupName", CG_SetGroupName_f },
+	{ "setPrimeGrenade", CG_SetPrimeGrenade_f },
+	{ "setGoalStance", CG_SetGoalStance_f },
+	{ "setTargetGoalName", CG_SetTargetGoal_f },
+	{ "setMinCampTime", CG_SetMinCampTime_f },
+	{ "setMaxCampTime", CG_SetMaxCampTime_f },
 };
 
 

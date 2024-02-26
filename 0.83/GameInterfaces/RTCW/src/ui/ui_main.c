@@ -6665,7 +6665,7 @@ void UI_DrawConnectScreen( qboolean overlay ) {
 	info[0] = '\0';
 
 	if ( !Q_stricmp( cstate.servername,"localhost" ) ) {
-		Text_PaintCenter( centerPoint, yStart + 48, scale, colorWhite,va( "Omni-Bot Version: %s", OB_VERSION ), ITEM_TEXTSTYLE_SHADOWEDMORE );
+		Text_PaintCenter( centerPoint, yStart + 48, scale, colorWhite,va( "Omnibot Mod Version: %s", OB_VERSION ), ITEM_TEXTSTYLE_SHADOWEDMORE );
 	} else {
 		strcpy( text, va( trap_TranslateString( "Connecting to %s" ), cstate.servername ) );
 		Text_PaintCenter( centerPoint, yStart + 48, scale, colorWhite,text, ITEM_TEXTSTYLE_SHADOWEDMORE );
