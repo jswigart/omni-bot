@@ -120,95 +120,6 @@ member ClearSecondaryGoals = function()
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-member CheatsEnabled = function()
-{
-	if ( CheatsEnabled() ) {
-		return true;
-	}
-	Error("cheats must be enabled to use this command");
-	print("type /devmap", GetMapName(), "in console");
-	return false;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//
-member WarpToPosition = function( pos )
-{
-	if ( this.CheatsEnabled() )
-	{
-		s = "setviewpos " + pos[0] + " " + pos[1] + " " + pos[2] + " " + " 0";
-		print(s);
-		ExecCommandOnClient(GetLocalEntity(), s);
-	}
-};
-///////////////////////////////////////////////////////////////////////////////
-//
-member WarpTo = function( _params )
-{
-	pos = Util.GetPositionFromParam( _params[0] );
-	if ( pos )
-	{
-		this.WarpToPosition(pos + Vector3(0,0,24));
-	}
-	else
-		{ Error( "RTCWUtil.Warpto: Invalid goal name, waypoint name, waypoint UID or paththrough name!^2" ); }
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//
-member WarpTestBot = function( _params )
-{
-	if ( !this.CheatsEnabled() )
-	{
-		return;
-	}
-
-	b = Util.GetBotByName("testbot");
-
-	if ( !b )
-	{
-		Error("no testbot found");
-		return;
-	}
-
-	localEnt = GetLocalEntity();
-
-	if ( _params[0] )
-	{
-		wp = Util.WpNameInfo(_params[0], "RTCWUtil.WarpTestBot");
-		if ( wp )
-		{
-			pos = wp.position + Vector3(0,0,24);
-		}
-	}
-	else
-	{
-		pos = GetEntPosition(localEnt);
-		if ( pos )
-		{
-			pos += Vector3(100,0,24);
-		}
-		else
-		{
-			Error( "RTCWUtil.WarpTestBot: Unable to get local position^2");
-		}
-	}
-
-	if (pos)
-	{
-		s = "setviewpos " + pos[0] + " " + pos[1] + " " + pos[2] + " " + " 0";
-		print(s);
-		ExecCommandOnClient(localEnt, s);
-		yield();
-		ExecCommandOnClient(b.GetGameEntity(), s);
-		yield();yield();
-		ExecCommandOnClient(localEnt, "say_team bot come");
-	}
-};
-
-
-///////////////////////////////////////////////////////////////////////////////
-//
 member CountClass = function( team, class )
 {
 	count = 0;
@@ -593,38 +504,6 @@ member TraceArty = function( usePlayer )
 	{
 		Error("RTCWUtil.TraceArty: No Arty Goal Close Enough");
 	}
-};
-
-
-///////////////////////////////////////////////////////////////////////////////
-// find all waypoints that have the same position as another and name them
-// so you can /bot wt DUPE1 etc
-member FindDuplicateWaypoints = function( )
-{
-	if ( !Wp.IsWaypointViewOn() ) {
-		print( "ERROR: Waypoint View must be enabled" );
-		return;
-	}
-
-	wpTable = {};
-	Wp.GetAllWaypoints( wpTable );
-
-	dupecount = 0;
-
-	foreach( id and waypoint in wpTable )
-	{
-		pos = waypoint.position;
-		foreach( xid and xwaypoint in wpTable )
-		{
-			if ( pos == xwaypoint.position && id != xid ) {
-				dupecount += 1;
-				Wp.SetWaypointName( id, "DUPE" + dupecount );
-				break;
-			}
-		}
-	}
-
-	print( "dupe check complete. found ", dupecount, "duplicates" );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
