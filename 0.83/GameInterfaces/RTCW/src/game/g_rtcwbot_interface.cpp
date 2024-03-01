@@ -2135,10 +2135,20 @@ obResult GetEntityPosition( const GameEntity _ent, float _pos[3] ) {
 		//	return Success;
 		//}
 
-		// Clients and entities not caught above will return normal position.
-		_pos[0] = pEnt->r.currentOrigin[0];
-		_pos[1] = pEnt->r.currentOrigin[1];
-		_pos[2] = pEnt->r.currentOrigin[2];
+		if(!g_dedicated.integer && _ent.GetIndex() == 0 && pEnt->client->sess.sessionTeam == TEAM_SPECTATOR)
+		{
+			//local spectator
+			_pos[0] = pEnt->client->ps.origin[0];
+			_pos[1] = pEnt->client->ps.origin[1];
+			_pos[2] = pEnt->client->ps.origin[2];
+		}
+		else
+		{
+			// Clients and entities not caught above will return normal position.
+			_pos[0] = pEnt->r.currentOrigin[0];
+			_pos[1] = pEnt->r.currentOrigin[1];
+			_pos[2] = pEnt->r.currentOrigin[2];
+		}
 
 		return Success;
 	}
@@ -2195,12 +2205,26 @@ obResult GetEntityWorldAABB( const GameEntity _ent, AABB &_aabb ) {
 	if ( pEnt && pEnt->inuse ) {
 		/*if(!pEnt->r.linked && pEnt->parent && pEnt->parent->s.eType == ET_OID_TRIGGER)
 		pEnt = pEnt->parent;*/
-		_aabb.m_Mins[0] = pEnt->r.absmin[0];
-		_aabb.m_Mins[1] = pEnt->r.absmin[1];
-		_aabb.m_Mins[2] = pEnt->r.absmin[2];
-		_aabb.m_Maxs[0] = pEnt->r.absmax[0];
-		_aabb.m_Maxs[1] = pEnt->r.absmax[1];
-		_aabb.m_Maxs[2] = pEnt->r.absmax[2];
+
+		if(!g_dedicated.integer && _ent.GetIndex() == 0 && pEnt->client && pEnt->client->sess.sessionTeam == TEAM_SPECTATOR)
+		{
+			//local spectator
+			playerState_t* ps = &pEnt->client->ps;
+			for(int i = 0; i < 3; i++)
+			{
+				_aabb.m_Mins[i] = ps->origin[i] + ps->mins[i] - 1;
+				_aabb.m_Maxs[i] = ps->origin[i] + ps->maxs[i] + 1;
+			}
+		}
+		else
+		{
+			_aabb.m_Mins[0] = pEnt->r.absmin[0];
+			_aabb.m_Mins[1] = pEnt->r.absmin[1];
+			_aabb.m_Mins[2] = pEnt->r.absmin[2];
+			_aabb.m_Maxs[0] = pEnt->r.absmax[0];
+			_aabb.m_Maxs[1] = pEnt->r.absmax[1];
+			_aabb.m_Maxs[2] = pEnt->r.absmax[2];
+		}
 
 		// raise player bounds slightly since it appears to be in the ground a bit
 		if ( pEnt->client )
