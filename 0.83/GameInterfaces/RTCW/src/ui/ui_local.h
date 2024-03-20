@@ -129,8 +129,6 @@ extern vmCvar_t ui_useHttpDown;
 #define MAX_EDIT_LINE           256
 
 #define MAX_MENUDEPTH           8
-#define MAX_MENUITEMS           128 // JPW NERVE put this back for MP
-//#define MAX_MENUITEMS			256
 
 #define MTYPE_NULL              0
 #define MTYPE_SLIDER            1
