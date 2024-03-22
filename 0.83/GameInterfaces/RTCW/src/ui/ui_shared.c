@@ -5618,6 +5618,60 @@ void Item_SetupKeywordHash( void ) {
 	}
 }
 
+typedef struct vidmode_s
+{
+	const char *description;
+	int mode;
+} vidmode_t;
+
+vidmode_t r_vidModes[] =
+{
+	{ "640x480 (4:3)",       3 },
+	{ "800x600 (4:3)",       4 },
+	{ "856x480 (16:9)",     11 },
+	{ "960x720 (4:3)",       5 },
+	{ "1024x576 (16:9)",    17 },
+	{ "1024x640 (16:10)",   16 },
+	{ "1024x768 (4:3)",      6 },
+	{ "1152x864 (4:3)",      7 },
+	{ "1280x720 (16:9)",    18 },
+	{ "1280x800 (16:10)",   20 },
+	{ "1280x960 (4:3)",     21 },
+	{ "1280x1024 (5:4)",     8 },
+	{ "1440x900 (16:10)",   22 },
+	{ "1600x900 (16:9)",    23 },
+	{ "1600x1000 (16:10)",  24 },
+	{ "1600x1200 (4:3)",     9 },
+	{ "1680x1050 (16:10)",  25 },
+	{ "1920x1080 (16:9)",   26 },
+	{ "1920x1200 (16:10)",  27 },
+	{ "1920x1440 (4:3)",    28 },
+	{ "2048x1536 (4:3)",    10 },
+	{ "2560x1600 (16:10)",  29 },
+	{ "Automatic (Native)", -2 }
+};
+
+/*
+===============
+UI_ApplyItemHacks
+
+Hacks to fix issues with menu scripts
+===============
+*/
+static void Item_ApplyHacks(itemDef_t *item) {
+
+	// Add video modes to system menu
+	if(item->type == ITEM_TYPE_MULTI && item->cvar && !Q_stricmp(item->cvar, "r_mode")) {
+		int i;
+		multiDef_t *multiPtr = (multiDef_t*)item->typeData;
+
+		for(i = 0; i < ARRAY_LEN(r_vidModes) && i < MAX_MULTI_CVARS; i++) {
+			multiPtr->cvarList[i] = String_Alloc(r_vidModes[i].description);
+			multiPtr->cvarValue[i] = r_vidModes[i].mode;
+		}
+		multiPtr->count = i;
+	}
+}
 /*
 ===============
 Item_Parse
@@ -5641,6 +5695,7 @@ qboolean Item_Parse( int handle, itemDef_t *item ) {
 		}
 
 		if ( *token.string == '}' ) {
+			Item_ApplyHacks(item);
 			return qtrue;
 		}
 
