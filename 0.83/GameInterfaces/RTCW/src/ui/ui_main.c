@@ -6158,7 +6158,6 @@ UI_Init
 */
 void _UI_Init( qboolean inGameLoad ) {
 	int start;
-	char version[128];
 
 	UI_RegisterCvars();
 	UI_InitMemory();
@@ -6292,7 +6291,7 @@ void _UI_Init( qboolean inGameLoad ) {
 	} else if ( !Q_stricmp( httpdown.version, "Wolf 1.41b-MP win-x86 May 8 2006" ) )     {
 		orig_BeginDownload = ( void (__cdecl *)( const char *,const char * ) )DetourFunction( (LPBYTE)0x0040BC90, (LPBYTE) hook_BeginDownload );
 	} else {
-		trap_Print( va( S_COLOR_RED "HTTP Downloader: RTCW Version(%s) is not supported!\n", version ) );
+		trap_Print( va( S_COLOR_RED "HTTP Downloader: RTCW Version(%s) is not supported!\n", httpdown.version ) );
 	}
 #endif
 }

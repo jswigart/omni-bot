@@ -5,7 +5,7 @@
 // A user mod should never modify this file
 
 #define Q3_VERSION      "Wolf 1.41-MP"
-#define OB_VERSION      "0.85"
+#define OB_VERSION      "0.9"
 #define OMNIBOT_URL "www.omni-bot.com"
 // 1.4-MP : (== 1.34)
 // 1.3-MP : final for release
@@ -243,6 +243,8 @@ typedef int clipHandle_t;
 
 #define MAX_QINT            0x7fffffff
 #define MIN_QINT            ( -MAX_QINT - 1 )
+
+#define ARRAY_LEN(x)			(sizeof(x) / sizeof(*(x)))
 
 // TTimo gcc: was missing, added from Q3 source
 #ifndef max

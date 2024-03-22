@@ -1,3 +1,15 @@
+
+=== COMMANDS ===
+Added saveplayerpos, saveusepoint, stuckstart, stucknext, warptogoaloffset, cleargoalflags
+
+=== MOD ===
+Added more video modes (screen resolutions)
+Added DMS tool commands setGoalName, setWaypointName, setGoalStance, ...
+Changed MAX_MENUS increased from 64 to 128
+Fixed GetLocalPosition of a spectator
+
+---------------------------------------------------------------
+
 ==0.9 RTCW Change Log==
 
 === BOT ===
