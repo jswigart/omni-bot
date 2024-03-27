@@ -1,5 +1,4 @@
 #include "PrecompRTCW.h"
-#include "PrecompRTCW.cpp"
 
 #include "BotExports.cpp"
 #include "RTCW_FilterClosest.cpp"

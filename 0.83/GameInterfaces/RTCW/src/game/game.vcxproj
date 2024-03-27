@@ -73,7 +73,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -126,20 +126,20 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|Win32'">$(SolutionDir)/build/msvc10/$(ProjectName)/$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|Win32'">$(SolutionDir)/build/msvc10/$(ProjectName)/$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|Win32'">../build/$(ProjectName)/$(Platform)/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|Win32'">../build/$(ProjectName)/$(Platform)/$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|Win32'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|x64'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release - Lua|Win32'">$(SolutionDir)/build/msvc10/$(ProjectName)/$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release - Lua|Win32'">$(SolutionDir)/build/msvc10/$(ProjectName)/$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release - Lua|Win32'">../build/$(ProjectName)/$(Platform)/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release - Lua|Win32'">../build/$(ProjectName)/$(Platform)/$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release - Lua|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release - Lua|x64'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)/build/msvc10/$(ProjectName)/$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)/build/msvc10/$(ProjectName)/$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../build/$(ProjectName)/$(Platform)/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../build/$(ProjectName)/$(Platform)/$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)/build/msvc10/$(ProjectName)/$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)/build/msvc10/$(ProjectName)/$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../build/$(ProjectName)/$(Platform)/$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../build/$(ProjectName)/$(Platform)/$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
@@ -174,34 +174,30 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release - Lua|x64'">qagame_mp_x64</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">qagame_mp_x86</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">qagame_mp_x64</TargetName>
-    <RunCodeAnalysis Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|Win32'">true</RunCodeAnalysis>
-    <RunCodeAnalysis Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|x64'">true</RunCodeAnalysis>
     <CodeAnalysisIgnoreGeneratedCode Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|Win32'">false</CodeAnalysisIgnoreGeneratedCode>
     <CodeAnalysisIgnoreGeneratedCode Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|x64'">false</CodeAnalysisIgnoreGeneratedCode>
-    <RunCodeAnalysis Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</RunCodeAnalysis>
-    <RunCodeAnalysis Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</RunCodeAnalysis>
     <CodeAnalysisIgnoreGeneratedCode Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CodeAnalysisIgnoreGeneratedCode>
     <CodeAnalysisIgnoreGeneratedCode Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CodeAnalysisIgnoreGeneratedCode>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|x64'">
-    <OutDir>$(SolutionDir)/build/msvc10/$(ProjectName)/$(Platform)/$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)/build/msvc10/$(ProjectName)/$(Platform)/$(Configuration)\</IntDir>
+    <OutDir>../build/$(ProjectName)/$(Platform)/$(Configuration)\</OutDir>
+    <IntDir>../build/$(ProjectName)/$(Platform)/$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)/build/msvc10/$(ProjectName)/$(Platform)/$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)/build/msvc10/$(ProjectName)/$(Platform)/$(Configuration)\</IntDir>
+    <OutDir>../build/$(ProjectName)/$(Platform)/$(Configuration)\</OutDir>
+    <IntDir>../build/$(ProjectName)/$(Platform)/$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)/build/msvc10/$(ProjectName)/$(Platform)/$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)/build/msvc10/$(ProjectName)/$(Platform)/$(Configuration)\</IntDir>
+    <OutDir>../build/$(ProjectName)/$(Platform)/$(Configuration)\</OutDir>
+    <IntDir>../build/$(ProjectName)/$(Platform)/$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - Lua|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release - Lua|x64'">
-    <OutDir>$(SolutionDir)/build/msvc10/$(ProjectName)/$(Platform)/$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)/build/msvc10/$(ProjectName)/$(Platform)/$(Configuration)\</IntDir>
+    <OutDir>../build/$(ProjectName)/$(Platform)/$(Configuration)\</OutDir>
+    <IntDir>../build/$(ProjectName)/$(Platform)/$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|Win32'">
     <Midl>
@@ -255,10 +251,7 @@
     </Bscmake>
     <PostBuildEvent>
       <Message>copy to RTCW</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\rtcw\game\"
-copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
-
-</Command>
+      <Command>copy "$(TargetPath)" $(RTCWDIR)\omnibot</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug -Lua|x64'">
@@ -310,10 +303,7 @@ copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
     </Bscmake>
     <PostBuildEvent>
       <Message>copy to RTCW</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\rtcw\game\"
-copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
-
-</Command>
+      <Command>copy "$(TargetPath)" $(RTCWDIR)\omnibot</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release - Lua|Win32'">
@@ -367,10 +357,7 @@ copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
     </Bscmake>
     <PostBuildEvent>
       <Message>Copy To RTCW</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\rtcw\game\"
-copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
-
-</Command>
+      <Command>copy "$(TargetPath)" $(RTCWDIR)\omnibot</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release - Lua|x64'">
@@ -422,10 +409,7 @@ copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
     </Bscmake>
     <PostBuildEvent>
       <Message>Copy To RTCW</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\rtcw\game\"
-copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
-
-</Command>
+      <Command>copy "$(TargetPath)" $(RTCWDIR)\omnibot</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -477,10 +461,7 @@ copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
     </Bscmake>
     <PostBuildEvent>
       <Message>Copy To RTCW</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\rtcw\game\"
-copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
-
-</Command>
+      <Command>copy "$(TargetPath)" $(RTCWDIR)\omnibot</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -530,10 +511,7 @@ copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
     </Bscmake>
     <PostBuildEvent>
       <Message>Copy To RTCW</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\rtcw\game\"
-copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
-
-</Command>
+      <Command>copy "$(TargetPath)" $(RTCWDIR)\omnibot</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -589,10 +567,7 @@ copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
     </Bscmake>
     <PostBuildEvent>
       <Message>Copy To RTCW</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\rtcw\game\"
-copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
-
-</Command>
+      <Command>copy "$(TargetPath)" $(RTCWDIR)\omnibot</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -645,10 +620,7 @@ copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
     </Bscmake>
     <PostBuildEvent>
       <Message>Copy To RTCW</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\rtcw\game\"
-copy "$(TargetPath)" "$(RTCWDIR)\omnibot"
-
-</Command>
+      <Command>copy "$(TargetPath)" $(RTCWDIR)\omnibot</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

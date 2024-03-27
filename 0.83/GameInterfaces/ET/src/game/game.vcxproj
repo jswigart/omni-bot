@@ -21,6 +21,8 @@
   <PropertyGroup Label="Globals">
     <ProjectName>game</ProjectName>
     <ProjectGuid>{4F8332D7-5687-4875-813A-A1B7AA479C2D}</ProjectGuid>
+    <TargetPlatformVersion>7.0</TargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -38,11 +40,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -70,14 +73,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\build2013\$(ProjectName)\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\build2013\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\build2013\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\build2013\$(ProjectName)\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\build2013\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\build2013\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
@@ -103,10 +106,10 @@
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IntDir>..\build2013\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>..\build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IntDir>..\build2013\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>..\build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -145,16 +148,13 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>.\Debug/qagame_mp_x86.lib</ImportLibrary>
+      <ImportLibrary>
+      </ImportLibrary>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PostBuildEvent>
       <Message>Copy to ET</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\et\game\"
-copy "$(TargetPath)" "$(ETDIR)\omnibot"
-
-
-</Command>
+      <Command>copy "$(TargetPath)" $(ETDIR)\omnibot</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -193,15 +193,12 @@ copy "$(TargetPath)" "$(ETDIR)\omnibot"
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>.\Debug/qagame_mp_x86.lib</ImportLibrary>
+      <ImportLibrary>
+      </ImportLibrary>
     </Link>
     <PostBuildEvent>
       <Message>Copy to ET</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\et\game\"
-copy "$(TargetPath)" "$(ETDIR)\omnibot"
-
-
-</Command>
+      <Command>copy "$(TargetPath)" $(ETDIR)64\omnibot</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -246,16 +243,13 @@ copy "$(TargetPath)" "$(ETDIR)\omnibot"
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>.\Release/qagame_mp_x86.lib</ImportLibrary>
+      <ImportLibrary>
+      </ImportLibrary>
       <MapFileName>$(OutDir)$(TargetName).map2</MapFileName>
     </Link>
     <PostBuildEvent>
       <Message>Copy to ET</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\et\game\"
-copy "$(TargetPath)" "$(ETDIR)\omnibot"
-
-
-</Command>
+      <Command>copy "$(TargetPath)" $(ETDIR)\omnibot</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -276,7 +270,6 @@ copy "$(TargetPath)" "$(ETDIR)\omnibot"
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <PrecompiledHeader>
       </PrecompiledHeader>
@@ -297,16 +290,13 @@ copy "$(TargetPath)" "$(ETDIR)\omnibot"
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>.\Release/qagame_mp_x86.lib</ImportLibrary>
+      <ImportLibrary>
+      </ImportLibrary>
       <MapFileName>$(OutDir)$(TargetName).map2</MapFileName>
     </Link>
     <PostBuildEvent>
       <Message>Copy to ET</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\et\game\"
-copy "$(TargetPath)" "$(ETDIR)\omnibot"
-
-
-</Command>
+      <Command>copy "$(TargetPath)" $(ETDIR)64\omnibot</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

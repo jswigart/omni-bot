@@ -870,7 +870,7 @@
     <ClCompile Include="..\..\..\Common\Omni-Bot.cpp">
       <Filter>Dll</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\BatchBuild.cpp">
+    <ClCompile Include="..\..\..\Common\BatchBuildWin.cpp">
       <Filter>_Build</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\dependencies\Recast\Recast\Source\RecastAlloc.cpp">

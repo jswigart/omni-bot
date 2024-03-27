@@ -1,16 +1,18 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34701.34
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{08A08908-D5BA-4330-A1C4-31B284B87814}"
 	ProjectSection(SolutionItems) = preProject
 		Jamfile = Jamfile
 		project-root.jam = project-root.jam
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgame", "cgame\cgame2010.vcxproj", "{EF4B4519-B2B7-4C56-88EE-C4F6D903DB80}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgame", "cgame\cgame.vcxproj", "{EF4B4519-B2B7-4C56-88EE-C4F6D903DB80}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game", "game\game2010.vcxproj", "{E61FC486-F433-40E1-96C9-A76E99466D0E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game", "game\game.vcxproj", "{E61FC486-F433-40E1-96C9-A76E99466D0E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ui", "ui\ui2010.vcxproj", "{50F9C02C-22E4-40F7-AAAD-1BD715DB79F1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ui", "ui\ui.vcxproj", "{50F9C02C-22E4-40F7-AAAD-1BD715DB79F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,7 +45,6 @@ Global
 		{E61FC486-F433-40E1-96C9-A76E99466D0E}.Debug - Lua|Win32.ActiveCfg = Debug -Lua|Win32
 		{E61FC486-F433-40E1-96C9-A76E99466D0E}.Debug - Lua|Win32.Build.0 = Debug -Lua|Win32
 		{E61FC486-F433-40E1-96C9-A76E99466D0E}.Debug - Lua|x64.ActiveCfg = Debug -Lua|x64
-		{E61FC486-F433-40E1-96C9-A76E99466D0E}.Debug - Lua|x64.Build.0 = Debug -Lua|x64
 		{E61FC486-F433-40E1-96C9-A76E99466D0E}.Debug|Win32.ActiveCfg = Debug|Win32
 		{E61FC486-F433-40E1-96C9-A76E99466D0E}.Debug|Win32.Build.0 = Debug|Win32
 		{E61FC486-F433-40E1-96C9-A76E99466D0E}.Debug|x64.ActiveCfg = Debug|x64
@@ -51,7 +52,6 @@ Global
 		{E61FC486-F433-40E1-96C9-A76E99466D0E}.Release - Lua|Win32.ActiveCfg = Release - Lua|Win32
 		{E61FC486-F433-40E1-96C9-A76E99466D0E}.Release - Lua|Win32.Build.0 = Release - Lua|Win32
 		{E61FC486-F433-40E1-96C9-A76E99466D0E}.Release - Lua|x64.ActiveCfg = Release - Lua|x64
-		{E61FC486-F433-40E1-96C9-A76E99466D0E}.Release - Lua|x64.Build.0 = Release - Lua|x64
 		{E61FC486-F433-40E1-96C9-A76E99466D0E}.Release|Win32.ActiveCfg = Release|Win32
 		{E61FC486-F433-40E1-96C9-A76E99466D0E}.Release|Win32.Build.0 = Release|Win32
 		{E61FC486-F433-40E1-96C9-A76E99466D0E}.Release|x64.ActiveCfg = Release|x64

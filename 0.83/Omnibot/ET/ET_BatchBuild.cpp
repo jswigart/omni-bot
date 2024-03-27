@@ -1,9 +1,7 @@
 #include "PrecompET.h"
-#include "PrecompET.cpp"
 
 #include "BotExports.cpp"
 #include "ET_FilterClosest.cpp"
-//#include "ET_BaseStates.cpp"
 #include "ET_GoalManager.cpp"
 #include "gmETBinds.cpp"
 #include "ET_Client.cpp"

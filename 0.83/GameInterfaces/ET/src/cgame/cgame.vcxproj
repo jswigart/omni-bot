@@ -19,32 +19,30 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>ui</ProjectName>
-    <ProjectGuid>{4C02EEB1-33AA-41C5-9A96-609161DF1635}</ProjectGuid>
+    <ProjectName>cgame</ProjectName>
+    <ProjectGuid>{68A804FC-00C3-44E2-A479-3DB3D20F943D}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v120_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v120_xp</PlatformToolset>
   </PropertyGroup>
@@ -74,16 +72,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\build2013\$(ProjectName)\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\build2013\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\build2013\$(ProjectName)\$(Configuration)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\build2013\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">..\build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\build2013\$(ProjectName)\$(Configuration)\</OutDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\build2013\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\build2013\$(ProjectName)\$(Configuration)\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\build2013\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\build\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
@@ -98,14 +96,14 @@
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ui_mp_x86</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ui_mp_x64</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ui_mp_x86</TargetName>
-    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ui_mp_x64</TargetName>
-    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</PostBuildEventUseInBuild>
-    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</PostBuildEventUseInBuild>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">cgame_mp_x86</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">cgame_mp_x64</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">cgame_mp_x86</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cgame_mp_x64</TargetName>
     <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</PostBuildEventUseInBuild>
     <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -113,15 +111,13 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\Release/ui.tlb</TypeLibraryName>
+      <TypeLibraryName>.\Release/cgame.tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
-      <Optimization>MinSpace</Optimization>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UI_EXPORTS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(BOOST);$(REPO_ROOT)\Omnibot\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CGAMEDLL;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -131,6 +127,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
+      <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -140,23 +137,19 @@
       <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <ModuleDefinitionFile>.\ui.def</ModuleDefinitionFile>
-      <BaseAddress>0x40000000</BaseAddress>
+      <AdditionalLibraryDirectories>$(BOOST)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\cgame.def</ModuleDefinitionFile>
+      <SubSystem>Windows</SubSystem>
+      <BaseAddress>0x30000000</BaseAddress>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>.\Release/ui_mp_x86.lib</ImportLibrary>
-      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>
+      </ImportLibrary>
     </Link>
     <PostBuildEvent>
       <Message>Copy to ET</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\et\game\"
-copy "$(TargetPath)" "$(ETDIR)\omnibot"
-$(REPO_ROOT)Tools\zip\zip -9j "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(TargetPath)"
-copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
-
-
-</Command>
+      <Command>$(REPO_ROOT)Tools\zip\zip -9j "$(ETDIR)\omnibot\omnibot_et.pk3" "$(TargetPath)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -164,15 +157,13 @@ copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MkTypLibCompatible>true</MkTypLibCompatible>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TypeLibraryName>.\Release/ui.tlb</TypeLibraryName>
+      <TypeLibraryName>.\Release/cgame.tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
-      <Optimization>MinSpace</Optimization>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UI_EXPORTS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(REPO_ROOT)\Omnibot\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CGAMEDLL;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -182,6 +173,7 @@ copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
+      <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -190,23 +182,19 @@ copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <ModuleDefinitionFile>.\ui.def</ModuleDefinitionFile>
-      <BaseAddress>0x40000000</BaseAddress>
+      <AdditionalLibraryDirectories>$(BOOST)\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\cgame.def</ModuleDefinitionFile>
+      <SubSystem>Windows</SubSystem>
+      <BaseAddress>0x30000000</BaseAddress>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>.\Release/ui_mp_x86.lib</ImportLibrary>
-      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>
+      </ImportLibrary>
     </Link>
     <PostBuildEvent>
       <Message>Copy to ET</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\et\game\"
-copy "$(TargetPath)" "$(ETDIR)\omnibot"
-$(REPO_ROOT)Tools\zip\zip -9j "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(TargetPath)"
-copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
-
-
-</Command>
+      <Command>$(REPO_ROOT)Tools\zip\zip -9j "$(ETDIR)64\omnibot\omnibot_et.pk3" "$(TargetPath)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -215,13 +203,13 @@ copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
       <MkTypLibCompatible>true</MkTypLibCompatible>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\Debug/ui.tlb</TypeLibraryName>
+      <TypeLibraryName>.\Debug/cgame.tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UI_EXPORTS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalIncludeDirectories>$(BOOST);$(REPO_ROOT)\Omnibot\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CGAMEDLL;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <PrecompiledHeader>
@@ -239,25 +227,21 @@ copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
       <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <ModuleDefinitionFile>.\ui.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(BOOST)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\cgame.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <BaseAddress>0x40000000</BaseAddress>
+      <SubSystem>Windows</SubSystem>
+      <BaseAddress>0x30000000</BaseAddress>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>.\Debug/ui_mp_x86.lib</ImportLibrary>
+      <ImportLibrary>
+      </ImportLibrary>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
-      <SubSystem>Windows</SubSystem>
     </Link>
     <PostBuildEvent>
       <Message>Copy to ET</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\et\game\"
-copy "$(TargetPath)" "$(ETDIR)\omnibot"
-$(REPO_ROOT)Tools\zip\zip -9j "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(TargetPath)"
-copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
-
-
-</Command>
+      <Command>$(REPO_ROOT)Tools\zip\zip -9j "$(ETDIR)\omnibot\omnibot_et.pk3" "$(TargetPath)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -265,13 +249,13 @@ copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MkTypLibCompatible>true</MkTypLibCompatible>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <TypeLibraryName>.\Debug/ui.tlb</TypeLibraryName>
+      <TypeLibraryName>.\Debug/cgame.tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UI_EXPORTS;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <AdditionalIncludeDirectories>$(REPO_ROOT)\Omnibot\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CGAMEDLL;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <PrecompiledHeader>
@@ -288,29 +272,28 @@ copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <ModuleDefinitionFile>.\ui.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(BOOST)\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>.\cgame.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
       <BaseAddress>
       </BaseAddress>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>.\Debug/ui_mp_x86.lib</ImportLibrary>
-      <SubSystem>Windows</SubSystem>
+      <ImportLibrary>
+      </ImportLibrary>
     </Link>
     <PostBuildEvent>
       <Message>Copy to ET</Message>
-      <Command>copy "$(TargetPath)" "$(OMNIBOT_INST)\et\game\"
-copy "$(TargetPath)" "$(ETDIR)\omnibot"
-$(REPO_ROOT)Tools\zip\zip -9j "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(TargetPath)"
-copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
-
-
-</Command>
+      <Command>$(REPO_ROOT)Tools\zip\zip -9j "$(ETDIR)64\omnibot\omnibot_et.pk3" "$(TargetPath)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\game\bg_animation.c" />
+    <ClCompile Include="..\game\bg_animgroup.c" />
     <ClCompile Include="..\game\bg_campaign.c" />
+    <ClCompile Include="..\game\bg_character.c" />
     <ClCompile Include="..\game\bg_classes.c" />
     <ClCompile Include="..\game\bg_lib.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -319,96 +302,76 @@ copy "$(OMNIBOT_INST)\et\game\omnibot_et.pk3" "$(ETDIR)\omnibot"
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\game\bg_misc.c" />
+    <ClCompile Include="..\game\bg_pmove.c" />
+    <ClCompile Include="..\game\bg_slidemove.c" />
+    <ClCompile Include="..\game\bg_sscript.c" />
+    <ClCompile Include="..\game\bg_stats.c" />
+    <ClCompile Include="..\game\bg_tracemap.c" />
+    <ClCompile Include="cg_atmospheric.c" />
+    <ClCompile Include="cg_character.c" />
+    <ClCompile Include="cg_commandmap.c" />
+    <ClCompile Include="cg_consolecmds.c" />
+    <ClCompile Include="cg_debriefing.c" />
+    <ClCompile Include="cg_draw.c" />
+    <ClCompile Include="cg_drawtools.c" />
+    <ClCompile Include="cg_effects.c" />
+    <ClCompile Include="cg_ents.c" />
+    <ClCompile Include="cg_event.c" />
+    <ClCompile Include="cg_fireteamoverlay.c" />
+    <ClCompile Include="cg_fireteams.c" />
+    <ClCompile Include="cg_flamethrower.c" />
+    <ClCompile Include="cg_info.c" />
+    <ClCompile Include="cg_limbopanel.c" />
+    <ClCompile Include="cg_loadpanel.c" />
+    <ClCompile Include="cg_localents.c" />
+    <ClCompile Include="cg_main.c" />
+    <ClCompile Include="cg_marks.c" />
+    <ClCompile Include="cg_missionbriefing.c" />
+    <ClCompile Include="cg_multiview.c" />
+    <ClCompile Include="cg_newDraw.c" />
+    <ClCompile Include="cg_omnibot.c" />
+    <ClCompile Include="cg_particles.c" />
+    <ClCompile Include="cg_players.c" />
+    <ClCompile Include="cg_playerstate.c" />
+    <ClCompile Include="cg_polybus.c" />
+    <ClCompile Include="cg_popupmessages.c" />
+    <ClCompile Include="cg_predict.c" />
+    <ClCompile Include="cg_scoreboard.c" />
+    <ClCompile Include="cg_servercmds.c" />
+    <ClCompile Include="cg_snapshot.c" />
+    <ClCompile Include="cg_sound.c" />
+    <ClCompile Include="cg_spawn.c" />
+    <ClCompile Include="cg_statsranksmedals.c" />
+    <ClCompile Include="cg_syscalls.c" />
+    <ClCompile Include="cg_trails.c" />
+    <ClCompile Include="cg_view.c" />
+    <ClCompile Include="cg_weapons.c" />
+    <ClCompile Include="cg_window.c" />
     <ClCompile Include="..\game\q_math.c" />
     <ClCompile Include="..\game\q_shared.c" />
-    <ClCompile Include="ui_atoms.c" />
-    <ClCompile Include="ui_gameinfo.c" />
-    <ClCompile Include="ui_loadpanel.c" />
-    <ClCompile Include="ui_main.c" />
-    <ClCompile Include="ui_players.c" />
-    <ClCompile Include="ui_shared.c" />
-    <ClCompile Include="ui_syscalls.c" />
-    <ClCompile Include="ui_util.c" />
+    <ClCompile Include="..\ui\ui_shared.c" />
+    <ClCompile Include="Omnibot_Interprocess.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\game\bg_classes.h" />
+    <ClInclude Include="..\game\bg_local.h" />
     <ClInclude Include="..\game\bg_public.h" />
-    <ClInclude Include="keycodes.h" />
+    <ClInclude Include="cg_local.h" />
+    <ClInclude Include="cg_public.h" />
+    <ClInclude Include="..\ui\keycodes.h" />
     <ClInclude Include="..\..\main\ui\menudef.h" />
     <ClInclude Include="..\game\q_shared.h" />
     <ClInclude Include="..\game\surfaceflags.h" />
-    <ClInclude Include="..\cgame\tr_types.h" />
-    <ClInclude Include="ui_local.h" />
-    <ClInclude Include="ui_public.h" />
-    <ClInclude Include="ui_shared.h" />
-    <ClInclude Include="..\..\etmain\ui\menudef.h" />
-    <ClInclude Include="..\..\etmain\ui\menumacros.h" />
+    <ClInclude Include="tr_types.h" />
+    <ClInclude Include="..\ui\ui_shared.h" />
+    <ClInclude Include="Omnibot_Interprocess.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\etmain\ui\credits_activision.menu" />
-    <None Include="..\..\etmain\ui\credits_additional.menu" />
-    <None Include="..\..\etmain\ui\credits_idsoftware.menu" />
-    <None Include="..\..\etmain\ui\credits_quit.menu" />
-    <None Include="..\..\etmain\ui\credits_splashdamage.menu" />
-    <None Include="..\..\etmain\ui\global.menu" />
-    <None Include="..\..\etmain\ui\hostgame.menu" />
-    <None Include="..\..\etmain\ui\hostgame_advanced.menu" />
-    <None Include="..\..\etmain\ui\hostgame_advanced_default.menu" />
-    <None Include="..\..\etmain\ui\hostgame_dedicated_warning.menu" />
-    <None Include="..\..\etmain\ui\ingame_disconnect.menu" />
-    <None Include="..\..\etmain\ui\ingame_main.menu" />
-    <None Include="..\..\etmain\ui\ingame_messagemode.menu" />
-    <None Include="..\..\etmain\ui\ingame_serverinfo.menu" />
-    <None Include="..\..\etmain\ui\ingame_tapout.menu" />
-    <None Include="..\..\etmain\ui\ingame_tapoutlms.menu" />
-    <None Include="..\..\etmain\ui\ingame_vote.menu" />
-    <None Include="..\..\etmain\ui\ingame_vote_disabled.menu" />
-    <None Include="..\..\etmain\ui\ingame_vote_map.menu" />
-    <None Include="..\..\etmain\ui\ingame_vote_misc.menu" />
-    <None Include="..\..\etmain\ui\ingame_vote_misc_refrcon.menu" />
-    <None Include="..\..\etmain\ui\ingame_vote_players.menu" />
-    <None Include="..\..\etmain\ui\ingame_vote_players_warn.menu" />
-    <None Include="..\..\etmain\ui\main.menu" />
-    <None Include="..\..\etmain\ui\menus.txt" />
-    <None Include="..\..\etmain\ui\options.menu" />
-    <None Include="..\..\etmain\ui\options_controls.menu" />
-    <None Include="..\..\etmain\ui\options_controls_default.menu" />
-    <None Include="..\..\etmain\ui\options_customise_game.menu" />
-    <None Include="..\..\etmain\ui\options_customise_hud.menu" />
-    <None Include="..\..\etmain\ui\options_system.menu" />
-    <None Include="..\..\etmain\ui\options_system_gamma.menu" />
-    <None Include="..\..\etmain\ui\playonline.menu" />
-    <None Include="..\..\etmain\ui\playonline_connecttoip.menu" />
-    <None Include="..\..\etmain\ui\playonline_disablepb.menu" />
-    <None Include="..\..\etmain\ui\playonline_enablepb.menu" />
-    <None Include="..\..\etmain\ui\playonline_serverinfo.menu" />
-    <None Include="..\..\etmain\ui\popup_autoupdate.menu" />
-    <None Include="..\..\etmain\ui\popup_errormessage.menu" />
-    <None Include="..\..\etmain\ui\popup_errormessage_pb.menu" />
-    <None Include="..\..\etmain\ui\popup_hostgameerrormessage.menu" />
-    <None Include="..\..\etmain\ui\popup_password.menu" />
-    <None Include="..\..\etmain\ui\profile.menu" />
-    <None Include="..\..\etmain\ui\profile_create.menu" />
-    <None Include="..\..\etmain\ui\profile_create_error.menu" />
-    <None Include="..\..\etmain\ui\profile_create_initial.menu" />
-    <None Include="..\..\etmain\ui\profile_delete.menu" />
-    <None Include="..\..\etmain\ui\profile_delete_error.menu" />
-    <None Include="..\..\etmain\ui\profile_rename.menu" />
-    <None Include="..\..\etmain\ui\quit.menu" />
-    <None Include="..\..\etmain\ui\rec_restart.menu" />
-    <None Include="..\..\etmain\ui\vid_confirm.menu" />
-    <None Include="..\..\etmain\ui\vid_restart.menu" />
-    <None Include="..\..\etmain\ui\viewreplay.menu" />
-    <None Include="..\..\etmain\ui\viewreplay_delete.menu" />
-    <None Include="..\..\etmain\ui\wm_ftquickmessage.menu" />
-    <None Include="..\..\etmain\ui\wm_ftquickmessageAlt.menu" />
-    <None Include="..\..\etmain\ui\wm_quickmessage.menu" />
-    <None Include="..\..\etmain\ui\wm_quickmessageAlt.menu" />
+    <None Include="cgame.def" />
     <None Include="Jamfile" />
-    <None Include="ui.def" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="ui.rc" />
+    <ResourceCompile Include="cgame.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

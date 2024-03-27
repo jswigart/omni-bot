@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{650E2314-5703-4787-B2C4-AA664E2F1F6F}"
 	ProjectSection(SolutionItems) = preProject
@@ -8,11 +8,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		project-root.jam = project-root.jam
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgame", "cgame\cgame_2013.vcxproj", "{68A804FC-00C3-44E2-A479-3DB3D20F943D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgame", "cgame\cgame.vcxproj", "{68A804FC-00C3-44E2-A479-3DB3D20F943D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game", "game\game_2013.vcxproj", "{4F8332D7-5687-4875-813A-A1B7AA479C2D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "game", "game\game.vcxproj", "{4F8332D7-5687-4875-813A-A1B7AA479C2D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ui", "ui\ui_2013.vcxproj", "{4C02EEB1-33AA-41C5-9A96-609161DF1635}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ui", "ui\ui.vcxproj", "{4C02EEB1-33AA-41C5-9A96-609161DF1635}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,9 +39,11 @@ Global
 		{4F8332D7-5687-4875-813A-A1B7AA479C2D}.Release|x64.ActiveCfg = Release|x64
 		{4F8332D7-5687-4875-813A-A1B7AA479C2D}.Release|x64.Build.0 = Release|x64
 		{4C02EEB1-33AA-41C5-9A96-609161DF1635}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4C02EEB1-33AA-41C5-9A96-609161DF1635}.Debug|Win32.Build.0 = Debug|Win32
 		{4C02EEB1-33AA-41C5-9A96-609161DF1635}.Debug|x64.ActiveCfg = Debug|x64
 		{4C02EEB1-33AA-41C5-9A96-609161DF1635}.Debug|x64.Build.0 = Debug|x64
 		{4C02EEB1-33AA-41C5-9A96-609161DF1635}.Release|Win32.ActiveCfg = Release|Win32
+		{4C02EEB1-33AA-41C5-9A96-609161DF1635}.Release|Win32.Build.0 = Release|Win32
 		{4C02EEB1-33AA-41C5-9A96-609161DF1635}.Release|x64.ActiveCfg = Release|x64
 		{4C02EEB1-33AA-41C5-9A96-609161DF1635}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection

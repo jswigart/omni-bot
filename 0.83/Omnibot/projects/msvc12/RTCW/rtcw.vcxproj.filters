@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="_Build">
-      <UniqueIdentifier>{1294ec3d-f29a-43bb-9dfc-8dc7daeab0ff}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Dlls">
       <UniqueIdentifier>{ee9638a3-e8bb-41e1-ba6a-23f134fb68a2}</UniqueIdentifier>
     </Filter>
@@ -24,9 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\RTCW\RTCW_BatchBuild.cpp">
-      <Filter>_Build</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\common\BotExports.cpp">
       <Filter>Dlls</Filter>
     </ClCompile>
@@ -54,7 +48,6 @@
     <ClCompile Include="..\..\..\RTCW\RTCW_FilterClosest.cpp">
       <Filter>Core\Filters</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\GameInterfaces\RTCW\MP\WolfMP-Source\src\game\g_rtcwbot_interface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\Common\Common.rc">
