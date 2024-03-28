@@ -1034,87 +1034,8 @@ int gmScriptGoal::gmfClearFinishCriteria(gmThread *a_thread)
 int gmScriptGoal::gmfQueryMapGoals(gmThread *a_thread)
 {
 	CHECK_THIS_SGOAL();
-	GM_CHECK_TABLE_PARAM(table, 0);
-	GM_TABLE_PARAM(params,2,0);
-
 	Prof(QueryMapGoals);
-
-	table->RemoveAndDeleteAll(a_thread->GetMachine());
-
-	GoalManager::Query qry;
-
-	if(GM_NUM_PARAMS > 1)
-	{
-		switch(GM_THREAD_ARG->ParamType(1))
-		{
-		case GM_INT:
-			qry.AddType(GM_THREAD_ARG->ParamInt(1));
-			break;
-		case GM_STRING:
-			qry.Expression(GM_THREAD_ARG->ParamString(1,0));
-			break;
-		case GM_TABLE:
-			{
-				gmTableObject *typesTable = GM_THREAD_ARG->ParamTable(1);
-				if(typesTable->Count() > GoalManager::Query::MaxGoalTypes)
-				{
-					GM_EXCEPTION_MSG("maximum count of goal types in query is %d, got %d", GoalManager::Query::MaxGoalTypes, typesTable->Count());
-					return GM_EXCEPTION;
-				}
-				gmTableIterator tIt;
-				for(gmTableNode *pNode = typesTable->GetFirst(tIt); pNode; pNode = typesTable->GetNext(tIt))
-				{
-					if(pNode->m_value.m_type != GM_INT)
-					{
-						GM_EXCEPTION_MSG("expecting param 1 as table of int, got %s", GM_THREAD_ARG->GetMachine()->GetTypeName(pNode->m_value.m_type));
-						return GM_EXCEPTION;
-					}
-					qry.AddType(pNode->m_value.GetInt());
-				}
-			}
-			break;
-		default:
-			GM_EXCEPTION_MSG("expecting param 1 as string or int or table, got %s", GM_THREAD_ARG->ParamTypeName(1));
-			return GM_EXCEPTION;
-		}
-	}
-
-	qry.Bot(native->GetClient());
-	qry.CheckRangeProperty(true);
-
-	// parse optional parameters
-	if(params)
-	{
-		qry.FromTable(a_thread->GetMachine(),params);
-	}	
-
-	if ( qry.GetError() != GoalManager::Query::QueryOk ) {
-		GM_EXCEPTION_MSG(qry.QueryErrorString());
-		return GM_EXCEPTION;
-	}
-
-	GoalManager::GetInstance()->GetGoals(qry);
-	if ( qry.GetError() != GoalManager::Query::QueryOk ) {
-		GM_EXCEPTION_MSG(qry.QueryErrorString());
-		return GM_EXCEPTION;
-	}
-
-	if(!qry.m_List.empty())
-	{
-		gmMachine *pMachine = a_thread->GetMachine();
-
-		DisableGCInScope gcEn(pMachine);
-
-		for(obuint32 i = 0; i < qry.m_List.size(); ++i)
-		{
-			gmUserObject *pUser = qry.m_List[i]->GetScriptObject(pMachine);
-			OBASSERT(pUser, "Invalid Object");
-
-			table->Set(pMachine, i, gmVariable(pUser));
-		}
-	}
-	a_thread->PushInt((gmint)qry.m_List.size());
-	return GM_OK;
+	return GetMapGoals(a_thread, native->GetClient());
 }
 
 int gmScriptGoal::gmfWatchForMapGoalsInRadius(gmThread *a_thread)

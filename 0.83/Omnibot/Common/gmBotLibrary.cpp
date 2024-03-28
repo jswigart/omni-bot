@@ -530,25 +530,75 @@ static int GM_CDECL gmfGetMapGoal(gmThread *a_thread)
 //
 //		table	- The table to put the matching goals into.
 //		team	- The team the goal should be for. 0 means any team.
-//		exp		- The expression to use to match the goal names. 0 to match any.
+//		exp		- The expression to use to match the goal names. "" to match any.
 //		params
 //
 // Returns:
-//		none
+//		count of returned goals
 static int GM_CDECL gmfGetMapGoals(gmThread *a_thread)
 {
-	GM_CHECK_TABLE_PARAM(table, 0);
-	GM_INT_PARAM(iTeam,1,0);
-	GM_STRING_PARAM(pExpr,2,0);
-	GM_TABLE_PARAM(params,3,0);
+	return GetMapGoals(a_thread, 0);
+}
 
+int GM_CDECL GetMapGoals(gmThread *a_thread, Client *client)
+{
+	GM_CHECK_TABLE_PARAM(table, 0);
 	table->RemoveAndDeleteAll(a_thread->GetMachine());
 
 	GoalManager::Query qry;
-	qry.NoFilters();
-	qry.Expression(pExpr).Team(iTeam);
+	int p = 1;
+	if(client) //QueryGoals
+	{
+		qry.Bot(client);
+		qry.CheckRangeProperty(true);
+	}
+	else //GetGoals
+	{
+		qry.NoFilters();
+		GM_INT_PARAM(iTeam, 1, 0);
+		qry.Team(iTeam);
+		p++;
+	}
+
+	if(GM_NUM_PARAMS > p)
+	{
+		switch(GM_THREAD_ARG->ParamType(p))
+		{
+		case GM_INT:
+			qry.AddType(GM_THREAD_ARG->ParamInt(p));
+			break;
+		case GM_STRING:
+			qry.Expression(GM_THREAD_ARG->ParamString(p));
+			break;
+		case GM_TABLE:
+			{
+				gmTableObject *typesTable = GM_THREAD_ARG->ParamTable(p);
+				if(typesTable->Count() > GoalManager::Query::MaxGoalTypes)
+				{
+					GM_EXCEPTION_MSG("maximum count of goal types in query is %d, got %d", GoalManager::Query::MaxGoalTypes, typesTable->Count());
+					return GM_EXCEPTION;
+				}
+				gmTableIterator tIt;
+				for(gmTableNode *pNode = typesTable->GetFirst(tIt); pNode; pNode = typesTable->GetNext(tIt))
+				{
+					if(pNode->m_value.m_type != GM_INT)
+					{
+						GM_EXCEPTION_MSG("expecting param %d as table of int, got %s", p, GM_THREAD_ARG->GetMachine()->GetTypeName(pNode->m_value.m_type));
+						return GM_EXCEPTION;
+					}
+					qry.AddType(pNode->m_value.GetInt());
+				}
+			}
+			break;
+		default:
+			GM_EXCEPTION_MSG("expecting param %d as string or int or table, got %s", p, GM_THREAD_ARG->ParamTypeName(p));
+			return GM_EXCEPTION;
+		}
+	}
 
 	// parse optional parameters
+	p++;
+	GM_TABLE_PARAM(params, p, 0);
 	if(params)
 	{
 		qry.FromTable(a_thread->GetMachine(),params);
@@ -578,6 +628,7 @@ static int GM_CDECL gmfGetMapGoals(gmThread *a_thread)
 			table->Set(pMachine, i, gmVariable(pUser));
 		}
 	}
+	a_thread->PushInt((gmint)qry.m_List.size());
 	return GM_OK;
 }
 

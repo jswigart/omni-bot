@@ -42,5 +42,6 @@ class gmMachine;
 void gmBindBotLib(gmMachine * a_machine);
 void MapDebugPrint(const char *message);
 void MapDebugPrint(gmThread *a_thread, const char *message);
+int GM_CDECL GetMapGoals(gmThread *a_thread, Client *client);
 
 #endif
