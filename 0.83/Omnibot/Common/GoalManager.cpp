@@ -277,6 +277,11 @@ void GoalManager::Query::FromTable(gmMachine *a_machine, gmTableObject *a_table)
 			SkipInUse(var.GetInt()!=0);
 	}
 	{
+		gmVariable var = a_table->Get(a_machine,"CheckRange");
+		if(var.IsInt())
+			CheckRangeProperty(var.GetInt()!=0);
+	}
+	{
 		gmVariable var = a_table->Get(a_machine,"NoFilters");
 		if(var.IsInt() && var.GetInt()!=0)
 			NoFilters();
