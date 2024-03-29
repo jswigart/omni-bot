@@ -501,8 +501,8 @@ void PathPlannerWaypoint::cmdWaypointAutoBuild(const StringVector &_args)
 
 			// Use the bounding box if iUseBBox is enabled
 			EngineFuncs::TraceLine(tr, 
-				(m_WaypointList[i]->GetPosition() + Vector3f(0,0,40)),
-				(m_WaypointList[j]->GetPosition() + Vector3f(0,0,40)), 
+				(m_WaypointList[i]->GetPosition().AddZ(40)),
+				(m_WaypointList[j]->GetPosition().AddZ(40)), 
 				(bUseBBox ? &bbox : NULL), (TR_MASK_SOLID | TR_MASK_PLAYERCLIP), -1, True);
 			++iNumRayCasts;
 

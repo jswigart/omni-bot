@@ -1107,7 +1107,7 @@ static int gmfGroundPoint(gmThread *a_thread)
 	Vector3f vPt(pt.x,pt.y,pt.z);
 
 	obTraceResult tr;
-	EngineFuncs::TraceLine(tr,vPt,vPt+Vector3f(0,0,-1024.f),NULL,iMask,-1,False);
+	EngineFuncs::TraceLine(tr,vPt,vPt.AddZ(-1024.f),NULL,iMask,-1,False);
 	if(tr.m_Fraction<1.f)
 		vPt = tr.m_Endpos;
 

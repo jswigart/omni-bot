@@ -560,8 +560,8 @@ PathPlannerWaypoint::BlockableStatus RTCW_PathCheck(const Waypoint* _wp1, const 
 		static float fOffset = 25.0f;
 		static Vector3f vMins(-5.f, -5.f, -5.f), vMaxs(5.f, 5.f, 5.f);
 		AABB aabb(vMins, vMaxs);
-		vStart = _wp1->GetPosition() + Vector3f(0, 0, fOffset);
-		vEnd = _wp2->GetPosition() + Vector3f(0, 0, fOffset);
+		vStart = _wp1->GetPosition().AddZ(fOffset);
+		vEnd = _wp2->GetPosition().AddZ(fOffset);
 		
 		if(bRender)
 		{
@@ -576,7 +576,7 @@ PathPlannerWaypoint::BlockableStatus RTCW_PathCheck(const Waypoint* _wp1, const 
 	if(res != PathPlannerWaypoint::B_PATH_CLOSED && _wp1->IsFlagOn(F_RTCW_NAV_BRIDGE) && _wp2->IsFlagOn(F_RTCW_NAV_BRIDGE))
 	{
 		vStart = _wp1->GetPosition() + (_wp2->GetPosition() - _wp1->GetPosition()) * 0.5;
-		vEnd = vStart +  Vector3f(0,0,-48);
+		vEnd = vStart.AddZ(-48);
 
 		if(bRender)
 		{

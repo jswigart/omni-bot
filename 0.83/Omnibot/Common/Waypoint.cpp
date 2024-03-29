@@ -168,8 +168,7 @@ void Waypoint::Sync( RemoteLib::DataBuffer & db, bool fullSync ) {
 
 Segment3f Waypoint::GetSegment()
 {
-	Vector3f vWpBottom = GetPosition() + Vector3f(0,0,g_fBottomWaypointOffset);
-	return Segment3f(vWpBottom, Vector3f::UNIT_Z, g_fTopWaypointOffset-g_fBottomWaypointOffset);
+	return Segment3f(GetPosition().AddZ(g_fBottomWaypointOffset), Vector3f::UNIT_Z, g_fTopWaypointOffset-g_fBottomWaypointOffset);
 }
 
 void Waypoint::AssignNewUID()

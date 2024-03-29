@@ -1335,7 +1335,7 @@ void GoalManager::Update()
 		if(HighlightedGoal)
 		{
 			Utils::DrawRadius(
-				HighlightedGoal->GetPosition()+Vector3f(0,0,32.f),
+				HighlightedGoal->GetPosition().AddZ(32.f),
 				HighlightedGoal->GetRadius(),
 				COLOR::YELLOW,
 				IGame::GetDeltaTimeSecs()*2.f);
