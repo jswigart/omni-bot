@@ -571,7 +571,7 @@ void PathPlannerWaypoint::cmdWaypointView(const StringVector &_args)
 {
 	if(_args.size() >= 2)
 	{
-		if(Utils::StringToTrue(_args[1]))
+		if(Utils::StringToTrue(_args[1]) || _args[1] == "toggle" && !m_PlannerFlags.CheckFlag(NAV_VIEW))
 		{
 			m_PlannerFlags.SetFlag(NAV_VIEW);
 			const char * msg = IGameManager::GetInstance()->GetGame()->IsDebugDrawSupported();
@@ -580,16 +580,14 @@ void PathPlannerWaypoint::cmdWaypointView(const StringVector &_args)
 				return;
 			}
 		}
-		else if(Utils::StringToFalse(_args[1]))
+		else if(Utils::StringToFalse(_args[1]) || _args[1] == "toggle")
 		{
 			m_PlannerFlags.ClearFlag(NAV_VIEW);
 
 			if(g_ClientFuncs) g_ClientFuncs->ClearView();
 		}
-
-		EngineFuncs::ConsoleMessage(va("Waypoint Visible %s",
-			m_PlannerFlags.CheckFlag(NAV_VIEW) ? "on." : "off."));
 	}
+	EngineFuncs::ConsoleMessage(va("Waypoint Visible %s.", m_PlannerFlags.CheckFlag(NAV_VIEW) ? "on" : "off"));
 }
 
 void PathPlannerWaypoint::cmdWaypointAutoFlag(const StringVector &_args)
