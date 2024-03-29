@@ -87,6 +87,7 @@ public:
 	Vector3 Perpendicular() const;
 
 	bool IsZero() const;
+	Vector3 AddZ(Real z) const;
 
 	Real x, y, z;
 

@@ -1961,7 +1961,7 @@ void PathPlannerWaypoint::cmdBoxSelect(const StringVector &_args)
 		}
 		else
 		{
-			AABB boxselect(m_BoxStart, vAimPos);
+			boxselect.Set(m_BoxStart, vAimPos);
 			Utils::OutlineAABB(boxselect, COLOR::MAGENTA, 2.f,AABB::DIR_BOTTOM);
 
 			boxselect.m_Mins[2] = -4096.f;

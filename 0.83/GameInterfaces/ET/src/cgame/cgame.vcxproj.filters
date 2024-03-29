@@ -116,9 +116,6 @@
     <ClCompile Include="cg_newDraw.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cg_omnibot.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cg_particles.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -180,6 +177,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Omnibot_Interprocess.cpp">
+      <Filter>Omnibot</Filter>
+    </ClCompile>
+    <ClCompile Include="cg_omnibot.c">
       <Filter>Omnibot</Filter>
     </ClCompile>
   </ItemGroup>

@@ -502,10 +502,10 @@ public:
 
 class IClientInterface {
 public:
-	// Adds a line to immediately display between 2 positions, with a specific color
+	// Adds a line to display between 2 positions, with a specific color
 	virtual void DrawLine(const float _start[3], const float _end[3], int _color, int _time) = 0;
 
-	// Adds a AABB to immediately display, with a specific color
+	// Adds a AABB to display, with a specific color
 	virtual void DrawAABB(const float _mins[3], const float _maxs[3], int _color, int _time, AABB::Direction _dir) = 0;
 
 	// Adds a radius indicator to be displayed at a certain position with radius and color
@@ -519,6 +519,12 @@ public:
 
 	// Removes all currently visible objects
 	virtual void ClearView() = 0;
+
+	//Immediately draws a line (should be called from DrawActiveFrame)
+	virtual void DrawLine(const float _start[3], const float _end[3], int _color) = 0;
+
+	//Callback from mod (cgame_mp_x86.dll) to Omni-bot library (omnibot_et.dll) to draw waypoints
+	void (*DrawActiveFrame)();
 };
 
 //class SkeletonInterface : public IEngineInterface

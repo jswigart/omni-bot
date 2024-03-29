@@ -161,6 +161,7 @@
       <PrecompiledHeaderFile>PrecompET.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)PrecompET.pch</PrecompiledHeaderOutputFile>
       <EnablePREfast>false</EnablePREfast>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

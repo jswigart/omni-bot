@@ -87,6 +87,13 @@ namespace InterProcess
 
 	//////////////////////////////////////////////////////////////////////////
 
+	void DrawActiveFrame()
+	{
+		PathPlannerBase *pPathPlanner = IGameManager::GetInstance()->GetNavSystem();
+		if(pPathPlanner->IsViewOn())
+			pPathPlanner->DrawActiveFrame();
+	}
+
 	void Init()
 	{
 		Prof_Scope(InterProcess);
@@ -125,7 +132,8 @@ namespace InterProcess
 			if(hmod){
 				pfnGetClientFunctionsFromDLL pfnGetBotFuncs = (pfnGetClientFunctionsFromDLL)dlsym(hmod, "ExportClientFunctionsFromDLL");
 #endif
-				if(pfnGetBotFuncs && pfnGetBotFuncs(&g_ClientFuncs, 1)==BOT_ERROR_NONE){
+				if(pfnGetBotFuncs && pfnGetBotFuncs(&g_ClientFuncs, 2)==BOT_ERROR_NONE){
+					g_ClientFuncs->DrawActiveFrame = DrawActiveFrame;
 					LOG("cgame drawing Initialized");
 				}
 				else {
@@ -157,7 +165,11 @@ namespace InterProcess
 #ifdef INTERPROCESS
 		g_MessageQueue.reset();
 #else
-		g_ClientFuncs=0;
+		if(g_ClientFuncs)
+		{
+			g_ClientFuncs->DrawActiveFrame = NULL;
+			g_ClientFuncs = 0;
+		}
 #endif
 		Initialized=false;
 	}

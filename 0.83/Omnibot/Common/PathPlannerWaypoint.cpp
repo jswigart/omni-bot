@@ -190,10 +190,7 @@ void PathPlannerWaypoint::UpdateNavRender()
 	Prof(UpdateNavRender);
 
 	GameEntity ge = Utils::GetLocalEntity();
-	if(!ge.IsValid())
-		return; 
-
-	float fWaypointDuration = 2.f;
+	if(!ge.IsValid()) return; 
 
 	if(!m_CreatingSector.m_SectorBounds.IsZero())
 	{
@@ -207,10 +204,6 @@ void PathPlannerWaypoint::UpdateNavRender()
 			localaabb.Translate(vAimPos);
 			localaabb.m_Mins[2] += 4.f;
 			localaabb.CenterPoint(vTmp);
-
-			AABB boxselect(vAimPos);
-			boxselect.m_Mins[2] = -4096.f;
-			boxselect.m_Maxs[2] = 4096.f;
 
 			Vector3f axis[] =
 			{
@@ -274,19 +267,21 @@ void PathPlannerWaypoint::UpdateNavRender()
 	}
 	//////////////////////////////////////////////////////////////////////////
 	// Render box selection
-	AABB boxselect(Vector3f::ZERO);
 	if(m_BoxStart != Vector3f::ZERO)
 	{
 		Vector3f vAimPos;
 		if(Utils::GetLocalAimPoint(vAimPos))
 		{
-			AABB aabb(m_BoxStart, vAimPos);
-			Utils::OutlineAABB(aabb, COLOR::MAGENTA, IGame::GetDeltaTimeSecs()*2.f,AABB::DIR_BOTTOM);
+			boxselect.Set(m_BoxStart, vAimPos);
+			Utils::OutlineAABB(boxselect, COLOR::MAGENTA, IGame::GetDeltaTimeSecs() * 2.f, AABB::DIR_BOTTOM);
 
-			boxselect = aabb;
 			boxselect.m_Mins[2] = -4096.f;
 			boxselect.m_Maxs[2] = 4096.f;
 		}
+	}
+	else
+	{
+		boxselect.Set(Vector3f::ZERO);
 	}
 	//////////////////////////////////////////////////////////////////////////
 
@@ -297,100 +292,6 @@ void PathPlannerWaypoint::UpdateNavRender()
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	Vector3f vPosition, vFacing;
-	g_EngineFuncs->GetEntityEyePosition(ge, vPosition);
-	g_EngineFuncs->GetEntityOrientation(ge, vFacing, 0, 0);
-
-	Timer tme;
-	static int iNextStart = 0;
-	static int index = 0;
-
-	int iNumWps = (int)m_WaypointList.size();
-	//for(int i = 0; i < iNumWps; ++i)
-	while(iNumWps)
-	{
-		index %= iNumWps;
-
-		if(index==0)
-		{
-			if(iNextStart > IGame::GetTime())
-				break;
-			iNextStart = IGame::GetTime() + Utils::SecondsToMilliseconds(fWaypointDuration);
-			//UpdateSelectedWpRender();
-		}
-
-		Waypoint *pWp = m_WaypointList[index];
-
-		obColor wpColor = g_WaypointColor;
-		if(pWp->IsFlagOn(F_NAV_TEAM1))
-			wpColor = g_Team1;
-		else if(pWp->IsFlagOn(F_NAV_TEAM2))
-			wpColor = g_Team2;
-		else if(pWp->IsFlagOn(F_NAV_TEAM3))
-			wpColor = g_Team3;
-		else if(pWp->IsFlagOn(F_NAV_TEAM4))
-			wpColor = g_Team4;
-
-		// Is it selected?
-		if(std::find(m_SelectedWaypoints.begin(), m_SelectedWaypoints.end(), pWp) != m_SelectedWaypoints.end())
-			wpColor = g_SelectedWaypoint;
-
-		if(!boxselect.IsZero() && boxselect.Contains(pWp->GetPosition()))
-			wpColor = g_SelectedWaypoint;
-
-		//g_EngineFuncs->AddDisplayLine(LINE_WAYPOINT, pWp->GetPosition(), pWp->GetPosition(), wpColor);
-		if(Utils::InFieldOfView(vFacing, pWp->GetPosition()-vPosition, 120.0f))
-		{
-			Utils::DrawLine(
-				pWp->GetPosition() + Vector3f(0.f, 0.f, g_fTopWaypointOffset),
-				pWp->GetPosition() + Vector3f(0.f, 0.f, g_fBottomWaypointOffset),
-				wpColor,
-				fWaypointDuration);
-
-			if(m_PlannerFlags.CheckFlag(WAYPOINT_VIEW_FACING) && 
-				pWp->GetFacing() != Vector3f::ZERO)
-			{
-				Vector3f vStart = pWp->GetPosition() + Vector3f(0.f, 0.f, g_fFacingOffset);
-				Utils::DrawLine(
-					vStart,
-					vStart + pWp->GetFacing() * 32.f,
-					g_ShowFacingColor,
-					fWaypointDuration);
-			}
-		}
-
-		// Add the paths
-		Waypoint::ConnectionList::iterator it = pWp->m_Connections.begin();
-		while(it != pWp->m_Connections.end())
-		{
-			obColor pathColor = it->m_Connection->IsConnectedTo(pWp) ? g_LinkColor2Way : g_LinkColor1Way;
-
-			if(it->CheckFlag(F_LNK_CLOSED))
-				pathColor = g_LinkClosedColor;
-			else if(it->CheckFlag(F_LNK_TELEPORT))
-				pathColor = g_LinkTeleport;
-			
-			//////////////////////////////////////////////////////////////////////////
-			Vector3f vP1 = pWp->GetPosition() + Vector3f(0.f, 0.f, g_fTopPathOffset);
-			Vector3f vP2 = it->m_Connection->GetPosition() + Vector3f(0.f, 0.f, g_fBottomPathOffset);
-			if(Utils::InFieldOfView(vFacing, vP1-vPosition, 120.0f) ||
-				Utils::InFieldOfView(vFacing, vP2-vPosition, 120.0f))
-			{
-				Utils::DrawLine(
-					vP1,
-					vP2,
-					pathColor,
-					fWaypointDuration);
-			}
-			//////////////////////////////////////////////////////////////////////////
-
-			++it;
-		}
-
-		++index;
-		if(tme.GetElapsedSeconds() > 0.02)
-			break;
-	}
 
 	// render entity connections.
 	for(int i = 0; i < MaxEntityConnections; ++i)
@@ -450,6 +351,72 @@ void PathPlannerWaypoint::UpdateNavRender()
 	}
 }
 
+void PathPlannerWaypoint::DrawActiveFrame()
+{
+	Prof(DrawActiveFrame);
+
+	GameEntity ge = Utils::GetLocalEntity();
+	if(!ge.IsValid()) return;
+	Vector3f vPosition, vFacing;
+	g_EngineFuncs->GetEntityEyePosition(ge, vPosition);
+	g_EngineFuncs->GetEntityOrientation(ge, vFacing, 0, 0);
+
+	for(WaypointList::const_iterator itW = m_WaypointList.begin(); itW != m_WaypointList.end(); itW++)
+	{
+		Waypoint *pWp = *itW;
+		Vector3f vP1 = pWp->GetPosition().AddZ(g_fTopPathOffset);
+
+		bool inFOV = Utils::InFieldOfView120(vFacing, vP1 - vPosition);
+		if(inFOV)
+		{
+			obColor color = g_WaypointColor;
+			if(pWp->IsFlagOn(F_NAV_TEAM1))
+				color = g_Team1;
+			else if(pWp->IsFlagOn(F_NAV_TEAM2))
+				color = g_Team2;
+			else if(pWp->IsFlagOn(F_NAV_TEAM3))
+				color = g_Team3;
+			else if(pWp->IsFlagOn(F_NAV_TEAM4))
+				color = g_Team4;
+
+			// Is it selected?
+			if(std::find(m_SelectedWaypoints.begin(), m_SelectedWaypoints.end(), pWp) != m_SelectedWaypoints.end()
+			  || boxselect.Contains(pWp->GetPosition()))
+				color = g_SelectedWaypoint;
+
+			g_ClientFuncs->DrawLine(
+			  pWp->GetPosition().AddZ(g_fTopWaypointOffset),
+			  pWp->GetPosition().AddZ(g_fBottomWaypointOffset),
+			  color);
+
+			if(m_PlannerFlags.CheckFlag(WAYPOINT_VIEW_FACING) && pWp->GetFacing() != Vector3f::ZERO)
+			{
+				Vector3f vStart = pWp->GetPosition().AddZ(g_fFacingOffset);
+				g_ClientFuncs->DrawLine(
+				  vStart,
+				  vStart + pWp->GetFacing() * 32.f,
+				  g_ShowFacingColor);
+			}
+		}
+
+		// Add the paths
+		for(Waypoint::ConnectionList::iterator it = pWp->m_Connections.begin(); it != pWp->m_Connections.end(); it++)
+		{
+			Vector3f vP2 = it->m_Connection->GetPosition().AddZ(g_fBottomPathOffset);
+			if(inFOV || Utils::InFieldOfView120(vFacing, vP2 - vPosition))
+			{
+				obColor color = it->m_Connection->IsConnectedTo(pWp) ? g_LinkColor2Way : g_LinkColor1Way;
+				if(it->CheckFlag(F_LNK_CLOSED))
+					color = g_LinkClosedColor;
+				else if(it->CheckFlag(F_LNK_TELEPORT))
+					color = g_LinkTeleport;
+
+				g_ClientFuncs->DrawLine(vP1, vP2, color);
+			}
+		}
+	}
+}
+
 int PathPlannerWaypoint::CheckBlockable()
 {
 	int count = 0;
@@ -472,8 +439,7 @@ void PathPlannerWaypoint::Update()
 {
 	Prof(PathPlannerWaypoint);
 
-	if(m_PlannerFlags.CheckFlag(NAV_VIEW))
-		UpdateNavRender();
+	if(IsViewOn()) UpdateNavRender();
 
 	// TODO: run any time spliced paths.
 	if(m_BlockableRegulator->IsReady() && m_PathCheckCallback)
@@ -512,7 +478,7 @@ void PathPlannerWaypoint::Update()
 			}
 
 			// Show some feedback			
-			if(m_PlannerFlags.CheckFlag(NAV_VIEW))
+			if(IsViewOn())
 			{
 				Utils::DrawLine(
 					(*it).first->GetPosition() + Vector3f(0.f, 0.f, g_fBlockablePathOffset),
@@ -531,7 +497,7 @@ void PathPlannerWaypoint::Update()
 		}
 	}
 
-	if(m_PlannerFlags.CheckFlag(NAV_VIEW))
+	if(IsViewOn())
 	{
 		RenderFailedPaths();
 

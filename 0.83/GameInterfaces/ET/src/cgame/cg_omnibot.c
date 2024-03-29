@@ -1,9 +1,10 @@
 #include "cg_local.h"
 
 extern vmCvar_t	cg_omnibotdrawing, cg_omnibot_render_distance;
+extern void OmnibotDrawActiveFrame();
 
-const int OMNIBOT_LINES_INCREASE_SIZE = 512;
-const int OMNIBOT_LINES_INITIAL_SIZE = 5120;
+const int OMNIBOT_LINES_INCREASE_SIZE = 256;
+const int OMNIBOT_LINES_INITIAL_SIZE = 128;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -80,7 +81,7 @@ static int InfoColor;
 
 //////////////////////////////////////////////////////////////////////////
 
-void CG_DrawDebugLine(UdpDebugLineMessage *_lineinfo) 
+void CG_DrawLine(float *start, float *end, int color)
 {
 	vec3_t		forward, right;
 	polyVert_t	verts[4];
@@ -94,16 +95,16 @@ void CG_DrawDebugLine(UdpDebugLineMessage *_lineinfo)
 	{
 		vec3_t toline;
 		float fRenderDistanceSq = cg_omnibot_render_distance.integer * cg_omnibot_render_distance.integer;
-		VectorSubtract(cg_entities[0].currentState.pos.trBase, _lineinfo->start, toline);
+		VectorSubtract(cg_entities[0].currentState.pos.trBase, start, toline);
 		if(VectorLengthSquared(toline) > fRenderDistanceSq){
-			VectorSubtract(cg_entities[0].currentState.pos.trBase, _lineinfo->end, toline);
+			VectorSubtract(cg_entities[0].currentState.pos.trBase, end, toline);
 			if(VectorLengthSquared(toline) > fRenderDistanceSq)
 			return;
 		}
 	}
 	//////////////////////////////////////////////////////////////////////////
 
-	VectorSubtract( _lineinfo->end, _lineinfo->start, forward );
+	VectorSubtract( end, start, forward );
 
 	line[0] = DotProduct( forward, cg.refdef_current->viewaxis[1] );
 	line[1] = DotProduct( forward, cg.refdef_current->viewaxis[2] );
@@ -114,25 +115,30 @@ void CG_DrawDebugLine(UdpDebugLineMessage *_lineinfo)
 
 	//////////////////////////////////////////////////////////////////////////
 
-	VectorMA( _lineinfo->end, fLineWidth, right, verts[0].xyz );
+	VectorMA( end, fLineWidth, right, verts[0].xyz );
 	verts[0].st[0] = 1;
 	verts[0].st[1] = 1;
 
-	VectorMA( _lineinfo->end, -fLineWidth, right, verts[1].xyz );
+	VectorMA( end, -fLineWidth, right, verts[1].xyz );
 	verts[1].st[0] = 1;
 	verts[1].st[1] = 0;
 
-	VectorMA( _lineinfo->start, -fLineWidth, right, verts[2].xyz );
+	VectorMA( start, -fLineWidth, right, verts[2].xyz );
 	verts[2].st[0] = 0;
 	verts[2].st[1] = 0;
 
-	VectorMA( _lineinfo->start, fLineWidth, right, verts[3].xyz );
+	VectorMA( start, fLineWidth, right, verts[3].xyz );
 	verts[3].st[0] = 0;
 	verts[3].st[1] = 1;
 
-	*(int*)verts[0].modulate = *(int*)verts[1].modulate = *(int*)verts[2].modulate = *(int*)verts[3].modulate = _lineinfo->color;
+	*(int*)verts[0].modulate = *(int*)verts[1].modulate = *(int*)verts[2].modulate = *(int*)verts[3].modulate = color;
 
 	trap_R_AddPolyToScene( cgs.media.railCoreShader, 4, verts );
+}
+
+void CG_DrawDebugLine(UdpDebugLineMessage *lineinfo)
+{
+	CG_DrawLine(lineinfo->start, lineinfo->end, lineinfo->color);
 }
 
 void CG_DrawDebugRadius(UdpDebugRadiusMessage *_lineinfo)
@@ -540,5 +546,8 @@ void OmnibotRenderDebugLines()
 		trap_R_SetColor(NULL);
 		InfoText[0]=0;
 	}
+
+	//callback to draw waypoints
+	OmnibotDrawActiveFrame();
 }
 

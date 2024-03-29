@@ -60,6 +60,7 @@ public:
 	virtual void Update() = 0;
 	virtual void Shutdown() = 0;
 	virtual bool IsReady() const = 0;
+	virtual void DrawActiveFrame() {}
 
 	virtual Vector3f GetRandomDestination(Client *_client, const Vector3f &_start, const NavFlags _team) = 0;
 

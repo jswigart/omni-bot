@@ -8,6 +8,7 @@ extern "C" void DrawDebugAABB(float *mins, float *_maxs, int _duration, int _col
 extern "C" void DrawDebugPolygon(vec3_t *verts, int _numverts, int _duration, int _color);
 extern "C" void DrawDebugText(float *_start, const char *_msg, int _duration, int _color);
 extern "C" void ClearDebugDraw();
+extern "C" void CG_DrawLine(float *start, float *end, int color);
 
 class ETClientInterface : public IClientInterface
 {
@@ -40,8 +41,18 @@ class ETClientInterface : public IClientInterface
 	{
 		ClearDebugDraw();
 	}
+
+	void DrawLine(const float _start[3], const float _end[3], int _color)
+	{
+		CG_DrawLine((float*)_start, (float*)_end, _color);
+	}
+
 } g_ClientInterface;
 
+extern "C" void OmnibotDrawActiveFrame()
+{
+	if(g_ClientInterface.DrawActiveFrame) g_ClientInterface.DrawActiveFrame();
+}
 
 #ifdef WIN32
 #define OMNIBOT_API __declspec(dllexport)
@@ -51,7 +62,7 @@ class ETClientInterface : public IClientInterface
 
 extern "C" OMNIBOT_API eomnibot_error ExportClientFunctionsFromDLL(IClientInterface **_pClientFuncs, int _version)
 {
-	if(_version==1){
+	if(_version==2){
 		*_pClientFuncs = &g_ClientInterface;
 		return BOT_ERROR_NONE;
 	}

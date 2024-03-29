@@ -488,3 +488,9 @@ Real PointToSegmentDistance(const Vector3<Real> &aPt, const Vector3<Real> &aSeg1
 	}
 	return Length(aPt, aOutClosest);
 }
+//----------------------------------------------------------------------------
+template<class Real>
+Vector3<Real> Vector3<Real>::AddZ(Real _z) const
+{
+	return Vector3(x, y, z + _z);
+}

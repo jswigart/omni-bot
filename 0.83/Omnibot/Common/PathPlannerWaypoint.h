@@ -85,6 +85,7 @@ public:
 	void Update();
 	void Shutdown();
 	bool IsReady() const;
+	void DrawActiveFrame();
 
 	int GetLatestFileVersion() const;
 
@@ -345,14 +346,6 @@ protected:
 	enum { MaxEntityConnections = 32 };
 	EntityConnection				EntityConnections[MaxEntityConnections];
 
-	struct Obstacle
-	{
-		GameEntity		Entity;
-		float			Radius;
-	};
-	enum { MaxObstacles = 512 };
-	Obstacle				Obstacles[MaxEntityConnections];
-
 	void _RunDijkstra(const NavFlags _team);
 	void _RunAStar(const NavFlags _team, const Vector3f &_goalPosition);
 
@@ -380,6 +373,7 @@ protected:
 	int	m_MovingWaypointIndex;
 
 	Vector3f	m_BoxStart;
+	AABB boxselect;
 
 	void UpdateNavRender();
 	void UpdateSelectedWpRender();
