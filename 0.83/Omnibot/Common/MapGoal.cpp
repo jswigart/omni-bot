@@ -1688,13 +1688,6 @@ bool MapGoal::LoadFromTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_loadt
 
 	_loadtable->CopyTo(_machine,proptable);
 	
-	if(const char *TagName = proptable->Get(_machine,"TagName").GetCStringSafe(0))
-		m_TagName = TagName;
-	else
-	{
-		_err.AddError("Goal.TagName Field Missing!");
-		return false;
-	}
 	if(const char *Name = proptable->Get(_machine,"Name").GetCStringSafe(0))
 		m_Name = Name;
 	else
@@ -1702,8 +1695,19 @@ bool MapGoal::LoadFromTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_loadt
 		_err.AddError("Goal.Name Field Missing!");
 		return false;
 	}
+	const char *TagName = proptable->Get(_machine, "TagName").GetCStringSafe(0);
+	if(!TagName && m_Name.length() > m_GoalType.length()+1)
+		TagName = m_Name.c_str() + m_GoalType.length()+1; //set TagName from Name
+	if(TagName)
+		m_TagName = TagName;
+	else
+	{
+		_err.AddError("Goal.TagName Field Missing!");
+		return false;
+	}
 	m_GroupName = proptable->Get(_machine, "GroupName").GetCStringSafe("");
 	proptable->Get(_machine, "Version").GetInt(m_Version, 0);
+	if(m_Version == 0) proptable->Set(_machine, "Version", gmVariable(m_Version = MapGoalVersion));
 	if(!proptable->Get(_machine, "Position").GetVector(m_Position))
 	{
 		_err.AddError("Goal.Position Field Missing!");
@@ -1765,7 +1769,6 @@ bool MapGoal::LoadFromTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_loadt
 	proptable->Get(_machine, "Range").GetInt(m_Range, 0);
 
 	// clear out the properties we don't want to pass along.
-	//proptable->Set(_machine,"Version",gmVariable::s_null);
 	proptable->Set(_machine,"Name",gmVariable::s_null);
 	proptable->Set(_machine,"TagName",gmVariable::s_null);
 	proptable->Set(_machine,"GroupName",gmVariable::s_null);
