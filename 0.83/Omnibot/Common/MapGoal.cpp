@@ -294,6 +294,18 @@ void MapGoal::GenerateName(int _instance, bool _skipdupecheck)
 	}
 	boost::replace_all(m_Name, " ", "_");
 
+	//remove invalid characters
+	for(const char *s = m_Name.c_str(); *s; s++)
+	{
+		char c = *s;
+		if(!(c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z' || c >= '0' && c <= '9' || c == '_'))
+		{
+			static boost::regex re("[^A-Za-z0-9_]");
+			m_Name = boost::regex_replace(m_Name, re, "");
+			break;
+		}
+	}
+
 	//////////////////////////////////////////////////////////////////////////
 	// Dupe name handling, append an instance number
 	if(_instance > 0)
@@ -1591,15 +1603,6 @@ void MapGoal::SwapEntities(MapGoal * g1, MapGoal * g2)
 
 bool MapGoal::SaveToTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_savetable, ErrorObj &_err)
 {
-#if 0
-	const char *name = GetName().c_str();
-	for(const char *s = name; *s; s++)
-	{
-		char ch = *s;
-		if(ch=='{' || ch=='}') return false; //tank on ludendorff bridge
-	}
-#endif
-
 	gmGCRoot<gmTableObject> GoalTable(_machine->AllocTableObject(),_machine);
 
 	if(m_SerializeFunc)
