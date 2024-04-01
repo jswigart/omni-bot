@@ -570,11 +570,11 @@ void IGame::InitScriptContentFlags(gmMachine *_machine, gmTableObject *_table)
 	_table->Set(_machine, "WATER",	gmVariable(CONT_WATER));
 	_table->Set(_machine, "SLIME",	gmVariable(CONT_SLIME));
 	_table->Set(_machine, "FOG",	gmVariable(CONT_FOG));
-
 	_table->Set(_machine, "TELEPORTER",	gmVariable(CONT_TELEPORTER));
 	_table->Set(_machine, "MOVER",	gmVariable(CONT_MOVER));
 	_table->Set(_machine, "TRIGGER",gmVariable(CONT_TRIGGER));
 	_table->Set(_machine, "LAVA",	gmVariable(CONT_LAVA));
+	_table->Set(_machine, "PLAYERCLIP",	gmVariable(CONT_PLYRCLIP));
 }
 
 void IGame::InitScriptSurfaceFlags(gmMachine *_machine, gmTableObject *_table)
