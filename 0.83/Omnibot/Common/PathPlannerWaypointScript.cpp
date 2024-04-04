@@ -234,19 +234,8 @@ static int GM_CDECL gmfConnectWaypoints(gmThread *a_thread)
 	GM_CHECK_INT_PARAM(guid1, 0);
 	GM_CHECK_INT_PARAM(guid2, 1);
 
-	bool bSuccess = false;
 	PathPlannerWaypoint *pWp = GetWpPlanner();
-	if(pWp)
-	{		
-		Waypoint *pWaypoint1 = pWp->GetWaypointByGUID(guid1);
-		Waypoint *pWaypoint2 = pWp->GetWaypointByGUID(guid2);
-		if(pWaypoint1 != NULL && pWaypoint2 != NULL)
-		{
-			pWaypoint1->ConnectTo(pWaypoint2);
-			bSuccess = true;
-		}
-	}
-
+	bool bSuccess = pWp && pWp->_ConnectWaypoints(pWp->GetWaypointByGUID(guid1), pWp->GetWaypointByGUID(guid2));
 	a_thread->PushInt(bSuccess ? 1 : 0);
 	return GM_OK;
 }

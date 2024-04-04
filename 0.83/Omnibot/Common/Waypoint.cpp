@@ -194,7 +194,7 @@ bool Waypoint::IsConnectedTo(const Waypoint *_wp) const
 
 bool Waypoint::ConnectTo(Waypoint *_wp, obuint32 _flags)
 {
-	if(_wp && !IsConnectedTo(_wp))
+	if(_wp && _wp != this && !IsConnectedTo(_wp))
 	{
 		Waypoint::ConnectionInfo info;
 		info.m_Connection = _wp;

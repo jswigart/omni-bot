@@ -124,6 +124,9 @@ public:
 	bool DeleteWaypoint(const Vector3f &_pos);
 	void DeleteWaypoint(Waypoint *pDeleteMe);
 
+	bool _ConnectWaypoints(Waypoint *_wp1, Waypoint *_wp2);
+	bool _DisConnectWaypoints(Waypoint *_wp1, Waypoint *_wp2);
+
 	void RegisterNavFlag(const String &_name, const NavFlags &_func);
 	//void RegisterLinkFlag(const String &_name, const NavFlags &_func);
 
@@ -265,7 +268,6 @@ protected:
 	void cmdWaypointConnect(const StringVector &_args);
 	void cmdWaypointConnectX(const StringVector &_args);
 	void cmdWaypointConnect_Helper(const StringVector &_args, Waypoint *_waypoint);
-	void cmdWaypointConnect_Helper(const StringVector &_args);
 	void cmdWaypointConnect2Way(const StringVector &_args);
 	void cmdWaypointConnect2WayX(const StringVector &_args);
 	void cmdWaypointConnect2Way_Helper(const StringVector &_args, Waypoint *_waypoint);
@@ -359,9 +361,6 @@ protected:
 	obuint32 m_WaypointMark;
 	obuint32 m_GoalIndex;
 	int _MarkWaypointsInRadius(const Vector3f &_pos, const NavFlags _team, int _flags);
-
-	bool _ConnectWaypoints(Waypoint *_wp1, Waypoint *_wp2);
-	bool _DisConnectWaypoints(Waypoint *_wp1, Waypoint *_wp2);
 
 	bool LoadFromFile(const String &_file);
 

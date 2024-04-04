@@ -1553,24 +1553,10 @@ PathPlannerWaypoint::ClosestLink PathPlannerWaypoint::_GetClosestLink(const Vect
 
 bool PathPlannerWaypoint::_ConnectWaypoints(Waypoint *_wp1, Waypoint *_wp2)
 {
-	if((_wp1 && _wp2) && (_wp1 != _wp2))
+	if(_wp1 && _wp1->ConnectTo(_wp2))
 	{
-		Waypoint::ConnectionList::iterator it = _wp1->m_Connections.begin();
-		for( ; it != _wp1->m_Connections.end(); ++it)
-		{
-			if(it->m_Connection == _wp2)
-				return false;
-		}
-
-		Waypoint::ConnectionInfo info;
-		info.m_Connection = _wp2;
-		info.m_ConnectionFlags = 0;
-		_wp1->m_Connections.push_back(info);
-
 		if(_wp1->IsAnyFlagOn(m_BlockableMask) && _wp2->IsAnyFlagOn(m_BlockableMask))
-		{
 			m_BlockableList.push_back(std::make_pair(_wp1, &_wp1->m_Connections.back()));
-		}
 		return true;
 	}
 	return false;
