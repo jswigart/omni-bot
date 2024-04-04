@@ -19,7 +19,6 @@ GMBIND_FUNCTION_MAP_END();
 
 int gmTimer::gmfResetTimer(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	Timer *pNative = gmTimer::GetThisObject( a_thread );
 	if(!pNative)
 	{
@@ -34,7 +33,6 @@ int gmTimer::gmfResetTimer(gmThread *a_thread)
 
 int gmTimer::gmfGetElapsedTime(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	Timer *pNative = gmTimer::GetThisObject( a_thread );
 	if(!pNative)
 	{

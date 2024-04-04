@@ -108,7 +108,6 @@ int GM_CDECL gmfFloodFillEnableStep(gmThread *a_thread)
 //		none
 int GM_CDECL gmfFloodFillStep(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	PathPlannerFloodFill *pPlanner = GetNavPlanner();
 	if(pPlanner)
 		pPlanner->m_PlannerFlags.SetFlag(PathPlannerFloodFill::NAVMESH_TAKESTEP);
@@ -149,7 +148,6 @@ int GM_CDECL gmfFloodFillAddFloodStart(gmThread *a_thread)
 //		none
 int GM_CDECL gmfFloodFillClearFloodStarts(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	PathPlannerFloodFill *pPlanner = GetNavPlanner();
 	if(pPlanner)
 		pPlanner->ClearFloodStarts();
@@ -169,7 +167,6 @@ int GM_CDECL gmfFloodFillClearFloodStarts(gmThread *a_thread)
 //		none
 int GM_CDECL gmfFloodFillLoadFloodStarts(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	PathPlannerFloodFill *pPlanner = GetNavPlanner();
 	if(pPlanner)
 		pPlanner->LoadFloodStarts();
@@ -189,7 +186,6 @@ int GM_CDECL gmfFloodFillLoadFloodStarts(gmThread *a_thread)
 //		none
 int GM_CDECL gmfFloodFillSaveFloodStarts(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	PathPlannerFloodFill *pPlanner = GetNavPlanner();
 	if(pPlanner)
 		pPlanner->SaveFloodStarts();

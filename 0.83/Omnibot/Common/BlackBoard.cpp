@@ -290,7 +290,6 @@ static int GM_CDECL gmfGetNumRecords(gmThread *a_thread)
 }
 static int GM_CDECL gmfRemoveByPoster(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	GM_CHECK_INT_PARAM(poster, 0);
 	GM_INT_PARAM(type, 1, bbk_All);
 	a_thread->PushInt(g_Blackboard.RemoveBBRecordByPoster(poster, type));
@@ -299,7 +298,6 @@ static int GM_CDECL gmfRemoveByPoster(gmThread *a_thread)
 
 static int GM_CDECL gmfRemoveByTarget(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	GM_CHECK_INT_PARAM(target, 0);
 	GM_INT_PARAM(type, 1, bbk_All);
 	a_thread->PushInt(g_Blackboard.RemoveBBRecordByTarget(target, type));
@@ -325,7 +323,6 @@ static int GM_CDECL gmfRecordExistsTarget(gmThread *a_thread)
 
 static int GM_CDECL gmfPrint(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	GM_INT_PARAM(type, 0, bbk_All);
 	g_Blackboard.DumpBlackBoardContentsToGame(type);
 	return GM_OK;

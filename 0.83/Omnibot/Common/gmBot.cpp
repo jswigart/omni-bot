@@ -255,8 +255,6 @@ void gmBot::DebugInfo(gmUserObject *a_object, gmMachine *a_machine, gmChildInfoC
 int gmBot::gmfGetGameEntity(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-	
 	gmVariable v;
 	v.SetEntity(native->GetGameEntity().AsInt());
 	a_thread->Push(v);
@@ -275,8 +273,6 @@ int gmBot::gmfGetGameEntity(gmThread *a_thread)
 int gmBot::gmfGetGameId(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	a_thread->PushInt(native->GetGameID());
 	return GM_OK;
 }
@@ -293,8 +289,6 @@ int gmBot::gmfGetGameId(gmThread *a_thread)
 int gmBot::gmfGetPosition(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	const Vector3f &v = native->GetPosition();
 	a_thread->PushVector(v.x, v.y, v.z);
 	return GM_OK;
@@ -312,8 +306,6 @@ int gmBot::gmfGetPosition(gmThread *a_thread)
 int gmBot::gmfGetEyePosition(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	const Vector3f &v = native->GetEyePosition();
 	a_thread->PushVector(v.x, v.y, v.z);
 	return GM_OK;
@@ -331,8 +323,6 @@ int gmBot::gmfGetEyePosition(gmThread *a_thread)
 int gmBot::gmfGetFacing(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	const Vector3f &v = native->GetFacingVector();
 	a_thread->PushVector(v.x, v.y, v.z);
 	return GM_OK;
@@ -351,8 +341,6 @@ int gmBot::gmfGetFacing(gmThread *a_thread)
 int gmBot::gmfGetVelocity(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	const Vector3f &v = native->GetVelocity();
 	a_thread->PushVector(v.x, v.y, v.z);
 	return GM_OK;
@@ -370,7 +358,6 @@ int gmBot::gmfGetVelocity(gmThread *a_thread)
 int gmBot::gmfIsStuck(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
 	GM_FLOAT_OR_INT_PARAM(stuckTime, 0, 0.5f);
 
 	bool Stuck = false;
@@ -398,8 +385,6 @@ int gmBot::gmfIsStuck(gmThread *a_thread)
 int gmBot::gmfResetStuckTime(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	native->ResetStuckTime();
 	return GM_OK;
 }
@@ -416,8 +401,6 @@ int gmBot::gmfResetStuckTime(gmThread *a_thread)
 int gmBot::gmfGetTeam(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	a_thread->PushInt(native->GetTeam());
 	return GM_OK;
 }
@@ -434,7 +417,6 @@ int gmBot::gmfGetTeam(gmThread *a_thread)
 int gmBot::gmfGetClassId(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
 	a_thread->PushInt(native->GetClass());
 	return GM_OK;
 }
@@ -589,7 +571,6 @@ int gmBot::gmfSetGoal_GetAmmo(gmThread *a_thread)
 int gmBot::gmfSetGoal_GetArmor(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
 	/*GM_FLOAT_PARAM(camptime, 0, 3.0f);
 
 	if(native->GetBrain())
@@ -608,7 +589,6 @@ int gmBot::gmfSetGoal_GetArmor(gmThread *a_thread)
 int gmBot::gmfSetGoal_GetHealth(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
 	/*GM_FLOAT_PARAM(camptime, 0, 3.0f);
 
 	if(native->GetBrain())
@@ -778,7 +758,6 @@ int gmBot::gmfGetAllAlly(gmThread *a_thread)
 int gmBot::gmfGetTarget(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
 	GameEntity geTarget = native->GetTargetingSystem()->GetCurrentTarget();
 	if(geTarget.IsValid())
 	{
@@ -805,8 +784,6 @@ int gmBot::gmfGetTarget(gmThread *a_thread)
 int gmBot::gmfGetLastTarget(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	GameEntity geTarget = native->GetTargetingSystem()->GetLastTarget();
 	if(geTarget.IsValid())
 	{
@@ -1320,8 +1297,6 @@ int gmBot::gmfGetNearestDestination(gmThread *a_thread)
 int gmBot::gmfClearWeapons(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	native->GetWeaponSystem()->ClearWeapons();
 	return GM_OK;
 }
@@ -1339,8 +1314,6 @@ int gmBot::gmfClearWeapons(gmThread *a_thread)
 int gmBot::gmfFireWeapon(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	native->GetWeaponSystem()->FireWeapon(Primary);
 	return GM_OK;
 }
@@ -1359,8 +1332,6 @@ int gmBot::gmfFireWeapon(gmThread *a_thread)
 int gmBot::gmfGetCurrentWeapon(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-	
 	a_thread->PushInt(native->GetWeaponSystem()->GetCurrentWeaponID());
 	return GM_OK;
 }
@@ -1378,8 +1349,6 @@ int gmBot::gmfGetCurrentWeapon(gmThread *a_thread)
 int gmBot::gmfGetBestWeapon(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	GameEntity ent;
 	GM_GAMEENTITY_FROM_PARAM(ent, 0, GameEntity())
 
@@ -1389,8 +1358,6 @@ int gmBot::gmfGetBestWeapon(gmThread *a_thread)
 int gmBot::gmfGetRandomWeapon(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	const int wpnId = native->GetWeaponSystem()->SelectRandomWeapon();
 	if(wpnId)
 		a_thread->PushInt(wpnId);
@@ -1934,8 +1901,6 @@ int gmBot::gmfSetEnableShooting(gmThread *a_thread)
 int gmBot::gmfReloadProfile(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	native->LoadProfile(Client::PROFILE_CUSTOM);
 	return GM_OK;
 }
@@ -2033,8 +1998,6 @@ int gmBot::gmfDumpBotTable(gmThread *a_thread)
 int gmBot::gmfCanSnipe(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	a_thread->PushInt(native->CanBotSnipe() ? 1 : 0);
 	return GM_OK;
 }
@@ -2075,7 +2038,6 @@ int gmBot::gmfGetStat(gmThread *a_thread)
 int gmBot::gmfGetHighLevelGoalName(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
 	using namespace AiState;
 	FINDSTATE(hl,HighLevel,native->GetStateRoot());
 	if(hl != NULL && hl->GetActiveState())
@@ -2089,7 +2051,6 @@ int gmBot::gmfGetHighLevelGoalName(gmThread *a_thread)
 int gmBot::gmfGetMapGoalName(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
 	using namespace AiState;
 	FINDSTATE(hl,HighLevel,native->GetStateRoot());
 	if(hl != NULL)

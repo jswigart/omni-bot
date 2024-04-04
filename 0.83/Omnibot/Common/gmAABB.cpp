@@ -114,8 +114,6 @@ void gmAABB::AsString(gmUserObject *a_object, char *a_buffer, int a_bufferLen)
 int gmAABB::gmfCenterPoint(gmThread *a_thread)
 {
 	CHECK_THIS_AABB();
-	GM_CHECK_NUM_PARAMS(0);
-	
 	Vector3f vCenter(Vector3f::ZERO);
 	pNative->CenterPoint(vCenter);
 	a_thread->PushVector(vCenter.x, vCenter.y, vCenter.z);
@@ -191,7 +189,6 @@ int gmAABB::gmfScale(gmThread *a_thread)
 //		int - true if zero, false if not
 int gmAABB::gmfIsZero(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	CHECK_THIS_AABB();
 	a_thread->PushInt(pNative->IsZero() ? 1 : 0);
 	return GM_OK;

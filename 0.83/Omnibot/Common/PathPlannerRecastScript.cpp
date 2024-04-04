@@ -121,7 +121,6 @@ int GM_CDECL gmfRecastBuildNavMesh(gmThread *a_thread)
 //		none
 int GM_CDECL gmfRecastFloodFill(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	PathPlannerRecast *pPlanner = GetRecastPlanner();
 	if(pPlanner)
 	{

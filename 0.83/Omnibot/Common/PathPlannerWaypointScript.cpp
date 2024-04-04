@@ -608,8 +608,6 @@ static int GM_CDECL gmfGetClosestWaypoint(gmThread *a_thread)
 
 static int GM_CDECL gmfCheckBlockable(gmThread* a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
-
 	PathPlannerWaypoint* pWp = GetWpPlanner();
 	if (pWp) a_thread->PushInt(pWp->CheckBlockable());
 	else a_thread->PushNull();
@@ -618,7 +616,6 @@ static int GM_CDECL gmfCheckBlockable(gmThread* a_thread)
 
 static int GM_CDECL gmfWaypointSave(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);	
 	GM_STRING_PARAM(wpname,0,0);	
 
 	PathPlannerWaypoint *obj = NULL;
@@ -632,7 +629,6 @@ static int GM_CDECL gmfWaypointSave(gmThread *a_thread)
 
 static int GM_CDECL gmfWaypointLoad(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);	
 	GM_STRING_PARAM(wpname,0,0);	
 
 	PathPlannerWaypoint *obj = NULL;

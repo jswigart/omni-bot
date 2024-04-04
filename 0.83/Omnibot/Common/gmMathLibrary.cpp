@@ -29,7 +29,6 @@
 //		float - random number 0.0 - 1.0
 static int GM_CDECL gmfUnitRandom(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	a_thread->PushFloat(Mathf::UnitRandom());	
 	return GM_OK;
 }
@@ -47,7 +46,6 @@ static int GM_CDECL gmfUnitRandom(gmThread *a_thread)
 //		float - random number -1.0 - 1.0
 static int GM_CDECL gmfSymmetricRandom(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	a_thread->PushFloat(Mathf::SymmetricRandom());	
 	return GM_OK;
 }

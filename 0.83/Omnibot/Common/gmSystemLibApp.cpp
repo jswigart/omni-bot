@@ -74,7 +74,6 @@ void gmFile::Destructor(File *_native)
 
 int gmfMount(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	// TODO:
 	return GM_OK;
 }
@@ -83,7 +82,6 @@ int gmfMount(gmThread *a_thread)
 
 int gmfUnMount(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	// TODO:
 	return GM_OK;
 }
@@ -335,7 +333,6 @@ int gmFile::gmfOpen(gmThread *a_thread)
 //		none
 int gmFile::gmfClose(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 	pNative->Close();
 	return GM_OK;
@@ -354,7 +351,6 @@ int gmFile::gmfClose(gmThread *a_thread)
 //		<int> - True if file opened, False if not.
 int gmFile::gmfIsOpen(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 	GM_THREAD_ARG->PushInt(pNative->IsOpen() ? 1 : 0);
 	return GM_OK;
@@ -393,7 +389,6 @@ int gmFile::gmfSeek(gmThread *a_thread)
 //		<int> - Location in the file.
 int gmFile::gmfTell(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 	a_thread->PushInt((obuint32)pNative->Tell());
 	return GM_OK;
@@ -412,7 +407,6 @@ int gmFile::gmfTell(gmThread *a_thread)
 //		<int> - true if end of file, false if not.
 int gmFile::gmfEndOfFile(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 	a_thread->PushInt(pNative->EndOfFile() ? 1 : 0);
 	return GM_OK;
@@ -431,7 +425,6 @@ int gmFile::gmfEndOfFile(gmThread *a_thread)
 //		<int> - size of the file, in bytes.
 int gmFile::gmfFileSize(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 	a_thread->PushInt((int)pNative->FileLength());
 	return GM_OK;
@@ -450,7 +443,6 @@ int gmFile::gmfFileSize(gmThread *a_thread)
 //		<int> - true if successful false if not.
 int gmFile::gmfFlush(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 	a_thread->PushInt(pNative->Flush() ? 1 : 0);
 	return GM_OK;
@@ -469,7 +461,6 @@ int gmFile::gmfFlush(gmThread *a_thread)
 //		<string> - Last error string.
 int gmFile::gmfGetLastError(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 	a_thread->PushNewString(pNative->GetLastError().c_str());
 	return GM_OK;
@@ -488,7 +479,6 @@ int gmFile::gmfGetLastError(gmThread *a_thread)
 //		<int> - Integer value read from file.
 int gmFile::gmfReadInt32(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 
 	obuint32 out;
@@ -513,7 +503,6 @@ int gmFile::gmfReadInt32(gmThread *a_thread)
 //		<int> - Integer value read from file.
 int gmFile::gmfReadInt16(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 
 	obuint16 out;
@@ -538,7 +527,6 @@ int gmFile::gmfReadInt16(gmThread *a_thread)
 //		<int> - Integer value read from file.
 int gmFile::gmfReadInt8(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 
 	obuint8 out;
@@ -563,7 +551,6 @@ int gmFile::gmfReadInt8(gmThread *a_thread)
 //		<float> - Float value read from file.
 int gmFile::gmfReadFloat(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 
 	float out;
@@ -588,7 +575,6 @@ int gmFile::gmfReadFloat(gmThread *a_thread)
 //		<string> - String read from file.
 int gmFile::gmfReadString(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 
 	String out;
@@ -613,7 +599,6 @@ int gmFile::gmfReadString(gmThread *a_thread)
 //		<string> - Line read from file.
 int gmFile::gmfReadLine(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	File *pNative = gmFile::GetThisObject( a_thread );
 
 	String out;

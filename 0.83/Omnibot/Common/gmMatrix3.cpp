@@ -200,7 +200,6 @@ int gmMatrix3::gmfInverseTransformVector(gmThread *a_thread)
 
 int gmMatrix3::gmfInverse(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	gmMat3Type* native = gmMatrix3::GetThisObject( a_thread );
 	Matrix3f mInv = native->Inverse();
 	gmMatrix3::PushObject(a_thread, mInv);

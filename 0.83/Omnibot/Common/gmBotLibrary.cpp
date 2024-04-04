@@ -411,7 +411,6 @@ static int GM_CDECL gmfMoveBotToAnotherTeam(gmThread *a_thread)
 //		None
 static int GM_CDECL gmfKickAll(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	StringVector tl;
 	tl.push_back("kickall");
 	CommandReciever::DispatchCommand(tl);
@@ -1352,8 +1351,6 @@ static int gmfDrawTrajectory(gmThread *a_thread)
 //		null - If no map is loaded, or there was an error.
 static int GM_CDECL gmfGetMapName(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
-
 	const char *pMapName = g_EngineFuncs->GetMapName();
 	if(pMapName)
 	{
@@ -1380,7 +1377,6 @@ static int GM_CDECL gmfGetMapName(gmThread *a_thread)
 //		<gmAABB> - Axis aligned box for the map extents.
 static int GM_CDECL gmfGetMapExtents(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	GM_GMBIND_PARAM(AABB*, gmAABB, aabb, 0, NULL);
 	AABB mapaabb;
 	g_EngineFuncs->GetMapExtents(mapaabb);
@@ -1424,7 +1420,6 @@ static int GM_CDECL gmfGetPointContents(gmThread *a_thread)
 //		int - The current time, in milliseconds (1000ms = 1 second)
 static int GM_CDECL gmfGetTime(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	a_thread->PushFloat(IGame::GetTimeSecs());
 	return GM_OK;
 }
@@ -2487,7 +2482,6 @@ static int gmfCheckEntityBoundsIntersect(gmThread *a_thread)
 //		string - current game state
 static int GM_CDECL gmfGetGameState(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	a_thread->PushNewString(InterfaceFuncs::GetGameState(InterfaceFuncs::GetGameState()));
 	return GM_OK;
 }
@@ -2503,7 +2497,6 @@ static int GM_CDECL gmfGetGameState(gmThread *a_thread)
 //		float - seconds left in game
 static int GM_CDECL gmfGetGameTimeLeft(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	a_thread->PushFloat(InterfaceFuncs::GetGameTimeLeft());
 	return GM_OK;
 }
@@ -2546,7 +2539,6 @@ static int GM_CDECL gmfExecCommandOnClient(gmThread *a_thread)
 //		<string> - Name of current game.
 static int GM_CDECL gmfGetGameName(gmThread *a_thread)
 {	
-	GM_CHECK_NUM_PARAMS(0);
 	a_thread->PushNewString(g_EngineFuncs->GetGameName());
 	return GM_OK;
 }
@@ -2561,7 +2553,6 @@ static int GM_CDECL gmfGetGameName(gmThread *a_thread)
 //		<string> - Name of current mod.
 static int GM_CDECL gmfGetModName(gmThread *a_thread)
 {	
-	GM_CHECK_NUM_PARAMS(0);
 	a_thread->PushNewString(g_EngineFuncs->GetModName());
 	return GM_OK;
 }
@@ -2576,7 +2567,6 @@ static int GM_CDECL gmfGetModName(gmThread *a_thread)
 //		<string> - Version of current mod.
 static int GM_CDECL gmfGetModVersion(gmThread *a_thread)
 {	
-	GM_CHECK_NUM_PARAMS(0);
 	a_thread->PushNewString(g_EngineFuncs->GetModVers());
 	return GM_OK;
 }
@@ -2589,8 +2579,6 @@ static int GM_CDECL gmfGetModVersion(gmThread *a_thread)
 //
 static int GM_CDECL gmfShowPaths(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
-
 	IGame *pGame = IGameManager::GetInstance()->GetGame();
 	if(pGame)
 	{
@@ -2612,7 +2600,6 @@ static int GM_CDECL gmfShowPaths(gmThread *a_thread)
 //		<float> - Current Gravity.
 static int GM_CDECL gmfGetGravity(gmThread *a_thread)
 {	
-	GM_CHECK_NUM_PARAMS(0);
 	a_thread->PushFloat(IGame::GetGravity());
 	return GM_OK;
 }
@@ -2627,7 +2614,6 @@ static int GM_CDECL gmfGetGravity(gmThread *a_thread)
 //		<int> - true if cheats enabled, false if not.
 static int GM_CDECL gmfGetCheats(gmThread *a_thread)
 {	
-	GM_CHECK_NUM_PARAMS(0);
 	a_thread->PushInt(IGame::GetCheatsEnabled());
 	return GM_OK;
 }
@@ -2662,7 +2648,6 @@ static int GM_CDECL gmfServerScriptFunction(gmThread *a_thread)
 
 static int GM_CDECL gmfGetLocalEntity(gmThread *a_thread)
 {	
-	GM_CHECK_NUM_PARAMS(0);
 	if(Utils::GetLocalEntity().IsValid())
 		a_thread->PushEntity(Utils::GetLocalEntity().AsInt());
 	else
@@ -2672,7 +2657,6 @@ static int GM_CDECL gmfGetLocalEntity(gmThread *a_thread)
 
 static int GM_CDECL gmfGetLocalPosition(gmThread *a_thread)
 {	
-	GM_CHECK_NUM_PARAMS(0);
 	Vector3f v;
 	if(Utils::GetLocalPosition(v))
 		a_thread->PushVector(v);
@@ -2683,7 +2667,6 @@ static int GM_CDECL gmfGetLocalPosition(gmThread *a_thread)
 
 static int GM_CDECL gmfGetLocalGroundPosition(gmThread *a_thread)
 {	
-	GM_CHECK_NUM_PARAMS(0);
 	Vector3f v;
 	if(Utils::GetLocalGroundPosition(v, TR_MASK_FLOODFILL))
 		a_thread->PushVector(v);
@@ -2694,7 +2677,6 @@ static int GM_CDECL gmfGetLocalGroundPosition(gmThread *a_thread)
 
 static int GM_CDECL gmfGetLocalEyePosition(gmThread *a_thread)
 {	
-	GM_CHECK_NUM_PARAMS(0);
 	Vector3f v;
 	if(Utils::GetLocalEyePosition(v))
 		a_thread->PushVector(v);
@@ -2705,7 +2687,6 @@ static int GM_CDECL gmfGetLocalEyePosition(gmThread *a_thread)
 
 static int GM_CDECL gmfGetLocalFacing(gmThread *a_thread)
 {	
-	GM_CHECK_NUM_PARAMS(0);
 	Vector3f v;
 	if(Utils::GetLocalFacing(v))
 		a_thread->PushVector(v);
@@ -2716,7 +2697,6 @@ static int GM_CDECL gmfGetLocalFacing(gmThread *a_thread)
 
 static int GM_CDECL gmfGetLocalAABB(gmThread *a_thread)
 {	
-	GM_CHECK_NUM_PARAMS(0);
 	AABB aabb;
 	if(Utils::GetLocalAABB(aabb))
 		gmAABB::PushObject(a_thread, aabb);
@@ -2727,7 +2707,6 @@ static int GM_CDECL gmfGetLocalAABB(gmThread *a_thread)
 
 static int GM_CDECL gmfGetLocalAimPosition(gmThread *a_thread)
 {	
-	GM_CHECK_NUM_PARAMS(0);
 	GM_INT_PARAM(mask,0,TR_MASK_FLOODFILL);
 	Vector3f v, n;
 	if(Utils::GetLocalAimPoint(v,&n,mask))
@@ -2739,7 +2718,6 @@ static int GM_CDECL gmfGetLocalAimPosition(gmThread *a_thread)
 
 static int GM_CDECL gmfGetLocalAimNormal(gmThread *a_thread)
 {	
-	GM_CHECK_NUM_PARAMS(0);
 	GM_INT_PARAM(mask,0,TR_MASK_FLOODFILL);
 	Vector3f v, n;
 	if(Utils::GetLocalAimPoint(v,&n,mask))
@@ -2765,7 +2743,6 @@ static int GM_CDECL gmfGetNearestNonSolid(gmThread *a_thread)
 
 static int GM_CDECL gmfGetLocalCommand(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	if(CommandReciever::m_ConsoleCommandThreadId == a_thread->GetId() 
 		|| CommandReciever::m_MapDebugPrintThreadId == a_thread->GetId())
 		a_thread->PushNewString(CommandReciever::m_ConsoleCommand.c_str());
@@ -2776,14 +2753,12 @@ static int GM_CDECL gmfGetLocalCommand(gmThread *a_thread)
 
 static int GM_CDECL gmfReloadGoalScripts(gmThread *a_thread)
 {	
-	GM_CHECK_NUM_PARAMS(0);
 	IGameManager::GetInstance()->GetGame()->ReloadGoalScripts();
 	return GM_OK;
 }
 
 static int GM_CDECL gmfAllocGoalSerialNum(gmThread *a_thread)
 {	
-	GM_CHECK_NUM_PARAMS(0);
 	a_thread->PushInt(GetMapGoalSerial());
 	return GM_OK;
 }

@@ -108,7 +108,6 @@ int GM_CDECL gmfNavMeshEnableStep(gmThread *a_thread)
 //		none
 int GM_CDECL gmfNavMeshStep(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
 	PathPlannerNavMesh *pPlanner = GetNavPlannerNM();
 	if(pPlanner)
 		pPlanner->m_PlannerFlags.SetFlag(PathPlannerNavMesh::NAVMESH_TAKESTEP);

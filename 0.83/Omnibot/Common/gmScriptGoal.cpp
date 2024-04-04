@@ -335,7 +335,6 @@ int gmScriptGoal::gmfLimitTo(gmThread *a_thread)
 int gmScriptGoal::gmfLimitToNoTarget(gmThread *a_thread)
 {
 	CHECK_THIS_SGOAL();
-	GM_CHECK_NUM_PARAMS(0);
 	if(native)
 	{
 		// special case
@@ -459,8 +458,6 @@ int gmScriptGoal::gmfLimitToTargetNoEntityFlag(gmThread *a_thread)
 int gmScriptGoal::gmfFinished(gmThread *a_thread)
 {
 	CHECK_THIS_SGOAL();
-	GM_CHECK_NUM_PARAMS(0);
-
 	if(native)
 		native->SetFinished();
 	return GM_SYS_KILL; 
@@ -469,8 +466,6 @@ int gmScriptGoal::gmfFinished(gmThread *a_thread)
 int gmScriptGoal::gmfDidPathSucceed(gmThread *a_thread)
 {
 	CHECK_THIS_SGOAL();
-	GM_CHECK_NUM_PARAMS(0);
-
 	a_thread->PushInt(native->DidPathSucceed() ? 1 : 0);
 	return GM_SYS_KILL; 
 }
@@ -478,8 +473,6 @@ int gmScriptGoal::gmfDidPathSucceed(gmThread *a_thread)
 int gmScriptGoal::gmfDidPathFail(gmThread *a_thread)
 {
 	CHECK_THIS_SGOAL();
-	GM_CHECK_NUM_PARAMS(0);
-
 	a_thread->PushInt(native->DidPathFail() ? 1 : 0);
 	return GM_SYS_KILL; 
 }
@@ -487,8 +480,6 @@ int gmScriptGoal::gmfDidPathFail(gmThread *a_thread)
 int gmScriptGoal::gmfIsActive(gmThread *a_thread)
 {
 	CHECK_THIS_SGOAL();
-	GM_CHECK_NUM_PARAMS(0);
-
 	a_thread->PushInt(native->IsActive() ? 1 : 0);
 	return GM_OK; 
 }

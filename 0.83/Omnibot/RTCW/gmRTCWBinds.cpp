@@ -145,8 +145,6 @@ static int GM_CDECL gmfBotPickSecondaryWeapon(gmThread *a_thread)
 static int GM_CDECL gmfGetReinforceTime(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-	
 	a_thread->PushFloat(InterfaceFuncs::GetReinforceTime(native));
 	return GM_OK;
 }
@@ -216,8 +214,6 @@ static int GM_CDECL gmfChangeSpawnPoint(gmThread *a_thread)
 static int GM_CDECL gmfCanSnipe(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	a_thread->PushInt(InterfaceFuncs::CanSnipe(native) ? 1 : 0);
 	return GM_OK;
 }
@@ -278,8 +274,6 @@ static int GM_CDECL gmfSnipe(gmThread *a_thread)
 //		int - game type
 static int GM_CDECL gmfGetGameType(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
-	
 	a_thread->PushInt(InterfaceFuncs::GetGameType());
 	return GM_OK;
 }
@@ -402,8 +396,6 @@ static int GM_CDECL gmfGetCvar(gmThread *a_thread)
 static int GM_CDECL gmfGetSpawnPoint(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-	
 	a_thread->PushInt(InterfaceFuncs::GetSpawnPoint(native));
 	return GM_OK;
 }

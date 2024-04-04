@@ -83,8 +83,6 @@ static int GM_CDECL gmfBotPickSecondaryWeapon(gmThread *a_thread)
 static int GM_CDECL gmfGetReinforceTime(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-	
 	a_thread->PushFloat(InterfaceFuncs::GetReinforceTime(native));
 	return GM_OK;
 }
@@ -141,7 +139,6 @@ static int GM_CDECL gmfChangeSpawnPoint(gmThread *a_thread)
 static int GM_CDECL gmfFireteamCreate(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
 	InterfaceFuncs::FireTeamCreate(native);
 	return GM_OK;
 }
@@ -149,7 +146,6 @@ static int GM_CDECL gmfFireteamCreate(gmThread *a_thread)
 static int GM_CDECL gmfFireteamDisband(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
 	InterfaceFuncs::FireTeamDisband(native);
 	return GM_OK;
 }
@@ -157,7 +153,6 @@ static int GM_CDECL gmfFireteamDisband(gmThread *a_thread)
 static int GM_CDECL gmfFireTeamLeave(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
 	InterfaceFuncs::FireTeamLeave(native);
 	return GM_OK;
 }
@@ -214,8 +209,6 @@ static int GM_CDECL gmfFireTeamPropose(gmThread *a_thread)
 static int GM_CDECL gmfFireTeamGetInfo(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	ET_FireTeamInfo ft;
 	if(InterfaceFuncs::FireTeamGetInfo(native, ft) && ft.m_InFireTeam)
 	{
@@ -248,8 +241,6 @@ static int GM_CDECL gmfFireTeamGetInfo(gmThread *a_thread)
 static int GM_CDECL gmfIsInFireTeam(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
-
 	ET_FireTeamInfo ft;
 	if(InterfaceFuncs::FireTeamGetInfo(native, ft) && ft.m_InFireTeam)
 		a_thread->PushInt(ft.m_InFireTeam?1:0);
@@ -262,7 +253,6 @@ static int GM_CDECL gmfIsInFireTeam(gmThread *a_thread)
 static int GM_CDECL gmfVoteYes(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
 	native->GameCommand("vote yes");
 	return GM_OK;
 }
@@ -270,7 +260,6 @@ static int GM_CDECL gmfVoteYes(gmThread *a_thread)
 static int GM_CDECL gmfVoteNo(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(0);
 	native->GameCommand("vote no");
 	return GM_OK;
 }
@@ -323,8 +312,6 @@ int gmfSayFireTeam(gmThread *a_thread)
 //		int - game type
 static int GM_CDECL gmfGetGameType(gmThread *a_thread)
 {
-	GM_CHECK_NUM_PARAMS(0);
-	
 	a_thread->PushInt(InterfaceFuncs::GetGameType());
 	return GM_OK;
 }
