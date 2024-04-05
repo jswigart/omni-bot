@@ -1150,14 +1150,14 @@ void MapGoal::RenderDefault()
 		if(GetRadius() != 0.f)
 			Utils::DrawRadius(GetPosition(), GetRadius(), COLOR::ORANGE, 2.f);
 		else
-			Utils::DrawLine(GetPosition(), GetPosition() + Vector3f::UNIT_Z * 32.f, COLOR::ORANGE, 2.f);
+			Utils::DrawLine(GetPosition(), GetPosition().AddZ(32), COLOR::ORANGE, 2.f);
 	}
 
 	// use pts
 	for(int i = 0; i < GetNumUsePoints(); ++i)
 	{
 		Vector3f vUsePt = GetWorldUsePoint(i);
-		Utils::DrawLine(vUsePt, vUsePt + Vector3f::UNIT_Z * 32.f, COLOR::GREEN, 2.f);
+		Utils::DrawLine(vUsePt, vUsePt.AddZ(32), COLOR::GREEN, 2.f);
 	}
 
 	if(bf.CheckFlag(DrawDisabled))
@@ -1482,7 +1482,7 @@ void MapGoal::CheckForPersistentProperty()
 //	if(GetRadius() != 0.f)
 //		Utils::DrawRadius(GetPosition(), GetRadius(), _color, _duration);
 //	else
-//		Utils::DrawLine(GetPosition(), GetPosition() + Vector3f::UNIT_Z * 32.f, _color, _duration);
+//		Utils::DrawLine(GetPosition(), GetPosition().AddZ(32), _color, _duration);
 //}
 //
 //void MapGoal::DrawUsePoints(int _color, float _duration)
@@ -1490,7 +1490,7 @@ void MapGoal::CheckForPersistentProperty()
 //	for(int i = 0; i < GetNumUsePoints(); ++i)
 //	{
 //		Vector3f vUsePt = GetWorldUsePoint(i);
-//		Utils::DrawLine(vUsePt, vUsePt + Vector3f::UNIT_Z * 32.f, _color, _duration);
+//		Utils::DrawLine(vUsePt, vUsePt.AddZ(32), _color, _duration);
 //	}
 //}
 void MapGoal::DrawRoute(int _color, float _duration)

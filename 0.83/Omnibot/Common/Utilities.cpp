@@ -437,20 +437,7 @@ namespace Utils
 
 	bool GetLocalGroundPosition(Vector3f &_pos, int _tracemask)
 	{
-		obTraceResult tr;
-		Vector3f vPos;
-		if(GetLocalEyePosition(vPos))
-		{
-			EngineFuncs::TraceLine(tr, vPos, vPos - Vector3f::UNIT_Z * 4096.f, 
-				NULL, _tracemask, GetLocalGameId(), False);
-
-			if(tr.m_Fraction < 1.f)
-			{
-				_pos = tr.m_Endpos;
-				return true;
-			}
-		}
-		return false;
+		return GetLocalGroundPosition(_pos, NULL, _tracemask);
 	}
 
 	bool GetLocalGroundPosition(Vector3f &_pos, Vector3f *_normal, int _tracemask /*= TR_MASK_FLOODFILL*/)
@@ -459,7 +446,7 @@ namespace Utils
 		Vector3f vPos;
 		if(GetLocalEyePosition(vPos))
 		{
-			EngineFuncs::TraceLine(tr, vPos, vPos - Vector3f::UNIT_Z * 4096.f, 
+			EngineFuncs::TraceLine(tr, vPos, vPos.AddZ(-4096), 
 				NULL, _tracemask, GetLocalGameId(), False);
 
 			if(tr.m_Fraction < 1.f)
@@ -589,13 +576,13 @@ namespace Utils
 		if(_list.size()>1)
 		{
 			if(_vertheight > 0.f)
-				DrawLine(_list[0], _list[0] + Vector3f::UNIT_Z * _vertheight, _vertcolor, _time);
+				DrawLine(_list[0], _list[0].AddZ(_vertheight), _vertcolor, _time);
 			for(obuint32 i = 1; i < _list.size(); ++i)
 			{
 				Utils::DrawLine(_list[i-1], _list[i], _color, _time);
 
 				if(_vertheight > 0.f)
-					DrawLine(_list[i], _list[i] + Vector3f::UNIT_Z * _vertheight, _vertcolor, _time);
+					DrawLine(_list[i], _list[i].AddZ(_vertheight), _vertcolor, _time);
 			}
 			if(_closed)
 				DrawLine(_list.back(), _list.front(), _color, _time);
@@ -607,13 +594,13 @@ namespace Utils
 		if(_indices.size()>1)
 		{
 			if(_vertheight > 0.f)
-				DrawLine(_vertices[_indices[0]], _vertices[_indices[0]] + Vector3f::UNIT_Z * _vertheight, _vertcolor, _time);
+				DrawLine(_vertices[_indices[0]], _vertices[_indices[0]].AddZ(_vertheight), _vertcolor, _time);
 			for(obuint32 i = 1; i < _indices.size(); ++i)
 			{
 				Utils::DrawLine(_vertices[_indices[i-1]], _vertices[_indices[i]], _color, _time);
 
 				if(_vertheight > 0.f)
-					DrawLine(_vertices[_indices[i]], _vertices[_indices[i]] + Vector3f::UNIT_Z * _vertheight, _vertcolor, _time);
+					DrawLine(_vertices[_indices[i]], _vertices[_indices[i]].AddZ(_vertheight), _vertcolor, _time);
 			}
 			if(_closed)
 				DrawLine(_vertices[_indices.front()], _vertices[_indices.back()], _color, _time);

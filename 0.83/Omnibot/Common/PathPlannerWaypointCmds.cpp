@@ -393,12 +393,12 @@ void PathPlannerWaypoint::cmdWaypointAutoRadius(const StringVector &_args)
 		// First get a point down from this waypoint slightly above the ground.
 		Vector3f vStartPosition = (*it)->GetPosition();
 
-		Vector3f vEndPosition = vStartPosition + (-Vector3f::UNIT_Z * 1000.0f);
+		Vector3f vEndPosition = vStartPosition.AddZ(-1000);
 		obTraceResult tr;
 		EngineFuncs::TraceLine(tr, vStartPosition, vEndPosition, NULL, TR_MASK_SOLID, 0, False);	
 		if(tr.m_Fraction < 1.0)
 		{
-			vStartPosition = Vector3f(tr.m_Endpos) + Vector3f::UNIT_Z * fTestHeight;
+			vStartPosition = Vector3f(tr.m_Endpos).AddZ(fTestHeight);
 		}
 
 		float fClosestHit = fMaxRadius;
@@ -1931,11 +1931,11 @@ void PathPlannerWaypoint::cmdAutoBuildFeatures(const StringVector &_args)
 		}
 		
 		//////////////////////////////////////////////////////////////////////////
-		Utils::DrawLine(vPos, vPos+Vector3f::UNIT_Z * 32.f, COLOR::GREEN, fTime);
+		Utils::DrawLine(vPos, vPos.AddZ(32), COLOR::GREEN, fTime);
 		if(vPos != vTarget)
 		{
 			Utils::DrawLine(vPos, vTarget, COLOR::MAGENTA, fTime);
-			Utils::DrawLine(vTarget, vTarget+Vector3f::UNIT_Z * 32.f, COLOR::RED, fTime);
+			Utils::DrawLine(vTarget, vTarget.AddZ(32), COLOR::RED, fTime);
 		}
 		if(!features[i].m_Bounds.IsZero())
 			Utils::OutlineAABB(features[i].m_Bounds, COLOR::GREEN, fTime);
@@ -2043,13 +2043,10 @@ void PathPlannerWaypoint::cmdWaypointSplit(const StringVector &_args)
 		return;
 	}
 	
-	Vector3f p0 = wp0->GetPosition(); 
-	Vector3f p1 = wp1->GetPosition(); 
-	
 	const float fMid = (g_fTopWaypointOffset + g_fBottomWaypointOffset) / 2;
-	p0 += Vector3f(0.f,0.f,fMid);
-	p1 += Vector3f(0.f,0.f,fMid);
-
+	Vector3f p0 = wp0->GetPosition().AddZ(fMid); 
+	Vector3f p1 = wp1->GetPosition().AddZ(fMid); 
+	
 	// find point on connection which is near player
 	Vector3f d = p1 - p0;
 	p = (p-p1).Dot(d) / d.SquaredLength() * d + p1;
@@ -2112,8 +2109,6 @@ void PathPlannerWaypoint::cmdWaypointGround(const StringVector &_args)
 	if(!m_PlannerFlags.CheckFlag(NAV_VIEW))
 		return;
 
-	const float fWpHeight = g_fTopWaypointOffset - g_fBottomWaypointOffset;
-
 	/*const char *strUsage[] = 
 	{ 
 		"waypoint_ground",
@@ -2129,7 +2124,7 @@ void PathPlannerWaypoint::cmdWaypointGround(const StringVector &_args)
 		if(w->GetNavigationFlags() & NO_GROUND_FLAGS)
 			continue;
 
-		Vector3f wpmid = w->GetPosition() + Vector3f(0.f,0.f,g_fBottomWaypointOffset+fWpHeight*0.5f);
+		Vector3f wpmid = w->GetPosition().AddZ((g_fTopWaypointOffset + g_fBottomWaypointOffset)/2);
 
 		Vector3f np;
 		if(GroundPosition(np,wpmid,true))

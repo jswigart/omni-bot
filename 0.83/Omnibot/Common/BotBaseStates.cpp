@@ -1789,10 +1789,8 @@ namespace AiState
 
 		// Use a ray the size of a waypoint offset down by half a waypoint height.
 
-		Vector3f pos1 = _pos + Vector3f(0.f,0.f,g_fTopWaypointOffset);
-		pos1.z -= (fWpHeight * 0.5f);
-		Vector3f pos2 = pos1;
-		pos2.z -= fWpHeight;
+		Vector3f pos1 = _pos.AddZ(g_fTopWaypointOffset - fWpHeight * 0.5f);
+		Vector3f pos2 = pos1.AddZ(-fWpHeight);
 		
 		const bool bMover = InterfaceFuncs::IsMoverAt(pos1,pos2);
 
@@ -1861,20 +1859,10 @@ namespace AiState
 		if(DebugDrawingEnabled())
 		{
 			// Line Ray
-			Utils::DrawLine(vStartPos, vEndPos, 
-				bHit ? COLOR::RED : COLOR::GREEN, 2.0f);
-
-			Vector3f vBottomStartLine(vStartPos), vBottomEndLine(vEndPos);
-			vBottomStartLine.z += localAABB.m_Mins[2];
-			vBottomEndLine.z += localAABB.m_Mins[2];
-			Utils::DrawLine(vBottomStartLine, vBottomEndLine, 
-				bHit ? COLOR::RED : COLOR::GREEN, 2.0f);
-
-			Vector3f vTopStartLine(vStartPos), vTopEndLine(vEndPos);
-			vTopStartLine.z += localAABB.m_Maxs[2];
-			vTopEndLine.z += localAABB.m_Maxs[2];
-			Utils::DrawLine(vTopStartLine, vTopEndLine, 
-				bHit ? COLOR::RED : COLOR::GREEN, 2.0f);
+			obColor color = bHit ? COLOR::RED : COLOR::GREEN;
+			Utils::DrawLine(vStartPos, vEndPos, color, 2.0f);
+			Utils::DrawLine(vStartPos.AddZ(localAABB.m_Mins[2]), vEndPos.AddZ(localAABB.m_Mins[2]), color, 2.0f);
+			Utils::DrawLine(vStartPos.AddZ(localAABB.m_Maxs[2]), vEndPos.AddZ(localAABB.m_Maxs[2]), color, 2.0f);
 		}
 	}
 
@@ -2761,8 +2749,8 @@ namespace AiState
 
 		obTraceResult tr;
 		EngineFuncs::TraceLine(tr, 
-			vPos + Vector3f(0.f,0.f,START_OFFSET),
-			vPos + Vector3f(0.f,0.f,END_OFFSET),
+			vPos.AddZ(START_OFFSET),
+			vPos.AddZ(END_OFFSET),
 			&bounds,
 			TR_MASK_FLOODFILL,
 			-1, 
@@ -3186,7 +3174,7 @@ namespace AiState
 					if(node.Connections[d].Destination)
 					{						
 						Vector3f vNeighbor = _GetNodePosition(*node.Connections[d].Destination);
-						Utils::DrawLine(vNodePos+ Vector3f(0.f,0.f,8.f), vNeighbor, nodeCol, RENDER_TIME);
+						Utils::DrawLine(vNodePos.AddZ(8), vNeighbor, nodeCol, RENDER_TIME);
 
 						const float fDist = Length(vNodePos, vNeighbor);
 						if(fDist > 128.f)
@@ -3217,8 +3205,8 @@ namespace AiState
 									vNeighborPos.x += (Radius*2.f) * Offset[j][0];
 									vNeighborPos.y += (Radius*2.f) * Offset[j][1];
 									Utils::DrawLine(
-										vNodePos2 + Vector3f(0.f,0.f,32.f),
-										vNeighborPos + Vector3f(0.f,0.f,32.f),
+										vNodePos2.AddZ(32),
+										vNeighborPos.AddZ(32),
 										COLOR::BLUE,
 										RENDER_TIME);
 								}

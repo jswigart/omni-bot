@@ -176,7 +176,7 @@ void PathPlannerWaypoint::UpdateSelectedWpRender()
 			if(!flagString.empty())
 			{
 				Utils::PrintText(
-					pWaypoint->GetPosition() + Vector3f::UNIT_Z * g_fWaypointTextOffset,
+					pWaypoint->GetPosition().AddZ(g_fWaypointTextOffset),
 					COLOR::WHITE,
 					g_fWaypointTextDuration,
 					flagString.c_str());
@@ -481,8 +481,8 @@ void PathPlannerWaypoint::Update()
 			if(IsViewOn())
 			{
 				Utils::DrawLine(
-					(*it).first->GetPosition() + Vector3f(0.f, 0.f, g_fBlockablePathOffset),
-					(*it).second->m_Connection->GetPosition() + Vector3f(0.f, 0.f, g_fBlockablePathOffset),
+					(*it).first->GetPosition().AddZ(g_fBlockablePathOffset),
+					(*it).second->m_Connection->GetPosition().AddZ(g_fBlockablePathOffset),
 					((*it).second->m_ConnectionFlags & F_LNK_CLOSED) ? g_BlockableBlocked : g_BlockableOpen,
 					(float)m_BlockableRegulator->GetInterval() / 1000.f);
 			}
@@ -1855,13 +1855,8 @@ Vector3f PathPlannerWaypoint::GetRandomDestination(Client *_client, const Vector
 	if(!reachableWps.empty())
 	{
 		int ix = rand() % (int)reachableWps.size();
-		Waypoint *pWp = reachableWps[ix];
-
-		const float fWpHeight = g_fTopWaypointOffset-g_fBottomWaypointOffset;
-		const float fWpHalfHeight = fWpHeight * g_fPathLevelOffset;
-
-		dest = pWp->GetPosition();
-		dest.z += g_fBottomWaypointOffset + fWpHalfHeight;
+		const float offset = g_fBottomWaypointOffset + (g_fTopWaypointOffset-g_fBottomWaypointOffset) * g_fPathLevelOffset;
+		dest = reachableWps[ix]->GetPosition().AddZ(offset);
 	}
 	return dest;
 }
@@ -1877,16 +1872,14 @@ void PathPlannerWaypoint::RegisterGameGoals()
 
 void PathPlannerWaypoint::GetPath(Path &_path, int _smoothiterations)
 {
-	const float fWpHeight = g_fTopWaypointOffset-g_fBottomWaypointOffset;
-	const float fWpHalfHeight = fWpHeight * g_fPathLevelOffset;
+	const float offset = g_fBottomWaypointOffset + (g_fTopWaypointOffset-g_fBottomWaypointOffset) * g_fPathLevelOffset;
 	
 	bool bFirst = true;
 	while(!m_Solution.empty())
 	{
 		// Center the waypoint position according to offsets.
 		Waypoint *pWp = m_Solution.back();
-		Vector3f vWpPos = pWp->GetPosition();
-		vWpPos.z += g_fBottomWaypointOffset + fWpHalfHeight;
+		Vector3f vWpPos = pWp->GetPosition().AddZ(offset);
 
 		if(bFirst)
 		{
@@ -1897,8 +1890,7 @@ void PathPlannerWaypoint::GetPath(Path &_path, int _smoothiterations)
 				if(m_Client && !pWp->OnPathThrough())
 				{
 					Waypoint *pWp2 = m_Solution[m_Solution.size()-2];
-					Vector3f vNextWpPos = pWp2->GetPosition();
-					vNextWpPos.z += g_fBottomWaypointOffset + fWpHalfHeight;
+					Vector3f vNextWpPos = pWp2->GetPosition().AddZ(offset);
 					Vector3f vClosest;
 					float t = Utils::ClosestPtOnLine(vWpPos, vNextWpPos, m_Client->GetPosition(), vClosest);
 					if(t > 0.f) //bot is near connection between the first and second waypoint
@@ -1947,17 +1939,16 @@ void PathPlannerWaypoint::RunPathQuery(const PathQuery &_qry)
 bool PathPlannerWaypoint::GroundPosition(Vector3f &out, const Vector3f &p, bool offsetforwp)
 {
 	obTraceResult tr;
-	EngineFuncs::TraceLine(tr,p+Vector3f(0.f,0.f,32.f),p+Vector3f(0.f,0.f,-2048.f),NULL,TR_MASK_FLOODFILL,-1,False);
-	out = Vector3f(tr.m_Endpos) - Vector3f(0.f,0.f,offsetforwp?g_fBottomWaypointOffset:0.f);
+	EngineFuncs::TraceLine(tr,p.AddZ(32),p.AddZ(-2048),NULL,TR_MASK_FLOODFILL,-1,False);
+	out = Vector3f(tr.m_Endpos).AddZ(offsetforwp ? -g_fBottomWaypointOffset : 0);
 	return tr.m_Fraction < 1.f && !tr.m_StartSolid;
 }
 
 void PathPlannerWaypoint::SliceLink(Waypoint *wp0, Waypoint *wp1, float _maxlen)
 {
-	const float fWpHeight = g_fTopWaypointOffset - g_fBottomWaypointOffset;
-
-	Vector3f wp0mid = wp0->GetPosition() + Vector3f(0.f,0.f,g_fBottomWaypointOffset+fWpHeight*0.5f);
-	Vector3f wp1mid = wp1->GetPosition() + Vector3f(0.f,0.f,g_fBottomWaypointOffset+fWpHeight*0.5f);
+	const float mid = (g_fTopWaypointOffset + g_fBottomWaypointOffset)/2;
+	Vector3f wp0mid = wp0->GetPosition().AddZ(mid);
+	Vector3f wp1mid = wp1->GetPosition().AddZ(mid);
 
 	float fLinkLen = Length(wp0mid, wp1mid);
 
@@ -2114,10 +2105,7 @@ void PathPlannerWaypoint::RemoveEntityConnection(GameEntity _ent)
 
 Vector3f PathPlannerWaypoint::GetDisplayPosition(const Vector3f &_pos)
 {
-	Vector3f dp = _pos;
-	const float fWpHeight = g_fTopWaypointOffset - g_fBottomWaypointOffset;
-	dp.z += g_fBottomWaypointOffset + (fWpHeight*0.5f);
-	return dp;
+	return _pos.AddZ((g_fTopWaypointOffset + g_fBottomWaypointOffset)/2);
 }
 
 void PathPlannerWaypoint::_FindAllReachable(Client *_client, const Vector3f &_pos, const NavFlags &_team, WaypointList & reachable) {

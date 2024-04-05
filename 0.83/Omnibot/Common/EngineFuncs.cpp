@@ -168,8 +168,8 @@ namespace EngineFuncs
 
 			obTraceResult tr;
 			EngineFuncs::TraceLine(tr, 
-				_pos + Vector3f(0.f, 0.f, _offset), 
-				_pos - Vector3f::UNIT_Z * 2048.f,
+				_pos.AddZ(_offset), 
+				_pos.AddZ(-2048.f),
 				NULL,
 				TR_MASK_FLOODFILL, -1, False);
 			if(tr.m_Fraction < 1.f)
