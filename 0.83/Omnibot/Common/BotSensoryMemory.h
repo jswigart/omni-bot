@@ -67,7 +67,7 @@ namespace AiState
 		enum Type { EntAny, EntEnemy, EntAlly };
 
 		// typedef: MemoryMap
-		//	stdext::hash_map of entities to their memory record.
+		//	map of entities to their memory record.
 		typedef stdext::unordered_map<GameEntity, MemoryRecord> MemoryMap;
 
 		// function: UpdateWithSoundSource

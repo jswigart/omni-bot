@@ -219,10 +219,10 @@ private:
 
 #ifdef WIN32
 	typedef stdext::hash_compare<int> HashMapCompare;
-	typedef stdext::hash_map<int, PlanNode*, HashMapCompare/*, HashMapAllocator*/ > NavHashMap;
+	typedef stdext::unordered_map<int, PlanNode*, HashMapCompare/*, HashMapAllocator*/ > NavHashMap;
 #else
 	typedef stdext::hash<int> HashMapCompare;
-	typedef stdext::hash_map<int, PlanNode*, HashMapCompare, stdext::equal_to<int>/*, HashMapAllocator*/ > NavHashMap;
+	typedef stdext::unordered_map<int, PlanNode*, HashMapCompare, stdext::equal_to<int>/*, HashMapAllocator*/ > NavHashMap;
 #endif
 	NodeList			m_OpenList;
 	NodeList			m_Solution;
