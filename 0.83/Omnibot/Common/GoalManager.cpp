@@ -905,12 +905,7 @@ bool GoalManager::Load(const String &_map, ErrorObj &_err)
 	pMachine->GetGlobals()->Set(pMachine,MapGoalTable,gmVariable::s_null);
 	if(ScriptManager::GetInstance()->ExecuteFile(script, ThreadId))
 	{
-		
-		const char* dir = PHYSFS_getRealDir(script.c_str());
-		if(dir) {
-			const char* nav = strstr(dir, "incomplete_navs");
-			if(nav) m_NavDir = nav;
-		}
+		PathPlannerWaypoint::SetNavDir(m_NavDir, script.c_str());
 
 		//////////////////////////////////////////////////////////////////////////
 		// remove old goals.

@@ -297,7 +297,7 @@ fs::path FileSystem::GetRealPath(const String &_file)
 	try
 	{
 		fs::path filepath(_file);
-		return GetRealDir(_file) / filepath.leaf();
+		return GetRealDir(_file) / filepath.filename();
 	}
 	catch(const std::exception & ex)
 	{

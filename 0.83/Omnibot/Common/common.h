@@ -120,7 +120,6 @@ namespace stdext
 #pragma warning( disable: 4265 )
 #endif //_WIN32
 
-#include <boost/filesystem/convenience.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/static_assert.hpp>

@@ -1212,6 +1212,19 @@ bool PathPlannerWaypoint::Load(const String &_mapname, bool _dl)
 	return false;
 }
 
+void PathPlannerWaypoint::SetNavDir(String &navDir, const char *_file)
+{
+	const char* dir = PHYSFS_getRealDir(_file);
+	if (dir) {
+		const char* nav = strstr(dir, "incomplete_navs");
+		if(nav)
+		{
+			navDir = nav;
+			if(navDir.size() > 15 && navDir[15] == '\\') navDir[15] = '/';
+		}
+	}
+}
+
 bool PathPlannerWaypoint::LoadFromFile(const String &_file)
 {
 	Unload();
@@ -1224,11 +1237,7 @@ bool PathPlannerWaypoint::LoadFromFile(const String &_file)
 	if(!InFile.IsOpen())
 		return false;
 
-	const char* dir = PHYSFS_getRealDir(_file.c_str());
-	if (dir) {
-		const char* nav = strstr(dir, "incomplete_navs");
-		if (nav) m_NavDir = nav;
-	}
+	SetNavDir(m_NavDir, _file.c_str());
 
 	// Read the waypoint header.
 	memset(&m_WaypointHeader, 0, sizeof(m_WaypointHeader));

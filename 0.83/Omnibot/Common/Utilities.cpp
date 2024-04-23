@@ -300,11 +300,11 @@ namespace Utils
 		try
 		{
 			// Look for JUST the file in the current folder first.
-			if(fs::exists(_file.leaf()))
-				return _file.leaf();
+			if(fs::exists(_file.filename()))
+				return _file.filename();
 
 			// Look for the file using the full provided path, if it differs from just the filename
-			if((_file.string() != _file.leaf()) && fs::exists(_file))
+			if((_file.string() != _file.filename()) && fs::exists(_file))
 				return _file;
 
 			// Look in the system path for the file.
@@ -321,11 +321,11 @@ namespace Utils
 					try
 					{
 						// search for the just the file or the whole path
-						fs::path checkPath = fs::path(*it) / fs::path(_file.leaf());
+						fs::path checkPath = fs::path(*it) / fs::path(_file.filename());
 						if(fs::exists(checkPath) && !fs::is_directory(checkPath))
 							return checkPath;
 
-						if (_file.string() != _file.leaf())
+						if (_file.string() != _file.filename())
 						{
 							checkPath = fs::path(*it) / fs::path(_file);
 							if(fs::exists(checkPath) && !fs::is_directory(checkPath))
@@ -403,13 +403,13 @@ namespace Utils
 			if(fs::exists(pathOverride) && !fs::is_directory(pathOverride))
 			{
 				basePath = fs::path(pPathOverride);
-				basePath = basePath.branch_path();
+				basePath = basePath.parent_path();
 			}
 
 			if(basePath.empty())
 			{
-				basePath = Utils::FindFile(pathOverride.leaf());
-				basePath = basePath.branch_path();
+				basePath = Utils::FindFile(pathOverride.filename());
+				basePath = basePath.parent_path();
 			}
 		}
 		catch(const std::exception & ex)

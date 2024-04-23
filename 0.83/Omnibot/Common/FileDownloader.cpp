@@ -6,11 +6,11 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#ifdef ENABLE_FILE_DOWNLOADER
+
 #include "PrecompCommon.h"
 #include "FileDownloader.h"
 #include "NavigationManager.h"
-
-#ifdef ENABLE_FILE_DOWNLOADER
 
 #include <boost/asio.hpp>
 using boost::asio::ip::tcp;
@@ -419,7 +419,11 @@ void FileDownloader::UpdateAllWaypoints(bool _getnew)
 	FileSystem::FindAllFiles("nav/", navFiles, ".*.way");
 	for(obuint32 i = 0; i < navFiles.size(); ++i)
 	{
-		const String &mapname = fs::basename(navFiles[i]);
+		const String &mapname = navFiles[i].stem()
+#if BOOST_FILESYSTEM_VERSION > 2
+			.string()
+#endif
+		;
 		maplist.push_back(mapname);
 	}
 	g_MasterThreadGroup.create_thread(AsIOThread(maplist,gGameAbbrev,gNavFileVersion));

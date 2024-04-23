@@ -116,6 +116,7 @@ public:
 	bool Load(const String &_mapname, bool _dl = true);
 	bool Save(const String &_mapname);
 	void Unload();
+	static void SetNavDir(String &navDir, const char *_file);
 
 	void GetPath(Path &_path, int _smoothiterations);
 

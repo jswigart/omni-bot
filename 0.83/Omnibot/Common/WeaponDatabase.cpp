@@ -104,7 +104,7 @@ void WeaponDatabase::LoadWeaponDefinitions(bool _clearall)
 	for(; cIt != cItEnd; ++cIt)
 	{
 		// skip the default weapon script, we just use that for initializing other scripts.
-		if((*cIt).leaf() == "weapon_defaults.gm")
+		if((*cIt).filename() == "weapon_defaults.gm")
 			continue;
 
 		WeaponPtr wpn(new Weapon(0, m_DefaultWeapon.get()));
