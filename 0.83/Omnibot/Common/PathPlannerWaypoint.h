@@ -103,8 +103,6 @@ public:
 	Waypoint *GetWaypointByGUID(obuint32 _uid) const;
 	Waypoint *_GetClosestWaypoint(const Vector3f &_pos, const NavFlags _team, const int _options, int *_index = NULL) const;
 
-	void RunPathQuery(const PathQuery &_qry);
-
 	Vector3f GetRandomDestination(Client *_client, const Vector3f &_start, const NavFlags _team);
 
 	void PlanPathToGoal(Client *_client, const Vector3f &_start, const Vector3f &_goal, const NavFlags _team);

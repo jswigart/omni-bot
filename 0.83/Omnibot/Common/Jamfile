@@ -40,7 +40,6 @@ SOURCES = [ glob ../dependencies/gmscriptex/gmsrc_ex/src/gm/*.cpp ]
 		  [ glob ../dependencies/pcre-8.10/*.c ] 
 		  [ glob ../dependencies/pcre-8.10/*.cpp ] 		  
 #		  [ glob ../dependencies/sqlite3/*.c ]
-		  [ glob ObstacleManager.cpp ]
 #		  [ glob RecastInterfaces.cpp ]
 		  [ glob BatchBuild.cpp ] 
 		;

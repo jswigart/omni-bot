@@ -31,9 +31,6 @@
 
 #include "FilterClosest.h"
 #include "FilterAllType.h"
-#include "FilterMostHurt.h"
-
-#include "ObstacleManager.h"
 
 #include "gmCall.h"
 

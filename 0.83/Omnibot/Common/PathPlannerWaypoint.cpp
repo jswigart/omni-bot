@@ -1941,10 +1941,6 @@ obuint32 PathPlannerWaypoint::SelectWaypoints(const AABB &_box)
 	return iNumSelected;
 }
 
-void PathPlannerWaypoint::RunPathQuery(const PathQuery &_qry)
-{
-}
-
 bool PathPlannerWaypoint::GroundPosition(Vector3f &out, const Vector3f &p, bool offsetforwp)
 {
 	obTraceResult tr;

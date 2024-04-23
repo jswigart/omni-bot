@@ -661,7 +661,7 @@ void IGame::UpdateGame()
 		m_StateRoot->RootUpdate();
 	}
 
-	obstacleManager.Update();
+	//obstacleManager.Update();
 
 	// This is called often to update the state of the bots and perform their "thinking"
 	for(int i = 0; i < Constants::MAX_PLAYERS; ++i)
@@ -812,10 +812,10 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 					break;
 				}
 
-				if(m->m_EntityCategory.CheckFlag(ENT_CAT_OBSTACLE))
-				{
-					obstacleManager.AddObstacle( m->m_Entity );
-				}
+				//if(m->m_EntityCategory.CheckFlag(ENT_CAT_OBSTACLE))
+				//{
+				//	obstacleManager.AddObstacle( m->m_Entity );
+				//}
 
 				m_GameEntities[index].m_Entity = m->m_Entity;
 				m_GameEntities[index].m_EntityClass = m->m_EntityClass;
@@ -840,7 +840,7 @@ void IGame::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb)
 			const Event_EntityDeleted *m = _message.Get<Event_EntityDeleted>();
 			if(m)
 			{
-				obstacleManager.RemoveObstacle(m->m_Entity);
+				//obstacleManager.RemoveObstacle(m->m_Entity);
 
 				int index = m->m_Entity.GetIndex();
 				if(m_GameEntities[index].m_Entity.IsValid())

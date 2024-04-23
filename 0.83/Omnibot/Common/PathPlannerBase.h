@@ -20,7 +20,6 @@ struct Event_EntityConnection;
 
 #include "EventReciever.h"
 #include "CommandReciever.h"
-#include "PathQuery.h"
 
 namespace gcn
 {
@@ -63,8 +62,6 @@ public:
 	virtual void DrawActiveFrame() {}
 
 	virtual Vector3f GetRandomDestination(Client *_client, const Vector3f &_start, const NavFlags _team) = 0;
-
-	virtual void RunPathQuery(const PathQuery &_qry) {};
 
 	virtual void PlanPathToGoal(Client *_client, const Vector3f &_start, const Vector3f &_goal, const NavFlags _team) = 0;
 	virtual int PlanPathToNearest(Client *_client, const Vector3f &_start, const Vector3List &_goals, const NavFlags &_team) = 0;

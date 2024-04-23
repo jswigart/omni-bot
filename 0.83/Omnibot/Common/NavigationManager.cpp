@@ -12,9 +12,11 @@
 #include "IGame.h"
 
 #include "PathPlannerWaypoint.h"
+#if ENABLE_PATH_PLANNERS
 #include "PathPlannerNavMesh.h"
 #include "PathPlannerFloodFill.h"
 #include "PathPlannerRecast.h"
+#endif
 
 NavigationManager *NavigationManager::m_Instance = 0;
 

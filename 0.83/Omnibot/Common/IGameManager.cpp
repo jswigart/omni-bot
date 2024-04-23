@@ -22,7 +22,6 @@
 #include "WeaponDatabase.h"
 #include "FileSystem.h"
 #include "FileDownloader.h"
-#include "ChunkedFile.h"
 
 //////////////////////////////////////////////////////////////////////////
 

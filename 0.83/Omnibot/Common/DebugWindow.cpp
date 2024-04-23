@@ -3,12 +3,14 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "DebugWindow.h"
+#ifdef ENABLE_DEBUG_WINDOW
 #include "NavigationManager.h"
 #include "PathPlannerWaypoint.h"
 #include "PathPlannerNavMesh.h"
 #include "PathPlannerFloodFill.h"
 #include "PathPlannerRecast.h"
 #include "ScriptManager.h"
+#endif
 
 static RenderOverlayType gOverlayType = OVERLAY_GAME;
 

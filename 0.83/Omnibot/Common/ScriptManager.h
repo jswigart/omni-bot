@@ -13,7 +13,6 @@ class Client;
 
 #include "gmMachine.h"
 #include "CommandReciever.h"
-#include "MessageManager.h"
 
 class gmUserObject;
 class gmStringObject;
