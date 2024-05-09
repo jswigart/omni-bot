@@ -56,10 +56,31 @@ namespace Priority
 
 namespace Utils
 {
-	bool RegexMatch( const char * exp, const char * str ) {		
+	bool RegexMatch( const char * exp, const char * str )
+	{		
+		for(; ; exp++, str++)
+		{
+			char e = *exp, s = *str;
+			if(!e) return !s;
+			if(e == s) continue;
+			if(e >= 'A' && e <= 'Z')
+			{
+				if(e + ('a' - 'A') == s) continue;
+				return false;
+			}
+			if(e >= 'a' && e <= 'z')
+			{
+				if(e - ('a' - 'A') == s) continue;
+				return false;
+			}
+			if(e == '_' || e >= '0' && e <= '9') return false;
+			break;
+		}
+
+		if(exp[0]=='.' && exp[1]=='*' && exp[2]=='\0') return true;
+
 		try
 		{
-			if(exp[0]=='.' && exp[1]=='*' && exp[2]=='\0') return true;
 			boost::regex expression( exp, REGEX_OPTIONS );
 			return boost::regex_match( str, expression );
 		}

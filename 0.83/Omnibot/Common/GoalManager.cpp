@@ -1826,3 +1826,19 @@ void GoalManager::GetGoals(Query &_qry)
 	}
 	_qry.OnQueryFinish();
 }
+
+int GoalManager::Iterate(const char* expression, std::function<void(MapGoal*)> action)
+{
+	bool all = !expression || !*expression;
+	int n = 0;
+	for(MapGoalList::iterator it = m_MapGoalList.begin(), itEnd = m_MapGoalList.end(); it != itEnd; ++it)
+	{
+		if((all || Utils::RegexMatch(expression, (*it)->GetName().c_str())) 
+			&& !(*it)->GetDisabled() && !(*it)->GetDeleteMe())
+		{
+			action(it->get());
+			n++;
+		}
+	}
+	return n;
+}

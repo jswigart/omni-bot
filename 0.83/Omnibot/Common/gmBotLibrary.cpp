@@ -646,22 +646,8 @@ static int GM_CDECL gmfSetMapGoalProperties(gmThread *a_thread)
 	GM_CHECK_STRING_PARAM(expr,0);
 	GM_CHECK_TABLE_PARAM(props,1);
 
-	GoalManager::Query qry;
-	qry.NoFilters();
-	qry.Expression(expr);
-	GoalManager::GetInstance()->GetGoals(qry);
-
-	if(!qry.m_List.empty())
-	{
-		for(MapGoalList::iterator it = qry.m_List.begin(); it != qry.m_List.end(); ++it)
-		{
-			(*it)->FromScriptTable(a_thread->GetMachine(),props,false);
-		}
-	}
-	else
-	{
+	if(!GoalManager::GetInstance()->Iterate(expr, [=](MapGoal *g) { g->FromScriptTable(a_thread->GetMachine(),props,false); }))
 		MapDebugPrint(a_thread, va("SetMapGoalProperties: goal query for %s has no results", expr));
-	}
 	return GM_OK;
 }
 
@@ -688,34 +674,12 @@ void MapDebugPrint(const char *message)
 	MapDebugPrint(ScriptManager::GetInstance()->GetMachine(), 0, message);
 }
 
-static int SetAvailableMapGoals(gmThread *a_thread, int _team, bool _available, const char* _expression, int ignoreErrors)
+static int SetAvailableMapGoals(gmThread *a_thread, int team, bool available, const char* expr, int ignoreErrors)
 {
-	GoalManager::Query qry;
-	qry.Expression(_expression);
-	qry.NoFilters();
-	GoalManager::GetInstance()->GetGoals(qry);
-
-	if(!qry.m_List.empty())
-	{
-		for(MapGoalList::iterator it = qry.m_List.begin(); it != qry.m_List.end(); ++it)
-		{
-			if(_team == 0)
-			{
-				for(int t = 1; t <= 4; ++t)
-					(*it)->SetAvailable(t, _available);
-			}
-			else
-			{
-				(*it)->SetAvailable(_team, _available);
-			}
-		}
-	}
-	else if(!ignoreErrors)
-	{
-		MapDebugPrint(a_thread, va("SetAvailableMapGoals: goal query for %s has no results", _expression));
-	}
-
-	return (int)qry.m_List.size();
+	int n = GoalManager::GetInstance()->Iterate(expr, [=](MapGoal *g) { g->SetAvailable(team,  available); });
+	if(n==0 && !ignoreErrors)
+		MapDebugPrint(a_thread, va("SetAvailableMapGoals: goal query for %s has no results", expr));
+	return n;
 }
 
 // function: SetAvailableMapGoals
@@ -790,27 +754,10 @@ static int GM_CDECL gmfSetGoalPriorityForTeamClass(gmThread *a_thread)
 	GM_INT_PARAM(classId,3,0);
 	GM_INT_PARAM(persis,4,0);
 	
-	GoalManager::Query qry;
-	qry.Expression(exp);
-	qry.NoFilters();
-	GoalManager::GetInstance()->GetGoals(qry);
-
-	if(!qry.m_List.empty())
-	{
-		for(MapGoalList::iterator it = qry.m_List.begin(); it != qry.m_List.end(); ++it)
-		{
-			(*it)->SetPriorityForClass(teamId, classId, priority);
-		}
-	}
-	else if(!persis)
-	{
+	if(!GoalManager::GetInstance()->Iterate(exp, [=](MapGoal *g) { g->SetPriorityForClass(teamId, classId, priority); }) && !persis)
 		MapDebugPrint(a_thread, va("SetGoalPriority: goal query for %s has no results", exp));
-	}
 
-	if(persis)
-	{
-		MapGoal::SetPersistentPriorityForClass(exp,teamId,classId,priority);
-	}
+	if(persis) MapGoal::SetPersistentPriorityForClass(exp,teamId,classId,priority);
 	return GM_OK;
 }
 
@@ -852,23 +799,11 @@ static int GM_CDECL SetOrClearGoalRole(gmThread *a_thread, bool enable)
 	}
 	BitFlag32 role(roleInt);
 
-	GoalManager::Query qry;
-	qry.Expression(exp);
-	qry.NoFilters();
-	GoalManager::GetInstance()->GetGoals(qry);
-
-	if(!qry.m_List.empty())
-	{
-		for(MapGoalList::iterator it = qry.m_List.begin(); it != qry.m_List.end(); ++it)
-		{
-			BitFlag32 oldRole = (*it)->GetRoleMask();
-			(*it)->SetRoleMask(enable ? (oldRole | role) : (oldRole & ~role));
-		}
-	}
-	else if(!persis)
-	{
+	if(!GoalManager::GetInstance()->Iterate(exp, [=](MapGoal *g){ 
+			BitFlag32 oldRole = g->GetRoleMask();
+			g->SetRoleMask(enable ? (oldRole | role) : (oldRole & ~role));
+		}) && !persis)
 		MapDebugPrint(a_thread, va("%s: goal query for %s has no results", enable ? "SetGoalRole" : "ClearGoalRole", exp));
-	}
 
 	if(persis) MapGoal::SetPersistentRole(exp, role);
 	return GM_OK;
@@ -943,14 +878,7 @@ static int GM_CDECL gmfSetGoalGroup(gmThread *a_thread)
 	else if(a_thread->ParamType(0)==GM_STRING)
 	{
 		GM_STRING_PARAM(exp,0,0);
-		GoalManager::Query qry;
-		qry.Expression(exp);
-		qry.NoFilters();
-		GoalManager::GetInstance()->GetGoals(qry);
-		for(obuint32 i = 0; i < qry.m_List.size(); ++i)
-		{
-			qry.m_List[i]->SetGroupName(group);
-		}
+		GoalManager::GetInstance()->Iterate(exp, [=](MapGoal *g){ g->SetGroupName(group); });
 	}
 	else
 	{

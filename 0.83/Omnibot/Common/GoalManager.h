@@ -138,7 +138,7 @@ public:
 	void RemoveGoalByEntity(GameEntity _ent);
 	
 	void GetGoals(Query &_qry);
-
+	int Iterate(const char *expression, std::function<void(MapGoal*)> action);
 	MapGoalPtr GetGoal(const String &_goalname);
 	MapGoalPtr GetGoal(int _serialNum);
 
