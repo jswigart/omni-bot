@@ -361,8 +361,13 @@ void ScriptManager::Shutdown()
 	gmGCRootManager::Get()->DestroyMachine(m_ScriptEngine);
 	gmGCRootManager::Destroy();
 
-	LOGFUNCBLOCK;
-	ShowGMStats();
+	bool stats = false;
+	Options::GetValue("Script","EndGameStats",stats);
+	if(stats)
+	{
+		LOGFUNCBLOCK;
+		ShowGMStats();
+	}
 	OB_DELETE(m_ScriptEngine);
 	LOG("Script System Shut Down.");
 }
