@@ -1025,8 +1025,9 @@ bool GoalManager::Load(const String &_map, ErrorObj &_err)
 	pMachine->GetGlobals()->Set(pMachine,MapGoalTable,gmVariable::s_null);
 	pMachine->CollectGarbage(true);
 
-	_err.AddInfo("%d Goals Loaded, %d Goals Deferred, %d Goals could not load. elapsed time: %.2f seconds",
-		GoalsLoaded,GoalsDeferred,GoalsLoadedFailed,loadTime.GetElapsedSeconds());
+	if(GoalsLoadedFailed > 0) _err.AddError("%d Goals could not load", GoalsLoadedFailed);
+	_err.AddInfo("%d Goals Loaded, %d Goals Deferred. elapsed time: %.2f seconds",
+		GoalsLoaded,GoalsDeferred,loadTime.GetElapsedSeconds());
 
 	return LoadedOk;
 }
