@@ -55,6 +55,8 @@ MessageQueuePtr g_MessageQueue;
 #include <windows.h>
 #else
 #include <dlfcn.h>
+
+#ifndef __APPLE__
 #include <link.h>
 
 static int dl_iterate_callback(struct dl_phdr_info *info, size_t size, void *data)
@@ -73,6 +75,7 @@ static int dl_iterate_callback(struct dl_phdr_info *info, size_t size, void *dat
 	}
 	return 0;
 }
+#endif
 #endif
 
 #endif // INTERPROCESS
@@ -118,6 +121,7 @@ namespace InterProcess
 			}
 #else
 
+
 #ifdef WIN32
 #ifdef _WIN64
 			HMODULE hmod = GetModuleHandle("cgame_mp_x64");
@@ -128,7 +132,11 @@ namespace InterProcess
 				pfnGetClientFunctionsFromDLL pfnGetBotFuncs = (pfnGetClientFunctionsFromDLL)GetProcAddress(hmod, "ExportClientFunctionsFromDLL");
 #else
 			void *hmod = 0;
+#if defined __APPLE__
+			hmod = dlopen(va("%s/omnibot/cgame_mac", g_EngineFuncs->GetLogPath()), RTLD_NOW|RTLD_NOLOAD);
+#else
 			dl_iterate_phdr(dl_iterate_callback, &hmod);
+#endif
 			if(hmod){
 				pfnGetClientFunctionsFromDLL pfnGetBotFuncs = (pfnGetClientFunctionsFromDLL)dlsym(hmod, "ExportClientFunctionsFromDLL");
 #endif

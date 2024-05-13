@@ -1832,6 +1832,7 @@ void Options::SaveConfigFileIfChanged()
 		Linux ETL: /home/username/.etlegacy
 		Linux ET 2.6: /home/username/.etwolf
 		Linux RTCW: /home/username/.wolf
+		Mac ETL: /Users/username/Library/Application Support/etlegacy
 	*/
 
 	//If the config has been loaded from fs_homepath, save it to fs_homepath
