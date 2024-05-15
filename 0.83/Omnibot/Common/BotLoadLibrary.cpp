@@ -254,7 +254,9 @@ eomnibot_error Omnibot_LoadLibrary(int version, const char *lib, const char *pat
 #else
 #ifdef __x86_64__
 #define SUFFIX ".x86_64"
-#else
+#elif defined __aarch64__
+#define SUFFIX ".aarch64"
+#else	
 #define SUFFIX
 #endif
 #endif
