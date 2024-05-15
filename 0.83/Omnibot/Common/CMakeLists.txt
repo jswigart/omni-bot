@@ -18,13 +18,11 @@ file(GLOB COMMON_SRC CONFIGURE_DEPENDS
     ${DEPENDENCIES_PATH}/physfs/zlib123/*.c
     ${DEPENDENCIES_PATH}/physfs/platform/*.c
 
-    ${DEPENDENCIES_PATH}/Recast/Recast/Source/*.cpp
-    ${DEPENDENCIES_PATH}/Recast/Detour/Source/*.cpp
-    # ${DEPENDENCIES_PATH}/Recast/DetourTileCache/Source/*.cpp
-    ${DEPENDENCIES_PATH}/Recast/DebugUtils/Source/*.cpp
+    # ${DEPENDENCIES_PATH}/Recast/Recast/Source/*.cpp
+    # ${DEPENDENCIES_PATH}/Recast/Detour/Source/*.cpp
+    # ${DEPENDENCIES_PATH}/Recast/DebugUtils/Source/*.cpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/ObstacleManager.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/RecastInterfaces.cpp
+    # ${CMAKE_CURRENT_SOURCE_DIR}/RecastInterfaces.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/BatchBuild.cpp
 )
 
@@ -46,18 +44,15 @@ target_include_directories(omnibot-common
     PUBLIC "${DEPENDENCIES_PATH}/wildmagic"
     PUBLIC "${DEPENDENCIES_PATH}/iprof"
 
-    PUBLIC "${DEPENDENCIES_PATH}/Recast/Common/include"
-    PUBLIC "${DEPENDENCIES_PATH}/Recast/Recast/Include"
-    PUBLIC "${DEPENDENCIES_PATH}/Recast/DebugUtils/Include"
-    PUBLIC "${DEPENDENCIES_PATH}/Recast/Detour/Include"
-    PUBLIC "${DEPENDENCIES_PATH}/Recast/DetourTileCache/Include"
+    # PUBLIC "${DEPENDENCIES_PATH}/Recast/Recast/Include"
+    # PUBLIC "${DEPENDENCIES_PATH}/Recast/DebugUtils/Include"
+    # PUBLIC "${DEPENDENCIES_PATH}/Recast/Detour/Include"
     PUBLIC "${DEPENDENCIES_PATH}/physfs"
     PUBLIC "${DEPENDENCIES_PATH}/physfs/lzma/C"
     PUBLIC "${DEPENDENCIES_PATH}/physfs/zlib123"
     PUBLIC "${DEPENDENCIES_PATH}/physfs/lzma/C/Archive/7z"
     PUBLIC "${DEPENDENCIES_PATH}/physfs/lzma/C/Compress/Lzma"
     PUBLIC "${DEPENDENCIES_PATH}/physfs/lzma/C/Compress/Branch"
-    # PUBLIC "${DEPENDENCIES_PATH}/Remotery/lib"
 )
 
 if (WIN32)
@@ -68,7 +63,7 @@ if (WIN32)
     endif()
 elseif(APPLE)
     target_include_directories(omnibot-common PUBLIC "${DEPENDENCIES_PATH}/gmscriptex/gmsrc_ex/src/platform/osx")
-elseif(LINUX)
+else()
     target_include_directories(omnibot-common PUBLIC "${DEPENDENCIES_PATH}/gmscriptex/gmsrc_ex/src/platform/win32gcc")
 endif()
 

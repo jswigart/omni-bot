@@ -16,5 +16,5 @@ if (WIN32)
             LIBRARY_OUTPUT_DIRECTORY_DEBUG ""
             LIBRARY_OUTPUT_DIRECTORY_RELEASE ""
     )
-
+    target_sources(omnibot-et PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../projects/msvc12/Common/Common.rc)
 endif ()

@@ -1,19 +1,10 @@
-# $LastChangedBy$
-# $LastChangedDate$
-# $LastChangedRevision$
-
 # The RTCW Library.
 
 project RTCW
-	: requirements <include>./
 	: requirements <include>../Common
    	;
 
-# Declare an alias to the common library
-alias common_lib : ..//Common : <link>static ;
-
 # Compile ALL .cpp files and link to Common.lib to create our dll
 
-SOURCES = [ glob RTCW_BatchBuild.cpp ] ..//boost_fs ..//boost_regx ..//boost_dt ..//boost_sys common_lib ;
-
-lib omnibot_rtcw : $(SOURCES) : <tag>@tag <toolset>gcc:<cflags>-w <cflags>-fno-strict-aliasing <linkflags>-lrt <cflags>-std=c++11 ;
+lib omnibot_rtcw : RTCW_BatchBuild.cpp ..//boost_all ..//Common 
+	: <tag>@tag ;

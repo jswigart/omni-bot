@@ -1,15 +1,11 @@
-# $LastChangedBy$
-# $LastChangedDate$
-# $LastChangedRevision$
-
 # The Omni-bot Common Static Library.
 
 project Common
 	: requirements 
 	 <include>./
-	 <include>../dependencies/Recast/Recast/Include
-	 <include>../dependencies/Recast/DebugUtils/Include
-	 <include>../dependencies/Recast/Detour/Include
+#	 <include>../dependencies/Recast/Recast/Include
+#	 <include>../dependencies/Recast/DebugUtils/Include
+#	 <include>../dependencies/Recast/Detour/Include
 	 <include>../dependencies/physfs
 	 <include>../dependencies/physfs/lzma/C
 	 <include>../dependencies/physfs/zlib123
@@ -36,14 +32,15 @@ SOURCES = [ glob ../dependencies/gmscriptex/gmsrc_ex/src/gm/*.cpp ]
 #		  [ glob ../dependencies/Recast/Recast/Source/*.cpp ] 
 #		  [ glob ../dependencies/Recast/Detour/Source/*.cpp ]
 #		  [ glob ../dependencies/Recast/DebugUtils/Source/*.cpp ]
-		  [ glob ../dependencies/iprof/*.c ] 
-		  [ glob ../dependencies/pcre-8.10/*.c ] 
-		  [ glob ../dependencies/pcre-8.10/*.cpp ] 		  
-#		  [ glob ../dependencies/sqlite3/*.c ]
+#		  [ glob ../dependencies/iprof/*.c ] 
 #		  [ glob RecastInterfaces.cpp ]
-		  [ glob BatchBuild.cpp ] 
+		  BatchBuild.cpp
 		;
 
-lib Common : $(SOURCES) 
-		 : <link>static <toolset>gcc:<cflags>-w <cflags>-pthread <cflags>-DPHYSFS_SUPPORTS_ZIP=1 <cflags>-DPHYSFS_SUPPORTS_7Z=1 <cflags>-DPHYSFS_NO_CDROM_SUPPORT <cflags>-fno-strict-aliasing <cflags>-std=c++11
-		 ;
+if <target-os>darwin
+{
+	SOURCES += ../dependencies/physfs/platform/macosx.c ;
+}
+
+lib Common : $(SOURCES)
+	: <link>static <cflags>-DPHYSFS_SUPPORTS_ZIP=1 <cflags>-DPHYSFS_SUPPORTS_7Z=1 <cflags>-DPHYSFS_NO_CDROM_SUPPORT ;

@@ -1,7 +1,3 @@
-# $LastChangedBy$
-# $LastChangedDate$
-# $LastChangedRevision$
-
 # Root jam file for Omni-bot.
 
 import modules ;
@@ -18,19 +14,22 @@ project Omnibot
 	 <include>dependencies/iprof
 	 <include>dependencies/wildmagic
 	 <include>dependencies/gmscriptex/gmsrc_ex/src/3rdParty
-	 <include>dependencies/gmscriptex/gmsrc_ex/src/platform/win32gcc
 	 <include>dependencies/gmscriptex/gmsrc_ex/src/gm
 	 <include>dependencies/gmscriptex/gmsrc_ex/src/binds
 	 <include>dependencies/gmscriptex/gmsrc_ex/src/3rdParty/gmbinder2
 	 <toolset>msvc:<include>dependencies/gmscriptex/gmsrc_ex/src/platform/win32msvc
 	 <toolset>gcc:<include>dependencies/gmscriptex/gmsrc_ex/src/platform/win32gcc
-	 <toolset>darwin:<include>dependencies/gmscriptex/gmsrc_ex/src/platform/osx
+	 <target-os>darwin:<include>dependencies/gmscriptex/gmsrc_ex/src/platform/osx
+	 <target-os>darwin:<linkflags>"-framework IOKit -framework Carbon"
 	 <toolset>msvc:<define>WIN32
 	 <toolset>gcc:<define>__linux__
 	 <toolset>darwin:<define>__osx__
 	 <variant>debug:<define>_DEBUG
 	 <variant>release:<define>NDEBUG
 	 <address-model>64:<cflags>-fPIC
+	 <cxxflags>-std=c++11
+	 <cflags>-fno-strict-aliasing
+	 <warnings>off
 	;
 
 # define external libs
@@ -39,37 +38,26 @@ lib boost_regex : : <variant>release <file>$(BOOST_LIB)/libboost_regex$(BOOST_SU
 lib boost_date_time : : <variant>release <file>$(BOOST_LIB)/libboost_date_time$(BOOST_SUFFIX).a ;
 lib boost_system : : <variant>release <file>$(BOOST_LIB)/libboost_system$(BOOST_SUFFIX).a ;
 
-# define aliases for convenience and to force static linking
-alias boost_fs : boost_filesystem : <link>static ;
-alias boost_regx : boost_regex : <link>static ;
-alias boost_dt : boost_date_time : <link>static ;
-alias boost_sys : boost_system : <link>static ;
+# define alias for convenience and to force static linking
+alias boost_all : boost_filesystem boost_regex boost_date_time boost_system : <link>static ;
 
 # target suffix
 rule tag ( name : type ? : property-set )
 {
 	if $(type) = SHARED_LIB
 	{
+		if [ $(property-set).get <target-os> ] = darwin
+		{
+			return $(name)_mac.so ;
+		}
 		if [ $(property-set).get <address-model> ] = 64
 		{
 			return $(name).x86_64.so ;
 		}
-		else
-		{
-			return $(name).so ;
-		}
+		return $(name).so ;
 	}
 }
 
-
 build-project Common ; 
-#build-project MC ;
 build-project ET ;
 build-project RTCW ; 
-#build-project TeamFortressLib ; 
-#build-project FF ; 
-#build-project D3 ; 
-#build-project Q4 ; 
-#build-project HL2DM ; 
-#build-project SKELETON ; 
-
