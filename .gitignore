@@ -7,3 +7,5 @@
 /0.83/Omnibot/projects/msvc12/build/
 /0.83/GameInterfaces/*/src/build/
 /0.83/Installer/Files/rtcw/scripts/rtcw_autoexec_user.gm
+/0.83/Omnibot/CMakeFiles
+/0.83/Omnibot/CMakeCache.txt
