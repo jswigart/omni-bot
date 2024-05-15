@@ -298,7 +298,7 @@ void MapGoal::GenerateName(int _instance, bool _skipdupecheck)
 	for(const char *s = m_Name.c_str(); *s; s++)
 	{
 		char c = *s;
-		if(!(c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z' || c >= '0' && c <= '9' || c == '_'))
+		if(!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_'))
 		{
 			static boost::regex re("[^A-Za-z0-9_]");
 			m_Name = boost::regex_replace(m_Name, re, "");
@@ -1633,7 +1633,7 @@ bool MapGoal::SaveToTable(gmMachine *_machine, gmGCRoot<gmTableObject> &_savetab
 	if(!GetGroupName().empty()) GoalTable->Set(_machine, "GroupName", GetGroupName().c_str());
 	GoalTable->Set(_machine,"Position",gmVariable(m_InterfacePosition.IsZero() ? m_Position : m_InterfacePosition));
 	if(m_Radius!=0.0f) GoalTable->Set(_machine, "Radius", gmVariable(m_Radius));
-	if(m_MinRadius < m_MinRadiusInit && m_Radius < m_MinRadiusInit || m_MinRadius > m_MinRadiusInit && m_Radius < m_MinRadius)
+	if((m_MinRadius < m_MinRadiusInit && m_Radius < m_MinRadiusInit) || (m_MinRadius > m_MinRadiusInit && m_Radius < m_MinRadius))
 		GoalTable->Set(_machine, "MinRadius", gmVariable(m_MinRadius));
 	
 	if(!m_CreateOnLoad) GoalTable->Set(_machine, "CreateOnLoad", gmVariable(m_CreateOnLoad));

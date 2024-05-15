@@ -30,7 +30,7 @@ GMBIND_FUNCTION_MAP_BEGIN( gmAABB )
 	GMBIND_FUNCTION( "FindIntersection", gmfFindIntersection )
 	GMBIND_FUNCTION( "GetAxisLength", gmfGetAxisLength )
 	GMBIND_FUNCTION( "Render", gmfRenderAABB )
-GMBIND_FUNCTION_MAP_END();
+GMBIND_FUNCTION_MAP_END()
 
 GMBIND_PROPERTY_MAP_BEGIN( gmAABB )
 	// var: Mins
@@ -47,7 +47,7 @@ GMBIND_PROPERTY_MAP_END();
 AABB *gmAABB::Constructor(gmThread *a_thread)
 {
 	AABB *pNewAABB = new AABB;
-	memset(pNewAABB, 0, sizeof(pNewAABB));
+	memset(pNewAABB, 0, sizeof(AABB));
 
 	if(a_thread)
 	{
@@ -391,7 +391,7 @@ bool gmAABB::setMaxs( AABB *a_native, gmThread *a_thread, gmVariable *a_operands
 int Bounds_Constructor(gmThread *a_thread)
 {
 	BoundingBox *pNewAABB = new BoundingBox;
-	memset(pNewAABB, 0, sizeof(pNewAABB));
+	memset(pNewAABB, 0, sizeof(BoundingBox));
 
 	if(a_thread)
 	{

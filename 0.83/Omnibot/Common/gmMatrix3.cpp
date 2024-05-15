@@ -25,7 +25,7 @@ GMBIND_FUNCTION_MAP_BEGIN( gmMatrix3 )
 	// function: Inverse
 	//		Inverts this matrix.
 	GMBIND_FUNCTION( "Inverse", gmfInverse )
-GMBIND_FUNCTION_MAP_END();
+GMBIND_FUNCTION_MAP_END()
 
 GMBIND_PROPERTY_MAP_BEGIN( gmMatrix3 )
 	GMBIND_PROPERTY("ZERO", gmfGetZero, NULL )

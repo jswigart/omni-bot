@@ -272,7 +272,7 @@ namespace AiState
 		ScriptGoal();
 	};
 
-};
+}
 
 #endif
 

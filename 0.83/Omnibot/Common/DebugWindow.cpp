@@ -127,7 +127,7 @@ namespace DrawBuffer
 		Lines.clear();
 		Points.clear();
 	}
-};
+}
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -397,7 +397,7 @@ namespace Listeners
 		int			mOffsetX, mOffsetY;
 		bool		mShiftHeld;
 	};
-};
+}
 
 Listeners::Console consoleListener;
 Listeners::GenericActionListener dwActionListener;
@@ -498,7 +498,7 @@ namespace ListModels
 			case GoalAvailability1:
 				return m_GoalList[i]->IsAvailable(OB_TEAM_1) ? "1":"0";
 			case GoalAvailability2:
-				return m_GoalList[i]->IsAvailable(OB_TEAM_2) ? "1":"0";;
+				return m_GoalList[i]->IsAvailable(OB_TEAM_2) ? "1":"0";
 			case GoalAvailability3:
 				return m_GoalList[i]->IsAvailable(OB_TEAM_3) ? "1":"0";
 			case GoalAvailability4:
@@ -562,7 +562,7 @@ namespace ListModels
 		}
 		StringVector m_Completions;
 	};
-};
+}
 
 ListModels::ClientListModel clientList;
 ListModels::GoalsListModel goalList;

@@ -10,21 +10,6 @@
 #include "NameManager.h"
 
 //////////////////////////////////////////////////////////////////////////
-class BotIdentity
-{
-public:
-
-	BotIdentity()
-		: m_DesiredClassId(RANDOM_CLASS_IF_NO_CLASS)
-		, m_DesiredTeamId(RANDOM_TEAM_IF_NO_TEAM)
-	{
-	}
-private:
-	String		m_Name;
-	obint32		m_DesiredClassId;
-	obint32		m_DesiredTeamId;
-};
-//////////////////////////////////////////////////////////////////////////
 
 NameReference::NameReference(const String &_name, const String &_profile) :
 	m_Name(_name),

@@ -897,4 +897,4 @@ namespace AiState
 			}
 		}
 	}
-};
+}

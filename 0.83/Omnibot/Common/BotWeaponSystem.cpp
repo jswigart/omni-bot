@@ -794,4 +794,4 @@ namespace AiState
 		return NumWeaponIds ? (WeaponIds[rand() % NumWeaponIds]) : 0;
 	}
 	
-};
+}

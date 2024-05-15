@@ -48,6 +48,6 @@ namespace Trajectory
 
 		TrajectorySim();
 	};
-};
+}
 
 #endif

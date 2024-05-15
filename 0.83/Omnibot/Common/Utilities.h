@@ -38,7 +38,7 @@ namespace Priority
 		NumPriority
 	};
 	const char *AsString(int n);
-};
+}
 //////////////////////////////////////////////////////////////////////////
 
 // file: Utils
@@ -313,7 +313,7 @@ namespace Utils
 		Vector3f *_linePt = NULL);
 
 	int intersect2D_Segments(const Segment3f &S1,const Segment3f &S2, Vector3f* I0 = 0, Vector3f* I1 = 0);
-};
+}
 
 //////////////////////////////////////////////////////////////////////////
 class PropertyMap

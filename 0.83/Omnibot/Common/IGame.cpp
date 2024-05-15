@@ -52,8 +52,8 @@ IGame::IGame()
 	: m_StateRoot(0)
 	, m_NumDeletedThreads(0)
 	, m_WeaponClassIdStart(0)
-	, m_bDrawBlockableTests	(false)
 	, m_PlayersChanged(true)
+	, m_bDrawBlockableTests	(false)
 {
 }
 

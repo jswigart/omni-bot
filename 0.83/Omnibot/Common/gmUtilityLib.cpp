@@ -47,7 +47,7 @@ namespace gmUtility
 			{
 				char tmpName[256] = {};
 				const char * str = pNode->m_key.AsString(_machine,tmpName,256);
-				OBASSERT(*str != NULL && str != NULL,"Error getting key string of gm var");
+				OBASSERT(str && *str,"Error getting key string of gm var");
 				if(str != NULL)
 				{
 					TableInfo_t ti;
@@ -259,7 +259,7 @@ namespace gmUtility
 				gmTableObject *pTable = 0;
 
 				gmType type = GM_USER;
-				while(pTable = _machine->GetTypeTable(type))
+				while((pTable = _machine->GetTypeTable(type)))
 				{
 					const char *pTypeName = _machine->GetTypeName(type);
 					if(pTypeName)
@@ -425,7 +425,7 @@ namespace gmUtility
 		}
 		return GM_OK;
 	}
-};
+}
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////

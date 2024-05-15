@@ -14,6 +14,6 @@ namespace InterProcess
 	void DrawBounds(const AABB &_aabb, obColor _color, float _time, AABB::Direction _dir);
 	void DrawPolygon(const Vector3List &_vertices, obColor _color, float _time);
 	void DrawText(const Vector3f &_a, const char *_txt, obColor _color, float _time);
-};
+}
 
 #endif

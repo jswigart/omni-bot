@@ -30,6 +30,6 @@ namespace AiState
 		GlobalRoot();
 	private:
 	};
-};
+}
 
 #endif

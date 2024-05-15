@@ -192,7 +192,6 @@ namespace AiState
 	{
 		Prof(UpdateSight);
 
-		int iUpdated = 0;
 		for(int i = 0; i < NumRecords; ++i)
 		{
 			if(m_Records[i].GetEntity().IsValid())
@@ -203,7 +202,6 @@ namespace AiState
 					continue;
 				}
 				UpdateRecord(m_Records[i]);
-				++iUpdated;
 			}
 		}
 	}
@@ -591,4 +589,4 @@ namespace AiState
 
 		return State_Busy;
 	}
-};
+}

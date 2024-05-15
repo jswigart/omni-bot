@@ -91,7 +91,7 @@ GMBIND_FUNCTION_MAP_BEGIN( gmScriptGoal )
 
 	GMBIND_FUNCTION( "MarkInProgress", gmfMarkInProgress )
 	GMBIND_FUNCTION( "MarkInUse", gmfMarkInUse )
-GMBIND_FUNCTION_MAP_END();
+GMBIND_FUNCTION_MAP_END()
 
 GMBIND_PROPERTY_MAP_BEGIN( gmScriptGoal )
 	GMBIND_PROPERTY( "Name", getName, setName )

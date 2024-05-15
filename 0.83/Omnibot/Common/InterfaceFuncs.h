@@ -64,6 +64,6 @@ namespace InterfaceFuncs
 		MessageHelper msg(GEN_MSG_SETLOADOUT, &_info, sizeof(T));
 		return SUCCESS(InterfaceMsg(msg,_ent));
 	}
-};
+}
 
 #endif

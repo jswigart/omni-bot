@@ -74,9 +74,6 @@ namespace KEYVALUEINI
 
 #if defined(__linux__) || ((defined __MACH__) && (defined __APPLE__))
 #   define _stricmp(a,b) strcasecmp((a),(b))
-#endif
-
-#if defined(__linux__) || ((defined __MACH__) && (defined __APPLE__))
 #   define _vsnprintf(a,b,c,d) vsnprintf((a),(b),(c),(d))
 #endif
 
@@ -862,7 +859,7 @@ namespace KEYVALUEINI
 	}
 
 
-}; // END KEYVALUE INI NAMESPACE
+} // END KEYVALUE INI NAMESPACE
 
 using namespace KEYVALUEINI;
 

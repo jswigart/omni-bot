@@ -41,7 +41,7 @@ namespace GameContext
 		if(mGuiContext && mGuiDC)
 			wglMakeCurrent(mGuiDC,mGuiContext);
 	}
-};
+}
 
 //////////////////////////////////////////////////////////////////////////
 

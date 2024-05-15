@@ -20,37 +20,37 @@ class gmScriptGoal;
 namespace AiState
 {
 	//////////////////////////////////////////////////////////////////////////
-	class TrackTargetZone
-	{
-	public:
-		enum { MaxTargetZones = 8 };
-		struct TargetZone
-		{
-			Vector3f	m_Position;
-			obint32		m_TargetCount;
-			bool		m_InUse : 1;
-		};
+	//class TrackTargetZone
+	//{
+	//public:
+	//	enum { MaxTargetZones = 8 };
+	//	struct TargetZone
+	//	{
+	//		Vector3f	m_Position;
+	//		obint32		m_TargetCount;
+	//		bool		m_InUse : 1;
+	//	};
 
-		void Restart(float _radius);
+	//	void Restart(float _radius);
 
-		void UpdateAimPosition();
+	//	void UpdateAimPosition();
 
-		bool HasAim() const { return m_ValidAim; }
+	//	bool HasAim() const { return m_ValidAim; }
 
-		const Vector3f &GetAimPosition() { return m_AimPosition; }
+	//	const Vector3f &GetAimPosition() { return m_AimPosition; }
 
-		void RenderDebug();
+	//	void RenderDebug();
 
-		void Update(Client *_client);
+	//	void Update(Client *_client);
 
-		TrackTargetZone();
-	private:
-		float			m_Radius;
-		Vector3f		m_AimPosition;
-		GameEntity		m_LastTarget;
-		TargetZone		m_TargetZones[MaxTargetZones];
-		bool			m_ValidAim;
-	};
+	//	TrackTargetZone();
+	//private:
+	//	float			m_Radius;
+	//	Vector3f		m_AimPosition;
+	//	GameEntity		m_LastTarget;
+	//	TargetZone		m_TargetZones[MaxTargetZones];
+	//	bool			m_ValidAim;
+	//};
 	//////////////////////////////////////////////////////////////////////////
 	class AimerUser
 	{
@@ -638,7 +638,7 @@ namespace AiState
 		CastInput	CastInputs[MaxCasts];
 		CastOutput	CastOutputs[MaxCasts];
 		int			GroupId[MaxCasts];
-		const char *UserName[MaxCasts];;
+		const char *UserName[MaxCasts];
 		
 		int			CastReadPosition;
 		int			CastWritePosition;
@@ -749,6 +749,6 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-};
+}
 
 #endif

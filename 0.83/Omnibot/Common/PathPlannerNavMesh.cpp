@@ -28,7 +28,7 @@ const float k_fGroundExtent = 10.0f;
 namespace NavigationMeshOptions
 {
 	float CharacterHeight = 64.f;	
-};
+}
 //////////////////////////////////////////////////////////////////////////
 
 PathPlannerNavMesh *g_PlannerNavMesh = 0;

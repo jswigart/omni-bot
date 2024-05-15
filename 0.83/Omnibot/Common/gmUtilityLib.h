@@ -37,7 +37,7 @@ namespace gmUtility
 	bool DumpTable(gmMachine *_machine, const String &_file, const String &_name, int _flags);
 	bool DumpTable(gmMachine *_machine, File &outFile, const String &_name, gmTableObject *_tbl, int _flags);
 	void DumpTableInfo(gmMachine *_machine, const int _flags, gmTableObject *_table, char *_buffer, int _buflen, int _lvl, File &_file);
-};
+}
 
 class gmMachine;
 void gmBindUtilityLib(gmMachine * a_machine);

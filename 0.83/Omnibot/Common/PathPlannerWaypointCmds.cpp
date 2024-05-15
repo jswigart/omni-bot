@@ -571,7 +571,7 @@ void PathPlannerWaypoint::cmdWaypointView(const StringVector &_args)
 {
 	if(_args.size() >= 2)
 	{
-		if(Utils::StringToTrue(_args[1]) || _args[1] == "toggle" && !m_PlannerFlags.CheckFlag(NAV_VIEW))
+		if(Utils::StringToTrue(_args[1]) || (_args[1] == "toggle" && !m_PlannerFlags.CheckFlag(NAV_VIEW)))
 		{
 			m_PlannerFlags.SetFlag(NAV_VIEW);
 			const char * msg = IGameManager::GetInstance()->GetGame()->IsDebugDrawSupported();

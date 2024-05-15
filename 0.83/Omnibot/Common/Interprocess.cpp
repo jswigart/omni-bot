@@ -367,4 +367,4 @@ namespace InterProcess
 #endif // INTERPROCESS
 		}
 	}
-};
+}

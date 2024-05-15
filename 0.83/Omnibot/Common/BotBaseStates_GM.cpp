@@ -250,4 +250,4 @@ namespace AiState
 			;
 	}
 
-};
+}

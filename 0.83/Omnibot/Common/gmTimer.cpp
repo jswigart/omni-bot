@@ -11,9 +11,9 @@
 
 GMBIND_INIT_TYPE( gmTimer, "Timer" );
 GMBIND_FUNCTION_MAP_BEGIN( gmTimer )
-GMBIND_FUNCTION( "Reset", gmfResetTimer );
-GMBIND_FUNCTION( "GetElapsedTime", gmfGetElapsedTime );
-GMBIND_FUNCTION_MAP_END();
+GMBIND_FUNCTION( "Reset", gmfResetTimer )
+GMBIND_FUNCTION( "GetElapsedTime", gmfGetElapsedTime )
+GMBIND_FUNCTION_MAP_END()
 
 //////////////////////////////////////////////////////////////////////////
 

@@ -271,5 +271,5 @@ namespace AiState
 		//		Chooses the current weapon based on the result of <_UpdateWeaponFromGame>
 		void _UpdateCurrentWeapon(FireMode _mode);
 	};
-};
+}
 #endif

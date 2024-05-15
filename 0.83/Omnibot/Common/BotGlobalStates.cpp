@@ -23,4 +23,4 @@ namespace AiState
 		AppendState(new RegionTriggers);
 	}
 
-};
+}

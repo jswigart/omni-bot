@@ -211,7 +211,7 @@ static int GM_CDECL gmfRunScript(gmThread *a_thread)
 	}
 	catch(const std::exception& e)
 	{
-		e;
+		_UNUSED(e);
 		OBASSERT(0, e.what());		
 	}	
 	a_thread->PushInt(0);

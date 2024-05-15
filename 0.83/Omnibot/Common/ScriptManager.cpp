@@ -489,7 +489,7 @@ gmTableObject *ScriptManager::GetBotTable(const Client *_client)
 		
 		if(botVar.m_type == gmBot::GetType())
 		{
-			return gmBot::GetUserTable(botVar.GetUserObjectSafe(gmBot::GetType()));;
+			return gmBot::GetUserTable(botVar.GetUserObjectSafe(gmBot::GetType()));
 		}
 		else
 		{

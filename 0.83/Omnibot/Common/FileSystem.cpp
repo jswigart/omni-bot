@@ -917,15 +917,11 @@ bool File::ReadLine(String &_str)
 		OBASSERT(m_TextMode, "Function Only for Text Mode");
 		if(m_TextMode)
 		{
-			const obuint8 cr = 0x0D;
-			const obuint8 lf = 0x0A;
-			lf;
-
 			if(EndOfFile())
 				return false;
 
 			char ch;
-			while(Read(&ch, sizeof(ch), 1) && !EndOfFile() && ch != cr && ch != '\n')
+			while(Read(&ch, sizeof(ch), 1) && !EndOfFile() && ch != '\r' && ch != '\n')
 				_str.push_back(ch);
 
 			// eat white space.

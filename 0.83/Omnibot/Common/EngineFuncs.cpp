@@ -233,7 +233,7 @@ namespace EngineFuncs
 		g_EngineFuncs->PrintError(_msg);
 		//ThreadAddError(_msg);
 	}
-};
+}
 
 
 

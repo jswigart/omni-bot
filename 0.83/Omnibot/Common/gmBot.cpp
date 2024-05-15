@@ -35,10 +35,9 @@ GMBIND_INIT_TYPE(gmBot, "Bot");
 
 GMBIND_FUNCTION_MAP_BEGIN(gmBot)
 
-	GMBIND_FUNCTION( "CanSnipe", gmfCanSnipe );
-
-	GMBIND_FUNCTION( "ChangeTeam", gmfChangeTeam );
-	GMBIND_FUNCTION( "ChangeClass", gmfChangeClass );
+	GMBIND_FUNCTION( "CanSnipe", gmfCanSnipe )
+	GMBIND_FUNCTION( "ChangeTeam", gmfChangeTeam )
+	GMBIND_FUNCTION( "ChangeClass", gmfChangeClass )
 	GMBIND_FUNCTION( "ExecCommand", gmfExecCommand )
 	GMBIND_FUNCTION( "FireWeapon", gmfFireWeapon )
 	GMBIND_FUNCTION( "GetCurrentAmmo", gmfGetAmmo )
@@ -137,7 +136,7 @@ GMBIND_FUNCTION_MAP_BEGIN(gmBot)
 	GMBIND_FUNCTION( "IsCarryingFlag", gmfIsCarryingFlag )
 	GMBIND_FUNCTION( "CanGrabItem", gmfCanGrabItem )
 
-GMBIND_FUNCTION_MAP_END();
+GMBIND_FUNCTION_MAP_END()
 
 // property: Field Of View
 //		<Field Of View> is the angle(in degrees) that the bot can 'see' in front of them.

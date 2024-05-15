@@ -19,7 +19,7 @@ class CallbackParameters;
 namespace gcn
 {
 	class Widget;
-};
+}
 
 class UpdateDelay
 {

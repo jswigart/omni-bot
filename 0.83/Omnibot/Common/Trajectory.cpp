@@ -203,4 +203,4 @@ namespace Trajectory
 				break;
 		}
 	}
-};
+}

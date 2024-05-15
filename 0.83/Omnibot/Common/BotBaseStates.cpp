@@ -1029,10 +1029,10 @@ namespace AiState
 		, m_PathStatus(PathFinished)
 		, m_PtOnPath(Vector3f::ZERO)
 		, m_LookAheadPt(Vector3f::ZERO)
-		, m_PassThroughState(0)
-		, m_RayDistance(-1.0f)
 		, m_JumpTime(0)
 		, m_LastStuckTime(0)
+		, m_PassThroughState(0)
+		, m_RayDistance(-1.0f)
 	{
 	}
 
@@ -1739,8 +1739,8 @@ namespace AiState
 					}
 					
 					if( 2 * fHeight * fHeight > fDistSq2d //climb only if next waypoint is above or below player
-						|| m_LadderDirection > 0 && fHeight > -g_fTopWaypointOffset
-						|| m_LadderDirection < 0 && -fHeight > g_fTopWaypointOffset) 
+						|| (m_LadderDirection > 0 && fHeight > -g_fTopWaypointOffset)
+						|| (m_LadderDirection < 0 && -fHeight > g_fTopWaypointOffset))
 					{
 						Vector3f vEye = GetClient()->GetEyePosition();
 						Vector3f vLook = pt.m_Pt - vEye;
@@ -2444,120 +2444,120 @@ namespace AiState
 
 	//////////////////////////////////////////////////////////////////////////
 
-	TrackTargetZone::TrackTargetZone()
-		: m_Radius(0.f)
-	{
-		Restart(0.f);
-	}
-	void TrackTargetZone::Restart(float _radius)
-	{
-		m_Radius = _radius;
-		m_ValidAim = false;
+	//TrackTargetZone::TrackTargetZone()
+	//	: m_Radius(0.f)
+	//{
+	//	Restart(0.f);
+	//}
+	//void TrackTargetZone::Restart(float _radius)
+	//{
+	//	m_Radius = _radius;
+	//	m_ValidAim = false;
 
-		m_LastTarget.Reset();
-		for(int i = 0; i < MaxTargetZones; ++i)
-		{
-			m_TargetZones[i].m_InUse = false;
-			m_TargetZones[i].m_TargetCount = 0;
-			m_TargetZones[i].m_Position = Vector3f::ZERO;
-		}
-	}
+	//	m_LastTarget.Reset();
+	//	for(int i = 0; i < MaxTargetZones; ++i)
+	//	{
+	//		m_TargetZones[i].m_InUse = false;
+	//		m_TargetZones[i].m_TargetCount = 0;
+	//		m_TargetZones[i].m_Position = Vector3f::ZERO;
+	//	}
+	//}
 
-	void TrackTargetZone::UpdateAimPosition()
-	{
-		int iNumZones = 0;
-		float fTotalWeight = 0.f;
-		for(int i = 0; i < MaxTargetZones; ++i)
-		{
-			if(m_TargetZones[i].m_InUse)
-			{
-				fTotalWeight += (float)m_TargetZones[i].m_TargetCount;
-				iNumZones++;
-			}			
-		}
+	//void TrackTargetZone::UpdateAimPosition()
+	//{
+	//	int iNumZones = 0;
+	//	float fTotalWeight = 0.f;
+	//	for(int i = 0; i < MaxTargetZones; ++i)
+	//	{
+	//		if(m_TargetZones[i].m_InUse)
+	//		{
+	//			fTotalWeight += (float)m_TargetZones[i].m_TargetCount;
+	//			iNumZones++;
+	//		}			
+	//	}
 
-		float fRand = Mathf::IntervalRandom(0.f, fTotalWeight);
-		for(int i = 0; i < MaxTargetZones; ++i)
-		{
-			if(m_TargetZones[i].m_InUse)
-			{
-				fRand -= (float)m_TargetZones[i].m_TargetCount;
-				if(fRand < 0.f)
-				{
-					m_AimPosition = m_TargetZones[i].m_Position;
-					m_ValidAim = true;
-					return;
-				}
-			}
-		}
-		m_ValidAim = false;
-	}
+	//	float fRand = Mathf::IntervalRandom(0.f, fTotalWeight);
+	//	for(int i = 0; i < MaxTargetZones; ++i)
+	//	{
+	//		if(m_TargetZones[i].m_InUse)
+	//		{
+	//			fRand -= (float)m_TargetZones[i].m_TargetCount;
+	//			if(fRand < 0.f)
+	//			{
+	//				m_AimPosition = m_TargetZones[i].m_Position;
+	//				m_ValidAim = true;
+	//				return;
+	//			}
+	//		}
+	//	}
+	//	m_ValidAim = false;
+	//}
 
-	void TrackTargetZone::RenderDebug()
-	{
-		for(int i = 0; i < MaxTargetZones; ++i)
-		{
-			if(m_TargetZones[i].m_InUse)
-			{
-				Utils::DrawRadius(
-					m_TargetZones[i].m_Position,
-					m_Radius, 
-					COLOR::MAGENTA, 
-					MIN_RENDER_TIME);
+	//void TrackTargetZone::RenderDebug()
+	//{
+	//	for(int i = 0; i < MaxTargetZones; ++i)
+	//	{
+	//		if(m_TargetZones[i].m_InUse)
+	//		{
+	//			Utils::DrawRadius(
+	//				m_TargetZones[i].m_Position,
+	//				m_Radius, 
+	//				COLOR::MAGENTA, 
+	//				MIN_RENDER_TIME);
 
-				Utils::PrintText(
-					m_TargetZones[i].m_Position,
-					COLOR::WHITE,
-					1.f, 
-					"%d",
-					m_TargetZones[i].m_TargetCount);
-			}
-		}
-	}
+	//			Utils::PrintText(
+	//				m_TargetZones[i].m_Position,
+	//				COLOR::WHITE,
+	//				1.f, 
+	//				"%d",
+	//				m_TargetZones[i].m_TargetCount);
+	//		}
+	//	}
+	//}
 
-	void TrackTargetZone::Update(Client *_client)
-	{
-		const MemoryRecord *pTargetRec = _client->GetTargetingSystem()->GetCurrentTargetRecord();
-		if(pTargetRec != NULL && pTargetRec->GetEntity() != m_LastTarget)
-		{
-			for(int i = 0; i < MaxTargetZones; ++i)
-			{
-				// if new target, add it to the zone counter
-				bool bFound = false;
-				TargetZone *pFreeZone = 0;
-				for(int z = 0; z < MaxTargetZones; ++z)
-				{
-					if(m_TargetZones[z].m_InUse)
-					{
-						const float fSqDistance = SquaredLength(m_TargetZones[z].m_Position,pTargetRec->GetLastSensedPosition());
+	//void TrackTargetZone::Update(Client *_client)
+	//{
+	//	const MemoryRecord *pTargetRec = _client->GetTargetingSystem()->GetCurrentTargetRecord();
+	//	if(pTargetRec != NULL && pTargetRec->GetEntity() != m_LastTarget)
+	//	{
+	//		for(int i = 0; i < MaxTargetZones; ++i)
+	//		{
+	//			// if new target, add it to the zone counter
+	//			bool bFound = false;
+	//			TargetZone *pFreeZone = 0;
+	//			for(int z = 0; z < MaxTargetZones; ++z)
+	//			{
+	//				if(m_TargetZones[z].m_InUse)
+	//				{
+	//					const float fSqDistance = SquaredLength(m_TargetZones[z].m_Position,pTargetRec->GetLastSensedPosition());
 
-						if(fSqDistance < Mathf::Sqr(m_Radius))
-						{
-							m_TargetZones[z].m_TargetCount++;
-							bFound = true;
-						}
-					}
-					else
-					{
-						if(!pFreeZone)
-							pFreeZone = &m_TargetZones[z];
-					}
-				}
+	//					if(fSqDistance < Mathf::Sqr(m_Radius))
+	//					{
+	//						m_TargetZones[z].m_TargetCount++;
+	//						bFound = true;
+	//					}
+	//				}
+	//				else
+	//				{
+	//					if(!pFreeZone)
+	//						pFreeZone = &m_TargetZones[z];
+	//				}
+	//			}
 
-				if(!bFound && pFreeZone)
-				{
-					pFreeZone->m_InUse = true;
-					pFreeZone->m_Position = pTargetRec->GetLastSensedPosition();
-					pFreeZone->m_TargetCount = 1;
-				}
-			}
+	//			if(!bFound && pFreeZone)
+	//			{
+	//				pFreeZone->m_InUse = true;
+	//				pFreeZone->m_Position = pTargetRec->GetLastSensedPosition();
+	//				pFreeZone->m_TargetCount = 1;
+	//			}
+	//		}
 
-			m_LastTarget = pTargetRec->GetEntity();
-		}
+	//		m_LastTarget = pTargetRec->GetEntity();
+	//	}
 
-		if(m_LastTarget.IsValid() && !InterfaceFuncs::IsAlive(m_LastTarget))
-			m_LastTarget.Reset();
-	}
+	//	if(m_LastTarget.IsValid() && !InterfaceFuncs::IsAlive(m_LastTarget))
+	//		m_LastTarget.Reset();
+	//}
 
 	//////////////////////////////////////////////////////////////////////////
 
@@ -3219,10 +3219,10 @@ namespace AiState
 
 		if(pNearestSector)
 		{
-			int iNumConnections = 0;
-			for(int d = 0; d < DIR_NUM; ++d)
-				if(pNearestSector->Connections[d].Destination)
-					++iNumConnections;
+			//int iNumConnections = 0;
+			//for(int d = 0; d < DIR_NUM; ++d)
+			//	if(pNearestSector->Connections[d].Destination)
+			//		++iNumConnections;
 			Vector3f vNodePos = _GetNodePosition(*pNearestSector);
 			Utils::PrintText(
 				vNodePos+Vector3f(0,0,32),
@@ -3364,4 +3364,4 @@ namespace AiState
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-};
+}

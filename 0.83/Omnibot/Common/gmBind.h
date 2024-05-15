@@ -281,7 +281,7 @@ Declaration:    GMBIND_DECLARE_FUNCTIONS( );
 
 GMBIND_FUNCTION_MAP_BEGIN( a_class );
 // Function declarations
-GMBIND_FUNCTION_MAP_END();
+GMBIND_FUNCTION_MAP_END()
 
 a_class - The gmBind derived class to use for this proxy
 
@@ -511,7 +511,7 @@ GMBIND_FUNCTION_MAP_BEGIN( gmBomb )
 //
 GMBIND_FUNCTION( "explode", gmExplode )
 //
-GMBIND_FUNCTION_MAP_END();
+GMBIND_FUNCTION_MAP_END()
 
 // Implement the property map for this type
 GMBIND_PROPERTY_MAP_BEGIN( gmBomb )
@@ -2709,7 +2709,7 @@ gmMemFixed gmBind< T_NATIVE, T_API >::m_gmUserObjects( 8+2*sizeof(void*), 1024 )
 // public section of the proxy API class
 //
 #define GMBIND_DECLARE_FUNCTIONS()		\
-	static void registerFunctions( gmMachine *a_machine );	
+	static void registerFunctions( gmMachine *a_machine )	
 ///////////////////////////////////////////////////
 // Method:	GMBIND_FUNCTION_MAP_BEGIN
 //
@@ -2760,7 +2760,7 @@ gmMemFixed gmBind< T_NATIVE, T_API >::m_gmUserObjects( 8+2*sizeof(void*), 1024 )
 // class. Overrides the default implementation
 //
 #define GMBIND_DECLARE_PROPERTIES()			\
-	static void registerProperties();
+	static void registerProperties()
 //
 ///////////////////////////////////////////////////////
 // Method:	GMBIND_PROPERTY_MAP_BEGIN

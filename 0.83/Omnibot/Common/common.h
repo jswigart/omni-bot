@@ -96,7 +96,7 @@ namespace stdext
     using std::unordered_map;
     using std::hash;
     using std::equal_to;
-};
+}
 
 #ifdef WIN32
 	//#define ENABLE_REMOTE_DEBUGGER
@@ -334,7 +334,7 @@ enum MoveMode
 		bShowAssert = Utils::AssertFunction((bool)((f)!=0), #f, __FILE__, __LINE__, __VA_ARGS__); \
 	} }
 #else	// !DEBUG
-#define OBASSERT(f, sz, ...) (f)
+#define OBASSERT(f, sz, ...) (void)(f)
 #endif	// !DEBUG
 
 #endif

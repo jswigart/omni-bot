@@ -170,7 +170,7 @@ namespace MiniDumper
 	{
 		g_AppName.clear();
 	}
-};
+}
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -188,7 +188,7 @@ namespace MiniDumper
 	{
 		g_AppName.clear();
 	}
-};
+}
 
 #endif
 

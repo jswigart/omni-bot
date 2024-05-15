@@ -233,7 +233,7 @@ struct ET_CvarSet
 
 struct ET_CvarGet
 {
-	char *		m_Cvar;
+	const  char *		m_Cvar;
 	int			m_Value;
 };
 

@@ -515,7 +515,7 @@ const bool RTCW_Game::RTCW_CanSensoreEntity(const EntityInstance &_ent)
 		return false;
 
 	int c =_ent.m_EntityClass;
-	return c<RTCW_CLASS_MAX || c!=RTCW_CLASSEX_ARTY && c!=RTCW_CLASSEX_FLAMECHUNK && c!=RTCW_CLASSEX_ROCKET;
+	return c<RTCW_CLASS_MAX || (c!=RTCW_CLASSEX_ARTY && c!=RTCW_CLASSEX_FLAMECHUNK && c!=RTCW_CLASSEX_ROCKET);
 }
 
 void RTCW_Game::ClientJoined(const Event_SystemClientConnected *_msg)

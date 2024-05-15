@@ -16,6 +16,7 @@ State::State(const char * _name, const UpdateDelay &_ur)
 	, m_Parent(0)
 	, m_FirstChild(0)
 	, m_Root(0)
+	, m_NumThreads(0)
 	, m_Client(0)
 	, m_NextUpdate(0)
 	, m_LastUpdateTime(0)
@@ -27,7 +28,6 @@ State::State(const char * _name, const UpdateDelay &_ur)
 	, m_NameHash(0)
 	, m_DebugIcon(Ico_Default)
 	, m_SyncCrc( 0 )
-	, m_NumThreads(0)
 {
 	SetName(_name);
 	DebugExpand(true);
@@ -1111,12 +1111,12 @@ State::StateStatus StatePrioritized::UpdateState(float fDt)
 	int iBestRand = 0;
 
 #ifdef _DEBUG
-	const int N = 64; // cs: was 32
-	float STATES_PRIO[N] = {};
-	State *STATES_P[N] = {}; int NumPriorities = 0;
-	State *STATES_X[N] = {}; int NumExited = 0;
-	State *OLD_BEST = m_CurrentState; OLD_BEST;
-	const char *BOT_NAME = GetClient() ? GetClient()->GetName() : 0; BOT_NAME;
+	//const int N = 64; // cs: was 32
+	//float STATES_PRIO[N] = {};
+	//State *STATES_P[N] = {}; int NumPriorities = 0;
+	//State *STATES_X[N] = {}; int NumExited = 0;
+	//State *OLD_BEST = m_CurrentState; OLD_BEST;
+	//const char *BOT_NAME = GetClient() ? GetClient()->GetName() : 0; BOT_NAME;
 #endif
 
 	for(State *pState = m_FirstChild; pState; pState = pState->m_Sibling)
@@ -1127,9 +1127,9 @@ State::StateStatus StatePrioritized::UpdateState(float fDt)
 		float fPriority = pState->InternalGetPriority();
 
 #ifdef _DEBUG
-		STATES_PRIO[NumPriorities] = fPriority;
-		STATES_P[NumPriorities] = pState;
-		NumPriorities++;
+		//STATES_PRIO[NumPriorities] = fPriority;
+		//STATES_P[NumPriorities] = pState;
+		//NumPriorities++;
 #endif
 
 		if(fPriority >= fBestPriority)
@@ -1168,7 +1168,7 @@ State::StateStatus StatePrioritized::UpdateState(float fDt)
 		if(pBestState != pState && pState->IsActive())
 		{
 #ifdef _DEBUG
-			STATES_X[NumExited++] = pState;
+			//STATES_X[NumExited++] = pState;
 #endif
 			pState->InternalExit();
 		}

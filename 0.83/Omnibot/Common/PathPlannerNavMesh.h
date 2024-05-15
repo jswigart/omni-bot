@@ -36,7 +36,7 @@ enum ToolStateNavMesh
 namespace NavigationMeshOptions
 {
 	extern float CharacterHeight;
-};
+}
 
 // class: PathPlannerNavMesh
 //		Path planner interface for the navmesh system for hl2

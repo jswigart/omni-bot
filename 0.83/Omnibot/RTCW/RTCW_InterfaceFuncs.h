@@ -15,7 +15,7 @@ namespace InterfaceFuncs
 {
 	bool SendPrivateMessage(Client *_bot, char *_targName, char *_message);
 	bool SetCvar(char *_cvar, char *_value);
-	int GetCvar(char *_cvar);
+	int GetCvar(const char *_cvar);
 	bool IsWeaponOverheated(Client *_bot, RTCW_Weapon _weapon);
 	void GetMountedGunHeat(Client *_bot, const GameEntity _gun, int &_cur, int &_max);
 	ExplosiveState GetExplosiveState(Client *_bot, const GameEntity _dynamite);
@@ -41,6 +41,6 @@ namespace InterfaceFuncs
 	void SetSuicide(Client *_bot, int _sui, int _pers);
 	void DisableBotPush(Client *_bot, int _push);
 	int GetPlayerClass(GameEntity _ent);
-};
+}
 
 #endif

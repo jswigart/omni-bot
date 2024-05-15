@@ -29,6 +29,7 @@ Client::HoldButtons::HoldButtons()
 Client::Client()
 	: m_DesiredTeam		(RANDOM_TEAM_IF_NO_TEAM)
 	, m_DesiredClass	(RANDOM_CLASS_IF_NO_CLASS)
+	, m_SpawnTime(0)
 	, m_StepHeight		(0.0f)
 	, m_StateRoot		(NULL)
 	, m_Position		(Vector3f::ZERO)
@@ -53,7 +54,6 @@ Client::Client()
 	, m_AimDamping			(10.0f)
 	, m_AimTolerance		(48.0f)
 	, m_ProfileType			(PROFILE_NONE)
-	, m_SpawnTime(0)
 {
 	memset(&m_ClientInput, 0, sizeof(m_ClientInput));
 	memset(&m_HealthArmor, 0, sizeof(m_HealthArmor));
@@ -88,11 +88,6 @@ void Client::Update()
 
 	{
 		Prof(Interface_Functions);
-
-		// for remote syncing
-		const Vector3f oldPosition = m_Position;
-		const Vector3f oldFacing = m_FacingVector;
-		const Msg_HealthArmor oldHealthArmor = m_HealthArmor;
 
 		// update my locally properties with the one the game has for me.	
 		EngineFuncs::EntityPosition(m_GameEntity, m_Position);
@@ -312,8 +307,7 @@ void Client::ProcessEvent(const MessageHelper &_message, CallbackParameters &_cb
 		}
 		HANDLER(MESSAGE_SPECTATED)
 		{
-			const Event_Spectated *m = _message.Get<Event_Spectated>();
-			m;
+			//const Event_Spectated *m = _message.Get<Event_Spectated>();
 			if(IsDebugEnabled(BOT_DEBUG_FPINFO))
 			{
 				StringStr strOutString;

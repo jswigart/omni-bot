@@ -67,24 +67,24 @@ public:
 #define PROPERTY_PROPOGATE(name) m_##name =  _other->m_##name;
 	//////////////////////////////////////////////////////////////////////////
 
-	PROPERTY_BITFLAG64(DisableWithEntityFlag);
-	PROPERTY_BITFLAG64(DeleteWithEntityFlag);
-	PROPERTY_FLOAT(RenderHeight);
-	PROPERTY_FLOAT(DefaultRenderRadius);
-	PROPERTY_INT(DefaultDrawFlags);
-	PROPERTY_BOOL(DeleteMe);
-	PROPERTY_BOOL(DynamicPosition);
-	PROPERTY_BOOL(DynamicOrientation);
-	PROPERTY_BOOL(PropertiesBound);
-	PROPERTY_BOOL(RemoveWithEntity);
-	PROPERTY_BOOL(InterfaceGoal);
-	PROPERTY_BOOL(Disabled);
-	PROPERTY_BOOL(InUse);
-	PROPERTY_BOOL(DisableForControllingTeam);
-	PROPERTY_BOOL(DontSave);
-	PROPERTY_BOOL(RenderGoal);
-	PROPERTY_BOOL(RenderRoutes);
-	PROPERTY_BOOL(CreateOnLoad);
+	PROPERTY_BITFLAG64(DisableWithEntityFlag)
+	PROPERTY_BITFLAG64(DeleteWithEntityFlag)
+	PROPERTY_FLOAT(RenderHeight)
+	PROPERTY_FLOAT(DefaultRenderRadius)
+	PROPERTY_INT(DefaultDrawFlags)
+	PROPERTY_BOOL(DeleteMe)
+	PROPERTY_BOOL(DynamicPosition)
+	PROPERTY_BOOL(DynamicOrientation)
+	PROPERTY_BOOL(PropertiesBound)
+	PROPERTY_BOOL(RemoveWithEntity)
+	PROPERTY_BOOL(InterfaceGoal)
+	PROPERTY_BOOL(Disabled)
+	PROPERTY_BOOL(InUse)
+	PROPERTY_BOOL(DisableForControllingTeam)
+	PROPERTY_BOOL(DontSave)
+	PROPERTY_BOOL(RenderGoal)
+	PROPERTY_BOOL(RenderRoutes)
+	PROPERTY_BOOL(CreateOnLoad)
 	
 	enum DefaultDrawFlags
 	{

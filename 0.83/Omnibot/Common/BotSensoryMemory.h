@@ -206,5 +206,5 @@ namespace AiState
 		static pfnCanSensoreEntity		m_pfnCanSensoreEntity;
 	private:
 	};
-};
+}
 #endif

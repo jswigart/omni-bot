@@ -256,7 +256,7 @@ namespace InterfaceFuncs
 		return true;
 	}
 
-	int GetCvar(char *_cvar)
+	int GetCvar(const char *_cvar)
 	{
 		if (_cvar)
 		{
@@ -284,4 +284,4 @@ namespace InterfaceFuncs
 		MessageHelper msg(ET_MSG_DISABLEBOTPUSH, &data, sizeof(data));
 		InterfaceMsg(msg, _bot->GetGameEntity());
 	}
-};
+}

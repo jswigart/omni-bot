@@ -146,7 +146,7 @@ struct RTCW_CvarSet
 
 struct RTCW_CvarGet
 {
-	char *		m_Cvar;
+	const char *m_Cvar;
 	int			m_Value;
 };
 

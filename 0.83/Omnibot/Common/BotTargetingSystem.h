@@ -71,5 +71,5 @@ namespace AiState
 
 		GameEntity		m_ForceTarget;
 	};
-};
+}
 #endif

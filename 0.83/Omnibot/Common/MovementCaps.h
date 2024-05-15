@@ -11,6 +11,6 @@ namespace Movement
 
 		MOVE_MAX,
 	};
-};
+}
 
 #endif

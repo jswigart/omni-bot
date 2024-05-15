@@ -98,4 +98,4 @@ namespace AiState
 		return State_Busy;
 	}
 
-};
+}

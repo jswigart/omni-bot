@@ -287,7 +287,7 @@ protected:
 	void cmdWaypointClearConnections(const StringVector &_args);
 	void cmdWaypointSetName(const StringVector &_args);
 	void cmdWaypointSetProperty(const StringVector &_args);
-	void cmdWaypointShowProperty(const StringVector &_args);;
+	void cmdWaypointShowProperty(const StringVector &_args);
 	void cmdWaypointClearProperty(const StringVector &_args);
 	void cmdWaypointAutoRadius(const StringVector &_args);
 	void cmdWaypointMove(const StringVector &_args);
