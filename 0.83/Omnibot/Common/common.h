@@ -1,22 +1,12 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-// $LastChangedBy$
-// $LastChangedDate$
-// $LastChangedRevision$
-//
-// file: Commonly included headers
-//		In order to reduce the clutter in every file that commonly includes
-//		some headers, such as STL headers and utility headers, we put them
-//		in here so that those files can just include this and get access to
-//		all the common stuff.
-//
-////////////////////////////////////////////////////////////////////////////////
+//Commonly included headers
+//In order to reduce the clutter in every file that commonly includes
+//some headers, such as STL headers and utility headers, we put them
+//in here so that those files can just include this and get access to all the common stuff.
 
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
 //#include "CodeAnalysis.h"
-
 
 // Disable some compiler warnings.
 #ifdef _MSC_VER

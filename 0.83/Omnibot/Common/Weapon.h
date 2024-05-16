@@ -1,15 +1,5 @@
-////////////////////////////////////////////////////////////////////////////////
-// 
-// $LastChangedBy$
-// $LastChangedDate$
-// $LastChangedRevision$
-//
-// file: Weapon
-//		This class represents a weapon as a whole, and a container for the
-//		various fire modes that it has. Some mods may only use 1 fire mod, while others
-//		may support many.
-//
-////////////////////////////////////////////////////////////////////////////////
+//This class represents a weapon as a whole, and a container for the
+//various fire modes that it has. Some mods may only use 1 fire mod, while others may support many.
 
 #ifndef __WEAPON_H__
 #define __WEAPON_H__

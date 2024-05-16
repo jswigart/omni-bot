@@ -1,14 +1,6 @@
-////////////////////////////////////////////////////////////////////////////////
-// 
-// $LastChangedBy$
-// $LastChangedDate$
-// $LastChangedRevision$
-//
-// about: Exported function definitions
-//		In order for the game to call functions from the bot, we must export
-//		the functions to the game itself and allow it to call them. 
-//
-////////////////////////////////////////////////////////////////////////////////
+//Exported function definitions
+//In order for the game to call functions from the bot, we must export
+//the functions to the game itself and allow it to call them. 
 
 #ifndef __OMNIBOT_H__
 #define __OMNIBOT_H__
