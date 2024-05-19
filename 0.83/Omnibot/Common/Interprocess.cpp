@@ -133,7 +133,8 @@ namespace InterProcess
 #else
 			void *hmod = 0;
 #if defined __APPLE__
-			hmod = dlopen(va("%s/omnibot/cgame_mac", g_EngineFuncs->GetLogPath()), RTLD_NOW|RTLD_NOLOAD);
+			hmod = dlopen(va("%s/omnibot/cgame_mac", g_EngineFuncs->GetLogPath()), RTLD_NOW|RTLD_NOLOAD); //ETLegacy
+			if(!hmod) hmod = dlopen("omnibot/cgame.mp.x86_64.dylib", RTLD_NOW|RTLD_NOLOAD); //ioRTCW
 #else
 			dl_iterate_phdr(dl_iterate_callback, &hmod);
 #endif

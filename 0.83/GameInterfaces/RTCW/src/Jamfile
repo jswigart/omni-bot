@@ -1,30 +1,46 @@
 # Root project file for the RTCW interface.
-# Builds the game libraries.
-
+# Builds the game mod libraries.
 
 project omnibot_rtcw
 	: build-dir ./build
-	: requirements <toolset>msvc:<define>WIN32
-	: requirements <toolset>gcc:<define>__linux__
-	: requirements <variant>debug:<define>_DEBUG
-	: requirements <variant>release:<define>NDEBUG
+	: requirements
+	<toolset>msvc:<define>WIN32
+	<toolset>gcc:<define>__linux__
+	<variant>debug:<define>_DEBUG
+	<variant>release:<define>NDEBUG
+	<cflags>-fno-strict-aliasing
+	<warnings>off
 	;
-
-# define external libs
-lib dl_lib : : <name>dl ;
 
 # target suffix
 rule tag ( name : type ? : property-set )
 {
 	if $(type) = SHARED_LIB
 	{
-		if [ $(property-set).get <address-model> ] = 64
+		if [ $(property-set).get <target-os> ] = windows
 		{
-			return $(name).x86_64.so ;
+			if [ $(property-set).get <address-model> ] = 64
+			{
+				return $(name)_mp_x64.dll ;
+			}
+			else
+			{
+				return $(name)_mp_x86.dll ;
+			}
 		}
 		else
 		{
-			return $(name).i386.so ;
+			local ext = so ;
+			if [ $(property-set).get <target-os> ] = darwin
+			{
+				ext = dylib ;
+			}
+			local suffix = i386 ;
+			if [ $(property-set).get <address-model> ] = 64
+			{
+				suffix = x86_64 ;
+			}
+			return $(name).mp.$(suffix).$(ext) ;
 		}
 	}
 }

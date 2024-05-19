@@ -3,19 +3,19 @@
 import modules ;
 
 project cgame
-	: requirements <define>CGAMEDLL
-	: requirements <include>../game
-	: requirements <include>../ui
-	: requirements <include>../../../../Omnibot/Common
+	: requirements
+	<define>CGAMEDLL
+	<include>../game
+	<include>../ui
+	<include>../../../../Omnibot/Common
 	;
 
 SOURCES = [ glob ../game/bg_*.c ]
-		  [ glob cg_*.c ]
-		  [ glob *.cpp ]
-		  ../game/q_math.c
-		  ../game/q_shared.c
-		  ../ui/ui_shared.c
+		[ glob cg_*.c ]
+		[ glob *.cpp ]
+		../game/q_math.c
+		../game/q_shared.c
+		../ui/ui_shared.c
 		;
 
-lib cgame.mp.so : $(SOURCES) : <tag>@tag <toolset>gcc:<cflags>-Os <cflags>-w <cflags>-fno-strict-aliasing <linkflags>-pthread <linkflags>-lrt ;
-
+lib cgame : $(SOURCES) : <tag>@tag <toolset>gcc:<cflags>-Os ;

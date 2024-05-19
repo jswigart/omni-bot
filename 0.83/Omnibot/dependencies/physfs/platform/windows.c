@@ -11,6 +11,8 @@
 
 #ifdef PHYSFS_PLATFORM_WINDOWS
 
+#pragma comment(lib,"advapi32.lib")
+
 /* Forcibly disable UNICODE, since we manage this ourselves. */
 #ifdef UNICODE
 #undef UNICODE

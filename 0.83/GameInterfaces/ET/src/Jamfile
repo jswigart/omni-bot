@@ -1,30 +1,44 @@
-# Root project file for the ET interface.
+# Root project file for the ET mod.
 # Builds the game libraries.
-
 
 project omnibot_et
 	: build-dir ./build
-	: requirements <toolset>msvc:<define>WIN32
-	: requirements <toolset>gcc:<define>__linux__
-	: requirements <variant>debug:<define>_DEBUG
-	: requirements <variant>release:<define>NDEBUG
+	: requirements
+	<toolset>msvc:<define>WIN32
+	<toolset>gcc:<define>__linux__
+	<variant>debug:<define>_DEBUG
+	<variant>release:<define>NDEBUG
+	<cflags>-fno-strict-aliasing
+	<warnings>off
 	;
-
-# define external libs
-lib dl_lib : : <name>dl ;
 
 # target suffix
 rule tag ( name : type ? : property-set )
 {
 	if $(type) = SHARED_LIB
 	{
-		if [ $(property-set).get <address-model> ] = 64
+		if [ $(property-set).get <target-os> ] = darwin
 		{
-			return $(name).x86_64.so ;
+			return $(name)_mac ;
+		}
+		else if [ $(property-set).get <target-os> ] = windows
+		{
+			if [ $(property-set).get <address-model> ] = 64
+			{
+				return $(name)_mp_x64.dll ;
+			}
+			else
+			{
+				return $(name)_mp_x86.dll ;
+			}
+		}
+		else if [ $(property-set).get <address-model> ] = 64
+		{
+			return $(name).mp.x86_64.so ;
 		}
 		else
 		{
-			return $(name).i386.so ;
+			return $(name).mp.i386.so ;
 		}
 	}
 }

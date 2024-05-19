@@ -1,20 +1,20 @@
 # The server library.
 
 project game
-	: requirements <define>GAMEDLL
-	: requirements <variant>debug:<define>DEBUG
-	: requirements <include>../../../../Omnibot/Common
-	: requirements <include>../../../../Omnibot/RTCW
+	: requirements
+	<define>GAMEDLL
+	<variant>debug:<define>DEBUG
+	<include>../../../../Omnibot/Common
+	<include>../../../../Omnibot/RTCW	
 	;
 
 SOURCES = [ glob bg_*.c ]
-		  [ glob g_*.c : g_lua.c g_sha1.c ]
-                  [ glob et-*.c ]
-		  [ glob g_*.cpp ]
-		  [ glob ../../../../Omnibot/Common/BotLoadLibrary.cpp ]
-		  q_math.c
-		  q_shared.c
+		[ glob g_*.c : g_lua.c g_sha1.c ]
+        [ glob et-*.c ]
+		[ glob g_*.cpp ]
+		[ glob ../../../../Omnibot/Common/BotLoadLibrary.cpp ]
+		q_math.c
+		q_shared.c
 		;
 
-lib qagame.mp.so : $(SOURCES) ..//dl_lib : <tag>@tag <toolset>gcc:<cflags>-Os <cflags>-w <cflags>-fno-strict-aliasing ;
-
+lib qagame : $(SOURCES) : <tag>@tag <toolset>gcc:<cflags>-Os ;

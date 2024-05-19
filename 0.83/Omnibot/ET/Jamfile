@@ -1,8 +1,7 @@
 # The ET Library.
 
 project ET
-	: requirements <include>../Common
-   	;
+	: requirements <include>../Common ;
 
 # Compile ALL .cpp files and link to Common.lib to create our dll
 
