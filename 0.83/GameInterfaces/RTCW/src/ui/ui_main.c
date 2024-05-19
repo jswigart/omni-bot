@@ -6726,7 +6726,7 @@ void UI_DrawConnectScreen( qboolean overlay ) {
 		break;
 	case CA_CONNECTED: {
 		if ( *downloadName ) {
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WIN64)
 			if ( httpdown.useHttp ) {
 				UI_DisplayMyDownloadInfo( downloadName, centerPoint, yStart, scale );
 			} else {  //do regular download function

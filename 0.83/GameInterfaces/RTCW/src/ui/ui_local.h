@@ -1,9 +1,9 @@
 #ifndef __UI_LOCAL_H__
 #define __UI_LOCAL_H__
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WIN64)
 #include <windows.h>
-#include <detours.h>
+#include "../detours/detours.h"
 #endif
 
 #include "../game/q_shared.h"
@@ -1154,7 +1154,7 @@ void UI_SPUnlockMedals_f( void );
 void UI_InitGameinfo( void );
 
 //S4ND - HTTP Downloader
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(_WIN64)
 void hook_BeginDownload( const char *localName, const char *remoteName );
 extern void ( WINAPIV *orig_BeginDownload )( const char *localName, const char *remoteName );
 void UI_DisplayMyDownloadInfo( const char *downloadName, float centerPoint, float yStart, float scale );
