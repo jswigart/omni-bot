@@ -80,6 +80,7 @@ typedef int intptr_t;
 #include <time.h>
 #include <ctype.h>
 #include <limits.h>
+#include <stdint.h>
 
 #endif
 
@@ -87,8 +88,6 @@ typedef int intptr_t;
 
 //#pragma intrinsic( memset, memcpy )
 
-#else
-#include <stdint.h>
 #endif
 
 

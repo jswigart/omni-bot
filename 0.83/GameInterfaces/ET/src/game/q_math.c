@@ -549,23 +549,23 @@ void VectorRotate( vec3_t in, vec3_t matrix[3], vec3_t out )
 
 //============================================================================
 
-/*
-** float q_rsqrt( float number )
-*/
-float Q_rsqrt( float number )
+typedef union
 {
-	long i;
-	float x2, y;
-	const float threehalfs = 1.5F;
+	float f;
+	int32_t i;
+	uint32_t ui;
+} floatint_t;
 
-	x2 = number * 0.5F;
-	y  = number;
-	i  = * ( long * ) &y;						// evil floating point bit level hacking
-	i  = 0x5f3759df - ( i >> 1 );               // what the fuck?
-	y  = * ( float * ) &i;
-	y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
-//	y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
+// 1/sqrt(f), fast but inaccurate
+float Q_rsqrt(float f)
+{
+	floatint_t  t;
+	float y;
 
+	t.f = f;
+	t.i = 0x5f3759df - (t.i >> 1); // evil floating point bit level hacking
+	y = t.f;
+	y = y * (1.5F - (f * 0.5F * y * y)); // iteration
 	return y;
 }
 
