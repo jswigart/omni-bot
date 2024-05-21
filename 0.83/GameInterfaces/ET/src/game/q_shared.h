@@ -94,6 +94,7 @@
 #include <limits.h>
 #include <sys/stat.h> // rain
 #include <float.h>
+#include <stdint.h>
 
 #endif
 
