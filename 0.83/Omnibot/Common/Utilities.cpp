@@ -57,15 +57,19 @@ namespace Utils
 			if(e == s) continue;
 			if(e >= 'A' && e <= 'Z')
 			{
-				if(e + ('a' - 'A') == s) continue;
-				return false;
+				if(e + ('a' - 'A') == s) continue; //case insensitive
 			}
-			if(e >= 'a' && e <= 'z')
+			else if(e >= 'a' && e <= 'z')
 			{
 				if(e - ('a' - 'A') == s) continue;
-				return false;
 			}
-			if(e == '_' || (e >= '0' && e <= '9')) return false;
+			else if(e != '_' && !(e >= '0' && e <= '9'))
+			{
+				if(e == '*' || e == '\\' && exp[1] == '{') exp--, str--; //repeat last char
+				break;
+			}
+			e = exp[1];
+			if(e != '*' && e != '\\') return false;
 			break;
 		}
 
