@@ -55,7 +55,7 @@ IGame::~IGame()
 
 const char *IGame::GetVersion() const
 {
-	return "0.9";
+	return "0.91";
 }
 
 const char *IGame::GetVersionDateTime() const

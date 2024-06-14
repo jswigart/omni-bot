@@ -1,5 +1,5 @@
 ==Overview==
-RTCW:Omnibot is a modification for http://en.wikipedia.org/wiki/Return_to_Castle_Wolfenstein. Some general modifications have been made to the 1.4 SDK. 
+RTCW:Omnibot is a modification for https://en.wikipedia.org/wiki/Return_to_Castle_Wolfenstein. Some general modifications have been made to the 1.4 SDK. 
 
 ===Bot Features===
 * 99 fully supported maps (complete waypoints / scripts)

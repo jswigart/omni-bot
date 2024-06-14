@@ -1,12 +1,30 @@
+==0.91 RTCW Change Log==
 
-=== COMMANDS ===
-Added saveplayerpos, saveusepoint, stuckstart, stucknext, warptogoaloffset, cleargoalflags
+macOS is supported
+
+=== BOT ===
+Improved waypoints drawing (incompatible with older omnibot mods !)
+Added config option Script/EndGameStats, which prints gm scripts memory usage at the end of game
+Added GetGoals parameter can be a hash number instead of a regular expression
+Added QueryGoals filter CheckRange
+Added TraceLine parameter CONTENT.PLAYERCLIP
+Fixed Wp.Connect blockable connections
+Fixed invalid characters in goal names
+Optimized RegexMatch, SetAvailableMapGoals, SetGoalPriority
 
 === MOD ===
 Added more video modes (screen resolutions)
 Added DMS tool commands setGoalName, setWaypointName, setGoalStance, ...
 Changed MAX_MENUS increased from 64 to 128
 Fixed GetLocalPosition of a spectator
+
+=== SCRIPTS ===
+Changed paththrough navigation can use this instead of _this parameter
+Improved Util.SetGoalRange, Util.RemoveGoal parameter can be a regular expression
+
+=== COMMANDS ===
+Added saveplayerpos, saveusepoint, stuckstart, stucknext, warptogoaloffset, cleargoalflags
+Added parameter toggle to waypoint_view
 
 ---------------------------------------------------------------
 
