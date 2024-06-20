@@ -28,6 +28,7 @@ this.Exit = function()
 
 this.Update = function()
 {
+	position = this.MapGoal.GetPosition();
 	Util.RouteTo(this);
 
 	UsingWeapon = 0;
@@ -66,6 +67,12 @@ this.Update = function()
 	CampTime = RandFloat(this.MapGoal.MinCampTime, this.MapGoal.MaxCampTime);
 	for(timeout = 0; timeout < CampTime; timeout += 1)
 	{
+		if (this.MapGoal.GetPosition() != position)
+		{
+			//go to a new position
+			this.ReleaseAimRequest();
+			return;
+		}
 		if ( UsingWeapon && (!this.Bot.HasAmmo(UsingWeapon) || (UsingWeapon == WEAPON.PANZERFAUST && !this.Bot.IsWeaponCharged(WEAPON.PANZERFAUST, 0))) )
 		{
 			this.BlackboardDelay(20);

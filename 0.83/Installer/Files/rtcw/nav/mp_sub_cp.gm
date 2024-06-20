@@ -1,11 +1,6 @@
 global Map =
 {
 	Quiet = true,
-	Checkpoint_checkpoint01 = "CHECKPOINT_checkpoint01",
-	Checkpoint_checkpoint02 = "CHECKPOINT_checkpoint02",
-	Checkpoint_checkpoint03 = "CHECKPOINT_checkpoint03",
-	Checkpoint_checkpoint04 = "CHECKPOINT_checkpoint04",
-	Checkpoint_checkpoint05 = "CHECKPOINT_checkpoint05",
 
 	checkpoint01_Axis_Captured = function( trigger )
 	{
@@ -91,9 +86,4 @@ global OnMapLoad = function()
 	Util.EnableGoal( "CHECKPOINT.*" );
 
 	print( "OnMapLoad" );
-};
-
-
-global OnBotJoin = function( bot )
-{
 };

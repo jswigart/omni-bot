@@ -79,9 +79,6 @@ global InitializeRoutes = function()
 {
 	MapRoutes =
 	{
-		PLANT_Cathedrale_door =
-		{
-		},
 		FLAG_Top_Secret_Documents =
 		{
 			ROUTE_bspawn =

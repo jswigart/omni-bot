@@ -61,13 +61,6 @@ global OnMapLoad = function()
 	});
 	//SetAvailableMapGoals( TEAM.ALLIES, true, "AIRSTRIKE_bDoor.*" );
 
-
-	yield(); yield();
-	/*if ( Map.Suicide ) {
-		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.LIEUTENANT, 1, 1 );
-		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.SOLDIER, 1, 1 );
-		RTCWUtil.SetSuicide( TEAM.ALLIES, CLASS.ENGINEER, 1, 1 );
-	}*/
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 

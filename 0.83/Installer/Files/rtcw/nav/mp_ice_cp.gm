@@ -1,17 +1,6 @@
 global Map =
 {
 	Quiet = true,
-	Checkpoint_checkpoint01 = "CHECKPOINT_checkpoint01",
-	Checkpoint_checkpoint02 = "CHECKPOINT_checkpoint02",
-	Checkpoint_checkpoint03 = "CHECKPOINT_checkpoint03",
-	Checkpoint_checkpoint04 = "CHECKPOINT_checkpoint04",
-	Checkpoint_checkpoint05 = "CHECKPOINT_checkpoint05",
-	Flag_axis_obj01 = "FLAG_axis_obj01",
-	Cappoint_130 = "CAPPOINT_130",
-	Mount_tower_mg = "MOUNTMG42_tower_mg",
-	Mount_truck_mg = "MOUNTMG42_truck_mg",
-	Repair_tower_mg = "REPAIRMG42_tower_mg",
-	Repair_truck_mg = "REPAIRMG42_truck_mg",
 
 	axis_obj01_Taken = function( trigger )
 	{
@@ -94,9 +83,4 @@ global OnMapLoad = function()
 	Util.EnableGoal( "CHECKPOINT.*" );
 
 	print( "OnMapLoad" );
-};
-
-
-global OnBotJoin = function( bot )
-{
 };

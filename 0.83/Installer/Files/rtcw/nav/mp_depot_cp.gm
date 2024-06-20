@@ -129,7 +129,3 @@ global OnMapLoad = function()
 
 	print( "OnMapLoad" );
 };
-
-global OnBotJoin = function( bot )
-{
-};

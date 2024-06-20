@@ -188,9 +188,6 @@ global InitializeRoutes = function()
 {
 	MapRoutes =
 	{
-		PLANT_north_wall =
-		{
-		},
 		PLANT_power_generator_A =
 		{
 			ROUTE_flagspawn =

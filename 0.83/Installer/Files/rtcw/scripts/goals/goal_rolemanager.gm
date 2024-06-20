@@ -60,16 +60,18 @@ this.FindFreeRoleSlot = function()
 		// prioritize roles that have no players
 		if (currentBots == 0) { numFree += 9; }
 
+		crucialClass = role.crucialClass;
+		if (IsTable(crucialClass)) {
+			crucialClass = crucialClass[currentBots];
+		} else if (currentBots > 0) {
+			crucialClass = null;
+		}
+
 		// see which one needs a bot the most
 		if ( numFree > evalNum ) {
 			evalNum = numFree;
 			newRole = id;
-
-			if ( currentBots == 0 ) {
-				newClass = role.crucialClass;
-			} else {
-				newClass = null;
-			}
+			newClass = crucialClass;
 			spawnPoint = role.spawnpt;
 			voiceMacro = role.voice;
 		}

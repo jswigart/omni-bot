@@ -68,7 +68,7 @@ this.FindTarget = function()
 	// cache the goal list
 	if ( !Map.ArtyGoals ) {
 		Map.ArtyGoals = {};
-		GetGoals( Map.ArtyGoals, 0, "Artillery_S.*" );
+		GetGoals( Map.ArtyGoals, 0, 0xb708821b /* ARTILLERY_S */ );
 	}
 
 	if ( !Map.PTArtyInfo[ this.Data ].Cached ) {

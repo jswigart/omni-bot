@@ -141,15 +141,6 @@ global OnMapLoad = function()
 
 	MapRoutes =
 	{
-		PLANT_one_of_the_two_guns =
-		{
-		},
-		PLANT_entrance_of_the_Fortress =
-		{
-		},
-		PLANT_entrance_of_the_Guns_Cave =
-		{
-		},
 		CHECKPOINT_flag =
 		{
 			ROUTE_bspawn =
@@ -183,12 +174,3 @@ global OnMapLoad = function()
 	Util.MapDebugPrint( "Omni-bot map script for " + GetMapName() + " executed." );
 };
 
-global OnBotJoin = function( bot )
-{
-};
-
-global InitializeRoutes = function()
-{
-
-
-};

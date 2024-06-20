@@ -222,12 +222,6 @@ global InitializeRoutes = function()
 		{
 			ROUTE_docgrab = {},
 		},
-		PLANT_Grate =
-		{
-		},
-		PLANT_Lower_Valley_Entrance =
-		{
-		},
 		FLAG_Secret_Documents =
 		{
 			ROUTE_bspawn =

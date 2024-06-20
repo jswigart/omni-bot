@@ -18,6 +18,10 @@ Added DMS tool commands setGoalName, setWaypointName, setGoalStance, ...
 Changed MAX_MENUS increased from 64 to 128
 Fixed GetLocalPosition of a spectator
 
+=== GOALS ===
+Improved role's crucialClass can be a table of classes
+Improved camp goal can be moved during game
+
 === SCRIPTS ===
 Changed paththrough navigation can use this instead of _this parameter
 Improved Util.SetGoalRange, Util.RemoveGoal parameter can be a regular expression
