@@ -581,6 +581,8 @@ int GM_CDECL GetMapGoals(gmThread *a_thread, Client *client)
 				}
 			}
 			break;
+		case GM_NULL:
+			break;
 		default:
 			GM_EXCEPTION_MSG("expecting param %d as string or int or table, got %s", p, GM_THREAD_ARG->ParamTypeName(p));
 			return GM_EXCEPTION;
