@@ -544,16 +544,43 @@ void ClearMaxLivesBans ()
 Svcmd_EntityList_f
 ===================
 */
-void	Svcmd_EntityList_f (void) {
+
+void Appendf( char **dest, int *size, const char *fmt, ... )
+{
+	va_list		argptr;
+	int ret;
+
+	va_start (argptr, fmt);
+	if(*size>0)
+	{
+		ret = Q_vsnprintf(*dest, *size, fmt, argptr);
+		if(ret<0) {
+			*dest += *size - 1;
+			*size = 0;
+		}
+		else {
+			*size -= ret;
+			*dest += ret;
+		}
+	}
+	va_end (argptr);
+}
+
+void	Svcmd_EntityList_f() {
 	int			e;
 	gentity_t		*check;
+	char *dest;
+	int size;
+	char buf[256];
 
 	check = g_entities+1;
 	for (e = 1; e < level.num_entities ; e++, check++) {
 		if ( !check->inuse ) {
 			continue;
 		}
-		G_Printf("%3i:", e);
+		dest = buf;
+		size = sizeof(buf)-1;
+		Appendf(&dest, &size, "%3i:", e);
 
 		static char *typeName[] = {"ET_GENERAL", "ET_PLAYER", "ET_ITEM", "ET_MISSILE", "ET_MOVER", "ET_BEAM", "ET_PORTAL", "ET_SPEAKER", "ET_PUSH_TRIGGER", "ET_TELEPORT_TRIGGER", 
 			"ET_INVISIBLE", "ET_CONCUSSIVE_TRIGGER", "ET_OID_TRIGGER", "ET_EXPLOSIVE_INDICATOR", "ET_EXPLOSIVE", "ET_EF_SPOTLIGHT", "ET_ALARMBOX", "ET_CORONA", "ET_TRAP", "ET_GAMEMODEL", 
@@ -562,23 +589,25 @@ void	Svcmd_EntityList_f (void) {
 			"ET_BOTGOAL_INDICATOR", "ET_CORPSE", "ET_SMOKER", "ET_TEMPHEAD", "ET_MG42_BARREL", "ET_TEMPLEGS", "ET_TRIGGER_MULTIPLE", "ET_TRIGGER_FLAGONLY", "ET_TRIGGER_FLAGONLY_MULTIPLE", 
 			"ET_GAMEMANAGER", "ET_AAGUN", "ET_CABINET_H", "ET_CABINET_A", "ET_HEALER", "ET_SUPPLIER", "ET_LANDMINE_HINT", "ET_ATTRACTOR_HINT", "ET_SNIPER_HINT", "ET_LANDMINESPOT_HINT", "ET_COMMANDMAP_MARKER", "ET_WOLF_OBJECTIVE", "ET_EVENTS"};
 
-		if(check->s.eType >= ET_GENERAL && check->s.eType <= ET_EVENTS)
-			G_Printf("%-19s ", typeName[check->s.eType]);
+		if (check->s.eType >= ET_GENERAL && check->s.eType <= ET_EVENTS)
+			Appendf(&dest, &size, "%-19s ", typeName[check->s.eType]);
 		else
-			G_Printf("%3i                 ", check->s.eType);
+			Appendf(&dest, &size, "%-20i", check->s.eType);
 
 		if ( check->classname ) {
-			G_Printf("%s   ", check->classname);
+			Appendf(&dest, &size, "%s   ", check->classname);
 		}
 
 		if ( check->scriptName ) {
-			G_Printf("^3(script: %s)^7 ", check->scriptName);
+			Appendf(&dest, &size, "^3(script: %s)^7 ", check->scriptName);
 		}
 		if ( check->targetname ) {
-			G_Printf("^3(target: %s)^7", check->targetname);
+			Appendf(&dest, &size, "^3(target: %s)^7", check->targetname);
 		}
 
-		G_Printf("\n");
+		*dest++ = '\n';
+		*dest = 0;
+		trap_Printf(buf);
 	}
 }
 
