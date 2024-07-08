@@ -676,6 +676,31 @@ static int SetAvailableMapGoals(gmThread *a_thread, int team, bool available, co
 	return n;
 }
 
+static int SetAvailableTable(gmThread *a_thread, int team, bool available, gmTableObject* tbl, int ignoreErrors)
+{
+	int n = 0;
+	int i;
+	gmTableIterator tIt;
+	for(gmTableNode *pNode = tbl->GetFirst(tIt); pNode; pNode = tbl->GetNext(tIt))
+	{
+		switch(pNode->m_value.m_type)
+		{
+			case GM_STRING:
+				n += SetAvailableMapGoals(a_thread, team, available, pNode->m_value.GetCStringSafe(0), ignoreErrors);
+				break;
+			case GM_TABLE:
+				i = SetAvailableTable(a_thread, team, available, pNode->m_value.GetTableObjectSafe(), ignoreErrors);
+				if(i < 0) return i;
+				n += i;
+				break;
+			default:
+				GM_EXCEPTION_MSG("expecting table of strings, got %s", a_thread->GetMachine()->GetTypeName(pNode->m_value.m_type));
+				return -1;
+		}
+	}
+	return n;
+}
+
 // function: SetAvailableMapGoals
 //		This function enables/disables map goals
 //
@@ -704,17 +729,8 @@ static int GM_CDECL gmfSetAvailableMapGoals(gmThread *a_thread)
 	}
 	else if(a_thread->ParamType(2)==GM_TABLE)
 	{
-		gmTableObject* tbl = a_thread->ParamTable(2);
-		gmTableIterator tIt;
-		for(gmTableNode *pNode = tbl->GetFirst(tIt); pNode; pNode = tbl->GetNext(tIt))
-		{
-			if(!pNode->m_value.IsString())
-			{
-				GM_EXCEPTION_MSG("expecting param 2 as table of string, got %s", a_thread->GetMachine()->GetTypeName(pNode->m_value.m_type));
-				return GM_EXCEPTION;
-			}
-			size += SetAvailableMapGoals(a_thread, team, enable != 0, pNode->m_value.GetCStringSafe(0), ignoreErrors);
-		}
+		size = SetAvailableTable(a_thread, team, enable != 0, a_thread->ParamTable(2), ignoreErrors);
+		if(size < 0) return GM_EXCEPTION;
 	}
 	else
 	{
