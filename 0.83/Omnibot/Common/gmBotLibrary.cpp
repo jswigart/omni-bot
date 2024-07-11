@@ -637,14 +637,16 @@ int GM_CDECL GetMapGoals(gmThread *a_thread, Client *client)
 //		none
 static int GM_CDECL gmfSetMapGoalProperties(gmThread *a_thread)
 {
-	GM_CHECK_STRING_PARAM(expr,0);
+	GM_CHECK_NUM_PARAMS(2);
 	GM_CHECK_TABLE_PARAM(props,1);
 
-	if(!GoalManager::GetInstance()->Iterate(expr, [=](MapGoal *g) { g->FromScriptTable(a_thread->GetMachine(),props,false); }))
-		MapDebugPrint(a_thread, va("SetMapGoalProperties: goal query for %s has no results", expr));
-	return GM_OK;
+	int n = GoalManager::GetInstance()->Iterate(a_thread, a_thread->Param(0), "SetMapGoalProperties", false, [=](MapGoal *g)
+		{ g->FromScriptTable(a_thread->GetMachine(), props, false); });
+	return n < 0 ? GM_EXCEPTION : GM_OK;
 }
 
+// function: MapDebugPrint
+//		Prints debug message to the console.
 static void MapDebugPrint(gmMachine *a_machine, int threadId, const char *message)
 {
 	gmCall call;
@@ -668,76 +670,35 @@ void MapDebugPrint(const char *message)
 	MapDebugPrint(ScriptManager::GetInstance()->GetMachine(), 0, message);
 }
 
-static int SetAvailableMapGoals(gmThread *a_thread, int team, bool available, const char* expr, int ignoreErrors)
-{
-	int n = GoalManager::GetInstance()->Iterate(expr, [=](MapGoal *g) { g->SetAvailable(team,  available); });
-	if(n==0 && !ignoreErrors)
-		MapDebugPrint(a_thread, va("SetAvailableMapGoals: goal query for %s has no results", expr));
-	return n;
-}
-
-static int SetAvailableTable(gmThread *a_thread, int team, bool available, gmTableObject* tbl, int ignoreErrors)
-{
-	int n = 0;
-	int i;
-	gmTableIterator tIt;
-	for(gmTableNode *pNode = tbl->GetFirst(tIt); pNode; pNode = tbl->GetNext(tIt))
-	{
-		switch(pNode->m_value.m_type)
-		{
-			case GM_STRING:
-				n += SetAvailableMapGoals(a_thread, team, available, pNode->m_value.GetCStringSafe(0), ignoreErrors);
-				break;
-			case GM_TABLE:
-				i = SetAvailableTable(a_thread, team, available, pNode->m_value.GetTableObjectSafe(), ignoreErrors);
-				if(i < 0) return i;
-				n += i;
-				break;
-			default:
-				GM_EXCEPTION_MSG("expecting table of strings, got %s", a_thread->GetMachine()->GetTypeName(pNode->m_value.m_type));
-				return -1;
-		}
-	}
-	return n;
-}
-
 // function: SetAvailableMapGoals
 //		This function enables/disables map goals
 //
 // Parameters:
 //
 //		int		- The team the goal should be for. 0 means any team. See global team table.
-//		int		- True to enable, false to disable.
+//		int		- true to enable, false to disable.
 //		string or table	- OPTIONAL - The expression to use to match the goal names.
+//		int - OPTIONAL - true to ignore errors, false to print debug message if the goal does not exist
 //
 // Returns:
 //		int - count of goals
 static int GM_CDECL gmfSetAvailableMapGoals(gmThread *a_thread)
 {
+	GM_CHECK_NUM_PARAMS(2);
 	GM_CHECK_INT_PARAM(team, 0);
 	GM_CHECK_INT_PARAM(enable, 1);
+	bool available = enable != 0;
 	GM_INT_PARAM(ignoreErrors, 3, 0);
 
-	int size = 0;
+	auto action = [=](MapGoal *g) { g->SetAvailable(team,  available); };
+	int n;
 	if(a_thread->GetNumParams() < 3)
-	{
-		size = SetAvailableMapGoals(a_thread, team, enable != 0, 0, 0);
-	}
-	else if(a_thread->ParamType(2)==GM_STRING)
-	{
-		size = SetAvailableMapGoals(a_thread, team, enable != 0, a_thread->ParamString(2), ignoreErrors);
-	}
-	else if(a_thread->ParamType(2)==GM_TABLE)
-	{
-		size = SetAvailableTable(a_thread, team, enable != 0, a_thread->ParamTable(2), ignoreErrors);
-		if(size < 0) return GM_EXCEPTION;
-	}
+		n = GoalManager::GetInstance()->Iterate("", action);
 	else
-	{
-		MapDebugPrint(a_thread, "SetAvailableMapGoals: Parameter 3 must be a string or table");
-	}
+		n = GoalManager::GetInstance()->Iterate(a_thread, a_thread->Param(2), "SetAvailableMapGoals", ignoreErrors!=0, action);
 
-	a_thread->PushInt(size);
+	if(n < 0) return GM_EXCEPTION;
+	a_thread->PushInt(n);
 	return GM_OK;
 }
 
@@ -755,31 +716,34 @@ static int GM_CDECL gmfSetAvailableMapGoals(gmThread *a_thread)
 //
 // Returns:
 //		none
-static int GM_CDECL gmfSetGoalPriorityForTeamClass(gmThread *a_thread)
+static int GM_CDECL gmfSetGoalPriority(gmThread *a_thread)
 {	
 	GM_CHECK_NUM_PARAMS(2);
-	GM_CHECK_STRING_PARAM(exp,0);
 	GM_CHECK_FLOAT_OR_INT_PARAM(priority,1);
 	GM_INT_PARAM(teamId,2,0);
 	GM_INT_PARAM(classId,3,0);
 	GM_INT_PARAM(persis,4,0);
 	
-	if(!GoalManager::GetInstance()->Iterate(exp, [=](MapGoal *g) { g->SetPriorityForClass(teamId, classId, priority); }) && !persis)
-		MapDebugPrint(a_thread, va("SetGoalPriority: goal query for %s has no results", exp));
+	if(GoalManager::GetInstance()->Iterate(a_thread, a_thread->Param(0), "SetGoalPriority", persis!=0,
+		[=](MapGoal *g) { g->SetPriorityForClass(teamId, classId, priority); }) < 0)
+		return GM_EXCEPTION;
 
-	if(persis) MapGoal::SetPersistentPriorityForClass(exp,teamId,classId,priority);
+	if(persis)
+	{
+		GM_CHECK_STRING_PARAM(exp,0);
+		MapGoal::SetPersistentPriorityForClass(exp, teamId, classId, priority);
+	}
 	return GM_OK;
 }
 
 static int GM_CDECL SetOrClearGoalRole(gmThread *a_thread, bool enable)
 {
 	GM_CHECK_NUM_PARAMS(2);
-	GM_CHECK_STRING_PARAM(exp, 0);
 
-	int persis = 0;
+	bool persist = false;
 	if(enable){
-		GM_INT_PARAM(persis0, 2, 0);
-		persis=persis0;
+		GM_INT_PARAM(persist0, 2, 0);
+		persist = persist0!=0;
 	}
 
 	obint32 roleInt = 0;
@@ -809,13 +773,19 @@ static int GM_CDECL SetOrClearGoalRole(gmThread *a_thread, bool enable)
 	}
 	BitFlag32 role(roleInt);
 
-	if(!GoalManager::GetInstance()->Iterate(exp, [=](MapGoal *g){ 
+	if(GoalManager::GetInstance()->Iterate(a_thread, a_thread->Param(0), enable ? "SetGoalRole" : "ClearGoalRole", persist,
+		[=](MapGoal *g)
+		{
 			BitFlag32 oldRole = g->GetRoleMask();
 			g->SetRoleMask(enable ? (oldRole | role) : (oldRole & ~role));
-		}) && !persis)
-		MapDebugPrint(a_thread, va("%s: goal query for %s has no results", enable ? "SetGoalRole" : "ClearGoalRole", exp));
+		}) < 0)
+		return GM_EXCEPTION;
 
-	if(persis) MapGoal::SetPersistentRole(exp, role);
+	if(persist)
+	{
+		GM_CHECK_STRING_PARAM(exp, 0);
+		MapGoal::SetPersistentRole(exp, role);
+	}
 	return GM_OK;
 }
 
@@ -856,7 +826,7 @@ static int GM_CDECL gmfClearGoalRole(gmThread *a_thread)
 //
 // Parameters:
 //
-//		string	- The group expression to use to match the goal names. -OR- indexed string table of goal expressions
+//		string - The group expression to use to match the goal names. -OR- string table of goal expressions
 //		string - The group name to use.
 //
 // Returns:
@@ -866,36 +836,9 @@ static int GM_CDECL gmfSetGoalGroup(gmThread *a_thread)
 	GM_CHECK_NUM_PARAMS(2);	
 	GM_CHECK_STRING_PARAM(group,1);
 	
-	if(a_thread->ParamType(0)==GM_TABLE)
-	{
-		GM_TABLE_PARAM(tbl,0,0);
-		if(tbl)
-		{
-			gmTableIterator tIt;
-			gmTableNode *pNode = tbl->GetFirst(tIt);
-			while(pNode)
-			{
-				const char *pGoalName = pNode->m_value.GetCStringSafe(0);
-				MapGoalPtr mg = pGoalName ? GoalManager::GetInstance()->GetGoal(pGoalName) : MapGoalPtr();
-				if(mg)
-				{
-					mg->SetGroupName(group);				
-				}
-				pNode = tbl->GetNext(tIt);
-			}
-		}
-	}
-	else if(a_thread->ParamType(0)==GM_STRING)
-	{
-		GM_STRING_PARAM(exp,0,0);
-		GoalManager::GetInstance()->Iterate(exp, [=](MapGoal *g){ g->SetGroupName(group); });
-	}
-	else
-	{
-		GM_EXCEPTION_MSG("expected param 0 as table or string");
-		return GM_EXCEPTION;
-	}
-	return GM_OK;
+	int n = GoalManager::GetInstance()->Iterate(a_thread, a_thread->Param(0), "SetGoalGroup", false,
+		[=](MapGoal *g){ g->SetGroupName(group); });
+	return n < 0 ? GM_EXCEPTION : GM_OK;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -2939,10 +2882,10 @@ static gmFunctionEntry s_botLib[] =
 	{"SetMapGoalProperties",	gmfSetMapGoalProperties},
 
 	{"SetAvailableMapGoals",	gmfSetAvailableMapGoals},
-	{"SetGoalPriority",			gmfSetGoalPriorityForTeamClass},
+	{"SetGoalPriority",			gmfSetGoalPriority},
 	{"SetGoalGroup",			gmfSetGoalGroup},	
-	{"SetGoalRole",		gmfSetGoalRole},
-	{"ClearGoalRole",		gmfClearGoalRole},
+	{"SetGoalRole",				gmfSetGoalRole},
+	{"ClearGoalRole",			gmfClearGoalRole},
 
 	{"CreateMapGoal",			gmfCreateMapGoal},
 

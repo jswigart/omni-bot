@@ -8,6 +8,7 @@
 #include "MapGoalDatabase.h"
 #include "physfs.h"
 #include "gmUtilityLib.h"
+#include "gmBotLibrary.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -1832,6 +1833,39 @@ int GoalManager::Iterate(const char* expression, std::function<void(MapGoal*)> a
 			action(it->get());
 			n++;
 		}
+	}
+	return n;
+}
+
+int GoalManager::Iterate(gmThread *a_thread, gmVariable &expression, const char *function, bool ignoreErrors, std::function<void(MapGoal *)> action)
+{
+	gmTableIterator tIt;
+	gmTableObject *tbl;
+	const char *expr;
+	int n;
+	
+	switch(expression.m_type)
+	{
+		case GM_STRING:
+			expr = ((gmStringObject *)expression.m_value.m_ref)->GetString();
+			n = Iterate(expr, action);
+			if(n==0 && !ignoreErrors)
+				MapDebugPrint(a_thread, va("%s: goal query for %s has no results", function, expr));
+			break;
+		case GM_TABLE:
+			tbl = (gmTableObject *)expression.m_value.m_ref;
+			n = 0;
+			for(gmTableNode *pNode = tbl->GetFirst(tIt); pNode; pNode = tbl->GetNext(tIt))
+			{
+				int i = Iterate(a_thread, pNode->m_value, function, ignoreErrors, action);
+				if(i < 0) return i;
+				n += i;
+			}
+			break;
+		default:
+			GM_EXCEPTION_MSG("expecting goal expression or table of goal expressions, got %s", 
+				a_thread->GetMachine()->GetTypeName(expression.m_type));
+			return -1;
 	}
 	return n;
 }
