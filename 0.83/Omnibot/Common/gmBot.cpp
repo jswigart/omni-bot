@@ -2104,18 +2104,25 @@ int gmBot::gmfClearRoles(gmThread *a_thread)
 int gmBot::gmfHasRole(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(1);
 
-	for(int i = 0; i < a_thread->GetNumParams(); ++i)
+	int result = 0;
+	if(a_thread->GetNumParams() == 0)
 	{
-		GM_CHECK_INT_PARAM(n, i);
-		if(native->GetRoleMask().CheckFlag(n))
+		result = native->GetRoleMask().AnyFlagSet();
+	}
+	else
+	{
+		for(int i = 0; i < a_thread->GetNumParams(); ++i)
 		{
-			a_thread->PushInt(1);
-			return GM_OK;
+			GM_CHECK_INT_PARAM(n, i);
+			if(native->GetRoleMask().CheckFlag(n))
+			{
+				result = 1;
+				break;
+			}
 		}
 	}
-	a_thread->PushInt(0);
+	a_thread->PushInt(result);
 	return GM_OK;
 }
 
