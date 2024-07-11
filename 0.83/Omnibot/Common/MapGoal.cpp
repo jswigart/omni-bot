@@ -2147,7 +2147,7 @@ static int gmfGetPriorityForClient(gmThread *a_thread)
 	return GM_OK;
 }
 
-static int gmfSetRoles(gmThread *a_thread)
+static int gmfSetOrClearRoles(gmThread *a_thread, bool enable)
 {
 	MapGoal *NativePtr = 0;
 	if(!gmBind2::Class<MapGoal>::FromThis(a_thread,NativePtr) || !NativePtr)
@@ -2161,32 +2161,39 @@ static int gmfSetRoles(gmThread *a_thread)
 	BitFlag32 rolemask = NativePtr->GetRoleMask(); // cs: preserve current mask
 	for(int p = 0; p < a_thread->GetNumParams(); ++p)
 	{
-		GM_CHECK_INT_PARAM(r,p);
-		rolemask.SetFlag(r,true);
+		gmTableObject *tbl = a_thread->ParamTable(p);
+		if(tbl)
+		{
+			gmTableIterator tIt;
+			for(gmTableNode *pNode = tbl->GetFirst(tIt); pNode; pNode = tbl->GetNext(tIt))
+			{
+				int r;
+				if(!pNode->m_value.GetInt(r, 0))
+				{
+					GM_EXCEPTION_MSG("expecting param %d as int or table of int, got %s", p, a_thread->GetMachine()->GetTypeName(pNode->m_value.m_type));
+					return GM_EXCEPTION;
+				}
+				rolemask.SetFlag(r,enable);
+			}
+		}
+		else
+		{
+			GM_CHECK_INT_PARAM(r,p);
+			rolemask.SetFlag(r,enable);
+		}
 	}
 	NativePtr->SetRoleMask(rolemask);
 	return GM_OK;
 }
 
+static int gmfSetRoles(gmThread *a_thread)
+{
+	return gmfSetOrClearRoles(a_thread, true);
+}
+
 static int gmfClearRoles(gmThread *a_thread)
 {
-	MapGoal *NativePtr = 0;
-	if(!gmBind2::Class<MapGoal>::FromThis(a_thread,NativePtr) || !NativePtr)
-	{
-		GM_EXCEPTION_MSG("Script Function on NULL MapGoal"); 
-		return GM_EXCEPTION;
-	}
-
-	GM_CHECK_NUM_PARAMS(1);
-
-	BitFlag32 rolemask = NativePtr->GetRoleMask(); // cs: preserve current mask
-	for(int p = 0; p < a_thread->GetNumParams(); ++p)
-	{
-		GM_CHECK_INT_PARAM(r,p);
-		rolemask.SetFlag(r,false);
-	}
-	NativePtr->SetRoleMask(rolemask);
-	return GM_OK;
+	return gmfSetOrClearRoles(a_thread, false);
 }
 
 static int gmfHasRole(gmThread *a_thread)
