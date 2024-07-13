@@ -27,6 +27,5 @@ void MemoryRecord::Reset(GameEntity _ent)
 	m_InFOV = false;
 	m_IsAllied = false;
 	m_IsShootable = false;
-	m_IgnoreAsTarget = false;
 	m_Serial++;
 }

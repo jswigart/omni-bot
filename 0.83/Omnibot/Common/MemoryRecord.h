@@ -22,11 +22,10 @@ public:
 
 	inline int GetTimeTargetHasBeenVisible() const { return IsInFOV() ? IGame::GetTime() - GetTimeBecameVisible() : 0; }
 	inline int GetTimeHasBeenOutOfView() const { return IGame::GetTime() - GetTimeLastVisible(); }
+	
 	inline int GetIgnoreTargetTime() const { return m_IgnoreForTargeting; }
-
-	inline void IgnoreAsTarget(bool _ignore) { m_IgnoreAsTarget = _ignore; } 
 	inline void IgnoreAsTargetForTime(int _milliseconds) { m_IgnoreForTargeting = IGame::GetTime() + _milliseconds; }
-	inline bool ShouldIgnore() const { return m_IgnoreAsTarget || m_IgnoreForTargeting > IGame::GetTime(); }
+	inline bool ShouldIgnore() const { return m_IgnoreForTargeting > IGame::GetTime(); }
 
 	inline const Vector3f &GetLastSensedPosition() const { return m_TargetInfo.m_LastPosition; }
 	inline const Vector3f &GetLastSensedVelocity() const { return m_TargetInfo.m_LastVelocity; }
@@ -86,10 +85,6 @@ private:
 	// bool: m_IsAllied
 	//		Marks whether this entity is an ally of this bot.
 	bool			m_IsAllied : 1;
-
-	// bool: m_IgnoreAsTarget
-	//		Ignore this entity as a valid target.
-	bool			m_IgnoreAsTarget : 1;
 };
 
 class RecordHandle

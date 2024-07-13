@@ -54,8 +54,7 @@ GMBIND_FUNCTION_MAP_BEGIN(gmBot)
 	GMBIND_FUNCTION( "ForceTarget", gmfForceTarget )
 	GMBIND_FUNCTION( "GetLastTarget", gmfGetLastTarget )
 	GMBIND_FUNCTION( "GetTargetInfo", gmfGetTargetInfo )
-	GMBIND_FUNCTION( "IgnoreTargetForTime", gmfIgnoreTargetForTime )
-	GMBIND_FUNCTION( "IgnoreTarget", gmfIgnoreTargetForTime /*gmfIgnoreTarget*/ )
+	GMBIND_FUNCTION( "IgnoreTarget", gmfIgnoreTarget )
 	GMBIND_FUNCTION( "GetWeapon", gmfGetWeapon )
 	GMBIND_FUNCTION( "GetHighLevelGoalName", gmfGetHighLevelGoalName )
 	GMBIND_FUNCTION( "GetMapGoalName", gmfGetMapGoalName )
@@ -841,42 +840,17 @@ int gmBot::gmfGetTargetInfo(gmThread *a_thread)
 	return GM_OK;
 }
 
-// function: IgnoreTargetForTime
-//		This function causes the bot to ignore a specific entity for targeting for some duration of time.
-//
-// Parameters:
-//
-//		<GameEntity> - The entity to use
-//		- OR - 
-//		<int> - The gameId for the entity to use
-//		float/int - The number of seconds to ignore target
-//
-// Returns:
-//		none
-int gmBot::gmfIgnoreTargetForTime(gmThread *a_thread)
-{
-	CHECK_THIS_BOT();
-	GM_CHECK_NUM_PARAMS(2);
-	GameEntity gameEnt;
-	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);	
-	OBASSERT(gameEnt.IsValid(), "Bad Entity");
-	GM_CHECK_FLOAT_OR_INT_PARAM(ignoreTime, 1);
-	
-	MemoryRecord *pRecord = native->GetSensoryMemory()->GetMemoryRecord(gameEnt, true);
-	if(pRecord)	
-		pRecord->IgnoreAsTargetForTime(Utils::SecondsToMilliseconds(ignoreTime));
-	return GM_OK;
-}
-
 // function: IgnoreTarget
 //		This function causes the bot to ignore a specific entity for targeting for some duration of time.
 //
 // Parameters:
 //
-//		<GameEntity> - The entity to use
+//		<GameEntity> - The entity
 //		- OR - 
-//		<int> - The gameId for the entity to use
-//		<int> - - OPTIONAL - true to ignore, false to disable ignore. default true.
+//		<int> - The gameId for the entity
+//		- OR - 
+//		<string> or <table> - goals names (MOVER_)
+//		float/int - OPTIONAL - The number of seconds to ignore target
 //
 // Returns:
 //		none
@@ -884,15 +858,39 @@ int gmBot::gmfIgnoreTarget(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
 	GM_CHECK_NUM_PARAMS(1);
-	GameEntity gameEnt;
-	GM_CHECK_GAMEENTITY_FROM_PARAM(gameEnt, 0);	
-	OBASSERT(gameEnt.IsValid(), "Bad Entity");
-	GM_INT_PARAM(ignoreTarget, 1, 1);
+	GM_FLOAT_OR_INT_PARAM(ignoreTime, 1, 99999);
+	int ignoreMilliseconds = Utils::SecondsToMilliseconds(ignoreTime);
 
-	MemoryRecord *pRecord = native->GetSensoryMemory()->GetMemoryRecord(gameEnt, true);
-	if(pRecord)	
-		pRecord->IgnoreAsTarget(ignoreTarget != 0);
-	return GM_OK;
+	SensoryMemory *sensoryMemory = native->GetSensoryMemory();
+
+	switch(a_thread->ParamType(0))
+	{
+	case GM_ENTITY:
+	case GM_INT:
+		{
+			GameEntity ent;
+			GM_GAMEENTITY_FROM_PARAM(ent, 0, GameEntity());
+			MemoryRecord *pRecord = sensoryMemory->GetMemoryRecord(ent, true);
+			if(pRecord) pRecord->IgnoreAsTargetForTime(ignoreMilliseconds);
+			return GM_OK;
+		}
+	case GM_STRING:
+	case GM_TABLE:
+		{
+			int n = GoalManager::GetInstance()->Iterate(a_thread, a_thread->Param(0), "IgnoreTarget", false, [=](MapGoal *g) {
+				GameEntity ent = g->GetEntity();
+				if(ent.IsValid())
+				{
+					MemoryRecord *pRecord = sensoryMemory->GetMemoryRecord(ent, true);
+					if(pRecord) pRecord->IgnoreAsTargetForTime(ignoreMilliseconds);
+				}
+			});
+			return n < 0 ? GM_EXCEPTION : GM_OK;
+		}
+	default:
+		GM_EXCEPTION_MSG("expecting param 0 gameentity or int or string or table of strings. got %s", a_thread->GetMachine()->GetTypeName(a_thread->ParamType(0)));
+		return GM_EXCEPTION;
+	}
 }
 
 // function: GetWeapon
@@ -1948,7 +1946,7 @@ int gmBot::gmfIsWeaponCharged(gmThread *a_thread)
 //		string - filename to dump to
 //
 // Returns:
-//		int - bot version number
+//		None
 int gmBot::gmfDumpBotTable(gmThread *a_thread)
 {
 	CHECK_THIS_BOT();
