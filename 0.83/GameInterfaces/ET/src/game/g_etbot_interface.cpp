@@ -5765,7 +5765,8 @@ void Bot_Interface_ConsoleCommand()
 		}
 
 		Arguments args;
-		for(int i = 0; i < trap_Argc(); ++i)
+		int n = min(trap_Argc(), Arguments::MaxArgs);
+		for(int i = 0; i < n; ++i)
 		{
 			trap_Argv(i, args.m_Args[args.m_NumArgs++], Arguments::MaxArgLength);
 		}
