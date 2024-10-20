@@ -239,6 +239,7 @@ void G_Script_ScriptLoad( void ) {
 
 	level.scriptEntity = G_Alloc( len );
 	trap_FS_Read( level.scriptEntity, len, f );
+	level.scriptEntity[len] = 0;
 
 	trap_FS_FCloseFile( f );
 }
